@@ -85,9 +85,32 @@ theorem finiteEvenFourTorusZ2OneStepNormalizedOrbitFiberBalance_iff_configuratio
     rw [finiteGroupOrbitAggregateCoefficient_smul,
       finiteGroupOrbitAggregateCoefficient_smul]
     dsimp [νf, νc, cf, cc]
-    rw [← finiteEvenFourTorusZ2GaugeInvariantOneStepFineOrbitFiberKernelCoefficient_eq_configurationFiberAggregate]
-    unfold finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseOrbitKernelCoefficient
-    exact h A q
+    calc
+      finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
+            (finiteEvenFourTorusDoubleRefinement H)
+            β energyIdentity energyNontrivial hβ hEnergy *
+          finiteGroupOrbitAggregateCoefficient
+            (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+            (FiniteEvenFourTorusZ2SliceConfiguration H)
+            (finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCoefficient
+              H β energyIdentity energyNontrivial hβ hEnergy A) q =
+        finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
+            (finiteEvenFourTorusDoubleRefinement H)
+            β energyIdentity energyNontrivial hβ hEnergy *
+          finiteEvenFourTorusZ2GaugeInvariantOneStepFineOrbitFiberKernelCoefficient
+            H β energyIdentity energyNontrivial hβ hEnergy A q := by
+          rw [finiteEvenFourTorusZ2GaugeInvariantOneStepFineOrbitFiberKernelCoefficient_eq_configurationFiberAggregate]
+      _ = finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
+            H β energyIdentity energyNontrivial hβ hEnergy *
+          finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseOrbitKernelCoefficient
+            H β energyIdentity energyNontrivial hβ hEnergy A q := h A q
+      _ = finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
+            H β energyIdentity energyNontrivial hβ hEnergy *
+          finiteGroupOrbitAggregateCoefficient
+            (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+            (FiniteEvenFourTorusZ2SliceConfiguration H)
+            (finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseKernelWeight
+              H β energyIdentity energyNontrivial hβ hEnergy A) q := rfl
   · intro h A q
     let νf := finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
       (finiteEvenFourTorusDoubleRefinement H)
@@ -129,9 +152,32 @@ theorem finiteEvenFourTorusZ2OneStepNormalizedOrbitFiberBalance_iff_configuratio
     rw [finiteGroupOrbitAggregateCoefficient_smul,
       finiteGroupOrbitAggregateCoefficient_smul] at hq
     dsimp [νf, νc, cf, cc] at hq
-    rw [← finiteEvenFourTorusZ2GaugeInvariantOneStepFineOrbitFiberKernelCoefficient_eq_configurationFiberAggregate]
-    unfold finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseOrbitKernelCoefficient
-    exact hq
+    calc
+      finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
+            (finiteEvenFourTorusDoubleRefinement H)
+            β energyIdentity energyNontrivial hβ hEnergy *
+          finiteEvenFourTorusZ2GaugeInvariantOneStepFineOrbitFiberKernelCoefficient
+            H β energyIdentity energyNontrivial hβ hEnergy A q =
+        finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
+            (finiteEvenFourTorusDoubleRefinement H)
+            β energyIdentity energyNontrivial hβ hEnergy *
+          finiteGroupOrbitAggregateCoefficient
+            (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+            (FiniteEvenFourTorusZ2SliceConfiguration H)
+            (finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCoefficient
+              H β energyIdentity energyNontrivial hβ hEnergy A) q := by
+          rw [finiteEvenFourTorusZ2GaugeInvariantOneStepFineOrbitFiberKernelCoefficient_eq_configurationFiberAggregate]
+      _ = finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
+            H β energyIdentity energyNontrivial hβ hEnergy *
+          finiteGroupOrbitAggregateCoefficient
+            (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+            (FiniteEvenFourTorusZ2SliceConfiguration H)
+            (finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseKernelWeight
+              H β energyIdentity energyNontrivial hβ hEnergy A) q := hq
+      _ = finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
+            H β energyIdentity energyNontrivial hβ hEnergy *
+          finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseOrbitKernelCoefficient
+            H β energyIdentity energyNontrivial hβ hEnergy A q := rfl
 
 /-- Exact configuration-fibre criterion for the actual normalized one-step
 cross-volume residual at arbitrary nonnegative coupling. -/
