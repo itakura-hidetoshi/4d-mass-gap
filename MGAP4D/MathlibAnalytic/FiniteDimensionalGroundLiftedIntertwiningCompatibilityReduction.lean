@@ -46,8 +46,10 @@ theorem groundLiftCorrection_apply_ground
     D.groundLiftedDefect (D.eigenbasis i.1) -
         (D.eigenbasis i.1 - D.operator (D.eigenbasis i.1)) =
       D.eigenbasis i.1
-  rw [D.groundLiftedDefect_apply_ground i,
-    D.operator_apply_eigenbasis i.1, i.2, one_smul]
+  have hOp :
+      D.operator (D.eigenbasis i.1) = D.eigenbasis i.1 := by
+    simpa [i.2] using D.operator_apply_eigenbasis i.1
+  rw [D.groundLiftedDefect_apply_ground i, hOp]
   simp
 
 /-- On every strictly excited mode the ground correction vanishes. -/
@@ -57,8 +59,7 @@ theorem groundLiftCorrection_apply_excited
   change
     D.groundLiftedDefect (D.eigenbasis i.1) -
         (D.eigenbasis i.1 - D.operator (D.eigenbasis i.1)) = 0
-  rw [D.groundLiftedDefect_apply_excited i]
-  simp
+  exact sub_eq_zero.mpr (D.groundLiftedDefect_apply_excited i)
 
 /-- On every null mode the ground correction also vanishes. -/
 theorem groundLiftCorrection_apply_null
@@ -67,8 +68,7 @@ theorem groundLiftCorrection_apply_null
   change
     D.groundLiftedDefect (D.eigenbasis i.1) -
         (D.eigenbasis i.1 - D.operator (D.eigenbasis i.1)) = 0
-  rw [D.groundLiftedDefect_apply_null i]
-  simp
+  exact sub_eq_zero.mpr (D.groundLiftedDefect_apply_null i)
 
 /-- Audit-visible spectral characterization of the correction: it is one on
 the ground sector and zero on the excited and null sectors. -/
@@ -167,12 +167,12 @@ theorem finiteDimensionalGroundLiftedIntertwiningResidual_decomposition
       -(Df.operator (J x) - J (Dc.operator x)) +
         (Df.groundLiftCorrection (J x) -
           J (Dc.groundLiftCorrection x))
-  have hf :=
-    ContinuousLinearMap.congr_fun
-      Df.groundLiftedDefect_eq_transferDefect_add_groundLiftCorrection (J x)
-  have hc :=
-    ContinuousLinearMap.congr_fun
-      Dc.groundLiftedDefect_eq_transferDefect_add_groundLiftCorrection x
+  have hf := congrArg
+    (fun L : Ef →L[ℝ] Ef => L (J x))
+    Df.groundLiftedDefect_eq_transferDefect_add_groundLiftCorrection
+  have hc := congrArg
+    (fun L : Ec →L[ℝ] Ec => L x)
+    Dc.groundLiftedDefect_eq_transferDefect_add_groundLiftCorrection
   change
     Df.groundLiftedDefect (J x) =
       (J x - Df.operator (J x)) + Df.groundLiftCorrection (J x) at hf
