@@ -67,7 +67,23 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalyticFirstVariation_sub
   simp only [Finset.sum_neg_distrib, Finset.sum_add_distrib,
     Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
   field_simp [hn] at hcross ⊢
-  linear_combination hcross
+  linear_combination 3 * hcross
+
+/-- Real-valued count of one actual configuration coarse-map fibre. -/
+theorem finiteEvenFourTorusZ2SliceConfigurationCoarseMap_fiberIndicatorSum
+    (H : ℕ)
+    (b : FiniteEvenFourTorusZ2SliceConfiguration H) :
+    (∑ B : FiniteEvenFourTorusZ2SliceConfiguration
+        (finiteEvenFourTorusDoubleRefinement H),
+      if finiteEvenFourTorusZ2SliceConfigurationCoarseMap H B = b then
+        (1 : ℝ)
+      else 0) =
+      (Fintype.card
+        (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H).ker : ℝ) := by
+  simpa [finiteEvenFourTorusZ2SliceConfigurationCoarseHom] using
+    finiteSurjectiveGroupHom_fiber_count
+      (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H)
+      (finiteEvenFourTorusZ2SliceConfigurationCoarseHom_surjective H) b
 
 /-- The beta-zero fine fibre first variation changes by kernel multiplicity
 and the constant embedding scale times the fine spatial-action defect. -/
@@ -92,12 +108,16 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCo
             (finiteEvenFourTorusDoubleRefinement H)
             energyIdentity energyNontrivial A') := by
   classical
-  unfold finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCoefficientFirstVariation
-    finiteFiberPushforwardCoefficient
-  rw [← Finset.sum_sub_distrib]
-  calc
-    (∑ B : FiniteEvenFourTorusZ2SliceConfiguration
-        (finiteEvenFourTorusDoubleRefinement H),
+  let s := finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale H
+  let d := -(1 / 2 : ℝ) *
+    (finiteEvenFourTorusZ2SpatialWilsonAction
+        (finiteEvenFourTorusDoubleRefinement H)
+        energyIdentity energyNontrivial A -
+      finiteEvenFourTorusZ2SpatialWilsonAction
+        (finiteEvenFourTorusDoubleRefinement H)
+        energyIdentity energyNontrivial A')
+  have hpoint : ∀ B : FiniteEvenFourTorusZ2SliceConfiguration
+      (finiteEvenFourTorusDoubleRefinement H),
       (if finiteEvenFourTorusZ2SliceConfigurationCoarseMap H B = b then
           finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalyticFirstVariation
               (finiteEvenFourTorusDoubleRefinement H)
@@ -109,49 +129,45 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCo
               (finiteEvenFourTorusDoubleRefinement H)
               energyIdentity energyNontrivial B A' *
             finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingPointwiseScale H B
-        else 0)) =
-      ∑ B : FiniteEvenFourTorusZ2SliceConfiguration
-          (finiteEvenFourTorusDoubleRefinement H),
-        if finiteEvenFourTorusZ2SliceConfigurationCoarseMap H B = b then
-          (-(1 / 2 : ℝ) *
-              (finiteEvenFourTorusZ2SpatialWilsonAction
-                  (finiteEvenFourTorusDoubleRefinement H)
-                  energyIdentity energyNontrivial A -
-                finiteEvenFourTorusZ2SpatialWilsonAction
-                  (finiteEvenFourTorusDoubleRefinement H)
-                  energyIdentity energyNontrivial A')) *
-            finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale H
-        else 0 := by
-      apply Finset.sum_congr rfl
-      intro B _hB
-      by_cases hBfiber : finiteEvenFourTorusZ2SliceConfigurationCoarseMap H B = b
-      · rw [if_pos hBfiber, if_pos hBfiber,
-          finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingPointwiseScale_eq_cardinality]
-        rw [← sub_mul]
-        rw [finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalyticFirstVariation_sub_right]
-      · rw [if_neg hBfiber, if_neg hBfiber, zero_sub, if_neg hBfiber]
-    _ = (-(1 / 2 : ℝ) *
-          (finiteEvenFourTorusZ2SpatialWilsonAction
-              (finiteEvenFourTorusDoubleRefinement H)
-              energyIdentity energyNontrivial A -
-            finiteEvenFourTorusZ2SpatialWilsonAction
-              (finiteEvenFourTorusDoubleRefinement H)
-              energyIdentity energyNontrivial A') *
-          finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale H) *
+        else 0) =
+      if finiteEvenFourTorusZ2SliceConfigurationCoarseMap H B = b then
+        d * s
+      else 0 := by
+    intro B
+    by_cases hB : finiteEvenFourTorusZ2SliceConfigurationCoarseMap H B = b
+    · rw [if_pos hB, if_pos hB, if_pos hB,
+        finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingPointwiseScale_eq_cardinality]
+      rw [← sub_mul,
+        finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalyticFirstVariation_sub_right]
+      rfl
+    · simp [hB]
+  have hcount := finiteEvenFourTorusZ2SliceConfigurationCoarseMap_fiberIndicatorSum H b
+  unfold finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCoefficientFirstVariation
+    finiteFiberPushforwardCoefficient
+  rw [← Finset.sum_sub_distrib]
+  simp_rw [hpoint]
+  calc
+    (∑ B : FiniteEvenFourTorusZ2SliceConfiguration
+        (finiteEvenFourTorusDoubleRefinement H),
+      if finiteEvenFourTorusZ2SliceConfigurationCoarseMap H B = b then d * s else 0) =
+      d * s *
         (∑ B : FiniteEvenFourTorusZ2SliceConfiguration
             (finiteEvenFourTorusDoubleRefinement H),
           if finiteEvenFourTorusZ2SliceConfigurationCoarseMap H B = b then
-            (1 : ℝ) else 0) := by
+            (1 : ℝ)
+          else 0) := by
       rw [Finset.mul_sum]
       apply Finset.sum_congr rfl
       intro B _hB
-      by_cases hBfiber : finiteEvenFourTorusZ2SliceConfigurationCoarseMap H B = b
-      · simp [hBfiber]
-      · simp [hBfiber]
+      by_cases hB : finiteEvenFourTorusZ2SliceConfigurationCoarseMap H B = b
+      · simp [hB]
+      · simp [hB]
+    _ = d * s *
+        (Fintype.card
+          (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H).ker : ℝ) := by
+      rw [hcount]
     _ = _ := by
-      rw [finiteSurjectiveGroupHom_fiber_count
-        (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H)
-        (finiteEvenFourTorusZ2SliceConfigurationCoarseHom_surjective H) b]
+      dsimp [d, s]
       ring
 
 /-- The beta-zero coarse first variation changes by the same constant embedding
@@ -195,6 +211,7 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCo
         (Fintype.card
           (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H).ker : ℝ) := by
   classical
+  have hcount := finiteEvenFourTorusZ2SliceConfigurationCoarseMap_fiberIndicatorSum H b
   unfold finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCoefficientAnalytic
     finiteFiberPushforwardCoefficient
   simp_rw [finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalytic_zero]
@@ -209,17 +226,16 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCo
         (∑ B : FiniteEvenFourTorusZ2SliceConfiguration
             (finiteEvenFourTorusDoubleRefinement H),
           if finiteEvenFourTorusZ2SliceConfigurationCoarseMap H B = b then
-            (1 : ℝ) else 0) := by
+            (1 : ℝ)
+          else 0) := by
       rw [Finset.mul_sum]
       apply Finset.sum_congr rfl
       intro B _hB
-      by_cases hBfiber : finiteEvenFourTorusZ2SliceConfigurationCoarseMap H B = b
-      · simp [hBfiber]
-      · simp [hBfiber]
+      by_cases hB : finiteEvenFourTorusZ2SliceConfigurationCoarseMap H B = b
+      · simp [hB]
+      · simp [hB]
     _ = _ := by
-      rw [finiteSurjectiveGroupHom_fiber_count
-        (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H)
-        (finiteEvenFourTorusZ2SliceConfigurationCoarseHom_surjective H) b]
+      rw [hcount]
 
 /-- At beta zero the coarse analytic coefficient is the constant embedding
 scale. -/
@@ -234,7 +250,8 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseKernelWeightAnalytic_zer
       finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale H := by
   unfold finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseKernelWeightAnalytic
   rw [finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalytic_zero]
-  simp [finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingPointwiseScale_eq_cardinality]
+  rw [finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingPointwiseScale_eq_cardinality]
+  ring
 
 /-- Identity anchoring turns the whole beta-zero projective first variation into
 one explicit fine-minus-coarse spatial Wilson action defect. -/
@@ -263,12 +280,49 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationF
   let s := finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale H
   let k : ℝ := Fintype.card
     (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H).ker
-  have hFine :=
-    finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCoefficientFirstVariation_sub
+  let fA :=
+    finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCoefficientFirstVariation
+      H energyIdentity energyNontrivial A (1 : FiniteEvenFourTorusZ2SliceConfiguration H)
+  let f1 :=
+    finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCoefficientFirstVariation
+      H energyIdentity energyNontrivial
+        (1 : FiniteEvenFourTorusZ2SliceConfiguration
+          (finiteEvenFourTorusDoubleRefinement H))
+        (1 : FiniteEvenFourTorusZ2SliceConfiguration H)
+  let cA :=
+    finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseKernelWeightFirstVariation
+      H energyIdentity energyNontrivial A (1 : FiniteEvenFourTorusZ2SliceConfiguration H)
+  let c1 :=
+    finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseKernelWeightFirstVariation
+      H energyIdentity energyNontrivial
+        (1 : FiniteEvenFourTorusZ2SliceConfiguration
+          (finiteEvenFourTorusDoubleRefinement H))
+        (1 : FiniteEvenFourTorusZ2SliceConfiguration H)
+  have hFine :
+      fA - f1 =
+        -(1 / 2 : ℝ) * s * k *
+          (finiteEvenFourTorusZ2SpatialWilsonAction
+              (finiteEvenFourTorusDoubleRefinement H)
+              energyIdentity energyNontrivial A -
+            finiteEvenFourTorusZ2SpatialWilsonAction
+              (finiteEvenFourTorusDoubleRefinement H)
+              energyIdentity energyNontrivial 1) := by
+    dsimp [fA, f1, s, k]
+    exact finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCoefficientFirstVariation_sub
       H energyIdentity energyNontrivial A 1 (1 : FiniteEvenFourTorusZ2SliceConfiguration H)
-  have hCoarse :=
-    finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseKernelWeightFirstVariation_sub
-      H energyIdentity energyNontrivial A 1 (1 : FiniteEvenFourTorusZ2SliceConfiguration H)
+  have hCoarse :
+      cA - c1 =
+        -(1 / 2 : ℝ) * s *
+          (finiteEvenFourTorusZ2SpatialWilsonAction
+              H energyIdentity energyNontrivial
+              (finiteEvenFourTorusZ2SliceConfigurationCoarseMap H A) -
+            finiteEvenFourTorusZ2SpatialWilsonAction
+              H energyIdentity energyNontrivial 1) := by
+    dsimp [cA, c1, s]
+    simpa only [finiteEvenFourTorusZ2SliceConfigurationCoarseMap_one] using
+      finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseKernelWeightFirstVariation_sub
+        H energyIdentity energyNontrivial A 1
+          (1 : FiniteEvenFourTorusZ2SliceConfiguration H)
   have hFineZeroA :=
     finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCoefficientAnalytic_zero
       H energyIdentity energyNontrivial A (1 : FiniteEvenFourTorusZ2SliceConfiguration H)
@@ -287,49 +341,28 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationF
         (1 : FiniteEvenFourTorusZ2SliceConfiguration
           (finiteEvenFourTorusDoubleRefinement H))
         (1 : FiniteEvenFourTorusZ2SliceConfiguration H)
-  simp only [finiteEvenFourTorusZ2SliceConfigurationCoarseMap_one] at hCoarse
   unfold finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationFiberObstructionFirstVariation
   rw [hFineZeroA, hFineZeroOne, hCoarseZeroA, hCoarseZeroOne]
   change
-    _ = (1 / 2 : ℝ) * k * s ^ 2 * _
-  change
-    finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCoefficientFirstVariation
-          H energyIdentity energyNontrivial A 1 * s +
-        (s * k) *
-          finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseKernelWeightFirstVariation
-            H energyIdentity energyNontrivial 1 1 -
-      (finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCoefficientFirstVariation
-          H energyIdentity energyNontrivial 1 1 * s +
-        (s * k) *
-          finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseKernelWeightFirstVariation
-            H energyIdentity energyNontrivial A 1) =
-      (1 / 2 : ℝ) * k * s ^ 2 * _
-  have hFine' :
-      finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCoefficientFirstVariation
-            H energyIdentity energyNontrivial A 1 -
-        finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCoefficientFirstVariation
-            H energyIdentity energyNontrivial 1 1 =
-        -(1 / 2 : ℝ) * s * k *
-          (finiteEvenFourTorusZ2SpatialWilsonAction
-              (finiteEvenFourTorusDoubleRefinement H)
-              energyIdentity energyNontrivial A -
-            finiteEvenFourTorusZ2SpatialWilsonAction
-              (finiteEvenFourTorusDoubleRefinement H)
-              energyIdentity energyNontrivial 1) := by
-    simpa [s, k] using hFine
-  have hCoarse' :
-      finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseKernelWeightFirstVariation
-            H energyIdentity energyNontrivial A 1 -
-        finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseKernelWeightFirstVariation
-            H energyIdentity energyNontrivial 1 1 =
-        -(1 / 2 : ℝ) * s *
-          (finiteEvenFourTorusZ2SpatialWilsonAction
-              H energyIdentity energyNontrivial
-              (finiteEvenFourTorusZ2SliceConfigurationCoarseMap H A) -
-            finiteEvenFourTorusZ2SpatialWilsonAction
-              H energyIdentity energyNontrivial 1) := by
-    simpa [s] using hCoarse
-  linear_combination s * hFine' - (s * k) * hCoarse'
+    fA * s + (s * k) * c1 - (f1 * s + (s * k) * cA) =
+      (1 / 2 : ℝ) * k * s ^ 2 *
+        ((finiteEvenFourTorusZ2SpatialWilsonAction
+            H energyIdentity energyNontrivial
+            (finiteEvenFourTorusZ2SliceConfigurationCoarseMap H A) -
+          finiteEvenFourTorusZ2SpatialWilsonAction
+            H energyIdentity energyNontrivial 1) -
+        (finiteEvenFourTorusZ2SpatialWilsonAction
+            (finiteEvenFourTorusDoubleRefinement H)
+            energyIdentity energyNontrivial A -
+          finiteEvenFourTorusZ2SpatialWilsonAction
+            (finiteEvenFourTorusDoubleRefinement H)
+            energyIdentity energyNontrivial 1))
+  calc
+    fA * s + (s * k) * c1 - (f1 * s + (s * k) * cA) =
+        s * (fA - f1) - (s * k) * (cA - c1) := by ring
+    _ = _ := by
+      rw [hFine, hCoarse]
+      ring
 
 /-- If the fine configuration lies in the actual coarse-map kernel, only its
 fine spatial Wilson action defect remains. -/
