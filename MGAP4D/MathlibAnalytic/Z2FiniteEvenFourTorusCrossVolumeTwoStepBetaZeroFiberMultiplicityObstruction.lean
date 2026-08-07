@@ -177,6 +177,7 @@ theorem finiteEvenFourTorusZ2GaugeInvariantTwoStepBoltzmannCoarseOrbitCoefficien
       exact fun h => hbq h.symm
     rw [if_neg hbq, if_neg hqb, mul_zero]
 
+set_option maxHeartbeats 800000 in
 /-- The direct `β = 0` Boltzmann balance holds exactly when the composed
 configuration coarse hom has singleton kernel. -/
 theorem finiteEvenFourTorusZ2TwoStepBoltzmannOrbitFiberBalance_beta_zero_iff_card_ker_eq_one
