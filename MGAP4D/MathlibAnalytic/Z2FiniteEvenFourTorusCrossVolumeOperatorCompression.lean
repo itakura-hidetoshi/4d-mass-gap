@@ -288,12 +288,21 @@ structure Z2FiniteEvenFourTorusCrossVolumeOperatorCompressionPackage
   obstructionCriterion :
     intertwiningObstruction = 0 ↔
       ∀ y : FiniteEvenFourTorusZ2GaugeOrbitProbabilityL2 H,
-        actualCoarseDefect y |> fun coarseEvolved =>
-          (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-            l2PullbackLinearMap coarseEvolved =
-        renormalizedDefect y |>
+        finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
+            (finiteEvenFourTorusDoubleRefinement H)
+            β energyIdentity energyNontrivial hβ.le hEnergy.le
+            ((finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
+              l2PullbackLinearMap y) =
           (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
             l2PullbackLinearMap
+              (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
+                H β energyIdentity energyNontrivial hβ.le hEnergy.le y)
+  obstructionZeroImpliesCompressionEq :
+    intertwiningObstruction = 0 →
+      finiteEvenFourTorusZ2GaugeOrbitRenormalizedGroundLiftedDefect
+          H β energyIdentity energyNontrivial hβ.le hEnergy.le =
+        finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
+          H β energyIdentity energyNontrivial hβ.le hEnergy.le
 
 /-- Construct the complete actual cross-volume operator-compression package. -/
 noncomputable def z2FiniteEvenFourTorusCrossVolumeOperatorCompressionPackage
@@ -340,44 +349,12 @@ noncomputable def z2FiniteEvenFourTorusCrossVolumeOperatorCompressionPackage
     finiteEvenFourTorusZ2GaugeOrbitGroundLiftedIntertwiningObstruction
       H β energyIdentity energyNontrivial hβ.le hEnergy.le
   intertwiningObstruction_eq := rfl
-  obstructionCriterion := by
-    constructor
-    · intro hzero y
-      have hintertwine :=
-        (finiteEvenFourTorusZ2GaugeOrbitGroundLiftedIntertwiningObstruction_eq_zero_iff
-          H β energyIdentity energyNontrivial hβ.le hEnergy.le).mp hzero y
-      have hcompression :=
-        finiteEvenFourTorusZ2GaugeOrbitGroundLiftedIntertwiningObstruction_zero_implies_compression_eq
-          H β energyIdentity energyNontrivial hβ.le hEnergy.le hzero
-      change
-        (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-            l2PullbackLinearMap
-              (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
-                H β energyIdentity energyNontrivial hβ.le hEnergy.le y) =
-          (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-            l2PullbackLinearMap
-              (finiteEvenFourTorusZ2GaugeOrbitRenormalizedGroundLiftedDefect
-                H β energyIdentity energyNontrivial hβ.le hEnergy.le y)
-      rw [hcompression]
-    · intro h
-      apply
-        (finiteEvenFourTorusZ2GaugeOrbitGroundLiftedIntertwiningObstruction_eq_zero_iff
-          H β energyIdentity energyNontrivial hβ.le hEnergy.le).2
-      intro y
-      have hy := h y
-      change
-        (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-            l2PullbackLinearMap
-              (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
-                H β energyIdentity energyNontrivial hβ.le hEnergy.le y) =
-          (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-            l2PullbackLinearMap
-              (finiteEvenFourTorusZ2GaugeOrbitRenormalizedGroundLiftedDefect
-                H β energyIdentity energyNontrivial hβ.le hEnergy.le y)
-        at hy
-      exact False.elim (by
-        have := hy
-        simp at this)
+  obstructionCriterion :=
+    finiteEvenFourTorusZ2GaugeOrbitGroundLiftedIntertwiningObstruction_eq_zero_iff
+      H β energyIdentity energyNontrivial hβ.le hEnergy.le
+  obstructionZeroImpliesCompressionEq :=
+    finiteEvenFourTorusZ2GaugeOrbitGroundLiftedIntertwiningObstruction_zero_implies_compression_eq
+      H β energyIdentity energyNontrivial hβ.le hEnergy.le
 
 end
 
