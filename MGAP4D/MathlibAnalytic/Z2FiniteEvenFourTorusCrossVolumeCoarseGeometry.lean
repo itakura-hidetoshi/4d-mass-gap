@@ -28,6 +28,7 @@ theorem finiteEvenFourTorusSide_dvd_doubleRefinement_side
       ((2 * finiteEvenFourTorusDoubleRefinement H + 1) + 1) := by
   use 2
   rw [finiteEvenFourTorusDoubleRefinement_side]
+  omega
 
 /-- Canonical fine-to-coarse periodic coordinate homomorphism for the doubled
 side. -/
@@ -184,6 +185,22 @@ theorem finiteEvenFourTorusZ2SliceConfigurationCoarseMap_mul
   classical
   funext e
   unfold finiteEvenFourTorusZ2SliceConfigurationCoarseMap
+  change
+    (∏ v : FiniteEvenFourTorusSpatialVertex
+        (finiteEvenFourTorusDoubleRefinement H),
+      if finiteEvenFourTorusSpatialVertexCoarseMap H v = e.1 then
+        A (v, e.2) * B (v, e.2)
+      else 1) =
+      (∏ v : FiniteEvenFourTorusSpatialVertex
+          (finiteEvenFourTorusDoubleRefinement H),
+        if finiteEvenFourTorusSpatialVertexCoarseMap H v = e.1 then
+          A (v, e.2)
+        else 1) *
+      (∏ v : FiniteEvenFourTorusSpatialVertex
+          (finiteEvenFourTorusDoubleRefinement H),
+        if finiteEvenFourTorusSpatialVertexCoarseMap H v = e.1 then
+          B (v, e.2)
+        else 1)
   rw [← Finset.prod_mul_distrib]
   apply Finset.prod_congr rfl
   intro v _hv
@@ -238,6 +255,22 @@ theorem finiteEvenFourTorusZ2ResidualSliceGaugeCoarseMap_mul
   classical
   funext v
   unfold finiteEvenFourTorusZ2ResidualSliceGaugeCoarseMap
+  change
+    (∏ w : FiniteEvenFourTorusSpatialVertex
+        (finiteEvenFourTorusDoubleRefinement H),
+      if finiteEvenFourTorusSpatialVertexCoarseMap H w = v then
+        g w * h w
+      else 1) =
+      (∏ w : FiniteEvenFourTorusSpatialVertex
+          (finiteEvenFourTorusDoubleRefinement H),
+        if finiteEvenFourTorusSpatialVertexCoarseMap H w = v then
+          g w
+        else 1) *
+      (∏ w : FiniteEvenFourTorusSpatialVertex
+          (finiteEvenFourTorusDoubleRefinement H),
+        if finiteEvenFourTorusSpatialVertexCoarseMap H w = v then
+          h w
+        else 1)
   rw [← Finset.prod_mul_distrib]
   apply Finset.prod_congr rfl
   intro w _hw
