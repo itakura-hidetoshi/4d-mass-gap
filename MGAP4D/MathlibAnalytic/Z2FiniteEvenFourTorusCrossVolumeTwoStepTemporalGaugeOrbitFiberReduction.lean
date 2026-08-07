@@ -130,7 +130,6 @@ theorem finiteEvenFourTorusZ2GaugeInvariantTwoStepFineOrbitFiberKernelCoefficien
       apply congrArg (fun w : αf → ℝ =>
         finiteGroupOrbitFiberCoefficient Gc αc C w q)
       funext B
-      dsimp [Gf, αf, K, H₂]
       rw [finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel_eq_rightAverage]
     _ = finiteGroupOrbitFiberCoefficient Gc αc C
         (fun B : αf => K B A * scale B) q := by
