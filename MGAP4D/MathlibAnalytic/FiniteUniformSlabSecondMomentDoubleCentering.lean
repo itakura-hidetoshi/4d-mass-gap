@@ -123,7 +123,8 @@ theorem finiteUniformSlabSecondMoment_eq_interaction_add_additive
 /-- Therefore every remaining term outside the interaction kernel is
 boundary-additive and disappears under uniform double centering. -/
 theorem finiteUniformAverageComplement_comp_finiteUniformSlabSecondMoment_eq_interaction
-    {α γ : Type*} [Fintype α] [Nonempty α] [Fintype γ] [Nonempty γ]
+    {α : Type} {γ : Type*}
+    [Fintype α] [Nonempty α] [Fintype γ] [Nonempty γ]
     (left right : α → ℝ)
     (crossing : γ → α → α → ℝ)
     (crossingMean : ℝ)
