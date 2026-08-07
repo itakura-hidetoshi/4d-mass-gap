@@ -8,6 +8,18 @@ open scoped BigOperators InnerProduct
 
 noncomputable section
 
+/-- Pushforward weight of one target point under a map from a finite weighted
+space.  The definition is noncomputable only to hide the equality decision on
+the target type. -/
+noncomputable def finiteProbabilityPushforwardWeight
+    {X Y : Type}
+    [Fintype X]
+    (P : FiniteStrictProbabilityL2Data X)
+    (f : X → Y)
+    (y : Y) : ℝ := by
+  classical
+  exact ∑ x : X, if f x = y then P.weight x else 0
+
 /-- A map between strict finite probability spaces with exact pushforward
 weights.  This is the finite discrete form of a measure-preserving map. -/
 structure FiniteStrictProbabilityMap
@@ -19,7 +31,7 @@ structure FiniteStrictProbabilityMap
   toFun : X → Y
   weight_pushforward :
     ∀ y : Y,
-      (∑ x : X, if toFun x = y then P.weight x else 0) = Q.weight y
+      finiteProbabilityPushforwardWeight P toFun y = Q.weight y
 
 namespace FiniteStrictProbabilityMap
 
@@ -71,9 +83,10 @@ theorem weighted_sum_comp
           if M.toFun x = y then P.weight x * f y else 0 := by
       rw [Finset.sum_comm]
     _ = ∑ y : Y,
-          (∑ x : X, if M.toFun x = y then P.weight x else 0) * f y := by
+          finiteProbabilityPushforwardWeight P M.toFun y * f y := by
       apply Finset.sum_congr rfl
       intro y _hy
+      unfold finiteProbabilityPushforwardWeight
       rw [Finset.sum_mul]
       apply Finset.sum_congr rfl
       intro x _hx
@@ -83,7 +96,7 @@ theorem weighted_sum_comp
     _ = ∑ y : Y, Q.weight y * f y := by
       apply Finset.sum_congr rfl
       intro y _hy
-      rw [M.weight_pushforward]
+      rw [M.weight_pushforward y]
 
 /-- Coordinate realization of the measure-preserving pullback.  It decodes a
 target square-root-density vector to its observable, pulls the observable back,
@@ -135,10 +148,11 @@ noncomputable def l2PullbackLinearIsometry
 def id
     (P : FiniteStrictProbabilityL2Data X) :
     FiniteStrictProbabilityMap X X P P where
-  toFun := id
+  toFun := fun x => x
   weight_pushforward := by
     classical
     intro y
+    unfold finiteProbabilityPushforwardWeight
     simp
 
 /-- Composition of exact finite probability maps is again an exact finite
@@ -154,6 +168,7 @@ def comp
     have h := M.weighted_sum_comp
       (fun y : Y => if N.toFun y = z then (1 : ℝ) else 0)
     have hN := N.weight_pushforward z
+    unfold finiteProbabilityPushforwardWeight at hN ⊢
     calc
       (∑ x : X,
           if (N.toFun ∘ M.toFun) x = z then P.weight x else 0) =
@@ -211,10 +226,12 @@ theorem l2PullbackLinearMap_id
     (P : FiniteStrictProbabilityL2Data X)
     (x : FiniteProbabilityL2Carrier X) :
     (FiniteStrictProbabilityMap.id P).l2PullbackLinearMap x = x := by
+  ext i
+  rw [l2PullbackLinearMap_apply]
   change
-    P.observableEmbedLinearMap
-        (P.coordinateObserveLinearMap x) = x
-  exact P.observableEmbed_coordinateObserve x
+    Real.sqrt (P.weight i) *
+        (x i / Real.sqrt (P.weight i)) = x i
+  field_simp [P.sqrt_weight_ne_zero i]
 
 end FiniteStrictProbabilityMap
 
