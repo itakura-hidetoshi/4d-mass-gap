@@ -112,6 +112,42 @@ theorem finiteEvenFourTorusZ2GaugeInvariantTwoStepOneSlabTransferIntertwiningRes
           H β energyIdentity energyNontrivial hβ hEnergy f) = _
   rw [finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_eq_normalization_smul_raw]
   rw [finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_eq_normalization_smul_raw]
+  change
+    (finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
+      (finiteEvenFourTorusDoubleRefinement
+        (finiteEvenFourTorusDoubleRefinement H))
+      β energyIdentity energyNontrivial hβ hEnergy : ℝ) •
+        finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer
+          (finiteEvenFourTorusDoubleRefinement
+            (finiteEvenFourTorusDoubleRefinement H))
+          β energyIdentity energyNontrivial hβ hEnergy
+          (finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbeddingLinearIsometry H f) -
+      finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbeddingLinearIsometry H
+        ((finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
+          H β energyIdentity energyNontrivial hβ hEnergy : ℝ) •
+          finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer
+            H β energyIdentity energyNontrivial hβ hEnergy f) =
+      (finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
+        (finiteEvenFourTorusDoubleRefinement
+          (finiteEvenFourTorusDoubleRefinement H))
+        β energyIdentity energyNontrivial hβ hEnergy : ℝ) •
+        (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer
+            (finiteEvenFourTorusDoubleRefinement
+              (finiteEvenFourTorusDoubleRefinement H))
+            β energyIdentity energyNontrivial hβ hEnergy
+            (finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbeddingLinearIsometry H f) -
+          finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbeddingLinearIsometry H
+            (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer
+              H β energyIdentity energyNontrivial hβ hEnergy f)) +
+      ((finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
+          (finiteEvenFourTorusDoubleRefinement
+            (finiteEvenFourTorusDoubleRefinement H))
+          β energyIdentity energyNontrivial hβ hEnergy : ℝ) -
+        (finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
+          H β energyIdentity energyNontrivial hβ hEnergy : ℝ)) •
+        finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbeddingLinearIsometry H
+          (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer
+            H β energyIdentity energyNontrivial hβ hEnergy f)
   rw [map_smul]
   module
 
@@ -149,24 +185,20 @@ theorem finiteEvenFourTorusZ2GaugeInvariantTwoStepOneSlabRawTransferIntertwining
                   (finiteEvenFourTorusDoubleRefinement H) A)) *
             f.1 b) := by
   change
-    (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer
+    (finiteEvenFourTorusZ2UnfixedGaugeOneSlabRawTransfer
         (finiteEvenFourTorusDoubleRefinement
           (finiteEvenFourTorusDoubleRefinement H))
         β energyIdentity energyNontrivial hβ hEnergy
-        (finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbeddingLinearIsometry H f)).1 A -
+        (finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbeddingLinearIsometry H f).1) A -
       (finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbeddingLinearIsometry H
         (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer
           H β energyIdentity energyNontrivial hβ hEnergy f)).1 A = _
-  rw [finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer_apply_coe]
+  unfold finiteEvenFourTorusZ2UnfixedGaugeOneSlabRawTransfer
+  rw [finiteKernelOperator_apply]
+  simp_rw [finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbedding_apply_coe_eq_scale_mul_rawPullback]
   rw [finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer_apply_coe]
   unfold finiteEvenFourTorusZ2UnfixedGaugeOneSlabRawTransfer
-  rw [finiteKernelOperator_apply, finiteKernelOperator_apply]
-  rw [finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbedding_apply_coe_eq_scale_mul_rawPullback]
-  apply congrArg₂ (· - ·)
-  · apply Finset.sum_congr rfl
-    intro B _hB
-    rw [finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbedding_apply_coe_eq_scale_mul_rawPullback]
-  · ring
+  rw [finiteKernelOperator_apply]
 
 /-- Direct two-step raw-kernel compatibility is exactly the displayed finite-sum
 equation for every coarse invariant observable and finest configuration. -/
@@ -203,13 +235,16 @@ theorem finiteEvenFourTorusZ2GaugeInvariantTwoStepOneSlabRawTransferIntertwining
   constructor
   · intro h f A
     have hf := LinearMap.congr_fun h f
-    have hA := congrArg
-      (fun u : FiniteEvenFourTorusZ2GaugeInvariantSliceHilbert
-        (finiteEvenFourTorusDoubleRefinement
-          (finiteEvenFourTorusDoubleRefinement H)) => u.1 A) hf
+    have hA :
+        (finiteEvenFourTorusZ2GaugeInvariantTwoStepOneSlabRawTransferIntertwiningResidualLinearMap
+          H β energyIdentity energyNontrivial hβ hEnergy f).1 A = 0 := by
+      simpa using congrArg
+        (fun u : FiniteEvenFourTorusZ2GaugeInvariantSliceHilbert
+          (finiteEvenFourTorusDoubleRefinement
+            (finiteEvenFourTorusDoubleRefinement H)) => u.1 A) hf
     rw [finiteEvenFourTorusZ2GaugeInvariantTwoStepOneSlabRawTransferIntertwiningResidual_apply_coe_eq_kernel_sums]
       at hA
-    simpa using sub_eq_zero.mp hA
+    exact sub_eq_zero.mp hA
   · intro h
     apply LinearMap.ext
     intro f
@@ -281,6 +316,31 @@ structure Z2FiniteEvenFourTorusCrossVolumeTwoStepKernelFixedSectorCompatibilityP
         ((finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbeddingLinearIsometry H).toLinearMap.comp
           (finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabRawTransfer
             H β energyIdentity energyNontrivial hβ hEnergy).toLinearMap)
+  rawKernelCriterion :
+    rawTransferResidual = 0 ↔
+      ∀ (f : FiniteEvenFourTorusZ2GaugeInvariantSliceHilbert H)
+        (A : FiniteEvenFourTorusZ2SliceConfiguration
+          (finiteEvenFourTorusDoubleRefinement
+            (finiteEvenFourTorusDoubleRefinement H))),
+        (∑ B : FiniteEvenFourTorusZ2SliceConfiguration
+            (finiteEvenFourTorusDoubleRefinement
+              (finiteEvenFourTorusDoubleRefinement H)),
+          finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel
+              (finiteEvenFourTorusDoubleRefinement
+                (finiteEvenFourTorusDoubleRefinement H))
+              β energyIdentity energyNontrivial hβ hEnergy B A *
+            (finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbeddingPointwiseScale H B *
+              f.1
+                (finiteEvenFourTorusZ2SliceConfigurationCoarseMap H
+                  (finiteEvenFourTorusZ2SliceConfigurationCoarseMap
+                    (finiteEvenFourTorusDoubleRefinement H) B)))) =
+        finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbeddingPointwiseScale H A *
+          (∑ b : FiniteEvenFourTorusZ2SliceConfiguration H,
+            finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernel
+                H β energyIdentity energyNontrivial hβ hEnergy b
+                (finiteEvenFourTorusZ2SliceConfigurationCoarseMap H
+                  (finiteEvenFourTorusZ2SliceConfigurationCoarseMap
+                    (finiteEvenFourTorusDoubleRefinement H) A)) * f.1 b)
   groundFixedSectorCriterion :
     finiteEvenFourTorusZ2GaugeInvariantTwoStepGroundProjectorIntertwiningResidualLinearMap
         H β energyIdentity energyNontrivial hβ hEnergy = 0 ↔
@@ -317,6 +377,9 @@ noncomputable def z2FiniteEvenFourTorusCrossVolumeTwoStepKernelFixedSectorCompat
   rawTransferResidual_eq := rfl
   normalizedTransferDecomposition :=
     finiteEvenFourTorusZ2GaugeInvariantTwoStepOneSlabTransferIntertwiningResidual_raw_normalization_decomposition
+      H β energyIdentity energyNontrivial hβ hEnergy
+  rawKernelCriterion :=
+    finiteEvenFourTorusZ2GaugeInvariantTwoStepOneSlabRawTransferIntertwiningResidual_eq_zero_iff_kernelEquation
       H β energyIdentity energyNontrivial hβ hEnergy
   groundFixedSectorCriterion :=
     finiteEvenFourTorusZ2GaugeInvariantTwoStepGroundProjectorIntertwiningResidual_eq_zero_iff_fixedSectorDecomposition
