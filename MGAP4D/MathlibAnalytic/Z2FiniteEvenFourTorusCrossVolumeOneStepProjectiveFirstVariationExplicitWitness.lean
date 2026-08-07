@@ -160,53 +160,45 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepProjectiveFirstVariation_expli
         0 0 1
         finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration
         1 1 1 ≠ 0 := by
-  have hformula :=
-    finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationFiberObstructionFirstVariation_identityAnchor_eq_spatialDefect_of_coarseMap_eq_one
-      0 0 1 finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration
-      finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration_coarseMap_eq_one
-  have hOne := finiteEvenFourTorusZ2SpatialWilsonAction_zero_one_one
-    (finiteEvenFourTorusDoubleRefinement 0)
-  have hk :
-      0 < (Fintype.card
-        (finiteEvenFourTorusZ2SliceConfigurationCoarseHom 0).ker : ℝ) := by
-    exact_mod_cast (Fintype.card_pos :
-      0 < Fintype.card (finiteEvenFourTorusZ2SliceConfigurationCoarseHom 0).ker)
-  have hs :=
-    finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale_zero_pos
-  have hS :=
-    finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration_spatialWilsonAction_pos
-  have hk0 :
-      (Fintype.card
-        (finiteEvenFourTorusZ2SliceConfigurationCoarseHom 0).ker : ℝ) ≠ 0 :=
-    ne_of_gt hk
-  have hs0 :
-      finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale 0 ≠ 0 :=
-    ne_of_gt hs
-  have hdiff :
+  let k : ℝ :=
+    Fintype.card (finiteEvenFourTorusZ2SliceConfigurationCoarseHom 0).ker
+  let s : ℝ := finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale 0
+  let d : ℝ :=
+    finiteEvenFourTorusZ2SpatialWilsonAction
+        (finiteEvenFourTorusDoubleRefinement 0) 0 1
+        finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration -
       finiteEvenFourTorusZ2SpatialWilsonAction
-          (finiteEvenFourTorusDoubleRefinement 0) 0 1
-          finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration -
-        finiteEvenFourTorusZ2SpatialWilsonAction
-          (finiteEvenFourTorusDoubleRefinement 0) 0 1 1 ≠ 0 := by
-    rw [hOne]
-    exact ne_of_gt hS
-  have hRhs :
-      -(1 / 2 : ℝ) *
-          (Fintype.card
-            (finiteEvenFourTorusZ2SliceConfigurationCoarseHom 0).ker : ℝ) *
-          (finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale 0) ^ 2 *
-          (finiteEvenFourTorusZ2SpatialWilsonAction
-              (finiteEvenFourTorusDoubleRefinement 0) 0 1
-              finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration -
-            finiteEvenFourTorusZ2SpatialWilsonAction
-              (finiteEvenFourTorusDoubleRefinement 0) 0 1 1) ≠ 0 := by
+        (finiteEvenFourTorusDoubleRefinement 0) 0 1 1
+  have hformula :
+      finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationFiberObstructionFirstVariation
+          0 0 1
+          finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration
+          1 1 1 =
+        -(1 / 2 : ℝ) * k * s ^ 2 * d := by
+    dsimp [k, s, d]
+    exact
+      finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationFiberObstructionFirstVariation_identityAnchor_eq_spatialDefect_of_coarseMap_eq_one
+        0 0 1 finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration
+        finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration_coarseMap_eq_one
+  have hk0 : k ≠ 0 := by
+    dsimp [k]
+    exact_mod_cast (Fintype.card_ne_zero :
+      Fintype.card (finiteEvenFourTorusZ2SliceConfigurationCoarseHom 0).ker ≠ 0)
+  have hs0 : s ≠ 0 := by
+    exact ne_of_gt finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale_zero_pos
+  have hd0 : d ≠ 0 := by
+    dsimp [d]
+    rw [finiteEvenFourTorusZ2SpatialWilsonAction_zero_one_one]
+    exact ne_of_gt
+      finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration_spatialWilsonAction_pos
+  have hprod : -(1 / 2 : ℝ) * k * s ^ 2 * d ≠ 0 := by
     exact mul_ne_zero
       (mul_ne_zero
         (mul_ne_zero (by norm_num) hk0)
         (pow_ne_zero 2 hs0))
-      hdiff
+      hd0
   intro hzero
-  exact hRhs (hformula.symm.trans hzero)
+  exact hprod (hformula.symm.trans hzero)
 
 /-- Consequently the actual operator-norm-normalized one-step cross-volume
 transfer is nonintertwining throughout a whole sufficiently small positive
