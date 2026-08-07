@@ -28,42 +28,16 @@ noncomputable def finiteSurjectiveGroupHomSection
     φ (finiteSurjectiveGroupHomSection φ hφ y) = y :=
   Classical.choose_spec (hφ y)
 
-/-- Fibre of a group homomorphism over one target element. -/
-abbrev FiniteGroupHomFiber
+/-- A finite ambient group gives the kernel of any group homomorphism a
+noncomputable finite enumeration without exposing a decidable membership
+predicate in theorem statements. -/
+noncomputable instance finiteGroupHomKerFintype
     {G H : Type}
     [Group G]
     [Group H]
-    (φ : G →* H)
-    (y : H) : Type :=
-  {x : G // φ x = y}
-
-/-- Every fibre of a surjective group homomorphism is canonically equivalent,
-once a section point is chosen, to the kernel. -/
-noncomputable def finiteSurjectiveGroupHomFiberEquivKer
-    {G H : Type}
-    [Group G]
-    [Group H]
-    (φ : G →* H)
-    (hφ : Function.Surjective φ)
-    (y : H) :
-    FiniteGroupHomFiber φ y ≃ φ.ker where
-  toFun x :=
-    ⟨x.1 * (finiteSurjectiveGroupHomSection φ hφ y)⁻¹, by
-      change φ (x.1 * (finiteSurjectiveGroupHomSection φ hφ y)⁻¹) = 1
-      rw [map_mul, map_inv, x.2,
-        finiteSurjectiveGroupHomSection_map]
-      simp⟩
-  invFun k :=
-    ⟨k.1 * finiteSurjectiveGroupHomSection φ hφ y, by
-      change φ (k.1 * finiteSurjectiveGroupHomSection φ hφ y) = y
-      rw [map_mul, k.2, finiteSurjectiveGroupHomSection_map]
-      simp⟩
-  left_inv x := by
-    apply Subtype.ext
-    simp [mul_assoc]
-  right_inv k := by
-    apply Subtype.ext
-    simp [mul_assoc]
+    [Fintype G]
+    (φ : G →* H) : Fintype φ.ker :=
+  Fintype.ofFinite _
 
 /-- A surjective finite group homomorphism has the usual set-level product
 decomposition into its kernel and target.  No homomorphic section is claimed. -/
@@ -83,13 +57,39 @@ noncomputable def finiteSurjectiveGroupHomEquivKerProd
   invFun ky :=
     ky.1.1 * finiteSurjectiveGroupHomSection φ hφ ky.2
   left_inv x := by
+    change
+      (x * (finiteSurjectiveGroupHomSection φ hφ (φ x))⁻¹) *
+          finiteSurjectiveGroupHomSection φ hφ (φ x) = x
     simp [mul_assoc]
   right_inv ky := by
     rcases ky with ⟨k, y⟩
+    have hk : φ k.1 = 1 := k.2
+    have hmap :
+        φ (k.1 * finiteSurjectiveGroupHomSection φ hφ y) = y := by
+      rw [map_mul, hk, finiteSurjectiveGroupHomSection_map]
+      simp
     apply Prod.ext
     · apply Subtype.ext
+      change
+        (k.1 * finiteSurjectiveGroupHomSection φ hφ y) *
+            (finiteSurjectiveGroupHomSection φ hφ
+              (φ (k.1 * finiteSurjectiveGroupHomSection φ hφ y)))⁻¹ =
+          k.1
+      rw [hmap]
       simp [mul_assoc]
-    · simp
+    · exact hmap
+
+/-- The second component of the product decomposition is exactly the image
+under the original homomorphism. -/
+@[simp] theorem finiteSurjectiveGroupHomEquivKerProd_snd
+    {G H : Type}
+    [Group G]
+    [Group H]
+    (φ : G →* H)
+    (hφ : Function.Surjective φ)
+    (x : G) :
+    (finiteSurjectiveGroupHomEquivKerProd φ hφ x).2 = φ x :=
+  rfl
 
 /-- Cardinality decomposition for a surjective homomorphism of finite groups. -/
 theorem finiteSurjectiveGroupHom_card_eq_card_ker_mul_card
@@ -103,20 +103,6 @@ theorem finiteSurjectiveGroupHom_card_eq_card_ker_mul_card
     Fintype.card G = Fintype.card φ.ker * Fintype.card H := by
   rw [← Fintype.card_prod]
   exact Fintype.card_congr (finiteSurjectiveGroupHomEquivKerProd φ hφ)
-
-/-- Every fibre of a surjective homomorphism of finite groups has exactly the
-kernel cardinality. -/
-theorem finiteSurjectiveGroupHom_fiber_card
-    {G H : Type}
-    [Group G]
-    [Group H]
-    [Fintype G]
-    [Fintype H]
-    (φ : G →* H)
-    (hφ : Function.Surjective φ)
-    (y : H) :
-    Fintype.card (FiniteGroupHomFiber φ y) = Fintype.card φ.ker :=
-  Fintype.card_congr (finiteSurjectiveGroupHomFiberEquivKer φ hφ y)
 
 /-- Uniform probability on a finite group is pushed forward exactly to uniform
 probability by every surjective group homomorphism. -/
@@ -134,25 +120,38 @@ theorem finiteSurjectiveGroupHom_uniform_pushforward_weight
       (finiteUniformProbabilityL2Data H).weight y := by
   classical
   unfold finiteProbabilityPushforwardWeight
-  rw [← Fintype.sum_subtype]
   change
-    (∑ _x : FiniteGroupHomFiber φ y,
-        (Fintype.card G : ℝ)⁻¹) =
+    (∑ x : G,
+      if φ x = y then (Fintype.card G : ℝ)⁻¹ else 0) =
       (Fintype.card H : ℝ)⁻¹
-  rw [Fintype.sum_const]
-  simp only [nsmul_eq_mul]
-  rw [finiteSurjectiveGroupHom_fiber_card φ hφ y]
-  have hcard := finiteSurjectiveGroupHom_card_eq_card_ker_mul_card φ hφ
-  have hker : (Fintype.card φ.ker : ℝ) ≠ 0 := by
-    exact_mod_cast Fintype.card_ne_zero
-  have hH : (Fintype.card H : ℝ) ≠ 0 := by
-    exact_mod_cast Fintype.card_ne_zero
-  have hcardR :
-      (Fintype.card G : ℝ) =
-        (Fintype.card φ.ker : ℝ) * (Fintype.card H : ℝ) := by
-    exact_mod_cast hcard
-  rw [hcardR]
-  field_simp
+  let E := finiteSurjectiveGroupHomEquivKerProd φ hφ
+  calc
+    (∑ x : G,
+      if φ x = y then (Fintype.card G : ℝ)⁻¹ else 0) =
+      ∑ ky : φ.ker × H,
+        if ky.2 = y then (Fintype.card G : ℝ)⁻¹ else 0 := by
+      exact Fintype.sum_equiv E _ _ (fun x => by rfl)
+    _ = ∑ k : φ.ker, ∑ z : H,
+        if z = y then (Fintype.card G : ℝ)⁻¹ else 0 := by
+      rw [Fintype.sum_prod_type]
+    _ = ∑ _k : φ.ker, (Fintype.card G : ℝ)⁻¹ := by
+      apply Finset.sum_congr rfl
+      intro k _hk
+      simp
+    _ = (Fintype.card φ.ker : ℝ) * (Fintype.card G : ℝ)⁻¹ := by
+      simp
+    _ = (Fintype.card H : ℝ)⁻¹ := by
+      have hcard := finiteSurjectiveGroupHom_card_eq_card_ker_mul_card φ hφ
+      have hker : (Fintype.card φ.ker : ℝ) ≠ 0 := by
+        exact_mod_cast Fintype.card_ne_zero
+      have hH : (Fintype.card H : ℝ) ≠ 0 := by
+        exact_mod_cast Fintype.card_ne_zero
+      have hcardR :
+          (Fintype.card G : ℝ) =
+            (Fintype.card φ.ker : ℝ) * (Fintype.card H : ℝ) := by
+        exact_mod_cast hcard
+      rw [hcardR]
+      field_simp [hker, hH]
 
 /-- Bundled exact finite probability map induced by a surjective homomorphism
 between finite groups equipped with their uniform laws. -/
