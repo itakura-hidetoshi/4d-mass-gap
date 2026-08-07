@@ -21,7 +21,7 @@ noncomputable section
   exact (finiteGroupOrbitClass_eq_iff G α x (g • x)).2 ⟨g, rfl⟩
 
 /-- Indicator of one orbit, regarded as an invariant Euclidean vector. -/
-noncomputable def finiteGroupOrbitIndicator
+noncomputable def finiteGroupOrbitInvariantIndicator
     (G α : Type)
     [Group G]
     [Fintype α]
@@ -37,14 +37,14 @@ noncomputable def finiteGroupOrbitIndicator
           if finiteGroupOrbitClass G α x = q then 1 else 0
       rw [finiteGroupOrbitClass_smul G α g x]⟩
 
-@[simp] theorem finiteGroupOrbitIndicator_apply
+@[simp] theorem finiteGroupOrbitInvariantIndicator_apply
     (G α : Type)
     [Group G]
     [Fintype α]
     [MulAction G α]
     (q : FiniteGroupOrbitQuotient G α)
     (x : α) :
-    (finiteGroupOrbitIndicator G α q).1 x =
+    (finiteGroupOrbitInvariantIndicator G α q).1 x =
       if finiteGroupOrbitClass G α x = q then 1 else 0 :=
   rfl
 
@@ -290,7 +290,7 @@ theorem finiteGroupInvariant_crossSum_eq_iff_orbitFiberSums
   classical
   constructor
   · intro h q
-    have hq := h (finiteGroupOrbitIndicator G α q)
+    have hq := h (finiteGroupOrbitInvariantIndicator G α q)
     unfold finiteGroupOrbitFiberCoefficient
     unfold finiteGroupOrbitAggregateCoefficient
     simpa using hq
