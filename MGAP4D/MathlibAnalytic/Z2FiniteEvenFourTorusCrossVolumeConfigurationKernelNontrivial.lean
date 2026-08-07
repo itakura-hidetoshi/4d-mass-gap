@@ -76,7 +76,12 @@ theorem finiteEvenFourTorusZ2SliceConfigurationCoarseMap_singleLinkExcitation
           simp [hwv, hww]
         · simp [hwv]
       rw [hprod]
-      simp [hcv]
+      have hlink :
+          (v, ν) ≠
+            (finiteEvenFourTorusSpatialVertexCoarseMap H w₀, ν) := by
+        intro h
+        exact hcv (congrArg Prod.fst h).symm
+      rw [if_neg hlink]
   · have hprod :
       (∏ w : FiniteEvenFourTorusSpatialVertex
           (finiteEvenFourTorusDoubleRefinement H),
@@ -160,7 +165,11 @@ noncomputable instance finiteEvenFourTorusZ2SliceConfigurationCoarseHomKerNontri
     unfold finiteEvenFourTorusZ2SingleLinkExcitation
     by_cases he : e = finiteEvenFourTorusSpatialLinkCoarseMap H e₂
     · simp [he, z2GaugeNontrivial_mul_self]
-    · simp [he]
+    · have he' :
+          e ≠
+            (finiteEvenFourTorusSpatialVertexCoarseMap H e₂.1, e₂.2) := by
+        simpa [finiteEvenFourTorusSpatialLinkCoarseMap] using he
+      rw [if_neg he', if_neg he']
   have hAne : A ≠ 1 := by
     intro h
     have heval := congrArg
@@ -179,7 +188,7 @@ noncomputable instance finiteEvenFourTorusZ2SliceConfigurationCoarseHomKerNontri
     intro h
     apply hAne
     exact congrArg Subtype.val h
-  exact ⟨⟨1, k, hk⟩⟩
+  exact ⟨⟨1, k, hk.symm⟩⟩
 
 /-- Therefore the configuration coarse-hom kernel cardinality is strictly
 larger than one at every finite side parameter. -/
