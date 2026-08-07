@@ -67,7 +67,7 @@ theorem observableConditionalExpectation_comp
           unfold conditionalFiberWeightedSum
           by_cases hyz : N.toFun y = z
           · simp only [hyz, if_pos]
-          · simp only [hyz, if_neg, Finset.sum_const_zero]
+          · simp [hyz]
     _ = ∑ x : X, ∑ y : Y,
         if N.toFun y = z then
           if M.toFun x = y then P.weight x * f x else 0
