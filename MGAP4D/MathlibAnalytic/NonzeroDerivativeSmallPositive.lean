@@ -18,7 +18,7 @@ theorem HasDerivAt.eventually_ne_zero_right_of_eq_zero_of_ne_zero
     (hderiv : HasDerivAt f d 0)
     (hzero : f 0 = 0)
     (hd : d ≠ 0) :
-    ∀ᶠ β in 𝓝[>] (0 : ℝ), f β ≠ 0 := by
+    ∀ᶠ β in nhdsWithin (0 : ℝ) (Ioi 0), f β ≠ 0 := by
   have hnhds : ({0}ᶜ : Set ℝ) ∈ 𝓝 d := by
     exact IsOpen.mem_nhds isOpen_compl_singleton (by simpa using hd)
   have hslope := hderiv.tendsto_slope_zero_right hnhds
@@ -41,7 +41,7 @@ theorem HasDerivAt.exists_pos_forall_pos_lt_ne_zero_of_eq_zero_of_ne_zero
     ∃ ε : ℝ, 0 < ε ∧ ∀ β : ℝ, 0 < β → β < ε → f β ≠ 0 := by
   have hEvent :=
     hderiv.eventually_ne_zero_right_of_eq_zero_of_ne_zero hzero hd
-  change {β : ℝ | f β ≠ 0} ∈ 𝓝[>] (0 : ℝ) at hEvent
+  change {β : ℝ | f β ≠ 0} ∈ nhdsWithin (0 : ℝ) (Ioi 0) at hEvent
   rcases (mem_nhdsGT_iff_exists_Ioo_subset).1 hEvent with ⟨ε, hε, hsub⟩
   refine ⟨ε, hε, ?_⟩
   intro β hβ hβε
