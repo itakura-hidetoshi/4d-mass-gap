@@ -79,30 +79,45 @@ theorem finiteUniformSlabSecondMoment_eq_interaction_add_additive
   simp_rw [hpoint]
   rw [Finset.sum_add_distrib, Finset.sum_add_distrib,
     Finset.sum_add_distrib]
-  simp_rw [← Finset.mul_sum]
   have hconst' :
       n⁻¹ * ∑ _u : γ, (l ^ 2 + r ^ 2 + 2 * l * r) =
         l ^ 2 + r ^ 2 + 2 * l * r := by
-    calc
-      n⁻¹ * ∑ _u : γ, (l ^ 2 + r ^ 2 + 2 * l * r) =
-          (l ^ 2 + r ^ 2 + 2 * l * r) *
-            (n⁻¹ * ∑ _u : γ, (1 : ℝ)) := by
-        simp [n]
-        field_simp [hn]
-        ring
-      _ = _ := by rw [hconst, mul_one]
+    simpa [n, hn]
   have hl :
       n⁻¹ * ∑ u : γ, (2 * l) * c u = 2 * crossingMean * l := by
-    rw [← Finset.mul_sum]
-    rw [mul_assoc, hmean]
-    ring
+    calc
+      n⁻¹ * ∑ u : γ, (2 * l) * c u =
+          (2 * l) * (n⁻¹ * ∑ u : γ, c u) := by
+        rw [← Finset.mul_sum]
+        ring
+      _ = (2 * l) * crossingMean := by rw [hmean]
+      _ = 2 * crossingMean * l := by ring
   have hr :
       n⁻¹ * ∑ u : γ, (2 * r) * c u = 2 * crossingMean * r := by
-    rw [← Finset.mul_sum]
-    rw [mul_assoc, hmean]
-    ring
-  rw [hl, hr, hconst']
-  ring
+    calc
+      n⁻¹ * ∑ u : γ, (2 * r) * c u =
+          (2 * r) * (n⁻¹ * ∑ u : γ, c u) := by
+        rw [← Finset.mul_sum]
+        ring
+      _ = (2 * r) * crossingMean := by rw [hmean]
+      _ = 2 * crossingMean * r := by ring
+  calc
+    n⁻¹ *
+        ((∑ u : γ, (c u) ^ 2) +
+          (∑ u : γ, (2 * l) * c u) +
+          (∑ u : γ, (2 * r) * c u) +
+          (∑ _u : γ, (l ^ 2 + r ^ 2 + 2 * l * r))) =
+      n⁻¹ * ∑ u : γ, (c u) ^ 2 +
+        (n⁻¹ * ∑ u : γ, (2 * l) * c u) +
+        (n⁻¹ * ∑ u : γ, (2 * r) * c u) +
+        (n⁻¹ * ∑ _u : γ, (l ^ 2 + r ^ 2 + 2 * l * r)) := by ring
+    _ = n⁻¹ * ∑ u : γ, (c u) ^ 2 +
+        2 * crossingMean * l + 2 * crossingMean * r +
+        (l ^ 2 + r ^ 2 + 2 * l * r) := by
+      rw [hl, hr, hconst']
+    _ = n⁻¹ * ∑ u : γ, (c u) ^ 2 + 2 * l * r +
+        l ^ 2 + r ^ 2 + 2 * crossingMean * l + 2 * crossingMean * r := by
+      ring
 
 /-- Therefore every remaining term outside the interaction kernel is
 boundary-additive and disappears under uniform double centering. -/
@@ -123,6 +138,11 @@ theorem finiteUniformAverageComplement_comp_finiteUniformSlabSecondMoment_eq_int
           finiteUniformAverageComplementLinearMap) := by
   apply
     finiteUniformAverageComplement_comp_finiteKernelOperator_congr_of_sub_right_independent
+      (α := α)
+      (K := finiteUniformSlabSecondMoment
+        (α := α) (γ := γ) left right crossing)
+      (L := finiteUniformSlabSecondMomentInteraction
+        (α := α) (γ := γ) left right crossing)
   intro x x' y y'
   rw [finiteUniformSlabSecondMoment_eq_interaction_add_additive
       left right crossing crossingMean hMean x y,
