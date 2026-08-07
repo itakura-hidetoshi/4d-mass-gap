@@ -83,6 +83,7 @@ noncomputable def finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseOrbitKernelCoe
       H β energyIdentity energyNontrivial hβ hEnergy A)
     q
 
+set_option maxHeartbeats 800000 in
 /-- At a fixed finest evaluation configuration, the direct two-step raw-kernel
 equation against every coarsest invariant observable is equivalent to equality
 on every coarsest residual-gauge orbit. -/
