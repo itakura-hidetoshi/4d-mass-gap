@@ -17,7 +17,9 @@ noncomputable def finiteEvenFourTorusZ2GaugeInvariantConfigurationCoarsePullback
       FiniteEvenFourTorusZ2GaugeInvariantSliceHilbert
         (finiteEvenFourTorusDoubleRefinement H) where
   toFun f :=
-    ⟨fun A => f.1 (finiteEvenFourTorusZ2SliceConfigurationCoarseMap H A), by
+    ⟨WithLp.toLp 2 fun A : FiniteEvenFourTorusZ2SliceConfiguration
+        (finiteEvenFourTorusDoubleRefinement H) =>
+        f.1 (finiteEvenFourTorusZ2SliceConfigurationCoarseMap H A), by
       intro g A
       change
         f.1 (finiteEvenFourTorusZ2SliceConfigurationCoarseMap H (g • A)) =
@@ -28,11 +30,11 @@ noncomputable def finiteEvenFourTorusZ2GaugeInvariantConfigurationCoarsePullback
         (finiteEvenFourTorusZ2SliceConfigurationCoarseMap H A)⟩
   map_add' f g := by
     apply Subtype.ext
-    funext A
+    ext A
     rfl
   map_smul' c f := by
     apply Subtype.ext
-    funext A
+    ext A
     rfl
 
 @[simp] theorem finiteEvenFourTorusZ2GaugeInvariantConfigurationCoarsePullbackLinearMap_apply
