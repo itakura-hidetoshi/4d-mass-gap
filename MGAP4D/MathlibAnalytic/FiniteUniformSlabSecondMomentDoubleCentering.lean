@@ -46,8 +46,10 @@ theorem finiteUniformSlabSecondMoment_eq_interaction_add_additive
     (hMean : ∀ x y : α,
       (Fintype.card γ : ℝ)⁻¹ * ∑ u : γ, crossing u x y = crossingMean)
     (x y : α) :
-    finiteUniformSlabSecondMoment left right crossing x y =
-      finiteUniformSlabSecondMomentInteraction left right crossing x y +
+    finiteUniformSlabSecondMoment
+        (α := α) (γ := γ) left right crossing x y =
+      finiteUniformSlabSecondMomentInteraction
+          (α := α) (γ := γ) left right crossing x y +
         (left x) ^ 2 + (right y) ^ 2 +
         2 * crossingMean * left x + 2 * crossingMean * right y := by
   classical
@@ -60,8 +62,6 @@ theorem finiteUniformSlabSecondMoment_eq_interaction_add_additive
   let c : γ → ℝ := fun u => crossing u x y
   have hmean : n⁻¹ * ∑ u : γ, c u = crossingMean := by
     simpa [n, c] using hMean x y
-  have hconst : n⁻¹ * ∑ _u : γ, (1 : ℝ) = 1 := by
-    simp [n, hn]
   unfold finiteUniformSlabSecondMoment
     finiteUniformSlabSecondMomentInteraction
     finiteUniformCrossingSecondMoment
@@ -82,7 +82,8 @@ theorem finiteUniformSlabSecondMoment_eq_interaction_add_additive
   have hconst' :
       n⁻¹ * ∑ _u : γ, (l ^ 2 + r ^ 2 + 2 * l * r) =
         l ^ 2 + r ^ 2 + 2 * l * r := by
-    simpa [n, hn]
+    simp [n]
+    field_simp [hn]
   have hl :
       n⁻¹ * ∑ u : γ, (2 * l) * c u = 2 * crossingMean * l := by
     calc
@@ -130,11 +131,13 @@ theorem finiteUniformAverageComplement_comp_finiteUniformSlabSecondMoment_eq_int
       (Fintype.card γ : ℝ)⁻¹ * ∑ u : γ, crossing u x y = crossingMean) :
     finiteUniformAverageComplementLinearMap.comp
         ((finiteKernelOperator
-          (finiteUniformSlabSecondMoment left right crossing)).toLinearMap.comp
+          (finiteUniformSlabSecondMoment
+            (α := α) (γ := γ) left right crossing)).toLinearMap.comp
           finiteUniformAverageComplementLinearMap) =
       finiteUniformAverageComplementLinearMap.comp
         ((finiteKernelOperator
-          (finiteUniformSlabSecondMomentInteraction left right crossing)).toLinearMap.comp
+          (finiteUniformSlabSecondMomentInteraction
+            (α := α) (γ := γ) left right crossing)).toLinearMap.comp
           finiteUniformAverageComplementLinearMap) := by
   apply
     finiteUniformAverageComplement_comp_finiteKernelOperator_congr_of_sub_right_independent
