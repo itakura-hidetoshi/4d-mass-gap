@@ -111,11 +111,25 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepKernelEquation_iff_orbitFiberC
         H β energyIdentity energyNontrivial hβ hEnergy A)
       (finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseKernelWeight
         H β energyIdentity energyNontrivial hβ hEnergy A)
-  simpa [finiteEvenFourTorusZ2GaugeInvariantOneStepFineKernelWeight,
-    finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseKernelWeight,
-    finiteEvenFourTorusZ2GaugeInvariantOneStepFineOrbitFiberKernelCoefficient,
-    finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseOrbitKernelCoefficient,
-    Finset.mul_sum, mul_assoc] using hGeneric
+  constructor
+  · intro h
+    have hOrbit := hGeneric.mp (by
+      intro f
+      simpa only [finiteEvenFourTorusZ2GaugeInvariantOneStepFineKernelWeight,
+        finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseKernelWeight,
+        Finset.mul_sum, mul_assoc] using h f)
+    intro q
+    simpa only [finiteEvenFourTorusZ2GaugeInvariantOneStepFineOrbitFiberKernelCoefficient,
+      finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseOrbitKernelCoefficient] using hOrbit q
+  · intro h
+    have hFunctional := hGeneric.mpr (by
+      intro q
+      simpa only [finiteEvenFourTorusZ2GaugeInvariantOneStepFineOrbitFiberKernelCoefficient,
+        finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseOrbitKernelCoefficient] using h q)
+    intro f
+    simpa only [finiteEvenFourTorusZ2GaugeInvariantOneStepFineKernelWeight,
+      finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseKernelWeight,
+      Finset.mul_sum, mul_assoc] using hFunctional f
 
 /-- Package-G one-step raw transfer residual vanishes exactly when the actual
 fine kernel, after coarse-map and gauge-orbit aggregation with the exact
