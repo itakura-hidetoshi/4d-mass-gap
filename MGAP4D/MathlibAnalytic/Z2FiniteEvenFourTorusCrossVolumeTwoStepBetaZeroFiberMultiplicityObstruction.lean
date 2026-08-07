@@ -127,8 +127,8 @@ theorem finiteEvenFourTorusZ2GaugeInvariantTwoStepBoltzmannFineOrbitFiberCoeffic
             (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
             (FiniteEvenFourTorusZ2SliceConfiguration H)
             (finiteEvenFourTorusZ2SliceConfigurationTwoStepCoarseHom H B) = q
-        · simp [finiteEvenFourTorusZ2SliceConfigurationTwoStepCoarseHom_apply, hBq]
-        · simp [finiteEvenFourTorusZ2SliceConfigurationTwoStepCoarseHom_apply, hBq]
+        · simp [finiteEvenFourTorusZ2SliceConfigurationTwoStepCoarseHom_apply]
+        · simp [finiteEvenFourTorusZ2SliceConfigurationTwoStepCoarseHom_apply]
     _ = finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbeddingCardinalityScale H *
         ((Fintype.card (finiteEvenFourTorusZ2SliceConfigurationTwoStepCoarseHom H).ker : ℝ) *
           finiteGroupOrbitMass
@@ -167,8 +167,15 @@ theorem finiteEvenFourTorusZ2GaugeInvariantTwoStepBoltzmannCoarseOrbitCoefficien
   by_cases hbq : finiteGroupOrbitClass
       (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
       (FiniteEvenFourTorusZ2SliceConfiguration H) b = q
-  · simp [hbq, eq_comm]
-  · simp [hbq, eq_comm]
+  · have hqb : q = finiteGroupOrbitClass
+        (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+        (FiniteEvenFourTorusZ2SliceConfiguration H) b := hbq.symm
+    rw [if_pos hbq, if_pos hqb, mul_one]
+  · have hqb : q ≠ finiteGroupOrbitClass
+        (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+        (FiniteEvenFourTorusZ2SliceConfiguration H) b := by
+      exact fun h => hbq h.symm
+    rw [if_neg hbq, if_neg hqb, mul_zero]
 
 /-- The direct `β = 0` Boltzmann balance holds exactly when the composed
 configuration coarse hom has singleton kernel. -/
@@ -197,17 +204,28 @@ theorem finiteEvenFourTorusZ2TwoStepBoltzmannOrbitFiberBalance_beta_zero_iff_car
           (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
           (FiniteEvenFourTorusZ2SliceConfiguration H) q ≠ 0 :=
       ne_of_gt (finiteGroupOrbitMass_pos _ _ q)
+    have hkm :
+        (Fintype.card (finiteEvenFourTorusZ2SliceConfigurationTwoStepCoarseHom H).ker : ℝ) *
+            finiteGroupOrbitMass
+              (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+              (FiniteEvenFourTorusZ2SliceConfiguration H) q =
+          finiteGroupOrbitMass
+            (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+            (FiniteEvenFourTorusZ2SliceConfiguration H) q := by
+      apply mul_left_cancel₀ hc
+      simpa [mul_assoc] using hEq
     have hkR :
         (Fintype.card (finiteEvenFourTorusZ2SliceConfigurationTwoStepCoarseHom H).ker : ℝ) = 1 := by
       apply mul_right_cancel₀ hm
-      apply mul_left_cancel₀ hc
-      simpa [mul_assoc] using hEq
+      simpa using hkm
     exact_mod_cast hkR
   · intro hker A q
+    have hkerR :
+        (Fintype.card (finiteEvenFourTorusZ2SliceConfigurationTwoStepCoarseHom H).ker : ℝ) = 1 := by
+      exact_mod_cast hker
     rw [finiteEvenFourTorusZ2GaugeInvariantTwoStepBoltzmannFineOrbitFiberCoefficient_beta_zero,
-      finiteEvenFourTorusZ2GaugeInvariantTwoStepBoltzmannCoarseOrbitCoefficient_beta_zero]
-    norm_cast at hker
-    rw [hker]
+      finiteEvenFourTorusZ2GaugeInvariantTwoStepBoltzmannCoarseOrbitCoefficient_beta_zero,
+      hkerR]
     ring
 
 /-- The composed direct two-step coarse hom also has nontrivial kernel. -/
@@ -230,8 +248,9 @@ noncomputable instance finiteEvenFourTorusZ2SliceConfigurationTwoStepCoarseHomKe
     intro h
     apply hk
     apply Subtype.ext
-    exact congrArg Subtype.val h
-  exact ⟨⟨1, K, hK⟩⟩
+    have hval := congrArg Subtype.val h
+    simpa [K] using hval
+  exact ⟨⟨1, K, hK.symm⟩⟩
 
 /-- Direct two-step kernel cardinality is strictly larger than one. -/
 theorem finiteEvenFourTorusZ2SliceConfigurationTwoStepCoarseHom_card_ker_gt_one
