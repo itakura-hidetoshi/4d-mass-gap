@@ -163,14 +163,14 @@ noncomputable instance finiteEvenFourTorusZ2SliceConfigurationCoarseHomKerNontri
       hemap]
     funext e
     unfold finiteEvenFourTorusZ2SingleLinkExcitation
+    change
+      (if e = finiteEvenFourTorusSpatialLinkCoarseMap H e₂ then
+          z2GaugeNontrivial else 1) *
+        (if e = finiteEvenFourTorusSpatialLinkCoarseMap H e₂ then
+          z2GaugeNontrivial else 1) = 1
     by_cases he : e = finiteEvenFourTorusSpatialLinkCoarseMap H e₂
-    · simp [he, z2GaugeNontrivial_mul_self]
-    · have he' :
-          e ≠
-            (finiteEvenFourTorusSpatialVertexCoarseMap H e₂.1, e₂.2) := by
-        simpa [finiteEvenFourTorusSpatialLinkCoarseMap] using he
-      simp only [if_neg he']
-      rfl
+    · rw [if_pos he, z2GaugeNontrivial_mul_self]
+    · rw [if_neg he, one_mul]
   have hAne : A ≠ 1 := by
     intro h
     have heval := congrArg
