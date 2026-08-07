@@ -178,44 +178,35 @@ theorem finiteEvenFourTorusZ2GaugeInvariantTwoStepOneSlabRawTransferIntertwining
 /-- The direct two-step Boltzmann balance is literally an equality of finite
 exponential action sums on every coarsest residual-gauge orbit. -/
 theorem finiteEvenFourTorusZ2TwoStepBoltzmannOrbitFiberBalance_iff_explicitSums
-    (H : ℕ)
-    (β energyIdentity energyNontrivial : ℝ)
-    (hβ : 0 ≤ β)
-    (hEnergy : energyIdentity ≤ energyNontrivial) :
+    (H : ℕ) (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 ≤ β) (hEnergy : energyIdentity ≤ energyNontrivial) :
     FiniteEvenFourTorusZ2TwoStepBoltzmannOrbitFiberBalance
         H β energyIdentity energyNontrivial hβ hEnergy ↔
-      ∀ (A : FiniteEvenFourTorusZ2SliceConfiguration
-          (finiteEvenFourTorusDoubleRefinement
-            (finiteEvenFourTorusDoubleRefinement H)))
-        (q : FiniteEvenFourTorusZ2ResidualGaugeOrbit H),
-        (∑ B : FiniteEvenFourTorusZ2SliceConfiguration
-            (finiteEvenFourTorusDoubleRefinement
-              (finiteEvenFourTorusDoubleRefinement H)),
-          if finiteGroupOrbitClass
-              (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
-              (FiniteEvenFourTorusZ2SliceConfiguration H)
-              (finiteEvenFourTorusZ2SliceConfigurationCoarseMap H
-                (finiteEvenFourTorusZ2SliceConfigurationCoarseMap
-                  (finiteEvenFourTorusDoubleRefinement H) B)) = q then
-            Real.exp (-β *
-              finiteEvenFourTorusZ2TemporalGaugeOneSlabAction
-                (finiteEvenFourTorusDoubleRefinement
-                  (finiteEvenFourTorusDoubleRefinement H))
-                β energyIdentity energyNontrivial B A) *
-              finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbeddingPointwiseScale H B
-          else 0) =
-        ∑ b : FiniteEvenFourTorusZ2SliceConfiguration H,
-          if finiteGroupOrbitClass
-              (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
-              (FiniteEvenFourTorusZ2SliceConfiguration H) b = q then
-            finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbeddingPointwiseScale H A *
-              Real.exp (-β *
-                finiteEvenFourTorusZ2TemporalGaugeOneSlabAction
-                  H β energyIdentity energyNontrivial b
-                    (finiteEvenFourTorusZ2SliceConfigurationCoarseMap H
-                      (finiteEvenFourTorusZ2SliceConfigurationCoarseMap
-                        (finiteEvenFourTorusDoubleRefinement H) A)))
-          else 0 := by
+    ∀ (A : FiniteEvenFourTorusZ2SliceConfiguration
+        (finiteEvenFourTorusDoubleRefinement (finiteEvenFourTorusDoubleRefinement H)))
+      (q : FiniteEvenFourTorusZ2ResidualGaugeOrbit H),
+      (∑ B : FiniteEvenFourTorusZ2SliceConfiguration
+          (finiteEvenFourTorusDoubleRefinement (finiteEvenFourTorusDoubleRefinement H)),
+        if finiteGroupOrbitClass (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+            (FiniteEvenFourTorusZ2SliceConfiguration H)
+            (finiteEvenFourTorusZ2SliceConfigurationCoarseMap H
+              (finiteEvenFourTorusZ2SliceConfigurationCoarseMap
+                (finiteEvenFourTorusDoubleRefinement H) B)) = q then
+          Real.exp (-β * finiteEvenFourTorusZ2TemporalGaugeOneSlabAction
+            (finiteEvenFourTorusDoubleRefinement (finiteEvenFourTorusDoubleRefinement H))
+            β energyIdentity energyNontrivial B A) *
+            finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbeddingPointwiseScale H B
+        else 0) =
+      ∑ b : FiniteEvenFourTorusZ2SliceConfiguration H,
+        if finiteGroupOrbitClass (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+            (FiniteEvenFourTorusZ2SliceConfiguration H) b = q then
+          finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbeddingPointwiseScale H A *
+            Real.exp (-β * finiteEvenFourTorusZ2TemporalGaugeOneSlabAction
+              H β energyIdentity energyNontrivial b
+                (finiteEvenFourTorusZ2SliceConfigurationCoarseMap H
+                  (finiteEvenFourTorusZ2SliceConfigurationCoarseMap
+                    (finiteEvenFourTorusDoubleRefinement H) A)))
+        else 0 := by
   rfl
 
 /-- One explicit direct two-step Boltzmann fibre mismatch certifies a nonzero
