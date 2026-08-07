@@ -64,11 +64,10 @@ theorem observableConditionalExpectation_comp
         else 0 := by
           apply Finset.sum_congr rfl
           intro y _hy
+          unfold conditionalFiberWeightedSum
           by_cases hyz : N.toFun y = z
-          · rw [if_pos hyz]
-            unfold conditionalFiberWeightedSum
-          · rw [if_neg hyz]
-            simp
+          · simp only [hyz, if_pos]
+          · simp only [hyz, if_neg, Finset.sum_const_zero]
     _ = ∑ x : X, ∑ y : Y,
         if N.toFun y = z then
           if M.toFun x = y then P.weight x * f x else 0
@@ -79,21 +78,24 @@ theorem observableConditionalExpectation_comp
           apply Finset.sum_congr rfl
           intro x _hx
           by_cases hxz : N.toFun (M.toFun x) = z
-          · simp [hxz]
-          · have hnot : ∀ y : Y,
-                N.toFun y = z → M.toFun x = y → False := by
-              intro y hyz hxy
-              subst y
-              exact hxz hyz
-            simp only [Finset.sum_ite_irrel, Finset.sum_const_zero]
-            apply Finset.sum_eq_zero
-            intro y _hy
+          · rw [if_pos hxz]
+            rw [Fintype.sum_eq_single (M.toFun x)]
+            · simp [hxz]
+            · intro y hyne
+              by_cases hyz : N.toFun y = z
+              · rw [if_pos hyz, if_neg (Ne.symm hyne)]
+              · rw [if_neg hyz]
+          · rw [if_neg hxz]
+            apply Fintype.sum_eq_zero
+            intro y
             by_cases hyz : N.toFun y = z
             · rw [if_pos hyz]
-              by_cases hxy : M.toFun x = y
-              · exact False.elim (hnot y hyz hxy)
-              · simp [hxy]
-            · simp [hyz]
+              have hxy : M.toFun x ≠ y := by
+                intro hxy
+                subst y
+                exact hxz hyz
+              rw [if_neg hxy]
+            · rw [if_neg hyz]
 
 /-- Covariant tower property on square-root-density `L²`: conditioning from
 `X` to `Y` and then from `Y` to `Z` is exactly conditioning along the composed
@@ -181,12 +183,6 @@ theorem compressContinuousLinearOperator_comp
   rw [(M.comp N).compressContinuousLinearOperator_apply]
   rw [N.compressContinuousLinearOperator_apply]
   rw [M.compressContinuousLinearOperator_apply]
-  change
-    (M.comp N).l2ConditionalExpectationLinearMap
-        (A ((M.comp N).l2PullbackLinearMap z)) =
-      N.l2ConditionalExpectationLinearMap
-        (M.l2ConditionalExpectationLinearMap
-          (A (M.l2PullbackLinearMap (N.l2PullbackLinearMap z))))
   rw [← M.l2ConditionalExpectationLinearMap_comp N]
   rw [M.l2PullbackLinearMap_comp N]
 
