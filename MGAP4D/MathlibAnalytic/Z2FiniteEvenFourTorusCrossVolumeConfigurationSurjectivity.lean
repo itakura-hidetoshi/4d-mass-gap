@@ -73,7 +73,6 @@ theorem finiteEvenFourTorusZ2SliceConfigurationCoarseMap_section
         s = finiteEvenFourTorusSpatialVertexCoarseSection H
           (finiteEvenFourTorusSpatialVertexCoarseMap H s) := by
       rw [hs]
-      rfl
     rw [if_pos hsSelected, hs]
   · intro w hws
     by_cases hwv : finiteEvenFourTorusSpatialVertexCoarseMap H w = v
@@ -135,7 +134,6 @@ theorem finiteEvenFourTorusZ2ResidualSliceGaugeCoarseMap_section
         s = finiteEvenFourTorusSpatialVertexCoarseSection H
           (finiteEvenFourTorusSpatialVertexCoarseMap H s) := by
       rw [hs]
-      rfl
     rw [if_pos hsSelected, hs]
   · intro w hws
     by_cases hwv : finiteEvenFourTorusSpatialVertexCoarseMap H w = v
