@@ -45,6 +45,13 @@ noncomputable instance finiteGroupOrbitQuotientFintype
     Fintype (FiniteGroupOrbitQuotient G α) :=
   Fintype.ofFinite _
 
+noncomputable instance finiteGroupOrbitQuotientDecidableEq
+    (G α : Type)
+    [Group G]
+    [MulAction G α] :
+    DecidableEq (FiniteGroupOrbitQuotient G α) :=
+  Classical.decEq _
+
 /-- Canonical orbit class of one configuration. -/
 def finiteGroupOrbitClass
     (G α : Type)
@@ -81,7 +88,10 @@ theorem finiteGroupOrbitClass_eq_iff
       ∃ g : G, g • x = y := by
   constructor
   · exact Quotient.exact
-  · exact Quotient.sound
+  · intro hxy
+    change Quotient.mk (finiteGroupOrbitSetoid G α) x =
+      Quotient.mk (finiteGroupOrbitSetoid G α) y
+    exact Quotient.sound hxy
 
 /-- The real counting mass of one orbit fiber.  This definition is phrased as
 a finite pushforward sum, so no choice of a representative enters the mass. -/
@@ -105,12 +115,12 @@ theorem finiteGroupOrbitMass_pos
   classical
   unfold finiteGroupOrbitMass
   apply (Finset.sum_pos_iff_of_nonneg ?_).2
+  · refine ⟨finiteGroupOrbitRepresentative G α q, Finset.mem_univ _, ?_⟩
+    simp
   · intro x _hx
     by_cases hq : q = finiteGroupOrbitClass G α x
     · simp [hq]
     · simp [hq]
-  · refine ⟨finiteGroupOrbitRepresentative G α q, Finset.mem_univ _, ?_⟩
-    simp
 
 /-- Orbit masses partition the whole finite configuration type. -/
 theorem finiteGroupOrbitMass_sum
@@ -127,7 +137,8 @@ theorem finiteGroupOrbitMass_sum
         finiteGroupOrbitMass G α q =
       ∑ q : FiniteGroupOrbitQuotient G α,
         ∑ x : α,
-          if q = finiteGroupOrbitClass G α x then 1 else 0 := rfl
+          if q = finiteGroupOrbitClass G α x then 1 else 0 := by
+      simp only [finiteGroupOrbitMass]
     _ = ∑ x : α,
         ∑ q : FiniteGroupOrbitQuotient G α,
           if q = finiteGroupOrbitClass G α x then 1 else 0 := by
@@ -163,7 +174,7 @@ noncomputable def finiteGroupOrbitProbabilityL2Data
       (∑ q : FiniteGroupOrbitQuotient G α,
         finiteGroupOrbitMass G α q *
           (Fintype.card α : ℝ)⁻¹) = 1
-    rw [Finset.sum_mul, finiteGroupOrbitMass_sum]
+    rw [← Finset.sum_mul, finiteGroupOrbitMass_sum]
     exact mul_inv_cancel₀ hcard
 
 /-- The quotient probability weight is literally the pushforward of the
@@ -286,7 +297,8 @@ noncomputable def finiteGroupOrbitCoordinatesToInvariantLinearMap
         have hclass :
             finiteGroupOrbitClass G α (g • x) =
               finiteGroupOrbitClass G α x := by
-          exact (Quotient.sound ⟨g, rfl⟩).symm
+          exact ((finiteGroupOrbitClass_eq_iff G α x (g • x)).2
+            ⟨g, rfl⟩).symm
         change
           y (finiteGroupOrbitClass G α (g • x)) /
               Real.sqrt
