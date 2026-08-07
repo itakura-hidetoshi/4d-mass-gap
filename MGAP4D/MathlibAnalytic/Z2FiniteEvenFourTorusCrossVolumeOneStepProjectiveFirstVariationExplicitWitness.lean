@@ -220,7 +220,7 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneSlabTransferIntertwiningResidual_e
         finiteEvenFourTorusZ2GaugeInvariantOneSlabTransferIntertwiningResidualLinearMap
           0 β 0 1 (le_of_lt hβ) (by norm_num : (0 : ℝ) ≤ 1) ≠ 0 := by
   exact
-    finiteEvenFourTorusZ2GaugeInvariantOneSlabTransferIntertwiningResidual_exists_smallPositive_interval_ne_zero_of_projectiveFirstVariation_ne_zero
+    finiteEvenFourTorusZ2GaugeInvariantOneSlabTransferIntertwiningResidual_exists_smallPositive_interval_of_firstVariation_ne_zero
       0 0 1 (by norm_num)
       finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration
       (1 : FiniteEvenFourTorusZ2SliceConfiguration 0)
