@@ -17,6 +17,17 @@ variable
     {P : FiniteStrictProbabilityL2Data X}
     {Q : FiniteStrictProbabilityL2Data Y}
 
+/-- Weighted numerator of finite conditional expectation over one fibre.  The
+noncomputable wrapper hides the equality decision on the target type from the
+public theorem surface. -/
+noncomputable def conditionalFiberWeightedSum
+    (M : FiniteStrictProbabilityMap X Y P Q)
+    (f : X → ℝ)
+    (y : Y) : ℝ := by
+  classical
+  exact ∑ x : X,
+    if M.toFun x = y then P.weight x * f x else 0
+
 /-- Probability-weighted conditional expectation of a source observable along
 an exact finite probability map.  The target value is the conditional weighted
 average over one fibre. -/
@@ -26,21 +37,15 @@ noncomputable def observableConditionalExpectationLinearMap
   classical
   exact
     { toFun := fun f y =>
-        (∑ x : X,
-          if M.toFun x = y then P.weight x * f x else 0) / Q.weight y
+        M.conditionalFiberWeightedSum f y / Q.weight y
       map_add' := by
         intro f g
         funext y
         change
-          (∑ x : X,
-              if M.toFun x = y then P.weight x * (f x + g x) else 0) /
-                Q.weight y =
-            (∑ x : X,
-                if M.toFun x = y then P.weight x * f x else 0) /
-                  Q.weight y +
-              (∑ x : X,
-                if M.toFun x = y then P.weight x * g x else 0) /
-                  Q.weight y
+          M.conditionalFiberWeightedSum (f + g) y / Q.weight y =
+            M.conditionalFiberWeightedSum f y / Q.weight y +
+              M.conditionalFiberWeightedSum g y / Q.weight y
+        unfold conditionalFiberWeightedSum
         rw [← add_div]
         congr 1
         rw [← Finset.sum_add_distrib]
@@ -53,16 +58,12 @@ noncomputable def observableConditionalExpectationLinearMap
         intro c f
         funext y
         change
-          (∑ x : X,
-              if M.toFun x = y then P.weight x * (c * f x) else 0) /
-                Q.weight y =
-            c *
-              ((∑ x : X,
-                if M.toFun x = y then P.weight x * f x else 0) /
-                  Q.weight y)
+          M.conditionalFiberWeightedSum (c • f) y / Q.weight y =
+            c * (M.conditionalFiberWeightedSum f y / Q.weight y)
+        unfold conditionalFiberWeightedSum
         rw [← mul_div_assoc]
         congr 1
-        rw [← Finset.mul_sum]
+        rw [Finset.mul_sum]
         apply Finset.sum_congr rfl
         intro x _hx
         by_cases hxy : M.toFun x = y
@@ -75,9 +76,7 @@ noncomputable def observableConditionalExpectationLinearMap
     (f : X → ℝ)
     (y : Y) :
     M.observableConditionalExpectationLinearMap f y =
-      (∑ x : X,
-        if M.toFun x = y then P.weight x * f x else 0) / Q.weight y := by
-  classical
+      M.conditionalFiberWeightedSum f y / Q.weight y :=
   rfl
 
 /-- Conditional expectation is a left inverse of pullback on observables. -/
@@ -89,6 +88,7 @@ theorem observableConditionalExpectation_observablePullback
   classical
   funext y
   rw [M.observableConditionalExpectationLinearMap_apply]
+  unfold conditionalFiberWeightedSum
   change
     (∑ x : X,
       if M.toFun x = y then P.weight x * f (M.toFun x) else 0) /
@@ -185,17 +185,16 @@ theorem l2ConditionalExpectation_adjoint_pairing
     (∑ z : Y,
       Q.weight z *
         M.observableConditionalExpectationLinearMap g z * f z) =
-      ∑ z : Y,
-        (∑ a : X,
-          if M.toFun a = z then P.weight a * g a else 0) * f z := by
-            apply Finset.sum_congr rfl
-            intro z _hz
-            rw [M.observableConditionalExpectationLinearMap_apply]
-            field_simp [ne_of_gt (Q.weight_pos z)]
+      ∑ z : Y, M.conditionalFiberWeightedSum g z * f z := by
+        apply Finset.sum_congr rfl
+        intro z _hz
+        rw [M.observableConditionalExpectationLinearMap_apply]
+        field_simp [ne_of_gt (Q.weight_pos z)] <;> ring
     _ = ∑ z : Y, ∑ a : X,
         if M.toFun a = z then P.weight a * g a * f z else 0 := by
           apply Finset.sum_congr rfl
           intro z _hz
+          unfold conditionalFiberWeightedSum
           rw [Finset.sum_mul]
           apply Finset.sum_congr rfl
           intro a _ha
