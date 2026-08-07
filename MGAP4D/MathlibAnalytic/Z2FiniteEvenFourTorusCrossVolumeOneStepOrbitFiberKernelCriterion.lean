@@ -73,6 +73,7 @@ noncomputable def finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseOrbitKernelCoe
       H β energyIdentity energyNontrivial hβ hEnergy A)
     q
 
+set_option maxHeartbeats 800000 in
 /-- At one fixed fine evaluation configuration, the actual raw-kernel equation
 against every coarse gauge-invariant observable is equivalent to equality of
 fine and coarse kernel mass on every coarse residual-gauge orbit. -/
