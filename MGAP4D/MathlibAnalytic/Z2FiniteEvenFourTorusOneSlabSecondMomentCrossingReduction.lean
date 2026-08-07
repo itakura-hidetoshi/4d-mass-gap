@@ -114,6 +114,7 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalyticSecondVariation_eq
   unfold finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalyticSecondVariation
     finiteUniformSlabSecondMoment
     finiteEvenFourTorusZ2UnfixedGaugeOneSlabAction
+  rfl
 
 /-- Exact double-centered raw second-moment reduction:
 
