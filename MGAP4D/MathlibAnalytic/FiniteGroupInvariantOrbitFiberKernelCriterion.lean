@@ -158,13 +158,21 @@ theorem finiteFiberPushforwardCoefficient_comp
       apply Finset.sum_congr rfl
       intro z _hz
       by_cases hzx : C₁ (C₂ z) = x
-      · simp [hzx]
-      · have hnone : ∀ y : β,
-            C₂ z = y → C₁ y ≠ x := by
-          intro y hy
-          subst y
-          exact hzx
-        simp [hzx, hnone]
+      · rw [if_pos hzx]
+        rw [Finset.sum_eq_single (C₂ z)]
+        · simp [hzx]
+        · intro y _hy hyne
+          have hne : C₂ z ≠ y := by
+            exact fun h => hyne h.symm
+          simp [hne]
+        · simp
+      · rw [if_neg hzx]
+        apply Finset.sum_eq_zero
+        intro y _hy
+        by_cases hzy : C₂ z = y
+        · subst y
+          simp [hzx]
+        · simp [hzy]
 
 /-- Orbit aggregation of an ordinary fibre pushforward is the direct sum over
 fine points whose image belongs to the chosen orbit. -/
@@ -209,13 +217,21 @@ theorem finiteGroupOrbitAggregate_fiberPushforward
       apply Finset.sum_congr rfl
       intro z _hz
       by_cases hzq : finiteGroupOrbitClass G α (C z) = q
-      · simp [hzq]
-      · have hnone : ∀ x : α,
-            C z = x → finiteGroupOrbitClass G α x ≠ q := by
-          intro x hx
-          subst x
-          exact hzq
-        simp [hzq, hnone]
+      · rw [if_pos hzq]
+        rw [Finset.sum_eq_single (C z)]
+        · simp [hzq]
+        · intro x _hx hxne
+          have hne : C z ≠ x := by
+            exact fun h => hxne h.symm
+          simp [hne]
+        · simp
+      · rw [if_neg hzq]
+        apply Finset.sum_eq_zero
+        intro x _hx
+        by_cases hcx : C z = x
+        · subst x
+          simp [hzq]
+        · simp [hcx]
 
 /-- Weighted evaluation against an invariant vector decomposes exactly into
 orbit coefficients times the representative value. -/
