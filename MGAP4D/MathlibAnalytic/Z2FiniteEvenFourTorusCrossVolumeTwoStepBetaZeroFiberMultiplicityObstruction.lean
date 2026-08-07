@@ -218,7 +218,17 @@ theorem finiteEvenFourTorusZ2TwoStepBoltzmannOrbitFiberBalance_beta_zero_iff_car
     have hkR :
         (Fintype.card (finiteEvenFourTorusZ2SliceConfigurationTwoStepCoarseHom H).ker : ℝ) = 1 := by
       apply mul_right_cancel₀ hm
-      exact hkm
+      calc
+        (Fintype.card (finiteEvenFourTorusZ2SliceConfigurationTwoStepCoarseHom H).ker : ℝ) *
+            finiteGroupOrbitMass
+              (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+              (FiniteEvenFourTorusZ2SliceConfiguration H) q =
+          finiteGroupOrbitMass
+            (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+            (FiniteEvenFourTorusZ2SliceConfiguration H) q := hkm
+        _ = 1 * finiteGroupOrbitMass
+            (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+            (FiniteEvenFourTorusZ2SliceConfiguration H) q := by rw [one_mul]
     exact_mod_cast hkR
   · intro hker A q
     have hkerR :
