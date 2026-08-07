@@ -169,14 +169,13 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCo
     (u := Finset.univ)
     (fun B _hB => by
       by_cases hFiber : finiteEvenFourTorusZ2SliceConfigurationCoarseMap H B = b
-      · rw [if_pos hFiber, if_pos hFiber]
-        exact
+      · simpa only [hFiber, if_pos] using
           (finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalytic_hasDerivAt_zero_named
             (finiteEvenFourTorusDoubleRefinement H)
             energyIdentity energyNontrivial B A).mul_const
               (finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingPointwiseScale H B)
-      · rw [if_neg hFiber, if_neg hFiber]
-        exact hasDerivAt_const (x := (0 : ℝ)) (c := (0 : ℝ)))
+      · simpa only [hFiber, if_neg] using
+          (hasDerivAt_const (x := (0 : ℝ)) (c := (0 : ℝ))))
 
 /-- Differentiate the coarse one-step coefficient. -/
 theorem finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseKernelWeightAnalytic_hasDerivAt_zero
@@ -242,6 +241,23 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationF
   unfold projectiveCrossDifference
   unfold finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationFiberObstruction
   unfold finiteScalarWeightedProjectiveFiberObstruction
+  change
+    finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCoefficientAnalytic
+          H energyIdentity energyNontrivial β A b *
+        finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseKernelWeightAnalytic
+          H energyIdentity energyNontrivial β A₀ b₀ -
+      finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCoefficientAnalytic
+          H energyIdentity energyNontrivial β A₀ b₀ *
+        finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseKernelWeightAnalytic
+          H energyIdentity energyNontrivial β A b =
+    finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCoefficient
+          H β energyIdentity energyNontrivial hβ hEnergy A b *
+        finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseKernelWeight
+          H β energyIdentity energyNontrivial hβ hEnergy A₀ b₀ -
+      finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCoefficient
+          H β energyIdentity energyNontrivial hβ hEnergy A₀ b₀ *
+        finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseKernelWeight
+          H β energyIdentity energyNontrivial hβ hEnergy A b
   rw [finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCoefficientAnalytic_eq_actual
     H β energyIdentity energyNontrivial hβ hEnergy A b]
   rw [finiteEvenFourTorusZ2GaugeInvariantOneStepCoarseKernelWeightAnalytic_eq_actual
@@ -349,22 +365,32 @@ structure Z2FiniteEvenFourTorusCrossVolumeOneStepProjectiveFirstVariationPackage
     (H : ℕ)
     (energyIdentity energyNontrivial : ℝ)
     (hEnergy : energyIdentity ≤ energyNontrivial) where
-  analyticAgreement : ∀ (β : ℝ) (hβ : 0 ≤ β) A b,
-    finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationFiberObstructionAnalytic
-        H energyIdentity energyNontrivial β A 1 b 1 =
-      finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationFiberObstruction
-        H β energyIdentity energyNontrivial hβ hEnergy A 1 b 1
-  betaZeroValue : ∀ A b,
-    finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationFiberObstructionAnalytic
-      H energyIdentity energyNontrivial 0 A 1 b 1 = 0
-  betaZeroDerivative : ∀ A b,
-    HasDerivAt
-      (fun β : ℝ =>
-        finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationFiberObstructionAnalytic
-          H energyIdentity energyNontrivial β A 1 b 1)
-      (finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationFiberObstructionFirstVariation
-        H energyIdentity energyNontrivial A 1 b 1)
-      0
+  analyticAgreement :
+    ∀ (β : ℝ) (hβ : 0 ≤ β)
+      (A : FiniteEvenFourTorusZ2SliceConfiguration
+        (finiteEvenFourTorusDoubleRefinement H))
+      (b : FiniteEvenFourTorusZ2SliceConfiguration H),
+      finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationFiberObstructionAnalytic
+          H energyIdentity energyNontrivial β A 1 b 1 =
+        finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationFiberObstruction
+          H β energyIdentity energyNontrivial hβ hEnergy A 1 b 1
+  betaZeroValue :
+    ∀ (A : FiniteEvenFourTorusZ2SliceConfiguration
+        (finiteEvenFourTorusDoubleRefinement H))
+      (b : FiniteEvenFourTorusZ2SliceConfiguration H),
+      finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationFiberObstructionAnalytic
+        H energyIdentity energyNontrivial 0 A 1 b 1 = 0
+  betaZeroDerivative :
+    ∀ (A : FiniteEvenFourTorusZ2SliceConfiguration
+        (finiteEvenFourTorusDoubleRefinement H))
+      (b : FiniteEvenFourTorusZ2SliceConfiguration H),
+      HasDerivAt
+        (fun β : ℝ =>
+          finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationFiberObstructionAnalytic
+            H energyIdentity energyNontrivial β A 1 b 1)
+        (finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationFiberObstructionFirstVariation
+          H energyIdentity energyNontrivial A 1 b 1)
+        0
 
 /-- Construct the one-step Package-P first-variation receipt. -/
 noncomputable def z2FiniteEvenFourTorusCrossVolumeOneStepProjectiveFirstVariationPackage
