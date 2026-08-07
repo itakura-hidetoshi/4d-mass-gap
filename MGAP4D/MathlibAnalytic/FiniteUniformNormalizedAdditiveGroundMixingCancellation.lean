@@ -220,8 +220,7 @@ theorem finiteUniformNormalizedSpatialRankOneKernel_apply_complement_sub
         intro x _hx
         ring
     _ = _ := by
-      rw [← Finset.mul_sum]
-      ring
+      rw [← Finset.sum_mul, ← Finset.mul_sum]
 
 /-- Exact generic disconnected-mixing cancellation:
 
