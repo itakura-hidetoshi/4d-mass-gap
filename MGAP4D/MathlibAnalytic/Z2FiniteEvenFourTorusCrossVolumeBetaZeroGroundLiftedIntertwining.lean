@@ -26,7 +26,6 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_beta_zero_idem
   ext A
   rw [finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_apply_coe_beta_zero]
   simp_rw [finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_apply_coe_beta_zero]
-  rw [finiteEvenFourTorusZ2UnfixedGaugeInvariantOneSlabTransfer_apply_coe_beta_zero]
   have hcard :
       (Fintype.card (FiniteEvenFourTorusZ2SliceConfiguration H) : ℝ) ≠ 0 := by
     exact_mod_cast Fintype.card_ne_zero
