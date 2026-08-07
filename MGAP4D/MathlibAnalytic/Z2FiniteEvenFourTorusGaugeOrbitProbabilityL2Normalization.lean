@@ -114,55 +114,17 @@ theorem finiteGroupInvariantToOrbitProbabilityObservable_norm_sq
     (f : finiteGroupInvariantSubmodule G α) :
     ‖finiteGroupInvariantToOrbitProbabilityObservableLinearMap G α f‖ ^ 2 =
       (Fintype.card α : ℝ)⁻¹ * ‖f‖ ^ 2 := by
-  classical
-  rw [(finiteGroupOrbitProbabilityL2Data G α).norm_sq_observableEmbed]
-  change
-    (∑ q : FiniteGroupOrbitQuotient G α,
-      (finiteGroupOrbitMass G α q * (Fintype.card α : ℝ)⁻¹) *
-        (f.1 (finiteGroupOrbitRepresentative G α q)) ^ 2) =
-      (Fintype.card α : ℝ)⁻¹ * ‖f‖ ^ 2
-  have horbit :
-      (∑ q : FiniteGroupOrbitQuotient G α,
-        finiteGroupOrbitMass G α q *
-          (f.1 (finiteGroupOrbitRepresentative G α q)) ^ 2) =
-        ‖f‖ ^ 2 := by
-    calc
-      (∑ q : FiniteGroupOrbitQuotient G α,
-        finiteGroupOrbitMass G α q *
-          (f.1 (finiteGroupOrbitRepresentative G α q)) ^ 2) =
-        inner ℝ
-          (finiteGroupInvariantToOrbitCoordinatesLinearMap G α f)
-          (finiteGroupInvariantToOrbitCoordinatesLinearMap G α f) := by
-            rw [PiLp.inner_apply]
-            apply Finset.sum_congr rfl
-            intro q _hq
-            change
-              finiteGroupOrbitMass G α q *
-                  (f.1 (finiteGroupOrbitRepresentative G α q)) ^ 2 =
-                (Real.sqrt (finiteGroupOrbitMass G α q) *
-                    f.1 (finiteGroupOrbitRepresentative G α q)) *
-                  (Real.sqrt (finiteGroupOrbitMass G α q) *
-                    f.1 (finiteGroupOrbitRepresentative G α q))
-            rw [← Real.sq_sqrt
-              (le_of_lt (finiteGroupOrbitMass_pos G α q))]
-            ring
-      _ = inner ℝ f f :=
-        finiteGroupInvariantToOrbitCoordinates_inner G α f f
-      _ = ‖f‖ ^ 2 := real_inner_self_eq_norm_sq f
-  calc
-    (∑ q : FiniteGroupOrbitQuotient G α,
-      (finiteGroupOrbitMass G α q * (Fintype.card α : ℝ)⁻¹) *
-        (f.1 (finiteGroupOrbitRepresentative G α q)) ^ 2) =
-      (Fintype.card α : ℝ)⁻¹ *
-        ∑ q : FiniteGroupOrbitQuotient G α,
-          finiteGroupOrbitMass G α q *
-            (f.1 (finiteGroupOrbitRepresentative G α q)) ^ 2 := by
-      rw [Finset.mul_sum]
-      apply Finset.sum_congr rfl
-      intro q _hq
-      ring
-    _ = (Fintype.card α : ℝ)⁻¹ * ‖f‖ ^ 2 := by
-      rw [horbit]
+  rw [
+    finiteGroupInvariantToOrbitProbabilityObservable_eq_sqrt_inv_card_smul_coordinates
+      G α f,
+    norm_smul,
+    Real.norm_eq_abs,
+    abs_of_nonneg (Real.sqrt_nonneg _),
+    mul_pow,
+    Real.sq_sqrt
+  ]
+  · rw [(finiteGroupInvariantToOrbitCoordinatesLinearIsometry G α).norm_map]
+  · positivity
 
 /-- Every operator transported through the canonical counting-Hilbert
 identification also intertwines the literal same-observable
@@ -182,14 +144,17 @@ theorem finiteGroupInvariantToOrbitProbabilityObservable_transportOperator_inter
       finiteGroupInvariantToOrbitProbabilityObservableLinearMap G α (A f) := by
   rw [
     finiteGroupInvariantToOrbitProbabilityObservable_eq_sqrt_inv_card_smul_coordinates
+      G α f,
+    finiteGroupInvariantToOrbitProbabilityObservable_eq_sqrt_inv_card_smul_coordinates
+      G α (A f),
+    map_smul
   ]
-  rw [map_smul]
   exact
     congrArg
       (fun y =>
         Real.sqrt ((Fintype.card α : ℝ)⁻¹) • y)
-      ((finiteGroupInvariantOrbitProbabilityL2Identification G α).
-        transportOperator_apply_forward A f)
+      (RealHilbertLinearIsometricIdentification.transportOperator_apply_forward
+        (finiteGroupInvariantOrbitProbabilityL2Identification G α) A f)
 
 /-- The actual finite `Z₂` literal orbit-observable probability map. -/
 noncomputable def finiteEvenFourTorusZ2GaugeOrbitProbabilityObservableLinearMap
