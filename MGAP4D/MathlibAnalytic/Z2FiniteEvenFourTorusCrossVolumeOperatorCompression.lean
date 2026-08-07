@@ -18,8 +18,8 @@ noncomputable def finiteEvenFourTorusZ2GaugeOrbitCoarseL2ConditionalExpectationL
     FiniteEvenFourTorusZ2GaugeOrbitProbabilityL2
         (finiteEvenFourTorusDoubleRefinement H) →ₗ[ℝ]
       FiniteEvenFourTorusZ2GaugeOrbitProbabilityL2 H :=
-  (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-    l2ConditionalExpectationLinearMap
+  FiniteStrictProbabilityMap.l2ConditionalExpectationLinearMap
+    (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H)
 
 /-- The actual conditional expectation is an exact left inverse of the
 contravariant coarse-orbit pullback. -/
@@ -27,10 +27,10 @@ theorem finiteEvenFourTorusZ2GaugeOrbitCoarseL2ConditionalExpectation_leftInvers
     (H : ℕ)
     (y : FiniteEvenFourTorusZ2GaugeOrbitProbabilityL2 H) :
     finiteEvenFourTorusZ2GaugeOrbitCoarseL2ConditionalExpectationLinearMap H
-        ((finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-          l2PullbackLinearMap y) = y :=
-  (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-    l2ConditionalExpectation_l2Pullback y
+        (FiniteStrictProbabilityMap.l2PullbackLinearMap
+          (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H) y) = y :=
+  FiniteStrictProbabilityMap.l2ConditionalExpectation_l2Pullback
+    (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H) y
 
 /-- Hilbert-adjoint pairing for the actual cross-volume Z2 orbit map. -/
 theorem finiteEvenFourTorusZ2GaugeOrbitCoarseL2ConditionalExpectation_adjoint
@@ -42,10 +42,10 @@ theorem finiteEvenFourTorusZ2GaugeOrbitCoarseL2ConditionalExpectation_adjoint
         (finiteEvenFourTorusZ2GaugeOrbitCoarseL2ConditionalExpectationLinearMap H x)
         y =
       inner ℝ x
-        ((finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-          l2PullbackLinearMap y) :=
-  (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-    l2ConditionalExpectation_adjoint_pairing x y
+        (FiniteStrictProbabilityMap.l2PullbackLinearMap
+          (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H) y) :=
+  FiniteStrictProbabilityMap.l2ConditionalExpectation_adjoint_pairing
+    (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H) x y
 
 /-- Orthogonal projection of the fine orbit-probability carrier onto vectors
 measurable with respect to the actual coarse orbit map. -/
@@ -55,8 +55,8 @@ noncomputable def finiteEvenFourTorusZ2GaugeOrbitCoarseProjectionLinearMap
         (finiteEvenFourTorusDoubleRefinement H) →ₗ[ℝ]
       FiniteEvenFourTorusZ2GaugeOrbitProbabilityL2
         (finiteEvenFourTorusDoubleRefinement H) :=
-  (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-    l2CoarseProjectionLinearMap
+  FiniteStrictProbabilityMap.l2CoarseProjectionLinearMap
+    (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H)
 
 /-- The actual cross-volume coarse-measurable projection is idempotent. -/
 theorem finiteEvenFourTorusZ2GaugeOrbitCoarseProjection_idempotent
@@ -66,15 +66,15 @@ theorem finiteEvenFourTorusZ2GaugeOrbitCoarseProjection_idempotent
     finiteEvenFourTorusZ2GaugeOrbitCoarseProjectionLinearMap H
         (finiteEvenFourTorusZ2GaugeOrbitCoarseProjectionLinearMap H x) =
       finiteEvenFourTorusZ2GaugeOrbitCoarseProjectionLinearMap H x :=
-  (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-    l2CoarseProjection_idempotent x
+  FiniteStrictProbabilityMap.l2CoarseProjection_idempotent
+    (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H) x
 
 /-- The actual coarse-measurable projection is symmetric. -/
 theorem finiteEvenFourTorusZ2GaugeOrbitCoarseProjection_isSymmetric
     (H : ℕ) :
     (finiteEvenFourTorusZ2GaugeOrbitCoarseProjectionLinearMap H).IsSymmetric :=
-  (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-    l2CoarseProjection_isSymmetric
+  FiniteStrictProbabilityMap.l2CoarseProjection_isSymmetric
+    (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H)
 
 /-- The mathematically canonical renormalized coarse defect: pull a coarse
 orbit vector to the fine volume, evolve by the actual fine ground-lifted defect,
@@ -87,11 +87,11 @@ noncomputable def finiteEvenFourTorusZ2GaugeOrbitRenormalizedGroundLiftedDefect
     (hEnergy : energyIdentity ≤ energyNontrivial) :
     FiniteEvenFourTorusZ2GaugeOrbitProbabilityL2 H →L[ℝ]
       FiniteEvenFourTorusZ2GaugeOrbitProbabilityL2 H :=
-  (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-    compressContinuousLinearOperator
-      (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
-        (finiteEvenFourTorusDoubleRefinement H)
-        β energyIdentity energyNontrivial hβ hEnergy)
+  FiniteStrictProbabilityMap.compressContinuousLinearOperator
+    (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H)
+    (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
+      (finiteEvenFourTorusDoubleRefinement H)
+      β energyIdentity energyNontrivial hβ hEnergy)
 
 /-- The renormalized coarse defect is symmetric because the actual fine defect
 is symmetric and conditional expectation is the Hilbert adjoint of pullback. -/
@@ -102,14 +102,14 @@ theorem finiteEvenFourTorusZ2GaugeOrbitRenormalizedGroundLiftedDefect_isSymmetri
     (hEnergy : energyIdentity ≤ energyNontrivial) :
     (finiteEvenFourTorusZ2GaugeOrbitRenormalizedGroundLiftedDefect
       H β energyIdentity energyNontrivial hβ hEnergy).toLinearMap.IsSymmetric :=
-  (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-    compressContinuousLinearOperator_isSymmetric
-      (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
-        (finiteEvenFourTorusDoubleRefinement H)
-        β energyIdentity energyNontrivial hβ hEnergy)
-      (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect_isSymmetric
-        (finiteEvenFourTorusDoubleRefinement H)
-        β energyIdentity energyNontrivial hβ hEnergy)
+  FiniteStrictProbabilityMap.compressContinuousLinearOperator_isSymmetric
+    (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H)
+    (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
+      (finiteEvenFourTorusDoubleRefinement H)
+      β energyIdentity energyNontrivial hβ hEnergy)
+    (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect_isSymmetric
+      (finiteEvenFourTorusDoubleRefinement H)
+      β energyIdentity energyNontrivial hβ hEnergy)
 
 /-- Exact finite coercivity `1/2` survives the actual cross-volume compression.
 This statement requires no cross-volume intertwining hypothesis. -/
@@ -127,16 +127,16 @@ theorem finiteEvenFourTorusZ2GaugeOrbitRenormalizedGroundLiftedDefect_half_coerc
       inner ℝ
         (finiteEvenFourTorusZ2GaugeOrbitRenormalizedGroundLiftedDefect
           H β energyIdentity energyNontrivial hβ.le hEnergy.le y) y :=
-  (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-    compressContinuousLinearOperator_quadratic_lower_bound
-      (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
-        (finiteEvenFourTorusDoubleRefinement H)
-        β energyIdentity energyNontrivial hβ.le hEnergy.le)
-      (1 / 2 : ℝ)
-      (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect_half_coercive
-        energyIdentity energyNontrivial hEnergy β hβ hβCutoff
-        (finiteEvenFourTorusDoubleRefinement H))
-      y
+  FiniteStrictProbabilityMap.compressContinuousLinearOperator_quadratic_lower_bound
+    (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H)
+    (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
+      (finiteEvenFourTorusDoubleRefinement H)
+      β energyIdentity energyNontrivial hβ.le hEnergy.le)
+    (1 / 2 : ℝ)
+    (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect_half_coercive
+      energyIdentity energyNontrivial hEnergy β hβ hβCutoff
+      (finiteEvenFourTorusDoubleRefinement H))
+    y
 
 /-- Compression-level discrepancy between the renormalized fine defect and the
 independently constructed actual coarse defect.  Its vanishing is weaker than
@@ -164,13 +164,13 @@ noncomputable def finiteEvenFourTorusZ2GaugeOrbitGroundLiftedIntertwiningObstruc
     FiniteEvenFourTorusZ2GaugeOrbitProbabilityL2 H →ₗ[ℝ]
       FiniteEvenFourTorusZ2GaugeOrbitProbabilityL2
         (finiteEvenFourTorusDoubleRefinement H) :=
-  (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-    intertwiningResidualLinearMap
-      (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
-        (finiteEvenFourTorusDoubleRefinement H)
-        β energyIdentity energyNontrivial hβ hEnergy)
-      (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
-        H β energyIdentity energyNontrivial hβ hEnergy)
+  FiniteStrictProbabilityMap.intertwiningResidualLinearMap
+    (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H)
+    (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
+      (finiteEvenFourTorusDoubleRefinement H)
+      β energyIdentity energyNontrivial hβ hEnergy)
+    (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
+      H β energyIdentity energyNontrivial hβ hEnergy)
 
 /-- The actual obstruction vanishes exactly when the fine and coarse defects
 strongly intertwine through the geometrically induced `L²` pullback. -/
@@ -185,19 +185,19 @@ theorem finiteEvenFourTorusZ2GaugeOrbitGroundLiftedIntertwiningObstruction_eq_ze
         finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
             (finiteEvenFourTorusDoubleRefinement H)
             β energyIdentity energyNontrivial hβ hEnergy
-            ((finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-              l2PullbackLinearMap y) =
-          (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-            l2PullbackLinearMap
-              (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
-                H β energyIdentity energyNontrivial hβ hEnergy y) :=
-  (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-    intertwiningResidualLinearMap_eq_zero_iff
-      (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
-        (finiteEvenFourTorusDoubleRefinement H)
-        β energyIdentity energyNontrivial hβ hEnergy)
-      (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
-        H β energyIdentity energyNontrivial hβ hEnergy)
+            (FiniteStrictProbabilityMap.l2PullbackLinearMap
+              (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H) y) =
+          FiniteStrictProbabilityMap.l2PullbackLinearMap
+            (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H)
+            (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
+              H β energyIdentity energyNontrivial hβ hEnergy y) :=
+  FiniteStrictProbabilityMap.intertwiningResidualLinearMap_eq_zero_iff
+    (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H)
+    (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
+      (finiteEvenFourTorusDoubleRefinement H)
+      β energyIdentity energyNontrivial hβ hEnergy)
+    (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
+      H β energyIdentity energyNontrivial hβ hEnergy)
 
 /-- If the strong geometric intertwining obstruction vanishes, the actual
 coarse defect is exactly the conditional-expectation compression of the actual
@@ -213,13 +213,16 @@ theorem finiteEvenFourTorusZ2GaugeOrbitGroundLiftedIntertwiningObstruction_zero_
     finiteEvenFourTorusZ2GaugeOrbitRenormalizedGroundLiftedDefect
         H β energyIdentity energyNontrivial hβ hEnergy =
       finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
-        H β energyIdentity energyNontrivial hβ hEnergy := by
-  apply
-    (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-      compressContinuousLinearOperator_eq_of_intertwining
-  exact
-    (finiteEvenFourTorusZ2GaugeOrbitGroundLiftedIntertwiningObstruction_eq_zero_iff
-      H β energyIdentity energyNontrivial hβ hEnergy).mp hzero
+        H β energyIdentity energyNontrivial hβ hEnergy :=
+  FiniteStrictProbabilityMap.compressContinuousLinearOperator_eq_of_intertwining
+    (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H)
+    (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
+      (finiteEvenFourTorusDoubleRefinement H)
+      β energyIdentity energyNontrivial hβ hEnergy)
+    (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
+      H β energyIdentity energyNontrivial hβ hEnergy)
+    ((finiteEvenFourTorusZ2GaugeOrbitGroundLiftedIntertwiningObstruction_eq_zero_iff
+      H β energyIdentity energyNontrivial hβ hEnergy).mp hzero)
 
 /-- Audit-visible complete Package C: actual cross-volume conditional
 expectation, orthogonal projection, renormalized defect, exact coercivity and
@@ -242,8 +245,8 @@ structure Z2FiniteEvenFourTorusCrossVolumeOperatorCompressionPackage
       finiteEvenFourTorusZ2GaugeOrbitCoarseL2ConditionalExpectationLinearMap H
   leftInverse : ∀ y : FiniteEvenFourTorusZ2GaugeOrbitProbabilityL2 H,
     conditionalExpectation
-        ((finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-          l2PullbackLinearMap y) = y
+        (FiniteStrictProbabilityMap.l2PullbackLinearMap
+          (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H) y) = y
   projection :
     FiniteEvenFourTorusZ2GaugeOrbitProbabilityL2
         (finiteEvenFourTorusDoubleRefinement H) →ₗ[ℝ]
@@ -291,12 +294,12 @@ structure Z2FiniteEvenFourTorusCrossVolumeOperatorCompressionPackage
         finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
             (finiteEvenFourTorusDoubleRefinement H)
             β energyIdentity energyNontrivial hβ.le hEnergy.le
-            ((finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-              l2PullbackLinearMap y) =
-          (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H).
-            l2PullbackLinearMap
-              (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
-                H β energyIdentity energyNontrivial hβ.le hEnergy.le y)
+            (FiniteStrictProbabilityMap.l2PullbackLinearMap
+              (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H) y) =
+          FiniteStrictProbabilityMap.l2PullbackLinearMap
+            (finiteEvenFourTorusZ2GaugeOrbitCoarseProbabilityMap H)
+            (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
+              H β energyIdentity energyNontrivial hβ.le hEnergy.le y)
   obstructionZeroImpliesCompressionEq :
     intertwiningObstruction = 0 →
       finiteEvenFourTorusZ2GaugeOrbitRenormalizedGroundLiftedDefect
