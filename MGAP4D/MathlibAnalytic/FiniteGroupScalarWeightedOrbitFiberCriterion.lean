@@ -116,9 +116,10 @@ theorem finiteGroupInvariant_scaledCrossSum_eq_iff_scaledOrbitFiberSums
           ring
     have hOrbit := hGeneric.mp hScaled
     intro q
+    have hq := hOrbit q
     rw [finiteGroupOrbitFiberCoefficient_smul,
-      finiteGroupOrbitAggregateCoefficient_smul] at hOrbit
-    exact hOrbit q
+      finiteGroupOrbitAggregateCoefficient_smul] at hq
+    exact hq
   · intro h
     have hScaledOrbit :
         ∀ q : FiniteGroupOrbitQuotient G α,
