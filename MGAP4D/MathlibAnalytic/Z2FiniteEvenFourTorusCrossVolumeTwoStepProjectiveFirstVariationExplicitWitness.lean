@@ -148,7 +148,7 @@ theorem finiteEvenFourTorusZ2TwoStepProjectiveFirstVariationWitnessConfiguration
   rw [finiteEvenFourTorusZ2TwoStepProjectiveFirstVariationWitnessConfiguration_holonomy]
   native_decide
 
-/-- The concrete `H = 0`, `(energyIdentity,energyNontrivial) = (0,1)` direct
+/- The concrete `H = 0`, `(energyIdentity,energyNontrivial) = (0,1)` direct
 witness has a genuinely nonzero beta-zero two-step projective first variation. -/
 set_option maxRecDepth 4096 in
 theorem finiteEvenFourTorusZ2GaugeInvariantTwoStepProjectiveFirstVariation_explicitWitness_ne_zero :
