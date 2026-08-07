@@ -102,7 +102,7 @@ theorem finiteSurjectiveGroupHom_card_ker_comp
           (Fintype.card φ.ker * Fintype.card K) := by rw [hφcard]
       _ = (Fintype.card ψ.ker * Fintype.card φ.ker) *
           Fintype.card K := by simp [Nat.mul_assoc]
-  exact Nat.mul_right_cancel hEq
+  exact Nat.mul_right_cancel Fintype.card_pos hEq
 
 /-- Exact tower law for multiplicity-normalized fibre averaging. -/
 theorem finiteSurjectiveGroupHomFiberAverage_comp
@@ -133,7 +133,7 @@ theorem finiteSurjectiveGroupHomFiberAverage_comp
     finiteSurjectiveGroupHom_card_ker_real_ne_zero φ
   push_cast
   field_simp [hψker, hφker]
-  ring
+  rfl
 
 /-- Audit-visible generic multiplicity-normalized fibre-average package. -/
 structure FiniteSurjectiveGroupHomFiberAveragePackage
