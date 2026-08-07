@@ -19,7 +19,7 @@ theorem HasDerivAt.eventually_ne_zero_right_of_eq_zero_of_ne_zero
     (hzero : f 0 = 0)
     (hd : d ≠ 0) :
     ∀ᶠ β in nhdsWithin (0 : ℝ) (Ioi 0), f β ≠ 0 := by
-  have hnhds : ({0}ᶜ : Set ℝ) ∈ 𝓝 d := by
+  have hnhds : ({0}ᶜ : Set ℝ) ∈ nhds d := by
     exact IsOpen.mem_nhds isOpen_compl_singleton (by simpa using hd)
   have hslope := hderiv.tendsto_slope_zero_right hnhds
   filter_upwards [hslope] with β hβ
