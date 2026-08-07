@@ -22,49 +22,53 @@ an exact finite probability map.  The target value is the conditional weighted
 average over one fibre. -/
 noncomputable def observableConditionalExpectationLinearMap
     (M : FiniteStrictProbabilityMap X Y P Q) :
-    (X → ℝ) →ₗ[ℝ] (Y → ℝ) where
-  toFun f := fun y =>
-    (∑ x : X,
-      if M.toFun x = y then P.weight x * f x else 0) / Q.weight y
-  map_add' f g := by
-    funext y
-    change
-      (∑ x : X,
-          if M.toFun x = y then P.weight x * (f x + g x) else 0) /
-            Q.weight y =
+    (X → ℝ) →ₗ[ℝ] (Y → ℝ) := by
+  classical
+  exact
+    { toFun := fun f y =>
         (∑ x : X,
-            if M.toFun x = y then P.weight x * f x else 0) /
-              Q.weight y +
+          if M.toFun x = y then P.weight x * f x else 0) / Q.weight y
+      map_add' := by
+        intro f g
+        funext y
+        change
           (∑ x : X,
-            if M.toFun x = y then P.weight x * g x else 0) /
-              Q.weight y
-    rw [← add_div]
-    congr 1
-    rw [← Finset.sum_add_distrib]
-    apply Finset.sum_congr rfl
-    intro x _hx
-    by_cases hxy : M.toFun x = y
-    · simp [hxy, mul_add]
-    · simp [hxy]
-  map_smul' c f := by
-    funext y
-    change
-      (∑ x : X,
-          if M.toFun x = y then P.weight x * (c * f x) else 0) /
-            Q.weight y =
-        c *
-          ((∑ x : X,
-            if M.toFun x = y then P.weight x * f x else 0) /
-              Q.weight y)
-    rw [← mul_div_assoc]
-    congr 1
-    rw [← Finset.mul_sum]
-    apply Finset.sum_congr rfl
-    intro x _hx
-    by_cases hxy : M.toFun x = y
-    · simp [hxy]
-      ring
-    · simp [hxy]
+              if M.toFun x = y then P.weight x * (f x + g x) else 0) /
+                Q.weight y =
+            (∑ x : X,
+                if M.toFun x = y then P.weight x * f x else 0) /
+                  Q.weight y +
+              (∑ x : X,
+                if M.toFun x = y then P.weight x * g x else 0) /
+                  Q.weight y
+        rw [← add_div]
+        congr 1
+        rw [← Finset.sum_add_distrib]
+        apply Finset.sum_congr rfl
+        intro x _hx
+        by_cases hxy : M.toFun x = y
+        · simp [hxy, mul_add]
+        · simp [hxy]
+      map_smul' := by
+        intro c f
+        funext y
+        change
+          (∑ x : X,
+              if M.toFun x = y then P.weight x * (c * f x) else 0) /
+                Q.weight y =
+            c *
+              ((∑ x : X,
+                if M.toFun x = y then P.weight x * f x else 0) /
+                  Q.weight y)
+        rw [← mul_div_assoc]
+        congr 1
+        rw [← Finset.mul_sum]
+        apply Finset.sum_congr rfl
+        intro x _hx
+        by_cases hxy : M.toFun x = y
+        · simp [hxy]
+          ring
+        · simp [hxy] }
 
 @[simp] theorem observableConditionalExpectationLinearMap_apply
     (M : FiniteStrictProbabilityMap X Y P Q)
@@ -72,7 +76,8 @@ noncomputable def observableConditionalExpectationLinearMap
     (y : Y) :
     M.observableConditionalExpectationLinearMap f y =
       (∑ x : X,
-        if M.toFun x = y then P.weight x * f x else 0) / Q.weight y :=
+        if M.toFun x = y then P.weight x * f x else 0) / Q.weight y := by
+  classical
   rfl
 
 /-- Conditional expectation is a left inverse of pullback on observables. -/
@@ -159,12 +164,17 @@ theorem l2ConditionalExpectation_adjoint_pairing
   change
     inner ℝ
         (Q.observableEmbedLinearMap
-          (M.observableConditionalExpectationLinearMap g))
+          (M.observableConditionalExpectationLinearMap
+            (P.coordinateObserveLinearMap
+              (P.observableEmbedLinearMap g))))
         (Q.observableEmbedLinearMap f) =
       inner ℝ
         (P.observableEmbedLinearMap g)
         (P.observableEmbedLinearMap
-          (M.observablePullbackLinearMap f))
+          (M.observablePullbackLinearMap
+            (Q.coordinateObserveLinearMap
+              (Q.observableEmbedLinearMap f))))
+  rw [P.coordinateObserve_observableEmbed, Q.coordinateObserve_observableEmbed]
   rw [Q.inner_observableEmbed, P.inner_observableEmbed]
   change
     (∑ z : Y,
@@ -390,7 +400,8 @@ theorem intertwiningResidualLinearMap_eq_zero_iff
           M.l2PullbackLinearMap (B y) = 0 at hy
     exact sub_eq_zero.mp hy
   · intro h
-    ext y
+    apply LinearMap.ext
+    intro y
     change
       A (M.l2PullbackLinearMap y) -
           M.l2PullbackLinearMap (B y) = 0
