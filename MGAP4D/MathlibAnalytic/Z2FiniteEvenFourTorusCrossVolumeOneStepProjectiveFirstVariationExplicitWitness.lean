@@ -161,22 +161,33 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepProjectiveFirstVariation_expli
         0 0 1
         finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration
         1 1 1 ≠ 0 := by
+  have hSraw :=
+    finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration_spatialWilsonAction_pos
+  have hS1raw :=
+    finiteEvenFourTorusZ2SpatialWilsonAction_zero_one_one
+      (finiteEvenFourTorusDoubleRefinement 0)
   let k : ℝ :=
     Fintype.card (finiteEvenFourTorusZ2SliceConfigurationCoarseHom 0).ker
   let s : ℝ := finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale 0
-  let d : ℝ :=
+  let S : ℝ :=
     finiteEvenFourTorusZ2SpatialWilsonAction
-        (finiteEvenFourTorusDoubleRefinement 0) 0 1
-        finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration -
-      finiteEvenFourTorusZ2SpatialWilsonAction
-        (finiteEvenFourTorusDoubleRefinement 0) 0 1 1
+      (finiteEvenFourTorusDoubleRefinement 0) 0 1
+      finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration
+  let S1 : ℝ :=
+    finiteEvenFourTorusZ2SpatialWilsonAction
+      (finiteEvenFourTorusDoubleRefinement 0) 0 1
+      (1 : FiniteEvenFourTorusZ2SliceConfiguration
+        (finiteEvenFourTorusDoubleRefinement 0))
+  let d : ℝ := S - S1
+  change 0 < S at hSraw
+  change S1 = 0 at hS1raw
   have hformula :
       finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationFiberObstructionFirstVariation
           0 0 1
           finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration
           1 1 1 =
         -(1 / 2 : ℝ) * k * s ^ 2 * d := by
-    dsimp [k, s, d]
+    dsimp [k, s, d, S, S1]
     exact
       finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationFiberObstructionFirstVariation_identityAnchor_eq_spatialDefect_of_coarseMap_eq_one
         0 0 1 finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration
@@ -188,10 +199,9 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepProjectiveFirstVariation_expli
   have hs0 : s ≠ 0 := by
     exact ne_of_gt finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale_zero_pos
   have hd0 : d ≠ 0 := by
-    dsimp [d]
-    rw [finiteEvenFourTorusZ2SpatialWilsonAction_zero_one_one]
-    exact ne_of_gt
-      finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration_spatialWilsonAction_pos
+    change S - S1 ≠ 0
+    rw [hS1raw]
+    exact ne_of_gt hSraw
   have hprod : -(1 / 2 : ℝ) * k * s ^ 2 * d ≠ 0 := by
     exact mul_ne_zero
       (mul_ne_zero
