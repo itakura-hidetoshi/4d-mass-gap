@@ -95,7 +95,6 @@ theorem finiteGroupOrbitProbabilityEmbeddingScale_eq_cardinality
     Real.sq_sqrt (le_of_lt hwc), Real.sq_sqrt (le_of_lt hmf),
     Real.sq_sqrt (le_of_lt hnc), Real.sq_sqrt (le_of_lt hnf)]
   field_simp [ne_of_gt hmf, ne_of_gt hmc, ne_of_gt hnf, ne_of_gt hnc]
-  ring
 
 /-- The generic cardinality scale is strictly positive. -/
 theorem finiteGroupConfigurationCardinalityEmbeddingScale_pos
