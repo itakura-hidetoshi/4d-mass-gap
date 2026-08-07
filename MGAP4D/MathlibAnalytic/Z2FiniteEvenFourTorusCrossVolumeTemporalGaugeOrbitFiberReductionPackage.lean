@@ -69,37 +69,29 @@ theorem finiteEvenFourTorusZ2GaugeOrbitGroundLiftedIntertwiningObstruction_eq_ze
 finest/coarsest normalization equality and direct fixed-sector compatibility,
 kills the actual direct two-step ground-lifted obstruction. -/
 theorem finiteEvenFourTorusZ2GaugeOrbitTwoStepGroundLiftedIntertwiningObstruction_eq_zero_of_temporalGaugeOrbitFiberKernel_normalization_fixedSector
-    (H : ℕ)
-    (β energyIdentity energyNontrivial : ℝ)
-    (hβ : 0 ≤ β)
-    (hEnergy : energyIdentity ≤ energyNontrivial)
-    (hKernel :
-      ∀ (A : FiniteEvenFourTorusZ2SliceConfiguration
-          (finiteEvenFourTorusDoubleRefinement
-            (finiteEvenFourTorusDoubleRefinement H)))
-        (q : FiniteEvenFourTorusZ2ResidualGaugeOrbit H),
-        finiteEvenFourTorusZ2GaugeInvariantTwoStepTemporalGaugeFineOrbitFiberKernelCoefficient
-            H β energyIdentity energyNontrivial hβ hEnergy A q =
-          finiteEvenFourTorusZ2GaugeInvariantTwoStepTemporalGaugeCoarseOrbitKernelCoefficient
-            H β energyIdentity energyNontrivial hβ hEnergy A q)
-    (hNormalization :
+    (H : ℕ) (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 ≤ β) (hEnergy : energyIdentity ≤ energyNontrivial)
+    (hKernel : ∀ (A : FiniteEvenFourTorusZ2SliceConfiguration
+      (finiteEvenFourTorusDoubleRefinement (finiteEvenFourTorusDoubleRefinement H)))
+      (q : FiniteEvenFourTorusZ2ResidualGaugeOrbit H),
+      finiteEvenFourTorusZ2GaugeInvariantTwoStepTemporalGaugeFineOrbitFiberKernelCoefficient
+        H β energyIdentity energyNontrivial hβ hEnergy A q =
+      finiteEvenFourTorusZ2GaugeInvariantTwoStepTemporalGaugeCoarseOrbitKernelCoefficient
+        H β energyIdentity energyNontrivial hβ hEnergy A q)
+    (hNormalization : finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
+      (finiteEvenFourTorusDoubleRefinement (finiteEvenFourTorusDoubleRefinement H))
+      β energyIdentity energyNontrivial hβ hEnergy =
       finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
-          (finiteEvenFourTorusDoubleRefinement
-            (finiteEvenFourTorusDoubleRefinement H))
-          β energyIdentity energyNontrivial hβ hEnergy =
-        finiteEvenFourTorusZ2UnfixedGaugeOneSlabNormalizationScalar
-          H β energyIdentity energyNontrivial hβ hEnergy)
-    (hFixedSector :
-      FiniteDimensionalGroundProjectorDecompositionCompatible
-        (finiteEvenFourTorusZ2UnfixedGaugeInvariantSpectralData
-          (finiteEvenFourTorusDoubleRefinement
-            (finiteEvenFourTorusDoubleRefinement H))
-          β energyIdentity energyNontrivial hβ hEnergy)
-        (finiteEvenFourTorusZ2UnfixedGaugeInvariantSpectralData
-          H β energyIdentity energyNontrivial hβ hEnergy)
-        (finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbeddingLinearIsometry H).toLinearMap) :
+        H β energyIdentity energyNontrivial hβ hEnergy)
+    (hFixedSector : FiniteDimensionalGroundProjectorDecompositionCompatible
+      (finiteEvenFourTorusZ2UnfixedGaugeInvariantSpectralData
+        (finiteEvenFourTorusDoubleRefinement (finiteEvenFourTorusDoubleRefinement H))
+        β energyIdentity energyNontrivial hβ hEnergy)
+      (finiteEvenFourTorusZ2UnfixedGaugeInvariantSpectralData
+        H β energyIdentity energyNontrivial hβ hEnergy)
+      (finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseEmbeddingLinearIsometry H).toLinearMap) :
     finiteEvenFourTorusZ2GaugeOrbitTwoStepGroundLiftedIntertwiningObstruction
-        H β energyIdentity energyNontrivial hβ hEnergy = 0 := by
+      H β energyIdentity energyNontrivial hβ hEnergy = 0 := by
   have hKernelUnfixed :
       ∀ (A : FiniteEvenFourTorusZ2SliceConfiguration
           (finiteEvenFourTorusDoubleRefinement
