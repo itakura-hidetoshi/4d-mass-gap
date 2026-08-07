@@ -34,14 +34,14 @@ theorem finiteBoltzmannWeightedSum_hasDerivAt_zero
       (finiteBoltzmannWeightedSum energy weight)
       (∑ x : α, (-energy x) * weight x)
       0 := by
-  change HasDerivAt
-    (fun β : ℝ =>
-      ∑ x in Finset.univ, Real.exp ((-energy x) * β) * weight x)
-    (∑ x in Finset.univ, (-energy x) * weight x)
-    0
-  apply HasDerivAt.fun_sum
-  intro x _hx
-  exact (finiteBoltzmannFactor_hasDerivAt_zero (energy x)).mul_const (weight x)
+  simpa [finiteBoltzmannWeightedSum] using
+    (HasDerivAt.fun_sum
+      (u := Finset.univ)
+      (A := fun x β : α × ℝ =>
+        Real.exp ((-energy x.1) * x.2) * weight x.1)
+      (A' := fun x : α => (-energy x) * weight x)
+      (fun x _hx =>
+        (finiteBoltzmannFactor_hasDerivAt_zero (energy x)).mul_const (weight x)))
 
 @[simp] theorem finiteBoltzmannWeightedSum_zero
     {α : Type*} [Fintype α]
