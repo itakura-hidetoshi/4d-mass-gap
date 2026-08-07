@@ -20,11 +20,13 @@ theorem finiteEvenFourTorusSpatialVertexStep_ne
   intro h
   have hcoord := congrArg
     (fun w : FiniteEvenFourTorusSpatialVertex H => w.1 μ.1) h
-  change
-    v.1 μ.1 + (1 : ZMod ((2 * H + 1) + 1)) = v.1 μ.1 at hcoord
+  have hcoord' :
+      v.1 μ.1 + (1 : ZMod ((2 * H + 1) + 1)) = v.1 μ.1 := by
+    simpa [finiteEvenFourTorusSpatialVertexStep, finiteFourTorusStep,
+      finiteFourTorusUnitStep] using hcoord
   have hone : (1 : ZMod ((2 * H + 1) + 1)) = 0 := by
     apply add_left_cancel (a := v.1 μ.1)
-    simpa using hcoord
+    simpa using hcoord'
   exact finiteEvenFourTorusSpatialModulus_one_ne_zero H hone
 
 /-- Endpoint difference of a temporal-link field along one spatial edge. -/
@@ -86,8 +88,8 @@ theorem z2Gauge_sum_left_mul
   let E : Z2Gauge ≃ Z2Gauge :=
     { toFun := fun g => c * g
       invFun := fun g => c⁻¹ * g
-      left_inv := by intro g; simp [mul_assoc]
-      right_inv := by intro g; simp [mul_assoc] }
+      left_inv := by intro g; simp
+      right_inv := by intro g; simp }
   exact Fintype.sum_equiv E _ _ (fun g => by rfl)
 
 /-- At every spatial edge, uniform temporal-link averaging removes all
@@ -180,12 +182,47 @@ theorem finiteEvenFourTorusZ2TemporalLinkAverage_crossingAction_eq
             H β energyIdentity energyNontrivial U A' B') := by
   classical
   simp_rw [finiteEvenFourTorusZ2UnfixedGaugeCrossingAction_eq_fintype_sum]
-  rw [Finset.sum_comm, Finset.sum_comm]
-  rw [Finset.mul_sum, Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro e _he
-  exact finiteEvenFourTorusZ2TemporalLinkAverage_localCrossingEnergy_eq
-    H energyIdentity energyNontrivial A B A' B' e
+  calc
+    (Fintype.card (FiniteEvenFourTorusZ2TemporalLinkField H) : ℝ)⁻¹ *
+        (∑ U : FiniteEvenFourTorusZ2TemporalLinkField H,
+          ∑ e : FiniteEvenFourTorusSpatialLink H,
+            finiteEvenFourTorusZ2CrossingLocalEnergy energyIdentity energyNontrivial
+              (finiteEvenFourTorusZ2UnfixedTemporalPlaquetteHolonomy H U A B e)) =
+      (Fintype.card (FiniteEvenFourTorusZ2TemporalLinkField H) : ℝ)⁻¹ *
+        (∑ e : FiniteEvenFourTorusSpatialLink H,
+          ∑ U : FiniteEvenFourTorusZ2TemporalLinkField H,
+            finiteEvenFourTorusZ2CrossingLocalEnergy energyIdentity energyNontrivial
+              (finiteEvenFourTorusZ2UnfixedTemporalPlaquetteHolonomy H U A B e)) := by
+        congr 1
+        exact Finset.sum_comm
+    _ = ∑ e : FiniteEvenFourTorusSpatialLink H,
+        (Fintype.card (FiniteEvenFourTorusZ2TemporalLinkField H) : ℝ)⁻¹ *
+          (∑ U : FiniteEvenFourTorusZ2TemporalLinkField H,
+            finiteEvenFourTorusZ2CrossingLocalEnergy energyIdentity energyNontrivial
+              (finiteEvenFourTorusZ2UnfixedTemporalPlaquetteHolonomy H U A B e)) := by
+        rw [Finset.mul_sum]
+    _ = ∑ e : FiniteEvenFourTorusSpatialLink H,
+        (Fintype.card (FiniteEvenFourTorusZ2TemporalLinkField H) : ℝ)⁻¹ *
+          (∑ U : FiniteEvenFourTorusZ2TemporalLinkField H,
+            finiteEvenFourTorusZ2CrossingLocalEnergy energyIdentity energyNontrivial
+              (finiteEvenFourTorusZ2UnfixedTemporalPlaquetteHolonomy H U A' B' e)) := by
+        apply Finset.sum_congr rfl
+        intro e _he
+        exact finiteEvenFourTorusZ2TemporalLinkAverage_localCrossingEnergy_eq
+          H energyIdentity energyNontrivial A B A' B' e
+    _ = (Fintype.card (FiniteEvenFourTorusZ2TemporalLinkField H) : ℝ)⁻¹ *
+        (∑ e : FiniteEvenFourTorusSpatialLink H,
+          ∑ U : FiniteEvenFourTorusZ2TemporalLinkField H,
+            finiteEvenFourTorusZ2CrossingLocalEnergy energyIdentity energyNontrivial
+              (finiteEvenFourTorusZ2UnfixedTemporalPlaquetteHolonomy H U A' B' e)) := by
+        rw [Finset.mul_sum]
+    _ = (Fintype.card (FiniteEvenFourTorusZ2TemporalLinkField H) : ℝ)⁻¹ *
+        (∑ U : FiniteEvenFourTorusZ2TemporalLinkField H,
+          ∑ e : FiniteEvenFourTorusSpatialLink H,
+            finiteEvenFourTorusZ2CrossingLocalEnergy energyIdentity energyNontrivial
+              (finiteEvenFourTorusZ2UnfixedTemporalPlaquetteHolonomy H U A' B' e)) := by
+        congr 1
+        exact Finset.sum_comm
 
 end
 
