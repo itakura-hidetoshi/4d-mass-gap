@@ -152,7 +152,10 @@ theorem finiteEvenFourTorusZ2GaugeInvariantTwoStepOneSlabTransferIntertwiningRes
   module
 
 /-- Exact actual finite-sum formula for the direct two-step raw transfer
-residual. -/
+residual.  The local elaboration budget only accommodates the large dependent
+type expression produced by the two nested refinements; it changes no theorem
+statement or mathematical assumption. -/
+set_option maxHeartbeats 800000 in
 theorem finiteEvenFourTorusZ2GaugeInvariantTwoStepOneSlabRawTransferIntertwiningResidual_apply_coe_eq_kernel_sums
     (H : ℕ)
     (β energyIdentity energyNontrivial : ℝ)
