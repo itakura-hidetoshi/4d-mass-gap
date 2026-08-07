@@ -127,6 +127,7 @@ theorem finiteEvenFourTorusZ2GaugeInvariantTwoStepKernelEquation_iff_orbitFiberC
         H β energyIdentity energyNontrivial hβ hEnergy A)
       (finiteEvenFourTorusZ2GaugeInvariantTwoStepCoarseKernelWeight
         H β energyIdentity energyNontrivial hβ hEnergy A)
+  -- Normalize the weighted functional and orbit coefficients in separate steps.
   constructor
   · intro h
     have hOrbit := hGeneric.mp (by
