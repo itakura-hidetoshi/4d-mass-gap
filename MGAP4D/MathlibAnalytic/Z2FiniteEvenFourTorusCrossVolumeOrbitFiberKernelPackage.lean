@@ -54,7 +54,7 @@ theorem finiteEvenFourTorusZ2GaugeInvariantTwoStepOneSlabRawTransferIntertwining
   exact hMismatch (hAll A q)
 
 /-- Strong one-step projective compatibility data.  This is deliberately a
-structure of hypotheses, not an unconditional model claim. -/
+bundle of hypotheses, not an unconditional model claim. -/
 structure Z2FiniteEvenFourTorusOneStepStrongProjectiveCompatibilityData
     (H : ℕ)
     (β energyIdentity energyNontrivial : ℝ)
