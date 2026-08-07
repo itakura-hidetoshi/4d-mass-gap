@@ -67,7 +67,7 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalyticFirstVariation_sub
   simp only [Finset.sum_neg_distrib, Finset.sum_add_distrib,
     Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
   field_simp [hn] at hcross ⊢
-  linear_combination 3 * hcross
+  linear_combination 5 * hcross
 
 /-- Real-valued count of one actual configuration coarse-map fibre. -/
 theorem finiteEvenFourTorusZ2SliceConfigurationCoarseMap_fiberIndicatorSum
@@ -80,10 +80,17 @@ theorem finiteEvenFourTorusZ2SliceConfigurationCoarseMap_fiberIndicatorSum
       else 0) =
       (Fintype.card
         (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H).ker : ℝ) := by
-  simpa [finiteEvenFourTorusZ2SliceConfigurationCoarseHom] using
-    finiteSurjectiveGroupHom_fiber_count
-      (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H)
-      (finiteEvenFourTorusZ2SliceConfigurationCoarseHom_surjective H) b
+  change
+    (∑ B : FiniteEvenFourTorusZ2SliceConfiguration
+        (finiteEvenFourTorusDoubleRefinement H),
+      if (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H) B = b then
+        (1 : ℝ)
+      else 0) =
+      (Fintype.card
+        (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H).ker : ℝ)
+  exact finiteSurjectiveGroupHom_fiber_count
+    (finiteEvenFourTorusZ2SliceConfigurationCoarseHom H)
+    (finiteEvenFourTorusZ2SliceConfigurationCoarseHom_surjective H) b
 
 /-- The beta-zero fine fibre first variation changes by kernel multiplicity
 and the constant embedding scale times the fine spatial-action defect. -/
@@ -139,7 +146,6 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCo
         finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingPointwiseScale_eq_cardinality]
       rw [← sub_mul,
         finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalyticFirstVariation_sub_right]
-      rfl
     · simp [hB]
   have hcount := finiteEvenFourTorusZ2SliceConfigurationCoarseMap_fiberIndicatorSum H b
   unfold finiteEvenFourTorusZ2GaugeInvariantOneStepFineConfigurationFiberKernelCoefficientFirstVariation
