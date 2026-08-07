@@ -134,21 +134,12 @@ theorem finiteEvenFourTorusZ2ResidualSliceGauge_shiftedFiberProduct_inv
             finiteEvenFourTorusSpatialVertexStep H v μ then
           g u
         else 1)⁻¹ := by
-  classical
-  have hshift :=
-    finiteEvenFourTorusZ2ResidualSliceGauge_shiftedFiberProduct
-      H g v μ
-  have hinv :=
-    Finset.prod_inv_distrib
-      (s := (Finset.univ : Finset
-        (FiniteEvenFourTorusSpatialVertex
-          (finiteEvenFourTorusDoubleRefinement H))))
-      (fun w =>
-        if finiteEvenFourTorusSpatialVertexCoarseMap H w = v then
-          g (finiteEvenFourTorusSpatialVertexStep
-            (finiteEvenFourTorusDoubleRefinement H) w μ)
-        else 1)
-  simpa using hinv.trans (congrArg Inv.inv hshift)
+  have hinvSelf : ∀ x : Z2Gauge, x⁻¹ = x := by
+    intro x
+    fin_cases x <;> native_decide
+  simpa only [hinvSelf] using
+    (finiteEvenFourTorusZ2ResidualSliceGauge_shiftedFiberProduct
+      H g v μ)
 
 /-- The actual doubled-torus configuration coarse graining is exactly
 equivariant for the corresponding residual-gauge fibre-product map. -/
