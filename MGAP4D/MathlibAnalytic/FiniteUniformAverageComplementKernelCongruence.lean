@@ -44,8 +44,7 @@ theorem finiteUniformAverageComplement_comp_finiteKernelOperator_congr_of_sub_ri
       finiteKernelOperator K qf - finiteKernelOperator L qf = g := by
     ext y
     dsimp [g, R]
-    rw [finiteKernelOperator_apply, finiteKernelOperator_apply,
-      finiteKernelOperator_apply, ← Finset.sum_sub_distrib]
+    rw [← Finset.sum_sub_distrib]
     apply Finset.sum_congr rfl
     intro x _hx
     ring
