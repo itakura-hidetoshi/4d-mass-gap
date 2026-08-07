@@ -165,10 +165,10 @@ theorem finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect_intertwines
       (finiteEvenFourTorusZ2GaugeOrbitProbabilityL2Identification H).forward
         (finiteEvenFourTorusZ2GeometricDoobGroundLiftedDefect
           H β energyIdentity energyNontrivial hβ hEnergy f) :=
-  (finiteEvenFourTorusZ2GaugeOrbitProbabilityL2Identification H).
-    transportOperator_apply_forward
-      (finiteEvenFourTorusZ2GeometricDoobGroundLiftedDefect
-        H β energyIdentity energyNontrivial hβ hEnergy) f
+  RealHilbertLinearIsometricIdentification.transportOperator_apply_forward
+    (finiteEvenFourTorusZ2GaugeOrbitProbabilityL2Identification H)
+    (finiteEvenFourTorusZ2GeometricDoobGroundLiftedDefect
+      H β energyIdentity energyNontrivial hβ hEnergy) f
 
 /-- The transported gauge-orbit quadratic form is exactly the actual finite
 Gauss-invariant quadratic form. -/
@@ -189,10 +189,22 @@ theorem finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect_inner
   let I := finiteEvenFourTorusZ2GaugeOrbitProbabilityL2Identification H
   let A := finiteEvenFourTorusZ2GeometricDoobGroundLiftedDefect
     H β energyIdentity energyNontrivial hβ hEnergy
-  change inner ℝ (I.forward (A (I.inverse y))) y =
-    inner ℝ (A (I.inverse y)) (I.inverse y)
-  rw [← I.forward_inverse y]
-  exact I.forward_inner _ _
+  calc
+    inner ℝ
+        (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
+          H β energyIdentity energyNontrivial hβ hEnergy y) y =
+      inner ℝ
+        (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
+          H β energyIdentity energyNontrivial hβ hEnergy
+          (I.forward (I.inverse y)))
+        (I.forward (I.inverse y)) := by
+      rw [I.forward_inverse]
+    _ = inner ℝ
+        (I.forward (A (I.inverse y)))
+        (I.forward (I.inverse y)) := by
+      rw [finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect_intertwines]
+    _ = inner ℝ (A (I.inverse y)) (I.inverse y) :=
+      I.forward_inner _ _
 
 /-- Symmetry of the actual defect on the configuration gauge-orbit carrier. -/
 theorem finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect_isSymmetric
@@ -202,12 +214,12 @@ theorem finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect_isSymmetric
     (hEnergy : energyIdentity ≤ energyNontrivial) :
     (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
       H β energyIdentity energyNontrivial hβ hEnergy).toLinearMap.IsSymmetric :=
-  (finiteEvenFourTorusZ2GaugeOrbitProbabilityL2Identification H).
-    transportOperator_isSymmetric
-      (finiteEvenFourTorusZ2GeometricDoobGroundLiftedDefect
-        H β energyIdentity energyNontrivial hβ hEnergy)
-      (finiteEvenFourTorusZ2GeometricDoobGroundLiftedDefect_isSymmetric
-        H β energyIdentity energyNontrivial hβ hEnergy)
+  RealHilbertLinearIsometricIdentification.transportOperator_isSymmetric
+    (finiteEvenFourTorusZ2GaugeOrbitProbabilityL2Identification H)
+    (finiteEvenFourTorusZ2GeometricDoobGroundLiftedDefect
+      H β energyIdentity energyNontrivial hβ hEnergy)
+    (finiteEvenFourTorusZ2GeometricDoobGroundLiftedDefect_isSymmetric
+      H β energyIdentity energyNontrivial hβ hEnergy)
 
 /-- The exact finite-volume coercivity constant `1/2` holds on every vector of
 the actual configuration gauge-orbit probability `L²` carrier. -/
@@ -225,14 +237,14 @@ theorem finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect_half_coerci
       inner ℝ
         (finiteEvenFourTorusZ2GaugeOrbitProbabilityGroundLiftedDefect
           H β energyIdentity energyNontrivial hβ.le hEnergy.le y) y :=
-  (finiteEvenFourTorusZ2GaugeOrbitProbabilityL2Identification H).
-    transportOperator_quadratic_lower_bound
-      (finiteEvenFourTorusZ2GeometricDoobGroundLiftedDefect
-        H β energyIdentity energyNontrivial hβ.le hEnergy.le)
-      (1 / 2 : ℝ)
-      (finiteEvenFourTorusZ2GeometricDoobGroundLiftedDefect_half_coercive
-        energyIdentity energyNontrivial hEnergy β hβ hβCutoff H)
-      y
+  RealHilbertLinearIsometricIdentification.transportOperator_quadratic_lower_bound
+    (finiteEvenFourTorusZ2GaugeOrbitProbabilityL2Identification H)
+    (finiteEvenFourTorusZ2GeometricDoobGroundLiftedDefect
+      H β energyIdentity energyNontrivial hβ.le hEnergy.le)
+    (1 / 2 : ℝ)
+    (finiteEvenFourTorusZ2GeometricDoobGroundLiftedDefect_half_coercive
+      energyIdentity energyNontrivial hEnergy β hβ hβCutoff H)
+    y
 
 /-- Audit-visible actual finite `Z₂` configuration gauge-orbit probability
 realization and defect conjugacy package. -/
