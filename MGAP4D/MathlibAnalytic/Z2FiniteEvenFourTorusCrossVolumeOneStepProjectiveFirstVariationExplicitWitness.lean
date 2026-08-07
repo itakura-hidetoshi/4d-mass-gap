@@ -153,7 +153,7 @@ theorem finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale_zero_
       (finiteEvenFourTorusDoubleRefinement 0))]
   exact finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingPointwiseScale_pos 0 1
 
-/-- The explicit `H = 0`, `(energyIdentity,energyNontrivial) = (0,1)` witness
+/- The explicit `H = 0`, `(energyIdentity,energyNontrivial) = (0,1)` witness
 has a genuinely nonzero beta-zero one-step projective first variation. -/
 set_option maxRecDepth 2048 in
 theorem finiteEvenFourTorusZ2GaugeInvariantOneStepProjectiveFirstVariation_explicitWitness_ne_zero :
@@ -200,8 +200,7 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneStepProjectiveFirstVariation_expli
     exact ne_of_gt finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale_zero_pos
   have hd0 : d ≠ 0 := by
     change S - S1 ≠ 0
-    rw [hS1raw]
-    exact ne_of_gt hSraw
+    simpa [hS1raw] using (ne_of_gt hSraw)
   have hprod : -(1 / 2 : ℝ) * k * s ^ 2 * d ≠ 0 := by
     exact mul_ne_zero
       (mul_ne_zero
@@ -220,7 +219,7 @@ theorem finiteEvenFourTorusZ2GaugeInvariantOneSlabTransferIntertwiningResidual_e
         finiteEvenFourTorusZ2GaugeInvariantOneSlabTransferIntertwiningResidualLinearMap
           0 β 0 1 (le_of_lt hβ) (by norm_num : (0 : ℝ) ≤ 1) ≠ 0 := by
   exact
-    finiteEvenFourTorusZ2GaugeInvariantOneSlabTransferIntertwiningResidual_exists_smallPositive_interval_of_firstVariation_ne_zero
+    finiteEvenFourTorusZ2GaugeInvariantOneSlabTransferIntertwiningResidual_exists_smallPositive_interval_ne_zero_of_projectiveFirstVariation_ne_zero
       0 0 1 (by norm_num)
       finiteEvenFourTorusZ2ProjectiveFirstVariationWitnessConfiguration
       (1 : FiniteEvenFourTorusZ2SliceConfiguration 0)
