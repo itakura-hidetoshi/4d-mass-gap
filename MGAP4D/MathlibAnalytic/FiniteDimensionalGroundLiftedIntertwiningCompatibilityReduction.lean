@@ -36,7 +36,6 @@ theorem groundLiftedDefect_eq_transferDefect_add_groundLiftCorrection :
   apply ContinuousLinearMap.ext
   intro x
   simp [groundLiftCorrection]
-  module
 
 /-- On every fixed transfer eigenmode the correction is exactly the identity. -/
 theorem groundLiftCorrection_apply_ground
