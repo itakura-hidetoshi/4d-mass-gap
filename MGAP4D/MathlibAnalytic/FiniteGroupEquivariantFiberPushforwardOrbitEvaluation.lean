@@ -62,10 +62,12 @@ theorem finiteGroupOrbitAggregateCoefficient_eq_mass_mul_representative
   · have hval :=
       finiteGroupCoefficientInvariant_value_eq_representative
         G α a ha q x hxq
-    simp [hxq, hxq.symm, hval]
+    have hqx : q = finiteGroupOrbitClass G α x := hxq.symm
+    rw [if_pos hxq, if_pos hqx, one_mul]
+    exact hval.symm
   · have hqne : q ≠ finiteGroupOrbitClass G α x := by
       exact fun h => hxq h.symm
-    simp [hxq, hqne]
+    rw [if_neg hxq, if_neg hqne, zero_mul]
 
 /-- For invariant coefficients, equality after orbit aggregation on every orbit
 is equivalent to pointwise equality on the original finite acted type. -/
