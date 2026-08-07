@@ -69,24 +69,23 @@ theorem finiteEvenFourTorusZ2SliceConfigurationCoarseMap_section
       else 1) = B (v, μ)
     rw [if_pos hs]
     unfold finiteEvenFourTorusZ2SliceConfigurationCoarseSection
-    rw [if_pos]
-    · rw [hs]
-    · simpa [hs]
+    have hsSelected :
+        s = finiteEvenFourTorusSpatialVertexCoarseSection H
+          (finiteEvenFourTorusSpatialVertexCoarseMap H s) := by
+      rw [hs]
+      rfl
+    rw [if_pos hsSelected, hs]
   · intro w hws
     by_cases hwv : finiteEvenFourTorusSpatialVertexCoarseMap H w = v
-    · have hwSection :
-          finiteEvenFourTorusSpatialVertexCoarseSection H
-              (finiteEvenFourTorusSpatialVertexCoarseMap H w) = s := by
-        rw [hwv]
+    · rw [if_pos hwv]
+      unfold finiteEvenFourTorusZ2SliceConfigurationCoarseSection
       have hnotSelected :
           w ≠ finiteEvenFourTorusSpatialVertexCoarseSection H
             (finiteEvenFourTorusSpatialVertexCoarseMap H w) := by
-        intro h
-        apply hws
-        exact h.trans hwSection
-      simp [hwv, finiteEvenFourTorusZ2SliceConfigurationCoarseSection,
-        hnotSelected]
-    · simp [hwv]
+        rw [hwv]
+        simpa [s] using hws
+      rw [if_neg hnotSelected]
+    · rw [if_neg hwv]
 
 /-- The bundled doubled-torus coarse configuration hom is surjective. -/
 theorem finiteEvenFourTorusZ2SliceConfigurationCoarseHom_surjective
@@ -132,24 +131,23 @@ theorem finiteEvenFourTorusZ2ResidualSliceGaugeCoarseMap_section
       else 1) = h v
     rw [if_pos hs]
     unfold finiteEvenFourTorusZ2ResidualSliceGaugeCoarseSection
-    rw [if_pos]
-    · rw [hs]
-    · simpa [hs]
+    have hsSelected :
+        s = finiteEvenFourTorusSpatialVertexCoarseSection H
+          (finiteEvenFourTorusSpatialVertexCoarseMap H s) := by
+      rw [hs]
+      rfl
+    rw [if_pos hsSelected, hs]
   · intro w hws
     by_cases hwv : finiteEvenFourTorusSpatialVertexCoarseMap H w = v
-    · have hwSection :
-          finiteEvenFourTorusSpatialVertexCoarseSection H
-              (finiteEvenFourTorusSpatialVertexCoarseMap H w) = s := by
-        rw [hwv]
+    · rw [if_pos hwv]
+      unfold finiteEvenFourTorusZ2ResidualSliceGaugeCoarseSection
       have hnotSelected :
           w ≠ finiteEvenFourTorusSpatialVertexCoarseSection H
             (finiteEvenFourTorusSpatialVertexCoarseMap H w) := by
-        intro hw
-        apply hws
-        exact hw.trans hwSection
-      simp [hwv, finiteEvenFourTorusZ2ResidualSliceGaugeCoarseSection,
-        hnotSelected]
-    · simp [hwv]
+        rw [hwv]
+        simpa [s] using hws
+      rw [if_neg hnotSelected]
+    · rw [if_neg hwv]
 
 /-- The bundled residual-gauge coarse hom is surjective as well. -/
 theorem finiteEvenFourTorusZ2ResidualSliceGaugeCoarseHom_surjective
