@@ -64,8 +64,7 @@ theorem finiteUniformAverageComplementLinearMap_eq_zero_of_constant
   have hn : (Fintype.card α : ℝ) ≠ 0 := by
     exact_mod_cast Fintype.card_ne_zero
   ext y
-  change
-    g y - (Fintype.card α : ℝ)⁻¹ * ∑ z : α, g z = (0 : ℝ)
+  rw [finiteUniformAverageComplementLinearMap_apply]
   have hsum :
       (∑ z : α, g z) = (Fintype.card α : ℝ) * g y := by
     calc
@@ -76,7 +75,7 @@ theorem finiteUniformAverageComplementLinearMap_eq_zero_of_constant
       _ = (Fintype.card α : ℝ) * g y := by simp
   rw [hsum]
   field_simp [hn]
-  ring
+  simp
 
 /-- If every right-coordinate difference of a kernel is independent of the left
 coordinate, then the kernel operator maps every zero-mass input to a constant
