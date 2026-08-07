@@ -155,6 +155,7 @@ theorem finiteEvenFourTorusZ2GaugeInvariantCoarseEmbeddingCardinalityScale_zero_
 
 /-- The explicit `H = 0`, `(energyIdentity,energyNontrivial) = (0,1)` witness
 has a genuinely nonzero beta-zero one-step projective first variation. -/
+set_option maxRecDepth 2048 in
 theorem finiteEvenFourTorusZ2GaugeInvariantOneStepProjectiveFirstVariation_explicitWitness_ne_zero :
     finiteEvenFourTorusZ2GaugeInvariantOneStepGlobalProjectiveConfigurationFiberObstructionFirstVariation
         0 0 1
