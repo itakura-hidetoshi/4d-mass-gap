@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.FiniteGroupUniformProbabilityPushforward
+import MGAP4D.MathlibAnalytic.FiniteGroupOrbitProbabilityL2Realization
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -9,19 +10,20 @@ open scoped BigOperators
 noncomputable section
 
 /-- Every fibre of a surjective homomorphism between finite groups has exactly
-the cardinality of its kernel. -/
+the cardinality of its kernel.  This display theorem asks only for decidable
+target equality; the predicate-count theorem below remains fully classical. -/
 theorem finiteSurjectiveGroupHom_fiber_count
     {G H : Type}
     [Group G]
     [Group H]
     [Fintype G]
     [Fintype H]
+    [DecidableEq H]
     (φ : G →* H)
     (hφ : Function.Surjective φ)
     (y : H) :
     (∑ x : G, if φ x = y then (1 : ℝ) else 0) =
       (Fintype.card φ.ker : ℝ) := by
-  classical
   let E := finiteSurjectiveGroupHomEquivKerProd φ hφ
   calc
     (∑ x : G, if φ x = y then (1 : ℝ) else 0) =
