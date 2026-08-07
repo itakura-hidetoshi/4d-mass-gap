@@ -67,7 +67,8 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalyticFirstVariation_sub
   simp only [Finset.sum_neg_distrib, Finset.sum_add_distrib,
     Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
   field_simp [hn] at hcross ⊢
-  linear_combination 5 * hcross
+  rw [hcross]
+  ring
 
 /-- Real-valued count of one actual configuration coarse-map fibre. -/
 theorem finiteEvenFourTorusZ2SliceConfigurationCoarseMap_fiberIndicatorSum
