@@ -113,7 +113,8 @@ theorem baseComplement_groundProjectorSecondVariation_baseComplement_apply
   rw [hP1Q] at hSecond
   rw [D.groundProjectorVariation_baseProjector_eq_transferVariation] at hSecond
   rw [FiniteLinearizedTransferGroundProjectorData.baseComplement_apply]
-  abel
+  apply sub_eq_iff_eq_add.mpr
+  exact hSecond.symm
 
 /-- The disconnected first-order ground/excited mixing term appearing in the
 second-order ground-lifted expansion. -/
