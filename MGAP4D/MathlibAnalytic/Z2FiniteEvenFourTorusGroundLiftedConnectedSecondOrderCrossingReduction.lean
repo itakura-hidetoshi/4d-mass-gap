@@ -303,7 +303,8 @@ theorem finiteEvenFourTorusZ2ConnectedTransferSecondVariation_eq_normalizedCross
     finiteUniformAverageComplementLinearMap
   have hComplement : D.baseComplement = Q := by
     unfold FiniteLinearizedTransferGroundProjectorData.baseComplement
-      finiteUniformAverageComplementLinearMap
+    dsimp [Q]
+    unfold finiteUniformAverageComplementLinearMap
     rw [hProjector]
   have hSecond :
       D.baseComplement.comp
@@ -334,8 +335,15 @@ theorem finiteEvenFourTorusZ2ConnectedTransferSecondVariation_eq_normalizedCross
     exact
       finiteEvenFourTorusZ2UniformNormalizedSecondMomentInteraction_doubleCentered_eq_crossing_add_spatial
         H energyIdentity energyNontrivial
-  have hMix :
-      D.firstVariationGroundMixing + D.firstVariationGroundMixing =
+  have hMixRange :
+      D.baseComplement.comp D.firstVariationGroundMixing =
+        D.firstVariationGroundMixing := by
+    apply LinearMap.ext
+    intro x
+    exact D.baseComplement_firstVariationGroundMixing_apply x
+  have hMixQ :
+      D.baseComplement.comp D.firstVariationGroundMixing +
+          D.baseComplement.comp D.firstVariationGroundMixing =
         Q.comp
           ((finiteKernelOperator
             (finiteUniformNormalizedSpatialRankOneKernel
@@ -347,6 +355,16 @@ theorem finiteEvenFourTorusZ2ConnectedTransferSecondVariation_eq_normalizedCross
     exact
       finiteEvenFourTorusZ2NormalizedOneSlabKernelFirstVariationModel_groundMixing_double_eq_spatialRankOne
         H energyIdentity energyNontrivial normalizationDerivative
+  have hMix :
+      D.firstVariationGroundMixing + D.firstVariationGroundMixing =
+        Q.comp
+          ((finiteKernelOperator
+            (finiteUniformNormalizedSpatialRankOneKernel
+              (fun X : FiniteEvenFourTorusZ2SliceConfiguration H =>
+                finiteEvenFourTorusZ2SpatialWilsonAction
+                  H energyIdentity energyNontrivial X))).toLinearMap.comp Q) := by
+    rw [← hMixRange, ← hMixRange]
+    exact hMixQ
   unfold FiniteSecondOrderLinearizedTransferGroundProjectorData.connectedTransferSecondVariation
   rw [hSecond, hSplit]
   calc
@@ -373,9 +391,14 @@ theorem finiteEvenFourTorusZ2ConnectedTransferSecondVariation_eq_normalizedCross
                   H energyIdentity energyNontrivial X))).toLinearMap.comp Q) -
           (D.firstVariationGroundMixing + D.firstVariationGroundMixing)) := by
       abel
-    _ = _ := by
+    _ = Q.comp
+          ((finiteKernelOperator
+            (finiteEvenFourTorusZ2UniformNormalizedTemporalCrossingSecondMomentKernel
+              H energyIdentity energyNontrivial)).toLinearMap.comp Q) := by
       rw [hMix]
       simp
+    _ = _ := by
+      rfl
 
 /-- Conditional ground-lifted form of the same Package-W reduction:
 
