@@ -20,6 +20,9 @@ complete. -/
 noncomputable instance realLinearIsometryRangeCompleteSpace
     (J : H →ₗᵢ[ℝ] B) :
     CompleteSpace (realLinearIsometryRange J) := by
+  letI : CompleteSpace (⊤ : Submodule ℝ H) := by
+    apply IsComplete.completeSpace_coe
+    simpa using (isComplete_univ : IsComplete (Set.univ : Set H))
   rw [show realLinearIsometryRange J =
       (⊤ : Submodule ℝ H).map J.toLinearMap by
     exact LinearMap.range_eq_map J.toLinearMap]
