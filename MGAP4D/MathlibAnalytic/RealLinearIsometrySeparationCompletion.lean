@@ -84,8 +84,8 @@ noncomputable def realLinearIsometryCompletionExtension
               (hfExt.comp (continuous_const_smul r))
               (hfExt.const_smul r)
         | ih x =>
-            rw [hfExt_coe, hfExt_coe]
-            exact f.map_smul r x }
+            rw [← Completion.coe_smul, hfExt_coe]
+            simpa using f.map_smul r x }
   exact
     { toLinearMap := fLin
       norm_map' := by
@@ -96,6 +96,7 @@ noncomputable def realLinearIsometryCompletionExtension
               (continuous_norm.comp hfExt)
               continuous_norm
         | ih x =>
+            change ‖fExt (x : Completion E)‖ = ‖(x : Completion E)‖
             rw [hfExt_coe, Completion.norm_coe]
             exact f.norm_map x }
 
