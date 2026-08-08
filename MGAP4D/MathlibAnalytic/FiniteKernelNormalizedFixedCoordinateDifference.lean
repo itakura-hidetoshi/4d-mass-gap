@@ -4,9 +4,38 @@ import Mathlib.Tactic
 namespace MGAP4D
 namespace MathlibAnalytic
 
+open Filter TopologicalSpace
 open scoped BigOperators
 
 noncomputable section
+
+/-- Finite sums preserve scalar convergence.  This local helper keeps the
+Perron-slope argument independent of Mathlib naming drift for finite-sum
+Tendsto lemmas. -/
+theorem tendsto_finsetSum
+    {ι X : Type*}
+    {l : Filter X}
+    {f : ι → X → ℝ}
+    {a : ι → ℝ}
+    (s : Finset ι)
+    (h : ∀ i ∈ s, Tendsto (f i) l (nhds (a i))) :
+    Tendsto
+      (fun x => ∑ i in s, f i x)
+      l
+      (nhds (∑ i in s, a i)) := by
+  classical
+  induction s using Finset.induction_on with
+  | empty =>
+      simp
+  | @insert i s hi ih =>
+      have hiT : Tendsto (f i) l (nhds (a i)) := h i (by simp)
+      have hsT :
+          Tendsto
+            (fun x => ∑ j in s, f j x)
+            l
+            (nhds (∑ j in s, a j)) :=
+        ih (fun j hj => h j (by simp [hj]))
+      simpa [Finset.sum_insert, hi] using hiT.add hsT
 
 /-- A fixed vector of an operator-norm-normalized finite kernel satisfies an
 exact output-coordinate difference equation.  This generic identity isolates
