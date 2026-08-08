@@ -38,7 +38,7 @@ theorem finiteEvenFourTorusZ2TemporalLinkField_card_zero :
     Fintype.card (FiniteEvenFourTorusZ2TemporalLinkField 0) = 256 := by
   native_decide
 
-/-- The four boundary pairs of the side-two witness have zero mixed defect in
+/- The four boundary pairs of the side-two witness have zero mixed defect in
 the first nontrivial-count moment.  This is the finite combinatorial shadow of
 the boundary-independent first crossing mean. -/
 set_option maxRecDepth 100000 in
@@ -61,7 +61,7 @@ theorem finiteEvenFourTorusZ2CrossingNontrivialCount_sum_mixed_balance_zero :
           finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity) := by
   native_decide
 
-/-- The corresponding mixed defect in the squared nontrivial-count moment is
+/- The corresponding mixed defect in the squared nontrivial-count moment is
 exactly twice the temporal-field cardinality.  Equivalently, after uniform
 averaging, the mixed second-moment defect is exactly `2` before restoring the
 energy gap factor. -/
