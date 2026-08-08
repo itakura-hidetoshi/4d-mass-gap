@@ -73,8 +73,10 @@ theorem finiteEvenFourTorusZ2GroundLiftedKernelRightExtension_mixedDifference_eq
         finiteEvenFourTorusZ2NormalizedOneSlabCouplingFamilyMixedDifference
           H energyIdentity energyNontrivial x x' y y' β := by
   unfold finiteEvenFourTorusZ2GroundLiftedKernelRightExtension
+    finiteEvenFourTorusZ2NormalizedOneSlabCouplingFamilyKernel
+    finiteEvenFourTorusZ2NormalizedOneSlabCouplingFamilyMixedDifference
+    finiteEvenFourTorusZ2OneSlabCouplingFamilyMixedDifference
     finiteKernelMixedCrossDifference
-  rw [finiteEvenFourTorusZ2NormalizedOneSlabCouplingFamilyKernel_mixedDifference_eq]
   ring
 
 /-- Exact scalar version of the Package-W/X second-moment reduction:
