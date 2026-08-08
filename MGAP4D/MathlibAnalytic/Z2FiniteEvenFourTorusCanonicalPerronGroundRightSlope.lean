@@ -1,6 +1,8 @@
 import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusOneSlabMixedSecondOrderRealization
 import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusUnfixedGaugeCanonicalPerronGroundContinuity
 import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusGroundLiftedConnectedSecondOrderCancellation
+import MGAP4D.MathlibAnalytic.FiniteKernelNormalizedFixedCoordinateDifference
+import Mathlib.Topology.Algebra.Monoid
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -82,6 +84,9 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGround_zero_apply
           H energyIdentity energyNontrivial 0) p = p at hfix
   rw [hk] at hfix
   have hA := congrArg (fun q : FiniteEvenFourTorusZ2SliceHilbert H => q A) hfix
+  change
+    finiteKernelNormalizedOperator
+        (fun _ _ : FiniteEvenFourTorusZ2SliceConfiguration H => (1 : ℝ)) p A = p A at hA
   rw [finiteKernelNormalizedOperator_one_apply] at hA
   have hsum : ∑ X : FiniteEvenFourTorusZ2SliceConfiguration H, p X = 1 := hspec.1
   rw [hsum, mul_one] at hA
@@ -132,7 +137,17 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_ten
         finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension
           H energyIdentity energyNontrivial β A) := by
     simpa [toPi] using (continuous_apply A).comp hPlain
-  have hWithin := hCoord.continuousAt.continuousWithinAt.tendsto
+  have hAt :
+      Tendsto
+        (fun β : ℝ =>
+          finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension
+            H energyIdentity energyNontrivial β A)
+        (nhds (0 : ℝ))
+        (nhds
+          (finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension
+            H energyIdentity energyNontrivial 0 A)) :=
+    hCoord.continuousAt
+  have hWithin := hAt.mono_left inf_le_left
   simpa only [finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_zero_apply
     H energyIdentity energyNontrivial hEnergy A] using hWithin
 
@@ -224,39 +239,12 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGround_coordinateDiffere
   have hfix :=
     (finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGround_spec
       H energyIdentity energyNontrivial hEnergy ⟨β, hβ⟩).2.2
-  have hy := congrArg (fun q : FiniteEvenFourTorusZ2SliceHilbert H => q y) hfix
-  have hy' := congrArg (fun q : FiniteEvenFourTorusZ2SliceHilbert H => q y') hfix
-  change
-    finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization
-        H energyIdentity energyNontrivial β *
-      (∑ A : FiniteEvenFourTorusZ2SliceConfiguration H,
-        finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelCouplingFamily
-          H energyIdentity energyNontrivial β A y * p A) = p y at hy
-  change
-    finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization
-        H energyIdentity energyNontrivial β *
-      (∑ A : FiniteEvenFourTorusZ2SliceConfiguration H,
-        finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelCouplingFamily
-          H energyIdentity energyNontrivial β A y' * p A) = p y' at hy'
-  change
-    p y - p y' =
-      finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization
-          H energyIdentity energyNontrivial β *
-        ∑ A : FiniteEvenFourTorusZ2SliceConfiguration H,
-          (finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelCouplingFamily
-              H energyIdentity energyNontrivial β A y -
-            finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelCouplingFamily
-              H energyIdentity energyNontrivial β A y') * p A
-  rw [← hy, ← hy']
-  rw [← Finset.mul_sum]
-  apply congrArg
-    (fun z : ℝ =>
-      finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization
-        H energyIdentity energyNontrivial β * z)
-  rw [Finset.sum_sub_distrib]
-  apply Finset.sum_congr rfl
-  intro A _hA
-  ring
+  have h :=
+    finiteKernelNormalizedOperator_fixed_coordinateDifference
+      (finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelCouplingFamily
+        H energyIdentity energyNontrivial β)
+      p hfix y y'
+  simpa [p, finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization] using h
 
 /-- The actual canonical Perron ground has an explicit right first-order
 coordinate-difference slope at beta zero.  It is obtained solely from the
@@ -294,18 +282,25 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_coo
           H energyIdentity energyNontrivial y -
         finiteEvenFourTorusZ2SpatialWilsonAction
           H energyIdentity energyNontrivial y'))
+  have hNormAt :
+      Tendsto
+        (finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization
+          H energyIdentity energyNontrivial)
+        (nhds (0 : ℝ))
+        (nhds
+          (finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization
+            H energyIdentity energyNontrivial 0)) :=
+    (continuous_finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization
+      H energyIdentity energyNontrivial).continuousAt
+  have hNorm0 := hNormAt.mono_left inf_le_left
   have hNorm :
       Tendsto
         (finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization
           H energyIdentity energyNontrivial)
         (nhdsWithin (0 : ℝ) (Ioi 0))
         (nhds n⁻¹) := by
-    have ht :=
-      (continuous_finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization
-        H energyIdentity energyNontrivial).continuousAt.tendsto
-    have ht' := ht.mono_left inf_le_left
     simpa [n, C, finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization_zero]
-      using ht'
+      using hNorm0
   have hTerm : ∀ A : C,
       Tendsto
         (fun β : ℝ =>
@@ -325,8 +320,6 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_coo
       finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_tendsto_apply_zero
         H energyIdentity energyNontrivial hEnergy A
     simpa [slope, n, C] using hk.mul hp
-  have hSum0 :=
-    tendsto_finsetSum (Finset.univ : Finset C) (fun A _hA => hTerm A)
   have hSum :
       Tendsto
         (fun β : ℝ =>
@@ -339,13 +332,36 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_coo
                 H energyIdentity energyNontrivial β A)
         (nhdsWithin (0 : ℝ) (Ioi 0))
         (nhds (∑ _A : C, slope * n⁻¹)) := by
-    simpa using hSum0
+    simpa using
+      (tendsto_finsetSum (Finset.univ : Finset C) (fun A _hA => hTerm A))
   have hsumLimit : (∑ _A : C, slope * n⁻¹) = slope := by
     rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
     change n * (slope * n⁻¹) = slope
     field_simp [hn]
   rw [hsumLimit] at hSum
-  have hRhs := hNorm.mul hSum
+  have hRhs0 := hNorm.mul hSum
+  have hRhs :
+      Tendsto
+        (fun β : ℝ =>
+          finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization
+              H energyIdentity energyNontrivial β *
+            ∑ A : C,
+              ((finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelCouplingFamily
+                    H energyIdentity energyNontrivial β A y -
+                  finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelCouplingFamily
+                    H energyIdentity energyNontrivial β A y') / β) *
+                finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension
+                  H energyIdentity energyNontrivial β A)
+        (nhdsWithin (0 : ℝ) (Ioi 0))
+        (nhds
+          (-((n⁻¹) * (1 / 2 : ℝ) *
+            (finiteEvenFourTorusZ2SpatialWilsonAction
+                H energyIdentity energyNontrivial y -
+              finiteEvenFourTorusZ2SpatialWilsonAction
+                H energyIdentity energyNontrivial y')))) := by
+    convert hRhs0 using 1
+    dsimp [slope]
+    ring
   have hEq :
       (fun β : ℝ =>
         (finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension
@@ -364,7 +380,6 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_coo
                 H energyIdentity energyNontrivial β A) := by
     filter_upwards [self_mem_nhdsWithin] with β hβ
     have hβpos : 0 < β := hβ
-    have hβne : β ≠ 0 := ne_of_gt hβpos
     have hfixed :=
       finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGround_coordinateDifference_fixed
         H energyIdentity energyNontrivial hEnergy β (le_of_lt hβpos) y y'
@@ -381,7 +396,7 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_coo
     rw [div_eq_mul_inv]
     ring
   have hFinal := hRhs.congr' hEq.symm
-  simpa [slope, n, C] using hFinal
+  simpa [n, C] using hFinal
 
 end
 
