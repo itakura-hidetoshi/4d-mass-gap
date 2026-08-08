@@ -71,6 +71,15 @@ theorem periodicHypercubicEvenWilsonOpenHalfObservableL2_coeFn
   exact BoundedContinuousFunction.coeFn_toLp
     (E := ℝ) 2 (periodicHypercubicEvenOpenHalfHaarMeasure H N) ℝ u
 
+/-- The scalar real inner product is ordinary multiplication. -/
+private theorem realScalar_inner_eq_mul (x y : ℝ) :
+    inner ℝ x y = x * y := by
+  calc
+    inner ℝ x y = inner ℝ (x • (1 : ℝ)) (y • (1 : ℝ)) := by simp
+    _ = x * (y * inner ℝ (1 : ℝ) (1 : ℝ)) := by
+      rw [real_inner_smul_left, real_inner_smul_right]
+    _ = x * y := by simp
+
 /-- The physical rectangular feature kernel has the completed-positive-Gram
 representative almost everywhere.  This local bridge keeps the boundary-moment
 module independent of the heavier static Gram-operator factorization chain. -/
@@ -128,7 +137,7 @@ theorem periodicHypercubicEvenWilsonBoundaryGramFeature_adjointBridge_weightedPa
   rw [show K p = periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
       H N hN beta hbeta p.1 p.2 by exact hK]
   rw [show E p = f p.1 * g p.2 by exact hE]
-  exact realL2Scalar_inner_eq_mul _ _
+  exact realScalar_inner_eq_mul _ _
 
 /-- The boundary moment of a bounded continuous positive-half observable is
 a.e.-strongly measurable in the shared-boundary variable. -/
@@ -299,7 +308,7 @@ theorem periodicHypercubicEvenBoundaryObservableMomentL2_inner
           H N hN beta hbeta u] with b hb
       rw [show m b = periodicHypercubicEvenBoundaryObservableMoment
           H N hN beta hbeta u b by exact hb]
-      exact realL2Scalar_inner_eq_mul _ _
+      exact realScalar_inner_eq_mul _ _
     _ = ∫ b, ∫ x, raw (b, x) ∂halfMeasure ∂boundaryMeasure := by
       apply integral_congr_ae
       filter_upwards with b
@@ -313,8 +322,8 @@ theorem periodicHypercubicEvenBoundaryObservableMomentL2_inner
       apply integral_congr_ae
       filter_upwards [periodicHypercubicEvenWilsonOpenHalfObservableL2_coeFn
         H N u] with x hx
+      simp only [raw]
       rw [show g x = u x by exact hx]
-      simp [raw]
       ring
     _ = ∫ p, raw p ∂(boundaryMeasure.prod halfMeasure) := by
       exact (MeasureTheory.integral_prod raw hraw).symm
@@ -328,7 +337,7 @@ theorem periodicHypercubicEvenBoundaryObservableMomentL2_inner
           H N hN beta hbeta,
         realL2ExternalTensor_coeFn
           (μ := boundaryMeasure) (ν := halfMeasure) f g] with p hK hfg
-      rw [hK, hfg, realL2Scalar_inner_eq_mul]
+      rw [hK, hfg, realScalar_inner_eq_mul]
       rfl
 
 /-- Exact finite Wilson identification of the scalar boundary moment with
@@ -464,11 +473,16 @@ theorem physicalYangMillsEvenPeriodicWilsonOSBoundaryMomentL2_eq_synthesisOperat
     rw [show m b = periodicHypercubicEvenBoundaryObservableMoment
         (halfExtent n) N hN (beta n) (hbeta n) u b by exact hmb]
     rfl
-  rw [hvm]
-  simpa [u, m,
-    physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservableL2] using
-    periodicHypercubicEvenBoundaryObservableMomentL2_eq_synthesisOperator
-      (halfExtent n) N hN (beta n) (hbeta n) u
+  have hm :
+      m = periodicHypercubicEvenWilsonBoundaryGramFeatureSynthesisOperator
+        (halfExtent n) N hN (beta n) (hbeta n)
+        (physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservableL2
+          S D halfExtent N hN beta hbeta B hInvariant n F) := by
+    simpa [u, m,
+      physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservableL2] using
+      periodicHypercubicEvenBoundaryObservableMomentL2_eq_synthesisOperator
+        (halfExtent n) N hN (beta n) (hbeta n) u
+  simpa [v] using hvm.trans hm
 
 /-- Audit-visible actual finite-Wilson boundary moment / adjoint-synthesis
 package. -/
