@@ -8,8 +8,6 @@ open scoped BigOperators
 
 noncomputable section
 
-set_option maxHeartbeats 1000000
-
 /-- The zero/one crossing action is exactly the real cast of the nontrivial
 plaquette count. -/
 theorem finiteEvenFourTorusZ2UnfixedGaugeCrossingAction_zero_one_eq_count
@@ -67,50 +65,45 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeCrossingAction_eq_card_mul_identity_add
       simp only [Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ,
         nsmul_eq_mul]
       rw [Finset.sum_mul]
-      ring
 
-/-- Real-valued form of the side-two first-count mixed balance. -/
-theorem finiteEvenFourTorusZ2CrossingNontrivialCount_real_sum_mixed_balance_zero :
-    (∑ U : FiniteEvenFourTorusZ2TemporalLinkField 0,
-        (finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
-          finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity
-          finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity : ℝ)) +
-      (∑ U : FiniteEvenFourTorusZ2TemporalLinkField 0,
-        (finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
-          finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation
-          finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation : ℝ)) =
-    (∑ U : FiniteEvenFourTorusZ2TemporalLinkField 0,
-        (finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
-          finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity
-          finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation : ℝ)) +
-      (∑ U : FiniteEvenFourTorusZ2TemporalLinkField 0,
-        (finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
-          finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation
-          finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity : ℝ)) := by
-  exact_mod_cast
-    finiteEvenFourTorusZ2CrossingNontrivialCount_sum_mixed_balance_zero
-
-/-- Real-valued form of the side-two squared-count mixed excess. -/
-theorem finiteEvenFourTorusZ2CrossingNontrivialCount_real_sq_sum_mixed_excess_zero :
-    (∑ U : FiniteEvenFourTorusZ2TemporalLinkField 0,
-        (finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
-          finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity
-          finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity : ℝ) ^ 2) +
-      (∑ U : FiniteEvenFourTorusZ2TemporalLinkField 0,
-        (finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
-          finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation
-          finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation : ℝ) ^ 2) =
-    (∑ U : FiniteEvenFourTorusZ2TemporalLinkField 0,
-        (finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
-          finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity
-          finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation : ℝ) ^ 2) +
-      (∑ U : FiniteEvenFourTorusZ2TemporalLinkField 0,
-        (finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
-          finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation
-          finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity : ℝ) ^ 2) +
-      2 * (Fintype.card (FiniteEvenFourTorusZ2TemporalLinkField 0) : ℝ) := by
-  exact_mod_cast
-    finiteEvenFourTorusZ2CrossingNontrivialCount_sq_sum_mixed_excess_zero
+/-- Compact algebraic engine for the side-two witness.  If four finite real
+profiles have zero first mixed sum and squared mixed excess `2 * |γ|`, then the
+same four profiles inserted into one common affine energy expression have
+uniform mixed square defect exactly `2 * d^2`. -/
+theorem finiteUniformAffineSquare_mixedDifference_eq_two_mul_sq
+    {γ : Type*} [Fintype γ] [Nonempty γ]
+    (N00 N01 N10 N11 : γ → ℝ)
+    (a d : ℝ)
+    (hFirst :
+      (∑ u : γ, N00 u) + (∑ u : γ, N11 u) =
+        (∑ u : γ, N01 u) + (∑ u : γ, N10 u))
+    (hSecond :
+      (∑ u : γ, (N00 u) ^ 2) + (∑ u : γ, (N11 u) ^ 2) =
+        (∑ u : γ, (N01 u) ^ 2) + (∑ u : γ, (N10 u) ^ 2) +
+          2 * (Fintype.card γ : ℝ)) :
+    (Fintype.card γ : ℝ)⁻¹ * (∑ u : γ, (a + N00 u * d) ^ 2) -
+        (Fintype.card γ : ℝ)⁻¹ * (∑ u : γ, (a + N01 u * d) ^ 2) -
+      ((Fintype.card γ : ℝ)⁻¹ * (∑ u : γ, (a + N10 u * d) ^ 2) -
+        (Fintype.card γ : ℝ)⁻¹ * (∑ u : γ, (a + N11 u * d) ^ 2)) =
+      2 * d ^ 2 := by
+  let n : ℝ := Fintype.card γ
+  have hn : n ≠ 0 := by
+    dsimp [n]
+    exact_mod_cast (Fintype.card_ne_zero : Fintype.card γ ≠ 0)
+  change
+    n⁻¹ * (∑ u : γ, (a + N00 u * d) ^ 2) -
+        n⁻¹ * (∑ u : γ, (a + N01 u * d) ^ 2) -
+      (n⁻¹ * (∑ u : γ, (a + N10 u * d) ^ 2) -
+        n⁻¹ * (∑ u : γ, (a + N11 u * d) ^ 2)) = 2 * d ^ 2
+  simp_rw [show ∀ z : ℝ,
+      (a + z * d) ^ 2 = a ^ 2 + (2 * a * d) * z + d ^ 2 * z ^ 2 by
+    intro z
+    ring]
+  simp only [Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ,
+    nsmul_eq_mul]
+  field_simp [hn]
+  linear_combination
+    (2 * a * d) * hFirst + d ^ 2 * hSecond
 
 /-- The explicit side-two finite Wilson witness has exact temporal-crossing
 second-moment mixed defect
@@ -129,94 +122,68 @@ theorem finiteEvenFourTorusZ2TemporalCrossingSecondMoment_mixedDifference_witnes
       finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity
       finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation =
         2 * (energyNontrivial - energyIdentity) ^ 2 := by
-  let m : ℝ := Fintype.card (FiniteEvenFourTorusSpatialLink 0)
-  let n : ℝ := Fintype.card (FiniteEvenFourTorusZ2TemporalLinkField 0)
-  let d : ℝ := energyNontrivial - energyIdentity
-  have hn : n ≠ 0 := by
-    dsimp [n]
-    exact_mod_cast (Fintype.card_ne_zero :
-      Fintype.card (FiniteEvenFourTorusZ2TemporalLinkField 0) ≠ 0)
-  have hfirst :=
-    finiteEvenFourTorusZ2CrossingNontrivialCount_real_sum_mixed_balance_zero
-  have hsecond :=
-    finiteEvenFourTorusZ2CrossingNontrivialCount_real_sq_sum_mixed_excess_zero
+  let γ := FiniteEvenFourTorusZ2TemporalLinkField 0
+  let N00 : γ → ℕ := fun U =>
+    finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
+      finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity
+      finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity
+  let N01 : γ → ℕ := fun U =>
+    finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
+      finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity
+      finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation
+  let N10 : γ → ℕ := fun U =>
+    finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
+      finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation
+      finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity
+  let N11 : γ → ℕ := fun U =>
+    finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
+      finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation
+      finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation
+  let R00 : γ → ℝ := fun U => (N00 U : ℝ)
+  let R01 : γ → ℝ := fun U => (N01 U : ℝ)
+  let R10 : γ → ℝ := fun U => (N10 U : ℝ)
+  let R11 : γ → ℝ := fun U => (N11 U : ℝ)
+  have hFirstNat :=
+    finiteEvenFourTorusZ2CrossingNontrivialCount_sum_mixed_balance_zero
+  have hSecondNat :=
+    finiteEvenFourTorusZ2CrossingNontrivialCount_sq_sum_mixed_excess_zero
+  have hFirst := congrArg (fun z : ℕ => (z : ℝ)) hFirstNat
+  have hSecond := congrArg (fun z : ℕ => (z : ℝ)) hSecondNat
+  push_cast at hFirst hSecond
+  change
+    (∑ U : γ, R00 U) + (∑ U : γ, R11 U) =
+      (∑ U : γ, R01 U) + (∑ U : γ, R10 U) at hFirst
+  change
+    (∑ U : γ, (R00 U) ^ 2) + (∑ U : γ, (R11 U) ^ 2) =
+      (∑ U : γ, (R01 U) ^ 2) + (∑ U : γ, (R10 U) ^ 2) +
+        2 * (Fintype.card γ : ℝ) at hSecond
   unfold finiteKernelMixedCrossDifference
     finiteEvenFourTorusZ2TemporalCrossingSecondMoment
     finiteUniformCrossingSecondMoment
   simp_rw [finiteEvenFourTorusZ2UnfixedGaugeCrossingAction_eq_card_mul_identity_add_count_mul_gap]
   change
-    n⁻¹ *
-          (∑ U : FiniteEvenFourTorusZ2TemporalLinkField 0,
-            (m * energyIdentity +
-              (finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
-                finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity
-                finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity : ℝ) * d) ^ 2) -
-        n⁻¹ *
-          (∑ U : FiniteEvenFourTorusZ2TemporalLinkField 0,
-            (m * energyIdentity +
-              (finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
-                finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity
-                finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation : ℝ) * d) ^ 2) -
-      (n⁻¹ *
-          (∑ U : FiniteEvenFourTorusZ2TemporalLinkField 0,
-            (m * energyIdentity +
-              (finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
-                finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation
-                finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity : ℝ) * d) ^ 2) -
-        n⁻¹ *
-          (∑ U : FiniteEvenFourTorusZ2TemporalLinkField 0,
-            (m * energyIdentity +
-              (finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
-                finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation
-                finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation : ℝ) * d) ^ 2)) =
-      2 * d ^ 2
-  simp_rw [show ∀ a : ℝ,
-      (m * energyIdentity + a * d) ^ 2 =
-        (m * energyIdentity) ^ 2 +
-          (2 * m * energyIdentity * d) * a + d ^ 2 * a ^ 2 by
-    intro a
-    ring]
-  simp only [Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ,
-    nsmul_eq_mul]
-  have hfirst' :
-      (∑ U : FiniteEvenFourTorusZ2TemporalLinkField 0,
-          (finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
-            finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity
-            finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity : ℝ)) +
-        (∑ U : FiniteEvenFourTorusZ2TemporalLinkField 0,
-          (finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
-            finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation
-            finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation : ℝ)) =
-      (∑ U : FiniteEvenFourTorusZ2TemporalLinkField 0,
-          (finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
-            finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity
-            finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation : ℝ)) +
-        (∑ U : FiniteEvenFourTorusZ2TemporalLinkField 0,
-          (finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
-            finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation
-            finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity : ℝ)) := hfirst
-  have hsecond' :
-      (∑ U : FiniteEvenFourTorusZ2TemporalLinkField 0,
-          (finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
-            finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity
-            finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity : ℝ) ^ 2) +
-        (∑ U : FiniteEvenFourTorusZ2TemporalLinkField 0,
-          (finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
-            finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation
-            finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation : ℝ) ^ 2) =
-      (∑ U : FiniteEvenFourTorusZ2TemporalLinkField 0,
-          (finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
-            finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity
-            finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation : ℝ) ^ 2) +
-        (∑ U : FiniteEvenFourTorusZ2TemporalLinkField 0,
-          (finiteEvenFourTorusZ2CrossingNontrivialCount 0 U
-            finiteEvenFourTorusZ2CrossingSecondMomentWitnessExcitation
-            finiteEvenFourTorusZ2CrossingSecondMomentWitnessIdentity : ℝ) ^ 2) +
-        2 * n := by
-    simpa [n] using hsecond
-  field_simp [hn]
-  linear_combination
-    (2 * m * energyIdentity * d) * hfirst' + d ^ 2 * hsecond'
+    (Fintype.card γ : ℝ)⁻¹ *
+          (∑ U : γ,
+            ((Fintype.card (FiniteEvenFourTorusSpatialLink 0) : ℝ) * energyIdentity +
+              R00 U * (energyNontrivial - energyIdentity)) ^ 2) -
+        (Fintype.card γ : ℝ)⁻¹ *
+          (∑ U : γ,
+            ((Fintype.card (FiniteEvenFourTorusSpatialLink 0) : ℝ) * energyIdentity +
+              R01 U * (energyNontrivial - energyIdentity)) ^ 2) -
+      ((Fintype.card γ : ℝ)⁻¹ *
+          (∑ U : γ,
+            ((Fintype.card (FiniteEvenFourTorusSpatialLink 0) : ℝ) * energyIdentity +
+              R10 U * (energyNontrivial - energyIdentity)) ^ 2) -
+        (Fintype.card γ : ℝ)⁻¹ *
+          (∑ U : γ,
+            ((Fintype.card (FiniteEvenFourTorusSpatialLink 0) : ℝ) * energyIdentity +
+              R11 U * (energyNontrivial - energyIdentity)) ^ 2)) =
+      2 * (energyNontrivial - energyIdentity) ^ 2
+  exact finiteUniformAffineSquare_mixedDifference_eq_two_mul_sq
+    R00 R01 R10 R11
+    ((Fintype.card (FiniteEvenFourTorusSpatialLink 0) : ℝ) * energyIdentity)
+    (energyNontrivial - energyIdentity)
+    hFirst hSecond
 
 /-- Under the strict physical energy ordering, the side-two crossing-second-
 moment mixed defect is nonzero. -/
