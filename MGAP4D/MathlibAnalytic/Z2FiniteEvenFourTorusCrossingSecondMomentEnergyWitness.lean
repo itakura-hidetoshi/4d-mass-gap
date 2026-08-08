@@ -101,6 +101,7 @@ theorem finiteUniformAffineSquare_mixedDifference_eq_two_mul_sq
     ring]
   simp only [Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ,
     nsmul_eq_mul]
+  simp_rw [← Finset.mul_sum]
   field_simp [hn]
   linear_combination
     (2 * a * d) * hFirst + d ^ 2 * hSecond
