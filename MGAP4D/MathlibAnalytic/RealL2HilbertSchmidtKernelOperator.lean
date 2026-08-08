@@ -179,6 +179,7 @@ theorem realL2HilbertSchmidtKernelOperator_isPositive
   rw [LinearMap.isPositive_iff]
   refine ⟨realL2HilbertSchmidtKernelOperator_isSymmetric K hSymm, ?_⟩
   intro f
+  change 0 ≤ inner ℝ (realL2HilbertSchmidtKernelOperator K f) f
   rw [realL2HilbertSchmidtKernelOperator_inner K f f]
   exact hNonneg f
 
