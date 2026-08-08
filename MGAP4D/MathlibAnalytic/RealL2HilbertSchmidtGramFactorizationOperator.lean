@@ -14,6 +14,34 @@ universe u v
 
 variable {α : Type u} [MeasurableSpace α] {μ : Measure α}
 
+/-- Over a real Hilbert space, a symmetric Hilbert--Schmidt kernel pairing is
+completely determined by its diagonal quadratic form.  Thus equality of
+quadratic forms with `f ↦ ‖A f‖²` recovers the full Gram factorization by real
+polarization. -/
+theorem realL2HilbertSchmidtKernelPairing_gramFactorization_of_symmetric_of_quadratic
+    [SFinite μ]
+    (K : Lp ℝ 2 (μ.prod μ))
+    (H : Type v)
+    [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    (A : Lp ℝ 2 μ →L[ℝ] H)
+    (hSymm : RealL2HilbertSchmidtKernelPairingSymmetric K)
+    (hQuadratic : ∀ f : Lp ℝ 2 μ,
+      realL2HilbertSchmidtKernelPairing K f f = inner ℝ (A f) (A f)) :
+    RealL2HilbertSchmidtKernelPairingGramFactorization K H A := by
+  intro f g
+  have hsum := hQuadratic (f + g)
+  have hff := hQuadratic f
+  have hgg := hQuadratic g
+  rw [realL2HilbertSchmidtKernelPairing_add_left,
+    realL2HilbertSchmidtKernelPairing_add_right,
+    realL2HilbertSchmidtKernelPairing_add_right] at hsum
+  simp only [map_add] at hsum
+  rw [inner_add_left, inner_add_right, inner_add_right] at hsum
+  have hBsymm := hSymm g f
+  have hIsymm : inner ℝ (A g) (A f) = inner ℝ (A f) (A g) :=
+    real_inner_comm _ _
+  nlinarith
+
 /-- A quotient-level exact Gram factorization identifies the canonical square
 Hilbert--Schmidt kernel operator with `A† A`.
 
