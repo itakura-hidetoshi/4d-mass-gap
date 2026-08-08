@@ -173,7 +173,8 @@ theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_product_norm_
             H N hN beta hbeta p.1 p.2
       have hprod : 0 ≤ (bound - g) * (bound + g) :=
         mul_nonneg (sub_nonneg.mpr hle) (add_nonneg hbound0 hg0)
-      rw [Real.norm_eq_abs, abs_of_nonneg hg0]
+      change |‖g‖ ^ 2| ≤ bound ^ 2
+      rw [abs_of_nonneg (sq_nonneg ‖g‖), Real.norm_eq_abs, abs_of_nonneg hg0]
       nlinarith)
 
 /-- The actual two-variable compact Wilson Gram feature belongs to
