@@ -45,15 +45,17 @@ theorem hasSecondOrderExpansionAtZero_of_derivativeProfile
       simpa [div_eq_mul_inv, mul_assoc] using h
     have hfTendsto :
         Tendsto f (nhdsWithin (0 : ℝ) (Ioi 0)) (nhds 0) := by
-      have h := (hf 0).continuousAt
-      have ht := h.tendsto.mono_left inf_le_left
+      have hWithin : ContinuousWithinAt f (Ioi 0) 0 :=
+        (hf 0).continuousAt.continuousWithinAt
+      have ht := hWithin.tendsto
       simpa [hf0] using ht
     have hsqTendsto :
         Tendsto (fun β : ℝ => β ^ 2)
           (nhdsWithin (0 : ℝ) (Ioi 0)) (nhds 0) := by
-      have h : ContinuousAt (fun β : ℝ => β ^ 2) 0 :=
-        continuousAt_id.pow 2
-      simpa using h.tendsto.mono_left inf_le_left
+      have hWithin :
+          ContinuousWithinAt (fun β : ℝ => β ^ 2) (Ioi 0) 0 :=
+        (continuousAt_id.pow 2).continuousWithinAt
+      simpa using hWithin.tendsto
     apply HasDerivAt.lhopital_zero_right_on_Ioo
       (a := (0 : ℝ)) (b := (1 : ℝ))
       (f := f) (f' := g)
