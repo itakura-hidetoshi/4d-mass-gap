@@ -350,7 +350,7 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_coo
         (nhdsWithin (0 : ℝ) (Ioi 0))
         (nhds (∑ _A : C, slope * n⁻¹)) := by
     simpa using
-      (tendsto_finsetSum (Finset.univ : Finset C) (fun A _hA => hTerm A))
+      (tendsto_finset_sum (Finset.univ : Finset C) (fun A _hA => hTerm A))
   have hsumLimit : (∑ _A : C, slope * n⁻¹) = slope := by
     rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
     change n * (slope * n⁻¹) = slope
