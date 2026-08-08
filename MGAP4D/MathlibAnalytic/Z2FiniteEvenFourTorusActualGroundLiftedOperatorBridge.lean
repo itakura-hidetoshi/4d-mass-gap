@@ -19,8 +19,9 @@ theorem finiteKernelOperator_const_mul_kernel
   apply ContinuousLinearMap.ext
   intro f
   ext y
-  rw [finiteKernelOperator_apply, ContinuousLinearMap.smul_apply,
-    finiteKernelOperator_apply, Finset.mul_sum]
+  rw [finiteKernelOperator_apply]
+  simp only [ContinuousLinearMap.smul_apply, PiLp.smul_apply]
+  rw [finiteKernelOperator_apply, Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro x _hx
   ring
@@ -34,8 +35,11 @@ theorem finiteKernelOperator_sub_kernel
   apply ContinuousLinearMap.ext
   intro f
   ext y
-  rw [finiteKernelOperator_apply, ContinuousLinearMap.sub_apply,
-    finiteKernelOperator_apply, finiteKernelOperator_apply,
+  rw [finiteKernelOperator_apply]
+  change
+    (∑ x : α, (K x y - L x y) * f x) =
+      (finiteKernelOperator K f) y - (finiteKernelOperator L f) y
+  rw [finiteKernelOperator_apply, finiteKernelOperator_apply,
     ← Finset.sum_sub_distrib]
   apply Finset.sum_congr rfl
   intro x _hx
@@ -104,11 +108,9 @@ theorem finiteEvenFourTorusZ2CanonicalGroundRankOneProjectorKernelRightExtension
   ext y
   rw [finiteKernelOperator_apply, ContinuousLinearMap.smul_apply,
     InnerProductSpace.rankOne_apply]
-  change
-    (∑ x : FiniteEvenFourTorusZ2SliceConfiguration H,
-        ((inner ℝ p p)⁻¹ * p x * p y) * f x) =
-      (inner ℝ p p)⁻¹ * (inner ℝ p f) * p y
+  simp only [PiLp.smul_apply]
   rw [PiLp.inner_apply]
+  simp only [RCLike.inner_apply, conj_trivial]
   change
     (∑ x : FiniteEvenFourTorusZ2SliceConfiguration H,
         ((inner ℝ p p)⁻¹ * p x * p y) * f x) =
@@ -172,12 +174,12 @@ theorem finiteEvenFourTorusZ2ActualGroundSpectralDefect_exists_smallPositive_uni
     (energyIdentity energyNontrivial : ℝ)
     (hEnergy : energyIdentity < energyNontrivial) :
     ∃ ε : ℝ, 0 < ε ∧
-      ∀ β : ℝ, 0 < β → β < ε →
+      ∀ β : ℝ, ∀ hβ : 0 < β, β < ε →
         finiteUniformAverageComplementLinearMap.comp
           ((((finiteEvenFourTorusZ2UnfixedGaugeAmbientSpectralData
-                0 β energyIdentity energyNontrivial (le_of_lt ‹0 < β›) hEnergy.le).groundSpectralProjector -
+                0 β energyIdentity energyNontrivial hβ.le hEnergy.le).groundSpectralProjector -
               (finiteEvenFourTorusZ2UnfixedGaugeAmbientSpectralData
-                0 β energyIdentity energyNontrivial (le_of_lt ‹0 < β›) hEnergy.le).operator).toLinearMap).comp
+                0 β energyIdentity energyNontrivial hβ.le hEnergy.le).operator).toLinearMap).comp
             finiteUniformAverageComplementLinearMap) ≠ 0 := by
   rcases
       finiteEvenFourTorusZ2GroundLiftedKernelRightExtension_exists_smallPositive_uniformComplementBlock_ne_zero_zero
