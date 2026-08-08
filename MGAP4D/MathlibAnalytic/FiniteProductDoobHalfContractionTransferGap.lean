@@ -87,7 +87,7 @@ theorem log_two_le_neg_log_of_pos_le_half
     (hrhalf : r ≤ (1 / 2 : ℝ)) :
     Real.log 2 ≤ -Real.log r := by
   have hhalfpos : (0 : ℝ) < (1 / 2 : ℝ) := by norm_num
-  have hlog := Real.strictMonoOn_log.monotoneOn hrpos.le hhalfpos.le hrhalf
+  have hlog := Real.strictMonoOn_log.monotoneOn hrpos hhalfpos hrhalf
   have hlogHalf : Real.log (1 / 2 : ℝ) = -Real.log 2 := by
     rw [show (1 / 2 : ℝ) = (2 : ℝ)⁻¹ by norm_num, Real.log_inv]
   rw [hlogHalf] at hlog
@@ -148,4 +148,3 @@ end FiniteKernelGroundStateDoobData
 end
 
 end MathlibAnalytic
-end MGAP4D
