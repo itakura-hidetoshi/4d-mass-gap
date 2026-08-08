@@ -43,9 +43,9 @@ theorem realHilbertIntegratedSelfRankOne_inner
     ← integral_inner hxInt y]
   apply integral_congr_ae
   filter_upwards with a
-  rw [realHilbertSelfRankOne_apply, inner_smul_real_right,
+  rw [realHilbertSelfRankOne_apply, inner_smul_ofReal_right,
     real_inner_comm y (v a)]
-  rfl
+  ring
 
 /-- The integrated feature operator is symmetric. -/
 theorem realHilbertIntegratedSelfRankOne_isSymmetric
