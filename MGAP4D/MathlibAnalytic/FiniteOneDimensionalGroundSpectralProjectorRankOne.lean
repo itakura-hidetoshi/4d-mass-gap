@@ -24,6 +24,7 @@ theorem operator_groundSpectralProjector
     (x : E) :
     D.operator (D.groundSpectralProjector x) =
       D.groundSpectralProjector x := by
+  unfold groundSpectralProjector
   rw [orthonormalDiagonalOperator_apply]
   simp only [map_sum, map_smul]
   apply Finset.sum_congr rfl
@@ -39,6 +40,7 @@ theorem groundSpectralProjector_fixed
     (p : E)
     (hpfix : D.operator p = p) :
     D.groundSpectralProjector p = p := by
+  unfold groundSpectralProjector
   rw [orthonormalDiagonalOperator_apply]
   conv_rhs => rw [← D.eigenbasis.sum_repr' p]
   apply Finset.sum_congr rfl
@@ -79,6 +81,9 @@ theorem groundSpectralProjector_eq_normalized_rankOne
   have hpP : D.groundSpectralProjector p = p :=
     D.groundSpectralProjector_fixed p hpfix
   have hsym := D.groundSpectralProjector_isSymmetric p x
+  change
+    inner ℝ (D.groundSpectralProjector p) x =
+      inner ℝ p (D.groundSpectralProjector x) at hsym
   rw [hpP, hc] at hsym
   simp only [real_inner_smul_right] at hsym
   have hppos : 0 < inner ℝ p p := real_inner_self_pos.mpr hpne
