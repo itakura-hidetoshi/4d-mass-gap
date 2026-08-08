@@ -125,22 +125,23 @@ theorem periodicHypercubicEvenWilsonBoundaryGramHilbertSchmidtOperator_norm_le_i
         H N hN beta hbeta‖ ≤
       (periodicHypercubicSpecialUnitaryWilsonSystem
         (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.partitionFunction⁻¹ := by
-  let K := periodicHypercubicEvenBoundaryCompletedPositiveGramKernelPairL2
-    H N hN beta hbeta
   let C := periodicHypercubicSpecialUnitaryWilsonSystem
     (PeriodicHypercubicEvenSideLength H) N hN beta hbeta
-  let zinv : ℝ := C.base.partitionFunction⁻¹
   have hop :
       ‖periodicHypercubicEvenWilsonBoundaryGramHilbertSchmidtOperator
-          H N hN beta hbeta‖ ≤ ‖K‖ := by
-    simpa [K] using
-      periodicHypercubicEvenWilsonBoundaryGramHilbertSchmidtOperator_norm_le
-        H N hN beta hbeta
+          H N hN beta hbeta‖ ≤
+        ‖periodicHypercubicEvenBoundaryCompletedPositiveGramKernelPairL2
+          H N hN beta hbeta‖ :=
+    periodicHypercubicEvenWilsonBoundaryGramHilbertSchmidtOperator_norm_le
+      H N hN beta hbeta
   have hZ : 0 < C.base.partitionFunction :=
     compact_oriented_partitionFunction_pos C.base
       (continuous_compact_oriented_boltzmannIntegrable C)
-  have hzinv : 0 ≤ zinv := le_of_lt (inv_pos.mpr hZ)
-  have hkSq : ‖K‖ ^ 2 ≤ zinv ^ 2 := by
+  have hzinv : 0 ≤ C.base.partitionFunction⁻¹ :=
+    le_of_lt (inv_pos.mpr hZ)
+  have hkSq :
+      ‖periodicHypercubicEvenBoundaryCompletedPositiveGramKernelPairL2
+        H N hN beta hbeta‖ ^ 2 ≤ C.base.partitionFunction⁻¹ ^ 2 := by
     rw [periodicHypercubicEvenBoundaryCompletedPositiveGramKernelPairL2_norm_sq]
     let pairMeasure := periodicHypercubicEvenBoundaryPairHaarMeasure H N
     letI : IsProbabilityMeasure pairMeasure := by
@@ -152,7 +153,7 @@ theorem periodicHypercubicEvenWilsonBoundaryGramHilbertSchmidtOperator_norm_le_i
         PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H N ×
           PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H N,
         ‖periodicHypercubicEvenBoundaryCompletedPositiveGramL2Kernel
-          H N hN beta hbeta p.1 p.2‖ ^ 2 ≤ zinv ^ 2 := by
+          H N hN beta hbeta p.1 p.2‖ ^ 2 ≤ C.base.partitionFunction⁻¹ ^ 2 := by
       intro p
       have h :=
         periodicHypercubicEvenBoundaryCompletedPositiveGramL2Kernel_abs_le_inv_partitionFunction
@@ -162,23 +163,30 @@ theorem periodicHypercubicEvenWilsonBoundaryGramHilbertSchmidtOperator_norm_le_i
             H N hN beta hbeta p.1 p.2| := abs_nonneg _
       have hsquare :
           |periodicHypercubicEvenBoundaryCompletedPositiveGramL2Kernel
-            H N hN beta hbeta p.1 p.2| ^ 2 ≤ zinv ^ 2 := by
-        nlinarith
+            H N hN beta hbeta p.1 p.2| ^ 2 ≤
+            C.base.partitionFunction⁻¹ ^ 2 := by
+        simpa [C] using (sq_le_sq₀ hnonneg hzinv).2 h
       simpa [Real.norm_eq_abs] using hsquare
     calc
       (∫ p,
           ‖periodicHypercubicEvenBoundaryCompletedPositiveGramL2Kernel
             H N hN beta hbeta p.1 p.2‖ ^ 2 ∂pairMeasure) ≤
-          ∫ _p, zinv ^ 2 ∂pairMeasure := by
+          ∫ _p, C.base.partitionFunction⁻¹ ^ 2 ∂pairMeasure := by
         exact integral_mono_ae
           (periodicHypercubicEvenBoundaryCompletedPositiveGramL2Kernel_pair_norm_sq_integrable
             H N hN beta hbeta)
-          (integrable_const (zinv ^ 2))
+          (integrable_const (C.base.partitionFunction⁻¹ ^ 2))
           (Filter.Eventually.of_forall hpoint)
-      _ = zinv ^ 2 := by simp
-  have hk : ‖K‖ ≤ zinv := by
-    nlinarith [norm_nonneg K]
-  exact hop.trans (by simpa [K, zinv, C] using hk)
+      _ = C.base.partitionFunction⁻¹ ^ 2 := by simp
+  have hk :
+      ‖periodicHypercubicEvenBoundaryCompletedPositiveGramKernelPairL2
+        H N hN beta hbeta‖ ≤ C.base.partitionFunction⁻¹ := by
+    nlinarith [norm_nonneg
+      (periodicHypercubicEvenBoundaryCompletedPositiveGramKernelPairL2
+        H N hN beta hbeta)]
+  change ‖periodicHypercubicEvenWilsonBoundaryGramHilbertSchmidtOperator
+      H N hN beta hbeta‖ ≤ C.base.partitionFunction⁻¹
+  exact hop.trans hk
 
 /-- Audit-visible actual compact-Wilson Hilbert--Schmidt boundary-operator
 receipt.  Positivity and symmetry are deliberately separated into the next
