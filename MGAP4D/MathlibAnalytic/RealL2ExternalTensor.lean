@@ -118,14 +118,20 @@ theorem realL2ExternalTensor_add_left
     (f₁ f₂ : Lp ℝ 2 μ) (g : Lp ℝ 2 ν) :
     realL2ExternalTensor (f₁ + f₂) g =
       realL2ExternalTensor f₁ g + realL2ExternalTensor f₂ g := by
+  have hf :
+      (fun z : α × β => (f₁ + f₂) z.1) =ᵐ[μ.prod ν]
+        (fun z => f₁ z.1 + f₂ z.1) := by
+    simpa [Function.comp_def] using
+      (Measure.quasiMeasurePreserving_fst (μ := μ) (ν := ν)).ae_eq
+        (Lp.coeFn_add f₁ f₂)
   apply Lp.ext
   filter_upwards [realL2ExternalTensor_coeFn (f₁ + f₂) g,
     realL2ExternalTensor_coeFn f₁ g,
     realL2ExternalTensor_coeFn f₂ g,
-    Lp.coeFn_add f₁ f₂,
-    Lp.coeFn_add (realL2ExternalTensor f₁ g) (realL2ExternalTensor f₂ g)] with z h h1 h2 hf hadd
+    hf,
+    Lp.coeFn_add (realL2ExternalTensor f₁ g) (realL2ExternalTensor f₂ g)] with z h h1 h2 hfz hadd
   simp only [realL2ExternalTensorFunction] at h h1 h2
-  rw [h, h1, h2, hf, hadd]
+  rw [h, h1, h2, hfz, hadd]
   ring
 
 /-- External tensor is additive in the right factor. -/
@@ -134,14 +140,20 @@ theorem realL2ExternalTensor_add_right
     (f : Lp ℝ 2 μ) (g₁ g₂ : Lp ℝ 2 ν) :
     realL2ExternalTensor f (g₁ + g₂) =
       realL2ExternalTensor f g₁ + realL2ExternalTensor f g₂ := by
+  have hg :
+      (fun z : α × β => (g₁ + g₂) z.2) =ᵐ[μ.prod ν]
+        (fun z => g₁ z.2 + g₂ z.2) := by
+    simpa [Function.comp_def] using
+      (Measure.quasiMeasurePreserving_snd (μ := μ) (ν := ν)).ae_eq
+        (Lp.coeFn_add g₁ g₂)
   apply Lp.ext
   filter_upwards [realL2ExternalTensor_coeFn f (g₁ + g₂),
     realL2ExternalTensor_coeFn f g₁,
     realL2ExternalTensor_coeFn f g₂,
-    Lp.coeFn_add g₁ g₂,
-    Lp.coeFn_add (realL2ExternalTensor f g₁) (realL2ExternalTensor f g₂)] with z h h1 h2 hg hadd
+    hg,
+    Lp.coeFn_add (realL2ExternalTensor f g₁) (realL2ExternalTensor f g₂)] with z h h1 h2 hgz hadd
   simp only [realL2ExternalTensorFunction] at h h1 h2
-  rw [h, h1, h2, hg, hadd]
+  rw [h, h1, h2, hgz, hadd]
   ring
 
 /-- External tensor is real-linear in the left factor. -/
@@ -149,13 +161,19 @@ theorem realL2ExternalTensor_smul_left
     [SFinite μ] [SFinite ν]
     (c : ℝ) (f : Lp ℝ 2 μ) (g : Lp ℝ 2 ν) :
     realL2ExternalTensor (c • f) g = c • realL2ExternalTensor f g := by
+  have hf :
+      (fun z : α × β => (c • f) z.1) =ᵐ[μ.prod ν]
+        (fun z => c • f z.1) := by
+    simpa [Function.comp_def] using
+      (Measure.quasiMeasurePreserving_fst (μ := μ) (ν := ν)).ae_eq
+        (Lp.coeFn_smul c f)
   apply Lp.ext
   filter_upwards [realL2ExternalTensor_coeFn (c • f) g,
     realL2ExternalTensor_coeFn f g,
-    Lp.coeFn_smul c f,
-    Lp.coeFn_smul c (realL2ExternalTensor f g)] with z h hfg hf hsmul
+    hf,
+    Lp.coeFn_smul c (realL2ExternalTensor f g)] with z h hfg hfz hsmul
   simp only [realL2ExternalTensorFunction] at h hfg
-  rw [h, hfg, hf, hsmul]
+  rw [h, hfg, hfz, hsmul]
   simp [smul_eq_mul]
 
 /-- External tensor is real-linear in the right factor. -/
@@ -163,13 +181,19 @@ theorem realL2ExternalTensor_smul_right
     [SFinite μ] [SFinite ν]
     (c : ℝ) (f : Lp ℝ 2 μ) (g : Lp ℝ 2 ν) :
     realL2ExternalTensor f (c • g) = c • realL2ExternalTensor f g := by
+  have hg :
+      (fun z : α × β => (c • g) z.2) =ᵐ[μ.prod ν]
+        (fun z => c • g z.2) := by
+    simpa [Function.comp_def] using
+      (Measure.quasiMeasurePreserving_snd (μ := μ) (ν := ν)).ae_eq
+        (Lp.coeFn_smul c g)
   apply Lp.ext
   filter_upwards [realL2ExternalTensor_coeFn f (c • g),
     realL2ExternalTensor_coeFn f g,
-    Lp.coeFn_smul c g,
-    Lp.coeFn_smul c (realL2ExternalTensor f g)] with z h hfg hg hsmul
+    hg,
+    Lp.coeFn_smul c (realL2ExternalTensor f g)] with z h hfg hgz hsmul
   simp only [realL2ExternalTensorFunction] at h hfg
-  rw [h, hfg, hg, hsmul]
+  rw [h, hfg, hgz, hsmul]
   simp [smul_eq_mul]
 
 /-- Audit-visible exact cross-norm receipt for the real `L²` external tensor. -/
