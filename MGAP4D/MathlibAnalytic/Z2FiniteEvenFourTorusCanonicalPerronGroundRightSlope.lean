@@ -147,7 +147,16 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_ten
           (finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension
             H energyIdentity energyNontrivial 0 A)) :=
     hCoord.continuousAt
-  have hWithin := hAt.mono_left inf_le_left
+  have hWithin :
+      Tendsto
+        (fun β : ℝ =>
+          finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension
+            H energyIdentity energyNontrivial β A)
+        (nhdsWithin (0 : ℝ) (Ioi 0))
+        (nhds
+          (finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension
+            H energyIdentity energyNontrivial 0 A)) :=
+    hAt.mono_left inf_le_left
   simpa only [finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_zero_apply
     H energyIdentity energyNontrivial hEnergy A] using hWithin
 
@@ -292,7 +301,15 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_coo
             H energyIdentity energyNontrivial 0)) :=
     (continuous_finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization
       H energyIdentity energyNontrivial).continuousAt
-  have hNorm0 := hNormAt.mono_left inf_le_left
+  have hNorm0 :
+      Tendsto
+        (finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization
+          H energyIdentity energyNontrivial)
+        (nhdsWithin (0 : ℝ) (Ioi 0))
+        (nhds
+          (finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization
+            H energyIdentity energyNontrivial 0)) :=
+    hNormAt.mono_left inf_le_left
   have hNorm :
       Tendsto
         (finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization
