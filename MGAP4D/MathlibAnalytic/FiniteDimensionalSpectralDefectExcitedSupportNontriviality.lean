@@ -55,10 +55,10 @@ when transporting an ambient excited mode into an invariant compression. -/
 theorem groundSpectralProjector_sub_operator_ne_zero_of_strict_eigenvector
     (v : E)
     (hv : v ≠ 0)
-    (λ : ℝ)
-    (hλpos : 0 < λ)
-    (hλlt : λ < 1)
-    (heig : D.operator v = λ • v) :
+    (eigenvalue : ℝ)
+    (hEigenvaluePos : 0 < eigenvalue)
+    (hEigenvalueLt : eigenvalue < 1)
+    (heig : D.operator v = eigenvalue • v) :
     D.groundSpectralProjector - D.operator ≠ 0 := by
   intro hzero
   have hEq : D.groundSpectralProjector = D.operator :=
