@@ -70,6 +70,9 @@ noncomputable def realLinearIsometryCompletionExtension
   let fExt : Completion E →+ F := fAdd.extension f.continuous
   have hfExt : Continuous fExt :=
     fAdd.continuous_extension f.continuous
+  have hfExt_coe (x : E) :
+      fExt (x : Completion E) = f x := by
+    exact AddMonoidHom.extension_coe fAdd f.continuous x
   let fLin : Completion E →ₗ[ℝ] F :=
     { toFun := fExt
       map_add' := fExt.map_add
@@ -81,7 +84,8 @@ noncomputable def realLinearIsometryCompletionExtension
               (hfExt.comp (continuous_const_smul r))
               (hfExt.const_smul r)
         | ih x =>
-            simp [fExt, fAdd, ← Completion.coe_smul, f.map_smul] }
+            rw [hfExt_coe, hfExt_coe]
+            exact f.map_smul r x }
   exact
     { toLinearMap := fLin
       norm_map' := by
@@ -92,12 +96,16 @@ noncomputable def realLinearIsometryCompletionExtension
               (continuous_norm.comp hfExt)
               continuous_norm
         | ih x =>
-            simpa [fLin, fExt, fAdd] using f.norm_map x }
+            rw [hfExt_coe, Completion.norm_coe]
+            exact f.norm_map x }
 
 @[simp] theorem realLinearIsometryCompletionExtension_coe
     (f : E →ₗᵢ[ℝ] F) (x : E) :
     realLinearIsometryCompletionExtension f (x : Completion E) = f x := by
-  simp [realLinearIsometryCompletionExtension]
+  change
+    (f.toLinearMap.toAddMonoidHom.extension f.continuous)
+        (x : Completion E) = f x
+  exact AddMonoidHom.extension_coe _ f.continuous x
 
 /-- Combined canonical lift: first remove the seminorm-zero directions, then
 complete.  This is the generic Mathlib mechanism needed by the physical OS
