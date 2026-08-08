@@ -48,6 +48,9 @@ theorem groundSpectralProjector_fixed
   by_cases h : D.eigenvalue i = 1
   · simp [groundSpectralProjectorCoefficient, h]
   · have hsym := D.symmetric (D.eigenbasis i) p
+    change
+      inner ℝ (D.operator (D.eigenbasis i)) p =
+        inner ℝ (D.eigenbasis i) (D.operator p) at hsym
     rw [D.operator_apply_eigenbasis, hpfix] at hsym
     simp only [real_inner_smul_left] at hsym
     have hzeroProd :
