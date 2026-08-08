@@ -33,21 +33,19 @@ local instance (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-/-- Real boundary Haar `L²` for the actual even-periodic compact `SU(N)`
-Wilson lattice. -/
-abbrev PeriodicHypercubicEvenSpecialUnitaryBoundaryL2
-    (H N : ℕ) : Type :=
-  Lp ℝ 2 (periodicHypercubicEvenBoundaryHaarMeasure H N)
-
 /-- The actual compact Wilson shared-boundary Gram kernel, viewed through the
 generic Fréchet--Riesz Hilbert--Schmidt construction as a bounded operator on
-boundary Haar `L²`. -/
+boundary Haar `L²`.
+
+The carrier is written explicitly here.  The same type is already named
+`PeriodicHypercubicEvenSpecialUnitaryBoundaryL2` in the physical Yang--Mills
+OS spine, so no duplicate alias is introduced in this lower analytic layer. -/
 noncomputable def periodicHypercubicEvenWilsonBoundaryGramHilbertSchmidtOperator
     (H N : ℕ) (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ) (hbeta : 0 ≤ beta) :
-    PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 H N →L[ℝ]
-      PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 H N :=
+    Lp ℝ 2 (periodicHypercubicEvenBoundaryHaarMeasure H N) →L[ℝ]
+      Lp ℝ 2 (periodicHypercubicEvenBoundaryHaarMeasure H N) :=
   realL2HilbertSchmidtKernelOperator
     (μ := periodicHypercubicEvenBoundaryHaarMeasure H N)
     (periodicHypercubicEvenBoundaryCompletedPositiveGramKernelPairL2
@@ -59,7 +57,7 @@ theorem periodicHypercubicEvenWilsonBoundaryGramHilbertSchmidtOperator_inner
     (H N : ℕ) (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ) (hbeta : 0 ≤ beta)
-    (f g : PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 H N) :
+    (f g : Lp ℝ 2 (periodicHypercubicEvenBoundaryHaarMeasure H N)) :
     inner ℝ
         (periodicHypercubicEvenWilsonBoundaryGramHilbertSchmidtOperator
           H N hN beta hbeta f) g =
@@ -153,12 +151,14 @@ theorem periodicHypercubicEvenWilsonBoundaryGramHilbertSchmidtOperator_norm_le_i
       have h :=
         periodicHypercubicEvenBoundaryCompletedPositiveGramL2Kernel_abs_le_inv_partitionFunction
           H N hN beta hbeta p.1 p.2
-      rw [Real.norm_eq_abs]
       have hnonneg : 0 ≤
           |periodicHypercubicEvenBoundaryCompletedPositiveGramL2Kernel
             H N hN beta hbeta p.1 p.2| := abs_nonneg _
-      simpa [zinv, C] using
-        (sq_le_sq₀ hnonneg hzinv).2 h
+      have hsquare :
+          |periodicHypercubicEvenBoundaryCompletedPositiveGramL2Kernel
+            H N hN beta hbeta p.1 p.2| ^ 2 ≤ zinv ^ 2 := by
+        nlinarith
+      simpa [Real.norm_eq_abs] using hsquare
     calc
       (∫ p,
           ‖periodicHypercubicEvenBoundaryCompletedPositiveGramL2Kernel
@@ -182,7 +182,7 @@ structure PeriodicHypercubicEvenWilsonBoundaryGramHilbertSchmidtOperatorPackage
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ) (hbeta : 0 ≤ beta) : Prop where
   innerFormula :
-    ∀ f g : PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 H N,
+    ∀ f g : Lp ℝ 2 (periodicHypercubicEvenBoundaryHaarMeasure H N),
       inner ℝ
           (periodicHypercubicEvenWilsonBoundaryGramHilbertSchmidtOperator
             H N hN beta hbeta f) g =
