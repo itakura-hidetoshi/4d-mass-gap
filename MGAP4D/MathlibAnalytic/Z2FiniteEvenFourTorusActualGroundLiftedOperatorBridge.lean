@@ -109,11 +109,12 @@ theorem finiteEvenFourTorusZ2CanonicalGroundRankOneProjectorKernelRightExtension
   rw [finiteKernelOperator_apply, ContinuousLinearMap.smul_apply,
     InnerProductSpace.rankOne_apply]
   simp only [PiLp.smul_apply, smul_eq_mul]
-  rw [PiLp.inner_apply]
+  rw [PiLp.inner_apply, PiLp.inner_apply]
   change
     (∑ x : FiniteEvenFourTorusZ2SliceConfiguration H,
-        ((inner ℝ p p)⁻¹ * p x * p y) * f x) =
-      (inner ℝ p p)⁻¹ *
+        (((∑ i : FiniteEvenFourTorusZ2SliceConfiguration H, p i * p i)⁻¹ *
+          p x * p y) * f x)) =
+      (∑ i : FiniteEvenFourTorusZ2SliceConfiguration H, p i * p i)⁻¹ *
         (∑ x : FiniteEvenFourTorusZ2SliceConfiguration H, f x * p x) * p y
   rw [Finset.mul_sum, Finset.sum_mul]
   apply Finset.sum_congr rfl
