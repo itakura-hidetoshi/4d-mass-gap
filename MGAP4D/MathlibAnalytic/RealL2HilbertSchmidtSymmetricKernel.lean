@@ -46,21 +46,21 @@ theorem realL2HilbertSchmidtKernelPairing_symmetric_of_ae_symmetric_rep
       filter_upwards [hK, hfg] with p hpK hpfg
       rw [hpK, hpfg]
       simp [realL2ExternalTensorFunction]
+      rw [Real.inner_apply]
     _ = ∫ p : α × α, F p.swap ∂(μ.prod μ) := by
       simpa [F] using
         (MeasureTheory.integral_prod_swap (μ := μ) (ν := μ) F).symm
     _ = ∫ p : α × α, k p * (g p.1 * f p.2) ∂(μ.prod μ) := by
       apply integral_congr_ae
       filter_upwards with p
-      rw [hkSymm p]
-      simp [F]
-      ring
+      simp [F, hkSymm p, mul_comm]
     _ = realL2HilbertSchmidtKernelPairing K g f := by
       rw [realL2HilbertSchmidtKernelPairing, MeasureTheory.L2.inner_def]
       apply integral_congr_ae
       filter_upwards [hK, hgf] with p hpK hpgf
       rw [hpK, hpgf]
       simp [realL2ExternalTensorFunction]
+      rw [Real.inner_apply]
 
 /-- The same representative symmetry criterion makes the associated
 Fréchet--Riesz Hilbert--Schmidt operator symmetric in Mathlib's Hilbert-space
