@@ -36,8 +36,7 @@ theorem finiteEvenFourTorusZ2AmbientGroundSpectralDefect_exists_smallPositive_ne
         energyIdentity energyNontrivial hEnergy with
     ⟨ε, hε, hBlock⟩
   refine ⟨ε, hε, ?_⟩
-  intro β hβ hβε
-  intro hzero
+  intro β hβ hβε hzero
   apply hBlock β hβ hβε
   rw [hzero]
   simp
@@ -104,14 +103,18 @@ theorem finiteEvenFourTorusZ2AmbientExcitedEigenbasis_mem_invariant
     (finiteGroupInvariantSubmodule
       (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
       (FiniteEvenFourTorusZ2SliceConfiguration H)).smul_mem _ hout
-  have hλne : D.eigenvalue i.1 ≠ 0 := ne_of_gt i.2.1
+  have hEigenvalueNe : D.eigenvalue i.1 ≠ 0 := ne_of_gt i.2.1
   have hrecover :
       (D.eigenvalue i.1)⁻¹ •
           finiteEvenFourTorusZ2UnfixedGaugeOneSlabTransfer
             H β energyIdentity energyNontrivial hβ hEnergy v = v := by
-    rw [heig, smul_smul, inv_mul_cancel₀ hλne, one_smul]
-  rw [hrecover] at hscaled
-  simpa [D, v] using hscaled
+    rw [heig, smul_smul, inv_mul_cancel₀ hEigenvalueNe, one_smul]
+  change v ∈
+    finiteGroupInvariantSubmodule
+      (FiniteEvenFourTorusZ2ResidualSliceGaugeGroup H)
+      (FiniteEvenFourTorusZ2SliceConfiguration H)
+  rw [← hrecover]
+  exact hscaled
 
 /-- An ambient excited mode therefore forces the compressed Gauss-invariant
 transfer to have a nonzero ground spectral defect and hence a strictly excited
@@ -263,10 +266,24 @@ noncomputable def z2FiniteEvenFourTorusExcitedSupportEnergyPackage
     (hEnergy : energyIdentity < energyNontrivial) :
     Z2FiniteEvenFourTorusExcitedSupportEnergyPackage
       energyIdentity energyNontrivial hEnergy := by
-  rcases
-      finiteEvenFourTorusZ2InvariantExcitedSpectralIndex_exists_smallPositive_nonempty_zero
-        energyIdentity energyNontrivial hEnergy with
-    ⟨ε, hε, hExcited⟩
+  let hExists :=
+    finiteEvenFourTorusZ2InvariantExcitedSpectralIndex_exists_smallPositive_nonempty_zero
+      energyIdentity energyNontrivial hEnergy
+  let ε : ℝ := Classical.choose hExists
+  have hSpec :
+      0 < ε ∧
+        ∀ β : ℝ, ∀ hβ : 0 < β, β < ε →
+          Nonempty
+            (FiniteEvenFourTorusZ2UnfixedGaugeExcitedSpectralIndex
+              0 β energyIdentity energyNontrivial hβ.le hEnergy.le) :=
+    Classical.choose_spec hExists
+  have hε : 0 < ε := hSpec.1
+  have hExcited :
+      ∀ β : ℝ, ∀ hβ : 0 < β, β < ε →
+        Nonempty
+          (FiniteEvenFourTorusZ2UnfixedGaugeExcitedSpectralIndex
+            0 β energyIdentity energyNontrivial hβ.le hEnergy.le) :=
+    hSpec.2
   refine
     { epsilon := ε
       epsilon_pos := hε
