@@ -75,7 +75,8 @@ theorem physicalState_vacuumCenteredCarrier_mem_vacuumOrthogonal
       inner ℝ Pn.vacuum Pn.vacuum = ‖Pn.vacuum‖ ^ 2 :=
         real_inner_self_eq_norm_sq Pn.vacuum
       _ = 1 := by rw [Pn.norm_vacuum hPn]; norm_num
-  simp [hinner]
+  rw [inner_sub_right, inner_smul_right, hinner]
+  simp
 
 /-- Whole-boundary realization of the completed OS transfer restricted to the
 physical excitation sector:
@@ -217,9 +218,17 @@ theorem completedVacuumOrthogonalBoundaryTransfer_quadratic_bound
   have happ :=
     (Q.completedVacuumOrthogonalBoundaryTransfer hInvariant C n t).le_opNorm v
   have hq := R.quadraticDecayFactor_nonneg t
+  have hv := norm_nonneg v
+  have happ_le :
+      ‖Q.completedVacuumOrthogonalBoundaryTransfer hInvariant C n t v‖ ≤
+        Real.sqrt (R.quadraticDecayFactor t) * ‖v‖ := by
+    calc
+      ‖Q.completedVacuumOrthogonalBoundaryTransfer hInvariant C n t v‖ ≤
+          ‖Q.completedVacuumOrthogonalBoundaryTransfer hInvariant C n t‖ * ‖v‖ := happ
+      _ ≤ Real.sqrt (R.quadraticDecayFactor t) * ‖v‖ :=
+        mul_le_mul_of_nonneg_right hop hv
   have hsqrt := Real.sqrt_nonneg (R.quadraticDecayFactor t)
   have hsqrt_sq := Real.sq_sqrt hq
-  have hv := norm_nonneg v
   have hout := norm_nonneg
     (Q.completedVacuumOrthogonalBoundaryTransfer hInvariant C n t v)
   nlinarith
