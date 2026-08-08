@@ -12,36 +12,37 @@ open scoped InnerProductSpace InnerProduct
 
 noncomputable section
 
-local instance (H : ℕ) : NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+local instance openHalfAnalysisSideLengthNeZero (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
   simp [PeriodicHypercubicEvenSideLength]⟩
 
-local instance (N : ℕ) :
+local instance openHalfAnalysisSpecialUnitaryIsTopologicalGroup (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 
-local instance (N : ℕ) :
+local instance openHalfAnalysisSpecialUnitaryCompactSpace (N : ℕ) :
     CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
-local instance (N : ℕ) :
+local instance openHalfAnalysisSpecialUnitarySecondCountableTopology (N : ℕ) :
     SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupSecondCountableTopology N
 
-local instance (N : ℕ) :
+local instance openHalfAnalysisSpecialUnitaryMeasurableSpace (N : ℕ) :
     MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
 
-local instance (N : ℕ) :
+local instance openHalfAnalysisSpecialUnitaryBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-local instance (H N : ℕ) :
+local instance openHalfAnalysisBoundaryHaarSFinite (H N : ℕ) :
     SFinite (periodicHypercubicEvenBoundaryHaarMeasure H N) := by
   dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
     FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
   infer_instance
 
-local instance (H N : ℕ) :
+local instance openHalfAnalysisOpenHalfHaarSFinite (H N : ℕ) :
     SFinite (periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
   dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
     FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
