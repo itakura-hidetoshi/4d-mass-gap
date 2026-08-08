@@ -36,17 +36,15 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_inn
         (finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension
           H energyIdentity energyNontrivial 0) =
       (Fintype.card (FiniteEvenFourTorusZ2SliceConfiguration H) : ℝ)⁻¹ := by
-  let C := FiniteEvenFourTorusZ2SliceConfiguration H
-  let n : ℝ := Fintype.card C
-  have hn : n ≠ 0 := by
-    dsimp [n, C]
-    exact_mod_cast (Fintype.card_ne_zero : Fintype.card C ≠ 0)
+  have hcard :
+      (Fintype.card (FiniteEvenFourTorusZ2SliceConfiguration H) : ℝ) ≠ 0 := by
+    exact_mod_cast (Fintype.card_ne_zero :
+      Fintype.card (FiniteEvenFourTorusZ2SliceConfiguration H) ≠ 0)
   rw [PiLp.inner_apply]
   simp_rw [finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_zero_apply
     H energyIdentity energyNontrivial hEnergy]
-  change (∑ _A : C, n⁻¹ * n⁻¹) = n⁻¹
   rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
-  field_simp [hn]
+  field_simp [hcard]
 
 /-- Inverse squared norm of the canonical ground converges to the boundary
 cardinality.  This is the only denominator entering the rank-one projector. -/
@@ -78,7 +76,11 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_inn
   have hinner :
       Tendsto (fun β : ℝ => inner ℝ (p β) (p β))
         (nhdsWithin (0 : ℝ) (Ioi 0)) (nhds n⁻¹) := by
-    have h := hp.inner hp
+    have h :
+        Tendsto (fun β : ℝ => inner ℝ (p β) (p β))
+          (nhdsWithin (0 : ℝ) (Ioi 0))
+          (nhds (inner ℝ (p 0) (p 0))) :=
+      hp.inner (𝕜 := ℝ) hp
     rw [finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_inner_self_zero
       H energyIdentity energyNontrivial hEnergy] at h
     simpa [p, n] using h
@@ -148,16 +150,49 @@ theorem finiteEvenFourTorusZ2CanonicalGroundRankOneProjectorKernelRightExtension
   have hn : n ≠ 0 := by
     dsimp [n, C]
     exact_mod_cast (Fintype.card_ne_zero : Fintype.card C ≠ 0)
-  have hDen :=
-    finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_inner_self_inv_tendsto
-      H energyIdentity energyNontrivial hEnergy
-  have hx :=
-    finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_coordinateDifference_slope
-      H energyIdentity energyNontrivial hEnergy x x'
-  have hy :=
-    finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_coordinateDifference_slope
-      H energyIdentity energyNontrivial hEnergy y y'
-  have hProd := hDen.mul (hx.mul hy)
+  have hDen :
+      Tendsto
+        (fun β : ℝ => (inner ℝ (p β) (p β))⁻¹)
+        (nhdsWithin (0 : ℝ) (Ioi 0))
+        (nhds n) := by
+    simpa [p, n, C] using
+      (finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_inner_self_inv_tendsto
+        H energyIdentity energyNontrivial hEnergy)
+  have hx :
+      Tendsto
+        (fun β : ℝ => (p β x - p β x') / β)
+        (nhdsWithin (0 : ℝ) (Ioi 0))
+        (nhds (-(n⁻¹ * (1 / 2 : ℝ) * dx))) := by
+    simpa [p, n, C, dx] using
+      (finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_coordinateDifference_slope
+        H energyIdentity energyNontrivial hEnergy x x')
+  have hy :
+      Tendsto
+        (fun β : ℝ => (p β y - p β y') / β)
+        (nhdsWithin (0 : ℝ) (Ioi 0))
+        (nhds (-(n⁻¹ * (1 / 2 : ℝ) * dy))) := by
+    simpa [p, n, C, dy] using
+      (finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_coordinateDifference_slope
+        H energyIdentity energyNontrivial hEnergy y y')
+  have hProd :
+      Tendsto
+        (fun β : ℝ =>
+          (inner ℝ (p β) (p β))⁻¹ *
+            (((p β x - p β x') / β) * ((p β y - p β y') / β)))
+        (nhdsWithin (0 : ℝ) (Ioi 0))
+        (nhds
+          (n *
+            (-(n⁻¹ * (1 / 2 : ℝ) * dx) *
+              -(n⁻¹ * (1 / 2 : ℝ) * dy)))) := by
+    exact hDen.mul (hx.mul hy)
+  have hLimit :
+      n *
+          (-(n⁻¹ * (1 / 2 : ℝ) * dx) *
+            -(n⁻¹ * (1 / 2 : ℝ) * dy)) =
+        n⁻¹ * (1 / 4 : ℝ) * dx * dy := by
+    field_simp [hn]
+    ring
+  rw [hLimit] at hProd
   have hEq :
       (fun β : ℝ =>
         finiteKernelMixedCrossDifference
@@ -166,8 +201,7 @@ theorem finiteEvenFourTorusZ2CanonicalGroundRankOneProjectorKernelRightExtension
             x x' y y' / β ^ 2) =ᶠ[nhdsWithin (0 : ℝ) (Ioi 0)]
       (fun β : ℝ =>
         (inner ℝ (p β) (p β))⁻¹ *
-          ((p β x - p β x') / β) *
-          ((p β y - p β y') / β)) := by
+          (((p β x - p β x') / β) * ((p β y - p β y') / β))) := by
     filter_upwards [self_mem_nhdsWithin] with β hβ
     have hβne : β ≠ 0 := ne_of_gt hβ
     rw [finiteEvenFourTorusZ2CanonicalGroundRankOneProjectorKernelRightExtension_mixedDifference_eq]
@@ -175,11 +209,7 @@ theorem finiteEvenFourTorusZ2CanonicalGroundRankOneProjectorKernelRightExtension
     field_simp [hβne]
     ring
   have hFinal := hProd.congr' hEq.symm
-  convert hFinal using 1
-  · rfl
-  · dsimp [n, C, dx, dy] at *
-    field_simp [hn]
-    ring
+  simpa [n, C, dx, dy] using hFinal
 
 end
 
