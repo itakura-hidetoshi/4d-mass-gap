@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonGibbsBoundaryHilbertSchmidtOperatorFactorization
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonGibbsBoundaryOpenHalfAnalysisOperator
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingBoundaryL2TransferGap
 import MGAP4D.MathlibAnalytic.RealL2HilbertSchmidtRectangularKernelAdjoint
 import Mathlib.MeasureTheory.Function.LpSpace.ContinuousFunctions
@@ -70,6 +70,65 @@ theorem periodicHypercubicEvenWilsonOpenHalfObservableL2_coeFn
       (fun x => u x) := by
   exact BoundedContinuousFunction.coeFn_toLp
     (E := ℝ) 2 (periodicHypercubicEvenOpenHalfHaarMeasure H N) ℝ u
+
+/-- The physical rectangular feature kernel has the completed-positive-Gram
+representative almost everywhere.  This local bridge keeps the boundary-moment
+module independent of the heavier static Gram-operator factorization chain. -/
+theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureRectangularL2_adjointBridge_coeFn
+    (H N : ℕ) (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ) (hbeta : 0 ≤ beta) :
+    (fun p =>
+      periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureRectangularL2
+        H N hN beta hbeta p) =ᵐ[
+      (periodicHypercubicEvenBoundaryHaarMeasure H N).prod
+        (periodicHypercubicEvenOpenHalfHaarMeasure H N)]
+      (fun p => periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+        H N hN beta hbeta p.1 p.2) := by
+  let hmem :=
+    periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_product_memLp_two
+      H N hN beta hbeta
+  simpa [periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureRectangularL2,
+    periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureProductL2,
+    periodicHypercubicEvenBoundaryOpenHalfHaarMeasure] using
+      hmem.coeFn_toLp
+
+/-- The raw completed-positive-Gram feature times an arbitrary boundary/open-half
+`L²` tensor is integrable.  This is just `L² × L² → L¹`, exposed directly via
+Mathlib's `L2.integrable_inner`. -/
+theorem periodicHypercubicEvenWilsonBoundaryGramFeature_adjointBridge_weightedPair_integrable
+    (H N : ℕ) (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : Lp ℝ 2 (periodicHypercubicEvenBoundaryHaarMeasure H N))
+    (g : Lp ℝ 2 (periodicHypercubicEvenOpenHalfHaarMeasure H N)) :
+    Integrable
+      (fun p :
+        PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H N =>
+        periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+          H N hN beta hbeta p.1 p.2 * (f p.1 * g p.2))
+      ((periodicHypercubicEvenBoundaryHaarMeasure H N).prod
+        (periodicHypercubicEvenOpenHalfHaarMeasure H N)) := by
+  let boundaryMeasure := periodicHypercubicEvenBoundaryHaarMeasure H N
+  let halfMeasure := periodicHypercubicEvenOpenHalfHaarMeasure H N
+  let K := periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureRectangularL2
+    H N hN beta hbeta
+  let E := realL2ExternalTensor f g
+  have hinner : Integrable
+      (fun p => inner ℝ (K p) (E p))
+      (boundaryMeasure.prod halfMeasure) :=
+    MeasureTheory.L2.integrable_inner K E
+  apply hinner.congr
+  filter_upwards [
+    periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureRectangularL2_adjointBridge_coeFn
+      H N hN beta hbeta,
+    realL2ExternalTensor_coeFn
+      (μ := boundaryMeasure) (ν := halfMeasure) f g] with p hK hE
+  rw [show K p = periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+      H N hN beta hbeta p.1 p.2 by exact hK]
+  rw [show E p = f p.1 * g p.2 by exact hE]
+  exact realL2Scalar_inner_eq_mul _ _
 
 /-- The boundary moment of a bounded continuous positive-half observable is
 a.e.-strongly measurable in the shared-boundary variable. -/
@@ -226,7 +285,7 @@ theorem periodicHypercubicEvenBoundaryObservableMomentL2_inner
       H N hN beta hbeta p.1 p.2 * (f p.1 * g p.2)
   have hraw : Integrable raw (boundaryMeasure.prod halfMeasure) := by
     simpa [raw, boundaryMeasure, halfMeasure, g] using
-      periodicHypercubicEvenWilsonBoundaryGramFeature_weightedPair_integrable
+      periodicHypercubicEvenWilsonBoundaryGramFeature_adjointBridge_weightedPair_integrable
         H N hN beta hbeta f g
   calc
     inner ℝ m f = ∫ b, inner ℝ (m b) (f b) ∂boundaryMeasure :=
@@ -265,7 +324,7 @@ theorem periodicHypercubicEvenBoundaryObservableMomentL2_inner
       rw [realL2HilbertSchmidtKernelPairing, MeasureTheory.L2.inner_def]
       apply integral_congr_ae
       filter_upwards [
-        periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureRectangularL2_coeFn
+        periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureRectangularL2_adjointBridge_coeFn
           H N hN beta hbeta,
         realL2ExternalTensor_coeFn
           (μ := boundaryMeasure) (ν := halfMeasure) f g] with p hK hfg
