@@ -29,9 +29,9 @@ theorem finiteKernelNormalizedOperator_fixed_coordinateDifference
     ‖finiteKernelOperator K‖⁻¹ * (finiteKernelOperator K p) y' = p y' at hy'
   rw [finiteKernelOperator_apply] at hy hy'
   rw [← hy, ← hy']
-  rw [← Finset.mul_sum]
+  rw [← mul_sub]
   apply congrArg (fun z : ℝ => ‖finiteKernelOperator K‖⁻¹ * z)
-  rw [Finset.sum_sub_distrib]
+  rw [← Finset.sum_sub_distrib]
   apply Finset.sum_congr rfl
   intro x _hx
   ring
