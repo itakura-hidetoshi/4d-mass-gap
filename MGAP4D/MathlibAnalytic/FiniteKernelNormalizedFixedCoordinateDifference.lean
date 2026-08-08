@@ -23,6 +23,10 @@ theorem finiteKernelNormalizedOperator_fixed_coordinateDifference
   have hy := congrArg (fun q : FiniteBoundaryHilbert α => q y) hfix
   have hy' := congrArg (fun q : FiniteBoundaryHilbert α => q y') hfix
   unfold finiteKernelNormalizedOperator at hy hy'
+  change
+    ((‖finiteKernelOperator K‖⁻¹ • finiteKernelOperator K) p) y = p y at hy
+  change
+    ((‖finiteKernelOperator K‖⁻¹ • finiteKernelOperator K) p) y' = p y' at hy'
   rw [ContinuousLinearMap.smul_apply, finiteKernelOperator_apply] at hy hy'
   change
     ‖finiteKernelOperator K‖⁻¹ * (∑ x : α, K x y * p x) = p y at hy
