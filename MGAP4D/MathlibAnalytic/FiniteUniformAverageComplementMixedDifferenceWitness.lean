@@ -34,6 +34,7 @@ theorem finiteUniformAverageComplement_comp_finiteKernelOperator_comp_complement
     intro h
     subst x'
     simp [finiteKernelMixedCrossDifference] at hMixed
+  have hx'x : x' ≠ x := Ne.symm hxx'
   let f : FiniteBoundaryHilbert α :=
     WithLp.toLp 2 (fun z : α => if z = x then (1 : ℝ)
       else if z = x' then (-1 : ℝ) else 0)
@@ -43,29 +44,68 @@ theorem finiteUniformAverageComplement_comp_finiteKernelOperator_comp_complement
   have hQf : finiteUniformAverageComplementLinearMap f = f := by
     ext z
     rw [finiteUniformAverageComplementLinearMap_apply, hsum]
-    simp
+    ring
   have hKfy : finiteKernelOperator K f y = K x y - K x' y := by
     rw [finiteKernelOperator_apply]
     dsimp [f]
-    simp [hxx']
+    calc
+      (∑ z : α,
+          if z = x then K z y
+          else if z = x' then -K z y else 0) =
+        (∑ z : α, if z = x then K x y else 0) +
+          (∑ z : α, if z = x' then -K x' y else 0) := by
+        rw [← Finset.sum_add_distrib]
+        apply Finset.sum_congr rfl
+        intro z _hz
+        by_cases hz : z = x
+        · subst z
+          simp [hxx']
+        · by_cases hz' : z = x'
+          · subst z
+            simp [hxx', hx'x]
+          · simp [hz, hz']
+      _ = K x y + (-K x' y) := by simp
+      _ = K x y - K x' y := by ring
   have hKfy' : finiteKernelOperator K f y' = K x y' - K x' y' := by
     rw [finiteKernelOperator_apply]
     dsimp [f]
-    simp [hxx']
+    calc
+      (∑ z : α,
+          if z = x then K z y'
+          else if z = x' then -K z y' else 0) =
+        (∑ z : α, if z = x then K x y' else 0) +
+          (∑ z : α, if z = x' then -K x' y' else 0) := by
+        rw [← Finset.sum_add_distrib]
+        apply Finset.sum_congr rfl
+        intro z _hz
+        by_cases hz : z = x
+        · subst z
+          simp [hxx']
+        · by_cases hz' : z = x'
+          · subst z
+            simp [hxx', hx'x]
+          · simp [hz, hz']
+      _ = K x y' + (-K x' y') := by simp
+      _ = K x y' - K x' y' := by ring
   intro hzero
   have hz := LinearMap.congr_fun hzero f
   change
     finiteUniformAverageComplementLinearMap
       (finiteKernelOperator K (finiteUniformAverageComplementLinearMap f)) = 0 at hz
   rw [hQf] at hz
-  have hy := congrArg (fun g : FiniteBoundaryHilbert α => g y) hz
-  have hy' := congrArg (fun g : FiniteBoundaryHilbert α => g y') hz
-  simp only [Pi.zero_apply] at hy hy'
+  have hy :
+      finiteUniformAverageComplementLinearMap (finiteKernelOperator K f) y = 0 := by
+    simpa using congrArg (fun g : FiniteBoundaryHilbert α => g y) hz
+  have hy' :
+      finiteUniformAverageComplementLinearMap (finiteKernelOperator K f) y' = 0 := by
+    simpa using congrArg (fun g : FiniteBoundaryHilbert α => g y') hz
   rw [finiteUniformAverageComplementLinearMap_apply] at hy hy'
+  have hout : finiteKernelOperator K f y - finiteKernelOperator K f y' = 0 := by
+    linear_combination hy - hy'
+  rw [hKfy, hKfy'] at hout
   apply hMixed
   unfold finiteKernelMixedCrossDifference
-  rw [← hKfy, ← hKfy']
-  linear_combination hy - hy'
+  linear_combination hout
 
 end
 
