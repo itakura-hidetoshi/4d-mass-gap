@@ -43,7 +43,9 @@ theorem realHilbertIntegratedSelfRankOne_inner
     ← integral_inner hxInt y]
   apply integral_congr_ae
   filter_upwards with a
-  simp [realHilbertSelfRankOne_apply, real_inner_comm, mul_comm]
+  rw [realHilbertSelfRankOne_apply, real_inner_comm (v a) x,
+    inner_smul_real_right]
+  rfl
 
 /-- The integrated feature operator is symmetric. -/
 theorem realHilbertIntegratedSelfRankOne_isSymmetric
@@ -52,11 +54,21 @@ theorem realHilbertIntegratedSelfRankOne_isSymmetric
     (hv2 : Integrable (fun a => ‖v a‖ ^ 2) μ) :
     ((realHilbertIntegratedSelfRankOne μ v : H →L[ℝ] H) : H →ₗ[ℝ] H).IsSymmetric := by
   intro x y
-  rw [realHilbertIntegratedSelfRankOne_inner hv hv2 x y,
-    realHilbertIntegratedSelfRankOne_inner hv hv2 y x]
-  apply integral_congr_ae
-  filter_upwards with a
-  ring
+  change
+    inner ℝ (realHilbertIntegratedSelfRankOne μ v x) y =
+      inner ℝ x (realHilbertIntegratedSelfRankOne μ v y)
+  calc
+    inner ℝ (realHilbertIntegratedSelfRankOne μ v x) y =
+        ∫ a, inner ℝ (v a) x * inner ℝ (v a) y ∂μ :=
+      realHilbertIntegratedSelfRankOne_inner hv hv2 x y
+    _ = ∫ a, inner ℝ (v a) y * inner ℝ (v a) x ∂μ := by
+      apply integral_congr_ae
+      filter_upwards with a
+      ring
+    _ = inner ℝ (realHilbertIntegratedSelfRankOne μ v y) x :=
+      (realHilbertIntegratedSelfRankOne_inner hv hv2 y x).symm
+    _ = inner ℝ x (realHilbertIntegratedSelfRankOne μ v y) :=
+      real_inner_comm _ _
 
 /-- The quadratic form of the integrated feature operator is the integral of
 squares of scalar feature coefficients. -/
