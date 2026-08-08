@@ -26,7 +26,7 @@ structure HasSecondOrderExpansionAtZero (f : ℝ → ℝ) (d₂ : ℝ) : Prop wh
   firstVariation : HasDerivAt f 0 0
   quadraticQuotient :
     Tendsto (fun β : ℝ => f β / β ^ 2)
-      (nhdsWithin (0 : ℝ) (Ioi 0)) (𝓝 (d₂ / 2))
+      (nhdsWithin (0 : ℝ) (Ioi 0)) (nhds (d₂ / (2 : ℝ)))
 
 /-- If the positive-side quadratic quotient tends to a nonzero coefficient,
 then the function is eventually nonzero on the punctured positive
@@ -36,10 +36,10 @@ theorem Tendsto.eventually_ne_zero_right_of_quadraticQuotient_ne_zero
     {q : ℝ}
     (hlim :
       Tendsto (fun β : ℝ => f β / β ^ 2)
-        (nhdsWithin (0 : ℝ) (Ioi 0)) (𝓝 q))
+        (nhdsWithin (0 : ℝ) (Ioi 0)) (nhds q))
     (hq : q ≠ 0) :
     ∀ᶠ β in nhdsWithin (0 : ℝ) (Ioi 0), f β ≠ 0 := by
-  have hnhds : ({0}ᶜ : Set ℝ) ∈ 𝓝 q := by
+  have hnhds : ({0}ᶜ : Set ℝ) ∈ nhds q := by
     exact IsOpen.mem_nhds isOpen_compl_singleton (by simpa using hq)
   have hquot := hlim hnhds
   filter_upwards [hquot] with β hβ
@@ -55,7 +55,7 @@ theorem Tendsto.exists_pos_forall_pos_lt_ne_zero_of_quadraticQuotient_ne_zero
     {q : ℝ}
     (hlim :
       Tendsto (fun β : ℝ => f β / β ^ 2)
-        (nhdsWithin (0 : ℝ) (Ioi 0)) (𝓝 q))
+        (nhdsWithin (0 : ℝ) (Ioi 0)) (nhds q))
     (hq : q ≠ 0) :
     ∃ ε : ℝ, 0 < ε ∧ ∀ β : ℝ, 0 < β → β < ε → f β ≠ 0 := by
   have hEvent :=
@@ -78,7 +78,8 @@ theorem HasSecondOrderExpansionAtZero.exists_pos_forall_pos_lt_ne_zero_of_second
     ∃ ε : ℝ, 0 < ε ∧ ∀ β : ℝ, 0 < β → β < ε → f β ≠ 0 := by
   apply Tendsto.exists_pos_forall_pos_lt_ne_zero_of_quadraticQuotient_ne_zero
     h.quadraticQuotient
-  exact div_ne_zero hd₂ (by norm_num)
+  have htwo : (2 : ℝ) ≠ 0 := by norm_num
+  exact div_ne_zero hd₂ htwo
 
 /-- Contrapositive accumulation form: under a realized second-order expansion,
 zeros arbitrarily close to zero from the positive side force the second
