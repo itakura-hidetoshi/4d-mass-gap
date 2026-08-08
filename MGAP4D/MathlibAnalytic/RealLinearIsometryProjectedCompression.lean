@@ -20,7 +20,9 @@ complete. -/
 noncomputable instance realLinearIsometryRangeCompleteSpace
     (J : H →ₗᵢ[ℝ] B) :
     CompleteSpace (realLinearIsometryRange J) := by
-  change CompleteSpace ((⊤ : Submodule ℝ H).map J.toLinearMap)
+  rw [show realLinearIsometryRange J =
+      (⊤ : Submodule ℝ H).map J.toLinearMap by
+    exact LinearMap.range_eq_map J.toLinearMap]
   exact J.completeSpace_map (⊤ : Submodule ℝ H)
 
 /-- Canonical contractive left inverse of a Hilbert-space isometric embedding:
