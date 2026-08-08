@@ -37,21 +37,19 @@ theorem realL2HilbertSchmidtKernelPairing_symmetric_of_ae_symmetric_rep
   intro f g
   have hfg := realL2ExternalTensor_coeFn (μ := μ) (ν := μ) f g
   have hgf := realL2ExternalTensor_coeFn (μ := μ) (ν := μ) g f
-  let F : α × α → ℝ := fun p => k p * (f p.1 * g p.2)
+  let F : α × α → ℝ := fun p => ⟪k p, f p.1 * g p.2⟫_ℝ
   calc
     realL2HilbertSchmidtKernelPairing K f g =
-        ∫ p : α × α, k p * (f p.1 * g p.2) ∂(μ.prod μ) := by
+        ∫ p : α × α, F p ∂(μ.prod μ) := by
       rw [realL2HilbertSchmidtKernelPairing, MeasureTheory.L2.inner_def]
       apply integral_congr_ae
       filter_upwards [hK, hfg] with p hpK hpfg
       rw [hpK, hpfg]
-      simp [realL2ExternalTensorFunction]
-      rw [RCLike.inner_apply']
-      simp
+      simp [realL2ExternalTensorFunction, F]
     _ = ∫ p : α × α, F p.swap ∂(μ.prod μ) := by
-      simpa [F] using
+      simpa using
         (MeasureTheory.integral_prod_swap (μ := μ) (ν := μ) F).symm
-    _ = ∫ p : α × α, k p * (g p.1 * f p.2) ∂(μ.prod μ) := by
+    _ = ∫ p : α × α, ⟪k p, g p.1 * f p.2⟫_ℝ ∂(μ.prod μ) := by
       apply integral_congr_ae
       filter_upwards with p
       simp [F, hkSymm p, mul_comm]
@@ -61,8 +59,6 @@ theorem realL2HilbertSchmidtKernelPairing_symmetric_of_ae_symmetric_rep
       filter_upwards [hK, hgf] with p hpK hpgf
       rw [hpK, hpgf]
       simp [realL2ExternalTensorFunction]
-      rw [RCLike.inner_apply']
-      simp
 
 /-- The same representative symmetry criterion makes the associated
 Fréchet--Riesz Hilbert--Schmidt operator symmetric in Mathlib's Hilbert-space
