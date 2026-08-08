@@ -32,32 +32,6 @@ local instance coherentPullbackSpecialUnitaryBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-namespace PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
-
-variable {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
-variable {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
-
-/-- The identification of the opaque OS carrier with the original positive-time
-observable algebra is additive. -/
-@[simp] theorem positiveTimeElement_add
-    (P : D.OSPreHilbertData) (F G : P.Carrier) :
-    P.positiveTimeElement (F + G) =
-      P.positiveTimeElement F + P.positiveTimeElement G := by
-  apply Subtype.ext
-  apply Subtype.ext
-  rfl
-
-/-- The identification of the opaque OS carrier with the original positive-time
-observable algebra is real homogeneous. -/
-@[simp] theorem positiveTimeElement_smul
-    (P : D.OSPreHilbertData) (r : ℝ) (F : P.Carrier) :
-    P.positiveTimeElement (r • F) = r • P.positiveTimeElement F := by
-  apply Subtype.ext
-  apply Subtype.ext
-  rfl
-
-end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
-
 /-- Coherent finite-Wilson pullback data at the positive-time observable level.
 
 The older weak-star bridge chooses a complete finite bridge separately for each
@@ -69,10 +43,14 @@ independently for every observable.
 This structure removes both freedoms at once:
 
 * one interpolation map is fixed at each lattice scale;
-* one real-linear map sends the full physical positive-time observable algebra
-  to bounded continuous positive-half finite-Wilson observables;
+* one real-linear map sends the positive-time *submodule* used by the OS
+  bilinear form to bounded continuous positive-half finite-Wilson observables;
 * the reflected quadratic pullback identity is required for this common linear
   map.
+
+The `toSubmodule` carrier is deliberate: it is the same lightweight linear
+carrier already used by `osBilinForm`, avoiding nested-subtype algebra-instance
+search on the full positive-time subalgebra.
 
 No decay, coercivity, mass, integrability, or operator-norm estimate is added. -/
 structure PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
@@ -99,7 +77,7 @@ structure PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
             N hN (beta n) (hbeta n)).gibbsMeasure
   positiveHalfPullback :
     ∀ n,
-      D.positiveTimeSubalgebra →ₗ[ℝ]
+      D.positiveTimeSubalgebra.toSubmodule →ₗ[ℝ]
         BoundedContinuousFunction
           (PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
             (halfExtent n) N) ℝ
@@ -107,7 +85,9 @@ structure PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
     ∀ n (F : D.positiveTimeSubalgebra) A,
       D.quadraticBoundedContinuousFunction F (interpolate n A) =
         periodicHypercubicEvenFullReflectedObservable
-          (halfExtent n) (positiveHalfPullback n F) A
+          (halfExtent n)
+          (positiveHalfPullback n
+            (⟨F.1, F.2⟩ : D.positiveTimeSubalgebra.toSubmodule)) A
 
 namespace PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
 
@@ -132,7 +112,9 @@ noncomputable def toWeakStarBridge
   finiteBridge := fun F =>
     { interpolate := Q.interpolate
       interpolate_measurable := Q.interpolate_measurable
-      positiveHalfObservable := fun n => Q.positiveHalfPullback n F
+      positiveHalfObservable := fun n =>
+        Q.positiveHalfPullback n
+          (⟨F.1, F.2⟩ : D.positiveTimeSubalgebra.toSubmodule)
       approximatingMeasure_toMeasure_eq := Q.approximatingMeasure_toMeasure_eq
       quadraticObservable_pullback := fun n A =>
         Q.quadraticObservable_pullback n F A }
@@ -142,7 +124,8 @@ noncomputable def toWeakStarBridge
       S D halfExtent N hN beta hbeta)
     (F : D.positiveTimeSubalgebra) (n : ℕ) :
     ((Q.toWeakStarBridge.finiteBridge F).positiveHalfObservable n) =
-      Q.positiveHalfPullback n F :=
+      Q.positiveHalfPullback n
+        (⟨F.1, F.2⟩ : D.positiveTimeSubalgebra.toSubmodule) :=
   rfl
 
 @[simp] theorem toWeakStarBridge_interpolate
@@ -174,7 +157,7 @@ theorem continuum_weakStarReflectionPositive
 
 /-- For the OS carrier generated from the coherent bridge, the actual finite
 positive-half observable is definitionally the common linear pullback of its
-positive-time observable. -/
+positive-time submodule element. -/
 @[simp] theorem finitePositiveHalfObservable_eq_positiveHalfPullback
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
       S D halfExtent N hN beta hbeta)
@@ -188,7 +171,7 @@ positive-time observable. -/
         S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n F =
       Q.positiveHalfPullback n
         ((physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-          S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n).positiveTimeElement F) :=
+          S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n).toPositiveTime F) :=
   rfl
 
 /-- A common positive-time linear pullback automatically generates the raw
@@ -206,19 +189,19 @@ noncomputable def toPositiveHalfPullbackLinearCoherence
     let Pn :=
       physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
         S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
-    change Q.positiveHalfPullback n (Pn.positiveTimeElement (F + G)) =
-      Q.positiveHalfPullback n (Pn.positiveTimeElement F) +
-        Q.positiveHalfPullback n (Pn.positiveTimeElement G)
-    rw [Pn.positiveTimeElement_add]
+    change Q.positiveHalfPullback n (Pn.toPositiveTime (F + G)) =
+      Q.positiveHalfPullback n (Pn.toPositiveTime F) +
+        Q.positiveHalfPullback n (Pn.toPositiveTime G)
+    rw [Pn.toPositiveTime_add]
     exact (Q.positiveHalfPullback n).map_add _ _
   map_smul := by
     intro n r F
     let Pn :=
       physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
         S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
-    change Q.positiveHalfPullback n (Pn.positiveTimeElement (r • F)) =
-      r • Q.positiveHalfPullback n (Pn.positiveTimeElement F)
-    rw [Pn.positiveTimeElement_smul]
+    change Q.positiveHalfPullback n (Pn.toPositiveTime (r • F)) =
+      r • Q.positiveHalfPullback n (Pn.toPositiveTime F)
+    rw [Pn.toPositiveTime_smul]
     exact (Q.positiveHalfPullback n).map_smul r _
 
 /-- The coherent bridge therefore gives a canonical linear-isometric boundary
