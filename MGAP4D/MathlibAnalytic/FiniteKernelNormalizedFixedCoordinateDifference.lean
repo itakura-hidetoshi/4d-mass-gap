@@ -20,9 +20,9 @@ theorem tendsto_finsetSum
     (s : Finset ι)
     (h : ∀ i ∈ s, Tendsto (f i) l (nhds (a i))) :
     Tendsto
-      (fun x => ∑ i in s, f i x)
+      (fun x => s.sum (fun i => f i x))
       l
-      (nhds (∑ i in s, a i)) := by
+      (nhds (s.sum a)) := by
   classical
   induction s using Finset.induction_on with
   | empty =>
@@ -31,10 +31,10 @@ theorem tendsto_finsetSum
       have hiT : Tendsto (f i) l (nhds (a i)) := h i (by simp)
       have hsT :
           Tendsto
-            (fun x => ∑ j in s, f j x)
+            (fun x => s.sum (fun j => f j x))
             l
-            (nhds (∑ j in s, a j)) :=
-        ih (fun j hj => h j (by simp [hj]))
+            (nhds (s.sum a)) :=
+        ih (fun j hj => h j (Finset.mem_insert_of_mem hj))
       simpa [Finset.sum_insert, hi] using hiT.add hsT
 
 /-- A fixed vector of an operator-norm-normalized finite kernel satisfies an
