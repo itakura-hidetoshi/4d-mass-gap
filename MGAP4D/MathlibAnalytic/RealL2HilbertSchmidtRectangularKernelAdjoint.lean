@@ -22,7 +22,8 @@ noncomputable def realL2HilbertSchmidtRectangularKernelSynthesisOperator
     [SFinite μ] [SFinite ν]
     (K : Lp ℝ 2 (μ.prod ν)) :
     Lp ℝ 2 ν →L[ℝ] Lp ℝ 2 μ :=
-  (realL2HilbertSchmidtRectangularKernelOperator K)†
+  (realL2HilbertSchmidtRectangularKernelOperator
+    (μ := μ) (ν := ν) K)†
 
 /-- Exact matrix coefficient of the generic adjoint synthesis operator. -/
 theorem realL2HilbertSchmidtRectangularKernelSynthesisOperator_inner
@@ -32,7 +33,9 @@ theorem realL2HilbertSchmidtRectangularKernelSynthesisOperator_inner
     inner ℝ
         (realL2HilbertSchmidtRectangularKernelSynthesisOperator K g) f =
       realL2HilbertSchmidtKernelPairing K f g := by
-  let A := realL2HilbertSchmidtRectangularKernelOperator K
+  let A : Lp ℝ 2 μ →L[ℝ] Lp ℝ 2 ν :=
+    realL2HilbertSchmidtRectangularKernelOperator
+      (μ := μ) (ν := ν) K
   calc
     inner ℝ
         (realL2HilbertSchmidtRectangularKernelSynthesisOperator K g) f =
