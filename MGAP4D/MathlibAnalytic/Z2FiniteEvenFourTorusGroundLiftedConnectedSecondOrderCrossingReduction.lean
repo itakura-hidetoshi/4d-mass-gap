@@ -367,7 +367,7 @@ theorem finiteEvenFourTorusZ2ConnectedTransferSecondVariation_eq_normalizedCross
       D.firstVariationGroundMixing + D.firstVariationGroundMixing =
           D.baseComplement.comp D.firstVariationGroundMixing +
             D.baseComplement.comp D.firstVariationGroundMixing := by
-        rw [hMixRange, hMixRange]
+        rw [hMixRange]
       _ = _ := hMixQ
   unfold FiniteSecondOrderLinearizedTransferGroundProjectorData.connectedTransferSecondVariation
   rw [hSecond, hSplit]
