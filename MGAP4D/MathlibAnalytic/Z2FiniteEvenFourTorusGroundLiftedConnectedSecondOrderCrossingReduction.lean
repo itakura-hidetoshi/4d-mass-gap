@@ -363,8 +363,12 @@ theorem finiteEvenFourTorusZ2ConnectedTransferSecondVariation_eq_normalizedCross
               (fun X : FiniteEvenFourTorusZ2SliceConfiguration H =>
                 finiteEvenFourTorusZ2SpatialWilsonAction
                   H energyIdentity energyNontrivial X))).toLinearMap.comp Q) := by
-    rw [← hMixRange, ← hMixRange]
-    exact hMixQ
+    calc
+      D.firstVariationGroundMixing + D.firstVariationGroundMixing =
+          D.baseComplement.comp D.firstVariationGroundMixing +
+            D.baseComplement.comp D.firstVariationGroundMixing := by
+        rw [hMixRange, hMixRange]
+      _ = _ := hMixQ
   unfold FiniteSecondOrderLinearizedTransferGroundProjectorData.connectedTransferSecondVariation
   rw [hSecond, hSplit]
   calc
