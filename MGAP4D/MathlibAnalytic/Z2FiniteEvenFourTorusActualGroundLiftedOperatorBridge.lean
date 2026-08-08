@@ -114,7 +114,7 @@ theorem finiteEvenFourTorusZ2CanonicalGroundRankOneProjectorKernelRightExtension
     intro a b
     rfl
   simp_rw [hrealInner]
-  rw [Finset.mul_sum, Finset.sum_mul]
+  rw [Finset.sum_mul, Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro x _hx
   ring
