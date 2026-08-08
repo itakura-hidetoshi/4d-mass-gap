@@ -58,6 +58,10 @@ theorem periodicHypercubicEvenBoundaryCompletedPositiveGramL2Kernel_jointMeasura
   let Boundary := PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H N
   let Half := PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H N
   let mu := periodicHypercubicEvenOpenHalfHaarMeasure H N
+  letI : SFinite mu := by
+    dsimp [mu, periodicHypercubicEvenOpenHalfHaarMeasure,
+      FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+    infer_instance
   let g := fun p : Boundary × Half =>
     periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
       H N hN beta hbeta p.1 p.2
