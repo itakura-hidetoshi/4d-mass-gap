@@ -10,9 +10,9 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-universe u v
+universe u
 
-variable {α : Type u} {β : Type v}
+variable {α : Type u} {β : Type u}
   [MeasurableSpace α] [MeasurableSpace β]
   {μ : Measure α} {ν : Measure β}
 
