@@ -44,6 +44,7 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_inn
   simp_rw [finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGroundRightExtension_zero_apply
     H energyIdentity energyNontrivial hEnergy]
   rw [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
+  simp [RCLike.inner_apply]
   field_simp [hcard]
 
 /-- Inverse squared norm of the canonical ground converges to the boundary
@@ -191,7 +192,6 @@ theorem finiteEvenFourTorusZ2CanonicalGroundRankOneProjectorKernelRightExtension
             -(n⁻¹ * (1 / 2 : ℝ) * dy)) =
         n⁻¹ * (1 / 4 : ℝ) * dx * dy := by
     field_simp [hn]
-    ring
   rw [hLimit] at hProd
   have hEq :
       (fun β : ℝ =>
