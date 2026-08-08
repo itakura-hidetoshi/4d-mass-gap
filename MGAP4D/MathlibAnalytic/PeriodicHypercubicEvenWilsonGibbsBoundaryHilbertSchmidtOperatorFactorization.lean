@@ -258,7 +258,7 @@ theorem periodicHypercubicEvenWilsonBoundaryGramFeature_weightedPair_integrable
   let K := periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureRectangularL2
     H N hN beta hbeta
   let E := realL2ExternalTensor f g
-  have h := MeasureTheory.L2.integrable_inner K E
+  have h := MeasureTheory.L2.integrable_inner (𝕜 := ℝ) K E
   apply h.congr
   filter_upwards [
     periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureRectangularL2_coeFn
