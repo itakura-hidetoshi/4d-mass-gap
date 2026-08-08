@@ -216,6 +216,9 @@ theorem periodicHypercubicEvenWilsonBoundaryGramFeatureFactorizedOperator_isPosi
   refine ⟨periodicHypercubicEvenWilsonBoundaryGramFeatureFactorizedOperator_isSymmetric
     H N hN beta hbeta, ?_⟩
   intro f
+  change 0 ≤ inner ℝ
+    (periodicHypercubicEvenWilsonBoundaryGramFeatureFactorizedOperator
+      H N hN beta hbeta f) f
   rw [periodicHypercubicEvenWilsonBoundaryGramFeatureFactorizedOperator_inner_self]
   exact sq_nonneg _
 
