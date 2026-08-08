@@ -69,7 +69,16 @@ theorem groundSpectralProjector_sub_operator_ne_zero_of_strict_eigenvector
   have hinner := congrArg (fun w : E => inner ℝ w v) hfixed
   simp only [real_inner_smul_left] at hinner
   have hvpos : 0 < inner ℝ v v := real_inner_self_pos.mpr hv
-  nlinarith
+  have hfactor :
+      eigenvalue * (eigenvalue - 1) * inner ℝ v v = 0 := by
+    nlinarith [hinner]
+  have heigenvalueNe : eigenvalue ≠ 0 := ne_of_gt hEigenvaluePos
+  have heigenvalueSubNe : eigenvalue - 1 ≠ 0 :=
+    sub_ne_zero.mpr (ne_of_lt hEigenvalueLt)
+  have hinnerNe : inner ℝ v v ≠ 0 := ne_of_gt hvpos
+  exact
+    (mul_ne_zero (mul_ne_zero heigenvalueNe heigenvalueSubNe) hinnerNe)
+      hfactor
 
 /-- A nonempty excited sector contains a strictly positive support-Hamiltonian
 energy. -/
