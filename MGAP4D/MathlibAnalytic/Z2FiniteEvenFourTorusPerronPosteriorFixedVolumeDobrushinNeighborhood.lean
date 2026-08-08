@@ -14,14 +14,15 @@ theorem continuous_zero_exists_abs_lt_half
     (hf : Continuous f)
     (h0 : f 0 = 0) :
     ∃ ε : ℝ, 0 < ε ∧ ∀ x : ℝ, |x| < ε → f x < (1 / 2 : ℝ) := by
+  have hAt : ContinuousAt f (0 : ℝ) := hf.continuousAt
   have hMetric :=
-    (Metric.continuousAt_iff.mp hf.continuousAt) (1 / 2 : ℝ) (by norm_num)
+    (Metric.continuousAt_iff.mp hAt) (1 / 2 : ℝ) (by norm_num)
   obtain ⟨ε, hε, hControl⟩ := hMetric
   refine ⟨ε, hε, ?_⟩
   intro x hx
   have hdist : dist x 0 < ε := by
     simpa [Real.dist_eq] using hx
-  have hout := hControl x hdist
+  have hout := hControl (x := x) hdist
   rw [h0] at hout
   have habs : |f x| < (1 / 2 : ℝ) := by
     simpa [Real.dist_eq] using hout
@@ -122,7 +123,7 @@ noncomputable def z2FiniteEvenFourTorusPerronPosteriorFixedVolumeDobrushinPackag
     (H : ℕ)
     (energyIdentity energyNontrivial : ℝ)
     (hEnergy : energyIdentity < energyNontrivial) :
-    Z2FiniteEvenFourTorusPerronPosteriorFixedVolumeDobrushinPackage
+    Z2FiniteEvenFourTorusZ2PerronPosteriorFixedVolumeDobrushinPackage
       H energyIdentity energyNontrivial hEnergy := by
   let hExists :=
     finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelope_exists_smallPositive_row_column_lt_half
