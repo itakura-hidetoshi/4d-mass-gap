@@ -169,7 +169,7 @@ theorem finitePositiveHalfObservableL2_add
   change Q.positiveHalfObservableL2LinearMap n (F + G) =
     Q.positiveHalfObservableL2LinearMap n F +
       Q.positiveHalfObservableL2LinearMap n G
-  exact map_add (Q.positiveHalfObservableL2LinearMap n) F G
+  exact (Q.positiveHalfObservableL2LinearMap n).map_add F G
 
 /-- Raw pullback homogeneity descends canonically to the actual open-half Haar
 `L²` feature vector. -/
@@ -200,17 +200,65 @@ noncomputable def toBoundaryMomentLinearCoherence
       S D halfExtent N hN beta hbeta B hInvariant where
   map_add := by
     intro n F G
-    rw [physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2_eq_actualSynthesis,
-      Q.finitePositiveHalfObservableL2_add n F G,
-      map_add,
-      ← physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2_eq_actualSynthesis,
-      ← physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2_eq_actualSynthesis]
+    let A :=
+      physicalYangMillsEvenPeriodicWilsonOSActualBoundarySynthesisOperator
+        halfExtent N hN beta hbeta n
+    calc
+      physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2
+          S D halfExtent N hN beta hbeta B hInvariant n (F + G) =
+        A
+          (physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservableL2
+            S D halfExtent N hN beta hbeta B hInvariant n (F + G)) := by
+        simpa [A] using
+          physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2_eq_actualSynthesis
+            S D halfExtent N hN beta hbeta B hInvariant n (F + G)
+      _ = A
+          (physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservableL2
+              S D halfExtent N hN beta hbeta B hInvariant n F +
+            physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservableL2
+              S D halfExtent N hN beta hbeta B hInvariant n G) := by
+        rw [Q.finitePositiveHalfObservableL2_add n F G]
+      _ = A
+            (physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservableL2
+              S D halfExtent N hN beta hbeta B hInvariant n F) +
+          A
+            (physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservableL2
+              S D halfExtent N hN beta hbeta B hInvariant n G) := by
+        exact A.map_add _ _
+      _ = physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2
+            S D halfExtent N hN beta hbeta B hInvariant n F +
+          physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2
+            S D halfExtent N hN beta hbeta B hInvariant n G := by
+        rw [← physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2_eq_actualSynthesis
+              S D halfExtent N hN beta hbeta B hInvariant n F,
+          ← physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2_eq_actualSynthesis
+              S D halfExtent N hN beta hbeta B hInvariant n G]
   map_smul := by
     intro n r F
-    rw [physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2_eq_actualSynthesis,
-      Q.finitePositiveHalfObservableL2_smul n r F,
-      map_smul,
-      ← physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2_eq_actualSynthesis]
+    let A :=
+      physicalYangMillsEvenPeriodicWilsonOSActualBoundarySynthesisOperator
+        halfExtent N hN beta hbeta n
+    calc
+      physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2
+          S D halfExtent N hN beta hbeta B hInvariant n (r • F) =
+        A
+          (physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservableL2
+            S D halfExtent N hN beta hbeta B hInvariant n (r • F)) := by
+        simpa [A] using
+          physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2_eq_actualSynthesis
+            S D halfExtent N hN beta hbeta B hInvariant n (r • F)
+      _ = A
+          (r • physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservableL2
+            S D halfExtent N hN beta hbeta B hInvariant n F) := by
+        rw [Q.finitePositiveHalfObservableL2_smul n r F]
+      _ = r • A
+          (physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservableL2
+            S D halfExtent N hN beta hbeta B hInvariant n F) := by
+        exact A.map_smul r _
+      _ = r • physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2
+          S D halfExtent N hN beta hbeta B hInvariant n F := by
+        rw [← physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2_eq_actualSynthesis
+              S D halfExtent N hN beta hbeta B hInvariant n F]
 
 /-- Therefore raw finite positive-half pullback coherence already produces a
 canonical linear-isometric embedding of the actual OS pre-Hilbert carrier into
