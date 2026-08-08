@@ -20,16 +20,16 @@ noncomputable def realHilbertSubspaceProjection
     (M : Submodule ℝ H) [CompleteSpace M]
     (x : H) (hx : x ∈ M) :
     realHilbertSubspaceProjection M x = x := by
-  change ((M.orthogonalProjection x : M) : H) = x
-  simpa using M.orthogonalProjection_mem_subspace_eq_self ⟨x, hx⟩
+  change M.starProjection x = x
+  exact M.starProjection_eq_self_iff.mpr hx
 
 /-- Orthogonal projection to a complete Hilbert subspace is contractive. -/
 theorem realHilbertSubspaceProjection_norm_le
     (M : Submodule ℝ H) [CompleteSpace M]
     (x : H) :
     ‖realHilbertSubspaceProjection M x‖ ≤ ‖x‖ := by
-  change ‖(M.orthogonalProjection x : M)‖ ≤ ‖x‖
-  exact M.norm_orthogonalProjection_apply_le x
+  change ‖M.starProjection x‖ ≤ ‖x‖
+  exact M.norm_starProjection_apply_le x
 
 /-- Project an ambient boundary vector to the isometric physical range, pull it
 back to the physical Hilbert space, project to a distinguished complete
@@ -75,8 +75,9 @@ theorem realLinearIsometrySubspaceProjectedCompression_norm_le
   let x := realLinearIsometryProjectedInverse J y
   let z := realHilbertSubspaceProjection M x
   have hz : z ∈ M := by
-    change ((M.orthogonalProjection x : M) : H) ∈ M
-    exact (M.orthogonalProjection x).property
+    change M.starProjection x ∈ M
+    have hrange : M.starProjection x ∈ M.starProjection.range := ⟨x, rfl⟩
+    simpa using hrange
   change ‖J (T z)‖ ≤ c * ‖y‖
   rw [J.norm_map]
   calc
