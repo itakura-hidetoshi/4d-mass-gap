@@ -68,8 +68,8 @@ theorem finiteEvenFourTorusZ2UniformNormalizedTemporalCrossingSecondMomentKernel
       Fintype.card (FiniteEvenFourTorusZ2SliceConfiguration 0) ≠ 0)
   have hgap : energyNontrivial - energyIdentity ≠ 0 :=
     sub_ne_zero.mpr (ne_of_gt hEnergy)
-  exact mul_ne_zero (inv_ne_zero.mpr hcard)
-    (mul_ne_zero (by norm_num) (sq_ne_zero.mpr hgap))
+  exact mul_ne_zero (inv_ne_zero hcard)
+    (mul_ne_zero (by norm_num) (pow_ne_zero 2 hgap))
 
 /-- Therefore Package W's normalized temporal crossing second-moment operator
 has a nonzero uniform-average complement block already at `H=0`. -/
