@@ -46,8 +46,8 @@ theorem hasSecondOrderExpansionAtZero_of_derivativeProfile
     have hfTendsto :
         Tendsto f (nhdsWithin (0 : ℝ) (Ioi 0)) (nhds 0) := by
       have h := (hf 0).continuousAt
-      rw [hf0] at h
-      exact h.mono_left inf_le_left
+      have ht := h.tendsto.mono_left inf_le_left
+      simpa [hf0] using ht
     have hsqTendsto :
         Tendsto (fun β : ℝ => β ^ 2)
           (nhdsWithin (0 : ℝ) (Ioi 0)) (nhds 0) := by
