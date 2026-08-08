@@ -8,6 +8,8 @@ open scoped BigOperators
 
 noncomputable section
 
+set_option maxHeartbeats 1000000
+
 /-- The zero/one crossing action is exactly the real cast of the nontrivial
 plaquette count. -/
 theorem finiteEvenFourTorusZ2UnfixedGaugeCrossingAction_zero_one_eq_count
@@ -66,7 +68,6 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeCrossingAction_eq_card_mul_identity_add
         nsmul_eq_mul]
       rw [Finset.sum_mul]
       ring
-    _ = _ := by rfl
 
 /-- Real-valued form of the side-two first-count mixed balance. -/
 theorem finiteEvenFourTorusZ2CrossingNontrivialCount_real_sum_mixed_balance_zero :
