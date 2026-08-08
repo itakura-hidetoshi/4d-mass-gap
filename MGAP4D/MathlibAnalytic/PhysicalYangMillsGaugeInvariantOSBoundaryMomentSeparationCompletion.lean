@@ -77,8 +77,12 @@ noncomputable def separatedBoundaryMomentLinearIsometry
           S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n).osClass F) =
       physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2
         S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n F := by
-  rw [separatedBoundaryMomentLinearIsometry,
-    realLinearIsometrySeparationQuotient_mk]
+  rw [separatedBoundaryMomentLinearIsometry]
+  change
+    (realLinearIsometrySeparationQuotient
+      (Q.boundaryMomentLinearIsometry hInvariant n))
+      (SeparationQuotient.mk F) = _
+  rw [realLinearIsometrySeparationQuotient_mk]
   rfl
 
 /-- The separated Wilson boundary realization extends uniquely and
