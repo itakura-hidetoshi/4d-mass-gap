@@ -33,6 +33,12 @@ local instance (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
+local instance (H N : ℕ) :
+    SFinite (periodicHypercubicEvenBoundaryHaarMeasure H N) := by
+  dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
+  infer_instance
+
 /-- The actual compact Wilson shared-boundary Gram kernel, viewed through the
 generic Fréchet--Riesz Hilbert--Schmidt construction as a bounded operator on
 boundary Haar `L²`.
