@@ -123,7 +123,7 @@ noncomputable def z2FiniteEvenFourTorusPerronPosteriorFixedVolumeDobrushinPackag
     (H : ℕ)
     (energyIdentity energyNontrivial : ℝ)
     (hEnergy : energyIdentity < energyNontrivial) :
-    Z2FiniteEvenFourTorusZ2PerronPosteriorFixedVolumeDobrushinPackage
+    Z2FiniteEvenFourTorusPerronPosteriorFixedVolumeDobrushinPackage
       H energyIdentity energyNontrivial hEnergy := by
   let hExists :=
     finiteEvenFourTorusZ2PerronPosteriorCanonicalEnvelope_exists_smallPositive_row_column_lt_half
