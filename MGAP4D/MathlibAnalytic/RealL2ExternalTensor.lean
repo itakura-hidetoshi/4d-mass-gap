@@ -131,7 +131,10 @@ theorem realL2ExternalTensor_add_left
     hf,
     Lp.coeFn_add (realL2ExternalTensor f₁ g) (realL2ExternalTensor f₂ g)] with z h h1 h2 hfz hadd
   simp only [realL2ExternalTensorFunction] at h h1 h2
-  rw [h, h1, h2, hfz, hadd]
+  rw [h, hfz, hadd]
+  change (f₁ z.1 + f₂ z.1) * g z.2 =
+    realL2ExternalTensor f₁ g z + realL2ExternalTensor f₂ g z
+  rw [h1, h2]
   ring
 
 /-- External tensor is additive in the right factor. -/
@@ -153,7 +156,10 @@ theorem realL2ExternalTensor_add_right
     hg,
     Lp.coeFn_add (realL2ExternalTensor f g₁) (realL2ExternalTensor f g₂)] with z h h1 h2 hgz hadd
   simp only [realL2ExternalTensorFunction] at h h1 h2
-  rw [h, h1, h2, hgz, hadd]
+  rw [h, hgz, hadd]
+  change f z.1 * (g₁ z.2 + g₂ z.2) =
+    realL2ExternalTensor f g₁ z + realL2ExternalTensor f g₂ z
+  rw [h1, h2]
   ring
 
 /-- External tensor is real-linear in the left factor. -/
@@ -173,8 +179,10 @@ theorem realL2ExternalTensor_smul_left
     hf,
     Lp.coeFn_smul c (realL2ExternalTensor f g)] with z h hfg hfz hsmul
   simp only [realL2ExternalTensorFunction] at h hfg
-  rw [h, hfg, hfz, hsmul]
-  simp [smul_eq_mul]
+  rw [h, hfz, hsmul]
+  change (c * f z.1) * g z.2 = c * realL2ExternalTensor f g z
+  rw [hfg]
+  ring
 
 /-- External tensor is real-linear in the right factor. -/
 theorem realL2ExternalTensor_smul_right
@@ -193,8 +201,10 @@ theorem realL2ExternalTensor_smul_right
     hg,
     Lp.coeFn_smul c (realL2ExternalTensor f g)] with z h hfg hgz hsmul
   simp only [realL2ExternalTensorFunction] at h hfg
-  rw [h, hfg, hgz, hsmul]
-  simp [smul_eq_mul]
+  rw [h, hgz, hsmul]
+  change f z.1 * (c * g z.2) = c * realL2ExternalTensor f g z
+  rw [hfg]
+  ring
 
 /-- Audit-visible exact cross-norm receipt for the real `L²` external tensor. -/
 structure RealL2ExternalTensorPackage
