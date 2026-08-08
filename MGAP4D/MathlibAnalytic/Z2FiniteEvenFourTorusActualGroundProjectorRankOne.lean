@@ -40,7 +40,8 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeAmbientGroundSpectralProjector_eq_canon
   have hpne : p ≠ 0 := by
     intro hpzero
     let A : FiniteEvenFourTorusZ2SliceConfiguration H := fun _ => 1
-    have hpos := hspec.2.1 A
+    have hpos : 0 < p A := by
+      simpa [p] using hspec.2.1 A
     rw [hpzero] at hpos
     simp at hpos
   have hpfix : D.operator p = p := by
@@ -70,7 +71,13 @@ theorem finiteEvenFourTorusZ2UnfixedGaugeAmbientGroundSpectralProjector_eq_canon
       finiteEvenFourTorusZ2UnfixedGaugeCanonicalPerronGround_eq_pos_smul_chosenGround
         H energyIdentity energyNontrivial hEnergy βp
     refine ⟨a / c, ?_⟩
-    rw [ha, hpchosen, smul_smul, div_mul_cancel₀ a (ne_of_gt hcpos)]
+    rw [ha]
+    have hscaled :=
+      congrArg
+        (fun v : FiniteEvenFourTorusZ2SliceHilbert H => (a / c) • v)
+        hpchosen
+    symm
+    simpa [p, smul_smul, div_mul_cancel₀ a (ne_of_gt hcpos)] using hscaled
   change D.groundSpectralProjector =
     (inner ℝ p p)⁻¹ • InnerProductSpace.rankOne ℝ p p
   exact D.groundSpectralProjector_eq_normalized_rankOne p hpne hpfix hline
