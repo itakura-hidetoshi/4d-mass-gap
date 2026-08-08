@@ -20,7 +20,7 @@ theorem finiteKernelOperator_const_mul_kernel
   intro f
   ext y
   rw [finiteKernelOperator_apply]
-  simp only [ContinuousLinearMap.smul_apply, PiLp.smul_apply]
+  simp only [ContinuousLinearMap.smul_apply, PiLp.smul_apply, smul_eq_mul]
   rw [finiteKernelOperator_apply, Finset.mul_sum]
   apply Finset.sum_congr rfl
   intro x _hx
@@ -108,9 +108,8 @@ theorem finiteEvenFourTorusZ2CanonicalGroundRankOneProjectorKernelRightExtension
   ext y
   rw [finiteKernelOperator_apply, ContinuousLinearMap.smul_apply,
     InnerProductSpace.rankOne_apply]
-  simp only [PiLp.smul_apply]
+  simp only [PiLp.smul_apply, smul_eq_mul]
   rw [PiLp.inner_apply]
-  simp only [RCLike.inner_apply, conj_trivial]
   change
     (∑ x : FiniteEvenFourTorusZ2SliceConfiguration H,
         ((inner ℝ p p)⁻¹ * p x * p y) * f x) =
