@@ -72,14 +72,13 @@ structure Z2FiniteEvenFourTorusGeometricDoobUniformSupportEnergyLogTwoPackage
     0 < finiteEvenFourTorusZ2GeometricDoobDirectResponseCutoff
       energyIdentity energyNontrivial hEnergy
   excitedSectorNonempty :
-    ∀ (β : ℝ), 0 < β →
+    ∀ (β : ℝ) (hβ : 0 < β),
       β ≤ finiteEvenFourTorusZ2GeometricDoobDirectResponseCutoff
         energyIdentity energyNontrivial hEnergy →
       ∀ H : ℕ,
         Nonempty
           (FiniteEvenFourTorusZ2UnfixedGaugeExcitedSpectralIndex
-            H β energyIdentity energyNontrivial
-            (by assumption).le hEnergy.le)
+            H β energyIdentity energyNontrivial hβ.le hEnergy.le)
   allExcitedEnergyGeLogTwo :
     ∀ (β : ℝ) (hβ : 0 < β),
       β ≤ finiteEvenFourTorusZ2GeometricDoobDirectResponseCutoff
