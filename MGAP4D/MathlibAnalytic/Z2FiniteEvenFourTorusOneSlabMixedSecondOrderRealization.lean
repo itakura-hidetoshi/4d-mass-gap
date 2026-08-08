@@ -92,6 +92,7 @@ theorem finiteEvenFourTorusZ2OneSlabAnalyticFirstProfileMixedDifference_zero
       H energyIdentity energyNontrivial x x' y y' 0 = 0 := by
   unfold finiteEvenFourTorusZ2OneSlabAnalyticFirstProfileMixedDifference
     finiteKernelMixedCrossDifference
+  dsimp
   rw [finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalyticFirstVariationProfile_zero,
     finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalyticFirstVariationProfile_zero,
     finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalyticFirstVariationProfile_zero,
@@ -200,10 +201,15 @@ theorem finiteEvenFourTorusZ2OneSlabCouplingFamilyMixedDifference_eq_analytic
   unfold finiteEvenFourTorusZ2OneSlabCouplingFamilyMixedDifference
     finiteEvenFourTorusZ2OneSlabAnalyticMixedDifference
     finiteKernelMixedCrossDifference
-  rw [finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalytic_eq_couplingFamily,
-    finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalytic_eq_couplingFamily,
-    finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalytic_eq_couplingFamily,
-    finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalytic_eq_couplingFamily]
+  dsimp
+  rw [← finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalytic_eq_couplingFamily
+      H energyIdentity energyNontrivial β x y,
+    ← finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalytic_eq_couplingFamily
+      H energyIdentity energyNontrivial β x y',
+    ← finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalytic_eq_couplingFamily
+      H energyIdentity energyNontrivial β x' y,
+    ← finiteEvenFourTorusZ2UnfixedGaugeOneSlabKernelAnalytic_eq_couplingFamily
+      H energyIdentity energyNontrivial β x' y']
 
 /-- All-real operator-norm normalization scalar for the coupling family. -/
 noncomputable def finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization
@@ -280,19 +286,23 @@ theorem finiteEvenFourTorusZ2NormalizedOneSlabCouplingFamilyMixedDifference_quad
           H energyIdentity energyNontrivial)
         (nhdsWithin (0 : ℝ) (Ioi 0))
         (nhds (Fintype.card (FiniteEvenFourTorusZ2SliceConfiguration H) : ℝ)⁻¹) := by
-    have h :=
-      (continuous_finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization
-        H energyIdentity energyNontrivial).continuousAt.tendsto
     have hWithin :
+        ContinuousWithinAt
+          (finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization
+            H energyIdentity energyNontrivial)
+          (Ioi 0) 0 :=
+      (continuous_finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization
+        H energyIdentity energyNontrivial).continuousAt.continuousWithinAt
+    have ht :
         Tendsto
           (finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization
             H energyIdentity energyNontrivial)
           (nhdsWithin (0 : ℝ) (Ioi 0))
           (nhds
             (finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization
-              H energyIdentity energyNontrivial 0)) := by
-      exact h.mono_left inf_le_left
-    simpa [finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization_zero] using hWithin
+              H energyIdentity energyNontrivial 0)) :=
+      hWithin.tendsto
+    simpa [finiteEvenFourTorusZ2OneSlabCouplingFamilyNormalization_zero] using ht
   have hRaw :=
     (finiteEvenFourTorusZ2OneSlabAnalyticMixedDifference_secondOrderExpansion
       H energyIdentity energyNontrivial x x' y y').quadraticQuotient
@@ -310,7 +320,7 @@ theorem finiteEvenFourTorusZ2NormalizedOneSlabCouplingFamilyMixedDifference_quad
   have hMul := hNorm.mul hRaw'
   convert hMul using 1 <;>
     simp [finiteEvenFourTorusZ2NormalizedOneSlabCouplingFamilyMixedDifference,
-      div_eq_mul_inv] <;> ring
+      div_eq_mul_inv] <;> ring_nf
 
 end
 
