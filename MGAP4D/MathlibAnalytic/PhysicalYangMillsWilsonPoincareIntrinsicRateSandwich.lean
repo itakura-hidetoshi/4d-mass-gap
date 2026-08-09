@@ -110,6 +110,9 @@ theorem positive_admissibleMass_eventually_le_intrinsicCenteredMassRate
   have hfactor :
       C.boundedAnalysis.centeredTransferFactor n ≤
         Real.exp (-m * S.latticeSpacing n) := by
+    change
+      ‖C.boundedAnalysis.physicalExcitationOneStepOperator n‖ ≤
+        Real.exp (-m * S.latticeSpacing n) at hn
     simpa only [
       C.boundedAnalysis.physicalExcitationOneStepOperator_opNorm_eq_centeredTransferFactor]
       using hn
