@@ -37,9 +37,9 @@ theorem exists_rayleighQuotient_gt_of_lt_norm
     (hT : T.IsPositive) {r : ℝ} (hr : r < ‖T‖) :
     ∃ x : E, r < T.rayleighQuotient x := by
   by_contra h
-  push_neg at h
+  push Not at h
   have hle : ‖T‖ ≤ r := by
-    rw [hT.norm_eq_iSup_rayleighQuotient_real]
+    rw [norm_eq_iSup_rayleighQuotient_real (T := T) hT]
     exact ciSup_le h
   exact (not_le_of_gt hr) hle
 
@@ -49,7 +49,7 @@ theorem exists_unit_inner_gt_of_lt_norm
     (hT : T.IsPositive) {r : ℝ}
     (hr_nonneg : 0 ≤ r) (hr : r < ‖T‖) :
     ∃ x : E, ‖x‖ = 1 ∧ r < inner ℝ (T x) x := by
-  rcases hT.exists_rayleighQuotient_gt_of_lt_norm hr with ⟨x, hxray⟩
+  rcases exists_rayleighQuotient_gt_of_lt_norm (T := T) hT hr with ⟨x, hxray⟩
   have hx : x ≠ 0 := by
     intro hx0
     subst x
@@ -105,7 +105,7 @@ theorem exists_unit_discreteEnergy_lt_logRate_add
   have hr_lt : r < ‖T‖ := by
     dsimp [r]
     nlinarith
-  rcases hT.exists_unit_inner_gt_of_lt_norm hr_nonneg hr_lt with
+  rcases exists_unit_inner_gt_of_lt_norm (T := T) hT hr_nonneg hr_lt with
     ⟨x, hx_norm, hx_inner⟩
   have hr_pos : 0 < r := by
     dsimp [r]
