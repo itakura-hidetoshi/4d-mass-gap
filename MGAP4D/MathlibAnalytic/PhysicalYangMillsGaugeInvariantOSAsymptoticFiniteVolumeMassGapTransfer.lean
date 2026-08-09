@@ -229,7 +229,7 @@ theorem rightHamiltonian_inner_ge_mass_mul_norm_sq
     G.mass * ‖(psi : P.PhysicalHilbert)‖ ^ 2 ≤
       inner ℝ (T.rightHamiltonian psi) (psi : P.PhysicalHilbert) := by
   exact G.toAsymptoticFiniteVolumeVacuumGapTransfer
-    |>.rightHamiltonian_inner_ge_mass_mul_norm_sq T psi hpsi
+    |>.rightHamiltonian_inner_ge_mass_mul_norm_sq psi hpsi
 
 /-- Common-carrier asymptotic transfer preserves the same lower bound on the
 closed Hamiltonian domain. -/
@@ -242,7 +242,7 @@ theorem closedRightHamiltonian_inner_ge_mass_mul_norm_sq
       inner ℝ (T.closedRightHamiltonian psi)
         (psi : P.PhysicalHilbert) := by
   exact G.toAsymptoticFiniteVolumeVacuumGapTransfer
-    |>.closedRightHamiltonian_inner_ge_mass_mul_norm_sq T hP psi hpsi
+    |>.closedRightHamiltonian_inner_ge_mass_mul_norm_sq hP psi hpsi
 
 end EmbeddedAsymptoticFiniteVolumeVacuumGapTransfer
 end StronglyContinuousPhysicalSemigroup
