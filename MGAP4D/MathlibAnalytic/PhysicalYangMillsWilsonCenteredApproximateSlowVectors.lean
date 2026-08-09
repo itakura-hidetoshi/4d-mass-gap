@@ -15,7 +15,7 @@ lower threshold for its operator norm.
 This is the approximation principle needed for finite Wilson slow modes.  It
 uses only Mathlib's characterization of the operator norm as the least uniform
 bound; no finite-dimensionality or norm-attaining eigenvector is assumed. -/
-theorem ContinuousLinearMap.exists_apply_norm_gt_mul_norm_of_lt_opNorm
+theorem continuousLinearMap_exists_apply_norm_gt_mul_norm_of_lt_opNorm
     {E F : Type*}
     [NormedAddCommGroup E] [NormedAddCommGroup F]
     [NormedSpace ℝ E] [NormedSpace ℝ F]
@@ -30,17 +30,15 @@ theorem ContinuousLinearMap.exists_apply_norm_gt_mul_norm_of_lt_opNorm
 
 /-- The approximate operator-norm vector supplied above is automatically
 nonzero. -/
-theorem ContinuousLinearMap.exists_nonzero_apply_norm_gt_mul_norm_of_lt_opNorm
+theorem continuousLinearMap_exists_nonzero_apply_norm_gt_mul_norm_of_lt_opNorm
     {E F : Type*}
     [NormedAddCommGroup E] [NormedAddCommGroup F]
     [NormedSpace ℝ E] [NormedSpace ℝ F]
     (T : E →L[ℝ] F) {r : ℝ}
     (hr_nonneg : 0 ≤ r) (hr_lt : r < ‖T‖) :
     ∃ x : E, x ≠ 0 ∧ r * ‖x‖ < ‖T x‖ := by
-  rcases
-      MGAP4D.MathlibAnalytic.ContinuousLinearMap.
-        exists_apply_norm_gt_mul_norm_of_lt_opNorm T hr_nonneg hr_lt with
-    ⟨x, hx⟩
+  rcases continuousLinearMap_exists_apply_norm_gt_mul_norm_of_lt_opNorm
+      T hr_nonneg hr_lt with ⟨x, hx⟩
   refine ⟨x, ?_, hx⟩
   intro hzero
   subst x
@@ -167,10 +165,8 @@ theorem exists_centeredApproximateSlowVector
     rw [hfactor] at hrexp
     exact hrexp
   have hr_nonneg : 0 ≤ r := Real.exp_pos _ |>.le
-  rcases
-      MGAP4D.MathlibAnalytic.ContinuousLinearMap.
-        exists_nonzero_apply_norm_gt_mul_norm_of_lt_opNorm Tn hr_nonneg hr_lt with
-    ⟨F, hF, hslow⟩
+  rcases continuousLinearMap_exists_nonzero_apply_norm_gt_mul_norm_of_lt_opNorm
+      Tn hr_nonneg hr_lt with ⟨F, hF, hslow⟩
   exact ⟨F, hF, hslow⟩
 
 end PhysicalYangMillsEvenPeriodicWilsonOSIntrinsicCenteredRateConvergence
