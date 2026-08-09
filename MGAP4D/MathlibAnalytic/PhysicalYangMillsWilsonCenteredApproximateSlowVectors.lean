@@ -1,9 +1,9 @@
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonIntrinsicCenteredRateLimit
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRealizableCenteredOneStepOperatorRate
 import Mathlib.Tactic
 
 noncomputable section
 
-open Filter Set Topology
+open Set Topology
 open scoped InnerProductSpace
 
 namespace MGAP4D
@@ -89,37 +89,16 @@ variable
       D.WeakStarReflectionInvariant
         (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)}
 
-/-- At any finite scale with positive centered transfer factor, the actual
-operator norm is exactly the exponential of minus its intrinsic logarithmic
-rate times the physical lattice spacing.
-
-No convergence data and no continuum mass enter this identity. -/
-theorem centeredTransferFactor_eq_exp_neg_intrinsicRate_mul_latticeSpacing
-    (B : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
-      S D halfExtent N hN beta hbeta Q E R hInvariant)
-    (n : ℕ) (hfactor : 0 < B.centeredTransferFactor n) :
-    B.centeredTransferFactor n =
-      Real.exp
-        (-physicalYangMillsEvenPeriodicWilsonOSIntrinsicCenteredMassRate B n *
-          S.latticeSpacing n) := by
-  have ha : 0 < S.latticeSpacing n := S.latticeSpacing_pos n
-  have hlog :
-      -physicalYangMillsEvenPeriodicWilsonOSIntrinsicCenteredMassRate B n *
-          S.latticeSpacing n =
-        Real.log (B.centeredTransferFactor n) := by
-    unfold physicalYangMillsEvenPeriodicWilsonOSIntrinsicCenteredMassRate
-    field_simp [ne_of_gt ha]
-  rw [hlog, Real.exp_log hfactor]
-
 /-- For every finite lattice scale with positive centered transfer factor and
 every strictly positive rate excess `eps`, the actual centered Wilson one-step
-operator has a nonzero slow vector whose one-step norm beats the exponential
-threshold corresponding to `g_n + eps`.
+operator has a nonzero vector beating the strict threshold
 
-Finite slow-mode existence is therefore automatic from the operator norm. The
-Yang--Mills-specific reverse problem begins only when moving finite slow states
-must be recovered in the continuum Hamiltonian domain with a Rayleigh limsup
-bound. -/
+`centeredTransferFactor n * exp (-eps * latticeSpacing n)`.
+
+Since `centeredTransferFactor n` is definitionally the actual centered operator
+norm, finite slow-mode existence is automatic from generic operator-norm
+approximation.  No logarithmic-rate definition, convergence package, continuum
+mass, finite-dimensionality, or exact target value enters this theorem. -/
 theorem exists_centeredApproximateSlowVector
     (B : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
       S D halfExtent N hN beta hbeta Q E R hInvariant)
@@ -130,9 +109,8 @@ theorem exists_centeredApproximateSlowVector
         S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
     ∃ F : Pn.CenteredCarrier,
       F ≠ 0 ∧
-      Real.exp
-          (-(physicalYangMillsEvenPeriodicWilsonOSIntrinsicCenteredMassRate B n + eps) *
-            S.latticeSpacing n) * ‖F‖ <
+      (B.centeredTransferFactor n *
+          Real.exp (-eps * S.latticeSpacing n)) * ‖F‖ <
         ‖B.centeredOneStepOperator n F‖ := by
   dsimp only
   let Pn :=
@@ -140,28 +118,24 @@ theorem exists_centeredApproximateSlowVector
       S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
   let Tn : Pn.CenteredCarrier →L[ℝ] Pn.CenteredCarrier :=
     B.centeredOneStepOperator n
-  let gn : ℝ :=
-    physicalYangMillsEvenPeriodicWilsonOSIntrinsicCenteredMassRate B n
-  let an : ℝ := S.latticeSpacing n
-  let r : ℝ := Real.exp (-(gn + eps) * an)
-  have ha : 0 < an := by
-    dsimp [an]
-    exact S.latticeSpacing_pos n
-  have hstep : -(gn + eps) * an < -gn * an := by
-    have hepsa : 0 < eps * an := mul_pos heps ha
-    nlinarith
-  have hrexp : r < Real.exp (-gn * an) := by
+  let r : ℝ :=
+    B.centeredTransferFactor n * Real.exp (-eps * S.latticeSpacing n)
+  have ha : 0 < S.latticeSpacing n := S.latticeSpacing_pos n
+  have hepsa : 0 < eps * S.latticeSpacing n := mul_pos heps ha
+  have hexp_pos : 0 < Real.exp (-eps * S.latticeSpacing n) := Real.exp_pos _
+  have hexp_lt_one : Real.exp (-eps * S.latticeSpacing n) < 1 := by
+    rw [Real.exp_lt_one_iff]
+    linarith
+  have hr_lt_factor : r < B.centeredTransferFactor n := by
     dsimp [r]
-    exact Real.exp_lt_exp.mpr hstep
-  have hfactorExp : Real.exp (-gn * an) = B.centeredTransferFactor n := by
-    dsimp [gn, an]
-    symm
-    exact B.centeredTransferFactor_eq_exp_neg_intrinsicRate_mul_latticeSpacing
-      n hfactor
+    nlinarith
   have hr_lt : r < ‖Tn‖ := by
-    rw [hfactorExp] at hrexp
-    exact hrexp
-  have hr_nonneg : 0 ≤ r := (Real.exp_pos _).le
+    dsimp [Tn]
+    change r < B.centeredTransferFactor n
+    exact hr_lt_factor
+  have hr_nonneg : 0 ≤ r := by
+    dsimp [r]
+    positivity
   rcases continuousLinearMap_exists_nonzero_apply_norm_gt_mul_norm_of_lt_opNorm
       Tn hr_nonneg hr_lt with ⟨F, hF, hslow⟩
   exact ⟨F, hF, hslow⟩
