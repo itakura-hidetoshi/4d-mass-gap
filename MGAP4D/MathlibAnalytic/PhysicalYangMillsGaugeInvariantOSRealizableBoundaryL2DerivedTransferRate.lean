@@ -223,7 +223,7 @@ theorem oneStep_centered_boundaryMoment_le
       S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n F1
       (A.boundaryMoment_memLp n F1)
   have hnorm : ‖v1‖ ≤ A.transferFactor n * ‖v0‖ := by
-    simpa [Pn, F0, F1, v0, v1] using
+    simpa only [Pn, F0, F1, v0, v1] using
       A.oneStep_centered_boundaryMomentL2_norm_le n F
   have hsq :
       ‖v1‖ ^ 2 ≤ (A.transferFactor n) ^ 2 * ‖v0‖ ^ 2 := by
