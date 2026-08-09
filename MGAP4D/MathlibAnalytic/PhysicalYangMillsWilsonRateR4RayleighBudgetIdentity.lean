@@ -87,9 +87,8 @@ theorem normalized_physicalYangMillsMass_eq_rayleighExtremaBudget_of_attained
   calc
     A.referenceTime * T.physicalYangMillsMass =
         (K.toCanonicalOptimalComponentData W).budget :=
-      (K.toCanonicalOptimalComponentData W).
-        normalized_physicalYangMillsMass_eq_budget_of_attained
-          psi hpsi horthogonal hattainCanonical
+      (K.toCanonicalOptimalComponentData W).normalized_physicalYangMillsMass_eq_budget_of_attained
+        psi hpsi horthogonal hattainCanonical
     _ = A.rayleighExtremaBudget := hbudget
 
 /-- The intrinsic continuum rate reconstructed from actual finite Wilson
