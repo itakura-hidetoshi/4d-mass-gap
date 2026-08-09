@@ -27,7 +27,7 @@ The point is density, not a choice of synthetic spectrum: approximate the given
 excitation by vectors in the restricted closed-Hamiltonian domain.  If every
 approximant vanished, uniqueness of limits would force the target excitation to
 vanish. -/
-theorem physicalYangMillsExcitationDomainWitness_of_nonzeroExcitation
+noncomputable def physicalYangMillsExcitationDomainWitness_of_nonzeroExcitation
     (T : P.StronglyContinuousPhysicalSemigroup)
     (hP : P.IsNormalized)
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
@@ -47,8 +47,19 @@ theorem physicalYangMillsExcitationDomainWitness_of_nonzeroExcitation
         ((T.vacuumOrthogonalClosedRightHamiltonian hSymmetric).domain :
           Set P.VacuumOrthogonalHilbert) :=
     hDense phi
-  rw [mem_closure_iff_seq_limit] at hClosure
-  rcases hClosure with ⟨u, huDomain, huTendsto⟩
+  have hSeq :
+      ∃ u : ℕ → P.VacuumOrthogonalHilbert,
+        (∀ n, u n ∈
+          (T.vacuumOrthogonalClosedRightHamiltonian hSymmetric).domain) ∧
+        Tendsto u atTop (nhds phi) :=
+    (mem_closure_iff_seq_limit).mp hClosure
+  let u : ℕ → P.VacuumOrthogonalHilbert := Classical.choose hSeq
+  have huDomain :
+      ∀ n, u n ∈
+        (T.vacuumOrthogonalClosedRightHamiltonian hSymmetric).domain :=
+    (Classical.choose_spec hSeq).1
+  have huTendsto : Tendsto u atTop (nhds phi) :=
+    (Classical.choose_spec hSeq).2
   have hExists : ∃ n : ℕ, u n ≠ 0 := by
     by_contra hNo
     push_neg at hNo
@@ -59,7 +70,8 @@ theorem physicalYangMillsExcitationDomainWitness_of_nonzeroExcitation
     have hphiZero : phi = 0 :=
       tendsto_nhds_unique huTendsto tendsto_const_nhds
     exact hphi hphiZero
-  rcases hExists with ⟨n, hn⟩
+  let n : ℕ := Classical.choose hExists
+  have hn : u n ≠ 0 := Classical.choose_spec hExists
   let xCore : T.vacuumOrthogonalClosedRightHamiltonianDomain :=
     ⟨u n, by
       simpa only [T.vacuumOrthogonalClosedRightHamiltonian_domain] using
@@ -88,13 +100,16 @@ theorem physicalYangMillsExcitationDomainWitness_of_nonzeroExcitation
 /-- Therefore, after self-adjoint OS reconstruction, the variational mass needs
 only nontriviality of the complete excitation Hilbert sector; membership in the
 closed Hamiltonian domain follows automatically from density. -/
-theorem physicalYangMillsExcitationDomainWitness_of_nontrivial
+noncomputable def physicalYangMillsExcitationDomainWitness_of_nontrivial
     (T : P.StronglyContinuousPhysicalSemigroup)
     (hP : P.IsNormalized)
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
     [Nontrivial P.VacuumOrthogonalHilbert] :
     T.PhysicalYangMillsExcitationDomainWitness := by
-  obtain ⟨phi, hphi⟩ := exists_ne (0 : P.VacuumOrthogonalHilbert)
+  have hExists : ∃ phi : P.VacuumOrthogonalHilbert, phi ≠ 0 :=
+    exists_ne (0 : P.VacuumOrthogonalHilbert)
+  let phi : P.VacuumOrthogonalHilbert := Classical.choose hExists
+  have hphi : phi ≠ 0 := Classical.choose_spec hExists
   exact T.physicalYangMillsExcitationDomainWitness_of_nonzeroExcitation
     hP hSelf phi hphi
 
