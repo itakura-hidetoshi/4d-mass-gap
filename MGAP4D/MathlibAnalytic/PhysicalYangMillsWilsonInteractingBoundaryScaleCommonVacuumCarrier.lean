@@ -79,7 +79,7 @@ instance physicalYangMillsEvenPeriodicWilsonBoundaryScaleMarginalMeasure_probabi
       (halfExtent n) N hN (beta n) (hbeta n)
   refine ⟨?_⟩
   rw [← mp.map_eq]
-  rw [Measure.map_apply mp.measurable measurableSet_univ]
+  rw [Measure.map_apply mp.measurable MeasurableSet.univ]
   simpa using
     (periodicHypercubicSpecialUnitaryWilsonSystem_gibbsMeasure_probability
       (PeriodicHypercubicEvenSideLength (halfExtent n))
