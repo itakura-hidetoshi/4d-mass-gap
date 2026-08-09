@@ -37,7 +37,9 @@ theorem ContinuousLinearMap.exists_nonzero_apply_norm_gt_mul_norm_of_lt_opNorm
     (T : E →L[ℝ] F) {r : ℝ}
     (hr_nonneg : 0 ≤ r) (hr_lt : r < ‖T‖) :
     ∃ x : E, x ≠ 0 ∧ r * ‖x‖ < ‖T x‖ := by
-  rcases T.exists_apply_norm_gt_mul_norm_of_lt_opNorm hr_nonneg hr_lt with
+  rcases
+      MGAP4D.MathlibAnalytic.ContinuousLinearMap.
+        exists_apply_norm_gt_mul_norm_of_lt_opNorm T hr_nonneg hr_lt with
     ⟨x, hx⟩
   refine ⟨x, ?_, hx⟩
   intro hzero
@@ -112,7 +114,6 @@ theorem centeredTransferFactor_eq_exp_neg_rate_mul_latticeSpacing
         Real.log (C.boundedAnalysis.centeredTransferFactor n) := by
     unfold physicalYangMillsEvenPeriodicWilsonOSIntrinsicCenteredMassRate
     field_simp [ne_of_gt ha]
-    ring
   rw [hlog, Real.exp_log hfactor]
 
 /-- For every finite lattice scale and every strictly positive rate excess
@@ -166,8 +167,10 @@ theorem exists_centeredApproximateSlowVector
     rw [hfactor] at hrexp
     exact hrexp
   have hr_nonneg : 0 ≤ r := Real.exp_pos _ |>.le
-  rcases Tn.exists_nonzero_apply_norm_gt_mul_norm_of_lt_opNorm
-      hr_nonneg hr_lt with ⟨F, hF, hslow⟩
+  rcases
+      MGAP4D.MathlibAnalytic.ContinuousLinearMap.
+        exists_nonzero_apply_norm_gt_mul_norm_of_lt_opNorm Tn hr_nonneg hr_lt with
+    ⟨F, hF, hslow⟩
   exact ⟨F, hF, hslow⟩
 
 end PhysicalYangMillsEvenPeriodicWilsonOSIntrinsicCenteredRateConvergence
