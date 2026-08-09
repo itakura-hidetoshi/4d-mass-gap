@@ -43,7 +43,7 @@ local instance realizableFloorWeakStarDerivedRateSpecialUnitaryBorelSpace (N : �
 actual finite one-step factors.
 
 There are no maps between changing finite Hilbert spaces and the continuum
-Hilbert space.  Finite time remains genuinely `ℕ`-indexed.  The only dynamical
+Hilbert space. Finite time remains genuinely `ℕ`-indexed. The only dynamical
 limit field is convergence of the evolved centered scalar OS quadratic value
 along floor-selected lattice times. -/
 structure PhysicalYangMillsEvenPeriodicWilsonOSRealizableFloorWeakStarDerivedRateGapTransfer
@@ -150,7 +150,7 @@ theorem finite_floor_half_quadratic_le
   exact h
 
 /-- Scalar weak-star convergence transports the finite rate limit into an
-actual continuum half-quadratic gap certificate.  Its mass is the limit of
+actual continuum half-quadratic gap certificate. Its mass is the limit of
 `-log(rₙ)/aₙ`, not a preselected constant. -/
 noncomputable def toHalfQuadraticGapCertificate
     (W : PhysicalYangMillsEvenPeriodicWilsonOSRealizableFloorWeakStarDerivedRateGapTransfer
@@ -197,7 +197,7 @@ noncomputable def toHalfQuadraticGapCertificate
 /-- The actual continuum Wilson OS vacuum normalization remains
 weak-star-theorem-generated; it is not a field of the transfer package. -/
 theorem continuum_isNormalized
-    (W : PhysicalYangMillsEvenPeriodicWilsonOSRealizableFloorWeakStarDerivedRateGapTransfer
+    (_W : PhysicalYangMillsEvenPeriodicWilsonOSRealizableFloorWeakStarDerivedRateGapTransfer
       S D halfExtent N hN beta hbeta Q E R hInvariant transferFactor A G T) :
     (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
       S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant).IsNormalized :=
@@ -237,17 +237,15 @@ theorem mass_le_physicalYangMillsMass_of_uniformCenteredVariance
       S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant F)
     (hContinuous : T.StrongContinuityOnObservableStates) :
     let Ts :=
-      PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.
-        PositiveTimeObservableContractionSemigroup.StrongContinuityOnObservableStates.
-          toStronglyContinuousPhysicalSemigroup T hContinuous
+      PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup.StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
+        T hContinuous
     A.mass ≤ Ts.physicalYangMillsMass := by
   let Pinf :=
     physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
       S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant
-  let Ts :=
-    PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.
-      PositiveTimeObservableContractionSemigroup.StrongContinuityOnObservableStates.
-        toStronglyContinuousPhysicalSemigroup T hContinuous
+  let Ts : Pinf.StronglyContinuousPhysicalSemigroup :=
+    PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup.StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
+      T hContinuous
   let H := W.toHalfQuadraticGapCertificate
   let hP : Pinf.IsNormalized := W.continuum_isNormalized
   have hSelf : IsSelfAdjoint Ts.closedRightHamiltonian := by
@@ -275,9 +273,8 @@ theorem physicalYangMillsMass_pos_of_uniformCenteredVariance
       S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant F)
     (hContinuous : T.StrongContinuityOnObservableStates) :
     let Ts :=
-      PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.
-        PositiveTimeObservableContractionSemigroup.StrongContinuityOnObservableStates.
-          toStronglyContinuousPhysicalSemigroup T hContinuous
+      PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup.StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
+        T hContinuous
     0 < Ts.physicalYangMillsMass := by
   have hLower := W.mass_le_physicalYangMillsMass_of_uniformCenteredVariance
     V hContinuous
