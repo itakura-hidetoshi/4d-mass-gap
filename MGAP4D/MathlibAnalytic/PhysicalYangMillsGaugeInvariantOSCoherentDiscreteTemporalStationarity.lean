@@ -1,6 +1,7 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicIntegerTemporalTranslation
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsContinuumEuclideanTimeTranslation
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSConfigurationTimeTranslation
 
 noncomputable section
 
@@ -126,10 +127,11 @@ theorem approximatingMeasure_map_realizableTime_eq_self
         (Q.interpolate_measurable n)
         τ.measurable
     _ = Measure.map (Q.interpolate n) μ := by
-      rw [show Measure.map τ μ = μ by
-        exact
-          periodicHypercubicSpecialUnitary_gibbs_map_integerTemporalTranslation_eq_self
-            L N hN (beta n) (hbeta n) k]
+      have hμ : Measure.map τ μ = μ :=
+        periodicHypercubicSpecialUnitary_gibbs_map_integerTemporalTranslation_eq_self
+          L N hN (beta n) (hbeta n) k
+      rw [hμ]
+      rfl
 
 /-- Every bounded continuous physical observable has invariant expectation under
 an actual realizable finite-Wilson Euclidean-time translation. -/
@@ -182,15 +184,10 @@ theorem approximatingGaugeInvariantWeakStarState_realizableTime_invariant
     physicalYangMillsApproximatingGaugeInvariantWeakStarState_apply]
   rw [physicalYangMillsApproximatingGaugeInvariantExpectation_apply,
     physicalYangMillsApproximatingGaugeInvariantExpectation_apply]
-  change
-    (∫ X,
-        (O : BoundedContinuousFunction S.Configuration ℝ)
-          (E.translate (R.realizableTime n k) X)
-      ∂(S.approximatingMeasure n : Measure S.Configuration)) =
-      ∫ X, (O : BoundedContinuousFunction S.Configuration ℝ) X
-        ∂(S.approximatingMeasure n : Measure S.Configuration)
-  exact R.approximating_boundedContinuous_expectation_realizableTime n k
-    (O : BoundedContinuousFunction S.Configuration ℝ)
+  simpa only [realizedGaugeInvariantObservableTranslation,
+    physicalGaugeInvariantObservablePrecompAlgEquiv_apply] using
+    R.approximating_boundedContinuous_expectation_realizableTime n k
+      (O : BoundedContinuousFunction S.Configuration ℝ)
 
 end PhysicalYangMillsEvenPeriodicWilsonOSCoherentDiscreteTemporalCovariance
 
