@@ -256,7 +256,7 @@ theorem rightHamiltonian_inner_ge_3320_mul_norm_sq
       inner ℝ (T.rightHamiltonian psi) (psi : P.PhysicalHilbert) := by
   simpa [physicalYangMillsExact3320Mass] using
     A.toEmbeddedAsymptoticFiniteVolumeVacuumGapTransfer
-      |>.rightHamiltonian_inner_ge_mass_mul_norm_sq T psi hpsi
+      |>.rightHamiltonian_inner_ge_mass_mul_norm_sq psi hpsi
 
 /-- The same exact `33/20` lower bound survives graph closure of the continuum
 OS Hamiltonian. -/
@@ -271,7 +271,7 @@ theorem closedRightHamiltonian_inner_ge_3320_mul_norm_sq
         (psi : P.PhysicalHilbert) := by
   simpa [physicalYangMillsExact3320Mass] using
     A.toEmbeddedAsymptoticFiniteVolumeVacuumGapTransfer
-      |>.closedRightHamiltonian_inner_ge_mass_mul_norm_sq T hP psi hpsi
+      |>.closedRightHamiltonian_inner_ge_mass_mul_norm_sq hP psi hpsi
 
 end PhysicalYangMillsEvenPeriodicWilsonOSRealizableFloorCommonCarrierGapTransfer
 
