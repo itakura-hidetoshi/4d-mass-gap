@@ -118,28 +118,19 @@ theorem map_finiteMarginal_eq_boundaryMarginal
       periodicHypercubicEvenBoundaryMarginalMeasure
         (halfExtent n) N hN (beta n) (hbeta n) := by
   rw [R.finiteMarginal_eq_map_wilsonGibbs n]
-  let μ :=
-    (periodicHypercubicSpecialUnitaryWilsonSystem
-      (PeriodicHypercubicEvenSideLength (halfExtent n))
-      N hN (beta n) (hbeta n)).gibbsMeasure
-  calc
-    Measure.map (R.boundaryReadout n)
-        (Measure.map (R.observe n) μ) =
-      Measure.map (R.boundaryReadout n ∘ R.observe n) μ := by
-        exact Measure.map_map
-          (R.boundaryReadout_measurable n)
-          (R.observe_measurable n)
-    _ = Measure.map
+  rw [Measure.map_map
+    (R.boundaryReadout_measurable n)
+    (R.observe_measurable n)]
+  have hfun :
+      R.boundaryReadout n ∘ R.observe n =
         (periodicHypercubicEvenEdgeOrbitPartition
-          (halfExtent n)).boundaryRestriction μ := by
-      congr 1
-      funext A
-      exact R.boundaryReadout_observe n A
-    _ = periodicHypercubicEvenBoundaryMarginalMeasure
-        (halfExtent n) N hN (beta n) (hbeta n) := by
-      exact
-        periodicHypercubicEvenSpecialUnitary_map_boundaryRestriction_gibbsMeasure
-          (halfExtent n) N hN (beta n) (hbeta n)
+          (halfExtent n)).boundaryRestriction := by
+    funext A
+    exact R.boundaryReadout_observe n A
+  rw [hfun]
+  exact
+    periodicHypercubicEvenSpecialUnitary_map_boundaryRestriction_gibbsMeasure
+      (halfExtent n) N hN (beta n) (hbeta n)
 
 /-- Forget the compact Wilson source realization and recover exactly the
 interacting-boundary projective readout interface introduced in #1584.
