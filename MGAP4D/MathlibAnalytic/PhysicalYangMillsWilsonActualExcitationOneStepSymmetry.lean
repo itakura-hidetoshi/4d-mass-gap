@@ -1,4 +1,3 @@
-import MGAP4D.MathlibAnalytic.ContinuousLinearMapIsometricSubmoduleRange
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRealizableCenteredPhysicalExcitationOperator
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Tactic
@@ -36,6 +35,9 @@ theorem completedOperator_isSymmetric
   refine hDense.induction_on₂ ?_ ?_ x y
   · exact isClosed_eq (by fun_prop) (by fun_prop)
   · intro u v
+    change
+      inner ℝ (completedOperator e T (e u)) (e v) =
+        inner ℝ (e u) (completedOperator e T (e v))
     rw [completedOperator_on_core e hDense hIsometry T u,
       completedOperator_on_core e hDense hIsometry T v]
     exact hCore u v
@@ -121,24 +123,38 @@ theorem centeredOneStepOperator_represented_inner_symmetric
   let hPn : Pn.IsNormalized :=
     physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData_isNormalized
       S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
-  let e : Pn.CenteredCarrier →L[ℝ] Pn.VacuumOrthogonalHilbert :=
-    (Pn.centeredPhysicalStateLinearMap hPn).mkContinuous 1 (by
-      intro X
-      rw [Pn.norm_centeredPhysicalStateLinearMap hPn X]
-      simp)
-  have heNorm : ∀ X : Pn.CenteredCarrier, ‖e X‖ = ‖X‖ := by
-    intro X
-    exact Pn.norm_centeredPhysicalStateLinearMap hPn X
   have hleft :
-      inner ℝ (e (A.centeredOneStepOperator n F)) (e G) =
-        inner ℝ (A.centeredOneStepOperator n F) G :=
-    ContinuousLinearMap.inner_map_map_of_norm_map
-      e heNorm (A.centeredOneStepOperator n F) G
+      inner ℝ
+          (Pn.centeredPhysicalStateLinearMap hPn (A.centeredOneStepOperator n F))
+          (Pn.centeredPhysicalStateLinearMap hPn G) =
+        inner ℝ (A.centeredOneStepOperator n F) G := by
+    change
+      inner ℝ
+          (Pn.physicalState
+            ((A.centeredOneStepOperator n F : Pn.CenteredCarrier) : Pn.Carrier))
+          (Pn.physicalState (G : Pn.Carrier)) =
+        inner ℝ
+          ((A.centeredOneStepOperator n F : Pn.CenteredCarrier) : Pn.Carrier)
+          (G : Pn.Carrier)
+    exact Pn.inner_physicalState_physicalState
+      ((A.centeredOneStepOperator n F : Pn.CenteredCarrier) : Pn.Carrier)
+      (G : Pn.Carrier)
   have hright :
-      inner ℝ (e F) (e (A.centeredOneStepOperator n G)) =
-        inner ℝ F (A.centeredOneStepOperator n G) :=
-    ContinuousLinearMap.inner_map_map_of_norm_map
-      e heNorm F (A.centeredOneStepOperator n G)
+      inner ℝ
+          (Pn.centeredPhysicalStateLinearMap hPn F)
+          (Pn.centeredPhysicalStateLinearMap hPn (A.centeredOneStepOperator n G)) =
+        inner ℝ F (A.centeredOneStepOperator n G) := by
+    change
+      inner ℝ
+          (Pn.physicalState (F : Pn.Carrier))
+          (Pn.physicalState
+            ((A.centeredOneStepOperator n G : Pn.CenteredCarrier) : Pn.Carrier)) =
+        inner ℝ
+          (F : Pn.Carrier)
+          ((A.centeredOneStepOperator n G : Pn.CenteredCarrier) : Pn.Carrier)
+    exact Pn.inner_physicalState_physicalState
+      (F : Pn.Carrier)
+      ((A.centeredOneStepOperator n G : Pn.CenteredCarrier) : Pn.Carrier)
   have hcarrier :
       inner ℝ (A.centeredOneStepOperator n F) G =
         inner ℝ F (A.centeredOneStepOperator n G) := by
@@ -151,8 +167,6 @@ theorem centeredOneStepOperator_represented_inner_symmetric
           (R.realizableCarrierTranslation hInvariant n 1 (G : Pn.Carrier))
     exact R.realizableCarrierTranslation_inner_symmetric hInvariant n 1
       (F : Pn.Carrier) (G : Pn.Carrier)
-  change inner ℝ (e (A.centeredOneStepOperator n F)) (e G) =
-    inner ℝ (e F) (e (A.centeredOneStepOperator n G))
   exact hleft.trans (hcarrier.trans hright.symm)
 
 /-- The **actual completed finite Wilson excitation one-step operator** is
