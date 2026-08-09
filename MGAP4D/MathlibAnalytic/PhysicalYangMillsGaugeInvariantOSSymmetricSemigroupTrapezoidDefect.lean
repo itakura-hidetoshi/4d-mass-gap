@@ -242,11 +242,9 @@ theorem inner_triplePhysicalDefect_eq_correlation_trapezoidDefect
     (T.physicalOperator_add_apply (s + t) s psi).symm
   have hhh :
       T.toPhysicalSemigroup.operator (s + t)
-          (T.toPhysicalSemigroup.operator s
-            (T.toPhysicalSemigroup.operator t psi)) =
-        T.toPhysicalSemigroup.operator ((s + t) + (s + t)) psi := by
-    rw [hst]
-    exact (T.physicalOperator_add_apply (s + t) (s + t) psi).symm
+          (T.toPhysicalSemigroup.operator (s + t) psi) =
+        T.toPhysicalSemigroup.operator ((s + t) + (s + t)) psi :=
+    (T.physicalOperator_add_apply (s + t) (s + t) psi).symm
   calc
     inner ℝ psi
         (T.physicalDefect (s + t)
@@ -287,7 +285,8 @@ theorem inner_triplePhysicalDefect_eq_correlation_trapezoidDefect
         T.physicalCorrelation psi ((s + t) + t) -
         T.physicalCorrelation psi ((s + t) + (s + t)) := by
       unfold physicalCorrelation
-      simp only [T.toPhysicalSemigroup.operator_zero]
+      simp only [T.toPhysicalSemigroup.operator_zero,
+        ContinuousLinearMap.id_apply]
       ring
 
 /-- Pairwise trapezoid inequality for symmetric contraction-semigroup
