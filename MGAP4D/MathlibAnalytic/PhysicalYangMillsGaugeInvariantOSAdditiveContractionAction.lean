@@ -76,7 +76,8 @@ theorem translatedDenseStateLinearMap_norm_le
     ‖A.translatedDenseStateLinearMap i F‖ ≤
       1 * ‖P.physicalStateLinearMap F‖ := by
   rw [A.translatedDenseStateLinearMap_apply,
-    P.physicalStateLinearMap_apply, P.norm_physicalState, one_mul]
+    P.physicalStateLinearMap_apply, P.norm_physicalState,
+    P.norm_physicalState, one_mul]
   exact A.norm_translate_le i F
 
 /-- Unique bounded extension of the indexed carrier action to the complete OS
