@@ -1,3 +1,4 @@
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapIsometricSubmoduleRange
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRealizableCenteredPhysicalExcitationOperator
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Tactic
@@ -32,23 +33,12 @@ theorem completedOperator_isSymmetric
       inner ℝ (e (T x)) (e y) = inner ℝ (e x) (e (T y))) :
     (completedOperator e T).IsSymmetric := by
   intro x y
-  have hRightCore (v : E) :
-      ∀ x : H,
-        inner ℝ (completedOperator e T x) (e v) =
-          inner ℝ x (completedOperator e T (e v)) := by
-    intro x
-    apply hDense.induction
-    · intro z hz
-      rcases hz with ⟨u, rfl⟩
-      rw [completedOperator_on_core e hDense hIsometry T u,
-        completedOperator_on_core e hDense hIsometry T v]
-      exact hCore u v
-    · exact isClosed_eq (by fun_prop) (by fun_prop)
-  apply hDense.induction
-  · intro z hz
-    rcases hz with ⟨v, rfl⟩
-    exact hRightCore v x
+  refine hDense.induction_on₂ ?_ ?_ x y
   · exact isClosed_eq (by fun_prop) (by fun_prop)
+  · intro u v
+    rw [completedOperator_on_core e hDense hIsometry T u,
+      completedOperator_on_core e hDense hIsometry T v]
+    exact hCore u v
 
 end DenseIsometricCoreOperatorCompletion
 
