@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.DirichletDefectScalingToDiscreteTransferRate
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSPhysicalExcitationBoundaryDirichletCoefficient
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRealizableCenteredPhysicalExcitationFloorDecay
 import Mathlib.Tactic
 
 noncomputable section
@@ -190,8 +191,14 @@ theorem centeredMassRate_tendsto
         -Real.log (A.boundedAnalysis.centeredTransferFactor n) /
           S.latticeSpacing n)
       atTop (nhds A.mass) := by
-  simpa only [A.defectTransferFactor_eq_centeredTransferFactor] using
-    A.toPositiveDirichletDefectScaling.massRate_tendsto_mass
+  have h := A.toPositiveDirichletDefectScaling.massRate_tendsto_mass
+  change
+    Tendsto
+      (fun n =>
+        -Real.log (A.toPositiveDirichletDefectScaling.transferFactor n) /
+          S.latticeSpacing n)
+      atTop (nhds A.mass) at h
+  simpa only [A.defectTransferFactor_eq_centeredTransferFactor] using h
 
 /-- Repackage the actual Wilson Dirichlet scaling as the existing centered
 one-step derived-rate certificate.  Its `massRate_tendsto` field is now a
