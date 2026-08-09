@@ -147,7 +147,7 @@ theorem positiveTranslation_eq_iterate_one
       rw [R.positiveTranslation_zero_apply]
       rfl
   | succ k ih =>
-      rw [Nat.succ_eq_add_one, R.positiveTranslation_add_apply, ih,
+      rw [R.positiveTranslation_add_apply, ih,
         Function.iterate_succ_apply']
 
 /-- Actual realizable positive-time translation transported to the finite OS
