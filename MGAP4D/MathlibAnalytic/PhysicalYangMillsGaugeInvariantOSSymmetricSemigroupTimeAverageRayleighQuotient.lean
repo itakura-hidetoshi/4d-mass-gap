@@ -65,11 +65,15 @@ theorem timeAverageClosedRayleighQuotient_le_twoStepDefectRate_div_one_sub_corre
     hSymmetric hh psi
   rw [hpsi] at hden
   norm_num at hden
+  have hden' :
+      1 - 2 * (h : ℝ) * T.twoStepCorrelationDefectRate h psi ≤
+        ‖T.timeAverage h psi‖ ^ 2 := by
+    linarith
   have hLpos :
       0 < 1 - 2 * (h : ℝ) * T.twoStepCorrelationDefectRate h psi := by
     linarith
   have hDpos : 0 < ‖T.timeAverage h psi‖ ^ 2 :=
-    lt_of_lt_of_le hLpos hden
+    lt_of_lt_of_le hLpos hden'
   have hd : 0 ≤ T.twoStepCorrelationDefectRate h psi :=
     T.twoStepCorrelationDefectRate_nonneg hSymmetric hh psi
   unfold timeAverageClosedRayleighQuotient
@@ -85,7 +89,7 @@ theorem timeAverageClosedRayleighQuotient_le_twoStepDefectRate_div_one_sub_corre
     _ ≤ T.twoStepCorrelationDefectRate h psi /
         (1 - 2 * (h : ℝ) * T.twoStepCorrelationDefectRate h psi) := by
           apply (div_le_div_iff₀ hDpos hLpos).2
-          exact mul_le_mul_of_nonneg_left hden hd
+          exact mul_le_mul_of_nonneg_left hden' hd
 
 /-- Algebraic form of the moving-state correction error.  This identity is the
 bridge from the exact quotient estimate to a Mosco/Gamma-limsup statement. -/
@@ -96,13 +100,31 @@ theorem defectRate_div_one_sub_correction_sub_defectRate_eq
       (2 * (h : ℝ) * d ^ 2) / (1 - 2 * (h : ℝ) * d) := by
   have hdenpos : 0 < 1 - 2 * (h : ℝ) * d := by linarith
   have hdenne : 1 - 2 * (h : ℝ) * d ≠ 0 := ne_of_gt hdenpos
-  field_simp [hdenne]
-  ring
+  have hd_as :
+      d =
+        (d * (1 - 2 * (h : ℝ) * d)) /
+          (1 - 2 * (h : ℝ) * d) := by
+    apply (eq_div_iff hdenne).2
+    ring
+  calc
+    d / (1 - 2 * (h : ℝ) * d) - d =
+        d / (1 - 2 * (h : ℝ) * d) -
+          (d * (1 - 2 * (h : ℝ) * d)) /
+            (1 - 2 * (h : ℝ) * d) := by rw [hd_as]
+    _ =
+        (d - d * (1 - 2 * (h : ℝ) * d)) /
+          (1 - 2 * (h : ℝ) * d) := by
+      rw [sub_div]
+    _ =
+        (2 * (h : ℝ) * d ^ 2) /
+          (1 - 2 * (h : ℝ) * d) := by
+      congr 1
+      ring
 
-/-- For a nonnegative two-step rate the correction can only increase the
-comparison value. -/
+/-- A positive correction denominator can only increase the comparison value
+by the explicit nonnegative quadratic correction term. -/
 theorem defectRate_le_defectRate_div_one_sub_correction
-    (h : NNReal) {d : ℝ} (hd : 0 ≤ d)
+    (h : NNReal) (d : ℝ)
     (hcorrection : 2 * (h : ℝ) * d < 1) :
     d ≤ d / (1 - 2 * (h : ℝ) * d) := by
   have herr := defectRate_div_one_sub_correction_sub_defectRate_eq
