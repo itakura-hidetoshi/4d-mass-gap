@@ -98,27 +98,21 @@ theorem defectRate_div_one_sub_correction_sub_defectRate_eq
     (hcorrection : 2 * (h : ℝ) * d < 1) :
     d / (1 - 2 * (h : ℝ) * d) - d =
       (2 * (h : ℝ) * d ^ 2) / (1 - 2 * (h : ℝ) * d) := by
-  have hdenpos : 0 < 1 - 2 * (h : ℝ) * d := by linarith
-  have hdenne : 1 - 2 * (h : ℝ) * d ≠ 0 := ne_of_gt hdenpos
-  have hd_as :
-      d =
-        (d * (1 - 2 * (h : ℝ) * d)) /
-          (1 - 2 * (h : ℝ) * d) := by
-    apply (eq_div_iff hdenne).2
-    ring
+  let L : ℝ := 1 - 2 * (h : ℝ) * d
+  have hLpos : 0 < L := by
+    dsimp [L]
+    linarith
+  have hLne : L ≠ 0 := ne_of_gt hLpos
+  have hInvMul : L⁻¹ * L = 1 := inv_mul_cancel₀ hLne
+  change d / L - d = (2 * (h : ℝ) * d ^ 2) / L
+  rw [div_eq_mul_inv, div_eq_mul_inv]
   calc
-    d / (1 - 2 * (h : ℝ) * d) - d =
-        d / (1 - 2 * (h : ℝ) * d) -
-          (d * (1 - 2 * (h : ℝ) * d)) /
-            (1 - 2 * (h : ℝ) * d) := by rw [hd_as]
-    _ =
-        (d - d * (1 - 2 * (h : ℝ) * d)) /
-          (1 - 2 * (h : ℝ) * d) := by
-      rw [sub_div]
-    _ =
-        (2 * (h : ℝ) * d ^ 2) /
-          (1 - 2 * (h : ℝ) * d) := by
+    d * L⁻¹ - d = d * L⁻¹ - d * (L⁻¹ * L) := by
+      rw [hInvMul, mul_one]
+    _ = (d - d * L) * L⁻¹ := by ring
+    _ = (2 * (h : ℝ) * d ^ 2) * L⁻¹ := by
       congr 1
+      dsimp [L]
       ring
 
 /-- A positive correction denominator can only increase the comparison value
