@@ -50,13 +50,13 @@ noncomputable def periodicHypercubicEvenWilsonBoundaryHilbertSchmidtAnalysis
     (beta : ℝ) (hbeta : 0 ≤ beta) :
     PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 H N →L[ℝ]
       PeriodicHypercubicEvenSpecialUnitaryOpenHalfL2 H N := by
-  letI : IsFiniteMeasure (periodicHypercubicEvenBoundaryHaarMeasure H N) := by
-    dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
-      FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
+  letI : SFinite (periodicHypercubicEvenBoundaryHaarMeasure H N) := by
+    unfold periodicHypercubicEvenBoundaryHaarMeasure
+      FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure
     infer_instance
-  letI : IsFiniteMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
-    dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
-      FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+  letI : SFinite (periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
+    unfold periodicHypercubicEvenOpenHalfHaarMeasure
+      FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure
     infer_instance
   exact
     realL2HilbertSchmidtRectangularKernelOperator
@@ -80,13 +80,13 @@ theorem periodicHypercubicEvenWilsonBoundaryHilbertSchmidtAnalysis_inner
         (periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureProductL2
           H N hN beta hbeta)
         f g := by
-  letI : IsFiniteMeasure (periodicHypercubicEvenBoundaryHaarMeasure H N) := by
-    dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
-      FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
+  letI : SFinite (periodicHypercubicEvenBoundaryHaarMeasure H N) := by
+    unfold periodicHypercubicEvenBoundaryHaarMeasure
+      FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure
     infer_instance
-  letI : IsFiniteMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
-    dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
-      FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+  letI : SFinite (periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
+    unfold periodicHypercubicEvenOpenHalfHaarMeasure
+      FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure
     infer_instance
   exact
     realL2HilbertSchmidtRectangularKernelOperator_inner
@@ -106,13 +106,13 @@ theorem periodicHypercubicEvenWilsonBoundaryHilbertSchmidtAnalysis_norm_le
         H N hN beta hbeta‖ ≤
       ‖periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureProductL2
         H N hN beta hbeta‖ := by
-  letI : IsFiniteMeasure (periodicHypercubicEvenBoundaryHaarMeasure H N) := by
-    dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
-      FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
+  letI : SFinite (periodicHypercubicEvenBoundaryHaarMeasure H N) := by
+    unfold periodicHypercubicEvenBoundaryHaarMeasure
+      FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure
     infer_instance
-  letI : IsFiniteMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
-    dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
-      FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+  letI : SFinite (periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
+    unfold periodicHypercubicEvenOpenHalfHaarMeasure
+      FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure
     infer_instance
   exact
     realL2HilbertSchmidtRectangularKernelOperator_norm_le
