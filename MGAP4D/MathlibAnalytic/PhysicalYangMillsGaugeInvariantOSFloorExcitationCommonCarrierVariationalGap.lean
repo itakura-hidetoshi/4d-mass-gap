@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSPhysicalExcitationDirichletLowerBoundGap
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSExponentialGapSlope
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSClosedMassGapTransfer
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSOptimalRayleighCoercivity
 import Mathlib.Tactic
 
@@ -175,7 +176,7 @@ theorem closedRightHamiltonian_inner_ge_mass_mul_norm_sq
     A.mass * ‖(psi : P.PhysicalHilbert)‖ ^ 2 ≤
       inner ℝ (T.closedRightHamiltonian psi)
         (psi : P.PhysicalHilbert) :=
-  VacuumSemigroupGapSlope.closedRightHamiltonian_inner_ge_mass_mul_norm_sq
+  PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.StronglyContinuousPhysicalSemigroup.VacuumSemigroupGapSlope.closedRightHamiltonian_inner_ge_mass_mul_norm_sq
     T G.toVacuumSemigroupGapSlope hP psi hpsi
 
 /-- The corrected floor-time Wilson mass lower bound is therefore an admissible
