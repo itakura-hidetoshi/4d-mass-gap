@@ -185,10 +185,9 @@ theorem normalized_physicalYangMillsMass_eq_33_over_20_of_component_saturation
       inner ℝ (T.closedRightHamiltonian psi) (psi : P.PhysicalHilbert) =
         lambda * ‖(psi : P.PhysicalHilbert)‖ ^ 2 := by
     dsimp [lambda]
-    apply (mul_left_cancel₀ (ne_of_gt A.referenceTime_pos))
-    rw [mul_assoc]
-    field_simp [ne_of_gt A.referenceTime_pos]
-    simpa [mul_comm, mul_left_comm, mul_assoc] using hnormalized
+    rw [div_mul_eq_mul_div]
+    apply (eq_div_iff (ne_of_gt A.referenceTime_pos)).2
+    simpa [mul_comm] using hnormalized
   have hattained : T.physicalYangMillsClosedRayleighQuotient psi = lambda := by
     unfold PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.StronglyContinuousPhysicalSemigroup.physicalYangMillsClosedRayleighQuotient
     rw [hinner]
