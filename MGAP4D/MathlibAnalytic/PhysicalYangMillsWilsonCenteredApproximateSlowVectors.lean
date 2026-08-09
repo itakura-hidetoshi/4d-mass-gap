@@ -88,9 +88,10 @@ variable
       D.WeakStarReflectionInvariant
         (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)}
 
-/-- For every finite scale and every factor `theta` strictly between zero and
-one, the **completed finite physical excitation operator** has a nonzero slow
-state beating `theta` times its exact operator norm.
+/-- For every finite scale with positive physical-excitation operator norm and
+every factor `theta` strictly between zero and one, the **completed finite
+physical excitation operator** has a nonzero slow state beating `theta` times
+its exact operator norm.
 
 The exact identity
 
@@ -103,7 +104,9 @@ enters this finite-side result. -/
 theorem exists_physicalExcitationApproximateSlowVector
     (A : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
       S D halfExtent N hN beta hbeta Q E R hInvariant)
-    (n : ℕ) {theta : ℝ} (htheta_pos : 0 < theta) (htheta_lt_one : theta < 1) :
+    (n : ℕ)
+    (hfactor : 0 < A.centeredTransferFactor n)
+    {theta : ℝ} (htheta_pos : 0 < theta) (htheta_lt_one : theta < 1) :
     let Pn :=
       physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
         S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
@@ -118,20 +121,11 @@ theorem exists_physicalExcitationApproximateSlowVector
   let Tn : Pn.VacuumOrthogonalHilbert →L[ℝ] Pn.VacuumOrthogonalHilbert :=
     A.physicalExcitationOneStepOperator n
   let r : ℝ := A.centeredTransferFactor n * theta
-  have hfactor_nonneg : 0 ≤ A.centeredTransferFactor n := by
-    rw [← A.physicalExcitationOneStepOperator_opNorm_eq_centeredTransferFactor n]
-    exact norm_nonneg _
   have hr_nonneg : 0 ≤ r := by
     dsimp [r]
     positivity
   have hr_lt_factor : r < A.centeredTransferFactor n := by
     dsimp [r]
-    have hfactor_pos : 0 < A.centeredTransferFactor n := by
-      by_contra h
-      have hfactor_zero : A.centeredTransferFactor n = 0 :=
-        le_antisymm (le_of_not_gt h) hfactor_nonneg
-      rw [hfactor_zero] at htheta_pos htheta_lt_one
-      linarith
     nlinarith
   have hr_lt : r < ‖Tn‖ := by
     dsimp [Tn]
