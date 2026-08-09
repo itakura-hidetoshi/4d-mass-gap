@@ -181,7 +181,7 @@ noncomputable def toMassFreeAmbientCarrier
     (phi : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingHilbert
       S D halfExtent N hN beta hbeta
         Q.vacuumNormalized.toWeakStarBridge hInvariant n) :
-    J.toMassFreeAmbientCarrier Q hInvariant |>.embed n phi =
+    (J.toMassFreeAmbientCarrier Q hInvariant).embed n phi =
       J.commonEmbed
         (Q.vacuumNormalized.physicalHilbertInteractingBoundaryCommonLinearIsometry
           hInvariant n phi) :=
