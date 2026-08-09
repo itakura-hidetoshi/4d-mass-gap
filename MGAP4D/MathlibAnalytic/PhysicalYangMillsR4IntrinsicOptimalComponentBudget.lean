@@ -103,7 +103,7 @@ variable {A : T.PhysicalYangMillsR4NormalizedFormDecomposition}
 
 /-- The intrinsic normalized R4 coercivity budget assembled from the optimal
 component coefficients.  This definition contains no target rational value. -/
-def budget (B : A.PhysicalYangMillsR4IntrinsicOptimalComponentData) : ℝ :=
+def budget (B : PhysicalYangMillsR4IntrinsicOptimalComponentData A) : ℝ :=
   B.baseCoefficient + B.curvatureCoefficient +
     B.interactionPositiveCoefficient - B.interactionLeakCoefficient -
       B.boundaryErrorCoefficient - B.regularizationErrorCoefficient
@@ -111,7 +111,7 @@ def budget (B : A.PhysicalYangMillsR4IntrinsicOptimalComponentData) : ℝ :=
 /-- The intrinsic optimal component budget lower-bounds the normalized actual
 physical Hamiltonian quadratic form. -/
 theorem normalized_inner_ge_budget_mul_norm_sq
-    (B : A.PhysicalYangMillsR4IntrinsicOptimalComponentData)
+    (B : PhysicalYangMillsR4IntrinsicOptimalComponentData A)
     (psi : T.closedRightHamiltonian.domain)
     (hpsi : (psi : P.PhysicalHilbert) ≠ 0)
     (horthogonal : inner ℝ (psi : P.PhysicalHilbert) P.vacuum = 0) :
@@ -131,7 +131,7 @@ theorem normalized_inner_ge_budget_mul_norm_sq
 /-- Dividing by the positive model-derived reference time makes the intrinsic
 component budget an actual graph-closed Hamiltonian Rayleigh lower bound. -/
 theorem budget_div_referenceTime_mem_physicalYangMillsRayleighLowerBoundSet
-    (B : A.PhysicalYangMillsR4IntrinsicOptimalComponentData) :
+    (B : PhysicalYangMillsR4IntrinsicOptimalComponentData A) :
     (B.budget / A.referenceTime) ∈ T.physicalYangMillsRayleighLowerBoundSet := by
   intro psi hpsi horthogonal
   have h := B.normalized_inner_ge_budget_mul_norm_sq psi hpsi horthogonal
@@ -148,7 +148,7 @@ theorem budget_div_referenceTime_mem_physicalYangMillsRayleighLowerBoundSet
 /-- With a genuine excitation-domain witness, the model-derived intrinsic R4
 budget lies below the normalized variational Yang--Mills mass. -/
 theorem budget_le_normalized_physicalYangMillsMass
-    (B : A.PhysicalYangMillsR4IntrinsicOptimalComponentData)
+    (B : PhysicalYangMillsR4IntrinsicOptimalComponentData A)
     (W : T.PhysicalYangMillsExcitationDomainWitness) :
     B.budget ≤ A.referenceTime * T.physicalYangMillsMass := by
   have hlower : B.budget / A.referenceTime ≤ T.physicalYangMillsMass :=
@@ -163,7 +163,7 @@ theorem budget_le_normalized_physicalYangMillsMass
 /-- If an actual nonzero vacuum-orthogonal state attains the complete intrinsic
 budget, then the normalized physical Yang--Mills mass equals that budget. -/
 theorem normalized_physicalYangMillsMass_eq_budget_of_attained
-    (B : A.PhysicalYangMillsR4IntrinsicOptimalComponentData)
+    (B : PhysicalYangMillsR4IntrinsicOptimalComponentData A)
     (psi : T.closedRightHamiltonian.domain)
     (hpsi : (psi : P.PhysicalHilbert) ≠ 0)
     (horthogonal : inner ℝ (psi : P.PhysicalHilbert) P.vacuum = 0)
@@ -207,7 +207,7 @@ theorem normalized_physicalYangMillsMass_eq_budget_of_attained
 `33/20` is generated only after the six **intrinsic optimal coefficients** have
 been independently identified with the R4 rational values. -/
 theorem budget_eq_33_over_20_of_intrinsic_coefficients
-    (B : A.PhysicalYangMillsR4IntrinsicOptimalComponentData)
+    (B : PhysicalYangMillsR4IntrinsicOptimalComponentData A)
     (hbase : B.baseCoefficient = (9 : ℝ) / 5)
     (hcurv : B.curvatureCoefficient = (1 : ℝ) / 10)
     (hintpos : B.interactionPositiveCoefficient = 0)
@@ -227,7 +227,7 @@ physical mass is theorem-equal to `33/20`.
 Neither `33/20` nor any freely chosen component coefficient is present in the
 underlying decomposition or optimality data. -/
 theorem normalized_physicalYangMillsMass_eq_33_over_20_of_intrinsic_coefficients_and_attainment
-    (B : A.PhysicalYangMillsR4IntrinsicOptimalComponentData)
+    (B : PhysicalYangMillsR4IntrinsicOptimalComponentData A)
     (psi : T.closedRightHamiltonian.domain)
     (hpsi : (psi : P.PhysicalHilbert) ≠ 0)
     (horthogonal : inner ℝ (psi : P.PhysicalHilbert) P.vacuum = 0)
