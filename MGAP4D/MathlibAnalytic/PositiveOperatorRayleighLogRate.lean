@@ -119,11 +119,9 @@ theorem exists_unit_discreteEnergy_lt_logRate_add
   refine ⟨x, hx_norm, ?_⟩
   calc
     (1 - inner ℝ (T x) x) / a < (1 - r) / a := by
-      apply (div_lt_div_right ha).2
-      linarith
+      exact (div_lt_iff₀ ha).2 (by linarith)
     _ ≤ (-Real.log ‖T‖ + a * eps) / a := by
-      apply (div_le_div_right ha).2
-      linarith
+      exact (div_le_iff₀ ha).2 (by linarith)
     _ = -Real.log ‖T‖ / a + eps := by
       field_simp [ha.ne']
       <;> ring
