@@ -17,6 +17,18 @@ variable {P : D.OSPreHilbertData}
 
 namespace StronglyContinuousPhysicalSemigroup
 
+/-- Pointwise form of the semigroup law.  Keeping this wrapper separate avoids
+repeated coercion noise from `ContinuousLinearMap.comp` in the defect algebra. -/
+theorem physicalOperator_add_apply
+    (T : P.StronglyContinuousPhysicalSemigroup)
+    (s t : NNReal) (psi : P.PhysicalHilbert) :
+    T.toPhysicalSemigroup.operator (s + t) psi =
+      T.toPhysicalSemigroup.operator s
+        (T.toPhysicalSemigroup.operator t psi) := by
+  have h := congrArg (fun L => L psi)
+    (T.toPhysicalSemigroup.operator_add s t)
+  simpa only [ContinuousLinearMap.comp_apply] using h
+
 /-- The bounded semigroup defect `(I - T_t) psi`, written at vector level so
 that no additional operator-algebra structure is needed. -/
 def physicalDefect
@@ -50,13 +62,12 @@ theorem physicalDefect_commute
     calc
       T.toPhysicalSemigroup.operator s
           (T.toPhysicalSemigroup.operator t psi) =
-        T.toPhysicalSemigroup.operator (s + t) psi := by
-          rw [T.toPhysicalSemigroup.operator_add]
-      _ = T.toPhysicalSemigroup.operator (t + s) psi := by
-          rw [add_comm]
+        T.toPhysicalSemigroup.operator (s + t) psi :=
+          (T.physicalOperator_add_apply s t psi).symm
+      _ = T.toPhysicalSemigroup.operator (t + s) psi := by rw [add_comm]
       _ = T.toPhysicalSemigroup.operator t
-          (T.toPhysicalSemigroup.operator s psi) := by
-          rw [T.toPhysicalSemigroup.operator_add]
+          (T.toPhysicalSemigroup.operator s psi) :=
+          T.physicalOperator_add_apply t s psi
   unfold physicalDefect
   simp only [map_sub]
   rw [hst]
@@ -76,12 +87,12 @@ theorem physicalOperator_physicalDefect_commute
     calc
       T.toPhysicalSemigroup.operator a
           (T.toPhysicalSemigroup.operator t psi) =
-        T.toPhysicalSemigroup.operator (a + t) psi := by
-          rw [T.toPhysicalSemigroup.operator_add]
+        T.toPhysicalSemigroup.operator (a + t) psi :=
+          (T.physicalOperator_add_apply a t psi).symm
       _ = T.toPhysicalSemigroup.operator (t + a) psi := by rw [add_comm]
       _ = T.toPhysicalSemigroup.operator t
-          (T.toPhysicalSemigroup.operator a psi) := by
-          rw [T.toPhysicalSemigroup.operator_add]
+          (T.toPhysicalSemigroup.operator a psi) :=
+          T.physicalOperator_add_apply t a psi
   unfold physicalDefect
   simp only [map_sub]
   rw [hat]
@@ -95,7 +106,7 @@ theorem physicalDefect_add
       T.physicalDefect s psi +
         T.toPhysicalSemigroup.operator s (T.physicalDefect t psi) := by
   unfold physicalDefect
-  rw [T.toPhysicalSemigroup.operator_add]
+  rw [T.physicalOperator_add_apply s t psi]
   simp only [map_sub]
   module
 
@@ -165,10 +176,20 @@ theorem inner_triplePhysicalDefect_nonneg
     have hs : s / 2 + s / 2 = s := by
       apply NNReal.eq
       norm_num
+    have hopen :
+        T.toPhysicalSemigroup.operator s y =
+          T.toPhysicalSemigroup.operator (s / 2)
+            (T.toPhysicalSemigroup.operator (s / 2) y) := by
+      calc
+        T.toPhysicalSemigroup.operator s y =
+            T.toPhysicalSemigroup.operator (s / 2 + s / 2) y := by rw [hs]
+        _ = T.toPhysicalSemigroup.operator (s / 2)
+            (T.toPhysicalSemigroup.operator (s / 2) y) :=
+          T.physicalOperator_add_apply (s / 2) (s / 2) y
     have hhalf :
         inner ℝ psi (T.toPhysicalSemigroup.operator s y) =
           inner ℝ u (T.toPhysicalSemigroup.operator (s / 2) y) := by
-      rw [← hs, T.toPhysicalSemigroup.operator_add]
+      rw [hopen]
       exact (hSymmetric (s / 2) psi
         (T.toPhysicalSemigroup.operator (s / 2) y)).symm
     rw [hhalf]
@@ -189,8 +210,8 @@ theorem inner_triplePhysicalDefect_nonneg
       _ = inner ℝ u
           (T.physicalDefect t
             (T.physicalDefect s (T.physicalDefect t u))) := by
-        exact (T.physicalDefect_inner_eq hSymmetric t u
-          (T.physicalDefect s (T.physicalDefect t u))).symm
+        exact T.physicalDefect_inner_eq hSymmetric t u
+          (T.physicalDefect s (T.physicalDefect t u))
 
 /-- Exact scalar expansion of the triple defect. -/
 theorem inner_triplePhysicalDefect_eq_correlation_trapezoidDefect
@@ -204,15 +225,70 @@ theorem inner_triplePhysicalDefect_eq_correlation_trapezoidDefect
         T.physicalCorrelation psi ((s + t) + s) +
         T.physicalCorrelation psi ((s + t) + t) -
         T.physicalCorrelation psi ((s + t) + (s + t)) := by
-  unfold physicalDefect physicalCorrelation
-  simp only [map_sub, inner_sub_right]
-  rw [T.toPhysicalSemigroup.operator_add,
-    T.toPhysicalSemigroup.operator_add,
-    T.toPhysicalSemigroup.operator_add,
-    T.toPhysicalSemigroup.operator_add,
-    T.toPhysicalSemigroup.operator_add]
-  simp only [T.toPhysicalSemigroup.operator_zero]
-  ring
+  have hst :
+      T.toPhysicalSemigroup.operator s
+          (T.toPhysicalSemigroup.operator t psi) =
+        T.toPhysicalSemigroup.operator (s + t) psi :=
+    (T.physicalOperator_add_apply s t psi).symm
+  have hht :
+      T.toPhysicalSemigroup.operator (s + t)
+          (T.toPhysicalSemigroup.operator t psi) =
+        T.toPhysicalSemigroup.operator ((s + t) + t) psi :=
+    (T.physicalOperator_add_apply (s + t) t psi).symm
+  have hhs :
+      T.toPhysicalSemigroup.operator (s + t)
+          (T.toPhysicalSemigroup.operator s psi) =
+        T.toPhysicalSemigroup.operator ((s + t) + s) psi :=
+    (T.physicalOperator_add_apply (s + t) s psi).symm
+  have hhh :
+      T.toPhysicalSemigroup.operator (s + t)
+          (T.toPhysicalSemigroup.operator s
+            (T.toPhysicalSemigroup.operator t psi)) =
+        T.toPhysicalSemigroup.operator ((s + t) + (s + t)) psi := by
+    rw [hst]
+    exact (T.physicalOperator_add_apply (s + t) (s + t) psi).symm
+  calc
+    inner ℝ psi
+        (T.physicalDefect (s + t)
+          (T.physicalDefect s (T.physicalDefect t psi))) =
+      inner ℝ psi psi -
+        inner ℝ psi (T.toPhysicalSemigroup.operator t psi) -
+        inner ℝ psi (T.toPhysicalSemigroup.operator s psi) +
+        inner ℝ psi
+          (T.toPhysicalSemigroup.operator s
+            (T.toPhysicalSemigroup.operator t psi)) -
+        inner ℝ psi (T.toPhysicalSemigroup.operator (s + t) psi) +
+        inner ℝ psi
+          (T.toPhysicalSemigroup.operator (s + t)
+            (T.toPhysicalSemigroup.operator t psi)) +
+        inner ℝ psi
+          (T.toPhysicalSemigroup.operator (s + t)
+            (T.toPhysicalSemigroup.operator s psi)) -
+        inner ℝ psi
+          (T.toPhysicalSemigroup.operator (s + t)
+            (T.toPhysicalSemigroup.operator s
+              (T.toPhysicalSemigroup.operator t psi))) := by
+      unfold physicalDefect
+      simp only [map_sub, inner_sub_right]
+      ring
+    _ = inner ℝ psi psi -
+        inner ℝ psi (T.toPhysicalSemigroup.operator t psi) -
+        inner ℝ psi (T.toPhysicalSemigroup.operator s psi) +
+        inner ℝ psi (T.toPhysicalSemigroup.operator (s + t) psi) -
+        inner ℝ psi (T.toPhysicalSemigroup.operator (s + t) psi) +
+        inner ℝ psi (T.toPhysicalSemigroup.operator ((s + t) + t) psi) +
+        inner ℝ psi (T.toPhysicalSemigroup.operator ((s + t) + s) psi) -
+        inner ℝ psi
+          (T.toPhysicalSemigroup.operator ((s + t) + (s + t)) psi) := by
+      rw [hst, hht, hhs, hhh]
+    _ = T.physicalCorrelation psi 0 - T.physicalCorrelation psi s -
+        T.physicalCorrelation psi t +
+        T.physicalCorrelation psi ((s + t) + s) +
+        T.physicalCorrelation psi ((s + t) + t) -
+        T.physicalCorrelation psi ((s + t) + (s + t)) := by
+      unfold physicalCorrelation
+      simp only [T.toPhysicalSemigroup.operator_zero]
+      ring
 
 /-- Pairwise trapezoid inequality for symmetric contraction-semigroup
 correlations.  This is the pointwise estimate whose interval integral gives the
