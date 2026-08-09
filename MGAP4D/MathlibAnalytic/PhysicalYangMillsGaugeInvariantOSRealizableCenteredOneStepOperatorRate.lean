@@ -52,7 +52,7 @@ theorem vacuumCenteredCarrier_mem_centeredCarrierSubmodule
     (F.toGaugeInvariant -
       P.omega F.toGaugeInvariant •
         (1 : physicalYangMillsGaugeInvariantObservableSubalgebra S)) = 0
-  rw [map_sub, map_smul, hP]
+  rw [sub_eq_add_neg, map_add, map_neg, map_smul, hP]
   simp
 
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
@@ -166,11 +166,22 @@ noncomputable def centeredOneStepLinearMap
       map_add' := by
         intro F G
         apply Subtype.ext
-        exact map_add (R.realizableCarrierTranslation hInvariant n 1) F G
+        change
+          R.realizableCarrierTranslation hInvariant n 1
+              ((F : Pn.Carrier) + (G : Pn.Carrier)) =
+            R.realizableCarrierTranslation hInvariant n 1 (F : Pn.Carrier) +
+              R.realizableCarrierTranslation hInvariant n 1 (G : Pn.Carrier)
+        exact (R.realizableCarrierTranslation hInvariant n 1).map_add
+          (F : Pn.Carrier) (G : Pn.Carrier)
       map_smul' := by
         intro c F
         apply Subtype.ext
-        exact map_smul (R.realizableCarrierTranslation hInvariant n 1) c F }
+        change
+          R.realizableCarrierTranslation hInvariant n 1
+              (c • (F : Pn.Carrier)) =
+            c • R.realizableCarrierTranslation hInvariant n 1 (F : Pn.Carrier)
+        exact (R.realizableCarrierTranslation hInvariant n 1).map_smul
+          c (F : Pn.Carrier) }
 
 /-- #1509's actual positive-half factorization supplies continuity of the
 centered restriction, but the operator itself is exactly the restricted
@@ -224,8 +235,9 @@ theorem centeredTransferFactor_nonneg
     (A : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
       S D halfExtent N hN beta hbeta Q E R hInvariant)
     (n : ℕ) :
-    0 ≤ A.centeredTransferFactor n :=
-  norm_nonneg _
+    0 ≤ A.centeredTransferFactor n := by
+  change 0 ≤ ‖A.centeredOneStepOperator n‖
+  exact norm_nonneg (A.centeredOneStepOperator n)
 
 /-- The intrinsic centered operator norm is bounded by #1509's theorem-generated
 positive-half/synthesis product factor. -/
