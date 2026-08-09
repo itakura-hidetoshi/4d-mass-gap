@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRealizableCenteredOneStepOperatorRate
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRealizableCenteredPhysicalExcitationOperator
 import Mathlib.Tactic
 
 noncomputable section
@@ -12,9 +12,9 @@ namespace MathlibAnalytic
 /-- A continuous linear operator has a vector beating every nonnegative strict
 lower threshold for its operator norm.
 
-This is the approximation principle needed for finite Wilson slow modes. It
-uses only Mathlib's characterization of the operator norm as the least uniform
-bound; no finite-dimensionality or norm-attaining eigenvector is assumed. -/
+This is the generic approximation principle needed for finite Wilson slow
+modes.  It uses only Mathlib's `ContinuousLinearMap.opNorm_le_bound`; no
+finite-dimensionality or norm-attaining eigenvector is assumed. -/
 theorem continuousLinearMap_exists_apply_norm_gt_mul_norm_of_lt_opNorm
     {E F : Type*}
     [NormedAddCommGroup E] [NormedAddCommGroup F]
@@ -27,8 +27,7 @@ theorem continuousLinearMap_exists_apply_norm_gt_mul_norm_of_lt_opNorm
   have hop : ‖T‖ ≤ r := T.opNorm_le_bound hr_nonneg h
   exact (not_le_of_gt hr_lt) hop
 
-/-- The approximate operator-norm vector supplied above is automatically
-nonzero. -/
+/-- The strict operator-norm approximation witness is automatically nonzero. -/
 theorem continuousLinearMap_exists_nonzero_apply_norm_gt_mul_norm_of_lt_opNorm
     {E F : Type*}
     [NormedAddCommGroup E] [NormedAddCommGroup F]
@@ -89,56 +88,58 @@ variable
       D.WeakStarReflectionInvariant
         (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)}
 
-/-- For every finite lattice scale with positive centered transfer factor and
-every strictly positive rate excess `eps`, the actual centered Wilson one-step
-operator has a nonzero vector beating the strict threshold
+/-- For every finite scale and every factor `theta` strictly between zero and
+one, the **completed finite physical excitation operator** has a nonzero slow
+state beating `theta` times its exact operator norm.
 
-`centeredTransferFactor n * exp (-eps * latticeSpacing n)`.
+The exact identity
 
-Since `centeredTransferFactor n` is definitionally the actual centered operator
-norm, finite slow-mode existence is automatic from generic operator-norm
-approximation.  No logarithmic-rate definition, convergence package, continuum
-mass, finite-dimensionality, or exact target value enters this theorem. -/
-theorem exists_centeredApproximateSlowVector
-    (B : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
+`‖T_n^phys,exc‖ = centeredTransferFactor n`
+
+is supplied by the already integrated dense-isometric completion theorem.
+Consequently no centered-carrier quotient inversion, finite-dimensionality,
+eigenvector existence, logarithmic rate, continuum mass, or target exact value
+enters this finite-side result. -/
+theorem exists_physicalExcitationApproximateSlowVector
+    (A : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
       S D halfExtent N hN beta hbeta Q E R hInvariant)
-    (n : ℕ) (hfactor : 0 < B.centeredTransferFactor n)
-    {eps : ℝ} (heps : 0 < eps) :
+    (n : ℕ) {theta : ℝ} (htheta_pos : 0 < theta) (htheta_lt_one : theta < 1) :
     let Pn :=
       physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
         S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
-    ∃ F : Pn.CenteredCarrier,
-      F ≠ 0 ∧
-      (B.centeredTransferFactor n *
-          Real.exp (-eps * S.latticeSpacing n)) * ‖F‖ <
-        ‖B.centeredOneStepOperator n F‖ := by
+    ∃ psi : Pn.VacuumOrthogonalHilbert,
+      psi ≠ 0 ∧
+      (A.centeredTransferFactor n * theta) * ‖psi‖ <
+        ‖A.physicalExcitationOneStepOperator n psi‖ := by
   dsimp only
   let Pn :=
     physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
       S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
-  let Tn : Pn.CenteredCarrier →L[ℝ] Pn.CenteredCarrier :=
-    B.centeredOneStepOperator n
-  let r : ℝ :=
-    B.centeredTransferFactor n * Real.exp (-eps * S.latticeSpacing n)
-  have ha : 0 < S.latticeSpacing n := S.latticeSpacing_pos n
-  have hepsa : 0 < eps * S.latticeSpacing n := mul_pos heps ha
-  have hexp_pos : 0 < Real.exp (-eps * S.latticeSpacing n) := Real.exp_pos _
-  have hexp_lt_one : Real.exp (-eps * S.latticeSpacing n) < 1 := by
-    rw [Real.exp_lt_one_iff]
-    linarith
-  have hr_lt_factor : r < B.centeredTransferFactor n := by
-    dsimp [r]
-    nlinarith
-  have hr_lt : r < ‖Tn‖ := by
-    dsimp [Tn]
-    change r < B.centeredTransferFactor n
-    exact hr_lt_factor
+  let Tn : Pn.VacuumOrthogonalHilbert →L[ℝ] Pn.VacuumOrthogonalHilbert :=
+    A.physicalExcitationOneStepOperator n
+  let r : ℝ := A.centeredTransferFactor n * theta
+  have hfactor_nonneg : 0 ≤ A.centeredTransferFactor n := by
+    rw [← A.physicalExcitationOneStepOperator_opNorm_eq_centeredTransferFactor n]
+    exact norm_nonneg _
   have hr_nonneg : 0 ≤ r := by
     dsimp [r]
     positivity
+  have hr_lt_factor : r < A.centeredTransferFactor n := by
+    dsimp [r]
+    have hfactor_pos : 0 < A.centeredTransferFactor n := by
+      by_contra h
+      have hfactor_zero : A.centeredTransferFactor n = 0 :=
+        le_antisymm (le_of_not_gt h) hfactor_nonneg
+      rw [hfactor_zero] at htheta_pos htheta_lt_one
+      linarith
+    nlinarith
+  have hr_lt : r < ‖Tn‖ := by
+    dsimp [Tn]
+    rw [A.physicalExcitationOneStepOperator_opNorm_eq_centeredTransferFactor]
+    exact hr_lt_factor
   rcases continuousLinearMap_exists_nonzero_apply_norm_gt_mul_norm_of_lt_opNorm
-      Tn hr_nonneg hr_lt with ⟨F, hF, hslow⟩
-  exact ⟨F, hF, hslow⟩
+      Tn hr_nonneg hr_lt with ⟨psi, hpsi, hslow⟩
+  exact ⟨psi, hpsi, hslow⟩
 
 end PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
 
