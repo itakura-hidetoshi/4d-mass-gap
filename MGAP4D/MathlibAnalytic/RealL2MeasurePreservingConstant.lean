@@ -27,7 +27,7 @@ theorem realL2_compMeasurePreserving_const_one
   rw [← indicatorConstLp_univ, ← indicatorConstLp_univ]
   simpa using
     (Lp.indicatorConstLp_compMeasurePreserving
-      (p := (2 : ℝ≥0∞))
+      (p := (2 : ENNReal))
       (μ := μ) (μb := ν) (f := f)
       MeasurableSet.univ (measure_ne_top ν Set.univ) (1 : ℝ) hf)
 
