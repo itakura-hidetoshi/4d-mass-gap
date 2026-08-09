@@ -251,7 +251,7 @@ theorem physicalOperator_norm_le_timeAverage_norm
     have hfunInt : IntervalIntegrable
         (fun s : ℝ => inner ℝ psi
           (T.realPhysicalOrbit psi (s + (h : ℝ)))) volume 0 (h : ℝ) :=
-      hcorrContinuous.intervalIntegrable
+      hcorrContinuous.intervalIntegrable 0 (h : ℝ)
     have hmono := intervalIntegral.integral_mono_on
       (a := (0 : ℝ)) (b := (h : ℝ))
       (f := fun _ : ℝ => T.physicalCorrelation psi (h + h))
@@ -270,7 +270,7 @@ theorem physicalOperator_norm_le_timeAverage_norm
       have hsum : (s + (h : ℝ)).toNNReal = r + h := by
         change (s + (h : ℝ)).toNNReal = NNReal.mk s hs0 + h
         apply NNReal.eq
-        simp [Real.coe_toNNReal, add_nonneg hs0 h.coe_nonneg]
+        simp [add_nonneg hs0 h.coe_nonneg]
       simpa [physicalCorrelation, realPhysicalOrbit, hsum] using hc
   have hpair : ‖q‖ ^ 2 ≤ inner ℝ (T.timeAverage h psi) q := by
     rw [T.inner_timeAverage_operator_eq_shiftedCorrelationIntegral
@@ -340,7 +340,7 @@ theorem norm_sq_sub_two_mul_defectRate_le_timeAverage_norm_sq
             (2 * (h : ℝ))) =
         T.physicalCorrelation psi (h + h) := by
     field_simp [hhreal]
-    <;> ring
+    ring
   rw [hidentity]
   exact hcorr
 
