@@ -46,6 +46,9 @@ theorem finiteProductProbabilityMarginal_projective
     Finset.restrict₂ hJI
   have hr : Measurable r :=
     measurable_pi_lambda _ (fun _ => measurable_pi_apply _)
+  change
+    Measure.pi (fun j : J => μ j) =
+      (Measure.pi (fun i : I => μ i)).map r
   refine Measure.pi_eq (μ := fun j : J => μ j) ?_
   intro s hs
   rw [Measure.map_apply hr (MeasurableSet.univ_pi hs)]
@@ -54,9 +57,17 @@ theorem finiteProductProbabilityMarginal_projective
   have hpre :
       r ⁻¹' (Set.univ.pi s) = Set.univ.pi t := by
     ext x
-    simp [r, t, Set.mem_pi]
+    simp only [Set.mem_preimage, Set.mem_pi, Set.mem_univ, true_implies]
+    constructor
+    · intro hx a haI
+      by_cases haJ : a ∈ J
+      · simpa [r, t, haJ] using hx a haJ
+      · simp [t, haJ]
+    · intro hx a haJ
+      have haI : a ∈ I := hJI haJ
+      simpa [r, t, haJ] using hx a haI
   rw [hpre, Measure.pi_pi]
-  simp [t, measure_univ]
+  simpa [t, measure_univ, Finset.prod_coe_sort, hJI]
 
 end
 
