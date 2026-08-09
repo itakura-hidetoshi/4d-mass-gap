@@ -11,9 +11,9 @@ open Filter
 noncomputable section
 
 /-- A nonnegative target physical time has a nonnegative canonical floor step
-at every positive lattice spacing.  This is the bridge from the integer-valued
-floor selector used by the geometric lattice action to an honest natural
-iteration count. -/
+at every positive lattice spacing.  It bridges the integer-valued floor
+selector used by the geometric lattice action to an honest natural iteration
+count. -/
 theorem physicalTemporalFloorStep_nonneg
     (latticeSpacing : ℕ → ℝ)
     (latticeSpacing_pos : ∀ n, 0 < latticeSpacing n)
@@ -72,8 +72,8 @@ theorem physicalTemporalFloorNatStep_tendsto
 /-- The exact exponential factor evaluated at the canonical floor-selected
 physical time converges to the exact factor at the target physical time.
 
-This is the scalar analytic kernel for passing a one-slab exponential transfer
-bound to a fixed physical time before taking the right-generator limit. -/
+Scalar analytic kernel for passing a one-slab exponential transfer bound to a
+fixed physical time before taking the right-generator limit. -/
 theorem physicalTemporalFloorExponentialFactor_tendsto
     (latticeSpacing : ℕ → ℝ)
     (latticeSpacing_pos : ∀ n, 0 < latticeSpacing n)
@@ -101,7 +101,7 @@ theorem physicalTemporalFloorExponentialFactor_tendsto
 
 /-- A pointwise one-step norm contraction iterates with the expected geometric
 factor.  No linearity, completeness, finite-dimensionality, or spectral
-structure is required. -/
+assumptions are required. -/
 theorem norm_iterate_le_pow_of_norm_le
     {E : Type*} [SeminormedAddCommGroup E]
     (T : E → E) (r : ℝ) (hr : 0 ≤ r)
@@ -121,9 +121,9 @@ theorem norm_iterate_le_pow_of_norm_le
           ring
 
 /-- Exponential one-step contractions therefore iterate with their exact
-geometric power.  This theorem is deliberately kept at the normed-space level;
-the identification of that power with the floor-selected physical-time
-exponential is a separate scalar step. -/
+geometric power.  The result stays deliberately at the normed-space level;
+identifying that power with the floor-selected physical-time exponential is a
+separate scalar step. -/
 theorem norm_iterate_le_exp_pow_of_norm_le
     {E : Type*} [SeminormedAddCommGroup E]
     (T : E → E) (mass spacing : ℝ)
