@@ -10,7 +10,6 @@ noncomputable section
 
 open Filter MeasureTheory Set Topology
 open scoped InnerProductSpace
-open PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -266,7 +265,7 @@ theorem rightHamiltonian_inner_ge_3320_mul_norm_sq
       S D halfExtent N hN beta hbeta Q E R hInvariant B T)
     (hContinuous : T.StrongContinuityOnObservableStates)
     (psi :
-      (StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
+      (PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup.StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
         T hContinuous).rightGeneratorDomain)
     (hpsi : inner ℝ
       (psi : (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
@@ -277,7 +276,7 @@ theorem rightHamiltonian_inner_ge_3320_mul_norm_sq
         ‖(psi : (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
           S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant).PhysicalHilbert)‖ ^ 2 ≤
       inner ℝ
-        ((StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
+        ((PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup.StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
           T hContinuous).rightHamiltonian psi)
         (psi : (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
           S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant).PhysicalHilbert) := by
@@ -292,7 +291,7 @@ theorem closedRightHamiltonian_inner_ge_3320_mul_norm_sq
       S D halfExtent N hN beta hbeta Q E R hInvariant B T)
     (hContinuous : T.StrongContinuityOnObservableStates)
     (psi :
-      (StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
+      (PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup.StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
         T hContinuous).closedRightHamiltonian.domain)
     (hpsi : inner ℝ
       (psi : (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
@@ -303,7 +302,7 @@ theorem closedRightHamiltonian_inner_ge_3320_mul_norm_sq
         ‖(psi : (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
           S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant).PhysicalHilbert)‖ ^ 2 ≤
       inner ℝ
-        ((StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
+        ((PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup.StrongContinuityOnObservableStates.toStronglyContinuousPhysicalSemigroup
           T hContinuous).closedRightHamiltonian psi)
         (psi : (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
           S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant).PhysicalHilbert) := by
