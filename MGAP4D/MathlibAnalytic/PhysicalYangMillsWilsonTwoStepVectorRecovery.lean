@@ -75,17 +75,15 @@ structure PhysicalYangMillsEvenPeriodicWilsonOSIntrinsicRateTwoStepVectorRecover
   vectorDefectExcess_tendsto_zero : Tendsto vectorDefectExcess atTop (nhds 0)
   twoStepVectorDefect_le :
     ∀ n phi, ‖phi‖ = 1 →
-      ‖
-        ((excitationEmbed n
-            (((C.boundedAnalysis.physicalExcitationOneStepOperator n) ∘L
-              (C.boundedAnalysis.physicalExcitationOneStepOperator n)) phi) :
-            P.VacuumOrthogonalHilbert) : P.PhysicalHilbert) -
+      let K := C.boundedAnalysis.physicalExcitationOneStepOperator n
+      let eta := excitationEmbed n ((K ∘L K) phi)
+      let psi := excitationEmbed n phi
+      ‖(eta : P.PhysicalHilbert) -
           T.toPhysicalSemigroup.operator
             (physicalYangMillsLatticeSpacingNNReal S n +
               physicalYangMillsLatticeSpacingNNReal S n)
-            ((excitationEmbed n phi : P.VacuumOrthogonalHilbert) :
-              P.PhysicalHilbert)
-      ‖ ≤ 2 * S.latticeSpacing n * vectorDefectExcess n
+            (psi : P.PhysicalHilbert)‖ ≤
+        2 * S.latticeSpacing n * vectorDefectExcess n
 
 namespace PhysicalYangMillsEvenPeriodicWilsonOSIntrinsicRateTwoStepVectorRecoveryTransfer
 
@@ -132,7 +130,6 @@ noncomputable def toScalarTwoStepRecoveryTransfer
     let etaOrth : P.VacuumOrthogonalHilbert := V.excitationEmbed n etaFinite
     let psi : P.PhysicalHilbert := (psiOrth : P.PhysicalHilbert)
     let eta : P.PhysicalHilbert := (etaOrth : P.PhysicalHilbert)
-    have hh : 0 < h := physicalYangMillsLatticeSpacingNNReal_pos S n
     have hdenpos : 0 < 2 * S.latticeSpacing n := by
       nlinarith [S.latticeSpacing_pos n]
     have hpsiNorm : ‖psi‖ = 1 := by
