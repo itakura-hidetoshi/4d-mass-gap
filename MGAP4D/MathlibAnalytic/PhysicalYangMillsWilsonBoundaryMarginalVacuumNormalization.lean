@@ -205,9 +205,11 @@ theorem boundaryMarginal_vacuum_eq_one
         halfExtent N hN beta hbeta n)
       (p := (2 : ENNReal)) (c := (1 : ℝ))
   filter_upwards [htransport, hvacMarginal, hconst] with b htransport_b hvac_b hconst_b
-  rw [htransport_b, hvac_b, hconst_b]
+  rw [htransport_b, hconst_b]
   unfold periodicHypercubicEvenBoundaryHaarToMarginalL2Function
+  rw [hvac_b]
   unfold periodicHypercubicEvenBoundaryHaarToMarginalL2Weight
+  simp only [Function.const_apply]
   exact inv_mul_cancel₀
     (ne_of_gt
       (periodicHypercubicEvenBoundaryVacuumMoment_pos
