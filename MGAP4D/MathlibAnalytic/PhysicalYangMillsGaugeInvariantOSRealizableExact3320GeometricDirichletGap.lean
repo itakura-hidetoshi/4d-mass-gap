@@ -235,7 +235,6 @@ noncomputable def toBoundaryMomentGapCertificate
       S D halfExtent N hN beta hbeta Q E R hInvariant where
   oneStep_centered_boundaryMoment_le := by
     intro n F
-    dsimp only
     let Pn :=
       physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
         S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
