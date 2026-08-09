@@ -181,7 +181,8 @@ noncomputable def toScalarTwoStepRecoveryTransfer
         _ ≤
           (1 - inner ℝ etaFinite phi) +
             (2 * S.latticeSpacing n) * V.vectorDefectExcess n := by
-            exact add_le_add_left hinner (1 - inner ℝ etaFinite phi)
+            simpa [add_comm] using
+              add_le_add_left hinner (1 - inner ℝ etaFinite phi)
         _ =
           1 - inner ℝ etaFinite phi +
             (2 * S.latticeSpacing n) * V.vectorDefectExcess n := by
@@ -211,7 +212,6 @@ noncomputable def toScalarTwoStepRecoveryTransfer
         (1 - inner ℝ etaFinite phi) / (2 * S.latticeSpacing n) +
           V.vectorDefectExcess n := by
         field_simp [ne_of_gt hdenpos, ne_of_gt (S.latticeSpacing_pos n)]
-        ring
 
 /-- The vector recovery condition already implies the reverse variational mass
 inequality through the scalar transfer constructed above. -/
