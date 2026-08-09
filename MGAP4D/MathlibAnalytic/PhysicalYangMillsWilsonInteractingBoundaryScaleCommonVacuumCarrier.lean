@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.RealL2MeasurePreservingConstant
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonBoundaryHaarScaleProjectiveCarrier
+import MGAP4D.MathlibAnalytic.FiniteProductProbabilityProjectiveFamily
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonBoundaryMarginalProjectiveL2Carrier
 import Mathlib.Tactic
 
@@ -34,6 +34,16 @@ local instance (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
+/-- The reflection-fixed boundary configuration carried by the interacting
+Wilson scale `n`.
+
+This local abbreviation deliberately avoids importing the pure boundary-Haar
+scale carrier solely for its coordinate type. -/
+abbrev PhysicalYangMillsEvenPeriodicWilsonInteractingBoundaryScaleConfiguration
+    (halfExtent : ℕ → ℕ) (N : ℕ) (n : ℕ) :=
+  PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration
+    (halfExtent n) N
+
 /-- The actual interacting reflection-fixed boundary marginal at Wilson scale
 `n`.  Unlike the pure-Haar common carrier, this coordinate law already absorbs
 the squared finite OS boundary vacuum wavefunction. -/
@@ -44,7 +54,7 @@ noncomputable def physicalYangMillsEvenPeriodicWilsonBoundaryScaleMarginalMeasur
     (beta : ℕ → ℝ) (hbeta : ∀ n, 0 ≤ beta n)
     (n : ℕ) :
     Measure
-      (PhysicalYangMillsEvenPeriodicWilsonBoundaryScaleConfiguration
+      (PhysicalYangMillsEvenPeriodicWilsonInteractingBoundaryScaleConfiguration
         halfExtent N n) :=
   periodicHypercubicEvenBoundaryMarginalMeasure
     (halfExtent n) N hN (beta n) (hbeta n)
@@ -84,7 +94,7 @@ noncomputable def physicalYangMillsEvenPeriodicWilsonBoundaryScaleMarginalFinite
     (J : Finset ℕ) :
     Measure
       (∀ n : J,
-        PhysicalYangMillsEvenPeriodicWilsonBoundaryScaleConfiguration
+        PhysicalYangMillsEvenPeriodicWilsonInteractingBoundaryScaleConfiguration
           halfExtent N n) :=
   finiteProductProbabilityMarginal
     (fun n =>
@@ -116,7 +126,7 @@ noncomputable def physicalYangMillsEvenPeriodicWilsonBoundaryScaleMarginalInfini
     (beta : ℕ → ℝ) (hbeta : ∀ n, 0 ≤ beta n) :
     Measure
       (∀ n : ℕ,
-        PhysicalYangMillsEvenPeriodicWilsonBoundaryScaleConfiguration
+        PhysicalYangMillsEvenPeriodicWilsonInteractingBoundaryScaleConfiguration
           halfExtent N n) :=
   Measure.infinitePi
     (fun n =>
