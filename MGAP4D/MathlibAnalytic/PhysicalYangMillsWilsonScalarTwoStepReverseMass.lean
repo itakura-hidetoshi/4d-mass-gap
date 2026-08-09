@@ -238,6 +238,12 @@ theorem embeddedSlowState_twoStepDefectRate_lt_dominator
     V.twoStepDefectRate_le_finiteEnergy_add_excess
       n (V.finiteSlowState n) (V.finiteSlowState_norm n)
   have hslow := V.finiteSlowState_energy_lt_rate_add_spacing n
+  change
+    T.twoStepCorrelationDefectRate
+        (physicalYangMillsLatticeSpacingNNReal S n)
+        (((V.excitationEmbed n) (V.finiteSlowState n) : P.VacuumOrthogonalHilbert) :
+          P.PhysicalHilbert) <
+      V.slowStateDominator n
   unfold slowStateDominator
   linarith
 
