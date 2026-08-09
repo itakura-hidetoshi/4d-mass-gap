@@ -92,7 +92,10 @@ theorem centeredPhysicalStateLinearMap_denseRange
       Tendsto
         (fun n => inner ℝ P.vacuum (P.physicalState (F n)))
         atTop (nhds 0) := by
-    have h := tendsto_const_nhds.inner hFState
+    have hinner :
+        Continuous (fun x : P.PhysicalHilbert => inner ℝ P.vacuum x) := by
+      fun_prop
+    have h := hinner.continuousAt.tendsto.comp hFState
     simpa only [hpsiOrth] using h
   let Fc : ℕ → P.CenteredCarrier := fun n =>
     ⟨P.vacuumCenteredCarrier (F n),
