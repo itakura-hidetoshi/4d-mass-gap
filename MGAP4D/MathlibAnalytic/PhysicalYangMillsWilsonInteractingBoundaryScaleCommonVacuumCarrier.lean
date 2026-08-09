@@ -71,20 +71,18 @@ instance physicalYangMillsEvenPeriodicWilsonBoundaryScaleMarginalMeasure_probabi
     IsProbabilityMeasure
       (physicalYangMillsEvenPeriodicWilsonBoundaryScaleMarginalMeasure
         halfExtent N hN beta hbeta n) := by
+  letI : IsProbabilityMeasure
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength (halfExtent n))
+        N hN (beta n) (hbeta n)).gibbsMeasure :=
+    periodicHypercubicSpecialUnitaryWilsonSystem_gibbsMeasure_probability
+      (PeriodicHypercubicEvenSideLength (halfExtent n))
+      N hN (beta n) (hbeta n)
   let mp :=
     periodicHypercubicEvenSpecialUnitaryBoundaryRestrictionMeasurePreserving
       (halfExtent n) N hN (beta n) (hbeta n)
-  have hmap :
-      IsProbabilityMeasure
-        (Measure.map
-          ((periodicHypercubicEvenEdgeOrbitPartition
-            (halfExtent n)).boundaryRestriction)
-          (periodicHypercubicSpecialUnitaryWilsonSystem
-            (PeriodicHypercubicEvenSideLength (halfExtent n))
-            N hN (beta n) (hbeta n)).gibbsMeasure) :=
-    Measure.isProbabilityMeasure_map mp.measurable.aemeasurable
-  rw [mp.map_eq] at hmap
-  exact hmap
+  rw [← mp.map_eq]
+  exact Measure.isProbabilityMeasure_map mp.measurable.aemeasurable
 
 /-- Finite products of the actual interacting boundary marginals.  Independence
 here is a kinematic common-carrier device; it makes no claim that Wilson Gibbs
