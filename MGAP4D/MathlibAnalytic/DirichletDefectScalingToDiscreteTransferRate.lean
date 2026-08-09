@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsDerivedDiscreteTransferRate
-import Mathlib.Analysis.Real.Sqrt
 import Mathlib.Topology.Order.Basic
 import Mathlib.Tactic
 
