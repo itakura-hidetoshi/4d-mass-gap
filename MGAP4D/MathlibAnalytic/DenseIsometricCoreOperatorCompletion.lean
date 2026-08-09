@@ -10,7 +10,7 @@ namespace MathlibAnalytic
 
 universe u v
 
-/-- Generic completion of a bounded operator from a norm-preserving dense linear
+/- Generic completion of a bounded operator from a norm-preserving dense linear
 core into a complete ambient normed space.
 
 This is the abstract functional-analytic layer used by the finite Wilson
