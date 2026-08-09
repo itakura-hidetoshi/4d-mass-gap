@@ -177,36 +177,22 @@ in any input. -/
 theorem referenceTime_mul_intrinsicRate_eq_33_over_20_of_complete_linked_data
     (G : PhysicalYangMillsEvenPeriodicWilsonOSIntrinsicRateCommonCarrierTransfer
       S D halfExtent N hN beta hbeta Q E R hInvariant C P T)
-    (hP : P.IsNormalized)
-    (K : T.PhysicalYangMillsR4ComponentBoundednessData A)
-    (W : T.PhysicalYangMillsExcitationDomainWitness)
-    (m : ℝ)
-    (hm_pos : 0 < m)
+    (hP : P.IsNormalized) (K : T.PhysicalYangMillsR4ComponentBoundednessData A)
+    (W : T.PhysicalYangMillsExcitationDomainWitness) (m : ℝ) (hm_pos : 0 < m)
     (hm : physicalYangMillsEvenPeriodicWilsonOSBoundaryPoincareAdmissibleMass
       S D halfExtent N hN beta hbeta Q E R hInvariant m)
-    (hOptimalEq :
-      physicalYangMillsEvenPeriodicWilsonOSBoundaryPoincareOptimalMass
-          S D halfExtent N hN beta hbeta Q E R hInvariant =
-        T.physicalYangMillsMass)
-    (psi : T.closedRightHamiltonian.domain)
-    (hpsi : (psi : P.PhysicalHilbert) ≠ 0)
+    (hOptimalEq : physicalYangMillsEvenPeriodicWilsonOSBoundaryPoincareOptimalMass
+      S D halfExtent N hN beta hbeta Q E R hInvariant = T.physicalYangMillsMass)
+    (psi : T.closedRightHamiltonian.domain) (hpsi : (psi : P.PhysicalHilbert) ≠ 0)
     (horthogonal : inner ℝ (psi : P.PhysicalHilbert) P.vacuum = 0)
-    (hattain :
-      A.referenceTime *
-          inner ℝ (T.closedRightHamiltonian psi) (psi : P.PhysicalHilbert) =
-        A.rayleighExtremaBudget * ‖(psi : P.PhysicalHilbert)‖ ^ 2)
-    (hbase :
-      sInf (T.physicalYangMillsComponentRayleighSet A.qBase) = (9 : ℝ) / 5)
-    (hcurv :
-      sInf (T.physicalYangMillsComponentRayleighSet A.qCurvature) = (1 : ℝ) / 10)
-    (hintpos :
-      sInf (T.physicalYangMillsComponentRayleighSet A.qInteractionPositive) = 0)
-    (hleak :
-      sSup (T.physicalYangMillsComponentRayleighSet A.qInteractionLeak) = (1 : ℝ) / 10)
-    (hboundary :
-      sSup (T.physicalYangMillsComponentRayleighSet A.qBoundaryError) = (1 : ℝ) / 20)
-    (hreg :
-      sSup (T.physicalYangMillsComponentRayleighSet A.qRegularizationError) = (1 : ℝ) / 10) :
+    (hattain : A.referenceTime * inner ℝ (T.closedRightHamiltonian psi)
+      (psi : P.PhysicalHilbert) = A.rayleighExtremaBudget * ‖(psi : P.PhysicalHilbert)‖ ^ 2)
+    (hbase : sInf (T.physicalYangMillsComponentRayleighSet A.qBase) = (9 : ℝ) / 5)
+    (hcurv : sInf (T.physicalYangMillsComponentRayleighSet A.qCurvature) = (1 : ℝ) / 10)
+    (hintpos : sInf (T.physicalYangMillsComponentRayleighSet A.qInteractionPositive) = 0)
+    (hleak : sSup (T.physicalYangMillsComponentRayleighSet A.qInteractionLeak) = (1 : ℝ) / 10)
+    (hboundary : sSup (T.physicalYangMillsComponentRayleighSet A.qBoundaryError) = (1 : ℝ) / 20)
+    (hreg : sSup (T.physicalYangMillsComponentRayleighSet A.qRegularizationError) = (1 : ℝ) / 10) :
     A.referenceTime * C.limit = (33 : ℝ) / 20 := by
   have hlimitEq : C.limit = T.physicalYangMillsMass :=
     G.limit_eq_physicalYangMillsMass_of_boundaryOptimal_eq
