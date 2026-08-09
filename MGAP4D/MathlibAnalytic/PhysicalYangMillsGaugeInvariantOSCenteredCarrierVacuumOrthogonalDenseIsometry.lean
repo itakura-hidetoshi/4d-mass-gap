@@ -83,7 +83,7 @@ theorem centeredPhysicalStateLinearMap_denseRange
     have hfun :
         (fun n => P.physicalState (F n)) = u := by
       funext n
-      simpa only [P.physicalStateLinearMap_apply] using (hF n).symm
+      simpa only [P.physicalStateLinearMap_apply] using hF n
     rw [hfun]
     exact huTendsto
   have hpsiOrth : inner ℝ P.vacuum (psi : P.PhysicalHilbert) = 0 :=
@@ -128,9 +128,14 @@ theorem centeredPhysicalStateLinearMap_denseRange
         atTop (nhds psi) := by
     apply Metric.tendsto_atTop.2
     intro ε hε
-    have hambient := (Metric.tendsto_atTop.1 hcenteredAmbient) ε hε
-    filter_upwards [hambient] with n hn
-    exact hn
+    rcases (Metric.tendsto_atTop.1 hcenteredAmbient) ε hε with ⟨N, hN⟩
+    refine ⟨N, ?_⟩
+    intro n hn
+    change dist
+      (((P.centeredPhysicalStateLinearMap hP (Fc n) :
+        P.VacuumOrthogonalHilbert) : P.PhysicalHilbert))
+      (psi : P.PhysicalHilbert) < ε
+    exact hN n hn
   rw [mem_closure_iff_seq_limit]
   refine ⟨fun n => P.centeredPhysicalStateLinearMap hP (Fc n), ?_, hcentered⟩
   intro n
