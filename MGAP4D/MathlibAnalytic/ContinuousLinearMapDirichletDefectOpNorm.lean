@@ -30,7 +30,9 @@ theorem continuousLinearMap_norm_le_sqrt_one_sub_of_dirichlet_coercive
       ‖T x‖ ^ 2 ≤ (Real.sqrt (1 - c) * ‖x‖) ^ 2 := by
     rw [mul_pow, Real.sq_sqrt hsub]
     nlinarith [hcoercive x]
-  nlinarith [norm_nonneg (T x), norm_nonneg x]
+  have hrhs : 0 ≤ Real.sqrt (1 - c) * ‖x‖ :=
+    mul_nonneg hsqrt (norm_nonneg x)
+  nlinarith [norm_nonneg (T x), hrhs]
 
 /-- Operator-norm form of the generic Dirichlet coercivity converse. -/
 theorem continuousLinearMap_opNorm_le_sqrt_one_sub_of_dirichlet_coercive
