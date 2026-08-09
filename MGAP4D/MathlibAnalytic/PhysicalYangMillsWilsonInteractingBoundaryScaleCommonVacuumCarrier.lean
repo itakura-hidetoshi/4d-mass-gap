@@ -79,11 +79,27 @@ instance physicalYangMillsEvenPeriodicWilsonBoundaryScaleMarginalMeasure_probabi
       (halfExtent n) N hN (beta n) (hbeta n)
   refine ⟨?_⟩
   rw [← mp.map_eq]
-  rw [Measure.map_apply mp.measurable MeasurableSet.univ]
-  simpa using
-    (periodicHypercubicSpecialUnitaryWilsonSystem_gibbsMeasure_probability
-      (PeriodicHypercubicEvenSideLength (halfExtent n))
-      N hN (beta n) (hbeta n)).measure_univ
+  calc
+    (Measure.map
+        ((periodicHypercubicEvenEdgeOrbitPartition
+          (halfExtent n)).boundaryRestriction)
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength (halfExtent n))
+          N hN (beta n) (hbeta n)).gibbsMeasure) Set.univ =
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength (halfExtent n))
+        N hN (beta n) (hbeta n)).gibbsMeasure
+        (((periodicHypercubicEvenEdgeOrbitPartition
+          (halfExtent n)).boundaryRestriction) ⁻¹' Set.univ) := by
+      exact Measure.map_apply mp.measurable MeasurableSet.univ
+    _ = (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength (halfExtent n))
+          N hN (beta n) (hbeta n)).gibbsMeasure Set.univ := by
+      simp
+    _ = 1 :=
+      (periodicHypercubicSpecialUnitaryWilsonSystem_gibbsMeasure_probability
+        (PeriodicHypercubicEvenSideLength (halfExtent n))
+        N hN (beta n) (hbeta n)).measure_univ
 
 /-- Finite products of the actual interacting boundary marginals.  Independence
 here is a kinematic common-carrier device; it makes no claim that Wilson Gibbs
