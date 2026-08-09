@@ -74,6 +74,9 @@ theorem physicalCorrelationDefectIntegrand_add_reflected_le
     simpa [add_comm] using tsub_add_cancel_of_le hrh
   have href_nonneg : 0 ≤ (h : ℝ) - s := sub_nonneg.mpr hsh
   have hrcoe : (r : ℝ) = s := rfl
+  have hrto : s.toNNReal = r := by
+    apply NNReal.eq
+    simp [Real.toNNReal_of_nonneg hs0, hrcoe]
   have htcoe : (t : ℝ) = (h : ℝ) - s := by
     dsimp [t]
     rw [NNReal.coe_sub hrh, hrcoe]
@@ -87,8 +90,8 @@ theorem physicalCorrelationDefectIntegrand_add_reflected_le
   have hpair := T.physicalCorrelation_pair_trapezoid_le
     hSymmetric r t psi
   rw [hrt] at hpair
-  rw [hfirst, hsecond]
-  simpa [add_comm, add_left_comm, add_assoc] using hpair
+  rw [hfirst, hsecond, hrto]
+  linarith
 
 /-- Reflection of the defect integrand about the midpoint preserves its interval
 integral. -/
@@ -139,7 +142,7 @@ theorem two_mul_integral_physicalCorrelationDefectIntegrand_le
     hhreal.le hsumint hconstint ?_
   · rw [intervalIntegral.integral_add hgint hrefint] at hmono
     rw [T.integral_physicalCorrelationDefectIntegrand_reflected h psi] at hmono
-    simpa [g, two_mul] using hmono
+    simpa [g, two_mul, mul_sub] using hmono
   · intro s hs
     exact T.physicalCorrelationDefectIntegrand_add_reflected_le
       hSymmetric h psi hs.1 hs.2
@@ -191,12 +194,17 @@ theorem inner_physicalDefect_timeAverage_eq_integral
       (fun s : ℝ => inner ℝ psi
         (T.realPhysicalOrbit psi (s + (h : ℝ)))) volume 0 (h : ℝ) :=
     hshift.intervalIntegrable 0 (h : ℝ)
+  have hendpoint :
+      inner ℝ (T.toPhysicalSemigroup.operator h psi) (T.timeAverage h psi) =
+        (h : ℝ)⁻¹ *
+          (∫ s in (0 : ℝ)..(h : ℝ),
+            inner ℝ psi (T.realPhysicalOrbit psi (s + (h : ℝ)))) := by
+    rw [real_inner_comm]
+    exact T.inner_timeAverage_operator_eq_shiftedCorrelationIntegral
+      hSymmetric h psi
   unfold physicalDefect
-  rw [inner_sub_left, T.inner_timeAverage_left_eq_correlationIntegral h psi]
-  rw [real_inner_comm (T.toPhysicalSemigroup.operator h psi)
-    (T.timeAverage h psi)]
-  rw [T.inner_timeAverage_operator_eq_shiftedCorrelationIntegral
-    hSymmetric h psi]
+  rw [inner_sub_left, T.inner_timeAverage_left_eq_correlationIntegral h psi,
+    hendpoint]
   rw [← mul_sub]
   rw [← intervalIntegral.integral_sub h0int hshiftint]
   rfl
@@ -240,23 +248,24 @@ theorem inner_closedRightHamiltonian_timeAverage_le_twoStepDefectRate
     exact T.two_mul_integral_physicalCorrelationDefectIntegrand_le
       hSymmetric hh psi
   have hIhalf : I ≤ (h : ℝ) * delta / 2 := by linarith
-  rw [T.inner_closedRightHamiltonian_timeAverage_eq_integral
-    hSymmetric h psi]
-  unfold twoStepCorrelationDefectRate
-  rw [T.physicalCorrelation_zero]
-  change (h : ℝ)⁻¹ ^ 2 * I ≤
-    (‖psi‖ ^ 2 - T.physicalCorrelation psi (h + h)) /
-      (2 * (h : ℝ))
   have hdelta : delta = ‖psi‖ ^ 2 - T.physicalCorrelation psi (h + h) := by
     dsimp [delta]
     rw [T.physicalCorrelation_zero]
-  rw [← hdelta]
+  rw [hdelta] at hIhalf
+  rw [T.inner_closedRightHamiltonian_timeAverage_eq_integral
+    hSymmetric h psi]
+  unfold twoStepCorrelationDefectRate
+  change (h : ℝ)⁻¹ ^ 2 * I ≤
+    (‖psi‖ ^ 2 - T.physicalCorrelation psi (h + h)) /
+      (2 * (h : ℝ))
   calc
     (h : ℝ)⁻¹ ^ 2 * I = I / ((h : ℝ) ^ 2) := by
       field_simp [hhreal.ne']
-    _ ≤ ((h : ℝ) * delta / 2) / ((h : ℝ) ^ 2) := by
+    _ ≤ ((h : ℝ) * (‖psi‖ ^ 2 - T.physicalCorrelation psi (h + h)) / 2) /
+        ((h : ℝ) ^ 2) := by
       exact (div_le_div_iff_of_pos_right (sq_pos_of_pos hhreal)).2 hIhalf
-    _ = delta / (2 * (h : ℝ)) := by
+    _ = (‖psi‖ ^ 2 - T.physicalCorrelation psi (h + h)) /
+        (2 * (h : ℝ)) := by
       field_simp [hhreal.ne']
       ring
 
@@ -291,7 +300,9 @@ theorem timeAverage_ne_zero_of_unit_and_defectCorrection_lt_one
   rw [hpsi] at hden
   norm_num at hden
   have hpos : 0 < ‖T.timeAverage h psi‖ ^ 2 := by linarith
-  exact norm_ne_zero_iff.mp (by positivity)
+  intro hzero
+  rw [hzero, norm_zero] at hpos
+  norm_num at hpos
 
 end StronglyContinuousPhysicalSemigroup
 
