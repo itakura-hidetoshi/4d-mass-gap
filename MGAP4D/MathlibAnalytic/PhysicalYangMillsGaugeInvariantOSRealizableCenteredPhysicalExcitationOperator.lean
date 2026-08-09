@@ -1,10 +1,10 @@
+import MGAP4D.MathlibAnalytic.DenseIsometricCoreOperatorCompletion
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSCenteredCarrierVacuumOrthogonalDenseIsometry
-import Mathlib.Analysis.Normed.Operator.Extend
 import Mathlib.Tactic
 
 noncomputable section
 
-open Filter Set Topology
+open Function
 open scoped InnerProductSpace
 
 namespace MGAP4D
@@ -59,78 +59,12 @@ variable
       D.WeakStarReflectionInvariant
         (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)}
 
-/-- One-step actual Wilson translation on the centered carrier, followed by the
-norm-preserving represented-state map into the completed finite excitation
-Hilbert space. -/
-noncomputable def centeredDensePhysicalOneStepLinearMap
-    (A : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
-      S D halfExtent N hN beta hbeta Q E R hInvariant)
-    (n : ℕ) :
-    let Pn :=
-      physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-        S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
-    Pn.CenteredCarrier →ₗ[ℝ] Pn.VacuumOrthogonalHilbert := by
-  dsimp only
-  let Pn :=
-    physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-      S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
-  let hPn : Pn.IsNormalized :=
-    physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData_isNormalized
-      S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
-  exact
-    (Pn.centeredPhysicalStateLinearMap hPn).comp
-      (A.centeredOneStepLinearMap n)
+/-- The completed finite physical excitation operator obtained from #1511's
+actual centered one-step Wilson transfer through #1515's norm-preserving dense
+representation of the centered carrier in `Ωₙ⊥`.
 
-@[simp] theorem centeredDensePhysicalOneStepLinearMap_apply_coe
-    (A : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
-      S D halfExtent N hN beta hbeta Q E R hInvariant)
-    (n : ℕ)
-    (F : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-      S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n).CenteredCarrier) :
-    let Pn :=
-      physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-        S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
-    ((A.centeredDensePhysicalOneStepLinearMap n F : Pn.VacuumOrthogonalHilbert) :
-      Pn.PhysicalHilbert) =
-      Pn.physicalState
-        (R.realizableCarrierTranslation hInvariant n 1 (F : Pn.Carrier)) := by
-  rfl
-
-/-- The dense physical one-step map has exactly the intrinsic centered operator
-norm bound from #1511, measured against the isometric dense core map of #1515. -/
-theorem centeredDensePhysicalOneStepLinearMap_norm_le
-    (A : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
-      S D halfExtent N hN beta hbeta Q E R hInvariant)
-    (n : ℕ)
-    (F : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-      S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n).CenteredCarrier) :
-    let Pn :=
-      physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-        S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
-    let hPn : Pn.IsNormalized :=
-      physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData_isNormalized
-        S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
-    ‖A.centeredDensePhysicalOneStepLinearMap n F‖ ≤
-      A.centeredTransferFactor n *
-        ‖Pn.centeredPhysicalStateLinearMap hPn F‖ := by
-  dsimp only
-  let Pn :=
-    physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-      S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
-  let hPn : Pn.IsNormalized :=
-    physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData_isNormalized
-      S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
-  change
-    ‖Pn.centeredPhysicalStateLinearMap hPn (A.centeredOneStepLinearMap n F)‖ ≤
-      A.centeredTransferFactor n *
-        ‖Pn.centeredPhysicalStateLinearMap hPn F‖
-  rw [Pn.norm_centeredPhysicalStateLinearMap,
-    Pn.norm_centeredPhysicalStateLinearMap]
-  simpa only [centeredOneStepOperator] using
-    (A.centeredOneStepOperator n).le_opNorm F
-
-/-- The unique bounded completion of the actual centered one-step Wilson
-translation to the finite physical excitation Hilbert space `Ωₙ⊥`. -/
+The completion is an instance of the generic dense-isometric-core construction;
+no additional Yang--Mills dynamics or quantitative constant is introduced. -/
 noncomputable def physicalExcitationOneStepOperator
     (A : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
       S D halfExtent N hN beta hbeta Q E R hInvariant)
@@ -147,11 +81,12 @@ noncomputable def physicalExcitationOneStepOperator
     physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData_isNormalized
       S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
   exact
-    (A.centeredDensePhysicalOneStepLinearMap n).extendOfNorm
+    DenseIsometricCoreOperatorCompletion.completedOperator
       (Pn.centeredPhysicalStateLinearMap hPn)
+      (A.centeredOneStepOperator n)
 
-/-- The completed excitation operator agrees exactly with one-step Wilson
-translation on every centered represented state. -/
+/-- The completed excitation operator agrees exactly with the actual one-step
+Wilson translation on every represented centered carrier state. -/
 theorem physicalExcitationOneStepOperator_on_centeredPhysicalState
     (A : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
       S D halfExtent N hN beta hbeta Q E R hInvariant)
@@ -167,7 +102,7 @@ theorem physicalExcitationOneStepOperator_on_centeredPhysicalState
     A.physicalExcitationOneStepOperator n
         (Pn.centeredPhysicalStateLinearMap hPn F) =
       Pn.centeredPhysicalStateLinearMap hPn
-        (A.centeredOneStepLinearMap n F) := by
+        (A.centeredOneStepOperator n F) := by
   dsimp only
   let Pn :=
     physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
@@ -175,81 +110,78 @@ theorem physicalExcitationOneStepOperator_on_centeredPhysicalState
   let hPn : Pn.IsNormalized :=
     physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData_isNormalized
       S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
-  exact LinearMap.extendOfNorm_eq
-    (Pn.centeredPhysicalStateLinearMap_denseRange hPn)
-    ⟨A.centeredTransferFactor n, A.centeredDensePhysicalOneStepLinearMap_norm_le n⟩ F
+  exact
+    DenseIsometricCoreOperatorCompletion.completedOperator_on_core
+      (Pn.centeredPhysicalStateLinearMap hPn)
+      (Pn.centeredPhysicalStateLinearMap_denseRange hPn)
+      (Pn.norm_centeredPhysicalStateLinearMap hPn)
+      (A.centeredOneStepOperator n) F
 
-/-- The completed excitation operator retains the centered one-step norm bound
-on every vector of `Ωₙ⊥`. -/
-theorem physicalExcitationOneStepOperator_norm_le
+/-- On represented centered states, the completed excitation operator is
+literally one realizable Wilson carrier translation followed by the OS state
+map. -/
+theorem physicalExcitationOneStepOperator_on_centeredPhysicalState_coe
     (A : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
       S D halfExtent N hN beta hbeta Q E R hInvariant)
     (n : ℕ)
-    (psi : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-      S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n).VacuumOrthogonalHilbert) :
-    ‖A.physicalExcitationOneStepOperator n psi‖ ≤
-      A.centeredTransferFactor n * ‖psi‖ := by
+    (F : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n).CenteredCarrier) :
+    let Pn :=
+      physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+        S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
+    let hPn : Pn.IsNormalized :=
+      physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData_isNormalized
+        S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
+    ((A.physicalExcitationOneStepOperator n
+        (Pn.centeredPhysicalStateLinearMap hPn F) : Pn.VacuumOrthogonalHilbert) :
+      Pn.PhysicalHilbert) =
+      Pn.physicalState
+        (R.realizableCarrierTranslation hInvariant n 1 (F : Pn.Carrier)) := by
+  dsimp only
   let Pn :=
     physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
       S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
   let hPn : Pn.IsNormalized :=
     physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData_isNormalized
       S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
-  have h := LinearMap.norm_extendOfNorm_apply_le
-    (f := A.centeredDensePhysicalOneStepLinearMap n)
-    (e := Pn.centeredPhysicalStateLinearMap hPn)
-    (Pn.centeredPhysicalStateLinearMap_denseRange hPn)
-    (A.centeredTransferFactor n)
-    (A.centeredDensePhysicalOneStepLinearMap_norm_le n)
-    psi
-  simpa only [physicalExcitationOneStepOperator] using h
+  rw [A.physicalExcitationOneStepOperator_on_centeredPhysicalState n F]
+  rfl
 
-/-- One operator-norm inequality follows immediately from the completed bound. -/
-theorem physicalExcitationOneStepOperator_opNorm_le_centeredTransferFactor
-    (A : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
-      S D halfExtent N hN beta hbeta Q E R hInvariant)
-    (n : ℕ) :
-    ‖A.physicalExcitationOneStepOperator n‖ ≤ A.centeredTransferFactor n := by
-  apply ContinuousLinearMap.opNorm_le_bound
-    (A.physicalExcitationOneStepOperator n) (A.centeredTransferFactor_nonneg n)
-  intro psi
-  exact A.physicalExcitationOneStepOperator_norm_le n psi
-
-/-- Density plus exact norm preservation gives the reverse operator-norm
-inequality: completion cannot shrink the intrinsic centered norm. -/
-theorem centeredTransferFactor_le_physicalExcitationOneStepOperator_opNorm
-    (A : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
-      S D halfExtent N hN beta hbeta Q E R hInvariant)
-    (n : ℕ) :
-    A.centeredTransferFactor n ≤ ‖A.physicalExcitationOneStepOperator n‖ := by
-  let Pn :=
-    physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-      S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
-  let hPn : Pn.IsNormalized :=
-    physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData_isNormalized
-      S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
-  change ‖A.centeredOneStepOperator n‖ ≤ ‖A.physicalExcitationOneStepOperator n‖
-  apply ContinuousLinearMap.opNorm_le_bound
-    (A.centeredOneStepOperator n)
-    (norm_nonneg (A.physicalExcitationOneStepOperator n))
-  intro F
-  have h := (A.physicalExcitationOneStepOperator n).le_opNorm
-    (Pn.centeredPhysicalStateLinearMap hPn F)
-  rw [A.physicalExcitationOneStepOperator_on_centeredPhysicalState n F] at h
-  rw [Pn.norm_centeredPhysicalStateLinearMap,
-    Pn.norm_centeredPhysicalStateLinearMap] at h
-  simpa only [centeredOneStepOperator] using h
-
-/-- The finite rate `rₙ` of #1511 is literally the operator norm of the actual
-completed one-step Wilson transfer on the physical excitation Hilbert space. -/
+/-- The completed excitation operator has exactly the same operator norm as
+#1511's intrinsic centered one-step operator.  Completion neither enlarges nor
+shrinks the finite excitation rate. -/
 @[simp] theorem physicalExcitationOneStepOperator_opNorm_eq_centeredTransferFactor
     (A : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
       S D halfExtent N hN beta hbeta Q E R hInvariant)
     (n : ℕ) :
-    ‖A.physicalExcitationOneStepOperator n‖ = A.centeredTransferFactor n :=
-  le_antisymm
-    (A.physicalExcitationOneStepOperator_opNorm_le_centeredTransferFactor n)
-    (A.centeredTransferFactor_le_physicalExcitationOneStepOperator_opNorm n)
+    ‖A.physicalExcitationOneStepOperator n‖ = A.centeredTransferFactor n := by
+  let Pn :=
+    physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
+  let hPn : Pn.IsNormalized :=
+    physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData_isNormalized
+      S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
+  change
+    ‖DenseIsometricCoreOperatorCompletion.completedOperator
+        (Pn.centeredPhysicalStateLinearMap hPn)
+        (A.centeredOneStepOperator n)‖ =
+      ‖A.centeredOneStepOperator n‖
+  exact
+    DenseIsometricCoreOperatorCompletion.completedOperator_opNorm_eq
+      (Pn.centeredPhysicalStateLinearMap hPn)
+      (Pn.centeredPhysicalStateLinearMap_denseRange hPn)
+      (Pn.norm_centeredPhysicalStateLinearMap hPn)
+      (A.centeredOneStepOperator n)
+
+/-- Consequently the intrinsic finite mass rate can be read directly from the
+actual completed finite physical excitation operator norm. -/
+theorem centeredMassRate_eq_physicalExcitationOneStepOperator_opNorm
+    (A : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
+      S D halfExtent N hN beta hbeta Q E R hInvariant)
+    (n : ℕ) :
+    -Real.log (A.centeredTransferFactor n) / S.latticeSpacing n =
+      -Real.log ‖A.physicalExcitationOneStepOperator n‖ / S.latticeSpacing n := by
+  rw [A.physicalExcitationOneStepOperator_opNorm_eq_centeredTransferFactor]
 
 end PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
 
@@ -273,8 +205,9 @@ variable
       D.WeakStarReflectionInvariant
         (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)}
 
-/-- The derived finite mass rate can now be read directly from the actual
-completed excitation-sector one-step operator norm. -/
+/-- The derived finite mass rate is literally the logarithmic decay rate of the
+actual completed one-step Wilson transfer on the finite physical excitation
+Hilbert space. -/
 @[simp] theorem massRate_eq_physicalExcitationOneStepOperator_opNorm
     (A : PhysicalYangMillsEvenPeriodicWilsonOSRealizableCenteredOneStepOperatorDerivedRateCertificate
       S D halfExtent N hN beta hbeta Q E R hInvariant)
