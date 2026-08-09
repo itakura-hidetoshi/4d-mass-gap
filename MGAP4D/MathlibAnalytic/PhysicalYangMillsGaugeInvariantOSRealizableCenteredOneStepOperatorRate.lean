@@ -52,8 +52,19 @@ theorem vacuumCenteredCarrier_mem_centeredCarrierSubmodule
     (F.toGaugeInvariant -
       P.omega F.toGaugeInvariant •
         (1 : physicalYangMillsGaugeInvariantObservableSubalgebra S)) = 0
-  rw [sub_eq_add_neg, map_add, map_neg, map_smul, hP]
-  simp
+  calc
+    P.omega
+        (F.toGaugeInvariant -
+          P.omega F.toGaugeInvariant •
+            (1 : physicalYangMillsGaugeInvariantObservableSubalgebra S)) =
+      P.omega F.toGaugeInvariant -
+        P.omega
+          (P.omega F.toGaugeInvariant •
+            (1 : physicalYangMillsGaugeInvariantObservableSubalgebra S)) := by
+      exact map_sub P.omega _ _
+    _ = 0 := by
+      rw [map_smul, hP]
+      simp
 
 end PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
 
