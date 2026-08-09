@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonIntrinsicRateRayleighLimsupRecovery
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonIntrinsicCenteredRateLimit
 import Mathlib.Tactic
 
 noncomputable section
@@ -12,7 +12,7 @@ namespace MathlibAnalytic
 /-- A continuous linear operator has a vector beating every nonnegative strict
 lower threshold for its operator norm.
 
-This is the approximation principle needed for finite Wilson slow modes.  It
+This is the approximation principle needed for finite Wilson slow modes. It
 uses only Mathlib's characterization of the operator norm as the least uniform
 bound; no finite-dimensionality or norm-attaining eigenvector is assumed. -/
 theorem continuousLinearMap_exists_apply_norm_gt_mul_norm_of_lt_opNorm
@@ -24,8 +24,7 @@ theorem continuousLinearMap_exists_apply_norm_gt_mul_norm_of_lt_opNorm
     ∃ x : E, r * ‖x‖ < ‖T x‖ := by
   by_contra h
   push_neg at h
-  have hop : ‖T‖ ≤ r :=
-    T.opNorm_le_bound hr_nonneg h
+  have hop : ‖T‖ ≤ r := T.opNorm_le_bound hr_nonneg h
   exact (not_le_of_gt hr_lt) hop
 
 /-- The approximate operator-norm vector supplied above is automatically
@@ -68,7 +67,7 @@ local instance approximateSlowSpecialUnitaryBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-namespace PhysicalYangMillsEvenPeriodicWilsonOSIntrinsicCenteredRateConvergence
+namespace PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
 
 set_option maxHeartbeats 800000
 
@@ -90,61 +89,59 @@ variable
       D.WeakStarReflectionInvariant
         (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)}
 
-/-- The intrinsic centered operator norm is exactly the exponential of minus
-its logarithmic mass rate times the physical lattice spacing.
+/-- At any finite scale with positive centered transfer factor, the actual
+operator norm is exactly the exponential of minus its intrinsic logarithmic
+rate times the physical lattice spacing.
 
-This is a theorem about the actual finite Wilson operator norm, not a mass
-normalization convention. -/
-theorem centeredTransferFactor_eq_exp_neg_rate_mul_latticeSpacing
-    (C : PhysicalYangMillsEvenPeriodicWilsonOSIntrinsicCenteredRateConvergence
+No convergence data and no continuum mass enter this identity. -/
+theorem centeredTransferFactor_eq_exp_neg_intrinsicRate_mul_latticeSpacing
+    (B : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
       S D halfExtent N hN beta hbeta Q E R hInvariant)
-    (n : ℕ) :
-    C.boundedAnalysis.centeredTransferFactor n =
+    (n : ℕ) (hfactor : 0 < B.centeredTransferFactor n) :
+    B.centeredTransferFactor n =
       Real.exp
-        (-physicalYangMillsEvenPeriodicWilsonOSIntrinsicCenteredMassRate
-            C.boundedAnalysis n * S.latticeSpacing n) := by
+        (-physicalYangMillsEvenPeriodicWilsonOSIntrinsicCenteredMassRate B n *
+          S.latticeSpacing n) := by
   have ha : 0 < S.latticeSpacing n := S.latticeSpacing_pos n
-  have hfactor : 0 < C.boundedAnalysis.centeredTransferFactor n :=
-    C.transferFactor_pos n
   have hlog :
-      -physicalYangMillsEvenPeriodicWilsonOSIntrinsicCenteredMassRate
-          C.boundedAnalysis n * S.latticeSpacing n =
-        Real.log (C.boundedAnalysis.centeredTransferFactor n) := by
+      -physicalYangMillsEvenPeriodicWilsonOSIntrinsicCenteredMassRate B n *
+          S.latticeSpacing n =
+        Real.log (B.centeredTransferFactor n) := by
     unfold physicalYangMillsEvenPeriodicWilsonOSIntrinsicCenteredMassRate
     field_simp [ne_of_gt ha]
   rw [hlog, Real.exp_log hfactor]
 
-/-- For every finite lattice scale and every strictly positive rate excess
-`eps`, the **actual centered Wilson one-step operator** has a nonzero slow
-vector whose one-step norm beats the exponential threshold corresponding to
-`g_n + eps`.
+/-- For every finite lattice scale with positive centered transfer factor and
+every strictly positive rate excess `eps`, the actual centered Wilson one-step
+operator has a nonzero slow vector whose one-step norm beats the exponential
+threshold corresponding to `g_n + eps`.
 
-Equivalently, finite slow-mode existence is automatic from the operator-norm
-definition.  The genuinely Yang--Mills-specific reverse problem starts only
-when these moving finite vectors must be recovered as continuum Hamiltonian
-states with a Rayleigh limsup bound. -/
+Finite slow-mode existence is therefore automatic from the operator norm. The
+Yang--Mills-specific reverse problem begins only when moving finite slow states
+must be recovered in the continuum Hamiltonian domain with a Rayleigh limsup
+bound. -/
 theorem exists_centeredApproximateSlowVector
-    (C : PhysicalYangMillsEvenPeriodicWilsonOSIntrinsicCenteredRateConvergence
+    (B : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
       S D halfExtent N hN beta hbeta Q E R hInvariant)
-    (n : ℕ) {eps : ℝ} (heps : 0 < eps) :
+    (n : ℕ) (hfactor : 0 < B.centeredTransferFactor n)
+    {eps : ℝ} (heps : 0 < eps) :
     let Pn :=
       physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
         S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
     ∃ F : Pn.CenteredCarrier,
       F ≠ 0 ∧
       Real.exp
-          (-(physicalYangMillsEvenPeriodicWilsonOSIntrinsicCenteredMassRate
-                C.boundedAnalysis n + eps) * S.latticeSpacing n) * ‖F‖ <
-        ‖C.boundedAnalysis.centeredOneStepOperator n F‖ := by
+          (-(physicalYangMillsEvenPeriodicWilsonOSIntrinsicCenteredMassRate B n + eps) *
+            S.latticeSpacing n) * ‖F‖ <
+        ‖B.centeredOneStepOperator n F‖ := by
   dsimp only
   let Pn :=
     physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
       S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
   let Tn : Pn.CenteredCarrier →L[ℝ] Pn.CenteredCarrier :=
-    C.boundedAnalysis.centeredOneStepOperator n
+    B.centeredOneStepOperator n
   let gn : ℝ :=
-    physicalYangMillsEvenPeriodicWilsonOSIntrinsicCenteredMassRate
-      C.boundedAnalysis n
+    physicalYangMillsEvenPeriodicWilsonOSIntrinsicCenteredMassRate B n
   let an : ℝ := S.latticeSpacing n
   let r : ℝ := Real.exp (-(gn + eps) * an)
   have ha : 0 < an := by
@@ -156,20 +153,20 @@ theorem exists_centeredApproximateSlowVector
   have hrexp : r < Real.exp (-gn * an) := by
     dsimp [r]
     exact Real.exp_lt_exp.mpr hstep
-  have hfactor :
-      Real.exp (-gn * an) = C.boundedAnalysis.centeredTransferFactor n := by
+  have hfactorExp : Real.exp (-gn * an) = B.centeredTransferFactor n := by
     dsimp [gn, an]
     symm
-    exact C.centeredTransferFactor_eq_exp_neg_rate_mul_latticeSpacing n
+    exact B.centeredTransferFactor_eq_exp_neg_intrinsicRate_mul_latticeSpacing
+      n hfactor
   have hr_lt : r < ‖Tn‖ := by
-    rw [hfactor] at hrexp
+    rw [hfactorExp] at hrexp
     exact hrexp
-  have hr_nonneg : 0 ≤ r := Real.exp_pos _ |>.le
+  have hr_nonneg : 0 ≤ r := (Real.exp_pos _).le
   rcases continuousLinearMap_exists_nonzero_apply_norm_gt_mul_norm_of_lt_opNorm
       Tn hr_nonneg hr_lt with ⟨F, hF, hslow⟩
   exact ⟨F, hF, hslow⟩
 
-end PhysicalYangMillsEvenPeriodicWilsonOSIntrinsicCenteredRateConvergence
+end PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
 
 end MathlibAnalytic
 end MGAP4D
