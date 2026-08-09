@@ -80,7 +80,12 @@ theorem realizableCarrierTranslation_norm_le
     | zero => simp
     | succ k ih =>
         rw [pow_succ]
-        exact mul_le_mul ih hr1 (pow_nonneg hr0 k) zero_le_one
+        calc
+          r ^ k * r ≤ 1 * r :=
+            mul_le_mul_of_nonneg_right ih hr0
+          _ ≤ 1 * 1 :=
+            mul_le_mul_of_nonneg_left hr1 zero_le_one
+          _ = 1 := by ring
   have hcenter := G.centered_norm_le_pow n k F
   dsimp only at hcenter
   have hcenterContract :
