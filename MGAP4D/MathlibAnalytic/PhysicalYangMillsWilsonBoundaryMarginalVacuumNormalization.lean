@@ -70,19 +70,6 @@ variable
     {N : ℕ}
     {hN : 0 < N}
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    {beta : ℕ → ℕ → ℝ}
-
-end PhysicalYangMillsEvenPeriodicWilsonOSPositiveHalfVacuumUnitCompatibility
-
-namespace PhysicalYangMillsEvenPeriodicWilsonOSPositiveHalfVacuumUnitCompatibility
-
-variable
-    {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
-    {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
-    {halfExtent : ℕ → ℕ}
-    {N : ℕ}
-    {hN : 0 < N}
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     {beta : ℕ → ℝ}
     {hbeta : ∀ n, 0 ≤ beta n}
     {Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
