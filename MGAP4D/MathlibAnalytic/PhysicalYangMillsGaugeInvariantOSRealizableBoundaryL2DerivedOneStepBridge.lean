@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRealizableBoundaryL2DerivedTransferRate
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRealizableOneStepDerivedRateGap
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonGibbsBoundedContinuousReflectionPositivity
 import Mathlib.Tactic
 
 noncomputable section
@@ -34,11 +35,85 @@ local instance realizableBoundaryDerivedOneStepSpecialUnitaryBorelSpace (N : ℕ
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
+/-- The Gram feature belonging to every actual finite Wilson OS carrier is
+integrable automatically from bounded continuity and compact-Haar finiteness.
+
+This lemma is deliberately restated in the mass-free derived-transfer layer so
+that the physical bridge has no dependency on any exact-value module. -/
+theorem physical_yang_mills_evenPeriodicWilsonOS_derivedTransfer_boundaryMoment_gram_integrable
+    (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
+    (D : PhysicalYangMillsGaugeInvariantOSReflectionData S)
+    (halfExtent : ℕ → ℕ)
+    (N : ℕ)
+    (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℕ → ℝ)
+    (hbeta : ∀ n, 0 ≤ beta n)
+    (B : PhysicalYangMillsEvenPeriodicWilsonOSWeakStarBridge
+      S D halfExtent N hN beta hbeta)
+    (hInvariant : ∀ n,
+      D.WeakStarReflectionInvariant
+        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
+    (n : ℕ)
+    (F : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S D halfExtent N hN beta hbeta B hInvariant n).Carrier)
+    (b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration
+      (halfExtent n) N) :
+    Integrable
+      (periodicHypercubicEvenBoundaryObservableGramFeature
+        (halfExtent n) N hN (beta n) (hbeta n)
+        (fun x =>
+          physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservable
+            S D halfExtent N hN beta hbeta B hInvariant n F x)
+        b)
+      (periodicHypercubicEvenOpenHalfHaarMeasure (halfExtent n) N) := by
+  exact
+    periodicHypercubicEvenBoundaryObservableGramFeature_integrable_of_boundedContinuous
+      (halfExtent n) N hN (beta n) (hbeta n)
+      (physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservable
+        S D halfExtent N hN beta hbeta B hInvariant n F)
+      b
+
+/-- The full reflected finite Wilson Gibbs integral is exactly the squared
+shared-boundary Gram-moment integral, with all integrability obligations
+generated from the actual bounded-continuous Wilson observable.
+
+No mass value occurs in this identity. -/
+theorem physical_yang_mills_evenPeriodicWilsonOS_derivedTransfer_finiteReflectedIntegral_eq_boundaryMoment_norm_sq
+    (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
+    (D : PhysicalYangMillsGaugeInvariantOSReflectionData S)
+    (halfExtent : ℕ → ℕ)
+    (N : ℕ)
+    (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℕ → ℝ)
+    (hbeta : ∀ n, 0 ≤ beta n)
+    (B : PhysicalYangMillsEvenPeriodicWilsonOSWeakStarBridge
+      S D halfExtent N hN beta hbeta)
+    (hInvariant : ∀ n,
+      D.WeakStarReflectionInvariant
+        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
+    (n : ℕ)
+    (F : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S D halfExtent N hN beta hbeta B hInvariant n).Carrier) :
+    physicalYangMillsEvenPeriodicWilsonOSFiniteReflectedIntegral
+        S D halfExtent N hN beta hbeta B hInvariant n F =
+      ∫ b,
+        ‖physicalYangMillsEvenPeriodicWilsonOSBoundaryMoment
+          S D halfExtent N hN beta hbeta B hInvariant n F b‖ ^ 2
+        ∂(periodicHypercubicEvenBoundaryHaarMeasure (halfExtent n) N) := by
+  exact
+    physical_yang_mills_evenPeriodicWilsonOS_finiteReflectedIntegral_eq_boundaryMoment_norm_sq
+      S D halfExtent N hN beta hbeta B hInvariant n F
+      (fun b =>
+        physical_yang_mills_evenPeriodicWilsonOS_derivedTransfer_boundaryMoment_gram_integrable
+          S D halfExtent N hN beta hbeta B hInvariant n F b)
+
 /-- The OS carrier norm square of every actual finite Wilson observable is the
 literal compact-Haar shared-boundary Gram-moment integral.
 
 This mass-free theorem is the structural identity previously buried in an
-exact-value file.  It depends only on the actual finite reflected Gibbs integral
+exact-value file. It depends only on the actual finite reflected Gibbs integral
 and the already-proved boundary Gram factorization. -/
 theorem physical_yang_mills_evenPeriodicWilsonOS_carrier_norm_sq_eq_boundaryMoment_norm_sq
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
@@ -76,7 +151,7 @@ theorem physical_yang_mills_evenPeriodicWilsonOS_carrier_norm_sq_eq_boundaryMome
         ‖physicalYangMillsEvenPeriodicWilsonOSBoundaryMoment
           S D halfExtent N hN beta hbeta B hInvariant n F b‖ ^ 2
         ∂(periodicHypercubicEvenBoundaryHaarMeasure (halfExtent n) N) :=
-      physical_yang_mills_evenPeriodicWilsonOS_finiteReflectedIntegral_eq_boundaryMoment_norm_sq_auto
+      physical_yang_mills_evenPeriodicWilsonOS_derivedTransfer_finiteReflectedIntegral_eq_boundaryMoment_norm_sq
         S D halfExtent N hN beta hbeta B hInvariant n F
 
 namespace PhysicalYangMillsEvenPeriodicWilsonOSRealizableBoundaryL2TransferFamily
@@ -101,7 +176,7 @@ variable
 
 /-- The boundary `L²` transfer estimate generated by `Kₙ` is exactly the
 one-step centered OS carrier estimate required by the realizable discrete gap
-spine.  The factor is the actual operator norm `‖Kₙ‖`; no numerical mass enters. -/
+spine. The factor is the actual operator norm `‖Kₙ‖`; no numerical mass enters. -/
 theorem oneStep_centered_carrier_norm_le
     (A : PhysicalYangMillsEvenPeriodicWilsonOSRealizableBoundaryL2TransferFamily
       S D halfExtent N hN beta hbeta Q E R hInvariant)
