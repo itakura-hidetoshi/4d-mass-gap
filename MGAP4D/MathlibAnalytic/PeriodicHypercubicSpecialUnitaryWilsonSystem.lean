@@ -22,6 +22,24 @@ def periodicHypercubicSpecialUnitaryWilsonSystem
     (periodicHypercubicFiniteOrientedGeometry n)
     N hN beta beta_nonneg
 
+/-- Typeclass form of the already-proved canonical Gibbs normalization for the
+actual periodic compact `SU(N)` Wilson system.  The specialized head avoids
+requiring typeclass search to unfold the model constructor before applying the
+generic continuous-compact Wilson probability theorem. -/
+instance periodicHypercubicSpecialUnitaryWilsonSystem_gibbsMeasure_probability
+    (n N : ℕ)
+    [NeZero n]
+    (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ)
+    (beta_nonneg : 0 ≤ beta) :
+    MeasureTheory.IsProbabilityMeasure
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        n N hN beta beta_nonneg).gibbsMeasure :=
+  continuous_compact_oriented_gibbsMeasure_isProbabilityMeasure
+    (periodicHypercubicSpecialUnitaryWilsonSystem
+      n N hN beta beta_nonneg)
+
 /-- The plaquette holonomy of the canonical compact system is exactly the
 previously constructed signed periodic holonomy. -/
 theorem periodicHypercubicSpecialUnitaryWilsonSystem_plaquetteHolonomy
