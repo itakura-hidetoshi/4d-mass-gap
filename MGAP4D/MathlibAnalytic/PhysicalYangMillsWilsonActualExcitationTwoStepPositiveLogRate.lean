@@ -62,8 +62,9 @@ theorem exists_unit_twoStepDiscreteEnergy_lt_logRate_add_of_isSymmetric
     rw [hT2norm]
     positivity
   have h2a : 0 < 2 * a := by positivity
-  rcases hT2pos.exists_unit_discreteEnergy_lt_logRate_add
-      h2a hT2norm_pos heps with ⟨x, hxnorm, hxenergy⟩
+  rcases ContinuousLinearMap.IsPositive.exists_unit_discreteEnergy_lt_logRate_add
+      (T := T2) hT2pos h2a hT2norm_pos heps with
+    ⟨x, hxnorm, hxenergy⟩
   have hlog : Real.log ‖T2‖ = 2 * Real.log ‖T‖ := by
     rw [hT2norm, Real.log_mul hTnorm.ne' hTnorm.ne']
     ring
@@ -185,9 +186,15 @@ theorem exists_physicalExcitationUnitTwoStepEnergy_lt_centeredLogRate_add
       Tn (A.physicalExcitationOneStepOperator_isSymmetric n)
       (S.latticeSpacing_pos n) hTnorm heps with
     ⟨psi, hpsi, henergy⟩
+  have hopnorm : ‖Tn‖ = A.centeredTransferFactor n := by
+    dsimp [Tn]
+    exact A.physicalExcitationOneStepOperator_opNorm_eq_centeredTransferFactor n
   refine ⟨psi, hpsi, ?_⟩
-  simpa [Tn, A.physicalExcitationOneStepOperator_opNorm_eq_centeredTransferFactor]
-    using henergy
+  change
+    (1 - inner ℝ ((Tn ∘L Tn) psi) psi) / (2 * S.latticeSpacing n) <
+      -Real.log (A.centeredTransferFactor n) / S.latticeSpacing n + eps
+  rw [← hopnorm]
+  exact henergy
 
 end PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
 
