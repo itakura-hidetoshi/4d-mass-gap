@@ -91,7 +91,7 @@ theorem physicalCorrelationDefectIntegrand_add_reflected_le
     hSymmetric r t psi
   rw [hrt] at hpair
   rw [hfirst, hsecond, hrto]
-  linarith
+  simpa [add_comm] using hpair
 
 /-- Reflection of the defect integrand about the midpoint preserves its interval
 integral. -/
@@ -267,7 +267,6 @@ theorem inner_closedRightHamiltonian_timeAverage_le_twoStepDefectRate
     _ = (‖psi‖ ^ 2 - T.physicalCorrelation psi (h + h)) /
         (2 * (h : ℝ)) := by
       field_simp [hhreal.ne']
-      ring
 
 /-- The two-step correlation defect rate is nonnegative for positive width. -/
 theorem twoStepCorrelationDefectRate_nonneg
@@ -275,7 +274,6 @@ theorem twoStepCorrelationDefectRate_nonneg
     (hSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
     {h : NNReal} (hh : 0 < h) (psi : P.PhysicalHilbert) :
     0 ≤ T.twoStepCorrelationDefectRate h psi := by
-  have hhreal : (0 : ℝ) < (h : ℝ) := by exact_mod_cast hh
   have hnorm := T.physicalOperator_norm_le h psi
   have hcorr := T.physicalCorrelation_add_self_eq_norm_sq hSymmetric h psi
   unfold twoStepCorrelationDefectRate
