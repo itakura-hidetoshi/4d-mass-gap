@@ -133,8 +133,10 @@ theorem eventually_poincareCoefficient_le_one
           atTop (nhds 0) :=
       tendsto_const_nhds.mul hm
     simpa [mul_assoc] using htwo
-  have hlt : ∀ᶠ n in atTop, 2 * A.mass * S.latticeSpacing n < 1 :=
-    (tendsto_order.1 hzero).2 1 zero_lt_one
+  have hIio : Iio (1 : ℝ) ∈ nhds (0 : ℝ) :=
+    Iio_mem_nhds zero_lt_one
+  have hlt : ∀ᶠ n in atTop, 2 * A.mass * S.latticeSpacing n < 1 := by
+    exact hzero hIio
   exact hlt.mono fun _ h => h.le
 
 /-- A literal boundary Poincare inequality at one scale is exactly a quadratic
@@ -169,8 +171,6 @@ theorem centeredOneStepOperator_dirichlet_coercive_of_boundary_poincare
     physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
       S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
   let F0 : Pn.Carrier := Pn.vacuumCenteredCarrier (G : Pn.Carrier)
-  let F1 : Pn.Carrier :=
-    R.realizableCarrierTranslation hInvariant n 1 F0
   have hGzero := G.property
   change Pn.omega (G : Pn.Carrier).toGaugeInvariant = 0 at hGzero
   have hF0 : F0 = (G : Pn.Carrier) := by
@@ -187,7 +187,8 @@ theorem centeredOneStepOperator_dirichlet_coercive_of_boundary_poincare
       S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n F0
   have hnorm1 :=
     physical_yang_mills_evenPeriodicWilsonOS_carrier_norm_sq_eq_boundaryMoment_norm_sq
-      S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n F1
+      S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
+      (R.realizableCarrierTranslation hInvariant n 1 F0)
   change
     (2 * A.mass * S.latticeSpacing n) *
         (∫ b,
@@ -200,10 +201,10 @@ theorem centeredOneStepOperator_dirichlet_coercive_of_boundary_poincare
           ∂(periodicHypercubicEvenBoundaryHaarMeasure (halfExtent n) N)) -
         ∫ b,
           ‖physicalYangMillsEvenPeriodicWilsonOSBoundaryMoment
-            S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n F1 b‖ ^ 2
+            S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n
+              (R.realizableCarrierTranslation hInvariant n 1 F0) b‖ ^ 2
           ∂(periodicHypercubicEvenBoundaryHaarMeasure (halfExtent n) N) at hp
   rw [← hnorm0, ← hnorm1] at hp
-  dsimp [F1] at hp
   rw [hF0] at hp
   have hopcoe := A.boundedAnalysis.centeredOneStepOperator_apply_coe n G
   have hopnorm :
