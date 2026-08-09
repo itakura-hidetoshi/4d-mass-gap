@@ -228,10 +228,8 @@ theorem normalized_physicalYangMillsMass_eq_33_over_20_of_canonical_coefficients
       T.physicalYangMillsComponentCanonicalUpperCoefficient A.qRegularizationError =
         (1 : ℝ) / 10) :
     A.referenceTime * T.physicalYangMillsMass = (33 : ℝ) / 20 := by
-  exact
-    (K.toCanonicalOptimalComponentData W).
-      normalized_physicalYangMillsMass_eq_33_over_20_of_intrinsic_coefficients_and_attainment
-        psi hpsi horthogonal hattain hbase hcurv hintpos hleak hboundary hreg
+  exact (K.toCanonicalOptimalComponentData W).normalized_physicalYangMillsMass_eq_33_over_20_of_intrinsic_coefficients_and_attainment
+    psi hpsi horthogonal hattain hbase hcurv hintpos hleak hboundary hreg
 
 end PhysicalYangMillsR4ComponentBoundednessData
 
