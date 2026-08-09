@@ -83,8 +83,8 @@ theorem physicalYangMillsMass_eq_of_isGreatest_rayleighLowerBoundSet
   have hmassGreatest :=
     T.physicalYangMillsMass_isGreatest_rayleighLowerBoundSet W
   exact le_antisymm
-    (hm.2 T.physicalYangMillsMass hmassGreatest.1)
-    (hmassGreatest.2 m hm.1)
+    (hm.2 hmassGreatest.1)
+    (hmassGreatest.2 hm.1)
 
 /-- Proof-relevant carrier for a model-derived optimal coercivity value.  The
 value is not assumed to be the physical mass; equality is a theorem below. -/
