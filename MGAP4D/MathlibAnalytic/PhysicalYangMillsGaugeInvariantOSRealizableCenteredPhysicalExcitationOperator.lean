@@ -41,6 +41,8 @@ local instance realizableCenteredPhysicalExcitationSpecialUnitaryBorelSpace
 
 namespace PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
 
+set_option maxHeartbeats 800000
+
 variable
     {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
     {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
