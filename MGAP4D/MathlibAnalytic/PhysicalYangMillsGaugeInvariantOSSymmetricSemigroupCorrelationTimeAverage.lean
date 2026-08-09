@@ -28,8 +28,7 @@ def physicalCorrelation
     (T : P.StronglyContinuousPhysicalSemigroup)
     (psi : P.PhysicalHilbert) :
     T.physicalCorrelation psi 0 = ‖psi‖ ^ 2 := by
-  simp [physicalCorrelation, T.toPhysicalSemigroup.operator_zero,
-    real_inner_self_eq_norm_sq]
+  simp [physicalCorrelation, T.toPhysicalSemigroup.operator_zero]
 
 /-- For a symmetric Euclidean semigroup, the correlation at twice a time is
 exactly the squared norm of the half-time evolved vector.  This is the basic
@@ -60,14 +59,18 @@ theorem physicalCorrelation_add_self_antitone
       T.physicalCorrelation psi (s + s) := by
   rw [T.physicalCorrelation_add_self_eq_norm_sq hSymmetric,
     T.physicalCorrelation_add_self_eq_norm_sq hSymmetric]
-  have ht : t = (t - s) + s := by
-    simpa [add_comm] using (tsub_add_cancel_of_le hst).symm
   have hop :
       T.toPhysicalSemigroup.operator t psi =
         T.toPhysicalSemigroup.operator (t - s)
           (T.toPhysicalSemigroup.operator s psi) := by
-    rw [ht, T.toPhysicalSemigroup.operator_add]
-    rfl
+    calc
+      T.toPhysicalSemigroup.operator t psi =
+          T.toPhysicalSemigroup.operator ((t - s) + s) psi := by
+        rw [tsub_add_cancel_of_le hst]
+      _ = T.toPhysicalSemigroup.operator (t - s)
+          (T.toPhysicalSemigroup.operator s psi) := by
+        rw [T.toPhysicalSemigroup.operator_add]
+        rfl
   rw [hop]
   have hnorm := T.physicalOperator_norm_le (t - s)
     (T.toPhysicalSemigroup.operator s psi)
@@ -126,18 +129,31 @@ theorem physicalCorrelation_midpoint_defect_eq_norm_sq
     unfold physicalCorrelation
     have hs := hSymmetric a psi
       (T.toPhysicalSemigroup.operator (a + d) psi)
-    rw [T.toPhysicalSemigroup.operator_add] at hs
-    simpa [add_assoc] using hs.symm
+    calc
+      inner ℝ psi
+          (T.toPhysicalSemigroup.operator ((a + a) + d) psi) =
+        inner ℝ psi
+          (T.toPhysicalSemigroup.operator (a + (a + d)) psi) := by
+        congr 2
+        ac_rfl
+      _ = inner ℝ psi
+          (T.toPhysicalSemigroup.operator a
+            (T.toPhysicalSemigroup.operator (a + d) psi)) := by
+        rw [T.toPhysicalSemigroup.operator_add]
+        rfl
+      _ = inner ℝ (T.toPhysicalSemigroup.operator a psi)
+          (T.toPhysicalSemigroup.operator (a + d) psi) := hs.symm
   rw [T.physicalCorrelation_add_self_eq_norm_sq hSymmetric,
     T.physicalCorrelation_add_self_eq_norm_sq hSymmetric, hmiddle,
     norm_sub_sq_real]
+  ring
 
-/-- The graph-closed Hamiltonian energy of a positive-width time average is
-exactly the endpoint generator pairing.  This identity is valid for moving
-states and is the numerator interface for the later two-step defect estimate. -/
+/-- The graph-closed Hamiltonian energy of a time average is exactly the
+endpoint generator pairing.  This identity is valid for moving states and is
+the numerator interface for the later two-step defect estimate. -/
 theorem inner_closedRightHamiltonian_timeAverage_eq_endpointPairing
     (T : P.StronglyContinuousPhysicalSemigroup)
-    {h : NNReal} (hh : 0 < h) (psi : P.PhysicalHilbert) :
+    (h : NNReal) (psi : P.PhysicalHilbert) :
     inner ℝ
         (T.closedRightHamiltonian
           (T.timeAverageClosedRightHamiltonianDomain h psi))
@@ -154,7 +170,7 @@ integral of the shifted correlation over the second half-interval. -/
 theorem inner_timeAverage_operator_eq_shiftedCorrelationIntegral
     (T : P.StronglyContinuousPhysicalSemigroup)
     (hSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
-    {h : NNReal} (hh : 0 < h) (psi : P.PhysicalHilbert) :
+    (h : NNReal) (psi : P.PhysicalHilbert) :
     inner ℝ (T.timeAverage h psi)
         (T.toPhysicalSemigroup.operator h psi) =
       (h : ℝ)⁻¹ *
@@ -174,10 +190,15 @@ theorem inner_timeAverage_operator_eq_shiftedCorrelationIntegral
     _ = ∫ s in (0 : ℝ)..(h : ℝ),
         inner ℝ (T.toPhysicalSemigroup.operator h psi)
           (T.realPhysicalOrbit psi s) := by
-      rw [← ContinuousLinearMap.intervalIntegral_comp_comm
+      change
+        (innerSL ℝ (T.toPhysicalSemigroup.operator h psi))
+            (∫ s in (0 : ℝ)..(h : ℝ), T.realPhysicalOrbit psi s) =
+          ∫ s in (0 : ℝ)..(h : ℝ),
+            (innerSL ℝ (T.toPhysicalSemigroup.operator h psi))
+              (T.realPhysicalOrbit psi s)
+      rw [ContinuousLinearMap.intervalIntegral_comp_comm
         (innerSL ℝ (T.toPhysicalSemigroup.operator h psi))
         (T.realPhysicalOrbit_intervalIntegrable psi 0 (h : ℝ))]
-      rfl
     _ = ∫ s in (0 : ℝ)..(h : ℝ),
         inner ℝ psi (T.realPhysicalOrbit psi (s + (h : ℝ))) := by
       apply intervalIntegral.integral_congr
@@ -219,11 +240,18 @@ theorem physicalOperator_norm_le_timeAverage_norm
       (h : ℝ) * T.physicalCorrelation psi (h + h) ≤
         ∫ s in (0 : ℝ)..(h : ℝ),
           inner ℝ psi (T.realPhysicalOrbit psi (s + (h : ℝ))) := by
+    have hshift : Continuous
+        (fun s : ℝ => T.realPhysicalOrbit psi (s + (h : ℝ))) :=
+      (T.realPhysicalOrbit_continuous psi).comp
+        (continuous_id.add continuous_const)
+    have hcorrContinuous : Continuous
+        (fun s : ℝ => inner ℝ psi
+          (T.realPhysicalOrbit psi (s + (h : ℝ)))) :=
+      continuous_const.inner hshift
     have hfunInt : IntervalIntegrable
         (fun s : ℝ => inner ℝ psi
-          (T.realPhysicalOrbit psi (s + (h : ℝ)))) volume 0 (h : ℝ) := by
-      apply Continuous.intervalIntegrable
-      fun_prop
+          (T.realPhysicalOrbit psi (s + (h : ℝ)))) volume 0 (h : ℝ) :=
+      hcorrContinuous.intervalIntegrable
     have hmono := intervalIntegral.integral_mono_on
       (a := (0 : ℝ)) (b := (h : ℝ))
       (f := fun _ : ℝ => T.physicalCorrelation psi (h + h))
@@ -234,19 +262,19 @@ theorem physicalOperator_norm_le_timeAverage_norm
     · intro s hs
       have hs0 : 0 ≤ s := hs.1
       have hsh : s ≤ (h : ℝ) := hs.2
-      let r : NNReal := ⟨s, hs0⟩
+      let r : NNReal := NNReal.mk s hs0
       have hrh : r ≤ h := by
         exact_mod_cast hsh
       have hrt : r + h ≤ h + h := by gcongr
       have hc := T.physicalCorrelation_antitone hSymmetric psi hrt
-      have hrs : (r : ℝ) = s := rfl
       have hsum : (s + (h : ℝ)).toNNReal = r + h := by
+        change (s + (h : ℝ)).toNNReal = NNReal.mk s hs0 + h
         apply NNReal.eq
-        simp [Real.toNNReal_of_nonneg (add_nonneg hs0 h.coe_nonneg), r]
+        simp [Real.coe_toNNReal, add_nonneg hs0 h.coe_nonneg]
       simpa [physicalCorrelation, realPhysicalOrbit, hsum] using hc
   have hpair : ‖q‖ ^ 2 ≤ inner ℝ (T.timeAverage h psi) q := by
     rw [T.inner_timeAverage_operator_eq_shiftedCorrelationIntegral
-      hSymmetric hh psi, ← hcorr2]
+      hSymmetric h psi, ← hcorr2]
     have hinv : 0 ≤ (h : ℝ)⁻¹ := inv_nonneg.mpr hhreal.le
     calc
       T.physicalCorrelation psi (h + h) =
@@ -261,12 +289,15 @@ theorem physicalOperator_norm_le_timeAverage_norm
         ‖T.timeAverage h psi‖ * ‖q‖ :=
     real_inner_le_norm _ _
   by_cases hq : ‖q‖ = 0
-  · simp [hq]
+  · change ‖q‖ ≤ ‖T.timeAverage h psi‖
+    rw [hq]
+    exact norm_nonneg _
   · have hqpos : 0 < ‖q‖ := lt_of_le_of_ne (norm_nonneg q) (Ne.symm hq)
     have hmul : ‖q‖ * ‖q‖ ≤ ‖T.timeAverage h psi‖ * ‖q‖ := by
       rw [← pow_two]
       exact hpair.trans hcauchy
-    exact (mul_le_mul_right hqpos).mp hmul
+    have haverage_nonneg : 0 ≤ ‖T.timeAverage h psi‖ := norm_nonneg _
+    nlinarith
 
 /-- Uniform squared-norm lower bound by the two-step scalar correlation. -/
 theorem physicalCorrelation_twoStep_le_timeAverage_norm_sq
@@ -298,12 +329,20 @@ theorem norm_sq_sub_two_mul_defectRate_le_timeAverage_norm_sq
     ‖psi‖ ^ 2 - 2 * (h : ℝ) * T.twoStepCorrelationDefectRate h psi ≤
       ‖T.timeAverage h psi‖ ^ 2 := by
   have hhreal : (2 : ℝ) * (h : ℝ) ≠ 0 := by
-    have : (0 : ℝ) < (h : ℝ) := by exact_mod_cast hh
+    have hh' : (0 : ℝ) < (h : ℝ) := by exact_mod_cast hh
     positivity
   have hcorr := T.physicalCorrelation_twoStep_le_timeAverage_norm_sq
     hSymmetric hh psi
   unfold twoStepCorrelationDefectRate
-  convert hcorr using 1 <;> field_simp [hhreal]
+  have hidentity :
+      ‖psi‖ ^ 2 - 2 * (h : ℝ) *
+          ((‖psi‖ ^ 2 - T.physicalCorrelation psi (h + h)) /
+            (2 * (h : ℝ))) =
+        T.physicalCorrelation psi (h + h) := by
+    field_simp [hhreal]
+    <;> ring
+  rw [hidentity]
+  exact hcorr
 
 end StronglyContinuousPhysicalSemigroup
 
