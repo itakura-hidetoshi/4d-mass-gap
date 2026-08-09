@@ -121,8 +121,9 @@ end PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveTemporalCovariance
 actual finite Wilson carrier.
 
 It is the boundary Gram-moment norm-square loss over one genuine integer
-lattice-time step. -/
-noncomputable def physicalYangMillsEvenPeriodicWilsonOSRealizableCenteredBoundaryDirichletEnergy
+lattice-time step. The declaration is explicitly mass-free and does not reuse
+the legacy exact-value declaration name. -/
+noncomputable def physicalYangMillsEvenPeriodicWilsonOSRealizableCenteredBoundaryDirichletEnergyMassFree
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (D : PhysicalYangMillsGaugeInvariantOSReflectionData S)
     (halfExtent : ℕ → ℕ)
@@ -184,7 +185,7 @@ theorem physical_yang_mills_evenPeriodicWilsonOS_centered_geometricDirichlet_eq_
     let Fc := Pn.vacuumCenteredCarrier F
     inner ℝ Fc Fc -
         inner ℝ Fc (R.realizableCarrierTranslation hInvariant n 2 Fc) =
-      physicalYangMillsEvenPeriodicWilsonOSRealizableCenteredBoundaryDirichletEnergy
+      physicalYangMillsEvenPeriodicWilsonOSRealizableCenteredBoundaryDirichletEnergyMassFree
         S D halfExtent N hN beta hbeta Q E R hInvariant n F := by
   dsimp only
   let Pn :=
@@ -281,7 +282,7 @@ theorem centered_boundaryDirichlet_poincare
           ‖physicalYangMillsEvenPeriodicWilsonOSBoundaryMoment
             S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n Fc b‖ ^ 2
           ∂(periodicHypercubicEvenBoundaryHaarMeasure (halfExtent n) N)) ≤
-      physicalYangMillsEvenPeriodicWilsonOSRealizableCenteredBoundaryDirichletEnergy
+      physicalYangMillsEvenPeriodicWilsonOSRealizableCenteredBoundaryDirichletEnergyMassFree
         S D halfExtent N hN beta hbeta Q E R hInvariant n F := by
   dsimp only
   let Pn :=
@@ -305,7 +306,7 @@ theorem centered_boundaryDirichlet_poincare
         rw [hnorm0]
     _ ≤ inner ℝ Fc Fc -
         inner ℝ Fc (R.realizableCarrierTranslation hInvariant n 2 Fc) := hcoercive
-    _ = physicalYangMillsEvenPeriodicWilsonOSRealizableCenteredBoundaryDirichletEnergy
+    _ = physicalYangMillsEvenPeriodicWilsonOSRealizableCenteredBoundaryDirichletEnergyMassFree
         S D halfExtent N hN beta hbeta Q E R hInvariant n F := henergy
 
 end PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveHalfBoundedOneStepAnalysis
