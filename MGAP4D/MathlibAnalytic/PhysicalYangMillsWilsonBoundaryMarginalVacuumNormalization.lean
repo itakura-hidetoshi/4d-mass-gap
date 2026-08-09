@@ -205,15 +205,25 @@ theorem boundaryMarginal_vacuum_eq_one
         halfExtent N hN beta hbeta n)
       (p := (2 : ENNReal)) (c := (1 : ℝ))
   filter_upwards [htransport, hvacMarginal, hconst] with b htransport_b hvac_b hconst_b
-  rw [htransport_b, hconst_b]
-  unfold periodicHypercubicEvenBoundaryHaarToMarginalL2Function
-  rw [hvac_b]
-  unfold periodicHypercubicEvenBoundaryHaarToMarginalL2Weight
-  simp only [Function.const_apply]
-  exact inv_mul_cancel₀
-    (ne_of_gt
-      (periodicHypercubicEvenBoundaryVacuumMoment_pos
-        (halfExtent n) N hN (beta n) (hbeta n) b))
+  calc
+    _ = periodicHypercubicEvenBoundaryHaarToMarginalL2Function
+          (halfExtent n) N hN (beta n) (hbeta n) f b := htransport_b
+    _ = periodicHypercubicEvenBoundaryHaarToMarginalL2Weight
+          (halfExtent n) N hN (beta n) (hbeta n) b * f b := rfl
+    _ = periodicHypercubicEvenBoundaryHaarToMarginalL2Weight
+          (halfExtent n) N hN (beta n) (hbeta n) b *
+        periodicHypercubicEvenBoundaryVacuumMoment
+          (halfExtent n) N hN (beta n) (hbeta n) b := by rw [hvac_b]
+    _ = 1 := by
+      unfold periodicHypercubicEvenBoundaryHaarToMarginalL2Weight
+      exact inv_mul_cancel₀
+        (ne_of_gt
+          (periodicHypercubicEvenBoundaryVacuumMoment_pos
+            (halfExtent n) N hN (beta n) (hbeta n) b))
+    _ = Function.const
+          (PhysicalYangMillsEvenPeriodicWilsonInteractingBoundaryScaleConfiguration
+            halfExtent N n) (1 : ℝ) b := rfl
+    _ = _ := hconst_b.symm
 
 /-- The downstream finite-vacuum compatibility used by the interacting common
 carrier is theorem-generated from the strictly upstream unit-preservation law. -/
