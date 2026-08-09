@@ -51,9 +51,9 @@ theorem physicalYangMillsExact3320OneStepNormFactor_le_one
     physicalYangMillsExact3320OneStepNormFactor S n ≤ 1 := by
   unfold physicalYangMillsExact3320OneStepNormFactor
   rw [Real.exp_le_one_iff]
-  exact neg_nonpos.mpr
-    (mul_nonneg physicalYangMillsExact3320Mass_pos.le
-      (S.latticeSpacing_pos n).le)
+  exact mul_nonpos_of_nonpos_of_nonneg
+    (neg_nonpos.mpr physicalYangMillsExact3320Mass_pos.le)
+    (S.latticeSpacing_pos n).le
 
 namespace PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveTemporalCovariance
 
@@ -285,7 +285,8 @@ theorem centered_osQuadraticValue_le_pow_sq
   rw [Pn.osQuadraticValue_eq_norm_sq, Pn.osQuadraticValue_eq_norm_sq]
   have hfactor :
       0 ≤ (physicalYangMillsExact3320OneStepNormFactor S n) ^ k := by
-    positivity
+    exact pow_nonneg
+      (physicalYangMillsExact3320OneStepNormFactor_pos S n).le k
   nlinarith [norm_nonneg
     (R.realizableCarrierTranslation hInvariant n k
       (Pn.vacuumCenteredCarrier F)),
