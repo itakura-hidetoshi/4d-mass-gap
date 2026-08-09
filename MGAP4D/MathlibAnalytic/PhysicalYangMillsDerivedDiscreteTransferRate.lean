@@ -37,13 +37,13 @@ variable
 
 /-- The mass rate directly read from the `n`-th positive transfer factor. -/
 def massRate
-    (A : PositiveDiscreteTransferRateLimit latticeSpacing transferFactor)
+    (_A : PositiveDiscreteTransferRateLimit latticeSpacing transferFactor)
     (n : ℕ) : ℝ :=
   -Real.log (transferFactor n) / latticeSpacing n
 
 /-- The supplied convergence field is exactly convergence of the derived mass
 rates. -/
-theorem massRate_tendsto
+theorem derivedMassRate_tendsto
     (A : PositiveDiscreteTransferRateLimit latticeSpacing transferFactor) :
     Tendsto A.massRate atTop (nhds A.mass) := by
   simpa only [massRate] using A.massRate_tendsto
@@ -87,13 +87,6 @@ theorem floorFactor_eq_pow
   unfold floorFactor
   symm
   rw [A.factor_eq_exp_neg_massRate_mul_spacing n]
-  change
-    Real.exp (-A.massRate n * latticeSpacing n) ^
-        physicalTemporalFloorNatStep latticeSpacing t n =
-      Real.exp
-        (-A.massRate n *
-          ((physicalTemporalFloorNatStep latticeSpacing t n : ℝ) *
-            latticeSpacing n))
   rw [← Real.exp_nat_mul]
   congr 1
   ring
@@ -119,7 +112,7 @@ theorem floorFactor_tendsto
               latticeSpacing n))
         atTop
         (nhds (-A.mass * (t : ℝ))) :=
-    A.massRate_tendsto.neg.mul htime
+    A.derivedMassRate_tendsto.neg.mul htime
   simpa only [floorFactor] using harg.rexp
 
 /-- Equivalent geometric-power form of the same derived-rate continuum limit. -/
