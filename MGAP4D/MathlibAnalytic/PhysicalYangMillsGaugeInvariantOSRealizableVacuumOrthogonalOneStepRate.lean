@@ -3,7 +3,6 @@ import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSCenteredQuadratic
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSSemigroupSymmetry
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsDerivedDiscreteTransferRate
 import Mathlib.Analysis.Normed.Operator.Extend
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Restrict
 import Mathlib.Tactic
 
 noncomputable section
