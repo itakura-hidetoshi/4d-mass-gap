@@ -140,7 +140,11 @@ theorem transferFactor_nonneg
       S D halfExtent N hN beta hbeta Q E R hInvariant)
     (n : ℕ) :
     0 ≤ A.transferFactor n :=
-  mul_nonneg (norm_nonneg _) (norm_nonneg _)
+  mul_nonneg
+    (norm_nonneg
+      (physicalYangMillsEvenPeriodicWilsonOSActualBoundarySynthesisOperator
+        halfExtent N hN beta hbeta n))
+    (norm_nonneg (A.analysis n))
 
 /-- The actual integer one-step Wilson OS carrier norm is controlled by the
 product of the two actual operator norms.
