@@ -50,20 +50,18 @@ noncomputable def periodicHypercubicEvenWilsonBoundaryHilbertSchmidtAnalysis
     (beta : ℝ) (hbeta : 0 ≤ beta) :
     PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 H N →L[ℝ]
       PeriodicHypercubicEvenSpecialUnitaryOpenHalfL2 H N := by
-  let boundaryMeasure := periodicHypercubicEvenBoundaryHaarMeasure H N
-  let halfMeasure := periodicHypercubicEvenOpenHalfHaarMeasure H N
-  letI : IsFiniteMeasure boundaryMeasure := by
-    dsimp [boundaryMeasure, periodicHypercubicEvenBoundaryHaarMeasure,
+  letI : IsFiniteMeasure (periodicHypercubicEvenBoundaryHaarMeasure H N) := by
+    dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
       FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
     infer_instance
-  letI : IsFiniteMeasure halfMeasure := by
-    dsimp [halfMeasure, periodicHypercubicEvenOpenHalfHaarMeasure,
+  letI : IsFiniteMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
+    dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
       FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
     infer_instance
   exact
     realL2HilbertSchmidtRectangularKernelOperator
-      (μ := boundaryMeasure)
-      (ν := halfMeasure)
+      (μ := periodicHypercubicEvenBoundaryHaarMeasure H N)
+      (ν := periodicHypercubicEvenOpenHalfHaarMeasure H N)
       (periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureProductL2
         H N hN beta hbeta)
 
@@ -82,20 +80,18 @@ theorem periodicHypercubicEvenWilsonBoundaryHilbertSchmidtAnalysis_inner
         (periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureProductL2
           H N hN beta hbeta)
         f g := by
-  let boundaryMeasure := periodicHypercubicEvenBoundaryHaarMeasure H N
-  let halfMeasure := periodicHypercubicEvenOpenHalfHaarMeasure H N
-  letI : IsFiniteMeasure boundaryMeasure := by
-    dsimp [boundaryMeasure, periodicHypercubicEvenBoundaryHaarMeasure,
+  letI : IsFiniteMeasure (periodicHypercubicEvenBoundaryHaarMeasure H N) := by
+    dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
       FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
     infer_instance
-  letI : IsFiniteMeasure halfMeasure := by
-    dsimp [halfMeasure, periodicHypercubicEvenOpenHalfHaarMeasure,
+  letI : IsFiniteMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
+    dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
       FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
     infer_instance
   exact
     realL2HilbertSchmidtRectangularKernelOperator_inner
-      (μ := boundaryMeasure)
-      (ν := halfMeasure)
+      (μ := periodicHypercubicEvenBoundaryHaarMeasure H N)
+      (ν := periodicHypercubicEvenOpenHalfHaarMeasure H N)
       (periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureProductL2
         H N hN beta hbeta)
       f g
@@ -110,20 +106,18 @@ theorem periodicHypercubicEvenWilsonBoundaryHilbertSchmidtAnalysis_norm_le
         H N hN beta hbeta‖ ≤
       ‖periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureProductL2
         H N hN beta hbeta‖ := by
-  let boundaryMeasure := periodicHypercubicEvenBoundaryHaarMeasure H N
-  let halfMeasure := periodicHypercubicEvenOpenHalfHaarMeasure H N
-  letI : IsFiniteMeasure boundaryMeasure := by
-    dsimp [boundaryMeasure, periodicHypercubicEvenBoundaryHaarMeasure,
+  letI : IsFiniteMeasure (periodicHypercubicEvenBoundaryHaarMeasure H N) := by
+    dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
       FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
     infer_instance
-  letI : IsFiniteMeasure halfMeasure := by
-    dsimp [halfMeasure, periodicHypercubicEvenOpenHalfHaarMeasure,
+  letI : IsFiniteMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
+    dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
       FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
     infer_instance
   exact
     realL2HilbertSchmidtRectangularKernelOperator_norm_le
-      (μ := boundaryMeasure)
-      (ν := halfMeasure)
+      (μ := periodicHypercubicEvenBoundaryHaarMeasure H N)
+      (ν := periodicHypercubicEvenOpenHalfHaarMeasure H N)
       (periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureProductL2
         H N hN beta hbeta)
 
