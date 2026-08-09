@@ -167,9 +167,25 @@ noncomputable def toScalarTwoStepRecoveryTransfer
             inner ℝ psi (T.toPhysicalSemigroup.operator (h + h) psi) ≤
           1 - inner ℝ etaFinite phi +
             (2 * S.latticeSpacing n) * V.vectorDefectExcess n := by
-      rw [hpsiNorm]
-      norm_num
-      linarith
+      calc
+        ‖psi‖ ^ 2 -
+            inner ℝ psi (T.toPhysicalSemigroup.operator (h + h) psi) =
+          1 - inner ℝ psi (T.toPhysicalSemigroup.operator (h + h) psi) := by
+            rw [hpsiNorm]
+            norm_num
+        _ =
+          (1 - inner ℝ etaFinite phi) +
+            (inner ℝ etaFinite phi -
+              inner ℝ psi (T.toPhysicalSemigroup.operator (h + h) psi)) := by
+            ring
+        _ ≤
+          (1 - inner ℝ etaFinite phi) +
+            (2 * S.latticeSpacing n) * V.vectorDefectExcess n := by
+            exact add_le_add_left hinner (1 - inner ℝ etaFinite phi)
+        _ =
+          1 - inner ℝ etaFinite phi +
+            (2 * S.latticeSpacing n) * V.vectorDefectExcess n := by
+            rfl
     have hquot :
         (‖psi‖ ^ 2 -
             inner ℝ psi (T.toPhysicalSemigroup.operator (h + h) psi)) /
@@ -194,7 +210,7 @@ noncomputable def toScalarTwoStepRecoveryTransfer
       _ =
         (1 - inner ℝ etaFinite phi) / (2 * S.latticeSpacing n) +
           V.vectorDefectExcess n := by
-        field_simp [ne_of_gt hdenpos]
+        field_simp [ne_of_gt hdenpos, ne_of_gt (S.latticeSpacing_pos n)]
         ring
 
 /-- The vector recovery condition already implies the reverse variational mass
