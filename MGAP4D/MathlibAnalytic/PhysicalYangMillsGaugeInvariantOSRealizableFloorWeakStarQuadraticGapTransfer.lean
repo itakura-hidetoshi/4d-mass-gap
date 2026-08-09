@@ -10,6 +10,7 @@ noncomputable section
 
 open Filter MeasureTheory Set Topology
 open scoped InnerProductSpace
+open PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -64,8 +65,7 @@ theorem physicalYangMillsExact3320FloorHalfQuadraticFactor_tendsto
     simp only [physicalYangMillsExact3320FloorHalfQuadraticFactor, pow_two]
   · rw [← Real.exp_add]
     congr 1
-    push_cast
-    ring
+    norm_num [NNReal.coe_div] <;> ring
 
 /-- Scalar weak-star replacement for the former common-Hilbert-space floor
 transfer.
@@ -251,6 +251,12 @@ theorem continuum_operator_vacuumOrthogonal_norm_le_exp_3320
       Real.exp (-physicalYangMillsExact3320Mass * (t : ℝ)) * ‖psi‖ := by
   have h := A.toHalfQuadraticGapCertificate.norm_decay
     A.continuum_isNormalized t psi hpsi
+  change
+    ‖T.toPhysicalSemigroup.operator t psi‖ ≤
+      Real.sqrt
+        (Real.exp
+          (-physicalYangMillsExact3320Mass * (((t + t : NNReal) : ℝ)))) *
+        ‖psi‖ at h
   simpa only [sqrt_exp_neg_mul_double_nnreal] using h
 
 /-- With strong continuity on the continuum observable core, the scalar
