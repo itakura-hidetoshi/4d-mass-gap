@@ -78,6 +78,9 @@ instance physicalYangMillsEvenPeriodicWilsonBoundaryScaleMarginalMeasure_probabi
     periodicHypercubicSpecialUnitaryWilsonSystem_gibbsMeasure_probability
       (PeriodicHypercubicEvenSideLength (halfExtent n))
       N hN (beta n) (hbeta n)
+  change IsProbabilityMeasure
+    (periodicHypercubicEvenBoundaryMarginalMeasure
+      (halfExtent n) N hN (beta n) (hbeta n))
   let mp :=
     periodicHypercubicEvenSpecialUnitaryBoundaryRestrictionMeasurePreserving
       (halfExtent n) N hN (beta n) (hbeta n)
