@@ -68,10 +68,14 @@ theorem timeIntegral_mem_vacuumOrthogonal_of_innerSymmetric
         (∫ s in (0 : ℝ)..(h : ℝ), T.realPhysicalOrbit psi s) =
       ∫ s in (0 : ℝ)..(h : ℝ),
         inner ℝ P.vacuum (T.realPhysicalOrbit psi s) := by
+      change
+        (innerSL ℝ P.vacuum)
+            (∫ s in (0 : ℝ)..(h : ℝ), T.realPhysicalOrbit psi s) =
+          ∫ s in (0 : ℝ)..(h : ℝ),
+            (innerSL ℝ P.vacuum) (T.realPhysicalOrbit psi s)
       rw [← ContinuousLinearMap.intervalIntegral_comp_comm
         (innerSL ℝ P.vacuum)
         (T.realPhysicalOrbit_intervalIntegrable psi 0 (h : ℝ))]
-      rfl
     _ = ∫ s in (0 : ℝ)..(h : ℝ), (0 : ℝ) := by
       apply intervalIntegral.integral_congr
       intro s hs
@@ -226,7 +230,7 @@ theorem eventually_timeAverageClosedRightHamiltonianDomain_ne_zero
   have hevent :
       ∀ᶠ h : NNReal in nhdsWithin 0 (Ioi 0),
         0 < ‖(T.timeAverageClosedRightHamiltonianDomain h psi : P.PhysicalHilbert)‖ :=
-    hnorm.eventually (eventually_lt_nhds hnorm_pos)
+    hnorm.eventually (eventually_gt_nhds hnorm_pos)
   filter_upwards [hevent] with h hh
   exact norm_pos_iff.mp hh
 
