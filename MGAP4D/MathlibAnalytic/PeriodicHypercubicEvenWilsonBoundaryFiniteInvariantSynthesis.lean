@@ -109,6 +109,7 @@ theorem periodicHypercubicEvenWilsonBoundaryGramFeature_exists_synthesis_preimag
   · intro x hx hAx
     have hle : c * ‖x‖ ^ 2 ≤ 0 := by
       simpa [hAx] using hLower x hx
+    have hxnonneg : 0 ≤ ‖x‖ := norm_nonneg x
     have hxnorm : ‖x‖ = 0 := by
       nlinarith [sq_nonneg ‖x‖]
     exact norm_eq_zero.mp hxnorm
