@@ -1,0 +1,224 @@
+import MGAP4D.MathlibAnalytic.UniformQuadraticCoercivityLimitPosDef
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingContinuumSymmetry
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSContinuumVacuum
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonCommonProductFiniteOSGramPosDefPhysicalCarrier
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+noncomputable section
+
+/-- The remaining strict-OS kinematic datum expressed as volume-uniform
+coercivity on every finite family of common positive-time observables.
+
+For a finite index set `s`, the constant `δ` may depend on `s`, but it is
+uniform in the Wilson volume index `n`.  This is exactly the strength needed
+for strict positivity to survive the weak-star continuum limit. -/
+structure PhysicalYangMillsEvenPeriodicWilsonOSCommonProductUniformFiniteOSCoercivityPhysicalCarrierData
+    (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
+    (D : PhysicalYangMillsGaugeInvariantOSReflectionData S)
+    (halfExtent : ℕ → ℕ)
+    (N : ℕ) (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℕ → ℝ) (hbeta : ∀ n, 0 ≤ beta n)
+    (B : PhysicalYangMillsEvenPeriodicWilsonOSWeakStarBridge
+      S D halfExtent N hN beta hbeta)
+    (hInvariant : ∀ n,
+      D.WeakStarReflectionInvariant
+        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)) where
+  observable : ℕ → D.positiveTimeSubalgebra
+  uniformFiniteOSCoercivity : ∀ s : Finset ℕ,
+    ∃ δ : ℝ, 0 < δ ∧ ∀ n (x : s → ℝ),
+      δ * (∑ i, x i ^ 2) ≤
+        D.osBilinForm
+          (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)
+          (∑ i : s, x i •
+            physicalYangMillsPositiveTimeToSubmodule D
+              (observable (i : ℕ)))
+          (∑ i : s, x i •
+            physicalYangMillsPositiveTimeToSubmodule D
+              (observable (i : ℕ)))
+
+namespace PhysicalYangMillsEvenPeriodicWilsonOSCommonProductUniformFiniteOSCoercivityPhysicalCarrierData
+
+variable
+    {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
+    {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
+    {halfExtent : ℕ → ℕ}
+    {N : ℕ}
+    {hN : 0 < N}
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    {beta : ℕ → ℝ}
+    {hbeta : ∀ n, 0 ≤ beta n}
+    {B : PhysicalYangMillsEvenPeriodicWilsonOSWeakStarBridge
+      S D halfExtent N hN beta hbeta}
+    {hInvariant : ∀ n,
+      D.WeakStarReflectionInvariant
+        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)}
+
+/-- Volume-uniform finite Wilson OS coercivity passes to strict positive
+definiteness of the corresponding continuum OS Gram matrix.  The proof uses
+only convergence of the diagonal quadratic value of each fixed finite linear
+combination, not entrywise matrix convergence. -/
+theorem continuum_osGram_posDef
+    (J : PhysicalYangMillsEvenPeriodicWilsonOSCommonProductUniformFiniteOSCoercivityPhysicalCarrierData
+      S D halfExtent N hN beta hbeta B hInvariant)
+    (s : Finset ℕ) :
+    Matrix.PosDef
+      ((fun i j : s =>
+        D.osBilinForm
+          (physicalYangMillsContinuumGaugeInvariantWeakStarState S)
+          (physicalYangMillsPositiveTimeToSubmodule D
+            (J.observable (i : ℕ)))
+          (physicalYangMillsPositiveTimeToSubmodule D
+            (J.observable (j : ℕ)))) : Matrix s s ℝ) := by
+  classical
+  letI : AddCommGroup D.positiveTimeSubalgebra.toSubmodule :=
+    Submodule.addCommGroup
+      (R := ℝ)
+      (M := physicalYangMillsGaugeInvariantObservableSubalgebra S)
+      (p := D.positiveTimeSubalgebra.toSubmodule)
+  letI : Module ℝ D.positiveTimeSubalgebra.toSubmodule :=
+    Submodule.module
+      (R := ℝ)
+      (M := physicalYangMillsGaugeInvariantObservableSubalgebra S)
+      (p := D.positiveTimeSubalgebra.toSubmodule)
+  let w : s → D.positiveTimeSubalgebra.toSubmodule := fun i =>
+    physicalYangMillsPositiveTimeToSubmodule D (J.observable (i : ℕ))
+  let A : ℕ → Matrix s s ℝ := fun n i j =>
+    D.osBilinForm
+      (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)
+      (w i) (w j)
+  let A_limit : Matrix s s ℝ := fun i j =>
+    D.osBilinForm
+      (physicalYangMillsContinuumGaugeInvariantWeakStarState S)
+      (w i) (w j)
+  rcases J.uniformFiniteOSCoercivity s with ⟨δ, hδ, hcoercive⟩
+  have hSymm :
+      (D.osBilinForm
+        (physicalYangMillsContinuumGaugeInvariantWeakStarState S)).IsSymm :=
+    D.osBilinForm_isSymm
+      (physicalYangMillsContinuumGaugeInvariantWeakStarState S)
+      (physical_yang_mills_gaugeInvariantWeakStarReflectionInvariance_passes_to_limit
+        S D hInvariant)
+  have hHermitian : A_limit.IsHermitian := by
+    exact bilinForm_matrix_isHermitian_of_isSymm
+      (D.osBilinForm
+        (physicalYangMillsContinuumGaugeInvariantWeakStarState S))
+      hSymm w
+  have hTendsto : ∀ x : s → ℝ,
+      Filter.Tendsto
+        (fun n : ℕ => dotProduct (star x) (Matrix.mulVec (A n) x))
+        Filter.atTop
+        (nhds (dotProduct (star x) (Matrix.mulVec A_limit x))) := by
+    intro x
+    have h :=
+      physical_yang_mills_evenPeriodicWilsonOS_approximating_osBilinForm_tendsto
+        S D
+        (∑ i : s, x i • w i)
+        (∑ i : s, x i • w i)
+    have hApprox :
+        (fun n : ℕ => dotProduct (star x) (Matrix.mulVec (A n) x)) =
+          (fun n : ℕ =>
+            D.osBilinForm
+              (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)
+              (∑ i : s, x i • w i)
+              (∑ i : s, x i • w i)) := by
+      funext n
+      have hq :=
+        bilinForm_matrix_quadratic_eq
+          (D.osBilinForm
+            (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
+          w x
+      simpa only [A] using hq
+    have hLimit :
+        dotProduct (star x) (Matrix.mulVec A_limit x) =
+          D.osBilinForm
+            (physicalYangMillsContinuumGaugeInvariantWeakStarState S)
+            (∑ i : s, x i • w i)
+            (∑ i : s, x i • w i) := by
+      have hq :=
+        bilinForm_matrix_quadratic_eq
+          (D.osBilinForm
+            (physicalYangMillsContinuumGaugeInvariantWeakStarState S))
+          w x
+      simpa only [A_limit] using hq
+    rw [hApprox, hLimit]
+    exact h
+  have hCoercive : ∀ n (x : s → ℝ),
+      δ * (∑ i, x i ^ 2) ≤
+        dotProduct (star x) (Matrix.mulVec (A n) x) := by
+    intro n x
+    have hq :
+        dotProduct (star x) (Matrix.mulVec (A n) x) =
+          D.osBilinForm
+            (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)
+            (∑ i : s, x i • w i)
+            (∑ i : s, x i • w i) := by
+      have h :=
+        bilinForm_matrix_quadratic_eq
+          (D.osBilinForm
+            (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
+          w x
+      simpa only [A] using h
+    calc
+      δ * (∑ i, x i ^ 2) ≤
+          D.osBilinForm
+            (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)
+            (∑ i : s, x i • w i)
+            (∑ i : s, x i • w i) := by
+        simpa only [w] using hcoercive n x
+      _ = dotProduct (star x) (Matrix.mulVec (A n) x) := hq.symm
+  have hPosDef :=
+    matrix_posDef_of_uniform_quadratic_coercivity_tendsto
+      A A_limit hHermitian δ hδ hTendsto hCoercive
+  simpa [A_limit, w] using hPosDef
+
+/-- The continuum pre-Hilbert carrier form of the same result, written exactly
+in the interface expected by the finite-Gram package integrated in #1602. -/
+theorem continuum_carrier_osGram_posDef
+    (J : PhysicalYangMillsEvenPeriodicWilsonOSCommonProductUniformFiniteOSCoercivityPhysicalCarrierData
+      S D halfExtent N hN beta hbeta B hInvariant)
+    (s : Finset ℕ) :
+    let P :=
+      physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
+        S D halfExtent N hN beta hbeta B hInvariant
+    Matrix.PosDef
+      ((fun i j : s =>
+        D.osBilinForm P.omega
+          (P.toPositiveTime
+            (P.carrierOfPositiveTime (J.observable (i : ℕ))))
+          (P.toPositiveTime
+            (P.carrierOfPositiveTime (J.observable (j : ℕ))))) : Matrix s s ℝ) := by
+  let P :=
+    physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
+      S D halfExtent N hN beta hbeta B hInvariant
+  have h := J.continuum_osGram_posDef s
+  simpa [P, physicalYangMillsPositiveTimeToSubmodule,
+    PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.carrierOfPositiveTime,
+    PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.toPositiveTime] using h
+
+/-- Uniform finite-volume OS coercivity theorem-generates the finite positive
+definite continuum Gram datum of #1602, and therefore all downstream
+kinematic common-product carrier constructions already attached to it. -/
+noncomputable def toFiniteOSGramPosDefPhysicalCarrierData
+    (J : PhysicalYangMillsEvenPeriodicWilsonOSCommonProductUniformFiniteOSCoercivityPhysicalCarrierData
+      S D halfExtent N hN beta hbeta B hInvariant) :
+    PhysicalYangMillsEvenPeriodicWilsonOSCommonProductFiniteOSGramPosDefPhysicalCarrierData
+      halfExtent N hN beta hbeta
+      (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
+        S D halfExtent N hN beta hbeta B hInvariant)
+      (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData_isNormalized
+        S D halfExtent N hN beta hbeta B hInvariant) where
+  observable := fun n =>
+    (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
+      S D halfExtent N hN beta hbeta B hInvariant).carrierOfPositiveTime
+        (J.observable n)
+  osGram_posDef := J.continuum_carrier_osGram_posDef
+
+end PhysicalYangMillsEvenPeriodicWilsonOSCommonProductUniformFiniteOSCoercivityPhysicalCarrierData
+
+end
+
+end MathlibAnalytic
+end MGAP4D
