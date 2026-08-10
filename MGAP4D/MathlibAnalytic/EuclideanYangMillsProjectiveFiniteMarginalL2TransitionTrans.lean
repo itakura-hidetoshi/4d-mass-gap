@@ -9,9 +9,7 @@ noncomputable section
 
 namespace EuclideanYangMillsProjectiveLimitMeasure
 
-variable
-    {F : EuclideanYangMillsProjectiveCylinderFamily}
-    (L : EuclideanYangMillsProjectiveLimitMeasure F)
+variable {F : EuclideanYangMillsProjectiveCylinderFamily}
 
 /-- Finite-marginal `L²` transition maps compose exactly along inclusions.
 
@@ -19,6 +17,7 @@ Rather than unfolding `Lp.compMeasurePreservingₗᵢ`, the proof uses the commo
 projective-limit `L²` carrier: both iterated and direct transitions have the
 same continuum pullback, and the large-marginal pullback is injective. -/
 theorem finiteMarginalL2Transition_trans
+    (L : EuclideanYangMillsProjectiveLimitMeasure F)
     {I J K : Finset EuclideanFourSpace}
     (hKJ : J ⊆ K)
     (hIK : K ⊆ I)
