@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Polynomial.Roots
+import Mathlib.Data.Real.Basic
 import Mathlib.LinearAlgebra.LinearIndependent.Basic
 
 namespace MGAP4D
@@ -47,7 +48,9 @@ theorem infiniteRange_powerFamily_linearIndependent
     rcases hy with ⟨x, rfl⟩
     simpa only [Polynomial.IsRoot] using hpEval x
   have hcoeff := congrArg (fun q : ℝ[X] => q.coeff i) hpZero
-  simpa [p, hi] using sub_eq_zero.mp hcoeff
+  have hab_i : a i - b i = 0 := by
+    simpa [p, hi] using hcoeff
+  exact sub_eq_zero.mp hab_i
 
 end
 
