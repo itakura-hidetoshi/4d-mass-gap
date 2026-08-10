@@ -29,25 +29,29 @@ theorem finiteMarginalL2Transition_trans
           (F := F) hKJ f) =
       EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Transition
         (F := F) (hKJ.trans hIK) f := by
-  apply (L.finiteMarginalL2Pullback I).injective
+  apply (EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Pullback
+    L I).injective
   calc
-    L.finiteMarginalL2Pullback I
+    EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Pullback L I
         (EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Transition
           (F := F) hIK
           (EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Transition
             (F := F) hKJ f)) =
-      L.finiteMarginalL2Pullback K
+      EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Pullback L K
         (EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Transition
           (F := F) hKJ f) :=
-      (L.finiteMarginalL2Pullback_compatible hIK
+      (EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Pullback_compatible
+        L hIK
         (EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Transition
           (F := F) hKJ f)).symm
-    _ = L.finiteMarginalL2Pullback J f :=
-      (L.finiteMarginalL2Pullback_compatible hKJ f).symm
-    _ = L.finiteMarginalL2Pullback I
+    _ = EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Pullback L J f :=
+      (EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Pullback_compatible
+        L hKJ f).symm
+    _ = EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Pullback L I
         (EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Transition
           (F := F) (hKJ.trans hIK) f) :=
-      L.finiteMarginalL2Pullback_compatible (hKJ.trans hIK) f
+      EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Pullback_compatible
+        L (hKJ.trans hIK) f
 
 end EuclideanYangMillsProjectiveLimitMeasure
 
