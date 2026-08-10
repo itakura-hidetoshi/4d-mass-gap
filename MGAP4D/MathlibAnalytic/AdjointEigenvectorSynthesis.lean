@@ -4,7 +4,7 @@ import Mathlib.Tactic
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open scoped InnerProductSpace
+open scoped InnerProduct InnerProductSpace
 
 noncomputable section
 
