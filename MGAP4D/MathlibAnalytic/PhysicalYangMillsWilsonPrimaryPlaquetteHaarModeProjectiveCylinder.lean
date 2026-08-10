@@ -142,8 +142,12 @@ theorem finiteSupportEventually
   | empty => simp
   | @insert a s ha ih =>
       filter_upwards [C.supportEventually a, ih] with n haNow hsNow
-      simpa only [Finset.biUnion_insert] using
-        (Finset.union_subset.mpr ⟨haNow, hsNow⟩)
+      intro x hx
+      rcases Finset.mem_biUnion.mp hx with ⟨i, hi, hxi⟩
+      rcases Finset.mem_insert.mp hi with hia | hi
+      · subst i
+        exact haNow hxi
+      · exact hsNow (Finset.mem_biUnion.mpr ⟨i, hi, hxi⟩)
 
 /-- Every finite selected cylinder family therefore has one actual Wilson scale
 whose projective marginal contains its common support. -/
