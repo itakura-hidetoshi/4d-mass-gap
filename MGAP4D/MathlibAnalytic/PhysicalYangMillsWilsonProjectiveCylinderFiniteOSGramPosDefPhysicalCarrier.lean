@@ -221,14 +221,23 @@ theorem eventually_uniformFiniteOSCoercivity
     exact J.eventually_projective_eq (i : ℕ)
   filter_upwards [heq] with n hn
   intro x
-  let T := physicalYangMillsProjectivePositiveTimeL2LinearMap R L hInvariant n
+  let T : D.positiveTimeSubalgebra.toSubmodule →ₗ[ℝ]
+      Lp ℝ 2 L.continuumMeasure :=
+    physicalYangMillsProjectivePositiveTimeL2LinearMap R L hInvariant n
+  have hmap_finset : ∀ t : Finset s,
+      T (∑ i in t, x i • J.observable (i : ℕ)) =
+        ∑ i in t, x i • J.continuumVector (i : ℕ) := by
+    intro t
+    induction t using Finset.induction_on with
+    | empty =>
+        simpa using T.map_zero
+    | @insert i t hi ih =>
+        rw [Finset.sum_insert hi, Finset.sum_insert hi]
+        rw [T.map_add, T.map_smul, hn i, ih]
   have hmap :
       T (∑ i : s, x i • J.observable (i : ℕ)) =
         ∑ i : s, x i • J.continuumVector (i : ℕ) := by
-    rw [map_sum]
-    apply Finset.sum_congr rfl
-    intro i hi
-    rw [map_smul, hn i]
+    simpa using hmap_finset Finset.univ
   calc
     δ * (∑ i, x i ^ 2) ≤
         ‖∑ i : s, x i • J.continuumVector (i : ℕ)‖ ^ 2 :=
@@ -516,8 +525,7 @@ noncomputable def toFiniteOSGramPosDefPhysicalCarrierData
         S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant)
       (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData_isNormalized
         S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant) :=
-  (C.toProjectiveL2EventuallyCoherentPhysicalCarrierData).
-    toFiniteOSGramPosDefPhysicalCarrierData
+  (C.toProjectiveL2EventuallyCoherentPhysicalCarrierData).toFiniteOSGramPosDefPhysicalCarrierData
 
 end PhysicalYangMillsEvenPeriodicWilsonOSFiniteProjectiveCylinderLinearIndependentData
 
