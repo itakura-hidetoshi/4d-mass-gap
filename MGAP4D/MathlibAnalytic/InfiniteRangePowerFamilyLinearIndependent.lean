@@ -38,12 +38,12 @@ theorem infiniteRange_powerFamily_linearIndependent
     have hpa : pa.eval (f x) = ∑ j ∈ s, a j * f x ^ j := by
       change (∑ j ∈ s, Polynomial.monomial j (a j)).eval (f x) =
         ∑ j ∈ s, a j * f x ^ j
-      rw [Polynomial.eval_finsetSum]
+      rw [Polynomial.eval_finset_sum]
       simp
     have hpb : pb.eval (f x) = ∑ j ∈ s, b j * f x ^ j := by
       change (∑ j ∈ s, Polynomial.monomial j (b j)).eval (f x) =
         ∑ j ∈ s, b j * f x ^ j
-      rw [Polynomial.eval_finsetSum]
+      rw [Polynomial.eval_finset_sum]
       simp
     exact hpa.trans (hx'.trans hpb.symm)
   have hpEq : pa = pb := by
@@ -54,11 +54,11 @@ theorem infiniteRange_powerFamily_linearIndependent
     exact hpEval x
   have hca : pa.coeff i = a i := by
     change (∑ j ∈ s, Polynomial.monomial j (a j)).coeff i = a i
-    rw [Polynomial.finsetSum_coeff]
+    rw [Polynomial.finset_sum_coeff]
     simp [hi]
   have hcb : pb.coeff i = b i := by
     change (∑ j ∈ s, Polynomial.monomial j (b j)).coeff i = b i
-    rw [Polynomial.finsetSum_coeff]
+    rw [Polynomial.finset_sum_coeff]
     simp [hi]
   calc
     a i = pa.coeff i := hca.symm
