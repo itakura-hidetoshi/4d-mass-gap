@@ -14,6 +14,22 @@ noncomputable def periodicHypercubicEvenPrimarySpatialPlaquette
   ((0 : PeriodicHypercubicEvenVertex H),
     ⟨((1 : PeriodicHypercubicAxis), (2 : PeriodicHypercubicAxis)), by decide⟩)
 
+@[simp]
+theorem periodicHypercubicEvenPrimarySpatialPlaquette_firstAxis
+    (H : ℕ) :
+    periodicHypercubicPlaquetteFirstAxis
+        (periodicHypercubicEvenPrimarySpatialPlaquette H) =
+      (1 : PeriodicHypercubicAxis) := by
+  rfl
+
+@[simp]
+theorem periodicHypercubicEvenPrimarySpatialPlaquette_secondAxis
+    (H : ℕ) :
+    periodicHypercubicPlaquetteSecondAxis
+        (periodicHypercubicEvenPrimarySpatialPlaquette H) =
+      (2 : PeriodicHypercubicAxis) := by
+  rfl
+
 /-- The physical positive link underlying the `k`-th signed boundary incidence
 of the canonical primary spatial plaquette. -/
 noncomputable def periodicHypercubicEvenPrimarySpatialPlaquetteEdge
@@ -21,6 +37,40 @@ noncomputable def periodicHypercubicEvenPrimarySpatialPlaquetteEdge
   (periodicHypercubicBoundaryStep
     (PeriodicHypercubicEvenSideLength H)
     (periodicHypercubicEvenPrimarySpatialPlaquette H) k).edge
+
+@[simp]
+theorem periodicHypercubicEvenPrimarySpatialPlaquetteEdge_zero
+    (H : ℕ) :
+    periodicHypercubicEvenPrimarySpatialPlaquetteEdge H 0 =
+      ((0 : PeriodicHypercubicEvenVertex H), (1 : PeriodicHypercubicAxis)) := by
+  rfl
+
+@[simp]
+theorem periodicHypercubicEvenPrimarySpatialPlaquetteEdge_one
+    (H : ℕ) :
+    periodicHypercubicEvenPrimarySpatialPlaquetteEdge H 1 =
+      (periodicHypercubicShift
+          (PeriodicHypercubicEvenSideLength H)
+          (0 : PeriodicHypercubicEvenVertex H) (1 : PeriodicHypercubicAxis),
+        (2 : PeriodicHypercubicAxis)) := by
+  rfl
+
+@[simp]
+theorem periodicHypercubicEvenPrimarySpatialPlaquetteEdge_two
+    (H : ℕ) :
+    periodicHypercubicEvenPrimarySpatialPlaquetteEdge H 2 =
+      (periodicHypercubicShift
+          (PeriodicHypercubicEvenSideLength H)
+          (0 : PeriodicHypercubicEvenVertex H) (2 : PeriodicHypercubicAxis),
+        (1 : PeriodicHypercubicAxis)) := by
+  rfl
+
+@[simp]
+theorem periodicHypercubicEvenPrimarySpatialPlaquetteEdge_three
+    (H : ℕ) :
+    periodicHypercubicEvenPrimarySpatialPlaquetteEdge H 3 =
+      ((0 : PeriodicHypercubicEvenVertex H), (2 : PeriodicHypercubicAxis)) := by
+  rfl
 
 /-- A unit spatial shift of the zero vertex is nonzero on every even periodic
 lattice.  The only arithmetic input is that the side length `2(H+1)` is at
@@ -50,6 +100,8 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteEdge_side_fixed
     apply periodicHypercubicEvenEdgeSide_spatial_eq_fixed_of_val_eq_zero <;>
     simp [periodicHypercubicEvenPrimarySpatialPlaquetteEdge,
       periodicHypercubicEvenPrimarySpatialPlaquette,
+      periodicHypercubicPlaquetteFirstAxis,
+      periodicHypercubicPlaquetteSecondAxis,
       periodicHypercubicShift_apply]
 
 /-- The four physical edges of the canonical spatial plaquette are pairwise
@@ -59,14 +111,12 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteEdge_injective
     (H : ℕ) :
     Function.Injective (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H) := by
   intro i j hij
-  fin_cases i <;> fin_cases j
-  all_goals
+  fin_cases i <;> fin_cases j <;>
     simp [periodicHypercubicEvenPrimarySpatialPlaquetteEdge,
-      periodicHypercubicEvenPrimarySpatialPlaquette] at hij ⊢
-  · exact False.elim
-      ((periodicHypercubicEvenShift_zero_ne_zero H (2 : PeriodicHypercubicAxis)) hij.symm)
-  · exact False.elim
-      ((periodicHypercubicEvenShift_zero_ne_zero H (1 : PeriodicHypercubicAxis)) hij)
+      periodicHypercubicEvenPrimarySpatialPlaquette,
+      periodicHypercubicPlaquetteFirstAxis,
+      periodicHypercubicPlaquetteSecondAxis,
+      periodicHypercubicEvenShift_zero_ne_zero H] at hij ⊢
 
 /-- The canonical four plaquette edges as an embedding into the actual
 reflection-fixed boundary edge index. -/
