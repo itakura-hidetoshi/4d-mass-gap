@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.HaarPlaquetteWordL2Orthonormal
+import Mathlib.Data.Fintype.Perm
 import Mathlib.MeasureTheory.Constructions.Pi
 
 namespace MGAP4D
@@ -14,31 +15,32 @@ universe u
 `haarCyclicPlaquetteWord`.
 
 Starting from the natural `Fin 4` order `(a,b,c,d)`, the resulting nested tuple
-is `(((b,a),d),c)`.  The construction deliberately factors through Mathlib
-finite-product measurable equivalences instead of encoding an ad hoc tuple
-bijection. -/
+is `(((b,a),d),c)`.  The two adjacent swaps are performed already at the index
+reindexing stage, so the measure proof uses only finite-product measurable
+equivalences and product associativity. -/
 noncomputable def haarFinFourCyclicNestedCoordinates
     {G : Type u} [MeasurableSpace G]
     (x : Fin 4 → G) : ((G × G) × G) × G :=
+  let order : Fin 4 ≃ Fin 4 :=
+    (Equiv.swap (0 : Fin 4) 1).trans (Equiv.swap (2 : Fin 4) 3)
   let reindex := MeasurableEquiv.piCongrLeft
     (fun _ : Fin 2 ⊕ Fin 2 => G)
-    ((finSumFinEquiv : Fin 2 ⊕ Fin 2 ≃ Fin 4).symm)
+    (order.trans (finSumFinEquiv : Fin 2 ⊕ Fin 2 ≃ Fin 4).symm)
   let split := MeasurableEquiv.sumPiEquivProdPi
     (fun _ : Fin 2 ⊕ Fin 2 => G)
   let pair := MeasurableEquiv.piFinTwo (fun _ : Fin 2 => G)
   (MeasurableEquiv.prodAssoc :
       ((G × G) × G) × G ≃ᵐ (G × G) × (G × G)).symm
-    (Prod.map Prod.swap Prod.swap
-      (Prod.map pair pair (split (reindex x))))
+    (Prod.map pair pair (split (reindex x)))
 
 /-- The canonical `Fin 4` Haar-product reshaping is measure-preserving.
 
 The proof is a composition of Mathlib equivalences:
 
-* `piCongrLeft` along `Fin 2 ⊕ Fin 2 ≃ Fin 4`;
+* `piCongrLeft` along the permutation sending the natural order
+  `(a,b,c,d)` to `(b,a,d,c)` and then `Fin 4 ≃ Fin 2 ⊕ Fin 2`;
 * `sumPiEquivProdPi`;
 * `piFinTwo` on each pair;
-* swapping both homogeneous Haar pairs;
 * inverse product associativity.
 -/
 theorem measurePreserving_haarFinFourCyclicNestedCoordinates
@@ -47,9 +49,11 @@ theorem measurePreserving_haarFinFourCyclicNestedCoordinates
     MeasurePreserving haarFinFourCyclicNestedCoordinates
       (Measure.pi fun _ : Fin 4 => μ)
       (((μ.prod μ).prod μ).prod μ) := by
+  let order : Fin 4 ≃ Fin 4 :=
+    (Equiv.swap (0 : Fin 4) 1).trans (Equiv.swap (2 : Fin 4) 3)
   let reindex := MeasurableEquiv.piCongrLeft
     (fun _ : Fin 2 ⊕ Fin 2 => G)
-    ((finSumFinEquiv : Fin 2 ⊕ Fin 2 ≃ Fin 4).symm)
+    (order.trans (finSumFinEquiv : Fin 2 ⊕ Fin 2 ≃ Fin 4).symm)
   let split := MeasurableEquiv.sumPiEquivProdPi
     (fun _ : Fin 2 ⊕ Fin 2 => G)
   let pair := MeasurableEquiv.piFinTwo (fun _ : Fin 2 => G)
@@ -60,7 +64,7 @@ theorem measurePreserving_haarFinFourCyclicNestedCoordinates
     simpa [reindex] using
       (MeasureTheory.measurePreserving_piCongrLeft
         (fun _ : Fin 2 ⊕ Fin 2 => μ)
-        ((finSumFinEquiv : Fin 2 ⊕ Fin 2 ≃ Fin 4).symm))
+        (order.trans (finSumFinEquiv : Fin 2 ⊕ Fin 2 ≃ Fin 4).symm))
   have hSplit :
       MeasurePreserving split
         (Measure.pi fun _ : Fin 2 ⊕ Fin 2 => μ)
@@ -81,15 +85,6 @@ theorem measurePreserving_haarFinFourCyclicNestedCoordinates
           (Measure.pi fun _ : Fin 2 => μ))
         ((μ.prod μ).prod (μ.prod μ)) :=
     hPair.prod hPair
-  have hSwap :
-      MeasurePreserving (Prod.swap : G × G → G × G)
-        (μ.prod μ) (μ.prod μ) :=
-    measurePreserving_swap
-  have hSwaps :
-      MeasurePreserving (Prod.map Prod.swap Prod.swap)
-        ((μ.prod μ).prod (μ.prod μ))
-        ((μ.prod μ).prod (μ.prod μ)) :=
-    hSwap.prod hSwap
   have hAssocForward :
       MeasurePreserving
         (MeasurableEquiv.prodAssoc :
@@ -107,9 +102,9 @@ theorem measurePreserving_haarFinFourCyclicNestedCoordinates
       (MeasurableEquiv.prodAssoc :
         ((G × G) × G) × G ≃ᵐ (G × G) × (G × G))
       hAssocForward
-  simpa [haarFinFourCyclicNestedCoordinates, reindex, split, pair,
+  simpa [haarFinFourCyclicNestedCoordinates, order, reindex, split, pair,
     Function.comp_def] using
-    hAssocBack.comp (hSwaps.comp (hPairs.comp (hSplit.comp hReindex)))
+    hAssocBack.comp (hPairs.comp (hSplit.comp hReindex))
 
 /-- The cyclic plaquette word directly on the natural `Fin 4` coordinate
 product.  The internal reshaping sends `(a,b,c,d)` to `(((b,a),d),c)`, so this
