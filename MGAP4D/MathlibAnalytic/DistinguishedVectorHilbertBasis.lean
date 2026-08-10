@@ -13,7 +13,7 @@ variable {H : Type u} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [Complete
 /-- A Hilbert basis together with one distinguished basis index representing a
 specified vector. -/
 structure DistinguishedVectorHilbertBasis (v : H) where
-  Index : Type
+  Index : Type u
   basis : HilbertBasis Index ℝ H
   index : Index
   basis_index : basis index = v
@@ -33,7 +33,7 @@ theorem distinguishedVectorHilbertBasis_nonempty
     simp only [Set.mem_singleton_iff] at hx hy
     subst x
     subst y
-    simp [real_inner_self_eq_norm_sq, hv]
+    simp [hv]
   obtain ⟨w, b, hsub, hb⟩ := hs.exists_hilbertBasis_extension
   let i₀ : w := ⟨v, hsub (by simp)⟩
   refine ⟨{
@@ -56,8 +56,9 @@ postcomposing with the target transposition which swaps its old image with the
 required target point. -/
 noncomputable def retargetEmbedding
     {ι : Type u} {κ : Type v}
-    (e : ι ↪ κ) (i₀ : ι) (k₀ : κ) : ι ↪ κ :=
-  (Equiv.swap (e i₀) k₀).toEmbedding.comp e
+    (e : ι ↪ κ) (i₀ : ι) (k₀ : κ) : ι ↪ κ := by
+  letI := Classical.decEq κ
+  exact (Equiv.swap (e i₀) k₀).toEmbedding.comp e
 
 /-- The retargeted embedding sends the distinguished source index to the
 prescribed distinguished target index exactly. -/
@@ -65,6 +66,7 @@ prescribed distinguished target index exactly. -/
     {ι : Type u} {κ : Type v}
     (e : ι ↪ κ) (i₀ : ι) (k₀ : κ) :
     retargetEmbedding e i₀ k₀ i₀ = k₀ := by
+  classical
   simp [retargetEmbedding]
 
 /-- Consequently, for two unit distinguished vectors, **any** embedding of the
