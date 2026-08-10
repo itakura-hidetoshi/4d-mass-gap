@@ -7,6 +7,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory
+open MeasureTheory.Measure
 
 noncomputable section
 
