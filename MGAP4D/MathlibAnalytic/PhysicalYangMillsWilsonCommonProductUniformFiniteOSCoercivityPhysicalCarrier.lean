@@ -74,9 +74,15 @@ theorem continuum_osGram_posDef
             (J.observable (j : ℕ)))) : Matrix s s ℝ) := by
   classical
   letI : AddCommGroup D.positiveTimeSubalgebra.toSubmodule :=
-    Submodule.addCommGroup (p := D.positiveTimeSubalgebra.toSubmodule)
+    Submodule.addCommGroup
+      (R := ℝ)
+      (M := physicalYangMillsGaugeInvariantObservableSubalgebra S)
+      (p := D.positiveTimeSubalgebra.toSubmodule)
   letI : Module ℝ D.positiveTimeSubalgebra.toSubmodule :=
-    Submodule.module (p := D.positiveTimeSubalgebra.toSubmodule)
+    Submodule.module
+      (R := ℝ)
+      (M := physicalYangMillsGaugeInvariantObservableSubalgebra S)
+      (p := D.positiveTimeSubalgebra.toSubmodule)
   let w : s → D.positiveTimeSubalgebra.toSubmodule := fun i =>
     physicalYangMillsPositiveTimeToSubmodule D (J.observable (i : ℕ))
   let A : ℕ → Matrix s s ℝ := fun n i j =>
