@@ -50,7 +50,7 @@ theorem measurePreserving_haarPairInvMul
     MeasurePreserving (fun z : G × G => z.1⁻¹ * z.2⁻¹) (μ.prod μ) μ := by
   have hInv :
       MeasurePreserving (Inv.inv : G → G) μ μ :=
-    MeasureTheory.measurePreserving_inv μ
+    measurePreserving_inv μ
   have hInvPair :
       MeasurePreserving (Prod.map Inv.inv Inv.inv) (μ.prod μ) (μ.prod μ) :=
     hInv.prod hInv
