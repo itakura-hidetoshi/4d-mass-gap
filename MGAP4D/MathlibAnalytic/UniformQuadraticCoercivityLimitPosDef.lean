@@ -1,4 +1,5 @@
-import Mathlib.LinearAlgebra.BilinearForm.Properties
+import Mathlib.LinearAlgebra.Finsupp.LinearCombination
+import Mathlib.LinearAlgebra.Matrix.BilinearForm
 import Mathlib.LinearAlgebra.Matrix.PosDef
 import Mathlib.Topology.Order.OrderClosed
 import Mathlib.Tactic
@@ -23,7 +24,7 @@ theorem finset_sum_sq_pos_of_ne_zero
     by_contra h
     apply hx
     funext i
-    simpa only [not_exists, not_not] using h i
+    exact not_ne_iff.mp ((not_exists.mp h) i)
   rw [Finset.sum_pos_iff_of_nonneg]
   · exact ⟨i, Finset.mem_univ i, sq_pos_of_ne_zero hi⟩
   · intro i _
@@ -47,10 +48,11 @@ theorem bilinForm_matrix_isHermitian_of_isSymm
     (B : LinearMap.BilinForm ℝ V)
     (hB : B.IsSymm)
     (w : ι → V) :
-    ((fun i j => B (w i) (w j)) : Matrix ι ι ℝ).IsHermitian := by
-  rw [Matrix.isHermitian_iff_isSymm, Matrix.IsSymm.ext_iff]
+    Matrix.IsHermitian
+      ((fun i j => B (w i) (w j)) : Matrix ι ι ℝ) := by
+  apply Matrix.IsHermitian.ext
   intro i j
-  exact hB.eq (w j) (w i)
+  simpa using hB.eq (w j) (w i)
 
 /-- The matrix quadratic form of a real bilinear Gram matrix is the bilinear
 form evaluated on the corresponding finite linear combination. -/
@@ -64,8 +66,21 @@ theorem bilinForm_matrix_quadratic_eq
         (((fun i j => B (w i) (w j)) : Matrix ι ι ℝ) *ᵥ x) =
       B (∑ i, x i • w i) (∑ i, x i • w i) := by
   classical
-  simp [Matrix.dotProduct, Matrix.mulVec, Finset.mul_sum,
-    mul_comm, mul_left_comm, mul_assoc]
+  let l : (ι → ℝ) →ₗ[ℝ] V := Fintype.linearCombination ℝ w
+  have hMatrix :
+      ((fun i j => B (w i) (w j)) : Matrix ι ι ℝ) =
+        LinearMap.BilinForm.toMatrix' (B.comp l l) := by
+    ext i j
+    simp [l]
+  rw [hMatrix]
+  calc
+    star x ⬝ᵥ (LinearMap.BilinForm.toMatrix' (B.comp l l) *ᵥ x) =
+        x ⬝ᵥ (LinearMap.BilinForm.toMatrix' (B.comp l l) *ᵥ x) := by simp
+    _ = Matrix.toBilin' (LinearMap.BilinForm.toMatrix' (B.comp l l)) x x :=
+      (Matrix.toBilin'_apply'
+        (LinearMap.BilinForm.toMatrix' (B.comp l l)) x x).symm
+    _ = B (∑ i, x i • w i) (∑ i, x i • w i) := by
+      simp [l, Fintype.linearCombination_apply]
 
 /-- Quadratic-form convergence preserves finite-dimensional strict positivity
 when the approximating matrices have a volume-uniform Euclidean coercivity
@@ -78,7 +93,7 @@ theorem matrix_posDef_of_uniform_quadratic_coercivity_tendsto
     {ι : Type u} [Fintype ι] [DecidableEq ι]
     (A : ℕ → Matrix ι ι ℝ)
     (A_limit : Matrix ι ι ℝ)
-    (hHermitian : A_limit.IsHermitian)
+    (hHermitian : Matrix.IsHermitian A_limit)
     (δ : ℝ) (hδ : 0 < δ)
     (hTendsto : ∀ x : ι → ℝ,
       Tendsto
