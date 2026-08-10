@@ -84,7 +84,7 @@ theorem measurePreserving_haarFinFourCyclicNestedCoordinates
   have hSwap :
       MeasurePreserving (Prod.swap : G × G → G × G)
         (μ.prod μ) (μ.prod μ) :=
-    MeasureTheory.measurePreserving_swap
+    measurePreserving_swap
   have hSwaps :
       MeasurePreserving (Prod.map Prod.swap Prod.swap)
         ((μ.prod μ).prod (μ.prod μ))
