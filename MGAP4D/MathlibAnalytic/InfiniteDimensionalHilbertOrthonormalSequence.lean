@@ -31,7 +31,8 @@ theorem exists_orthonormal_nat_of_not_finiteDimensional
     letI : Fintype w := hwFinite.fintype
     apply hInfiniteDimensional
     exact b.toOrthonormalBasis.toBasis.finiteDimensional_of_finite
-  obtain ⟨f, hf⟩ := Infinite.natEmbedding w hwInfinite
+  letI : Infinite w := hwInfinite.to_subtype
+  let f : ℕ ↪ w := Infinite.natEmbedding w
   refine ⟨fun n => b (f n), ?_⟩
   constructor
   · intro n
@@ -40,7 +41,7 @@ theorem exists_orthonormal_nat_of_not_finiteDimensional
     apply b.orthonormal.inner_eq_zero
     intro hIndex
     apply hmn
-    exact hf hIndex
+    exact f.injective hIndex
 
 /-- Noncomputably select the canonical `ℕ`-indexed orthonormal sequence supplied
 by non-finite-dimensionality. -/
