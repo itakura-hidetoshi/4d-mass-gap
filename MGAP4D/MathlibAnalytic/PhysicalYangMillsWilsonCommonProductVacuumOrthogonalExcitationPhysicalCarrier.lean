@@ -85,7 +85,7 @@ explicitly:
 
 `SecondCountable + Borel → CountablyGenerated`,
 `CountablyGenerated + SFinite → IsSeparable μ`,
-`IsSeparable μ → SecondCountable (Lp ℝ 2 μ)`.
+`IsSeparable μ + 1 ≤ 2 < ∞ → SecondCountable (Lp ℝ 2 μ)`.
 
 The infinite-product Wilson boundary law is a probability measure, hence
 s-finite. -/
@@ -116,6 +116,8 @@ noncomputable local instance commonProductSeparableSpace :
       (physicalYangMillsEvenPeriodicWilsonBoundaryScaleMarginalInfiniteProduct
         halfExtent N hN beta hbeta) := by
     infer_instance
+  letI : Fact (1 ≤ (2 : ℝ≥0∞)) := ⟨by norm_num⟩
+  letI : Fact ((2 : ℝ≥0∞) ≠ ∞) := ⟨by norm_num⟩
   letI : SecondCountableTopology
       (PhysicalYangMillsEvenPeriodicWilsonInteractingBoundaryCommonHilbert
         halfExtent N hN beta hbeta) := by
