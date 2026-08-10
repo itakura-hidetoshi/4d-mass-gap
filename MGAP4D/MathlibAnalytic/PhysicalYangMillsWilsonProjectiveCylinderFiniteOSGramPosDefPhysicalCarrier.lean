@@ -224,21 +224,28 @@ theorem eventually_uniformFiniteOSCoercivity
   let T : D.positiveTimeSubalgebra.toSubmodule →ₗ[ℝ]
       Lp ℝ 2 L.continuumMeasure :=
     physicalYangMillsProjectivePositiveTimeL2LinearMap R L hInvariant n
+  have hmap_finset : ∀ t : Finset s,
+      T (t.sum (fun i => x i • J.observable (i : ℕ))) =
+        t.sum (fun i => x i • J.continuumVector (i : ℕ)) := by
+    intro t
+    induction t using Finset.induction_on with
+    | empty =>
+        simpa using T.map_zero
+    | @insert i t hi ih =>
+        rw [Finset.sum_insert hi, Finset.sum_insert hi]
+        calc
+          T (x i • J.observable (i : ℕ) +
+              t.sum (fun j => x j • J.observable (j : ℕ))) =
+              T (x i • J.observable (i : ℕ)) +
+                T (t.sum (fun j => x j • J.observable (j : ℕ))) :=
+            T.map_add _ _
+          _ = x i • J.continuumVector (i : ℕ) +
+                t.sum (fun j => x j • J.continuumVector (j : ℕ)) := by
+            rw [T.map_smul, hn i, ih]
   have hmap :
       T (∑ i : s, x i • J.observable (i : ℕ)) =
         ∑ i : s, x i • J.continuumVector (i : ℕ) := by
-    calc
-      T (∑ i : s, x i • J.observable (i : ℕ)) =
-          ∑ i : s, T (x i • J.observable (i : ℕ)) := by
-        simpa using
-          (map_sum T (fun i : s => x i • J.observable (i : ℕ)) Finset.univ)
-      _ = ∑ i : s, x i • J.continuumVector (i : ℕ) := by
-        apply Finset.sum_congr rfl
-        intro i hi
-        calc
-          T (x i • J.observable (i : ℕ)) =
-              x i • T (J.observable (i : ℕ)) := T.map_smul _ _
-          _ = x i • J.continuumVector (i : ℕ) := by rw [hn i]
+    simpa using hmap_finset Finset.univ
   calc
     δ * (∑ i, x i ^ 2) ≤
         ‖∑ i : s, x i • J.continuumVector (i : ℕ)‖ ^ 2 :=
