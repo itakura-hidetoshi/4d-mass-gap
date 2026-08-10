@@ -12,9 +12,6 @@ noncomputable section
 
 universe u v
 
-/-- A countable orthonormal excitation sequence orthogonal to a distinguished
-vacuum.  This is the concrete target geometry consumed by the separable-source
-isometry theorem of `SeparableHilbertVacuumOrthogonalSequenceIsometry`. -/
 structure VacuumOrthogonalOrthonormalSequenceData
     {K : Type u} [NormedAddCommGroup K] [InnerProductSpace ℝ K]
     (vacuum : K) where
@@ -23,14 +20,7 @@ structure VacuumOrthogonalOrthonormalSequenceData
   vacuum_orthogonal_excitation : ∀ n, ⟪vacuum, excitation n⟫_ℝ = 0
 
 /-- A unit vector in an infinite-dimensional real Hilbert space has a countable
-orthonormal sequence in its orthogonal complement.
-
-The proof is entirely Hilbert-geometric.  Extend the singleton vacuum to a
-Mathlib Hilbert basis.  The basis index set cannot be finite, since a finite
-Hilbert basis would yield a finite-dimensional vector space.  Removing the
-single vacuum vector leaves an infinite set; `Infinite.natEmbedding` then
-selects a countable subfamily.  Orthonormality and vacuum orthogonality are
-inherited from the ambient Hilbert basis. -/
+orthonormal sequence in its orthogonal complement. -/
 theorem vacuumOrthogonalOrthonormalSequenceData_nonempty_of_not_finiteDimensional
     {K : Type u} [NormedAddCommGroup K] [InnerProductSpace ℝ K]
     [CompleteSpace K]
@@ -39,10 +29,11 @@ theorem vacuumOrthogonalOrthonormalSequenceData_nonempty_of_not_finiteDimensiona
     Nonempty (VacuumOrthogonalOrthonormalSequenceData vacuum) := by
   classical
   have hs : Orthonormal ℝ ((↑) : ({vacuum} : Set K) → K) := by
-    rw [orthonormal_subsingleton_iff]
-    intro x
-    have hx : (x : K) = vacuum := Set.mem_singleton_iff.mp x.property
-    simpa [hx] using hVacuum
+    constructor
+    · intro x
+      have hx : (x : K) = vacuum := Set.mem_singleton_iff.mp x.property
+      simpa [hx] using hVacuum
+    · exact Subsingleton.pairwise
   obtain ⟨w, b, hsub, hb⟩ := hs.exists_hilbertBasis_extension
   have hwInfinite : w.Infinite := by
     intro hwFinite
@@ -51,7 +42,12 @@ theorem vacuumOrthogonalOrthonormalSequenceData_nonempty_of_not_finiteDimensiona
     exact b.toOrthonormalBasis.toBasis.finiteDimensional_of_finite
   have hAwayInfinite : (w \ {vacuum}).Infinite := by
     intro hAwayFinite
-    exact hwInfinite (Set.Finite.of_sdiff hAwayFinite (Set.finite_singleton vacuum))
+    apply hwInfinite
+    apply (hAwayFinite.union (Set.finite_singleton vacuum)).subset
+    intro x hx
+    by_cases hxVacuum : x = vacuum
+    · exact Or.inr (by simpa [hxVacuum])
+    · exact Or.inl ⟨hx, by simpa using hxVacuum⟩
   let awayIndex : ℕ ↪ (w \ {vacuum}) :=
     Infinite.natEmbedding (w \ {vacuum}) hAwayInfinite
   let includeAway : (w \ {vacuum}) ↪ w :=
@@ -81,8 +77,6 @@ theorem vacuumOrthogonalOrthonormalSequenceData_nonempty_of_not_finiteDimensiona
     excitation_orthonormal := hExcitation
     vacuum_orthogonal_excitation := hOrthogonal }⟩
 
-/-- Noncomputably select the vacuum-orthogonal orthonormal excitation sequence
-forced by infinite Hilbert dimension. -/
 noncomputable def vacuumOrthogonalOrthonormalSequenceDataOfNotFiniteDimensional
     {K : Type u} [NormedAddCommGroup K] [InnerProductSpace ℝ K]
     [CompleteSpace K]
@@ -93,9 +87,6 @@ noncomputable def vacuumOrthogonalOrthonormalSequenceDataOfNotFiniteDimensional
     (vacuumOrthogonalOrthonormalSequenceData_nonempty_of_not_finiteDimensional
       vacuum hVacuum hInfinite)
 
-/-- A separable source Hilbert space therefore embeds isometrically into any
-infinite-dimensional target Hilbert space, with prescribed unit distinguished
-vectors matched exactly. -/
 noncomputable def distinguishedVectorLinearIsometryOfSeparableInfiniteDimensionalTarget
     {H : Type u} {K : Type v}
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
@@ -111,8 +102,6 @@ noncomputable def distinguishedVectorLinearIsometryOfSeparableInfiniteDimensiona
     x hx vacuum hVacuum
     J.excitation J.excitation_orthonormal J.vacuum_orthogonal_excitation
 
-/-- The infinite-dimensional-target construction preserves the distinguished
-unit vectors exactly. -/
 @[simp] theorem distinguishedVectorLinearIsometryOfSeparableInfiniteDimensionalTarget_apply
     {H : Type u} {K : Type v}
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
