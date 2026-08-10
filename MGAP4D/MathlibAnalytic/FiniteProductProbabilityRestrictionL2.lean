@@ -27,20 +27,14 @@ theorem measurePreserving_finiteProductProbabilityRestriction
     [∀ i, IsProbabilityMeasure (μ i)]
     (s : Finset ι) :
     MeasurePreserving
-      (fun x i : s => x i)
+      (fun (x : ∀ i, α i) (i : s) => x i)
       (Measure.pi μ)
       (Measure.pi fun i : s => μ i) := by
   classical
   let p : ι → Prop := fun i => i ∈ s
   have hSplit :=
     MeasureTheory.measurePreserving_piEquivPiSubtypeProd (μ := μ) p
-  have hFst :
-      MeasurePreserving Prod.fst
-        ((Measure.pi fun i : Subtype p => μ i).prod
-          (Measure.pi fun i : Subtype (fun i => ¬ p i) => μ i))
-        (Measure.pi fun i : Subtype p => μ i) :=
-    MeasureTheory.measurePreserving_fst
-  have h := hFst.comp hSplit
+  have h := MeasureTheory.measurePreserving_fst.comp hSplit
   simpa [p, Function.comp_def] using h
 
 /-- Exact real `L²` pullback from a selected finite block of coordinates into
@@ -56,7 +50,7 @@ noncomputable def finiteProductProbabilityRestrictionL2Pullback
       Lp ℝ 2 (Measure.pi μ) :=
   Lp.compMeasurePreservingₗᵢ
     (𝕜 := ℝ)
-    (fun x i : s => x i)
+    (fun (x : ∀ i, α i) (i : s) => x i)
     (measurePreserving_finiteProductProbabilityRestriction μ s)
 
 /-- Any orthonormal family on a selected finite coordinate block remains
