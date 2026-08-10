@@ -230,7 +230,10 @@ theorem eventually_uniformFiniteOSCoercivity
     intro t
     induction t using Finset.induction_on with
     | empty =>
-        simpa using T.map_zero
+        have hzero : T (0 : D.positiveTimeSubalgebra.toSubmodule) = 0 := by
+          simpa only [zero_smul] using
+            (T.map_smul (0 : ℝ) (0 : D.positiveTimeSubalgebra.toSubmodule))
+        exact hzero
     | @insert i t hi ih =>
         rw [Finset.sum_insert hi, Finset.sum_insert hi]
         calc
@@ -245,7 +248,7 @@ theorem eventually_uniformFiniteOSCoercivity
   have hmap :
       T (∑ i : s, x i • J.observable (i : ℕ)) =
         ∑ i : s, x i • J.continuumVector (i : ℕ) := by
-    simpa using hmap_finset Finset.univ
+    exact hmap_finset Finset.univ
   calc
     δ * (∑ i, x i ^ 2) ≤
         ‖∑ i : s, x i • J.continuumVector (i : ℕ)‖ ^ 2 :=
