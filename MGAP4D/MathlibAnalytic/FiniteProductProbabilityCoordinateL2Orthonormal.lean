@@ -1,5 +1,6 @@
 import Mathlib.Analysis.InnerProductSpace.Orthonormal
 import Mathlib.MeasureTheory.Constructions.Pi
+import Mathlib.MeasureTheory.Function.L2Space
 import Mathlib.MeasureTheory.Function.LpSpace.Basic
 
 namespace MGAP4D
