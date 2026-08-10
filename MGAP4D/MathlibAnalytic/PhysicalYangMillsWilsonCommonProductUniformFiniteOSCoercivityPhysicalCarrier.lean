@@ -117,12 +117,58 @@ theorem continuum_osGram_posDef
         S D
         (∑ i : s, x i • w i)
         (∑ i : s, x i • w i)
-    simpa [A, A_limit, bilinForm_matrix_quadratic_eq] using h
+    have hApprox :
+        (fun n : ℕ => dotProduct (star x) (Matrix.mulVec (A n) x)) =
+          (fun n : ℕ =>
+            D.osBilinForm
+              (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)
+              (∑ i : s, x i • w i)
+              (∑ i : s, x i • w i)) := by
+      funext n
+      have hq :=
+        bilinForm_matrix_quadratic_eq
+          (D.osBilinForm
+            (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
+          w x
+      simpa only [A] using hq
+    have hLimit :
+        dotProduct (star x) (Matrix.mulVec A_limit x) =
+          D.osBilinForm
+            (physicalYangMillsContinuumGaugeInvariantWeakStarState S)
+            (∑ i : s, x i • w i)
+            (∑ i : s, x i • w i) := by
+      have hq :=
+        bilinForm_matrix_quadratic_eq
+          (D.osBilinForm
+            (physicalYangMillsContinuumGaugeInvariantWeakStarState S))
+          w x
+      simpa only [A_limit] using hq
+    rw [hApprox, hLimit]
+    exact h
   have hCoercive : ∀ n (x : s → ℝ),
       δ * (∑ i, x i ^ 2) ≤
         dotProduct (star x) (Matrix.mulVec (A n) x) := by
     intro n x
-    simpa [A, w, bilinForm_matrix_quadratic_eq] using hcoercive n x
+    have hq :
+        dotProduct (star x) (Matrix.mulVec (A n) x) =
+          D.osBilinForm
+            (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)
+            (∑ i : s, x i • w i)
+            (∑ i : s, x i • w i) := by
+      have h :=
+        bilinForm_matrix_quadratic_eq
+          (D.osBilinForm
+            (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
+          w x
+      simpa only [A] using h
+    calc
+      δ * (∑ i, x i ^ 2) ≤
+          D.osBilinForm
+            (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)
+            (∑ i : s, x i • w i)
+            (∑ i : s, x i • w i) := by
+        simpa only [w] using hcoercive n x
+      _ = dotProduct (star x) (Matrix.mulVec (A n) x) := hq.symm
   have hPosDef :=
     matrix_posDef_of_uniform_quadratic_coercivity_tendsto
       A A_limit hHermitian δ hδ hTendsto hCoercive
