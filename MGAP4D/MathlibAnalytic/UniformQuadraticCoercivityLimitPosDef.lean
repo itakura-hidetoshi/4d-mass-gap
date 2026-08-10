@@ -1,3 +1,4 @@
+import Mathlib.LinearAlgebra.BilinearForm.Properties
 import Mathlib.LinearAlgebra.Matrix.PosDef
 import Mathlib.Topology.Order.OrderClosed
 import Mathlib.Tactic
@@ -9,7 +10,7 @@ open Filter Matrix
 
 noncomputable section
 
-universe u
+universe u v
 
 /-- A nonzero real coefficient vector on a finite index type has strictly
 positive Euclidean square energy. -/
@@ -37,6 +38,34 @@ theorem positive_limit_of_uniform_positive_lower_bound
     (hlower : ∀ n, δ ≤ u n) :
     0 < a := by
   exact hδ.trans_le (ge_of_tendsto' hu hlower)
+
+/-- The matrix obtained by evaluating a symmetric real bilinear form on a
+finite family is Hermitian. -/
+theorem bilinForm_matrix_isHermitian_of_isSymm
+    {V : Type v} [AddCommGroup V] [Module ℝ V]
+    {ι : Type u}
+    (B : LinearMap.BilinForm ℝ V)
+    (hB : B.IsSymm)
+    (w : ι → V) :
+    ((fun i j => B (w i) (w j)) : Matrix ι ι ℝ).IsHermitian := by
+  rw [Matrix.isHermitian_iff_isSymm, Matrix.IsSymm.ext_iff]
+  intro i j
+  exact hB.eq (w j) (w i)
+
+/-- The matrix quadratic form of a real bilinear Gram matrix is the bilinear
+form evaluated on the corresponding finite linear combination. -/
+theorem bilinForm_matrix_quadratic_eq
+    {V : Type v} [AddCommGroup V] [Module ℝ V]
+    {ι : Type u} [Fintype ι]
+    (B : LinearMap.BilinForm ℝ V)
+    (w : ι → V)
+    (x : ι → ℝ) :
+    star x ⬝ᵥ
+        (((fun i j => B (w i) (w j)) : Matrix ι ι ℝ) *ᵥ x) =
+      B (∑ i, x i • w i) (∑ i, x i • w i) := by
+  classical
+  simp [Matrix.dotProduct, Matrix.mulVec, Finset.mul_sum,
+    mul_comm, mul_left_comm, mul_assoc]
 
 /-- Quadratic-form convergence preserves finite-dimensional strict positivity
 when the approximating matrices have a volume-uniform Euclidean coercivity
