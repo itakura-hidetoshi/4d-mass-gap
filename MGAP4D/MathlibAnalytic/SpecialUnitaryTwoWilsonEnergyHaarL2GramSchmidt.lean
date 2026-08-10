@@ -111,6 +111,91 @@ theorem specialUnitaryWilsonPlaquetteEnergyTwoHaarGramSchmidtMode_orthonormal :
   exact InnerProductSpace.gramSchmidtNormed_orthonormal
     specialUnitaryWilsonPlaquetteEnergyPowerHaarL2_two_linearIndependent
 
+/-- Each normalized Gram--Schmidt mode lies in the finite initial span of the
+concrete Wilson-energy power family.  This is the triangularity needed to
+recover an actual continuous representative rather than only an `L²` class. -/
+theorem specialUnitaryWilsonPlaquetteEnergyTwoHaarGramSchmidtMode_mem_power_span_Iic
+    (k : ℕ) :
+    specialUnitaryWilsonPlaquetteEnergyTwoHaarGramSchmidtMode k ∈
+      Submodule.span ℝ
+        ((fun j : ℕ =>
+          specialUnitaryWilsonPlaquetteEnergyPowerHaarL2
+            specialUnitaryTwoRankPositive j) '' Set.Iic k) := by
+  change
+    InnerProductSpace.gramSchmidtNormed ℝ
+        (fun j : ℕ =>
+          specialUnitaryWilsonPlaquetteEnergyPowerHaarL2
+            specialUnitaryTwoRankPositive j) k ∈ _
+  rw [InnerProductSpace.gramSchmidtNormed]
+  exact Submodule.smul_mem _ _
+    (InnerProductSpace.gramSchmidt_mem_span ℝ
+      (fun j : ℕ =>
+        specialUnitaryWilsonPlaquetteEnergyPowerHaarL2
+          specialUnitaryTwoRankPositive j)
+      (le_refl k))
+
+/-- The same finite-span statement expressed entirely through the canonical
+continuous Wilson-energy powers and Mathlib `ContinuousMap.toLp`. -/
+theorem specialUnitaryWilsonPlaquetteEnergyTwoHaarGramSchmidtMode_mem_continuousPower_span_Iic
+    (k : ℕ) :
+    specialUnitaryWilsonPlaquetteEnergyTwoHaarGramSchmidtMode k ∈
+      Submodule.span ℝ
+        ((fun j : ℕ =>
+          ContinuousMap.toLp
+            (E := ℝ) 2
+            (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ)) ℝ
+            (specialUnitaryWilsonPlaquetteEnergyTwoContinuous ^ j)) '' Set.Iic k) := by
+  have hSet :
+      ((fun j : ℕ =>
+          specialUnitaryWilsonPlaquetteEnergyPowerHaarL2
+            specialUnitaryTwoRankPositive j) '' Set.Iic k) =
+        ((fun j : ℕ =>
+          ContinuousMap.toLp
+            (E := ℝ) 2
+            (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ)) ℝ
+            (specialUnitaryWilsonPlaquetteEnergyTwoContinuous ^ j)) '' Set.Iic k) := by
+    ext v
+    constructor
+    · rintro ⟨j, hj, rfl⟩
+      exact ⟨j, hj,
+        (specialUnitaryWilsonPlaquetteEnergyPowerHaarL2_two_eq_continuousMap_toLp j).symm⟩
+    · rintro ⟨j, hj, rfl⟩
+      exact ⟨j, hj,
+        specialUnitaryWilsonPlaquetteEnergyPowerHaarL2_two_eq_continuousMap_toLp j⟩
+  rw [← hSet]
+  exact specialUnitaryWilsonPlaquetteEnergyTwoHaarGramSchmidtMode_mem_power_span_Iic k
+
+/-- Every theorem-generated SU(2) Wilson Gram--Schmidt `L²` mode lies in the
+range of the canonical continuous-function embedding. -/
+theorem specialUnitaryWilsonPlaquetteEnergyTwoHaarGramSchmidtMode_mem_continuousMap_toLp_range
+    (k : ℕ) :
+    specialUnitaryWilsonPlaquetteEnergyTwoHaarGramSchmidtMode k ∈
+      (ContinuousMap.toLp
+        (E := ℝ) 2
+        (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ)) ℝ).range := by
+  apply (Submodule.span_le.2 ?_)
+    (specialUnitaryWilsonPlaquetteEnergyTwoHaarGramSchmidtMode_mem_continuousPower_span_Iic k)
+  rintro v ⟨j, hj, rfl⟩
+  exact ⟨specialUnitaryWilsonPlaquetteEnergyTwoContinuous ^ j, rfl⟩
+
+/-- The canonical actual continuous representative of the `k`-th theorem-
+generated SU(2) Wilson Gram--Schmidt `L²` mode. -/
+noncomputable def specialUnitaryWilsonPlaquetteEnergyTwoContinuousGramSchmidtMode
+    (k : ℕ) :
+    C(Matrix.specialUnitaryGroup (Fin 2) ℂ, ℝ) :=
+  (specialUnitaryWilsonPlaquetteEnergyTwoHaarGramSchmidtMode_mem_continuousMap_toLp_range k).choose
+
+/-- The chosen continuous representative maps exactly to the normalized-Haar
+`L²` Gram--Schmidt mode. -/
+theorem specialUnitaryWilsonPlaquetteEnergyTwoContinuousGramSchmidtMode_toLp
+    (k : ℕ) :
+    ContinuousMap.toLp
+        (E := ℝ) 2
+        (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ)) ℝ
+        (specialUnitaryWilsonPlaquetteEnergyTwoContinuousGramSchmidtMode k) =
+      specialUnitaryWilsonPlaquetteEnergyTwoHaarGramSchmidtMode k :=
+  (specialUnitaryWilsonPlaquetteEnergyTwoHaarGramSchmidtMode_mem_continuousMap_toLp_range k).choose_spec
+
 /-- Realize the theorem-generated SU(2) Wilson-energy orthonormal modes on the
 actual canonical primary spatial plaquette inside the full boundary Haar
 `L²`. -/
