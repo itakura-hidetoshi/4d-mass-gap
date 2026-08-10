@@ -27,6 +27,9 @@ theorem orthonormal_index_countable_of_separable
   apply Pairwise.countable_of_isOpen_disjoint
       (s := fun i => Metric.ball (e i) (1 / 2 : ℝ))
   · intro i j hij
+    change Disjoint
+      (Metric.ball (e i) (1 / 2 : ℝ))
+      (Metric.ball (e j) (1 / 2 : ℝ))
     rw [Set.disjoint_left]
     intro z hzi hzj
     have hzi' : dist (e i) z < (1 / 2 : ℝ) := by
