@@ -48,10 +48,8 @@ theorem orthonormal_nat_l2_zero_one_not_both_ae_constant
         rw [inner_smul_right, h10]
         simp
   have hv0zero : v 0 = 0 := by
-    apply Lp.ext
-    have hv0' : (v 0 : α → ℝ) =ᵐ[μ] fun _ => 0 := by
-      simpa [hc0] using hv0
-    exact hv0'.trans Lp.coeFn_zero.symm
+    apply Lp.eq_zero_iff_ae_eq_zero.mpr
+    simpa [hc0] using hv0
   have hnorm := hv.norm_eq_one 0
   rw [hv0zero, norm_zero] at hnorm
   norm_num at hnorm
