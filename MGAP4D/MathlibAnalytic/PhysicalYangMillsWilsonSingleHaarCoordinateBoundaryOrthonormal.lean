@@ -43,12 +43,14 @@ noncomputable def periodicHypercubicEvenPrimaryBoundarySpatialEdge
     (periodicHypercubicEvenEdgeOrbitPartition H).FixedEdge := by
   refine ⟨
     ((0 : PeriodicHypercubicEvenVertex H), (1 : PeriodicHypercubicAxis)), ?_⟩
-  change periodicHypercubicEvenEdgeSide H
-      ((0 : PeriodicHypercubicEvenVertex H), (1 : PeriodicHypercubicAxis)) =
-    ReflectionEdgeSide.fixed
-  apply periodicHypercubicEvenEdgeSide_spatial_eq_fixed_of_val_eq_zero
-  · decide
-  · simp
+  have hspace : (1 : PeriodicHypercubicAxis) ≠ 0 := by
+    decide
+  have hzero : (((0 : PeriodicHypercubicEvenVertex H) 0).val = 0) := by
+    simp
+  exact periodicHypercubicEvenEdgeSide_spatial_eq_fixed_of_val_eq_zero
+    H
+    ((0 : PeriodicHypercubicEvenVertex H), (1 : PeriodicHypercubicAxis))
+    hspace hzero
 
 /-- Pull one normalized-Haar `SU(N)` `L²` coordinate into the full reflection
 boundary product Haar `L²`, using the canonical primary spatial boundary edge.
