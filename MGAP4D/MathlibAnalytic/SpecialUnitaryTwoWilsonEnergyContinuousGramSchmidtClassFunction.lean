@@ -168,8 +168,8 @@ def periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtObservab
 /-- The same mode read only from the reflection-fixed boundary configuration. -/
 def periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtBoundaryObservable
     (H k : ℕ)
-    (b : PeriodicHypercubicEvenBoundaryEdge H →
-      Matrix.specialUnitaryGroup (Fin 2) ℂ) : ℝ :=
+    (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration
+      (Matrix.specialUnitaryGroup (Fin 2) ℂ)) : ℝ :=
   specialUnitaryWilsonPlaquetteEnergyTwoContinuousGramSchmidtMode k
     (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2 b)
 
