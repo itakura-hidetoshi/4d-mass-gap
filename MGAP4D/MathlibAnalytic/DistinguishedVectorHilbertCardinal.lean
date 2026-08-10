@@ -14,7 +14,8 @@ canonically supplies an embedding.  This is the direct computational content of
 Mathlib's `Cardinal.lift_mk_le'`. -/
 noncomputable def embeddingOfLiftedCardinalLE
     {α : Type u} {β : Type v}
-    (h : Cardinal.lift.{v} #α ≤ Cardinal.lift.{u} #β) :
+    (h : Cardinal.lift.{v} (Cardinal.mk α) ≤
+      Cardinal.lift.{u} (Cardinal.mk β)) :
     α ↪ β :=
   Classical.choice (Cardinal.lift_mk_le'.mp h)
 
@@ -32,9 +33,9 @@ def DistinguishedVectorHilbertDimensionLE
     (x : H) (hx : ‖x‖ = 1)
     (y : K) (hy : ‖y‖ = 1) : Prop :=
   Cardinal.lift.{v}
-      #(distinguishedVectorHilbertBasis x hx).Index ≤
+      (Cardinal.mk (distinguishedVectorHilbertBasis x hx).Index) ≤
     Cardinal.lift.{u}
-      #(distinguishedVectorHilbertBasis y hy).Index
+      (Cardinal.mk (distinguishedVectorHilbertBasis y hy).Index)
 
 /-- A Hilbert-dimension inequality between two real Hilbert spaces with
 specified unit vectors theorem-generates a genuine linear isometric embedding
