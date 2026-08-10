@@ -35,31 +35,31 @@ theorem exists_pos_sum_sq_le_norm_sq_of_linearIndependent
       (WithLp.linearEquiv 2 ℝ (ι → ℝ)).injective
   rcases (LinearMap.injective_iff_antilipschitz S).mp hS with
     ⟨K, hK, hAnti⟩
-  have hKinv : 0 < ((K⁻¹ : ℝ≥0) : ℝ) := by
-    exact_mod_cast (inv_pos.mpr hK)
-  refine ⟨(((K⁻¹ : ℝ≥0) : ℝ) ^ 2), sq_pos_of_pos hKinv, ?_⟩
+  have hKreal : 0 < (K : ℝ) := by
+    exact_mod_cast hK
+  refine ⟨((K : ℝ) ^ 2), sq_pos_of_pos hKreal, ?_⟩
   intro x
   let y : EuclideanSpace ℝ ι := WithLp.toLp 2 x
   have hbound :
-      ((K⁻¹ : ℝ≥0) : ℝ) * ‖y‖ ≤ ‖S y‖ := by
+      (K : ℝ) * ‖y‖ ≤ ‖S y‖ := by
     simpa using hAnti.mul_le_dist y 0
   have hsq :
-      ((((K⁻¹ : ℝ≥0) : ℝ) * ‖y‖) ^ 2) ≤ ‖S y‖ ^ 2 := by
+      (((K : ℝ) * ‖y‖) ^ 2) ≤ ‖S y‖ ^ 2 := by
     have hprod :
         0 ≤
-          (‖S y‖ - ((K⁻¹ : ℝ≥0) : ℝ) * ‖y‖) *
-            (‖S y‖ + ((K⁻¹ : ℝ≥0) : ℝ) * ‖y‖) :=
+          (‖S y‖ - (K : ℝ) * ‖y‖) *
+            (‖S y‖ + (K : ℝ) * ‖y‖) :=
       mul_nonneg
         (sub_nonneg.mpr hbound)
-        (add_nonneg (norm_nonneg _) (mul_nonneg hKinv.le (norm_nonneg _)))
+        (add_nonneg (norm_nonneg _) (mul_nonneg hKreal.le (norm_nonneg _)))
     nlinarith
   have hynorm : ‖y‖ ^ 2 = ∑ i, x i ^ 2 := by
     simpa [y] using EuclideanSpace.real_norm_sq_eq y
   have hSy : S y = ∑ i, x i • v i := by
     simp [S, y, Fintype.linearCombination_apply]
   calc
-    (((K⁻¹ : ℝ≥0) : ℝ) ^ 2) * (∑ i, x i ^ 2) =
-        ((((K⁻¹ : ℝ≥0) : ℝ) * ‖y‖) ^ 2) := by
+    ((K : ℝ) ^ 2) * (∑ i, x i ^ 2) =
+        (((K : ℝ) * ‖y‖) ^ 2) := by
       rw [← hynorm]
       ring
     _ ≤ ‖S y‖ ^ 2 := hsq
