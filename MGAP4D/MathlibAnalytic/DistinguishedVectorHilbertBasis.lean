@@ -58,7 +58,7 @@ noncomputable def retargetEmbedding
     {ι : Type u} {κ : Type v}
     (e : ι ↪ κ) (i₀ : ι) (k₀ : κ) : ι ↪ κ := by
   letI := Classical.decEq κ
-  exact (Equiv.swap (e i₀) k₀).toEmbedding.comp e
+  exact e.trans (Equiv.swap (e i₀) k₀).toEmbedding
 
 /-- The retargeted embedding sends the distinguished source index to the
 prescribed distinguished target index exactly. -/
