@@ -117,6 +117,10 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteEdge_injective
       periodicHypercubicPlaquetteFirstAxis,
       periodicHypercubicPlaquetteSecondAxis,
       periodicHypercubicEvenShift_zero_ne_zero H] at hij ⊢
+  · exact (periodicHypercubicEvenShift_zero_ne_zero
+      H (2 : PeriodicHypercubicAxis)) hij.symm
+  · exact (periodicHypercubicEvenShift_zero_ne_zero
+      H (1 : PeriodicHypercubicAxis)) hij.symm
 
 /-- The canonical four plaquette edges as an embedding into the actual
 reflection-fixed boundary edge index. -/
