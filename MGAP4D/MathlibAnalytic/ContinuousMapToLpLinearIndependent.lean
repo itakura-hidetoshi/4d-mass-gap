@@ -25,7 +25,7 @@ theorem continuousMap_toLp_linearIndependent
     [SecondCountableTopologyEither α ℝ]
     {μ : Measure α}
     [IsFiniteMeasure μ]
-    [μ.IsOpenPosMeasure]
+    [Measure.IsOpenPosMeasure μ]
     {p : ℝ≥0∞}
     [Fact (1 ≤ p)]
     (v : ι → C(α, ℝ))
