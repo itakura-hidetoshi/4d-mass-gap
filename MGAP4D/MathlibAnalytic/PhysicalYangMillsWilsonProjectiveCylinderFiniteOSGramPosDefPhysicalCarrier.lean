@@ -136,8 +136,12 @@ theorem physical_yang_mills_projectivePositiveTimeL2_norm_sq_eq_osBilinForm
     _ = D.osBilinForm
         (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)
         G G := by
-      simp [PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.osQuadraticValue,
-        c, Pn]
+      change D.osBilinForm Pn.omega
+          (Pn.toPositiveTime c) (Pn.toPositiveTime c) =
+        D.osBilinForm
+          (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n) G G
+      rw [PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.toPositiveTime_positiveTimeSubmoduleCarrierLinearMap]
+      rfl
 
 /-- Projective `L²` eventual coherence plus finite linear independence is enough
 to generate strict continuum OS Gram matrices.
@@ -217,17 +221,19 @@ theorem eventually_uniformFiniteOSCoercivity
     exact J.eventually_projective_eq (i : ℕ)
   filter_upwards [heq] with n hn
   intro x
+  let T := physicalYangMillsProjectivePositiveTimeL2LinearMap R L hInvariant n
   have hmap :
-      physicalYangMillsProjectivePositiveTimeL2LinearMap R L hInvariant n
-          (∑ i : s, x i • J.observable (i : ℕ)) =
+      T (∑ i : s, x i • J.observable (i : ℕ)) =
         ∑ i : s, x i • J.continuumVector (i : ℕ) := by
-    simp only [map_sum, map_smul, hn]
+    rw [map_sum]
+    apply Finset.sum_congr rfl
+    intro i hi
+    rw [map_smul, hn i]
   calc
     δ * (∑ i, x i ^ 2) ≤
         ‖∑ i : s, x i • J.continuumVector (i : ℕ)‖ ^ 2 :=
       hlower x
-    _ = ‖physicalYangMillsProjectivePositiveTimeL2LinearMap R L hInvariant n
-          (∑ i : s, x i • J.observable (i : ℕ))‖ ^ 2 := by
+    _ = ‖T (∑ i : s, x i • J.observable (i : ℕ))‖ ^ 2 := by
       rw [hmap]
     _ = D.osBilinForm
           (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)
@@ -364,9 +370,10 @@ noncomputable def toFiniteOSGramPosDefPhysicalCarrierData
       (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData_isNormalized
         S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant) where
   observable := fun n =>
-    (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
-      S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant).
-        positiveTimeSubmoduleCarrierLinearMap (J.observable n)
+    PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.positiveTimeSubmoduleCarrierLinearMap
+      (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData
+        S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant)
+      (J.observable n)
   osGram_posDef := by
     intro s
     have h := J.continuum_osGram_posDef s
@@ -406,11 +413,13 @@ structure PhysicalYangMillsEvenPeriodicWilsonOSFiniteProjectiveCylinderLinearInd
     R.finiteOSMarginalLinearIsometry hInvariant n
         (Pn.physicalState
           (Pn.positiveTimeSubmoduleCarrierLinearMap (observable k))) =
-      L.finiteMarginalL2Transition h (cylinderVector k)
+      EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Transition
+        (F := F) h (cylinderVector k)
   finiteCommonMarginalLinearIndependent : ∀ s : Finset ℕ,
     LinearIndependent ℝ
       (fun i : s =>
-        L.finiteMarginalL2Transition
+        EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Transition
+          (F := F)
           (Finset.subset_biUnion_of_mem cylinderIndex i.property)
           (cylinderVector (i : ℕ)))
 
@@ -459,7 +468,8 @@ noncomputable def toProjectiveL2EventuallyCoherentPhysicalCarrierData
               (Pn.positiveTimeSubmoduleCarrierLinearMap (C.observable k)))) := by
         rfl
       _ = L.finiteMarginalL2Pullback (R.marginalIndex n)
-          (L.finiteMarginalL2Transition hn (C.cylinderVector k)) := by
+          (EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Transition
+            (F := F) hn (C.cylinderVector k)) := by
         rw [C.finiteImage_eq_transition k n hn]
       _ = L.finiteMarginalL2Pullback (C.cylinderIndex k)
           (C.cylinderVector k) :=
@@ -473,7 +483,8 @@ noncomputable def toProjectiveL2EventuallyCoherentPhysicalCarrierData
           Lp ℝ 2 L.continuumMeasure :=
       (L.finiteMarginalL2Pullback commonIndex).toLinearMap
     let u : s → Lp ℝ 2 (F.finiteMarginal commonIndex) := fun i =>
-      L.finiteMarginalL2Transition
+      EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Transition
+        (F := F)
         (Finset.subset_biUnion_of_mem C.cylinderIndex i.property)
         (C.cylinderVector (i : ℕ))
     have hu : LinearIndependent ℝ u := by
@@ -505,7 +516,7 @@ noncomputable def toFiniteOSGramPosDefPhysicalCarrierData
         S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant)
       (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData_isNormalized
         S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant) :=
-  C.toProjectiveL2EventuallyCoherentPhysicalCarrierData.
+  (C.toProjectiveL2EventuallyCoherentPhysicalCarrierData).
     toFiniteOSGramPosDefPhysicalCarrierData
 
 end PhysicalYangMillsEvenPeriodicWilsonOSFiniteProjectiveCylinderLinearIndependentData
