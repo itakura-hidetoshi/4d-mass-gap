@@ -31,15 +31,33 @@ theorem infiniteRange_powerFamily_linearIndependent
   have hpEval : ∀ x : α, pa.eval (f x) = pb.eval (f x) := by
     intro x
     have hx := congrFun hab x
-    simpa [pa, pb] using hx
+    have hx' :
+        (∑ j ∈ s, a j * f x ^ j) =
+          ∑ j ∈ s, b j * f x ^ j := by
+      simpa only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul] using hx
+    have hpa : pa.eval (f x) = ∑ j ∈ s, a j * f x ^ j := by
+      rw [pa, Polynomial.eval_finsetSum]
+      simp
+    have hpb : pb.eval (f x) = ∑ j ∈ s, b j * f x ^ j := by
+      rw [pb, Polynomial.eval_finsetSum]
+      simp
+    exact hpa.trans (hx'.trans hpb.symm)
   have hpEq : pa = pb := by
     apply Polynomial.eq_of_infinite_eval_eq
     refine hf.mono ?_
     intro y hy
     rcases hy with ⟨x, rfl⟩
     exact hpEval x
-  have hcoeff := congrArg (fun q : Polynomial ℝ => q.coeff i) hpEq
-  simpa [pa, pb, hi] using hcoeff
+  have hca : pa.coeff i = a i := by
+    rw [pa, Polynomial.finsetSum_coeff]
+    simp [hi]
+  have hcb : pb.coeff i = b i := by
+    rw [pb, Polynomial.finsetSum_coeff]
+    simp [hi]
+  calc
+    a i = pa.coeff i := hca.symm
+    _ = pb.coeff i := congrArg (fun q : Polynomial ℝ => q.coeff i) hpEq
+    _ = b i := hcb
 
 end
 
