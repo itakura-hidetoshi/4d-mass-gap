@@ -29,18 +29,28 @@ theorem orthonormal_nat_l2_zero_one_not_both_ae_constant
   have hrel : c0 • v 1 = c1 • v 0 := by
     apply Lp.ext
     filter_upwards [Lp.coeFn_smul c0 (v 1), Lp.coeFn_smul c1 (v 0), hv0, hv1] with x hs0 hs1 h0x h1x
-    rw [hs0, hs1, h1x, h0x]
-    simp [smul_eq_mul, mul_comm]
-  have hinner := congrArg (fun w => inner ℝ (v 1) w) hrel
+    rw [hs0, hs1]
+    simp only [Pi.smul_apply, smul_eq_mul, h1x, h0x, mul_comm]
+  have hinner :
+      inner ℝ (v 1) (c0 • v 1) = inner ℝ (v 1) (c1 • v 0) :=
+    congrArg (fun w => inner ℝ (v 1) w) hrel
   have h11 : inner ℝ (v 1) (v 1) = 1 := by
     simpa using (orthonormal_iff_ite.mp hv 1 1)
   have h10 : inner ℝ (v 1) (v 0) = 0 := by
     exact hv.inner_eq_zero (by norm_num)
   have hc0 : c0 = 0 := by
-    simpa [inner_smul_right, h11, h10] using hinner
+    calc
+      c0 = inner ℝ (v 1) (c0 • v 1) := by
+        rw [inner_smul_right, h11]
+        simp
+      _ = inner ℝ (v 1) (c1 • v 0) := hinner
+      _ = 0 := by
+        rw [inner_smul_right, h10]
+        simp
   have hv0zero : v 0 = 0 := by
     apply Lp.ext
     filter_upwards [hv0] with x hx
+    change (v 0 : α → ℝ) x = 0
     simpa [hc0] using hx
   have hnorm := hv.norm_eq_one 0
   rw [hv0zero, norm_zero] at hnorm
