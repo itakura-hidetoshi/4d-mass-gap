@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Module.Completion
+import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.LinearAlgebra.Dimension.Finite
 
 namespace MGAP4D
