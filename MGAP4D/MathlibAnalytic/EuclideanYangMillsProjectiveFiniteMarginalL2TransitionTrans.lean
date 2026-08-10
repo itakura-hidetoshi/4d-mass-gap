@@ -29,7 +29,7 @@ theorem finiteMarginalL2Transition_trans
           (F := F) hKJ f) =
       EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Transition
         (F := F) (hKJ.trans hIK) f := by
-  apply L.finiteMarginalL2Pullback_injective I
+  apply (L.finiteMarginalL2Pullback I).injective
   calc
     L.finiteMarginalL2Pullback I
         (EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Transition
