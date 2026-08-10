@@ -115,9 +115,8 @@ noncomputable def toProjectiveL2EventuallyCoherentPhysicalCarrierData
       S D halfExtent N hN beta hbeta Q F R L hInvariant) :
     PhysicalYangMillsEvenPeriodicWilsonOSProjectiveL2EventuallyCoherentPhysicalCarrierData
       S D halfExtent N hN beta hbeta Q F R L hInvariant :=
-  PhysicalYangMillsEvenPeriodicWilsonOSFiniteProjectiveCylinderLinearIndependentData.
-    toProjectiveL2EventuallyCoherentPhysicalCarrierData
-      C.toFiniteProjectiveCylinderLinearIndependentData
+  PhysicalYangMillsEvenPeriodicWilsonOSFiniteProjectiveCylinderLinearIndependentData.toProjectiveL2EventuallyCoherentPhysicalCarrierData
+    C.toFiniteProjectiveCylinderLinearIndependentData
 
 /-- Finite projective-cylinder orthonormality theorem-generates the exact
 strict continuum finite-Gram physical-carrier datum.  The route is
@@ -136,9 +135,8 @@ noncomputable def toFiniteOSGramPosDefPhysicalCarrierData
         S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant)
       (physical_yang_mills_evenPeriodicWilsonOS_continuum_preHilbertData_isNormalized
         S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant) :=
-  PhysicalYangMillsEvenPeriodicWilsonOSFiniteProjectiveCylinderLinearIndependentData.
-    toFiniteOSGramPosDefPhysicalCarrierData
-      C.toFiniteProjectiveCylinderLinearIndependentData
+  PhysicalYangMillsEvenPeriodicWilsonOSFiniteProjectiveCylinderLinearIndependentData.toFiniteOSGramPosDefPhysicalCarrierData
+    C.toFiniteProjectiveCylinderLinearIndependentData
 
 end PhysicalYangMillsEvenPeriodicWilsonOSFiniteProjectiveCylinderOrthonormalData
 
