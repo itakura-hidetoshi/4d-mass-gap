@@ -40,21 +40,28 @@ theorem vacuumOrthogonalOrthonormalSequenceData_nonempty_of_not_finiteDimensiona
     letI : Fintype w := hwFinite.fintype
     apply hInfinite
     exact b.toOrthonormalBasis.toBasis.finiteDimensional_of_finite
-  have hAwayInfinite : (w \ {vacuum}).Infinite := by
+  let away : Set K := w \ ({vacuum} : Set K)
+  have hAwayInfinite : away.Infinite := by
     intro hAwayFinite
     apply hwInfinite
     apply (hAwayFinite.union (Set.finite_singleton vacuum)).subset
     intro x hx
     by_cases hxVacuum : x = vacuum
     · exact Or.inr (by simpa [hxVacuum])
-    · exact Or.inl ⟨hx, by simpa using hxVacuum⟩
-  let awayIndex : ℕ ↪ (w \ {vacuum}) :=
-    Infinite.natEmbedding (w \ {vacuum}) hAwayInfinite
-  let includeAway : (w \ {vacuum}) ↪ w :=
-    ⟨fun x => ⟨x.1, x.2.1⟩, by
-      intro x y hxy
-      apply Subtype.ext
-      exact congrArg Subtype.val hxy⟩
+    · refine Or.inl ?_
+      change x ∈ w ∧ x ∉ ({vacuum} : Set K)
+      exact ⟨hx, by simpa using hxVacuum⟩
+  let awayIndex : ℕ ↪ away :=
+    Infinite.natEmbedding away hAwayInfinite
+  let includeAway : away ↪ w :=
+    ⟨fun x => ⟨x.1, by
+        have hx : (x : K) ∈ w ∧ (x : K) ∉ ({vacuum} : Set K) := by
+          simpa [away] using x.property
+        exact hx.1⟩,
+      by
+        intro x y hxy
+        apply Subtype.ext
+        exact congrArg Subtype.val hxy⟩
   let sequenceIndex : ℕ ↪ w := awayIndex.trans includeAway
   let excitation : ℕ → K := fun n => b (sequenceIndex n)
   have hExcitation : Orthonormal ℝ excitation := by
@@ -69,7 +76,12 @@ theorem vacuumOrthogonalOrthonormalSequenceData_nonempty_of_not_finiteDimensiona
       have hval : vacuum = (awayIndex n : K) := by
         simpa [vacuumIndex, sequenceIndex, includeAway] using
           congrArg Subtype.val hEq
-      exact (awayIndex n).property.2 (by simpa using hval.symm)
+      have hAwayProperty :
+          (awayIndex n : K) ∈ w ∧ (awayIndex n : K) ∉ ({vacuum} : Set K) := by
+        simpa [away] using (awayIndex n).property
+      have hNotVacuum : (awayIndex n : K) ≠ vacuum := by
+        simpa using hAwayProperty.2
+      exact hNotVacuum hval.symm
     have hinner := b.orthonormal.inner_eq_zero hne
     simpa [excitation, hbVacuum] using hinner
   exact ⟨{
