@@ -117,7 +117,7 @@ noncomputable local instance commonProductSeparableSpace :
         halfExtent N hN beta hbeta) := by
     infer_instance
   letI : Fact (1 ≤ (2 : ℝ≥0∞)) := ⟨by norm_num⟩
-  letI : Fact ((2 : ℝ≥0∞) ≠ ∞) := ⟨by norm_num⟩
+  letI : Fact ((2 : ℝ≥0∞) ≠ ⊤) := ⟨by norm_num⟩
   letI : SecondCountableTopology
       (PhysicalYangMillsEvenPeriodicWilsonInteractingBoundaryCommonHilbert
         halfExtent N hN beta hbeta) := by
