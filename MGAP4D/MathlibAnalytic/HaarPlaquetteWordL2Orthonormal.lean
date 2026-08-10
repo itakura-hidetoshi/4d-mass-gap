@@ -114,6 +114,120 @@ theorem haarPlaquetteWordL2Pullback_orthonormal
     Orthonormal ℝ ((haarPlaquetteWordL2Pullback μ) ∘ v) :=
   hv.comp_linearIsometry (haarPlaquetteWordL2Pullback μ)
 
+/-- Left multiplication of a left-Haar random variable by an independent
+probability variable preserves the Haar law.
+
+The first coordinate is Haar and the second coordinate has law `ν`; Mathlib's
+`measurePreserving_prod_mul_swap` performs `(x,y) ↦ (y,y*x)`, after which the
+second projection is Haar. -/
+theorem measurePreserving_haarLeftMul
+    {G : Type u} [MeasurableSpace G] [Group G]
+    [MeasurableMul₂ G]
+    (μ ν : Measure G)
+    [SFinite μ] [SFinite ν]
+    [IsProbabilityMeasure μ] [IsProbabilityMeasure ν]
+    [IsMulLeftInvariant μ] :
+    MeasurePreserving (fun z : G × G => z.2 * z.1) (μ.prod ν) μ := by
+  simpa [Function.comp_def] using
+    (MeasureTheory.measurePreserving_snd.comp
+      (MeasureTheory.measurePreserving_prod_mul_swap (μ := μ) (ν := ν)))
+
+/-- Inverse-left multiplication also preserves the law of the left-Haar first
+coordinate.  Crucially, no inversion-invariance assumption on Haar measure is
+needed: Mathlib's inverse shear proves this directly. -/
+theorem measurePreserving_haarInvLeftMul
+    {G : Type u} [MeasurableSpace G] [Group G]
+    [MeasurableMul₂ G] [MeasurableInv G]
+    (μ ν : Measure G)
+    [SFinite μ] [SFinite ν]
+    [IsProbabilityMeasure μ] [IsProbabilityMeasure ν]
+    [IsMulLeftInvariant μ] :
+    MeasurePreserving (fun z : G × G => z.2⁻¹ * z.1) (μ.prod ν) μ := by
+  simpa [Function.comp_def] using
+    (MeasureTheory.measurePreserving_snd.comp
+      (MeasureTheory.measurePreserving_prod_inv_mul_swap (μ := μ) (ν := ν)))
+
+/-- A cyclic representative of the oriented plaquette word.
+
+With nested coordinates `(((b,a),d),c)`, this is
+`c⁻¹ * d⁻¹ * a * b`.  It is conjugate to the physical oriented word
+`a * b * c⁻¹ * d⁻¹`; therefore every conjugation-invariant class function has
+exactly the same value on the two words.
+
+This cyclic representative is analytically preferable because its Haar-law
+proof uses only left invariance, not compact-group unimodularity or inversion
+invariance. -/
+def haarCyclicPlaquetteWord
+    {G : Type u} [Group G]
+    (z : ((G × G) × G) × G) : G :=
+  z.2⁻¹ * (z.1.2⁻¹ * (z.1.1.2 * z.1.1.1))
+
+/-- Four independent probability-Haar variables pushed through the cyclic
+plaquette word `c⁻¹ * d⁻¹ * a * b` have exactly Haar law using left invariance
+alone.
+
+The proof iterates the two Mathlib shears above: first form `a*b`, then
+left-multiply by `d⁻¹`, then by `c⁻¹`. -/
+theorem measurePreserving_haarCyclicPlaquetteWord
+    {G : Type u} [MeasurableSpace G] [Group G]
+    [MeasurableMul₂ G] [MeasurableInv G]
+    (μ : Measure G)
+    [SFinite μ] [IsProbabilityMeasure μ]
+    [IsMulLeftInvariant μ] :
+    MeasurePreserving haarCyclicPlaquetteWord
+      (((μ.prod μ).prod μ).prod μ) μ := by
+  have hAB :
+      MeasurePreserving (fun z : G × G => z.2 * z.1) (μ.prod μ) μ :=
+    measurePreserving_haarLeftMul μ μ
+  have hABWithD :
+      MeasurePreserving
+        (Prod.map (fun z : G × G => z.2 * z.1) id)
+        ((μ.prod μ).prod μ) (μ.prod μ) :=
+    hAB.prod (MeasurePreserving.id μ)
+  have hABD :
+      MeasurePreserving
+        (fun z : (G × G) × G => z.2⁻¹ * (z.1.2 * z.1.1))
+        ((μ.prod μ).prod μ) μ := by
+    simpa [Function.comp_def] using
+      (measurePreserving_haarInvLeftMul μ μ).comp hABWithD
+  have hABDWithC :
+      MeasurePreserving
+        (Prod.map
+          (fun z : (G × G) × G => z.2⁻¹ * (z.1.2 * z.1.1)) id)
+        (((μ.prod μ).prod μ).prod μ) (μ.prod μ) :=
+    hABD.prod (MeasurePreserving.id μ)
+  simpa [haarCyclicPlaquetteWord, Function.comp_def, mul_assoc] using
+    (measurePreserving_haarInvLeftMul μ μ).comp hABDWithC
+
+/-- Exact real `L²` pullback along the cyclic plaquette word.  Unlike the
+non-cyclic word above, this construction requires only left Haar invariance. -/
+noncomputable def haarCyclicPlaquetteWordL2Pullback
+    {G : Type u} [MeasurableSpace G] [Group G]
+    [MeasurableMul₂ G] [MeasurableInv G]
+    (μ : Measure G)
+    [SFinite μ] [IsProbabilityMeasure μ]
+    [IsMulLeftInvariant μ] :
+    Lp ℝ 2 μ →ₗᵢ[ℝ]
+      Lp ℝ 2 (((μ.prod μ).prod μ).prod μ) :=
+  Lp.compMeasurePreservingₗᵢ
+    (𝕜 := ℝ)
+    haarCyclicPlaquetteWord
+    (measurePreserving_haarCyclicPlaquetteWord μ)
+
+/-- Orthonormal Haar modes remain orthonormal after cyclic plaquette-word
+pullback, with no inversion-invariance assumption. -/
+theorem haarCyclicPlaquetteWordL2Pullback_orthonormal
+    {G : Type u} [MeasurableSpace G] [Group G]
+    [MeasurableMul₂ G] [MeasurableInv G]
+    (μ : Measure G)
+    [SFinite μ] [IsProbabilityMeasure μ]
+    [IsMulLeftInvariant μ]
+    {κ : Type*}
+    (v : κ → Lp ℝ 2 μ)
+    (hv : Orthonormal ℝ v) :
+    Orthonormal ℝ ((haarCyclicPlaquetteWordL2Pullback μ) ∘ v) :=
+  hv.comp_linearIsometry (haarCyclicPlaquetteWordL2Pullback μ)
+
 end
 
 end MathlibAnalytic
