@@ -37,29 +37,30 @@ theorem exists_pos_sum_sq_le_norm_sq_of_linearIndependent
     ⟨K, hK, hAnti⟩
   have hKreal : 0 < (K : ℝ) := by
     exact_mod_cast hK
-  refine ⟨((K : ℝ) ^ 2), sq_pos_of_pos hKreal, ?_⟩
+  have hKinv : 0 < (K : ℝ)⁻¹ := inv_pos.mpr hKreal
+  refine ⟨((K : ℝ)⁻¹ ^ 2), sq_pos_of_pos hKinv, ?_⟩
   intro x
   let y : EuclideanSpace ℝ ι := WithLp.toLp 2 x
   have hbound :
-      (K : ℝ) * ‖y‖ ≤ ‖S y‖ := by
+      (K : ℝ)⁻¹ * ‖y‖ ≤ ‖S y‖ := by
     simpa using hAnti.mul_le_dist y 0
   have hsq :
-      (((K : ℝ) * ‖y‖) ^ 2) ≤ ‖S y‖ ^ 2 := by
+      (((K : ℝ)⁻¹ * ‖y‖) ^ 2) ≤ ‖S y‖ ^ 2 := by
     have hprod :
         0 ≤
-          (‖S y‖ - (K : ℝ) * ‖y‖) *
-            (‖S y‖ + (K : ℝ) * ‖y‖) :=
+          (‖S y‖ - (K : ℝ)⁻¹ * ‖y‖) *
+            (‖S y‖ + (K : ℝ)⁻¹ * ‖y‖) :=
       mul_nonneg
         (sub_nonneg.mpr hbound)
-        (add_nonneg (norm_nonneg _) (mul_nonneg hKreal.le (norm_nonneg _)))
+        (add_nonneg (norm_nonneg _) (mul_nonneg hKinv.le (norm_nonneg _)))
     nlinarith
   have hynorm : ‖y‖ ^ 2 = ∑ i, x i ^ 2 := by
     simpa [y] using EuclideanSpace.real_norm_sq_eq y
   have hSy : S y = ∑ i, x i • v i := by
     simp [S, y, Fintype.linearCombination_apply]
   calc
-    ((K : ℝ) ^ 2) * (∑ i, x i ^ 2) =
-        (((K : ℝ) * ‖y‖) ^ 2) := by
+    ((K : ℝ)⁻¹ ^ 2) * (∑ i, x i ^ 2) =
+        (((K : ℝ)⁻¹ * ‖y‖) ^ 2) := by
       rw [← hynorm]
       ring
     _ ≤ ‖S y‖ ^ 2 := hsq
