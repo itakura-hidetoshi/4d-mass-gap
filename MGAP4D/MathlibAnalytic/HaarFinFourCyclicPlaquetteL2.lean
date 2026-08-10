@@ -43,13 +43,7 @@ theorem haarFinFourCyclicNestedCoordinates_apply
     (x : Fin 4 → G) :
     haarFinFourCyclicNestedCoordinates x =
       (((x 1, x 0), x 3), x 2) := by
-  apply Prod.ext
-  · apply Prod.ext
-    · apply Prod.ext
-      · simp [haarFinFourCyclicNestedCoordinates]
-      · simp [haarFinFourCyclicNestedCoordinates]
-    · simp [haarFinFourCyclicNestedCoordinates]
-  · simp [haarFinFourCyclicNestedCoordinates]
+  rfl
 
 /-- The canonical `Fin 4` Haar-product reshaping is measure-preserving.
 
