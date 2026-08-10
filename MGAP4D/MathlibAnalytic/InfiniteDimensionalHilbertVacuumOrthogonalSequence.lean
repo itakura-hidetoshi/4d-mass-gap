@@ -61,7 +61,7 @@ theorem vacuumOrthogonalOrthonormalSequenceData_nonempty_of_not_finiteDimensiona
       by
         intro x y hxy
         apply Subtype.ext
-        exact congrArg Subtype.val hxy⟩
+        exact congrArg (fun z : w => (z : K)) hxy⟩
   let sequenceIndex : ℕ ↪ w := awayIndex.trans includeAway
   let excitation : ℕ → K := fun n => b (sequenceIndex n)
   have hExcitation : Orthonormal ℝ excitation := by
