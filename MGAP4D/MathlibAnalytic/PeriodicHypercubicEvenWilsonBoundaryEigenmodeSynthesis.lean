@@ -5,7 +5,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory
-open scoped InnerProductSpace
+open scoped InnerProduct InnerProductSpace
 
 noncomputable section
 
@@ -57,7 +57,7 @@ theorem periodicHypercubicEvenWilsonBoundaryGramFeature_exists_synthesis_preimag
           H N hN beta hbeta u = y := by
   let A := periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator
     H N hN beta hbeta
-  have hyA : A† (A y) = lambda • y := by
+  have hyA : (A†) (A y) = lambda • y := by
     simpa [A, periodicHypercubicEvenWilsonBoundaryGramFeatureFactorizedOperator,
       periodicHypercubicEvenWilsonBoundaryGramFeatureSynthesisOperator] using hy
   rcases
