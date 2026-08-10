@@ -52,11 +52,11 @@ theorem vacuumOrthogonalOrthonormalSequenceData_nonempty_of_not_finiteDimensiona
       change x ∈ w ∧ x ∉ ({vacuum} : Set K)
       exact ⟨hx, by simpa using hxVacuum⟩
   let awayIndex : ℕ ↪ away :=
-    Infinite.natEmbedding away hAwayInfinite
+    hAwayInfinite.to_subtype.natEmbedding
   let includeAway : away ↪ w :=
     ⟨fun x => ⟨x.1, by
-        have hx : (x : K) ∈ w ∧ (x : K) ∉ ({vacuum} : Set K) := by
-          simpa [away] using x.property
+        have hx : (x : K) ∈ away := x.property
+        change (x : K) ∈ w ∧ (x : K) ∉ ({vacuum} : Set K) at hx
         exact hx.1⟩,
       by
         intro x y hxy
@@ -76,9 +76,11 @@ theorem vacuumOrthogonalOrthonormalSequenceData_nonempty_of_not_finiteDimensiona
       have hval : vacuum = (awayIndex n : K) := by
         simpa [vacuumIndex, sequenceIndex, includeAway] using
           congrArg Subtype.val hEq
-      have hAwayProperty :
-          (awayIndex n : K) ∈ w ∧ (awayIndex n : K) ∉ ({vacuum} : Set K) := by
-        simpa [away] using (awayIndex n).property
+      have hAwayProperty : (awayIndex n : K) ∈ away := (awayIndex n).property
+      change
+        (awayIndex n : K) ∈ w ∧
+          (awayIndex n : K) ∉ ({vacuum} : Set K)
+        at hAwayProperty
       have hNotVacuum : (awayIndex n : K) ≠ vacuum := by
         simpa using hAwayProperty.2
       exact hNotVacuum hval.symm
