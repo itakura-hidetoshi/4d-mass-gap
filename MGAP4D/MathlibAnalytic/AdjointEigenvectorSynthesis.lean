@@ -23,8 +23,8 @@ assuming a global coercive lower bound or global surjectivity of `A†`. -/
 theorem continuousLinearMap_adjoint_exists_preimage_of_nonzero_normal_eigenvector
     (A : V →L[ℝ] W) (y : V) (lambda : ℝ)
     (hlambda : lambda ≠ 0)
-    (hy : A† (A y) = lambda • y) :
-    ∃ u : W, A† u = y := by
+    (hy : (A†) (A y) = lambda • y) :
+    ∃ u : W, (A†) u = y := by
   refine ⟨lambda⁻¹ • A y, ?_⟩
   simp [hy, hlambda]
 
@@ -32,8 +32,8 @@ theorem continuousLinearMap_adjoint_exists_preimage_of_nonzero_normal_eigenvecto
 preimage, namely `A v`. -/
 theorem continuousLinearMap_adjoint_exists_preimage_of_normal_equation
     (A : V →L[ℝ] W) (y v : V)
-    (hv : A† (A v) = y) :
-    ∃ u : W, A† u = y :=
+    (hv : (A†) (A v) = y) :
+    ∃ u : W, (A†) u = y :=
   ⟨A v, hv⟩
 
 end
