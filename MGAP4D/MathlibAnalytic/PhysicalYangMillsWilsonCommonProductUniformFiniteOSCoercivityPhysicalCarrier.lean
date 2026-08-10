@@ -108,9 +108,9 @@ theorem continuum_osGram_posDef
       hSymm w
   have hTendsto : ∀ x : s → ℝ,
       Filter.Tendsto
-        (fun n : ℕ => dotProduct (star x) (A n *ᵥ x))
+        (fun n : ℕ => dotProduct (star x) (Matrix.mulVec (A n) x))
         Filter.atTop
-        (nhds (dotProduct (star x) (A_limit *ᵥ x))) := by
+        (nhds (dotProduct (star x) (Matrix.mulVec A_limit x))) := by
     intro x
     have h :=
       physical_yang_mills_evenPeriodicWilsonOS_approximating_osBilinForm_tendsto
@@ -119,7 +119,8 @@ theorem continuum_osGram_posDef
         (∑ i : s, x i • w i)
     simpa [A, A_limit, bilinForm_matrix_quadratic_eq] using h
   have hCoercive : ∀ n (x : s → ℝ),
-      δ * (∑ i, x i ^ 2) ≤ dotProduct (star x) (A n *ᵥ x) := by
+      δ * (∑ i, x i ^ 2) ≤
+        dotProduct (star x) (Matrix.mulVec (A n) x) := by
     intro n x
     simpa [A, w, bilinForm_matrix_quadratic_eq] using hcoercive n x
   have hPosDef :=
