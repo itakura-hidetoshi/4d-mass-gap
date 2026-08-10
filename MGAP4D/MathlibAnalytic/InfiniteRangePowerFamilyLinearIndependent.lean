@@ -55,11 +55,27 @@ theorem infiniteRange_powerFamily_linearIndependent
   have hca : pa.coeff i = a i := by
     change (∑ j ∈ s, Polynomial.monomial j (a j)).coeff i = a i
     rw [Polynomial.finset_sum_coeff]
-    simp [hi]
+    calc
+      (∑ j ∈ s, (Polynomial.monomial j (a j)).coeff i) =
+          (Polynomial.monomial i (a i)).coeff i := by
+        apply Finset.sum_eq_single i
+        · intro j hj hji
+          exact Polynomial.coeff_monomial_of_ne (a j) hji.symm
+        · intro hnot
+          exact (hnot hi).elim
+      _ = a i := Polynomial.coeff_monomial_same i (a i)
   have hcb : pb.coeff i = b i := by
     change (∑ j ∈ s, Polynomial.monomial j (b j)).coeff i = b i
     rw [Polynomial.finset_sum_coeff]
-    simp [hi]
+    calc
+      (∑ j ∈ s, (Polynomial.monomial j (b j)).coeff i) =
+          (Polynomial.monomial i (b i)).coeff i := by
+        apply Finset.sum_eq_single i
+        · intro j hj hji
+          exact Polynomial.coeff_monomial_of_ne (b j) hji.symm
+        · intro hnot
+          exact (hnot hi).elim
+      _ = b i := Polynomial.coeff_monomial_same i (b i)
   calc
     a i = pa.coeff i := hca.symm
     _ = pb.coeff i := congrArg (fun q : Polynomial ℝ => q.coeff i) hpEq
