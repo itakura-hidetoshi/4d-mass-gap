@@ -20,26 +20,20 @@ def specialUnitaryTwoRotationMatrix (t : ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
 theorem specialUnitaryTwoRotationMatrix_mem_unitaryGroup (t : ℝ) :
     specialUnitaryTwoRotationMatrix t ∈
       Matrix.unitaryGroup (Fin 2) ℂ := by
-  have hc : Complex.cos (t : ℂ) = (Real.cos t : ℂ) :=
-    (Complex.ofReal_cos t).symm
-  have hs : Complex.sin (t : ℂ) = (Real.sin t : ℂ) :=
-    (Complex.ofReal_sin t).symm
   rw [Matrix.mem_unitaryGroup_iff]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [specialUnitaryTwoRotationMatrix, Matrix.mul_apply, hc, hs] <;>
-    ring_nf <;>
+    simp [specialUnitaryTwoRotationMatrix, Matrix.mul_apply] <;>
+    rw [← Complex.ofReal_cos t, ← Complex.ofReal_sin t] <;>
     norm_num [← Complex.ofReal_mul, ← Complex.ofReal_add,
-      Real.sin_sq_add_cos_sq]
+      Real.sin_sq_add_cos_sq] <;>
+    ring
 
 /-- The real rotation matrix has determinant one. -/
 theorem specialUnitaryTwoRotationMatrix_det (t : ℝ) :
     Matrix.det (specialUnitaryTwoRotationMatrix t) = 1 := by
-  have hc : Complex.cos (t : ℂ) = (Real.cos t : ℂ) :=
-    (Complex.ofReal_cos t).symm
-  have hs : Complex.sin (t : ℂ) = (Real.sin t : ℂ) :=
-    (Complex.ofReal_sin t).symm
-  simp [specialUnitaryTwoRotationMatrix, Matrix.det_fin_two, hc, hs]
+  simp [specialUnitaryTwoRotationMatrix, Matrix.det_fin_two]
+  rw [← Complex.ofReal_cos t, ← Complex.ofReal_sin t]
   norm_num [← Complex.ofReal_mul, ← Complex.ofReal_add,
     Real.sin_sq_add_cos_sq]
 
