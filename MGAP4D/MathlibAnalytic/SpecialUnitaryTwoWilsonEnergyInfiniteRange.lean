@@ -32,10 +32,15 @@ theorem specialUnitaryTwoRotationMatrix_mem_unitaryGroup (t : ℝ) :
       Complex.cos (t : ℂ) * Complex.cos (t : ℂ) +
           Complex.sin (t : ℂ) * Complex.sin (t : ℂ) = 1 := by
     simpa [pow_two] using Complex.cos_sq_add_sin_sq (t : ℂ)
+  have htrig' :
+      Complex.sin (t : ℂ) * Complex.sin (t : ℂ) +
+          Complex.cos (t : ℂ) * Complex.cos (t : ℂ) = 1 := by
+    simpa [pow_two] using Complex.sin_sq_add_cos_sq (t : ℂ)
   rw [Matrix.mem_unitaryGroup_iff]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [specialUnitaryTwoRotationMatrix, Matrix.mul_apply, hcosStar, hsinStar, htrig] <;>
+    simp [specialUnitaryTwoRotationMatrix, Matrix.mul_apply,
+      hcosStar, hsinStar, htrig, htrig'] <;>
     ring
 
 /-- The real rotation matrix has determinant one. -/
