@@ -12,32 +12,31 @@ noncomputable section
 
 universe u v
 
-/-- Restriction of a finite product probability variable to an arbitrary
-finite coordinate block is measure-preserving.
+/-- Restriction of a finite product probability variable to any decidable
+coordinate predicate is measure-preserving.
 
 Mathlib first splits the full product into the selected subtype and its
 complement by `measurePreserving_piEquivPiSubtypeProd`; the first projection
-then forgets the complementary probability block.  Thus no coordinate-wise
-independence calculation is reproduced here. -/
+then forgets the complementary probability block.  Working directly with the
+predicate subtype also keeps the `Fintype` instance definitionally identical
+to the one used by Mathlib's split theorem. -/
 theorem measurePreserving_finiteProductProbabilityRestriction
     {ι : Type u} [Fintype ι]
     {α : ι → Type v}
     [∀ i, MeasurableSpace (α i)]
     (μ : ∀ i, Measure (α i))
     [∀ i, IsProbabilityMeasure (μ i)]
-    (s : Finset ι) :
+    (p : ι → Prop) [DecidablePred p] :
     MeasurePreserving
-      (fun (x : ∀ i, α i) (i : s) => x i)
+      (fun (x : ∀ i, α i) (i : Subtype p) => x i)
       (Measure.pi μ)
-      (Measure.pi fun i : s => μ i) := by
-  classical
-  let p : ι → Prop := fun i => i ∈ s
+      (Measure.pi fun i : Subtype p => μ i) := by
   have hSplit :=
     MeasureTheory.measurePreserving_piEquivPiSubtypeProd (μ := μ) p
   have h := MeasureTheory.measurePreserving_fst.comp hSplit
-  simpa [p, Function.comp_def] using h
+  simpa [Function.comp_def] using h
 
-/-- Exact real `L²` pullback from a selected finite block of coordinates into
+/-- Exact real `L²` pullback from a predicate-selected coordinate block into
 the full finite product probability space. -/
 noncomputable def finiteProductProbabilityRestrictionL2Pullback
     {ι : Type u} [Fintype ι]
@@ -45,30 +44,31 @@ noncomputable def finiteProductProbabilityRestrictionL2Pullback
     [∀ i, MeasurableSpace (α i)]
     (μ : ∀ i, Measure (α i))
     [∀ i, IsProbabilityMeasure (μ i)]
-    (s : Finset ι) :
-    Lp ℝ 2 (Measure.pi fun i : s => μ i) →ₗᵢ[ℝ]
+    (p : ι → Prop) [DecidablePred p] :
+    Lp ℝ 2 (Measure.pi fun i : Subtype p => μ i) →ₗᵢ[ℝ]
       Lp ℝ 2 (Measure.pi μ) :=
   Lp.compMeasurePreservingₗᵢ
     (𝕜 := ℝ)
-    (fun (x : ∀ i, α i) (i : s) => x i)
-    (measurePreserving_finiteProductProbabilityRestriction μ s)
+    (fun (x : ∀ i, α i) (i : Subtype p) => x i)
+    (measurePreserving_finiteProductProbabilityRestriction μ p)
 
-/-- Any orthonormal family on a selected finite coordinate block remains
-orthonormal after pullback to the full product probability `L²` space. -/
+/-- Any orthonormal family on a predicate-selected finite coordinate block
+remains orthonormal after pullback to the full product probability `L²`
+space. -/
 theorem finiteProductProbabilityRestrictionL2Pullback_orthonormal
     {ι : Type u} [Fintype ι]
     {α : ι → Type v}
     [∀ i, MeasurableSpace (α i)]
     (μ : ∀ i, Measure (α i))
     [∀ i, IsProbabilityMeasure (μ i)]
-    (s : Finset ι)
+    (p : ι → Prop) [DecidablePred p]
     {κ : Type*}
-    (v : κ → Lp ℝ 2 (Measure.pi fun i : s => μ i))
+    (v : κ → Lp ℝ 2 (Measure.pi fun i : Subtype p => μ i))
     (hv : Orthonormal ℝ v) :
     Orthonormal ℝ
-      ((finiteProductProbabilityRestrictionL2Pullback μ s) ∘ v) :=
+      ((finiteProductProbabilityRestrictionL2Pullback μ p) ∘ v) :=
   hv.comp_linearIsometry
-    (finiteProductProbabilityRestrictionL2Pullback μ s)
+    (finiteProductProbabilityRestrictionL2Pullback μ p)
 
 end
 
