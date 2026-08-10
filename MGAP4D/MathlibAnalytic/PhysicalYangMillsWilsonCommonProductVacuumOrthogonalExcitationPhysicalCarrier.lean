@@ -1,6 +1,7 @@
 import MGAP4D.MathlibAnalytic.SeparableHilbertVacuumOrthogonalSequenceIsometry
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonCommonProductHilbertDimensionPhysicalCarrier
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonCommonProductPhysicalAmbientCarrier
+import Mathlib.MeasureTheory.Constructions.BorelSpace.Basic
 import Mathlib.MeasureTheory.Measure.SeparableMeasure
 import Mathlib.Tactic
 
@@ -79,14 +80,42 @@ variable
 
 /-- The actual interacting common-product `L²` is separable.  The coordinate
 space is a countable product of finite-dimensional compact second-countable
-boundary configuration spaces; its Borel measurable space is countably
-generated, and the infinite-product Wilson boundary law is a probability
-measure, hence s-finite.  Mathlib then supplies second countability of `L²` and
-therefore separability. -/
+boundary configuration spaces.  We expose the Mathlib instance chain
+explicitly:
+
+`SecondCountable + Borel → CountablyGenerated`,
+`CountablyGenerated + SFinite → IsSeparable μ`,
+`IsSeparable μ → SecondCountable (Lp ℝ 2 μ)`.
+
+The infinite-product Wilson boundary law is a probability measure, hence
+s-finite. -/
 noncomputable local instance commonProductSeparableSpace :
     TopologicalSpace.SeparableSpace
       (PhysicalYangMillsEvenPeriodicWilsonInteractingBoundaryCommonHilbert
         halfExtent N hN beta hbeta) := by
+  letI : SecondCountableTopology
+      (∀ n : ℕ,
+        PhysicalYangMillsEvenPeriodicWilsonInteractingBoundaryScaleConfiguration
+          halfExtent N n) := by
+    infer_instance
+  letI : BorelSpace
+      (∀ n : ℕ,
+        PhysicalYangMillsEvenPeriodicWilsonInteractingBoundaryScaleConfiguration
+          halfExtent N n) := by
+    infer_instance
+  letI : MeasurableSpace.CountablyGenerated
+      (∀ n : ℕ,
+        PhysicalYangMillsEvenPeriodicWilsonInteractingBoundaryScaleConfiguration
+          halfExtent N n) :=
+    BorelSpace.countablyGenerated
+  letI : SFinite
+      (physicalYangMillsEvenPeriodicWilsonBoundaryScaleMarginalInfiniteProduct
+        halfExtent N hN beta hbeta) := by
+    infer_instance
+  letI : IsSeparable
+      (physicalYangMillsEvenPeriodicWilsonBoundaryScaleMarginalInfiniteProduct
+        halfExtent N hN beta hbeta) := by
+    infer_instance
   letI : SecondCountableTopology
       (PhysicalYangMillsEvenPeriodicWilsonInteractingBoundaryCommonHilbert
         halfExtent N hN beta hbeta) := by
