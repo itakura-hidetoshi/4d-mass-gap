@@ -23,6 +23,7 @@ theorem separationQuotient_linearIndependent_of_linearCombination_norm_pos
     (hPos : ∀ l : ℕ →₀ ℝ, l ≠ 0 →
       0 < ‖Finsupp.linearCombination ℝ v l‖) :
     LinearIndependent ℝ (fun n => SeparationQuotient.mk (v n)) := by
+  classical
   rw [linearIndependent_iff_injective_finsuppLinearCombination]
   intro l₁ l₂ hEq
   by_contra hne
@@ -31,17 +32,27 @@ theorem separationQuotient_linearIndependent_of_linearCombination_norm_pos
       Finsupp.linearCombination ℝ
           (fun n => SeparationQuotient.mk (v n)) (l₁ - l₂) = 0 := by
     rw [map_sub, hEq, sub_self]
+  have hMapCombination :
+      SeparationQuotient.mk
+          (Finsupp.linearCombination ℝ v (l₁ - l₂)) =
+        Finsupp.linearCombination ℝ
+          (fun n => SeparationQuotient.mk (v n)) (l₁ - l₂) := by
+    change
+      (SeparationQuotient.mkCLM ℝ V)
+          (Finsupp.linearCombination ℝ v (l₁ - l₂)) = _
+    simp [Finsupp.linearCombination_apply]
   have hMk :
       SeparationQuotient.mk
           (Finsupp.linearCombination ℝ v (l₁ - l₂)) = 0 := by
-    simpa [Finsupp.linearCombination_apply] using hQuotientZero
+    rw [hMapCombination, hQuotientZero]
   have hNormZero :
       ‖Finsupp.linearCombination ℝ v (l₁ - l₂)‖ = 0 := by
-    have hqNorm :
-        ‖SeparationQuotient.mk
-            (Finsupp.linearCombination ℝ v (l₁ - l₂))‖ = 0 := by
-      rw [hMk, norm_zero]
-    simpa using hqNorm
+    calc
+      ‖Finsupp.linearCombination ℝ v (l₁ - l₂)‖ =
+          ‖SeparationQuotient.mk
+            (Finsupp.linearCombination ℝ v (l₁ - l₂))‖ := by
+              rw [SeparationQuotient.norm_mk]
+      _ = 0 := by rw [hMk, norm_zero]
   have hStrict := hPos (l₁ - l₂) hDiff
   rw [hNormZero] at hStrict
   exact (lt_irrefl 0) hStrict
