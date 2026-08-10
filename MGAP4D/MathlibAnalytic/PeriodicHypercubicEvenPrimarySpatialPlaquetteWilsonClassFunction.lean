@@ -9,6 +9,10 @@ noncomputable section
 
 universe u
 
+local instance primaryPlaquetteWilsonClassFunctionMeasurableSpace (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 /-- The naturally oriented four-edge plaquette word `a b c⁻¹ d⁻¹`. -/
 def orientedFourEdgePlaquetteWord
     {G : Type u} [Group G]
@@ -35,8 +39,8 @@ theorem haarFinFourCyclicPlaquetteWord_eq
     haarFinFourCyclicPlaquetteWord x =
       (x 2)⁻¹ * (x 3)⁻¹ * x 0 * x 1 := by
   simp [haarFinFourCyclicPlaquetteWord,
-    haarFinFourCyclicNestedCoordinates,
-    haarCyclicPlaquetteWord]
+    haarFinFourCyclicNestedCoordinates_apply,
+    haarCyclicPlaquetteWord, mul_assoc]
 
 /-- The natural oriented `Fin 4` word is conjugate to the exact cyclic Haar
 word already used by the boundary `L²` isometry. -/
@@ -66,7 +70,7 @@ theorem specialUnitaryWilsonPlaquetteEnergy_orientedFourEdge_eq_cyclic
 plaquette, expressed directly in its four physical positive edge values. -/
 theorem periodicHypercubicEvenPrimarySpatialPlaquetteHolonomy_eq_orientedFourEdge
     (H : ℕ)
-    {G : Type u} [Group G]
+    {G : Type} [Group G]
     (A : PeriodicHypercubicEvenEdge H → G) :
     periodicHypercubicPlaquetteHolonomy A
         (periodicHypercubicEvenPrimarySpatialPlaquette H) =

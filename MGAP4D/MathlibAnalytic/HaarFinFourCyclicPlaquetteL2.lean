@@ -33,6 +33,24 @@ noncomputable def haarFinFourCyclicNestedCoordinates
       ((G × G) × G) × G ≃ᵐ (G × G) × (G × G)).symm
     (Prod.map pair pair (split (reindex x)))
 
+/-- Pointwise evaluation of the canonical `Fin 4` reshaping.
+
+This isolates the concrete finite-coordinate computation from downstream
+consumers: the measurable-equivalence implementation above evaluates exactly
+to `(((x 1, x 0), x 3), x 2)`. -/
+theorem haarFinFourCyclicNestedCoordinates_apply
+    {G : Type u} [MeasurableSpace G]
+    (x : Fin 4 → G) :
+    haarFinFourCyclicNestedCoordinates x =
+      (((x 1, x 0), x 3), x 2) := by
+  apply Prod.ext
+  · apply Prod.ext
+    · apply Prod.ext
+      · simp [haarFinFourCyclicNestedCoordinates]
+      · simp [haarFinFourCyclicNestedCoordinates]
+    · simp [haarFinFourCyclicNestedCoordinates]
+  · simp [haarFinFourCyclicNestedCoordinates]
+
 /-- The canonical `Fin 4` Haar-product reshaping is measure-preserving.
 
 The proof is a composition of Mathlib equivalences:
