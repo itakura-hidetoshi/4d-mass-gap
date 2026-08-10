@@ -4,132 +4,165 @@ This document records the authoritative proof-development path of `itakura-hidet
 
 It separates:
 
-- theorem infrastructure already replayed on the authoritative carrier;
-- concrete finite compact-gauge and finite `Z₂` Wilson results;
-- the completed finite high-temperature geometric-transfer gap;
-- projective-limit and varying-Hilbert operator machinery;
-- model-facing carrier and convergence obligations; and
+- theorem infrastructure already integrated on the authoritative carrier;
+- actual finite compact-Wilson and finite `Z₂` constructions;
+- finite-to-continuum common-carrier and reverse-recovery theorem generators;
+- current kinematic and dynamical model-facing obligations;
+- the conditional R4 exact-value route; and
 - claims that are explicitly not made.
 
-## Snapshot — 2026-08-07 JST
+## Snapshot — 2026-08-10 JST
 
 ```text
 authoritative theorem carrier:
   formal/real-hilbert-uniform-coercive-strong-limit
 
 latest integrated theorem checkpoint:
-  PR #1407
-  Realize actual Z2 defect on finite probability L2
+  PR #1602
+  Reduce independent OS classes to finite positive-definite Gram matrices
 
 fixed integrated PR head:
-  b0b284a085694ca7c951229c91184c207b6105dd
+  5d4c2d72a6aadd9f559efa9d8c0effade79189b9
 
 latest authoritative carrier / squash integration:
-  2b0ff76af45559ee81a9d47d8751db22a999ca70
+  3816c7600477f613c1a16d2dd38f0c177d11649c
 
 latest completed validation:
-  PR Lean Fast Check #9258
-  run id 31127171274
-  job id 92702662214
+  PR Lean Fast Check #9923
+  run id 31350112541
+  job id 93339185437
   completed / success
 
 terminal build:
-  Build completed successfully (8757 jobs)
+  Build completed successfully (8744 jobs)
+
+artifact:
+  lean-fast-check-log
+  id 9048695428
+  sha256:c5b6896e86ffd9eec562e9fcb68418d588d6dee9e6b5df89247b83d478f94c74
 
 post-merge comparison:
-  2b0ff76af45559ee81a9d47d8751db22a999ca70
+  3816c7600477f613c1a16d2dd38f0c177d11649c
   versus formal/real-hilbert-uniform-coercive-strong-limit
   identical / ahead 0 / behind 0
 ```
 
 Open, Draft, stale, superseded, and closed-unmerged pull requests are not part of the authoritative theorem state.
 
-Current active Draft:
+## Current proof architecture
+
+The repository now has seven main lanes.
 
 ```text
-PR #1409
-  Realize finite Z2 carrier on gauge-orbit probability L2
+A. continuum OS / Hamiltonian / PVM
 
-base:
-  2b0ff76af45559ee81a9d47d8751db22a999ca70
+reflection positivity
+  -> OS separated quotient
+  -> real Hilbert completion
+  -> symmetric contraction semigroup
+  -> graph-closed physical Hamiltonian
+  -> PVM / bounded-Borel calculus
+  -> variational physical mass
 
-candidate head:
-  997bf6e19b8c5aeaa75e8c114955eea0d696eacc
 
-status at this snapshot:
-  Draft / mergeable
-  no completed final-head pull-request CI evidence
-  not authoritative
+B. actual compact SU(N) finite Wilson OS geometry
+
+finite Wilson Gibbs law
+  -> positive-time Wilson reflection form
+  -> completed finite OS Hilbert H_n^OS
+  -> boundary-Haar L2 realization
+  -> interacting boundary marginal m_{0,n}^2 dHaar
+  -> selected compact projective observation and boundary recovery
+
+
+C. finite Z2 geometric-transfer theorem
+
+actual adjacent-slice slab transfer
+  -> Perron / Doob geometry
+  -> exact-marginal coupling
+  -> coordinate-response matrix
+  -> full excited-transfer cap 1/2
+  -> geometric Dirichlet coercivity 1/2
+  -> conditional varying-Hilbert preservation
+
+
+D. intrinsic finite Wilson rate and slow-state recovery
+
+finite excitation operator norm
+  -> intrinsic rate g_n
+  -> positive two-step operator
+  -> theorem-generated slow state phi_n
+  -> continuum symmetric-semigroup time average
+  -> moving Rayleigh limsup machinery
+  -> selected two-step o(a_n) recovery interface
+
+
+E. interacting common carrier across lattice scales
+
+interacting boundary marginals mu_{partial,n}
+  -> countable product probability
+  -> finite OS isometries into common L2
+  -> canonical common vacuum
+  -> common-product-to-physical isometry
+  -> mass-free finite-to-continuum ambient carrier
+
+
+F. physical mass / R4 exact-value lane
+
+forward intrinsic-rate comparison
+  + reverse selected slow-state recovery
+  -> conditional C.limit = physicalYangMillsMass
+
+physical component forms
+  -> component Rayleigh extrema
+  -> R4 direct variational budget
+  -> conditional normalized 33/20 endpoint
+
+
+G. current continuum strictness reduction
+
+common-product L2 separability
+  -> infinite-dimensional physical Hilbert suffices
+  -> vacuum-orthogonal orthonormal sequence
+  -> independent separated OS classes
+  -> finite positive-definite OS Gram matrices
+  -> explicit strict continuum Wilson OS family [open]
 ```
 
-## Proof architecture
+## Current frontier at a glance
 
-The repository now has six connected lanes.
+The immediate work is no longer to invent another abstract physical carrier. The repository has reduced the remaining model-facing obligations to concrete analytic statements.
 
 ```text
-A. continuum reconstruction and exact-spectrum infrastructure
+KINEMATIC FRONTIER
 
-Euclidean / OS input
-  -> reflection-positive quotient
-  -> real Hilbert completion
-  -> semigroup and generator
-  -> self-adjoint Hamiltonian interfaces
-  -> PVM and bounded-Borel calculus
-  -> exact lower-spectrum consequences from a supplied spine
-  -> concrete interacting continuum construction [open]
+explicit countable positive-time gauge-invariant continuum observables
+  -> finite reflected OS Gram matrices are positive definite
+  -> global separated OS classes are linearly independent
+  -> physical Hilbert is infinite-dimensional
+  -> common-product physical isometry is theorem-generated
+  -> all finite mass-free ambient embeddings are theorem-generated
 
 
-B. finite compact-Haar SU(N) analysis
+DYNAMICAL FRONTIER
 
-Wilson Gibbs law
-  -> exact conditional laws
-  -> heat-bath projections and Hamiltonian
-  -> explicit bounded-test Dobrushin matrices
-  -> genuine L2 Rayleigh data where required
-  -> finite Gibbs Poincare/coercivity and centered decay
-
-
-C. actual finite even-four-torus Z2 geometric transfer
-
-adjacent-slice slab kernel
-  -> residual Gauss projection and temporal-link sum
-  -> normalized symmetric positive transfer
-  -> Perron ground and finite spectral decomposition
-  -> high-temperature posterior coupling
-  -> coordinate-response matrix
-  -> excited-transfer cap 1/2
-  -> full geometric Dirichlet coercivity 1/2
+canonical finite Wilson slow states phi_n
+  + theorem-generated finite/common embeddings
+  -> prove
+     ||iota_n(K_n^2 phi_n) - T(2a_n)iota_n(phi_n)||
+       <= 2a_n delta_n,
+     delta_n -> 0
+  -> physicalYangMillsMass <= C.limit
+  -> with forward direction, C.limit = physicalYangMillsMass
 
 
-D. ground-lifted strong-limit preservation
+NUMERICAL / PHYSICAL-NORMALIZATION FRONTIER
 
-finite full-carrier defect coercivity 1/2
-  -> supplied varying-Hilbert approximation data
-  -> limiting coercivity 1/2
-  -> real spectrum in [1/2, infinity)
-  -> zero resolvent
-  -> inverse norm at most 2
-
-
-E. projective-limit L2 operator system
-
-finite-marginal pullback isometries
-  -> directed cylinder subspaces
-  -> topological cylinder density
-  -> compatible finite operators
-  -> algebraic-core gluing
-  -> unique bounded continuum L2 extension
-  -> selected actual-Z2 finite-carrier bridge
-
-
-F. concrete probability carriers
-
-finite Hilbert space
-  -> strict finite-probability L2 coordinates
-  -> spectral-probability realization
-  -> pointwise ground-lifted defect
-  -> residual gauge-orbit probability realization [active]
-  -> cross-volume compatible probability/marginal system [open]
+actual R4 decomposition
+  -> six component Rayleigh extrema
+  -> sharp budget attainment
+  -> independent physical referenceTime
+  -> only then interpret a normalized 33/20 identity physically
 ```
 
 ## Milestone ledger
@@ -138,568 +171,660 @@ finite Hilbert space
 
 **Status: integrated and permanent.**
 
-Required discipline:
+Repository governance for the authoritative theorem carrier remains:
 
 ```text
-exact authoritative base
-Draft start
-fixed final head
-completed workflow/job/step/artifact evidence
-no branch writes while CI is queued or in progress
-code failures separated from external Actions failures
-Ready re-audit
-squash merge with expected_head_sha fixed
-post-merge identical comparison.
+start ordinary PRs from the exact canonical SHA
+start as Draft
+fix the final head before Ready
+use only completed run / job / step / artifact / log evidence for CI conclusions
+do not treat queued or in_progress as success or failure
+do not write to a branch while its CI is running
+separate Lean/code failures from GitHub Actions or external infrastructure failures
+re-audit base, head, mergeability, reviews, threads, and overlapping PRs before Ready
+re-audit again after Ready
+squash merge only
+fix expected_head_sha at merge
+verify post-merge identical / ahead 0 / behind 0.
 ```
 
-Only the authoritative carrier determines theorem status. The public `main` branch is a landing surface and must receive exact validated documentation blobs separately.
+The public `main` branch is the repository landing surface, not the theorem authority. Documentation merged to the authoritative carrier must be synchronized separately to `main`.
 
-### Milestone 1 — Continuum OS, Hamiltonian, PVM, and exact-spectrum theorem infrastructure
+### Milestone 1 — Continuum OS, Hilbert completion, semigroup, Hamiltonian, and PVM infrastructure
 
 **Status: integrated as theorem infrastructure.**
 
 Integrated surfaces include:
 
 ```text
-reflection-positive quotient and Hilbert completion
-strong semigroup and generator routes
-closed-graph and self-adjoint Hamiltonian interfaces
-bounded-Borel PVM calculus
+reflection-positive quotient and separation
+real pre-Hilbert and Hilbert completion
+physical semigroup interfaces
+strong-continuity and generator machinery
+graph-closed Hamiltonian domain
+symmetric / self-adjoint operator interfaces
+PVM and bounded-Borel integration
 scalar spectral measures and support
-exact-gap interval, leastness, infimum, and first-excitation consequences.
+variational non-vacuum mass interfaces.
 ```
 
 Boundary:
 
 ```text
-the construction spine remains supplied input
-the interacting continuum gauge measure is not constructed here
-exactGapValueReal = 33/20 is an internal normalization route.
+the interacting continuum Yang--Mills construction itself is not thereby produced
+a supplied continuum construction spine may carry stronger exact-spectrum data
+internal exact-value theorem transport is not a substitute for model construction.
 ```
 
-### Milestone 2 — Finite compact-Haar `SU(N)` Gibbs and heat-bath analysis
+### Milestone 2 — Finite compact-Haar `SU(N)` Wilson Gibbs and heat-bath analysis
 
 **Status: integrated.**
 
 Integrated surfaces include:
 
 ```text
-normalized compact Haar Wilson Gibbs probability
-exact one-link conditionals
-heat-bath projections and reversibility
-conditional-variance / Dirichlet identities
+normalized finite periodic Wilson Gibbs probability
+actual one-link conditional laws
+compact Haar heat-bath kernels and projections
+reversibility and Hilbert projection structure
+conditional variance / Dirichlet identities
 shared-plaquette localization
-explicit bounded-test Dobrushin coefficient
-finite and tail-uniform L2 theorem generators with genuine Rayleigh input
-canonical boundary analysis and beta-zero closure.
+bounded-test Dobrushin control
+finite Poincare/coercivity generators with genuine L2 input.
 ```
 
 Permanent distinction:
 
 ```text
-total variation or bounded-test control
+bounded-test or total-variation contraction
   !=
-L2 spectral gap without a genuine L2 argument.
+L2 spectral gap without a genuine Hilbert-space argument.
 ```
 
-### Milestone 3 — Actual finite `Z₂` geometric one-slab transfer
+### Milestone 3 — Actual finite compact Wilson OS Hilbert completion
 
 **Status: integrated.**
 
-The carrier constructs:
+At each selected scale, the actual compact Wilson reflection form is carried through the OS quotient and completion. The completed finite carrier is not identified with an arbitrary raw probability `L²` space.
+
+The canonical boundary-moment realization supplies
 
 ```text
-actual adjacent-slice Wilson slab kernel
+H_n^OS ->_linear_isometry L2(boundary Haar_n).
+```
+
+This completed OS carrier is the finite Hilbert space used by the current intrinsic-rate and reverse-recovery lane.
+
+### Milestone 4 — Interacting Wilson boundary marginal and density correction
+
+**Status: integrated.**
+
+The actual interacting reflection-fixed boundary law is
+
+```text
+d mu_{partial,n} = m_{0,n}^2 d mu_{Haar,n},
+```
+
+with strictly positive Wilson boundary vacuum moment `m_{0,n}`.
+
+The repository constructs the reciprocal-vacuum density correction
+
+```text
+L2(boundary Haar_n)
+  ->_linear_isometry L2(mu_{partial,n}).
+```
+
+Therefore the current interacting lane does not use the false beta-zero shortcut `boundary Gibbs = Haar` at nonzero coupling.
+
+### Milestone 5 — Compact Wilson selected projective observation / boundary recovery
+
+**Status: integrated as a theorem generator over concrete observation data.**
+
+For one selected finite projective marginal at each scale, use:
+
+```text
+actual compact Wilson configuration
+  -> selected finite projective observation
+  -> measurable boundary readout
+```
+
+with exact pointwise compatibility with the actual Wilson boundary restriction.
+
+`Measure.map_map` and the existing Wilson boundary pushforward theorem then generate the interacting boundary-marginal pushforward identity. The finite carrier becomes
+
+```text
+H_n^OS
+  -> L2(boundary Haar_n)
+  -> L2(mu_{partial,n})
+  -> L2(selected projective marginal_n).
+```
+
+The finite OS space is identified with the exact range submodule of this embedding, not the whole marginal `L²` space.
+
+### Milestone 6 — Finite `Z₂` geometric one-slab transfer and full gap
+
+**Status: integrated.**
+
+The finite even-four-torus `Z₂` prototype contains:
+
+```text
+actual adjacent-slice Wilson kernel
 spatial half-action sandwich
 temporal-link summation
-residual slice-gauge action and Gauss projection
-normalized Gauss-invariant transfer
-natural-time powers
-complete finite spectral decomposition
-positive simple Perron ground
-injectivity and no finite null sector at strict coupling
-positive excitation gap at each finite volume.
+residual Gauss projection
+positive Perron ground
+exact geometric Doob row
+exact-marginal posterior coupling
+coordinate-response matrix.
 ```
 
-The finite-order periodic-permutation no-go is also integrated: an invertible periodic shift cannot be renamed into a nontrivial positive contractive transfer.
-
-### Milestone 4 — High-temperature Perron posterior and exact-marginal coupling
-
-**Status: integrated.**
-
-The integrated route is:
+On one positive volume-independent high-temperature interval:
 
 ```text
-continuity of finite inverse matrices and Perron data
-  -> exact zero-coupling posterior seed
-  -> positive volume-independent continuation cutoff
-  -> strict row/column posterior Dobrushin data
-  -> exact-marginal parallel overlap coupling
-  -> Hamming contraction and spatial-sandwich stability
-  -> stationary uniqueness, mixing, TV, and strong convergence
-  -> observable-response transport.
+all strictly excited normalized transfer eigenvalues <= 1/2
+geometric Doob Dirichlet coercivity constant = 1/2.
 ```
 
-Residual-gauge latent index laws are uniform and environment-independent, so the latent mismatch contribution vanishes exactly.
+This theorem is a completed finite geometric prototype. It does not identify finite `Z₂` with compact `SU(2)` / `SU(N)` continuum Yang--Mills.
 
-### Milestone 5 — Coordinate-response matrix and full geometric gap
+### Milestone 7 — Ground-lifted defect and varying-Hilbert gap preservation
+
+**Status: integrated conditionally on explicit convergence data.**
+
+The finite `Z₂` full-transfer theorem yields a whole-carrier defect coercivity bound with constant `1/2`.
+
+Given supplied varying-Hilbert approximation and evolved-convergence data, the repository preserves this exact coercivity at the limit and derives the corresponding real-spectrum and resolvent consequences.
+
+Still required for a physical use of this theorem:
+
+```text
+construct the actual approximation maps
+construct the actual embeddings
+prove the actual convergence
+identify the limit with the intended physical operator.
+```
+
+### Milestone 8 — Projective-limit `L²` cylinder system, density, and compatible-operator extension
+
+**Status: integrated as generic infrastructure.**
+
+The repository constructs:
+
+```text
+finite-marginal L2 pullback isometries
+directed cylinder subspaces
+topological density of their algebraic supremum
+compatible operator gluing on the cylinder core
+unique bounded continuum L2 extension.
+```
+
+This machinery remains available for physical finite-to-continuum constructions, but the current compact-Wilson common carrier no longer depends on pretending that interacting Gibbs laws at distinct lattice spacings form an exact projective family.
+
+### Milestone 9 — Actual finite Wilson intrinsic logarithmic excitation rate
 
 **Status: integrated.**
 
-The previously open finite-side obstruction is closed.
+For the completed finite Wilson excitation operator,
+
+```text
+g_n = -log ||T_n^exc|| / a_n.
+```
+
+The finite rate is obtained from the actual operator norm; no finite-dimensional eigenvalue attainment is required.
+
+The existing forward common-carrier theorem supplies the finite-to-continuum variational direction once its mass-free carrier hypotheses are instantiated.
+
+### Milestone 10 — Positive two-step Wilson slow-state construction
+
+**Status: integrated.**
+
+For every bounded symmetric finite excitation operator, Mathlib adjoint identities prove positivity of the square and the exact norm identity
+
+```text
+||T^2|| = ||T||^2.
+```
+
+This yields a two-step Rayleigh/log-rate recovery theorem without a one-step positivity assumption.
+
+For the actual finite Wilson operator, the repository theorem-generates unit slow states at every scale. A canonical selected state `phi_n` can be chosen with finite two-step energy below
+
+```text
+g_n + a_n.
+```
+
+### Milestone 11 — Symmetric-semigroup time-domain Rayleigh recovery machinery
+
+**Status: integrated.**
+
+The generic continuum side now avoids an unnecessary spectral recovery assumption.
 
 Integrated chain:
 
 ```text
-Hamming-dual response
-  -> finite-probability total-variation primalization
-  -> coordinate mismatch of the exact overlap coupling
-  -> exact full-mixture response without latent error
-  -> finite coordinate-response matrix
-  -> strict source-column sums below 1/2
-  -> actual geometric Doob variation certificate
-  -> weighted mean-zero Rayleigh rate 1/2
-  -> excited-transfer eigenvalue cap 1/2
-  -> geometric Dirichlet coercivity 1/2
-  -> full spatially sandwiched transfer package.
+symmetric contraction semigroup correlations
+  -> positive and commuting semigroup defects
+  -> triple-defect factorization
+  -> pairwise trapezoid inequality
+  -> lossless interval-integrated numerator bound
+  -> time-average denominator lower bound
+  -> graph-domain generator identity
+  -> moving Rayleigh correction.
 ```
 
-Authoritative finite theorem:
+For unit input and `2 h d_h < 1`,
 
 ```text
-for every finite side in one common positive high-temperature interval,
-all strictly excited normalized geometric-transfer eigenvalues are <= 1/2,
-and the exact geometric Doob Dirichlet form is coercive with constant 1/2.
+R(A_h psi) <= d_h / (1 - 2 h d_h).
 ```
 
-Random scan is a stationary comparison device in the proof. It is not geometric one-slab time.
+If `h_n -> 0` and scalar dominators converge to `L`, the correction also converges to `L` and denominator positivity is eventually automatic.
 
-### Milestone 6 — Ground-lifted defect and varying-Hilbert strong-limit theorem
+### Milestone 12 — Scalar and vector reverse Wilson mass recovery
 
-**Status: integrated conditionally on explicit convergence data.**
+**Status: theorem generators integrated.**
 
-The ground-lifted defect removes the changing ground-sector bookkeeping by acting as identity on the finite ground sector and as `I - T` on excited/null modes.
-
-For the actual finite `Z₂` system:
+The scalar route uses theorem-generated finite slow states plus a mass-free one-sided scalar compatibility to prove
 
 ```text
-(1/2) * ||f||^2 <= inner(D_H f, f)
+physicalYangMillsMass <= C.limit.
 ```
 
-on the whole finite carrier.
-
-For every supplied asymptotically embedded strong-limit package, the repository proves:
+The vector route reduces that scalar compatibility to
 
 ```text
-(1/2) * ||f||^2 <= inner(D_infinity f, f)
-spectrum ℝ D_infinity ⊆ [1/2, infinity)
-0 ∈ resolventSet ℝ D_infinity
-||D_infinity^{-1}|| <= 2.
+||iota_n(T_n^2 phi) - T(2a_n)iota_n(phi)||
+  <= 2a_n delta_n,
+delta_n -> 0,
 ```
 
-Still open:
+using real Cauchy--Schwarz and exact norm preservation.
 
-```text
-construct the actual approximation maps
-construct the actual isometric embeddings
-prove approximation convergence
-prove evolved strong convergence
-identify the resulting limit as a physical continuum operator.
-```
-
-### Milestone 7 — Projective-limit finite-marginal `L²` isometric system
-
-**Status: integrated.**
-
-For a projective-limit probability measure and finite coordinate sets `J ⊆ I`, the carrier constructs:
-
-```text
-tau[J,I] : L2(Q J) -> L2(Q I)
-iota[J]   : L2(Q J) -> L2(mu)
-```
-
-as real-linear isometries with exact compatibility
-
-```text
-iota[J] = iota[I] after tau[J,I].
-```
-
-The continuum ranges are directed finite-coordinate cylinder subspaces.
-
-### Milestone 8 — Cylinder density
-
-**Status: integrated.**
-
-The repository proves the correct topological exhaustion:
-
-```text
-topologicalClosure (sup_J cylinderSubspace(J)) = top.
-```
-
-It deliberately does not claim algebraic equality of the finite-cylinder supremum with the full `L²` carrier.
-
-The proof uses finite-coordinate cylinders as a measurable generating set algebra and finite-measure `Lp` induction; no artificial countable skeleton is inserted.
-
-### Milestone 9 — Compatible finite-marginal operator extension
-
-**Status: integrated.**
-
-A uniformly bounded compatible family is:
-
-```text
-conjugated to cylinder ranges
-  -> proved compatible on arbitrary overlaps through I union J
-  -> glued on the algebraic cylinder core
-  -> bounded on that core
-  -> extended to the complete continuum L2 carrier.
-```
-
-The extension has exact finite-marginal intertwining, common bounds, and uniqueness.
-
-Still open:
-
-```text
-construct the actual compatible family from finite gauge geometry
-prove the family approximates one physical evolution or defect
-prove evolved convergence.
-```
-
-### Milestone 10 — Actual finite `Z₂` to selected projective-marginal bridge
-
-**Status: theorem generator integrated; model-facing identification open.**
-
-The actual finite Gauss-invariant Hilbert carrier is not unconditionally equated with an arbitrary marginal `L²` space. Instead the repository requests explicit data:
-
-```text
-selected finite coordinate set
-mutually inverse real-linear isometries
-actual defect realization on the selected marginal
-compatible finite-marginal operator system.
-```
-
-Given those data, exact intertwining, symmetry, coercivity `1/2`, continuum embedding, and equality of embedded quadratic forms follow automatically.
-
-The next goal is to construct these data canonically from the actual finite probability/gauge-orbit geometry.
-
-### Milestone 11 — Concrete finite spectral-probability `L²` realization
-
-**Status: integrated.**
-
-The generic layer constructs strict finite-probability `L²` coordinates for any finite-dimensional real Hilbert space. An orthonormal diagonal operator becomes literal pointwise multiplication.
-
-The actual `Z₂` specialization proves:
-
-```text
-canonical spectral-index finite probability
-exact carrier isometry
-pointwise ground-lifted defect coefficient
-exact conjugacy and intertwining
-exact diagonal quadratic form
-symmetry
-whole-carrier coercivity 1/2.
-```
+It also theorem-generates a genuine nonzero vacuum-orthogonal graph-domain continuum excitation witness.
 
 Boundary:
 
 ```text
-the spectral-index probability is a coordinate realization
-it is not yet the Euclidean finite marginal
-it is not yet the residual gauge-orbit probability.
+the vector residual is not yet derived from the bare compact Wilson / continuum model.
 ```
 
-### Milestone 12 — Actual residual gauge-orbit probability `L²`
+### Milestone 13 — Selected slow-state Mosco/Gamma-limsup reduction
 
-**Status: active; not integrated.**
+**Status: integrated; actual residual proof open.**
 
-Target package:
+The reverse dynamical obligation is no longer imposed on all finite unit excitations. It is sufficient to prove the moving-time two-step residual only for the canonical theorem-generated slow-state sequence `phi_n`:
 
 ```text
-finite group-action orbit quotient and Fintype
-pushforward orbit-counting probability
-strict positivity of every orbit mass
-square-root-orbit-mass coordinates
-isometric equivalence with invariant wavefunctions
-actual residual slice-gauge orbit quotient
-nontriviality of the actual orbit space
-actual Gauss-invariant carrier = orbit-probability L2
-actual ground-lifted defect on the orbit carrier
-exact coercivity 1/2.
+||iota_n(K_n^2 phi_n) - T(2a_n)iota_n(phi_n)||
+  <= 2a_n delta_n,
+delta_n -> 0.
 ```
 
-Draft PR #1409 contains a candidate implementation, but the roadmap does not mark this milestone complete without completed final-head CI and integration.
+Given this residual and the mass-free ambient carrier, the repository proves the reverse physical mass inequality and continuum excitation witness.
 
-### Milestone 13 — Cross-volume orbit/marginal transition system
+**This selected residual is one of the two principal current open obligations.**
 
-**Status: open; immediate frontier after Milestone 12.**
+### Milestone 14 — Interacting boundary common product across Wilson scales
+
+**Status: integrated.**
+
+Instead of asserting exact projectivity of interacting Wilson measures across lattice spacings, construct the countable product
+
+```text
+mu_common = product_n mu_{partial,n}.
+```
+
+For every scale,
+
+```text
+H_n^OS
+  -> L2(boundary Haar_n)
+  -> L2(mu_{partial,n})
+  -> L2(mu_common)
+```
+
+is a genuine linear isometry.
+
+This gives one mass-free common kinematic Hilbert carrier without a false cross-scale Gibbs consistency assumption.
+
+### Milestone 15 — Canonical common vacuum
+
+**Status: integrated.**
+
+The coherent positive-half Wilson pullback initially has a scale-wise sign ambiguity. The repository proves from its exact reflected quadratic identity on the unit observable that the unit image is a constant sign `s_n` with
+
+```text
+s_n^2 = 1.
+```
+
+Multiplying the entire positive-half pullback by that sign preserves every reflected quadratic observable and selects the canonical `+1` branch.
+
+Consequently the finite OS vacuum is theorem-generated to the constant-one vector in every interacting boundary marginal and then in the common product.
+
+No extra scale-wise vacuum normalization field is required.
+
+### Milestone 16 — One common-product physical isometry generates the mass-free ambient carrier
+
+**Status: integrated as a theorem generator; concrete realization reduced further downstream.**
+
+A single vacuum-preserving linear isometry
+
+```text
+L2(mu_common) -> P.PhysicalHilbert
+```
+
+generates every finite scale map
+
+```text
+H_n^OS -> P.PhysicalHilbert,
+```
+
+with exact norm and vacuum preservation, and therefore generates the entire mass-free ambient carrier used by the reverse recovery theorem.
+
+The repository then systematically removes this map as an opaque input in Milestones 17--20.
+
+### Milestone 17 — Hilbert-basis / dimension / cardinal reductions
+
+**Status: integrated.**
+
+The common-product physical isometry can be generated from progressively weaker Hilbert geometry:
+
+```text
+explicit Hilbert bases + vacuum-compatible index embedding
+  -> theorem-generated vacuum-containing Hilbert bases + one index embedding
+  -> lifted Hilbert-cardinal inequality.
+```
+
+These layers are retained as reusable generic Mathlib infrastructure, but are no longer the preferred final model-facing interface.
+
+### Milestone 18 — Separable common product + infinite-dimensional physical Hilbert
+
+**Status: integrated.**
+
+The actual interacting common-product `L²` is proved separable from the measure-theoretic topology and finite exponent facts.
+
+For a complete real Hilbert target with unit vacuum, Mathlib Hilbert-basis extension shows that
+
+```text
+not FiniteDimensional physicalHilbert
+```
+
+produces an `ℕ`-indexed orthonormal sequence orthogonal to the vacuum. Separability of the common-product source then gives a vacuum-preserving common-product-to-physical isometry.
+
+Thus the kinematic obligation is reduced from a Hilbert-cardinal statement to physical-Hilbert infinite-dimensionality.
+
+### Milestone 19 — Infinite-dimensionality reduced to independent separated OS classes
+
+**Status: integrated.**
+
+It is sufficient to construct
+
+```text
+observable : ℕ -> P.Carrier
+```
+
+of positive-time gauge-invariant continuum observables whose separated OS classes are linearly independent.
+
+An infinite linearly independent family makes the separated pre-Hilbert space non-finite-dimensional. Injectivity of the canonical completion map prevents its Hilbert completion from becoming finite-dimensional.
+
+This theorem-generates Milestone 18 and hence the common-product physical carrier.
+
+### Milestone 20 — Independent OS classes reduced to finite positive-definite Gram matrices
+
+**Status: integrated — latest checkpoint #1602.**
+
+Mathlib provides the finite-local characterization of linear independence and the theorem that a positive-definite Gram matrix implies linear independence.
+
+The resulting generic equivalence is:
+
+```text
+(for every finite s, Gram(v restricted to s) is positive definite)
+  <->
+LinearIndependent v.
+```
+
+For the actual continuum OS carrier, it is therefore sufficient to prove that every finite matrix
+
+```text
+G_ij = D.osBilinForm P.omega
+         (P.toPositiveTime (observable i))
+         (P.toPositiveTime (observable j))
+```
+
+is positive definite.
+
+Reflection positivity alone gives positive semidefiniteness, not the strict inequality required for `Matrix.PosDef`.
+
+### Milestone 21 — Concrete strict continuum OS nondegeneracy
+
+**Status: open — immediate kinematic frontier.**
 
 Required theorem unit:
 
 ```text
-choose concrete finite coordinate/marginal spaces
-  -> construct maps between finite gauge-orbit probability spaces
-  -> prove measure preservation or the exact Radon--Nikodym correction
-  -> construct L2 transition isometries
-  -> prove compatibility with actual finite defects
-  -> prove cocycle / directed-system laws
-  -> identify these maps with projective finite-marginal transitions.
+choose an explicit countable family of positive-time
+continuum gauge-invariant Wilson/OS observables
+
+  -> compute or control every finite reflected OS Gram matrix
+  -> prove strict positivity for every nonzero finite coefficient vector
+  -> package Matrix.PosDef for every finite subfamily
+  -> invoke #1602
+  -> theorem-generate the common-product physical carrier
+  -> theorem-generate all finite-to-continuum ambient embeddings.
 ```
 
-The transition system must be derived from actual gauge-field restriction/coarse-graining geometry, not supplied as an opaque family of isometries.
+Important restriction:
 
-### Milestone 14 — Actual compatible continuum operator and convergence
+```text
+OS reflection positivity alone is insufficient:
+it yields semidefinite Gram matrices.
+The missing statement is strict nondegeneracy for one concrete infinite family.
+```
+
+This should be attacked from actual continuum Wilson correlation structure, locality/separation, or another model-derived strictness theorem, not inserted as a renamed Hilbert-dimension certificate.
+
+### Milestone 22 — Prove the selected slow-state moving-time residual
+
+**Status: open — immediate dynamical frontier.**
+
+With Milestone 21 supplying the kinematic ambient carrier, prove for the canonical finite slow states:
+
+```text
+||iota_n(K_n^2 phi_n) - T(2a_n)iota_n(phi_n)||
+  = o(a_n).
+```
+
+Equivalent proof-relevant form:
+
+```text
+exists delta_n -> 0 such that
+||iota_n(K_n^2 phi_n) - T(2a_n)iota_n(phi_n)||
+  <= 2a_n delta_n.
+```
+
+Desired sources of this estimate include actual common-carrier semigroup comparison, quantitative finite-to-continuum transfer convergence, or an appropriate Mosco/Trotter--Kato style theorem specialized to the selected recovery sequence.
+
+Do **not** replace it by fixed-time convergence without a rate argument.
+
+### Milestone 23 — Actual physical mass equality
+
+**Status: theorem route integrated; concrete closure depends on Milestones 21 and 22.**
+
+The repository already contains the two variational directions needed for the intrinsic rate.
+
+Once the current actual carrier and selected recovery residual are constructed, theorem composition gives
+
+```text
+C.limit = physicalYangMillsMass.
+```
+
+The route does not require a separately supplied positive mass certificate, a convergent sequence of exact finite eigenvectors, or a legacy finite gap-certificate owner.
+
+This equality is not advertised as unconditionally discharged before the model-facing hypotheses are constructed.
+
+### Milestone 24 — Actual R4 decomposition and component variational extrema
+
+**Status: structural variational layer integrated; numerical evaluations open.**
+
+For every actual component quadratic form `q`, the canonical coefficient is identified with the genuine Rayleigh extremum:
+
+```text
+lower coefficient = sInf componentRayleighSet(q)
+upper coefficient = sSup componentRayleighSet(q).
+```
+
+The direct R4 budget is therefore built from actual physical graph-domain states, not arbitrary coefficient certificates.
+
+Open work:
+
+```text
+derive the final six-component decomposition from the actual model
+prove form boundedness and the required domains where not already generated
+evaluate the six actual extrema
+prove the sharp combined budget is attained, or prove equivalent sharpness.
+```
+
+### Milestone 25 — Conditional `33/20` normalized endpoint
+
+**Status: theorem assembly integrated; physical derivation open.**
+
+If the six actual component extrema are proved to be
+
+```text
+9/5, 1/10, 0, 1/10, 1/20, 1/10,
+```
+
+and the direct R4 budget is sharply attained, the structural theorem gives the normalized sum `33/20`.
+
+With actual physical mass equality and an independently constructed `referenceTime`, the intended endpoint takes the form
+
+```text
+referenceTime * physicalYangMillsMass = 33/20.
+```
+
+Still open:
+
+```text
+the six model-derived extrema
+their physical decomposition provenance
+sharp budget attainment
+independent reference-time / physical-unit normalization.
+```
+
+The repository must not set any of these inputs merely to obtain the target rational number.
+
+### Milestone 26 — Interacting continuum Yang--Mills construction
 
 **Status: open.**
 
-Required chain:
+The generic and conditional continuum theorem infrastructure does not replace the physical construction.
+
+Required output includes a nontrivial interacting continuum gauge theory with the needed properties, including as appropriate:
 
 ```text
-actual finite orbit/marginal operators
-  -> uniform operator bound
-  -> exact transition intertwining
-  -> unique continuum L2 extension
-  -> approximation maps into the common carrier
-  -> strong convergence on the dense cylinder core
-  -> whole-carrier strong convergence
-  -> evolved convergence or resolvent convergence
-  -> preservation of coercivity 1/2 by the actual limit.
-```
-
-A theorem conditional on supplied convergence data is already integrated; this milestone constructs and discharges those data.
-
-### Milestone 15 — Thermodynamic and continuum scaling for the finite gauge model
-
-**Status: open.**
-
-Required choices and estimates:
-
-```text
-volume sequence
-lattice-spacing sequence
-coupling sequence
-boundary and gauge-fixing conventions
-uniform local regularity
-tightness / projective consistency
-control of the transfer normalization
-compatibility of geometric time with the scaling trajectory.
-```
-
-A finite-volume common gap is necessary but not sufficient for a continuum theory.
-
-### Milestone 16 — Compact `SU(2)` / `SU(N)` geometric extension
-
-**Status: open.**
-
-The current complete geometric full-gap theorem is for finite `Z₂`. The compact-Haar `SU(N)` Gibbs/heat-bath lane is substantial but does not yet contain the same actual adjacent-slice Perron--Doob coordinate-response closure.
-
-Required work includes:
-
-```text
-compact temporal-link integration
-compact residual-gauge orbit/marginal geometry
-positive Perron or Krein--Rutman replacement
-localized posterior response without finite-state shortcuts
-volume-independent geometric transfer gap
-compatible continuum scaling.
-```
-
-Finite `Z₂` must not be relabeled as compact `SU(2)` or `SU(N)` Yang--Mills.
-
-### Milestone 17 — Continuum Euclidean Yang--Mills measure
-
-**Status: open.**
-
-Required outputs:
-
-```text
-nontrivial continuum probability measure
-correct gauge content
-Euclidean covariance
+continuum probability / state construction
+gauge content and covariance
 reflection positivity
-clustering
 regularity / temperedness
-compatibility with the finite approximants.
+clustering or vacuum uniqueness inputs
+compatibility with the finite Wilson approximants
+physical time semigroup identification.
 ```
 
-The generic projective-limit machinery does not replace the construction and proof of these physical properties.
+Where the repository currently starts from supplied continuum OS data, those fields must ultimately be justified from the actual model rather than retained as terminal assumptions.
 
-### Milestone 18 — OS reconstruction, physical Hamiltonian, and spectral transfer
-
-**Status: theorem infrastructure integrated; concrete identification open.**
-
-Required chain:
-
-```text
-continuum OS measure
-  -> physical Hilbert space
-  -> geometric time semigroup
-  -> self-adjoint Hamiltonian
-  -> identification with the continuum limit of finite geometric defects/transfers
-  -> vacuum sector
-  -> strict nonvacuum spectral lower bound.
-```
-
-The operator obtained from projective-limit `L²` extension is not automatically the OS-reconstructed Hamiltonian or its defect.
-
-### Milestone 19 — Physical normalization and final claim
+### Milestone 27 — Final physical Hamiltonian and mass-gap claim
 
 **Status: open.**
 
-Required distinctions:
+The final physical claim requires all prior distinctions to be preserved:
 
 ```text
-finite transfer cap 1/2
-finite defect coercivity 1/2
-continuum transported coercivity
-Hamiltonian energy gap
-internal exactGapValueReal = 33/20
-physical mass in fixed units.
+finite Z2 transfer cap 1/2
+  != finite compact-Wilson intrinsic rate
+  != continuum defect coercivity
+  != physical Hamiltonian mass
+  != normalized exact-value constant 33/20.
 ```
 
-A final theorem requires explicit maps and normalization theorems connecting these quantities. No numerical identity is inferred by notation or intention.
+A final theorem must arise from the actual interacting continuum model, identify the reconstructed physical Hamiltonian, prove a strict non-vacuum spectral lower bound, and only then attach an independently derived physical normalization.
 
-## Immediate proof packages
+## Two principal current proof packages
 
-### Package A — Complete and validate the gauge-orbit probability realization
+The next development should prioritize two mathematically substantive packages rather than adding helper-only wrappers.
+
+### Package A — Strict OS Gram construction
+
+Target:
 
 ```text
-generic orbit pushforward probability
-  + invariant-wavefunction L2 isometry
-  + actual residual gauge-orbit quotient
-  + exact defect conjugacy
-  + coercivity 1/2
-  -> completed final-head CI and integration.
+actual continuum positive-time Wilson observables
+  -> finite Gram strict positivity
+  -> #1602 finite PosDef interface
+  -> physical Hilbert infinite-dimensionality
+  -> common-product physical carrier
+  -> mass-free ambient carrier.
 ```
 
-### Package B — Construct actual cross-volume maps
+Preferred style:
 
 ```text
-finite gauge restriction/coarse-graining map
-  -> orbit-map well-definedness
-  -> pushforward/marginal law
-  -> L2 pullback or corrected isometry
-  -> defect/operator intertwining
-  -> directed compatibility.
+generic Mathlib strict-Gram helper only when genuinely reusable
+then immediate actual continuum Wilson/OS specialization.
 ```
 
-### Package C — Instantiate the projective-limit operator system
+### Package B — Selected slow-state moving-time convergence
+
+Target:
 
 ```text
-actual finite orbit probability carriers
-  + cross-volume transition isometries
-  + actual defect compatibility
-  + common norm bound
-  -> compatible finite-marginal operator family
-  -> unique bounded continuum L2 defect.
+actual finite Wilson selected slow state phi_n
+  -> quantitative two-step finite/common comparison
+  -> o(a_n) residual
+  -> reverse variational inequality
+  -> actual intrinsic-rate / physical-mass equality.
 ```
 
-### Package D — Prove actual convergence
+Preferred style:
 
 ```text
-dense cylinder-core convergence
-  -> whole-carrier strong convergence
-  -> evolved or resolvent convergence
-  -> actual application of the ground-lifted strong-limit theorem
-  -> continuum coercivity 1/2 and zero-resolvent package.
+prove only the selected-sequence estimate actually needed by the limsup theorem;
+do not reintroduce stronger all-vector or all-time assumptions.
 ```
 
-### Package E — Move from finite `Z₂` to physical compact gauge theory
+The two packages are logically distinct: Package A closes the kinematic common carrier; Package B closes the dynamical recovery.
+
+## Anti-goals and permanent distinctions
+
+Do not:
+
+- identify finite `Z₂` with compact `SU(2)` / `SU(N)` Yang--Mills;
+- call the finite `Z₂` constant `1/2` the physical Yang--Mills mass;
+- identify interacting Wilson boundary marginals with Haar at nonzero coupling;
+- assert exact projectivity of interacting Wilson Gibbs laws across lattice spacings without an actual theorem;
+- identify a completed finite OS Hilbert space with a whole raw marginal `L²` space when only a range identification is proved;
+- turn reflection-positive semidefinite Gram matrices into positive-definite matrices without a strictness proof;
+- replace the selected moving-time `o(a_n)` residual by ordinary fixed-time convergence;
+- assume exact finite eigenvectors or norm attainment when operator-norm approximation suffices;
+- insert a physical mass, exact spectrum vector, or legacy gap certificate into a kinematic common carrier;
+- set R4 coefficients to the desired rational values instead of proving their actual variational extrema;
+- set `referenceTime` to manufacture `33/20`;
+- present `exactGapValueReal = 33/20` as a currently derived physical mass;
+- claim a Clay Millennium solution before the interacting continuum construction and all model-facing obligations are discharged.
+
+## Definition of completion for the present program
+
+The current program is complete only when one theorem chain starts from actual interacting Yang--Mills/Wilson model data and constructs, rather than assumes:
 
 ```text
-compact SU(2) / SU(N) one-slab geometry
-  -> compact posterior response
-  -> compact full-transfer gap
-  -> physical scaling trajectory
-  -> continuum Euclidean measure
-  -> OS Hamiltonian and mass gap.
+finite Wilson approximants
++ continuum OS model
++ strict OS nondegeneracy / common carrier
++ selected moving-time recovery
++ intrinsic finite-to-continuum mass equality
++ actual R4 decomposition and extrema
++ independent physical normalization
 ```
 
-## Permanent anti-goals
+and then concludes the intended physical spectral statement without circular numerical input.
 
-The development must not:
-
-```text
-weaken theorem statements or physical assumptions to make a proof elaborate
-count an open, Draft, stale, or unmerged PR as theorem authority
-count queued or in-progress CI as success or failure
-change code in response to an external Actions outage without a completed code failure
-identify random-scan or heat-bath time with geometric one-slab time
-promote total-variation contraction to L2 coercivity without an L2 theorem
-confuse positive finite-volume gaps with a volume-uniform gap
-confuse a transfer eigenvalue cap with a Hamiltonian energy in physical units
-confuse the spectral-probability coordinate space with a Euclidean marginal
-confuse a supplied finite-carrier isometry with a constructed gauge-geometric identification
-confuse finite Z2 with compact SU(2) / SU(N) Yang--Mills
-confuse projective-limit L2 operator extension with OS reconstruction
-confuse exactGapValueReal = 33/20 with the finite constant 1/2
-present 33/20 as a physical mass without unit and continuum-identification theorems
-claim an unconditional Clay solution before the concrete continuum construction is closed.
-```
-
-## Completion criteria
-
-### Finite `Z₂` geometric stage
-
-**Completed.** It requires and now has:
-
-```text
-actual adjacent-slice transfer
-Perron ground and spectral decomposition
-common high-temperature interval
-correct-marginal coupling
-coordinate-resolved response
-full-transfer spectral cap 1/2
-full-transfer Dirichlet coercivity 1/2.
-```
-
-### Concrete finite carrier stage
-
-Complete when:
-
-```text
-the actual residual gauge-orbit probability L2 realization is integrated
-and its relation to the spectral-probability realization is explicit.
-```
-
-### Cross-volume projective stage
-
-Complete when:
-
-```text
-actual finite orbit/marginal carriers form a directed compatible system
-the actual defects intertwine under every transition
-and the system instantiates the generic continuum operator extension.
-```
-
-### Continuum operator stage
-
-Complete when:
-
-```text
-the actual finite family converges on the common continuum carrier
-coercivity 1/2 is preserved by constructed—not merely supplied—convergence data
-and the limit operator is identified with the relevant Euclidean/OS evolution object.
-```
-
-### Physical Yang--Mills stage
-
-Complete only when:
-
-```text
-a compact nonabelian gauge model is constructed along a physical scaling trajectory
-the continuum Euclidean measure and OS axioms are proved
-the reconstructed Hamiltonian is identified
-a strict physical spectral gap is proved
-and physical-unit normalization is established.
-```
-
-## Replay baseline
-
-```text
-Lean:
-  leanprover/lean4:v4.30.0-rc2
-
-mathlib:
-  5450b53e5ddc75d46418fabb605edbf36bd0beb6
-```
-
-The authoritative workflow remains exact-base Draft development, completed final-head validation, Ready re-audit, squash merge with fixed `expected_head_sha`, and post-merge identity verification.
+Until then, the repository should continue to distinguish theorem infrastructure, theorem generators conditional on explicit model-facing data, and genuinely discharged physical construction steps.
