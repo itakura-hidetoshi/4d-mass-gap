@@ -145,6 +145,24 @@ noncomputable def specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerLinearMap
     specialUnitaryTwoNormalizedTraceHilbertKernelFeature
     specialUnitaryTwoCyclicFourEdgeNormalizedTraceDegreeOneLinearMap n
 
+/-- The arbitrary-degree cyclic contraction sends the genuine four-edge pure
+power feature to the degree-`n` target feature of the cyclic plaquette word. -/
+theorem specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerLinearMap_feature
+    (n : ℕ)
+    (x : Fin 4 → Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerLinearMap n
+        ((specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseFeature.pow n).feature x) =
+      (specialUnitaryTwoNormalizedTraceHilbertKernelFeature.pow n).feature
+        (haarFinFourCyclicPlaquetteWord x) := by
+  simpa [specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerLinearMap] using
+    (RealHilbertKernelFeature.powLinearMap_feature
+      specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseFeature
+      specialUnitaryTwoNormalizedTraceHilbertKernelFeature
+      specialUnitaryTwoCyclicFourEdgeNormalizedTraceDegreeOneLinearMap
+      haarFinFourCyclicPlaquetteWord
+      specialUnitaryTwoCyclicFourEdgeNormalizedTraceDegreeOneLinearMap_feature
+      n x)
+
 /-- Hilbert-adjoint pullback of an arbitrary degree-`n` cyclic dual vector to
 the genuine four-edge degree-`n` carrier. -/
 noncomputable def specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback
@@ -181,6 +199,22 @@ theorem specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback_inner
       specialUnitaryTwoNormalizedTraceHilbertKernelFeature n
   rw [specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback,
     LinearMap.adjoint_inner_left]
+
+/-- Exact pure-feature pairing for the arbitrary-degree adjoint pullback.  The
+right-hand side is already expressed at the actual cyclic plaquette word, so no
+new orientation or inverse convention is introduced at higher degree. -/
+theorem specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback_inner_feature
+    (n : ℕ)
+    (q : (specialUnitaryTwoNormalizedTraceHilbertKernelFeature.pow n).FeatureHilbert)
+    (x : Fin 4 → Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    inner ℝ
+        (specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback n q)
+        ((specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseFeature.pow n).feature x) =
+      inner ℝ q
+        ((specialUnitaryTwoNormalizedTraceHilbertKernelFeature.pow n).feature
+          (haarFinFourCyclicPlaquetteWord x)) := by
+  rw [specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback_inner,
+    specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerLinearMap_feature]
 
 end
 
