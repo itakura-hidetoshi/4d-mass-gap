@@ -122,7 +122,8 @@ exact feature vector selected by `RealHilbertKernelFeature.pow`. -/
           (RealHilbertKernelFeature.pow C n)).feature x) =
       (RealHilbertKernelFeature.pow C (n + 1)).feature x := by
   unfold RealHilbertKernelFeature.powSuccFeatureHilbertLinearEquiv
-  simp
+  rw [RealHilbertKernelFeature.kernelCastFeatureHilbertLinearEquivMpr_feature]
+  rw [RealHilbertKernelFeature.featureHilbertLinearEquivOfEq_feature]
 
 /-- The inverse successor carrier equivalence sends the exact power feature
 back to the raw product feature. -/
@@ -137,7 +138,8 @@ back to the raw product feature. -/
       (RealHilbertKernelFeature.mul C
         (RealHilbertKernelFeature.pow C n)).feature x := by
   apply (RealHilbertKernelFeature.powSuccFeatureHilbertLinearEquiv C n).injective
-  simp
+  rw [LinearEquiv.apply_symm_apply]
+  exact RealHilbertKernelFeature.powSuccFeatureHilbertLinearEquiv_feature C n x
 
 /-- If the degree-one carrier of a real Hilbert-kernel feature is finite
 dimensional, then every recursively completed tensor-power carrier produced by
