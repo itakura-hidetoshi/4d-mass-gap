@@ -70,7 +70,7 @@ noncomputable def cyclicFourLegRealFeatureContraction
           (orientedRealFeatureLinearMap N (orientation 3) (v 3)))
         (realFeatureMatrixMulLinearMap N
           (orientedRealFeatureLinearMap N (orientation 0) (v 0))
-          (orientedRealFeatureLinearMap N (orientation 1) (v 1)) := by
+          (orientedRealFeatureLinearMap N (orientation 1) (v 1))) := by
   rfl
 
 /-- Primary-spatial specialization of the cyclic four-leg contraction. -/
