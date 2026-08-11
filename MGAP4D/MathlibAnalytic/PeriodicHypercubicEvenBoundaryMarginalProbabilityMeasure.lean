@@ -75,13 +75,15 @@ theorem periodicHypercubicEvenBoundaryMarginalMeasure_isProbabilityMeasure
       (periodicHypercubicEvenBoundaryMarginalMeasure H N hN beta hbeta) := by
   let C := periodicHypercubicSpecialUnitaryWilsonSystem
     (PeriodicHypercubicEvenSideLength H) N hN beta hbeta
-  letI : IsProbabilityMeasure C.gibbsMeasure :=
-    continuous_compact_oriented_gibbsMeasure_isProbabilityMeasure C
-  rw [← periodicHypercubicEvenSpecialUnitary_map_boundaryRestriction_gibbsMeasure
-    H N hN beta hbeta]
-  exact Measure.isProbabilityMeasure_map
-    (periodicHypercubicEvenSpecialUnitaryBoundaryRestrictionMeasurePreserving
-      H N hN beta hbeta).measurable.aemeasurable
+  have hSource : C.gibbsMeasure Set.univ = 1 :=
+    (continuous_compact_oriented_gibbsMeasure_isProbabilityMeasure C).measure_univ
+  have hMP :=
+    periodicHypercubicEvenSpecialUnitaryBoundaryRestrictionMeasurePreserving
+      H N hN beta hbeta
+  constructor
+  rw [← hMP.map_eq]
+  rw [Measure.map_apply_of_aemeasurable hMP.measurable.aemeasurable MeasurableSet.univ]
+  simpa [C] using hSource
 
 /-- Export the probability normalization as a typeclass instance so downstream
 weighted-L² constructions can use the actual boundary marginal directly. -/
