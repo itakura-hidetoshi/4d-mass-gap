@@ -37,6 +37,31 @@ noncomputable def finiteDimensionalRealHilbertCompletionLinearIsometryEquiv
   · intro x
     simp [e₁, e₂]
 
+/-- On the canonical dense copy of a finite-dimensional Hilbert space, the
+completion equivalence is exactly the identity. -/
+@[simp] theorem finiteDimensionalRealHilbertCompletionLinearIsometryEquiv_coe
+    (E : Type*)
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [FiniteDimensional ℝ E]
+    (x : E) :
+    finiteDimensionalRealHilbertCompletionLinearIsometryEquiv E
+        (x : UniformSpace.Completion E) = x := by
+  letI : CompleteSpace E := FiniteDimensional.complete ℝ E
+  simp [finiteDimensionalRealHilbertCompletionLinearIsometryEquiv]
+
+/-- Conversely, the inverse equivalence is the canonical completion embedding. -/
+@[simp] theorem finiteDimensionalRealHilbertCompletionLinearIsometryEquiv_symm_apply
+    (E : Type*)
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [FiniteDimensional ℝ E]
+    (x : E) :
+    (finiteDimensionalRealHilbertCompletionLinearIsometryEquiv E).symm x =
+      (x : UniformSpace.Completion E) := by
+  apply (finiteDimensionalRealHilbertCompletionLinearIsometryEquiv E).injective
+  simp
+
 /-- The uniform completion of a finite-dimensional real Hilbert space is again
 finite-dimensional.  This theorem is intentionally not registered globally as
 an instance; downstream recursive tensor constructions install it locally at
