@@ -97,14 +97,30 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteEdge_direction_ne_zero
     (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H k).2 ≠
       (0 : PeriodicHypercubicAxis) := by
   fin_cases k
-  · rw [periodicHypercubicEvenPrimarySpatialPlaquetteEdge_zero]
-    decide
-  · rw [periodicHypercubicEvenPrimarySpatialPlaquetteEdge_one]
-    decide
-  · rw [periodicHypercubicEvenPrimarySpatialPlaquetteEdge_two]
-    decide
-  · rw [periodicHypercubicEvenPrimarySpatialPlaquetteEdge_three]
-    decide
+  · have h :
+        (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H (0 : Fin 4)).2 ≠
+          (0 : PeriodicHypercubicAxis) := by
+      rw [periodicHypercubicEvenPrimarySpatialPlaquetteEdge_zero]
+      decide
+    simpa using h
+  · have h :
+        (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H (1 : Fin 4)).2 ≠
+          (0 : PeriodicHypercubicAxis) := by
+      rw [periodicHypercubicEvenPrimarySpatialPlaquetteEdge_one]
+      decide
+    simpa using h
+  · have h :
+        (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H (2 : Fin 4)).2 ≠
+          (0 : PeriodicHypercubicAxis) := by
+      rw [periodicHypercubicEvenPrimarySpatialPlaquetteEdge_two]
+      decide
+    simpa using h
+  · have h :
+        (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H (3 : Fin 4)).2 ≠
+          (0 : PeriodicHypercubicAxis) := by
+      rw [periodicHypercubicEvenPrimarySpatialPlaquetteEdge_three]
+      decide
+    simpa using h
 
 /-- Every physical edge of the canonical primary spatial plaquette is based on
 the primary fixed time slice. -/
