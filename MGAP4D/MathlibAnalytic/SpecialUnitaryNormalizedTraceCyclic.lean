@@ -23,7 +23,22 @@ theorem normalizedSpecialUnitaryRealTrace_mul_cycle
     Matrix.trace
       ((h : Matrix (Fin N) (Fin N) ℂ) *
         (g : Matrix (Fin N) (Fin N) ℂ))
-  rw [Matrix.trace_mul_cycle]
+  calc
+    Matrix.trace
+        ((g : Matrix (Fin N) (Fin N) ℂ) *
+          (h : Matrix (Fin N) (Fin N) ℂ)) =
+      Matrix.trace
+        ((1 : Matrix (Fin N) (Fin N) ℂ) *
+          (g : Matrix (Fin N) (Fin N) ℂ) *
+          (h : Matrix (Fin N) (Fin N) ℂ)) := by simp
+    _ = Matrix.trace
+        ((h : Matrix (Fin N) (Fin N) ℂ) *
+          (1 : Matrix (Fin N) (Fin N) ℂ) *
+          (g : Matrix (Fin N) (Fin N) ℂ)) := by
+      rw [Matrix.trace_mul_cycle]
+    _ = Matrix.trace
+        ((h : Matrix (Fin N) (Fin N) ℂ) *
+          (g : Matrix (Fin N) (Fin N) ℂ)) := by simp
 
 end
 
