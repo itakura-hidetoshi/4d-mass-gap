@@ -54,16 +54,8 @@ theorem specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgeProductKernel_eq_inner
         (specialUnitaryTwoCyclicFourEdgeNormalizedTraceFeatureTensor x)
         (specialUnitaryTwoCyclicFourEdgeNormalizedTraceFeatureTensor y) := by
   simp only [specialUnitaryTwoCyclicFourEdgeNormalizedTraceFeatureTensor,
-    TensorProduct.inner_tmul]
-  rw [← specialUnitaryTwoNormalizedTraceFeatureVector_eq_kernelFeature,
-    ← specialUnitaryTwoNormalizedTraceFeatureVector_eq_kernelFeature,
-    ← specialUnitaryTwoNormalizedTraceFeatureVector_eq_kernelFeature,
-    ← specialUnitaryTwoNormalizedTraceFeatureVector_eq_kernelFeature,
-    ← specialUnitaryTwoNormalizedTraceFeatureVector_eq_kernelFeature,
-    ← specialUnitaryTwoNormalizedTraceFeatureVector_eq_kernelFeature,
-    ← specialUnitaryTwoNormalizedTraceFeatureVector_eq_kernelFeature,
-    ← specialUnitaryTwoNormalizedTraceFeatureVector_eq_kernelFeature]
-  simp only [specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgeProductKernel]
+    TensorProduct.inner_tmul,
+    specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgeProductKernel]
   rw [
     (specialUnitaryNormalizedTraceRelativeKernelFeature
       2 cyclicFourEdgeSourcePowerTwoRankPositive).kernel_eq_inner (x 2) (y 2),
@@ -73,6 +65,15 @@ theorem specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgeProductKernel_eq_inner
       2 cyclicFourEdgeSourcePowerTwoRankPositive).kernel_eq_inner (x 0) (y 0),
     (specialUnitaryNormalizedTraceRelativeKernelFeature
       2 cyclicFourEdgeSourcePowerTwoRankPositive).kernel_eq_inner (x 1) (y 1)]
+  rw [
+    ← specialUnitaryTwoNormalizedTraceFeatureVector_eq_kernelFeature (x 2),
+    ← specialUnitaryTwoNormalizedTraceFeatureVector_eq_kernelFeature (y 2),
+    ← specialUnitaryTwoNormalizedTraceFeatureVector_eq_kernelFeature (x 3),
+    ← specialUnitaryTwoNormalizedTraceFeatureVector_eq_kernelFeature (y 3),
+    ← specialUnitaryTwoNormalizedTraceFeatureVector_eq_kernelFeature (x 0),
+    ← specialUnitaryTwoNormalizedTraceFeatureVector_eq_kernelFeature (y 0),
+    ← specialUnitaryTwoNormalizedTraceFeatureVector_eq_kernelFeature (x 1),
+    ← specialUnitaryTwoNormalizedTraceFeatureVector_eq_kernelFeature (y 1)]
 
 /-- Exact degree-one edgewise four-leg Hilbert feature. -/
 noncomputable def specialUnitaryTwoCyclicFourEdgeNormalizedTraceSourceFeature :
