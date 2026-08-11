@@ -8,6 +8,7 @@ import Mathlib.Analysis.Normed.Module.Completion
 import Mathlib.Analysis.Normed.Operator.Extend
 import Mathlib.Topology.Algebra.Module.FiniteDimensionBilinear
 import Mathlib.Tactic
+import Mathlib.Tactic.FunProp
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -185,10 +186,10 @@ noncomputable def orientedFourLegRealFeatureMultilinearMap
         (orientedRealFeatureLinearMap N (orientation 2) (v 2))
         (orientedRealFeatureLinearMap N (orientation 3) (v 3)))
   map_update_add' := by
-    intro v i x y
+    intro _ v i x y
     fin_cases i <;> simp
   map_update_smul' := by
-    intro v i r x
+    intro _ v i r x
     fin_cases i <;> simp
 
 /-- The generic continuous four-leg contraction.  Its continuity is inherited
@@ -197,18 +198,20 @@ space, so no norm or scalar-topology instance on raw matrices is needed. -/
 noncomputable def orientedFourLegRealFeatureContraction
     (N : ℕ)
     (orientation : Fin 4 → PeriodicHypercubicOrientation) :
-    (SpecialUnitaryMatrixRealFeatureSpace N) [×4]→L[ℝ]
-      SpecialUnitaryMatrixRealFeatureSpace N where
+    ContinuousMultilinearMap ℝ
+      (fun _ : Fin 4 => SpecialUnitaryMatrixRealFeatureSpace N)
+      (SpecialUnitaryMatrixRealFeatureSpace N) where
   toMultilinearMap := orientedFourLegRealFeatureMultilinearMap N orientation
   cont := by
-    change Continuous fun v : Fin 4 → SpecialUnitaryMatrixRealFeatureSpace N =>
-      realFeatureMatrixMulContinuousBilinearMap N
-        (realFeatureMatrixMulContinuousBilinearMap N
-          ((orientedRealFeatureLinearMap N (orientation 0)).toContinuousLinearMap (v 0))
-          ((orientedRealFeatureLinearMap N (orientation 1)).toContinuousLinearMap (v 1)))
-        (realFeatureMatrixMulContinuousBilinearMap N
-          ((orientedRealFeatureLinearMap N (orientation 2)).toContinuousLinearMap (v 2))
-          ((orientedRealFeatureLinearMap N (orientation 3)).toContinuousLinearMap (v 3))
+    change Continuous
+      (fun v : Fin 4 → SpecialUnitaryMatrixRealFeatureSpace N =>
+        realFeatureMatrixMulContinuousBilinearMap N
+          (realFeatureMatrixMulContinuousBilinearMap N
+            ((orientedRealFeatureLinearMap N (orientation 0)).toContinuousLinearMap (v 0))
+            ((orientedRealFeatureLinearMap N (orientation 1)).toContinuousLinearMap (v 1)))
+          (realFeatureMatrixMulContinuousBilinearMap N
+            ((orientedRealFeatureLinearMap N (orientation 2)).toContinuousLinearMap (v 2))
+            ((orientedRealFeatureLinearMap N (orientation 3)).toContinuousLinearMap (v 3))))
     fun_prop
 
 @[simp] theorem orientedFourLegRealFeatureContraction_apply
@@ -253,8 +256,9 @@ def periodicHypercubicEvenPrimarySpatialPlaquetteOrientation
 /-- Actual bounded four-leg contraction for the primary spatial plaquette. -/
 noncomputable def periodicHypercubicEvenPrimarySpatialPlaquetteFourLegRealFeatureContraction
     (H N : ℕ) :
-    (SpecialUnitaryMatrixRealFeatureSpace N) [×4]→L[ℝ]
-      SpecialUnitaryMatrixRealFeatureSpace N :=
+    ContinuousMultilinearMap ℝ
+      (fun _ : Fin 4 => SpecialUnitaryMatrixRealFeatureSpace N)
+      (SpecialUnitaryMatrixRealFeatureSpace N) :=
   orientedFourLegRealFeatureContraction N
     (periodicHypercubicEvenPrimarySpatialPlaquetteOrientation H)
 
@@ -267,12 +271,11 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteFourLegRealFeatureContracti
     periodicHypercubicEvenPrimarySpatialPlaquetteFourLegRealFeatureContraction H N
         (fun k => specialUnitaryMatrixRealFeature N (x k)) =
       specialUnitaryMatrixRealFeature N (orientedFourEdgePlaquetteWord x) := by
-  simp [periodicHypercubicEvenPrimarySpatialPlaquetteFourLegRealFeatureContraction,
-    orientedFourLegRealFeatureContraction_apply,
-    realFeatureMatrixMulLinearMap,
-    periodicHypercubicEvenPrimarySpatialPlaquetteOrientation,
+  unfold periodicHypercubicEvenPrimarySpatialPlaquetteFourLegRealFeatureContraction
+  rw [orientedFourLegRealFeatureContraction_apply]
+  simp [periodicHypercubicEvenPrimarySpatialPlaquetteOrientation,
+    realFeatureMatrixMulLinearMap_apply,
     orientedFourEdgePlaquetteWord,
-    specialUnitaryMatrixRealFeature,
     mul_assoc]
 
 /-- Algebraic four-fold projective tensor carrier indexed by the four canonical
@@ -326,6 +329,7 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteProjectiveRealFeatureContra
         (specialUnitaryFourLegProjectiveRealFeatureTensor N
           (fun k => specialUnitaryMatrixRealFeature N (x k))) =
       specialUnitaryMatrixRealFeature N (orientedFourEdgePlaquetteWord x) := by
+  unfold periodicHypercubicEvenPrimarySpatialPlaquetteProjectiveRealFeatureContraction
   rw [orientedFourLegProjectiveRealFeatureContraction_pure]
   exact periodicHypercubicEvenPrimarySpatialPlaquetteFourLegRealFeatureContraction_apply
     H N x
