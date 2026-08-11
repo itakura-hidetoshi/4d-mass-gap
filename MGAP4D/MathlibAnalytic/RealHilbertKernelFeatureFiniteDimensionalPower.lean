@@ -84,8 +84,28 @@ exact feature vector selected by `RealHilbertKernelFeature.pow`. -/
         ((RealHilbertKernelFeature.mul C
           (RealHilbertKernelFeature.pow C n)).feature x) =
       (RealHilbertKernelFeature.pow C (n + 1)).feature x := by
-  simp [RealHilbertKernelFeature.powSuccFeatureHilbertLinearEquiv,
-    RealHilbertKernelFeature.pow, pow_succ, mul_comm]
+  let D :=
+    RealHilbertKernelFeature.mul C
+      (RealHilbertKernelFeature.pow C n)
+  have hKernel :
+      (fun a b => kernel a b ^ (n + 1)) =
+        (fun a b => kernel a b * kernel a b ^ n) := by
+    funext a b
+    rw [pow_succ]
+    exact mul_comm _ _
+  have hPow :
+      RealHilbertKernelFeature.pow C (n + 1) =
+        Eq.mpr (congrArg (RealHilbertKernelFeature X) hKernel) D := by
+    simp only [RealHilbertKernelFeature.pow]
+    rfl
+  rw [hPow]
+  change
+    RealHilbertKernelFeature.kernelCastFeatureHilbertLinearEquivMpr hKernel D
+        (D.feature x) =
+      (Eq.mpr (congrArg (RealHilbertKernelFeature X) hKernel) D).feature x
+  exact
+    RealHilbertKernelFeature.kernelCastFeatureHilbertLinearEquivMpr_feature
+      hKernel D x
 
 /-- If the degree-one carrier of a real Hilbert-kernel feature is finite
 dimensional, then every recursively completed tensor-power carrier produced by
