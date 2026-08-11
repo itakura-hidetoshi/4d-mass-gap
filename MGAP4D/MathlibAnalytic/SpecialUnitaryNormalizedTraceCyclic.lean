@@ -23,7 +23,7 @@ theorem normalizedSpecialUnitaryRealTrace_mul_cycle
     Matrix.trace
       ((h : Matrix (Fin N) (Fin N) ℂ) *
         (g : Matrix (Fin N) (Fin N) ℂ))
-  exact Matrix.trace_mul_cycle _ _
+  rw [Matrix.trace_mul_cycle]
 
 end
 
