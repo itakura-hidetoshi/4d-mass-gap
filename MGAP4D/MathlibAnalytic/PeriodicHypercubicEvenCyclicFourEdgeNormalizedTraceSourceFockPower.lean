@@ -74,6 +74,7 @@ theorem specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgeProductKernel_eq_inner
     ← specialUnitaryTwoNormalizedTraceFeatureVector_eq_kernelFeature (y 0),
     ← specialUnitaryTwoNormalizedTraceFeatureVector_eq_kernelFeature (x 1),
     ← specialUnitaryTwoNormalizedTraceFeatureVector_eq_kernelFeature (y 1)]
+  rfl
 
 /-- Exact degree-one edgewise four-leg Hilbert feature. -/
 noncomputable def specialUnitaryTwoCyclicFourEdgeNormalizedTraceSourceFeature :
