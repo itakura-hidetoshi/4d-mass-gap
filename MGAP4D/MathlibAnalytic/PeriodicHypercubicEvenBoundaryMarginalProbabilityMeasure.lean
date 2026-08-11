@@ -73,17 +73,34 @@ theorem periodicHypercubicEvenBoundaryMarginalMeasure_isProbabilityMeasure
     (beta : ℝ) (hbeta : 0 ≤ beta) :
     IsProbabilityMeasure
       (periodicHypercubicEvenBoundaryMarginalMeasure H N hN beta hbeta) := by
-  letI : IsProbabilityMeasure
+  have hSource :
       (periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure :=
-    continuous_compact_oriented_gibbsMeasure_isProbabilityMeasure
+        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure
+          Set.univ = 1 :=
+    (continuous_compact_oriented_gibbsMeasure_isProbabilityMeasure
       (periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
-  rw [← periodicHypercubicEvenSpecialUnitary_map_boundaryRestriction_gibbsMeasure
-    H N hN beta hbeta]
-  exact Measure.isProbabilityMeasure_map
-    (periodicHypercubicEvenSpecialUnitaryBoundaryRestrictionMeasurePreserving
-      H N hN beta hbeta).measurable.aemeasurable
+        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)).measure_univ
+  have hMP :=
+    periodicHypercubicEvenSpecialUnitaryBoundaryRestrictionMeasurePreserving
+      H N hN beta hbeta
+  constructor
+  rw [← hMP.map_eq]
+  calc
+    (Measure.map
+        (periodicHypercubicEvenEdgeOrbitPartition H).boundaryRestriction
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure)
+        Set.univ =
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure
+        ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryRestriction ⁻¹'
+          Set.univ) :=
+      Measure.map_apply_of_aemeasurable
+        hMP.measurable.aemeasurable MeasurableSet.univ
+    _ = (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure
+          Set.univ := by rw [Set.preimage_univ]
+    _ = 1 := hSource
 
 /-- Export the probability normalization as a typeclass instance so downstream
 weighted-L² constructions can use the actual boundary marginal directly. -/
