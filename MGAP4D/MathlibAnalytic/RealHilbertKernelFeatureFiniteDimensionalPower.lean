@@ -49,7 +49,15 @@ noncomputable def RealHilbertKernelFeature.powSuccFeatureHilbertLinearEquiv
       (RealHilbertKernelFeature.pow C n)).FeatureHilbert ≃ₗ[ℝ]
       (RealHilbertKernelFeature.pow C (n + 1)).FeatureHilbert := by
   simp only [RealHilbertKernelFeature.pow]
-  exact RealHilbertKernelFeature.kernelCastFeatureHilbertLinearEquivMpr _ _
+  have hKernel :
+      (fun x y => kernel x y ^ (n + 1)) =
+        (fun x y => kernel x y * kernel x y ^ n) := by
+    funext x y
+    rw [pow_succ]
+    exact mul_comm _ _
+  exact
+    RealHilbertKernelFeature.kernelCastFeatureHilbertLinearEquivMpr
+      hKernel _
 
 /-- If the degree-one carrier of a real Hilbert-kernel feature is finite
 dimensional, then every recursively completed tensor-power carrier produced by
