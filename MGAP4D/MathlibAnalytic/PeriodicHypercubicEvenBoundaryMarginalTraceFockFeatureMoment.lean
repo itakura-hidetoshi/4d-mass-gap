@@ -107,9 +107,13 @@ theorem
         PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
       periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernel H
         p.1 p.2 := by
-  let hol := periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2
-  have hhol : Continuous hol :=
+  have hhol : Continuous
+      (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2) :=
     continuous_periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy_two H
+  change Continuous fun p =>
+    specialUnitaryNormalizedTraceRelativeKernel 2
+      (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2 p.1)
+      (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2 p.2)
   exact continuous_specialUnitaryNormalizedTraceRelativeKernel_two.comp
     ((hhol.comp continuous_fst).prodMk (hhol.comp continuous_snd))
 
