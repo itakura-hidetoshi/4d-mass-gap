@@ -69,7 +69,8 @@ theorem periodicHypercubicEvenPrimarySpatialEdgeTemporalCompanion_boundaryLeg_eq
       A e := by
   simp [periodicHypercubicEvenPositiveBoundaryTemporalBoundaryLeg,
     periodicHypercubicEvenPrimarySpatialEdgeTemporalCompanion,
-    periodicHypercubicStepValue, hprimary]
+    periodicHypercubicStepValue, periodicHypercubicPlaquetteSecondAxis,
+    hprimary]
 
 /-- In boundary-fibered coordinates, the companion boundary leg is literally
 the selected shared-boundary coordinate. -/
