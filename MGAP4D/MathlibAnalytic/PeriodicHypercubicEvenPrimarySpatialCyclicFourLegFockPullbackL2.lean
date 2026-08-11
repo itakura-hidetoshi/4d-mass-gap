@@ -108,8 +108,20 @@ private theorem periodicHypercubicEvenIdentityBoundaryFiberedOpenHalf_measurable
             (x, (fun _ : P.PositiveEdge => (1 : Gauge))))) := by
     exact measurable_const.prodMk (measurable_id.prodMk measurable_const)
   have h := (P.boundaryFiberedPiMeasurableEquiv Gauge).symm.measurable.comp hz
-  simpa only [FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedPiMeasurableEquiv_symm_apply]
-    using h
+  have hfun :
+      ((P.boundaryFiberedPiMeasurableEquiv Gauge).symm ∘
+          (fun x : P.OpenHalfConfiguration Gauge =>
+            ((fun _ : P.FixedEdge => (1 : Gauge)),
+              (x, (fun _ : P.PositiveEdge => (1 : Gauge)))))) =
+        (fun x : P.OpenHalfConfiguration Gauge =>
+          P.boundaryFiberedAssemble
+            (fun _ => (1 : Gauge)) x (fun _ => (1 : Gauge))) := by
+    funext x
+    exact P.boundaryFiberedPiMeasurableEquiv_symm_apply Gauge
+      ((fun _ : P.FixedEdge => (1 : Gauge)),
+        (x, (fun _ : P.PositiveEdge => (1 : Gauge))))
+  rw [← hfun]
+  exact h
 
 /-- Every canonical temporal-companion open path is measurable on the actual
 positive open-half configuration space. -/
@@ -168,13 +180,8 @@ theorem continuous_specialUnitaryNormalizedTraceRelativeKernel
       (fun p : Matrix.specialUnitaryGroup (Fin N) ℂ ×
           Matrix.specialUnitaryGroup (Fin N) ℂ =>
         specialUnitaryNormalizedTraceRelativeKernel N p.1 p.2) := by
-  unfold specialUnitaryNormalizedTraceRelativeKernel
-  change Continuous
-    (fun p : Matrix.specialUnitaryGroup (Fin N) ℂ ×
-        Matrix.specialUnitaryGroup (Fin N) ℂ =>
-      (Matrix.trace
-        (star (p.1 : Matrix (Fin N) (Fin N) ℂ) *
-          (p.2 : Matrix (Fin N) (Fin N) ℂ))).re / (N : ℝ))
+  simp_rw [specialUnitaryNormalizedTraceRelativeKernel_eq_scaled]
+  unfold specialUnitaryRealTraceRelativeKernel
   fun_prop
 
 /-- The degree-`n` positive-half cyclic feature is almost-everywhere strongly
