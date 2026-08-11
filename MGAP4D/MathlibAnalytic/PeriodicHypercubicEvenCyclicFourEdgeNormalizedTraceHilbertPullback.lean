@@ -1,7 +1,7 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPrimarySpatialCyclicFourLegFockPullback
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.InnerProductSpace.TensorProduct
-import Mathlib.Topology.Algebra.Module.FiniteDimension
+import Mathlib.Analysis.Normed.Module.FiniteDimension
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -9,6 +9,10 @@ namespace MathlibAnalytic
 open scoped TensorProduct InnerProduct InnerProductSpace
 
 noncomputable section
+
+local instance cyclicFourEdgeHilbertMeasurableSpace :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  specialUnitaryGroupMeasurableSpace 2
 
 private theorem cyclicFourEdgeHilbertTwoRankPositive : 0 < (2 : ℕ) := by
   norm_num
@@ -27,6 +31,13 @@ private theorem specialUnitaryTwoNormalizedTraceFeatureScale_ne_zero :
     specialUnitaryTwoNormalizedTraceFeatureScale ≠ 0 :=
   ne_of_gt specialUnitaryTwoNormalizedTraceFeatureScale_pos
 
+private theorem specialUnitaryTwoNormalizedTraceFeatureScale_inv_mul_sq :
+    specialUnitaryTwoNormalizedTraceFeatureScale⁻¹ *
+        (specialUnitaryTwoNormalizedTraceFeatureScale *
+          specialUnitaryTwoNormalizedTraceFeatureScale) =
+      specialUnitaryTwoNormalizedTraceFeatureScale := by
+  field_simp [specialUnitaryTwoNormalizedTraceFeatureScale_ne_zero]
+
 /-- Explicit normalized degree-one `SU(2)` matrix feature. -/
 noncomputable def specialUnitaryTwoNormalizedTraceFeatureVector
     (g : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
@@ -34,8 +45,8 @@ noncomputable def specialUnitaryTwoNormalizedTraceFeatureVector
   specialUnitaryTwoNormalizedTraceFeatureScale •
     specialUnitaryMatrixRealFeature 2 g
 
-/-- The explicit vector is the degree-one RKHS feature already used by the
-normalized relative-trace kernel. -/
+/-- The explicit vector is definitionally the degree-one RKHS feature already
+used by the normalized relative-trace kernel. -/
 theorem specialUnitaryTwoNormalizedTraceFeatureVector_eq_kernelFeature
     (g : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
     specialUnitaryTwoNormalizedTraceFeatureVector g =
@@ -43,68 +54,113 @@ theorem specialUnitaryTwoNormalizedTraceFeatureVector_eq_kernelFeature
         2 cyclicFourEdgeHilbertTwoRankPositive).feature g := by
   rfl
 
-/-- Two-edge Hilbert tensor carrier.  Because the matrix feature is finite
-dimensional, Mathlib's algebraic inner-product tensor is already complete; no
-second completion is needed. -/
+/-- Canonical finite-dimensional Hilbert tensor for one ordered edge pair. -/
 abbrev SpecialUnitaryTwoNormalizedTracePairTensorSpace :=
   SpecialUnitaryMatrixRealFeatureSpace 2 ⊗[ℝ]
     SpecialUnitaryMatrixRealFeatureSpace 2
 
-/-- Pair-of-pairs finite-dimensional Hilbert tensor carrier for the four
-companion edges, in cyclic pair order `(2,3)|(0,1)`. -/
+/-- Canonical pair-of-pairs Hilbert tensor in cyclic order `(2,3)|(0,1)`.
+Because every factor is finite-dimensional over `ℝ`, this algebraic Hilbert
+tensor is already complete; no extra completion carrier is needed. -/
 abbrev SpecialUnitaryTwoNormalizedTraceFourEdgeHilbertTensorSpace :=
   SpecialUnitaryTwoNormalizedTracePairTensorSpace ⊗[ℝ]
     SpecialUnitaryTwoNormalizedTracePairTensorSpace
 
-/-- Matrix multiplication linearized on the canonical finite-dimensional
-Hilbert tensor product. -/
-noncomputable def specialUnitaryTwoRealFeaturePairMulTensorLinearMap :
+local instance specialUnitaryTwoNormalizedTracePairTensorCompleteSpace :
+    CompleteSpace SpecialUnitaryTwoNormalizedTracePairTensorSpace :=
+  FiniteDimensional.complete ℝ _
+
+local instance specialUnitaryTwoNormalizedTraceFourEdgeHilbertTensorCompleteSpace :
+    CompleteSpace SpecialUnitaryTwoNormalizedTraceFourEdgeHilbertTensorSpace :=
+  FiniteDimensional.complete ℝ _
+
+/-- Normalized backward-pair multiplication.  The inverse feature scale removes
+one of the two input normalizations, so two normalized edge features map to one
+normalized product feature. -/
+noncomputable def specialUnitaryTwoBackwardPairNormalizedBilinearMap :
+    SpecialUnitaryMatrixRealFeatureSpace 2 →ₗ[ℝ]
+      SpecialUnitaryMatrixRealFeatureSpace 2 →ₗ[ℝ]
+        SpecialUnitaryMatrixRealFeatureSpace 2 :=
+  specialUnitaryTwoNormalizedTraceFeatureScale⁻¹ •
+    ((realFeatureMatrixMulLinearMap 2).compl₁₂
+      (orientedRealFeatureLinearMap 2 .backward)
+      (orientedRealFeatureLinearMap 2 .backward))
+
+/-- Normalized forward-pair multiplication. -/
+noncomputable def specialUnitaryTwoForwardPairNormalizedBilinearMap :
+    SpecialUnitaryMatrixRealFeatureSpace 2 →ₗ[ℝ]
+      SpecialUnitaryMatrixRealFeatureSpace 2 →ₗ[ℝ]
+        SpecialUnitaryMatrixRealFeatureSpace 2 :=
+  specialUnitaryTwoNormalizedTraceFeatureScale⁻¹ •
+    ((realFeatureMatrixMulLinearMap 2).compl₁₂
+      (orientedRealFeatureLinearMap 2 .forward)
+      (orientedRealFeatureLinearMap 2 .forward))
+
+/-- Linearized normalized backward-pair contraction. -/
+noncomputable def specialUnitaryTwoBackwardPairTensorLinearMap :
     SpecialUnitaryTwoNormalizedTracePairTensorSpace →ₗ[ℝ]
       SpecialUnitaryMatrixRealFeatureSpace 2 :=
-  TensorProduct.lift (realFeatureMatrixMulLinearMap 2)
+  TensorProduct.lift specialUnitaryTwoBackwardPairNormalizedBilinearMap
 
-/-- Finite-dimensionality makes tensor-linearized multiplication bounded. -/
-noncomputable def specialUnitaryTwoRealFeaturePairMulTensorContinuousLinearMap :
-    SpecialUnitaryTwoNormalizedTracePairTensorSpace →L[ℝ]
+/-- Linearized normalized forward-pair contraction. -/
+noncomputable def specialUnitaryTwoForwardPairTensorLinearMap :
+    SpecialUnitaryTwoNormalizedTracePairTensorSpace →ₗ[ℝ]
       SpecialUnitaryMatrixRealFeatureSpace 2 :=
-  LinearMap.toContinuousLinearMap
-    specialUnitaryTwoRealFeaturePairMulTensorLinearMap
+  TensorProduct.lift specialUnitaryTwoForwardPairNormalizedBilinearMap
 
-@[simp] theorem specialUnitaryTwoRealFeaturePairMulTensorContinuousLinearMap_tmul
-    (v w : SpecialUnitaryMatrixRealFeatureSpace 2) :
-    specialUnitaryTwoRealFeaturePairMulTensorContinuousLinearMap
-        (v ⊗ₜ[ℝ] w) =
-      realFeatureMatrixMulLinearMap 2 v w := by
-  change specialUnitaryTwoRealFeaturePairMulTensorLinearMap (v ⊗ₜ[ℝ] w) = _
-  simp [specialUnitaryTwoRealFeaturePairMulTensorLinearMap]
+@[simp] theorem specialUnitaryTwoBackwardPairTensorLinearMap_feature_tmul
+    (g h : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    specialUnitaryTwoBackwardPairTensorLinearMap
+        (specialUnitaryTwoNormalizedTraceFeatureVector g ⊗ₜ[ℝ]
+          specialUnitaryTwoNormalizedTraceFeatureVector h) =
+      specialUnitaryTwoNormalizedTraceFeatureVector (g⁻¹ * h⁻¹) := by
+  simp [specialUnitaryTwoBackwardPairTensorLinearMap,
+    specialUnitaryTwoBackwardPairNormalizedBilinearMap,
+    specialUnitaryTwoNormalizedTraceFeatureVector,
+    smul_smul,
+    specialUnitaryTwoNormalizedTraceFeatureScale_inv_mul_sq,
+    realFeatureMatrixMulLinearMap_apply,
+    specialUnitaryMatrixRealFeature]
 
-/-- The cyclic backward pair `(2,3)`. -/
-noncomputable def specialUnitaryTwoBackwardPairTensorContraction :
-    SpecialUnitaryTwoNormalizedTracePairTensorSpace →L[ℝ]
+@[simp] theorem specialUnitaryTwoForwardPairTensorLinearMap_feature_tmul
+    (g h : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    specialUnitaryTwoForwardPairTensorLinearMap
+        (specialUnitaryTwoNormalizedTraceFeatureVector g ⊗ₜ[ℝ]
+          specialUnitaryTwoNormalizedTraceFeatureVector h) =
+      specialUnitaryTwoNormalizedTraceFeatureVector (g * h) := by
+  simp [specialUnitaryTwoForwardPairTensorLinearMap,
+    specialUnitaryTwoForwardPairNormalizedBilinearMap,
+    specialUnitaryTwoNormalizedTraceFeatureVector,
+    smul_smul,
+    specialUnitaryTwoNormalizedTraceFeatureScale_inv_mul_sq,
+    realFeatureMatrixMulLinearMap_apply,
+    specialUnitaryMatrixRealFeature]
+
+/-- Normalized multiplication of the two already-contracted pair features. -/
+noncomputable def specialUnitaryTwoOuterNormalizedBilinearMap :
+    SpecialUnitaryMatrixRealFeatureSpace 2 →ₗ[ℝ]
+      SpecialUnitaryMatrixRealFeatureSpace 2 →ₗ[ℝ]
+        SpecialUnitaryMatrixRealFeatureSpace 2 :=
+  specialUnitaryTwoNormalizedTraceFeatureScale⁻¹ •
+    realFeatureMatrixMulLinearMap 2
+
+/-- Algebraic four-edge contraction on the canonical finite-dimensional Hilbert
+tensor. -/
+noncomputable def specialUnitaryTwoCyclicFourEdgeNormalizedTraceLinearMap :
+    SpecialUnitaryTwoNormalizedTraceFourEdgeHilbertTensorSpace →ₗ[ℝ]
       SpecialUnitaryMatrixRealFeatureSpace 2 :=
-  specialUnitaryTwoRealFeaturePairMulTensorContinuousLinearMap.comp
-    (TensorProduct.mapL
-      (orientedRealFeatureLinearMap 2 .backward).toContinuousLinearMap
-      (orientedRealFeatureLinearMap 2 .backward).toContinuousLinearMap)
+  TensorProduct.lift
+    ((specialUnitaryTwoOuterNormalizedBilinearMap).compl₁₂
+      specialUnitaryTwoBackwardPairTensorLinearMap
+      specialUnitaryTwoForwardPairTensorLinearMap)
 
-/-- The cyclic forward pair `(0,1)`. -/
-noncomputable def specialUnitaryTwoForwardPairTensorContraction :
-    SpecialUnitaryTwoNormalizedTracePairTensorSpace →L[ℝ]
-      SpecialUnitaryMatrixRealFeatureSpace 2 :=
-  specialUnitaryTwoRealFeaturePairMulTensorContinuousLinearMap.comp
-    (TensorProduct.mapL
-      (orientedRealFeatureLinearMap 2 .forward).toContinuousLinearMap
-      (orientedRealFeatureLinearMap 2 .forward).toContinuousLinearMap)
-
-/-- Contract `(2,3)` and `(0,1)` separately and multiply the pair products in
-cyclic order. -/
-noncomputable def specialUnitaryTwoCyclicFourEdgeCompletedContractionRaw :
+/-- Bounded four-edge Hilbert contraction.  Boundedness is automatic because
+the source is finite-dimensional. -/
+noncomputable def specialUnitaryTwoCyclicFourEdgeNormalizedTraceContraction :
     SpecialUnitaryTwoNormalizedTraceFourEdgeHilbertTensorSpace →L[ℝ]
       SpecialUnitaryMatrixRealFeatureSpace 2 :=
-  specialUnitaryTwoRealFeaturePairMulTensorContinuousLinearMap.comp
-    (TensorProduct.mapL
-      specialUnitaryTwoBackwardPairTensorContraction
-      specialUnitaryTwoForwardPairTensorContraction)
+  LinearMap.toContinuousLinearMap
+    specialUnitaryTwoCyclicFourEdgeNormalizedTraceLinearMap
 
 /-- Pure four-edge normalized feature tensor in cyclic pair order `(2,3)|(0,1)`. -/
 noncomputable def specialUnitaryTwoCyclicFourEdgeNormalizedTraceFeatureTensor
@@ -115,45 +171,6 @@ noncomputable def specialUnitaryTwoCyclicFourEdgeNormalizedTraceFeatureTensor
     (specialUnitaryTwoNormalizedTraceFeatureVector (x 0) ⊗ₜ[ℝ]
       specialUnitaryTwoNormalizedTraceFeatureVector (x 1))
 
-/-- Before the final normalization correction, the four-edge contraction carries
-four copies of the degree-one normalization scale. -/
-theorem specialUnitaryTwoCyclicFourEdgeCompletedContractionRaw_featureTensor
-    (x : Fin 4 → Matrix.specialUnitaryGroup (Fin 2) ℂ) :
-    specialUnitaryTwoCyclicFourEdgeCompletedContractionRaw
-        (specialUnitaryTwoCyclicFourEdgeNormalizedTraceFeatureTensor x) =
-      specialUnitaryTwoNormalizedTraceFeatureScale ^ 4 •
-        specialUnitaryMatrixRealFeature 2 (haarFinFourCyclicPlaquetteWord x) := by
-  simp [specialUnitaryTwoCyclicFourEdgeCompletedContractionRaw,
-    specialUnitaryTwoCyclicFourEdgeNormalizedTraceFeatureTensor,
-    specialUnitaryTwoBackwardPairTensorContraction,
-    specialUnitaryTwoForwardPairTensorContraction,
-    specialUnitaryTwoNormalizedTraceFeatureVector,
-    specialUnitaryTwoRealFeaturePairMulTensorContinuousLinearMap_tmul,
-    realFeatureMatrixMulLinearMap_apply,
-    haarFinFourCyclicPlaquetteWord,
-    haarCyclicPlaquetteWord,
-    mul_assoc, pow_succ]
-
-/-- Correction factor converting the four normalized input scales to the one
-normalized output scale. -/
-noncomputable def specialUnitaryTwoCyclicFourEdgeNormalizationCorrection : ℝ :=
-  specialUnitaryTwoNormalizedTraceFeatureScale /
-    specialUnitaryTwoNormalizedTraceFeatureScale ^ 4
-
-private theorem specialUnitaryTwoCyclicFourEdgeNormalizationCorrection_mul_scale_pow :
-    specialUnitaryTwoCyclicFourEdgeNormalizationCorrection *
-        specialUnitaryTwoNormalizedTraceFeatureScale ^ 4 =
-      specialUnitaryTwoNormalizedTraceFeatureScale := by
-  unfold specialUnitaryTwoCyclicFourEdgeNormalizationCorrection
-  field_simp [specialUnitaryTwoNormalizedTraceFeatureScale_ne_zero]
-
-/-- The normalized cyclic four-edge finite-dimensional Hilbert contraction. -/
-noncomputable def specialUnitaryTwoCyclicFourEdgeNormalizedTraceContraction :
-    SpecialUnitaryTwoNormalizedTraceFourEdgeHilbertTensorSpace →L[ℝ]
-      SpecialUnitaryMatrixRealFeatureSpace 2 :=
-  specialUnitaryTwoCyclicFourEdgeNormalizationCorrection •
-    specialUnitaryTwoCyclicFourEdgeCompletedContractionRaw
-
 /-- The normalized four-edge contraction sends the four edgewise normalized
 features exactly to the normalized feature of the cyclic composite holonomy. -/
 theorem specialUnitaryTwoCyclicFourEdgeNormalizedTraceContraction_featureTensor
@@ -162,15 +179,21 @@ theorem specialUnitaryTwoCyclicFourEdgeNormalizedTraceContraction_featureTensor
         (specialUnitaryTwoCyclicFourEdgeNormalizedTraceFeatureTensor x) =
       specialUnitaryTwoNormalizedTraceFeatureVector
         (haarFinFourCyclicPlaquetteWord x) := by
-  rw [specialUnitaryTwoCyclicFourEdgeNormalizedTraceContraction,
-    ContinuousLinearMap.smul_apply,
-    specialUnitaryTwoCyclicFourEdgeCompletedContractionRaw_featureTensor]
-  rw [smul_smul,
-    specialUnitaryTwoCyclicFourEdgeNormalizationCorrection_mul_scale_pow]
-  rfl
+  change specialUnitaryTwoCyclicFourEdgeNormalizedTraceLinearMap
+      (specialUnitaryTwoCyclicFourEdgeNormalizedTraceFeatureTensor x) = _
+  simp [specialUnitaryTwoCyclicFourEdgeNormalizedTraceLinearMap,
+    specialUnitaryTwoOuterNormalizedBilinearMap,
+    specialUnitaryTwoCyclicFourEdgeNormalizedTraceFeatureTensor,
+    specialUnitaryTwoNormalizedTraceFeatureVector,
+    smul_smul,
+    specialUnitaryTwoNormalizedTraceFeatureScale_inv_mul_sq,
+    realFeatureMatrixMulLinearMap_apply,
+    specialUnitaryMatrixRealFeature,
+    haarFinFourCyclicPlaquetteWord_eq,
+    mul_assoc]
 
 /-- Hilbert-adjoint pullback of a degree-one cyclic normalized-trace dual vector
-to the exact four-edge tensor carrier. -/
+to the four-edge tensor carrier. -/
 noncomputable def specialUnitaryTwoCyclicFourEdgeNormalizedTraceDualPullback
     (q : SpecialUnitaryMatrixRealFeatureSpace 2) :
     SpecialUnitaryTwoNormalizedTraceFourEdgeHilbertTensorSpace :=
