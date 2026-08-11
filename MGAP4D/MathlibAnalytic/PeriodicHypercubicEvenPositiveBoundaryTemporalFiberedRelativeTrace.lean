@@ -42,8 +42,18 @@ private theorem periodicHypercubicEvenPositiveBoundaryTemporalBoundaryLeg_bounda
             ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble b x₂ y₂) s := by
       cases horientation : s.orientation <;>
         simp [periodicHypercubicStepValue, horientation, hvalue]
-    simp [periodicHypercubicEvenPositiveBoundaryTemporalBoundaryLeg,
-      hprimary.1, s, hstep]
+    have hstep' :
+        periodicHypercubicStepValue
+            ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble b x₁ y₁)
+            (periodicHypercubicBoundaryStep
+              (PeriodicHypercubicEvenSideLength H) p (3 : Fin 4)) =
+          periodicHypercubicStepValue
+            ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble b x₂ y₂)
+            (periodicHypercubicBoundaryStep
+              (PeriodicHypercubicEvenSideLength H) p (3 : Fin 4)) := by
+      simpa [s] using hstep
+    unfold periodicHypercubicEvenPositiveBoundaryTemporalBoundaryLeg
+    rw [if_pos hprimary.1, hstep']
   · unfold periodicHypercubicEvenPositiveBoundaryTemporalAntipodalEdgePattern at hantipodal
     have hbaseNe : (p.1 0).val ≠ 0 := by omega
     let s := periodicHypercubicBoundaryStep
@@ -62,8 +72,18 @@ private theorem periodicHypercubicEvenPositiveBoundaryTemporalBoundaryLeg_bounda
             ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble b x₂ y₂) s := by
       cases horientation : s.orientation <;>
         simp [periodicHypercubicStepValue, horientation, hvalue]
-    simp [periodicHypercubicEvenPositiveBoundaryTemporalBoundaryLeg,
-      hbaseNe, s, hstep]
+    have hstep' :
+        periodicHypercubicStepValue
+            ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble b x₁ y₁)
+            (periodicHypercubicBoundaryStep
+              (PeriodicHypercubicEvenSideLength H) p (1 : Fin 4)) =
+          periodicHypercubicStepValue
+            ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble b x₂ y₂)
+            (periodicHypercubicBoundaryStep
+              (PeriodicHypercubicEvenSideLength H) p (1 : Fin 4)) := by
+      simpa [s] using hstep
+    unfold periodicHypercubicEvenPositiveBoundaryTemporalBoundaryLeg
+    rw [if_neg hbaseNe, hstep']
 
 private theorem periodicHypercubicEvenPositiveBoundaryTemporalOpenPath_boundaryFibered_independent
     {H N : ℕ}
@@ -113,15 +133,15 @@ private theorem periodicHypercubicEvenPositiveBoundaryTemporalOpenPath_boundaryF
     have h0 := hstep 0 hprimary.2.1
     have h1 := hstep 1 hprimary.2.2.1
     have h2 := hstep 2 hprimary.2.2.2.1
-    simp [periodicHypercubicEvenPositiveBoundaryTemporalOpenPath,
-      hprimary.1, h0, h1, h2]
+    unfold periodicHypercubicEvenPositiveBoundaryTemporalOpenPath
+    rw [if_pos hprimary.1, h0, h1, h2]
   · unfold periodicHypercubicEvenPositiveBoundaryTemporalAntipodalEdgePattern at hantipodal
     have hbaseNe : (p.1 0).val ≠ 0 := by omega
     have h0 := hstep 0 hantipodal.2.1
     have h2 := hstep 2 hantipodal.2.2.2.1
     have h3 := hstep 3 hantipodal.2.2.2.2
-    simp [periodicHypercubicEvenPositiveBoundaryTemporalOpenPath,
-      hbaseNe, h0, h2, h3]
+    unfold periodicHypercubicEvenPositiveBoundaryTemporalOpenPath
+    rw [if_neg hbaseNe, h2, h3, h0]
 
 /-- Canonical shared-boundary leg of a positive-boundary temporal plaquette.
 Dummy open-half coordinates are set to the group identity; the independence
