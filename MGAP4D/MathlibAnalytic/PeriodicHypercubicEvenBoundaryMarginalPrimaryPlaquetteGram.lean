@@ -92,16 +92,16 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy_sect
   let e := periodicHypercubicEvenPrimarySpatialPlaquetteFixedEdgeEmbedding H
   have h10 : e 1 ≠ e 0 := by
     intro h
-    have := e.injective h
-    norm_num at this
+    have hfin := e.injective h
+    omega
   have h20 : e 2 ≠ e 0 := by
     intro h
-    have := e.injective h
-    norm_num at this
+    have hfin := e.injective h
+    omega
   have h30 : e 3 ≠ e 0 := by
     intro h
-    have := e.injective h
-    norm_num at this
+    have hfin := e.injective h
+    omega
   unfold periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy
   rw [haarFinFourCyclicPlaquetteWord_eq]
   simp [periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomySection,
@@ -194,8 +194,8 @@ theorem periodicHypercubicEvenBoundaryMarginalPrimarySpatialPlaquetteWilsonEnerg
       (periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyTwoBoundaryContinuous_infiniteRange H)
       k
   dsimp [μ, w] at hGram
-  rw [periodicHypercubicEvenBoundaryHaar_withEffectiveDensity_eq_marginalMeasure] at hGram
-  exact hGram
+  simpa only [periodicHypercubicEvenBoundaryHaar_withEffectiveDensity_eq_marginalMeasure]
+    using hGram
 
 end
 
