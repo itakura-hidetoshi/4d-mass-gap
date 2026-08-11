@@ -67,8 +67,8 @@ abbrev SpecialUnitaryTwoNormalizedTracePairTensorSpace :=
 
 /-- Canonical pair-of-pairs finite-dimensional Hilbert tensor in cyclic order
 `(2,3)|(0,1)`.  We deliberately keep this as Mathlib's algebraic tensor with
-its canonical inner product and use `LinearMap.adjoint`; no extra completion
-instance is introduced, avoiding any duplicate tensor-product topology. -/
+its canonical inner product and use `LinearMap.adjoint`.  No additional
+completion instance gets added, avoiding duplicate tensor-product topology. -/
 abbrev SpecialUnitaryTwoNormalizedTraceFourEdgeHilbertTensorSpace :=
   SpecialUnitaryTwoNormalizedTracePairTensorSpace ⊗[ℝ]
     SpecialUnitaryTwoNormalizedTracePairTensorSpace
