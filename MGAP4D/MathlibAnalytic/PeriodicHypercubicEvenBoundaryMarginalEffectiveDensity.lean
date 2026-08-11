@@ -68,7 +68,9 @@ theorem periodicHypercubicEvenBoundaryMarginalEffectiveDensity_ne_zero
       H N hN beta hbeta b ≠ 0 := by
   unfold periodicHypercubicEvenBoundaryMarginalEffectiveDensity
   rw [ENNReal.ofReal_ne_zero_iff]
-  positivity
+  exact pow_pos
+    (periodicHypercubicEvenBoundaryVacuumMoment_pos
+      H N hN beta hbeta b) 2
 
 /-- Audit-friendly almost-everywhere form of the same nonvanishing statement,
 ready for Mathlib's `withDensity_absolutelyContinuous'` API. -/
