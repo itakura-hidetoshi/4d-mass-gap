@@ -10,7 +10,7 @@ open scoped InnerProduct InnerProductSpace
 
 noncomputable section
 
-universe u v
+universe v
 
 /-- A nonzero scalar kernel moment detects a nonzero Bochner moment of any
 real Hilbert feature realization.
@@ -20,7 +20,7 @@ against the fixed feature vector at `x₀` gives exactly
 `∫ x, a x * kernel x₀ x`. Hence a nonzero scalar kernel moment forces the
 Hilbert-valued moment itself to be nonzero. -/
 theorem RealHilbertKernelFeature.integral_ne_zero_of_kernel_moment_ne_zero
-    {X : Type u}
+    {X : Type}
     {kernel : X → X → ℝ}
     [MeasurableSpace X]
     (C : RealHilbertKernelFeature X kernel)
@@ -47,7 +47,7 @@ theorem RealHilbertKernelFeature.integral_ne_zero_of_kernel_moment_ne_zero
 moment against `kernel x₀ x ^ n` forces the corresponding degree-`n` Hilbert
 tensor-feature Bochner moment to be nonzero. -/
 theorem RealHilbertKernelFeature.pow_integral_ne_zero_of_kernel_pow_moment_ne_zero
-    {X : Type u}
+    {X : Type}
     {kernel : X → X → ℝ}
     [MeasurableSpace X]
     (C : RealHilbertKernelFeature X kernel)
@@ -76,7 +76,7 @@ theorem RealHilbertKernelFeature.sqrt_smul_ne_zero_of_pos
 Taylor coefficient is positive, the corresponding scaled Fock component is
 nonzero. -/
 theorem RealHilbertKernelFeature.pow_scaled_integral_ne_zero
-    {X : Type u}
+    {X : Type}
     {kernel : X → X → ℝ}
     [MeasurableSpace X]
     (C : RealHilbertKernelFeature X kernel)
