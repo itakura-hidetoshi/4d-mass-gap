@@ -155,10 +155,10 @@ noncomputable def periodicHypercubicEvenPrimarySpatialPlaquetteFourTemporalCompa
 private theorem cyclicFourEdgeDiagonalTaylorScalarFactorization
     (beta a₂ a₃ a₀ a₁ : ℝ)
     (n : ℕ) :
-    (((beta * a₂) ^ n / (Nat.factorial n : ℝ) *
-        (beta * a₃) ^ n / (Nat.factorial n : ℝ)) *
-      ((beta * a₀) ^ n / (Nat.factorial n : ℝ) *
-        (beta * a₁) ^ n / (Nat.factorial n : ℝ))) =
+    ((((beta * a₂) ^ n / (Nat.factorial n : ℝ)) *
+        ((beta * a₃) ^ n / (Nat.factorial n : ℝ))) *
+      (((beta * a₀) ^ n / (Nat.factorial n : ℝ)) *
+        ((beta * a₁) ^ n / (Nat.factorial n : ℝ)))) =
       (beta ^ n / (Nat.factorial n : ℝ)) ^ 4 *
         (((a₂ * a₃) * (a₀ * a₁)) ^ n) := by
   ring
