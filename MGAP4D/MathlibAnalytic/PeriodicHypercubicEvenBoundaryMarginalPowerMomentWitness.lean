@@ -64,7 +64,12 @@ theorem gram_det_ne_zero_exists_positive_index_inner_sum_ne_zero
     intro h
     subst i
     exact hi hzero
-  omega
+  have hval : i.val ≠ 0 := by
+    intro hval
+    apply hine
+    apply Fin.ext
+    simpa using hval
+  exact Nat.pos_of_ne_zero hval
 
 private theorem boundaryMarginalMomentTwoRankPositive : 0 < (2 : ℕ) := by
   norm_num
