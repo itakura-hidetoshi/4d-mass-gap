@@ -135,10 +135,27 @@ the primary fixed time slice. -/
 theorem periodicHypercubicEvenPrimarySpatialPlaquetteEdge_source_time_val_zero
     (H : ℕ) (k : Fin 4) :
     ((periodicHypercubicEvenPrimarySpatialPlaquetteEdge H k).1 0).val = 0 := by
-  fin_cases k <;>
-    simp [periodicHypercubicEvenPrimarySpatialPlaquetteEdge,
-      periodicHypercubicEvenPrimarySpatialPlaquette,
-      periodicHypercubicShift_apply]
+  fin_cases k
+  · have h :
+        ((periodicHypercubicEvenPrimarySpatialPlaquetteEdge H (0 : Fin 4)).1 0).val = 0 := by
+      rw [periodicHypercubicEvenPrimarySpatialPlaquetteEdge_zero]
+      rfl
+    simpa using h
+  · have h :
+        ((periodicHypercubicEvenPrimarySpatialPlaquetteEdge H (1 : Fin 4)).1 0).val = 0 := by
+      rw [periodicHypercubicEvenPrimarySpatialPlaquetteEdge_one]
+      simp [periodicHypercubicShift_apply]
+    simpa using h
+  · have h :
+        ((periodicHypercubicEvenPrimarySpatialPlaquetteEdge H (2 : Fin 4)).1 0).val = 0 := by
+      rw [periodicHypercubicEvenPrimarySpatialPlaquetteEdge_two]
+      simp [periodicHypercubicShift_apply]
+    simpa using h
+  · have h :
+        ((periodicHypercubicEvenPrimarySpatialPlaquetteEdge H (3 : Fin 4)).1 0).val = 0 := by
+      rw [periodicHypercubicEvenPrimarySpatialPlaquetteEdge_three]
+      rfl
+    simpa using h
 
 /-- The four canonical positive-side temporal companions, one for each physical
 edge of the primary spatial plaquette. -/
