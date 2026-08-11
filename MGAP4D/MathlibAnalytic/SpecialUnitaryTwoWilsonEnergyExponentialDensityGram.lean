@@ -132,7 +132,7 @@ theorem specialUnitaryWilsonPlaquetteEnergyTwoPower_exponentialDensity_toLp_line
             (Matrix.specialUnitaryGroup (Fin 2) ℂ)).withDensity
               (specialUnitaryTwoWilsonEnergyExponentialDensity beta)) ℝ
           (specialUnitaryWilsonPlaquetteEnergyTwoContinuous ^ k)) := by
-  letI : IsFiniteMeasure
+  haveI : IsFiniteMeasure
       ((normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ)).withDensity
         (specialUnitaryTwoWilsonEnergyExponentialDensity beta)) :=
     specialUnitaryTwoWilsonEnergyExponentialDensity_isFiniteMeasure beta hbeta
@@ -156,7 +156,7 @@ theorem specialUnitaryWilsonPlaquetteEnergyTwoPower_exponentialDensity_fin_gram_
             (Matrix.specialUnitaryGroup (Fin 2) ℂ)).withDensity
               (specialUnitaryTwoWilsonEnergyExponentialDensity beta)) ℝ
           (specialUnitaryWilsonPlaquetteEnergyTwoContinuous ^ (j : ℕ)))).det ≠ 0 := by
-  letI : IsFiniteMeasure
+  haveI : IsFiniteMeasure
       ((normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ)).withDensity
         (specialUnitaryTwoWilsonEnergyExponentialDensity beta)) :=
     specialUnitaryTwoWilsonEnergyExponentialDensity_isFiniteMeasure beta hbeta
