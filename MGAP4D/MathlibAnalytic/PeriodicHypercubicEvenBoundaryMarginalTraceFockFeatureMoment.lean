@@ -58,6 +58,23 @@ noncomputable def
       2 boundaryMarginalTraceFockFeatureTwoRankPositive).comap
       (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2)
 
+/-- The degree-`n` tensor trace feature is formed on `SU(2)` first and only then
+pulled back along the actual primary-plaquette boundary holonomy.  Keeping the
+tensor power on the finite-dimensional group side avoids any boundary-level
+kernel reconstruction or change-of-basis argument. -/
+noncomputable def
+    periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature
+    (H n : ℕ) :
+    RealHilbertKernelFeature
+      (PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2)
+      (fun b₁ b₂ =>
+        specialUnitaryNormalizedTraceRelativeKernel 2
+          (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2 b₁)
+          (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2 b₂) ^ n) :=
+  ((specialUnitaryNormalizedTraceRelativeKernelFeature
+      2 boundaryMarginalTraceFockFeatureTwoRankPositive).pow n).comap
+    (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2)
+
 /-- Canonical boundary basepoint whose primary plaquette holonomy is the identity. -/
 noncomputable def periodicHypercubicEvenPrimarySpatialPlaquetteTraceKernelBasepoint
     (H : ℕ) :
@@ -97,35 +114,6 @@ theorem continuous_specialUnitaryNormalizedTraceRelativeKernel_two :
     ring
   exact hTrace.comp ((continuous_fst.inv).mul continuous_snd)
 
-/-- Hence the actual primary-plaquette relative-trace boundary kernel is jointly
-continuous. -/
-theorem
-    continuous_periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernel
-    (H : ℕ) :
-    Continuous fun p :
-      PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 ×
-        PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
-      periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernel H
-        p.1 p.2 := by
-  have hhol : Continuous
-      (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2) :=
-    continuous_periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy_two H
-  have hpair : Continuous fun p :
-      PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 ×
-        PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
-      (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2 p.1,
-        periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2 p.2) :=
-    (hhol.comp continuous_fst).prodMk (hhol.comp continuous_snd)
-  have hcomp : Continuous fun p :
-      PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 ×
-        PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
-      specialUnitaryNormalizedTraceRelativeKernel 2
-        (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2 p.1)
-        (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2 p.2) :=
-    continuous_specialUnitaryNormalizedTraceRelativeKernel_two.comp hpair
-  unfold periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernel
-  exact hcomp
-
 /-- The actual boundary relative-trace kernel has unit diagonal. -/
 theorem periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernel_self
     (H : ℕ)
@@ -152,11 +140,11 @@ noncomputable def periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePo
       (j : ℕ))
 
 /-- Every polynomial-weighted degree-`n` tensor trace feature is Bochner
-integrable in the actual interacting boundary marginal.  Compactness gives a
-sup-norm bound for the scalar polynomial, while the tensor-power feature has
-unit norm because the relative-trace kernel has unit diagonal. -/
+integrable in the actual interacting boundary marginal.  The degree feature is
+continuous already on `SU(2)` and is then pulled back along the continuous
+actual plaquette holonomy. -/
 theorem
-    periodicHypercubicEvenBoundaryMarginalPrimarySpatialPlaquetteNormalizedTracePolynomial_powFeature_integrable
+    periodicHypercubicEvenBoundaryMarginalPrimarySpatialPlaquetteNormalizedTracePolynomial_degreeFeature_integrable
     (H : ℕ)
     (beta : ℝ) (hbeta : 0 ≤ beta)
     (k : ℕ)
@@ -165,32 +153,41 @@ theorem
     Integrable
       (fun b =>
         periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial H k c b •
-          ((periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernelFeature
-            H).pow n).feature b)
+          (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature
+            H n).feature b)
       (periodicHypercubicEvenBoundaryMarginalMeasure
         H 2 boundaryMarginalTraceFockFeatureTwoRankPositive beta hbeta) := by
+  let C₀ :=
+    (specialUnitaryNormalizedTraceRelativeKernelFeature
+      2 boundaryMarginalTraceFockFeatureTwoRankPositive).pow n
   let C :=
-    periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernelFeature H
+    periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature H n
+  let hol := periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2
   let p := periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial H k c
-  let μ := periodicHypercubicEvenBoundaryMarginalMeasure
-    H 2 boundaryMarginalTraceFockFeatureTwoRankPositive beta hbeta
-  have hKernelPow : Continuous fun q :
-      PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 ×
-        PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
-      periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernel H
-          q.1 q.2 ^ n :=
-    (continuous_periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernel
-      H).pow n
-  have hFeature : Continuous (C.pow n).feature := by
-    exact RealHilbertKernelFeature.continuous_feature_of_continuous_kernel
-      (C.pow n) hKernelPow
-  have hWeighted : Continuous fun b => p b • (C.pow n).feature b :=
+  have hBaseKernel : Continuous fun q :
+      Matrix.specialUnitaryGroup (Fin 2) ℂ ×
+        Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      specialUnitaryNormalizedTraceRelativeKernel 2 q.1 q.2 ^ n :=
+    continuous_specialUnitaryNormalizedTraceRelativeKernel_two.pow n
+  have hBaseFeature : Continuous C₀.feature :=
+    RealHilbertKernelFeature.continuous_feature_of_continuous_kernel C₀ hBaseKernel
+  have hhol : Continuous hol :=
+    continuous_periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy_two H
+  have hFeature : Continuous C.feature := by
+    simpa [C, C₀, hol,
+      periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature] using
+      hBaseFeature.comp hhol
+  have hWeighted : Continuous fun b => p b • C.feature b :=
     p.continuous.smul hFeature
-  have hFeatureNorm : ∀ b, ‖(C.pow n).feature b‖ = 1 := by
+  have hFeatureNorm : ∀ b, ‖C.feature b‖ = 1 := by
     intro b
     apply RealHilbertKernelFeature.feature_norm_eq_one
     intro x
-    rw [periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernel_self]
+    have hself :
+        specialUnitaryNormalizedTraceRelativeKernel 2 (hol x) (hol x) = 1 := by
+      simpa [hol, periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernel]
+        using periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernel_self H x
+    rw [hself]
     simp
   refine Integrable.of_bound hWeighted.aestronglyMeasurable ‖p‖ ?_
   filter_upwards [] with b
@@ -201,7 +198,7 @@ theorem
 a nonzero scalar kernel moment at the identity-holonomy basepoint, and hence
 forces the actual degree-`n` tensor-feature Bochner moment to be nonzero. -/
 theorem
-    periodicHypercubicEvenBoundaryMarginalPrimarySpatialPlaquetteNormalizedTracePolynomial_powFeature_integral_ne_zero_of_inner_ne_zero
+    periodicHypercubicEvenBoundaryMarginalPrimarySpatialPlaquetteNormalizedTracePolynomial_degreeFeature_integral_ne_zero_of_inner_ne_zero
     (H : ℕ)
     (beta : ℝ) (hbeta : 0 ≤ beta)
     (k : ℕ)
@@ -221,12 +218,13 @@ theorem
           (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial H k c)) ≠ 0) :
     (∫ b,
       periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial H k c b •
-        ((periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernelFeature
-          H).pow n).feature b
+        (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature
+          H n).feature b
       ∂(periodicHypercubicEvenBoundaryMarginalMeasure
         H 2 boundaryMarginalTraceFockFeatureTwoRankPositive beta hbeta)) ≠ 0 := by
   let C :=
-    periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernelFeature H
+    periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature H n
+  let hol := periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2
   let p := periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial H k c
   let μ := periodicHypercubicEvenBoundaryMarginalMeasure
     H 2 boundaryMarginalTraceFockFeatureTwoRankPositive beta hbeta
@@ -247,24 +245,35 @@ theorem
     intro hz
     apply hmoment
     simpa [μ, p] using hInnerEq.trans hz
+  have hSection : ∀ b,
+      specialUnitaryNormalizedTraceRelativeKernel 2
+        (hol (periodicHypercubicEvenPrimarySpatialPlaquetteTraceKernelBasepoint H))
+        (hol b) =
+      periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceTwoBoundaryContinuous H b := by
+    intro b
+    simpa [hol, periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernel]
+      using
+        periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernel_basepoint
+          H b
   have hKernelMoment :
       (∫ b, p b *
-        periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernel H
-          (periodicHypercubicEvenPrimarySpatialPlaquetteTraceKernelBasepoint H) b ^ n
+        specialUnitaryNormalizedTraceRelativeKernel 2
+          (hol (periodicHypercubicEvenPrimarySpatialPlaquetteTraceKernelBasepoint H))
+          (hol b) ^ n
         ∂μ) ≠ 0 := by
-    simpa only [
-      periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernel_basepoint]
-      using hTraceMoment
-  have hIntegrable : Integrable (fun b => p b • (C.pow n).feature b) μ := by
+    simpa only [hSection] using hTraceMoment
+  have hIntegrable : Integrable (fun b => p b • C.feature b) μ := by
     simpa [C, p, μ] using
-      periodicHypercubicEvenBoundaryMarginalPrimarySpatialPlaquetteNormalizedTracePolynomial_powFeature_integrable
+      periodicHypercubicEvenBoundaryMarginalPrimarySpatialPlaquetteNormalizedTracePolynomial_degreeFeature_integrable
         H beta hbeta k c n
   have hNonzero :=
-    C.pow_integral_ne_zero_of_kernel_pow_moment_ne_zero
-      μ (fun b => p b) n hIntegrable
+    C.integral_ne_zero_of_kernel_moment_ne_zero
+      μ (fun b => p b) hIntegrable
       (periodicHypercubicEvenPrimarySpatialPlaquetteTraceKernelBasepoint H)
       hKernelMoment
-  simpa [C, p, μ] using hNonzero
+  simpa [C, hol, p, μ,
+    periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature]
+    using hNonzero
 
 /-- Actual positive-coupling Fock strictness.  Every centered nonzero finite
 normalized-trace polynomial has a strictly positive tensor degree whose
@@ -272,7 +281,7 @@ Bochner feature moment is nonzero, and the positive Taylor coefficient
 `beta^i / i!` cannot annihilate that component under the canonical square-root
 Fock scaling. -/
 theorem
-    periodicHypercubicEvenBoundaryMarginalPrimarySpatialPlaquetteNormalizedTracePolynomial_exists_positiveTaylorDegree_powFeatureMoment_ne_zero
+    periodicHypercubicEvenBoundaryMarginalPrimarySpatialPlaquetteNormalizedTracePolynomial_exists_positiveTaylorDegree_degreeFeatureMoment_ne_zero
     (H : ℕ)
     (beta : ℝ) (hbeta : 0 < beta)
     (k : ℕ)
@@ -297,15 +306,15 @@ theorem
       0 < beta ^ (i : ℕ) / (Nat.factorial (i : ℕ) : ℝ) ∧
       (∫ b,
         periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial H k c b •
-          ((periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernelFeature
-            H).pow (i : ℕ)).feature b
+          (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature
+            H (i : ℕ)).feature b
         ∂(periodicHypercubicEvenBoundaryMarginalMeasure
           H 2 boundaryMarginalTraceFockFeatureTwoRankPositive beta hbeta.le)) ≠ 0 ∧
       Real.sqrt (beta ^ (i : ℕ) / (Nat.factorial (i : ℕ) : ℝ)) •
         (∫ b,
           periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial H k c b •
-            ((periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernelFeature
-              H).pow (i : ℕ)).feature b
+            (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature
+              H (i : ℕ)).feature b
           ∂(periodicHypercubicEvenBoundaryMarginalMeasure
             H 2 boundaryMarginalTraceFockFeatureTwoRankPositive beta hbeta.le)) ≠ 0 := by
   rcases
@@ -326,7 +335,7 @@ theorem
             H 2 boundaryMarginalTraceFockFeatureTwoRankPositive beta hbeta.le) ℝ p) ≠ 0 := by
     simpa [p, periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial] using hmoment
   have hFeatureMoment :=
-    periodicHypercubicEvenBoundaryMarginalPrimarySpatialPlaquetteNormalizedTracePolynomial_powFeature_integral_ne_zero_of_inner_ne_zero
+    periodicHypercubicEvenBoundaryMarginalPrimarySpatialPlaquetteNormalizedTracePolynomial_degreeFeature_integral_ne_zero_of_inner_ne_zero
       H beta hbeta.le k c (i : ℕ) hmoment'
   refine ⟨i, hi, hcoefficient, hFeatureMoment, ?_⟩
   exact RealHilbertKernelFeature.sqrt_smul_ne_zero_of_pos
