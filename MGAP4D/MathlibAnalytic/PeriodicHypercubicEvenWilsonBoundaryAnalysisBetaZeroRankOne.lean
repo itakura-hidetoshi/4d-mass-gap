@@ -138,11 +138,14 @@ theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureProductL2_zero
         H N hN 0 (by norm_num)).coeFn_toLp,
       realL2ExternalTensor_coeFn u v,
       hu, hv] with z hz hTensor huz hvz
-  rw [hz, hTensor, huz, hvz]
-  change periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
-      H N hN 0 (by norm_num) z.1 z.2 = c * 1
-  rw [periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_zero]
-  rfl
+  calc
+    _ = periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+        H N hN 0 (by norm_num) z.1 z.2 := hz
+    _ = c * 1 := by
+      rw [periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_zero]
+    _ = realL2ExternalTensorFunction u v z := by
+      simp [realL2ExternalTensorFunction, huz, hvz]
+    _ = _ := hTensor.symm
 
 /-- Product-measure form of the same zero-coupling separable-kernel identity. -/
 theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureRectangularL2_zero_eq_externalTensor
@@ -154,7 +157,7 @@ theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureRectangularL2_
         (periodicHypercubicEvenWilsonBoundaryBetaZeroLeftFactorL2 H N hN)
         (periodicHypercubicEvenWilsonBoundaryBetaZeroRightFactorL2 H N) := by
   simpa [periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureRectangularL2,
-    periodicHypercubicEvenBoundaryOpenHalfHaarMeasure] using
+    periodicHypercubicEvenOpenHalfHaarMeasure] using
     periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureProductL2_zero_eq_externalTensor
       H N hN
 
