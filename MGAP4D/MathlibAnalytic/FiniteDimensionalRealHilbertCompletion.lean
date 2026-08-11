@@ -1,4 +1,5 @@
 import Mathlib.Analysis.InnerProductSpace.Completion
+import Mathlib.Analysis.Normed.Module.FiniteDimension
 import Mathlib.Analysis.Normed.Operator.Extend
 
 namespace MGAP4D
