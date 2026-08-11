@@ -84,46 +84,79 @@ theorem specialUnitaryTwoWilsonEnergyExponentialDensity_le_one
         (by norm_num : 0 < (2 : ℕ)) U)
   simpa using ENNReal.ofReal_le_ofReal hexp
 
+/-- For arbitrary real coupling the Wilson exponential density is bounded by
+the finite constant `exp (2 * |beta|)`, using only `0 ≤ E_W ≤ 2`. -/
+theorem specialUnitaryTwoWilsonEnergyExponentialDensity_le_exp_two_abs
+    (beta : ℝ)
+    (U : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    specialUnitaryTwoWilsonEnergyExponentialDensity beta U ≤
+      ENNReal.ofReal (Real.exp (2 * |beta|)) := by
+  unfold specialUnitaryTwoWilsonEnergyExponentialDensity
+  have hE0 : 0 ≤ specialUnitaryWilsonPlaquetteEnergy 2 U :=
+    specialUnitaryWilsonPlaquetteEnergy_nonneg
+      (by norm_num : 0 < (2 : ℕ)) U
+  have hE2 : specialUnitaryWilsonPlaquetteEnergy 2 U ≤ 2 :=
+    specialUnitaryWilsonPlaquetteEnergy_le_two
+      (by norm_num : 0 < (2 : ℕ)) U
+  have harg :
+      -beta * specialUnitaryWilsonPlaquetteEnergy 2 U ≤ 2 * |beta| := by
+    calc
+      -beta * specialUnitaryWilsonPlaquetteEnergy 2 U ≤
+          |beta| * specialUnitaryWilsonPlaquetteEnergy 2 U :=
+        mul_le_mul_of_nonneg_right (neg_le_abs beta) hE0
+      _ ≤ |beta| * 2 :=
+        mul_le_mul_of_nonneg_left hE2 (abs_nonneg beta)
+      _ = 2 * |beta| := by ring
+  exact ENNReal.ofReal_le_ofReal (Real.exp_le_exp.mpr harg)
+
 /-- The Wilson exponential tilt of normalized Haar `SU(2)` is finite for every
-nonnegative coupling.  The proof uses only the pointwise bound by one and the
-fact that normalized Haar is a probability measure. -/
+real coupling.  A uniform finite bound follows from `E_W ∈ [0,2]`. -/
 theorem specialUnitaryTwoWilsonEnergyExponentialDensity_lintegral_ne_top
-    (beta : ℝ) (hbeta : 0 ≤ beta) :
+    (beta : ℝ) :
     (∫⁻ U,
       specialUnitaryTwoWilsonEnergyExponentialDensity beta U
       ∂(normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ))) ≠ ⊤ := by
   have hle :
       (∫⁻ U,
         specialUnitaryTwoWilsonEnergyExponentialDensity beta U
-        ∂(normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ))) ≤ 1 := by
+        ∂(normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ))) ≤
+        ENNReal.ofReal (Real.exp (2 * |beta|)) := by
     calc
       (∫⁻ U,
         specialUnitaryTwoWilsonEnergyExponentialDensity beta U
         ∂(normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ))) ≤
-          ∫⁻ _ : Matrix.specialUnitaryGroup (Fin 2) ℂ, (1 : ENNReal)
+          ∫⁻ _ : Matrix.specialUnitaryGroup (Fin 2) ℂ,
+            ENNReal.ofReal (Real.exp (2 * |beta|))
             ∂(normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
               apply lintegral_mono
               intro U
-              exact specialUnitaryTwoWilsonEnergyExponentialDensity_le_one
-                beta hbeta U
-      _ = 1 := by simp
+              exact specialUnitaryTwoWilsonEnergyExponentialDensity_le_exp_two_abs
+                beta U
+      _ = ENNReal.ofReal (Real.exp (2 * |beta|)) := by simp
   exact ne_top_of_le_ne_top (by simp) hle
 
 /-- The concrete Wilson exponential density therefore generates a finite
-weighted Haar measure without adding any new model assumption. -/
+weighted Haar measure for every real coupling. -/
 theorem specialUnitaryTwoWilsonEnergyExponentialDensity_isFiniteMeasure
-    (beta : ℝ) (hbeta : 0 ≤ beta) :
+    (beta : ℝ) :
     IsFiniteMeasure
       ((normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ)).withDensity
         (specialUnitaryTwoWilsonEnergyExponentialDensity beta)) := by
   exact isFiniteMeasure_withDensity
-    (specialUnitaryTwoWilsonEnergyExponentialDensity_lintegral_ne_top beta hbeta)
+    (specialUnitaryTwoWilsonEnergyExponentialDensity_lintegral_ne_top beta)
+
+local instance su2ExponentialDensityWeightedHaarFiniteMeasure
+    (beta : ℝ) :
+    IsFiniteMeasure
+      ((normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ)).withDensity
+        (specialUnitaryTwoWilsonEnergyExponentialDensity beta)) :=
+  specialUnitaryTwoWilsonEnergyExponentialDensity_isFiniteMeasure beta
 
 /-- At every nonnegative coupling, all `SU(2)` Wilson-energy powers remain
 linearly independent in `L²` of the concrete Wilson-exponentially tilted Haar
 measure. -/
 theorem specialUnitaryWilsonPlaquetteEnergyTwoPower_exponentialDensity_toLp_linearIndependent
-    (beta : ℝ) (hbeta : 0 ≤ beta) :
+    (beta : ℝ) (_hbeta : 0 ≤ beta) :
     LinearIndependent ℝ
       (fun k : ℕ =>
         ContinuousMap.toLp
@@ -132,10 +165,6 @@ theorem specialUnitaryWilsonPlaquetteEnergyTwoPower_exponentialDensity_toLp_line
             (Matrix.specialUnitaryGroup (Fin 2) ℂ)).withDensity
               (specialUnitaryTwoWilsonEnergyExponentialDensity beta)) ℝ
           (specialUnitaryWilsonPlaquetteEnergyTwoContinuous ^ k)) := by
-  haveI : IsFiniteMeasure
-      ((normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ)).withDensity
-        (specialUnitaryTwoWilsonEnergyExponentialDensity beta)) :=
-    specialUnitaryTwoWilsonEnergyExponentialDensity_isFiniteMeasure beta hbeta
   exact
     specialUnitaryWilsonPlaquetteEnergyTwoPower_withDensity_toLp_linearIndependent
       (specialUnitaryTwoWilsonEnergyExponentialDensity beta)
@@ -147,7 +176,7 @@ theorem specialUnitaryWilsonPlaquetteEnergyTwoPower_exponentialDensity_toLp_line
 Gram determinant for the concrete nonnegative-coupling Wilson exponential
 density. -/
 theorem specialUnitaryWilsonPlaquetteEnergyTwoPower_exponentialDensity_fin_gram_det_ne_zero
-    (beta : ℝ) (hbeta : 0 ≤ beta) (k : ℕ) :
+    (beta : ℝ) (_hbeta : 0 ≤ beta) (k : ℕ) :
     (Matrix.gram ℝ
       (fun j : Fin (k + 1) =>
         ContinuousMap.toLp
@@ -156,10 +185,6 @@ theorem specialUnitaryWilsonPlaquetteEnergyTwoPower_exponentialDensity_fin_gram_
             (Matrix.specialUnitaryGroup (Fin 2) ℂ)).withDensity
               (specialUnitaryTwoWilsonEnergyExponentialDensity beta)) ℝ
           (specialUnitaryWilsonPlaquetteEnergyTwoContinuous ^ (j : ℕ)))).det ≠ 0 := by
-  haveI : IsFiniteMeasure
-      ((normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ)).withDensity
-        (specialUnitaryTwoWilsonEnergyExponentialDensity beta)) :=
-    specialUnitaryTwoWilsonEnergyExponentialDensity_isFiniteMeasure beta hbeta
   exact
     specialUnitaryWilsonPlaquetteEnergyTwoPower_withDensity_fin_gram_det_ne_zero
       (specialUnitaryTwoWilsonEnergyExponentialDensity beta)
