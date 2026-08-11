@@ -88,7 +88,8 @@ theorem continuous_specialUnitaryNormalizedTraceRelativeKernel_two :
       specialUnitaryNormalizedTraceRelativeKernel 2 p.1 p.2 := by
   have hTrace : Continuous fun U : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
       normalizedSpecialUnitaryRealTrace 2 U := by
-    have hEnergy :=
+    have hEnergy : Continuous fun U : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+        (1 : ℝ) - specialUnitaryWilsonPlaquetteEnergy 2 U :=
       continuous_const.sub (continuous_specialUnitaryWilsonPlaquetteEnergy 2)
     convert hEnergy using 1
     funext U
