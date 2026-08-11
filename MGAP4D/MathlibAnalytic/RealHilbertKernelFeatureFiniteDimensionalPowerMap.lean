@@ -121,7 +121,7 @@ theorem RealHilbertKernelFeature.powLinearMap_feature
         dsimp [Raw₂]
         infer_instance
       simp [RealHilbertKernelFeature.powLinearMap,
-        RealHilbertKernelFeature.mul, Raw₁, Raw₂, hT, ih]
+        LinearEquiv.trans_apply, RealHilbertKernelFeature.mul, hT, ih]
 
 end
 
