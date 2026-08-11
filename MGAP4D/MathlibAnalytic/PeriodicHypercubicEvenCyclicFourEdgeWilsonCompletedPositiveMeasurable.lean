@@ -116,7 +116,10 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionNormalized
   have htrace : Continuous
       (fun U : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
         normalizedSpecialUnitaryRealTrace 2 U) := by
-    have h := continuous_const.sub henergy
+    have h : Continuous
+        (fun U : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+          (1 : ℝ) - specialUnitaryWilsonPlaquetteEnergy 2 U) :=
+      continuous_const.sub henergy
     simpa [specialUnitaryWilsonPlaquetteEnergy_eq] using h
   unfold periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionNormalizedTrace
   exact htrace.measurable.comp
