@@ -110,9 +110,21 @@ theorem
   have hhol : Continuous
       (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2) :=
     continuous_periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy_two H
+  have hpair : Continuous fun p :
+      PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 ×
+        PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
+      (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2 p.1,
+        periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2 p.2) :=
+    (hhol.comp continuous_fst).prodMk (hhol.comp continuous_snd)
+  have hcomp : Continuous fun p :
+      PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 ×
+        PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
+      specialUnitaryNormalizedTraceRelativeKernel 2
+        (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2 p.1)
+        (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2 p.2) :=
+    continuous_specialUnitaryNormalizedTraceRelativeKernel_two.comp hpair
   unfold periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernel
-  exact continuous_specialUnitaryNormalizedTraceRelativeKernel_two.comp
-    ((hhol.comp continuous_fst).prodMk (hhol.comp continuous_snd))
+  exact hcomp
 
 /-- The actual boundary relative-trace kernel has unit diagonal. -/
 theorem periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernel_self
