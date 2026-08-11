@@ -293,7 +293,6 @@ theorem
           H 2 (by norm_num) beta hbeta p.1 p.2 by exact hK]
       rw [show realL2ExternalTensor f g p = f p.1 * g p.2 by exact hfg]
       rw [cyclicFockAnalysisPairing_realScalar_inner_eq_mul]
-      rfl
     _ = ∫ b, ∫ x, raw (b, x) ∂halfMeasure ∂boundaryMeasure := by
       exact MeasureTheory.integral_prod raw hraw
     _ = ∫ b, ∫ x,
