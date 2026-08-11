@@ -10,28 +10,43 @@ open scoped TensorProduct
 noncomputable section
 
 /-- Reindexing a Hilbert-kernel feature along an equality of scalar kernels does
-not change finite-dimensionality of its feature carrier.  This small transport
-lemma isolates the dependent cast introduced by the `simpa` in
-`RealHilbertKernelFeature.pow`. -/
-theorem RealHilbertKernelFeature.castFeatureHilbert_finiteDimensional
+not change its feature vector space.  The induced map is literally the identity
+after eliminating the kernel equality; packaging it as a linear equivalence
+lets downstream arguments transport finite-dimensionality without depending on
+the syntactic identity of the equality proof used by a `simpa` cast. -/
+noncomputable def RealHilbertKernelFeature.kernelCastFeatureHilbertLinearEquiv
     {X : Type}
     {kernel₁ kernel₂ : X → X → ℝ}
     (h : kernel₁ = kernel₂)
-    (C : RealHilbertKernelFeature X kernel₁)
-    [FiniteDimensional ℝ C.FeatureHilbert] :
-    FiniteDimensional ℝ
-      ((h ▸ C : RealHilbertKernelFeature X kernel₂).FeatureHilbert) := by
+    (C : RealHilbertKernelFeature X kernel₁) :
+    C.FeatureHilbert ≃ₗ[ℝ]
+      (h ▸ C : RealHilbertKernelFeature X kernel₂).FeatureHilbert := by
   subst h
-  infer_instance
+  exact LinearEquiv.refl ℝ C.FeatureHilbert
+
+/-- The successor carrier used by `RealHilbertKernelFeature.pow` is linearly
+equivalent to the raw completed tensor carrier produced by `mul`.  Crucially,
+this definition lets Lean expose and reuse the *actual* kernel cast occurring
+inside `pow`; no separately manufactured proof of the power identity is used. -/
+noncomputable def RealHilbertKernelFeature.powSuccFeatureHilbertLinearEquiv
+    {X : Type}
+    {kernel : X → X → ℝ}
+    (C : RealHilbertKernelFeature X kernel)
+    (n : ℕ) :
+    (RealHilbertKernelFeature.mul C
+      (RealHilbertKernelFeature.pow C n)).FeatureHilbert ≃ₗ[ℝ]
+      (RealHilbertKernelFeature.pow C (n + 1)).FeatureHilbert := by
+  simp only [RealHilbertKernelFeature.pow]
+  exact RealHilbertKernelFeature.kernelCastFeatureHilbertLinearEquiv _ _
 
 /-- If the degree-one carrier of a real Hilbert-kernel feature is finite
 dimensional, then every recursively completed tensor-power carrier produced by
 `RealHilbertKernelFeature.pow` is finite dimensional.
 
-The successor step is exactly the implementation of `pow`: finite-dimensional
-base carrier tensor finite-dimensional preceding power carrier, followed by
-the finite-dimensional Hilbert-completion bridge.  The final kernel reindexing
-is discharged by `castFeatureHilbert_finiteDimensional`. -/
+The successor step follows the implementation of `pow`: finite-dimensional
+base carrier tensor finite-dimensional preceding power carrier, completion,
+then the kernel-index cast.  The last step is transported through
+`powSuccFeatureHilbertLinearEquiv`. -/
 theorem RealHilbertKernelFeature.pow_finiteDimensional
     {X : Type}
     {kernel : X → X → ℝ}
@@ -62,19 +77,8 @@ theorem RealHilbertKernelFeature.pow_finiteDimensional
         exact finiteDimensional_realHilbert_completion
           (C.FeatureHilbert ⊗[ℝ]
             (RealHilbertKernelFeature.pow C n).FeatureHilbert)
-      have hKernel :
-          (fun x y => kernel x y * kernel x y ^ n) =
-            (fun x y => kernel x y ^ (n + 1)) := by
-        funext x y
-        rw [pow_succ]
-      have hCast :
-          FiniteDimensional ℝ
-            ((hKernel ▸ D :
-              RealHilbertKernelFeature X
-                (fun x y => kernel x y ^ (n + 1))).FeatureHilbert) :=
-        RealHilbertKernelFeature.castFeatureHilbert_finiteDimensional
-          hKernel D
-      simpa [D, RealHilbertKernelFeature.pow, pow_succ, mul_comm] using hCast
+      exact
+        (RealHilbertKernelFeature.powSuccFeatureHilbertLinearEquiv C n).finiteDimensional
 
 end
 
