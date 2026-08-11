@@ -30,6 +30,15 @@ local instance cyclicFourEdgeCyclicProbeIntegralBorelSpace :
     BorelSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupBorelSpace 2
 
+local instance cyclicFourEdgeCyclicProbeIntegralSU2Nontrivial :
+    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun U : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (U : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
 /-- The actual scalar cyclic degree probe is Haar integrable.  This is the
 finite-measure `L² → L¹` consequence of the already constructed `MemLp 2`
 probe; no additional boundedness or transport hypothesis is introduced. -/
@@ -42,6 +51,10 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfDe
       (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfDegreeDualProbe
         H n q)
       (periodicHypercubicEvenOpenHalfHaarMeasure H 2) := by
+  letI : IsFiniteMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H 2) := by
+    dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
+      FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+    infer_instance
   exact
     (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfDegreeDualProbe_memLp
       H n q).integrable (by norm_num : (1 : ℝ≥0∞) ≤ 2)
@@ -171,6 +184,17 @@ theorem
   unfold periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartialOpenHalfWeightedIntegral
   apply integral_congr_ae
   exact Filter.Eventually.of_forall fun x => by
+    change
+      periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartial
+          H beta hbeta degree b x *
+        inner ℝ
+          (specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback n q)
+          ((periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeDegreeFeature
+            H n).feature x) =
+      periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartial
+          H beta hbeta degree b x *
+        periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfDegreeDualProbe
+          H n q x
     rw [specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback_inner_temporalCompanionOpenHalf_feature_eq_probe]
 
 /-- Pointwise cyclic-probe/adjoint identity transported through the actual
@@ -192,6 +216,17 @@ theorem
   unfold periodicHypercubicEvenBoundaryCompletedPositiveGramOpenHalfWeightedIntegral
   apply integral_congr_ae
   exact Filter.Eventually.of_forall fun x => by
+    change
+      periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+          H 2 (by norm_num) beta hbeta b x *
+        inner ℝ
+          (specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback n q)
+          ((periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeDegreeFeature
+            H n).feature x) =
+      periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+          H 2 (by norm_num) beta hbeta b x *
+        periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfDegreeDualProbe
+          H n q x
     rw [specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback_inner_temporalCompanionOpenHalf_feature_eq_probe]
 
 /-- Fixed-boundary Wilson Taylor convergence in the exact four-edge adjoint
