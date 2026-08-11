@@ -6,6 +6,54 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+/-- Exact incidence pattern at the primary reflection-fixed slice. -/
+def periodicHypercubicEvenPositiveBoundaryTemporalPrimaryEdgePattern
+    (H : ℕ) (p : PeriodicHypercubicEvenPlaquette H) : Prop :=
+  (p.1 0).val = 0 ∧
+    (periodicHypercubicEvenEdgeOrbitPartition H).side
+        (periodicHypercubicBoundaryStep
+          (PeriodicHypercubicEvenSideLength H) p 0).edge =
+      ReflectionEdgeSide.positive ∧
+    (periodicHypercubicEvenEdgeOrbitPartition H).side
+        (periodicHypercubicBoundaryStep
+          (PeriodicHypercubicEvenSideLength H) p 1).edge =
+      ReflectionEdgeSide.positive ∧
+    (periodicHypercubicEvenEdgeOrbitPartition H).side
+        (periodicHypercubicBoundaryStep
+          (PeriodicHypercubicEvenSideLength H) p 2).edge =
+      ReflectionEdgeSide.positive ∧
+    (periodicHypercubicEvenEdgeOrbitPartition H).side
+        (periodicHypercubicBoundaryStep
+          (PeriodicHypercubicEvenSideLength H) p 3).edge =
+      ReflectionEdgeSide.fixed
+
+/-- Exact incidence pattern at the antipodal-adjacent positive slice. -/
+def periodicHypercubicEvenPositiveBoundaryTemporalAntipodalEdgePattern
+    (H : ℕ) (p : PeriodicHypercubicEvenPlaquette H) : Prop :=
+  (p.1 0).val = H ∧
+    (periodicHypercubicEvenEdgeOrbitPartition H).side
+        (periodicHypercubicBoundaryStep
+          (PeriodicHypercubicEvenSideLength H) p 0).edge =
+      ReflectionEdgeSide.positive ∧
+    (periodicHypercubicEvenEdgeOrbitPartition H).side
+        (periodicHypercubicBoundaryStep
+          (PeriodicHypercubicEvenSideLength H) p 1).edge =
+      ReflectionEdgeSide.fixed ∧
+    (periodicHypercubicEvenEdgeOrbitPartition H).side
+        (periodicHypercubicBoundaryStep
+          (PeriodicHypercubicEvenSideLength H) p 2).edge =
+      ReflectionEdgeSide.positive ∧
+    (periodicHypercubicEvenEdgeOrbitPartition H).side
+        (periodicHypercubicBoundaryStep
+          (PeriodicHypercubicEvenSideLength H) p 3).edge =
+      ReflectionEdgeSide.positive
+
+/-- The two exact positive-boundary temporal incidence patterns. -/
+def periodicHypercubicEvenPositiveBoundaryTemporalExactEdgePattern
+    (H : ℕ) (p : PeriodicHypercubicEvenPlaquette H) : Prop :=
+  periodicHypercubicEvenPositiveBoundaryTemporalPrimaryEdgePattern H p ∨
+    periodicHypercubicEvenPositiveBoundaryTemporalAntipodalEdgePattern H p
+
 /-- For a nondegenerate positive half-torus (`H > 0`), a temporal plaquette
 adjacent to a reflection-fixed slice has exactly one fixed spatial boundary
 incidence and three positive incidences.
@@ -20,40 +68,8 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalPlaquette_exact_edge_patte
     (hH : 0 < H)
     (p : PeriodicHypercubicEvenPlaquette H)
     (hp : periodicHypercubicEvenPositiveBoundaryTemporalPlaquette p) :
-    (((p.1 0).val = 0) ∧
-      (periodicHypercubicEvenEdgeOrbitPartition H).side
-          (periodicHypercubicBoundaryStep
-            (PeriodicHypercubicEvenSideLength H) p 0).edge =
-        ReflectionEdgeSide.positive ∧
-      (periodicHypercubicEvenEdgeOrbitPartition H).side
-          (periodicHypercubicBoundaryStep
-            (PeriodicHypercubicEvenSideLength H) p 1).edge =
-        ReflectionEdgeSide.positive ∧
-      (periodicHypercubicEvenEdgeOrbitPartition H).side
-          (periodicHypercubicBoundaryStep
-            (PeriodicHypercubicEvenSideLength H) p 2).edge =
-        ReflectionEdgeSide.positive ∧
-      (periodicHypercubicEvenEdgeOrbitPartition H).side
-          (periodicHypercubicBoundaryStep
-            (PeriodicHypercubicEvenSideLength H) p 3).edge =
-        ReflectionEdgeSide.fixed) ∨
-    (((p.1 0).val = H) ∧
-      (periodicHypercubicEvenEdgeOrbitPartition H).side
-          (periodicHypercubicBoundaryStep
-            (PeriodicHypercubicEvenSideLength H) p 0).edge =
-        ReflectionEdgeSide.positive ∧
-      (periodicHypercubicEvenEdgeOrbitPartition H).side
-          (periodicHypercubicBoundaryStep
-            (PeriodicHypercubicEvenSideLength H) p 1).edge =
-        ReflectionEdgeSide.fixed ∧
-      (periodicHypercubicEvenEdgeOrbitPartition H).side
-          (periodicHypercubicBoundaryStep
-            (PeriodicHypercubicEvenSideLength H) p 2).edge =
-        ReflectionEdgeSide.positive ∧
-      (periodicHypercubicEvenEdgeOrbitPartition H).side
-          (periodicHypercubicBoundaryStep
-            (PeriodicHypercubicEvenSideLength H) p 3).edge =
-        ReflectionEdgeSide.positive) := by
+    periodicHypercubicEvenPositiveBoundaryTemporalExactEdgePattern H p := by
+  unfold periodicHypercubicEvenPositiveBoundaryTemporalExactEdgePattern
   have htime := hp.1
   have hmu :=
     (periodicHypercubicEvenPlaquetteHasTimeDirection_iff_firstAxis_zero p).1 htime
@@ -86,6 +102,7 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalPlaquette_exact_edge_patte
     rcases hp.2 with h | h <;> omega
   rcases hp.2 with hbase0 | hbaseH
   · left
+    unfold periodicHypercubicEvenPositiveBoundaryTemporalPrimaryEdgePattern
     have hnowrap :
         (p.1 0).val + 1 < PeriodicHypercubicEvenSideLength H := by
       simp only [PeriodicHypercubicEvenSideLength]
@@ -118,6 +135,7 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalPlaquette_exact_edge_patte
         H _ hnu hbase0
     exact ⟨hbase0, hstep0, hstep1, hstep2, hstep3⟩
   · right
+    unfold periodicHypercubicEvenPositiveBoundaryTemporalAntipodalEdgePattern
     have hnowrap :
         (p.1 0).val + 1 < PeriodicHypercubicEvenSideLength H := by
       simp only [PeriodicHypercubicEvenSideLength]
@@ -163,9 +181,13 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalPlaquette_existsUnique_fix
           (periodicHypercubicBoundaryStep
             (PeriodicHypercubicEvenSideLength H) p k).edge =
         ReflectionEdgeSide.fixed := by
-  rcases periodicHypercubicEvenPositiveBoundaryTemporalPlaquette_exact_edge_pattern
-    hH p hp with hprimary | hantipodal
-  · refine ⟨3, hprimary.2.2.2.2, ?_⟩
+  have hpattern :=
+    periodicHypercubicEvenPositiveBoundaryTemporalPlaquette_exact_edge_pattern
+      hH p hp
+  unfold periodicHypercubicEvenPositiveBoundaryTemporalExactEdgePattern at hpattern
+  rcases hpattern with hprimary | hantipodal
+  · unfold periodicHypercubicEvenPositiveBoundaryTemporalPrimaryEdgePattern at hprimary
+    refine ⟨3, hprimary.2.2.2.2, ?_⟩
     intro k hk
     fin_cases k
     · rw [hprimary.2.1] at hk
@@ -175,7 +197,8 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalPlaquette_existsUnique_fix
     · rw [hprimary.2.2.2.1] at hk
       cases hk
     · rfl
-  · refine ⟨1, hantipodal.2.2.1, ?_⟩
+  · unfold periodicHypercubicEvenPositiveBoundaryTemporalAntipodalEdgePattern at hantipodal
+    refine ⟨1, hantipodal.2.2.1, ?_⟩
     intro k hk
     fin_cases k
     · rw [hantipodal.2.1] at hk
