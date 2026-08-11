@@ -51,7 +51,13 @@ theorem specialUnitaryTwoWilsonEnergyExponentialDensity_measurable
     (beta : ℝ) :
     Measurable (specialUnitaryTwoWilsonEnergyExponentialDensity beta) := by
   unfold specialUnitaryTwoWilsonEnergyExponentialDensity
-  fun_prop
+  have hcont :
+      Continuous
+        (fun U : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+          Real.exp (-beta * specialUnitaryWilsonPlaquetteEnergy 2 U)) := by
+    exact Real.continuous_exp.comp
+      (continuous_const.mul (continuous_specialUnitaryWilsonPlaquetteEnergy 2))
+  exact (ENNReal.continuous_ofReal.comp hcont).measurable
 
 /-- The concrete Wilson exponential density is everywhere nonzero. -/
 theorem specialUnitaryTwoWilsonEnergyExponentialDensity_ne_zero
@@ -69,10 +75,14 @@ theorem specialUnitaryTwoWilsonEnergyExponentialDensity_le_one
     (U : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
     specialUnitaryTwoWilsonEnergyExponentialDensity beta U ≤ 1 := by
   unfold specialUnitaryTwoWilsonEnergyExponentialDensity
-  rw [ENNReal.ofReal_le_one, Real.exp_le_one_iff]
-  exact mul_nonpos_of_nonpos_of_nonneg
-    (neg_nonpos.mpr hbeta)
-    (specialUnitaryWilsonPlaquetteEnergy_nonneg 2 U)
+  have hexp :
+      Real.exp (-beta * specialUnitaryWilsonPlaquetteEnergy 2 U) ≤ 1 := by
+    rw [Real.exp_le_one_iff]
+    exact mul_nonpos_of_nonpos_of_nonneg
+      (neg_nonpos.mpr hbeta)
+      (specialUnitaryWilsonPlaquetteEnergy_nonneg
+        (by norm_num : 0 < (2 : ℕ)) U)
+  simpa using ENNReal.ofReal_le_ofReal hexp
 
 /-- The Wilson exponential tilt of normalized Haar `SU(2)` is finite for every
 nonnegative coupling.  The proof uses only the pointwise bound by one and the
