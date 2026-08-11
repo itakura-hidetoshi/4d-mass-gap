@@ -34,6 +34,15 @@ local instance betaZeroAnalysisBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
+local instance betaZeroAnalysisSU2Nontrivial :
+    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun U : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (U : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
 local instance betaZeroAnalysisBoundaryHaarFinite (H N : ℕ) :
     IsFiniteMeasure (periodicHypercubicEvenBoundaryHaarMeasure H N) := by
   dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
@@ -106,6 +115,8 @@ theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureProductL2_zero
     (MeasureTheory.Lp.const 2 μ) c
   let v : Lp ℝ 2 ν :=
     (MeasureTheory.Lp.const 2 ν) (1 : ℝ)
+  change periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureProductL2
+      H N hN 0 (by norm_num) = realL2ExternalTensor u v
   have hu : (fun z :
       PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H N ×
         PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H N =>
@@ -218,7 +229,9 @@ theorem periodicHypercubicEvenSpecialUnitaryTwoPrimaryPlaquetteAnalysisGramMatri
     (H : ℕ) :
     ¬ (periodicHypercubicEvenSpecialUnitaryTwoPrimaryPlaquetteAnalysisGramMatrix
         H 0 (by norm_num) 1).det ≠ 0 := by
-  rw [periodicHypercubicEvenSpecialUnitaryTwoPrimaryPlaquetteAnalysisGramMatrix_zero_twoMode_det]
+  intro hdet
+  exact hdet
+    (periodicHypercubicEvenSpecialUnitaryTwoPrimaryPlaquetteAnalysisGramMatrix_zero_twoMode_det H)
 
 end
 
