@@ -120,8 +120,57 @@ theorem RealHilbertKernelFeature.powLinearMap_feature
       letI : FiniteDimensional ℝ Raw₂ := by
         dsimp [Raw₂]
         infer_instance
-      simp [RealHilbertKernelFeature.powLinearMap,
-        LinearEquiv.trans_apply, RealHilbertKernelFeature.mul, hT, ih]
+      let completionEquiv₁ : UniformSpace.Completion Raw₁ ≃ₗᵢ[ℝ] Raw₁ :=
+        finiteDimensionalRealHilbertCompletionLinearIsometryEquiv Raw₁
+      let completionEquiv₂ : UniformSpace.Completion Raw₂ ≃ₗᵢ[ℝ] Raw₂ :=
+        finiteDimensionalRealHilbertCompletionLinearIsometryEquiv Raw₂
+      let successorEquiv₁ :=
+        RealHilbertKernelFeature.powSuccFeatureHilbertLinearEquiv C₁ n
+      let successorEquiv₂ :=
+        RealHilbertKernelFeature.powSuccFeatureHilbertLinearEquiv C₂ n
+      let tensorMap : Raw₁ →ₗ[ℝ] Raw₂ :=
+        TensorProduct.map T
+          (RealHilbertKernelFeature.powLinearMap C₁ C₂ T n)
+      change
+        successorEquiv₂
+            (completionEquiv₂.symm
+              (tensorMap
+                (completionEquiv₁
+                  (successorEquiv₁.symm
+                    ((RealHilbertKernelFeature.pow C₁ (n + 1)).feature x))))) =
+          (RealHilbertKernelFeature.pow C₂ (n + 1)).feature (f x)
+      have hSource :
+          successorEquiv₁.symm
+              ((RealHilbertKernelFeature.pow C₁ (n + 1)).feature x) =
+            (RealHilbertKernelFeature.mul C₁
+              (RealHilbertKernelFeature.pow C₁ n)).feature x := by
+        simpa [successorEquiv₁] using
+          (RealHilbertKernelFeature.powSuccFeatureHilbertLinearEquiv_symm_feature
+            C₁ n x)
+      rw [hSource]
+      have hCompletionSource :
+          completionEquiv₁
+              ((RealHilbertKernelFeature.mul C₁
+                (RealHilbertKernelFeature.pow C₁ n)).feature x) =
+            (C₁.feature x ⊗ₜ[ℝ]
+              (RealHilbertKernelFeature.pow C₁ n).feature x : Raw₁) := by
+        simp [completionEquiv₁, RealHilbertKernelFeature.mul, Raw₁]
+      rw [hCompletionSource]
+      dsimp [tensorMap]
+      rw [TensorProduct.map_tmul]
+      rw [hT x, ih]
+      have hCompletionTarget :
+          completionEquiv₂.symm
+              (C₂.feature (f x) ⊗ₜ[ℝ]
+                (RealHilbertKernelFeature.pow C₂ n).feature (f x) : Raw₂) =
+            (((C₂.feature (f x) ⊗ₜ[ℝ]
+                (RealHilbertKernelFeature.pow C₂ n).feature (f x) : Raw₂) :
+              UniformSpace.Completion Raw₂)) := by
+        simp [completionEquiv₂]
+      rw [hCompletionTarget]
+      simpa [successorEquiv₂, RealHilbertKernelFeature.mul, Raw₂] using
+        (RealHilbertKernelFeature.powSuccFeatureHilbertLinearEquiv_feature
+          C₂ n (f x))
 
 end
 
