@@ -65,13 +65,32 @@ abbrev SpecialUnitaryTwoNormalizedTracePairTensorSpace :=
   SpecialUnitaryMatrixRealFeatureSpace 2 ⊗[ℝ]
     SpecialUnitaryMatrixRealFeatureSpace 2
 
+/-- Fix Mathlib's canonical Hilbert tensor norm before any linear maps on the
+pair carrier are elaborated.  This keeps the algebraic `TensorProduct.lift`
+and the Hilbert adjoint on one definitionally identical additive carrier. -/
+noncomputable local instance specialUnitaryTwoNormalizedTracePairTensorNormedAddCommGroup :
+    NormedAddCommGroup SpecialUnitaryTwoNormalizedTracePairTensorSpace :=
+  TensorProduct.instNormedAddCommGroup
+
+noncomputable local instance specialUnitaryTwoNormalizedTracePairTensorInnerProductSpace :
+    InnerProductSpace ℝ SpecialUnitaryTwoNormalizedTracePairTensorSpace :=
+  TensorProduct.instInnerProductSpace
+
 /-- Canonical pair-of-pairs finite-dimensional Hilbert tensor in cyclic order
 `(2,3)|(0,1)`.  We deliberately keep this as Mathlib's algebraic tensor with
 its canonical inner product and use `LinearMap.adjoint`.  No additional
-completion instance gets added, avoiding duplicate tensor-product topology. -/
+completion structure is added, avoiding duplicate tensor-product topology. -/
 abbrev SpecialUnitaryTwoNormalizedTraceFourEdgeHilbertTensorSpace :=
   SpecialUnitaryTwoNormalizedTracePairTensorSpace ⊗[ℝ]
     SpecialUnitaryTwoNormalizedTracePairTensorSpace
+
+noncomputable local instance specialUnitaryTwoNormalizedTraceFourEdgeTensorNormedAddCommGroup :
+    NormedAddCommGroup SpecialUnitaryTwoNormalizedTraceFourEdgeHilbertTensorSpace :=
+  TensorProduct.instNormedAddCommGroup
+
+noncomputable local instance specialUnitaryTwoNormalizedTraceFourEdgeTensorInnerProductSpace :
+    InnerProductSpace ℝ SpecialUnitaryTwoNormalizedTraceFourEdgeHilbertTensorSpace :=
+  TensorProduct.instInnerProductSpace
 
 /-- Normalized backward-pair multiplication.  The inverse feature scale removes
 one of the two input normalizations, so two normalized edge features map to one
@@ -119,6 +138,7 @@ noncomputable def specialUnitaryTwoForwardPairTensorLinearMap :
     smul_smul,
     specialUnitaryTwoNormalizedTraceFeatureScale_mul_mul_inv,
     realFeatureMatrixMulLinearMap_apply]
+  simp [specialUnitaryMatrixRealFeature]
 
 @[simp] theorem specialUnitaryTwoForwardPairTensorLinearMap_feature_tmul
     (g h : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
@@ -132,6 +152,7 @@ noncomputable def specialUnitaryTwoForwardPairTensorLinearMap :
     smul_smul,
     specialUnitaryTwoNormalizedTraceFeatureScale_mul_mul_inv,
     realFeatureMatrixMulLinearMap_apply]
+  simp [specialUnitaryMatrixRealFeature]
 
 /-- Normalized multiplication of the two already-contracted pair features. -/
 noncomputable def specialUnitaryTwoOuterNormalizedBilinearMap :
@@ -176,15 +197,18 @@ theorem specialUnitaryTwoCyclicFourEdgeNormalizedTraceContraction_featureTensor
         (specialUnitaryTwoCyclicFourEdgeNormalizedTraceFeatureTensor x) =
       specialUnitaryTwoNormalizedTraceFeatureVector
         (haarFinFourCyclicPlaquetteWord x) := by
-  simp [specialUnitaryTwoCyclicFourEdgeNormalizedTraceContraction,
+  simp only [specialUnitaryTwoCyclicFourEdgeNormalizedTraceContraction,
     specialUnitaryTwoCyclicFourEdgeNormalizedTraceLinearMap,
-    specialUnitaryTwoOuterNormalizedBilinearMap,
     specialUnitaryTwoCyclicFourEdgeNormalizedTraceFeatureTensor,
+    TensorProduct.lift.tmul, LinearMap.coe_comp, Function.comp_apply]
+  rw [specialUnitaryTwoBackwardPairTensorLinearMap_feature_tmul,
+    specialUnitaryTwoForwardPairTensorLinearMap_feature_tmul]
+  simp [specialUnitaryTwoOuterNormalizedBilinearMap,
     specialUnitaryTwoNormalizedTraceFeatureVector,
     smul_smul,
     specialUnitaryTwoNormalizedTraceFeatureScale_mul_mul_inv,
-    realFeatureMatrixMulLinearMap_apply,
-    haarFinFourCyclicPlaquetteWord_eq,
+    realFeatureMatrixMulLinearMap_apply]
+  simp [specialUnitaryMatrixRealFeature, haarFinFourCyclicPlaquetteWord_eq,
     mul_assoc]
 
 /-- Hilbert-adjoint pullback of a degree-one cyclic normalized-trace dual vector
