@@ -12,6 +12,47 @@ noncomputable section
 
 universe v
 
+/-- A nonzero Bochner integral in a real Hilbert space is detected by a scalar
+inner-product probe.  The canonical choice is the moment itself: pairing the
+integrand against its integral produces the strictly positive squared norm of
+the moment. -/
+theorem exists_dual_probe_integral_ne_zero_of_integral_ne_zero
+    {X : Type}
+    {H : Type v}
+    [MeasurableSpace X]
+    [NormedAddCommGroup H]
+    [InnerProductSpace ℝ H]
+    [CompleteSpace H]
+    (mu : Measure X)
+    (f : X → H)
+    (hf : Integrable f mu)
+    (hmoment : (∫ x, f x ∂mu) ≠ 0) :
+    ∃ q : H, (∫ x, inner ℝ q (f x) ∂mu) ≠ 0 := by
+  let v := ∫ x, f x ∂mu
+  refine ⟨v, ?_⟩
+  have hpair :
+      (∫ x, inner ℝ v (f x) ∂mu) = inner ℝ v v := by
+    simpa [v] using integral_inner hf v
+  rw [hpair]
+  intro hzero
+  have hvzero : v = 0 := inner_self_eq_zero.mp hzero
+  exact hmoment (by simpa [v] using hvzero)
+
+/-- Weighted-feature specialization of the canonical dual-probe principle. -/
+theorem RealHilbertKernelFeature.exists_dual_probe_of_integral_ne_zero
+    {X : Type}
+    {kernel : X → X → ℝ}
+    [MeasurableSpace X]
+    (C : RealHilbertKernelFeature X kernel)
+    (mu : Measure X)
+    (a : X → ℝ)
+    (ha : Integrable (fun x => a x • C.feature x) mu)
+    (hmoment : (∫ x, a x • C.feature x ∂mu) ≠ 0) :
+    ∃ q : C.FeatureHilbert,
+      (∫ x, inner ℝ q (a x • C.feature x) ∂mu) ≠ 0 := by
+  exact exists_dual_probe_integral_ne_zero_of_integral_ne_zero
+    mu (fun x => a x • C.feature x) ha hmoment
+
 /-- A nonzero scalar kernel moment detects a nonzero Bochner moment of any
 real Hilbert feature realization.
 
