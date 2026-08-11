@@ -72,6 +72,57 @@ noncomputable def RealHilbertKernelFeature.powLinearMap
               (completionEquiv₁.toLinearMap.comp
                 successorEquiv₁.symm.toLinearMap)))
 
+/-- Naturality of the finite-dimensional power lift on pure Hilbert features.
+If the degree-one map sends `C₁.feature x` to `C₂.feature (f x)`, then every
+power lift sends the recursively completed degree-`n` pure feature of `x` to
+the degree-`n` pure feature of `f x`.
+
+The successor proof follows the construction literally: move the exact power
+feature back to the raw product feature, remove the finite-dimensional
+completion, apply `TensorProduct.map` to the pure tensor, use the degree-one
+hypothesis and induction hypothesis, then restore completion and the exact
+successor carrier. -/
+theorem RealHilbertKernelFeature.powLinearMap_feature
+    {X₁ X₂ : Type}
+    {kernel₁ : X₁ → X₁ → ℝ}
+    {kernel₂ : X₂ → X₂ → ℝ}
+    (C₁ : RealHilbertKernelFeature X₁ kernel₁)
+    (C₂ : RealHilbertKernelFeature X₂ kernel₂)
+    [FiniteDimensional ℝ C₁.FeatureHilbert]
+    [FiniteDimensional ℝ C₂.FeatureHilbert]
+    (T : C₁.FeatureHilbert →ₗ[ℝ] C₂.FeatureHilbert)
+    (f : X₁ → X₂)
+    (hT : ∀ x, T (C₁.feature x) = C₂.feature (f x))
+    (n : ℕ)
+    (x : X₁) :
+    RealHilbertKernelFeature.powLinearMap C₁ C₂ T n
+        ((RealHilbertKernelFeature.pow C₁ n).feature x) =
+      (RealHilbertKernelFeature.pow C₂ n).feature (f x) := by
+  induction n with
+  | zero =>
+      rfl
+  | succ n ih =>
+      letI : FiniteDimensional ℝ
+          ((RealHilbertKernelFeature.pow C₁ n).FeatureHilbert) :=
+        RealHilbertKernelFeature.pow_finiteDimensional C₁ n
+      letI : FiniteDimensional ℝ
+          ((RealHilbertKernelFeature.pow C₂ n).FeatureHilbert) :=
+        RealHilbertKernelFeature.pow_finiteDimensional C₂ n
+      let Raw₁ :=
+        C₁.FeatureHilbert ⊗[ℝ]
+          (RealHilbertKernelFeature.pow C₁ n).FeatureHilbert
+      let Raw₂ :=
+        C₂.FeatureHilbert ⊗[ℝ]
+          (RealHilbertKernelFeature.pow C₂ n).FeatureHilbert
+      letI : FiniteDimensional ℝ Raw₁ := by
+        dsimp [Raw₁]
+        infer_instance
+      letI : FiniteDimensional ℝ Raw₂ := by
+        dsimp [Raw₂]
+        infer_instance
+      simp [RealHilbertKernelFeature.powLinearMap,
+        RealHilbertKernelFeature.mul, Raw₁, Raw₂, hT, ih]
+
 end
 
 end MathlibAnalytic
