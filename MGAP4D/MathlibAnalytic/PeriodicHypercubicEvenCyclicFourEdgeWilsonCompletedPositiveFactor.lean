@@ -296,7 +296,17 @@ theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartial
   have hFour :=
     periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryOpenHalfFourEdgeWilsonPartialKernel_tendsto_actualWilson
       hH beta b x (fun _ => 1)
-  have hMul := tendsto_const_nhds.mul hFour
+  have hResidual :
+      Tendsto
+        (fun _ : ℕ =>
+          periodicHypercubicEvenBoundaryCompletedPositiveGramResidualFactor
+            H beta hbeta b x)
+        atTop
+        (𝓝
+          (periodicHypercubicEvenBoundaryCompletedPositiveGramResidualFactor
+            H beta hbeta b x)) :=
+    tendsto_const_nhds
+  have hMul := hResidual.mul hFour
   simpa [periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartial,
     periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_eq_residual_mul_fourCompanionProduct]
     using hMul
