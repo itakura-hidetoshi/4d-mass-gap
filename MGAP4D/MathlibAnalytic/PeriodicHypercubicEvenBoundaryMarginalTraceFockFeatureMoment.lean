@@ -110,10 +110,7 @@ theorem
   have hhol : Continuous
       (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2) :=
     continuous_periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy_two H
-  change Continuous fun p =>
-    specialUnitaryNormalizedTraceRelativeKernel 2
-      (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2 p.1)
-      (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy H 2 p.2)
+  unfold periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryKernel
   exact continuous_specialUnitaryNormalizedTraceRelativeKernel_two.comp
     ((hhol.comp continuous_fst).prodMk (hhol.comp continuous_snd))
 
