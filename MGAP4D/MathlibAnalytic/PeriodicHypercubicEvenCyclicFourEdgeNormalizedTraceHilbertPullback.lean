@@ -200,7 +200,7 @@ theorem specialUnitaryTwoCyclicFourEdgeNormalizedTraceContraction_featureTensor
   simp only [specialUnitaryTwoCyclicFourEdgeNormalizedTraceContraction,
     specialUnitaryTwoCyclicFourEdgeNormalizedTraceLinearMap,
     specialUnitaryTwoCyclicFourEdgeNormalizedTraceFeatureTensor,
-    TensorProduct.lift.tmul, LinearMap.coe_comp, Function.comp_apply]
+    TensorProduct.lift.tmul, LinearMap.compl₁₂_apply]
   rw [specialUnitaryTwoBackwardPairTensorLinearMap_feature_tmul,
     specialUnitaryTwoForwardPairTensorLinearMap_feature_tmul]
   simp [specialUnitaryTwoOuterNormalizedBilinearMap,
