@@ -96,7 +96,11 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteEdge_direction_ne_zero
     (H : ℕ) (k : Fin 4) :
     (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H k).2 ≠
       (0 : PeriodicHypercubicAxis) := by
-  fin_cases k <;> simp
+  fin_cases k <;>
+    simp [periodicHypercubicEvenPrimarySpatialPlaquetteEdge,
+      periodicHypercubicEvenPrimarySpatialPlaquette,
+      periodicHypercubicPlaquetteFirstAxis,
+      periodicHypercubicPlaquetteSecondAxis]
 
 /-- Every physical edge of the canonical primary spatial plaquette is based on
 the primary fixed time slice. -/
