@@ -143,6 +143,7 @@ theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureProductL2_zero
         H N hN 0 (by norm_num) z.1 z.2 := hz
     _ = c * 1 := by
       rw [periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_zero]
+      simp [c]
     _ = realL2ExternalTensorFunction u v z := by
       simp [realL2ExternalTensorFunction, huz, hvz]
     _ = _ := hTensor.symm
@@ -157,7 +158,7 @@ theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureRectangularL2_
         (periodicHypercubicEvenWilsonBoundaryBetaZeroLeftFactorL2 H N hN)
         (periodicHypercubicEvenWilsonBoundaryBetaZeroRightFactorL2 H N) := by
   simpa [periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureRectangularL2,
-    periodicHypercubicEvenOpenHalfHaarMeasure] using
+    periodicHypercubicEvenBoundaryOpenHalfHaarMeasure] using
     periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureProductL2_zero_eq_externalTensor
       H N hN
 
