@@ -163,7 +163,10 @@ theorem
           H beta hbeta n q =
         periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceDegreeDualProbeMarginalL2
           H beta hbeta n q := by
-  simp [periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionCyclicFockMarginalTransportDefect]
+  unfold periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionCyclicFockMarginalTransportDefect
+  constructor
+  · exact sub_eq_zero.mp
+  · exact sub_eq_zero.mpr
 
 /-- Once the single marginal transport defect vanishes, every actual Wilson
 analysis pairing with the temporal-companion Fock probe becomes exactly the
