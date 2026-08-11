@@ -216,6 +216,97 @@ theorem specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback_inner_fe
   rw [specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback_inner,
     specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerLinearMap_feature]
 
+/-- The actual four positive-half temporal-companion path holonomies, kept in
+the physical `Fin 4` edge slots used by the cyclic contraction. -/
+noncomputable def periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeWord
+    (H : ℕ)
+    (x : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    Fin 4 → Matrix.specialUnitaryGroup (Fin 2) ℂ :=
+  fun k =>
+    periodicHypercubicEvenPositiveBoundaryTemporalFiberedOpenPath x
+      (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion H k)
+
+/-- The degree-`n` source feature after pulling the genuine four-edge product
+kernel back along the four actual temporal-companion open-half paths. -/
+noncomputable def
+    periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeDegreeFeature
+    (H n : ℕ) :
+    RealHilbertKernelFeature
+      ((periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+        (Matrix.specialUnitaryGroup (Fin 2) ℂ))
+      (fun x y =>
+        specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseKernel
+          (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeWord H x)
+          (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeWord H y) ^ n) :=
+  (specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseFeature.pow n).comap
+    (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeWord H)
+
+/-- The pulled-back degree kernel is exactly the product of the four degree-`n`
+normalized relative-trace edge kernels.  This is the diagonal four-edge Taylor
+sector; no single cyclic-composite kernel has been substituted for this product. -/
+theorem
+    periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeDegreeKernel_eq_product
+    (H n : ℕ)
+    (x y : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseKernel
+        (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeWord H x)
+        (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeWord H y) ^ n =
+      (specialUnitaryNormalizedTraceRelativeKernel 2
+          (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeWord H x 2)
+          (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeWord H y 2) ^ n *
+        specialUnitaryNormalizedTraceRelativeKernel 2
+          (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeWord H x 3)
+          (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeWord H y 3) ^ n) *
+      (specialUnitaryNormalizedTraceRelativeKernel 2
+          (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeWord H x 0)
+          (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeWord H y 0) ^ n *
+        specialUnitaryNormalizedTraceRelativeKernel 2
+          (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeWord H x 1)
+          (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeWord H y 1) ^ n) := by
+  simp [specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseKernel, mul_pow]
+
+/-- On an actual open-half configuration, the arbitrary-degree four-edge map
+lands in the existing cyclic Fock degree feature built from the same four
+temporal companions. -/
+theorem
+    specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerLinearMap_temporalCompanionOpenHalf_feature
+    (H n : ℕ)
+    (x : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerLinearMap n
+        ((periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeDegreeFeature
+          H n).feature x) =
+      (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfNormalizedTraceRelativeDegreeFeature
+        H n).feature x := by
+  simpa [periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeDegreeFeature,
+    periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeWord,
+    periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfNormalizedTraceRelativeDegreeFeature,
+    periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfCyclicHolonomy,
+    specialUnitaryTwoNormalizedTraceHilbertKernelFeature] using
+    (specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerLinearMap_feature n
+      (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeWord H x))
+
+/-- The Hilbert-adjoint pullback pairing, now evaluated directly on the four
+actual temporal-companion open-half paths and identified with the already
+constructed cyclic Fock degree feature. -/
+theorem
+    specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback_inner_temporalCompanionOpenHalf_feature
+    (H n : ℕ)
+    (q : (specialUnitaryTwoNormalizedTraceHilbertKernelFeature.pow n).FeatureHilbert)
+    (x : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin 2) ℂ)) :
+    inner ℝ
+        (specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback n q)
+        ((periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeDegreeFeature
+          H n).feature x) =
+      inner ℝ q
+        ((periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfNormalizedTraceRelativeDegreeFeature
+          H n).feature x) := by
+  rw [specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback_inner]
+  rw [specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerLinearMap_temporalCompanionOpenHalf_feature]
+
 end
 
 end MathlibAnalytic
