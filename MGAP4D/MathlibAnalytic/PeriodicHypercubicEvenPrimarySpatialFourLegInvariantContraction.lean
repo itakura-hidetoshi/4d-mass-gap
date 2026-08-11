@@ -204,7 +204,7 @@ noncomputable def orientedFourLegRealFeatureMultilinearMap
   · intro v i x y
     fin_cases i <;> simp [mul_add, add_mul]
   · intro v i r x
-    fin_cases i <;> simp [smul_mul_assoc, mul_smul_comm]
+    fin_cases i <;> simp [smul_mul_assoc]
 
 /-- Generic bounded four-leg contraction.  Continuity is inherited entirely
 from bounded bilinear multiplication and bounded orientation maps on the
@@ -239,7 +239,7 @@ noncomputable def orientedFourLegRealFeatureContraction
           (orientedRealFeatureLinearMap N (orientation 1) (v 1)))
         (realFeatureMatrixMulLinearMap N
           (orientedRealFeatureLinearMap N (orientation 2) (v 2))
-          (orientedRealFeatureLinearMap N (orientation 3) (v 3)) := by
+          (orientedRealFeatureLinearMap N (orientation 3) (v 3))) := by
   rfl
 
 /-- The primary plaquette reuses the orientation already stored in the
@@ -286,10 +286,12 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteFourLegRealFeatureContracti
       specialUnitaryMatrixRealFeature N (orientedFourEdgePlaquetteWord x) := by
   unfold periodicHypercubicEvenPrimarySpatialPlaquetteFourLegRealFeatureContraction
   rw [orientedFourLegRealFeatureContraction_apply]
+  change _ = complexMatrixRealFeature N
+    ((orientedFourEdgePlaquetteWord x : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+      Matrix (Fin N) (Fin N) ℂ)
   simp [periodicHypercubicEvenPrimarySpatialPlaquetteOrientation,
     realFeatureMatrixMulLinearMap_apply,
     orientedFourEdgePlaquetteWord,
-    specialUnitaryMatrixRealFeature,
     mul_assoc]
 
 /-- Algebraic four-fold projective tensor carrier indexed by the four canonical
