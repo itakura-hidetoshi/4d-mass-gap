@@ -72,8 +72,14 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteFourTemporalCompanionWilson
   have h01 := mul_le_mul (hfactor 0) (hfactor 1) hc (hnonneg 0)
   have hpairs := mul_le_mul h23 h01 (mul_nonneg hc hc)
     (mul_nonneg (hnonneg 2) (hnonneg 3))
-  simpa [periodicHypercubicEvenPrimarySpatialPlaquetteFourTemporalCompanionWilsonBoltzmannProduct,
-    A, c, pow_succ] using hpairs
+  calc
+    (Real.exp (-2 * beta)) ^ 4 = (c * c) * (c * c) := by
+      dsimp [c]
+      ring
+    _ ≤ periodicHypercubicEvenPrimarySpatialPlaquetteFourTemporalCompanionWilsonBoltzmannProduct
+        H beta b x y := by
+      simpa [periodicHypercubicEvenPrimarySpatialPlaquetteFourTemporalCompanionWilsonBoltzmannProduct,
+        A] using hpairs
 
 /-- The complete four-edge finite Wilson Fock kernel is uniformly bounded in
 absolute value by one. -/
@@ -90,7 +96,8 @@ theorem specialUnitaryTwoCyclicFourEdgeWilsonPartialProductKernel_abs_le_one
   have h23 := mul_le_mul (hfactor 2) (hfactor 3) (abs_nonneg _) zero_le_one
   have h01 := mul_le_mul (hfactor 0) (hfactor 1) (abs_nonneg _) zero_le_one
   have hpairs := mul_le_mul h23 h01
-    (mul_nonneg (abs_nonneg _) (abs_nonneg _)) zero_le_one
+    (mul_nonneg (abs_nonneg _) (abs_nonneg _))
+    (mul_nonneg zero_le_one zero_le_one)
   simpa [specialUnitaryTwoCyclicFourEdgeWilsonPartialProductKernel, abs_mul] using hpairs
 
 /-- The residual completed-positive Gram factor is nonnegative. -/
