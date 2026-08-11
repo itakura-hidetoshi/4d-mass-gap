@@ -101,25 +101,33 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteEdge_direction_ne_zero
         (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H (0 : Fin 4)).2 ≠
           (0 : PeriodicHypercubicAxis) := by
       rw [periodicHypercubicEvenPrimarySpatialPlaquetteEdge_zero]
-      norm_num
+      intro hEq
+      have hVal := congrArg Fin.val hEq
+      norm_num at hVal
     simpa using h
   · have h :
         (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H (1 : Fin 4)).2 ≠
           (0 : PeriodicHypercubicAxis) := by
       rw [periodicHypercubicEvenPrimarySpatialPlaquetteEdge_one]
-      norm_num
+      intro hEq
+      have hVal := congrArg Fin.val hEq
+      norm_num at hVal
     simpa using h
   · have h :
         (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H (2 : Fin 4)).2 ≠
           (0 : PeriodicHypercubicAxis) := by
       rw [periodicHypercubicEvenPrimarySpatialPlaquetteEdge_two]
-      norm_num
+      intro hEq
+      have hVal := congrArg Fin.val hEq
+      norm_num at hVal
     simpa using h
   · have h :
         (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H (3 : Fin 4)).2 ≠
           (0 : PeriodicHypercubicAxis) := by
       rw [periodicHypercubicEvenPrimarySpatialPlaquetteEdge_three]
-      norm_num
+      intro hEq
+      have hVal := congrArg Fin.val hEq
+      norm_num at hVal
     simpa using h
 
 /-- Every physical edge of the canonical primary spatial plaquette is based on
