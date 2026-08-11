@@ -41,7 +41,8 @@ theorem continuousLinearMap_adjoint_comp_self_linearIndependent_of_map_linearInd
       Submodule.sub_mem _ hx hy
     have hsubKerNormal : x - y ∈ (A† ∘L A).ker := by
       change (A† ∘L A) (x - y) = 0
-      rw [map_sub, hxy, sub_self]
+      rw [map_sub]
+      exact sub_eq_zero.mpr hxy
     have hsubKerA : x - y ∈ A.ker := by
       rw [A.ker_adjoint_comp_self] at hsubKerNormal
       exact hsubKerNormal
