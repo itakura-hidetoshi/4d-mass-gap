@@ -25,7 +25,7 @@ noncomputable def specialUnitaryTwoFourEdgeCoordinateWilsonPartialFeature
         specialUnitaryWilsonRelativeKernelPartial 2 beta degree (x k) (y k)) :=
   (specialUnitaryWilsonRelativeKernelPartialConcreteFeature
       2 cyclicFourEdgeWilsonPartialTwoRankPositive beta hbeta degree).comap
-    (fun x => x k)
+    (fun (x : Fin 4 → Matrix.specialUnitaryGroup (Fin 2) ℂ) => x k)
 
 /-- Product of the four independently truncated Wilson relative kernels in the
 validated cyclic pair order `(2,3)|(0,1)`.
