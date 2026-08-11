@@ -15,8 +15,7 @@ variable {α : Type u} {β : Type v}
   [MeasurableSpace α] [MeasurableSpace β]
   {μ : Measure α} {ν : Measure β}
 
-/-- The real scalar inner product is ordinary multiplication. -/
-theorem realScalar_inner_eq_mul (a b : ℝ) :
+private theorem realL2SeparableKernel_scalar_inner_eq_mul (a b : ℝ) :
     inner ℝ a b = a * b := by
   have h11 : inner ℝ (1 : ℝ) (1 : ℝ) = 1 := by
     simpa using (inner_self_eq_norm_sq_to_K (𝕜 := ℝ) (1 : ℝ))
@@ -52,8 +51,9 @@ theorem realL2ExternalTensor_inner
           realL2ExternalTensor_coeFn f g] with z huv hfg
       rw [huv, hfg]
       simp only [realL2ExternalTensorFunction]
-      rw [realScalar_inner_eq_mul,
-        realScalar_inner_eq_mul, realScalar_inner_eq_mul]
+      rw [realL2SeparableKernel_scalar_inner_eq_mul,
+        realL2SeparableKernel_scalar_inner_eq_mul,
+        realL2SeparableKernel_scalar_inner_eq_mul]
       ring
     _ = (∫ a, inner ℝ (u a) (f a) ∂μ) *
         ∫ b, inner ℝ (v b) (g b) ∂ν := by
