@@ -36,6 +36,19 @@ noncomputable def RealHilbertKernelFeature.kernelCastFeatureHilbertLinearEquivMp
   subst h
   exact LinearEquiv.refl ℝ C.FeatureHilbert
 
+/-- The reverse kernel-cast equivalence transports feature vectors pointwise. -/
+@[simp] theorem RealHilbertKernelFeature.kernelCastFeatureHilbertLinearEquivMpr_feature
+    {X : Type}
+    {kernel₁ kernel₂ : X → X → ℝ}
+    (h : kernel₁ = kernel₂)
+    (C : RealHilbertKernelFeature X kernel₂)
+    (x : X) :
+    RealHilbertKernelFeature.kernelCastFeatureHilbertLinearEquivMpr h C
+        (C.feature x) =
+      (Eq.mpr (congrArg (RealHilbertKernelFeature X) h) C).feature x := by
+  subst h
+  rfl
+
 /-- The successor carrier used by `RealHilbertKernelFeature.pow` is linearly
 equivalent to the raw completed tensor carrier produced by `mul`.  The helper
 matches the reverse equality transport emitted by the defining `simpa` of
@@ -58,6 +71,21 @@ noncomputable def RealHilbertKernelFeature.powSuccFeatureHilbertLinearEquiv
   exact
     RealHilbertKernelFeature.kernelCastFeatureHilbertLinearEquivMpr
       hKernel _
+
+/-- The successor carrier equivalence sends the raw product feature to the
+exact feature vector selected by `RealHilbertKernelFeature.pow`. -/
+@[simp] theorem RealHilbertKernelFeature.powSuccFeatureHilbertLinearEquiv_feature
+    {X : Type}
+    {kernel : X → X → ℝ}
+    (C : RealHilbertKernelFeature X kernel)
+    (n : ℕ)
+    (x : X) :
+    RealHilbertKernelFeature.powSuccFeatureHilbertLinearEquiv C n
+        ((RealHilbertKernelFeature.mul C
+          (RealHilbertKernelFeature.pow C n)).feature x) =
+      (RealHilbertKernelFeature.pow C (n + 1)).feature x := by
+  simp [RealHilbertKernelFeature.powSuccFeatureHilbertLinearEquiv,
+    RealHilbertKernelFeature.pow, pow_succ, mul_comm]
 
 /-- If the degree-one carrier of a real Hilbert-kernel feature is finite
 dimensional, then every recursively completed tensor-power carrier produced by
