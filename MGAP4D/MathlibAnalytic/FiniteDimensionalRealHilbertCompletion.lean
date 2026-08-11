@@ -48,7 +48,12 @@ completion equivalence is exactly the identity. -/
     finiteDimensionalRealHilbertCompletionLinearIsometryEquiv E
         (x : UniformSpace.Completion E) = x := by
   letI : CompleteSpace E := FiniteDimensional.complete ℝ E
-  simp [finiteDimensionalRealHilbertCompletionLinearIsometryEquiv]
+  unfold finiteDimensionalRealHilbertCompletionLinearIsometryEquiv
+  rw [show (x : UniformSpace.Completion E) =
+      ((UniformSpace.Completion.toComplL :
+        E →L[ℝ] UniformSpace.Completion E).toLinearMap x) by rfl]
+  rw [LinearEquiv.extendOfIsometry_eq]
+  rfl
 
 /-- Conversely, the inverse equivalence is the canonical completion embedding. -/
 @[simp] theorem finiteDimensionalRealHilbertCompletionLinearIsometryEquiv_symm_apply
