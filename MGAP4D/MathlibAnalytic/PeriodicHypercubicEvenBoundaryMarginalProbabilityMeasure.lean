@@ -61,11 +61,7 @@ theorem periodicHypercubicEvenBoundaryHaar_withEffectiveDensity_eq_marginalMeasu
           H N hN beta hbeta) =
       periodicHypercubicEvenBoundaryMarginalMeasure
         H N hN beta hbeta := by
-  unfold periodicHypercubicEvenBoundaryMarginalMeasure
-  congr 1
-  funext b
-  exact periodicHypercubicEvenBoundaryMarginalEffectiveDensity_eq_marginalDensity
-    H N hN beta hbeta b
+  rfl
 
 /-- The actual finite Wilson interacting boundary marginal is a probability
 measure.  No new normalization integral is required: the marginal is the exact
@@ -77,6 +73,10 @@ theorem periodicHypercubicEvenBoundaryMarginalMeasure_isProbabilityMeasure
     (beta : ℝ) (hbeta : 0 ≤ beta) :
     IsProbabilityMeasure
       (periodicHypercubicEvenBoundaryMarginalMeasure H N hN beta hbeta) := by
+  let C := periodicHypercubicSpecialUnitaryWilsonSystem
+    (PeriodicHypercubicEvenSideLength H) N hN beta hbeta
+  letI : IsProbabilityMeasure C.gibbsMeasure :=
+    continuous_compact_oriented_gibbsMeasure_isProbabilityMeasure C
   rw [← periodicHypercubicEvenSpecialUnitary_map_boundaryRestriction_gibbsMeasure
     H N hN beta hbeta]
   exact Measure.isProbabilityMeasure_map
