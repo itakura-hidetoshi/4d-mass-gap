@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.ContinuousInfiniteRangePowerLpLinearIndependent
-import Mathlib.Analysis.InnerProductSpace.GramMatrix
+import Mathlib.MeasureTheory.Function.L2Space
 import Mathlib.MeasureTheory.Measure.OpenPos
 import Mathlib.MeasureTheory.Measure.WithDensity
 
