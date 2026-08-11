@@ -156,6 +156,10 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalPlaquette_exact_edge_patte
         ReflectionEdgeSide.fixed
       exact periodicHypercubicEvenEdgeSide_spatial_eq_fixed_of_val_eq_half
         H _ hnu h10
+    have hbasePos : 1 ≤ (p.1 0).val := by
+      omega
+    have hbaseLe : (p.1 0).val ≤ H := by
+      omega
     have hstep3 :
         (periodicHypercubicEvenEdgeOrbitPartition H).side
             (periodicHypercubicBoundaryStep
@@ -165,7 +169,7 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalPlaquette_exact_edge_patte
         (p.1, periodicHypercubicPlaquetteSecondAxis p) =
           ReflectionEdgeSide.positive
       exact periodicHypercubicEvenEdgeSide_spatial_eq_positive_of_val
-        H _ hnu (by omega) (by omega)
+        H (p.1, periodicHypercubicPlaquetteSecondAxis p) hnu hbasePos hbaseLe
     exact ⟨hbaseH, hstep0, hstep1, hstep2, hstep3⟩
 
 /-- In a nondegenerate positive half-torus, a positive-boundary temporal
