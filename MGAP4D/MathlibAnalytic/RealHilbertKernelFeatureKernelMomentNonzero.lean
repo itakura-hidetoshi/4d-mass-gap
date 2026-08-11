@@ -40,7 +40,7 @@ theorem RealHilbertKernelFeature.integral_ne_zero_of_kernel_moment_ne_zero
         rw [real_inner_smul_right, ← C.kernel_eq_inner]
       _ = inner ℝ (C.feature x₀) (∫ x, a x • C.feature x ∂mu) :=
         integral_inner ha (C.feature x₀)
-      _ = 0 := by rw [hzero, inner_zero]
+      _ = 0 := by simp [hzero]
   exact hmoment hScalar
 
 /-- Degree-`n` specialization for tensor-power features.  A nonzero scalar
