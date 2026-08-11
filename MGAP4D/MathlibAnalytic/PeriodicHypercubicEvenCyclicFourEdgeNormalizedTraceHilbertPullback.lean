@@ -1,7 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPrimarySpatialCyclicFourLegFockPullback
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Analysis.InnerProductSpace.TensorProduct
-import Mathlib.Analysis.Normed.Module.FiniteDimension
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -38,6 +37,13 @@ private theorem specialUnitaryTwoNormalizedTraceFeatureScale_inv_mul_sq :
       specialUnitaryTwoNormalizedTraceFeatureScale := by
   field_simp [specialUnitaryTwoNormalizedTraceFeatureScale_ne_zero]
 
+private theorem specialUnitaryTwoNormalizedTraceFeatureScale_mul_mul_inv :
+    specialUnitaryTwoNormalizedTraceFeatureScale *
+        (specialUnitaryTwoNormalizedTraceFeatureScale *
+          specialUnitaryTwoNormalizedTraceFeatureScale⁻¹) =
+      specialUnitaryTwoNormalizedTraceFeatureScale := by
+  field_simp [specialUnitaryTwoNormalizedTraceFeatureScale_ne_zero]
+
 /-- Explicit normalized degree-one `SU(2)` matrix feature. -/
 noncomputable def specialUnitaryTwoNormalizedTraceFeatureVector
     (g : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
@@ -59,20 +65,13 @@ abbrev SpecialUnitaryTwoNormalizedTracePairTensorSpace :=
   SpecialUnitaryMatrixRealFeatureSpace 2 ⊗[ℝ]
     SpecialUnitaryMatrixRealFeatureSpace 2
 
-/-- Canonical pair-of-pairs Hilbert tensor in cyclic order `(2,3)|(0,1)`.
-Because every factor is finite-dimensional over `ℝ`, this algebraic Hilbert
-tensor is already complete; no extra completion carrier is needed. -/
+/-- Canonical pair-of-pairs finite-dimensional Hilbert tensor in cyclic order
+`(2,3)|(0,1)`.  We deliberately keep this as Mathlib's algebraic tensor with
+its canonical inner product and use `LinearMap.adjoint`; no extra completion
+instance is introduced, avoiding any duplicate tensor-product topology. -/
 abbrev SpecialUnitaryTwoNormalizedTraceFourEdgeHilbertTensorSpace :=
   SpecialUnitaryTwoNormalizedTracePairTensorSpace ⊗[ℝ]
     SpecialUnitaryTwoNormalizedTracePairTensorSpace
-
-local instance specialUnitaryTwoNormalizedTracePairTensorCompleteSpace :
-    CompleteSpace SpecialUnitaryTwoNormalizedTracePairTensorSpace :=
-  FiniteDimensional.complete ℝ _
-
-local instance specialUnitaryTwoNormalizedTraceFourEdgeHilbertTensorCompleteSpace :
-    CompleteSpace SpecialUnitaryTwoNormalizedTraceFourEdgeHilbertTensorSpace :=
-  FiniteDimensional.complete ℝ _
 
 /-- Normalized backward-pair multiplication.  The inverse feature scale removes
 one of the two input normalizations, so two normalized edge features map to one
@@ -118,9 +117,8 @@ noncomputable def specialUnitaryTwoForwardPairTensorLinearMap :
     specialUnitaryTwoBackwardPairNormalizedBilinearMap,
     specialUnitaryTwoNormalizedTraceFeatureVector,
     smul_smul,
-    specialUnitaryTwoNormalizedTraceFeatureScale_inv_mul_sq,
-    realFeatureMatrixMulLinearMap_apply,
-    specialUnitaryMatrixRealFeature]
+    specialUnitaryTwoNormalizedTraceFeatureScale_mul_mul_inv,
+    realFeatureMatrixMulLinearMap_apply]
 
 @[simp] theorem specialUnitaryTwoForwardPairTensorLinearMap_feature_tmul
     (g h : Matrix.specialUnitaryGroup (Fin 2) ℂ) :
@@ -132,9 +130,8 @@ noncomputable def specialUnitaryTwoForwardPairTensorLinearMap :
     specialUnitaryTwoForwardPairNormalizedBilinearMap,
     specialUnitaryTwoNormalizedTraceFeatureVector,
     smul_smul,
-    specialUnitaryTwoNormalizedTraceFeatureScale_inv_mul_sq,
-    realFeatureMatrixMulLinearMap_apply,
-    specialUnitaryMatrixRealFeature]
+    specialUnitaryTwoNormalizedTraceFeatureScale_mul_mul_inv,
+    realFeatureMatrixMulLinearMap_apply]
 
 /-- Normalized multiplication of the two already-contracted pair features. -/
 noncomputable def specialUnitaryTwoOuterNormalizedBilinearMap :
@@ -154,13 +151,13 @@ noncomputable def specialUnitaryTwoCyclicFourEdgeNormalizedTraceLinearMap :
       specialUnitaryTwoBackwardPairTensorLinearMap
       specialUnitaryTwoForwardPairTensorLinearMap)
 
-/-- Bounded four-edge Hilbert contraction.  Boundedness is automatic because
-the source is finite-dimensional. -/
+/-- The finite-dimensional Hilbert contraction, kept as a linear map so that
+Mathlib's finite-dimensional `LinearMap.adjoint` supplies the canonical dual
+pullback without introducing a second tensor-product topology. -/
 noncomputable def specialUnitaryTwoCyclicFourEdgeNormalizedTraceContraction :
-    SpecialUnitaryTwoNormalizedTraceFourEdgeHilbertTensorSpace →L[ℝ]
+    SpecialUnitaryTwoNormalizedTraceFourEdgeHilbertTensorSpace →ₗ[ℝ]
       SpecialUnitaryMatrixRealFeatureSpace 2 :=
-  LinearMap.toContinuousLinearMap
-    specialUnitaryTwoCyclicFourEdgeNormalizedTraceLinearMap
+  specialUnitaryTwoCyclicFourEdgeNormalizedTraceLinearMap
 
 /-- Pure four-edge normalized feature tensor in cyclic pair order `(2,3)|(0,1)`. -/
 noncomputable def specialUnitaryTwoCyclicFourEdgeNormalizedTraceFeatureTensor
@@ -179,25 +176,24 @@ theorem specialUnitaryTwoCyclicFourEdgeNormalizedTraceContraction_featureTensor
         (specialUnitaryTwoCyclicFourEdgeNormalizedTraceFeatureTensor x) =
       specialUnitaryTwoNormalizedTraceFeatureVector
         (haarFinFourCyclicPlaquetteWord x) := by
-  change specialUnitaryTwoCyclicFourEdgeNormalizedTraceLinearMap
-      (specialUnitaryTwoCyclicFourEdgeNormalizedTraceFeatureTensor x) = _
-  simp [specialUnitaryTwoCyclicFourEdgeNormalizedTraceLinearMap,
+  simp [specialUnitaryTwoCyclicFourEdgeNormalizedTraceContraction,
+    specialUnitaryTwoCyclicFourEdgeNormalizedTraceLinearMap,
     specialUnitaryTwoOuterNormalizedBilinearMap,
     specialUnitaryTwoCyclicFourEdgeNormalizedTraceFeatureTensor,
     specialUnitaryTwoNormalizedTraceFeatureVector,
     smul_smul,
-    specialUnitaryTwoNormalizedTraceFeatureScale_inv_mul_sq,
+    specialUnitaryTwoNormalizedTraceFeatureScale_mul_mul_inv,
     realFeatureMatrixMulLinearMap_apply,
-    specialUnitaryMatrixRealFeature,
     haarFinFourCyclicPlaquetteWord_eq,
     mul_assoc]
 
 /-- Hilbert-adjoint pullback of a degree-one cyclic normalized-trace dual vector
-to the four-edge tensor carrier. -/
+to the four-edge tensor carrier.  `LinearMap.adjoint` is the canonical Mathlib
+adjoint for finite-dimensional inner-product spaces. -/
 noncomputable def specialUnitaryTwoCyclicFourEdgeNormalizedTraceDualPullback
     (q : SpecialUnitaryMatrixRealFeatureSpace 2) :
     SpecialUnitaryTwoNormalizedTraceFourEdgeHilbertTensorSpace :=
-  specialUnitaryTwoCyclicFourEdgeNormalizedTraceContraction.adjoint q
+  LinearMap.adjoint specialUnitaryTwoCyclicFourEdgeNormalizedTraceContraction q
 
 /-- Exact degree-one pullback identity against every four-edge pure feature
 tensor. -/
@@ -211,7 +207,7 @@ theorem specialUnitaryTwoCyclicFourEdgeNormalizedTraceDualPullback_inner_feature
         (specialUnitaryTwoNormalizedTraceFeatureVector
           (haarFinFourCyclicPlaquetteWord x)) := by
   rw [specialUnitaryTwoCyclicFourEdgeNormalizedTraceDualPullback,
-    ContinuousLinearMap.adjoint_inner_left,
+    LinearMap.adjoint_inner_left,
     specialUnitaryTwoCyclicFourEdgeNormalizedTraceContraction_featureTensor]
 
 end
