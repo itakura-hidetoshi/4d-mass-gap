@@ -121,9 +121,27 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryOpenHalfFourEdgeWil
       (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeWord H b)
       (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeWord H x)).symm
 
+/-- The finite Taylor factor, including `exp(-beta)`, written using the literal
+normalized trace of one actual temporal-companion plaquette. -/
+noncomputable def periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionActualTraceTaylorPartialFactor
+    (H : ℕ)
+    (beta : ℝ)
+    (degree : ℕ)
+    (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration
+      (Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (x y : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (k : Fin 4) : ℝ :=
+  Real.exp (-beta) *
+    ∑ m ∈ Finset.range (degree + 1),
+      (beta *
+        periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionNormalizedTrace
+          H b x y k) ^ m /
+        (Nat.factorial m : ℝ)
+
 /-- One finite Wilson relative-kernel factor, evaluated on an actual physical
-boundary edge and temporal-companion open path, is exactly `exp(-beta)` times
-the finite Taylor sum of the literal companion plaquette trace. -/
+boundary edge and temporal-companion open path, is exactly the corresponding
+literal companion-trace Taylor factor. -/
 theorem periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionWilsonRelativeKernelPartial_eq_actualTraceSum
     {H : ℕ}
     (hH : 0 < H)
@@ -137,20 +155,34 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionWilsonRela
     specialUnitaryWilsonRelativeKernelPartial 2 beta degree
         (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeWord H b k)
         (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeWord H x k) =
-      Real.exp (-beta) *
-        ∑ m ∈ Finset.range (degree + 1),
-          (beta *
-            periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionNormalizedTrace
-              H b x y k) ^ m /
-            (Nat.factorial m : ℝ) := by
+      periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionActualTraceTaylorPartialFactor
+        H beta degree b x y k := by
+  unfold periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionActualTraceTaylorPartialFactor
   unfold specialUnitaryWilsonRelativeKernelPartial
   rw [periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionExponentialPartialKernel_eq_sum_actualTrace
     hH degree beta b x y k]
 
-/-- Exact finite four-factor expansion on the actual temporal companions.  It
-is intentionally kept as a product of four independent finite sums; expanding
-this expression yields the full rectangular multi-index set rather than only
-the diagonal `(m,m,m,m)` sector. -/
+/-- Product of the four independent actual-trace Taylor partial factors. -/
+noncomputable def periodicHypercubicEvenPrimarySpatialPlaquetteFourTemporalCompanionActualTraceTaylorPartialProduct
+    (H : ℕ)
+    (beta : ℝ)
+    (degree : ℕ)
+    (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration
+      (Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (x y : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin 2) ℂ)) : ℝ :=
+  (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionActualTraceTaylorPartialFactor
+      H beta degree b x y 2 *
+    periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionActualTraceTaylorPartialFactor
+      H beta degree b x y 3) *
+  (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionActualTraceTaylorPartialFactor
+      H beta degree b x y 0 *
+    periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionActualTraceTaylorPartialFactor
+      H beta degree b x y 1)
+
+/-- Exact finite four-factor expansion on the actual temporal companions.  The
+right side is a product of four independent finite sums, hence retains the full
+rectangular multi-index set rather than only the diagonal sector. -/
 theorem periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryOpenHalfFourEdgeWilsonPartialKernel_eq_product_actualTraceSums
     {H : ℕ}
     (hH : 0 < H)
@@ -163,27 +195,10 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryOpenHalfFourEdgeWil
     specialUnitaryTwoCyclicFourEdgeWilsonPartialProductKernel beta degree
         (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeWord H b)
         (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeWord H x) =
-      ((Real.exp (-beta) *
-          ∑ m ∈ Finset.range (degree + 1),
-            (beta *
-              periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionNormalizedTrace
-                H b x y 2) ^ m / (Nat.factorial m : ℝ)) *
-        (Real.exp (-beta) *
-          ∑ m ∈ Finset.range (degree + 1),
-            (beta *
-              periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionNormalizedTrace
-                H b x y 3) ^ m / (Nat.factorial m : ℝ))) *
-      ((Real.exp (-beta) *
-          ∑ m ∈ Finset.range (degree + 1),
-            (beta *
-              periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionNormalizedTrace
-                H b x y 0) ^ m / (Nat.factorial m : ℝ)) *
-        (Real.exp (-beta) *
-          ∑ m ∈ Finset.range (degree + 1),
-            (beta *
-              periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionNormalizedTrace
-                H b x y 1) ^ m / (Nat.factorial m : ℝ))) := by
+      periodicHypercubicEvenPrimarySpatialPlaquetteFourTemporalCompanionActualTraceTaylorPartialProduct
+        H beta degree b x y := by
   unfold specialUnitaryTwoCyclicFourEdgeWilsonPartialProductKernel
+  unfold periodicHypercubicEvenPrimarySpatialPlaquetteFourTemporalCompanionActualTraceTaylorPartialProduct
   rw [periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionWilsonRelativeKernelPartial_eq_actualTraceSum
       hH beta degree b x y 2,
     periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionWilsonRelativeKernelPartial_eq_actualTraceSum
@@ -216,6 +231,32 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionWilsonBolt
     hH beta b x y k]
   rw [specialUnitaryWilsonRelativeKernel_eq_trace]
 
+/-- Product of the four literal actual Wilson Boltzmann plaquette factors in
+the validated cyclic pair order. -/
+noncomputable def periodicHypercubicEvenPrimarySpatialPlaquetteFourTemporalCompanionWilsonBoltzmannProduct
+    (H : ℕ)
+    (beta : ℝ)
+    (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration
+      (Matrix.specialUnitaryGroup (Fin 2) ℂ))
+    (x y : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin 2) ℂ)) : ℝ :=
+  (specialUnitaryWilsonBoltzmannCentralFunction 2 beta
+      (periodicHypercubicPlaquetteHolonomy
+        ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble b x y)
+        (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion H 2)) *
+    specialUnitaryWilsonBoltzmannCentralFunction 2 beta
+      (periodicHypercubicPlaquetteHolonomy
+        ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble b x y)
+        (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion H 3))) *
+  (specialUnitaryWilsonBoltzmannCentralFunction 2 beta
+      (periodicHypercubicPlaquetteHolonomy
+        ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble b x y)
+        (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion H 0)) *
+    specialUnitaryWilsonBoltzmannCentralFunction 2 beta
+      (periodicHypercubicPlaquetteHolonomy
+        ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble b x y)
+        (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion H 1)))
+
 /-- The complete finite four-factor Hilbert kernel converges pointwise to the
 product of the four exact Wilson relative kernels. -/
 theorem specialUnitaryTwoCyclicFourEdgeWilsonPartialProductKernel_tendsto
@@ -236,8 +277,8 @@ theorem specialUnitaryTwoCyclicFourEdgeWilsonPartialProductKernel_tendsto
         (specialUnitaryWilsonRelativeKernelPartial_tendsto 2 beta (u 1) (v 1)))
 
 /-- On the actual boundary/open-half temporal companions, the full finite Fock
-kernel therefore converges to the literal product of the four selected Wilson
-Boltzmann plaquette factors. -/
+kernel converges to the literal product of the four selected Wilson Boltzmann
+plaquette factors. -/
 theorem periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryOpenHalfFourEdgeWilsonPartialKernel_tendsto_actualWilson
     {H : ℕ}
     (hH : 0 < H)
@@ -253,26 +294,13 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryOpenHalfFourEdgeWil
           (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeWord H x))
       atTop
       (𝓝
-        ((specialUnitaryWilsonBoltzmannCentralFunction 2 beta
-            (periodicHypercubicPlaquetteHolonomy
-              ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble b x y)
-              (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion H 2)) *
-          specialUnitaryWilsonBoltzmannCentralFunction 2 beta
-            (periodicHypercubicPlaquetteHolonomy
-              ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble b x y)
-              (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion H 3))) *
-        (specialUnitaryWilsonBoltzmannCentralFunction 2 beta
-            (periodicHypercubicPlaquetteHolonomy
-              ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble b x y)
-              (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion H 0)) *
-          specialUnitaryWilsonBoltzmannCentralFunction 2 beta
-            (periodicHypercubicPlaquetteHolonomy
-              ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble b x y)
-              (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion H 1)))) := by
+        (periodicHypercubicEvenPrimarySpatialPlaquetteFourTemporalCompanionWilsonBoltzmannProduct
+          H beta b x y)) := by
   have h := specialUnitaryTwoCyclicFourEdgeWilsonPartialProductKernel_tendsto beta
     (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeWord H b)
     (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfFourEdgeWord H x)
-  simpa only [← periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionWilsonBoltzmannCentralFunction_eq_relativeKernel
+  simpa only [periodicHypercubicEvenPrimarySpatialPlaquetteFourTemporalCompanionWilsonBoltzmannProduct,
+    ← periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionWilsonBoltzmannCentralFunction_eq_relativeKernel
       hH beta b x y] using h
 
 end
