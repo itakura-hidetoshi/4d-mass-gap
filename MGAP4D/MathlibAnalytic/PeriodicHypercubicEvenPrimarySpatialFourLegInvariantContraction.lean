@@ -1,9 +1,9 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPrimarySpatialEdgeTemporalCompanion
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPrimarySpatialPlaquetteWilsonClassFunction
 import MGAP4D.MathlibAnalytic.SpecialUnitaryNormalizedTraceKernelFeature
-import Mathlib.Analysis.InnerProductSpace.Completion
-import Mathlib.Analysis.Matrix.Normed
-import Mathlib.Analysis.Normed.Module.PiTensorProduct.ProjectiveSeminorm
+import Mathlib.Algebra.Algebra.Bilinear
+import Mathlib.Analysis.InnerProductSpace.TensorProduct
+import Mathlib.Analysis.Normed.Module.Completion
 import Mathlib.Analysis.Normed.Operator.Extend
 import Mathlib.Topology.Algebra.Module.FiniteDimensionBilinear
 import Mathlib.Tactic
@@ -15,23 +15,9 @@ open scoped TensorProduct
 
 noncomputable section
 
-/-- We use the Frobenius norm only as a local topological presentation of the
-finite-dimensional complex matrix algebra.  The resulting algebraic matrix word
-and its realified feature are independent of this choice of equivalent norm. -/
-local instance matrixFrobeniusNormedRing (N : ℕ) :
-    NormedRing (Matrix (Fin N) (Fin N) ℂ) :=
-  Matrix.frobeniusNormedRing
-
-local instance matrixFrobeniusNormedSpaceReal (N : ℕ) :
-    NormedSpace ℝ (Matrix (Fin N) (Fin N) ℂ) :=
-  Matrix.frobeniusNormedSpace
-
-local instance matrixFrobeniusNormedAlgebraReal (N : ℕ) :
-    NormedAlgebra ℝ (Matrix (Fin N) (Fin N) ℂ) :=
-  Matrix.frobeniusNormedAlgebra
-
 /-- Recover a complex matrix from the transposed real/imaginary Euclidean
-coordinates of its defining real feature. -/
+coordinates of its defining real feature.  This map is deliberately kept
+algebraic: no arbitrary matrix norm is introduced into the continuous layer. -/
 noncomputable def realFeatureComplexMatrixLinearMap
     (N : ℕ) :
     SpecialUnitaryMatrixRealFeatureSpace N →ₗ[ℝ]
@@ -47,7 +33,8 @@ noncomputable def realFeatureComplexMatrixLinearMap
     ext i j
     apply Complex.ext <;> simp
 
-/-- Realification is itself a real-linear map. -/
+/-- Realification is a real-linear map from complex matrices into the canonical
+Euclidean defining-feature space. -/
 noncomputable def complexMatrixRealFeatureLinearMap
     (N : ℕ) :
     Matrix (Fin N) (Fin N) ℂ →ₗ[ℝ]
@@ -110,66 +97,187 @@ noncomputable def complexMatrixConjTransposeRealLinearMap
     intro r A
     simp
 
-/-- A signed edge feature is converted to the matrix used by the canonical
-plaquette word: forward edges are unchanged and backward edges use conjugate
-transpose. -/
-noncomputable def orientedRealFeatureMatrixLinearMap
+/-- Orientation on a degree-one real matrix feature.  Forward edges are the
+identity; backward edges are reconstructed algebraically, conjugate-transposed,
+and realified again. -/
+noncomputable def orientedRealFeatureLinearMap
     (N : ℕ)
     (o : PeriodicHypercubicOrientation) :
     SpecialUnitaryMatrixRealFeatureSpace N →ₗ[ℝ]
-      Matrix (Fin N) (Fin N) ℂ :=
+      SpecialUnitaryMatrixRealFeatureSpace N :=
   match o with
-  | .forward => realFeatureComplexMatrixLinearMap N
+  | .forward => LinearMap.id
   | .backward =>
-      complexMatrixConjTransposeRealLinearMap N ∘ₗ
-        realFeatureComplexMatrixLinearMap N
+      complexMatrixRealFeatureLinearMap N ∘ₗ
+        complexMatrixConjTransposeRealLinearMap N ∘ₗ
+          realFeatureComplexMatrixLinearMap N
 
-/-- On an `SU(N)` defining feature, the signed real-linear map is exactly the
-underlying forward matrix or inverse matrix. -/
-@[simp] theorem orientedRealFeatureMatrixLinearMap_specialUnitaryMatrixRealFeature
+/-- On an `SU(N)` defining feature, the orientation map is exactly the feature
+of the forward or inverse group element. -/
+@[simp] theorem orientedRealFeatureLinearMap_specialUnitaryMatrixRealFeature
     (N : ℕ)
     (o : PeriodicHypercubicOrientation)
     (U : Matrix.specialUnitaryGroup (Fin N) ℂ) :
-    orientedRealFeatureMatrixLinearMap N o
+    orientedRealFeatureLinearMap N o
         (specialUnitaryMatrixRealFeature N U) =
       match o with
-      | .forward => (U : Matrix (Fin N) (Fin N) ℂ)
-      | .backward => ((U⁻¹ : Matrix.specialUnitaryGroup (Fin N) ℂ) :
-          Matrix (Fin N) (Fin N) ℂ) := by
+      | .forward => specialUnitaryMatrixRealFeature N U
+      | .backward => specialUnitaryMatrixRealFeature N U⁻¹ := by
   cases o with
-  | forward =>
-      exact realFeatureComplexMatrixLinearMap_specialUnitaryMatrixRealFeature N U
+  | forward => rfl
   | backward =>
-      change Matrix.conjTranspose
-          (realFeatureComplexMatrixLinearMap N
-            (specialUnitaryMatrixRealFeature N U)) = _
+      change complexMatrixRealFeature N
+          (Matrix.conjTranspose
+            (realFeatureComplexMatrixLinearMap N
+              (specialUnitaryMatrixRealFeature N U))) = _
       rw [realFeatureComplexMatrixLinearMap_specialUnitaryMatrixRealFeature]
       have h := congrArg Subtype.val (Matrix.star_eq_inv U)
-      simpa only [Matrix.specialUnitaryGroup.coe_star,
-        Matrix.star_eq_conjTranspose] using h
+      simpa [specialUnitaryMatrixRealFeature,
+        Matrix.specialUnitaryGroup.coe_star,
+        Matrix.star_eq_conjTranspose] using
+        congrArg (complexMatrixRealFeature N) h
 
-/-- Generic bounded four-leg matrix contraction.  The input order is exactly
-`Fin 4` order; each leg first passes through its supplied orientation map and
-the four resulting matrices are multiplied in that order. -/
-noncomputable def orientedFourLegMatrixContraction
-    (N : ℕ)
-    (orientation : Fin 4 → PeriodicHypercubicOrientation) :
-    (SpecialUnitaryMatrixRealFeatureSpace N) [×4]→L[ℝ]
-      Matrix (Fin N) (Fin N) ℂ :=
-  (ContinuousMultilinearMap.mkPiAlgebraFin ℝ 4
-      (Matrix (Fin N) (Fin N) ℂ)).compContinuousLinearMap
-    (fun k =>
-      (orientedRealFeatureMatrixLinearMap N (orientation k)).toContinuousLinearMap)
+/-- Matrix multiplication transported algebraically to the canonical Euclidean
+real matrix-feature space. -/
+noncomputable def realFeatureMatrixMulLinearMap
+    (N : ℕ) :
+    SpecialUnitaryMatrixRealFeatureSpace N →ₗ[ℝ]
+      SpecialUnitaryMatrixRealFeatureSpace N →ₗ[ℝ]
+        SpecialUnitaryMatrixRealFeatureSpace N :=
+  ((LinearMap.mul ℝ (Matrix (Fin N) (Fin N) ℂ)).compl₁₂
+      (realFeatureComplexMatrixLinearMap N)
+      (realFeatureComplexMatrixLinearMap N)).compr₂
+    (complexMatrixRealFeatureLinearMap N)
 
-/-- The same bounded four-leg contraction, now returned in the canonical real
-Euclidean degree-one matrix feature space. -/
-noncomputable def orientedFourLegRealFeatureContraction
+@[simp] theorem realFeatureMatrixMulLinearMap_apply
     (N : ℕ)
-    (orientation : Fin 4 → PeriodicHypercubicOrientation) :
-    (SpecialUnitaryMatrixRealFeatureSpace N) [×4]→L[ℝ]
+    (v w : SpecialUnitaryMatrixRealFeatureSpace N) :
+    realFeatureMatrixMulLinearMap N v w =
+      complexMatrixRealFeature N
+        (realFeatureComplexMatrixLinearMap N v *
+          realFeatureComplexMatrixLinearMap N w) := by
+  rfl
+
+/-- Every such bilinear multiplication map is bounded because both input
+feature spaces are finite-dimensional Euclidean spaces.  This is the generic
+continuous algebraic kernel from which the four-leg contraction is built. -/
+noncomputable def realFeatureMatrixMulContinuousBilinearMap
+    (N : ℕ) :
+    SpecialUnitaryMatrixRealFeatureSpace N →L[ℝ]
+      SpecialUnitaryMatrixRealFeatureSpace N →L[ℝ]
+        SpecialUnitaryMatrixRealFeatureSpace N :=
+  (realFeatureMatrixMulLinearMap N).toContinuousBilinearMap
+
+@[simp] theorem realFeatureMatrixMulContinuousBilinearMap_apply
+    (N : ℕ)
+    (v w : SpecialUnitaryMatrixRealFeatureSpace N) :
+    realFeatureMatrixMulContinuousBilinearMap N v w =
+      realFeatureMatrixMulLinearMap N v w := by
+  rfl
+
+/-- Orientation-correct bilinear multiplication of two degree-one edge
+features, still entirely in the canonical Euclidean feature space. -/
+noncomputable def orientedRealFeatureMatrixMulLinearMap
+    (N : ℕ)
+    (o₀ o₁ : PeriodicHypercubicOrientation) :
+    SpecialUnitaryMatrixRealFeatureSpace N →ₗ[ℝ]
+      SpecialUnitaryMatrixRealFeatureSpace N →ₗ[ℝ]
+        SpecialUnitaryMatrixRealFeatureSpace N :=
+  (realFeatureMatrixMulLinearMap N).compl₁₂
+    (orientedRealFeatureLinearMap N o₀)
+    (orientedRealFeatureLinearMap N o₁)
+
+@[simp] theorem orientedRealFeatureMatrixMulLinearMap_specialUnitaryMatrixRealFeature
+    (N : ℕ)
+    (o₀ o₁ : PeriodicHypercubicOrientation)
+    (U V : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    orientedRealFeatureMatrixMulLinearMap N o₀ o₁
+        (specialUnitaryMatrixRealFeature N U)
+        (specialUnitaryMatrixRealFeature N V) =
+      realFeatureMatrixMulLinearMap N
+        (orientedRealFeatureLinearMap N o₀
+          (specialUnitaryMatrixRealFeature N U))
+        (orientedRealFeatureLinearMap N o₁
+          (specialUnitaryMatrixRealFeature N V)) := by
+  rfl
+
+/-- Algebraic pair tensor carrier for two degree-one real matrix features. -/
+abbrev SpecialUnitaryPairRealFeatureTensorSpace (N : ℕ) :=
+  SpecialUnitaryMatrixRealFeatureSpace N ⊗[ℝ]
+    SpecialUnitaryMatrixRealFeatureSpace N
+
+/-- Orientation-correct multiplication linearized on a two-edge tensor. -/
+noncomputable def orientedPairTensorRealFeatureLinearMap
+    (N : ℕ)
+    (o₀ o₁ : PeriodicHypercubicOrientation) :
+    SpecialUnitaryPairRealFeatureTensorSpace N →ₗ[ℝ]
       SpecialUnitaryMatrixRealFeatureSpace N :=
-  (complexMatrixRealFeatureLinearMap N).toContinuousLinearMap.compContinuousMultilinearMap
-    (orientedFourLegMatrixContraction N orientation)
+  TensorProduct.lift (orientedRealFeatureMatrixMulLinearMap N o₀ o₁)
+
+@[simp] theorem orientedPairTensorRealFeatureLinearMap_tmul
+    (N : ℕ)
+    (o₀ o₁ : PeriodicHypercubicOrientation)
+    (v w : SpecialUnitaryMatrixRealFeatureSpace N) :
+    orientedPairTensorRealFeatureLinearMap N o₀ o₁ (v ⊗ₜ[ℝ] w) =
+      orientedRealFeatureMatrixMulLinearMap N o₀ o₁ v w := by
+  rfl
+
+/-- The pair-tensor contraction is bounded: its source is the canonical
+finite-dimensional Hilbert tensor product and its target is Euclidean. -/
+noncomputable def orientedPairTensorRealFeatureContraction
+    (N : ℕ)
+    (o₀ o₁ : PeriodicHypercubicOrientation) :
+    SpecialUnitaryPairRealFeatureTensorSpace N →L[ℝ]
+      SpecialUnitaryMatrixRealFeatureSpace N :=
+  (orientedPairTensorRealFeatureLinearMap N o₀ o₁).toContinuousLinearMap
+
+/-- Algebraic four-fold tensor carrier, grouped canonically as `(0,1) ⊗ (2,3)`. -/
+abbrev SpecialUnitaryFourLegRealFeatureTensorSpace (N : ℕ) :=
+  SpecialUnitaryPairRealFeatureTensorSpace N ⊗[ℝ]
+    SpecialUnitaryPairRealFeatureTensorSpace N
+
+/-- Canonical pure four-edge tensor in physical `Fin 4` edge order. -/
+def specialUnitaryFourLegRealFeatureTensor
+    (N : ℕ)
+    (v : Fin 4 → SpecialUnitaryMatrixRealFeatureSpace N) :
+    SpecialUnitaryFourLegRealFeatureTensorSpace N :=
+  (v 0 ⊗ₜ[ℝ] v 1) ⊗ₜ[ℝ] (v 2 ⊗ₜ[ℝ] v 3)
+
+/-- Generic orientation-correct four-leg contraction on the algebraic four-fold
+tensor carrier.  It first contracts `(0,1)` and `(2,3)`, then multiplies the
+two resulting realified matrix features. -/
+noncomputable def orientedFourLegTensorRealFeatureLinearMap
+    (N : ℕ)
+    (orientation : Fin 4 → PeriodicHypercubicOrientation) :
+    SpecialUnitaryFourLegRealFeatureTensorSpace N →ₗ[ℝ]
+      SpecialUnitaryMatrixRealFeatureSpace N :=
+  TensorProduct.lift
+    ((realFeatureMatrixMulLinearMap N).compl₁₂
+      (orientedPairTensorRealFeatureLinearMap N
+        (orientation 0) (orientation 1))
+      (orientedPairTensorRealFeatureLinearMap N
+        (orientation 2) (orientation 3)))
+
+@[simp] theorem orientedFourLegTensorRealFeatureLinearMap_pure
+    (N : ℕ)
+    (orientation : Fin 4 → PeriodicHypercubicOrientation)
+    (v : Fin 4 → SpecialUnitaryMatrixRealFeatureSpace N) :
+    orientedFourLegTensorRealFeatureLinearMap N orientation
+        (specialUnitaryFourLegRealFeatureTensor N v) =
+      realFeatureMatrixMulLinearMap N
+        (orientedRealFeatureMatrixMulLinearMap N
+          (orientation 0) (orientation 1) (v 0) (v 1))
+        (orientedRealFeatureMatrixMulLinearMap N
+          (orientation 2) (orientation 3) (v 2) (v 3)) := by
+  rfl
+
+/-- Bounded linearization of the generic four-leg invariant contraction. -/
+noncomputable def orientedFourLegTensorRealFeatureContraction
+    (N : ℕ)
+    (orientation : Fin 4 → PeriodicHypercubicOrientation) :
+    SpecialUnitaryFourLegRealFeatureTensorSpace N →L[ℝ]
+      SpecialUnitaryMatrixRealFeatureSpace N :=
+  (orientedFourLegTensorRealFeatureLinearMap N orientation).toContinuousLinearMap
 
 /-- The canonical primary plaquette orientation is read directly from the
 existing signed-boundary API; no second orientation convention is introduced. -/
@@ -196,200 +304,138 @@ def periodicHypercubicEvenPrimarySpatialPlaquetteOrientation
     (H : ℕ) :
     periodicHypercubicEvenPrimarySpatialPlaquetteOrientation H 3 = .backward := rfl
 
-/-- The actual primary-spatial bounded four-leg feature contraction. -/
+/-- The actual primary-spatial four-leg tensor contraction. -/
 noncomputable def periodicHypercubicEvenPrimarySpatialPlaquetteFourLegRealFeatureContraction
     (H N : ℕ) :
-    (SpecialUnitaryMatrixRealFeatureSpace N) [×4]→L[ℝ]
+    SpecialUnitaryFourLegRealFeatureTensorSpace N →L[ℝ]
       SpecialUnitaryMatrixRealFeatureSpace N :=
-  orientedFourLegRealFeatureContraction N
+  orientedFourLegTensorRealFeatureContraction N
     (periodicHypercubicEvenPrimarySpatialPlaquetteOrientation H)
 
-/-- On four defining `SU(N)` edge features, the bounded contraction is exactly
-the defining real feature of the existing naturally oriented plaquette word. -/
+/-- On four `SU(N)` degree-one edge features, the contraction is exactly the
+defining real feature of the existing naturally oriented plaquette word. -/
 theorem periodicHypercubicEvenPrimarySpatialPlaquetteFourLegRealFeatureContraction_apply
     (H N : ℕ)
     (x : Fin 4 → Matrix.specialUnitaryGroup (Fin N) ℂ) :
     periodicHypercubicEvenPrimarySpatialPlaquetteFourLegRealFeatureContraction H N
-        (fun k => specialUnitaryMatrixRealFeature N (x k)) =
+        (specialUnitaryFourLegRealFeatureTensor N
+          (fun k => specialUnitaryMatrixRealFeature N (x k))) =
       specialUnitaryMatrixRealFeature N (orientedFourEdgePlaquetteWord x) := by
   simp [periodicHypercubicEvenPrimarySpatialPlaquetteFourLegRealFeatureContraction,
-    orientedFourLegRealFeatureContraction,
-    orientedFourLegMatrixContraction,
+    orientedFourLegTensorRealFeatureContraction,
+    orientedFourLegTensorRealFeatureLinearMap_pure,
+    orientedRealFeatureMatrixMulLinearMap,
+    realFeatureMatrixMulLinearMap,
     periodicHypercubicEvenPrimarySpatialPlaquetteOrientation,
     orientedFourEdgePlaquetteWord,
     specialUnitaryMatrixRealFeature,
-    ContinuousMultilinearMap.mkPiAlgebraFin_apply, mul_assoc]
+    mul_assoc]
 
-/-- The algebraic four-fold projective tensor carrier.  Its index is exactly the
-four canonical physical edge slots `Fin 4`, so no reassociation or ad hoc edge
-permutation is hidden in the carrier. -/
-abbrev SpecialUnitaryFourLegProjectiveRealFeatureTensorSpace (N : ℕ) :=
-  PiTensorProduct ℝ
-    (fun _ : Fin 4 => SpecialUnitaryMatrixRealFeatureSpace N)
+/-- Hilbert completion of the algebraic four-edge tensor carrier. -/
+abbrev SpecialUnitaryCompletedFourLegRealFeatureTensorSpace (N : ℕ) :=
+  UniformSpace.Completion (SpecialUnitaryFourLegRealFeatureTensorSpace N)
 
-/-- Canonical pure four-edge tensor in physical edge order. -/
-def specialUnitaryFourLegProjectiveRealFeatureTensor
-    (N : ℕ)
-    (v : Fin 4 → SpecialUnitaryMatrixRealFeatureSpace N) :
-    SpecialUnitaryFourLegProjectiveRealFeatureTensorSpace N :=
-  ⨂ₜ[ℝ] k, v k
-
-/-- Universal projective-tensor linearization of the bounded four-leg feature
-contraction. -/
-noncomputable def orientedFourLegProjectiveRealFeatureContraction
-    (N : ℕ)
-    (orientation : Fin 4 → PeriodicHypercubicOrientation) :
-    SpecialUnitaryFourLegProjectiveRealFeatureTensorSpace N →L[ℝ]
-      SpecialUnitaryMatrixRealFeatureSpace N :=
-  PiTensorProduct.liftIsometry ℝ
-    (fun _ : Fin 4 => SpecialUnitaryMatrixRealFeatureSpace N)
-    (SpecialUnitaryMatrixRealFeatureSpace N)
-    (orientedFourLegRealFeatureContraction N orientation)
-
-/-- The projective tensor linearization agrees exactly with the multilinear
-contraction on pure four-edge tensors. -/
-@[simp] theorem orientedFourLegProjectiveRealFeatureContraction_pure
-    (N : ℕ)
-    (orientation : Fin 4 → PeriodicHypercubicOrientation)
-    (v : Fin 4 → SpecialUnitaryMatrixRealFeatureSpace N) :
-    orientedFourLegProjectiveRealFeatureContraction N orientation
-        (specialUnitaryFourLegProjectiveRealFeatureTensor N v) =
-      orientedFourLegRealFeatureContraction N orientation v := by
-  simp [orientedFourLegProjectiveRealFeatureContraction,
-    specialUnitaryFourLegProjectiveRealFeatureTensor]
-
-/-- Primary-spatial specialization of the algebraic projective-tensor
-contraction. -/
-noncomputable def periodicHypercubicEvenPrimarySpatialPlaquetteProjectiveRealFeatureContraction
+/-- Extend the bounded four-leg contraction to the completed four-edge tensor
+carrier. -/
+noncomputable def periodicHypercubicEvenPrimarySpatialPlaquetteCompletedFourLegRealFeatureContraction
     (H N : ℕ) :
-    SpecialUnitaryFourLegProjectiveRealFeatureTensorSpace N →L[ℝ]
+    SpecialUnitaryCompletedFourLegRealFeatureTensorSpace N →L[ℝ]
       SpecialUnitaryMatrixRealFeatureSpace N :=
-  orientedFourLegProjectiveRealFeatureContraction N
-    (periodicHypercubicEvenPrimarySpatialPlaquetteOrientation H)
-
-/-- On a pure tensor of four `SU(N)` defining features, the algebraic tensor
-contraction is exactly the naturally oriented primary-plaquette feature. -/
-theorem periodicHypercubicEvenPrimarySpatialPlaquetteProjectiveRealFeatureContraction_apply
-    (H N : ℕ)
-    (x : Fin 4 → Matrix.specialUnitaryGroup (Fin N) ℂ) :
-    periodicHypercubicEvenPrimarySpatialPlaquetteProjectiveRealFeatureContraction H N
-        (specialUnitaryFourLegProjectiveRealFeatureTensor N
-          (fun k => specialUnitaryMatrixRealFeature N (x k))) =
-      specialUnitaryMatrixRealFeature N (orientedFourEdgePlaquetteWord x) := by
-  rw [orientedFourLegProjectiveRealFeatureContraction_pure]
-  exact periodicHypercubicEvenPrimarySpatialPlaquetteFourLegRealFeatureContraction_apply
-    H N x
-
-/-- Completion of the algebraic four-fold projective tensor carrier. -/
-abbrev SpecialUnitaryCompletedFourLegProjectiveRealFeatureTensorSpace (N : ℕ) :=
-  UniformSpace.Completion
-    (SpecialUnitaryFourLegProjectiveRealFeatureTensorSpace N)
-
-/-- Extend the projective-tensor contraction continuously to its completed
-carrier.  The codomain is the complete finite-dimensional Euclidean real
-feature space. -/
-noncomputable def periodicHypercubicEvenPrimarySpatialPlaquetteCompletedProjectiveRealFeatureContraction
-    (H N : ℕ) :
-    SpecialUnitaryCompletedFourLegProjectiveRealFeatureTensorSpace N →L[ℝ]
-      SpecialUnitaryMatrixRealFeatureSpace N :=
-  (periodicHypercubicEvenPrimarySpatialPlaquetteProjectiveRealFeatureContraction H N).extend
+  (periodicHypercubicEvenPrimarySpatialPlaquetteFourLegRealFeatureContraction H N).extend
     (UniformSpace.Completion.toComplL :
-      SpecialUnitaryFourLegProjectiveRealFeatureTensorSpace N →L[ℝ]
-        SpecialUnitaryCompletedFourLegProjectiveRealFeatureTensorSpace N)
+      SpecialUnitaryFourLegRealFeatureTensorSpace N →L[ℝ]
+        SpecialUnitaryCompletedFourLegRealFeatureTensorSpace N)
 
-/-- The completed contraction restricts exactly to the algebraic contraction
-on the canonical dense tensor carrier. -/
-theorem periodicHypercubicEvenPrimarySpatialPlaquetteCompletedProjectiveRealFeatureContraction_coe
+/-- The completed contraction restricts exactly to the algebraic tensor carrier. -/
+theorem periodicHypercubicEvenPrimarySpatialPlaquetteCompletedFourLegRealFeatureContraction_coe
     (H N : ℕ)
-    (t : SpecialUnitaryFourLegProjectiveRealFeatureTensorSpace N) :
-    periodicHypercubicEvenPrimarySpatialPlaquetteCompletedProjectiveRealFeatureContraction H N
-        (t : SpecialUnitaryCompletedFourLegProjectiveRealFeatureTensorSpace N) =
-      periodicHypercubicEvenPrimarySpatialPlaquetteProjectiveRealFeatureContraction H N t := by
+    (t : SpecialUnitaryFourLegRealFeatureTensorSpace N) :
+    periodicHypercubicEvenPrimarySpatialPlaquetteCompletedFourLegRealFeatureContraction H N
+        (t : SpecialUnitaryCompletedFourLegRealFeatureTensorSpace N) =
+      periodicHypercubicEvenPrimarySpatialPlaquetteFourLegRealFeatureContraction H N t := by
   exact ContinuousLinearMap.extend_eq
-    (periodicHypercubicEvenPrimarySpatialPlaquetteProjectiveRealFeatureContraction H N)
+    (periodicHypercubicEvenPrimarySpatialPlaquetteFourLegRealFeatureContraction H N)
     (e := (UniformSpace.Completion.toComplL :
-      SpecialUnitaryFourLegProjectiveRealFeatureTensorSpace N →L[ℝ]
-        SpecialUnitaryCompletedFourLegProjectiveRealFeatureTensorSpace N))
+      SpecialUnitaryFourLegRealFeatureTensorSpace N →L[ℝ]
+        SpecialUnitaryCompletedFourLegRealFeatureTensorSpace N))
     (by
       simpa only [UniformSpace.Completion.coe_toComplL] using
         (UniformSpace.Completion.denseRange_coe :
-          DenseRange fun x : SpecialUnitaryFourLegProjectiveRealFeatureTensorSpace N =>
-            (x : SpecialUnitaryCompletedFourLegProjectiveRealFeatureTensorSpace N)))
+          DenseRange fun x : SpecialUnitaryFourLegRealFeatureTensorSpace N =>
+            (x : SpecialUnitaryCompletedFourLegRealFeatureTensorSpace N)))
     (by
       simpa only [UniformSpace.Completion.coe_toComplL] using
         UniformSpace.Completion.isUniformInducing_coe
-          (SpecialUnitaryFourLegProjectiveRealFeatureTensorSpace N))
+          (SpecialUnitaryFourLegRealFeatureTensorSpace N))
     t
 
 /-- The completed four-leg contraction on actual boundary-restricted physical
 edge variables is exactly the defining feature of the canonical primary
 spatial plaquette holonomy. -/
-theorem periodicHypercubicEvenPrimarySpatialPlaquetteCompletedProjectiveRealFeatureContraction_boundaryRestriction
+theorem periodicHypercubicEvenPrimarySpatialPlaquetteCompletedFourLegRealFeatureContraction_boundaryRestriction
     (H N : ℕ)
     (A : PeriodicHypercubicEvenEdge H →
       Matrix.specialUnitaryGroup (Fin N) ℂ) :
-    periodicHypercubicEvenPrimarySpatialPlaquetteCompletedProjectiveRealFeatureContraction H N
-        ((specialUnitaryFourLegProjectiveRealFeatureTensor N
+    periodicHypercubicEvenPrimarySpatialPlaquetteCompletedFourLegRealFeatureContraction H N
+        ((specialUnitaryFourLegRealFeatureTensor N
           (fun k => specialUnitaryMatrixRealFeature N
             ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryRestriction A
               (periodicHypercubicEvenPrimarySpatialPlaquetteFixedEdgeEmbedding H k))) :
-            SpecialUnitaryFourLegProjectiveRealFeatureTensorSpace N) :
-          SpecialUnitaryCompletedFourLegProjectiveRealFeatureTensorSpace N) =
+            SpecialUnitaryFourLegRealFeatureTensorSpace N) :
+          SpecialUnitaryCompletedFourLegRealFeatureTensorSpace N) =
       specialUnitaryMatrixRealFeature N
         (periodicHypercubicPlaquetteHolonomy A
           (periodicHypercubicEvenPrimarySpatialPlaquette H)) := by
-  rw [periodicHypercubicEvenPrimarySpatialPlaquetteCompletedProjectiveRealFeatureContraction_coe]
-  rw [periodicHypercubicEvenPrimarySpatialPlaquetteProjectiveRealFeatureContraction_apply]
+  rw [periodicHypercubicEvenPrimarySpatialPlaquetteCompletedFourLegRealFeatureContraction_coe]
+  rw [periodicHypercubicEvenPrimarySpatialPlaquetteFourLegRealFeatureContraction_apply]
   rw [periodicHypercubicEvenPrimarySpatialPlaquetteHolonomy_eq_orientedFourEdge]
-  congr 2
-  funext k
-  exact periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryRestriction_apply H A k
+  simp_rw [periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryRestriction_apply]
 
-/-- Fibered-coordinate version: the same completed contraction depends only on
-`b`; it reconstructs the primary spatial plaquette holonomy of every assembly
-`boundaryFiberedAssemble b x y`, independently of the two open-half choices. -/
-theorem periodicHypercubicEvenPrimarySpatialPlaquetteCompletedProjectiveRealFeatureContraction_boundaryFibered
+/-- Fibered-coordinate version: the completed contraction depends only on `b`
+and reconstructs the primary spatial plaquette feature of every assembly
+`boundaryFiberedAssemble b x y`. -/
+theorem periodicHypercubicEvenPrimarySpatialPlaquetteCompletedFourLegRealFeatureContraction_boundaryFibered
     (H N : ℕ)
     (b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H N)
     (x y : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
       (Matrix.specialUnitaryGroup (Fin N) ℂ)) :
-    periodicHypercubicEvenPrimarySpatialPlaquetteCompletedProjectiveRealFeatureContraction H N
-        ((specialUnitaryFourLegProjectiveRealFeatureTensor N
+    periodicHypercubicEvenPrimarySpatialPlaquetteCompletedFourLegRealFeatureContraction H N
+        ((specialUnitaryFourLegRealFeatureTensor N
           (fun k => specialUnitaryMatrixRealFeature N
             (b (periodicHypercubicEvenPrimarySpatialPlaquetteFixedEdgeEmbedding H k))) :
-            SpecialUnitaryFourLegProjectiveRealFeatureTensorSpace N) :
-          SpecialUnitaryCompletedFourLegProjectiveRealFeatureTensorSpace N) =
+            SpecialUnitaryFourLegRealFeatureTensorSpace N) :
+          SpecialUnitaryCompletedFourLegRealFeatureTensorSpace N) =
       specialUnitaryMatrixRealFeature N
         (periodicHypercubicPlaquetteHolonomy
           ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble b x y)
           (periodicHypercubicEvenPrimarySpatialPlaquette H)) := by
   simpa using
-    periodicHypercubicEvenPrimarySpatialPlaquetteCompletedProjectiveRealFeatureContraction_boundaryRestriction
+    periodicHypercubicEvenPrimarySpatialPlaquetteCompletedFourLegRealFeatureContraction_boundaryRestriction
       H N
       ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble b x y)
 
 /-- Replacing the four explicit boundary coordinates by the four canonical
 temporal-companion boundary legs leaves the exact completed primary-plaquette
 feature unchanged. -/
-theorem periodicHypercubicEvenPrimarySpatialPlaquetteCompletedProjectiveRealFeatureContraction_temporalCompanionBoundaryLegs
+theorem periodicHypercubicEvenPrimarySpatialPlaquetteCompletedFourLegRealFeatureContraction_temporalCompanionBoundaryLegs
     (H N : ℕ)
     (b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H N)
     (x y : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
       (Matrix.specialUnitaryGroup (Fin N) ℂ)) :
-    periodicHypercubicEvenPrimarySpatialPlaquetteCompletedProjectiveRealFeatureContraction H N
-        ((specialUnitaryFourLegProjectiveRealFeatureTensor N
+    periodicHypercubicEvenPrimarySpatialPlaquetteCompletedFourLegRealFeatureContraction H N
+        ((specialUnitaryFourLegRealFeatureTensor N
           (fun k => specialUnitaryMatrixRealFeature N
             (periodicHypercubicEvenPositiveBoundaryTemporalFiberedBoundaryLeg b
               (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion H k))) :
-            SpecialUnitaryFourLegProjectiveRealFeatureTensorSpace N) :
-          SpecialUnitaryCompletedFourLegProjectiveRealFeatureTensorSpace N) =
+            SpecialUnitaryFourLegRealFeatureTensorSpace N) :
+          SpecialUnitaryCompletedFourLegRealFeatureTensorSpace N) =
       specialUnitaryMatrixRealFeature N
         (periodicHypercubicPlaquetteHolonomy
           ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble b x y)
           (periodicHypercubicEvenPrimarySpatialPlaquette H)) := by
   simp_rw [periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion_fiberedBoundaryLeg_eq]
   exact
-    periodicHypercubicEvenPrimarySpatialPlaquetteCompletedProjectiveRealFeatureContraction_boundaryFibered
+    periodicHypercubicEvenPrimarySpatialPlaquetteCompletedFourLegRealFeatureContraction_boundaryFibered
       H N b x y
 
 /-- Apply the identical completed tensor architecture to the four positive-half
@@ -399,17 +445,16 @@ noncomputable def periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion
     (x : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
       (Matrix.specialUnitaryGroup (Fin N) ℂ)) :
     SpecialUnitaryMatrixRealFeatureSpace N :=
-  periodicHypercubicEvenPrimarySpatialPlaquetteCompletedProjectiveRealFeatureContraction H N
-    ((specialUnitaryFourLegProjectiveRealFeatureTensor N
+  periodicHypercubicEvenPrimarySpatialPlaquetteCompletedFourLegRealFeatureContraction H N
+    ((specialUnitaryFourLegRealFeatureTensor N
       (fun k => specialUnitaryMatrixRealFeature N
         (periodicHypercubicEvenPositiveBoundaryTemporalFiberedOpenPath x
           (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion H k))) :
-        SpecialUnitaryFourLegProjectiveRealFeatureTensorSpace N) :
-      SpecialUnitaryCompletedFourLegProjectiveRealFeatureTensorSpace N)
+        SpecialUnitaryFourLegRealFeatureTensorSpace N) :
+      SpecialUnitaryCompletedFourLegRealFeatureTensorSpace N)
 
 /-- Explicit pure-tensor formula for the four temporal-companion open-half
-feature: it is the same orientation-correct four-edge word in defining real
-matrix feature coordinates. -/
+feature: it is the same canonical orientation-correct four-edge word. -/
 theorem periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfCompletedRealFeature_eq
     (H N : ℕ)
     (x : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
@@ -422,9 +467,9 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfCo
             periodicHypercubicEvenPositiveBoundaryTemporalFiberedOpenPath x
               (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion H k))) := by
   unfold periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfCompletedRealFeature
-  rw [periodicHypercubicEvenPrimarySpatialPlaquetteCompletedProjectiveRealFeatureContraction_coe]
+  rw [periodicHypercubicEvenPrimarySpatialPlaquetteCompletedFourLegRealFeatureContraction_coe]
   exact
-    periodicHypercubicEvenPrimarySpatialPlaquetteProjectiveRealFeatureContraction_apply
+    periodicHypercubicEvenPrimarySpatialPlaquetteFourLegRealFeatureContraction_apply
       H N
       (fun k =>
         periodicHypercubicEvenPositiveBoundaryTemporalFiberedOpenPath x
