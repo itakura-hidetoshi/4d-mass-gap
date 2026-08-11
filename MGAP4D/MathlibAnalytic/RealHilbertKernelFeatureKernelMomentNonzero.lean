@@ -31,7 +31,6 @@ theorem RealHilbertKernelFeature.integral_ne_zero_of_kernel_moment_ne_zero
     (hmoment : (∫ x, a x * kernel x₀ x ∂mu) ≠ 0) :
     (∫ x, a x • C.feature x ∂mu) ≠ 0 := by
   intro hzero
-  have hInner := integral_inner ha (C.feature x₀)
   have hScalar : (∫ x, a x * kernel x₀ x ∂mu) = 0 := by
     calc
       (∫ x, a x * kernel x₀ x ∂mu) =
@@ -39,7 +38,8 @@ theorem RealHilbertKernelFeature.integral_ne_zero_of_kernel_moment_ne_zero
         apply integral_congr_ae
         filter_upwards [] with x
         rw [real_inner_smul_right, ← C.kernel_eq_inner]
-      _ = inner ℝ (C.feature x₀) (∫ x, a x • C.feature x ∂mu) := hInner
+      _ = inner ℝ (C.feature x₀) (∫ x, a x • C.feature x ∂mu) :=
+        integral_inner ha (C.feature x₀)
       _ = 0 := by rw [hzero, inner_zero]
   exact hmoment hScalar
 
