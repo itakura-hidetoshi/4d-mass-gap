@@ -194,23 +194,53 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalPlaquette_existsUnique_fix
     refine ⟨3, hprimary.2.2.2.2, ?_⟩
     intro k hk
     fin_cases k
-    · rw [hprimary.2.1] at hk
+    · change
+        (periodicHypercubicEvenEdgeOrbitPartition H).side
+            (periodicHypercubicBoundaryStep
+              (PeriodicHypercubicEvenSideLength H) p (0 : Fin 4)).edge =
+          ReflectionEdgeSide.fixed at hk
+      rw [hprimary.2.1] at hk
       cases hk
-    · rw [hprimary.2.2.1] at hk
+    · change
+        (periodicHypercubicEvenEdgeOrbitPartition H).side
+            (periodicHypercubicBoundaryStep
+              (PeriodicHypercubicEvenSideLength H) p (1 : Fin 4)).edge =
+          ReflectionEdgeSide.fixed at hk
+      rw [hprimary.2.2.1] at hk
       cases hk
-    · rw [hprimary.2.2.2.1] at hk
+    · change
+        (periodicHypercubicEvenEdgeOrbitPartition H).side
+            (periodicHypercubicBoundaryStep
+              (PeriodicHypercubicEvenSideLength H) p (2 : Fin 4)).edge =
+          ReflectionEdgeSide.fixed at hk
+      rw [hprimary.2.2.2.1] at hk
       cases hk
     · rfl
   · unfold periodicHypercubicEvenPositiveBoundaryTemporalAntipodalEdgePattern at hantipodal
     refine ⟨1, hantipodal.2.2.1, ?_⟩
     intro k hk
     fin_cases k
-    · rw [hantipodal.2.1] at hk
+    · change
+        (periodicHypercubicEvenEdgeOrbitPartition H).side
+            (periodicHypercubicBoundaryStep
+              (PeriodicHypercubicEvenSideLength H) p (0 : Fin 4)).edge =
+          ReflectionEdgeSide.fixed at hk
+      rw [hantipodal.2.1] at hk
       cases hk
     · rfl
-    · rw [hantipodal.2.2.2.1] at hk
+    · change
+        (periodicHypercubicEvenEdgeOrbitPartition H).side
+            (periodicHypercubicBoundaryStep
+              (PeriodicHypercubicEvenSideLength H) p (2 : Fin 4)).edge =
+          ReflectionEdgeSide.fixed at hk
+      rw [hantipodal.2.2.2.1] at hk
       cases hk
-    · rw [hantipodal.2.2.2.2] at hk
+    · change
+        (periodicHypercubicEvenEdgeOrbitPartition H).side
+            (periodicHypercubicBoundaryStep
+              (PeriodicHypercubicEvenSideLength H) p (3 : Fin 4)).edge =
+          ReflectionEdgeSide.fixed at hk
+      rw [hantipodal.2.2.2.2] at hk
       cases hk
 
 end
