@@ -21,7 +21,7 @@ noncomputable def specialUnitaryTwoFourEdgeCoordinateWilsonPartialFeature
     (k : Fin 4) :
     RealHilbertKernelFeature
       (Fin 4 → Matrix.specialUnitaryGroup (Fin 2) ℂ)
-      (fun x y =>
+      (fun (x y : Fin 4 → Matrix.specialUnitaryGroup (Fin 2) ℂ) =>
         specialUnitaryWilsonRelativeKernelPartial 2 beta degree (x k) (y k)) :=
   (specialUnitaryWilsonRelativeKernelPartialConcreteFeature
       2 cyclicFourEdgeWilsonPartialTwoRankPositive beta hbeta degree).comap
