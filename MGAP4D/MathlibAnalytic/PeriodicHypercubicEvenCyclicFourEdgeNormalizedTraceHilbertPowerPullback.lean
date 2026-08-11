@@ -12,6 +12,10 @@ noncomputable section
 private theorem cyclicFourEdgeHilbertPowerTwoRankPositive : 0 < (2 : ℕ) := by
   norm_num
 
+local instance cyclicFourEdgeHilbertPowerMeasurableSpace :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  specialUnitaryGroupMeasurableSpace 2
+
 /-- Reinstall Mathlib's canonical Hilbert tensor structures in this module.
 The corresponding instances in the degree-one file were deliberately local. -/
 noncomputable local instance cyclicFourEdgePowerPairNormedAddCommGroup :
@@ -49,6 +53,12 @@ noncomputable def specialUnitaryTwoNormalizedTraceHilbertKernelFeature :
       (specialUnitaryNormalizedTraceRelativeKernel 2) :=
   specialUnitaryNormalizedTraceRelativeKernelFeature
     2 cyclicFourEdgeHilbertPowerTwoRankPositive
+
+noncomputable local instance cyclicFourEdgePowerTargetFeatureFiniteDimensional :
+    FiniteDimensional ℝ
+      specialUnitaryTwoNormalizedTraceHilbertKernelFeature.FeatureHilbert := by
+  change FiniteDimensional ℝ (SpecialUnitaryMatrixRealFeatureSpace 2)
+  infer_instance
 
 /-- The normalized relative-trace kernel is the inner product of the explicit
 normalized matrix feature vectors used by the degree-one four-edge contraction. -/
@@ -91,6 +101,13 @@ noncomputable def specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseFeature 
       specialUnitaryTwoNormalizedTraceRelativeKernel_eq_inner_featureVector,
       specialUnitaryTwoNormalizedTraceRelativeKernel_eq_inner_featureVector,
       specialUnitaryTwoNormalizedTraceRelativeKernel_eq_inner_featureVector]
+
+noncomputable local instance cyclicFourEdgePowerEdgewiseFeatureFiniteDimensional :
+    FiniteDimensional ℝ
+      specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseFeature.FeatureHilbert := by
+  change FiniteDimensional ℝ
+    SpecialUnitaryTwoNormalizedTraceFourEdgeHilbertTensorSpace
+  infer_instance
 
 /-- Degree-one map between the genuine four-edge Hilbert feature and the cyclic
 normalized relative-trace feature. -/
