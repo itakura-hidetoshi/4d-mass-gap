@@ -29,6 +29,18 @@ local instance cyclicFockAnalysisPairingBorelSpace :
     BorelSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupBorelSpace 2
 
+local instance cyclicFockAnalysisPairingBoundaryHaarSFinite (H : ℕ) :
+    SFinite (periodicHypercubicEvenBoundaryHaarMeasure H 2) := by
+  dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
+  infer_instance
+
+local instance cyclicFockAnalysisPairingOpenHalfHaarSFinite (H : ℕ) :
+    SFinite (periodicHypercubicEvenOpenHalfHaarMeasure H 2) := by
+  dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+  infer_instance
+
 local instance cyclicFockAnalysisPairingSU2Nontrivial :
     Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
   refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
