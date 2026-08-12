@@ -11,8 +11,9 @@ noncomputable section
 
 /-- The literal finite set of all positive-boundary temporal plaquettes. -/
 noncomputable def periodicHypercubicEvenPositiveBoundaryTemporalPlaquettes
-    (H : ℕ) : Finset (PeriodicHypercubicEvenPlaquette H) :=
-  (Finset.univ : Finset (PeriodicHypercubicEvenPlaquette H)).filter
+    (H : ℕ) : Finset (PeriodicHypercubicEvenPlaquette H) := by
+  classical
+  exact (Finset.univ : Finset (PeriodicHypercubicEvenPlaquette H)).filter
     periodicHypercubicEvenPositiveBoundaryTemporalPlaquette
 
 @[simp]
@@ -29,11 +30,19 @@ noncomputable def periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion
   toFun := periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion H
   inj' := by
     intro i j hij
+    have hbase :
+        (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H i).1 =
+          (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H j).1 := by
+      simpa [periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion,
+        periodicHypercubicEvenPrimarySpatialEdgeTemporalCompanion] using
+        congrArg Prod.fst hij
+    have haxis :
+        (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H i).2 =
+          (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H j).2 := by
+      have h := congrArg periodicHypercubicPlaquetteSecondAxis hij
+      simpa [periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion] using h
     apply periodicHypercubicEvenPrimarySpatialPlaquetteEdge_injective H
-    apply Prod.ext
-    · exact congrArg Prod.fst hij
-    · have haxis := congrArg periodicHypercubicPlaquetteSecondAxis hij
-      simpa using haxis
+    exact Prod.ext hbase haxis
 
 /-- The literal selected four-companion plaquette set. -/
 noncomputable def periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionSet
