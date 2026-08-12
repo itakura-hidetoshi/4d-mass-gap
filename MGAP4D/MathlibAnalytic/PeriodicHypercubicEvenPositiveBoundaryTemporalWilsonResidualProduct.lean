@@ -13,6 +13,15 @@ noncomputable section
 private theorem positiveBoundaryTemporalWilsonResidualProductTwoRankPositive : 0 < (2 : ℕ) := by
   norm_num
 
+local instance positiveBoundaryTemporalWilsonResidualProductSU2Nontrivial :
+    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun U : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (U : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
 /-- The selected four-companion Wilson action is exactly the finite sum over
 its embedded four-element plaquette block. -/
 theorem periodicHypercubicEvenPrimarySpatialPlaquetteFourTemporalCompanionWilsonAction_eq_sum
@@ -24,10 +33,10 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteFourTemporalCompanionWilson
         specialUnitaryWilsonPlaquetteEnergy 2
           (periodicHypercubicPlaquetteHolonomy A p) := by
   classical
-  simp [periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionSet,
+  simp +decide [periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionSet,
     periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionEmbedding,
-    periodicHypercubicEvenPrimarySpatialPlaquetteFourTemporalCompanionWilsonAction]
-  ring
+    periodicHypercubicEvenPrimarySpatialPlaquetteFourTemporalCompanionWilsonAction,
+    Fin.sum_univ_succ] <;> ring
 
 /-- The formerly algebraic positive-boundary residual action is the literal
 sum over every positive-boundary temporal plaquette except the four selected
@@ -147,7 +156,6 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonPlaquetteFactor_boun
   rw [specialUnitaryWilsonRelativeKernel_eq_trace]
   rw [periodicHypercubicEvenPositiveBoundaryTemporal_normalizedTrace_boundaryFibered_eq_relativeKernel
     hH b x y p hpositive]
-  rfl
 
 /-- The full positive-boundary temporal Wilson factor in boundary/open-half
 coordinates is an exact finite product of relative Wilson kernels.  The
@@ -192,8 +200,8 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonResidualWeight_bound
   rw [periodicHypercubicEvenPositiveBoundaryTemporalWilsonResidualWeight_eq_prod_residualPlaquettes]
   apply Finset.prod_congr rfl
   intro p hp
-  have hfull : p ∈ periodicHypercubicEvenPositiveBoundaryTemporalPlaquettes H := by
-    exact Finset.mem_of_mem_sdiff hp
+  have hfull : p ∈ periodicHypercubicEvenPositiveBoundaryTemporalPlaquettes H :=
+    (Finset.mem_sdiff.mp hp).1
   exact periodicHypercubicEvenPositiveBoundaryTemporalWilsonPlaquetteFactor_boundaryFibered_eq_relativeKernel
     hH beta b x y p hfull
 
