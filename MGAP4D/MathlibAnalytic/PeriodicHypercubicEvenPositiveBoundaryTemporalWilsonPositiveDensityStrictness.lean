@@ -198,7 +198,7 @@ theorem
               congrArg (fun z : ℝ => p b * z) hadj.symm
           _ = inner ℝ q₄ (p b • C₀.feature b) := by
             symm
-            rw [real_inner_smul_right]
+            simpa only [real_inner_smul_right]
       _ = inner ℝ q₄ (∫ b, p b • C₀.feature b ∂ν) :=
         integral_inner hSourceIntegrable q₄
       _ = 0 := by
