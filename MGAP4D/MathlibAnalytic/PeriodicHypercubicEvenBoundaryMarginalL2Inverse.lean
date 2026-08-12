@@ -92,9 +92,9 @@ theorem periodicHypercubicEvenBoundaryMarginalToHaarL2Function_memLp
   apply hg.congr
   filter_upwards with b
   change
-    (periodicHypercubicEvenBoundaryVacuumMoment H N hN beta hbeta b * g b) ^ 2 =
-      (periodicHypercubicEvenBoundaryMarginalDensityNNReal
-        H N hN beta hbeta b : ℝ) * f b
+    (periodicHypercubicEvenBoundaryMarginalDensityNNReal
+        H N hN beta hbeta b : ℝ) * f b =
+      (periodicHypercubicEvenBoundaryVacuumMoment H N hN beta hbeta b * g b) ^ 2
   simp only [f]
   unfold periodicHypercubicEvenBoundaryMarginalDensityNNReal
   rw [Real.coe_toNNReal (sq_nonneg
