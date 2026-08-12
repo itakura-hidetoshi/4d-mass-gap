@@ -203,23 +203,41 @@ noncomputable def periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryPr
 
 /-- Moore--Aronszajn direct-sum realization of the **entire** literal positive-
 boundary temporal Wilson kernel, with the protected positive-degree four-edge
-sector retained as the right Hilbert summand. -/
+sector retained as the right Hilbert summand.
+
+We deliberately leave the kernel in its raw `(full - protected) + protected`
+form.  The equality with the literal full kernel is proved separately below;
+this keeps the feature space definitionally equal to the direct sum and avoids
+dependent casts when applying generic noncancellation lemmas. -/
 noncomputable def periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature
     (H : ℕ)
     (beta : ℝ)
     (hbeta : 0 ≤ beta)
-    (n : ℕ) :
-    RealHilbertKernelFeature
-      (PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2)
-      (periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullKernel H beta) := by
-  let R := periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryProtectedRemainderFeature
-    H beta hbeta n
-  let S := periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryProtectedSelectedDegreeFeature
-    H beta hbeta n
-  simpa [R, S] using RealHilbertKernelFeature.add R S
+    (n : ℕ) :=
+  RealHilbertKernelFeature.add
+    (periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryProtectedRemainderFeature
+      H beta hbeta n)
+    (periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryProtectedSelectedDegreeFeature
+      H beta hbeta n)
 
-/-- The full decomposition feature is continuous because its kernel is the
-actual finite product of continuous Wilson relative kernels. -/
+/-- The raw direct-sum feature kernel is exactly the literal complete positive-
+boundary Wilson kernel. -/
+theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature_kernel
+    (H : ℕ)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (n : ℕ)
+    (b c : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2) :
+    (periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature
+      H beta hbeta n).kernel_eq_inner b c =
+      periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullKernel H beta b c := by
+  rw [(periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature
+    H beta hbeta n).kernel_eq_inner]
+  simp [periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature]
+
+/-- The full decomposition feature is continuous because its raw direct-sum
+kernel simplifies exactly to the actual finite product of continuous Wilson
+relative kernels. -/
 theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature_continuous
     (H : ℕ)
     (beta : ℝ)
@@ -228,10 +246,11 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompos
     Continuous
       (periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature
         H beta hbeta n).feature := by
-  exact RealHilbertKernelFeature.continuous_feature_of_continuous_kernel
+  apply RealHilbertKernelFeature.continuous_feature_of_continuous_kernel
     (periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature
       H beta hbeta n)
-    (periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullKernel_continuous H beta)
+  simpa [periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature] using
+    periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullKernel_continuous H beta
 
 /-- Every full-decomposition feature vector has unit norm. -/
 theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature_norm
@@ -244,7 +263,8 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompos
         H beta hbeta n).feature b‖ = 1 := by
   apply RealHilbertKernelFeature.feature_norm_eq_one
   intro d
-  exact periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullKernel_self H beta d
+  simpa [periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature] using
+    periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullKernel_self H beta d
 
 /-- Polynomial-weighted full positive-boundary Wilson feature vectors are
 Bochner integrable in the actual interacting boundary marginal. -/
@@ -345,6 +365,7 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompos
     H beta hbeta n
   rw [real_inner_smul_left, real_inner_smul_right]
   rw [← C.kernel_eq_inner]
+  simp [C, periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature]
   ring
 
 /-- Main full-sector strictness theorem.  Every centered nonzero normalized-
@@ -433,13 +454,27 @@ theorem periodicHypercubicEvenBoundaryMarginalNormalizedTracePolynomial_exists_p
       periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature] using hAdd
   have hGram :
       0 < ∫ b₁, ∫ b₂,
-        inner ℝ (p b₁ • C.feature b₁) (p b₂ • C.feature b₂) ∂μ ∂μ :=
-    C.weighted_inner_doubleIntegral_pos_of_integral_ne_zero
+        inner ℝ
+          (p b₁ •
+            (periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature
+              H beta hbeta.le n).feature b₁)
+          (p b₂ •
+            (periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature
+              H beta hbeta.le n).feature b₂) ∂μ ∂μ := by
+    change 0 < ∫ b₁, ∫ b₂,
+      inner ℝ (p b₁ • C.feature b₁) (p b₂ • C.feature b₂) ∂μ ∂μ
+    exact C.weighted_inner_doubleIntegral_pos_of_integral_ne_zero
       μ p hIntegrable hFullMoment
   refine ⟨i, hi, q, hq, ?_⟩
-  simp only [
-    periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature_weighted_inner_eq_fullKernel] at hGram
-  simpa [p, μ, C, n] using hGram
+  have hGramKernel :
+      0 < ∫ b₁, ∫ b₂,
+        p b₁ * p b₂ *
+          periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullKernel
+            H beta b₁ b₂ ∂μ ∂μ := by
+    simpa only [
+      periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature_weighted_inner_eq_fullKernel] using
+      hGram
+  simpa [p, μ, n] using hGramKernel
 
 end
 
