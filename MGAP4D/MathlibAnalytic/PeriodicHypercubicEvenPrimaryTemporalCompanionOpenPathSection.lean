@@ -6,6 +6,10 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+local instance (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 /-- The canonical primary temporal companion always has the primary fixed-plane
 incidence pattern.  This packages the geometric fact that its three open-path
 incidences are steps `0,1,2`, while step `3` is the selected fixed boundary
@@ -70,11 +74,11 @@ theorem
           (PeriodicHypercubicEvenSideLength H)
           (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H j).1
           (0 : PeriodicHypercubicAxis) :=
-    congrArg Prod.fst hij
+    congrArg (fun e : PeriodicHypercubicEvenEdge H => e.1) hij
   have hdirection :
       (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H i).2 =
         (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H j).2 :=
-    congrArg Prod.snd hij
+    congrArg (fun e : PeriodicHypercubicEvenEdge H => e.2) hij
   have hsource' := congrArg
     (fun v => periodicHypercubicUnshift
       (PeriodicHypercubicEvenSideLength H) v (0 : PeriodicHypercubicAxis))
@@ -245,14 +249,14 @@ prescribed four-tuple exactly.  The two temporal incidences are identity and
 the middle upper spatial incidence carries the selected value. -/
 theorem
     periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenPath_section
-    (H : ℕ) (hH : 0 < H)
-    {Gauge : Type} [Group Gauge]
-    (u : Fin 4 → Gauge) (k : Fin 4) :
+    (H N : ℕ) (hH : 0 < H)
+    (u : Fin 4 → Matrix.specialUnitaryGroup (Fin N) ℂ) (k : Fin 4) :
     periodicHypercubicEvenPositiveBoundaryTemporalFiberedOpenPath
         (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfSection
           H hH u)
         (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion H k) =
       u k := by
+  let Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ
   let P := periodicHypercubicEvenEdgeOrbitPartition H
   let p := periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion H k
   let x :=
@@ -364,7 +368,7 @@ theorem
   funext k
   exact
     periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenPath_section
-      H hH u k
+      H N hH u k
 
 /-- Every abstract four-edge `SU(N)` tuple is realized by an actual positive
 open-half lattice configuration through the four primary temporal companions. -/
@@ -395,7 +399,7 @@ theorem
   funext k
   exact
     periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenPath_section
-      H hH u k
+      H N hH u k
 
 end
 
