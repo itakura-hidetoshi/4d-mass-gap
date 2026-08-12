@@ -26,7 +26,7 @@ theorem finite_real_inner_probe_separation_linearIndependent
     by_contra hc
     rcases hsep c hc with ⟨q, hq⟩
     apply hq
-    rw [hsum, inner_zero]
+    simpa [hsum]
   intro i
   simpa using congrFun hc0 i
 
