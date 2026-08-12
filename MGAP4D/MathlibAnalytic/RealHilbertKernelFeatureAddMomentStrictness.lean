@@ -15,7 +15,7 @@ This is the cancellation-free separation step used by finite Fock sums: the
 right coordinate is recovered by Mathlib's continuous projection `WithLp.sndL`,
 which commutes with the Bochner integral. -/
 theorem RealHilbertKernelFeature.add_weighted_integral_ne_zero_of_right
-    {X : Type*} [MeasurableSpace X]
+    {X : Type} [MeasurableSpace X]
     {kernel₁ kernel₂ : X → X → ℝ}
     (C₁ : RealHilbertKernelFeature X kernel₁)
     (C₂ : RealHilbertKernelFeature X kernel₂)
