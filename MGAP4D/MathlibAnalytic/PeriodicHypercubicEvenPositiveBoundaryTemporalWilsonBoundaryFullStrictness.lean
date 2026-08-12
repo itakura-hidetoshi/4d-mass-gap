@@ -229,10 +229,10 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompos
     (n : ℕ)
     (b c : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2) :
     inner ℝ
-        (periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature
-          H beta hbeta n).feature b
-        (periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature
-          H beta hbeta n).feature c =
+        ((periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature
+          H beta hbeta n).feature b)
+        ((periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature
+          H beta hbeta n).feature c) =
       periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullKernel H beta b c := by
   let C := periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature
     H beta hbeta n
