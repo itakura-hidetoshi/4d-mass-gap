@@ -26,7 +26,7 @@ theorem RealHilbertKernelFeature.nonnegSMul_weighted_integral_eq_sqrt_smul
         ∫ x, Real.sqrt c • (a x • C.feature x) ∂μ := by
       apply integral_congr_ae
       filter_upwards [] with x
-      simp [RealHilbertKernelFeature.nonnegSMul, smul_smul, mul_comm]
+      simpa [RealHilbertKernelFeature.nonnegSMul, smul_smul]
     _ = Real.sqrt c • (∫ x, a x • C.feature x ∂μ) := by
       exact integral_smul (Real.sqrt c) (fun x => a x • C.feature x)
 
