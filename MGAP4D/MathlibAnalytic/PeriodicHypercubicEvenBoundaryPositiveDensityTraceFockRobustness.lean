@@ -126,12 +126,14 @@ theorem
     simp only [d, Fin.cases_zero, zero_smul, zero_add, Fin.cases_succ]
     simp only [ContinuousMap.sum_apply, ContinuousMap.smul_apply,
       ContinuousMap.pow_apply, ContinuousMap.mul_apply, smul_eq_mul]
-    change
-      (∑ j : Fin (k + 1), c j * r b ^ ((j : ℕ) + 1)) =
-        r b * (∑ j : Fin (k + 1), c j * r b ^ (j : ℕ))
-    rw [Finset.mul_sum]
+    have hp :
+        p b = ∑ j : Fin (k + 1), c j * r b ^ (j : ℕ) := by
+      simp [p, r,
+        periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial]
+    rw [hp, Finset.mul_sum]
     apply Finset.sum_congr rfl
     intro j _hj
+    simp only [Fin.val_succ]
     rw [pow_succ]
     ring
   have hshiftLp :
