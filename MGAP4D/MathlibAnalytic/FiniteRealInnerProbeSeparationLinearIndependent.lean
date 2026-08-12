@@ -1,4 +1,4 @@
-import Mathlib.LinearAlgebra.InnerProductSpace.Basic
+import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.LinearAlgebra.LinearIndependent.Defs
 
 namespace MGAP4D
