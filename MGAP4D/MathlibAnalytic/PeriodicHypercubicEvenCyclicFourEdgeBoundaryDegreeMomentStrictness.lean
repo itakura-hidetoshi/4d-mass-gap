@@ -1,6 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenCyclicFourEdgeWilsonAnalysisPositiveDegreeWitnessLimit
 import MGAP4D.MathlibAnalytic.RealHilbertKernelFeatureWeightedGramStrictness
-import Mathlib.Tactic.FunProp
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -62,38 +61,39 @@ theorem
             H n).feature b)
       (periodicHypercubicEvenBoundaryMarginalMeasure
         H 2 cyclicFourEdgeBoundaryDegreeStrictnessTwoRankPositive beta hbeta) := by
+  let C₀ := specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseFeature.pow n
   let C :=
     periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeDegreeFeature H n
   let word := periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeWord H
   let p := periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial H k c
   have hWord : Continuous word := by
-    dsimp [word, periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeWord]
-    fun_prop
+    apply continuous_pi
+    intro j
+    simpa [word, periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeWord] using
+      (continuous_apply
+        (periodicHypercubicEvenPrimarySpatialPlaquetteFixedEdgeEmbedding H j))
   have hCoordinateKernel : ∀ j : Fin 4,
       Continuous fun q :
         (Fin 4 → Matrix.specialUnitaryGroup (Fin 2) ℂ) ×
           (Fin 4 → Matrix.specialUnitaryGroup (Fin 2) ℂ) =>
         specialUnitaryNormalizedTraceRelativeKernel 2 (q.1 j) (q.2 j) := by
     intro j
-    exact continuous_specialUnitaryNormalizedTraceRelativeKernel_two.comp (by fun_prop)
+    exact continuous_specialUnitaryNormalizedTraceRelativeKernel_two.comp
+      (((continuous_apply j).comp continuous_fst).prod_mk
+        ((continuous_apply j).comp continuous_snd))
   have hBaseKernel : Continuous fun q :
       (Fin 4 → Matrix.specialUnitaryGroup (Fin 2) ℂ) ×
         (Fin 4 → Matrix.specialUnitaryGroup (Fin 2) ℂ) =>
       specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseKernel q.1 q.2 ^ n := by
-    simpa [specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseKernel] using
-      (((hCoordinateKernel 2).mul (hCoordinateKernel 3)).mul
-        ((hCoordinateKernel 0).mul (hCoordinateKernel 1))).pow n
-  have hKernel : Continuous fun q :
-      PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 ×
-        PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
-      specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseKernel
-        (word q.1) (word q.2) ^ n := by
-    exact hBaseKernel.comp
-      ((hWord.comp continuous_fst).prod_mk (hWord.comp continuous_snd))
+    unfold specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseKernel
+    exact (((hCoordinateKernel 2).mul (hCoordinateKernel 3)).mul
+      ((hCoordinateKernel 0).mul (hCoordinateKernel 1))).pow n
+  have hBaseFeature : Continuous C₀.feature :=
+    RealHilbertKernelFeature.continuous_feature_of_continuous_kernel C₀ hBaseKernel
   have hFeature : Continuous C.feature := by
-    simpa [C, word,
+    simpa [C, C₀, word,
       periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeDegreeFeature] using
-      RealHilbertKernelFeature.continuous_feature_of_continuous_kernel C hKernel
+      hBaseFeature.comp hWord
   have hRelativeSelf : ∀ g : Matrix.specialUnitaryGroup (Fin 2) ℂ,
       specialUnitaryNormalizedTraceRelativeKernel 2 g g = 1 := by
     intro g
@@ -105,10 +105,11 @@ theorem
     intro b
     apply RealHilbertKernelFeature.feature_norm_eq_one
     intro x
-    simpa [C, word,
-      periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeDegreeFeature,
-      specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseKernel,
-      hRelativeSelf]
+    change
+      specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseKernel
+          (word x) (word x) ^ n = 1
+    simp only [specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseKernel,
+      hRelativeSelf, one_mul, one_pow]
   have hWeighted : Continuous fun b => p b • C.feature b :=
     p.continuous.smul hFeature
   refine Integrable.of_bound hWeighted.aestronglyMeasurable ‖p‖ ?_
@@ -180,6 +181,7 @@ theorem
       periodicHypercubicEvenBoundaryMarginalPrimarySpatialPlaquetteNormalizedTracePolynomial_fourEdgeDegreeFeature_integrable
         H beta hbeta k c n
   intro hzero
+  change (∫ b, p b • C.feature b ∂μ) = 0 at hzero
   apply hq
   calc
     (∫ b,
@@ -190,11 +192,15 @@ theorem
         ∫ b, inner ℝ r (p b • C.feature b) ∂μ := by
       apply integral_congr_ae
       filter_upwards [] with b
-      rw [real_inner_smul_right, real_inner_smul_right]
+      change
+        p b * inner ℝ q
+            ((periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature
+              H n).feature b) =
+          inner ℝ r (p b • C.feature b)
+      rw [real_inner_smul_right]
       rw [specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback_inner_boundaryFourEdgeDegreeFeature]
-      rfl
     _ = inner ℝ r (∫ b, p b • C.feature b ∂μ) := integral_inner hIntegrable r
-    _ = 0 := by simp [hzero]
+    _ = 0 := by rw [hzero]; simp
 
 /-- The genuine four-edge diagonal degree kernel therefore has a strictly
 positive weighted Gram integral whenever it is detected by a nonzero cyclic
