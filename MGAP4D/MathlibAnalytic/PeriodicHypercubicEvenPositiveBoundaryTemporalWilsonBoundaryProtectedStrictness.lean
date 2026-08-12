@@ -102,28 +102,6 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullKernel_s
     (periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryLegConfiguration H)
   simpa [periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullKernel] using Cpull
 
-/-- The scalar weighted-Gram value of the protected selected degree.  Naming
-this quantity keeps the strictness theorem reusable while retaining every
-literal residual degree-zero factor. -/
-noncomputable def periodicHypercubicEvenBoundaryMarginalProtectedPositiveBoundaryWilsonSelectedDegreeGramValue
-    (H : ℕ)
-    (beta : ℝ)
-    (k n : ℕ)
-    (c : Fin (k + 1) → ℝ) : ℝ :=
-  ((Real.exp (-beta)) ^
-      (periodicHypercubicEvenPositiveBoundaryTemporalResidualPlaquettes H).card *
-    specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeCoefficient beta n) *
-    (∫ b₁, ∫ b₂,
-      inner ℝ
-        (periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature H k c n b₁)
-        (periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature H k c n b₂)
-      ∂(periodicHypercubicEvenBoundaryMarginalMeasure
-        H 2 positiveBoundaryTemporalWilsonBoundaryProtectedStrictnessTwoRankPositive beta
-        (le_of_lt (lt_of_lt_of_le (Real.exp_pos (-beta)) (by positivity))))
-      ∂(periodicHypercubicEvenBoundaryMarginalMeasure
-        H 2 positiveBoundaryTemporalWilsonBoundaryProtectedStrictnessTwoRankPositive beta
-        (le_of_lt (lt_of_lt_of_le (Real.exp_pos (-beta)) (by positivity)))))
-
 /-- A cyclic dual probe that detects the genuine degree-`n` source produces a
 strictly positive protected component inside the full positive-boundary Wilson
 sector. -/
