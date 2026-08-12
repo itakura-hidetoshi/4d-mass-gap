@@ -188,13 +188,24 @@ theorem
         have hadj :=
           specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback_inner_boundaryFourEdgeDegreeFeatureValue
             H n q b
-        rw [real_inner_smul_right, real_inner_smul_right]
-        simpa [q₄, C₀,
-          periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeDegreeFeatureValue] using
-          congrArg (fun z : ℝ => p b * z) hadj.symm
+        calc
+          inner ℝ q (p b • T.feature b) =
+              p b * inner ℝ q (T.feature b) := by
+            rw [real_inner_smul_right]
+          _ = p b * inner ℝ q₄ (C₀.feature b) := by
+            simpa [q₄, C₀,
+              periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeDegreeFeatureValue] using
+              congrArg (fun z : ℝ => p b * z) hadj.symm
+          _ = inner ℝ q₄ (p b • C₀.feature b) := by
+            symm
+            rw [real_inner_smul_right]
       _ = inner ℝ q₄ (∫ b, p b • C₀.feature b ∂ν) :=
         integral_inner hSourceIntegrable q₄
-      _ = 0 := by rw [hzero, inner_zero_right]
+      _ = 0 := by
+        calc
+          inner ℝ q₄ (∫ b, p b • C₀.feature b ∂ν) =
+              inner ℝ q₄ 0 := congrArg (fun z => inner ℝ q₄ z) hzero
+          _ = 0 := inner_zero_right _
   let S₀ := periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeWilsonSelectedDegreeFeature
     H beta hbeta.le n
   let s := specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeCoefficient beta n
@@ -259,6 +270,17 @@ theorem
         inner ℝ (p b₁ • C.feature b₁) (p b₂ • C.feature b₂) ∂ν ∂ν :=
     C.weighted_inner_doubleIntegral_pos_of_integral_ne_zero
       ν p hFullIntegrable hFullMoment
+  have hFullGramLiteral :
+      0 < ∫ b₁, ∫ b₂,
+        inner ℝ
+          (p b₁ •
+            (periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature
+              H beta hbeta.le n).feature b₁)
+          (p b₂ •
+            (periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature
+              H beta hbeta.le n).feature b₂)
+          ∂ν ∂ν := by
+    simpa [C] using hFullGram
   refine ⟨i, hi, q, ?_, ?_, ?_⟩
   · simpa [q, T, p, ν, μ, n] using hq
   · simpa [C₀, p, ν, μ, n,
@@ -271,7 +293,7 @@ theorem
               H beta b₁ b₂ ∂ν ∂ν := by
       simpa only [
         periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullDecompositionFeature_weighted_inner_eq_fullKernel] using
-        hFullGram
+        hFullGramLiteral
     simpa [p, ν, μ, n] using hKernelGram
 
 end
