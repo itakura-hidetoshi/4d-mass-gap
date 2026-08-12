@@ -43,40 +43,6 @@ theorem RealHilbertKernelFeature.add_weighted_integral_ne_zero_of_right
     hproj.trans hzeroProjected
   simpa [RealHilbertKernelFeature.add] using hproj0
 
-/-- Weighting a nonnegative scalar rescaling of a Hilbert feature commutes with
-Bochner integration.  This is the exact bridge between the square-root Taylor
-coefficient used by `nonnegSMul` and the corresponding degree moment. -/
-theorem RealHilbertKernelFeature.nonnegSMul_weighted_integral_eq
-    {X : Type} [MeasurableSpace X]
-    {kernel : X → X → ℝ}
-    (C : RealHilbertKernelFeature X kernel)
-    (μ : Measure X)
-    (a : X → ℝ)
-    (c : ℝ) (hc : 0 ≤ c) :
-    (∫ x,
-      a x • (RealHilbertKernelFeature.nonnegSMul c hc C).feature x ∂μ) =
-      Real.sqrt c • (∫ x, a x • C.feature x ∂μ) := by
-  rw [← integral_smul]
-  apply integral_congr_ae
-  exact Filter.Eventually.of_forall (fun x => by
-    simp [RealHilbertKernelFeature.nonnegSMul, smul_smul, mul_comm])
-
-/-- Hence a nonzero square-root-scaled degree moment is already a nonzero
-Bochner moment in the actual `nonnegSMul` Fock component. -/
-theorem RealHilbertKernelFeature.nonnegSMul_weighted_integral_ne_zero
-    {X : Type} [MeasurableSpace X]
-    {kernel : X → X → ℝ}
-    (C : RealHilbertKernelFeature X kernel)
-    (μ : Measure X)
-    (a : X → ℝ)
-    (c : ℝ) (hc : 0 ≤ c)
-    (hScaled :
-      Real.sqrt c • (∫ x, a x • C.feature x ∂μ) ≠ 0) :
-    (∫ x,
-      a x • (RealHilbertKernelFeature.nonnegSMul c hc C).feature x ∂μ) ≠ 0 := by
-  rw [RealHilbertKernelFeature.nonnegSMul_weighted_integral_eq C μ a c hc]
-  exact hScaled
-
 end
 
 end MathlibAnalytic
