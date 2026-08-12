@@ -134,9 +134,25 @@ theorem
           (x (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionStepTwoPositiveEdge
             H hH k))⁻¹) :=
     (h0.mul h1).mul h2.inv
-  simpa only [
-    periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionFiberedOpenPath_eq_coordinates]
-    using hcoordinates
+  have hfun :
+      (fun x : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+          (Matrix.specialUnitaryGroup (Fin N) ℂ) =>
+        periodicHypercubicEvenPositiveBoundaryTemporalFiberedOpenPath x
+          (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion H k)) =
+      (fun x : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+          (Matrix.specialUnitaryGroup (Fin N) ℂ) =>
+        x (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionStepZeroPositiveEdge
+            H hH k) *
+          x (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionUpperSpatialEdgeEmbedding
+            H hH k) *
+          (x (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionStepTwoPositiveEdge
+            H hH k))⁻¹) := by
+    funext x
+    exact
+      periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionFiberedOpenPath_eq_coordinates
+        H N hH x k
+  rw [hfun]
+  exact hcoordinates
 
 end
 
