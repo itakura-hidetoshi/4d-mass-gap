@@ -45,6 +45,12 @@ local instance boundaryPositiveDensityTraceFockRobustnessSU2Nontrivial :
       (U : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
   norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
 
+local instance boundaryPositiveDensityTraceFockRobustnessHaarOpenPos :
+    Measure.IsOpenPosMeasure
+      (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  dsimp [normalizedCompactHaar]
+  infer_instance
+
 local instance boundaryPositiveDensityTraceFockRobustnessBoundaryHaarFinite
     (H : ℕ) :
     IsFiniteMeasure (periodicHypercubicEvenBoundaryHaarMeasure H 2) := by
@@ -119,12 +125,14 @@ theorem
     rw [Fin.sum_univ_succ]
     simp only [d, Fin.cases_zero, zero_smul, zero_add, Fin.cases_succ]
     simp only [ContinuousMap.sum_apply, ContinuousMap.smul_apply,
-      ContinuousMap.pow_apply, ContinuousMap.mul_apply]
+      ContinuousMap.pow_apply, ContinuousMap.mul_apply, smul_eq_mul]
+    change
+      (∑ j : Fin (k + 1), c j * r b ^ ((j : ℕ) + 1)) =
+        r b * (∑ j : Fin (k + 1), c j * r b ^ (j : ℕ))
     rw [Finset.mul_sum]
     apply Finset.sum_congr rfl
     intro j _hj
-    simp [p, periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial,
-      pow_succ]
+    rw [pow_succ]
     ring
   have hshiftLp :
       (∑ j : Fin (k + 2), d j • v j) =
@@ -146,15 +154,25 @@ theorem
       inner ℝ
         (ContinuousMap.toLp (E := ℝ) 2 ν ℝ (r ^ ((i : ℕ) + 1)))
         (ContinuousMap.toLp (E := ℝ) 2 ν ℝ p) := by
-    rw [MeasureTheory.ContinuousMap.inner_toLp,
-      MeasureTheory.ContinuousMap.inner_toLp]
-    apply integral_congr_ae
-    filter_upwards [] with b
-    simp only [ContinuousMap.pow_apply, ContinuousMap.mul_apply]
-    rw [periodicHypercubicEven_real_inner_eq_mul,
-      periodicHypercubicEven_real_inner_eq_mul]
-    rw [pow_succ]
-    ring
+    calc
+      inner ℝ
+          (ContinuousMap.toLp (E := ℝ) 2 ν ℝ (r ^ (i : ℕ)))
+          (ContinuousMap.toLp (E := ℝ) 2 ν ℝ (r * p)) =
+        ∫ b, (r * p) b * (r ^ (i : ℕ)) b ∂ν := by
+          simpa using MeasureTheory.ContinuousMap.inner_toLp ν
+            (r ^ (i : ℕ)) (r * p)
+      _ = ∫ b, p b * (r ^ ((i : ℕ) + 1)) b ∂ν := by
+        apply integral_congr_ae
+        filter_upwards [] with b
+        simp only [ContinuousMap.mul_apply, ContinuousMap.pow_apply]
+        rw [pow_succ]
+        ring
+      _ = inner ℝ
+          (ContinuousMap.toLp (E := ℝ) 2 ν ℝ (r ^ ((i : ℕ) + 1)))
+          (ContinuousMap.toLp (E := ℝ) 2 ν ℝ p) := by
+        symm
+        simpa using MeasureTheory.ContinuousMap.inner_toLp ν
+          (r ^ ((i : ℕ) + 1)) p
   refine ⟨i, Nat.succ_pos _, ?_⟩
   have htarget := hinnerShift ▸ hi'
   simpa [ν, r, p] using htarget
