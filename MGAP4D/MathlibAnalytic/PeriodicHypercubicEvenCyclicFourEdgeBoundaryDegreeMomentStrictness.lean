@@ -60,7 +60,7 @@ private theorem continuous_cyclicFourEdgeCoordinateKernel
       (Fin 4 → Matrix.specialUnitaryGroup (Fin 2) ℂ) ×
         (Fin 4 → Matrix.specialUnitaryGroup (Fin 2) ℂ) =>
       (q.1 j, q.2 j) :=
-    ((continuous_apply j).comp continuous_fst).prod_mk
+    ((continuous_apply j).comp continuous_fst).prodMk
       ((continuous_apply j).comp continuous_snd)
   exact continuous_specialUnitaryNormalizedTraceRelativeKernel_two.comp hpair
 
@@ -123,9 +123,7 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeDegreeFeatu
   let C := specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseFeature.pow n
   apply RealHilbertKernelFeature.feature_norm_eq_one C
   intro x
-  change specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseKernel
-      (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeWord H x)
-      (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeWord H x) ^ n = 1
+  change specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseKernel x x ^ n = 1
   have hRelativeSelf : ∀ g : Matrix.specialUnitaryGroup (Fin 2) ℂ,
       specialUnitaryNormalizedTraceRelativeKernel 2 g g = 1 := by
     intro g
