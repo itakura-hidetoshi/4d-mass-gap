@@ -59,7 +59,8 @@ theorem
     (hsep :
       ∀ c : Fin (k + 1) → ℝ, c ≠ 0 →
         ∃ n : ℕ,
-          ∃ q : (specialUnitaryTwoNormalizedTraceHilbertKernelFeature.pow n).FeatureHilbert,
+          ∃ q : (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature
+              H n).FeatureHilbert,
             inner ℝ
                 (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfDegreeDualProbeL2
                   H n q)
@@ -93,7 +94,8 @@ theorem
     (hsep :
       ∀ c : Fin (k + 1) → ℝ, c ≠ 0 →
         ∃ n : ℕ, 0 < n ∧
-          ∃ q : (specialUnitaryTwoNormalizedTraceHilbertKernelFeature.pow n).FeatureHilbert,
+          ∃ q : (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature
+              H n).FeatureHilbert,
             inner ℝ
                 (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfDegreeDualProbeL2
                   H n q)
