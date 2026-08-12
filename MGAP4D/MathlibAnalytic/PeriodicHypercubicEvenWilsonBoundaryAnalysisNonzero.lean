@@ -62,7 +62,13 @@ local instance wilsonBoundaryAnalysisNonzeroOpenHalfNeZero (H N : ℕ) :
 local instance wilsonBoundaryAnalysisNonzeroProductNeZero (H N : ℕ) :
     NeZero ((periodicHypercubicEvenBoundaryHaarMeasure H N).prod
       (periodicHypercubicEvenOpenHalfHaarMeasure H N)) := by
-  infer_instance
+  let μ := periodicHypercubicEvenBoundaryHaarMeasure H N
+  let ν := periodicHypercubicEvenOpenHalfHaarMeasure H N
+  refine ⟨Measure.measure_univ_ne_zero.mp ?_⟩
+  rw [← Set.univ_prod_univ, Measure.prod_prod]
+  exact mul_ne_zero
+    (Measure.measure_univ_ne_zero.mpr (NeZero.ne μ))
+    (Measure.measure_univ_ne_zero.mpr (NeZero.ne ν))
 
 /-- Continuous constant-one vector on the actual shared-boundary compact space. -/
 noncomputable def periodicHypercubicEvenBoundaryConstantOneContinuous
@@ -272,8 +278,8 @@ theorem periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator_constant
   have hpos :=
     periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator_constantOne_inner_pos
       H N hN beta hbeta
-  rw [hzero, zero_inner] at hpos
-  exact lt_irrefl 0 hpos
+  rw [hzero] at hpos
+  simpa using hpos
 
 /-- The actual compact Wilson boundary-to-open-half analysis operator is
 nonzero.  No cancellation, rank, or marginal-transport assumption is used. -/
@@ -288,8 +294,7 @@ theorem periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator_ne_zero
     periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator_constantOne_ne_zero
       H N hN beta hbeta
   apply happly
-  rw [hzero]
-  exact ContinuousLinearMap.zero_apply _
+  simp [hzero]
 
 /-- The actual `A†A` Wilson boundary Gram factor has a strictly positive
 quadratic form on the constant-one boundary vector. -/
@@ -320,8 +325,8 @@ theorem periodicHypercubicEvenWilsonBoundaryGramFeatureFactorizedOperator_ne_zer
   have hpos :=
     periodicHypercubicEvenWilsonBoundaryGramFeatureFactorizedOperator_constantOne_inner_self_pos
       H N hN beta hbeta
-  rw [hzero, ContinuousLinearMap.zero_apply, zero_inner] at hpos
-  exact lt_irrefl 0 hpos
+  rw [hzero] at hpos
+  simpa using hpos
 
 end
 
