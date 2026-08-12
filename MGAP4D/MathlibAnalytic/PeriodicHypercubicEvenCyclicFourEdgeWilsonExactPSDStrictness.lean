@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenCyclicFourEdgeBoundaryDegreeMomentStrictness
+import MGAP4D.MathlibAnalytic.RealHilbertKernelFeatureNonnegSMulMomentStrictness
 import MGAP4D.MathlibAnalytic.SpecialUnitaryWilsonSelectedTaylorPSD
 import Mathlib.Tactic
 
@@ -296,6 +297,14 @@ theorem specialUnitaryTwoCyclicFourEdgeWilsonPartialSelectedRemainderKernel_tend
       (𝓝
         (specialUnitaryTwoCyclicFourEdgeWilsonSelectedRemainderKernel
           beta selected u v)) := by
+  have hProduct :
+      Tendsto
+        (fun degree =>
+          specialUnitaryTwoCyclicFourEdgeWilsonPartialProductKernel beta degree u v)
+        atTop
+        (𝓝 (specialUnitaryTwoCyclicFourEdgeWilsonProductKernel beta u v)) := by
+    simpa [specialUnitaryTwoCyclicFourEdgeWilsonProductKernel] using
+      specialUnitaryTwoCyclicFourEdgeWilsonPartialProductKernel_tendsto beta u v
   have hBase :
       Tendsto
         (fun degree =>
@@ -304,12 +313,8 @@ theorem specialUnitaryTwoCyclicFourEdgeWilsonPartialSelectedRemainderKernel_tend
         atTop
         (𝓝
           (specialUnitaryTwoCyclicFourEdgeWilsonProductKernel beta u v -
-            specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeKernel beta selected u v)) := by
-    exact
-      (by
-        simpa [specialUnitaryTwoCyclicFourEdgeWilsonProductKernel] using
-          specialUnitaryTwoCyclicFourEdgeWilsonPartialProductKernel_tendsto beta u v).sub
-        tendsto_const_nhds
+            specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeKernel beta selected u v)) :=
+    hProduct.sub tendsto_const_nhds
   have hShift :
       Tendsto
         (fun tail =>
@@ -757,9 +762,14 @@ theorem periodicHypercubicEvenBoundaryMarginalNormalizedTracePolynomial_exists_p
     C.weighted_inner_doubleIntegral_pos_of_integral_ne_zero
       μ p hIntegrable hFullMoment
   refine ⟨i, hi, q, hq, ?_⟩
-  simpa [C, R, S, p, μ, n,
-    periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeWilsonDecompositionFeature] using
-    hGram
+  have hC :
+      C = periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeWilsonDecompositionFeature
+        H beta hbeta.le n := by
+    rfl
+  rw [hC] at hGram
+  simp only [
+    periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeWilsonDecompositionFeature_weighted_inner_eq_exactKernel] at hGram
+  simpa [p, μ, n] using hGram
 
 end
 
