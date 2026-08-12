@@ -96,22 +96,6 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonAction_eq_sum
   · simp [propositionIndicator, hpositive]
   · simp [propositionIndicator, hpositive]
 
-/-- The selected four-companion Wilson action is exactly the finite sum over
-that embedded four-element plaquette block. -/
-theorem periodicHypercubicEvenPrimarySpatialPlaquetteFourTemporalCompanionWilsonAction_eq_sum
-    (H : ℕ)
-    (A : PeriodicHypercubicEvenEdge H →
-      Matrix.specialUnitaryGroup (Fin 2) ℂ) :
-    periodicHypercubicEvenPrimarySpatialPlaquetteFourTemporalCompanionWilsonAction H A =
-      ∑ p ∈ periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionSet H,
-        specialUnitaryWilsonPlaquetteEnergy 2
-          (periodicHypercubicPlaquetteHolonomy A p) := by
-  classical
-  simp [periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionSet,
-    periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionEmbedding,
-    periodicHypercubicEvenPrimarySpatialPlaquetteFourTemporalCompanionWilsonAction]
-  ring
-
 private theorem real_exp_neg_mul_finset_sum_eq_prod
     {ι : Type*}
     (s : Finset ι)
@@ -131,7 +115,7 @@ private theorem real_exp_neg_mul_finset_sum_eq_prod
 /-- Literal one-plaquette Wilson factor on a positive-boundary temporal
 plaquette. -/
 noncomputable def periodicHypercubicEvenPositiveBoundaryTemporalWilsonPlaquetteFactor
-    (N : ℕ)
+    (H N : ℕ)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ)
     (A : PeriodicHypercubicEvenEdge H →
@@ -152,8 +136,8 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoltzmannWeight_eq_p
     periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoltzmannWeight H N beta A =
       ∏ p ∈ periodicHypercubicEvenPositiveBoundaryTemporalPlaquettes H,
         periodicHypercubicEvenPositiveBoundaryTemporalWilsonPlaquetteFactor
-          N beta A p := by
-  rw [periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoltzmannWeight]
+          H N beta A p := by
+  unfold periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoltzmannWeight
   rw [periodicHypercubicEvenPositiveBoundaryTemporalWilsonAction_eq_sum]
   exact real_exp_neg_mul_finset_sum_eq_prod
     (periodicHypercubicEvenPositiveBoundaryTemporalPlaquettes H) beta
@@ -163,13 +147,13 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoltzmannWeight_eq_p
 /-- Every literal positive-boundary temporal plaquette factor is the standard
 one-plaquette Wilson central function. -/
 theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonPlaquetteFactor_eq_centralFunction
-    (N : ℕ)
+    (H N : ℕ)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ)
     (A : PeriodicHypercubicEvenEdge H →
       Matrix.specialUnitaryGroup (Fin N) ℂ)
     (p : PeriodicHypercubicEvenPlaquette H) :
-    periodicHypercubicEvenPositiveBoundaryTemporalWilsonPlaquetteFactor N beta A p =
+    periodicHypercubicEvenPositiveBoundaryTemporalWilsonPlaquetteFactor H N beta A p =
       specialUnitaryWilsonBoltzmannCentralFunction N beta
         (periodicHypercubicPlaquetteHolonomy A p) := by
   rfl
