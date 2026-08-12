@@ -23,9 +23,6 @@ private theorem real_exp_neg_mul_finset_sum_eq_prod
           (-beta * f a) + (-beta * ∑ i ∈ s, f i) by ring]
       rw [Real.exp_add, ih]
 
-/-- The actual one-plaquette factor appearing in the full positive-boundary
-temporal Wilson product.  Plaquettes outside the positive-boundary temporal
-sector contribute the literal multiplicative unit. -/
 noncomputable def periodicHypercubicEvenPositiveBoundaryTemporalWilsonPlaquetteFactor
     (H N : ℕ)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
@@ -33,17 +30,12 @@ noncomputable def periodicHypercubicEvenPositiveBoundaryTemporalWilsonPlaquetteF
     (A : PeriodicHypercubicEvenEdge H →
       Matrix.specialUnitaryGroup (Fin N) ℂ)
     (p : PeriodicHypercubicEvenPlaquette H) : ℝ :=
-  if periodicHypercubicEvenPositiveBoundaryTemporalPlaquette p then
-    Real.exp
-      (-beta * specialUnitaryWilsonPlaquetteEnergy N
-        (periodicHypercubicPlaquetteHolonomy A p))
-  else
-    1
+  Real.exp
+    (-beta * propositionIndicator
+      (periodicHypercubicEvenPositiveBoundaryTemporalPlaquette p)
+      (specialUnitaryWilsonPlaquetteEnergy N
+        (periodicHypercubicPlaquetteHolonomy A p)))
 
-/-- The positive-boundary temporal Wilson Boltzmann weight is exactly the
-finite product of its actual plaquette factors over the full plaquette type.
-No crossing plaquette is discarded: inactive plaquettes contribute the degree-
-zero multiplicative unit through the sector indicator. -/
 theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoltzmannWeight_eq_prod_plaquetteFactor
     (H N : ℕ)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
@@ -54,20 +46,16 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoltzmannWeight_eq_p
       ∏ p ∈ (Finset.univ : Finset (PeriodicHypercubicEvenPlaquette H)),
         periodicHypercubicEvenPositiveBoundaryTemporalWilsonPlaquetteFactor
           H N beta A p := by
-  classical
   unfold periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoltzmannWeight
   unfold periodicHypercubicEvenPositiveBoundaryTemporalWilsonAction
-  rw [real_exp_neg_mul_finset_sum_eq_prod]
-  apply Finset.prod_congr rfl
-  intro p _hp
-  by_cases hpositive : periodicHypercubicEvenPositiveBoundaryTemporalPlaquette p
-  · simp [periodicHypercubicEvenPositiveBoundaryTemporalWilsonPlaquetteFactor,
-      propositionIndicator, hpositive]
-  · simp [periodicHypercubicEvenPositiveBoundaryTemporalWilsonPlaquetteFactor,
-      propositionIndicator, hpositive]
+  unfold periodicHypercubicEvenPositiveBoundaryTemporalWilsonPlaquetteFactor
+  exact real_exp_neg_mul_finset_sum_eq_prod
+    (Finset.univ : Finset (PeriodicHypercubicEvenPlaquette H)) beta
+    (fun p => propositionIndicator
+      (periodicHypercubicEvenPositiveBoundaryTemporalPlaquette p)
+      (specialUnitaryWilsonPlaquetteEnergy N
+        (periodicHypercubicPlaquetteHolonomy A p)))
 
-/-- On an active positive-boundary temporal plaquette, the product factor is
-exactly its physical one-plaquette Wilson Boltzmann factor. -/
 theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonPlaquetteFactor_eq_of_positiveBoundary
     {H N : ℕ}
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
@@ -81,10 +69,9 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonPlaquetteFactor_eq_o
       Real.exp
         (-beta * specialUnitaryWilsonPlaquetteEnergy N
           (periodicHypercubicPlaquetteHolonomy A p)) := by
-  simp [periodicHypercubicEvenPositiveBoundaryTemporalWilsonPlaquetteFactor, hp]
+  simp [periodicHypercubicEvenPositiveBoundaryTemporalWilsonPlaquetteFactor,
+    propositionIndicator, hp]
 
-/-- Outside the positive-boundary temporal sector, the corresponding product
-factor is exactly one. -/
 theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonPlaquetteFactor_eq_one_of_not_positiveBoundary
     {H N : ℕ}
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
@@ -95,7 +82,8 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonPlaquetteFactor_eq_o
     (hp : ¬ periodicHypercubicEvenPositiveBoundaryTemporalPlaquette p) :
     periodicHypercubicEvenPositiveBoundaryTemporalWilsonPlaquetteFactor
         H N beta A p = 1 := by
-  simp [periodicHypercubicEvenPositiveBoundaryTemporalWilsonPlaquetteFactor, hp]
+  simp [periodicHypercubicEvenPositiveBoundaryTemporalWilsonPlaquetteFactor,
+    propositionIndicator, hp]
 
 end
 
