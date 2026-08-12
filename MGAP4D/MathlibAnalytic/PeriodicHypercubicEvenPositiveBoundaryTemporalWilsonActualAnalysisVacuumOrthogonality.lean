@@ -160,7 +160,9 @@ theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_boundaryInput
         H 2 positiveBoundaryTemporalWilsonActualAnalysisVacuumOrthogonalityTwoRankPositive
         beta hbeta p.1 p.2 by exact hK]
   rw [show E p = f p.1 * g p.2 by exact hE]
-  rw [hg]
+  have hg' : g p.2 = (1 : ℝ) := by
+    simpa [Function.comp_apply, g] using hg
+  rw [hg']
   simp [periodicHypercubicEven_real_inner_eq_mul]
 
 /-- The open-half vacuum matrix coefficient of the actual Wilson analysis is
@@ -225,7 +227,9 @@ theorem periodicHypercubicEvenOpenHalfConstantOneL2_inner_analysis_eq_boundaryVa
             H 2 positiveBoundaryTemporalWilsonActualAnalysisVacuumOrthogonalityTwoRankPositive
             beta hbeta p.1 p.2 by exact hK]
       rw [show realL2ExternalTensor f g p = f p.1 * g p.2 by exact hE]
-      rw [hg]
+      have hg' : g p.2 = (1 : ℝ) := by
+        simpa [Function.comp_apply, g] using hg
+      rw [hg']
       simp [raw, periodicHypercubicEven_real_inner_eq_mul]
     _ = ∫ b, ∫ x, raw (b, x) ∂halfMeasure ∂boundaryMeasure := by
       exact MeasureTheory.integral_prod raw hraw
