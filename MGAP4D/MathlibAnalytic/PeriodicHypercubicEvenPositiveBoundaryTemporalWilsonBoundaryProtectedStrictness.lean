@@ -66,8 +66,7 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryLegConfigura
       periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeWord H b k := by
   simpa [periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryLegConfiguration,
     periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeWord] using
-    periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion_fiberedBoundaryLeg_eq
-      b k
+    periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion_fiberedBoundaryLeg_eq b k
 
 /-- The literal full positive-boundary temporal Wilson kernel on two actual
 shared-boundary configurations. -/
@@ -90,14 +89,12 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullKernel_s
     (selected : ℕ) :
     RealKernelPositiveSemidefiniteCertificate
       (PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2)
-      (fun b c =>
-        periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullKernel
-            H beta b c -
-          (Real.exp (-beta)) ^
-              (periodicHypercubicEvenPositiveBoundaryTemporalResidualPlaquettes H).card *
-            specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeKernel beta selected
-              (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeWord H b)
-              (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeWord H c)) := by
+      (fun b c => periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullKernel H beta b c -
+        (Real.exp (-beta)) ^
+            (periodicHypercubicEvenPositiveBoundaryTemporalResidualPlaquettes H).card *
+          specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeKernel beta selected
+            (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeWord H b)
+            (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeWord H c)) := by
   have C :=
     periodicHypercubicEvenPositiveBoundaryTemporalWilsonFullProduct_sub_residualScalar_mul_fourEdgeSelectedDegreeKernel_positiveSemidefiniteCertificate
       H beta hbeta selected
@@ -105,44 +102,49 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullKernel_s
     (periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryLegConfiguration H)
   simpa [periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoundaryFullKernel] using Cpull
 
-/-- A cyclic dual probe that detects the genuine degree-`n` source produces a
-strictly positive protected component inside the full positive-boundary Wilson
-sector.  Its coefficient contains both the literal residual degree-zero scalar
-and the exact four-edge Wilson selected Taylor coefficient. -/
-theorem periodicHypercubicEvenBoundaryMarginal_protectedPositiveBoundaryWilsonSelectedDegreeGram_pos_of_cyclicDualProbe
+/-- The scalar weighted-Gram value of the protected selected degree.  Naming
+this quantity keeps the strictness theorem reusable while retaining every
+literal residual degree-zero factor. -/
+noncomputable def periodicHypercubicEvenBoundaryMarginalProtectedPositiveBoundaryWilsonSelectedDegreeGramValue
     (H : ℕ)
     (beta : ℝ)
-    (hbeta : 0 < beta)
     (k n : ℕ)
-    (c : Fin (k + 1) → ℝ)
-    (q :
-      (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature
-        H n).FeatureHilbert)
-    (hq :
-      (∫ b,
-        inner ℝ q
-          (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial H k c b •
-            (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature
-              H n).feature b)
-        ∂(periodicHypercubicEvenBoundaryMarginalMeasure
-          H 2 positiveBoundaryTemporalWilsonBoundaryProtectedStrictnessTwoRankPositive
-          beta hbeta.le)) ≠ 0) :
-    0 <
-      ((Real.exp (-beta)) ^
-          (periodicHypercubicEvenPositiveBoundaryTemporalResidualPlaquettes H).card *
-        specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeCoefficient beta n) *
-        (∫ b₁, ∫ b₂,
-          inner ℝ
-            (periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature
-              H k c n b₁)
-            (periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature
-              H k c n b₂)
-          ∂(periodicHypercubicEvenBoundaryMarginalMeasure
-            H 2 positiveBoundaryTemporalWilsonBoundaryProtectedStrictnessTwoRankPositive
-            beta hbeta.le)
-          ∂(periodicHypercubicEvenBoundaryMarginalMeasure
-            H 2 positiveBoundaryTemporalWilsonBoundaryProtectedStrictnessTwoRankPositive
-            beta hbeta.le)) := by
+    (c : Fin (k + 1) → ℝ) : ℝ :=
+  ((Real.exp (-beta)) ^
+      (periodicHypercubicEvenPositiveBoundaryTemporalResidualPlaquettes H).card *
+    specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeCoefficient beta n) *
+    (∫ b₁, ∫ b₂,
+      inner ℝ
+        (periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature H k c n b₁)
+        (periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature H k c n b₂)
+      ∂(periodicHypercubicEvenBoundaryMarginalMeasure
+        H 2 positiveBoundaryTemporalWilsonBoundaryProtectedStrictnessTwoRankPositive beta
+        (le_of_lt (lt_of_lt_of_le (Real.exp_pos (-beta)) (by positivity))))
+      ∂(periodicHypercubicEvenBoundaryMarginalMeasure
+        H 2 positiveBoundaryTemporalWilsonBoundaryProtectedStrictnessTwoRankPositive beta
+        (le_of_lt (lt_of_lt_of_le (Real.exp_pos (-beta)) (by positivity)))))
+
+/-- A cyclic dual probe that detects the genuine degree-`n` source produces a
+strictly positive protected component inside the full positive-boundary Wilson
+sector. -/
+theorem periodicHypercubicEvenBoundaryMarginal_protectedPositiveBoundaryWilsonSelectedDegreeGram_pos_of_cyclicDualProbe
+    (H : ℕ) (beta : ℝ) (hbeta : 0 < beta) (k n : ℕ) (c : Fin (k + 1) → ℝ)
+    (q : (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature H n).FeatureHilbert)
+    (hq : (∫ b, inner ℝ q
+      (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial H k c b •
+        (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature H n).feature b)
+      ∂(periodicHypercubicEvenBoundaryMarginalMeasure H 2
+        positiveBoundaryTemporalWilsonBoundaryProtectedStrictnessTwoRankPositive beta hbeta.le)) ≠ 0) :
+    0 < ((Real.exp (-beta)) ^
+      (periodicHypercubicEvenPositiveBoundaryTemporalResidualPlaquettes H).card *
+      specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeCoefficient beta n) *
+      (∫ b₁, ∫ b₂, inner ℝ
+        (periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature H k c n b₁)
+        (periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature H k c n b₂)
+        ∂(periodicHypercubicEvenBoundaryMarginalMeasure H 2
+          positiveBoundaryTemporalWilsonBoundaryProtectedStrictnessTwoRankPositive beta hbeta.le)
+        ∂(periodicHypercubicEvenBoundaryMarginalMeasure H 2
+          positiveBoundaryTemporalWilsonBoundaryProtectedStrictnessTwoRankPositive beta hbeta.le)) := by
   have hGram :=
     periodicHypercubicEvenBoundaryMarginal_weightedFourEdgeDegreeFeature_gram_pos_of_cyclicDualProbe
       H beta hbeta.le k n c q hq
@@ -155,8 +157,7 @@ theorem periodicHypercubicEvenBoundaryMarginal_protectedPositiveBoundaryWilsonSe
     unfold specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeCoefficient
     exact pow_pos hTaylor _
   have hResidual :=
-    periodicHypercubicEvenPositiveBoundaryTemporalWilsonResidualDegreeZeroScalar_pos
-      H beta
+    periodicHypercubicEvenPositiveBoundaryTemporalWilsonResidualDegreeZeroScalar_pos H beta
   exact mul_pos (mul_pos hResidual hSelectedCoefficient) hGram
 
 /-- Every centered nonzero normalized-trace boundary polynomial at positive
@@ -164,58 +165,34 @@ coupling has a positive degree whose strict four-edge Fock Gram component is
 protected inside the complete literal positive-boundary temporal Wilson
 sector. -/
 theorem periodicHypercubicEvenBoundaryMarginalNormalizedTracePolynomial_exists_positiveDegree_protectedPositiveBoundaryWilsonSelectedGram_strict
-    (H : ℕ)
-    (beta : ℝ)
-    (hbeta : 0 < beta)
-    (k : ℕ)
-    (c : Fin (k + 1) → ℝ)
-    (hc : c ≠ 0)
-    (hzero :
-      inner ℝ
-        (ContinuousMap.toLp
-          (E := ℝ) 2
-          (periodicHypercubicEvenBoundaryMarginalMeasure
-            H 2 positiveBoundaryTemporalWilsonBoundaryProtectedStrictnessTwoRankPositive
-            beta hbeta.le) ℝ
-          (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceTwoBoundaryContinuous H ^
-            (0 : ℕ)))
-        (∑ j : Fin (k + 1), c j •
-          ContinuousMap.toLp
-            (E := ℝ) 2
-            (periodicHypercubicEvenBoundaryMarginalMeasure
-              H 2 positiveBoundaryTemporalWilsonBoundaryProtectedStrictnessTwoRankPositive
-              beta hbeta.le) ℝ
-            (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceTwoBoundaryContinuous H ^
-              (j : ℕ))) = 0) :
-    ∃ i : Fin (k + 1),
-      0 < (i : ℕ) ∧
-      ∃ q :
-        (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature
-          H (i : ℕ)).FeatureHilbert,
-        (∫ b,
-          inner ℝ q
-            (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial H k c b •
-              (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature
-                H (i : ℕ)).feature b)
-          ∂(periodicHypercubicEvenBoundaryMarginalMeasure
-            H 2 positiveBoundaryTemporalWilsonBoundaryProtectedStrictnessTwoRankPositive
-            beta hbeta.le)) ≠ 0 ∧
-        0 <
-          ((Real.exp (-beta)) ^
-              (periodicHypercubicEvenPositiveBoundaryTemporalResidualPlaquettes H).card *
-            specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeCoefficient beta (i : ℕ)) *
-            (∫ b₁, ∫ b₂,
-              inner ℝ
-                (periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature
-                  H k c (i : ℕ) b₁)
-                (periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature
-                  H k c (i : ℕ) b₂)
-              ∂(periodicHypercubicEvenBoundaryMarginalMeasure
-                H 2 positiveBoundaryTemporalWilsonBoundaryProtectedStrictnessTwoRankPositive
-                beta hbeta.le)
-              ∂(periodicHypercubicEvenBoundaryMarginalMeasure
-                H 2 positiveBoundaryTemporalWilsonBoundaryProtectedStrictnessTwoRankPositive
-                beta hbeta.le)) := by
+    (H : ℕ) (beta : ℝ) (hbeta : 0 < beta) (k : ℕ)
+    (c : Fin (k + 1) → ℝ) (hc : c ≠ 0)
+    (hzero : inner ℝ
+      (ContinuousMap.toLp (E := ℝ) 2
+        (periodicHypercubicEvenBoundaryMarginalMeasure H 2
+          positiveBoundaryTemporalWilsonBoundaryProtectedStrictnessTwoRankPositive beta hbeta.le) ℝ
+        (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceTwoBoundaryContinuous H ^ (0 : ℕ)))
+      (∑ j : Fin (k + 1), c j • ContinuousMap.toLp (E := ℝ) 2
+        (periodicHypercubicEvenBoundaryMarginalMeasure H 2
+          positiveBoundaryTemporalWilsonBoundaryProtectedStrictnessTwoRankPositive beta hbeta.le) ℝ
+        (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceTwoBoundaryContinuous H ^ (j : ℕ))) = 0) :
+    ∃ i : Fin (k + 1), 0 < (i : ℕ) ∧ ∃ q :
+      (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature H (i : ℕ)).FeatureHilbert,
+      (∫ b, inner ℝ q
+        (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial H k c b •
+          (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature H (i : ℕ)).feature b)
+        ∂(periodicHypercubicEvenBoundaryMarginalMeasure H 2
+          positiveBoundaryTemporalWilsonBoundaryProtectedStrictnessTwoRankPositive beta hbeta.le)) ≠ 0 ∧
+      0 < ((Real.exp (-beta)) ^
+        (periodicHypercubicEvenPositiveBoundaryTemporalResidualPlaquettes H).card *
+        specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeCoefficient beta (i : ℕ)) *
+        (∫ b₁, ∫ b₂, inner ℝ
+          (periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature H k c (i : ℕ) b₁)
+          (periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature H k c (i : ℕ) b₂)
+          ∂(periodicHypercubicEvenBoundaryMarginalMeasure H 2
+            positiveBoundaryTemporalWilsonBoundaryProtectedStrictnessTwoRankPositive beta hbeta.le)
+          ∂(periodicHypercubicEvenBoundaryMarginalMeasure H 2
+            positiveBoundaryTemporalWilsonBoundaryProtectedStrictnessTwoRankPositive beta hbeta.le)) := by
   rcases
     periodicHypercubicEvenBoundaryMarginalNormalizedTracePolynomial_exists_positiveDegree_fourEdgeDiagonalGram_strict
       H beta hbeta k c hc hzero with
