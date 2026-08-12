@@ -47,6 +47,7 @@ marginal.  This is the source-carrier analogue of the existing cyclic target
 integrability theorem: the four-edge word is continuous, the edgewise degree
 kernel is continuous, and its Hilbert feature has unit norm because every
 normalized relative-trace kernel has unit diagonal. -/
+set_option maxHeartbeats 800000 in
 theorem
     periodicHypercubicEvenBoundaryMarginalPrimarySpatialPlaquetteNormalizedTracePolynomial_fourEdgeDegreeFeature_integrable
     (H : ℕ)
@@ -192,15 +193,31 @@ theorem
         ∫ b, inner ℝ r (p b • C.feature b) ∂μ := by
       apply integral_congr_ae
       filter_upwards [] with b
-      change
-        p b * inner ℝ q
-            ((periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature
-              H n).feature b) =
-          inner ℝ r (p b • C.feature b)
-      rw [real_inner_smul_right]
-      rw [specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback_inner_boundaryFourEdgeDegreeFeature]
+      calc
+        inner ℝ q
+            (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial H k c b •
+              (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature
+                H n).feature b) =
+            periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial H k c b *
+              inner ℝ q
+                ((periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature
+                  H n).feature b) := by
+            rw [real_inner_smul_right]
+        _ = periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial H k c b *
+              inner ℝ r
+                ((periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeDegreeFeature
+                  H n).feature b) := by
+            rw [specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback_inner_boundaryFourEdgeDegreeFeature]
+        _ = inner ℝ r
+              (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial H k c b •
+                (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeDegreeFeature
+                  H n).feature b) := by
+            rw [real_inner_smul_right]
+        _ = inner ℝ r (p b • C.feature b) := by rfl
     _ = inner ℝ r (∫ b, p b • C.feature b ∂μ) := integral_inner hIntegrable r
-    _ = 0 := by rw [hzero]; simp
+    _ = 0 := by
+      have h := congrArg (fun z => inner ℝ r z) hzero
+      simpa using h
 
 /-- The genuine four-edge diagonal degree kernel therefore has a strictly
 positive weighted Gram integral whenever it is detected by a nonzero cyclic
