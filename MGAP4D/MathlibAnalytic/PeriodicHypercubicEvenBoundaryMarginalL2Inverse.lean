@@ -79,9 +79,11 @@ theorem periodicHypercubicEvenBoundaryMarginalToHaarL2Function_memLp
   apply (memLp_two_iff_integrable_sq
     (periodicHypercubicEvenBoundaryMarginalToHaarL2Function_aestronglyMeasurable
       H N hN beta hbeta g)).2
-  have hg : Integrable (fun b => (g b) ^ 2)
-      (periodicHypercubicEvenBoundaryMarginalMeasure H N hN beta hbeta) :=
-    (Lp.memLp g).integrable_sq
+  let f : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H N → ℝ :=
+    fun b => (g b) ^ 2
+  have hg : Integrable f
+      (periodicHypercubicEvenBoundaryMarginalMeasure H N hN beta hbeta) := by
+    simpa [f] using (Lp.memLp g).integrable_sq
   rw [periodicHypercubicEvenBoundaryMarginalMeasure_eq_withDensity_nnreal
     H N hN beta hbeta] at hg
   rw [integrable_withDensity_iff_integrable_smul
@@ -92,7 +94,8 @@ theorem periodicHypercubicEvenBoundaryMarginalToHaarL2Function_memLp
   change
     (periodicHypercubicEvenBoundaryVacuumMoment H N hN beta hbeta b * g b) ^ 2 =
       (periodicHypercubicEvenBoundaryMarginalDensityNNReal
-        H N hN beta hbeta b : ℝ) * (g b) ^ 2
+        H N hN beta hbeta b : ℝ) * f b
+  simp only [f]
   unfold periodicHypercubicEvenBoundaryMarginalDensityNNReal
   rw [Real.coe_toNNReal (sq_nonneg
     (periodicHypercubicEvenBoundaryVacuumMoment H N hN beta hbeta b))]
