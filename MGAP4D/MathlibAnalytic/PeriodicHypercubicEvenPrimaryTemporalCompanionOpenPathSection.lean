@@ -65,20 +65,8 @@ theorem
   intro i j hij
   rw [periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionUpperSpatialEdge_eq,
     periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionUpperSpatialEdge_eq] at hij
-  have hsource :
-      periodicHypercubicShift
-          (PeriodicHypercubicEvenSideLength H)
-          (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H i).1
-          (0 : PeriodicHypercubicAxis) =
-        periodicHypercubicShift
-          (PeriodicHypercubicEvenSideLength H)
-          (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H j).1
-          (0 : PeriodicHypercubicAxis) :=
-    congrArg (fun e : PeriodicHypercubicEvenEdge H => e.1) hij
-  have hdirection :
-      (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H i).2 =
-        (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H j).2 :=
-    congrArg (fun e : PeriodicHypercubicEvenEdge H => e.2) hij
+  have hsource := congrArg Prod.fst hij
+  have hdirection := congrArg Prod.snd hij
   have hsource' := congrArg
     (fun v => periodicHypercubicUnshift
       (PeriodicHypercubicEvenSideLength H) v (0 : PeriodicHypercubicAxis))
@@ -338,8 +326,8 @@ theorem
     rw [hA2]
     simp
   change periodicHypercubicEvenPositiveBoundaryTemporalOpenPath A p = u k
-  rw [show (p.1 0).val = 0 from hbase]
-  simp only [periodicHypercubicEvenPositiveBoundaryTemporalOpenPath, if_pos]
+  unfold periodicHypercubicEvenPositiveBoundaryTemporalOpenPath
+  rw [if_pos hbase]
   rw [hs0, hs1, hs2]
   simp
 
