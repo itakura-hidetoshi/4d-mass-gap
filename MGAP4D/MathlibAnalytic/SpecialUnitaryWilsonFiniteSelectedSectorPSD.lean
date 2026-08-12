@@ -18,7 +18,7 @@ The proof uses only the one-plaquette exact PSD remainder and the generic
 finite Schur-product telescoping theorem; no multi-degree contribution is
 discarded. -/
 theorem specialUnitaryWilsonRelativeKernel_finsetProd_sub_selectedDegreeProd_positiveSemidefiniteCertificate
-    {ι : Type*}
+    {ι : Type}
     (N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
@@ -59,7 +59,7 @@ theorem specialUnitaryWilsonRelativeKernel_finsetProd_sub_selectedDegreeProd_pos
 certificate: the full product is the selected product plus its exact Schur-PSD
 complement. -/
 theorem specialUnitaryWilsonRelativeKernel_finsetProd_eq_remainder_add_selectedDegreeProd
-    {ι : Type*}
+    {ι : Type}
     (N : ℕ)
     (beta : ℝ)
     (s : Finset ι)
