@@ -56,13 +56,9 @@ private theorem continuous_cyclicFourEdgeCoordinateKernel
       (Fin 4 → Matrix.specialUnitaryGroup (Fin 2) ℂ) ×
         (Fin 4 → Matrix.specialUnitaryGroup (Fin 2) ℂ) =>
       specialUnitaryNormalizedTraceRelativeKernel 2 (q.1 j) (q.2 j) := by
-  have hpair : Continuous fun q :
-      (Fin 4 → Matrix.specialUnitaryGroup (Fin 2) ℂ) ×
-        (Fin 4 → Matrix.specialUnitaryGroup (Fin 2) ℂ) =>
-      (q.1 j, q.2 j) :=
-    ((continuous_apply j).comp continuous_fst).prodMk
-      ((continuous_apply j).comp continuous_snd)
-  exact continuous_specialUnitaryNormalizedTraceRelativeKernel_two.comp hpair
+  exact continuous_specialUnitaryNormalizedTraceRelativeKernel_two.comp₂
+    ((continuous_apply j).comp continuous_fst)
+    ((continuous_apply j).comp continuous_snd)
 
 private theorem continuous_cyclicFourEdgeEdgewiseKernel :
     Continuous fun q :
@@ -76,10 +72,7 @@ private theorem continuous_cyclicFourEdgeEdgewiseKernel :
       ((continuous_cyclicFourEdgeCoordinateKernel 0).mul
         (continuous_cyclicFourEdgeCoordinateKernel 1))
 
-/-- The genuine source degree-`n` feature evaluated on the four fixed boundary
-edges.  Naming this value keeps the arbitrary-degree source carrier opaque to
-downstream elaboration while retaining exactly the #1665 edgewise Fock
-carrier and kernel. -/
+/-- The genuine source degree feature evaluated on the four fixed boundary edges. -/
 noncomputable def periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeDegreeFeatureValue
     (H n : ℕ)
     (b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2) :
@@ -97,8 +90,7 @@ noncomputable def periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFe
   periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial H k c b •
     periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeDegreeFeatureValue H n b
 
-/-- The genuine four-edge source degree feature is continuous on the actual
-boundary carrier. -/
+/-- The genuine source degree feature is continuous on the actual boundary carrier. -/
 theorem periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeDegreeFeatureValue_continuous
     (H n : ℕ) :
     Continuous
@@ -114,17 +106,16 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeDegreeFeatu
   simpa [C, periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeDegreeFeatureValue] using
     hFeature.comp (continuous_cyclicFourEdgeBoundaryWord H)
 
-/-- The genuine source degree feature has unit norm on every boundary
-configuration. -/
+/-- The genuine source degree feature has unit norm. -/
 theorem periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeDegreeFeatureValue_norm
     (H n : ℕ)
     (b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2) :
     ‖periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeDegreeFeatureValue H n b‖ = 1 := by
   let C := specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseFeature.pow n
+  change ‖C.feature (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeWord H b)‖ = 1
   apply RealHilbertKernelFeature.feature_norm_eq_one C
   intro x
-  change specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseKernel x x ^ n = 1
-  have hRelativeSelf : ∀ g : Matrix.specialUnitaryGroup (Fin 2) ℂ,
+  have hSelf : ∀ g : Matrix.specialUnitaryGroup (Fin 2) ℂ,
       specialUnitaryNormalizedTraceRelativeKernel 2 g g = 1 := by
     intro g
     unfold specialUnitaryNormalizedTraceRelativeKernel
@@ -132,11 +123,10 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeDegreeFeatu
     exact normalizedSpecialUnitaryRealTrace_one 2
       cyclicFourEdgeBoundaryDegreeStrictnessTwoRankPositive
   simp only [specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseKernel,
-    hRelativeSelf, one_mul, one_pow]
+    hSelf, one_mul, one_pow]
 
-/-- Every bounded normalized-trace polynomial times a genuine four-edge source
-degree feature is Bochner integrable in the actual interacting boundary
-marginal. -/
+/-- Bounded polynomial weights make every genuine four-edge source degree feature
+Bochner integrable in the interacting boundary marginal. -/
 theorem periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature_integrable
     (H : ℕ)
     (beta : ℝ) (hbeta : 0 ≤ beta)
@@ -148,21 +138,20 @@ theorem periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature_inte
       (periodicHypercubicEvenBoundaryMarginalMeasure
         H 2 cyclicFourEdgeBoundaryDegreeStrictnessTwoRankPositive beta hbeta) := by
   let p := periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial H k c
-  have hWeighted : Continuous
+  have hContinuous : Continuous
       (periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature H k c n) := by
     simpa [periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature, p] using
       p.continuous.smul
         (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeDegreeFeatureValue_continuous H n)
-  refine Integrable.of_bound hWeighted.aestronglyMeasurable ‖p‖ ?_
+  refine Integrable.of_bound hContinuous.aestronglyMeasurable ‖p‖ ?_
   filter_upwards [] with b
   rw [periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature,
     norm_smul,
     periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeDegreeFeatureValue_norm]
   simpa [p] using p.norm_coe_le_norm b
 
-/-- The arbitrary-degree Hilbert-adjoint pullback pairs with the actual four
-boundary edges exactly as the original cyclic target dual vector pairs with
-the corresponding cyclic target degree feature. -/
+/-- The Hilbert adjoint pullback pairs with the genuine four-edge source feature
+exactly as the original cyclic target dual vector pairs with the cyclic target feature. -/
 theorem
     specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback_inner_boundaryFourEdgeDegreeFeatureValue
     (H n : ℕ)
@@ -185,9 +174,8 @@ theorem
     periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy,
     specialUnitaryTwoNormalizedTraceHilbertKernelFeature] using h
 
-/-- A nonzero interacting-boundary cyclic dual pairing forces the Bochner
-moment of the genuine four-edge source degree feature to be nonzero.  No
-marginal transport-defect hypothesis is used. -/
+/-- A nonzero cyclic dual pairing forces the genuine four-edge source Bochner
+moment to be nonzero, without any marginal transport-defect assumption. -/
 theorem
     periodicHypercubicEvenBoundaryMarginal_weightedFourEdgeDegreeFeature_integral_ne_zero_of_cyclicDualProbe
     (H : ℕ)
@@ -237,8 +225,7 @@ theorem
             periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial H k c b *
               inner ℝ q
                 ((periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceRelativeBoundaryDegreeFeature
-                  H n).feature b) := by
-            rw [real_inner_smul_right]
+                  H n).feature b) := by rw [real_inner_smul_right]
         _ = periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial H k c b *
               inner ℝ r
                 (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeDegreeFeatureValue H n b) := by
@@ -249,24 +236,20 @@ theorem
             symm
             rw [real_inner_smul_right]
         _ = inner ℝ r
-              (periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature H k c n b) := by
-            rfl
+              (periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature H k c n b) := rfl
     _ = inner ℝ r
-        (∫ b,
-          periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature H k c n b ∂μ) :=
+        (∫ b, periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature H k c n b ∂μ) :=
       integral_inner hIntegrable r
     _ = 0 := by
       calc
         inner ℝ r
-            (∫ b,
-              periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature H k c n b ∂μ) =
+            (∫ b, periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature H k c n b ∂μ) =
             inner ℝ r 0 := congrArg (fun z => inner ℝ r z) hzero
         _ = 0 := by
           rw [← zero_smul ℝ r, real_inner_smul_right, zero_mul]
 
-/-- The genuine four-edge diagonal degree kernel has a strictly positive
-weighted Gram integral whenever the corresponding target degree is detected by
-a nonzero cyclic dual probe. -/
+/-- The selected genuine four-edge diagonal degree has a strictly positive
+weighted Gram integral whenever it is detected by a cyclic dual probe. -/
 theorem
     periodicHypercubicEvenBoundaryMarginal_weightedFourEdgeDegreeFeature_gram_pos_of_cyclicDualProbe
     (H : ℕ)
@@ -317,10 +300,8 @@ theorem
     periodicHypercubicEvenBoundaryMarginalWeightedFourEdgeDegreeFeature,
     periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeDegreeFeatureValue] using hGram
 
-/-- A centered nonzero boundary polynomial at positive coupling produces a
-strictly positive genuine four-edge diagonal Fock Gram contribution in some
-positive Taylor degree.  The exact physical diagonal coefficient
-`(beta^i / i!)^4` remains strictly positive. -/
+/-- A centered nonzero boundary polynomial at positive coupling has a strictly
+positive genuine four-edge diagonal Fock contribution in some positive Taylor degree. -/
 theorem
     periodicHypercubicEvenBoundaryMarginalNormalizedTracePolynomial_exists_positiveDegree_fourEdgeDiagonalGram_strict
     (H : ℕ)
