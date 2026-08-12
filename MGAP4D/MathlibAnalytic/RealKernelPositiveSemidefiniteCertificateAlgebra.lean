@@ -72,7 +72,7 @@ theorem finsetSum
     RealKernelPositiveSemidefiniteCertificate X
       (fun x y => ∑ i ∈ s, kernel i x y) := by
   classical
-  induction s using Finset.induction_on generalizing C with
+  induction s using Finset.induction_on with
   | empty =>
       simpa using RealKernelPositiveSemidefiniteCertificate.zero X
   | @insert a s ha ih =>
