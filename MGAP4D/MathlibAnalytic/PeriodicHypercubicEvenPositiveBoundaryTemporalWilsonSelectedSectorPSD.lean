@@ -149,6 +149,111 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionSelectedDe
     specialUnitaryTwoCyclicFourEdgeWilsonSelectedCoordinateProductKernel_eq_selectedDegree
       beta selected _ _
 
+/-- The selected product on the entire literal positive-boundary temporal
+sector factors exactly into the retained residual degree-zero scalar and the
+genuine four-edge selected Fock kernel.  Thus the unselected interaction is
+kept as an actual degree-zero Fock component rather than replaced by `1`. -/
+theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonSelectedDegreeProduct_eq_residualScalar_mul_fourEdgeSelectedDegreeKernel
+    (H : ℕ)
+    (beta : ℝ)
+    (selected : ℕ)
+    (u v : PeriodicHypercubicEvenPlaquette H →
+      Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    (∏ p ∈ periodicHypercubicEvenPositiveBoundaryTemporalPlaquettes H,
+      specialUnitaryWilsonRelativeSelectedDegreeKernel 2 beta
+        (periodicHypercubicEvenPositiveBoundaryTemporalWilsonSelectedDegreeAssignment
+          H selected p) (u p) (v p)) =
+      (Real.exp (-beta)) ^
+          (periodicHypercubicEvenPositiveBoundaryTemporalResidualPlaquettes H).card *
+        specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeKernel beta selected
+          (fun k => u
+            (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion H k))
+          (fun k => v
+            (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion H k)) := by
+  classical
+  let full := periodicHypercubicEvenPositiveBoundaryTemporalPlaquettes H
+  let companions := periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionSet H
+  let residual := periodicHypercubicEvenPositiveBoundaryTemporalResidualPlaquettes H
+  let f : PeriodicHypercubicEvenPlaquette H → ℝ := fun p =>
+    specialUnitaryWilsonRelativeSelectedDegreeKernel 2 beta
+      (periodicHypercubicEvenPositiveBoundaryTemporalWilsonSelectedDegreeAssignment
+        H selected p) (u p) (v p)
+  have hsubset : companions ⊆ full := by
+    simpa [companions, full] using
+      periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionSet_subset_positiveBoundary H
+  have hunion : residual ∪ companions = full := by
+    simpa [residual, companions, full,
+      periodicHypercubicEvenPositiveBoundaryTemporalResidualPlaquettes] using
+      (Finset.sdiff_union_of_subset hsubset)
+  have hdisjoint : Disjoint residual companions := by
+    refine Finset.disjoint_left.mpr ?_
+    intro p hpResidual hpCompanion
+    have hpDiff : p ∈ full \ companions := by
+      simpa [residual, full, companions,
+        periodicHypercubicEvenPositiveBoundaryTemporalResidualPlaquettes] using hpResidual
+    exact (Finset.mem_sdiff.mp hpDiff).2 hpCompanion
+  have hproduct :
+      (∏ p ∈ full, f p) =
+        (∏ p ∈ residual, f p) * (∏ p ∈ companions, f p) := by
+    rw [← hunion]
+    exact Finset.prod_union hdisjoint
+  have hresidual :
+      (∏ p ∈ residual, f p) =
+        (Real.exp (-beta)) ^ residual.card := by
+    calc
+      (∏ p ∈ residual, f p) =
+          ∏ _p ∈ residual, Real.exp (-beta) := by
+            apply Finset.prod_congr rfl
+            intro p hp
+            dsimp [f]
+            exact
+              periodicHypercubicEvenPositiveBoundaryTemporalWilsonSelectedDegreeKernel_eq_exp_neg_of_mem_residual
+                H beta selected p
+                  (by simpa [residual] using hp) (u p) (v p)
+      _ = (Real.exp (-beta)) ^ residual.card := by simp
+  have hcompanionsAssignment :
+      (∏ p ∈ companions, f p) =
+        ∏ p ∈ companions,
+          specialUnitaryWilsonRelativeSelectedDegreeKernel 2 beta selected
+            (u p) (v p) := by
+    apply Finset.prod_congr rfl
+    intro p hp
+    have hpCompanion :
+        p ∈ periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionSet H := by
+      simpa [companions] using hp
+    simp [f,
+      periodicHypercubicEvenPositiveBoundaryTemporalWilsonSelectedDegreeAssignment,
+      hpCompanion]
+  have hcompanions :
+      (∏ p ∈ companions, f p) =
+        specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeKernel beta selected
+          (fun k => u
+            (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion H k))
+          (fun k => v
+            (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion H k)) := by
+    rw [hcompanionsAssignment]
+    simpa [companions] using
+      periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionSelectedDegreeProduct_eq_selectedDegreeKernel
+        H beta selected u v
+  change
+    (∏ p ∈ full, f p) =
+      (Real.exp (-beta)) ^ residual.card *
+        specialUnitaryTwoCyclicFourEdgeWilsonSelectedDegreeKernel beta selected
+          (fun k => u
+            (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion H k))
+          (fun k => v
+            (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanion H k))
+  rw [hproduct, hresidual, hcompanions]
+
+/-- The literal residual degree-zero scalar multiplying the four-edge selected
+sector is strictly positive. -/
+theorem periodicHypercubicEvenPositiveBoundaryTemporalWilsonResidualDegreeZeroScalar_pos
+    (H : ℕ)
+    (beta : ℝ) :
+    0 < (Real.exp (-beta)) ^
+      (periodicHypercubicEvenPositiveBoundaryTemporalResidualPlaquettes H).card := by
+  positivity
+
 end
 
 end MathlibAnalytic
