@@ -117,7 +117,11 @@ theorem specialUnitaryWilsonRelativeKernelPartial_eq_selected_add_remainder
         (∑ m ∈ (Finset.range (degree + 1)).erase selected,
           specialUnitaryWilsonRelativeSelectedDegreeKernel N beta m g h) +
           specialUnitaryWilsonRelativeSelectedDegreeKernel N beta selected g h := by
-      exact (Finset.sum_erase_add (Finset.range (degree + 1)) selected hmem).symm
+      exact
+        (Finset.sum_erase_add
+          (Finset.range (degree + 1))
+          (fun m => specialUnitaryWilsonRelativeSelectedDegreeKernel N beta m g h)
+          hmem).symm
     _ = specialUnitaryWilsonRelativeSelectedDegreeKernel N beta selected g h +
         specialUnitaryWilsonRelativeKernelPartialSelectedRemainder
           N beta degree selected g h := by
