@@ -33,7 +33,9 @@ theorem RealHilbertKernelFeature.add_weighted_integral_right_norm_le
         (WithLp.sndL 2 ℝ C₁.FeatureHilbert C₂.FeatureHilbert) M := by
     simpa [M, RealHilbertKernelFeature.add] using hproj
   rw [hEq]
-  simpa [M, WithLp.sndL] using (WithLp.norm_snd_le M)
+  simpa [M, WithLp.sndL] using
+    (WithLp.norm_snd_le
+      (p := 2) (α := C₁.FeatureHilbert) (β := C₂.FeatureHilbert) M)
 
 /-- The left weighted moment of an `L²` direct-sum feature has norm at most
 that of the full weighted moment. -/
@@ -58,7 +60,9 @@ theorem RealHilbertKernelFeature.add_weighted_integral_left_norm_le
         (WithLp.fstL 2 ℝ C₁.FeatureHilbert C₂.FeatureHilbert) M := by
     simpa [M, RealHilbertKernelFeature.add] using hproj
   rw [hEq]
-  simpa [M, WithLp.fstL] using (WithLp.norm_fst_le M)
+  simpa [M, WithLp.fstL] using
+    (WithLp.norm_fst_le
+      (p := 2) (α := C₁.FeatureHilbert) (β := C₂.FeatureHilbert) M)
 
 /-- Adding the next nonnegative Taylor/Fock degree cannot decrease the norm of
 the weighted moment of the previous finite exponential truncation. -/
