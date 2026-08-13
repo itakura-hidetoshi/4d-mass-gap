@@ -72,10 +72,7 @@ local instance boundaryEffectiveSectionDensityMarginalFinite
     exact periodicHypercubicSpecialUnitaryWilsonSystem_gibbsMeasure_probability
       (PeriodicHypercubicEvenSideLength H) 2
       boundaryEffectiveSectionDensityTwoRankPositive beta hbeta
-  letI : IsZeroOrProbabilityMeasure mu :=
-    MeasureTheory.instIsZeroOrProbabilityMeasureOfIsProbabilityMeasure mu
-  letI : IsFiniteMeasure mu :=
-    MeasureTheory.IsZeroOrProbabilityMeasure.toIsFiniteMeasure mu
+  letI : IsFiniteMeasure mu := ⟨by simp⟩
   apply Measure.isFiniteMeasure_map
 
 noncomputable def periodicHypercubicEvenBoundaryEffectiveSectionRealWeight
