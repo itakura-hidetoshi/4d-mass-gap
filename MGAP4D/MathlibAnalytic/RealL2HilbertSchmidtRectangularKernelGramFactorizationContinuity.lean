@@ -44,15 +44,15 @@ theorem realL2HilbertSchmidtRectangularKernelFactorizedOperator_tendsto
     [SFinite μ] [SFinite ν]
     {ι : Type*} {l : Filter ι}
     {K : ι → Lp ℝ 2 (μ.prod ν)}
-    {K∞ : Lp ℝ 2 (μ.prod ν)}
-    (hK : Tendsto K l (𝓝 K∞)) :
+    {Klimit : Lp ℝ 2 (μ.prod ν)}
+    (hK : Tendsto K l (𝓝 Klimit)) :
     Tendsto
       (fun i => realL2HilbertSchmidtRectangularKernelFactorizedOperator (K i))
       l
-      (𝓝 (realL2HilbertSchmidtRectangularKernelFactorizedOperator K∞)) := by
+      (𝓝 (realL2HilbertSchmidtRectangularKernelFactorizedOperator Klimit)) := by
   exact
     ((realL2HilbertSchmidtRectangularKernelFactorizedOperator_continuous
-      (μ := μ) (ν := ν)).tendsto K∞).comp hK
+      (μ := μ) (ν := ν)).tendsto Klimit).comp hK
 
 end
 
