@@ -28,8 +28,10 @@ theorem FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedAssemble_continuous_bo
   intro e
   by_cases hpos : P.side e = ReflectionEdgeSide.positive
   · simp [FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedAssemble, hpos]
+    exact continuous_const
   · by_cases hneg : P.side e = ReflectionEdgeSide.negative
     · simp [FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedAssemble, hpos, hneg]
+      exact continuous_const
     · have hfixed : P.side e = ReflectionEdgeSide.fixed := by
         cases hside : P.side e <;> simp_all
       simpa [FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedAssemble,
@@ -86,6 +88,7 @@ theorem periodicHypercubicEvenSpatialCrossingWilsonAction_continuous
       simpa [C] using continuous_compact_oriented_plaquetteHolonomy C p
     exact (continuous_specialUnitaryWilsonPlaquetteEnergy N).comp hHol
   · simp [propositionIndicator, hs]
+    exact continuous_const
 
 /-- The fixed-plane spatial Wilson Boltzmann weight is continuous as a function
 of the physical shared-boundary configuration. -/
@@ -122,7 +125,10 @@ theorem periodicHypercubicEvenBoundaryGramCoefficient_continuous
       H 2 (by norm_num) beta).div_const _
 
 /-- The exact residual boundary factor appearing on the canonical
-four-companion section is continuous. -/
+four-companion section is continuous.  The elevated heartbeat allowance is
+local to this finite product declaration; it only pays for normalization of the
+large dependent finite-lattice index type. -/
+set_option maxHeartbeats 800000 in
 theorem periodicHypercubicEvenPositiveBoundaryTemporalResidualBoundaryProduct_continuous
     (H : ℕ)
     (beta : ℝ) :
