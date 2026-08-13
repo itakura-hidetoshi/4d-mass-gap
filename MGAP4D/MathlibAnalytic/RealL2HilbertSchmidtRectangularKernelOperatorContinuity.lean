@@ -39,8 +39,16 @@ theorem realL2HilbertSchmidtRectangularKernelOperator_sub
   intro f
   apply ext_inner_right ℝ
   intro g
-  simp [realL2HilbertSchmidtRectangularKernelOperator_inner,
-    realL2HilbertSchmidtKernelPairing_sub_kernel, inner_sub_left]
+  change inner ℝ
+      (realL2HilbertSchmidtRectangularKernelOperator (K₁ - K₂) f) g =
+    inner ℝ
+      (realL2HilbertSchmidtRectangularKernelOperator K₁ f -
+        realL2HilbertSchmidtRectangularKernelOperator K₂ f) g
+  rw [realL2HilbertSchmidtRectangularKernelOperator_inner,
+    inner_sub_left,
+    realL2HilbertSchmidtRectangularKernelOperator_inner,
+    realL2HilbertSchmidtRectangularKernelOperator_inner]
+  exact realL2HilbertSchmidtKernelPairing_sub_kernel K₁ K₂ f g
 
 /-- Sharp difference estimate: the rectangular operator construction is a
 contraction from product-kernel `L²` norm to operator norm. -/
@@ -53,7 +61,7 @@ theorem realL2HilbertSchmidtRectangularKernelOperator_sub_norm_le
   rw [← realL2HilbertSchmidtRectangularKernelOperator_sub]
   exact realL2HilbertSchmidtRectangularKernelOperator_norm_le (K₁ - K₂)
 
-/-- The product-`L²` kernel-to-operator map is `1`-Lipschitz.  Consequently any
+/-- The product-`L²` kernel-to-operator map is `1`-lipschitz.  Consequently any
 `L²` convergence of finite Wilson/Fock kernels automatically yields operator-
 norm convergence of their rectangular analysis operators. -/
 theorem realL2HilbertSchmidtRectangularKernelOperator_lipschitz
