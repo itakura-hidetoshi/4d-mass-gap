@@ -121,9 +121,15 @@ theorem periodicHypercubicEvenBoundaryEffectiveSectionDensity_integral_eq_bounda
               (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeWord H b)
               (periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryFourEdgeWord H d))
         ∂(periodicHypercubicEvenBoundaryHaarMeasure H 2) := by
-  rw [integral_withDensity_eq_integral_smul₀
+  have htop :
+      ∀ᵐ b ∂(periodicHypercubicEvenBoundaryHaarMeasure H 2),
+        periodicHypercubicEvenBoundaryEffectiveSectionDensity H beta hbeta b < ⊤ :=
+    Filter.Eventually.of_forall fun b => by
+      unfold periodicHypercubicEvenBoundaryEffectiveSectionDensity
+      exact ENNReal.ofReal_lt_top
+  rw [integral_withDensity_eq_integral_toReal_smul₀
     (periodicHypercubicEvenBoundaryEffectiveSectionDensity_measurable
-      H beta hbeta).aemeasurable]
+      H beta hbeta).aemeasurable htop]
   apply integral_congr_ae
   filter_upwards [] with b
   unfold periodicHypercubicEvenBoundaryEffectiveSectionDensity
