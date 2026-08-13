@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.RealHilbertKernelFeatureProduct
+import Mathlib.MeasureTheory.Function.L2Space
 import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
 
 namespace MGAP4D
