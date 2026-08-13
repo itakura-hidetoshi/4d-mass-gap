@@ -6,7 +6,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory
-open scoped InnerProduct InnerProductSpace Topology
+open scoped ENNReal InnerProduct InnerProductSpace Topology
 
 noncomputable section
 
