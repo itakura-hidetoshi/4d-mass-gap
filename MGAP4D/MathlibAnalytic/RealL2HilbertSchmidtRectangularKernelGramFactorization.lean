@@ -84,11 +84,22 @@ theorem realL2HilbertSchmidtRectangularKernelFactorizedOperator_isSymmetric
       Lp ℝ 2 μ →L[ℝ] Lp ℝ 2 μ) :
       Lp ℝ 2 μ →ₗ[ℝ] Lp ℝ 2 μ).IsSymmetric := by
   intro f g
-  rw [real_inner_comm f
-      (realL2HilbertSchmidtRectangularKernelFactorizedOperator K g)]
-  rw [realL2HilbertSchmidtRectangularKernelFactorizedOperator_inner,
-    realL2HilbertSchmidtRectangularKernelFactorizedOperator_inner]
-  exact real_inner_comm _ _
+  calc
+    inner ℝ (realL2HilbertSchmidtRectangularKernelFactorizedOperator K f) g =
+        inner ℝ
+          (realL2HilbertSchmidtRectangularKernelOperator K f)
+          (realL2HilbertSchmidtRectangularKernelOperator K g) :=
+      realL2HilbertSchmidtRectangularKernelFactorizedOperator_inner K f g
+    _ = inner ℝ
+          (realL2HilbertSchmidtRectangularKernelOperator K g)
+          (realL2HilbertSchmidtRectangularKernelOperator K f) := by
+      exact real_inner_comm _ _
+    _ = inner ℝ
+          (realL2HilbertSchmidtRectangularKernelFactorizedOperator K g) f :=
+      (realL2HilbertSchmidtRectangularKernelFactorizedOperator_inner K g f).symm
+    _ = inner ℝ f
+          (realL2HilbertSchmidtRectangularKernelFactorizedOperator K g) := by
+      exact real_inner_comm _ _
 
 /-- The generic rectangular Gram factor is positive. -/
 theorem realL2HilbertSchmidtRectangularKernelFactorizedOperator_isPositive
