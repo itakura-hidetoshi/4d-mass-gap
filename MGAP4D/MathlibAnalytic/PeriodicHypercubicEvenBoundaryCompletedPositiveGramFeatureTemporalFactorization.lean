@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPositiveHalfBoundaryIndependence
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPositiveBoundaryTemporalWilsonResidualProduct
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryVacuumMomentPositivity
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -76,30 +77,9 @@ theorem periodicHypercubicEvenBoundaryCompletedPositiveWilsonAmplitude_eq_openHa
   rw [periodicHypercubicEvenPositiveBoundaryTemporalWilsonBoltzmannWeight_boundaryFibered_eq_relativeKernelProduct
     hH beta b x (fun _ => 1)]
 
-/-- The boundary Gram coefficient is in fact strictly positive, not merely
-nonnegative.  Both its spatial crossing Boltzmann numerator and the physical
-partition function are strictly positive. -/
-theorem periodicHypercubicEvenBoundaryGramCoefficient_pos
-    (H N : ℕ) (hN : 0 < N)
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (beta : ℝ) (hbeta : 0 ≤ beta)
-    (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration
-      (Matrix.specialUnitaryGroup (Fin N) ℂ)) :
-    0 < periodicHypercubicEvenBoundaryGramCoefficient H N hN beta hbeta b := by
-  unfold periodicHypercubicEvenBoundaryGramCoefficient
-  apply div_pos
-  · unfold periodicHypercubicEvenBoundarySpatialCrossingWilsonBoltzmannWeight
-    unfold periodicHypercubicEvenSpatialCrossingWilsonBoltzmannWeight
-    exact Real.exp_pos _
-  · exact compact_oriented_partitionFunction_pos
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base
-      (continuous_compact_oriented_boltzmannIntegrable
-        (periodicHypercubicSpecialUnitaryWilsonSystem
-          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta))
-
-/-- Hence the square-root boundary coefficient carried by the scalar Gram
-feature is also strictly positive. -/
+/-- The square-root boundary coefficient carried by the scalar Gram feature is
+strictly positive.  This reuses the canonical boundary Gram positivity theorem
+from the vacuum-moment layer rather than duplicating the declaration. -/
 theorem periodicHypercubicEvenBoundaryGramCoefficient_sqrt_pos
     (H N : ℕ) (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
