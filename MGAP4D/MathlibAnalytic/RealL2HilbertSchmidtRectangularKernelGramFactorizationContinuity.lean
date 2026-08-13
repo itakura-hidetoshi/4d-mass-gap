@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.RealL2HilbertSchmidtRectangularKernelGramFactorization
 import MGAP4D.MathlibAnalytic.RealL2HilbertSchmidtRectangularKernelOperatorContinuity
+import Mathlib.Analysis.InnerProductSpace.Continuous
 import Mathlib.Analysis.Normed.Operator.BoundedLinearMaps
 
 namespace MGAP4D
@@ -10,7 +11,7 @@ open scoped InnerProductSpace InnerProduct Topology
 
 noncomputable section
 
-universe u v
+universe u v w
 
 variable {α : Type u} {β : Type v}
   [MeasurableSpace α] [MeasurableSpace β]
@@ -53,6 +54,26 @@ theorem realL2HilbertSchmidtRectangularKernelFactorizedOperator_tendsto
   exact
     ((realL2HilbertSchmidtRectangularKernelFactorizedOperator_continuous
       (μ := μ) (ν := ν)).tendsto Klimit).comp hK
+
+/-- Operator-norm convergence on a real Hilbert space passes to every fixed
+quadratic form `T ↦ ⟪T f, f⟫`.  This generic lemma keeps later model-specific
+proofs free of expanded `L²` carrier types. -/
+theorem continuousLinearMap_fixedQuadratic_tendsto
+    {E : Type w}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    {ι : Type*} {l : Filter ι}
+    {Gd : ι → (E →L[ℝ] E)} {G : E →L[ℝ] E}
+    (hG : Tendsto Gd l (𝓝 G))
+    (f : E) :
+    Tendsto
+      (fun i => inner ℝ (Gd i f) f)
+      l
+      (𝓝 (inner ℝ (G f) f)) := by
+  have hEval : Continuous (fun T : E →L[ℝ] E => T f) := by
+    exact continuous_id.clm_apply continuous_const
+  have hApply : Tendsto (fun i => Gd i f) l (𝓝 (G f)) :=
+    (hEval.tendsto G).comp hG
+  exact hApply.inner tendsto_const_nhds
 
 end
 
