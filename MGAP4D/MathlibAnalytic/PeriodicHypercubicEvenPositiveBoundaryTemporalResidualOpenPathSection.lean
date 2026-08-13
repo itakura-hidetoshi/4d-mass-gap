@@ -15,6 +15,11 @@ theorem
     ((periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionUpperSpatialEdge H k).1 0).val =
       1 := by
   rw [periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionUpperSpatialEdge_eq]
+  change
+    (periodicHypercubicShift
+      (PeriodicHypercubicEvenSideLength H)
+      (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H k).1
+      (0 : PeriodicHypercubicAxis) 0).val = 1
   rw [periodicHypercubicShift_apply]
   simp only [if_pos rfl]
   have hzero :=
@@ -122,9 +127,11 @@ private theorem
   have hsource := congrArg Prod.fst hval
   rw [periodicHypercubicBoundaryStep_three] at hsource
   have htime := congrArg (fun v => (v 0).val) hsource
-  rw [periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionUpperSpatialEdge_source_time_val_one]
-    at htime
-  rw [hantipodal.1] at htime
+  change
+    ((periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionUpperSpatialEdge H j).1 0).val =
+      (p.1 0).val at htime
+  rw [periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionUpperSpatialEdge_source_time_val_one,
+    hantipodal.1] at htime
   omega
 
 /-- On the canonical four-companion open-half section, every *residual*
