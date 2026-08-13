@@ -124,7 +124,7 @@ theorem RealHilbertKernelFeature.exists_weighted_kernel_integral_ne_zero_of_inte
       inner ℝ M (C.feature y) =
           ∫ x, inner ℝ (g x) (C.feature y) ∂μ := by
         symm
-        exact integral_inner hIntegrable (C.feature y)
+        exact integral_inner (𝕜 := ℝ) hIntegrable (C.feature y)
       _ = ∫ x, a x * kernel x y ∂μ := by
         apply integral_congr_ae
         filter_upwards [] with x
@@ -136,7 +136,7 @@ theorem RealHilbertKernelFeature.exists_weighted_kernel_integral_ne_zero_of_inte
     calc
       inner ℝ M M = ∫ x, inner ℝ M (g x) ∂μ := by
         symm
-        exact integral_inner hIntegrable M
+        exact integral_inner (𝕜 := ℝ) hIntegrable M
       _ = ∫ _x : X, (0 : ℝ) ∂μ := by
         apply integral_congr_ae
         filter_upwards [] with x
