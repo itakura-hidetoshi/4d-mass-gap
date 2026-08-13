@@ -74,7 +74,6 @@ theorem
     funext x
     unfold periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfCyclicHolonomy
     rw [haarFinFourCyclicPlaquetteWord_eq]
-    rfl
   rw [hfun]
   exact hword
 
@@ -185,6 +184,7 @@ theorem
     rw [hHol]
   unfold periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfDegreeDualProbe
   rw [hProbeVector, hFeature]
+  rfl
 
 /-- A nonzero boundary feature pairing yields a pointwise nonzero actual
 open-half probe by evaluating at the explicit temporal-companion section. -/
@@ -247,11 +247,18 @@ theorem
     periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfDegreeDualProbeL2_coeFn
       H n q
   rw [hZero] at hRep
+  have hZeroRep :
+      ((0 : Lp ℝ 2 (periodicHypercubicEvenOpenHalfHaarMeasure H 2)) :
+          (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+            (Matrix.specialUnitaryGroup (Fin 2) ℂ) → ℝ) =ᵐ[
+        periodicHypercubicEvenOpenHalfHaarMeasure H 2]
+        (fun _ => (0 : ℝ)) := by
+    exact Filter.Eventually.of_forall (fun y => by simp)
   have hAE :
       periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfDegreeDualProbe
           H n q =ᵐ[μ]
         (fun _ => (0 : ℝ)) := by
-    simpa [μ] using hRep.symm
+    exact hRep.symm.trans (by simpa [μ] using hZeroRep)
   have hEverywhere :
       periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfDegreeDualProbe
           H n q =
