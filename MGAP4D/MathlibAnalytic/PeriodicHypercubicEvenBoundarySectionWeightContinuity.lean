@@ -124,9 +124,26 @@ theorem periodicHypercubicEvenBoundaryGramCoefficient_continuous
     (periodicHypercubicEvenBoundarySpatialCrossingWilsonBoltzmannWeight_continuous
       H 2 (by norm_num) beta).div_const _
 
+/-- One boundary relative-kernel factor is continuous.  Isolating this small
+statement keeps the joint-kernel composition out of the finite-product
+elaboration step. -/
+private theorem periodicHypercubicEvenBoundaryRelativeKernelFactor_continuous
+    (H : ℕ)
+    (beta : ℝ)
+    (p : PeriodicHypercubicEvenPlaquette H) :
+    Continuous
+      (fun b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
+        specialUnitaryWilsonRelativeKernel 2 beta
+          (periodicHypercubicEvenPositiveBoundaryTemporalFiberedBoundaryLeg b p)
+          1) := by
+  exact (continuous_specialUnitaryWilsonRelativeKernel 2 beta).comp
+    ((periodicHypercubicEvenPositiveBoundaryTemporalFiberedBoundaryLeg_continuous
+      H p).prodMk continuous_const)
+
 /-- Finite products of the boundary relative-kernel factors are continuous for
-an arbitrary plaquette `Finset`.  Keeping the concrete residual `sdiff` out of
-this proof prevents normalization of its large dependent finite-lattice term. -/
+an arbitrary plaquette `Finset`.  The proof is built by `Finset` induction so
+Lean never has to match the full product target against `continuous_finset_prod`
+in one elaboration step. -/
 private theorem periodicHypercubicEvenBoundaryRelativeKernelProduct_continuous_on
     (H : ℕ)
     (beta : ℝ)
@@ -137,11 +154,18 @@ private theorem periodicHypercubicEvenBoundaryRelativeKernelProduct_continuous_o
           specialUnitaryWilsonRelativeKernel 2 beta
             (periodicHypercubicEvenPositiveBoundaryTemporalFiberedBoundaryLeg b p)
             1) := by
-  refine continuous_finset_prod s ?_
-  intro p _hp
-  exact (continuous_specialUnitaryWilsonRelativeKernel 2 beta).comp
-    ((periodicHypercubicEvenPositiveBoundaryTemporalFiberedBoundaryLeg_continuous
-      H p).prodMk continuous_const)
+  classical
+  induction s using Finset.induction_on with
+  | empty =>
+      simpa using
+        (continuous_const :
+          Continuous
+            (fun _ : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
+              (1 : ℝ)))
+  | @insert p s hp ih =>
+      simpa [Finset.prod_insert, hp] using
+        (periodicHypercubicEvenBoundaryRelativeKernelFactor_continuous
+          H beta p).mul ih
 
 /-- The exact residual boundary factor appearing on the canonical four-companion
 section is continuous.  The residual interaction is retained literally; only
