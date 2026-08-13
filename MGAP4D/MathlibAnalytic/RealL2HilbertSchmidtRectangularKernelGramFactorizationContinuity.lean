@@ -49,9 +49,10 @@ theorem realL2HilbertSchmidtRectangularKernelFactorizedOperator_tendsto
     Tendsto
       (fun i => realL2HilbertSchmidtRectangularKernelFactorizedOperator (K i))
       l
-      (𝓝 (realL2HilbertSchmidtRectangularKernelFactorizedOperator K∞)) :=
-  (realL2HilbertSchmidtRectangularKernelFactorizedOperator_continuous
-    (μ := μ) (ν := ν)).tendsto K∞ |>.comp hK
+      (𝓝 (realL2HilbertSchmidtRectangularKernelFactorizedOperator K∞)) := by
+  exact
+    ((realL2HilbertSchmidtRectangularKernelFactorizedOperator_continuous
+      (μ := μ) (ν := ν)).tendsto K∞).comp hK
 
 end
 
