@@ -84,6 +84,8 @@ theorem realL2HilbertSchmidtRectangularKernelFactorizedOperator_isSymmetric
       Lp ℝ 2 μ →L[ℝ] Lp ℝ 2 μ) :
       Lp ℝ 2 μ →ₗ[ℝ] Lp ℝ 2 μ).IsSymmetric := by
   intro f g
+  rw [real_inner_comm f
+      (realL2HilbertSchmidtRectangularKernelFactorizedOperator K g)]
   rw [realL2HilbertSchmidtRectangularKernelFactorizedOperator_inner,
     realL2HilbertSchmidtRectangularKernelFactorizedOperator_inner]
   exact real_inner_comm _ _
@@ -114,7 +116,14 @@ theorem realL2HilbertSchmidtRectangularKernelFactorizedOperator_inner_self_pos_i
         (realL2HilbertSchmidtRectangularKernelFactorizedOperator K f) f ↔
       realL2HilbertSchmidtRectangularKernelOperator K f ≠ 0 := by
   rw [realL2HilbertSchmidtRectangularKernelFactorizedOperator_inner_self]
-  exact sq_pos_iff
+  constructor
+  · intro hpos hzero
+    rw [hzero, norm_zero] at hpos
+    norm_num at hpos
+  · intro hne
+    have hnorm : 0 < ‖realL2HilbertSchmidtRectangularKernelOperator K f‖ :=
+      norm_pos_iff.mpr hne
+    nlinarith
 
 /-- Audit-visible generic rectangular Gram-factorization receipt. -/
 structure RealL2HilbertSchmidtRectangularKernelGramFactorizationPackage
