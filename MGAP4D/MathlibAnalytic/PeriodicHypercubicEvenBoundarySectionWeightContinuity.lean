@@ -124,39 +124,28 @@ theorem periodicHypercubicEvenBoundaryGramCoefficient_continuous
     (periodicHypercubicEvenBoundarySpatialCrossingWilsonBoltzmannWeight_continuous
       H 2 (by norm_num) beta).div_const _
 
-/-- Named wrapper for the exact residual boundary product.  Keeping the large
-finite-lattice product behind one definition avoids forcing the elaborator to
-normalize its full dependent index expression while matching continuity
-combinators.  The definition is literally the original residual interaction. -/
-noncomputable def periodicHypercubicEvenPositiveBoundaryTemporalResidualBoundaryProductFn
+/-- Finite products of the boundary relative-kernel factors are continuous for
+an arbitrary plaquette `Finset`.  Keeping the concrete residual `sdiff` out of
+this proof prevents normalization of its large dependent finite-lattice term. -/
+private theorem periodicHypercubicEvenBoundaryRelativeKernelProduct_continuous_on
     (H : ℕ)
-    (beta : ℝ) :
-    PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 → ℝ :=
-  fun b =>
-    ∏ p ∈ periodicHypercubicEvenPositiveBoundaryTemporalResidualPlaquettes H,
-      specialUnitaryWilsonRelativeKernel 2 beta
-        (periodicHypercubicEvenPositiveBoundaryTemporalFiberedBoundaryLeg b p)
-        1
-
-/-- Continuity of the named exact residual boundary product. -/
-set_option maxHeartbeats 2000000 in
-theorem periodicHypercubicEvenPositiveBoundaryTemporalResidualBoundaryProductFn_continuous
-    (H : ℕ)
-    (beta : ℝ) :
+    (beta : ℝ)
+    (s : Finset (PeriodicHypercubicEvenPlaquette H)) :
     Continuous
-      (periodicHypercubicEvenPositiveBoundaryTemporalResidualBoundaryProductFn
-        H beta) := by
-  unfold periodicHypercubicEvenPositiveBoundaryTemporalResidualBoundaryProductFn
-  apply continuous_finset_prod
+      (fun b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
+        ∏ p ∈ s,
+          specialUnitaryWilsonRelativeKernel 2 beta
+            (periodicHypercubicEvenPositiveBoundaryTemporalFiberedBoundaryLeg b p)
+            1) := by
+  refine continuous_finset_prod s ?_
   intro p _hp
   exact (continuous_specialUnitaryWilsonRelativeKernel 2 beta).comp
     ((periodicHypercubicEvenPositiveBoundaryTemporalFiberedBoundaryLeg_continuous
       H p).prodMk continuous_const)
 
 /-- The exact residual boundary factor appearing on the canonical four-companion
-section is continuous.  This keeps the original public theorem statement while
-routing elaboration through the named finite-product wrapper above. -/
-set_option maxHeartbeats 2000000 in
+section is continuous.  The residual interaction is retained literally; only
+the finite-product continuity argument is proved first for an abstract Finset. -/
 theorem periodicHypercubicEvenPositiveBoundaryTemporalResidualBoundaryProduct_continuous
     (H : ℕ)
     (beta : ℝ) :
@@ -166,8 +155,8 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalResidualBoundaryProduct_co
           specialUnitaryWilsonRelativeKernel 2 beta
             (periodicHypercubicEvenPositiveBoundaryTemporalFiberedBoundaryLeg b p)
             1) := by
-  simpa only [periodicHypercubicEvenPositiveBoundaryTemporalResidualBoundaryProductFn] using
-    periodicHypercubicEvenPositiveBoundaryTemporalResidualBoundaryProductFn_continuous H beta
+  exact periodicHypercubicEvenBoundaryRelativeKernelProduct_continuous_on
+    H beta (periodicHypercubicEvenPositiveBoundaryTemporalResidualPlaquettes H)
 
 /-- The complete boundary prefactor in the actual four-companion section
 factorization is continuous.  In particular its measurability can now be
