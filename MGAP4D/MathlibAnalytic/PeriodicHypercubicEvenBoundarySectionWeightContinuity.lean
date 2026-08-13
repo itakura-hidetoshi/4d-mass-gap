@@ -163,9 +163,36 @@ private theorem periodicHypercubicEvenBoundaryRelativeKernelProduct_continuous_o
             (fun _ : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
               (1 : ℝ)))
   | @insert p s hp ih =>
-      simpa [Finset.prod_insert, hp] using
+      have hmul :
+          Continuous
+            (fun b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
+              specialUnitaryWilsonRelativeKernel 2 beta
+                  (periodicHypercubicEvenPositiveBoundaryTemporalFiberedBoundaryLeg b p)
+                  1 *
+                ∏ q ∈ s,
+                  specialUnitaryWilsonRelativeKernel 2 beta
+                    (periodicHypercubicEvenPositiveBoundaryTemporalFiberedBoundaryLeg b q)
+                    1) :=
         (periodicHypercubicEvenBoundaryRelativeKernelFactor_continuous
           H beta p).mul ih
+      have hinsert :
+          (fun b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
+            ∏ q ∈ insert p s,
+              specialUnitaryWilsonRelativeKernel 2 beta
+                (periodicHypercubicEvenPositiveBoundaryTemporalFiberedBoundaryLeg b q)
+                1) =
+          (fun b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
+            specialUnitaryWilsonRelativeKernel 2 beta
+                (periodicHypercubicEvenPositiveBoundaryTemporalFiberedBoundaryLeg b p)
+                1 *
+              ∏ q ∈ s,
+                specialUnitaryWilsonRelativeKernel 2 beta
+                  (periodicHypercubicEvenPositiveBoundaryTemporalFiberedBoundaryLeg b q)
+                  1) := by
+        funext b
+        rw [Finset.prod_insert hp]
+      rw [hinsert]
+      exact hmul
 
 /-- The exact residual boundary factor appearing on the canonical four-companion
 section is continuous.  The residual interaction is retained literally; only
