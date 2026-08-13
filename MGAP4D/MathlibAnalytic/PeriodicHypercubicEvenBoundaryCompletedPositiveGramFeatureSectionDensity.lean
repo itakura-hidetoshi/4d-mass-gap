@@ -115,12 +115,30 @@ theorem
     Measurable
       (periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureSectionDensity
         H hH beta hbeta u) := by
-  unfold periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureSectionDensity
-  exact ENNReal.measurable_ofReal.comp
-    ((periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_jointMeasurable
+  let x : PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H 2 :=
+    periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfSection
+      H (Nat.zero_lt_of_lt hH) u
+  have hEmbed : Measurable
+      (fun b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
+        (b, x)) :=
+    measurable_id.prodMk measurable_const
+  have hGram : Measurable
+      (fun p :
+        PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 ×
+          PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H 2 =>
+        periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+          H 2 boundaryCompletedPositiveGramFeatureSectionDensityTwoRankPositive
+          beta hbeta p.1 p.2) :=
+    periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_jointMeasurable
       H 2 boundaryCompletedPositiveGramFeatureSectionDensityTwoRankPositive
-      beta hbeta).comp
-      (measurable_id.prodMk measurable_const))
+      beta hbeta
+  change Measurable
+    (fun b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
+      ENNReal.ofReal
+        (periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+          H 2 boundaryCompletedPositiveGramFeatureSectionDensityTwoRankPositive
+          beta hbeta b x))
+  exact ENNReal.measurable_ofReal.comp (hGram.comp hEmbed)
 
 /-- The section density is everywhere nonzero, hence in particular nonzero
 boundary-Haar almost everywhere. -/
