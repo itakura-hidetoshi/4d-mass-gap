@@ -21,14 +21,15 @@ theorem
       (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H k).1
       (0 : PeriodicHypercubicAxis) 0).val = 1
   rw [periodicHypercubicShift_apply]
-  simp only [if_pos rfl]
+  simp only [if_true]
   have hzero :=
     periodicHypercubicEvenPrimarySpatialPlaquetteEdge_source_time_val_zero H k
   have hnowrap :
       ((periodicHypercubicEvenPrimarySpatialPlaquetteEdge H k).1 0).val + 1 <
         PeriodicHypercubicEvenSideLength H := by
     rw [hzero]
-    simp [PeriodicHypercubicEvenSideLength]
+    simp only [PeriodicHypercubicEvenSideLength]
+    omega
   rw [periodicHypercubicEven_val_add_one_of_lt H _ hnowrap, hzero]
 
 private theorem
