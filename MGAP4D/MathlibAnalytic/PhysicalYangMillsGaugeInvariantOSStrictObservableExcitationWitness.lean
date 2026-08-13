@@ -42,8 +42,7 @@ theorem physicalState_ne_zero_of_osQuadratic_pos
         symm
         exact P.inner_physicalState_physicalState F F
       _ = 0 := by
-        rw [hzero]
-        exact inner_zero_left
+        simp [hzero]
   exact (ne_of_gt hpos) hquadZero
 
 /-- Centering against the OS vacuum observable is exactly enough to put the
