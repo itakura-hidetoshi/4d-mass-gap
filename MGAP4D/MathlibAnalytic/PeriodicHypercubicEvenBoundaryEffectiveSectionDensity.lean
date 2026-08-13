@@ -61,13 +61,21 @@ local instance boundaryEffectiveSectionDensityMarginalFinite
         H 2 boundaryEffectiveSectionDensityTwoRankPositive beta hbeta) := by
   rw [← periodicHypercubicEvenSpecialUnitary_map_boundaryRestriction_gibbsMeasure
     H 2 boundaryEffectiveSectionDensityTwoRankPositive beta hbeta]
-  letI : IsProbabilityMeasure
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength H) 2
-        boundaryEffectiveSectionDensityTwoRankPositive beta hbeta).gibbsMeasure :=
-    periodicHypercubicSpecialUnitaryWilsonSystem_gibbsMeasure_probability
+  let mu :=
+    (periodicHypercubicSpecialUnitaryWilsonSystem
+      (PeriodicHypercubicEvenSideLength H) 2
+      boundaryEffectiveSectionDensityTwoRankPositive beta hbeta).gibbsMeasure
+  change IsFiniteMeasure
+    (Measure.map (periodicHypercubicEvenEdgeOrbitPartition H).boundaryRestriction mu)
+  letI : IsProbabilityMeasure mu := by
+    dsimp [mu]
+    exact periodicHypercubicSpecialUnitaryWilsonSystem_gibbsMeasure_probability
       (PeriodicHypercubicEvenSideLength H) 2
       boundaryEffectiveSectionDensityTwoRankPositive beta hbeta
+  letI : IsZeroOrProbabilityMeasure mu :=
+    MeasureTheory.instIsZeroOrProbabilityMeasureOfIsProbabilityMeasure mu
+  letI : IsFiniteMeasure mu :=
+    MeasureTheory.IsZeroOrProbabilityMeasure.toIsFiniteMeasure mu
   apply Measure.isFiniteMeasure_map
 
 noncomputable def periodicHypercubicEvenBoundaryEffectiveSectionRealWeight
