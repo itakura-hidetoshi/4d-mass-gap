@@ -70,7 +70,7 @@ theorem
   have hlimit :=
     periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartialAdjointProbeProductIntegral_tendsto_inner_analysis
       hH n beta hbeta f q
-  exact lt_of_lt_of_le hdelta (le_of_tendsto hlimit hlower)
+  exact lt_of_lt_of_le hdelta (ge_of_tendsto hlimit hlower)
 
 /-- Under the same eventual protected lower bound, the genuine actual Wilson
 analysis output cannot be the zero `L²` vector.  No sign is inferred from a PSD
