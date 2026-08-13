@@ -104,7 +104,12 @@ noncomputable def
 
 /-- The section density is measurable as the pullback of the already-proved
 jointly measurable actual boundary/open-half Gram feature along the measurable
-embedding `b ↦ (b, section(u))`. -/
+embedding `b ↦ (b, section(u))`.
+
+The heartbeat allowance is local to this declaration.  Its proof is a direct
+measurable-composition argument; the extra budget is needed only to normalize
+the large finite-lattice dependent types. -/
+set_option maxHeartbeats 800000 in
 theorem
     periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureSectionDensity_measurable
     (H : ℕ)
