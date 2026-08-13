@@ -105,6 +105,30 @@ theorem
         hH beta hbeta)
       f f
 
+/-- The cancellation-free finite quantities themselves converge: the squared
+norms of the finite full-residual Wilson/Fock analysis vectors converge to the
+squared norm of the genuine completed-positive Wilson analysis vector. -/
+theorem
+    periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartialAnalysis_norm_sq_tendsto_actual
+    {H : ℕ}
+    (hH : 0 < H)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (f : Lp ℝ 2 (periodicHypercubicEvenBoundaryHaarMeasure H 2)) :
+    Tendsto
+      (fun degree =>
+        ‖periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartialAnalysisOperator
+          H hH beta hbeta degree f‖ ^ 2)
+      atTop
+      (𝓝
+        (‖periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator
+          H 2 cyclicFourEdgeWilsonGramStrictnessLimitTwoRankPositive beta hbeta f‖ ^ 2)) := by
+  simpa only [
+    periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartialFactorizedOperator_inner_self,
+    periodicHypercubicEvenWilsonBoundaryGramFeatureFactorizedOperator_inner_self] using
+    periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartialFactorizedQuadratic_tendsto_actual
+      hH beta hbeta f
+
 /-- A uniform strictly positive lower bound on the **positive finite Gram
 quadratic forms** survives the Wilson/Fock limit and becomes a strict actual
 `A†A` witness.  This replaces the previous signed scalar-probe lower-bound
