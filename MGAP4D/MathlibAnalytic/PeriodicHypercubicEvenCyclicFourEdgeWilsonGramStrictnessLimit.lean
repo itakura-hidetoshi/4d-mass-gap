@@ -49,12 +49,37 @@ local instance cyclicFourEdgeWilsonGramStrictnessLimitSU2Nontrivial :
       (U : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
   norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
 
+/-- Fixed matrix coefficients are continuous for operator-norm convergence of
+continuous linear endomorphisms.  Keeping this lemma completely abstract keeps
+all periodic-Wilson definitions opaque during elaboration. -/
+private theorem continuousLinearMap_inner_apply_tendsto
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    {ι : Type*}
+    {l : Filter ι}
+    {Tn : ι → E →L[ℝ] E}
+    {T : E →L[ℝ] E}
+    (hT : Tendsto Tn l (𝓝 T))
+    (f g : E) :
+    Tendsto
+      (fun i => inner ℝ (Tn i f) g)
+      l
+      (𝓝 (inner ℝ (T f) g)) := by
+  have hpair : Tendsto (fun i => (Tn i, f)) l (𝓝 (T, f)) :=
+    hT.prodMk_nhds tendsto_const_nhds
+  have hEval : Continuous (fun z : (E →L[ℝ] E) × E => z.1 z.2) :=
+    (isBoundedBilinearMap_apply (𝕜 := ℝ) (E := E) (F := E)).continuous
+  have hApply : Tendsto (fun i => Tn i f) l (𝓝 (T f)) :=
+    (hEval.tendsto (T, f)).comp hpair
+  exact hApply.inner tendsto_const_nhds
+
 /-- Operator-norm convergence of the finite full-residual Gram factors implies
 convergence of every fixed quadratic form.
 
-The evaluation map `(T,f) ↦ T f` is bounded bilinear, and the real Hilbert
-inner product is continuous, so no coordinate expansion or scalar probe is
-needed. -/
+The proof now applies the abstract fixed-matrix-coefficient continuity lemma
+directly to the already-constructed Wilson Gram-operator limit.  No Wilson
+kernel definition is unfolded. -/
 theorem
     periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartialFactorizedQuadratic_tendsto_actual
     {H : ℕ}
@@ -74,24 +99,11 @@ theorem
           (periodicHypercubicEvenWilsonBoundaryGramFeatureFactorizedOperator
             H 2 cyclicFourEdgeWilsonGramStrictnessLimitTwoRankPositive beta hbeta f)
           f)) := by
-  let X := Lp ℝ 2 (periodicHypercubicEvenBoundaryHaarMeasure H 2)
-  let Gd := fun degree =>
-    periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartialFactorizedOperator
-      H hH beta hbeta degree
-  let G := periodicHypercubicEvenWilsonBoundaryGramFeatureFactorizedOperator
-    H 2 cyclicFourEdgeWilsonGramStrictnessLimitTwoRankPositive beta hbeta
-  have hG : Tendsto Gd atTop (𝓝 G) := by
-    simpa [Gd, G] using
-      periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartialFactorizedOperator_tendsto_actual
-        hH beta hbeta
-  have hpair :
-      Tendsto (fun degree => (Gd degree, f)) atTop (𝓝 (G, f)) :=
-    hG.prodMk_nhds tendsto_const_nhds
-  have happly : Tendsto (fun degree => Gd degree f) atTop (𝓝 (G f)) := by
-    have hEval : Continuous (fun z : (X →L[ℝ] X) × X => z.1 z.2) :=
-      (isBoundedBilinearMap_apply (𝕜 := ℝ) (E := X) (F := X)).continuous
-    exact (hEval.tendsto (G, f)).comp hpair
-  simpa [Gd, G] using happly.inner tendsto_const_nhds
+  exact
+    continuousLinearMap_inner_apply_tendsto
+      (periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartialFactorizedOperator_tendsto_actual
+        hH beta hbeta)
+      f f
 
 /-- A uniform strictly positive lower bound on the **positive finite Gram
 quadratic forms** survives the Wilson/Fock limit and becomes a strict actual
