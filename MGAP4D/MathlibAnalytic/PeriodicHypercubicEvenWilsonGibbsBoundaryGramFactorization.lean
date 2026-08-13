@@ -35,6 +35,18 @@ local instance boundaryGramFactorizationSpecialUnitaryBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
+local instance boundaryGramFactorizationBoundaryHaarSFinite (H N : ℕ) :
+    SFinite (periodicHypercubicEvenBoundaryHaarMeasure H N) := by
+  dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
+  infer_instance
+
+local instance boundaryGramFactorizationOpenHalfHaarSFinite (H N : ℕ) :
+    SFinite (periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
+  dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+  infer_instance
+
 /-- The Wilson-specific `A†A` operator is definitionally the generic Gram
 factor of the actual completed positive boundary/open-half Hilbert--Schmidt
 kernel.  This theorem exposes that identification to downstream files without
