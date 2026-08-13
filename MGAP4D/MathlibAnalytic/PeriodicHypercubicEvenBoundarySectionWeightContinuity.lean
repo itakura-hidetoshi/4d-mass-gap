@@ -138,7 +138,12 @@ theorem periodicHypercubicEvenPositiveBoundaryTemporalResidualBoundaryProduct_co
           specialUnitaryWilsonRelativeKernel 2 beta
             (periodicHypercubicEvenPositiveBoundaryTemporalFiberedBoundaryLeg b p)
             1) := by
-  apply continuous_finset_prod
+  refine continuous_finsetProd
+    (f := fun p b =>
+      specialUnitaryWilsonRelativeKernel 2 beta
+        (periodicHypercubicEvenPositiveBoundaryTemporalFiberedBoundaryLeg b p)
+        1)
+    (periodicHypercubicEvenPositiveBoundaryTemporalResidualPlaquettes H) ?_
   intro p _hp
   exact (continuous_specialUnitaryWilsonRelativeKernel 2 beta).comp
     ((periodicHypercubicEvenPositiveBoundaryTemporalFiberedBoundaryLeg_continuous
