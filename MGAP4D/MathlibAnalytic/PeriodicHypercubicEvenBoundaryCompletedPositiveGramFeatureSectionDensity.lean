@@ -1,6 +1,4 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryCompletedPositiveGramFeatureSectionFactorization
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonGibbsBoundaryOpenHalfProductL2
-import Mathlib.MeasureTheory.Measure.OpenPos
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -84,9 +82,10 @@ theorem
         (mul_pos (hKernel _ _) (hKernel _ _))))
 
 /-- For fixed four-companion coordinates, use the actual completed-positive
-Gram feature itself as an equivalent positive density on boundary Haar.  The
-value is finite because it is obtained with `ENNReal.ofReal` from the real
-finite-volume Wilson Gram feature. -/
+Gram feature as a pointwise finite positive boundary weight.  Measurability is
+deliberately established only at the later theorem that consumes the weight,
+so the large finite-lattice dependent type is normalized once rather than in a
+standalone declaration. -/
 noncomputable def
     periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureSectionDensity
     (H : ℕ)
@@ -101,49 +100,6 @@ noncomputable def
       beta hbeta b
       (periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfSection
         H (Nat.zero_lt_of_lt hH) u))
-
-/-- The section density is measurable as the pullback of the already-proved
-jointly measurable actual boundary/open-half Gram feature along the measurable
-embedding `b ↦ (b, section(u))`.
-
-The heartbeat allowance is local to this declaration.  Its proof is a direct
-measurable-composition argument; the extra budget is needed only to normalize
-the large finite-lattice dependent types. -/
-set_option maxHeartbeats 800000 in
-theorem
-    periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureSectionDensity_measurable
-    (H : ℕ)
-    (hH : 1 < H)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (u : Fin 4 → Matrix.specialUnitaryGroup (Fin 2) ℂ) :
-    Measurable
-      (periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureSectionDensity
-        H hH beta hbeta u) := by
-  let x : PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H 2 :=
-    periodicHypercubicEvenPrimarySpatialPlaquetteTemporalCompanionOpenHalfSection
-      H (Nat.zero_lt_of_lt hH) u
-  have hEmbed : Measurable
-      (fun b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
-        (b, x)) :=
-    measurable_id.prodMk measurable_const
-  have hGram : Measurable
-      (fun p :
-        PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 ×
-          PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H 2 =>
-        periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
-          H 2 boundaryCompletedPositiveGramFeatureSectionDensityTwoRankPositive
-          beta hbeta p.1 p.2) :=
-    periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_jointMeasurable
-      H 2 boundaryCompletedPositiveGramFeatureSectionDensityTwoRankPositive
-      beta hbeta
-  change Measurable
-    (fun b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 =>
-      ENNReal.ofReal
-        (periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
-          H 2 boundaryCompletedPositiveGramFeatureSectionDensityTwoRankPositive
-          beta hbeta b x))
-  exact ENNReal.measurable_ofReal.comp (hGram.comp hEmbed)
 
 /-- The section density is everywhere nonzero, hence in particular nonzero
 boundary-Haar almost everywhere. -/
