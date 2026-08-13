@@ -124,9 +124,10 @@ theorem periodicHypercubicEvenBoundaryGramCoefficient_continuous
     (periodicHypercubicEvenBoundarySpatialCrossingWilsonBoltzmannWeight_continuous
       H 2 (by norm_num) beta).div_const _
 
-/-- One boundary relative-kernel factor is continuous.  Isolating this small
-statement keeps the joint-kernel composition out of the finite-product
-elaboration step. -/
+/-- One boundary relative-kernel factor is continuous.  Use the binary
+continuity composition already used by the full boundary kernel theorem, rather
+than packaging the arguments through `prodMk`; this keeps dependent product
+normalization out of the elaboration path. -/
 private theorem periodicHypercubicEvenBoundaryRelativeKernelFactor_continuous
     (H : ℕ)
     (beta : ℝ)
@@ -136,9 +137,9 @@ private theorem periodicHypercubicEvenBoundaryRelativeKernelFactor_continuous
         specialUnitaryWilsonRelativeKernel 2 beta
           (periodicHypercubicEvenPositiveBoundaryTemporalFiberedBoundaryLeg b p)
           1) := by
-  exact (continuous_specialUnitaryWilsonRelativeKernel 2 beta).comp
-    ((periodicHypercubicEvenPositiveBoundaryTemporalFiberedBoundaryLeg_continuous
-      H p).prodMk continuous_const)
+  exact (continuous_specialUnitaryWilsonRelativeKernel 2 beta).comp₂
+    (periodicHypercubicEvenPositiveBoundaryTemporalFiberedBoundaryLeg_continuous H p)
+    continuous_const
 
 /-- Finite products of the boundary relative-kernel factors are continuous for
 an arbitrary plaquette `Finset`.  The proof is built by `Finset` induction so
