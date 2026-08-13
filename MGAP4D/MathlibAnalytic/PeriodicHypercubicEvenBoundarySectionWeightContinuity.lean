@@ -124,11 +124,11 @@ theorem periodicHypercubicEvenBoundaryGramCoefficient_continuous
     (periodicHypercubicEvenBoundarySpatialCrossingWilsonBoltzmannWeight_continuous
       H 2 (by norm_num) beta).div_const _
 
-/-- The exact residual boundary factor appearing on the canonical
-four-companion section is continuous.  The elevated heartbeat allowance is
-local to this finite product declaration; it only pays for normalization of the
-large dependent finite-lattice index type. -/
-set_option maxHeartbeats 800000 in
+/- The exact residual boundary factor appearing on the canonical four-companion
+section is continuous.  The elevated heartbeat allowance is local to this
+finite product declaration; it only pays for normalization of the large
+dependent finite-lattice index type. -/
+set_option maxHeartbeats 2000000 in
 theorem periodicHypercubicEvenPositiveBoundaryTemporalResidualBoundaryProduct_continuous
     (H : ℕ)
     (beta : ℝ) :
