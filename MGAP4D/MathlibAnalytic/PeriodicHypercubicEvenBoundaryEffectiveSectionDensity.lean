@@ -61,7 +61,7 @@ local instance boundaryEffectiveSectionDensityMarginalFinite
         H 2 boundaryEffectiveSectionDensityTwoRankPositive beta hbeta) := by
   rw [← periodicHypercubicEvenSpecialUnitary_map_boundaryRestriction_gibbsMeasure
     H 2 boundaryEffectiveSectionDensityTwoRankPositive beta hbeta]
-  infer_instance
+  apply Measure.isFiniteMeasure_map
 
 noncomputable def periodicHypercubicEvenBoundaryEffectiveSectionRealWeight
     (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta)
@@ -185,7 +185,7 @@ theorem periodicHypercubicEvenBoundaryEffectiveSectionRealWeight_integrable
     (periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureSectionBoundaryPrefactor_continuous
       H beta hbeta).measurable.aestronglyMeasurable
   unfold periodicHypercubicEvenBoundaryEffectiveSectionRealWeight
-  refine hVac.mul_bdd hRhoMeas ?_
+  refine hVac.mul_bdd hRhoMeas (c := ‖rho‖) ?_
   filter_upwards with b
   simpa [rho] using rho.norm_coe_le_norm b
 
