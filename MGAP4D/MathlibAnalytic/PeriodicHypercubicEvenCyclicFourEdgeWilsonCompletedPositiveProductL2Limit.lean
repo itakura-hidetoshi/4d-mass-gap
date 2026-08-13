@@ -326,9 +326,29 @@ theorem
         Tendsto (fun degree => F degree p) atTop (𝓝 0) :=
     Filter.Eventually.of_forall fun p => by
       dsimp [F]
-      have hraw :=
-        periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartial_tendsto
-          hH beta hbeta p.1 p.2
+      have hraw : Tendsto
+          (fun degree =>
+            periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartial
+              H beta hbeta degree p.1 p.2)
+          atTop
+          (𝓝
+            (periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+              H 2 cyclicFourEdgeWilsonProductL2LimitTwoRankPositive
+              beta hbeta p.1 p.2)) := by
+        simpa using
+          periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartial_tendsto
+            hH beta hbeta p.1 p.2
+      have hconst : Tendsto
+          (fun _ : ℕ =>
+            periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+              H 2 cyclicFourEdgeWilsonProductL2LimitTwoRankPositive
+              beta hbeta p.1 p.2)
+          atTop
+          (𝓝
+            (periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+              H 2 cyclicFourEdgeWilsonProductL2LimitTwoRankPositive
+              beta hbeta p.1 p.2)) :=
+        tendsto_const_nhds
       have hdiff : Tendsto
           (fun degree =>
             periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartial
@@ -337,7 +357,7 @@ theorem
                 H 2 cyclicFourEdgeWilsonProductL2LimitTwoRankPositive
                 beta hbeta p.1 p.2)
           atTop (𝓝 0) := by
-        simpa using hraw.sub tendsto_const_nhds
+        simpa using hraw.sub hconst
       simpa using hdiff.norm.pow 2
   have hdom :=
     MeasureTheory.tendsto_integral_filter_of_dominated_convergence
@@ -376,7 +396,16 @@ theorem
     simpa only [
       periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartialProductL2_sub_actual_norm_sq]
       using hsq
-  have hsqrt := (Real.continuous_sqrt.tendsto 0).comp hsq'
+  have hsqrt : Tendsto
+      (fun degree =>
+        Real.sqrt
+          (‖periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartialProductL2
+                H hH beta hbeta degree -
+              periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureProductL2
+                H 2 cyclicFourEdgeWilsonProductL2LimitTwoRankPositive beta hbeta‖ ^ 2))
+      atTop (𝓝 0) := by
+    simpa only [Real.sqrt_zero] using
+      (Real.continuous_sqrt.tendsto 0).comp hsq'
   have hnorm : Tendsto
       (fun degree =>
         ‖periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartialProductL2
@@ -384,7 +413,7 @@ theorem
             periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureProductL2
               H 2 cyclicFourEdgeWilsonProductL2LimitTwoRankPositive beta hbeta‖)
       atTop (𝓝 0) := by
-    simpa [Function.comp_apply, Real.sqrt_sq_eq_abs] using hsqrt
+    simpa only [Real.sqrt_sq_eq_abs, abs_of_nonneg, norm_nonneg] using hsqrt
   exact (tendsto_iff_norm_sub_tendsto_zero).2 hnorm
 
 /-- Product-`L²` finite kernels rewritten on the literal product measure used
