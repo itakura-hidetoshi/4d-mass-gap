@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPositiveBoundaryTemporalWilsonActualAnalysisProbeNonzero
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPositiveBoundaryTemporalWilsonActualAnalysisVacuumOrthogonality
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -91,6 +92,55 @@ theorem
   intro hzero
   apply hAf
   simpa [hzero]
+
+/-- A centered interacting-boundary trace polynomial with a strict `A† A`
+quadratic witness produces a genuine nonzero open-half state orthogonal to the
+physical vacuum.  Thus the remaining strictness obligation is isolated at the
+positive quadratic form itself; no scalar probe or cross-degree sign choice is
+needed in this final Hilbert-space step. -/
+theorem
+    periodicHypercubicEvenBoundaryNormalizedTracePolynomial_actualAnalysisOutput_centered_and_ne_zero_of_factorized_inner_self_pos
+    (H : ℕ)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (k : ℕ)
+    (c : Fin (k + 1) → ℝ)
+    (hzero :
+      inner ℝ
+        (periodicHypercubicEvenBoundaryMarginalVacuumL2 H beta hbeta)
+        (periodicHypercubicEvenBoundaryMarginalNormalizedTracePolynomialL2
+          H beta hbeta k c) = 0)
+    (hpos :
+      0 < inner ℝ
+        (periodicHypercubicEvenWilsonBoundaryGramFeatureFactorizedOperator
+          H 2 positiveBoundaryTemporalWilsonActualAnalysisNonzeroCriterionTwoRankPositive
+          beta hbeta
+          (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
+            H beta hbeta k c))
+        (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
+          H beta hbeta k c)) :
+    inner ℝ
+        (periodicHypercubicEvenOpenHalfConstantOneL2 H 2)
+        (periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator
+          H 2 positiveBoundaryTemporalWilsonActualAnalysisNonzeroCriterionTwoRankPositive
+          beta hbeta
+          (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
+            H beta hbeta k c)) = 0 ∧
+      periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator
+          H 2 positiveBoundaryTemporalWilsonActualAnalysisNonzeroCriterionTwoRankPositive
+          beta hbeta
+          (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
+            H beta hbeta k c) ≠ 0 := by
+  constructor
+  · exact
+      periodicHypercubicEvenBoundaryNormalizedTracePolynomial_actualAnalysisOutput_centered
+        H beta hbeta k c hzero
+  · exact
+      periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator_apply_ne_zero_of_factorized_inner_self_pos
+        beta hbeta
+        (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
+          H beta hbeta k c)
+        hpos
 
 /-- A uniform positive lower bound on the finite four-edge adjoint/Fock
 pairings survives the full Wilson-analysis limit.  This isolates exactly the
