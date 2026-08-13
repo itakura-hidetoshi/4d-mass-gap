@@ -5,8 +5,8 @@ import Mathlib.Analysis.Normed.Operator.BoundedLinearMaps
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open MeasureTheory
-open scoped InnerProductSpace InnerProduct
+open Filter MeasureTheory
+open scoped InnerProductSpace InnerProduct Topology
 
 noncomputable section
 
