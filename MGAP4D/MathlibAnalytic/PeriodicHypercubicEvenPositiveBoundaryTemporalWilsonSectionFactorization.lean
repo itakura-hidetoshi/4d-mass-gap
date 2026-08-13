@@ -9,6 +9,15 @@ open scoped BigOperators
 
 noncomputable section
 
+local instance positiveBoundaryTemporalWilsonSectionFactorizationSU2Nontrivial :
+    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun U : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (U : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
 /-- The canonical four-companion section is an exact right inverse of the
 physical four-edge open-path word.  Thus the four selected open-path variables
 are genuinely independent `SU(2)` coordinates, not merely abstract probes. -/
