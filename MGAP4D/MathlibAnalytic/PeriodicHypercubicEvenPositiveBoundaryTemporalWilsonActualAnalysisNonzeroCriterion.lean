@@ -41,63 +41,10 @@ local instance positiveBoundaryTemporalWilsonActualAnalysisNonzeroCriterionSU2No
       (U : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
   norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
 
-/-- The positive factorization `A† A` of the completed actual positive-boundary
-Wilson analysis operator.  Working with this quadratic object removes any
-choice of an open-half scalar probe and hence avoids cancellations between
-Taylor/Fock degrees at the level of a single matrix coefficient. -/
-noncomputable def
-    periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisFactorizedPositiveOperator
-    (H : ℕ)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta) :=
-  let A :=
-    periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator
-      H 2 positiveBoundaryTemporalWilsonActualAnalysisNonzeroCriterionTwoRankPositive
-      beta hbeta
-  A.adjoint.comp A
-
-/-- The quadratic form of the factorized completed actual Wilson analysis
-operator is exactly the squared norm of its analysis output. -/
-theorem
-    periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisFactorizedPositiveOperator_inner_self
-    {H : ℕ}
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (f : Lp ℝ 2 (periodicHypercubicEvenBoundaryHaarMeasure H 2)) :
-    inner ℝ
-        (periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisFactorizedPositiveOperator
-          H beta hbeta f)
-        f =
-      ‖periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator
-          H 2 positiveBoundaryTemporalWilsonActualAnalysisNonzeroCriterionTwoRankPositive
-          beta hbeta f‖ ^ 2 := by
-  let A :=
-    periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator
-      H 2 positiveBoundaryTemporalWilsonActualAnalysisNonzeroCriterionTwoRankPositive
-      beta hbeta
-  change inner ℝ ((A.adjoint.comp A) f) f = ‖A f‖ ^ 2
-  calc
-    inner ℝ ((A.adjoint.comp A) f) f = inner ℝ (A.adjoint (A f)) f := rfl
-    _ = inner ℝ (A f) (A f) := A.adjoint_inner_left (A f) f
-    _ = ‖A f‖ ^ 2 := real_inner_self_eq_norm_sq (A f)
-
-/-- The completed actual Wilson `A† A` quadratic form is nonnegative. -/
-theorem
-    periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisFactorizedPositiveOperator_inner_self_nonneg
-    {H : ℕ}
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (f : Lp ℝ 2 (periodicHypercubicEvenBoundaryHaarMeasure H 2)) :
-    0 ≤ inner ℝ
-      (periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisFactorizedPositiveOperator
-        H beta hbeta f)
-      f := by
-  rw [
-    periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisFactorizedPositiveOperator_inner_self]
-  exact sq_nonneg _
-
-/-- A strict quadratic witness for `A† A` is a cancellation-free witness that
-the genuine completed actual Wilson analysis output is nonzero. -/
+/-- A strict quadratic witness for the canonical completed actual Wilson
+factorization `A† A` is a cancellation-free witness that the genuine analysis
+output is nonzero.  This reuses the generic factorized operator rather than
+introducing an SU(2)-specific duplicate. -/
 theorem
     periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator_apply_ne_zero_of_factorized_inner_self_pos
     {H : ℕ}
@@ -106,8 +53,9 @@ theorem
     (f : Lp ℝ 2 (periodicHypercubicEvenBoundaryHaarMeasure H 2))
     (hpos :
       0 < inner ℝ
-        (periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisFactorizedPositiveOperator
-          H beta hbeta f)
+        (periodicHypercubicEvenWilsonBoundaryGramFeatureFactorizedOperator
+          H 2 positiveBoundaryTemporalWilsonActualAnalysisNonzeroCriterionTwoRankPositive
+          beta hbeta f)
         f) :
     periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator
         H 2 positiveBoundaryTemporalWilsonActualAnalysisNonzeroCriterionTwoRankPositive
@@ -115,13 +63,13 @@ theorem
   intro hzero
   have h := hpos
   rw [
-    periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisFactorizedPositiveOperator_inner_self,
+    periodicHypercubicEvenWilsonBoundaryGramFeatureFactorizedOperator_inner_self,
     hzero, norm_zero] at h
   norm_num at h
 
-/-- It is enough to exhibit one strict `A† A` quadratic witness to prove that
-the completed actual positive-boundary Wilson analysis operator itself is
-nonzero.  This is the natural target for the protected strict Gram theorem. -/
+/-- It is enough to exhibit one strict quadratic witness for the canonical
+`A† A` factorization to prove that the completed actual positive-boundary
+Wilson analysis operator itself is nonzero. -/
 theorem
     periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator_ne_zero_of_exists_factorized_inner_self_pos
     {H : ℕ}
@@ -129,8 +77,9 @@ theorem
     (hbeta : 0 ≤ beta)
     (hpos : ∃ f : Lp ℝ 2 (periodicHypercubicEvenBoundaryHaarMeasure H 2),
       0 < inner ℝ
-        (periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisFactorizedPositiveOperator
-          H beta hbeta f)
+        (periodicHypercubicEvenWilsonBoundaryGramFeatureFactorizedOperator
+          H 2 positiveBoundaryTemporalWilsonActualAnalysisNonzeroCriterionTwoRankPositive
+          beta hbeta f)
         f) :
     periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator
         H 2 positiveBoundaryTemporalWilsonActualAnalysisNonzeroCriterionTwoRankPositive
