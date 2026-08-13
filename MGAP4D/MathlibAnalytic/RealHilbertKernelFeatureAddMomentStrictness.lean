@@ -109,8 +109,8 @@ theorem RealHilbertKernelFeature.exists_weighted_kernel_integral_ne_zero_of_inte
     (hIntegrable : Integrable (fun x => a x • C.feature x) μ)
     (hMoment : (∫ x, a x • C.feature x ∂μ) ≠ 0) :
     ∃ y : X, (∫ x, a x * kernel x y ∂μ) ≠ 0 := by
-  let g := fun x => a x • C.feature x
-  let M := ∫ x, g x ∂μ
+  let g : X → C.FeatureHilbert := fun x => a x • C.feature x
+  let M : C.FeatureHilbert := ∫ x, g x ∂μ
   have hM : M ≠ 0 := by
     simpa [M, g] using hMoment
   by_contra hNo
@@ -137,12 +137,12 @@ theorem RealHilbertKernelFeature.exists_weighted_kernel_integral_ne_zero_of_inte
       inner ℝ M M = ∫ x, inner ℝ M (g x) ∂μ := by
         symm
         exact integral_inner hIntegrable M
-      _ = ∫ _x : X, 0 ∂μ := by
+      _ = ∫ _x : X, (0 : ℝ) ∂μ := by
         apply integral_congr_ae
         filter_upwards [] with x
         dsimp [g]
         rw [real_inner_smul_right, hOrth x, mul_zero]
-      _ = 0 := integral_zero
+      _ = 0 := by simp
   exact hM (inner_self_eq_zero.mp hSelf)
 
 end
