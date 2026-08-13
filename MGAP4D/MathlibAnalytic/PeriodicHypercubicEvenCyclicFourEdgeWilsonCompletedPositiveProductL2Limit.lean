@@ -91,9 +91,6 @@ theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartial
     (Filter.Eventually.of_forall fun p => by
       let a := periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartial
         H beta hbeta degree p.1 p.2
-      have hC0 : 0 ≤ C := by
-        dsimp [C, periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartialBound]
-        exact Real.sqrt_nonneg _
       have ha : ‖a‖ ≤ C := by
         dsimp [a, C]
         simpa [Real.norm_eq_abs] using
@@ -101,7 +98,7 @@ theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartial
             H beta hbeta degree p.1 p.2
       change |‖a‖ ^ 2| ≤ C ^ 2
       rw [abs_of_nonneg (sq_nonneg ‖a‖)]
-      nlinarith [sq_nonneg (C - ‖a‖)])
+      exact pow_le_pow_left₀ (norm_nonneg a) ha 2)
 
 /-- Canonical product-Haar `L²` vector represented by the complete finite
 four-edge Wilson Taylor/Fock kernel. -/
@@ -256,27 +253,38 @@ theorem
     cyclicFourEdgeWilsonProductL2LimitTwoRankPositive beta hbeta
   let Cactual : ℝ := Real.sqrt (Csystem.base.partitionFunction⁻¹)
   let C : ℝ := Cpartial + Cactual
-  apply MeasureTheory.tendsto_integral_filter_of_dominated_convergence
-    (fun _ => C ^ 2)
-  · exact Filter.Eventually.of_forall fun degree =>
-      ((periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartial_jointMeasurable
-          hH beta hbeta degree).sub
-        (periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_jointMeasurable
-          H 2 cyclicFourEdgeWilsonProductL2LimitTwoRankPositive beta hbeta)).norm.pow_const 2 |>.aestronglyMeasurable
-  · exact Filter.Eventually.of_forall fun degree =>
+  let F := fun degree
+      (p :
+        PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 ×
+          PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H 2) =>
+    ‖periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartial
+          H beta hbeta degree p.1 p.2 -
+        periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+          H 2 cyclicFourEdgeWilsonProductL2LimitTwoRankPositive
+          beta hbeta p.1 p.2‖ ^ 2
+  have hF_meas :
+      ∀ᶠ degree in atTop,
+        AEStronglyMeasurable (F degree)
+          (periodicHypercubicEvenBoundaryOpenHalfHaarMeasure H 2) :=
+    Filter.Eventually.of_forall fun degree => by
+      dsimp [F]
+      exact
+        ((periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartial_jointMeasurable
+            hH beta hbeta degree).sub
+          (periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_jointMeasurable
+            H 2 cyclicFourEdgeWilsonProductL2LimitTwoRankPositive beta hbeta)).norm.pow_const 2 |>.aestronglyMeasurable
+  have hF_bound :
+      ∀ᶠ degree in atTop,
+        ∀ᵐ p ∂(periodicHypercubicEvenBoundaryOpenHalfHaarMeasure H 2),
+          ‖F degree p‖ ≤ C ^ 2 :=
+    Filter.Eventually.of_forall fun degree =>
       Filter.Eventually.of_forall fun p => by
+        dsimp [F]
         let a := periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartial
           H beta hbeta degree p.1 p.2
         let b := periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
           H 2 cyclicFourEdgeWilsonProductL2LimitTwoRankPositive
           beta hbeta p.1 p.2
-        have hCp0 : 0 ≤ Cpartial := by
-          dsimp [Cpartial,
-            periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartialBound]
-          exact Real.sqrt_nonneg _
-        have hCa0 : 0 ≤ Cactual := by
-          dsimp [Cactual]
-          exact Real.sqrt_nonneg _
         have ha : ‖a‖ ≤ Cpartial := by
           dsimp [a, Cpartial]
           simpa [Real.norm_eq_abs] using
@@ -301,14 +309,23 @@ theorem
             ‖a - b‖ ≤ ‖a‖ + ‖b‖ := norm_sub_le a b
             _ ≤ Cpartial + Cactual := add_le_add ha hb
             _ = C := rfl
-        have hC0 : 0 ≤ C := add_nonneg hCp0 hCa0
         change ‖‖a - b‖ ^ 2‖ ≤ C ^ 2
         rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg ‖a - b‖)]
-        nlinarith [sq_nonneg (C - ‖a - b‖)]
-  · simpa using
+        exact pow_le_pow_left₀ (norm_nonneg (a - b)) hdiff 2
+  have hC_integrable :
+      Integrable
+        (fun _ :
+          PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H 2 ×
+            PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H 2 => C ^ 2)
+        (periodicHypercubicEvenBoundaryOpenHalfHaarMeasure H 2) := by
+    simpa using
       (integrable_const (μ := periodicHypercubicEvenBoundaryOpenHalfHaarMeasure H 2)
         (C ^ 2))
-  · exact Filter.Eventually.of_forall fun p => by
+  have hF_lim :
+      ∀ᵐ p ∂(periodicHypercubicEvenBoundaryOpenHalfHaarMeasure H 2),
+        Tendsto (fun degree => F degree p) atTop (𝓝 0) :=
+    Filter.Eventually.of_forall fun p => by
+      dsimp [F]
       have hraw :=
         periodicHypercubicEvenBoundaryCompletedPositiveGramFourEdgeWilsonPartial_tendsto
           hH beta hbeta p.1 p.2
@@ -322,6 +339,13 @@ theorem
           atTop (𝓝 0) := by
         simpa using hraw.sub tendsto_const_nhds
       simpa using hdiff.norm.pow 2
+  have hdom :=
+    MeasureTheory.tendsto_integral_filter_of_dominated_convergence
+      (F := F)
+      (f := fun _ => (0 : ℝ))
+      (fun _ => C ^ 2)
+      hF_meas hF_bound hC_integrable hF_lim
+  simpa [F] using hdom
 
 /-- The complete finite four-edge Wilson/Fock product kernels converge to the
 actual completed-positive Wilson kernel in product-Haar `L²` norm. -/
@@ -360,7 +384,7 @@ theorem
             periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureProductL2
               H 2 cyclicFourEdgeWilsonProductL2LimitTwoRankPositive beta hbeta‖)
       atTop (𝓝 0) := by
-    simpa [Real.sqrt_sq_eq_abs] using hsqrt
+    simpa [Function.comp_apply, Real.sqrt_sq_eq_abs] using hsqrt
   exact (tendsto_iff_norm_sub_tendsto_zero).2 hnorm
 
 /-- Product-`L²` finite kernels rewritten on the literal product measure used
