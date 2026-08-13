@@ -73,7 +73,8 @@ local instance boundaryEffectiveSectionDensityMarginalFinite
       (PeriodicHypercubicEvenSideLength H) 2
       boundaryEffectiveSectionDensityTwoRankPositive beta hbeta
   letI : IsFiniteMeasure mu := ⟨by simp⟩
-  apply Measure.isFiniteMeasure_map
+  exact Measure.isFiniteMeasure_map mu
+    (periodicHypercubicEvenEdgeOrbitPartition H).boundaryRestriction
 
 noncomputable def periodicHypercubicEvenBoundaryEffectiveSectionRealWeight
     (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta)
