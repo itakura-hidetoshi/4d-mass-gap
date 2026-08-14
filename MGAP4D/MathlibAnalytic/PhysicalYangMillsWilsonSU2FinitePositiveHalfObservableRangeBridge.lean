@@ -109,9 +109,16 @@ theorem finitePositiveHalfObservable_range_eq_positiveHalfPullback_range
       physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
         S D halfExtent 2 finitePositiveHalfObservableRangeBridgeTwoRankPositive
           beta hbeta Q.toWeakStarBridge hInvariant n
-    refine ⟨Pn.positiveTimeSubmoduleCarrierLinearMap G, ?_⟩
-    rw [Q.finitePositiveHalfObservable_eq_positiveHalfPullback hInvariant n]
-    rw [Pn.toPositiveTime_positiveTimeSubmoduleCarrierLinearMap]
+    rcases Pn.carrierToPositiveTimeLinearMap_surjective G with ⟨F, hF⟩
+    refine ⟨F, ?_⟩
+    calc
+      physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservable
+          S D halfExtent 2 finitePositiveHalfObservableRangeBridgeTwoRankPositive
+            beta hbeta Q.toWeakStarBridge hInvariant n F =
+        Q.positiveHalfPullback n (Pn.toPositiveTime F) :=
+          Q.finitePositiveHalfObservable_eq_positiveHalfPullback hInvariant n F
+      _ = Q.positiveHalfPullback n G := by
+        exact congrArg (fun x => Q.positiveHalfPullback n x) hF
 
 /-- If the actual finite-positive-half OS image is sup-norm dense, the existing
 cylinder-density bridge now yields the raw actual-analysis range-closure
