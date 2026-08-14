@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonBoundaryAnalysisNonzero
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryRawActualAnalysisOperatorNonzero
 
 namespace MGAP4D
 namespace MathlibAnalytic
