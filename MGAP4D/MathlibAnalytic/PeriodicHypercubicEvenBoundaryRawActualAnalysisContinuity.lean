@@ -184,9 +184,12 @@ theorem periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysis
       simpa [K, zbound, C] using
         periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_le_sqrt_inv_partitionFunction
           H 2 boundaryRawActualAnalysisContinuityTwoRankPositive beta hbeta b x
+    have hpsiNorm : ‖psi b‖ = psi b := by
+      rw [Real.norm_eq_abs, abs_of_nonneg hpsi0]
+    have hKNorm : ‖K b x‖ = K b x := by
+      rw [Real.norm_eq_abs, abs_of_nonneg hK0]
     change ‖(p b * psi b) * K b x‖ ≤ (‖p‖ * zbound) * psi b
-    rw [norm_mul, norm_mul, Real.norm_eq_abs,
-      abs_of_nonneg hpsi0, Real.norm_eq_abs, abs_of_nonneg hK0]
+    rw [norm_mul, norm_mul, hpsiNorm, hKNorm]
     calc
       ‖p b‖ * psi b * K b x ≤ ‖p‖ * psi b * K b x :=
         mul_le_mul_of_nonneg_right
