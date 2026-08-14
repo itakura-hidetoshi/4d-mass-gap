@@ -151,8 +151,18 @@ theorem positiveHalfL2LinearMap_apply_eq_positiveTimeSubmoduleL2LinearMap
     Q.positiveHalfL2LinearMap hInvariant n F =
       Q.positiveTimeSubmoduleL2LinearMap n
         ((positiveTimeSubmoduleRangeClosurePreHilbert Q hInvariant n).toPositiveTime F) := by
-  rw [Q.positiveHalfL2LinearMap_apply,
-    Q.finitePositiveHalfObservable_eq_positiveHalfPullback hInvariant n F]
+  rw [Q.positiveHalfL2LinearMap_apply]
+  change
+    periodicHypercubicEvenWilsonOpenHalfObservableL2 (halfExtent n) 2
+        (physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservable
+          S D halfExtent 2 positiveTimeSubmoduleRangeClosureTwoRankPositive
+          beta hbeta Q.toWeakStarBridge hInvariant n F) =
+      BoundedContinuousFunction.toLp
+        (E := ℝ) 2
+        (periodicHypercubicEvenOpenHalfHaarMeasure (halfExtent n) 2) ℝ
+        (Q.positiveHalfPullback n
+          ((positiveTimeSubmoduleRangeClosurePreHilbert Q hInvariant n).toPositiveTime F))
+  rw [Q.finitePositiveHalfObservable_eq_positiveHalfPullback hInvariant n F]
   rfl
 
 /-- The carrier-level open-half `L²` map is exactly the direct positive-time
@@ -166,7 +176,8 @@ theorem positiveHalfL2LinearMap_eq_positiveTimeSubmodule_comp
     Q.positiveHalfL2LinearMap hInvariant n =
       (Q.positiveTimeSubmoduleL2LinearMap n).comp
         (positiveTimeSubmoduleRangeClosurePreHilbert Q hInvariant n).carrierToPositiveTimeLinearMap := by
-  ext F
+  apply LinearMap.ext
+  intro F
   exact Q.positiveHalfL2LinearMap_apply_eq_positiveTimeSubmoduleL2LinearMap
     hInvariant n F
 
