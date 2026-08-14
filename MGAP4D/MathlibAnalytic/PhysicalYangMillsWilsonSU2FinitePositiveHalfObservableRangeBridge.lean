@@ -78,6 +78,41 @@ theorem finitePositiveHalfObservable_range_subset_positiveHalfPullback_range
   rintro f ⟨F, rfl⟩
   exact Q.finitePositiveHalfObservable_mem_positiveHalfPullback_range hInvariant n F
 
+/-- The finite-positive-half observable image on the actual OS carrier is
+exactly the range of the coherent physical positive-time pullback.
+
+The reverse inclusion is not a surjectivity assertion onto all bounded
+continuous open-half observables.  It uses the canonical right inverse from a
+physical positive-time observable into the OS carrier and then the existing
+`finitePositiveHalfObservable_eq_positiveHalfPullback` identity. -/
+theorem finitePositiveHalfObservable_range_eq_positiveHalfPullback_range
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
+      S D halfExtent 2 finitePositiveHalfObservableRangeBridgeTwoRankPositive beta hbeta)
+    (hInvariant : ∀ n,
+      D.WeakStarReflectionInvariant
+        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
+    (n : ℕ) :
+    Set.range
+        (fun F :
+          (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+            S D halfExtent 2 finitePositiveHalfObservableRangeBridgeTwoRankPositive
+              beta hbeta Q.toWeakStarBridge hInvariant n).Carrier =>
+          physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservable
+            S D halfExtent 2 finitePositiveHalfObservableRangeBridgeTwoRankPositive
+              beta hbeta Q.toWeakStarBridge hInvariant n F) =
+      LinearMap.range (Q.positiveHalfPullback n) := by
+  apply Set.Subset.antisymm
+  · exact Q.finitePositiveHalfObservable_range_subset_positiveHalfPullback_range
+      hInvariant n
+  · rintro u ⟨G, rfl⟩
+    let Pn :=
+      physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+        S D halfExtent 2 finitePositiveHalfObservableRangeBridgeTwoRankPositive
+          beta hbeta Q.toWeakStarBridge hInvariant n
+    refine ⟨Pn.positiveTimeSubmoduleCarrierLinearMap G, ?_⟩
+    rw [Q.finitePositiveHalfObservable_eq_positiveHalfPullback hInvariant n]
+    rw [Pn.toPositiveTime_positiveTimeSubmoduleCarrierLinearMap]
+
 /-- If the actual finite-positive-half OS image is sup-norm dense, the existing
 cylinder-density bridge now yields the raw actual-analysis range-closure
 statement without a separate `hLift` hypothesis. -/
