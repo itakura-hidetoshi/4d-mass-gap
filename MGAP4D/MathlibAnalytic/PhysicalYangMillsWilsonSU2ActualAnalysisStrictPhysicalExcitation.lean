@@ -160,7 +160,7 @@ theorem normalizedTracePolynomial_exists_nonzero_vacuumOrthogonalPhysicalState_o
           (beta n) (hbeta n) f ≠ 0 := by
     simpa [f] using
       periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator_apply_ne_zero_of_factorized_inner_self_pos
-        (halfExtent n) (beta n) (hbeta n) k c hpos
+        (beta n) (hbeta n) f (by simpa [f] using hpos)
   have hf : f ≠ 0 := by
     intro hf
     apply hAnalysisNe
