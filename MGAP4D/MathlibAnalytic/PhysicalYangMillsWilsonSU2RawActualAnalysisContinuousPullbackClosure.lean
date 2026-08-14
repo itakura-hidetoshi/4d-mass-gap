@@ -118,14 +118,16 @@ theorem normalizedTracePolynomial_rawActualAnalysis_mem_positiveTimeL2RangeClosu
   have hClosureG : g ∈ closure (LinearMap.range (Q.positiveHalfPullback n)) := by
     simpa [g] using hClosure
   rcases mem_closure_iff_seq_limit.mp hClosureG with ⟨u, huRange, huTendsto⟩
+  have hLContinuous : Tendsto L (𝓝 g) (𝓝 (L g)) :=
+    L.continuous.continuousAt
   have hLpTendsto : Tendsto (fun m => L (u m)) atTop (𝓝 (L g)) :=
-    L.continuous.continuousAt.comp huTendsto
+    hLContinuous.comp huTendsto
   have hLpRange : ∀ m, L (u m) ∈ LinearMap.range (Q.positiveTimeSubmoduleL2LinearMap n) := by
     intro m
     rcases huRange m with ⟨F, hF⟩
     refine ⟨F, ?_⟩
-    change L (u m) = L (Q.positiveHalfPullback n F)
-    rw [hF]
+    change L (Q.positiveHalfPullback n F) = L (u m)
+    exact congrArg L hF
   have hLpClosure : L g ∈ closure (LinearMap.range (Q.positiveTimeSubmoduleL2LinearMap n)) :=
     mem_closure_iff_seq_limit.mpr ⟨fun m => L (u m), hLpRange, hLpTendsto⟩
   simpa [L, g,
