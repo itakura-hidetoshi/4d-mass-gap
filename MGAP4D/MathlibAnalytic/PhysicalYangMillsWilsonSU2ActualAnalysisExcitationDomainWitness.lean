@@ -85,9 +85,12 @@ noncomputable def normalizedTracePolynomial_excitationDomainWitness_of_analysisI
     physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData_isNormalized
       S D halfExtent 2 actualAnalysisExcitationDomainWitnessTwoRankPositive beta hbeta
       Q.toWeakStarBridge hInvariant n
-  rcases Q.normalizedTracePolynomial_exists_nonzero_vacuumOrthogonalPhysicalState_of_analysisImage_range_of_factorized_inner_self_pos
-      hInvariant U n k c hzero hpos hAnalysisRange with ⟨psi, hpsi⟩
-  exact T.physicalYangMillsExcitationDomainWitness_of_nonzeroExcitation hPn hSelf psi hpsi
+  have hNonempty : Nonempty T.PhysicalYangMillsExcitationDomainWitness := by
+    rcases Q.normalizedTracePolynomial_exists_nonzero_vacuumOrthogonalPhysicalState_of_analysisImage_range_of_factorized_inner_self_pos
+        hInvariant U n k c hzero hpos hAnalysisRange with ⟨psi, hpsi⟩
+    exact ⟨T.physicalYangMillsExcitationDomainWitness_of_nonzeroExcitation
+      hPn hSelf psi hpsi⟩
+  exact Classical.choice hNonempty
 
 end PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
 
