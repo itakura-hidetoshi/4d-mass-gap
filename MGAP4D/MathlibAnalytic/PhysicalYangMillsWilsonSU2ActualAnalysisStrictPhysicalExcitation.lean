@@ -155,7 +155,9 @@ theorem normalizedTracePolynomial_exists_nonzero_vacuumOrthogonalPhysicalState_o
         inner ℝ Aout Aout =
             inner ℝ (Pn.omega F.toGaugeInvariant • one) Aout :=
           congrArg (fun x => inner ℝ x Aout) hscalar
-        _ = 0 := by simp [hAoutCentered]
+        _ = Pn.omega F.toGaugeInvariant * inner ℝ one Aout := by
+          rw [inner_smul_left]
+        _ = 0 := by rw [hAoutCentered, mul_zero]
     exact hAoutNe (inner_self_eq_zero.mp hself)
   have hFcNe : Fc ≠ 0 := by
     intro hzeroFc
@@ -167,7 +169,9 @@ theorem normalizedTracePolynomial_exists_nonzero_vacuumOrthogonalPhysicalState_o
       calc
         ‖Fc‖ = ‖Pn.physicalState Fc‖ := (Pn.norm_physicalState Fc).symm
         _ = 0 := by rw [hzeroPhysical, norm_zero]
-    exact hFcNe (norm_eq_zero.mp hnorm)
+    have hFcZero : Fc = 0 :=
+      (norm_eq_zero : ‖Fc‖ = 0 ↔ Fc = 0).mp hnorm
+    exact hFcNe hFcZero
   have hPn : Pn.IsNormalized :=
     physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData_isNormalized
       S D halfExtent 2 actualAnalysisStrictPhysicalExcitationTwoRankPositive beta hbeta
