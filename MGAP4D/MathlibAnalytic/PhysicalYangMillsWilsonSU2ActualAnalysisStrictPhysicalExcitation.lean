@@ -2,6 +2,7 @@ import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPositiveBoundaryTemporalWils
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonBoundaryMarginalVacuumNormalization
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSBoundaryMomentSeparationCompletion
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalCore
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSCenteredQuadraticExcitation
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -93,6 +94,158 @@ theorem physicalHilbertBoundaryMomentLinearIsometry_vacuum_eq_boundaryVacuumHaar
     periodicHypercubicEvenBoundaryVacuumHaarL2_coeFn
       (halfExtent n) (beta n) (hbeta n)] with b hcanonical hvacuum
   exact hcanonical.trans hvacuum.symm
+
+/-- The coherent positive-half `L²` realization carries the OS vacuum observable
+to the same constant-one vector which appears in the concrete actual-analysis
+vacuum-orthogonality theorem. -/
+theorem positiveHalfL2LinearMap_vacuum_eq_openHalfConstantOneL2
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
+      S D halfExtent 2 actualAnalysisStrictPhysicalExcitationTwoRankPositive beta hbeta)
+    (hInvariant : ∀ n,
+      D.WeakStarReflectionInvariant
+        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
+    (U : PhysicalYangMillsEvenPeriodicWilsonOSPositiveHalfVacuumUnitCompatibility
+      Q hInvariant)
+    (n : ℕ) :
+    let Pn :=
+      physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+        S D halfExtent 2 actualAnalysisStrictPhysicalExcitationTwoRankPositive beta hbeta
+        Q.toWeakStarBridge hInvariant n
+    Q.positiveHalfL2LinearMap hInvariant n Pn.vacuumObservable =
+      periodicHypercubicEvenOpenHalfConstantOneL2 (halfExtent n) 2 := by
+  dsimp only
+  change
+    physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservableL2
+        S D halfExtent 2 actualAnalysisStrictPhysicalExcitationTwoRankPositive beta hbeta
+        Q.toWeakStarBridge hInvariant n
+        ((physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+          S D halfExtent 2 actualAnalysisStrictPhysicalExcitationTwoRankPositive beta hbeta
+          Q.toWeakStarBridge hInvariant n).vacuumObservable) = _
+  unfold physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservableL2
+  rw [U.finitePositiveHalfObservable_vacuum_eq_one n]
+  rfl
+
+/-- The #1669 centered/nonzero actual-analysis output itself produces a genuine
+nonzero reconstructed OS excitation as soon as that *output* lies in the range
+of the already-existing coherent positive-half realization.
+
+This is the natural realization condition used by the preceding normal-output
+physical-range layer.  It is strictly upstream of asking the weighted boundary
+input itself to be in the completed boundary-moment range.
+
+The proof vacuum-centers an actual carrier preimage `F`.  Its positive-half image
+is `A f - a • 1` for the scalar vacuum expectation `a`.  Since #1669 proves
+`A f ≠ 0` and `A f ⟂ 1`, this difference cannot vanish for any `a`.  Thus the
+centered carrier is nonzero; the canonical OS completion is isometric, and the
+existing centered-carrier theorem places the resulting nonzero state in
+`VacuumOrthogonalHilbert`.
+
+No static `A† A` operator is identified with Euclidean time translation. -/
+theorem normalizedTracePolynomial_exists_nonzero_vacuumOrthogonalPhysicalState_of_analysisImage_range_of_factorized_inner_self_pos
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
+      S D halfExtent 2 actualAnalysisStrictPhysicalExcitationTwoRankPositive beta hbeta)
+    (hInvariant : ∀ n,
+      D.WeakStarReflectionInvariant
+        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
+    (U : PhysicalYangMillsEvenPeriodicWilsonOSPositiveHalfVacuumUnitCompatibility
+      Q hInvariant)
+    (n k : ℕ)
+    (c : Fin (k + 1) → ℝ)
+    (hzero :
+      inner ℝ
+        (periodicHypercubicEvenBoundaryMarginalVacuumL2
+          (halfExtent n) (beta n) (hbeta n))
+        (periodicHypercubicEvenBoundaryMarginalNormalizedTracePolynomialL2
+          (halfExtent n) (beta n) (hbeta n) k c) = 0)
+    (hpos :
+      0 < inner ℝ
+        (periodicHypercubicEvenWilsonBoundaryGramFeatureFactorizedOperator
+          (halfExtent n) 2 actualAnalysisStrictPhysicalExcitationTwoRankPositive
+          (beta n) (hbeta n)
+          (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
+            (halfExtent n) (beta n) (hbeta n) k c))
+        (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
+          (halfExtent n) (beta n) (hbeta n) k c))
+    (hAnalysisRange :
+      periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator
+          (halfExtent n) 2 actualAnalysisStrictPhysicalExcitationTwoRankPositive
+          (beta n) (hbeta n)
+          (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
+            (halfExtent n) (beta n) (hbeta n) k c) ∈
+        (Q.positiveHalfL2LinearMap hInvariant n).range) :
+    let Pn :=
+      physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+        S D halfExtent 2 actualAnalysisStrictPhysicalExcitationTwoRankPositive beta hbeta
+        Q.toWeakStarBridge hInvariant n
+    ∃ psi : Pn.VacuumOrthogonalHilbert, psi ≠ 0 := by
+  dsimp only
+  let Pn :=
+    physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S D halfExtent 2 actualAnalysisStrictPhysicalExcitationTwoRankPositive beta hbeta
+      Q.toWeakStarBridge hInvariant n
+  let Aout :=
+    periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator
+      (halfExtent n) 2 actualAnalysisStrictPhysicalExcitationTwoRankPositive
+      (beta n) (hbeta n)
+      (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
+        (halfExtent n) (beta n) (hbeta n) k c)
+  let one := periodicHypercubicEvenOpenHalfConstantOneL2 (halfExtent n) 2
+  change Aout ∈ (Q.positiveHalfL2LinearMap hInvariant n).range at hAnalysisRange
+  rcases hAnalysisRange with ⟨F, hF⟩
+  have hFimage : Q.positiveHalfL2LinearMap hInvariant n F = Aout := by
+    simpa [Aout] using hF
+  have hAoutNe : Aout ≠ 0 := by
+    simpa [Aout] using
+      periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator_apply_ne_zero_of_factorized_inner_self_pos
+        (beta n) (hbeta n)
+        (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
+          (halfExtent n) (beta n) (hbeta n) k c) hpos
+  have hAoutCentered : inner ℝ one Aout = 0 := by
+    simpa [one, Aout] using
+      periodicHypercubicEvenBoundaryNormalizedTracePolynomial_actualAnalysisOutput_centered
+        (halfExtent n) (beta n) (hbeta n) k c hzero
+  have hVacImage :
+      Q.positiveHalfL2LinearMap hInvariant n Pn.vacuumObservable = one := by
+    simpa [Pn, one] using
+      Q.positiveHalfL2LinearMap_vacuum_eq_openHalfConstantOneL2 hInvariant U n
+  let Fc := Pn.vacuumCenteredCarrier F
+  have hFcImage :
+      Q.positiveHalfL2LinearMap hInvariant n Fc =
+        Aout - Pn.omega F.toGaugeInvariant • one := by
+    change Q.positiveHalfL2LinearMap hInvariant n
+        (F - Pn.omega F.toGaugeInvariant • Pn.vacuumObservable) = _
+    rw [map_sub, map_smul, hFimage, hVacImage]
+  have hFcImageNe : Q.positiveHalfL2LinearMap hInvariant n Fc ≠ 0 := by
+    intro hzeroImage
+    have hdiff : Aout - Pn.omega F.toGaugeInvariant • one = 0 := by
+      rw [← hFcImage, hzeroImage]
+    have hscalar : Aout = Pn.omega F.toGaugeInvariant • one := sub_eq_zero.mp hdiff
+    have hself : inner ℝ Aout Aout = 0 := by
+      rw [hscalar, inner_smul_left, hAoutCentered]
+      simp
+    exact hAoutNe (inner_self_eq_zero.mp hself)
+  have hFcNe : Fc ≠ 0 := by
+    intro hzeroFc
+    apply hFcImageNe
+    rw [hzeroFc, map_zero]
+  have hPhysicalNe : Pn.physicalState Fc ≠ 0 := by
+    intro hzeroPhysical
+    apply hFcNe
+    apply norm_eq_zero.mp
+    calc
+      ‖Fc‖ = ‖Pn.physicalState Fc‖ := (Pn.norm_physicalState Fc).symm
+      _ = 0 := by rw [hzeroPhysical, norm_zero]
+  have hPn : Pn.IsNormalized :=
+    physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData_isNormalized
+      S D halfExtent 2 actualAnalysisStrictPhysicalExcitationTwoRankPositive beta hbeta
+      Q.toWeakStarBridge hInvariant n
+  let psi : Pn.VacuumOrthogonalHilbert :=
+    ⟨Pn.physicalState Fc,
+      Pn.physicalState_vacuumCenteredCarrier_mem_vacuumOrthogonal hPn F⟩
+  refine ⟨psi, ?_⟩
+  intro hzeroPsi
+  apply hPhysicalNe
+  exact congrArg Subtype.val hzeroPsi
 
 /-- The finite actual-Wilson strict polynomial witness lifts to a genuine
 nonzero vacuum-orthogonal vector in the already-constructed completed OS
