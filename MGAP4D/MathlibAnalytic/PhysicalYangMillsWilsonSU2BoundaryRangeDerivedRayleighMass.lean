@@ -63,58 +63,34 @@ boundary-moment isometry `Ĵ_n`.
 This is strictly downstream of the earlier open-half realization condition:
 there is no requirement that the Wilson analysis output, or the raw analysis
 witness, admit a preimage under `positiveHalfL2LinearMap`.  The proof instead
-uses only:
-
-* strict factorized Wilson positivity to show that the selected boundary mode
-  is nonzero;
-* the exact completed linear isometry `Ĵ_n`;
-* vacuum-unit compatibility, which identifies `Ĵ_n Ω_n` with the concrete
-  boundary-vacuum Haar wavefunction; and
-* the already-proved density-transport centeredness of the normalized-trace
-  polynomial.
+uses strict factorized Wilson positivity, the exact completed linear isometry,
+vacuum-unit compatibility, and the already-proved density-transport
+centeredness of the normalized-trace polynomial.
 
 Thus no static Wilson Gram operator is identified with Euclidean time
 translation and no new mass, decay, coercivity, determinant, or projective
 assumption is introduced. -/
 theorem normalizedTracePolynomial_exists_nonzero_vacuumOrthogonalPhysicalState_of_boundaryHaar_range_of_factorized_inner_self_pos
-    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
-      S D halfExtent 2 boundaryRangeDerivedRayleighMassTwoRankPositive beta hbeta)
-    (hInvariant : ∀ n,
-      D.WeakStarReflectionInvariant
-        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
-    (U : PhysicalYangMillsEvenPeriodicWilsonOSPositiveHalfVacuumUnitCompatibility
-      Q hInvariant)
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback S D halfExtent 2 boundaryRangeDerivedRayleighMassTwoRankPositive beta hbeta)
+    (hInvariant : ∀ n, D.WeakStarReflectionInvariant (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
+    (U : PhysicalYangMillsEvenPeriodicWilsonOSPositiveHalfVacuumUnitCompatibility Q hInvariant)
     (n k : ℕ) (c : Fin (k + 1) → ℝ)
-    (hzero :
-      inner ℝ
-        (periodicHypercubicEvenBoundaryMarginalVacuumL2
-          (halfExtent n) (beta n) (hbeta n))
-        (periodicHypercubicEvenBoundaryMarginalNormalizedTracePolynomialL2
-          (halfExtent n) (beta n) (hbeta n) k c) = 0)
-    (hpos :
-      0 < inner ℝ
-        (periodicHypercubicEvenWilsonBoundaryGramFeatureFactorizedOperator
-          (halfExtent n) 2 boundaryRangeDerivedRayleighMassTwoRankPositive
-          (beta n) (hbeta n)
-          (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
-            (halfExtent n) (beta n) (hbeta n) k c))
-        (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
-          (halfExtent n) (beta n) (hbeta n) k c))
-    (hBoundaryRange :
-      periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
-          (halfExtent n) (beta n) (hbeta n) k c ∈
-        LinearMap.range
-          (Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n).toLinearMap) :
-    let Pn :=
-      physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-        S D halfExtent 2 boundaryRangeDerivedRayleighMassTwoRankPositive beta hbeta
-        Q.toWeakStarBridge hInvariant n
+    (hzero : inner ℝ (periodicHypercubicEvenBoundaryMarginalVacuumL2 (halfExtent n) (beta n) (hbeta n))
+      (periodicHypercubicEvenBoundaryMarginalNormalizedTracePolynomialL2 (halfExtent n) (beta n) (hbeta n) k c) = 0)
+    (hpos : 0 < inner ℝ (periodicHypercubicEvenWilsonBoundaryGramFeatureFactorizedOperator (halfExtent n) 2
+      boundaryRangeDerivedRayleighMassTwoRankPositive (beta n) (hbeta n)
+      (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2 (halfExtent n) (beta n) (hbeta n) k c))
+      (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2 (halfExtent n) (beta n) (hbeta n) k c))
+    (hBoundaryRange : periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
+      (halfExtent n) (beta n) (hbeta n) k c ∈ LinearMap.range
+        (Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n).toLinearMap) :
+    let Pn := physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData S D halfExtent 2
+      boundaryRangeDerivedRayleighMassTwoRankPositive beta hbeta Q.toWeakStarBridge hInvariant n
     ∃ psi : Pn.VacuumOrthogonalHilbert, psi ≠ 0 := by
   dsimp only
-  let Pn :=
-    physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-      S D halfExtent 2 boundaryRangeDerivedRayleighMassTwoRankPositive beta hbeta
-      Q.toWeakStarBridge hInvariant n
+  let Pn := physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+    S D halfExtent 2 boundaryRangeDerivedRayleighMassTwoRankPositive beta hbeta
+    Q.toWeakStarBridge hInvariant n
   let J := Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n
   let f := periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
     (halfExtent n) (beta n) (hbeta n) k c
@@ -141,27 +117,21 @@ theorem normalizedTracePolynomial_exists_nonzero_vacuumOrthogonalPhysicalState_o
       _ = J 0 := by rw [hphiZero]
       _ = 0 := map_zero J
   have hVacImage :
-      J Pn.vacuum =
-        periodicHypercubicEvenBoundaryVacuumHaarL2
-          (halfExtent n) (beta n) (hbeta n) := by
-    change
-      Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n
-          (Pn.physicalState Pn.vacuumObservable) =
-        periodicHypercubicEvenBoundaryVacuumHaarL2
-          (halfExtent n) (beta n) (hbeta n)
+      J Pn.vacuum = periodicHypercubicEvenBoundaryVacuumHaarL2
+        (halfExtent n) (beta n) (hbeta n) := by
+    change Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n
+        (Pn.physicalState Pn.vacuumObservable) =
+      periodicHypercubicEvenBoundaryVacuumHaarL2 (halfExtent n) (beta n) (hbeta n)
     rw [Q.physicalHilbertBoundaryMomentLinearIsometry_physicalState]
     apply Lp.ext
     exact
       (U.canonicalBoundaryMomentL2_vacuum_coeFn n).trans
         (periodicHypercubicEvenBoundaryVacuumHaarL2_coeFn
           (halfExtent n) (beta n) (hbeta n)).symm
-  have hfCentered :
-      inner ℝ
-        (periodicHypercubicEvenBoundaryVacuumHaarL2
-          (halfExtent n) (beta n) (hbeta n)) f = 0 := by
-    exact
-      periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2_centered
-        (halfExtent n) (beta n) (hbeta n) k c hzero
+  have hfCentered : inner ℝ
+      (periodicHypercubicEvenBoundaryVacuumHaarL2 (halfExtent n) (beta n) (hbeta n)) f = 0 := by
+    exact periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2_centered
+      (halfExtent n) (beta n) (hbeta n) k c hzero
   have hImageOrth : inner ℝ (J Pn.vacuum) (J phi) = 0 := by
     rw [hVacImage, hphiImage]
     exact hfCentered
@@ -179,44 +149,25 @@ theorem normalizedTracePolynomial_exists_nonzero_vacuumOrthogonalPhysicalState_o
 Hamiltonian excitation domain nonempty.  Domain membership is generated from
 self-adjointness and density; it is not an additional Wilson-side assumption. -/
 noncomputable def normalizedTracePolynomial_excitationDomainWitness_of_boundaryHaar_range_of_factorized_inner_self_pos
-    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
-      S D halfExtent 2 boundaryRangeDerivedRayleighMassTwoRankPositive beta hbeta)
-    (hInvariant : ∀ n,
-      D.WeakStarReflectionInvariant
-        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
-    (U : PhysicalYangMillsEvenPeriodicWilsonOSPositiveHalfVacuumUnitCompatibility
-      Q hInvariant)
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback S D halfExtent 2 boundaryRangeDerivedRayleighMassTwoRankPositive beta hbeta)
+    (hInvariant : ∀ n, D.WeakStarReflectionInvariant (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
+    (U : PhysicalYangMillsEvenPeriodicWilsonOSPositiveHalfVacuumUnitCompatibility Q hInvariant)
     (n k : ℕ) (c : Fin (k + 1) → ℝ)
-    (hzero :
-      inner ℝ
-        (periodicHypercubicEvenBoundaryMarginalVacuumL2
-          (halfExtent n) (beta n) (hbeta n))
-        (periodicHypercubicEvenBoundaryMarginalNormalizedTracePolynomialL2
-          (halfExtent n) (beta n) (hbeta n) k c) = 0)
-    (hpos :
-      0 < inner ℝ
-        (periodicHypercubicEvenWilsonBoundaryGramFeatureFactorizedOperator
-          (halfExtent n) 2 boundaryRangeDerivedRayleighMassTwoRankPositive
-          (beta n) (hbeta n)
-          (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
-            (halfExtent n) (beta n) (hbeta n) k c))
-        (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
-          (halfExtent n) (beta n) (hbeta n) k c))
-    (hBoundaryRange :
-      periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
-          (halfExtent n) (beta n) (hbeta n) k c ∈
-        LinearMap.range
-          (Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n).toLinearMap)
-    (T :
-      (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-        S D halfExtent 2 boundaryRangeDerivedRayleighMassTwoRankPositive beta hbeta
-        Q.toWeakStarBridge hInvariant n).StronglyContinuousPhysicalSemigroup)
-    (hSelf : IsSelfAdjoint T.closedRightHamiltonian) :
-    T.PhysicalYangMillsExcitationDomainWitness := by
-  let Pn :=
-    physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-      S D halfExtent 2 boundaryRangeDerivedRayleighMassTwoRankPositive beta hbeta
-      Q.toWeakStarBridge hInvariant n
+    (hzero : inner ℝ (periodicHypercubicEvenBoundaryMarginalVacuumL2 (halfExtent n) (beta n) (hbeta n))
+      (periodicHypercubicEvenBoundaryMarginalNormalizedTracePolynomialL2 (halfExtent n) (beta n) (hbeta n) k c) = 0)
+    (hpos : 0 < inner ℝ (periodicHypercubicEvenWilsonBoundaryGramFeatureFactorizedOperator (halfExtent n) 2
+      boundaryRangeDerivedRayleighMassTwoRankPositive (beta n) (hbeta n)
+      (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2 (halfExtent n) (beta n) (hbeta n) k c))
+      (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2 (halfExtent n) (beta n) (hbeta n) k c))
+    (hBoundaryRange : periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
+      (halfExtent n) (beta n) (hbeta n) k c ∈ LinearMap.range
+        (Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n).toLinearMap)
+    (T : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData S D halfExtent 2
+      boundaryRangeDerivedRayleighMassTwoRankPositive beta hbeta Q.toWeakStarBridge hInvariant n).StronglyContinuousPhysicalSemigroup)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian) : T.PhysicalYangMillsExcitationDomainWitness := by
+  let Pn := physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+    S D halfExtent 2 boundaryRangeDerivedRayleighMassTwoRankPositive beta hbeta
+    Q.toWeakStarBridge hInvariant n
   have hPn : Pn.IsNormalized :=
     physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData_isNormalized
       S D halfExtent 2 boundaryRangeDerivedRayleighMassTwoRankPositive beta hbeta
@@ -225,49 +176,28 @@ noncomputable def normalizedTracePolynomial_excitationDomainWitness_of_boundaryH
       Q.normalizedTracePolynomial_exists_nonzero_vacuumOrthogonalPhysicalState_of_boundaryHaar_range_of_factorized_inner_self_pos
         hInvariant U n k c hzero hpos hBoundaryRange with
     ⟨psi, hpsi⟩
-  exact
-    T.physicalYangMillsExcitationDomainWitness_of_nonzeroExcitation
-      hPn hSelf psi hpsi
+  exact T.physicalYangMillsExcitationDomainWitness_of_nonzeroExcitation hPn hSelf psi hpsi
 
 /-- Consequently the variational mass attached to the actual reconstructed
-closed Yang--Mills Hamiltonian is well-defined on a nonempty excitation domain
-and is nonnegative under the completed boundary-range realization.  No
-numerical mass value is inserted here. -/
+closed Yang--Mills Hamiltonian is nonnegative under the completed boundary-range
+realization.  No numerical mass value is inserted here. -/
 theorem normalizedTracePolynomial_physicalYangMillsMass_nonneg_of_boundaryHaar_range_of_factorized_inner_self_pos
-    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
-      S D halfExtent 2 boundaryRangeDerivedRayleighMassTwoRankPositive beta hbeta)
-    (hInvariant : ∀ n,
-      D.WeakStarReflectionInvariant
-        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
-    (U : PhysicalYangMillsEvenPeriodicWilsonOSPositiveHalfVacuumUnitCompatibility
-      Q hInvariant)
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback S D halfExtent 2 boundaryRangeDerivedRayleighMassTwoRankPositive beta hbeta)
+    (hInvariant : ∀ n, D.WeakStarReflectionInvariant (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
+    (U : PhysicalYangMillsEvenPeriodicWilsonOSPositiveHalfVacuumUnitCompatibility Q hInvariant)
     (n k : ℕ) (c : Fin (k + 1) → ℝ)
-    (hzero :
-      inner ℝ
-        (periodicHypercubicEvenBoundaryMarginalVacuumL2
-          (halfExtent n) (beta n) (hbeta n))
-        (periodicHypercubicEvenBoundaryMarginalNormalizedTracePolynomialL2
-          (halfExtent n) (beta n) (hbeta n) k c) = 0)
-    (hpos :
-      0 < inner ℝ
-        (periodicHypercubicEvenWilsonBoundaryGramFeatureFactorizedOperator
-          (halfExtent n) 2 boundaryRangeDerivedRayleighMassTwoRankPositive
-          (beta n) (hbeta n)
-          (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
-            (halfExtent n) (beta n) (hbeta n) k c))
-        (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
-          (halfExtent n) (beta n) (hbeta n) k c))
-    (hBoundaryRange :
-      periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
-          (halfExtent n) (beta n) (hbeta n) k c ∈
-        LinearMap.range
-          (Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n).toLinearMap)
-    (T :
-      (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-        S D halfExtent 2 boundaryRangeDerivedRayleighMassTwoRankPositive beta hbeta
-        Q.toWeakStarBridge hInvariant n).StronglyContinuousPhysicalSemigroup)
-    (hSelf : IsSelfAdjoint T.closedRightHamiltonian) :
-    0 ≤ T.physicalYangMillsMass := by
+    (hzero : inner ℝ (periodicHypercubicEvenBoundaryMarginalVacuumL2 (halfExtent n) (beta n) (hbeta n))
+      (periodicHypercubicEvenBoundaryMarginalNormalizedTracePolynomialL2 (halfExtent n) (beta n) (hbeta n) k c) = 0)
+    (hpos : 0 < inner ℝ (periodicHypercubicEvenWilsonBoundaryGramFeatureFactorizedOperator (halfExtent n) 2
+      boundaryRangeDerivedRayleighMassTwoRankPositive (beta n) (hbeta n)
+      (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2 (halfExtent n) (beta n) (hbeta n) k c))
+      (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2 (halfExtent n) (beta n) (hbeta n) k c))
+    (hBoundaryRange : periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
+      (halfExtent n) (beta n) (hbeta n) k c ∈ LinearMap.range
+        (Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n).toLinearMap)
+    (T : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData S D halfExtent 2
+      boundaryRangeDerivedRayleighMassTwoRankPositive beta hbeta Q.toWeakStarBridge hInvariant n).StronglyContinuousPhysicalSemigroup)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian) : 0 ≤ T.physicalYangMillsMass := by
   let W :=
     Q.normalizedTracePolynomial_excitationDomainWitness_of_boundaryHaar_range_of_factorized_inner_self_pos
       hInvariant U n k c hzero hpos hBoundaryRange T hSelf
