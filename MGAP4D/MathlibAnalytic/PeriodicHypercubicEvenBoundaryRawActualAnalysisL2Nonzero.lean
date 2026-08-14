@@ -123,10 +123,19 @@ theorem
       using hx0
   intro hL2
   apply hf
-  apply ContinuousMap.toLp_injective
-    (periodicHypercubicEvenOpenHalfHaarMeasure H 2)
-  simpa [f,
-    periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysisHaarL2] using hL2
+  have hzero :
+      ContinuousMap.toLp (E := ℝ) (2 : ℝ≥0∞)
+          (periodicHypercubicEvenOpenHalfHaarMeasure H 2) ℝ f =
+        ContinuousMap.toLp (E := ℝ) (2 : ℝ≥0∞)
+          (periodicHypercubicEvenOpenHalfHaarMeasure H 2) ℝ
+          (0 : C((periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+            (Matrix.specialUnitaryGroup (Fin 2) ℂ), ℝ)) := by
+    simpa [f,
+      periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysisHaarL2] using hL2
+  exact
+    (ContinuousMap.toLp_injective
+      (𝕜 := ℝ) (p := (2 : ℝ≥0∞))
+      (periodicHypercubicEvenOpenHalfHaarMeasure H 2)) hzero
 
 /-- Every nonzero normalized-trace polynomial therefore produces a
 positive-degree witness whose explicit actual Wilson analysis representative is
