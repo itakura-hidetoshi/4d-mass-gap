@@ -22,9 +22,8 @@ theorem realLinearIsometry_mem_setRange_of_tendsto
     (J : E →ₗᵢ[ℝ] F) (u : ℕ → E) (y : F)
     (h : Tendsto (fun m => J (u m)) atTop (𝓝 y)) :
     y ∈ Set.range (fun x : E => J x) := by
-  have hComplete : IsComplete (Set.range (fun x : E => J x)) := by
-    rw [← Set.image_univ]
-    exact (LinearIsometry.isComplete_image_iff J).2 isComplete_univ
+  have hComplete : IsComplete (Set.range (fun x : E => J x)) :=
+    J.isometry.isUniformInducing.isComplete_range
   have hClosed : IsClosed (Set.range (fun x : E => J x)) := hComplete.isClosed
   apply hClosed.mem_of_tendsto h
   exact Filter.Eventually.of_forall fun m => ⟨u m, rfl⟩
