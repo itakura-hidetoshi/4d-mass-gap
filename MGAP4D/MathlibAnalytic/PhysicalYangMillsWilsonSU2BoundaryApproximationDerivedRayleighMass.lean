@@ -9,22 +9,23 @@ open scoped InnerProduct InnerProductSpace
 
 noncomputable section
 
-/-- The range of a linear isometry from a complete normed space is closed, so
-any norm-limit of actual image vectors is again an actual image vector.
+/-- The set-theoretic range of a linear isometry from a complete normed space
+is closed, so any norm-limit of actual image vectors is again an actual image
+vector.
 
-This is the precise completion principle used below: no surjectivity of the
-isometry is assumed. -/
-theorem realLinearIsometry_mem_range_of_tendsto
+Keeping the proof on `Set.range` avoids conflating the closed topological image
+with the `Submodule` returned by `LinearMap.range`.  No surjectivity is assumed. -/
+theorem realLinearIsometry_mem_setRange_of_tendsto
     {E F : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup F] [NormedSpace ℝ F]
     (J : E →ₗᵢ[ℝ] F) (u : ℕ → E) (y : F)
     (h : Tendsto (fun m => J (u m)) atTop (𝓝 y)) :
-    y ∈ LinearMap.range J.toLinearMap := by
-  have hClosed : IsClosed (LinearMap.range J.toLinearMap) := by
-    change IsClosed (Set.range J)
+    y ∈ Set.range (fun x : E => J x) := by
+  have hComplete : IsComplete (Set.range (fun x : E => J x)) := by
     rw [← Set.image_univ]
-    exact ((LinearIsometry.isComplete_image_iff J).2 isComplete_univ).isClosed
+    exact (LinearIsometry.isComplete_image_iff J).2 isComplete_univ
+  have hClosed : IsClosed (Set.range (fun x : E => J x)) := hComplete.isClosed
   apply hClosed.mem_of_tendsto h
   exact Filter.Eventually.of_forall fun m => ⟨u m, rfl⟩
 
@@ -98,10 +99,12 @@ theorem normalizedTracePolynomial_boundaryHaar_mem_physicalHilbertBoundaryMoment
     periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
         (halfExtent n) (beta n) (hbeta n) k c ∈
       LinearMap.range (Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n).toLinearMap := by
-  exact realLinearIsometry_mem_range_of_tendsto
-    (Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n) psi
-    (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
-      (halfExtent n) (beta n) (hbeta n) k c) hApprox
+  rcases realLinearIsometry_mem_setRange_of_tendsto
+      (Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n) psi
+      (periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
+        (halfExtent n) (beta n) (hbeta n) k c) hApprox with
+    ⟨phi, hphi⟩
+  exact ⟨phi, hphi⟩
 
 /-- The actual reconstructed Yang--Mills variational mass is therefore
 nonnegative once the theorem-generated Wilson boundary mode is obtainable as
