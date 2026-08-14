@@ -82,6 +82,12 @@ local instance positiveTimeSubmoduleRangeClosureBorelSpace :
     BorelSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupBorelSpace 2
 
+local instance positiveTimeSubmoduleRangeClosureOpenHalfHaarFinite (H : ℕ) :
+    IsFiniteMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H 2) := by
+  dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+  infer_instance
+
 local instance positiveTimeSubmoduleRangeClosureSU2Nontrivial :
     Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
   refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
@@ -135,6 +141,20 @@ noncomputable def positiveTimeSubmoduleL2LinearMap
         (periodicHypercubicEvenOpenHalfHaarMeasure (halfExtent n) 2) ℝ
         (Q.positiveHalfPullback n F) := rfl
 
+/-- Pointwise form of the carrier-to-positive-time factorization. -/
+theorem positiveHalfL2LinearMap_apply_eq_positiveTimeSubmoduleL2LinearMap
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
+      S D halfExtent 2 positiveTimeSubmoduleRangeClosureTwoRankPositive beta hbeta)
+    (hInvariant : ∀ n, D.WeakStarReflectionInvariant
+      (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
+    (n : ℕ) (F : (positiveTimeSubmoduleRangeClosurePreHilbert Q hInvariant n).Carrier) :
+    Q.positiveHalfL2LinearMap hInvariant n F =
+      Q.positiveTimeSubmoduleL2LinearMap n
+        ((positiveTimeSubmoduleRangeClosurePreHilbert Q hInvariant n).toPositiveTime F) := by
+  rw [Q.positiveHalfL2LinearMap_apply,
+    Q.finitePositiveHalfObservable_eq_positiveHalfPullback hInvariant n F]
+  rfl
+
 /-- The carrier-level open-half `L²` map is exactly the direct positive-time
 submodule map after the canonical carrier-to-positive-time equivalence. -/
 theorem positiveHalfL2LinearMap_eq_positiveTimeSubmodule_comp
@@ -147,7 +167,8 @@ theorem positiveHalfL2LinearMap_eq_positiveTimeSubmodule_comp
       (Q.positiveTimeSubmoduleL2LinearMap n).comp
         (positiveTimeSubmoduleRangeClosurePreHilbert Q hInvariant n).carrierToPositiveTimeLinearMap := by
   ext F
-  rfl
+  exact Q.positiveHalfL2LinearMap_apply_eq_positiveTimeSubmoduleL2LinearMap
+    hInvariant n F
 
 /-- Consequently the carrier-level and direct positive-time-submodule pullbacks
 have exactly the same `L²` range.  The surjectivity used here is only the
@@ -164,17 +185,19 @@ theorem range_positiveHalfL2LinearMap_eq_range_positiveTimeSubmoduleL2LinearMap
   constructor
   · rintro ⟨F, rfl⟩
     refine ⟨(positiveTimeSubmoduleRangeClosurePreHilbert Q hInvariant n).toPositiveTime F, ?_⟩
-    rfl
+    exact (Q.positiveHalfL2LinearMap_apply_eq_positiveTimeSubmoduleL2LinearMap
+      hInvariant n F).symm
   · rintro ⟨G, rfl⟩
     rcases (positiveTimeSubmoduleRangeClosurePreHilbert Q hInvariant n).carrierToPositiveTimeLinearMap_surjective G with
       ⟨F, hF⟩
     refine ⟨F, ?_⟩
-    change Q.positiveHalfL2LinearMap hInvariant n F =
-      Q.positiveTimeSubmoduleL2LinearMap n G
-    rw [Q.positiveHalfL2LinearMap_eq_positiveTimeSubmodule_comp hInvariant n]
-    change Q.positiveTimeSubmoduleL2LinearMap n
-      ((positiveTimeSubmoduleRangeClosurePreHilbert Q hInvariant n).carrierToPositiveTimeLinearMap F) = _
-    rw [hF]
+    calc
+      Q.positiveHalfL2LinearMap hInvariant n F =
+          Q.positiveTimeSubmoduleL2LinearMap n
+            ((positiveTimeSubmoduleRangeClosurePreHilbert Q hInvariant n).toPositiveTime F) :=
+        Q.positiveHalfL2LinearMap_apply_eq_positiveTimeSubmoduleL2LinearMap hInvariant n F
+      _ = Q.positiveTimeSubmoduleL2LinearMap n G := by
+        exact congrArg (fun x => Q.positiveTimeSubmoduleL2LinearMap n x) hF
 
 /-- The raw actual-analysis realizability frontier can now be stated entirely
 at the positive-time-submodule level, independently of the OS carrier wrapper. -/
