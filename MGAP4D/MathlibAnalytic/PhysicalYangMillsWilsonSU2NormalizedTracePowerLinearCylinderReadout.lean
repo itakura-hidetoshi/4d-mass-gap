@@ -60,34 +60,55 @@ private abbrev normalizedTracePowerLinearCylinderRaw
   periodicHypercubicEvenBoundaryNormalizedTracePowerRawActualAnalysisBoundedContinuousFunction
     H beta hbeta j
 
+/-- The primitive model-facing readout for one normalized-trace power: `F`
+reads the positive open half, while its OS reflection reads the reflected
+positive half.  Packaging these two pointwise identities keeps subsequent
+polarization theorems short and makes clear that no quadratic identity is an
+independent assumption. -/
+structure NormalizedTracePowerLinearHalfReadout
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
+      S D halfExtent 2 normalizedTracePowerLinearCylinderReadoutTwoRankPositive
+        beta hbeta)
+    (n j : ℕ)
+    (F : D.positiveTimeSubalgebra) : Prop where
+  positive : ∀ A,
+    ((F : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
+        BoundedContinuousFunction S.Configuration ℝ)
+        (Q.interpolate n A) =
+      normalizedTracePowerLinearCylinderRaw
+        (halfExtent n) (beta n) (hbeta n) j
+        ((periodicHypercubicEvenEdgeOrbitPartition (halfExtent n)).positiveRestriction A)
+  reflected : ∀ A,
+    ((D.reflection
+        (F : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
+        physicalYangMillsGaugeInvariantObservableSubalgebra S) :
+        BoundedContinuousFunction S.Configuration ℝ)
+        (Q.interpolate n A) =
+      normalizedTracePowerLinearCylinderRaw
+        (halfExtent n) (beta n) (hbeta n) j
+        ((periodicHypercubicEvenEdgeOrbitPartition (halfExtent n)).positiveRestriction
+          (periodicHypercubicEvenConfigurationReflection (halfExtent n) A))
+
+/-- A theorem-generated family of the primitive half-cylinder readouts. -/
+structure NormalizedTracePowerLinearHalfReadoutFamily
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
+      S D halfExtent 2 normalizedTracePowerLinearCylinderReadoutTwoRankPositive
+        beta hbeta)
+    (n : ℕ) where
+  observable : ℕ → D.positiveTimeSubalgebra
+  readout : ∀ j, NormalizedTracePowerLinearHalfReadout Q n j (observable j)
+
 /-- The two quadratic-cylinder identities required by polarization are already
-forced by the two linear half-cylinder readouts: the positive readout of `F`
-and the reflected readout of `Theta F`.  In particular the `F + 1` identity is
-not independent model data; it follows from `AlgHom.map_add`, `map_one`, and
-pointwise multiplication. -/
+forced by the two linear half-cylinder readouts.  In particular the `F + 1`
+identity is not independent model data; it follows from `AlgHom.map_add`,
+`map_one`, and pointwise multiplication. -/
 theorem normalizedTracePower_quadraticCylinder_of_linearHalfReadout
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
       S D halfExtent 2 normalizedTracePowerLinearCylinderReadoutTwoRankPositive
         beta hbeta)
     (n j : ℕ)
     (F : D.positiveTimeSubalgebra)
-    (hPositive : ∀ A,
-      ((F : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
-          BoundedContinuousFunction S.Configuration ℝ)
-          (Q.interpolate n A) =
-        normalizedTracePowerLinearCylinderRaw
-          (halfExtent n) (beta n) (hbeta n) j
-          ((periodicHypercubicEvenEdgeOrbitPartition (halfExtent n)).positiveRestriction A))
-    (hReflected : ∀ A,
-      ((D.reflection
-          (F : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
-          physicalYangMillsGaugeInvariantObservableSubalgebra S) :
-          BoundedContinuousFunction S.Configuration ℝ)
-          (Q.interpolate n A) =
-        normalizedTracePowerLinearCylinderRaw
-          (halfExtent n) (beta n) (hbeta n) j
-          ((periodicHypercubicEvenEdgeOrbitPartition (halfExtent n)).positiveRestriction
-            (periodicHypercubicEvenConfigurationReflection (halfExtent n) A))) :
+    (R : NormalizedTracePowerLinearHalfReadout Q n j F) :
     (∀ A,
       D.quadraticBoundedContinuousFunction F (Q.interpolate n A) =
         periodicHypercubicEvenFullReflectedObservable (halfExtent n)
@@ -122,7 +143,7 @@ theorem normalizedTracePower_quadraticCylinder_of_linearHalfReadout
           (halfExtent n) (beta n) (hbeta n) j
           ((periodicHypercubicEvenEdgeOrbitPartition (halfExtent n)).positiveRestriction
             (periodicHypercubicEvenConfigurationReflection (halfExtent n) A))
-    rw [hReflected A, hPositive A]
+    rw [R.reflected A, R.positive A]
     ring
   · intro A
     unfold PhysicalYangMillsGaugeInvariantOSReflectionData.quadraticBoundedContinuousFunction
@@ -152,12 +173,11 @@ theorem normalizedTracePower_quadraticCylinder_of_linearHalfReadout
           BoundedContinuousFunction S.Configuration ℝ) (Q.interpolate n A) + 1) *
         (((F : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
           BoundedContinuousFunction S.Configuration ℝ) (Q.interpolate n A) + 1) = _
-    rw [hReflected A, hPositive A]
+    rw [R.reflected A, R.positive A]
     ring
 
-/-- Vacuum normalization plus the two linear half-cylinder readouts reconstructs
-the exact coherent positive-half trace-power readout.  The shifted quadratic
-identity is theorem-generated above rather than supplied independently. -/
+/-- Vacuum normalization plus the primitive linear half-cylinder readout
+reconstructs the exact coherent positive-half trace-power readout. -/
 theorem normalizedTracePower_positiveHalfPullback_eq_of_vacuumCompatibility_linearHalfReadout
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
       S D halfExtent 2 normalizedTracePowerLinearCylinderReadoutTwoRankPositive
@@ -169,34 +189,18 @@ theorem normalizedTracePower_positiveHalfPullback_eq_of_vacuumCompatibility_line
       Q hInvariant)
     (n j : ℕ)
     (F : D.positiveTimeSubalgebra)
-    (hPositive : ∀ A,
-      ((F : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
-          BoundedContinuousFunction S.Configuration ℝ)
-          (Q.interpolate n A) =
-        normalizedTracePowerLinearCylinderRaw
-          (halfExtent n) (beta n) (hbeta n) j
-          ((periodicHypercubicEvenEdgeOrbitPartition (halfExtent n)).positiveRestriction A))
-    (hReflected : ∀ A,
-      ((D.reflection
-          (F : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
-          physicalYangMillsGaugeInvariantObservableSubalgebra S) :
-          BoundedContinuousFunction S.Configuration ℝ)
-          (Q.interpolate n A) =
-        normalizedTracePowerLinearCylinderRaw
-          (halfExtent n) (beta n) (hbeta n) j
-          ((periodicHypercubicEvenEdgeOrbitPartition (halfExtent n)).positiveRestriction
-            (periodicHypercubicEvenConfigurationReflection (halfExtent n) A))) :
+    (R : NormalizedTracePowerLinearHalfReadout Q n j F) :
     Q.positiveHalfPullback n
         (⟨F.1, F.2⟩ : D.positiveTimeSubalgebra.toSubmodule) =
       normalizedTracePowerLinearCylinderRaw
         (halfExtent n) (beta n) (hbeta n) j := by
   rcases Q.normalizedTracePower_quadraticCylinder_of_linearHalfReadout
-      n j F hPositive hReflected with ⟨hQuadratic, hQuadraticAddOne⟩
+      n j F R with ⟨hQuadratic, hQuadraticAddOne⟩
   exact
     Q.normalizedTracePower_positiveHalfPullback_eq_of_vacuumCompatibility_quadraticCylinder
       hInvariant U n j F hQuadratic hQuadraticAddOne
 
-/-- A family of linear positive/reflected cylinder readouts therefore puts every
+/-- A family of primitive linear half-cylinder readouts therefore puts every
 normalized-trace polynomial raw actual-analysis vector in the exact physical
 positive-time `L²` range. -/
 theorem normalizedTracePolynomial_rawActualAnalysis_mem_positiveTimeL2Range_of_vacuumCompatibility_linearHalfReadout
@@ -210,40 +214,21 @@ theorem normalizedTracePolynomial_rawActualAnalysis_mem_positiveTimeL2Range_of_v
       Q hInvariant)
     (n k : ℕ)
     (c : Fin (k + 1) → ℝ)
-    (F : ℕ → D.positiveTimeSubalgebra)
-    (hPositive : ∀ j A,
-      (((F j : D.positiveTimeSubalgebra) :
-          physicalYangMillsGaugeInvariantObservableSubalgebra S) :
-          BoundedContinuousFunction S.Configuration ℝ)
-          (Q.interpolate n A) =
-        normalizedTracePowerLinearCylinderRaw
-          (halfExtent n) (beta n) (hbeta n) j
-          ((periodicHypercubicEvenEdgeOrbitPartition (halfExtent n)).positiveRestriction A))
-    (hReflected : ∀ j A,
-      ((D.reflection
-          ((F j : D.positiveTimeSubalgebra) :
-            physicalYangMillsGaugeInvariantObservableSubalgebra S) :
-          physicalYangMillsGaugeInvariantObservableSubalgebra S) :
-          BoundedContinuousFunction S.Configuration ℝ)
-          (Q.interpolate n A) =
-        normalizedTracePowerLinearCylinderRaw
-          (halfExtent n) (beta n) (hbeta n) j
-          ((periodicHypercubicEvenEdgeOrbitPartition (halfExtent n)).positiveRestriction
-            (periodicHypercubicEvenConfigurationReflection (halfExtent n) A))) :
+    (R : NormalizedTracePowerLinearHalfReadoutFamily Q n) :
     periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysisHaarL2
         (halfExtent n) (beta n) (hbeta n) k c ∈
       LinearMap.range (Q.positiveTimeSubmoduleL2LinearMap n) := by
   apply
     Q.normalizedTracePolynomial_rawActualAnalysis_mem_positiveTimeL2Range_of_vacuumCompatibility_quadraticCylinder
-      hInvariant U n k c F
+      hInvariant U n k c R.observable
   · intro j A
     exact
       (Q.normalizedTracePower_quadraticCylinder_of_linearHalfReadout
-        n j (F j) (hPositive j) (hReflected j)).1 A
+        n j (R.observable j) (R.readout j)).1 A
   · intro j A
     exact
       (Q.normalizedTracePower_quadraticCylinder_of_linearHalfReadout
-        n j (F j) (hPositive j) (hReflected j)).2 A
+        n j (R.observable j) (R.readout j)).2 A
 
 end PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
 
