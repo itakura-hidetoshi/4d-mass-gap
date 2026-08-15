@@ -104,7 +104,10 @@ theorem positiveHalfPullback_eq_of_quadratic_polarization
     (n : ℕ)
     (hUnit :
       Q.positiveHalfPullback n
-          (positiveHalfQuadraticPolarizationUnit (S := S) (D := D)) = 1)
+          (positiveHalfQuadraticPolarizationUnit (S := S) (D := D)) =
+        (1 : BoundedContinuousFunction
+          (PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+            (halfExtent n) N) ℝ))
     (F : D.positiveTimeSubalgebra)
     (f : BoundedContinuousFunction
       (PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
@@ -113,8 +116,12 @@ theorem positiveHalfPullback_eq_of_quadratic_polarization
       D.quadraticBoundedContinuousFunction F (Q.interpolate n A) =
         periodicHypercubicEvenFullReflectedObservable (halfExtent n) f A)
     (hQuadraticAddOne : ∀ A,
-      D.quadraticBoundedContinuousFunction (F + 1) (Q.interpolate n A) =
-        periodicHypercubicEvenFullReflectedObservable (halfExtent n) (f + 1) A) :
+      D.quadraticBoundedContinuousFunction
+          (F + (1 : D.positiveTimeSubalgebra)) (Q.interpolate n A) =
+        periodicHypercubicEvenFullReflectedObservable (halfExtent n)
+          (f + (1 : BoundedContinuousFunction
+            (PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+              (halfExtent n) N) ℝ)) A) :
     Q.positiveHalfPullback n
         (⟨F.1, F.2⟩ : D.positiveTimeSubalgebra.toSubmodule) = f := by
   let H := halfExtent n
@@ -125,13 +132,19 @@ theorem positiveHalfPullback_eq_of_quadratic_polarization
   let unit : D.positiveTimeSubalgebra.toSubmodule :=
     positiveHalfQuadraticPolarizationUnit (S := S) (D := D)
   have hFadd :
-      (⟨(F + 1).1, (F + 1).2⟩ : D.positiveTimeSubalgebra.toSubmodule) =
-        Fsub + unit := by
+      (⟨(F + (1 : D.positiveTimeSubalgebra)).1,
+          (F + (1 : D.positiveTimeSubalgebra)).2⟩ :
+        D.positiveTimeSubalgebra.toSubmodule) = Fsub + unit := by
     rfl
   have hPullAdd :
       Q.positiveHalfPullback n
-          (⟨(F + 1).1, (F + 1).2⟩ : D.positiveTimeSubalgebra.toSubmodule) =
-        Q.positiveHalfPullback n Fsub + 1 := by
+          (⟨(F + (1 : D.positiveTimeSubalgebra)).1,
+              (F + (1 : D.positiveTimeSubalgebra)).2⟩ :
+            D.positiveTimeSubalgebra.toSubmodule) =
+        Q.positiveHalfPullback n Fsub +
+          (1 : BoundedContinuousFunction
+            (PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+              (halfExtent n) N) ℝ) := by
     rw [hFadd, (Q.positiveHalfPullback n).map_add]
     change Q.positiveHalfPullback n Fsub +
         Q.positiveHalfPullback n
@@ -149,8 +162,9 @@ theorem positiveHalfPullback_eq_of_quadratic_polarization
     have h0raw :=
       (Q.quadraticObservable_pullback n F A).symm.trans (hQuadratic A)
     have h1raw :=
-      (Q.quadraticObservable_pullback n (F + 1) A).symm.trans
-        (hQuadraticAddOne A)
+      (Q.quadraticObservable_pullback n
+        (F + (1 : D.positiveTimeSubalgebra)) A).symm.trans
+          (hQuadraticAddOne A)
     have h0 :
         Q.positiveHalfPullback n Fsub x *
             Q.positiveHalfPullback n Fsub
@@ -194,7 +208,10 @@ theorem mem_positiveHalfPullback_range_of_quadratic_polarization
     (n : ℕ)
     (hUnit :
       Q.positiveHalfPullback n
-          (positiveHalfQuadraticPolarizationUnit (S := S) (D := D)) = 1)
+          (positiveHalfQuadraticPolarizationUnit (S := S) (D := D)) =
+        (1 : BoundedContinuousFunction
+          (PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+            (halfExtent n) N) ℝ))
     (F : D.positiveTimeSubalgebra)
     (f : BoundedContinuousFunction
       (PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
@@ -203,8 +220,12 @@ theorem mem_positiveHalfPullback_range_of_quadratic_polarization
       D.quadraticBoundedContinuousFunction F (Q.interpolate n A) =
         periodicHypercubicEvenFullReflectedObservable (halfExtent n) f A)
     (hQuadraticAddOne : ∀ A,
-      D.quadraticBoundedContinuousFunction (F + 1) (Q.interpolate n A) =
-        periodicHypercubicEvenFullReflectedObservable (halfExtent n) (f + 1) A) :
+      D.quadraticBoundedContinuousFunction
+          (F + (1 : D.positiveTimeSubalgebra)) (Q.interpolate n A) =
+        periodicHypercubicEvenFullReflectedObservable (halfExtent n)
+          (f + (1 : BoundedContinuousFunction
+            (PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+              (halfExtent n) N) ℝ)) A) :
     f ∈ LinearMap.range (Q.positiveHalfPullback n) := by
   refine ⟨(⟨F.1, F.2⟩ : D.positiveTimeSubalgebra.toSubmodule), ?_⟩
   exact Q.positiveHalfPullback_eq_of_quadratic_polarization
@@ -248,7 +269,10 @@ theorem normalizedTracePowerRawActualAnalysisBounded_mem_finitePositiveHalfObser
     (n j : ℕ)
     (hUnit :
       Q.positiveHalfPullback n
-          (positiveHalfQuadraticPolarizationUnit (S := S) (D := D)) = 1)
+          (positiveHalfQuadraticPolarizationUnit (S := S) (D := D)) =
+        (1 : BoundedContinuousFunction
+          (PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+            (halfExtent n) 2) ℝ))
     (F : D.positiveTimeSubalgebra)
     (hQuadratic : ∀ A,
       D.quadraticBoundedContinuousFunction F (Q.interpolate n A) =
@@ -256,10 +280,14 @@ theorem normalizedTracePowerRawActualAnalysisBounded_mem_finitePositiveHalfObser
           (periodicHypercubicEvenBoundaryNormalizedTracePowerRawActualAnalysisBoundedContinuousFunction
             (halfExtent n) (beta n) (hbeta n) j) A)
     (hQuadraticAddOne : ∀ A,
-      D.quadraticBoundedContinuousFunction (F + 1) (Q.interpolate n A) =
+      D.quadraticBoundedContinuousFunction
+          (F + (1 : D.positiveTimeSubalgebra)) (Q.interpolate n A) =
         periodicHypercubicEvenFullReflectedObservable (halfExtent n)
           (periodicHypercubicEvenBoundaryNormalizedTracePowerRawActualAnalysisBoundedContinuousFunction
-            (halfExtent n) (beta n) (hbeta n) j + 1) A) :
+              (halfExtent n) (beta n) (hbeta n) j +
+            (1 : BoundedContinuousFunction
+              (PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
+                (halfExtent n) 2) ℝ)) A) :
     periodicHypercubicEvenBoundaryNormalizedTracePowerRawActualAnalysisBoundedContinuousFunction
         (halfExtent n) (beta n) (hbeta n) j ∈
       Set.range
