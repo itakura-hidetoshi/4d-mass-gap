@@ -46,6 +46,7 @@ theorem boundedContinuous_gaugeInvariant_of_dense_interpolation
     · exact O.continuous
     · intro Y hY
       rcases hY with ⟨n, U, rfl⟩
+      change O (G.action g (E.interpolate n U)) = O (E.interpolate n U)
       rw [← G.interpolate_equivariant n g U]
       exact hfinite n g U
   exact congrFun hfun X
