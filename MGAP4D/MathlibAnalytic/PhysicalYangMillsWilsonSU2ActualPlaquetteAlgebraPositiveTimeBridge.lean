@@ -1,0 +1,178 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryRawActualAnalysisPlaquetteAlgebraClosure
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2RawActualAnalysisContinuousPullbackClosure
+import Mathlib.Tactic
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+open Filter Set Topology
+
+noncomputable section
+
+private theorem actualPlaquettePositiveTimeBridgeTwoRankPositive : 0 < (2 : ℕ) := by
+  norm_num
+
+local instance actualPlaquettePositiveTimeBridgeNeZero (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength]⟩
+
+local instance actualPlaquettePositiveTimeBridgeTopologicalGroup :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup 2
+
+local instance actualPlaquettePositiveTimeBridgeCompactSpace :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  specialUnitaryGroupCompactSpace 2
+
+local instance actualPlaquettePositiveTimeBridgeSecondCountable :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology 2
+
+local instance actualPlaquettePositiveTimeBridgeMeasurableSpace :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  specialUnitaryGroupMeasurableSpace 2
+
+local instance actualPlaquettePositiveTimeBridgeBorelSpace :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  specialUnitaryGroupBorelSpace 2
+
+local instance actualPlaquettePositiveTimeBridgeSU2Nontrivial :
+    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun U : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (U : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
+/-- The bounded-continuous carrier obtained from the concrete actual plaquette
+algebra by Mathlib's canonical linear isometry from continuous maps on a
+compact space.
+
+This carrier is target-independent and carries no density assumption: its
+members are exactly bounded representatives of actual finite plaquette-algebra
+observables. -/
+noncomputable def periodicHypercubicEvenBoundaryActualPlaquetteAlgebraBoundedCarrier
+    (H : ℕ) :
+    Set (BoundedContinuousFunction
+      (PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H 2) ℝ) :=
+  Set.range fun f :
+      periodicHypercubicEvenBoundaryActualPlaquetteAlgebra
+        H 2 actualPlaquettePositiveTimeBridgeTwoRankPositive =>
+    ContinuousMap.linearIsometryBoundedOfCompact
+      (PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H 2) ℝ ℝ f.1
+
+/-- The explicit raw actual-analysis mode lies in the sup-norm closure of the
+bounded carrier of the actual plaquette algebra.
+
+The hard input is the preceding concrete `C⁰` theorem, which was proved from
+finite plaquette generators, polynomial approximation of the Gibbs
+exponentials, and the boundary Bochner integral.  Here we only transport that
+closure through Mathlib's canonical continuous linear isometry
+`ContinuousMap.linearIsometryBoundedOfCompact`.
+
+No abstract `Dense` hypothesis and no positive-time realizability hypothesis
+is used in this theorem. -/
+theorem
+    periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysisBoundedContinuousFunction_mem_actualPlaquetteAlgebraBoundedCarrier_closure
+    (H : ℕ)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (k : ℕ)
+    (c : Fin (k + 1) → ℝ) :
+    periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysisBoundedContinuousFunction
+        H beta hbeta k c ∈
+      closure (periodicHypercubicEvenBoundaryActualPlaquetteAlgebraBoundedCarrier H) := by
+  let X := PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H 2
+  let A := periodicHypercubicEvenBoundaryActualPlaquetteAlgebra
+    H 2 actualPlaquettePositiveTimeBridgeTwoRankPositive
+  let L := ContinuousMap.linearIsometryBoundedOfCompact X ℝ ℝ
+  let g :=
+    periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysisContinuousMap
+      H beta hbeta k c
+  have hgTopologicalClosure : g ∈ A.topologicalClosure := by
+    simpa [A, g] using
+      (periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysisContinuousMap_mem_actualPlaquetteAlgebra_topologicalClosure
+        H beta hbeta k c)
+  have hgClosure : g ∈ closure (A : Set C(X, ℝ)) := by
+    simpa only [Subalgebra.topologicalClosure_coe] using hgTopologicalClosure
+  rcases mem_closure_iff_seq_limit.mp hgClosure with ⟨u, huA, huTendsto⟩
+  have huMappedTendsto : Tendsto (fun m => L (u m)) atTop (𝓝 (L g)) :=
+    L.continuous.continuousAt.comp huTendsto
+  have huCarrier : ∀ m,
+      L (u m) ∈ periodicHypercubicEvenBoundaryActualPlaquetteAlgebraBoundedCarrier H := by
+    intro m
+    refine ⟨⟨u m, huA m⟩, ?_⟩
+    rfl
+  have hMappedClosure :
+      L g ∈ closure
+        (periodicHypercubicEvenBoundaryActualPlaquetteAlgebraBoundedCarrier H) :=
+    mem_closure_iff_seq_limit.mpr ⟨fun m => L (u m), huCarrier, huMappedTendsto⟩
+  simpa [L, g,
+    periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysisBoundedContinuousFunction]
+    using hMappedClosure
+
+namespace PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
+
+variable
+    {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
+    {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
+    {halfExtent : ℕ → ℕ}
+    {beta : ℕ → ℝ}
+    {hbeta : ∀ n, 0 ≤ beta n}
+
+/-- Once every bounded actual-plaquette-algebra observable is realized by the
+existing coherent positive-time pullback, the explicit raw actual-analysis
+mode belongs to the required positive-half range closure.
+
+This is the precise non-density frontier.  The approximation statement itself
+is now theorem-generated from the actual finite plaquette/Wilson construction;
+the only remaining input is the concrete realization of that algebraic carrier
+inside the pre-existing physical positive-time pullback range. -/
+theorem
+    normalizedTracePolynomial_rawActualAnalysis_mem_positiveHalfPullbackRangeClosure_of_actualPlaquetteAlgebra_lift
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
+      S D halfExtent 2 actualPlaquettePositiveTimeBridgeTwoRankPositive beta hbeta)
+    (n k : ℕ)
+    (c : Fin (k + 1) → ℝ)
+    (hLift :
+      periodicHypercubicEvenBoundaryActualPlaquetteAlgebraBoundedCarrier
+          (halfExtent n) ⊆
+        LinearMap.range (Q.positiveHalfPullback n)) :
+    periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysisBoundedContinuousFunction
+        (halfExtent n) (beta n) (hbeta n) k c ∈
+      closure (LinearMap.range (Q.positiveHalfPullback n)) := by
+  apply closure_mono hLift
+  exact
+    periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysisBoundedContinuousFunction_mem_actualPlaquetteAlgebraBoundedCarrier_closure
+      (halfExtent n) (beta n) (hbeta n) k c
+
+/-- The same concrete actual-plaquette realization hypothesis reaches the
+already-established open-half Haar `L²` range closure.  Thus all approximation,
+Gibbs-exponential, boundary-integration, and `C⁰ → L²` work is discharged before
+the remaining physical positive-time realization step. -/
+theorem
+    normalizedTracePolynomial_rawActualAnalysis_mem_positiveTimeL2RangeClosure_of_actualPlaquetteAlgebra_lift
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
+      S D halfExtent 2 actualPlaquettePositiveTimeBridgeTwoRankPositive beta hbeta)
+    (n k : ℕ)
+    (c : Fin (k + 1) → ℝ)
+    (hLift :
+      periodicHypercubicEvenBoundaryActualPlaquetteAlgebraBoundedCarrier
+          (halfExtent n) ⊆
+        LinearMap.range (Q.positiveHalfPullback n)) :
+    periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysisHaarL2
+        (halfExtent n) (beta n) (hbeta n) k c ∈
+      closure (LinearMap.range (Q.positiveTimeSubmoduleL2LinearMap n)) := by
+  apply
+    Q.normalizedTracePolynomial_rawActualAnalysis_mem_positiveTimeL2RangeClosure_of_mem_positiveHalfPullbackRangeClosure
+  exact
+    Q.normalizedTracePolynomial_rawActualAnalysis_mem_positiveHalfPullbackRangeClosure_of_actualPlaquetteAlgebra_lift
+      n k c hLift
+
+end PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
+
+end
+
+end MathlibAnalytic
+end MGAP4D
