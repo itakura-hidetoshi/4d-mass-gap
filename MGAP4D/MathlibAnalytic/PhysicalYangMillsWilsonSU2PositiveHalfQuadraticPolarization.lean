@@ -37,8 +37,7 @@ private def positiveHalfQuadraticPolarizationUnit
 
 /-- The shifted positive-time observable, constructed in the ambient observable
 algebra and returned to the positive-time subalgebra by `Subalgebra.add_mem`.
-Writing this constructor explicitly avoids asking typeclass synthesis for the
-additive structure of the projected subtype `D.positiveTimeSubalgebra`. -/
+This avoids projected-subtype typeclass search. -/
 private def positiveHalfQuadraticPolarizationAddOne
     {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
     {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
@@ -57,6 +56,31 @@ private def positiveHalfQuadraticPolarizationOpenHalfIdentity
     PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H N :=
   fun _ => 1
 
+/-- The scalar polarization identity used by the positive-half reconstruction.
+Keeping the nonlinear arithmetic independent of the gauge-theory types makes
+the main theorem both transparent and inexpensive to elaborate. -/
+private theorem positiveHalfQuadraticPolarization_cross_sum
+    (a b c d : ℝ)
+    (h0 : a * b = c * d)
+    (h1 : (a + 1) * (b + 1) = (c + 1) * (d + 1)) :
+    (a - c) + (b - d) = 0 := by
+  nlinarith
+
+/-- If the difference of two real-valued functions is paired with the same
+reflected difference to zero for every pair of points, then the functions are
+pointwise equal. -/
+private theorem positiveHalfQuadraticPolarization_pointwise_eq
+    {X : Type*}
+    (g f : X → ℝ)
+    (rho : X → X)
+    (y0 : X)
+    (hsum : ∀ x y, (g x - f x) + (g (rho y) - f (rho y)) = 0) :
+    ∀ x, g x = f x := by
+  intro x
+  have hx := hsum x y0
+  have hz := hsum (rho y0) y0
+  linarith
+
 /-- Boundary-fibered assembly evaluates a reflected positive-half observable as
 an honest rank-one product in the two independently variable open halves. -/
 theorem periodicHypercubicEvenFullReflectedObservable_boundaryFiberedAssemble
@@ -67,8 +91,7 @@ theorem periodicHypercubicEvenFullReflectedObservable_boundaryFiberedAssemble
     (x y : PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H N) :
     periodicHypercubicEvenFullReflectedObservable H f
         ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble b x y) =
-      f x *
-        f (periodicHypercubicEvenOpenHalfOrientationCorrection H y) := by
+      f x * f (periodicHypercubicEvenOpenHalfOrientationCorrection H y) := by
   let P := periodicHypercubicEvenEdgeOrbitPartition H
   unfold periodicHypercubicEvenFullReflectedObservable
   rw [periodicHypercubicEvenPositiveRestriction_configurationReflection]
@@ -91,25 +114,15 @@ variable
     {beta : ℕ → ℝ}
     {hbeta : ∀ n, 0 ≤ beta n}
 
-/-- **Quadratic polarization removes the apparent positive-half range
-assumption.**
+/-- **Quadratic polarization reconstructs the exact positive-half readout.**
 
-Suppose a concrete physical positive-time observable `F` has the desired
-finite reflected readout `f`, and the explicitly constructed shifted observable
-`F + 1` has the corresponding shifted readout `f + 1`. If the coherent
-positive-half pullback is normalized on the unit, then its actual linear
-readout of `F` is forced to be exactly `f`.
+Suppose a concrete physical positive-time observable `F` has finite reflected
+readout `f`, while the explicitly constructed shifted observable `F + 1` has
+readout `f + 1`. If the coherent positive-half pullback is normalized on the
+unit, linearity and the two quadratic identities force its readout of `F` to
+be exactly `f`.
 
-The proof uses no multiplicativity or surjectivity of `positiveHalfPullback`.
-The quadratic identities for `F` and `F + 1`, together with linearity and the
-unit, give for arbitrary independent open halves `x,y`
-
-`(QF(x)-f(x)) + (QF(ρy)-f(ρy)) = 0`.
-
-Fixing `y` makes the first difference constant; then substituting the same
-orientation-corrected point in the first slot forces that constant to vanish.
-This is the rank-one polarization step needed to turn concrete projective /
-cylinder reflected identities into an exact positive-half preimage. -/
+No multiplicativity or surjectivity of `positiveHalfPullback` is used. -/
 theorem positiveHalfPullback_eq_of_quadratic_polarization
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
       S D halfExtent N hN beta hbeta)
@@ -196,29 +209,24 @@ theorem positiveHalfPullback_eq_of_quadratic_polarization
       rw [periodicHypercubicEvenFullReflectedObservable_boundaryFiberedAssemble,
         periodicHypercubicEvenFullReflectedObservable_boundaryFiberedAssemble] at h1raw
       simpa only [Fsub, BoundedContinuousFunction.add_apply] using h1raw
-    nlinarith
+    exact positiveHalfQuadraticPolarization_cross_sum
+      (Q.positiveHalfPullback n Fsub x)
+      (Q.positiveHalfPullback n Fsub
+        (periodicHypercubicEvenOpenHalfOrientationCorrection H y))
+      (f x)
+      (f (periodicHypercubicEvenOpenHalfOrientationCorrection H y))
+      h0 h1
   apply BoundedContinuousFunction.ext
   intro x
-  let y0 : PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H N :=
-    positiveHalfQuadraticPolarizationOpenHalfIdentity H N
-  let z := periodicHypercubicEvenOpenHalfOrientationCorrection H y0
-  have hx := hsum x y0
-  have hz := hsum z y0
-  change
-    (Q.positiveHalfPullback n Fsub x - f x) +
-      (Q.positiveHalfPullback n Fsub z - f z) = 0 at hx
-  change
-    (Q.positiveHalfPullback n Fsub z - f z) +
-      (Q.positiveHalfPullback n Fsub z - f z) = 0 at hz
-  have hz0 : Q.positiveHalfPullback n Fsub z - f z = 0 := by
-    linarith
-  have hx0 : Q.positiveHalfPullback n Fsub x - f x = 0 := by
-    linarith
-  exact sub_eq_zero.mp hx0
+  exact positiveHalfQuadraticPolarization_pointwise_eq
+    (fun z => Q.positiveHalfPullback n Fsub z)
+    (fun z => f z)
+    (periodicHypercubicEvenOpenHalfOrientationCorrection H)
+    (positiveHalfQuadraticPolarizationOpenHalfIdentity H N)
+    hsum x
 
 /-- A concrete pair of reflected cylinder identities therefore gives exact
-membership in the coherent positive-half pullback range. This is the form
-consumed by the existing finite-positive-half and `C⁰ → L²` bridges. -/
+membership in the coherent positive-half pullback range. -/
 theorem mem_positiveHalfPullback_range_of_quadratic_polarization
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
       S D halfExtent N hN beta hbeta)
@@ -248,83 +256,6 @@ theorem mem_positiveHalfPullback_range_of_quadratic_polarization
   refine ⟨(⟨F.1, F.2⟩ : D.positiveTimeSubalgebra.toSubmodule), ?_⟩
   exact Q.positiveHalfPullback_eq_of_quadratic_polarization
     n hUnit F f hQuadratic hQuadraticAddOne
-
-end PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
-
-private theorem positiveHalfQuadraticPolarizationTwoRankPositive : 0 < (2 : ℕ) := by
-  norm_num
-
-local instance positiveHalfQuadraticPolarizationSU2Nontrivial :
-    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
-  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
-  intro h
-  have h00 := congrArg
-    (fun U : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
-      (U : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
-  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
-
-namespace PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
-
-variable
-    {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
-    {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
-    {halfExtent : ℕ → ℕ}
-    {beta : ℕ → ℝ}
-    {hbeta : ∀ n, 0 ≤ beta n}
-
-/-- For the explicit SU(2) normalized-trace-power raw observable, Milestone 10
-can now be discharged by constructing one physical positive-time cylinder
-observable and proving its reflected readout for `F` and the explicit shifted
-observable `F + 1`.
-
-The conclusion is the concrete finite-positive-half range statement already
-consumed by the exact trace-power `L²` and physical-excitation route. -/
-theorem normalizedTracePowerRawActualAnalysisBounded_mem_finitePositiveHalfObservableRange_of_quadratic_polarization
-    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
-      S D halfExtent 2 positiveHalfQuadraticPolarizationTwoRankPositive beta hbeta)
-    (hInvariant : ∀ n,
-      D.WeakStarReflectionInvariant
-        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
-    (n j : ℕ)
-    (hUnit :
-      Q.positiveHalfPullback n
-          (positiveHalfQuadraticPolarizationUnit (S := S) (D := D)) =
-        (1 : BoundedContinuousFunction
-          (PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
-            (halfExtent n) 2) ℝ))
-    (F : D.positiveTimeSubalgebra)
-    (hQuadratic : ∀ A,
-      D.quadraticBoundedContinuousFunction F (Q.interpolate n A) =
-        periodicHypercubicEvenFullReflectedObservable (halfExtent n)
-          (periodicHypercubicEvenBoundaryNormalizedTracePowerRawActualAnalysisBoundedContinuousFunction
-            (halfExtent n) (beta n) (hbeta n) j) A)
-    (hQuadraticAddOne : ∀ A,
-      D.quadraticBoundedContinuousFunction
-          (positiveHalfQuadraticPolarizationAddOne (D := D) F)
-          (Q.interpolate n A) =
-        periodicHypercubicEvenFullReflectedObservable (halfExtent n)
-          (periodicHypercubicEvenBoundaryNormalizedTracePowerRawActualAnalysisBoundedContinuousFunction
-              (halfExtent n) (beta n) (hbeta n) j +
-            (1 : BoundedContinuousFunction
-              (PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
-                (halfExtent n) 2) ℝ)) A) :
-    periodicHypercubicEvenBoundaryNormalizedTracePowerRawActualAnalysisBoundedContinuousFunction
-        (halfExtent n) (beta n) (hbeta n) j ∈
-      Set.range
-        (fun G :
-          (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-            S D halfExtent 2 positiveHalfQuadraticPolarizationTwoRankPositive
-              beta hbeta Q.toWeakStarBridge hInvariant n).Carrier =>
-          physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservable
-            S D halfExtent 2 positiveHalfQuadraticPolarizationTwoRankPositive
-              beta hbeta Q.toWeakStarBridge hInvariant n G) := by
-  rw [Q.finitePositiveHalfObservable_range_eq_positiveHalfPullback_range
-    hInvariant n]
-  exact Q.mem_positiveHalfPullback_range_of_quadratic_polarization
-    n hUnit F
-      (periodicHypercubicEvenBoundaryNormalizedTracePowerRawActualAnalysisBoundedContinuousFunction
-        (halfExtent n) (beta n) (hbeta n) j)
-      hQuadratic hQuadraticAddOne
 
 end PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
 
