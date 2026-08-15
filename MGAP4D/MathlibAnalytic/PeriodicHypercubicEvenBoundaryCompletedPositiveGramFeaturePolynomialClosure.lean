@@ -47,13 +47,7 @@ private theorem continuousMapNegBetaExp_mem_topologicalClosure
     ⟨fun t => Real.exp (-beta * (t : ℝ)),
       Real.continuous_exp.comp (continuous_const.mul continuous_subtype_val)⟩
   have h := ContinuousMap.comp_attachBound_mem_closure A fA p
-  have hp :
-      p.comp (↑fA).attachBound = continuousMapNegBetaExp beta f := by
-    ext x
-    change Real.exp (-beta * f x) = Real.exp (-beta * f x)
-    rfl
-  rw [hp] at h
-  exact h
+  simpa [continuousMapNegBetaExp, fA, p] using h
 
 /-- The strict-positive Wilson action, restricted to one actual positive
 open-half fiber with fixed boundary data, as a bundled continuous function. -/
