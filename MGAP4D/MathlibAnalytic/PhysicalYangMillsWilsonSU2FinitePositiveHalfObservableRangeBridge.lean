@@ -120,6 +120,29 @@ theorem finitePositiveHalfObservable_range_eq_positiveHalfPullback_range
       _ = Q.positiveHalfPullback n G := by
         exact congrArg (fun x => Q.positiveHalfPullback n x) hF
 
+/-- Taking sup-norm closure preserves the exact identification between the
+finite OS positive-half image and the coherent positive-half pullback range.
+This is the form needed for approximate actual-Wilson/cylinder realization:
+no exact preimage of the approximated observable is required. -/
+theorem finitePositiveHalfObservable_rangeClosure_eq_positiveHalfPullback_rangeClosure
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
+      S D halfExtent 2 finitePositiveHalfObservableRangeBridgeTwoRankPositive beta hbeta)
+    (hInvariant : ∀ n,
+      D.WeakStarReflectionInvariant
+        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
+    (n : ℕ) :
+    closure
+        (Set.range
+          (fun F :
+            (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+              S D halfExtent 2 finitePositiveHalfObservableRangeBridgeTwoRankPositive
+                beta hbeta Q.toWeakStarBridge hInvariant n).Carrier =>
+            physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservable
+              S D halfExtent 2 finitePositiveHalfObservableRangeBridgeTwoRankPositive
+                beta hbeta Q.toWeakStarBridge hInvariant n F)) =
+      closure (LinearMap.range (Q.positiveHalfPullback n)) := by
+  rw [Q.finitePositiveHalfObservable_range_eq_positiveHalfPullback_range hInvariant n]
+
 /-- If the actual finite-positive-half OS image is sup-norm dense, the existing
 cylinder-density bridge now yields the raw actual-analysis range-closure
 statement without a separate `hLift` hypothesis. -/
