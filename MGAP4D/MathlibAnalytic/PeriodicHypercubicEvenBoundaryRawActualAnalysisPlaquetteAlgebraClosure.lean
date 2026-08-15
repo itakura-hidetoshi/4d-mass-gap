@@ -80,11 +80,8 @@ theorem
       (periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureContinuousMap_mem_actualPlaquetteAlgebra_topologicalClosure
         H 2 boundaryRawActualAnalysisPlaquetteClosureTwoRankPositive beta hbeta b)
   change
-    (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePolynomial H k c b *
-        periodicHypercubicEvenBoundaryVacuumMoment
-          H 2 boundaryRawActualAnalysisBochnerTwoRankPositive beta hbeta b) •
-      periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureContinuousMapSU2
-        H beta hbeta b ∈ A.topologicalClosure
+    _ • periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureContinuousMapSU2
+      H beta hbeta b ∈ A.topologicalClosure
   exact A.topologicalClosure.smul_mem hK _
 
 /-- The full explicit normalized-trace raw actual-analysis continuous function
