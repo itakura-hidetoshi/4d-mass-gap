@@ -89,8 +89,9 @@ noncomputable def periodicHypercubicEvenBoundaryPositivePlaquetteTermContinuousM
     (b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H N)
     (p : PeriodicHypercubicEvenPlaquette H) :
     C((periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
-        (Matrix.specialUnitaryGroup (Fin N) ℂ), ℝ) :=
-  if periodicHypercubicEvenStrictPositivePlaquette p then
+        (Matrix.specialUnitaryGroup (Fin N) ℂ), ℝ) := by
+  classical
+  exact if periodicHypercubicEvenStrictPositivePlaquette p then
     periodicHypercubicEvenBoundaryPlaquetteEnergyContinuousMap H N hN b p
   else 0
 
@@ -128,8 +129,9 @@ noncomputable def
     (b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H N)
     (p : PeriodicHypercubicEvenPlaquette H) :
     C((periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
-        (Matrix.specialUnitaryGroup (Fin N) ℂ), ℝ) :=
-  if periodicHypercubicEvenPositiveBoundaryTemporalPlaquette p then
+        (Matrix.specialUnitaryGroup (Fin N) ℂ), ℝ) := by
+  classical
+  exact if periodicHypercubicEvenPositiveBoundaryTemporalPlaquette p then
     periodicHypercubicEvenBoundaryPlaquetteEnergyContinuousMap H N hN b p
   else 0
 
