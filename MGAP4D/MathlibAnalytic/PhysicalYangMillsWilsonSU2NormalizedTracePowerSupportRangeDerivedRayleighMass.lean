@@ -147,8 +147,7 @@ theorem normalizedTracePolynomial_physicalYangMillsMass_nonneg_of_support_powerA
       periodicHypercubicEvenBoundaryNormalizedTracePowerActualAnalysisHaarL2
           (halfExtent n) (beta n) (hbeta n) (j : ℕ) ∈
         LinearMap.range (Q.positiveTimeSubmoduleL2LinearMap n))
-    (T : (normalizedTracePowerSupportRangePreHilbert Q hInvariant n).
-      StronglyContinuousPhysicalSemigroup)
+    (T : (normalizedTracePowerSupportRangePreHilbert Q hInvariant n).StronglyContinuousPhysicalSemigroup)
     (hSelf : IsSelfAdjoint T.closedRightHamiltonian) :
     0 ≤ T.physicalYangMillsMass := by
   have hClosure :=
