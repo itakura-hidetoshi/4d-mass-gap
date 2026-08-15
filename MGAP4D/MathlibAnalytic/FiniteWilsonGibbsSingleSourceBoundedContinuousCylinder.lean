@@ -40,6 +40,7 @@ theorem finite_wilson_gibbs_single_source_boundedContinuousCylinderLift_globalOb
       f (R.observe J A) := by
   rw [EuclideanYangMillsProjectiveCylinderFamily.boundedContinuousCylinderLift_apply]
   rw [finite_wilson_gibbs_single_source_globalObserve_restrict]
+  rfl
 
 /-- Function-level form of the same-root cylinder identity.  Thus precomposing
 any lifted continuum cylinder observable with the actual common Wilson source
