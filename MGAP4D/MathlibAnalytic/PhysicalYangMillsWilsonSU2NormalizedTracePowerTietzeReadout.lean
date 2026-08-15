@@ -79,7 +79,10 @@ noncomputable def normalizedTracePowerTietzePositiveRestrictionContinuousMap
       normalizedTracePowerTietzeOpenConfiguration halfExtent n) :=
   ⟨(periodicHypercubicEvenEdgeOrbitPartition
       (halfExtent n)).positiveRestriction,
-    by fun_prop⟩
+    by
+      apply continuous_pi
+      intro e
+      exact continuous_apply e.1⟩
 
 /-- The finite normalized-trace-power cylinder viewed directly on the full
 finite Wilson configuration. -/
@@ -121,8 +124,8 @@ theorem exists_normalizedTracePower_physicalExtension_of_isClosedEmbedding
             ((periodicHypercubicEvenEdgeOrbitPartition
               (halfExtent n)).positiveRestriction A) := by
   rcases
-      (normalizedTracePowerTietzeFullTarget halfExtent beta hbeta n j).
-        exists_extension_norm_eq_of_isClosedEmbedding he with
+      BoundedContinuousFunction.exists_extension_norm_eq_of_isClosedEmbedding
+        (normalizedTracePowerTietzeFullTarget halfExtent beta hbeta n j) he with
     ⟨O, hnorm, hreadout⟩
   refine ⟨O, hnorm, ?_⟩
   intro A
