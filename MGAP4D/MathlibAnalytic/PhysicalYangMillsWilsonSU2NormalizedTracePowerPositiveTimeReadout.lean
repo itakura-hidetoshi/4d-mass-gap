@@ -95,6 +95,17 @@ theorem rawBounded_mem_positiveHalfPullbackRange
 
 end PhysicalYangMillsWilsonSU2NormalizedTracePowerPositiveTimeReadout
 
+private abbrev normalizedTracePowerPositiveTimeReadoutPreHilbert
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
+      S D halfExtent 2 normalizedTracePowerPositiveTimeReadoutTwoRankPositive beta hbeta)
+    (hInvariant : ∀ m,
+      D.WeakStarReflectionInvariant
+        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S m))
+    (n : ℕ) :=
+  physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+    S D halfExtent 2 normalizedTracePowerPositiveTimeReadoutTwoRankPositive
+      beta hbeta Q.toWeakStarBridge hInvariant n
+
 /-- Concrete trace-power readout data automatically realizes every selected
 raw bounded observable in the theorem-generated finite positive-half OS image.
 The reverse carrier construction is supplied by the already-proved exact range
@@ -111,9 +122,7 @@ theorem normalizedTracePower_rawBounded_mem_finitePositiveHalfObservableRange_of
         (halfExtent n) (beta n) (hbeta n) j ∈
       Set.range
         (fun F :
-          (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-            S D halfExtent 2 normalizedTracePowerPositiveTimeReadoutTwoRankPositive
-              beta hbeta Q.toWeakStarBridge hInvariant n).Carrier =>
+          (normalizedTracePowerPositiveTimeReadoutPreHilbert Q hInvariant n).Carrier =>
           physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservable
             S D halfExtent 2 normalizedTracePowerPositiveTimeReadoutTwoRankPositive
               beta hbeta Q.toWeakStarBridge hInvariant n F) := by
@@ -138,6 +147,41 @@ theorem normalizedTracePolynomial_rawActualAnalysis_mem_positiveTimeL2Range_of_r
       LinearMap.range (Q.positiveTimeSubmoduleL2LinearMap n) := by
   apply Q.normalizedTracePolynomial_rawActualAnalysis_mem_positiveTimeL2Range_of_support_rawPowerBounded_mem_finitePositiveHalfObservableRange
     hInvariant n k c
+  intro j _
+  exact Q.normalizedTracePower_rawBounded_mem_finitePositiveHalfObservableRange_of_readout
+    hInvariant n (j : ℕ) R
+
+/-- The concrete readout family also discharges the last supportwise finite
+realization premise in the reconstructed Hamiltonian mass route.  All
+remaining hypotheses are exactly the already-existing finite Wilson
+nontriviality, centering, vacuum compatibility, and self-adjoint-semigroup
+inputs; no new density or global range condition appears. -/
+theorem normalizedTracePolynomial_physicalYangMillsMass_nonneg_of_readout
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
+      S D halfExtent 2 normalizedTracePowerPositiveTimeReadoutTwoRankPositive beta hbeta)
+    (hInvariant : ∀ m,
+      D.WeakStarReflectionInvariant
+        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S m))
+    (U : PhysicalYangMillsEvenPeriodicWilsonOSPositiveHalfVacuumUnitCompatibility
+      Q hInvariant)
+    (n k : ℕ)
+    (c : Fin (k + 1) → ℝ)
+    (hH : 1 < halfExtent n)
+    (hbetaPos : 0 < beta n)
+    (hc : c ≠ 0)
+    (hzero :
+      inner ℝ
+        (periodicHypercubicEvenBoundaryMarginalVacuumL2
+          (halfExtent n) (beta n) (hbeta n))
+        (periodicHypercubicEvenBoundaryMarginalNormalizedTracePolynomialL2
+          (halfExtent n) (beta n) (hbeta n) k c) = 0)
+    (R : PhysicalYangMillsWilsonSU2NormalizedTracePowerPositiveTimeReadout Q n)
+    (T : (normalizedTracePowerPositiveTimeReadoutPreHilbert
+      Q hInvariant n).StronglyContinuousPhysicalSemigroup)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian) :
+    0 ≤ T.physicalYangMillsMass := by
+  apply Q.normalizedTracePolynomial_physicalYangMillsMass_nonneg_of_support_rawPowerBounded_mem_finitePositiveHalfObservableRange
+    hInvariant U n k c hH hbetaPos hc hzero _ T hSelf
   intro j _
   exact Q.normalizedTracePower_rawBounded_mem_finitePositiveHalfObservableRange_of_readout
     hInvariant n (j : ℕ) R
