@@ -1,4 +1,4 @@
-import Mathlib.Topology.ContinuousMap.Bounded.Compact
+import Mathlib.Topology.ContinuousMap.Compact
 
 namespace MGAP4D
 namespace MathlibAnalytic
