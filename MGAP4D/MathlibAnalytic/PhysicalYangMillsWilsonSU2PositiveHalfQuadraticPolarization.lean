@@ -195,8 +195,7 @@ theorem positiveHalfPullback_eq_of_quadratic_polarization
       dsimp only [A] at h1raw
       rw [periodicHypercubicEvenFullReflectedObservable_boundaryFiberedAssemble,
         periodicHypercubicEvenFullReflectedObservable_boundaryFiberedAssemble] at h1raw
-      simpa only [Fsub, BoundedContinuousFunction.add_apply,
-        BoundedContinuousFunction.one_apply] using h1raw
+      simpa only [Fsub, BoundedContinuousFunction.add_apply] using h1raw
     nlinarith
   apply BoundedContinuousFunction.ext
   intro x
