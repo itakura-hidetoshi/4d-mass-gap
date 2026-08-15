@@ -181,7 +181,10 @@ theorem positiveHalfPullback_eq_of_quadratic_polarization
             Q.positiveHalfPullback n Fsub
               (periodicHypercubicEvenOpenHalfOrientationCorrection H y) =
           f x * f (periodicHypercubicEvenOpenHalfOrientationCorrection H y) := by
-      simpa [H, P, A, Fsub] using h0raw
+      dsimp only [A] at h0raw
+      rw [periodicHypercubicEvenFullReflectedObservable_boundaryFiberedAssemble,
+        periodicHypercubicEvenFullReflectedObservable_boundaryFiberedAssemble] at h0raw
+      simpa only [Fsub] using h0raw
     have h1 :
         (Q.positiveHalfPullback n Fsub x + 1) *
             (Q.positiveHalfPullback n Fsub
@@ -189,7 +192,11 @@ theorem positiveHalfPullback_eq_of_quadratic_polarization
           (f x + 1) *
             (f (periodicHypercubicEvenOpenHalfOrientationCorrection H y) + 1) := by
       rw [hPullAdd] at h1raw
-      simpa [H, P, A, Fsub, Fadd] using h1raw
+      dsimp only [A] at h1raw
+      rw [periodicHypercubicEvenFullReflectedObservable_boundaryFiberedAssemble,
+        periodicHypercubicEvenFullReflectedObservable_boundaryFiberedAssemble] at h1raw
+      simpa only [Fsub, BoundedContinuousFunction.add_apply,
+        BoundedContinuousFunction.one_apply] using h1raw
     nlinarith
   apply BoundedContinuousFunction.ext
   intro x
