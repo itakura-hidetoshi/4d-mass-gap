@@ -127,16 +127,15 @@ theorem
     simpa [psi] using
       periodicHypercubicEvenBoundaryVacuumMoment_measurable
         H 2 boundaryRawActualAnalysisBochnerTwoRankPositive beta hbeta
-  have hKmap : Measurable Kmap := by
-    exact
-      (periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureContinuousMapSU2_continuous
-        H beta hbeta).measurable
-  have hPhiMeas : Measurable Phi := by
+  have hScalarStrong : AEStronglyMeasurable (fun b => p b * psi b) μ :=
+    (hp.mul hpsi).aestronglyMeasurable
+  have hKStrong : AEStronglyMeasurable Kmap μ :=
+    (periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureContinuousMapSU2_continuous
+      H beta hbeta).aestronglyMeasurable
+  have hPhiStrong : AEStronglyMeasurable Phi μ := by
     simpa [Phi,
       periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysisContinuousMapIntegrand,
-      p, psi, Kmap] using (hp.mul hpsi).smul hKmap
-  have hPhiStrong : AEStronglyMeasurable Phi μ :=
-    hPhiMeas.aestronglyMeasurable
+      p, psi, Kmap] using hScalarStrong.smul hKStrong
   have hBound : ∀ᵐ b ∂μ, ∀ x, ‖Phi b x‖ ≤ bound b := by
     filter_upwards [] with b
     intro x
@@ -244,7 +243,13 @@ theorem
       periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysisContinuousMap
         H beta hbeta k c := by
   ext x
-  simp
+  rw [periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysisBochnerContinuousMap_apply]
+  change
+    periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysis
+        H beta hbeta k c x =
+      periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysis
+        H beta hbeta k c x
+  rfl
 
 end
 
