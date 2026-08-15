@@ -97,8 +97,10 @@ theorem
   have hgClosure : g ∈ closure (A : Set C(X, ℝ)) := by
     simpa only [Subalgebra.topologicalClosure_coe] using hgTopologicalClosure
   rcases mem_closure_iff_seq_limit.mp hgClosure with ⟨u, huA, huTendsto⟩
+  have hLAt : Tendsto L (𝓝 g) (𝓝 (L g)) :=
+    L.continuous.continuousAt
   have huMappedTendsto : Tendsto (fun m => L (u m)) atTop (𝓝 (L g)) :=
-    L.continuous.continuousAt.comp huTendsto
+    hLAt.comp huTendsto
   have huCarrier : ∀ m,
       L (u m) ∈ periodicHypercubicEvenBoundaryActualPlaquetteAlgebraBoundedCarrier H := by
     intro m
