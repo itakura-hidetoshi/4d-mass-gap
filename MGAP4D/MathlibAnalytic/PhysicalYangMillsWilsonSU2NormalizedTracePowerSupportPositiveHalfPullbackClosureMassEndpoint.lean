@@ -131,26 +131,27 @@ theorem
     periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysisHaarL2
         (halfExtent n) (beta n) (hbeta n) k c ∈
       closure (LinearMap.range (Q.positiveTimeSubmoduleL2LinearMap n)) := by
-  let R := LinearMap.range (Q.positiveTimeSubmoduleL2LinearMap n)
+  let C : Submodule ℝ
+      (PhysicalYangMillsEvenPeriodicWilsonOSOpenHalfFeatureL2 halfExtent 2 n) :=
+    (LinearMap.range (Q.positiveTimeSubmoduleL2LinearMap n)).topologicalClosure
   rw [periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysisHaarL2_eq_sum_powerActualAnalysis]
   have hSum :
       (∑ j : Fin (k + 1), c j •
         periodicHypercubicEvenBoundaryNormalizedTracePowerActualAnalysisHaarL2
-          (halfExtent n) (beta n) (hbeta n) (j : ℕ)) ∈ R.topologicalClosure := by
-    apply R.topologicalClosure.sum_mem
+          (halfExtent n) (beta n) (hbeta n) (j : ℕ)) ∈ C := by
+    apply C.sum_mem
     intro j _hj
     by_cases hcj : c j = 0
     · simp [hcj]
-    · apply R.topologicalClosure.smul_mem
+    · apply C.smul_mem
       have hj :
           periodicHypercubicEvenBoundaryNormalizedTracePowerActualAnalysisHaarL2
               (halfExtent n) (beta n) (hbeta n) (j : ℕ) ∈
-            closure (R : Set _) := by
-        simpa [R] using
-          Q.normalizedTracePowerActualAnalysis_mem_positiveTimeL2RangeClosure_of_rawBounded_mem_positiveHalfPullbackRangeClosure
-            n (j : ℕ) (hPowerClosure j hcj)
-      simpa only [Submodule.topologicalClosure_coe] using hj
-  simpa only [R, Submodule.topologicalClosure_coe] using hSum
+            closure (LinearMap.range (Q.positiveTimeSubmoduleL2LinearMap n)) :=
+        Q.normalizedTracePowerActualAnalysis_mem_positiveTimeL2RangeClosure_of_rawBounded_mem_positiveHalfPullbackRangeClosure
+          n (j : ℕ) (hPowerClosure j hcj)
+      simpa only [C, Submodule.topologicalClosure_coe] using hj
+  simpa only [C, Submodule.topologicalClosure_coe] using hSum
 
 /-- Terminal reconstructed-Hamiltonian consequence with the physical
 realization obligation reduced to finitely many sup-norm closure statements,
