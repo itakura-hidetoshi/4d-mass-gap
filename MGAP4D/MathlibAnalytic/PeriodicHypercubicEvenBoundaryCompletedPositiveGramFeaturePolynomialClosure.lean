@@ -50,7 +50,8 @@ private theorem continuousMapNegBetaExp_mem_topologicalClosure
   have hp :
       p.comp (↑fA).attachBound = continuousMapNegBetaExp beta f := by
     ext x
-    simp [p, fA, continuousMapNegBetaExp]
+    change Real.exp (-beta * f x) = Real.exp (-beta * f x)
+    rfl
   rw [hp] at h
   exact h
 
@@ -197,9 +198,9 @@ theorem
   have hAmplitude :=
     periodicHypercubicEvenBoundaryCompletedPositiveWilsonAmplitudeContinuousMap_mem_topologicalClosure_of_actions_mem
       H N hN beta b A hBulk hTemporal
-  have hScaled := A.topologicalClosure.smul_mem
+  have hScaled := A.topologicalClosure.smul_mem hAmplitude
     (Real.sqrt (periodicHypercubicEvenBoundaryGramCoefficient
-      H N hN beta hbeta b)) hAmplitude
+      H N hN beta hbeta b))
   have hScaleEq :
       (Real.sqrt (periodicHypercubicEvenBoundaryGramCoefficient
           H N hN beta hbeta b)) •
