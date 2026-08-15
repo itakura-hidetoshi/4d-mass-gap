@@ -123,6 +123,55 @@ variable
     {beta : ℕ → ℝ}
     {hbeta : ∀ n, 0 ≤ beta n}
 
+/-- Approximate physical positive-time realization of the actual plaquette
+carrier is already sufficient for the explicit raw actual-analysis mode.
+
+Unlike an exact section into `range (Q.positiveHalfPullback n)`, the hypothesis
+only asks each finite actual-plaquette observable to lie in the sup-norm closure
+of that range.  Since the target raw mode is itself in the closure of the
+actual plaquette carrier, Mathlib's `closure_minimal` closes the two
+approximations without choosing or diagonalizing approximating sequences. -/
+theorem
+    normalizedTracePolynomial_rawActualAnalysis_mem_positiveHalfPullbackRangeClosure_of_actualPlaquetteAlgebra_closure_lift
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
+      S D halfExtent 2 actualPlaquettePositiveTimeBridgeTwoRankPositive beta hbeta)
+    (n k : ℕ)
+    (c : Fin (k + 1) → ℝ)
+    (hLiftClosure :
+      periodicHypercubicEvenBoundaryActualPlaquetteAlgebraBoundedCarrier
+          (halfExtent n) ⊆
+        closure (LinearMap.range (Q.positiveHalfPullback n))) :
+    periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysisBoundedContinuousFunction
+        (halfExtent n) (beta n) (hbeta n) k c ∈
+      closure (LinearMap.range (Q.positiveHalfPullback n)) := by
+  exact
+    (closure_minimal hLiftClosure isClosed_closure)
+      (periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysisBoundedContinuousFunction_mem_actualPlaquetteAlgebraBoundedCarrier_closure
+        (halfExtent n) (beta n) (hbeta n) k c)
+
+/-- The approximate actual-plaquette realization hypothesis also reaches the
+open-half Haar `L²` range closure through Mathlib's canonical
+bounded-continuous-to-`L²` map.  Thus no exact positive-time preimage is needed
+at either the `C⁰` or `L²` level. -/
+theorem
+    normalizedTracePolynomial_rawActualAnalysis_mem_positiveTimeL2RangeClosure_of_actualPlaquetteAlgebra_closure_lift
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
+      S D halfExtent 2 actualPlaquettePositiveTimeBridgeTwoRankPositive beta hbeta)
+    (n k : ℕ)
+    (c : Fin (k + 1) → ℝ)
+    (hLiftClosure :
+      periodicHypercubicEvenBoundaryActualPlaquetteAlgebraBoundedCarrier
+          (halfExtent n) ⊆
+        closure (LinearMap.range (Q.positiveHalfPullback n))) :
+    periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysisHaarL2
+        (halfExtent n) (beta n) (hbeta n) k c ∈
+      closure (LinearMap.range (Q.positiveTimeSubmoduleL2LinearMap n)) := by
+  apply
+    Q.normalizedTracePolynomial_rawActualAnalysis_mem_positiveTimeL2RangeClosure_of_mem_positiveHalfPullbackRangeClosure
+  exact
+    Q.normalizedTracePolynomial_rawActualAnalysis_mem_positiveHalfPullbackRangeClosure_of_actualPlaquetteAlgebra_closure_lift
+      n k c hLiftClosure
+
 /-- Once every bounded actual-plaquette-algebra observable is realized by the
 existing coherent positive-time pullback, the explicit raw actual-analysis
 mode belongs to the required positive-half range closure.
