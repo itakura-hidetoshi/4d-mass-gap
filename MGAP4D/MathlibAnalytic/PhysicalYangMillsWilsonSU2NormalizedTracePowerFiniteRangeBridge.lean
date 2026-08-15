@@ -104,6 +104,18 @@ theorem periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2_eq_sum_pow
           H beta hbeta (j : ℕ) := by
   unfold periodicHypercubicEvenBoundaryNormalizedTracePolynomialHaarL2
   unfold periodicHypercubicEvenBoundaryMarginalNormalizedTracePolynomialL2
+  let L := periodicHypercubicEvenBoundaryMarginalToHaarL2LinearMap
+    H 2 normalizedTracePowerFiniteRangeBridgeTwoRankPositive beta hbeta
+  change
+    L (∑ j : Fin (k + 1), c j •
+      ContinuousMap.toLp (E := ℝ) 2
+        (periodicHypercubicEvenBoundaryMarginalMeasure
+          H 2 normalizedTracePowerFiniteRangeBridgeTwoRankPositive beta hbeta) ℝ
+        (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTraceTwoBoundaryContinuous H ^
+          (j : ℕ))) =
+      ∑ j : Fin (k + 1), c j •
+        periodicHypercubicEvenBoundaryNormalizedTracePowerHaarL2
+          H beta hbeta (j : ℕ)
   rw [map_sum]
   apply Finset.sum_congr rfl
   intro j hj
@@ -180,13 +192,10 @@ theorem normalizedTracePolynomial_rawActualAnalysis_mem_positiveTimeL2Range_of_p
     periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysisHaarL2
         (halfExtent n) (beta n) (hbeta n) k c ∈
       LinearMap.range (Q.positiveTimeSubmoduleL2LinearMap n) := by
-  choose F hF using hPowerRange
-  refine ⟨∑ j : Fin (k + 1), c j • F j, ?_⟩
-  rw [map_sum]
   rw [periodicHypercubicEvenBoundaryNormalizedTracePolynomialRawActualAnalysisHaarL2_eq_sum_powerActualAnalysis]
-  apply Finset.sum_congr rfl
-  intro j hj
-  rw [map_smul, hF j]
+  exact (LinearMap.range (Q.positiveTimeSubmoduleL2LinearMap n)).sum_mem fun j _hj =>
+    (LinearMap.range (Q.positiveTimeSubmoduleL2LinearMap n)).smul_mem (c j)
+      (hPowerRange j)
 
 /-- Consequently the same finite family of exact range statements supplies the
 range-closure input consumed by the reconstructed physical-excitation route. -/
