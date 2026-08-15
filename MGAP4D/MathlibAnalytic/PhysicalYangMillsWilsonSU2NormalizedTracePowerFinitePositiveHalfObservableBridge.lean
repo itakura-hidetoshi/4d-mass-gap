@@ -59,6 +59,12 @@ local instance normalizedTracePowerFinitePositiveHalfObservableBridgeOpenHalfHaa
     FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
   infer_instance
 
+local instance normalizedTracePowerFinitePositiveHalfObservableBridgeOpenHalfHaarFinite (H : ℕ) :
+    IsFiniteMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H 2) := by
+  dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+  infer_instance
+
 /-- The coefficient vector selecting exactly the top normalized-trace power.
 This lets us reuse the already-proved polynomial raw-analysis construction
 without introducing a second analytic integral. -/
@@ -219,8 +225,8 @@ theorem
       LinearMap.range (Q.positiveTimeSubmoduleL2LinearMap n) := by
   apply Q.normalizedTracePowerActualAnalysis_mem_positiveTimeL2Range_of_rawBounded_mem_positiveHalfPullbackRange
     n j
-  rw [← Q.finitePositiveHalfObservable_range_eq_positiveHalfPullback_range hInvariant n]
-  exact hFiniteRange
+  exact Q.finitePositiveHalfObservable_range_subset_positiveHalfPullback_range
+    hInvariant n hFiniteRange
 
 /-- For a chosen polynomial, the model-facing range obligation is now only a
 finite family of concrete sup-norm trace-power observables indexed by the
