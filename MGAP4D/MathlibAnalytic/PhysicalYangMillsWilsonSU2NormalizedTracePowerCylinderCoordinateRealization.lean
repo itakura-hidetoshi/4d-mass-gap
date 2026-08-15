@@ -64,6 +64,7 @@ private abbrev normalizedTracePowerCylinderCoordinateTarget
 continuum coordinate.  No gauge statement is built into the coordinate itself:
 raw link coordinates are allowed to transform covariantly. -/
 noncomputable def positiveHalfCylinderCoordinatePullback
+    {n : ℕ}
     (coordinate : S.Configuration →
       PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
         (halfExtent n) 2)
@@ -79,6 +80,7 @@ noncomputable def positiveHalfCylinderCoordinatePullback
       exact ⟨C, fun A B => hC (coordinate A) (coordinate B)⟩ }
 
 @[simp] theorem positiveHalfCylinderCoordinatePullback_apply
+    {n : ℕ}
     (coordinate : S.Configuration →
       PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration
         (halfExtent n) 2)
