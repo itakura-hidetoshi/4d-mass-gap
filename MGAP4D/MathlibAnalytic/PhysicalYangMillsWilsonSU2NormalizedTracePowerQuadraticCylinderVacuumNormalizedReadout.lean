@@ -78,7 +78,7 @@ theorem positiveHalfPullback_positiveTimeUnit_eq_one_of_vacuumCompatibility
     apply Subtype.ext
     rfl
   rw [← hCarrierUnit]
-  simpa [Pn] using U.positiveHalfPullback_vacuum_eq_one n
+  exact U.positiveHalfPullback_vacuum_eq_one n
 
 /-- After using the already-established vacuum compatibility, the exact
 normalized-trace-power readout requires only the two concrete reflected
