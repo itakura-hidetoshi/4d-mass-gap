@@ -44,9 +44,9 @@ private abbrev normalizedTracePowerFiniteReadoutEquivalencePreHilbert
 /-- A concrete finite-Wilson realization of every normalized-trace power
 constructs the reusable positive-time readout record.
 
-The construction uses only the already-proved equality between the range of the
-actual finite positive-half observable map and the range of the coherent
-positive-half pullback.  In particular, no surjectivity, density,
+The construction uses only the already-proved inclusion from the range of the
+actual finite positive-half observable map into the range of the coherent
+positive-half pullback. In particular, no surjectivity, density,
 multiplicativity, decay, coercivity, or Hamiltonian hypothesis is added. -/
 noncomputable def normalizedTracePowerPositiveTimeReadout_of_finitePositiveHalfObservableRange
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
@@ -71,9 +71,8 @@ noncomputable def normalizedTracePowerPositiveTimeReadout_of_finitePositiveHalfO
           (halfExtent n) (beta n) (hbeta n) j ∈
         LinearMap.range (Q.positiveHalfPullback n) := by
     intro j
-    rw [← Q.finitePositiveHalfObservable_range_eq_positiveHalfPullback_range
-      hInvariant n]
-    exact hFiniteRange j
+    exact Q.finitePositiveHalfObservable_range_subset_positiveHalfPullback_range
+      hInvariant n (hFiniteRange j)
   exact
     { observable := fun j => Classical.choose (hPullbackRange j)
       positiveHalfPullback_eq := fun j => Classical.choose_spec (hPullbackRange j) }
