@@ -27,6 +27,20 @@ variable
     {R : FiniteWilsonGibbsSingleSourceProjectiveRealization W}
     {J : Finset EuclideanFourSpace}
 
+/-- The positive-restriction compatibility layer uses the same field-value
+family as the packaged projective cylinder family.  Keep the transport local:
+this only exposes the definitional equality needed by product-topology
+instance search and introduces no new topological assumption. -/
+local instance finiteWilsonGibbsSingleSourcePositiveRestrictionCylinderFieldTopology
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W)
+    [∀ x, TopologicalSpace (R.fieldValue x)] :
+    ∀ x, TopologicalSpace
+      (R.toProjectiveRealization.toProjectiveCylinderFamily.fieldValue x) := by
+  intro x
+  change TopologicalSpace (R.fieldValue x)
+  infer_instance
+
 /-- Pointwise form of the concrete same-root observation identity. -/
 theorem observe_apply
     (C : FiniteWilsonGibbsSingleSourcePositiveRestrictionCompatibility R J)
