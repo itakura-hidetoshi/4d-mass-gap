@@ -6,6 +6,20 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+/-- The single-source and packaged projective cylinder families use
+definitionally the same field-value types.  Expose the corresponding topology
+instance explicitly so typeclass search need not unfold the two nested record
+constructors `toProjectiveRealization` and `toProjectiveCylinderFamily`. -/
+local instance finiteWilsonGibbsSingleSourceProjectiveCylinderFieldTopology
+    {W : FiniteWilsonOSAutomaticApproximationFamily}
+    (R : FiniteWilsonGibbsSingleSourceProjectiveRealization W)
+    [∀ x, TopologicalSpace (R.fieldValue x)] :
+    ∀ x, TopologicalSpace
+      (R.toProjectiveRealization.toProjectiveCylinderFamily.fieldValue x) := by
+  intro x
+  change TopologicalSpace (R.fieldValue x)
+  infer_instance
+
 /-- A bounded-continuous projective cylinder observable, evaluated on the
 single-source Wilson `globalObserve`, is exactly the original finite-coordinate
 observable evaluated on the corresponding finite Wilson observation.
