@@ -31,14 +31,6 @@ local instance restrictedBoundaryVacuumPhysicalScalarOSCompletedL2BorelSpace (N 
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-/-- The completed OS Hilbert vector represented by a bounded continuous scalar
-observable from the same boundary-vacuum continuum law. -/
-noncomputable def periodicHypercubicEvenRestrictedBoundaryVacuumScalarOSPhysicalState
-    (H : ℕ → ℕ)
-    (N : ℕ) (hN : 0 < N)
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (beta : ℕ → ℕ → ℝ) := beta
-
 /-- The actual completed OS Hilbert vector represented by a bounded continuous
 scalar observable.  The carrier and completion are the already constructed
 same-root scalar OS objects; no second Hilbert completion is introduced. -/
