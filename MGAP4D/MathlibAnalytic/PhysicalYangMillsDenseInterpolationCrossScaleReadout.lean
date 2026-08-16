@@ -78,7 +78,11 @@ theorem observable_unique_of_dense_interpolation
     · exact R₂.observable.continuous
     · intro X hX
       rcases hX with ⟨n, U, rfl⟩
-      rw [R₁.readout n U, R₂.readout n U]
+      change R₁.observable (E.interpolate n U) =
+        R₂.observable (E.interpolate n U)
+      calc
+        R₁.observable (E.interpolate n U) = target n U := R₁.readout n U
+        _ = R₂.observable (E.interpolate n U) := (R₂.readout n U).symm
   ext X
   exact congrFun hfun X
 
@@ -137,7 +141,7 @@ variable
     {target : ℕ → (n : ℕ) → (E.system n).base.Configuration → ℝ}
 
 /-- Select one target index from a scale-coherent countable family. -/
-noncomputable def at
+noncomputable def select
     (R : DenseInterpolationTargetFamilyExtension G target)
     (j : ℕ) : DenseInterpolationTargetExtension G (target j) where
   observable := R.observable j
@@ -149,7 +153,7 @@ theorem compatible
     (R : DenseInterpolationTargetFamilyExtension G target)
     (j : ℕ) :
     G.interpolationReadoutCompatible (target j) :=
-  (R.at j).compatible
+  (R.select j).compatible
 
 /-- Dense interpolation plus finite target gauge invariance turns a whole
 countable readout family into physical gauge-invariant observables pointwise. -/
@@ -165,7 +169,7 @@ noncomputable def toGaugeInvariantObservable
         target j n U)
     (j : ℕ) :
     physicalYangMillsGaugeInvariantObservableSubalgebra (G.toSymmetryLimit L) :=
-  (R.at j).toGaugeInvariantObservable L hDense (htarget j)
+  (R.select j).toGaugeInvariantObservable L hDense (htarget j)
 
 end DenseInterpolationTargetFamilyExtension
 
