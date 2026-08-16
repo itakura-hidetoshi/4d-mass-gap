@@ -92,69 +92,6 @@ theorem
         (H n) N hN (beta n) (hbeta n) := by
   rfl
 
-/-- Every scale of the path-valued physical embedding retains the exact finite
-integer-time stationarity proved at the Wilson level. -/
-theorem
-    periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathPhysicalEmbedding_embeddedMeasure_map_shift_eq_self
-    (H : ℕ → ℕ)
-    (N : ℕ) (hN : 0 < N)
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (beta : ℕ → ℝ) (hbeta : ∀ n, 0 ≤ beta n)
-    (latticeSpacing : ℕ → ℝ)
-    (latticeSpacing_pos : ∀ n, 0 < latticeSpacing n)
-    (latticeSpacing_tendsto_zero : Tendsto latticeSpacing atTop (nhds 0))
-    (physicalVolume : ℕ → ℝ)
-    (physicalVolume_tendsto_atTop : Tendsto physicalVolume atTop atTop)
-    (n : ℕ) (k : ℤ) :
-    Measure.map
-        (periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathShift k)
-        ((periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathPhysicalEmbedding
-          H N hN beta hbeta
-          latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
-          physicalVolume physicalVolume_tendsto_atTop).toLatticeEmbedding.embeddedMeasure n :
-          Measure (ℤ → ℝ)) =
-      ((periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathPhysicalEmbedding
-          H N hN beta hbeta
-          latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
-          physicalVolume physicalVolume_tendsto_atTop).toLatticeEmbedding.embeddedMeasure n :
-        Measure (ℤ → ℝ)) := by
-  rw [periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathPhysicalEmbedding_embeddedMeasure_eq]
-  simp only [periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathProbabilityMeasure_toMeasure]
-  exact
-    periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathMeasure_map_shift_eq_self
-      (H n) N hN (beta n) (hbeta n) k
-
-/-- Every temporal coordinate of the generic embedded path law is still the
-literal same-root effective-boundary scalar law. -/
-theorem
-    periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathPhysicalEmbedding_coordinate_eq_map_effectiveMeasure
-    (H : ℕ → ℕ)
-    (N : ℕ) (hN : 0 < N)
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (beta : ℕ → ℝ) (hbeta : ∀ n, 0 ≤ beta n)
-    (latticeSpacing : ℕ → ℝ)
-    (latticeSpacing_pos : ∀ n, 0 < latticeSpacing n)
-    (latticeSpacing_tendsto_zero : Tendsto latticeSpacing atTop (nhds 0))
-    (physicalVolume : ℕ → ℝ)
-    (physicalVolume_tendsto_atTop : Tendsto physicalVolume atTop atTop)
-    (n : ℕ) (t : ℤ) :
-    Measure.map (fun x : ℤ → ℝ => x t)
-        ((periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathPhysicalEmbedding
-          H N hN beta hbeta
-          latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
-          physicalVolume physicalVolume_tendsto_atTop).toLatticeEmbedding.embeddedMeasure n :
-          Measure (ℤ → ℝ)) =
-      Measure.map
-        (periodicHypercubicEvenBoundaryVacuumMoment
-          (H n) N hN (beta n) (hbeta n))
-        (periodicHypercubicEvenBoundaryMarginalEffectiveMeasure
-          (H n) N hN (beta n) (hbeta n)) := by
-  rw [periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathPhysicalEmbedding_embeddedMeasure_eq]
-  simp only [periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathProbabilityMeasure_toMeasure]
-  exact
-    periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathMeasure_coordinate_eq_map_effectiveMeasure
-      (H n) N hN (beta n) (hbeta n) t
-
 end
 
 end MathlibAnalytic
