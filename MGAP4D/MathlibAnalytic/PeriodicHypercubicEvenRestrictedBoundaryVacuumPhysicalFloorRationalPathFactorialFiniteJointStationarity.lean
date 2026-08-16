@@ -84,10 +84,10 @@ theorem
     Measure.map
         (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalFiniteJointShiftReadout
           J r)
-        (L.continuumMeasure : Measure (ℚ → ℝ)) =
+        L.continuumMeasure.toMeasure =
       Measure.map
         (J.restrict (π := fun _ : ℚ => ℝ))
-        (L.continuumMeasure : Measure (ℚ → ℝ)) := by
+        L.continuumMeasure.toMeasure := by
   have hJ : Measurable (J.restrict (π := fun _ : ℚ => ℝ)) :=
     J.measurable_restrict
   have hShift :=
@@ -98,20 +98,20 @@ theorem
   have hStationaryMeasure :
       Measure.map
           (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalPathShift r)
-          (L.continuumMeasure : Measure (ℚ → ℝ)) =
-        (L.continuumMeasure : Measure (ℚ → ℝ)) := by
+          L.continuumMeasure.toMeasure =
+        L.continuumMeasure.toMeasure := by
     have h := congrArg ProbabilityMeasure.toMeasure hStationaryProbability
     simpa only [ProbabilityMeasure.toMeasure_map] using h
   calc
     Measure.map
         (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalFiniteJointShiftReadout
           J r)
-        (L.continuumMeasure : Measure (ℚ → ℝ)) =
+        L.continuumMeasure.toMeasure =
       Measure.map
         ((J.restrict (π := fun _ : ℚ => ℝ)) ∘
           periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalPathShift r)
-        (L.continuumMeasure : Measure (ℚ → ℝ)) := by
-      apply congrArg (fun f => Measure.map f (L.continuumMeasure : Measure (ℚ → ℝ)))
+        L.continuumMeasure.toMeasure := by
+      apply congrArg (fun f => Measure.map f L.continuumMeasure.toMeasure)
       funext x
       exact
         periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalFiniteJointShiftReadout_eq_restrict_shift
@@ -120,11 +120,11 @@ theorem
         (J.restrict (π := fun _ : ℚ => ℝ))
         (Measure.map
           (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalPathShift r)
-          (L.continuumMeasure : Measure (ℚ → ℝ))) :=
+          L.continuumMeasure.toMeasure) :=
       (Measure.map_map hJ hShift).symm
     _ = Measure.map
         (J.restrict (π := fun _ : ℚ => ℝ))
-        (L.continuumMeasure : Measure (ℚ → ℝ)) := by
+        L.continuumMeasure.toMeasure := by
       rw [hStationaryMeasure]
 
 /-- Consequently every measurable finite-cylinder readout has exactly the same
@@ -155,10 +155,10 @@ theorem
         (F ∘
           periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalFiniteJointShiftReadout
             J r)
-        (L.continuumMeasure : Measure (ℚ → ℝ)) =
+        L.continuumMeasure.toMeasure =
       Measure.map
         (F ∘ J.restrict (π := fun _ : ℚ => ℝ))
-        (L.continuumMeasure : Measure (ℚ → ℝ)) := by
+        L.continuumMeasure.toMeasure := by
   have hJoint :=
     periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathFactorial_continuum_finiteJointLaw_shift_eq_self
       H N hN beta hbeta physicalVolume physicalVolume_tendsto_atTop L J r
@@ -172,21 +172,21 @@ theorem
         (F ∘
           periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalFiniteJointShiftReadout
             J r)
-        (L.continuumMeasure : Measure (ℚ → ℝ)) =
+        L.continuumMeasure.toMeasure =
       Measure.map F
         (Measure.map
           (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalFiniteJointShiftReadout
             J r)
-          (L.continuumMeasure : Measure (ℚ → ℝ))) :=
+          L.continuumMeasure.toMeasure) :=
       (Measure.map_map hF hShiftedJoint).symm
     _ = Measure.map F
         (Measure.map
           (J.restrict (π := fun _ : ℚ => ℝ))
-          (L.continuumMeasure : Measure (ℚ → ℝ))) := by
+          L.continuumMeasure.toMeasure) := by
       rw [hJoint]
     _ = Measure.map
         (F ∘ J.restrict (π := fun _ : ℚ => ℝ))
-        (L.continuumMeasure : Measure (ℚ → ℝ)) :=
+        L.continuumMeasure.toMeasure :=
       Measure.map_map hF hJ
 
 end
