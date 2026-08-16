@@ -13,6 +13,15 @@ noncomputable section
 private theorem normalizedTracePowerCrossScaleTwoRankPositive : 0 < (2 : ℕ) := by
   norm_num
 
+local instance normalizedTracePowerCrossScaleSU2Nontrivial :
+    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun U : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (U : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
 namespace PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
 
 variable
