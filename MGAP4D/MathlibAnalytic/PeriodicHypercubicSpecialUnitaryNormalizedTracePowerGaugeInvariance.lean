@@ -34,7 +34,7 @@ theorem normalizedSpecialUnitaryRealTrace_pow_conjInvariant
 /-- For the actual signed periodic `SU(N)` Wilson system, every normalized
 trace power of a plaquette holonomy is gauge invariant.
 
-The proof is entirely constructive: finite oriented holonomy covariance gives
+The proof is entirely constructive: compact oriented holonomy covariance gives
 conjugation at the plaquette base vertex, and the preceding class-function
 lemma removes that conjugation after taking the power and normalized trace. -/
 theorem periodicHypercubicSpecialUnitary_plaquetteNormalizedTracePower_gaugeInvariant
@@ -59,7 +59,7 @@ theorem periodicHypercubicSpecialUnitary_plaquetteNormalizedTracePower_gaugeInva
       normalizedSpecialUnitaryRealTrace N
         (((periodicHypercubicSpecialUnitaryWilsonSystem
           n N hN beta beta_nonneg).base.plaquetteHolonomy A p) ^ j) := by
-  rw [finite_oriented_plaquetteHolonomy_gaugeTransform]
+  rw [compact_oriented_plaquetteHolonomy_gaugeTransform]
   exact normalizedSpecialUnitaryRealTrace_pow_conjInvariant _ _ j
 
 end
