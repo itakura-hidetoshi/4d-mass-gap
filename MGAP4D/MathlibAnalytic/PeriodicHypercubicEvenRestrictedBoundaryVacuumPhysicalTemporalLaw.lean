@@ -127,6 +127,7 @@ theorem
           (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure := by
       rw [periodicHypercubicSpecialUnitary_gibbs_map_integerTemporalTranslation_eq_self
         (PeriodicHypercubicEvenSideLength H) N hN beta hbeta (-t)]
+      rfl
 
 /-- Consequently every integer time slice has the same literal pushforward law
 from the effective shared-boundary measure.
