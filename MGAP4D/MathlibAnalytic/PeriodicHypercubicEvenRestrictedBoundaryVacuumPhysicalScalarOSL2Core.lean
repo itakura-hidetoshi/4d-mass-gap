@@ -137,6 +137,12 @@ theorem periodicHypercubicEvenRestrictedBoundaryVacuumScalarOS_inner_eq_integral
         physicalVolume physicalVolume_tendsto_atTop L O₂) = _
   rw [P.inner_eq_osBilinForm]
   rw [PhysicalYangMillsGaugeInvariantOSReflectionData.osBilinForm_apply]
+  change
+    physicalYangMillsContinuumGaugeInvariantWeakStarState
+        (periodicHypercubicEvenRestrictedBoundaryVacuumGaugeSymmetryLimit
+          H N hN beta hbeta
+          latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
+          physicalVolume physicalVolume_tendsto_atTop L) _ = _
   rw [physicalYangMillsContinuumGaugeInvariantWeakStarState_apply]
   rfl
 
