@@ -43,8 +43,8 @@ noncomputable def periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathRead
     periodicHypercubicEvenRestrictedBoundaryVacuumMomentAtTime
       H N hN beta hbeta t A
 
-/-- The full integer-time path readout is measurable for the product Borel
-structure on `ℤ → ℝ`. -/
+/-- The full integer-time path readout is measurable using the product Borel
+sigma algebra of `ℤ → ℝ`. -/
 theorem periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathReadout_measurable
     (H N : ℕ) (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
