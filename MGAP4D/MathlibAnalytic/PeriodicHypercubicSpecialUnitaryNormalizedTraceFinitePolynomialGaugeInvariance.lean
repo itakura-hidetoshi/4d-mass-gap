@@ -19,7 +19,7 @@ def normalizedSpecialUnitaryRealTraceFinitePolynomial
     (s : Finset ℕ)
     (c : ℕ → ℝ)
     (g : Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
-  ∑ j in s, c j * normalizedSpecialUnitaryRealTrace N (g ^ j)
+  s.sum (fun j => c j * normalizedSpecialUnitaryRealTrace N (g ^ j))
 
 /-- Every finite real polynomial in normalized trace powers is a class
 function on `SU(N)`.
