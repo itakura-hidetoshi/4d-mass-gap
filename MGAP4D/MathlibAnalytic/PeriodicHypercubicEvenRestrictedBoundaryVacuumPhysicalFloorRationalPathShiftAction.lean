@@ -168,6 +168,7 @@ theorem
           (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalPathShift_measurable r).aemeasurable) := by
     funext n
     rw [periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathEmbedding_embeddedMeasure_eq]
+    rfl
   rw [hSequence]
   exact h
 
