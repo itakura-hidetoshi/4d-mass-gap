@@ -22,15 +22,14 @@ theorem map_fst_prod_withDensity_eq_withDensity_lintegral
     [SFinite μ] [SFinite ν]
     (d : α × β → ℝ≥0∞)
     (hd : Measurable d) :
-    Measure.map Prod.fst ((μ.prod ν).withDensity d) =
+    Measure.map (Prod.fst : α × β → α) ((μ.prod ν).withDensity d) =
       μ.withDensity (fun x => ∫⁻ y, d (x, y) ∂ν) := by
-  have hmarg : Measurable (fun x => ∫⁻ y, d (x, y) ∂ν) :=
-    hd.lintegral_prod_right'
   ext s hs
   rw [Measure.map_apply measurable_fst hs]
   rw [withDensity_apply _ (hs.preimage measurable_fst)]
   rw [withDensity_apply _ hs]
-  have hpre : Prod.fst ⁻¹' s = s ×ˢ Set.univ := by
+  have hpre :
+      (Prod.fst : α × β → α) ⁻¹' s = s ×ˢ (Set.univ : Set β) := by
     ext z
     simp
   rw [hpre]
@@ -81,6 +80,10 @@ theorem periodicHypercubicEvenBoundaryMarginalEffectiveDensity_eq_lintegral_fibe
           H N hN beta hbeta (b, z)
         ∂((periodicHypercubicEvenOpenHalfHaarMeasure H N).prod
           (periodicHypercubicEvenOpenHalfHaarMeasure H N)) := by
+  letI : SFinite (periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
+    dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
+      FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+    infer_instance
   let one : BoundedContinuousFunction
       (PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H N) ℝ := 1
   let T :=
@@ -108,10 +111,22 @@ theorem periodicHypercubicEvenBoundaryMarginalEffectiveDensity_eq_lintegral_fibe
       simp [periodicHypercubicEvenBoundaryWeightedReflectedObservable,
         periodicHypercubicEvenBoundaryReflectedObservable, one]
     rwa [heq] at hIntWeighted
+  have hPair :
+      (∫ z,
+        (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+          H N hN beta hbeta (b, z)).toReal
+        ∂((periodicHypercubicEvenOpenHalfHaarMeasure H N).prod
+          (periodicHypercubicEvenOpenHalfHaarMeasure H N))) =
+        ∫ x, ∫ y,
+          (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+            H N hN beta hbeta (b, (x, y))).toReal
+          ∂(periodicHypercubicEvenOpenHalfHaarMeasure H N)
+          ∂(periodicHypercubicEvenOpenHalfHaarMeasure H N) :=
+    MeasureTheory.integral_prod _ hInt
   unfold periodicHypercubicEvenBoundaryMarginalEffectiveDensity
   rw [← periodicHypercubicEvenBoundaryFiberedGibbsDensity_integral_eq_vacuumMoment_sq
     H N hN beta hbeta b]
-  rw [← MeasureTheory.integral_prod _ hInt]
+  rw [← hPair]
   rw [MeasureTheory.ofReal_integral_eq_lintegral_ofReal hInt
     (Filter.Eventually.of_forall fun _ => ENNReal.toReal_nonneg)]
   apply lintegral_congr
@@ -176,12 +191,23 @@ theorem periodicHypercubicEvenBoundaryRestriction_map_gibbsMeasure_eq_effectiveM
         H N hN beta hbeta b
   calc
     Measure.map P.boundaryRestriction C.gibbsMeasure =
-        Measure.map Prod.fst
+        Measure.map
+          (Prod.fst :
+            P.BoundaryConfiguration Gauge ×
+              (P.OpenHalfConfiguration Gauge × P.OpenHalfConfiguration Gauge) →
+            P.BoundaryConfiguration Gauge)
           (Measure.map (P.boundaryFiberedCoordinates Gauge) C.gibbsMeasure) := by
-      rw [Measure.map_map measurable_fst
-        (P.boundaryFiberedCoordinates_measurable Gauge)]
-      rfl
-    _ = Measure.map Prod.fst ((μb.prod (μh.prod μh)).withDensity d) := by
+      simpa [FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedCoordinates] using
+        (Measure.map_map
+          (μ := C.gibbsMeasure)
+          measurable_fst
+          (P.boundaryFiberedCoordinates_measurable Gauge)).symm
+    _ = Measure.map
+        (Prod.fst :
+          P.BoundaryConfiguration Gauge ×
+            (P.OpenHalfConfiguration Gauge × P.OpenHalfConfiguration Gauge) →
+          P.BoundaryConfiguration Gauge)
+        ((μb.prod (μh.prod μh)).withDensity d) := by
       rw [hcoords]
     _ = μb.withDensity (fun b => ∫⁻ z, d (b, z) ∂(μh.prod μh)) := by
       exact map_fst_prod_withDensity_eq_withDensity_lintegral
