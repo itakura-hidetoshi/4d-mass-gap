@@ -58,6 +58,13 @@ theorem periodicHypercubicEvenBoundaryMarginalEffectiveMeasure_isProbabilityMeas
           P.boundaryRestriction A) := by
     have h := measurable_fst.comp hCoordinates
     simpa [FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedCoordinates] using h
+  have hBoundaryExact :
+      Measurable
+        (P.boundaryRestriction :
+          (PeriodicHypercubicEvenEdge H →
+            Matrix.specialUnitaryGroup (Fin N) ℂ) →
+          PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H N) := by
+    simpa using hBoundary
   have hMarginal :
       Measure.map P.boundaryRestriction
           (periodicHypercubicSpecialUnitaryWilsonSystem
@@ -73,9 +80,23 @@ theorem periodicHypercubicEvenBoundaryMarginalEffectiveMeasure_isProbabilityMeas
     (periodicHypercubicSpecialUnitaryWilsonSystem_gibbsMeasure_probability
       (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).measure_univ
   refine ⟨?_⟩
-  rw [← hMarginal]
-  rw [Measure.map_apply hBoundary MeasurableSet.univ]
-  simpa using hSource
+  calc
+    periodicHypercubicEvenBoundaryMarginalEffectiveMeasure
+        H N hN beta hbeta Set.univ =
+      (Measure.map P.boundaryRestriction
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure) Set.univ :=
+      congrArg (fun μ : Measure
+        (PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H N) => μ Set.univ)
+        hMarginal.symm
+    _ = (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure
+        (P.boundaryRestriction ⁻¹' Set.univ) :=
+      Measure.map_apply hBoundaryExact MeasurableSet.univ
+    _ = (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure Set.univ := by
+      simp
+    _ = 1 := hSource
 
 /-- The actual effective finite Wilson boundary law, now packaged as a genuine
 Mathlib probability measure. -/
