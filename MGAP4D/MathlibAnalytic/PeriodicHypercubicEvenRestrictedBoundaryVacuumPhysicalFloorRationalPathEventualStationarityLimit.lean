@@ -88,7 +88,9 @@ theorem
             (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalPathShift_measurable r).aemeasurable)
         atTop
         (nhds L.continuumMeasure) := by
-    exact Tendsto.congr' hEventually.symm L.weakConvergence
+    refine Tendsto.congr' ?_ L.weakConvergence
+    filter_upwards [hEventually] with n hn
+    exact hn.symm
   exact tendsto_nhds_unique hShifted hSameLimit
 
 end
