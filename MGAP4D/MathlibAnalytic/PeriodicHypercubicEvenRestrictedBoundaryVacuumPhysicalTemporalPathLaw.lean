@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenRestrictedBoundaryVacuumPhysicalTemporalLaw
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsOrientedLatticeEmbedding
 
 namespace MGAP4D
 namespace MathlibAnalytic
@@ -151,8 +152,33 @@ noncomputable def periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathMeas
     (periodicHypercubicSpecialUnitaryWilsonSystem
       (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure
 
-/-- The full temporal path law is a probability measure because its source is
-the normalized Wilson Gibbs law. -/
+/-- The same temporal path law packaged directly as a Mathlib probability
+measure, so normalization is retained by construction. -/
+noncomputable def
+    periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathProbabilityMeasure
+    (H N : ℕ) (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ) (hbeta : 0 ≤ beta) :
+    ProbabilityMeasure (ℤ → ℝ) :=
+  (periodicHypercubicSpecialUnitaryWilsonSystem
+    (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsProbabilityMeasure.map
+      (periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathReadout_measurable
+        H N hN beta hbeta).aemeasurable
+
+@[simp]
+theorem
+    periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathProbabilityMeasure_toMeasure
+    (H N : ℕ) (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ) (hbeta : 0 ≤ beta) :
+    (periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathProbabilityMeasure
+        H N hN beta hbeta : Measure (ℤ → ℝ)) =
+      periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathMeasure
+        H N hN beta hbeta := by
+  rfl
+
+/-- The full temporal path law is a probability measure because it is the
+underlying measure of the preceding normalized path probability law. -/
 theorem
     periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathMeasure_isProbabilityMeasure
     (H N : ℕ) (hN : 0 < N)
@@ -161,15 +187,9 @@ theorem
     IsProbabilityMeasure
       (periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathMeasure
         H N hN beta hbeta) := by
-  letI : IsProbabilityMeasure
-      ((periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure) :=
-    continuous_compact_oriented_gibbsMeasure_isProbabilityMeasure
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
-  exact Measure.isProbabilityMeasure_map
-    (periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathReadout_measurable
-      H N hN beta hbeta).aemeasurable
+  rw [← periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathProbabilityMeasure_toMeasure
+    H N hN beta hbeta]
+  infer_instance
 
 /-- The actual finite Wilson temporal path law is exactly stationary under every
 integer path shift.
