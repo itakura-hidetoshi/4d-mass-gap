@@ -67,7 +67,8 @@ theorem periodicHypercubicEvenBoundaryMarginalEffectiveMeasure_map_gauge_eq_self
       (periodicHypercubicEvenBoundaryHaarMeasure H N).withDensity
         (periodicHypercubicEvenBoundaryMarginalEffectiveDensity
           H N hN beta hbeta)
-  rw [e.map_withDensity_comp_symm_transport
+  rw [MGAP4D.MathlibAnalytic.MeasurableEquiv.map_withDensity_comp_symm_transport
+    e
     (periodicHypercubicEvenBoundaryHaarMeasure H N)
     (periodicHypercubicEvenBoundaryMarginalEffectiveDensity H N hN beta hbeta)
     (periodicHypercubicEvenBoundaryMarginalEffectiveDensity_measurable
