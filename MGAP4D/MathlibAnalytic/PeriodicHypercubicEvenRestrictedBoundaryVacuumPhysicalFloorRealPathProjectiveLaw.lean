@@ -107,7 +107,8 @@ theorem
       H N hN beta hbeta latticeSpacing n
   let r : (∀ t : I, ℝ) → (∀ t : J, ℝ) :=
     Finset.restrict₂ (π := fun _ : ℝ => ℝ) hJI
-  have hI : Measurable I.restrict := I.measurable_restrict
+  have hI : Measurable (I.restrict (π := fun _ : ℝ => ℝ)) :=
+    I.measurable_restrict
   have hr : Measurable r :=
     measurable_pi_lambda _ (fun _ => measurable_pi_apply _)
   change μ.map J.restrict = (μ.map I.restrict).map r
