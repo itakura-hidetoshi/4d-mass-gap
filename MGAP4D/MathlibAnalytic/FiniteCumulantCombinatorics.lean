@@ -1,3 +1,4 @@
+import Mathlib.Algebra.Ring.Defs
 import Mathlib.Order.Partition.Finpartition
 
 namespace MGAP4D
