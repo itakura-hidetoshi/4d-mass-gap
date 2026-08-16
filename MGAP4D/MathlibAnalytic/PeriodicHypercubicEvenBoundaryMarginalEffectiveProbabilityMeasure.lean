@@ -45,8 +45,6 @@ theorem periodicHypercubicEvenBoundaryMarginalEffectiveMeasure_isProbabilityMeas
       (periodicHypercubicEvenBoundaryMarginalEffectiveMeasure
         H N hN beta hbeta) := by
   let P := periodicHypercubicEvenEdgeOrbitPartition H
-  let C := periodicHypercubicSpecialUnitaryWilsonSystem
-    (PeriodicHypercubicEvenSideLength H) N hN beta hbeta
   have hCoordinates :
       Measurable
         (P.boundaryFiberedCoordinates
@@ -60,19 +58,24 @@ theorem periodicHypercubicEvenBoundaryMarginalEffectiveMeasure_isProbabilityMeas
           P.boundaryRestriction A) := by
     have h := measurable_fst.comp hCoordinates
     simpa [FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedCoordinates] using h
-  letI : IsProbabilityMeasure C.gibbsMeasure := by
-    simpa [C] using
-      (periodicHypercubicSpecialUnitaryWilsonSystem_gibbsMeasure_probability
-        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
+  letI : IsProbabilityMeasure
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure :=
+    periodicHypercubicSpecialUnitaryWilsonSystem_gibbsMeasure_probability
+      (PeriodicHypercubicEvenSideLength H) N hN beta hbeta
   have hMap :
       IsProbabilityMeasure
-        (Measure.map P.boundaryRestriction C.gibbsMeasure) :=
+        (Measure.map P.boundaryRestriction
+          (periodicHypercubicSpecialUnitaryWilsonSystem
+            (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure) :=
     Measure.isProbabilityMeasure_map hBoundary.aemeasurable
   have hMarginal :
-      Measure.map P.boundaryRestriction C.gibbsMeasure =
+      Measure.map P.boundaryRestriction
+          (periodicHypercubicSpecialUnitaryWilsonSystem
+            (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure =
         periodicHypercubicEvenBoundaryMarginalEffectiveMeasure
           H N hN beta hbeta := by
-    simpa [P, C] using
+    simpa [P] using
       (periodicHypercubicEvenBoundaryRestriction_map_gibbsMeasure_eq_effectiveMeasure
         H N hN beta hbeta)
   rw [hMarginal] at hMap
