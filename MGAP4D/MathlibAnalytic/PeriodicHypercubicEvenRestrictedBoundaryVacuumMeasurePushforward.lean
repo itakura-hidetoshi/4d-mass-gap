@@ -93,8 +93,13 @@ theorem periodicHypercubicEvenRestrictedBoundaryVacuumMoment_map_gibbsMeasure_eq
           H N hN beta hbeta)
         (periodicHypercubicEvenBoundaryMarginalEffectiveMeasure
           H N hN beta hbeta) := by
-      rw [periodicHypercubicEvenBoundaryRestriction_map_gibbsMeasure_eq_effectiveMeasure
-        H N hN beta hbeta]
+      rw [show
+        Measure.map P.boundaryRestriction C.gibbsMeasure =
+          periodicHypercubicEvenBoundaryMarginalEffectiveMeasure
+            H N hN beta hbeta by
+        simpa [P, C] using
+          (periodicHypercubicEvenBoundaryRestriction_map_gibbsMeasure_eq_effectiveMeasure
+            H N hN beta hbeta)]
 
 end
 
