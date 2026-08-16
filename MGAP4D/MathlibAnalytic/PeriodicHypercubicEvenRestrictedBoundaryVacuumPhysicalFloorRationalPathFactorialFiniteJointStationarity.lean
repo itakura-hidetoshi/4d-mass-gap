@@ -32,7 +32,7 @@ local instance restrictedBoundaryVacuumFloorRationalFactorialFiniteJointBorelSpa
   specialUnitaryGroupBorelSpace N
 
 /-- Read a finite rational-time joint observable after one common rational
-translation.  Every output coordinate is evaluated on the same continuum path,
+translation. Every output coordinate is evaluated on the same continuum path,
 so all joint correlations are retained. -/
 def
     periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalFiniteJointShiftReadout
@@ -130,7 +130,7 @@ theorem
 /-- Consequently every measurable finite-cylinder readout has exactly the same
 law after simultaneous rational translation of all of its time arguments.
 
-No integrability or moment assumption is needed at this level.  Downstream
+No integrability or moment assumption is needed at this level. Downstream
 OS/Wightman moment identities can therefore add only the integrability required
 for their particular observable, while reusing this law equality unchanged. -/
 theorem
@@ -139,14 +139,12 @@ theorem
     (H : ℕ → ℕ)
     (N : ℕ) (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (beta : ℕ → ℕ → ℝ)
-    (hbeta : ∀ n m, 0 ≤ beta n m)
+    (beta : ℕ → ℝ) (hbeta : ∀ n, 0 ≤ beta n)
     (physicalVolume : ℕ → ℝ)
     (physicalVolume_tendsto_atTop : Filter.Tendsto physicalVolume Filter.atTop Filter.atTop)
-    (nBeta : ℕ)
     (L : PhysicalFourDimensionalYangMillsProkhorovSubsequenceLimit
       (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathEmbedding
-        H N hN (fun n => beta n nBeta) (fun n => hbeta n nBeta)
+        H N hN beta hbeta
         periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing
         periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing_pos
         periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing_tendsto_zero
@@ -163,8 +161,7 @@ theorem
         (L.continuumMeasure : Measure (ℚ → ℝ)) := by
   have hJoint :=
     periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathFactorial_continuum_finiteJointLaw_shift_eq_self
-      H N hN (fun n => beta n nBeta) (fun n => hbeta n nBeta)
-      physicalVolume physicalVolume_tendsto_atTop L J r
+      H N hN beta hbeta physicalVolume physicalVolume_tendsto_atTop L J r
   have hShiftedJoint :=
     periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalFiniteJointShiftReadout_measurable
       J r
