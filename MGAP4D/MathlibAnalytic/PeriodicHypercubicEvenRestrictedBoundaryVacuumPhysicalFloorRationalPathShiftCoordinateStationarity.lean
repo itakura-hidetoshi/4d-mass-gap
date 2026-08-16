@@ -61,23 +61,36 @@ theorem
       L.continuumMeasure.map (measurable_pi_apply q).aemeasurable := by
   apply ProbabilityMeasure.toMeasure_injective
   simp only [ProbabilityMeasure.toMeasure_map]
-  rw [Measure.map_map
-    (measurable_pi_apply q)
-    (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalPathShift_measurable r)]
   have hcomp :
       (fun x : ℚ → ℝ => x q) ∘
           periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalPathShift r =
         fun x : ℚ → ℝ => x (q + r) := by
     funext x
     rfl
-  rw [hcomp]
-  have h :=
-    congrArg ProbabilityMeasure.toMeasure
-      (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPath_continuum_coordinate_eq
-        H N hN beta hbeta
-        latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
-        physicalVolume physicalVolume_tendsto_atTop L (q + r) q)
-  simpa only [ProbabilityMeasure.toMeasure_map] using h
+  calc
+    Measure.map (fun x : ℚ → ℝ => x q)
+        (Measure.map
+          (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalPathShift r)
+          (L.continuumMeasure : Measure (ℚ → ℝ))) =
+      Measure.map
+        ((fun x : ℚ → ℝ => x q) ∘
+          periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalPathShift r)
+        (L.continuumMeasure : Measure (ℚ → ℝ)) := by
+      exact Measure.map_map
+        (measurable_pi_apply q)
+        (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalPathShift_measurable r)
+    _ = Measure.map (fun x : ℚ → ℝ => x (q + r))
+        (L.continuumMeasure : Measure (ℚ → ℝ)) := by
+      rw [hcomp]
+    _ = Measure.map (fun x : ℚ → ℝ => x q)
+        (L.continuumMeasure : Measure (ℚ → ℝ)) := by
+      have h :=
+        congrArg ProbabilityMeasure.toMeasure
+          (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPath_continuum_coordinate_eq
+            H N hN beta hbeta
+            latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
+            physicalVolume physicalVolume_tendsto_atTop L (q + r) q)
+      simpa only [ProbabilityMeasure.toMeasure_map] using h
 
 end
 
