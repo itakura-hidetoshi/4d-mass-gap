@@ -78,11 +78,17 @@ noncomputable def
   interpolate_measurable := by
     intro n
     let P := periodicHypercubicEvenEdgeOrbitPartition (H n)
-    let Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ
     have hCoordinates :
-        Measurable (P.boundaryFiberedCoordinates Gauge) :=
-      P.boundaryFiberedCoordinates_measurable Gauge
-    have hBoundary : Measurable P.boundaryRestriction := by
+        Measurable
+          (P.boundaryFiberedCoordinates
+            (Matrix.specialUnitaryGroup (Fin N) ℂ)) :=
+      P.boundaryFiberedCoordinates_measurable
+        (Matrix.specialUnitaryGroup (Fin N) ℂ)
+    have hBoundary :
+        Measurable
+          (fun A : PeriodicHypercubicEvenEdge (H n) →
+              Matrix.specialUnitaryGroup (Fin N) ℂ =>
+            P.boundaryRestriction A) := by
       have h := measurable_fst.comp hCoordinates
       simpa [FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedCoordinates] using h
     exact
