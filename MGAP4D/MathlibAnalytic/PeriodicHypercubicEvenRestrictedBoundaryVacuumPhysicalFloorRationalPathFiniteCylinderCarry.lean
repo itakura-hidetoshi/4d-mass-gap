@@ -90,13 +90,39 @@ theorem
           H N hN beta hbeta) := by
   unfold periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathMeasure
     periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathMeasure
-  rw [periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathReadout_eq_extension_temporalPathReadout]
-  exact
-    (Measure.map_map
-      (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathExtension_measurable
-        latticeSpacing n)
-      (periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathReadout_measurable
-        H N hN beta hbeta)).symm
+  calc
+    Measure.map
+        (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathReadout
+          H N hN beta hbeta latticeSpacing n)
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure =
+      Measure.map
+        (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathExtension
+            latticeSpacing n ∘
+          periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathReadout
+            H N hN beta hbeta)
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure := by
+      apply congrArg (fun f => Measure.map f
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure)
+      funext A
+      exact
+        periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathReadout_eq_extension_temporalPathReadout
+          H N hN beta hbeta latticeSpacing n A
+    _ = Measure.map
+        (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathExtension
+          latticeSpacing n)
+        (Measure.map
+          (periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathReadout
+            H N hN beta hbeta)
+          (periodicHypercubicSpecialUnitaryWilsonSystem
+            (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure) :=
+      (Measure.map_map
+        (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathExtension_measurable
+          latticeSpacing n)
+        (periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathReadout_measurable
+          H N hN beta hbeta)).symm
 
 /-- After removing the common floor shift corresponding to a rational
 translation `r`, the residual finite rational cylinder consists exactly of the
