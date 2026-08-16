@@ -1,10 +1,8 @@
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenRestrictedBoundaryVacuumPhysicalGaugeAction
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryVacuumMomentRestrictionGaugeTransport
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicIntegerTemporalTranslation
 
 namespace MGAP4D
 namespace MathlibAnalytic
-
-open Filter
 
 noncomputable section
 
@@ -105,8 +103,8 @@ theorem periodicHypercubicEvenRestrictedBoundaryVacuumMomentAtTime_integerTempor
   rw [htranslate]
 
 /-- Scale-wise time-indexed interpolation generated from the same concrete
-boundary-vacuum physical embedding.  At `t = 0` this is exactly the existing
-scalar interpolation; away from zero it records the translated boundary slice
+boundary-vacuum readout.  At `t = 0` this is exactly the existing scalar
+interpolation formula; away from zero it records the translated boundary slice
 rather than forcing a translation action on `ℝ`. -/
 noncomputable def
     periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalInterpolateAtTime
@@ -127,21 +125,16 @@ theorem
     (N : ℕ) (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℕ → ℝ) (hbeta : ∀ n, 0 ≤ beta n)
-    (latticeSpacing : ℕ → ℝ)
-    (latticeSpacing_pos : ∀ n, 0 < latticeSpacing n)
-    (latticeSpacing_tendsto_zero : Tendsto latticeSpacing atTop (nhds 0))
-    (physicalVolume : ℕ → ℝ)
-    (physicalVolume_tendsto_atTop : Tendsto physicalVolume atTop atTop)
     (n : ℕ)
     (A : PeriodicHypercubicEvenEdge (H n) →
       Matrix.specialUnitaryGroup (Fin N) ℂ) :
     periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalInterpolateAtTime
         H N hN beta hbeta n 0 A =
-      (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalEmbedding
-        H N hN beta hbeta
-        latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
-        physicalVolume physicalVolume_tendsto_atTop).interpolate n A := by
-  rfl
+      periodicHypercubicEvenRestrictedBoundaryVacuumMoment
+        (H n) N hN (beta n) (hbeta n) A := by
+  exact
+    periodicHypercubicEvenRestrictedBoundaryVacuumMomentAtTime_zero
+      (H n) N hN (beta n) (hbeta n) A
 
 /-- Exact scale-wise covariance of the temporal readout family under the actual
 integer lattice translation. -/
