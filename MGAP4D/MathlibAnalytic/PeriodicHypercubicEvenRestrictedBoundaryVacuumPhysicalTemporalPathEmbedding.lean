@@ -40,7 +40,7 @@ At every lattice scale the interpolation is the concrete stationary temporal
 path readout constructed from the same Wilson configuration.  This keeps time
 translation nontrivial while placing all lattice scales in one common carrier
 `ℤ → ℝ`. -/
-noncomputable def
+@[reducible] noncomputable def
     periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathPhysicalEmbedding
     (H : ℕ → ℕ)
     (N : ℕ) (hN : 0 < N)
