@@ -167,7 +167,6 @@ theorem
     continuous_compact_oriented_gibbsMeasure_isProbabilityMeasure
       (periodicHypercubicSpecialUnitaryWilsonSystem
         (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
-  unfold periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathMeasure
   exact Measure.isProbabilityMeasure_map
     (periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathReadout_measurable
       H N hN beta hbeta).aemeasurable
