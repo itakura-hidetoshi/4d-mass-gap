@@ -93,8 +93,6 @@ theorem
           H N hN beta hbeta)
         (periodicHypercubicSpecialUnitaryWilsonSystem
           (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure := by
-  let C := periodicHypercubicSpecialUnitaryWilsonSystem
-    (PeriodicHypercubicEvenSideLength H) N hN beta hbeta
   let T := periodicHypercubicIntegerTemporalConfigurationTranslation
     (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ)
     (PeriodicHypercubicEvenSideLength H) (-t)
@@ -108,16 +106,25 @@ theorem
   calc
     Measure.map
         (periodicHypercubicEvenRestrictedBoundaryVacuumMomentAtTime
-          H N hN beta hbeta t) C.gibbsMeasure =
+          H N hN beta hbeta t)
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure =
       Measure.map
         (periodicHypercubicEvenRestrictedBoundaryVacuumMoment
           H N hN beta hbeta)
-        (Measure.map T C.gibbsMeasure) := by
+        (Measure.map T
+          (periodicHypercubicSpecialUnitaryWilsonSystem
+            (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure) := by
       simpa [periodicHypercubicEvenRestrictedBoundaryVacuumMomentAtTime, T] using
-        (Measure.map_map (μ := C.gibbsMeasure) hReadout hT).symm
+        (Measure.map_map
+          (μ := (periodicHypercubicSpecialUnitaryWilsonSystem
+            (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure)
+          hReadout hT).symm
     _ = Measure.map
         (periodicHypercubicEvenRestrictedBoundaryVacuumMoment
-          H N hN beta hbeta) C.gibbsMeasure := by
+          H N hN beta hbeta)
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure := by
       rw [periodicHypercubicSpecialUnitary_gibbs_map_integerTemporalTranslation_eq_self
         (PeriodicHypercubicEvenSideLength H) N hN beta hbeta (-t)]
 
