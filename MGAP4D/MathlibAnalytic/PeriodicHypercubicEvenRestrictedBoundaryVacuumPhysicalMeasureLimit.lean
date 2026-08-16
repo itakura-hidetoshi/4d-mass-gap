@@ -71,37 +71,28 @@ theorem
     H N hN beta hbeta
     latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
     physicalVolume physicalVolume_tendsto_atTop
+  have hEmbedded :
+      ProbabilityMeasure.toMeasure (E.toLatticeEmbedding.embeddedMeasure n) =
+        Measure.map (E.interpolate n) (E.system n).gibbsMeasure := by
+    exact
+      ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalGaugeAction.embeddedMeasure_toMeasure_eq
+        n
+  rw [hEmbedded]
   change
-    ProbabilityMeasure.toMeasure (E.toLatticeEmbedding.embeddedMeasure n) =
+    Measure.map
+        (periodicHypercubicEvenRestrictedBoundaryVacuumMoment
+          (H n) N hN (beta n) (hbeta n))
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength (H n)) N hN
+          (beta n) (hbeta n)).gibbsMeasure =
       Measure.map
         (periodicHypercubicEvenBoundaryVacuumMoment
           (H n) N hN (beta n) (hbeta n))
         (periodicHypercubicEvenBoundaryMarginalEffectiveMeasure
           (H n) N hN (beta n) (hbeta n))
-  calc
-    ProbabilityMeasure.toMeasure (E.toLatticeEmbedding.embeddedMeasure n) =
-        Measure.map (E.interpolate n) (E.system n).gibbsMeasure :=
-      ContinuousCompactOrientedGaugeWilsonPhysicalEmbedding.PhysicalGaugeAction.embeddedMeasure_toMeasure_eq n
-    _ = Measure.map
-        (periodicHypercubicEvenBoundaryVacuumMoment
-          (H n) N hN (beta n) (hbeta n))
-        (periodicHypercubicEvenBoundaryMarginalEffectiveMeasure
-          (H n) N hN (beta n) (hbeta n)) := by
-      change
-        Measure.map
-            (periodicHypercubicEvenRestrictedBoundaryVacuumMoment
-              (H n) N hN (beta n) (hbeta n))
-            (periodicHypercubicSpecialUnitaryWilsonSystem
-              (PeriodicHypercubicEvenSideLength (H n)) N hN
-              (beta n) (hbeta n)).gibbsMeasure =
-          Measure.map
-            (periodicHypercubicEvenBoundaryVacuumMoment
-              (H n) N hN (beta n) (hbeta n))
-            (periodicHypercubicEvenBoundaryMarginalEffectiveMeasure
-              (H n) N hN (beta n) (hbeta n))
-      exact
-        periodicHypercubicEvenRestrictedBoundaryVacuumMoment_map_gibbsMeasure_eq_map_effectiveMeasure
-          (H n) N hN (beta n) (hbeta n)
+  exact
+    periodicHypercubicEvenRestrictedBoundaryVacuumMoment_map_gibbsMeasure_eq_map_effectiveMeasure
+      (H n) N hN (beta n) (hbeta n)
 
 /-- Along any supplied Prokhorov subsequence limit of the concrete scalar
 boundary-vacuum embedding, expectations computed directly on the finite
@@ -140,23 +131,10 @@ theorem
             (beta (L.subsequence n)) (hbeta (L.subsequence n))))
       atTop
       (nhds
-        (∫ x, O x ∂(L.continuumMeasure : Measure ℝ))) := by
-  let E := periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalEmbedding
-    H N hN beta hbeta
-    latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
-    physicalVolume physicalVolume_tendsto_atTop
-  have hWeak :
-      Tendsto
-        (fun n : ℕ =>
-          ∫ x, O x
-            ∂(E.toLatticeEmbedding.embeddedMeasure
-              (L.subsequence n) : Measure ℝ))
-        atTop
-        (nhds
-          (∫ x, O x ∂(L.continuumMeasure : Measure ℝ))) := by
-    simpa [E] using
-      ((ProbabilityMeasure.tendsto_iff_forall_integral_tendsto.mp
-        L.weakConvergence) O)
+        (∫ x, O x ∂ProbabilityMeasure.toMeasure L.continuumMeasure)) := by
+  have hWeak :=
+    (ProbabilityMeasure.tendsto_iff_forall_integral_tendsto.mp
+      L.weakConvergence) O
   have hSequence :
       (fun n : ℕ =>
         ∫ b,
@@ -168,8 +146,12 @@ theorem
             (beta (L.subsequence n)) (hbeta (L.subsequence n)))) =
       fun n : ℕ =>
         ∫ x, O x
-          ∂(E.toLatticeEmbedding.embeddedMeasure
-            (L.subsequence n) : Measure ℝ) := by
+          ∂ProbabilityMeasure.toMeasure
+            ((periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalEmbedding
+              H N hN beta hbeta
+              latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
+              physicalVolume physicalVolume_tendsto_atTop).toLatticeEmbedding.embeddedMeasure
+                (L.subsequence n)) := by
     funext n
     let k := L.subsequence n
     change
@@ -179,7 +161,11 @@ theorem
         ∂(periodicHypercubicEvenBoundaryMarginalEffectiveMeasure
           (H k) N hN (beta k) (hbeta k))) =
         ∫ x, O x
-          ∂(E.toLatticeEmbedding.embeddedMeasure k : Measure ℝ)
+          ∂ProbabilityMeasure.toMeasure
+            ((periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalEmbedding
+              H N hN beta hbeta
+              latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
+              physicalVolume physicalVolume_tendsto_atTop).toLatticeEmbedding.embeddedMeasure k)
     have hVacuum :
         Measurable
           (periodicHypercubicEvenBoundaryVacuumMoment
@@ -188,17 +174,20 @@ theorem
         (H k) N hN (beta k) (hbeta k)
     have hLaw :
         ProbabilityMeasure.toMeasure
-            (E.toLatticeEmbedding.embeddedMeasure k) =
+            ((periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalEmbedding
+              H N hN beta hbeta
+              latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
+              physicalVolume physicalVolume_tendsto_atTop).toLatticeEmbedding.embeddedMeasure k) =
           Measure.map
             (periodicHypercubicEvenBoundaryVacuumMoment
               (H k) N hN (beta k) (hbeta k))
             (periodicHypercubicEvenBoundaryMarginalEffectiveMeasure
               (H k) N hN (beta k) (hbeta k)) := by
-      simpa [E] using
-        (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalEmbedding_embeddedMeasure_toMeasure_eq_map_effectiveMeasure
+      exact
+        periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalEmbedding_embeddedMeasure_toMeasure_eq_map_effectiveMeasure
           H N hN beta hbeta
           latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
-          physicalVolume physicalVolume_tendsto_atTop k)
+          physicalVolume physicalVolume_tendsto_atTop k
     calc
       (∫ b,
         O (periodicHypercubicEvenBoundaryVacuumMoment
@@ -215,7 +204,11 @@ theorem
         exact MeasureTheory.integral_map
           hVacuum.aemeasurable O.continuous.aestronglyMeasurable
       _ = ∫ x, O x
-          ∂(E.toLatticeEmbedding.embeddedMeasure k : Measure ℝ) := by
+          ∂ProbabilityMeasure.toMeasure
+            ((periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalEmbedding
+              H N hN beta hbeta
+              latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
+              physicalVolume physicalVolume_tendsto_atTop).toLatticeEmbedding.embeddedMeasure k) := by
         exact congrArg
           (fun μ : Measure ℝ => ∫ x, O x ∂μ)
           hLaw.symm
