@@ -115,32 +115,20 @@ theorem
     (s t : ℤ) :
     L.continuumMeasure.map (measurable_pi_apply s).aemeasurable =
       L.continuumMeasure.map (measurable_pi_apply t).aemeasurable := by
-  calc
-    L.continuumMeasure.map (measurable_pi_apply s).aemeasurable =
-        (periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathCoordinateScalarLimit
-          H N hN beta hbeta
-          latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
-          physicalVolume physicalVolume_tendsto_atTop L s).continuumMeasure := by
-      symm
-      exact
-        periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathCoordinateScalarLimit_continuumMeasure
-          H N hN beta hbeta
-          latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
-          physicalVolume physicalVolume_tendsto_atTop L s
-    _ =
-        (periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathCoordinateScalarLimit
-          H N hN beta hbeta
-          latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
-          physicalVolume physicalVolume_tendsto_atTop L t).continuumMeasure :=
-      periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathCoordinateScalarLimit_continuumMeasure_eq
+  exact Eq.trans
+    (periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathCoordinateScalarLimit_continuumMeasure
+      H N hN beta hbeta
+      latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
+      physicalVolume physicalVolume_tendsto_atTop L s).symm
+    (Eq.trans
+      (periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathCoordinateScalarLimit_continuumMeasure_eq
         H N hN beta hbeta
         latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
-        physicalVolume physicalVolume_tendsto_atTop L s t
-    _ = L.continuumMeasure.map (measurable_pi_apply t).aemeasurable :=
-      periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathCoordinateScalarLimit_continuumMeasure
+        physicalVolume physicalVolume_tendsto_atTop L s t)
+      (periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathCoordinateScalarLimit_continuumMeasure
         H N hN beta hbeta
         latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
-        physicalVolume physicalVolume_tendsto_atTop L t
+        physicalVolume physicalVolume_tendsto_atTop L t))
 
 end
 
