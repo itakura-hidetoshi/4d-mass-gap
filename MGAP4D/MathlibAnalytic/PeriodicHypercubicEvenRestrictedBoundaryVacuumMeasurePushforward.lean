@@ -55,14 +55,20 @@ theorem periodicHypercubicEvenRestrictedBoundaryVacuumMoment_map_gibbsMeasure_eq
           H N hN beta hbeta)
         (periodicHypercubicEvenBoundaryMarginalEffectiveMeasure
           H N hN beta hbeta) := by
-  let Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ
   let P := periodicHypercubicEvenEdgeOrbitPartition H
   let C := periodicHypercubicSpecialUnitaryWilsonSystem
     (PeriodicHypercubicEvenSideLength H) N hN beta hbeta
   have hCoordinates :
-      Measurable (P.boundaryFiberedCoordinates Gauge) :=
-    P.boundaryFiberedCoordinates_measurable Gauge
-  have hBoundary : Measurable P.boundaryRestriction := by
+      Measurable
+        (P.boundaryFiberedCoordinates
+          (Matrix.specialUnitaryGroup (Fin N) ℂ)) :=
+    P.boundaryFiberedCoordinates_measurable
+      (Matrix.specialUnitaryGroup (Fin N) ℂ)
+  have hBoundary :
+      Measurable
+        (fun A : PeriodicHypercubicEvenEdge H →
+            Matrix.specialUnitaryGroup (Fin N) ℂ =>
+          P.boundaryRestriction A) := by
     have h := measurable_fst.comp hCoordinates
     simpa [FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedCoordinates] using h
   have hVacuum :
