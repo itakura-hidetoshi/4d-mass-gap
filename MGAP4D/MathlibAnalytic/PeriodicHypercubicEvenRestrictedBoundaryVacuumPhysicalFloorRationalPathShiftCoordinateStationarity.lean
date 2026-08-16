@@ -71,19 +71,19 @@ theorem
     Measure.map (fun x : ℚ → ℝ => x q)
         (Measure.map
           (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalPathShift r)
-          (L.continuumMeasure : Measure (ℚ → ℝ))) =
+          (ProbabilityMeasure.toMeasure L.continuumMeasure)) =
       Measure.map
         ((fun x : ℚ → ℝ => x q) ∘
           periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalPathShift r)
-        (L.continuumMeasure : Measure (ℚ → ℝ)) := by
+        (ProbabilityMeasure.toMeasure L.continuumMeasure) := by
       exact Measure.map_map
         (measurable_pi_apply q)
         (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalPathShift_measurable r)
     _ = Measure.map (fun x : ℚ → ℝ => x (q + r))
-        (L.continuumMeasure : Measure (ℚ → ℝ)) := by
+        (ProbabilityMeasure.toMeasure L.continuumMeasure) := by
       rw [hcomp]
     _ = Measure.map (fun x : ℚ → ℝ => x q)
-        (L.continuumMeasure : Measure (ℚ → ℝ)) := by
+        (ProbabilityMeasure.toMeasure L.continuumMeasure) := by
       have h :=
         congrArg ProbabilityMeasure.toMeasure
           (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPath_continuum_coordinate_eq
