@@ -5,6 +5,10 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+local instance restrictedBoundaryGramGaugeNeZero (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength]⟩
+
 /-- The completed-positive boundary Gram feature pulled back to the actual full
 finite `SU(N)` configuration through the canonical boundary and positive-half
 restriction maps.
@@ -44,15 +48,39 @@ theorem periodicHypercubicEvenRestrictedCompletedPositiveGramFeature_gaugeInvari
           gamma A) =
       periodicHypercubicEvenRestrictedCompletedPositiveGramFeature
         H N hN beta hbeta A := by
-  unfold periodicHypercubicEvenRestrictedCompletedPositiveGramFeature
-  rw [periodicHypercubicEven_boundaryRestriction_gaugeTransform
-    H N hN beta hbeta gamma A]
-  rw [periodicHypercubicEven_positiveRestriction_gaugeTransform
-    H N hN beta hbeta gamma A]
+  let P := periodicHypercubicEvenEdgeOrbitPartition H
+  let A₁ : PeriodicHypercubicEvenEdge H →
+      Matrix.specialUnitaryGroup (Fin N) ℂ :=
+    (periodicHypercubicSpecialUnitaryWilsonSystem
+      (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.gaugeTransform gamma A
+  have hB :
+      P.boundaryRestriction A₁ =
+        periodicHypercubicEvenBoundaryGaugeTransform H N gamma
+          (P.boundaryRestriction A) := by
+    dsimp [A₁]
+    simpa [P] using
+      (periodicHypercubicEven_boundaryRestriction_gaugeTransform
+        H N hN beta hbeta gamma A)
+  have hX :
+      P.positiveRestriction A₁ =
+        periodicHypercubicEvenPositiveOpenHalfGaugeTransform H N gamma
+          (P.positiveRestriction A) := by
+    dsimp [A₁]
+    simpa [P] using
+      (periodicHypercubicEven_positiveRestriction_gaugeTransform
+        H N hN beta hbeta gamma A)
+  change
+    periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+        H N hN beta hbeta
+        (P.boundaryRestriction A₁)
+        (P.positiveRestriction A₁) =
+      periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+        H N hN beta hbeta
+        (P.boundaryRestriction A)
+        (P.positiveRestriction A)
+  rw [hB, hX]
   exact periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_gaugeInvariant
-    H N hN beta hbeta gamma
-      ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryRestriction A)
-      ((periodicHypercubicEvenEdgeOrbitPartition H).positiveRestriction A)
+    H N hN beta hbeta gamma (P.boundaryRestriction A) (P.positiveRestriction A)
 
 /-- Functional form of raw restriction gauge transport.  Downstream
 interpolation/Tietze arguments can rewrite the whole finite-volume feature in
