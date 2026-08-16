@@ -164,7 +164,9 @@ theorem
   letI : IsProbabilityMeasure
       ((periodicHypercubicSpecialUnitaryWilsonSystem
         (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure) :=
-    inferInstance
+    continuous_compact_oriented_gibbsMeasure_isProbabilityMeasure
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
   unfold periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathMeasure
   exact Measure.isProbabilityMeasure_map
     (periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathReadout_measurable
@@ -265,11 +267,29 @@ theorem
         (periodicHypercubicSpecialUnitaryWilsonSystem
           (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure := by
   unfold periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathMeasure
-  rw [Measure.map_map
-    (measurable_pi_apply t)
-    (periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathReadout_measurable
-      H N hN beta hbeta)]
-  rfl
+  calc
+    Measure.map (fun x : ℤ → ℝ => x t)
+        (Measure.map
+          (periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathReadout
+            H N hN beta hbeta)
+          (periodicHypercubicSpecialUnitaryWilsonSystem
+            (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure) =
+      Measure.map
+        ((fun x : ℤ → ℝ => x t) ∘
+          periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathReadout
+            H N hN beta hbeta)
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure := by
+      exact Measure.map_map
+        (measurable_pi_apply t)
+        (periodicHypercubicEvenRestrictedBoundaryVacuumTemporalPathReadout_measurable
+          H N hN beta hbeta)
+    _ = Measure.map
+        (periodicHypercubicEvenRestrictedBoundaryVacuumMomentAtTime
+          H N hN beta hbeta t)
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure := by
+      rfl
 
 /-- Hence every coordinate marginal of the stationary full path law is the same
 literal effective-boundary scalar law. -/
