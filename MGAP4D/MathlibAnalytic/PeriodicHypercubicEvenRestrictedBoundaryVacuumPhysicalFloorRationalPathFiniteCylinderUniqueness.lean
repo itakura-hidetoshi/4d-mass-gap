@@ -9,18 +9,22 @@ open MeasureTheory
 noncomputable section
 
 /-- Equality of all finite rational-coordinate marginals determines equality of
-full rational-path measures.
+full rational-path finite measures.
 
 This is the countable-product uniqueness step needed after finite-cylinder
 stationarity has been proved.  It does not manufacture joint stationarity from
 one-coordinate marginals: the finite-cylinder hypothesis is explicit. -/
 theorem rationalPathMeasure_eq_of_finite_restrict_eq
     (μ ν : Measure (ℚ → ℝ))
+    [IsFiniteMeasure μ] [IsFiniteMeasure ν]
     (hfinite : ∀ J : Finset ℚ,
       Measure.map J.restrict μ = Measure.map J.restrict ν) :
     μ = ν := by
   let P : ∀ J : Finset ℚ, Measure (∀ q : J, ℝ) :=
     fun J => Measure.map J.restrict ν
+  letI (J : Finset ℚ) : IsFiniteMeasure (P J) := by
+    dsimp only [P]
+    infer_instance
   have hμ : IsProjectiveLimit (α := fun _ : ℚ => ℝ) μ P := by
     intro J
     exact hfinite J
