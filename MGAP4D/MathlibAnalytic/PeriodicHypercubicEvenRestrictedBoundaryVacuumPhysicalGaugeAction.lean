@@ -14,6 +14,26 @@ local instance restrictedBoundaryVacuumPhysicalGaugeNeZero (H : ℕ) :
     NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
   simp [PeriodicHypercubicEvenSideLength]⟩
 
+local instance restrictedBoundaryVacuumPhysicalGaugeTopologicalGroup (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance restrictedBoundaryVacuumPhysicalGaugeCompactSpace (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance restrictedBoundaryVacuumPhysicalGaugeSecondCountable (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance restrictedBoundaryVacuumPhysicalGaugeMeasurableSpace (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance restrictedBoundaryVacuumPhysicalGaugeBorelSpace (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
 /-- A scale-wise finite gauge symmetry: at every even periodic lattice scale we
 may choose an arbitrary vertex gauge transformation independently.
 
