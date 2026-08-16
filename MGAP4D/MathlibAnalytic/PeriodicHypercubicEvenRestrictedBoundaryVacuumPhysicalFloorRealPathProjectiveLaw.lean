@@ -98,7 +98,7 @@ theorem
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ) (hbeta : 0 ≤ beta)
     (latticeSpacing : ℕ → ℝ) (n : ℕ) :
-    IsProjectiveMeasureFamily
+    IsProjectiveMeasureFamily (α := fun _ : ℝ => ℝ)
       (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRealPathFiniteMarginal
         H N hN beta hbeta latticeSpacing n) := by
   intro I J hJI
@@ -126,7 +126,7 @@ theorem
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ) (hbeta : 0 ≤ beta)
     (latticeSpacing : ℕ → ℝ) (n : ℕ) :
-    IsProjectiveLimit
+    IsProjectiveLimit (α := fun _ : ℝ => ℝ)
       (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRealPathMeasure
         H N hN beta hbeta latticeSpacing n)
       (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRealPathFiniteMarginal
@@ -145,7 +145,7 @@ noncomputable def
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ) (hbeta : 0 ≤ beta)
     (latticeSpacing : ℕ → ℝ) (n : ℕ) : Measure (ℝ → ℝ) :=
-  kolmogorovProjectiveLimit
+  kolmogorovProjectiveLimit (α := fun _ : ℝ => ℝ)
     (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRealPathFiniteMarginal
       H N hN beta hbeta latticeSpacing n)
     (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRealPathFiniteMarginal_projective
@@ -170,15 +170,15 @@ theorem
   let P :=
     periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRealPathFiniteMarginal
       H N hN beta hbeta latticeSpacing n
-  have hP : IsProjectiveMeasureFamily P :=
+  have hP : IsProjectiveMeasureFamily (α := fun _ : ℝ => ℝ) P :=
     periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRealPathFiniteMarginal_projective
       H N hN beta hbeta latticeSpacing n
   have hKolmogorov :
-      IsProjectiveLimit
-        (kolmogorovProjectiveLimit P hP) P :=
-    isProjectiveLimit_kolmogorovProjectiveLimit hP
+      IsProjectiveLimit (α := fun _ : ℝ => ℝ)
+        (kolmogorovProjectiveLimit (α := fun _ : ℝ => ℝ) P hP) P :=
+    isProjectiveLimit_kolmogorovProjectiveLimit (α := fun _ : ℝ => ℝ) hP
   have hDirect :
-      IsProjectiveLimit
+      IsProjectiveLimit (α := fun _ : ℝ => ℝ)
         (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRealPathMeasure
           H N hN beta hbeta latticeSpacing n) P :=
     periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRealPathMeasure_isProjectiveLimit
