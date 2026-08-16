@@ -83,18 +83,23 @@ theorem periodicHypercubicEvenBoundaryMarginalEffectiveMeasure_map_gauge_eq_self
     exact
       (periodicHypercubicEvenBoundaryGaugeTransform_measurePreserving
         H N gamma).map_eq
-  rw [hHaar]
-  congr 1
-  funext b
-  change
-    periodicHypercubicEvenBoundaryMarginalEffectiveDensity
-        H N hN beta hbeta
-        (periodicHypercubicEvenBoundaryGaugeTransform H N
-          (fun v => (gamma v)⁻¹) b) =
+  have hDensity :
+      (fun b =>
+        periodicHypercubicEvenBoundaryMarginalEffectiveDensity
+          H N hN beta hbeta (e.symm b)) =
+        periodicHypercubicEvenBoundaryMarginalEffectiveDensity
+          H N hN beta hbeta := by
+    funext b
+    change
       periodicHypercubicEvenBoundaryMarginalEffectiveDensity
-        H N hN beta hbeta b
-  exact periodicHypercubicEvenBoundaryMarginalEffectiveDensity_gaugeInvariant
-    H N hN beta hbeta (fun v => (gamma v)⁻¹) b
+          H N hN beta hbeta
+          (periodicHypercubicEvenBoundaryGaugeTransform H N
+            (fun v => (gamma v)⁻¹) b) =
+        periodicHypercubicEvenBoundaryMarginalEffectiveDensity
+          H N hN beta hbeta b
+    exact periodicHypercubicEvenBoundaryMarginalEffectiveDensity_gaugeInvariant
+      H N hN beta hbeta (fun v => (gamma v)⁻¹) b
+  rw [hHaar, hDensity]
 
 end
 
