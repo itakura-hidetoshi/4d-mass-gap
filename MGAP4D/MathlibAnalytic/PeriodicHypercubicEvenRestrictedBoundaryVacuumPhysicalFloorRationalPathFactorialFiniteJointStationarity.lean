@@ -125,7 +125,9 @@ theorem
     _ = Measure.map
         (J.restrict (π := fun _ : ℚ => ℝ))
         L.continuumMeasure.toMeasure := by
-      rw [hStationaryMeasure]
+      exact congrArg
+        (fun μ => Measure.map (J.restrict (π := fun _ : ℚ => ℝ)) μ)
+        hStationaryMeasure
 
 /-- Consequently every measurable finite-cylinder readout has exactly the same
 law after simultaneous rational translation of all of its time arguments.
@@ -183,7 +185,7 @@ theorem
         (Measure.map
           (J.restrict (π := fun _ : ℚ => ℝ))
           L.continuumMeasure.toMeasure) := by
-      rw [hJoint]
+      exact congrArg (fun μ => Measure.map F μ) hJoint
     _ = Measure.map
         (F ∘ J.restrict (π := fun _ : ℚ => ℝ))
         L.continuumMeasure.toMeasure :=
