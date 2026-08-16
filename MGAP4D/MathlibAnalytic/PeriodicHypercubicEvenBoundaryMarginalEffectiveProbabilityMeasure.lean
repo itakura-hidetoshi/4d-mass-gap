@@ -60,7 +60,10 @@ theorem periodicHypercubicEvenBoundaryMarginalEffectiveMeasure_isProbabilityMeas
           P.boundaryRestriction A) := by
     have h := measurable_fst.comp hCoordinates
     simpa [FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedCoordinates] using h
-  letI : IsProbabilityMeasure C.gibbsMeasure := inferInstance
+  letI : IsProbabilityMeasure C.gibbsMeasure := by
+    simpa [C] using
+      (periodicHypercubicSpecialUnitaryWilsonSystem_gibbsMeasure_probability
+        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
   have hMap :
       IsProbabilityMeasure
         (Measure.map P.boundaryRestriction C.gibbsMeasure) :=
