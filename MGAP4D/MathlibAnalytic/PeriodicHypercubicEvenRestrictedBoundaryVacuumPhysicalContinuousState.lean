@@ -118,8 +118,7 @@ theorem
       ∂(periodicHypercubicEvenBoundaryMarginalEffectiveMeasure
         (H (L.subsequence n)) N hN
         (beta (L.subsequence n)) (hbeta (L.subsequence n)))) =
-      (physicalYangMillsApproximatingGaugeInvariantContinuousState S n).
-        toContinuousLinearMap Oinv := by
+      (physicalYangMillsApproximatingGaugeInvariantContinuousState S n).toContinuousLinearMap Oinv := by
   dsimp only
   rw [physicalYangMillsApproximatingGaugeInvariantContinuousState_apply]
   rw [physicalYangMillsApproximatingGaugeInvariantExpectation_apply]
@@ -228,8 +227,7 @@ theorem
         H N hN beta hbeta
         latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
         physicalVolume physicalVolume_tendsto_atTop L O
-    (physicalYangMillsContinuumGaugeInvariantContinuousState S).
-        toContinuousLinearMap Oinv =
+    (physicalYangMillsContinuumGaugeInvariantContinuousState S).toContinuousLinearMap Oinv =
       ∫ x, O x ∂ProbabilityMeasure.toMeasure L.continuumMeasure := by
   rfl
 
@@ -278,8 +276,7 @@ theorem
             (beta (L.subsequence n)) (hbeta (L.subsequence n))))
       atTop
       (nhds
-        ((physicalYangMillsContinuumGaugeInvariantContinuousState S).
-          toContinuousLinearMap Oinv)) := by
+        ((physicalYangMillsContinuumGaugeInvariantContinuousState S).toContinuousLinearMap Oinv)) := by
   dsimp only
   have hSequence :
       (fun n : ℕ =>
@@ -295,8 +292,7 @@ theorem
           (periodicHypercubicEvenRestrictedBoundaryVacuumGaugeSymmetryLimit
             H N hN beta hbeta
             latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
-            physicalVolume physicalVolume_tendsto_atTop L) n).
-          toContinuousLinearMap
+            physicalVolume physicalVolume_tendsto_atTop L) n).toContinuousLinearMap
             (periodicHypercubicEvenRestrictedBoundaryVacuumGaugeInvariantObservable
               H N hN beta hbeta
               latticeSpacing latticeSpacing_pos latticeSpacing_tendsto_zero
