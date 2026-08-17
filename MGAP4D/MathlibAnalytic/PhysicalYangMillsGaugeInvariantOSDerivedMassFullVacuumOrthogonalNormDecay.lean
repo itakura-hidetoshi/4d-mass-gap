@@ -73,10 +73,8 @@ theorem vacuumCenteredTimeAverage_inner_vacuum_eq_zero
     (hP : P.IsNormalized)
     (h : NNReal) (psi : P.PhysicalHilbert) :
     inner ℝ (T.vacuumCenteredTimeAverage h psi) P.vacuum = 0 := by
-  have hvacuum : inner ℝ P.vacuum P.vacuum = 1 := by
-    rw [real_inner_self_eq_norm_sq, P.norm_vacuum hP]
-    norm_num
-  simp [vacuumCenteredTimeAverage, inner_sub_left, inner_smul_left, hvacuum]
+  simp [vacuumCenteredTimeAverage, inner_sub_left, inner_smul_left,
+    P.norm_vacuum hP]
 
 /-- On an already vacuum-orthogonal state, centered time averages converge back
  to the original state as positive averaging width tends to zero. -/
@@ -87,7 +85,7 @@ theorem vacuumCenteredTimeAverage_tendsto_zero
     Tendsto (fun h : NNReal => T.vacuumCenteredTimeAverage h psi)
       (nhdsWithin 0 (Ioi 0)) (nhds psi) := by
   have htime := T.timeAverage_tendsto_zero psi
-  have hinner := htime.inner
+  have hinner := htime.inner (𝕜 := ℝ)
     (tendsto_const_nhds :
       Tendsto (fun _ : NNReal => P.vacuum)
         (nhdsWithin 0 (Ioi 0)) (nhds P.vacuum))
