@@ -95,15 +95,7 @@ theorem periodicHypercubicEvenEdgeReflection_integerTemporalTranslation
     apply Prod.ext
     · rw [periodicHypercubicEvenTimeReflection_add_integerTemporalDisplacement]
       unfold periodicHypercubicUnshift
-      change
-        periodicHypercubicEvenTimeReflection H v +
-              periodicHypercubicIntegerTemporalDisplacement
-                (PeriodicHypercubicEvenSideLength H) (-k) -
-              periodicHypercubicUnit (PeriodicHypercubicEvenSideLength H) 0 =
-          periodicHypercubicIntegerTemporalDisplacement
-              (PeriodicHypercubicEvenSideLength H) (-k) +
-            (periodicHypercubicEvenTimeReflection H v -
-              periodicHypercubicUnit (PeriodicHypercubicEvenSideLength H) 0)
+      simp only [Prod.fst, Prod.snd]
       simp only [sub_eq_add_neg]
       ac_rfl
     · rfl
