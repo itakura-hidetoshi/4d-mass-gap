@@ -95,7 +95,7 @@ theorem periodicHypercubicEvenEdgeReflection_integerTemporalTranslation
     apply Prod.ext
     · rw [periodicHypercubicEvenTimeReflection_add_integerTemporalDisplacement]
       unfold periodicHypercubicUnshift
-      abel
+      abel_nf
     · rfl
   · rw [periodicHypercubicEdgeTranslationEquiv_apply]
     rw [periodicHypercubicEvenEdgeReflection_spatial H _ hmu]
