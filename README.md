@@ -19,14 +19,14 @@ Repository:
 Authoritative theorem carrier:
   formal/real-hilbert-uniform-coercive-strong-limit
 
-Current authoritative head:
-  b4196326db0b6d5d5e96bb55046a641aaffef9ea
-
-Latest integrated checkpoint:
+Latest theorem-bearing checkpoint:
   PR #1767
   Lift continuum rational finite reflection laws to full path invariance
 
-Latest integrated PR validation:
+Theorem checkpoint merge SHA:
+  b4196326db0b6d5d5e96bb55046a641aaffef9ea
+
+Checkpoint validation:
   PR Lean Fast Check #10809
   completed / success
 
@@ -37,7 +37,7 @@ Detailed development plan:
   ROADMAP.md
 ```
 
-Only results merged into `formal/real-hilbert-uniform-coercive-strong-limit` count as authoritative theorem status.
+Documentation-only merges may advance the carrier branch tip beyond the theorem checkpoint SHA without changing the theorem state described here. Only results merged into `formal/real-hilbert-uniform-coercive-strong-limit` count as authoritative theorem status.
 
 ## Current proof picture
 
@@ -185,7 +185,7 @@ map θ L.continuumMeasure = L.continuumMeasure,
 θ x q = x (-q).
 ```
 
-This is now authoritative at `b4196326db0b6d5d5e96bb55046a641aaffef9ea`.
+This theorem entered the authoritative carrier at `b4196326db0b6d5d5e96bb55046a641aaffef9ea`.
 
 Reflection invariance is a geometric measure-level input. It is **not** the same statement as OS reflection positivity.
 

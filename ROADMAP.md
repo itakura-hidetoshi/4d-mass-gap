@@ -14,17 +14,19 @@ It distinguishes:
 authoritative theorem carrier:
   formal/real-hilbert-uniform-coercive-strong-limit
 
-authoritative head:
-  b4196326db0b6d5d5e96bb55046a641aaffef9ea
-
-latest integrated checkpoint:
+latest theorem-bearing checkpoint:
   PR #1767
   Lift continuum rational finite reflection laws to full path invariance
 
-latest integrated PR validation:
+theorem checkpoint merge SHA:
+  b4196326db0b6d5d5e96bb55046a641aaffef9ea
+
+checkpoint validation:
   PR Lean Fast Check #10809
   completed / success
 ```
+
+Documentation-only merges may advance the carrier branch tip beyond the theorem checkpoint SHA without changing the theorem state represented by this roadmap.
 
 ## Roadmap in one view
 
@@ -642,7 +644,7 @@ finite Z2 geometric cap / coercivity 1/2
 
 # Immediate next proof package
 
-The safest additive order from canonical `b4196326db0b6d5d5e96bb55046a641aaffef9ea` is:
+The safest additive order from theorem checkpoint `b4196326db0b6d5d5e96bb55046a641aaffef9ea` is:
 
 ```text
 1. define the same-root positive rational-time cylinder algebra;
