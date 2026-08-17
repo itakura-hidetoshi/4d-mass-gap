@@ -107,6 +107,7 @@ theorem periodicHypercubicEvenBoundaryPositiveFullReflectedObservable_eq_boundar
   rw [hA]
   simp [periodicHypercubicEvenBoundaryPositiveFullReflectedObservable,
     periodicHypercubicEvenBoundaryPositiveReflectedObservable,
+    FiniteInvolutiveEdgeOrbitPartition.boundaryFiberedCoordinates,
     P, periodicHypercubicEvenConfigurationReflection_boundaryFiberedAssemble]
 
 /-- Density-weighted boundary-positive reflected observable. -/
