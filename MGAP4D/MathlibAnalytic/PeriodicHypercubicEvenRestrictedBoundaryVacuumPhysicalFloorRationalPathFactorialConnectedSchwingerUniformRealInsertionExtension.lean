@@ -48,6 +48,7 @@ Schwinger function. -/
 def periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalConnectedSchwingerUniformRealInsertionExtension
     {H : ℕ → ℕ}
     {N : ℕ} {hN : 0 < N}
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
     {physicalVolume : ℕ → ℝ}
     {physicalVolume_tendsto_atTop : Filter.Tendsto physicalVolume Filter.atTop Filter.atTop}
@@ -71,6 +72,7 @@ theorem
     periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalConnectedSchwingerUniformRealInsertionExtension_uniformContinuous
     {H : ℕ → ℕ}
     {N : ℕ} {hN : 0 < N}
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
     {physicalVolume : ℕ → ℝ}
     {physicalVolume_tendsto_atTop : Filter.Tendsto physicalVolume Filter.atTop Filter.atTop}
@@ -97,6 +99,7 @@ theorem
     periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalConnectedSchwingerUniformRealInsertionExtension_ratPiCast
     {H : ℕ → ℕ}
     {N : ℕ} {hN : 0 < N}
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
     {physicalVolume : ℕ → ℝ}
     {physicalVolume_tendsto_atTop : Filter.Tendsto physicalVolume Filter.atTop Filter.atTop}
