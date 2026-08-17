@@ -97,6 +97,10 @@ theorem
   have hR : Measurable R :=
     (periodicHypercubicEvenSpecialUnitary_gibbs_measurePreserving_reflection
       H N hN beta hbeta).measurable
+  have hμR : Measure.map R μ = μ := by
+    simpa [R, μ] using
+      periodicHypercubicEvenSpecialUnitary_gibbs_map_reflection_eq_self
+        H N hN beta hbeta
   have hcov : slotRef ∘ readout = (slot ∘ readout) ∘ R := by
     funext A
     have h :=
@@ -114,8 +118,7 @@ theorem
     _ = Measure.map (slot ∘ readout) (Measure.map R μ) :=
       (Measure.map_map (hslot.comp hreadout) hR).symm
     _ = Measure.map (slot ∘ readout) μ := by
-      rw [periodicHypercubicEvenSpecialUnitary_gibbs_map_reflection_eq_self
-        H N hN beta hbeta]
+      rw [hμR]
     _ = Measure.map slot (Measure.map readout μ) :=
       (Measure.map_map hslot hreadout).symm
 
