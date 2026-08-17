@@ -242,6 +242,9 @@ theorem
   let μ : Measure (ℚ → ℝ) :=
     show Measure (ℚ → ℝ) from
       (L.continuumMeasure : Measure E.toLatticeEmbedding.PhysicalConfiguration)
+  letI : IsFiniteMeasure μ := by
+    dsimp [μ]
+    infer_instance
   let X : ℚ → (ℚ → ℝ) → ℝ := fun q x => x (-q)
   let Y : ℚ → (ℚ → ℝ) → ℝ := fun q x => x q
   have hX : AEMeasurable (fun x : ℚ → ℝ => (X · x)) μ := by
