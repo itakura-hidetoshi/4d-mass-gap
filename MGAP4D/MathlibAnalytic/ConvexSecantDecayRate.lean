@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Convex.Slope
+import Mathlib.Data.Real.Basic
 
 /-!
 # Secant decay rates of convex functions
