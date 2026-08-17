@@ -79,10 +79,10 @@ theorem
     (m : ℕ) (time : Fin m → ℚ) :
     Measure.map
         (fun x : ℚ → ℝ => fun i : Fin m => x (-time i))
-        (L.continuumMeasure : Measure (ℚ → ℝ)) =
+        L.continuumMeasure =
       Measure.map
         (fun x : ℚ → ℝ => fun i : Fin m => x (time i))
-        (L.continuumMeasure : Measure (ℚ → ℝ)) := by
+        L.continuumMeasure := by
   let E :=
     periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathEmbedding
       H N hN beta hbeta
