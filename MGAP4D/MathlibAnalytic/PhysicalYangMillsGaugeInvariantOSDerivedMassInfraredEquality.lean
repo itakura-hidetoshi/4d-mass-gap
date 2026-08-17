@@ -132,6 +132,7 @@ theorem log_exp_decayEnvelope_div_add_self_time_eq_physicalYangMillsMass
   have htime :
       (((t + t : NNReal) : ℝ)) = 2 * (t : ℝ) := by
     norm_num
+    ring
   rw [hzero, henvelope, htime]
   field_simp [ht_ne]
   ring
@@ -185,7 +186,7 @@ theorem physicalYangMillsMass_le_normalizedLogDecayFromZero
     T.physicalYangMillsMass_le_normalizedLogDecayFromZero_add_self
       hP hSymmetric s horthogonal hpsi_ne hs
   have htime : (((s + s : NNReal) : ℝ)) = (t : ℝ) := by
-    norm_num [s] <;> ring
+    norm_num [s]
   rw [htime] at h
   exact h
 
@@ -204,11 +205,16 @@ theorem physicalYangMillsMass_le_physicalCorrelationRealClampInfraredEffectiveMa
   have hlim :=
     T.physicalCorrelationRealClampNormalizedLogDecayFromZero_shift_tendsto_infrared
       hSymmetric hpsi_ne
-  apply le_of_tendsto hlim
-  filter_upwards with u
-  exact
-    T.physicalYangMillsMass_le_normalizedLogDecayFromZero
-      hP hSymmetric (u + 1) horthogonal hpsi_ne (by positivity)
+  have hneg := hlim.neg
+  have hbound :
+      -T.physicalCorrelationRealClampInfraredEffectiveMass psi ≤
+        -T.physicalYangMillsMass := by
+    apply le_of_tendsto hneg
+    filter_upwards with u
+    exact neg_le_neg
+      (T.physicalYangMillsMass_le_normalizedLogDecayFromZero
+        hP hSymmetric (u + 1) horthogonal hpsi_ne (by positivity))
+  exact neg_le_neg_iff.mp hbound
 
 /-- Taking the variational infimum over all nonzero vacuum-orthogonal physical
 states gives the reverse comparison from the graph-closed Hamiltonian mass to
