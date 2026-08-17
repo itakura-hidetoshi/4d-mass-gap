@@ -31,7 +31,8 @@ theorem continuous_midpointConvex_nonpos_Icc
     (h0 : g 0 ≤ 0) (h1 : g 1 ≤ 0) :
     ∀ u ∈ Icc (0 : ℝ) 1, g u ≤ 0 := by
   obtain ⟨m, hm, hmax⟩ :=
-    isCompact_Icc.exists_isMaxOn ⟨0, by simp⟩ hg.continuousOn
+    (isCompact_Icc : IsCompact (Icc (0 : ℝ) 1)).exists_isMaxOn
+      ⟨0, by simp⟩ hg.continuousOn
   intro u hu
   by_contra hu0
   have hupos : 0 < g u := lt_of_not_ge hu0
