@@ -31,11 +31,13 @@ theorem continuous_midpointConvex_nonpos_Icc
     (h0 : g 0 ≤ 0) (h1 : g 1 ≤ 0) :
     ∀ u ∈ Icc (0 : ℝ) 1, g u ≤ 0 := by
   obtain ⟨m, hm, hmax⟩ :=
-    isCompact_Icc.exists_isMaxOn (by simp) hg.continuousOn
+    isCompact_Icc.exists_isMaxOn ⟨0, by simp⟩ hg.continuousOn
   intro u hu
   by_contra hu0
   have hupos : 0 < g u := lt_of_not_ge hu0
-  have hmpos : 0 < g m := lt_of_lt_of_le hupos (hmax hu)
+  have humax := hmax hu
+  change g u ≤ g m at humax
+  have hmpos : 0 < g m := lt_of_lt_of_le hupos humax
   rcases le_total m (1 / 2 : ℝ) with hmhalf | hhalfm
   · have h2m : 2 * m ∈ Icc (0 : ℝ) 1 := by
       constructor
@@ -43,6 +45,7 @@ theorem continuous_midpointConvex_nonpos_Icc
       · nlinarith
     have hmid' := hmid (show (0 : ℝ) ∈ Icc 0 1 by simp) h2m
     have h2max := hmax h2m
+    change g (2 * m) ≤ g m at h2max
     have harg : ((0 : ℝ) + 2 * m) / 2 = m := by ring
     rw [harg] at hmid'
     nlinarith
@@ -50,6 +53,7 @@ theorem continuous_midpointConvex_nonpos_Icc
       constructor <;> nlinarith [hm.2]
     have hmid' := hmid h2m1 (show (1 : ℝ) ∈ Icc 0 1 by simp)
     have h2max := hmax h2m1
+    change g (2 * m - 1) ≤ g m at h2max
     have harg : ((2 * m - 1) + 1) / 2 = m := by ring
     rw [harg] at hmid'
     nlinarith
@@ -70,17 +74,21 @@ theorem convexOn_Ici_of_continuous_midpoint
   have hg : Continuous g := by
     dsimp [g, p, ell]
     fun_prop
+  have hx0 : 0 ≤ x := hx
+  have hy0 : 0 ≤ y := hy
   have hgmid : ∀ {s t : ℝ}, s ∈ Icc (0 : ℝ) 1 → t ∈ Icc (0 : ℝ) 1 →
       g ((s + t) / 2) ≤ (g s + g t) / 2 := by
     intro s t hs ht
     have hps : p s ∈ Ici (0 : ℝ) := by
       dsimp [p]
-      constructor
-      nlinarith [hx, hy, hs.1, hs.2]
+      exact add_nonneg
+        (mul_nonneg hs.1 hx0)
+        (mul_nonneg (sub_nonneg.mpr hs.2) hy0)
     have hpt : p t ∈ Ici (0 : ℝ) := by
       dsimp [p]
-      constructor
-      nlinarith [hx, hy, ht.1, ht.2]
+      exact add_nonneg
+        (mul_nonneg ht.1 hx0)
+        (mul_nonneg (sub_nonneg.mpr ht.2) hy0)
     have h := hmid hps hpt
     have hp : p ((s + t) / 2) = (p s + p t) / 2 := by
       dsimp [p]
