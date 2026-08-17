@@ -1,5 +1,6 @@
 import Mathlib.Analysis.Convex.Slope
 import Mathlib.Data.Real.Basic
+import Mathlib.Tactic
 
 /-!
 # Secant decay rates of convex functions
@@ -20,7 +21,7 @@ direct instantiation of Mathlib's `ConvexOn.slope_mono_adjacent` theorem.
 namespace MGAP4D
 
 /-- Negative secant slope, interpreted as an interval decay rate. -/
-def secantDecayRate (f : ℝ → ℝ) (s t : ℝ) : ℝ :=
+noncomputable def secantDecayRate (f : ℝ → ℝ) (s t : ℝ) : ℝ :=
   (f s - f t) / (t - s)
 
 /-- Convexity makes adjacent secant decay rates antitone. -/
@@ -31,7 +32,10 @@ theorem ConvexOn.secantDecayRate_anti_adjacent
     (hxy : x < y) (hyz : y < z) :
     secantDecayRate f y z ≤ secantDecayRate f x y := by
   have h := hf.slope_mono_adjacent hx hz hxy hyz
-  have hn := neg_le_neg h
-  simpa [secantDecayRate, neg_div, neg_sub] using hn
+  unfold secantDecayRate
+  calc
+    (f y - f z) / (z - y) = -((f z - f y) / (z - y)) := by ring
+    _ ≤ -((f y - f x) / (y - x)) := neg_le_neg h
+    _ = (f x - f y) / (y - x) := by ring
 
 end MGAP4D
