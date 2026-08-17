@@ -97,6 +97,10 @@ theorem
           MGAP4D.ratPiCast (fun i => time i + q) := by
       funext i
       simp [MGAP4D.realCommonShift, MGAP4D.ratPiCast]
+    change
+      realConnectedSchwinger
+          (MGAP4D.realCommonShift (MGAP4D.ratPiCast time) (q : ℝ)) =
+        realConnectedSchwinger (MGAP4D.ratPiCast time)
     rw [hShiftCast]
     calc
       realConnectedSchwinger (MGAP4D.ratPiCast (fun i => time i + q)) =
