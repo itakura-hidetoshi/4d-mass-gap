@@ -40,21 +40,35 @@ theorem physicalCorrelation_rightSlope_tendsto_rightHamiltonian_inner
           (psi : P.PhysicalHilbert)⟫_ℝ) := by
   have hgenerator := T.rightGenerator_hasRightGeneratorValue psi
   unfold HasRightGeneratorValue at hgenerator
+  have hham :
+      Tendsto
+        (fun t : NNReal =>
+          T.rightHamiltonianDifferenceQuotient
+            (psi : P.PhysicalHilbert) t)
+        (nhdsWithin 0 (Ioi 0))
+        (nhds (T.rightHamiltonian psi)) := by
+    have hneg := hgenerator.neg
+    simpa only [T.rightHamiltonianDifferenceQuotient_eq_neg,
+      T.rightHamiltonian_apply] using hneg
   have hinner :
       Tendsto
         (fun t : NNReal =>
-          ⟪T.rightDifferenceQuotient (psi : P.PhysicalHilbert) t,
+          ⟪T.rightHamiltonianDifferenceQuotient
+              (psi : P.PhysicalHilbert) t,
             (psi : P.PhysicalHilbert)⟫_ℝ)
         (nhdsWithin 0 (Ioi 0))
         (nhds
-          ⟪T.rightGenerator psi,
+          ⟪T.rightHamiltonian psi,
             (psi : P.PhysicalHilbert)⟫_ℝ) :=
-    hgenerator.inner tendsto_const_nhds
-  have hneg := hinner.neg
-  simpa [rightDifferenceQuotient, physicalCorrelation,
+    hham.inner tendsto_const_nhds
+  have hcorr (t : NNReal) :
+      T.physicalCorrelation (psi : P.PhysicalHilbert) t =
+        ⟪T.toPhysicalSemigroup.operator t (psi : P.PhysicalHilbert),
+          (psi : P.PhysicalHilbert)⟫_ℝ := by
+    rw [physicalCorrelation, real_inner_comm]
+  simpa [rightHamiltonianDifferenceQuotient, hcorr,
     T.toPhysicalSemigroup.operator_zero, real_inner_smul_left,
-    inner_sub_left, real_inner_comm, T.rightHamiltonian_apply,
-    inner_neg_left] using hneg
+    inner_sub_left] using hinner
 
 /-- The preceding infinitesimal OS decay rate is nonnegative, in agreement
 with contractivity of Euclidean time evolution. -/
