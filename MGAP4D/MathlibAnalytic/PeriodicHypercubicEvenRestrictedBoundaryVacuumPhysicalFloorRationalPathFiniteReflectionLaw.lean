@@ -79,7 +79,11 @@ theorem
       H N hN beta hbeta latticeSpacing s
   let slot : (ℚ → ℝ) → (Fin m → ℝ) := fun x i => x (time i)
   let slotRef : (ℚ → ℝ) → (Fin m → ℝ) := fun x i => x (-time i)
-  let R := periodicHypercubicEvenConfigurationReflection H
+  let R :
+      (PeriodicHypercubicEvenEdge H → Matrix.specialUnitaryGroup (Fin N) ℂ) →
+        (PeriodicHypercubicEvenEdge H → Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+    periodicHypercubicEvenConfigurationReflection
+      (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) H
   let μ :=
     (periodicHypercubicSpecialUnitaryWilsonSystem
       (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure
