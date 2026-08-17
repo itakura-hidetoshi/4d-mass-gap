@@ -26,13 +26,13 @@ theorem nnreal_two_mul_midpoint_le_of_pair_doubled
   have h := hpair (s / 2) (t / 2)
   have hmid : s / 2 + t / 2 = (s + t) / 2 := by
     apply NNReal.eq
-    norm_num
+    ring
   have hs : s / 2 + s / 2 = s := by
     apply NNReal.eq
-    norm_num
+    ring
   have ht : t / 2 + t / 2 = t := by
     apply NNReal.eq
-    norm_num
+    ring
   simpa only [hmid, hs, ht] using h
 
 end MGAP4D
