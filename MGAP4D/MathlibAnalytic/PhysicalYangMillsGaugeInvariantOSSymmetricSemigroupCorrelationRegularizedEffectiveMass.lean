@@ -55,8 +55,10 @@ theorem physicalCorrelationRealClampRegularizedEffectiveMass_anti_adjacent
     T.physicalCorrelationRealClampRegularizedEffectiveMass psi ε y z ≤
       T.physicalCorrelationRealClampRegularizedEffectiveMass psi ε x y := by
   exact
-    (T.physicalCorrelationRealClampRegularizedLog_convexOn_Ici
-      hSymmetric psi hε).secantDecayRate_anti_adjacent hx hz hxy hyz
+    MGAP4D.ConvexOn.secantDecayRate_anti_adjacent
+      (T.physicalCorrelationRealClampRegularizedLog_convexOn_Ici
+        hSymmetric psi hε)
+      hx hz hxy hyz
 
 /-- Equal-width version: the regularized effective mass on the next step is no
 larger than on the preceding step. -/
@@ -72,7 +74,7 @@ theorem physicalCorrelationRealClampRegularizedEffectiveMass_step_antitone
   apply T.physicalCorrelationRealClampRegularizedEffectiveMass_anti_adjacent
     hSymmetric psi hε
   · exact hs
-  · linarith
+  · exact show 0 ≤ s + 2 * h by positivity
   · linarith
   · linarith
 
