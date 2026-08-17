@@ -70,10 +70,11 @@ namespace PhysicalSemigroup
 /-- Every positive-time physical contraction preserving the normalized vacuum
 also preserves the vacuum-orthogonal excitation sector.
 
-No bounded-operator self-adjointness is assumed: contractivity and exact vacuum
-fixing force the adjoint to fix the vacuum, after which the adjoint identity
-transports vacuum orthogonality. -/
-theorem operator_mem_vacuumOrthogonal
+This strengthens the existing symmetry-based preservation theorem: no
+bounded-operator self-adjointness or inner symmetry is assumed. Contractivity,
+normalization, and exact vacuum fixing force the adjoint to fix the vacuum, after
+which the adjoint identity transports vacuum orthogonality. -/
+theorem operator_mem_vacuumOrthogonal_of_normalized
     (T : P.PhysicalSemigroup) (hP : P.IsNormalized) (t : NNReal)
     {psi : P.PhysicalHilbert} (hpsi : psi ∈ P.vacuumOrthogonal) :
     T.operator t psi ∈ P.vacuumOrthogonal := by
