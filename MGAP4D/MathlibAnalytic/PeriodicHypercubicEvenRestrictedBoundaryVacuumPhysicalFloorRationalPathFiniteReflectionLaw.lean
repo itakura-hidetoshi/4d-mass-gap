@@ -117,8 +117,8 @@ theorem
       rw [hcov]
     _ = Measure.map (slot ∘ readout) (Measure.map R μ) :=
       (Measure.map_map (hslot.comp hreadout) hR).symm
-    _ = Measure.map (slot ∘ readout) μ := by
-      rw [hμR]
+    _ = Measure.map (slot ∘ readout) μ :=
+      congrArg (Measure.map (slot ∘ readout)) hμR
     _ = Measure.map slot (Measure.map readout μ) :=
       (Measure.map_map hslot hreadout).symm
 
