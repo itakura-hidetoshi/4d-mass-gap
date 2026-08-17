@@ -59,7 +59,11 @@ theorem log_sub_log_sandwich_of_pos
   rw [hlogxy, hdivxy] at hxy
   rw [hlogyx, hdivyx] at hyx
   constructor
-  · linarith
+  · have hneg := neg_le_neg hyx
+    calc
+      (x - y) / x = -((y - x) / x) := by ring
+      _ <= -(Real.log y - Real.log x) := hneg
+      _ = Real.log x - Real.log y := by ring
   · exact hxy
 
 namespace MathlibAnalytic
@@ -101,6 +105,14 @@ theorem physicalCorrelationRealClampLog_rightSlope_tendsto_rightHamiltonian_over
   let phi : P.PhysicalHilbert := (psi : P.PhysicalHilbert)
   let c0 : ℝ := T.physicalCorrelation phi 0
   let energy : ℝ := ⟪T.rightHamiltonian psi, phi⟫_ℝ
+  change
+    Tendsto
+      (fun t : NNReal =>
+        (t : ℝ)⁻¹ *
+          (T.physicalCorrelationRealClampLog phi 0 -
+            T.physicalCorrelationRealClampLog phi (t : ℝ)))
+      (nhdsWithin 0 (Ioi 0))
+      (nhds (energy / c0))
   have hc0pos : 0 < c0 := by
     dsimp [c0, phi]
     exact T.physicalCorrelation_pos_of_ne_zero hSymmetric 0 hpsi
@@ -134,12 +146,15 @@ theorem physicalCorrelationRealClampLog_rightSlope_tendsto_rightHamiltonian_over
         (nhdsWithin 0 (Ioi 0))
         (nhds (energy / c0)) :=
     hraw.div hcorr hc0pos.ne'
+  have hposTime :
+      ∀ᶠ t : NNReal in nhdsWithin (0 : NNReal) (Ioi 0), 0 < t :=
+    self_mem_nhdsWithin
   have hlower_le :
       ∀ᶠ t in nhdsWithin (0 : NNReal) (Ioi 0),
         ((t : ℝ)⁻¹ * (c0 - T.physicalCorrelation phi t)) / c0 <=
           (t : ℝ)⁻¹ *
             (Real.log c0 - Real.log (T.physicalCorrelation phi t)) := by
-    filter_upwards [self_mem_nhdsWithin] with t ht
+    filter_upwards [hposTime] with t ht
     have htReal : 0 < (t : ℝ) := by exact_mod_cast ht
     have hctpos : 0 < T.physicalCorrelation phi t := by
       dsimp [phi]
@@ -154,7 +169,7 @@ theorem physicalCorrelationRealClampLog_rightSlope_tendsto_rightHamiltonian_over
             (Real.log c0 - Real.log (T.physicalCorrelation phi t)) <=
           ((t : ℝ)⁻¹ * (c0 - T.physicalCorrelation phi t)) /
             T.physicalCorrelation phi t := by
-    filter_upwards [self_mem_nhdsWithin] with t ht
+    filter_upwards [hposTime] with t ht
     have htReal : 0 < (t : ℝ) := by exact_mod_cast ht
     have hctpos : 0 < T.physicalCorrelation phi t := by
       dsimp [phi]
@@ -172,7 +187,11 @@ theorem physicalCorrelationRealClampLog_rightSlope_tendsto_rightHamiltonian_over
         (nhds (energy / c0)) :=
     tendsto_of_tendsto_of_tendsto_of_le_of_le'
       hlower hupper hlower_le hle_upper
-  simpa [physicalCorrelationRealClampLog, c0, energy, phi] using hlogRaw
+  have hclampZero : T.physicalCorrelationRealClamp phi 0 = c0 := by
+    simpa only [c0] using
+      T.physicalCorrelationRealClamp_coe phi (0 : NNReal)
+  simpa only [physicalCorrelationRealClampLog, hclampZero,
+    T.physicalCorrelationRealClamp_coe] using hlogRaw
 
 /-- Rayleigh-quotient form of the initial logarithmic decay theorem. -/
 theorem physicalCorrelationRealClampLog_rightSlope_tendsto_rightHamiltonian_rayleigh
@@ -192,7 +211,7 @@ theorem physicalCorrelationRealClampLog_rightSlope_tendsto_rightHamiltonian_rayl
         (⟪T.rightHamiltonian psi,
             (psi : P.PhysicalHilbert)⟫_ℝ /
           ‖(psi : P.PhysicalHilbert)‖ ^ 2)) := by
-  simpa [T.physicalCorrelation_zero] using
+  simpa only [T.physicalCorrelation_zero] using
     T.physicalCorrelationRealClampLog_rightSlope_tendsto_rightHamiltonian_overCorrelationZero
       hSymmetric psi hpsi
 
