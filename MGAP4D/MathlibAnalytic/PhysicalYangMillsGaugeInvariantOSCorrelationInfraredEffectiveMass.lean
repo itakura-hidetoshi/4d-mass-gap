@@ -61,7 +61,8 @@ theorem physicalCorrelationRealClampEffectiveMass_shift_antitone
     hSymmetric hpsi
   · have hu : (0 : NNReal) < u + 1 := by positivity
     exact_mod_cast hu
-  · have huv' : u + 1 ≤ v + 1 := add_le_add_right huv 1
+  · have huv' : u + 1 ≤ v + 1 := by
+      simpa only [add_comm] using (add_le_add_right huv 1)
     exact_mod_cast huv'
 
 /-- The shifted effective-mass tail is bounded below by zero. -/
