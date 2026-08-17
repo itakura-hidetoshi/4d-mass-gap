@@ -239,12 +239,11 @@ theorem
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing_pos
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing_tendsto_zero
       physicalVolume physicalVolume_tendsto_atTop
-  let μ : Measure (ℚ → ℝ) :=
-    show Measure (ℚ → ℝ) from
-      (L.continuumMeasure : Measure E.toLatticeEmbedding.PhysicalConfiguration)
-  letI : IsFiniteMeasure μ := by
-    dsimp [μ]
-    infer_instance
+  let μF : FiniteMeasure (ℚ → ℝ) :=
+    show FiniteMeasure (ℚ → ℝ) from
+      L.continuumMeasure.toFiniteMeasure
+  let μ : Measure (ℚ → ℝ) := μF
+  letI : IsFiniteMeasure μ := μF.prop
   let X : ℚ → (ℚ → ℝ) → ℝ := fun q x => x (-q)
   let Y : ℚ → (ℚ → ℝ) → ℝ := fun q x => x q
   have hX : AEMeasurable (fun x : ℚ → ℝ => (X · x)) μ := by
@@ -258,7 +257,7 @@ theorem
     apply
       (ProbabilityTheory.map_eq_iff_forall_finset_map_restrict_eq hX hY).2
     intro J
-    simpa [E, μ, X, Y,
+    simpa [E, μ, μF, X, Y,
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalPathReflection,
       Finset.restrict_def] using
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathFactorial_continuum_finset_reflection_jointLaw_eq_self
