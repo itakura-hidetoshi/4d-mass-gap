@@ -154,8 +154,7 @@ theorem physicalCorrelationRealClampLog_rightSlope_tendsto_rightHamiltonian_over
         ((t : ℝ)⁻¹ * (c0 - T.physicalCorrelation phi t)) / c0 <=
           (t : ℝ)⁻¹ *
             (Real.log c0 - Real.log (T.physicalCorrelation phi t)) := by
-    refine hposTime.mono ?_
-    intro t ht
+    refine hposTime.mono (fun (t : NNReal) ht => ?_)
     have htReal : 0 < (t : ℝ) := by exact_mod_cast ht
     have hctpos : 0 < T.physicalCorrelation phi t := by
       dsimp [phi]
@@ -170,8 +169,7 @@ theorem physicalCorrelationRealClampLog_rightSlope_tendsto_rightHamiltonian_over
             (Real.log c0 - Real.log (T.physicalCorrelation phi t)) <=
           ((t : ℝ)⁻¹ * (c0 - T.physicalCorrelation phi t)) /
             T.physicalCorrelation phi t := by
-    refine hposTime.mono ?_
-    intro t ht
+    refine hposTime.mono (fun (t : NNReal) ht => ?_)
     have htReal : 0 < (t : ℝ) := by exact_mod_cast ht
     have hctpos : 0 < T.physicalCorrelation phi t := by
       dsimp [phi]
