@@ -85,7 +85,7 @@ theorem VacuumSemigroupGapSlope.slope_le_infraredEffectiveMass
         T.physicalCorrelationRealClampEffectiveMass psi 0
           (((u + 1 : NNReal) : ℝ)) := by
     apply T.physicalCorrelationRealClampEffectiveMass_zero_antitone
-      hSymmetric hpsi
+      hSymmetric hpsi_ne
     · positivity
     · exact htime
   exact hslope.trans hanti
