@@ -69,7 +69,8 @@ theorem realRightOffsetToNNReal_tendsto
           Continuous (fun z : ℝ => (z - x).toNNReal) :=
         continuous_real_toNNReal.comp (continuous_id.sub continuous_const)
       have hxcont :
-          ContinuousAt (fun z : ℝ => (z - x).toNNReal) x :=
+          Tendsto (fun z : ℝ => (z - x).toNNReal)
+            (nhds x) (nhds ((x - x).toNNReal)) :=
         hcont.continuousAt
       simpa using hxcont
     exact hfull.mono_left inf_le_left
