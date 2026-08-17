@@ -1,5 +1,5 @@
 import Mathlib.Topology.Order.MonotoneConvergence
-import Mathlib.Data.Real.Basic
+import Mathlib.Topology.Instances.Real.Lemmas
 
 /-!
 # Long-time limits of nonnegative antitone real sequences
