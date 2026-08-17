@@ -169,7 +169,10 @@ theorem physicalYangMillsMass_mul_norm_sq_le_rightHamiltonian_inner_operator
   have horthS :
       inner ℝ (psiS : P.PhysicalHilbert) P.vacuum = 0 := by
     rw [real_inner_comm]
-    have h := P.mem_vacuumOrthogonal_iff.mp hmemS
+    have h :=
+      (P.mem_vacuumOrthogonal_iff
+        (T.toPhysicalSemigroup.operator s
+          (psi : P.PhysicalHilbert))).mp hmemS
     simpa [psiS] using h
   simpa [psiS] using
     T.physicalYangMillsMass_mul_norm_sq_le_rightHamiltonian_inner
