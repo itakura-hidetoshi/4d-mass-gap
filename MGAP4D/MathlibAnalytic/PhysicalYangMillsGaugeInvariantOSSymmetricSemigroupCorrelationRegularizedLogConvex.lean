@@ -118,7 +118,12 @@ theorem physicalCorrelationRealClamp_add_eps_le_exp_jensen_two
   have hlog :=
     T.physicalCorrelationRealClampRegularizedLog_jensen_two
       hSymmetric psi hε hs ht ha hb hab
-  exact Real.le_exp_of_log_le hlog
+  have hpos :
+      0 < T.physicalCorrelationRealClamp psi (a * s + b * t) + ε :=
+    add_pos_of_nonneg_of_pos
+      (T.physicalCorrelationRealClamp_nonneg hSymmetric psi _) hε
+  rw [← Real.exp_log hpos]
+  exact Real.exp_le_exp.mpr hlog
 
 end StronglyContinuousPhysicalSemigroup
 
