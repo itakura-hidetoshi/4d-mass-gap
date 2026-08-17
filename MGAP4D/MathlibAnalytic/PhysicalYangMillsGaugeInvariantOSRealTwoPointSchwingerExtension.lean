@@ -44,9 +44,10 @@ theorem physicalEuclideanTwoPointSeparation_lipschitzWith :
   have hsub :
       LipschitzWith (2 : NNReal)
         (fun time : Fin 2 → ℝ => time 1 - time 0) := by
-    simpa using
+    convert
       ((LipschitzWith.eval (α := fun _ : Fin 2 => ℝ) (1 : Fin 2)).sub
-        (LipschitzWith.eval (α := fun _ : Fin 2 => ℝ) (0 : Fin 2)))
+        (LipschitzWith.eval (α := fun _ : Fin 2 => ℝ) (0 : Fin 2))) using 1 <;>
+      norm_num
   have hnnnorm :
       LipschitzWith (2 : NNReal)
         (fun time : Fin 2 → ℝ => ‖time 1 - time 0‖₊) := by
