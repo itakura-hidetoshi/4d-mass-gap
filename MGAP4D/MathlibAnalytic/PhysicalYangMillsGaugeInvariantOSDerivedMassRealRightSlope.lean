@@ -68,7 +68,10 @@ theorem realRightOffsetToNNReal_tendsto
       have hcont :
           Continuous (fun z : ℝ => (z - x).toNNReal) :=
         continuous_real_toNNReal.comp (continuous_id.sub continuous_const)
-      simpa using hcont.continuousAt
+      have hxcont :
+          ContinuousAt (fun z : ℝ => (z - x).toNNReal) x :=
+        hcont.continuousAt
+      simpa using hxcont
     exact hfull.mono_left inf_le_left
   · filter_upwards [self_mem_nhdsWithin] with z hz
     have hd : 0 < z - x := sub_pos.mpr hz
