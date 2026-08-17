@@ -59,12 +59,12 @@ theorem
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRealPathRestrictRational := by
   exact continuous_pi (fun q => continuous_apply (q : ℝ))
 
-/-- Hence rational restriction is measurable for the product Borel sigma algebras. -/
+/-- Rational restriction is measurable for the product sigma algebras. -/
 theorem
     periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRealPathRestrictRational_measurable :
     Measurable
-      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRealPathRestrictRational :=
-  periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRealPathRestrictRational_continuous.measurable
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRealPathRestrictRational := by
+  exact measurable_pi_lambda _ (fun q => measurable_pi_apply (q : ℝ))
 
 /-- Restricting the real floor extension of one integer path gives the same
 floor selector on every rational time. -/
