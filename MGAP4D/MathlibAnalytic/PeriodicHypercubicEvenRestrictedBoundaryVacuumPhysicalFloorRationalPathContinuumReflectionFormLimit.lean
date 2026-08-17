@@ -297,7 +297,14 @@ theorem
       atTop
       (nhds
         (Cyl.realReflectionForm
-          (L.continuumMeasure : Measure (ℚ → ℝ)))) := by
+          (show Measure (ℚ → ℝ) from
+            (L.continuumMeasure : Measure
+              (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathEmbedding
+                H N hN beta hbeta
+                periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing
+                periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing_pos
+                periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing_tendsto_zero
+                physicalVolume physicalVolume_tendsto_atTop).toLatticeEmbedding.PhysicalConfiguration)))) := by
   have hIntegral :=
     (ProbabilityMeasure.tendsto_iff_forall_integral_tendsto.mp
       L.weakConvergence) Cyl.realReflectionIntegrand
