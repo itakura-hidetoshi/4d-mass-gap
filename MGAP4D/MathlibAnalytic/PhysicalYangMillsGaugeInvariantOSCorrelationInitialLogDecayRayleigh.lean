@@ -150,7 +150,7 @@ theorem physicalCorrelationRealClampLog_rightSlope_tendsto_rightHamiltonian_over
       ∀ᶠ t : NNReal in nhdsWithin (0 : NNReal) (Ioi 0), 0 < t :=
     self_mem_nhdsWithin
   have hlower_le :
-      ∀ᶠ t in nhdsWithin (0 : NNReal) (Ioi 0),
+      ∀ᶠ t : NNReal in nhdsWithin (0 : NNReal) (Ioi 0),
         ((t : ℝ)⁻¹ * (c0 - T.physicalCorrelation phi t)) / c0 <=
           (t : ℝ)⁻¹ *
             (Real.log c0 - Real.log (T.physicalCorrelation phi t)) := by
@@ -164,7 +164,7 @@ theorem physicalCorrelationRealClampLog_rightSlope_tendsto_rightHamiltonian_over
       mul_le_mul_of_nonneg_left hsand.1 (inv_nonneg.mpr htReal.le)
     simpa [div_eq_mul_inv, mul_assoc] using hmul
   have hle_upper :
-      ∀ᶠ t in nhdsWithin (0 : NNReal) (Ioi 0),
+      ∀ᶠ t : NNReal in nhdsWithin (0 : NNReal) (Ioi 0),
         (t : ℝ)⁻¹ *
             (Real.log c0 - Real.log (T.physicalCorrelation phi t)) <=
           ((t : ℝ)⁻¹ * (c0 - T.physicalCorrelation phi t)) /
