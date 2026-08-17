@@ -7,7 +7,7 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-open Filter Set MeasureTheory
+open MeasureTheory
 
 namespace PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
 
@@ -19,42 +19,41 @@ namespace StronglyContinuousPhysicalSemigroup
 
 /-- The physical Euclidean-time orbit, extended from nonnegative time to the
 real line by clamping negative times to zero.  This auxiliary real-time orbit
-lets us use mathlib's Bochner interval-integral API without changing the
-physical semigroup parameter space. -/
-def realPhysicalOrbit
+lets the generator-density route use mathlib's Bochner interval integrals
+without changing the physical semigroup parameter space. -/
+def generatorDensityRealOrbit
     (T : P.StronglyContinuousPhysicalSemigroup)
     (psi : P.PhysicalHilbert) (s : ℝ) : P.PhysicalHilbert :=
   T.toPhysicalSemigroup.operator (Real.toNNReal s) psi
 
-/-- The clamped real-time physical orbit is continuous. -/
-theorem realPhysicalOrbit_continuous
+/-- The clamped real-time orbit used in the generator-density route is
+continuous. -/
+theorem generatorDensityRealOrbit_continuous
     (T : P.StronglyContinuousPhysicalSemigroup)
     (psi : P.PhysicalHilbert) :
-    Continuous (T.realPhysicalOrbit psi) := by
+    Continuous (T.generatorDensityRealOrbit psi) := by
   exact (T.physicalOrbit_continuous psi).comp continuous_real_toNNReal
 
-/-- Hence every finite interval of the clamped physical orbit is Bochner
-integrable. -/
-theorem realPhysicalOrbit_intervalIntegrable
+/-- Every finite interval of the clamped orbit is Bochner integrable. -/
+theorem generatorDensityRealOrbit_intervalIntegrable
     (T : P.StronglyContinuousPhysicalSemigroup)
     (psi : P.PhysicalHilbert) (a b : ℝ) :
-    IntervalIntegrable (T.realPhysicalOrbit psi) volume a b :=
-  (T.realPhysicalOrbit_continuous psi).intervalIntegrable a b
+    IntervalIntegrable (T.generatorDensityRealOrbit psi) volume a b :=
+  (T.generatorDensityRealOrbit_continuous psi).intervalIntegrable a b
 
-/-- Steklov averaging of a physical vector over the initial Euclidean-time
-interval `[0,h]`.  Positive `h` will be used to produce vectors in the right
-infinitesimal-generator domain. -/
-noncomputable def steklovAverage
+/-- Initial-interval Steklov averaging used to construct a dense family of
+vectors in the right infinitesimal-generator domain. -/
+noncomputable def generatorDensitySteklovAverage
     (T : P.StronglyContinuousPhysicalSemigroup)
     (psi : P.PhysicalHilbert) (h : NNReal) : P.PhysicalHilbert :=
   (h : ℝ)⁻¹ •
-    ∫ s in (0 : ℝ)..(h : ℝ), T.realPhysicalOrbit psi s
+    ∫ s in (0 : ℝ)..(h : ℝ), T.generatorDensityRealOrbit psi s
 
-@[simp] theorem steklovAverage_zero
+@[simp] theorem generatorDensitySteklovAverage_zero
     (T : P.StronglyContinuousPhysicalSemigroup)
     (psi : P.PhysicalHilbert) :
-    T.steklovAverage psi 0 = 0 := by
-  simp [steklovAverage]
+    T.generatorDensitySteklovAverage psi 0 = 0 := by
+  simp [generatorDensitySteklovAverage]
 
 end StronglyContinuousPhysicalSemigroup
 
