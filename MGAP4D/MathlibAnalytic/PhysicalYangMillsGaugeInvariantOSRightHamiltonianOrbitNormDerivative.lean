@@ -68,14 +68,23 @@ theorem physicalOrbitNormSqSlope_tendsto_rightGenerator
           (psi : P.PhysicalHilbert))) := by
   have hgen := T.rightGenerator_hasRightGeneratorValue psi
   unfold HasRightGeneratorValue at hgen
+  have horbitAtZero :
+      Tendsto
+        (fun t : NNReal =>
+          T.toPhysicalSemigroup.operator t (psi : P.PhysicalHilbert))
+        (nhds 0)
+        (nhds
+          (T.toPhysicalSemigroup.operator 0
+            (psi : P.PhysicalHilbert))) :=
+    T.strongContinuousAt_zero (psi : P.PhysicalHilbert)
   have horbitFull :
       Tendsto
         (fun t : NNReal =>
           T.toPhysicalSemigroup.operator t (psi : P.PhysicalHilbert))
         (nhds 0)
         (nhds (psi : P.PhysicalHilbert)) := by
-    simpa [T.toPhysicalSemigroup.operator_zero] using
-      T.strongContinuousAt_zero (psi : P.PhysicalHilbert)
+    rw [T.toPhysicalSemigroup.operator_zero] at horbitAtZero
+    exact horbitAtZero
   have horbit :
       Tendsto
         (fun t : NNReal =>
