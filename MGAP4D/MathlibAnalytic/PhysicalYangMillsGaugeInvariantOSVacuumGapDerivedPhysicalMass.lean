@@ -1,26 +1,29 @@
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSClosedMassGapTransfer
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSDerivedRayleighMass
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSDerivedMassTransfer
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumIRMassLower
 import Mathlib.Tactic
 
 /-!
-# Vacuum OS gap slope as a lower bound for the derived physical Yang--Mills mass
+# Vacuum OS gap slope below both infrared decay and derived physical mass
 
-The graph-closed right Hamiltonian already satisfies the vacuum-sector
-quadratic-form coercive estimate supplied by `VacuumSemigroupGapSlope`.
-Independently, the physical Yang--Mills mass is defined variationally as the
-infimum of Rayleigh quotients of nonzero vacuum-orthogonal vectors in the
-actual closed Hamiltonian domain.
+The repository already proves, separately, that a positive vacuum-sector transfer
+slope lies below every nonzero vacuum-orthogonal infrared OS effective mass and
+below the variational physical Yang--Mills mass of the actual graph-closed OS
+Hamiltonian.
 
-This file connects those two existing layers.  Once a genuine excitation-domain
-witness is available, the closed coercive estimate is a uniform Rayleigh lower
-bound, hence
+This file packages those two rigorously distinct consequences behind the same
+transfer slope:
 
-`0 < G.mass <= T.physicalYangMillsMass`.
+`0 < G.mass`,
+`G.mass <= m_IR(psi)`,
+`G.mass <= physicalYangMillsMass`.
 
-Thus positivity carried by the vacuum OS transfer slope propagates to the
-actual variational mass of the graph-closed physical Hamiltonian.  No numerical
-mass value, spectral-attainment assumption, PVM hypothesis, or new Yang--Mills
-axiom is introduced.
+The point is not to identify the infrared exponent with the variational mass.
+No such equality is asserted here.  The theorem only records their common
+positive lower bound, both with an explicit excitation-domain witness and with
+the existing self-adjoint/nontrivial excitation-sector route.
+
+No numerical mass value, spectral-attainment assumption, PVM hypothesis, or
+new Yang--Mills axiom is introduced.
 -/
 
 namespace MGAP4D
@@ -39,75 +42,81 @@ variable {P : D.OSPreHilbertData}
 
 namespace StronglyContinuousPhysicalSemigroup
 
-/-- A vacuum OS gap slope is a uniform lower bound for the variational mass of
-the actual graph-closed physical Hamiltonian. -/
-theorem VacuumSemigroupGapSlope.mass_le_physicalYangMillsMass
+/-- A vacuum transfer slope is a common strictly positive lower bound for both
+the infrared OS exponent of a chosen nonzero excitation and the variational
+mass of the actual closed physical Hamiltonian. -/
+theorem VacuumSemigroupGapSlope.mass_ir_physicalYangMillsMass_lower_bounds
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.VacuumSemigroupGapSlope)
     (hP : P.IsNormalized)
+    (hSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
+    {psi : P.PhysicalHilbert}
+    (hpsi : inner ℝ psi P.vacuum = 0)
+    (hpsi_ne : psi ≠ 0)
     (W : T.PhysicalYangMillsExcitationDomainWitness) :
-    G.mass ≤ T.physicalYangMillsMass := by
-  apply T.uniformRayleighLowerBound_le_physicalYangMillsMass W
-  intro psi _hpsi horthogonal
-  exact
-    VacuumSemigroupGapSlope.closedRightHamiltonian_inner_ge_mass_mul_norm_sq
-      T G hP psi horthogonal
-
-/-- The transfer slope and the actual variational physical mass therefore form
-a strictly positive lower-bound chain. -/
-theorem VacuumSemigroupGapSlope.mass_pos_and_le_physicalYangMillsMass
-    (T : P.StronglyContinuousPhysicalSemigroup)
-    (G : T.VacuumSemigroupGapSlope)
-    (hP : P.IsNormalized)
-    (W : T.PhysicalYangMillsExcitationDomainWitness) :
-    0 < G.mass ∧ G.mass ≤ T.physicalYangMillsMass := by
+    0 < G.mass ∧
+      G.mass ≤ T.physicalCorrelationRealClampInfraredEffectiveMass psi ∧
+      G.mass ≤ T.physicalYangMillsMass := by
   exact ⟨G.mass_pos,
-    VacuumSemigroupGapSlope.mass_le_physicalYangMillsMass T G hP W⟩
+    G.mass_le_infraredEffectiveMass T hSymmetric hpsi hpsi_ne,
+    G.mass_le_physicalYangMillsMass T hP W⟩
 
-/-- In particular, existence of a positive vacuum OS gap slope proves
-positivity of the mass defined from the actual graph-closed Hamiltonian. -/
-theorem VacuumSemigroupGapSlope.physicalYangMillsMass_pos
+/-- Finite-volume transfer data expose the same common lower bound through the
+associated continuum vacuum-gap slope. -/
+theorem FiniteVolumeVacuumGapTransfer.mass_ir_physicalYangMillsMass_lower_bounds
+    (T : P.StronglyContinuousPhysicalSemigroup)
+    (G : T.FiniteVolumeVacuumGapTransfer)
+    (hP : P.IsNormalized)
+    (hSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
+    {psi : P.PhysicalHilbert}
+    (hpsi : inner ℝ psi P.vacuum = 0)
+    (hpsi_ne : psi ≠ 0)
+    (W : T.PhysicalYangMillsExcitationDomainWitness) :
+    0 < G.mass ∧
+      G.mass ≤ T.physicalCorrelationRealClampInfraredEffectiveMass psi ∧
+      G.mass ≤ T.physicalYangMillsMass := by
+  exact ⟨G.mass_pos,
+    G.mass_le_infraredEffectiveMass T hSymmetric hpsi hpsi_ne,
+    G.mass_le_physicalYangMillsMass T hP W⟩
+
+/-- After self-adjoint reconstruction, nontriviality of the excitation Hilbert
+space removes the need to pass an explicit excitation-domain witness when
+recording the common infrared/variational lower bound. -/
+theorem VacuumSemigroupGapSlope.mass_ir_physicalYangMillsMass_lower_bounds_of_nontrivial
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.VacuumSemigroupGapSlope)
     (hP : P.IsNormalized)
-    (W : T.PhysicalYangMillsExcitationDomainWitness) :
-    0 < T.physicalYangMillsMass := by
-  exact lt_of_lt_of_le G.mass_pos
-    (VacuumSemigroupGapSlope.mass_le_physicalYangMillsMass T G hP W)
-
-/-- The finite-volume transfer package gives the same lower bound on the
-variational physical mass through its associated vacuum OS gap slope. -/
-theorem FiniteVolumeVacuumGapTransfer.mass_le_physicalYangMillsMass
-    (T : P.StronglyContinuousPhysicalSemigroup)
-    (G : T.FiniteVolumeVacuumGapTransfer)
-    (hP : P.IsNormalized)
-    (W : T.PhysicalYangMillsExcitationDomainWitness) :
-    G.mass ≤ T.physicalYangMillsMass := by
-  exact
-    VacuumSemigroupGapSlope.mass_le_physicalYangMillsMass
-      T G.toVacuumSemigroupGapSlope hP W
-
-/-- Finite-volume transfer data therefore expose a strictly positive lower
-bound for the actual variational physical mass. -/
-theorem FiniteVolumeVacuumGapTransfer.mass_pos_and_le_physicalYangMillsMass
-    (T : P.StronglyContinuousPhysicalSemigroup)
-    (G : T.FiniteVolumeVacuumGapTransfer)
-    (hP : P.IsNormalized)
-    (W : T.PhysicalYangMillsExcitationDomainWitness) :
-    0 < G.mass ∧ G.mass ≤ T.physicalYangMillsMass := by
+    (hSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
+    {psi : P.PhysicalHilbert}
+    (hpsi : inner ℝ psi P.vacuum = 0)
+    (hpsi_ne : psi ≠ 0)
+    [Nontrivial P.VacuumOrthogonalHilbert] :
+    0 < G.mass ∧
+      G.mass ≤ T.physicalCorrelationRealClampInfraredEffectiveMass psi ∧
+      G.mass ≤ T.physicalYangMillsMass := by
   exact ⟨G.mass_pos,
-    FiniteVolumeVacuumGapTransfer.mass_le_physicalYangMillsMass T G hP W⟩
+    G.mass_le_infraredEffectiveMass T hSymmetric hpsi hpsi_ne,
+    G.mass_le_physicalYangMillsMass_of_nontrivial T hP hSelf⟩
 
-/-- Positivity of the actual variational physical mass follows immediately
-from finite-volume vacuum-gap transfer data. -/
-theorem FiniteVolumeVacuumGapTransfer.physicalYangMillsMass_pos
+/-- Finite-volume wrapper for the self-adjoint/nontrivial excitation-sector
+version of the common lower-bound chain. -/
+theorem FiniteVolumeVacuumGapTransfer.mass_ir_physicalYangMillsMass_lower_bounds_of_nontrivial
     (T : P.StronglyContinuousPhysicalSemigroup)
     (G : T.FiniteVolumeVacuumGapTransfer)
     (hP : P.IsNormalized)
-    (W : T.PhysicalYangMillsExcitationDomainWitness) :
-    0 < T.physicalYangMillsMass := by
-  exact lt_of_lt_of_le G.mass_pos
-    (FiniteVolumeVacuumGapTransfer.mass_le_physicalYangMillsMass T G hP W)
+    (hSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
+    (hSelf : IsSelfAdjoint T.closedRightHamiltonian)
+    {psi : P.PhysicalHilbert}
+    (hpsi : inner ℝ psi P.vacuum = 0)
+    (hpsi_ne : psi ≠ 0)
+    [Nontrivial P.VacuumOrthogonalHilbert] :
+    0 < G.mass ∧
+      G.mass ≤ T.physicalCorrelationRealClampInfraredEffectiveMass psi ∧
+      G.mass ≤ T.physicalYangMillsMass := by
+  exact ⟨G.mass_pos,
+    G.mass_le_infraredEffectiveMass T hSymmetric hpsi hpsi_ne,
+    G.mass_le_physicalYangMillsMass_of_nontrivial T hP hSelf⟩
 
 end StronglyContinuousPhysicalSemigroup
 
