@@ -125,8 +125,16 @@ theorem periodicHypercubicEvenBoundaryPositiveObservable_original_iteratedIntegr
     filter_upwards [] with x
     exact periodicHypercubicEvenBoundaryObservable_corrected_innerIntegral_eq_original
       H N hN beta hbeta fb b x
-  rw [← htransport]
-  simpa [fb, periodicHypercubicEvenBoundaryPositiveObservableSlice] using hcorrected
+  have hslice :
+      0 ≤ ∫ x, ∫ y,
+        (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+          H N hN beta hbeta (b, (x, y))).toReal *
+          (fb x * fb (periodicHypercubicEvenOpenHalfOrientationCorrection H y))
+        ∂(periodicHypercubicEvenOpenHalfHaarMeasure H N)
+        ∂(periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
+    rw [← htransport]
+    exact hcorrected
+  simpa [fb, periodicHypercubicEvenBoundaryPositiveObservableSlice] using hslice
 
 /-- Boundary-dependent finite Wilson Gram positivity.
 
