@@ -61,8 +61,8 @@ theorem physicalCorrelationRealClampRegularizedLog_antitone
   have hcorr := T.physicalCorrelationRealClamp_antitone hSymmetric psi hst
   have hsum :
       T.physicalCorrelationRealClamp psi t + ε ≤
-        T.physicalCorrelationRealClamp psi s + ε :=
-    add_le_add_right hcorr ε
+        T.physicalCorrelationRealClamp psi s + ε := by
+    linarith
   exact
     Real.log_le_log
       (add_pos_of_nonneg_of_pos
