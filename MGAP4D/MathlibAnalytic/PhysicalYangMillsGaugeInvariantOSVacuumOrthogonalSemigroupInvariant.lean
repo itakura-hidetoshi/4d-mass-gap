@@ -19,44 +19,53 @@ private theorem adjoint_fixes_unit_of_opNorm_le_one
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (A : E →L[ℝ] E) (Omega : E)
     (hA : ‖A‖ ≤ 1) (hOmega : ‖Omega‖ = 1) (hfix : A Omega = Omega) :
-    A† Omega = Omega := by
-  have hnorm : ‖A† Omega‖ ≤ 1 := by
+    (ContinuousLinearMap.adjoint A) Omega = Omega := by
+  have hnorm : ‖(ContinuousLinearMap.adjoint A) Omega‖ ≤ 1 := by
     calc
-      ‖A† Omega‖ ≤ ‖A†‖ * ‖Omega‖ :=
+      ‖(ContinuousLinearMap.adjoint A) Omega‖ ≤
+          ‖ContinuousLinearMap.adjoint A‖ * ‖Omega‖ :=
         ContinuousLinearMap.le_opNorm _ _
       _ = ‖A‖ * 1 := by
         rw [LinearIsometryEquiv.norm_map, hOmega]
       _ ≤ 1 := by simpa using hA
-  have hadjOmega : inner ℝ (A† Omega) Omega = 1 := by
+  have hadjOmega :
+      inner ℝ ((ContinuousLinearMap.adjoint A) Omega) Omega = 1 := by
     calc
-      inner ℝ (A† Omega) Omega = inner ℝ Omega (A Omega) :=
+      inner ℝ ((ContinuousLinearMap.adjoint A) Omega) Omega =
+          inner ℝ Omega (A Omega) :=
         A.adjoint_inner_left Omega Omega
       _ = inner ℝ Omega Omega := by rw [hfix]
       _ = 1 := by
         rw [real_inner_self_eq_norm_sq, hOmega]
         norm_num
-  have hOmegaAdj : inner ℝ Omega (A† Omega) = 1 := by
+  have hOmegaAdj :
+      inner ℝ Omega ((ContinuousLinearMap.adjoint A) Omega) = 1 := by
     rw [real_inner_comm]
     exact hadjOmega
   have hOmegaSelf : inner ℝ Omega Omega = 1 := by
     rw [real_inner_self_eq_norm_sq, hOmega]
     norm_num
-  have hAdjSelf : inner ℝ (A† Omega) (A† Omega) ≤ 1 := by
+  have hAdjSelf :
+      inner ℝ ((ContinuousLinearMap.adjoint A) Omega)
+          ((ContinuousLinearMap.adjoint A) Omega) ≤ 1 := by
     rw [real_inner_self_eq_norm_sq]
-    nlinarith [norm_nonneg (A† Omega)]
+    nlinarith [norm_nonneg ((ContinuousLinearMap.adjoint A) Omega)]
   have hdiff_le :
-      inner ℝ (A† Omega - Omega) (A† Omega - Omega) ≤ 0 := by
+      inner ℝ ((ContinuousLinearMap.adjoint A) Omega - Omega)
+          ((ContinuousLinearMap.adjoint A) Omega - Omega) ≤ 0 := by
     rw [inner_sub_left, inner_sub_right, inner_sub_right]
     nlinarith
   have hdiff_nonneg :
-      0 ≤ inner ℝ (A† Omega - Omega) (A† Omega - Omega) := by
+      0 ≤ inner ℝ ((ContinuousLinearMap.adjoint A) Omega - Omega)
+          ((ContinuousLinearMap.adjoint A) Omega - Omega) := by
     rw [real_inner_self_eq_norm_sq]
     positivity
   have hdiff_zero :
-      inner ℝ (A† Omega - Omega) (A† Omega - Omega) = 0 :=
+      inner ℝ ((ContinuousLinearMap.adjoint A) Omega - Omega)
+          ((ContinuousLinearMap.adjoint A) Omega - Omega) = 0 :=
     le_antisymm hdiff_le hdiff_nonneg
-  have hsub : A† Omega - Omega = 0 :=
-    (inner_self_eq_zero.mp hdiff_zero)
+  have hsub : (ContinuousLinearMap.adjoint A) Omega - Omega = 0 :=
+    inner_self_eq_zero.mp hdiff_zero
   exact sub_eq_zero.mp hsub
 
 namespace PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
@@ -79,13 +88,14 @@ theorem operator_mem_vacuumOrthogonal_of_normalized
     {psi : P.PhysicalHilbert} (hpsi : psi ∈ P.vacuumOrthogonal) :
     T.operator t psi ∈ P.vacuumOrthogonal := by
   rw [P.mem_vacuumOrthogonal_iff] at hpsi ⊢
-  have hadjFix : (T.operator t)† P.vacuum = P.vacuum :=
+  have hadjFix :
+      (ContinuousLinearMap.adjoint (T.operator t)) P.vacuum = P.vacuum :=
     adjoint_fixes_unit_of_opNorm_le_one
       (T.operator t) P.vacuum (T.opNorm_le t) (P.norm_vacuum hP)
       (T.fixes_vacuum t)
   calc
     inner ℝ P.vacuum (T.operator t psi) =
-        inner ℝ ((T.operator t)† P.vacuum) psi := by
+        inner ℝ ((ContinuousLinearMap.adjoint (T.operator t)) P.vacuum) psi := by
       symm
       exact (T.operator t).adjoint_inner_left psi P.vacuum
     _ = inner ℝ P.vacuum psi := by rw [hadjFix]
