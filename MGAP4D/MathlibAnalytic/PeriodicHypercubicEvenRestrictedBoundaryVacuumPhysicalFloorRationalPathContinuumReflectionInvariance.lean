@@ -98,6 +98,13 @@ theorem
           fun i : ι => (show ℚ → ℝ from x) (time i))
         (L.continuumMeasure : Measure _) := by
   classical
+  let E :=
+    periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathEmbedding
+      H N hN beta hbeta
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing_pos
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing_tendsto_zero
+      physicalVolume physicalVolume_tendsto_atTop
   let e : ι ≃ Fin (Fintype.card ι) := Fintype.equivFin ι
   let timeFin : Fin (Fintype.card ι) → ℚ := fun j => time (e.symm j)
   let slotFin : (ℚ → ℝ) → (Fin (Fintype.card ι) → ℝ) :=
@@ -116,25 +123,29 @@ theorem
     periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathFactorial_continuum_fin_reflection_jointLaw_eq_self
       H N hN beta hbeta physicalVolume physicalVolume_tendsto_atTop L
       (Fintype.card ι) timeFin
-  let μ : Measure (ℚ → ℝ) := L.continuumMeasure
-  change Measure.map (fun x : ℚ → ℝ => fun i : ι => x (-time i)) μ =
-    Measure.map (fun x : ℚ → ℝ => fun i : ι => x (time i)) μ
-  calc
-    Measure.map (fun x : ℚ → ℝ => fun i : ι => x (-time i)) μ =
-        Measure.map (reindex ∘ slotRefFin) μ := by
-      congr 1
-      funext x i
-      simp [reindex, slotRefFin, timeFin, e, Function.comp_def]
-    _ = Measure.map reindex (Measure.map slotRefFin μ) :=
-      (Measure.map_map hreindex hslotRefFin).symm
-    _ = Measure.map reindex (Measure.map slotFin μ) := by
-      rw [hfin]
-    _ = Measure.map (reindex ∘ slotFin) μ :=
-      Measure.map_map hreindex hslotFin
-    _ = Measure.map (fun x : ℚ → ℝ => fun i : ι => x (time i)) μ := by
-      congr 1
-      funext x i
-      simp [reindex, slotFin, timeFin, e, Function.comp_def]
+  let μ : Measure (ℚ → ℝ) :=
+    show Measure (ℚ → ℝ) from
+      (L.continuumMeasure : Measure E.toLatticeEmbedding.PhysicalConfiguration)
+  have hmain :
+      Measure.map (fun x : ℚ → ℝ => fun i : ι => x (-time i)) μ =
+        Measure.map (fun x : ℚ → ℝ => fun i : ι => x (time i)) μ := by
+    calc
+      Measure.map (fun x : ℚ → ℝ => fun i : ι => x (-time i)) μ =
+          Measure.map (reindex ∘ slotRefFin) μ := by
+        congr 1
+        funext x i
+        simp [reindex, slotRefFin, timeFin, e, Function.comp_def]
+      _ = Measure.map reindex (Measure.map slotRefFin μ) :=
+        (Measure.map_map hreindex hslotRefFin).symm
+      _ = Measure.map reindex (Measure.map slotFin μ) := by
+        simpa [E, μ, slotFin, slotRefFin] using congrArg (Measure.map reindex) hfin
+      _ = Measure.map (reindex ∘ slotFin) μ :=
+        Measure.map_map hreindex hslotFin
+      _ = Measure.map (fun x : ℚ → ℝ => fun i : ι => x (time i)) μ := by
+        congr 1
+        funext x i
+        simp [reindex, slotFin, timeFin, e, Function.comp_def]
+  simpa [E, μ] using hmain
 
 /-- Every finite-set restriction of the continuum rational path law is exactly
 reflection invariant.  This is the form consumed directly by Mathlib's
@@ -158,10 +169,24 @@ theorem
     Measure.map
         (fun x : ℚ → ℝ => J.restrict
           (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalPathReflection x))
-        (L.continuumMeasure : Measure _) =
+        (show Measure (ℚ → ℝ) from
+          (L.continuumMeasure : Measure
+            (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathEmbedding
+              H N hN beta hbeta
+              periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing
+              periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing_pos
+              periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing_tendsto_zero
+              physicalVolume physicalVolume_tendsto_atTop).toLatticeEmbedding.PhysicalConfiguration)) =
       Measure.map
         (fun x : ℚ → ℝ => J.restrict x)
-        (L.continuumMeasure : Measure _) := by
+        (show Measure (ℚ → ℝ) from
+          (L.continuumMeasure : Measure
+            (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathEmbedding
+              H N hN beta hbeta
+              periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing
+              periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing_pos
+              periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing_tendsto_zero
+              physicalVolume physicalVolume_tendsto_atTop).toLatticeEmbedding.PhysicalConfiguration)) := by
   simpa [periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalPathReflection,
     Finset.restrict_def] using
     (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathFactorial_continuum_fintype_reflection_jointLaw_eq_self
@@ -191,9 +216,32 @@ theorem
         physicalVolume physicalVolume_tendsto_atTop).toLatticeEmbedding) :
     Measure.map
         periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalPathReflection
-        (L.continuumMeasure : Measure _) =
-      (L.continuumMeasure : Measure _) := by
-  let μ : Measure (ℚ → ℝ) := L.continuumMeasure
+        (show Measure (ℚ → ℝ) from
+          (L.continuumMeasure : Measure
+            (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathEmbedding
+              H N hN beta hbeta
+              periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing
+              periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing_pos
+              periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing_tendsto_zero
+              physicalVolume physicalVolume_tendsto_atTop).toLatticeEmbedding.PhysicalConfiguration)) =
+      (show Measure (ℚ → ℝ) from
+        (L.continuumMeasure : Measure
+          (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathEmbedding
+            H N hN beta hbeta
+            periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing
+            periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing_pos
+            periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing_tendsto_zero
+            physicalVolume physicalVolume_tendsto_atTop).toLatticeEmbedding.PhysicalConfiguration)) := by
+  let E :=
+    periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathEmbedding
+      H N hN beta hbeta
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing_pos
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing_tendsto_zero
+      physicalVolume physicalVolume_tendsto_atTop
+  let μ : Measure (ℚ → ℝ) :=
+    show Measure (ℚ → ℝ) from
+      (L.continuumMeasure : Measure E.toLatticeEmbedding.PhysicalConfiguration)
   let X : ℚ → (ℚ → ℝ) → ℝ := fun q x => x (-q)
   let Y : ℚ → (ℚ → ℝ) → ℝ := fun q x => x q
   have hX : AEMeasurable (fun x : ℚ → ℝ => (X · x)) μ := by
@@ -207,7 +255,7 @@ theorem
     apply
       (ProbabilityTheory.map_eq_iff_forall_finset_map_restrict_eq hX hY).2
     intro J
-    simpa [X, Y,
+    simpa [E, μ, X, Y,
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalRationalPathReflection,
       Finset.restrict_def] using
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathFactorial_continuum_finset_reflection_jointLaw_eq_self
