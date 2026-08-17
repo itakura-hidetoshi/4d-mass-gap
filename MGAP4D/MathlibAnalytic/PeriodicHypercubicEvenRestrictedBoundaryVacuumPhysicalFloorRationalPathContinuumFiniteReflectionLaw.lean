@@ -78,11 +78,25 @@ theorem
         physicalVolume physicalVolume_tendsto_atTop).toLatticeEmbedding)
     (m : ℕ) (time : Fin m → ℚ) :
     Measure.map
-        (fun x : ℚ → ℝ => fun i : Fin m => x (-time i))
-        L.continuumMeasure =
+        (fun x :
+          (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathEmbedding
+            H N hN beta hbeta
+            periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing
+            periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing_pos
+            periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing_tendsto_zero
+            physicalVolume physicalVolume_tendsto_atTop).toLatticeEmbedding.PhysicalConfiguration =>
+          fun i : Fin m => (show ℚ → ℝ from x) (-time i))
+        (L.continuumMeasure : Measure _) =
       Measure.map
-        (fun x : ℚ → ℝ => fun i : Fin m => x (time i))
-        L.continuumMeasure := by
+        (fun x :
+          (periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathEmbedding
+            H N hN beta hbeta
+            periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing
+            periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing_pos
+            periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing_tendsto_zero
+            physicalVolume physicalVolume_tendsto_atTop).toLatticeEmbedding.PhysicalConfiguration =>
+          fun i : Fin m => (show ℚ → ℝ from x) (time i))
+        (L.continuumMeasure : Measure _) := by
   let E :=
     periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFloorRationalPathEmbedding
       H N hN beta hbeta
@@ -161,7 +175,7 @@ theorem
     congrArg
       (fun μ : ProbabilityMeasure (Fin m → ℝ) => (μ : Measure (Fin m → ℝ)))
       hProbabilityEq
-  simpa [slot, slotRef] using hMeasureEq
+  simpa [E, slot, slotRef] using hMeasureEq
 
 end
 
