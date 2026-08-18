@@ -167,13 +167,26 @@ theorem
           (L.continuumMeasure : Measure (ℚ → ℝ)) =
         (L.continuumMeasure : Measure (ℚ → ℝ)) := by
     simpa using congrArg ProbabilityMeasure.toMeasure hrefPM
+  have hmap :
+      (∫ y, F y
+        ∂Measure.map
+          periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathReflection
+          (L.continuumMeasure : Measure (ℚ → ℝ))) =
+        ∫ x,
+          F (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathReflection x)
+          ∂(L.continuumMeasure : Measure (ℚ → ℝ)) := by
+    exact
+      MeasureTheory.integral_map
+        periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathReflection_measurable.aemeasurable
+        F.continuous.measurable.aestronglyMeasurable
   rw [periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathExpectation_apply]
   rw [periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathExpectation_apply]
-  rw [← href]
-  exact
-    MeasureTheory.integral_map
-      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathReflection_measurable.aemeasurable
-      F.continuous.measurable.aestronglyMeasurable
+  change
+    (∫ x,
+      F (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathReflection x)
+      ∂(L.continuumMeasure : Measure (ℚ → ℝ))) =
+      ∫ x, F x ∂(L.continuumMeasure : Measure (ℚ → ℝ))
+  rw [← hmap, href]
 
 /-- Fixed-slot Osterwalder--Schrader bilinear form on the continuum scalar path
 law. -/
@@ -201,13 +214,13 @@ noncomputable def
             J G))
     (by
       intro F G K
-      simp [add_mul])
+      simpa only [map_add, add_mul])
     (by
       intro c F G
       simp [smul_mul_assoc])
     (by
       intro F G K
-      simp [mul_add])
+      simpa only [map_add, mul_add])
     (by
       intro c F G
       simp [mul_smul_comm])
