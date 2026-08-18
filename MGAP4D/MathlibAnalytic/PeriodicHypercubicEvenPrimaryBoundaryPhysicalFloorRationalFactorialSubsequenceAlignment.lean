@@ -95,7 +95,7 @@ theorem
     exact_mod_cast ht
   rw [hk] at htR
   have hkR : 0 ≤ (k : ℝ) :=
-    nonneg_of_mul_nonneg_right htR ha
+    nonneg_of_mul_nonneg_right (by simpa [mul_comm] using htR) ha
   have hkZ : 0 ≤ k := by
     exact_mod_cast hkR
   have hAlignedInt :
