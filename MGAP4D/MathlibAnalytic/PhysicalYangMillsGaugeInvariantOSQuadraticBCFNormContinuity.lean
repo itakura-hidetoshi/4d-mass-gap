@@ -46,7 +46,8 @@ theorem boundedContinuousPrecompAlgEquiv_isometry
     (h : Homeomorph X X) :
     Isometry (boundedContinuousPrecompAlgEquiv h) := by
   intro F K
-  rw [← map_sub, boundedContinuousPrecompAlgEquiv_norm]
+  rw [edist_dist, edist_dist, dist_eq_norm, dist_eq_norm,
+    ← map_sub, boundedContinuousPrecompAlgEquiv_norm]
 
 /-- The reflected quadratic operation on real bounded-continuous functions. -/
 noncomputable def boundedContinuousReflectedQuadratic
