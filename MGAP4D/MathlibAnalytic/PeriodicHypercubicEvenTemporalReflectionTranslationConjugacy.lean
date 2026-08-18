@@ -1,90 +1,25 @@
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenConfigurationReflection
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicIntegerTemporalTranslation
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenRestrictedBoundaryVacuumPhysicalTemporalReflectionCovariance
 import Mathlib.Tactic
 
 /-!
-# Temporal reflection--translation conjugacy on the actual finite Wilson lattice
+# Pointwise temporal reflection--translation receipts on the finite Wilson lattice
 
-The continuum OS inner product contains correlations across the reflection plane, so positive-half
-marginal stationarity alone is not sufficient for translating OS classes.  The required geometric
-input is already present at finite Wilson scale: site reflection reverses every integer temporal
-displacement.
+The canonical repository already contains the geometric theorems that site, positive-edge, and full
+configuration reflection reverse integer temporal translations.  This file does not duplicate those
+results.  It adds only the pointwise inverse-pullback formula for the existing configuration action
+and a pointwise corollary of the already-proved configuration conjugacy.
 
-This file proves that fact first on vertices, then on orientation-corrected physical positive links,
-and finally on full finite configurations:
+These receipts are convenient for subsequent same-root primary-scalar OS calculations, where
+translated and reflected finite observables are compared edge by edge.
 
-`θ (T_k A) = T_{-k} (θ A)`.
-
-The configuration theorem uses only the existing pullback translation and the concrete physical
-edge reflection.  No measure statement, continuum premise, OS contraction, null-space preservation,
-semigroup, Hamiltonian, spectral statement, or mass-gap transfer is introduced here.
+No new reflection theorem, measure statement, continuum premise, OS contraction, null-space
+preservation, semigroup, Hamiltonian, spectral statement, or mass-gap transfer is introduced here.
 -/
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
 noncomputable section
-
-/-- Site reflection reverses an arbitrary integer temporal displacement. -/
-theorem periodicHypercubicEvenTimeReflection_add_integerTemporalDisplacement
-    (H : ℕ)
-    (v : PeriodicHypercubicEvenVertex H)
-    (k : ℤ) :
-    periodicHypercubicEvenTimeReflection H
-        (v + periodicHypercubicIntegerTemporalDisplacement
-          (PeriodicHypercubicEvenSideLength H) k) =
-      periodicHypercubicEvenTimeReflection H v +
-        periodicHypercubicIntegerTemporalDisplacement
-          (PeriodicHypercubicEvenSideLength H) (-k) := by
-  funext mu
-  by_cases hmu : mu = (0 : Fin 4)
-  · subst mu
-    simp [periodicHypercubicEvenTimeReflection,
-      periodicHypercubicIntegerTemporalDisplacement]
-  · simp [periodicHypercubicEvenTimeReflection,
-      periodicHypercubicIntegerTemporalDisplacement, hmu]
-
-/-- Orientation-corrected positive-link reflection conjugates an integer temporal edge translation
-to the opposite translation. -/
-theorem periodicHypercubicEvenEdgeReflection_integerTemporalTranslation
-    (H : ℕ)
-    (k : ℤ)
-    (e : PeriodicHypercubicEvenEdge H) :
-    periodicHypercubicEvenEdgeReflection H
-        (periodicHypercubicEdgeTranslationEquiv
-          (PeriodicHypercubicEvenSideLength H)
-          (periodicHypercubicIntegerTemporalDisplacement
-            (PeriodicHypercubicEvenSideLength H) k) e) =
-      periodicHypercubicEdgeTranslationEquiv
-        (PeriodicHypercubicEvenSideLength H)
-        (periodicHypercubicIntegerTemporalDisplacement
-          (PeriodicHypercubicEvenSideLength H) (-k))
-        (periodicHypercubicEvenEdgeReflection H e) := by
-  rcases e with ⟨v, mu⟩
-  by_cases hmu : mu = (0 : Fin 4)
-  · subst mu
-    apply Prod.ext
-    · simp only [periodicHypercubicEdgeTranslationEquiv_apply,
-        periodicHypercubicEvenEdgeReflection_time, Prod.fst, Prod.snd]
-      change
-        periodicHypercubicUnshift (PeriodicHypercubicEvenSideLength H)
-            (periodicHypercubicEvenTimeReflection H
-              (v + periodicHypercubicIntegerTemporalDisplacement
-                (PeriodicHypercubicEvenSideLength H) k)) 0 =
-          periodicHypercubicUnshift (PeriodicHypercubicEvenSideLength H)
-              (periodicHypercubicEvenTimeReflection H v) 0 +
-            periodicHypercubicIntegerTemporalDisplacement
-              (PeriodicHypercubicEvenSideLength H) (-k)
-      rw [periodicHypercubicEvenTimeReflection_add_integerTemporalDisplacement]
-      unfold periodicHypercubicUnshift
-      abel
-    · rfl
-  · apply Prod.ext
-    · simp only [periodicHypercubicEdgeTranslationEquiv_apply, Prod.fst, Prod.snd]
-      rw [periodicHypercubicEvenEdgeReflection_spatial H _ hmu]
-      rw [periodicHypercubicEvenEdgeReflection_spatial H _ hmu]
-      exact periodicHypercubicEvenTimeReflection_add_integerTemporalDisplacement H v k
-    · rfl
 
 /-- Pointwise form of the integer temporal configuration pullback: evaluating `T_k A` at an
 untranslated edge is the same as evaluating `A` at that edge translated by `-k`. -/
@@ -107,25 +42,22 @@ theorem periodicHypercubicIntegerTemporalConfigurationTranslation_apply
   rw [← periodicHypercubicIntegerTemporalEdgeTranslation_add_apply] at h
   simpa using h
 
-/-- Concrete finite configuration reflection conjugates every integer temporal translation to its
-inverse translation. -/
-theorem periodicHypercubicEvenConfigurationReflection_integerTemporalTranslation
+/-- Pointwise corollary of the existing finite configuration reflection--translation conjugacy. -/
+theorem periodicHypercubicEvenConfigurationReflection_integerTemporalTranslation_apply
     {Gauge : Type} [Group Gauge] [MeasurableSpace Gauge]
     (H : ℕ)
     (k : ℤ)
-    (A : PeriodicHypercubicEvenEdge H → Gauge) :
+    (A : PeriodicHypercubicEvenEdge H → Gauge)
+    (e : PeriodicHypercubicEvenEdge H) :
     periodicHypercubicEvenConfigurationReflection H
         (periodicHypercubicIntegerTemporalConfigurationTranslation
-          (PeriodicHypercubicEvenSideLength H) k A) =
+          (PeriodicHypercubicEvenSideLength H) k A) e =
       periodicHypercubicIntegerTemporalConfigurationTranslation
         (PeriodicHypercubicEvenSideLength H) (-k)
-        (periodicHypercubicEvenConfigurationReflection H A) := by
-  funext e
-  by_cases htime : e.2 = (0 : Fin 4)
-  · simp [periodicHypercubicEvenConfigurationReflection, htime,
-      periodicHypercubicEvenEdgeReflection_integerTemporalTranslation]
-  · simp [periodicHypercubicEvenConfigurationReflection, htime,
-      periodicHypercubicEvenEdgeReflection_integerTemporalTranslation]
+        (periodicHypercubicEvenConfigurationReflection H A) e :=
+  congrFun
+    (periodicHypercubicEvenConfigurationReflection_integerTemporalTranslation
+      H k A) e
 
 end
 
