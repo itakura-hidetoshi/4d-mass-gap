@@ -118,7 +118,7 @@ theorem periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathReadout_add
         H
         (Int.toNat (physicalTemporalFloorStep latticeSpacing (q : ℝ) n))
         (physicalTemporalFloorRationalCommonNatShift latticeSpacing t n) A
-    convert hcov using 1 <;> omega
+    simpa only [Nat.add_comm] using hcov
   · right
     unfold periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathReadout
     unfold periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalOneStepReadout
@@ -128,7 +128,7 @@ theorem periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathReadout_add
         H
         (Int.toNat (physicalTemporalFloorStep latticeSpacing (q : ℝ) n) + 1)
         (physicalTemporalFloorRationalCommonNatShift latticeSpacing t n) A
-    convert hcov using 1 <;> omega
+    simpa only [Nat.add_comm, Nat.add_left_comm, Nat.add_assoc] using hcov
 
 /-- Finite-slot form of the same carry resolution.  Every coordinate of the shifted joint readout
 is, after one common inverse source translation, either its unshifted coordinate or exactly one
