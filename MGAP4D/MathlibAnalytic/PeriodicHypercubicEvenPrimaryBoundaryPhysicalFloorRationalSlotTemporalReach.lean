@@ -82,7 +82,7 @@ theorem
           (H n) latticeSpacing n Cyl.slots)
       atTop := by
   let T : ℝ :=
-    ∑ q in Cyl.slots, |((q : ℚ) : ℝ)|
+    Finset.sum Cyl.slots (fun q => |((q : ℚ) : ℝ)|)
   have hreach_event :
       Filter.Eventually
         (fun n : ℕ =>
