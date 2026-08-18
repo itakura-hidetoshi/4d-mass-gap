@@ -83,8 +83,8 @@ theorem first_le_base_of_sq_le_base_mul_next_of_uniformBound
                   (base * r ^ (2 ^ n)) ^ 2 := by ring
               _ ≤ base * a (n + 1) := hchain
           have hcancel :
-              base * (r ^ (2 ^ n)) ^ 2 ≤ a (n + 1) :=
-            (mul_le_mul_left hbase_pos).mp hscaled
+              base * (r ^ (2 ^ n)) ^ 2 ≤ a (n + 1) := by
+            nlinarith [hscaled]
           calc
             base * r ^ (2 ^ (n + 1)) =
                 base * (r ^ (2 ^ n)) ^ 2 := by
@@ -102,9 +102,10 @@ theorem first_le_base_of_sq_le_base_mul_next_of_uniformBound
     have hlarge :
         ∀ᶠ n : ℕ in atTop, M + 1 ≤ base * r ^ (2 ^ n) :=
       (tendsto_atTop.1 hscaled_atTop) (M + 1)
-    filter_upwards [hlarge] with n hn
-    have hlo := hlower n
-    have hup := hbound n
+    rcases eventually_atTop.1 hlarge with ⟨n0, hn0⟩
+    have hn := hn0 n0 (le_refl n0)
+    have hlo := hlower n0
+    have hup := hbound n0
     nlinarith
 
 namespace PrimaryScalarFixedSlotOSPreHilbertData
@@ -130,6 +131,13 @@ theorem fixedSlotCarrierTimeTranslate_norm_le
   have hshift_nonneg : ∀ n : ℕ, 0 ≤ ((2 : ℚ) ^ n) * t := by
     intro n
     exact mul_nonneg (pow_nonneg (by norm_num) _) ht
+  have hnorm_time_congr :
+      ∀ {s u : ℚ} (hs : 0 ≤ s) (hu : 0 ≤ u), s = u →
+        ‖P.fixedSlotCarrierTimeTranslate s hs F‖ =
+          ‖P.fixedSlotCarrierTimeTranslate u hu F‖ := by
+    intro s u hs hu hsu
+    subst u
+    rfl
   let a : ℕ → ℝ := fun n =>
     ‖P.fixedSlotCarrierTimeTranslate
       (((2 : ℚ) ^ n) * t) (hshift_nonneg n) F‖
@@ -146,7 +154,12 @@ theorem fixedSlotCarrierTimeTranslate_norm_le
           ((2 : ℚ) ^ (n + 1)) * t := by
       rw [pow_succ]
       ring
-    simpa [a, htime] using hmid
+    have hnorm_double :=
+      hnorm_time_congr
+        (add_nonneg (hshift_nonneg n) (hshift_nonneg n))
+        (hshift_nonneg (n + 1)) htime
+    rw [hnorm_double] at hmid
+    simpa [a] using hmid
   have hbound : ∀ n : ℕ, a n ≤ ‖F.observable‖ := by
     intro n
     exact
@@ -155,7 +168,13 @@ theorem fixedSlotCarrierTimeTranslate_norm_le
   have hfirst : a 0 ≤ ‖F‖ :=
     first_le_base_of_sq_le_base_mul_next_of_uniformBound
       ‖F‖ ‖F.observable‖ a (norm_nonneg F) ha hrec hbound
-  simpa [a] using hfirst
+  change
+    ‖P.fixedSlotCarrierTimeTranslate
+      (((2 : ℚ) ^ 0) * t) (hshift_nonneg 0) F‖ ≤ ‖F‖ at hfirst
+  have hzero : ((2 : ℚ) ^ 0) * t = t := by norm_num
+  have hnorm_zero := hnorm_time_congr (hshift_nonneg 0) ht hzero
+  rw [hnorm_zero] at hfirst
+  exact hfirst
 
 end PrimaryScalarFixedSlotOSPreHilbertData
 
