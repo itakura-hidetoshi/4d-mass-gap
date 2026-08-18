@@ -170,13 +170,18 @@ theorem periodicHypercubicEvenBoundaryPositivePrimarySpatialCylinderAtTime_measu
         H N k g) := by
   let Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ
   let P := periodicHypercubicEvenEdgeOrbitPartition H
+  let embed :
+      P.BoundaryConfiguration Gauge × P.OpenHalfConfiguration Gauge →
+        P.BoundaryConfiguration Gauge ×
+          (P.OpenHalfConfiguration Gauge × P.OpenHalfConfiguration Gauge) :=
+    fun z => (z.1, (z.2, fun _ => 1))
+  have hembed : Continuous embed := by
+    exact continuous_fst.prodMk (continuous_snd.prodMk continuous_const)
   have hassemble : Measurable
       (fun z : P.BoundaryConfiguration Gauge × P.OpenHalfConfiguration Gauge =>
         P.boundaryFiberedAssemble z.1 z.2 (fun _ => 1)) := by
-    exact
-      ((P.continuous_boundaryFiberedAssemble Gauge).comp
-        (continuous_fst.prodMk
-          (continuous_snd.prodMk continuous_const))).measurable
+    have h := (P.continuous_boundaryFiberedAssemble Gauge).comp hembed
+    simpa [embed, Function.comp_def] using h.measurable
   have hcylinder : Measurable
       (periodicHypercubicEvenPrimarySpatialBoundaryCylinderAtTime
         (Gauge := Gauge) H k g) :=
@@ -293,7 +298,7 @@ theorem periodicHypercubicEvenPrimarySpatialBoundaryCylinderAtTime_wilsonGibbs_r
           (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure := by
       apply integral_congr_ae
       filter_upwards [] with A
-      unfold periodicHypercubicEvenBoundaryPositiveFullReflectedObservable
+      simp only [periodicHypercubicEvenBoundaryPositiveFullReflectedObservable]
       rw [
         periodicHypercubicEvenBoundaryPositivePrimarySpatialCylinderAtTime_reconstruct
           H N k hk g A,
