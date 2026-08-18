@@ -85,10 +85,7 @@ theorem fixedSlotSeparatedLinearIsometry_osClass
     (F : P.FixedSlotCarrier) :
     P.fixedSlotSeparatedLinearIsometry Q hPQ (P.osClass F) =
       Q.osClass (P.fixedSlotCarrierInclusion Q hPQ F) := by
-  simpa [fixedSlotSeparatedLinearIsometry,
-    fixedSlotCarrierToSeparatedLinearIsometry] using
-    realLinearIsometrySeparationQuotient_mk
-      (P.fixedSlotCarrierToSeparatedLinearIsometry Q hPQ) F
+  rfl
 
 @[simp]
 theorem fixedSlotSeparatedInclusion_osClass
@@ -131,12 +128,12 @@ theorem fixedSlotSeparatedInclusion_trans
     (x : P.Separated) :
     Q.fixedSlotSeparatedInclusion R hQR
         (P.fixedSlotSeparatedInclusion Q hPQ x) =
-      P.fixedSlotSeparatedInclusion R (fun q hq => hQR (hPQ hq)) x := by
+      P.fixedSlotSeparatedInclusion R (fun _ hq => hQR (hPQ hq)) x := by
   obtain ⟨F, rfl⟩ := SeparationQuotient.surjective_mk x
   change
     Q.fixedSlotSeparatedInclusion R hQR
         (P.fixedSlotSeparatedInclusion Q hPQ (P.osClass F)) =
-      P.fixedSlotSeparatedInclusion R (fun q hq => hQR (hPQ hq))
+      P.fixedSlotSeparatedInclusion R (fun _ hq => hQR (hPQ hq))
         (P.osClass F)
   rw [P.fixedSlotSeparatedInclusion_osClass]
   rw [Q.fixedSlotSeparatedInclusion_osClass]
