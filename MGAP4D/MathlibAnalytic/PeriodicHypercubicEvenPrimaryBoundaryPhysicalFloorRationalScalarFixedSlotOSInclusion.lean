@@ -28,8 +28,8 @@ noncomputable def
     (J K : Finset ℚ)
     (hJK : J ⊆ K) :
     C((∀ q : K, ℝ), ∀ q : J, ℝ) :=
-  ⟨(fun x q => x ⟨q.1, hJK q.2⟩),
-    continuous_pi (fun q => continuous_apply ⟨q.1, hJK q.2⟩)⟩
+  ⟨(fun x q => x (⟨q.1, hJK q.2⟩ : K)),
+    continuous_pi (fun q => continuous_apply (⟨q.1, hJK q.2⟩ : K))⟩
 
 /-- Covariant inclusion of cylinder observables along `J ⊆ K`: the larger-slot
 observable simply ignores coordinates outside `J`. -/
@@ -59,7 +59,7 @@ theorem
     (x : ∀ q : K, ℝ) :
     periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotObservableInclusion
         J K hJK F x =
-      F (fun q : J => x ⟨q.1, hJK q.2⟩) :=
+      F (fun q : J => x (⟨q.1, hJK q.2⟩ : K)) :=
   rfl
 
 /-- Enlarging the finite slot carrier does not alter the induced observable on
