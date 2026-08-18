@@ -8,6 +8,30 @@ open MeasureTheory
 
 noncomputable section
 
+local instance physicalYangMillsEvenPeriodicBoundaryPositiveWilsonOSWeakLimitFromLocalitySideLengthNeZero
+    (H : ℕ) : NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength]⟩
+
+local instance physicalYangMillsEvenPeriodicBoundaryPositiveWilsonOSWeakLimitFromLocalitySpecialUnitaryIsTopologicalGroup
+    (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance physicalYangMillsEvenPeriodicBoundaryPositiveWilsonOSWeakLimitFromLocalitySpecialUnitaryCompactSpace
+    (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance physicalYangMillsEvenPeriodicBoundaryPositiveWilsonOSWeakLimitFromLocalitySpecialUnitarySecondCountableTopology
+    (N : ℕ) : SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance physicalYangMillsEvenPeriodicBoundaryPositiveWilsonOSWeakLimitFromLocalitySpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance physicalYangMillsEvenPeriodicBoundaryPositiveWilsonOSWeakLimitFromLocalitySpecialUnitaryBorelSpace
+    (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
 /-- Construct the boundary-positive actual-Wilson weak-limit bridge directly
 from locality of a full finite observable.
 
