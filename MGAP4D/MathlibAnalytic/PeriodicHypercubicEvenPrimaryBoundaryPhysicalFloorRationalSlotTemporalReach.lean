@@ -21,7 +21,7 @@ primary temporal reach is a transparent scaling hypothesis.
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open Filter
+open Filter MeasureTheory ProbabilityTheory
 
 noncomputable section
 
@@ -76,13 +76,13 @@ theorem
         (periodicHypercubicEvenPrimarySpatialPhysicalTemporalReach H latticeSpacing)
         atTop atTop)
     (Cyl : PeriodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPositiveCylinder) :
-    ∀ᶠ n : ℕ in atTop,
+    ∀ᶠ n in atTop,
       PeriodicHypercubicEvenPrimarySpatialPositiveRationalSlotsAdmissible
         (H n) latticeSpacing n Cyl.slots := by
   let T : ℝ :=
     ∑ q in Cyl.slots, |((q : ℚ) : ℝ)|
   have hreach_event :
-      ∀ᶠ n : ℕ in atTop,
+      ∀ᶠ n in atTop,
         T ≤ periodicHypercubicEvenPrimarySpatialPhysicalTemporalReach H latticeSpacing n :=
     (tendsto_atTop.1 hreach T)
   filter_upwards [hreach_event] with n hn
