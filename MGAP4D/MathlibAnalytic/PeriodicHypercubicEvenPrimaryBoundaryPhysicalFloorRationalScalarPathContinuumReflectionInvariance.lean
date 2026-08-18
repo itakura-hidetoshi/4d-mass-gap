@@ -29,6 +29,26 @@ open Filter MeasureTheory Function
 
 noncomputable section
 
+local instance primaryScalarReflectionTopologicalGroup (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance primaryScalarReflectionCompactSpace (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance primaryScalarReflectionSecondCountable (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance primaryScalarReflectionMeasurableSpace (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance primaryScalarReflectionBorelSpace (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
 /-- Intrinsic reflection on the fixed scalar rational path carrier is
 continuous in the product topology. -/
 theorem periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathReflection_continuous :
