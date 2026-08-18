@@ -126,8 +126,8 @@ theorem periodicHypercubicEvenBoundaryPositiveObservableOfFull_reconstruct
         ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryRestriction A,
           (periodicHypercubicEvenEdgeOrbitPartition H).positiveRestriction A) =
       f A :=
-  (periodicHypercubicEvenEdgeOrbitPartition H).
-    boundaryPositiveObservableOfFull_reconstruct Gauge (fun _ => 1) f hind A
+  FiniteInvolutiveEdgeOrbitPartition.boundaryPositiveObservableOfFull_reconstruct
+    (periodicHypercubicEvenEdgeOrbitPartition H) Gauge (fun _ => 1) f hind A
 
 /-- The boundary-positive reflected observable of the canonical descent is
 exactly the ordinary full reflected product `f(A) f(theta A)`. -/
@@ -142,7 +142,7 @@ theorem periodicHypercubicEvenBoundaryPositiveFullReflectedObservable_descent_eq
     periodicHypercubicEvenBoundaryPositiveFullReflectedObservable H
         (periodicHypercubicEvenBoundaryPositiveObservableOfFull H f) A =
       f A * f (periodicHypercubicEvenConfigurationReflection H A) := by
-  unfold periodicHypercubicEvenBoundaryPositiveFullReflectedObservable
+  simp only [periodicHypercubicEvenBoundaryPositiveFullReflectedObservable]
   rw [periodicHypercubicEvenBoundaryPositiveObservableOfFull_reconstruct
       H f hind A,
     periodicHypercubicEvenBoundaryPositiveObservableOfFull_reconstruct
