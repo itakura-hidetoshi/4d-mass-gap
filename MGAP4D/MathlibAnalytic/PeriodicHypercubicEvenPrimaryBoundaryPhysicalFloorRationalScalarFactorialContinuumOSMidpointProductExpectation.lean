@@ -66,7 +66,16 @@ theorem
   have h :=
     L.factorial_continuum_osShiftedPair_expectation_eq_midpoint
       H N hN beta hbeta J hJ t ht Phi
-  simpa [Phi, fstMap, sndMap] using h
+  change
+    (∫ x,
+        F (fun q : J => x (-(q.1 + t))) *
+          G (fun q : J => x (q.1 + t))
+      ∂(L.continuumMeasure : Measure (ℚ → ℝ))) =
+      ∫ x,
+        F (fun q : J => x (-q.1)) *
+          G (fun q : J => x ((q.1 + t) + t))
+        ∂(L.continuumMeasure : Measure (ℚ → ℝ)) at h
+  exact h
 
 end
 
