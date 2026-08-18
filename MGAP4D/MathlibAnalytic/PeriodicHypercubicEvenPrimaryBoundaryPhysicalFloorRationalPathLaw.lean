@@ -242,7 +242,6 @@ theorem periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathMeasure_fin
         (periodicHypercubicSpecialUnitaryWilsonSystem
           (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure := by
       congr 1
-      funext A
 
 /-- A scalar cylinder on the full primary rational path, supported on a finite
 slot set `J`. -/
