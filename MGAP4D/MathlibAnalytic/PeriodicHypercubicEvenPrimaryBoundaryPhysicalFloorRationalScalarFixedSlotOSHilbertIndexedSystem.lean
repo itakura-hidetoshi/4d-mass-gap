@@ -184,10 +184,10 @@ noncomputable instance fixedSlotIndexedHilbertDirectedSystem
       (fun J : PrimaryScalarFiniteNonnegativeSlotIndex =>
         P.fixedSlotIndexedHilbert J)
       (fun _ _ h => P.fixedSlotIndexedHilbertMap _ _ h) where
-  map_self x := by
-    exact P.fixedSlotIndexedHilbertMap_refl _ x
-  map_map hij hjk x := by
-    exact P.fixedSlotIndexedHilbertMap_trans _ _ _ hij hjk x
+  map_self := fun {i} x =>
+    P.fixedSlotIndexedHilbertMap_refl i x
+  map_map := fun {k j i} hij hjk x =>
+    P.fixedSlotIndexedHilbertMap_trans i j k hij hjk x
 
 end PrimaryScalarFixedSlotOSPreHilbertData
 
