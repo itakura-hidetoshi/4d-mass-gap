@@ -262,6 +262,7 @@ theorem periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathCylinder_re
   rw [
     periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathFiniteRestriction_reflectionCompleted_eq_readout
       H latticeSpacing n J A hJ]
+  rfl
 
 end
 
