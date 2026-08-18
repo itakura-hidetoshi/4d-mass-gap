@@ -261,11 +261,11 @@ theorem periodicHypercubicEvenBoundaryPositiveWilsonGibbs_reflectedObservable_in
     periodicHypercubicEvenBoundaryPositiveReflectedObservable H f
   let weightedObservable := fun z => (density z).toReal * coordinateObservable z
   let weightedBound := C.base.partitionFunction⁻¹ * (M * M)
-  letI : SFinite boundaryMeasure := by
+  letI : IsFiniteMeasure boundaryMeasure := by
     dsimp [boundaryMeasure, periodicHypercubicEvenBoundaryHaarMeasure,
       FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
     infer_instance
-  letI : SFinite halfMeasure := by
+  letI : IsFiniteMeasure halfMeasure := by
     dsimp [halfMeasure, periodicHypercubicEvenOpenHalfHaarMeasure,
       FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
     infer_instance
