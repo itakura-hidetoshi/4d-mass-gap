@@ -136,6 +136,19 @@ theorem primaryScalarFiniteNonnegativeSlotIndexTimeTranslate_mono
   periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFiniteSlotTimeTranslate_mono
     t hJK
 
+/-- The canonical translated-slot member associated with an original slot. -/
+def periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFiniteSlotTimeTranslateMember
+    (J : Finset ℚ) (t : ℚ) (q : J) :
+    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFiniteSlotTimeTranslate t J :=
+  ⟨q.1 + t, Finset.mem_image.mpr ⟨q.1, q.2, rfl⟩⟩
+
+@[simp]
+theorem periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFiniteSlotTimeTranslateMember_val
+    (J : Finset ℚ) (t : ℚ) (q : J) :
+    (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFiniteSlotTimeTranslateMember
+      J t q).1 = q.1 + t :=
+  rfl
+
 /-- Coordinate pullback from translated finite slots to the original finite slots. -/
 noncomputable def
     periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFiniteSlotTimeTranslateCoordinatePullback
@@ -146,10 +159,12 @@ noncomputable def
         ℝ),
       (∀ q : J, ℝ)) :=
   ⟨fun v q =>
-      v ⟨q.1 + t, Finset.mem_image.mpr ⟨q.1, q.2, rfl⟩⟩,
+      v (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFiniteSlotTimeTranslateMember
+        J t q),
     continuous_pi (fun q =>
       continuous_apply
-        ⟨q.1 + t, Finset.mem_image.mpr ⟨q.1, q.2, rfl⟩⟩)⟩
+        (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFiniteSlotTimeTranslateMember
+          J t q))⟩
 
 /-- Canonical transport of a fixed-slot bounded-continuous observable to the translated slot set. -/
 noncomputable def
@@ -181,7 +196,15 @@ theorem periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlot
         (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotObservableTimeTranslate
           J t F) x =
       periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable J F
-        (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathTimeTranslate t x) :=
+        (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathTimeTranslate t x) := by
+  rw [
+    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable_apply,
+    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable_apply]
+  change
+    F (fun q : J =>
+      x ((periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFiniteSlotTimeTranslateMember
+        J t q).1)) =
+      F (fun q : J => x (q.1 + t))
   rfl
 
 end
