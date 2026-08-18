@@ -48,7 +48,7 @@ noncomputable def
     ((fun q : J => x (-(q.1 + t))),
       fun q : J => x (q.1 + t)), ?_⟩
   exact
-    (continuous_pi (fun q : J => continuous_apply (-(q.1 + t)))).prod_mk
+    (continuous_pi (fun q : J => continuous_apply (-(q.1 + t)))).prodMk
       (continuous_pi (fun q : J => continuous_apply (q.1 + t)))
 
 @[simp]
@@ -83,7 +83,7 @@ noncomputable def
     ((fun q : J => x (-q.1)),
       fun q : J => x ((q.1 + t) + t)), ?_⟩
   exact
-    (continuous_pi (fun q : J => continuous_apply (-q.1))).prod_mk
+    (continuous_pi (fun q : J => continuous_apply (-q.1))).prodMk
       (continuous_pi (fun q : J => continuous_apply ((q.1 + t) + t)))
 
 @[simp]
@@ -107,6 +107,26 @@ theorem
     (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarOSMidpointPairContinuousMap
       J t x).2 q = x ((q.1 + t) + t) :=
   rfl
+
+local instance primaryScalarOSMidpointPairTopologicalGroup (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance primaryScalarOSMidpointPairCompactSpace (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance primaryScalarOSMidpointPairSecondCountableTopology (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance primaryScalarOSMidpointPairMeasurableSpace (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance primaryScalarOSMidpointPairBorelSpace (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
 
 /-- Scalarized pointwise source identity behind the finite OS midpoint law.  Only the symmetric
 coordinates `±(q+t)` are translated; no global path covariance is asserted. -/
@@ -148,26 +168,6 @@ theorem
       (periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePrimaryBoundary H N)
       (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathReadout_add_aligned_negConfigurationTranslation
         H latticeSpacing latticeSpacing_pos n q.1 t (hJ q) ht k halign A)
-
-local instance primaryScalarOSMidpointPairTopologicalGroup (N : ℕ) :
-    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
-  specialUnitaryGroupIsTopologicalGroup N
-
-local instance primaryScalarOSMidpointPairCompactSpace (N : ℕ) :
-    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
-  specialUnitaryGroupCompactSpace N
-
-local instance primaryScalarOSMidpointPairSecondCountableTopology (N : ℕ) :
-    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
-  specialUnitaryGroupSecondCountableTopology N
-
-local instance primaryScalarOSMidpointPairMeasurableSpace (N : ℕ) :
-    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
-  specialUnitaryGroupMeasurableSpace N
-
-local instance primaryScalarOSMidpointPairBorelSpace (N : ℕ) :
-    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
-  specialUnitaryGroupBorelSpace N
 
 /-- At an explicitly aligned finite scale, the translated OS symmetric scalar pair law equals the
 midpoint pair law exactly under the actual finite scalar path measure. -/
