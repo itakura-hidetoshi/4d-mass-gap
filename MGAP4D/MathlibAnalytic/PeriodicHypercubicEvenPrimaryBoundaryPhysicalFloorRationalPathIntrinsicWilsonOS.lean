@@ -132,9 +132,17 @@ theorem
           (periodicHypercubicEvenConfigurationReflection H A),
         ← periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathCylinder_reflectionCompleted_eq_rationalCylinder
           H latticeSpacing n J g
-          (periodicHypercubicEvenConfigurationReflection H A) hJ,
-        periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathReadout_configurationReflection
-          H latticeSpacing n A]
+          (periodicHypercubicEvenConfigurationReflection H A) hJ]
+      exact congrArg
+        (fun x =>
+          periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathCylinder
+              H J g
+              (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathReadout
+                H latticeSpacing n A) *
+            periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathCylinder
+              H J g x)
+        (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathReadout_configurationReflection
+          H latticeSpacing n A)
 
 end
 
