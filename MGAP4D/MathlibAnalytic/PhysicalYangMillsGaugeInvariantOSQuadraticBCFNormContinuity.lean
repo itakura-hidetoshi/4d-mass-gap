@@ -34,7 +34,8 @@ theorem boundedContinuousPrecompAlgEquiv_norm
         boundedContinuousPrecompAlgEquiv h.symm
             (boundedContinuousPrecompAlgEquiv h O) = O := by
       ext x
-      simp [boundedContinuousPrecompAlgEquiv_apply]
+      change O (h (h.symm x)) = O x
+      rw [h.apply_symm_apply]
     rw [heq] at hle
     exact hle
 
@@ -104,9 +105,14 @@ theorem PhysicalYangMillsWilsonSU2PrimitiveWeakLimitGeometry.quadraticBoundedCon
       (nhds (physicalPositiveTimeBCF Flim))) :
     Tendsto (fun n => D.quadraticBoundedContinuousFunction (F n)) atTop
       (nhds (D.quadraticBoundedContinuousFunction Flim)) := by
-  have hQ :=
+  have hcont :
+      Tendsto (boundedContinuousReflectedQuadratic G.configurationReflection)
+        (nhds (physicalPositiveTimeBCF Flim))
+        (nhds (boundedContinuousReflectedQuadratic G.configurationReflection
+          (physicalPositiveTimeBCF Flim))) :=
     (boundedContinuousReflectedQuadratic_continuous
-      G.configurationReflection).continuousAt.comp hF
+      G.configurationReflection).tendsto (physicalPositiveTimeBCF Flim)
+  have hQ := hcont.comp hF
   simpa only [G.quadraticBoundedContinuousFunction_eq_reflectedQuadratic] using hQ
 
 /-- The same convergence is exactly the norm-to-zero condition consumed by the
