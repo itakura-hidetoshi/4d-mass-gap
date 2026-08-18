@@ -52,6 +52,13 @@ theorem periodicHypercubicSpatialAxisSwap12_symm_apply
       periodicHypercubicSpatialAxisSwap12 i := by
   fin_cases i <;> native_decide
 
+@[simp]
+theorem periodicHypercubicSpatialAxisSwap12_involutive
+    (i : PeriodicHypercubicAxis) :
+    periodicHypercubicSpatialAxisSwap12
+        (periodicHypercubicSpatialAxisSwap12 i) = i := by
+  fin_cases i <;> native_decide
+
 /-- Coordinate reindexing of periodic vertices induced by the spatial axis swap. -/
 def periodicHypercubicVertexSpatialAxisSwap12Equiv
     (n : ℕ) : PeriodicHypercubicVertex n ≃ PeriodicHypercubicVertex n where
@@ -89,7 +96,8 @@ theorem periodicHypercubicVertexSpatialAxisSwap12Equiv_shift
         (periodicHypercubicVertexSpatialAxisSwap12Equiv n x)
         (periodicHypercubicSpatialAxisSwap12 mu) := by
   funext i
-  simp [periodicHypercubicShift_apply]
+  fin_cases mu <;> fin_cases i <;>
+    simp [periodicHypercubicShift_apply]
 
 /-- Reindex physical positive edges by the same vertex and axis permutation. -/
 def periodicHypercubicEdgeSpatialAxisSwap12Equiv
