@@ -60,59 +60,60 @@ variable {L :
 seminormed structure associated with one continuum law and one slot set from
 colliding with the ambient supremum-norm structure of bounded-continuous
 functions. -/
-structure Carrier
+structure FixedSlotCarrier
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta latticeSpacing L) where
   observable :
     PeriodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotObservable
       P.slots
 
-protected def Carrier.zero
+protected def FixedSlotCarrier.zero
     (P : PrimaryScalarFixedSlotOSPreHilbertData
-      H N hN beta hbeta latticeSpacing L) : P.Carrier where
+      H N hN beta hbeta latticeSpacing L) : P.FixedSlotCarrier where
   observable := 0
 
-protected def Carrier.add
+protected def FixedSlotCarrier.add
     {P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta latticeSpacing L}
-    (F G : P.Carrier) : P.Carrier where
+    (F G : P.FixedSlotCarrier) : P.FixedSlotCarrier where
   observable := F.observable + G.observable
 
-protected def Carrier.neg
+protected def FixedSlotCarrier.neg
     {P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta latticeSpacing L}
-    (F : P.Carrier) : P.Carrier where
+    (F : P.FixedSlotCarrier) : P.FixedSlotCarrier where
   observable := -F.observable
 
-protected def Carrier.sub
+protected def FixedSlotCarrier.sub
     {P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta latticeSpacing L}
-    (F G : P.Carrier) : P.Carrier where
+    (F G : P.FixedSlotCarrier) : P.FixedSlotCarrier where
   observable := F.observable - G.observable
 
-protected def Carrier.nsmul
+protected def FixedSlotCarrier.nsmul
     {P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta latticeSpacing L}
-    (n : ℕ) (F : P.Carrier) : P.Carrier where
+    (n : ℕ) (F : P.FixedSlotCarrier) : P.FixedSlotCarrier where
   observable := n • F.observable
 
-protected def Carrier.zsmul
+protected def FixedSlotCarrier.zsmul
     {P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta latticeSpacing L}
-    (n : ℤ) (F : P.Carrier) : P.Carrier where
+    (n : ℤ) (F : P.FixedSlotCarrier) : P.FixedSlotCarrier where
   observable := n • F.observable
 
-protected def Carrier.smul
+protected def FixedSlotCarrier.smul
     {P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta latticeSpacing L}
-    (r : ℝ) (F : P.Carrier) : P.Carrier where
+    (r : ℝ) (F : P.FixedSlotCarrier) : P.FixedSlotCarrier where
   observable := r • F.observable
 
 /-- The wrapped observable determines the fixed-slot carrier element exactly. -/
-theorem Carrier.observable_injective
+theorem FixedSlotCarrier.observable_injective
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta latticeSpacing L) :
-    Function.Injective (@Carrier.observable H N hN _ beta hbeta latticeSpacing L P) := by
+    Function.Injective
+      (@FixedSlotCarrier.observable H N hN _ beta hbeta latticeSpacing L P) := by
   intro F G h
   cases F
   cases G
@@ -121,15 +122,15 @@ theorem Carrier.observable_injective
 
 instance carrierAddCommGroup
     (P : PrimaryScalarFixedSlotOSPreHilbertData
-      H N hN beta hbeta latticeSpacing L) : AddCommGroup P.Carrier := by
-  letI : Zero P.Carrier := ⟨Carrier.zero P⟩
-  letI : Add P.Carrier := ⟨Carrier.add⟩
-  letI : Neg P.Carrier := ⟨Carrier.neg⟩
-  letI : Sub P.Carrier := ⟨Carrier.sub⟩
-  letI : SMul ℕ P.Carrier := ⟨Carrier.nsmul⟩
-  letI : SMul ℤ P.Carrier := ⟨Carrier.zsmul⟩
-  refine Function.Injective.addCommGroup Carrier.observable
-    (Carrier.observable_injective P) ?_ ?_ ?_ ?_ ?_ ?_
+      H N hN beta hbeta latticeSpacing L) : AddCommGroup P.FixedSlotCarrier := by
+  letI : Zero P.FixedSlotCarrier := ⟨FixedSlotCarrier.zero P⟩
+  letI : Add P.FixedSlotCarrier := ⟨FixedSlotCarrier.add⟩
+  letI : Neg P.FixedSlotCarrier := ⟨FixedSlotCarrier.neg⟩
+  letI : Sub P.FixedSlotCarrier := ⟨FixedSlotCarrier.sub⟩
+  letI : SMul ℕ P.FixedSlotCarrier := ⟨FixedSlotCarrier.nsmul⟩
+  letI : SMul ℤ P.FixedSlotCarrier := ⟨FixedSlotCarrier.zsmul⟩
+  refine Function.Injective.addCommGroup FixedSlotCarrier.observable
+    (FixedSlotCarrier.observable_injective P) ?_ ?_ ?_ ?_ ?_ ?_
   · rfl
   · intro F G
     rfl
@@ -144,60 +145,60 @@ instance carrierAddCommGroup
 
 instance carrierRealSMul
     (P : PrimaryScalarFixedSlotOSPreHilbertData
-      H N hN beta hbeta latticeSpacing L) : SMul ℝ P.Carrier :=
-  ⟨Carrier.smul⟩
+      H N hN beta hbeta latticeSpacing L) : SMul ℝ P.FixedSlotCarrier :=
+  ⟨FixedSlotCarrier.smul⟩
 
 instance carrierModule
     (P : PrimaryScalarFixedSlotOSPreHilbertData
-      H N hN beta hbeta latticeSpacing L) : Module ℝ P.Carrier := by
+      H N hN beta hbeta latticeSpacing L) : Module ℝ P.FixedSlotCarrier := by
   refine Function.Injective.module ℝ
-    ⟨⟨Carrier.observable, ?_⟩, ?_⟩
-    (Carrier.observable_injective P) ?_
+    ⟨⟨FixedSlotCarrier.observable, ?_⟩, ?_⟩
+    (FixedSlotCarrier.observable_injective P) ?_
   · rfl
   · intro F G
     rfl
   · intro r F
     rfl
 
-@[simp] theorem Carrier.observable_zero
+@[simp] theorem FixedSlotCarrier.observable_zero
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta latticeSpacing L) :
-    (0 : P.Carrier).observable = 0 := rfl
+    (0 : P.FixedSlotCarrier).observable = 0 := rfl
 
-@[simp] theorem Carrier.observable_add
+@[simp] theorem FixedSlotCarrier.observable_add
     {P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta latticeSpacing L}
-    (F G : P.Carrier) :
+    (F G : P.FixedSlotCarrier) :
     (F + G).observable = F.observable + G.observable := rfl
 
-@[simp] theorem Carrier.observable_neg
+@[simp] theorem FixedSlotCarrier.observable_neg
     {P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta latticeSpacing L}
-    (F : P.Carrier) :
+    (F : P.FixedSlotCarrier) :
     (-F).observable = -F.observable := rfl
 
-@[simp] theorem Carrier.observable_sub
+@[simp] theorem FixedSlotCarrier.observable_sub
     {P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta latticeSpacing L}
-    (F G : P.Carrier) :
+    (F G : P.FixedSlotCarrier) :
     (F - G).observable = F.observable - G.observable := rfl
 
-@[simp] theorem Carrier.observable_nsmul
+@[simp] theorem FixedSlotCarrier.observable_nsmul
     {P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta latticeSpacing L}
-    (n : ℕ) (F : P.Carrier) :
+    (n : ℕ) (F : P.FixedSlotCarrier) :
     (n • F).observable = n • F.observable := rfl
 
-@[simp] theorem Carrier.observable_zsmul
+@[simp] theorem FixedSlotCarrier.observable_zsmul
     {P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta latticeSpacing L}
-    (n : ℤ) (F : P.Carrier) :
+    (n : ℤ) (F : P.FixedSlotCarrier) :
     (n • F).observable = n • F.observable := rfl
 
-@[simp] theorem Carrier.observable_smul
+@[simp] theorem FixedSlotCarrier.observable_smul
     {P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta latticeSpacing L}
-    (r : ℝ) (F : P.Carrier) :
+    (r : ℝ) (F : P.FixedSlotCarrier) :
     (r • F).observable = r • F.observable := rfl
 
 /-- The positive-semidefinite fixed-slot OS form as a Mathlib pre-inner-product
@@ -205,7 +206,7 @@ core. -/
 @[reducible] noncomputable def core
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta latticeSpacing L) :
-    PreInnerProductSpace.Core ℝ P.Carrier where
+    PreInnerProductSpace.Core ℝ P.FixedSlotCarrier where
   inner F G :=
     L.fixedSlotOSBilinForm H N hN beta hbeta latticeSpacing P.slots
       F.observable G.observable
@@ -235,13 +236,13 @@ core. -/
 /-- The fixed-slot OS core induces its canonical seminormed additive structure. -/
 noncomputable instance carrierSeminormedAddCommGroup
     (P : PrimaryScalarFixedSlotOSPreHilbertData
-      H N hN beta hbeta latticeSpacing L) : SeminormedAddCommGroup P.Carrier :=
+      H N hN beta hbeta latticeSpacing L) : SeminormedAddCommGroup P.FixedSlotCarrier :=
   InnerProductSpace.Core.toSeminormedAddCommGroup (c := P.core)
 
 /-- The same core supplies the compatible real inner-product-space structure. -/
 noncomputable instance carrierInnerProductSpace
     (P : PrimaryScalarFixedSlotOSPreHilbertData
-      H N hN beta hbeta latticeSpacing L) : InnerProductSpace ℝ P.Carrier :=
+      H N hN beta hbeta latticeSpacing L) : InnerProductSpace ℝ P.FixedSlotCarrier :=
   InnerProductSpace.ofCore P.core
 
 /-- The induced inner product is exactly the continuum fixed-slot OS bilinear
@@ -249,7 +250,7 @@ form. -/
 @[simp] theorem inner_eq_fixedSlotOSBilinForm
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta latticeSpacing L)
-    (F G : P.Carrier) :
+    (F G : P.FixedSlotCarrier) :
     inner ℝ F G =
       L.fixedSlotOSBilinForm H N hN beta hbeta latticeSpacing P.slots
         F.observable G.observable := by
@@ -258,7 +259,7 @@ form. -/
 /-- Fixed-slot OS null vectors form a real linear subspace. -/
 def nullSubmodule
     (P : PrimaryScalarFixedSlotOSPreHilbertData
-      H N hN beta hbeta latticeSpacing L) : Submodule ℝ P.Carrier where
+      H N hN beta hbeta latticeSpacing L) : Submodule ℝ P.FixedSlotCarrier where
   carrier := {F | ‖F‖ = 0}
   zero_mem' := norm_zero
   add_mem' := by
@@ -276,7 +277,7 @@ def nullSubmodule
 @[simp] theorem mem_nullSubmodule
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta latticeSpacing L)
-    (F : P.Carrier) :
+    (F : P.FixedSlotCarrier) :
     F ∈ P.nullSubmodule ↔ ‖F‖ = 0 :=
   Iff.rfl
 
@@ -285,7 +286,7 @@ form. -/
 theorem mem_nullSubmodule_iff_osQuadratic_eq_zero
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta latticeSpacing L)
-    (F : P.Carrier) :
+    (F : P.FixedSlotCarrier) :
     F ∈ P.nullSubmodule ↔
       L.fixedSlotOSBilinForm H N hN beta hbeta latticeSpacing P.slots
         F.observable F.observable = 0 := by
@@ -308,7 +309,7 @@ theorem mem_nullSubmodule_iff_osQuadratic_eq_zero
 abbrev Separated
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta latticeSpacing L) : Type :=
-  SeparationQuotient P.Carrier
+  SeparationQuotient P.FixedSlotCarrier
 
 /-- Hilbert completion of one fixed finite positive rational slot sector. -/
 def Hilbert
@@ -338,7 +339,7 @@ noncomputable instance hilbertCompleteSpace
 def osClass
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta latticeSpacing L)
-    (F : P.Carrier) : P.Separated :=
+    (F : P.FixedSlotCarrier) : P.Separated :=
   SeparationQuotient.mk F
 
 /-- Dense vector in the fixed-slot Hilbert completion represented by a cylinder
@@ -346,7 +347,7 @@ observable. -/
 def hilbertState
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta latticeSpacing L)
-    (F : P.Carrier) : P.Hilbert := by
+    (F : P.FixedSlotCarrier) : P.Hilbert := by
   change UniformSpace.Completion P.Separated
   exact (P.osClass F : UniformSpace.Completion P.Separated)
 
