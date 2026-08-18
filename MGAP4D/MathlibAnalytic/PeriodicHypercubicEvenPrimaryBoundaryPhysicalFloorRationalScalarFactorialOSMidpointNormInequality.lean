@@ -150,7 +150,6 @@ theorem fixedSlotCarrierTimeTranslate_norm_sq_le_mul_norm_double
       rw [P.fixedSlotCarrierInclusion_norm PK hleft F]
       change ‖F‖ * ‖P2.fixedSlotCarrierInclusion PK hfuture T2F‖ = _
       rw [P2.fixedSlotCarrierInclusion_norm PK hfuture T2F]
-      rfl
 
 end PrimaryScalarFixedSlotOSPreHilbertData
 
