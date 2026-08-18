@@ -241,7 +241,33 @@ theorem periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompl
     periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathCylinder_wilsonSource_intrinsicReflectionPositive_boundedMeasurable
       H N hN beta hbeta latticeSpacing n J hslots g hg M hM hbound
   unfold periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathMeasure
-  rw [MeasureTheory.integral_map hX.aemeasurable hIntegrand.aestronglyMeasurable]
+  have hmap :
+      (∫ x,
+        periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathCylinder
+            H J g x *
+          periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathCylinder
+            H J g
+            (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathReflection H x)
+        ∂Measure.map
+          (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathReadout
+            (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ)
+            H latticeSpacing n)
+          (periodicHypercubicSpecialUnitaryWilsonSystem
+            (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure) =
+        ∫ A,
+          periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathCylinder
+              H J g
+              (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathReadout
+                H latticeSpacing n A) *
+            periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathCylinder
+              H J g
+              (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathReflection H
+                (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathReadout
+                  H latticeSpacing n A))
+          ∂(periodicHypercubicSpecialUnitaryWilsonSystem
+            (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure := by
+    exact MeasureTheory.integral_map hX.aemeasurable hIntegrand.aestronglyMeasurable
+  rw [hmap]
   exact hsource
 
 end
