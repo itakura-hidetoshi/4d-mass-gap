@@ -31,7 +31,7 @@ noncomputable section
 /-- Translating the configuration forward by `k` and reading the primary spatial slice at time
 `k + m` exactly reproduces the original readout at time `m`. -/
 theorem periodicHypercubicEvenPrimarySpatialBoundaryReadoutAtTime_add_configurationTranslation
-    {Gauge : Type*} [MeasurableSpace Gauge]
+    {Gauge : Type} [MeasurableSpace Gauge]
     (H m k : ℕ)
     (A : PeriodicHypercubicEvenEdge H → Gauge) :
     periodicHypercubicEvenPrimarySpatialBoundaryReadoutAtTime H (k + m)
@@ -67,7 +67,7 @@ theorem periodicHypercubicEvenPrimarySpatialBoundaryReadoutAtTime_add_configurat
 untranslated primary fixed-slice readout. -/
 @[simp]
 theorem periodicHypercubicEvenPrimarySpatialBoundaryReadoutAtTime_configurationTranslation_self
-    {Gauge : Type*} [MeasurableSpace Gauge]
+    {Gauge : Type} [MeasurableSpace Gauge]
     (H k : ℕ)
     (A : PeriodicHypercubicEvenEdge H → Gauge) :
     periodicHypercubicEvenPrimarySpatialBoundaryReadoutAtTime H k
@@ -81,7 +81,7 @@ theorem periodicHypercubicEvenPrimarySpatialBoundaryReadoutAtTime_configurationT
 /-- Equivalently, a future readout of `A` is the present readout of the source translated backward
 by the same number of lattice units. -/
 theorem periodicHypercubicEvenPrimarySpatialBoundaryReadoutAtTime_add_eq_neg_configurationTranslation
-    {Gauge : Type*} [MeasurableSpace Gauge]
+    {Gauge : Type} [MeasurableSpace Gauge]
     (H m k : ℕ)
     (A : PeriodicHypercubicEvenEdge H → Gauge) :
     periodicHypercubicEvenPrimarySpatialBoundaryReadoutAtTime H (k + m) A =
@@ -97,7 +97,7 @@ theorem periodicHypercubicEvenPrimarySpatialBoundaryReadoutAtTime_add_eq_neg_con
 
 /-- Scalar primary-boundary cylinders satisfy the same exact source covariance. -/
 theorem periodicHypercubicEvenPrimarySpatialBoundaryCylinderAtTime_add_configurationTranslation
-    {Gauge : Type*} [MeasurableSpace Gauge]
+    {Gauge : Type} [MeasurableSpace Gauge]
     (H m k : ℕ)
     (g : (PeriodicHypercubicEvenPrimarySpatialBoundaryEdge H → Gauge) → ℝ)
     (A : PeriodicHypercubicEvenEdge H → Gauge) :
@@ -111,7 +111,7 @@ theorem periodicHypercubicEvenPrimarySpatialBoundaryCylinderAtTime_add_configura
 
 /-- Future scalar cylinders are exact pullbacks by the inverse integer source translation. -/
 theorem periodicHypercubicEvenPrimarySpatialBoundaryCylinderAtTime_add_eq_neg_configurationTranslation
-    {Gauge : Type*} [MeasurableSpace Gauge]
+    {Gauge : Type} [MeasurableSpace Gauge]
     (H m k : ℕ)
     (g : (PeriodicHypercubicEvenPrimarySpatialBoundaryEdge H → Gauge) → ℝ)
     (A : PeriodicHypercubicEvenEdge H → Gauge) :
