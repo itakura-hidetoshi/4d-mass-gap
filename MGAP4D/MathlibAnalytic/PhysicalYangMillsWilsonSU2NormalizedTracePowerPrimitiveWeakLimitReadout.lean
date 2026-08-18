@@ -57,38 +57,26 @@ positive-half readout of that same observable at every lattice scale. -/
 theorem normalizedTracePower_quadraticObservable_pullback_of_primitivePositiveHalfReadout
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (D : PhysicalYangMillsGaugeInvariantOSReflectionData S)
-    (halfExtent : ℕ → ℕ)
-    (beta : ℕ → ℝ)
-    (hbeta : ∀ n, 0 ≤ beta n)
-    (interpolate : ∀ n,
-      (PeriodicHypercubicEvenEdge (halfExtent n) →
-        Matrix.specialUnitaryGroup (Fin 2) ℂ) →
-        S.Configuration)
+    (halfExtent : ℕ → ℕ) (beta : ℕ → ℝ) (hbeta : ∀ n, 0 ≤ beta n)
+    (interpolate : ∀ n, (PeriodicHypercubicEvenEdge (halfExtent n) →
+      Matrix.specialUnitaryGroup (Fin 2) ℂ) → S.Configuration)
     (configurationReflection : Homeomorph S.Configuration S.Configuration)
-    (reflection_gauge_commute : ∀ g A,
-      configurationReflection (S.action g A) =
-        S.action g (configurationReflection A))
-    (reflection_realization : ∀ O,
-      D.reflection O =
-        physicalGaugeInvariantObservablePrecompAlgEquiv S
-          configurationReflection reflection_gauge_commute O)
-    (interpolate_reflection : ∀ n A,
-      configurationReflection (interpolate n A) =
-        interpolate n
-          (periodicHypercubicEvenConfigurationReflection (halfExtent n) A))
-    (j : ℕ)
-    (F : D.positiveTimeSubalgebra)
+    (reflection_gauge_commute : ∀ g A, configurationReflection (S.action g A) =
+      S.action g (configurationReflection A))
+    (reflection_realization : ∀ O, D.reflection O =
+      physicalGaugeInvariantObservablePrecompAlgEquiv S
+        configurationReflection reflection_gauge_commute O)
+    (interpolate_reflection : ∀ n A, configurationReflection (interpolate n A) =
+      interpolate n (periodicHypercubicEvenConfigurationReflection (halfExtent n) A))
+    (j : ℕ) (F : D.positiveTimeSubalgebra)
     (positive_readout : ∀ n A,
       ((F : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
-          BoundedContinuousFunction S.Configuration ℝ)
-          (interpolate n A) =
-        periodicHypercubicEvenBoundaryNormalizedTracePowerRawActualAnalysisBoundedContinuousFunction
-          (halfExtent n) (beta n) (hbeta n) j
-          ((periodicHypercubicEvenEdgeOrbitPartition
-            (halfExtent n)).positiveRestriction A))
+        BoundedContinuousFunction S.Configuration ℝ) (interpolate n A) =
+      periodicHypercubicEvenBoundaryNormalizedTracePowerRawActualAnalysisBoundedContinuousFunction
+        (halfExtent n) (beta n) (hbeta n) j
+        ((periodicHypercubicEvenEdgeOrbitPartition (halfExtent n)).positiveRestriction A))
     (n : ℕ)
-    (A : PeriodicHypercubicEvenEdge (halfExtent n) →
-      Matrix.specialUnitaryGroup (Fin 2) ℂ) :
+    (A : PeriodicHypercubicEvenEdge (halfExtent n) → Matrix.specialUnitaryGroup (Fin 2) ℂ) :
     D.quadraticBoundedContinuousFunction F (interpolate n A) =
       normalizedTracePowerTietzeFullTarget halfExtent beta hbeta n j A *
         normalizedTracePowerTietzeFullTarget halfExtent beta hbeta n j
@@ -140,43 +128,31 @@ density premise, or range premise is used. -/
 theorem normalizedTracePower_approximating_quadratic_nonneg_of_primitivePositiveHalfReadout
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (D : PhysicalYangMillsGaugeInvariantOSReflectionData S)
-    (halfExtent : ℕ → ℕ)
-    (beta : ℕ → ℝ)
-    (hbeta : ∀ n, 0 ≤ beta n)
-    (interpolate : ∀ n,
-      (PeriodicHypercubicEvenEdge (halfExtent n) →
-        Matrix.specialUnitaryGroup (Fin 2) ℂ) →
-        S.Configuration)
+    (halfExtent : ℕ → ℕ) (beta : ℕ → ℝ) (hbeta : ∀ n, 0 ≤ beta n)
+    (interpolate : ∀ n, (PeriodicHypercubicEvenEdge (halfExtent n) →
+      Matrix.specialUnitaryGroup (Fin 2) ℂ) → S.Configuration)
     (interpolate_measurable : ∀ n, Measurable (interpolate n))
     (approximatingMeasure_toMeasure_eq : ∀ n,
-      (S.approximatingMeasure n : Measure S.Configuration) =
-        Measure.map (interpolate n)
-          (periodicHypercubicSpecialUnitaryWilsonSystem
-            (PeriodicHypercubicEvenSideLength (halfExtent n))
-            2 normalizedTracePowerPrimitiveWeakLimitReadoutTwoRankPositive
-            (beta n) (hbeta n)).gibbsMeasure)
+      (S.approximatingMeasure n : Measure S.Configuration) = Measure.map (interpolate n)
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength (halfExtent n)) 2
+          normalizedTracePowerPrimitiveWeakLimitReadoutTwoRankPositive
+          (beta n) (hbeta n)).gibbsMeasure)
     (configurationReflection : Homeomorph S.Configuration S.Configuration)
-    (reflection_gauge_commute : ∀ g A,
-      configurationReflection (S.action g A) =
-        S.action g (configurationReflection A))
-    (reflection_realization : ∀ O,
-      D.reflection O =
-        physicalGaugeInvariantObservablePrecompAlgEquiv S
-          configurationReflection reflection_gauge_commute O)
-    (interpolate_reflection : ∀ n A,
-      configurationReflection (interpolate n A) =
-        interpolate n
-          (periodicHypercubicEvenConfigurationReflection (halfExtent n) A))
-    (j : ℕ)
-    (F : D.positiveTimeSubalgebra)
+    (reflection_gauge_commute : ∀ g A, configurationReflection (S.action g A) =
+      S.action g (configurationReflection A))
+    (reflection_realization : ∀ O, D.reflection O =
+      physicalGaugeInvariantObservablePrecompAlgEquiv S
+        configurationReflection reflection_gauge_commute O)
+    (interpolate_reflection : ∀ n A, configurationReflection (interpolate n A) =
+      interpolate n (periodicHypercubicEvenConfigurationReflection (halfExtent n) A))
+    (j : ℕ) (F : D.positiveTimeSubalgebra)
     (positive_readout : ∀ n A,
       ((F : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
-          BoundedContinuousFunction S.Configuration ℝ)
-          (interpolate n A) =
-        periodicHypercubicEvenBoundaryNormalizedTracePowerRawActualAnalysisBoundedContinuousFunction
-          (halfExtent n) (beta n) (hbeta n) j
-          ((periodicHypercubicEvenEdgeOrbitPartition
-            (halfExtent n)).positiveRestriction A))
+        BoundedContinuousFunction S.Configuration ℝ) (interpolate n A) =
+      periodicHypercubicEvenBoundaryNormalizedTracePowerRawActualAnalysisBoundedContinuousFunction
+        (halfExtent n) (beta n) (hbeta n) j
+        ((periodicHypercubicEvenEdgeOrbitPartition (halfExtent n)).positiveRestriction A))
     (n : ℕ) :
     0 ≤ ∫ A, D.quadraticBoundedContinuousFunction F A
       ∂(S.approximatingMeasure n : Measure S.Configuration) := by
@@ -205,43 +181,31 @@ pullback package. -/
 theorem normalizedTracePower_continuum_quadratic_nonneg_of_primitivePositiveHalfReadout
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (D : PhysicalYangMillsGaugeInvariantOSReflectionData S)
-    (halfExtent : ℕ → ℕ)
-    (beta : ℕ → ℝ)
-    (hbeta : ∀ n, 0 ≤ beta n)
-    (interpolate : ∀ n,
-      (PeriodicHypercubicEvenEdge (halfExtent n) →
-        Matrix.specialUnitaryGroup (Fin 2) ℂ) →
-        S.Configuration)
+    (halfExtent : ℕ → ℕ) (beta : ℕ → ℝ) (hbeta : ∀ n, 0 ≤ beta n)
+    (interpolate : ∀ n, (PeriodicHypercubicEvenEdge (halfExtent n) →
+      Matrix.specialUnitaryGroup (Fin 2) ℂ) → S.Configuration)
     (interpolate_measurable : ∀ n, Measurable (interpolate n))
     (approximatingMeasure_toMeasure_eq : ∀ n,
-      (S.approximatingMeasure n : Measure S.Configuration) =
-        Measure.map (interpolate n)
-          (periodicHypercubicSpecialUnitaryWilsonSystem
-            (PeriodicHypercubicEvenSideLength (halfExtent n))
-            2 normalizedTracePowerPrimitiveWeakLimitReadoutTwoRankPositive
-            (beta n) (hbeta n)).gibbsMeasure)
+      (S.approximatingMeasure n : Measure S.Configuration) = Measure.map (interpolate n)
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength (halfExtent n)) 2
+          normalizedTracePowerPrimitiveWeakLimitReadoutTwoRankPositive
+          (beta n) (hbeta n)).gibbsMeasure)
     (configurationReflection : Homeomorph S.Configuration S.Configuration)
-    (reflection_gauge_commute : ∀ g A,
-      configurationReflection (S.action g A) =
-        S.action g (configurationReflection A))
-    (reflection_realization : ∀ O,
-      D.reflection O =
-        physicalGaugeInvariantObservablePrecompAlgEquiv S
-          configurationReflection reflection_gauge_commute O)
-    (interpolate_reflection : ∀ n A,
-      configurationReflection (interpolate n A) =
-        interpolate n
-          (periodicHypercubicEvenConfigurationReflection (halfExtent n) A))
-    (j : ℕ)
-    (F : D.positiveTimeSubalgebra)
+    (reflection_gauge_commute : ∀ g A, configurationReflection (S.action g A) =
+      S.action g (configurationReflection A))
+    (reflection_realization : ∀ O, D.reflection O =
+      physicalGaugeInvariantObservablePrecompAlgEquiv S
+        configurationReflection reflection_gauge_commute O)
+    (interpolate_reflection : ∀ n A, configurationReflection (interpolate n A) =
+      interpolate n (periodicHypercubicEvenConfigurationReflection (halfExtent n) A))
+    (j : ℕ) (F : D.positiveTimeSubalgebra)
     (positive_readout : ∀ n A,
       ((F : physicalYangMillsGaugeInvariantObservableSubalgebra S) :
-          BoundedContinuousFunction S.Configuration ℝ)
-          (interpolate n A) =
-        periodicHypercubicEvenBoundaryNormalizedTracePowerRawActualAnalysisBoundedContinuousFunction
-          (halfExtent n) (beta n) (hbeta n) j
-          ((periodicHypercubicEvenEdgeOrbitPartition
-            (halfExtent n)).positiveRestriction A)) :
+        BoundedContinuousFunction S.Configuration ℝ) (interpolate n A) =
+      periodicHypercubicEvenBoundaryNormalizedTracePowerRawActualAnalysisBoundedContinuousFunction
+        (halfExtent n) (beta n) (hbeta n) j
+        ((periodicHypercubicEvenEdgeOrbitPartition (halfExtent n)).positiveRestriction A)) :
     0 ≤ ∫ A, D.quadraticBoundedContinuousFunction F A
       ∂(S.continuumMeasure : Measure S.Configuration) := by
   simpa using
