@@ -183,7 +183,6 @@ theorem normalizedTracePower_varying_continuum_quadratic_nonneg_of_primitiveCyli
     j (fun n => (R n).positiveTimeTracePowerObservable j)
   · intro n A
     exact (R n).positiveTimeTracePowerObservable_interpolate j A
-  · exact Olim
   · exact huniform
 
 end
