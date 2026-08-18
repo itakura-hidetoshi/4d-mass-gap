@@ -77,11 +77,11 @@ theorem normalizedTracePowerTietzeFullTarget_negativeHalfIndependent
       (fun A => normalizedTracePowerTietzeFullTarget
         halfExtent beta hbeta n j A) := by
   exact
-    (periodicHypercubicEvenEdgeOrbitPartition (halfExtent n)).
-      negativeHalfIndependent_comp_positiveRestriction
-        (fun x =>
-          periodicHypercubicEvenBoundaryNormalizedTracePowerRawActualAnalysisBoundedContinuousFunction
-            (halfExtent n) (beta n) (hbeta n) j x)
+    FiniteInvolutiveEdgeOrbitPartition.negativeHalfIndependent_comp_positiveRestriction
+      (periodicHypercubicEvenEdgeOrbitPartition (halfExtent n))
+      (fun x =>
+        periodicHypercubicEvenBoundaryNormalizedTracePowerRawActualAnalysisBoundedContinuousFunction
+          (halfExtent n) (beta n) (hbeta n) j x)
 
 /-- Every existing SU(2) normalized-trace-power full target therefore satisfies
 the actual finite even-periodic Wilson Gibbs Osterwalder--Schrader inequality.
