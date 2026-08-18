@@ -76,14 +76,18 @@ theorem
         (periodicHypercubicEvenPrimarySpatialPhysicalTemporalReach H latticeSpacing)
         atTop atTop)
     (Cyl : PeriodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPositiveCylinder) :
-    ∀ᶠ n in atTop,
-      PeriodicHypercubicEvenPrimarySpatialPositiveRationalSlotsAdmissible
-        (H n) latticeSpacing n Cyl.slots := by
+    Filter.Eventually
+      (fun n : ℕ =>
+        PeriodicHypercubicEvenPrimarySpatialPositiveRationalSlotsAdmissible
+          (H n) latticeSpacing n Cyl.slots)
+      atTop := by
   let T : ℝ :=
     ∑ q in Cyl.slots, |((q : ℚ) : ℝ)|
   have hreach_event :
-      ∀ᶠ n in atTop,
-        T ≤ periodicHypercubicEvenPrimarySpatialPhysicalTemporalReach H latticeSpacing n :=
+      Filter.Eventually
+        (fun n : ℕ =>
+          T ≤ periodicHypercubicEvenPrimarySpatialPhysicalTemporalReach H latticeSpacing n)
+        atTop :=
     (tendsto_atTop.1 hreach T)
   filter_upwards [hreach_event] with n hn
   constructor
