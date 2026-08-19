@@ -62,9 +62,10 @@ theorem fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit_intervalInt
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
     (lambda : ℝ) (x : P.fixedSlotHilbertDirectLimitRegularSubspace) (a b : ℝ) :
     IntervalIntegrable (P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit lambda x)
-      MeasureTheory.volume a b :=
-  (P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit_continuous lambda x)
-    .intervalIntegrable a b
+      MeasureTheory.volume a b := by
+  have hcont :=
+    P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit_continuous lambda x
+  exact hcont.intervalIntegrable a b
 
 @[simp] theorem fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit_zero
     (P : PrimaryScalarFixedSlotOSPreHilbertData
@@ -97,9 +98,10 @@ theorem fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive_hasDerivAt
     (lambda : ℝ) (x : P.fixedSlotHilbertDirectLimitRegularSubspace) (r : ℝ) :
     HasDerivAt (P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive lambda x)
       (P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit lambda x r) r := by
+  have hcont :=
+    P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit_continuous lambda x
   simpa only [fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive] using
-    ((P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit_continuous lambda x)
-      .integral_hasStrictDerivAt 0 r).hasDerivAt
+    (hcont.integral_hasStrictDerivAt 0 r).hasDerivAt
 
 noncomputable def fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral
     (P : PrimaryScalarFixedSlotOSPreHilbertData
@@ -175,6 +177,25 @@ theorem fixedSlotHilbertDirectLimitRegular_exponentialMovingInterval_hasDerivAt_
     simpa using P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive_hasDerivAt lambda x 0
   exact hshift.sub hzero
 
+theorem fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive_hasDerivAt_zero
+    (P : PrimaryScalarFixedSlotOSPreHilbertData
+      H N hN beta hbeta
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
+    (lambda : ℝ) (h : NNReal) (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
+    HasDerivAt
+      (P.fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive lambda h x)
+      (lambda • P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda h x +
+        P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit lambda x (h : ℝ) - x) 0 := by
+  have hscalar := fixedSlotHilbertDirectLimitRegular_exponentialPrefactor_hasDerivAt_zero lambda
+  have hinterval :=
+    P.fixedSlotHilbertDirectLimitRegular_exponentialMovingInterval_hasDerivAt_zero lambda h x
+  have hproduct := hscalar.smul hinterval
+  convert hproduct using 1
+  simp only [fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral,
+    mul_zero, Real.exp_zero, one_smul, add_zero,
+    P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive_zero lambda x, sub_zero]
+  module
+
 theorem fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive_hasDerivAt_zero_explicit
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta
@@ -185,18 +206,18 @@ theorem fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive_hasDer
       (lambda • P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda h x +
         Real.exp ((-lambda) * (h : ℝ)) •
           P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism h x - x) 0 := by
-  have hscalar := fixedSlotHilbertDirectLimitRegular_exponentialPrefactor_hasDerivAt_zero lambda
-  have hinterval :=
-    P.fixedSlotHilbertDirectLimitRegular_exponentialMovingInterval_hasDerivAt_zero lambda h x
-  have hproduct := hscalar.smul hinterval
-  convert hproduct using 1
-  · simp only [fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral,
-      mul_zero, Real.exp_zero, one_smul, add_zero,
-      P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive_zero lambda x, sub_zero]
-    module
-  · unfold fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit
+  have hbase :=
+    P.fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive_hasDerivAt_zero lambda h x
+  have horbit :
+      P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit lambda x (h : ℝ) =
+        Real.exp ((-lambda) * (h : ℝ)) •
+          P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism h x := by
+    unfold fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit
+    unfold fixedSlotHilbertDirectLimitRegularClampedRealOrbit
     have hh : Real.toNNReal (h : ℝ) = h := by simp
-    rw [hh]
+    rw [hh, P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_apply]
+  rw [horbit] at hbase
+  exact hbase
 
 /-- Semigroup action on the exponentially weighted orbit, with the compensating exponential. -/
 theorem fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_exponentiallyWeightedOrbit
