@@ -119,9 +119,19 @@ theorem fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian_inner_
   apply neg_nonpos.mpr
   change 0 ≤ inner ℝ
     (fixedSlotHilbertDirectLimitRegularYosidaDyadicScale n •
-      (y - P.fixedSlotHilbertDirectLimitRegularDyadicYosidaResolvent n y)) y
-  simpa only [real_inner_smul_left, inner_sub_left] using
-    (mul_nonneg hscale (sub_nonneg.mpr hinner))
+      ((y : P.fixedSlotHilbertDirectLimitCompletion) -
+        (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaResolvent n y :
+          P.fixedSlotHilbertDirectLimitCompletion)))
+    (y : P.fixedSlotHilbertDirectLimitCompletion)
+  change
+    inner ℝ
+        (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaResolvent n y :
+          P.fixedSlotHilbertDirectLimitCompletion)
+        (y : P.fixedSlotHilbertDirectLimitCompletion) ≤
+      inner ℝ (y : P.fixedSlotHilbertDirectLimitCompletion)
+        (y : P.fixedSlotHilbertDirectLimitCompletion) at hinner
+  rw [real_inner_smul_left, inner_sub_left]
+  exact mul_nonneg hscale (sub_nonneg.mpr hinner)
 
 /-- Pointwise derivative of the bounded Yosida exponential orbit. -/
 theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_apply_hasDerivAt
