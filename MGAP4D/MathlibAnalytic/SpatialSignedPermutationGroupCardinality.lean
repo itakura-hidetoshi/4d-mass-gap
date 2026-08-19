@@ -77,7 +77,6 @@ theorem spatialSignedPermutationGroup_card :
         (SemidirectProduct.equivProd (φ := spatialAxisPermutationSignAction))
     _ = 48 := by
       rw [Fintype.card_prod, spatialAxisSign_card, spatialAxisPermutation_card]
-      norm_num
 
 /-- Audit-visible finite-order formulation using `Nat.card`. -/
 theorem spatialSignedPermutationGroup_natCard :
