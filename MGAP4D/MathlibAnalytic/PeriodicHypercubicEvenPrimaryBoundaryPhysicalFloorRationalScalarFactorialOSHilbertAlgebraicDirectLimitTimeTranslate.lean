@@ -88,6 +88,23 @@ theorem fixedSlotHilbertAlgebraicTimeTranslateComponent_map
       fixedSlotHilbertInclusion] using
       (P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM_inclusion
         (P.fixedSlotDataOfIndex K) hJK t ht x
+  change
+    P.fixedSlotHilbertAlgebraicOf
+        (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht K)
+        (((P.fixedSlotDataOfIndex K).fixedSlotHilbertTimeTranslateCLM t ht).toLinearMap
+          (P.fixedSlotIndexedHilbertMap J K hJK x)) =
+      P.fixedSlotHilbertAlgebraicOf
+        (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J)
+        (((P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM t ht).toLinearMap x)
+  change
+    (P.fixedSlotDataOfIndex
+        (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J)).fixedSlotHilbertInclusion
+      (P.fixedSlotDataOfIndex
+        (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht K))
+      (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate_mono t ht hJK)
+      (((P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM t ht).toLinearMap x) =
+    ((P.fixedSlotDataOfIndex K).fixedSlotHilbertTimeTranslateCLM t ht).toLinearMap
+      (P.fixedSlotIndexedHilbertMap J K hJK x) at hnat
   rw [← hnat]
   simpa only [fixedSlotIndexedHilbertMap, fixedSlotIndexedHilbertLinearIsometry,
     fixedSlotHilbertInclusion] using
@@ -95,7 +112,7 @@ theorem fixedSlotHilbertAlgebraicTimeTranslateComponent_map
       (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J)
       (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht K)
       (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate_mono t ht hJK)
-      ((P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM t ht x)
+      (((P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM t ht).toLinearMap x)
 
 /-- Canonical nonnegative-rational time translation on the algebraic direct limit of finite-slot
 primary-scalar OS Hilbert sectors. -/
@@ -129,6 +146,12 @@ theorem fixedSlotHilbertAlgebraicTimeTranslate_of
       P.fixedSlotHilbertAlgebraicOf
         (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J)
         ((P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM t ht x) := by
+  change
+    P.fixedSlotHilbertAlgebraicTimeTranslate t ht
+        (P.fixedSlotHilbertAlgebraicOf J x) =
+      P.fixedSlotHilbertAlgebraicOf
+        (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J)
+        (((P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM t ht).toLinearMap x)
   simp [fixedSlotHilbertAlgebraicTimeTranslate,
     fixedSlotHilbertAlgebraicTimeTranslateComponent,
     fixedSlotHilbertAlgebraicOf]
