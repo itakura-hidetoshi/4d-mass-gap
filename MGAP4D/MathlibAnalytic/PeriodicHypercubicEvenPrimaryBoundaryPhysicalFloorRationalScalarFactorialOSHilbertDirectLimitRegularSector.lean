@@ -306,10 +306,13 @@ theorem fixedSlotHilbertDirectLimitRegularSubspace_uniformContinuous_orbit
       exact hab
     have hzero := hclose (x := d) hdδ
     rw [dist_eq_norm] at hzero ⊢
-    rw [← hba]
+    rw [← hba, norm_sub_rev]
     exact lt_of_le_of_lt
-      (P.fixedSlotHilbertDirectLimitNNRatTimeTranslate_sub_norm_le a d
-        (x : P.fixedSlotHilbertDirectLimitCompletion)) hzero
+      (by
+        simpa [add_comm] using
+          P.fixedSlotHilbertDirectLimitNNRatTimeTranslate_sub_norm_le a d
+            (x : P.fixedSlotHilbertDirectLimitCompletion))
+      hzero
   · let d : NNRat := a - b
     have hab' : b + d = a := by
       dsimp [d]
@@ -325,10 +328,12 @@ theorem fixedSlotHilbertDirectLimitRegularSubspace_uniformContinuous_orbit
     have hzero := hclose (x := d) hdδ
     rw [dist_eq_norm] at hzero ⊢
     rw [← hab']
-    rw [norm_sub_rev]
     exact lt_of_le_of_lt
-      (P.fixedSlotHilbertDirectLimitNNRatTimeTranslate_sub_norm_le b d
-        (x : P.fixedSlotHilbertDirectLimitCompletion)) hzero
+      (by
+        simpa [add_comm] using
+          P.fixedSlotHilbertDirectLimitNNRatTimeTranslate_sub_norm_le b d
+            (x : P.fixedSlotHilbertDirectLimitCompletion))
+      hzero
 
 end PrimaryScalarFixedSlotOSPreHilbertData
 
