@@ -158,8 +158,12 @@ theorem fixedSlotHilbertDirectLimitRegularClampedRealOrbit_zero
     (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
     P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit x 0 = x := by
   unfold fixedSlotHilbertDirectLimitRegularClampedRealOrbit
-  change P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism 0 x = x
-  exact P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_zero_apply x
+  have hz : Real.toNNReal (0 : ℝ) = 0 := by
+    rw [Real.toNNReal_of_nonneg (le_refl (0 : ℝ))]
+    rfl
+  rw [hz]
+  simpa only [P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_apply] using
+    P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_zero_apply x
 
 @[simp]
 theorem fixedSlotHilbertDirectLimitRegularClampedRealOrbit_add
