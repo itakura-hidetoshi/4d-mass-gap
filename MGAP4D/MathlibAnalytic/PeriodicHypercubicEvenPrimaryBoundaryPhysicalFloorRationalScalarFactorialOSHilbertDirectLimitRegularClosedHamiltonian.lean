@@ -225,8 +225,8 @@ private theorem linearPMap_closure_isFormalAdjoint_of_isFormalAdjoint
   rw [hxuValueFunction] at huSnd
   rw [hyvBaseFunction] at hvFst
   rw [hyvValueFunction] at hvSnd
-  have hleft := huSnd.inner hvFst
-  have hright := huFst.inner hvSnd
+  have hleft := Filter.Tendsto.inner (𝕜 := ℝ) huSnd hvFst
+  have hright := Filter.Tendsto.inner (𝕜 := ℝ) huFst hvSnd
   have hfunctions :
       (fun n => inner ℝ (A (xu n)) ((yv n : A.domain) : K)) =
         fun n => inner ℝ ((xu n : A.domain) : K) (A (yv n)) := by
@@ -275,7 +275,7 @@ theorem fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian_inner_nonneg
       (continuous_snd.tendsto
         ((x : P.fixedSlotHilbertDirectLimitRegularSubspace),
           P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian x)).comp hu
-  have hinner := huSnd.inner huFst
+  have hinner := Filter.Tendsto.inner (𝕜 := ℝ) huSnd huFst
   apply le_of_tendsto_of_tendsto tendsto_const_nhds hinner
   exact Filter.Eventually.of_forall fun n => by
     rcases (LinearPMap.mem_graph_iff
@@ -318,7 +318,11 @@ theorem fixedSlotHilbertDirectLimitRegular_lambda_mul_norm_le_closedShift
         inner ℝ (P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonianShift lambda x)
           (x : P.fixedSlotHilbertDirectLimitRegularSubspace) := by
     rw [P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonianShift_apply,
-      inner_add_left, real_inner_smul_left, real_inner_self_eq_norm_sq]
+      inner_add_left]
+    rw [real_inner_smul_left
+      (x : P.fixedSlotHilbertDirectLimitRegularSubspace)
+      (x : P.fixedSlotHilbertDirectLimitRegularSubspace) lambda]
+    rw [real_inner_self_eq_norm_sq]
     linarith [hlambda.le, P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian_inner_nonneg x]
   have hcs := real_inner_le_norm
     (P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonianShift lambda x)
