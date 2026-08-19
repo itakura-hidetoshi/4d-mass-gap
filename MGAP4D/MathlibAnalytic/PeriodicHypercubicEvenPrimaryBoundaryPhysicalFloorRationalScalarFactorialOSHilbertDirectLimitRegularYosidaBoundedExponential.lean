@@ -48,6 +48,29 @@ local instance regularOperatorIsTopologicalRing
     IsTopologicalRing (K →L[ℝ] K) :=
   NonUnitalSeminormedRing.toIsTopologicalRing
 
+/-- Two real scalar multiples of the same bounded endomorphism commute.  Proving this pointwise
+avoids the stronger `SMulCommClass` assumption used by the generic `Commute.smul_left/right`
+convenience lemmas. -/
+private theorem continuousLinearEndomorphism_smul_commute
+    {K : Type*} [NormedAddCommGroup K] [NormedSpace ℝ K]
+    (A : K →L[ℝ] K) (s t : ℝ) :
+    Commute (s • A) (t • A) := by
+  apply Commute.intro
+  ext x
+  simp only [mul_apply_eq_comp, smul_apply, map_smul, smul_smul]
+  rw [mul_comm s t]
+
+/-- Generic Banach-algebra derivative for the exponential of a bounded real endomorphism.
+Keeping this helper independent of the large same-root dependent carrier prevents expensive
+unification when it is specialized below. -/
+private theorem continuousLinearEndomorphism_exp_smul_hasDerivAt
+    {K : Type*} [NormedAddCommGroup K] [NormedSpace ℝ K] [CompleteSpace K]
+    (A : K →L[ℝ] K) (t : ℝ) :
+    HasDerivAt
+      (fun r : ℝ => NormedSpace.exp (r • A))
+      (NormedSpace.exp (t • A) * A) t := by
+  exact hasDerivAt_exp_smul_const A t
+
 /-- The bounded negative dyadic Yosida generator `-H_{2^n}`. -/
 noncomputable def fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian
     (P : PrimaryScalarFixedSlotOSPreHilbertData
@@ -103,7 +126,7 @@ theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_add
   have hsum : (s + t) • A = s • A + t • A := add_smul s t A
   rw [hsum]
   exact NormedSpace.exp_add_of_commute
-    (((Commute.refl A).smul_left s).smul_right t)
+    (continuousLinearEndomorphism_smul_commute A s t)
 
 /-- Banach-algebra derivative of the real-time bounded Yosida exponential. -/
 theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_hasDerivAt
@@ -123,11 +146,7 @@ theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_hasDerivAt
   change HasDerivAt
     (fun r : ℝ => NormedSpace.exp (r • A))
     (NormedSpace.exp (t • A) * A) t
-  have hderiv : HasDerivAt
-      (fun r : ℝ => NormedSpace.exp (r • A))
-      (NormedSpace.exp (t • A) * A) t :=
-    hasDerivAt_exp_smul_const A t
-  exact hderiv
+  exact continuousLinearEndomorphism_exp_smul_hasDerivAt A t
 
 /-- The real-time bounded Yosida exponential is continuous in operator norm. -/
 theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_continuous
