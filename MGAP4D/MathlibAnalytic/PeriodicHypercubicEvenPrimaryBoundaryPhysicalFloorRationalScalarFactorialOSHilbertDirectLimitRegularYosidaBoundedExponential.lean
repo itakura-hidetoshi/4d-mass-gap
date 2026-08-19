@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPrimaryBoundaryPhysicalFloorRationalScalarFactorialOSHilbertDirectLimitRegularYosidaStrongConvergence
 import Mathlib.Analysis.SpecialFunctions.Exponential
+import Mathlib.Analysis.Normed.Ring.Lemmas
 import Mathlib.Tactic
 
 /-!
@@ -38,6 +39,19 @@ variable {L :
   PeriodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePathProkhorovSubsequenceLimit
     H N hN beta hbeta
     periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing}
+
+/- Pin the standard operator-norm ring/topological-ring structures locally.  This avoids forcing
+Lean to rediscover the long instance chain through the concrete same-root regular Hilbert subtype
+each time the Banach-algebra exponential API is elaborated. -/
+local instance regularOperatorNormedRing
+    {K : Type*} [NormedAddCommGroup K] [NormedSpace ℝ K] :
+    NormedRing (K →L[ℝ] K) :=
+  ContinuousLinearMap.toNormedRing
+
+local instance regularOperatorIsTopologicalRing
+    {K : Type*} [NormedAddCommGroup K] [NormedSpace ℝ K] :
+    IsTopologicalRing (K →L[ℝ] K) :=
+  NonUnitalSeminormedRing.toIsTopologicalRing
 
 /-- The bounded negative dyadic Yosida generator `-H_{2^n}`. -/
 noncomputable def fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian
@@ -94,7 +108,7 @@ theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_hasDerivAt
         P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n)
       t := by
   simpa [fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal] using
-    (NormedSpace.hasDerivAt_exp_smul_const
+    (hasDerivAt_exp_smul_const
       (P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n) t)
 
 /-- The real-time bounded Yosida exponential is continuous in operator norm. -/
