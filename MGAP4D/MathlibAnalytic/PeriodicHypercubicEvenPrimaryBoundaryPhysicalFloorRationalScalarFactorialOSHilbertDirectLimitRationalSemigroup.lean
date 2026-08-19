@@ -213,6 +213,16 @@ theorem fixedSlotIndexedHilbertTimeTranslate_zero_common
             (P.fixedSlotDataOfIndex M) hJ
             ((P.fixedSlotDataOfIndex J).hilbertState F)
       rw [(P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM_hilbertState]
+      change
+        (P.fixedSlotDataOfIndex
+            (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate 0 le_rfl J)).fixedSlotHilbertInclusion
+            (P.fixedSlotDataOfIndex M) h0
+            ((P.fixedSlotDataOfIndex
+              (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate 0 le_rfl J)).hilbertState
+              ((P.fixedSlotDataOfIndex J).fixedSlotCarrierTimeTranslate 0 le_rfl F)) =
+          (P.fixedSlotDataOfIndex J).fixedSlotHilbertInclusion
+            (P.fixedSlotDataOfIndex M) hJ
+            ((P.fixedSlotDataOfIndex J).hilbertState F)
       rw [(P.fixedSlotDataOfIndex
         (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate 0 le_rfl J)).fixedSlotHilbertInclusion_hilbertState]
       rw [(P.fixedSlotDataOfIndex J).fixedSlotHilbertInclusion_hilbertState]
@@ -298,12 +308,68 @@ theorem fixedSlotIndexedHilbertTimeTranslate_add_common
               (t + s) (add_nonneg ht hs)
               ((P.fixedSlotDataOfIndex J).hilbertState F))
       rw [(P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM_hilbertState]
+      change
+        (P.fixedSlotDataOfIndex
+            (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate s hs
+              (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J))).fixedSlotHilbertInclusion
+            (P.fixedSlotDataOfIndex M) hst
+            ((P.fixedSlotDataOfIndex
+                (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J)).fixedSlotHilbertTimeTranslateCLM
+              s hs
+              ((P.fixedSlotDataOfIndex
+                (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J)).hilbertState
+                ((P.fixedSlotDataOfIndex J).fixedSlotCarrierTimeTranslate t ht F))) =
+          (P.fixedSlotDataOfIndex
+            (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate
+              (t + s) (add_nonneg ht hs) J)).fixedSlotHilbertInclusion
+            (P.fixedSlotDataOfIndex M) hsum
+            ((P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM
+              (t + s) (add_nonneg ht hs)
+              ((P.fixedSlotDataOfIndex J).hilbertState F))
       rw [(P.fixedSlotDataOfIndex
         (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J)).fixedSlotHilbertTimeTranslateCLM_hilbertState]
+      change
+        (P.fixedSlotDataOfIndex
+            (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate s hs
+              (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J))).fixedSlotHilbertInclusion
+            (P.fixedSlotDataOfIndex M) hst
+            ((P.fixedSlotDataOfIndex
+              (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate s hs
+                (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J))).hilbertState
+              ((P.fixedSlotDataOfIndex
+                  (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J)).fixedSlotCarrierTimeTranslate
+                s hs
+                ((P.fixedSlotDataOfIndex J).fixedSlotCarrierTimeTranslate t ht F))) =
+          (P.fixedSlotDataOfIndex
+            (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate
+              (t + s) (add_nonneg ht hs) J)).fixedSlotHilbertInclusion
+            (P.fixedSlotDataOfIndex M) hsum
+            ((P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM
+              (t + s) (add_nonneg ht hs)
+              ((P.fixedSlotDataOfIndex J).hilbertState F))
       rw [(P.fixedSlotDataOfIndex
         (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate s hs
           (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J))).fixedSlotHilbertInclusion_hilbertState]
       rw [(P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM_hilbertState]
+      change
+        (P.fixedSlotDataOfIndex M).hilbertState
+            ((P.fixedSlotDataOfIndex
+              (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate s hs
+                (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J))).fixedSlotCarrierInclusion
+              (P.fixedSlotDataOfIndex M) hst
+              ((P.fixedSlotDataOfIndex
+                  (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J)).fixedSlotCarrierTimeTranslate
+                s hs
+                ((P.fixedSlotDataOfIndex J).fixedSlotCarrierTimeTranslate t ht F))) =
+          (P.fixedSlotDataOfIndex
+            (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate
+              (t + s) (add_nonneg ht hs) J)).fixedSlotHilbertInclusion
+            (P.fixedSlotDataOfIndex M) hsum
+            ((P.fixedSlotDataOfIndex
+              (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate
+                (t + s) (add_nonneg ht hs) J)).hilbertState
+              ((P.fixedSlotDataOfIndex J).fixedSlotCarrierTimeTranslate
+                (t + s) (add_nonneg ht hs) F))
       rw [(P.fixedSlotDataOfIndex
         (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate
           (t + s) (add_nonneg ht hs) J)).fixedSlotHilbertInclusion_hilbertState]
