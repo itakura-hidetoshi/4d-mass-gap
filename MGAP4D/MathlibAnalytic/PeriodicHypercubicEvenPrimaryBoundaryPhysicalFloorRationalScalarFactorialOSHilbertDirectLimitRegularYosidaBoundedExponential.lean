@@ -40,14 +40,9 @@ variable {L :
     H N hN beta hbeta
     periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing}
 
-/- Pin the standard operator-norm ring/topological-ring structures locally.  This avoids forcing
-Lean to rediscover the long instance chain through the concrete same-root regular Hilbert subtype
-each time the Banach-algebra exponential API is elaborated. -/
-local instance regularOperatorNormedRing
-    {K : Type*} [NormedAddCommGroup K] [NormedSpace ℝ K] :
-    NormedRing (K →L[ℝ] K) :=
-  ContinuousLinearMap.toNormedRing
-
+/- Pin only the topological-ring proposition locally.  The canonical `ContinuousLinearMap`
+operator-norm `NormedRing` instance must remain untouched so that the existing additive and
+real-scalar module structures stay definitionally aligned. -/
 local instance regularOperatorIsTopologicalRing
     {K : Type*} [NormedAddCommGroup K] [NormedSpace ℝ K] :
     IsTopologicalRing (K →L[ℝ] K) :=
