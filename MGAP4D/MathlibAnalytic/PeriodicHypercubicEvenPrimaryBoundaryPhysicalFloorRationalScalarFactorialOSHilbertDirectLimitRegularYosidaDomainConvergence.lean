@@ -83,7 +83,20 @@ theorem fixedSlotHilbertDirectLimitRegular_sub_yosidaResolvent_eq_positiveResolv
   rw [P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonianShift_apply,
     map_add, map_smul] at hshift
   rw [P.fixedSlotHilbertDirectLimitRegularYosidaResolvent_apply]
-  module
+  calc
+    (x : P.fixedSlotHilbertDirectLimitRegularSubspace) -
+        lambda • P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda
+          (x : P.fixedSlotHilbertDirectLimitRegularSubspace) =
+      (lambda • P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda
+          (x : P.fixedSlotHilbertDirectLimitRegularSubspace) +
+        P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda
+          (P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian x)) -
+        lambda • P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda
+          (x : P.fixedSlotHilbertDirectLimitRegularSubspace) := by
+      rw [hshift]
+    _ = P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda
+        (P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian x) := by
+      module
 
 /-- Sharp graph-core error estimate for the normalized Yosida resolvent. -/
 theorem fixedSlotHilbertDirectLimitRegular_sub_yosidaResolvent_norm_le
@@ -159,7 +172,18 @@ theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaResolvent_tendsto_on_close
     · simpa only [zero_mul] using
         fixedSlotHilbertDirectLimitRegularYosidaDyadicScale_inv_tendsto_zero.mul_const
           ‖P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian x‖
-  have hrecover := tendsto_const_nhds.sub herror
+  have hxconst : Tendsto
+      (fun _ : ℕ => (x : P.fixedSlotHilbertDirectLimitRegularSubspace)) atTop
+      (nhds (x : P.fixedSlotHilbertDirectLimitRegularSubspace)) := tendsto_const_nhds
+  have hrecover : Tendsto
+      (fun n : ℕ =>
+        (x : P.fixedSlotHilbertDirectLimitRegularSubspace) -
+          ((x : P.fixedSlotHilbertDirectLimitRegularSubspace) -
+            P.fixedSlotHilbertDirectLimitRegularDyadicYosidaResolvent n
+              (x : P.fixedSlotHilbertDirectLimitRegularSubspace)))
+      atTop
+      (nhds ((x : P.fixedSlotHilbertDirectLimitRegularSubspace) - 0)) :=
+    hxconst.sub herror
   simpa only [sub_zero, sub_sub_cancel_left] using hrecover
 
 /-- Bounded Yosida Hamiltonian `H_λ = λ (I - J_λ)`. -/
