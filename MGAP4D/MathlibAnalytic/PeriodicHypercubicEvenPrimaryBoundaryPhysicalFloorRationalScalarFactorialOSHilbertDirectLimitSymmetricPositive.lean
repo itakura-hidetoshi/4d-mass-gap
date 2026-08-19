@@ -167,20 +167,27 @@ theorem fixedSlotHilbertTimeTranslate_inner_eq_common_midpoint
       obtain ⟨F, rfl⟩ := SeparationQuotient.surjective_mk x
       induction y using Completion.induction_on with
       | hp =>
+          let K : PrimaryScalarFiniteNonnegativeSlotIndex :=
+            ⟨periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarOSMidpointCommonSlotSet
+                P.slots t,
+              periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarOSMidpointCommonSlotSet_nonneg
+                P.slots P.slots_nonneg t ht⟩
+          let P2 := P.fixedSlotTimeTranslateData (t + t) (add_nonneg ht ht)
+          let hfuture : P2.slots ⊆ (P.fixedSlotDataOfIndex K).slots :=
+            periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarOSMidpointCommonSlotSet_future_subset
+              P.slots t
+          have hfutureContinuous : Continuous (fun y : P.Hilbert =>
+              P2.fixedSlotHilbertLinearIsometry (P.fixedSlotDataOfIndex K) hfuture
+                (P.fixedSlotHilbertTimeTranslateCLM
+                  (t + t) (add_nonneg ht ht) y)) :=
+            (P2.fixedSlotHilbertLinearIsometry
+              (P.fixedSlotDataOfIndex K) hfuture).continuous.comp
+              (P.fixedSlotHilbertTimeTranslateCLM
+                (t + t) (add_nonneg ht ht)).continuous
           exact isClosed_eq
             (continuous_const.inner
               (P.fixedSlotHilbertTimeTranslateCLM t ht).continuous)
-            (continuous_const.inner
-              ((P.fixedSlotTimeTranslateData (t + t) (add_nonneg ht ht)).fixedSlotHilbertLinearIsometry
-                (P.fixedSlotDataOfIndex
-                  ⟨periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarOSMidpointCommonSlotSet
-                      P.slots t,
-                    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarOSMidpointCommonSlotSet_nonneg
-                      P.slots P.slots_nonneg t ht⟩)
-                (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarOSMidpointCommonSlotSet_future_subset
-                  P.slots t)).continuous.comp
-                (P.fixedSlotHilbertTimeTranslateCLM
-                  (t + t) (add_nonneg ht ht)).continuous)
+            (continuous_const.inner hfutureContinuous)
       | ih y =>
           obtain ⟨G, rfl⟩ := SeparationQuotient.surjective_mk y
           change
