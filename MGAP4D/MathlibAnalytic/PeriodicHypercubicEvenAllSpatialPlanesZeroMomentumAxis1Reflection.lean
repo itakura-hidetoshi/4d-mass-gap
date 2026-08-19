@@ -125,14 +125,14 @@ def periodicHypercubicEvenSpatialPlaneAxis1ReflectionRebaseEquiv
 
 /-- Conjugating edge value for the cyclic rebase in a plane containing axis `1`. -/
 def periodicHypercubicEvenSpatialAxis1ReflectionConjugator
-    {H : ℕ} {Gauge : Type*} [Group Gauge]
+    {H : ℕ} {Gauge : Type} [Group Gauge]
     (a : PeriodicHypercubicEvenSpatialDisplacement H)
     (A : PeriodicHypercubicEvenEdge H → Gauge) : Gauge :=
   (A (a.1, (1 : PeriodicHypercubicAxis)))⁻¹
 
 /-- In plane `(1,2)`, axis-`1` reflection yields a conjugate of the inverse holonomy. -/
 theorem periodicHypercubicEvenSpatialPlanePlaquetteHolonomy_axis1Reflection_plane12
-    {Gauge : Type*} [Group Gauge]
+    {Gauge : Type} [Group Gauge]
     (H : ℕ)
     (A : PeriodicHypercubicEvenEdge H → Gauge)
     (a : PeriodicHypercubicEvenSpatialDisplacement H) :
@@ -167,7 +167,7 @@ theorem periodicHypercubicEvenSpatialPlanePlaquetteHolonomy_axis1Reflection_plan
 
 /-- In plane `(1,3)`, axis-`1` reflection yields a conjugate of the inverse holonomy. -/
 theorem periodicHypercubicEvenSpatialPlanePlaquetteHolonomy_axis1Reflection_plane13
-    {Gauge : Type*} [Group Gauge]
+    {Gauge : Type} [Group Gauge]
     (H : ℕ)
     (A : PeriodicHypercubicEvenEdge H → Gauge)
     (a : PeriodicHypercubicEvenSpatialDisplacement H) :
@@ -202,7 +202,7 @@ theorem periodicHypercubicEvenSpatialPlanePlaquetteHolonomy_axis1Reflection_plan
 
 /-- Plane `(2,3)` is unchanged exactly under reflection of axis `1`. -/
 theorem periodicHypercubicEvenSpatialPlanePlaquetteHolonomy_axis1Reflection_plane23
-    {Gauge : Type*} [Group Gauge]
+    {Gauge : Type} [Group Gauge]
     (H : ℕ)
     (A : PeriodicHypercubicEvenEdge H → Gauge)
     (a : PeriodicHypercubicEvenSpatialDisplacement H) :
