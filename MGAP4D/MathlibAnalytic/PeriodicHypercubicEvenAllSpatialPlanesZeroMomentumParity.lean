@@ -237,14 +237,12 @@ theorem periodicHypercubicEvenSpatialPlaneZeroMomentumNormalizedTrace_parityInva
       periodicHypercubicEvenSpatialPlaneZeroMomentumNormalizedTrace H N plane A := by
   classical
   unfold periodicHypercubicEvenSpatialPlaneZeroMomentumNormalizedTrace
-  refine Fintype.sum_equiv
-    (periodicHypercubicEvenSpatialPlaneParityRebaseEquiv H plane).symm _ _ ?_
-  intro a
-  have h :=
-    periodicHypercubicEvenSpatialPlaneTranslatedNormalizedTrace_parity
-      H N plane
-      ((periodicHypercubicEvenSpatialPlaneParityRebaseEquiv H plane).symm a) A
-  simpa using h
+  rw [← Equiv.sum_comp
+    (periodicHypercubicEvenSpatialPlaneParityRebaseEquiv H plane)]
+  apply Finset.sum_congr rfl
+  intro a _ha
+  exact periodicHypercubicEvenSpatialPlaneTranslatedNormalizedTrace_parity
+    H N plane a A
 
 /-- The equal-weight all-spatial zero-momentum normalized-trace observable is spatial-parity even. -/
 theorem periodicHypercubicEvenAllSpatialPlanesZeroMomentumNormalizedTrace_parityInvariant
