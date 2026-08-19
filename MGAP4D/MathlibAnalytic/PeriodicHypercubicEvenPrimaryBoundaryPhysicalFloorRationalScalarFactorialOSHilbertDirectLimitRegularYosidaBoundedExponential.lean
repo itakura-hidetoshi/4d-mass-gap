@@ -56,6 +56,8 @@ private theorem continuousLinearEndomorphism_exp_smul_add
     (A : K →L[ℝ] K) (s t : ℝ) :
     NormedSpace.exp ((s + t) • A) =
       NormedSpace.exp (s • A) * NormedSpace.exp (t • A) := by
+  letI : NormedAlgebra ℚ (K →L[ℝ] K) :=
+    NormedAlgebra.restrictScalars ℚ ℝ (K →L[ℝ] K)
   rw [add_smul]
   apply NormedSpace.exp_add_of_commute
   change (s • A) * (t • A) = (t • A) * (s • A)
@@ -72,7 +74,8 @@ private theorem continuousLinearEndomorphism_exp_smul_hasDerivAt
     HasDerivAt
       (fun r : ℝ => NormedSpace.exp (r • A))
       (NormedSpace.exp (t • A) * A) t := by
-  exact hasDerivAt_exp_smul_const A t
+  exact hasDerivAt_exp_smul_const
+    (𝕂 := ℝ) (𝔸 := K →L[ℝ] K) A t
 
 /-- The bounded negative dyadic Yosida generator `-H_{2^n}`. -/
 noncomputable def fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian
