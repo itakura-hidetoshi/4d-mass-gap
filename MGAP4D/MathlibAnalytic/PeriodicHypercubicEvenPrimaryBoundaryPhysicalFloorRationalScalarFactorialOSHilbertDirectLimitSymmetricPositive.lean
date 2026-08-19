@@ -5,19 +5,19 @@ import Mathlib.Tactic
 /-!
 # Symmetry and positivity of the factorial OS rational direct-limit semigroup
 
-The same-root factorial midpoint identity is stronger than contractivity.  At half time it gives the
+The same-root factorial midpoint identity is stronger than contractivity. At half time it gives the
 standard OS factorization
 
 `<T_h x, T_h y> = <x, T_(2h) y>`.
 
 This file lifts that identity from finite-slot carrier vectors through separation, fixed-slot Hilbert
-completion, the algebraic direct limit, and finally the completed direct limit.  The factorization
+completion, the algebraic direct limit, and finally the completed direct limit. The factorization
 immediately yields symmetry of every nonnegative-rational-time operator and positivity of its
 quadratic form:
 
 `<T_t x,y> = <x,T_t y>` and `<x,T_t x> = ||T_(t/2)x||^2 >= 0`.
 
-No continuity in the time parameter is assumed or inferred.  In particular this package does not
+No continuity in the time parameter is assumed or inferred. In particular this package does not
 silently identify the rational semigroup with a real `C₀` semigroup.
 -/
 
@@ -153,19 +153,66 @@ theorem fixedSlotHilbertTimeTranslate_inner_eq_common_midpoint
   dsimp
   induction x using Completion.induction_on with
   | hp =>
-      exact isClosed_eq (by fun_prop) (by fun_prop)
+      exact isClosed_eq
+        ((P.fixedSlotHilbertTimeTranslateCLM t ht).continuous.inner continuous_const)
+        ((P.fixedSlotHilbertLinearIsometry
+          (P.fixedSlotDataOfIndex
+            ⟨periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarOSMidpointCommonSlotSet
+                P.slots t,
+              periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarOSMidpointCommonSlotSet_nonneg
+                P.slots P.slots_nonneg t ht⟩)
+          (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarOSMidpointCommonSlotSet_left_subset
+            P.slots t)).continuous.inner continuous_const)
   | ih x =>
       obtain ⟨F, rfl⟩ := SeparationQuotient.surjective_mk x
       induction y using Completion.induction_on with
       | hp =>
-          exact isClosed_eq (by fun_prop) (by fun_prop)
+          exact isClosed_eq
+            (continuous_const.inner
+              (P.fixedSlotHilbertTimeTranslateCLM t ht).continuous)
+            (continuous_const.inner
+              ((P.fixedSlotTimeTranslateData (t + t) (add_nonneg ht ht)).fixedSlotHilbertLinearIsometry
+                (P.fixedSlotDataOfIndex
+                  ⟨periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarOSMidpointCommonSlotSet
+                      P.slots t,
+                    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarOSMidpointCommonSlotSet_nonneg
+                      P.slots P.slots_nonneg t ht⟩)
+                (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarOSMidpointCommonSlotSet_future_subset
+                  P.slots t)).continuous.comp
+                (P.fixedSlotHilbertTimeTranslateCLM
+                  (t + t) (add_nonneg ht ht)).continuous)
       | ih y =>
           obtain ⟨G, rfl⟩ := SeparationQuotient.surjective_mk y
+          change
+            inner ℝ
+                (P.fixedSlotHilbertTimeTranslateCLM t ht (P.hilbertState F))
+                (P.fixedSlotHilbertTimeTranslateCLM t ht (P.hilbertState G)) =
+              inner ℝ
+                (P.fixedSlotHilbertInclusion
+                  (P.fixedSlotDataOfIndex
+                    ⟨periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarOSMidpointCommonSlotSet
+                        P.slots t,
+                      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarOSMidpointCommonSlotSet_nonneg
+                        P.slots P.slots_nonneg t ht⟩)
+                  (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarOSMidpointCommonSlotSet_left_subset
+                    P.slots t)
+                  (P.hilbertState F))
+                ((P.fixedSlotTimeTranslateData (t + t) (add_nonneg ht ht)).fixedSlotHilbertInclusion
+                  (P.fixedSlotDataOfIndex
+                    ⟨periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarOSMidpointCommonSlotSet
+                        P.slots t,
+                      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarOSMidpointCommonSlotSet_nonneg
+                        P.slots P.slots_nonneg t ht⟩)
+                  (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarOSMidpointCommonSlotSet_future_subset
+                    P.slots t)
+                  (P.fixedSlotHilbertTimeTranslateCLM
+                    (t + t) (add_nonneg ht ht) (P.hilbertState G)))
           rw [P.fixedSlotHilbertTimeTranslateCLM_hilbertState]
           rw [P.fixedSlotHilbertTimeTranslateCLM_hilbertState]
           rw [P.fixedSlotHilbertInclusion_hilbertState]
           rw [P.fixedSlotHilbertTimeTranslateCLM_hilbertState]
-          rw [(P.fixedSlotTimeTranslateData (t + t) (add_nonneg ht ht)).fixedSlotHilbertInclusion_hilbertState]
+          rw [(P.fixedSlotTimeTranslateData
+            (t + t) (add_nonneg ht ht)).fixedSlotHilbertInclusion_hilbertState]
           rw [(P.fixedSlotTimeTranslateData t ht).inner_hilbertState_hilbertState]
           rw [(P.fixedSlotDataOfIndex
             ⟨periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarOSMidpointCommonSlotSet
@@ -208,9 +255,9 @@ theorem fixedSlotHilbertAlgebraicTimeTranslate_inner_factorization
       t ht x y
   change
     inner ℝ
-        (P.fixedSlotHilbertAlgebraicOf Jt
+        (P.fixedSlotHilbertAlgebraicLinearIsometry Jt
           ((P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM t ht x))
-        (P.fixedSlotHilbertAlgebraicOf Jt
+        (P.fixedSlotHilbertAlgebraicLinearIsometry Jt
           ((P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM t ht y)) =
       inner ℝ
         (P.fixedSlotHilbertAlgebraicOf J x)
@@ -222,6 +269,17 @@ theorem fixedSlotHilbertAlgebraicTimeTranslate_inner_factorization
   rw [← P.fixedSlotHilbertAlgebraicOf_map J2 M hJ2
     ((P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM
       (t + t) (add_nonneg ht ht) y)]
+  change
+    inner ℝ
+        ((P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM t ht x)
+        ((P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM t ht y) =
+      inner ℝ
+        (P.fixedSlotHilbertAlgebraicLinearIsometry M
+          (P.fixedSlotIndexedHilbertMap J M hJ x))
+        (P.fixedSlotHilbertAlgebraicLinearIsometry M
+          (P.fixedSlotIndexedHilbertMap J2 M hJ2
+            ((P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM
+              (t + t) (add_nonneg ht ht) y)))
   rw [P.fixedSlotHilbertAlgebraicLinearIsometry_inner]
   change
     inner ℝ
@@ -250,11 +308,18 @@ theorem fixedSlotHilbertDirectLimitTimeTranslate_inner_factorization
           (t + t) (add_nonneg ht ht) y) := by
   induction x using Completion.induction_on with
   | hp =>
-      exact isClosed_eq (by fun_prop) (by fun_prop)
+      exact isClosed_eq
+        ((P.fixedSlotHilbertDirectLimitTimeTranslateCLM t ht).continuous.inner continuous_const)
+        (continuous_id.inner continuous_const)
   | ih z =>
       induction y using Completion.induction_on with
       | hp =>
-          exact isClosed_eq (by fun_prop) (by fun_prop)
+          exact isClosed_eq
+            (continuous_const.inner
+              (P.fixedSlotHilbertDirectLimitTimeTranslateCLM t ht).continuous)
+            (continuous_const.inner
+              (P.fixedSlotHilbertDirectLimitTimeTranslateCLM
+                (t + t) (add_nonneg ht ht)).continuous)
       | ih w =>
           rw [P.fixedSlotHilbertDirectLimitTimeTranslateCLM_coe]
           rw [P.fixedSlotHilbertDirectLimitTimeTranslateCLM_coe]
@@ -279,19 +344,30 @@ theorem fixedSlotHilbertDirectLimitTimeTranslate_inner_symmetric
     ring
   have hxy := P.fixedSlotHilbertDirectLimitTimeTranslate_inner_factorization h hh x y
   have hyx := P.fixedSlotHilbertDirectLimitTimeTranslate_inner_factorization h hh y x
-  rw [hdouble] at hxy hyx
+  have hxy' :
+      inner ℝ
+          (P.fixedSlotHilbertDirectLimitTimeTranslateCLM h hh x)
+          (P.fixedSlotHilbertDirectLimitTimeTranslateCLM h hh y) =
+        inner ℝ x (P.fixedSlotHilbertDirectLimitTimeTranslateCLM t ht y) := by
+    simpa [hdouble] using hxy
+  have hyx' :
+      inner ℝ
+          (P.fixedSlotHilbertDirectLimitTimeTranslateCLM h hh y)
+          (P.fixedSlotHilbertDirectLimitTimeTranslateCLM h hh x) =
+        inner ℝ y (P.fixedSlotHilbertDirectLimitTimeTranslateCLM t ht x) := by
+    simpa [hdouble] using hyx
   calc
     inner ℝ (P.fixedSlotHilbertDirectLimitTimeTranslateCLM t ht x) y =
         inner ℝ y (P.fixedSlotHilbertDirectLimitTimeTranslateCLM t ht x) := by
       rw [real_inner_comm]
     _ = inner ℝ
         (P.fixedSlotHilbertDirectLimitTimeTranslateCLM h hh y)
-        (P.fixedSlotHilbertDirectLimitTimeTranslateCLM h hh x) := hyx.symm
+        (P.fixedSlotHilbertDirectLimitTimeTranslateCLM h hh x) := hyx'.symm
     _ = inner ℝ
         (P.fixedSlotHilbertDirectLimitTimeTranslateCLM h hh x)
         (P.fixedSlotHilbertDirectLimitTimeTranslateCLM h hh y) := by
       rw [real_inner_comm]
-    _ = inner ℝ x (P.fixedSlotHilbertDirectLimitTimeTranslateCLM t ht y) := hxy
+    _ = inner ℝ x (P.fixedSlotHilbertDirectLimitTimeTranslateCLM t ht y) := hxy'
 
 /-- The rational OS quadratic form is the squared norm at half time. -/
 theorem fixedSlotHilbertDirectLimitTimeTranslate_inner_self_eq_half_norm_sq
@@ -309,12 +385,17 @@ theorem fixedSlotHilbertDirectLimitTimeTranslate_inner_self_eq_half_norm_sq
     dsimp [h]
     ring
   have hfac := P.fixedSlotHilbertDirectLimitTimeTranslate_inner_factorization h hh x x
-  rw [hdouble] at hfac
+  have hfac' :
+      inner ℝ
+          (P.fixedSlotHilbertDirectLimitTimeTranslateCLM h hh x)
+          (P.fixedSlotHilbertDirectLimitTimeTranslateCLM h hh x) =
+        inner ℝ x (P.fixedSlotHilbertDirectLimitTimeTranslateCLM t ht x) := by
+    simpa [hdouble] using hfac
   calc
     inner ℝ x (P.fixedSlotHilbertDirectLimitTimeTranslateCLM t ht x) =
         inner ℝ
           (P.fixedSlotHilbertDirectLimitTimeTranslateCLM h hh x)
-          (P.fixedSlotHilbertDirectLimitTimeTranslateCLM h hh x) := hfac.symm
+          (P.fixedSlotHilbertDirectLimitTimeTranslateCLM h hh x) := hfac'.symm
     _ = ‖P.fixedSlotHilbertDirectLimitTimeTranslateCLM h hh x‖ ^ 2 :=
       real_inner_self_eq_norm_sq _
     _ = ‖P.fixedSlotHilbertDirectLimitTimeTranslateCLM (t / 2)
