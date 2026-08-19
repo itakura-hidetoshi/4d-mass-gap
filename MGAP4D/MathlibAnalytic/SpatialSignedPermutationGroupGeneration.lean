@@ -94,7 +94,8 @@ theorem spatialAxisAdjacentSwapGenerator_closure_eq_top :
   have hAllSwaps :
       Subgroup.closure {σ : Equiv.Perm (Fin 3) | σ.IsSwap} ≤
         Subgroup.closure spatialAxisAdjacentSwapGeneratorSet := by
-    apply Subgroup.closure_le.2
+    refine (Subgroup.closure_le
+      (Subgroup.closure spatialAxisAdjacentSwapGeneratorSet)).2 ?_
     intro σ hσ
     rcases hσ with ⟨x, y, hxy, rfl⟩
     fin_cases x <;> fin_cases y
@@ -135,7 +136,8 @@ theorem spatialAxisPermutationSignAction_swap_reflect1
   funext j
   fin_cases i <;> fin_cases j <;>
     simp [spatialAxisPermutationSignAction_apply,
-      spatialAxisReflect1Sign, spatialAxisSingleReflectionSign]
+      spatialAxisReflect1Sign, spatialAxisSingleReflectionSign] <;>
+    decide
 
 /-- The three distinguished signed-coordinate generators generate the full abstract group. -/
 theorem spatialSignedPermutationGeneratedSubgroup_eq_top :
