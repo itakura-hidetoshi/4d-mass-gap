@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.SpatialSignedPermutationGroup
-import Mathlib.Algebra.GroupWithZero.Units.Fintype
 import Mathlib.Data.Fintype.BigOperators
 import Mathlib.Data.Fintype.Perm
 import Mathlib.Tactic
@@ -13,11 +12,17 @@ The abstract spatial signed-permutation group is the semidirect product
 
 The integer unit group has exactly two elements, so the sign-function group has `2^3 = 8`
 elements.  The permutation group of three axes has `3! = 6` elements.  Since a semidirect product
-has the product carrier, the abstract signed-coordinate group therefore has exactly
+has a canonical equivalence with its product carrier, the abstract signed-coordinate group therefore
+has exactly
 
 `8 * 6 = 48`
 
 elements.
+
+This file keeps the proof compatible with the repository-pinned mathlib version: the pinned tree
+already proves `ℤˣ = {1, -1}` but does not yet provide the later standalone integer-units `Fintype`
+module.  We therefore install the finite instances locally from the canonical existing theorem and
+from `SemidirectProduct.equivProd`.
 
 This is the finite-order theorem for the abstract group.  Generation by the distinguished three
 generators, comparison with the concrete configuration action, cubic representation labels,
@@ -29,12 +34,31 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+/-- Repository-pin-compatible finite enumeration of the two integer units. -/
+local instance spatialIntegerUnitsFintype : Fintype ℤˣ :=
+  ⟨{1, -1}, fun u => by
+    rcases Int.units_eq_one_or u with h | h
+    · simp [h]
+    · simp [h]⟩
+
+/-- The repository-pinned integer unit type has exactly two elements. -/
+theorem spatialIntegerUnits_card :
+    Fintype.card ℤˣ = 2 := by
+  native_decide
+
+/-- Install finiteness of the semidirect product through its canonical product equivalence. -/
+local instance spatialSignedPermutationGroupFintype :
+    Fintype SpatialSignedPermutationGroup :=
+  Fintype.ofEquiv
+    (SpatialAxisSign × Equiv.Perm (Fin 3))
+    (SemidirectProduct.equivProd (φ := spatialAxisPermutationSignAction)).symm
+
 /-- There are exactly `2^3 = 8` sign assignments on the three spatial axes. -/
 theorem spatialAxisSign_card :
     Fintype.card SpatialAxisSign = 8 := by
   classical
   change Fintype.card (Fin 3 → ℤˣ) = 8
-  rw [Fintype.card_fun, Fintype.card_units_int]
+  rw [Fintype.card_fun, spatialIntegerUnits_card]
   norm_num
 
 /-- The permutation group of the three abstract spatial coordinate axes has `3! = 6` elements. -/
@@ -46,9 +70,14 @@ theorem spatialAxisPermutation_card :
 /-- The abstract three-dimensional signed permutation group has exactly `48` elements. -/
 theorem spatialSignedPermutationGroup_card :
     Fintype.card SpatialSignedPermutationGroup = 48 := by
-  change Fintype.card (SpatialAxisSign × Equiv.Perm (Fin 3)) = 48
-  rw [Fintype.card_prod, spatialAxisSign_card, spatialAxisPermutation_card]
-  norm_num
+  calc
+    Fintype.card SpatialSignedPermutationGroup =
+        Fintype.card (SpatialAxisSign × Equiv.Perm (Fin 3)) :=
+      Fintype.card_congr
+        (SemidirectProduct.equivProd (φ := spatialAxisPermutationSignAction))
+    _ = 48 := by
+      rw [Fintype.card_prod, spatialAxisSign_card, spatialAxisPermutation_card]
+      norm_num
 
 /-- Audit-visible finite-order formulation using `Nat.card`. -/
 theorem spatialSignedPermutationGroup_natCard :
