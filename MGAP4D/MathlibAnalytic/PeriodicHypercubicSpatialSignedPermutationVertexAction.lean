@@ -56,6 +56,15 @@ theorem spatialAxisUnitZMod_mul
       spatialAxisUnitZMod n u * spatialAxisUnitZMod n v := by
   simp [spatialAxisUnitZMod]
 
+/-- Inverse application reverses the order of permutation multiplication. -/
+@[simp]
+theorem spatialAxisPermutation_mul_symm_apply
+    (σ τ : Equiv.Perm (Fin 3))
+    (j : Fin 3) :
+    (σ * τ).symm j = τ.symm (σ.symm j) := by
+  apply (σ * τ).injective
+  simp [Equiv.Perm.mul_apply]
+
 /-- Action of one abstract signed spatial permutation on a periodic four-dimensional vertex.
 Time is fixed; the three spatial coordinates are reindexed by `g.right⁻¹` and multiplied by their
 corresponding abstract signs. -/
@@ -112,10 +121,8 @@ theorem periodicHypercubicVertexSpatialSignedPermutation_mul
   funext i
   refine Fin.cases ?_ (fun j => ?_) i
   · rfl
-  · simp only [periodicHypercubicVertexSpatialSignedPermutation_succ,
-      SemidirectProduct.mul_left, SemidirectProduct.mul_right,
-      spatialAxisPermutationSignAction_apply, spatialAxisUnitZMod_mul]
-    simp [Equiv.Perm.mul_apply, mul_assoc]
+  · simp [periodicHypercubicVertexSpatialSignedPermutation_succ,
+      spatialAxisUnitZMod_mul, mul_assoc]
 
 /-- Every abstract signed spatial permutation therefore gives an actual permutation of the periodic
 vertex carrier. -/
@@ -174,11 +181,13 @@ theorem periodicHypercubicVertexSpatialSignedPermutation_swap12
         spatialSignedPermutationSwap12 x =
       periodicHypercubicVertexSpatialAxisSwap12Equiv n x := by
   funext i
-  fin_cases i <;>
-    simp [periodicHypercubicVertexSpatialSignedPermutation,
-      spatialSignedPermutationSwap12, spatialAxisPositiveSign,
-      spatialAxisUnitZMod,
-      periodicHypercubicVertexSpatialAxisSwap12Equiv_apply]
+  refine Fin.cases ?_ (fun j => ?_) i
+  · rfl
+  · fin_cases j <;>
+      simp [periodicHypercubicVertexSpatialSignedPermutation,
+        spatialSignedPermutationSwap12, spatialAxisPositiveSign,
+        spatialAxisUnitZMod,
+        periodicHypercubicVertexSpatialAxisSwap12Equiv_apply]
 
 /-- The abstract `swap23` generator recovers exactly the previously canonical concrete vertex
 reindexing that swaps lattice axes `2` and `3`. -/
@@ -189,11 +198,13 @@ theorem periodicHypercubicVertexSpatialSignedPermutation_swap23
         spatialSignedPermutationSwap23 x =
       periodicHypercubicVertexSpatialAxisSwap23Equiv n x := by
   funext i
-  fin_cases i <;>
-    simp [periodicHypercubicVertexSpatialSignedPermutation,
-      spatialSignedPermutationSwap23, spatialAxisPositiveSign,
-      spatialAxisUnitZMod,
-      periodicHypercubicVertexSpatialAxisSwap23Equiv_apply]
+  refine Fin.cases ?_ (fun j => ?_) i
+  · rfl
+  · fin_cases j <;>
+      simp [periodicHypercubicVertexSpatialSignedPermutation,
+        spatialSignedPermutationSwap23, spatialAxisPositiveSign,
+        spatialAxisUnitZMod,
+        periodicHypercubicVertexSpatialAxisSwap23Equiv_apply]
 
 /-- The abstract first-coordinate sign flip recovers exactly the previously canonical axis-`1`
 reflection on the even periodic lattice. -/
@@ -205,11 +216,13 @@ theorem periodicHypercubicVertexSpatialSignedPermutation_reflect1
         spatialSignedPermutationReflect1 x =
       periodicHypercubicEvenSpatialAxis1Reflection H x := by
   funext i
-  fin_cases i <;>
-    simp [periodicHypercubicVertexSpatialSignedPermutation,
-      spatialSignedPermutationReflect1, spatialAxisReflect1Sign,
-      spatialAxisUnitZMod,
-      periodicHypercubicEvenSpatialAxis1Reflection]
+  refine Fin.cases ?_ (fun j => ?_) i
+  · rfl
+  · fin_cases j <;>
+      simp [periodicHypercubicVertexSpatialSignedPermutation,
+        spatialSignedPermutationReflect1, spatialAxisReflect1Sign,
+        spatialAxisUnitZMod,
+        periodicHypercubicEvenSpatialAxis1Reflection]
 
 end
 
