@@ -91,8 +91,8 @@ theorem fixedSlotHilbertTimeTranslate_norm_le
   | ih x =>
       rw [P.fixedSlotHilbertTimeTranslateCLM_coe]
       rw [P.fixedSlotSeparatedTimeTranslateCLM_apply]
-      change ‖P.fixedSlotSeparatedTimeTranslate t ht x‖ ≤ ‖x‖
-      exact P.fixedSlotSeparatedTimeTranslate_norm_le t ht x
+      simpa [Hilbert, hilbertNormedAddCommGroup] using
+        P.fixedSlotSeparatedTimeTranslate_norm_le t ht x
 
 /-- The Hilbert-completion translation has operator norm at most one. -/
 theorem fixedSlotHilbertTimeTranslateCLM_norm_le_one
