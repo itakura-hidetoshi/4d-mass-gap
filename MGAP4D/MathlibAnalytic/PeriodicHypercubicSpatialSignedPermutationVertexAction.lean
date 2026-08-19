@@ -65,6 +65,18 @@ theorem spatialAxisPermutation_mul_symm_apply
   apply (σ * τ).injective
   simp [Equiv.Perm.mul_apply]
 
+/-- `swap12` fixes the third abstract spatial coordinate. -/
+@[simp]
+theorem spatialAxisAbstractSwap12_fixed2 :
+    Equiv.swap (0 : Fin 3) 1 (2 : Fin 3) = 2 := by
+  native_decide
+
+/-- `swap23` fixes the first abstract spatial coordinate. -/
+@[simp]
+theorem spatialAxisAbstractSwap23_fixed0 :
+    Equiv.swap (1 : Fin 3) 2 (0 : Fin 3) = 0 := by
+  native_decide
+
 /-- `Fin.cases` at the first spatial coordinate of `Fin 4`. -/
 @[simp]
 theorem periodicHypercubicFinCases_spatial1
