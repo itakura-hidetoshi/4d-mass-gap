@@ -184,7 +184,19 @@ theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaResolvent_tendsto_on_close
       atTop
       (nhds ((x : P.fixedSlotHilbertDirectLimitRegularSubspace) - 0)) :=
     hxconst.sub herror
-  simpa only [sub_zero, sub_sub_cancel_left] using hrecover
+  have hrecoverFunction :
+      (fun n : ℕ =>
+        (x : P.fixedSlotHilbertDirectLimitRegularSubspace) -
+          ((x : P.fixedSlotHilbertDirectLimitRegularSubspace) -
+            P.fixedSlotHilbertDirectLimitRegularDyadicYosidaResolvent n
+              (x : P.fixedSlotHilbertDirectLimitRegularSubspace))) =
+      (fun n : ℕ =>
+        P.fixedSlotHilbertDirectLimitRegularDyadicYosidaResolvent n
+          (x : P.fixedSlotHilbertDirectLimitRegularSubspace)) := by
+    funext n
+    abel
+  rw [hrecoverFunction] at hrecover
+  simpa only [sub_zero] using hrecover
 
 /-- Bounded Yosida Hamiltonian `H_λ = λ (I - J_λ)`. -/
 noncomputable def fixedSlotHilbertDirectLimitRegularYosidaHamiltonian
