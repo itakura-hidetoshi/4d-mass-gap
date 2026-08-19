@@ -163,7 +163,8 @@ theorem fixedSlotHilbertDirectLimitRegularPositiveResolvent_identity
       (mu - lambda) •
         ((P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda).comp
           (P.fixedSlotHilbertDirectLimitRegularPositiveResolvent mu hmu)) := by
-  simpa [fixedSlotHilbertDirectLimitRegularPositiveResolvent] using
+  have hscalar : -lambda + mu = mu - lambda := by ring
+  simpa [fixedSlotHilbertDirectLimitRegularPositiveResolvent, hscalar] using
     P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian.realResolvent_sub_eq_smul_comp
       P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian_isSelfAdjoint
       (mass := (0 : ℝ)) (lambda := -lambda) (mu := -mu)
@@ -185,7 +186,8 @@ theorem fixedSlotHilbertDirectLimitRegularPositiveResolvent_sub_norm_le
       (mass := (0 : ℝ)) (lambda := -lambda) (mu := -mu)
       (neg_lt_zero.mpr hlambda) (neg_lt_zero.mpr hmu)
       P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian_zero_rayleigh_lower_bound
-  simpa [fixedSlotHilbertDirectLimitRegularPositiveResolvent, abs_sub_comm] using h
+  have hscalar : -lambda + mu = mu - lambda := by ring
+  simpa [fixedSlotHilbertDirectLimitRegularPositiveResolvent, hscalar] using h
 
 /-- Normalized Yosida resolvent `J_λ = λ(λI + H̄)⁻¹`. -/
 noncomputable def fixedSlotHilbertDirectLimitRegularYosidaResolvent
@@ -232,9 +234,15 @@ theorem fixedSlotHilbertDirectLimitRegularYosidaResolvent_norm_le_one
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
     (lambda : ℝ) (hlambda : 0 < lambda) :
     ‖P.fixedSlotHilbertDirectLimitRegularYosidaResolvent lambda hlambda‖ ≤ 1 := by
-  apply ContinuousLinearMap.opNorm_le_bound zero_le_one
-  intro y
-  simpa using P.fixedSlotHilbertDirectLimitRegularYosidaResolvent_norm_bound lambda hlambda y
+  unfold fixedSlotHilbertDirectLimitRegularYosidaResolvent
+  rw [norm_smul, Real.norm_eq_abs, abs_of_pos hlambda]
+  have hres := P.fixedSlotHilbertDirectLimitRegularPositiveResolvent_norm_le lambda hlambda
+  have hinv : lambda * lambda⁻¹ = 1 := by
+    exact mul_inv_cancel₀ (ne_of_gt hlambda)
+  calc
+    lambda * ‖P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda‖ ≤
+        lambda * lambda⁻¹ := mul_le_mul_of_nonneg_left hres hlambda.le
+    _ = 1 := hinv
 
 /-- Bounded positive-resolvent/Yosida package. -/
 theorem fixedSlotHilbertDirectLimitRegularPositiveResolventYosida_package
