@@ -173,8 +173,41 @@ theorem fixedSlotHilbertDirectLimitRegularSubspace_invariant
     (𝓝 0) (𝓝 (x : P.fixedSlotHilbertDirectLimitCompletion)) at hx
   have hcomp :=
     (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM s).continuous.continuousAt.tendsto.comp hx
-  simpa only [Function.comp_apply,
-    P.fixedSlotHilbertDirectLimitNNRatTimeTranslate_add, add_comm] using hcomp
+  change Tendsto
+    (fun t : NNRat =>
+      P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM s
+        (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t
+          (x : P.fixedSlotHilbertDirectLimitCompletion)))
+    (𝓝 0)
+    (𝓝 (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM s
+      (x : P.fixedSlotHilbertDirectLimitCompletion))) at hcomp
+  have hcomm :
+      (fun t : NNRat =>
+        P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t
+          (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM s
+            (x : P.fixedSlotHilbertDirectLimitCompletion))) =
+        (fun t : NNRat =>
+          P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM s
+            (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t
+              (x : P.fixedSlotHilbertDirectLimitCompletion))) := by
+    funext t
+    calc
+      P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t
+          (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM s
+            (x : P.fixedSlotHilbertDirectLimitCompletion)) =
+        P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM (s + t)
+          (x : P.fixedSlotHilbertDirectLimitCompletion) :=
+        P.fixedSlotHilbertDirectLimitNNRatTimeTranslate_add t s
+          (x : P.fixedSlotHilbertDirectLimitCompletion)
+      _ = P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM (t + s)
+          (x : P.fixedSlotHilbertDirectLimitCompletion) := by rw [add_comm]
+      _ = P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM s
+          (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t
+            (x : P.fixedSlotHilbertDirectLimitCompletion)) :=
+        (P.fixedSlotHilbertDirectLimitNNRatTimeTranslate_add s t
+          (x : P.fixedSlotHilbertDirectLimitCompletion)).symm
+  rw [hcomm]
+  exact hcomp
 
 /-- The defect between two ordered orbit times is bounded by the corresponding zero-time defect. -/
 theorem fixedSlotHilbertDirectLimitNNRatTimeTranslate_sub_norm_le
@@ -212,8 +245,28 @@ theorem fixedSlotHilbertDirectLimitRegularSubspace_tendsto_add_zero
     (𝓝 0) (𝓝 (x : P.fixedSlotHilbertDirectLimitCompletion)) at hx
   have hs :=
     (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM s).continuous.continuousAt.tendsto.comp hx
-  simpa only [Function.comp_apply,
-    P.fixedSlotHilbertDirectLimitNNRatTimeTranslate_add] using hs
+  change Tendsto
+    (fun t : NNRat =>
+      P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM s
+        (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t
+          (x : P.fixedSlotHilbertDirectLimitCompletion)))
+    (𝓝 0)
+    (𝓝 (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM s
+      (x : P.fixedSlotHilbertDirectLimitCompletion))) at hs
+  have hfun :
+      (fun t : NNRat =>
+        P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM (t + s)
+          (x : P.fixedSlotHilbertDirectLimitCompletion)) =
+        (fun t : NNRat =>
+          P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM s
+            (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t
+              (x : P.fixedSlotHilbertDirectLimitCompletion))) := by
+    funext t
+    exact
+      (P.fixedSlotHilbertDirectLimitNNRatTimeTranslate_add s t
+        (x : P.fixedSlotHilbertDirectLimitCompletion)).symm
+  rw [hfun]
+  exact hs
 
 /-- A regular rational orbit is uniformly continuous. This is the quantitative input for canonical
 extension to nonnegative real time. -/
@@ -234,7 +287,7 @@ theorem fixedSlotHilbertDirectLimitRegularSubspace_uniformContinuous_orbit
       P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t
         (x : P.fixedSlotHilbertDirectLimitCompletion))
     (𝓝 0) (𝓝 (x : P.fixedSlotHilbertDirectLimitCompletion)) at hx0
-  rw [Metric.tendsto_nhds] at hx0
+  rw [Metric.tendsto_nhds_nhds] at hx0
   obtain ⟨δ, hδ, hclose⟩ := hx0 ε hε
   refine ⟨δ, hδ, ?_⟩
   intro a b hab
