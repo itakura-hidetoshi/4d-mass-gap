@@ -150,10 +150,11 @@ theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_hasDerivAt
       P.fixedSlotHilbertDirectLimitRegularSubspace →L[ℝ]
         P.fixedSlotHilbertDirectLimitRegularSubspace :=
     P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n
-  change HasDerivAt
-    (fun r : ℝ => NormedSpace.exp (r • A))
-    (NormedSpace.exp (t • A) * A) t
-  exact continuousLinearEndomorphism_exp_smul_hasDerivAt A t
+  have hA : HasDerivAt
+      (fun r : ℝ => NormedSpace.exp (r • A))
+      (NormedSpace.exp (t • A) * A) t :=
+    continuousLinearEndomorphism_exp_smul_hasDerivAt A t
+  simpa only [fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal, A] using hA
 
 /-- The real-time bounded Yosida exponential is continuous in operator norm. -/
 theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_continuous
