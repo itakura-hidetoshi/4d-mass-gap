@@ -77,6 +77,17 @@ private theorem continuousLinearEndomorphism_exp_smul_hasDerivAt
   exact hasDerivAt_exp_smul_const
     (𝕂 := ℝ) (𝔸 := K →L[ℝ] K) A t
 
+/-- Generic operator-norm continuity of the exponential scalar line.  Keeping the projection from
+`HasDerivAt` to `ContinuousAt` at this generic level avoids expensive dependent-type unification
+when the result is specialized to the same-root regular carrier. -/
+private theorem continuousLinearEndomorphism_exp_smul_continuous
+    {K : Type*} [NormedAddCommGroup K] [NormedSpace ℝ K] [CompleteSpace K]
+    (A : K →L[ℝ] K) :
+    Continuous (fun t : ℝ => NormedSpace.exp (t • A)) := by
+  rw [continuous_iff_continuousAt]
+  intro t
+  exact (continuousLinearEndomorphism_exp_smul_hasDerivAt A t).continuousAt
+
 /-- The bounded negative dyadic Yosida generator `-H_{2^n}`. -/
 noncomputable def fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian
     (P : PrimaryScalarFixedSlotOSPreHilbertData
@@ -163,9 +174,14 @@ theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_continuous
     (n : ℕ) :
     Continuous
       (fun t : ℝ => P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n t) := by
-  rw [continuous_iff_continuousAt]
-  intro t
-  exact (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_hasDerivAt n t).continuousAt
+  let K := P.fixedSlotHilbertDirectLimitRegularSubspace
+  letI : CompleteSpace K :=
+    P.fixedSlotHilbertDirectLimitRegularSubspace_completeSpace
+  let A : K →L[ℝ] K :=
+    P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n
+  have hA : Continuous (fun t : ℝ => NormedSpace.exp (t • A)) :=
+    continuousLinearEndomorphism_exp_smul_continuous A
+  simpa only [fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal, K, A] using hA
 
 /-- Positive-time restriction of the bounded dyadic Yosida exponential. -/
 noncomputable def fixedSlotHilbertDirectLimitRegularDyadicYosidaExponential
