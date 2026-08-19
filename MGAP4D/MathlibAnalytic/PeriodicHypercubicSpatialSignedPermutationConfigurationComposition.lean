@@ -113,7 +113,8 @@ theorem periodicHypercubicConfigurationSpatialSignedPermutation_mul
             (hi * gi).left ((hi * gi).right k) = 1 := by
           rw [spatialSignedPermutation_mul_imageSign, hh, hg]
           simp
-        simp [periodicHypercubicStepValue, hg, hh, hprod,
+        simp [periodicHypercubicConfigurationSpatialSignedPermutation,
+          periodicHypercubicStepValue, hhi, hg, hh, hprod,
           periodicHypercubicVertexSpatialSignedPermutation_mul]
       · have hhneg :
             hi.left (hi.right (gi.right k)) = (-1 : ℤˣ) :=
@@ -123,7 +124,8 @@ theorem periodicHypercubicConfigurationSpatialSignedPermutation_mul
             (hi * gi).left ((hi * gi).right k) ≠ 1 := by
           rw [spatialSignedPermutation_mul_imageSign, hhneg, hg]
           native_decide
-        simp [periodicHypercubicStepValue, hg, hh, hhneg, hprod,
+        simp [periodicHypercubicConfigurationSpatialSignedPermutation,
+          periodicHypercubicStepValue, hhi, hg, hh, hhneg, hprod,
           periodicHypercubicVertexSpatialSignedPermutation_mul]
     · have hgneg :
           gi.left (gi.right k) = (-1 : ℤˣ) :=
@@ -133,7 +135,8 @@ theorem periodicHypercubicConfigurationSpatialSignedPermutation_mul
             (hi * gi).left ((hi * gi).right k) ≠ 1 := by
           rw [spatialSignedPermutation_mul_imageSign, hh, hgneg]
           native_decide
-        simp [periodicHypercubicStepValue, hg, hgneg, hh, hprod,
+        simp [periodicHypercubicConfigurationSpatialSignedPermutation,
+          periodicHypercubicStepValue, hhi, hg, hgneg, hh, hprod,
           periodicHypercubicVertexSpatialSignedPermutation_mul,
           periodicHypercubicVertexSpatialSignedPermutation_unshift_spatial_of_pos]
       · have hhneg :
@@ -144,7 +147,8 @@ theorem periodicHypercubicConfigurationSpatialSignedPermutation_mul
             (hi * gi).left ((hi * gi).right k) = 1 := by
           rw [spatialSignedPermutation_mul_imageSign, hhneg, hgneg]
           native_decide
-        simp [periodicHypercubicStepValue, hg, hgneg, hh, hhneg, hprod,
+        simp [periodicHypercubicConfigurationSpatialSignedPermutation,
+          periodicHypercubicStepValue, hhi, hg, hgneg, hh, hhneg, hprod,
           periodicHypercubicVertexSpatialSignedPermutation_mul,
           periodicHypercubicVertexSpatialSignedPermutation_unshift_spatial_of_neg]
 
