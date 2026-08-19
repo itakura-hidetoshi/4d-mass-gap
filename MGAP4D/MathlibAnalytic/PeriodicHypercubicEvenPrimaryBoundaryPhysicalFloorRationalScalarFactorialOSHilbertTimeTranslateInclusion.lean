@@ -165,10 +165,10 @@ theorem fixedSlotHilbertTimeTranslateCLM_inclusion
   | hp =>
       exact
         isClosed_eq
-          ((P.fixedSlotTimeTranslateData t ht).fixedSlotHilbertLinearIsometry
+          (((P.fixedSlotTimeTranslateData t ht).fixedSlotHilbertLinearIsometry
               (Q.fixedSlotTimeTranslateData t ht)
               (P.fixedSlotTimeTranslateData_mono Q hPQ t ht)).continuous.comp
-            (P.fixedSlotHilbertTimeTranslateCLM t ht).continuous
+            (P.fixedSlotHilbertTimeTranslateCLM t ht).continuous)
           ((Q.fixedSlotHilbertTimeTranslateCLM t ht).continuous.comp
             (P.fixedSlotHilbertLinearIsometry Q hPQ).continuous)
   | ih x =>
