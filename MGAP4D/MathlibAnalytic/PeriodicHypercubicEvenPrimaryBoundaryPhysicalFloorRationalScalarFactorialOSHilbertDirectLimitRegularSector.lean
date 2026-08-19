@@ -301,10 +301,10 @@ theorem fixedSlotHilbertDirectLimitRegularSubspace_uniformContinuous_orbit
         rw [NNRat.dist_eq, NNRat.dist_eq]
         change dist ((b - a : NNRat) : ℚ) 0 = dist (b : ℚ) (a : ℚ)
         rw [NNRat.coe_sub hab_le]
-        simp [Rat.dist_eq, abs_of_nonneg, sub_nonneg.mpr hab_le]
+        simp only [dist_eq_norm, sub_zero]
       rw [hdist, dist_comm]
       exact hab
-    have hzero := hclose d hdδ
+    have hzero := hclose (x_1 := d) hdδ
     rw [dist_eq_norm] at hzero ⊢
     rw [← hba]
     exact lt_of_le_of_lt
@@ -319,10 +319,10 @@ theorem fixedSlotHilbertDirectLimitRegularSubspace_uniformContinuous_orbit
         rw [NNRat.dist_eq, NNRat.dist_eq]
         change dist ((a - b : NNRat) : ℚ) 0 = dist (a : ℚ) (b : ℚ)
         rw [NNRat.coe_sub hba_le]
-        simp [Rat.dist_eq, abs_of_nonneg, sub_nonneg.mpr hba_le]
+        simp only [dist_eq_norm, sub_zero]
       rw [hdist]
       exact hab
-    have hzero := hclose d hdδ
+    have hzero := hclose (x_1 := d) hdδ
     rw [dist_eq_norm] at hzero ⊢
     rw [← hab']
     rw [norm_sub_rev]
