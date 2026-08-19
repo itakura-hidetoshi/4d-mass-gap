@@ -125,7 +125,7 @@ def periodicHypercubicEvenSpatialPlaneAxis1ReflectionRebaseEquiv
 
 /-- Conjugating edge value for the cyclic rebase in a plane containing axis `1`. -/
 def periodicHypercubicEvenSpatialAxis1ReflectionConjugator
-    {Gauge : Type*} [Group Gauge]
+    {H : ℕ} {Gauge : Type*} [Group Gauge]
     (a : PeriodicHypercubicEvenSpatialDisplacement H)
     (A : PeriodicHypercubicEvenEdge H → Gauge) : Gauge :=
   (A (a.1, (1 : PeriodicHypercubicAxis)))⁻¹
