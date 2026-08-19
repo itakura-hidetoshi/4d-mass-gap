@@ -26,14 +26,15 @@ theorem nnratToNNReal_coe (q : NNRat) :
   rfl
 
 @[simp]
-theorem nnratToNNReal_zero : nnratToNNReal 0 = 0 :=
-  rfl
+theorem nnratToNNReal_zero : nnratToNNReal 0 = 0 := by
+  apply NNReal.eq
+  simp [nnratToNNReal]
 
 @[simp]
 theorem nnratToNNReal_add (p q : NNRat) :
     nnratToNNReal (p + q) = nnratToNNReal p + nnratToNNReal q := by
   apply NNReal.eq
-  norm_cast
+  simp [nnratToNNReal]
 
 /-- The half-line rational inclusion preserves distances exactly. -/
 theorem nnratToNNReal_isometry : Isometry nnratToNNReal := by
@@ -52,7 +53,7 @@ theorem nnratToNNReal_denseRange : DenseRange nnratToNNReal := by
   apply dense_of_exists_between
   intro a b hab
   have habR : (a : ℝ) < (b : ℝ) := by exact_mod_cast hab
-  obtain ⟨q, haq, hqb⟩ := exists_rat_btwn_of_lt habR
+  obtain ⟨q, haq, hqb⟩ := exists_rat_btwn habR
   have hq0 : (0 : ℚ) ≤ q := by
     have ha0 : (0 : ℝ) ≤ (a : ℝ) := a.2
     have hq0R : (0 : ℝ) < (q : ℝ) := lt_of_le_of_lt ha0 haq
