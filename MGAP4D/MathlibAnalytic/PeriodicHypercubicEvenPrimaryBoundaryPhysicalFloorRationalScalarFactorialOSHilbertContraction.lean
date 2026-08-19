@@ -72,6 +72,27 @@ theorem fixedSlotHilbertTimeTranslateCLM_coe
         Completion (P.fixedSlotTimeTranslateData t ht).Separated)
   exact ContinuousLinearMap.completion_apply_coe _ _
 
+/-- On the literal Mathlib completion, separated rational-time translation remains a contraction.
+This isolates the canonical completion norm before passing through the project's `Hilbert` wrapper. -/
+theorem fixedSlotCompletionTimeTranslate_norm_le
+    (P : PrimaryScalarFixedSlotOSPreHilbertData
+      H N hN beta hbeta
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
+    (t : ℚ) (ht : 0 ≤ t)
+    (x : Completion P.Separated) :
+    ‖(P.fixedSlotSeparatedTimeTranslateCLM t ht).completion x‖ ≤ ‖x‖ := by
+  induction x using Completion.induction_on with
+  | hp =>
+      exact
+        isClosed_le
+          (continuous_norm.comp
+            (P.fixedSlotSeparatedTimeTranslateCLM t ht).completion.continuous)
+          continuous_norm
+  | ih x =>
+      rw [ContinuousLinearMap.completion_apply_coe]
+      simpa only [Completion.norm_coe, P.fixedSlotSeparatedTimeTranslateCLM_apply] using
+        P.fixedSlotSeparatedTimeTranslate_norm_le t ht x
+
 /-- The completed fixed-slot rational-time translation remains a contraction. -/
 theorem fixedSlotHilbertTimeTranslate_norm_le
     (P : PrimaryScalarFixedSlotOSPreHilbertData
@@ -80,20 +101,8 @@ theorem fixedSlotHilbertTimeTranslate_norm_le
     (t : ℚ) (ht : 0 ≤ t)
     (x : P.Hilbert) :
     ‖P.fixedSlotHilbertTimeTranslateCLM t ht x‖ ≤ ‖x‖ := by
-  change
-    ‖P.fixedSlotHilbertTimeTranslateCLM t ht x‖ ≤ ‖x‖
-  induction x using Completion.induction_on with
-  | hp =>
-      exact
-        isClosed_le
-          (continuous_norm.comp (P.fixedSlotHilbertTimeTranslateCLM t ht).continuous)
-          continuous_norm
-  | ih x =>
-      rw [P.fixedSlotHilbertTimeTranslateCLM_coe]
-      rw [P.fixedSlotSeparatedTimeTranslateCLM_apply]
-      with_reducible_and_instances
-        change ‖P.fixedSlotSeparatedTimeTranslate t ht x‖ ≤ ‖x‖
-      exact P.fixedSlotSeparatedTimeTranslate_norm_le t ht x
+  with_unfolding_all
+    exact P.fixedSlotCompletionTimeTranslate_norm_le t ht x
 
 /-- The Hilbert-completion translation has operator norm at most one. -/
 theorem fixedSlotHilbertTimeTranslateCLM_norm_le_one
