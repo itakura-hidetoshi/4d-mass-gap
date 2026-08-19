@@ -48,17 +48,20 @@ local instance regularOperatorIsTopologicalRing
     IsTopologicalRing (K →L[ℝ] K) :=
   NonUnitalSeminormedRing.toIsTopologicalRing
 
-/-- Two real scalar multiples of the same bounded endomorphism commute.  Proving this pointwise
-avoids the stronger `SMulCommClass` assumption used by the generic `Commute.smul_left/right`
-convenience lemmas. -/
-private theorem continuousLinearEndomorphism_smul_commute
-    {K : Type*} [NormedAddCommGroup K] [NormedSpace ℝ K]
+/-- Generic Banach-algebra semigroup law for the exponential scalar line through one bounded
+real endomorphism.  The commutation goal is created by `exp_add_of_commute` itself, so its
+multiplication instance is exactly the one used by the Banach-algebra theorem. -/
+private theorem continuousLinearEndomorphism_exp_smul_add
+    {K : Type*} [NormedAddCommGroup K] [NormedSpace ℝ K] [CompleteSpace K]
     (A : K →L[ℝ] K) (s t : ℝ) :
-    Commute (s • A) (t • A) := by
-  apply Commute.intro
+    NormedSpace.exp ((s + t) • A) =
+      NormedSpace.exp (s • A) * NormedSpace.exp (t • A) := by
+  rw [add_smul]
+  apply NormedSpace.exp_add_of_commute
+  change (s • A) * (t • A) = (t • A) * (s • A)
   ext x
-  simp only [mul_apply_eq_comp, smul_apply, map_smul, smul_smul]
-  rw [mul_comm s t]
+  change s • A (t • A x) = t • A (s • A x)
+  rw [A.map_smul, A.map_smul, smul_smul, smul_smul, mul_comm s t]
 
 /-- Generic Banach-algebra derivative for the exponential of a bounded real endomorphism.
 Keeping this helper independent of the large same-root dependent carrier prevents expensive
@@ -116,6 +119,8 @@ theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_add
     P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n (s + t) =
       P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n s *
         P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n t := by
+  letI : CompleteSpace P.fixedSlotHilbertDirectLimitRegularSubspace :=
+    P.fixedSlotHilbertDirectLimitRegularSubspace_completeSpace
   let A :
       P.fixedSlotHilbertDirectLimitRegularSubspace →L[ℝ]
         P.fixedSlotHilbertDirectLimitRegularSubspace :=
@@ -123,10 +128,7 @@ theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_add
   change
     NormedSpace.exp ((s + t) • A) =
       NormedSpace.exp (s • A) * NormedSpace.exp (t • A)
-  have hsum : (s + t) • A = s • A + t • A := add_smul s t A
-  rw [hsum]
-  exact NormedSpace.exp_add_of_commute
-    (continuousLinearEndomorphism_smul_commute A s t)
+  exact continuousLinearEndomorphism_exp_smul_add A s t
 
 /-- Banach-algebra derivative of the real-time bounded Yosida exponential. -/
 theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_hasDerivAt
@@ -139,6 +141,8 @@ theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_hasDerivAt
       (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n t *
         P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n)
       t := by
+  letI : CompleteSpace P.fixedSlotHilbertDirectLimitRegularSubspace :=
+    P.fixedSlotHilbertDirectLimitRegularSubspace_completeSpace
   let A :
       P.fixedSlotHilbertDirectLimitRegularSubspace →L[ℝ]
         P.fixedSlotHilbertDirectLimitRegularSubspace :=
