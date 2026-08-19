@@ -160,11 +160,18 @@ theorem periodicHypercubicEvenAllSpatialPlanesZeroMomentumNormalizedTrace_genera
   have hone : P 1 := by
     intro B
     rfl
-  have hmul : ∀ x y, P x → P y → P (x * y) := by
-    intro x y hx hy B
+  have hmul :
+      ∀ x y,
+        x ∈ periodicHypercubicEvenGeneratedSignedSpatialPermutationSubgroup H N →
+        y ∈ periodicHypercubicEvenGeneratedSignedSpatialPermutationSubgroup H N →
+        P x → P y → P (x * y) := by
+    intro x y _hxmem _hymem hx hy B
     simpa using (hx (y B)).trans (hy B)
-  have hinv : ∀ x, P x → P x⁻¹ := by
-    intro x hx B
+  have hinv :
+      ∀ x,
+        x ∈ periodicHypercubicEvenGeneratedSignedSpatialPermutationSubgroup H N →
+        P x → P x⁻¹ := by
+    intro x _hxmem hx B
     have h := hx (x⁻¹ B)
     have h' :
         periodicHypercubicEvenAllSpatialPlanesZeroMomentumNormalizedTrace H N B =
