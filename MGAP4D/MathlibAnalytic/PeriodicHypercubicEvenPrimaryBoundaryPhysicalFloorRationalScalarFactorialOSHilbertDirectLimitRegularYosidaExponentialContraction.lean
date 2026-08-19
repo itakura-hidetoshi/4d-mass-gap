@@ -117,8 +117,8 @@ theorem fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian_inner_
   unfold fixedSlotHilbertDirectLimitRegularDyadicYosidaHamiltonian
   rw [P.fixedSlotHilbertDirectLimitRegularYosidaHamiltonian_apply, inner_neg_left]
   apply neg_nonpos.mpr
-  rw [real_inner_smul_left, inner_sub_left]
-  exact mul_nonneg hscale (sub_nonneg.mpr hinner)
+  simpa [real_inner_smul_left, inner_sub_left] using
+    (mul_nonneg hscale (sub_nonneg.mpr hinner))
 
 /-- Pointwise derivative of the bounded Yosida exponential orbit. -/
 theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_apply_hasDerivAt
