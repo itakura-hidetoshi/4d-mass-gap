@@ -42,6 +42,15 @@ theorem periodicHypercubicSpatialSignedPermutationAxis_val
     periodicHypercubicSpatialSignedPermutationAxis g k = Fin.succ (g.right k) :=
   rfl
 
+/-- Euclidean time axis `0 : Fin 4` is distinct from every embedded spatial axis. -/
+@[simp]
+theorem periodicHypercubicTimeAxis_ne_spatialSucc
+    (k : Fin 3) :
+    (0 : Fin 4) ≠ Fin.succ k := by
+  intro h
+  have hval := congrArg Fin.val h
+  omega
+
 /-- The sign carried by the image of any spatial axis is exactly `+1` or `-1`. -/
 theorem spatialSignedPermutation_imageSign_eq_one_or_neg_one
     (g : SpatialSignedPermutationGroup)
