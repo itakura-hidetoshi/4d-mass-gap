@@ -90,7 +90,8 @@ theorem fixedSlotHilbertTimeTranslate_norm_le
           continuous_norm
   | ih x =>
       rw [P.fixedSlotHilbertTimeTranslateCLM_coe]
-      simpa using P.fixedSlotSeparatedTimeTranslate_norm_le t ht x
+      simpa only [Completion.norm_coe, P.fixedSlotSeparatedTimeTranslateCLM_apply] using
+        P.fixedSlotSeparatedTimeTranslate_norm_le t ht x
 
 /-- The Hilbert-completion translation has operator norm at most one. -/
 theorem fixedSlotHilbertTimeTranslateCLM_norm_le_one
