@@ -115,12 +115,25 @@ noncomputable def fixedSlotHilbertDirectLimitRegularSubspace
     simpa using hconst
   add_mem' := by
     intro x y hx hy
-    have hxy := hx.add hy
-    simpa only [map_add] using hxy
+    change Tendsto
+      (fun t : NNRat => P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t x)
+      (𝓝 0) (𝓝 x) at hx
+    change Tendsto
+      (fun t : NNRat => P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t y)
+      (𝓝 0) (𝓝 y) at hy
+    change Tendsto
+      (fun t : NNRat => P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t (x + y))
+      (𝓝 0) (𝓝 (x + y))
+    simpa only [map_add] using hx.add hy
   smul_mem' := by
     intro c x hx
-    have hcx := hx.const_smul c
-    simpa only [map_smul] using hcx
+    change Tendsto
+      (fun t : NNRat => P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t x)
+      (𝓝 0) (𝓝 x) at hx
+    change Tendsto
+      (fun t : NNRat => P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t (c • x))
+      (𝓝 0) (𝓝 (c • x))
+    simpa only [map_smul] using hx.const_smul c
 
 /-- Membership is exactly zero-time strong continuity of the rational orbit. -/
 theorem mem_fixedSlotHilbertDirectLimitRegularSubspace_iff
@@ -144,21 +157,24 @@ theorem fixedSlotHilbertDirectLimitRegularSubspace_invariant
     P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM s
         (x : P.fixedSlotHilbertDirectLimitCompletion) ∈
       P.fixedSlotHilbertDirectLimitRegularSubspace := by
+  change Tendsto
+    (fun t : NNRat =>
+      P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t
+        (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM s
+          (x : P.fixedSlotHilbertDirectLimitCompletion)))
+    (𝓝 0)
+    (𝓝 (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM s
+      (x : P.fixedSlotHilbertDirectLimitCompletion)))
   have hx := x.2
+  change Tendsto
+    (fun t : NNRat =>
+      P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t
+        (x : P.fixedSlotHilbertDirectLimitCompletion))
+    (𝓝 0) (𝓝 (x : P.fixedSlotHilbertDirectLimitCompletion)) at hx
   have hcomp :=
     (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM s).continuous.continuousAt.tendsto.comp hx
-  have hadd :
-      (fun t : NNRat =>
-          P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM s
-            (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t
-              (x : P.fixedSlotHilbertDirectLimitCompletion))) =
-        fun t : NNRat =>
-          P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM (t + s)
-            (x : P.fixedSlotHilbertDirectLimitCompletion) := by
-    funext t
-    exact P.fixedSlotHilbertDirectLimitNNRatTimeTranslate_add s t x
-  rw [hadd] at hcomp
-  exact hcomp
+  simpa only [Function.comp_apply,
+    P.fixedSlotHilbertDirectLimitNNRatTimeTranslate_add, add_comm] using hcomp
 
 /-- The defect between two ordered orbit times is bounded by the corresponding zero-time defect. -/
 theorem fixedSlotHilbertDirectLimitNNRatTimeTranslate_sub_norm_le
@@ -189,9 +205,15 @@ theorem fixedSlotHilbertDirectLimitRegularSubspace_tendsto_add_zero
       (𝓝 (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM s
         (x : P.fixedSlotHilbertDirectLimitCompletion))) := by
   have hx := x.2
+  change Tendsto
+    (fun t : NNRat =>
+      P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t
+        (x : P.fixedSlotHilbertDirectLimitCompletion))
+    (𝓝 0) (𝓝 (x : P.fixedSlotHilbertDirectLimitCompletion)) at hx
   have hs :=
     (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM s).continuous.continuousAt.tendsto.comp hx
-  simpa only [P.fixedSlotHilbertDirectLimitNNRatTimeTranslate_add] using hs
+  simpa only [Function.comp_apply,
+    P.fixedSlotHilbertDirectLimitNNRatTimeTranslate_add] using hs
 
 /-- A regular rational orbit is uniformly continuous. This is the quantitative input for canonical
 extension to nonnegative real time. -/
@@ -207,6 +229,11 @@ theorem fixedSlotHilbertDirectLimitRegularSubspace_uniformContinuous_orbit
   rw [Metric.uniformContinuous_iff]
   intro ε hε
   have hx0 := x.2
+  change Tendsto
+    (fun t : NNRat =>
+      P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t
+        (x : P.fixedSlotHilbertDirectLimitCompletion))
+    (𝓝 0) (𝓝 (x : P.fixedSlotHilbertDirectLimitCompletion)) at hx0
   rw [Metric.tendsto_nhds] at hx0
   obtain ⟨δ, hδ, hclose⟩ := hx0 ε hε
   refine ⟨δ, hδ, ?_⟩
