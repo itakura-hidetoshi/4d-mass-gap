@@ -46,10 +46,8 @@ theorem periodicHypercubicSpatialSignedPermutationAxis_val
 @[simp]
 theorem periodicHypercubicTimeAxis_ne_spatialSucc
     (k : Fin 3) :
-    (0 : Fin 4) ≠ Fin.succ k := by
-  intro h
-  have hval := congrArg Fin.val h
-  omega
+    (0 : Fin 4) ≠ Fin.succ k :=
+  Ne.symm (Fin.succ_ne_zero k)
 
 /-- The sign carried by the image of any spatial axis is exactly `+1` or `-1`. -/
 theorem spatialSignedPermutation_imageSign_eq_one_or_neg_one
