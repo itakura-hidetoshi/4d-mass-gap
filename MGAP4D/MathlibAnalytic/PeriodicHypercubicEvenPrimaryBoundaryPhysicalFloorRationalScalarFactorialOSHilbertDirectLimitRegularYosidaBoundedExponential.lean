@@ -144,8 +144,6 @@ theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_hasDerivAt
       (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n t *
         P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n)
       t := by
-  letI : CompleteSpace P.fixedSlotHilbertDirectLimitRegularSubspace :=
-    P.fixedSlotHilbertDirectLimitRegularSubspace_completeSpace
   let A :
       P.fixedSlotHilbertDirectLimitRegularSubspace →L[ℝ]
         P.fixedSlotHilbertDirectLimitRegularSubspace :=
