@@ -80,7 +80,13 @@ theorem fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient_zero
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
     (t : NNReal) :
     P.fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient 0 t = 0 := by
-  simp [fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient]
+  unfold fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient
+  have hmapzero :
+      P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t
+          (0 : P.fixedSlotHilbertDirectLimitRegularSubspace) = 0 :=
+    map_zero _
+  rw [hmapzero]
+  simp
 
 @[simp]
 theorem fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient_add
@@ -227,7 +233,7 @@ theorem fixedSlotHilbertDirectLimitRegularClampedRealOrbit_endomorphism_eq_add_o
   have hs_to : s.toNNReal = NNReal.mk s hs := Real.toNNReal_of_nonneg hs
   have hsum : (s + (t : ℝ)).toNNReal = NNReal.mk s hs + t := by
     apply NNReal.eq
-    simp [Real.coe_toNNReal, add_nonneg hs t.coe_nonneg]
+    simp [add_nonneg hs t.coe_nonneg]
   rw [hs_to, hsum]
   exact P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_add_apply _ _ x
 
@@ -268,10 +274,11 @@ theorem fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_timeIntegral
         (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t x) := by
   unfold fixedSlotHilbertDirectLimitRegularTimeIntegral
   unfold fixedSlotHilbertDirectLimitRegularTimePrimitive
+  have hxint :=
+    (P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit_continuous x).intervalIntegrable
+      0 (h : ℝ)
   rw [← ContinuousLinearMap.intervalIntegral_comp_comm
-    (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t)
-    ((P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit_continuous x)
-      .intervalIntegrable 0 (h : ℝ))]
+    (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t) hxint]
   apply intervalIntegral.integral_congr
   intro s hs
   exact P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_clampedRealOrbit t x s
@@ -311,13 +318,15 @@ theorem fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_timeIntegral_eq_p
         P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit x s) -
         ∫ s in (0 : ℝ)..(t : ℝ),
           P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit x s := by
+      have hlong :=
+        (P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit_continuous x).intervalIntegrable
+          0 ((t : ℝ) + (h : ℝ))
+      have hshort :=
+        (P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit_continuous x).intervalIntegrable
+          0 (t : ℝ)
       symm
       simpa [add_comm] using
-        intervalIntegral.integral_interval_sub_left
-          ((P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit_continuous x)
-            .intervalIntegrable 0 ((t : ℝ) + (h : ℝ)))
-          ((P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit_continuous x)
-            .intervalIntegrable 0 (t : ℝ))
+        intervalIntegral.integral_interval_sub_left hlong hshort
 
 /-- Moving interval primitive used to identify the generator of a time average. -/
 noncomputable def fixedSlotHilbertDirectLimitRegularShiftedTimeIntegralPrimitive
@@ -386,8 +395,7 @@ theorem fixedSlotHilbertDirectLimitRegularHasRightGeneratorValue_timeAverage
         (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism h x - x)) := by
   unfold FixedSlotHilbertDirectLimitRegularHasRightGeneratorValue
   have hreal :=
-    (P.fixedSlotHilbertDirectLimitRegularShiftedTimeIntegralPrimitive_hasDerivAt_zero h x)
-      .tendsto_slope_zero_right
+    (P.fixedSlotHilbertDirectLimitRegularShiftedTimeIntegralPrimitive_hasDerivAt_zero h x).tendsto_slope_zero_right
   have hscaled := (tendsto_const_nhds.smul hreal : Tendsto
     (fun r : ℝ => (h : ℝ)⁻¹ •
       (r⁻¹ •
@@ -436,8 +444,9 @@ theorem fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient_inner_symmetri
     (x y : P.fixedSlotHilbertDirectLimitRegularSubspace) :
     inner ℝ (P.fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient x t) y =
       inner ℝ x (P.fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient y t) := by
-  simp only [fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient,
-    real_inner_smul_left, real_inner_smul_right, inner_sub_left, inner_sub_right]
+  unfold fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient
+  rw [real_inner_smul_left, real_inner_smul_right]
+  rw [inner_sub_left, inner_sub_right]
   rw [P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_inner_symmetric t x y]
 
 /-- The infinitesimal generator is symmetric on its canonical dense domain. -/
@@ -453,12 +462,32 @@ theorem fixedSlotHilbertDirectLimitRegularRightGenerator_inner_symmetric
   have hx := P.fixedSlotHilbertDirectLimitRegularRightGenerator_hasValue x
   have hy := P.fixedSlotHilbertDirectLimitRegularRightGenerator_hasValue y
   unfold FixedSlotHilbertDirectLimitRegularHasRightGeneratorValue at hx hy
-  have hleft := hx.inner (tendsto_const_nhds : Tendsto
-    (fun _ : NNReal => (y : P.fixedSlotHilbertDirectLimitRegularSubspace))
-    (nhdsWithin 0 (Ioi 0)) (nhds y))
-  have hright := (tendsto_const_nhds : Tendsto
-    (fun _ : NNReal => (x : P.fixedSlotHilbertDirectLimitRegularSubspace))
-    (nhdsWithin 0 (Ioi 0)) (nhds x)).inner hy
+  have hyconst : Tendsto
+      (fun _ : NNReal => (y : P.fixedSlotHilbertDirectLimitRegularSubspace))
+      (nhdsWithin 0 (Ioi 0)) (nhds (y : P.fixedSlotHilbertDirectLimitRegularSubspace)) :=
+    tendsto_const_nhds
+  have hxconst : Tendsto
+      (fun _ : NNReal => (x : P.fixedSlotHilbertDirectLimitRegularSubspace))
+      (nhdsWithin 0 (Ioi 0)) (nhds (x : P.fixedSlotHilbertDirectLimitRegularSubspace)) :=
+    tendsto_const_nhds
+  have hleft : Tendsto
+      (fun t : NNReal => inner ℝ
+        (P.fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient
+          (x : P.fixedSlotHilbertDirectLimitRegularSubspace) t)
+        (y : P.fixedSlotHilbertDirectLimitRegularSubspace))
+      (nhdsWithin 0 (Ioi 0))
+      (nhds (inner ℝ (P.fixedSlotHilbertDirectLimitRegularRightGenerator x)
+        (y : P.fixedSlotHilbertDirectLimitRegularSubspace))) :=
+    Filter.Tendsto.inner (𝕜 := ℝ) hx hyconst
+  have hright : Tendsto
+      (fun t : NNReal => inner ℝ
+        (x : P.fixedSlotHilbertDirectLimitRegularSubspace)
+        (P.fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient
+          (y : P.fixedSlotHilbertDirectLimitRegularSubspace) t))
+      (nhdsWithin 0 (Ioi 0))
+      (nhds (inner ℝ (x : P.fixedSlotHilbertDirectLimitRegularSubspace)
+        (P.fixedSlotHilbertDirectLimitRegularRightGenerator y))) :=
+    Filter.Tendsto.inner (𝕜 := ℝ) hxconst hy
   have hfun :
       (fun t : NNReal => inner ℝ
         (P.fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient
@@ -536,9 +565,19 @@ theorem fixedSlotHilbertDirectLimitRegularRightGenerator_inner_nonpos
       (x : P.fixedSlotHilbertDirectLimitRegularSubspace) ≤ 0 := by
   have hx := P.fixedSlotHilbertDirectLimitRegularRightGenerator_hasValue x
   unfold FixedSlotHilbertDirectLimitRegularHasRightGeneratorValue at hx
-  have hinner := hx.inner (tendsto_const_nhds : Tendsto
-    (fun _ : NNReal => (x : P.fixedSlotHilbertDirectLimitRegularSubspace))
-    (nhdsWithin 0 (Ioi 0)) (nhds x))
+  have hxconst : Tendsto
+      (fun _ : NNReal => (x : P.fixedSlotHilbertDirectLimitRegularSubspace))
+      (nhdsWithin 0 (Ioi 0)) (nhds (x : P.fixedSlotHilbertDirectLimitRegularSubspace)) :=
+    tendsto_const_nhds
+  have hinner : Tendsto
+      (fun t : NNReal => inner ℝ
+        (P.fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient
+          (x : P.fixedSlotHilbertDirectLimitRegularSubspace) t)
+        (x : P.fixedSlotHilbertDirectLimitRegularSubspace))
+      (nhdsWithin 0 (Ioi 0))
+      (nhds (inner ℝ (P.fixedSlotHilbertDirectLimitRegularRightGenerator x)
+        (x : P.fixedSlotHilbertDirectLimitRegularSubspace))) :=
+    Filter.Tendsto.inner (𝕜 := ℝ) hx hxconst
   apply le_of_tendsto_of_tendsto hinner tendsto_const_nhds
   filter_upwards [self_mem_nhdsWithin] with t ht
   exact P.fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient_inner_nonpos x t ht
@@ -628,7 +667,9 @@ theorem fixedSlotHilbertDirectLimitRegularRightHamiltonian_endomorphism
   simp only [P.fixedSlotHilbertDirectLimitRegularRightHamiltonian_apply, map_neg]
   rw [P.fixedSlotHilbertDirectLimitRegularRightGenerator_endomorphism]
 
-/-- Sequential closability of the same-root right generator. -/
+/-- Sequential closability of the same-root right generator.  Dense-domain symmetry gives the
+short canonical proof: a graph-limit vector over a vanishing domain sequence is orthogonal to the
+dense generator domain, hence is zero. -/
 theorem fixedSlotHilbertDirectLimitRegularRightGenerator_sequentially_closable
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta
@@ -640,99 +681,42 @@ theorem fixedSlotHilbertDirectLimitRegularRightGenerator_sequentially_closable
     (hgenerator : Tendsto
       (fun n => P.fixedSlotHilbertDirectLimitRegularRightGenerator (x n)) atTop (nhds eta)) :
     eta = 0 := by
-  have horthogonal : ∀ z : P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomain,
-      inner ℝ eta (z : P.fixedSlotHilbertDirectLimitRegularSubspace) = 0 := by
-    intro z
-    have hperturbation (r : ℝ) :
-        inner ℝ
-          (eta + r • P.fixedSlotHilbertDirectLimitRegularRightGenerator z)
-          (r • (z : P.fixedSlotHilbertDirectLimitRegularSubspace)) ≤ 0 := by
-      have hleft : Tendsto
-          (fun n => P.fixedSlotHilbertDirectLimitRegularRightGenerator (x n + r • z))
-          atTop
-          (nhds (eta + r • P.fixedSlotHilbertDirectLimitRegularRightGenerator z)) := by
-        have hconst : Tendsto
-            (fun _ : ℕ => r • P.fixedSlotHilbertDirectLimitRegularRightGenerator z)
-            atTop (nhds (r • P.fixedSlotHilbertDirectLimitRegularRightGenerator z)) :=
-          tendsto_const_nhds
-        simpa using hgenerator.add hconst
-      have hright : Tendsto
-          (fun n => ((x n + r • z : P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomain) :
-            P.fixedSlotHilbertDirectLimitRegularSubspace))
-          atTop (nhds (r • (z : P.fixedSlotHilbertDirectLimitRegularSubspace))) := by
-        have hconst : Tendsto
-            (fun _ : ℕ => r • (z : P.fixedSlotHilbertDirectLimitRegularSubspace))
-            atTop (nhds (r • (z : P.fixedSlotHilbertDirectLimitRegularSubspace))) :=
-          tendsto_const_nhds
-        simpa using hx.add hconst
-      have hinner := hleft.inner hright
-      apply le_of_tendsto_of_tendsto hinner tendsto_const_nhds
-      exact Filter.Eventually.of_forall fun n =>
-        P.fixedSlotHilbertDirectLimitRegularRightGenerator_inner_nonpos (x n + r • z)
-    have hquadratic (r : ℝ) :
-        r * inner ℝ eta (z : P.fixedSlotHilbertDirectLimitRegularSubspace) +
-          r ^ 2 * inner ℝ (P.fixedSlotHilbertDirectLimitRegularRightGenerator z)
-            (z : P.fixedSlotHilbertDirectLimitRegularSubspace) ≤ 0 := by
-      have h := hperturbation r
-      simpa [inner_add_left, real_inner_smul_left, real_inner_smul_right,
-        pow_two, mul_assoc] using h
-    have hq : inner ℝ (P.fixedSlotHilbertDirectLimitRegularRightGenerator z)
-        (z : P.fixedSlotHilbertDirectLimitRegularSubspace) ≤ 0 :=
-      P.fixedSlotHilbertDirectLimitRegularRightGenerator_inner_nonpos z
-    by_contra hnonzero
-    have hsquare : 0 < inner ℝ eta
-        (z : P.fixedSlotHilbertDirectLimitRegularSubspace) ^ 2 :=
-      sq_pos_of_ne_zero hnonzero
-    have hden : 0 < 1 - inner ℝ (P.fixedSlotHilbertDirectLimitRegularRightGenerator z)
-        (z : P.fixedSlotHilbertDirectLimitRegularSubspace) := by
-      linarith
-    have hchosen := hquadratic
-      (inner ℝ eta (z : P.fixedSlotHilbertDirectLimitRegularSubspace) /
-        (1 - inner ℝ (P.fixedSlotHilbertDirectLimitRegularRightGenerator z)
-          (z : P.fixedSlotHilbertDirectLimitRegularSubspace)))
-    have hidentity :
-        (inner ℝ eta (z : P.fixedSlotHilbertDirectLimitRegularSubspace) /
-              (1 - inner ℝ (P.fixedSlotHilbertDirectLimitRegularRightGenerator z)
-                (z : P.fixedSlotHilbertDirectLimitRegularSubspace))) *
-            inner ℝ eta (z : P.fixedSlotHilbertDirectLimitRegularSubspace) +
-          (inner ℝ eta (z : P.fixedSlotHilbertDirectLimitRegularSubspace) /
-              (1 - inner ℝ (P.fixedSlotHilbertDirectLimitRegularRightGenerator z)
-                (z : P.fixedSlotHilbertDirectLimitRegularSubspace))) ^ 2 *
-            inner ℝ (P.fixedSlotHilbertDirectLimitRegularRightGenerator z)
-              (z : P.fixedSlotHilbertDirectLimitRegularSubspace) =
-          inner ℝ eta (z : P.fixedSlotHilbertDirectLimitRegularSubspace) ^ 2 /
-            (1 - inner ℝ (P.fixedSlotHilbertDirectLimitRegularRightGenerator z)
-              (z : P.fixedSlotHilbertDirectLimitRegularSubspace)) ^ 2 := by
-      field_simp [ne_of_gt hden]
-      <;> ring
-    rw [hidentity] at hchosen
-    have hpositive : 0 <
-        inner ℝ eta (z : P.fixedSlotHilbertDirectLimitRegularSubspace) ^ 2 /
-          (1 - inner ℝ (P.fixedSlotHilbertDirectLimitRegularRightGenerator z)
-            (z : P.fixedSlotHilbertDirectLimitRegularSubspace)) ^ 2 :=
-      div_pos hsquare (sq_pos_of_pos hden)
-    exact (not_lt_of_ge hchosen) hpositive
-  have hclosed : IsClosed {z : P.fixedSlotHilbertDirectLimitRegularSubspace |
-      inner ℝ eta z = 0} :=
-    isClosed_eq (continuous_const.inner continuous_id) continuous_const
-  have hsubset :
-      (P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomain :
-        Set P.fixedSlotHilbertDirectLimitRegularSubspace) ⊆
-      {z : P.fixedSlotHilbertDirectLimitRegularSubspace | inner ℝ eta z = 0} := by
-    intro z hz
-    exact horthogonal ⟨z, hz⟩
-  have hetaClosure : eta ∈ closure
-      (P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomain :
-        Set P.fixedSlotHilbertDirectLimitRegularSubspace) := by
-    rw [P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomain_dense.closure_eq]
-    exact mem_univ eta
-  have hetaInner : inner ℝ eta eta = 0 :=
-    (closure_minimal hsubset hclosed) hetaClosure
-  have hnormSq : ‖eta‖ ^ 2 = 0 := by
-    simpa [real_inner_self_eq_norm_sq] using hetaInner
-  have hnorm : ‖eta‖ = 0 := by
-    nlinarith [norm_nonneg eta]
-  exact norm_eq_zero.mp hnorm
+  apply P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomain_dense.eq_zero_of_inner_left ℝ
+  intro z hz
+  let zD : P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomain := ⟨z, hz⟩
+  have hzconst : Tendsto
+      (fun _ : ℕ => (zD : P.fixedSlotHilbertDirectLimitRegularSubspace))
+      atTop (nhds (zD : P.fixedSlotHilbertDirectLimitRegularSubspace)) :=
+    tendsto_const_nhds
+  have hAzconst : Tendsto
+      (fun _ : ℕ => P.fixedSlotHilbertDirectLimitRegularRightGenerator zD)
+      atTop (nhds (P.fixedSlotHilbertDirectLimitRegularRightGenerator zD)) :=
+    tendsto_const_nhds
+  have hleft : Tendsto
+      (fun n => inner ℝ
+        (P.fixedSlotHilbertDirectLimitRegularRightGenerator (x n))
+        (zD : P.fixedSlotHilbertDirectLimitRegularSubspace))
+      atTop
+      (nhds (inner ℝ eta (zD : P.fixedSlotHilbertDirectLimitRegularSubspace))) :=
+    Filter.Tendsto.inner (𝕜 := ℝ) hgenerator hzconst
+  have hright : Tendsto
+      (fun n => inner ℝ
+        (x n : P.fixedSlotHilbertDirectLimitRegularSubspace)
+        (P.fixedSlotHilbertDirectLimitRegularRightGenerator zD))
+      atTop (nhds 0) := by
+    have h := Filter.Tendsto.inner (𝕜 := ℝ) hx hAzconst
+    simpa using h
+  have hfun :
+      (fun n => inner ℝ
+        (P.fixedSlotHilbertDirectLimitRegularRightGenerator (x n))
+        (zD : P.fixedSlotHilbertDirectLimitRegularSubspace)) =
+      (fun n => inner ℝ
+        (x n : P.fixedSlotHilbertDirectLimitRegularSubspace)
+        (P.fixedSlotHilbertDirectLimitRegularRightGenerator zD)) := by
+    funext n
+    exact P.fixedSlotHilbertDirectLimitRegularRightGenerator_inner_symmetric (x n) zD
+  rw [hfun] at hleft
+  exact tendsto_nhds_unique hleft hright
 
 /-- Sequential closability of the symmetric nonnegative OS Hamiltonian. -/
 theorem fixedSlotHilbertDirectLimitRegularRightHamiltonian_sequentially_closable
