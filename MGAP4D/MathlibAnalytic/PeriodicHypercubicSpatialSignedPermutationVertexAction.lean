@@ -65,6 +65,30 @@ theorem spatialAxisPermutation_mul_symm_apply
   apply (σ * τ).injective
   simp [Equiv.Perm.mul_apply]
 
+/-- `Fin.cases` at the first spatial coordinate of `Fin 4`. -/
+@[simp]
+theorem periodicHypercubicFinCases_spatial1
+    {α : Type*} (z : α) (f : Fin 3 → α) :
+    Fin.cases z f (1 : Fin 4) = f 0 := by
+  change Fin.cases z f (Fin.succ (0 : Fin 3)) = f 0
+  rfl
+
+/-- `Fin.cases` at the second spatial coordinate of `Fin 4`. -/
+@[simp]
+theorem periodicHypercubicFinCases_spatial2
+    {α : Type*} (z : α) (f : Fin 3 → α) :
+    Fin.cases z f (2 : Fin 4) = f 1 := by
+  change Fin.cases z f (Fin.succ (1 : Fin 3)) = f 1
+  rfl
+
+/-- `Fin.cases` at the third spatial coordinate of `Fin 4`. -/
+@[simp]
+theorem periodicHypercubicFinCases_spatial3
+    {α : Type*} (z : α) (f : Fin 3 → α) :
+    Fin.cases z f (3 : Fin 4) = f 2 := by
+  change Fin.cases z f (Fin.succ (2 : Fin 3)) = f 2
+  rfl
+
 /-- Action of one abstract signed spatial permutation on a periodic four-dimensional vertex.
 Time is fixed; the three spatial coordinates are reindexed by `g.right⁻¹` and multiplied by their
 corresponding abstract signs. -/
