@@ -157,7 +157,40 @@ theorem fixedSlotHilbertDirectLimitRegularClampedRealOrbit_zero
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
     (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
     P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit x 0 = x := by
-  simp [fixedSlotHilbertDirectLimitRegularClampedRealOrbit]
+  unfold fixedSlotHilbertDirectLimitRegularClampedRealOrbit
+  change P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism 0 x = x
+  exact P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_zero_apply x
+
+@[simp]
+theorem fixedSlotHilbertDirectLimitRegularClampedRealOrbit_add
+    (P : PrimaryScalarFixedSlotOSPreHilbertData
+      H N hN beta hbeta
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
+    (x y : P.fixedSlotHilbertDirectLimitRegularSubspace)
+    (s : ℝ) :
+    P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit (x + y) s =
+      P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit x s +
+        P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit y s := by
+  unfold fixedSlotHilbertDirectLimitRegularClampedRealOrbit
+  change P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism s.toNNReal (x + y) =
+    P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism s.toNNReal x +
+      P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism s.toNNReal y
+  exact map_add _ x y
+
+@[simp]
+theorem fixedSlotHilbertDirectLimitRegularClampedRealOrbit_smul
+    (P : PrimaryScalarFixedSlotOSPreHilbertData
+      H N hN beta hbeta
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
+    (c : ℝ)
+    (x : P.fixedSlotHilbertDirectLimitRegularSubspace)
+    (s : ℝ) :
+    P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit (c • x) s =
+      c • P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit x s := by
+  unfold fixedSlotHilbertDirectLimitRegularClampedRealOrbit
+  change P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism s.toNNReal (c • x) =
+    c • P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism s.toNNReal x
+  exact map_smul _ c x
 
 /-- The Bochner primitive of the regular-sector orbit. -/
 noncomputable def fixedSlotHilbertDirectLimitRegularTimePrimitive
@@ -187,8 +220,7 @@ theorem fixedSlotHilbertDirectLimitRegularTimePrimitive_hasDerivAt
     HasDerivAt (P.fixedSlotHilbertDirectLimitRegularTimePrimitive x)
       (P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit x r) r := by
   simpa only [fixedSlotHilbertDirectLimitRegularTimePrimitive] using
-    ((P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit_continuous x)
-      .integral_hasStrictDerivAt 0 r).hasDerivAt
+    ((P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit_continuous x).integral_hasStrictDerivAt 0 r).hasDerivAt
 
 /-- Unnormalized positive-time Bochner integral of a regular orbit. -/
 noncomputable def fixedSlotHilbertDirectLimitRegularTimeIntegral
@@ -199,6 +231,36 @@ noncomputable def fixedSlotHilbertDirectLimitRegularTimeIntegral
     (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
     P.fixedSlotHilbertDirectLimitRegularSubspace :=
   P.fixedSlotHilbertDirectLimitRegularTimePrimitive x (h : ℝ)
+
+@[simp]
+theorem fixedSlotHilbertDirectLimitRegularTimeIntegral_add
+    (P : PrimaryScalarFixedSlotOSPreHilbertData
+      H N hN beta hbeta
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
+    (h : NNReal)
+    (x y : P.fixedSlotHilbertDirectLimitRegularSubspace) :
+    P.fixedSlotHilbertDirectLimitRegularTimeIntegral h (x + y) =
+      P.fixedSlotHilbertDirectLimitRegularTimeIntegral h x +
+        P.fixedSlotHilbertDirectLimitRegularTimeIntegral h y := by
+  simpa only [fixedSlotHilbertDirectLimitRegularTimeIntegral,
+    fixedSlotHilbertDirectLimitRegularTimePrimitive,
+    fixedSlotHilbertDirectLimitRegularClampedRealOrbit_add] using
+    intervalIntegral.integral_add
+      ((P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit_continuous x).intervalIntegrable 0 (h : ℝ))
+      ((P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit_continuous y).intervalIntegrable 0 (h : ℝ))
+
+@[simp]
+theorem fixedSlotHilbertDirectLimitRegularTimeIntegral_smul
+    (P : PrimaryScalarFixedSlotOSPreHilbertData
+      H N hN beta hbeta
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
+    (h : NNReal)
+    (c : ℝ)
+    (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
+    P.fixedSlotHilbertDirectLimitRegularTimeIntegral h (c • x) =
+      c • P.fixedSlotHilbertDirectLimitRegularTimeIntegral h x := by
+  simp [fixedSlotHilbertDirectLimitRegularTimeIntegral,
+    fixedSlotHilbertDirectLimitRegularTimePrimitive]
 
 /-- Positive-time Cesàro average in the regular Hilbert sector. -/
 noncomputable def fixedSlotHilbertDirectLimitRegularTimeAverage
@@ -231,13 +293,11 @@ theorem fixedSlotHilbertDirectLimitRegularTimeAverage_tendsto_zero
       (fun h : NNReal => P.fixedSlotHilbertDirectLimitRegularTimeAverage h x)
       (nhdsWithin 0 (Ioi 0)) (nhds x) := by
   have hreal :=
-    (P.fixedSlotHilbertDirectLimitRegularTimePrimitive_hasDerivAt x 0)
-      .tendsto_slope_zero_right
+    (P.fixedSlotHilbertDirectLimitRegularTimePrimitive_hasDerivAt x 0).tendsto_slope_zero_right
   have hcomp := hreal.comp fixedSlotHilbertDirectLimit_nnreal_coe_tendsto_zero_right
   simpa [fixedSlotHilbertDirectLimitRegularTimeAverage,
     fixedSlotHilbertDirectLimitRegularTimeIntegral,
-    fixedSlotHilbertDirectLimitRegularTimePrimitive,
-    fixedSlotHilbertDirectLimitRegularClampedRealOrbit] using hcomp
+    fixedSlotHilbertDirectLimitRegularTimePrimitive] using hcomp
 
 /-- Time averages are additive in the initial vector. -/
 @[simp]
@@ -250,14 +310,7 @@ theorem fixedSlotHilbertDirectLimitRegularTimeAverage_add
     P.fixedSlotHilbertDirectLimitRegularTimeAverage h (x + y) =
       P.fixedSlotHilbertDirectLimitRegularTimeAverage h x +
         P.fixedSlotHilbertDirectLimitRegularTimeAverage h y := by
-  simp only [fixedSlotHilbertDirectLimitRegularTimeAverage,
-    fixedSlotHilbertDirectLimitRegularTimeIntegral,
-    fixedSlotHilbertDirectLimitRegularTimePrimitive,
-    fixedSlotHilbertDirectLimitRegularClampedRealOrbit]
-  rw [intervalIntegral.integral_add]
-  · module
-  · exact (P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit_continuous x).intervalIntegrable _ _
-  · exact (P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit_continuous y).intervalIntegrable _ _
+  simp [fixedSlotHilbertDirectLimitRegularTimeAverage, smul_add]
 
 /-- Time averages respect real scalar multiplication. -/
 @[simp]
@@ -270,10 +323,7 @@ theorem fixedSlotHilbertDirectLimitRegularTimeAverage_smul
     (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
     P.fixedSlotHilbertDirectLimitRegularTimeAverage h (c • x) =
       c • P.fixedSlotHilbertDirectLimitRegularTimeAverage h x := by
-  simp [fixedSlotHilbertDirectLimitRegularTimeAverage,
-    fixedSlotHilbertDirectLimitRegularTimeIntegral,
-    fixedSlotHilbertDirectLimitRegularTimePrimitive,
-    fixedSlotHilbertDirectLimitRegularClampedRealOrbit, smul_smul, mul_comm]
+  simp [fixedSlotHilbertDirectLimitRegularTimeAverage, smul_smul, mul_comm]
 
 /-- The time-average smoothing operation is real-linear. -/
 noncomputable def fixedSlotHilbertDirectLimitRegularTimeAverageLinearMap
