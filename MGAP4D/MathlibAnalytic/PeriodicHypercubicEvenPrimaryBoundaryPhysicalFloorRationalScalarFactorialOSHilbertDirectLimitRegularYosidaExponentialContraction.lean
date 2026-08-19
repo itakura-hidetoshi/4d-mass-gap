@@ -31,6 +31,51 @@ noncomputable section
 
 namespace PrimaryScalarFixedSlotOSPreHilbertData
 
+/- Pin only the topological-ring proposition locally, as in the bounded-exponential layer. -/
+local instance yosidaContractionOperatorIsTopologicalRing
+    {K : Type*} [NormedAddCommGroup K] [NormedSpace ℝ K] :
+    IsTopologicalRing (K →L[ℝ] K) :=
+  NonUnitalSeminormedRing.toIsTopologicalRing
+
+/-- Generic commutation of a bounded endomorphism with the exponential on its scalar line. -/
+private theorem continuousLinearEndomorphism_comm_exp_smul_apply
+    {K : Type*} [NormedAddCommGroup K] [NormedSpace ℝ K] [CompleteSpace K]
+    (A : K →L[ℝ] K) (t : ℝ) (y : K) :
+    A (NormedSpace.exp (t • A) y) = NormedSpace.exp (t • A) (A y) := by
+  letI : NormedAlgebra ℚ (K →L[ℝ] K) :=
+    NormedAlgebra.restrictScalars ℚ ℝ (K →L[ℝ] K)
+  have hcommBase : Commute A (t • A) := by
+    change A * (t • A) = (t • A) * A
+    ext x
+    change A (t • A x) = t • A (A x)
+    rw [A.map_smul]
+  have hcommExp : Commute A (NormedSpace.exp (t • A)) := hcommBase.exp_right
+  have happ := congrArg (fun B : K →L[ℝ] K => B y) hcommExp.eq
+  simpa using happ
+
+/-- Generic pointwise derivative of the exponential scalar line through a bounded endomorphism. -/
+private theorem continuousLinearEndomorphism_exp_smul_apply_hasDerivAt
+    {K : Type*} [NormedAddCommGroup K] [NormedSpace ℝ K] [CompleteSpace K]
+    (A : K →L[ℝ] K) (t : ℝ) (y : K) :
+    HasDerivAt
+      (fun r : ℝ => NormedSpace.exp (r • A) y)
+      (A (NormedSpace.exp (t • A) y)) t := by
+  have hOp : HasDerivAt
+      (fun r : ℝ => NormedSpace.exp (r • A))
+      (NormedSpace.exp (t • A) * A) t := by
+    exact hasDerivAt_exp_smul_const
+      (𝕂 := ℝ) (𝔸 := K →L[ℝ] K) A t
+  have hConst : HasFDerivAt
+      (fun _ : ℝ => y)
+      (0 : ℝ →L[ℝ] K) t :=
+    hasFDerivAt_const y t
+  have hDeriv : HasDerivAt
+      (fun r : ℝ => NormedSpace.exp (r • A) y)
+      ((NormedSpace.exp (t • A) * A) y) t :=
+    (hOp.hasFDerivAt.clm_apply hConst).hasDerivAt
+  rw [continuousLinearEndomorphism_comm_exp_smul_apply A t y]
+  simpa using hDeriv
+
 variable {H : ℕ → ℕ}
 variable {N : ℕ} {hN : 0 < N}
 variable [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
@@ -67,32 +112,11 @@ theorem fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian_inner_
   have hscale : 0 ≤ fixedSlotHilbertDirectLimitRegularYosidaDyadicScale n :=
     (fixedSlotHilbertDirectLimitRegularYosidaDyadicScale_pos n).le
   unfold fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian
+  rw [ContinuousLinearMap.neg_apply]
   unfold fixedSlotHilbertDirectLimitRegularDyadicYosidaHamiltonian
-  rw [P.fixedSlotHilbertDirectLimitRegularYosidaHamiltonian_apply]
-  rw [ContinuousLinearMap.neg_apply, inner_neg_left,
-    real_inner_smul_left, inner_sub_left]
+  rw [P.fixedSlotHilbertDirectLimitRegularYosidaHamiltonian_apply,
+    inner_neg_left, real_inner_smul_left, inner_sub_left]
   exact neg_nonpos.mpr (mul_nonneg hscale (sub_nonneg.mpr hinner))
-
-/-- The negative bounded Yosida generator commutes with its exponential orbit. -/
-theorem fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian_comm_exponentialReal_apply
-    (P : PrimaryScalarFixedSlotOSPreHilbertData
-      H N hN beta hbeta
-      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (n : ℕ) (t : ℝ) (y : P.fixedSlotHilbertDirectLimitRegularSubspace) :
-    P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n
-        (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n t y) =
-      P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n t
-        (P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n y) := by
-  let A :
-      P.fixedSlotHilbertDirectLimitRegularSubspace →L[ℝ]
-        P.fixedSlotHilbertDirectLimitRegularSubspace :=
-    P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n
-  have hcommBase : Commute A (t • A) := (Commute.refl A).smul_right t
-  have hcommExp : Commute A (NormedSpace.exp (t • A)) := hcommBase.exp_right
-  have happ := congrArg
-    (fun B : P.fixedSlotHilbertDirectLimitRegularSubspace →L[ℝ]
-        P.fixedSlotHilbertDirectLimitRegularSubspace => B y) hcommExp.eq
-  simpa only [fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal, A] using happ
 
 /-- Pointwise derivative of the bounded Yosida exponential orbit. -/
 theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_apply_hasDerivAt
@@ -104,16 +128,12 @@ theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_apply_hasD
       (fun r : ℝ => P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n r y)
       (P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n
         (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n t y)) t := by
-  have hOp := P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_hasDerivAt n t
-  have hConst : HasFDerivAt
-      (fun _ : ℝ => y)
-      (0 : ℝ →L[ℝ] P.fixedSlotHilbertDirectLimitRegularSubspace) t :=
-    hasFDerivAt_const t y
-  have hApply := hOp.hasFDerivAt.clm_apply hConst
-  have hDeriv := hApply.hasDerivAt
-  rw [P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian_comm_exponentialReal_apply
-    n t y]
-  simpa using hDeriv
+  let K := P.fixedSlotHilbertDirectLimitRegularSubspace
+  letI : CompleteSpace K := P.fixedSlotHilbertDirectLimitRegularSubspace_completeSpace
+  let A : K →L[ℝ] K :=
+    P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n
+  have hA := continuousLinearEndomorphism_exp_smul_apply_hasDerivAt A t y
+  simpa only [fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal, K, A] using hA
 
 /-- The squared norm of every bounded Yosida exponential orbit has nonpositive derivative. -/
 theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_norm_sq_hasDerivAt_nonpos
@@ -132,8 +152,12 @@ theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_norm_sq_ha
   have hsq := horbit.norm_sq
   refine ⟨2 * inner ℝ z (A z), ?_, ?_⟩
   · simpa only [z, A] using hsq
-  · have hA := P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian_inner_nonpos n z
-    exact mul_nonpos_of_nonneg_of_nonpos (by norm_num : (0 : ℝ) ≤ 2) hA
+  · have hAleft :=
+      P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian_inner_nonpos n z
+    have hAright : inner ℝ z (A z) ≤ 0 := by
+      rw [real_inner_comm]
+      simpa only [A] using hAleft
+    exact mul_nonpos_of_nonneg_of_nonpos (by norm_num : (0 : ℝ) ≤ 2) hAright
 
 /-- Positive-time bounded Yosida exponentials are pointwise contractions. -/
 theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponential_norm_le
@@ -164,12 +188,15 @@ theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponential_norm_le
         P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n 0 y = y := by
       rw [P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_zero n]
       rfl
+    have hmono' : f (t : ℝ) - f 0 ≤ 0 := by
+      simpa using hmono
+    have hft : f (t : ℝ) ≤ f 0 := sub_nonpos.mp hmono'
     change
       ‖P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n (t : ℝ) y‖ ^ 2 ≤
         ‖y‖ ^ 2
-    dsimp [f] at hmono
-    rw [hzero] at hmono
-    linarith
+    dsimp [f] at hft
+    rw [hzero] at hft
+    exact hft
   nlinarith [norm_nonneg
     (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponential n t y), norm_nonneg y]
 
