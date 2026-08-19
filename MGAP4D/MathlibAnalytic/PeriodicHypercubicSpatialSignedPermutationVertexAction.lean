@@ -158,10 +158,12 @@ def periodicHypercubicVertexSpatialSignedPermutationHom
       Equiv.Perm (PeriodicHypercubicVertex n) where
   toFun := periodicHypercubicVertexSpatialSignedPermutationEquiv n
   map_one' := by
-    ext v
+    apply Equiv.ext
+    intro v
     exact periodicHypercubicVertexSpatialSignedPermutation_one n v
   map_mul' g h := by
-    ext v
+    apply Equiv.ext
+    intro v
     exact periodicHypercubicVertexSpatialSignedPermutation_mul n g h v
 
 /-- The abstract `swap12` element recovers the canonical concrete spatial-axis `(1 2)` vertex
@@ -173,12 +175,14 @@ theorem periodicHypercubicVertexSpatialSignedPermutation_swap12
         spatialSignedPermutationSwap12 v =
       periodicHypercubicVertexSpatialAxisSwap12Equiv n v := by
   funext mu
-  fin_cases mu <;>
-    simp [periodicHypercubicVertexSpatialSignedPermutation,
-      spatialIntegerUnitZModAction,
-      spatialSignedPermutationSwap12,
-      spatialAxisPositiveSign,
-      periodicHypercubicVertexSpatialAxisSwap12Equiv_apply]
+  refine Fin.cases ?_ (fun i => ?_) mu
+  · simp
+  · fin_cases i <;>
+      simp [periodicHypercubicVertexSpatialSignedPermutation,
+        spatialIntegerUnitZModAction,
+        spatialSignedPermutationSwap12,
+        spatialAxisPositiveSign,
+        periodicHypercubicVertexSpatialAxisSwap12Equiv_apply]
 
 /-- The abstract `swap23` element recovers the canonical concrete spatial-axis `(2 3)` vertex
 reindexing. -/
@@ -189,12 +193,14 @@ theorem periodicHypercubicVertexSpatialSignedPermutation_swap23
         spatialSignedPermutationSwap23 v =
       periodicHypercubicVertexSpatialAxisSwap23Equiv n v := by
   funext mu
-  fin_cases mu <;>
-    simp [periodicHypercubicVertexSpatialSignedPermutation,
-      spatialIntegerUnitZModAction,
-      spatialSignedPermutationSwap23,
-      spatialAxisPositiveSign,
-      periodicHypercubicVertexSpatialAxisSwap23Equiv_apply]
+  refine Fin.cases ?_ (fun i => ?_) mu
+  · simp
+  · fin_cases i <;>
+      simp [periodicHypercubicVertexSpatialSignedPermutation,
+        spatialIntegerUnitZModAction,
+        spatialSignedPermutationSwap23,
+        spatialAxisPositiveSign,
+        periodicHypercubicVertexSpatialAxisSwap23Equiv_apply]
 
 /-- The abstract first-axis reflection recovers the canonical concrete reflection of spatial axis
 `1` on the even periodic lattice. -/
@@ -206,12 +212,14 @@ theorem periodicHypercubicVertexSpatialSignedPermutation_reflect1
         spatialSignedPermutationReflect1 v =
       periodicHypercubicEvenSpatialAxis1Reflection H v := by
   funext mu
-  fin_cases mu <;>
-    simp [periodicHypercubicVertexSpatialSignedPermutation,
-      spatialIntegerUnitZModAction,
-      spatialSignedPermutationReflect1,
-      spatialAxisReflect1Sign,
-      periodicHypercubicEvenSpatialAxis1Reflection]
+  refine Fin.cases ?_ (fun i => ?_) mu
+  · simp
+  · fin_cases i <;>
+      simp [periodicHypercubicVertexSpatialSignedPermutation,
+        spatialIntegerUnitZModAction,
+        spatialSignedPermutationReflect1,
+        spatialAxisReflect1Sign,
+        periodicHypercubicEvenSpatialAxis1Reflection]
 
 /-- The abstract global parity element recovers the canonical concrete spatial-parity vertex map on
 the even periodic lattice. -/
@@ -223,12 +231,14 @@ theorem periodicHypercubicVertexSpatialSignedPermutation_parity
         spatialSignedPermutationParity v =
       periodicHypercubicEvenSpatialParity H v := by
   funext mu
-  fin_cases mu <;>
-    simp [periodicHypercubicVertexSpatialSignedPermutation,
-      spatialIntegerUnitZModAction,
-      spatialSignedPermutationParity,
-      spatialAxisParitySign,
-      periodicHypercubicEvenSpatialParity]
+  refine Fin.cases ?_ (fun i => ?_) mu
+  · simp
+  · fin_cases i <;>
+      simp [periodicHypercubicVertexSpatialSignedPermutation,
+        spatialIntegerUnitZModAction,
+        spatialSignedPermutationParity,
+        spatialAxisParitySign,
+        periodicHypercubicEvenSpatialParity]
 
 end
 
