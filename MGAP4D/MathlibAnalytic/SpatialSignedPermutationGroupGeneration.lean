@@ -102,11 +102,14 @@ theorem spatialAxisAdjacentSwapGenerator_closure_eq_top :
     · exact (hxy rfl).elim
     · exact h01
     · exact h02
-    · simpa [Equiv.swap_comm] using h01
+    · rw [Equiv.swap_comm]
+      exact h01
     · exact (hxy rfl).elim
     · exact h12
-    · simpa [Equiv.swap_comm] using h02
-    · simpa [Equiv.swap_comm] using h12
+    · rw [Equiv.swap_comm]
+      exact h02
+    · rw [Equiv.swap_comm]
+      exact h12
     · exact (hxy rfl).elim
   apply top_unique
   intro σ _hσ
