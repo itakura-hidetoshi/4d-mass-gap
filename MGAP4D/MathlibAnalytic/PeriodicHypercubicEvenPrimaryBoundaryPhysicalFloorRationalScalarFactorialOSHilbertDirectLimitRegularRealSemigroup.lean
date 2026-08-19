@@ -130,9 +130,13 @@ theorem fixedSlotHilbertDirectLimitRegularRealOrbit_mem_regularSubspace
     (𝓝 (P.fixedSlotHilbertDirectLimitRegularRealOrbit x t))
   have hzeroAt : ContinuousAt MGAP4D.nnratToNNReal (0 : NNRat) :=
     MGAP4D.nnratToNNReal_isometry.continuous.continuousAt
+  have hzeroRaw : Tendsto MGAP4D.nnratToNNReal
+      (𝓝 (0 : NNRat))
+      (𝓝 (MGAP4D.nnratToNNReal (0 : NNRat))) :=
+    hzeroAt.tendsto
   have hzero : Tendsto MGAP4D.nnratToNNReal
       (𝓝 (0 : NNRat)) (𝓝 (0 : NNReal)) := by
-    simpa using hzeroAt
+    simpa using hzeroRaw
   have hconst : Tendsto (fun _ : NNRat => t)
       (𝓝 (0 : NNRat)) (𝓝 t) := tendsto_const_nhds
   have htime : Tendsto (fun q : NNRat => MGAP4D.nnratToNNReal q + t)
