@@ -8,7 +8,7 @@ import Mathlib.Tactic
 For a unitary matrix, entrywise complex conjugation is equivalently the transpose of its inverse.
 We therefore define the finite-Wilson charge-conjugation involution by
 
-`C(U) = (U⁻¹)ᵀ`.
+`C(U) = transpose (U⁻¹)`.
 
 This presentation uses only the existing group inverse and matrix-transpose APIs, so preservation of
 unitarity and determinant one is immediate.  We prove involutivity, compatibility with
@@ -29,8 +29,9 @@ def specialUnitaryChargeConjugation
     {N : ℕ}
     (U : Matrix.specialUnitaryGroup (Fin N) ℂ) :
     Matrix.specialUnitaryGroup (Fin N) ℂ := by
-  refine ⟨(((U⁻¹ : Matrix.specialUnitaryGroup (Fin N) ℂ) :
-      Matrix (Fin N) (Fin N) ℂ))ᵀ, ?_⟩
+  refine ⟨Matrix.transpose
+      (((U⁻¹ : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+        Matrix (Fin N) (Fin N) ℂ)), ?_⟩
   constructor
   · exact Matrix.transpose_mem_unitaryGroup_iff.mpr (U⁻¹).2.1
   · simpa using (U⁻¹).2.2
@@ -40,8 +41,9 @@ theorem specialUnitaryChargeConjugation_coe
     {N : ℕ}
     (U : Matrix.specialUnitaryGroup (Fin N) ℂ) :
     (specialUnitaryChargeConjugation U : Matrix (Fin N) (Fin N) ℂ) =
-      (((U⁻¹ : Matrix.specialUnitaryGroup (Fin N) ℂ) :
-        Matrix (Fin N) (Fin N) ℂ))ᵀ :=
+      Matrix.transpose
+        (((U⁻¹ : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+          Matrix (Fin N) (Fin N) ℂ)) :=
   rfl
 
 /-- On underlying matrices, charge conjugation is entrywise complex conjugation. -/
@@ -50,9 +52,16 @@ theorem specialUnitaryChargeConjugation_coe_eq_map_star
     (U : Matrix.specialUnitaryGroup (Fin N) ℂ) :
     (specialUnitaryChargeConjugation U : Matrix (Fin N) (Fin N) ℂ) =
       (U : Matrix (Fin N) (Fin N) ℂ).map star := by
-  ext i j
-  simp [specialUnitaryChargeConjugation, Matrix.specialUnitaryGroup.coe_star,
+  have hInv :
+      (((U⁻¹ : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+          Matrix (Fin N) (Fin N) ℂ)) =
+        star (U : Matrix (Fin N) (Fin N) ℂ) := by
+    rw [← Matrix.specialUnitaryGroup.coe_star]
+    exact congrArg Subtype.val (Matrix.star_eq_inv U).symm
+  rw [specialUnitaryChargeConjugation_coe, hInv,
     Matrix.star_eq_conjTranspose]
+  ext i j
+  rfl
 
 /-- Charge conjugation is involutive. -/
 @[simp]
@@ -74,11 +83,35 @@ theorem specialUnitaryChargeConjugation_mul
     specialUnitaryChargeConjugation (U * V) =
       specialUnitaryChargeConjugation U * specialUnitaryChargeConjugation V := by
   apply Subtype.ext
+  change
+    (specialUnitaryChargeConjugation (U * V) :
+      Matrix (Fin N) (Fin N) ℂ) =
+      (specialUnitaryChargeConjugation U : Matrix (Fin N) (Fin N) ℂ) *
+        (specialUnitaryChargeConjugation V : Matrix (Fin N) (Fin N) ℂ)
   rw [specialUnitaryChargeConjugation_coe_eq_map_star,
     specialUnitaryChargeConjugation_coe_eq_map_star,
     specialUnitaryChargeConjugation_coe_eq_map_star]
   ext i j
-  simp [Matrix.mul_apply, Finset.star_sum]
+  simp [Matrix.mul_apply]
+
+/-- Charge conjugation as a multiplicative equivalence of `SU(N)`. -/
+def specialUnitaryChargeConjugationMulEquiv
+    (N : ℕ) :
+    Matrix.specialUnitaryGroup (Fin N) ℂ ≃*
+      Matrix.specialUnitaryGroup (Fin N) ℂ where
+  toFun := specialUnitaryChargeConjugation
+  invFun := specialUnitaryChargeConjugation
+  left_inv := specialUnitaryChargeConjugation_involutive
+  right_inv := specialUnitaryChargeConjugation_involutive
+  map_mul' := specialUnitaryChargeConjugation_mul
+
+@[simp]
+theorem specialUnitaryChargeConjugationMulEquiv_apply
+    {N : ℕ}
+    (U : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    specialUnitaryChargeConjugationMulEquiv N U =
+      specialUnitaryChargeConjugation U :=
+  rfl
 
 /-- Charge conjugation commutes with group inversion. -/
 @[simp]
@@ -87,9 +120,7 @@ theorem specialUnitaryChargeConjugation_inv
     (U : Matrix.specialUnitaryGroup (Fin N) ℂ) :
     specialUnitaryChargeConjugation U⁻¹ =
       (specialUnitaryChargeConjugation U)⁻¹ := by
-  apply inv_injective
-  rw [inv_inv, ← specialUnitaryChargeConjugation_mul]
-  simp
+  exact (specialUnitaryChargeConjugationMulEquiv N).map_inv U
 
 /-- The normalized real trace is charge-conjugation even. -/
 theorem normalizedSpecialUnitaryRealTrace_chargeConjugation
@@ -97,14 +128,22 @@ theorem normalizedSpecialUnitaryRealTrace_chargeConjugation
     (U : Matrix.specialUnitaryGroup (Fin N) ℂ) :
     normalizedSpecialUnitaryRealTrace N (specialUnitaryChargeConjugation U) =
       normalizedSpecialUnitaryRealTrace N U := by
-  rw [normalizedSpecialUnitaryRealTrace_eq_trace_re_div,
-    normalizedSpecialUnitaryRealTrace_eq_trace_re_div]
-  rw [specialUnitaryChargeConjugation_coe]
-  rw [Matrix.trace_transpose]
-  have hInv := normalizedSpecialUnitaryRealTrace_inv U
-  rw [normalizedSpecialUnitaryRealTrace_eq_trace_re_div,
-    normalizedSpecialUnitaryRealTrace_eq_trace_re_div] at hInv
-  exact hInv
+  calc
+    normalizedSpecialUnitaryRealTrace N (specialUnitaryChargeConjugation U) =
+        normalizedSpecialUnitaryRealTrace N U⁻¹ := by
+      rw [normalizedSpecialUnitaryRealTrace_eq_trace_re_div,
+        normalizedSpecialUnitaryRealTrace_eq_trace_re_div]
+      change
+        (Matrix.trace
+          (Matrix.transpose
+            (((U⁻¹ : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+              Matrix (Fin N) (Fin N) ℂ)))).re / (N : ℝ) =
+          (Matrix.trace
+            (((U⁻¹ : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+              Matrix (Fin N) (Fin N) ℂ))).re / (N : ℝ)
+      rw [Matrix.trace_transpose]
+    _ = normalizedSpecialUnitaryRealTrace N U :=
+      normalizedSpecialUnitaryRealTrace_inv U
 
 end
 
