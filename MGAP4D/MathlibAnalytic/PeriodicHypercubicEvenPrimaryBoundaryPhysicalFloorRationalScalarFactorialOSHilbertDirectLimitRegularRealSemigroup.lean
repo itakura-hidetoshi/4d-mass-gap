@@ -128,9 +128,11 @@ theorem fixedSlotHilbertDirectLimitRegularRealOrbit_mem_regularSubspace
         (P.fixedSlotHilbertDirectLimitRegularRealOrbit x t))
     (𝓝 0)
     (𝓝 (P.fixedSlotHilbertDirectLimitRegularRealOrbit x t))
-  have hzero : Tendsto MGAP4D.nnratToNNReal
-      (𝓝 (0 : NNRat)) (𝓝 (0 : NNReal)) :=
+  have hzeroAt : ContinuousAt MGAP4D.nnratToNNReal (0 : NNRat) :=
     MGAP4D.nnratToNNReal_isometry.continuous.continuousAt
+  have hzero : Tendsto MGAP4D.nnratToNNReal
+      (𝓝 (0 : NNRat)) (𝓝 (0 : NNReal)) := by
+    simpa using hzeroAt
   have hconst : Tendsto (fun _ : NNRat => t)
       (𝓝 (0 : NNRat)) (𝓝 t) := tendsto_const_nhds
   have htime : Tendsto (fun q : NNRat => MGAP4D.nnratToNNReal q + t)
@@ -355,7 +357,8 @@ theorem fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_zero
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L) :
     P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism 0 =
       ContinuousLinearMap.id ℝ P.fixedSlotHilbertDirectLimitRegularSubspace := by
-  ext x
+  apply ContinuousLinearMap.ext
+  intro x
   exact P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_zero_apply x
 
 /-- Pointwise additive real semigroup law, in the conventional `T_s (T_t x) = T_{s+t} x` form. -/
@@ -385,7 +388,8 @@ theorem fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_add
     (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism s).comp
         (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t) =
       P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism (s + t) := by
-  ext x
+  apply ContinuousLinearMap.ext
+  intro x
   exact P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_add_apply s t x
 
 /-- Strong continuity at zero on every vector of the canonical regular Hilbert sector. -/
