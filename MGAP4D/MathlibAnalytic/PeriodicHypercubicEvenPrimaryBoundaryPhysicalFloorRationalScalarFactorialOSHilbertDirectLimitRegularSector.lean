@@ -304,7 +304,7 @@ theorem fixedSlotHilbertDirectLimitRegularSubspace_uniformContinuous_orbit
         simp only [dist_eq_norm, sub_zero]
       rw [hdist, dist_comm]
       exact hab
-    have hzero := hclose (x_1 := d) hdδ
+    have hzero := hclose (x := d) hdδ
     rw [dist_eq_norm] at hzero ⊢
     rw [← hba]
     exact lt_of_le_of_lt
@@ -322,7 +322,7 @@ theorem fixedSlotHilbertDirectLimitRegularSubspace_uniformContinuous_orbit
         simp only [dist_eq_norm, sub_zero]
       rw [hdist]
       exact hab
-    have hzero := hclose (x_1 := d) hdδ
+    have hzero := hclose (x := d) hdδ
     rw [dist_eq_norm] at hzero ⊢
     rw [← hab']
     rw [norm_sub_rev]
