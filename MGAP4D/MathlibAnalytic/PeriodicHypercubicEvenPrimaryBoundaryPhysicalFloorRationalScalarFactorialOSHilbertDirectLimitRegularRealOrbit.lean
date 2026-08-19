@@ -102,9 +102,10 @@ theorem fixedSlotHilbertDirectLimitRegularRealOrbit_norm_le
     ‖P.fixedSlotHilbertDirectLimitRegularRealOrbit x s‖ ≤ ‖(x :
       P.fixedSlotHilbertDirectLimitCompletion)‖}
   have hclosed : IsClosed S := by
-    exact isClosed_le continuous_const
+    exact isClosed_le
       (continuous_norm.comp
         (P.fixedSlotHilbertDirectLimitRegularRealOrbit_uniformContinuous x).continuous)
+      continuous_const
   have hrange : Set.range MGAP4D.nnratToNNReal ⊆ S := by
     intro s hs
     rcases hs with ⟨q, rfl⟩
@@ -142,7 +143,6 @@ theorem fixedSlotHilbertDirectLimitRegularRealOrbit_add
     rw [P.fixedSlotHilbertDirectLimitRegularRealOrbit_nnrat]
     rw [P.fixedSlotHilbertDirectLimitRegularRealOrbit_nnrat]
     rw [map_add]
-    rfl
   have hgc : Continuous g := by
     exact
       (P.fixedSlotHilbertDirectLimitRegularRealOrbit_uniformContinuous x).continuous.add
@@ -171,7 +171,6 @@ theorem fixedSlotHilbertDirectLimitRegularRealOrbit_smul
     dsimp [g, f]
     rw [P.fixedSlotHilbertDirectLimitRegularRealOrbit_nnrat]
     rw [map_smul]
-    rfl
   have hgc : Continuous g :=
     (P.fixedSlotHilbertDirectLimitRegularRealOrbit_uniformContinuous x).continuous.const_smul c
   have hEq := MGAP4D.nnratUniformlyExtend_unique f g hg hgc
@@ -229,8 +228,18 @@ theorem fixedSlotHilbertDirectLimitRegularRealTime_inner_symmetric
         (y : P.fixedSlotHilbertDirectLimitCompletion) =
       inner ℝ (x : P.fixedSlotHilbertDirectLimitCompletion)
         (P.fixedSlotHilbertDirectLimitRegularRealTimeCLM s y)}
+  have hxcont : Continuous (fun s : NNReal =>
+      P.fixedSlotHilbertDirectLimitRegularRealTimeCLM s x) := by
+    simpa only [P.fixedSlotHilbertDirectLimitRegularRealTimeCLM_apply] using
+      (P.fixedSlotHilbertDirectLimitRegularRealOrbit_uniformContinuous x).continuous
+  have hycont : Continuous (fun s : NNReal =>
+      P.fixedSlotHilbertDirectLimitRegularRealTimeCLM s y) := by
+    simpa only [P.fixedSlotHilbertDirectLimitRegularRealTimeCLM_apply] using
+      (P.fixedSlotHilbertDirectLimitRegularRealOrbit_uniformContinuous y).continuous
   have hclosed : IsClosed S := by
-    exact isClosed_eq (by fun_prop) (by fun_prop)
+    exact isClosed_eq
+      (hxcont.inner continuous_const)
+      (continuous_const.inner hycont)
   have hrange : Set.range MGAP4D.nnratToNNReal ⊆ S := by
     intro s hs
     rcases hs with ⟨q, rfl⟩
@@ -262,8 +271,12 @@ theorem fixedSlotHilbertDirectLimitRegularRealTime_inner_nonneg
   let S : Set NNReal := {s |
     0 ≤ inner ℝ (x : P.fixedSlotHilbertDirectLimitCompletion)
       (P.fixedSlotHilbertDirectLimitRegularRealTimeCLM s x)}
+  have hxcont : Continuous (fun s : NNReal =>
+      P.fixedSlotHilbertDirectLimitRegularRealTimeCLM s x) := by
+    simpa only [P.fixedSlotHilbertDirectLimitRegularRealTimeCLM_apply] using
+      (P.fixedSlotHilbertDirectLimitRegularRealOrbit_uniformContinuous x).continuous
   have hclosed : IsClosed S := by
-    exact isClosed_le continuous_const (by fun_prop)
+    exact isClosed_le continuous_const (continuous_const.inner hxcont)
   have hrange : Set.range MGAP4D.nnratToNNReal ⊆ S := by
     intro s hs
     rcases hs with ⟨q, rfl⟩
