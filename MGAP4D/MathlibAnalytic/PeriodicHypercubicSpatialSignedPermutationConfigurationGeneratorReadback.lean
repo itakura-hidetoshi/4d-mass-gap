@@ -51,9 +51,56 @@ theorem spatialSignedPermutationReflect1_inv :
   apply SemidirectProduct.ext
   · funext i
     fin_cases i <;>
-      simp [spatialSignedPermutationReflect1, spatialAxisReflect1Sign,
-        spatialAxisPermutationSignAction_apply]
+      simp [spatialSignedPermutationReflect1, spatialAxisReflect1Sign]
   · simp [spatialSignedPermutationReflect1]
+
+/-- Normal form produced by the pinned semidirect-product simp set for abstract `swap12`. -/
+@[simp]
+theorem spatialSignedPermutation_inl_mul_inr_swap12 :
+    (SemidirectProduct.inl (φ := spatialAxisPermutationSignAction)
+        spatialAxisPositiveSign) *
+        SemidirectProduct.inr (φ := spatialAxisPermutationSignAction)
+          (Equiv.swap (0 : Fin 3) 1) =
+      spatialSignedPermutationSwap12 := by
+  change
+    (SemidirectProduct.inl (φ := spatialAxisPermutationSignAction)
+        spatialAxisPositiveSign) *
+        SemidirectProduct.inr (φ := spatialAxisPermutationSignAction)
+          (Equiv.swap (0 : Fin 3) 1) =
+      (⟨spatialAxisPositiveSign, Equiv.swap (0 : Fin 3) 1⟩ :
+        SpatialSignedPermutationGroup)
+  exact
+    (SemidirectProduct.mk_eq_inl_mul_inr
+      (φ := spatialAxisPermutationSignAction)
+      (Equiv.swap (0 : Fin 3) 1) spatialAxisPositiveSign).symm
+
+/-- Normal form produced by the pinned semidirect-product simp set for abstract `swap23`. -/
+@[simp]
+theorem spatialSignedPermutation_inl_mul_inr_swap23 :
+    (SemidirectProduct.inl (φ := spatialAxisPermutationSignAction)
+        spatialAxisPositiveSign) *
+        SemidirectProduct.inr (φ := spatialAxisPermutationSignAction)
+          (Equiv.swap (1 : Fin 3) 2) =
+      spatialSignedPermutationSwap23 := by
+  change
+    (SemidirectProduct.inl (φ := spatialAxisPermutationSignAction)
+        spatialAxisPositiveSign) *
+        SemidirectProduct.inr (φ := spatialAxisPermutationSignAction)
+          (Equiv.swap (1 : Fin 3) 2) =
+      (⟨spatialAxisPositiveSign, Equiv.swap (1 : Fin 3) 2⟩ :
+        SpatialSignedPermutationGroup)
+  exact
+    (SemidirectProduct.mk_eq_inl_mul_inr
+      (φ := spatialAxisPermutationSignAction)
+      (Equiv.swap (1 : Fin 3) 2) spatialAxisPositiveSign).symm
+
+/-- Normal form produced by the pinned semidirect-product simp set for first-axis reflection. -/
+@[simp]
+theorem spatialSignedPermutation_inl_reflect1 :
+    SemidirectProduct.inl (φ := spatialAxisPermutationSignAction)
+        spatialAxisReflect1Sign =
+      spatialSignedPermutationReflect1 := by
+  rfl
 
 /-- The generic signed edge image of `swap12` is exactly the already-canonical positive-edge swap,
 with forward orientation. -/
@@ -74,7 +121,7 @@ theorem periodicHypercubicEdgeSpatialSignedPermutationBoundaryStep_swap12
         periodicHypercubicSpatialSignedPermutationAxis,
         periodicHypercubicEdgeSpatialAxisSwap12Equiv_apply,
         periodicHypercubicVertexSpatialSignedPermutation_swap12,
-        spatialSignedPermutationSwap12, spatialAxisPositiveSign]
+        spatialAxisPositiveSign]
 
 /-- The generic signed edge image of `swap23` is exactly the already-canonical positive-edge swap,
 with forward orientation. -/
@@ -95,7 +142,7 @@ theorem periodicHypercubicEdgeSpatialSignedPermutationBoundaryStep_swap23
         periodicHypercubicSpatialSignedPermutationAxis,
         periodicHypercubicEdgeSpatialAxisSwap23Equiv_apply,
         periodicHypercubicVertexSpatialSignedPermutation_swap23,
-        spatialSignedPermutationSwap23, spatialAxisPositiveSign]
+        spatialAxisPositiveSign]
 
 /-- The generic signed edge image of first-axis reflection is exactly the concrete positive-edge
 representative, with backward orientation precisely for physical axis `1`. -/
@@ -117,7 +164,7 @@ theorem periodicHypercubicEdgeSpatialSignedPermutationBoundaryStep_reflect1
       periodicHypercubicSpatialSignedPermutationAxis,
       periodicHypercubicEvenEdgeSpatialAxis1Reflection,
       periodicHypercubicVertexSpatialSignedPermutation_reflect1,
-      spatialSignedPermutationReflect1, spatialAxisReflect1Sign]
+      spatialAxisReflect1Sign]
 
 /-- Generic abstract `swap12` configuration pullback equals the existing concrete swap action. -/
 theorem periodicHypercubicConfigurationSpatialSignedPermutation_swap12
@@ -148,7 +195,7 @@ theorem periodicHypercubicConfigurationSpatialSignedPermutation_swap23
 /-- Generic abstract first-axis reflection pullback equals the existing concrete finite-lattice
 reflection action, including inversion of exactly the reversed axis-`1` link values. -/
 theorem periodicHypercubicConfigurationSpatialSignedPermutation_reflect1
-    {Gauge : Type*} [Group Gauge]
+    {Gauge : Type} [Group Gauge]
     (H : ℕ)
     (A : PeriodicHypercubicEvenEdge H → Gauge) :
     periodicHypercubicConfigurationSpatialSignedPermutation
