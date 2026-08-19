@@ -83,6 +83,17 @@ theorem fixedSlotIndexedCarrierTimeTranslate_zero_common
   apply
     periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable_injective
       M.1
+  change
+    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable M.1
+        (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotObservableInclusion
+          (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFiniteSlotTimeTranslate
+            0 J.1)
+          M.1 h0
+          (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotObservableTimeTranslate
+            J.1 0 F.observable)) =
+      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable M.1
+        (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotObservableInclusion
+          J.1 M.1 hJ F.observable)
   rw [
     periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable_inclusion]
   rw [
@@ -131,26 +142,30 @@ theorem fixedSlotIndexedCarrierTimeTranslate_add_common
   apply
     periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable_injective
       M.1
-  rw [
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable_inclusion]
-  rw [
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable_inclusion]
   change
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable
-        (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFiniteSlotTimeTranslate s
-          (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFiniteSlotTimeTranslate
-            t J.1))
-        (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotObservableTimeTranslate
-          (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFiniteSlotTimeTranslate
-            t J.1)
-          s
+    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable M.1
+        (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotObservableInclusion
+          (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFiniteSlotTimeTranslate s
+            (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFiniteSlotTimeTranslate
+              t J.1))
+          M.1 hst
           (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotObservableTimeTranslate
-            J.1 t F.observable)) =
-      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable
-        (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFiniteSlotTimeTranslate
-          (t + s) J.1)
-        (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotObservableTimeTranslate
-          J.1 (t + s) F.observable)
+            (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFiniteSlotTimeTranslate
+              t J.1)
+            s
+            (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotObservableTimeTranslate
+              J.1 t F.observable))) =
+      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable M.1
+        (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotObservableInclusion
+          (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFiniteSlotTimeTranslate
+            (t + s) J.1)
+          M.1 hsum
+          (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotObservableTimeTranslate
+            J.1 (t + s) F.observable))
+  rw [
+    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable_inclusion]
+  rw [
+    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable_inclusion]
   exact
     periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable_timeTranslate_add
       J.1 t s F.observable
@@ -188,15 +203,19 @@ theorem fixedSlotIndexedHilbertTimeTranslate_zero_common
             (P.fixedSlotDataOfIndex M) hJ).continuous
   | ih x =>
       obtain ⟨F, rfl⟩ := SeparationQuotient.surjective_mk x
-      rw [(P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM_coe]
+      change
+        (P.fixedSlotDataOfIndex
+            (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate 0 le_rfl J)).fixedSlotHilbertInclusion
+            (P.fixedSlotDataOfIndex M) h0
+            ((P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM 0 le_rfl
+              ((P.fixedSlotDataOfIndex J).hilbertState F)) =
+          (P.fixedSlotDataOfIndex J).fixedSlotHilbertInclusion
+            (P.fixedSlotDataOfIndex M) hJ
+            ((P.fixedSlotDataOfIndex J).hilbertState F)
+      rw [(P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM_hilbertState]
       rw [(P.fixedSlotDataOfIndex
-        (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate 0 le_rfl J)).fixedSlotHilbertInclusion_coe]
-      rw [(P.fixedSlotDataOfIndex J).fixedSlotHilbertInclusion_coe]
-      rw [(P.fixedSlotDataOfIndex J).fixedSlotSeparatedTimeTranslateCLM_apply]
-      rw [(P.fixedSlotDataOfIndex J).fixedSlotSeparatedTimeTranslate_osClass]
-      rw [(P.fixedSlotDataOfIndex
-        (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate 0 le_rfl J)).fixedSlotSeparatedInclusion_osClass]
-      rw [(P.fixedSlotDataOfIndex J).fixedSlotSeparatedInclusion_osClass]
+        (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate 0 le_rfl J)).fixedSlotHilbertInclusion_hilbertState]
+      rw [(P.fixedSlotDataOfIndex J).fixedSlotHilbertInclusion_hilbertState]
       rw [P.fixedSlotIndexedCarrierTimeTranslate_zero_common J M h0 hJ F]
 
 /-- Additive rational-time Hilbert coherence after canonical insertion into any common upper
@@ -261,30 +280,33 @@ theorem fixedSlotIndexedHilbertTimeTranslate_add_common
               (t + s) (add_nonneg ht hs)).continuous)
   | ih x =>
       obtain ⟨F, rfl⟩ := SeparationQuotient.surjective_mk x
-      rw [(P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM_coe]
+      change
+        (P.fixedSlotDataOfIndex
+            (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate s hs
+              (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J))).fixedSlotHilbertInclusion
+            (P.fixedSlotDataOfIndex M) hst
+            ((P.fixedSlotDataOfIndex
+                (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J)).fixedSlotHilbertTimeTranslateCLM
+              s hs
+              ((P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM t ht
+                ((P.fixedSlotDataOfIndex J).hilbertState F))) =
+          (P.fixedSlotDataOfIndex
+            (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate
+              (t + s) (add_nonneg ht hs) J)).fixedSlotHilbertInclusion
+            (P.fixedSlotDataOfIndex M) hsum
+            ((P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM
+              (t + s) (add_nonneg ht hs)
+              ((P.fixedSlotDataOfIndex J).hilbertState F))
+      rw [(P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM_hilbertState]
       rw [(P.fixedSlotDataOfIndex
-        (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J)).fixedSlotHilbertTimeTranslateCLM_coe]
+        (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J)).fixedSlotHilbertTimeTranslateCLM_hilbertState]
       rw [(P.fixedSlotDataOfIndex
         (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate s hs
-          (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J))).fixedSlotHilbertInclusion_coe]
-      rw [(P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM_coe]
+          (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J))).fixedSlotHilbertInclusion_hilbertState]
+      rw [(P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM_hilbertState]
       rw [(P.fixedSlotDataOfIndex
         (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate
-          (t + s) (add_nonneg ht hs) J)).fixedSlotHilbertInclusion_coe]
-      rw [(P.fixedSlotDataOfIndex J).fixedSlotSeparatedTimeTranslateCLM_apply]
-      rw [(P.fixedSlotDataOfIndex
-        (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J)).fixedSlotSeparatedTimeTranslateCLM_apply]
-      rw [(P.fixedSlotDataOfIndex J).fixedSlotSeparatedTimeTranslateCLM_apply]
-      rw [(P.fixedSlotDataOfIndex J).fixedSlotSeparatedTimeTranslate_osClass]
-      rw [(P.fixedSlotDataOfIndex
-        (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J)).fixedSlotSeparatedTimeTranslate_osClass]
-      rw [(P.fixedSlotDataOfIndex J).fixedSlotSeparatedTimeTranslate_osClass]
-      rw [(P.fixedSlotDataOfIndex
-        (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate s hs
-          (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J))).fixedSlotSeparatedInclusion_osClass]
-      rw [(P.fixedSlotDataOfIndex
-        (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate
-          (t + s) (add_nonneg ht hs) J)).fixedSlotSeparatedInclusion_osClass]
+          (t + s) (add_nonneg ht hs) J)).fixedSlotHilbertInclusion_hilbertState]
       rw [P.fixedSlotIndexedCarrierTimeTranslate_add_common J M t s ht hs hst hsum F]
 
 /-- Zero rational time acts identically on the algebraic Hilbert direct limit. -/
