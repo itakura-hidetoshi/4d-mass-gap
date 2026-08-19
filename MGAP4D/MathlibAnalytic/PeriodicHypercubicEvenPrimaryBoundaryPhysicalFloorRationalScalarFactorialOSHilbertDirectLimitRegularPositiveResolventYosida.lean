@@ -1,6 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPrimaryBoundaryPhysicalFloorRationalScalarFactorialOSHilbertDirectLimitRegularSelfAdjointHamiltonian
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalRealResolventIdentity
-import Mathlib.Analysis.Normed.Operator.Basic
+import Mathlib.Analysis.Normed.Operator.NormedSpace
 import Mathlib.Tactic
 
 /-!
@@ -235,14 +235,16 @@ theorem fixedSlotHilbertDirectLimitRegularYosidaResolvent_norm_le_one
     (lambda : ℝ) (hlambda : 0 < lambda) :
     ‖P.fixedSlotHilbertDirectLimitRegularYosidaResolvent lambda hlambda‖ ≤ 1 := by
   unfold fixedSlotHilbertDirectLimitRegularYosidaResolvent
-  rw [norm_smul, Real.norm_eq_abs, abs_of_pos hlambda]
   have hres := P.fixedSlotHilbertDirectLimitRegularPositiveResolvent_norm_le lambda hlambda
-  have hinv : lambda * lambda⁻¹ = 1 := by
-    exact mul_inv_cancel₀ (ne_of_gt hlambda)
   calc
-    lambda * ‖P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda‖ ≤
-        lambda * lambda⁻¹ := mul_le_mul_of_nonneg_left hres hlambda.le
-    _ = 1 := hinv
+    ‖lambda • P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda‖ ≤
+        ‖lambda‖ * ‖P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda‖ :=
+      ContinuousLinearMap.opNorm_smul_le lambda
+        (P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda)
+    _ = lambda * ‖P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda‖ := by
+      rw [Real.norm_eq_abs, abs_of_pos hlambda]
+    _ ≤ lambda * lambda⁻¹ := mul_le_mul_of_nonneg_left hres hlambda.le
+    _ = 1 := by exact mul_inv_cancel₀ (ne_of_gt hlambda)
 
 /-- Bounded positive-resolvent/Yosida package. -/
 theorem fixedSlotHilbertDirectLimitRegularPositiveResolventYosida_package
