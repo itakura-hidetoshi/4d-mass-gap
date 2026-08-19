@@ -27,17 +27,14 @@ theorem nnratToNNReal_coe (q : NNRat) :
 
 @[simp]
 theorem nnratToNNReal_zero : nnratToNNReal 0 = 0 := by
-  apply Subtype.ext
-  change (((0 : NNRat) : ℚ) : ℝ) = 0
-  norm_num
+  apply NNReal.eq
+  simp [nnratToNNReal]
 
 @[simp]
 theorem nnratToNNReal_add (p q : NNRat) :
     nnratToNNReal (p + q) = nnratToNNReal p + nnratToNNReal q := by
-  apply Subtype.ext
-  change (((p + q : NNRat) : ℚ) : ℝ) =
-    ((p : ℚ) : ℝ) + ((q : ℚ) : ℝ)
-  norm_cast
+  apply NNReal.eq
+  simp [nnratToNNReal]
 
 /-- The half-line rational inclusion preserves distances exactly. -/
 theorem nnratToNNReal_isometry : Isometry nnratToNNReal := by
