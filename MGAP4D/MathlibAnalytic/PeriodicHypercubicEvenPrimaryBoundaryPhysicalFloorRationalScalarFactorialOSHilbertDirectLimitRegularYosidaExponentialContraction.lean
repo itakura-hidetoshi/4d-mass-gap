@@ -69,10 +69,11 @@ private theorem continuousLinearEndomorphism_exp_smul_apply_hasDerivAt
       (fun _ : ℝ => y)
       (0 : ℝ →L[ℝ] K) t :=
     hasFDerivAt_const y t
+  have hDerivRaw := (hOp.hasFDerivAt.clm_apply hConst).hasDerivAt
   have hDeriv : HasDerivAt
       (fun r : ℝ => NormedSpace.exp (r • A) y)
-      ((NormedSpace.exp (t • A) * A) y) t :=
-    (hOp.hasFDerivAt.clm_apply hConst).hasDerivAt
+      ((NormedSpace.exp (t • A) * A) y) t := by
+    simpa using hDerivRaw
   rw [continuousLinearEndomorphism_comm_exp_smul_apply A t y]
   simpa using hDeriv
 
@@ -114,9 +115,10 @@ theorem fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian_inner_
   unfold fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian
   rw [ContinuousLinearMap.neg_apply]
   unfold fixedSlotHilbertDirectLimitRegularDyadicYosidaHamiltonian
-  rw [P.fixedSlotHilbertDirectLimitRegularYosidaHamiltonian_apply,
-    inner_neg_left, real_inner_smul_left, inner_sub_left]
-  exact neg_nonpos.mpr (mul_nonneg hscale (sub_nonneg.mpr hinner))
+  rw [P.fixedSlotHilbertDirectLimitRegularYosidaHamiltonian_apply, inner_neg_left]
+  apply neg_nonpos.mpr
+  rw [real_inner_smul_left, inner_sub_left]
+  exact mul_nonneg hscale (sub_nonneg.mpr hinner)
 
 /-- Pointwise derivative of the bounded Yosida exponential orbit. -/
 theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_apply_hasDerivAt
