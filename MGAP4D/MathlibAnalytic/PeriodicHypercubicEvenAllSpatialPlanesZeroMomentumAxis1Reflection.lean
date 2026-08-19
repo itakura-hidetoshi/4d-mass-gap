@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpatialAxis1ReflectionGeometry
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenAllSpatialPlanesZeroMomentumParity
 import MGAP4D.MathlibAnalytic.SpecialUnitaryNormalizedRealTraceConjugation
 import Mathlib.Tactic
 
@@ -34,18 +35,6 @@ theorem periodicHypercubicEvenSpatialAxis1Reflection_self
     periodicHypercubicEvenSpatialAxis1Reflection H
         (periodicHypercubicEvenSpatialAxis1Reflection H v) = v :=
   periodicHypercubicEvenSpatialAxis1Reflection_involutive H v
-
-/-- Move a transverse shift past the reflected-axis shift and cancel the latter with its inverse. -/
-@[simp]
-theorem periodicHypercubicUnshift_shift_shift_cancel_left
-    (n : ℕ)
-    (x : PeriodicHypercubicVertex n)
-    (mu nu : PeriodicHypercubicAxis) :
-    periodicHypercubicUnshift n
-        (periodicHypercubicShift n (periodicHypercubicShift n x mu) nu) mu =
-      periodicHypercubicShift n x nu := by
-  rw [periodicHypercubicShift_comm n x mu nu]
-  exact periodicHypercubicUnshift_shift n (periodicHypercubicShift n x nu) mu
 
 /-- Plane-dependent base point used after reflecting axis `1`.
 Planes containing axis `1` need one negative axis-`1` shift; plane `(2,3)` does not. -/
