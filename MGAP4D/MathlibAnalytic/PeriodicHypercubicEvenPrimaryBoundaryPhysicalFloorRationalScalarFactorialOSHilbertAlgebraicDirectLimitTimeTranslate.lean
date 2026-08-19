@@ -149,12 +149,17 @@ theorem fixedSlotHilbertAlgebraicTimeTranslate_of
   change
     P.fixedSlotHilbertAlgebraicTimeTranslate t ht
         (P.fixedSlotHilbertAlgebraicOf J x) =
-      P.fixedSlotHilbertAlgebraicOf
-        (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate t ht J)
-        (((P.fixedSlotDataOfIndex J).fixedSlotHilbertTimeTranslateCLM t ht).toLinearMap x)
-  simp [fixedSlotHilbertAlgebraicTimeTranslate,
-    fixedSlotHilbertAlgebraicTimeTranslateComponent,
-    fixedSlotHilbertAlgebraicOf]
+      P.fixedSlotHilbertAlgebraicTimeTranslateComponent t ht J x
+  simpa only [fixedSlotHilbertAlgebraicTimeTranslate, fixedSlotHilbertAlgebraicOf] using
+    (Module.DirectLimit.lift_of
+      (R := ℝ)
+      (ι := PrimaryScalarFiniteNonnegativeSlotIndex)
+      (G := fun K : PrimaryScalarFiniteNonnegativeSlotIndex => P.fixedSlotIndexedHilbert K)
+      (f := fun K M hKM => P.fixedSlotIndexedHilbertMap K M hKM)
+      (g := fun K => P.fixedSlotHilbertAlgebraicTimeTranslateComponent t ht K)
+      (Hg := fun K M hKM y =>
+        P.fixedSlotHilbertAlgebraicTimeTranslateComponent_map t ht K M hKM y)
+      x)
 
 end PrimaryScalarFixedSlotOSPreHilbertData
 
