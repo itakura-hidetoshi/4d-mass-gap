@@ -150,13 +150,16 @@ theorem periodicHypercubicEvenSpatialPlaneTranslatedNormalizedTrace_swap12
   cases plane with
   | plane12 =>
       unfold periodicHypercubicEvenSpatialPlaneTranslatedNormalizedTrace
+      rw [periodicHypercubicSpatialPlaneSwap12Equiv_plane12]
       rw [periodicHypercubicEvenSpatialPlanePlaquetteHolonomy_swap12_plane12]
       exact normalizedSpecialUnitaryRealTrace_inv _
   | plane13 =>
       unfold periodicHypercubicEvenSpatialPlaneTranslatedNormalizedTrace
+      rw [periodicHypercubicSpatialPlaneSwap12Equiv_plane13]
       rw [periodicHypercubicEvenSpatialPlanePlaquetteHolonomy_swap12_plane13]
   | plane23 =>
       unfold periodicHypercubicEvenSpatialPlaneTranslatedNormalizedTrace
+      rw [periodicHypercubicSpatialPlaneSwap12Equiv_plane23]
       rw [periodicHypercubicEvenSpatialPlanePlaquetteHolonomy_swap12_plane23]
 
 /-- Each fixed-plane zero-momentum component is carried to the correspondingly relabelled plane by
