@@ -75,9 +75,13 @@ noncomputable def fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
     (n : ℕ) :
     P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n 0 = 1 := by
-  change NormedSpace.exp
-      (0 • P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n) = 1
-  rw [zero_smul]
+  let A :
+      P.fixedSlotHilbertDirectLimitRegularSubspace →L[ℝ]
+        P.fixedSlotHilbertDirectLimitRegularSubspace :=
+    P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n
+  change NormedSpace.exp ((0 : ℝ) • A) = 1
+  have hz : (0 : ℝ) • A = 0 := zero_smul ℝ A
+  rw [hz]
   exact NormedSpace.exp_zero
 
 /-- The bounded Yosida exponential has the exact additive real-time semigroup law. -/
@@ -89,22 +93,17 @@ theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_add
     P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n (s + t) =
       P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n s *
         P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n t := by
+  let A :
+      P.fixedSlotHilbertDirectLimitRegularSubspace →L[ℝ]
+        P.fixedSlotHilbertDirectLimitRegularSubspace :=
+    P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n
   change
-    NormedSpace.exp
-        ((s + t) • P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n) =
-      NormedSpace.exp
-          (s • P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n) *
-        NormedSpace.exp
-          (t • P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n)
-  have hsum :
-      (s + t) • P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n =
-        s • P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n +
-          t • P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n :=
-    add_smul s t _
+    NormedSpace.exp ((s + t) • A) =
+      NormedSpace.exp (s • A) * NormedSpace.exp (t • A)
+  have hsum : (s + t) • A = s • A + t • A := add_smul s t A
   rw [hsum]
   exact NormedSpace.exp_add_of_commute
-    (((Commute.refl
-      (P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n)).smul_left s).smul_right t)
+    (((Commute.refl A).smul_left s).smul_right t)
 
 /-- Banach-algebra derivative of the real-time bounded Yosida exponential. -/
 theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_hasDerivAt
@@ -117,15 +116,18 @@ theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_hasDerivAt
       (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n t *
         P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n)
       t := by
+  let A :
+      P.fixedSlotHilbertDirectLimitRegularSubspace →L[ℝ]
+        P.fixedSlotHilbertDirectLimitRegularSubspace :=
+    P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n
   change HasDerivAt
-    (fun r : ℝ => NormedSpace.exp
-      (r • P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n))
-    (NormedSpace.exp
-        (t • P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n) *
-      P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n)
-    t
-  exact hasDerivAt_exp_smul_const
-    (P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n) t
+    (fun r : ℝ => NormedSpace.exp (r • A))
+    (NormedSpace.exp (t • A) * A) t
+  have hderiv : HasDerivAt
+      (fun r : ℝ => NormedSpace.exp (r • A))
+      (NormedSpace.exp (t • A) * A) t :=
+    hasDerivAt_exp_smul_const A t
+  exact hderiv
 
 /-- The real-time bounded Yosida exponential is continuous in operator norm. -/
 theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_continuous
