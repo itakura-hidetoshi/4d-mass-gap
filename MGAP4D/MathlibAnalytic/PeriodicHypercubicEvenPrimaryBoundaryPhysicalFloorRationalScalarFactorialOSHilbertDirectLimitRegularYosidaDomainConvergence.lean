@@ -224,8 +224,8 @@ theorem fixedSlotHilbertDirectLimitRegularYosidaDomain_package
       (fun n : ℕ => P.fixedSlotHilbertDirectLimitRegularDyadicYosidaResolvent n
         (x : P.fixedSlotHilbertDirectLimitRegularSubspace))
       atTop (nhds (x : P.fixedSlotHilbertDirectLimitRegularSubspace)) ∧
-      (∀ lambda : ℝ, 0 < lambda →
-        ‖P.fixedSlotHilbertDirectLimitRegularYosidaHamiltonian lambda ‹0 < lambda›
+      (∀ (lambda : ℝ) (hlambda : 0 < lambda),
+        ‖P.fixedSlotHilbertDirectLimitRegularYosidaHamiltonian lambda hlambda
             (x : P.fixedSlotHilbertDirectLimitRegularSubspace)‖ ≤
           ‖P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian x‖) := by
   refine ⟨P.fixedSlotHilbertDirectLimitRegularDyadicYosidaResolvent_tendsto_on_closedDomain x, ?_⟩
