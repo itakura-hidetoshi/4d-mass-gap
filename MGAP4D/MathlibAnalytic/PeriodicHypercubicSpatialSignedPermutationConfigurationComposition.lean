@@ -103,54 +103,48 @@ theorem periodicHypercubicConfigurationSpatialSignedPermutation_mul
   · simp [periodicHypercubicConfigurationSpatialSignedPermutation,
       periodicHypercubicStepValue, hinv,
       periodicHypercubicVertexSpatialSignedPermutation_mul]
-  · by_cases hg : (g⁻¹).left ((g⁻¹).right k) = 1
-    · by_cases hh :
-          (h⁻¹).left ((h⁻¹).right ((g⁻¹).right k)) = 1
+  · simp only [periodicHypercubicConfigurationSpatialSignedPermutation]
+    rw [hinv]
+    generalize hgi : g⁻¹ = gi
+    generalize hhi : h⁻¹ = hi
+    by_cases hg : gi.left (gi.right k) = 1
+    · by_cases hh : hi.left (hi.right (gi.right k)) = 1
       · have hprod :
-            (h⁻¹ * g⁻¹).left ((h⁻¹ * g⁻¹).right k) = 1 := by
-          rw [spatialSignedPermutation_mul_imageSign]
-          simp [hh, hg]
-        simp [periodicHypercubicConfigurationSpatialSignedPermutation,
-          periodicHypercubicStepValue, periodicHypercubicSpatialSignedPermutationAxis,
-          hinv, hg, hh, hprod,
+            (hi * gi).left ((hi * gi).right k) = 1 := by
+          rw [spatialSignedPermutation_mul_imageSign, hh, hg]
+          simp
+        simp [periodicHypercubicStepValue, hg, hh, hprod,
           periodicHypercubicVertexSpatialSignedPermutation_mul]
       · have hhneg :
-            (h⁻¹).left ((h⁻¹).right ((g⁻¹).right k)) = (-1 : ℤˣ) :=
+            hi.left (hi.right (gi.right k)) = (-1 : ℤˣ) :=
           (spatialSignedPermutation_imageSign_eq_one_or_neg_one
-            (h⁻¹) ((g⁻¹).right k)).resolve_left hh
+            hi (gi.right k)).resolve_left hh
         have hprod :
-            (h⁻¹ * g⁻¹).left ((h⁻¹ * g⁻¹).right k) ≠ 1 := by
+            (hi * gi).left ((hi * gi).right k) ≠ 1 := by
           rw [spatialSignedPermutation_mul_imageSign, hhneg, hg]
           native_decide
-        simp [periodicHypercubicConfigurationSpatialSignedPermutation,
-          periodicHypercubicStepValue, periodicHypercubicSpatialSignedPermutationAxis,
-          hinv, hg, hh, hhneg, hprod,
+        simp [periodicHypercubicStepValue, hg, hh, hhneg, hprod,
           periodicHypercubicVertexSpatialSignedPermutation_mul]
     · have hgneg :
-          (g⁻¹).left ((g⁻¹).right k) = (-1 : ℤˣ) :=
-        (spatialSignedPermutation_imageSign_eq_one_or_neg_one (g⁻¹) k).resolve_left hg
-      by_cases hh :
-          (h⁻¹).left ((h⁻¹).right ((g⁻¹).right k)) = 1
+          gi.left (gi.right k) = (-1 : ℤˣ) :=
+        (spatialSignedPermutation_imageSign_eq_one_or_neg_one gi k).resolve_left hg
+      by_cases hh : hi.left (hi.right (gi.right k)) = 1
       · have hprod :
-            (h⁻¹ * g⁻¹).left ((h⁻¹ * g⁻¹).right k) ≠ 1 := by
+            (hi * gi).left ((hi * gi).right k) ≠ 1 := by
           rw [spatialSignedPermutation_mul_imageSign, hh, hgneg]
           native_decide
-        simp [periodicHypercubicConfigurationSpatialSignedPermutation,
-          periodicHypercubicStepValue, periodicHypercubicSpatialSignedPermutationAxis,
-          hinv, hg, hgneg, hh, hprod,
+        simp [periodicHypercubicStepValue, hg, hgneg, hh, hprod,
           periodicHypercubicVertexSpatialSignedPermutation_mul,
           periodicHypercubicVertexSpatialSignedPermutation_unshift_spatial_of_pos]
       · have hhneg :
-            (h⁻¹).left ((h⁻¹).right ((g⁻¹).right k)) = (-1 : ℤˣ) :=
+            hi.left (hi.right (gi.right k)) = (-1 : ℤˣ) :=
           (spatialSignedPermutation_imageSign_eq_one_or_neg_one
-            (h⁻¹) ((g⁻¹).right k)).resolve_left hh
+            hi (gi.right k)).resolve_left hh
         have hprod :
-            (h⁻¹ * g⁻¹).left ((h⁻¹ * g⁻¹).right k) = 1 := by
+            (hi * gi).left ((hi * gi).right k) = 1 := by
           rw [spatialSignedPermutation_mul_imageSign, hhneg, hgneg]
           native_decide
-        simp [periodicHypercubicConfigurationSpatialSignedPermutation,
-          periodicHypercubicStepValue, periodicHypercubicSpatialSignedPermutationAxis,
-          hinv, hg, hgneg, hh, hhneg, hprod,
+        simp [periodicHypercubicStepValue, hg, hgneg, hh, hhneg, hprod,
           periodicHypercubicVertexSpatialSignedPermutation_mul,
           periodicHypercubicVertexSpatialSignedPermutation_unshift_spatial_of_neg]
 
