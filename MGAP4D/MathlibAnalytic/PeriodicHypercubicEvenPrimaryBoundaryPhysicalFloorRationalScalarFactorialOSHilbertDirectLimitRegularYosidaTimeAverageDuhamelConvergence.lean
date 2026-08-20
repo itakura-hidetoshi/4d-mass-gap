@@ -378,7 +378,8 @@ theorem fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath_hasDerivA
     have hOuterF :=
       (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_hasDerivAt
         n ((t : ℝ) - r)).hasFDerivAt
-    have hCompF := hOuterF.comp r harg.hasFDerivAt
+    have hCompF :=
+      HasFDerivAt.comp (f := fun s : ℝ => (t : ℝ) - s) r hOuterF harg.hasFDerivAt
     have hComp := hCompF.hasDerivAt
     simpa [Function.comp_def] using hComp
   have hE : HasDerivAt
