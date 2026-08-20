@@ -1,35 +1,39 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPrimaryBoundaryPhysicalFloorRationalScalarFactorialOSHilbertDirectLimitRegularHamiltonianLaplaceResolvent
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPrimaryBoundaryPhysicalFloorRationalScalarFactorialOSHilbertDirectLimitRegularYosidaExponentialConvergence
-import Mathlib.Analysis.Calculus.Deriv.Mul
-import Mathlib.MeasureTheory.Integral.IntervalIntegral.FundThmCalculus
 import Mathlib.Tactic
 
 /-!
-# Finite Laplace resolvent vectors on the same-root regular OS semigroup
+# Positive resolvent range and the actual regular OS generator domain
 
-This file starts the closed-generator identification package directly from the original regular
-factorial-OS `C₀` contraction semigroup.  For a real parameter `lambda` and finite Euclidean time
-`h`, we construct the weighted orbit integral
+The canonical regular factorial-OS construction already contains two same-root objects:
 
-`R_{lambda,h} x = ∫₀ʰ exp (-lambda s) T_s x ds`
+* finite Laplace vectors `R_{lambda,h} x`, known to lie in the actual right-generator domain and to
+  satisfy the exact finite-time Hamiltonian-shift identity;
+* the bounded positive resolvent `R_lambda = (lambda I + Hbar)⁻¹` of the nonnegative self-adjoint
+  graph-closed Hamiltonian.
 
-and prove, without introducing a new semigroup abstraction, that it lies in the actual right
-infinitesimal-generator domain.  Its generator and Hamiltonian values satisfy the exact finite-time
-resolvent formula
+This file identifies them at infinite Euclidean time.  Closed-shift injectivity shows that every
+finite Laplace vector is the positive resolvent applied to its finite-time shifted value.  Exponential
+terminal decay therefore gives
 
-`A R_{lambda,h} x = lambda R_{lambda,h} x + exp (-lambda h) T_h x - x`,
+`R_{lambda,n} x -> R_lambda x`.
 
-`H R_{lambda,h} x = x - lambda R_{lambda,h} x - exp (-lambda h) T_h x`.
+Passing the original semigroup action through this limit yields the exact resolvent-orbit formula
 
-For positive `lambda`, the terminal term is controlled by contraction and exponential decay.  These
-identities are the same-root finite-time input for identifying the infinite semigroup Laplace
-resolvent with the already-constructed positive resolvent `(lambda I + H̄)⁻¹`.
+`T_t R_lambda x = exp(lambda t) (R_lambda x - R_{lambda,t} x)`.
+
+The right-hand side has an explicit derivative at zero, proving directly -- without assuming the
+original generator is already closed -- that the whole range of the positive resolvent lies in the
+actual right-generator domain.  Surjectivity of `lambda I + Hbar` then gives the reverse domain
+inclusion and hence exact equality between the original semigroup generator domain and the closed
+Hamiltonian domain.
 -/
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
 open Filter Set Topology
-open scoped InnerProductSpace Interval LinearPMap
+open scoped InnerProductSpace LinearPMap
 
 noncomputable section
 
@@ -44,454 +48,491 @@ variable {L :
     H N hN beta hbeta
     periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing}
 
-/-- Exponentially weighted original regular OS orbit, clamped only on negative real times. -/
-noncomputable def fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit
+/-- A finite Laplace vector is exactly the positive resolvent applied to its closed-Hamiltonian
+shift.  This is simply uniqueness of the preimage under the injective positive shift. -/
+theorem fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_eq_positiveResolvent_closedShift
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
+    (lambda : ℝ) (hlambda : 0 < lambda)
+    (h : NNReal) (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
+    P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda h x =
+      P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda
+        (P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonianShift lambda
+          (P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegralClosedDomain lambda h x)) := by
+  have hdom :
+      P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegralClosedDomain lambda h x =
+        P.fixedSlotHilbertDirectLimitRegularPositiveResolventDomain lambda hlambda
+          (P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonianShift lambda
+            (P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegralClosedDomain lambda h x)) := by
+    apply P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonianShift_injective hlambda
+    exact
+      (P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonianShift_positiveResolventDomain
+        lambda hlambda
+        (P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonianShift lambda
+          (P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegralClosedDomain lambda h x))).symm
+  have hcoe := congrArg
+    (fun z : P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian.domain =>
+      (z : P.fixedSlotHilbertDirectLimitRegularSubspace)) hdom
+  simpa only [P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegralClosedDomain_coe,
+    P.fixedSlotHilbertDirectLimitRegularPositiveResolvent_apply] using hcoe
+
+/-- Natural-time finite Laplace vectors converge strongly to the positive resolvent. -/
+theorem fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_nat_tendsto_positiveResolvent
+    (P : PrimaryScalarFixedSlotOSPreHilbertData
+      H N hN beta hbeta
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
+    (lambda : ℝ) (hlambda : 0 < lambda)
+    (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
+    Tendsto
+      (fun n : ℕ =>
+        P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda (n : NNReal) x)
+      atTop
+      (nhds (P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda x)) := by
+  have hshift :=
+    P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonianShift_finiteLaplace_tendsto
+      hlambda x
+  have hmap :=
+    (P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda).continuous.continuousAt.tendsto.comp
+      hshift
+  simpa only [P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_eq_positiveResolvent_closedShift]
+    using hmap
+
+/-- The exponentially weighted terminal orbit at width `n+t` is the fixed scalar multiple of the
+`T_t`-image of the terminal orbit at width `n`. -/
+theorem fixedSlotHilbertDirectLimitRegularExponentialTerminal_nat_add_eq
+    (P : PrimaryScalarFixedSlotOSPreHilbertData
+      H N hN beta hbeta
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
+    (lambda : ℝ) (t : NNReal)
     (x : P.fixedSlotHilbertDirectLimitRegularSubspace)
-    (s : ℝ) : P.fixedSlotHilbertDirectLimitRegularSubspace :=
-  Real.exp ((-lambda) * s) • P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit x s
+    (n : ℕ) :
+    Real.exp ((-lambda) * ((((n : NNReal) + t : NNReal) : ℝ))) •
+        P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism ((n : NNReal) + t) x =
+      Real.exp ((-lambda) * (t : ℝ)) •
+        P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t
+          (Real.exp ((-lambda) * (n : ℝ)) •
+            P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism (n : NNReal) x) := by
+  rw [map_smul, smul_smul]
+  rw [P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_add_apply]
+  rw [add_comm t (n : NNReal)]
+  congr 1
+  rw [← Real.exp_add]
+  congr 1
+  push_cast
+  ring
 
-/-- Weighted regular OS orbits are continuous on the real line. -/
-theorem fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit_continuous
+/-- Positive exponential decay persists after adding a fixed nonnegative time to the natural cutoff. -/
+theorem fixedSlotHilbertDirectLimitRegularExponentialTerminal_nat_add_tendsto_zero
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
+    {lambda : ℝ} (hlambda : 0 < lambda)
+    (t : NNReal)
     (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
-    Continuous (P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit lambda x) := by
-  have hscalar : Continuous (fun s : ℝ => Real.exp ((-lambda) * s)) :=
-    Real.continuous_exp.comp (continuous_const.mul continuous_id)
-  exact hscalar.smul (P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit_continuous x)
+    Tendsto
+      (fun n : ℕ =>
+        Real.exp ((-lambda) * ((((n : NNReal) + t : NNReal) : ℝ))) •
+          P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism ((n : NNReal) + t) x)
+      atTop (nhds 0) := by
+  have hbase :=
+    P.fixedSlotHilbertDirectLimitRegular_exponentialTerminal_nat_tendsto_zero hlambda x
+  have hmap :=
+    (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t).continuous.continuousAt.tendsto.comp
+      hbase
+  have hscalar : Tendsto
+      (fun _ : ℕ => Real.exp ((-lambda) * (t : ℝ))) atTop
+      (nhds (Real.exp ((-lambda) * (t : ℝ)))) := tendsto_const_nhds
+  have hsmul := hscalar.smul hmap
+  have hfun :
+      (fun n : ℕ =>
+        Real.exp ((-lambda) * ((((n : NNReal) + t : NNReal) : ℝ))) •
+          P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism ((n : NNReal) + t) x) =
+      (fun n : ℕ =>
+        Real.exp ((-lambda) * (t : ℝ)) •
+          P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t
+            (Real.exp ((-lambda) * (n : ℝ)) •
+              P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism (n : NNReal) x)) := by
+    funext n
+    exact P.fixedSlotHilbertDirectLimitRegularExponentialTerminal_nat_add_eq lambda t x n
+  rw [hfun]
+  simpa using hsmul
 
-/-- Weighted regular OS orbits are Bochner integrable on every compact interval. -/
-theorem fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit_intervalIntegrable
+/-- Closed positive shifts of finite Laplace vectors with cutoff `n+t` converge to the original
+vector. -/
+theorem fixedSlotHilbertDirectLimitRegularClosedRightHamiltonianShift_finiteLaplace_nat_add_tendsto
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
-    (x : P.fixedSlotHilbertDirectLimitRegularSubspace)
-    (a b : ℝ) :
-    IntervalIntegrable
-      (P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit lambda x)
-      MeasureTheory.volume a b :=
-  (P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit_continuous lambda x).intervalIntegrable
-    a b
-
-@[simp]
-theorem fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit_zero
-    (P : PrimaryScalarFixedSlotOSPreHilbertData
-      H N hN beta hbeta
-      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
+    {lambda : ℝ} (hlambda : 0 < lambda)
+    (t : NNReal)
     (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
-    P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit lambda x 0 = x := by
-  simp [fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit,
-    fixedSlotHilbertDirectLimitRegularClampedRealOrbit]
+    Tendsto
+      (fun n : ℕ =>
+        P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonianShift lambda
+          (P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegralClosedDomain
+            lambda ((n : NNReal) + t) x))
+      atTop (nhds x) := by
+  have hterminal :=
+    P.fixedSlotHilbertDirectLimitRegularExponentialTerminal_nat_add_tendsto_zero hlambda t x
+  have hsub : Tendsto
+      (fun n : ℕ => x -
+        Real.exp ((-lambda) * ((((n : NNReal) + t : NNReal) : ℝ))) •
+          P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism ((n : NNReal) + t) x)
+      atTop (nhds (x - 0)) := tendsto_const_nhds.sub hterminal
+  simpa only [sub_zero,
+    P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonianShift_finiteLaplaceIntegral] using hsub
 
-/-- Bochner primitive of the exponentially weighted regular OS orbit. -/
-noncomputable def fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive
+/-- Finite Laplace vectors with cutoff `n+t` converge to the same positive resolvent. -/
+theorem fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_nat_add_tendsto_positiveResolvent
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
-    (x : P.fixedSlotHilbertDirectLimitRegularSubspace)
-    (r : ℝ) : P.fixedSlotHilbertDirectLimitRegularSubspace :=
-  ∫ s in (0 : ℝ)..r,
-    P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit lambda x s
-
-@[simp]
-theorem fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive_zero
-    (P : PrimaryScalarFixedSlotOSPreHilbertData
-      H N hN beta hbeta
-      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
+    (lambda : ℝ) (hlambda : 0 < lambda)
+    (t : NNReal)
     (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
-    P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive lambda x 0 = 0 := by
-  simp [fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive]
+    Tendsto
+      (fun n : ℕ =>
+        P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda ((n : NNReal) + t) x)
+      atTop
+      (nhds (P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda x)) := by
+  have hshift :=
+    P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonianShift_finiteLaplace_nat_add_tendsto
+      hlambda t x
+  have hmap :=
+    (P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda).continuous.continuousAt.tendsto.comp
+      hshift
+  simpa only [P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_eq_positiveResolvent_closedShift]
+    using hmap
 
-/-- The weighted orbit is the derivative of its Bochner primitive. -/
-theorem fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive_hasDerivAt
+/-- Real formula whose positive-time restriction will be the orbit of a positive-resolvent vector. -/
+noncomputable def fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
-    (x : P.fixedSlotHilbertDirectLimitRegularSubspace)
-    (r : ℝ) :
-    HasDerivAt
-      (P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive lambda x)
-      (P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit lambda x r)
-      r := by
-  simpa only [fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive] using
-    ((P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit_continuous lambda x)
-      .integral_hasStrictDerivAt 0 r).hasDerivAt
-
-/-- Finite-time Laplace integral of the original regular OS orbit. -/
-noncomputable def fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral
-    (P : PrimaryScalarFixedSlotOSPreHilbertData
-      H N hN beta hbeta
-      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
-    (h : NNReal)
-    (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
-    P.fixedSlotHilbertDirectLimitRegularSubspace :=
-  P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive lambda x (h : ℝ)
-
-@[simp]
-theorem fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_zero_width
-    (P : PrimaryScalarFixedSlotOSPreHilbertData
-      H N hN beta hbeta
-      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
-    (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
-    P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda 0 x = 0 := by
-  simp [fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral]
-
-/-- Exponentially renormalized moving-interval primitive obtained by applying the semigroup to a
-finite Laplace integral. -/
-noncomputable def fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive
-    (P : PrimaryScalarFixedSlotOSPreHilbertData
-      H N hN beta hbeta
-      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
-    (h : NNReal)
+    (lambda : ℝ) (hlambda : 0 < lambda)
     (x : P.fixedSlotHilbertDirectLimitRegularSubspace)
     (r : ℝ) : P.fixedSlotHilbertDirectLimitRegularSubspace :=
   Real.exp (lambda * r) •
-    (P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive lambda x ((h : ℝ) + r) -
+    (P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda x -
       P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive lambda x r)
 
 @[simp]
-theorem fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive_zero
+theorem fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula_zero
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
-    (h : NNReal)
+    (lambda : ℝ) (hlambda : 0 < lambda)
     (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
-    P.fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive lambda h x 0 =
-      P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda h x := by
-  simp [fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive,
-    fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral]
+    P.fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula lambda hlambda x 0 =
+      P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda x := by
+  simp [fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula]
 
-/-- Scalar exponential prefactor derivative at zero. -/
-theorem fixedSlotHilbertDirectLimitRegularExponentialPrefactor_hasDerivAt_zero
-    (lambda : ℝ) :
-    HasDerivAt (fun r : ℝ => Real.exp (lambda * r)) lambda 0 := by
-  have hlinear : HasDerivAt (fun r : ℝ => lambda * r) lambda 0 := by
-    simpa using (hasDerivAt_id (x := (0 : ℝ))).const_mul lambda
-  simpa using hlinear.exp
-
-/-- Moving weighted interval derivative at zero. -/
-theorem fixedSlotHilbertDirectLimitRegularExponentialMovingInterval_hasDerivAt_zero
+/-- The shifted finite-Laplace primitives converge to the positive-resolvent orbit formula. -/
+theorem fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive_nat_tendsto_positiveResolventOrbitFormula
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
-    (h : NNReal)
-    (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
-    HasDerivAt
-      (fun r : ℝ =>
-        P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive lambda x ((h : ℝ) + r) -
-          P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive lambda x r)
-      (P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit lambda x (h : ℝ) - x)
-      0 := by
-  have harg : HasDerivAt (fun r : ℝ => (h : ℝ) + r) 1 0 := by
-    simpa using (hasDerivAt_id (x := (0 : ℝ))).const_add (h : ℝ)
-  have hshift :
-      HasDerivAt
-        (fun r : ℝ =>
-          P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive lambda x ((h : ℝ) + r))
-        (P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit lambda x (h : ℝ))
-        0 := by
-    have hout :=
-      P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive_hasDerivAt
-        lambda x ((h : ℝ) + 0)
-    have hcomp := hout.scomp 0 harg
-    simpa using hcomp
-  have hzero :
-      HasDerivAt
-        (P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive lambda x)
-        x 0 := by
-    simpa using P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive_hasDerivAt lambda x 0
-  exact hshift.sub hzero
-
-/-- Derivative at zero of the shifted exponential primitive, written in completed original-semigroup
-notation. -/
-theorem fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive_hasDerivAt_zero
-    (P : PrimaryScalarFixedSlotOSPreHilbertData
-      H N hN beta hbeta
-      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
-    (h : NNReal)
-    (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
-    HasDerivAt
-      (P.fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive lambda h x)
-      (lambda • P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda h x +
-        Real.exp ((-lambda) * (h : ℝ)) •
-          P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism h x - x)
-      0 := by
-  have hscalar := fixedSlotHilbertDirectLimitRegularExponentialPrefactor_hasDerivAt_zero lambda
-  have hinterval :=
-    P.fixedSlotHilbertDirectLimitRegularExponentialMovingInterval_hasDerivAt_zero lambda h x
-  have hproduct := hscalar.smul hinterval
-  convert hproduct using 1
-  · simp only [fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive]
-  · simp only [fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral, mul_zero, Real.exp_zero,
-      one_smul, add_zero, P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive_zero,
-      sub_zero]
-    rw [fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit]
-    have hh : (h : ℝ).toNNReal = h := by
-      exact NNReal.eq (by simp)
-    rw [fixedSlotHilbertDirectLimitRegularClampedRealOrbit, hh]
-    module
-
-/-- Applying the original OS semigroup to a weighted orbit shifts its real-time argument and produces
-the compensating exponential factor. -/
-theorem fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_exponentiallyWeightedOrbit
-    (P : PrimaryScalarFixedSlotOSPreHilbertData
-      H N hN beta hbeta
-      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
+    (lambda : ℝ) (hlambda : 0 < lambda)
     (t : NNReal)
+    (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
+    Tendsto
+      (fun n : ℕ =>
+        P.fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive
+          lambda (n : NNReal) x (t : ℝ))
+      atTop
+      (nhds (P.fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula
+        lambda hlambda x (t : ℝ))) := by
+  have hwidth :=
+    P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_nat_add_tendsto_positiveResolvent
+      lambda hlambda t x
+  have hconst : Tendsto
+      (fun _ : ℕ => P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda t x)
+      atTop (nhds (P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda t x)) :=
+    tendsto_const_nhds
+  have hsub := hwidth.sub hconst
+  have hscalar : Tendsto
+      (fun _ : ℕ => Real.exp (lambda * (t : ℝ))) atTop
+      (nhds (Real.exp (lambda * (t : ℝ)))) := tendsto_const_nhds
+  have hsmul := hscalar.smul hsub
+  have hfun :
+      (fun n : ℕ =>
+        P.fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive
+          lambda (n : NNReal) x (t : ℝ)) =
+      (fun n : ℕ => Real.exp (lambda * (t : ℝ)) •
+        (P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral
+            lambda ((n : NNReal) + t) x -
+          P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda t x)) := by
+    funext n
+    simp [fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive,
+      fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral]
+  rw [hfun]
+  simpa [fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula,
+    fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral] using hsmul
+
+/-- Exact semigroup action on every positive-resolvent vector. -/
+theorem fixedSlotHilbertDirectLimitRegularPositiveResolvent_semigroup_action
+    (P : PrimaryScalarFixedSlotOSPreHilbertData
+      H N hN beta hbeta
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
+    (lambda : ℝ) (hlambda : 0 < lambda)
+    (t : NNReal)
+    (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
+    P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t
+        (P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda x) =
+      P.fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula
+        lambda hlambda x (t : ℝ) := by
+  have hfinite :=
+    P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_nat_tendsto_positiveResolvent
+      lambda hlambda x
+  have hleft :=
+    (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t).continuous.continuousAt.tendsto.comp
+      hfinite
+  have hright :=
+    P.fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive_nat_tendsto_positiveResolventOrbitFormula
+      lambda hlambda t x
+  have hfun :
+      (fun n : ℕ =>
+        P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t
+          (P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda (n : NNReal) x)) =
+      (fun n : ℕ =>
+        P.fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive
+          lambda (n : NNReal) x (t : ℝ)) := by
+    funext n
+    exact P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_finiteLaplaceIntegral
+      lambda t (n : NNReal) x
+  rw [hfun] at hleft
+  exact tendsto_nhds_unique hleft hright
+
+/-- The positive-resolvent orbit formula has derivative `lambda R_lambda x - x` at zero. -/
+theorem fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula_hasDerivAt_zero
+    (P : PrimaryScalarFixedSlotOSPreHilbertData
+      H N hN beta hbeta
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
+    (lambda : ℝ) (hlambda : 0 < lambda)
+    (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
+    HasDerivAt
+      (P.fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula lambda hlambda x)
+      (lambda • P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda x - x)
+      0 := by
+  have hscalar := fixedSlotHilbertDirectLimitRegular_exponentialPrefactor_hasDerivAt_zero lambda
+  have hconst : HasDerivAt
+      (fun _ : ℝ => P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda x)
+      0 0 := hasDerivAt_const (x := (0 : ℝ))
+  have hprimitive :=
+    P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive_hasDerivAt lambda x 0
+  have hsub := hconst.sub hprimitive
+  have hproduct := hscalar.smul hsub
+  simpa [fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula,
+    sub_eq_add_neg] using hproduct
+
+/-- Difference quotient of a positive-resolvent vector is the slope of its explicit orbit formula. -/
+theorem fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient_positiveResolvent
+    (P : PrimaryScalarFixedSlotOSPreHilbertData
+      H N hN beta hbeta
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
+    (lambda : ℝ) (hlambda : 0 < lambda)
     (x : P.fixedSlotHilbertDirectLimitRegularSubspace)
-    (s : ℝ)
-    (hs : 0 ≤ s) :
-    P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t
-        (P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit lambda x s) =
-      Real.exp (lambda * (t : ℝ)) •
-        P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit lambda x
-          (s + (t : ℝ)) := by
-  calc
-    P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t
-        (P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit lambda x s) =
-      Real.exp ((-lambda) * s) •
-        P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t
-          (P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit x s) := by
-      simp [fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit, map_smul]
-    _ = Real.exp ((-lambda) * s) •
-        P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit
-          (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t x) s := by
-      rw [P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_clampedRealOrbit]
-    _ = Real.exp ((-lambda) * s) •
-        P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit x (s + (t : ℝ)) := by
-      rw [P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit_endomorphism_eq_add_of_nonneg
-        t x s hs]
-    _ = Real.exp (lambda * (t : ℝ)) •
-        P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit lambda x
-          (s + (t : ℝ)) := by
-      rw [fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit, smul_smul]
-      congr 1
-      rw [← Real.exp_add]
-      congr 1
-      ring
-
-/-- Applying the original regular OS semigroup to a finite Laplace integral gives the shifted
-exponential primitive. -/
-theorem fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_finiteLaplaceIntegral
-    (P : PrimaryScalarFixedSlotOSPreHilbertData
-      H N hN beta hbeta
-      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
-    (t h : NNReal)
-    (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
-    P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t
-        (P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda h x) =
-      P.fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive lambda h x (t : ℝ) := by
-  unfold fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral
-  unfold fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive
-  rw [← ContinuousLinearMap.intervalIntegral_comp_comm
-    (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t)
-    (P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit_intervalIntegrable
-      lambda x 0 (h : ℝ))]
-  calc
-    (∫ s in (0 : ℝ)..(h : ℝ),
-        P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t
-          (P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit lambda x s)) =
-      ∫ s in (0 : ℝ)..(h : ℝ),
-        Real.exp (lambda * (t : ℝ)) •
-          P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit lambda x
-            (s + (t : ℝ)) := by
-      apply intervalIntegral.integral_congr
-      intro s hs
-      have hh : (0 : ℝ) ≤ (h : ℝ) := h.coe_nonneg
-      rw [uIcc_of_le hh] at hs
-      exact P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_exponentiallyWeightedOrbit
-        lambda t x s hs.1
-    _ = Real.exp (lambda * (t : ℝ)) •
-        (∫ s in (0 : ℝ)..(h : ℝ),
-          P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit lambda x
-            (s + (t : ℝ))) := by
-      rw [intervalIntegral.integral_smul]
-    _ = Real.exp (lambda * (t : ℝ)) •
-        (∫ s in (t : ℝ)..(h : ℝ) + (t : ℝ),
-          P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit lambda x s) := by
-      rw [intervalIntegral.integral_comp_add_right]
-      simp
-    _ = P.fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive lambda h x (t : ℝ) := by
-      unfold fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive
-      unfold fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive
-      congr 1
-      symm
-      simpa [add_comm] using
-        intervalIntegral.integral_interval_sub_left
-          (P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit_intervalIntegrable
-            lambda x 0 ((t : ℝ) + (h : ℝ)))
-          (P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit_intervalIntegrable
-            lambda x 0 (t : ℝ))
-
-/-- Right difference quotient of a finite Laplace vector is the slope of its shifted primitive. -/
-theorem fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient_finiteLaplaceIntegral
-    (P : PrimaryScalarFixedSlotOSPreHilbertData
-      H N hN beta hbeta
-      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
-    (h t : NNReal)
-    (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
+    (t : NNReal) :
     P.fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient
-        (P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda h x) t =
+        (P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda x) t =
       (t : ℝ)⁻¹ •
-        (P.fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive lambda h x (t : ℝ) -
-          P.fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive lambda h x 0) := by
+        (P.fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula
+            lambda hlambda x (t : ℝ) -
+          P.fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula
+            lambda hlambda x 0) := by
   unfold fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient
-  rw [P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_finiteLaplaceIntegral]
-  rw [P.fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive_zero]
+  rw [P.fixedSlotHilbertDirectLimitRegularPositiveResolvent_semigroup_action]
+  rw [P.fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula_zero]
 
-/-- Every finite Laplace integral has the exact expected right-generator value. -/
-theorem fixedSlotHilbertDirectLimitRegularHasRightGeneratorValue_finiteLaplaceIntegral
+/-- Every positive-resolvent vector has the expected actual right-generator value. -/
+theorem fixedSlotHilbertDirectLimitRegularHasRightGeneratorValue_positiveResolvent
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
-    (h : NNReal)
+    (lambda : ℝ) (hlambda : 0 < lambda)
     (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
     P.FixedSlotHilbertDirectLimitRegularHasRightGeneratorValue
-      (P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda h x)
-      (lambda • P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda h x +
-        Real.exp ((-lambda) * (h : ℝ)) •
-          P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism h x - x) := by
+      (P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda x)
+      (lambda • P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda x - x) := by
   unfold FixedSlotHilbertDirectLimitRegularHasRightGeneratorValue
   have hreal :=
-    (P.fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive_hasDerivAt_zero
-      lambda h x).tendsto_slope_zero_right
+    (P.fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula_hasDerivAt_zero
+      lambda hlambda x).tendsto_slope_zero_right
   have hcomp := hreal.comp nnreal_coe_tendsto_zero_right
-  simpa only [P.fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient_finiteLaplaceIntegral,
+  simpa only [P.fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient_positiveResolvent,
     zero_add] using hcomp
 
-/-- Every finite Laplace vector lies in the actual right-generator domain of the original regular OS
+/-- The range of every positive resolvent lies in the actual generator domain of the original OS
 semigroup. -/
-theorem fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_mem_rightGeneratorDomain
+theorem fixedSlotHilbertDirectLimitRegularPositiveResolvent_mem_rightGeneratorDomain
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
-    (h : NNReal)
+    (lambda : ℝ) (hlambda : 0 < lambda)
     (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
-    P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda h x ∈
+    P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda x ∈
       P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomain :=
-  ⟨lambda • P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda h x +
-      Real.exp ((-lambda) * (h : ℝ)) •
-        P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism h x - x,
-    P.fixedSlotHilbertDirectLimitRegularHasRightGeneratorValue_finiteLaplaceIntegral lambda h x⟩
+  ⟨lambda • P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda x - x,
+    P.fixedSlotHilbertDirectLimitRegularHasRightGeneratorValue_positiveResolvent lambda hlambda x⟩
 
-/-- Finite Laplace vector bundled in the actual original right-generator domain. -/
-noncomputable def fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegralGeneratorDomain
+/-- Positive resolvent bundled in the original actual generator domain. -/
+noncomputable def fixedSlotHilbertDirectLimitRegularPositiveResolventGeneratorDomain
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
-    (h : NNReal)
+    (lambda : ℝ) (hlambda : 0 < lambda)
     (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
     P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomain :=
-  ⟨P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda h x,
-    P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_mem_rightGeneratorDomain lambda h x⟩
+  ⟨P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda x,
+    P.fixedSlotHilbertDirectLimitRegularPositiveResolvent_mem_rightGeneratorDomain lambda hlambda x⟩
 
 @[simp]
-theorem fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegralGeneratorDomain_coe
+theorem fixedSlotHilbertDirectLimitRegularPositiveResolventGeneratorDomain_coe
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
-    (h : NNReal)
+    (lambda : ℝ) (hlambda : 0 < lambda)
     (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
-    (P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegralGeneratorDomain lambda h x :
+    (P.fixedSlotHilbertDirectLimitRegularPositiveResolventGeneratorDomain lambda hlambda x :
       P.fixedSlotHilbertDirectLimitRegularSubspace) =
-      P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda h x :=
-  rfl
+      P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda x := rfl
 
-/-- Exact finite-time generator resolvent formula. -/
-theorem fixedSlotHilbertDirectLimitRegularRightGenerator_finiteLaplaceIntegral
+/-- Exact original generator value on positive-resolvent vectors. -/
+theorem fixedSlotHilbertDirectLimitRegularRightGenerator_positiveResolvent
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
-    (h : NNReal)
+    (lambda : ℝ) (hlambda : 0 < lambda)
     (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
     P.fixedSlotHilbertDirectLimitRegularRightGenerator
-        (P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegralGeneratorDomain lambda h x) =
-      lambda • P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda h x +
-        Real.exp ((-lambda) * (h : ℝ)) •
-          P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism h x - x := by
+        (P.fixedSlotHilbertDirectLimitRegularPositiveResolventGeneratorDomain lambda hlambda x) =
+      lambda • P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda x - x := by
   apply P.fixedSlotHilbertDirectLimitRegularHasRightGeneratorValue_unique
     (P.fixedSlotHilbertDirectLimitRegularRightGenerator_hasValue
-      (P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegralGeneratorDomain lambda h x))
-  exact P.fixedSlotHilbertDirectLimitRegularHasRightGeneratorValue_finiteLaplaceIntegral lambda h x
+      (P.fixedSlotHilbertDirectLimitRegularPositiveResolventGeneratorDomain lambda hlambda x))
+  exact P.fixedSlotHilbertDirectLimitRegularHasRightGeneratorValue_positiveResolvent lambda hlambda x
 
-/-- Exact finite-time Hamiltonian resolvent formula. -/
-theorem fixedSlotHilbertDirectLimitRegularRightHamiltonian_finiteLaplaceIntegral
+/-- Exact original Hamiltonian value on positive-resolvent vectors. -/
+theorem fixedSlotHilbertDirectLimitRegularRightHamiltonian_positiveResolvent
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
-    (h : NNReal)
+    (lambda : ℝ) (hlambda : 0 < lambda)
     (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
     P.fixedSlotHilbertDirectLimitRegularRightHamiltonian
-        (P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegralGeneratorDomain lambda h x) =
-      x - lambda • P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda h x -
-        Real.exp ((-lambda) * (h : ℝ)) •
-          P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism h x := by
+        (P.fixedSlotHilbertDirectLimitRegularPositiveResolventGeneratorDomain lambda hlambda x) =
+      x - lambda • P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda x := by
   rw [P.fixedSlotHilbertDirectLimitRegularRightHamiltonian_apply]
-  rw [P.fixedSlotHilbertDirectLimitRegularRightGenerator_finiteLaplaceIntegral]
+  rw [P.fixedSlotHilbertDirectLimitRegularRightGenerator_positiveResolvent]
   module
 
-/-- The exponentially decaying terminal orbit is bounded by the scalar weight times the initial
-norm. -/
-theorem fixedSlotHilbertDirectLimitRegularExponentialTerminal_norm_le
+/-- Every vector in the graph-closed Hamiltonian domain already belongs to the actual original
+right-generator domain. -/
+theorem fixedSlotHilbertDirectLimitRegularClosedDomain_mem_rightGeneratorDomain
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
-    (h : NNReal)
-    (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
-    ‖Real.exp ((-lambda) * (h : ℝ)) •
-        P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism h x‖ ≤
-      Real.exp ((-lambda) * (h : ℝ)) * ‖x‖ := by
-  rw [norm_smul, Real.norm_eq_abs,
-    abs_of_pos (Real.exp_pos ((-lambda) * (h : ℝ)))]
-  exact mul_le_mul_of_nonneg_left
-    (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_norm_le h x)
-    (Real.exp_pos ((-lambda) * (h : ℝ))).le
+    (z : P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian.domain) :
+    (z : P.fixedSlotHilbertDirectLimitRegularSubspace) ∈
+      P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomain := by
+  let y : P.fixedSlotHilbertDirectLimitRegularSubspace :=
+    P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonianShift 1 z
+  have hdom :
+      P.fixedSlotHilbertDirectLimitRegularPositiveResolventDomain 1 one_pos y = z := by
+    apply P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonianShift_injective one_pos
+    simpa only [y] using
+      P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonianShift_positiveResolventDomain
+        1 one_pos y
+  have hmem :=
+    P.fixedSlotHilbertDirectLimitRegularPositiveResolvent_mem_rightGeneratorDomain 1 one_pos y
+  rw [P.fixedSlotHilbertDirectLimitRegularPositiveResolvent_apply, hdom] at hmem
+  exact hmem
 
-/-- Collected finite-Laplace generator-domain package. -/
-theorem fixedSlotHilbertDirectLimitRegularFiniteLaplaceGeneratorDomain_package
+/-- Exact equality of the actual semigroup generator domain and the graph-closed Hamiltonian domain. -/
+theorem fixedSlotHilbertDirectLimitRegularRightGeneratorDomain_eq_closedRightHamiltonian_domain
+    (P : PrimaryScalarFixedSlotOSPreHilbertData
+      H N hN beta hbeta
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L) :
+    P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomain =
+      P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian.domain := by
+  apply le_antisymm
+  · intro x hx
+    exact P.fixedSlotHilbertDirectLimitRegularRightHamiltonianLinearPMap_le_closed.1 hx
+  · intro x hx
+    exact P.fixedSlotHilbertDirectLimitRegularClosedDomain_mem_rightGeneratorDomain ⟨x, hx⟩
+
+/-- A closed-Hamiltonian-domain vector regarded canonically as an actual original generator-domain
+vector, using the proved domain equality. -/
+noncomputable def fixedSlotHilbertDirectLimitRegularRightGeneratorDomainOfClosedDomain
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
-    (lambda : ℝ)
-    (h : NNReal)
-    (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
-    (P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda h x ∈
-      P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomain) ∧
-    (P.fixedSlotHilbertDirectLimitRegularRightHamiltonian
-        (P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegralGeneratorDomain lambda h x) =
-      x - lambda • P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda h x -
-        Real.exp ((-lambda) * (h : ℝ)) •
-          P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism h x) := by
-  exact ⟨P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_mem_rightGeneratorDomain
-      lambda h x,
-    P.fixedSlotHilbertDirectLimitRegularRightHamiltonian_finiteLaplaceIntegral lambda h x⟩
+    (z : P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian.domain) :
+    P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomain :=
+  ⟨(z : P.fixedSlotHilbertDirectLimitRegularSubspace),
+    P.fixedSlotHilbertDirectLimitRegularClosedDomain_mem_rightGeneratorDomain z⟩
+
+@[simp]
+theorem fixedSlotHilbertDirectLimitRegularRightGeneratorDomainOfClosedDomain_coe
+    (P : PrimaryScalarFixedSlotOSPreHilbertData
+      H N hN beta hbeta
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
+    (z : P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian.domain) :
+    (P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomainOfClosedDomain z :
+      P.fixedSlotHilbertDirectLimitRegularSubspace) = z := rfl
+
+/-- On the now-equal domain, the original OS Hamiltonian is exactly the graph-closed Hamiltonian. -/
+theorem fixedSlotHilbertDirectLimitRegularRightHamiltonian_of_closedDomain
+    (P : PrimaryScalarFixedSlotOSPreHilbertData
+      H N hN beta hbeta
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
+    (z : P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian.domain) :
+    P.fixedSlotHilbertDirectLimitRegularRightHamiltonian
+        (P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomainOfClosedDomain z) =
+      P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian z := by
+  have h :=
+    P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian_of_rightGenerator
+      (P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomainOfClosedDomain z)
+  have hdom :
+      P.fixedSlotHilbertDirectLimitRegularClosedDomainOfRightGenerator
+          (P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomainOfClosedDomain z) = z := by
+    apply Subtype.ext
+    rfl
+  rw [hdom] at h
+  exact h.symm
+
+/-- Equivalently, the actual infinitesimal generator is `-Hbar` on the full common domain. -/
+theorem fixedSlotHilbertDirectLimitRegularRightGenerator_of_closedDomain
+    (P : PrimaryScalarFixedSlotOSPreHilbertData
+      H N hN beta hbeta
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
+    (z : P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian.domain) :
+    P.fixedSlotHilbertDirectLimitRegularRightGenerator
+        (P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomainOfClosedDomain z) =
+      -P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian z := by
+  have hneg := congrArg Neg.neg
+    (P.fixedSlotHilbertDirectLimitRegularRightHamiltonian_of_closedDomain z)
+  simpa only [P.fixedSlotHilbertDirectLimitRegularRightHamiltonian_apply, neg_neg] using hneg
+
+/-- Core generator/domain identification package. -/
+theorem fixedSlotHilbertDirectLimitRegularClosedGeneratorIdentification_package
+    (P : PrimaryScalarFixedSlotOSPreHilbertData
+      H N hN beta hbeta
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L) :
+    (P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomain =
+      P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian.domain) ∧
+    (∀ z : P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian.domain,
+      P.fixedSlotHilbertDirectLimitRegularRightHamiltonian
+          (P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomainOfClosedDomain z) =
+        P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian z) ∧
+    (∀ z : P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian.domain,
+      P.fixedSlotHilbertDirectLimitRegularRightGenerator
+          (P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomainOfClosedDomain z) =
+        -P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian z) := by
+  exact ⟨P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomain_eq_closedRightHamiltonian_domain,
+    P.fixedSlotHilbertDirectLimitRegularRightHamiltonian_of_closedDomain,
+    P.fixedSlotHilbertDirectLimitRegularRightGenerator_of_closedDomain⟩
 
 end PrimaryScalarFixedSlotOSPreHilbertData
 
