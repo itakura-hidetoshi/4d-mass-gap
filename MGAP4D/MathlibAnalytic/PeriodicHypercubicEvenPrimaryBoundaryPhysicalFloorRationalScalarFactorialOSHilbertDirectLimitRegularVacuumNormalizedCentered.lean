@@ -54,6 +54,9 @@ theorem fixedSlotHilbertDirectLimitVacuumCarrier_inner_self
         P.fixedSlotHilbertDirectLimitVacuumCarrier = 1 := by
   rw [(P.fixedSlotDataOfIndex fixedSlotHilbertDirectLimitVacuumIndex).inner_eq_fixedSlotOSBilinForm]
   rw [L.fixedSlotOSBilinForm_apply]
+  simp only [P.fixedSlotDataOfIndex_slots,
+    fixedSlotHilbertDirectLimitVacuumIndex_val,
+    P.fixedSlotHilbertDirectLimitVacuumCarrier_observable]
   have hpath :
       periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable
           (∅ : Finset ℚ)
@@ -62,14 +65,14 @@ theorem fixedSlotHilbertDirectLimitVacuumCarrier_inner_self
         (1 : BoundedContinuousFunction (ℚ → ℝ) ℝ) := by
     ext x
     rfl
-  rw [hpath]
+  simp only [hpath]
   have hreflection :
       periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarReflectionPullback
           (1 : BoundedContinuousFunction (ℚ → ℝ) ℝ) =
         (1 : BoundedContinuousFunction (ℚ → ℝ) ℝ) := by
     ext x
     rfl
-  rw [hreflection]
+  simp only [hreflection, mul_one]
   rw [periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathExpectation_apply]
   simp
 
@@ -93,9 +96,14 @@ theorem fixedSlotHilbertDirectLimitVacuumHilbertState_norm
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L) :
     ‖(P.fixedSlotDataOfIndex fixedSlotHilbertDirectLimitVacuumIndex).hilbertState
         P.fixedSlotHilbertDirectLimitVacuumCarrier‖ = 1 := by
-  unfold PrimaryScalarFixedSlotOSPreHilbertData.hilbertState
-  simp only [id_eq]
-  rw [UniformSpace.Completion.norm_coe]
+  change
+    ‖(UniformSpace.Completion.toComplₗᵢ :
+      (P.fixedSlotDataOfIndex fixedSlotHilbertDirectLimitVacuumIndex).Separated →ₗᵢ[ℝ]
+        UniformSpace.Completion
+          (P.fixedSlotDataOfIndex fixedSlotHilbertDirectLimitVacuumIndex).Separated)
+      ((P.fixedSlotDataOfIndex fixedSlotHilbertDirectLimitVacuumIndex).osClass
+        P.fixedSlotHilbertDirectLimitVacuumCarrier)‖ = 1
+  rw [LinearIsometry.norm_map]
   change ‖SeparationQuotient.mk P.fixedSlotHilbertDirectLimitVacuumCarrier‖ = 1
   rw [SeparationQuotient.norm_mk]
   exact P.fixedSlotHilbertDirectLimitVacuumCarrier_norm
