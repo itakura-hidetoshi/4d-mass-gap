@@ -192,13 +192,12 @@ theorem
       H N latticeSpacing n Cyl.slots
       (Cyl.centeredPlaquetteLiftedCylinderAt H N m)
       (‖Cyl.observable‖ + ‖m‖)
-  · intro u
-    change ‖Cyl.observable _ - m‖ ≤ ‖Cyl.observable‖ + ‖m‖
-    calc
-      ‖Cyl.observable _ - m‖ ≤ ‖Cyl.observable _‖ + ‖m‖ := norm_sub_le _ _
-      _ ≤ ‖Cyl.observable‖ + ‖m‖ := by
-        exact add_le_add_right (Cyl.observable.norm_coe_le_norm _) _
-  · exact z
+  intro u
+  change ‖Cyl.observable _ - m‖ ≤ ‖Cyl.observable‖ + ‖m‖
+  calc
+    ‖Cyl.observable _ - m‖ ≤ ‖Cyl.observable _‖ + ‖m‖ := norm_sub_le _ _
+    _ ≤ ‖Cyl.observable‖ + ‖m‖ := by
+      exact add_le_add (Cyl.observable.norm_coe_le_norm _) le_rfl
 
 /-- Under explicit finite slot admissibility, the boundary-positive representative reconstructs
 exactly the centered current Wilson-source observable on every full configuration. -/
@@ -234,6 +233,13 @@ theorem
     periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathCylinder_reflectionCompleted_eq_rationalCylinder
       H latticeSpacing n Cyl.slots gEdge A
       (fun q => Cyl.slots_nonneg q.1 q.2)]
+  change
+    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathCylinder H Cyl.slots
+        (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquetteLiftedCylinder
+          H N Cyl.slots g)
+        (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathReadout
+          H latticeSpacing n A) =
+      Cyl.wilsonSourceObservable H N latticeSpacing n A - m
   rw [
     periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathCylinder_scalarPlaquetteLift_eq
       H N Cyl.slots g
@@ -267,7 +273,7 @@ theorem
     PeriodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPositiveCylinder.wilsonSourceCenteredReflectionFormAt
   apply integral_congr_ae
   filter_upwards [] with A
-  unfold periodicHypercubicEvenBoundaryPositiveFullReflectedObservable
+  simp only [periodicHypercubicEvenBoundaryPositiveFullReflectedObservable]
   rw [Cyl.wilsonSourceCenteredBoundaryPositiveObservableAt_reconstruct
     H N latticeSpacing n m hslots A]
   rw [Cyl.wilsonSourceCenteredBoundaryPositiveObservableAt_reconstruct
