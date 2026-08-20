@@ -236,6 +236,7 @@ theorem fixedSlotCarrierFiniteMidpointWilsonSourceLeftExpectation_eq_finiteMean
   change
     P.fixedSlotCarrierFiniteMidpointWilsonSourceLeftExpectation J F n =
       (P.fixedSlotDataOfIndex J).fixedSlotCarrierFiniteMean F n
+  unfold fixedSlotCarrierFiniteMidpointWilsonSourceLeftExpectation
   rw [← hpull]
   change
     periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathExpectation mu Left =
