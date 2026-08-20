@@ -93,32 +93,12 @@ theorem fixedSlotHilbertDirectLimitRegularVacuumOrthogonalRealTimeVector_ne_zero
         have hsq :
             ‖P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalRealTimeVector
                 (tau (n + 1)) x‖ ^ 2 = 0 := by
-          calc
-            ‖P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalRealTimeVector
-                (tau (n + 1)) x‖ ^ 2 =
-              inner ℝ
-                (P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalRealTimeVector
-                  (tau (n + 1)) x)
-                (P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalRealTimeVector
-                  (tau (n + 1)) x) :=
-              (real_inner_self_eq_norm_sq _).symm
-            _ = inner ℝ x
-                (P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalRealTimeVector
-                  (tau (n + 1))
-                  (P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalRealTimeVector
-                    (tau (n + 1)) x)) :=
-              P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalRealTimeVector_inner_symmetric
-                (tau (n + 1)) x
-                (P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalRealTimeVector
-                  (tau (n + 1)) x)
-            _ = inner ℝ x
-                (P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalRealTimeVector
-                  (tau (n + 1) + tau (n + 1)) x) := by
-              rw [P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalRealTimeVector_add]
-            _ = inner ℝ x
-                (P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalRealTimeVector
-                  (tau n) x) := by rw [hdouble]
-            _ = 0 := by simp [ihn]
+          rw [← P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalCorrelation_add_self_eq_norm_sq
+            (tau (n + 1)) x]
+          rw [hdouble]
+          unfold fixedSlotHilbertDirectLimitRegularVacuumOrthogonalCorrelation
+          rw [ihn]
+          simp
         have hnorm :
             ‖P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalRealTimeVector
                 (tau (n + 1)) x‖ = 0 := by
