@@ -375,10 +375,12 @@ theorem fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath_hasDerivA
       ((-1 : ℝ) •
         (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n ((t : ℝ) - r) *
           P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n)) r := by
-    have hcomp :=
+    have hOuterF :=
       (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_hasDerivAt
-        n ((t : ℝ) - r)).scomp r harg
-    simpa only [Function.comp_apply] using hcomp
+        n ((t : ℝ) - r)).hasFDerivAt
+    have hCompF := hOuterF.comp r harg.hasFDerivAt
+    have hComp := hCompF.hasDerivAt
+    simpa [Function.comp_def] using hComp
   have hE : HasDerivAt
       (fun s : ℝ => P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n
         ((t : ℝ) - s))
