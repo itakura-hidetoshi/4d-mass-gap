@@ -58,7 +58,7 @@ theorem fixedSlotHilbertDirectLimitVacuumCarrier_inner_self
     fixedSlotHilbertDirectLimitVacuumIndex_val,
     P.fixedSlotHilbertDirectLimitVacuumCarrier_observable]
   rw [periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathExpectation_apply]
-  change (∫ _ : ℚ → ℝ, (1 : ℝ) * 1 ∂(L.continuumMeasure : Measure (ℚ → ℝ))) = 1
+  change (∫ _ : ℚ → ℝ, (1 : ℝ) * 1 ∂(L.continuumMeasure : MeasureTheory.Measure (ℚ → ℝ))) = 1
   rw [one_mul]
   rw [MeasureTheory.integral_const]
   rw [MeasureTheory.probReal_univ]
