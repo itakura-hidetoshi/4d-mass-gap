@@ -297,6 +297,8 @@ theorem fixedSlotCarrierFiniteMidpointWilsonSourceRightExpectation_eq_doubleTran
   change
     P.fixedSlotCarrierFiniteMidpointWilsonSourceRightExpectation J r F n =
       (P.fixedSlotDataOfIndex K).fixedSlotCarrierFiniteMean G n
+  unfold fixedSlotCarrierFiniteMidpointWilsonSourceRightExpectation
+  simp only [Function.comp_apply]
   rw [← hpull]
   change
     periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathExpectation mu Right =
