@@ -164,7 +164,6 @@ theorem
   have hERF : E RF = m := by simpa [E, F, RF] using hrefMean
   have hEone : E (1 : BoundedContinuousFunction (ℚ → ℝ) ℝ) = 1 := by
     dsimp [E]
-    rw [periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathExpectation_apply]
     simp
   have hexpand :
       (F - m • (1 : BoundedContinuousFunction (ℚ → ℝ) ℝ)) *
@@ -295,6 +294,7 @@ theorem
             (Cyl.wilsonSourceObservable H N latticeSpacing n
               (periodicHypercubicEvenConfigurationReflection H A) - m)
       rw [Cyl.wilsonSourceObservable_reflection H N latticeSpacing n A]
+      rfl
 
 namespace PrimaryScalarFixedSlotOSPreHilbertData
 
