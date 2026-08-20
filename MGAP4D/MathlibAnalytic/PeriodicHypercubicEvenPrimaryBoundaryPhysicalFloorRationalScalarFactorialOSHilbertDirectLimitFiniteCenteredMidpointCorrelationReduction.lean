@@ -219,33 +219,77 @@ theorem fixedSlotCarrierFiniteTranslatedMeanSubtractedReflectionForm_eventually_
   let K := primaryScalarFiniteNonnegativeSlotIndexTimeTranslate r hr J
   let G := (P.fixedSlotDataOfIndex J).fixedSlotCarrierTimeTranslate r hr F
   let m := (P.fixedSlotDataOfIndex K).fixedSlotCarrierFiniteMean G n
+  let μ : Measure (ℚ → ℝ) :=
+    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePathProbabilityMeasure
+      (H (L.subsequence n)) N hN
+      (beta (L.subsequence n)) (hbeta (L.subsequence n))
+      (fun k =>
+        periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing
+          (L.subsequence k))
+      n
   have hsub := congrArg (fun z : ℝ => z - m ^ 2) hn
-  change
-    ((∫ x,
+  have hsubμ :
+      ((∫ x,
+          F.observable
+              (fun q : (P.fixedSlotDataOfIndex J).slots => x (-(q.1 + r))) *
+            F.observable
+              (fun q : (P.fixedSlotDataOfIndex J).slots => x (q.1 + r))
+          ∂μ) - m ^ 2) =
+        ((∫ x,
+            F.observable
+                (fun q : (P.fixedSlotDataOfIndex J).slots => x (-q.1)) *
+              F.observable
+                (fun q : (P.fixedSlotDataOfIndex J).slots => x ((q.1 + r) + r))
+            ∂μ) - m ^ 2) := by
+    simpa [μ] using hsub
+  have hreflection :
+      ((P.fixedSlotDataOfIndex K).fixedSlotCarrierPositiveCylinder G).realReflectionForm μ =
+        ∫ x,
+          F.observable
+              (fun q : (P.fixedSlotDataOfIndex J).slots => x (q.1 + r)) *
+            F.observable
+              (fun q : (P.fixedSlotDataOfIndex J).slots => x (-(q.1 + r)))
+          ∂μ := by
+    unfold
+      PeriodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPositiveCylinder.realReflectionForm
+    apply integral_congr_ae
+    filter_upwards with x
+    rw [
+      PeriodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPositiveCylinder.realReflectionIntegrand_apply]
+    change
+      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable
+          (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFiniteSlotTimeTranslate
+            r (P.fixedSlotDataOfIndex J).slots)
+          (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotObservableTimeTranslate
+            (P.fixedSlotDataOfIndex J).slots r F.observable) x *
+        periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable
+          (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFiniteSlotTimeTranslate
+            r (P.fixedSlotDataOfIndex J).slots)
+          (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotObservableTimeTranslate
+            (P.fixedSlotDataOfIndex J).slots r F.observable)
+          (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathReflection x) =
         F.observable
             (fun q : (P.fixedSlotDataOfIndex J).slots => x (q.1 + r)) *
           F.observable
-            (fun q : (P.fixedSlotDataOfIndex J).slots => x (-r + -q.1))
-        ∂(periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePathProbabilityMeasure
-          (H (L.subsequence n)) N hN
-          (beta (L.subsequence n)) (hbeta (L.subsequence n))
-          (fun k =>
-            periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing
-              (L.subsequence k))
-          n : Measure (ℚ → ℝ))) - m ^ 2) =
+            (fun q : (P.fixedSlotDataOfIndex J).slots => x (-(q.1 + r)))
+    rw [
+      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable_timeTranslate,
+      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable_timeTranslate,
+      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable_apply,
+      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable_apply]
+    simp [
+      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathTimeTranslate,
+      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathReflection]
+  change
+    ((P.fixedSlotDataOfIndex K).fixedSlotCarrierPositiveCylinder G).realReflectionForm μ - m ^ 2 =
       ((∫ x,
           F.observable
               (fun q : (P.fixedSlotDataOfIndex J).slots => x (-q.1)) *
             F.observable
               (fun q : (P.fixedSlotDataOfIndex J).slots => x ((q.1 + r) + r))
-          ∂(periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePathProbabilityMeasure
-            (H (L.subsequence n)) N hN
-            (beta (L.subsequence n)) (hbeta (L.subsequence n))
-            (fun k =>
-              periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing
-                (L.subsequence k))
-            n : Measure (ℚ → ℝ))) - m ^ 2)
-  simpa [mul_comm] using hsub
+          ∂μ) - m ^ 2)
+  rw [hreflection]
+  simpa [mul_comm] using hsubμ
 
 /-- Midpoint-resolved form aligned with the positive smoothing time `s` and subsequent half-time
 separation `h` used throughout the current finite gap reduction. -/
