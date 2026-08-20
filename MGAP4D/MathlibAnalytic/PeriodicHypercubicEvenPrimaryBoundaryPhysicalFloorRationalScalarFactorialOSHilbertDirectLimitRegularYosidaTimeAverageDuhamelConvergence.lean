@@ -344,7 +344,6 @@ noncomputable def fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath
     (P.fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitFormula h x r)
 
 /-- Exact derivative of the Duhamel path. -/
-set_option maxHeartbeats 800000 in
 theorem fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath_hasDerivAt
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta
@@ -357,10 +356,9 @@ theorem fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath_hasDerivA
       (P.fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath n t h x)
       (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n ((t : ℝ) - r)
         (P.fixedSlotHilbertDirectLimitRegularTimeAverageYosidaGeneratorError n h x r)) r := by
-  let q : ℝ := (t : ℝ) - r
   let E : P.fixedSlotHilbertDirectLimitRegularSubspace →L[ℝ]
       P.fixedSlotHilbertDirectLimitRegularSubspace :=
-    P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n q
+    P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n ((t : ℝ) - r)
   let A : P.fixedSlotHilbertDirectLimitRegularSubspace →L[ℝ]
       P.fixedSlotHilbertDirectLimitRegularSubspace :=
     P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n
@@ -370,33 +368,44 @@ theorem fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath_hasDerivA
     P.fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitDerivative h x r
   have harg : HasDerivAt (fun s : ℝ => (t : ℝ) - s) (-1) r := by
     simpa using (hasDerivAt_const r (t : ℝ)).sub (hasDerivAt_id (x := r))
+  have hEraw : HasDerivAt
+      (fun s : ℝ => P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n
+        ((t : ℝ) - s))
+      ((-1 : ℝ) •
+        (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n ((t : ℝ) - r) *
+          P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n)) r := by
+    have hcomp :=
+      (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_hasDerivAt
+        n ((t : ℝ) - r)).scomp r harg
+    simpa only [Function.comp_apply] using hcomp
   have hE : HasDerivAt
       (fun s : ℝ => P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n
         ((t : ℝ) - s))
       ((-1 : ℝ) • (E * A)) r := by
-    have hcomp :=
-      (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_hasDerivAt n q).scomp r harg
-    simpa only [q, E, A] using hcomp
-  have hu := P.fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitFormula_hasDerivAt h x r
+    simpa only [E, A] using hEraw
+  have hu : HasDerivAt
+      (P.fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitFormula h x) u' r := by
+    simpa only [u'] using
+      P.fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitFormula_hasDerivAt h x r
   have happly := hE.clm_apply hu
   have hraw : HasDerivAt
       (P.fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath n t h x)
       (((-1 : ℝ) • (E * A)) u + E u') r := by
     simpa only [fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath,
-      q, E, u, u'] using happly
+      E, u, u'] using happly
+  have hA : A u = - P.fixedSlotHilbertDirectLimitRegularDyadicYosidaHamiltonian n u := by
+    simp [A, fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian]
+  have hleft : ((-1 : ℝ) • (E * A)) u = - E (A u) := by
+    simp
   have halg :
       (((-1 : ℝ) • (E * A)) u + E u') =
         E (P.fixedSlotHilbertDirectLimitRegularTimeAverageYosidaGeneratorError n h x r) := by
-    change
-      - E (A u) + E u' =
-        E (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaHamiltonian n u + u')
-    rw [map_add]
-    have hA : A u = - P.fixedSlotHilbertDirectLimitRegularDyadicYosidaHamiltonian n u := by
-      simp [A, fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian]
-    rw [hA, map_neg]
+    rw [hleft]
+    unfold fixedSlotHilbertDirectLimitRegularTimeAverageYosidaGeneratorError
+    rw [map_add, hA, map_neg]
     module
   rw [← halg]
-  simpa only [q, E] using hraw
+  simpa only [E] using hraw
 
 /-- The real-time bounded Yosida exponential is a contraction at nonnegative real parameters. -/
 theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_norm_le_of_nonneg
