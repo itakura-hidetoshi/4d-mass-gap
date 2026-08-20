@@ -1,13 +1,16 @@
 # MGAP4D Roadmap
 
-This roadmap records the current proof-development order of `itakura-hidetoshi/4d-mass-gap` as of **2026-08-17 JST**.
+This roadmap records the current proof-development order of `itakura-hidetoshi/4d-mass-gap` as of **2026-08-20 JST**.
 
-Status labels used here:
+It replaces the older roadmap whose principal frontier was continuum OS reflection positivity. That frontier has now been crossed on the canonical same-root primary-scalar continuum process. The immediate mathematical frontier is a **strictly positive coercive lower bound on the exact same-root vacuum-orthogonal graph-closed Hamiltonian domain**.
 
-- **Integrated** — merged into the authoritative theorem carrier;
-- **Integrated reduction** — the theorem reduction is canonical, but an explicit model-facing construction remains;
-- **Conditional route** — theorem composition is available once named hypotheses are supplied;
-- **Open** — a genuine theorem or construction still required.
+## Status legend
+
+- **Integrated** — merged into the authoritative theorem carrier.
+- **Integrated infrastructure** — reusable theorem machinery is merged, but a separate model-facing instantiation is still required.
+- **Open now** — the immediate constructive theorem target.
+- **Open downstream** — required later, but not the next local blocker.
+- **Conditional route** — theorem assembly exists only under explicit inputs that are not yet derived from the final model.
 
 ## Snapshot
 
@@ -15,755 +18,761 @@ Status labels used here:
 authoritative theorem carrier:
   formal/real-hilbert-uniform-coercive-strong-limit
 
-authoritative head:
-  082cbf7e8b8042d847e9e1d670f85969e078e883
+latest theorem-bearing checkpoint:
+  PR #1896
+  formal: normalize the same-root OS vacuum and center the excitation semigroup
 
-latest integrated checkpoint:
-  PR #1736
-  Normalize unregularized OS log decay by elapsed time
+canonical exact merge SHA:
+  777e48e54b1bdb8028d624513568be476a415e1d
 
-public landing branch:
-  main
+checkpoint validation:
+  PR Lean Fast Check #11202
+  completed / success
 ```
 
-Historical or stale open PRs are not authoritative. Only results merged into the theorem carrier count as the current proof state.
+The public `main` branch is a landing surface. The theorem authority is `formal/real-hilbert-uniform-coercive-strong-limit`.
 
 ## Roadmap in one view
 
 ```text
-actual finite compact Wilson / OS geometry                         [Integrated]
-  -> actual-analysis strictness                                   [Integrated #1669]
-  -> C0/L2/positive-time/reconstructed-excitation theorem bridge  [Integrated #1670]
-  -> target-specific cross-scale gauge-invariant readout reduction[Integrated #1671-#1675]
-  -> concrete same-root positive-time readout family              [OPEN]
+SAME-ROOT WILSON -> SCALAR CONTINUUM -> OS HAMILTONIAN LANE
 
-factorial finite temporal geometry
-  -> exact rational path-law stationarity                         [Integrated #1676-#1682]
-  -> finite joint / moments / cumulants / Schwinger stationarity  [Integrated #1683-#1688]
-  -> rational-to-real extension machinery                         [Integrated #1689-#1694]
-  -> actual physical OS two-point real-insertion correlation      [Integrated #1695-#1699]
-  -> same-root path-law <-> OS two-point identification           [OPEN]
+actual periodic-even compact SU(N) Wilson Gibbs geometry            [Integrated]
+  -> theorem-generated finite Wilson OS positivity                  [Integrated]
+  -> one-sided primary reflection-fixed boundary readout            [Integrated]
+  -> reflection-completed rational path                             [Integrated]
+  -> canonical primary plaquette scalarization                      [Integrated]
+  -> same-root Prokhorov continuum law on ℚ -> ℝ                   [Integrated]
+  -> continuum positive rational-cylinder OS positivity             [Integrated #1802]
+  -> intrinsic continuum reflection invariance                      [Integrated #1803]
+  -> fixed-slot positive-semidefinite OS bilinear forms             [Integrated #1804]
+  -> OS separation quotient / fixed-slot Hilbert completion         [Integrated]
+  -> Hilbert directed system / algebraic direct limit               [Integrated]
+  -> rational-time OS contraction                                   [Integrated #1845]
+  -> completed rational contraction semigroup                       [Integrated]
+  -> zero-time regular sector / real orbit extension                [Integrated #1884]
+  -> real strongly continuous contraction semigroup                 [Integrated #1885]
+  -> dense generator / nonnegative OS Hamiltonian                   [Integrated #1886]
+  -> self-adjoint graph-closed Hamiltonian / positive resolvent      [Integrated #1887-#1888]
+  -> Yosida convergence / bounded exponential semigroups            [Integrated #1889-#1893]
+  -> exact generator = negative closed Hamiltonian                  [Integrated #1894]
+  -> same-root vacuum / Ω⊥ excitation sector                        [Integrated #1895]
+  -> ‖Ω‖=1, exact centering, excitation semigroup package           [Integrated #1896]
+  -> ∃ m > 0, H̄|Ω⊥ >= m                                           [OPEN NOW]
+  -> same-root exponential excitation decay                         [OPEN downstream]
+  -> same-root positive spectral gap above Ω                        [OPEN downstream]
 
-finite reflection geometry
-  -> rational-cylinder reflection covariance                     [Integrated #1700-#1705]
-  -> product-Haar and finite Wilson Gibbs reflection invariance   [Integrated #1708,#1711]
-  -> continuum same-root reflection-positive construction        [OPEN]
+OLDER GENERIC PHYSICAL OS / HAMILTONIAN LANE
 
-completed physical OS autocorrelation
-  -> additive convexity                                           [Integrated]
-  -> multiplicative midpoint inequality                           [Integrated #1713]
-  -> regularized log convexity / effective masses                 [Integrated #1714-#1725]
-  -> fixed positive epsilon asymptotic limit = 0                  [Integrated #1726]
-  -> unregularized strict positivity / log convexity              [Integrated #1727-#1729]
-  -> unregularized long-time effective-mass limit                 [Integrated #1730-#1732]
-  -> Cesaro + telescoping + elapsed-time log-decay limit          [Integrated #1733-#1736]
-  -> spectral-bottom / physical-mass identification               [OPEN NOW]
+physical OS correlation calculus                                   [Integrated infrastructure]
+  -> physical OS infrared mass                                      [Integrated infrastructure]
+  -> graph-closed physical Hamiltonian variational mass             [Integrated infrastructure]
+  -> Mathlib Gronwall / full-sector decay                           [Integrated infrastructure]
+  -> physicalYangMillsOSInfraredMass = physicalYangMillsMass        [Integrated infrastructure]
+  -> physical mass = greatest uniform decay rate                    [Integrated infrastructure]
+  -> exact carrier/model bridge to newer same-root scalar Hilbert   [OPEN]
 
-finite-to-continuum dynamics
-  -> selected moving-time o(a_n) residual                         [OPEN]
-  -> intrinsic Wilson rate = physical mass                        [Conditional route]
+FULL 4D YANG--MILLS LANE
 
-actual interacting continuum Yang--Mills construction             [OPEN]
-actual R4 extrema + independent normalization                     [OPEN]
-final physical mass-gap theorem                                   [OPEN]
+primary scalar rational-time process                               [Integrated]
+  -> sufficiently rich interacting continuum gauge-field/state      [OPEN]
+  -> full Euclidean/gauge/regularity/clustering package             [OPEN]
+  -> nontrivial physical excitation theory from the same root        [OPEN]
+  -> final positive mass-gap theorem                                [OPEN]
+
+SIGNED-SPATIAL / GLUEBALL-GEOMETRY LANE
+
+48-element signed spatial vertex action                            [Integrated]
+  -> signed edge / boundary-step action                             [Integrated]
+  -> actual gauge-configuration action + composition                [Integrated #1876]
+  -> plaquette-holonomy covariance                                  [OPEN]
+  -> cubic irrep / continuum-spin identification                    [OPEN]
+  -> glueball spectral statements                                   [OPEN]
+
+FINITE-TO-CONTINUUM RATE LANE
+
+intrinsic finite Wilson rate + canonical slow states               [Integrated machinery]
+  -> selected moving-time o(a_n) residual                           [OPEN]
+  -> intrinsic finite Wilson rate = same-root/physical mass         [Conditional route]
+
+EXACT-VALUE LANE
+
+actual model-derived component extrema + sharpness                 [OPEN]
+  -> independent physical normalization                             [OPEN]
+  -> physical interpretation of normalized 33/20 endpoint           [OPEN]
 ```
 
 ---
 
-# Architecture
-
-The current program has eight logically distinct lanes.
-
-## A. Continuum OS / Hamiltonian / spectral infrastructure
-
-```text
-reflection positivity
-  -> separated OS quotient
-  -> real Hilbert completion
-  -> strongly continuous symmetric contraction semigroup
-  -> generator / graph-closed Hamiltonian
-  -> self-adjoint / PVM / bounded-Borel calculus
-  -> scalar spectral measure / support
-  -> variational physical mass.
-```
-
-**Status: Integrated as theorem infrastructure.**
-
-Boundary: this infrastructure does not itself construct the interacting continuum Yang--Mills model.
-
-## B. Actual finite compact Wilson / OS geometry
-
-```text
-periodic-even compact Wilson Gibbs law
-  -> finite reflection positivity
-  -> completed finite OS Hilbert carrier
-  -> boundary-moment / boundary-Haar L2 realization
-  -> interacting boundary marginal m0^2 dHaar
-  -> positive-boundary Fock / Gram strictness
-  -> actual boundary analysis and raw actual-analysis modes.
-```
-
-**Status: Integrated.**
-
-## C. Actual Wilson positive-time / reconstructed-excitation bridge
-
-```text
-actual plaquette / normalized-trace modes
-  -> bounded-continuous C0 representatives
-  -> canonical C0 -> L2 transport
-  -> positive-time submodule / pullback range factorization
-  -> concrete trace-power range/readout interface
-  -> reconstructed vacuum-orthogonal physical excitation
-  -> Hamiltonian-domain / Rayleigh handoff.
-```
-
-**Status: theorem bridge integrated; concrete same-root cross-scale positive-time readout remains open.**
-
-## D. Same-Wilson-source temporal path and Schwinger stationarity
-
-```text
-integer temporal stationarity
-  -> factorial spacing a_n = (n!)^-1
-  -> eventual exact alignment of every rational shift
-  -> full rational continuum path-law stationarity
-  -> finite rational joint laws
-  -> n-point moments / cumulants / connected Schwinger functions.
-```
-
-**Status: Integrated through the rational-time Euclidean level.**
-
-## E. Reflection geometry
-
-```text
-finite configuration reflection
-  -> temporal reflection covariance
-  -> factorial rational-cylinder alignment
-  -> product-Haar reflection invariance
-  -> finite Wilson Gibbs reflection invariance
-  -> continuum same-root OS reflection-positive construction.
-```
-
-**Status: finite geometry and finite Gibbs law integrated; final continuum same-root step open.**
-
-## F. Physical OS correlation regularity and long-time decay
-
-```text
-physical symmetric OS semigroup
-  -> continuous / antitone / nonnegative correlation
-  -> additive midpoint convexity
-  -> multiplicative midpoint inequality
-  -> log convexity
-  -> effective-mass secant monotonicity
-  -> long-time effective-mass limit
-  -> endpoint log decay per elapsed Euclidean time.
-```
-
-**Status: Integrated through #1736.**
-
-The current open question in this lane is the physical interpretation of that limit as a spectral mass and, ultimately, a strictly positive Yang--Mills mass.
-
-## G. Finite-to-continuum dynamical recovery
-
-```text
-finite Wilson intrinsic rate g_n
-  -> theorem-generated slow states phi_n
-  -> moving-time comparison at 2 a_n
-  -> continuum Rayleigh limsup
-  -> reverse physical-mass inequality
-  -> intrinsic-rate / physical-mass equality.
-```
-
-**Status: theorem machinery integrated; selected moving-time residual open.**
-
-## H. Physical exact-value / normalization lane
-
-```text
-actual physical component forms
-  -> component Rayleigh extrema
-  -> sharp R4 budget
-  -> actual physical mass identification
-  -> independent reference-time normalization
-  -> normalized 33/20 endpoint.
-```
-
-**Status: structural theorem route integrated conditionally; model-derived numerical inputs open.**
-
----
-
-# Milestone ledger
-
-## Milestone 0 — Authority, replay, and claim discipline
+# Phase 0 — Authority, replay, and claim discipline
 
 **Status: Integrated and permanent.**
 
 Repository rules:
 
 ```text
-start ordinary theorem PRs from the exact authoritative SHA
-start as Draft
-fix final head before Ready
-use completed run/job/step/artifact/log evidence for CI conclusions
-never treat queued/in_progress as final evidence
-do not write to a branch while its CI is running
-separate Lean/code failures from Actions/cache/external failures
-re-audit base/head/mergeability/reviews/threads before merge
-squash merge only
-pin expected_head_sha at merge
-verify the authoritative carrier after integration.
+start ordinary PRs from the exact authoritative SHA
+start ordinary proof PRs as Draft
+use the GitHub connector as the canonical repository-operation path
+judge CI only after workflow / job / Lean step are all completed
+do not write to a PR head while CI is queued or in_progress
+fix only after completed failure and after re-checking the exact head
+keep development additive / tighten-only
+never introduce sorry / admit / axiom / placeholder constants
+fix the final head before Ready
+re-check exact head / base / mergeability / reviews / threads before merge
+integrate green PRs by normal merge with expected head pinned
+record the actual merge SHA returned by the merge action
+verify canonical is identical / ahead 0 / behind 0 after merge
+start the next Draft from that exact SHA.
 ```
 
-The public `main` branch is a landing surface. The theorem authority is `formal/real-hilbert-uniform-coercive-strong-limit`.
+Claim discipline is part of the mathematics. In particular, no result may be moved between the newer same-root regular direct-limit carrier and the older abstract `PhysicalHilbert` carrier without an exact theorem-level bridge.
 
-## Milestone 1 — Continuum OS, Hilbert, semigroup, Hamiltonian, and PVM infrastructure
+---
 
-**Status: Integrated.**
-
-The repository contains the analytic infrastructure required to transport reflection-positive Euclidean data to a completed real physical Hilbert space, a strongly continuous symmetric physical time semigroup, Hamiltonian-domain interfaces, scalar spectral measures, and variational mass statements.
-
-## Milestone 2 — Actual finite compact `SU(N)` Wilson / OS geometry
+# Phase 1 — Actual finite compact `SU(N)` Wilson root
 
 **Status: Integrated.**
+
+The finite model contains the actual periodic-even compact `SU(N)` Wilson Gibbs probability law and its finite OS geometry.
 
 Integrated surfaces include:
 
 ```text
-finite periodic Wilson Gibbs probability
-compact normalized Haar geometry
-finite Wilson reflection positivity
-completed finite OS Hilbert spaces
-boundary-Haar and interacting-boundary L2 realization
-selected finite/projective observation and boundary recovery.
+periodic lattice / oriented edge / plaquette geometry
+normalized Haar probability structure
+Wilson action and Gibbs density
+reflection geometry and boundary fiber decomposition
+finite Wilson Gram-square / reflection-positivity theorem
+gauge covariance of plaquette holonomies
+normalized real trace-power gauge invariance
+integer temporal covariance / finite reflection covariance.
 ```
 
-The finite OS Hilbert carrier is identified with the exact range of its realization maps rather than an arbitrary raw `L²` carrier.
+Permanent boundary:
 
-## Milestone 3 — Finite `Z₂` geometric-transfer theorem
+- the interacting boundary marginal is not replaced by Haar measure at nonzero coupling;
+- finite Wilson OS positivity is theorem-generated, not assumed as a terminal positivity premise.
 
-**Status: Integrated supporting lane.**
+---
 
-The finite `Z₂` model proves the genuine geometric transfer cap / coercivity value
+# Phase 2 — One-sided primary rational path and same-root scalar continuum law
+
+**Status: Integrated.**
+
+The earlier full boundary-vacuum readout contains both primary and antipodal reflection-fixed slices, so it is not treated as globally positive-half local.
+
+The canonical route instead uses the primary fixed slice only:
 
 ```text
-1/2.
+primary reflection-fixed spatial boundary carrier
+  -> positive integer temporal readout
+  -> theorem-generated negative-half independence on its valid reach
+  -> finite bounded-measurable Wilson cylinder OS positivity
+  -> reflection completion using the same finite Wilson source
+  -> canonical primary plaquette scalarization
+  -> fixed scalar path carrier ℚ -> ℝ.
 ```
 
-Permanent distinction:
+The scalar coordinate is the canonical orientation-correct primary plaquette normalized trace / Wilson class function already constructed in the finite model.
+
+The full reflected path is constructed without assuming a false global identity such as
 
 ```text
-finite Z2 coercivity 1/2
-  != compact SU(2)/SU(N) physical mass
-  != unregularized OS long-time limit
-  != normalized exact-value constant 33/20.
+floor(-q / a) = -floor(q / a).
 ```
 
-## Milestone 4 — Intrinsic finite Wilson rate and slow-state machinery
+Negative rational times are supplied through actual source reflection.
 
-**Status: Integrated as theorem infrastructure.**
+---
 
-The repository defines
+# Phase 3 — Prokhorov continuum OS positivity and reflection invariance
+
+**Status: Integrated.**
+
+The scalar rational path carrier is a countable product Polish space. Tightness/Prokhorov machinery extracts a subsequential continuum probability law from the same finite Wilson pushforwards while preserving the physical scaling subsequence.
+
+## PR #1802 — continuum rational-cylinder OS positivity
+
+For every bounded-continuous cylinder on finitely many nonnegative rational times, the canonical same-root continuum law satisfies
 
 ```text
-g_n = -log ||T_n^exc|| / a_n
+0 <= ∫ x, F(x) * F(Θ x) ∂ L.continuumMeasure,
+Θ x q = x (-q).
 ```
 
-and theorem-generates finite two-step slow states. The continuum semigroup side contains time averaging, graph-domain identities, and moving Rayleigh estimates for reverse variational recovery.
-
-## Milestone 5 — Actual positive-boundary Wilson strictness to actual analysis
-
-**Status: Integrated — PR #1669.**
-
-The actual finite Wilson package reaches:
+The proof composes:
 
 ```text
-positive-boundary temporal Wilson factorization
-protected strict Wilson/Fock Gram structure
-nonzero actual boundary analysis operator
-inverse interacting-boundary L2 density transport
-positive-density normalized-trace witnesses
-open-half nonzero probes
-factorized actual-analysis nonzero criteria
-Hilbert-Schmidt / Gram convergence
-strict centered actual-analysis output infrastructure.
+actual finite Wilson positivity
++ primary temporal-reach geometry
++ exact finite scalar path readback
++ weak convergence of the same path laws
++ eventual finite-slot admissibility.
 ```
 
-## Milestone 6 — Reconstructed physical-excitation theorem bridge
+No continuum reflection-positivity premise is introduced.
 
-**Status: Integrated — PR #1670.**
+## PR #1803 — intrinsic reflection invariance
 
-The former active Draft is now canonical.
+The same continuum scalar law satisfies
+
+```text
+map Θ L.continuumMeasure = L.continuumMeasure.
+```
+
+## PR #1804 — fixed-slot OS bilinear forms
+
+For every finite nonnegative rational slot sector `J`, the repository constructs a symmetric positive-semidefinite real bilinear form
+
+```text
+B_J(F,G) = E[(Θ F) G].
+```
+
+### Completion criterion — satisfied
+
+This phase is complete because continuum OS positivity is available on the actual same-root primary scalar path law. The old roadmap's statement that this was the immediate blocker is obsolete.
+
+---
+
+# Phase 4 — Fixed-slot OS quotient, Hilbert completion, and directed system
+
+**Status: Integrated.**
+
+For each finite nonnegative rational slot sector, the repository constructs
+
+```text
+OS seminormed cylinder carrier
+  -> OS null quotient / separation quotient
+  -> real Hilbert completion.
+```
+
+Canonical finite-slot inclusions are proved isometric and compatible. The fixed-slot Hilbert sectors therefore form a directed system.
+
+The repository constructs:
+
+```text
+algebraic Hilbert direct limit
+  -> canonical normed structure
+  -> uniform completion / completed direct-limit Hilbert carrier.
+```
+
+Time translation is transported through the same fixed-slot/directed-limit structure rather than installed on a duplicate Hilbert carrier.
+
+---
+
+# Phase 5 — Same-root OS contraction and rational semigroup
+
+**Status: Integrated.**
+
+The key finite-slot midpoint identity gives
+
+```text
+‖T_t F‖² <= ‖F‖ * ‖T_(2t) F‖.
+```
+
+A separate shift-independent bound gives
+
+```text
+‖T_s F‖ <= ‖F.observable‖∞.
+```
+
+PR #1845 combines those facts by dyadic iteration and proves the genuine same-root contraction
+
+```text
+‖T_t F‖ <= ‖F‖
+```
+
+for every nonnegative rational `t`.
+
+The contraction is then lifted through separation quotient, fixed-slot Hilbert completion, algebraic direct limit, and completed direct limit.
+
+PR #1883 closes exact rational semigroup coherence on the completed direct limit:
+
+```text
+T_0 = I,
+T_s (T_t x) = T_(s+t) x.
+```
+
+Permanent boundary:
+
+> Rational semigroup laws plus contractivity do not imply strong continuity at zero.
+
+The repository therefore does not postulate continuity on the entire completed direct-limit carrier.
+
+---
+
+# Phase 6 — Canonical regular sector and real `C₀` OS semigroup
+
+**Status: Integrated.**
+
+## PR #1884 — regular real-time OS package
+
+The canonical zero-time regular sector consists of vectors whose actual rational OS orbit converges strongly back to the initial vector as rational time tends to zero from the right.
+
+The package proves:
+
+```text
+linearity and rational-time invariance of the regular sector
+right continuity at every rational time
+uniform continuity of every regular rational orbit
+canonical dense extension NNRat -> NNReal
+real-time contractivity
+real-time OS symmetry and positivity.
+```
+
+## PR #1885 — endomorphism-valued real semigroup
+
+Real-time values are proved to remain inside the regular sector and the exact additive law is closed there.
+
+The result is a genuine strongly continuous contraction semigroup
+
+```text
+T : NNReal -> ContinuousLinearMap H_reg H_reg
+```
+
+with
+
+```text
+T_0 = I,
+T_s T_t = T_(s+t),
+‖T_t x‖ <= ‖x‖,
+T_t x -> x as t -> 0+.
+```
+
+### Completion criterion — satisfied
+
+The same-root primary scalar OS reconstruction now has an actual real-time `C₀` contraction semigroup on a complete Hilbert carrier.
+
+---
+
+# Phase 7 — Generator, graph-closed Hamiltonian, resolvent, and self-adjointness
+
+**Status: Integrated.**
+
+## PR #1886 — generator package
+
+The right-generator domain is defined from actual strong difference quotients of the real same-root semigroup.
+
+```text
+A_OS = right generator,
+H_OS = -A_OS.
+```
+
+The domain is dense. The generator/Hamiltonian is symmetric in the appropriate sense, `A_OS` is dissipative, `H_OS` has nonnegative quadratic form, and both are sequentially closable.
+
+## PR #1887 — graph closure and self-adjoint Hamiltonian
+
+The graph-closed Hamiltonian `H̄` is constructed as a Mathlib `LinearPMap` and shown to be self-adjoint using the same-root semigroup and positive-shift range theorem.
 
 Integrated consequences include:
 
 ```text
-actual plaquette/cylinder C0 closure
-canonical bounded-continuous -> L2 transport
-OS carrier ≃ positive-time submodule
-finite positive-half observable range = coherent pullback range
-trace-power readout reduced to concrete finite range membership
-reconstructed nonzero vacuum-orthogonal excitation theorem route
-Hamiltonian-domain / Rayleigh / physical-mass handoff.
+dense closed domain
+formal symmetry
+quadratic-form nonnegativity
+positive-shift lower bounds
+closed range
+finite Laplace vector resolvent identity
+surjectivity / bijectivity of λ I + H̄ for λ > 0
+H̄ = H̄†.
 ```
 
-The remaining premise is intentionally concrete: actual finite cylinder / positive-time realization from the same Wilson/projective geometry.
+## PR #1888 — positive resolvent and Yosida contraction
 
-## Milestone 7 — Target-specific continuum readout and actual gauge invariance
-
-**Status: Integrated reduction — PRs #1671--#1675.**
-
-The realization problem is narrowed to the physically required targets.
-
-Integrated results include:
+For `λ > 0`, define
 
 ```text
-cylinder multiplication handled before the linear OS pullback
-continuous finite-coordinate / scalar-readout reductions
-Tietze extension as topology only, not hidden gauge invariance
-dense-interpolation generation of global physical gauge invariance
-cross-scale trace-power compatibility as an explicit same-root condition
-normalized SU(N) trace-power conjugation invariance
-actual signed plaquette normalized-trace-power gauge invariance.
+R_λ = (λ I + H̄)⁻¹,
+J_λ = λ R_λ.
 ```
 
-**Still open:** construct a single same-root physical bounded-continuous positive-time observable family realizing the required trace-power targets across scales.
-
-## Milestone 8 — Factorial spacing and full rational path-law stationarity
-
-**Status: Integrated — PRs #1676--#1682.**
-
-The canonical spacing
+The repository proves
 
 ```text
-a_n = (n!)^-1
+‖R_λ x‖ <= λ⁻¹ ‖x‖,
+‖R_λ‖ <= λ⁻¹,
+‖J_λ x‖ <= ‖x‖,
+‖J_λ‖ <= 1,
 ```
 
-is positive, tends to zero, and eventually aligns every fixed rational time exactly with the lattice.
+and the standard resolvent identity.
 
-This yields exact full-path stationarity on the rational continuum path carrier:
+---
+
+# Phase 8 — Yosida approximation and exact generator/Hamiltonian identification
+
+**Status: Integrated.**
+
+PRs #1889-#1893 close the standard Yosida approximation route on the same carrier.
+
+Integrated chain:
 
 ```text
-forall r : Q,
-  map (rationalTranslation r) mu_cont = mu_cont.
+J_(2^n) x -> x on dom(H̄)
+  -> J_(2^n) x -> x on the full regular Hilbert carrier
+  -> H_(2^n) x -> H̄ x on dom(H̄)
+  -> bounded exponential semigroups E_n(t) = exp(-t H_(2^n))
+  -> contraction of E_n(t)
+  -> locally uniform convergence on compact time intervals
+  -> E_n(t) x -> T_t x for every regular vector.
 ```
 
-This is a full joint path-law statement on `ℝ^ℚ`, not a one-coordinate marginal argument.
+This identifies the original OS semigroup as the strong Yosida exponential limit without assuming `T_t = exp(-tH̄)` from a spectral functional calculus.
 
-## Milestone 9 — Finite joint laws, moments, cumulants, and connected Schwinger stationarity
+## PR #1894 — exact domain/operator identity
 
-**Status: Integrated — PRs #1683--#1688.**
-
-The full rational path-law equality is projected to:
+The infinite Laplace-resolvent argument proves the reverse generator-domain inclusion and closes
 
 ```text
-finite rational joint laws
-measurable finite-cylinder readouts
-Bochner expectations
-finite n-point products
-centered products
-finite cumulants
-connected two-point correlations
-labelled repeated-time connected Schwinger functions.
+D(A_OS) = D(H̄),
+A_OS = -H̄,
+H_OS = H̄.
 ```
 
-All are exactly invariant under common rational Euclidean-time translation.
+### Completion criterion — satisfied
 
-## Milestone 10 — Rational-to-real extension infrastructure and actual OS two-point function
+The graph-closed self-adjoint Hamiltonian is now exactly the infinitesimal Hamiltonian of the original same-root regular OS `C₀` semigroup.
 
-**Status: Integrated theorem infrastructure; same-root identification open — PRs #1689--#1699.**
+---
 
-Integrated layers include:
+# Phase 9 — Normalized vacuum and exact excitation carrier
+
+**Status: Integrated.**
+
+## PR #1895 — same-root vacuum and `Ω⊥`
+
+The vacuum is constructed from the literal constant-one cylinder in the empty finite rational slot sector.
+
+Theorems include
 
 ```text
-density of rational tuples in real tuples
-continuous common-shift uniqueness
-uniform-extension machinery from rational insertion tuples
-uniform continuity of actual physical OS autocorrelations
-actual real-insertion OS two-point correlation
-exact common real-time translation invariance.
+T_t Ω = Ω,
+Ω ∈ D(A_OS),
+A_OS Ω = 0,
+Ω ∈ D(H̄),
+H̄ Ω = 0.
 ```
 
-For a physical state `psi`, the actual real two-point object is built from the OS semigroup as
+Define
 
 ```text
-S_psi(t0,t1) = C_psi(|t1-t0|).
+Ω⊥ = {x | inner ℝ Ω x = 0}.
 ```
-
-**Still open:** prove the exact same-root equality identifying the rational path-law connected two-point function with the rational restriction of this physical OS two-point object.
-
-## Milestone 11 — Finite temporal reflection and Wilson Gibbs reflection invariance
-
-**Status: Integrated at finite / rational-cylinder level — PRs #1700--#1711.**
-
-Integrated results include:
-
-```text
-rational path reflection map
-factorial eventual reflection alignment
-configuration reflection / integer temporal conjugacy
-finite rational-cylinder reflection covariance
-full product normalized-Haar reflection invariance
-actual finite Wilson Gibbs reflection invariance.
-```
-
-**Still open:** generate the final continuum same-root reflection-positive physical construction rather than merely retaining continuum OS input data.
-
-## Milestone 12 — Additive convexity of physical OS correlations
-
-**Status: Integrated — PRs #1696,#1703,#1707,#1710,#1712.**
-
-The exact squared-norm midpoint defect yields ordinary midpoint convexity, which is promoted to full real-half-line convexity:
-
-```text
-ConvexOn R (Ici 0) C_tilde_psi.
-```
-
-No spectral representation or differentiability is used.
-
-## Milestone 13 — Multiplicative midpoint inequality and regularized log convexity
-
-**Status: Integrated — PRs #1713--#1715.**
-
-The physical correlation satisfies
-
-```text
-C_psi((s+t)/2)^2 <= C_psi(s) C_psi(t).
-```
-
-After transfer to the real half-line, for every `epsilon >= 0`,
-
-```text
-(C_tilde((s+t)/2)+epsilon)^2
-  <= (C_tilde(s)+epsilon)(C_tilde(t)+epsilon).
-```
-
-For `epsilon > 0`, this gives a positive continuous function whose logarithm is convex on `[0,infinity)`.
-
-## Milestone 14 — Regularized effective-mass sequence and long-time limit
-
-**Status: Integrated — PRs #1716--#1725.**
-
-For fixed `epsilon > 0` and `h > 0`, finite-difference effective masses are proved:
-
-```text
-nonnegative
-antitone on successive equal-width intervals
-convergent to a canonical conditional infimum.
-```
-
-Cesàro convergence and exact telescoping identify the limit with normalized endpoint regularized logarithmic decay, including the elapsed-time form.
-
-## Milestone 15 — Fixed-positive-regularization obstruction
-
-**Status: Integrated — PR #1726.**
-
-The regularized route is diagnostically complete:
-
-```text
-fixed epsilon > 0
-  => (L_epsilon(0)-L_epsilon(nh))/(nh) -> 0
-  => long-time regularized effective-mass limit = 0.
-```
-
-This is an order-of-limits theorem. A fixed positive additive floor cannot encode a positive asymptotic mass.
-
-No existing physical mass, exact-value, finite-coercivity, or moving-time theorem is weakened by this result.
-
-## Milestone 16 — Unregularized finite-time strict positivity and log convexity
-
-**Status: Integrated — PRs #1727--#1729.**
-
-For every nonzero physical state, finite-time injectivity of the strongly continuous symmetric semigroup implies
-
-```text
-C_psi(t) > 0
-```
-
-for every finite `t >= 0`.
-
-Therefore the repository can work directly with
-
-```text
-log C_tilde_psi
-```
-
-without positive additive regularization. Its logarithm is continuous and convex on the real half-line, and the corresponding finite-difference effective masses are nonnegative and antitone.
-
-## Milestone 17 — Canonical unregularized long-time effective-mass limit
-
-**Status: Integrated — PRs #1730--#1732.**
-
-For `h > 0`, define
-
-```text
-M_h(n) = m(nh, nh+h).
-```
-
-Then
-
-```text
-M_h is Antitone
-0 <= M_h(n)
-m_infinity,h := inf_n M_h(n)
-M_h(n) -> m_infinity,h
-0 <= m_infinity,h <= M_h(n).
-```
-
-This constructs a canonical finite-step long-time effective-mass limit for every nonzero physical state.
-
-It does **not** yet prove strict positivity of that limit.
-
-## Milestone 18 — Unregularized Cesàro / telescoping / elapsed-time log decay
-
-**Status: Integrated — PRs #1733--#1736. Current authoritative checkpoint.**
 
 The repository proves:
 
 ```text
-Cesaro means of M_h -> m_infinity,h
-sum_{i<n} M_h(i)
-  = (log C_tilde_psi(0) - log C_tilde_psi(nh)) / h
+Ω⊥ is complete;
+T_t preserves Ω⊥;
+H̄ preserves Ω⊥ on its exact closed-domain intersection;
+the exact restricted graph-closed Hamiltonian is formally symmetric.
 ```
 
-and therefore
+## PR #1896 — normalization and centering
+
+The constant-one OS state is evaluated directly against the continuum probability law and transported through the full same-root reconstruction:
 
 ```text
-(log C_tilde_psi(0) - log C_tilde_psi(nh)) / (n h)
-  -> m_infinity,h.
+‖Ω‖ = 1,
+inner ℝ Ω Ω = 1,
+Ω != 0.
 ```
 
-This is the current endpoint: the unregularized physical OS autocorrelation has a canonical long-time logarithmic decay rate along every fixed positive sampling step.
+Define
+
+```text
+c_Ω(x) = inner ℝ Ω x,
+x° = x - c_Ω(x) • Ω.
+```
+
+The repository proves
+
+```text
+x° ∈ Ω⊥,
+c_Ω(x) • Ω + x° = x,
+centering fixes already-orthogonal vectors,
+c_Ω(T_t x) = c_Ω(x),
+T_t(x°) = (T_t x)°.
+```
+
+The semigroup is corestricted to the complete excitation carrier with exact zero-time, additive, and contraction laws.
+
+The exact same-root coercivity predicate is also exposed on the vacuum-orthogonal closed Hamiltonian domain.
 
 ---
 
-# Current open frontiers
+# Phase 10 — Strictly positive same-root excitation coercivity
 
-## Milestone 19 — Identify the OS log-decay limit with spectral support / physical mass
+**Status: OPEN NOW — immediate principal frontier.**
 
-**Status: OPEN — immediate analytic frontier.**
-
-The next theorem package should connect
+The target is to prove the existence of a positive constant on the exact carrier already constructed:
 
 ```text
-m_infinity,h
+∃ m : ℝ,
+  0 < m ∧
+  FixedSlotHilbertDirectLimitRegularVacuumOrthogonalCoerciveAt P m.
 ```
 
-to the existing self-adjoint / PVM / scalar spectral-measure infrastructure.
-
-The intended hierarchy is:
+Equivalently, for every exact excitation-domain vector,
 
 ```text
-physical OS autocorrelation
-  -> Hamiltonian spectral/Laplace representation or existing equivalent bridge
-  -> bottom of the spectral support seen by psi
-  -> asymptotic logarithmic decay
-  -> statewise spectral mass.
+m * ‖x‖^2 <= inner ℝ x (H̄ x).
 ```
 
-Then prove the additional statement actually needed to reach `physicalYangMillsMass`.
+This must be a theorem of the same Wilson / primary-scalar / Prokhorov root.
 
-Important distinctions:
+## Preferred constructive route
 
-- `m_infinity,h >= 0` is already proved;
-- strict positivity is **not** already proved;
-- sampling-step independence should be theorem-generated, not assumed;
-- equality with the global physical mass requires the correct non-vacuum spectral state/family and variational comparison.
-
-If the repository's existing spectral calculus does not yet identify `T_t` with the required `exp(-tH)` functional calculus on the completed physical carrier, that bridge is the first submilestone rather than an implicit assumption.
-
-## Milestone 20 — Complete same-root actual-Wilson positive-time readout
-
-**Status: OPEN — immediate model-facing frontier.**
-
-Construct the required normalized-trace-power physical observables from the actual Wilson/projective/cylinder root.
-
-Required properties include, as needed by the existing reductions:
+The next proof package should search for the strongest already-integrated quantitative statement that can be transported without changing carriers. Preferred order:
 
 ```text
-bounded continuity
-exact same-root finite readout
-cross-scale compatibility
-physical gauge invariance
-positive-time membership.
+1. identify an actual finite-Wilson or same-root scalar quantitative lower-bound certificate;
+2. express it on the canonical primary-scalar OS cylinder/Hilbert objects;
+3. prove uniformity strong enough to survive the selected continuum limit;
+4. pass the estimate through the fixed-slot / direct-limit construction;
+5. extend from the canonical dense/core domain to the exact graph-closed excitation domain;
+6. conclude strict positivity of the already-defined same-root coercivity predicate.
 ```
 
-Do **not** assume:
+If an existing older physical coercivity theorem is considered, an exact same-carrier bridge must be proved first. Matching theorem names, analogous formulas, or a shared informal interpretation are not sufficient.
+
+## Anti-shortcuts
+
+Do not:
 
 ```text
-global surjectivity of Q.positiveHalfPullback
-global multiplicativity of Q.positiveHalfPullback
-abstract Dense of the entire bounded-continuous carrier
-a duplicate physical Hilbert space
-A†A = Euclidean time evolution.
+insert m > 0 as a fresh physical assumption
+identify the older PhysicalHilbert with the newer same-root Hilbert by notation
+infer full-sector coercivity from one scalar cyclic correlation without density/cyclicity closure
+transfer a numerical mass from the conditional exact-value lane
+infer a positive gap solely from contractivity, self-adjointness, or H̄ Ω = 0.
 ```
 
-Once this is discharged, the already integrated #1670 theorem bridge produces the reconstructed nonzero physical excitation and its downstream Hamiltonian/Rayleigh interfaces.
+## Completion criterion
 
-## Milestone 21 — Same-root path-law / physical-OS two-point identification
+Phase 10 is complete only when the authoritative same-root carrier contains a theorem with an explicit existential positive lower bound, not merely the definition of the coercivity predicate.
+
+---
+
+# Phase 11 — Same-root decay and spectral-gap consequences
+
+**Status: OPEN downstream.**
+
+Once Phase 10 supplies `m > 0`, derive the consequences on the same carrier.
+
+Target semigroup statement:
+
+```text
+forall t : NNReal,
+forall x : Ω⊥,
+  ‖T_t x‖ <= exp (-m * t) * ‖x‖
+```
+
+or the exact equivalent form supported by the repository's real conventions.
+
+Target Hamiltonian/spectral statement:
+
+```text
+vacuum eigenvalue = 0
+and
+spectrum(H̄ on Ω⊥) ⊆ [m, ∞).
+```
+
+The full closed Hamiltonian is already self-adjoint and the vacuum/excitation decomposition is canonical. Any remaining restricted-self-adjointness or reducing-subspace lemmas needed for a clean spectral statement should be proved additively from that structure.
+
+### Completion criterion
+
+A same-root mass-gap theorem must be stated on the newer regular direct-limit carrier itself, with no hidden transfer from the older generic physical carrier.
+
+---
+
+# Phase 12 — Relation to the older generic physical OS / mass lane
+
+**Status: Integrated infrastructure; exact bridge open.**
+
+The older generic physical lane proves, under its explicit physical OS hypotheses,
+
+```text
+physicalYangMillsOSInfraredMass = physicalYangMillsMass
+```
+
+and identifies that mass with the greatest full vacuum-orthogonal uniform exponential semigroup decay rate.
+
+The proof uses
+
+```text
+closed-Hamiltonian Rayleigh lower bound
+  -> generator-domain orbit differential inequality
+  -> real right-neighborhood slope control
+  -> Mathlib scalar Gronwall
+  -> generator-domain exponential decay
+  -> density/closure to all vacuum-orthogonal states.
+```
+
+This machinery remains valuable, but the current same-root scalar Hilbert construction is not yet identified with the older abstract `PhysicalHilbert` carrier.
+
+Two safe options are allowed:
+
+```text
+A. prove the needed decay/gap consequences directly on the same-root carrier; or
+B. construct an exact linear-isometric/unitary/shared-carrier bridge and transport the generic theorem honestly.
+```
+
+Do not silently choose option B by definitional resemblance.
+
+---
+
+# Phase 13 — Extend from the primary scalar process to full 4D interacting Yang--Mills
 
 **Status: OPEN.**
 
-Prove the pointwise rational equality that identifies the connected two-point function from the factorial same-Wilson-source rational path law with the rational restriction of the actual physical OS-semigroup correlation.
+The current same-root continuum object is a real scalar rational-time process derived from the canonical primary plaquette normalized trace. It is not yet the complete continuum gauge field/state.
 
-The extension machinery is already available. This milestone should not add a second continuum field carrier merely to force the equality.
+A Clay-level existence theorem still requires a sufficiently rich continuum construction carrying the needed local four-dimensional gauge-invariant observable content.
 
-## Milestone 22 — Selected slow-state moving-time residual
-
-**Status: OPEN — principal finite-to-continuum dynamical frontier.**
-
-For the canonical theorem-generated finite slow states `phi_n`, prove
+Required model-derived package includes, in the chosen rigorous formulation:
 
 ```text
-|| iota_n(K_n^2 phi_n) - T(2 a_n) iota_n(phi_n) ||
+four-dimensional Euclidean covariance
+gauge covariance / gauge-invariant observable algebra
+reflection positivity
+regularity / temperedness or the selected formal substitute
+clustering / vacuum uniqueness structure
+finite-Wilson compatibility / continuum scaling relation
+nontriviality
+and the physical Hamiltonian realization.
+```
+
+The construction must remain anchored to the actual finite Wilson root rather than introducing an independent continuum theory by assumption.
+
+### Important distinction
+
+A positive gap proved first on the primary scalar OS Hilbert carrier would be a major same-root result, but it would still not by itself prove that the complete four-dimensional Yang--Mills physical Hilbert space has the same full-sector gap. The required richness/cyclicity/completeness bridge must be explicit.
+
+---
+
+# Phase 14 — Signed spatial symmetry and glueball geometry
+
+**Status: Partially integrated.**
+
+The finite-lattice signed-spatial lane now contains the abstract 48-element signed permutation action on the actual gauge-configuration carrier.
+
+Integrated through PR #1876:
+
+```text
+signed spatial vertex action
+  -> unit-step covariance
+  -> signed boundary-step transport
+  -> generic configuration pullback
+  -> exact readback of swap12 / swap23 / axis-1 reflection
+  -> exact composition law / monoid homomorphism into configuration permutations.
+```
+
+Open next steps:
+
+```text
+1. transport oriented plaquette holonomy under the full signed action;
+2. prove covariance/invariance of the selected scalar plaquette observables;
+3. construct cubic-group projection operators or equivalent representation data;
+4. identify lattice cubic irreps of candidate gauge-invariant states;
+5. only with a justified continuum limit discuss continuum spin;
+6. only after spectral identification make glueball-mass statements.
+```
+
+No continuum glueball claim follows from finite cubic symmetry alone.
+
+---
+
+# Phase 15 — Selected moving-time finite-Wilson recovery
+
+**Status: OPEN quantitative lane; generic machinery integrated.**
+
+The repository retains intrinsic finite Wilson transfer rates and theorem-generated slow states.
+
+The characteristic missing quantitative statement remains a selected moving-time residual of the form
+
+```text
+‖ iota_n(K_n^2 phi_n) - T(2 a_n) iota_n(phi_n) ‖
   <= 2 a_n delta_n,
 
 delta_n -> 0.
 ```
 
-Equivalently, the residual is `o(a_n)`.
+Equivalently, the residual must be `o(a_n)`.
 
-Ordinary fixed-time convergence is not a substitute. The estimate should come from genuine quantitative finite-to-continuum semigroup comparison, Mosco/Trotter--Kato style control, or another model-derived selected-sequence argument.
+Ordinary fixed-time convergence is not a substitute because the relevant time itself shrinks with `a_n`.
 
-## Milestone 23 — Intrinsic finite Wilson rate equals physical mass
-
-**Status: Conditional route integrated; actual closure open.**
-
-The forward and reverse variational theorem infrastructure is already present. Once the required ambient same-root realization and Milestone 22 are discharged, theorem composition can identify the intrinsic finite Wilson rate limit with the physical mass.
-
-This equality is not currently an unconditional theorem of the bare compact Wilson model.
-
-## Milestone 24 — Global common-product physical realization / strict continuum OS family
-
-**Status: OPEN as a separate global kinematic lane.**
-
-The earlier reduction remains relevant when the full common-product physical isometry is required:
-
-```text
-concrete countable positive-time continuum observables
-  -> every finite reflected OS Gram matrix positive definite
-  -> separated OS classes linearly independent
-  -> physical Hilbert infinite-dimensional
-  -> common-product physical isometry theorem-generated.
-```
-
-The target-specific reconstructed-excitation route does not by itself assert this full global realization.
-
-## Milestone 25 — Interacting continuum Yang--Mills construction
-
-**Status: OPEN.**
-
-The final model must construct, rather than retain as terminal data, the appropriate continuum objects and properties, including as needed:
-
-```text
-nontrivial interacting continuum probability/state
-gauge covariance / gauge content
-reflection positivity
-regularity / temperedness
-clustering and/or vacuum uniqueness inputs
-compatibility with finite Wilson approximants
-physical time-semigroup identification.
-```
-
-This is indispensable for a final Clay-level claim.
+A future identification of the intrinsic finite Wilson rate with a continuum mass requires both this quantitative closure and an exact common physical realization.
 
 ---
 
-# Exact-value and physical-normalization milestones
+# Phase 16 — Exact-value and physical normalization lane
 
-## Milestone 26 — Actual R4 decomposition and component variational extrema
+**Status: Conditional route; physical interpretation open.**
 
-**Status: Structural theorem layer integrated; model-derived values open.**
-
-For actual physical component forms, the repository identifies canonical coefficients with genuine Rayleigh-set `sInf` / `sSup` extrema.
-
-Still required:
-
-```text
-derive the final component decomposition from the actual model
-prove all required form/domain bounds
-evaluate the required component extrema
-prove sharp budget attainment or an equivalent sharpness theorem.
-```
-
-No coefficient may be chosen merely to manufacture the target rational number.
-
-## Milestone 27 — Independent physical normalization and the `33/20` endpoint
-
-**Status: Conditional theorem assembly integrated; physical derivation open.**
-
-The normalized exact-value route retains the target
+The repository contains structural exact-value assembly machinery and retains the normalized endpoint
 
 ```text
 33/20.
 ```
 
-A physical identity involving that value requires all of the following independently:
+A physical interpretation requires independent proofs of
 
 ```text
-actual physical mass equality
-actual model-derived R4 extrema
-sharp combined budget
-physical referenceTime / unit normalization.
+actual model-derived component decomposition
+actual component Rayleigh extrema
+required sharpness / attainment
+identification with the relevant same-root/full physical mass
+physical reference-time / unit normalization.
 ```
 
-Only then may an identity of the form
+No coefficient may be assigned merely to manufacture the target rational number.
+
+Permanent distinctions:
 
 ```text
-referenceTime * physicalYangMillsMass = 33/20
-```
-
-be interpreted physically.
-
-## Milestone 28 — Final physical Yang--Mills mass-gap theorem
-
-**Status: OPEN.**
-
-A final theorem must start from the actual interacting continuum Yang--Mills construction and conclude a strict non-vacuum spectral lower bound for the reconstructed physical Hamiltonian without circular numerical input.
-
-It must preserve the distinctions
-
-```text
-finite Z2 cap 1/2
-  != finite compact-Wilson intrinsic rate
-  != unregularized statewise OS log-decay limit
-  != continuum defect coercivity
-  != physicalYangMillsMass
-  != normalized 33/20 endpoint.
+finite Z₂ geometric cap / coercivity 1/2
+  != intrinsic compact-Wilson finite rate
+  != any future same-root primary-scalar coercive mass
+  != older generic physicalYangMillsMass unless bridged
+  != normalized conditional endpoint 33/20.
 ```
 
 ---
 
-# Safest additive next packages
+# Immediate next proof package
 
-Two fronts are now mature enough for focused work and should remain logically separate.
-
-## Package A — OS long-time decay to spectral mass
-
-Preferred order:
+From canonical exact SHA
 
 ```text
-1. expose or reuse the exact physical semigroup <-> Hamiltonian spectral-calculus bridge;
-2. represent the nonzero-state autocorrelation through its scalar spectral measure;
-3. identify asymptotic log decay with the bottom of the spectral support seen by that state;
-4. derive sampling-step independence from that common spectral quantity rather than assuming it;
-5. compare the statewise bottom with the existing variational physical-mass interface;
-6. state strict positivity only after a genuine spectral-gap/model theorem supplies it.
+777e48e54b1bdb8028d624513568be476a415e1d
 ```
 
-This package should not inject `33/20` or any desired positive constant into the asymptotic theorem.
-
-## Package B — actual Wilson same-root realization
-
-Preferred order:
+the safest additive mathematical order is now:
 
 ```text
-1. construct the cross-scale normalized-trace-power bounded-continuous physical observables;
-2. prove exact same-root finite readout identities;
-3. prove the needed gauge-invariant and positive-time membership properties;
-4. discharge the #1670/#1671-#1675 readout premises;
-5. identify the rational path-law two-point surface with the actual physical OS two-point surface where the roots coincide;
-6. then compose with the already integrated reconstructed-excitation and reflection/Schwinger infrastructure.
+1. inspect the exact same-root excitation Hamiltonian/coercivity interfaces introduced in #1895-#1896;
+2. identify the strongest existing actual-Wilson or primary-scalar quantitative estimate that can feed them without changing carrier;
+3. prove any missing dense-core / closed-domain transport lemmas;
+4. derive an explicit theorem ∃ m > 0 with same-root excitation coercivity;
+5. derive same-root excitation-semigroup exponential decay;
+6. close the corresponding spectral lower bound above the normalized vacuum;
+7. only then decide whether an exact bridge to the older generic PhysicalHilbert lane adds mathematical value;
+8. continue the independent full-4D gauge-field and signed-spatial/glueball geometry lanes without conflating their carriers.
 ```
 
-The two packages can later meet at the physical state used for the spectral/log-decay theorem.
+The preferred proof style remains:
+
+```text
+reuse Mathlib
+reuse existing actual Wilson geometry
+stay on the same constructed root whenever possible
+prove exact carrier bridges when transport is necessary
+avoid generic wrapper proliferation
+avoid strengthening assumptions merely to activate a theorem.
+```
 
 ---
 
@@ -771,34 +780,21 @@ The two packages can later meet at the physical state used for the spectral/log-
 
 Do not:
 
-- claim the Clay Millennium problem is solved before the model-facing continuum construction is complete;
-- identify finite `Z₂` with compact `SU(2)` / `SU(N)` continuum Yang--Mills;
-- identify finite coercivity `1/2` with the physical Yang--Mills mass;
-- claim the former #1670 Draft frontier is still current — #1670 is merged;
-- replace actual positive-time readout construction by global pullback surjectivity or multiplicativity;
-- infer full real-path continuum field theory merely from rational path-law stationarity;
-- infer continuum OS positivity merely from finite Gibbs reflection invariance;
-- infer same-root OS reconstruction from a topological extension theorem alone;
-- keep a fixed positive `epsilon` and interpret its long-time regularized effective-mass limit as a positive mass — that limit is proved to be zero;
-- infer strict positivity of `m_infinity,h` from nonnegativity;
-- identify `m_infinity,h` with `physicalYangMillsMass` before the spectral/variational bridge is proved;
-- replace the moving-time `o(a_n)` requirement by ordinary fixed-time convergence;
-- tune R4 coefficients or reference time to force `33/20`;
-- identify static Wilson `A†A` with Euclidean time evolution.
+- claim the Clay Millennium problem is solved before the full model-facing construction is complete;
+- describe same-root continuum OS positivity as still open — it is integrated for the primary scalar rational-time process;
+- describe the primary scalar process as the complete continuum gauge connection;
+- infer a positive gap merely from self-adjointness, contractivity, or the existence of a normalized vacuum;
+- infer whole-excitation-sector coercivity from one nonzero scalar state without the needed density/cyclicity argument;
+- identify the newer same-root regular direct-limit Hilbert carrier with the older generic `PhysicalHilbert` without an exact bridge;
+- transport `physicalYangMillsMass`, `1/2`, or `33/20` onto the newer same-root carrier without a theorem;
+- identify the finite signed spatial action with a continuum glueball spin classification without plaquette/representation/continuum bridges;
+- replace the selected moving-time `o(a_n)` condition by fixed-time convergence;
+- add `sorry`, `admit`, `axiom`, or placeholder constants.
 
-# Completion criterion
+---
 
-The program reaches a final physical mass-gap theorem only when the same-root construction chain is closed:
+# Completion criterion for the program
 
-```text
-actual finite compact Wilson roots
-  -> controlled continuum interacting Yang--Mills state
-  -> continuum reflection-positive OS reconstruction
-  -> physical Hilbert space and Hamiltonian from that same root
-  -> non-vacuum spectral mass > 0
-  -> finite-to-continuum and observable compatibility
-  -> independent physical normalization
-  -> optional exact normalized endpoint.
-```
+The full program is complete only when a single explicit theorem chain begins from an actual interacting four-dimensional compact-gauge Yang--Mills construction and reaches a reconstructed physical Hilbert theory with a normalized vacuum and a strictly positive non-vacuum spectral lower bound for the physical Hamiltonian, with the required continuum OS, gauge, Euclidean, regularity, clustering/nontriviality, finite-Wilson compatibility, and normalization inputs constructed rather than merely supplied.
 
-Until then, the repository should continue to advertise the strongest theorem actually integrated while keeping every remaining model-facing premise explicit.
+The current canonical result is an important but narrower milestone: the same actual Wilson root now reaches a genuine primary-scalar continuum OS Hilbert reconstruction, real `C₀` semigroup, self-adjoint graph-closed Hamiltonian, normalized vacuum, and exact vacuum-orthogonal excitation carrier. The next missing mass-gap datum is **strictly positive same-root excitation coercivity**.
