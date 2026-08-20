@@ -76,9 +76,10 @@ noncomputable def fixedSlotHilbertDirectLimitRegularClosedDomainTimeTranslate
     have hmem :=
       P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomain_invariant t
         (P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomainOfClosedDomain z)
-    rw [P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomain_eq_closedRightHamiltonian_domain]
-      at hmem
-    exact hmem⟩
+    have hclosed :=
+      P.fixedSlotHilbertDirectLimitRegularRightHamiltonianLinearPMap_le_closed.1 hmem
+    simpa only [P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomainOfClosedDomain_coe] using
+      hclosed⟩
 
 @[simp]
 theorem fixedSlotHilbertDirectLimitRegularClosedDomainTimeTranslate_coe
