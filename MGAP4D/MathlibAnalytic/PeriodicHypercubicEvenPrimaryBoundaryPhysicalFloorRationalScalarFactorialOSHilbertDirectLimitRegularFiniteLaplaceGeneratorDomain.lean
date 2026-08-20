@@ -355,8 +355,12 @@ theorem fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula_hasDeriv
       0 0 :=
     hasDerivAt_const (x := (0 : ℝ))
       (P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda x)
-  have hprimitive :=
-    P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive_hasDerivAt lambda x 0
+  have hprimitive :
+      HasDerivAt
+        (P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive lambda x)
+        x 0 := by
+    simpa only [P.fixedSlotHilbertDirectLimitRegularExponentiallyWeightedOrbit_zero] using
+      P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive_hasDerivAt lambda x 0
   have hsub := hconst.sub hprimitive
   have hproduct := hscalar.smul hsub
   convert hproduct using 1
