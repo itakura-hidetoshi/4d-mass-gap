@@ -185,7 +185,7 @@ theorem fixedSlotCarrierFiniteMean_timeTranslate_eventually_eq
         P.fixedSlotCarrierFiniteMean F n := by
   have h :=
     L.factorial_fixedSlotObservableTimeTranslate_finiteExpectation_reindexed_eventually_eq
-      H N hN beta hbeta P.slots P.slots_nonneg t ht F.observable
+      H N hN beta hbeta P.slots (fun q => P.slots_nonneg q.1 q.2) t ht F.observable
   simpa [fixedSlotCarrierFiniteMean,
     fixedSlotTimeTranslateData_slots,
     fixedSlotCarrierTimeTranslate_observable] using h
