@@ -227,9 +227,13 @@ theorem continuous_compact_oriented_singleLinkConditionalTotalVariation_le_of_sh
   let R : ℝ :=
     C.base.beta *
       (2 * ((C.base.sharedPlaquettes target source).card : ℝ) * energyBound)
+  have hCard :
+      0 ≤ ((C.base.sharedPlaquettes target source).card : ℝ) := by
+    positivity
   have hR : 0 ≤ R := by
     unfold R
-    positivity
+    exact mul_nonneg C.base.beta_nonneg
+      (mul_nonneg (mul_nonneg (by norm_num) hCard) hEnergyBound_nonneg)
   apply
     continuous_compact_oriented_singleLinkConditionalTotalVariation_le_of_oscillation
       C A B target R hR
