@@ -152,9 +152,25 @@ theorem fixedSlotHilbertDirectLimitRegularVacuumOrthogonalCorrelation_rightSlope
         inner ℝ phi
           (-((t : ℝ)⁻¹ •
             (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t phi - phi)))
-    rw [inner_neg_right, real_inner_smul_right, inner_sub_right]
-    rw [real_inner_self_eq_norm_sq]
-    ring
+    calc
+      (t : ℝ)⁻¹ *
+          (‖phi‖ ^ 2 -
+            inner ℝ phi
+              (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t phi)) =
+        -((t : ℝ)⁻¹ *
+          (inner ℝ phi
+              (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t phi) -
+            inner ℝ phi phi)) := by
+          rw [real_inner_self_eq_norm_sq]
+          ring
+      _ = -inner ℝ phi
+          ((t : ℝ)⁻¹ •
+            (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t phi - phi)) := by
+          rw [real_inner_smul_right, inner_sub_right]
+      _ = inner ℝ phi
+          (-((t : ℝ)⁻¹ •
+            (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t phi - phi))) := by
+          rw [inner_neg_right]
   simpa only [hpoint, phi, z] using hinner
 
 /-- Initial unregularized logarithmic decay converges to the exact closed-Hamiltonian Rayleigh
