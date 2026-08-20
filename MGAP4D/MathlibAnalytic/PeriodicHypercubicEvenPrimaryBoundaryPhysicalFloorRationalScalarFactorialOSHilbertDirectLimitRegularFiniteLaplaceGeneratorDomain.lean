@@ -108,9 +108,11 @@ theorem fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_nat_tendsto_posi
   have hmap :=
     (P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda).continuous.continuousAt.tendsto.comp
       hshift
-  simpa only [Function.comp_apply,
-    ← P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_eq_positiveResolvent_closedShift]
-    using hmap
+  convert hmap using 1
+  funext n
+  exact
+    P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_eq_positiveResolvent_closedShift
+      lambda hlambda (n : NNReal) x
 
 /-- The exponentially weighted terminal orbit at width `n+t` is the fixed scalar multiple of the
 `T_t`-image of the terminal orbit at width `n`. -/
@@ -223,9 +225,11 @@ theorem fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_nat_add_tendsto_
   have hmap :=
     (P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda).continuous.continuousAt.tendsto.comp
       hshift
-  simpa only [Function.comp_apply,
-    ← P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_eq_positiveResolvent_closedShift]
-    using hmap
+  convert hmap using 1
+  funext n
+  exact
+    P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_eq_positiveResolvent_closedShift
+      lambda hlambda ((n : NNReal) + t) x
 
 /-- Real formula whose positive-time restriction will be the orbit of a positive-resolvent vector. -/
 noncomputable def fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula
@@ -355,13 +359,12 @@ theorem fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula_hasDeriv
     P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive_hasDerivAt lambda x 0
   have hsub := hconst.sub hprimitive
   have hproduct := hscalar.smul hsub
-  have hproduct' : HasDerivAt
-      (P.fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula lambda hlambda x)
-      (-x + lambda • P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda x)
-      0 := by
-    simpa [fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula,
-      sub_eq_add_neg] using hproduct
-  simpa [sub_eq_add_neg, add_comm] using hproduct'
+  convert hproduct using 1
+  simp only [fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula,
+    P.fixedSlotHilbertDirectLimitRegularPositiveResolvent_apply,
+    P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive_zero,
+    mul_zero, Real.exp_zero, one_smul]
+  module
 
 /-- Difference quotient of a positive-resolvent vector is the slope of its explicit orbit formula. -/
 theorem fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient_positiveResolvent
