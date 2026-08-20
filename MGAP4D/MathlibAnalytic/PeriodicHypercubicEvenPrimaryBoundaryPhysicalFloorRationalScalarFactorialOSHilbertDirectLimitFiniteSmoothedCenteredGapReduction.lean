@@ -118,7 +118,7 @@ theorem fixedSlotHilbertDirectLimitRegularVacuumOrthogonalCorrelation_nnrat_eq
             ((x : P.FixedSlotHilbertDirectLimitRegularVacuumOrthogonalHilbert) :
               P.fixedSlotHilbertDirectLimitRegularSubspace) :
           P.fixedSlotHilbertDirectLimitRegularSubspace) :
-          P.fixedSlotHilbertDirectLimitCompletion) = _
+          P.fixedSlotHilbertDirectLimitCompletion)) = _
   rw [P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_nnrat]
 
 /-- The finite common decay estimate passes through the selected Wilson limits to each explicit
