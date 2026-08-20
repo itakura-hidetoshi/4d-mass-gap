@@ -201,7 +201,7 @@ the norm of the original Hamiltonian vector, independently of the dyadic index a
 theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaHamiltonian_timeTranslate_norm_le
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta
-      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorRationalScalarFactorialLatticeSpacing L)
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
     (n : ℕ) (t : NNReal)
     (x : P.fixedSlotHilbertDirectLimitRegularRightGeneratorDomain) :
     ‖P.fixedSlotHilbertDirectLimitRegularDyadicYosidaHamiltonian n
