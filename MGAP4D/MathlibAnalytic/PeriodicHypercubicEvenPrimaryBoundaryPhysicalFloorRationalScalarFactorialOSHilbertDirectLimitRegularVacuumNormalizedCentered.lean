@@ -60,7 +60,10 @@ theorem fixedSlotHilbertDirectLimitVacuumCarrier_inner_self
   rw [periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathExpectation_apply]
   simp only [periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable_apply]
   change (∫ _ : ℚ → ℝ, (1 : ℝ) * 1 ∂(L.continuumMeasure : Measure (ℚ → ℝ))) = 1
-  simp
+  rw [one_mul]
+  rw [MeasureTheory.integral_const]
+  rw [MeasureTheory.probReal_univ]
+  rw [one_smul]
 
 /-- The empty-slot vacuum cylinder has seminorm exactly one before OS separation. -/
 @[simp]
