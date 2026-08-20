@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPrimaryBoundaryPhysicalFloorRationalScalarFactorialOSHilbertDirectLimitFiniteSmoothedCenteredGapReduction
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenGibbsReflection
 import Mathlib.Tactic
 
 /-!
@@ -10,27 +9,24 @@ The preceding same-root reduction isolates two quantitative finite inputs:
 * a common centered Euclidean-time decay rate on the selected factorial tail;
 * one strictly positive centered zero-separation floor on that same tail.
 
-Those inputs are currently written on the fixed scalar rational-path pushforwards.  This file
-moves them one level closer to the bare model without changing the carrier or the centering
-convention.
+Those inputs are written on the fixed scalar rational-path pushforwards.  The canonical finite
+reflection-invariance layer already proves that each such scalar law is the direct pushforward of
+the actual finite Wilson Gibbs measure and is invariant under intrinsic rational-time reflection.
+This file now uses those exact receipts to move the centered quantities one level closer to the
+bare model without changing their meaning.
 
-First we prove that the actual finite reflection-completed primary path law, and hence its scalar
-plaquette pushforward, are invariant under intrinsic rational-time reflection.  We then center a
-positive scalar cylinder by its own finite mean and prove the exact identity
-
-`reflectionForm(centered F) = reflectionForm(F) - finiteMean(F)^2`.
-
-Next the centered scalar form is pulled all the way back through the two same-root pushforwards to
-the actual finite even-periodic Wilson Gibbs measure.  Thus the quantity used by the mass-gap
-reduction is literally an actual Wilson-source integral
+A positive scalar cylinder is centered by its own finite mean and its intrinsic reflected form is
+proved exactly equal to `Q(F) - mean(F)^2`.  The centered scalar form is then pulled through the
+canonical direct-source map to the actual finite even-periodic Wilson Gibbs measure, giving the
+literal source integral
 
 `∫ (O(A)-m) (O(theta A)-m) d mu_W(A)`.
 
-Finally the two finite hypotheses from the preceding file are proved equivalent to versions stated
-entirely with these Wilson-source centered reflected integrals.  The next model-specific step can
-therefore target the already-existing boundary Gram factorization of this actual source integral,
-without importing an older physical carrier or identifying a static Gram operator with Euclidean
-time evolution.
+Finally the two finite hypotheses from #1912 are proved equivalent to versions stated entirely
+with these Wilson-source centered reflected integrals.  The next model-specific step can therefore
+target the already-existing boundary Gram factorization of this actual source integral, without
+importing an older physical carrier or identifying a static Gram operator with Euclidean time
+evolution.
 
 No positive rate, positive floor, boundary Gram lower bound, spectral gap, numerical mass, or
 old-carrier equivalence is asserted here.
@@ -66,102 +62,6 @@ local instance finiteCenteredWilsonSourceSpecialUnitaryMeasurableSpace (N : ℕ)
 local instance finiteCenteredWilsonSourceSpecialUnitaryBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
-
-/-- The actual finite reflection-completed primary rational path law is exactly invariant under
-intrinsic rational-time reflection.  This is source Wilson reflection invariance plus the exact
-reflection covariance of the completed readout. -/
-theorem periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathMeasure_reflection_map_eq_self
-    (H N : ℕ) (hN : 0 < N)
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (beta : ℝ) (hbeta : 0 ≤ beta)
-    (latticeSpacing : ℕ → ℝ)
-    (n : ℕ) :
-    Measure.map
-        (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathReflection
-          (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) H)
-        (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathMeasure
-          H N hN beta hbeta latticeSpacing n) =
-      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathMeasure
-        H N hN beta hbeta latticeSpacing n := by
-  let Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ
-  let X :=
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathReadout
-      (Gauge := Gauge) H latticeSpacing n
-  let theta :=
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathReflection
-      (Gauge := Gauge) H
-  let rho := periodicHypercubicEvenConfigurationReflection (Gauge := Gauge) H
-  let mu :=
-    (periodicHypercubicSpecialUnitaryWilsonSystem
-      (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure
-  have hX : Measurable X :=
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathReadout_measurable
-      H Gauge latticeSpacing n
-  have htheta : Measurable theta :=
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathReflection_measurable H
-  have hrho :=
-    periodicHypercubicSpecialUnitaryWilsonSystem_gibbs_reflection_measurePreserving
-      H N hN beta hbeta
-  have hcov : theta ∘ X = X ∘ rho := by
-    funext A
-    exact
-      (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathReadout_configurationReflection
-        H latticeSpacing n A).symm
-  unfold periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathMeasure
-  change Measure.map theta (Measure.map X mu) = Measure.map X mu
-  calc
-    Measure.map theta (Measure.map X mu) = Measure.map (theta ∘ X) mu :=
-      Measure.map_map htheta hX
-    _ = Measure.map (X ∘ rho) mu := by rw [hcov]
-    _ = Measure.map X (Measure.map rho mu) :=
-      (Measure.map_map hX hrho.measurable).symm
-    _ = Measure.map X mu := by rw [hrho.map_eq]
-
-/-- The finite scalar plaquette rational-path law inherits exact intrinsic reflection invariance
-from the reflection-completed primary path law. -/
-theorem periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePathMeasure_reflection_map_eq_self
-    (H N : ℕ) (hN : 0 < N)
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (beta : ℝ) (hbeta : 0 ≤ beta)
-    (latticeSpacing : ℕ → ℝ)
-    (n : ℕ) :
-    Measure.map
-        periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathReflection
-        (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePathMeasure
-          H N hN beta hbeta latticeSpacing n) =
-      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePathMeasure
-        H N hN beta hbeta latticeSpacing n := by
-  let S := periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePath H N
-  let theta := periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathReflection
-  let Theta :=
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathReflection
-      (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) H
-  let nu :=
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathMeasure
-      H N hN beta hbeta latticeSpacing n
-  have hS : Measurable S :=
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePath_measurable H N
-  have htheta : Measurable theta :=
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathReflection_measurable
-  have hTheta : Measurable Theta :=
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalPathReflection_measurable H
-  have hnu : Measure.map Theta nu = nu :=
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathMeasure_reflection_map_eq_self
-      H N hN beta hbeta latticeSpacing n
-  have hcov : theta ∘ S = S ∘ Theta := by
-    funext x
-    exact
-      (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePath_reflection
-        H N x).symm
-  unfold periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePathMeasure
-  change Measure.map theta (Measure.map S nu) = Measure.map S nu
-  calc
-    Measure.map theta (Measure.map S nu) = Measure.map (theta ∘ S) nu :=
-      Measure.map_map htheta hS
-    _ = Measure.map (S ∘ Theta) nu := by rw [hcov]
-    _ = Measure.map S (Measure.map Theta nu) :=
-      (Measure.map_map hS hTheta).symm
-    _ = Measure.map S nu := by rw [hnu]
 
 /-- Reflection invariance of a scalar rational-path probability law gives equality of the
 expectation of every bounded-continuous observable and its intrinsic reflection pullback. -/
@@ -318,8 +218,7 @@ theorem
   unfold
     PeriodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPositiveCylinder.wilsonSourceObservable
   rw [
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathReadout_configurationReflection,
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePath_reflection]
+    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquetteReflectionCompletedReadout_configurationReflection]
 
 /-- Actual Wilson Gibbs source integral of the scalar cylinder centered by `m`. -/
 noncomputable def
@@ -354,40 +253,31 @@ theorem
           H N hN beta hbeta latticeSpacing n) =
       Cyl.wilsonSourceCenteredReflectionFormAt
         H N hN beta hbeta latticeSpacing n m := by
-  let S := periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePath H N
-  let X :=
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathReadout
-      (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) H latticeSpacing n
+  let O :=
+    (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePath H N) ∘
+      (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathReadout
+        (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) H latticeSpacing n)
   let G := Cyl.centeredReflectionIntegrandAt m
   let mu :=
     (periodicHypercubicSpecialUnitaryWilsonSystem
       (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).gibbsMeasure
-  have hS : Measurable S :=
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePath_measurable H N
-  have hX : Measurable X :=
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathReadout_measurable
-      H (Matrix.specialUnitaryGroup (Fin N) ℂ) latticeSpacing n
-  have hGS : AEStronglyMeasurable (fun x => G (S x))
-      (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathMeasure
-        H N hN beta hbeta latticeSpacing n) :=
-    ((G.continuous.measurable.comp hS).aestronglyMeasurable)
+  have hO : Measurable O := by
+    exact
+      (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePath_measurable
+        H N).comp
+        (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathReadout_measurable
+          H (Matrix.specialUnitaryGroup (Fin N) ℂ) latticeSpacing n)
+  have hdirect :=
+    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePathMeasure_eq_map_wilsonSource
+      H N hN beta hbeta latticeSpacing n
   unfold
     PeriodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPositiveCylinder.centeredReflectionFormAt
   rw [periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathExpectation_apply]
   rw [periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePathProbabilityMeasure_toMeasure]
-  unfold periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePathMeasure
+  rw [hdirect]
   calc
-    (∫ y, G y
-      ∂Measure.map S
-        (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathMeasure
-          H N hN beta hbeta latticeSpacing n)) =
-        ∫ x, G (S x)
-          ∂periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathMeasure
-            H N hN beta hbeta latticeSpacing n := by
-      exact MeasureTheory.integral_map hS.aemeasurable G.continuous.aestronglyMeasurable
-    _ = ∫ A, G (S (X A)) ∂mu := by
-      unfold periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathMeasure
-      exact MeasureTheory.integral_map hX.aemeasurable hGS
+    (∫ y, G y ∂Measure.map O mu) = ∫ A, G (O A) ∂mu := by
+      exact MeasureTheory.integral_map hO.aemeasurable G.continuous.aestronglyMeasurable
     _ = Cyl.wilsonSourceCenteredReflectionFormAt
           H N hN beta hbeta latticeSpacing n m := by
       unfold
@@ -400,7 +290,7 @@ theorem
         (Cyl.wilsonSourceObservable H N latticeSpacing n A - m) *
             (Cyl.pathObservable
               (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathReflection
-                (S (X A))) - m) =
+                (O A)) - m) =
           (Cyl.wilsonSourceObservable H N latticeSpacing n A - m) *
             (Cyl.wilsonSourceObservable H N latticeSpacing n
               (periodicHypercubicEvenConfigurationReflection H A) - m)
