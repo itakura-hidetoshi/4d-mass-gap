@@ -324,11 +324,11 @@ theorem fixedSlotCarrierFiniteMidpointWilsonSourceMarginalMeans_eventually_eq_tr
             (primaryScalarFiniteNonnegativeSlotIndexTimeTranslate r hr J)).fixedSlotCarrierFiniteMean
             ((P.fixedSlotDataOfIndex J).fixedSlotCarrierTimeTranslate r hr F) n := by
   have hsingle :=
-    (P.fixedSlotDataOfIndex J).fixedSlotCarrierFiniteMean_timeTranslate_eventually_eq
-      r hr F
+    P.fixedSlotCarrierFiniteMean_indexedTimeTranslate_eventually_eq
+      J r hr F
   have hdouble :=
-    (P.fixedSlotDataOfIndex J).fixedSlotCarrierFiniteMean_timeTranslate_eventually_eq
-      (r + r) (add_nonneg hr hr) F
+    P.fixedSlotCarrierFiniteMean_indexedTimeTranslate_eventually_eq
+      J (r + r) (add_nonneg hr hr) F
   filter_upwards [hsingle, hdouble] with n hsingle_n hdouble_n
   constructor
   · rw [P.fixedSlotCarrierFiniteMidpointWilsonSourceLeftExpectation_eq_finiteMean J F n]
