@@ -220,19 +220,32 @@ theorem fixedSlotCarrierFiniteTranslatedMeanSubtractedReflectionForm_eventually_
   let G := (P.fixedSlotDataOfIndex J).fixedSlotCarrierTimeTranslate r hr F
   let m := (P.fixedSlotDataOfIndex K).fixedSlotCarrierFiniteMean G n
   have hsub := congrArg (fun z : ℝ => z - m ^ 2) hn
-  simpa [
-    fixedSlotCarrierFiniteTranslatedMeanSubtractedReflectionForm,
-    fixedSlotCarrierFiniteTranslatedMidpointMeanSubtractedCorrelation,
-    fixedSlotCarrierPositiveCylinder,
-    PeriodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPositiveCylinder.realReflectionForm,
-    PeriodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPositiveCylinder.realReflectionIntegrand_apply,
-    PeriodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPositiveCylinder.pathObservable_apply,
-    fixedSlotCarrierTimeTranslate_observable,
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotObservableTimeTranslate,
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFiniteSlotTimeTranslateCoordinatePullback,
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFiniteSlotTimeTranslateMember,
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathReflection,
-    K, G, m, mul_comm] using hsub
+  change
+    ((∫ x,
+        F.observable
+            (fun q : (P.fixedSlotDataOfIndex J).slots => x (q.1 + r)) *
+          F.observable
+            (fun q : (P.fixedSlotDataOfIndex J).slots => x (-r + -q.1))
+        ∂(periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePathProbabilityMeasure
+          (H (L.subsequence n)) N hN
+          (beta (L.subsequence n)) (hbeta (L.subsequence n))
+          (fun k =>
+            periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing
+              (L.subsequence k))
+          n : Measure (ℚ → ℝ))) - m ^ 2) =
+      ((∫ x,
+          F.observable
+              (fun q : (P.fixedSlotDataOfIndex J).slots => x (-q.1)) *
+            F.observable
+              (fun q : (P.fixedSlotDataOfIndex J).slots => x ((q.1 + r) + r))
+          ∂(periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePathProbabilityMeasure
+            (H (L.subsequence n)) N hN
+            (beta (L.subsequence n)) (hbeta (L.subsequence n))
+            (fun k =>
+              periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing
+                (L.subsequence k))
+            n : Measure (ℚ → ℝ))) - m ^ 2)
+  simpa [mul_comm] using hsub
 
 /-- Midpoint-resolved form aligned with the positive smoothing time `s` and subsequent half-time
 separation `h` used throughout the current finite gap reduction. -/
