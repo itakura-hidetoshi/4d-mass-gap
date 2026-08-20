@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPrimaryBoundaryPhysicalFloorRationalScalarFactorialOSHilbertDirectLimitRegularHamiltonianLaplaceResolvent
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPrimaryBoundaryPhysicalFloorRationalScalarFactorialOSHilbertDirectLimitRegularYosidaExponentialConvergence
+import Mathlib.Topology.Instances.NNReal.Lemmas
 import Mathlib.Tactic
 
 /-!
@@ -48,6 +49,18 @@ variable {L :
     H N hN beta hbeta
     periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing}
 
+/-- The canonical coercion from nonnegative real time to real time preserves the strict
+right-neighborhood filter at zero. -/
+theorem fixedSlotHilbertDirectLimitRegular_nnreal_coe_tendsto_zero_right :
+    Tendsto (fun h : NNReal => (h : ℝ))
+      (nhdsWithin 0 (Ioi 0)) (nhdsWithin 0 (Ioi 0)) := by
+  change Filter.map NNReal.toReal
+      (nhdsWithin (0 : NNReal) (Ioi 0)) ≤
+    nhdsWithin (0 : ℝ) (Ioi 0)
+  rw [NNReal.map_coe_nhdsGT]
+  simp only [NNReal.coe_zero]
+  exact le_rfl
+
 /-- A finite Laplace vector is exactly the positive resolvent applied to its closed-Hamiltonian
 shift.  This is simply uniqueness of the preimage under the injective positive shift. -/
 theorem fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_eq_positiveResolvent_closedShift
@@ -95,7 +108,8 @@ theorem fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_nat_tendsto_posi
   have hmap :=
     (P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda).continuous.continuousAt.tendsto.comp
       hshift
-  simpa only [P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_eq_positiveResolvent_closedShift]
+  simpa only [Function.comp_apply,
+    ← P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_eq_positiveResolvent_closedShift]
     using hmap
 
 /-- The exponentially weighted terminal orbit at width `n+t` is the fixed scalar multiple of the
@@ -140,10 +154,17 @@ theorem fixedSlotHilbertDirectLimitRegularExponentialTerminal_nat_add_tendsto_ze
   have hmap :=
     (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t).continuous.continuousAt.tendsto.comp
       hbase
+  have hmap0 : Tendsto
+      (fun n : ℕ =>
+        P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t
+          (Real.exp ((-lambda) * (n : ℝ)) •
+            P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism (n : NNReal) x))
+      atTop (nhds 0) := by
+    simpa only [Function.comp_apply, map_zero] using hmap
   have hscalar : Tendsto
       (fun _ : ℕ => Real.exp ((-lambda) * (t : ℝ))) atTop
       (nhds (Real.exp ((-lambda) * (t : ℝ)))) := tendsto_const_nhds
-  have hsmul := hscalar.smul hmap
+  have hsmul := hscalar.smul hmap0
   have hfun :
       (fun n : ℕ =>
         Real.exp ((-lambda) * ((((n : NNReal) + t : NNReal) : ℝ))) •
@@ -156,7 +177,7 @@ theorem fixedSlotHilbertDirectLimitRegularExponentialTerminal_nat_add_tendsto_ze
     funext n
     exact P.fixedSlotHilbertDirectLimitRegularExponentialTerminal_nat_add_eq lambda t x n
   rw [hfun]
-  simpa using hsmul
+  simpa only [smul_zero] using hsmul
 
 /-- Closed positive shifts of finite Laplace vectors with cutoff `n+t` converge to the original
 vector. -/
@@ -202,7 +223,8 @@ theorem fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_nat_add_tendsto_
   have hmap :=
     (P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda).continuous.continuousAt.tendsto.comp
       hshift
-  simpa only [P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_eq_positiveResolvent_closedShift]
+  simpa only [Function.comp_apply,
+    ← P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral_eq_positiveResolvent_closedShift]
     using hmap
 
 /-- Real formula whose positive-time restriction will be the orbit of a positive-resolvent vector. -/
@@ -288,6 +310,14 @@ theorem fixedSlotHilbertDirectLimitRegularPositiveResolvent_semigroup_action
   have hleft :=
     (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t).continuous.continuousAt.tendsto.comp
       hfinite
+  have hleft' : Tendsto
+      (fun n : ℕ =>
+        P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t
+          (P.fixedSlotHilbertDirectLimitRegularFiniteLaplaceIntegral lambda (n : NNReal) x))
+      atTop
+      (nhds (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t
+        (P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda x))) := by
+    simpa only [Function.comp_apply] using hleft
   have hright :=
     P.fixedSlotHilbertDirectLimitRegularShiftedExponentialTimePrimitive_nat_tendsto_positiveResolventOrbitFormula
       lambda hlambda t x
@@ -301,8 +331,8 @@ theorem fixedSlotHilbertDirectLimitRegularPositiveResolvent_semigroup_action
     funext n
     exact P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_finiteLaplaceIntegral
       lambda t (n : NNReal) x
-  rw [hfun] at hleft
-  exact tendsto_nhds_unique hleft hright
+  rw [hfun] at hleft'
+  exact tendsto_nhds_unique hleft' hright
 
 /-- The positive-resolvent orbit formula has derivative `lambda R_lambda x - x` at zero. -/
 theorem fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula_hasDerivAt_zero
@@ -318,13 +348,20 @@ theorem fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula_hasDeriv
   have hscalar := fixedSlotHilbertDirectLimitRegular_exponentialPrefactor_hasDerivAt_zero lambda
   have hconst : HasDerivAt
       (fun _ : ℝ => P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda x)
-      0 0 := hasDerivAt_const (x := (0 : ℝ))
+      0 0 :=
+    hasDerivAt_const (x := (0 : ℝ))
+      (P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda x)
   have hprimitive :=
     P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive_hasDerivAt lambda x 0
   have hsub := hconst.sub hprimitive
   have hproduct := hscalar.smul hsub
-  simpa [fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula,
-    sub_eq_add_neg] using hproduct
+  have hproduct' : HasDerivAt
+      (P.fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula lambda hlambda x)
+      (-x + lambda • P.fixedSlotHilbertDirectLimitRegularPositiveResolvent lambda hlambda x)
+      0 := by
+    simpa [fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula,
+      sub_eq_add_neg] using hproduct
+  simpa [sub_eq_add_neg, add_comm] using hproduct'
 
 /-- Difference quotient of a positive-resolvent vector is the slope of its explicit orbit formula. -/
 theorem fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient_positiveResolvent
@@ -359,7 +396,7 @@ theorem fixedSlotHilbertDirectLimitRegularHasRightGeneratorValue_positiveResolve
   have hreal :=
     (P.fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula_hasDerivAt_zero
       lambda hlambda x).tendsto_slope_zero_right
-  have hcomp := hreal.comp nnreal_coe_tendsto_zero_right
+  have hcomp := hreal.comp fixedSlotHilbertDirectLimitRegular_nnreal_coe_tendsto_zero_right
   simpa only [P.fixedSlotHilbertDirectLimitRegularRightDifferenceQuotient_positiveResolvent,
     zero_add] using hcomp
 
