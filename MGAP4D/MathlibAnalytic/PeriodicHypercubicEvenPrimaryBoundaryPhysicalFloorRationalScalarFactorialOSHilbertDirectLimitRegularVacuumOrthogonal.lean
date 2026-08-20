@@ -118,8 +118,6 @@ theorem fixedSlotHilbertAlgebraicTimeTranslate_vacuumAlgebraic
   unfold fixedSlotHilbertDirectLimitVacuumAlgebraic
   rw [P.fixedSlotHilbertAlgebraicTimeTranslate_of]
   rw [fixedSlotHilbertTimeTranslateCLM_hilbertState]
-  simp only [fixedSlotDataOfIndex_timeTranslateData,
-    fixedSlotHilbertDirectLimitVacuumIndex_timeTranslate]
   apply congrArg
     (P.fixedSlotHilbertAlgebraicOf fixedSlotHilbertDirectLimitVacuumIndex)
   apply congrArg
@@ -526,26 +524,27 @@ theorem fixedSlotHilbertDirectLimitRegularVacuumOrthogonalClosedRightHamiltonian
         (P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalAmbientDomainPoint x) :=
   rfl
 
-/-- Ambient formal self-adjointness descends to the exact vacuum-orthogonal restriction. -/
-theorem fixedSlotHilbertDirectLimitRegularVacuumOrthogonalClosedRightHamiltonian_isFormalAdjoint
+/-- Ambient formal self-adjointness descends as the exact inner-product symmetry relation on the
+vacuum-orthogonal closed domain.  This formulation avoids choosing a second, non-definitionally
+equal `Module` instance for the nested orthogonal submodule while retaining the operator identity
+needed by later Rayleigh and spectral arguments. -/
+theorem fixedSlotHilbertDirectLimitRegularVacuumOrthogonalClosedRightHamiltonian_inner_symmetric
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta
-      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L) :
-    P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalClosedRightHamiltonian.IsFormalAdjoint
-      P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalClosedRightHamiltonian := by
-  intro x y
-  change inner ℝ
-      (P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian
-        (P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalAmbientDomainPoint x))
-      (((y : P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalClosedDomain) :
-        P.FixedSlotHilbertDirectLimitRegularVacuumOrthogonalHilbert) :
-        P.fixedSlotHilbertDirectLimitRegularSubspace) =
+      periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
+    (x y : P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalClosedDomain) :
     inner ℝ
-      (((x : P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalClosedDomain) :
-        P.FixedSlotHilbertDirectLimitRegularVacuumOrthogonalHilbert) :
-        P.fixedSlotHilbertDirectLimitRegularSubspace)
-      (P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian
-        (P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalAmbientDomainPoint y))
+        (P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian
+          (P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalAmbientDomainPoint x))
+        (((y : P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalClosedDomain) :
+          P.FixedSlotHilbertDirectLimitRegularVacuumOrthogonalHilbert) :
+          P.fixedSlotHilbertDirectLimitRegularSubspace) =
+      inner ℝ
+        (((x : P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalClosedDomain) :
+          P.FixedSlotHilbertDirectLimitRegularVacuumOrthogonalHilbert) :
+          P.fixedSlotHilbertDirectLimitRegularSubspace)
+        (P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian
+          (P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalAmbientDomainPoint y)) := by
   exact P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian_isFormalAdjoint
     (P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalAmbientDomainPoint x)
     (P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalAmbientDomainPoint y)
