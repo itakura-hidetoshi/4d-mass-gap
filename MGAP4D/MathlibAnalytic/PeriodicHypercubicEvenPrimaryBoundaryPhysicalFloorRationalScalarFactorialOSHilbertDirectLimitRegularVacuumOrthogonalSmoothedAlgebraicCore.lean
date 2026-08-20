@@ -166,7 +166,7 @@ theorem fixedSlotHilbertDirectLimitRegularVacuumOrthogonal_mem_closure_centeredS
         (η.1 : P.fixedSlotHilbertDirectLimitRegularSubspace) =
           P.fixedSlotHilbertDirectLimitRegularCentered yr := by
       rfl
-    rw [dist_eq_norm]
+    rw [dist_eq_norm, norm_sub_rev]
     change ‖(η.1 : P.fixedSlotHilbertDirectLimitRegularSubspace) - ξ.1‖ < ε
     rw [hη]
     calc
