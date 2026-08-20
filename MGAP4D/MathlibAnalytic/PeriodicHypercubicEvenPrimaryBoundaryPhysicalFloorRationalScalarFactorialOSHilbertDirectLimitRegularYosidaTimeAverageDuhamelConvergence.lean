@@ -375,13 +375,29 @@ theorem fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath_hasDerivA
       ((-1 : ℝ) •
         (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n ((t : ℝ) - r) *
           P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n)) r := by
-    have hOuterF :=
-      (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_hasDerivAt
-        n ((t : ℝ) - r)).hasFDerivAt
-    have hCompF :=
-      HasFDerivAt.comp (f := fun s : ℝ => (t : ℝ) - s) r hOuterF harg.hasFDerivAt
+    let q : ℝ → ℝ := fun s => (t : ℝ) - s
+    let q' : ℝ →L[ℝ] ℝ := ContinuousLinearMap.toSpanSingleton ℝ (-1)
+    let G : ℝ →
+        (P.fixedSlotHilbertDirectLimitRegularSubspace →L[ℝ]
+          P.fixedSlotHilbertDirectLimitRegularSubspace) :=
+      fun s => P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n s
+    let G' : ℝ →L[ℝ]
+        (P.fixedSlotHilbertDirectLimitRegularSubspace →L[ℝ]
+          P.fixedSlotHilbertDirectLimitRegularSubspace) :=
+      ContinuousLinearMap.toSpanSingleton ℝ
+        (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n ((t : ℝ) - r) *
+          P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n)
+    have hqF : HasFDerivAt q q' r := by
+      simpa [q, q'] using harg.hasFDerivAt
+    have hGF : HasFDerivAt G G' (q r) := by
+      simpa [G, G', q] using
+        (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_hasDerivAt
+          n ((t : ℝ) - r)).hasFDerivAt
+    have hCompF : HasFDerivAt (G ∘ q) (G'.comp q') r :=
+      HasFDerivAt.comp
+        (f := q) (f' := q') (g := G) (g' := G') r hGF hqF
     have hComp := hCompF.hasDerivAt
-    simpa [Function.comp_def] using hComp
+    simpa [G, G', q, q', Function.comp_def] using hComp
   have hE : HasDerivAt
       (fun s : ℝ => P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n
         ((t : ℝ) - s))
