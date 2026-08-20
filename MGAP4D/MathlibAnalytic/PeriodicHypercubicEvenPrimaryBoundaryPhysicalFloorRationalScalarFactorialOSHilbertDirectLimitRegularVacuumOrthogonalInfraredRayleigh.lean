@@ -167,7 +167,7 @@ theorem fixedSlotHilbertDirectLimitRegularVacuumOrthogonalCorrelation_rightSlope
           ((t : ℝ)⁻¹ •
             (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t phi - phi)) := by
           congr 1
-          rw [real_inner_smul_right, inner_sub_right]
+          rw [← inner_sub_right, ← real_inner_smul_right]
       _ = inner ℝ phi
           (-((t : ℝ)⁻¹ •
             (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t phi - phi))) := by
