@@ -372,8 +372,7 @@ theorem fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath_hasDerivA
   have hEraw : HasDerivAt
       (fun s : ℝ => P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n
         ((t : ℝ) - s))
-      ((-1 : ℝ) •
-        (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n ((t : ℝ) - r) *
+      (-(P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n ((t : ℝ) - r) *
           P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n)) r := by
     let q : ℝ → ℝ := fun s => (t : ℝ) - s
     let q' : ℝ →L[ℝ] ℝ := ContinuousLinearMap.toSpanSingleton ℝ (-1)
@@ -397,11 +396,11 @@ theorem fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath_hasDerivA
       HasFDerivAt.comp
         (f := q) (f' := q') (g := G) (g' := G') r hGF hqF
     have hComp := hCompF.hasDerivAt
-    simpa [G, G', q, q', Function.comp_def, neg_one_smul] using hComp
+    simpa [G, G', q, q', Function.comp_def] using hComp
   have hE : HasDerivAt
       (fun s : ℝ => P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n
         ((t : ℝ) - s))
-      ((-1 : ℝ) • (E * A)) r := by
+      (-(E * A)) r := by
     simpa only [E, A] using hEraw
   have hu : HasDerivAt
       (P.fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitFormula h x) u' r := by
@@ -410,15 +409,15 @@ theorem fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath_hasDerivA
   have happly := hE.clm_apply hu
   have hraw : HasDerivAt
       (P.fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath n t h x)
-      (((-1 : ℝ) • (E * A)) u + E u') r := by
+      ((-(E * A)) u + E u') r := by
     simpa only [fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath,
       E, u, u'] using happly
   have hA : A u = - P.fixedSlotHilbertDirectLimitRegularDyadicYosidaHamiltonian n u := by
     simp [A, fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian]
-  have hleft : ((-1 : ℝ) • (E * A)) u = - E (A u) := by
+  have hleft : (-(E * A)) u = - E (A u) := by
     simp
   have halg :
-      (((-1 : ℝ) • (E * A)) u + E u') =
+      ((-(E * A)) u + E u') =
         E (P.fixedSlotHilbertDirectLimitRegularTimeAverageYosidaGeneratorError n h x r) := by
     rw [hleft]
     unfold fixedSlotHilbertDirectLimitRegularTimeAverageYosidaGeneratorError
