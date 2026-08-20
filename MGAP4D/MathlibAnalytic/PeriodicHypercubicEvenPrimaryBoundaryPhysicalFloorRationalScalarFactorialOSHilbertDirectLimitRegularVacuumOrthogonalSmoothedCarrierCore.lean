@@ -116,7 +116,8 @@ theorem fixedSlotHilbertDirectLimit_algebraic_carrier_approximation
         ((P.fixedSlotDataOfIndex J).hilbertState F))
       (P.fixedSlotHilbertDirectLimitLinearIsometry J x) < ε
   rw [LinearIsometry.dist_map]
-  exact hu
+  change dist x ((P.fixedSlotDataOfIndex J).hilbertState F) < ε at hu
+  simpa only [dist_comm] using hu
 
 /-- Positive rational-time translates of literal fixed-slot cylinders. -/
 def fixedSlotHilbertDirectLimitPositiveTimeSmoothedCarrierSet
