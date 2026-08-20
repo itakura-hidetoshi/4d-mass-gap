@@ -125,6 +125,7 @@ theorem fixedSlotHilbertAlgebraicTimeTranslate_vacuumAlgebraic
   apply FixedSlotCarrier.observable_injective _
   rw [P.fixedSlotHilbertDirectLimitVacuumCarrier_timeTranslate_observable,
     P.fixedSlotHilbertDirectLimitVacuumCarrier_observable]
+  rfl
 
 /-- Canonical constant vacuum in the completed algebraic direct limit. -/
 noncomputable def fixedSlotHilbertDirectLimitVacuum
