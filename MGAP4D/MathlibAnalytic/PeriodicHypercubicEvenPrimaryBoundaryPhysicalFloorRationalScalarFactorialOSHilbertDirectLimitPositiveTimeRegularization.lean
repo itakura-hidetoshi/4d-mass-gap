@@ -66,8 +66,8 @@ theorem natCast_mul_decrement_le_totalDrop_of_discreteConvex
         _ ≤ (n : ℝ) * (a n - a (n + 1)) +
               (a n - a (n + 1)) :=
           add_le_add hmul hdec
-        _ ≤ (a 0 - a n) + (a n - a (n + 1)) :=
-          add_le_add_right ih _
+        _ ≤ (a 0 - a n) + (a n - a (n + 1)) := by
+          linarith
         _ = a 0 - a (n + 1) := by ring
 
 namespace PrimaryScalarFixedSlotOSPreHilbertData
@@ -92,6 +92,9 @@ theorem fixedSlotHilbertDirectLimitNNRatTimeTranslate_norm_antitone
         ‖P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t x‖) := by
   intro s t hst
   obtain ⟨u, rfl⟩ := exists_add_of_le hst
+  change
+    ‖P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM (s + u) x‖ ≤
+      ‖P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM s x‖
   rw [← P.fixedSlotHilbertDirectLimitNNRatTimeTranslate_add u s x]
   exact
     P.fixedSlotHilbertDirectLimitNNRatTimeTranslate_norm_le u
@@ -247,31 +250,34 @@ theorem fixedSlotHilbertDirectLimitNNRat_positiveTime_sub_norm_sq_le
       a (2 * n) - a (2 * n + 1) ≤
         ‖x‖ ^ 2 / ((2 : ℝ) * (n : ℝ)) := by
     apply (le_div_iff₀ hdenR).2
-    simpa [Nat.cast_mul] using hchain
+    calc
+      (a (2 * n) - a (2 * n + 1)) * ((2 : ℝ) * (n : ℝ)) =
+          ((2 * n : ℕ) : ℝ) * (a (2 * n) - a (2 * n + 1)) := by
+        push_cast
+        ring
+      _ ≤ ‖x‖ ^ 2 := hchain
   let y : P.fixedSlotHilbertDirectLimitCompletion :=
     P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM s x
   have ht_half : t / 2 ≤ d := by
     calc
       t / 2 ≤ (s / (n : NNRat)) / 2 := by gcongr
-      _ = d := by
-        dsimp [d, den]
-        field_simp
-        <;> ring
+      _ = s / den := by
+        rw [div_div]
+        congr 1
+        dsimp [den]
+        push_cast
+        ring
+      _ = d := rfl
   have horbit :
       P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM (t / 2) y =
         P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM (s + t / 2) x := by
     dsimp [y]
-    calc
-      P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM (t / 2)
-          (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM s x) =
-        P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM (s + t / 2) x :=
-        P.fixedSlotHilbertDirectLimitNNRatTimeTranslate_add (t / 2) s x
+    exact P.fixedSlotHilbertDirectLimitNNRatTimeTranslate_add (t / 2) s x
   have hnorm_mono :
       ‖P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM (s + d) x‖ ≤
         ‖P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM (s + t / 2) x‖ := by
-    exact
-      P.fixedSlotHilbertDirectLimitNNRatTimeTranslate_norm_antitone x
-        (add_le_add_left ht_half s)
+    apply P.fixedSlotHilbertDirectLimitNNRatTimeTranslate_norm_antitone x
+    gcongr
   have hnorm_sq_mono :
       ‖P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM (s + d) x‖ ^ 2 ≤
         ‖P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM (s + t / 2) x‖ ^ 2 := by
@@ -289,19 +295,33 @@ theorem fixedSlotHilbertDirectLimitNNRat_positiveTime_sub_norm_sq_le
   have hcorr_lower :
       a (2 * n + 1) ≤
         inner ℝ y (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t y) := by
-    rw [hcorr, horbit, ha2n1]
-    exact hnorm_sq_mono
+    calc
+      a (2 * n + 1) =
+          ‖P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM (s + d) x‖ ^ 2 := ha2n1
+      _ ≤ ‖P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM (s + t / 2) x‖ ^ 2 :=
+        hnorm_sq_mono
+      _ = ‖P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM (t / 2) y‖ ^ 2 := by
+        rw [horbit]
+      _ = inner ℝ y (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t y) :=
+        hcorr.symm
   have hy_norm : ‖y‖ ^ 2 = a (2 * n) := by
-    rw [ha2n]
-    rfl
+    dsimp [y]
+    exact ha2n.symm
   have hdefect :
       ‖y‖ ^ 2 - inner ℝ y (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t y) ≤
         a (2 * n) - a (2 * n + 1) := by
     rw [hy_norm]
     linarith
-  have hstrong :=
+  have hstrong :
+      ‖P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t y - y‖ ^ 2 ≤
+        2 *
+          (‖y‖ ^ 2 -
+            inner ℝ y (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t y)) :=
     P.fixedSlotHilbertDirectLimitNNRatTimeTranslate_sub_norm_sq_le_twice_correlation_defect
       t y
+  change
+    ‖P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t y - y‖ ^ 2 ≤
+      ‖x‖ ^ 2 / (n : ℝ)
   calc
     ‖P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t y - y‖ ^ 2 ≤
         2 *
@@ -309,7 +329,9 @@ theorem fixedSlotHilbertDirectLimitNNRat_positiveTime_sub_norm_sq_le
             inner ℝ y (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM t y)) := hstrong
     _ ≤ 2 * (a (2 * n) - a (2 * n + 1)) := by gcongr
     _ ≤ 2 * (‖x‖ ^ 2 / ((2 : ℝ) * (n : ℝ))) := by gcongr
-    _ = ‖x‖ ^ 2 / (n : ℝ) := by field_simp [hnR.ne']; ring
+    _ = ‖x‖ ^ 2 / (n : ℝ) := by
+      field_simp [hnR.ne']
+      ring
 
 /-- Every strictly positive nonnegative-rational translate of an arbitrary completed direct-limit
 vector belongs to the canonical zero-time regular sector. -/
