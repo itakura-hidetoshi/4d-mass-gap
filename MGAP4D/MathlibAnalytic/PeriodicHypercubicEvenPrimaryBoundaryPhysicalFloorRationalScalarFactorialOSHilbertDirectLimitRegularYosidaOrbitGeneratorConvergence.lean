@@ -278,8 +278,11 @@ theorem fixedSlotHilbertDirectLimitRegularYosidaOrbitGeneratorConvergence_packag
           P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t
             (P.fixedSlotHilbertDirectLimitRegularRightHamiltonian x)‖ ≤
         2 * ‖P.fixedSlotHilbertDirectLimitRegularRightHamiltonian x‖) := by
-  exact ⟨P.fixedSlotHilbertDirectLimitRegularDyadicYosidaHamiltonian_tendsto_timeTranslate x,
-    P.fixedSlotHilbertDirectLimitRegularDyadicYosidaHamiltonian_timeTranslate_error_norm_le x⟩
+  refine ⟨?_, ?_⟩
+  · intro t
+    exact P.fixedSlotHilbertDirectLimitRegularDyadicYosidaHamiltonian_tendsto_timeTranslate t x
+  · intro n t
+    exact P.fixedSlotHilbertDirectLimitRegularDyadicYosidaHamiltonian_timeTranslate_error_norm_le n t x
 
 end PrimaryScalarFixedSlotOSPreHilbertData
 
