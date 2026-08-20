@@ -57,22 +57,6 @@ theorem fixedSlotHilbertDirectLimitVacuumCarrier_inner_self
   simp only [P.fixedSlotDataOfIndex_slots,
     fixedSlotHilbertDirectLimitVacuumIndex_val,
     P.fixedSlotHilbertDirectLimitVacuumCarrier_observable]
-  have hpath :
-      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable
-          (∅ : Finset ℚ)
-          (1 : PeriodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotObservable
-            (∅ : Finset ℚ)) =
-        (1 : BoundedContinuousFunction (ℚ → ℝ) ℝ) := by
-    ext x
-    rfl
-  simp only [hpath]
-  have hreflection :
-      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarReflectionPullback
-          (1 : BoundedContinuousFunction (ℚ → ℝ) ℝ) =
-        (1 : BoundedContinuousFunction (ℚ → ℝ) ℝ) := by
-    ext x
-    rfl
-  simp only [hreflection, mul_one]
   rw [periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathExpectation_apply]
   simp
 
