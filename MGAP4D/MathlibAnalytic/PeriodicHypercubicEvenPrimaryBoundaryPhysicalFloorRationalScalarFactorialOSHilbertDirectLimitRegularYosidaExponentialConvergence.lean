@@ -111,12 +111,17 @@ theorem fixedSlotHilbertDirectLimitRegularYosidaExponential_tendsto_uniformOn_co
         (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponential n t z -
           P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t z) +
         P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t (z - x)‖ ≤
+      ‖P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponential n t (x - z) +
+        (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponential n t z -
+          P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t z)‖ +
+        ‖P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t (z - x)‖ :=
+      norm_add_le _ _
+    _ ≤
       (‖P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponential n t (x - z)‖ +
         ‖P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponential n t z -
           P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t z‖) +
         ‖P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t (z - x)‖ := by
-      exact (norm_add_le _ _).trans
-        (add_le_add_right (norm_add_le _ _) _)
+      exact add_le_add (norm_add_le _ _) (le_refl _)
     _ < ε := by linarith
 
 /-- For every fixed nonnegative time, the bounded dyadic Yosida exponential converges strongly to
