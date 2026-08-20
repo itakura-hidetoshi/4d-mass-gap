@@ -89,7 +89,7 @@ theorem fixedSlotHilbertDirectLimit_positiveTime_algebraic_approximation
           (P.fixedSlotHilbertDirectLimitNNRatTimeTranslateCLM s
             (z : P.fixedSlotHilbertDirectLimitCompletion)) < ε := by
   obtain ⟨z, hz⟩ :=
-    Completion.denseRange_coe.exists_dist_lt x hε
+    UniformSpace.Completion.denseRange_coe.exists_dist_lt x hε
   refine ⟨z, ?_, ?_⟩
   · exact ⟨s, hs, z, rfl⟩
   · calc
