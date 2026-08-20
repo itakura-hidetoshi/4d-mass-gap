@@ -142,9 +142,10 @@ theorem fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitFormula_hasDerivAt
     (P.fixedSlotHilbertDirectLimitRegularTimePrimitive_hasDerivAt x ((h : ℝ) + r)).scomp r harg
   have hbase := P.fixedSlotHilbertDirectLimitRegularTimePrimitive_hasDerivAt x r
   have hdiff := hshift.sub hbase
-  simpa only [fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitFormula,
-    fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitDerivative] using
-    hdiff.const_smul (h : ℝ)⁻¹
+  have hscaled := hdiff.const_smul (h : ℝ)⁻¹
+  simpa [fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitFormula,
+    fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitDerivative,
+    Function.comp_def] using hscaled
 
 /-- At every nonnegative real time, the primitive formula is exactly the original OS orbit of the
 Cesàro-average core vector. -/
@@ -161,8 +162,14 @@ theorem fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitFormula_eq_clamped
   unfold fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitFormula
   unfold fixedSlotHilbertDirectLimitRegularClampedRealOrbit
   unfold fixedSlotHilbertDirectLimitRegularTimeAverage
-  rw [map_smul]
-  rw [P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_timeIntegral_eq_primitive_sub]
+  change
+    (h : ℝ)⁻¹ •
+        (P.fixedSlotHilbertDirectLimitRegularTimePrimitive x ((h : ℝ) + r) -
+          P.fixedSlotHilbertDirectLimitRegularTimePrimitive x r) =
+      P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism r.toNNReal
+        ((h : ℝ)⁻¹ • P.fixedSlotHilbertDirectLimitRegularTimeIntegral h x)
+  rw [map_smul,
+    P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_timeIntegral_eq_primitive_sub]
   simp [Real.toNNReal_of_nonneg hr]
 
 /-- On nonnegative times, the explicit derivative field is the negative Hamiltonian orbit. -/
@@ -180,6 +187,7 @@ theorem fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitDerivative_eq_neg_
   let t : NNReal := r.toNNReal
   have ht : (t : ℝ) = r := by
     simp [t, Real.toNNReal_of_nonneg hr]
+  have hsumNonneg : 0 ≤ (h : ℝ) + r := add_nonneg h.coe_nonneg hr
   have hshift :
       P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit x ((h : ℝ) + r) =
         P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t
@@ -187,7 +195,7 @@ theorem fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitDerivative_eq_neg_
     unfold fixedSlotHilbertDirectLimitRegularClampedRealOrbit
     have hsum : ((h : ℝ) + r).toNNReal = h + t := by
       apply NNReal.eq
-      simp [t, Real.toNNReal_of_nonneg hr]
+      simp [t, Real.toNNReal_of_nonneg hsumNonneg, Real.toNNReal_of_nonneg hr]
     rw [hsum]
     rw [add_comm h t]
     exact
@@ -201,7 +209,16 @@ theorem fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitDerivative_eq_neg_
     P.fixedSlotHilbertDirectLimitRegularRightHamiltonian_timeAverage]
   unfold fixedSlotHilbertDirectLimitRegularClampedRealOrbit
   rw [show r.toNNReal = t by rfl]
-  simp only [map_neg, map_smul, map_sub, neg_neg]
+  change
+    (h : ℝ)⁻¹ •
+        (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t
+            (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism h x) -
+          P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t x) =
+      - P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t
+          (-((h : ℝ)⁻¹ •
+            (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism h x - x)))
+  rw [map_neg, map_smul, map_sub]
+  module
 
 /-- The real-line time-average formula at zero is the actual time-average vector. -/
 @[simp]
@@ -243,11 +260,21 @@ theorem fixedSlotHilbertDirectLimitRegularTimeAverageYosidaGeneratorError_contin
     Continuous (P.fixedSlotHilbertDirectLimitRegularTimeAverageYosidaGeneratorError n h x) := by
   have horbit : Continuous
       (P.fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitFormula h x) := by
-    exact fun_prop
+    rw [continuous_iff_continuousAt]
+    intro r
+    exact
+      (P.fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitFormula_hasDerivAt h x r).continuousAt
+  have hshift : Continuous (fun r : ℝ =>
+      P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit x ((h : ℝ) + r)) :=
+    (P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit_continuous x).comp
+      (continuous_const.add continuous_id)
+  have hbase : Continuous
+      (P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit x) :=
+    P.fixedSlotHilbertDirectLimitRegularClampedRealOrbit_continuous x
   have hderiv : Continuous
       (P.fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitDerivative h x) := by
     unfold fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitDerivative
-    fun_prop
+    exact (hshift.sub hbase).const_smul (h : ℝ)⁻¹
   unfold fixedSlotHilbertDirectLimitRegularTimeAverageYosidaGeneratorError
   exact
     ((P.fixedSlotHilbertDirectLimitRegularDyadicYosidaHamiltonian n).continuous.comp horbit).add hderiv
@@ -287,16 +314,22 @@ theorem fixedSlotHilbertDirectLimitRegularTimeAverageYosidaGeneratorError_tendst
       (fun n : ℕ => P.fixedSlotHilbertDirectLimitRegularTimeAverageYosidaGeneratorError n h x r)
       atTop (nhds 0) := by
   let y := P.fixedSlotHilbertDirectLimitRegularTimeAverageGeneratorCoreVector h x
+  let v : P.fixedSlotHilbertDirectLimitRegularSubspace :=
+    P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism r.toNNReal
+      (P.fixedSlotHilbertDirectLimitRegularRightHamiltonian y)
   have hmain :=
-    (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaHamiltonian_tendsto_timeTranslate
-      r.toNNReal y).sub tendsto_const_nhds
+    P.fixedSlotHilbertDirectLimitRegularDyadicYosidaHamiltonian_tendsto_timeTranslate
+      r.toNNReal y
+  have hconst : Tendsto (fun _ : ℕ => v) atTop (nhds v) := tendsto_const_nhds
+  have hsub := hmain.sub hconst
+  have hv : v - v = (0 : P.fixedSlotHilbertDirectLimitRegularSubspace) := sub_self v
+  rw [hv] at hsub
   rw [P.fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitFormula_eq_clamped h x r hr,
     P.fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitDerivative_eq_neg_hamiltonian_orbit h x r hr]
-    at *
   simpa only [fixedSlotHilbertDirectLimitRegularTimeAverageYosidaGeneratorError,
     fixedSlotHilbertDirectLimitRegularClampedRealOrbit,
-    y, P.fixedSlotHilbertDirectLimitRegularTimeAverageGeneratorCoreVector_coe,
-    sub_eq_add_neg] using hmain
+    y, v, P.fixedSlotHilbertDirectLimitRegularTimeAverageGeneratorCoreVector_coe,
+    sub_eq_add_neg] using hsub
 
 /-- Duhamel interpolation path between `Eₙ(t)y` and `T_t y` for a time-average core vector. -/
 noncomputable def fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath
@@ -323,17 +356,46 @@ theorem fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath_hasDerivA
       (P.fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath n t h x)
       (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n ((t : ℝ) - r)
         (P.fixedSlotHilbertDirectLimitRegularTimeAverageYosidaGeneratorError n h x r)) r := by
+  let q : ℝ := (t : ℝ) - r
+  let E : P.fixedSlotHilbertDirectLimitRegularSubspace →L[ℝ]
+      P.fixedSlotHilbertDirectLimitRegularSubspace :=
+    P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n q
+  let A : P.fixedSlotHilbertDirectLimitRegularSubspace →L[ℝ]
+      P.fixedSlotHilbertDirectLimitRegularSubspace :=
+    P.fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian n
+  let u : P.fixedSlotHilbertDirectLimitRegularSubspace :=
+    P.fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitFormula h x r
+  let u' : P.fixedSlotHilbertDirectLimitRegularSubspace :=
+    P.fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitDerivative h x r
   have harg : HasDerivAt (fun s : ℝ => (t : ℝ) - s) (-1) r := by
     simpa using (hasDerivAt_const r (t : ℝ)).sub (hasDerivAt_id (x := r))
-  have hE :=
-    (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_hasDerivAt n
-      ((t : ℝ) - r)).scomp r harg
-  have horbit := P.fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitFormula_hasDerivAt h x r
-  have happly := hE.clm_apply horbit
-  simpa [fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath,
-    fixedSlotHilbertDirectLimitRegularTimeAverageYosidaGeneratorError,
-    fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian,
-    map_add, sub_eq_add_neg] using happly
+  have hE : HasDerivAt
+      (fun s : ℝ => P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n
+        ((t : ℝ) - s))
+      ((-1 : ℝ) • (E * A)) r := by
+    have hcomp :=
+      (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_hasDerivAt n q).scomp r harg
+    simpa only [q, E, A] using hcomp
+  have hu := P.fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitFormula_hasDerivAt h x r
+  have happly := hE.clm_apply hu
+  have hraw : HasDerivAt
+      (P.fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath n t h x)
+      (((-1 : ℝ) • (E * A)) u + E u') r := by
+    simpa only [fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath,
+      q, E, u, u'] using happly
+  have halg :
+      (((-1 : ℝ) • (E * A)) u + E u') =
+        E (P.fixedSlotHilbertDirectLimitRegularTimeAverageYosidaGeneratorError n h x r) := by
+    change
+      - E (A u) + E u' =
+        E (P.fixedSlotHilbertDirectLimitRegularDyadicYosidaHamiltonian n u + u')
+    rw [map_add]
+    have hA : A u = - P.fixedSlotHilbertDirectLimitRegularDyadicYosidaHamiltonian n u := by
+      simp [A, fixedSlotHilbertDirectLimitRegularNegativeDyadicYosidaHamiltonian]
+    rw [hA, map_neg]
+    module
+  rw [← halg]
+  simpa only [q, E] using hraw
 
 /-- The real-time bounded Yosida exponential is a contraction at nonnegative real parameters. -/
 theorem fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal_norm_le_of_nonneg
@@ -415,9 +477,10 @@ theorem fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamel_norm_le_integ
       0 (t : ℝ)
   have hmain := norm_sub_le_integral_of_norm_deriv_le_of_le
     (f := f) (B := B) t.coe_nonneg hcont hdiff.differentiableOn hderiv hB
+  dsimp [f, B] at hmain
   rw [P.fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath_zero,
     P.fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath_end] at hmain
-  simpa only [f, B, norm_sub_rev] using hmain
+  simpa only [norm_sub_rev] using hmain
 
 /-- For each compact time horizon, the integral of the generator error tends to zero. -/
 theorem fixedSlotHilbertDirectLimitRegularTimeAverageYosidaGeneratorError_integral_tendsto_zero
@@ -542,8 +605,11 @@ theorem fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelConvergence_pa
     have huni :=
       P.fixedSlotHilbertDirectLimitRegularTimeAverageYosidaExponential_tendsto_uniformOn_compact
         t h x hε
-    filter_upwards [huni] with n hn
-    simpa only [dist_eq_norm] using hn t (le_refl t)
+    rcases eventually_atTop.1 huni with ⟨N0, hN0⟩
+    refine ⟨N0, ?_⟩
+    intro n hn
+    have hpoint := hN0 n hn t (le_refl t)
+    simpa only [dist_eq_norm] using hpoint
 
 end PrimaryScalarFixedSlotOSPreHilbertData
 
