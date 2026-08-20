@@ -54,10 +54,24 @@ theorem fixedSlotHilbertDirectLimitVacuumCarrier_inner_self
         P.fixedSlotHilbertDirectLimitVacuumCarrier = 1 := by
   rw [(P.fixedSlotDataOfIndex fixedSlotHilbertDirectLimitVacuumIndex).inner_eq_fixedSlotOSBilinForm]
   rw [L.fixedSlotOSBilinForm_apply]
-  simp [periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathExpectation_apply,
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarReflectionPullback_apply,
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable_apply,
-    P.fixedSlotHilbertDirectLimitVacuumCarrier_observable]
+  have hpath :
+      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotPathObservable
+          (∅ : Finset ℚ)
+          (1 : PeriodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarFixedSlotObservable
+            (∅ : Finset ℚ)) =
+        (1 : BoundedContinuousFunction (ℚ → ℝ) ℝ) := by
+    ext x
+    rfl
+  rw [hpath]
+  have hreflection :
+      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarReflectionPullback
+          (1 : BoundedContinuousFunction (ℚ → ℝ) ℝ) =
+        (1 : BoundedContinuousFunction (ℚ → ℝ) ℝ) := by
+    ext x
+    rfl
+  rw [hreflection]
+  rw [periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPathExpectation_apply]
+  simp
 
 /-- The empty-slot vacuum cylinder has seminorm exactly one before OS separation. -/
 @[simp]
@@ -80,6 +94,7 @@ theorem fixedSlotHilbertDirectLimitVacuumHilbertState_norm
     ‖(P.fixedSlotDataOfIndex fixedSlotHilbertDirectLimitVacuumIndex).hilbertState
         P.fixedSlotHilbertDirectLimitVacuumCarrier‖ = 1 := by
   unfold PrimaryScalarFixedSlotOSPreHilbertData.hilbertState
+  simp only [id_eq]
   rw [UniformSpace.Completion.norm_coe]
   change ‖SeparationQuotient.mk P.fixedSlotHilbertDirectLimitVacuumCarrier‖ = 1
   rw [SeparationQuotient.norm_mk]
@@ -169,9 +184,17 @@ theorem fixedSlotHilbertDirectLimitRegularVacuum_inner_centered
     (x : P.fixedSlotHilbertDirectLimitRegularSubspace) :
     inner ℝ P.fixedSlotHilbertDirectLimitRegularVacuum
       (P.fixedSlotHilbertDirectLimitRegularCentered x) = 0 := by
-  simp [fixedSlotHilbertDirectLimitRegularCentered,
-    fixedSlotHilbertDirectLimitRegularVacuumCoefficient,
-    P.fixedSlotHilbertDirectLimitRegularVacuum_inner_self]
+  simp only [fixedSlotHilbertDirectLimitRegularCentered,
+    fixedSlotHilbertDirectLimitRegularVacuumCoefficient]
+  change
+    inner ℝ P.fixedSlotHilbertDirectLimitVacuum
+      ((x : P.fixedSlotHilbertDirectLimitCompletion) -
+        inner ℝ P.fixedSlotHilbertDirectLimitVacuum
+            (x : P.fixedSlotHilbertDirectLimitCompletion) •
+          P.fixedSlotHilbertDirectLimitVacuum) = 0
+  rw [inner_sub_right, inner_smul_right]
+  rw [real_inner_self_eq_norm_sq, P.fixedSlotHilbertDirectLimitVacuum_norm]
+  simp
 
 /-- Every centered regular vector belongs to the canonical excitation sector. -/
 theorem fixedSlotHilbertDirectLimitRegularCentered_mem_vacuumOrthogonal
@@ -243,9 +266,10 @@ theorem fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_centered
         (P.fixedSlotHilbertDirectLimitRegularCentered x) =
       P.fixedSlotHilbertDirectLimitRegularCentered
         (P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism t x) := by
-  simp [fixedSlotHilbertDirectLimitRegularCentered,
-    P.fixedSlotHilbertDirectLimitRegularVacuumCoefficient_timeTranslate t x,
-    map_sub, map_smul]
+  unfold fixedSlotHilbertDirectLimitRegularCentered
+  rw [map_sub, map_smul]
+  rw [P.fixedSlotHilbertDirectLimitRegularRealTimeEndomorphism_vacuum]
+  rw [P.fixedSlotHilbertDirectLimitRegularVacuumCoefficient_timeTranslate]
 
 /-- Pointwise real-time action corestricted to the complete vacuum-orthogonal excitation carrier. -/
 noncomputable def fixedSlotHilbertDirectLimitRegularVacuumOrthogonalRealTimeVector
