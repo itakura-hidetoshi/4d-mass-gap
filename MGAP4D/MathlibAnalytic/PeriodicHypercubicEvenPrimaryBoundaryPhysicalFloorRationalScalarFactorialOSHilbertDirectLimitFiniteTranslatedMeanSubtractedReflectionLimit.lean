@@ -82,9 +82,10 @@ theorem fixedSlotCarrierFiniteMeanSubtractedReflectionForm_eventuallyEq_translat
     (F : (P.fixedSlotDataOfIndex J).FixedSlotCarrier) :
     (fun n => P.fixedSlotCarrierFiniteMeanSubtractedReflectionForm J h hh F n) =ᶠ[atTop]
       (fun n => P.fixedSlotCarrierFiniteTranslatedMeanSubtractedReflectionForm J h hh F n) := by
-  simpa [fixedSlotCarrierFiniteTranslatedMeanSubtractedReflectionForm] using
+  filter_upwards [
     P.fixedSlotCarrierFiniteMeanSubtractedReflectionForm_eventually_eq_translatedMeanSubtracted
-      J h hh F
+      J h hh F] with n hn
+  simpa [fixedSlotCarrierFiniteTranslatedMeanSubtractedReflectionForm] using hn
 
 /-- Main finite-to-Hilbert receipt for the quantitatively natural centered sequence:
 
