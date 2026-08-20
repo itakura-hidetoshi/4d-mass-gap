@@ -90,9 +90,9 @@ theorem fixedSlotHilbertDirectLimitVacuumCarrier_timeTranslate_observable
       H N hN beta hbeta
       periodicHypercubicEvenRestrictedBoundaryVacuumPhysicalFactorialLatticeSpacing L)
     (t : ℚ) (ht : 0 ≤ t) :
-    (((P.fixedSlotDataOfIndex fixedSlotHilbertDirectLimitVacuumIndex)
-        .fixedSlotCarrierTimeTranslate t ht
-        P.fixedSlotHilbertDirectLimitVacuumCarrier).observable) = 1 := by
+    ((P.fixedSlotDataOfIndex fixedSlotHilbertDirectLimitVacuumIndex).fixedSlotCarrierTimeTranslate
+        t ht P.fixedSlotHilbertDirectLimitVacuumCarrier).observable = 1 := by
+  rw [fixedSlotCarrierTimeTranslate_observable]
   ext v
   rfl
 
@@ -117,8 +117,7 @@ theorem fixedSlotHilbertAlgebraicTimeTranslate_vacuumAlgebraic
       P.fixedSlotHilbertDirectLimitVacuumAlgebraic := by
   unfold fixedSlotHilbertDirectLimitVacuumAlgebraic
   rw [P.fixedSlotHilbertAlgebraicTimeTranslate_of]
-  rw [(P.fixedSlotDataOfIndex fixedSlotHilbertDirectLimitVacuumIndex)
-    .fixedSlotHilbertTimeTranslateCLM_hilbertState]
+  rw [fixedSlotHilbertTimeTranslateCLM_hilbertState]
   simp only [fixedSlotDataOfIndex_timeTranslateData,
     fixedSlotHilbertDirectLimitVacuumIndex_timeTranslate]
   apply congrArg
@@ -126,8 +125,8 @@ theorem fixedSlotHilbertAlgebraicTimeTranslate_vacuumAlgebraic
   apply congrArg
     ((P.fixedSlotDataOfIndex fixedSlotHilbertDirectLimitVacuumIndex).hilbertState)
   apply FixedSlotCarrier.observable_injective _
-  ext v
-  rfl
+  rw [P.fixedSlotHilbertDirectLimitVacuumCarrier_timeTranslate_observable,
+    P.fixedSlotHilbertDirectLimitVacuumCarrier_observable]
 
 /-- Canonical constant vacuum in the completed algebraic direct limit. -/
 noncomputable def fixedSlotHilbertDirectLimitVacuum
@@ -443,9 +442,9 @@ def fixedSlotHilbertDirectLimitRegularVacuumOrthogonalClosedDomain
   add_mem' := by
     intro x y hx hy
     change
-      ((x : P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalHilbert) :
+      ((x : P.FixedSlotHilbertDirectLimitRegularVacuumOrthogonalHilbert) :
           P.fixedSlotHilbertDirectLimitRegularSubspace) +
-        ((y : P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonalHilbert) :
+        ((y : P.FixedSlotHilbertDirectLimitRegularVacuumOrthogonalHilbert) :
           P.fixedSlotHilbertDirectLimitRegularSubspace) ∈
       P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian.domain
     exact P.fixedSlotHilbertDirectLimitRegularClosedRightHamiltonian.domain.add_mem hx hy
