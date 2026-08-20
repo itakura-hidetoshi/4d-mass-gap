@@ -331,7 +331,6 @@ theorem fixedSlotHilbertDirectLimitNNRat_positiveTime_sub_norm_sq_le
     _ ≤ 2 * (‖x‖ ^ 2 / ((2 : ℝ) * (n : ℝ))) := by gcongr
     _ = ‖x‖ ^ 2 / (n : ℝ) := by
       field_simp [hnR.ne']
-      ring
 
 /-- Every strictly positive nonnegative-rational translate of an arbitrary completed direct-limit
 vector belongs to the canonical zero-time regular sector. -/
