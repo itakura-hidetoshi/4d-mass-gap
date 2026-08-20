@@ -343,7 +343,8 @@ noncomputable def fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath
   P.fixedSlotHilbertDirectLimitRegularDyadicYosidaExponentialReal n ((t : ℝ) - r)
     (P.fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitFormula h x r)
 
-/-- Exact derivative of the Duhamel path. -/
+/- Exact derivative of the Duhamel path. -/
+set_option maxHeartbeats 1000000 in
 theorem fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath_hasDerivAt
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta
