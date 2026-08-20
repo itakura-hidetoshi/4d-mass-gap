@@ -364,10 +364,10 @@ theorem fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula_hasDeriv
   have hsub := hconst.sub hprimitive
   have hproduct := hscalar.smul hsub
   convert hproduct using 1
-  simp only [fixedSlotHilbertDirectLimitRegularPositiveResolventOrbitFormula,
+  simp only [Pi.sub_apply,
     P.fixedSlotHilbertDirectLimitRegularPositiveResolvent_apply,
     P.fixedSlotHilbertDirectLimitRegularExponentialTimePrimitive_zero,
-    mul_zero, Real.exp_zero, one_smul]
+    mul_zero, Real.exp_zero, one_smul, zero_sub, sub_zero]
   module
 
 /-- Difference quotient of a positive-resolvent vector is the slope of its explicit orbit formula. -/
