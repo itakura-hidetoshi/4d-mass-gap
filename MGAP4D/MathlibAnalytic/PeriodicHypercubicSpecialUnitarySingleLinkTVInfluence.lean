@@ -110,9 +110,23 @@ theorem periodicHypercubicSpecialUnitary_sharedPlaquettes_eq_current
   classical
   apply Finset.ext
   intro p
-  rw [compact_oriented_mem_sharedPlaquettes_iff,
-    periodicHypercubic_mem_sharedPlaquettes_iff]
-  simp only [periodicHypercubicSpecialUnitary_touches_iff_current]
+  constructor
+  · intro hp
+    have hGeneric :=
+      (compact_oriented_mem_sharedPlaquettes_iff
+        (periodicHypercubicSpecialUnitaryWilsonSystem
+          n N hN beta hBeta).base target source p).mp hp
+    apply (periodicHypercubic_mem_sharedPlaquettes_iff
+      n target source p).mpr
+    simpa only [periodicHypercubicSpecialUnitary_touches_iff_current] using hGeneric
+  · intro hp
+    have hConcrete :=
+      (periodicHypercubic_mem_sharedPlaquettes_iff
+        n target source p).mp hp
+    apply (compact_oriented_mem_sharedPlaquettes_iff
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        n N hN beta hBeta).base target source p).mpr
+    simpa only [periodicHypercubicSpecialUnitary_touches_iff_current] using hConcrete
 
 /-- Standard periodic `SU(N)` plaquette energy is bounded by two. -/
 theorem periodicHypercubicSpecialUnitary_plaquetteEnergy_le_two_current
