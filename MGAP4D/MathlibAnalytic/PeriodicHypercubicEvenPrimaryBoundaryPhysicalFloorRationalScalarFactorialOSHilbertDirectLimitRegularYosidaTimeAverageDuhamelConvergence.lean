@@ -324,10 +324,10 @@ theorem fixedSlotHilbertDirectLimitRegularTimeAverageYosidaGeneratorError_tendst
   have hsub := hmain.sub hconst
   have hv : v - v = (0 : P.fixedSlotHilbertDirectLimitRegularSubspace) := sub_self v
   rw [hv] at hsub
+  unfold fixedSlotHilbertDirectLimitRegularTimeAverageYosidaGeneratorError
   rw [P.fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitFormula_eq_clamped h x r hr,
     P.fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitDerivative_eq_neg_hamiltonian_orbit h x r hr]
-  simpa only [fixedSlotHilbertDirectLimitRegularTimeAverageYosidaGeneratorError,
-    fixedSlotHilbertDirectLimitRegularClampedRealOrbit,
+  simpa only [fixedSlotHilbertDirectLimitRegularClampedRealOrbit,
     y, v, P.fixedSlotHilbertDirectLimitRegularTimeAverageGeneratorCoreVector_coe,
     sub_eq_add_neg] using hsub
 
@@ -344,6 +344,7 @@ noncomputable def fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath
     (P.fixedSlotHilbertDirectLimitRegularTimeAverageRealOrbitFormula h x r)
 
 /-- Exact derivative of the Duhamel path. -/
+set_option maxHeartbeats 800000 in
 theorem fixedSlotHilbertDirectLimitRegularTimeAverageYosidaDuhamelPath_hasDerivAt
     (P : PrimaryScalarFixedSlotOSPreHilbertData
       H N hN beta hbeta
