@@ -147,31 +147,41 @@ theorem fixedSlotHilbertDirectLimitCenteredCarrierState_correlation_double_eq_su
             (P.fixedSlotHilbertDirectLimitCarrierState J F)) -
         ((P.fixedSlotDataOfIndex J).fixedSlotCarrierContinuumMean F) ^ 2 := by
   let x := P.fixedSlotHilbertDirectLimitCarrierState J F
-  let Ω := P.fixedSlotHilbertDirectLimitVacuum
   let μ := (P.fixedSlotDataOfIndex J).fixedSlotCarrierContinuumMean F
-  have hΩx : inner ℝ Ω x = μ := by
-    exact P.fixedSlotHilbertDirectLimitVacuum_inner_carrierState_eq_continuumMean J F
-  have hxΩ : inner ℝ x Ω = μ := by
+  have hVacuumX :
+      inner ℝ P.fixedSlotHilbertDirectLimitVacuum x = μ := by
+    simpa [x, μ] using
+      P.fixedSlotHilbertDirectLimitVacuum_inner_carrierState_eq_continuumMean J F
+  have hXVacuum :
+      inner ℝ x P.fixedSlotHilbertDirectLimitVacuum = μ := by
     calc
-      inner ℝ x Ω = inner ℝ Ω x := real_inner_comm _ _
-      _ = μ := hΩx
-  have hΩTx :
-      inner ℝ Ω
+      inner ℝ x P.fixedSlotHilbertDirectLimitVacuum =
+          inner ℝ P.fixedSlotHilbertDirectLimitVacuum x := real_inner_comm _ _
+      _ = μ := hVacuumX
+  have hVacuumTx :
+      inner ℝ P.fixedSlotHilbertDirectLimitVacuum
           (P.fixedSlotHilbertDirectLimitTimeTranslateCLM
             (h + h) (add_nonneg hh hh) x) = μ := by
-    exact
+    simpa [x, μ] using
       P.fixedSlotHilbertDirectLimitVacuum_inner_timeTranslate_carrierState_eq_continuumMean
         J (h + h) (add_nonneg hh hh) F
+  have hVacuumSelf :
+      inner ℝ P.fixedSlotHilbertDirectLimitVacuum
+        P.fixedSlotHilbertDirectLimitVacuum = 1 := by
+    rw [real_inner_self_eq_norm_sq, P.fixedSlotHilbertDirectLimitVacuum_norm]
+    norm_num
   change
-    inner ℝ (x - μ • Ω)
+    inner ℝ
+        (x - μ • P.fixedSlotHilbertDirectLimitVacuum)
         (P.fixedSlotHilbertDirectLimitTimeTranslateCLM
-          (h + h) (add_nonneg hh hh) (x - μ • Ω)) =
+          (h + h) (add_nonneg hh hh)
+          (x - μ • P.fixedSlotHilbertDirectLimitVacuum)) =
       inner ℝ x
           (P.fixedSlotHilbertDirectLimitTimeTranslateCLM
             (h + h) (add_nonneg hh hh) x) - μ ^ 2
   rw [map_sub, map_smul, P.fixedSlotHilbertDirectLimitTimeTranslateCLM_vacuum]
   simp only [inner_sub_left, inner_sub_right, inner_smul_left, inner_smul_right]
-  simp [hΩx, hxΩ, hΩTx, P.fixedSlotHilbertDirectLimitVacuum_norm]
+  rw [hVacuumTx, hXVacuum, hVacuumSelf]
   ring
 
 /-- The centered double-time Hilbert correlation is the continuum translated reflection form
