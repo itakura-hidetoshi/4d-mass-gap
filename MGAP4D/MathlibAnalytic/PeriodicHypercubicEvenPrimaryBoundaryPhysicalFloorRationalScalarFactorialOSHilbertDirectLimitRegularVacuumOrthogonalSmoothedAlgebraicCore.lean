@@ -92,7 +92,7 @@ theorem fixedSlotHilbertDirectLimitRegularCentered_sub_norm_le_two
         ‖P.fixedSlotHilbertDirectLimitRegularVacuumCoefficient x -
           P.fixedSlotHilbertDirectLimitRegularVacuumCoefficient y‖ := by
       rw [norm_smul, P.fixedSlotHilbertDirectLimitRegularVacuum_norm, mul_one]
-    _ ≤ ‖x - y‖ + ‖x - y‖ := add_le_add_left hcoeff _
+    _ ≤ ‖x - y‖ + ‖x - y‖ := add_le_add_right hcoeff _
     _ = 2 * ‖x - y‖ := by ring
 
 /-- A positive-time-smoothed algebraic vector, regarded canonically as a regular vector. -/
@@ -162,13 +162,13 @@ theorem fixedSlotHilbertDirectLimitRegularVacuumOrthogonal_mem_closure_centeredS
       simpa only [
         P.fixedSlotHilbertDirectLimitRegularCentered_eq_self_of_mem_vacuumOrthogonal
           ξ.1 ξ.2] using hcenter
-    change
-      dist
-        (P.fixedSlotHilbertDirectLimitRegularCentered yr :
-          P.fixedSlotHilbertDirectLimitRegularVacuumOrthogonal)
-        ξ < ε
+    have hη :
+        (η.1 : P.fixedSlotHilbertDirectLimitRegularSubspace) =
+          P.fixedSlotHilbertDirectLimitRegularCentered yr := by
+      rfl
     rw [dist_eq_norm]
-    change ‖P.fixedSlotHilbertDirectLimitRegularCentered yr - ξ.1‖ < ε
+    change ‖(η.1 : P.fixedSlotHilbertDirectLimitRegularSubspace) - ξ.1‖ < ε
+    rw [hη]
     calc
       ‖P.fixedSlotHilbertDirectLimitRegularCentered yr - ξ.1‖ ≤
           2 * ‖yr - ξ.1‖ := hcenter'
