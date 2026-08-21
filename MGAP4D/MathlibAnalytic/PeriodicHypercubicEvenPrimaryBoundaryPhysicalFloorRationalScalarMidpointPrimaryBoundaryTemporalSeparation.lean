@@ -129,7 +129,6 @@ theorem
   change (periodicHypercubicEvenTimeReflection H e.1 0).val = _
   rw [periodicHypercubicEvenTimeReflection_time]
   rw [periodicHypercubicEven_neg_val_of_ne_zero H (e.1 0) ht, hval]
-  rfl
 
 /-- On a literal reflected-left / positive-right plaquette-edge pair, the
 primary-boundary temporal separation is exactly the sum of the two physical
