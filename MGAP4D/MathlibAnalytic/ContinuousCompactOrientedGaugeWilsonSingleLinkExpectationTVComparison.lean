@@ -27,6 +27,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory
+open scoped ENNReal
 
 noncomputable section
 
