@@ -64,7 +64,7 @@ theorem continuous_compact_oriented_dobrushin_influenceIterateKernel_tail_le_geo
     (hStrict : data.coefficient < 1)
     (D M : ℕ)
     (target source : C.base.geometry.Edge) :
-    (∑ k in Finset.range M,
+    (∑ k ∈ Finset.range M,
       finiteInfluenceIterateKernel data.influence (D + k) target source) ≤
         data.coefficient ^ D / (1 - data.coefficient) := by
   calc
