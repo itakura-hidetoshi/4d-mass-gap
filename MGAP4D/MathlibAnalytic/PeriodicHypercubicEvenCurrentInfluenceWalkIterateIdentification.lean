@@ -351,11 +351,19 @@ theorem periodicHypercubicEvenSpecialUnitary_sparseDobrushinMatrixData_influence
           omega)
         hN beta hBeta hThreshold).influence
       d target source = 0 := by
-  rw [← periodicHypercubicEvenInfluenceWalkKernel_eq_finiteInfluenceIterateKernel]
   exact
-    periodicHypercubicEvenSpecialUnitary_sparseDobrushinMatrixData_influenceWalkKernel_eq_zero_of_supportsSeparatedBy
-      H N D d hH hN beta hBeta hThreshold S T hsep hd
-      target htarget source hsource
+    (periodicHypercubicEvenInfluenceWalkKernel_eq_finiteInfluenceIterateKernel
+      H d
+      (periodicHypercubicSpecialUnitary_sparseDobrushinMatrixData_of_threshold
+        (PeriodicHypercubicEvenSideLength H) N
+        (by
+          simp [PeriodicHypercubicEvenSideLength]
+          omega)
+        hN beta hBeta hThreshold).influence
+      target source).symm.trans
+      (periodicHypercubicEvenSpecialUnitary_sparseDobrushinMatrixData_influenceWalkKernel_eq_zero_of_supportsSeparatedBy
+        H N D d hH hN beta hBeta hThreshold S T hsep hd
+        target htarget source hsource)
 
 end
 
