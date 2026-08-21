@@ -127,8 +127,21 @@ private theorem periodicHypercubicEvenInfluenceWalkKernel_succ
           influence (γ 0) (Fin.tail γ 0) *
             periodicHypercubicEvenInfluenceWalkWeight H d influence (Fin.tail γ)
         else 0
-      rw [← Fin.cons_self_tail γ]
-      simp [periodicHypercubicEvenInfluenceWalkWeight_cons]
+      have hWeight :
+          periodicHypercubicEvenInfluenceWalkWeight H (d + 1) influence γ =
+            influence (γ 0) (Fin.tail γ 0) *
+              periodicHypercubicEvenInfluenceWalkWeight H d influence (Fin.tail γ) := by
+        calc
+          periodicHypercubicEvenInfluenceWalkWeight H (d + 1) influence γ =
+              periodicHypercubicEvenInfluenceWalkWeight H (d + 1) influence
+                (Fin.cons (γ 0) (Fin.tail γ)) := by
+                  rw [Fin.cons_self_tail]
+          _ = influence (γ 0) (Fin.tail γ 0) *
+                periodicHypercubicEvenInfluenceWalkWeight H d influence (Fin.tail γ) :=
+              periodicHypercubicEvenInfluenceWalkWeight_cons
+                H d influence (γ 0) (Fin.tail γ)
+      rw [hWeight]
+      simp
     _ =
         ∑ head : PeriodicHypercubicEvenEdge H,
           ∑ tail : Fin (d + 1) → PeriodicHypercubicEvenEdge H,
