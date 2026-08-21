@@ -45,7 +45,7 @@ theorem finite_geometric_tail_sum_le
     (hc0 : 0 ≤ c)
     (hc1 : c < 1)
     (D M : ℕ) :
-    (∑ k in Finset.range M, c ^ (D + k)) ≤ c ^ D / (1 - c) := by
+    (∑ k ∈ Finset.range M, c ^ (D + k)) ≤ c ^ D / (1 - c) := by
   have hsum :
       HasSum (fun k : ℕ => c ^ (D + k)) (c ^ D / (1 - c)) := by
     simpa [pow_add, div_eq_mul_inv] using
