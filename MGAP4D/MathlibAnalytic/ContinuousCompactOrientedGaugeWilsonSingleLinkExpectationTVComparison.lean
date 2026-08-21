@@ -70,6 +70,7 @@ theorem continuous_compact_oriented_singleLinkConditionalGaugeExpectation_eq_int
     hrho_meas.aemeasurable hrho_lt_top phi]
   apply integral_congr_ae
   exact Filter.Eventually.of_forall fun g => by
+    dsimp [rho]
     rw [ENNReal.toReal_ofReal
       (continuous_compact_oriented_singleLinkRealConditionalDensity_nonneg
         C A target g)]
