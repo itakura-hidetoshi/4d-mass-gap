@@ -172,8 +172,10 @@ theorem
   · have hrefVal :=
       periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquetteEdgeReflection_sourceTime_val_of_floor_zero
         H latticeSpacing n qLeft (by simpa [mLeft] using hleftZero) kLeft
-    simp [periodicHypercubicEvenPrimaryBoundaryTemporalSeparation,
-      hrefVal, hrightVal, mLeft, mRight, hleftZero]
+    simp only [periodicHypercubicEvenPrimaryBoundaryTemporalSeparation]
+    rw [if_pos hrefVal, hrightVal]
+    change mRight = mLeft + mRight
+    omega
   · have hleftPos : 1 ≤ mLeft := Nat.one_le_iff_ne_zero.mpr hleftZero
     have hrefVal :=
       periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquetteEdgeReflection_sourceTime_val_of_floor_positive
