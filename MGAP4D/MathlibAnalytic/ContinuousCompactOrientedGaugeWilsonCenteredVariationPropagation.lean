@@ -97,9 +97,8 @@ theorem periodicHypercubicSpecialUnitary_sharedPlaquetteInfluence_eq_sparseActiv
               n N hN beta hBeta).base.sharedPlaquettes
               target source).card : ℝ) = 1
         rw [periodicHypercubicSpecialUnitary_sharedPlaquettes_eq_current
-          n N hN beta hBeta target source,
-          hConcreteCard]
-        norm_num
+          n N hN beta hBeta target source]
+        exact_mod_cast hConcreteCard
       unfold specialUnitaryCompactOrientedSharedPlaquetteInfluence
         periodicHypercubicSpecialUnitarySparseActiveTVInfluence
         periodicHypercubicSpecialUnitaryActiveTVMajorant
