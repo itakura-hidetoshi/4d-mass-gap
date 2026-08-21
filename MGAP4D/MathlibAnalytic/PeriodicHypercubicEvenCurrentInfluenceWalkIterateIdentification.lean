@@ -81,16 +81,12 @@ private theorem periodicHypercubicEvenInfluenceWalkKernel_zero
       unfold periodicHypercubicEvenInfluenceWalkKernel
       apply Finset.sum_eq_zero
       intro γ _
-      have hEndpoints :
-          ¬ (γ 0 = target ∧ γ (Fin.last 0) = source) := by
-        rintro ⟨h0, hlast⟩
-        apply hts
-        calc
-          target = γ 0 := h0.symm
-          _ = γ (Fin.last 0) :=
-            congrArg γ (Fin.eq_zero (Fin.last 0)).symm
-          _ = source := hlast
-      simp [hEndpoints]
+      by_cases h0 : γ 0 = target
+      · have hnotSource : γ 0 ≠ source := by
+          intro hs
+          exact hts (h0.symm.trans hs)
+        simp [h0, hnotSource]
+      · simp [h0]
     simpa [hts] using hsum
 
 /-- The explicit length-`d+1` walk kernel obeys the same one-step convolution
