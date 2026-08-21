@@ -49,7 +49,7 @@ theorem periodicHypercubicEvenPlaquetteLocalPath_zero_iff
     periodicHypercubicEvenPlaquetteLocalPath H 0 e f ↔ e = f := by
   constructor
   · rintro ⟨γ, h0, hlast, _⟩
-    have hindex : (Fin.last 0 : Fin 1) = 0 := Subsingleton.elim _ _
+    have hindex : (Fin.last 0 : Fin 1) = 0 := by rfl
     calc
       e = γ 0 := h0.symm
       _ = γ (Fin.last 0) := congrArg γ hindex.symm
