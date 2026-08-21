@@ -104,7 +104,7 @@ theorem periodicHypercubicSpecialUnitary_sharedPlaquetteInfluence_eq_sparseActiv
         periodicHypercubicSpecialUnitaryActiveTVMajorant
         compactHaarOscillationInfluence
         HaarLikelihoodRatioInfluence.coefficient
-      simp only [hEq, if_false, hActive, if_true]
+      rw [if_neg hEq, if_pos hActive]
       rw [hGenericCard]
       ring_nf
     · have hNe : source ≠ target := Ne.symm hEq
