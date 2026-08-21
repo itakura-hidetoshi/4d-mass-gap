@@ -61,7 +61,8 @@ theorem finiteInfluenceIterateKernel_nonneg
   induction d with
   | zero =>
       intro target source
-      simp [finiteInfluenceIterateKernel]
+      simp only [finiteInfluenceIterateKernel]
+      split_ifs <;> norm_num
   | succ d ih =>
       intro target source
       change
@@ -89,7 +90,15 @@ theorem finiteInfluenceIterateKernel_rowSum_le_pow
       finiteInfluenceIterateKernel influence d target source) ≤ c ^ d := by
   induction d generalizing target with
   | zero =>
-      simp [finiteInfluenceIterateKernel]
+      simp only [finiteInfluenceIterateKernel, pow_zero]
+      rw [Finset.sum_eq_single target]
+      · simp
+      · intro source _ hsource
+        have hne : target ≠ source := by
+          exact fun h => hsource h.symm
+        simp [hne]
+      · intro htarget
+        exact False.elim (htarget (Finset.mem_univ target))
   | succ d ih =>
       change
         (∑ source : α,
