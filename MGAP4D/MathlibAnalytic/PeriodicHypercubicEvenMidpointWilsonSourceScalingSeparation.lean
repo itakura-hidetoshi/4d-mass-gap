@@ -91,8 +91,8 @@ theorem physicalTemporalFloorStep_toNat_add_le_of_add_nat_mul_spacing_le_primary
     exact Int.floor_le _
   have hreal :
       ((physicalTemporalFloorStep latticeSpacing t n : ℤ) : ℝ) + (D : ℝ) ≤
-        (H : ℝ) :=
-    (add_le_add_right hfloor_le_div (D : ℝ)).trans hdivD
+        (H : ℝ) := by
+    linarith [hfloor_le_div, hdivD]
   have hint :
       physicalTemporalFloorStep latticeSpacing t n + (D : ℤ) ≤ (H : ℤ) := by
     exact_mod_cast hreal
