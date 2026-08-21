@@ -113,9 +113,7 @@ noncomputable def
 continuous centered-variation carrier: Feller continuity supplies the new BCF,
 and compact midpoint recentering restores the centered profile with no loss in
 the already-proved updated variation constants. -/
-noncomputable def
-    ContinuousCompactOrientedGaugeWilsonCenteredVariationProfile.
-      conditionalExpectationCenteredVariationProfile
+noncomputable def ContinuousCompactOrientedGaugeWilsonCenteredVariationProfile.conditionalExpectationCenteredVariationProfile
     {C : ContinuousCompactOrientedGaugeWilsonSystem}
     {O : BoundedContinuousFunction C.base.Configuration ℝ}
     (P : ContinuousCompactOrientedGaugeWilsonCenteredVariationProfile C O)
