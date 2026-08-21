@@ -68,7 +68,8 @@ theorem continuous_compact_oriented_finiteSingleLinkHeatBathObservable_integrabl
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
     (A : C.base.Configuration) :
     C.finiteSingleLinkHeatBathExpectationBCF [] O A = O A := by
-  simp [ContinuousCompactOrientedGaugeWilsonSystem.finiteSingleLinkHeatBathExpectationBCF]
+  simp [ContinuousCompactOrientedGaugeWilsonSystem.finiteSingleLinkHeatBathExpectationBCF,
+    Kernel.id_apply]
 
 /-- Exact observable recursion corresponding to the current finite-kernel
 composition: the head target acts first. -/
