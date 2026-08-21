@@ -69,7 +69,7 @@ theorem
                 (physicalTemporalFloorStep latticeSpacing ((qLeft : ℚ) : ℝ) n) +
               Int.toNat
                 (physicalTemporalFloorStep latticeSpacing
-                  ((((qRight + r) + r : ℚ) : ℝ)) n)))) := by
+                  ((((qRight + r) + r : ℚ) : ℝ)) n))) := by
   intro qLeft hqLeft qRight hqRight
   let mLeft : ℕ :=
     Int.toNat
