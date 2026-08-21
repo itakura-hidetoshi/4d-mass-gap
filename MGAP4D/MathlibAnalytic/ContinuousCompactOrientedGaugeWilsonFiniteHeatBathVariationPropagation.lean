@@ -175,8 +175,7 @@ noncomputable def
         (C.finiteSingleLinkHeatBathContinuousBCF targets O)
   | [] => P
   | target :: targets =>
-      (P.finiteHeatBathCenteredVariationProfile D targets).
-        conditionalExpectationCenteredVariationProfile D target
+      (P.finiteHeatBathCenteredVariationProfile D targets).conditionalExpectationCenteredVariationProfile D target
 
 @[simp] theorem continuous_compact_oriented_finiteHeatBathCenteredVariationProfile_variation
     {C : ContinuousCompactOrientedGaugeWilsonSystem}
