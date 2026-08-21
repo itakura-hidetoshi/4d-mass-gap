@@ -167,10 +167,12 @@ theorem continuous_compact_oriented_dobrushin_influenceIterateKernel_rowSum_le_p
     (target : C.base.geometry.Edge) :
     (∑ source : C.base.geometry.Edge,
       finiteInfluenceIterateKernel D.influence d target source) ≤
-        D.coefficient ^ d :=
-  finiteInfluenceIterateKernel_rowSum_le_pow
-    D.influence D.influence_nonneg D.coefficient D.coefficient_nonneg
-    D.rowSum_le_coefficient d target
+        D.coefficient ^ d := by
+  classical
+  exact
+    finiteInfluenceIterateKernel_rowSum_le_pow
+      D.influence D.influence_nonneg D.coefficient D.coefficient_nonneg
+      D.rowSum_le_coefficient d target
 
 /-- Every entry of every finite current compact Dobrushin iterate is bounded by
 `coefficient^d`. -/
@@ -180,10 +182,12 @@ theorem continuous_compact_oriented_dobrushin_influenceIterateKernel_le_pow
     (d : ℕ)
     (target source : C.base.geometry.Edge) :
     finiteInfluenceIterateKernel D.influence d target source ≤
-      D.coefficient ^ d :=
-  finiteInfluenceIterateKernel_le_pow
-    D.influence D.influence_nonneg D.coefficient D.coefficient_nonneg
-    D.rowSum_le_coefficient d target source
+      D.coefficient ^ d := by
+  classical
+  exact
+    finiteInfluenceIterateKernel_le_pow
+      D.influence D.influence_nonneg D.coefficient D.coefficient_nonneg
+      D.rowSum_le_coefficient d target source
 
 private instance periodicHypercubicEvenSideLength_neZero_iterateKernel
     (H : ℕ) : NeZero (PeriodicHypercubicEvenSideLength H) :=
@@ -211,6 +215,7 @@ theorem periodicHypercubicEvenSpecialUnitary_sparseDobrushinMatrixData_influence
           hN beta hBeta hThreshold).influence
         d target source ≤
       (18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta) ^ d := by
+  classical
   let C :=
     periodicHypercubicSpecialUnitaryWilsonSystem
       (PeriodicHypercubicEvenSideLength H) N hN beta hBeta
