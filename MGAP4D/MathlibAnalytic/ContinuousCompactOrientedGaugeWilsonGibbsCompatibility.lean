@@ -212,6 +212,73 @@ theorem continuous_compact_oriented_gibbs_integral_singleLinkConditionalExpectat
     _ = ∫ A : C.base.Configuration, O A ∂C.gibbsMeasure := by
       simp
 
+/-- Subtracting a constant before the current exact one-link conditional
+expectation subtracts the same constant afterwards. -/
+theorem continuous_compact_oriented_singleLinkConditionalExpectationBCF_sub_const
+    (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    (O : BoundedContinuousFunction C.base.Configuration ℝ)
+    (c : ℝ)
+    (A : C.base.Configuration)
+    (target : C.base.geometry.Edge) :
+    C.singleLinkConditionalExpectationBCF
+        (O - BoundedContinuousFunction.const C.base.Configuration c) A target =
+      C.singleLinkConditionalExpectationBCF O A target - c := by
+  letI : IsProbabilityMeasure (C.singleLinkConditionalMeasure A target) :=
+    continuous_compact_oriented_singleLinkConditionalMeasure_isProbabilityMeasure
+      C A target
+  have hO : Integrable
+      (fun g : C.base.Gauge => O (C.base.replaceLink A target g))
+      (C.singleLinkConditionalMeasure A target) :=
+    continuous_compact_oriented_singleLinkObservable_integrable C O A target
+  unfold ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalExpectationBCF
+  change
+    (∫ g : C.base.Gauge,
+      O (C.base.replaceLink A target g) - c
+      ∂C.singleLinkConditionalMeasure A target) =
+      (∫ g : C.base.Gauge,
+        O (C.base.replaceLink A target g)
+        ∂C.singleLinkConditionalMeasure A target) - c
+  rw [integral_sub hO (integrable_const c)]
+  simp
+
+/-- Centering a bounded continuous observable by its actual Gibbs mean is
+compatible pointwise with the current exact one-link conditional expectation. -/
+theorem continuous_compact_oriented_singleLinkConditionalExpectationBCF_gibbsCentered
+    (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    (O : BoundedContinuousFunction C.base.Configuration ℝ)
+    (A : C.base.Configuration)
+    (target : C.base.geometry.Edge) :
+    C.singleLinkConditionalExpectationBCF
+        (O - BoundedContinuousFunction.const C.base.Configuration
+          (∫ B : C.base.Configuration, O B ∂C.gibbsMeasure)) A target =
+      C.singleLinkConditionalExpectationBCF O A target -
+        ∫ B : C.base.Configuration, O B ∂C.gibbsMeasure := by
+  exact continuous_compact_oriented_singleLinkConditionalExpectationBCF_sub_const
+    C O (∫ B : C.base.Configuration, O B ∂C.gibbsMeasure) A target
+
+/-- The current exact one-link projection preserves Gibbs centering: projecting
+an observable after subtracting its actual Gibbs mean still has zero Gibbs
+mean. -/
+theorem continuous_compact_oriented_gibbs_integral_singleLinkConditionalExpectationBCF_gibbsCentered_eq_zero
+    (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    (target : C.base.geometry.Edge)
+    (O : BoundedContinuousFunction C.base.Configuration ℝ) :
+    (∫ A : C.base.Configuration,
+      C.singleLinkConditionalExpectationBCF
+        (O - BoundedContinuousFunction.const C.base.Configuration
+          (∫ B : C.base.Configuration, O B ∂C.gibbsMeasure)) A target
+      ∂C.gibbsMeasure) = 0 := by
+  rw [continuous_compact_oriented_gibbs_integral_singleLinkConditionalExpectationBCF]
+  have hO : Integrable (fun A : C.base.Configuration => O A) C.gibbsMeasure :=
+    O.continuous.integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  change
+    (∫ A : C.base.Configuration,
+      O A - (∫ B : C.base.Configuration, O B ∂C.gibbsMeasure)
+      ∂C.gibbsMeasure) = 0
+  rw [integral_sub hO (integrable_const _)]
+  simp
+
 end
 
 end MathlibAnalytic
