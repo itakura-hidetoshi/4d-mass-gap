@@ -5,6 +5,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory Set
+open scoped ENNReal
 
 noncomputable section
 
