@@ -192,6 +192,12 @@ noncomputable def
       rfl
   | cons target targets ih =>
       rw [continuous_compact_oriented_finiteUpdatedVariation_cons]
+      change
+        ((P.finiteHeatBathCenteredVariationProfile D targets).conditionalExpectationCenteredVariationProfile
+            D target).variation source =
+          continuousCompactOrientedGaugeWilsonDobrushinUpdatedVariation D
+            (continuousCompactOrientedGaugeWilsonFiniteUpdatedVariation
+              D P.variation targets) target source
       rw [continuous_compact_oriented_conditionalExpectationCenteredVariationProfile_variation]
       unfold continuousCompactOrientedGaugeWilsonDobrushinUpdatedVariation
       by_cases h : source = target
