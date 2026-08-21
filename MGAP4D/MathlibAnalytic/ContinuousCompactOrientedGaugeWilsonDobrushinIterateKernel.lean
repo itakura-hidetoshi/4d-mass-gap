@@ -61,8 +61,7 @@ theorem finiteInfluenceIterateKernel_nonneg
   induction d with
   | zero =>
       intro target source
-      change 0 ≤ if target = source then (1 : ℝ) else 0
-      split_ifs <;> norm_num
+      simp [finiteInfluenceIterateKernel]
   | succ d ih =>
       intro target source
       change
@@ -90,9 +89,7 @@ theorem finiteInfluenceIterateKernel_rowSum_le_pow
       finiteInfluenceIterateKernel influence d target source) ≤ c ^ d := by
   induction d generalizing target with
   | zero =>
-      change
-        (∑ source : α, if target = source then (1 : ℝ) else 0) ≤ c ^ 0
-      simp
+      simp [finiteInfluenceIterateKernel]
   | succ d ih =>
       change
         (∑ source : α,
