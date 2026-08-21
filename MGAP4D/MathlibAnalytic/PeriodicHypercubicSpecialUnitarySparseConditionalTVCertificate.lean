@@ -77,6 +77,7 @@ theorem periodicHypercubicSpecialUnitary_diagonalSingleLinkConditionalTotalVaria
       n N hN beta hBeta A B target hAgree
   change C.singleLinkConditionalTotalVariation A B target = 0
   unfold ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalTotalVariation
+  dsimp [C]
   rw [hDensity]
   simp
 
