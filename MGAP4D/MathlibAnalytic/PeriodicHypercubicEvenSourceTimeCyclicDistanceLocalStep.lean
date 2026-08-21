@@ -72,9 +72,9 @@ theorem periodicHypercubicEvenTimeCyclicDistance_add_one_right
     periodicHypercubicEvenTimeCyclicDistance H t (t + 1) = 1 := by
   letI : NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
     simp [PeriodicHypercubicEvenSideLength]⟩
+  unfold periodicHypercubicEvenTimeCyclicDistance
   by_cases hnowrap : t.val + 1 < PeriodicHypercubicEvenSideLength H
   · rw [periodicHypercubicEven_val_add_one_of_lt H t hnowrap]
-    unfold periodicHypercubicEvenTimeCyclicDistance
     have hdist : Nat.dist t.val (t.val + 1) = 1 := by
       rw [Nat.dist_eq_sub_of_le (by omega)]
       omega
@@ -85,7 +85,6 @@ theorem periodicHypercubicEvenTimeCyclicDistance_add_one_right
       omega
     rw [min_eq_left hle]
   · rw [periodicHypercubicEven_val_add_one_of_not_lt H t hnowrap]
-    unfold periodicHypercubicEvenTimeCyclicDistance
     rw [Nat.dist_zero_right]
     have htlt : t.val < PeriodicHypercubicEvenSideLength H := ZMod.val_lt t
     have hlast : t.val + 1 = PeriodicHypercubicEvenSideLength H := by
