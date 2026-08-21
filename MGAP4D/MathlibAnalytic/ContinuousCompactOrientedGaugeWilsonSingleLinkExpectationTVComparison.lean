@@ -122,6 +122,7 @@ theorem continuous_probabilityDensity_boundedTest_expectation_sub_abs_le_halfL1
     _ ≤ ∫ x, M * |p x - q x| ∂mu := by
       apply integral_mono hdiffAbsInt hmajorInt
       intro x
+      change |phi x * (p x - q x)| ≤ M * |p x - q x|
       rw [abs_mul]
       exact mul_le_mul_of_nonneg_right (hphi_bound x) (abs_nonneg _)
     _ = M * ∫ x, |p x - q x| ∂mu := by
