@@ -68,9 +68,9 @@ theorem continuous_compact_oriented_dobrushin_influenceIterateKernel_tail_le_geo
       finiteInfluenceIterateKernel data.influence (D + k) target source) ≤
         data.coefficient ^ D / (1 - data.coefficient) := by
   calc
-    (∑ k in Finset.range M,
+    (∑ k ∈ Finset.range M,
         finiteInfluenceIterateKernel data.influence (D + k) target source) ≤
-      ∑ k in Finset.range M, data.coefficient ^ (D + k) := by
+      ∑ k ∈ Finset.range M, data.coefficient ^ (D + k) := by
         apply Finset.sum_le_sum
         intro k _
         exact
@@ -96,7 +96,7 @@ theorem finiteInfluenceIterateKernel_prefix_sum_eq_zero_of_supportsSeparatedBy
     (htarget : target ∈ S)
     (source : PeriodicHypercubicEvenEdge H)
     (hsource : source ∈ T) :
-    (∑ d in Finset.range D,
+    (∑ d ∈ Finset.range D,
       finiteInfluenceIterateKernel influence d target source) = 0 := by
   apply Finset.sum_eq_zero
   intro d hd
@@ -133,7 +133,7 @@ theorem
           source ∈
             periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointRightSupport
               (H n) latticeSpacing n J r →
-          (∑ d in Finset.range D,
+          (∑ d ∈ Finset.range D,
             finiteInfluenceIterateKernel
               (fun target source =>
                 periodicHypercubicSpecialUnitarySparseActiveTVInfluence
@@ -179,9 +179,9 @@ theorem periodicHypercubicEvenSpecialUnitary_sparseDobrushinMatrixData_prefix_ze
           simp [PeriodicHypercubicEvenSideLength]
           omega)
         hN beta hBeta hThreshold
-    ((∑ d in Finset.range D,
+    ((∑ d ∈ Finset.range D,
         finiteInfluenceIterateKernel data.influence d target source) = 0) ∧
-      ((∑ k in Finset.range M,
+      ((∑ k ∈ Finset.range M,
           finiteInfluenceIterateKernel data.influence (D + k) target source) ≤
         (18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta) ^ D /
           (1 - 18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta)) := by
