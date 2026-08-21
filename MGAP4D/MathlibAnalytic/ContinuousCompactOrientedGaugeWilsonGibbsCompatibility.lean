@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonDobrushinVariationPropagation
+import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHeatBathReversibility
 import Mathlib.MeasureTheory.Integral.Marginal
 
 namespace MGAP4D
@@ -82,6 +83,47 @@ theorem continuous_compact_oriented_configurationHaar_lintegral_singleLink_avera
   simp_rw [← compact_oriented_replaceLink_eq_update C]
   simp only [compact_oriented_replaceLink_replaceLink]
   simp [μ]
+
+/-- Exact one-link conditional resampling preserves the canonical finite-volume
+Wilson Gibbs integral for every nonnegative measurable observable. -/
+theorem continuous_compact_oriented_gibbs_lintegral_singleLinkConditionalMeasure
+    (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    (target : C.base.geometry.Edge)
+    (f : C.base.Configuration → ℝ≥0∞)
+    (hf : Measurable f) :
+    (∫⁻ A : C.base.Configuration,
+        (∫⁻ g : C.base.Gauge,
+          f (C.base.replaceLink A target g)
+          ∂C.singleLinkConditionalMeasure A target)
+        ∂C.gibbsMeasure) =
+      ∫⁻ A : C.base.Configuration, f A ∂C.gibbsMeasure := by
+  have hSymm :=
+    continuous_compact_oriented_singleLinkHeatBathTransitionLIntegral_symm
+      C target
+      (fun z : C.base.Configuration × C.base.Configuration => f z.2)
+      (hf.comp measurable_snd)
+  calc
+    (∫⁻ A : C.base.Configuration,
+        (∫⁻ g : C.base.Gauge,
+          f (C.base.replaceLink A target g)
+          ∂C.singleLinkConditionalMeasure A target)
+        ∂C.gibbsMeasure) =
+      C.singleLinkHeatBathTransitionLIntegral target
+        (fun z : C.base.Configuration × C.base.Configuration => f z.2) := by
+          unfold
+            ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathTransitionLIntegral
+          apply lintegral_congr
+          intro A
+          exact
+            (continuous_compact_oriented_lintegral_singleLinkHeatBathKernel
+              C target A f hf).symm
+    _ = C.singleLinkHeatBathTransitionLIntegral target
+        (fun z : C.base.Configuration × C.base.Configuration => f z.1) := by
+          simpa using hSymm
+    _ = ∫⁻ A : C.base.Configuration, f A ∂C.gibbsMeasure := by
+      unfold
+        ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathTransitionLIntegral
+      simp
 
 end
 
