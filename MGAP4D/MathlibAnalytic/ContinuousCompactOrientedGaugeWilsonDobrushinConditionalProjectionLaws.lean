@@ -47,7 +47,7 @@ theorem continuous_compact_oriented_singleLinkConditionalExpectationBCF_replaceL
     continuous_compact_oriented_singleLinkConditionalExpectationBCF_eq_of_agreeOffLink
       C O (C.base.replaceLink A target g) A target
   intro e he
-  exact compact_oriented_replaceLink_of_ne C.base A target e g he
+  exact compact_oriented_replaceLink_other C.base A target e g he
 
 /-- The current exact one-link conditional expectation fixes every bounded
 continuous observable already constant on fibers obtained by forgetting the
@@ -69,7 +69,7 @@ theorem continuous_compact_oriented_singleLinkConditionalExpectationBCF_fixes_of
     intro g
     apply hFiber (C.base.replaceLink A target g) A
     intro e he
-    exact compact_oriented_replaceLink_of_ne C.base A target e g he
+    exact compact_oriented_replaceLink_other C.base A target e g he
   unfold ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalExpectationBCF
   simp_rw [hPoint]
   simp
