@@ -20,7 +20,7 @@ theorem continuous_compact_oriented_singleLinkHeatBathKernel_comp_gibbsMeasure
   rw [Measure.bind_apply hs (Kernel.aemeasurable _)]
   let f : C.base.Configuration → ℝ≥0∞ :=
     s.indicator (fun _ => 1)
-  have hf : Measurable f := hs.indicator measurable_const
+  have hf : Measurable f := measurable_const.indicator hs
   have hInv :=
     continuous_compact_oriented_gibbs_lintegral_singleLinkConditionalMeasure
       C target f hf
