@@ -163,7 +163,7 @@ theorem continuous_compact_oriented_singleLinkConditionalGaugeExpectation_sub_ab
   let R : ℝ := (b - a) / 2
   have hR : 0 ≤ R := by
     unfold R
-    positivity
+    exact div_nonneg (sub_nonneg.mpr hab) (by norm_num)
   have hcenter : ∀ g, |phi g - c| ≤ R := by
     intro g
     unfold c R
