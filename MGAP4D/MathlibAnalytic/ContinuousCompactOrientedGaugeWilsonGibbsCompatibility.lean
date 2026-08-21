@@ -1,12 +1,13 @@
 import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonDobrushinVariationPropagation
-import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHeatBathReversibility
+import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHeatBathJointIntegralSymmetry
 import Mathlib.MeasureTheory.Integral.Marginal
+import Mathlib.Probability.Kernel.Composition.IntegralCompProd
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open MeasureTheory Set
-open scoped ENNReal
+open MeasureTheory Set ProbabilityTheory
+open scoped ENNReal ProbabilityTheory
 
 noncomputable section
 
@@ -123,6 +124,92 @@ theorem continuous_compact_oriented_gibbs_lintegral_singleLinkConditionalMeasure
     _ = ∫⁻ A : C.base.Configuration, f A ∂C.gibbsMeasure := by
       unfold
         ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathTransitionLIntegral
+      simp
+
+/-- Bochner integration of a bounded continuous observable against the actual
+one-link heat-bath kernel is exactly the current pointwise conditional
+expectation. -/
+theorem continuous_compact_oriented_integral_singleLinkHeatBathKernel_BCF
+    (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    (target : C.base.geometry.Edge)
+    (A : C.base.Configuration)
+    (O : BoundedContinuousFunction C.base.Configuration ℝ) :
+    (∫ B : C.base.Configuration, O B
+        ∂C.singleLinkHeatBathKernel target A) =
+      C.singleLinkConditionalExpectationBCF O A target := by
+  rw [continuous_compact_oriented_singleLinkHeatBathKernel_apply]
+  unfold ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalExpectationBCF
+  exact MeasureTheory.integral_map
+    (continuous_compact_oriented_replaceLink C A target).measurable.aemeasurable
+    O.continuous.measurable.aestronglyMeasurable
+
+/-- The current exact one-link conditional expectation preserves the ordinary
+real integral of every bounded continuous observable under the canonical
+finite-volume Wilson Gibbs law. -/
+theorem continuous_compact_oriented_gibbs_integral_singleLinkConditionalExpectationBCF
+    (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    (target : C.base.geometry.Edge)
+    (O : BoundedContinuousFunction C.base.Configuration ℝ) :
+    (∫ A : C.base.Configuration,
+        C.singleLinkConditionalExpectationBCF O A target
+        ∂C.gibbsMeasure) =
+      ∫ A : C.base.Configuration, O A ∂C.gibbsMeasure := by
+  let J := C.singleLinkHeatBathJointMeasure target
+  have hNewContinuous : Continuous
+      (fun z : C.base.Configuration × C.base.Configuration => O z.2) :=
+    O.continuous.comp continuous_snd
+  have hOldContinuous : Continuous
+      (fun z : C.base.Configuration × C.base.Configuration => O z.1) :=
+    O.continuous.comp continuous_fst
+  have hNewIntegrable : Integrable
+      (fun z : C.base.Configuration × C.base.Configuration => O z.2) J :=
+    hNewContinuous.integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have hOldIntegrable : Integrable
+      (fun z : C.base.Configuration × C.base.Configuration => O z.1) J :=
+    hOldContinuous.integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have hNewFubini :
+      (∫ z, O z.2 ∂J) =
+        ∫ A : C.base.Configuration,
+          ∫ B : C.base.Configuration, O B
+            ∂C.singleLinkHeatBathKernel target A
+          ∂C.gibbsMeasure := by
+    unfold J ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathJointMeasure
+    exact MeasureTheory.Measure.integral_compProd hNewIntegrable
+  have hOldFubini :
+      (∫ z, O z.1 ∂J) =
+        ∫ A : C.base.Configuration,
+          ∫ _B : C.base.Configuration, O A
+            ∂C.singleLinkHeatBathKernel target A
+          ∂C.gibbsMeasure := by
+    unfold J ContinuousCompactOrientedGaugeWilsonSystem.singleLinkHeatBathJointMeasure
+    exact MeasureTheory.Measure.integral_compProd hOldIntegrable
+  have hSymm :=
+    continuous_compact_oriented_integral_singleLinkHeatBathJointMeasure_symm
+      C target
+      (fun z : C.base.Configuration × C.base.Configuration => O z.2)
+      hNewContinuous.measurable.aestronglyMeasurable
+  calc
+    (∫ A : C.base.Configuration,
+        C.singleLinkConditionalExpectationBCF O A target
+        ∂C.gibbsMeasure) =
+      ∫ A : C.base.Configuration,
+        ∫ B : C.base.Configuration, O B
+          ∂C.singleLinkHeatBathKernel target A
+        ∂C.gibbsMeasure := by
+      apply integral_congr_ae
+      filter_upwards [] with A
+      exact
+        (continuous_compact_oriented_integral_singleLinkHeatBathKernel_BCF
+          C target A O).symm
+    _ = ∫ z, O z.2 ∂J := hNewFubini.symm
+    _ = ∫ z, O z.1 ∂J := by simpa using hSymm
+    _ = ∫ A : C.base.Configuration,
+        ∫ _B : C.base.Configuration, O A
+          ∂C.singleLinkHeatBathKernel target A
+        ∂C.gibbsMeasure := hOldFubini
+    _ = ∫ A : C.base.Configuration, O A ∂C.gibbsMeasure := by
       simp
 
 end
