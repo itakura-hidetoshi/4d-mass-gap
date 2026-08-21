@@ -39,9 +39,10 @@ noncomputable section
 noncomputable def finiteInfluenceIterateKernel
     {α : Type*}
     [Fintype α]
-    [DecidableEq α]
     (influence : α → α → ℝ) : ℕ → α → α → ℝ
-  | 0, target, source => if target = source then 1 else 0
+  | 0, target, source => by
+      classical
+      exact if target = source then 1 else 0
   | d + 1, target, source =>
       ∑ mid : α,
         influence target mid * finiteInfluenceIterateKernel influence d mid source
