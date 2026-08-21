@@ -175,6 +175,7 @@ theorem
     omega
   simpa [
     periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquetteEdge,
+    periodicHypercubicEvenPrimarySpatialPlaquetteEdge_source_time_val_zero H k,
     m] using
     (periodicHypercubicEvenIntegerTemporalEdgeTranslation_sourceTime_val_of_add_lt
       H m (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H k) hadd)
