@@ -12,6 +12,7 @@ noncomputable section
 finite product configuration space. -/
 theorem compact_oriented_replaceLink_eq_update
     (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    [DecidableEq C.base.geometry.Edge]
     (A : C.base.Configuration)
     (target : C.base.geometry.Edge)
     (g : C.base.Gauge) :
