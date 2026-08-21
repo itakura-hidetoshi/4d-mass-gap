@@ -97,10 +97,10 @@ theorem
             A
               (periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquetteEdge
                 H latticeSpacing n q k))) := by
+  unfold periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePath
   rw [
     periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalReflectionCompletedPathReadout_of_nonnegative
       H latticeSpacing n A q hq]
-  unfold periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarPlaquettePath
   rw [periodicHypercubicEvenPrimarySpatialPlaquetteNormalizedTracePrimaryBoundary_eq]
   rfl
 
