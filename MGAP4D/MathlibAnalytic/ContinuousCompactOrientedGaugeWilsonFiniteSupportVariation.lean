@@ -63,17 +63,20 @@ noncomputable def
         exact he hsource
       simp [he, hEq]
 
-@[simp] theorem continuous_compact_oriented_ofFiniteSupport_variation
+/-- On the declared finite support, the coarse variation profile is exactly
+the universal oscillation bound `2 * ‖O‖`. -/
+theorem continuous_compact_oriented_ofFiniteSupport_variation_eq_two_mul_norm_of_mem
     {C : ContinuousCompactOrientedGaugeWilsonSystem}
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
     (S : Finset C.base.geometry.Edge)
     (hSupport : ∀ A B : C.base.Configuration,
       (∀ e, e ∈ S → A e = B e) → O A = O B)
-    (e : C.base.geometry.Edge) :
+    {e : C.base.geometry.Edge}
+    (he : e ∈ S) :
     (ContinuousCompactOrientedGaugeWilsonLinkVariationBound.ofFiniteSupport
-      O S hSupport).variation e = if e ∈ S then 2 * ‖O‖ else 0 := by
+      O S hSupport).variation e = 2 * ‖O‖ := by
   classical
-  rfl
+  simp [ContinuousCompactOrientedGaugeWilsonLinkVariationBound.ofFiniteSupport, he]
 
 /-- The finite-support variation profile vanishes identically away from the
 declared support. -/
@@ -88,7 +91,7 @@ theorem continuous_compact_oriented_ofFiniteSupport_variation_eq_zero_of_not_mem
     (ContinuousCompactOrientedGaugeWilsonLinkVariationBound.ofFiniteSupport
       O S hSupport).variation e = 0 := by
   classical
-  simp [he]
+  simp [ContinuousCompactOrientedGaugeWilsonLinkVariationBound.ofFiniteSupport, he]
 
 /-- Compact midpoint recentering upgrades the same finite-support variation
 bound to the centered profile required by the random-scan covariance route. -/
@@ -103,17 +106,23 @@ noncomputable def
   (ContinuousCompactOrientedGaugeWilsonLinkVariationBound.ofFiniteSupport
     O S hSupport).toCenteredVariationProfile
 
-@[simp] theorem continuous_compact_oriented_centeredOfFiniteSupport_variation
+/-- Midpoint recentering preserves the coarse finite-support variation on the
+support exactly. -/
+theorem continuous_compact_oriented_centeredOfFiniteSupport_variation_eq_two_mul_norm_of_mem
     {C : ContinuousCompactOrientedGaugeWilsonSystem}
     (O : BoundedContinuousFunction C.base.Configuration ℝ)
     (S : Finset C.base.geometry.Edge)
     (hSupport : ∀ A B : C.base.Configuration,
       (∀ e, e ∈ S → A e = B e) → O A = O B)
-    (e : C.base.geometry.Edge) :
+    {e : C.base.geometry.Edge}
+    (he : e ∈ S) :
     (ContinuousCompactOrientedGaugeWilsonCenteredVariationProfile.ofFiniteSupport
-      O S hSupport).variation e = if e ∈ S then 2 * ‖O‖ else 0 := by
+      O S hSupport).variation e = 2 * ‖O‖ := by
   classical
-  rfl
+  change (ContinuousCompactOrientedGaugeWilsonLinkVariationBound.ofFiniteSupport
+    O S hSupport).variation e = 2 * ‖O‖
+  exact continuous_compact_oriented_ofFiniteSupport_variation_eq_two_mul_norm_of_mem
+    O S hSupport he
 
 /-- The centered finite-support profile has no variation outside its declared
 support. -/
@@ -128,7 +137,10 @@ theorem continuous_compact_oriented_centeredOfFiniteSupport_variation_eq_zero_of
     (ContinuousCompactOrientedGaugeWilsonCenteredVariationProfile.ofFiniteSupport
       O S hSupport).variation e = 0 := by
   classical
-  simp [he]
+  change (ContinuousCompactOrientedGaugeWilsonLinkVariationBound.ofFiniteSupport
+    O S hSupport).variation e = 0
+  exact continuous_compact_oriented_ofFiniteSupport_variation_eq_zero_of_not_mem
+    O S hSupport he
 
 end
 
