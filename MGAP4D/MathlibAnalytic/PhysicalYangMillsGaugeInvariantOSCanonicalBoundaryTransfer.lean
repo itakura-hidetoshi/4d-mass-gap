@@ -1,7 +1,8 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSBoundaryMomentLinearIsometry
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingHilbertSemigroup
 import Mathlib.Analysis.InnerProductSpace.Adjoint
-import Mathlib.Analysis.Normed.Operator.Extend
+import Mathlib.Topology.Algebra.LinearMapCompletion
+import Mathlib.Topology.UniformSpace.Separation
 import Mathlib.Tactic
 
 noncomputable section
@@ -54,9 +55,7 @@ variable
         (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)}
 
 /-- The actual boundary-moment isometry and the represented-state embedding
-have exactly the same norm on the raw OS carrier.  This is the compatibility
-needed to extend the boundary realization to the completed finite-volume OS
-Hilbert space. -/
+have exactly the same norm on the raw OS carrier. -/
 theorem linearMap_norm_eq_physicalStateLinearMap_norm
     (L : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMomentLinearCoherence
       S D halfExtent N hN beta hbeta B hInvariant)
@@ -73,26 +72,128 @@ theorem linearMap_norm_eq_physicalStateLinearMap_norm
     physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2_norm,
     Pn.norm_physicalState]
 
-/-- Canonical isometric realization of the *completed* finite Wilson OS Hilbert
-space inside the actual shared-boundary `L²` space.
+/-- The coherent raw boundary moment descends canonically through the OS
+separation quotient. -/
+noncomputable def separatedLinearMap
+    (L : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMomentLinearCoherence
+      S D halfExtent N hN beta hbeta B hInvariant)
+    (n : ℕ) :
+    (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+        S D halfExtent N hN beta hbeta B hInvariant n).Separated →ₗ[ℝ]
+      PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N := by
+  let J0 := L.linearIsometry n
+  have hJ0 : UniformContinuous J0 := J0.isometry.uniformContinuous
+  refine
+    { toFun := SeparationQuotient.lift' J0
+      map_add' := ?_
+      map_smul' := ?_ }
+  · intro x y
+    rcases SeparationQuotient.surjective_mk x with ⟨F, rfl⟩
+    rcases SeparationQuotient.surjective_mk y with ⟨G, rfl⟩
+    rw [← SeparationQuotient.mk_add,
+      SeparationQuotient.lift'_mk hJ0,
+      SeparationQuotient.lift'_mk hJ0,
+      SeparationQuotient.lift'_mk hJ0]
+    exact J0.map_add F G
+  · intro r x
+    rcases SeparationQuotient.surjective_mk x with ⟨F, rfl⟩
+    rw [← SeparationQuotient.mk_smul,
+      SeparationQuotient.lift'_mk hJ0,
+      SeparationQuotient.lift'_mk hJ0]
+    exact J0.map_smul r F
 
-The extension is unique because represented positive-time states have dense
-range.  No transfer, gap, decay, or integrability hypothesis is added here. -/
+@[simp] theorem separatedLinearMap_mk
+    (L : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMomentLinearCoherence
+      S D halfExtent N hN beta hbeta B hInvariant)
+    (n : ℕ)
+    (F : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S D halfExtent N hN beta hbeta B hInvariant n).Carrier) :
+    L.separatedLinearMap n (SeparationQuotient.mk F) = L.linearIsometry n F := by
+  change SeparationQuotient.lift' (L.linearIsometry n) (SeparationQuotient.mk F) = _
+  rw [SeparationQuotient.lift'_mk
+    ((L.linearIsometry n).isometry.uniformContinuous)]
+
+/-- The descended boundary map preserves the quotient norm exactly. -/
+theorem separatedLinearMap_norm
+    (L : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMomentLinearCoherence
+      S D halfExtent N hN beta hbeta B hInvariant)
+    (n : ℕ)
+    (x : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S D halfExtent N hN beta hbeta B hInvariant n).Separated) :
+    ‖L.separatedLinearMap n x‖ = ‖x‖ := by
+  rcases SeparationQuotient.surjective_mk x with ⟨F, rfl⟩
+  rw [L.separatedLinearMap_mk]
+  simpa using (L.linearIsometry n).norm_map F
+
+/-- The actual Wilson boundary realization on the separated OS pre-Hilbert
+space, now as a genuine Mathlib linear isometry. -/
+noncomputable def separatedLinearIsometry
+    (L : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMomentLinearCoherence
+      S D halfExtent N hN beta hbeta B hInvariant)
+    (n : ℕ) :
+    (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+        S D halfExtent N hN beta hbeta B hInvariant n).Separated →ₗᵢ[ℝ]
+      PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N where
+  toLinearMap := L.separatedLinearMap n
+  norm_map' := L.separatedLinearMap_norm n
+
+@[simp] theorem separatedLinearIsometry_mk
+    (L : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMomentLinearCoherence
+      S D halfExtent N hN beta hbeta B hInvariant)
+    (n : ℕ)
+    (F : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S D halfExtent N hN beta hbeta B hInvariant n).Carrier) :
+    L.separatedLinearIsometry n (SeparationQuotient.mk F) =
+      physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2
+        S D halfExtent N hN beta hbeta B hInvariant n F := by
+  change L.separatedLinearMap n (SeparationQuotient.mk F) = _
+  rw [L.separatedLinearMap_mk, linearIsometry_apply]
+
+/-- Continuous-linear extension of the separated actual Wilson boundary
+realization to the completed finite-volume OS Hilbert space. -/
+noncomputable def completedLinearMap
+    (L : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMomentLinearCoherence
+      S D halfExtent N hN beta hbeta B hInvariant)
+    (n : ℕ) :
+    PhysicalYangMillsEvenPeriodicWilsonOSApproximatingHilbert
+        S D halfExtent N hN beta hbeta B hInvariant n →L[ℝ]
+      PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N := by
+  let Pn :=
+    physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S D halfExtent N hN beta hbeta B hInvariant n
+  change UniformSpace.Completion Pn.Separated →L[ℝ]
+    PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N
+  exact (L.separatedLinearIsometry n).toContinuousLinearMap.fromCompletion
+
+/-- The completed continuous-linear boundary realization preserves norm. -/
+theorem completedLinearMap_norm
+    (L : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMomentLinearCoherence
+      S D halfExtent N hN beta hbeta B hInvariant)
+    (n : ℕ)
+    (psi : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingHilbert
+      S D halfExtent N hN beta hbeta B hInvariant n) :
+    ‖L.completedLinearMap n psi‖ = ‖psi‖ := by
+  let Pn :=
+    physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S D halfExtent N hN beta hbeta B hInvariant n
+  change UniformSpace.Completion Pn.Separated at psi
+  refine UniformSpace.Completion.induction_on psi
+    (isClosed_eq (L.completedLinearMap n).continuous.norm continuous_norm) ?_
+  intro x
+  rw [completedLinearMap, ContinuousLinearMap.fromCompletion_apply_coe]
+  exact (L.separatedLinearIsometry n).norm_map x
+
+/-- Canonical isometric realization of the completed finite Wilson OS Hilbert
+space inside the actual shared-boundary `L²` space. -/
 noncomputable def completedLinearIsometry
     (L : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMomentLinearCoherence
       S D halfExtent N hN beta hbeta B hInvariant)
     (n : ℕ) :
     PhysicalYangMillsEvenPeriodicWilsonOSApproximatingHilbert
         S D halfExtent N hN beta hbeta B hInvariant n →ₗᵢ[ℝ]
-      PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N := by
-  let Pn :=
-    physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-      S D halfExtent N hN beta hbeta B hInvariant n
-  exact
-    (L.linearMap n).extendOfIsometry
-      (e := Pn.physicalStateLinearMap)
-      Pn.physicalStateLinearMap_denseRange
-      (L.linearMap_norm_eq_physicalStateLinearMap_norm n)
+      PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N where
+  toLinearMap := (L.completedLinearMap n).toLinearMap
+  norm_map' := L.completedLinearMap_norm n
 
 /-- On the dense represented-state family, the completed isometry is exactly
 the actual Wilson boundary moment. -/
@@ -110,38 +211,33 @@ the actual Wilson boundary moment. -/
   let Pn :=
     physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
       S D halfExtent N hN beta hbeta B hInvariant n
-  rw [← Pn.physicalStateLinearMap_apply]
-  simp [completedLinearIsometry,
-    linearMap_norm_eq_physicalStateLinearMap_norm]
+  change L.completedLinearMap n
+      ((Pn.osClass F : Pn.Separated) : UniformSpace.Completion Pn.Separated) = _
+  rw [completedLinearMap, ContinuousLinearMap.fromCompletion_apply_coe]
+  change L.separatedLinearIsometry n (SeparationQuotient.mk F) = _
+  exact L.separatedLinearIsometry_mk n F
 
 /-- The Hilbert adjoint of the completed boundary isometry is a left inverse on
-its physical image: `J_n† J_n = I`.
-
-This is derived from preservation of the real inner product, rather than
-assumed as a separate reconstruction axiom. -/
+its physical image: `J_n† J_n = I`. -/
 theorem completedLinearIsometry_adjoint_apply
     (L : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMomentLinearCoherence
       S D halfExtent N hN beta hbeta B hInvariant)
     (n : ℕ)
     (psi : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingHilbert
       S D halfExtent N hN beta hbeta B hInvariant n) :
-    ((L.completedLinearIsometry n).toContinuousLinearMap†)
+    (((L.completedLinearIsometry n).toContinuousLinearMap)†)
         (L.completedLinearIsometry n psi) = psi := by
   apply ext_inner_left ℝ
   intro phi
-  rw [ContinuousLinearMap.adjoint_inner_left]
-  exact (L.completedLinearIsometry n).inner_map_map psi phi
+  rw [ContinuousLinearMap.adjoint_inner_right]
+  exact (L.completedLinearIsometry n).inner_map_map phi psi
 
-/-- The canonical actual shared-boundary transfer at physical time `t`.
-
-Writing `J_n` for the completed boundary-moment isometry and `T_{n,t/2}` for
-the actual completed finite Wilson OS transfer, this is
-
+/-- The canonical actual shared-boundary transfer at physical time `t`:
 `K_{n,t} = J_n T_{n,t/2} J_n†`.
 
-The half-time convention is exactly the one used by the existing boundary-gap
-interfaces.  On the orthogonal complement of the physical boundary image the
-adjoint kills the vector, so no arbitrary extension of the transfer is chosen. -/
+The half-time convention is the one used by the existing boundary-gap
+interfaces.  The adjoint gives the canonical zero extension off the physical
+boundary image. -/
 noncomputable def canonicalBoundaryTransfer
     (L : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMomentLinearCoherence
       S D halfExtent N hN beta hbeta B hInvariant)
@@ -149,10 +245,15 @@ noncomputable def canonicalBoundaryTransfer
       S D halfExtent N hN beta hbeta B hInvariant)
     (n : ℕ) (t : NNReal) :
     PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N →L[ℝ]
-      PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N :=
+      PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N := by
   let J := L.completedLinearIsometry n
-  J.toContinuousLinearMap.comp
-    ((C.finiteOperator n (t / 2)).comp J.toContinuousLinearMap†)
+  let Jadj :
+      PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N →L[ℝ]
+        PhysicalYangMillsEvenPeriodicWilsonOSApproximatingHilbert
+          S D halfExtent N hN beta hbeta B hInvariant n :=
+    (J.toContinuousLinearMap)†
+  exact J.toContinuousLinearMap.comp
+    ((C.finiteOperator n (t / 2)).comp Jadj)
 
 /-- The canonical boundary transfer exactly intertwines the completed finite OS
 operator with the completed boundary realization. -/
@@ -166,8 +267,18 @@ operator with the completed boundary realization. -/
       S D halfExtent N hN beta hbeta B hInvariant n) :
     L.canonicalBoundaryTransfer C n t (L.completedLinearIsometry n psi) =
       L.completedLinearIsometry n (C.finiteOperator n (t / 2) psi) := by
-  simp [canonicalBoundaryTransfer,
-    completedLinearIsometry_adjoint_apply]
+  let J := L.completedLinearIsometry n
+  let Jadj :
+      PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N →L[ℝ]
+        PhysicalYangMillsEvenPeriodicWilsonOSApproximatingHilbert
+          S D halfExtent N hN beta hbeta B hInvariant n :=
+    (J.toContinuousLinearMap)†
+  change J (C.finiteOperator n (t / 2) (Jadj (J psi))) =
+    J (C.finiteOperator n (t / 2) psi)
+  have hLeft : Jadj (J psi) = psi := by
+    dsimp [Jadj, J]
+    exact L.completedLinearIsometry_adjoint_apply n psi
+  rw [hLeft]
 
 /-- Dense-carrier form of the completed finite Wilson OS transfer. -/
 theorem finiteOperator_on_physicalState
@@ -187,13 +298,7 @@ theorem finiteOperator_on_physicalState
     (C.toPositiveTimeObservableContractionSemigroup n).toCarrierSemigroup
       |>.physicalOperator_on_physicalState t F
 
-/-- Exact model-derived boundary-moment intertwining for every raw OS carrier
-vector.  In particular it applies to the vacuum-centered carriers used by the
-Poincaré and quadratic boundary-gap packages.
-
-Thus, once the two algebraic boundary-moment coherence laws are available, the
-legacy `boundaryTransfer` and `boundaryMoment_intertwining` fields no longer
-represent independent analytic input. -/
+/-- Exact boundary-moment intertwining for every raw OS carrier vector. -/
 theorem canonicalBoundaryTransfer_canonicalBoundaryMoment_intertwining
     (L : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMomentLinearCoherence
       S D halfExtent N hN beta hbeta B hInvariant)
@@ -225,7 +330,7 @@ theorem canonicalBoundaryTransfer_canonicalBoundaryMoment_intertwining
       L.canonicalBoundaryTransfer_completedLinearIsometry C n t (Pn.physicalState F)
     _ = L.completedLinearIsometry n
         (Pn.physicalState (Tn.carrierTranslation (t / 2) F)) := by
-      rw [L.finiteOperator_on_physicalState C n (t / 2) F]
+      rw [finiteOperator_on_physicalState C n (t / 2) F]
     _ = physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2
         S D halfExtent N hN beta hbeta B hInvariant n
         (Tn.carrierTranslation (t / 2) F) := by
@@ -233,7 +338,7 @@ theorem canonicalBoundaryTransfer_canonicalBoundaryMoment_intertwining
 
 /-- The canonical boundary transfer is contractive on the entire boundary
 `L²` space.  This is a structural `≤ 1` estimate only; it is deliberately not
-a strict vacuum-sector contraction and therefore does not assert a mass gap. -/
+a strict vacuum-sector contraction. -/
 theorem canonicalBoundaryTransfer_norm_le
     (L : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMomentLinearCoherence
       S D halfExtent N hN beta hbeta B hInvariant)
@@ -243,26 +348,30 @@ theorem canonicalBoundaryTransfer_norm_le
     (v : PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N) :
     ‖L.canonicalBoundaryTransfer C n t v‖ ≤ ‖v‖ := by
   let J := L.completedLinearIsometry n
+  let Jadj :
+      PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N →L[ℝ]
+        PhysicalYangMillsEvenPeriodicWilsonOSApproximatingHilbert
+          S D halfExtent N hN beta hbeta B hInvariant n :=
+    (J.toContinuousLinearMap)†
   have hJ : ‖J.toContinuousLinearMap‖ ≤ 1 := by
     refine ContinuousLinearMap.opNorm_le_bound J.toContinuousLinearMap zero_le_one ?_
     intro psi
     simpa using (le_refl ‖psi‖)
-  have hAdj : ‖J.toContinuousLinearMap†‖ ≤ 1 := by
+  have hAdj : ‖Jadj‖ ≤ 1 := by
+    dsimp [Jadj]
     simpa using hJ
   have hT : ‖C.finiteOperator n (t / 2)‖ ≤ 1 :=
     C.finiteOperator_opNorm_le n (t / 2)
-  change
-    ‖J (C.finiteOperator n (t / 2) (J.toContinuousLinearMap† v))‖ ≤ ‖v‖
+  change ‖J (C.finiteOperator n (t / 2) (Jadj v))‖ ≤ ‖v‖
   rw [J.norm_map]
   calc
-    ‖C.finiteOperator n (t / 2) (J.toContinuousLinearMap† v)‖ ≤
-        ‖C.finiteOperator n (t / 2)‖ * ‖J.toContinuousLinearMap† v‖ :=
+    ‖C.finiteOperator n (t / 2) (Jadj v)‖ ≤
+        ‖C.finiteOperator n (t / 2)‖ * ‖Jadj v‖ :=
       (C.finiteOperator n (t / 2)).le_opNorm _
-    _ ≤ 1 * ‖J.toContinuousLinearMap† v‖ :=
+    _ ≤ 1 * ‖Jadj v‖ :=
       mul_le_mul_of_nonneg_right hT (norm_nonneg _)
-    _ = ‖J.toContinuousLinearMap† v‖ := one_mul _
-    _ ≤ ‖J.toContinuousLinearMap†‖ * ‖v‖ :=
-      (J.toContinuousLinearMap†).le_opNorm v
+    _ = ‖Jadj v‖ := one_mul _
+    _ ≤ ‖Jadj‖ * ‖v‖ := Jadj.le_opNorm v
     _ ≤ 1 * ‖v‖ :=
       mul_le_mul_of_nonneg_right hAdj (norm_nonneg _)
     _ = ‖v‖ := one_mul _
