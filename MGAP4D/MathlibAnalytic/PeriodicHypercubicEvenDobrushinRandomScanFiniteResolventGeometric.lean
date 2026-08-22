@@ -131,12 +131,16 @@ theorem periodicHypercubicEvenSpecialUnitary_dobrushinRandomScanFiniteResolventP
       (∑ i : PeriodicHypercubicEvenEdge H, v i) = ∑ i ∈ S, v i :=
     finite_sum_eq_sum_support_of_eq_zero_off S v hvSupport
   unfold continuousCompactOrientedGaugeWilsonTotalVariation at hTotalAll
+  change
+    (∑ i : PeriodicHypercubicEvenEdge H, w i) ≤
+      (1 - Ddata.coefficient)⁻¹ *
+        ∑ i : PeriodicHypercubicEvenEdge H, v i at hTotalAll
   rw [hvTotal] at hTotalAll
   have hTotal :
       (∑ i : PeriodicHypercubicEvenEdge H, w i) ≤
         (1 - 18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta)⁻¹ *
           ∑ i ∈ S, v i := by
-    simpa [w, Ddata,
+    simpa [Ddata,
       periodicHypercubicSpecialUnitary_sparseDobrushinMatrixData_of_threshold] using
       hTotalAll
   exact
