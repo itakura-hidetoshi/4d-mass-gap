@@ -46,20 +46,6 @@ noncomputable def CompactOrientedGaugeWilsonSystem.replaceLinks
   funext e
   simp [CompactOrientedGaugeWilsonSystem.replaceLinks]
 
-/-- Adding one link to the splice set changes no other physical link. -/
-theorem compact_oriented_replaceLinks_insert_agreeOffLink
-    (L : CompactOrientedGaugeWilsonSystem)
-    (A B : L.Configuration)
-    (s : Finset L.geometry.Edge)
-    (source : L.geometry.Edge) :
-    L.AgreeOffLink
-      (L.replaceLinks A B (insert source s))
-      (L.replaceLinks A B s)
-      source := by
-  classical
-  intro e he
-  simp [CompactOrientedGaugeWilsonSystem.replaceLinks, he]
-
 /-- A linkwise variation profile controls the global oscillation by the sum of
 its physical-link variations. -/
 theorem continuous_compact_oriented_linkVariationBound_globalOscillation_le_sum
@@ -78,6 +64,13 @@ theorem continuous_compact_oriented_linkVariationBound_globalOscillation_le_sum
     | empty =>
         simp
     | @insert source s hsource ih =>
+        have hAgree :
+            C.base.AgreeOffLink
+              (C.base.replaceLinks A B (insert source s))
+              (C.base.replaceLinks A B s)
+              source := by
+          intro e he
+          simp [CompactOrientedGaugeWilsonSystem.replaceLinks, he]
         calc
           |F (C.base.replaceLinks A B (insert source s)) - F A| ≤
               |F (C.base.replaceLinks A B (insert source s)) -
@@ -89,8 +82,7 @@ theorem continuous_compact_oriented_linkVariationBound_globalOscillation_le_sum
               (P.variation_bound source
                 (C.base.replaceLinks A B (insert source s))
                 (C.base.replaceLinks A B s)
-                (compact_oriented_replaceLinks_insert_agreeOffLink
-                  C.base A B s source))
+                hAgree)
               ih
           _ = ∑ e ∈ insert source s, P.variation e := by
             simp [Finset.sum_insert, hsource]
