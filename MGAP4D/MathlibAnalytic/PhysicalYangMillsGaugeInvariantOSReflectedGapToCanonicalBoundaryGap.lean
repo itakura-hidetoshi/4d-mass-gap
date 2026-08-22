@@ -37,19 +37,22 @@ theorem completedLinearIsometry_adjoint_norm_le
     (v : PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N) :
     ‖(((L.completedLinearIsometry n).toContinuousLinearMap)†) v‖ ≤ ‖v‖ := by
   let J := L.completedLinearIsometry n
-  let x := (J.toContinuousLinearMap)† v
+  let Jadj := (J.toContinuousLinearMap)†
+  let x := Jadj v
   have hsq : ‖x‖ ^ 2 ≤ ‖v‖ * ‖x‖ := by
     calc
       ‖x‖ ^ 2 = inner ℝ x x := by
         simpa using (real_inner_self_eq_norm_sq x).symm
       _ = inner ℝ v (J x) := by
-        dsimp [x]
+        dsimp [x, Jadj]
         exact ContinuousLinearMap.adjoint_inner_left J.toContinuousLinearMap _ _
       _ ≤ ‖v‖ * ‖J x‖ := real_inner_le_norm _ _
       _ = ‖v‖ * ‖x‖ := by rw [J.norm_map]
   have hx : 0 ≤ ‖x‖ := norm_nonneg _
   have hv : 0 ≤ ‖v‖ := norm_nonneg _
-  nlinarith
+  have hxle : ‖x‖ ≤ ‖v‖ := by
+    nlinarith
+  simpa [x, Jadj, J] using hxle
 
 end PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMomentLinearCoherence
 
@@ -188,7 +191,7 @@ noncomputable def toCanonicalBoundaryVacuumGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant L C :=
   Q.toApproximatingVacuumGapCertificate.toCanonicalBoundaryVacuumGapCertificate
     L
-    (fun t => Real.sqrt_nonneg _)
+    (fun _ => Real.sqrt_nonneg _)
 
 end PhysicalYangMillsEvenPeriodicWilsonOSApproximatingQuadraticGapCertificate
 
