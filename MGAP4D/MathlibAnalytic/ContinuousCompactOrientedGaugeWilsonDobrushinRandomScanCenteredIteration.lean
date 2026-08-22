@@ -39,9 +39,19 @@ noncomputable def
     ContinuousCompactOrientedGaugeWilsonCenteredVariationProfile C
       (C.randomScanConditionalExpectationContinuousBCF O) := by
   let Q : ContinuousCompactOrientedGaugeWilsonLinkVariationBound C
-      (fun A => C.randomScanConditionalExpectationContinuousBCF O A) := by
-    simpa only [continuous_compact_oriented_randomScanConditionalExpectationContinuousBCF_apply]
-      using P.randomScanVariationBound D
+      (fun A => C.randomScanConditionalExpectationContinuousBCF O A) :=
+    { variation :=
+        continuousCompactOrientedGaugeWilsonDobrushinRandomScanUpdatedVariation
+          D P.variation
+      variation_nonneg :=
+        continuous_compact_oriented_dobrushinRandomScanUpdatedVariation_nonneg
+          D P.variation P.variation_nonneg
+      variation_bound := by
+        intro source A B hAgree
+        simpa only [continuous_compact_oriented_randomScanConditionalExpectationContinuousBCF_apply]
+          using
+            continuous_compact_oriented_dobrushin_randomScanConditionalExpectationBCF_difference_abs_le
+              P D source A B hAgree }
   exact Q.toCenteredVariationProfile
 
 /-- Recentring the Feller random-scan observable does not change its declared
