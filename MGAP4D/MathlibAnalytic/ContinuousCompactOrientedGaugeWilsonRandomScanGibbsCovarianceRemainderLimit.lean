@@ -84,7 +84,10 @@ theorem
             (fun A =>
               ((P.toRandomScanCenteredState).randomScanIterate D M).observable A)|)
         atTop (nhds 0) := by
-    exact squeeze_zero' (fun M => abs_nonneg _) hBound hEnvelope
+    exact squeeze_zero'
+      (eventually_of_forall fun M => abs_nonneg _)
+      (eventually_of_forall hBound)
+      hEnvelope
   apply (tendsto_zero_iff_norm_tendsto_zero).2
   simpa [Real.norm_eq_abs] using hAbs
 
