@@ -37,13 +37,13 @@ theorem finiteHeatBathScheduleInfluenceDegree_sum_cons_of_ne
     (targets : List α)
     (initial source : α)
     (h : source ≠ target) :
-    (∑ d in Finset.range ((target :: targets).length + 1),
+    (∑ d ∈ Finset.range ((target :: targets).length + 1),
         finiteHeatBathScheduleInfluenceDegree influence (target :: targets) d
           initial source) =
-      (∑ d in Finset.range (targets.length + 1),
+      (∑ d ∈ Finset.range (targets.length + 1),
           finiteHeatBathScheduleInfluenceDegree influence targets d initial source) +
         influence target source *
-          (∑ d in Finset.range (targets.length + 1),
+          (∑ d ∈ Finset.range (targets.length + 1),
             finiteHeatBathScheduleInfluenceDegree influence targets d initial target) := by
   have htop :
       finiteHeatBathScheduleInfluenceDegree influence targets
@@ -53,10 +53,10 @@ theorem finiteHeatBathScheduleInfluenceDegree_sum_cons_of_ne
         influence targets (targets.length + 1) initial source (by omega)
   have hsource :
       finiteHeatBathScheduleInfluenceDegree influence targets 0 initial source +
-          (∑ d in Finset.range (targets.length + 1),
+          (∑ d ∈ Finset.range (targets.length + 1),
             finiteHeatBathScheduleInfluenceDegree influence targets (d + 1)
               initial source) =
-        ∑ d in Finset.range (targets.length + 1),
+        ∑ d ∈ Finset.range (targets.length + 1),
           finiteHeatBathScheduleInfluenceDegree influence targets d initial source := by
     rw [Finset.sum_range_succ, htop, add_zero]
     rw [← Finset.sum_range_succ']
@@ -78,7 +78,7 @@ theorem finiteHeatBathScheduleInfluenceKernel_eq_sum_degree
     (influence : α → α → ℝ) :
     ∀ (targets : List α) (initial source : α),
       finiteHeatBathScheduleInfluenceKernel influence targets initial source =
-        ∑ d in Finset.range (targets.length + 1),
+        ∑ d ∈ Finset.range (targets.length + 1),
           finiteHeatBathScheduleInfluenceDegree influence targets d initial source := by
   intro targets
   induction targets with
