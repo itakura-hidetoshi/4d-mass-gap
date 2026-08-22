@@ -65,6 +65,13 @@ theorem canonicalBoundaryTransfer_opNorm_eq_one
       S D halfExtent N hN beta hbeta B hInvariant)
     (n : ℕ) (t : NNReal) :
     ‖L.canonicalBoundaryTransfer C n t‖ = 1 := by
+  letI : Nontrivial
+      (PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N) := by
+    refine ⟨⟨L.canonicalBoundaryVacuum n, 0, ?_⟩⟩
+    intro hzero
+    have hnorm := L.canonicalBoundaryVacuum_norm n
+    rw [hzero, norm_zero] at hnorm
+    norm_num at hnorm
   apply le_antisymm
   · exact L.canonicalBoundaryTransfer_opNorm_le C n t
   · have h :=
