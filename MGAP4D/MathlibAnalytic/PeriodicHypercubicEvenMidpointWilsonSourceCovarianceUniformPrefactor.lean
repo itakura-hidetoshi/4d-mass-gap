@@ -154,6 +154,7 @@ theorem
 /-- The actual finite midpoint Wilson-source covariance has a geometric decay
 bound whose non-geometric prefactor is independent of lattice volume, spacing,
 and midpoint translation. -/
+set_option maxHeartbeats 800000 in
 theorem
     periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointWilsonSourceCovariance_abs_le_geometric_uniformPrefactor_of_floor_min_ge
     (H N D : ℕ)
