@@ -92,7 +92,10 @@ theorem finiteHeatBathScheduleInfluenceKernel_eq_sum_degree
       rw [finiteHeatBathScheduleInfluenceKernel_cons]
       by_cases h : source = target
       · subst source
-        simp [finiteHeatBathScheduleInfluenceDegree]
+        symm
+        apply Finset.sum_eq_zero
+        intro d _
+        cases d <;> simp
       · simp only [h, if_false]
         rw [ih initial source, ih initial target]
         exact
