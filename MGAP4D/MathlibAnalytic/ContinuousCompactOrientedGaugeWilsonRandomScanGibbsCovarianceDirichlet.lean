@@ -133,8 +133,8 @@ theorem continuous_compact_oriented_gibbsCovarianceReal_finset_sum_right_bcf
     (F : BoundedContinuousFunction C.base.Configuration ℝ)
     (G : α → BoundedContinuousFunction C.base.Configuration ℝ)
     (s : Finset α) :
-    C.gibbsCovarianceReal (fun A => F A) (fun A => (∑ i in s, G i) A) =
-      ∑ i in s, C.gibbsCovarianceReal (fun A => F A) (fun A => G i A) := by
+    C.gibbsCovarianceReal (fun A => F A) (fun A => (s.sum G) A) =
+      s.sum (fun i => C.gibbsCovarianceReal (fun A => F A) (fun A => G i A)) := by
   induction s using Finset.induction_on with
   | empty =>
       simp [ContinuousCompactOrientedGaugeWilsonSystem.gibbsCovarianceReal,
