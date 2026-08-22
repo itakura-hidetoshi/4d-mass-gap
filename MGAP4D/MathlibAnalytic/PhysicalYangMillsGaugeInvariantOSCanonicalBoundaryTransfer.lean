@@ -215,8 +215,11 @@ theorem completedLinearMap_norm
     (isClosed_eq (L.completedLinearMap n).continuous.norm continuous_norm) ?_
   intro x
   rw [L.completedLinearMap_coe]
-  rw [UniformSpace.Completion.norm_coe]
-  exact (L.separatedLinearIsometry n).norm_map x
+  calc
+    ‖L.separatedLinearIsometry n x‖ = ‖x‖ :=
+      (L.separatedLinearIsometry n).norm_map x
+    _ = ‖(x : UniformSpace.Completion Pn.Separated)‖ :=
+      (UniformSpace.Completion.norm_coe x).symm
 
 /-- Canonical isometric realization of the completed finite Wilson OS Hilbert
 space inside the actual shared-boundary `L²` space. -/
