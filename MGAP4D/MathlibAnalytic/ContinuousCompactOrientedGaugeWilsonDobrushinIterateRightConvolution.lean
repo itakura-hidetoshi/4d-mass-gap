@@ -178,7 +178,25 @@ theorem finiteInfluenceTruncatedKernel_succ_right
             finiteInfluenceIterateKernel influence d initial mid *
               influence mid source := by
         rw [Finset.sum_range_succ']
-        simp [finiteInfluenceIterateKernel]
+        have hzero :
+            finiteInfluenceIterateKernel influence 0 initial source =
+              (if initial = source then 1 else 0) := by
+          by_cases h : initial = source <;>
+            simp [finiteInfluenceIterateKernel, h]
+        rw [hzero]
+        have hpositive :
+            (∑ x ∈ Finset.range n,
+              finiteInfluenceIterateKernel influence (x + 1) initial source) =
+              ∑ x ∈ Finset.range n,
+                ∑ mid : α,
+                  finiteInfluenceIterateKernel influence x initial mid *
+                    influence mid source := by
+          apply Finset.sum_congr rfl
+          intro x _
+          exact finiteInfluenceIterateKernel_succ_right influence x initial source
+        rw [hpositive]
+        rw [Finset.sum_range_succ]
+        ring
     _ =
       (if initial = source then 1 else 0) +
         ∑ mid : α,
