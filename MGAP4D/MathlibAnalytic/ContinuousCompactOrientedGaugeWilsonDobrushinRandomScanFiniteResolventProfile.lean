@@ -185,7 +185,7 @@ theorem continuous_compact_oriented_dobrushinRandomScanUpdatedVariation_card_mul
       (n - 1) * variation source +
         ∑ target : C.base.geometry.Edge,
           D.influence target source * variation target
-  rw [mul_assoc, mul_inv_cancel₀ hn, one_mul]
+  rw [← mul_assoc, mul_inv_cancel₀ hn, one_mul]
   exact
     continuous_compact_oriented_dobrushinRandomScanUpdatedVariation_targetSum_eq
       D variation source
@@ -252,7 +252,8 @@ theorem continuous_compact_oriented_dobrushinRandomScanVariationPartialSum_resol
               rw [hRec]
               ring
         _ = S source + u source := by
-          rw [ih source]
+          simpa [n, S, u] using
+            congrArg (fun x => x + u source) (ih source).symm
 
 /-- Normalized finite random-scan accumulated variation profile. -/
 noncomputable def continuousCompactOrientedGaugeWilsonDobrushinRandomScanFiniteResolventProfile
@@ -326,8 +327,15 @@ theorem continuous_compact_oriented_dobrushinRandomScanFiniteResolventProfile_su
   have hSle :
       S source ≤ n * variation source +
         ∑ target : C.base.geometry.Edge, D.influence target source * S target := by
-    rw [hIdentity]
-    exact sub_le_self _ (mul_nonneg hnPos.le hTerminal)
+    calc
+      S source =
+          n * variation source +
+            (∑ target : C.base.geometry.Edge,
+              D.influence target source * S target) - n * uM source := by
+        simpa [n, S, uM] using hIdentity
+      _ ≤ n * variation source +
+          ∑ target : C.base.geometry.Edge, D.influence target source * S target :=
+        sub_le_self _ (mul_nonneg hnPos.le hTerminal)
   unfold continuousCompactOrientedGaugeWilsonDobrushinRandomScanFiniteResolventProfile
   change
     n⁻¹ * S source ≤
@@ -346,7 +354,7 @@ theorem continuous_compact_oriented_dobrushinRandomScanFiniteResolventProfile_su
           D.influence target source * (n⁻¹ * S target) := by
       rw [mul_add, Finset.mul_sum]
       have hInvMul : n⁻¹ * n = 1 := inv_mul_cancel₀ (ne_of_gt hnPos)
-      rw [mul_assoc, hInvMul, one_mul]
+      rw [← mul_assoc, hInvMul, one_mul]
       congr 1
       apply Finset.sum_congr rfl
       intro target _
