@@ -88,6 +88,7 @@ theorem canonicalBoundaryVacuumOrthogonalTransfer_image_defect
   rw [(L.completedVacuumOrthogonalLinearIsometry n).norm_map]
   rw [L.canonicalBoundaryVacuumOrthogonalTransfer_image_norm
     C hExchange n t psi]
+  rw [Submodule.norm_coe]
 
 end PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMomentLinearCoherence
 
