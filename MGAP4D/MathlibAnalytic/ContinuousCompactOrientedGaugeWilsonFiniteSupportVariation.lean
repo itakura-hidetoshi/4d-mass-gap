@@ -72,6 +72,7 @@ noncomputable def
     (e : C.base.geometry.Edge) :
     (ContinuousCompactOrientedGaugeWilsonLinkVariationBound.ofFiniteSupport
       O S hSupport).variation e = if e ∈ S then 2 * ‖O‖ else 0 := by
+  classical
   rfl
 
 /-- The finite-support variation profile vanishes identically away from the
@@ -86,6 +87,7 @@ theorem continuous_compact_oriented_ofFiniteSupport_variation_eq_zero_of_not_mem
     (he : e ∉ S) :
     (ContinuousCompactOrientedGaugeWilsonLinkVariationBound.ofFiniteSupport
       O S hSupport).variation e = 0 := by
+  classical
   simp [he]
 
 /-- Compact midpoint recentering upgrades the same finite-support variation
@@ -110,6 +112,7 @@ noncomputable def
     (e : C.base.geometry.Edge) :
     (ContinuousCompactOrientedGaugeWilsonCenteredVariationProfile.ofFiniteSupport
       O S hSupport).variation e = if e ∈ S then 2 * ‖O‖ else 0 := by
+  classical
   rfl
 
 /-- The centered finite-support profile has no variation outside its declared
@@ -124,6 +127,7 @@ theorem continuous_compact_oriented_centeredOfFiniteSupport_variation_eq_zero_of
     (he : e ∉ S) :
     (ContinuousCompactOrientedGaugeWilsonCenteredVariationProfile.ofFiniteSupport
       O S hSupport).variation e = 0 := by
+  classical
   simp [he]
 
 end
