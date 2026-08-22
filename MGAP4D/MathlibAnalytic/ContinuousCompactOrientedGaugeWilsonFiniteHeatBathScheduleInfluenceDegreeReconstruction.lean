@@ -59,7 +59,7 @@ theorem finiteHeatBathScheduleInfluenceDegree_sum_cons_of_ne
         ∑ d ∈ Finset.range (targets.length + 1),
           finiteHeatBathScheduleInfluenceDegree influence targets d initial source := by
     rw [Finset.sum_range_succ, htop, add_zero]
-    rw [← Finset.sum_range_succ']
+    rw [Finset.sum_range_succ']
   simp only [List.length_cons]
   rw [show targets.length + 1 + 1 = (targets.length + 1) + 1 by omega]
   rw [Finset.sum_range_succ']
