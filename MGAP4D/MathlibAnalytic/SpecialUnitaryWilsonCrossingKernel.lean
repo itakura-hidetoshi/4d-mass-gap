@@ -63,6 +63,47 @@ def specialUnitaryWilsonRelativeKernel
     (g h : Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
   specialUnitaryWilsonBoltzmannCentralFunction N beta (g⁻¹ * h)
 
+/-- For positive rank and nonnegative coupling, the exact one-plaquette Wilson
+relative kernel lies between the explicit Boltzmann floor `exp (-2 * beta)` and
+one.  This is the first pointwise quantitative bound on the concrete crossing
+kernel used by the shared-boundary transfer construction. -/
+theorem specialUnitaryWilsonRelativeKernel_mem_Icc
+    {N : ℕ}
+    (hN : 0 < N)
+    {beta : ℝ}
+    (hbeta : 0 ≤ beta)
+    (g h : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    specialUnitaryWilsonRelativeKernel N beta g h ∈
+      Set.Icc (Real.exp (-2 * beta)) 1 := by
+  have hE0 :
+      0 ≤ specialUnitaryWilsonPlaquetteEnergy N (g⁻¹ * h) :=
+    specialUnitaryWilsonPlaquetteEnergy_nonneg hN (g⁻¹ * h)
+  have hE2 :
+      specialUnitaryWilsonPlaquetteEnergy N (g⁻¹ * h) ≤ 2 :=
+    specialUnitaryWilsonPlaquetteEnergy_le_two hN (g⁻¹ * h)
+  unfold specialUnitaryWilsonRelativeKernel
+  unfold specialUnitaryWilsonBoltzmannCentralFunction
+  constructor
+  · apply Real.exp_le_exp.mpr
+    have hmul := mul_le_mul_of_nonneg_left hE2 hbeta
+    linarith
+  · rw [← Real.exp_zero]
+    apply Real.exp_le_exp.mpr
+    exact neg_nonpos.mpr (mul_nonneg hbeta hE0)
+
+/-- In particular, the exact one-plaquette Wilson relative kernel is strictly
+positive at every pair of group elements. -/
+theorem specialUnitaryWilsonRelativeKernel_pos
+    {N : ℕ}
+    (hN : 0 < N)
+    {beta : ℝ}
+    (hbeta : 0 ≤ beta)
+    (g h : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    0 < specialUnitaryWilsonRelativeKernel N beta g h := by
+  exact lt_of_lt_of_le
+    (Real.exp_pos (-2 * beta))
+    (specialUnitaryWilsonRelativeKernel_mem_Icc hN hbeta g h).1
+
 /-- The relative Wilson kernel is the positive constant `exp (-beta)` times the
 exponential of the normalized real-trace relative kernel. -/
 theorem specialUnitaryWilsonRelativeKernel_eq_trace
@@ -147,6 +188,21 @@ def localCrossingWilsonKernel
     (positiveHalfHolonomy : X → Matrix.specialUnitaryGroup (Fin N) ℂ)
     (x y : X) : ℝ :=
   specialUnitaryWilsonRelativeKernel N beta
+    (positiveHalfHolonomy x) (positiveHalfHolonomy y)
+
+/-- The concrete crossing kernel pulled back along any positive-half holonomy
+inherits the exact pointwise Wilson bounds. -/
+theorem localCrossingWilsonKernel_mem_Icc
+    {X : Type}
+    {N : ℕ}
+    (hN : 0 < N)
+    {beta : ℝ}
+    (hbeta : 0 ≤ beta)
+    (positiveHalfHolonomy : X → Matrix.specialUnitaryGroup (Fin N) ℂ)
+    (x y : X) :
+    localCrossingWilsonKernel N beta positiveHalfHolonomy x y ∈
+      Set.Icc (Real.exp (-2 * beta)) 1 := by
+  exact specialUnitaryWilsonRelativeKernel_mem_Icc hN hbeta
     (positiveHalfHolonomy x) (positiveHalfHolonomy y)
 
 /-- A Hilbert feature theorem for the relative `SU(N)` Wilson kernel pulls back
