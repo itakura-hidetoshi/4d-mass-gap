@@ -89,7 +89,7 @@ theorem specialUnitaryWilsonRelativeKernel_mem_Icc
     linarith
   · rw [← Real.exp_zero]
     apply Real.exp_le_exp.mpr
-    exact neg_nonpos.mpr (mul_nonneg hbeta hE0)
+    exact mul_nonpos_of_nonpos_of_nonneg (neg_nonpos.mpr hbeta) hE0
 
 /-- In particular, the exact one-plaquette Wilson relative kernel is strictly
 positive at every pair of group elements. -/
