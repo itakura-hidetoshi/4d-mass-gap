@@ -48,7 +48,7 @@ theorem continuous_compact_oriented_dobrushin_transposeInteraction_le_coefficien
       ∑ target : C.base.geometry.Edge, D.coefficient * w target := by
         apply Finset.sum_le_sum
         intro target _
-        rw [Finset.sum_mul]
+        rw [← Finset.sum_mul]
         exact mul_le_mul_of_nonneg_right
           (D.rowSum_le_coefficient target) (hw target)
     _ = D.coefficient * continuousCompactOrientedGaugeWilsonTotalVariation w := by
@@ -113,7 +113,7 @@ theorem continuous_compact_oriented_dobrushinRandomScanFiniteResolventProfile_ga
       continuousCompactOrientedGaugeWilsonTotalVariation w ≤
         continuousCompactOrientedGaugeWilsonTotalVariation variation +
           D.coefficient * continuousCompactOrientedGaugeWilsonTotalVariation w :=
-    hSummed.trans (add_le_add_left hInteraction _)
+    hSummed.trans (add_le_add_right hInteraction _)
   change
     (1 - D.coefficient) *
         continuousCompactOrientedGaugeWilsonTotalVariation w ≤
