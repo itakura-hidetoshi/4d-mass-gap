@@ -87,7 +87,8 @@ theorem finiteHeatBathScheduleInfluenceKernel_nonneg
   induction targets with
   | nil =>
       intro initial source
-      simp [finiteHeatBathScheduleInfluenceKernel]
+      by_cases h : initial = source <;>
+        simp [finiteHeatBathScheduleInfluenceKernel, h]
   | cons target targets ih =>
       intro initial source
       rw [finiteHeatBathScheduleInfluenceKernel_cons]
