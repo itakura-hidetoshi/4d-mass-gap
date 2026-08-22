@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonRandomScanGibbsCovarianceRemainderContraction
+import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonRandomScanSpectralEnclosureL2
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Tactic
 
@@ -28,38 +29,6 @@ namespace MathlibAnalytic
 open Filter
 
 noncomputable section
-
-/-- A nonnegative Dobrushin coefficient gives a nonnegative normalized
-random-scan rate on any nonempty finite physical-link set. -/
-theorem continuous_compact_oriented_dobrushinRandomScanRate_nonneg
-    (C : ContinuousCompactOrientedGaugeWilsonSystem)
-    (coefficient : ℝ)
-    (hCoefficientNonneg : 0 ≤ coefficient)
-    (hEdge : 0 < Fintype.card C.base.geometry.Edge) :
-    0 ≤ continuousCompactOrientedDobrushinRandomScanRate C coefficient := by
-  have hCardPos :
-      (0 : ℝ) < (Fintype.card C.base.geometry.Edge : ℝ) :=
-    Nat.cast_pos.mpr hEdge
-  have hCardNat : 1 ≤ Fintype.card C.base.geometry.Edge :=
-    Nat.one_le_iff_ne_zero.mpr (Nat.ne_of_gt hEdge)
-  have hCardOne :
-      (1 : ℝ) ≤ (Fintype.card C.base.geometry.Edge : ℝ) := by
-    exact_mod_cast hCardNat
-  have hGapLeOne :
-      continuousCompactOrientedDobrushinHeatBathGap coefficient ≤ 1 := by
-    unfold continuousCompactOrientedDobrushinHeatBathGap
-    linarith
-  have hGapLeCard :
-      continuousCompactOrientedDobrushinHeatBathGap coefficient ≤
-        (Fintype.card C.base.geometry.Edge : ℝ) :=
-    hGapLeOne.trans hCardOne
-  have hDivLeOne :
-      continuousCompactOrientedDobrushinHeatBathGap coefficient /
-          (Fintype.card C.base.geometry.Edge : ℝ) ≤ 1 := by
-    rw [div_le_iff₀ hCardPos]
-    simpa using hGapLeCard
-  unfold continuousCompactOrientedDobrushinRandomScanRate
-  linarith
 
 /-- Under strict Dobrushin contraction, the actual bounded-continuous
 random-scan covariance remainder tends to zero. -/
