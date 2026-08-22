@@ -96,7 +96,7 @@ theorem completedLinearIsometry_mem_actualBoundaryAnalysis_orthogonal_ker
         UniformSpace.Completion Pn.Separated) ∈ A.kerᗮ
   rw [L.completedLinearMap_coe, L.separatedLinearIsometry_mk]
   rw [ContinuousLinearMap.orthogonal_ker A]
-  apply Submodule.subset_topologicalClosure
+  apply (A†).range.le_topologicalClosure
   refine ⟨physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservableL2
     S D halfExtent N hN beta hbeta B hInvariant n F, ?_⟩
   simpa [A, physicalYangMillsEvenPeriodicWilsonOSActualBoundarySynthesisOperator,
@@ -107,9 +107,9 @@ theorem completedLinearIsometry_mem_actualBoundaryAnalysis_orthogonal_ker
 /-- The actual Wilson analysis, restricted through the canonical physical
 boundary isometry, is injective.
 
-No quantitative lower bound is asserted: this theorem removes only the null
-space obstruction.  The remaining model-facing estimate is a positive lower
-bound for this injective map on the relevant normalized physical sector. -/
+This removes only the null-space obstruction.  It does not imply closed range,
+a bounded inverse, or any uniform coercive lower bound for the static analysis
+operator. -/
 theorem actualBoundaryAnalysisOnPhysicalHilbert_injective
     (L : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMomentLinearCoherence
       S D halfExtent N hN beta hbeta B hInvariant)
@@ -132,16 +132,17 @@ theorem actualBoundaryAnalysisOnPhysicalHilbert_injective
       inner ℝ
         (L.completedLinearIsometry n (psi - phi))
         (L.completedLinearIsometry n (psi - phi)) = 0 :=
-    Submodule.inner_left_of_mem_orthogonal horth hker
+    Submodule.inner_left_of_mem_orthogonal hker horth
   have hJzero : L.completedLinearIsometry n (psi - phi) = 0 :=
     inner_self_eq_zero.mp hinner
-  have hsubzero : psi - phi = 0 :=
-    (L.completedLinearIsometry n).injective hJzero
+  have hsubzero : psi - phi = 0 := by
+    apply (L.completedLinearIsometry n).injective
+    simpa using hJzero
   exact sub_eq_zero.mp hsubzero
 
 /-- Every nonzero physical OS vector has strictly positive actual Wilson
-open-half analysis norm.  This is qualitative nondegeneracy, not yet a
-Poincare/coercive lower bound uniform over unit vectors or lattice scales. -/
+open-half analysis norm.  This is qualitative nondegeneracy only; no Poincare
+or scale-uniform coercive constant is inferred. -/
 theorem actualBoundaryAnalysisOnPhysicalHilbert_norm_pos
     (L : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMomentLinearCoherence
       S D halfExtent N hN beta hbeta B hInvariant)
@@ -152,15 +153,18 @@ theorem actualBoundaryAnalysisOnPhysicalHilbert_norm_pos
     0 < ‖L.actualBoundaryAnalysisOnPhysicalHilbert n psi‖ := by
   apply norm_pos_iff.mpr
   intro hzero
-  exact hpsi (L.actualBoundaryAnalysisOnPhysicalHilbert_injective n hzero)
+  apply hpsi
+  apply L.actualBoundaryAnalysisOnPhysicalHilbert_injective n
+  simpa using hzero
 
 /-- Consequently the static actual Wilson Gram factor `A† A` has strictly
 positive quadratic form on every nonzero vector in the physical boundary
 image.
 
-This isolates the remaining analytic frontier exactly: turn this qualitative
-strict positivity into a quantitative lower bound `c_n ‖psi‖²`, and then
-control `c_n` along the continuum scaling sequence. -/
+This remains qualitative.  In particular it does not promote the static
+Hilbert--Schmidt analysis operator to a global bounded-below map.  The physical
+mass-gap frontier remains the model-derived time-transfer/reflected Wilson
+quadratic decay estimate on the vacuum-orthogonal sector. -/
 theorem actualBoundaryGramFactorizedOperator_inner_physical_pos
     (L : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMomentLinearCoherence
       S D halfExtent N hN beta hbeta B hInvariant)
