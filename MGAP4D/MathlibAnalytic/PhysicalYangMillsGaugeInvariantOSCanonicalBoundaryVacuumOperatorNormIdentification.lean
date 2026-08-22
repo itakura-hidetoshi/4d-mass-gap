@@ -157,7 +157,9 @@ theorem finiteVacuumOrthogonalTransfer_opNorm_le_canonicalBoundary
     (n : ℕ) (t : NNReal) :
     ‖finiteVacuumOrthogonalTransfer C hExchange n (t / 2)‖ ≤
       ‖L.canonicalBoundaryVacuumOrthogonalTransfer C hExchange n t‖ := by
-  refine ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg _) ?_
+  refine ContinuousLinearMap.opNorm_le_bound _
+    (ContinuousLinearMap.opNorm_nonneg
+      (L.canonicalBoundaryVacuumOrthogonalTransfer C hExchange n t)) ?_
   intro psi
   have hInter :=
     L.canonicalBoundaryVacuumOrthogonalTransfer_intertwining_restricted
@@ -191,7 +193,9 @@ theorem canonicalBoundaryVacuumOrthogonalTransfer_opNorm_le_finite
     (n : ℕ) (t : NNReal) :
     ‖L.canonicalBoundaryVacuumOrthogonalTransfer C hExchange n t‖ ≤
       ‖finiteVacuumOrthogonalTransfer C hExchange n (t / 2)‖ := by
-  refine ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg _) ?_
+  refine ContinuousLinearMap.opNorm_le_bound _
+    (ContinuousLinearMap.opNorm_nonneg
+      (finiteVacuumOrthogonalTransfer C hExchange n (t / 2))) ?_
   intro v
   let Pn :=
     physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
