@@ -88,7 +88,7 @@ theorem finiteHeatBathScheduleInfluenceDegree_le_iterate_of_nodup
                   mul_nonneg
                     (finiteInfluenceIterateKernel_nonneg
                       influence hInfluence d initial mid)
-                    (hInfluence mid source)
+                    (hInfluence mid target)
             · simp only [hsource, if_false]
               calc
                 finiteHeatBathScheduleInfluenceDegree influence tail (d + 1)
