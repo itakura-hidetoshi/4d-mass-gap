@@ -55,7 +55,9 @@ theorem finiteHeatBathScheduleInfluenceDegree_le_iterate_of_nodup
             (List.nodup_cons.mp hNodup).2
           rw [finiteHeatBathScheduleInfluenceDegree_cons_zero]
           by_cases hsource : source = target
-          · simp [hsource, finiteInfluenceIterateKernel]
+          · subst source
+            by_cases hinitial : initial = target <;>
+              simp [finiteInfluenceIterateKernel, hinitial]
           · simp only [hsource, if_false]
             exact ihTargets htailNodup initial source
   | succ d ihDegree =>
