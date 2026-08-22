@@ -1,6 +1,7 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSBoundaryMomentLinearIsometry
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingHilbertSemigroup
 import Mathlib.Analysis.InnerProductSpace.Adjoint
+import Mathlib.Analysis.Normed.Operator.Extend
 import Mathlib.Topology.Algebra.LinearMapCompletion
 import Mathlib.Topology.UniformSpace.Separation
 import Mathlib.Tactic
@@ -152,9 +153,10 @@ noncomputable def separatedLinearIsometry
 /-- Continuous-linear extension of the separated actual Wilson boundary
 realization to the completed finite-volume OS Hilbert space.
 
-The project pins a mathlib revision predating `ContinuousLinearMap.fromCompletion`,
-so the extension is bundled directly from the stable `AddMonoidHom.extension`
-primitive. -/
+The construction uses the dense canonical embedding
+`UniformSpace.Completion.toComplL` and the pinned Mathlib
+`ContinuousLinearMap.extend` API, so no source/olean-version-specific
+completion helper is needed. -/
 noncomputable def completedLinearMap
     (L : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMomentLinearCoherence
       S D halfExtent N hN beta hbeta B hInvariant)
@@ -166,21 +168,9 @@ noncomputable def completedLinearMap
     physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
       S D halfExtent N hN beta hbeta B hInvariant n
   let J := (L.separatedLinearIsometry n).toContinuousLinearMap
-  change UniformSpace.Completion Pn.Separated →L[ℝ]
-    PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N
-  refine
-    { __ := J.toAddMonoidHom.extension J.continuous
-      map_smul' := ?_
-      cont := AddMonoidHom.continuous_extension J.toAddMonoidHom J.continuous }
-  intro c x
-  refine UniformSpace.Completion.induction_on x
-    (isClosed_eq
-      ((AddMonoidHom.continuous_extension J.toAddMonoidHom J.continuous).comp
-        (continuous_const_smul c))
-      (by fun_prop)) ?_
-  intro a
-  simp [← UniformSpace.Completion.coe_smul,
-    AddMonoidHom.extension_coe J.toAddMonoidHom J.continuous]
+  let e : Pn.Separated →L[ℝ] UniformSpace.Completion Pn.Separated :=
+    UniformSpace.Completion.toComplL
+  exact J.extend e
 
 /-- The completion extension agrees with the separated boundary isometry on
 the dense canonical copy. -/
@@ -195,11 +185,19 @@ the dense canonical copy. -/
           (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
             S D halfExtent N hN beta hbeta B hInvariant n).Separated) =
       L.separatedLinearIsometry n x := by
-  change
-    (((L.separatedLinearIsometry n).toContinuousLinearMap.toAddMonoidHom.extension
-      (L.separatedLinearIsometry n).toContinuousLinearMap.continuous) x) =
-      (L.separatedLinearIsometry n).toContinuousLinearMap x
-  exact AddMonoidHom.extension_coe _ _ x
+  let Pn :=
+    physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+      S D halfExtent N hN beta hbeta B hInvariant n
+  let J := (L.separatedLinearIsometry n).toContinuousLinearMap
+  let e : Pn.Separated →L[ℝ] UniformSpace.Completion Pn.Separated :=
+    UniformSpace.Completion.toComplL
+  change J.extend e (e x) = J x
+  exact J.extend_eq
+    (by simpa [e] using
+      (UniformSpace.Completion.denseRange_coe (α := Pn.Separated)))
+    (by simpa [e] using
+      (UniformSpace.Completion.isUniformInducing_coe Pn.Separated))
+    x
 
 /-- The completed continuous-linear boundary realization preserves norm. -/
 theorem completedLinearMap_norm
@@ -217,7 +215,7 @@ theorem completedLinearMap_norm
     (isClosed_eq (L.completedLinearMap n).continuous.norm continuous_norm) ?_
   intro x
   rw [L.completedLinearMap_coe]
-  exact (L.separatedLinearIsometry n).norm_map x
+  simpa using (L.separatedLinearIsometry n).norm_map x
 
 /-- Canonical isometric realization of the completed finite Wilson OS Hilbert
 space inside the actual shared-boundary `L²` space. -/
