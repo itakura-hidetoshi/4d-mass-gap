@@ -1,6 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSCanonicalBoundaryTransferGlobalNorm
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingVacuumOrthogonalSemigroup
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Restrict
+import Mathlib.Analysis.Normed.Operator.Basic
 import Mathlib.Tactic
 
 noncomputable section
@@ -228,8 +228,37 @@ theorem canonicalBoundaryTransfer_mem_canonicalBoundaryVacuumOrthogonal
     L.completedLinearIsometry_mem_canonicalBoundaryVacuumOrthogonal
       n (C.finiteOperator n (t / 2) (Jadj v)) hT
 
-/-- The actual canonical boundary transfer restricted to the complete
+/-- Algebraic restriction of the actual canonical boundary transfer to the
 vacuum-orthogonal boundary sector. -/
+noncomputable def canonicalBoundaryVacuumOrthogonalTransferLinearMap
+    (L : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMomentLinearCoherence
+      S D halfExtent N hN beta hbeta B hInvariant)
+    (C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
+      S D halfExtent N hN beta hbeta B hInvariant)
+    (hExchange : ∀ n,
+      PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData.PositiveTimeObservableContractionSemigroup.ReflectionTimeTranslationExchange
+        (C.toPositiveTimeObservableContractionSemigroup n))
+    (n : ℕ) (t : NNReal) :
+    L.CanonicalBoundaryVacuumOrthogonalHilbert n →ₗ[ℝ]
+      L.CanonicalBoundaryVacuumOrthogonalHilbert n where
+  toFun := fun v =>
+    ⟨L.canonicalBoundaryTransfer C n t
+        (v : PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N),
+      L.canonicalBoundaryTransfer_mem_canonicalBoundaryVacuumOrthogonal
+        C hExchange n t v v.property⟩
+  map_add' := by
+    intro x y
+    apply Subtype.ext
+    simp
+  map_smul' := by
+    intro c x
+    apply Subtype.ext
+    simp
+
+/-- The actual canonical boundary transfer restricted to the complete
+vacuum-orthogonal boundary sector.  Continuity is obtained from the already
+proved ambient contraction, avoiding any dependency on version-specific
+continuous-linear-map restriction helpers. -/
 noncomputable def canonicalBoundaryVacuumOrthogonalTransfer
     (L : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMomentLinearCoherence
       S D halfExtent N hN beta hbeta B hInvariant)
@@ -241,9 +270,17 @@ noncomputable def canonicalBoundaryVacuumOrthogonalTransfer
     (n : ℕ) (t : NNReal) :
     L.CanonicalBoundaryVacuumOrthogonalHilbert n →L[ℝ]
       L.CanonicalBoundaryVacuumOrthogonalHilbert n :=
-  (L.canonicalBoundaryTransfer C n t).restrict
-    (L.canonicalBoundaryTransfer_mem_canonicalBoundaryVacuumOrthogonal
-      C hExchange n t)
+  (L.canonicalBoundaryVacuumOrthogonalTransferLinearMap C hExchange n t).mkContinuous
+    1
+    (by
+      intro v
+      change
+        ‖L.canonicalBoundaryTransfer C n t
+            (v : PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N)‖ ≤
+          1 * ‖(v : PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N)‖
+      simpa using
+        L.canonicalBoundaryTransfer_norm_le C n t
+          (v : PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N))
 
 @[simp] theorem canonicalBoundaryVacuumOrthogonalTransfer_coe
     (L : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMomentLinearCoherence
