@@ -47,7 +47,6 @@ theorem tendsto_sub_one_div_add_one_atTop :
   apply hratio.congr'
   filter_upwards [eventually_gt_atTop (0 : ℝ)] with x hx
   field_simp [ne_of_gt hx]
-  <;> ring
 
 /-- The explicit active one-link TV majorant tends to one at large coupling. -/
 theorem periodicHypercubicSpecialUnitaryActiveTVMajorant_tendsto_one_atTop :
@@ -98,7 +97,7 @@ theorem periodicHypercubicSpecialUnitary_not_eventually_threshold_of_beta_tendst
         1 < 18 * periodicHypercubicSpecialUnitaryActiveTVMajorant (beta n) :=
     (tendsto_order.1 h18).1 1 (by norm_num)
   intro hlt
-  filter_upwards [hlt, hgt] with n hnlt hngt
+  rcases (hlt.and hgt).exists with ⟨n, hnlt, hngt⟩
   exact (lt_asymm hnlt hngt).elim
 
 /-- More strongly, if `beta_n → +∞`, no fixed `rhoBar < 1` can eventually
@@ -119,7 +118,7 @@ theorem periodicHypercubicSpecialUnitary_not_eventually_eighteen_mul_activeTVMaj
         rhoBar < 18 * periodicHypercubicSpecialUnitaryActiveTVMajorant (beta n) :=
     (tendsto_order.1 h18).1 rhoBar hrho18
   intro hle
-  filter_upwards [hle, hgt] with n hnle hngt
+  rcases (hle.and hgt).exists with ⟨n, hnle, hngt⟩
   exact (not_lt_of_ge hnle) hngt
 
 end
