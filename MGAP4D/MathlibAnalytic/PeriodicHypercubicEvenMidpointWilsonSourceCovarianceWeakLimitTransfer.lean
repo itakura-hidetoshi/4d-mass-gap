@@ -126,10 +126,6 @@ theorem
     periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointLeftWilsonSourceObservable
     periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointRightWilsonSourceObservable
   dsimp
-  simp only [Function.comp_apply,
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointProductObservable_apply,
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointLeftPathObservable_apply,
-    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointRightPathObservable_apply]
   rw [
     periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointProductExpectation_eq_wilsonSource
       H N hN beta hbeta latticeSpacing n J r F F,
