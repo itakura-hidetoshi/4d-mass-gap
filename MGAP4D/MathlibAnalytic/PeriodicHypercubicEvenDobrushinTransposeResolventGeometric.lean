@@ -114,9 +114,6 @@ theorem periodicHypercubicEvenSpecialUnitary_sparseDobrushinMatrixData_transpose
     w source ≤
       (18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta) ^ D *
         ∑ initial : PeriodicHypercubicEvenEdge H, w initial := by
-  let C :=
-    periodicHypercubicSpecialUnitaryWilsonSystem
-      (PeriodicHypercubicEvenSideLength H) N hN beta hBeta
   let Ddata :=
     periodicHypercubicSpecialUnitary_sparseDobrushinMatrixData_of_threshold
       (PeriodicHypercubicEvenSideLength H) N
@@ -127,16 +124,19 @@ theorem periodicHypercubicEvenSpecialUnitary_sparseDobrushinMatrixData_transpose
   have hBound :
       w source ≤ Ddata.coefficient ^ D *
         ∑ initial : PeriodicHypercubicEvenEdge H, w initial := by
-    apply
+    exact
       finiteInfluenceIterateKernel_subinvariant_le_pow_total_of_supported_source_and_kernel_zero
+        (α := PeriodicHypercubicEvenEdge H)
         Ddata.influence Ddata.influence_nonneg Ddata.coefficient Ddata.coefficient_nonneg
         Ddata.rowSum_le_coefficient D S v w hw hvSupport
-    · simpa [Ddata] using hSub
-    · intro k hk initial hi
-      simpa [Ddata] using
-        (periodicHypercubicEvenSpecialUnitary_sparseDobrushinMatrixData_finiteInfluenceIterateKernel_eq_zero_of_supportsSeparatedBy
-          H N D k hH hN beta hBeta hThreshold S T hsep hk
-          initial hi source hsource)
+        (by simpa [Ddata] using hSub)
+        source
+        (by
+          intro k hk initial hi
+          simpa [Ddata] using
+            (periodicHypercubicEvenSpecialUnitary_sparseDobrushinMatrixData_finiteInfluenceIterateKernel_eq_zero_of_supportsSeparatedBy
+              H N D k hH hN beta hBeta hThreshold S T hsep hk
+              initial hi source hsource))
   simpa [Ddata,
     periodicHypercubicSpecialUnitary_sparseDobrushinMatrixData_of_threshold] using hBound
 
@@ -181,9 +181,6 @@ theorem periodicHypercubicEvenSpecialUnitary_sparseDobrushinMatrixData_transpose
       ((18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta) ^ D /
         (1 - 18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta)) *
           ∑ initial ∈ S, v initial := by
-  let C :=
-    periodicHypercubicSpecialUnitaryWilsonSystem
-      (PeriodicHypercubicEvenSideLength H) N hN beta hBeta
   let Ddata :=
     periodicHypercubicSpecialUnitary_sparseDobrushinMatrixData_of_threshold
       (PeriodicHypercubicEvenSideLength H) N
