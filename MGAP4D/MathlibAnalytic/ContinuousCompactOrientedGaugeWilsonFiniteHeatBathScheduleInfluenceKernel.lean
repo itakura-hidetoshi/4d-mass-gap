@@ -77,7 +77,8 @@ noncomputable def finiteHeatBathScheduleInfluenceKernel
         finiteHeatBathScheduleInfluenceKernel influence targets initial source +
           influence target source *
             finiteHeatBathScheduleInfluenceKernel influence targets initial target := by
-  rfl
+  by_cases h : source = target <;>
+    simp [finiteHeatBathScheduleInfluenceKernel, h]
 
 /-- Nonnegative influence entries give a nonnegative exact schedule kernel. -/
 theorem finiteHeatBathScheduleInfluenceKernel_nonneg
