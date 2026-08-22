@@ -60,7 +60,8 @@ noncomputable def finiteHeatBathScheduleInfluenceKernel
     (initial source : α) :
     finiteHeatBathScheduleInfluenceKernel influence [] initial source =
       if initial = source then 1 else 0 := by
-  rfl
+  by_cases h : initial = source <;>
+    simp [finiteHeatBathScheduleInfluenceKernel, h]
 
 @[simp] theorem finiteHeatBathScheduleInfluenceKernel_cons
     {α : Type*}
