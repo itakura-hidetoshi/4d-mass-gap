@@ -68,8 +68,8 @@ theorem finiteHeatBathScheduleInfluenceDegree_sum_cons_of_ne
     finiteHeatBathScheduleInfluenceDegree_cons_succ, h, if_false]
   rw [Finset.sum_add_distrib]
   rw [← Finset.mul_sum]
-  rw [← add_assoc]
-  rw [hsource]
+  rw [← hsource]
+  ring
 
 /-- The exact schedule influence kernel is precisely the finite sum of its
 degree pieces, with maximal possible degree equal to the schedule length. -/
