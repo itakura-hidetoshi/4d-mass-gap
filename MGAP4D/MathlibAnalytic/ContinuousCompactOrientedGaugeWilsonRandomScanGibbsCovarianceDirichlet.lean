@@ -250,7 +250,6 @@ theorem continuous_compact_oriented_gibbsCovarianceReal_randomScanHeatBathFluctu
             C.gibbsCovarianceReal (fun A => F A)
               (fun A => projections target A)) := by
         field_simp [hnNe]
-        ring
     _ = n⁻¹ *
         ∑ target : C.base.geometry.Edge,
           (C.gibbsCovarianceReal (fun A => F A) (fun A => G A) -
