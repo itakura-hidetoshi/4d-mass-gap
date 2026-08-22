@@ -48,6 +48,7 @@ theorem
     finiteHeatBathScheduleInfluenceKernel
         data.influence targets initial source ≤
       data.coefficient ^ D / (1 - data.coefficient) := by
+  classical
   have hSchedule :=
     finiteHeatBathScheduleInfluenceKernel_le_truncated_of_nodup
       data.influence data.influence_nonneg targets hNodup initial source
