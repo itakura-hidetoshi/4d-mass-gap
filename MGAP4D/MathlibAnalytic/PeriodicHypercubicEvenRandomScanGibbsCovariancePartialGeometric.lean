@@ -114,6 +114,7 @@ theorem periodicHypercubicEvenSpecialUnitary_gibbsCovarianceReal_randomScan_part
         (fun e : PeriodicHypercubicEvenEdge H => PF.variation e * w e)
         (by
           intro e he
+          change PF.variation e * w e = 0
           rw [hFSupport e he, zero_mul])
   have hw (e : PeriodicHypercubicEvenEdge H) (he : e ∈ T) :
       w e ≤
