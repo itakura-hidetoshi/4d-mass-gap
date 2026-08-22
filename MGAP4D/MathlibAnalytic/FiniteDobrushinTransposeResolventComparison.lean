@@ -141,7 +141,7 @@ theorem finiteInfluenceIterateKernel_subinvariant_le_partial_resolvent_add_resid
                 finiteInfluenceIterateKernel influence d initial source * v initial) +
               ∑ initial : α,
                 finiteInfluenceIterateKernel influence (d + 1) initial source * w initial) := by
-          exact add_le_add_left hStep _
+          exact add_le_add_right hStep _
         _ =
           (Finset.range (d + 1)).sum
               (fun k => ∑ initial : α,
@@ -208,7 +208,7 @@ theorem finiteInfluenceIterateKernel_subinvariant_le_partial_resolvent_add_pow_r
   exact
     (finiteInfluenceIterateKernel_subinvariant_le_partial_resolvent_add_residual
       influence hInfluence v w hSub d source).trans
-      (add_le_add_left
+      (add_le_add_right
         (finiteInfluenceIterateKernel_weighted_residual_le_pow_mul_sum
           influence hInfluence c hc hrow w hw d source)
         _)
