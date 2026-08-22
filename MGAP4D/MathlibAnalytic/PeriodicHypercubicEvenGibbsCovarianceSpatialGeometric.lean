@@ -37,14 +37,10 @@ private instance periodicHypercubicEvenSideLength_neZero_spatialCovarianceGeomet
 /-- The actual periodic compact `SU(N)` Gibbs covariance decays geometrically
 between plaquette-locally separated variation supports in finite volume. -/
 theorem periodicHypercubicEvenSpecialUnitary_gibbsCovarianceReal_abs_le_geometric_of_supportsSeparatedBy
-    (H N D : ℕ)
-    (hH : 0 < H)
-    (hN : 0 < N)
+    (H N D : ℕ) (hH : 0 < H) (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (beta : ℝ)
-    (hBeta : 0 ≤ beta)
-    (hThreshold :
-      18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta < 1)
+    (beta : ℝ) (hBeta : 0 ≤ beta)
+    (hThreshold : 18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta < 1)
     (S T : Finset (PeriodicHypercubicEvenEdge H))
     (hsep : periodicHypercubicEvenSupportsPlaquetteLocalSeparatedBy H D S T)
     (F O : BoundedContinuousFunction
@@ -52,22 +48,18 @@ theorem periodicHypercubicEvenSpecialUnitary_gibbsCovarianceReal_abs_le_geometri
         (PeriodicHypercubicEvenSideLength H) N hN beta hBeta).base.Configuration ℝ)
     (PF : ContinuousCompactOrientedGaugeWilsonLinkVariationBound
       (periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength H) N hN beta hBeta)
-      (fun A => F A))
+        (PeriodicHypercubicEvenSideLength H) N hN beta hBeta) (fun A => F A))
     (P : ContinuousCompactOrientedGaugeWilsonCenteredVariationProfile
       (periodicHypercubicSpecialUnitaryWilsonSystem
         (PeriodicHypercubicEvenSideLength H) N hN beta hBeta) O)
-    (hFSupport :
-      ∀ e : PeriodicHypercubicEvenEdge H, e ∉ T → PF.variation e = 0)
-    (hOSupport :
-      ∀ e : PeriodicHypercubicEvenEdge H, e ∉ S → P.variation e = 0) :
+    (hFSupport : ∀ e : PeriodicHypercubicEvenEdge H, e ∉ T → PF.variation e = 0)
+    (hOSupport : ∀ e : PeriodicHypercubicEvenEdge H, e ∉ S → P.variation e = 0) :
     |(periodicHypercubicSpecialUnitaryWilsonSystem
         (PeriodicHypercubicEvenSideLength H) N hN beta hBeta).gibbsCovarianceReal
         (fun A => F A) (fun A => O A)| ≤
       ((18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta) ^ D /
         (1 - 18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta)) *
-        (∑ e ∈ T, PF.variation e) *
-          ∑ i ∈ S, P.variation i := by
+        (∑ e ∈ T, PF.variation e) * ∑ i ∈ S, P.variation i := by
   let C :=
     periodicHypercubicSpecialUnitaryWilsonSystem
       (PeriodicHypercubicEvenSideLength H) N hN beta hBeta
