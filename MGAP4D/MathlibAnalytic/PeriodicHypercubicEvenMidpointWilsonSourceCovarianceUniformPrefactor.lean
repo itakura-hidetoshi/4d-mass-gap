@@ -154,7 +154,6 @@ theorem
 /-- The actual finite midpoint Wilson-source covariance has a geometric decay
 bound whose non-geometric prefactor is independent of lattice volume, spacing,
 and midpoint translation. -/
-set_option maxHeartbeats 800000 in
 theorem
     periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointWilsonSourceCovariance_abs_le_geometric_uniformPrefactor_of_floor_min_ge
     (H N D : ℕ)
@@ -196,54 +195,38 @@ theorem
       ((18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta) ^ D /
         (1 - 18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta)) *
         (8 * (J.card : ℝ) * ‖F‖) ^ 2 := by
-  let rho : ℝ := 18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta
-  let Ddata :=
-    periodicHypercubicSpecialUnitary_sparseDobrushinMatrixData_of_threshold
-      (PeriodicHypercubicEvenSideLength H) N
-      (by
-        simp [PeriodicHypercubicEvenSideLength]
-        omega)
-      hN beta hbeta hThreshold
-  let K : ℝ := 8 * (J.card : ℝ) * ‖F‖
-  let Rsum : ℝ :=
-    ∑ e ∈
-      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointRightSupport
-        H latticeSpacing n J r,
-      2 * ‖periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointRightWilsonSourceBCF
-        H N latticeSpacing n J hJ r hr F‖
-  let Lsum : ℝ :=
-    ∑ e ∈
-      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointLeftReflectedSupport
-        H latticeSpacing n J,
-      2 * ‖periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointLeftWilsonSourceBCF
-        H N latticeSpacing n J hJ F‖
-  have hRsum : Rsum ≤ K := by
-    simpa [Rsum, K] using
-      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointRightSupport_sum_two_mul_sourceNorm_le
-        H N latticeSpacing n J hJ r hr F
-  have hLsum : Lsum ≤ K := by
-    simpa [Lsum, K] using
-      periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointLeftReflectedSupport_sum_two_mul_sourceNorm_le
-        H N latticeSpacing n J hJ F
-  have hRsumNonneg : 0 ≤ Rsum := by
-    dsimp [Rsum]
-    positivity
-  have hLsumNonneg : 0 ≤ Lsum := by
-    dsimp [Lsum]
-    positivity
-  have hKNonneg : 0 ≤ K := by
-    dsimp [K]
-    positivity
-  have hRhoNonneg : 0 ≤ rho := by
-    simpa [rho, Ddata,
-      periodicHypercubicSpecialUnitary_sparseDobrushinMatrixData_of_threshold] using
-      Ddata.coefficient_nonneg
-  have hGapNonneg : 0 ≤ 1 - rho := by
-    exact le_of_lt (sub_pos.mpr (by simpa [rho] using hThreshold))
-  have hCoeffNonneg : 0 ≤ rho ^ D / (1 - rho) :=
+  have hRhoNonneg :
+      0 ≤ 18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta :=
+    mul_nonneg (by norm_num)
+      (periodicHypercubicSpecialUnitaryActiveTVMajorant_nonneg beta hbeta)
+  have hGapNonneg :
+      0 ≤ 1 - 18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta :=
+    le_of_lt (sub_pos.mpr hThreshold)
+  have hCoeffNonneg :
+      0 ≤
+        (18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta) ^ D /
+          (1 - 18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta) :=
     div_nonneg (pow_nonneg hRhoNonneg D) hGapNonneg
-  have hProduct : Rsum * Lsum ≤ K * K :=
-    mul_le_mul hRsum hLsum hLsumNonneg hKNonneg
+  have hRight :=
+    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointRightSupport_sum_two_mul_sourceNorm_le
+      H N latticeSpacing n J hJ r hr F
+  have hLeft :=
+    periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointLeftReflectedSupport_sum_two_mul_sourceNorm_le
+      H N latticeSpacing n J hJ F
+  have hLeftNonneg :
+      0 ≤
+        ∑ i ∈
+          periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointLeftReflectedSupport
+            H latticeSpacing n J,
+          2 * ‖periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointLeftWilsonSourceBCF
+            H N latticeSpacing n J hJ F‖ := by
+    positivity
+  have hCoeffKNonneg :
+      0 ≤
+        ((18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta) ^ D /
+          (1 - 18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta)) *
+            (8 * (J.card : ℝ) * ‖F‖) :=
+    mul_nonneg hCoeffNonneg (by positivity)
   have hCov :=
     periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointWilsonSourceCovariance_abs_le_geometric_of_floor_min_ge
       H N D hH hN beta hbeta hThreshold latticeSpacing n J hJ r hr
@@ -251,16 +234,42 @@ theorem
   calc
     |periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointWilsonSourceCovariance
         H N hN beta hbeta latticeSpacing n J r F| ≤
-      (rho ^ D / (1 - rho)) * Rsum * Lsum := by
-        simpa [rho, Rsum, Lsum] using hCov
-    _ = (rho ^ D / (1 - rho)) * (Rsum * Lsum) := by ring
-    _ ≤ (rho ^ D / (1 - rho)) * (K * K) :=
-      mul_le_mul_of_nonneg_left hProduct hCoeffNonneg
+      ((18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta) ^ D /
+        (1 - 18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta)) *
+        (∑ e ∈
+          periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointRightSupport
+            H latticeSpacing n J r,
+          2 * ‖periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointRightWilsonSourceBCF
+            H N latticeSpacing n J hJ r hr F‖) *
+        ∑ i ∈
+          periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointLeftReflectedSupport
+            H latticeSpacing n J,
+          2 * ‖periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointLeftWilsonSourceBCF
+            H N latticeSpacing n J hJ F‖ := hCov
+    _ ≤
+      ((18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta) ^ D /
+        (1 - 18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta)) *
+        (8 * (J.card : ℝ) * ‖F‖) *
+        ∑ i ∈
+          periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointLeftReflectedSupport
+            H latticeSpacing n J,
+          2 * ‖periodicHypercubicEvenPrimarySpatialPhysicalFloorRationalScalarMidpointLeftWilsonSourceBCF
+            H N latticeSpacing n J hJ F‖ := by
+      exact
+        mul_le_mul_of_nonneg_right
+          (mul_le_mul_of_nonneg_left hRight hCoeffNonneg)
+          hLeftNonneg
+    _ ≤
+      ((18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta) ^ D /
+        (1 - 18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta)) *
+        (8 * (J.card : ℝ) * ‖F‖) *
+        (8 * (J.card : ℝ) * ‖F‖) := by
+      exact mul_le_mul_of_nonneg_left hLeft hCoeffKNonneg
     _ =
       ((18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta) ^ D /
         (1 - 18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta)) *
         (8 * (J.card : ℝ) * ‖F‖) ^ 2 := by
-      simp [rho, K, pow_two]
+      ring
 
 end
 
