@@ -43,24 +43,26 @@ noncomputable section
 noncomputable def continuousCompactOrientedGaugeWilsonDobrushinRandomScanVariationIterate
     {C : ContinuousCompactOrientedGaugeWilsonSystem}
     (D : ContinuousCompactOrientedGaugeWilsonDobrushinMatrixData C)
-    (variation : C.base.geometry.Edge → ℝ) : ℕ → C.base.geometry.Edge → ℝ
-  | 0 => variation
-  | m + 1 =>
-      continuousCompactOrientedGaugeWilsonDobrushinRandomScanUpdatedVariation
-        D (continuousCompactOrientedGaugeWilsonDobrushinRandomScanVariationIterate
-          D variation m)
+    (variation : C.base.geometry.Edge → ℝ) : ℕ → C.base.geometry.Edge → ℝ :=
+  fun m =>
+    Nat.rec variation
+      (fun _ previous =>
+        continuousCompactOrientedGaugeWilsonDobrushinRandomScanUpdatedVariation
+          D previous)
+      m
 
 /-- Exact finite partial sum of random-scan variation iterates. -/
 noncomputable def continuousCompactOrientedGaugeWilsonDobrushinRandomScanVariationPartialSum
     {C : ContinuousCompactOrientedGaugeWilsonSystem}
     (D : ContinuousCompactOrientedGaugeWilsonDobrushinMatrixData C)
-    (variation : C.base.geometry.Edge → ℝ) : ℕ → C.base.geometry.Edge → ℝ
-  | 0 => fun _ => 0
-  | m + 1 => fun source =>
-      continuousCompactOrientedGaugeWilsonDobrushinRandomScanVariationPartialSum
-          D variation m source +
-        continuousCompactOrientedGaugeWilsonDobrushinRandomScanVariationIterate
-          D variation m source
+    (variation : C.base.geometry.Edge → ℝ) : ℕ → C.base.geometry.Edge → ℝ :=
+  fun m =>
+    Nat.rec (fun _ => 0)
+      (fun k previous source =>
+        previous source +
+          continuousCompactOrientedGaugeWilsonDobrushinRandomScanVariationIterate
+            D variation k source)
+      m
 
 /-- The finite partial sum is the literal finite sum of random-scan iterates. -/
 theorem continuous_compact_oriented_dobrushinRandomScanVariationPartialSum_eq_sum
@@ -247,18 +249,6 @@ theorem continuous_compact_oriented_dobrushinRandomScanVariationPartialSum_resol
               ∑ target : C.base.geometry.Edge,
                 D.influence target source * S target - n * u source) +
             u source := by
-              change
-                n * variation source +
-                      ((∑ target : C.base.geometry.Edge,
-                          D.influence target source * S target) +
-                        ∑ target : C.base.geometry.Edge,
-                          D.influence target source * u target) -
-                    n * continuousCompactOrientedGaugeWilsonDobrushinRandomScanUpdatedVariation
-                      D u source =
-                  (n * variation source +
-                      ∑ target : C.base.geometry.Edge,
-                        D.influence target source * S target - n * u source) +
-                    u source
               rw [hRec]
               ring
         _ = S source + u source := by
@@ -327,7 +317,6 @@ theorem continuous_compact_oriented_dobrushinRandomScanFiniteResolventProfile_su
     continuousCompactOrientedGaugeWilsonDobrushinRandomScanVariationIterate
       D variation M
   have hnPos : 0 < n := Nat.cast_pos.mpr hEdge
-  have hn : n ≠ 0 := ne_of_gt hnPos
   have hTerminal : 0 ≤ uM source :=
     continuous_compact_oriented_dobrushinRandomScanVariationIterate_nonneg
       D variation hVariation M source
@@ -356,7 +345,7 @@ theorem continuous_compact_oriented_dobrushinRandomScanFiniteResolventProfile_su
         ∑ target : C.base.geometry.Edge,
           D.influence target source * (n⁻¹ * S target) := by
       rw [mul_add, Finset.mul_sum]
-      have hInvMul : n⁻¹ * n = 1 := inv_mul_cancel₀ hn
+      have hInvMul : n⁻¹ * n = 1 := inv_mul_cancel₀ (ne_of_gt hnPos)
       rw [mul_assoc, hInvMul, one_mul]
       congr 1
       apply Finset.sum_congr rfl
