@@ -39,16 +39,19 @@ single-link heat-bath updates.  `initial` indexes the input variation and
 `source` the output variation. -/
 noncomputable def finiteHeatBathScheduleInfluenceKernel
     {α : Type*}
-    [DecidableEq α]
     (influence : α → α → ℝ) :
     List α → α → α → ℝ
-  | [], initial, source => if initial = source then 1 else 0
-  | target :: targets, initial, source =>
-      if source = target then 0
-      else
-        finiteHeatBathScheduleInfluenceKernel influence targets initial source +
-          influence target source *
-            finiteHeatBathScheduleInfluenceKernel influence targets initial target
+  | [], initial, source => by
+      classical
+      exact if initial = source then 1 else 0
+  | target :: targets, initial, source => by
+      classical
+      exact
+        if source = target then 0
+        else
+          finiteHeatBathScheduleInfluenceKernel influence targets initial source +
+            influence target source *
+              finiteHeatBathScheduleInfluenceKernel influence targets initial target
 
 @[simp] theorem finiteHeatBathScheduleInfluenceKernel_nil
     {α : Type*}
