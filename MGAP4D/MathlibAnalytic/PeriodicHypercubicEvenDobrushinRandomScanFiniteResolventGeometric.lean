@@ -128,16 +128,15 @@ theorem periodicHypercubicEvenSpecialUnitary_dobrushinRandomScanFiniteResolventP
     continuous_compact_oriented_dobrushinRandomScanFiniteResolventProfile_total_le_inv_gap_mul
       Ddata v hvNonneg hCoeff hEdge M
   have hvTotal :
-      continuousCompactOrientedGaugeWilsonTotalVariation v =
-        ∑ i ∈ S, v i := by
-    unfold continuousCompactOrientedGaugeWilsonTotalVariation
-    exact finite_sum_eq_sum_support_of_eq_zero_off S v hvSupport
+      (∑ i : PeriodicHypercubicEvenEdge H, v i) = ∑ i ∈ S, v i :=
+    finite_sum_eq_sum_support_of_eq_zero_off S v hvSupport
+  unfold continuousCompactOrientedGaugeWilsonTotalVariation at hTotalAll
   rw [hvTotal] at hTotalAll
   have hTotal :
       (∑ i : PeriodicHypercubicEvenEdge H, w i) ≤
         (1 - 18 * periodicHypercubicSpecialUnitaryActiveTVMajorant beta)⁻¹ *
           ∑ i ∈ S, v i := by
-    simpa [w, continuousCompactOrientedGaugeWilsonTotalVariation, Ddata,
+    simpa [w, Ddata,
       periodicHypercubicSpecialUnitary_sparseDobrushinMatrixData_of_threshold] using
       hTotalAll
   exact
