@@ -166,7 +166,6 @@ theorem finiteInfluenceTruncatedKernel_succ_right
   rw [show n + 1 + 1 = (n + 1) + 1 by omega]
   rw [Finset.sum_range_succ]
   simp only [finiteInfluenceIterateKernel_succ_right]
-  rw [Finset.sum_comm]
   calc
     (∑ x ∈ Finset.range (n + 1),
         finiteInfluenceIterateKernel influence x initial source) +
