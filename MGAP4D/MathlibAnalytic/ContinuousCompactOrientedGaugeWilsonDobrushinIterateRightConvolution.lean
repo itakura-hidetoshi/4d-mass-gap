@@ -146,7 +146,6 @@ theorem finiteInfluenceTruncatedKernel_succ
   unfold finiteInfluenceTruncatedKernel
   rw [show n + 1 + 1 = (n + 1) + 1 by omega]
   rw [Finset.sum_range_succ]
-  simp
 
 /-- The truncated kernel has the terminal recursion matching a schedule update:
 `R_{n+1} = I + R_n C`. -/
