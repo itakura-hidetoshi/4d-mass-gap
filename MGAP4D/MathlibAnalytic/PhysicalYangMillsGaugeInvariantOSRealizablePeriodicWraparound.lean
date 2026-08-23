@@ -57,8 +57,11 @@ periodic configurations. -/
     periodicHypercubicConfigurationTranslationMeasurableEquiv L
         (periodicHypercubicIntegerTemporalDisplacement L (Int.ofNat L)) A = A
   rw [periodicHypercubicIntegerTemporalDisplacement_period]
-  simpa using
-    periodicHypercubicIntegerTemporalConfigurationTranslation_zero_apply L A
+  funext e
+  have h :=
+    periodicHypercubicConfigurationTranslation_apply_translatedEdge
+      L (0 : PeriodicHypercubicVertex L) A e
+  simpa using h
 
 namespace PhysicalYangMillsEvenPeriodicWilsonOSCoherentDiscreteTemporalCovariance
 
@@ -214,21 +217,33 @@ theorem realizableCarrierTranslation_period_sub_norm_eq_zero
     rw [physicalYangMillsApproximatingGaugeInvariantWeakStarState_apply,
       physicalYangMillsApproximatingGaugeInvariantExpectation_apply,
       Q.approximatingMeasure_toMeasure_eq n]
-    rw [MeasureTheory.integral_map
-      (Q.interpolate_measurable n).aemeasurable
-      (((D.reflection G.toGaugeInvariant * G.toGaugeInvariant :
+    let μn :=
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength (halfExtent n))
+        N hN (beta n) (hbeta n)).gibbsMeasure
+    let Oquad : BoundedContinuousFunction S.Configuration ℝ :=
+      ((D.reflection G.toGaugeInvariant * G.toGaugeInvariant :
           physicalYangMillsGaugeInvariantObservableSubalgebra S) :
-        BoundedContinuousFunction S.Configuration ℝ).continuous.aestronglyMeasurable)]
-    apply integral_eq_zero_of_ae
-    filter_upwards [] with U
+        BoundedContinuousFunction S.Configuration ℝ)
     change
-      ((D.reflection G.toGaugeInvariant :
-          physicalYangMillsGaugeInvariantObservableSubalgebra S) :
-        BoundedContinuousFunction S.Configuration ℝ) (Q.interpolate n U) *
-        (G.toGaugeInvariant : BoundedContinuousFunction S.Configuration ℝ)
-          (Q.interpolate n U) = 0
-    rw [hpoint U]
-    ring
+      (∫ A, Oquad A ∂Measure.map (Q.interpolate n) μn) = 0
+    calc
+      (∫ A, Oquad A ∂Measure.map (Q.interpolate n) μn) =
+          ∫ U, Oquad (Q.interpolate n U) ∂μn := by
+        exact MeasureTheory.integral_map
+          (Q.interpolate_measurable n).aemeasurable
+          Oquad.continuous.aestronglyMeasurable
+      _ = 0 := by
+        apply integral_eq_zero_of_ae
+        filter_upwards [] with U
+        change
+          ((D.reflection G.toGaugeInvariant :
+              physicalYangMillsGaugeInvariantObservableSubalgebra S) :
+            BoundedContinuousFunction S.Configuration ℝ) (Q.interpolate n U) *
+            (G.toGaugeInvariant : BoundedContinuousFunction S.Configuration ℝ)
+              (Q.interpolate n U) = 0
+        rw [hpoint U]
+        ring
   rw [Pn.osQuadraticValue_eq_norm_sq] at hquad
   change ‖G‖ = 0
   nlinarith [norm_nonneg G]
@@ -250,11 +265,18 @@ theorem realizableCarrierTranslation_period_norm_eq
   have hzero :=
     R.realizableCarrierTranslation_period_sub_norm_eq_zero hInvariant n F
   dsimp only at hzero
+  change ‖R.realizableCarrierTranslation hInvariant n L F - F‖ = 0 at hzero
   have habs :=
     abs_norm_sub_norm_le
       (R.realizableCarrierTranslation hInvariant n L F) F
   rw [hzero] at habs
-  exact le_antisymm (by linarith) (by linarith)
+  have habs0 :
+      |‖R.realizableCarrierTranslation hInvariant n L F‖ - ‖F‖| = 0 :=
+    le_antisymm habs (abs_nonneg _)
+  have hsub :
+      ‖R.realizableCarrierTranslation hInvariant n L F‖ - ‖F‖ = 0 :=
+    abs_eq_zero.mp habs0
+  exact sub_eq_zero.mp hsub
 
 end PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveTemporalCovariance
 
@@ -303,7 +325,7 @@ theorem one_le_transferFactor_of_centered_nonzero
   have hL : 0 < L := by
     simp [L, PeriodicHypercubicEvenSideLength]
   have hpow : (transferFactor n) ^ L < 1 := by
-    exact pow_lt_one₀ hq0 hlt hL
+    exact pow_lt_one₀ hq0 hlt (Nat.ne_of_gt hL)
   have hiter := G.centered_norm_le_pow n L F
   dsimp only at hiter
   have hperiod :=
