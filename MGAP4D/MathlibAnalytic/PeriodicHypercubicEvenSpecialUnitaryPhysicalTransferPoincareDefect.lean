@@ -187,11 +187,13 @@ theorem
       H N hN beta hbeta := by
   letI :
       InnerProductSpace ℝ
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta) :=
+        ((realHilbertTopEigenspace
+          (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+            H N hN beta hbeta))ᗮ) :=
     Submodule.innerProductSpace
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta)
+      ((realHilbertTopEigenspace
+        (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+          H N hN beta hbeta))ᗮ)
   let R :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta
