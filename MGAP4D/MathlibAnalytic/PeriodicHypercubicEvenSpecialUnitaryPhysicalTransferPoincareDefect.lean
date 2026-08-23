@@ -51,15 +51,16 @@ theorem realHilbert_one_sub_opNorm_mul_norm_sq_le_quadraticDefect
 /-- For a symmetric compact operator with nonnegative quadratic form, every
 global quadratic-defect coefficient `δ ≤ 1` forces `‖R‖ ≤ 1 - δ`.
 Together with the preceding theorem, this identifies `1 - ‖R‖` as the optimal
-Poincare coefficient. Splitting positivity into symmetry and quadratic
-nonnegativity keeps concrete subtype transports typeclass-stable. -/
+Poincare coefficient. The symmetry input is stated as an explicit real pairing
+identity so concrete subtype transports never have to elaborate a scalar-
+polymorphic `IsSymmetric` proposition. -/
 theorem realHilbertSymmetricCompact_opNorm_le_one_sub_of_quadraticDefect
     {E : Type u}
     [NormedAddCommGroup E]
     [InnerProductSpace ℝ E]
     [CompleteSpace E]
     (R : E →L[ℝ] E)
-    (hSymm : (R : E →ₗ[ℝ] E).IsSymmetric)
+    (hSymm : ∀ f g : E, inner ℝ (R f) g = inner ℝ f (R g))
     (hNonneg : ∀ f : E, 0 ≤ inner ℝ (R f) f)
     (hCompact : IsCompactOperator R)
     {δ : ℝ}
@@ -68,9 +69,11 @@ theorem realHilbertSymmetricCompact_opNorm_le_one_sub_of_quadraticDefect
       δ * ‖f‖ ^ 2 ≤ realHilbertQuadraticDefect R f) :
     ‖R‖ ≤ 1 - δ := by
   have hPositive : (R : E →ₗ[ℝ] E).IsPositive := by
-    refine ⟨hSymm, ?_⟩
-    intro f
-    simpa using hNonneg f
+    refine ⟨?_, ?_⟩
+    · intro f g
+      exact hSymm f g
+    · intro f
+      simpa using hNonneg f
   by_cases hRzero : R = 0
   · rw [hRzero, norm_zero]
     linarith
@@ -149,8 +152,9 @@ local instance periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceOrthogon
 
 /-- Conversely, every Poincare coefficient on the actual orthogonal sector is
 bounded above by the canonical transfer gap. The proof stays on the already
-instanced concrete excitation carrier and transports symmetry, positivity and
-compactness from the ambient normalized physical transfer. -/
+instanced concrete excitation carrier and transports the real pairing symmetry,
+quadratic positivity and compactness from the ambient normalized physical
+transfer. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspacePoincareCoefficient_le_transferGap
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
@@ -167,7 +171,10 @@ theorem
   let R :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta
-  have hRsymm : R.toLinearMap.IsSymmetric := by
+  have hRpair : ∀ f g :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta,
+      inner ℝ (R f) g = inner ℝ f (R g) := by
     intro f g
     change inner ℝ
       (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
@@ -207,7 +214,7 @@ theorem
           H N hN beta hbeta))
   have hR : ‖R‖ ≤ 1 - δ :=
     realHilbertSymmetricCompact_opNorm_le_one_sub_of_quadraticDefect
-      R hRsymm hRnonneg hRcompact hδle (by
+      R hRpair hRnonneg hRcompact hδle (by
         intro f
         simpa [R,
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceQuadraticDefect]
