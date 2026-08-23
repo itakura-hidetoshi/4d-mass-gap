@@ -32,7 +32,7 @@ local instance (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-local noncomputable instance (H : ℕ) :
+local instance (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
@@ -145,7 +145,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_continuo
             PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
               PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
             (p.1 e, p.2 e)) :=
-        hleft.prod_mk hright
+        hleft.prodMk hright
       have hlocal : Continuous
           (fun p :
             PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
