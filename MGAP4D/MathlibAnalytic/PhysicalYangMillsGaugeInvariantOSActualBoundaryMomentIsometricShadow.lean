@@ -159,7 +159,8 @@ theorem physicalYangMillsEvenPeriodicWilsonOSPhysicalState_eq_zero_iff_canonical
     rw [← hnorm, hzero, norm_zero]
   · intro hzero
     apply norm_eq_zero.mp
-    rw [hnorm, hzero, norm_zero]
+    rw [hnorm]
+    simpa [m] using (norm_eq_zero.mpr hzero)
 
 end
 
