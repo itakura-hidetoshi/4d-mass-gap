@@ -110,11 +110,8 @@ def periodicHypercubicEvenPositiveHalfPathToBoundaryInteriorSpatialIndex
     periodicHypercubicEvenPositiveHalfPathToBoundaryInteriorSpatialIndex H
         (⟨k.1 + 1, by omega⟩, e) =
       Sum.inr (k, e) := by
-  simp [periodicHypercubicEvenPositiveHalfPathToBoundaryInteriorSpatialIndex]
-  apply Prod.ext
-  · apply Fin.ext
-    omega
-  · rfl
+  have hkLast : k.1 ≠ H := by omega
+  simp [periodicHypercubicEvenPositiveHalfPathToBoundaryInteriorSpatialIndex, hkLast]
 
 /-- The boundary/interior spatial decomposition is exactly equivalent to the
 flat `H+2`-slice path index. -/
@@ -134,21 +131,19 @@ def periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexEquiv
     rcases z with ⟨j, e⟩
     by_cases h0 : j.1 = 0
     · have hj : j = 0 := Fin.ext h0
-      subst j
+      rw [hj]
       simp [periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexToPath]
     · by_cases hlast : j.1 = H + 1
       · have hj : j = ⟨H + 1, by omega⟩ := Fin.ext hlast
-        subst j
+        rw [hj]
         simp [periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexToPath]
       · have hjpos : 1 ≤ j.1 := by omega
         have hjle : j.1 ≤ H := by omega
         simp [periodicHypercubicEvenPositiveHalfPathToBoundaryInteriorSpatialIndex,
           periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexToPath,
           h0, hlast]
-        apply Prod.ext
-        · apply Fin.ext
-          omega
-        · rfl
+        apply Fin.ext
+        omega
 
 /-- Reassociate the already-classified fixed and positive sectors so that all
 spatial coordinates are grouped before the temporal coordinates. -/
