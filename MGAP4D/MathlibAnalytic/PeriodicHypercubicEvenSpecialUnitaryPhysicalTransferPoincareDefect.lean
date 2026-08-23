@@ -22,7 +22,7 @@ noncomputable def realHilbertQuadraticDefect
   ‖f‖ ^ 2 - inner ℝ (R f) f
 
 /-- The operator-norm separation `1 - ‖R‖` always lower-bounds the quadratic
-Dirichlet defect.  No compactness or spectral theorem is needed in this
+Dirichlet defect. No compactness or spectral theorem is needed in this
 direction. -/
 theorem realHilbert_one_sub_opNorm_mul_norm_sq_le_quadraticDefect
     {E : Type u}
@@ -48,10 +48,9 @@ theorem realHilbert_one_sub_opNorm_mul_norm_sq_le_quadraticDefect
   dsimp [realHilbertQuadraticDefect]
   linarith
 
-/-- For a positive compact operator, the preceding lower bound is optimal:
-any global quadratic-defect coefficient `δ ≤ 1` forces `‖R‖ ≤ 1 - δ`.
-This is the finite-volume Poincare converse needed to identify the exact
-spectral separation with the best quadratic-defect constant. -/
+/-- For a positive compact operator, every global quadratic-defect coefficient
+`δ ≤ 1` forces `‖R‖ ≤ 1 - δ`. Together with the preceding theorem, this
+identifies `1 - ‖R‖` as the optimal Poincare coefficient. -/
 theorem realHilbertPositiveCompact_opNorm_le_one_sub_of_quadraticDefect
     {E : Type u}
     [NormedAddCommGroup E]
@@ -141,56 +140,10 @@ local instance periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceOrthogon
   (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
     H N hN beta hbeta).isClosed_orthogonal.completeSpace_coe
 
-/-- Positivity descends concretely to the actual full-top-eigenspace orthogonal
-restriction. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_isPositive
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
-    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-      H N hN beta hbeta :
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-            H N hN beta hbeta →L[ℝ]
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-            H N hN beta hbeta) :
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta →ₗ[ℝ]
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta).IsPositive := by
-  let S := periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-    H N hN beta hbeta
-  change
-    ((realHilbertTopEigenspaceOrthogonalRestriction S
-        (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
-          H N hN beta hbeta) :
-        (realHilbertTopEigenspace S)ᗮ →L[ℝ] (realHilbertTopEigenspace S)ᗮ) :
-      (realHilbertTopEigenspace S)ᗮ →ₗ[ℝ] (realHilbertTopEigenspace S)ᗮ).IsPositive
-  exact realHilbertTopEigenspaceOrthogonalRestriction_isPositive S
-    (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isPositive
-      H N hN beta hbeta)
-
-/-- Compactness likewise descends concretely to the actual orthogonal
-restriction. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_isCompact
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
-    IsCompactOperator
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-        H N hN beta hbeta) := by
-  let S := periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-    H N hN beta hbeta
-  change IsCompactOperator
-    (realHilbertTopEigenspaceOrthogonalRestriction S
-      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
-        H N hN beta hbeta))
-  exact realHilbertTopEigenspaceOrthogonalRestriction_isCompact S
-    (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
-      H N hN beta hbeta)
-    (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isCompact
-      H N hN beta hbeta)
-
 /-- Conversely, every Poincare coefficient on the actual orthogonal sector is
-bounded above by the canonical transfer gap.  Thus the finite-volume transfer
-gap is exactly the optimal quadratic-defect constant. -/
+bounded above by the canonical transfer gap. Positivity and compactness are
+kept on the generic Hilbert restriction to avoid rebuilding typeclasses on the
+large concrete subtype. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspacePoincareCoefficient_le_transferGap
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
@@ -204,23 +157,45 @@ theorem
           H N hN beta hbeta f) :
     δ ≤ periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap
       H N hN beta hbeta := by
-  let R :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+  let S :=
+    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
       H N hN beta hbeta
-  have hR : ‖R‖ ≤ 1 - δ :=
+  let hSsymm : (S :
+      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N →ₗ[ℝ]
+        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N).IsSymmetric := by
+    simpa [S] using
+      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+        H N hN beta hbeta
+  let R0 := realHilbertTopEigenspaceOrthogonalRestriction S hSsymm
+  have hR0 : ‖R0‖ ≤ 1 - δ :=
     realHilbertPositiveCompact_opNorm_le_one_sub_of_quadraticDefect
-      R
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_isPositive
-        H N hN beta hbeta)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_isCompact
-        H N hN beta hbeta)
+      R0
+      (by
+        simpa [R0, hSsymm] using
+          (realHilbertTopEigenspaceOrthogonalRestriction_isPositive S
+            (by
+              simpa [S] using
+                periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isPositive
+                  H N hN beta hbeta)))
+      (by
+        exact realHilbertTopEigenspaceOrthogonalRestriction_isCompact S hSsymm
+          (by
+            simpa [S] using
+              periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isCompact
+                H N hN beta hbeta))
       hδle
       (by
         intro f
-        simpa [R,
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceQuadraticDefect]
-          using hdefect f)
-  dsimp [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap, R]
+        simpa [R0, S, hSsymm,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceQuadraticDefect] using
+          hdefect f)
+  have hConcrete :
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta‖ ≤ 1 - δ := by
+    simpa [R0, S, hSsymm,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator] using hR0
+  dsimp [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap]
   linarith
 
 /-- The finite-volume transfer gap is at most one. -/
