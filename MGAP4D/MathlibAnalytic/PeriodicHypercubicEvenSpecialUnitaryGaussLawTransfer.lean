@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryGaussLawProjection
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Restrict
 import Mathlib.Tactic
 
 namespace MGAP4D
