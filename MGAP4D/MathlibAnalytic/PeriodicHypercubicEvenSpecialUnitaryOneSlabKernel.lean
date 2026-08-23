@@ -152,8 +152,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_pos
   exact Real.exp_pos _
 
 /-- Point matrices of a symmetric positive-semidefinite real kernel are
-positive-semidefinite matrices.  The proof uses the canonical Moore--Aronszajn
-feature only for this one kernel, avoiding any nested tensor-product carrier. -/
+positive-semidefinite matrices. -/
 private theorem realKernelPositiveSemidefiniteCertificate_pointMatrix
     {X : Type}
     {kernel : X → X → ℝ}
@@ -171,18 +170,26 @@ private theorem realKernelPositiveSemidefiniteCertificate_pointMatrix
   rw [heq] at hgram
   exact hgram
 
-/-- Schur-product induction: a finite pointwise product of symmetric PSD real
-kernels remains PSD, without constructing a dependent tensor-product feature. -/
-private theorem realKernelPositiveSemidefiniteCertificate_listProd_pointMatrix
-    {X I : Type}
-    (indices : List I)
-    (kernel : I → X → X → ℝ)
-    (C : ∀ i, RealKernelPositiveSemidefiniteCertificate X (kernel i))
+/-- For every finite family of spatial boundary configurations, the actual
+crossing-kernel point matrix is positive semidefinite.  The proof applies the
+Schur product theorem directly to the local `SU(N)` Wilson point matrices. -/
+private theorem
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_pointMatrix
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
     {ι : Type} [Fintype ι]
-    (points : ι → X) :
+    (points : ι → PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
     Matrix.PosSemidef
-      (fun a b => (indices.map fun i => kernel i (points a) (points b)).prod) := by
-  induction indices with
+      (fun a b =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
+          H N beta (points a) (points b)) := by
+  unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
+  generalize periodicHypercubicEvenSpatialSliceLinkList H = es
+  let C := specialUnitaryWilsonRelativeKernel_positiveSemidefiniteCertificate
+    N hN beta hbeta
+  induction es with
   | nil =>
       let v : ι → ℝ := fun _ => 1
       have hgram := Matrix.posSemidef_gram ℝ v
@@ -191,41 +198,11 @@ private theorem realKernelPositiveSemidefiniteCertificate_listProd_pointMatrix
         simp [Matrix.gram, v]
       rw [heq] at hgram
       simpa using hgram
-  | cons i rest ih =>
+  | cons e rest ih =>
       have hhead := realKernelPositiveSemidefiniteCertificate_pointMatrix
-        (C i) points
+        C (fun a : ι => points a e)
       have hprod := hhead.hadamard ih
       simpa only [List.map_cons, List.prod_cons, Matrix.hadamard_apply] using hprod
-
-/-- Scalar version of the Schur-product induction above. -/
-private theorem realKernelPositiveSemidefiniteCertificate_listProd
-    {X I : Type}
-    (indices : List I)
-    (kernel : I → X → X → ℝ)
-    (C : ∀ i, RealKernelPositiveSemidefiniteCertificate X (kernel i)) :
-    RealKernelPositiveSemidefinite X
-      (fun x y => (indices.map fun i => kernel i x y).prod) := by
-  intro ι _ points coefficients
-  have hmatrix :=
-    realKernelPositiveSemidefiniteCertificate_listProd_pointMatrix
-      indices kernel C points
-  have hquad := hmatrix.dotProduct_mulVec_nonneg coefficients
-  simpa [dotProduct, Matrix.mulVec, Finset.mul_sum,
-    mul_assoc, mul_comm, mul_left_comm] using hquad
-
-/-- Pulling a symmetric PSD kernel back along any map preserves its complete
-symmetric positive-semidefinite certificate. -/
-private def realKernelPositiveSemidefiniteCertificate_comap
-    {X Y : Type}
-    {kernel : Y → Y → ℝ}
-    (C : RealKernelPositiveSemidefiniteCertificate Y kernel)
-    (f : X → Y) :
-    RealKernelPositiveSemidefiniteCertificate X
-      (fun x y => kernel (f x) (f y)) where
-  symmetric := fun x y => C.symmetric (f x) (f y)
-  positiveSemidefinite := by
-    intro ι _ points coefficients
-    exact C.positiveSemidefinite ι (fun i => f (points i)) coefficients
 
 /-- Symmetry of the full crossing kernel follows link-by-link from symmetry of
 the exact local Wilson relative kernel. -/
@@ -249,7 +226,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_symmetri
         N hN beta hbeta (A e) (B e), ih]
 
 /-- The full temporal crossing kernel is positive semidefinite by the Schur
-product theorem applied to the exact local Wilson relative kernels. -/
+product theorem applied directly to its finite point matrices. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_positiveSemidefinite
     (H N : ℕ)
     (hN : 0 < N)
@@ -259,15 +236,13 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_positive
       (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
         H N beta) := by
-  unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
-  let C := specialUnitaryWilsonRelativeKernel_positiveSemidefiniteCertificate
-    N hN beta hbeta
-  exact
-    realKernelPositiveSemidefiniteCertificate_listProd
-      (periodicHypercubicEvenSpatialSliceLinkList H)
-      (fun e A B => specialUnitaryWilsonRelativeKernel N beta (A e) (B e))
-      (fun e =>
-        realKernelPositiveSemidefiniteCertificate_comap C (fun A => A e))
+  intro ι _ points coefficients
+  have hmatrix :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_pointMatrix
+      H N hN beta hbeta points
+  have hquad := hmatrix.dotProduct_mulVec_nonneg coefficients
+  simpa [dotProduct, Matrix.mulVec, Finset.mul_sum,
+    mul_assoc, mul_comm, mul_left_comm] using hquad
 
 /-- Complete symmetric-PSD certificate for the full crossing kernel. -/
 noncomputable def
