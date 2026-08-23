@@ -9,10 +9,6 @@ open MeasureTheory
 
 noncomputable section
 
-local instance positiveHalfCoordinateTransferBridgeSideLengthNeZero (H : ℕ) :
-    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
-  simp [PeriodicHypercubicEvenSideLength]⟩
-
 local instance positiveHalfCoordinateTransferBridgeSpatialSliceVertexFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
   Fintype.ofFinite _
