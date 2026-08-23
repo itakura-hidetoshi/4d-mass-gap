@@ -48,22 +48,29 @@ theorem realHilbert_one_sub_opNorm_mul_norm_sq_le_quadraticDefect
   dsimp [realHilbertQuadraticDefect]
   linarith
 
-/-- For a positive compact operator, every global quadratic-defect coefficient
-`δ ≤ 1` forces `‖R‖ ≤ 1 - δ`. Together with the preceding theorem, this
-identifies `1 - ‖R‖` as the optimal Poincare coefficient. -/
-theorem realHilbertPositiveCompact_opNorm_le_one_sub_of_quadraticDefect
+/-- For a symmetric compact operator with nonnegative quadratic form, every
+global quadratic-defect coefficient `δ ≤ 1` forces `‖R‖ ≤ 1 - δ`.
+Together with the preceding theorem, this identifies `1 - ‖R‖` as the optimal
+Poincare coefficient. Splitting positivity into symmetry and quadratic
+nonnegativity keeps concrete subtype transports typeclass-stable. -/
+theorem realHilbertSymmetricCompact_opNorm_le_one_sub_of_quadraticDefect
     {E : Type u}
     [NormedAddCommGroup E]
     [InnerProductSpace ℝ E]
     [CompleteSpace E]
     (R : E →L[ℝ] E)
-    (hPositive : (R : E →ₗ[ℝ] E).IsPositive)
+    (hSymm : (R : E →ₗ[ℝ] E).IsSymmetric)
+    (hNonneg : ∀ f : E, 0 ≤ inner ℝ (R f) f)
     (hCompact : IsCompactOperator R)
     {δ : ℝ}
     (hδle : δ ≤ 1)
     (hdefect : ∀ f : E,
       δ * ‖f‖ ^ 2 ≤ realHilbertQuadraticDefect R f) :
     ‖R‖ ≤ 1 - δ := by
+  have hPositive : (R : E →ₗ[ℝ] E).IsPositive := by
+    refine ⟨hSymm, ?_⟩
+    intro f
+    simpa using hNonneg f
   by_cases hRzero : R = 0
   · rw [hRzero, norm_zero]
     linarith
@@ -141,9 +148,9 @@ local instance periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceOrthogon
     H N hN beta hbeta).isClosed_orthogonal.completeSpace_coe
 
 /-- Conversely, every Poincare coefficient on the actual orthogonal sector is
-bounded above by the canonical transfer gap. Positivity and compactness are
-kept on the generic Hilbert restriction to avoid rebuilding typeclasses on the
-large concrete subtype. -/
+bounded above by the canonical transfer gap. The proof stays on the already
+instanced concrete excitation carrier and transports symmetry, positivity and
+compactness from the ambient normalized physical transfer. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspacePoincareCoefficient_le_transferGap
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
@@ -157,45 +164,59 @@ theorem
           H N hN beta hbeta f) :
     δ ≤ periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap
       H N hN beta hbeta := by
-  let S :=
-    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+  let R :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta
-  let hSsymm : (S :
-      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N →ₗ[ℝ]
-        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N).IsSymmetric := by
-    simpa [S] using
-      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+  have hRsymm : (R :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta →ₗ[ℝ]
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta).IsSymmetric := by
+    intro f g
+    change inner ℝ
+      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
         H N hN beta hbeta
-  let R0 := realHilbertTopEigenspaceOrthogonalRestriction S hSsymm
-  have hR0 : ‖R0‖ ≤ 1 - δ :=
-    realHilbertPositiveCompact_opNorm_le_one_sub_of_quadraticDefect
-      R0
-      (by
-        simpa [R0, hSsymm] using
-          (realHilbertTopEigenspaceOrthogonalRestriction_isPositive S
-            (by
-              simpa [S] using
-                periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isPositive
-                  H N hN beta hbeta)))
-      (by
-        exact realHilbertTopEigenspaceOrthogonalRestriction_isCompact S hSsymm
-          (by
-            simpa [S] using
-              periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isCompact
-                H N hN beta hbeta))
-      hδle
-      (by
+        (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
+      (g : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) =
+      inner ℝ
+        (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+        (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+          H N hN beta hbeta
+          (g : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
+    exact
+      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+        H N hN beta hbeta _ _
+  have hRnonneg : ∀ f :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta,
+      0 ≤ inner ℝ (R f) f := by
+    intro f
+    change 0 ≤ inner ℝ
+      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+        H N hN beta hbeta
+        (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
+      (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+    exact
+      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isPositive
+        H N hN beta hbeta).inner_nonneg_left _
+  have hRcompact : IsCompactOperator R := by
+    simpa [R,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator] using
+      (realHilbertTopEigenspaceOrthogonalRestriction_isCompact
+        (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+          H N hN beta hbeta)
+        (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+          H N hN beta hbeta)
+        (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isCompact
+          H N hN beta hbeta))
+  have hR : ‖R‖ ≤ 1 - δ :=
+    realHilbertSymmetricCompact_opNorm_le_one_sub_of_quadraticDefect
+      R hRsymm hRnonneg hRcompact hδle (by
         intro f
-        simpa [R0, S, hSsymm,
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator,
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceQuadraticDefect] using
-          hdefect f)
-  have hConcrete :
-      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-        H N hN beta hbeta‖ ≤ 1 - δ := by
-    simpa [R0, S, hSsymm,
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator] using hR0
-  dsimp [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap]
+        simpa [R,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceQuadraticDefect]
+          using hdefect f)
+  dsimp [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap, R]
   linarith
 
 /-- The finite-volume transfer gap is at most one. -/
