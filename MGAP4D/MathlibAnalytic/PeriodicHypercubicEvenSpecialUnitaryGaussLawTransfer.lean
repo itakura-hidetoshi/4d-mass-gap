@@ -133,9 +133,24 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2_gau
     (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaar_measurePreserving
       H N γ).quasiMeasurePreserving.ae_eq hK
   filter_upwards [hPull, hKPull, hK] with p hpull hkpull hkp
-  rw [hpull, hkpull, hkp]
-  exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_gaugeInvariant
-    H N beta γ p.1 p.2
+  rw [hpull]
+  change
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
+        H N hN beta hbeta
+        (periodicHypercubicEvenSpecialUnitarySpatialSlicePairGaugeTransform H N γ p) =
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
+        H N hN beta hbeta p
+  calc
+    _ = periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta
+          (periodicHypercubicEvenSpecialUnitarySpatialSlicePairGaugeTransform H N γ p).1
+          (periodicHypercubicEvenSpecialUnitarySpatialSlicePairGaugeTransform H N γ p).2 := by
+      simpa [Function.comp_def] using hkpull
+    _ = periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta p.1 p.2 := by
+      simpa using
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_gaugeInvariant
+          H N beta γ p.1 p.2
+    _ = periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
+          H N hN beta hbeta p := hkp.symm
 
 /-- External tensors intertwine one-slice gauge pullback with simultaneous
 pair-space gauge pullback. -/
@@ -155,8 +170,6 @@ theorem periodicHypercubicEvenSpecialUnitaryRealL2ExternalTensor_gaugePullback
   let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
   let U := periodicHypercubicEvenSpecialUnitarySpatialSliceGaugePullbackLinearIsometry H N γ
   let G := periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform H N γ
-  let Upair :=
-    periodicHypercubicEvenSpecialUnitarySpatialSlicePairGaugePullbackLinearIsometry H N γ
   have hLeft := realL2ExternalTensor_coeFn (μ := μ) (ν := μ) (U f) (U g)
   have hf := periodicHypercubicEvenSpecialUnitarySpatialSliceGaugePullbackLinearIsometry_coeFn
     H N γ f
@@ -184,10 +197,20 @@ theorem periodicHypercubicEvenSpecialUnitaryRealL2ExternalTensor_gaugePullback
     (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaar_measurePreserving
       H N γ).quasiMeasurePreserving.ae_eq hTensor
   filter_upwards [hLeft, hfPair, hgPair, hRight, hTensorPull] with p hleft hfp hgp hright htensor
-  rw [hleft, hright, htensor]
-  simp only [realL2ExternalTensorFunction]
-  rw [hfp, hgp]
-  rfl
+  calc
+    realL2ExternalTensor (U f) (U g) p =
+        realL2ExternalTensorFunction (U f) (U g) p := hleft
+    _ = f (G p.1) * g (G p.2) := by
+      simp only [realL2ExternalTensorFunction]
+      rw [hfp, hgp]
+    _ = realL2ExternalTensorFunction f g
+        (periodicHypercubicEvenSpecialUnitarySpatialSlicePairGaugeTransform H N γ p) := by
+      rfl
+    _ = realL2ExternalTensor f g
+        (periodicHypercubicEvenSpecialUnitarySpatialSlicePairGaugeTransform H N γ p) := by
+      simpa [Function.comp_def] using htensor.symm
+    _ = periodicHypercubicEvenSpecialUnitarySpatialSlicePairGaugePullbackLinearIsometry
+        H N γ (realL2ExternalTensor f g) p := hright.symm
 
 /-- The complete actual one-slab Hilbert--Schmidt pairing is invariant when
 both test vectors are pulled back by the same spatial lattice gauge
@@ -213,13 +236,21 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairing_ga
   let K :=
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
       H N hN beta hbeta
+  let U :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceGaugePullbackLinearIsometry H N γ
   let Upair :=
     periodicHypercubicEvenSpecialUnitarySpatialSlicePairGaugePullbackLinearIsometry H N γ
-  rw [realL2HilbertSchmidtKernelPairing, realL2HilbertSchmidtKernelPairing]
+  change inner ℝ K (realL2ExternalTensor (U f) (U g)) =
+    inner ℝ K (realL2ExternalTensor f g)
   rw [periodicHypercubicEvenSpecialUnitaryRealL2ExternalTensor_gaugePullback H N γ f g]
-  rw [← periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2_gaugeFixed
-    H N hN beta hbeta γ]
-  exact Upair.inner_map_map K (realL2ExternalTensor f g)
+  have hK : Upair K = K := by
+    exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2_gaugeFixed
+      H N hN beta hbeta γ
+  calc
+    inner ℝ K (Upair (realL2ExternalTensor f g)) =
+        inner ℝ (Upair K) (Upair (realL2ExternalTensor f g)) := by rw [hK]
+    _ = inner ℝ K (realL2ExternalTensor f g) :=
+      Upair.inner_map_map K (realL2ExternalTensor f g)
 
 /-- Pullback by the inverse gauge transformation is a left inverse on Haar
 `L²`. -/
@@ -242,7 +273,14 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSliceGaugePullback_inv_apply
     (periodicHypercubicEvenSpecialUnitarySpatialSliceHaar_measurePreserving
       H N γ⁻¹).quasiMeasurePreserving.ae_eq hInner
   filter_upwards [hOuter, hInnerPull] with A houter hinner
-  rw [houter, hinner]
+  rw [houter]
+  have hinner' :
+      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugePullbackLinearIsometry H N γ f
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform H N γ⁻¹ A) =
+        f (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform H N γ
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform H N γ⁻¹ A)) := by
+    simpa [Function.comp_def] using hinner
+  rw [hinner']
   rw [← periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform_mul]
   simp
 
@@ -368,15 +406,27 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
       (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)ᗮ := by
   rw [Submodule.mem_orthogonal]
   intro g hg
-  rw [real_inner_comm]
-  rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_isSymmetric
-    H N hN beta hbeta f g]
-  rw [real_inner_comm]
-  exact (Submodule.mem_orthogonal f).1 hf
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
-      H N hN beta hbeta g)
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_preserves_GaussLaw
-      H N hN beta hbeta hg)
+  calc
+    inner ℝ g
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
+          H N hN beta hbeta f) =
+      inner ℝ
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
+          H N hN beta hbeta f) g := real_inner_comm _ _
+    _ = inner ℝ f
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
+          H N hN beta hbeta g) :=
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_isSymmetric
+        H N hN beta hbeta f g
+    _ = inner ℝ
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
+          H N hN beta hbeta g) f := real_inner_comm _ _
+    _ = 0 :=
+      (Submodule.mem_orthogonal f).1 hf
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
+          H N hN beta hbeta g)
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_preserves_GaussLaw
+          H N hN beta hbeta hg)
 
 /-- The actual one-slab transfer commutes with the orthogonal Gauss-law
 projection. -/
@@ -413,8 +463,12 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
     (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2ClosedSubmodule
       H N).starProjection (T f) = T (P f)
   apply Submodule.eq_starProjection_of_mem_orthogonal
-  · simpa [K] using hTP
-  · simpa [K] using hdiff
+    (K := (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2ClosedSubmodule
+      H N).toSubmodule)
+  · rw [periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2ClosedSubmodule_toSubmodule_eq]
+    exact hTP
+  · rw [periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2ClosedSubmodule_toSubmodule_eq]
+    exact hdiff
 
 /-- Operator-level commutation with the orthogonal Gauss-law projection. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_GaussLawProjection_commute
@@ -443,11 +497,13 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOpe
     (hbeta : 0 ≤ beta) :
     periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N →L[ℝ]
       periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N :=
-  (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
-    H N hN beta hbeta).restrict
-      (fun f hf =>
+  ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
+      H N hN beta hbeta).comp
+    (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N).subtypeL).codRestrict
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+      (fun f =>
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_preserves_GaussLaw
-          H N hN beta hbeta hf)
+          H N hN beta hbeta f.property)
 
 @[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_coe
     (H N : ℕ)
@@ -460,7 +516,7 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOpe
         periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
       Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) =
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
-      H N hN beta hbeta f :=
+      H N hN beta hbeta f := by
   rfl
 
 /-- The restricted physical transfer remains symmetric. -/
@@ -478,10 +534,14 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_isSy
   intro f g
   change inner ℝ
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
-        H N hN beta hbeta f) g =
-    inner ℝ f
+        H N hN beta hbeta (f :
+          Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))
+      (g : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) =
+    inner ℝ
+      (f : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
-        H N hN beta hbeta g)
+        H N hN beta hbeta (g :
+          Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))
   exact
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_isSymmetric
       H N hN beta hbeta f g
@@ -502,12 +562,16 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_isPo
   refine ⟨periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_isSymmetric
     H N hN beta hbeta, ?_⟩
   intro f
-  have hAmbient :=
-    (LinearMap.isPositive_iff.mp
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_isPositive
-        H N hN beta hbeta)).2 (f :
-          Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
-  exact hAmbient
+  change 0 ≤ inner ℝ
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
+      H N hN beta hbeta (f :
+        Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))
+    (f : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+  rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_inner]
+  exact
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairing_nonnegative
+      H N hN beta hbeta
+      (f : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
 
 /-- Audit-visible finite-volume physical transfer package. -/
 structure PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferPackage
