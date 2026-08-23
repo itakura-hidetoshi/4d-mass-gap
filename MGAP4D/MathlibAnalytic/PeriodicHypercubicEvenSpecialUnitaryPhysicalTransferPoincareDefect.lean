@@ -5,6 +5,7 @@ import Mathlib.Tactic
 namespace MGAP4D
 namespace MathlibAnalytic
 
+open Module End
 open scoped InnerProductSpace InnerProduct
 
 noncomputable section
@@ -69,7 +70,7 @@ theorem realHilbertPositiveCompact_opNorm_le_one_sub_of_quadraticDefect
     linarith
   · have hex : ∃ u : E, R u ≠ 0 := by
       by_contra h
-      push_neg at h
+      push Not at h
       apply hRzero
       apply ContinuousLinearMap.ext
       intro u
@@ -90,7 +91,7 @@ theorem realHilbertPositiveCompact_opNorm_le_one_sub_of_quadraticDefect
         R unit hunit hPositive hCompact
     have hinner : inner ℝ (R v) v = ‖R‖ := by
       rw [hveig]
-      simp [inner_smul_left, real_inner_self_eq_norm_sq, hvnorm]
+      simp [inner_smul_left, hvnorm]
     have hvdefect := hdefect v
     dsimp [realHilbertQuadraticDefect] at hvdefect
     rw [hinner, hvnorm] at hvdefect
@@ -124,6 +125,13 @@ theorem
     (realHilbert_one_sub_opNorm_mul_norm_sq_le_quadraticDefect
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
         H N hN beta hbeta) f)
+
+local instance periodicHypercubicEvenSpecialUnitaryPhysicalPoincare_completeSpace
+    (H N : ℕ) :
+    CompleteSpace
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :=
+  (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule_isClosed
+    H N).completeSpace_coe
 
 local instance periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceOrthogonal_completeSpace
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
@@ -241,19 +249,28 @@ theorem
           ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFeatureAnalysisOperator
             H N hN beta hbeta
             (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)‖ ^ 2 := by
+  let T := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+    H N hN beta hbeta
+  let A := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFeatureAnalysisOperator
+    H N hN beta hbeta
+  let x : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N := f
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceQuadraticDefect
   unfold realHilbertQuadraticDefect
-  change
-    ‖(f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)‖ ^ 2 -
-        inner ℝ
-          (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-            H N hN beta hbeta
-            (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
-          (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) = _
+  change ‖x‖ ^ 2 -
+      inner ℝ
+        (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+          H N hN beta hbeta x) x =
+    ‖x‖ ^ 2 - ‖T‖⁻¹ * ‖A x‖ ^ 2
+  have hquad : inner ℝ (T x) x = ‖A x‖ ^ 2 := by
+    simpa [T, A] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_quadratic_eq_analysis_norm_sq
+        H N hN beta hbeta x
+  have hscaled :
+      inner ℝ (‖T‖⁻¹ • T x) x = ‖T‖⁻¹ * ‖A x‖ ^ 2 := by
+    have h := congrArg (fun z : ℝ => ‖T‖⁻¹ * z) hquad
+    simpa [inner_smul_left] using h
   rw [periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_apply]
-  simp only [inner_smul_left]
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_quadratic_eq_analysis_norm_sq]
-  simp
+  simpa [T, A] using hscaled
 
 /-- Using `‖T_phys‖ = ‖A_phys‖²`, the preceding identity is expressed purely
 in terms of the actual Wilson feature-analysis operator. -/
@@ -265,14 +282,13 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceQuadraticDefect
         H N hN beta hbeta f =
       ‖(f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)‖ ^ 2 -
-        ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFeatureAnalysisOperator
-          H N hN beta hbeta‖⁻² *
+        (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFeatureAnalysisOperator
+          H N hN beta hbeta‖ ^ 2)⁻¹ *
           ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFeatureAnalysisOperator
             H N hN beta hbeta
             (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)‖ ^ 2 := by
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceQuadraticDefect_eq_featureAnalysis]
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_eq_analysis_sq]
-  ring_nf
 
 /-- The midpoint decay factor from #2040 is exactly one minus one half of the
 canonical transfer gap. -/
