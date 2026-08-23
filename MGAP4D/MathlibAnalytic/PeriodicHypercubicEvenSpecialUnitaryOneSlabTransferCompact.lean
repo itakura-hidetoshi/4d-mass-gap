@@ -92,7 +92,9 @@ theorem realL2HilbertFeatureAnalysisFamily_simple_isCompact
       rw [hx]
       apply V.smul_mem
       exact Submodule.subset_span ⟨x, rfl⟩
-    change ∫ x, f x • (Φs : Lp H 2 μ) x ∂μ ∈ V
+    rw [show A f = ∫ x, f x • (Φs : Lp H 2 μ) x ∂μ by
+      simpa [A] using
+        realL2HilbertFeatureAnalysisFamily_apply μ H (Φs : Lp H 2 μ) f]
     exact V.convex.integral_mem hVclosed hPoint hInt
   let AV : Lp ℝ 2 μ →L[ℝ] V := A.codRestrict V hRange
   have hAV : IsCompactOperator AV :=
