@@ -150,6 +150,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogon
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
         H N hN beta hbeta) ^ n * ‖f‖ := by
   letI : NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :=
+    Submodule.normedSpace
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+  letI : NormedSpace ℝ
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
         H N hN beta hbeta) :=
     Submodule.normedSpace
