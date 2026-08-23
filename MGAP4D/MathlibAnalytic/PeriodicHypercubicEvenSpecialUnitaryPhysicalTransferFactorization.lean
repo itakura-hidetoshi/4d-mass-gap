@@ -61,6 +61,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_inne
           H N hN beta hbeta f)
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFeatureAnalysisOperator
           H N hN beta hbeta g) := by
+  let A :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureAnalysisOperator
+      H N hN beta hbeta
   change
     inner ℝ
         (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
@@ -71,15 +74,11 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_inne
           (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) = _
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_eq_adjoint_comp_analysis]
   change
-    inner ℝ
-        ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureAnalysisOperator
-          H N hN beta hbeta)†
-          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureAnalysisOperator
-            H N hN beta hbeta f))
+    inner ℝ ((A†) (A f))
         (g : Lp ℝ 2
-          (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) = _
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) =
+      inner ℝ (A f) (A g)
   rw [ContinuousLinearMap.adjoint_inner_left]
-  rfl
 
 /-- Exact physical Gram factorization:
 
@@ -98,22 +97,15 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_eq_a
           H N hN beta hbeta)†.comp
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFeatureAnalysisOperator
           H N hN beta hbeta) := by
+  let A :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFeatureAnalysisOperator
+      H N hN beta hbeta
   apply ContinuousLinearMap.ext
   intro f
   apply ext_inner_right ℝ
   intro g
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_inner_eq_analysis]
-  change
-    inner ℝ
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFeatureAnalysisOperator
-          H N hN beta hbeta f)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFeatureAnalysisOperator
-          H N hN beta hbeta g) =
-      inner ℝ
-        ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFeatureAnalysisOperator
-          H N hN beta hbeta)†
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFeatureAnalysisOperator
-            H N hN beta hbeta f)) g
+  change inner ℝ (A f) (A g) = inner ℝ ((A†) (A f)) g
   rw [ContinuousLinearMap.adjoint_inner_left]
 
 /-- The physical transfer quadratic form is exactly the squared norm of the
