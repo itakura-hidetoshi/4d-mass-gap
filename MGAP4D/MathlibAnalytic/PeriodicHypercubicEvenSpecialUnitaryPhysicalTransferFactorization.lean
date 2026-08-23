@@ -106,7 +106,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_eq_a
   intro g
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_inner_eq_analysis]
   change inner ℝ (A f) (A g) = inner ℝ ((A†) (A f)) g
-  rw [ContinuousLinearMap.adjoint_inner_left]
+  exact (A.adjoint_inner_left g (A f)).symm
 
 /-- The physical transfer quadratic form is exactly the squared norm of the
 physical feature-analysis vector. -/
