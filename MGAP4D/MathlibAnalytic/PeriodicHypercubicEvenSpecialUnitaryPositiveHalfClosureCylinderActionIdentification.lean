@@ -22,6 +22,10 @@ local instance positiveHalfClosureActionIdentificationSpatialLinkFintype (H : �
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+local instance positiveHalfClosureActionIdentificationSupportedPlaquetteFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenPositiveHalfClosureSupportedPlaquette H) :=
+  Fintype.ofFinite _
+
 /-- The contribution of one four-dimensional plaquette to the positive-half
 closure action.  Writing the three sector indicators additively makes the
 subsequent finite reindexing independent of any chosen sector decomposition. -/
@@ -61,6 +65,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureWeightedPlaquette
 finite weighted sum over the full plaquette carrier. -/
 theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureSectorAction_eq_sum_weighted
     (H N : ℕ)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (A : PeriodicHypercubicEvenEdge H → Matrix.specialUnitaryGroup (Fin N) ℂ) :
     (1 / 2 : ℝ) * periodicHypercubicEvenSpatialCrossingWilsonAction H N A +
         periodicHypercubicEvenPositiveWilsonAction H N A +
@@ -148,7 +153,7 @@ theorem periodicHypercubicEvenPositiveHalfCylinderSpatialCell_spatialCrossing_if
       have hj := periodicHypercubicEvenPositiveHalfCylinderSpatialCell_time_val H j p
       dsimp [q] at hval
       rw [hj] at hval
-      simp at hval
+      change j.1 = 0 at hval
       exact Or.inl hval
     · unfold periodicHypercubicEvenOnAntipodalReflectionPlane at hantipodal
       have hval := congrArg ZMod.val hantipodal
@@ -296,11 +301,11 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureWeightedPlaquette
             (periodicHypercubicEvenSpatialSlicePlaquetteAtTime H
               ((j.1 : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H)) p)) := by
   classical
+  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureWeightedPlaquetteEnergy
   rw [periodicHypercubicEvenPositiveHalfCylinderSpatialCell_spatialCrossing_iff]
   rw [periodicHypercubicEvenPositiveHalfCylinderSpatialCell_strictPositive_iff]
   have hboundary :=
     periodicHypercubicEvenPositiveHalfCylinderSpatialCell_not_positiveBoundaryTemporal H j p
-  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureWeightedPlaquetteEnergy
   by_cases hend : j.1 = 0 ∨ j.1 = H + 1
   · have hinterior : ¬ (j.1 ≠ 0 ∧ j.1 ≠ H + 1) := by
       tauto
@@ -325,9 +330,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureWeightedPlaquette
   classical
   have hcross :=
     periodicHypercubicEvenPositiveHalfCylinderTemporalCell_not_spatialCrossing H i e
+  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureWeightedPlaquetteEnergy
   rw [periodicHypercubicEvenPositiveHalfCylinderTemporalCell_positiveBoundary_iff]
   rw [periodicHypercubicEvenPositiveHalfCylinderTemporalCell_strictPositive_iff]
-  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureWeightedPlaquetteEnergy
   by_cases hend : i.1 = 0 ∨ i.1 = H
   · have hinterior : ¬ (i.1 ≠ 0 ∧ i.1 ≠ H) := by
       tauto
@@ -347,6 +352,7 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_eq_fintypeS
   classical
   simp [periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction,
     periodicHypercubicEvenSpatialSlicePlaquetteList]
+  rfl
 
 /-- Fintype sum form of the one-slab unfixed temporal crossing action. -/
 theorem periodicHypercubicEvenSpecialUnitaryUnfixedTemporalCrossingAction_eq_fintypeSum
@@ -362,6 +368,7 @@ theorem periodicHypercubicEvenSpecialUnitaryUnfixedTemporalCrossingAction_eq_fin
   classical
   simp [periodicHypercubicEvenSpecialUnitaryUnfixedTemporalCrossingAction,
     periodicHypercubicEvenSpatialSliceLinkList]
+  rfl
 
 /-- The spatial part of one fixed cylinder slice is its endpoint/interior
 coefficient times the intrinsic spatial Wilson action. -/
@@ -418,15 +425,13 @@ private theorem positiveHalf_endpointHalfSum_eq_adjacentHalfSum
   classical
   let G : Fin (H + 2) → ℝ := fun j =>
     (if j.1 = 0 ∨ j.1 = H + 1 then (1 / 2 : ℝ) else 1) * F j
-  have hmiddleIndex (k : Fin H) : k.succ.castSucc = k.castSucc.succ := by
-    apply Fin.ext
-    rfl
   have hmiddleWeight (k : Fin H) : G k.castSucc.succ = F k.castSucc.succ := by
-    dsimp [G]
-    have hk := k.2
-    simp only [Fin.val_succ, Fin.val_castSucc, ite_eq_right_iff]
-    intro h
-    rcases h with hzero | hlast <;> omega
+    have hkzero : (k.castSucc.succ : Fin (H + 2)).1 ≠ 0 := by
+      simp
+    have hklast : (k.castSucc.succ : Fin (H + 2)).1 ≠ H + 1 := by
+      simp only [Fin.val_succ, Fin.val_castSucc]
+      omega
+    simp [G, hkzero, hklast]
   have hzeroWeight : G (0 : Fin (H + 2)) = (1 / 2 : ℝ) * F 0 := by
     simp [G]
   have hlastWeight :
@@ -441,15 +446,13 @@ private theorem positiveHalf_endpointHalfSum_eq_adjacentHalfSum
     rw [Fin.sum_univ_castSucc]
     rw [hzeroWeight, hlastWeight]
     simp_rw [hmiddleWeight]
+    ring
   have hfirst :
       (∑ i : Fin (H + 1), (1 / 2 : ℝ) * F i.castSucc) =
         (1 / 2 : ℝ) * F 0 +
           ∑ k : Fin H, (1 / 2 : ℝ) * F k.castSucc.succ := by
     rw [Fin.sum_univ_succ]
     congr 1
-    apply Finset.sum_congr rfl
-    intro k _hk
-    rw [hmiddleIndex]
   have hsecond :
       (∑ i : Fin (H + 1), (1 / 2 : ℝ) * F i.succ) =
         (∑ k : Fin H, (1 / 2 : ℝ) * F k.castSucc.succ) +
@@ -466,7 +469,7 @@ private theorem positiveHalf_endpointHalfSum_eq_adjacentHalfSum
   change (∑ j : Fin (H + 2), G j) = _
   rw [hleft]
   rw [Finset.sum_add_distrib, hfirst, hsecond]
-  rw [hdouble]
+  rw [← hdouble]
   ring
 
 /-- The complete weighted cylinder-cell sum is literally the unfixed path
@@ -483,6 +486,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureCellSum_eq_unfixe
   classical
   rw [Fintype.sum_sum_type]
   rw [Fintype.sum_prod_type, Fintype.sum_prod_type]
+  simp only [periodicHypercubicEvenPositiveHalfCylinderPlaquetteCellEmbedding]
   simp_rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureSpatialLayerSum]
   simp_rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTemporalLayerSum]
   rw [positiveHalf_endpointHalfSum_eq_adjacentHalfSum H
@@ -501,6 +505,7 @@ exactly the unfixed finite-cylinder path action of its spatial and temporal
 restrictions. -/
 theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureSectorAction_eq_unfixedPathAction
     (H N : ℕ)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (A : PeriodicHypercubicEvenEdge H → Matrix.specialUnitaryGroup (Fin N) ℂ) :
     (1 / 2 : ℝ) * periodicHypercubicEvenSpatialCrossingWilsonAction H N A +
         periodicHypercubicEvenPositiveWilsonAction H N A +
