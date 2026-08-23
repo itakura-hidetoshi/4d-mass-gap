@@ -10,7 +10,7 @@ open scoped BigOperators InnerProductSpace
 
 noncomputable section
 
-set_option maxHeartbeats 5000000
+set_option maxHeartbeats 2000000
 
 local instance positiveHalfTransferIterationSpatialSliceLinkFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
@@ -74,42 +74,48 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpoint
       g (path (Fin.last n))
     ∂(periodicHypercubicEvenSpecialUnitaryNSlabSpatialPathHaarMeasure H N n)
 
-private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeStep_measurable
-    (H N : ℕ)
-    (beta : ℝ)
-    (n : ℕ)
-    (i : Fin n) :
-    Measurable
-      (fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N n =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta
-          (path i.castSucc) (path i.succ)) := by
-  have hleft :
-      Measurable
-        (fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N n =>
-          path i.castSucc) :=
-    measurable_pi_apply i.castSucc
-  have hright :
-      Measurable
-        (fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N n =>
-          path i.succ) :=
-    measurable_pi_apply i.succ
-  exact
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta).measurable.comp (hleft.prodMk hright)
-
-theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel_measurable
-    (H N : ℕ)
-    (beta : ℝ)
+/-- Generic finite nearest-neighbour path kernels are measurable as soon as the one-step kernel
+is measurable on the product space.  Keeping the carrier abstract prevents concrete finite
+`SU(N)` product types from entering finite-product measurability elaboration. -/
+private theorem finitePathKernel_measurable
+    {X : Type*}
+    [MeasurableSpace X]
+    (K : X × X → ℝ)
+    (hK : Measurable K)
     (n : ℕ) :
     Measurable
-      (periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel H N beta n) := by
+      (fun path : Fin (n + 1) → X =>
+        ∏ i : Fin n, K (path i.castSucc, path i.succ)) := by
   classical
-  unfold periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel
   apply (Finset.univ : Finset (Fin n)).measurable_prod
   intro i _hi
-  exact
-    periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeStep_measurable
-      H N beta n i
+  exact hK.comp
+    ((measurable_pi_apply i.castSucc).prodMk (measurable_pi_apply i.succ))
+
+/-- A finite product of one-step kernels bounded in absolute value by one is itself bounded by
+one.  This is the abstract majorization used by the path-integral recursion. -/
+private theorem finitePathKernel_abs_le_one
+    {X : Type*}
+    (K : X × X → ℝ)
+    (hK : ∀ p, |K p| ≤ 1)
+    (n : ℕ)
+    (path : Fin (n + 1) → X) :
+    |∏ i : Fin n, K (path i.castSucc, path i.succ)| ≤ 1 := by
+  classical
+  have habs :
+      |∏ i : Fin n, K (path i.castSucc, path i.succ)| =
+        ∏ i : Fin n, |K (path i.castSucc, path i.succ)| := by
+    simpa using
+      (Finset.abs_prod (Finset.univ : Finset (Fin n))
+        (fun i : Fin n => K (path i.castSucc, path i.succ)))
+  rw [habs]
+  calc
+    (∏ i : Fin n, |K (path i.castSucc, path i.succ)|) ≤
+        ∏ _i : Fin n, (1 : ℝ) := by
+      exact Finset.prod_le_prod
+        (fun _ _ => abs_nonneg _)
+        (fun i _ => hK (path i.castSucc, path i.succ))
+    _ = 1 := by simp
 
 theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel_abs_le_one
     (H N : ℕ)
@@ -120,32 +126,12 @@ theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel_abs_le_
     (path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N n) :
     |periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel
         H N beta n path| ≤ 1 := by
-  classical
   unfold periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel
-  have habs :
-      |∏ i : Fin n,
-          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta
-            (path i.castSucc) (path i.succ)| =
-        ∏ i : Fin n,
-          |periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta
-            (path i.castSucc) (path i.succ)| := by
-    simpa using
-      (Finset.abs_prod (Finset.univ : Finset (Fin n))
-        (fun i : Fin n =>
-          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta
-            (path i.castSucc) (path i.succ)))
-  rw [habs]
-  calc
-    (∏ i : Fin n,
-        |periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta
-          (path i.castSucc) (path i.succ)|) ≤
-      ∏ _i : Fin n, (1 : ℝ) := by
-        exact Finset.prod_le_prod
-          (fun _ _ => abs_nonneg _)
-          (fun i _ =>
-            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
-              H N hN beta hbeta (path i.castSucc) (path i.succ))
-    _ = 1 := by simp
+  apply finitePathKernel_abs_le_one
+  intro p
+  exact
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
+      H N hN beta hbeta p.1 p.2
 
 theorem periodicHypercubicEvenSpecialUnitaryOneSlabWeightedLeft_integrable
     (H N : ℕ)
@@ -505,93 +491,75 @@ private noncomputable def periodicHypercubicEvenSpecialUnitaryNSlabTemporalGauge
       periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel
         H N beta n p.2)
 
-private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSplitIntegrand_integrable
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
+/-- Abstract bounded-measurable-kernel majorization for the Fubini split.  All expensive concrete
+`SU(N)` carrier structure is absent here; only probability normalization, endpoint `L²`,
+measurability, and the pointwise kernel bound are used. -/
+private theorem boundedMeasurableKernel_splitIntegrand_integrable
+    {X : Type*}
+    [MeasurableSpace X]
+    (μ : Measure X)
+    [IsProbabilityMeasure μ]
+    (K : X × X → ℝ)
+    (hKmeas : Measurable K)
+    (hKbound : ∀ p, |K p| ≤ 1)
     (n : ℕ)
-    (f g : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) :
+    (f g : Lp ℝ 2 μ) :
     Integrable
-      (periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSplitIntegrand
-        H N beta n f g)
-      ((periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N).prod
-        (periodicHypercubicEvenSpecialUnitaryNSlabSpatialPathHaarMeasure H N n)) := by
-  let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
-  let tailμ := periodicHypercubicEvenSpecialUnitaryNSlabSpatialPathHaarMeasure H N n
-  have hf1 : Integrable (fun A => f A) μ := by
+      (fun p : X × (Fin (n + 1) → X) =>
+        (f p.1 * g (p.2 (Fin.last n))) *
+          (K (p.1, p.2 0) *
+            ∏ i : Fin n, K (p.2 i.castSucc, p.2 i.succ)))
+      (μ.prod (Measure.pi (fun _ : Fin (n + 1) => μ))) := by
+  have hf1 : Integrable (fun x => f x) μ := by
     rw [← memLp_one_iff_integrable]
     exact (Lp.memLp f).mono_exponent (by norm_num)
-  have hg1 : Integrable (fun A => g A) μ := by
+  have hg1 : Integrable (fun x => g x) μ := by
     rw [← memLp_one_iff_integrable]
     exact (Lp.memLp g).mono_exponent (by norm_num)
   have hgtail : Integrable
-      (fun tail : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N n =>
-        g (tail (Fin.last n))) tailμ := by
-    simpa [tailμ, periodicHypercubicEvenSpecialUnitaryNSlabSpatialPathHaarMeasure] using
-      (MeasureTheory.integrable_comp_eval
-        (μ := fun _ : Fin (n + 1) => μ) (i := Fin.last n) hg1)
+      (fun tail : Fin (n + 1) → X => g (tail (Fin.last n)))
+      (Measure.pi (fun _ : Fin (n + 1) => μ)) :=
+    MeasureTheory.integrable_comp_eval
+      (μ := fun _ : Fin (n + 1) => μ) (i := Fin.last n) hg1
   have hbase : Integrable
-      (fun p : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-          PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N n =>
+      (fun p : X × (Fin (n + 1) → X) =>
         f p.1 * g (p.2 (Fin.last n)))
-      (μ.prod tailμ) := hf1.mul_prod hgtail
+      (μ.prod (Measure.pi (fun _ : Fin (n + 1) => μ))) :=
+    hf1.mul_prod hgtail
+  have hpair : Measurable
+      (fun p : X × (Fin (n + 1) → X) => (p.1, p.2 0)) :=
+    measurable_fst.prodMk
+      ((measurable_pi_apply (0 : Fin (n + 1))).comp measurable_snd)
   have hKfirst : Measurable
-      (fun p : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-          PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N n =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta p.1 (p.2 0)) := by
-    have hpair : Measurable
-        (fun p : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-            PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N n =>
-          (p.1, p.2 0)) :=
-      measurable_fst.prodMk ((measurable_pi_apply (0 : Fin (n + 1))).comp measurable_snd)
-    exact
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-        H N beta).measurable.comp hpair
+      (fun p : X × (Fin (n + 1) → X) => K (p.1, p.2 0)) :=
+    hKmeas.comp hpair
   have hKtail : Measurable
-      (fun p : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-          PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N n =>
-        periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel
-          H N beta n p.2) :=
-    (periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel_measurable
-      H N beta n).comp measurable_snd
+      (fun p : X × (Fin (n + 1) → X) =>
+        ∏ i : Fin n, K (p.2 i.castSucc, p.2 i.succ)) :=
+    (finitePathKernel_measurable K hKmeas n).comp measurable_snd
   have hkernel : AEStronglyMeasurable
-      (fun p : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-          PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N n =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-            H N beta p.1 (p.2 0) *
-          periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel
-            H N beta n p.2)
-      (μ.prod tailμ) :=
+      (fun p : X × (Fin (n + 1) → X) =>
+        K (p.1, p.2 0) *
+          ∏ i : Fin n, K (p.2 i.castSucc, p.2 i.succ))
+      (μ.prod (Measure.pi (fun _ : Fin (n + 1) => μ))) :=
     (hKfirst.mul hKtail).aestronglyMeasurable
   apply hbase.mono (hbase.aestronglyMeasurable.mul hkernel)
   filter_upwards with p
-  have hk1 :=
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
-      H N hN beta hbeta p.1 (p.2 0)
-  have hkn :=
-    periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel_abs_le_one
-      H N hN beta hbeta n p.2
+  have hk1 := hKbound (p.1, p.2 0)
+  have hkn := finitePathKernel_abs_le_one K hKbound n p.2
   have hkprod :
-      |periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta p.1 (p.2 0) *
-        periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel
-          H N beta n p.2| ≤ 1 := by
+      |K (p.1, p.2 0) *
+        ∏ i : Fin n, K (p.2 i.castSucc, p.2 i.succ)| ≤ 1 := by
     rw [abs_mul]
     calc
-      |periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta p.1 (p.2 0)| *
-          |periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel
-            H N beta n p.2| ≤ 1 * 1 :=
+      |K (p.1, p.2 0)| *
+          |∏ i : Fin n, K (p.2 i.castSucc, p.2 i.succ)| ≤ 1 * 1 :=
         mul_le_mul hk1 hkn (abs_nonneg _) zero_le_one
       _ = 1 := by norm_num
   change
     |(f p.1 * g (p.2 (Fin.last n))) *
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta p.1 (p.2 0) *
-        periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel
-          H N beta n p.2)| ≤
+      (K (p.1, p.2 0) *
+        ∏ i : Fin n, K (p.2 i.castSucc, p.2 i.succ))| ≤
       |f p.1 * g (p.2 (Fin.last n))|
   rw [abs_mul]
   exact mul_le_mul_of_nonneg_left hkprod (abs_nonneg _)
@@ -633,7 +601,7 @@ private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpointAm
     Fin.insertNth_zero, Equiv.coe_fn_mk, cast_eq]
   rw [periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel_cons]
   simp [periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSplitIntegrand,
-    Fin.cons_zero, Fin.cons_succ]
+    Fin.cons_zero]
   ring
 
 private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSplitIntegral_fubini
@@ -657,9 +625,32 @@ private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSplitInteg
           g (tail (Fin.last n))
         ∂(periodicHypercubicEvenSpecialUnitaryNSlabSpatialPathHaarMeasure H N n) := by
   let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
-  have hsplit :=
-    periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSplitIntegrand_integrable
-      H N hN beta hbeta n f g
+  let K :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ :=
+    fun p =>
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+        H N beta p.1 p.2
+  have hKmeas : Measurable K := by
+    exact
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+        H N beta).measurable
+  have hKbound : ∀ p, |K p| ≤ 1 := by
+    intro p
+    exact
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
+        H N hN beta hbeta p.1 p.2
+  have hsplit0 :=
+    boundedMeasurableKernel_splitIntegrand_integrable
+      μ K hKmeas hKbound n f g
+  have hsplit : Integrable
+      (periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSplitIntegrand
+        H N beta n f g)
+      (μ.prod (periodicHypercubicEvenSpecialUnitaryNSlabSpatialPathHaarMeasure H N n)) := by
+    simpa [K, μ,
+      periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSplitIntegrand,
+      periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel,
+      periodicHypercubicEvenSpecialUnitaryNSlabSpatialPathHaarMeasure] using hsplit0
   rw [MeasureTheory.integral_prod_symm _ hsplit]
   apply integral_congr_ae
   filter_upwards with tail
