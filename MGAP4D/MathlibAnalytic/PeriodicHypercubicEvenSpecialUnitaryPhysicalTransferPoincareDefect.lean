@@ -189,11 +189,12 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta
   have hSymmetric :
-      (R :
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-            H N hN beta hbeta →ₗ[ℝ]
+      LinearMap.IsSymmetric (𝕜 := ℝ)
+        (R :
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-            H N hN beta hbeta).IsSymmetric := by
+              H N hN beta hbeta →ₗ[ℝ]
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+              H N hN beta hbeta) := by
     intro f g
     dsimp [R]
     exact
