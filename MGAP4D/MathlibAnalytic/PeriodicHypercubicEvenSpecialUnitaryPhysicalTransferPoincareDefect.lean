@@ -189,8 +189,11 @@ theorem
       ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
         H N hN beta hbeta‖ ≤ 1 - δ :=
     realHilbertSymmetric_opNorm_le_one_sub_of_quadraticDefect
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+      (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
         H N hN beta hbeta)
+      (R := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta)
+      (δ := δ)
       (fun f g =>
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_symm
           H N hN beta hbeta f g)
