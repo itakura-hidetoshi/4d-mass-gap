@@ -52,8 +52,9 @@ def periodicHypercubicEvenPositiveHalfCylinderSlabRightTime
 /-- The first positive-half slab starts on the primary fixed plane. -/
 @[simp] theorem periodicHypercubicEvenPositiveHalfCylinderSlabLeftTime_zero
     (H : ℕ) :
-    periodicHypercubicEvenPositiveHalfCylinderSlabLeftTime H 0 = 0 := by
-  simp [periodicHypercubicEvenPositiveHalfCylinderSlabLeftTime]
+    periodicHypercubicEvenPositiveHalfCylinderSlabLeftTime H
+        ⟨0, periodicHypercubicEvenPositiveHalfCylinderSlabCount_pos H⟩ = 0 := by
+  rfl
 
 /-- The last positive-half slab ends on the antipodal fixed plane. -/
 @[simp] theorem periodicHypercubicEvenPositiveHalfCylinderSlabRightTime_last
