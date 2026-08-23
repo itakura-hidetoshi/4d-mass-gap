@@ -1,7 +1,8 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenEdgeSideClassification
 import MGAP4D.MathlibAnalytic.FiniteInvolutiveEdgeBoundaryFiberedPiMeasure
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpatialSlice
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryObservableGram
+import MGAP4D.MathlibAnalytic.SpecialUnitaryBorelReceipts
+import MGAP4D.MathlibAnalytic.SpecialUnitaryTopologicalCompactReceipts
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -374,6 +375,16 @@ theorem periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_measurePre
   simpa [periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv,
     reindex, split] using hReindex.trans hSplit
 
+/-- Product normalized Haar probability on the actual shared fixed-edge boundary,
+defined at the pure coordinate/Haar layer so this file does not depend on the OS
+Gram construction. -/
+noncomputable def periodicHypercubicEvenBoundarySpatialSlicePairSourceHaarMeasure
+    (H N : ℕ) :
+    Measure ((periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ)) :=
+  (periodicHypercubicEvenEdgeOrbitPartition H).boundaryPiMeasure
+    (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ))
+
 /-- Product normalized Haar probability on one modern primary spatial slice,
 written here on the boundary-side import path so no transfer-layer instance is
 needed. -/
@@ -403,9 +414,9 @@ theorem periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_measurePre
     MeasurePreserving
       (periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv H
         (Matrix.specialUnitaryGroup (Fin N) ℂ))
-      (periodicHypercubicEvenBoundaryHaarMeasure H N)
+      (periodicHypercubicEvenBoundarySpatialSlicePairSourceHaarMeasure H N)
       (periodicHypercubicEvenBoundarySpatialSlicePairHaarMeasure H N) := by
-  simpa [periodicHypercubicEvenBoundaryHaarMeasure,
+  simpa [periodicHypercubicEvenBoundarySpatialSlicePairSourceHaarMeasure,
     periodicHypercubicEvenBoundarySpatialSlicePairHaarMeasure,
     periodicHypercubicEvenBoundarySpatialSliceHaarMeasure] using
     (periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_measurePreserving
