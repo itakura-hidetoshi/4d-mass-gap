@@ -1,5 +1,8 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpatialSlice
-import MGAP4D.MathlibAnalytic.SpecialUnitaryWilsonKernelRKHSFeature
+import MGAP4D.MathlibAnalytic.RealKernelPositiveSemidefiniteRKHS
+import MGAP4D.MathlibAnalytic.SpecialUnitaryWilsonKernelPositiveSemidefiniteCertificate
+import Mathlib.Analysis.InnerProductSpace.GramMatrix
+import Mathlib.Analysis.Matrix.Order
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -93,16 +96,14 @@ noncomputable def
     specialUnitaryWilsonPlaquetteEnergy N ((A e)⁻¹ * B e)).sum
 
 /-- Product of the exact local `SU(N)` Wilson relative kernels over all spatial
-links in one adjacent-time slab.  It is written through the canonical local
-crossing-kernel wrapper so the already constructed RKHS finite-product feature
-elaborates without expanding the whole dependent tensor-product tower. -/
+links in one adjacent-time slab. -/
 noncomputable def
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
     (H N : ℕ)
     (beta : ℝ)
     (A B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) : ℝ :=
   ((periodicHypercubicEvenSpatialSliceLinkList H).map fun e =>
-    localCrossingWilsonKernel N beta (fun X => X e) A B).prod
+    specialUnitaryWilsonRelativeKernel N beta (A e) (B e)).prod
 
 /-- The finite product of local relative Wilson kernels is exactly the
 Boltzmann factor of the temporal-gauge crossing action. -/
@@ -150,9 +151,133 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_pos
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_eq_boltzmann]
   exact Real.exp_pos _
 
-/-- Exact RKHS feature realization of the full temporal crossing kernel.  Each
-local factor uses the already constructed `SU(N)` Wilson RKHS feature and the
-finite product is realized by completed tensor products. -/
+/-- Point matrices of a symmetric positive-semidefinite real kernel are
+positive-semidefinite matrices.  The proof uses the canonical Moore--Aronszajn
+feature only for this one kernel, avoiding any nested tensor-product carrier. -/
+private theorem realKernelPositiveSemidefiniteCertificate_pointMatrix
+    {X : Type}
+    {kernel : X → X → ℝ}
+    (C : RealKernelPositiveSemidefiniteCertificate X kernel)
+    {ι : Type} [Fintype ι]
+    (points : ι → X) :
+    Matrix.PosSemidef (fun i j => kernel (points i) (points j)) := by
+  let F := C.toHilbertFeature
+  have hgram := Matrix.posSemidef_gram ℝ (fun i : ι => F.feature (points i))
+  have heq :
+      Matrix.gram ℝ (fun i : ι => F.feature (points i)) =
+        (fun i j => kernel (points i) (points j)) := by
+    ext i j
+    exact (F.kernel_eq_inner (points i) (points j)).symm
+  rw [heq] at hgram
+  exact hgram
+
+/-- Schur-product induction: a finite pointwise product of symmetric PSD real
+kernels remains PSD, without constructing a dependent tensor-product feature. -/
+private theorem realKernelPositiveSemidefiniteCertificate_listProd_pointMatrix
+    {X I : Type}
+    (indices : List I)
+    (kernel : I → X → X → ℝ)
+    (C : ∀ i, RealKernelPositiveSemidefiniteCertificate X (kernel i))
+    {ι : Type} [Fintype ι]
+    (points : ι → X) :
+    Matrix.PosSemidef
+      (fun a b => (indices.map fun i => kernel i (points a) (points b)).prod) := by
+  induction indices with
+  | nil =>
+      let v : ι → ℝ := fun _ => 1
+      have hgram := Matrix.posSemidef_gram ℝ v
+      have heq : Matrix.gram ℝ v = (fun _ _ : ι => (1 : ℝ)) := by
+        ext i j
+        simp [Matrix.gram, v]
+      rw [heq] at hgram
+      simpa using hgram
+  | cons i rest ih =>
+      have hhead := realKernelPositiveSemidefiniteCertificate_pointMatrix
+        (C i) points
+      have hprod := hhead.hadamard ih
+      simpa only [List.map_cons, List.prod_cons, Matrix.hadamard_apply] using hprod
+
+/-- Scalar version of the Schur-product induction above. -/
+private theorem realKernelPositiveSemidefiniteCertificate_listProd
+    {X I : Type}
+    (indices : List I)
+    (kernel : I → X → X → ℝ)
+    (C : ∀ i, RealKernelPositiveSemidefiniteCertificate X (kernel i)) :
+    RealKernelPositiveSemidefinite X
+      (fun x y => (indices.map fun i => kernel i x y).prod) := by
+  intro ι _ points coefficients
+  have hmatrix :=
+    realKernelPositiveSemidefiniteCertificate_listProd_pointMatrix
+      indices kernel C points
+  have hquad := hmatrix.dotProduct_mulVec_nonneg coefficients
+  simpa [Matrix.dotProduct, Matrix.mulVec, Finset.mul_sum,
+    mul_assoc, mul_comm, mul_left_comm] using hquad
+
+/-- Symmetry of the full crossing kernel follows link-by-link from symmetry of
+the exact local Wilson relative kernel. -/
+theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_symmetric
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (A B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
+        H N beta A B =
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
+        H N beta B A := by
+  unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
+  generalize periodicHypercubicEvenSpatialSliceLinkList H = es
+  induction es with
+  | nil => simp
+  | cons e es ih =>
+      simp only [List.map_cons, List.prod_cons]
+      rw [specialUnitaryWilsonRelativeKernel_symmetric
+        N hN beta hbeta (A e) (B e), ih]
+
+/-- The full temporal crossing kernel is positive semidefinite by the Schur
+product theorem applied to the exact local Wilson relative kernels. -/
+theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_positiveSemidefinite
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    RealKernelPositiveSemidefinite
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
+        H N beta) := by
+  unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
+  exact
+    realKernelPositiveSemidefiniteCertificate_listProd
+      (periodicHypercubicEvenSpatialSliceLinkList H)
+      (fun e A B => specialUnitaryWilsonRelativeKernel N beta (A e) (B e))
+      (fun e => by
+        let C := specialUnitaryWilsonRelativeKernel_positiveSemidefiniteCertificate
+          N hN beta hbeta
+        exact
+          { symmetric := fun A B => C.symmetric (A e) (B e)
+            positiveSemidefinite := by
+              intro ι _ points coefficients
+              exact C.positiveSemidefinite ι (fun i => points i e) coefficients })
+
+/-- Complete symmetric-PSD certificate for the full crossing kernel. -/
+noncomputable def
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernelCertificate
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    RealKernelPositiveSemidefiniteCertificate
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
+        H N beta) where
+  symmetric :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_symmetric
+      H N hN beta hbeta
+  positiveSemidefinite :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_positiveSemidefinite
+      H N hN beta hbeta
+
+/-- Lightweight Moore--Aronszajn feature of the full crossing kernel. -/
 noncomputable def
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernelFeature
     (H N : ℕ)
@@ -162,18 +287,12 @@ noncomputable def
     RealHilbertKernelFeature
       (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
-        H N beta) := by
-  exact
-    RealHilbertKernelFeature.listProd
-      (periodicHypercubicEvenSpatialSliceLinkList H)
-      (fun e A B =>
-        localCrossingWilsonKernel N beta (fun X => X e) A B)
-      (fun e =>
-        localCrossingWilsonKernelConcreteFeature
-          N hN beta hbeta (fun X => X e))
+        H N beta) :=
+  (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernelCertificate
+    H N hN beta hbeta).toHilbertFeature
 
-/-- The temporal crossing kernel is exactly the inner product of its global
-finite-product RKHS features. -/
+/-- The crossing kernel is exactly the inner product of its canonical RKHS
+features. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_eq_inner
     (H N : ℕ)
     (hN : 0 < N)
@@ -238,36 +357,8 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_eq_boltzmann]
   exact Real.exp_pos _
 
-/-- The complete one-slab compact Wilson kernel has an explicit real Hilbert
-feature obtained by scaling the crossing feature with the spatial half-weight.
-Thus the spatial sandwich preserves Gram positivity without any extra analytic
-assumption. -/
-noncomputable def
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelFeature
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    RealHilbertKernelFeature
-      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-        H N beta) := by
-  let C :=
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernelFeature
-      H N hN beta hbeta
-  refine
-    { FeatureHilbert := C.FeatureHilbert
-      feature := fun A =>
-        periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight
-          H N beta A • C.feature A
-      kernel_eq_inner := ?_ }
-  intro A B
-  rw [real_inner_smul_left, real_inner_smul_right]
-  rw [← C.kernel_eq_inner]
-  unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-  ring
-
-/-- Hilbert-feature symmetry of the complete one-slab Wilson kernel. -/
+/-- Symmetry of the complete one-slab kernel follows from crossing-kernel
+symmetry and the symmetric spatial half-weight sandwich. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
     (H N : ℕ)
     (hN : 0 < N)
@@ -277,13 +368,14 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
         H N beta A B =
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-        H N beta B A :=
-  (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelFeature
-    H N hN beta hbeta).symmetric A B
+        H N beta B A := by
+  unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+  rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_symmetric
+    H N hN beta hbeta A B]
+  ring
 
-/-- Positive semidefiniteness of the complete compact `SU(N)` one-slab Wilson
-kernel for every finite family of boundary configurations and real
-coefficients. -/
+/-- The spatial half-weight sandwich preserves positive semidefiniteness of the
+crossing kernel by absorbing one half-weight into each finite coefficient. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_positiveSemidefinite
     (H N : ℕ)
     (hN : 0 < N)
@@ -292,9 +384,50 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_positiveS
     RealKernelPositiveSemidefinite
       (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+        H N beta) := by
+  intro ι _ points coefficients
+  have hcross :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_positiveSemidefinite
+      H N hN beta hbeta ι points
+        (fun i => coefficients i *
+          periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight
+            H N beta (points i))
+  unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+  simpa [mul_assoc, mul_comm, mul_left_comm] using hcross
+
+/-- Complete symmetric-PSD certificate for the actual compact one-slab kernel. -/
+noncomputable def
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelCertificate
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    RealKernelPositiveSemidefiniteCertificate
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+        H N beta) where
+  symmetric :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
+      H N hN beta hbeta
+  positiveSemidefinite :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_positiveSemidefinite
+      H N hN beta hbeta
+
+/-- Canonical Moore--Aronszajn real Hilbert feature of the complete one-slab
+compact Wilson kernel.  This avoids the elaboration-heavy explicit dependent
+tensor tower while retaining an exact kernel-inner-product identity. -/
+noncomputable def
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelFeature
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    RealHilbertKernelFeature
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
         H N beta) :=
-  (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelFeature
-    H N hN beta hbeta).positiveSemidefinite
+  (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelCertificate
+    H N hN beta hbeta).toHilbertFeature
 
 end
 
