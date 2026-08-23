@@ -147,10 +147,31 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairing_co
   have hOneFst := (Measure.quasiMeasurePreserving_fst (μ := μ) (ν := μ)).ae_eq hOne
   have hOneSnd := (Measure.quasiMeasurePreserving_snd (μ := μ) (ν := μ)).ae_eq hOne
   filter_upwards [hK, hTensor, hOneFst, hOneSnd] with p hk ht h1 h2
-  rw [hk, ht]
-  simp only [realL2ExternalTensorFunction]
-  rw [h1, h2]
-  simp [realL2Scalar_inner_eq_mul]
+  have ht' :
+      (realL2ExternalTensor oneL2 oneL2) p = oneL2 p.1 * oneL2 p.2 := by
+    calc
+      (realL2ExternalTensor oneL2 oneL2) p =
+          realL2ExternalTensorFunction oneL2 oneL2 p := ht
+      _ = oneL2 p.1 * oneL2 p.2 := rfl
+  have h1' : oneL2 p.1 = 1 := by
+    simpa [Function.comp_def] using h1
+  have h2' : oneL2 p.2 = 1 := by
+    simpa [Function.comp_def] using h2
+  calc
+    inner ℝ (K p) ((realL2ExternalTensor oneL2 oneL2) p) =
+        inner ℝ
+          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta p.1 p.2)
+          ((realL2ExternalTensor oneL2 oneL2) p) := by rw [hk]
+    _ = inner ℝ
+          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta p.1 p.2)
+          (oneL2 p.1 * oneL2 p.2) := by
+      exact congrArg
+        (fun z : ℝ => inner ℝ
+          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta p.1 p.2) z)
+        ht'
+    _ = periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta p.1 p.2 := by
+      rw [h1', h2']
+      simp [realL2Scalar_inner_eq_mul]
 
 /-- The actual physical constant vector has strictly positive transfer expectation. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_transfer_expectation_pos
@@ -188,10 +209,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm
       H N hN beta hbeta‖ := by
   let T := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
     H N hN beta hbeta
-  have hT : T ≠ 0 := by
-    exact periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_ne_zero
+  have hT : T ≠ 0 :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_ne_zero
       H N hN beta hbeta
-  exact norm_pos_iff.mpr hT
+  have hnorm_ne : ‖T‖ ≠ 0 := by
+    intro hnorm
+    exact hT (ContinuousLinearMap.opNorm_zero_iff.mp hnorm)
+  exact lt_of_le_of_ne (norm_nonneg T) (Ne.symm hnorm_ne)
 
 /-- The normalized actual physical one-slab transfer. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
@@ -251,7 +275,8 @@ theorem periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOpe
     change ‖‖T‖⁻¹ • T f‖ ≤ 1 * ‖f‖
     rw [one_mul, norm_smul, Real.norm_eq_abs, abs_inv, abs_of_pos hnorm]
     rw [inv_mul_eq_div]
-    exact (div_le_iff₀ hnorm).2 (ContinuousLinearMap.le_opNorm T f)
+    exact (div_le_iff₀ hnorm).2 (by
+      simpa [mul_comm] using ContinuousLinearMap.le_opNorm T f)
   · have hle := ContinuousLinearMap.le_opNorm S Ω
     rw [hΩfixed, hΩnorm] at hle
     simpa using hle
@@ -279,6 +304,13 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationS
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     Submodule ℝ (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :=
   (ℝ ∙ periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector H N hN beta hbeta)ᗮ
+
+local instance periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitation_normedSpace
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
+    NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationSubmodule
+        H N hN beta hbeta) :=
+  Submodule.normedSpace _
 
 @[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationSubmodule_mem
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
@@ -370,7 +402,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationTransferOpe
     (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
   rw [periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_norm
     H N hN beta hbeta, one_mul] at h
-  simpa using h
+  exact h
 
 /-- Audit-visible normalization/excitation receipt. -/
 structure PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNormalizationPackage
