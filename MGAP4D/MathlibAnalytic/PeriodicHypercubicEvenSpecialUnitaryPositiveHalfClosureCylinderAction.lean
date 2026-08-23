@@ -266,7 +266,9 @@ theorem periodicHypercubicEvenPositiveHalfTemporalPlaquette_holonomy
           H N A i.castSucc e)⁻¹ := by
   unfold periodicHypercubicPlaquetteHolonomy
   unfold periodicHypercubicEvenPositiveHalfTemporalPlaquette
-  simp only [periodicHypercubicBoundaryStep_zero,
+  simp only [periodicHypercubicPlaquetteFirstAxis,
+    periodicHypercubicPlaquetteSecondAxis,
+    periodicHypercubicBoundaryStep_zero,
     periodicHypercubicBoundaryStep_one,
     periodicHypercubicBoundaryStep_two,
     periodicHypercubicBoundaryStep_three,
