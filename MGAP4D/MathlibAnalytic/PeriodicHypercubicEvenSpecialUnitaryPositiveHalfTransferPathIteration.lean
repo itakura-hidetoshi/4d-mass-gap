@@ -10,6 +10,8 @@ open scoped BigOperators InnerProductSpace
 
 noncomputable section
 
+set_option maxHeartbeats 1000000
+
 local instance positiveHalfTransferIterationSpatialSliceLinkFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
@@ -86,7 +88,11 @@ theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel_continu
       (periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel H N beta n) := by
   classical
   unfold periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel
-  fun_prop
+  apply continuous_finset_prod
+  intro i _hi
+  exact
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      H N beta).comp (by fun_prop)
 
 /-- At nonnegative coupling every arbitrary finite path kernel has absolute value at most one. -/
 theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel_abs_le_one
@@ -100,7 +106,19 @@ theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel_abs_le_
         H N beta n path| ≤ 1 := by
   classical
   unfold periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel
-  rw [abs_prod]
+  have habs :
+      |∏ i : Fin n,
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta
+            (path i.castSucc) (path i.succ)| =
+        ∏ i : Fin n,
+          |periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta
+            (path i.castSucc) (path i.succ)| := by
+    simpa using
+      (Finset.abs_prod (Finset.univ : Finset (Fin n))
+        (fun i : Fin n =>
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta
+            (path i.castSucc) (path i.succ)))
+  rw [habs]
   calc
     (∏ i : Fin n,
         |periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta
@@ -147,13 +165,13 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSlabWeightedLeft_integrable
       (μ.prod μ) :=
     (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
       H N beta).aestronglyMeasurable
-  apply hbase.mono' (hbase.aestronglyMeasurable.mul hKmeas)
+  apply hbase.mono (hbase.aestronglyMeasurable.mul hKmeas)
   filter_upwards with p
   have hk :=
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
       H N hN beta hbeta p.1 p.2
-  simpa [Real.norm_eq_abs, abs_mul] using
-    (mul_le_mul_of_nonneg_left hk (abs_nonneg (f p.1)))
+  rw [Real.norm_eq_abs, Real.norm_eq_abs, abs_mul]
+  exact mul_le_mul_of_nonneg_left hk (abs_nonneg (f p.1))
 
 /-- Literal pointwise integral representative of the Riesz-constructed one-slab transfer. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegralRepresentative
@@ -208,11 +226,14 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegral
     _ ≤ ∫ A, ‖f A‖ ∂μ := by
       apply integral_mono_ae hB.norm hf1.norm
       filter_upwards with A
-      have hk :=
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
-          H N hN beta hbeta A B
-      simpa [Real.norm_eq_abs, abs_mul] using
-        (mul_le_mul_of_nonneg_left hk (abs_nonneg (f A)))
+      change
+        |f A * periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta A B| ≤ |f A|
+      rw [abs_mul]
+      exact mul_le_mul_of_nonneg_left
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
+          H N hN beta hbeta A B)
+        (abs_nonneg (f A))
 
 /-- `L²` vector associated to the literal one-slab integral representative. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegralL2
@@ -262,19 +283,36 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
         ∂((periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N).prod
           (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) := by
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_inner]
-  rw [realL2HilbertSchmidtKernelPairing]
-  rw [MeasureTheory.L2.inner_def]
-  have hK :=
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2_coeFn
-      H N hN beta hbeta
-  have hfg := realL2ExternalTensor_coeFn
+  unfold realL2HilbertSchmidtKernelPairing
+  let K := periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
+    H N hN beta hbeta
+  let tensor := realL2ExternalTensor
     (μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
     (ν := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) f g
-  apply integral_congr_ae
-  filter_upwards [hK, hfg] with p hpK hpfg
-  rw [hpK, hpfg, realL2Scalar_inner_eq_mul]
-  simp only [realL2ExternalTensorFunction]
-  ring
+  calc
+    inner ℝ K tensor =
+        ∫ p,
+          inner ℝ (K p) (tensor p)
+          ∂((periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N).prod
+            (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) :=
+      MeasureTheory.L2.inner_def K tensor
+    _ = _ := by
+      have hK :=
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2_coeFn
+          H N hN beta hbeta
+      have hfg := realL2ExternalTensor_coeFn
+        (μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
+        (ν := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) f g
+      apply integral_congr_ae
+      filter_upwards [hK, hfg] with p hpK hpfg
+      change inner ℝ (K p) (tensor p) = _
+      rw [show K p =
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+            H N beta p.1 p.2 by simpa [K] using hpK]
+      rw [show tensor p = f p.1 * g p.2 by
+        simpa [tensor, realL2ExternalTensorFunction] using hpfg]
+      rw [realL2Scalar_inner_eq_mul]
+      ring
 
 /-- The literal integral representative is exactly the already-canonical Riesz transfer vector. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegralL2_eq_operator
@@ -322,9 +360,9 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegral
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
             H N beta p.1 p.2 * g p.2)
       (μ.prod μ) := by
-    apply hbase.mono'
-      ((hbase.aestronglyMeasurable.mul hKmeas).congr
-        (Filter.Eventually.of_forall fun p => by ring))
+    apply hbase.mono
+      (((Lp.aestronglyMeasurable f).comp_fst.mul hKmeas).mul
+        (Lp.aestronglyMeasurable g).comp_snd)
     filter_upwards with p
     have hk :=
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
@@ -335,19 +373,27 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegral
           |periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
             H N beta p.1 p.2| * |g p.2| ≤
         |f p.1| * 1 * |g p.2| := by gcongr
-      _ = |f p.1 * g p.2| := by rw [abs_mul]; ring
+      _ = |f p.1| * |g p.2| := by ring
   calc
     inner ℝ
         (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegralL2
           H N hN beta hbeta f) g =
       ∫ B,
+        inner ℝ
+          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegralL2
+            H N hN beta hbeta f B)
+          (g B) ∂μ :=
+      MeasureTheory.L2.inner_def
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegralL2
+          H N hN beta hbeta f) g
+    _ = ∫ B,
         (∫ A,
           f A * periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
             H N beta A B ∂μ) * g B ∂μ := by
-      rw [MeasureTheory.L2.inner_def]
       apply integral_congr_ae
       filter_upwards [hrep] with B hB
       rw [hB, realL2Scalar_inner_eq_mul]
+      rfl
     _ = ∫ p :
         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
@@ -384,8 +430,8 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegralL2_coeFn
       H N hN beta hbeta f
 
-/-- Recursive operator iterate with the physically natural convention `T^[n+1] = T ∘ T^[n]`.
-This carrier is definitionally convenient for the path-integral induction. -/
+/-- Recursive operator iterate with the path-integral convention
+`T^[n+1] = T^[n] ∘ T`, matching removal of the first slab. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIterate
     (H N : ℕ)
     (hN : 0 < N)
@@ -396,10 +442,10 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransf
         Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
   | 0 => 1
   | n + 1 =>
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
-        H N hN beta hbeta).comp
-        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIterate
-          H N hN beta hbeta n)
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIterate
+        H N hN beta hbeta n).comp
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
+          H N hN beta hbeta)
 
 @[simp] theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIterate_zero
     (H N : ℕ)
@@ -417,10 +463,10 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransf
     (n : ℕ) :
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIterate
         H N hN beta hbeta (n + 1) =
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
-        H N hN beta hbeta).comp
-        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIterate
-          H N hN beta hbeta n) := rfl
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIterate
+        H N hN beta hbeta n).comp
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
+          H N hN beta hbeta) := rfl
 
 /-- The recursion agrees exactly with the ordinary composition power. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIterate_eq_pow
@@ -438,7 +484,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIterate_
   | succ n ih =>
       rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIterate_succ, ih]
       simpa [ContinuousLinearMap.mul_def] using
-        (pow_succ'
+        (pow_succ
           (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
             H N hN beta hbeta) n).symm
 
@@ -450,13 +496,25 @@ theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpointAmplitude_
     periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpointAmplitude
         H N beta 0 f g = inner ℝ f g := by
   let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
-  unfold periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpointAmplitude
-  unfold periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel
-  rw [← (MeasureTheory.measurePreserving_funUnique μ (Fin 1)).symm.integral_comp']
-  rw [MeasureTheory.L2.inner_def]
-  apply integral_congr_ae
-  filter_upwards with A
-  simp [MeasurableEquiv.funUnique, realL2Scalar_inner_eq_mul]
+  change
+    (∫ path : Fin 1 → PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
+      f (path 0) * g (path 0) ∂(Measure.pi (fun _ : Fin 1 => μ))) = inner ℝ f g
+  calc
+    (∫ path : Fin 1 → PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
+      f (path 0) * g (path 0) ∂(Measure.pi (fun _ : Fin 1 => μ))) =
+      ∫ path : Fin 1 → PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
+        inner ℝ (f (path 0)) (g (path 0))
+        ∂(Measure.pi (fun _ : Fin 1 => μ)) := by
+      apply integral_congr_ae
+      filter_upwards with path
+      rw [realL2Scalar_inner_eq_mul]
+    _ = ∫ A, inner ℝ (f A) (g A) ∂μ := by
+      exact
+        (MeasureTheory.measurePreserving_eval
+          (μ := fun _ : Fin 1 => μ) (0 : Fin 1)).integral_comp'
+          (fun A => inner ℝ (f A) (g A))
+    _ = inner ℝ f g :=
+      (MeasureTheory.L2.inner_def f g).symm
 
 /-- Algebraic decomposition of an `(n+1)`-slab kernel after exposing its first slice. -/
 private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel_cons
@@ -508,7 +566,7 @@ theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpointAmplitude_
         g (tail (Fin.last n))) tailμ := by
     simpa [tailμ, periodicHypercubicEvenSpecialUnitaryNSlabSpatialPathHaarMeasure] using
       (MeasureTheory.integrable_comp_eval
-        (μ := fun _ : Fin (n + 1) => μ) hg1)
+        (μ := fun _ : Fin (n + 1) => μ) hg1 (Fin.last n))
   have hbase : Integrable
       (fun p :
         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
@@ -549,11 +607,14 @@ theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpointAmplitude_
             periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel
               H N beta n p.2 *
             g (p.2 (Fin.last n)))
-        (μ.prod tailμ) :=
-      (((hbase.aestronglyMeasurable.mul hKfirst.aestronglyMeasurable).mul
-        (hKtail.aestronglyMeasurable.comp_snd)).congr
-        (Filter.Eventually.of_forall fun p => by ring))
-    apply hbase.mono' hmeas
+        (μ.prod tailμ) := by
+      exact (((Lp.aestronglyMeasurable f).comp_fst.mul hKfirst.aestronglyMeasurable).mul
+        (hKtail.aestronglyMeasurable.comp_snd)).mul
+          ((Lp.aestronglyMeasurable g).comp
+            (Measure.quasiMeasurePreserving_snd (μ := μ) (ν := tailμ))).comp
+            (MeasureTheory.measurePreserving_eval
+              (μ := fun _ : Fin (n + 1) => μ) (Fin.last n)).quasiMeasurePreserving
+    apply hbase.mono hmeas
     filter_upwards with p
     have hk1 :=
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
@@ -569,7 +630,7 @@ theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpointAmplitude_
           |periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel
             H N beta n p.2| * |g (p.2 (Fin.last n))| ≤
         |f p.1| * 1 * 1 * |g (p.2 (Fin.last n))| := by gcongr
-      _ = |f p.1 * g (p.2 (Fin.last n))| := by rw [abs_mul]; ring
+      _ = |f p.1| * |g (p.2 (Fin.last n))| := by ring
   have hTf :=
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_coeFn
       H N hN beta hbeta f
@@ -593,6 +654,12 @@ theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpointAmplitude_
           periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel
             H N beta n p.2 *
           g (p.2 (Fin.last n)) ∂(μ.prod tailμ) := by
+        change
+          (∫ path : Fin (n + 2) → PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
+            f (path 0) *
+              periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel
+                H N beta (n + 1) path *
+              g (path (Fin.last (n + 1))) ∂(Measure.pi μs)) = _
         rw [← hMP.symm.integral_comp']
         apply integral_congr_ae
         filter_upwards with p
@@ -654,6 +721,7 @@ theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpointAmplitude_
       rw [periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpointAmplitude_succ
         H N hN beta hbeta n f g]
       rw [ih]
+      rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIterate_succ]
       rfl
 
 /-- Equivalently, every finite path amplitude is the matrix coefficient of the ordinary transfer
@@ -710,19 +778,19 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_pow_
       ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
           H N hN beta hbeta) ^ n)
         (f : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) := by
-  induction n with
+  induction n generalizing f with
   | zero => simp
   | succ n ih =>
-      rw [pow_succ', pow_succ']
+      rw [pow_succ, pow_succ]
       change
-        ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-            H N hN beta hbeta
-            (((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-              H N hN beta hbeta) ^ n) f) :
+        ((((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+            H N hN beta hbeta) ^ n)
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+              H N hN beta hbeta f) :
           periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
           Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) = _
-      rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_coe]
       rw [ih]
+      rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_coe]
       rfl
 
 /-- Main transfer/path theorem: the complete temporal-gauge positive-half endpoint amplitude on
