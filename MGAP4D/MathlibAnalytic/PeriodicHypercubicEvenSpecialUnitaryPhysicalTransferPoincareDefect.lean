@@ -188,49 +188,65 @@ theorem
   let R :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta
-  have hSymmetric :
-      LinearMap.IsSymmetric (𝕜 := ℝ)
-        (R :
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-              H N hN beta hbeta →ₗ[ℝ]
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-              H N hN beta hbeta) := by
-    intro f g
-    dsimp [R]
-    exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_symm
-        H N hN beta hbeta f g
   have hR : ‖R‖ ≤ 1 - δ := by
-    rw [ContinuousLinearMap.norm_eq_iSup_rayleighQuotient R hSymmetric]
-    apply ciSup_le
-    intro f
-    by_cases hf : f = 0
-    · subst f
-      simpa using sub_nonneg.mpr hδle
-    · have hnorm_pos : 0 < ‖f‖ := norm_pos_iff.mpr hf
-      have hnorm_sq_pos : 0 < ‖f‖ ^ 2 := by positivity
-      have hdef :
-          δ * ‖f‖ ^ 2 ≤ ‖f‖ ^ 2 - inner ℝ (R f) f := by
+    apply ContinuousLinearMap.opNorm_le_of_re_inner_le (sub_nonneg.mpr hδle)
+    intro x y hx hy
+    change inner ℝ (R x) y ≤ 1 - δ
+    have hdiag (z :
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta) :
+        inner ℝ (R z) z ≤ (1 - δ) * ‖z‖ ^ 2 := by
+      have hz :
+          δ * ‖z‖ ^ 2 ≤ ‖z‖ ^ 2 - inner ℝ (R z) z := by
         simpa [
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceQuadraticDefect,
-          realHilbertQuadraticDefect, R] using hdefect f
-      have hinner : inner ℝ (R f) f ≤ (1 - δ) * ‖f‖ ^ 2 := by
-        linarith
-      have hq_nonneg : 0 ≤ R.rayleighQuotient f := by
-        change 0 ≤ inner ℝ (R f) f / ‖f‖ ^ 2
-        exact div_nonneg (by
-          dsimp [R]
-          exact
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_nonneg
-              H N hN beta hbeta f) (sq_nonneg _)
-      have hq_le : R.rayleighQuotient f ≤ 1 - δ := by
-        change inner ℝ (R f) f / ‖f‖ ^ 2 ≤ 1 - δ
-        exact (div_le_iff₀ hnorm_sq_pos).2 (by
-          calc
-            inner ℝ (R f) f ≤ (1 - δ) * ‖f‖ ^ 2 := hinner
-            _ = (1 - δ) * ‖f‖ ^ 2 := rfl)
-      rw [abs_of_nonneg hq_nonneg]
-      exact hq_le
+          realHilbertQuadraticDefect, R] using hdefect z
+      linarith
+    have hnonneg (z :
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta) :
+        0 ≤ inner ℝ (R z) z := by
+      dsimp [R]
+      exact
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_nonneg
+          H N hN beta hbeta z
+    have hsymm (u v :
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta) :
+        inner ℝ (R u) v = inner ℝ u (R v) := by
+      dsimp [R]
+      exact
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_symm
+          H N hN beta hbeta u v
+    have hcross : inner ℝ (R y) x = inner ℝ (R x) y := by
+      calc
+        inner ℝ (R y) x = inner ℝ y (R x) := hsymm y x
+        _ = inner ℝ (R x) y := real_inner_comm _ _
+    have hpolar :
+        4 * inner ℝ (R x) y =
+          inner ℝ (R (x + y)) (x + y) -
+            inner ℝ (R (x - y)) (x - y) := by
+      simp only [map_add, map_sub, inner_add_left, inner_add_right,
+        inner_sub_left, inner_sub_right]
+      rw [hcross]
+      ring
+    have hsum_norm : ‖x + y‖ ≤ 2 := by
+      calc
+        ‖x + y‖ ≤ ‖x‖ + ‖y‖ := norm_add_le x y
+        _ = 2 := by rw [hx, hy]; norm_num
+    have hsum_sq : ‖x + y‖ ^ 2 ≤ 4 := by
+      nlinarith [norm_nonneg (x + y)]
+    have hqsum_le :
+        inner ℝ (R (x + y)) (x + y) ≤ 4 * (1 - δ) := by
+      calc
+        inner ℝ (R (x + y)) (x + y) ≤
+            (1 - δ) * ‖x + y‖ ^ 2 := hdiag (x + y)
+        _ ≤ (1 - δ) * 4 :=
+          mul_le_mul_of_nonneg_left hsum_sq (sub_nonneg.mpr hδle)
+        _ = 4 * (1 - δ) := by ring
+    have hqminus_nonneg : 0 ≤ inner ℝ (R (x - y)) (x - y) :=
+      hnonneg (x - y)
+    linarith
   dsimp [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap]
   dsimp [R] at hR
   linarith
