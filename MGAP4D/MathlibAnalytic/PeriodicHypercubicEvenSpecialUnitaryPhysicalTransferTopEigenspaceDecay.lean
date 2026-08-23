@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopEigenspaceContraction
-import Mathlib.Analysis.InnerProductSpace.Subspace
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
 
@@ -8,216 +7,169 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-universe u
+/-- A zero-safe midpoint contraction factor for a nonnegative scalar bound.
+Using `(1 + r) / 2` keeps the factor strictly positive even when `r = 0`,
+while retaining a strict factor below one whenever `r < 1`. -/
+noncomputable def realStrictContractionMidpointFactor (r : ℝ) : ℝ :=
+  (1 + r) / 2
 
-/-- A zero-safe midpoint contraction factor associated with a strict bounded
-endomorphism contraction.  Using `(1 + ‖R‖) / 2` keeps the factor strictly
-positive even when `R = 0`, while retaining a strict factor below one whenever
-`‖R‖ < 1`. -/
-noncomputable def realContinuousLinearMapStrictContractionMidpointFactor
-    {E : Type u}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    (R : E →L[ℝ] E) : ℝ :=
-  (1 + ‖R‖) / 2
-
-/-- The midpoint factor is strictly positive. -/
-theorem realContinuousLinearMapStrictContractionMidpointFactor_pos
-    {E : Type u}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    (R : E →L[ℝ] E) :
-    0 < realContinuousLinearMapStrictContractionMidpointFactor R := by
-  have hnorm : 0 ≤ ‖R‖ := norm_nonneg R
-  dsimp [realContinuousLinearMapStrictContractionMidpointFactor]
+/-- A nonnegative scalar bound has strictly positive midpoint factor. -/
+theorem realStrictContractionMidpointFactor_pos
+    {r : ℝ}
+    (hr0 : 0 ≤ r) :
+    0 < realStrictContractionMidpointFactor r := by
+  dsimp [realStrictContractionMidpointFactor]
   linarith
 
-/-- A strict operator contraction gives a midpoint factor strictly below one. -/
-theorem realContinuousLinearMapStrictContractionMidpointFactor_lt_one
-    {E : Type u}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    (R : E →L[ℝ] E)
-    (hR : ‖R‖ < 1) :
-    realContinuousLinearMapStrictContractionMidpointFactor R < 1 := by
-  dsimp [realContinuousLinearMapStrictContractionMidpointFactor]
+/-- A strict scalar contraction has midpoint factor strictly below one. -/
+theorem realStrictContractionMidpointFactor_lt_one
+    {r : ℝ}
+    (hr : r < 1) :
+    realStrictContractionMidpointFactor r < 1 := by
+  dsimp [realStrictContractionMidpointFactor]
   linarith
 
-/-- The original operator norm lies below its midpoint contraction factor. -/
-theorem realContinuousLinearMap_norm_le_strictContractionMidpointFactor
-    {E : Type u}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    (R : E →L[ℝ] E)
-    (hR : ‖R‖ < 1) :
-    ‖R‖ ≤ realContinuousLinearMapStrictContractionMidpointFactor R := by
-  dsimp [realContinuousLinearMapStrictContractionMidpointFactor]
+/-- A strict scalar contraction is bounded by its midpoint factor. -/
+theorem real_le_strictContractionMidpointFactor
+    {r : ℝ}
+    (hr : r < 1) :
+    r ≤ realStrictContractionMidpointFactor r := by
+  dsimp [realStrictContractionMidpointFactor]
   linarith
 
-/-- Submultiplicativity iterated through natural powers of a bounded real
-endomorphism. -/
-theorem realContinuousLinearMap_pow_norm_le
-    {E : Type u}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    (R : E →L[ℝ] E)
+/-- Powers preserve the comparison with the midpoint contraction factor. -/
+theorem real_pow_le_strictContractionMidpointFactor_pow
+    {r : ℝ}
+    (hr0 : 0 ≤ r)
+    (hr : r < 1)
     (n : ℕ) :
-    ‖R ^ n‖ ≤ ‖R‖ ^ n := by
+    r ^ n ≤ (realStrictContractionMidpointFactor r) ^ n := by
+  have hrle : r ≤ realStrictContractionMidpointFactor r :=
+    real_le_strictContractionMidpointFactor hr
+  have hq0 : 0 ≤ realStrictContractionMidpointFactor r :=
+    (realStrictContractionMidpointFactor_pos hr0).le
   induction n with
-  | zero =>
-      simp only [pow_zero]
-      apply ContinuousLinearMap.opNorm_le_bound (1 : E →L[ℝ] E) zero_le_one
-      intro x
-      simp
+  | zero => simp
   | succ n ih =>
       rw [pow_succ, pow_succ]
-      exact
-        (norm_mul_le (R ^ n) R).trans
-          (mul_le_mul_of_nonneg_right ih (norm_nonneg R))
+      exact mul_le_mul ih hrle hr0 (pow_nonneg hq0 n)
 
-/-- Powers of a strict bounded contraction are geometrically controlled by the
-zero-safe midpoint factor. -/
-theorem realContinuousLinearMapStrictContraction_pow_norm_le_midpointFactor
-    {E : Type u}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    (R : E →L[ℝ] E)
-    (hR : ‖R‖ < 1)
-    (n : ℕ) :
-    ‖R ^ n‖ ≤
-      (realContinuousLinearMapStrictContractionMidpointFactor R) ^ n := by
-  have hnormle := realContinuousLinearMap_norm_le_strictContractionMidpointFactor R hR
-  have hqnonneg : 0 ≤ realContinuousLinearMapStrictContractionMidpointFactor R :=
-    (realContinuousLinearMapStrictContractionMidpointFactor_pos R).le
-  calc
-    ‖R ^ n‖ ≤ ‖R‖ ^ n := realContinuousLinearMap_pow_norm_le R n
-    _ ≤ (realContinuousLinearMapStrictContractionMidpointFactor R) ^ n := by
-      induction n with
-      | zero => simp
-      | succ n ih =>
-          rw [pow_succ, pow_succ]
-          exact mul_le_mul ih hnormle (norm_nonneg R) (pow_nonneg hqnonneg n)
+/-- The positive logarithmic rate associated with the midpoint factor. -/
+noncomputable def realStrictContractionMidpointRate (r : ℝ) : ℝ :=
+  -Real.log (realStrictContractionMidpointFactor r)
 
-/-- Pointwise geometric decay follows from the operator-power estimate. -/
-theorem realContinuousLinearMapStrictContraction_pow_apply_norm_le_midpointFactor
-    {E : Type u}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    (R : E →L[ℝ] E)
-    (hR : ‖R‖ < 1)
-    (n : ℕ)
-    (x : E) :
-    ‖(R ^ n) x‖ ≤
-      (realContinuousLinearMapStrictContractionMidpointFactor R) ^ n * ‖x‖ := by
-  calc
-    ‖(R ^ n) x‖ ≤ ‖R ^ n‖ * ‖x‖ := ContinuousLinearMap.le_opNorm (R ^ n) x
-    _ ≤ (realContinuousLinearMapStrictContractionMidpointFactor R) ^ n * ‖x‖ :=
-      mul_le_mul_of_nonneg_right
-        (realContinuousLinearMapStrictContraction_pow_norm_le_midpointFactor R hR n)
-        (norm_nonneg x)
-
-/-- A finite positive decay rate associated canonically with the midpoint
-factor of a strict contraction. -/
-noncomputable def realContinuousLinearMapStrictContractionMidpointRate
-    {E : Type u}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    (R : E →L[ℝ] E) : ℝ :=
-  -Real.log (realContinuousLinearMapStrictContractionMidpointFactor R)
-
-/-- Strict contraction makes the midpoint logarithmic decay rate positive. -/
-theorem realContinuousLinearMapStrictContractionMidpointRate_pos
-    {E : Type u}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    (R : E →L[ℝ] E)
-    (hR : ‖R‖ < 1) :
-    0 < realContinuousLinearMapStrictContractionMidpointRate R := by
-  dsimp [realContinuousLinearMapStrictContractionMidpointRate]
+/-- A nonnegative strict scalar contraction has positive logarithmic rate. -/
+theorem realStrictContractionMidpointRate_pos
+    {r : ℝ}
+    (hr0 : 0 ≤ r)
+    (hr : r < 1) :
+    0 < realStrictContractionMidpointRate r := by
+  dsimp [realStrictContractionMidpointRate]
   exact neg_pos.mpr
     (Real.log_neg
-      (realContinuousLinearMapStrictContractionMidpointFactor_pos R)
-      (realContinuousLinearMapStrictContractionMidpointFactor_lt_one R hR))
+      (realStrictContractionMidpointFactor_pos hr0)
+      (realStrictContractionMidpointFactor_lt_one hr))
 
 /-- The midpoint factor is exactly the exponential of minus its logarithmic
 rate. -/
-theorem realContinuousLinearMapStrictContractionMidpointFactor_eq_exp_neg_rate
-    {E : Type u}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    (R : E →L[ℝ] E) :
-    realContinuousLinearMapStrictContractionMidpointFactor R =
-      Real.exp (-realContinuousLinearMapStrictContractionMidpointRate R) := by
-  have hqpos := realContinuousLinearMapStrictContractionMidpointFactor_pos R
-  dsimp [realContinuousLinearMapStrictContractionMidpointRate]
+theorem realStrictContractionMidpointFactor_eq_exp_neg_rate
+    {r : ℝ}
+    (hr0 : 0 ≤ r) :
+    realStrictContractionMidpointFactor r =
+      Real.exp (-realStrictContractionMidpointRate r) := by
+  have hqpos : 0 < realStrictContractionMidpointFactor r :=
+    realStrictContractionMidpointFactor_pos hr0
+  dsimp [realStrictContractionMidpointRate]
   rw [neg_neg, Real.exp_log hqpos]
 
 /-- Canonical finite-volume contraction factor for the normalized physical
 transfer on the orthogonal complement of its full top eigenspace. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) : ℝ :=
-  realContinuousLinearMapStrictContractionMidpointFactor
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-      H N hN beta hbeta)
+  realStrictContractionMidpointFactor
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+      H N hN beta hbeta‖
 
 /-- The actual finite-volume decay factor is positive. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor_pos
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     0 < periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
       H N hN beta hbeta := by
-  exact realContinuousLinearMapStrictContractionMidpointFactor_pos _
+  exact realStrictContractionMidpointFactor_pos (norm_nonneg _)
 
 /-- The actual finite-volume decay factor is strictly below one. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor_lt_one
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
       H N hN beta hbeta < 1 := by
-  exact realContinuousLinearMapStrictContractionMidpointFactor_lt_one _
+  exact realStrictContractionMidpointFactor_lt_one
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
       H N hN beta hbeta)
 
-/-- Natural powers of the actual excitation transfer decay geometrically in
-operator norm. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_norm_le
+/-- Positive natural powers of the actual excitation transfer decay
+geometrically in operator norm.  The positive-step formulation avoids making
+any nontriviality assumption on the excitation sector at time zero. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_norm_le_of_pos
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
-    (n : ℕ) :
+    (n : ℕ) (hn : 0 < n) :
     ‖(periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta) ^ n‖ ≤
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
         H N hN beta hbeta) ^ n := by
-  exact realContinuousLinearMapStrictContraction_pow_norm_le_midpointFactor _
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
-      H N hN beta hbeta) n
+  let R :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+      H N hN beta hbeta
+  have hRlt : ‖R‖ < 1 := by
+    simpa [R] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
+        H N hN beta hbeta
+  calc
+    ‖R ^ n‖ ≤ ‖R‖ ^ n := norm_pow_le' R hn
+    _ ≤ (realStrictContractionMidpointFactor ‖R‖) ^ n :=
+      real_pow_le_strictContractionMidpointFactor_pow (norm_nonneg R) hRlt n
+    _ = (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
+          H N hN beta hbeta) ^ n := by
+      simp [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor, R]
 
 /-- Every vector in the top-eigenspace orthogonal sector obeys the same
-finite-volume geometric time-step decay. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_apply_norm_le
+finite-volume geometric bound at each positive time step. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_apply_norm_le_of_pos
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
-    (n : ℕ)
+    (n : ℕ) (hn : 0 < n)
     (f : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
       H N hN beta hbeta) :
     ‖((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta) ^ n) f‖ ≤
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
         H N hN beta hbeta) ^ n * ‖f‖ := by
-  exact realContinuousLinearMapStrictContraction_pow_apply_norm_le_midpointFactor _
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
-      H N hN beta hbeta) n f
+  let R :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+      H N hN beta hbeta
+  calc
+    ‖(R ^ n) f‖ ≤ ‖R ^ n‖ * ‖f‖ := ContinuousLinearMap.le_opNorm (R ^ n) f
+    _ ≤ (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
+          H N hN beta hbeta) ^ n * ‖f‖ :=
+      mul_le_mul_of_nonneg_right
+        (by
+          simpa [R] using
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_norm_le_of_pos
+              H N hN beta hbeta n hn)
+        (norm_nonneg f)
 
 /-- Canonical positive finite-volume logarithmic transfer decay scale.  It is
 not a volume-uniform or continuum mass-gap statement. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) : ℝ :=
-  realContinuousLinearMapStrictContractionMidpointRate
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-      H N hN beta hbeta)
+  realStrictContractionMidpointRate
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+      H N hN beta hbeta‖
 
 /-- The finite-volume logarithmic transfer decay scale is strictly positive. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate_pos
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     0 < periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
       H N hN beta hbeta := by
-  exact realContinuousLinearMapStrictContractionMidpointRate_pos _
+  exact realStrictContractionMidpointRate_pos (norm_nonneg _)
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
       H N hN beta hbeta)
 
@@ -230,9 +182,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFac
       Real.exp
         (-periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
           H N hN beta hbeta) := by
-  exact realContinuousLinearMapStrictContractionMidpointFactor_eq_exp_neg_rate _
+  exact realStrictContractionMidpointFactor_eq_exp_neg_rate (norm_nonneg _)
 
-/-- Audit-visible finite-volume geometric decay package. -/
+/-- Audit-visible finite-volume top-eigenspace geometric decay package. -/
 structure PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayPackage
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) : Prop where
   decayFactorPositive :
@@ -241,14 +193,14 @@ structure PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayP
   decayFactorStrict :
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
       H N hN beta hbeta < 1
-  powerNormDecay : ∀ n : ℕ,
+  powerNormDecay : ∀ (n : ℕ), 0 < n →
     ‖(periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta) ^ n‖ ≤
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
         H N hN beta hbeta) ^ n
-  vectorDecay : ∀ (n : ℕ)
-      (f : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta),
+  vectorDecay : ∀ (n : ℕ), 0 < n →
+      ∀ f : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta,
     ‖((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta) ^ n) f‖ ≤
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
@@ -275,10 +227,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayPac
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor_lt_one
         H N hN beta hbeta
     powerNormDecay :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_norm_le
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_norm_le_of_pos
         H N hN beta hbeta
     vectorDecay :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_apply_norm_le
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_apply_norm_le_of_pos
         H N hN beta hbeta
     finiteVolumeDecayRatePositive :=
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate_pos
