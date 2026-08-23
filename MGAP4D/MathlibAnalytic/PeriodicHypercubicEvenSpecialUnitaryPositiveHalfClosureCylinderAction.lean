@@ -12,7 +12,8 @@ noncomputable section
 
 local instance positiveHalfClosureCylinderActionSideLengthNeZero (H : ℕ) :
     NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
-  simp [PeriodicHypercubicEvenSideLength]⟩
+  simp [PeriodicHypercubicEvenSideLength,
+    periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
 
 local instance positiveHalfClosureCylinderActionSpatialVertexFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
@@ -44,8 +45,9 @@ theorem periodicHypercubicEvenSpatialSliceVertexAtTime_shift
   funext i
   by_cases hi : i = 0
   · subst i
+    have hmu0 : (0 : PeriodicHypercubicAxis) ≠ mu.1 := Ne.symm mu.2
     simp [periodicHypercubicEvenSpatialSliceVertexAtTime,
-      periodicHypercubicShift_apply, mu.2]
+      periodicHypercubicShift_apply, hmu0]
   · simp [periodicHypercubicEvenSpatialSliceVertexAtTime,
       periodicHypercubicEvenSpatialSliceShift,
       periodicHypercubicShift_apply, hi]
@@ -111,6 +113,7 @@ theorem periodicHypercubicEvenSpatialSlicePlaquetteHolonomy_restrictionAtTime_eq
         (periodicHypercubicEvenSpatialSlicePlaquetteAtTime H t p) := by
   unfold periodicHypercubicEvenSpatialSlicePlaquetteHolonomy
   unfold periodicHypercubicPlaquetteHolonomy
+  unfold periodicHypercubicEvenSpatialSlicePlaquetteAtTime
   simp only [periodicHypercubicBoundaryStep_zero,
     periodicHypercubicBoundaryStep_one,
     periodicHypercubicBoundaryStep_two,
@@ -120,6 +123,7 @@ theorem periodicHypercubicEvenSpatialSlicePlaquetteHolonomy_restrictionAtTime_eq
   unfold periodicHypercubicEvenSpatialSliceLinkAtTime
   rw [periodicHypercubicEvenSpatialSliceVertexAtTime_shift]
   rw [periodicHypercubicEvenSpatialSliceVertexAtTime_shift]
+  rfl
 
 /-- The Wilson energy of a spatial four-dimensional cell is therefore exactly
 the intrinsic spatial-slice Wilson energy at that time. -/
@@ -261,6 +265,7 @@ theorem periodicHypercubicEvenPositiveHalfTemporalPlaquette_holonomy
         (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPathRestriction
           H N A i.castSucc e)⁻¹ := by
   unfold periodicHypercubicPlaquetteHolonomy
+  unfold periodicHypercubicEvenPositiveHalfTemporalPlaquette
   simp only [periodicHypercubicBoundaryStep_zero,
     periodicHypercubicBoundaryStep_one,
     periodicHypercubicBoundaryStep_two,
