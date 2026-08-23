@@ -171,8 +171,10 @@ theorem realHilbertPositiveCompact_topEigenspaceOrthogonalRestriction_norm_lt_on
     simpa [R] using hReq
   have hRne : R ≠ 0 := by
     intro hzero
-    have hnormzero : ‖R‖ = 0 := by simpa [hzero]
-    linarith [hReqR, hnormzero]
+    rw [hzero] at hReqR
+    have hzeroNorm : ‖(0 : Fᗮ →L[ℝ] Fᗮ)‖ = 0 :=
+      ContinuousLinearMap.opNorm_zero
+    linarith [hReqR, hzeroNorm]
   have hex : ∃ u : Fᗮ, R u ≠ 0 := by
     by_contra h
     push_neg at h
@@ -185,9 +187,13 @@ theorem realHilbertPositiveCompact_topEigenspaceOrthogonalRestriction_norm_lt_on
     intro hu0
     apply huR
     rw [hu0, map_zero]
-  let unit : Fᗮ := ‖u‖⁻¹ • u
+  let unit : Fᗮ := ‖(u : E)‖⁻¹ • u
   have hunit : ‖unit‖ = 1 := by
-    have hunorm_pos : 0 < ‖u‖ := norm_pos_iff.mpr hu
+    have hucoe : (u : E) ≠ 0 := by
+      intro hu0
+      apply hu
+      exact Subtype.ext hu0
+    have hunorm_pos : 0 < ‖(u : E)‖ := norm_pos_iff.mpr hucoe
     dsimp [unit]
     rw [norm_smul, Real.norm_eq_abs, abs_inv, abs_of_pos hunorm_pos]
     exact inv_mul_cancel₀ hunorm_pos.ne'
