@@ -53,7 +53,7 @@ theorem realHilbert_one_sub_opNorm_mul_norm_sq_le_quadraticDefect
 quadratic-defect coefficient `δ ≤ 1` forces `‖R‖ ≤ 1 - δ`.
 
 This is stronger than the compact-operator converse originally needed here:
-compactness and top-eigenvector attainment are unnecessary.  Mathlib's exact
+compactness and top-eigenvector attainment are unnecessary. Mathlib's exact
 Rayleigh formula for the norm of a symmetric bounded operator reduces the
 claim directly to the pointwise defect inequality. -/
 theorem realHilbertSymmetric_opNorm_le_one_sub_of_quadraticDefect
@@ -195,58 +195,29 @@ theorem
   let R : K →L[ℝ] K :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta
-  have hR : ‖R‖ ≤ 1 - δ := by
-    refine @ContinuousLinearMap.opNorm_le_of_re_inner_le
-      ℝ K K inferInstance hKNorm hKInner hKNorm hKInner R (1 - δ)
-      (sub_nonneg.mpr hδle) ?_
-    intro x y hx hy
-    change inner ℝ (R x) y ≤ 1 - δ
-    have hdiag (z : K) :
-        inner ℝ (R z) z ≤ (1 - δ) * ‖z‖ ^ 2 := by
-      have hz :
-          δ * ‖z‖ ^ 2 ≤ ‖z‖ ^ 2 - inner ℝ (R z) z := by
-        simpa [K,
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceQuadraticDefect,
-          realHilbertQuadraticDefect, R] using hdefect z
-      linarith
-    have hnonneg (z : K) : 0 ≤ inner ℝ (R z) z := by
-      simpa [K, R] using
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_nonneg
-          H N hN beta hbeta z
-    have hsymm (u v : K) : inner ℝ (R u) v = inner ℝ u (R v) := by
-      simpa [K, R] using
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_symm
-          H N hN beta hbeta u v
-    have hcross : inner ℝ (R y) x = inner ℝ (R x) y := by
-      calc
-        inner ℝ (R y) x = inner ℝ y (R x) := hsymm y x
-        _ = inner ℝ (R x) y := real_inner_comm _ _
-    have hpolar :
-        4 * inner ℝ (R x) y =
-          inner ℝ (R (x + y)) (x + y) -
-            inner ℝ (R (x - y)) (x - y) := by
-      simp only [map_add, map_sub, inner_add_left, inner_add_right,
-        inner_sub_left, inner_sub_right]
-      linarith [hcross]
-    have hsum_norm : ‖x + y‖ ≤ 2 := by
-      calc
-        ‖x + y‖ ≤ ‖x‖ + ‖y‖ := norm_add_le x y
-        _ = 2 := by rw [hx, hy]; norm_num
-    have hsum_sq : ‖x + y‖ ^ 2 ≤ 4 := by
-      nlinarith [norm_nonneg (x + y)]
-    have hqsum_le :
-        inner ℝ (R (x + y)) (x + y) ≤ 4 * (1 - δ) := by
-      calc
-        inner ℝ (R (x + y)) (x + y) ≤
-            (1 - δ) * ‖x + y‖ ^ 2 := hdiag (x + y)
-        _ ≤ (1 - δ) * 4 :=
-          mul_le_mul_of_nonneg_left hsum_sq (sub_nonneg.mpr hδle)
-        _ = 4 * (1 - δ) := by ring
-    have hqminus_nonneg : 0 ≤ inner ℝ (R (x - y)) (x - y) :=
-      hnonneg (x - y)
-    linarith
+  have hSymm : ∀ f g : K, inner ℝ (R f) g = inner ℝ f (R g) := by
+    intro f g
+    simpa [K, R] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_symm
+        H N hN beta hbeta f g
+  have hNonneg : ∀ f : K, 0 ≤ inner ℝ (R f) f := by
+    intro f
+    simpa [K, R] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_nonneg
+        H N hN beta hbeta f
+  have hDefect : ∀ f : K, δ * ‖f‖ ^ 2 ≤ realHilbertQuadraticDefect R f := by
+    intro f
+    simpa [K, R,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceQuadraticDefect] using
+      hdefect f
+  have hR : ‖R‖ ≤ 1 - δ :=
+    @realHilbertSymmetric_opNorm_le_one_sub_of_quadraticDefect
+      K hKNorm hKInner R hSymm hNonneg δ hδle hDefect
+  have hR' :
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta‖ ≤ 1 - δ := by
+    simpa [R, K] using hR
   dsimp [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap]
-  dsimp [R, K] at hR
   linarith
 
 /-- The finite-volume transfer gap is at most one. -/
