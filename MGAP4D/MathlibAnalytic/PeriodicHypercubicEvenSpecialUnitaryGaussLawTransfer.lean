@@ -422,7 +422,8 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
         (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
           H N hN beta hbeta g) f := real_inner_comm _ _
     _ = 0 :=
-      (Submodule.mem_orthogonal f).1 hf
+      (Submodule.mem_orthogonal
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) f).1 hf
         (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
           H N hN beta hbeta g)
         (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_preserves_GaussLaw
