@@ -169,10 +169,10 @@ theorem
     (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isPositive
       H N hN beta hbeta).inner_nonneg_left _
 
+set_option maxHeartbeats 800000 in
 /-- Conversely, every Poincare coefficient on the actual orthogonal sector is
 bounded above by the canonical transfer gap. Thus the canonical finite-volume
 gap is exactly the optimal quadratic-defect coefficient. -/
-set_option maxHeartbeats 400000 in
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspacePoincareCoefficient_le_transferGap
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
