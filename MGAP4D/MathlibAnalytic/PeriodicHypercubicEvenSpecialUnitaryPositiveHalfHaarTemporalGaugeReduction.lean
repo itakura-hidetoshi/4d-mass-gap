@@ -306,8 +306,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfUnfixedPathKernel_integr
               H N beta path)
 
 /-- A Gauss-law `L²` state is pointwise gauge invariant almost everywhere for each fixed spatial
-lattice gauge transformation.  This is derived directly from the canonical pullback definition and
-its fixed-submodule membership, without passing through the orthogonal projector. -/
+lattice gauge transformation. -/
 theorem periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariant_ae
     (H N : ℕ)
     (g : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
@@ -333,8 +332,8 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariant_ae
   exact hPull.symm
 
 /-- The antipodal residual gauge produced by temporal gauge fixing is invisible almost everywhere
-to a terminal Gauss-law state, after lifting the one-slice a.e. identity through the terminal path
-evaluation map. -/
+to a terminal Gauss-law state, after lifting the one-slice a.e. identity through terminal path
+evaluation. -/
 theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfTerminalGaugeInvariant_ae
     (H N : ℕ)
     (g : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
@@ -352,7 +351,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfTerminalGaugeInvariant_a
     periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariant_ae H N g hg gamma
   have hEval :=
     (MeasureTheory.measurePreserving_eval
-      (mu := fun _ : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H + 1) =>
+      (μ := fun _ : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H + 1) =>
         periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
       (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H))).quasiMeasurePreserving.ae_eq
       hSlice
@@ -381,9 +380,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfGaussEndpoint_unfixed_in
             H N beta path *
           g (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)))
         ∂(periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N) := by
-  let gaugeEquiv :=
-    periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugeSpatialPathMeasurableEquiv
-      H N U
   have hTerminal :=
     periodicHypercubicEvenSpecialUnitaryPositiveHalfTerminalGaugeInvariant_ae H N g hg U
   calc
@@ -394,26 +390,27 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfGaussEndpoint_unfixed_in
         g (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)))
       ∂(periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N)) =
         ∫ path,
-          f ((gaugeEquiv path) 0) *
+          f ((periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeSpatialPath
+            H N U path) 0) *
             periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
-              H N beta (gaugeEquiv path) *
-            g ((gaugeEquiv path)
+              H N beta
+              (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeSpatialPath
+                H N U path) *
+            g ((periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeSpatialPath
+              H N U path)
               (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)))
           ∂(periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N) := by
       apply integral_congr_ae
       filter_upwards [hTerminal] with path hterminal
       rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel_eq_temporalGauge]
-      change
-        f (path 0) *
-            periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
-              H N beta (gaugeEquiv path) *
-            g (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H))) = _
       rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeSpatialPath_zero]
       exact congrArg
         (fun x =>
           f (path 0) *
             periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
-              H N beta (gaugeEquiv path) * x)
+              H N beta
+              (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeSpatialPath
+                H N U path) * x)
         hterminal.symm
     _ = ∫ path,
           f (path 0) *
@@ -421,18 +418,19 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfGaussEndpoint_unfixed_in
               H N beta path *
             g (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)))
           ∂(periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N) := by
-      exact
+      have hChange :=
         (periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugeSpatialPath_measurePreserving
           H N U).integral_comp'
           (fun path =>
             f (path 0) *
               periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
                 H N beta path *
-              g (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)))
+              g (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H))))
+      simpa using hChange
 
 /-- After integrating the temporal-link field against its normalized product Haar law, the entire
 unfixed positive-half endpoint amplitude is exactly the temporal-gauge spatial-path amplitude on the
-Gauss-law terminal sector.  No terminal residual is canceled pointwise. -/
+Gauss-law terminal sector. No terminal residual is canceled pointwise. -/
 theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfGaussEndpoint_iteratedHaar_integral_eq_temporalGauge
     (H N : ℕ)
     (beta : ℝ)
