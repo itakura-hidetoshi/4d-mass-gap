@@ -4,6 +4,8 @@ import Mathlib.MeasureTheory.Function.LpSpace.ContinuousFunctions
 namespace MGAP4D
 namespace MathlibAnalytic
 
+open MeasureTheory
+
 noncomputable section
 
 local instance actualPositiveHalfLinearSideLengthNeZero (H : ℕ) :
@@ -148,7 +150,17 @@ noncomputable def openHalfL2LinearMap
       S D halfExtent N hN beta hbeta B hInvariant n).Carrier) :
     Q.openHalfL2LinearMap n F =
       physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservableL2
-        S D halfExtent N hN beta hbeta B hInvariant n F :=
+        S D halfExtent N hN beta hbeta B hInvariant n F := by
+  change
+    BoundedContinuousFunction.toLp
+        (E := ℝ) 2
+        (periodicHypercubicEvenOpenHalfHaarMeasure (halfExtent n) N) ℝ
+        (physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservable
+          S D halfExtent N hN beta hbeta B hInvariant n F) =
+      periodicHypercubicEvenWilsonOpenHalfObservableL2
+        (halfExtent n) N
+        (physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservable
+          S D halfExtent N hN beta hbeta B hInvariant n F)
   rfl
 
 /-- Compose the coherent positive-half `L²` pullback with the actual Wilson
