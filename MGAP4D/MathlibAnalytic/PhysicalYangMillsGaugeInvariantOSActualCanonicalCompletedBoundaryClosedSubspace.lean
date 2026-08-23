@@ -131,6 +131,8 @@ theorem norm_toCompletedBoundaryMomentContinuousLinearMapAutomatic
       continuous_norm
   · intro y
     rw [R.toCompletedBoundaryMomentContinuousLinearMapAutomatic_coe n y]
+    change ‖R.toSeparatedBoundaryMomentLinearIsometryAutomatic n y‖ =
+      ‖(y : UniformSpace.Completion P.Separated)‖
     simpa only [UniformSpace.Completion.norm_coe] using
       (R.toSeparatedBoundaryMomentLinearIsometryAutomatic n).norm_map y
 
