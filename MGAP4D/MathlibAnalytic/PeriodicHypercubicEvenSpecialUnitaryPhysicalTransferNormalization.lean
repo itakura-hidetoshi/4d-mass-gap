@@ -11,6 +11,49 @@ open scoped ENNReal InnerProductSpace InnerProduct
 
 noncomputable section
 
+/-- Normalizing a nonzero real bounded operator by its norm has norm one as
+soon as a unit top eigenvector is available.  Keeping this generic prevents
+large concrete lattice terms from dominating typeclass reduction. -/
+theorem realContinuousLinearMap_normalized_norm_eq_one
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [NormedSpace ℝ E]
+    (T : E →L[ℝ] E)
+    (Ω : E)
+    (hnorm : 0 < ‖T‖)
+    (hΩnorm : ‖Ω‖ = 1)
+    (heig : T Ω = ‖T‖ • Ω) :
+    ‖‖T‖⁻¹ • T‖ = 1 := by
+  let S : E →L[ℝ] E := ‖T‖⁻¹ • T
+  have hfix : S Ω = Ω := by
+    change ‖T‖⁻¹ • T Ω = Ω
+    rw [heig, smul_smul, inv_mul_cancel₀ hnorm.ne', one_smul]
+  apply le_antisymm
+  · apply ContinuousLinearMap.opNorm_le_bound S zero_le_one
+    intro f
+    change ‖‖T‖⁻¹ • T f‖ ≤ 1 * ‖f‖
+    rw [one_mul, norm_smul, Real.norm_eq_abs, abs_inv, abs_of_pos hnorm]
+    rw [inv_mul_eq_div]
+    exact (div_le_iff₀ hnorm).2 (by
+      simpa [mul_comm] using ContinuousLinearMap.le_opNorm T f)
+  · have hle := ContinuousLinearMap.le_opNorm S Ω
+    rw [hfix, hΩnorm] at hle
+    simpa using hle
+
+/-- Real scalar normalization preserves symmetry. -/
+theorem realContinuousLinearMap_smul_isSymmetric
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    (T : E →L[ℝ] E)
+    (c : ℝ)
+    (hT : (T : E →ₗ[ℝ] E).IsSymmetric) :
+    (((c • T : E →L[ℝ] E) : E →ₗ[ℝ] E).IsSymmetric) := by
+  intro f g
+  change inner ℝ (c • T f) g = inner ℝ f (c • T g)
+  have h := congrArg (fun z : ℝ => c * z) (hT f g)
+  simpa [inner_smul_left, inner_smul_right] using h
+
 local instance (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
@@ -214,7 +257,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm
       H N hN beta hbeta
   have hnorm_ne : ‖T‖ ≠ 0 := by
     intro hnorm
-    exact hT (ContinuousLinearMap.opNorm_zero_iff.mp hnorm)
+    have hTzero : T = 0 := by
+      rw [← ContinuousLinearMap.opNorm_zero_iff]
+      exact hnorm
+    exact hT hTzero
   exact lt_of_le_of_ne (norm_nonneg T) (Ne.symm hnorm_ne)
 
 /-- The normalized actual physical one-slab transfer. -/
@@ -259,27 +305,15 @@ theorem periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOpe
     ‖periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
       H N hN beta hbeta‖ = 1 := by
   let T := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator H N hN beta hbeta
-  let S := periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-    H N hN beta hbeta
   let Ω := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector H N hN beta hbeta
-  have hnorm : 0 < ‖T‖ :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos H N hN beta hbeta
-  have hΩnorm : ‖Ω‖ = 1 :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector_norm H N hN beta hbeta
-  have hΩfixed : S Ω = Ω :=
-    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_vacuum_fixed
-      H N hN beta hbeta
-  apply le_antisymm
-  · apply ContinuousLinearMap.opNorm_le_bound S zero_le_one
-    intro f
-    change ‖‖T‖⁻¹ • T f‖ ≤ 1 * ‖f‖
-    rw [one_mul, norm_smul, Real.norm_eq_abs, abs_inv, abs_of_pos hnorm]
-    rw [inv_mul_eq_div]
-    exact (div_le_iff₀ hnorm).2 (by
-      simpa [mul_comm] using ContinuousLinearMap.le_opNorm T f)
-  · have hle := ContinuousLinearMap.le_opNorm S Ω
-    rw [hΩfixed, hΩnorm] at hle
-    simpa using hle
+  change ‖‖T‖⁻¹ • T‖ = 1
+  exact realContinuousLinearMap_normalized_norm_eq_one T Ω
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+      H N hN beta hbeta)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector_norm
+      H N hN beta hbeta)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector_eigen
+      H N hN beta hbeta)
 
 /-- Symmetry survives normalization. -/
 theorem periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
@@ -290,27 +324,21 @@ theorem periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOpe
           periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
       periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N →ₗ[ℝ]
         periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N).IsSymmetric := by
-  let c := ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator H N hN beta hbeta‖⁻¹
   let T := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator H N hN beta hbeta
-  have hT := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_isSymmetric
-    H N hN beta hbeta
-  intro f g
-  change inner ℝ (c • T f) g = inner ℝ f (c • T g)
-  have h := congrArg (fun z : ℝ => c * z) (hT f g)
-  simpa [inner_smul_left, inner_smul_right] using h
+  change (((‖T‖⁻¹ • T :
+    periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N →L[ℝ]
+      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+    periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N →ₗ[ℝ]
+      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N).IsSymmetric)
+  exact realContinuousLinearMap_smul_isSymmetric T ‖T‖⁻¹
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_isSymmetric
+      H N hN beta hbeta)
 
 /-- Vacuum-orthogonal physical excitation sector. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationSubmodule
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     Submodule ℝ (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :=
   (ℝ ∙ periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector H N hN beta hbeta)ᗮ
-
-local instance periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitation_normedSpace
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
-    NormedSpace ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationSubmodule
-        H N hN beta hbeta) :=
-  Submodule.normedSpace _
 
 @[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationSubmodule_mem
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
@@ -357,47 +385,19 @@ theorem periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOpe
     _ = inner ℝ Ω f := by rw [hΩ]
     _ = 0 := hf
 
-/-- The normalized transfer restricted to the physical excitation sector. -/
-noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationTransferOperator
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationSubmodule
-        H N hN beta hbeta →L[ℝ]
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationSubmodule
-        H N hN beta hbeta :=
-  ((periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-      H N hN beta hbeta).comp
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationSubmodule
-      H N hN beta hbeta).subtypeL).codRestrict
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationSubmodule H N hN beta hbeta)
-      (fun f => periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_preserves_excitation
-        H N hN beta hbeta f.property)
-
-@[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationTransferOperator_coe
+/-- Every physical excitation vector is contracted in norm by the normalized
+transfer.  Strict contraction is deliberately deferred to the full top
+eigenspace-complement argument. -/
+theorem periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_excitation_contraction
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (f : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationSubmodule
       H N hN beta hbeta) :
-    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationTransferOperator
-      H N hN beta hbeta f :
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationSubmodule
-          H N hN beta hbeta) :
-      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) =
-    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-      H N hN beta hbeta f := rfl
-
-/-- The excitation restriction is a contraction. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationTransferOperator_norm_le_one
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
-    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationTransferOperator
-      H N hN beta hbeta‖ ≤ 1 := by
+    ‖periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+        H N hN beta hbeta
+        (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)‖ ≤
+      ‖(f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)‖ := by
   let S := periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
     H N hN beta hbeta
-  apply ContinuousLinearMap.opNorm_le_bound
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationTransferOperator
-      H N hN beta hbeta) zero_le_one
-  intro f
-  change ‖S (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)‖ ≤
-    1 * ‖f‖
-  rw [one_mul]
   have h := ContinuousLinearMap.le_opNorm S
     (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
   rw [periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_norm
@@ -415,8 +415,21 @@ structure PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNormalizationPackag
     H N hN beta hbeta
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector H N hN beta hbeta) =
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector H N hN beta hbeta
-  excitationNormLeOne : ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationTransferOperator
-    H N hN beta hbeta‖ ≤ 1
+  preservesExcitation :
+    ∀ {f},
+      f ∈ periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationSubmodule
+        H N hN beta hbeta →
+      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+          H N hN beta hbeta f ∈
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationSubmodule
+          H N hN beta hbeta
+  excitationContraction :
+    ∀ f : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationSubmodule
+        H N hN beta hbeta,
+      ‖periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+          H N hN beta hbeta
+          (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)‖ ≤
+        ‖(f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)‖
 
 /-- Construct the normalization/excitation package. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNormalizationPackage
@@ -429,7 +442,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNormalizationPackage
       H N hN beta hbeta
     vacuumFixed := periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_vacuum_fixed
       H N hN beta hbeta
-    excitationNormLeOne := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabExcitationTransferOperator_norm_le_one
+    preservesExcitation := periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_preserves_excitation
+      H N hN beta hbeta
+    excitationContraction := periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_excitation_contraction
       H N hN beta hbeta }
 
 end
