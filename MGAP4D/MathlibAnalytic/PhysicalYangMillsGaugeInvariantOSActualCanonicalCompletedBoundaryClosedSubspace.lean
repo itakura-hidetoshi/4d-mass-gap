@@ -131,7 +131,8 @@ theorem norm_toCompletedBoundaryMomentContinuousLinearMapAutomatic
       continuous_norm
   · intro y
     rw [R.toCompletedBoundaryMomentContinuousLinearMapAutomatic_coe n y]
-    exact (R.toSeparatedBoundaryMomentLinearIsometryAutomatic n).norm_map y
+    simpa only [UniformSpace.Completion.norm_coe] using
+      (R.toSeparatedBoundaryMomentLinearIsometryAutomatic n).norm_map y
 
 /-- The completed physical OS Hilbert space embeds linearly and isometrically in
 the actual Wilson boundary `L²` space.  No boundary-surjectivity claim is made. -/
