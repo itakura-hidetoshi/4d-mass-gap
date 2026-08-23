@@ -188,13 +188,19 @@ theorem
   let R :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta
+  have hSymmetric :
+      (R :
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+            H N hN beta hbeta →ₗ[ℝ]
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+            H N hN beta hbeta).IsSymmetric := by
+    intro f g
+    dsimp [R]
+    exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_symm
+        H N hN beta hbeta f g
   have hR : ‖R‖ ≤ 1 - δ := by
-    rw [ContinuousLinearMap.norm_eq_iSup_rayleighQuotient R (by
-      intro f g
-      dsimp [R]
-      exact
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_symm
-          H N hN beta hbeta f g)]
+    rw [ContinuousLinearMap.norm_eq_iSup_rayleighQuotient R hSymmetric]
     apply ciSup_le
     intro f
     by_cases hf : f = 0
