@@ -122,17 +122,16 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelFeature_we
       H N hN beta hbeta).measurable.aestronglyMeasurable
   have hmeas : AEStronglyMeasurable
       (fun A => f A • C.feature A) μ :=
-    (Lp.aestronglyMeasurable f).smul hCmeas
+    continuous_smul.comp_aestronglyMeasurable₂
+      (Lp.aestronglyMeasurable f) hCmeas
   apply hf1.norm.mono' hmeas
   filter_upwards with A
-  rw [norm_smul]
   have hC :=
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelFeature_norm_le_one
       H N hN beta hbeta A
-  calc
-    ‖f A‖ * ‖C.feature A‖ ≤ ‖f A‖ * 1 :=
-      mul_le_mul_of_nonneg_left hC (norm_nonneg _)
-    _ = ‖‖f A‖‖ := by simp
+  have hbound : ‖f A‖ * ‖C.feature A‖ ≤ ‖f A‖ := by
+    simpa using mul_le_mul_of_nonneg_left hC (norm_nonneg (f A))
+  simpa [norm_smul] using hbound
 
 /-- The complete one-slab Hilbert-valued Gram integrand is integrable on the
 product Haar probability. -/
@@ -242,7 +241,19 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairing_se
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
             PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
         inner ℝ (g p.1) (g p.2) ∂(μ.prod μ) := by
-      rw [realL2HilbertSchmidtKernelPairing, MeasureTheory.L2.inner_def]
+      rw [realL2HilbertSchmidtKernelPairing]
+      change
+        (∫ p :
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+              PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
+          inner ℝ
+            (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
+              H N hN beta hbeta p)
+            (realL2ExternalTensor f f p) ∂(μ.prod μ)) =
+          ∫ p :
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+              PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
+            inner ℝ (g p.1) (g p.2) ∂(μ.prod μ)
       apply integral_congr_ae
       filter_upwards [hK, hff] with p hpK hpff
       rw [hpK, hpff]
