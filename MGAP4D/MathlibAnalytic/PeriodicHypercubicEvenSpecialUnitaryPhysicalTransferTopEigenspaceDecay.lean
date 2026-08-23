@@ -16,7 +16,7 @@ positive even when `R = 0`, while retaining a strict factor below one whenever
 noncomputable def realContinuousLinearMapStrictContractionMidpointFactor
     {E : Type u}
     [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
+    [InnerProductSpace ℝ E]
     (R : E →L[ℝ] E) : ℝ :=
   (1 + ‖R‖) / 2
 
@@ -24,7 +24,7 @@ noncomputable def realContinuousLinearMapStrictContractionMidpointFactor
 theorem realContinuousLinearMapStrictContractionMidpointFactor_pos
     {E : Type u}
     [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
+    [InnerProductSpace ℝ E]
     (R : E →L[ℝ] E) :
     0 < realContinuousLinearMapStrictContractionMidpointFactor R := by
   have hnorm : 0 ≤ ‖R‖ := norm_nonneg R
@@ -35,7 +35,7 @@ theorem realContinuousLinearMapStrictContractionMidpointFactor_pos
 theorem realContinuousLinearMapStrictContractionMidpointFactor_lt_one
     {E : Type u}
     [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
+    [InnerProductSpace ℝ E]
     (R : E →L[ℝ] E)
     (hR : ‖R‖ < 1) :
     realContinuousLinearMapStrictContractionMidpointFactor R < 1 := by
@@ -46,7 +46,7 @@ theorem realContinuousLinearMapStrictContractionMidpointFactor_lt_one
 theorem realContinuousLinearMap_norm_le_strictContractionMidpointFactor
     {E : Type u}
     [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
+    [InnerProductSpace ℝ E]
     (R : E →L[ℝ] E)
     (hR : ‖R‖ < 1) :
     ‖R‖ ≤ realContinuousLinearMapStrictContractionMidpointFactor R := by
@@ -58,12 +58,16 @@ endomorphism. -/
 theorem realContinuousLinearMap_pow_norm_le
     {E : Type u}
     [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
+    [InnerProductSpace ℝ E]
     (R : E →L[ℝ] E)
     (n : ℕ) :
     ‖R ^ n‖ ≤ ‖R‖ ^ n := by
   induction n with
-  | zero => simp
+  | zero =>
+      simp only [pow_zero]
+      apply ContinuousLinearMap.opNorm_le_bound (1 : E →L[ℝ] E) zero_le_one
+      intro x
+      simp
   | succ n ih =>
       rw [pow_succ, pow_succ]
       exact
@@ -75,7 +79,7 @@ zero-safe midpoint factor. -/
 theorem realContinuousLinearMapStrictContraction_pow_norm_le_midpointFactor
     {E : Type u}
     [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
+    [InnerProductSpace ℝ E]
     (R : E →L[ℝ] E)
     (hR : ‖R‖ < 1)
     (n : ℕ) :
@@ -97,7 +101,7 @@ theorem realContinuousLinearMapStrictContraction_pow_norm_le_midpointFactor
 theorem realContinuousLinearMapStrictContraction_pow_apply_norm_le_midpointFactor
     {E : Type u}
     [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
+    [InnerProductSpace ℝ E]
     (R : E →L[ℝ] E)
     (hR : ‖R‖ < 1)
     (n : ℕ)
@@ -116,7 +120,7 @@ factor of a strict contraction. -/
 noncomputable def realContinuousLinearMapStrictContractionMidpointRate
     {E : Type u}
     [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
+    [InnerProductSpace ℝ E]
     (R : E →L[ℝ] E) : ℝ :=
   -Real.log (realContinuousLinearMapStrictContractionMidpointFactor R)
 
@@ -124,7 +128,7 @@ noncomputable def realContinuousLinearMapStrictContractionMidpointRate
 theorem realContinuousLinearMapStrictContractionMidpointRate_pos
     {E : Type u}
     [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
+    [InnerProductSpace ℝ E]
     (R : E →L[ℝ] E)
     (hR : ‖R‖ < 1) :
     0 < realContinuousLinearMapStrictContractionMidpointRate R := by
@@ -139,7 +143,7 @@ rate. -/
 theorem realContinuousLinearMapStrictContractionMidpointFactor_eq_exp_neg_rate
     {E : Type u}
     [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
+    [InnerProductSpace ℝ E]
     (R : E →L[ℝ] E) :
     realContinuousLinearMapStrictContractionMidpointFactor R =
       Real.exp (-realContinuousLinearMapStrictContractionMidpointRate R) := by
