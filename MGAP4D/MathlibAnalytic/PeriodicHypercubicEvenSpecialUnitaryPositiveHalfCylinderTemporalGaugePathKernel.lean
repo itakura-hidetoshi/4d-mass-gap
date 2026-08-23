@@ -67,8 +67,8 @@ private theorem finset_prod_exp_neg_mul_eq_exp_neg_mul_sum
     (beta : ℝ)
     (s : Finset ι)
     (f : ι → ℝ) :
-    (∏ i in s, Real.exp (-beta * f i)) =
-      Real.exp (-beta * ∑ i in s, f i) := by
+    (∏ i ∈ s, Real.exp (-beta * f i)) =
+      Real.exp (-beta * ∑ i ∈ s, f i) := by
   classical
   induction s using Finset.induction_on with
   | empty => simp
