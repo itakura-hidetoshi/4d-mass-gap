@@ -373,12 +373,14 @@ theorem periodicHypercubicEvenPositiveHalfCylinderCellToSupportedPlaquette_right
     apply periodicHypercubicEvenPositiveHalfTemporalPlaquette_projection H q.1 htime
     unfold periodicHypercubicEvenPositiveHalfCylinderSlabLeftTime
     exact ZMod.natCast_zmod_val (q.1.1 0)
-  · simp only [periodicHypercubicEvenPositiveHalfClosureSupportedPlaquetteToCell,
-      htime, dif_neg,
-      periodicHypercubicEvenPositiveHalfCylinderCellToSupportedPlaquette,
-      periodicHypercubicEvenPositiveHalfCylinderPlaquetteCellEmbedding]
-    rw [ZMod.natCast_zmod_val (q.1.1 0)]
-    exact periodicHypercubicEvenSpatialSlicePlaquetteAtTime_projection H q.1 htime
+  · simp only [periodicHypercubicEvenPositiveHalfClosureSupportedPlaquetteToCell]
+    split
+    · contradiction
+    · simp only [
+        periodicHypercubicEvenPositiveHalfCylinderCellToSupportedPlaquette,
+        periodicHypercubicEvenPositiveHalfCylinderPlaquetteCellEmbedding]
+      rw [ZMod.natCast_zmod_val (q.1.1 0)]
+      exact periodicHypercubicEvenSpatialSlicePlaquetteAtTime_projection H q.1 htime
 
 /-- Recovering coordinates after embedding a cylinder cell returns that cell. -/
 theorem periodicHypercubicEvenPositiveHalfCylinderCellToSupportedPlaquette_leftInverse
