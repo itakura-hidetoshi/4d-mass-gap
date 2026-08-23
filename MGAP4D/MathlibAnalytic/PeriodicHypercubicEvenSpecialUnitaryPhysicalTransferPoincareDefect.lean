@@ -185,46 +185,36 @@ theorem
           H N hN beta hbeta f) :
     δ ≤ periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap
       H N hN beta hbeta := by
-  letI :
-      InnerProductSpace ℝ
-        ((realHilbertTopEigenspace
-          (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-            H N hN beta hbeta))ᗮ) :=
-    Submodule.innerProductSpace
-      ((realHilbertTopEigenspace
-        (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-          H N hN beta hbeta))ᗮ)
-  let R :=
+  let K : Submodule ℝ
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :=
+    (realHilbertTopEigenspace
+      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+        H N hN beta hbeta))ᗮ
+  letI hKNorm : NormedAddCommGroup K := inferInstance
+  letI hKInner : InnerProductSpace ℝ K := Submodule.innerProductSpace K
+  let R : K →L[ℝ] K :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta
   have hR : ‖R‖ ≤ 1 - δ := by
-    apply ContinuousLinearMap.opNorm_le_of_re_inner_le (sub_nonneg.mpr hδle)
+    refine @ContinuousLinearMap.opNorm_le_of_re_inner_le
+      ℝ K K inferInstance hKNorm hKInner hKNorm hKInner R (1 - δ)
+      (sub_nonneg.mpr hδle) ?_
     intro x y hx hy
     change inner ℝ (R x) y ≤ 1 - δ
-    have hdiag (z :
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta) :
+    have hdiag (z : K) :
         inner ℝ (R z) z ≤ (1 - δ) * ‖z‖ ^ 2 := by
       have hz :
           δ * ‖z‖ ^ 2 ≤ ‖z‖ ^ 2 - inner ℝ (R z) z := by
-        simpa [
+        simpa [K,
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceQuadraticDefect,
           realHilbertQuadraticDefect, R] using hdefect z
       linarith
-    have hnonneg (z :
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta) :
-        0 ≤ inner ℝ (R z) z := by
-      dsimp [R]
-      exact
+    have hnonneg (z : K) : 0 ≤ inner ℝ (R z) z := by
+      simpa [K, R] using
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_nonneg
           H N hN beta hbeta z
-    have hsymm (u v :
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta) :
-        inner ℝ (R u) v = inner ℝ u (R v) := by
-      dsimp [R]
-      exact
+    have hsymm (u v : K) : inner ℝ (R u) v = inner ℝ u (R v) := by
+      simpa [K, R] using
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_symm
           H N hN beta hbeta u v
     have hcross : inner ℝ (R y) x = inner ℝ (R x) y := by
@@ -257,7 +247,7 @@ theorem
       hnonneg (x - y)
     linarith
   dsimp [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap]
-  dsimp [R] at hR
+  dsimp [R, K] at hR
   linarith
 
 /-- The finite-volume transfer gap is at most one. -/
