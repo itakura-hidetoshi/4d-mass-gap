@@ -127,11 +127,17 @@ theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel_abs_le_
     |periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel
         H N beta n path| ≤ 1 := by
   unfold periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel
-  apply finitePathKernel_abs_le_one
-  intro p
-  exact
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
-      H N hN beta hbeta p.1 p.2
+  simpa only using
+    (finitePathKernel_abs_le_one
+      (K := fun p :
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta p.1 p.2)
+      (hK := fun p =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
+          H N hN beta hbeta p.1 p.2)
+      (n := n) (path := path))
 
 theorem periodicHypercubicEvenSpecialUnitaryOneSlabWeightedLeft_integrable
     (H N : ℕ)
@@ -562,7 +568,9 @@ private theorem boundedMeasurableKernel_splitIntegrand_integrable
         ∏ i : Fin n, K (p.2 i.castSucc, p.2 i.succ))| ≤
       |f p.1 * g (p.2 (Fin.last n))|
   rw [abs_mul]
-  exact mul_le_mul_of_nonneg_left hkprod (abs_nonneg _)
+  simpa only [mul_one] using
+    (mul_le_mul_of_nonneg_left hkprod
+      (abs_nonneg (f p.1 * g (p.2 (Fin.last n)))))
 
 private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpointAmplitude_split
     (H N : ℕ)
