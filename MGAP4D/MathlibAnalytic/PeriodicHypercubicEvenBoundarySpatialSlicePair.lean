@@ -1,7 +1,7 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenEdgeSideClassification
 import MGAP4D.MathlibAnalytic.FiniteInvolutiveEdgeBoundaryFiberedPiMeasure
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryOneSlabHaarL2Transfer
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonGibbsReflectionPositivity
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpatialSlice
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryObservableGram
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -18,6 +18,26 @@ local instance boundarySpatialSlicePairSideLengthNeZero (H : ℕ) :
 local instance boundarySpatialSlicePairSpatialLinkFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
+
+local instance boundarySpatialSlicePairSpecialUnitaryIsTopologicalGroup (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance boundarySpatialSlicePairSpecialUnitaryCompactSpace (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance boundarySpatialSlicePairSpecialUnitarySecondCountableTopology (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance boundarySpatialSlicePairSpecialUnitaryMeasurableSpace (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance boundarySpatialSlicePairSpecialUnitaryBorelSpace (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
 
 /-- Vertices on the second, antipodal, reflection-fixed time slice. -/
 abbrev PeriodicHypercubicEvenAntipodalSpatialSliceVertex (H : ℕ) : Type :=
@@ -76,7 +96,6 @@ def periodicHypercubicEvenPrimaryToAntipodalSpatialSliceVertex
     (v : PeriodicHypercubicEvenSpatialSliceVertex H) :
     PeriodicHypercubicEvenAntipodalSpatialSliceVertex H :=
   ⟨periodicHypercubicEvenHalfPeriodTimeShift H v.1, by
-    unfold periodicHypercubicEvenOnPrimaryReflectionPlane at v
     unfold periodicHypercubicEvenOnAntipodalReflectionPlane
     rw [periodicHypercubicEvenHalfPeriodTimeShift_time, v.2]
     simp⟩
@@ -88,7 +107,6 @@ def periodicHypercubicEvenAntipodalToPrimarySpatialSliceVertex
     (v : PeriodicHypercubicEvenAntipodalSpatialSliceVertex H) :
     PeriodicHypercubicEvenSpatialSliceVertex H :=
   ⟨periodicHypercubicEvenHalfPeriodTimeShift H v.1, by
-    unfold periodicHypercubicEvenOnAntipodalReflectionPlane at v
     unfold periodicHypercubicEvenOnPrimaryReflectionPlane
     rw [periodicHypercubicEvenHalfPeriodTimeShift_time, v.2]
     exact periodicHypercubicEven_halfPeriod_add_self H⟩
@@ -351,19 +369,40 @@ theorem periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_measurePre
   simpa [periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv,
     reindex, split] using hReindex.trans hSplit
 
-/-- In particular, the actual Wilson shared-boundary Haar measure is exactly the
-product Haar probability measure on two modern spatial slices after the
-canonical two-slice reindexing. -/
+/-- Product normalized Haar probability on one modern primary spatial slice,
+written here on the boundary-side import path so no transfer-layer instance is
+needed. -/
+noncomputable def periodicHypercubicEvenBoundarySpatialSliceHaarMeasure
+    (H N : ℕ) :
+    Measure (PeriodicHypercubicEvenSpatialSliceConfiguration H
+      (Matrix.specialUnitaryGroup (Fin N) ℂ)) :=
+  Measure.pi (fun _ : PeriodicHypercubicEvenSpatialSliceLink H =>
+    normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ))
+
+/-- Product Haar probability on the ordered primary/antipodal boundary pair,
+with the antipodal slice canonically reindexed by half-period translation. -/
+noncomputable def periodicHypercubicEvenBoundarySpatialSlicePairHaarMeasure
+    (H N : ℕ) :
+    Measure
+      (PeriodicHypercubicEvenSpatialSliceConfiguration H
+          (Matrix.specialUnitaryGroup (Fin N) ℂ) ×
+        PeriodicHypercubicEvenSpatialSliceConfiguration H
+          (Matrix.specialUnitaryGroup (Fin N) ℂ)) :=
+  (periodicHypercubicEvenBoundarySpatialSliceHaarMeasure H N).prod
+    (periodicHypercubicEvenBoundarySpatialSliceHaarMeasure H N)
+
+/-- The actual Wilson shared-boundary Haar measure is exactly product Haar on
+two modern spatial slices after the canonical two-slice reindexing. -/
 theorem periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_measurePreserving_haar
     (H N : ℕ) :
     MeasurePreserving
       (periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv H
         (Matrix.specialUnitaryGroup (Fin N) ℂ))
       (periodicHypercubicEvenBoundaryHaarMeasure H N)
-      (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) := by
+      (periodicHypercubicEvenBoundarySpatialSlicePairHaarMeasure H N) := by
   simpa [periodicHypercubicEvenBoundaryHaarMeasure,
-    periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure,
-    periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure] using
+    periodicHypercubicEvenBoundarySpatialSlicePairHaarMeasure,
+    periodicHypercubicEvenBoundarySpatialSliceHaarMeasure] using
     (periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_measurePreserving
       H (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)))
 
