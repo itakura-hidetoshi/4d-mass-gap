@@ -94,7 +94,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogon
           H N hN beta hbeta) ^ n) f :
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
               H N hN beta hbeta) :
-          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
         (g : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)‖ ≤
       (Real.exp
         (-(n : ℝ) *
@@ -106,7 +106,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogon
             H N hN beta hbeta) ^ n) f :
               periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
                 H N hN beta hbeta) :
-            periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
+            periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
           (g : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)‖ ≤
         ‖((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
           H N hN beta hbeta) ^ n) f‖ * ‖g‖ := by
@@ -161,7 +161,7 @@ structure PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceExpone
           H N hN beta hbeta) ^ n) f :
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
               H N hN beta hbeta) :
-          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
         (g : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)‖ ≤
       (Real.exp
         (-(n : ℝ) *
