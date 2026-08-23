@@ -32,6 +32,10 @@ local instance (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
+local noncomputable instance (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
 /-- Product normalized Haar probability measure on the actual modern
 three-dimensional spatial-slice link carrier. -/
 noncomputable def periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
@@ -126,12 +130,28 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_continuo
             (1 : ℝ)))
   | cons e es ih =>
       simp only [List.map_cons, List.prod_cons]
+      have hleft : Continuous
+          (fun p :
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+              PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N => p.1 e) :=
+        (continuous_apply e).comp continuous_fst
+      have hright : Continuous
+          (fun p :
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+              PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N => p.2 e) :=
+        (continuous_apply e).comp continuous_snd
+      have hpair : Continuous
+          (fun p :
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+              PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+            (p.1 e, p.2 e)) :=
+        hleft.prod_mk hright
       have hlocal : Continuous
           (fun p :
             PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
               PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
-            specialUnitaryWilsonRelativeKernel N beta (p.1 e) (p.2 e)) := by
-        exact (continuous_specialUnitaryWilsonRelativeKernel N beta).comp (by fun_prop)
+            specialUnitaryWilsonRelativeKernel N beta (p.1 e) (p.2 e)) :=
+        (continuous_specialUnitaryWilsonRelativeKernel N beta).comp hpair
       exact hlocal.mul ih
 
 /-- The complete actual one-slab Wilson kernel is jointly continuous. -/
