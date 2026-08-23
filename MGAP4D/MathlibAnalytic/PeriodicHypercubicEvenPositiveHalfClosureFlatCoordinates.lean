@@ -143,6 +143,7 @@ def periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexEquiv
           periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexToPath,
           h0, hlast]
         apply Fin.ext
+        change j.1 - 1 + 1 = j.1
         omega
 
 /-- Reassociate the already-classified fixed and positive sectors so that all
