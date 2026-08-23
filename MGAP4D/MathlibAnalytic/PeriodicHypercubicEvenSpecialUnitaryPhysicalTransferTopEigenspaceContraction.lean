@@ -167,10 +167,12 @@ theorem realHilbertPositiveCompact_topEigenspaceOrthogonalRestriction_norm_lt_on
         S hPositive.isSymmetric hNorm
   refine lt_of_le_of_ne hle ?_
   intro hReq
+  have hReqR : ‖R‖ = 1 := by
+    simpa [R] using hReq
   have hRne : R ≠ 0 := by
     intro hzero
-    rw [hzero, norm_zero] at hReq
-    norm_num at hReq
+    rw [hzero, norm_zero] at hReqR
+    norm_num at hReqR
   have hex : ∃ u : Fᗮ, R u ≠ 0 := by
     by_contra h
     push_neg at h
@@ -186,7 +188,8 @@ theorem realHilbertPositiveCompact_topEigenspaceOrthogonalRestriction_norm_lt_on
   let unit : Fᗮ := ‖u‖⁻¹ • u
   have hunit : ‖unit‖ = 1 := by
     have hunorm_ne : ‖u‖ ≠ 0 := norm_ne_zero_iff.mpr hu
-    simp [unit, norm_smul, hunorm_ne]
+    change ‖u‖⁻¹ * ‖u‖ = 1
+    exact inv_mul_cancel₀ hunorm_ne
   have hRpos : ((R : Fᗮ →L[ℝ] Fᗮ) : Fᗮ →ₗ[ℝ] Fᗮ).IsPositive := by
     simpa [R, F] using
       realHilbertTopEigenspaceOrthogonalRestriction_isPositive S hPositive
@@ -198,7 +201,8 @@ theorem realHilbertPositiveCompact_topEigenspaceOrthogonalRestriction_norm_lt_on
     realHilbertPositiveCompact_exists_unit_topEigenvector
       R unit hunit hRpos hRcomp
   have hvfixR : R v = v := by
-    simpa [hReq] using hveig
+    rw [hReqR, one_smul] at hveig
+    exact hveig
   have hvfix : S (v : E) = (v : E) := by
     have h := congrArg (fun z : Fᗮ => (z : E)) hvfixR
     simpa [R, F] using h
