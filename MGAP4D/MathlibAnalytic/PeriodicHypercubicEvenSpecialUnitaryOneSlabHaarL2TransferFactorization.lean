@@ -76,11 +76,15 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatur
     rw [hA]
     exact add_smul (f A) (g A) (C.feature A)
   · intro c f
-    rw [← integral_smul c]
-    apply integral_congr_ae
-    filter_upwards [Lp.coeFn_smul c f] with A hA
-    rw [hA]
-    exact smul_smul c (f A) (C.feature A)
+    calc
+      (∫ A, (c • f) A • C.feature A ∂μ) =
+          ∫ A, c • (f A • C.feature A) ∂μ := by
+        apply integral_congr_ae
+        filter_upwards [Lp.coeFn_smul c f] with A hA
+        rw [hA]
+        simp [smul_smul]
+      _ = c • ∫ A, f A • C.feature A ∂μ := by
+        simpa using integral_smul c (fun A => f A • C.feature A)
 
 /-- The unbundled analysis map evaluates to the literal Bochner feature
 integral. -/
@@ -246,7 +250,16 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
           H N hN beta hbeta)†.comp
         (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureAnalysisOperator
           H N hN beta hbeta) := by
-  simpa [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator] using
+  change
+    realL2HilbertSchmidtKernelOperator
+        (μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
+          H N hN beta hbeta) =
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureAnalysisOperator
+          H N hN beta hbeta)†.comp
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureAnalysisOperator
+          H N hN beta hbeta)
+  exact
     realL2HilbertSchmidtKernelOperator_eq_adjoint_comp_of_gramFactorization
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
         H N hN beta hbeta)
@@ -267,7 +280,14 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
         H N hN beta hbeta‖ =
       ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureAnalysisOperator
           H N hN beta hbeta‖ ^ 2 := by
-  simpa [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator] using
+  change
+    ‖realL2HilbertSchmidtKernelOperator
+        (μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
+          H N hN beta hbeta)‖ =
+      ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureAnalysisOperator
+          H N hN beta hbeta‖ ^ 2
+  exact
     realL2HilbertSchmidtKernelOperator_norm_eq_analysis_sq_of_gramFactorization
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
         H N hN beta hbeta)
