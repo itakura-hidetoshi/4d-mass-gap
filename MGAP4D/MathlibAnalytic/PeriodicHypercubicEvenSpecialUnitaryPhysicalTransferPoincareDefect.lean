@@ -227,8 +227,7 @@ theorem
             inner ℝ (R (x - y)) (x - y) := by
       simp only [map_add, map_sub, inner_add_left, inner_add_right,
         inner_sub_left, inner_sub_right]
-      rw [hcross]
-      ring
+      linarith [hcross]
     have hsum_norm : ‖x + y‖ ≤ 2 := by
       calc
         ‖x + y‖ ≤ ‖x‖ + ‖y‖ := norm_add_le x y
