@@ -169,7 +169,6 @@ theorem
     (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isPositive
       H N hN beta hbeta).inner_nonneg_left _
 
-set_option maxHeartbeats 800000 in
 /-- Conversely, every Poincare coefficient on the actual orthogonal sector is
 bounded above by the canonical transfer gap. Thus the canonical finite-volume
 gap is exactly the optimal quadratic-defect coefficient. -/
@@ -186,28 +185,47 @@ theorem
           H N hN beta hbeta f) :
     δ ≤ periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap
       H N hN beta hbeta := by
-  have hR :
-      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-        H N hN beta hbeta‖ ≤ 1 - δ :=
-    realHilbertSymmetric_opNorm_le_one_sub_of_quadraticDefect
-      (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta)
-      (R := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-        H N hN beta hbeta)
-      (δ := δ)
-      (fun f g =>
+  let R :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+      H N hN beta hbeta
+  have hR : ‖R‖ ≤ 1 - δ := by
+    rw [ContinuousLinearMap.norm_eq_iSup_rayleighQuotient R (by
+      intro f g
+      dsimp [R]
+      exact
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_symm
-          H N hN beta hbeta f g)
-      (fun f =>
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_nonneg
-          H N hN beta hbeta f)
-      hδle
-      (by
-        intro f
+          H N hN beta hbeta f g)]
+    apply ciSup_le
+    intro f
+    by_cases hf : f = 0
+    · subst f
+      simpa using sub_nonneg.mpr hδle
+    · have hnorm_pos : 0 < ‖f‖ := norm_pos_iff.mpr hf
+      have hnorm_sq_pos : 0 < ‖f‖ ^ 2 := by positivity
+      have hdef :
+          δ * ‖f‖ ^ 2 ≤ ‖f‖ ^ 2 - inner ℝ (R f) f := by
         simpa [
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceQuadraticDefect]
-          using hdefect f)
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceQuadraticDefect,
+          realHilbertQuadraticDefect, R] using hdefect f
+      have hinner : inner ℝ (R f) f ≤ (1 - δ) * ‖f‖ ^ 2 := by
+        linarith
+      have hq_nonneg : 0 ≤ R.rayleighQuotient f := by
+        change 0 ≤ inner ℝ (R f) f / ‖f‖ ^ 2
+        exact div_nonneg (by
+          dsimp [R]
+          exact
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_nonneg
+              H N hN beta hbeta f) (sq_nonneg _)
+      have hq_le : R.rayleighQuotient f ≤ 1 - δ := by
+        change inner ℝ (R f) f / ‖f‖ ^ 2 ≤ 1 - δ
+        exact (div_le_iff₀ hnorm_sq_pos).2 (by
+          calc
+            inner ℝ (R f) f ≤ (1 - δ) * ‖f‖ ^ 2 := hinner
+            _ = (1 - δ) * ‖f‖ ^ 2 := rfl)
+      rw [abs_of_nonneg hq_nonneg]
+      exact hq_le
   dsimp [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap]
+  dsimp [R] at hR
   linarith
 
 /-- The finite-volume transfer gap is at most one. -/
