@@ -87,8 +87,8 @@ theorem realStrictContractionMidpointFactor_eq_exp_neg_rate
 
 /-- In the generic Hilbert carrier, the power of the top-eigenspace orthogonal
 restriction obeys its bundled operator-norm bound pointwise.  Keeping this
-lemma at the ambient Hilbert level avoids reconstructing a `NormedSpace`
-instance from an already bundled concrete subtype operator. -/
+lemma at the ambient Hilbert level avoids `NormedSpace` reconstruction for
+an already bundled concrete subtype operator. -/
 theorem realHilbertTopEigenspaceOrthogonalRestriction_pow_apply_norm_le
     {E : Type u}
     [NormedAddCommGroup E]
