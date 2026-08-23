@@ -185,6 +185,13 @@ theorem
           H N hN beta hbeta f) :
     δ ≤ periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap
       H N hN beta hbeta := by
+  letI :
+      InnerProductSpace ℝ
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta) :=
+    Submodule.innerProductSpace
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta)
   let R :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta
