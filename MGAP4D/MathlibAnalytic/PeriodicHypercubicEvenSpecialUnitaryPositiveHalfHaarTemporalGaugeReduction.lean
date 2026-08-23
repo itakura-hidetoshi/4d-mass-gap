@@ -264,6 +264,23 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugeSpatialPath
     periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugeSpatialPathMeasurableEquiv,
     periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeMeasurableEquiv] using h
 
+/-- `Fin`'s `OfNat 0` path index is the same primary slice as the explicit zero index used by
+the canonical temporal-gauge endpoint theorem. -/
+private theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugeSpatialPath_zero_ofNat
+    (H N : ℕ)
+    (U : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalLinkField H N)
+    (path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N) :
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeSpatialPath
+        H N U path 0 = path 0 := by
+  have h0 :
+      (0 : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H + 1)) =
+        ⟨0, Nat.zero_lt_succ _⟩ := by
+    apply Fin.ext
+    rfl
+  rw [h0]
+  exact periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeSpatialPath_zero
+    H N U path
+
 /-- For every fixed temporal field, the #2057 pointwise gauge reduction becomes an exact Haar
 change-of-variables identity for the complete path kernel. -/
 theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfUnfixedPathKernel_integral_eq_temporalGauge
@@ -403,7 +420,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfGaussEndpoint_unfixed_in
       apply integral_congr_ae
       filter_upwards [hTerminal] with path hterminal
       rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel_eq_temporalGauge]
-      rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeSpatialPath_zero]
+      rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugeSpatialPath_zero_ofNat]
       exact congrArg
         (fun x =>
           f (path 0) *
