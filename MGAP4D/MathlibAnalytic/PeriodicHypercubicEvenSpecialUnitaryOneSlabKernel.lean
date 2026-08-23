@@ -210,8 +210,22 @@ private theorem realKernelPositiveSemidefiniteCertificate_listProd
     realKernelPositiveSemidefiniteCertificate_listProd_pointMatrix
       indices kernel C points
   have hquad := hmatrix.dotProduct_mulVec_nonneg coefficients
-  simpa [Matrix.dotProduct, Matrix.mulVec, Finset.mul_sum,
+  simpa [dotProduct, Matrix.mulVec, Finset.mul_sum,
     mul_assoc, mul_comm, mul_left_comm] using hquad
+
+/-- Pulling a symmetric PSD kernel back along any map preserves its complete
+symmetric positive-semidefinite certificate. -/
+private def realKernelPositiveSemidefiniteCertificate_comap
+    {X Y : Type}
+    {kernel : Y → Y → ℝ}
+    (C : RealKernelPositiveSemidefiniteCertificate Y kernel)
+    (f : X → Y) :
+    RealKernelPositiveSemidefiniteCertificate X
+      (fun x y => kernel (f x) (f y)) where
+  symmetric := fun x y => C.symmetric (f x) (f y)
+  positiveSemidefinite := by
+    intro ι _ points coefficients
+    exact C.positiveSemidefinite ι (fun i => f (points i)) coefficients
 
 /-- Symmetry of the full crossing kernel follows link-by-link from symmetry of
 the exact local Wilson relative kernel. -/
@@ -246,18 +260,14 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_positive
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
         H N beta) := by
   unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
+  let C := specialUnitaryWilsonRelativeKernel_positiveSemidefiniteCertificate
+    N hN beta hbeta
   exact
     realKernelPositiveSemidefiniteCertificate_listProd
       (periodicHypercubicEvenSpatialSliceLinkList H)
       (fun e A B => specialUnitaryWilsonRelativeKernel N beta (A e) (B e))
-      (fun e => by
-        let C := specialUnitaryWilsonRelativeKernel_positiveSemidefiniteCertificate
-          N hN beta hbeta
-        exact
-          { symmetric := fun A B => C.symmetric (A e) (B e)
-            positiveSemidefinite := by
-              intro ι _ points coefficients
-              exact C.positiveSemidefinite ι (fun i => points i e) coefficients })
+      (fun e =>
+        realKernelPositiveSemidefiniteCertificate_comap C (fun A => A e))
 
 /-- Complete symmetric-PSD certificate for the full crossing kernel. -/
 noncomputable def
