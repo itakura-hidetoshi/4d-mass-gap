@@ -139,8 +139,8 @@ theorem integrand_integrable
   let Tn := C.toPositiveTimeObservableContractionSemigroup n
   unfold physicalYangMillsEvenPeriodicWilsonOSBoundaryMomentDefectIntegrand
   exact
-    (boundaryMoment_norm_sq_integrable (C := C) n F).sub
-      (boundaryMoment_norm_sq_integrable (C := C) n (Tn.carrierTranslation t F))
+    (boundaryMoment_norm_sq_integrable n F).sub
+      (boundaryMoment_norm_sq_integrable n (Tn.carrierTranslation t F))
 
 /-- The actual finite reflected-integral defect is exactly one local
 shared-boundary integral of the pointwise Gram-moment squared-norm loss.
@@ -184,12 +184,22 @@ theorem finiteReflectedIntegralDefect_eq_boundaryMomentDefect
         (S := S) (D := D) (halfExtent := halfExtent) (N := N)
         (hN := hN) (beta := beta) (hbeta := hbeta) (B := B)
         (hInvariant := hInvariant) n (Tn.carrierTranslation t F) b
-  have hFint := boundaryMoment_norm_sq_integrable (C := C) n F
+  have hFint := boundaryMoment_norm_sq_integrable n F
   have hTFint :=
-    boundaryMoment_norm_sq_integrable (C := C) n (Tn.carrierTranslation t F)
-  unfold physicalYangMillsEvenPeriodicWilsonOSFiniteReflectedIntegralDefect
-  unfold physicalYangMillsEvenPeriodicWilsonOSBoundaryMomentDefect
-  unfold physicalYangMillsEvenPeriodicWilsonOSBoundaryMomentDefectIntegrand
+    boundaryMoment_norm_sq_integrable n (Tn.carrierTranslation t F)
+  change
+    physicalYangMillsEvenPeriodicWilsonOSFiniteReflectedIntegral
+        S D halfExtent N hN beta hbeta B hInvariant n F -
+      physicalYangMillsEvenPeriodicWilsonOSFiniteReflectedIntegral
+        S D halfExtent N hN beta hbeta B hInvariant n
+        (Tn.carrierTranslation t F) =
+      ∫ b,
+        (‖physicalYangMillsEvenPeriodicWilsonOSBoundaryMoment
+            S D halfExtent N hN beta hbeta B hInvariant n F b‖ ^ 2 -
+          ‖physicalYangMillsEvenPeriodicWilsonOSBoundaryMoment
+            S D halfExtent N hN beta hbeta B hInvariant n
+            (Tn.carrierTranslation t F) b‖ ^ 2)
+        ∂(periodicHypercubicEvenBoundaryHaarMeasure (halfExtent n) N)
   rw [physical_yang_mills_evenPeriodicWilsonOS_finiteReflectedIntegral_eq_boundaryMoment_norm_sq
         S D halfExtent N hN beta hbeta B hInvariant n F hFgram,
       physical_yang_mills_evenPeriodicWilsonOS_finiteReflectedIntegral_eq_boundaryMoment_norm_sq
