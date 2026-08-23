@@ -93,6 +93,7 @@ theorem approximatingMeasure_reflection_map_eq_self
     _ = Measure.map (R.interpolate n) μ := by
       dsimp [μ]
       rw [periodicHypercubicSpecialUnitaryWilsonSystem_gibbs_reflection_map_eq_self]
+      rfl
 
 /-- Reflection invariance of the actual finite-volume physical weak-star state
 is generated from the physical measure invariance above. -/
