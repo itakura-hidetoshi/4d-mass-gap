@@ -149,6 +149,8 @@ theorem periodicHypercubicEvenPositiveHalfCylinderTemporalCell_supported
   let q := periodicHypercubicEvenPositiveHalfTemporalPlaquette H i e
   have htime : periodicHypercubicEvenPlaquetteHasTimeDirection q :=
     periodicHypercubicEvenPositiveHalfTemporalPlaquette_hasTimeDirection H i e
+  have hi : i.1 < H + 1 := by
+    simpa [periodicHypercubicEvenPositiveHalfCylinderSlabCount] using i.2
   by_cases hzero : i.1 = 0
   · right
     right
@@ -170,12 +172,10 @@ theorem periodicHypercubicEvenPositiveHalfCylinderTemporalCell_supported
       · rw [periodicHypercubicEvenStrictPositiveTime_iff_val]
         rw [show (q.1 0).val = i.1 by
           exact periodicHypercubicEvenPositiveHalfTemporalPlaquette_time_val H i e]
-        simp only [periodicHypercubicEvenPositiveHalfCylinderSlabCount] at i
         omega
       · rw [periodicHypercubicEvenStrictPositiveTime_iff_val]
         rw [show (q.1 0 + 1).val = i.1 + 1 by
           exact periodicHypercubicEvenPositiveHalfTemporalPlaquette_next_time_val H i e]
-        simp only [periodicHypercubicEvenPositiveHalfCylinderSlabCount] at i
         omega
 
 /-- The whole cylinder-cell embedding lands in the exact OS closure support. -/
@@ -228,10 +228,11 @@ theorem periodicHypercubicEvenPlaquetteFirstAxis_eq_zero_of_hasTimeDirection
   rcases htime with hfirst | hsecond
   · exact hfirst
   · have hlt := p.2.2
-    change periodicHypercubicPlaquetteFirstAxis p <
-      periodicHypercubicPlaquetteSecondAxis p at hlt
-    rw [hsecond] at hlt
-    omega
+    change (periodicHypercubicPlaquetteFirstAxis p).val <
+      (periodicHypercubicPlaquetteSecondAxis p).val at hlt
+    have hcontra : (periodicHypercubicPlaquetteFirstAxis p).val < 0 := by
+      simpa [hsecond] using hlt
+    exact (Nat.not_lt_zero _ hcontra).elim
 
 /-- The spatial axis of a time-containing ordered plaquette is nonzero. -/
 theorem periodicHypercubicEvenPlaquetteSecondAxis_ne_zero_of_hasTimeDirection
@@ -243,10 +244,11 @@ theorem periodicHypercubicEvenPlaquetteSecondAxis_ne_zero_of_hasTimeDirection
   have hfirst :=
     periodicHypercubicEvenPlaquetteFirstAxis_eq_zero_of_hasTimeDirection p htime
   have hlt := p.2.2
-  change periodicHypercubicPlaquetteFirstAxis p <
-    periodicHypercubicPlaquetteSecondAxis p at hlt
-  rw [hfirst, hsecond] at hlt
-  omega
+  change (periodicHypercubicPlaquetteFirstAxis p).val <
+    (periodicHypercubicPlaquetteSecondAxis p).val at hlt
+  have hcontra : (0 : ℕ) < 0 := by
+    simpa [hfirst, hsecond] using hlt
+  exact (Nat.lt_irrefl 0 hcontra)
 
 /-- Forget time from the base vertex and retain the spatial axis of a temporal
 plaquette. -/
@@ -316,11 +318,13 @@ noncomputable def periodicHypercubicEvenPositiveHalfClosureSupportedPlaquetteToC
             p htime).1 hpos |>.1
         exact
           ((periodicHypercubicEvenStrictPositiveTime_iff_val H (p.1 0)).1 hbase).2
-      · rcases hboundary.2 with hzero | hH <;> omega
+      · rcases hboundary.2 with hzero | hH
+        · simpa [hzero]
+        · simpa [hH]
     let i : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H) :=
       ⟨(p.1 0).val, by
-        simp only [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
-        omega⟩
+        simpa [periodicHypercubicEvenPositiveHalfCylinderSlabCount] using
+          Nat.lt_succ_of_le hle⟩
     exact Sum.inr
       (i, periodicHypercubicEvenTemporalPlaquetteSpatialLinkProjection H p htime)
   · have hle : (p.1 0).val ≤ H + 1 := by
@@ -332,11 +336,12 @@ noncomputable def periodicHypercubicEvenPositiveHalfClosureSupportedPlaquetteToC
           rw [hprimary]
           simp
         · unfold periodicHypercubicEvenOnAntipodalReflectionPlane at hantipodal
-          rw [hantipodal]
-          rw [ZMod.val_natCast_of_lt]
-          · omega
-          · simp only [PeriodicHypercubicEvenSideLength]
+          have hhalf_lt :
+              H + 1 < PeriodicHypercubicEvenSideLength H := by
+            change H + 1 < 2 * (H + 1)
             omega
+          rw [hantipodal]
+          simpa only [ZMod.val_natCast_of_lt hhalf_lt]
       · have hbase :=
           (periodicHypercubicEvenStrictPositivePlaquette_iff_base_of_not_hasTimeDirection
             p htime).1 hpos
@@ -345,7 +350,7 @@ noncomputable def periodicHypercubicEvenPositiveHalfClosureSupportedPlaquetteToC
           ((periodicHypercubicEvenStrictPositiveTime_iff_val H (p.1 0)).1 hbase).2.trans
             (Nat.le_succ H)
       · exact (htime hboundary.1).elim
-    let j : Fin (H + 2) := ⟨(p.1 0).val, by omega⟩
+    let j : Fin (H + 2) := ⟨(p.1 0).val, Nat.lt_succ_of_le hle⟩
     exact Sum.inl
       (j, periodicHypercubicEvenSpatialSlicePlaquetteProjection H p htime)
 
@@ -400,7 +405,10 @@ theorem periodicHypercubicEvenPositiveHalfCylinderCellToSupportedPlaquette_leftI
     apply Prod.ext
     · apply Fin.ext
       exact periodicHypercubicEvenPositiveHalfCylinderSpatialCell_time_val H j p
-    · simp [periodicHypercubicEvenSpatialSlicePlaquetteProjection]
+    · apply Prod.ext
+      · exact periodicHypercubicEvenSpatialSliceVertexProjection_atTime H _ p.1
+      · apply Subtype.ext
+        rfl
   · rcases z with ⟨i, e⟩
     have htime :
         periodicHypercubicEvenPlaquetteHasTimeDirection
@@ -414,8 +422,10 @@ theorem periodicHypercubicEvenPositiveHalfCylinderCellToSupportedPlaquette_leftI
     apply Prod.ext
     · apply Fin.ext
       exact periodicHypercubicEvenPositiveHalfTemporalPlaquette_time_val H i e
-    · simp [periodicHypercubicEvenTemporalPlaquetteSpatialLinkProjection,
-        periodicHypercubicEvenPositiveHalfTemporalPlaquette]
+    · apply Prod.ext
+      · exact periodicHypercubicEvenSpatialSliceVertexProjection_atTime H _ e.1
+      · apply Subtype.ext
+        rfl
 
 /-- Exact finite equivalence between the geometric positive-half cylinder cells
 and the plaquette support occurring in the OS positive-half closure action. -/
