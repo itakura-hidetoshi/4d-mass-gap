@@ -150,11 +150,73 @@ local instance periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceOrthogon
   (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
     H N hN beta hbeta).isClosed_orthogonal.completeSpace_coe
 
+/-- Explicit real pairing symmetry of the normalized physical transfer after
+restriction to the full top-eigenspace orthogonal sector. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_symm
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f g : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta) :
+    inner ℝ
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta f) g =
+      inner ℝ f
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta g) := by
+  change inner ℝ
+      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+        H N hN beta hbeta
+        (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
+      (g : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) =
+    inner ℝ
+      (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+        H N hN beta hbeta
+        (g : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
+  exact
+    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+      H N hN beta hbeta _ _
+
+/-- The restricted normalized physical transfer has nonnegative quadratic
+form, inherited from ambient transfer positivity. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_nonneg
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta) :
+    0 ≤ inner ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta f) f := by
+  change 0 ≤ inner ℝ
+    (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+      H N hN beta hbeta
+      (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
+    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+  exact
+    (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isPositive
+      H N hN beta hbeta).inner_nonneg_left _
+
+/-- Compactness of the normalized physical transfer descends to its full
+ top-eigenspace orthogonal restriction. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_isCompact
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
+    IsCompactOperator
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta) := by
+  simpa [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator] using
+    (realHilbertTopEigenspaceOrthogonalRestriction_isCompact
+      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+        H N hN beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+        H N hN beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isCompact
+        H N hN beta hbeta))
+
 /-- Conversely, every Poincare coefficient on the actual orthogonal sector is
-bounded above by the canonical transfer gap. The proof stays on the already
-instanced concrete excitation carrier and transports the real pairing symmetry,
-quadratic positivity and compactness from the ambient normalized physical
-transfer. -/
+bounded above by the canonical transfer gap. Thus the canonical finite-volume
+gap is exactly the optimal quadratic-defect coefficient. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspacePoincareCoefficient_le_transferGap
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
@@ -168,58 +230,27 @@ theorem
           H N hN beta hbeta f) :
     δ ≤ periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap
       H N hN beta hbeta := by
-  let R :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-      H N hN beta hbeta
-  have hRpair : ∀ f g :
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta,
-      inner ℝ (R f) g = inner ℝ f (R g) := by
-    intro f g
-    change inner ℝ
-      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-        H N hN beta hbeta
-        (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
-      (g : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) =
-      inner ℝ
-        (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
-        (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-          H N hN beta hbeta
-          (g : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
-    exact
-      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
-        H N hN beta hbeta _ _
-  have hRnonneg : ∀ f :
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta,
-      0 ≤ inner ℝ (R f) f := by
-    intro f
-    change 0 ≤ inner ℝ
-      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-        H N hN beta hbeta
-        (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
-      (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
-    exact
-      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isPositive
-        H N hN beta hbeta).inner_nonneg_left _
-  have hRcompact : IsCompactOperator R := by
-    simpa [R,
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator] using
-      (realHilbertTopEigenspaceOrthogonalRestriction_isCompact
-        (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-          H N hN beta hbeta)
-        (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
-          H N hN beta hbeta)
-        (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isCompact
-          H N hN beta hbeta))
-  have hR : ‖R‖ ≤ 1 - δ :=
+  have hR :
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta‖ ≤ 1 - δ :=
     realHilbertSymmetricCompact_opNorm_le_one_sub_of_quadraticDefect
-      R hRpair hRnonneg hRcompact hδle (by
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta)
+      (fun f g =>
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_symm
+          H N hN beta hbeta f g)
+      (fun f =>
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_nonneg
+          H N hN beta hbeta f)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_isCompact
+        H N hN beta hbeta)
+      hδle
+      (by
         intro f
-        simpa [R,
+        simpa [
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceQuadraticDefect]
           using hdefect f)
-  dsimp [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap, R]
+  dsimp [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap]
   linarith
 
 /-- The finite-volume transfer gap is at most one. -/
