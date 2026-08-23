@@ -110,8 +110,14 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection_mem
     periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection H N f ∈
       periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N := by
   rw [← periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2ClosedSubmodule_toSubmodule_eq]
+  change
+    (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2ClosedSubmodule
+      H N).starProjection f ∈
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2ClosedSubmodule
+        H N).toSubmodule
   exact Submodule.starProjection_apply_mem
-    (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2ClosedSubmodule H N) f
+    (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2ClosedSubmodule
+      H N).toSubmodule f
 
 /-- The Gauss-law projection fixes exactly the gauge-invariant vectors. -/
 theorem periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection_eq_self_iff
@@ -146,7 +152,12 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection_idemp
     (periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection H N).comp
         (periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection H N) =
       periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection H N := by
-  ext f
+  apply ContinuousLinearMap.ext
+  intro f
+  change
+    periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection H N
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection H N f) =
+      periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection H N f
   exact
     (periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection_eq_self_iff
       H N _).2
@@ -161,8 +172,16 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSlice_sub_GaussLawProjection_
     f - periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection H N f ∈
       (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)ᗮ := by
   rw [← periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2ClosedSubmodule_toSubmodule_eq]
+  change
+    f -
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2ClosedSubmodule
+          H N).starProjection f ∈
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2ClosedSubmodule
+        H N).toSubmoduleᗮ
   exact Submodule.sub_starProjection_mem_orthogonal
-    (K := periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2ClosedSubmodule H N)
+    (K :=
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2ClosedSubmodule
+        H N).toSubmodule)
     f
 
 /-- Audit-visible receipt for the genuine finite-volume Gauss-law Hilbert
