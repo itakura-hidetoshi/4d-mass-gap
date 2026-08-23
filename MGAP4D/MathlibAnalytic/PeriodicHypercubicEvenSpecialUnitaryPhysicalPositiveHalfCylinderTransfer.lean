@@ -1,6 +1,5 @@
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSActualCanonicalCompletedBoundarySpatialSlicePairL2
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopEigenspaceExponentialDecay
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenFixedTimeClassification
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenCrossingPlaquette
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -82,16 +81,8 @@ theorem periodicHypercubicEvenPositiveHalfCylinderSlabRightTime_castSucc_strictP
     (i : Fin H) :
     periodicHypercubicEvenStrictPositiveTime H
       (periodicHypercubicEvenPositiveHalfCylinderSlabRightTime H i.castSucc) := by
-  rw [periodicHypercubicEvenStrictPositiveTime_iff_val]
-  have hlt : i.1 + 1 < PeriodicHypercubicEvenSideLength H := by
-    have hi : i.1 < H := i.2
-    simp only [PeriodicHypercubicEvenSideLength]
-    omega
-  change
-    1 ≤ (((i.1 + 1 : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H))).val ∧
-      (((i.1 + 1 : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H))).val ≤ H
-  rw [ZMod.val_natCast_of_lt hlt]
-  omega
+  refine ⟨i, ?_⟩
+  rfl
 
 /-- The terminal right endpoint is not in the strict positive open half: it is
 the antipodal reflection-fixed slice itself. -/
@@ -100,11 +91,16 @@ theorem periodicHypercubicEvenPositiveHalfCylinderSlabRightTime_last_not_strictP
     ¬ periodicHypercubicEvenStrictPositiveTime H
       (periodicHypercubicEvenPositiveHalfCylinderSlabRightTime H (Fin.last H)) := by
   rw [periodicHypercubicEvenPositiveHalfCylinderSlabRightTime_last]
-  rw [periodicHypercubicEvenStrictPositiveTime_iff_val]
-  have hlt : H + 1 < PeriodicHypercubicEvenSideLength H := by
+  rintro ⟨k, hk⟩
+  have hklt : k.1 + 1 < PeriodicHypercubicEvenSideLength H := by
+    have hk' : k.1 < H := k.2
     simp only [PeriodicHypercubicEvenSideLength]
     omega
-  rw [ZMod.val_natCast_of_lt hlt]
+  have hHlt : H + 1 < PeriodicHypercubicEvenSideLength H := by
+    simp only [PeriodicHypercubicEvenSideLength]
+    omega
+  have hval := congrArg ZMod.val hk
+  rw [ZMod.val_natCast_of_lt hHlt, ZMod.val_natCast_of_lt hklt] at hval
   omega
 
 /-- Actual unnormalized physical transfer across the complete positive
