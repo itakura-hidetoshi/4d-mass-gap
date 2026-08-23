@@ -319,8 +319,10 @@ noncomputable def periodicHypercubicEvenPositiveHalfClosureSupportedPlaquetteToC
         exact
           ((periodicHypercubicEvenStrictPositiveTime_iff_val H (p.1 0)).1 hbase).2
       · rcases hboundary.2 with hzero | hH
-        · simpa [hzero]
-        · simpa [hH]
+        · change ((↑q).1 0).val ≤ H
+          simpa only [hzero] using Nat.zero_le H
+        · change ((↑q).1 0).val ≤ H
+          simpa only [hH] using Nat.le_refl H
     let i : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H) :=
       ⟨(p.1 0).val, by
         simpa [periodicHypercubicEvenPositiveHalfCylinderSlabCount] using
@@ -341,7 +343,7 @@ noncomputable def periodicHypercubicEvenPositiveHalfClosureSupportedPlaquetteToC
             change H + 1 < 2 * (H + 1)
             omega
           rw [hantipodal]
-          simpa only [ZMod.val_natCast_of_lt hhalf_lt]
+          simpa only [ZMod.val_natCast_of_lt hhalf_lt] using Nat.le_refl (H + 1)
       · have hbase :=
           (periodicHypercubicEvenStrictPositivePlaquette_iff_base_of_not_hasTimeDirection
             p htime).1 hpos
