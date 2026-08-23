@@ -140,18 +140,12 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_continuo
             PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
               PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N => p.2 e) :=
         (continuous_apply e).comp continuous_snd
-      have hpair : Continuous
-          (fun p :
-            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-              PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
-            (p.1 e, p.2 e)) :=
-        hleft.prodMk hright
       have hlocal : Continuous
           (fun p :
             PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
               PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
             specialUnitaryWilsonRelativeKernel N beta (p.1 e) (p.2 e)) :=
-        (continuous_specialUnitaryWilsonRelativeKernel N beta).comp hpair
+        (continuous_specialUnitaryWilsonRelativeKernel N beta).comp₂ hleft hright
       exact hlocal.mul ih
 
 /-- The complete actual one-slab Wilson kernel is jointly continuous. -/
