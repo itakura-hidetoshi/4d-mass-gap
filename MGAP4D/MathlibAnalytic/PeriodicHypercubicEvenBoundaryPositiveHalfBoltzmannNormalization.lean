@@ -152,12 +152,27 @@ theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_eq_normalized
     simpa [A, Splus, St] using
       periodicHypercubicEvenBoundaryCompletedPositiveWilsonAmplitude_eq_boltzmann
         H N beta b x
-  have hc :
-      0 ≤ periodicHypercubicEvenBoundaryGramCoefficient H N hN beta hbeta b :=
-    periodicHypercubicEvenBoundaryGramCoefficient_nonneg
-      H N hN beta hbeta b
   have hInvZ : 0 ≤ (1 / Z : ℝ) := by
     positivity
+  have hcoefNonneg : 0 ≤ Real.exp (-beta * Sfixed) / Z :=
+    div_nonneg (Real.exp_nonneg _) (le_of_lt hZ)
+  have hsqrtCoef :
+      (Real.sqrt (Real.exp (-beta * Sfixed) / Z)) ^ 2 =
+        Real.exp (-beta * Sfixed) / Z :=
+    Real.sq_sqrt hcoefNonneg
+  have hsqrtInvZ :
+      (Real.sqrt (1 / Z)) ^ 2 = (1 / Z : ℝ) :=
+    Real.sq_sqrt hInvZ
+  have hexpFeature :
+      -beta * Sfixed +
+          (-beta * (Splus + St) + -beta * (Splus + St)) =
+        -2 * beta * Sclosure := by
+    dsimp [Sclosure]
+    ring
+  have hexpNormalized :
+      -beta * Sclosure + -beta * Sclosure =
+        -2 * beta * Sclosure := by
+    ring
   have hfeatureSq :
       (periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
           H N hN beta hbeta b x) ^ 2 =
@@ -170,17 +185,14 @@ theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_eq_normalized
     calc
       (Real.sqrt (Real.exp (-beta * Sfixed) / Z) *
           Real.exp (-beta * (Splus + St))) ^ 2 =
-        (Real.exp (-beta * Sfixed) / Z) *
-          (Real.exp (-beta * (Splus + St))) ^ 2 := by
-            rw [mul_pow, Real.sq_sqrt]
-            · rfl
-            · exact div_nonneg (Real.exp_nonneg _) (le_of_lt hZ)
+        (Real.sqrt (Real.exp (-beta * Sfixed) / Z)) ^ 2 *
+          (Real.exp (-beta * (Splus + St))) ^ 2 := by ring
+      _ = (Real.exp (-beta * Sfixed) / Z) *
+          (Real.exp (-beta * (Splus + St))) ^ 2 := by rw [hsqrtCoef]
       _ = Real.exp (-2 * beta * Sclosure) / Z := by
         rw [pow_two, ← Real.exp_add]
         rw [div_mul_eq_mul_div, ← Real.exp_add]
-        congr 1
-        dsimp [Sclosure]
-        ring
+        rw [hexpFeature]
   have hnormalizedSq :
       (periodicHypercubicEvenBoundaryNormalizedPositiveHalfClosureBoltzmannAmplitude
           H N hN beta hbeta b x) ^ 2 =
@@ -199,12 +211,12 @@ theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_eq_normalized
     rw [hclosure]
     calc
       (Real.sqrt (1 / Z) * Real.exp (-beta * Sclosure)) ^ 2 =
-          (1 / Z) * (Real.exp (-beta * Sclosure)) ^ 2 := by
-        rw [mul_pow, Real.sq_sqrt hInvZ]
+          (Real.sqrt (1 / Z)) ^ 2 * (Real.exp (-beta * Sclosure)) ^ 2 := by
+        ring
+      _ = (1 / Z) * (Real.exp (-beta * Sclosure)) ^ 2 := by
+        rw [hsqrtInvZ]
       _ = Real.exp (-2 * beta * Sclosure) / Z := by
-        rw [pow_two, ← Real.exp_add]
-        field_simp [ne_of_gt hZ]
-        congr 1
+        rw [pow_two, ← Real.exp_add, hexpNormalized]
         ring
   have hfeatureNonneg :
       0 ≤ periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
