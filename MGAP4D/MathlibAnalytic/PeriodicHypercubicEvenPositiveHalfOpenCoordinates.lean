@@ -84,8 +84,7 @@ def periodicHypercubicEvenSpatialSliceVertexProjection
   funext i
   by_cases hi : i = 0
   · subst i
-    simp [periodicHypercubicEvenSpatialSliceVertexProjection, v.2,
-      periodicHypercubicEvenOnPrimaryReflectionPlane]
+    exact v.2.symm
   · simp [periodicHypercubicEvenSpatialSliceVertexProjection,
       periodicHypercubicEvenSpatialSliceVertexAtTime, hi]
 
@@ -142,7 +141,8 @@ def periodicHypercubicEvenPositiveHalfTemporalEdge
     (z : PeriodicHypercubicEvenPositiveHalfInteriorSpatialIndex H) :
     ((periodicHypercubicEvenPositiveHalfInteriorSpatialEdge H z).1 0).val =
       z.1.1 + 1 := by
-  rw [periodicHypercubicEvenSpatialSliceVertexAtTime_time]
+  change ((((z.1.1 + 1 : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H))).val =
+    z.1.1 + 1)
   apply ZMod.val_natCast_of_lt
   simp only [PeriodicHypercubicEvenSideLength]
   omega
@@ -152,7 +152,8 @@ def periodicHypercubicEvenPositiveHalfTemporalEdge
     (z : PeriodicHypercubicEvenPositiveHalfTemporalIndex H) :
     ((periodicHypercubicEvenPositiveHalfTemporalEdge H z).1 0).val =
       z.1.1 := by
-  rw [periodicHypercubicEvenSpatialSliceVertexAtTime_time]
+  change ((((z.1.1 : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H))).val =
+    z.1.1)
   apply ZMod.val_natCast_of_lt
   simp only [PeriodicHypercubicEvenSideLength]
   omega
@@ -194,9 +195,11 @@ theorem periodicHypercubicEvenPositiveHalfInteriorSpatialEdge_injective
   intro z w h
   have htime := congrArg
     (fun e : PeriodicHypercubicEvenEdge H => (e.1 0).val) h
+  have hkNat : z.1.1 + 1 = w.1.1 + 1 := by
+    simpa only [periodicHypercubicEvenPositiveHalfInteriorSpatialEdge_time_val] using htime
   have hk : z.1 = w.1 := by
     apply Fin.ext
-    simpa using Nat.succ.inj htime
+    omega
   have hsource := congrArg
     (fun e : PeriodicHypercubicEvenEdge H => e.1) h
   have hvertex : z.2.1 = w.2.1 := by
@@ -221,9 +224,9 @@ theorem periodicHypercubicEvenPositiveHalfTemporalEdge_injective
   intro z w h
   have htime := congrArg
     (fun e : PeriodicHypercubicEvenEdge H => (e.1 0).val) h
-  have hk : z.1 = w.1 := by
-    apply Fin.ext
-    simpa using htime
+  have hkNat : z.1.1 = w.1.1 := by
+    simpa only [periodicHypercubicEvenPositiveHalfTemporalEdge_time_val] using htime
+  have hk : z.1 = w.1 := Fin.ext hkNat
   have hsource := congrArg
     (fun e : PeriodicHypercubicEvenEdge H => e.1) h
   have hvertex : z.2 = w.2 := by
@@ -290,6 +293,9 @@ theorem periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge_surjective
     Function.Surjective
       (periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge H) := by
   intro e
+  have hepos :
+      periodicHypercubicEvenEdgeSide H e.1 = ReflectionEdgeSide.positive := by
+    simpa [periodicHypercubicEvenEdgeOrbitPartition] using e.2
   by_cases htime : e.1.2 = 0
   · have hedge : e.1 = (e.1.1, 0) := by
       apply Prod.ext
@@ -301,7 +307,7 @@ theorem periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge_surjective
       have hneg :=
         periodicHypercubicEvenEdgeSide_time_eq_negative_of_half_le_val
           H e.1.1 hhalf
-      rw [← hedge, e.2] at hneg
+      rw [← hedge, hepos] at hneg
       cases hneg
     let k : Fin (H + 1) := ⟨(e.1.1 0).val, by omega⟩
     let v0 := periodicHypercubicEvenSpatialSliceVertexProjection H e.1.1
@@ -318,13 +324,13 @@ theorem periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge_surjective
       rw [hcast]
       simpa [v0] using
         periodicHypercubicEvenSpatialSliceVertexAtTime_projection H e.1.1
-    · exact htime
+    · simpa [periodicHypercubicEvenPositiveHalfTemporalEdge] using htime.symm
   · have hzero : (e.1.1 0).val ≠ 0 := by
       intro hz
       have hfixed :=
         periodicHypercubicEvenEdgeSide_spatial_eq_fixed_of_val_eq_zero
           H e.1 htime hz
-      rw [e.2] at hfixed
+      rw [hepos] at hfixed
       cases hfixed
     have hpos : 1 ≤ (e.1.1 0).val := Nat.one_le_iff_ne_zero.2 hzero
     have hle : (e.1.1 0).val ≤ H := by
@@ -332,7 +338,7 @@ theorem periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge_surjective
       have hhalf : H + 1 ≤ (e.1.1 0).val := by omega
       exact
         (periodicHypercubicEvenEdgeSide_spatial_ne_positive_of_zero_or_half_le_val
-          H e.1 htime (Or.inr hhalf)) e.2
+          H e.1 htime (Or.inr hhalf)) hepos
     let k : Fin H := ⟨(e.1.1 0).val - 1, by omega⟩
     let v0 := periodicHypercubicEvenSpatialSliceVertexProjection H e.1.1
     let mu : PeriodicHypercubicEvenSpatialDirection := ⟨e.1.2, htime⟩
