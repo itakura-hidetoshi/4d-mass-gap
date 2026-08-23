@@ -8,6 +8,8 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+universe u
+
 /-- A zero-safe midpoint contraction factor for a nonnegative scalar bound.
 Using `(1 + r) / 2` keeps the factor strictly positive even when `r = 0`,
 while retaining a strict factor below one whenever `r < 1`. -/
@@ -83,6 +85,22 @@ theorem realStrictContractionMidpointFactor_eq_exp_neg_rate
   dsimp [realStrictContractionMidpointRate]
   rw [neg_neg, Real.exp_log hqpos]
 
+/-- In the generic Hilbert carrier, the power of the top-eigenspace orthogonal
+restriction obeys its bundled operator-norm bound pointwise.  Keeping this
+lemma at the ambient Hilbert level avoids reconstructing a `NormedSpace`
+instance from an already bundled concrete subtype operator. -/
+theorem realHilbertTopEigenspaceOrthogonalRestriction_pow_apply_norm_le
+    {E : Type u}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    (S : E →L[ℝ] E)
+    (hS : (S : E →ₗ[ℝ] E).IsSymmetric)
+    (n : ℕ)
+    (f : (realHilbertTopEigenspace S)ᗮ) :
+    ‖((realHilbertTopEigenspaceOrthogonalRestriction S hS) ^ n) f‖ ≤
+      ‖(realHilbertTopEigenspaceOrthogonalRestriction S hS) ^ n‖ * ‖f‖ := by
+  exact ContinuousLinearMap.le_opNorm _ _
+
 /-- Canonical finite-volume contraction factor for the normalized physical
 transfer on the orthogonal complement of its full top eigenspace. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
@@ -149,31 +167,31 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogon
       H N hN beta hbeta) ^ n) f‖ ≤
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
         H N hN beta hbeta) ^ n * ‖f‖ := by
-  letI : NormedSpace ℝ
-      (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :=
-    Submodule.normedSpace
-      (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
-  letI : NormedSpace ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta) :=
-    { norm_smul_le := fun c x => by
-        change
-          ‖c • (x : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)‖ ≤
-            ‖c‖ * ‖(x : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)‖
-        exact norm_smul_le c
-          (x : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) }
-  let R :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+  let S :=
+    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
       H N hN beta hbeta
+  let hS : (S :
+      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N →ₗ[ℝ]
+        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N).IsSymmetric := by
+    simpa [S] using
+      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+        H N hN beta hbeta
+  have hApply :=
+    realHilbertTopEigenspaceOrthogonalRestriction_pow_apply_norm_le S hS n f
   calc
-    ‖(R ^ n) f‖ ≤ ‖R ^ n‖ * ‖f‖ := ContinuousLinearMap.le_opNorm (R ^ n) f
+    ‖((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+      H N hN beta hbeta) ^ n) f‖ ≤
+        ‖(periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta) ^ n‖ * ‖f‖ := by
+      simpa [S, hS,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace] using hApply
     _ ≤ (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
           H N hN beta hbeta) ^ n * ‖f‖ :=
       mul_le_mul_of_nonneg_right
-        (by
-          simpa [R] using
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_norm_le_of_pos
-              H N hN beta hbeta n hn)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_norm_le_of_pos
+          H N hN beta hbeta n hn)
         (norm_nonneg f)
 
 /-- Canonical positive finite-volume logarithmic transfer decay scale.  It is
