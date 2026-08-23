@@ -93,14 +93,16 @@ noncomputable def
     specialUnitaryWilsonPlaquetteEnergy N ((A e)⁻¹ * B e)).sum
 
 /-- Product of the exact local `SU(N)` Wilson relative kernels over all spatial
-links in one adjacent-time slab. -/
+links in one adjacent-time slab.  It is written through the canonical local
+crossing-kernel wrapper so the already constructed RKHS finite-product feature
+elaborates without expanding the whole dependent tensor-product tower. -/
 noncomputable def
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
     (H N : ℕ)
     (beta : ℝ)
     (A B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) : ℝ :=
   ((periodicHypercubicEvenSpatialSliceLinkList H).map fun e =>
-    specialUnitaryWilsonRelativeKernel N beta (A e) (B e)).prod
+    localCrossingWilsonKernel N beta (fun X => X e) A B).prod
 
 /-- The finite product of local relative Wilson kernels is exactly the
 Boltzmann factor of the temporal-gauge crossing action. -/
@@ -161,8 +163,7 @@ noncomputable def
       (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
         H N beta) := by
-  simpa [periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel,
-    localCrossingWilsonKernel] using
+  exact
     RealHilbertKernelFeature.listProd
       (periodicHypercubicEvenSpatialSliceLinkList H)
       (fun e A B =>
