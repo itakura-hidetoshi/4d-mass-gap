@@ -7,6 +7,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory Set
+open Module End
 open scoped ENNReal InnerProductSpace InnerProduct
 
 noncomputable section
@@ -140,8 +141,7 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSliceGaugePullback_const_one
     simpa [oneL2] using
       (Lp.coeFn_const (μ := μ) (p := 2) (c := (1 : ℝ)))
   have hConstPull :=
-    (periodicHypercubicEvenSpecialUnitarySpatialSliceHaar_measurePreserving H N γ)
-      .quasiMeasurePreserving.ae_eq hConst
+    (periodicHypercubicEvenSpecialUnitarySpatialSliceHaar_measurePreserving H N γ).quasiMeasurePreserving.ae_eq hConst
   filter_upwards [hPull, hConstPull, hConst] with A hpull hpulled hone
   calc
     periodicHypercubicEvenSpecialUnitarySpatialSliceGaugePullbackLinearIsometry
