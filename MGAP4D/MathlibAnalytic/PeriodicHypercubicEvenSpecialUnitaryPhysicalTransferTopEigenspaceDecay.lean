@@ -183,10 +183,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogon
       H N hN beta hbeta) ^ n) f‖ ≤
         ‖(periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
           H N hN beta hbeta) ^ n‖ * ‖f‖ := by
-      simpa [S, hS,
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator,
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal,
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace] using hApply
+      change
+        ‖((realHilbertTopEigenspaceOrthogonalRestriction S hS) ^ n) f‖ ≤
+          ‖(realHilbertTopEigenspaceOrthogonalRestriction S hS) ^ n‖ * ‖f‖
+      exact hApply
     _ ≤ (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
           H N hN beta hbeta) ^ n * ‖f‖ :=
       mul_le_mul_of_nonneg_right
