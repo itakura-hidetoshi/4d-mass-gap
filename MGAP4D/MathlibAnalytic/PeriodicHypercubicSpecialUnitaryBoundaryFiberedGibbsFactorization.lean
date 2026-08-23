@@ -9,23 +9,23 @@ open scoped ENNReal
 
 noncomputable section
 
-local instance (N : ℕ) :
+local instance boundaryFiberedGibbsFactorizationSpecialUnitaryIsTopologicalGroup (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 
-local instance (N : ℕ) :
+local instance boundaryFiberedGibbsFactorizationSpecialUnitaryCompactSpace (N : ℕ) :
     CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
-local instance (N : ℕ) :
+local instance boundaryFiberedGibbsFactorizationSpecialUnitarySecondCountableTopology (N : ℕ) :
     SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupSecondCountableTopology N
 
-local instance (N : ℕ) :
+local instance boundaryFiberedGibbsFactorizationSpecialUnitaryMeasurableSpace (N : ℕ) :
     MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
 
-local instance (N : ℕ) :
+local instance boundaryFiberedGibbsFactorizationSpecialUnitaryBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 

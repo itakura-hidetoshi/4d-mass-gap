@@ -9,23 +9,23 @@ open MeasureTheory
 
 noncomputable section
 
-local instance (N : ℕ) :
+local instance boundaryFiberedHaarFactorizationSpecialUnitaryIsTopologicalGroup (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 
-local instance (N : ℕ) :
+local instance boundaryFiberedHaarFactorizationSpecialUnitaryCompactSpace (N : ℕ) :
     CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
-local instance (N : ℕ) :
+local instance boundaryFiberedHaarFactorizationSpecialUnitarySecondCountableTopology (N : ℕ) :
     SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupSecondCountableTopology N
 
-local instance (N : ℕ) :
+local instance boundaryFiberedHaarFactorizationSpecialUnitaryMeasurableSpace (N : ℕ) :
     MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
 
-local instance (N : ℕ) :
+local instance boundaryFiberedHaarFactorizationSpecialUnitaryBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
