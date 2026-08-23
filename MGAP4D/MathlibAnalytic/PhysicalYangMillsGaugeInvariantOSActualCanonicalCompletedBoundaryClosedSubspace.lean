@@ -76,10 +76,11 @@ existing automatic separated boundary isometry. -/
         R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
         R.approximatingReflectionInvariantFamily n).Separated) :
     R.toCompletedBoundaryMomentContinuousLinearMapAutomatic n
-        (x : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-          S R.reflectionData halfExtent N hN beta hbeta
-            R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
-            R.approximatingReflectionInvariantFamily n).PhysicalHilbert) =
+        (x : UniformSpace.Completion
+          (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+            S R.reflectionData halfExtent N hN beta hbeta
+              R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+              R.approximatingReflectionInvariantFamily n).Separated) =
       R.toSeparatedBoundaryMomentLinearIsometryAutomatic n x := by
   let P :=
     physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
@@ -156,10 +157,11 @@ noncomputable def toCompletedBoundaryMomentLinearIsometryAutomatic
         R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
         R.approximatingReflectionInvariantFamily n).Separated) :
     R.toCompletedBoundaryMomentLinearIsometryAutomatic n
-        (x : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-          S R.reflectionData halfExtent N hN beta hbeta
-            R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
-            R.approximatingReflectionInvariantFamily n).PhysicalHilbert) =
+        (x : UniformSpace.Completion
+          (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+            S R.reflectionData halfExtent N hN beta hbeta
+              R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+              R.approximatingReflectionInvariantFamily n).Separated) =
       R.toSeparatedBoundaryMomentLinearIsometryAutomatic n x := by
   exact R.toCompletedBoundaryMomentContinuousLinearMapAutomatic_coe n x
 
