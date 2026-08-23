@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopEigenspaceContraction
+import Mathlib.Analysis.Normed.Module.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Tactic
 
@@ -95,7 +96,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFac
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     0 < periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
       H N hN beta hbeta := by
-  exact realStrictContractionMidpointFactor_pos (norm_nonneg _)
+  change 0 < realStrictContractionMidpointFactor
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+      H N hN beta hbeta‖
+  exact realStrictContractionMidpointFactor_pos
+    (norm_nonneg
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta))
 
 /-- The actual finite-volume decay factor is strictly below one. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor_lt_one
@@ -142,6 +149,12 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogon
       H N hN beta hbeta) ^ n) f‖ ≤
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
         H N hN beta hbeta) ^ n * ‖f‖ := by
+  letI : NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta) :=
+    Submodule.normedSpace
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta)
   let R :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta
@@ -169,7 +182,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVo
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     0 < periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
       H N hN beta hbeta := by
-  exact realStrictContractionMidpointRate_pos (norm_nonneg _)
+  change 0 < realStrictContractionMidpointRate
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+      H N hN beta hbeta‖
+  exact realStrictContractionMidpointRate_pos
+    (norm_nonneg
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta))
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
       H N hN beta hbeta)
 
@@ -182,7 +201,17 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFac
       Real.exp
         (-periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
           H N hN beta hbeta) := by
-  exact realStrictContractionMidpointFactor_eq_exp_neg_rate (norm_nonneg _)
+  change realStrictContractionMidpointFactor
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta‖ =
+    Real.exp
+      (-realStrictContractionMidpointRate
+        ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta‖)
+  exact realStrictContractionMidpointFactor_eq_exp_neg_rate
+    (norm_nonneg
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta))
 
 /-- Audit-visible finite-volume top-eigenspace geometric decay package. -/
 structure PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayPackage
