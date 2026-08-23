@@ -151,8 +151,13 @@ theorem periodicHypercubicEven_primary_antipodal_disjoint
   have hlt : H + 1 < PeriodicHypercubicEvenSideLength H := by
     simp only [PeriodicHypercubicEvenSideLength]
     omega
-  have hval := congrArg ZMod.val hzero
-  simp [ZMod.val_natCast_of_lt hlt] at hval
+  have hmod :
+      0 % PeriodicHypercubicEvenSideLength H =
+        (H + 1) % PeriodicHypercubicEvenSideLength H :=
+    (ZMod.natCast_eq_natCast_iff' 0 (H + 1)
+      (PeriodicHypercubicEvenSideLength H)).mp hzero
+  rw [Nat.zero_mod, Nat.mod_eq_of_lt hlt] at hmod
+  omega
 
 /-- A fixed edge cannot point in the Euclidean-time direction. -/
 theorem periodicHypercubicEvenFixedEdge_direction_ne_zero
