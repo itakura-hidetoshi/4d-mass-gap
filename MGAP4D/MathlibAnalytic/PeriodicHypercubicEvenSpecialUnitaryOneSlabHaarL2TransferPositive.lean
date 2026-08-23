@@ -119,7 +119,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelFeature_we
     exact (Lp.memLp f).mono_exponent (by norm_num)
   have hCmeas : AEStronglyMeasurable C.feature μ :=
     (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelFeature_continuous
-      H N hN beta hbeta).measurable.aestronglyMeasurable
+      H N hN beta hbeta).aestronglyMeasurable
   have hmeas : AEStronglyMeasurable
       (fun A => f A • C.feature A) μ :=
     continuous_smul.comp_aestronglyMeasurable₂
