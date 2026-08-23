@@ -225,7 +225,10 @@ def periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeSpatial
     periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeSpatialPath
         H N U path ⟨0, Nat.zero_lt_succ _⟩ =
       path ⟨0, Nat.zero_lt_succ _⟩ := by
-  simp [periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeSpatialPath]
+  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeSpatialPath
+  rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderCumulativeGauge_zero]
+  exact periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform_one H N
+    (path ⟨0, Nat.zero_lt_succ _⟩)
 
 /-- Residual gauge field accumulated at the antipodal fixed slice. -/
 noncomputable def
