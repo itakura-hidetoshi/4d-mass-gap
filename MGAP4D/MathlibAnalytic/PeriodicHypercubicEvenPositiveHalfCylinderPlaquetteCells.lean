@@ -365,25 +365,20 @@ theorem periodicHypercubicEvenPositiveHalfCylinderCellToSupportedPlaquette_right
         (periodicHypercubicEvenPositiveHalfClosureSupportedPlaquetteToCell H q) = q := by
   classical
   apply Subtype.ext
-  let p := q.1
-  by_cases htime : periodicHypercubicEvenPlaquetteHasTimeDirection p
+  by_cases htime : periodicHypercubicEvenPlaquetteHasTimeDirection q.1
   · simp only [periodicHypercubicEvenPositiveHalfClosureSupportedPlaquetteToCell,
-      htime, dif_pos]
-    change
-      periodicHypercubicEvenPositiveHalfTemporalPlaquette H
-          ⟨(p.1 0).val, _⟩
-          (periodicHypercubicEvenTemporalPlaquetteSpatialLinkProjection H p htime) = p
-    apply periodicHypercubicEvenPositiveHalfTemporalPlaquette_projection H p htime
+      htime, dif_pos,
+      periodicHypercubicEvenPositiveHalfCylinderCellToSupportedPlaquette,
+      periodicHypercubicEvenPositiveHalfCylinderPlaquetteCellEmbedding]
+    apply periodicHypercubicEvenPositiveHalfTemporalPlaquette_projection H q.1 htime
     unfold periodicHypercubicEvenPositiveHalfCylinderSlabLeftTime
-    exact ZMod.natCast_zmod_val (p.1 0)
+    exact ZMod.natCast_zmod_val (q.1.1 0)
   · simp only [periodicHypercubicEvenPositiveHalfClosureSupportedPlaquetteToCell,
-      htime, dif_neg]
-    change
-      periodicHypercubicEvenSpatialSlicePlaquetteAtTime H
-          (((p.1 0).val : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H))
-          (periodicHypercubicEvenSpatialSlicePlaquetteProjection H p htime) = p
-    rw [ZMod.natCast_zmod_val (p.1 0)]
-    exact periodicHypercubicEvenSpatialSlicePlaquetteAtTime_projection H p htime
+      htime, dif_neg,
+      periodicHypercubicEvenPositiveHalfCylinderCellToSupportedPlaquette,
+      periodicHypercubicEvenPositiveHalfCylinderPlaquetteCellEmbedding]
+    rw [ZMod.natCast_zmod_val (q.1.1 0)]
+    exact periodicHypercubicEvenSpatialSlicePlaquetteAtTime_projection H q.1 htime
 
 /-- Recovering coordinates after embedding a cylinder cell returns that cell. -/
 theorem periodicHypercubicEvenPositiveHalfCylinderCellToSupportedPlaquette_leftInverse
