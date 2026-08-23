@@ -126,14 +126,21 @@ theorem
     physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
       S D halfExtent N hN beta hbeta B hInvariant n
   let Tn := C.toPositiveTimeObservableContractionSemigroup n
-  have htime : 2 * (t / 2) = t := by
-    ext
-    norm_num
-  have htranslated :=
-    L.canonicalBoundaryTransfer_centeredBoundaryMoment_norm_sq_eq_finiteReflectedIntegral
-      C n (t / 2) F
-  dsimp only at htranslated
-  rw [htime] at htranslated
+  have htranslated :
+      ‖L.canonicalBoundaryTransfer C n t
+          (physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2
+            S D halfExtent N hN beta hbeta B hInvariant n
+            (Pn.vacuumCenteredCarrier F))‖ ^ 2 =
+        physicalYangMillsEvenPeriodicWilsonOSFiniteReflectedIntegral
+          S D halfExtent N hN beta hbeta B hInvariant n
+          (Tn.carrierTranslation (t / 2)
+            (Pn.vacuumCenteredCarrier F)) := by
+    rw [L.canonicalBoundaryTransfer_canonicalBoundaryMoment_intertwining
+      C n t (Pn.vacuumCenteredCarrier F)]
+    exact
+      physical_yang_mills_evenPeriodicWilsonOS_canonicalBoundaryMomentL2_norm_sq_eq_finiteReflectedIntegral
+        S D halfExtent N hN beta hbeta B hInvariant n
+        (Tn.carrierTranslation (t / 2) (Pn.vacuumCenteredCarrier F))
   have hinitial :=
     physical_yang_mills_evenPeriodicWilsonOS_canonicalBoundaryMomentL2_norm_sq_eq_finiteReflectedIntegral
       S D halfExtent N hN beta hbeta B hInvariant n
@@ -238,7 +245,6 @@ theorem finite_integral_exponential_decay
           (Pn.vacuumCenteredCarrier F) := by
   dsimp only
   have h := Q.finite_integral_exponential_defect n t F
-  dsimp only at h
   nlinarith
 
 /-- The model-facing exponential finite-integral package generates exactly the
@@ -304,7 +310,6 @@ theorem canonicalBoundaryTransfer_centeredBoundaryMoment_exponential_defect
               (Pn.vacuumCenteredCarrier F))‖ ^ 2 := by
   dsimp only
   have h := Q.finite_integral_exponential_defect n t F
-  dsimp only at h
   exact
     (L.finiteReflectedIntegral_exponential_defect_iff_canonicalBoundaryTransfer_centeredBoundaryMoment_exponential_defect
       C n t Q.mass F).mp h
