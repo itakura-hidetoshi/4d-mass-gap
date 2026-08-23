@@ -10,7 +10,7 @@ open scoped BigOperators InnerProductSpace
 
 noncomputable section
 
-set_option maxHeartbeats 1000000
+set_option maxHeartbeats 5000000
 
 local instance positiveHalfTransferIterationSpatialSliceLinkFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
@@ -36,12 +36,10 @@ local instance positiveHalfTransferIterationSpecialUnitaryBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-/-- A spatial path with exactly `n` adjacent one-slab transfer steps and therefore `n+1` slices. -/
 abbrev PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath
     (H N n : ℕ) : Type :=
   Fin (n + 1) → PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N
 
-/-- Product one-slice Haar law on an arbitrary finite `n`-slab spatial path. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryNSlabSpatialPathHaarMeasure
     (H N n : ℕ) :
     Measure (PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N n) :=
@@ -56,7 +54,6 @@ instance periodicHypercubicEvenSpecialUnitaryNSlabSpatialPathHaar_isProbabilityM
   unfold periodicHypercubicEvenSpecialUnitaryNSlabSpatialPathHaarMeasure
   infer_instance
 
-/-- Product of the actual one-slab temporal-gauge kernels along an arbitrary `n`-slab path. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel
     (H N : ℕ)
     (beta : ℝ)
@@ -66,7 +63,6 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKern
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta
       (path i.castSucc) (path i.succ)
 
-/-- Endpoint-weighted `n`-slab path amplitude. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpointAmplitude
     (H N : ℕ)
     (beta : ℝ)
@@ -78,7 +74,6 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpoint
       g (path (Fin.last n))
     ∂(periodicHypercubicEvenSpecialUnitaryNSlabSpatialPathHaarMeasure H N n)
 
-/-- A single factor in the finite path-kernel product is measurable. -/
 private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeStep_measurable
     (H N : ℕ)
     (beta : ℝ)
@@ -100,9 +95,8 @@ private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeStep_measu
     measurable_pi_apply i.succ
   exact
     (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta).measurable.comp (hleft.prod_mk hright)
+      H N beta).measurable.comp (hleft.prodMk hright)
 
-/-- The finite path kernel is measurable; no generic path-space continuity is required. -/
 theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel_measurable
     (H N : ℕ)
     (beta : ℝ)
@@ -117,7 +111,6 @@ theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel_measura
     periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeStep_measurable
       H N beta n i
 
-/-- At nonnegative coupling every arbitrary finite path kernel has absolute value at most one. -/
 theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel_abs_le_one
     (H N : ℕ)
     (hN : 0 < N)
@@ -154,8 +147,6 @@ theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel_abs_le_
               H N hN beta hbeta (path i.castSucc) (path i.succ))
     _ = 1 := by simp
 
-/-- For an `L²` left boundary state, multiplication by one bounded one-slab kernel is integrable
-on the product Haar probability. -/
 theorem periodicHypercubicEvenSpecialUnitaryOneSlabWeightedLeft_integrable
     (H N : ℕ)
     (hN : 0 < N)
@@ -199,7 +190,6 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSlabWeightedLeft_integrable
   rw [abs_mul]
   simpa using mul_le_mul_of_nonneg_left hk (abs_nonneg (f p.1))
 
-/-- Literal pointwise integral representative of the Riesz-constructed one-slab transfer. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegralRepresentative
     (H N : ℕ)
     (beta : ℝ)
@@ -209,7 +199,6 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransf
     f A * periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A B
     ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
 
-/-- The literal one-slab integral representative belongs to spatial Haar `L²`. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegralRepresentative_memLp
     (H N : ℕ)
     (hN : 0 < N)
@@ -262,7 +251,6 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegral
             H N hN beta hbeta A B)
           (abs_nonneg (f A))
 
-/-- `L²` vector associated to the literal one-slab integral representative. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegralL2
     (H N : ℕ)
     (hN : 0 < N)
@@ -275,7 +263,6 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransf
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegralRepresentative
         H N beta f)
 
-/-- The literal integral `L²` vector has the expected almost-everywhere representative. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegralL2_coeFn
     (H N : ℕ)
     (hN : 0 < N)
@@ -290,8 +277,6 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegral
   (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegralRepresentative_memLp
     H N hN beta hbeta f).coeFn_toLp
 
-/-- The Riesz one-slab transfer matrix coefficient is the literal endpoint-weighted double Haar
-integral of the one-slab Wilson kernel. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_inner_eq_integral
     (H N : ℕ)
     (hN : 0 < N)
@@ -340,7 +325,6 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
       rw [realL2Scalar_inner_eq_mul]
       ring
 
-/-- The literal integral representative is exactly the already-canonical Riesz transfer vector. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegralL2_eq_operator
     (H N : ℕ)
     (hN : 0 < N)
@@ -443,7 +427,6 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegral
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_inner_eq_integral
           H N hN beta hbeta f g
 
-/-- Pointwise form of the actual one-slab transfer, justified from the Riesz construction. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_coeFn
     (H N : ℕ)
     (hN : 0 < N)
@@ -461,7 +444,6 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegralL2_coeFn
       H N hN beta hbeta f
 
-/-- The zero-slab endpoint amplitude is the ordinary Haar-`L²` inner product. -/
 theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpointAmplitude_zero
     (H N : ℕ)
     (beta : ℝ)
@@ -493,7 +475,6 @@ theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpointAmplitude_
       filter_upwards with A
       rw [realL2Scalar_inner_eq_mul]
 
-/-- Algebraic decomposition of an `(n+1)`-slab kernel after exposing its first slice. -/
 private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel_cons
     (H N : ℕ)
     (beta : ℝ)
@@ -511,8 +492,6 @@ private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel
   rw [Fin.prod_univ_succ]
   simp [Fin.cons_succ]
 
-/-- Factorized split-path integrand.  The endpoint product is the `L¹` majorant and the two
-kernel factors are bounded by one. -/
 private noncomputable def periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSplitIntegrand
     (H N : ℕ)
     (beta : ℝ)
@@ -526,7 +505,6 @@ private noncomputable def periodicHypercubicEvenSpecialUnitaryNSlabTemporalGauge
       periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel
         H N beta n p.2)
 
-/-- The factorized split-path integrand is integrable by the endpoint `L¹` majorant. -/
 private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSplitIntegrand_integrable
     (H N : ℕ)
     (hN : 0 < N)
@@ -567,7 +545,7 @@ private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSplitInteg
         (fun p : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
             PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N n =>
           (p.1, p.2 0)) :=
-      measurable_fst.prod_mk ((measurable_pi_apply (0 : Fin (n + 1))).comp measurable_snd)
+      measurable_fst.prodMk ((measurable_pi_apply (0 : Fin (n + 1))).comp measurable_snd)
     exact
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
         H N beta).measurable.comp hpair
@@ -618,7 +596,6 @@ private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSplitInteg
   rw [abs_mul]
   exact mul_le_mul_of_nonneg_left hkprod (abs_nonneg _)
 
-/-- The `Fin (n+2)` product Haar path splits into its first slice and its `n`-slab tail. -/
 private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpointAmplitude_split
     (H N : ℕ)
     (beta : ℝ)
@@ -653,14 +630,12 @@ private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpointAm
   apply integral_congr_ae
   filter_upwards with p
   simp only [MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv,
-    Fin.insertNth_zero]
+    Fin.insertNth_zero, Equiv.coe_fn_mk, cast_eq]
   rw [periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePathKernel_cons]
   simp [periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSplitIntegrand,
     Fin.cons_zero, Fin.cons_succ]
   ring
 
-/-- Fubini turns the split-path integral into the tail integral of the literal one-slab
-Riesz representative. -/
 private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSplitIntegral_fubini
     (H N : ℕ)
     (hN : 0 < N)
@@ -682,7 +657,6 @@ private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSplitInteg
           g (tail (Fin.last n))
         ∂(periodicHypercubicEvenSpecialUnitaryNSlabSpatialPathHaarMeasure H N n) := by
   let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
-  let tailμ := periodicHypercubicEvenSpecialUnitaryNSlabSpatialPathHaarMeasure H N n
   have hsplit :=
     periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSplitIntegrand_integrable
       H N hN beta hbeta n f g
@@ -718,7 +692,6 @@ private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSplitInteg
       unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegralRepresentative
       ring
 
-/-- Substitute the almost-everywhere literal Riesz representative by the canonical transfer. -/
 private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeRepresentativeIntegral_eq_transfer
     (H N : ℕ)
     (hN : 0 < N)
@@ -759,8 +732,6 @@ private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeRepresenta
   filter_upwards [hTfTail] with tail htail
   rw [htail]
 
-/-- Exposing the first slice turns the `(n+1)`-slab path integral into the `n`-slab amplitude
-with the one-slab transfer applied to the left endpoint state. -/
 theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpointAmplitude_succ
     (H N : ℕ)
     (hN : 0 < N)
@@ -809,8 +780,6 @@ theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpointAmplitude_
           H N hN beta hbeta f) g := by
       rfl
 
-/-- Every finite temporal-gauge path amplitude is the matrix coefficient of the ordinary transfer
-power. -/
 theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpointAmplitude_eq_pow_inner
     (H N : ℕ)
     (hN : 0 < N)
@@ -833,10 +802,8 @@ theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpointAmplitude_
         H N hN beta hbeta n f g]
       rw [ih]
       rw [pow_succ]
-      rfl
+      simp [ContinuousLinearMap.mul_def]
 
-/-- Coercing a physical transfer power back to the ambient Haar `L²` space agrees with the
-corresponding power of the ambient transfer. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_pow_coe
     (H N : ℕ)
     (hN : 0 < N)
@@ -866,9 +833,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_pow_
       rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_coe]
       rfl
 
-/-- Main transfer/path theorem: the complete temporal-gauge positive-half endpoint amplitude on
-Gauss-law boundary states is exactly the matrix coefficient of the existing physical
-`(H+1)`-fold one-slab transfer. -/
 theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfGaussEndpoint_temporalGauge_integral_eq_physicalTransfer
     (H N : ℕ)
     (hN : 0 < N)
@@ -912,8 +876,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfGaussEndpoint_temporalGa
       (g : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_pow_coe]
 
-/-- Combining #2061 with the transfer/path theorem removes the temporal-link field and identifies
-the complete unfixed positive-half endpoint amplitude directly with the physical transfer power. -/
 theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfGaussEndpoint_unfixed_iteratedHaar_integral_eq_physicalTransfer
     (H N : ℕ)
     (hN : 0 < N)
