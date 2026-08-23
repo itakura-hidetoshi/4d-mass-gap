@@ -167,11 +167,7 @@ theorem
   let R :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta
-  have hRsymm : (R :
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta →ₗ[ℝ]
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta).IsSymmetric := by
+  have hRsymm : R.toLinearMap.IsSymmetric := by
     intro f g
     change inner ℝ
       (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
