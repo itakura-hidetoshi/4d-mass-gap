@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPositiveHalfOpenCoordinates
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeReduction
 import Mathlib.Tactic
 
 namespace MGAP4D
