@@ -119,12 +119,21 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferLetterPhysicalOperator
       periodicHypercubicEvenSpecialUnitaryFiniteTransferLetterAmbientOperator
         H N hN beta hbeta letter (f : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N) := by
   cases letter with
-  | transfer => exact periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_coe
-      H N hN beta hbeta f
-  | slice a ha => exact periodicHypercubicEvenSpecialUnitaryPhysicalSpatialSliceObservableMulOperator_coe
-      H N a ha f
-  | slab b hb => exact periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairObservableOperator_coe
-      H N hN beta hbeta b hb f
+  | transfer =>
+      simpa [periodicHypercubicEvenSpecialUnitaryFiniteTransferLetterPhysicalOperator,
+        periodicHypercubicEvenSpecialUnitaryFiniteTransferLetterAmbientOperator] using
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_coe
+          H N hN beta hbeta f)
+  | slice a ha =>
+      simpa [periodicHypercubicEvenSpecialUnitaryFiniteTransferLetterPhysicalOperator,
+        periodicHypercubicEvenSpecialUnitaryFiniteTransferLetterAmbientOperator] using
+        (periodicHypercubicEvenSpecialUnitaryPhysicalSpatialSliceObservableMulOperator_coe
+          H N a ha f)
+  | slab b hb =>
+      simpa [periodicHypercubicEvenSpecialUnitaryFiniteTransferLetterPhysicalOperator,
+        periodicHypercubicEvenSpecialUnitaryFiniteTransferLetterAmbientOperator] using
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairObservableOperator_coe
+          H N hN beta hbeta b hb f)
 
 noncomputable def periodicHypercubicEvenSpecialUnitaryFiniteTransferWordAmbientOperator
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
@@ -197,6 +206,7 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPhysicalOperator_c
         PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) :
         PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N) = _
       rw [ih, periodicHypercubicEvenSpecialUnitaryFiniteTransferLetterPhysicalOperator_coe]
+      rfl
 
 theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferBlockPhysicalOperator_apply
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) (n : ℕ)
@@ -281,9 +291,7 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferSliceInsertionWordPhys
         H N hN beta hbeta left right a ha := by
   apply ContinuousLinearMap.ext
   intro f
-  rw [show periodicHypercubicEvenSpecialUnitaryFiniteTransferSliceInsertionWord H N left right a ha =
-      periodicHypercubicEvenSpecialUnitaryFiniteTransferBlock H N left ++
-        ([.slice a ha] ++ periodicHypercubicEvenSpecialUnitaryFiniteTransferBlock H N right) by rfl]
+  unfold periodicHypercubicEvenSpecialUnitaryFiniteTransferSliceInsertionWord
   rw [periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPhysicalOperator_append_apply]
   rw [periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPhysicalOperator_append_apply]
   rw [periodicHypercubicEvenSpecialUnitaryFiniteTransferBlockPhysicalOperator_apply]
@@ -300,9 +308,7 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferSlabInsertionWordPhysi
         H N hN beta hbeta left right b hb := by
   apply ContinuousLinearMap.ext
   intro f
-  rw [show periodicHypercubicEvenSpecialUnitaryFiniteTransferSlabInsertionWord H N left right b hb =
-      periodicHypercubicEvenSpecialUnitaryFiniteTransferBlock H N left ++
-        ([.slab b hb] ++ periodicHypercubicEvenSpecialUnitaryFiniteTransferBlock H N right) by rfl]
+  unfold periodicHypercubicEvenSpecialUnitaryFiniteTransferSlabInsertionWord
   rw [periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPhysicalOperator_append_apply]
   rw [periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPhysicalOperator_append_apply]
   rw [periodicHypercubicEvenSpecialUnitaryFiniteTransferBlockPhysicalOperator_apply]
