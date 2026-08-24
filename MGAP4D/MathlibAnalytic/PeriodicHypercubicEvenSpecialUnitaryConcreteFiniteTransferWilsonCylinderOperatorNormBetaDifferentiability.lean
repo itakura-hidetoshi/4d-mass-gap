@@ -62,7 +62,7 @@ noncomputable def
 /-- Away from the base coupling, the difference-quotient error is precisely the
 quadratic remainder divided by the coupling increment.  The proof is reduced
 pointwise before using scalar-module identities, avoiding generic operator-space
-instance search. -/
+typeclass inference. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferBetaDifferenceQuotientError_eq_inv_smul_remainder
     (H N : ℕ)
@@ -104,9 +104,8 @@ theorem
   rw [smul_add, smul_smul, inv_mul_cancel₀ hsub, one_smul]
 
 /-- Quantitative off-diagonal difference-quotient estimate.  The proof uses
-`opNorm_le_bound` and the pointwise remainder estimate, so no normed-space
-structure on the operator carrier has to be inferred through the generic
-`norm_smul` API. -/
+`opNorm_le_bound` and the pointwise remainder estimate, so generic operator
+carrier normed-space inference is not required through the `norm_smul` API. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferBetaDifferenceQuotient_norm_le
     (H N : ℕ)
@@ -202,8 +201,8 @@ theorem
 
 /-- The actual operator-norm difference-quotient error converges to zero on the
 genuine nonnegative coupling space.  The codomain here is `ℝ`: this is precisely
-convergence in operator norm, while avoiding any need to infer a metric-space
-instance on the concrete operator carrier itself. -/
+convergence in operator norm, without requiring a metric-space typeclass for
+the concrete operator carrier itself. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferBetaDifferenceQuotientErrorNorm_tendsto_zero
     (H N : ℕ)
