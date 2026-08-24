@@ -10,7 +10,6 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-set_option synthInstance.maxHeartbeats 1000000
 set_option maxHeartbeats 2000000
 
 local instance positiveHalfClosureEndpointOperatorSpatialSliceVertexFintype (H : ℕ) :
@@ -137,9 +136,10 @@ theorem periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointOperator_inner_
       H N hN beta hbeta f g).symm
 
 /-- The endpoint operator has the exact norm obtained by scalar multiplication
-of the existing physical positive-half transfer power.  The concrete norm-one
-Gauss-law state above supplies the nontrivial carrier needed for the exact
-operator-norm scalar law. -/
+of the existing physical positive-half transfer power.  The upper bound is the
+operator-seminorm scalar estimate; the reverse bound rescales by the inverse
+normalization and uses `opNorm_ext`, so no `NormSMulClass` on the operator space
+is required. -/
 theorem periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointOperator_norm
     (H N : ℕ)
     (hN : 0 < N)
@@ -152,11 +152,39 @@ theorem periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointOperator_norm
           H N hN beta hbeta *
         ‖periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator
           H N hN beta hbeta‖ := by
-  rw [periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointOperator]
-  rw [norm_smul, Real.norm_eq_abs,
-    abs_of_nonneg
-      (periodicHypercubicEvenBoundaryPositiveHalfPartitionSqrtNormalization_nonneg
-        H N hN beta hbeta)]
+  let c := periodicHypercubicEvenBoundaryPositiveHalfPartitionSqrtNormalization
+    H N hN beta hbeta
+  let T := periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator
+    H N hN beta hbeta
+  change ‖c • T‖ = c * ‖T‖
+  have hc : 0 ≤ c := by
+    dsimp [c]
+    exact periodicHypercubicEvenBoundaryPositiveHalfPartitionSqrtNormalization_nonneg
+      H N hN beta hbeta
+  apply le_antisymm
+  · simpa [Real.norm_eq_abs, abs_of_nonneg hc] using
+      (ContinuousLinearMap.opNorm_smul_le c T)
+  · by_cases hcz : c = 0
+    · rw [hcz, zero_mul]
+      exact ContinuousLinearMap.opNorm_nonneg _
+    · have hcpos : 0 < c := lt_of_le_of_ne hc (Ne.symm hcz)
+      have hnormRescale : ‖c⁻¹ • (c • T)‖ = ‖T‖ := by
+        apply ContinuousLinearMap.opNorm_ext
+        intro x
+        change ‖c⁻¹ • (c • T x)‖ = ‖T x‖
+        rw [← smul_smul, inv_mul_cancel₀ hcz, one_smul]
+      have hinv := ContinuousLinearMap.opNorm_smul_le c⁻¹ (c • T)
+      have hT : ‖T‖ ≤ c⁻¹ * ‖c • T‖ := by
+        calc
+          ‖T‖ = ‖c⁻¹ • (c • T)‖ := hnormRescale.symm
+          _ ≤ ‖c⁻¹‖ * ‖c • T‖ := hinv
+          _ = c⁻¹ * ‖c • T‖ := by
+            rw [Real.norm_eq_abs, abs_of_pos (inv_pos.mpr hcpos)]
+      calc
+        c * ‖T‖ ≤ c * (c⁻¹ * ‖c • T‖) :=
+          mul_le_mul_of_nonneg_left hT hc
+        _ = ‖c • T‖ := by
+          rw [← mul_assoc, mul_inv_cancel₀ hcz, one_mul]
 
 /-- Consequently every represented endpoint vector satisfies the sharp generic
 operator-norm estimate inherited from the physical transfer carrier. -/
