@@ -1,6 +1,7 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryPositiveHalfClosureTransferKernelBridge
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPositiveHalfTransferPathIteration
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryBoundaryFiberedGibbsFactorization
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOpenHalfHaarOrientationCorrectionCore
 import Mathlib.MeasureTheory.Integral.Prod
 import Mathlib.Tactic
 
@@ -42,9 +43,114 @@ local instance positiveHalfClosureEndpointSpecialUnitaryBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
+/-- The unfixed positive-half-cylinder kernel is strictly positive.  This is
+transported from the already established temporal-gauge path kernel. -/
+theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel_pos
+    (H N : ℕ)
+    (beta : ℝ)
+    (path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N)
+    (U : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalLinkField H N) :
+    0 < periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel
+      H N beta path U := by
+  rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel_eq_temporalGauge]
+  exact
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel_pos
+      H N beta _
+
+/-- At nonnegative coupling the unfixed positive-half-cylinder kernel has
+absolute value at most one.  The noncommutative temporal links are removed by
+the exact cumulative temporal-gauge transformation before applying the existing
+path-kernel bound. -/
+theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel_abs_le_one
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N)
+    (U : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalLinkField H N) :
+    |periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel
+      H N beta path U| ≤ 1 := by
+  rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel_eq_temporalGauge]
+  exact
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel_abs_le_one
+      H N hN beta hbeta _
+
+/-- The completed positive Gram feature is nonnegative directly from the #2065
+normalized unfixed-kernel representation. -/
+private theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_nonneg_from_kernel
+    (H N : ℕ)
+    (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ))
+    (x : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ)) :
+    0 ≤ periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+      H N hN beta hbeta b x := by
+  rw [periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_eq_normalizedUnfixedPathKernel
+    H N hN beta hbeta b x]
+  apply mul_nonneg
+  · unfold periodicHypercubicEvenBoundaryPositiveHalfPartitionSqrtNormalization
+    exact Real.sqrt_nonneg _
+  · exact le_of_lt
+      (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel_pos
+        H N beta
+        (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+          H N (b, x)).1
+        (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+          H N (b, x)).2)
+
+/-- On the diagonal, the completed positive Gram feature is the nonnegative
+square root of the orientation-corrected boundary-fibered Gibbs density.  This
+is derived here from the already canonical Gram-kernel identity, avoiding a
+higher-level reflection-positivity import. -/
+private theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_eq_sqrt_diagonalDensity_local
+    (H N : ℕ)
+    (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ))
+    (x : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ)) :
+    periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+        H N hN beta hbeta b x =
+      Real.sqrt
+        ((periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+          H N hN beta hbeta
+          (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H x))).toReal) := by
+  let a := periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+    H N hN beta hbeta b x
+  have ha : 0 ≤ a := by
+    dsimp [a]
+    exact
+      periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_nonneg_from_kernel
+        H N hN beta hbeta b x
+  have hd :
+      (periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+          H N hN beta hbeta
+          (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H x))).toReal =
+        a * a := by
+    simpa [a, periodicHypercubicEven_real_inner_eq_mul] using
+      (periodicHypercubicEvenBoundaryDensity_orientationCorrection_eq_inner
+        H N hN beta hbeta b x x)
+  calc
+    periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+        H N hN beta hbeta b x = a := rfl
+    _ = |a| := (abs_of_nonneg ha).symm
+    _ = Real.sqrt (a ^ 2) := (Real.sqrt_sq_eq_abs a).symm
+    _ = Real.sqrt (a * a) := by rw [pow_two]
+    _ = Real.sqrt
+        ((periodicHypercubicEvenSpecialUnitaryBoundaryFiberedGibbsDensity
+          H N hN beta hbeta
+          (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H x))).toReal) := by
+      rw [hd]
+
 /-- The completed positive Gram feature is jointly measurable in the actual
-positive-closure coordinates `(boundary, open half)`.  The same reflected
-diagonal density formula is used before either coordinate is frozen. -/
+positive-closure coordinates `(boundary, open half)`. -/
 theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_joint_measurable
     (H N : ℕ)
     (hN : 0 < N)
@@ -90,42 +196,10 @@ theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_joint_measura
               periodicHypercubicEvenOpenHalfOrientationCorrection H z.2))).toReal)) := by
     funext z
     exact
-      periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_eq_sqrt_diagonalDensity
+      periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_eq_sqrt_diagonalDensity_local
         H N hN beta hbeta z.1 z.2
   rw [heq]
   exact hsqrt
-
-/-- The unfixed positive-half-cylinder kernel is strictly positive.  This is
-transported from the already established temporal-gauge path kernel. -/
-theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel_pos
-    (H N : ℕ)
-    (beta : ℝ)
-    (path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N)
-    (U : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalLinkField H N) :
-    0 < periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel
-      H N beta path U := by
-  rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel_eq_temporalGauge]
-  exact
-    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel_pos
-      H N beta _
-
-/-- At nonnegative coupling the unfixed positive-half-cylinder kernel has
-absolute value at most one.  The noncommutative temporal links are removed by
-the exact cumulative temporal-gauge transformation before applying the existing
-path-kernel bound. -/
-theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel_abs_le_one
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N)
-    (U : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalLinkField H N) :
-    |periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel
-      H N beta path U| ≤ 1 := by
-  rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel_eq_temporalGauge]
-  exact
-    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel_abs_le_one
-      H N hN beta hbeta _
 
 /-- The primary spatial endpoint of the transfer coordinates is normalized Haar
 when the actual positive closure is distributed by its closure Haar law. -/
@@ -169,7 +243,7 @@ private theorem
       (pathMu.prod temporalMu) := by
     simpa [pathMu, temporalMu,
       periodicHypercubicEvenSpecialUnitaryPositiveHalfExplicitNestedHaarMeasure] using hTransfer
-  simpa [Function.comp_def] using (hTransfer'.trans hFst).trans hEval
+  simpa [Function.comp_def] using hEval.comp (hFst.comp hTransfer')
 
 /-- The antipodal spatial endpoint is also normalized one-slice Haar under the
 same closure Haar law. -/
@@ -214,7 +288,7 @@ private theorem
       (pathMu.prod temporalMu) := by
     simpa [pathMu, temporalMu,
       periodicHypercubicEvenSpecialUnitaryPositiveHalfExplicitNestedHaarMeasure] using hTransfer
-  simpa [Function.comp_def] using (hTransfer'.trans hFst).trans hEval
+  simpa [Function.comp_def] using hEval.comp (hFst.comp hTransfer')
 
 /-- Endpoint `L²` states remain integrable after pullback to the actual positive
 closure, and multiplication by the completed positive Gram feature preserves
@@ -334,6 +408,7 @@ theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_gaussEndpoint
     _ ≤ c * (|f0 z| * |gLast z|) :=
       mul_le_mul_of_nonneg_right hfeatureLe
         (mul_nonneg (abs_nonneg _) (abs_nonneg _))
+    _ = c * |f0 z * gLast z| := by rw [abs_mul]
 
 /-- The normalized endpoint integrand on explicit `(spatial path, temporal
 field)` Haar coordinates is integrable.  Rather than rebuilding joint
