@@ -43,6 +43,24 @@ local instance wilsonCylinderSecondActionInsertionCouplingC21PhysicalCompleteSpa
   (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule_isClosed
     H N).completeSpace_coe
 
+private theorem wilsonCylinderSecondActionInsertionCouplingC21_inner_sub_left
+    (H N : ℕ)
+    (x y z : PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) :
+    inner ℝ (x - y) z = inner ℝ x z - inner ℝ y z := by
+  calc
+    inner ℝ (x - y) z = inner ℝ (x + -y) z := by rw [sub_eq_add_neg]
+    _ = inner ℝ x z + inner ℝ (-y) z :=
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N).innerProductSpace.add_left
+        x (-y) z
+    _ = inner ℝ x z + (-1 : ℝ) * inner ℝ y z := by
+      have hneg :=
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N).innerProductSpace.smul_left
+          y z (-1 : ℝ)
+      have hneg' : inner ℝ (-y) z = (-1 : ℝ) * inner ℝ y z := by
+        simpa using hneg
+      rw [hneg']
+    _ = inner ℝ x z - inner ℝ y z := by ring
+
 private theorem wilsonCylinderSecondActionInsertionCouplingC21_pathZero_measurePreserving
     (H N : ℕ) :
     MeasurePreserving
@@ -241,14 +259,21 @@ private theorem wilsonCylinderSecondActionInsertionCouplingC21_secondIntegrand_i
           periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N path ^ 2) by
           simp [base]
           ring,
-    abs_mul, abs_mul, abs_pow]
+    abs_mul]
   have hfac :
-      |periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel H N beta path| *
-          |periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N path| ^ 2 ≤ C ^ 2 := by
+      |periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel H N beta path *
+          periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N path ^ 2| ≤ C ^ 2 := by
+    rw [abs_mul, abs_pow]
     calc
       _ ≤ 1 * C ^ 2 := mul_le_mul hK hSsq (sq_nonneg _) zero_le_one
       _ = C ^ 2 := one_mul _
-  simpa [mul_comm] using mul_le_mul_of_nonneg_left hfac (abs_nonneg (base path))
+  calc
+    |base path| *
+        |periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel H N beta path *
+          periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N path ^ 2| ≤
+      |base path| * C ^ 2 :=
+        mul_le_mul_of_nonneg_left hfac (abs_nonneg (base path))
+    _ = C ^ 2 * |base path| := by ring
 
 /-- Literal second Wilson-action insertion on the common positive-half path carrier. -/
 noncomputable def
@@ -311,14 +336,21 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePat
         periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N path ^ 2) by
         simp [F, base]
         ring,
-      abs_mul, abs_mul, abs_pow]
+      abs_mul]
     have hfac :
-        |periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel H N beta path| *
-            |periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N path| ^ 2 ≤ C ^ 2 := by
+        |periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel H N beta path *
+            periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N path ^ 2| ≤ C ^ 2 := by
+      rw [abs_mul, abs_pow]
       calc
         _ ≤ 1 * C ^ 2 := mul_le_mul hK hSsq (sq_nonneg _) zero_le_one
         _ = C ^ 2 := one_mul _
-    simpa [mul_comm] using mul_le_mul_of_nonneg_left hfac (abs_nonneg (base path))
+    calc
+      |base path| *
+          |periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel H N beta path *
+            periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N path ^ 2| ≤
+        |base path| * C ^ 2 :=
+          mul_le_mul_of_nonneg_left hfac (abs_nonneg (base path))
+      _ = C ^ 2 * |base path| := by ring
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathSecondActionInsertionAmplitude
   change |∫ path, F path ∂pathMu| ≤ _
   rw [← Real.norm_eq_abs]
@@ -467,7 +499,9 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathSecondActionInsertionAmplitude
         H N beta f g := by
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderSecondWilsonActionInsertionOperator
-  rw [InnerProductSpace.continuousLinearMapOfBilin_apply]
+  rw [InnerProductSpace.continuousLinearMapOfBilin_apply
+    (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathSecondActionInsertionBilin
+      H N hN beta hbeta) f g]
   rfl
 
 private theorem wilsonCylinderSecondActionInsertionCouplingC21_opNorm_le_of_inner_bound
@@ -614,14 +648,21 @@ private theorem wilsonCylinderSecondActionInsertionCouplingC21_firstIntegrand_in
           periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N path) by
           simp [base]
           ring,
-    abs_mul, abs_mul]
+    abs_mul]
   have hfac :
-      |periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel H N beta path| *
-        |periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N path| ≤ C := by
+      |periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel H N beta path *
+        periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N path| ≤ C := by
+    rw [abs_mul]
     calc
       _ ≤ 1 * C := mul_le_mul hK hSabs (abs_nonneg _) zero_le_one
       _ = C := one_mul _
-  simpa [mul_comm] using mul_le_mul_of_nonneg_left hfac (abs_nonneg (base path))
+  calc
+    |base path| *
+        |periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel H N beta path *
+          periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N path| ≤
+      |base path| * C :=
+        mul_le_mul_of_nonneg_left hfac (abs_nonneg (base path))
+    _ = C * |base path| := by ring
 
 /-- Operator remainder for differentiating the first Wilson-action insertion family. -/
 noncomputable def
@@ -708,7 +749,7 @@ private theorem wilsonCylinderSecondActionInsertionCouplingC21_remainder_inner_e
             H N hN beta hbeta f) g :=
     (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N).innerProductSpace.add_left _ _ _
   rw [hadd]
-  rw [inner_sub_left]
+  rw [wilsonCylinderSecondActionInsertionCouplingC21_inner_sub_left H N]
   have hsmul :
       inner ℝ
         ((gamma - beta) •
@@ -876,20 +917,36 @@ private theorem wilsonCylinderSecondActionInsertionCouplingC21_differenceQuotien
   have hsub : gamma.1 - beta.1 ≠ 0 := sub_ne_zero.mpr hval
   have hnorm : ‖gamma.1 - beta.1‖ ≠ 0 := norm_ne_zero_iff.mpr hsub
   rw [wilsonCylinderSecondActionInsertionCouplingC21_differenceQuotientError_eq H N hN beta gamma h]
-  rw [norm_smul]
-  have hR := periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionBetaRemainderOperator_norm_le
+  let C := periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound H N
+  let R := periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionBetaRemainderOperator
     H N hN beta.1 beta.2 gamma.1 gamma.2
+  let B := C ^ 3 * ‖gamma.1 - beta.1‖
+  have hC : 0 ≤ C := by
+    simpa [C] using
+      periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound_nonneg H N
+  have hB : 0 ≤ B := mul_nonneg (pow_nonneg hC 3) (norm_nonneg _)
+  apply ContinuousLinearMap.opNorm_le_bound _ hB
+  intro f
+  change ‖(gamma.1 - beta.1)⁻¹ • R f‖ ≤ B * ‖f‖
+  rw [norm_smul]
+  have hRop :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionBetaRemainderOperator_norm_le
+      H N hN beta.1 beta.2 gamma.1 gamma.2
+  have hRapp :
+      ‖R f‖ ≤ (C ^ 3 * ‖gamma.1 - beta.1‖ ^ 2) * ‖f‖ := by
+    calc
+      ‖R f‖ ≤ ‖R‖ * ‖f‖ := R.le_opNorm f
+      _ ≤ (C ^ 3 * ‖gamma.1 - beta.1‖ ^ 2) * ‖f‖ := by
+        apply mul_le_mul_of_nonneg_right _ (norm_nonneg f)
+        simpa [R, C] using hRop
   calc
-    ‖(gamma.1 - beta.1)⁻¹‖ *
-        ‖periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionBetaRemainderOperator
-          H N hN beta.1 beta.2 gamma.1 gamma.2‖ ≤
-      ‖(gamma.1 - beta.1)⁻¹‖ *
-        (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound H N ^ 3 *
-          ‖gamma.1 - beta.1‖ ^ 2) :=
-      mul_le_mul_of_nonneg_left hR (norm_nonneg _)
-    _ = periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound H N ^ 3 *
-        ‖gamma.1 - beta.1‖ := by
+    ‖(gamma.1 - beta.1)⁻¹‖ * ‖R f‖ ≤
+        ‖(gamma.1 - beta.1)⁻¹‖ *
+          ((C ^ 3 * ‖gamma.1 - beta.1‖ ^ 2) * ‖f‖) :=
+      mul_le_mul_of_nonneg_left hRapp (norm_nonneg _)
+    _ = B * ‖f‖ := by
       rw [norm_inv]
+      dsimp [B]
       field_simp [hnorm]
 
 noncomputable def
@@ -1080,7 +1137,7 @@ theorem
           H N hN gamma hgamma f -
         periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderSecondWilsonActionInsertionOperator
           H N hN beta hbeta f) g‖ ≤ B * ‖f‖ * ‖g‖
-  rw [inner_sub_left]
+  rw [wilsonCylinderSecondActionInsertionCouplingC21_inner_sub_left H N]
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderSecondWilsonActionInsertionOperator_inner_eq_pathActionSquareIntegral
     H N hN gamma hgamma f g]
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderSecondWilsonActionInsertionOperator_inner_eq_pathActionSquareIntegral
