@@ -281,14 +281,19 @@ private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSliceObser
       (K (p.1, p.2 0) *
         (∏ i : Fin n, K (p.2 i.castSucc, p.2 i.succ)) * a (p.2 j))| ≤
       |‖a‖ * (f p.1 * g (p.2 (Fin.last n)))|
-  rw [abs_mul, abs_mul, abs_of_nonneg (norm_nonneg a)]
   calc
-    |f p.1 * g (p.2 (Fin.last n))| *
+    |(f p.1 * g (p.2 (Fin.last n))) *
+        (K (p.1, p.2 0) *
+          (∏ i : Fin n, K (p.2 i.castSucc, p.2 i.succ)) * a (p.2 j))| =
+      |f p.1 * g (p.2 (Fin.last n))| *
         |K (p.1, p.2 0) *
-          (∏ i : Fin n, K (p.2 i.castSucc, p.2 i.succ)) * a (p.2 j)| ≤
-      |f p.1 * g (p.2 (Fin.last n))| * ‖a‖ :=
-        mul_le_mul_of_nonneg_left hfac (abs_nonneg _)
+          (∏ i : Fin n, K (p.2 i.castSucc, p.2 i.succ)) * a (p.2 j)| := by
+      rw [abs_mul]
+    _ ≤ |f p.1 * g (p.2 (Fin.last n))| * ‖a‖ :=
+      mul_le_mul_of_nonneg_left hfac (abs_nonneg _)
     _ = ‖a‖ * |f p.1 * g (p.2 (Fin.last n))| := by ring
+    _ = |‖a‖ * (f p.1 * g (p.2 (Fin.last n)))| := by
+      rw [abs_mul, abs_of_nonneg (norm_nonneg a)]
 
 private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSliceObservableAmplitude_split
     (H N : ℕ)
@@ -528,10 +533,11 @@ private theorem periodicHypercubicEvenSpecialUnitaryTransferSliceObservableAmpli
         H N beta right
         (periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservableMulOperator
           H N a f) g := by
-  simpa [periodicHypercubicEvenSpecialUnitaryTransferSliceObservableAmplitude,
-    periodicHypercubicEvenSpecialUnitaryTransferSliceIndex] using
-      periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSliceObservableAmplitude_zero
-        H N beta right a f g
+  unfold periodicHypercubicEvenSpecialUnitaryTransferSliceObservableAmplitude
+  convert
+    periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSliceObservableAmplitude_zero
+      H N beta right a f g using 1 <;>
+    simp [periodicHypercubicEvenSpecialUnitaryTransferSliceIndex]
 
 private theorem periodicHypercubicEvenSpecialUnitaryTransferSliceObservableAmplitude_succ_left
     (H N : ℕ)
@@ -548,11 +554,13 @@ private theorem periodicHypercubicEvenSpecialUnitaryTransferSliceObservableAmpli
         H N beta left right a
         (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
           H N hN beta hbeta f) g := by
-  simpa [periodicHypercubicEvenSpecialUnitaryTransferSliceObservableAmplitude,
-    periodicHypercubicEvenSpecialUnitaryTransferSliceIndex, Nat.succ_add] using
-      periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSliceObservableAmplitude_succ
-        H N hN beta hbeta (left + right)
-        (periodicHypercubicEvenSpecialUnitaryTransferSliceIndex left right) a f g
+  unfold periodicHypercubicEvenSpecialUnitaryTransferSliceObservableAmplitude
+  convert
+    periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSliceObservableAmplitude_succ
+      H N hN beta hbeta (left + right)
+      (periodicHypercubicEvenSpecialUnitaryTransferSliceIndex left right) a f g using 1 <;>
+    simp [periodicHypercubicEvenSpecialUnitaryTransferSliceIndex, Nat.succ_add] <;>
+    omega
 
 /-- Exact arbitrary-slice transfer formula on the full Haar `L²` carrier.
 With `left` slabs before and `right` slabs after the insertion, the actual
