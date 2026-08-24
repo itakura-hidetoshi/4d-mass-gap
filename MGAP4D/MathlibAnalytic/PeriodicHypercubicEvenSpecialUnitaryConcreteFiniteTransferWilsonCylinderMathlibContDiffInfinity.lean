@@ -405,7 +405,17 @@ theorem
         simpa only [Pi.smul_apply] using hscaledDeriv0
       change derivWithin (fun t : ℝ => c • F t) (Set.Ici (0 : ℝ)) beta = _
       rw [hscaledDeriv]
-      simp [c, pow_succ, Nat.add_assoc, neg_smul]
+      rw [smul_neg]
+      dsimp [c]
+      have hidx : m + n + 1 = m + (n + 1) := by omega
+      rw [hidx]
+      have hsign : (-1 : ℝ) ^ (n + 1) = - ((-1 : ℝ) ^ n) := by
+        rw [pow_succ]
+        ring
+      rw [hsign]
+      exact (neg_smul ((-1 : ℝ) ^ n)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
+          H N hN (m + (n + 1)) beta)).symm
 
 /-- The Mathlib-facing transfer family: it is simply order zero of the single
 Wilson action-insertion hierarchy.  It agrees pointwise with the genuine
