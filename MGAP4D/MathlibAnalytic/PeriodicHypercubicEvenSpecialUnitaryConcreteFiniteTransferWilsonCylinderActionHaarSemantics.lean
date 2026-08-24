@@ -36,7 +36,7 @@ local instance wilsonCylinderActionHaarSpecialUnitaryBorelSpace (N : ℕ) :
 number of slabs.  This small carrier lemma is deliberately generic: it records
 that no additional path equivalence is needed when two finite path lengths are
 literally equal. -/
-private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePairObservableAmplitude_cast'
+private theorem periodicHypercubicEvenSpecialUnitaryNSlabPairAmplitudeCommonCarrierTransport
     (H N : ℕ)
     (beta : ℝ)
     {n m : ℕ}
@@ -112,7 +112,7 @@ theorem
         (f : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
         (g : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N) := by
       unfold periodicHypercubicEvenSpecialUnitaryTransferSlabPairObservableAmplitude
-      rw [periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugePairObservableAmplitude_cast'
+      rw [periodicHypercubicEvenSpecialUnitaryNSlabPairAmplitudeCommonCarrierTransport
         H N beta htotal]
       rw [hindex]
 
