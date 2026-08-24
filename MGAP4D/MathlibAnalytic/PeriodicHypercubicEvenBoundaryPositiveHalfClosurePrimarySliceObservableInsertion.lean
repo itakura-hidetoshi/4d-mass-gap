@@ -110,7 +110,9 @@ noncomputable def periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObserva
         (periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservableMulL2 H N a f)
         (periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservableMulL2 H N a g)]
       with A hleft hfg hf hg hright
-    rw [hleft, hright, hfg, hf, hg]
+    rw [hleft, hright, hfg]
+    simp only [Pi.add_apply]
+    rw [hf, hg]
     ring
   map_smul' c f := by
     apply Lp.ext
@@ -122,8 +124,11 @@ noncomputable def periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObserva
       Lp.coeFn_smul c
         (periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservableMulL2 H N a f)]
       with A hleft hf hmul hright
-    rw [hleft, hright, hf, hmul]
-    simp [mul_comm, mul_left_comm, mul_assoc]
+    simp only [RingHom.id_apply]
+    rw [hleft, hright, hf]
+    simp only [Pi.smul_apply]
+    rw [hmul]
+    ring
 
 /-- The multiplication map satisfies the sharp generic sup-norm bound. -/
 theorem periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservableMulL2_norm_le
@@ -359,6 +364,10 @@ theorem periodicHypercubicEvenBoundaryPositiveHalfClosurePrimarySliceObservableO
               (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)))
         ∂(periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureHaarMeasure H N) := by
   rw [periodicHypercubicEvenBoundaryPositiveHalfClosurePrimarySliceObservableOperator]
+  change inner ℝ
+      (periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointOperator H N hN beta hbeta
+        (periodicHypercubicEvenSpecialUnitaryPhysicalSpatialSliceObservableMulOperator
+          H N a ha f)) g = _
   rw [periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointOperator_inner_eq_integral]
   let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
   let M := periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservableMulOperator H N a
