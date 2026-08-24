@@ -143,10 +143,41 @@ theorem
         intro u hu
         exact ih u hu
       rw [derivWithin_congr hEqOn (ih t ht)]
-      rw [derivWithin_fun_const_smul_field]
-      rw [periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_derivWithin_Icc
-        H N hN (m + n) beta gamma t hbeta hbg ht]
-      rw [smul_neg]
+      let F :=
+        periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
+          H N hN (m + n)
+      let c : ℝ := (-1 : ℝ) ^ n
+      let C :=
+        periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound H N
+      let B := C ^ ((m + n) + 2)
+      have hC : 0 ≤ C := by
+        simpa [C] using
+          periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound_nonneg H N
+      have hB : 0 ≤ B := pow_nonneg hC ((m + n) + 2)
+      have ht0 : 0 ≤ t := hbeta.trans ht.1
+      have hbaseRaw :=
+        wilsonCylinderTaylorSeries_hasDerivWithinAt_of_quadraticRemainder
+          (f := F)
+          (f' := fun u =>
+            -periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
+              H N hN (m + n + 1) u)
+          (s := Set.Icc beta gamma) B hB t ht
+          (by
+            intro y hy
+            have hy0 : 0 ≤ y := hbeta.trans hy.1
+            simpa [F, B, C, Nat.add_assoc] using
+              periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_quadraticRemainder
+                H N hN (m + n) t y ht0 hy0)
+      have hunique := (uniqueDiffOn_Icc hbg) t ht
+      have hscaled0 := (hbaseRaw.const_smul c).derivWithin hunique
+      have hscaled :
+          derivWithin (fun u : ℝ => c • F u) (Set.Icc beta gamma) t =
+            c • (-periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
+              H N hN (m + n + 1) t) := by
+        simpa only [Pi.smul_apply] using hscaled0
+      change derivWithin (fun u : ℝ => c • F u) (Set.Icc beta gamma) t = _
+      rw [hscaled, smul_neg]
+      dsimp [c]
       have hidx : m + n + 1 = m + (n + 1) := by omega
       rw [hidx]
       have hsign : (-1 : ℝ) ^ (n + 1) = - ((-1 : ℝ) ^ n) := by
@@ -281,10 +312,10 @@ theorem
       rw [← hterm0]
       apply Finset.sum_eq_single 0
       · intro b hb hb0
-        unfold periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm
-        simp [hb0]
+        ext v
+        simp [periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm, hb0]
       · simp
-    rw [hsum]
+    rw [hsum, sub_self, ContinuousLinearMap.opNorm_zero]
     simp
   · have hsubset : Set.Icc beta gamma ⊆ Set.Ici (0 : ℝ) := by
       intro y hy
@@ -297,7 +328,7 @@ theorem
       have hinfty :=
         periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily_contDiffOn_infty
           H N hN
-      exact (hinfty.of_le (by simp)).mono hsubset
+      exact (hinfty.of_le le_top).mono hsubset
     have hderiv : ∀ y ∈ Set.Icc beta gamma,
         ‖iteratedDerivWithin (n + 1)
           (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
@@ -386,7 +417,10 @@ theorem
   have hmajor : Summable (fun k : ℕ => (k.factorial : ℝ)⁻¹ * x ^ k) := by
     simpa [smul_eq_mul] using
       (NormedSpace.expSeries_summable' (𝕂 := ℝ) (𝔸 := ℝ) x)
-  refine Summable.of_nonneg_of_le (fun k => norm_nonneg _) ?_ hmajor
+  refine Summable.of_nonneg_of_le
+    (fun k => ContinuousLinearMap.opNorm_nonneg
+      (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm
+        H N hN beta hbeta gamma k)) ?_ hmajor
   intro k
   simpa [x] using
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylorTerm_norm_le_expMajorant
@@ -437,19 +471,20 @@ theorem
       atTop
       (𝓝 (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
         H N hN gamma)) := by
-  rw [Metric.tendsto_atTop]
-  intro epsilon hepsilon
-  have hmajor :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylor_remainderMajorant_tendsto_zero
-      H N beta gamma hbg
-  rw [Metric.tendsto_atTop] at hmajor
-  rcases hmajor epsilon hepsilon with ⟨N0, hN0⟩
-  refine ⟨N0, fun n hn => ?_⟩
-  rw [dist_eq_norm, norm_sub_rev]
-  exact lt_of_le_of_lt
-    (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylor_remainder_norm_le
-      H N hN n beta gamma hbeta hbg)
-    (by simpa [Real.dist_eq] using hN0 n hn)
+  with_reducible_and_instances
+    rw [Metric.tendsto_atTop]
+    intro epsilon hepsilon
+    have hmajor :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylor_remainderMajorant_tendsto_zero
+        H N beta gamma hbg
+    rw [Metric.tendsto_atTop] at hmajor
+    rcases hmajor epsilon hepsilon with ⟨N0, hN0⟩
+    refine ⟨N0, fun n hn => ?_⟩
+    rw [dist_eq_norm, norm_sub_rev]
+    exact lt_of_le_of_lt
+      (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylor_remainder_norm_le
+        H N hN n beta gamma hbeta hbg)
+      (by simpa [Real.dist_eq] using hN0 n hn)
 
 /-- Exact operator-valued Taylor series for the positive-half physical transfer.
 The equality is a genuine operator-norm `HasSum` statement. -/
@@ -472,7 +507,12 @@ theorem
   have hpartial :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylor_partialSums_tendsto_transfer
       H N hN beta gamma hbeta hbg
-  exact hasSum_of_subseq_of_summable hnorm hs hpartial
+  with_reducible_and_instances
+    exact hasSum_of_subseq_of_summable
+      (f := fun k : ℕ =>
+        periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm
+          H N hN beta hbeta gamma k)
+      hnorm hs hpartial
 
 /-- Final forward Taylor-series package: quantitative remainder, absolute
 summability, norm convergence, and exact series reconstruction. -/
