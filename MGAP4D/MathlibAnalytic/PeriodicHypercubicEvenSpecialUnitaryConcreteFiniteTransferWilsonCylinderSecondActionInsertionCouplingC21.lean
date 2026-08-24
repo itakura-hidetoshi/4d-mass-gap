@@ -499,9 +499,7 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathSecondActionInsertionAmplitude
         H N beta f g := by
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderSecondWilsonActionInsertionOperator
-  rw [InnerProductSpace.continuousLinearMapOfBilin_apply
-    (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathSecondActionInsertionBilin
-      H N hN beta hbeta) f g]
+  simp only [InnerProductSpace.continuousLinearMapOfBilin_apply]
   rfl
 
 private theorem wilsonCylinderSecondActionInsertionCouplingC21_opNorm_le_of_inner_bound
@@ -720,6 +718,9 @@ private theorem wilsonCylinderSecondActionInsertionCouplingC21_remainder_inner_e
   have hA2 : Integrable A2 pathMu := by
     simpa [A2, pathMu] using
       wilsonCylinderSecondActionInsertionCouplingC21_secondIntegrand_integrable H N hN beta hbeta f g
+  have hsub : Integrable (fun path => F gamma path - F beta path) pathMu := hFg.sub hFb
+  have hscaled : Integrable (fun path => (gamma - beta) * A2 path) pathMu :=
+    hA2.const_mul (gamma - beta)
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionBetaRemainderOperator
   change inner ℝ
     ((periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionInsertionOperator
@@ -774,7 +775,13 @@ private theorem wilsonCylinderSecondActionInsertionCouplingC21_remainder_inner_e
     (gamma - beta) * (∫ path, A2 path ∂pathMu) = _
   rw [← integral_sub hFg hFb]
   rw [← integral_const_mul]
-  rw [← integral_add (hFg.sub hFb) (hA2.const_mul (gamma - beta))]
+  have hcombine :
+      (∫ path, F gamma path - F beta path ∂pathMu) +
+          (∫ path, (gamma - beta) * A2 path ∂pathMu) =
+        ∫ path, (F gamma path - F beta path) + (gamma - beta) * A2 path ∂pathMu := by
+    symm
+    exact integral_add hsub hscaled
+  rw [hcombine]
   apply integral_congr_ae
   filter_upwards with path
   simp [F, A2]
