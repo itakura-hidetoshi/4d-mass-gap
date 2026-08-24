@@ -2,6 +2,7 @@ import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryConcreteFinite
 import Mathlib.Analysis.Calculus.IteratedDeriv.Lemmas
 import Mathlib.Analysis.Calculus.Taylor
 import Mathlib.Analysis.Normed.Algebra.Exponential
+import Mathlib.Analysis.Normed.Group.InfiniteSum
 import Mathlib.Analysis.Normed.Operator.NormedSpace
 import Mathlib.Tactic
 
@@ -22,39 +23,10 @@ local instance wilsonCylinderTaylorSeriesPhysicalCompleteSpace
   (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule_isClosed
     H N).completeSpace_coe
 
-/-!
-For the Taylor-series layer we pin the lower structures on the operator space to
-its normed-space projections. Mathlib's registered bounded-convergence topology
-on continuous linear maps coincides with the operator-norm topology in the
-normed setting, but the two instance paths are not definitionally identical.
-Keeping one path throughout avoids transporting instance-sensitive calculus
-propositions between the two presentations.
--/
-
-local instance wilsonCylinderTaylorSeriesOperatorAddCommGroup
-    (H N : ℕ) :
-    AddCommGroup
-      (PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
-        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) :=
-  NormedAddCommGroup.toAddCommGroup
-
-local instance wilsonCylinderTaylorSeriesOperatorModule
-    (H N : ℕ) :
-    Module ℝ
-      (PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
-        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) :=
-  NormedSpace.toModule
-
-local instance wilsonCylinderTaylorSeriesOperatorTopologicalSpace
-    (H N : ℕ) :
-    TopologicalSpace
-      (PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
-        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) :=
-  PseudoMetricSpace.toUniformSpace.toTopologicalSpace
-
-/-- A quadratic operator-norm remainder gives the actual one-dimensional
-Mathlib derivative on an arbitrary set. As in the native C-infinity bridge,
-this generic lemma is consumed immediately on the concrete operator space. -/
+/-- A quadratic operator-norm remainder gives the one-dimensional Mathlib
+within-derivative on any set.  This generic statement is always consumed
+immediately on the concrete operator space, so the canonical normed-space
+instance path remains fixed throughout each calculus call. -/
 private theorem wilsonCylinderTaylorSeries_hasDerivWithinAt_of_quadraticRemainder
     {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (f f' : ℝ → E) (s : Set ℝ) (B : ℝ) (hB : 0 ≤ B)
@@ -101,8 +73,8 @@ private theorem wilsonCylinderTaylorSeries_hasDerivWithinAt_of_quadraticRemainde
           field_simp [ne_of_gt hD]
     simpa [Real.dist_eq, abs_of_nonneg hqnonneg] using hq
 
-/-- Exact first derivative on a nondegenerate compact physical coupling
-interval, rebuilt directly from the quadratic remainder. -/
+/-- Exact first derivative of every Wilson insertion family on a nondegenerate
+compact forward physical coupling interval. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_derivWithin_Icc
     (H N : ℕ) (hN : 0 < N) (m : ℕ)
@@ -138,86 +110,7 @@ theorem
             H N hN m t y ht0 hy0)
   exact hraw.derivWithin ((uniqueDiffOn_Icc hbg) t ht)
 
-/-- Every insertion order is differentiable on a compact forward physical
-coupling interval. -/
-private theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_differentiableOn_Icc
-    (H N : ℕ) (hN : 0 < N) (m : ℕ)
-    (beta gamma : ℝ) (hbeta : 0 ≤ beta) (hbg : beta < gamma) :
-    DifferentiableOn ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-        H N hN m)
-      (Set.Icc beta gamma) := by
-  intro t ht
-  let C :=
-    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound H N
-  let B := C ^ (m + 2)
-  have hC : 0 ≤ C := by
-    simpa [C] using
-      periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound_nonneg H N
-  have hB : 0 ≤ B := pow_nonneg hC (m + 2)
-  have ht0 : 0 ≤ t := hbeta.trans ht.1
-  have hraw :=
-    wilsonCylinderTaylorSeries_hasDerivWithinAt_of_quadraticRemainder
-      (f := periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-        H N hN m)
-      (f' := fun u =>
-        -periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-          H N hN (m + 1) u)
-      (s := Set.Icc beta gamma) B hB t ht
-      (by
-        intro y hy
-        have hy0 : 0 ≤ y := hbeta.trans hy.1
-        simpa [B, C] using
-          periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_quadraticRemainder
-            H N hN m t y ht0 hy0)
-  exact hraw.differentiableWithinAt
-
-/-- Finite-order smoothness of every insertion order on the same compact
-operator-norm interval used by Taylor's theorem. -/
-private theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_contDiffOn_Icc_nat
-    (H N : ℕ) (hN : 0 < N)
-    (beta gamma : ℝ) (hbeta : 0 ≤ beta) (hbg : beta < gamma) :
-    ∀ (n m : ℕ),
-      ContDiffOn ℝ n
-        (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-          H N hN m)
-        (Set.Icc beta gamma) := by
-  intro n
-  induction n with
-  | zero =>
-      intro m
-      apply contDiffOn_zero.mpr
-      exact
-        (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_differentiableOn_Icc
-          H N hN m beta gamma hbeta hbg).continuousOn
-  | succ n ih =>
-      intro m
-      have hstep :
-          ContDiffOn ℝ ((n : ℕ∞ω) + 1)
-            (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-              H N hN m)
-            (Set.Icc beta gamma) := by
-        refine (contDiffOn_succ_iff_derivWithin (uniqueDiffOn_Icc hbg)).2 ?_
-        refine ⟨
-          periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_differentiableOn_Icc
-            H N hN m beta gamma hbeta hbg, ?_, ?_⟩
-        · simp
-        · have hnext := ih (m + 1)
-          have hneg :
-              ContDiffOn ℝ n
-                (fun t : ℝ =>
-                  -periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-                    H N hN (m + 1) t)
-                (Set.Icc beta gamma) := by
-            simpa only [Pi.neg_apply] using hnext.neg
-          exact hneg.congr (fun t ht =>
-            periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_derivWithin_Icc
-              H N hN m beta gamma t hbeta hbg ht)
-      simpa using hstep
-
-/-- Every compact forward interval inherits the full insertion hierarchy:
+/-- The compact-interval iterated derivative hierarchy is literal:
 `D^n O_m = (-1)^n O_(m+n)`. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_iteratedDerivWithin_Icc
@@ -250,52 +143,19 @@ theorem
         intro u hu
         exact ih u hu
       rw [derivWithin_congr hEqOn (ih t ht)]
-      let F :=
-        periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-          H N hN (m + n)
-      let c : ℝ := (-1 : ℝ) ^ n
-      let C :=
-        periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound H N
-      let B := C ^ ((m + n) + 2)
-      have hC : 0 ≤ C := by
-        simpa [C] using
-          periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound_nonneg H N
-      have hB : 0 ≤ B := pow_nonneg hC ((m + n) + 2)
-      have ht0 : 0 ≤ t := hbeta.trans ht.1
-      have hbase :=
-        wilsonCylinderTaylorSeries_hasDerivWithinAt_of_quadraticRemainder
-          (f := F)
-          (f' := fun u =>
-            -periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-              H N hN (m + n + 1) u)
-          (s := Set.Icc beta gamma) B hB t ht
-          (by
-            intro y hy
-            have hy0 : 0 ≤ y := hbeta.trans hy.1
-            simpa [F, B, C, Nat.add_assoc] using
-              periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_quadraticRemainder
-                H N hN (m + n) t y ht0 hy0)
-      have hscaled0 :=
-        (hbase.const_smul c).derivWithin ((uniqueDiffOn_Icc hbg) t ht)
-      have hscaled :
-          derivWithin (fun u : ℝ => c • F u) (Set.Icc beta gamma) t =
-            c • (-periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-              H N hN (m + n + 1) t) := by
-        simpa only [Pi.smul_apply] using hscaled0
-      change derivWithin (fun u : ℝ => c • F u) (Set.Icc beta gamma) t = _
-      rw [hscaled, smul_neg]
-      dsimp [c]
+      rw [derivWithin_fun_const_smul_field]
+      rw [periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_derivWithin_Icc
+        H N hN (m + n) beta gamma t hbeta hbg ht]
+      rw [smul_neg]
       have hidx : m + n + 1 = m + (n + 1) := by omega
       rw [hidx]
       have hsign : (-1 : ℝ) ^ (n + 1) = - ((-1 : ℝ) ^ n) := by
         rw [pow_succ]
         ring
-      rw [hsign]
-      exact (neg_smul ((-1 : ℝ) ^ n)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-          H N hN (m + (n + 1)) t)).symm
+      rw [hsign, neg_smul]
 
-/-- The transfer family itself has the expected literal interval derivatives. -/
+/-- The transfer family itself has the expected literal compact-interval
+iterated derivatives. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily_iteratedDerivWithin_Icc
     (H N : ℕ) (hN : 0 < N) (n : ℕ)
@@ -315,7 +175,7 @@ theorem
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_of_nonneg
     H N hN n t (hbeta.trans ht.1)]
 
-/-- Uniform derivative norm bound on every compact forward coupling interval. -/
+/-- Uniform norm bound for all compact-interval transfer derivatives. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily_iteratedDerivWithin_Icc_norm_le
     (H N : ℕ) (hN : 0 < N) (n : ℕ)
@@ -347,7 +207,7 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionInsertionOperator_norm_le
         H N hN n t (hbeta.trans ht.1)
 
-/-- The physical Taylor term based at `beta` and evaluated at `gamma`. -/
+/-- The physical Wilson Taylor term based at `beta` and evaluated at `gamma`. -/
 noncomputable def
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
@@ -424,17 +284,20 @@ theorem
         unfold periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm
         simp [hb0]
       · simp
-    rw [hsum, sub_self, norm_zero]
-    positivity
-  · have hCfinite :
+    rw [hsum]
+    simp
+  · have hsubset : Set.Icc beta gamma ⊆ Set.Ici (0 : ℝ) := by
+      intro y hy
+      exact hbeta.trans hy.1
+    have hCfinite :
         ContDiffOn ℝ (n + 1 : ℕ)
           (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
             H N hN)
           (Set.Icc beta gamma) := by
-      unfold periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
-      exact
-        periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_contDiffOn_Icc_nat
-          H N hN beta gamma hbeta hlt (n + 1) 0
+      have hinfty :=
+        periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily_contDiffOn_infty
+          H N hN
+      exact (hinfty.of_le (by simp)).mono hsubset
     have hderiv : ∀ y ∈ Set.Icc beta gamma,
         ‖iteratedDerivWithin (n + 1)
           (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
@@ -446,8 +309,8 @@ theorem
       exact
         periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily_iteratedDerivWithin_Icc_norm_le
           H N hN (n + 1) beta gamma y hbeta hlt hy
-    have hTaylor := taylor_mean_remainder_bound hbg hCfinite
-      (right_mem_Icc.mpr hbg) hderiv
+    have hTaylor := taylor_mean_remainder_bound hlt.le hCfinite
+      (right_mem_Icc.mpr hlt.le) hderiv
     rw [periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_taylorWithinEval_eq_WilsonTaylorSum
       H N hN n beta gamma hbeta hlt] at hTaylor
     exact hTaylor
@@ -472,11 +335,10 @@ theorem
     dsimp [a]
     exact mul_nonneg (by positivity) (pow_nonneg hdelta k)
   have hna : ‖a‖ = a := by
-    rw [Real.norm_eq_abs, abs_of_nonneg ha]
+    simpa [Real.norm_eq_abs, abs_of_nonneg ha]
   have hns : ‖s‖ = 1 := by
     dsimp [s]
-    rw [norm_pow]
-    simp
+    simp [Real.norm_eq_abs, abs_pow]
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm
   change ‖a •
       (s • periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionInsertionOperator
@@ -524,17 +386,16 @@ theorem
   have hmajor : Summable (fun k : ℕ => (k.factorial : ℝ)⁻¹ * x ^ k) := by
     simpa [smul_eq_mul] using
       (NormedSpace.expSeries_summable' (𝕂 := ℝ) (𝔸 := ℝ) x)
-  apply Summable.of_norm_bounded hmajor
+  refine Summable.of_nonneg_of_le (fun k => norm_nonneg _) ?_ hmajor
   intro k
-  rw [Real.norm_of_nonneg (norm_nonneg _)]
-  exact
+  simpa [x] using
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylorTerm_norm_le_expMajorant
       H N hN beta gamma hbeta hbg k
 
 /-- The explicit scalar Taylor-remainder majorant tends to zero. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylor_remainderMajorant_tendsto_zero
-    (H N : ℕ) (beta gamma : ℝ) (hbg : beta ≤ gamma) :
+    (H N : ℕ) (beta gamma : ℝ) (_hbg : beta ≤ gamma) :
     Tendsto
       (fun n : ℕ =>
         periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
@@ -605,12 +466,13 @@ theorem
   have hnorm :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylorTerm_summable_norm
       H N hN beta gamma hbeta hbg
-  apply hasSum_of_subseq_of_summable hnorm
-    (s := fun n : ℕ => Finset.range (n + 1))
-  · exact tendsto_finset_range.comp (tendsto_add_atTop_nat 1)
-  · exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylor_partialSums_tendsto_transfer
-        H N hN beta gamma hbeta hbg
+  have hs :
+      Tendsto (fun n : ℕ => Finset.range (n + 1)) atTop atTop :=
+    tendsto_finset_range.comp (tendsto_add_atTop_nat 1)
+  have hpartial :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylor_partialSums_tendsto_transfer
+      H N hN beta gamma hbeta hbg
+  exact hasSum_of_subseq_of_summable hnorm hs hpartial
 
 /-- Final forward Taylor-series package: quantitative remainder, absolute
 summability, norm convergence, and exact series reconstruction. -/
