@@ -509,8 +509,11 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureCellSum_eq_unfixe
         (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPathRestriction H N A j))]
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathAction
   unfold periodicHypercubicEvenSpecialUnitaryUnfixedOneSlabAction
-  simp only [Finset.sum_add_distrib]
-  abel_nf
+  simp only [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
+  rw [← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro i _hi
+  ring
 
 /-- Main action identification: the actual OS positive-half closure action is
 exactly the unfixed finite-cylinder path action of its spatial and temporal
