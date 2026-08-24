@@ -293,7 +293,8 @@ private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSliceObser
       mul_le_mul_of_nonneg_left hfac (abs_nonneg _)
     _ = ‖a‖ * |f p.1 * g (p.2 (Fin.last n))| := by ring
     _ = |‖a‖ * (f p.1 * g (p.2 (Fin.last n)))| := by
-      rw [abs_mul, abs_of_nonneg (norm_nonneg a)]
+      symm
+      rw [abs_mul, abs_of_nonneg (norm_nonneg a), abs_mul]
 
 private theorem periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSliceObservableAmplitude_split
     (H N : ℕ)
@@ -534,10 +535,10 @@ private theorem periodicHypercubicEvenSpecialUnitaryTransferSliceObservableAmpli
         (periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservableMulOperator
           H N a f) g := by
   unfold periodicHypercubicEvenSpecialUnitaryTransferSliceObservableAmplitude
-  convert
+  rw [Nat.zero_add]
+  simpa [periodicHypercubicEvenSpecialUnitaryTransferSliceIndex] using
     periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSliceObservableAmplitude_zero
-      H N beta right a f g using 1 <;>
-    simp [periodicHypercubicEvenSpecialUnitaryTransferSliceIndex]
+      H N beta right a f g
 
 private theorem periodicHypercubicEvenSpecialUnitaryTransferSliceObservableAmplitude_succ_left
     (H N : ℕ)
@@ -555,12 +556,13 @@ private theorem periodicHypercubicEvenSpecialUnitaryTransferSliceObservableAmpli
         (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
           H N hN beta hbeta f) g := by
   unfold periodicHypercubicEvenSpecialUnitaryTransferSliceObservableAmplitude
+  rw [Nat.succ_add]
   convert
     periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeSliceObservableAmplitude_succ
       H N hN beta hbeta (left + right)
-      (periodicHypercubicEvenSpecialUnitaryTransferSliceIndex left right) a f g using 1 <;>
-    simp [periodicHypercubicEvenSpecialUnitaryTransferSliceIndex, Nat.succ_add] <;>
-    omega
+      (periodicHypercubicEvenSpecialUnitaryTransferSliceIndex left right) a f g using 1
+  apply Fin.ext
+  rfl
 
 /-- Exact arbitrary-slice transfer formula on the full Haar `L²` carrier.
 With `left` slabs before and `right` slabs after the insertion, the actual
