@@ -258,15 +258,21 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSlabPairObservableIntegralL2_eq_o
         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
         f p.1 * g p.2) (μ.prod μ) := hf1.mul_prod hg1
-  have hfactorMeas : AEStronglyMeasurable
+  have hKMeas : AEStronglyMeasurable
       (fun p :
         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-            H N beta p.1 p.2 * b p)
+          H N beta p.1 p.2)
       (μ.prod μ) :=
-    ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta).mul b.continuous).aestronglyMeasurable
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      H N beta).aestronglyMeasurable
+  have hbMeas : AEStronglyMeasurable
+      (fun p :
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N => b p)
+      (μ.prod μ) :=
+    b.continuous.aestronglyMeasurable
   have hmajor : Integrable
       (fun p :
         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
@@ -287,10 +293,9 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSlabPairObservableIntegralL2_eq_o
           f p.1 *
             periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
               H N beta p.1 p.2 * b p * g p.2)
-        (μ.prod μ) := by
-      simpa [mul_assoc] using
-        (((Lp.aestronglyMeasurable f).comp_fst.mul hfactorMeas).mul
-          (Lp.aestronglyMeasurable g).comp_snd)
+        (μ.prod μ) :=
+      ((((Lp.aestronglyMeasurable f).comp_fst.mul hKMeas).mul hbMeas).mul
+        (Lp.aestronglyMeasurable g).comp_snd)
     apply hmajor.mono hmeas
     filter_upwards with p
     have hk :
@@ -311,7 +316,9 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSlabPairObservableIntegralL2_eq_o
           |periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
             H N beta p.1 p.2| * |b p| * |g p.2| ≤
         |f p.1| * 1 * ‖b‖ * |g p.2| := by gcongr
-      _ = ‖b‖ * (|f p.1| * |g p.2|) := by ring
+      _ = ‖b‖ * |f p.1 * g p.2| := by
+        rw [abs_mul]
+        ring
   calc
     inner ℝ
         (periodicHypercubicEvenSpecialUnitaryOneSlabPairObservableIntegralL2
