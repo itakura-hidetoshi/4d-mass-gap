@@ -32,49 +32,106 @@ local instance wilsonCylinderBetaDerivativeSpecialUnitaryBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-/-- The complete positive-half Wilson path action as one bounded continuous
-observable on the compact finite path carrier.  This supplies both measurability
-and the beta-independent domination needed below. -/
+/-- A beta-independent finite bound for the complete positive-half Wilson path
+action, obtained by summing the norms of the already-established bounded
+one-slab Wilson cell observable. -/
 noncomputable def
-    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionBoundedObservable
-    (H N : ℕ) :
-    BoundedContinuousFunction
-      (PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N) ℝ :=
-  BoundedContinuousFunction.mkOfCompact
-    ⟨periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N,
-      by
-        unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction
-        apply continuous_finset_sum
-        intro i _hi
-        exact
-          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabActionBoundedPairObservable
-            H N).continuous.comp
-            ((continuous_apply i.castSucc).prodMk (continuous_apply i.succ))⟩
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
+    (H N : ℕ) : ℝ :=
+  ∑ _i : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H),
+    ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabActionBoundedPairObservable H N‖
 
-@[simp] theorem
-    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionBoundedObservable_apply
-    (H N : ℕ)
-    (path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N) :
-    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionBoundedObservable
-        H N path =
-      periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N path :=
-  rfl
-
-/-- The complete temporal-gauge path action is uniformly bounded on the finite
-compact path carrier. -/
+/-- The complete temporal-gauge Wilson path action is uniformly bounded by the
+finite sum of the one-slab cell norms.  This avoids constructing a separate
+bounded-continuous function on the full concrete path carrier. -/
 theorem
-    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction_norm_le
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction_norm_le_uniformBound
     (H N : ℕ)
     (path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N) :
     ‖periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N path‖ ≤
-      ‖periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionBoundedObservable
-        H N‖ := by
-  simpa using
-    (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionBoundedObservable
-      H N).norm_coe_le_norm path
+      periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
+        H N := by
+  rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction_eq_sum_cellObservable]
+  calc
+    ‖∑ i : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H),
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabActionBoundedPairObservable H N
+          (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft path i,
+            periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight path i)‖ ≤
+      ∑ i : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H),
+        ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabActionBoundedPairObservable H N
+          (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft path i,
+            periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight path i)‖ := by
+        exact norm_sum_le _ _
+    _ ≤ ∑ _i : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H),
+        ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabActionBoundedPairObservable H N‖ := by
+      apply Finset.sum_le_sum
+      intro i _hi
+      exact
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabActionBoundedPairObservable
+          H N).norm_coe_le_norm
+          (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft path i,
+            periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight path i)
+    _ = periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
+        H N := rfl
 
-/-- Measurability of the full positive-half path kernel, obtained through its
-exact Boltzmann form rather than by unfolding the finite product. -/
+/-- Measurability of the complete positive-half Wilson path action follows by
+its canonical finite decomposition into measurable bounded one-slab cells. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction_measurable
+    (H N : ℕ) :
+    Measurable
+      (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N) := by
+  classical
+  let b :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabActionBoundedPairObservable H N
+  have hcell : ∀ i : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H),
+      Measurable
+        (fun path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N =>
+          b
+            (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft path i,
+              periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight path i)) := by
+    intro i
+    unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft
+    unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight
+    exact b.continuous.measurable.comp
+      ((measurable_pi_apply i.castSucc).prodMk (measurable_pi_apply i.succ))
+  have hsum : ∀ s : Finset (Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)),
+      Measurable
+        (fun path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N =>
+          ∑ i in s,
+            b
+              (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft path i,
+                periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight path i)) := by
+    intro s
+    induction s using Finset.induction_on with
+    | empty => simpa using (measurable_const : Measurable
+        (fun _ : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N => (0 : ℝ)))
+    | @insert a s ha ih =>
+        simpa [Finset.sum_insert, ha] using (hcell a).add ih
+  convert hsum Finset.univ using 1
+  funext path
+  simpa [b] using
+    (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction_eq_sum_cellObservable
+      H N path).symm
+
+/-- Generic measurability carrier for a finite nearest-neighbour path kernel. -/
+private theorem wilsonCylinderBetaDerivativeFinitePathKernel_measurable
+    {X : Type*}
+    [MeasurableSpace X]
+    (K : X × X → ℝ)
+    (hK : Measurable K)
+    (n : ℕ) :
+    Measurable
+      (fun path : Fin (n + 1) → X =>
+        ∏ i : Fin n, K (path i.castSucc, path i.succ)) := by
+  classical
+  apply (Finset.univ : Finset (Fin n)).measurable_prod
+  intro i _hi
+  exact hK.comp
+    ((measurable_pi_apply i.castSucc).prodMk (measurable_pi_apply i.succ))
+
+/-- Measurability of the full positive-half path kernel, specialized from the
+generic finite nearest-neighbour product carrier. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel_measurable
     (H N : ℕ)
@@ -82,22 +139,20 @@ theorem
     Measurable
       (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
         H N beta) := by
-  have haction : Measurable
-      (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N) :=
-    (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionBoundedObservable
-      H N).continuous.measurable
-  have hexp : Measurable
-      (fun path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N =>
-        Real.exp
-          (-beta *
-            periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction
-              H N path)) :=
-    Real.measurable_exp.comp (measurable_const.mul haction)
-  convert hexp using 1
-  funext path
-  exact
-    (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel_eq_boltzmann
-      H N beta path).symm
+  let K :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ :=
+    fun p => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+      H N beta p.1 p.2
+  have hK : Measurable K :=
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      H N beta).measurable
+  simpa [K,
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel,
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft,
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight] using
+    (wilsonCylinderBetaDerivativeFinitePathKernel_measurable K hK
+      (periodicHypercubicEvenPositiveHalfCylinderSlabCount H))
 
 /-- Pointwise beta derivative of the exact finite-volume Wilson path kernel. -/
 theorem
@@ -126,8 +181,7 @@ theorem
     neg_mul, mul_neg, neg_neg, mul_comm, mul_left_comm, mul_assoc] using hexp
 
 /-- Literal positive-half temporal-gauge endpoint amplitude as a function of
-beta.  For nonnegative beta the existing transfer theorem identifies its value
-with the physical positive-half transfer matrix coefficient. -/
+beta. -/
 noncomputable def
     periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeEndpointAmplitude
     (H N : ℕ)
@@ -221,8 +275,15 @@ private theorem wilsonCylinderBetaDerivative_endpointIntegrand_integrable
             (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H))))
       (periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N) := by
   let pathMu := periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N
-  have hbase := wilsonCylinderBetaDerivative_endpointProduct_integrable H N f g
-  have hKmeas :=
+  have hbase : Integrable
+      (fun path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N =>
+        (f : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N) (path 0) *
+          (g : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
+            (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)))) pathMu := by
+    simpa [pathMu] using wilsonCylinderBetaDerivative_endpointProduct_integrable H N f g
+  have hKmeas : AEStronglyMeasurable
+      (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
+        H N beta) pathMu :=
     (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel_measurable
       H N beta).aestronglyMeasurable
   have hmeas : AEStronglyMeasurable
@@ -330,20 +391,27 @@ theorem
         (g : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
           (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H))))
   let actionBound :=
-    ‖periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionBoundedObservable
-      H N‖
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
+      H N
   let bound := fun path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N =>
     actionBound *
       |(f : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N) (path 0) *
         (g : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
           (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)))|
-  have hbase := wilsonCylinderBetaDerivative_endpointProduct_integrable H N f g
+  have hbase : Integrable
+      (fun path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N =>
+        (f : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N) (path 0) *
+          (g : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
+            (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)))) pathMu := by
+    simpa [pathMu] using wilsonCylinderBetaDerivative_endpointProduct_integrable H N f g
   have hboundInt : Integrable bound pathMu := by
-    simpa [bound, actionBound, pathMu, Pi.smul_apply, smul_eq_mul] using
+    simpa [bound, actionBound, Pi.smul_apply, smul_eq_mul] using
       hbase.norm.smul actionBound
   have hFmeas : ∀ᶠ beta' in 𝓝 beta, AEStronglyMeasurable (F beta') pathMu := by
     filter_upwards with beta'
-    have hK :=
+    have hK : AEStronglyMeasurable
+        (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
+          H N beta') pathMu :=
       (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel_measurable
         H N beta').aestronglyMeasurable
     have h := hbase.aestronglyMeasurable.mul hK
@@ -356,28 +424,34 @@ theorem
       wilsonCylinderBetaDerivative_endpointIntegrand_integrable
         H N hN beta hbeta.le f g
   have hF'meas : AEStronglyMeasurable (F' beta) pathMu := by
-    have hK :=
+    have hK : AEStronglyMeasurable
+        (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
+          H N beta) pathMu :=
       (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel_measurable
         H N beta).aestronglyMeasurable
-    have hS :=
-      (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionBoundedObservable
-        H N).continuous.measurable.aestronglyMeasurable
+    have hS : AEStronglyMeasurable
+        (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N)
+        pathMu :=
+      (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction_measurable
+        H N).aestronglyMeasurable
     have h := (hbase.aestronglyMeasurable.mul hK).mul hS
-    exact (by
-      convert h.neg using 1
-      funext path
-      simp [F']
-      ring)
+    convert h.neg using 1
+    funext path
+    simp [F']
+    ring
   have hbound : ∀ᵐ path ∂pathMu, ∀ beta' ∈ Ioi (0 : ℝ), ‖F' beta' path‖ ≤ bound path := by
     filter_upwards with path
     intro beta' hbeta'
     have hK :=
       periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel_abs_le_one
         H N hN beta' (le_of_lt hbeta') path
-    have hS :=
-      periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction_norm_le
-        H N path
-    simp only [F', bound, actionBound, Real.norm_eq_abs, norm_neg, abs_mul]
+    have hS :
+        |periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N path| ≤
+          actionBound := by
+      simpa [Real.norm_eq_abs, actionBound] using
+        periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction_norm_le_uniformBound
+          H N path
+    simp only [F', bound, Real.norm_eq_abs, norm_neg, abs_mul]
     rw [show
       |(f : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N) (path 0)| *
           |periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
@@ -398,7 +472,7 @@ theorem
           (1 * actionBound) := by
         gcongr
         · exact hK
-        · simpa [Real.norm_eq_abs, actionBound] using hS
+        · exact hS
       _ = actionBound *
           |(f : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N) (path 0) *
             (g : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
@@ -452,7 +526,8 @@ theorem
       H N hN beta hbeta f g
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionInsertionOperator_inner_eq_pathActionIntegral
     H N hN beta hbeta.le f g]
-  exact h
+  simpa [periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionInsertionAmplitude]
+    using h
 
 /-- Derivative-value form of the finite-volume beta-variation identity. -/
 theorem
