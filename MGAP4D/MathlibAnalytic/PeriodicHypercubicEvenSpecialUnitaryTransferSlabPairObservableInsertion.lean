@@ -902,7 +902,8 @@ theorem periodicHypercubicEvenSpecialUnitaryTransferSlabPairObservableAmplitude_
                 H N hN beta hbeta) ^ left) f))) g := by
   induction left generalizing f with
   | zero =>
-      rw [periodicHypercubicEvenSpecialUnitaryTransferSlabPairObservableAmplitude_zero_left]
+      rw [periodicHypercubicEvenSpecialUnitaryTransferSlabPairObservableAmplitude_zero_left
+        H N hN beta hbeta]
       rw [periodicHypercubicEvenSpecialUnitaryNSlabTemporalGaugeEndpointAmplitude_eq_pow_inner
         H N hN beta hbeta]
       simp
