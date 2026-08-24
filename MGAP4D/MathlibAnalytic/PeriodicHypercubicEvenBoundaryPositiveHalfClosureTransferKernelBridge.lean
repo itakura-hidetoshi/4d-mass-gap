@@ -10,6 +10,11 @@ noncomputable section
 
 set_option maxHeartbeats 2000000
 
+local instance positiveHalfClosureTransferKernelBridgeSpecialUnitaryMeasurableSpace
+    (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 /-- Replacing the time coordinate of a primary-slice vertex by zero returns the
 same four-dimensional vertex. -/
 @[simp] theorem periodicHypercubicEvenSpatialSliceVertexAtTime_zero_eq
@@ -84,8 +89,7 @@ private theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_
     (e : PeriodicHypercubicEvenSpatialSliceLink H) :
     (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
         H N (b, x)).1 ⟨H + 1, by
-          simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
-          omega⟩ e =
+          simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩ e =
       b ((periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices H).symm (Sum.inr e)) := by
   let sourceIndex :=
     (periodicHypercubicEvenEdgeOrbitPartition H).FixedEdge ⊕
@@ -119,8 +123,7 @@ private theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_
     (e : PeriodicHypercubicEvenSpatialSliceLink H) :
     (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
         H N (b, x)).1 ⟨k.1 + 1, by
-          simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
-          omega⟩ e =
+          simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩ e =
       x ((periodicHypercubicEvenPositiveEdgeEquivPositiveHalfOpenIndex H).symm
         (Sum.inl (k, e))) := by
   let sourceIndex :=
@@ -217,8 +220,7 @@ theorem periodicHypercubicEvenSpecialUnitaryBoundaryFiberedAssemble_positiveHalf
       H N b x e).symm
   · by_cases hlast : j.1 = H + 1
     · have hj : j = ⟨H + 1, by
-          simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
-          omega⟩ := Fin.ext hlast
+          simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩ := Fin.ext hlast
       rw [hj]
       let ef := (periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices H).symm (Sum.inr e)
       have hedge :
@@ -252,8 +254,7 @@ theorem periodicHypercubicEvenSpecialUnitaryBoundaryFiberedAssemble_positiveHalf
         dsimp [k]
         omega
       have hj : j = ⟨k.1 + 1, by
-          simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
-          omega⟩ := by
+          simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩ := by
         apply Fin.ext
         exact hk.symm
       rw [hj]
