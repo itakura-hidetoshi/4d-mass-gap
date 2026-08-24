@@ -172,13 +172,15 @@ theorem
   have hmvt :=
     Convex.norm_image_sub_le_of_norm_hasDerivWithin_le
       hderiv hbound (convex_uIcc beta gamma) left_mem_uIcc right_mem_uIcc
+  have hR :
+      R gamma - R beta = K gamma - K beta + (gamma - beta) * (K beta * S) := by
+    simp [R, dK]
+    ring
   change ‖K gamma - K beta + (gamma - beta) * (K beta * S)‖ ≤
     C ^ 2 * ‖gamma - beta‖ ^ 2
   calc
     ‖K gamma - K beta + (gamma - beta) * (K beta * S)‖ = ‖R gamma - R beta‖ := by
-      congr 1
-      simp [R, dK]
-      ring
+      rw [hR]
     _ ≤ C ^ 2 * ‖gamma - beta‖ * ‖gamma - beta‖ := hmvt
     _ = C ^ 2 * ‖gamma - beta‖ ^ 2 := by ring
 
@@ -539,6 +541,10 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N path *
       (g : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
         (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)))
+  let D := fun path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N =>
+    F gamma path - F beta path
+  let B := fun path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N =>
+    (gamma - beta) * A path
   have hFgamma : Integrable (F gamma) pathMu := by
     simpa [F, pathMu] using
       wilsonCylinderOperatorNormBetaDerivative_endpointIntegrand_integrable
@@ -551,6 +557,18 @@ theorem
     simpa [A, pathMu] using
       wilsonCylinderOperatorNormBetaDerivative_actionIntegrand_integrable
         H N hN beta hbeta f g
+  have hD : Integrable D pathMu := by
+    simpa [D] using hFgamma.sub hFbeta
+  have hB : Integrable B pathMu := by
+    simpa [B] using hA.const_mul (gamma - beta)
+  have hDint :
+      (∫ path, D path ∂pathMu) =
+        (∫ path, F gamma path ∂pathMu) - (∫ path, F beta path ∂pathMu) := by
+    simpa [D] using integral_sub hFgamma hFbeta
+  have hBint :
+      (∫ path, B path ∂pathMu) =
+        (gamma - beta) * (∫ path, A path ∂pathMu) := by
+    simpa [B] using integral_const_mul (gamma - beta) A
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferBetaRemainderOperator
   change
     inner ℝ
@@ -605,10 +623,42 @@ theorem
             inner ℝ
               (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator
                 H N hN beta hbeta f) g) +
+            inner ℝ
+              ((gamma - beta) •
+                periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionInsertionOperator
+                  H N hN beta hbeta f) g := by
+          rw [show
+            inner ℝ
+              (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator
+                  H N hN gamma hgamma f -
+                periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator
+                  H N hN beta hbeta f) g =
+              inner ℝ
+                (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator
+                  H N hN gamma hgamma f) g -
+              inner ℝ
+                (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator
+                  H N hN beta hbeta f) g from
+            inner_sub_left (𝕜 := ℝ) _ _ _]
+      _ =
+          (inner ℝ
+              (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator
+                H N hN gamma hgamma f) g -
+            inner ℝ
+              (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator
+                H N hN beta hbeta f) g) +
             (gamma - beta) * inner ℝ
               (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionInsertionOperator
                 H N hN beta hbeta f) g := by
-          rw [inner_sub_left, real_inner_smul_left]
+          rw [show
+            inner ℝ
+              ((gamma - beta) •
+                periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionInsertionOperator
+                  H N hN beta hbeta f) g =
+              (gamma - beta) * inner ℝ
+                (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionInsertionOperator
+                  H N hN beta hbeta f) g from
+            real_inner_smul_left _ _ _]
   rw [hsplit]
   rw [← periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeEndpointAmplitude_eq_physicalTransfer_inner
       H N hN gamma hgamma f g]
@@ -620,12 +670,18 @@ theorem
   change
     (∫ path, F gamma path ∂pathMu) - (∫ path, F beta path ∂pathMu) +
         (gamma - beta) * (∫ path, A path ∂pathMu) = _
-  rw [← integral_sub hFgamma hFbeta, ← integral_const_mul]
-  rw [← integral_add (hFgamma.sub hFbeta) (hA.const_mul (gamma - beta))]
-  apply integral_congr_ae
-  filter_upwards with path
-  simp [F, A]
-  ring
+  calc
+    (∫ path, F gamma path ∂pathMu) - (∫ path, F beta path ∂pathMu) +
+        (gamma - beta) * (∫ path, A path ∂pathMu) =
+      (∫ path, D path ∂pathMu) + (∫ path, B path ∂pathMu) := by
+        rw [hDint, hBint]
+    _ = ∫ path, D path + B path ∂pathMu := by
+      exact (integral_add hD hB).symm
+    _ = _ := by
+      apply integral_congr_ae
+      filter_upwards with path
+      simp [D, B, F, A]
+      ring
 
 /-- Uniform matrix-coefficient estimate for the physical beta remainder. -/
 theorem
