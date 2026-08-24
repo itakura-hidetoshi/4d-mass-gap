@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryPositiveHalfClosureEndpointPhysicalTransfer
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopEigenvector
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -8,8 +9,6 @@ open MeasureTheory
 open scoped InnerProductSpace
 
 noncomputable section
-
-set_option synthInstance.maxHeartbeats 200000
 
 local instance positiveHalfClosureEndpointOperatorSpatialSliceVertexFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
@@ -38,6 +37,20 @@ local instance positiveHalfClosureEndpointOperatorSpecialUnitaryMeasurableSpace 
 local instance positiveHalfClosureEndpointOperatorSpecialUnitaryBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
+
+/-- The canonical constant unit Gauss-law state witnesses that the actual
+one-slice physical Hilbert space is nontrivial.  This is derived from the
+existing concrete norm-one state, rather than imposed as a new assumption. -/
+local instance positiveHalfClosureEndpointOperatorPhysicalNontrivial (H N : ℕ) :
+    Nontrivial
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) := by
+  let u := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H N
+  have hu : u ≠ 0 := by
+    intro hzero
+    have hnorm := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_norm H N
+    rw [hzero, norm_zero] at hnorm
+    norm_num at hnorm
+  exact ⟨⟨u, 0, hu⟩⟩
 
 /-- The finite-volume positive-half OS closure endpoint form is represented on
 actual Gauss-law one-slice Hilbert space by the partition square-root
