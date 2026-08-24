@@ -21,26 +21,17 @@ local instance wilsonCylinderMathlibContDiffInfinityPhysicalCompleteSpace
   (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule_isClosed
     H N).completeSpace_coe
 
-local instance wilsonCylinderMathlibContDiffInfinityOperatorAddCommGroup
-    (H N : ℕ) :
-    AddCommGroup
-      (PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
-        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) :=
-  NormedAddCommGroup.toAddCommGroup
-
-local instance wilsonCylinderMathlibContDiffInfinityOperatorModule
-    (H N : ℕ) :
-    Module ℝ
-      (PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
-        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) :=
-  NormedSpace.toModule
-
-local instance wilsonCylinderMathlibContDiffInfinityOperatorTopologicalSpace
-    (H N : ℕ) :
-    TopologicalSpace
-      (PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
-        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) :=
-  PseudoMetricSpace.toUniformSpace.toTopologicalSpace
+/-- Mathlib exposes both low-level algebra/topology instances and norm-derived
+instances for concrete operator spaces (and for `ℝ` itself).  The one-dimensional
+calculus API is polymorphically elaborated through the norm-derived route.  We
+therefore disable the competing low-level route in this file so every derivative,
+differentiability and `ContDiffOn` predicate is built from one coherent structure. -/
+local attribute [-instance] Real.instAddCommGroup
+local attribute [-instance] LieAlgebra.ofAssociativeAlgebra.toModule
+local attribute [-instance] ContinuousLinearMap.addCommMonoid
+local attribute [-instance] ContinuousLinearMap.addCommGroup
+local attribute [-instance] ContinuousLinearMap.module
+local attribute [-instance] ContinuousLinearMap.topologicalSpace
 
 /-- A quadratic remainder estimate implies the actual Mathlib one-dimensional
 `HasDerivWithinAt` statement.  This is the calculus bridge used below: it turns
