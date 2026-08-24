@@ -54,21 +54,22 @@ theorem realContinuousLinearMap_pow_isPositive
     (((T ^ n : E →L[ℝ] E) : E →ₗ[ℝ] E).IsPositive) := by
   rw [LinearMap.isPositive_iff]
   refine ⟨?_, ?_⟩
-  · change ((T : E →ₗ[ℝ] E) ^ n).IsSymmetric
-    exact hT.isSymmetric.pow n
-  · intro x
-    induction n using Nat.twoStepInduction with
+  · simpa only [ContinuousLinearMap.toLinearMap_pow] using hT.isSymmetric.pow n
+  · induction n using Nat.twoStepInduction with
     | zero =>
+        intro x
         simp
     | one =>
+        intro x
         exact hT.inner_nonneg_left x
     | more n ih _ihSucc =>
+        intro x
         have hpowSymm :
             (((T ^ (n + 1) : E →L[ℝ] E) : E →ₗ[ℝ] E).IsSymmetric) := by
-          change ((T : E →ₗ[ℝ] E) ^ (n + 1)).IsSymmetric
-          exact hT.isSymmetric.pow (n + 1)
+          simpa only [ContinuousLinearMap.toLinearMap_pow] using
+            hT.isSymmetric.pow (n + 1)
         calc
-          0 ≤ inner ℝ ((T ^ n) (T x)) (T x) := ih
+          0 ≤ inner ℝ ((T ^ n) (T x)) (T x) := ih (T x)
           _ = inner ℝ ((T ^ (n + 1)) x) (T x) := by
             rw [pow_succ]
             rfl
@@ -101,9 +102,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransfer
       H N hN beta hbeta)
     (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)
 
-/-- The represented positive-half closure endpoint operator is positive.  This
-uses only positivity of the physical transfer power and nonnegativity of the
-partition square-root normalization. -/
+/-- The represented positive-half closure endpoint operator is positive. -/
 theorem periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointOperator_isPositive
     (H N : ℕ)
     (hN : 0 < N)
@@ -132,9 +131,7 @@ theorem periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointOperator_isPosi
         H N hN beta hbeta)
 
 /-- A type-separated copy of the Gauss-law one-slice state space on which the
-positive-half closure endpoint form supplies the seminorm.  The proof and
-coupling parameters are included in the type so that different endpoint forms
-carry distinct Mathlib seminorm instances. -/
+positive-half closure endpoint form supplies the seminorm. -/
 structure PeriodicHypercubicEvenBoundaryPositiveHalfClosureEndpointCarrier
     (H N : ℕ)
     (hN : 0 < N)
@@ -337,7 +334,17 @@ semidefinite pre-inner-product core on the type-separated Gauss-law states. -/
       (periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointOperator_isPositive
         H N hN beta hbeta).inner_nonneg_left F.state
   add_left F G K := by
-    simp
+    change
+      inner ℝ
+          (periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointOperator
+            H N hN beta hbeta (F.state + G.state)) K.state =
+        inner ℝ
+            (periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointOperator
+              H N hN beta hbeta F.state) K.state +
+          inner ℝ
+            (periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointOperator
+              H N hN beta hbeta G.state) K.state
+    rw [map_add, inner_add_left]
   smul_left F G r := by
     simp [inner_smul_left]
 
@@ -508,9 +515,7 @@ theorem periodicHypercubicEvenBoundaryPositiveHalfClosureEndpoint_mem_nullSubmod
         ∂(periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureHaarMeasure H N)) = 0 := by
   rw [periodicHypercubicEvenBoundaryPositiveHalfClosureEndpoint_mem_nullSubmodule_iff_quadratic_eq_zero]
   rw [← periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointCarrier_inner]
-  exact
-    periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointCarrier_inner_eq_integral
-      H N hN beta hbeta F F |>.congr_left Iff.rfl
+  rw [periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointCarrier_inner_eq_integral]
 
 /-- The separated finite positive-half endpoint OS pre-Hilbert carrier. -/
 abbrev PeriodicHypercubicEvenBoundaryPositiveHalfClosureEndpointSeparated
