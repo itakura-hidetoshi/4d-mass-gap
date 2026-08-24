@@ -9,6 +9,8 @@ open scoped InnerProductSpace
 
 noncomputable section
 
+set_option synthInstance.maxHeartbeats 200000
+
 local instance positiveHalfClosureEndpointOperatorSpatialSliceVertexFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
   Fintype.ofFinite _
