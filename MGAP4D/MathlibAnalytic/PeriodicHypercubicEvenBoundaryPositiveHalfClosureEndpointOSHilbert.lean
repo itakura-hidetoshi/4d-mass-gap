@@ -52,10 +52,12 @@ theorem realContinuousLinearMap_pow_isSymmetric
     (hT : (T : E →ₗ[ℝ] E).IsSymmetric)
     (n : ℕ) :
     (((T ^ n : E →L[ℝ] E) : E →ₗ[ℝ] E).IsSymmetric) := by
-  intro x y
   induction n with
-  | zero => simp
+  | zero =>
+      intro x y
+      simp
   | succ n ih =>
+      intro x y
       calc
         inner ℝ ((T ^ (n + 1)) x) y =
             inner ℝ ((T ^ n) (T x)) y := by
