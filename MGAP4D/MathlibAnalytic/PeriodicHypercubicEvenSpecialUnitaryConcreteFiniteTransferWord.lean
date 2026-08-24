@@ -196,16 +196,17 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryFiniteTransferWordAmbientO
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    PeriodicHypercubicEvenSpecialUnitaryFiniteTransferWord H N →
-      (PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N →L[ℝ]
-        PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
+    (hbeta : 0 ≤ beta)
+    (word : PeriodicHypercubicEvenSpecialUnitaryFiniteTransferWord H N) :
+    PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N →L[ℝ]
+      PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N :=
+  match word with
   | [] =>
       ContinuousLinearMap.id ℝ
         (PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
-  | letter :: word =>
+  | letter :: tail =>
       (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordAmbientOperator
-          H N hN beta hbeta word).comp
+          H N hN beta hbeta tail).comp
         (periodicHypercubicEvenSpecialUnitaryFiniteTransferLetterAmbientOperator
           H N hN beta hbeta letter)
 
@@ -214,16 +215,17 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPhysical
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    PeriodicHypercubicEvenSpecialUnitaryFiniteTransferWord H N →
-      (PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
-        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)
+    (hbeta : 0 ≤ beta)
+    (word : PeriodicHypercubicEvenSpecialUnitaryFiniteTransferWord H N) :
+    PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
+      PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N :=
+  match word with
   | [] =>
       ContinuousLinearMap.id ℝ
         (PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)
-  | letter :: word =>
+  | letter :: tail =>
       (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPhysicalOperator
-          H N hN beta hbeta word).comp
+          H N hN beta hbeta tail).comp
         (periodicHypercubicEvenSpecialUnitaryFiniteTransferLetterPhysicalOperator
           H N hN beta hbeta letter)
 
