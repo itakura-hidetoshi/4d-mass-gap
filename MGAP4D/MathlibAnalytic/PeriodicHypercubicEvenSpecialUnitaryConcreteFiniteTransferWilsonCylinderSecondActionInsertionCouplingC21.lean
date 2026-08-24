@@ -499,7 +499,13 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathSecondActionInsertionAmplitude
         H N beta f g := by
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderSecondWilsonActionInsertionOperator
-  simp only [InnerProductSpace.continuousLinearMapOfBilin_apply]
+  unfold InnerProductSpace.continuousLinearMapOfBilin
+  change inner ℝ
+      ((InnerProductSpace.toDual ℝ
+        (PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)).symm
+        ((periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathSecondActionInsertionBilin
+          H N hN beta hbeta) f)) g = _
+  rw [InnerProductSpace.toDual_symm_apply]
   rfl
 
 private theorem wilsonCylinderSecondActionInsertionCouplingC21_opNorm_le_of_inner_bound
