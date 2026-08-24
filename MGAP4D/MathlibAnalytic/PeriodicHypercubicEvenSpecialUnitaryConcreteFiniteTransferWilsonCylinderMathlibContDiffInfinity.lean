@@ -405,7 +405,7 @@ theorem
         simpa only [Pi.smul_apply] using hscaledDeriv0
       change derivWithin (fun t : ℝ => c • F t) (Set.Ici (0 : ℝ)) beta = _
       rw [hscaledDeriv]
-      simp [c, F, pow_succ, Nat.add_assoc, mul_smul]
+      simp [c, pow_succ, Nat.add_assoc, neg_smul]
 
 /-- The Mathlib-facing transfer family: it is simply order zero of the single
 Wilson action-insertion hierarchy.  It agrees pointwise with the genuine
