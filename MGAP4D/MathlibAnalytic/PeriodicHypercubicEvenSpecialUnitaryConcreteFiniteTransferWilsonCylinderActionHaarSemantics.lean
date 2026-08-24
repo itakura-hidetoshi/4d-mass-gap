@@ -1,5 +1,7 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryConcreteFiniteTransferWilsonCylinderCellHaarSemantics
 import Mathlib.MeasureTheory.Function.LpSeminorm.CompareExp
+import Mathlib.MeasureTheory.Integral.Bochner.Basic
+import Mathlib.MeasureTheory.Integral.Pi
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -33,9 +35,8 @@ local instance wilsonCylinderActionHaarSpecialUnitaryBorelSpace (N : ℕ) :
   specialUnitaryGroupBorelSpace N
 
 /-- Transport an adjacent-slice insertion amplitude across an equality of the
-number of slabs.  This small carrier lemma is deliberately generic: it records
-that no additional path equivalence is needed when two finite path lengths are
-literally equal. -/
+number of slabs.  No additional path equivalence is needed when the two finite
+path lengths are literally equal. -/
 private theorem periodicHypercubicEvenSpecialUnitaryNSlabPairAmplitudeCommonCarrierTransport
     (H N : ℕ)
     (beta : ℝ)
@@ -52,9 +53,8 @@ private theorem periodicHypercubicEvenSpecialUnitaryNSlabPairAmplitudeCommonCarr
   subst m
   rfl
 
-/-- One positive-half Wilson cell word, although syntactically parametrized by
-`left = i` and `right = H-i`, is exactly the insertion on slab `i` of the common
-`H+1`-slab path carrier. -/
+/-- One positive-half Wilson cell word is exactly the insertion on slab `i` of
+the common `H+1`-slab path carrier. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderWilsonCellWord_haarAmplitude_eq_commonCarrierAmplitude
     (H N : ℕ)
@@ -156,8 +156,7 @@ theorem
       H N hN beta hbeta i f g
 
 /-- The complete positive-half Wilson action inserted into the literal
-product-Haar path integral.  This is the actual cylinder action
-`S_path = sum_i S_cell,i`, not a new abstract observable. -/
+product-Haar path integral. -/
 noncomputable def
     periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionInsertionAmplitude
     (H N : ℕ)
@@ -173,6 +172,24 @@ noncomputable def
         (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)))
     ∂(periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N)
 
+/-- Generic measurability carrier for a finite nearest-neighbour path kernel.
+Keeping the path length generic avoids expensive reduction of the concrete
+positive-half-cylinder index type. -/
+private theorem wilsonCylinderActionFinitePathKernel_measurable
+    {X : Type*}
+    [MeasurableSpace X]
+    (K : X × X → ℝ)
+    (hK : Measurable K)
+    (n : ℕ) :
+    Measurable
+      (fun path : Fin (n + 1) → X =>
+        ∏ i : Fin n, K (path i.castSucc, path i.succ)) := by
+  classical
+  apply (Finset.univ : Finset (Fin n)).measurable_prod
+  intro i _hi
+  exact hK.comp
+    ((measurable_pi_apply i.castSucc).prodMk (measurable_pi_apply i.succ))
+
 /-- Measurability of the complete positive-half temporal-gauge path kernel. -/
 private theorem
     periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel_measurable'
@@ -181,21 +198,24 @@ private theorem
     Measurable
       (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
         H N beta) := by
-  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
-  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft
-  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight
-  apply
-    (Finset.univ : Finset (Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H))).measurable_prod
-  intro i _hi
-  exact
+  let K :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ :=
+    fun p => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+      H N beta p.1 p.2
+  have hK : Measurable K :=
     (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta).measurable.comp
-      ((measurable_pi_apply i.castSucc).prodMk (measurable_pi_apply i.succ))
+      H N beta).measurable
+  simpa [K,
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel,
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft,
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight] using
+    (wilsonCylinderActionFinitePathKernel_measurable K hK
+      (periodicHypercubicEvenPositiveHalfCylinderSlabCount H))
 
 /-- A bounded pair observable inserted on any one positive-half slab gives an
-integrable endpoint-weighted path integrand.  The proof uses exactly the
-finite-volume structure: endpoint `L² x L² -> L¹` by Hölder, while the Wilson
-path kernel and bounded insertion provide a uniform multiplier. -/
+integrable endpoint-weighted path integrand.  Endpoint `L² × L² → L¹` is
+Hölder; the Wilson path kernel and bounded insertion are a uniform multiplier. -/
 private theorem
     periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderBoundedPairIntegrand_integrable
     (H N : ℕ)
@@ -216,23 +236,23 @@ private theorem
           (g : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
             (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H))))
       (periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N) := by
-  let mu := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
+  let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
   let pathMu := periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N
   let n := periodicHypercubicEvenPositiveHalfCylinderSlabCount H
   have hzero : MeasurePreserving
       (fun path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N =>
-        path (0 : Fin (n + 1))) pathMu mu := by
-    simpa [pathMu, mu, n,
+        path (0 : Fin (n + 1))) pathMu μ := by
+    simpa [pathMu, μ, n,
       periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure] using
       (MeasureTheory.measurePreserving_eval
-        (mu := fun _ : Fin (n + 1) => mu) (0 : Fin (n + 1)))
+        (μ := fun _ : Fin (n + 1) => μ) (0 : Fin (n + 1)))
   have hlast : MeasurePreserving
       (fun path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N =>
-        path (Fin.last n)) pathMu mu := by
-    simpa [pathMu, mu, n,
+        path (Fin.last n)) pathMu μ := by
+    simpa [pathMu, μ, n,
       periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure] using
       (MeasureTheory.measurePreserving_eval
-        (mu := fun _ : Fin (n + 1) => mu) (Fin.last n))
+        (μ := fun _ : Fin (n + 1) => μ) (Fin.last n))
   have hf2 : MemLp
       (fun path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N =>
         (f : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N) (path 0)) 2 pathMu := by
@@ -295,7 +315,7 @@ private theorem
     have h := hbase.aestronglyMeasurable.mul hfactorMeas
     convert h using 1
     funext path
-    ring
+    ring_nf
   have hmajor : Integrable
       (fun path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N =>
         ‖b‖ *
@@ -379,12 +399,15 @@ private theorem
         (g : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
           (path (Fin.last n))| * ‖b‖ :=
       mul_le_mul_of_nonneg_left hfactor (abs_nonneg _)
+    _ = ‖b‖ * |(f : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N) (path 0) *
+        (g : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
+          (path (Fin.last n))| := by ring
     _ = |‖b‖ *
         ((f : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N) (path 0) *
           (g : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
             (path (Fin.last n)))| := by
+      symm
       rw [abs_mul, abs_of_nonneg (norm_nonneg b)]
-      ring
 
 /-- Summing all common-carrier cell insertions is exactly one insertion of the
 complete positive-half Wilson path action. -/
@@ -448,8 +471,8 @@ theorem
               (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)))
           ∂(periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N) := by
       simpa using
-        (MeasureTheory.integral_finsetSum
-          (mu := periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N)
+        (MeasureTheory.integral_finset_sum
+          (μ := periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N)
           (Finset.univ : Finset (Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)))
           (f := fun i path =>
             (f : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N) (path 0) *
@@ -537,6 +560,17 @@ theorem
       ∑ i : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H),
         periodicHypercubicEvenSpecialUnitaryPhysicalTransferSlabWilsonCylinderCellActionOperator
           H N hN beta hbeta i.1 (H - i.1) f by simp]
+  change inner ℝ
+      (∑ i in (Finset.univ :
+        Finset (Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H))),
+        periodicHypercubicEvenSpecialUnitaryPhysicalTransferSlabWilsonCylinderCellActionOperator
+          H N hN beta hbeta i.1 (H - i.1) f) g =
+    ∑ i in (Finset.univ :
+      Finset (Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H))),
+      periodicHypercubicEvenSpecialUnitaryFiniteTransferWordHaarAmplitude H N beta
+        (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderWilsonCellWord H N i)
+        (f : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
+        (g : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
   rw [sum_inner]
   apply Finset.sum_congr rfl
   intro i _hi
