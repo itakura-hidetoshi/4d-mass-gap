@@ -174,7 +174,10 @@ theorem
       hderiv hbound (convex_uIcc beta gamma) left_mem_uIcc right_mem_uIcc
   have hR :
       R gamma - R beta = K gamma - K beta + (gamma - beta) * (K beta * S) := by
-    simp [R, dK]
+    change
+      (K gamma - K beta - (gamma - beta) * (-S * K beta)) -
+          (K beta - K beta - (beta - beta) * (-S * K beta)) =
+        K gamma - K beta + (gamma - beta) * (K beta * S)
     ring
   change ‖K gamma - K beta + (gamma - beta) * (K beta * S)‖ ≤
     C ^ 2 * ‖gamma - beta‖ ^ 2
@@ -597,6 +600,18 @@ theorem
           (gamma - beta) * inner ℝ
             (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionInsertionOperator
               H N hN beta hbeta f) g := by
+    have hsmul :
+        inner ℝ
+          ((gamma - beta) •
+            periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionInsertionOperator
+              H N hN beta hbeta f) g =
+        (gamma - beta) * inner ℝ
+          (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionInsertionOperator
+            H N hN beta hbeta f) g := by
+      simpa using
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N).innerProductSpace.smul_left
+          (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionInsertionOperator
+            H N hN beta hbeta f) g (gamma - beta)
     calc
       inner ℝ
           (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator
@@ -650,15 +665,7 @@ theorem
             (gamma - beta) * inner ℝ
               (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionInsertionOperator
                 H N hN beta hbeta f) g := by
-          rw [show
-            inner ℝ
-              ((gamma - beta) •
-                periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionInsertionOperator
-                  H N hN beta hbeta f) g =
-              (gamma - beta) * inner ℝ
-                (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionInsertionOperator
-                  H N hN beta hbeta f) g from
-            real_inner_smul_left _ _ _]
+          rw [hsmul]
   rw [hsplit]
   rw [← periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeEndpointAmplitude_eq_physicalTransfer_inner
       H N hN gamma hgamma f g]
