@@ -219,15 +219,7 @@ theorem
       H N hN m beta hbeta
   have hunique : UniqueDiffWithinAt ℝ (Set.Ici (0 : ℝ)) beta :=
     (uniqueDiffOn_Ici (0 : ℝ)) beta hbeta
-  have hexact :
-      derivWithin
-          (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-            H N hN m)
-          (Set.Ici (0 : ℝ)) beta =
-        -periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-          H N hN (m + 1) beta :=
-    HasDerivWithinAt.derivWithin hder hunique
-  exact hexact
+  exact hder.derivWithin hunique
 
 /-- Every order of the hierarchy is differentiable on the physical coupling
 half-line in Mathlib's native calculus sense. -/
@@ -248,13 +240,7 @@ theorem
         (Set.Ici (0 : ℝ)) beta :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_hasDerivWithinAt
       H N hN m beta hbeta
-  have hdiff :
-      DifferentiableWithinAt ℝ
-        (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-          H N hN m)
-        (Set.Ici (0 : ℝ)) beta :=
-    HasDerivWithinAt.differentiableWithinAt hder
-  exact hdiff
+  exact hder.differentiableWithinAt
 
 /-- Hence every order is continuous on the physical half-line. -/
 theorem
@@ -274,13 +260,7 @@ theorem
         (Set.Ici (0 : ℝ)) beta :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_hasDerivWithinAt
       H N hN m beta hbeta
-  have hcont :
-      ContinuousWithinAt
-        (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-          H N hN m)
-        (Set.Ici (0 : ℝ)) beta :=
-    HasDerivWithinAt.continuousWithinAt hder
-  exact hcont
+  exact hder.continuousWithinAt
 
 /-- Finite-order Mathlib `ContDiffOn` for every insertion order.  The induction
 uses the exact derivative recursion and the fact that `Ici 0` has unique
@@ -390,14 +370,14 @@ theorem
             (c • (-periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
               H N hN (m + n + 1) beta))
             (Set.Ici (0 : ℝ)) beta := by
-        exact HasDerivWithinAt.const_smul c hbase
+        simpa only [Pi.smul_apply] using hbase.const_smul c
       have hunique : UniqueDiffWithinAt ℝ (Set.Ici (0 : ℝ)) beta :=
         (uniqueDiffOn_Ici (0 : ℝ)) beta hbeta
       have hscaledDeriv :
           derivWithin (fun t : ℝ => c • F t) (Set.Ici (0 : ℝ)) beta =
             c • (-periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
               H N hN (m + n + 1) beta) :=
-        HasDerivWithinAt.derivWithin hscaled hunique
+        hscaled.derivWithin hunique
       change derivWithin (fun t : ℝ => c • F t) (Set.Ici (0 : ℝ)) beta = _
       rw [hscaledDeriv]
       simp [c, F, pow_succ, Nat.add_assoc, mul_smul]
@@ -456,9 +436,9 @@ theorem
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_iteratedDerivWithin
     H N hN 0 n beta hbeta]
+  simp only [Nat.zero_add]
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_of_nonneg
     H N hN n beta hbeta]
-  simp
 
 /-- Final native-Mathlib smoothness package.  This replaces the previous
 certificate-only wording by an actual `ContDiffOn ℝ ∞` theorem and exact
