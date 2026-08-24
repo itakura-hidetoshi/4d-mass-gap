@@ -20,7 +20,9 @@ same four-dimensional vertex. -/
   funext i
   by_cases hi : i = 0
   · subst i
-    simp [periodicHypercubicEvenSpatialSliceVertexAtTime, v.2]
+    have hv := v.2
+    unfold periodicHypercubicEvenOnPrimaryReflectionPlane at hv
+    simpa [periodicHypercubicEvenSpatialSliceVertexAtTime] using hv.symm
   · simp [periodicHypercubicEvenSpatialSliceVertexAtTime, hi]
 
 /-- Replacing the time coordinate of a primary-slice vertex by the antipodal
@@ -34,10 +36,149 @@ half-period is exactly the canonical half-period time translation. -/
   funext i
   by_cases hi : i = 0
   · subst i
-    simp [periodicHypercubicEvenSpatialSliceVertexAtTime,
-      periodicHypercubicEvenHalfPeriodTimeShift, v.2]
+    have hv := v.2
+    unfold periodicHypercubicEvenOnPrimaryReflectionPlane at hv
+    simpa [periodicHypercubicEvenSpatialSliceVertexAtTime,
+      periodicHypercubicEvenHalfPeriodTimeShift] using hv
   · simp [periodicHypercubicEvenSpatialSliceVertexAtTime,
       periodicHypercubicEvenHalfPeriodTimeShift, hi]
+
+private theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_primary_apply
+    (H N : ℕ)
+    (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ))
+    (x : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ))
+    (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+    (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+        H N (b, x)).1 0 e =
+      b ((periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices H).symm (Sum.inl e)) := by
+  let sourceIndex :=
+    (periodicHypercubicEvenEdgeOrbitPartition H).FixedEdge ⊕
+      (periodicHypercubicEvenEdgeOrbitPartition H).PositiveEdge
+  let targetIndex := PeriodicHypercubicEvenPositiveHalfClosureFlatIndex H
+  let A : sourceIndex → Matrix.specialUnitaryGroup (Fin N) ℂ :=
+    (MeasurableEquiv.sumPiEquivProdPi
+      (fun _ : sourceIndex => Matrix.specialUnitaryGroup (Fin N) ℂ)).symm (b, x)
+  have h :=
+    MeasurableEquiv.piCongrLeft_apply_apply
+      (β := fun _ : targetIndex => Matrix.specialUnitaryGroup (Fin N) ℂ)
+      (periodicHypercubicEvenPositiveHalfClosureIndexEquiv H) A
+      (Sum.inl ((periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices H).symm (Sum.inl e)))
+  simpa [sourceIndex, targetIndex, A,
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv,
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatToTransferCoordinatesMeasurableEquiv,
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatSpatialPathMeasurableEquiv,
+    periodicHypercubicEvenPositiveHalfClosureFlatMeasurableEquiv,
+    periodicHypercubicEvenPositiveHalfClosureIndexEquiv,
+    periodicHypercubicEvenPositiveHalfClassifiedClosureReassoc,
+    periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexEquiv,
+    periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexToPath] using h
+
+private theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_antipodal_apply
+    (H N : ℕ)
+    (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ))
+    (x : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ))
+    (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+    (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+        H N (b, x)).1 ⟨H + 1, by
+          simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
+          omega⟩ e =
+      b ((periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices H).symm (Sum.inr e)) := by
+  let sourceIndex :=
+    (periodicHypercubicEvenEdgeOrbitPartition H).FixedEdge ⊕
+      (periodicHypercubicEvenEdgeOrbitPartition H).PositiveEdge
+  let targetIndex := PeriodicHypercubicEvenPositiveHalfClosureFlatIndex H
+  let A : sourceIndex → Matrix.specialUnitaryGroup (Fin N) ℂ :=
+    (MeasurableEquiv.sumPiEquivProdPi
+      (fun _ : sourceIndex => Matrix.specialUnitaryGroup (Fin N) ℂ)).symm (b, x)
+  have h :=
+    MeasurableEquiv.piCongrLeft_apply_apply
+      (β := fun _ : targetIndex => Matrix.specialUnitaryGroup (Fin N) ℂ)
+      (periodicHypercubicEvenPositiveHalfClosureIndexEquiv H) A
+      (Sum.inl ((periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices H).symm (Sum.inr e)))
+  simpa [sourceIndex, targetIndex, A,
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv,
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatToTransferCoordinatesMeasurableEquiv,
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatSpatialPathMeasurableEquiv,
+    periodicHypercubicEvenPositiveHalfClosureFlatMeasurableEquiv,
+    periodicHypercubicEvenPositiveHalfClosureIndexEquiv,
+    periodicHypercubicEvenPositiveHalfClassifiedClosureReassoc,
+    periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexEquiv,
+    periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexToPath] using h
+
+private theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_interior_apply
+    (H N : ℕ)
+    (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ))
+    (x : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ))
+    (k : Fin H)
+    (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+    (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+        H N (b, x)).1 ⟨k.1 + 1, by
+          simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
+          omega⟩ e =
+      x ((periodicHypercubicEvenPositiveEdgeEquivPositiveHalfOpenIndex H).symm
+        (Sum.inl (k, e))) := by
+  let sourceIndex :=
+    (periodicHypercubicEvenEdgeOrbitPartition H).FixedEdge ⊕
+      (periodicHypercubicEvenEdgeOrbitPartition H).PositiveEdge
+  let targetIndex := PeriodicHypercubicEvenPositiveHalfClosureFlatIndex H
+  let A : sourceIndex → Matrix.specialUnitaryGroup (Fin N) ℂ :=
+    (MeasurableEquiv.sumPiEquivProdPi
+      (fun _ : sourceIndex => Matrix.specialUnitaryGroup (Fin N) ℂ)).symm (b, x)
+  have h :=
+    MeasurableEquiv.piCongrLeft_apply_apply
+      (β := fun _ : targetIndex => Matrix.specialUnitaryGroup (Fin N) ℂ)
+      (periodicHypercubicEvenPositiveHalfClosureIndexEquiv H) A
+      (Sum.inr ((periodicHypercubicEvenPositiveEdgeEquivPositiveHalfOpenIndex H).symm
+        (Sum.inl (k, e))))
+  simpa [sourceIndex, targetIndex, A,
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv,
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatToTransferCoordinatesMeasurableEquiv,
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatSpatialPathMeasurableEquiv,
+    periodicHypercubicEvenPositiveHalfClosureFlatMeasurableEquiv,
+    periodicHypercubicEvenPositiveHalfClosureIndexEquiv,
+    periodicHypercubicEvenPositiveHalfClassifiedClosureReassoc,
+    periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexEquiv,
+    periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexToPath] using h
+
+private theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_temporal_apply
+    (H N : ℕ)
+    (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ))
+    (x : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ))
+    (i : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H))
+    (v : PeriodicHypercubicEvenSpatialSliceVertex H) :
+    (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+        H N (b, x)).2 i v =
+      x ((periodicHypercubicEvenPositiveEdgeEquivPositiveHalfOpenIndex H).symm
+        (Sum.inr (i, v))) := by
+  let sourceIndex :=
+    (periodicHypercubicEvenEdgeOrbitPartition H).FixedEdge ⊕
+      (periodicHypercubicEvenEdgeOrbitPartition H).PositiveEdge
+  let targetIndex := PeriodicHypercubicEvenPositiveHalfClosureFlatIndex H
+  let A : sourceIndex → Matrix.specialUnitaryGroup (Fin N) ℂ :=
+    (MeasurableEquiv.sumPiEquivProdPi
+      (fun _ : sourceIndex => Matrix.specialUnitaryGroup (Fin N) ℂ)).symm (b, x)
+  have h :=
+    MeasurableEquiv.piCongrLeft_apply_apply
+      (β := fun _ : targetIndex => Matrix.specialUnitaryGroup (Fin N) ℂ)
+      (periodicHypercubicEvenPositiveHalfClosureIndexEquiv H) A
+      (Sum.inr ((periodicHypercubicEvenPositiveEdgeEquivPositiveHalfOpenIndex H).symm
+        (Sum.inr (i, v))))
+  simpa [sourceIndex, targetIndex, A,
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv,
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatToTransferCoordinatesMeasurableEquiv,
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatTemporalFieldMeasurableEquiv,
+    periodicHypercubicEvenPositiveHalfClosureFlatMeasurableEquiv,
+    periodicHypercubicEvenPositiveHalfClosureIndexEquiv,
+    periodicHypercubicEvenPositiveHalfClassifiedClosureReassoc,
+    periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexEquiv] using h
 
 /-- The spatial path extracted from the positive-half representative assembled
 from `(b,x)` is exactly the spatial component of the canonical positive-closure
@@ -57,98 +198,81 @@ theorem periodicHypercubicEvenSpecialUnitaryBoundaryFiberedAssemble_positiveHalf
   by_cases hzero : j.1 = 0
   · have hj : j = 0 := Fin.ext hzero
     subst j
+    let ef := (periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices H).symm (Sum.inl e)
+    have hedge :
+        periodicHypercubicEvenSpatialSliceLinkAtTime H 0 e = ef.1 := by
+      dsimp [ef, periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices,
+        periodicHypercubicEvenSpatialSliceSumToFixedEdge,
+        periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge]
+      unfold periodicHypercubicEvenSpatialSliceLinkAtTime
+      rw [periodicHypercubicEvenSpatialSliceVertexAtTime_zero_eq]
     change
       (periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble
           b x (fun _ => 1)
           (periodicHypercubicEvenSpatialSliceLinkAtTime H 0 e) = _
-    have hedge :
-        periodicHypercubicEvenSpatialSliceLinkAtTime H 0 e =
-          (periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge H e).1 := by
-      unfold periodicHypercubicEvenSpatialSliceLinkAtTime
-      rw [periodicHypercubicEvenSpatialSliceVertexAtTime_zero_eq]
-      rfl
     rw [hedge]
     rw [(periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble_fixed
-      b x (fun _ => 1) (periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge H e)]
-    simp [periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv,
-      periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatToTransferCoordinatesMeasurableEquiv,
-      periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatSpatialPathMeasurableEquiv,
-      periodicHypercubicEvenPositiveHalfClosureFlatMeasurableEquiv,
-      periodicHypercubicEvenPositiveHalfClosureIndexEquiv,
-      periodicHypercubicEvenPositiveHalfClassifiedClosureReassoc,
-      periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexEquiv,
-      periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexToPath,
-      periodicHypercubicEvenPositiveHalfPathToBoundaryInteriorSpatialIndex,
-      periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices,
-      periodicHypercubicEvenSpatialSliceSumToFixedEdge,
-      periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge]
+      b x (fun _ => 1) ef]
+    exact (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_primary_apply
+      H N b x e).symm
   · by_cases hlast : j.1 = H + 1
-    · have hj : j = ⟨H + 1, by omega⟩ := Fin.ext hlast
+    · have hj : j = ⟨H + 1, by
+          simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
+          omega⟩ := Fin.ext hlast
       rw [hj]
+      let ef := (periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices H).symm (Sum.inr e)
+      have hedge :
+          periodicHypercubicEvenSpatialSliceLinkAtTime H
+              (((H + 1 : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H))) e = ef.1 := by
+        dsimp [ef, periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices,
+          periodicHypercubicEvenSpatialSliceSumToFixedEdge,
+          periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge,
+          periodicHypercubicEvenPrimaryAntipodalSpatialSliceLinkEquiv,
+          periodicHypercubicEvenPrimaryAntipodalSpatialSliceVertexEquiv,
+          periodicHypercubicEvenPrimaryToAntipodalSpatialSliceVertex]
+        unfold periodicHypercubicEvenSpatialSliceLinkAtTime
+        rw [periodicHypercubicEvenSpatialSliceVertexAtTime_halfPeriod_eq]
       change
         (periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble
             b x (fun _ => 1)
             (periodicHypercubicEvenSpatialSliceLinkAtTime H
               (((H + 1 : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H))) e) = _
-      have hedge :
-          periodicHypercubicEvenSpatialSliceLinkAtTime H
-              (((H + 1 : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H))) e =
-            (periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge H
-              (periodicHypercubicEvenPrimaryAntipodalSpatialSliceLinkEquiv H e)).1 := by
-        unfold periodicHypercubicEvenSpatialSliceLinkAtTime
-        rw [periodicHypercubicEvenSpatialSliceVertexAtTime_halfPeriod_eq]
-        rfl
       rw [hedge]
       rw [(periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble_fixed
-        b x (fun _ => 1)
-        (periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge H
-          (periodicHypercubicEvenPrimaryAntipodalSpatialSliceLinkEquiv H e))]
-      simp [periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv,
-        periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatToTransferCoordinatesMeasurableEquiv,
-        periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatSpatialPathMeasurableEquiv,
-        periodicHypercubicEvenPositiveHalfClosureFlatMeasurableEquiv,
-        periodicHypercubicEvenPositiveHalfClosureIndexEquiv,
-        periodicHypercubicEvenPositiveHalfClassifiedClosureReassoc,
-        periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexEquiv,
-        periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexToPath,
-        periodicHypercubicEvenPositiveHalfPathToBoundaryInteriorSpatialIndex,
-        periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices,
-        periodicHypercubicEvenSpatialSliceSumToFixedEdge,
-        periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge,
-        periodicHypercubicEvenPrimaryAntipodalSpatialSliceLinkEquiv,
-        periodicHypercubicEvenPrimaryAntipodalSpatialSliceVertexEquiv,
-        periodicHypercubicEvenPrimaryToAntipodalSpatialSliceVertex]
+        b x (fun _ => 1) ef]
+      exact (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_antipodal_apply
+        H N b x e).symm
     · have hjpos : 1 ≤ j.1 := by omega
       have hjle : j.1 ≤ H := by
         have hjlt := j.2
+        simp only [periodicHypercubicEvenPositiveHalfCylinderSlabCount] at hjlt
         omega
       let k : Fin H := ⟨j.1 - 1, by omega⟩
       have hk : k.1 + 1 = j.1 := by
         dsimp [k]
         omega
-      have hj : j = ⟨k.1 + 1, by omega⟩ := by
+      have hj : j = ⟨k.1 + 1, by
+          simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
+          omega⟩ := by
         apply Fin.ext
         exact hk.symm
       rw [hj]
+      let ep := (periodicHypercubicEvenPositiveEdgeEquivPositiveHalfOpenIndex H).symm
+        (Sum.inl (k, e))
+      have hedge :
+          periodicHypercubicEvenPositiveHalfInteriorSpatialEdge H (k, e) = ep.1 := by
+        dsimp [ep]
+        simp [periodicHypercubicEvenPositiveEdgeEquivPositiveHalfOpenIndex,
+          periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge]
       change
         (periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble
             b x (fun _ => 1)
             (periodicHypercubicEvenPositiveHalfInteriorSpatialEdge H (k, e)) = _
+      rw [hedge]
       rw [(periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble_positive
-        b x (fun _ => 1)
-        (periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge H (Sum.inl (k, e)))]
-      simp [periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv,
-        periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatToTransferCoordinatesMeasurableEquiv,
-        periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatSpatialPathMeasurableEquiv,
-        periodicHypercubicEvenPositiveHalfClosureFlatMeasurableEquiv,
-        periodicHypercubicEvenPositiveHalfClosureIndexEquiv,
-        periodicHypercubicEvenPositiveHalfClassifiedClosureReassoc,
-        periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexEquiv,
-        periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexToPath,
-        periodicHypercubicEvenPositiveHalfPathToBoundaryInteriorSpatialIndex,
-        periodicHypercubicEvenPositiveEdgeEquivPositiveHalfOpenIndex,
-        periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge,
-        k]
+        b x (fun _ => 1) ep]
+      exact (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_interior_apply
+        H N b x k e).symm
 
 /-- The temporal-link field extracted from the same assembled representative is
 exactly the temporal component of the canonical positive-closure transfer
@@ -165,22 +289,22 @@ theorem periodicHypercubicEvenSpecialUnitaryBoundaryFiberedAssemble_positiveHalf
       (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
         H N (b, x)).2 := by
   funext i v
+  let ep := (periodicHypercubicEvenPositiveEdgeEquivPositiveHalfOpenIndex H).symm
+    (Sum.inr (i, v))
+  have hedge :
+      periodicHypercubicEvenPositiveHalfTemporalEdge H (i, v) = ep.1 := by
+    dsimp [ep]
+    simp [periodicHypercubicEvenPositiveEdgeEquivPositiveHalfOpenIndex,
+      periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge]
   change
     (periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble
         b x (fun _ => 1)
         (periodicHypercubicEvenPositiveHalfTemporalEdge H (i, v)) = _
+  rw [hedge]
   rw [(periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble_positive
-    b x (fun _ => 1)
-    (periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge H (Sum.inr (i, v)))]
-  simp [periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv,
-    periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatToTransferCoordinatesMeasurableEquiv,
-    periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatTemporalFieldMeasurableEquiv,
-    periodicHypercubicEvenPositiveHalfClosureFlatMeasurableEquiv,
-    periodicHypercubicEvenPositiveHalfClosureIndexEquiv,
-    periodicHypercubicEvenPositiveHalfClassifiedClosureReassoc,
-    periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexEquiv,
-    periodicHypercubicEvenPositiveEdgeEquivPositiveHalfOpenIndex,
-    periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge]
+    b x (fun _ => 1) ep]
+  exact (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_temporal_apply
+    H N b x i v).symm
 
 /-- Specializing the geometric action bridge to the positive-half representative
 assembled from boundary/open-half data identifies the OS closure action with the
