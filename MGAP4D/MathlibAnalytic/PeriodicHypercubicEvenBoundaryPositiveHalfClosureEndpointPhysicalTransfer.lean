@@ -134,7 +134,7 @@ private theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_eq_sq
           H N hN beta hbeta
           (b, (x, periodicHypercubicEvenOpenHalfOrientationCorrection H x))).toReal =
         a * a := by
-    simpa [a, periodicHypercubicEven_real_inner_eq_mul] using
+    simpa [a, periodicHypercubicEven_real_inner_eq_mul, pow_two] using
       (periodicHypercubicEvenBoundaryDensity_orientationCorrection_eq_inner
         H N hN beta hbeta b x x)
   calc
