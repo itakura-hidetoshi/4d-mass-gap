@@ -82,7 +82,17 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSlabPairObservableWeightedLeft_in
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
         ‖b‖ * f p.1) (μ.prod μ) := by
     simpa [Pi.smul_apply, smul_eq_mul] using hbase.smul ‖b‖
-  apply hmajor.mono (hbase.aestronglyMeasurable.mul hfactorMeas)
+  have hmeas : AEStronglyMeasurable
+      (fun p :
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+        f p.1 *
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+            H N beta p.1 p.2 * b p)
+      (μ.prod μ) := by
+    simpa [mul_assoc] using
+      (hbase.aestronglyMeasurable.mul hfactorMeas)
+  apply hmajor.mono hmeas
   filter_upwards with p
   have hk :
       |periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
@@ -270,9 +280,18 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSlabPairObservableIntegralL2_eq_o
         f p.1 *
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
             H N beta p.1 p.2 * b p * g p.2) (μ.prod μ) := by
-    apply hmajor.mono
-      (((Lp.aestronglyMeasurable f).comp_fst.mul hfactorMeas).mul
-        (Lp.aestronglyMeasurable g).comp_snd)
+    have hmeas : AEStronglyMeasurable
+        (fun p :
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+          f p.1 *
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+              H N beta p.1 p.2 * b p * g p.2)
+        (μ.prod μ) := by
+      simpa [mul_assoc] using
+        (((Lp.aestronglyMeasurable f).comp_fst.mul hfactorMeas).mul
+          (Lp.aestronglyMeasurable g).comp_snd)
+    apply hmajor.mono hmeas
     filter_upwards with p
     have hk :
         |periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
