@@ -486,6 +486,23 @@ private theorem positiveHalf_endpointHalfSum_eq_adjacentHalfSum
   rw [← hdouble]
   ring
 
+/-- Pure finite-sum bookkeeping used after the geometric cylinder reindexing:
+combine a sum of endpoint pairs with the temporal sum on the same slab carrier. -/
+private theorem positiveHalf_sum_pair_add_sum_eq_sum_middle
+    (m : ℕ)
+    (a b c : Fin m → ℝ) :
+    (∑ i : Fin m, (a i + b i)) + (∑ i : Fin m, c i) =
+      ∑ i : Fin m, (a i + c i + b i) := by
+  classical
+  change
+    (∑ i in (Finset.univ : Finset (Fin m)), a i + b i) +
+        (∑ i in (Finset.univ : Finset (Fin m)), c i) =
+      ∑ i in (Finset.univ : Finset (Fin m)), a i + c i + b i
+  rw [← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro i _hi
+  ring
+
 /-- The complete weighted cylinder-cell sum is literally the unfixed path
 action read from the same four-dimensional configuration. -/
 theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureCellSum_eq_unfixedPathAction
@@ -510,10 +527,27 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureCellSum_eq_unfixe
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathAction
   unfold periodicHypercubicEvenSpecialUnitaryUnfixedOneSlabAction
   simp only [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
-  rw [← Finset.sum_add_distrib]
-  apply Finset.sum_congr rfl
-  intro i _hi
-  ring
+  let a : Fin (H + 1) → ℝ := fun i =>
+    (1 / 2 : ℝ) *
+      periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
+        (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPathRestriction
+          H N A i.castSucc)
+  let b : Fin (H + 1) → ℝ := fun i =>
+    (1 / 2 : ℝ) *
+      periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
+        (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPathRestriction
+          H N A i.succ)
+  let c : Fin (H + 1) → ℝ := fun i =>
+    periodicHypercubicEvenSpecialUnitaryUnfixedTemporalCrossingAction H N
+      (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPathRestriction
+        H N A i.castSucc)
+      (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalFieldRestriction
+        H N A i)
+      (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPathRestriction
+        H N A i.succ)
+  change (∑ i : Fin (H + 1), a i + b i) + (∑ i : Fin (H + 1), c i) =
+    ∑ i : Fin (H + 1), a i + c i + b i
+  exact positiveHalf_sum_pair_add_sum_eq_sum_middle (H + 1) a b c
 
 /-- Main action identification: the actual OS positive-half closure action is
 exactly the unfixed finite-cylinder path action of its spatial and temporal
@@ -532,30 +566,3 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureSectorAction_eq_u
   rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureSum_eq_supportedSum]
   rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureSupportedSum_eq_cellSum]
   exact periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureCellSum_eq_unfixedPathAction H N A
-
-/-- Specialization of the action identification to the boundary/open-half
-coordinates used by the completed OS Gram feature. -/
-theorem periodicHypercubicEvenBoundaryPositiveHalfClosureWilsonAction_eq_unfixedPathAction
-    (H N : ℕ)
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration
-      (Matrix.specialUnitaryGroup (Fin N) ℂ))
-    (x : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
-      (Matrix.specialUnitaryGroup (Fin N) ℂ)) :
-    periodicHypercubicEvenBoundaryPositiveHalfClosureWilsonAction H N b x =
-      let A :=
-        (periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble
-          b x (fun _ => 1)
-      periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathAction H N
-        (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPathRestriction H N A)
-        (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalFieldRestriction H N A) := by
-  unfold periodicHypercubicEvenBoundaryPositiveHalfClosureWilsonAction
-  exact
-    periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureSectorAction_eq_unfixedPathAction H N
-      ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble
-        b x (fun _ => 1))
-
-end
-
-end MathlibAnalytic
-end MGAP4D
