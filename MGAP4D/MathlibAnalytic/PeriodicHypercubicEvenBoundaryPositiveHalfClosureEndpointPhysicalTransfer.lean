@@ -1,6 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryPositiveHalfClosureTransferKernelBridge
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPositiveHalfTransferPathIteration
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonGibbsBoundedContinuousReflectionPositivity
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryBoundaryFiberedGibbsFactorization
 import Mathlib.MeasureTheory.Integral.Prod
 import Mathlib.Tactic
 
@@ -43,9 +43,8 @@ local instance positiveHalfClosureEndpointSpecialUnitaryBorelSpace (N : ℕ) :
   specialUnitaryGroupBorelSpace N
 
 /-- The completed positive Gram feature is jointly measurable in the actual
-positive-closure coordinates `(boundary, open half)`.  The earlier measurable
-receipt fixed the boundary; here the same reflected-diagonal density formula is
-used before either coordinate is frozen. -/
+positive-closure coordinates `(boundary, open half)`.  The same reflected
+diagonal density formula is used before either coordinate is frozen. -/
 theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_joint_measurable
     (H N : ℕ)
     (hN : 0 < N)
@@ -95,6 +94,38 @@ theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_joint_measura
         H N hN beta hbeta z.1 z.2
   rw [heq]
   exact hsqrt
+
+/-- The unfixed positive-half-cylinder kernel is strictly positive.  This is
+transported from the already established temporal-gauge path kernel. -/
+theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel_pos
+    (H N : ℕ)
+    (beta : ℝ)
+    (path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N)
+    (U : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalLinkField H N) :
+    0 < periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel
+      H N beta path U := by
+  rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel_eq_temporalGauge]
+  exact
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel_pos
+      H N beta _
+
+/-- At nonnegative coupling the unfixed positive-half-cylinder kernel has
+absolute value at most one.  The noncommutative temporal links are removed by
+the exact cumulative temporal-gauge transformation before applying the existing
+path-kernel bound. -/
+theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel_abs_le_one
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N)
+    (U : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalLinkField H N) :
+    |periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel
+      H N beta path U| ≤ 1 := by
+  rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel_eq_temporalGauge]
+  exact
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel_abs_le_one
+      H N hN beta hbeta _
 
 /-- The primary spatial endpoint of the transfer coordinates is normalized Haar
 when the actual positive closure is distributed by its closure Haar law. -/
@@ -187,8 +218,8 @@ private theorem
 
 /-- Endpoint `L²` states remain integrable after pullback to the actual positive
 closure, and multiplication by the completed positive Gram feature preserves
-integrability because that feature is uniformly bounded by its partition
-square-root normalization. -/
+integrability because #2065 identifies that feature with the partition
+square-root normalization times a kernel bounded by one. -/
 theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_gaussEndpoints_integrable
     (H N : ℕ)
     (hN : 0 < N)
@@ -246,7 +277,7 @@ theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_gaussEndpoint
   have hfg : Integrable (fun z => f0 z * gLast z) closureMu :=
     hf2.integrable_mul hg2
   have hc : 0 ≤ c := by
-    dsimp [c]
+    dsimp [c, periodicHypercubicEvenBoundaryPositiveHalfPartitionSqrtNormalization]
     exact Real.sqrt_nonneg _
   have hmajor : Integrable (fun z => c * (f0 z * gLast z)) closureMu :=
     hfg.const_mul c
@@ -257,16 +288,39 @@ theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_gaussEndpoint
     ((hfeature.aestronglyMeasurable.mul hf2.aestronglyMeasurable).mul
       hg2.aestronglyMeasurable)
   filter_upwards with z
-  have hfeature0 :=
-    periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_nonneg
-      H N hN beta hbeta z.1 z.2
+  let path :=
+    (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+      H N z).1
+  let U :=
+    (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+      H N z).2
+  let K :=
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel
+      H N beta path U
+  have hk0 : 0 ≤ K := by
+    exact le_of_lt
+      (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel_pos
+        H N beta path U)
+  have hkAbs : |K| ≤ 1 :=
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel_abs_le_one
+      H N hN beta hbeta path U
+  have hkLe : K ≤ 1 := le_trans (le_abs_self K) hkAbs
+  have hfeatureEq :
+      periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+          H N hN beta hbeta z.1 z.2 = c * K := by
+    simpa [c, path, U, K] using
+      periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_eq_normalizedUnfixedPathKernel
+        H N hN beta hbeta z.1 z.2
+  have hfeature0 :
+      0 ≤ periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+          H N hN beta hbeta z.1 z.2 := by
+    rw [hfeatureEq]
+    exact mul_nonneg hc hk0
   have hfeatureLe :
       periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
           H N hN beta hbeta z.1 z.2 ≤ c := by
-    simpa [c, periodicHypercubicEvenBoundaryPositiveHalfPartitionSqrtNormalization,
-      one_div] using
-      (periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_le_sqrt_inv_partitionFunction
-        H N hN beta hbeta z.1 z.2)
+    rw [hfeatureEq]
+    simpa using mul_le_mul_of_nonneg_left hkLe hc
   change
     |periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
         H N hN beta hbeta z.1 z.2 * f0 z * gLast z| ≤
