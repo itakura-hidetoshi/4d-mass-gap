@@ -88,11 +88,11 @@ theorem
           H N hN t ht path
     calc
       ‖dK t‖ = ‖S‖ * |K t| := by
-        simp [dK, Real.norm_eq_abs, abs_mul]
+        simp [dK, Real.norm_eq_abs]
       _ ≤ C * 1 := mul_le_mul hS hKt (abs_nonneg _) hC
       _ = C := by ring
   have hmvt :=
-    norm_image_sub_le_of_norm_hasDerivWithin_le
+    Convex.norm_image_sub_le_of_norm_hasDerivWithin_le
       hderiv hbound (convex_Ici (0 : ℝ)) hbeta hgamma
   simpa [K, C] using hmvt
 
@@ -148,7 +148,7 @@ theorem
     intro t ht
     have ht_nonneg : 0 ≤ t := by
       change min beta gamma ≤ t ∧ t ≤ max beta gamma at ht
-      have hmin : 0 ≤ min beta gamma := by simp [min_nonneg, hbeta, hgamma]
+      have hmin : 0 ≤ min beta gamma := le_min hbeta hgamma
       exact hmin.trans ht.1
     have hKlip :=
       periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel_norm_sub_le
@@ -170,7 +170,7 @@ theorem
         _ = C ^ 2 * ‖t - beta‖ := by ring
     exact hdK.trans (mul_le_mul_of_nonneg_left hdist (sq_nonneg C))
   have hmvt :=
-    norm_image_sub_le_of_norm_hasDerivWithin_le
+    Convex.norm_image_sub_le_of_norm_hasDerivWithin_le
       hderiv hbound (convex_uIcc beta gamma) left_mem_uIcc right_mem_uIcc
   convert hmvt using 1 <;> simp [R, dK, K, S, C] <;> ring
 
@@ -268,7 +268,7 @@ theorem
         (p := (2 : ℝ≥0∞)) (q := (2 : ℝ≥0∞)) (r := (1 : ℝ≥0∞))
         hf2.1 hg2.1 (fun x y : ℝ => x * y) 1
         (Filter.Eventually.of_forall fun _ => by simp))
-  have htop : eLpNorm f0 2 pathMu * eLpNorm g1 2 pathMu ≠ ∞ :=
+  have htop : eLpNorm f0 2 pathMu * eLpNorm g1 2 pathMu ≠ (⊤ : ℝ≥0∞) :=
     ENNReal.mul_ne_top hf2.2.ne hg2.2.ne
   have hfNorm : (eLpNorm f0 2 pathMu).toReal = ‖f‖ := by
     calc
@@ -302,8 +302,10 @@ theorem
         (g : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
           (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)))| ∂pathMu) =
         (eLpNorm (fun path => f0 path * g1 path) 1 pathMu).toReal := by
-      simpa [f0, g1, n, Real.norm_eq_abs, eLpNorm_one_eq_lintegral_enorm] using
-        (integral_norm_eq_lintegral_enorm hbase.aestronglyMeasurable)
+      change (∫ path, ‖f0 path * g1 path‖ ∂pathMu) =
+        (eLpNorm (fun path => f0 path * g1 path) 1 pathMu).toReal
+      rw [integral_norm_eq_lintegral_enorm hbase.aestronglyMeasurable,
+        eLpNorm_one_eq_lintegral_enorm]
     _ ≤ (eLpNorm f0 2 pathMu * eLpNorm g1 2 pathMu).toReal :=
       ENNReal.toReal_mono htop hholder
     _ = ‖f‖ * ‖g‖ := by rw [ENNReal.toReal_mul, hfNorm, hgNorm]
@@ -548,8 +550,7 @@ theorem
         (gamma - beta) •
           periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionInsertionOperator
             H N hN beta hbeta f) g = _
-  rw [inner_add_left, inner_sub_left]
-  simp only [inner_smul_left, conj_trivial]
+  simp only [inner_add_left, inner_sub_left, real_inner_smul_left]
   rw [← periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeEndpointAmplitude_eq_physicalTransfer_inner
       H N hN gamma hgamma f g]
   rw [← periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeEndpointAmplitude_eq_physicalTransfer_inner
@@ -712,11 +713,12 @@ theorem
   have hsq : ‖R f‖ ^ 2 ≤ B * ‖f‖ * ‖R f‖ := by
     rw [← real_inner_self_eq_norm_sq]
     exact (le_abs_self _).trans (by simpa [R, B, mul_assoc] using hinner)
+  change ‖R f‖ ≤ B * ‖f‖
   by_cases hz : ‖R f‖ = 0
-  · simp [R, B, hz]
+  · rw [hz]
+    positivity
   have hpos : 0 < ‖R f‖ := lt_of_le_of_ne (norm_nonneg _) (Ne.symm hz)
   have hfnonneg : 0 ≤ ‖f‖ := norm_nonneg _
-  change ‖R f‖ ≤ B * ‖f‖
   nlinarith
 
 /-- Main operator-level beta-variation estimate: the complete positive-half physical
@@ -740,7 +742,8 @@ theorem
   let B :=
     periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
         H N ^ 2 * ‖gamma - beta‖ ^ 2
-  rw [ContinuousLinearMap.opNorm_le_bound R (by positivity)]
+  change ‖R‖ ≤ B
+  apply ContinuousLinearMap.opNorm_le_bound R (by positivity)
   intro f
   simpa [R, B] using
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferBetaRemainderOperator_apply_norm_le
