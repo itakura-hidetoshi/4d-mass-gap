@@ -137,86 +137,118 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight_measura
                   (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail) =>
                 a (path 0)) :=
             a.continuous.measurable.comp (measurable_pi_apply 0)
-          change Measurable
-            (fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
-                (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail) =>
-              a (path 0) *
-                periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight
-                  H N beta tail path)
-          exact ha0.mul ih
+          have hExplicit : Measurable
+              (fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
+                  (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail) =>
+                a (path 0) *
+                  periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight
+                    H N beta tail path) :=
+            ha0.mul ih
+          have hEq :
+              periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight
+                  H N beta (.slice a ha :: tail) =
+                fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
+                    (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail) =>
+                  a (path 0) *
+                    periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight
+                      H N beta tail path := by
+            funext path
+            rfl
+          rw [hEq]
+          exact hExplicit
       | transfer =>
-          let tailMap := fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
-              (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1) =>
-            (fun i : Fin
-                (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1) =>
-              path i.succ)
+          let n := periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail
+          let tailMap : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N (n + 1) →
+              PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N n :=
+            fun path i => path i.succ
           have htailMap : Measurable tailMap := by
             refine measurable_pi_lambda _ ?_
             intro i
             exact measurable_pi_apply i.succ
           have hpair : Measurable
-              (fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
-                  (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1) =>
-                (path 0,
-                  path (0 : Fin
-                    (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1)).succ)) :=
+              (fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N (n + 1) =>
+                (path 0, path (0 : Fin (n + 1)).succ)) :=
             (measurable_pi_apply 0).prodMk
-              (measurable_pi_apply (0 : Fin
-                (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1)).succ)
-          have hK : Measurable
-              (fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
-                  (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1) =>
+              (measurable_pi_apply (0 : Fin (n + 1)).succ)
+          have hKernelPair : Measurable
+              (fun p : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+                  PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
                 periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-                  H N beta (path 0) (path (0 : Fin
-                    (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1)).succ)) :=
+                  H N beta p.1 p.2) :=
             (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-              H N beta).measurable.comp hpair
-          change Measurable
-            (fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
-                (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1) =>
-              periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-                  H N beta (path 0) (path (0 : Fin
-                    (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1)).succ) *
-                periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight
-                  H N beta tail (tailMap path))
-          exact hK.mul (ih.comp htailMap)
+              H N beta).measurable
+          have hK : Measurable
+              (fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N (n + 1) =>
+                periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                  H N beta (path 0) (path (0 : Fin (n + 1)).succ)) :=
+            hKernelPair.comp hpair
+          have hExplicit : Measurable
+              (fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N (n + 1) =>
+                periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                    H N beta (path 0) (path (0 : Fin (n + 1)).succ) *
+                  periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight
+                    H N beta tail (tailMap path)) :=
+            hK.mul (ih.comp htailMap)
+          have hEq :
+              periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight
+                  H N beta (.transfer :: tail) =
+                fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N (n + 1) =>
+                  periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                      H N beta (path 0) (path (0 : Fin (n + 1)).succ) *
+                    periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight
+                      H N beta tail (tailMap path) := by
+            funext path
+            rfl
+          rw [hEq]
+          exact hExplicit
       | slab b hb =>
-          let tailMap := fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
-              (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1) =>
-            (fun i : Fin
-                (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1) =>
-              path i.succ)
+          let n := periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail
+          let tailMap : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N (n + 1) →
+              PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N n :=
+            fun path i => path i.succ
           have htailMap : Measurable tailMap := by
             refine measurable_pi_lambda _ ?_
             intro i
             exact measurable_pi_apply i.succ
           have hpair : Measurable
-              (fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
-                  (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1) =>
-                (path 0,
-                  path (0 : Fin
-                    (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1)).succ)) :=
+              (fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N (n + 1) =>
+                (path 0, path (0 : Fin (n + 1)).succ)) :=
             (measurable_pi_apply 0).prodMk
-              (measurable_pi_apply (0 : Fin
-                (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1)).succ)
-          have hK : Measurable
-              (fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
-                  (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1) =>
+              (measurable_pi_apply (0 : Fin (n + 1)).succ)
+          have hFactorPair : Measurable
+              (fun p : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+                  PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
                 periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-                  H N beta (path 0) (path (0 : Fin
-                    (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1)).succ)) :=
-            (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-              H N beta).measurable.comp hpair
-          have hb0 : Measurable
-              (fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
-                  (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1) =>
-                b (path 0,
-                  path (0 : Fin
-                    (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1)).succ)) :=
-            b.continuous.measurable.comp hpair
-          simpa [periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight, tailMap,
-            mul_assoc] using
-            (hK.mul hb0).mul (ih.comp htailMap)
+                    H N beta p.1 p.2 * b p) :=
+            ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+              H N beta).mul b.continuous).measurable
+          have hFactor : Measurable
+              (fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N (n + 1) =>
+                periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                    H N beta (path 0) (path (0 : Fin (n + 1)).succ) *
+                  b (path 0, path (0 : Fin (n + 1)).succ)) :=
+            hFactorPair.comp hpair
+          have hExplicit : Measurable
+              (fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N (n + 1) =>
+                (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                    H N beta (path 0) (path (0 : Fin (n + 1)).succ) *
+                  b (path 0, path (0 : Fin (n + 1)).succ)) *
+                    periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight
+                      H N beta tail (tailMap path)) :=
+            hFactor.mul (ih.comp htailMap)
+          have hEq :
+              periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight
+                  H N beta (.slab b hb :: tail) =
+                fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N (n + 1) =>
+                  (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                      H N beta (path 0) (path (0 : Fin (n + 1)).succ) *
+                    b (path 0, path (0 : Fin (n + 1)).succ)) *
+                      periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight
+                        H N beta tail (tailMap path) := by
+            funext path
+            rfl
+          rw [hEq]
+          exact hExplicit
 
 /-- The literal word path weight is bounded by the product of observable norms. -/
 theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight_abs_le
@@ -508,7 +540,7 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordHaarAmplitude_slic
   simp only [periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount,
     periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight]
   rw [hpath]
-  ring
+  ring_nf
 
 /-- An ordinary transfer letter is absorbed as the actual one-slab transfer operator. -/
 theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordHaarAmplitude_transfer
