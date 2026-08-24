@@ -172,7 +172,7 @@ theorem periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointOperator_norm
         apply ContinuousLinearMap.opNorm_ext
         intro x
         change ‖c⁻¹ • (c • T x)‖ = ‖T x‖
-        rw [← smul_smul, inv_mul_cancel₀ hcz, one_smul]
+        rw [smul_smul, inv_mul_cancel₀ hcz, one_smul]
       have hinv := ContinuousLinearMap.opNorm_smul_le c⁻¹ (c • T)
       have hT : ‖T‖ ≤ c⁻¹ * ‖c • T‖ := by
         calc
