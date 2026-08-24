@@ -223,8 +223,22 @@ private theorem wilsonCylinderArbitraryActionInsertionCinfty_nthIntegrand_integr
           periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N path ^ m *
           (g : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
             (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)))) pathMu := by
-    have h := (hbase.aestronglyMeasurable.mul hKmeas).mul hSpowMeas
-    simpa [base, Pi.mul_apply, mul_assoc, mul_left_comm, mul_comm] using h
+    have h := hbase.aestronglyMeasurable.mul (hKmeas.mul hSpowMeas)
+    have heq :
+        (fun path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N =>
+          (f : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N) (path 0) *
+            periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel H N beta path *
+            periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N path ^ m *
+            (g : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
+              (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)))) =
+          (fun path => base path *
+            (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel H N beta path *
+              periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction H N path ^ m)) := by
+      funext path
+      simp [base]
+      ring
+    rw [heq]
+    simpa only [Pi.mul_apply] using h
   have hC : 0 ≤ C := by
     simpa [C] using
       periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound_nonneg H N
@@ -585,7 +599,6 @@ theorem
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionInsertionOperator_inner_eq_pathActionIntegral
     H N hN beta hbeta f g]
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathNthActionInsertionAmplitude
-  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionInsertionAmplitude
   simp [pow_one]
 
 /-- The generic hierarchy also recovers the second insertion of the `C^{2,1}` layer. -/
