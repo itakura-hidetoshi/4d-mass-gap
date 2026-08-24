@@ -119,6 +119,7 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeig
               H N beta tail tailPath
 
 /-- The literal word path weight is measurable on its finite path space. -/
+set_option maxHeartbeats 8000000 in
 theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight_measurable
     (H N : ℕ)
     (beta : ℝ)
@@ -154,8 +155,7 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight_measura
                       H N beta tail path := by
             funext path
             rfl
-          rw [hEq]
-          exact hExplicit
+          exact hEq.symm ▸ hExplicit
       | transfer =>
           let n := periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail
           let tailMap : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N (n + 1) →
@@ -199,8 +199,7 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight_measura
                       H N beta tail (tailMap path) := by
             funext path
             rfl
-          rw [hEq]
-          exact hExplicit
+          exact hEq.symm ▸ hExplicit
       | slab b hb =>
           let n := periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail
           let tailMap : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N (n + 1) →
@@ -247,8 +246,7 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight_measura
                         H N beta tail (tailMap path) := by
             funext path
             rfl
-          rw [hEq]
-          exact hExplicit
+          exact hEq.symm ▸ hExplicit
 
 /-- The literal word path weight is bounded by the product of observable norms. -/
 theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight_abs_le
@@ -540,7 +538,7 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordHaarAmplitude_slic
   simp only [periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount,
     periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight]
   rw [hpath]
-  ring_nf
+  ac_rfl
 
 /-- An ordinary transfer letter is absorbed as the actual one-slab transfer operator. -/
 theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordHaarAmplitude_transfer
