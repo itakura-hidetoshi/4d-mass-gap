@@ -495,9 +495,9 @@ private theorem positiveHalf_sum_pair_add_sum_eq_sum_middle
       ∑ i : Fin m, (a i + c i + b i) := by
   classical
   change
-    (∑ i in (Finset.univ : Finset (Fin m)), a i + b i) +
-        (∑ i in (Finset.univ : Finset (Fin m)), c i) =
-      ∑ i in (Finset.univ : Finset (Fin m)), a i + c i + b i
+    Finset.sum (Finset.univ : Finset (Fin m)) (fun i => a i + b i) +
+        Finset.sum (Finset.univ : Finset (Fin m)) c =
+      Finset.sum (Finset.univ : Finset (Fin m)) (fun i => a i + c i + b i)
   rw [← Finset.sum_add_distrib]
   apply Finset.sum_congr rfl
   intro i _hi
@@ -545,8 +545,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureCellSum_eq_unfixe
         H N A i)
       (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPathRestriction
         H N A i.succ)
-  change (∑ i : Fin (H + 1), a i + b i) + (∑ i : Fin (H + 1), c i) =
-    ∑ i : Fin (H + 1), a i + c i + b i
   exact positiveHalf_sum_pair_add_sum_eq_sum_middle (H + 1) a b c
 
 /-- Main action identification: the actual OS positive-half closure action is
