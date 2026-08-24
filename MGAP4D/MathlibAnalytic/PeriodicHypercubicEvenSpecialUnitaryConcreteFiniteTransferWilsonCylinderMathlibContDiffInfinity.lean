@@ -21,6 +21,27 @@ local instance wilsonCylinderMathlibContDiffInfinityPhysicalCompleteSpace
   (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule_isClosed
     H N).completeSpace_coe
 
+local instance wilsonCylinderMathlibContDiffInfinityOperatorAddCommGroup
+    (H N : ℕ) :
+    AddCommGroup
+      (PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
+        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) :=
+  NormedAddCommGroup.toAddCommGroup
+
+local instance wilsonCylinderMathlibContDiffInfinityOperatorModule
+    (H N : ℕ) :
+    Module ℝ
+      (PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
+        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) :=
+  NormedSpace.toModule
+
+local instance wilsonCylinderMathlibContDiffInfinityOperatorTopologicalSpace
+    (H N : ℕ) :
+    TopologicalSpace
+      (PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
+        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) :=
+  PseudoMetricSpace.toUniformSpace.toTopologicalSpace
+
 /-- A quadratic remainder estimate implies the actual Mathlib one-dimensional
 `HasDerivWithinAt` statement.  This is the calculus bridge used below: it turns
 the operator-norm Taylor estimates already proved for the Wilson hierarchy into
