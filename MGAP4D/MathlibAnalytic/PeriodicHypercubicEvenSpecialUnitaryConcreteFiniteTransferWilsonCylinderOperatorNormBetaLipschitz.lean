@@ -179,9 +179,12 @@ theorem
   have hbase : Integrable base pathMu := by
     simpa [base, pathMu] using
       wilsonCylinderOperatorNormBetaLipschitz_endpointProduct_integrable H N f g
+  have hC : 0 ≤ C := by
+    simpa [C] using
+      periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound_nonneg
+        H N
   have hB : 0 ≤ B := by
-    dsimp [B, C]
-    positivity
+    simpa [B] using mul_nonneg hC (norm_nonneg (gamma - beta))
   have hdom : Integrable (fun path => B * |base path|) pathMu := by
     simpa [Pi.smul_apply, smul_eq_mul] using hbase.norm.smul B
   have hpoint : ∀ path, ‖D path‖ ≤ B * |base path| := by
@@ -287,6 +290,10 @@ theorem
   let B :=
     periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
       H N * ‖gamma - beta‖
+  have hC : 0 ≤ periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound H N :=
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound_nonneg H N
+  have hB : 0 ≤ B := by
+    simpa [B] using mul_nonneg hC (norm_nonneg (gamma - beta))
   have hinner :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator_sub_inner_norm_le
       H N hN beta hbeta gamma hgamma f (D f)
@@ -296,7 +303,7 @@ theorem
   change ‖D f‖ ≤ B * ‖f‖
   by_cases hz : ‖D f‖ = 0
   · rw [hz]
-    positivity
+    exact mul_nonneg hB (norm_nonneg f)
   have hpos : 0 < ‖D f‖ := lt_of_le_of_ne (norm_nonneg _) (Ne.symm hz)
   have hfnonneg : 0 ≤ ‖f‖ := norm_nonneg _
   nlinarith
@@ -325,8 +332,12 @@ theorem
   let B :=
     periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
       H N * ‖gamma - beta‖
+  have hC : 0 ≤ periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound H N :=
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound_nonneg H N
+  have hB : 0 ≤ B := by
+    simpa [B] using mul_nonneg hC (norm_nonneg (gamma - beta))
   change ‖D‖ ≤ B
-  apply ContinuousLinearMap.opNorm_le_bound D (by positivity)
+  apply ContinuousLinearMap.opNorm_le_bound D hB
   intro f
   simpa [D, B] using
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator_sub_apply_norm_le
