@@ -181,8 +181,8 @@ theorem physicalYangMillsEvenPeriodicWilsonOSBoundaryMomentSpatialSlicePairL2_co
   refine (MeasureTheory.Lp.coeFn_compMeasurePreserving
     (physicalYangMillsEvenPeriodicWilsonOSBoundaryMomentL2
       S D halfExtent N hN beta hbeta B hInvariant n F hF) hsymm).trans ?_
-  exact hsymm.quasiMeasurePreserving.ae_le
-    (hF.coeFn_toLp.fun_comp e.symm)
+  simpa only [Function.comp_apply, e] using
+    hsymm.quasiMeasurePreserving.ae_eq_comp hF.coeFn_toLp
 
 /-- Reindexing from the actual fixed boundary to the two spatial slices preserves
 exactly the squared `L²` norm of every approximating Wilson OS boundary moment. -/
