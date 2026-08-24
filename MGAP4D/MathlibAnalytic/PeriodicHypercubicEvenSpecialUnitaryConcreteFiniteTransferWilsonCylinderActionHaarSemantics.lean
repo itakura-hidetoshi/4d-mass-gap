@@ -293,15 +293,6 @@ private theorem
     unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight
     exact b.continuous.measurable.comp
       ((measurable_pi_apply i.castSucc).prodMk (measurable_pi_apply i.succ))
-  have hfactorMeas : AEStronglyMeasurable
-      (fun path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N =>
-        periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
-            H N beta path *
-          b
-            (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft path i,
-              periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight path i))
-      pathMu :=
-    (hKmeas.mul hbmeas).aestronglyMeasurable
   have hmeas : AEStronglyMeasurable
       (fun path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N =>
         (f : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N) (path 0) *
@@ -311,11 +302,8 @@ private theorem
             (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft path i,
               periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight path i) *
           (g : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
-            (path (Fin.last n))) pathMu := by
-    have h := hbase.aestronglyMeasurable.mul hfactorMeas
-    convert h using 1
-    funext path
-    ring_nf
+            (path (Fin.last n))) pathMu :=
+    (((hf2.1.mul hKmeas.aestronglyMeasurable).mul hbmeas.aestronglyMeasurable).mul hg2.1)
   have hmajor : Integrable
       (fun path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N =>
         ‖b‖ *
@@ -560,18 +548,22 @@ theorem
       ∑ i : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H),
         periodicHypercubicEvenSpecialUnitaryPhysicalTransferSlabWilsonCylinderCellActionOperator
           H N hN beta hbeta i.1 (H - i.1) f by simp]
-  change inner ℝ
-      (∑ i in (Finset.univ :
-        Finset (Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H))),
-        periodicHypercubicEvenSpecialUnitaryPhysicalTransferSlabWilsonCylinderCellActionOperator
-          H N hN beta hbeta i.1 (H - i.1) f) g =
-    ∑ i in (Finset.univ :
-      Finset (Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H))),
-      periodicHypercubicEvenSpecialUnitaryFiniteTransferWordHaarAmplitude H N beta
-        (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderWilsonCellWord H N i)
-        (f : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
-        (g : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
-  rw [sum_inner]
+  have hsum :
+      inner ℝ
+        (∑ i : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H),
+          periodicHypercubicEvenSpecialUnitaryPhysicalTransferSlabWilsonCylinderCellActionOperator
+            H N hN beta hbeta i.1 (H - i.1) f) g =
+        ∑ i : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H),
+          inner ℝ
+            (periodicHypercubicEvenSpecialUnitaryPhysicalTransferSlabWilsonCylinderCellActionOperator
+              H N hN beta hbeta i.1 (H - i.1) f) g := by
+    simpa using
+      (sum_inner (𝕜 := ℝ)
+        (Finset.univ : Finset (Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)))
+        (fun i =>
+          periodicHypercubicEvenSpecialUnitaryPhysicalTransferSlabWilsonCylinderCellActionOperator
+            H N hN beta hbeta i.1 (H - i.1) f) g)
+  rw [hsum]
   apply Finset.sum_congr rfl
   intro i _hi
   symm
