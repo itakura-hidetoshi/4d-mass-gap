@@ -10,6 +10,21 @@ open scoped BigOperators
 
 noncomputable section
 
+local instance positiveHalfClosureActionIdentificationSpatialPlaquetteFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSlicePlaquette H) := by
+  classical
+  infer_instance
+
+local instance positiveHalfClosureActionIdentificationSpatialLinkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := by
+  classical
+  infer_instance
+
+local instance positiveHalfClosureActionIdentificationCylinderCellFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenPositiveHalfCylinderPlaquetteCell H) := by
+  classical
+  infer_instance
+
 local instance positiveHalfClosureActionIdentificationSupportedPlaquetteFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenPositiveHalfClosureSupportedPlaquette H) := by
   classical
@@ -137,9 +152,8 @@ theorem periodicHypercubicEvenPositiveHalfCylinderSpatialCell_spatialCrossing_if
     periodicHypercubicEvenSpatialSlicePlaquetteAtTime_not_hasTimeDirection H _ p
   change periodicHypercubicEvenSpatialCrossingPlaquette q ↔ _
   rw [periodicHypercubicEvenSpatialCrossingPlaquette_iff_on_fixedPlane]
-  simp only [htime, true_and]
   constructor
-  · rintro (hprimary | hantipodal)
+  · rintro ⟨_htime, hprimary | hantipodal⟩
     · unfold periodicHypercubicEvenOnPrimaryReflectionPlane at hprimary
       have hval := congrArg ZMod.val hprimary
       have hj := periodicHypercubicEvenPositiveHalfCylinderSpatialCell_time_val H j p
@@ -157,12 +171,12 @@ theorem periodicHypercubicEvenPositiveHalfCylinderSpatialCell_spatialCrossing_if
       rw [hj, ZMod.val_natCast_of_lt hhalf_lt] at hval
       exact Or.inr hval
   · rintro (hzero | hlast)
-    · left
+    · refine ⟨htime, Or.inl ?_⟩
       unfold periodicHypercubicEvenOnPrimaryReflectionPlane
       dsimp [q, periodicHypercubicEvenSpatialSlicePlaquetteAtTime,
         periodicHypercubicEvenSpatialSliceVertexAtTime]
       simpa [hzero]
-    · right
+    · refine ⟨htime, Or.inr ?_⟩
       unfold periodicHypercubicEvenOnAntipodalReflectionPlane
       dsimp [q, periodicHypercubicEvenSpatialSlicePlaquetteAtTime,
         periodicHypercubicEvenSpatialSliceVertexAtTime]
@@ -426,12 +440,10 @@ private theorem positiveHalf_endpointHalfSum_eq_adjacentHalfSum
   let G : Fin (H + 2) → ℝ := fun j =>
     (if j.1 = 0 ∨ j.1 = H + 1 then (1 / 2 : ℝ) else 1) * F j
   have hmiddleWeight (k : Fin H) : G k.castSucc.succ = F k.castSucc.succ := by
-    have hend :
-        ¬ ((k.castSucc.succ : Fin (H + 2)).1 = 0 ∨
-          (k.castSucc.succ : Fin (H + 2)).1 = H + 1) := by
-      simp only [Fin.val_succ, Fin.val_castSucc]
-      omega
     dsimp [G]
+    have hk := k.2
+    have hend : ¬ (k.1 + 1 = 0 ∨ k.1 + 1 = H + 1) := by
+      omega
     rw [if_neg hend]
     ring
   have hzeroWeight : G (0 : Fin (H + 2)) = (1 / 2 : ℝ) * F 0 := by
