@@ -27,24 +27,22 @@ local instance concreteFiniteTransferWordHaarPathSpecialUnitaryMeasurableSpace (
 local instance concreteFiniteTransferWordHaarPathSpecialUnitaryBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) := specialUnitaryGroupBorelSpace N
 
-/-- Recursion-friendly count of the path slabs consumed by a transfer word.
-It is propositionally identical to the public count from the operator language,
-but puts the successor on the right so deleting the first coordinate is
-definitional in the consuming-letter cases. -/
+/-- Recursion-friendly count of path slabs consumed by a transfer word.
+The successor is placed on the right in consuming-letter cases so deleting
+the first path coordinate is definitionally typed. -/
 def periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount
-    {H N : ℕ}
-    (word : PeriodicHypercubicEvenSpecialUnitaryFiniteTransferWord H N) : ℕ :=
-  match word with
+    {H N : ℕ} : PeriodicHypercubicEvenSpecialUnitaryFiniteTransferWord H N → ℕ
   | [] => 0
-  | .transfer :: tail =>
-      periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1
-  | .slice _ _ :: tail =>
-      periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail
-  | .slab _ _ :: tail =>
-      periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1
-termination_by word.length
+  | letter :: tail =>
+      match letter with
+      | .transfer =>
+          periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1
+      | .slice _ _ =>
+          periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail
+      | .slab _ _ =>
+          periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1
 
-/-- The recursion-friendly path count agrees exactly with the public slab count. -/
+/-- The recursion-friendly path count agrees with the public slab count. -/
 theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount_eq_slabCount
     {H N : ℕ}
     (word : PeriodicHypercubicEvenSpecialUnitaryFiniteTransferWord H N) :
@@ -61,17 +59,16 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount_eq_s
 
 /-- Uniform absolute bound for the literal path weight of a finite word. -/
 def periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeightBound
-    {H N : ℕ}
-    (word : PeriodicHypercubicEvenSpecialUnitaryFiniteTransferWord H N) : ℝ :=
-  match word with
+    {H N : ℕ} : PeriodicHypercubicEvenSpecialUnitaryFiniteTransferWord H N → ℝ
   | [] => 1
-  | .transfer :: tail =>
-      periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeightBound tail
-  | .slice a _ :: tail =>
-      ‖a‖ * periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeightBound tail
-  | .slab b _ :: tail =>
-      ‖b‖ * periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeightBound tail
-termination_by word.length
+  | letter :: tail =>
+      match letter with
+      | .transfer =>
+          periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeightBound tail
+      | .slice a _ =>
+          ‖a‖ * periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeightBound tail
+      | .slab b _ =>
+          ‖b‖ * periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeightBound tail
 
 theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeightBound_nonneg
     {H N : ℕ}
@@ -87,40 +84,41 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeightBound_no
 /-- Literal chronological path weight of a finite transfer word.
 
 A slice letter multiplies at the current slice and does not advance time.
-An ordinary transfer contributes the one-slab Wilson kernel and advances once.
-A slab letter contributes the same kernel times its adjacent-slice observable
-and advances once. -/
+An ordinary transfer contributes one Wilson slab kernel and advances once.
+A slab letter contributes the kernel times its adjacent-slice observable and
+advances once. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight
     (H N : ℕ)
-    (beta : ℝ)
-    (word : PeriodicHypercubicEvenSpecialUnitaryFiniteTransferWord H N)
-    (path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
-      (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount word)) : ℝ :=
-  match word with
-  | [] => 1
-  | .slice a _ :: tail =>
-      a (path 0) *
-        periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight
-          H N beta tail path
-  | .transfer :: tail =>
-      let tailPath : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
-          (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail) :=
-        fun i => path i.succ
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta (path 0) (tailPath 0) *
-        periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight
-          H N beta tail tailPath
-  | .slab b _ :: tail =>
-      let tailPath : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
-          (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail) :=
-        fun i => path i.succ
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta (path 0) (tailPath 0) *
-        b (path 0, tailPath 0) *
-        periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight
-          H N beta tail tailPath
-termination_by word.length
+    (beta : ℝ) :
+    (word : PeriodicHypercubicEvenSpecialUnitaryFiniteTransferWord H N) →
+    PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
+      (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount word) → ℝ
+  | [], _ => 1
+  | letter :: tail, path =>
+      match letter with
+      | .slice a _ =>
+          a (path 0) *
+            periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight
+              H N beta tail path
+      | .transfer =>
+          let tailPath : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
+              (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail) :=
+            fun i => path i.succ
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+              H N beta (path 0) (tailPath 0) *
+            periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight
+              H N beta tail tailPath
+      | .slab b _ =>
+          let tailPath : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
+              (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail) :=
+            fun i => path i.succ
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+              H N beta (path 0) (tailPath 0) *
+            b (path 0, tailPath 0) *
+            periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight
+              H N beta tail tailPath
 
+/-- The literal word path weight is measurable on its finite path space. -/
 theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight_measurable
     (H N : ℕ)
     (beta : ℝ)
@@ -202,6 +200,7 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight_measura
             mul_assoc] using
             (hK.mul hb0).mul (ih.comp htailMap)
 
+/-- The literal word path weight is bounded by the product of observable norms. -/
 theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight_abs_le
     (H N : ℕ)
     (hN : 0 < N)
@@ -212,7 +211,7 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight_abs_le
       (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount word)) :
     |periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight H N beta word path| ≤
       periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeightBound word := by
-  induction word generalizing path with
+  induction word with
   | nil =>
       simp [periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight,
         periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeightBound]
@@ -226,8 +225,7 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight_abs_le
             a (path 0) * periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight
               H N beta tail path by rfl]
           rw [abs_mul]
-          exact mul_le_mul ha0 (ih path) (abs_nonneg _)
-            (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeightBound_nonneg tail)
+          exact mul_le_mul ha0 (ih path) (abs_nonneg _) (norm_nonneg a)
       | transfer =>
           let tailPath : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
               (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail) :=
@@ -398,11 +396,14 @@ private theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferFirstStepHaarI
   have hF : Integrable F (μ.prod tailμ) := by
     apply hmajor.mono (hbase.aestronglyMeasurable.mul hq.aestronglyMeasurable)
     filter_upwards with p
-    change
-      |(f p.1 * (w p.2 * g (p.2 (Fin.last n)))) * q (p.1, p.2 0)| ≤
-        |C * (f p.1 * (w p.2 * g (p.2 (Fin.last n))))|
-    rw [abs_mul, abs_mul, abs_of_nonneg hC]
-    exact mul_le_mul_of_nonneg_left (hqbound (p.1, p.2 0)) (abs_nonneg _)
+    let base := f p.1 * (w p.2 * g (p.2 (Fin.last n)))
+    change |base * q (p.1, p.2 0)| ≤ |C * base|
+    calc
+      |base * q (p.1, p.2 0)| = |base| * |q (p.1, p.2 0)| := abs_mul _ _
+      _ ≤ |base| * C :=
+        mul_le_mul_of_nonneg_left (hqbound (p.1, p.2 0)) (abs_nonneg _)
+      _ = C * |base| := by ring
+      _ = |C * base| := by rw [abs_mul, abs_of_nonneg hC]
   let μs : Fin (n + 2) → Measure
       (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) := fun _ => μ
   have hMP := MeasureTheory.measurePreserving_piFinSuccAbove μs (0 : Fin (n + 2))
@@ -458,8 +459,7 @@ private theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferFirstStepHaarI
       filter_upwards [hQfTail] with tail htail
       rw [htail]
 
-/-- A slice letter is absorbed by the literal Haar path integral as pointwise
-multiplication on the incoming state. -/
+/-- A slice letter is absorbed by the literal Haar path integral as pointwise multiplication. -/
 theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordHaarAmplitude_slice
     (H N : ℕ)
     (beta : ℝ)
@@ -477,10 +477,12 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordHaarAmplitude_slic
   have hMa :
       periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservableMulOperator H N a f =ᵐ[μ]
         fun A => a A * f A := by
-    simpa using periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservableMulL2_coeFn H N a f
+    simpa using
+      periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservableMulL2_coeFn H N a f
   have hMaPath :
       (fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N n =>
-        periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservableMulOperator H N a f (path 0)) =ᵐ[pathμ]
+        periodicHypercubicEvenSpecialUnitarySpatialSliceBoundedObservableMulOperator H N a f
+          (path 0)) =ᵐ[pathμ]
       (fun path => a (path 0) * f (path 0)) := by
     simpa [pathμ, periodicHypercubicEvenSpecialUnitaryNSlabSpatialPathHaarMeasure, μ] using
       ((MeasureTheory.measurePreserving_eval
@@ -493,8 +495,7 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordHaarAmplitude_slic
     periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight]
   ring
 
-/-- An ordinary transfer letter is absorbed by the literal Haar path integral
-as the actual one-slab transfer operator. -/
+/-- An ordinary transfer letter is absorbed as the actual one-slab transfer operator. -/
 theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordHaarAmplitude_transfer
     (H N : ℕ)
     (hN : 0 < N)
@@ -527,7 +528,8 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordHaarAmplitude_tran
         periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N]
         fun B => ∫ A, f A * q (A, B)
           ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := by
-    simpa [q, periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegralRepresentative] using hQf
+    simpa [q, periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferIntegralRepresentative]
+      using hQf
   have hflat := periodicHypercubicEvenSpecialUnitaryFiniteTransferFirstStepHaarIntegral_eq
     H N n q 1 zero_le_one hqmeas hqbound w f g hRight
     (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
@@ -536,8 +538,7 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordHaarAmplitude_tran
     periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount,
     periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight, n, q, w, mul_assoc] using hflat
 
-/-- A slab-observable letter is absorbed by the literal Haar path integral as
-the actual one-slab pair-insertion operator. -/
+/-- A slab-observable letter is absorbed as the one-slab pair-insertion operator. -/
 theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordHaarAmplitude_slab
     (H N : ℕ)
     (hN : 0 < N)
@@ -580,8 +581,13 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordHaarAmplitude_slab
         periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N]
         fun B => ∫ A, f A * q (A, B)
           ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := by
-    simpa [q, periodicHypercubicEvenSpecialUnitaryOneSlabPairObservableIntegralRepresentative,
-      mul_assoc] using hQf
+    filter_upwards [hQf] with B hB
+    rw [hB]
+    unfold periodicHypercubicEvenSpecialUnitaryOneSlabPairObservableIntegralRepresentative
+    apply integral_congr_ae
+    filter_upwards with A
+    simp [q]
+    ring
   have hflat := periodicHypercubicEvenSpecialUnitaryFiniteTransferFirstStepHaarIntegral_eq
     H N n q ‖b‖ (norm_nonneg b) hqmeas hqbound w f g hRight
     (periodicHypercubicEvenSpecialUnitaryOneSlabPairObservableOperator
@@ -640,8 +646,7 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordHaarAmplitude_eq_i
           rw [ih]
           rfl
 
-/-- The same exact Haar path formula on the genuine Gauss-law physical
-Hilbert sector. -/
+/-- The same exact Haar path formula on the genuine Gauss-law physical Hilbert sector. -/
 theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPhysicalOperator_inner_eq_haarAmplitude
     (H N : ℕ)
     (hN : 0 < N)
@@ -668,8 +673,7 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPhysicalOperator_i
       (f : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
       (g : PeriodicHypercubicEvenSpecialUnitaryTransferWordHaarL2 H N)
 
-/-- The arbitrary-word literal semantics specializes exactly to the earlier
-single-slice insertion amplitude. -/
+/-- The arbitrary-word literal semantics specializes to the earlier single-slice insertion. -/
 theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferSliceInsertionWord_haarAmplitude_eq_amplitude
     (H N : ℕ)
     (hN : 0 < N)
@@ -693,8 +697,7 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferSliceInsertionWord_haa
     H N hN beta hbeta
       (periodicHypercubicEvenSpecialUnitaryFiniteTransferSliceInsertionWord H N left right a ha) f g
 
-/-- The arbitrary-word literal semantics specializes exactly to the earlier
-single-slab pair-insertion amplitude. -/
+/-- The arbitrary-word literal semantics specializes to the earlier single-slab pair insertion. -/
 theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferSlabInsertionWord_haarAmplitude_eq_amplitude
     (H N : ℕ)
     (hN : 0 < N)
