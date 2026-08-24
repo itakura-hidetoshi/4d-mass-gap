@@ -220,14 +220,9 @@ theorem physicalYangMillsEvenPeriodicWilsonOSBoundaryMomentSpatialSlicePairL2_no
   exact physicalYangMillsEvenPeriodicWilsonOSBoundaryMomentL2_norm_sq
     S D halfExtent N hN beta hbeta B hInvariant n F hF
 
-/-- The approximating OS quadratic value is exactly the squared norm of its
-concrete two-spatial-slice boundary kernel.
+section QuadraticIdentification
 
-This is a quadratic identification only.  The currently available weak-star
-finite bridge does not assert linear compatibility of the chosen finite
-positive-half observables, so no linear map from the full approximating OS
-carrier is claimed here. -/
-theorem physical_yang_mills_evenPeriodicWilsonOS_osQuadraticValue_eq_boundarySpatialSlicePairL2_norm_sq
+variable
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (D : PhysicalYangMillsGaugeInvariantOSReflectionData S)
     (halfExtent : ℕ → ℕ)
@@ -244,19 +239,24 @@ theorem physical_yang_mills_evenPeriodicWilsonOS_osQuadraticValue_eq_boundarySpa
     (n : ℕ)
     (F : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
       S D halfExtent N hN beta hbeta B hInvariant n).Carrier)
+
+/-- The approximating OS quadratic value is exactly the squared norm of its
+concrete two-spatial-slice boundary kernel.
+
+This is a quadratic identification only.  The currently available weak-star
+finite bridge does not assert linear compatibility of the chosen finite
+positive-half observables, so no linear map from the full approximating OS
+carrier is claimed here. -/
+theorem physical_yang_mills_evenPeriodicWilsonOS_osQuadraticValue_eq_boundarySpatialSlicePairL2_norm_sq
     (hF : MemLp
-      (fun b =>
-        physicalYangMillsEvenPeriodicWilsonOSBoundaryMoment
-          S D halfExtent N hN beta hbeta B hInvariant n F b)
-      2
-      (periodicHypercubicEvenBoundaryHaarMeasure (halfExtent n) N))
+      (fun b => physicalYangMillsEvenPeriodicWilsonOSBoundaryMoment
+        S D halfExtent N hN beta hbeta B hInvariant n F b)
+      2 (periodicHypercubicEvenBoundaryHaarMeasure (halfExtent n) N))
     (hf : ∀ b, Integrable
       (periodicHypercubicEvenBoundaryObservableGramFeature
         (halfExtent n) N hN (beta n) (hbeta n)
-        (fun x =>
-          physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservable
-            S D halfExtent N hN beta hbeta B hInvariant n F x)
-        b)
+        (fun x => physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservable
+          S D halfExtent N hN beta hbeta B hInvariant n F x) b)
       (periodicHypercubicEvenOpenHalfHaarMeasure (halfExtent n) N)) :
     (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
       S D halfExtent N hN beta hbeta B hInvariant n).osQuadraticValue F =
@@ -276,35 +276,15 @@ boundary kernel vanishes in `L²`.
 This is the precise null-space compatibility available before any additional
 single-slice endpoint factorization theorem. -/
 theorem physical_yang_mills_evenPeriodicWilsonOS_osQuadraticValue_eq_zero_iff_boundarySpatialSlicePairL2_eq_zero
-    (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
-    (D : PhysicalYangMillsGaugeInvariantOSReflectionData S)
-    (halfExtent : ℕ → ℕ)
-    (N : ℕ)
-    (hN : 0 < N)
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (beta : ℕ → ℝ)
-    (hbeta : ∀ n, 0 ≤ beta n)
-    (B : PhysicalYangMillsEvenPeriodicWilsonOSWeakStarBridge
-      S D halfExtent N hN beta hbeta)
-    (hInvariant : ∀ n,
-      D.WeakStarReflectionInvariant
-        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
-    (n : ℕ)
-    (F : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-      S D halfExtent N hN beta hbeta B hInvariant n).Carrier)
     (hF : MemLp
-      (fun b =>
-        physicalYangMillsEvenPeriodicWilsonOSBoundaryMoment
-          S D halfExtent N hN beta hbeta B hInvariant n F b)
-      2
-      (periodicHypercubicEvenBoundaryHaarMeasure (halfExtent n) N))
+      (fun b => physicalYangMillsEvenPeriodicWilsonOSBoundaryMoment
+        S D halfExtent N hN beta hbeta B hInvariant n F b)
+      2 (periodicHypercubicEvenBoundaryHaarMeasure (halfExtent n) N))
     (hf : ∀ b, Integrable
       (periodicHypercubicEvenBoundaryObservableGramFeature
         (halfExtent n) N hN (beta n) (hbeta n)
-        (fun x =>
-          physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservable
-            S D halfExtent N hN beta hbeta B hInvariant n F x)
-        b)
+        (fun x => physicalYangMillsEvenPeriodicWilsonOSFinitePositiveHalfObservable
+          S D halfExtent N hN beta hbeta B hInvariant n F x) b)
       (periodicHypercubicEvenOpenHalfHaarMeasure (halfExtent n) N)) :
     (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
       S D halfExtent N hN beta hbeta B hInvariant n).osQuadraticValue F = 0 ↔
@@ -313,6 +293,8 @@ theorem physical_yang_mills_evenPeriodicWilsonOS_osQuadraticValue_eq_zero_iff_bo
   rw [physical_yang_mills_evenPeriodicWilsonOS_osQuadraticValue_eq_boundarySpatialSlicePairL2_norm_sq
     S D halfExtent N hN beta hbeta B hInvariant n F hF hf]
   simp
+
+end QuadraticIdentification
 
 end MathlibAnalytic
 end MGAP4D
