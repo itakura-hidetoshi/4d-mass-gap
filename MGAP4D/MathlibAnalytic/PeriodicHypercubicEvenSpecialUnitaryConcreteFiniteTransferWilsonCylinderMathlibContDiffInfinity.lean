@@ -21,18 +21,6 @@ local instance wilsonCylinderMathlibContDiffInfinityPhysicalCompleteSpace
   (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule_isClosed
     H N).completeSpace_coe
 
-/-- Mathlib exposes both low-level algebra/topology instances and norm-derived
-instances for concrete operator spaces (and for `ℝ` itself).  The one-dimensional
-calculus API is polymorphically elaborated through the norm-derived route.  We
-therefore disable the competing low-level route in this file so every derivative,
-differentiability and `ContDiffOn` predicate is built from one coherent structure. -/
-local attribute [-instance] Real.instAddCommGroup
-local attribute [-instance] LieAlgebra.ofAssociativeAlgebra.toModule
-local attribute [-instance] ContinuousLinearMap.addCommMonoid
-local attribute [-instance] ContinuousLinearMap.addCommGroup
-local attribute [-instance] ContinuousLinearMap.module
-local attribute [-instance] ContinuousLinearMap.topologicalSpace
-
 /-- A quadratic remainder estimate implies the actual Mathlib one-dimensional
 `HasDerivWithinAt` statement.  This is the calculus bridge used below: it turns
 the operator-norm Taylor estimates already proved for the Wilson hierarchy into
@@ -209,7 +197,10 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_quadraticRemainder
       H N hN m beta gamma hbeta hgamma
 
-/-- Exact `derivWithin` identity for the arbitrary-order hierarchy. -/
+/-- Exact `derivWithin` identity for the arbitrary-order hierarchy.  We chain
+directly from the generic quadratic-remainder bridge so the normed-space
+instances selected by Mathlib remain definitionally identical throughout the
+calculus call. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_derivWithin
     (H N : ℕ) (hN : 0 < N) (m : ℕ)
@@ -220,21 +211,34 @@ theorem
       (Set.Ici (0 : ℝ)) beta =
       -periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
         H N hN (m + 1) beta := by
-  have hder :
-      HasDerivWithinAt
-        (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-          H N hN m)
-        (-periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-          H N hN (m + 1) beta)
-        (Set.Ici (0 : ℝ)) beta :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_hasDerivWithinAt
-      H N hN m beta hbeta
+  let C :=
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound H N
+  let B := C ^ (m + 2)
+  have hC : 0 ≤ C := by
+    simpa [C] using
+      periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound_nonneg H N
+  have hB : 0 ≤ B := pow_nonneg hC (m + 2)
+  have hraw :=
+    wilsonCylinderMathlibContDiffInfinity_hasDerivWithinAt_of_quadraticRemainder
+      (f := periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
+        H N hN m)
+      (f' := fun t =>
+        -periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
+          H N hN (m + 1) t)
+      (s := Set.Ici (0 : ℝ)) B hB beta hbeta
+      (by
+        intro gamma hgamma
+        simpa [B, C] using
+          periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_quadraticRemainder
+            H N hN m beta gamma hbeta hgamma)
   have hunique : UniqueDiffWithinAt ℝ (Set.Ici (0 : ℝ)) beta :=
     (uniqueDiffOn_Ici (0 : ℝ)) beta hbeta
-  exact hder.derivWithin hunique
+  exact hraw.derivWithin hunique
 
 /-- Every order of the hierarchy is differentiable on the physical coupling
-half-line in Mathlib's native calculus sense. -/
+half-line in Mathlib's native calculus sense.  As for `derivWithin`, the
+quadratic-remainder bridge is consumed immediately rather than storing and
+re-elaborating a bare `HasDerivWithinAt` value on the concrete operator type. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_differentiableOn
     (H N : ℕ) (hN : 0 < N) (m : ℕ) :
@@ -243,16 +247,27 @@ theorem
         H N hN m)
       (Set.Ici (0 : ℝ)) := by
   intro beta hbeta
-  have hder :
-      HasDerivWithinAt
-        (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-          H N hN m)
-        (-periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-          H N hN (m + 1) beta)
-        (Set.Ici (0 : ℝ)) beta :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_hasDerivWithinAt
-      H N hN m beta hbeta
-  exact hder.differentiableWithinAt
+  let C :=
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound H N
+  let B := C ^ (m + 2)
+  have hC : 0 ≤ C := by
+    simpa [C] using
+      periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound_nonneg H N
+  have hB : 0 ≤ B := pow_nonneg hC (m + 2)
+  have hraw :=
+    wilsonCylinderMathlibContDiffInfinity_hasDerivWithinAt_of_quadraticRemainder
+      (f := periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
+        H N hN m)
+      (f' := fun t =>
+        -periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
+          H N hN (m + 1) t)
+      (s := Set.Ici (0 : ℝ)) B hB beta hbeta
+      (by
+        intro gamma hgamma
+        simpa [B, C] using
+          periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_quadraticRemainder
+            H N hN m beta gamma hbeta hgamma)
+  exact hraw.differentiableWithinAt
 
 /-- Hence every order is continuous on the physical half-line. -/
 theorem
@@ -263,16 +278,9 @@ theorem
         H N hN m)
       (Set.Ici (0 : ℝ)) := by
   intro beta hbeta
-  have hder :
-      HasDerivWithinAt
-        (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-          H N hN m)
-        (-periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-          H N hN (m + 1) beta)
-        (Set.Ici (0 : ℝ)) beta :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_hasDerivWithinAt
-      H N hN m beta hbeta
-  exact hder.continuousWithinAt
+  exact
+    (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_differentiableOn
+      H N hN m beta hbeta).continuousWithinAt
 
 /-- Finite-order Mathlib `ContDiffOn` for every insertion order.  The induction
 uses the exact derivative recursion and the fact that `Ici 0` has unique
@@ -368,28 +376,33 @@ theorem
         periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
           H N hN (m + n)
       let c : ℝ := (-1 : ℝ) ^ n
-      have hbase :
-          HasDerivWithinAt F
-            (-periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-              H N hN (m + n + 1) beta)
-            (Set.Ici (0 : ℝ)) beta := by
-        simpa [F, Nat.add_assoc] using
-          periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_hasDerivWithinAt
-            H N hN (m + n) beta hbeta
-      have hscaled :
-          HasDerivWithinAt
-            (fun t : ℝ => c • F t)
-            (c • (-periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-              H N hN (m + n + 1) beta))
-            (Set.Ici (0 : ℝ)) beta := by
-        simpa only [Pi.smul_apply] using hbase.const_smul c
+      let C :=
+        periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound H N
+      let B := C ^ ((m + n) + 2)
+      have hC : 0 ≤ C := by
+        simpa [C] using
+          periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound_nonneg H N
+      have hB : 0 ≤ B := pow_nonneg hC ((m + n) + 2)
+      have hbaseRaw :=
+        wilsonCylinderMathlibContDiffInfinity_hasDerivWithinAt_of_quadraticRemainder
+          (f := F)
+          (f' := fun t =>
+            -periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
+              H N hN (m + n + 1) t)
+          (s := Set.Ici (0 : ℝ)) B hB beta hbeta
+          (by
+            intro gamma hgamma
+            simpa [F, B, C, Nat.add_assoc] using
+              periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily_quadraticRemainder
+                H N hN (m + n) beta gamma hbeta hgamma)
       have hunique : UniqueDiffWithinAt ℝ (Set.Ici (0 : ℝ)) beta :=
         (uniqueDiffOn_Ici (0 : ℝ)) beta hbeta
+      have hscaledDeriv0 := (hbaseRaw.const_smul c).derivWithin hunique
       have hscaledDeriv :
           derivWithin (fun t : ℝ => c • F t) (Set.Ici (0 : ℝ)) beta =
             c • (-periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
-              H N hN (m + n + 1) beta) :=
-        hscaled.derivWithin hunique
+              H N hN (m + n + 1) beta) := by
+        simpa only [Pi.smul_apply] using hscaledDeriv0
       change derivWithin (fun t : ℝ => c • F t) (Set.Ici (0 : ℝ)) beta = _
       rw [hscaledDeriv]
       simp [c, F, pow_succ, Nat.add_assoc, mul_smul]
