@@ -40,10 +40,37 @@ local instance positiveHalfClosureEndpointOSHilbertSpecialUnitaryBorelSpace (N :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
+/-- Every natural power of a symmetric real bounded operator is symmetric.
+This pointwise proof stays on the bundled continuous-linear-map power and
+therefore does not depend on coercion lemmas between powers of continuous and
+plain linear maps. -/
+theorem realContinuousLinearMap_pow_isSymmetric
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    (T : E →L[ℝ] E)
+    (hT : (T : E →ₗ[ℝ] E).IsSymmetric)
+    (n : ℕ) :
+    (((T ^ n : E →L[ℝ] E) : E →ₗ[ℝ] E).IsSymmetric) := by
+  intro x y
+  induction n with
+  | zero => simp
+  | succ n ih =>
+      calc
+        inner ℝ ((T ^ (n + 1)) x) y =
+            inner ℝ ((T ^ n) (T x)) y := by
+          rw [pow_succ]
+          rfl
+        _ = inner ℝ (T x) ((T ^ n) y) := ih (T x) y
+        _ = inner ℝ x (T ((T ^ n) y)) := hT x ((T ^ n) y)
+        _ = inner ℝ x ((T ^ (n + 1)) y) := by
+          rw [pow_succ']
+          rfl
+
 /-- Every natural power of a positive bounded operator on a real Hilbert space
 is positive.  The quadratic part uses two-step induction: positivity of
-`T^(n+2)` is positivity of `T^n` evaluated at `T x`, while symmetry of every
-power is supplied by Mathlib's `LinearMap.IsSymmetric.pow`. -/
+`T^(n+2)` is positivity of `T^n` evaluated at `T x`; symmetry of every power is
+provided by the preceding bundled power theorem. -/
 theorem realContinuousLinearMap_pow_isPositive
     {E : Type*}
     [NormedAddCommGroup E]
@@ -53,32 +80,28 @@ theorem realContinuousLinearMap_pow_isPositive
     (n : ℕ) :
     (((T ^ n : E →L[ℝ] E) : E →ₗ[ℝ] E).IsPositive) := by
   rw [LinearMap.isPositive_iff]
-  refine ⟨?_, ?_⟩
-  · simpa only [ContinuousLinearMap.toLinearMap_pow] using hT.isSymmetric.pow n
-  · induction n using Nat.twoStepInduction with
-    | zero =>
-        intro x
-        simp
-    | one =>
-        intro x
-        exact hT.inner_nonneg_left x
-    | more n ih _ihSucc =>
-        intro x
-        have hpowSymm :
-            (((T ^ (n + 1) : E →L[ℝ] E) : E →ₗ[ℝ] E).IsSymmetric) := by
-          simpa only [ContinuousLinearMap.toLinearMap_pow] using
-            hT.isSymmetric.pow (n + 1)
-        calc
-          0 ≤ inner ℝ ((T ^ n) (T x)) (T x) := ih (T x)
-          _ = inner ℝ ((T ^ (n + 1)) x) (T x) := by
-            rw [pow_succ]
-            rfl
-          _ = inner ℝ (T x) ((T ^ (n + 1)) x) := real_inner_comm _ _
-          _ = inner ℝ ((T ^ (n + 1)) (T x)) x :=
-            (hpowSymm (T x) x).symm
-          _ = inner ℝ ((T ^ (n + 2)) x) x := by
-            rw [show n + 2 = (n + 1) + 1 by omega, pow_succ]
-            rfl
+  refine ⟨realContinuousLinearMap_pow_isSymmetric T hT.isSymmetric n, ?_⟩
+  induction n using Nat.twoStepInduction with
+  | zero =>
+      intro x
+      simp
+  | one =>
+      intro x
+      exact hT.inner_nonneg_left x
+  | more n ih _ihSucc =>
+      intro x
+      have hpowSymm := realContinuousLinearMap_pow_isSymmetric T hT.isSymmetric (n + 1)
+      calc
+        0 ≤ inner ℝ ((T ^ n) (T x)) (T x) := ih (T x)
+        _ = inner ℝ ((T ^ (n + 1)) x) (T x) := by
+          rw [pow_succ]
+          rfl
+        _ = inner ℝ (T x) ((T ^ (n + 1)) x) := real_inner_comm _ _
+        _ = inner ℝ ((T ^ (n + 1)) (T x)) x :=
+          (hpowSymm (T x) x).symm
+        _ = inner ℝ ((T ^ (n + 2)) x) x := by
+          rw [show n + 2 = (n + 1) + 1 by omega, pow_succ]
+          rfl
 
 /-- The actual physical positive-half transfer power is positive on the
 Gauss-law one-slice Hilbert space. -/
@@ -344,7 +367,8 @@ semidefinite pre-inner-product core on the type-separated Gauss-law states. -/
           inner ℝ
             (periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointOperator
               H N hN beta hbeta G.state) K.state
-    rw [map_add, inner_add_left]
+    rw [map_add]
+    exact inner_add_left _ _ _
   smul_left F G r := by
     simp [inner_smul_left]
 
