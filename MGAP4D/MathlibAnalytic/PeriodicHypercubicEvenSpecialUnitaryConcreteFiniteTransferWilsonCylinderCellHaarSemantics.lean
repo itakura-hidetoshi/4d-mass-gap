@@ -318,6 +318,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderWilsonCellWord_s
     periodicHypercubicEvenSpecialUnitaryFiniteTransferWordSlabCount
         (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderWilsonCellWord H N i) =
       periodicHypercubicEvenPositiveHalfCylinderSlabCount H := by
+  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderWilsonCellWord
   rw [periodicHypercubicEvenSpecialUnitaryFiniteTransferWilsonCylinderCellWord_slabCount]
   unfold periodicHypercubicEvenPositiveHalfCylinderSlabCount
   have hi : i.1 ≤ H := by
