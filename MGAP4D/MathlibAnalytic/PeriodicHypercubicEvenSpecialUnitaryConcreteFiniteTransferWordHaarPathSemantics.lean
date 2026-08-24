@@ -137,8 +137,13 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight_measura
                   (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail) =>
                 a (path 0)) :=
             a.continuous.measurable.comp (measurable_pi_apply 0)
-          simpa [periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight] using
-            ha0.mul ih
+          change Measurable
+            (fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
+                (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail) =>
+              a (path 0) *
+                periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight
+                  H N beta tail path)
+          exact ha0.mul ih
       | transfer =>
           let tailMap := fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
               (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1) =>
@@ -149,6 +154,15 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight_measura
             refine measurable_pi_lambda _ ?_
             intro i
             exact measurable_pi_apply i.succ
+          have hpair : Measurable
+              (fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
+                  (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1) =>
+                (path 0,
+                  path (0 : Fin
+                    (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1)).succ)) :=
+            (measurable_pi_apply 0).prodMk
+              (measurable_pi_apply (0 : Fin
+                (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1)).succ)
           have hK : Measurable
               (fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
                   (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1) =>
@@ -156,12 +170,16 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight_measura
                   H N beta (path 0) (path (0 : Fin
                     (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1)).succ)) :=
             (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-              H N beta).measurable.comp
-              ((measurable_pi_apply 0).prodMk
-                (measurable_pi_apply (0 : Fin
-                  (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1)).succ))
-          simpa [periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight, tailMap] using
-            hK.mul (ih.comp htailMap)
+              H N beta).measurable.comp hpair
+          change Measurable
+            (fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
+                (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1) =>
+              periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                  H N beta (path 0) (path (0 : Fin
+                    (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1)).succ) *
+                periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight
+                  H N beta tail (tailMap path))
+          exact hK.mul (ih.comp htailMap)
       | slab b hb =>
           let tailMap := fun path : PeriodicHypercubicEvenSpecialUnitaryNSlabSpatialPath H N
               (periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount tail + 1) =>
@@ -398,12 +416,9 @@ private theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferFirstStepHaarI
     filter_upwards with p
     let base := f p.1 * (w p.2 * g (p.2 (Fin.last n)))
     change |base * q (p.1, p.2 0)| ≤ |C * base|
-    calc
-      |base * q (p.1, p.2 0)| = |base| * |q (p.1, p.2 0)| := abs_mul _ _
-      _ ≤ |base| * C :=
-        mul_le_mul_of_nonneg_left (hqbound (p.1, p.2 0)) (abs_nonneg _)
-      _ = C * |base| := by ring
-      _ = |C * base| := by rw [abs_mul, abs_of_nonneg hC]
+    have hmul := mul_le_mul_of_nonneg_left
+      (hqbound (p.1, p.2 0)) (abs_nonneg base)
+    simpa [base, abs_mul, abs_of_nonneg hC, mul_comm, mul_left_comm, mul_assoc] using hmul
   let μs : Fin (n + 2) → Measure
       (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) := fun _ => μ
   have hMP := MeasureTheory.measurePreserving_piFinSuccAbove μs (0 : Fin (n + 2))
@@ -490,9 +505,9 @@ theorem periodicHypercubicEvenSpecialUnitaryFiniteTransferWordHaarAmplitude_slic
   unfold periodicHypercubicEvenSpecialUnitaryFiniteTransferWordHaarAmplitude
   apply integral_congr_ae
   filter_upwards [hMaPath] with path hpath
-  rw [hpath]
-  simp [periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount,
+  simp only [periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathSlabCount,
     periodicHypercubicEvenSpecialUnitaryFiniteTransferWordPathWeight]
+  rw [hpath]
   ring
 
 /-- An ordinary transfer letter is absorbed as the actual one-slab transfer operator. -/
