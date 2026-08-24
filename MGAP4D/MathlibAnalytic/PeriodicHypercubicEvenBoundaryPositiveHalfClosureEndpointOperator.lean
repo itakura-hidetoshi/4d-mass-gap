@@ -47,9 +47,11 @@ local instance positiveHalfClosureEndpointOperatorPhysicalNontrivial (H N : ℕ)
   let u := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H N
   have hu : u ≠ 0 := by
     intro hzero
-    have hnorm := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_norm H N
-    rw [hzero, norm_zero] at hnorm
-    norm_num at hnorm
+    have hnormu : ‖u‖ = 1 := by
+      simpa [u] using
+        (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_norm H N)
+    rw [hzero, norm_zero] at hnormu
+    norm_num at hnormu
   exact ⟨⟨u, 0, hu⟩⟩
 
 /-- The finite-volume positive-half OS closure endpoint form is represented on
@@ -133,6 +135,7 @@ theorem periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointOperator_inner_
 
 /-- The endpoint operator has the exact norm obtained by scalar multiplication
 of the existing physical positive-half transfer power. -/
+set_option synthInstance.maxHeartbeats 200000 in
 theorem periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointOperator_norm
     (H N : ℕ)
     (hN : 0 < N)
