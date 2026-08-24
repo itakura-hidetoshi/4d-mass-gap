@@ -7,7 +7,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory Filter Set
-open scoped BigOperators InnerProductSpace Topology
+open scoped BigOperators ENNReal InnerProductSpace Topology
 
 noncomputable section
 
@@ -172,7 +172,15 @@ theorem
   have hmvt :=
     Convex.norm_image_sub_le_of_norm_hasDerivWithin_le
       hderiv hbound (convex_uIcc beta gamma) left_mem_uIcc right_mem_uIcc
-  convert hmvt using 1 <;> simp [R, dK, K, S, C] <;> ring
+  change ‖K gamma - K beta + (gamma - beta) * (K beta * S)‖ ≤
+    C ^ 2 * ‖gamma - beta‖ ^ 2
+  calc
+    ‖K gamma - K beta + (gamma - beta) * (K beta * S)‖ = ‖R gamma - R beta‖ := by
+      congr 1
+      simp [R, dK]
+      ring
+    _ ≤ C ^ 2 * ‖gamma - beta‖ * ‖gamma - beta‖ := hmvt
+    _ = C ^ 2 * ‖gamma - beta‖ ^ 2 := by ring
 
 /-- The two endpoint L2 states have an L1 product on the common product-Haar path carrier. -/
 private theorem wilsonCylinderOperatorNormBetaDerivative_endpointProduct_integrable
@@ -361,10 +369,13 @@ private theorem wilsonCylinderOperatorNormBetaDerivative_endpointIntegrand_integ
         periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
           H N beta path by ring,
     norm_mul]
-  exact mul_le_of_le_one_right (norm_nonneg _)
-    (by simpa [Real.norm_eq_abs] using
-      periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel_abs_le_one
+  have hKnorm :
+      ‖periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
+          H N beta path‖ ≤ 1 := by
+    simpa [Real.norm_eq_abs] using
+      (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel_abs_le_one
         H N hN beta hbeta path)
+  exact mul_le_of_le_one_right (norm_nonneg _) hKnorm
 
 /-- Endpoint integrability with the complete Wilson path action inserted. -/
 private theorem wilsonCylinderOperatorNormBetaDerivative_actionIntegrand_integrable
@@ -550,7 +561,55 @@ theorem
         (gamma - beta) •
           periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionInsertionOperator
             H N hN beta hbeta f) g = _
-  simp only [inner_add_left, inner_sub_left, real_inner_smul_left]
+  have hsplit :
+      inner ℝ
+        (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator
+            H N hN gamma hgamma f -
+          periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator
+            H N hN beta hbeta f +
+          (gamma - beta) •
+            periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionInsertionOperator
+              H N hN beta hbeta f) g =
+        (inner ℝ
+            (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator
+              H N hN gamma hgamma f) g -
+          inner ℝ
+            (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator
+              H N hN beta hbeta f) g) +
+          (gamma - beta) * inner ℝ
+            (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionInsertionOperator
+              H N hN beta hbeta f) g := by
+    calc
+      inner ℝ
+          (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator
+              H N hN gamma hgamma f -
+            periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator
+              H N hN beta hbeta f +
+            (gamma - beta) •
+              periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionInsertionOperator
+                H N hN beta hbeta f) g =
+          inner ℝ
+            (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator
+                H N hN gamma hgamma f -
+              periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator
+                H N hN beta hbeta f) g +
+          inner ℝ
+            ((gamma - beta) •
+              periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionInsertionOperator
+                H N hN beta hbeta f) g := by
+            exact inner_add_left _ _ _
+      _ =
+          (inner ℝ
+              (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator
+                H N hN gamma hgamma f) g -
+            inner ℝ
+              (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator
+                H N hN beta hbeta f) g) +
+            (gamma - beta) * inner ℝ
+              (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonActionInsertionOperator
+                H N hN beta hbeta f) g := by
+          rw [inner_sub_left, real_inner_smul_left]
+  rw [hsplit]
   rw [← periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeEndpointAmplitude_eq_physicalTransfer_inner
       H N hN gamma hgamma f g]
   rw [← periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugeEndpointAmplitude_eq_physicalTransfer_inner
