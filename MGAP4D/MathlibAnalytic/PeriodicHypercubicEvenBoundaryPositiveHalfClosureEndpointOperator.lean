@@ -162,17 +162,23 @@ theorem periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointOperator_norm
   · simpa [Real.norm_eq_abs, abs_of_nonneg hc] using
       (ContinuousLinearMap.opNorm_smul_le c T)
   · by_cases hcz : c = 0
-    · simp [hcz]
+    · rw [hcz, zero_mul]
+      exact norm_nonneg _
     · have hcpos : 0 < c := lt_of_le_of_ne hc (Ne.symm hcz)
+      have hrescale : c⁻¹ • (c • T) = T := by
+        ext x
+        change c⁻¹ • (c • T x) = T x
+        rw [← smul_smul, inv_mul_cancel₀ hcz, one_smul]
       have hinv := ContinuousLinearMap.opNorm_smul_le c⁻¹ (c • T)
+      rw [hrescale] at hinv
       have hT : ‖T‖ ≤ c⁻¹ * ‖c • T‖ := by
-        simpa [inv_smul_smul₀ hcz, Real.norm_eq_abs,
+        simpa [Real.norm_eq_abs,
           abs_of_pos (inv_pos.mpr hcpos)] using hinv
       calc
         c * ‖T‖ ≤ c * (c⁻¹ * ‖c • T‖) :=
           mul_le_mul_of_nonneg_left hT hc
         _ = ‖c • T‖ := by
-          rw [mul_assoc, mul_inv_cancel₀ hcz, one_mul]
+          rw [← mul_assoc, mul_inv_cancel₀ hcz, one_mul]
 
 /-- Consequently every represented endpoint vector satisfies the sharp generic
 operator-norm estimate inherited from the physical transfer carrier. -/
