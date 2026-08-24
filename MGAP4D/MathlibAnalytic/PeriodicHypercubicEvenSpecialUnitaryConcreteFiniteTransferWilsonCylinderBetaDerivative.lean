@@ -110,10 +110,6 @@ theorem
     | @insert a s ha ih =>
         simpa [Finset.sum_insert, ha] using (hcell a).add ih
   convert hsum Finset.univ using 1
-  funext path
-  simpa [b] using
-    (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathAction_eq_sum_cellObservable
-      H N path).symm
 
 /-- Generic measurability carrier for a finite nearest-neighbour path kernel. -/
 private theorem wilsonCylinderBetaDerivativeFinitePathKernel_measurable
