@@ -435,111 +435,134 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceO
       H N hN beta hbeta‖ =
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta‖ := by
-  let RR := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+  let S := periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
     H N hN beta hbeta
-  let RC := periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+  let SC := periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator
     H N hN beta hbeta
-  apply le_antisymm
-  · apply ContinuousLinearMap.opNorm_le_bound RC (norm_nonneg RR)
-    intro y
-    have hyComp :=
-      (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceOrthogonal_mem_iff_components
-        H N hN beta hbeta
-        (y : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N)).1 y.property
-    let yr : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta :=
-      ⟨periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N y, hyComp.1⟩
-    let yi : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta :=
-      ⟨periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N y, hyComp.2⟩
-    have hIn : ‖y‖ ^ 2 = ‖yr‖ ^ 2 + ‖yi‖ ^ 2 := by
-      simpa [yr, yi] using
-        periodicHypercubicEvenSpecialUnitaryComplexPhysical_norm_sq H N
-          (y : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N)
-    have hReOut :
-        periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N
-          ((RC y : periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceOrthogonal
-            H N hN beta hbeta) :
-            PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) =
-          ((RR yr : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-            H N hN beta hbeta) :
-            periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) := by
-      change periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N
-          (periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator
+  let hS := periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+    H N hN beta hbeta
+  let hSC := periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+    H N hN beta hbeta
+  let RR := realHilbertTopEigenspaceOrthogonalRestriction S hS
+  let RC := complexHilbertTopEigenspaceOrthogonalRestriction SC hSC
+  have hnorm : ‖RC‖ = ‖RR‖ := by
+    apply le_antisymm
+    · apply ContinuousLinearMap.opNorm_le_bound RC (norm_nonneg RR)
+      intro y
+      have hyConcrete :
+          (y : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) ∈
+            (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspace
+              H N hN beta hbeta)ᗮ := by
+        simpa [SC, periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspace] using
+          y.property
+      have hyCompConcrete :=
+        (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceOrthogonal_mem_iff_components
+          H N hN beta hbeta
+          (y : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N)).1 hyConcrete
+      have hyComp :
+          periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N y ∈
+              (realHilbertTopEigenspace S)ᗮ ∧
+            periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N y ∈
+              (realHilbertTopEigenspace S)ᗮ := by
+        simpa [S, periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace] using
+          hyCompConcrete
+      let yr : (realHilbertTopEigenspace S)ᗮ :=
+        ⟨periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N y, hyComp.1⟩
+      let yi : (realHilbertTopEigenspace S)ᗮ :=
+        ⟨periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N y, hyComp.2⟩
+      have hIn : ‖y‖ ^ 2 = ‖yr‖ ^ 2 + ‖yi‖ ^ 2 := by
+        simpa [yr, yi] using
+          periodicHypercubicEvenSpecialUnitaryComplexPhysical_norm_sq H N
+            (y : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N)
+      have hReOut :
+          periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N
+            (((RC y : (complexHilbertTopEigenspace SC)ᗮ) :
+              PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N)) =
+            (((RR yr : (realHilbertTopEigenspace S)ᗮ) :
+              periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)) := by
+        change periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N
+            (periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator
+              H N hN beta hbeta
+              (y : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N)) =
+          periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
             H N hN beta hbeta
-            (y : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N)) =
-        periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-          H N hN beta hbeta
-          (periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N y)
-      simp [periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator,
-        periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_apply]
-    have hImOut :
-        periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N
-          ((RC y : periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceOrthogonal
-            H N hN beta hbeta) :
-            PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) =
-          ((RR yi : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-            H N hN beta hbeta) :
-            periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) := by
-      change periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N
-          (periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator
+            (periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N y)
+        simp [periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_apply]
+      have hImOut :
+          periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N
+            (((RC y : (complexHilbertTopEigenspace SC)ᗮ) :
+              PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N)) =
+            (((RR yi : (realHilbertTopEigenspace S)ᗮ) :
+              periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)) := by
+        change periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N
+            (periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator
+              H N hN beta hbeta
+              (y : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N)) =
+          periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
             H N hN beta hbeta
-            (y : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N)) =
-        periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-          H N hN beta hbeta
-          (periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N y)
-      simp [periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator,
-        periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_apply]
-    have hOut : ‖RC y‖ ^ 2 = ‖RR yr‖ ^ 2 + ‖RR yi‖ ^ 2 := by
-      have h := periodicHypercubicEvenSpecialUnitaryComplexPhysical_norm_sq H N
-        (((RC y : periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta) :
-          PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N))
-      rw [hReOut, hImOut] at h
-      simpa using h
-    have hr := ContinuousLinearMap.le_opNorm RR yr
-    have hi := ContinuousLinearMap.le_opNorm RR yi
-    have hr2 : ‖RR yr‖ ^ 2 ≤ (‖RR‖ * ‖yr‖) ^ 2 := by
-      nlinarith [hr, norm_nonneg (RR yr), norm_nonneg RR, norm_nonneg yr]
-    have hi2 : ‖RR yi‖ ^ 2 ≤ (‖RR‖ * ‖yi‖) ^ 2 := by
-      nlinarith [hi, norm_nonneg (RR yi), norm_nonneg RR, norm_nonneg yi]
-    have hsq : ‖RC y‖ ^ 2 ≤ (‖RR‖ * ‖y‖) ^ 2 := by
-      rw [hOut]
-      nlinarith [hIn, hr2, hi2, sq_nonneg ‖RR‖]
-    nlinarith [hsq, norm_nonneg (RC y), norm_nonneg RR, norm_nonneg y,
-      mul_nonneg (norm_nonneg RR) (norm_nonneg y)]
-  · apply ContinuousLinearMap.opNorm_le_bound RR (norm_nonneg RC)
-    intro y
-    let yc0 := periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N
-      (y : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
-    have hycOrth :
-        yc0 ∈ (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspace
-          H N hN beta hbeta)ᗮ := by
-      apply (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceOrthogonal_mem_iff_components
-        H N hN beta hbeta yc0).2
-      constructor
-      · simpa [yc0] using y.property
-      · simp [yc0]
-    let yc : periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta := ⟨yc0, hycOrth⟩
-    have hIn : ‖yc‖ = ‖y‖ := by
-      simpa [yc, yc0] using
-        periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_norm H N
-          (y : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
-    have hOut : ‖RC yc‖ = ‖RR y‖ := by
-      change
-        ‖periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator
-          H N hN beta hbeta yc0‖ =
-        ‖periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-          H N hN beta hbeta
-          (y : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)‖
-      rw [show yc0 = periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N
-          (y : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) by rfl,
-        periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_ofReal,
-        periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_norm]
-    have h := ContinuousLinearMap.le_opNorm RC yc
-    rw [hOut, hIn] at h
-    exact h
+            (periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N y)
+        simp [periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_apply]
+      have hOut : ‖RC y‖ ^ 2 = ‖RR yr‖ ^ 2 + ‖RR yi‖ ^ 2 := by
+        have h := periodicHypercubicEvenSpecialUnitaryComplexPhysical_norm_sq H N
+          (((RC y : (complexHilbertTopEigenspace SC)ᗮ) :
+            PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N))
+        rw [hReOut, hImOut] at h
+        simpa using h
+      have hr := ContinuousLinearMap.le_opNorm RR yr
+      have hi := ContinuousLinearMap.le_opNorm RR yi
+      have hr2 : ‖RR yr‖ ^ 2 ≤ (‖RR‖ * ‖yr‖) ^ 2 := by
+        nlinarith [hr, norm_nonneg (RR yr), norm_nonneg RR, norm_nonneg yr]
+      have hi2 : ‖RR yi‖ ^ 2 ≤ (‖RR‖ * ‖yi‖) ^ 2 := by
+        nlinarith [hi, norm_nonneg (RR yi), norm_nonneg RR, norm_nonneg yi]
+      have hsq : ‖RC y‖ ^ 2 ≤ (‖RR‖ * ‖y‖) ^ 2 := by
+        rw [hOut]
+        nlinarith [hIn, hr2, hi2, sq_nonneg ‖RR‖]
+      nlinarith [hsq, norm_nonneg (RC y), norm_nonneg RR, norm_nonneg y,
+        mul_nonneg (norm_nonneg RR) (norm_nonneg y)]
+    · apply ContinuousLinearMap.opNorm_le_bound RR (norm_nonneg RC)
+      intro y
+      let yc0 := periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N
+        (y : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+      have hyRealConcrete :
+          (y : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) ∈
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
+              H N hN beta hbeta)ᗮ := by
+        simpa [S, periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace] using y.property
+      have hycConcrete :
+          yc0 ∈ (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspace
+            H N hN beta hbeta)ᗮ := by
+        apply (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceOrthogonal_mem_iff_components
+          H N hN beta hbeta yc0).2
+        constructor
+        · simpa [yc0] using hyRealConcrete
+        · simp [yc0]
+      have hycOrth : yc0 ∈ (complexHilbertTopEigenspace SC)ᗮ := by
+        simpa [SC, periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspace] using
+          hycConcrete
+      let yc : (complexHilbertTopEigenspace SC)ᗮ := ⟨yc0, hycOrth⟩
+      have hIn : ‖yc‖ = ‖y‖ := by
+        simpa [yc, yc0] using
+          periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_norm H N
+            (y : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+      have hOut : ‖RC yc‖ = ‖RR y‖ := by
+        change
+          ‖periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator
+            H N hN beta hbeta yc0‖ =
+          ‖periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+            H N hN beta hbeta
+            (y : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)‖
+        rw [show yc0 = periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N
+            (y : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) by rfl,
+          periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_ofReal,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_norm]
+      have h := ContinuousLinearMap.le_opNorm RC yc
+      rw [hOut, hIn] at h
+      exact h
+  simpa [RR, RC, hS, hSC, S, SC,
+    periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator] using hnorm
 
 /-- The genuine complex excited sector is strictly contractive by the same real quantity `q`. -/
 theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
