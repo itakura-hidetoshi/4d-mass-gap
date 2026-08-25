@@ -460,6 +460,8 @@ private theorem formalMultilinearSeries_radius_one_le_of_norm_le_exp
     refine Summable.of_nonneg_of_le (fun k => norm_nonneg (p k)) hpNorm hmajor
   exact p.le_radius_of_summable (r := (1 : NNReal)) hpSummable
 
+set_option maxHeartbeats 10000000
+
 /-- Native Mathlib real analyticity of the Wilson transfer family on the
 physical half-line, including `beta = 0`.  The formal multilinear series is
 built under ordinary transparency; `with_reducible_and_instances` is reserved
@@ -523,6 +525,8 @@ theorem
   rw [hterm]
   with_reducible_and_instances
     exact hsum
+
+set_option maxHeartbeats 5000000
 
 /-- Public package for the real-analyticity upgrade: the exact two-sided
 physical Taylor reconstruction and native within-analyticity are returned
