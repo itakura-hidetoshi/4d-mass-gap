@@ -21,6 +21,10 @@ theorem
   let Ω : PH := periodicHypercubicEvenSpecialUnitaryTransferWordPhysicalVacuum H N
   have hΩnorm : ‖Ω‖ = 1 := by
     simpa [Ω] using periodicHypercubicEvenSpecialUnitaryTransferWordPhysicalVacuum_norm H N
+  have hspan : ‖a • Ω‖ = ‖a‖ := by
+    simpa using
+      (SemilinearIsometryClass.norm_map
+        (LinearIsometry.toSpanSingleton ℝ PH hΩnorm) a)
   apply le_antisymm
   · calc
       ‖a • (1 : PH →L[ℝ] PH)‖ ≤
@@ -36,7 +40,8 @@ theorem
       ContinuousLinearMap.le_opNorm (a • (1 : PH →L[ℝ] PH)) Ω
     calc
       |a| = ‖(a • (1 : PH →L[ℝ] PH)) Ω‖ := by
-        simp [hΩnorm, Real.norm_eq_abs]
+        change |a| = ‖a • Ω‖
+        rw [hspan, Real.norm_eq_abs]
       _ ≤ ‖a • (1 : PH →L[ℝ] PH)‖ * ‖Ω‖ := hbound
       _ = ‖a • (1 : PH →L[ℝ] PH)‖ := by rw [hΩnorm, mul_one]
 
