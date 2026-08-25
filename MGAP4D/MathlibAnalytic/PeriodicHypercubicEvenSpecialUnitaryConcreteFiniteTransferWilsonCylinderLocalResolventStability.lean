@@ -92,33 +92,17 @@ theorem
             (Set.Ici (0 : ℝ)) beta :=
         analyticWithinAt_const
       simpa [A] using hconst.sub hT
-    let ub : (PH →L[ℝ] PH)ˣ :=
-      { val := A beta
-        inv := u.inv
-        val_inv := by
-          rw [A, ← hu]
-          exact u.val_inv
-        inv_val := by
-          rw [A, ← hu]
-          exact u.inv_val }
+    have hAbeta : A beta = (u : PH →L[ℝ] PH) := by
+      simpa [A, T] using hu.symm
+    have hopen : {B : PH →L[ℝ] PH | IsUnit B} ∈ 𝓝 (A beta) := by
+      rw [hAbeta]
+      exact Units.isOpen.mem_nhds u.isUnit
     have hnear :
         ∀ᶠ gamma in 𝓝[Set.Ici (0 : ℝ)] beta,
           IsUnit (A gamma) :=
-      hA.continuousWithinAt (Units.isOpen.mem_nhds ub.isUnit)
+      hA.continuousWithinAt.eventually hopen
     filter_upwards [hnear] with gamma hgamma
-    rcases hgamma with ⟨v, hv⟩
-    change @IsUnit (PH →L[ℝ] PH)
-      (@MonoidWithZero.toMonoid (PH →L[ℝ] PH) ContinuousLinearMap.monoidWithZero)
-      (A gamma)
-    refine ⟨
-      { val := A gamma
-        inv := v.inv
-        val_inv := by
-          rw [← hv]
-          exact v.val_inv
-        inv_val := by
-          rw [← hv]
-          exact v.inv_val }, rfl⟩
+    simpa [A, T] using hgamma
 
 /-- Local real spectral-exclusion stability package.  At every physical
 coupling and every real shifted-transfer unit point, the shifted operators stay
