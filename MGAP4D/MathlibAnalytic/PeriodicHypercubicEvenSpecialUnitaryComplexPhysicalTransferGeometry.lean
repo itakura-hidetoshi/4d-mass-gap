@@ -215,7 +215,10 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysical_inner_components
       _ = (starRingEnd ℂ Complex.I) *
           (Complex.I * inner ℂ ex ey) :=
         congrArg (fun z : ℂ => (starRingEnd ℂ Complex.I) * z) hr
-      _ = inner ℂ ex ey := by simp
+      _ = inner ℂ ex ey := by
+        rw [show (starRingEnd ℂ) Complex.I = -Complex.I by simp]
+        rw [neg_mul, ← mul_assoc, Complex.I_mul_I]
+        simp
       _ = (inner ℝ x y : ℂ) := by
         simpa [ex, ey] using
           periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner H N x y
