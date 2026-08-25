@@ -130,8 +130,12 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner
   have hreal :
       inner ℝ ((f : Lp ℝ 2 μ) A) ((g : Lp ℝ 2 μ) A) =
         ((g : Lp ℝ 2 μ) A) * ((f : Lp ℝ 2 μ) A) := by
-    simpa using
-      (RCLike.inner_apply (𝕜 := ℝ) ((f : Lp ℝ 2 μ) A) ((g : Lp ℝ 2 μ) A))
+    calc
+      inner ℝ ((f : Lp ℝ 2 μ) A) ((g : Lp ℝ 2 μ) A) =
+          ((g : Lp ℝ 2 μ) A) *
+            (starRingEnd ℝ) ((f : Lp ℝ 2 μ) A) :=
+        RCLike.inner_apply _ _
+      _ = ((g : Lp ℝ 2 μ) A) * ((f : Lp ℝ 2 μ) A) := by simp
   rw [hreal]
   simp [RCLike.inner_apply]
 
@@ -168,7 +172,9 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysical_inner_components
           inner ℂ
             (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N x)
             (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N y) :=
-        inner_smul_left _ _ _
+        inner_smul_left (𝕜 := ℂ)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N x)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N y) Complex.I
       _ = -Complex.I * (inner ℝ x y : ℂ) := by
         rw [periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner]
         simp
@@ -186,7 +192,9 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysical_inner_components
           inner ℂ
             (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N x)
             (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N y) :=
-        inner_smul_right _ _ _
+        inner_smul_right (𝕜 := ℂ)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N x)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N y) Complex.I
       _ = Complex.I * (inner ℝ x y : ℂ) := by
         rw [periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner]
   have hII
@@ -198,11 +206,12 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysical_inner_components
     let ex := periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N x
     let ey := periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N y
     have hr : inner ℂ ex (Complex.I • ey) =
-        Complex.I * inner ℂ ex ey := inner_smul_right _ _ _
+        Complex.I * inner ℂ ex ey :=
+      inner_smul_right (𝕜 := ℂ) ex ey Complex.I
     calc
       inner ℂ (Complex.I • ex) (Complex.I • ey) =
           (starRingEnd ℂ Complex.I) * inner ℂ ex (Complex.I • ey) :=
-        inner_smul_left _ _ _
+        inner_smul_left (𝕜 := ℂ) ex (Complex.I • ey) Complex.I
       _ = (starRingEnd ℂ Complex.I) *
           (Complex.I * inner ℂ ex ey) :=
         congrArg (fun z : ℂ => (starRingEnd ℂ Complex.I) * z) hr
@@ -238,7 +247,7 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysical_norm_sq
       ‖periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N f‖ ^ 2 := by
   rw [norm_sq_eq_re_inner (𝕜 := ℂ) f,
     periodicHypercubicEvenSpecialUnitaryComplexPhysical_inner_components]
-  simp [real_inner_self_eq_norm_sq]
+  simp
   norm_cast
 
 /-- The scalar extension obeys the exact operator-norm pointwise estimate; no
