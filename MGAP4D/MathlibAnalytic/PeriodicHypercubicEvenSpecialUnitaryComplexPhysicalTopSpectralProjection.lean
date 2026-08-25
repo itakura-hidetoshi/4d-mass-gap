@@ -421,6 +421,10 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceO
     H N hN beta hbeta
   let SC := periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator
     H N hN beta hbeta
+  letI : NormedSpace ℂ ((complexHilbertTopEigenspace SC)ᗮ) :=
+    Submodule.normedSpace ((complexHilbertTopEigenspace SC)ᗮ)
+  letI : NormedSpace ℝ ((realHilbertTopEigenspace S)ᗮ) :=
+    Submodule.normedSpace ((realHilbertTopEigenspace S)ᗮ)
   let hS := periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
     H N hN beta hbeta
   let hSC := periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_isSymmetric
