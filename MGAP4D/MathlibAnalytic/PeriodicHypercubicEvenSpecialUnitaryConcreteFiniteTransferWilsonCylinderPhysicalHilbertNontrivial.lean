@@ -69,9 +69,10 @@ theorem
   norm_num at hnorm
 
 /-- The finite-volume Gauss-law physical Hilbert carrier is genuinely nontrivial,
-proved from its normalized constant-one vacuum rather than installed as an
-assumption. -/
-noncomputable instance
+proved from its normalized constant-one vacuum.  This is kept as a theorem,
+rather than a global typeclass instance, so downstream spectral arguments can
+install it only in the local carrier where it is actually needed. -/
+theorem
     periodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert_nontrivial
     (H N : ℕ) :
     Nontrivial (PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) :=
@@ -80,7 +81,9 @@ noncomputable instance
       periodicHypercubicEvenSpecialUnitaryTransferWordPhysicalVacuum_ne_zero H N⟩⟩
 
 /-- Once physical-carrier nontriviality is generated from the vacuum, every
-unit shifted Wilson transfer has a strictly positive canonical Neumann radius. -/
+unit shifted Wilson transfer has a strictly positive canonical Neumann radius.
+The inverse operator is shown nonzero directly from the physical vacuum, avoiding
+a global `Nontrivial` search through the reducible endomorphism carrier. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily_shiftedInverseRadius_pos
     (H N : ℕ) (hN : 0 < N) (z beta : ℝ) (hbeta : 0 ≤ beta)
@@ -99,16 +102,20 @@ theorem
             H N hN beta)‖⁻¹ := by
   rcases hunit with ⟨u, hu⟩
   rw [← hu, Ring.inverse_unit]
-  have hpos :
-      0 < ‖(↑(u⁻¹) :
-        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
-          PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)‖ :=
-    Units.norm_pos
-      (α :=
-        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
-          PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)
-      (u⁻¹)
-  exact inv_pos.mpr hpos
+  let PH := PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N
+  let Ω : PH := periodicHypercubicEvenSpecialUnitaryTransferWordPhysicalVacuum H N
+  have hΩ : Ω ≠ 0 := by
+    exact periodicHypercubicEvenSpecialUnitaryTransferWordPhysicalVacuum_ne_zero H N
+  have huinv_ne : (↑(u⁻¹) : PH →L[ℝ] PH) ≠ 0 := by
+    intro hzero
+    have hinv_mul :
+        (↑(u⁻¹) : PH →L[ℝ] PH) * (↑u : PH →L[ℝ] PH) = 1 := by
+      simp
+    rw [hzero, zero_mul] at hinv_mul
+    have hΩzero : (0 : PH) = Ω := by
+      simpa using congrArg (fun A : PH →L[ℝ] PH => A Ω) hinv_mul
+    exact hΩ hΩzero.symm
+  exact inv_pos.mpr (norm_pos_iff.mpr huinv_ne)
 
 /-- Audit-visible package tying the normalized Gauss-law vacuum, physical-space
 nontriviality and the positive Neumann radius to the same finite Wilson carrier. -/
