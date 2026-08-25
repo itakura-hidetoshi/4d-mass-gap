@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryConcreteFiniteTransferWilsonCylinderLocalResolventAnalyticity
+import Mathlib.Analysis.Normed.Operator.BoundedLinearMaps
 import Mathlib.Analysis.Normed.Ring.Units
 import Mathlib.Tactic
 
@@ -94,23 +95,21 @@ theorem
       simpa [A] using hconst.sub hT
     have hub : (↑u : PH →L[ℝ] PH) = A beta := by
       simpa [A, T] using hu
-    let ub : (PH →L[ℝ] PH)ˣ :=
-      { val := A beta
-        inv := u.inv
-        val_inv := by
-          rw [← hub]
-          exact u.val_inv
-        inv_val := by
-          rw [← hub]
-          exact u.inv_val }
-    have hopen : {B : PH →L[ℝ] PH | IsUnit B} ∈ 𝓝 (A beta) := by
-      simpa [ub] using (Units.nhds ub)
+    let e : PH ≃L[ℝ] PH := ContinuousLinearEquiv.ofUnit u
+    have he : (e : PH →L[ℝ] PH) = A beta := by
+      simpa [e] using hub
+    have hopen :
+        Set.range ((↑) : (PH ≃L[ℝ] PH) → PH →L[ℝ] PH) ∈ 𝓝 (A beta) := by
+      rw [← he]
+      exact ContinuousLinearEquiv.nhds e
     have hnear :
         ∀ᶠ gamma in 𝓝[Set.Ici (0 : ℝ)] beta,
-          A gamma ∈ {B : PH →L[ℝ] PH | IsUnit B} :=
-      hA.continuousWithinAt.eventually_mem hopen
+          A gamma ∈ Set.range ((↑) : (PH ≃L[ℝ] PH) → PH →L[ℝ] PH) := by
+      exact hA.continuousWithinAt hopen
     filter_upwards [hnear] with gamma hgamma
-    simpa [A, T] using hgamma
+    rcases hgamma with ⟨egamma, hegamma⟩
+    rw [← hegamma]
+    exact (ContinuousLinearEquiv.toUnit egamma).isUnit
 
 /-- Local real spectral-exclusion stability package.  At every physical
 coupling and every real shifted-transfer unit point, the shifted operators stay
