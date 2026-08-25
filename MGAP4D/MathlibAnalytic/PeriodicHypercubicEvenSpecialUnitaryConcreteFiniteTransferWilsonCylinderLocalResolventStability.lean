@@ -116,7 +116,10 @@ theorem
     rcases Set.mem_range.mp hgamma with ⟨egamma, hegamma⟩
     change IsUnit (A gamma)
     rw [← hegamma]
-    exact (ContinuousLinearEquiv.toUnit egamma).isUnit
+    refine ⟨ContinuousLinearEquiv.toUnit egamma, ?_⟩
+    apply ContinuousLinearMap.ext
+    intro x
+    rfl
 
 /-- Local real spectral-exclusion stability package.  At every physical
 coupling and every real shifted-transfer unit point, the shifted operators stay
