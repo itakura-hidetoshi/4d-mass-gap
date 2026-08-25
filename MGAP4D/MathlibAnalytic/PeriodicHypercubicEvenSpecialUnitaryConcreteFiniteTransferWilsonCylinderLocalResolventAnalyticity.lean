@@ -42,6 +42,7 @@ theorem
             periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
               H N hN gamma))
       (Set.Ici (0 : ℝ)) beta := by
+  rcases hunit with ⟨u, hu⟩
   with_reducible_and_instances
     let PH := PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N
     let T :=
@@ -65,7 +66,6 @@ theorem
         AnalyticAt ℝ
           (fun A : PH →L[ℝ] PH => Ring.inverse A)
           (z • (1 : PH →L[ℝ] PH) - T beta) := by
-      rcases hunit with ⟨u, hu⟩
       exact analyticAt_inverse (𝕜 := ℝ)
         { val := z • (1 : PH →L[ℝ] PH) - T beta
           inv := u.inv
