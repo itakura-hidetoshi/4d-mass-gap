@@ -117,7 +117,8 @@ theorem
     rcases Set.mem_range.mp hgamma with ⟨egamma, hegamma⟩
     change IsUnit (A gamma)
     rw [← hegamma]
-    exact ContinuousLinearMap.isUnit_iff_bijective.mpr egamma.bijective
+    exact ContinuousLinearMap.isUnit_iff_bijective.mpr (by
+      simpa using egamma.bijective)
 
 /-- Local real spectral-exclusion stability package.  At every physical
 coupling and every real shifted-transfer unit point, the shifted operators stay
