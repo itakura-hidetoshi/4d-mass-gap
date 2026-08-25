@@ -411,8 +411,8 @@ theorem
 
 /-- Native Mathlib real analyticity of the Wilson transfer family on the
 physical half-line, including `beta = 0`.  The formal multilinear series is
-constructed only at this reducible conversion point, so the pre-existing
-bounded-convergence topology is not replaced by a named wrapper instance. -/
+built under ordinary transparency; `with_reducible_and_instances` is reserved
+for the exact topology conversion from the already-proved Wilson `HasSum`. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily_analyticWithinAt
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
@@ -420,82 +420,82 @@ theorem
       (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
         H N hN)
       (Set.Ici (0 : ℝ)) beta := by
+  let C : ℝ :=
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
+      H N
+  let p : FormalMultilinearSeries ℝ ℝ
+      (PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
+        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) :=
+    fun k =>
+      ContinuousMultilinearMap.mkPiRing ℝ (Fin k)
+        (((k.factorial : ℝ)⁻¹) •
+          (((-1 : ℝ) ^ k) •
+            periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionInsertionOperator
+              H N hN k beta hbeta))
+  have hC : 0 ≤ C := by
+    simpa [C] using
+      periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound_nonneg H N
+  have hpNorm : ∀ k : ℕ, ‖p k‖ ≤ (k.factorial : ℝ)⁻¹ * C ^ k := by
+    intro k
+    have hInvNonneg : 0 ≤ (k.factorial : ℝ)⁻¹ := by positivity
+    have hO :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionInsertionOperator_norm_le
+        H N hN k beta hbeta
+    dsimp [p]
+    rw [ContinuousMultilinearMap.norm_mkPiRing]
+    calc
+      ‖((k.factorial : ℝ)⁻¹) •
+          (((-1 : ℝ) ^ k) •
+            periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionInsertionOperator
+              H N hN k beta hbeta)‖ ≤
+        ‖(k.factorial : ℝ)⁻¹‖ *
+          ‖((-1 : ℝ) ^ k) •
+            periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionInsertionOperator
+              H N hN k beta hbeta‖ :=
+        ContinuousLinearMap.opNorm_smul_le _ _
+      _ ≤ ‖(k.factorial : ℝ)⁻¹‖ *
+          (‖(-1 : ℝ) ^ k‖ *
+            ‖periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionInsertionOperator
+              H N hN k beta hbeta‖) :=
+        mul_le_mul_of_nonneg_left
+          (ContinuousLinearMap.opNorm_smul_le _ _) (norm_nonneg _)
+      _ = (k.factorial : ℝ)⁻¹ *
+            ‖periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionInsertionOperator
+              H N hN k beta hbeta‖ := by
+        simp [Real.norm_eq_abs, hInvNonneg]
+      _ ≤ (k.factorial : ℝ)⁻¹ * C ^ k :=
+        mul_le_mul_of_nonneg_left (by simpa [C] using hO) hInvNonneg
+  have hmajor : Summable (fun k : ℕ => (k.factorial : ℝ)⁻¹ * C ^ k) := by
+    simpa [smul_eq_mul] using
+      (NormedSpace.expSeries_summable' (𝕂 := ℝ) (𝔸 := ℝ) C)
+  have hpSummable : Summable (fun k : ℕ => ‖p k‖ * (1 : ℝ) ^ k) := by
+    simp only [one_pow, mul_one]
+    refine Summable.of_nonneg_of_le (fun k => norm_nonneg (p k)) hpNorm hmajor
+  have hradius := p.le_radius_of_summable (r := (1 : ℝ≥0)) hpSummable
+  refine ⟨p, 1, ?_⟩
+  refine ⟨by simpa using hradius, by norm_num, ?_⟩
+  intro y hy _hyBall
+  simp only [Set.mem_insert_iff] at hy
+  have hgamma : 0 ≤ beta + y := by
+    rcases hy with hEq | hmem
+    · rw [hEq]
+      exact hbeta
+    · exact hmem
+  have hsum :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylor_hasSum_transfer_abs
+      H N hN beta (beta + y) hbeta hgamma
+  have hterm :
+      (fun k : ℕ => p k (fun _ : Fin k => y)) =
+        (fun k : ℕ =>
+          periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm
+            H N hN beta hbeta (beta + y) k) := by
+    funext k
+    dsimp [p]
+    simp [ContinuousMultilinearMap.mkPiRing_apply,
+      periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm,
+      smul_smul, mul_assoc, mul_comm, mul_left_comm]
+  rw [hterm]
   with_reducible_and_instances
-    let C : ℝ :=
-      periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
-        H N
-    let p : FormalMultilinearSeries ℝ ℝ
-        (PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
-          PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) :=
-      fun k =>
-        ContinuousMultilinearMap.mkPiRing ℝ (Fin k)
-          (((k.factorial : ℝ)⁻¹) •
-            (((-1 : ℝ) ^ k) •
-              periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionInsertionOperator
-                H N hN k beta hbeta))
-    have hC : 0 ≤ C := by
-      simpa [C] using
-        periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound_nonneg H N
-    have hpNorm : ∀ k : ℕ, ‖p k‖ ≤ (k.factorial : ℝ)⁻¹ * C ^ k := by
-      intro k
-      have hInvNonneg : 0 ≤ (k.factorial : ℝ)⁻¹ := by positivity
-      have hO :=
-        periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionInsertionOperator_norm_le
-          H N hN k beta hbeta
-      dsimp [p]
-      rw [ContinuousMultilinearMap.norm_mkPiRing]
-      calc
-        ‖((k.factorial : ℝ)⁻¹) •
-            (((-1 : ℝ) ^ k) •
-              periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionInsertionOperator
-                H N hN k beta hbeta)‖ ≤
-          ‖(k.factorial : ℝ)⁻¹‖ *
-            ‖((-1 : ℝ) ^ k) •
-              periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionInsertionOperator
-                H N hN k beta hbeta‖ :=
-          ContinuousLinearMap.opNorm_smul_le _ _
-        _ ≤ ‖(k.factorial : ℝ)⁻¹‖ *
-            (‖(-1 : ℝ) ^ k‖ *
-              ‖periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionInsertionOperator
-                H N hN k beta hbeta‖) :=
-          mul_le_mul_of_nonneg_left
-            (ContinuousLinearMap.opNorm_smul_le _ _) (norm_nonneg _)
-        _ = (k.factorial : ℝ)⁻¹ *
-              ‖periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionInsertionOperator
-                H N hN k beta hbeta‖ := by
-          simp [Real.norm_eq_abs, hInvNonneg]
-        _ ≤ (k.factorial : ℝ)⁻¹ * C ^ k :=
-          mul_le_mul_of_nonneg_left (by simpa [C] using hO) hInvNonneg
-    have hmajor : Summable (fun k : ℕ => (k.factorial : ℝ)⁻¹ * C ^ k) := by
-      simpa [smul_eq_mul] using
-        (NormedSpace.expSeries_summable' (𝕂 := ℝ) (𝔸 := ℝ) C)
-    have hpSummable : Summable (fun k : ℕ => ‖p k‖ * (1 : ℝ) ^ k) := by
-      simp only [one_pow, mul_one]
-      refine Summable.of_nonneg_of_le (fun k => norm_nonneg (p k)) hpNorm hmajor
-    have hradius := p.le_radius_of_summable (r := (1 : ℝ≥0)) hpSummable
-    refine ⟨p, 1, ?_⟩
-    refine ⟨by simpa using hradius, by norm_num, ?_⟩
-    intro y hy _hyBall
-    simp only [Set.mem_insert_iff] at hy
-    have hgamma : 0 ≤ beta + y := by
-      rcases hy with hEq | hmem
-      · rw [hEq]
-        exact hbeta
-      · exact hmem
-    have hsum :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylor_hasSum_transfer_abs
-        H N hN beta (beta + y) hbeta hgamma
-    have hterm :
-        (fun k : ℕ => p k (fun _ : Fin k => y)) =
-          (fun k : ℕ =>
-            periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm
-              H N hN beta hbeta (beta + y) k) := by
-      funext k
-      dsimp [p]
-      simp [ContinuousMultilinearMap.mkPiRing_apply,
-        periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm,
-        smul_smul, mul_assoc, mul_comm, mul_left_comm]
-    rw [hterm]
     exact hsum
 
 /-- Public package for the real-analyticity upgrade: the exact two-sided
