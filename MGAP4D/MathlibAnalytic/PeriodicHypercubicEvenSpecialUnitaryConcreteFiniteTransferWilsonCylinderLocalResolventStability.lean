@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryConcreteFiniteTransferWilsonCylinderLocalResolventAnalyticity
+import Mathlib.Analysis.Normed.Operator.Banach
 import Mathlib.Analysis.Normed.Operator.BoundedLinearMaps
 import Mathlib.Analysis.Normed.Ring.Units
 import Mathlib.Tactic
@@ -116,10 +117,7 @@ theorem
     rcases Set.mem_range.mp hgamma with ⟨egamma, hegamma⟩
     change IsUnit (A gamma)
     rw [← hegamma]
-    refine ⟨ContinuousLinearEquiv.toUnit egamma, ?_⟩
-    apply ContinuousLinearMap.ext
-    intro x
-    rfl
+    exact ContinuousLinearMap.isUnit_iff_bijective.mpr egamma.bijective
 
 /-- Local real spectral-exclusion stability package.  At every physical
 coupling and every real shifted-transfer unit point, the shifted operators stay
