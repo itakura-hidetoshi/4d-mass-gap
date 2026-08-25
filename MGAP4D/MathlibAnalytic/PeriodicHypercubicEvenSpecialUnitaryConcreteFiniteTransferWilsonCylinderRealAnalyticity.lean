@@ -461,10 +461,41 @@ private theorem formalMultilinearSeries_radius_one_le_of_norm_le_exp
     refine Summable.of_nonneg_of_le (fun k => norm_nonneg (p k)) hpNorm hmajor
   exact p.le_radius_of_summable (r := (1 : NNReal)) hpSummable
 
+private theorem hasSum_of_norm_remainder_majorant
+    {F : Type*} [SeminormedAddCommGroup F]
+    (f : ℕ → F) (a : F) (r : ℕ → ℝ)
+    (hrNonneg : ∀ n : ℕ, 0 ≤ r n)
+    (hrZero : Tendsto r atTop (𝓝 0))
+    (hrem : ∀ n : ℕ, ‖a - ∑ k ∈ Finset.range (n + 1), f k‖ ≤ r n)
+    (hnorm : Summable (fun k : ℕ => ‖f k‖)) :
+    HasSum f a := by
+  have hpartial :
+      Tendsto (fun n : ℕ => ∑ k ∈ Finset.range (n + 1), f k) atTop (𝓝 a) := by
+    rw [Metric.tendsto_atTop]
+    intro epsilon hepsilon
+    have hr := hrZero
+    rw [Metric.tendsto_atTop] at hr
+    rcases hr epsilon hepsilon with ⟨N0, hN0⟩
+    refine ⟨N0, ?_⟩
+    intro n hn
+    have hrLt : r n < epsilon := by
+      have hdist := hN0 n hn
+      rw [Real.dist_eq, sub_zero, abs_of_nonneg (hrNonneg n)] at hdist
+      exact hdist
+    calc
+      dist (∑ k ∈ Finset.range (n + 1), f k) a =
+          ‖a - ∑ k ∈ Finset.range (n + 1), f k‖ := by
+        rw [dist_eq_norm, ← norm_neg, neg_sub]
+      _ ≤ r n := hrem n
+      _ < epsilon := hrLt
+  have hs :
+      Tendsto (fun n : ℕ => Finset.range (n + 1)) atTop atTop :=
+    tendsto_finset_range.comp (tendsto_add_atTop_nat 1)
+  exact hasSum_of_subseq_of_summable hnorm hs hpartial
+
 /-- Native Mathlib real analyticity of the Wilson transfer family on the
-physical half-line, including `beta = 0`.  The formal multilinear series is
-built under ordinary transparency; `with_reducible_and_instances` is reserved
-for the exact topology conversion from the already-proved Wilson `HasSum`. -/
+physical half-line, including `beta = 0`.  The formal multilinear series and
+its Wilson reconstruction are both realized in the operator-norm topology. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily_analyticWithinAt
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
@@ -472,6 +503,14 @@ theorem
       (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
         H N hN)
       (Set.Ici (0 : ℝ)) beta := by
+  letI : NormedAddCommGroup
+      (PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
+        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) :=
+    ContinuousLinearMap.toNormedAddCommGroup
+  letI : NormedSpace ℝ
+      (PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
+        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) :=
+    ContinuousLinearMap.toNormedSpace
   let C : ℝ :=
     periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound H N
   let p : FormalMultilinearSeries ℝ ℝ
@@ -500,9 +539,49 @@ theorem
     · rw [hEq]
       exact hbeta
     · exact hmem
-  have hsum :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylor_hasSum_transfer_abs
-      H N hN beta (beta + y) hbeta hgamma
+  let r : ℕ → ℝ := fun n =>
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
+        H N ^ (n + 1) * |(beta + y) - beta| ^ (n + 1) / n.factorial
+  have hrNonneg : ∀ n : ℕ, 0 ≤ r n := by
+    intro n
+    have hC :=
+      periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound_nonneg H N
+    dsimp [r]
+    positivity
+  have hrZero : Tendsto r atTop (𝓝 0) := by
+    simpa [r] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylor_remainderMajorantAbs_tendsto_zero
+        H N beta (beta + y)
+  have hrem : ∀ n : ℕ,
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
+            H N hN (beta + y) -
+          ∑ k ∈ Finset.range (n + 1),
+            periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm
+              H N hN beta hbeta (beta + y) k‖ ≤ r n := by
+    intro n
+    simpa [r] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylor_remainder_norm_le_abs
+        H N hN n beta (beta + y) hbeta hgamma
+  have hnorm : Summable (fun k : ℕ =>
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm
+        H N hN beta hbeta (beta + y) k‖) := by
+    simpa using
+      periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylorTerm_summable_norm_abs
+        H N hN beta (beta + y) hbeta hgamma
+  have hsum :
+      HasSum
+        (fun k : ℕ =>
+          periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm
+            H N hN beta hbeta (beta + y) k)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
+          H N hN (beta + y)) :=
+    hasSum_of_norm_remainder_majorant
+      (f := fun k : ℕ =>
+        periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm
+          H N hN beta hbeta (beta + y) k)
+      (a := periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
+        H N hN (beta + y))
+      (r := r) hrNonneg hrZero hrem hnorm
   have hterm :
       (fun k : ℕ => p k (fun _ : Fin k => y)) =
         (fun k : ℕ =>
@@ -514,8 +593,7 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm,
       smul_smul, mul_assoc, mul_comm, mul_left_comm]
   rw [hterm]
-  with_reducible_and_instances
-    exact hsum
+  exact hsum
 
 /-- Public package for the real-analyticity upgrade: the exact two-sided
 physical Taylor reconstruction and native within-analyticity are returned
