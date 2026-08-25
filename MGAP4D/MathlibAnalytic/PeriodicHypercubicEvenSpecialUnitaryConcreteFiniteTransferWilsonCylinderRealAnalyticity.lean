@@ -420,6 +420,14 @@ theorem
       (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
         H N hN)
       (Set.Ici (0 : ℝ)) beta := by
+  letI : SeminormedAddCommGroup
+      (PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
+        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) :=
+    ContinuousLinearMap.toSeminormedAddCommGroup
+  letI : NormedSpace ℝ
+      (PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
+        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) :=
+    ContinuousLinearMap.toNormedSpace
   let C : ℝ :=
     periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
       H N
