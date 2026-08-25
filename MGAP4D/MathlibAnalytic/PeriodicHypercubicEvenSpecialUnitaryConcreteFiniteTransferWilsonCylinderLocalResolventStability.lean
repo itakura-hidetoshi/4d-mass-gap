@@ -93,8 +93,11 @@ theorem
       simpa [A] using hconst.sub hT
     have hunitA : IsUnit (A beta) := by
       simpa [A, T] using hunit
+    have hunitA_mem :
+        A beta ∈ {B : PH →L[ℝ] PH | IsUnit B} := by
+      exact hunitA
     have hopen : {B : PH →L[ℝ] PH | IsUnit B} ∈ 𝓝 (A beta) := by
-      exact Units.isOpen.mem_nhds hunitA
+      exact Units.isOpen.mem_nhds hunitA_mem
     have hpreimage :
         A ⁻¹' {B : PH →L[ℝ] PH | IsUnit B} ∈ 𝓝[Set.Ici (0 : ℝ)] beta :=
       hA.continuousWithinAt.preimage_mem_nhdsWithin hopen
