@@ -397,24 +397,6 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopE
   (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspace
     H N hN beta hbeta)ᗮ
 
-local instance periodicHypercubicEvenSpecialUnitaryComplexTopOrthogonalNormedSpace
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
-    NormedSpace ℂ
-      (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta) :=
-  Submodule.normedSpace
-    (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceOrthogonal
-      H N hN beta hbeta)
-
-local instance periodicHypercubicEvenSpecialUnitaryRealTopOrthogonalNormedSpace
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
-    NormedSpace ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta) :=
-  Submodule.normedSpace
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-      H N hN beta hbeta)
-
 /-- The normalized complex transfer restricted to its full-top orthogonal complement. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
