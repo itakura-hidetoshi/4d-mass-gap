@@ -74,6 +74,7 @@ theorem
               PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) -
           periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
             H N hN gamma) := by
+  rcases hunit with ⟨u, hu⟩
   with_reducible_and_instances
     let PH := PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N
     let T :=
@@ -91,17 +92,24 @@ theorem
             (Set.Ici (0 : ℝ)) beta :=
         analyticWithinAt_const
       simpa [A] using hconst.sub hT
-    have hunitA : IsUnit (A beta) := by
-      simpa [A, T] using hunit
-    have hunitA_mem :
-        A beta ∈ {B : PH →L[ℝ] PH | IsUnit B} := by
-      exact hunitA
+    have hub : (↑u : PH →L[ℝ] PH) = A beta := by
+      simpa [A, T] using hu
+    let ub : (PH →L[ℝ] PH)ˣ :=
+      { val := A beta
+        inv := u.inv
+        val_inv := by
+          rw [← hub]
+          exact u.val_inv
+        inv_val := by
+          rw [← hub]
+          exact u.inv_val }
     have hopen : {B : PH →L[ℝ] PH | IsUnit B} ∈ 𝓝 (A beta) := by
-      exact Units.isOpen.mem_nhds hunitA_mem
-    have hpreimage :
-        A ⁻¹' {B : PH →L[ℝ] PH | IsUnit B} ∈ 𝓝[Set.Ici (0 : ℝ)] beta :=
-      hA.continuousWithinAt.preimage_mem_nhdsWithin hopen
-    filter_upwards [hpreimage] with gamma hgamma
+      simpa [ub] using (Units.nhds ub)
+    have hnear :
+        ∀ᶠ gamma in 𝓝[Set.Ici (0 : ℝ)] beta,
+          A gamma ∈ {B : PH →L[ℝ] PH | IsUnit B} :=
+      hA.continuousWithinAt.eventually_mem hopen
+    filter_upwards [hnear] with gamma hgamma
     simpa [A, T] using hgamma
 
 /-- Local real spectral-exclusion stability package.  At every physical
