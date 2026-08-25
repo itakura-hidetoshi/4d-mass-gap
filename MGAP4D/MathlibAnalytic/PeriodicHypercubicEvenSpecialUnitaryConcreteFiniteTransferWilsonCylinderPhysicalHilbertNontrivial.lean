@@ -115,7 +115,17 @@ theorem
     have hΩzero : (0 : PH) = Ω := by
       simpa using congrArg (fun A : PH →L[ℝ] PH => A Ω) hinv_mul
     exact hΩ hΩzero.symm
-  exact inv_pos.mpr (norm_pos_iff.mpr huinv_ne)
+  change
+    (↑(u⁻¹) :
+      PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
+        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) ≠ 0 at huinv_ne
+  have hpos :
+      0 < ‖(↑(u⁻¹) :
+        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
+          PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)‖ := by
+    rw [norm_pos_iff]
+    exact huinv_ne
+  exact inv_pos.mpr hpos
 
 /-- Audit-visible package tying the normalized Gauss-law vacuum, physical-space
 nontriviality and the positive Neumann radius to the same finite Wilson carrier. -/
