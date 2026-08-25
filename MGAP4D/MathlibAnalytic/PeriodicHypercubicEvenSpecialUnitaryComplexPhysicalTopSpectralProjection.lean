@@ -401,17 +401,19 @@ local instance periodicHypercubicEvenSpecialUnitaryComplexTopOrthogonalNormedSpa
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     NormedSpace ℂ
       (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta) := by
-  unfold periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceOrthogonal
-  exact Submodule.normedSpace _
+        H N hN beta hbeta) :=
+  Submodule.normedSpace
+    (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
 
 local instance periodicHypercubicEvenSpecialUnitaryRealTopOrthogonalNormedSpace
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     NormedSpace ℝ
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta) := by
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-  exact Submodule.normedSpace _
+        H N hN beta hbeta) :=
+  Submodule.normedSpace
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
 
 /-- The normalized complex transfer restricted to its full-top orthogonal complement. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
