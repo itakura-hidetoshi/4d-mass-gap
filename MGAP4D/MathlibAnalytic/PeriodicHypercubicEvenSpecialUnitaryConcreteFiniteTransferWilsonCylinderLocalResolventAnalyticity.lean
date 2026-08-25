@@ -45,7 +45,7 @@ theorem
   with_reducible_and_instances
     let PH := PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N
     letI : IsBoundedSMul ℝ (PH →L[ℝ] PH) :=
-      IsBoundedSMul.of_norm_smul_le fun r A =>
+      IsBoundedSMul.of_norm_smul_le fun (r : ℝ) (A : PH →L[ℝ] PH) =>
         ContinuousLinearMap.opNorm_smul_le r A
     let T :=
       periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
