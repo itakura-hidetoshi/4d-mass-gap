@@ -82,8 +82,9 @@ theorem
 
 /-- Once physical-carrier nontriviality is generated from the vacuum, every
 unit shifted Wilson transfer has a strictly positive canonical Neumann radius.
-The inverse operator is shown nonzero directly from the physical vacuum, avoiding
-a global `Nontrivial` search through the reducible endomorphism carrier. -/
+The proof is operator-norm native: the inverse unit cannot annihilate the
+normalized physical vacuum, and `ContinuousLinearMap.le_opNorm` then forces its
+operator norm to be strictly positive. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily_shiftedInverseRadius_pos
     (H N : ℕ) (hN : 0 < N) (z beta : ℝ) (hbeta : 0 ≤ beta)
@@ -104,28 +105,29 @@ theorem
   rw [← hu, Ring.inverse_unit]
   let PH := PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N
   let Ω : PH := periodicHypercubicEvenSpecialUnitaryTransferWordPhysicalVacuum H N
+  let A : PH →L[ℝ] PH := (↑(u⁻¹) : PH →L[ℝ] PH)
   have hΩ : Ω ≠ 0 := by
     exact periodicHypercubicEvenSpecialUnitaryTransferWordPhysicalVacuum_ne_zero H N
-  have huinv_ne : (↑(u⁻¹) : PH →L[ℝ] PH) ≠ 0 := by
+  have hΩnorm : ‖Ω‖ = 1 := by
+    simpa [Ω] using periodicHypercubicEvenSpecialUnitaryTransferWordPhysicalVacuum_norm H N
+  have hAΩ_ne : A Ω ≠ 0 := by
     intro hzero
-    have hinv_mul :
-        (↑(u⁻¹) : PH →L[ℝ] PH) * (↑u : PH →L[ℝ] PH) = 1 := by
-      simp
-    rw [hzero, zero_mul] at hinv_mul
-    have hΩzero : (0 : PH) = Ω := by
-      simpa using congrArg (fun A : PH →L[ℝ] PH => A Ω) hinv_mul
-    exact hΩ hΩzero.symm
-  change
-    (↑(u⁻¹) :
-      PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
-        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) ≠ 0 at huinv_ne
-  have hpos :
-      0 < ‖(↑(u⁻¹) :
-        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
-          PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)‖ := by
-    rw [norm_pos_iff]
-    exact huinv_ne
-  exact inv_pos.mpr hpos
+    have hmul : (↑u : PH →L[ℝ] PH) * A = 1 := by
+      simp [A]
+    have hΩzero : Ω = 0 := by
+      calc
+        Ω = (1 : PH →L[ℝ] PH) Ω := by simp
+        _ = ((↑u : PH →L[ℝ] PH) * A) Ω := by rw [hmul]
+        _ = (↑u : PH →L[ℝ] PH) (A Ω) := rfl
+        _ = 0 := by rw [hzero]; simp
+    exact hΩ hΩzero
+  have hAΩpos : 0 < ‖A Ω‖ := norm_pos_iff.mpr hAΩ_ne
+  have hbound : ‖A Ω‖ ≤ ‖A‖ := by
+    calc
+      ‖A Ω‖ ≤ ‖A‖ * ‖Ω‖ := A.le_opNorm Ω
+      _ = ‖A‖ := by rw [hΩnorm, mul_one]
+  have hApos : 0 < ‖A‖ := lt_of_lt_of_le hAΩpos hbound
+  exact inv_pos.mpr (by simpa [A] using hApos)
 
 /-- Audit-visible package tying the normalized Gauss-law vacuum, physical-space
 nontriviality and the positive Neumann radius to the same finite Wilson carrier. -/
