@@ -13,6 +13,30 @@ noncomputable section
 set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 500000
 
+local instance (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
+local instance (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
 /-- Complex Haar-`L²` pullback by the same physical spatial lattice gauge
 transformation used by the real finite Wilson carrier.  No new configuration
 space, measure, or gauge action is introduced: only the scalar field of the
@@ -243,7 +267,8 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalConstantUnitVector_no
 /-- The complex physical carrier is complete because it is a closed subspace
 of complex Haar `L²`.  Kept as a named constructor so downstream spectral
 files can install it locally without a global instance diamond. -/
-noncomputable def periodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert_completeSpace
+@[implicit_reducible] noncomputable def
+    periodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert_completeSpace
     (H N : ℕ) :
     CompleteSpace (PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) :=
   (periodicHypercubicEvenSpecialUnitarySpatialSliceComplexGaugeInvariantL2Submodule_isClosed
