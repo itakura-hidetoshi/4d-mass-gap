@@ -339,7 +339,12 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart_smul
   have his := Lp.coeFn_smul c.im
     (periodicHypercubicEvenSpecialUnitarySpatialSliceComplexL2ImagPart H N (f :
       Lp ℂ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))
-  filter_upwards [hleft, hsmul, hre, him, hrs, his] with A hl hs hr hi hrsA hisA
+  have hsub := Lp.coeFn_sub
+    (c.re • periodicHypercubicEvenSpecialUnitarySpatialSliceComplexL2RealPart H N (f :
+      Lp ℂ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))
+    (c.im • periodicHypercubicEvenSpecialUnitarySpatialSliceComplexL2ImagPart H N (f :
+      Lp ℂ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))
+  filter_upwards [hleft, hsmul, hre, him, hrs, his, hsub] with A hl hs hr hi hrsA hisA hsubA
   let fL2 : Lp ℂ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := f
   have hr' :
       periodicHypercubicEvenSpecialUnitarySpatialSliceComplexL2RealPart H N
@@ -356,11 +361,8 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart_smul
     _ = (c * fL2 A).re := by simpa [smul_eq_mul] using congrArg Complex.re hs
     _ = c.re * (fL2 A).re - c.im * (fL2 A).im := Complex.mul_re _ _
     _ = _ := by
-      change c.re * (fL2 A).re - c.im * (fL2 A).im =
-        (c.re • periodicHypercubicEvenSpecialUnitarySpatialSliceComplexL2RealPart H N
-          (f : Lp ℂ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))) A -
-        (c.im • periodicHypercubicEvenSpecialUnitarySpatialSliceComplexL2ImagPart H N
-          (f : Lp ℂ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))) A
+      rw [hsubA]
+      simp only [Pi.sub_apply]
       rw [hrsA, hisA]
       simpa [hr', hi']
 
@@ -392,7 +394,12 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart_smul
   have hrs := Lp.coeFn_smul c.re
     (periodicHypercubicEvenSpecialUnitarySpatialSliceComplexL2ImagPart H N (f :
       Lp ℂ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))
-  filter_upwards [hleft, hsmul, hre, him, his, hrs] with A hl hs hr hi hisA hrsA
+  have hadd := Lp.coeFn_add
+    (c.im • periodicHypercubicEvenSpecialUnitarySpatialSliceComplexL2RealPart H N (f :
+      Lp ℂ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))
+    (c.re • periodicHypercubicEvenSpecialUnitarySpatialSliceComplexL2ImagPart H N (f :
+      Lp ℂ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))
+  filter_upwards [hleft, hsmul, hre, him, his, hrs, hadd] with A hl hs hr hi hisA hrsA haddA
   let fL2 : Lp ℂ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := f
   have hr' :
       periodicHypercubicEvenSpecialUnitarySpatialSliceComplexL2RealPart H N
@@ -410,11 +417,8 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart_smul
     _ = c.re * (fL2 A).im + c.im * (fL2 A).re := Complex.mul_im _ _
     _ = c.im * (fL2 A).re + c.re * (fL2 A).im := by ring
     _ = _ := by
-      change c.im * (fL2 A).re + c.re * (fL2 A).im =
-        (c.im • periodicHypercubicEvenSpecialUnitarySpatialSliceComplexL2RealPart H N
-          (f : Lp ℂ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))) A +
-        (c.re • periodicHypercubicEvenSpecialUnitarySpatialSliceComplexL2ImagPart H N
-          (f : Lp ℂ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))) A
+      rw [haddA]
+      simp only [Pi.add_apply]
       rw [hisA, hrsA]
       simpa [hr', hi']
 
