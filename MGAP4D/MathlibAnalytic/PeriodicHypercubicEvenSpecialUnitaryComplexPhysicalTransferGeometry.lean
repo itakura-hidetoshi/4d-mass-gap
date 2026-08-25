@@ -127,6 +127,12 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner
     H N (g : Lp ℝ 2 μ)
   filter_upwards [hf, hg] with A hfA hgA
   rw [hfA, hgA]
+  have hreal :
+      inner ℝ ((f : Lp ℝ 2 μ) A) ((g : Lp ℝ 2 μ) A) =
+        ((g : Lp ℝ 2 μ) A) * ((f : Lp ℝ 2 μ) A) := by
+    simpa using
+      (RCLike.inner_apply (𝕜 := ℝ) ((f : Lp ℝ 2 μ) A) ((g : Lp ℝ 2 μ) A))
+  rw [hreal]
   simp [RCLike.inner_apply]
 
 /-- Exact decomposition of the genuine complex physical inner product into
@@ -154,24 +160,56 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysical_inner_components
           (Complex.I • periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N x)
           (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N y) =
         -Complex.I * (inner ℝ x y : ℂ) := by
-    rw [inner_smul_left, periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner]
-    simp
+    calc
+      inner ℂ
+          (Complex.I • periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N x)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N y) =
+        (starRingEnd ℂ Complex.I) *
+          inner ℂ
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N x)
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N y) :=
+        inner_smul_left _ _ _
+      _ = -Complex.I * (inner ℝ x y : ℂ) := by
+        rw [periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner]
+        simp
   have hIright
       (x y : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
       inner ℂ
           (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N x)
           (Complex.I • periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N y) =
         Complex.I * (inner ℝ x y : ℂ) := by
-    rw [inner_smul_right, periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner]
+    calc
+      inner ℂ
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N x)
+          (Complex.I • periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N y) =
+        Complex.I *
+          inner ℂ
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N x)
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N y) :=
+        inner_smul_right _ _ _
+      _ = Complex.I * (inner ℝ x y : ℂ) := by
+        rw [periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner]
   have hII
       (x y : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
       inner ℂ
           (Complex.I • periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N x)
           (Complex.I • periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N y) =
         (inner ℝ x y : ℂ) := by
-    rw [inner_smul_left, inner_smul_right,
-      periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner]
-    simp
+    let ex := periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N x
+    let ey := periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N y
+    have hr : inner ℂ ex (Complex.I • ey) =
+        Complex.I * inner ℂ ex ey := inner_smul_right _ _ _
+    calc
+      inner ℂ (Complex.I • ex) (Complex.I • ey) =
+          (starRingEnd ℂ Complex.I) * inner ℂ ex (Complex.I • ey) :=
+        inner_smul_left _ _ _
+      _ = (starRingEnd ℂ Complex.I) *
+          (Complex.I * inner ℂ ex ey) :=
+        congrArg (fun z : ℂ => (starRingEnd ℂ Complex.I) * z) hr
+      _ = inner ℂ ex ey := by simp
+      _ = (inner ℝ x y : ℂ) := by
+        simpa [ex, ey] using
+          periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner H N x y
   calc
     inner ℂ f g =
         inner ℂ
@@ -186,9 +224,9 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysical_inner_components
       rw [periodicHypercubicEvenSpecialUnitaryComplexPhysical_reconstruct H N f,
         periodicHypercubicEvenSpecialUnitaryComplexPhysical_reconstruct H N g]
     _ = _ := by
-      rw [inner_add_left, inner_add_right]
+      simp only [inner_add_left, inner_add_right]
       rw [periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner,
-        hIleft, hIright, hII]
+        hIright, hIleft, hII]
       ring
 
 /-- Pythagoras for the genuine complex Gauss-law Hilbert space. -/
