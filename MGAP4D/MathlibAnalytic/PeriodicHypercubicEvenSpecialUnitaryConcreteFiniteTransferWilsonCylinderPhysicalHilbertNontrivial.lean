@@ -26,7 +26,7 @@ noncomputable def
   simpa using
     (Lp.norm_const'
       (μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
-      (p := (2 : ℝ≥0∞)) (c := (1 : ℝ)) (by norm_num) (by norm_num))
+      (p := (2 : ENNReal)) (c := (1 : ℝ)) (by norm_num) (by norm_num))
 
 /-- Constant one is fixed by every actual spatial lattice gauge pullback. -/
 theorem
@@ -63,8 +63,10 @@ theorem
     (H N : ℕ) :
     periodicHypercubicEvenSpecialUnitaryTransferWordPhysicalVacuum H N ≠ 0 := by
   intro hzero
-  have hnorm := congrArg norm hzero
-  simpa using hnorm
+  have hnorm :=
+    periodicHypercubicEvenSpecialUnitaryTransferWordPhysicalVacuum_norm H N
+  rw [hzero, norm_zero] at hnorm
+  norm_num at hnorm
 
 /-- The finite-volume Gauss-law physical Hilbert carrier is genuinely nontrivial,
 proved from its normalized constant-one vacuum rather than installed as an
@@ -97,7 +99,12 @@ theorem
             H N hN beta)‖⁻¹ := by
   rcases hunit with ⟨u, hu⟩
   rw [← hu, Ring.inverse_unit]
-  exact inv_pos.mpr (Units.norm_pos u⁻¹)
+  have hpos :
+      0 < ‖(↑(u⁻¹) :
+        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
+          PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)‖ :=
+    Units.norm_pos (u⁻¹)
+  exact inv_pos.mpr hpos
 
 /-- Audit-visible package tying the normalized Gauss-law vacuum, physical-space
 nontriviality and the positive Neumann radius to the same finite Wilson carrier. -/
