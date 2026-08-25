@@ -97,17 +97,22 @@ theorem
       simpa [A, T] using hu
     let e : PH ≃L[ℝ] PH := ContinuousLinearEquiv.ofUnit u
     have he : (e : PH →L[ℝ] PH) = A beta := by
-      simpa [e] using hub
+      change (↑u : PH →L[ℝ] PH) = A beta
+      exact hub
     have hopen :
         Set.range ((↑) : (PH ≃L[ℝ] PH) → PH →L[ℝ] PH) ∈ 𝓝 (A beta) := by
       rw [← he]
       exact ContinuousLinearEquiv.nhds e
+    have hcont := hA.continuousWithinAt
+    change Filter.Tendsto A (𝓝[Set.Ici (0 : ℝ)] beta) (𝓝 (A beta)) at hcont
     have hnear :
         ∀ᶠ gamma in 𝓝[Set.Ici (0 : ℝ)] beta,
           A gamma ∈ Set.range ((↑) : (PH ≃L[ℝ] PH) → PH →L[ℝ] PH) := by
-      exact hA.continuousWithinAt hopen
+      exact hcont.eventually_mem hopen
     filter_upwards [hnear] with gamma hgamma
+    change ∃ egamma : PH ≃L[ℝ] PH, (egamma : PH →L[ℝ] PH) = A gamma at hgamma
     rcases hgamma with ⟨egamma, hegamma⟩
+    change IsUnit (A gamma)
     rw [← hegamma]
     exact (ContinuousLinearEquiv.toUnit egamma).isUnit
 
