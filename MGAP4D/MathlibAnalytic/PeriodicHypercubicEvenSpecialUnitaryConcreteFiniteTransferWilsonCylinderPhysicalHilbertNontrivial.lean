@@ -103,7 +103,11 @@ theorem
       0 < ‖(↑(u⁻¹) :
         PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
           PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)‖ :=
-    Units.norm_pos (u⁻¹)
+    Units.norm_pos
+      (α :=
+        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
+          PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)
+      (u⁻¹)
   exact inv_pos.mpr hpos
 
 /-- Audit-visible package tying the normalized Gauss-law vacuum, physical-space
