@@ -39,21 +39,18 @@ local instance (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
-/-- Ambient real-part map on the same finite spatial-slice Haar `L²` space. -/
 noncomputable def periodicHypercubicEvenSpecialUnitarySpatialSliceComplexL2RealPart
     (H N : ℕ) :
     Lp ℂ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) →L[ℝ]
       Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) :=
   Complex.reCLM.compLpL 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
 
-/-- Ambient imaginary-part map on the same finite spatial-slice Haar `L²` space. -/
 noncomputable def periodicHypercubicEvenSpecialUnitarySpatialSliceComplexL2ImagPart
     (H N : ℕ) :
     Lp ℂ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) →L[ℝ]
       Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) :=
   Complex.imCLM.compLpL 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
 
-/-- Ambient real-to-complex embedding on the same finite spatial-slice Haar `L²` space. -/
 noncomputable def periodicHypercubicEvenSpecialUnitarySpatialSliceRealL2OfReal
     (H N : ℕ) :
     Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) →L[ℝ]
@@ -87,7 +84,6 @@ noncomputable def periodicHypercubicEvenSpecialUnitarySpatialSliceRealL2OfReal
   simpa [periodicHypercubicEvenSpecialUnitarySpatialSliceRealL2OfReal] using
     (ContinuousLinearMap.coeFn_compLpL Complex.ofRealCLM f)
 
-/-- Real part commutes with the actual spatial gauge pullback. -/
 theorem periodicHypercubicEvenSpecialUnitarySpatialSliceComplexGaugePullback_realPart
     (H N : ℕ)
     (γ : PeriodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransformation H N)
@@ -122,7 +118,6 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSliceComplexGaugePullback_rea
       simpa [Function.comp_def] using hrp.symm
     _ = _ := hr.symm
 
-/-- Imaginary part commutes with the actual spatial gauge pullback. -/
 theorem periodicHypercubicEvenSpecialUnitarySpatialSliceComplexGaugePullback_imagPart
     (H N : ℕ)
     (γ : PeriodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransformation H N)
@@ -157,7 +152,6 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSliceComplexGaugePullback_ima
       simpa [Function.comp_def] using hip.symm
     _ = _ := hr.symm
 
-/-- Real-to-complex embedding commutes with the actual spatial gauge pullback. -/
 theorem periodicHypercubicEvenSpecialUnitarySpatialSliceComplexGaugePullback_ofReal
     (H N : ℕ)
     (γ : PeriodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransformation H N)
@@ -190,7 +184,6 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSliceComplexGaugePullback_ofR
       exact congrArg (fun x : ℝ => (x : ℂ)) hr.symm
     _ = _ := hor.symm
 
-/-- Real part of the ambient real embedding is the original real `L²` vector. -/
 @[simp] theorem periodicHypercubicEvenSpecialUnitarySpatialSliceComplexL2RealPart_ofReal
     (H N : ℕ)
     (f : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) :
@@ -206,7 +199,6 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSliceComplexGaugePullback_ofR
     _ = ((f A : ℂ)).re := congrArg Complex.re ho
     _ = _ := by simp
 
-/-- Imaginary part of the ambient real embedding vanishes. -/
 @[simp] theorem periodicHypercubicEvenSpecialUnitarySpatialSliceComplexL2ImagPart_ofReal
     (H N : ℕ)
     (f : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) :
@@ -224,7 +216,6 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSliceComplexGaugePullback_ofR
     _ = 0 := by simp
     _ = _ := hz.symm
 
-/-- Real part of a genuine complex physical vector is a genuine real physical vector. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart
     (H N : ℕ)
     (f : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) :
@@ -236,7 +227,6 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart
     rw [← periodicHypercubicEvenSpecialUnitarySpatialSliceComplexGaugePullback_realPart]
     rw [f.property γ]⟩
 
-/-- Imaginary part of a genuine complex physical vector is a genuine real physical vector. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart
     (H N : ℕ)
     (f : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) :
@@ -248,8 +238,6 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart
     rw [← periodicHypercubicEvenSpecialUnitarySpatialSliceComplexGaugePullback_imagPart]
     rw [f.property γ]⟩
 
-/-- Canonical embedding of the genuine real physical Gauss-law Hilbert space into the genuine
-complex physical Gauss-law Hilbert space. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOfReal
     (H N : ℕ)
     (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
@@ -284,7 +272,6 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOfReal
         (f : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))) = 0
   exact periodicHypercubicEvenSpecialUnitarySpatialSliceComplexL2ImagPart_ofReal H N _
 
-/-- Real and imaginary physical components determine a complex physical vector. -/
 theorem periodicHypercubicEvenSpecialUnitaryComplexPhysical_ext_components
     (H N : ℕ)
     {f g : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N}
@@ -324,7 +311,6 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysical_ext_components
   · exact hrfA.symm.trans hrgA
   · exact hifA.symm.trans higA
 
-/-- Real part of complex scalar multiplication inside the genuine physical sector. -/
 theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart_smul
     (H N : ℕ) (c : ℂ)
     (f : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) :
@@ -359,16 +345,15 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart_smul
     (c.im • periodicHypercubicEvenSpecialUnitarySpatialSliceComplexL2ImagPart H N (f :
       Lp ℂ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))
   filter_upwards [hleft, hsmul, hre, him, hrs, his, hsub] with A hl hs hr hi hrsA hisA hsubA
+  let fL2 : Lp ℂ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := f
   calc
-    _ = ((c • (f : Lp ℂ 2
-        (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))) A).re := hl
-    _ = (c * f A).re := by simpa [smul_eq_mul] using congrArg Complex.re hs
-    _ = c.re * (f A).re - c.im * (f A).im := Complex.mul_re _ _
+    _ = ((c • fL2) A).re := hl
+    _ = (c * fL2 A).re := by simpa [smul_eq_mul] using congrArg Complex.re hs
+    _ = c.re * (fL2 A).re - c.im * (fL2 A).im := Complex.mul_re _ _
     _ = _ := by
       rw [hsubA, hrsA, hisA, hr, hi]
       rfl
 
-/-- Imaginary part of complex scalar multiplication inside the genuine physical sector. -/
 theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart_smul
     (H N : ℕ) (c : ℂ)
     (f : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) :
@@ -403,12 +388,12 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart_smul
     (c.re • periodicHypercubicEvenSpecialUnitarySpatialSliceComplexL2ImagPart H N (f :
       Lp ℂ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))
   filter_upwards [hleft, hsmul, hre, him, his, hrs, hadd] with A hl hs hr hi hisA hrsA haddA
+  let fL2 : Lp ℂ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := f
   calc
-    _ = ((c • (f : Lp ℂ 2
-        (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))) A).im := hl
-    _ = (c * f A).im := by simpa [smul_eq_mul] using congrArg Complex.im hs
-    _ = c.re * (f A).im + c.im * (f A).re := Complex.mul_im _ _
-    _ = c.im * (f A).re + c.re * (f A).im := by ring
+    _ = ((c • fL2) A).im := hl
+    _ = (c * fL2 A).im := by simpa [smul_eq_mul] using congrArg Complex.im hs
+    _ = c.re * (fL2 A).im + c.im * (fL2 A).re := Complex.mul_im _ _
+    _ = c.im * (fL2 A).re + c.re * (fL2 A).im := by ring
     _ = _ := by
       rw [haddA, hisA, hrsA, hr, hi]
       rfl
@@ -448,7 +433,6 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart_smul
   apply Subtype.ext
   exact map_smul _ _ _
 
-/-- Real and imaginary `L²` components are contractive. -/
 theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart_norm_le
     (H N : ℕ)
     (f : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) :
@@ -460,9 +444,9 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart_norm_le
   filter_upwards [periodicHypercubicEvenSpecialUnitarySpatialSliceComplexL2RealPart_coeFn H N
     (f : Lp ℂ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))] with A hA
   rw [hA]
-  simpa [Real.norm_eq_abs] using Complex.abs_re_le_norm (f A)
+  exact Complex.abs_re_le_norm
+    ((f : Lp ℂ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) A)
 
-/-- Imaginary `L²` components are contractive. -/
 theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart_norm_le
     (H N : ℕ)
     (f : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) :
@@ -474,9 +458,9 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart_norm_le
   filter_upwards [periodicHypercubicEvenSpecialUnitarySpatialSliceComplexL2ImagPart_coeFn H N
     (f : Lp ℂ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))] with A hA
   rw [hA]
-  simpa [Real.norm_eq_abs] using Complex.abs_im_le_norm (f A)
+  exact Complex.abs_im_le_norm
+    ((f : Lp ℂ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) A)
 
-/-- Real-to-complex physical embedding is isometric. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_norm
     (H N : ℕ)
     (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
@@ -494,8 +478,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_norm
       (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N f)
     simpa using hre
 
-/-- Componentwise complexification of a bounded real operator on the genuine finite Wilson
-physical Hilbert space. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexificationFun
     (H N : ℕ)
     (T : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N →L[ℝ]
@@ -529,7 +511,6 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexifi
   simp [periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexificationFun,
     periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart_smul]
 
-/-- The componentwise extension is genuinely complex-linear. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexificationLinearMap
     (H N : ℕ)
     (T : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N →L[ℝ]
@@ -550,7 +531,6 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexifi
     · simp [periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart_smul,
         map_add, map_smul]
 
-/-- The complexified operator has a uniform explicit bound in terms of the real operator norm. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexificationFun_norm_le
     (H N : ℕ)
     (T : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N →L[ℝ]
@@ -581,7 +561,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexificationFun_
           (norm_nonneg T))
     _ = (2 * ‖T‖) * ‖f‖ := by ring
 
-/-- Canonical bounded complex-linear extension of any bounded real physical operator. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification
     (H N : ℕ)
     (T : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N →L[ℝ]
@@ -601,7 +580,6 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexifi
     periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N T f =
       periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexificationFun H N T f := rfl
 
-/-- Exact same-root intertwining with the original real physical operator. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_ofReal
     (H N : ℕ)
     (T : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N →L[ℝ]
@@ -614,8 +592,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_ofR
   · simp
   · simp
 
-/-- Genuine complex finite Wilson physical one-slab transfer: canonical scalar extension of the
-already-constructed genuine real physical transfer on the same Haar/Gauss-law root. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTransferOperator
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
@@ -624,7 +600,6 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTran
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
       H N hN beta hbeta)
 
-/-- Genuine complex normalized finite Wilson physical transfer. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
@@ -633,7 +608,6 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalO
     (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
       H N hN beta hbeta)
 
-/-- The complex Wilson transfer restricts exactly to the real Wilson transfer. -/
 theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTransferOperator_ofReal
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
@@ -644,7 +618,6 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTransferOperat
           H N hN beta hbeta f) :=
   periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_ofReal H N _ f
 
-/-- The normalized complex Wilson transfer restricts exactly to the real normalized transfer. -/
 theorem periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_ofReal
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
@@ -655,8 +628,6 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTran
           H N hN beta hbeta f) :=
   periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_ofReal H N _ f
 
-/-- The real normalized top eigenvector embeds to a fixed unit vector of the genuine complex
-normalized Wilson transfer. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenvector
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N :=
@@ -673,7 +644,6 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopE
   exact periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector_norm
     H N hN beta hbeta
 
-/-- The embedded top vector is fixed by the genuine complex normalized Wilson transfer. -/
 theorem periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_vacuum_fixed
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator
@@ -686,7 +656,6 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTran
     periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_ofReal,
     periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_vacuum_fixed]
 
-/-- Audit-visible same-root complex-transfer receipt. -/
 structure PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferPackage
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) : Prop where
   realIntertwining :
@@ -714,7 +683,6 @@ structure PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferPackage
       periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenvector
         H N hN beta hbeta
 
-/-- Construct the genuine complex Wilson physical-transfer receipt. -/
 theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferPackage
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferPackage
