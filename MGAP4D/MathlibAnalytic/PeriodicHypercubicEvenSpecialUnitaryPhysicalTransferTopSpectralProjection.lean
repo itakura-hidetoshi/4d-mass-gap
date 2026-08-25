@@ -138,16 +138,33 @@ theorem realHilbertTopEigenspace_projection_comp
     exact (realHilbertTopEigenspace_mem S _).1 (by simpa [F] using hPxF)
   have horth : x - F.starProjection x ∈ Fᗮ :=
     F.sub_starProjection_mem_orthogonal x
+  have horth' : x - F.starProjection x ∈ (realHilbertTopEigenspace S)ᗮ := by
+    change x - F.starProjection x ∈ Fᗮ
+    exact horth
   have hSorth : S (x - F.starProjection x) ∈ Fᗮ := by
-    simpa [F] using
-      (realHilbertTopEigenspace_orthogonal_invariant S hS
-        (by simpa [F] using horth))
+    exact realHilbertTopEigenspace_orthogonal_invariant S hS horth'
   have hPSorth : F.starProjection (S (x - F.starProjection x)) = 0 :=
     F.starProjection_apply_eq_zero_iff.mpr hSorth
   have hx : x = F.starProjection x + (x - F.starProjection x) := by
     abel
-  rw [hx, map_add, map_add, hSPx,
-    F.starProjection_eq_self_iff.mpr hPxF, hPSorth, add_zero]
+  calc
+    F.starProjection (S x) =
+        F.starProjection
+          (S (F.starProjection x + (x - F.starProjection x))) :=
+      congrArg (fun y : E => F.starProjection (S y)) hx
+    _ = F.starProjection
+          (S (F.starProjection x) + S (x - F.starProjection x)) := by
+      rw [map_add]
+    _ = F.starProjection
+          (F.starProjection x + S (x - F.starProjection x)) := by
+      rw [hSPx]
+    _ = F.starProjection (F.starProjection x) +
+          F.starProjection (S (x - F.starProjection x)) := by
+      rw [map_add]
+    _ = F.starProjection x + 0 := by
+      rw [F.starProjection_eq_self_iff.mpr hPxF, hPSorth]
+    _ = F.starProjection x := by
+      rw [add_zero]
 
 /-- Consequently a symmetric operator commutes with its canonical projection
 onto the full eigenvalue-one sector. -/
@@ -250,10 +267,22 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopSpectralProjection
           H N hN beta hbeta) =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
         H N hN beta hbeta := by
-  rw [realHilbertTopEigenspaceProjection_apply_eq_self_iff]
+  change
+    realHilbertTopEigenspaceProjection
+        (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+          H N hN beta hbeta)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+          H N hN beta hbeta) =
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+        H N hN beta hbeta
   exact
-    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_vacuum_fixed
-      H N hN beta hbeta
+    (realHilbertTopEigenspaceProjection_apply_eq_self_iff
+      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+        H N hN beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+        H N hN beta hbeta)).2
+      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_vacuum_fixed
+        H N hN beta hbeta)
 
 /-- The normalized physical transfer acts as the identity after projection onto
 the full top sector. -/
