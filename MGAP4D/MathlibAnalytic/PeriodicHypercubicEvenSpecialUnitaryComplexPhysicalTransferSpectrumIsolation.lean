@@ -75,7 +75,7 @@ theorem
     RCLike.conj_eq_iff_re.mp hzConj
   have hzIm : z.im = 0 := by
     have h := congrArg Complex.im hzReal
-    simpa using h
+    simpa using h.symm
   obtain ⟨v, hvEig, hvNe⟩ := hzEig.exists_hasEigenvector
   have hvEq : SC v = z • v :=
     Module.End.mem_genEigenspace_one.mp hvEig
@@ -98,15 +98,9 @@ theorem
     rw [not_or] at hnone
     rcases hnone with ⟨hvr0, hvi0⟩
     apply hvNe
-    have hvr0' :
-        periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N v = 0 := by
-      simpa [vr] using hvr0
-    have hvi0' :
-        periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N v = 0 := by
-      simpa [vi] using hvi0
-    rw [← periodicHypercubicEvenSpecialUnitaryComplexPhysical_reconstruct H N v,
-      hvr0', hvi0']
-    simp
+    apply periodicHypercubicEvenSpecialUnitaryComplexPhysical_ext_components H N
+    · simpa [vr] using hvr0
+    · simpa [vi] using hvi0
   have hRealEig : HasEigenvalue
       (S : Module.End ℝ
         (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
