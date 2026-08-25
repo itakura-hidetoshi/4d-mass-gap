@@ -269,9 +269,28 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceO
       (periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N g) hgComp.1
     have hii := him
       (periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N g) hgComp.2
-    simp only [Submodule.coe_inner] at hrr hir hri hii
+    have hrrC :
+        ((inner ℝ
+          (periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N g)
+          (periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N f) : ℝ) : ℂ) = 0 :=
+      congrArg (fun r : ℝ => (r : ℂ)) hrr
+    have hirC :
+        ((inner ℝ
+          (periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N g)
+          (periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N f) : ℝ) : ℂ) = 0 :=
+      congrArg (fun r : ℝ => (r : ℂ)) hir
+    have hriC :
+        ((inner ℝ
+          (periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N g)
+          (periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N f) : ℝ) : ℂ) = 0 :=
+      congrArg (fun r : ℝ => (r : ℂ)) hri
+    have hiiC :
+        ((inner ℝ
+          (periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N g)
+          (periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N f) : ℝ) : ℂ) = 0 :=
+      congrArg (fun r : ℝ => (r : ℂ)) hii
     rw [periodicHypercubicEvenSpecialUnitaryComplexPhysical_inner_components]
-    rw [hrr, hir, hri, hii]
+    rw [hrrC, hiiC, hriC, hirC]
     norm_num
 
 /-- Canonical complex orthogonal projection onto the full normalized-transfer top sector. -/
@@ -317,24 +336,30 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopSpectralPro
       H N hN beta hbeta (Q f)).2
     constructor
     · rw [hQre]
-      simpa [PR, FR, realHilbertTopEigenspaceProjection] using
-        FR.starProjection_apply_mem
-          (periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N f)
+      change (realHilbertTopEigenspace S).starProjection
+          (periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N f) ∈
+        realHilbertTopEigenspace S
+      exact (realHilbertTopEigenspace S).starProjection_apply_mem _
     · rw [hQim]
-      simpa [PR, FR, realHilbertTopEigenspaceProjection] using
-        FR.starProjection_apply_mem
-          (periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N f)
+      change (realHilbertTopEigenspace S).starProjection
+          (periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N f) ∈
+        realHilbertTopEigenspace S
+      exact (realHilbertTopEigenspace S).starProjection_apply_mem _
   · apply (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceOrthogonal_mem_iff_components
       H N hN beta hbeta (f - Q f)).2
     constructor
-    · have hbase := FR.sub_starProjection_mem_orthogonal
-        (periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N f)
-      rw [periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart_sub, hQre]
-      simpa [PR, FR, realHilbertTopEigenspaceProjection] using hbase
-    · have hbase := FR.sub_starProjection_mem_orthogonal
-        (periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N f)
-      rw [periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart_sub, hQim]
-      simpa [PR, FR, realHilbertTopEigenspaceProjection] using hbase
+    · rw [periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart_sub, hQre]
+      change periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N f -
+          (realHilbertTopEigenspace S).starProjection
+            (periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N f) ∈
+        (realHilbertTopEigenspace S)ᗮ
+      exact (realHilbertTopEigenspace S).sub_starProjection_mem_orthogonal _
+    · rw [periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart_sub, hQim]
+      change periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N f -
+          (realHilbertTopEigenspace S).starProjection
+            (periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N f) ∈
+        (realHilbertTopEigenspace S)ᗮ
+      exact (realHilbertTopEigenspace S).sub_starProjection_mem_orthogonal _
 
 @[simp] theorem periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopSpectralProjection_range
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
@@ -378,7 +403,7 @@ local instance periodicHypercubicEvenSpecialUnitaryComplexTopOrthogonalNormedSpa
       (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceOrthogonal
         H N hN beta hbeta) := by
   unfold periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceOrthogonal
-  infer_instance
+  exact Submodule.normedSpace _
 
 local instance periodicHypercubicEvenSpecialUnitaryRealTopOrthogonalNormedSpace
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
@@ -386,7 +411,7 @@ local instance periodicHypercubicEvenSpecialUnitaryRealTopOrthogonalNormedSpace
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
         H N hN beta hbeta) := by
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-  infer_instance
+  exact Submodule.normedSpace _
 
 /-- The normalized complex transfer restricted to its full-top orthogonal complement. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
