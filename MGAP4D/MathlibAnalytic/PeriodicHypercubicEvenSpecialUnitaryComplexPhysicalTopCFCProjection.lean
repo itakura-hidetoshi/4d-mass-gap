@@ -129,6 +129,17 @@ theorem realIsolatedTopCFCSelector_complement_factorization
     field_simp [hdenNe]
     ring
 
+/-- The generic isolated-top real-CFC element of a complex Hilbert-space operator.
+Keeping the C⋆-algebra construction behind this generic wrapper prevents concrete
+carrier aliases from re-running the full CFC instance search. -/
+noncomputable def complexHilbertRealIsolatedTopCFCProjection
+    {E : Type u}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℂ E]
+    [CompleteSpace E]
+    (S : E →L[ℂ] E) (q : ℝ) : E →L[ℂ] E :=
+  cfc (realIsolatedTopCFCSelector q) S
+
 /-- For a symmetric operator on a complex Hilbert space, a real continuous
 functional calculus selector for an isolated top spectral point is exactly the
 canonical orthogonal projection onto the full eigenvalue-one space.
@@ -144,10 +155,10 @@ theorem cfc_realIsolatedTopSelector_eq_complexHilbertTopEigenspaceProjection
     (hS : (S : E →ₗ[ℂ] E).IsSymmetric)
     (q : ℝ) (hq : q < 1)
     (hSpectrum : spectrum ℝ S ⊆ Set.Iic q ∪ ({1} : Set ℝ)) :
-    cfc (realIsolatedTopCFCSelector q) S =
+    complexHilbertRealIsolatedTopCFCProjection S q =
       complexHilbertTopEigenspaceProjection S := by
   let F := complexHilbertTopEigenspace S
-  let P : E →L[ℂ] E := cfc (realIsolatedTopCFCSelector q) S
+  let P : E →L[ℂ] E := complexHilbertRealIsolatedTopCFCProjection S q
   let K : E →L[ℂ] E := cfc (realIsolatedTopCFCComplementFactor q) S
   letI : CompleteSpace F :=
     (complexHilbertTopEigenspace_isClosed S).completeSpace_coe
@@ -171,18 +182,23 @@ theorem cfc_realIsolatedTopSelector_eq_complexHilbertTopEigenspaceProjection
     intro x hx
     exact realIsolatedTopCFCSelector_coordinate_mul hq (hSpectrum hx)
   have hPmul : P * P = P := by
+    change cfc (realIsolatedTopCFCSelector q) S *
+        cfc (realIsolatedTopCFCSelector q) S =
+      cfc (realIsolatedTopCFCSelector q) S
     calc
-      P * P =
+      cfc (realIsolatedTopCFCSelector q) S *
+          cfc (realIsolatedTopCFCSelector q) S =
           cfc
             (fun x =>
               realIsolatedTopCFCSelector q x * realIsolatedTopCFCSelector q x) S := by
-        simpa [P] using
+        exact
           (cfc_mul (realIsolatedTopCFCSelector q) (realIsolatedTopCFCSelector q) S
             hPhiCont hPhiCont).symm
       _ = cfc (realIsolatedTopCFCSelector q) S := cfc_congr hPhiIdem
-      _ = P := rfl
   have hPIdem : IsIdempotentElem P := hPmul
-  have hPSelf : IsSelfAdjoint P := IsSelfAdjoint.cfc
+  have hPSelf : IsSelfAdjoint P := by
+    change IsSelfAdjoint (cfc (realIsolatedTopCFCSelector q) S)
+    exact IsSelfAdjoint.cfc
   have hPStar : IsStarProjection P := ⟨hPIdem, hPSelf⟩
   have hSP : S * P = P := by
     change S * cfc (realIsolatedTopCFCSelector q) S =
@@ -271,6 +287,44 @@ theorem cfc_realIsolatedTopSelector_eq_complexHilbertTopEigenspaceProjection
         (hRange.trans hQRange.symm)
   simpa [P] using hPQ
 
+/-- A generic transfer from a native complex spectral enclosure for a symmetric
+complex Hilbert-space operator to the real scalar spectrum used by the real CFC.
+All C⋆-algebra and scalar-restriction instances are discharged while the Hilbert
+carrier is still abstract. -/
+theorem complexHilbertSymmetric_realSpectrum_subset_Iic_union_one_of_complexSpectrum
+    {E : Type u}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℂ E]
+    [CompleteSpace E]
+    (S : E →L[ℂ] E)
+    (hS : (S : E →ₗ[ℂ] E).IsSymmetric)
+    (q : ℝ)
+    (hComplex :
+      spectrum ℂ S ⊆
+        ((fun mu : ℝ => (mu : ℂ)) '' Set.Icc 0 q) ∪ ({1} : Set ℂ)) :
+    spectrum ℝ S ⊆ Set.Iic q ∪ ({1} : Set ℝ) := by
+  have hSelf : IsSelfAdjoint S := hS.isSelfAdjoint
+  have hRestrict : SpectrumRestricts S Complex.reCLM := hSelf.spectrumRestricts
+  intro mu hmu
+  have hmuComplex : (mu : ℂ) ∈ spectrum ℂ S := by
+    have hImage : algebraMap ℝ ℂ mu ∈ algebraMap ℝ ℂ '' spectrum ℝ S :=
+      ⟨mu, hmu, rfl⟩
+    rw [hRestrict.algebraMap_image] at hImage
+    simpa using hImage
+  rcases hComplex hmuComplex with hlow | hone
+  · rcases hlow with ⟨r, hr, hrmu⟩
+    have hrmuReal : r = mu := by
+      have h := congrArg Complex.re hrmu
+      simpa using h
+    have hmuLe : mu ≤ q := by
+      simpa [hrmuReal] using hr.2
+    exact Or.inl hmuLe
+  · have hmuOneComplex : (mu : ℂ) = 1 := by simpa using hone
+    have hmuOne : mu = 1 := by
+      have h := congrArg Complex.re hmuOneComplex
+      simpa using h
+    exact Or.inr (by simpa [hmuOne])
+
 local instance periodicHypercubicEvenSpecialUnitaryComplexTopCFCRealCompleteSpace
     (H N : ℕ) :
     CompleteSpace
@@ -306,36 +360,12 @@ theorem
     simpa [SC] using
       periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_isSymmetric
         H N hN beta hbeta
-  have hSelf : IsSelfAdjoint SC := hSymm.isSelfAdjoint
-  have hRestrict : SpectrumRestricts SC Complex.reCLM :=
-    IsSelfAdjoint.spectrumRestricts (a := SC) hSelf
   have hComplexSubset :=
     periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_complex_spectrum_subset_excitedRealInterval_union_one
       H N hN beta hbeta
-  intro mu hmu
-  have hmuComplex : (mu : ℂ) ∈ spectrum ℂ SC := by
-    have hImage : algebraMap ℝ ℂ mu ∈ algebraMap ℝ ℂ '' spectrum ℝ SC :=
-      ⟨mu, hmu, rfl⟩
-    rw [hRestrict.algebraMap_image] at hImage
-    simpa using hImage
-  have hmuComplex' :
-      (mu : ℂ) ∈ spectrum ℂ
-        (periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator
-          H N hN beta hbeta) := by
-    simpa [SC] using hmuComplex
-  rcases hComplexSubset hmuComplex' with hlow | hone
-  · rcases hlow with ⟨r, hr, hrmu⟩
-    have hrmuReal : r = mu := by
-      have h := congrArg Complex.re hrmu
-      simpa using h
-    have hmuLe : mu ≤ q := by
-      simpa [q, hrmuReal] using hr.2
-    exact Or.inl hmuLe
-  · have hmuOneComplex : (mu : ℂ) = 1 := by simpa using hone
-    have hmuOne : mu = 1 := by
-      have h := congrArg Complex.re hmuOneComplex
-      simpa using h
-    exact Or.inr (by simpa [hmuOne])
+  simpa [SC, q] using
+    (complexHilbertSymmetric_realSpectrum_subset_Iic_union_one_of_complexSpectrum
+      SC hSymm q (by simpa [SC, q] using hComplexSubset))
 
 /-- The isolated-top CFC projection of the genuine complex normalized Wilson
 transfer operator. -/
@@ -344,12 +374,11 @@ noncomputable def
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
       PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N :=
-  cfc
-    (realIsolatedTopCFCSelector
-      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-        H N hN beta hbeta‖)
+  complexHilbertRealIsolatedTopCFCProjection
     (periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator
       H N hN beta hbeta)
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+      H N hN beta hbeta‖
 
 /-- The CFC selector at the isolated spectral point `1` is exactly Mathlib's
 canonical orthogonal projection onto the entire complex top eigenspace. -/
