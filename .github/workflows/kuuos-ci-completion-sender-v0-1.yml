@@ -6,7 +6,9 @@ on:
     paths:
       - ".github/workflows/kuuos-ci-completion-sender-v0-1.yml"
       - "scripts/kuuos_ci_completion_sender_v0_1.py"
+      - "scripts/kuuos_ci_completion_source_inbox_v0_2.py"
       - "docs/kuuos_ci_completion_sender_v0_1.md"
+      - "docs/kuuos_ci_completion_source_inbox_v0_2.md"
   workflow_run:
     workflows:
       - "PR Lean Fast Check"
@@ -15,6 +17,7 @@ on:
 permissions:
   contents: read
   actions: read
+  issues: write
 
 concurrency:
   group: mgap4d-kuuos-ci-completion-sender-v01-${{ github.event.workflow_run.id || github.event.pull_request.number || github.run_id }}
@@ -30,10 +33,11 @@ jobs:
       - name: Checkout default-branch sender code
         uses: actions/checkout@v6
 
-      - name: Run deterministic sender self-check
+      - name: Run deterministic sender self-checks
         run: |
           set -euo pipefail
           python3 scripts/kuuos_ci_completion_sender_v0_1.py --self-check
+          python3 scripts/kuuos_ci_completion_source_inbox_v0_2.py --self-check
 
   send:
     if: >-
@@ -42,7 +46,7 @@ jobs:
         github.event.workflow_run.event == 'pull_request' &&
         github.event.workflow_run.head_repository.full_name == github.repository
       }}
-    name: Send bounded completion signal to KuuOS
+    name: Persist and send bounded completion signal
     runs-on: ubuntu-22.04
     timeout-minutes: 5
     steps:
@@ -52,10 +56,11 @@ jobs:
           ref: main
           fetch-depth: 1
 
-      - name: Run deterministic sender self-check
+      - name: Run deterministic sender self-checks
         run: |
           set -euo pipefail
           python3 scripts/kuuos_ci_completion_sender_v0_1.py --self-check
+          python3 scripts/kuuos_ci_completion_source_inbox_v0_2.py --self-check
 
       - name: Fetch exact completed source-run jobs and steps
         env:
@@ -84,6 +89,98 @@ jobs:
             --jobs-json "${RUNNER_TEMP}/kuuos-ci-completion/source-jobs.json" \
             --output "${RUNNER_TEMP}/kuuos-ci-completion/dispatch.json"
 
+      - name: Compile durable same-repository MCP inbox record
+        run: |
+          set -euo pipefail
+          python3 scripts/kuuos_ci_completion_source_inbox_v0_2.py \
+            --sender-result "${RUNNER_TEMP}/kuuos-ci-completion/dispatch.json" \
+            --output-dir "${RUNNER_TEMP}/kuuos-ci-completion/source-inbox"
+
+      - name: Persist deduplicated source-side pending Issue
+        id: source_inbox
+        env:
+          SOURCE_INBOX_TOKEN: ${{ github.token }}
+          SOURCE_INBOX_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          import pathlib
+          import urllib.parse
+          import urllib.request
+
+          root = pathlib.Path(os.environ["RUNNER_TEMP"]) / "kuuos-ci-completion" / "source-inbox"
+          spec = json.loads((root / "source_inbox_issue_spec.json").read_text(encoding="utf-8"))
+          token = os.environ["SOURCE_INBOX_TOKEN"]
+          repository = os.environ["SOURCE_INBOX_REPOSITORY"]
+          owner, repo = repository.split("/", 1)
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "Authorization": f"Bearer {token}",
+              "X-GitHub-Api-Version": "2022-11-28",
+              "User-Agent": "MGAP4D-KuuOS-CI-Source-Inbox-v0.2",
+          }
+
+          query = urllib.parse.urlencode({"q": spec["dedupe_query"], "per_page": 100})
+          request = urllib.request.Request(
+              f"https://api.github.com/search/issues?{query}", headers=headers
+          )
+          with urllib.request.urlopen(request, timeout=30) as response:
+              search = json.load(response)
+          exact = [item for item in search.get("items", []) if item.get("title") == spec["title"]]
+
+          receipt = {
+              "version": "mgap4d_kuuos_ci_completion_source_issue_receipt_v0_2",
+              "issue_key": spec["issue_key"],
+              "title": spec["title"],
+              "created": False,
+              "deduplicated": bool(exact),
+          }
+          if exact:
+              issue = exact[0]
+          else:
+              body = json.dumps(
+                  {"title": spec["title"], "body": spec["body"]},
+                  ensure_ascii=False,
+              ).encode("utf-8")
+              request = urllib.request.Request(
+                  f"https://api.github.com/repos/{owner}/{repo}/issues",
+                  data=body,
+                  headers={**headers, "Content-Type": "application/json"},
+                  method="POST",
+              )
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  issue = json.load(response)
+              receipt["created"] = True
+
+          receipt.update(
+              {
+                  "issue_number": issue.get("number"),
+                  "issue_url": issue.get("html_url"),
+                  "issue_state": issue.get("state"),
+                  "source_issue_is_success_evidence": False,
+                  "fresh_mcp_reobservation_required_before_ack": True,
+                  "merge_authority_granted": False,
+                  "write_authority_granted": False,
+              }
+          )
+          (root / "source_inbox_issue_receipt.json").write_text(
+              json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print(
+              "MGAP4D_KUUOS_SOURCE_INBOX_ISSUE="
+              f"{receipt['issue_number']} created={receipt['created']} deduplicated={receipt['deduplicated']}"
+          )
+          pathlib.Path(os.environ["GITHUB_OUTPUT"]).write_text(
+              f"issue_number={receipt['issue_number']}\n"
+              f"created={str(receipt['created']).lower()}\n"
+              f"deduplicated={str(receipt['deduplicated']).lower()}\n",
+              encoding="utf-8",
+          )
+          PY
+
       - name: Dispatch to KuuOS when cross-repository authority is configured
         id: dispatch
         env:
@@ -94,7 +191,7 @@ jobs:
           if [ -z "${KUUOS_CI_REENTRY_TOKEN:-}" ]; then
             echo "configured=false" >> "${GITHUB_OUTPUT}"
             echo "dispatched=false" >> "${GITHUB_OUTPUT}"
-            echo "KUUOS_CI_REENTRY_TOKEN_NOT_CONFIGURED: dispatch withheld fail-closed"
+            echo "KUUOS_CI_REENTRY_TOKEN_NOT_CONFIGURED: KuuOS mirror dispatch withheld; source durable Issue already persists the event"
             exit 0
           fi
 
@@ -132,7 +229,7 @@ jobs:
           echo "dispatched=true" >> "${GITHUB_OUTPUT}"
           echo "KUUOS_CI_COMPLETION_DISPATCH_ACCEPTED"
 
-      - name: Upload non-secret sender evidence
+      - name: Upload non-secret sender and source-inbox evidence
         if: ${{ always() }}
         uses: actions/upload-artifact@v6
         with:
@@ -140,6 +237,10 @@ jobs:
           path: |
             ${{ runner.temp }}/kuuos-ci-completion/dispatch.json
             ${{ runner.temp }}/kuuos-ci-completion/source-jobs.json
+            ${{ runner.temp }}/kuuos-ci-completion/source-inbox/source_inbox_result.json
+            ${{ runner.temp }}/kuuos-ci-completion/source-inbox/source_inbox_record.json
+            ${{ runner.temp }}/kuuos-ci-completion/source-inbox/source_inbox_issue_spec.json
+            ${{ runner.temp }}/kuuos-ci-completion/source-inbox/source_inbox_issue_receipt.json
           if-no-files-found: warn
           retention-days: 7
 
@@ -153,7 +254,9 @@ jobs:
             echo '- Required job: `Changed Lean fast check`'
             echo '- Required step: `Run changed Lean fast check`'
             echo '- Canonical PR base: `formal/real-hilbert-uniform-coercive-strong-limit`'
+            echo '- Durable source Issue: `#${{ steps.source_inbox.outputs.issue_number || 'not-created' }}`'
+            echo '- Source persistence requires no cross-repository secret.'
             echo '- Cross-repository authority configured: `${{ steps.dispatch.outputs.configured || 'false' }}`'
-            echo '- Dispatch accepted: `${{ steps.dispatch.outputs.dispatched || 'false' }}`'
-            echo '- Source event is wake-up signal only; KuuOS must freshly reobserve through MCP.'
+            echo '- KuuOS mirror dispatch accepted: `${{ steps.dispatch.outputs.dispatched || 'false' }}`'
+            echo '- Both Issue and dispatch are wake-up signals only; exact CI must be freshly reobserved through MCP before acknowledgement.'
           } >> "${GITHUB_STEP_SUMMARY}"
