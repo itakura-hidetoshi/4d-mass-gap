@@ -39,7 +39,9 @@ theorem realHilbertPositiveCompact_nonunit_spectralPoint_mem_Icc_topOrthogonalNo
       ‖realHilbertTopEigenspaceOrthogonalRestriction S hPositive.isSymmetric‖ := by
   by_cases hmuZero : mu = 0
   · subst mu
-    exact ⟨le_rfl, norm_nonneg _⟩
+    exact ⟨le_rfl,
+      norm_nonneg
+        (realHilbertTopEigenspaceOrthogonalRestriction S hPositive.isSymmetric)⟩
   have hmuEig : HasEigenvalue (S : Module.End ℝ E) mu :=
     (IsCompactOperator.hasEigenvalue_iff_mem_spectrum hCompact hmuZero).2 hmuSpec
   have hmuNonneg : 0 ≤ mu := by
@@ -82,7 +84,8 @@ theorem realHilbertPositiveCompact_nonunit_spectralPoint_mem_Icc_topOrthogonalNo
   have hOp := ContinuousLinearMap.le_opNorm R w
   rw [hRw, norm_smul, Real.norm_eq_abs, abs_of_nonneg hmuNonneg] at hOp
   have hwNormPos : 0 < ‖w‖ := norm_pos_iff.mpr hwNe
-  have hmuLe : mu ≤ ‖R‖ := (mul_le_mul_right hwNormPos).mp hOp
+  have hmuLe : mu ≤ ‖R‖ := by
+    nlinarith [hOp]
   exact ⟨hmuNonneg, by simpa [R, F] using hmuLe⟩
 
 /-- The whole real spectrum of a positive compact operator splits into the
