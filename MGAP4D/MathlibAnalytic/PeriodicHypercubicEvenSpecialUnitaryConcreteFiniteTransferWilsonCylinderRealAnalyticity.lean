@@ -413,6 +413,7 @@ theorem
 physical half-line, including `beta = 0`.  The formal multilinear series is
 built under ordinary transparency; `with_reducible_and_instances` is reserved
 for the exact topology conversion from the already-proved Wilson `HasSum`. -/
+set_option maxHeartbeats 10000000 in
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily_analyticWithinAt
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
