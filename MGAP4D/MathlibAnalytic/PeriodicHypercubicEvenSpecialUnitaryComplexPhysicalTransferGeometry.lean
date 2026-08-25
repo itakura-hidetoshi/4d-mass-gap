@@ -70,8 +70,8 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPartCLM
       simpa using
         periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart_norm_le H N f)
 
-/-- The physical imaginary-part operation, bundled over the restricted real
-scalar structure of the genuine complex carrier. -/
+/-- The physical imaginary-part operation, bundled over the restricted real scalar
+view of the genuine complex carrier. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPartCLM
     (H N : ℕ) :
     PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℝ]
@@ -126,8 +126,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner
   have hg := periodicHypercubicEvenSpecialUnitarySpatialSliceRealL2OfReal_coeFn
     H N (g : Lp ℝ 2 μ)
   filter_upwards [hf, hg] with A hfA hgA
-  rw [hfA, hgA, RCLike.inner_apply]
-  norm_cast
+  rw [hfA, hgA]
+  simp [RCLike.inner_apply]
 
 /-- Exact decomposition of the genuine complex physical inner product into
 real physical components. -/
@@ -148,6 +148,30 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysical_inner_components
           (inner ℝ
             (periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N f)
             (periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N g) : ℂ)) := by
+  have hIleft
+      (x y : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+      inner ℂ
+          (Complex.I • periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N x)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N y) =
+        -Complex.I * (inner ℝ x y : ℂ) := by
+    rw [inner_smul_left, periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner]
+    simp
+  have hIright
+      (x y : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+      inner ℂ
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N x)
+          (Complex.I • periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N y) =
+        Complex.I * (inner ℝ x y : ℂ) := by
+    rw [inner_smul_right, periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner]
+  have hII
+      (x y : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+      inner ℂ
+          (Complex.I • periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N x)
+          (Complex.I • periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N y) =
+        (inner ℝ x y : ℂ) := by
+    rw [inner_smul_left, inner_smul_right,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner]
+    simp
   calc
     inner ℂ f g =
         inner ℂ
@@ -162,9 +186,9 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysical_inner_components
       rw [periodicHypercubicEvenSpecialUnitaryComplexPhysical_reconstruct H N f,
         periodicHypercubicEvenSpecialUnitaryComplexPhysical_reconstruct H N g]
     _ = _ := by
-      simp only [inner_add_left, inner_add_right, inner_smul_left, inner_smul_right]
-      simp only [periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner]
-      simp
+      rw [inner_add_left, inner_add_right]
+      rw [periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner,
+        hIleft, hIright, hII]
       ring
 
 /-- Pythagoras for the genuine complex Gauss-law Hilbert space. -/
@@ -177,7 +201,7 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysical_norm_sq
   rw [norm_sq_eq_re_inner (𝕜 := ℂ) f,
     periodicHypercubicEvenSpecialUnitaryComplexPhysical_inner_components]
   simp [real_inner_self_eq_norm_sq]
-  norm_num
+  norm_cast
 
 /-- The scalar extension obeys the exact operator-norm pointwise estimate; no
 factor two is lost. -/
@@ -273,7 +297,12 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_isS
     congrArg (fun x : ℝ => (x : ℂ)) (hT rf ig)
   have hir : (inner ℝ (T if_) rg : ℂ) = (inner ℝ if_ (T rg) : ℂ) :=
     congrArg (fun x : ℝ => (x : ℂ)) (hT if_ rg)
-  simpa [rf, if_, rg, ig, hrr, hii, hri, hir]
+  change
+    (inner ℝ (T rf) rg : ℂ) + (inner ℝ (T if_) ig : ℂ) +
+        Complex.I * ((inner ℝ (T rf) ig : ℂ) - (inner ℝ (T if_) rg : ℂ)) =
+      (inner ℝ rf (T rg) : ℂ) + (inner ℝ if_ (T ig) : ℂ) +
+        Complex.I * ((inner ℝ rf (T ig) : ℂ) - (inner ℝ if_ (T rg) : ℂ))
+  rw [hrr, hii, hri, hir]
 
 /-- Positivity is preserved by the canonical scalar extension. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_isPositive
