@@ -303,6 +303,8 @@ theorem complexHilbertSymmetric_realSpectrum_subset_Iic_union_one_of_complexSpec
       spectrum ℂ S ⊆
         ((fun mu : ℝ => (mu : ℂ)) '' Set.Icc 0 q) ∪ ({1} : Set ℂ)) :
     spectrum ℝ S ⊆ Set.Iic q ∪ ({1} : Set ℝ) := by
+  letI : IsScalarTower ℝ ℂ (E →L[ℂ] E) :=
+    IsScalarTower.complexToReal (M := ℂ) (E := E →L[ℂ] E)
   have hSelf : IsSelfAdjoint S := hS.isSelfAdjoint
   have hRestrict : SpectrumRestricts S Complex.reCLM := hSelf.spectrumRestricts
   intro mu hmu
