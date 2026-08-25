@@ -1,6 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTopSpectralProjection
 import Mathlib.Analysis.CStarAlgebra.ContinuousLinearMap
-import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Instances
+import Mathlib.Analysis.CStarAlgebra.ContinuousFunctionalCalculus.Basic
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -29,6 +29,7 @@ def realIsolatedTopCFCComplementFactor (q x : ℝ) : ℝ :=
 /-- The isolated-top selector is globally continuous. -/
 theorem realIsolatedTopCFCSelector_continuous (q : ℝ) :
     Continuous (realIsolatedTopCFCSelector q) := by
+  unfold realIsolatedTopCFCSelector
   fun_prop
 
 /-- Below the cut, the isolated-top selector vanishes exactly. -/
@@ -180,30 +181,50 @@ theorem cfc_realIsolatedTopSelector_eq_complexHilbertTopEigenspaceProjection
             hPhiCont hPhiCont).symm
       _ = cfc (realIsolatedTopCFCSelector q) S := cfc_congr hPhiIdem
       _ = P := rfl
-  have hPIdem : IsIdempotentElem P := by
-    exact hPmul
-  have hPSelf : IsSelfAdjoint P := by
-    exact IsSelfAdjoint.cfc
+  have hPIdem : IsIdempotentElem P := hPmul
+  have hPSelf : IsSelfAdjoint P := IsSelfAdjoint.cfc
   have hPStar : IsStarProjection P := ⟨hPIdem, hPSelf⟩
   have hSP : S * P = P := by
     change S * cfc (realIsolatedTopCFCSelector q) S =
       cfc (realIsolatedTopCFCSelector q) S
-    rw [← cfc_id ℝ S hSA,
-      ← cfc_mul (id : ℝ → ℝ) (realIsolatedTopCFCSelector q) S
-        (by fun_prop) hPhiCont]
-    exact cfc_congr hCoordPhi
+    have hid : cfc (id : ℝ → ℝ) S = S := cfc_id ℝ S hSA
+    calc
+      S * cfc (realIsolatedTopCFCSelector q) S =
+          cfc (id : ℝ → ℝ) S * cfc (realIsolatedTopCFCSelector q) S := by
+        rw [hid]
+      _ = cfc (fun x : ℝ => x * realIsolatedTopCFCSelector q x) S := by
+        exact
+          (cfc_mul (id : ℝ → ℝ) (realIsolatedTopCFCSelector q) S
+            (by fun_prop) hPhiCont).symm
+      _ = cfc (realIsolatedTopCFCSelector q) S := cfc_congr hCoordPhi
   have hOneSubP :
       (1 : E →L[ℂ] E) - P =
         cfc (fun x : ℝ => 1 - realIsolatedTopCFCSelector q x) S := by
-    rw [cfc_sub (fun _ : ℝ => 1) (realIsolatedTopCFCSelector q) S
-      (by fun_prop) hPhiCont]
-    rw [cfc_const_one ℝ S hSA]
-    rfl
+    change (1 : E →L[ℂ] E) - cfc (realIsolatedTopCFCSelector q) S =
+      cfc (fun x : ℝ => 1 - realIsolatedTopCFCSelector q x) S
+    have hone : cfc (fun _ : ℝ => 1) S = (1 : E →L[ℂ] E) :=
+      cfc_const_one ℝ S hSA
+    calc
+      (1 : E →L[ℂ] E) - cfc (realIsolatedTopCFCSelector q) S =
+          cfc (fun _ : ℝ => 1) S - cfc (realIsolatedTopCFCSelector q) S := by
+        rw [hone]
+      _ = cfc (fun x : ℝ => 1 - realIsolatedTopCFCSelector q x) S := by
+        exact
+          (cfc_sub (fun _ : ℝ => 1) (realIsolatedTopCFCSelector q) S
+            (by fun_prop) hPhiCont).symm
   have hOneSubS :
       (1 : E →L[ℂ] E) - S = cfc (fun x : ℝ => 1 - x) S := by
-    rw [cfc_sub (fun _ : ℝ => 1) (id : ℝ → ℝ) S (by fun_prop) (by fun_prop)]
-    rw [cfc_const_one ℝ S hSA, cfc_id ℝ S hSA]
-    rfl
+    have hone : cfc (fun _ : ℝ => 1) S = (1 : E →L[ℂ] E) :=
+      cfc_const_one ℝ S hSA
+    have hid : cfc (id : ℝ → ℝ) S = S := cfc_id ℝ S hSA
+    calc
+      (1 : E →L[ℂ] E) - S =
+          cfc (fun _ : ℝ => 1) S - cfc (id : ℝ → ℝ) S := by
+        rw [hone, hid]
+      _ = cfc (fun x : ℝ => 1 - x) S := by
+        exact
+          (cfc_sub (fun _ : ℝ => 1) (id : ℝ → ℝ) S
+            (by fun_prop) (by fun_prop)).symm
   have hFactor :
       (1 : E →L[ℂ] E) - P = K * ((1 : E →L[ℂ] E) - S) := by
     calc
@@ -218,13 +239,14 @@ theorem cfc_realIsolatedTopSelector_eq_complexHilbertTopEigenspaceProjection
           cfc (fun x : ℝ => 1 - x) S :=
         cfc_mul (realIsolatedTopCFCComplementFactor q) (fun x : ℝ => 1 - x) S
           hKCont hOneSubCont
+      _ = K * cfc (fun x : ℝ => 1 - x) S := rfl
       _ = K * ((1 : E →L[ℂ] E) - S) := by
-        rw [← hOneSubS]
-        rfl
+        rw [hOneSubS]
   have hRangeSub : P.range ≤ F := by
     intro y hy
     rcases hy with ⟨x, rfl⟩
-    change S (P x) = P x
+    change P x ∈ complexHilbertTopEigenspace S
+    apply (complexHilbertTopEigenspace_mem S (P x)).2
     have h := congrArg (fun T : E →L[ℂ] E => T x) hSP
     simpa using h
   have hTopSub : F ≤ P.range := by
@@ -244,8 +266,9 @@ theorem cfc_realIsolatedTopSelector_eq_complexHilbertTopEigenspaceProjection
     simpa [complexHilbertTopEigenspaceProjection, F] using
       (Submodule.range_starProjection F)
   have hPQ : P = complexHilbertTopEigenspaceProjection S := by
-    apply hPStar.ext hQStar
-    exact hRange.trans hQRange.symm
+    exact
+      (ContinuousLinearMap.IsStarProjection.ext_iff hPStar hQStar).2
+        (hRange.trans hQRange.symm)
   simpa [P] using hPQ
 
 local instance periodicHypercubicEvenSpecialUnitaryComplexTopCFCRealCompleteSpace
@@ -284,7 +307,8 @@ theorem
       periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_isSymmetric
         H N hN beta hbeta
   have hSelf : IsSelfAdjoint SC := hSymm.isSelfAdjoint
-  have hRestrict := hSelf.spectrumRestricts
+  have hRestrict : SpectrumRestricts SC Complex.reCLM :=
+    IsSelfAdjoint.spectrumRestricts (a := SC) hSelf
   have hComplexSubset :=
     periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_complex_spectrum_subset_excitedRealInterval_union_one
       H N hN beta hbeta
