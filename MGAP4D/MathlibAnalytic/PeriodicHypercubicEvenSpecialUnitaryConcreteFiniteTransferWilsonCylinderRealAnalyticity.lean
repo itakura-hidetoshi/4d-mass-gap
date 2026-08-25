@@ -1,6 +1,7 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryConcreteFiniteTransferWilsonCylinderTaylorSeries
 import Mathlib.Analysis.Analytic.Within
 import Mathlib.Analysis.Normed.Module.Multilinear.Basic
+import Mathlib.Analysis.Normed.Operator.NormedSpace
 import Mathlib.MeasureTheory.Integral.IntervalIntegral.Basic
 import Mathlib.Topology.MetricSpace.Pseudo.Real
 import Mathlib.Tactic
