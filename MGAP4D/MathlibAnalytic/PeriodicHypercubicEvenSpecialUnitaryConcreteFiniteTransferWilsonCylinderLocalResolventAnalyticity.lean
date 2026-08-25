@@ -42,37 +42,35 @@ theorem
             periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
               H N hN gamma))
       (Set.Ici (0 : ℝ)) beta := by
-  let PH := PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N
-  letI : SeminormedAddCommGroup (PH →L[ℝ] PH) :=
-    ContinuousLinearMap.toSeminormedAddCommGroup
-  letI : NormedSpace ℝ (PH →L[ℝ] PH) :=
-    ContinuousLinearMap.toNormedSpace
-  letI : IsBoundedSMul ℝ (PH →L[ℝ] PH) :=
-    IsBoundedSMul.of_norm_smul_le fun r A =>
-      ContinuousLinearMap.opNorm_smul_le r A
-  let T :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
-      H N hN
-  have hT : AnalyticWithinAt ℝ T (Set.Ici (0 : ℝ)) beta := by
-    simpa [T] using
-      periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily_analyticWithinAt
-        H N hN beta hbeta
-  have hconst :
-      AnalyticWithinAt ℝ
-        (fun _ : ℝ => z • (1 : PH →L[ℝ] PH))
-        (Set.Ici (0 : ℝ)) beta :=
-    analyticWithinAt_const
-  have hshift :
-      AnalyticWithinAt ℝ
-        (fun gamma : ℝ => z • (1 : PH →L[ℝ] PH) - T gamma)
-        (Set.Ici (0 : ℝ)) beta :=
-    hconst.sub hT
-  have houter :
-      AnalyticAt ℝ Ring.inverse
-        (z • (1 : PH →L[ℝ] PH) - T beta) := by
-    exact analyticAt_inverse (𝕜 := ℝ) (IsUnit.unit hunit)
-  simpa [PH, T, Function.comp_def] using
-    houter.comp_analyticWithinAt hshift
+  with_reducible_and_instances
+    let PH := PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N
+    letI : IsBoundedSMul ℝ (PH →L[ℝ] PH) :=
+      IsBoundedSMul.of_norm_smul_le fun r A =>
+        ContinuousLinearMap.opNorm_smul_le r A
+    let T :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
+        H N hN
+    have hT : AnalyticWithinAt ℝ T (Set.Ici (0 : ℝ)) beta := by
+      simpa [T] using
+        periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily_analyticWithinAt
+          H N hN beta hbeta
+    have hconst :
+        AnalyticWithinAt ℝ
+          (fun _ : ℝ => z • (1 : PH →L[ℝ] PH))
+          (Set.Ici (0 : ℝ)) beta :=
+      analyticWithinAt_const
+    have hshift :
+        AnalyticWithinAt ℝ
+          (fun gamma : ℝ => z • (1 : PH →L[ℝ] PH) - T gamma)
+          (Set.Ici (0 : ℝ)) beta :=
+      hconst.sub hT
+    have houter :
+        AnalyticAt ℝ
+          (fun A : PH →L[ℝ] PH => Ring.inverse A)
+          (z • (1 : PH →L[ℝ] PH) - T beta) := by
+      exact analyticAt_inverse (𝕜 := ℝ) (IsUnit.unit hunit)
+    simpa [PH, T, Function.comp_def] using
+      houter.comp_analyticWithinAt hshift
 
 /-- Packaged resolvent regularity statement: native Wilson transfer
 analyticity together with local analyticity of every real shifted inverse at a
