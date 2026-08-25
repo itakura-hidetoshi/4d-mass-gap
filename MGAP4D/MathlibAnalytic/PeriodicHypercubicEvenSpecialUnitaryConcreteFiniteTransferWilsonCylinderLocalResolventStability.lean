@@ -97,8 +97,10 @@ theorem
       simpa [A, T] using hu
     let e : PH ≃L[ℝ] PH := ContinuousLinearEquiv.ofUnit u
     have he : (e : PH →L[ℝ] PH) = A beta := by
-      ext x
-      simpa [e, ContinuousLinearEquiv.ofUnit] using
+      apply ContinuousLinearMap.ext
+      intro x
+      simpa [e, ContinuousLinearEquiv.toContinuousLinearMap,
+        ContinuousLinearEquiv.ofUnit] using
         congrArg (fun f : PH →L[ℝ] PH => f x) hub
     have hopen :
         Set.range ((↑) : (PH ≃L[ℝ] PH) → PH →L[ℝ] PH) ∈ 𝓝 (A beta) := by
@@ -111,8 +113,7 @@ theorem
           A gamma ∈ Set.range ((↑) : (PH ≃L[ℝ] PH) → PH →L[ℝ] PH) := by
       exact hcont.eventually_mem hopen
     filter_upwards [hnear] with gamma hgamma
-    change ∃ egamma : PH ≃L[ℝ] PH, (egamma : PH →L[ℝ] PH) = A gamma at hgamma
-    rcases hgamma with ⟨egamma, hegamma⟩
+    rcases Set.mem_range.mp hgamma with ⟨egamma, hegamma⟩
     change IsUnit (A gamma)
     rw [← hegamma]
     exact (ContinuousLinearEquiv.toUnit egamma).isUnit
