@@ -126,9 +126,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner
   have hg := periodicHypercubicEvenSpecialUnitarySpatialSliceRealL2OfReal_coeFn
     H N (g : Lp ℝ 2 μ)
   filter_upwards [hf, hg] with A hfA hgA
-  rw [hfA, hgA]
-  simp [RCLike.inner_apply]
-  ring_nf
+  rw [hfA, hgA, RCLike.inner_apply]
+  norm_cast
 
 /-- Exact decomposition of the genuine complex physical inner product into
 real physical components. -/
@@ -163,7 +162,9 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysical_inner_components
       rw [periodicHypercubicEvenSpecialUnitaryComplexPhysical_reconstruct H N f,
         periodicHypercubicEvenSpecialUnitaryComplexPhysical_reconstruct H N g]
     _ = _ := by
-      simp [periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner]
+      simp only [inner_add_left, inner_add_right, inner_smul_left, inner_smul_right]
+      simp only [periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner]
+      simp
       ring
 
 /-- Pythagoras for the genuine complex Gauss-law Hilbert space. -/
@@ -176,6 +177,7 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysical_norm_sq
   rw [norm_sq_eq_re_inner (𝕜 := ℂ) f,
     periodicHypercubicEvenSpecialUnitaryComplexPhysical_inner_components]
   simp [real_inner_self_eq_norm_sq]
+  norm_num
 
 /-- The scalar extension obeys the exact operator-norm pointwise estimate; no
 factor two is lost. -/
@@ -225,11 +227,12 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_nor
     calc
       ‖T f‖ = ‖periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N (T f)‖ :=
         (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_norm H N (T f)).symm
-      _ = ‖TC (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N f)‖ := by
-        simp [TC,
-          periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_ofReal]
-      _ ≤ ‖TC‖ * ‖periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N f‖ :=
-        ContinuousLinearMap.le_opNorm TC _
+      _ =
+          ‖periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N T
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N f)‖ := by
+        rw [periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_ofReal]
+      _ ≤ ‖TC‖ * ‖periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N f‖ := by
+        exact ContinuousLinearMap.le_opNorm TC _
       _ = ‖TC‖ * ‖f‖ := by
         rw [periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_norm]
 
@@ -258,18 +261,19 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_isS
   simp only [periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_apply,
     periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexificationFun_realPart,
     periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexificationFun_imagPart]
-  rw [hT
-      (periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N f)
-      (periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N g),
-    hT
-      (periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N f)
-      (periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N g),
-    hT
-      (periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N f)
-      (periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N g),
-    hT
-      (periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N f)
-      (periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N g)]
+  let rf := periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N f
+  let if_ := periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N f
+  let rg := periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N g
+  let ig := periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N g
+  have hrr : (inner ℝ (T rf) rg : ℂ) = (inner ℝ rf (T rg) : ℂ) :=
+    congrArg (fun x : ℝ => (x : ℂ)) (hT rf rg)
+  have hii : (inner ℝ (T if_) ig : ℂ) = (inner ℝ if_ (T ig) : ℂ) :=
+    congrArg (fun x : ℝ => (x : ℂ)) (hT if_ ig)
+  have hri : (inner ℝ (T rf) ig : ℂ) = (inner ℝ rf (T ig) : ℂ) :=
+    congrArg (fun x : ℝ => (x : ℂ)) (hT rf ig)
+  have hir : (inner ℝ (T if_) rg : ℂ) = (inner ℝ if_ (T rg) : ℂ) :=
+    congrArg (fun x : ℝ => (x : ℂ)) (hT if_ rg)
+  simpa [rf, if_, rg, ig, hrr, hii, hri, hir]
 
 /-- Positivity is preserved by the canonical scalar extension. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_isPositive
