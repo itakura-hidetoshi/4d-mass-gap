@@ -480,7 +480,7 @@ theorem
     simp only [one_pow, mul_one]
     refine Summable.of_nonneg_of_le (fun k => norm_nonneg (p k)) hpNorm hmajor
   have hradius : (1 : ℝ≥0∞) ≤ p.radius :=
-    p.le_radius_of_summable (r := (1 : ℝ≥0)) hpSummable
+    p.le_radius_of_summable (r := (1 : NNReal)) hpSummable
   refine ⟨p, (1 : ℝ≥0∞), ?_⟩
   refine ⟨hradius, ENNReal.zero_lt_one, ?_⟩
   intro y hy _hyBall
