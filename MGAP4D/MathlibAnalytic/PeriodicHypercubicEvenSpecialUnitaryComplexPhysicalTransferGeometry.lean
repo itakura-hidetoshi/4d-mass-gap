@@ -15,6 +15,30 @@ noncomputable section
 set_option maxHeartbeats 5000000
 set_option synthInstance.maxHeartbeats 750000
 
+local instance (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
+local instance (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
 /-- The genuine real physical carrier embeds linearly and isometrically in the
 same-root complex Gauss-law Hilbert space. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOfRealLinearIsometry
@@ -104,6 +128,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner
   filter_upwards [hf, hg] with A hfA hgA
   rw [hfA, hgA]
   simp [RCLike.inner_apply]
+  ring_nf
 
 /-- Exact decomposition of the genuine complex physical inner product into
 real physical components. -/
@@ -124,11 +149,22 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysical_inner_components
           (inner ℝ
             (periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N f)
             (periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N g) : ℂ)) := by
-  rw [← periodicHypercubicEvenSpecialUnitaryComplexPhysical_reconstruct H N f,
-    ← periodicHypercubicEvenSpecialUnitaryComplexPhysical_reconstruct H N g]
-  simp [inner_add_left, inner_add_right, inner_smul_left, inner_smul_right,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner]
-  ring
+  calc
+    inner ℂ f g =
+        inner ℂ
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N
+              (periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N f) +
+            Complex.I • periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N
+              (periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N f))
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N
+              (periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N g) +
+            Complex.I • periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N
+              (periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N g)) := by
+      rw [periodicHypercubicEvenSpecialUnitaryComplexPhysical_reconstruct H N f,
+        periodicHypercubicEvenSpecialUnitaryComplexPhysical_reconstruct H N g]
+    _ = _ := by
+      simp [periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_inner]
+      ring
 
 /-- Pythagoras for the genuine complex Gauss-law Hilbert space. -/
 theorem periodicHypercubicEvenSpecialUnitaryComplexPhysical_norm_sq
@@ -137,7 +173,7 @@ theorem periodicHypercubicEvenSpecialUnitaryComplexPhysical_norm_sq
     ‖f‖ ^ 2 =
       ‖periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N f‖ ^ 2 +
       ‖periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N f‖ ^ 2 := by
-  rw [← norm_sq_eq_re_inner (𝕜 := ℂ) f,
+  rw [norm_sq_eq_re_inner (𝕜 := ℂ) f,
     periodicHypercubicEvenSpecialUnitaryComplexPhysical_inner_components]
   simp [real_inner_self_eq_norm_sq]
 
@@ -162,9 +198,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_nor
   have hr := ContinuousLinearMap.le_opNorm T xr
   have hi := ContinuousLinearMap.le_opNorm T xi
   have hr2 : ‖T xr‖ ^ 2 ≤ (‖T‖ * ‖xr‖) ^ 2 := by
-    nlinarith [norm_nonneg (T xr), norm_nonneg T, norm_nonneg xr]
+    nlinarith [hr, norm_nonneg (T xr), norm_nonneg T, norm_nonneg xr]
   have hi2 : ‖T xi‖ ^ 2 ≤ (‖T‖ * ‖xi‖) ^ 2 := by
-    nlinarith [norm_nonneg (T xi), norm_nonneg T, norm_nonneg xi]
+    nlinarith [hi, norm_nonneg (T xi), norm_nonneg T, norm_nonneg xi]
   have hsq : ‖TC f‖ ^ 2 ≤ (‖T‖ * ‖f‖) ^ 2 := by
     rw [hOut]
     nlinarith [hIn, hr2, hi2, sq_nonneg ‖T‖]
@@ -190,7 +226,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_nor
       ‖T f‖ = ‖periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N (T f)‖ :=
         (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_norm H N (T f)).symm
       _ = ‖TC (periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N f)‖ := by
-        rw [TC,
+        simp [TC,
           periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_ofReal]
       _ ≤ ‖TC‖ * ‖periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N f‖ :=
         ContinuousLinearMap.le_opNorm TC _
@@ -211,6 +247,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_isS
       PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →ₗ[ℂ]
         PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N).IsSymmetric := by
   intro f g
+  change inner ℂ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N T f) g =
+    inner ℂ f
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N T g)
   rw [periodicHypercubicEvenSpecialUnitaryComplexPhysical_inner_components H N
       (periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N T f) g,
     periodicHypercubicEvenSpecialUnitaryComplexPhysical_inner_components H N f
@@ -247,6 +287,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_isP
   refine ⟨periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_isSymmetric
     H N T hT.isSymmetric, ?_⟩
   intro f
+  change 0 ≤ RCLike.re (inner ℂ
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N T f) f)
   rw [periodicHypercubicEvenSpecialUnitaryComplexPhysical_inner_components H N
       (periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N T f) f]
   simp only [periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_apply,
