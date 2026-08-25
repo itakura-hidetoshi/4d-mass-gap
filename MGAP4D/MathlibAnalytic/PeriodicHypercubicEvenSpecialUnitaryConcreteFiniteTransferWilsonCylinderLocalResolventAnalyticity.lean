@@ -44,9 +44,6 @@ theorem
       (Set.Ici (0 : ℝ)) beta := by
   with_reducible_and_instances
     let PH := PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N
-    letI : IsBoundedSMul ℝ (PH →L[ℝ] PH) :=
-      IsBoundedSMul.of_norm_smul_le fun (r : ℝ) (A : PH →L[ℝ] PH) =>
-        ContinuousLinearMap.opNorm_smul_le r A
     let T :=
       periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
         H N hN
@@ -68,9 +65,19 @@ theorem
         AnalyticAt ℝ
           (fun A : PH →L[ℝ] PH => Ring.inverse A)
           (z • (1 : PH →L[ℝ] PH) - T beta) := by
-      exact analyticAt_inverse (𝕜 := ℝ) (IsUnit.unit hunit)
+      rcases hunit with ⟨u, hu⟩
+      exact analyticAt_inverse (𝕜 := ℝ)
+        { val := z • (1 : PH →L[ℝ] PH) - T beta
+          inv := u.inv
+          val_inv := by
+            rw [← hu]
+            exact u.val_inv
+          inv_val := by
+            rw [← hu]
+            exact u.inv_val }
     simpa [PH, T, Function.comp_def] using
-      houter.comp_analyticWithinAt hshift
+      houter.comp_analyticWithinAt
+        (f := fun gamma : ℝ => z • (1 : PH →L[ℝ] PH) - T gamma) hshift
 
 /-- Packaged resolvent regularity statement: native Wilson transfer
 analyticity together with local analyticity of every real shifted inverse at a
