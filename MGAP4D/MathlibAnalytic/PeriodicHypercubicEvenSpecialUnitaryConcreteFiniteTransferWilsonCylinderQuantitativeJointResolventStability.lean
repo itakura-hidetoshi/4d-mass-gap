@@ -139,7 +139,7 @@ theorem
       simpa [huA0] using hlt
     let unear := u.ofNearby A1 hnearUnit
     have hunear : (↑unear : PH →L[ℝ] PH) = A1 := by
-      rfl
+      simp [unear, Units.ofNearby]
     let e : PH ≃L[ℝ] PH := ContinuousLinearEquiv.ofUnit unear
     have he : (e : PH →L[ℝ] PH) = A1 := by
       apply ContinuousLinearMap.ext
