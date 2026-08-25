@@ -27,7 +27,7 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOfRealLinearIsomet
   norm_map' := periodicHypercubicEvenSpecialUnitaryPhysicalOfReal_norm H N
 
 /-- The physical real-part operation, bundled over the restricted real scalar
-structure of the genuine complex carrier. -/
+view of the genuine complex carrier. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPartCLM
     (H N : ℕ) :
     PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℝ]
