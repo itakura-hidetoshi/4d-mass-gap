@@ -137,11 +137,16 @@ theorem
         _ = ‖(↑u⁻¹ : PH →L[ℝ] PH)‖⁻¹ := by rw [hinv]
     have hnearUnit : ‖A1 - (↑u : PH →L[ℝ] PH)‖ < ‖(↑u⁻¹ : PH →L[ℝ] PH)‖⁻¹ := by
       simpa [huA0] using hlt
-    let e : PH ≃L[ℝ] PH := ContinuousLinearEquiv.ofUnit (u.ofNearby A1 hnearUnit)
+    let unear := u.ofNearby A1 hnearUnit
+    have hunear : (↑unear : PH →L[ℝ] PH) = A1 := by
+      rfl
+    let e : PH ≃L[ℝ] PH := ContinuousLinearEquiv.ofUnit unear
     have he : (e : PH →L[ℝ] PH) = A1 := by
       apply ContinuousLinearMap.ext
       intro x
-      rfl
+      simpa [e, ContinuousLinearEquiv.toContinuousLinearMap,
+        ContinuousLinearEquiv.ofUnit] using
+        congrArg (fun f : PH →L[ℝ] PH => f x) hunear
     change IsUnit A1
     rw [← he]
     exact ContinuousLinearMap.isUnit_iff_bijective.mpr (by
