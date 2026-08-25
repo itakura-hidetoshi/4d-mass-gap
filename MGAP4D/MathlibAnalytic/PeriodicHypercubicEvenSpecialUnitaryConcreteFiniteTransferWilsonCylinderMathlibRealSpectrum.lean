@@ -77,7 +77,13 @@ theorem
       (resolventSet ℝ
         (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
           H N hN beta)) := by
-  exact spectrum.isOpen_resolventSet _
+  exact
+    spectrum.isOpen_resolventSet
+      (𝕜 := ℝ)
+      (A := PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
+        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
+        H N hN beta)
 
 /-- Dually, the real spectrum of the genuine finite Wilson physical transfer
 operator is closed. -/
@@ -88,7 +94,13 @@ theorem
       (spectrum ℝ
         (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
           H N hN beta)) := by
-  exact spectrum.isClosed _
+  exact
+    spectrum.isClosed
+      (𝕜 := ℝ)
+      (A := PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
+        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
+        H N hN beta)
 
 /-- The explicit joint Neumann estimate from the physical vacuum becomes a
 native Mathlib resolvent-set stability theorem: simultaneous motion of the real
