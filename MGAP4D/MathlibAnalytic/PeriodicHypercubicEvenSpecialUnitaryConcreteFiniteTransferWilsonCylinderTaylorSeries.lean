@@ -10,7 +10,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open Filter Set
-open scoped InnerProductSpace Topology ContDiff BigOperators
+open scoped InnerProductSpace Topology ContDiff BigOperators Pointwise
 
 noncomputable section
 
@@ -183,7 +183,10 @@ theorem
       have hsign : (-1 : ℝ) ^ (n + 1) = - ((-1 : ℝ) ^ n) := by
         rw [pow_succ]
         ring
-      rw [hsign, neg_smul]
+      rw [hsign]
+      exact (neg_smul ((-1 : ℝ) ^ n)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionMathlibRealFamily
+          H N hN (m + (n + 1)) t)).symm
 
 /-- The transfer family itself has the expected literal compact-interval
 iterated derivatives. -/
@@ -328,7 +331,7 @@ theorem
       have hinfty :=
         periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily_contDiffOn_infty
           H N hN
-      exact (hinfty.of_le le_top).mono hsubset
+      exact (hinfty.of_le (by simp)).mono hsubset
     have hderiv : ∀ y ∈ Set.Icc beta gamma,
         ‖iteratedDerivWithin (n + 1)
           (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
@@ -457,8 +460,8 @@ theorem
   rw [hEq]
   exact hMul
 
-/-- The finite Wilson Taylor sums converge in operator norm to the physical
-transfer operator at every forward physical coupling. -/
+/-- The finite Wilson Taylor sums converge in the native bounded-convergence
+topology of continuous linear maps, using the operator-norm remainder bound. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylor_partialSums_tendsto_transfer
     (H N : ℕ) (hN : 0 < N)
@@ -471,23 +474,91 @@ theorem
       atTop
       (𝓝 (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
         H N hN gamma)) := by
-  with_reducible_and_instances
-    rw [Metric.tendsto_atTop]
-    intro epsilon hepsilon
+  let T :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
+      H N hN gamma
+  let S : ℕ →
+      (PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
+        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) := fun n =>
+    ∑ k ∈ Finset.range (n + 1),
+      periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm
+        H N hN beta hbeta gamma k
+  have hdiff : Tendsto (fun n : ℕ => T - S n) atTop (𝓝 0) := by
+    refine (ContinuousLinearMap.hasBasis_nhds_zero
+      (𝕜₁ := ℝ) (𝕜₂ := ℝ) (σ := RingHom.id ℝ)
+      (E := PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)
+      (F := PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)).tendsto_right_iff.mpr ?_
+    rintro ⟨s, U⟩ ⟨hs, hU⟩
+    rcases Metric.mem_nhds_iff.1 hU with ⟨epsilon, hepsilon, hballU⟩
+    have habs :
+        Absorbs ℝ
+          (Metric.ball
+            (0 : PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) 1) s :=
+      hs (Metric.ball_mem_nhds _ zero_lt_one)
+    rcases habs.exists_pos with ⟨M, hM, hMabs⟩
+    have hsNorm : ∀ x ∈ s, ‖x‖ < M := by
+      intro x hx
+      have hxscale :
+          x ∈ (M : ℝ) •
+            Metric.ball
+              (0 : PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) 1 :=
+        hMabs M (by simpa [Real.norm_eq_abs, abs_of_pos hM]) hx
+      rcases hxscale with ⟨y, hy, rfl⟩
+      have hyNorm : ‖y‖ < 1 := by
+        simpa [Metric.mem_ball, dist_eq_norm] using hy
+      simpa [norm_smul, Real.norm_eq_abs, abs_of_pos hM] using
+        (mul_lt_mul_of_pos_left hyNorm hM)
     have hmajor :=
       periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylor_remainderMajorant_tendsto_zero
         H N beta gamma hbg
     rw [Metric.tendsto_atTop] at hmajor
-    rcases hmajor epsilon hepsilon with ⟨N0, hN0⟩
-    refine ⟨N0, fun n hn => ?_⟩
-    rw [dist_eq_norm, norm_sub_rev]
-    exact lt_of_le_of_lt
-      (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylor_remainder_norm_le
-        H N hN n beta gamma hbeta hbg)
-      (by simpa [Real.dist_eq] using hN0 n hn)
+    rcases hmajor (epsilon / M) (div_pos hepsilon hM) with ⟨N0, hN0⟩
+    filter_upwards [eventually_ge_atTop N0] with n hn
+    intro x hx
+    apply hballU
+    have hmajorLt :
+        periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
+              H N ^ (n + 1) * (gamma - beta) ^ (n + 1) / n.factorial <
+          epsilon / M := by
+      exact lt_of_le_of_lt (le_abs_self _)
+        (by simpa [Real.dist_eq] using hN0 n hn)
+    have hmajorNonneg :
+        0 ≤ periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
+              H N ^ (n + 1) * (gamma - beta) ^ (n + 1) / n.factorial := by
+      have hC :=
+        periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound_nonneg H N
+      have hd : 0 ≤ gamma - beta := sub_nonneg.mpr hbg
+      positivity
+    have herr :
+        ‖T - S n‖ ≤
+          periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
+              H N ^ (n + 1) * (gamma - beta) ^ (n + 1) / n.factorial := by
+      simpa [T, S] using
+        periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylor_remainder_norm_le
+          H N hN n beta gamma hbeta hbg
+    have hpoint : ‖(T - S n) x‖ < epsilon := by
+      calc
+        ‖(T - S n) x‖ ≤ ‖T - S n‖ * ‖x‖ :=
+          (T - S n).le_opNorm x
+        _ ≤
+            (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
+                H N ^ (n + 1) * (gamma - beta) ^ (n + 1) / n.factorial) * ‖x‖ :=
+          mul_le_mul_of_nonneg_right herr (norm_nonneg _)
+        _ ≤
+            (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
+                H N ^ (n + 1) * (gamma - beta) ^ (n + 1) / n.factorial) * M :=
+          mul_le_mul_of_nonneg_left (hsNorm x hx).le hmajorNonneg
+        _ < (epsilon / M) * M :=
+          mul_lt_mul_of_pos_right hmajorLt hM
+        _ = epsilon := by
+          field_simp [ne_of_gt hM]
+    simpa [Metric.mem_ball, dist_eq_norm] using hpoint
+  have hconv := tendsto_const_nhds.sub hdiff
+  simpa [T, S] using hconv
 
 /-- Exact operator-valued Taylor series for the positive-half physical transfer.
-The equality is a genuine operator-norm `HasSum` statement. -/
+The equality is a genuine bounded-convergence `HasSum` statement, with absolute
+operator-norm summability. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylor_hasSum_transfer
     (H N : ℕ) (hN : 0 < N)
@@ -515,7 +586,7 @@ theorem
       hnorm hs hpartial
 
 /-- Final forward Taylor-series package: quantitative remainder, absolute
-summability, norm convergence, and exact series reconstruction. -/
+summability, bounded-convergence, and exact series reconstruction. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylorSeries_package
     (H N : ℕ) (hN : 0 < N) :
