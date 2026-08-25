@@ -20,9 +20,9 @@ local instance wilsonCylinderQuantitativeJointResolventPhysicalCompleteSpace
     H N).completeSpace_coe
 
 /-- Joint operator-norm perturbation bound for the real spectral shift and the
-physical Wilson coupling.  The shift contribution and the coupling contribution
-are kept separate, which is the quantitative input needed to pass from pointwise
-resolvent stability to uniform control on a compact spectral set. -/
+physical Wilson coupling.  The shift contribution is kept in its intrinsic
+operator norm, avoiding any unnecessary scalar-norm coercion, while the Wilson
+coupling contribution uses the already-proved global Lipschitz estimate. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily_shifted_sub_shifted_norm_le
     (H N : ℕ) (hN : 0 < N)
@@ -37,10 +37,9 @@ theorem
             PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) -
         periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
           H N hN beta)‖ ≤
-      |w - z| *
-          ‖(1 :
-            PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
-              PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)‖ +
+      ‖(w - z) • (1 :
+          PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
+            PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)‖ +
         periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
             H N * |gamma - beta| := by
   with_reducible_and_instances
@@ -65,12 +64,10 @@ theorem
       ‖(w - z) • (1 : PH →L[ℝ] PH) - (T gamma - T beta)‖ ≤
           ‖(w - z) • (1 : PH →L[ℝ] PH)‖ + ‖T gamma - T beta‖ :=
         norm_sub_le _ _
-      _ = |w - z| * ‖(1 : PH →L[ℝ] PH)‖ + ‖T gamma - T beta‖ := by
-        rw [norm_smul, Real.norm_eq_abs]
-      _ ≤ |w - z| * ‖(1 : PH →L[ℝ] PH)‖ +
+      _ ≤ ‖(w - z) • (1 : PH →L[ℝ] PH)‖ +
           periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
               H N * |gamma - beta| :=
-        add_le_add_left hT _
+        add_le_add le_rfl hT
 
 /-- The canonical Neumann radius of a real shifted Wilson transfer unit is
 strictly positive.  This records the quantitative radius in terms of
@@ -94,7 +91,13 @@ theorem
             H N hN beta)‖⁻¹ := by
   rcases hunit with ⟨u, hu⟩
   rw [← hu, Ring.inverse_unit]
-  exact inv_pos.mpr (Units.norm_pos u⁻¹)
+  have huinv :
+      0 <
+        ‖(↑(u⁻¹) :
+          PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
+            PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)‖ := by
+    exact Units.norm_pos (u⁻¹)
+  exact inv_pos.mpr huinv
 
 /-- Quantitative joint resolvent stability.  If the combined perturbation of
 spectral shift and Wilson coupling is smaller than the inverse norm radius of
@@ -112,10 +115,9 @@ theorem
         periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
           H N hN beta))
     (hnear :
-      |w - z| *
-          ‖(1 :
-            PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
-              PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)‖ +
+      ‖(w - z) • (1 :
+          PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
+            PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)‖ +
         periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
             H N * |gamma - beta| <
       ‖Ring.inverse
@@ -144,7 +146,7 @@ theorem
       rw [← huA0, Ring.inverse_unit]
     have hbound :
         ‖A1 - A0‖ ≤
-          |w - z| * ‖(1 : PH →L[ℝ] PH)‖ +
+          ‖(w - z) • (1 : PH →L[ℝ] PH)‖ +
             periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
                 H N * |gamma - beta| := by
       simpa [A0, A1, T] using
@@ -153,7 +155,7 @@ theorem
     have hlt : ‖A1 - A0‖ < ‖(↑u⁻¹ : PH →L[ℝ] PH)‖⁻¹ := by
       calc
         ‖A1 - A0‖ ≤
-            |w - z| * ‖(1 : PH →L[ℝ] PH)‖ +
+            ‖(w - z) • (1 : PH →L[ℝ] PH)‖ +
               periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
                   H N * |gamma - beta| := hbound
         _ < ‖Ring.inverse A0‖⁻¹ := by
@@ -161,7 +163,8 @@ theorem
         _ = ‖(↑u⁻¹ : PH →L[ℝ] PH)‖⁻¹ := by rw [hinv]
     have hnearUnit : ‖A1 - (↑u : PH →L[ℝ] PH)‖ < ‖(↑u⁻¹ : PH →L[ℝ] PH)‖⁻¹ := by
       simpa [huA0] using hlt
-    exact (u.ofNearby A1 hnearUnit).isUnit
+    change IsUnit A1
+    exact ⟨u.ofNearby A1 hnearUnit, rfl⟩
 
 /-- Explicit coupling-only Neumann criterion at a fixed real spectral shift. -/
 theorem
@@ -207,10 +210,9 @@ theorem
         periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
           H N hN beta))
     (hnear :
-      |w - z| *
-          ‖(1 :
-            PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
-              PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)‖ <
+      ‖(w - z) • (1 :
+          PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
+            PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)‖ <
       ‖Ring.inverse
         (z • (1 :
             PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
@@ -256,10 +258,9 @@ theorem
               PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) -
           periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
             H N hN beta) →
-      |w - z| *
-          ‖(1 :
-            PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
-              PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)‖ +
+      ‖(w - z) • (1 :
+          PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
+            PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N)‖ +
         periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
             H N * |gamma - beta| <
         ‖Ring.inverse
