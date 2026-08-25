@@ -9,7 +9,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open Filter Set
-open scoped InnerProductSpace Topology ContDiff BigOperators Pointwise Interval
+open scoped InnerProductSpace Topology ContDiff BigOperators Pointwise Interval ENNReal
 
 noncomputable section
 
@@ -95,10 +95,9 @@ private theorem
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm
   rfl
 
-/-- Taylor's theorem on the unordered physical coupling interval.  Unlike the
-forward-only theorem used in the first Taylor-series package, this statement
-allows either ordering of `beta` and `gamma`, while keeping both endpoints on
-the genuine physical half-line. -/
+/-- Taylor's theorem on the unordered physical coupling interval.  This allows
+either ordering of `beta` and `gamma`, while both endpoints remain on the
+genuine physical half-line. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylor_remainder_norm_le_abs
     (H N : ℕ) (hN : 0 < N) (n : ℕ)
@@ -152,18 +151,22 @@ theorem
       have hdist : |gamma - t| ≤ |gamma - beta| := by
         simpa [Real.dist_eq, abs_sub_comm] using Real.dist_right_le_of_mem_uIcc htIcc
       have hcoeffNonneg : 0 ≤ |gamma - t| ^ n / (n.factorial : ℝ) := by positivity
+      have hscalar :
+          ‖(gamma - t) ^ n / (n.factorial : ℝ)‖ =
+            |gamma - t| ^ n / (n.factorial : ℝ) := by
+        simp [Real.norm_eq_abs, abs_div, abs_pow]
       calc
         ‖((gamma - t) ^ n / n.factorial) •
-            iteratedDerivWithin (n + 1) T (Set.uIcc beta gamma) t‖ =
-            (|gamma - t| ^ n / n.factorial) *
+            iteratedDerivWithin (n + 1) T (Set.uIcc beta gamma) t‖ ≤
+            ‖(gamma - t) ^ n / (n.factorial : ℝ)‖ *
+              ‖iteratedDerivWithin (n + 1) T (Set.uIcc beta gamma) t‖ :=
+          ContinuousLinearMap.opNorm_smul_le _ _
+        _ = (|gamma - t| ^ n / n.factorial) *
               ‖iteratedDerivWithin (n + 1) T (Set.uIcc beta gamma) t‖ := by
-          rw [norm_smul]
-          simp [Real.norm_eq_abs, abs_pow, abs_of_nonneg]
+          rw [hscalar]
         _ ≤ (|gamma - t| ^ n / n.factorial) * C ^ (n + 1) :=
           mul_le_mul_of_nonneg_left hderiv hcoeffNonneg
         _ ≤ (|gamma - beta| ^ n / n.factorial) * C ^ (n + 1) := by
-          have hpow : |gamma - t| ^ n ≤ |gamma - beta| ^ n := by
-            gcongr
           have hfrac :
               |gamma - t| ^ n / (n.factorial : ℝ) ≤
                 |gamma - beta| ^ n / (n.factorial : ℝ) := by
@@ -183,10 +186,8 @@ theorem
         ring
       _ = _ := by rfl
 
-/-- Absolute-value exponential majorant for Wilson Taylor terms.  It is valid
-for arbitrary physical endpoints `beta,gamma ≥ 0`; the sign of the displacement
-is absorbed by the norm rather than by continuing the physical family to
-negative coupling. -/
+/-- Absolute exponential majorant for Wilson Taylor terms at arbitrary
+physical endpoints. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylorTerm_norm_le_expMajorant_abs
     (H N : ℕ) (hN : 0 < N)
@@ -207,10 +208,10 @@ theorem
   have hInvNonneg : 0 ≤ (k.factorial : ℝ)⁻¹ := by positivity
   have hna : ‖a‖ = (k.factorial : ℝ)⁻¹ * |d| ^ k := by
     dsimp [a]
-    rw [Real.norm_eq_abs, abs_mul, abs_pow, abs_of_nonneg hInvNonneg]
+    simp [abs_mul, abs_pow, hInvNonneg]
   have hns : ‖s‖ = 1 := by
     dsimp [s]
-    simp [Real.norm_eq_abs, abs_pow]
+    simp [abs_pow]
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm
   change ‖a •
       (s • periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionInsertionOperator
@@ -408,164 +409,118 @@ theorem
           H N hN beta hbeta gamma k)
       hnorm hs hpartial
 
-/-- The explicit one-variable formal multilinear series at a physical base
-coupling.  Its coefficient is `(-1)^k O_beta^(k) / k!`, represented as the
-canonical `k`-multilinear product map on `ℝ^k`. -/
-noncomputable def
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorFormalSeries
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
-    FormalMultilinearSeries ℝ ℝ
-      (PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
-        PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) :=
-  fun k =>
-    ContinuousMultilinearMap.mkPiRing ℝ (Fin k)
-      (((k.factorial : ℝ)⁻¹) •
-        (((-1 : ℝ) ^ k) •
-          periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionInsertionOperator
-            H N hN k beta hbeta))
-
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorFormalSeries_apply_eq_term
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
-    (gamma : ℝ) (k : ℕ) :
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorFormalSeries
-        H N hN beta hbeta k (fun _ : Fin k => gamma - beta) =
-      periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm
-        H N hN beta hbeta gamma k := by
-  simp [periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorFormalSeries,
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm,
-    ContinuousMultilinearMap.mkPiRing_apply, smul_smul, mul_comm]
-
-private theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorFormalSeries_coeff_norm_le
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) (k : ℕ) :
-    ‖periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorFormalSeries
-        H N hN beta hbeta k‖ ≤
-      (k.factorial : ℝ)⁻¹ *
-        periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
-          H N ^ k := by
-  have hbg : beta ≤ beta + 1 := by linarith
-  simpa [periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorFormalSeries,
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm,
-    ContinuousMultilinearMap.norm_mkPiRing] using
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylorTerm_norm_le_expMajorant
-      H N hN beta (beta + 1) hbeta hbg k
-
-/-- The explicit Wilson formal series has radius at least one at every physical
-base point.  A positive radius is all that `HasFPowerSeriesWithinAt` needs; the
-coefficient bound actually comes from the global exponential majorant. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorFormalSeries_one_le_radius
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
-    (1 : ℝ≥0∞) ≤
-      (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorFormalSeries
-        H N hN beta hbeta).radius := by
-  let p :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorFormalSeries
-      H N hN beta hbeta
-  let C :=
-    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound H N
-  have hmajor : Summable (fun k : ℕ => (k.factorial : ℝ)⁻¹ * C ^ k) := by
-    simpa [smul_eq_mul] using
-      (NormedSpace.expSeries_summable' (𝕂 := ℝ) (𝔸 := ℝ) C)
-  have hs : Summable (fun k : ℕ => ‖p k‖ * (1 : ℝ) ^ k) := by
-    simp only [one_pow, mul_one]
-    refine Summable.of_nonneg_of_le (fun k => norm_nonneg (p k)) ?_ hmajor
-    intro k
-    simpa [p, C] using
-      periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorFormalSeries_coeff_norm_le
-        H N hN beta hbeta k
-  exact p.le_radius_of_summable hs
-
-/-- The Wilson formal series is a genuine Mathlib power series for the transfer
-family within the physical coupling half-line. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily_hasFPowerSeriesWithinOnBall
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
-    HasFPowerSeriesWithinOnBall
-      (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
-        H N hN)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorFormalSeries
-        H N hN beta hbeta)
-      (Set.Ici (0 : ℝ)) beta 1 := by
-  refine ⟨
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorFormalSeries_one_le_radius
-      H N hN beta hbeta,
-    by norm_num,
-    ?_⟩
-  intro y hy _hyBall
-  simp only [Set.mem_insert_iff, Set.mem_Ici] at hy
-  have hgamma : 0 ≤ beta + y := by
-    rcases hy with h | h
-    · rw [h]
-      exact hbeta
-    · exact h
-  have hsum :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylor_hasSum_transfer_abs
-      H N hN beta (beta + y) hbeta hgamma
-  have hterms :
-      (fun k : ℕ =>
-        periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorFormalSeries
-          H N hN beta hbeta k (fun _ : Fin k => y)) =
-      (fun k : ℕ =>
-        periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm
-          H N hN beta hbeta (beta + y) k) := by
-    funext k
-    simpa using
-      periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorFormalSeries_apply_eq_term
-        H N hN beta hbeta (beta + y) k
-  rw [hterms]
-  exact hsum
-
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily_hasFPowerSeriesWithinAt
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
-    HasFPowerSeriesWithinAt
-      (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
-        H N hN)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorFormalSeries
-        H N hN beta hbeta)
-      (Set.Ici (0 : ℝ)) beta :=
-  ⟨1,
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily_hasFPowerSeriesWithinOnBall
-      H N hN beta hbeta⟩
-
 /-- Native Mathlib real analyticity of the Wilson transfer family on the
-physical half-line, including the boundary point `beta = 0`.  The statement is
-`AnalyticWithinAt`, not ambient `AnalyticAt`, so the syntactic totalization at
-negative coupling acquires no physical meaning. -/
+physical half-line, including `beta = 0`.  The formal multilinear series is
+constructed only at this reducible conversion point, so the pre-existing
+bounded-convergence topology is not replaced by a named wrapper instance. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily_analyticWithinAt
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     AnalyticWithinAt ℝ
       (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
         H N hN)
-      (Set.Ici (0 : ℝ)) beta :=
-  (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily_hasFPowerSeriesWithinAt
-    H N hN beta hbeta).analyticWithinAt
+      (Set.Ici (0 : ℝ)) beta := by
+  with_reducible_and_instances
+    let C : ℝ :=
+      periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound
+        H N
+    let p : FormalMultilinearSeries ℝ ℝ
+        (PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N →L[ℝ]
+          PeriodicHypercubicEvenSpecialUnitaryTransferWordPhysicalHilbert H N) :=
+      fun k =>
+        ContinuousMultilinearMap.mkPiRing ℝ (Fin k)
+          (((k.factorial : ℝ)⁻¹) •
+            (((-1 : ℝ) ^ k) •
+              periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionInsertionOperator
+                H N hN k beta hbeta))
+    have hC : 0 ≤ C := by
+      simpa [C] using
+        periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathActionUniformBound_nonneg H N
+    have hpNorm : ∀ k : ℕ, ‖p k‖ ≤ (k.factorial : ℝ)⁻¹ * C ^ k := by
+      intro k
+      have hInvNonneg : 0 ≤ (k.factorial : ℝ)⁻¹ := by positivity
+      have hO :=
+        periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionInsertionOperator_norm_le
+          H N hN k beta hbeta
+      dsimp [p]
+      rw [ContinuousMultilinearMap.norm_mkPiRing]
+      calc
+        ‖((k.factorial : ℝ)⁻¹) •
+            (((-1 : ℝ) ^ k) •
+              periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionInsertionOperator
+                H N hN k beta hbeta)‖ ≤
+          ‖(k.factorial : ℝ)⁻¹‖ *
+            ‖((-1 : ℝ) ^ k) •
+              periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionInsertionOperator
+                H N hN k beta hbeta‖ :=
+          ContinuousLinearMap.opNorm_smul_le _ _
+        _ ≤ ‖(k.factorial : ℝ)⁻¹‖ *
+            (‖(-1 : ℝ) ^ k‖ *
+              ‖periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionInsertionOperator
+                H N hN k beta hbeta‖) :=
+          mul_le_mul_of_nonneg_left
+            (ContinuousLinearMap.opNorm_smul_le _ _) (norm_nonneg _)
+        _ = (k.factorial : ℝ)⁻¹ *
+              ‖periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderNthWilsonActionInsertionOperator
+                H N hN k beta hbeta‖ := by
+          simp [Real.norm_eq_abs, hInvNonneg]
+        _ ≤ (k.factorial : ℝ)⁻¹ * C ^ k :=
+          mul_le_mul_of_nonneg_left (by simpa [C] using hO) hInvNonneg
+    have hmajor : Summable (fun k : ℕ => (k.factorial : ℝ)⁻¹ * C ^ k) := by
+      simpa [smul_eq_mul] using
+        (NormedSpace.expSeries_summable' (𝕂 := ℝ) (𝔸 := ℝ) C)
+    have hpSummable : Summable (fun k : ℕ => ‖p k‖ * (1 : ℝ) ^ k) := by
+      simp only [one_pow, mul_one]
+      refine Summable.of_nonneg_of_le (fun k => norm_nonneg (p k)) hpNorm hmajor
+    have hradius := p.le_radius_of_summable (r := (1 : ℝ≥0)) hpSummable
+    refine ⟨p, 1, ?_⟩
+    refine ⟨by simpa using hradius, by norm_num, ?_⟩
+    intro y hy _hyBall
+    simp only [Set.mem_insert_iff] at hy
+    have hgamma : 0 ≤ beta + y := by
+      rcases hy with hEq | hmem
+      · rw [hEq]
+        exact hbeta
+      · exact hmem
+    have hsum :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylor_hasSum_transfer_abs
+        H N hN beta (beta + y) hbeta hgamma
+    have hterm :
+        (fun k : ℕ => p k (fun _ : Fin k => y)) =
+          (fun k : ℕ =>
+            periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm
+              H N hN beta hbeta (beta + y) k) := by
+      funext k
+      dsimp [p]
+      simp [ContinuousMultilinearMap.mkPiRing_apply,
+        periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm,
+        smul_smul, mul_assoc, mul_comm, mul_left_comm]
+    rw [hterm]
+    exact hsum
 
-/-- Public package: an explicit Wilson formal power-series carrier together
-with native real analyticity on the genuine physical coupling half-line. -/
+/-- Public package for the real-analyticity upgrade: the exact two-sided
+physical Taylor reconstruction and native within-analyticity are returned
+together. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonRealAnalyticity_package
     (H N : ℕ) (hN : 0 < N) :
-    ∀ (beta : ℝ) (hbeta : 0 ≤ beta),
-      HasFPowerSeriesWithinAt
+    (∀ (beta gamma : ℝ) (hbeta : 0 ≤ beta) (hgamma : 0 ≤ gamma),
+      HasSum
+        (fun k : ℕ =>
+          periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorTerm
+            H N hN beta hbeta gamma k)
         (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
-          H N hN)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderWilsonTaylorFormalSeries
-          H N hN beta hbeta)
-        (Set.Ici (0 : ℝ)) beta ∧
+          H N hN gamma)) ∧
+    (∀ (beta : ℝ) (hbeta : 0 ≤ beta),
       AnalyticWithinAt ℝ
         (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily
           H N hN)
-        (Set.Ici (0 : ℝ)) beta := by
-  intro beta hbeta
+        (Set.Ici (0 : ℝ)) beta) := by
   exact ⟨
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily_hasFPowerSeriesWithinAt
-      H N hN beta hbeta,
+    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinder_WilsonTaylor_hasSum_transfer_abs
+      H N hN,
     periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderMathlibTransferFamily_analyticWithinAt
-      H N hN beta hbeta⟩
+      H N hN⟩
 
 end
 end MathlibAnalytic
