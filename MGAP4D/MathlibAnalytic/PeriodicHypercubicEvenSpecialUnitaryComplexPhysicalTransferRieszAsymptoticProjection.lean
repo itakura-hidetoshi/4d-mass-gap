@@ -63,10 +63,8 @@ theorem
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta‖
   have hq0 : 0 ≤ q := by
-    simpa [q] using
-      (norm_nonneg
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-          H N hN beta hbeta))
+    dsimp [q]
+    exact norm_nonneg _
   have hq1 : q < 1 := by
     simpa [q] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
@@ -77,7 +75,8 @@ theorem
       periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_pow_succ_sub_rieszProjectorAtRadius_norm_le
         H N hN beta hbeta r hr hrgap n
   have hdiff : Tendsto (fun n : ℕ => S ^ (n + 1) - P) atTop (𝓝 0) :=
-    tendsto_zero_of_norm_le_geometric_succ q 1 hq0 hq1 _ hbound
+    tendsto_zero_of_norm_le_geometric_succ q 1 hq0 hq1
+      (fun n : ℕ => S ^ (n + 1) - P) hbound
   have hadd := hdiff.add tendsto_const_nhds
   simpa [S, P] using hadd
 
@@ -108,22 +107,21 @@ theorem
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta‖
   have hq0 : 0 ≤ q := by
-    simpa [q] using
-      (norm_nonneg
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-          H N hN beta hbeta))
+    dsimp [q]
+    exact norm_nonneg _
   have hq1 : q < 1 := by
     simpa [q] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
         H N hN beta hbeta
   have hbound : ∀ n : ℕ,
-      ‖S ^ (n + 1) f - P f‖ ≤ q ^ (n + 1) * ‖f‖ := by
+      ‖(S ^ (n + 1)) f - P f‖ ≤ q ^ (n + 1) * ‖f‖ := by
     intro n
     simpa [S, P, q] using
       periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_pow_succ_apply_sub_rieszProjectorAtRadius_norm_le
         H N hN beta hbeta r hr hrgap n f
-  have hdiff : Tendsto (fun n : ℕ => S ^ (n + 1) f - P f) atTop (𝓝 0) :=
-    tendsto_zero_of_norm_le_geometric_succ q ‖f‖ hq0 hq1 _ hbound
+  have hdiff : Tendsto (fun n : ℕ => (S ^ (n + 1)) f - P f) atTop (𝓝 0) :=
+    tendsto_zero_of_norm_le_geometric_succ q ‖f‖ hq0 hq1
+      (fun n : ℕ => (S ^ (n + 1)) f - P f) hbound
   have hadd := hdiff.add tendsto_const_nhds
   simpa [S, P] using hadd
 
@@ -156,16 +154,14 @@ theorem
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta‖
   have hq0 : 0 ≤ q := by
-    simpa [q] using
-      (norm_nonneg
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-          H N hN beta hbeta))
+    dsimp [q]
+    exact norm_nonneg _
   have hq1 : q < 1 := by
     simpa [q] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
         H N hN beta hbeta
   have hbound : ∀ n : ℕ,
-      ‖inner ℂ f (S ^ (n + 1) g) - inner ℂ f (P g)‖ ≤
+      ‖inner ℂ f ((S ^ (n + 1)) g) - inner ℂ f (P g)‖ ≤
         q ^ (n + 1) * (‖f‖ * ‖g‖) := by
     intro n
     have h :=
@@ -173,9 +169,10 @@ theorem
         H N hN beta hbeta r hr hrgap n f g
     simpa [S, P, q, mul_assoc] using h
   have hdiff : Tendsto
-      (fun n : ℕ => inner ℂ f (S ^ (n + 1) g) - inner ℂ f (P g))
+      (fun n : ℕ => inner ℂ f ((S ^ (n + 1)) g) - inner ℂ f (P g))
       atTop (𝓝 0) :=
-    tendsto_zero_of_norm_le_geometric_succ q (‖f‖ * ‖g‖) hq0 hq1 _ hbound
+    tendsto_zero_of_norm_le_geometric_succ q (‖f‖ * ‖g‖) hq0 hq1
+      (fun n : ℕ => inner ℂ f ((S ^ (n + 1)) g) - inner ℂ f (P g)) hbound
   have hadd := hdiff.add tendsto_const_nhds
   simpa [S, P] using hadd
 
