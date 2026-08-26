@@ -10,8 +10,8 @@ noncomputable section
 /-- Bare positive-half specialization of the closure-to-path Haar transport.
 With no bulk insertion, the genuine unnormalized OS positive-half amplitude
 integrates exactly to the unfixed `H+1`-slab path kernel against the nested
-spatial-path / temporal-field Haar law.  The identity remains strictly before
-any temporal-gauge reduction. -/
+spatial-path / temporal-field Haar law.  The identity remains prior to any
+temporal-gauge reduction. -/
 theorem periodicHypercubicEvenBoundaryUnnormalizedPositiveHalfOSAmplitude_bareClosureIntegral_eq_nestedPathIntegral
     (H N : ℕ) (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
