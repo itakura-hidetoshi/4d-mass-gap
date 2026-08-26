@@ -9,6 +9,10 @@ open MeasureTheory
 
 noncomputable section
 
+local instance periodicHypercubicEvenOSBoundaryPairL2SpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 namespace PhysicalYangMillsEvenPeriodicWilsonOSCanonicalFiberReflection
 
 variable
