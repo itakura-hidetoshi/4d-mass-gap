@@ -11,6 +11,8 @@ open scoped InnerProductSpace
 
 noncomputable section
 
+set_option maxHeartbeats 2000000
+
 local instance osGaussEndpointPhysicalTransferSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
