@@ -191,11 +191,18 @@ theorem
         H N hN beta hbeta
   have hpow : ‖R ^ n‖ ≤ ‖R‖ ^ n := by
     induction n with
-    | zero => simp
+    | zero =>
+        change ‖(1 : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
+          PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N)‖ ≤ 1
+        apply ContinuousLinearMap.opNorm_le_bound _ zero_le_one
+        intro x
+        simp
     | succ n ih =>
         rw [pow_succ, pow_succ]
-        exact (norm_mul_le _ _).trans
-          (mul_le_mul_of_nonneg_right ih (norm_nonneg R))
+        have hmul : ‖(R ^ n) * R‖ ≤ ‖R ^ n‖ * ‖R‖ :=
+          norm_mul_le (R ^ n) R
+        exact hmul.trans
+          (mul_le_mul_of_nonneg_right ih (show 0 ≤ ‖R‖ from norm_nonneg R))
   simpa [R, hnorm] using hpow
 
 /-- Pointwise geometric decay of every centered transfer power. -/
