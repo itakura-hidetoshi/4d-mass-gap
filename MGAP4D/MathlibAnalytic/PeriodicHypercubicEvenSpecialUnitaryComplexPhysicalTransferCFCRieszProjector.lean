@@ -88,13 +88,20 @@ theorem
     simpa [R] using
       periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator_mem_resolventSet_of_excitedNorm_lt_re
         H N hN beta hbeta z hzq
+  have hzRUnit : IsUnit (algebraMap ℂ A z - R) := hzR
+  have hscalar :
+      DifferentiableAt ℂ (fun w : ℂ => w • (1 : A)) z :=
+    differentiableAt_id.smul_const (1 : A)
+  have hshiftScalar :
+      DifferentiableAt ℂ (fun w : ℂ => w • (1 : A) - R) z :=
+    hscalar.sub_const R
   have hshift :
       DifferentiableAt ℂ (fun w : ℂ => algebraMap ℂ A w - R) z := by
-    fun_prop
+    simpa [Algebra.algebraMap_eq_smul_one] using hshiftScalar
   have hinv :
       DifferentiableAt ℂ (fun x : A => Ring.inverse x)
         (algebraMap ℂ A z - R) :=
-    differentiableAt_inverse hzR
+    differentiableAt_inverse (𝕜 := ℂ) hzRUnit
   simpa [resolvent, Function.comp_def] using hinv.comp z hshift
 
 /-- The centered regular block has zero contour integral on the canonical CFC
@@ -160,7 +167,7 @@ theorem
       simpa [R] using
         periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator_resolvent_differentiableAt_of_excitedNorm_lt_re
           H N hN beta hbeta z hzq
-    exact hres.mul_const Q
+    exact DifferentiableAt.mul_const (𝕜 := ℂ) hres Q
   have hregContinuous :
       ContinuousOn (fun z : ℂ => resolvent R z * Q)
         (Metric.closedBall (1 : ℂ) r) := by
@@ -267,7 +274,7 @@ theorem
       simpa [R] using
         periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator_resolvent_differentiableAt_of_excitedNorm_lt_re
           H N hN beta hbeta z hzq
-    exact hres.mul_const Q
+    exact DifferentiableAt.mul_const (𝕜 := ℂ) hres Q
   have hregSphereContinuous :
       ContinuousOn (fun z : ℂ => resolvent R z * Q)
         (Metric.sphere (1 : ℂ) r) := by
