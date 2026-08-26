@@ -138,11 +138,11 @@ over its satisfying subtype. -/
 private theorem fintype_sum_propositionIndicator_eq_subtype
     {ι : Type*} [Fintype ι]
     (P : ι → Prop)
+    [Fintype {i // P i}]
     (f : ι → ℝ) :
     (∑ i : ι, propositionIndicator (P i) (f i)) =
       ∑ i : {i // P i}, f i := by
   classical
-  letI : Fintype {i // P i} := Fintype.ofFinite _
   calc
     (∑ i : ι, propositionIndicator (P i) (f i)) =
         ∑ i ∈ (Finset.univ.filter P : Finset ι), f i := by
@@ -196,17 +196,10 @@ theorem periodicHypercubicEvenSpatialCrossingWilsonAction_eq_primary_add_antipod
             (periodicHypercubicEvenSpatialSlicePlaquetteEmbedding H p))) =
         periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
           (periodicHypercubicEvenSpatialSliceRestriction A) := by
-    simpa [periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction,
-      periodicHypercubicEvenSpatialSlicePlaquetteList] using
-      congrArg List.sum
-        (congrArg
-          (List.map (specialUnitaryWilsonPlaquetteEnergy N))
-          (by
-            apply List.ext_get
-            · simp [periodicHypercubicEvenSpatialSlicePlaquetteList]
-            · intro n hn₁ hn₂
-              simp only [List.get_map]
-              rw [periodicHypercubicEvenSpatialSlicePlaquetteHolonomy_restriction_eq]))
+    have hlist :=
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_restriction_eq
+        H N A).symm
+    simpa [periodicHypercubicEvenSpatialSlicePlaquetteList] using hlist
   have hantipodal :
       (∑ p : PeriodicHypercubicEvenSpatialSlicePlaquette H,
         specialUnitaryWilsonPlaquetteEnergy N
@@ -214,17 +207,16 @@ theorem periodicHypercubicEvenSpatialCrossingWilsonAction_eq_primary_add_antipod
             (periodicHypercubicEvenAntipodalSpatialSlicePlaquetteEmbedding H p))) =
         periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
           (periodicHypercubicEvenAntipodalSpatialSliceRestriction A) := by
-    simpa [periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction,
-      periodicHypercubicEvenSpatialSlicePlaquetteList] using
-      congrArg List.sum
-        (congrArg
-          (List.map (specialUnitaryWilsonPlaquetteEnergy N))
-          (by
-            apply List.ext_get
-            · simp [periodicHypercubicEvenSpatialSlicePlaquetteList]
-            · intro n hn₁ hn₂
-              simp only [List.get_map]
-              rw [periodicHypercubicEvenSpatialSlicePlaquetteHolonomy_antipodalRestriction_eq]))
+    have hlist :
+        ((periodicHypercubicEvenSpatialSlicePlaquetteList H).map fun p =>
+          specialUnitaryWilsonPlaquetteEnergy N
+            (periodicHypercubicPlaquetteHolonomy A
+              (periodicHypercubicEvenAntipodalSpatialSlicePlaquetteEmbedding H p))).sum =
+          periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
+            (periodicHypercubicEvenAntipodalSpatialSliceRestriction A) := by
+      unfold periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction
+      simp_rw [periodicHypercubicEvenSpatialSlicePlaquetteHolonomy_antipodalRestriction_eq]
+    simpa [periodicHypercubicEvenSpatialSlicePlaquetteList] using hlist
   simpa [periodicHypercubicEvenSpatialCrossingPlaquetteEquivTwoSpatialSlices,
     periodicHypercubicEvenTwoSpatialSlicesToSpatialCrossingPlaquette] using
     congrArg₂ (· + ·) hprimary hantipodal
