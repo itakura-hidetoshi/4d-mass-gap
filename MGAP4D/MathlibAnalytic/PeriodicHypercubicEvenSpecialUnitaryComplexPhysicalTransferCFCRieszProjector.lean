@@ -1,6 +1,7 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferCFCResolventResidueLimit
 import Mathlib.Analysis.Complex.CauchyIntegral
 import Mathlib.Analysis.Calculus.FDeriv.Mul
+import Mathlib.Analysis.Normed.Algebra.GelfandFormula
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -82,23 +83,42 @@ theorem
       z := by
   let R := periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator
     H N hN beta hbeta
-  let A := PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
-    PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N
-  have hzR : z ∈ resolventSet ℂ R := by
+  have hRnorm :
+      ‖R‖ =
+        ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta‖ := by
     simpa [R] using
-      periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator_mem_resolventSet_of_excitedNorm_lt_re
-        H N hN beta hbeta z hzq
-  have hzRUnit : IsUnit (algebraMap ℂ A z - R) := hzR
-  let scalarOne : ℂ →L[ℂ] A :=
-    (ContinuousLinearMap.id ℂ ℂ).smulRight (1 : A)
-  have hshiftScalar :
-      DifferentiableAt ℂ (fun w : ℂ => scalarOne w - R) z :=
-    DifferentiableAt.sub_const (𝕜 := ℂ) scalarOne.differentiableAt R
-  have hshift :
-      DifferentiableAt ℂ (fun w : ℂ => algebraMap ℂ A w - R) z := by
-    simpa [scalarOne, Algebra.algebraMap_eq_smul_one] using hshiftScalar
-  have hinv := differentiableAt_inverse (𝕜 := ℂ) hzRUnit
-  simpa [resolvent, Function.comp_def] using hinv.comp z hshift
+      periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator_norm_eq_real_excited
+        H N hN beta hbeta
+  have hzNorm : ‖R‖ < ‖z‖ := by
+    calc
+      ‖R‖ =
+          ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+            H N hN beta hbeta‖ := hRnorm
+      _ < z.re := hzq
+      _ ≤ |z.re| := le_abs_self _
+      _ ≤ ‖z‖ := Complex.abs_re_le_norm z
+  have hOne :
+      ‖(1 : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
+        PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N)‖ ≤ 1 := by
+    apply ContinuousLinearMap.opNorm_le_bound _ zero_le_one
+    intro x
+    simp
+  have hzNormMul :
+      ‖R‖ *
+          ‖(1 : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
+            PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N)‖ < ‖z‖ := by
+    calc
+      ‖R‖ *
+          ‖(1 : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
+            PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N)‖ ≤
+          ‖R‖ * 1 := mul_le_mul_of_nonneg_left hOne (norm_nonneg R)
+      _ = ‖R‖ := by rw [mul_one]
+      _ < ‖z‖ := hzNorm
+  have hzR : z ∈ resolventSet ℂ R :=
+    spectrum.mem_resolventSet_of_norm_lt_mul (a := R) (k := z) hzNormMul
+  simpa [R] using
+    (spectrum.hasDerivAt_resolvent_const_left hzR).differentiableAt
 
 /-- The centered regular block has zero contour integral on the canonical CFC
 circle. -/
