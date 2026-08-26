@@ -29,6 +29,131 @@ local instance osPositiveHalfClosureHaarPathTransportSpecialUnitaryBorelSpace
     (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
+/-- Evaluating the positive-closure flat reindexing at the image of a source
+index reads exactly the original source coordinate.  This is the stable
+`piCongrLeft` interface used below instead of unfolding the whole measurable
+reindexing at every geometric sector. -/
+private theorem periodicHypercubicEvenPositiveHalfClosureFlat_reindexed_apply
+    (H N : ℕ)
+    (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ))
+    (x : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration
+      (Matrix.specialUnitaryGroup (Fin N) ℂ))
+    (s : (periodicHypercubicEvenEdgeOrbitPartition H).FixedEdge ⊕
+      (periodicHypercubicEvenEdgeOrbitPartition H).PositiveEdge) :
+    ((MeasurableEquiv.sumPiEquivProdPi
+        (fun _ : PeriodicHypercubicEvenPositiveHalfClosureFlatIndex H =>
+          Matrix.specialUnitaryGroup (Fin N) ℂ)).symm
+      (periodicHypercubicEvenPositiveHalfClosureFlatMeasurableEquiv H
+        (Matrix.specialUnitaryGroup (Fin N) ℂ) (b, x)))
+      (periodicHypercubicEvenPositiveHalfClosureIndexEquiv H s) =
+    ((MeasurableEquiv.sumPiEquivProdPi
+        (fun _ :
+          (periodicHypercubicEvenEdgeOrbitPartition H).FixedEdge ⊕
+            (periodicHypercubicEvenEdgeOrbitPartition H).PositiveEdge =>
+          Matrix.specialUnitaryGroup (Fin N) ℂ)).symm (b, x)) s := by
+  simpa [periodicHypercubicEvenPositiveHalfClosureFlatMeasurableEquiv] using
+    (MeasurableEquiv.piCongrLeft_apply_apply
+      (β := fun _ : PeriodicHypercubicEvenPositiveHalfClosureFlatIndex H =>
+        Matrix.specialUnitaryGroup (Fin N) ℂ)
+      (periodicHypercubicEvenPositiveHalfClosureIndexEquiv H)
+      ((MeasurableEquiv.sumPiEquivProdPi
+        (fun _ :
+          (periodicHypercubicEvenEdgeOrbitPartition H).FixedEdge ⊕
+            (periodicHypercubicEvenEdgeOrbitPartition H).PositiveEdge =>
+          Matrix.specialUnitaryGroup (Fin N) ℂ)).symm (b, x)) s)
+
+private theorem periodicHypercubicEvenPositiveHalfClosureIndexEquiv_primary
+    (H : ℕ)
+    (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+    periodicHypercubicEvenPositiveHalfClosureIndexEquiv H
+        (Sum.inl (periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge H e)) =
+      Sum.inl (0, e) := by
+  have hfixed :
+      periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices H
+          (periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge H e) =
+        Sum.inl e := by
+    simpa [periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices,
+      periodicHypercubicEvenSpatialSliceSumToFixedEdge] using
+      (periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices H).apply_symm_apply
+        (Sum.inl e)
+  simp [periodicHypercubicEvenPositiveHalfClosureIndexEquiv,
+    periodicHypercubicEvenPositiveHalfClassifiedClosureReassoc,
+    periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexEquiv,
+    periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexToPath,
+    hfixed]
+
+private theorem periodicHypercubicEvenPositiveHalfClosureIndexEquiv_antipodal
+    (H : ℕ)
+    (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+    periodicHypercubicEvenPositiveHalfClosureIndexEquiv H
+        (Sum.inl
+          (periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge H
+            (periodicHypercubicEvenPrimaryAntipodalSpatialSliceLinkEquiv H e))) =
+      Sum.inl ((Fin.last H).succ, e) := by
+  have hfixed :
+      periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices H
+          (periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge H
+            (periodicHypercubicEvenPrimaryAntipodalSpatialSliceLinkEquiv H e)) =
+        Sum.inr e := by
+    simpa [periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices,
+      periodicHypercubicEvenSpatialSliceSumToFixedEdge] using
+      (periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices H).apply_symm_apply
+        (Sum.inr e)
+  simp [periodicHypercubicEvenPositiveHalfClosureIndexEquiv,
+    periodicHypercubicEvenPositiveHalfClassifiedClosureReassoc,
+    periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexEquiv,
+    periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexToPath,
+    hfixed]
+  apply Fin.ext
+  rfl
+
+private theorem periodicHypercubicEvenPositiveHalfClosureIndexEquiv_interior
+    (H : ℕ)
+    (k : Fin H)
+    (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+    periodicHypercubicEvenPositiveHalfClosureIndexEquiv H
+        (Sum.inr
+          (periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge H
+            (Sum.inl (k, e)))) =
+      Sum.inl (k.succ.castSucc, e) := by
+  have hopen :
+      periodicHypercubicEvenPositiveEdgeEquivPositiveHalfOpenIndex H
+          (periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge H
+            (Sum.inl (k, e))) =
+        Sum.inl (k, e) := by
+    simpa [periodicHypercubicEvenPositiveEdgeEquivPositiveHalfOpenIndex] using
+      (periodicHypercubicEvenPositiveEdgeEquivPositiveHalfOpenIndex H).apply_symm_apply
+        (Sum.inl (k, e))
+  simp [periodicHypercubicEvenPositiveHalfClosureIndexEquiv,
+    periodicHypercubicEvenPositiveHalfClassifiedClosureReassoc,
+    periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexEquiv,
+    periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexToPath,
+    hopen]
+  apply Fin.ext
+  rfl
+
+private theorem periodicHypercubicEvenPositiveHalfClosureIndexEquiv_temporal
+    (H : ℕ)
+    (i : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H))
+    (v : PeriodicHypercubicEvenSpatialSliceVertex H) :
+    periodicHypercubicEvenPositiveHalfClosureIndexEquiv H
+        (Sum.inr
+          (periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge H
+            (Sum.inr (i, v)))) =
+      Sum.inr (i, v) := by
+  have hopen :
+      periodicHypercubicEvenPositiveEdgeEquivPositiveHalfOpenIndex H
+          (periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge H
+            (Sum.inr (i, v))) =
+        Sum.inr (i, v) := by
+    simpa [periodicHypercubicEvenPositiveEdgeEquivPositiveHalfOpenIndex] using
+      (periodicHypercubicEvenPositiveEdgeEquivPositiveHalfOpenIndex H).apply_symm_apply
+        (Sum.inr (i, v))
+  simpa [periodicHypercubicEvenPositiveHalfClosureIndexEquiv,
+    periodicHypercubicEvenPositiveHalfClassifiedClosureReassoc,
+    periodicHypercubicEvenPositiveHalfCylinderSlabCount, hopen]
+
 /-- At the primary fixed slice, the canonical closure-to-transfer reindexing
 reads exactly the corresponding shared-boundary link. -/
 @[simp] theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_primary_apply
@@ -41,8 +166,13 @@ reads exactly the corresponding shared-boundary link. -/
     (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
         H N (b, x)).1 0 e =
       b (periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge H e) := by
-  classical
-  rfl
+  have h := periodicHypercubicEvenPositiveHalfClosureFlat_reindexed_apply
+    H N b x
+    (Sum.inl (periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge H e))
+  rw [periodicHypercubicEvenPositiveHalfClosureIndexEquiv_primary H e] at h
+  simpa [periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv,
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatToTransferCoordinatesMeasurableEquiv,
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatSpatialPathMeasurableEquiv] using h
 
 /-- At the antipodal fixed slice, the canonical closure-to-transfer reindexing
 reads exactly the second shared-boundary spatial-slice copy. -/
@@ -57,17 +187,15 @@ reads exactly the second shared-boundary spatial-slice copy. -/
         H N (b, x)).1 (Fin.last H).succ e =
       b (periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge H
         (periodicHypercubicEvenPrimaryAntipodalSpatialSliceLinkEquiv H e)) := by
-  classical
-  simp [periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv,
+  have h := periodicHypercubicEvenPositiveHalfClosureFlat_reindexed_apply
+    H N b x
+    (Sum.inl
+      (periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge H
+        (periodicHypercubicEvenPrimaryAntipodalSpatialSliceLinkEquiv H e)))
+  rw [periodicHypercubicEvenPositiveHalfClosureIndexEquiv_antipodal H e] at h
+  simpa [periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv,
     periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatToTransferCoordinatesMeasurableEquiv,
-    periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatSpatialPathMeasurableEquiv,
-    periodicHypercubicEvenPositiveHalfClosureFlatMeasurableEquiv,
-    periodicHypercubicEvenPositiveHalfClosureIndexEquiv,
-    periodicHypercubicEvenPositiveHalfClassifiedClosureReassoc,
-    periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexEquiv,
-    periodicHypercubicEvenPositiveHalfPathToBoundaryInteriorSpatialIndex,
-    periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices,
-    periodicHypercubicEvenSpatialSliceSumToFixedEdge]
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatSpatialPathMeasurableEquiv] using h
 
 /-- Every strict interior path layer of the canonical closure reindexing reads
 exactly the corresponding positive-edge coordinate. -/
@@ -83,16 +211,15 @@ exactly the corresponding positive-edge coordinate. -/
         H N (b, x)).1 k.succ.castSucc e =
       x (periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge H
         (Sum.inl (k, e))) := by
-  classical
-  simp [periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv,
+  have h := periodicHypercubicEvenPositiveHalfClosureFlat_reindexed_apply
+    H N b x
+    (Sum.inr
+      (periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge H
+        (Sum.inl (k, e))))
+  rw [periodicHypercubicEvenPositiveHalfClosureIndexEquiv_interior H k e] at h
+  simpa [periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv,
     periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatToTransferCoordinatesMeasurableEquiv,
-    periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatSpatialPathMeasurableEquiv,
-    periodicHypercubicEvenPositiveHalfClosureFlatMeasurableEquiv,
-    periodicHypercubicEvenPositiveHalfClosureIndexEquiv,
-    periodicHypercubicEvenPositiveHalfClassifiedClosureReassoc,
-    periodicHypercubicEvenPositiveHalfBoundaryInteriorSpatialIndexEquiv,
-    periodicHypercubicEvenPositiveHalfPathToBoundaryInteriorSpatialIndex,
-    periodicHypercubicEvenPositiveEdgeEquivPositiveHalfOpenIndex]
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatSpatialPathMeasurableEquiv] using h
 
 /-- Every temporal-link layer of the canonical closure reindexing reads exactly
 the corresponding positive-edge coordinate. -/
@@ -108,15 +235,15 @@ the corresponding positive-edge coordinate. -/
         H N (b, x)).2 i v =
       x (periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge H
         (Sum.inr (i, v))) := by
-  classical
-  simp [periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv,
+  have h := periodicHypercubicEvenPositiveHalfClosureFlat_reindexed_apply
+    H N b x
+    (Sum.inr
+      (periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge H
+        (Sum.inr (i, v))))
+  rw [periodicHypercubicEvenPositiveHalfClosureIndexEquiv_temporal H i v] at h
+  simpa [periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv,
     periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatToTransferCoordinatesMeasurableEquiv,
-    periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatTemporalFieldMeasurableEquiv,
-    periodicHypercubicEvenPositiveHalfClosureFlatMeasurableEquiv,
-    periodicHypercubicEvenPositiveHalfClosureIndexEquiv,
-    periodicHypercubicEvenPositiveHalfClassifiedClosureReassoc,
-    periodicHypercubicEvenPositiveEdgeEquivPositiveHalfOpenIndex,
-    periodicHypercubicEvenPositiveHalfCylinderSlabCount]
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfFlatTemporalFieldMeasurableEquiv] using h
 
 /-- The canonical measurable closure reindexing is literally the same spatial
 path and temporal-link field obtained by first assembling the positive closure
@@ -144,9 +271,18 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurabl
   classical
   apply Prod.ext
   · funext j e
+    change
+      (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+        H N (b, x)).1 j e =
+      periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPathRestriction
+        H N
+        ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble
+          b x (fun _ => 1)) j e
+    have hjlt : j.1 < H + 2 := by
+      simpa [periodicHypercubicEvenPositiveHalfCylinderSlabCount] using j.2
     by_cases hzero : j.1 = 0
     · have hj : j = 0 := Fin.ext hzero
-      subst j
+      rw [hj]
       rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_primary_apply]
       rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPathRestriction_primary]
       unfold periodicHypercubicEvenSpatialSliceRestriction
@@ -159,7 +295,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurabl
       · have hj : j = (Fin.last H).succ := by
           apply Fin.ext
           simpa using hlast
-        subst j
+        rw [hj]
         rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_antipodal_apply]
         rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPathRestriction_antipodal]
         unfold periodicHypercubicEvenAntipodalSpatialSliceRestriction
@@ -175,7 +311,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurabl
           apply Fin.ext
           dsimp [k]
           omega
-        subst j
+        rw [hj]
         rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_interior_apply]
         unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPathRestriction
         unfold periodicHypercubicEvenSpecialUnitarySpatialSliceRestrictionAtTime
@@ -192,6 +328,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurabl
             (periodicHypercubicEvenPositiveHalfOpenIndexToPositiveEdge H
               (Sum.inl (k, e)))).symm
   · funext i v
+    change
+      (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+        H N (b, x)).2 i v =
+      periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalFieldRestriction
+        H N
+        ((periodicHypercubicEvenEdgeOrbitPartition H).boundaryFiberedAssemble
+          b x (fun _ => 1)) i v
     rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_temporal_apply]
     unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalFieldRestriction
     change
@@ -249,9 +392,12 @@ theorem periodicHypercubicEvenBoundaryUnnormalizedPositiveHalfOSAmplitude_closur
       filter_upwards with z
       rw [periodicHypercubicEvenBoundaryUnnormalizedPositiveHalfOSAmplitude_eq_unfixedPathKernel
         H N hN beta hbeta z.1 z.2]
-      rw [← periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv_eq_restrictions
-        H N z.1 z.2]
-      rfl
+      have hcoord :=
+        periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv_eq_restrictions
+          H N z.1 z.2
+      have hpath := congrArg Prod.fst hcoord
+      have htemporal := congrArg Prod.snd hcoord
+      rw [← hpath, ← htemporal]
     _ = ∫ z, G (E z) ∂mu := by
       apply integral_congr_ae
       filter_upwards with z
