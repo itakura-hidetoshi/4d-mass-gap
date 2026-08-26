@@ -68,8 +68,9 @@ theorem
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCFCTopSpectralProjection
       H N hN beta hbeta).toLinearMap =
-      (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspace_isCompl_transientSubspace
-        H N hN beta hbeta).projection := by
+      Submodule.IsCompl.projection
+        (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspace_isCompl_transientSubspace
+          H N hN beta hbeta) := by
   rw [periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCFCTopSpectralProjection_eq_topSpectralProjection]
   simpa [periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopSpectralProjection,
     complexHilbertTopEigenspaceProjection,
@@ -199,8 +200,9 @@ structure PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferBlockDiagon
   projectionCoordinates :
     (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCFCTopSpectralProjection
       H N hN beta hbeta).toLinearMap =
-      (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspace_isCompl_transientSubspace
-        H N hN beta hbeta).projection
+      Submodule.IsCompl.projection
+        (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspace_isCompl_transientSubspace
+          H N hN beta hbeta)
   blockAction :
     ∀ uv :
       periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabTopEigenspace
