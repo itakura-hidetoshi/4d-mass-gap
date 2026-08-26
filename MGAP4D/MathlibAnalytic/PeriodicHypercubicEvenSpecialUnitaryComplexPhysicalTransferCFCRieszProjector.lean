@@ -81,44 +81,17 @@ theorem
           (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator
             H N hN beta hbeta) w)
       z := by
-  let R := periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator
-    H N hN beta hbeta
-  have hRnorm :
-      ‖R‖ =
-        ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-          H N hN beta hbeta‖ := by
-    simpa [R] using
-      periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator_norm_eq_real_excited
-        H N hN beta hbeta
-  have hzNorm : ‖R‖ < ‖z‖ := by
-    calc
-      ‖R‖ =
-          ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-            H N hN beta hbeta‖ := hRnorm
-      _ < z.re := hzq
-      _ ≤ |z.re| := le_abs_self _
-      _ ≤ ‖z‖ := Complex.abs_re_le_norm z
-  have hOne :
-      ‖(1 : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
-        PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N)‖ ≤ 1 := by
-    apply ContinuousLinearMap.opNorm_le_bound _ zero_le_one
-    intro x
-    simp
-  have hzNormMul :
-      ‖R‖ *
-          ‖(1 : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
-            PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N)‖ < ‖z‖ := by
-    calc
-      ‖R‖ *
-          ‖(1 : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
-            PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N)‖ ≤
-          ‖R‖ * 1 := mul_le_mul_of_nonneg_left hOne (norm_nonneg R)
-      _ = ‖R‖ := by rw [mul_one]
-      _ < ‖z‖ := hzNorm
-  have hzR : z ∈ resolventSet ℂ R :=
-    spectrum.mem_resolventSet_of_norm_lt_mul (a := R) (k := z) hzNormMul
-  simpa [R] using
-    (spectrum.hasDerivAt_resolvent_const_left hzR).differentiableAt
+  have hzR :
+      z ∈ resolventSet ℂ
+        (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator
+          H N hN beta hbeta) :=
+    periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator_mem_resolventSet_of_excitedNorm_lt_re
+      H N hN beta hbeta z hzq
+  exact
+    (spectrum.hasDerivAt_resolvent_const_left
+      (a := periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator
+        H N hN beta hbeta)
+      (k := z) hzR).differentiableAt
 
 /-- The centered regular block has zero contour integral on the canonical CFC
 circle. -/
