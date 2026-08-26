@@ -66,6 +66,8 @@ theorem
     exact congrArg
       (periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N)
       (by simpa [S, P] using hReal)
+  rw [periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator,
+    periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCFCTopSpectralProjection_eq_complexification]
   apply ContinuousLinearMap.ext
   intro f
   change
@@ -100,6 +102,8 @@ theorem
     exact congrArg
       (periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N)
       (by simpa [S, P] using hReal)
+  rw [periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCFCTopSpectralProjection_eq_complexification,
+    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator]
   apply ContinuousLinearMap.ext
   intro f
   change
