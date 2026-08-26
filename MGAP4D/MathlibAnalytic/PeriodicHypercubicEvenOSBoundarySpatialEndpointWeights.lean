@@ -15,6 +15,14 @@ abbrev PeriodicHypercubicEvenSpatialCrossingPlaquetteSubtype (H : ℕ) : Type :=
   {p : PeriodicHypercubicEvenPlaquette H //
     periodicHypercubicEvenSpatialCrossingPlaquette p}
 
+local instance osBoundarySpatialEndpointWeightsSpatialSlicePlaquetteFintype
+    (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSlicePlaquette H) :=
+  Fintype.ofFinite _
+
+local instance osBoundarySpatialEndpointWeightsSpatialCrossingPlaquetteFintype
+    (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialCrossingPlaquetteSubtype H) :=
+  Fintype.ofFinite _
+
 /-- Embed a primary-indexed spatial plaquette on the antipodal fixed slice by
 the canonical half-period time translation. -/
 def periodicHypercubicEvenAntipodalSpatialSlicePlaquetteEmbedding
@@ -42,6 +50,7 @@ theorem periodicHypercubicEvenAntipodalSpatialSlicePlaquetteEmbedding_onAntipoda
     periodicHypercubicEvenOnAntipodalReflectionPlane H
       (periodicHypercubicEvenAntipodalSpatialSlicePlaquetteEmbedding H p).1 := by
   unfold periodicHypercubicEvenOnAntipodalReflectionPlane
+  unfold periodicHypercubicEvenAntipodalSpatialSlicePlaquetteEmbedding
   rw [periodicHypercubicEvenHalfPeriodTimeShift_time, p.1.2]
   simp
 
@@ -117,21 +126,37 @@ noncomputable def periodicHypercubicEvenSpatialCrossingPlaquetteEquivTwoSpatialS
       (periodicHypercubicEvenSpatialCrossingPlaquette_iff_on_fixedPlane p.1).1 p.2
     by_cases hp : periodicHypercubicEvenOnPrimaryReflectionPlane H p.1.1
     · apply Subtype.ext
-      rfl
+      simp only [periodicHypercubicEvenSpatialCrossingPlaquetteToTwoSpatialSlices,
+        periodicHypercubicEvenTwoSpatialSlicesToSpatialCrossingPlaquette, hp]
+      apply Prod.ext
+      · rfl
+      · apply Subtype.ext
+        rfl
     · have ha : periodicHypercubicEvenOnAntipodalReflectionPlane H p.1.1 :=
         hgeom.2.resolve_left hp
       apply Subtype.ext
+      simp only [periodicHypercubicEvenSpatialCrossingPlaquetteToTwoSpatialSlices,
+        periodicHypercubicEvenTwoSpatialSlicesToSpatialCrossingPlaquette, hp]
       apply Prod.ext
-      · exact periodicHypercubicEvenHalfPeriodTimeShift_involutive H p.1.1
-      · rfl
+      · change periodicHypercubicEvenHalfPeriodTimeShift H
+          (periodicHypercubicEvenHalfPeriodTimeShift H p.1.1) = p.1.1
+        exact periodicHypercubicEvenHalfPeriodTimeShift_involutive H p.1.1
+      · apply Subtype.ext
+        rfl
   right_inv z := by
     classical
     rcases z with p | p
     · have hp : periodicHypercubicEvenOnPrimaryReflectionPlane H
         (periodicHypercubicEvenSpatialSlicePlaquetteEmbedding H p).1 :=
         periodicHypercubicEvenSpatialSlicePlaquetteEmbedding_onPrimary H p
-      simp [periodicHypercubicEvenSpatialCrossingPlaquetteToTwoSpatialSlices,
+      simp only [periodicHypercubicEvenSpatialCrossingPlaquetteToTwoSpatialSlices,
         periodicHypercubicEvenTwoSpatialSlicesToSpatialCrossingPlaquette, hp]
+      apply congrArg Sum.inl
+      apply Prod.ext
+      · apply Subtype.ext
+        rfl
+      · apply Subtype.ext
+        rfl
     · have ha : periodicHypercubicEvenOnAntipodalReflectionPlane H
         (periodicHypercubicEvenAntipodalSpatialSlicePlaquetteEmbedding H p).1 :=
         periodicHypercubicEvenAntipodalSpatialSlicePlaquetteEmbedding_onAntipodal H p
@@ -140,11 +165,17 @@ noncomputable def periodicHypercubicEvenSpatialCrossingPlaquetteEquivTwoSpatialS
         intro hp
         exact periodicHypercubicEven_primary_antipodal_disjoint H
           (periodicHypercubicEvenAntipodalSpatialSlicePlaquetteEmbedding H p).1 hp ha
-      simp [periodicHypercubicEvenSpatialCrossingPlaquetteToTwoSpatialSlices,
-        periodicHypercubicEvenTwoSpatialSlicesToSpatialCrossingPlaquette,
-        periodicHypercubicEvenAntipodalSpatialSlicePlaquetteEmbedding,
-        periodicHypercubicEvenAntipodalToPrimarySpatialSliceVertex,
-        hnp]
+      have hnp' : ¬ periodicHypercubicEvenOnPrimaryReflectionPlane H
+          (periodicHypercubicEvenHalfPeriodTimeShift H p.1.1) := by
+        simpa [periodicHypercubicEvenAntipodalSpatialSlicePlaquetteEmbedding] using hnp
+      simp only [periodicHypercubicEvenSpatialCrossingPlaquetteToTwoSpatialSlices,
+        periodicHypercubicEvenTwoSpatialSlicesToSpatialCrossingPlaquette, hnp']
+      apply congrArg Sum.inr
+      apply Prod.ext
+      · apply Subtype.ext
+        exact periodicHypercubicEvenHalfPeriodTimeShift_involutive H p.1.1
+      · apply Subtype.ext
+        rfl
 
 /-- In particular the fixed-plane spatial plaquette sector has exactly twice
 the cardinality of one spatial slice. -/
