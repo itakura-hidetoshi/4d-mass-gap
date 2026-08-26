@@ -31,7 +31,33 @@ theorem
   classical
   rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedSpatialHalfPathAction_eq_left_add_right]
   simp only [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
-  rw [Fin.sum_univ_succ, Fin.sum_univ_castSucc]
+  have hleft :
+      (∑ i : Fin (H + 1),
+        (1 / 2 : ℝ) *
+          periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
+            (path i.castSucc)) =
+        (1 / 2 : ℝ) *
+            periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
+              (path 0) +
+          ∑ k : Fin H,
+            (1 / 2 : ℝ) *
+              periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
+                (path k.succ.castSucc) := by
+    exact Fin.sum_univ_succ _
+  have hright :
+      (∑ i : Fin (H + 1),
+        (1 / 2 : ℝ) *
+          periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
+            (path i.succ)) =
+        (∑ k : Fin H,
+          (1 / 2 : ℝ) *
+            periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
+              (path k.castSucc.succ)) +
+          (1 / 2 : ℝ) *
+            periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
+              (path (Fin.last H).succ) := by
+    exact Fin.sum_univ_castSucc _
+  rw [hleft, hright]
   have hindex : ∀ k : Fin H, k.succ.castSucc = k.castSucc.succ := by
     intro k
     apply Fin.ext
@@ -108,8 +134,8 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSliceRestrictionAtTime_zero
   · funext i
     by_cases hi : i = 0
     · subst i
-      simpa [periodicHypercubicEvenSpatialSliceVertexAtTime,
-        periodicHypercubicEvenOnPrimaryReflectionPlane] using e.1.2.symm
+      have he0 : e.1.1 0 = 0 := e.1.2
+      simpa [periodicHypercubicEvenSpatialSliceVertexAtTime] using he0.symm
     · simp [periodicHypercubicEvenSpatialSliceVertexAtTime, hi]
   · rfl
 
@@ -131,9 +157,9 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSliceRestrictionAtTime_antipo
   · funext i
     by_cases hi : i = 0
     · subst i
+      have he0 : e.1.1 0 = 0 := e.1.2
       simp [periodicHypercubicEvenSpatialSliceVertexAtTime,
-        periodicHypercubicEvenHalfPeriodTimeShift,
-        periodicHypercubicEvenOnPrimaryReflectionPlane, e.1.2]
+        periodicHypercubicEvenHalfPeriodTimeShift, he0]
     · simp [periodicHypercubicEvenSpatialSliceVertexAtTime,
         periodicHypercubicEvenHalfPeriodTimeShift, hi]
   · rfl
