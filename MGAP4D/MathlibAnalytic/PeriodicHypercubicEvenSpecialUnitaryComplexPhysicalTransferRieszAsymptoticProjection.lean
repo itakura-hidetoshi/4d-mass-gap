@@ -23,7 +23,7 @@ This small generic carrier is shared by operator-norm, strong, and matrix-elemen
 limits below. -/
 private theorem tendsto_zero_of_norm_le_geometric_succ
     {E : Type*} [SeminormedAddCommGroup E]
-    (q C : ℝ) (hq0 : 0 ≤ q) (hq1 : q < 1) (hC : 0 ≤ C)
+    (q C : ℝ) (hq0 : 0 ≤ q) (hq1 : q < 1)
     (u : ℕ → E)
     (hu : ∀ n : ℕ, ‖u n‖ ≤ q ^ (n + 1) * C) :
     Tendsto u atTop (𝓝 0) := by
@@ -62,7 +62,11 @@ theorem
   let q :=
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta‖
-  have hq0 : 0 ≤ q := norm_nonneg _
+  have hq0 : 0 ≤ q := by
+    simpa [q] using
+      (norm_nonneg
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta))
   have hq1 : q < 1 := by
     simpa [q] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
@@ -73,7 +77,7 @@ theorem
       periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_pow_succ_sub_rieszProjectorAtRadius_norm_le
         H N hN beta hbeta r hr hrgap n
   have hdiff : Tendsto (fun n : ℕ => S ^ (n + 1) - P) atTop (𝓝 0) :=
-    tendsto_zero_of_norm_le_geometric_succ q 1 hq0 hq1 zero_le_one _ hbound
+    tendsto_zero_of_norm_le_geometric_succ q 1 hq0 hq1 _ hbound
   have hadd := hdiff.add tendsto_const_nhds
   simpa [S, P] using hadd
 
@@ -103,7 +107,11 @@ theorem
   let q :=
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta‖
-  have hq0 : 0 ≤ q := norm_nonneg _
+  have hq0 : 0 ≤ q := by
+    simpa [q] using
+      (norm_nonneg
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta))
   have hq1 : q < 1 := by
     simpa [q] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
@@ -115,7 +123,7 @@ theorem
       periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_pow_succ_apply_sub_rieszProjectorAtRadius_norm_le
         H N hN beta hbeta r hr hrgap n f
   have hdiff : Tendsto (fun n : ℕ => S ^ (n + 1) f - P f) atTop (𝓝 0) :=
-    tendsto_zero_of_norm_le_geometric_succ q ‖f‖ hq0 hq1 (norm_nonneg f) _ hbound
+    tendsto_zero_of_norm_le_geometric_succ q ‖f‖ hq0 hq1 _ hbound
   have hadd := hdiff.add tendsto_const_nhds
   simpa [S, P] using hadd
 
@@ -147,12 +155,15 @@ theorem
   let q :=
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta‖
-  have hq0 : 0 ≤ q := norm_nonneg _
+  have hq0 : 0 ≤ q := by
+    simpa [q] using
+      (norm_nonneg
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta))
   have hq1 : q < 1 := by
     simpa [q] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
         H N hN beta hbeta
-  have hC0 : 0 ≤ ‖f‖ * ‖g‖ := mul_nonneg (norm_nonneg f) (norm_nonneg g)
   have hbound : ∀ n : ℕ,
       ‖inner ℂ f (S ^ (n + 1) g) - inner ℂ f (P g)‖ ≤
         q ^ (n + 1) * (‖f‖ * ‖g‖) := by
@@ -164,7 +175,7 @@ theorem
   have hdiff : Tendsto
       (fun n : ℕ => inner ℂ f (S ^ (n + 1) g) - inner ℂ f (P g))
       atTop (𝓝 0) :=
-    tendsto_zero_of_norm_le_geometric_succ q (‖f‖ * ‖g‖) hq0 hq1 hC0 _ hbound
+    tendsto_zero_of_norm_le_geometric_succ q (‖f‖ * ‖g‖) hq0 hq1 _ hbound
   have hadd := hdiff.add tendsto_const_nhds
   simpa [S, P] using hadd
 
