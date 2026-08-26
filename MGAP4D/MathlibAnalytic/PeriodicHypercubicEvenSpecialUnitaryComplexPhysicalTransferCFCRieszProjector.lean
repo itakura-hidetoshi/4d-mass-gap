@@ -93,7 +93,7 @@ theorem
     (ContinuousLinearMap.id ℂ ℂ).smulRight (1 : A)
   have hshiftScalar :
       DifferentiableAt ℂ (fun w : ℂ => scalarOne w - R) z :=
-    scalarOne.differentiableAt.sub_const R
+    DifferentiableAt.sub_const (𝕜 := ℂ) scalarOne.differentiableAt R
   have hshift :
       DifferentiableAt ℂ (fun w : ℂ => algebraMap ℂ A w - R) z := by
     simpa [scalarOne, Algebra.algebraMap_eq_smul_one] using hshiftScalar
