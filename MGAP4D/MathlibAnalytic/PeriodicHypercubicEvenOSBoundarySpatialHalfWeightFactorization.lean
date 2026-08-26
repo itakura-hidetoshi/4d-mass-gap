@@ -9,10 +9,6 @@ open scoped BigOperators
 
 noncomputable section
 
-local instance osBoundarySpatialHalfWeightSpatialSlicePlaquetteFintype
-    (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSlicePlaquette H) :=
-  Fintype.ofFinite _
-
 local instance osBoundarySpatialHalfWeightSpatialCrossingPlaquetteFintype
     (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialCrossingPlaquetteSubtype H) :=
   Fintype.ofFinite _
