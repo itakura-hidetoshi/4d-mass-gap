@@ -38,43 +38,36 @@ theorem
       (1 : ℂ) := by
   let R := periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator
     H N hN beta hbeta
+  let A := PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
+    PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N
   have hmem :
       (1 : ℂ) ∈ resolventSet ℂ R := by
     simpa [R] using
       periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator_one_mem_resolventSet
         H N hN beta hbeta
-  have hunit : IsUnit
-      (algebraMap ℂ
-          (PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
-            PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) (1 : ℂ) - R) :=
-    hmem
+  have hunit : IsUnit (algebraMap ℂ A (1 : ℂ) - R) := hmem
   rcases hunit with ⟨u, hu⟩
+  have hshiftContinuous :
+      ContinuousAt (fun z : ℂ => algebraMap ℂ A z - R) (1 : ℂ) := by
+    fun_prop
   have hshift :
       Tendsto
-        (fun z : ℂ =>
-          algebraMap ℂ
-              (PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
-                PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) z - R)
+        (fun z : ℂ => algebraMap ℂ A z - R)
         (𝓝 (1 : ℂ))
-        (𝓝
-          (algebraMap ℂ
-              (PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
-                PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) (1 : ℂ) - R)) := by
-    fun_prop
+        (𝓝 (algebraMap ℂ A (1 : ℂ) - R)) :=
+    hshiftContinuous
   have hshiftUnit :
       Tendsto
-        (fun z : ℂ =>
-          algebraMap ℂ
-              (PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
-                PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) z - R)
+        (fun z : ℂ => algebraMap ℂ A z - R)
         (𝓝 (1 : ℂ))
-        (𝓝
-          (u : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
-            PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N)) := by
+        (𝓝 (u : A)) := by
     simpa [hu] using hshift
-  have hinv :=
-    (NormedRing.inverse_continuousAt u).comp (1 : ℂ) hshiftUnit
-  simpa [resolvent, R, hu] using hinv
+  have hinvAt :
+      Tendsto (fun x : A => Ring.inverse x)
+        (𝓝 (u : A)) (𝓝 (Ring.inverse (u : A))) :=
+    NormedRing.inverse_continuousAt u
+  have hinv := hinvAt.comp hshiftUnit
+  simpa [resolvent, R, A, hu] using hinv
 
 /-- The CFC top projection is the actual operator-norm residue of the genuine
 complex normalized Wilson transfer resolvent at the isolated spectral point
@@ -104,6 +97,8 @@ theorem
     H N hN beta hbeta
   let Q := (1 : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
     PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) - P
+  let A := PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
+    PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N
   let U : Set ℂ :=
     {z : ℂ |
       ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
@@ -117,27 +112,43 @@ theorem
     simpa [R] using
       periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator_resolvent_continuousAt_one
         H N hN beta hbeta
+  have hmulQ :
+      Tendsto (fun T : A => T * Q)
+        (𝓝 (resolvent R (1 : ℂ)))
+        (𝓝 (resolvent R (1 : ℂ) * Q)) := by
+    exact continuous_mul_const.tendsto _
   have hregQ :
       Tendsto (fun z : ℂ => resolvent R z * Q)
         (𝓝 (1 : ℂ)) (𝓝 (resolvent R (1 : ℂ) * Q)) :=
-    hreg.mul tendsto_const_nhds
+    hmulQ.comp hreg
+  have hz0Continuous :
+      ContinuousAt (fun z : ℂ => z - 1) (1 : ℂ) := by
+    fun_prop
+  have hz0raw :
+      Tendsto (fun z : ℂ => z - 1)
+        (𝓝 (1 : ℂ)) (𝓝 ((1 : ℂ) - 1)) :=
+    hz0Continuous
   have hz0 :
       Tendsto (fun z : ℂ => z - 1)
         (𝓝 (1 : ℂ)) (𝓝 (0 : ℂ)) := by
-    fun_prop
+    simpa using hz0raw
+  have hzeroSmul :
+      (0 : ℂ) • (resolvent R (1 : ℂ) * Q) = (0 : A) := by
+    apply ContinuousLinearMap.ext
+    intro x
+    simp
   have hrem :
       Tendsto
         (fun z : ℂ => (z - 1) • (resolvent R z * Q))
         (𝓝 (1 : ℂ))
-        (𝓝 (0 : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
-          PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N)) := by
-    simpa using hz0.smul hregQ
+        (𝓝 (0 : A)) := by
+    have h := hz0.smul hregQ
+    simpa only [hzeroSmul] using h
   have hremWithin :
       Tendsto
         (fun z : ℂ => (z - 1) • (resolvent R z * Q))
         (𝓝[U] (1 : ℂ))
-        (𝓝 (0 : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
-          PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N)) :=
+        (𝓝 (0 : A)) :=
     hrem.mono_left inf_le_left
   have heq :
       (fun z : ℂ => (z - 1) • resolvent S z) =ᶠ[𝓝[U] (1 : ℂ)]
