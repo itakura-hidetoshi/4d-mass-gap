@@ -97,10 +97,7 @@ theorem
   have hshift :
       DifferentiableAt ℂ (fun w : ℂ => algebraMap ℂ A w - R) z := by
     simpa [scalarOne, Algebra.algebraMap_eq_smul_one] using hshiftScalar
-  have hinv :
-      DifferentiableAt ℂ (fun x : A => Ring.inverse x)
-        (algebraMap ℂ A z - R) :=
-    differentiableAt_inverse (𝕜 := ℂ) hzRUnit
+  have hinv := differentiableAt_inverse (𝕜 := ℂ) hzRUnit
   simpa [resolvent, Function.comp_def] using hinv.comp z hshift
 
 /-- The centered regular block has zero contour integral on the canonical CFC
