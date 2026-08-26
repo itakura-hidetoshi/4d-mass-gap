@@ -51,6 +51,8 @@ theorem periodicHypercubicEvenAntipodalSpatialSlicePlaquetteEmbedding_onAntipoda
       (periodicHypercubicEvenAntipodalSpatialSlicePlaquetteEmbedding H p).1 := by
   unfold periodicHypercubicEvenOnAntipodalReflectionPlane
   unfold periodicHypercubicEvenAntipodalSpatialSlicePlaquetteEmbedding
+  change periodicHypercubicEvenHalfPeriodTimeShift H p.1.1 0 =
+    ((H + 1 : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H))
   rw [periodicHypercubicEvenHalfPeriodTimeShift_time, p.1.2]
   simp
 
@@ -165,14 +167,13 @@ noncomputable def periodicHypercubicEvenSpatialCrossingPlaquetteEquivTwoSpatialS
         intro hp
         exact periodicHypercubicEven_primary_antipodal_disjoint H
           (periodicHypercubicEvenAntipodalSpatialSlicePlaquetteEmbedding H p).1 hp ha
-      have hnp' : ¬ periodicHypercubicEvenOnPrimaryReflectionPlane H
-          (periodicHypercubicEvenHalfPeriodTimeShift H p.1.1) := by
-        simpa [periodicHypercubicEvenAntipodalSpatialSlicePlaquetteEmbedding] using hnp
       simp only [periodicHypercubicEvenSpatialCrossingPlaquetteToTwoSpatialSlices,
-        periodicHypercubicEvenTwoSpatialSlicesToSpatialCrossingPlaquette, hnp']
+        periodicHypercubicEvenTwoSpatialSlicesToSpatialCrossingPlaquette, hnp]
       apply congrArg Sum.inr
       apply Prod.ext
       · apply Subtype.ext
+        change periodicHypercubicEvenHalfPeriodTimeShift H
+          (periodicHypercubicEvenHalfPeriodTimeShift H p.1.1) = p.1.1
         exact periodicHypercubicEvenHalfPeriodTimeShift_involutive H p.1.1
       · apply Subtype.ext
         rfl
