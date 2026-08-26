@@ -40,34 +40,25 @@ theorem
     H N hN beta hbeta
   let A := PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
     PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N
-  have hmem :
-      (1 : ℂ) ∈ resolventSet ℂ R := by
+  have hRnorm : ‖R‖ < 1 := by
     simpa [R] using
-      periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator_one_mem_resolventSet
+      periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator_norm_lt_one
         H N hN beta hbeta
-  have hunit : IsUnit (algebraMap ℂ A (1 : ℂ) - R) := hmem
-  rcases hunit with ⟨u, hu⟩
+  let u := Units.oneSub R hRnorm
   have hshiftContinuous :
       ContinuousAt (fun z : ℂ => algebraMap ℂ A z - R) (1 : ℂ) := by
     fun_prop
-  have hshift :
-      Tendsto
-        (fun z : ℂ => algebraMap ℂ A z - R)
-        (𝓝 (1 : ℂ))
-        (𝓝 (algebraMap ℂ A (1 : ℂ) - R)) :=
-    hshiftContinuous
   have hshiftUnit :
       Tendsto
         (fun z : ℂ => algebraMap ℂ A z - R)
         (𝓝 (1 : ℂ))
         (𝓝 (u : A)) := by
-    simpa [hu] using hshift
+    simpa [u] using hshiftContinuous
   have hinvAt :
-      Tendsto (fun x : A => Ring.inverse x)
-        (𝓝 (u : A)) (𝓝 (Ring.inverse (u : A))) :=
+      ContinuousAt (fun x : A => Ring.inverse x) (u : A) :=
     NormedRing.inverse_continuousAt u
-  have hinv := hinvAt.comp hshiftUnit
-  simpa [resolvent, R, A, hu] using hinv
+  have hinv := hinvAt.tendsto.comp hshiftUnit
+  simpa [resolvent, R, A, u] using hinv
 
 /-- The CFC top projection is the actual operator-norm residue of the genuine
 complex normalized Wilson transfer resolvent at the isolated spectral point
@@ -112,15 +103,10 @@ theorem
     simpa [R] using
       periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator_resolvent_continuousAt_one
         H N hN beta hbeta
-  have hmulQ :
-      Tendsto (fun T : A => T * Q)
-        (𝓝 (resolvent R (1 : ℂ)))
-        (𝓝 (resolvent R (1 : ℂ) * Q)) := by
-    exact continuous_mul_const.tendsto _
   have hregQ :
       Tendsto (fun z : ℂ => resolvent R z * Q)
         (𝓝 (1 : ℂ)) (𝓝 (resolvent R (1 : ℂ) * Q)) :=
-    hmulQ.comp hreg
+    Filter.Tendsto.mul_const Q hreg
   have hz0Continuous :
       ContinuousAt (fun z : ℂ => z - 1) (1 : ℂ) := by
     fun_prop
