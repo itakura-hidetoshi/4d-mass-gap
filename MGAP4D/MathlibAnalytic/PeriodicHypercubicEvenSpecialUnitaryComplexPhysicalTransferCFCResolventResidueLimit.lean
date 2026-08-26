@@ -53,12 +53,16 @@ theorem
         (fun z : ℂ => algebraMap ℂ A z - R)
         (𝓝 (1 : ℂ))
         (𝓝 (u : A)) := by
-    simpa [u] using hshiftContinuous
+    simpa [u] using hshiftContinuous.tendsto
   have hinvAt :
       ContinuousAt (fun x : A => Ring.inverse x) (u : A) :=
     NormedRing.inverse_continuousAt u
   have hinv := hinvAt.tendsto.comp hshiftUnit
-  simpa [resolvent, R, A, u] using hinv
+  change Tendsto
+    (fun z : ℂ => resolvent R z)
+    (𝓝 (1 : ℂ))
+    (𝓝 (resolvent R (1 : ℂ)))
+  simpa [resolvent, Function.comp_def, u] using hinv
 
 /-- The CFC top projection is the actual operator-norm residue of the genuine
 complex normalized Wilson transfer resolvent at the isolated spectral point
@@ -103,17 +107,27 @@ theorem
     simpa [R] using
       periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator_resolvent_continuousAt_one
         H N hN beta hbeta
+  let preQ : A →L[ℂ] A :=
+    ContinuousLinearMap.precomp
+      (PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) Q
+  have hregQComp :
+      Tendsto (fun z : ℂ => preQ (resolvent R z))
+        (𝓝 (1 : ℂ)) (𝓝 (preQ (resolvent R (1 : ℂ)))) :=
+    (preQ.continuous.tendsto _).comp hreg
+  have hpreQ (T : A) : preQ T = T * Q := by
+    rw [ContinuousLinearMap.mul_def]
+    rfl
   have hregQ :
       Tendsto (fun z : ℂ => resolvent R z * Q)
-        (𝓝 (1 : ℂ)) (𝓝 (resolvent R (1 : ℂ) * Q)) :=
-    Filter.Tendsto.mul_const Q hreg
+        (𝓝 (1 : ℂ)) (𝓝 (resolvent R (1 : ℂ) * Q)) := by
+    simpa only [hpreQ] using hregQComp
   have hz0Continuous :
       ContinuousAt (fun z : ℂ => z - 1) (1 : ℂ) := by
     fun_prop
   have hz0raw :
       Tendsto (fun z : ℂ => z - 1)
         (𝓝 (1 : ℂ)) (𝓝 ((1 : ℂ) - 1)) :=
-    hz0Continuous
+    hz0Continuous.tendsto
   have hz0 :
       Tendsto (fun z : ℂ => z - 1)
         (𝓝 (1 : ℂ)) (𝓝 (0 : ℂ)) := by
