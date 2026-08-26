@@ -9,7 +9,8 @@ noncomputable section
 
 local instance positiveHalfPlaquetteCoordinatesSideLengthNeZero (H : ℕ) :
     NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
-  simp [PeriodicHypercubicEvenSideLength]⟩
+  simp [PeriodicHypercubicEvenSideLength,
+    periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
 
 /-- Subtype of actual four-dimensional plaquettes lying on one of the strict
 positive interior spatial slices. -/
@@ -32,8 +33,7 @@ theorem periodicHypercubicEvenSpatialSlicePlaquetteAtTime_injective
     Function.Injective (periodicHypercubicEvenSpatialSlicePlaquetteAtTime H t) := by
   intro p q h
   apply Prod.ext
-  · apply Subtype.ext
-    have hbase := congrArg Prod.fst h
+  · have hbase := congrArg Prod.fst h
     have hproj := congrArg
       (periodicHypercubicEvenSpatialSliceVertexProjection H) hbase
     simpa [periodicHypercubicEvenSpatialSlicePlaquetteAtTime] using hproj
@@ -207,8 +207,7 @@ theorem periodicHypercubicEvenPositiveHalfTemporalPlaquette_coordinates_injectiv
   apply Prod.ext
   · exact hi
   · apply Prod.ext
-    · apply Subtype.ext
-      have hbase := congrArg Prod.fst h
+    · have hbase := congrArg Prod.fst h
       have hproj := congrArg
         (periodicHypercubicEvenSpatialSliceVertexProjection H) hbase
       simpa [periodicHypercubicEvenPositiveHalfTemporalPlaquette] using hproj
