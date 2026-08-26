@@ -277,6 +277,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurabl
       rw [hj]
       rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_primary_apply]
       rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPathRestriction_primary]
+      unfold periodicHypercubicEvenSpatialSliceRestriction
       have hedge :
           (periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge H e).1 =
             periodicHypercubicEvenSpatialSliceLinkEmbedding H e := by
