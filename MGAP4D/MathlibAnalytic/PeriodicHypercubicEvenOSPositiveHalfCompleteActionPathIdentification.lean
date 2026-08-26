@@ -80,6 +80,10 @@ theorem
             (path (Fin.last H).succ)) := by
       rw [Fin.sum_univ_succ]
       rw [Fin.sum_univ_castSucc]
+      have hzero : (0 : Fin (H + 1)).castSucc = (0 : Fin (H + 2)) := by
+        apply Fin.ext
+        rfl
+      rw [hzero]
     _ =
       (1 / 2 : ℝ) *
           periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N (path 0) +
