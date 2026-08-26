@@ -29,35 +29,6 @@ theorem
           periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
             (path (Fin.last H).succ) := by
   classical
-  rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedSpatialHalfPathAction_eq_left_add_right]
-  simp only [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
-  have hleft :
-      (∑ i : Fin (H + 1),
-        (1 / 2 : ℝ) *
-          periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
-            (path i.castSucc)) =
-        (1 / 2 : ℝ) *
-            periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
-              (path 0) +
-          ∑ k : Fin H,
-            (1 / 2 : ℝ) *
-              periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
-                (path k.succ.castSucc) := by
-    exact Fin.sum_univ_succ _
-  have hright :
-      (∑ i : Fin (H + 1),
-        (1 / 2 : ℝ) *
-          periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
-            (path i.succ)) =
-        (∑ k : Fin H,
-          (1 / 2 : ℝ) *
-            periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
-              (path k.castSucc.succ)) +
-          (1 / 2 : ℝ) *
-            periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
-              (path (Fin.last H).succ) := by
-    exact Fin.sum_univ_castSucc _
-  rw [hleft, hright]
   have hindex : ∀ k : Fin H, k.succ.castSucc = k.castSucc.succ := by
     intro k
     apply Fin.ext
@@ -80,7 +51,21 @@ theorem
     rw [← hindex k]
     ring
   calc
-    ((1 / 2 : ℝ) *
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedSpatialHalfPathAction
+        H N path =
+      (∑ i : Fin (H + 1),
+        (1 / 2 : ℝ) *
+          periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
+            (path i.castSucc)) +
+      (∑ i : Fin (H + 1),
+        (1 / 2 : ℝ) *
+          periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
+            (path i.succ)) := by
+      simpa [periodicHypercubicEvenPositiveHalfCylinderSlabCount] using
+        periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedSpatialHalfPathAction_eq_left_add_right
+          H N path
+    _ =
+      ((1 / 2 : ℝ) *
           periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N (path 0) +
         ∑ k : Fin H,
           (1 / 2 : ℝ) *
@@ -92,7 +77,10 @@ theorem
               (path k.castSucc.succ)) +
         (1 / 2 : ℝ) *
           periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
-            (path (Fin.last H).succ)) =
+            (path (Fin.last H).succ)) := by
+      rw [Fin.sum_univ_succ]
+      rw [Fin.sum_univ_castSucc]
+    _ =
       (1 / 2 : ℝ) *
           periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N (path 0) +
         ((∑ k : Fin H,
