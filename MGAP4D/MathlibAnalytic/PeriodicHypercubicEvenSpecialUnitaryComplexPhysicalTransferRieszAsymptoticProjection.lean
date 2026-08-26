@@ -77,7 +77,10 @@ theorem
   have hdiff : Tendsto (fun n : ℕ => S ^ (n + 1) - P) atTop (𝓝 0) :=
     tendsto_zero_of_norm_le_geometric_succ q 1 hq0 hq1
       (fun n : ℕ => S ^ (n + 1) - P) hbound
-  have hadd := hdiff.add tendsto_const_nhds
+  have hconst : Tendsto (fun _ : ℕ => P) atTop (𝓝 P) := tendsto_const_nhds
+  have hadd : Tendsto
+      (fun n : ℕ => (S ^ (n + 1) - P) + P) atTop (𝓝 ((0 : typeof P) + P)) :=
+    hdiff.add hconst
   simpa [S, P] using hadd
 
 /-- The same contour-defined asymptotic projector is the strong limit on every
@@ -122,7 +125,11 @@ theorem
   have hdiff : Tendsto (fun n : ℕ => (S ^ (n + 1)) f - P f) atTop (𝓝 0) :=
     tendsto_zero_of_norm_le_geometric_succ q ‖f‖ hq0 hq1
       (fun n : ℕ => (S ^ (n + 1)) f - P f) hbound
-  have hadd := hdiff.add tendsto_const_nhds
+  have hconst : Tendsto (fun _ : ℕ => P f) atTop (𝓝 (P f)) := tendsto_const_nhds
+  have hadd : Tendsto
+      (fun n : ℕ => ((S ^ (n + 1)) f - P f) + P f)
+      atTop (𝓝 ((0 : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) + P f)) :=
+    hdiff.add hconst
   simpa [S, P] using hadd
 
 /-- All complex Hilbert matrix elements converge to the matrix element of the
@@ -173,7 +180,14 @@ theorem
       atTop (𝓝 0) :=
     tendsto_zero_of_norm_le_geometric_succ q (‖f‖ * ‖g‖) hq0 hq1
       (fun n : ℕ => inner ℂ f ((S ^ (n + 1)) g) - inner ℂ f (P g)) hbound
-  have hadd := hdiff.add tendsto_const_nhds
+  have hconst : Tendsto
+      (fun _ : ℕ => inner ℂ f (P g)) atTop (𝓝 (inner ℂ f (P g))) :=
+    tendsto_const_nhds
+  have hadd : Tendsto
+      (fun n : ℕ =>
+        (inner ℂ f ((S ^ (n + 1)) g) - inner ℂ f (P g)) + inner ℂ f (P g))
+      atTop (𝓝 ((0 : ℂ) + inner ℂ f (P g))) :=
+    hdiff.add hconst
   simpa [S, P] using hadd
 
 /-- Audit-visible statement that the contour-defined Riesz projector is
