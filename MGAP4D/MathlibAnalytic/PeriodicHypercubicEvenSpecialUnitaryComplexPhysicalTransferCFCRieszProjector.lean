@@ -81,17 +81,17 @@ theorem
           (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator
             H N hN beta hbeta) w)
       z := by
-  have hzR :
-      z ∈ resolventSet ℂ
-        (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator
-          H N hN beta hbeta) :=
-    periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator_mem_resolventSet_of_excitedNorm_lt_re
-      H N hN beta hbeta z hzq
-  exact
-    (spectrum.hasDerivAt_resolvent_const_left
-      (a := periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator
-        H N hN beta hbeta)
-      (k := z) hzR).differentiableAt
+  let R := periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator
+    H N hN beta hbeta
+  have hzR : z ∈ resolventSet ℂ R := by
+    simpa [R] using
+      periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator_mem_resolventSet_of_excitedNorm_lt_re
+        H N hN beta hbeta z hzq
+  have hderiv :
+      HasDerivAt (resolvent R) (-resolvent R z ^ 2) z := by
+    with_reducible_and_instances
+      exact spectrum.hasDerivAt_resolvent_const_left (a := R) (k := z) hzR
+  exact hderiv.differentiableAt
 
 /-- The centered regular block has zero contour integral on the canonical CFC
 circle. -/
