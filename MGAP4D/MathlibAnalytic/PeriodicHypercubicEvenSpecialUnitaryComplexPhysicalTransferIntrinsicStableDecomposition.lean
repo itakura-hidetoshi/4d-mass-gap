@@ -74,10 +74,9 @@ theorem
         (fun T : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
           PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N => T x) hPP
       simpa using h
-    calc
-      P f = P (P x) := by rw [← hx]
-      _ = P x := hPPx
-      _ = f := hx
+    rw [← hx]
+    with_reducible_and_instances
+      exact hPPx
 
 /-- The intrinsic CFC top projection kills a vector exactly when its positive
 Wilson-transfer orbit converges strongly to zero.  Thus the kernel of the
