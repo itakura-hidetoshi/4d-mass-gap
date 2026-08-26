@@ -64,7 +64,9 @@ theorem
       H N hN beta hbeta‖
   have hq0 : 0 ≤ q := by
     dsimp [q]
-    exact norm_nonneg _
+    exact norm_nonneg
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta)
   have hq1 : q < 1 := by
     simpa [q] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
@@ -79,8 +81,8 @@ theorem
       (fun n : ℕ => S ^ (n + 1) - P) hbound
   have hconst : Tendsto (fun _ : ℕ => P) atTop (𝓝 P) := tendsto_const_nhds
   have hadd : Tendsto
-      (fun n : ℕ => (S ^ (n + 1) - P) + P) atTop (𝓝 ((0 : typeof P) + P)) :=
-    hdiff.add hconst
+      (fun n : ℕ => (S ^ (n + 1) - P) + P) atTop (𝓝 P) := by
+    simpa using hdiff.add hconst
   simpa [S, P] using hadd
 
 /-- The same contour-defined asymptotic projector is the strong limit on every
@@ -111,7 +113,9 @@ theorem
       H N hN beta hbeta‖
   have hq0 : 0 ≤ q := by
     dsimp [q]
-    exact norm_nonneg _
+    exact norm_nonneg
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta)
   have hq1 : q < 1 := by
     simpa [q] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
@@ -128,8 +132,8 @@ theorem
   have hconst : Tendsto (fun _ : ℕ => P f) atTop (𝓝 (P f)) := tendsto_const_nhds
   have hadd : Tendsto
       (fun n : ℕ => ((S ^ (n + 1)) f - P f) + P f)
-      atTop (𝓝 ((0 : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) + P f)) :=
-    hdiff.add hconst
+      atTop (𝓝 (P f)) := by
+    simpa using hdiff.add hconst
   simpa [S, P] using hadd
 
 /-- All complex Hilbert matrix elements converge to the matrix element of the
@@ -162,7 +166,9 @@ theorem
       H N hN beta hbeta‖
   have hq0 : 0 ≤ q := by
     dsimp [q]
-    exact norm_nonneg _
+    exact norm_nonneg
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta)
   have hq1 : q < 1 := by
     simpa [q] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
@@ -186,8 +192,8 @@ theorem
   have hadd : Tendsto
       (fun n : ℕ =>
         (inner ℂ f ((S ^ (n + 1)) g) - inner ℂ f (P g)) + inner ℂ f (P g))
-      atTop (𝓝 ((0 : ℂ) + inner ℂ f (P g))) :=
-    hdiff.add hconst
+      atTop (𝓝 (inner ℂ f (P g))) := by
+    simpa using hdiff.add hconst
   simpa [S, P] using hadd
 
 /-- Audit-visible statement that the contour-defined Riesz projector is
