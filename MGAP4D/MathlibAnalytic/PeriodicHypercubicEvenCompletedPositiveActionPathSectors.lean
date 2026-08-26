@@ -9,14 +9,6 @@ open scoped BigOperators
 
 noncomputable section
 
-local instance completedPositiveActionSpatialPlaquetteFintype (H : ℕ) :
-    Fintype (PeriodicHypercubicEvenSpatialSlicePlaquette H) :=
-  Fintype.ofFinite _
-
-local instance completedPositiveActionSpatialLinkFintype (H : ℕ) :
-    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
-  Fintype.ofFinite _
-
 local instance completedPositiveActionSpatialSectorFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenPositiveHalfSpatialPlaquetteSubtype H) :=
   Fintype.ofFinite _
