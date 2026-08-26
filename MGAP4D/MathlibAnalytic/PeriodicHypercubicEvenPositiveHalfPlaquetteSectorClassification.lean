@@ -15,10 +15,12 @@ def periodicHypercubicEvenPositiveHalfSpatialPlaquette
   periodicHypercubicEvenStrictPositivePlaquette p ∧
     ¬ periodicHypercubicEvenPlaquetteHasTimeDirection p
 
-/-- Time-space plaquettes belonging to the complete positive half-cylinder.
-This combines the strict-positive temporal plaquettes with the two temporal
-layers adjacent to the reflection-fixed endpoints from the positive side. -/
-def periodicHypercubicEvenPositiveHalfTemporalPlaquette
+/-- Predicate selecting the time-space plaquettes of the complete positive
+half-cylinder.  This combines strict-positive temporal plaquettes with the two
+temporal layers adjacent to the reflection-fixed endpoints from the positive
+side.  The `Sector` name distinguishes this predicate from the already-existing
+explicit slab plaquette embedding. -/
+def periodicHypercubicEvenPositiveHalfTemporalSectorPlaquette
     {H : ℕ} (p : PeriodicHypercubicEvenPlaquette H) : Prop :=
   (periodicHypercubicEvenPlaquetteHasTimeDirection p ∧
       periodicHypercubicEvenStrictPositivePlaquette p) ∨
@@ -51,12 +53,12 @@ theorem periodicHypercubicEvenPositiveHalfSpatialPlaquette_iff_baseTime_val
 when its base residue is one of the `H+1` slab times `0, ..., H`.  In
 particular, the first and last slabs are supplied by the positive-boundary
 temporal sector, while the intermediate slabs are strict-positive plaquettes. -/
-theorem periodicHypercubicEvenPositiveHalfTemporalPlaquette_iff_baseTime_val_le
+theorem periodicHypercubicEvenPositiveHalfTemporalSectorPlaquette_iff_baseTime_val_le
     {H : ℕ} (p : PeriodicHypercubicEvenPlaquette H) :
-    periodicHypercubicEvenPositiveHalfTemporalPlaquette p ↔
+    periodicHypercubicEvenPositiveHalfTemporalSectorPlaquette p ↔
       periodicHypercubicEvenPlaquetteHasTimeDirection p ∧
         (p.1 0).val ≤ H := by
-  unfold periodicHypercubicEvenPositiveHalfTemporalPlaquette
+  unfold periodicHypercubicEvenPositiveHalfTemporalSectorPlaquette
   constructor
   · rintro (⟨htime, hpos⟩ | hboundary)
     · have hadj :=
@@ -93,27 +95,28 @@ theorem periodicHypercubicEvenPositiveHalfTemporalPlaquette_iff_baseTime_val_le
         exact ⟨hbase, hnext⟩
 
 /-- The spatial and temporal positive-half sectors are disjoint. -/
-theorem periodicHypercubicEvenPositiveHalfSpatialPlaquette_not_temporal
+theorem periodicHypercubicEvenPositiveHalfSpatialPlaquette_not_temporalSector
     {H : ℕ} (p : PeriodicHypercubicEvenPlaquette H)
     (hspatial : periodicHypercubicEvenPositiveHalfSpatialPlaquette p) :
-    ¬ periodicHypercubicEvenPositiveHalfTemporalPlaquette p := by
+    ¬ periodicHypercubicEvenPositiveHalfTemporalSectorPlaquette p := by
   intro htemporal
   have hs :=
     (periodicHypercubicEvenPositiveHalfSpatialPlaquette_iff_baseTime_val p).1 hspatial
   have ht :=
-    (periodicHypercubicEvenPositiveHalfTemporalPlaquette_iff_baseTime_val_le p).1 htemporal
+    (periodicHypercubicEvenPositiveHalfTemporalSectorPlaquette_iff_baseTime_val_le p).1
+      htemporal
   exact hs.1 ht.1
 
 /-- The completed positive OS plaquette sector is exactly the disjoint union of
 its interior spatial slices and all `H+1` temporal slab layers.  This is the
 set-theoretic geometry needed before reindexing the Wilson action into the
 path-action normal form. -/
-theorem periodicHypercubicEvenStrictPositive_or_positiveBoundaryTemporal_iff_positiveHalfSpatial_or_temporal
+theorem periodicHypercubicEvenStrictPositive_or_positiveBoundaryTemporal_iff_positiveHalfSpatial_or_temporalSector
     {H : ℕ} (p : PeriodicHypercubicEvenPlaquette H) :
     periodicHypercubicEvenStrictPositivePlaquette p ∨
         periodicHypercubicEvenPositiveBoundaryTemporalPlaquette p ↔
       periodicHypercubicEvenPositiveHalfSpatialPlaquette p ∨
-        periodicHypercubicEvenPositiveHalfTemporalPlaquette p := by
+        periodicHypercubicEvenPositiveHalfTemporalSectorPlaquette p := by
   constructor
   · intro h
     rcases h with hpos | hboundary
