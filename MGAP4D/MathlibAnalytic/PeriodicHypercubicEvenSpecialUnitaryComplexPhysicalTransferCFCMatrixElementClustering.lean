@@ -48,7 +48,7 @@ theorem
             H N hN beta hbeta) ^ (n + 1)) g) -
           periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCFCTopSpectralProjection
             H N hN beta hbeta g‖ :=
-      norm_inner_le_norm _ _
+      norm_inner_le_norm (𝕜 := ℂ) f _
     _ ≤ ‖f‖ *
         (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
             H N hN beta hbeta‖ ^ (n + 1) * ‖g‖) :=
