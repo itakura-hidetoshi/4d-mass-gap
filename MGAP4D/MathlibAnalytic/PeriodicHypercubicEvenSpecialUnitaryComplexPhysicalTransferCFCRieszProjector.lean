@@ -91,7 +91,8 @@ theorem
       HasDerivAt (resolvent R) (-resolvent R z ^ 2) z := by
     with_reducible_and_instances
       exact spectrum.hasDerivAt_resolvent_const_left (a := R) (k := z) hzR
-  exact hderiv.differentiableAt
+  with_reducible_and_instances
+    exact hderiv.differentiableAt
 
 /-- The centered regular block has zero contour integral on the canonical CFC
 circle. -/
