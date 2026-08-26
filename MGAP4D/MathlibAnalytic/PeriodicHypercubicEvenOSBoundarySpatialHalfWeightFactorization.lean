@@ -21,7 +21,7 @@ local instance osBoundarySpatialHalfWeightSpatialCrossingPlaquetteFintype
 configuration. -/
 def periodicHypercubicEvenBoundaryPrimarySpatialSliceConfiguration
     (H : ℕ)
-    {Value : Type*}
+    {Value : Type}
     (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration Value) :
     PeriodicHypercubicEvenSpatialSliceConfiguration H Value :=
   fun e => b (periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge H e)
@@ -31,7 +31,7 @@ canonically reindexed by the half-period equivalence back to the primary slice
 link carrier. -/
 def periodicHypercubicEvenBoundaryAntipodalSpatialSliceConfiguration
     (H : ℕ)
-    {Value : Type*}
+    {Value : Type}
     (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration Value) :
     PeriodicHypercubicEvenSpatialSliceConfiguration H Value :=
   fun e =>
@@ -61,7 +61,7 @@ theorem periodicHypercubicEvenHalfPeriodTimeShift_shift_spatial
   by_cases hi : i = 0
   · subst i
     simp [periodicHypercubicEvenHalfPeriodTimeShift,
-      periodicHypercubicShift_apply, hmu, Ne.symm hmu]
+      periodicHypercubicShift_apply, Ne.symm hmu]
   · simp [periodicHypercubicEvenHalfPeriodTimeShift,
       periodicHypercubicShift_apply, hi]
 
@@ -90,12 +90,13 @@ theorem periodicHypercubicEvenSpatialSlicePlaquetteHolonomy_antipodalRestriction
     H p.1.1 p.2.1.1.1 p.2.1.1.2]
   rw [← periodicHypercubicEvenHalfPeriodTimeShift_shift_spatial
     H p.1.1 p.2.1.2.1 p.2.1.2.2]
+  simpa only [periodicHypercubicEvenSpatialSliceShift_coe]
 
 /-- Boundary-fibered assembly restricted to the primary fixed spatial slice
 recovers the primary boundary slice exactly. -/
 theorem periodicHypercubicEvenBoundaryFiberedAssemble_primarySpatialSliceRestriction
     (H : ℕ)
-    {Value : Type*}
+    {Value : Type}
     (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration Value)
     (x y : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration Value) :
     periodicHypercubicEvenSpatialSliceRestriction
@@ -113,7 +114,7 @@ theorem periodicHypercubicEvenBoundaryFiberedAssemble_primarySpatialSliceRestric
 recovers the antipodal boundary slice exactly. -/
 theorem periodicHypercubicEvenBoundaryFiberedAssemble_antipodalSpatialSliceRestriction
     (H : ℕ)
-    {Value : Type*}
+    {Value : Type}
     (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration Value)
     (x y : (periodicHypercubicEvenEdgeOrbitPartition H).OpenHalfConfiguration Value) :
     periodicHypercubicEvenAntipodalSpatialSliceRestriction
@@ -141,6 +142,7 @@ private theorem fintype_sum_propositionIndicator_eq_subtype
     (∑ i : ι, propositionIndicator (P i) (f i)) =
       ∑ i : {i // P i}, f i := by
   classical
+  letI : Fintype {i // P i} := Fintype.ofFinite _
   calc
     (∑ i : ι, propositionIndicator (P i) (f i)) =
         ∑ i ∈ (Finset.univ.filter P : Finset ι), f i := by
@@ -187,7 +189,6 @@ theorem periodicHypercubicEvenSpatialCrossingWilsonAction_eq_primary_add_antipod
   rw [← hreindex]
   rw [Fintype.sum_sum_type]
   unfold crossEnergy energy E
-  simp only [Equiv.symm_apply_apply]
   have hprimary :
       (∑ p : PeriodicHypercubicEvenSpatialSlicePlaquette H,
         specialUnitaryWilsonPlaquetteEnergy N
