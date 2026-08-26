@@ -58,13 +58,21 @@ theorem
   have hReal :=
     periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_comp_topSpectralProjection
       H N hN beta hbeta
+  have hcomp :
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N S).comp
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N P) =
+        periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N P := by
+    rw [← periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_comp]
+    exact congrArg
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N)
+      (by simpa [S, P] using hReal)
+  apply ContinuousLinearMap.ext
+  intro f
   change
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N S).comp
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N P) =
-      periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N P
-  rw [← periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_comp]
-  exact congrArg
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N) (by simpa [S, P] using hReal)
+    periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N S
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N P f) =
+      periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N P f
+  exact congrArg (fun T => T f) hcomp
 
 /-- The isolated CFC top projection absorbs the normalized complex transfer on
 the right. -/
@@ -84,13 +92,21 @@ theorem
   have hReal :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopSpectralProjection_comp_normalizedTransferOperator
       H N hN beta hbeta
+  have hcomp :
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N P).comp
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N S) =
+        periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N P := by
+    rw [← periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_comp]
+    exact congrArg
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N)
+      (by simpa [S, P] using hReal)
+  apply ContinuousLinearMap.ext
+  intro f
   change
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N P).comp
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N S) =
-      periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N P
-  rw [← periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_comp]
-  exact congrArg
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N) (by simpa [S, P] using hReal)
+    periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N P
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N S f) =
+      periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N P f
+  exact congrArg (fun T => T f) hcomp
 
 /-- The isolated CFC top element is idempotent in the bounded-operator algebra. -/
 theorem
@@ -176,7 +192,6 @@ theorem
   have hdecomp : S = P + R := by
     simp [S, P, R,
       periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator]
-    abel
   have hPP : P * P = P := by
     simpa [P] using
       periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCFCTopSpectralProjection_mul_self
@@ -189,6 +204,7 @@ theorem
     simpa [P, R] using
       periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator_mul_cfcTopProjection
         H N hN beta hbeta
+  change S ^ (n + 1) = P + R ^ (n + 1)
   rw [hdecomp]
   exact idempotent_add_orthogonal_pow_succ P R hPP hPR hRP n
 
