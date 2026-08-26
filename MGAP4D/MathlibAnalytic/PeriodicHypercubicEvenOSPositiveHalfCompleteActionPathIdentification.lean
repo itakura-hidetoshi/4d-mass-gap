@@ -83,7 +83,7 @@ theorem
       have hzero : (0 : Fin (H + 1)).castSucc = (0 : Fin (H + 2)) := by
         apply Fin.ext
         rfl
-      rw [hzero]
+      simpa [hzero]
     _ =
       (1 / 2 : ℝ) *
           periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N (path 0) +
