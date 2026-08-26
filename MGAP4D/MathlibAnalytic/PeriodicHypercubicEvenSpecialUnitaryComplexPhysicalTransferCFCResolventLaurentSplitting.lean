@@ -54,8 +54,8 @@ theorem
             H N hN beta hbeta‖ := hRnorm
       _ < z.re := hzq
       _ ≤ |z.re| := le_abs_self _
-      _ ≤ ‖z‖ := Complex.abs_re_le_norm
-  exact spectrum.mem_resolventSet_of_norm_lt hzNorm
+      _ ≤ ‖z‖ := Complex.abs_re_le_norm z
+  exact spectrum.mem_resolventSet_of_norm_lt (a := R) (k := z) hzNorm
 
 /-- In particular the centered block is regular at the isolated top spectral
 point `1`; its norm is strictly below that point. -/
@@ -65,11 +65,15 @@ theorem
     (1 : ℂ) ∈ resolventSet ℂ
       (periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator
         H N hN beta hbeta) := by
-  have hnorm :=
-    periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator_norm_lt_one
-      H N hN beta hbeta
-  apply spectrum.mem_resolventSet_of_norm_lt
-  simpa using hnorm
+  let R := periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator
+    H N hN beta hbeta
+  have hnorm : ‖R‖ < 1 := by
+    simpa [R] using
+      periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator_norm_lt_one
+        H N hN beta hbeta
+  have hnorm' : ‖R‖ < ‖(1 : ℂ)‖ := by
+    simpa using hnorm
+  exact spectrum.mem_resolventSet_of_norm_lt (a := R) (k := (1 : ℂ)) hnorm'
 
 /-- On the punctured right-half-plane resolvent region, the full resolvent
 restricted to the CFC-top complement is exactly the centered resolvent
@@ -117,7 +121,6 @@ theorem
   have hDecomp : S = P + R := by
     simp [S, P, R,
       periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator]
-    abel
   have hzS : z ∈ resolventSet ℂ S := by
     apply
       periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_rightHalfPlane_except_one_subset_complex_resolventSet
@@ -142,7 +145,11 @@ theorem
         ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
           H N hN beta hbeta‖ < 0 := by
       simpa using hzq
-    exact (not_lt_of_ge (norm_nonneg _)) hneg
+    have hnonneg :
+        0 ≤ ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta‖ :=
+      norm_nonneg _
+    exact (not_lt_of_ge hnonneg) hneg
   have hPB :
       P * (algebraMap ℂ
           (PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
@@ -161,11 +168,12 @@ theorem
               PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) z := by
         rw [hPR, sub_zero]
       _ = z • P := by
-        rw [Algebra.algebraMap_eq_smul_one, mul_smul_comm, mul_one]
+        simp only [Algebra.smul_def]
+        exact (Algebra.commutes z P).eq.symm
   have hPResR : z • (P * resolvent R z) = P := by
     calc
       z • (P * resolvent R z) = (z • P) * resolvent R z := by
-        exact (smul_mul_assoc z P (resolvent R z)).symm
+        simp only [Algebra.smul_def, mul_assoc]
       _ = (P * (algebraMap ℂ
             (PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
               PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) z - R)) *
@@ -177,11 +185,17 @@ theorem
       calc
         z • ((P * resolvent R z) * Q) =
             (z • (P * resolvent R z)) * Q := by
-          exact (smul_mul_assoc z (P * resolvent R z) Q).symm
+          simp only [Algebra.smul_def, mul_assoc]
         _ = P * Q := by rw [hPResR]
         _ = 0 := hPQ
     have hzero : (P * resolvent R z) * Q = 0 := by
-      simpa [hz0] using hzeroSmul
+      let X := (P * resolvent R z) * Q
+      have hzeroSmulX : z • X = 0 := by simpa [X] using hzeroSmul
+      calc
+        X = (1 : ℂ) • X := by rw [one_smul]
+        _ = (z⁻¹ * z) • X := by rw [inv_mul_cancel₀ hz0]
+        _ = z⁻¹ • (z • X) := (smul_smul z⁻¹ z X).symm
+        _ = 0 := by rw [hzeroSmulX, smul_zero]
     simpa [mul_assoc] using hzero
   have hShiftEq :
       algebraMap ℂ
