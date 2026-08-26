@@ -156,7 +156,6 @@ theorem periodicHypercubicEvenPositiveHalfSpatialWilsonAction_eq_interiorSliceSu
     periodicHypercubicEvenPositiveHalfSpatialPlaquetteFromCoordinates,
     periodicHypercubicEvenSpatialSlicePlaquetteList, energy]
   simp_rw [periodicHypercubicEvenSpatialSlicePlaquetteEnergy_restrictionAtTime_eq]
-  rfl
 
 /-- Reindex all completed-positive temporal Wilson plaquettes by the `H+1`
 physical slabs.  The resulting inner sum is literally the unfixed temporal
@@ -201,7 +200,6 @@ theorem periodicHypercubicEvenPositiveHalfTemporalSectorWilsonAction_eq_temporal
     periodicHypercubicEvenPositiveHalfTemporalSectorPlaquetteFromCoordinates,
     periodicHypercubicEvenSpatialSliceLinkList, energy]
   simp_rw [periodicHypercubicEvenPositiveHalfTemporalPlaquette_energy_eq_unfixed]
-  rfl
 
 /-- Global completed-positive bulk/temporal action in actual four-dimensional
 coordinates, rewritten exactly as the interior spatial-slice action plus the
