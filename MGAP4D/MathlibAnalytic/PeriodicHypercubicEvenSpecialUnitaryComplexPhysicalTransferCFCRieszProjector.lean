@@ -91,7 +91,8 @@ theorem
   have hzRUnit : IsUnit (algebraMap ℂ A z - R) := hzR
   have hscalar :
       DifferentiableAt ℂ (fun w : ℂ => w • (1 : A)) z :=
-    differentiableAt_id.smul_const (1 : A)
+    DifferentiableAt.smul_const (𝕜 := ℂ)
+      (show DifferentiableAt ℂ (fun w : ℂ => w) z from differentiableAt_id) (1 : A)
   have hshiftScalar :
       DifferentiableAt ℂ (fun w : ℂ => w • (1 : A) - R) z :=
     hscalar.sub_const R
