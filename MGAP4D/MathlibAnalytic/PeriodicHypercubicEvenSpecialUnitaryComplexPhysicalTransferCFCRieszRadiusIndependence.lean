@@ -8,6 +8,9 @@ open scoped InnerProductSpace InnerProduct Ring Topology Interval Real
 
 noncomputable section
 
+set_option maxHeartbeats 5000000
+set_option synthInstance.maxHeartbeats 750000
+
 private theorem complex_re_gt_of_mem_closedBall_radius_lt_gap
     {q r : ℝ} (hrgap : r < 1 - q) {z : ℂ}
     (hz : z ∈ Metric.closedBall (1 : ℂ) r) :
