@@ -93,7 +93,7 @@ theorem
       exact spectrum.hasDerivAt_resolvent_const_left (a := R) (k := z) hzR
   refine ⟨ContinuousLinearMap.toSpanSingleton ℂ (-resolvent R z ^ 2), ?_⟩
   with_reducible_and_instances
-    exact hderiv
+    exact hderiv.hasFDerivAt
 
 /-- The centered regular block has zero contour integral on the canonical CFC
 circle. -/
