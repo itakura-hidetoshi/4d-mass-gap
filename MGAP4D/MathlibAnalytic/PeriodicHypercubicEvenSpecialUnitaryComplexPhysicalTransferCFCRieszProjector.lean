@@ -89,16 +89,14 @@ theorem
       periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCenteredTransferOperator_mem_resolventSet_of_excitedNorm_lt_re
         H N hN beta hbeta z hzq
   have hzRUnit : IsUnit (algebraMap ℂ A z - R) := hzR
-  have hscalar :
-      DifferentiableAt ℂ (fun w : ℂ => w • (1 : A)) z :=
-    DifferentiableAt.smul_const (𝕜 := ℂ)
-      (show DifferentiableAt ℂ (fun w : ℂ => w) z from differentiableAt_id) (1 : A)
+  let scalarOne : ℂ →L[ℂ] A :=
+    (ContinuousLinearMap.id ℂ ℂ).smulRight (1 : A)
   have hshiftScalar :
-      DifferentiableAt ℂ (fun w : ℂ => w • (1 : A) - R) z :=
-    hscalar.sub_const R
+      DifferentiableAt ℂ (fun w : ℂ => scalarOne w - R) z :=
+    scalarOne.differentiableAt.sub_const R
   have hshift :
       DifferentiableAt ℂ (fun w : ℂ => algebraMap ℂ A w - R) z := by
-    simpa [Algebra.algebraMap_eq_smul_one] using hshiftScalar
+    simpa [scalarOne, Algebra.algebraMap_eq_smul_one] using hshiftScalar
   have hinv :
       DifferentiableAt ℂ (fun x : A => Ring.inverse x)
         (algebraMap ℂ A z - R) :=
