@@ -36,19 +36,31 @@ theorem hilbertTensorPosSemidefOpNormSmulGramSubGram
     ∑ x ∈ c.support, ∑ y ∈ c.support,
         star (c x) * Matrix.gram ℝ (f ∘ v) x y * c y
       = (‖f (∑ x ∈ c.support, c x • v x)‖ : ℝ) ^ 2 := by
+          rw [← inner_self_eq_norm_sq (𝕜 := ℝ)]
+          simp_rw [map_sum, map_smul, inner_sum, sum_inner, inner_smul_left,
+            inner_smul_right]
+          simp only [map_mul, starRingEnd_apply, star_trivial]
           rw [Finset.sum_comm]
-          simp [← inner_self_eq_norm_sq_to_K, inner_sum, sum_inner, inner_smul_left,
-            inner_smul_right, Finset.mul_sum, Finset.smul_sum,
-            RCLike.real_smul_eq_coe_mul] <;> grind
+          congr 1
+          funext x
+          congr 1
+          funext y
+          ring
     _ ≤ ‖f‖ ^ 2 • (‖∑ i ∈ c.support, c i • v i‖ : ℝ) ^ 2 := by
       norm_cast
       grw [f.le_opNorm _, smul_eq_mul, ← mul_pow]
     _ = ∑ x ∈ c.support, ∑ y ∈ c.support,
         star (c x) * ‖f‖ ^ 2 • Matrix.gram ℝ v x y * c y := by
+          rw [← inner_self_eq_norm_sq (𝕜 := ℝ)]
+          simp_rw [inner_sum, sum_inner, inner_smul_left, inner_smul_right,
+            Finset.mul_sum]
+          simp only [map_mul, starRingEnd_apply, star_trivial, smul_eq_mul]
           rw [Finset.sum_comm]
-          simp [← inner_self_eq_norm_sq_to_K, inner_sum, sum_inner, inner_smul_left,
-            inner_smul_right, Finset.mul_sum, Finset.smul_sum,
-            RCLike.real_smul_eq_coe_mul] <;> grind
+          congr 1
+          funext x
+          congr 1
+          funext y
+          ring
 
 /-- Pointwise boundedness of tensoring a real bounded operator by the identity
 for Mathlib's native Hilbert tensor norm. -/
@@ -180,8 +192,8 @@ theorem hilbertTensorMap_norm_le
       exact mul_le_mul
         (hilbertTensorRTensor_norm_le (G := H) f)
         (hilbertTensorLTensor_norm_le (E := E) g)
-        (norm_nonneg _)
-        (norm_nonneg _)
+        (norm_nonneg (hilbertTensorLTensor g E))
+        (norm_nonneg f)
 
 end
 
