@@ -41,9 +41,42 @@ local instance osBoundaryExcitationNativeHilbertTensorTransferSpatialSliceHaarSF
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
 
+/-- Mathlib's native Hilbert-tensor norm on the physical excitation tensor
+carrier, kept local to this file so that it does not replace the canonical
+algebraic tensor module path used by the concrete pair-`L²` embedding. -/
+@[reducible] local instance osBoundaryExcitationNativeHilbertTensorTransferNormedAddCommGroup
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    NormedAddCommGroup
+      (PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
+        H N hN beta hbeta) :=
+  TensorProduct.instNormedAddCommGroup
+    (𝕜 := ℝ)
+    (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+    (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+
+/-- The matching native Mathlib tensor inner product, again intentionally file-local. -/
+@[reducible] local instance osBoundaryExcitationNativeHilbertTensorTransferInnerProductSpace
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    InnerProductSpace ℝ
+      (PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
+        H N hN beta hbeta) :=
+  TensorProduct.instInnerProductSpace
+    (𝕜 := ℝ)
+    (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+    (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+
 /-- Tensor-square a single bounded operator on the physical one-slice
-excitation Hilbert space, using Mathlib's native Hilbert-tensor topology
-instance path directly. -/
+excitation Hilbert space. -/
 @[reducible] noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorMap
     (H N : ℕ)
     (hN : 0 < N)
@@ -206,7 +239,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
   rfl
 
 /-- The tensor-transfer operator norm is bounded by the product of the two
-one-slice operator norms. -/
+one-slice operator norms.  The proof is factored through the one-sided tensor
+maps so that the physical dependent carrier never has to be compared against a
+fully polymorphic four-carrier tensor-map theorem in one `isDefEq` step. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_norm_le_mul
     (H N : ℕ)
     (hN : 0 < N)
@@ -220,11 +255,25 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
         H N hN beta hbeta) ^ n‖ *
       ‖(periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
         H N hN beta hbeta) ^ n‖ := by
+  let K :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta
+  let T : K →L[ℝ] K :=
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+      H N hN beta hbeta) ^ n
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_eq_hilbertTensorMap]
-  exact
-    hilbertTensorMap_self_opNorm_le
-      ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-        H N hN beta hbeta) ^ n)
+  unfold hilbertTensorMap
+  calc
+    ContinuousLinearMap.opNorm
+        (hilbertTensorRTensor T K ∘L hilbertTensorLTensor T K) ≤
+      ‖hilbertTensorRTensor T K‖ * ‖hilbertTensorLTensor T K‖ := by
+        exact ContinuousLinearMap.opNorm_comp_le _ _
+    _ ≤ ‖T‖ * ‖T‖ := by
+      exact mul_le_mul
+        (hilbertTensorRTensor_norm_le (G := K) T)
+        (hilbertTensorLTensor_norm_le (E := K) T)
+        (norm_nonneg (hilbertTensorLTensor T K))
+        (norm_nonneg T)
 
 /-- Positive Euclidean times inherit the doubled finite-volume exponential
 operator-norm decay on the whole native Hilbert tensor carrier. -/
