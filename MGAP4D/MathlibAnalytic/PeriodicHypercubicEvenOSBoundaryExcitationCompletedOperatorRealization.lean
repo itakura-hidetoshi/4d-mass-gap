@@ -333,7 +333,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedEvolvedOp
     _ ≤ 1 *
         ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
           H N hN beta hbeta n‖ :=
-      mul_le_mul_of_nonneg_right hEmbedding (norm_nonneg _)
+      mul_le_mul_of_nonneg_right hEmbedding
+        (ContinuousLinearMap.opNorm_nonneg
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+            H N hN beta hbeta n))
     _ ≤ 1 * Real.exp
           (-2 * (n : ℝ) *
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
