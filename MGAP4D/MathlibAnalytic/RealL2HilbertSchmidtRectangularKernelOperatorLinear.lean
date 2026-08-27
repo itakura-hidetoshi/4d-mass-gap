@@ -27,8 +27,21 @@ theorem realL2HilbertSchmidtRectangularKernelOperator_add
   intro f
   apply ext_inner_right ℝ
   intro g
-  simp [realL2HilbertSchmidtRectangularKernelOperator_inner,
-    realL2HilbertSchmidtKernelPairing, inner_add_left]
+  calc
+    inner ℝ (realL2HilbertSchmidtRectangularKernelOperator (K + L) f) g =
+        realL2HilbertSchmidtKernelPairing (K + L) f g :=
+      realL2HilbertSchmidtRectangularKernelOperator_inner (K + L) f g
+    _ = realL2HilbertSchmidtKernelPairing K f g +
+        realL2HilbertSchmidtKernelPairing L f g := by
+      simp [realL2HilbertSchmidtKernelPairing, inner_add_left]
+    _ = inner ℝ (realL2HilbertSchmidtRectangularKernelOperator K f) g +
+        inner ℝ (realL2HilbertSchmidtRectangularKernelOperator L f) g := by
+      rw [realL2HilbertSchmidtRectangularKernelOperator_inner,
+        realL2HilbertSchmidtRectangularKernelOperator_inner]
+    _ = inner ℝ
+        ((realL2HilbertSchmidtRectangularKernelOperator K +
+          realL2HilbertSchmidtRectangularKernelOperator L) f) g := by
+      simp [inner_add_left]
 
 /-- The Fréchet--Riesz rectangular Hilbert--Schmidt operator is real-linear in
 its `L²` kernel. -/
@@ -41,8 +54,17 @@ theorem realL2HilbertSchmidtRectangularKernelOperator_smul
   intro f
   apply ext_inner_right ℝ
   intro g
-  simp [realL2HilbertSchmidtRectangularKernelOperator_inner,
-    realL2HilbertSchmidtKernelPairing, real_inner_smul_left]
+  calc
+    inner ℝ (realL2HilbertSchmidtRectangularKernelOperator (c • K) f) g =
+        realL2HilbertSchmidtKernelPairing (c • K) f g :=
+      realL2HilbertSchmidtRectangularKernelOperator_inner (c • K) f g
+    _ = c * realL2HilbertSchmidtKernelPairing K f g := by
+      simp [realL2HilbertSchmidtKernelPairing, real_inner_smul_left]
+    _ = c * inner ℝ (realL2HilbertSchmidtRectangularKernelOperator K f) g := by
+      rw [realL2HilbertSchmidtRectangularKernelOperator_inner]
+    _ = inner ℝ
+        ((c • realL2HilbertSchmidtRectangularKernelOperator K) f) g := by
+      simp [real_inner_smul_left]
 
 /-- The canonical real-linear map sending a product-`L²` Hilbert--Schmidt
 kernel to its bounded rectangular Fréchet--Riesz operator. -/
