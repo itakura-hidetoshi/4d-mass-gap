@@ -78,7 +78,7 @@ algebraic tensor module path used by the concrete pair-`L²` embedding. -/
 /-- Tensor-square a single bounded operator on the physical one-slice
 excitation Hilbert space.  Binding the factor operator first pins the inherited
 subspace topology before constructing the native tensor map. -/
-noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorMap
+@[reducible] noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorMap
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
