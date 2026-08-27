@@ -88,9 +88,11 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairTensorL2_norm
       H N hN beta hbeta) :
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairTensorL2
         H N hN beta hbeta f g‖ = ‖f‖ * ‖g‖ := by
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairTensorL2]
-  rw [realL2ExternalTensor_norm]
-  simp
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairTensorL2
+  simpa only [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2_norm] using
+    (realL2ExternalTensor_norm
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2 H N hN beta hbeta f)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2 H N hN beta hbeta g))
 
 /-- Evolve both endpoint excitations for the same positive integer Euclidean
 time and form their external tensor on the pair carrier. -/
@@ -147,17 +149,23 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairTensorTransfer
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
             H N hN beta hbeta) * (‖f‖ * ‖g‖) := by
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairTensorTransfer_norm]
-  have hf :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_apply_norm_le_exp_of_pos
-      H N hN beta hbeta n hn f
-  have hg :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_apply_norm_le_exp_of_pos
-      H N hN beta hbeta n hn g
-  have hnonnegf : 0 ≤
-      Real.exp
-        (-(n : ℝ) *
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-            H N hN beta hbeta) * ‖f‖ :=
+  let r : ℝ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+      H N hN beta hbeta
+  let a : ℝ := -(n : ℝ) * r
+  have hf :
+      ‖((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta) ^ n) f‖ ≤ Real.exp a * ‖f‖ := by
+    simpa [a, r] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_apply_norm_le_exp_of_pos
+        H N hN beta hbeta n hn f
+  have hg :
+      ‖((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta) ^ n) g‖ ≤ Real.exp a * ‖g‖ := by
+    simpa [a, r] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_apply_norm_le_exp_of_pos
+        H N hN beta hbeta n hn g
+  have hnonnegf : 0 ≤ Real.exp a * ‖f‖ :=
     mul_nonneg (Real.exp_nonneg _) (norm_nonneg _)
   have hmul := mul_le_mul hf hg (norm_nonneg _) hnonnegf
   calc
@@ -165,20 +173,20 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairTensorTransfer
           H N hN beta hbeta) ^ n) f‖ *
         ‖((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
           H N hN beta hbeta) ^ n) g‖ ≤
-      (Real.exp
-          (-(n : ℝ) *
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-              H N hN beta hbeta) * ‖f‖) *
-        (Real.exp
-          (-(n : ℝ) *
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-              H N hN beta hbeta) * ‖g‖) := hmul
+      (Real.exp a * ‖f‖) * (Real.exp a * ‖g‖) := hmul
+    _ = (Real.exp a * Real.exp a) * (‖f‖ * ‖g‖) := by ring
+    _ = Real.exp (a + a) * (‖f‖ * ‖g‖) := by
+      rw [← Real.exp_add]
     _ = Real.exp
         (-2 * (n : ℝ) *
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
             H N hN beta hbeta) * (‖f‖ * ‖g‖) := by
-      rw [← Real.exp_add]
-      ring
+      rw [show a + a =
+        -2 * (n : ℝ) *
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+            H N hN beta hbeta by
+        dsimp [a, r]
+        ring]
 
 /-- Pull the evolved two-endpoint excitation tensor back to the actual shared
 reflection-fixed boundary `L²` carrier. -/
