@@ -66,9 +66,15 @@ theorem periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointTransferNormali
     (hbeta : 0 ≤ beta) :
     0 ≤ periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointTransferNormalization
       H N hN beta hbeta := by
+  have hnorm :
+      0 ≤ ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+        H N hN beta hbeta‖ :=
+    le_of_lt
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+        H N hN beta hbeta)
   unfold periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointTransferNormalization
   exact mul_nonneg
-    (pow_nonneg (inv_nonneg.mpr (norm_nonneg _)) _)
+    (pow_nonneg (inv_nonneg.mpr hnorm) _)
     (Real.sqrt_nonneg _)
 
 /-- A Gauss-law one-slice state represented in the completed finite endpoint
@@ -172,7 +178,7 @@ theorem periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointTransferNormali
       unfold c
       unfold periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointTransferNormalization
       unfold periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_GaussEndpoint_transferNormalizedCoefficient
-      ring
+      simp only [mul_assoc]
 
 /-- Equivalently, the completed endpoint OS Hilbert inner product is literally
 the matrix coefficient of the norm-one physical positive-half transfer. -/
