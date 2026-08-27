@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOSBoundaryL2SpatialSlicePair
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingBoundaryL2TransferGap
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingBoundarySpatialSlicePairL2
 import Mathlib.Tactic
 
 noncomputable section
@@ -41,9 +41,8 @@ local instance osBoundaryTransferSpatialPairSpecialUnitaryBorelSpace
 /-- Conjugate a bounded operator on the actual shared-boundary Haar `L²`
 carrier to the ordered primary/antipodal spatial-slice pair coordinates.
 
-The two coordinate maps are the inverse linear isometries constructed from the
-measure-preserving boundary measurable equivalence, so this is a genuine
-unitary-coordinate change in the real Hilbert-space sense. -/
+The two coordinate maps are inverse linear isometries coming from the exact
+measure-preserving boundary coordinate equivalence. -/
 noncomputable def periodicHypercubicEvenBoundaryL2OperatorToSpatialSlicePair
     (H N : ℕ)
     (K : PeriodicHypercubicEvenSpecialUnitaryBoundaryHaarL2 H N →L[ℝ]
@@ -103,8 +102,8 @@ theorem periodicHypercubicEvenBoundaryL2OperatorToSpatialSlicePair_recover
   rw [periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundary_leftInverse]
   rw [periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundary_leftInverse]
 
-/-- The reverse norm inequality follows from the explicit inverse coordinate
-transport. -/
+/-- The reverse operator-norm inequality follows from the explicit inverse
+coordinate transport. -/
 theorem periodicHypercubicEvenBoundaryL2OperatorToSpatialSlicePair_opNorm_ge
     (H N : ℕ)
     (K : PeriodicHypercubicEvenSpecialUnitaryBoundaryHaarL2 H N →L[ℝ]
@@ -139,9 +138,9 @@ theorem periodicHypercubicEvenBoundaryL2OperatorToSpatialSlicePair_opNorm
     (periodicHypercubicEvenBoundaryL2OperatorToSpatialSlicePair_opNorm_le H N K)
     (periodicHypercubicEvenBoundaryL2OperatorToSpatialSlicePair_opNorm_ge H N K)
 
-/-- One actual Wilson boundary moment, transported to the ordered pair of
-modern spatial endpoints. -/
-noncomputable def physicalYangMillsEvenPeriodicWilsonOSBoundaryMomentSpatialSlicePairL2
+/-- The already-canonical Wilson boundary moment, rewritten with the transfer-side
+name for the same product-Haar endpoint-pair carrier. -/
+noncomputable def physicalYangMillsEvenPeriodicWilsonOSBoundaryMomentTransferSpatialSlicePairL2
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (D : PhysicalYangMillsGaugeInvariantOSReflectionData S)
     (halfExtent : ℕ → ℕ)
@@ -199,8 +198,7 @@ noncomputable def spatialSlicePairTransfer
   periodicHypercubicEvenBoundaryL2OperatorToSpatialSlicePair
     (halfExtent n) N (Q.boundaryTransfer n t)
 
-/-- Coordinate transport preserves the boundary-transfer operator norm
-exactly, not merely up to an inequality. -/
+/-- Coordinate transport preserves the boundary-transfer operator norm exactly. -/
 @[simp] theorem spatialSlicePairTransfer_opNorm
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingBoundaryL2TransferGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C)
@@ -221,7 +219,7 @@ theorem spatialSlicePairTransfer_opNorm_le
   exact Q.boundaryTransfer_opNorm_le n t
 
 /-- The original boundary-moment intertwining identity transports exactly to
-the two-spatial-endpoint coordinates. -/
+the transfer-side two-spatial-endpoint coordinates. -/
 theorem spatialSlicePairTransfer_boundaryMoment_intertwining
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingBoundaryL2TransferGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C)
@@ -233,26 +231,26 @@ theorem spatialSlicePairTransfer_boundaryMoment_intertwining
         S D halfExtent N hN beta hbeta B hInvariant n
     let Tn := C.toPositiveTimeObservableContractionSemigroup n
     Q.spatialSlicePairTransfer n t
-        (physicalYangMillsEvenPeriodicWilsonOSBoundaryMomentSpatialSlicePairL2
+        (physicalYangMillsEvenPeriodicWilsonOSBoundaryMomentTransferSpatialSlicePairL2
           S D halfExtent N hN beta hbeta B hInvariant n
           (Pn.vacuumCenteredCarrier F)
           (Q.boundaryMoment_memLp n (Pn.vacuumCenteredCarrier F))) =
-      physicalYangMillsEvenPeriodicWilsonOSBoundaryMomentSpatialSlicePairL2
+      physicalYangMillsEvenPeriodicWilsonOSBoundaryMomentTransferSpatialSlicePairL2
         S D halfExtent N hN beta hbeta B hInvariant n
         (Tn.carrierTranslation (t / 2) (Pn.vacuumCenteredCarrier F))
         (Q.boundaryMoment_memLp n
           (Tn.carrierTranslation (t / 2) (Pn.vacuumCenteredCarrier F))) := by
   dsimp only
   unfold spatialSlicePairTransfer
-  unfold physicalYangMillsEvenPeriodicWilsonOSBoundaryMomentSpatialSlicePairL2
+  unfold physicalYangMillsEvenPeriodicWilsonOSBoundaryMomentTransferSpatialSlicePairL2
   rw [periodicHypercubicEvenBoundaryL2OperatorToSpatialSlicePair_apply]
   rw [periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundary_leftInverse]
   rw [Q.boundaryMoment_intertwining n t F]
 
 end PhysicalYangMillsEvenPeriodicWilsonOSApproximatingBoundaryL2TransferGapCertificate
 
-/-- Audit-visible statement that the shared-boundary transfer language can be
-moved to the actual two-spatial-endpoint carrier with no loss in operator norm. -/
+/-- Audit-visible statement that the shared-boundary transfer language moves to
+the two-spatial-endpoint carrier with no loss in operator norm. -/
 structure PhysicalYangMillsOSBoundaryTransferSpatialSlicePairPackage
     (H N : ℕ) : Prop where
   normInvariant :
