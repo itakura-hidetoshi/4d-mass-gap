@@ -1,6 +1,6 @@
+import MGAP4D.MathlibAnalytic.HilbertTensorContinuousMap
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOSBoundaryExcitationAlgebraicTensorIsometry
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopEigenspaceExponentialDecay
-import Mathlib.Analysis.InnerProductSpace.TensorProduct
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -43,8 +43,7 @@ local instance osBoundaryExcitationNativeHilbertTensorTransferSpatialSliceHaarSF
 
 /-- Mathlib's native Hilbert-tensor norm on the physical excitation tensor
 carrier, kept local to this file so that it does not replace the canonical
-algebraic `TensorProduct` module path used by the concrete pair-`L²`
-embedding. -/
+algebraic tensor module path used by the concrete pair-`L²` embedding. -/
 local instance osBoundaryExcitationNativeHilbertTensorTransferNormedAddCommGroup
     (H N : ℕ)
     (hN : 0 < N)
@@ -89,7 +88,7 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHi
         H N hN beta hbeta →L[ℝ]
       PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
         H N hN beta hbeta :=
-  TensorProduct.mapL
+  hilbertTensorMap
     ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta) ^ n)
     ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
@@ -111,7 +110,7 @@ expected two-factor transfer power. -/
           H N hN beta hbeta) ^ n) f) ⊗ₜ[ℝ]
         (((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
           H N hN beta hbeta) ^ n) g) := by
-  rfl
+  exact hilbertTensorMap_tmul _ _ _ _
 
 /-- At Euclidean time zero the native Hilbert-tensor transfer is the identity. -/
 @[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_zero
@@ -124,7 +123,14 @@ expected two-factor transfer power. -/
       ContinuousLinearMap.id ℝ
         (PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
           H N hN beta hbeta) := by
-  simp [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer]
+  apply ContinuousLinearMap.coe_inj.mp
+  funext x
+  induction x using TensorProduct.induction_on with
+  | zero => simp
+  | tmul f g =>
+      simp [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer]
+  | add x y hx hy =>
+      simp only [map_add, hx, hy]
 
 /-- The native Hilbert-tensor transfer is an exact discrete semigroup on the
 whole algebraic Hilbert tensor carrier. -/
@@ -137,11 +143,18 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
         H N hN beta hbeta (m + n) =
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
-          H N hN beta hbeta m *
+          H N hN beta hbeta m ∘L
         periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
           H N hN beta hbeta n := by
-  simp [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer,
-    pow_add, TensorProduct.mapL_mul]
+  apply ContinuousLinearMap.coe_inj.mp
+  funext x
+  induction x using TensorProduct.induction_on with
+  | zero => simp
+  | tmul f g =>
+      simp [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer,
+        pow_add]
+  | add x y hx hy =>
+      simp only [map_add, ContinuousLinearMap.comp_apply, hx, hy]
 
 /-- Pointwise form of the native Hilbert-tensor semigroup law. -/
 @[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_add_apply
@@ -175,7 +188,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
         H N hN beta hbeta) ^ n‖ *
       ‖(periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
         H N hN beta hbeta) ^ n‖ := by
-  exact TensorProduct.norm_mapL_le _ _
+  exact hilbertTensorMap_norm_le _ _
 
 /-- Positive Euclidean times inherit the doubled finite-volume exponential
 operator-norm decay on the whole native Hilbert tensor carrier. -/
@@ -202,6 +215,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
     exact
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_norm_le_exp_of_pos
         H N hN beta hbeta n hn
+  have hNorm : 0 ≤ ‖T ^ n‖ := norm_nonneg _
+  have hExp : 0 ≤ Real.exp (-(n : ℝ) * r) := (Real.exp_pos _).le
   calc
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
         H N hN beta hbeta n‖ ≤ ‖T ^ n‖ * ‖T ^ n‖ := by
@@ -209,7 +224,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
         periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_norm_le_mul
           H N hN beta hbeta n
     _ ≤ Real.exp (-(n : ℝ) * r) * Real.exp (-(n : ℝ) * r) :=
-      mul_le_mul hT hT (norm_nonneg _) (Real.exp_nonneg _)
+      mul_le_mul hT hT hNorm hExp
     _ = Real.exp (-2 * (n : ℝ) * r) := by
       rw [← Real.exp_add]
       congr 1
@@ -267,7 +282,7 @@ structure PeriodicHypercubicEvenOSBoundaryExcitationNativeHilbertTensorTransferP
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
           H N hN beta hbeta (m + n) =
         periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
-            H N hN beta hbeta m *
+            H N hN beta hbeta m ∘L
           periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
             H N hN beta hbeta n
   doubledOperatorDecay :
