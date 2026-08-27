@@ -14,44 +14,9 @@ noncomputable section
 
 universe u v
 
-/-- The real `L²` external tensor preserves the Hilbert inner product on pure
-factors.  This is the product-measure identity underlying the Hilbert tensor
-completion used below. -/
-theorem realL2ExternalTensor_inner
-    {α : Type u} {β : Type v}
-    [MeasurableSpace α] [MeasurableSpace β]
-    {μ : Measure α} {ν : Measure β}
-    [SFinite μ] [SFinite ν]
-    (f₁ f₂ : Lp ℝ 2 μ) (g₁ g₂ : Lp ℝ 2 ν) :
-    inner ℝ (realL2ExternalTensor f₁ g₁)
-        (realL2ExternalTensor f₂ g₂) =
-      inner ℝ f₁ f₂ * inner ℝ g₁ g₂ := by
-  rw [MeasureTheory.L2.inner_def]
-  calc
-    (∫ z,
-        inner ℝ (realL2ExternalTensor f₁ g₁ z)
-          (realL2ExternalTensor f₂ g₂ z) ∂(μ.prod ν)) =
-      ∫ z : α × β,
-        inner ℝ (f₁ z.1) (f₂ z.1) *
-          inner ℝ (g₁ z.2) (g₂ z.2) ∂(μ.prod ν) := by
-        apply integral_congr_ae
-        filter_upwards
-          [realL2ExternalTensor_coeFn f₁ g₁,
-           realL2ExternalTensor_coeFn f₂ g₂] with z h₁ h₂
-        rw [h₁, h₂]
-        simp only [realL2ExternalTensorFunction, Real.inner_apply]
-        ring
-    _ =
-      (∫ a, inner ℝ (f₁ a) (f₂ a) ∂μ) *
-        (∫ b, inner ℝ (g₁ b) (g₂ b) ∂ν) := by
-      exact integral_prod_mul
-        (fun a => inner ℝ (f₁ a) (f₂ a))
-        (fun b => inner ℝ (g₁ b) (g₂ b))
-    _ = inner ℝ f₁ f₂ * inner ℝ g₁ g₂ := by
-      rw [← MeasureTheory.L2.inner_def, ← MeasureTheory.L2.inner_def]
-
 /-- The universal external-tensor lift is inner-product preserving on the
-whole algebraic Hilbert tensor product, not merely on pure tensors. -/
+whole algebraic Hilbert tensor product, not merely on pure tensors.  The pure
+tensor step is the already-established product-measure inner-product theorem. -/
 theorem realL2ExternalTensorLift_inner
     {α : Type u} {β : Type v}
     [MeasurableSpace α] [MeasurableSpace β]
@@ -303,7 +268,13 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationHilbertT
       periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundaryLinearIsometry H N
         (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
           H N hN beta hbeta x) := by
-  rfl
+  change
+    periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundaryLinearIsometry H N
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationHilbertTensorPairEmbedding
+        H N hN beta hbeta
+        (x : PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationHilbertTensorCompletion
+          H N hN beta hbeta)) = _
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationHilbertTensorPairEmbedding_coe]
 
 /-- Exact norm preservation on the completed pair-`L²` realization. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationHilbertTensorPairEmbedding_norm
