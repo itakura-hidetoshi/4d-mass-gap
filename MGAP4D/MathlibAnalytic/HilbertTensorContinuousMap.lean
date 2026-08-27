@@ -196,6 +196,16 @@ theorem hilbertTensorMap_norm_le
         (norm_nonneg (hilbertTensorLTensor g E))
         (norm_nonneg f)
 
+/-- For a bounded endomorphism, the tensor square is bounded by the square of
+its operator norm.  The single map argument pins the exact Hilbert topology,
+which is useful for concrete closed subspaces carrying inherited topologies. -/
+theorem hilbertTensorMap_self_norm_le
+    (f : E →L[ℝ] E) :
+    ‖hilbertTensorMap (E := E) (F := E) (G := E) (H := E) f f‖ ≤
+      ‖f‖ * ‖f‖ := by
+  exact hilbertTensorMap_norm_le
+    (E := E) (F := E) (G := E) (H := E) f f
+
 end
 
 end MathlibAnalytic
