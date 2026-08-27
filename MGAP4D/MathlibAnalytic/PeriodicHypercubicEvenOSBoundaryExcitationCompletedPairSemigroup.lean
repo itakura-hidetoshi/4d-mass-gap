@@ -59,6 +59,21 @@ carrier whose completion is evolved below. -/
     (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
       H N hN beta hbeta)
 
+/-- Expose the additive group inherited from the chosen native tensor norm
+explicitly.  Completion asks for this parent structure before it asks for the
+normed structure; naming the parent prevents expensive reconstruction through
+the dependent physical tensor alias. -/
+@[reducible] local instance osBoundaryExcitationCompletedPairSemigroupAddCommGroup
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    AddCommGroup
+      (PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
+        H N hN beta hbeta) :=
+  (osBoundaryExcitationCompletedPairSemigroupNormedAddCommGroup
+    H N hN beta hbeta).toAddCommGroup
+
 /-- The matching native tensor inner product. -/
 @[reducible] local instance osBoundaryExcitationCompletedPairSemigroupInnerProductSpace
     (H N : ℕ)
@@ -173,7 +188,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
   exact continuousLinearMap_completion_comp _ _
 
 /-- The completion functor transports the doubled finite-volume exponential
-operator bound without loss. -/
+operator bound without loss.  We prove this directly on Mathlib's canonical
+dense copy, so the statement is phrased in the same explicit `opNorm` carrier
+as the pre-existing #2329 estimate. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer_norm_le_exp_of_pos
     (H N : ℕ)
     (hN : 0 < N)
@@ -188,22 +205,15 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
         (-2 * (n : ℝ) *
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
             H N hN beta hbeta) := by
-  calc
-    ContinuousLinearMap.opNorm
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
-          H N hN beta hbeta n) ≤
-      ContinuousLinearMap.opNorm
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
-          H N hN beta hbeta n) := by
-        exact continuousLinearMap_completion_opNorm_le
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
-            H N hN beta hbeta n)
-    _ ≤ Real.exp
-        (-2 * (n : ℝ) *
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-            H N hN beta hbeta) :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_norm_le_exp_of_pos
-        H N hN beta hbeta n hn
+  apply ContinuousLinearMap.opNorm_le_bound
+  · exact (Real.exp_pos _).le
+  · intro y
+    refine UniformSpace.Completion.induction_on y ?_ ?_
+    · exact isClosed_le (by fun_prop) (by fun_prop)
+    · intro x
+      simpa using
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_apply_norm_le_exp_of_pos
+          H N hN beta hbeta n hn x
 
 /-- Conjugate the completed native tensor semigroup by the canonical isometric
 identification `Completion (K ⊗ K) ≃ H_pair` from #2368.  This is the actual
@@ -307,44 +317,48 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
         (-2 * (n : ℝ) *
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
             H N hN beta hbeta) := by
-  let U :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector
-      H N hN beta hbeta
-  let A :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
-      H N hN beta hbeta n
   have hA :
-      ContinuousLinearMap.opNorm A ≤
+      ContinuousLinearMap.opNorm
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
+            H N hN beta hbeta n) ≤
         Real.exp
           (-2 * (n : ℝ) *
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-              H N hN beta hbeta) := by
-    exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer_norm_le_exp_of_pos
-        H N hN beta hbeta n hn
+              H N hN beta hbeta) :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer_norm_le_exp_of_pos
+      H N hN beta hbeta n hn
   apply ContinuousLinearMap.opNorm_le_bound
   · exact (Real.exp_pos _).le
   · intro y
-    change
-      ‖U (A (U.symm y))‖ ≤
-        Real.exp
-          (-2 * (n : ℝ) *
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-              H N hN beta hbeta) * ‖y‖
-    rw [U.norm_map]
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_apply]
+    rw [(periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector
+      H N hN beta hbeta).norm_map]
     calc
-      ‖A (U.symm y)‖ ≤ ContinuousLinearMap.opNorm A * ‖U.symm y‖ :=
-        A.le_opNorm (U.symm y)
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
+          H N hN beta hbeta n
+          ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector
+            H N hN beta hbeta).symm y)‖ ≤
+        ContinuousLinearMap.opNorm
+            (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
+              H N hN beta hbeta n) *
+          ‖(periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector
+            H N hN beta hbeta).symm y‖ := by
+        exact
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
+            H N hN beta hbeta n).le_opNorm _
       _ ≤ Real.exp
           (-2 * (n : ℝ) *
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-              H N hN beta hbeta) * ‖U.symm y‖ :=
+              H N hN beta hbeta) *
+          ‖(periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector
+            H N hN beta hbeta).symm y‖ :=
         mul_le_mul_of_nonneg_right hA (norm_nonneg _)
       _ = Real.exp
           (-2 * (n : ℝ) *
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
               H N hN beta hbeta) * ‖y‖ := by
-        rw [U.symm.norm_map]
+        rw [(periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector
+          H N hN beta hbeta).symm.norm_map]
 
 /-- The completed concrete transfer exactly extends the pre-existing algebraic
 sector-valued excitation transfer on the canonical dense image. -/
@@ -365,12 +379,11 @@ sector-valued excitation transfer on the canonical dense image. -/
         (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
           H N hN beta hbeta n x) := by
   rw [← periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector_apply_coe
-      H N hN beta hbeta x,
-    ← periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector_apply_coe
-      H N hN beta hbeta
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
-        H N hN beta hbeta n x)]
-  simp [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer]
+      H N hN beta hbeta x]
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_apply]
+  rw [LinearIsometryEquiv.symm_apply_apply]
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer_apply_coe]
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector_apply_coe]
 
 /-- Ambient pair-`L²` form of the dense algebraic compatibility: after
 coercion from the completed sector, evolution is exactly the original
