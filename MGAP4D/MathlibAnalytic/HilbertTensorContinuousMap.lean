@@ -196,6 +196,21 @@ theorem hilbertTensorMap_norm_le
         (norm_nonneg (hilbertTensorLTensor g E))
         (norm_nonneg f)
 
+/-- Pointwise product bound for the continuous tensor map.  Keeping the map
+operator norm abstract here lets concrete specializations derive their own
+operator-norm bounds with `ContinuousLinearMap.opNorm_le_bound` without ever
+materializing a specialized `‖hilbertTensorMap ...‖` term. -/
+theorem hilbertTensorMap_apply_norm_le
+    (f : E →L[ℝ] F)
+    (g : G →L[ℝ] H)
+    (x : E ⊗[ℝ] G) :
+    ‖hilbertTensorMap f g x‖ ≤ (‖f‖ * ‖g‖) * ‖x‖ := by
+  calc
+    ‖hilbertTensorMap f g x‖ ≤ ‖hilbertTensorMap f g‖ * ‖x‖ :=
+      (hilbertTensorMap f g).le_opNorm x
+    _ ≤ (‖f‖ * ‖g‖) * ‖x‖ :=
+      mul_le_mul_of_nonneg_right (hilbertTensorMap_norm_le f g) (norm_nonneg x)
+
 /-- For a bounded endomorphism, the tensor square is bounded by the square of
 its operator norm.  The single map argument pins the exact Hilbert topology,
 which is useful for concrete closed subspaces carrying inherited topologies. -/
