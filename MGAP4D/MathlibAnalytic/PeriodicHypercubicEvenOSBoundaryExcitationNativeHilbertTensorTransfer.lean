@@ -41,42 +41,9 @@ local instance osBoundaryExcitationNativeHilbertTensorTransferSpatialSliceHaarSF
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
 
-/-- Mathlib's native Hilbert-tensor norm on the physical excitation tensor
-carrier, kept local to this file so that it does not replace the canonical
-algebraic tensor module path used by the concrete pair-`L²` embedding. -/
-@[reducible] local instance osBoundaryExcitationNativeHilbertTensorTransferNormedAddCommGroup
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    NormedAddCommGroup
-      (PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
-        H N hN beta hbeta) :=
-  TensorProduct.instNormedAddCommGroup
-    (𝕜 := ℝ)
-    (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-      H N hN beta hbeta)
-    (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-      H N hN beta hbeta)
-
-/-- The matching native Mathlib inner product, again intentionally file-local. -/
-@[reducible] local instance osBoundaryExcitationNativeHilbertTensorTransferInnerProductSpace
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    InnerProductSpace ℝ
-      (PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
-        H N hN beta hbeta) :=
-  TensorProduct.instInnerProductSpace
-    (𝕜 := ℝ)
-    (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-      H N hN beta hbeta)
-    (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-      H N hN beta hbeta)
-
 /-- Tensor-square a single bounded operator on the physical one-slice
-excitation Hilbert space. -/
+excitation Hilbert space, using Mathlib's native Hilbert-tensor topology
+instance path directly. -/
 @[reducible] noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorMap
     (H N : ℕ)
     (hN : 0 < N)
