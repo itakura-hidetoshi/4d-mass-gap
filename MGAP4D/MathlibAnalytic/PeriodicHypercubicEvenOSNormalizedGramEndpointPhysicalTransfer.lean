@@ -157,6 +157,7 @@ theorem periodicHypercubicEven_sqrtPartition_mul_BoundaryCompletedPositiveGramFe
         (periodicHypercubicSpecialUnitaryWilsonSystem
           (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.partitionFunction ≠ 0 :=
     ne_of_gt (Real.sqrt_pos.2 hZ)
+  rw [periodicHypercubicEvenSideLength_eq_two_mul_positiveHalfCylinderSlabCount] at hsqrt
   simp [hsqrt]
 
 end
