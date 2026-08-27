@@ -116,6 +116,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
         H N hN beta hbeta) :
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorMap
         H N hN beta hbeta T‖ ≤ ‖T‖ * ‖T‖ := by
+  set_option maxHeartbeats 600000 in
   exact
     hilbertTensorMap_self_norm_le
       (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
@@ -264,7 +265,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
 
 /-- The tensor-transfer operator norm is bounded by the product of the two
 one-slice operator norms. -/
-set_option maxHeartbeats 600000 in
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_norm_le_mul
     (H N : ℕ)
     (hN : 0 < N)
