@@ -101,9 +101,10 @@ excitation Hilbert space. -/
       H N hN beta hbeta)
     T T
 
-/-- The typed physical tensor-square wrapper inherits the generic product
-operator-norm bound before any local carrier abbreviation can trigger a second
-topology or module-instance search. -/
+/-- The typed physical tensor-square wrapper obeys the product operator-norm
+bound.  The proof unfolds the already-elaborated physical map and bounds its
+existing factors in place, avoiding a second generic typeclass reconstruction
+for the one-slice closed subtype. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorMap_norm_le
     (H N : ℕ)
     (hN : 0 < N)
@@ -117,17 +118,23 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorMap
         H N hN beta hbeta T) ≤
       ‖T‖ * ‖T‖ := by
-  exact
-    hilbertTensorMap_norm_le
-      (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta)
-      (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta)
-      (G := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta)
-      (H := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta)
-      T T
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorMap
+  unfold hilbertTensorMap
+  refine le_trans (ContinuousLinearMap.opNorm_comp_le _ _) ?_
+  refine mul_le_mul ?_ ?_ (by positivity) (norm_nonneg T)
+  · unfold hilbertTensorRTensor
+    apply LinearMap.mkContinuous_norm_le
+    exact norm_nonneg T
+  · simp_rw [hilbertTensorLTensor,
+      ← LinearIsometryEquiv.toContinuousLinearMap_toLinearIsometry]
+    grw [ContinuousLinearMap.opNorm_comp_le,
+      ContinuousLinearMap.opNorm_comp_le,
+      LinearIsometry.norm_toContinuousLinearMap_le,
+      LinearIsometry.norm_toContinuousLinearMap_le,
+      mul_one, one_mul]
+    unfold hilbertTensorRTensor
+    apply LinearMap.mkContinuous_norm_le
+    exact norm_nonneg T
 
 /-- The continuous two-endpoint excitation transfer on Mathlib's native
 Hilbert tensor norm. -/
