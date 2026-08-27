@@ -46,7 +46,7 @@ theorem realL2HilbertSchmidtRectangularKernelOperator_smul
 
 /-- The canonical real-linear map sending a product-`L²` Hilbert--Schmidt
 kernel to its bounded rectangular Fréchet--Riesz operator. -/
-noncomputable def realL2HilbertSchmidtRectangularKernelOperatorLinearMap
+noncomputable def realL2HilbertSchmidtRectangularKernelToOperatorLinearMap
     [SFinite μ] [SFinite ν] :
     Lp ℝ 2 (μ.prod ν) →ₗ[ℝ]
       (Lp ℝ 2 μ →L[ℝ] Lp ℝ 2 ν) where
@@ -54,23 +54,23 @@ noncomputable def realL2HilbertSchmidtRectangularKernelOperatorLinearMap
   map_add' := realL2HilbertSchmidtRectangularKernelOperator_add
   map_smul' := realL2HilbertSchmidtRectangularKernelOperator_smul
 
-@[simp] theorem realL2HilbertSchmidtRectangularKernelOperatorLinearMap_apply
+@[simp] theorem realL2HilbertSchmidtRectangularKernelToOperatorLinearMap_apply
     [SFinite μ] [SFinite ν]
     (K : Lp ℝ 2 (μ.prod ν)) :
-    realL2HilbertSchmidtRectangularKernelOperatorLinearMap K =
+    realL2HilbertSchmidtRectangularKernelToOperatorLinearMap K =
       realL2HilbertSchmidtRectangularKernelOperator K :=
   rfl
 
 /-- The kernel-to-operator linear map has pointwise norm bound one. -/
-theorem realL2HilbertSchmidtRectangularKernelOperatorLinearMap_apply_norm_le
+theorem realL2HilbertSchmidtRectangularKernelToOperatorLinearMap_apply_norm_le
     [SFinite μ] [SFinite ν]
     (K : Lp ℝ 2 (μ.prod ν)) :
-    ‖realL2HilbertSchmidtRectangularKernelOperatorLinearMap K‖ ≤ ‖K‖ := by
+    ‖realL2HilbertSchmidtRectangularKernelToOperatorLinearMap K‖ ≤ ‖K‖ := by
   exact realL2HilbertSchmidtRectangularKernelOperator_norm_le K
 
 /-- The Hilbert--Schmidt kernel construction is canonically a bounded linear map
 from product `L²` into the Banach space of bounded rectangular operators. -/
-noncomputable def realL2HilbertSchmidtRectangularKernelOperatorContinuousLinearMap
+noncomputable def realL2HilbertSchmidtRectangularKernelToOperatorContinuousLinearMap
     [SFinite μ] [SFinite ν] :
     Lp ℝ 2 (μ.prod ν) →L[ℝ]
       (Lp ℝ 2 μ →L[ℝ] Lp ℝ 2 ν) :=
@@ -80,36 +80,36 @@ noncomputable def realL2HilbertSchmidtRectangularKernelOperatorContinuousLinearM
     (E := Lp ℝ 2 (μ.prod ν))
     (F := Lp ℝ 2 μ →L[ℝ] Lp ℝ 2 ν)
     (σ := RingHom.id ℝ)
-    realL2HilbertSchmidtRectangularKernelOperatorLinearMap
+    realL2HilbertSchmidtRectangularKernelToOperatorLinearMap
     1
     (by
       intro K
       simpa using
-        realL2HilbertSchmidtRectangularKernelOperatorLinearMap_apply_norm_le K)
+        realL2HilbertSchmidtRectangularKernelToOperatorLinearMap_apply_norm_le K)
 
-@[simp] theorem realL2HilbertSchmidtRectangularKernelOperatorContinuousLinearMap_apply
+@[simp] theorem realL2HilbertSchmidtRectangularKernelToOperatorContinuousLinearMap_apply
     [SFinite μ] [SFinite ν]
     (K : Lp ℝ 2 (μ.prod ν)) :
-    realL2HilbertSchmidtRectangularKernelOperatorContinuousLinearMap K =
+    realL2HilbertSchmidtRectangularKernelToOperatorContinuousLinearMap K =
       realL2HilbertSchmidtRectangularKernelOperator K :=
   rfl
 
 /-- The operator norm of the kernel-to-operator bounded linear map is at most
 one. -/
-theorem realL2HilbertSchmidtRectangularKernelOperatorContinuousLinearMap_norm_le_one
+theorem realL2HilbertSchmidtRectangularKernelToOperatorContinuousLinearMap_norm_le_one
     [SFinite μ] [SFinite ν] :
-    ‖(realL2HilbertSchmidtRectangularKernelOperatorContinuousLinearMap
+    ‖(realL2HilbertSchmidtRectangularKernelToOperatorContinuousLinearMap
         (μ := μ) (ν := ν))‖ ≤ 1 := by
   apply ContinuousLinearMap.opNorm_le_bound
-    realL2HilbertSchmidtRectangularKernelOperatorContinuousLinearMap
+    realL2HilbertSchmidtRectangularKernelToOperatorContinuousLinearMap
     zero_le_one
   intro K
   simpa using
-    realL2HilbertSchmidtRectangularKernelOperatorLinearMap_apply_norm_le K
+    realL2HilbertSchmidtRectangularKernelToOperatorLinearMap_apply_norm_le K
 
 /-- Audit-visible receipt for the linear and bounded dependence of the
 rectangular Hilbert--Schmidt operator on its kernel. -/
-structure RealL2HilbertSchmidtRectangularKernelOperatorLinearPackage
+structure RealL2HilbertSchmidtRectangularKernelToOperatorPackage
     [SFinite μ] [SFinite ν] : Prop where
   additivity :
     ∀ K L : Lp ℝ 2 (μ.prod ν),
@@ -121,18 +121,18 @@ structure RealL2HilbertSchmidtRectangularKernelOperatorLinearPackage
       realL2HilbertSchmidtRectangularKernelOperator (c • K) =
         c • realL2HilbertSchmidtRectangularKernelOperator K
   normBound :
-    ‖(realL2HilbertSchmidtRectangularKernelOperatorContinuousLinearMap
+    ‖(realL2HilbertSchmidtRectangularKernelToOperatorContinuousLinearMap
         (μ := μ) (ν := ν))‖ ≤ 1
 
 /-- Construct the bounded kernel-linearity package. -/
-theorem realL2HilbertSchmidtRectangularKernelOperatorLinearPackage
+theorem realL2HilbertSchmidtRectangularKernelToOperatorPackage
     [SFinite μ] [SFinite ν] :
-    RealL2HilbertSchmidtRectangularKernelOperatorLinearPackage
+    RealL2HilbertSchmidtRectangularKernelToOperatorPackage
       (μ := μ) (ν := ν) :=
   { additivity := realL2HilbertSchmidtRectangularKernelOperator_add
     homogeneity := realL2HilbertSchmidtRectangularKernelOperator_smul
     normBound :=
-      realL2HilbertSchmidtRectangularKernelOperatorContinuousLinearMap_norm_le_one }
+      realL2HilbertSchmidtRectangularKernelToOperatorContinuousLinearMap_norm_le_one }
 
 end
 
