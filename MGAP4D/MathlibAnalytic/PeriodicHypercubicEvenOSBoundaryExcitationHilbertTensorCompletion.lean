@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOSBoundaryExcitationHilbertSchmidtOperatorCore
-import Mathlib.Topology.Algebra.Module.ClosedSubmodule
+import Mathlib.Topology.Algebra.Module.Basic
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -53,17 +53,17 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairAlge
       H N hN beta hbeta)
 
 /-- The completed physical two-endpoint excitation Hilbert sector is the
-closed linear span obtained by closing the concrete algebraic tensor image in
-pair-`L²`.  This formulation works without imposing a finite-dimensional
-inner-product instance on the abstract algebraic tensor product. -/
+topological closure of the concrete algebraic tensor image in pair-`L²`.
+Keeping the carrier as a `Submodule` uses Mathlib's native normed-space and
+complete-space instances for `Submodule.topologicalClosure`. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta) :
-    ClosedSubmodule ℝ (PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2 H N) :=
+    Submodule ℝ (PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2 H N) :=
   (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairAlgebraicRange
-    H N hN beta hbeta).closure
+    H N hN beta hbeta).topologicalClosure
 
 /-- Every algebraic excitation tensor lands in the completed pair-`L²`
 excitation sector by construction. -/
@@ -78,12 +78,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmb
         H N hN beta hbeta x ∈
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
         H N hN beta hbeta := by
-  change
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
-        H N hN beta hbeta x ∈
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairAlgebraicRange
-        H N hN beta hbeta).topologicalClosure
-  exact subset_closure (LinearMap.mem_range_self _ x)
+  apply Submodule.le_topologicalClosure
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairAlgebraicRange
+      H N hN beta hbeta)
+  exact LinearMap.mem_range_self _ x
 
 /-- The original algebraic tensor embedding, with codomain restricted to the
 completed physical excitation Hilbert sector. -/
@@ -99,7 +97,7 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebrai
   (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
     H N hN beta hbeta).codRestrict
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-        H N hN beta hbeta).toSubmodule
+        H N hN beta hbeta)
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding_mem_pairHilbertSector
         H N hN beta hbeta)
 
@@ -146,12 +144,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_
     IsClosed
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
         H N hN beta hbeta :
-        Set (PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2 H N)) :=
-  (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-    H N hN beta hbeta).isClosed
+        Set (PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2 H N)) := by
+  exact Submodule.isClosed_topologicalClosure
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairAlgebraicRange
+      H N hN beta hbeta)
 
-/-- Hence the concrete excitation sector is complete, because it is a closed
-subspace of the complete pair-`L²` Hilbert space. -/
+/-- The topological-closure carrier is complete in the native Mathlib subtype
+structure. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete
     (H N : ℕ)
     (hN : 0 < N)
@@ -174,7 +173,7 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilb
       PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2 H N where
   toLinearMap :=
     (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-      H N hN beta hbeta).toSubmodule.subtype
+      H N hN beta hbeta).subtype
   norm_map' := fun _ => rfl
 
 @[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorEmbedding_apply
