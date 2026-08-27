@@ -192,10 +192,12 @@ private theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfGaussEndpoint_un
               PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
             periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform
               H N p.1 p.2)
-          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-            H N beta).measurable
-          (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform_measurable_joint H N)
-          (by
+          (hK0 :=
+            (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+              H N beta).measurable)
+          (hact :=
+            periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform_measurable_joint H N)
+          (hEq := by
             intro p
             simpa only [one_mul,
               periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform_one] using
