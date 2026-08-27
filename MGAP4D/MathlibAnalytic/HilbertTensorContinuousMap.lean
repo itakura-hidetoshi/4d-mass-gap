@@ -230,6 +230,16 @@ theorem hilbertTensorMap_self_norm_le
   exact hilbertTensorMap_norm_le
     (E := E) (F := E) (G := E) (H := E) f f
 
+/-- The same tensor-square bound with `opNorm` exposed explicitly.  This avoids
+requiring concrete specializations to normalize the `Norm` instance on a large
+closed-subspace carrier merely to recover the underlying operator norm. -/
+theorem hilbertTensorMap_self_opNorm_le
+    (f : E →L[ℝ] E) :
+    ContinuousLinearMap.opNorm
+      (hilbertTensorMap (E := E) (F := E) (G := E) (H := E) f f) ≤
+      ‖f‖ * ‖f‖ := by
+  exact hilbertTensorMap_self_norm_le f
+
 end
 
 end MathlibAnalytic

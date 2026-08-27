@@ -255,7 +255,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
         H N hN beta hbeta) ^ n‖ := by
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_eq_hilbertTensorMap]
   exact
-    hilbertTensorMap_self_norm_le
+    hilbertTensorMap_self_opNorm_le
       ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
         H N hN beta hbeta) ^ n)
 
