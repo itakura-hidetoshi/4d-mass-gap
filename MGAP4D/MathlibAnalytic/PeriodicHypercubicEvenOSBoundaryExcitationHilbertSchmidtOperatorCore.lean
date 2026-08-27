@@ -78,7 +78,14 @@ Hilbert--Schmidt operator of the corresponding endpoint-pair kernel. -/
       realL2HilbertSchmidtRectangularKernelOperator
         (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairTensorL2
           H N hN beta hbeta f g) := by
-  simp [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorOperatorEmbedding]
+  change
+    realL2HilbertSchmidtRectangularKernelOperator
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
+          H N hN beta hbeta (f ⊗ₜ[ℝ] g)) =
+      realL2HilbertSchmidtRectangularKernelOperator
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairTensorL2
+          H N hN beta hbeta f g)
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding_tmul]
 
 /-- Exact rank-one action of a pure physical excitation tensor. -/
 @[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorOperatorEmbedding_tmul_apply
