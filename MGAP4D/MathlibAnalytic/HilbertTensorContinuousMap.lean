@@ -40,22 +40,28 @@ theorem hilbertTensorPosSemidefOpNormSmulGramSubGram
           simp_rw [map_sum, map_smul, inner_sum, sum_inner, inner_smul_left,
             inner_smul_right]
           rw [Finset.sum_comm]
-          simp [Matrix.gram_apply, Function.comp_apply, mul_assoc, mul_comm, mul_left_comm]
+          simp [Matrix.gram_apply, Function.comp_apply, mul_comm, mul_left_comm]
     _ ≤ ‖f‖ ^ 2 • (‖∑ i ∈ c.support, c i • v i‖ : ℝ) ^ 2 := by
       norm_cast
       grw [f.le_opNorm _, smul_eq_mul, ← mul_pow]
     _ = ∑ x ∈ c.support, ∑ y ∈ c.support,
         star (c x) * ‖f‖ ^ 2 • Matrix.gram ℝ v x y * c y := by
-          have hnorm :
+          have hgram :
               (‖∑ i ∈ c.support, c i • v i‖ : ℝ) ^ 2 =
-                inner ℝ (∑ i ∈ c.support, c i • v i)
-                  (∑ i ∈ c.support, c i • v i) := by
-            exact (inner_self_eq_norm_sq (𝕜 := ℝ) _).symm
-          rw [hnorm]
-          simp_rw [inner_sum, sum_inner, inner_smul_left, inner_smul_right,
-            Finset.mul_sum]
-          rw [Finset.sum_comm]
-          simp [Matrix.gram_apply, smul_eq_mul, mul_assoc, mul_comm, mul_left_comm]
+                ∑ x ∈ c.support, ∑ y ∈ c.support,
+                  star (c x) * Matrix.gram ℝ v x y * c y := by
+            rw [← inner_self_eq_norm_sq (𝕜 := ℝ)]
+            simp_rw [inner_sum, sum_inner, inner_smul_left, inner_smul_right]
+            rw [Finset.sum_comm]
+            simp [Matrix.gram_apply, mul_comm, mul_left_comm]
+          rw [hgram]
+          simp only [smul_eq_mul]
+          simp_rw [Finset.mul_sum]
+          apply Finset.sum_congr rfl
+          intro x hx
+          apply Finset.sum_congr rfl
+          intro y hy
+          ring
 
 /-- Pointwise boundedness of tensoring a real bounded operator by the identity
 for Mathlib's native Hilbert tensor norm. -/
