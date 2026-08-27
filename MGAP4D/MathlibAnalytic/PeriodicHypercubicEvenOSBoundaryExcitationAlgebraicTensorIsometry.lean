@@ -23,8 +23,7 @@ local instance realL2ExternalTensorLiftNormedAddCommGroup
   TensorProduct.instNormedAddCommGroup
     (𝕜 := ℝ) (E := Lp ℝ 2 μ) (F := Lp ℝ 2 ν)
 
-/-- Keep the corresponding native Mathlib tensor inner product explicit on the
-real `L²` algebraic tensor carrier. -/
+/-- Keep the corresponding native Mathlib tensor inner product explicit. -/
 local instance realL2ExternalTensorLiftInnerProductSpace
     {α : Type u} {β : Type v}
     [MeasurableSpace α] [MeasurableSpace β]
@@ -108,43 +107,6 @@ local instance osBoundaryExcitationAlgebraicTensorIsometrySpatialSliceHaarSFinit
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
 
-/-- Keep only the native tensor norm permanently visible on the physical
-algebraic core.  In particular this does not replace the canonical tensor
-module instance used by the already-compiled embedding. -/
-local instance osBoundaryExcitationAlgebraicTensorIsometryPhysicalTensorNormedAddCommGroup
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    NormedAddCommGroup
-      (PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
-        H N hN beta hbeta) := by
-  let K :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-      H N hN beta hbeta
-  change NormedAddCommGroup (K ⊗[ℝ] K)
-  exact TensorProduct.instNormedAddCommGroup
-    (𝕜 := ℝ) (E := K) (F := K)
-
-/-- Expose only the native tensor `Inner` operation on the physical algebraic
-core.  The complete inner-product-space structure is kept local to proofs that
-need the norm/inner compatibility, avoiding a competing module instance. -/
-local instance osBoundaryExcitationAlgebraicTensorIsometryPhysicalTensorInner
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    Inner ℝ
-      (PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
-        H N hN beta hbeta) := by
-  let K :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-      H N hN beta hbeta
-  change Inner ℝ (K ⊗[ℝ] K)
-  exact
-    (TensorProduct.instInnerProductSpace
-      (𝕜 := ℝ) (E := K) (F := K)).toInner
-
 /-- Forgetting the physical invariant-subspace wrappers is an exact linear
 isometry into the one-slice Haar `L²` carrier. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
@@ -175,94 +137,112 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2Linear
         H N hN beta hbeta f :=
   rfl
 
-/-- The nested physical-subspace inclusion also preserves the exact real inner
-product, definitionally. -/
-@[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2_inner
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (f g : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-      H N hN beta hbeta) :
-    inner ℝ
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2
-          H N hN beta hbeta f)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2
-          H N hN beta hbeta g) =
-      inner ℝ f g :=
-  rfl
-
-/-- The existing physical algebraic tensor embedding preserves the full native
-Mathlib tensor inner product.  The proof is purely algebraic induction, so the
-canonical embedding is never rebundled under a second module-instance path. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding_inner
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (x y : PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
-      H N hN beta hbeta) :
-    inner ℝ
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
-          H N hN beta hbeta x)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
-          H N hN beta hbeta y) =
-      inner ℝ x y := by
-  induction x using TensorProduct.induction_on with
-  | zero =>
-      rw [map_zero, inner_zero_left, inner_zero_left]
-  | tmul f g =>
-      induction y using TensorProduct.induction_on with
-      | zero =>
-          rw [map_zero, inner_zero_right, inner_zero_right]
-      | tmul f' g' =>
-          rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding_tmul,
-            periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding_tmul]
-          unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairTensorL2
-          rw [realL2ExternalTensor_inner, TensorProduct.inner_tmul,
-            periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2_inner,
-            periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2_inner]
-      | add y₁ y₂ hy₁ hy₂ =>
-          rw [map_add, inner_add_right, inner_add_right, hy₁, hy₂]
-  | add x₁ x₂ hx₁ hx₂ =>
-      rw [map_add, inner_add_left, inner_add_left, hx₁, hx₂]
-
-/-- Full algebraic-tensor norm preservation, extending the earlier pure-tensor
-cross-norm theorem to arbitrary finite linear combinations. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding_norm
+/-- Evaluate the native Mathlib tensor-product isometry on a physical
+algebraic excitation tensor.  Crucially, the native tensor norm and inner
+product instances live only inside this definition; they never replace the
+module instance under which the pre-existing canonical embedding was built. -/
+noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorEmbedding
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta)
     (x : PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
       H N hN beta hbeta) :
-    ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
-        H N hN beta hbeta x‖ = ‖x‖ := by
+    PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2 H N := by
   let K :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
       H N hN beta hbeta
-  letI : InnerProductSpace ℝ
-      (PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
-        H N hN beta hbeta) := by
-    change InnerProductSpace ℝ (K ⊗[ℝ] K)
-    exact TensorProduct.instInnerProductSpace
-      (𝕜 := ℝ) (E := K) (F := K)
-  calc
-    ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
-        H N hN beta hbeta x‖ =
-        √(RCLike.re
-          (inner ℝ
-            (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
-              H N hN beta hbeta x)
-            (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
-              H N hN beta hbeta x))) :=
-      norm_eq_sqrt_re_inner _
-    _ = √(RCLike.re (inner ℝ x x)) := by
-      rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding_inner]
-    _ = ‖x‖ := (norm_eq_sqrt_re_inner x).symm
+  letI : NormedAddCommGroup (K ⊗[ℝ] K) :=
+    TensorProduct.instNormedAddCommGroup (𝕜 := ℝ) (E := K) (F := K)
+  letI : InnerProductSpace ℝ (K ⊗[ℝ] K) :=
+    TensorProduct.instInnerProductSpace (𝕜 := ℝ) (E := K) (F := K)
+  exact
+    (realL2ExternalTensorLiftLinearIsometry.comp
+      (TensorProduct.mapIsometry
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+          H N hN beta hbeta)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+          H N hN beta hbeta))) x
 
-/-- Hence the concrete algebraic excitation embedding is injective on the full
-tensor core. -/
+/-- On pure tensors the native Hilbert-tensor realization is exactly the
+already-used physical endpoint-pair kernel. -/
+@[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorEmbedding_tmul
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (f g : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorEmbedding
+        H N hN beta hbeta (f ⊗ₜ[ℝ] g) =
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairTensorL2
+        H N hN beta hbeta f g := by
+  rfl
+
+/-- The native Hilbert-tensor realization agrees pointwise with the existing
+canonical algebraic embedding.  This is the key instance-coherence bridge:
+we compare values, not differently-instantiated bundled linear maps. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorEmbedding_eq_algebraicTensorEmbedding
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (x : PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
+      H N hN beta hbeta) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorEmbedding
+        H N hN beta hbeta x =
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
+        H N hN beta hbeta x := by
+  induction x using TensorProduct.induction_on with
+  | zero =>
+      simp only [map_zero]
+      change periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorEmbedding
+          H N hN beta hbeta 0 = 0
+      rfl
+  | tmul f g =>
+      rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorEmbedding_tmul,
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding_tmul]
+  | add x y hx hy =>
+      change periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorEmbedding
+          H N hN beta hbeta (x + y) =
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
+          H N hN beta hbeta x +
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
+          H N hN beta hbeta y
+      rw [← hx, ← hy]
+      rfl
+
+/-- The native Hilbert-tensor realization is injective because internally it
+is the composition of Mathlib linear isometries. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorEmbedding_injective
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    Function.Injective
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorEmbedding
+        H N hN beta hbeta) := by
+  intro x y hxy
+  let K :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta
+  letI : NormedAddCommGroup (K ⊗[ℝ] K) :=
+    TensorProduct.instNormedAddCommGroup (𝕜 := ℝ) (E := K) (F := K)
+  letI : InnerProductSpace ℝ (K ⊗[ℝ] K) :=
+    TensorProduct.instInnerProductSpace (𝕜 := ℝ) (E := K) (F := K)
+  let F : (K ⊗[ℝ] K) →ₗᵢ[ℝ]
+      PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2 H N :=
+    realL2ExternalTensorLiftLinearIsometry.comp
+      (TensorProduct.mapIsometry
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+          H N hN beta hbeta)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+          H N hN beta hbeta))
+  apply F.injective
+  exact hxy
+
+/-- Therefore the pre-existing canonical physical algebraic tensor embedding is
+injective on the whole algebraic tensor core, not only on pure tensors. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding_injective
     (H N : ℕ)
     (hN : 0 < N)
@@ -272,35 +252,15 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmb
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
         H N hN beta hbeta) := by
   intro x y hxy
-  have hzero :
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
-          H N hN beta hbeta (x - y) = 0 := by
-    rw [map_sub, hxy, sub_self]
-  have hnorm : ‖x - y‖ = 0 := by
-    rw [← periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding_norm
-      H N hN beta hbeta (x - y), hzero, norm_zero]
-  exact sub_eq_zero.mp (norm_eq_zero.mp hnorm)
-
-/-- The existing codrestricted algebraic realization preserves the same native
-tensor norm inside the completed closed excitation sector. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorToPairHilbertSector_norm
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (x : PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
-      H N hN beta hbeta) :
-    ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorToPairHilbertSector
-        H N hN beta hbeta x‖ = ‖x‖ := by
-  change
-    ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
-        H N hN beta hbeta x‖ = ‖x‖
-  exact
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding_norm
-      H N hN beta hbeta x
+  apply
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorEmbedding_injective
+      H N hN beta hbeta
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorEmbedding_eq_algebraicTensorEmbedding,
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorEmbedding_eq_algebraicTensorEmbedding]
+  exact hxy
 
 /-- The completed physical excitation sector is exactly the topological
-closure of the range of this isometric algebraic tensor realization. -/
+closure of this faithful algebraic tensor image. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_eq_topologicalClosure_range
     (H N : ℕ)
     (hN : 0 < N)
@@ -313,29 +273,28 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_
           H N hN beta hbeta)).topologicalClosure :=
   rfl
 
-/-- Audit-visible receipt that the algebraic excitation tensor core carries
-Mathlib's native Hilbert tensor norm and embeds isometrically and injectively
-into the concrete completed pair sector. -/
+/-- Audit-visible receipt for the faithful physical algebraic tensor
+realization and its concrete closed Hilbert completion. -/
 structure PeriodicHypercubicEvenOSBoundaryExcitationAlgebraicTensorIsometryPackage
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta) : Prop where
-  fullInner :
-    ∀ x y : PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
+  nativePureTensor :
+    ∀ f g : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
       H N hN beta hbeta,
-      inner ℝ
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
-            H N hN beta hbeta x)
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
-            H N hN beta hbeta y) =
-        inner ℝ x y
-  fullNorm :
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorEmbedding
+          H N hN beta hbeta (f ⊗ₜ[ℝ] g) =
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairTensorL2
+          H N hN beta hbeta f g
+  agreesWithCanonical :
     ∀ x : PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
       H N hN beta hbeta,
-      ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
-          H N hN beta hbeta x‖ = ‖x‖
-  injective :
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorEmbedding
+          H N hN beta hbeta x =
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
+          H N hN beta hbeta x
+  canonicalInjective :
     Function.Injective
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
         H N hN beta hbeta)
@@ -346,7 +305,7 @@ structure PeriodicHypercubicEvenOSBoundaryExcitationAlgebraicTensorIsometryPacka
         (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
           H N hN beta hbeta)).topologicalClosure
 
-/-- Construct the full algebraic-tensor isometry package. -/
+/-- Construct the algebraic-tensor isometry/coherence package. -/
 theorem periodicHypercubicEvenOSBoundaryExcitationAlgebraicTensorIsometryPackage
     (H N : ℕ)
     (hN : 0 < N)
@@ -354,13 +313,13 @@ theorem periodicHypercubicEvenOSBoundaryExcitationAlgebraicTensorIsometryPackage
     (hbeta : 0 ≤ beta) :
     PeriodicHypercubicEvenOSBoundaryExcitationAlgebraicTensorIsometryPackage
       H N hN beta hbeta :=
-  { fullInner :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding_inner
+  { nativePureTensor :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorEmbedding_tmul
         H N hN beta hbeta
-    fullNorm :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding_norm
+    agreesWithCanonical :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorEmbedding_eq_algebraicTensorEmbedding
         H N hN beta hbeta
-    injective :=
+    canonicalInjective :=
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding_injective
         H N hN beta hbeta
     completedSector :=
