@@ -252,8 +252,13 @@ theorem periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointTransferNormali
   have h :=
     periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointTransferNormalizedPhysicalState_excitation_inner_norm_le_exp
       H N hN beta hbeta f f
-  simpa [real_inner_self_eq_norm_sq, Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _),
-    pow_two, mul_assoc] using h
+  let Jf :=
+    periodicHypercubicEvenBoundaryPositiveHalfClosureEndpointTransferNormalizedPhysicalState
+      H N hN beta hbeta
+      (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+  have hJf_sq : (0 : ℝ) ≤ ‖Jf‖ ^ 2 := sq_nonneg ‖Jf‖
+  simpa [Jf, real_inner_self_eq_norm_sq, Real.norm_eq_abs,
+    abs_of_nonneg hJf_sq, pow_two, mul_assoc] using h
 
 /-- Audit-visible receipt: the transfer-normalized endpoint representation has
 strictly positive normalization, the same null kernel, dense range, exact
