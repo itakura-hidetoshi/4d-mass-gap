@@ -75,8 +75,156 @@ algebraic tensor module path used by the concrete pair-`L²` embedding. -/
     (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
       H N hN beta hbeta)
 
+/-- The right-factor tensor action specialized once and for all to the
+physical excitation carrier.  Naming this typed map prevents subsequent norm
+proofs from asking Lean to reconstruct the topology/module path of the closed
+one-slice subtype. -/
+@[reducible] noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertRTensorMap
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (T : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta →L[ℝ]
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta) :
+    PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
+        H N hN beta hbeta →L[ℝ]
+      PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
+        H N hN beta hbeta :=
+  hilbertTensorRTensor
+    (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+    (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+    T
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+
+/-- The physical right-factor tensor action has operator norm at most that of
+its one-slice factor.  The map is already fully typed, so this is just the
+`mkContinuous` receipt stored in its construction. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertRTensorMap_norm_le
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (T : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta →L[ℝ]
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta) :
+    ContinuousLinearMap.opNorm
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertRTensorMap
+        H N hN beta hbeta T) ≤ ‖T‖ := by
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertRTensorMap
+  unfold hilbertTensorRTensor
+  apply LinearMap.mkContinuous_norm_le
+  exact norm_nonneg T
+
+/-- The left-factor tensor action obtained by conjugating the already-typed
+physical right-factor action with the Hilbert-tensor commutation isometry. -/
+@[reducible] noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertLTensorMap
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (T : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta →L[ℝ]
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta) :
+    PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
+        H N hN beta hbeta →L[ℝ]
+      PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
+        H N hN beta hbeta :=
+  TensorProduct.commIsometry ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta) ∘L
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertRTensorMap
+      H N hN beta hbeta T ∘L
+      TensorProduct.commIsometry ℝ
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta)
+
+/-- The physical left-factor tensor action has the same operator-norm bound.
+This is proved pointwise: both commutation maps preserve norm exactly, and the
+middle physical right-factor map uses its already-established norm receipt.
+No operator-expression normalization of the dependent subtype is required. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertLTensorMap_norm_le
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (T : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta →L[ℝ]
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta) :
+    ContinuousLinearMap.opNorm
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertLTensorMap
+        H N hN beta hbeta T) ≤ ‖T‖ := by
+  apply ContinuousLinearMap.opNorm_le_bound
+  · exact norm_nonneg T
+  · intro x
+    change
+      ‖TensorProduct.commIsometry ℝ
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+            H N hN beta hbeta)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+            H N hN beta hbeta)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertRTensorMap
+            H N hN beta hbeta T
+            (TensorProduct.commIsometry ℝ
+              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+                H N hN beta hbeta)
+              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+                H N hN beta hbeta) x))‖ ≤ ‖T‖ * ‖x‖
+    rw [(TensorProduct.commIsometry ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta)).norm_map]
+    calc
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertRTensorMap
+          H N hN beta hbeta T
+          (TensorProduct.commIsometry ℝ
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+              H N hN beta hbeta)
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+              H N hN beta hbeta) x)‖ ≤
+          ContinuousLinearMap.opNorm
+            (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertRTensorMap
+              H N hN beta hbeta T) *
+            ‖TensorProduct.commIsometry ℝ
+              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+                H N hN beta hbeta)
+              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+                H N hN beta hbeta) x‖ := by
+        exact
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertRTensorMap
+            H N hN beta hbeta T).le_opNorm _
+      _ ≤ ‖T‖ *
+            ‖TensorProduct.commIsometry ℝ
+              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+                H N hN beta hbeta)
+              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+                H N hN beta hbeta) x‖ :=
+        mul_le_mul_of_nonneg_right
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertRTensorMap_norm_le
+            H N hN beta hbeta T)
+          (norm_nonneg _)
+      _ = ‖T‖ * ‖x‖ := by
+        rw [(TensorProduct.commIsometry ℝ
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+            H N hN beta hbeta)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+            H N hN beta hbeta)).norm_map]
+
 /-- Tensor-square a single bounded operator on the physical one-slice
-excitation Hilbert space. -/
+excitation Hilbert space, factored through the two already-typed physical
+factor maps. -/
 @[reducible] noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorMap
     (H N : ℕ)
     (hN : 0 < N)
@@ -90,21 +238,13 @@ excitation Hilbert space. -/
         H N hN beta hbeta →L[ℝ]
       PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
         H N hN beta hbeta :=
-  hilbertTensorMap
-    (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-      H N hN beta hbeta)
-    (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-      H N hN beta hbeta)
-    (G := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-      H N hN beta hbeta)
-    (H := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-      H N hN beta hbeta)
-    T T
+  periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertRTensorMap
+      H N hN beta hbeta T ∘L
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertLTensorMap
+      H N hN beta hbeta T
 
-/-- The typed physical tensor-square wrapper obeys the product operator-norm
-bound.  The proof unfolds the already-elaborated physical map and bounds its
-existing factors in place, avoiding a second generic typeclass reconstruction
-for the one-slice closed subtype. -/
+/-- The typed physical tensor-square wrapper inherits the product of the two
+physical factor bounds without revisiting the generic dependent topology. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorMap_norm_le
     (H N : ℕ)
     (hN : 0 < N)
@@ -119,23 +259,29 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
         H N hN beta hbeta T) ≤
       ‖T‖ * ‖T‖ := by
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorMap
-  unfold hilbertTensorMap
-  refine le_trans (ContinuousLinearMap.opNorm_comp_le _ _) ?_
-  refine mul_le_mul ?_ ?_ (by positivity) (norm_nonneg T)
-  · unfold hilbertTensorRTensor
-    apply LinearMap.mkContinuous_norm_le
-    exact norm_nonneg T
-  · set_option maxHeartbeats 2000000 in
-    simp_rw [hilbertTensorLTensor,
-      ← LinearIsometryEquiv.toContinuousLinearMap_toLinearIsometry]
-    grw [ContinuousLinearMap.opNorm_comp_le,
-      ContinuousLinearMap.opNorm_comp_le,
-      LinearIsometry.norm_toContinuousLinearMap_le,
-      LinearIsometry.norm_toContinuousLinearMap_le,
-      mul_one, one_mul]
-    unfold hilbertTensorRTensor
-    apply LinearMap.mkContinuous_norm_le
-    exact norm_nonneg T
+  calc
+    ContinuousLinearMap.opNorm
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertRTensorMap
+            H N hN beta hbeta T ∘L
+          periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertLTensorMap
+            H N hN beta hbeta T) ≤
+      ContinuousLinearMap.opNorm
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertRTensorMap
+            H N hN beta hbeta T) *
+        ContinuousLinearMap.opNorm
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertLTensorMap
+            H N hN beta hbeta T) :=
+      ContinuousLinearMap.opNorm_comp_le _ _
+    _ ≤ ‖T‖ * ‖T‖ :=
+      mul_le_mul
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertRTensorMap_norm_le
+          H N hN beta hbeta T)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertLTensorMap_norm_le
+          H N hN beta hbeta T)
+        (norm_nonneg
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertLTensorMap
+            H N hN beta hbeta T))
+        (norm_nonneg T)
 
 /-- The continuous two-endpoint excitation transfer on Mathlib's native
 Hilbert tensor norm. -/
@@ -228,7 +374,9 @@ expected two-factor transfer power. -/
   | zero => simp
   | tmul f g =>
       simp [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer,
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorMap]
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorMap,
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertRTensorMap,
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertLTensorMap]
   | add x y hx hy =>
       simp only [map_add, hx, hy]
 
@@ -252,7 +400,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
   | zero => simp
   | tmul f g =>
       simp [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer,
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorMap, pow_add]
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorMap,
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertRTensorMap,
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertLTensorMap, pow_add]
   | add x y hx hy =>
       simp only [map_add, ContinuousLinearMap.comp_apply, hx, hy]
 
