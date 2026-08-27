@@ -263,17 +263,12 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
       H N hN beta hbeta) ^ n
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_eq_hilbertTensorMap]
   unfold hilbertTensorMap
-  calc
-    ContinuousLinearMap.opNorm
-        (hilbertTensorRTensor T K ∘L hilbertTensorLTensor T K) ≤
-      ‖hilbertTensorRTensor T K‖ * ‖hilbertTensorLTensor T K‖ := by
-        exact ContinuousLinearMap.opNorm_comp_le _ _
-    _ ≤ ‖T‖ * ‖T‖ := by
-      exact mul_le_mul
-        (hilbertTensorRTensor_norm_le (G := K) T)
-        (hilbertTensorLTensor_norm_le (E := K) T)
-        (norm_nonneg (hilbertTensorLTensor T K))
-        (norm_nonneg T)
+  refine le_trans (ContinuousLinearMap.opNorm_comp_le _ _) ?_
+  exact mul_le_mul
+    (hilbertTensorRTensor_norm_le (G := K) T)
+    (hilbertTensorLTensor_norm_le (E := K) T)
+    (norm_nonneg (hilbertTensorLTensor T K))
+    (norm_nonneg T)
 
 /-- Positive Euclidean times inherit the doubled finite-volume exponential
 operator-norm decay on the whole native Hilbert tensor carrier. -/
