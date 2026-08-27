@@ -12,6 +12,26 @@ noncomputable section
 
 universe u v
 
+/-- Keep the native Mathlib tensor norm explicit on the real `L²` tensor
+carrier.  This avoids expensive typeclass unfolding through `Lp` during the
+isometry construction below. -/
+local instance realL2ExternalTensorLiftNormedAddCommGroup
+    {α : Type u} {β : Type v}
+    [MeasurableSpace α] [MeasurableSpace β]
+    {μ : Measure α} {ν : Measure β}
+    [SFinite μ] [SFinite ν] :
+    NormedAddCommGroup (Lp ℝ 2 μ ⊗[ℝ] Lp ℝ 2 ν) :=
+  TensorProduct.instNormedAddCommGroup
+
+/-- Keep the corresponding native Mathlib tensor inner product explicit. -/
+local instance realL2ExternalTensorLiftInnerProductSpace
+    {α : Type u} {β : Type v}
+    [MeasurableSpace α] [MeasurableSpace β]
+    {μ : Measure α} {ν : Measure β}
+    [SFinite μ] [SFinite ν] :
+    InnerProductSpace ℝ (Lp ℝ 2 μ ⊗[ℝ] Lp ℝ 2 ν) :=
+  TensorProduct.instInnerProductSpace
+
 /-- The universal external-tensor lift preserves the full native Mathlib
 inner product on the algebraic Hilbert tensor product, not only on pure
 tensors. -/
@@ -24,17 +44,19 @@ theorem realL2ExternalTensorLift_inner
     inner ℝ (realL2ExternalTensorLift x) (realL2ExternalTensorLift y) =
       inner ℝ x y := by
   induction x using TensorProduct.induction_on with
-  | zero => simp
+  | zero =>
+      rw [map_zero, inner_zero_left, inner_zero_left]
   | tmul f g =>
       induction y using TensorProduct.induction_on with
-      | zero => simp
+      | zero =>
+          rw [map_zero, inner_zero_right, inner_zero_right]
       | tmul f' g' =>
           rw [realL2ExternalTensorLift_tmul, realL2ExternalTensorLift_tmul,
             realL2ExternalTensor_inner, TensorProduct.inner_tmul]
       | add y₁ y₂ hy₁ hy₂ =>
-          simp only [map_add, inner_add_right, hy₁, hy₂]
+          rw [map_add, inner_add_right, inner_add_right, hy₁, hy₂]
   | add x₁ x₂ hx₁ hx₂ =>
-      simp only [map_add, inner_add_left, hx₁, hx₂]
+      rw [map_add, inner_add_left, inner_add_left, hx₁, hx₂]
 
 /-- The real `L²` external-tensor lift is therefore an exact linear isometry
 for Mathlib's native algebraic Hilbert tensor norm. -/
@@ -84,6 +106,30 @@ local instance osBoundaryExcitationAlgebraicTensorIsometrySpatialSliceHaarSFinit
     SFinite (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := by
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
+
+/-- Keep the native Mathlib tensor norm explicit on the physical excitation
+algebraic core. -/
+local instance osBoundaryExcitationAlgebraicTensorIsometryPhysicalTensorNormedAddCommGroup
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    NormedAddCommGroup
+      (PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
+        H N hN beta hbeta) :=
+  TensorProduct.instNormedAddCommGroup
+
+/-- Keep the native Mathlib tensor inner product explicit on the physical
+excitation algebraic core. -/
+local instance osBoundaryExcitationAlgebraicTensorIsometryPhysicalTensorInnerProductSpace
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    InnerProductSpace ℝ
+      (PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
+        H N hN beta hbeta) :=
+  TensorProduct.instInnerProductSpace
 
 /-- Forgetting the physical invariant-subspace wrappers is an exact linear
 isometry into the one-slice Haar `L²` carrier. -/
