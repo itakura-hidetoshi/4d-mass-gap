@@ -8,73 +8,91 @@ namespace MathlibAnalytic
 
 noncomputable section
 
-/-- Extend a linear isometry canonically from a normed space to Mathlib's
-uniform completion, using the completion embedding and the pinned
-`LinearMap.extendOfNorm` API.
-
-This is the pre-`LinearIsometry.fromCompletion` realization of the same
-universal construction: the extension is first obtained as a continuous
-linear map, and norm preservation is propagated from the canonical dense copy
-of the source. -/
-noncomputable def denseLinearIsometryCompletion
+private noncomputable def denseLinearIsometryRangeEquiv
     {𝕜 E F : Type*}
     [NontriviallyNormedField 𝕜]
     [NormedAddCommGroup E]
     [NormedSpace 𝕜 E]
     [NormedAddCommGroup F]
     [NormedSpace 𝕜 F]
-    [CompleteSpace F]
     (f : E →ₗᵢ[𝕜] F) :
-    UniformSpace.Completion E →ₗᵢ[𝕜] F := by
-  let e : E →ₗ[𝕜] UniformSpace.Completion E :=
-    (UniformSpace.Completion.toComplₗᵢ 𝕜 E).toLinearMap
-  have h_dense : DenseRange e := by
-    simpa [e] using (UniformSpace.Completion.denseRange_coe (α := E))
-  have h_bound : ∃ C : ℝ, ∀ x : E, ‖f.toLinearMap x‖ ≤ C * ‖e x‖ := by
-    refine ⟨1, ?_⟩
-    intro x
-    simp [e]
-  exact
-    { __ := f.toLinearMap.extendOfNorm e
-      norm_map' := by
-        refine h_dense.induction ?_ (isClosed_eq (by fun_prop) continuous_norm)
-        rintro _ ⟨x, rfl⟩
-        rw [LinearMap.extendOfNorm_eq h_dense h_bound x]
-        simp [e] }
+    E ≃ₗ[𝕜] LinearMap.range f.toLinearMap :=
+  LinearEquiv.ofInjective f.toLinearMap f.injective
 
-/-- On the canonical dense copy of the source, the completion extension is
-exactly the original linear isometry. -/
-@[simp] theorem denseLinearIsometryCompletion_apply_coe
+private noncomputable def denseLinearIsometryCompletionEmbedding
+    {𝕜 E : Type*}
+    [NontriviallyNormedField 𝕜]
+    [NormedAddCommGroup E]
+    [NormedSpace 𝕜 E] :
+    E →ₗ[𝕜] UniformSpace.Completion E :=
+  (UniformSpace.Completion.toComplₗᵢ :
+    E →ₗᵢ[𝕜] UniformSpace.Completion E).toLinearMap
+
+private noncomputable def denseLinearIsometryRangeEmbedding
     {𝕜 E F : Type*}
     [NontriviallyNormedField 𝕜]
     [NormedAddCommGroup E]
     [NormedSpace 𝕜 E]
     [NormedAddCommGroup F]
     [NormedSpace 𝕜 F]
-    [CompleteSpace F]
+    (f : E →ₗᵢ[𝕜] F) :
+    LinearMap.range f.toLinearMap →ₗ[𝕜] F :=
+  (LinearMap.range f.toLinearMap).subtype
+
+private theorem denseLinearIsometryCompletionEmbedding_denseRange
+    {𝕜 E : Type*}
+    [NontriviallyNormedField 𝕜]
+    [NormedAddCommGroup E]
+    [NormedSpace 𝕜 E] :
+    DenseRange
+      (denseLinearIsometryCompletionEmbedding (𝕜 := 𝕜) (E := E)) := by
+  simpa [denseLinearIsometryCompletionEmbedding] using
+    (UniformSpace.Completion.denseRange_coe (α := E))
+
+private theorem denseLinearIsometryRangeEmbedding_denseRange
+    {𝕜 E F : Type*}
+    [NontriviallyNormedField 𝕜]
+    [NormedAddCommGroup E]
+    [NormedSpace 𝕜 E]
+    [NormedAddCommGroup F]
+    [NormedSpace 𝕜 F]
+    (f : E →ₗᵢ[𝕜] F)
+    (h_dense : DenseRange f) :
+    DenseRange (denseLinearIsometryRangeEmbedding f) := by
+  apply h_dense.mono
+  rintro _ ⟨x, rfl⟩
+  exact ⟨⟨f x, ⟨x, rfl⟩⟩, rfl⟩
+
+private theorem denseLinearIsometryRangeEquiv_norm
+    {𝕜 E F : Type*}
+    [NontriviallyNormedField 𝕜]
+    [NormedAddCommGroup E]
+    [NormedSpace 𝕜 E]
+    [NormedAddCommGroup F]
+    [NormedSpace 𝕜 F]
     (f : E →ₗᵢ[𝕜] F)
     (x : E) :
-    denseLinearIsometryCompletion f
-        (x : UniformSpace.Completion E) = f x := by
-  let e : E →ₗ[𝕜] UniformSpace.Completion E :=
-    (UniformSpace.Completion.toComplₗᵢ 𝕜 E).toLinearMap
-  have h_dense : DenseRange e := by
-    simpa [e] using (UniformSpace.Completion.denseRange_coe (α := E))
-  have h_bound : ∃ C : ℝ, ∀ y : E, ‖f.toLinearMap y‖ ≤ C * ‖e y‖ := by
-    refine ⟨1, ?_⟩
-    intro y
-    simp [e]
-  change f.toLinearMap.extendOfNorm e (e x) = f x
-  exact LinearMap.extendOfNorm_eq h_dense h_bound x
+    ‖denseLinearIsometryRangeEmbedding f (denseLinearIsometryRangeEquiv f x)‖ =
+      ‖denseLinearIsometryCompletionEmbedding (𝕜 := 𝕜) (E := E) x‖ := by
+  simpa [denseLinearIsometryRangeEmbedding,
+    denseLinearIsometryRangeEquiv,
+    denseLinearIsometryCompletionEmbedding] using f.norm_map x
 
 /-- A linear isometry with dense range into a complete normed space identifies
 Mathlib's canonical uniform completion of its source with the target.
 
-The construction uses only APIs present in the repository's pinned Mathlib:
-extend along `UniformSpace.Completion.toComplₗᵢ` by
-`LinearMap.extendOfNorm`, then use the original dense range and closedness of
-the completed isometry range to obtain surjectivity, finally packaging it with
-`LinearIsometryEquiv.ofSurjective`. -/
+The construction is entirely native to the repository's pinned Mathlib.  First
+identify the source algebraically with the range of the isometry.  Then extend
+that algebraic equivalence by `LinearEquiv.extendOfIsometry` along the two dense
+maps
+
+`E → UniformSpace.Completion E`
+
+and
+
+`LinearMap.range f → F`.
+
+Thus no custom Cauchy-sequence completion and no hand-built inverse are used. -/
 noncomputable def denseLinearIsometryCompletionEquiv
     {𝕜 E F : Type*}
     [NontriviallyNormedField 𝕜]
@@ -86,14 +104,12 @@ noncomputable def denseLinearIsometryCompletionEquiv
     (f : E →ₗᵢ[𝕜] F)
     (h_dense : DenseRange f) :
     UniformSpace.Completion E ≃ₗᵢ[𝕜] F :=
-  LinearIsometryEquiv.ofSurjective (denseLinearIsometryCompletion f) <| by
-    have h_sub :
-        Set.range f ⊆ Set.range ⇑(denseLinearIsometryCompletion f) := by
-      rintro _ ⟨x, rfl⟩
-      exact ⟨(x : UniformSpace.Completion E), by simp⟩
-    rw [← Set.range_eq_univ,
-      ← (denseLinearIsometryCompletion f).isometry.isClosedEmbedding.isClosed_range.closure_eq,
-      (h_dense.mono h_sub).closure_eq]
+  (denseLinearIsometryRangeEquiv f).extendOfIsometry
+    (denseLinearIsometryCompletionEmbedding (𝕜 := 𝕜) (E := E))
+    (denseLinearIsometryRangeEmbedding f)
+    (denseLinearIsometryCompletionEmbedding_denseRange (𝕜 := 𝕜) (E := E))
+    (denseLinearIsometryRangeEmbedding_denseRange f h_dense)
+    (denseLinearIsometryRangeEquiv_norm f)
 
 /-- On the canonical dense copy of the source, the completion equivalence is
 exactly the original linear isometry. -/
@@ -110,9 +126,18 @@ exactly the original linear isometry. -/
     (x : E) :
     denseLinearIsometryCompletionEquiv f h_dense
         (x : UniformSpace.Completion E) = f x := by
-  change denseLinearIsometryCompletion f
-      (x : UniformSpace.Completion E) = f x
-  exact denseLinearIsometryCompletion_apply_coe f x
+  simpa [denseLinearIsometryCompletionEquiv,
+    denseLinearIsometryCompletionEmbedding,
+    denseLinearIsometryRangeEmbedding,
+    denseLinearIsometryRangeEquiv] using
+    (LinearEquiv.extendOfIsometry_eq
+      (f := denseLinearIsometryRangeEquiv f)
+      (e₁ := denseLinearIsometryCompletionEmbedding (𝕜 := 𝕜) (E := E))
+      (e₂ := denseLinearIsometryRangeEmbedding f)
+      (denseLinearIsometryCompletionEmbedding_denseRange (𝕜 := 𝕜) (E := E))
+      (denseLinearIsometryRangeEmbedding_denseRange f h_dense)
+      (denseLinearIsometryRangeEquiv_norm f)
+      x)
 
 end
 
