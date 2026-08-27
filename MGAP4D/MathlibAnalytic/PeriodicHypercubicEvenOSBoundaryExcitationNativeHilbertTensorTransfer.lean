@@ -102,6 +102,8 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHi
       H N hN beta hbeta)
     T T
 
+set_option maxHeartbeats 1000000
+
 /-- The physical tensor-square wrapper inherits the generic product operator
 norm bound without reconstructing its factor topology from a large transfer
 expression. -/
@@ -116,12 +118,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
         H N hN beta hbeta) :
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorMap
         H N hN beta hbeta T‖ ≤ ‖T‖ * ‖T‖ := by
-  set_option maxHeartbeats 600000 in
   exact
     hilbertTensorMap_self_norm_le
       (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
         H N hN beta hbeta)
       T
+
+set_option maxHeartbeats 200000
 
 /-- The continuous two-endpoint excitation transfer on Mathlib's native
 Hilbert tensor norm.  It evolves both physical one-slice excitation factors by
@@ -263,6 +266,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_add]
   rfl
 
+set_option maxHeartbeats 1000000
+
 /-- The tensor-transfer operator norm is bounded by the product of the two
 one-slice operator norms. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_norm_le_mul
@@ -283,6 +288,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
       H N hN beta hbeta
       ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
         H N hN beta hbeta) ^ n)
+
+set_option maxHeartbeats 200000
 
 /-- Positive Euclidean times inherit the doubled finite-volume exponential
 operator-norm decay on the whole native Hilbert tensor carrier. -/
