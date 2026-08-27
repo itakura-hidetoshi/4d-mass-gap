@@ -23,7 +23,7 @@ theorem continuousLinearMap_real_eigenvalue_norm_le_opNorm
   have huNorm : 0 < ‖u‖ := norm_pos_iff.mpr hu
   have hOp : ‖T u‖ ≤ ContinuousLinearMap.opNorm T * ‖u‖ := T.le_opNorm u
   rw [hEigen, norm_smul] at hOp
-  exact (mul_le_mul_right huNorm).mp hOp
+  nlinarith
 
 /-- Every real eigenvalue carried by a nonzero completed excitation state after
 `n > 0` Euclidean slabs lies inside the doubled finite-volume exponential
