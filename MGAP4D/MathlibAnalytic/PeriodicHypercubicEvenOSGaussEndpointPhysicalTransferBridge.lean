@@ -60,111 +60,53 @@ private theorem periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform_m
       (((measurable_pi_apply
         (periodicHypercubicEvenSpatialSliceShift H e.1 e.2)).comp measurable_fst).inv)
 
-/-- Joint measurability of one unfixed slab kernel, obtained by the existing
-pointwise temporal-gauge reduction with the lower gauge fixed to the identity. -/
-private theorem periodicHypercubicEvenSpecialUnitaryUnfixedOneSlabKernel_measurable_joint
-    (H N : ℕ) (beta : ℝ) :
-    Measurable
-      (fun p :
-        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransformation H N ×
-            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
-        periodicHypercubicEvenSpecialUnitaryUnfixedOneSlabKernel
-          H N beta p.1 p.2.1 p.2.2) := by
-  let T := fun p :
-      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransformation H N ×
-          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta
-      p.1
-      (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform H N p.2.1 p.2.2)
-  have hGaugeInput : Measurable
-      (fun p :
-        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransformation H N ×
-            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
-        (p.2.1, p.2.2)) :=
+/-- Generic measurability transport for a three-variable kernel reduced to a
+measurable two-variable kernel after a measurable action on the upper state.
+Keeping the carrier abstract prevents concrete finite `SU(N)` Pi types from
+entering theorem-declaration normalization. -/
+private theorem measurable_tripleKernel_of_reduction
+    {X G : Type*}
+    [MeasurableSpace X] [MeasurableSpace G]
+    (K : X × (G × X) → ℝ)
+    (K0 : X × X → ℝ)
+    (act : G × X → X)
+    (hK0 : Measurable K0)
+    (hact : Measurable act)
+    (hEq : ∀ p, K p = K0 (p.1, act (p.2.1, p.2.2))) :
+    Measurable K := by
+  have hInput : Measurable (fun p : X × (G × X) => (p.2.1, p.2.2)) :=
     (measurable_fst.comp measurable_snd).prodMk
       (measurable_snd.comp measurable_snd)
-  have hGauge : Measurable
-      (fun p :
-        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransformation H N ×
-            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
-        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform H N p.2.1 p.2.2) :=
-    (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform_measurable_joint H N).comp
-      hGaugeInput
-  have hPair : Measurable
-      (fun p :
-        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransformation H N ×
-            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
-        (p.1,
-          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform H N p.2.1 p.2.2)) :=
-    measurable_fst.prodMk hGauge
-  have hT : Measurable T :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta).measurable.comp hPair
-  have hEq :
-      (fun p :
-        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransformation H N ×
-            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
-        periodicHypercubicEvenSpecialUnitaryUnfixedOneSlabKernel
-          H N beta p.1 p.2.1 p.2.2) = T := by
+  have hAct : Measurable (fun p : X × (G × X) => act (p.2.1, p.2.2)) :=
+    hact.comp hInput
+  have hReduced : Measurable
+      (fun p : X × (G × X) => K0 (p.1, act (p.2.1, p.2.2))) :=
+    hK0.comp (measurable_fst.prodMk hAct)
+  have hFun : K = fun p : X × (G × X) => K0 (p.1, act (p.2.1, p.2.2)) := by
     funext p
-    calc
-      periodicHypercubicEvenSpecialUnitaryUnfixedOneSlabKernel
-          H N beta p.1 p.2.1 p.2.2 =
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta
-          (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform H N 1 p.1)
-          (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform H N
-            (1 * p.2.1) p.2.2) :=
-        periodicHypercubicEvenSpecialUnitaryUnfixedOneSlabKernel_eq_temporalGauge
-          H N beta 1 p.2.1 p.1 p.2.2
-      _ = T p := by
-        simp only [one_mul,
-          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform_one]
-        rfl
-  rw [hEq]
-  exact hT
+    exact hEq p
+  rw [hFun]
+  exact hReduced
 
-/-- The complete unfixed positive-half path kernel is jointly measurable in the
-spatial path and all temporal-link fields. -/
-private theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel_measurable_joint
-    (H N : ℕ) (beta : ℝ) :
+/-- Generic finite path-with-link-field kernels are measurable as soon as the
+one-slab kernel is measurable.  This is the temporal-field analogue of the
+abstract finite-path receipt used by the transfer-iteration spine. -/
+private theorem finitePathTemporalKernel_measurable
+    {X G : Type*}
+    [MeasurableSpace X] [MeasurableSpace G]
+    (K : X × (G × X) → ℝ)
+    (hK : Measurable K)
+    (n : ℕ) :
     Measurable
-      (fun q :
-        PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N ×
-          PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalLinkField H N =>
-        periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel
-          H N beta q.1 q.2) := by
+      (fun q : (Fin (n + 1) → X) × (Fin n → G) =>
+        ∏ i : Fin n, K (q.1 i.castSucc, (q.2 i, q.1 i.succ))) := by
   classical
-  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel
-  apply (Finset.univ :
-    Finset (Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H))).measurable_prod
+  apply (Finset.univ : Finset (Fin n)).measurable_prod
   intro i _hi
-  have hLower : Measurable
-      (fun q :
-        PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N ×
-          PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalLinkField H N =>
-        q.1 i.castSucc) :=
-    (measurable_pi_apply i.castSucc).comp measurable_fst
-  have hTemporal : Measurable
-      (fun q :
-        PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N ×
-          PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalLinkField H N =>
-        q.2 i) :=
-    (measurable_pi_apply i).comp measurable_snd
-  have hUpper : Measurable
-      (fun q :
-        PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N ×
-          PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalLinkField H N =>
-        q.1 i.succ) :=
-    (measurable_pi_apply i.succ).comp measurable_fst
-  exact
-    (periodicHypercubicEvenSpecialUnitaryUnfixedOneSlabKernel_measurable_joint H N beta).comp
-      (hLower.prodMk (hTemporal.prodMk hUpper))
+  exact hK.comp
+    (((measurable_pi_apply i.castSucc).comp measurable_fst).prodMk
+      (((measurable_pi_apply i).comp measurable_snd).prodMk
+        ((measurable_pi_apply i.succ).comp measurable_fst)))
 
 /-- The physical endpoint integrand on explicit path × temporal-field Haar is
 integrable.  The endpoint factor is `L² × L² ⊂ L¹` on path Haar, and the
@@ -230,9 +172,36 @@ private theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfGaussEndpoint_un
           PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalLinkField H N =>
         periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel
           H N beta q.1 q.2)
-      (pathμ.prod temporalμ) :=
-    (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel_measurable_joint
-      H N beta).aestronglyMeasurable
+      (pathμ.prod temporalμ) := by
+    simpa only [periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel] using
+      (finitePathTemporalKernel_measurable
+        (K := fun p :
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+            (PeriodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransformation H N ×
+              PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
+          periodicHypercubicEvenSpecialUnitaryUnfixedOneSlabKernel
+            H N beta p.1 p.2.1 p.2.2)
+        (hK := measurable_tripleKernel_of_reduction
+          (K0 := fun p :
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+              PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+              H N beta p.1 p.2)
+          (act := fun p :
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransformation H N ×
+              PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+            periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform
+              H N p.1 p.2)
+          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+            H N beta).measurable
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform_measurable_joint H N)
+          (by
+            intro p
+            simpa only [one_mul,
+              periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform_one] using
+              periodicHypercubicEvenSpecialUnitaryUnfixedOneSlabKernel_eq_temporalGauge
+                H N beta 1 p.2.1 p.1 p.2.2))
+        (n := periodicHypercubicEvenPositiveHalfCylinderSlabCount H)).aestronglyMeasurable
   apply hEndpointProd.mono
     (hKernelMeas.mul hEndpointProd.aestronglyMeasurable)
   filter_upwards with q
