@@ -89,6 +89,14 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHi
       PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
         H N hN beta hbeta :=
   hilbertTensorMap
+    (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+    (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+    (G := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+    (H := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
     ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta) ^ n)
     ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
@@ -110,7 +118,7 @@ expected two-factor transfer power. -/
           H N hN beta hbeta) ^ n) f) ⊗ₜ[ℝ]
         (((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
           H N hN beta hbeta) ^ n) g) := by
-  exact hilbertTensorMap_tmul _ _ _ _
+  rfl
 
 /-- At Euclidean time zero the native Hilbert-tensor transfer is the identity. -/
 @[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_zero
@@ -123,8 +131,8 @@ expected two-factor transfer power. -/
       ContinuousLinearMap.id ℝ
         (PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
           H N hN beta hbeta) := by
-  apply ContinuousLinearMap.coe_inj.mp
-  funext x
+  apply ContinuousLinearMap.ext
+  intro x
   induction x using TensorProduct.induction_on with
   | zero => simp
   | tmul f g =>
@@ -146,8 +154,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
           H N hN beta hbeta m ∘L
         periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
           H N hN beta hbeta n := by
-  apply ContinuousLinearMap.coe_inj.mp
-  funext x
+  apply ContinuousLinearMap.ext
+  intro x
   induction x using TensorProduct.induction_on with
   | zero => simp
   | tmul f g =>
@@ -188,7 +196,19 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
         H N hN beta hbeta) ^ n‖ *
       ‖(periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
         H N hN beta hbeta) ^ n‖ := by
-  exact hilbertTensorMap_norm_le _ _
+  exact hilbertTensorMap_norm_le
+    (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+    (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+    (G := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+    (H := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+      H N hN beta hbeta) ^ n)
+    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+      H N hN beta hbeta) ^ n)
 
 /-- Positive Euclidean times inherit the doubled finite-volume exponential
 operator-norm decay on the whole native Hilbert tensor carrier. -/
@@ -215,7 +235,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
     exact
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_norm_le_exp_of_pos
         H N hN beta hbeta n hn
-  have hNorm : 0 ≤ ‖T ^ n‖ := norm_nonneg _
+  have hNorm : 0 ≤ ‖T ^ n‖ := norm_nonneg (T ^ n)
   have hExp : 0 ≤ Real.exp (-(n : ℝ) * r) := (Real.exp_pos _).le
   calc
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
