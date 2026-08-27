@@ -84,9 +84,29 @@ theorem PhysicalYangMillsGaugeInvariantOSReflectionData.osBilinForm_eq_quadratic
     ⟨(G : physicalYangMillsGaugeInvariantObservableSubalgebra S), G.property⟩
   have hpol :=
     (D.osBilinForm_isSymm omega hInvariant).polarization Fm Gm
-  simpa [Fm, Gm, physicalYangMillsOSPositiveTimeAdd,
-    PhysicalYangMillsGaugeInvariantOSReflectionData.osBilinForm_apply,
-    PhysicalYangMillsGaugeInvariantOSReflectionData.quadraticObservable] using hpol
+  have hquadAdd :
+      omega (D.quadraticObservable (physicalYangMillsOSPositiveTimeAdd D F G)) =
+        omega
+            (D.reflection
+                (F : physicalYangMillsGaugeInvariantObservableSubalgebra S) *
+              ((F : physicalYangMillsGaugeInvariantObservableSubalgebra S) +
+                (G : physicalYangMillsGaugeInvariantObservableSubalgebra S))) +
+          omega
+            (D.reflection
+                (G : physicalYangMillsGaugeInvariantObservableSubalgebra S) *
+              ((F : physicalYangMillsGaugeInvariantObservableSubalgebra S) +
+                (G : physicalYangMillsGaugeInvariantObservableSubalgebra S))) := by
+    change
+      omega
+          (D.reflection
+              ((F : physicalYangMillsGaugeInvariantObservableSubalgebra S) +
+                (G : physicalYangMillsGaugeInvariantObservableSubalgebra S)) *
+            ((F : physicalYangMillsGaugeInvariantObservableSubalgebra S) +
+              (G : physicalYangMillsGaugeInvariantObservableSubalgebra S))) = _
+    rw [map_add D.reflection, add_mul, map_add omega]
+  rw [hquadAdd]
+  simpa [Fm, Gm,
+    PhysicalYangMillsGaugeInvariantOSReflectionData.osBilinForm_apply] using hpol
 
 /-- The finite periodic Wilson cross form obtained by polarizing the three
 actual reflected Gibbs integrals associated with `F + G`, `F`, and `G`.
