@@ -108,6 +108,12 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebrai
       (Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) ⊗[ℝ]
         Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) :=
   hilbertTensorLinearIsometry
+    (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+    (F := Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+    (G := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+    (H := Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
     (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
       H N hN beta hbeta)
     (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
@@ -126,7 +132,7 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebrai
         (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearMap
           H N hN beta hbeta)
         (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearMap
-          H N hN beta hbeta) x :=
+          H N hN beta hbeta) x := by
   rfl
 
 /-- The canonical algebraic excitation embedding into concrete endpoint-pair
@@ -156,7 +162,16 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebrai
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbeddingNativeLinearIsometry
         H N hN beta hbeta x =
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
-        H N hN beta hbeta x :=
+        H N hN beta hbeta x := by
+  change
+    realL2ExternalTensorLift
+      (TensorProduct.map
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearMap
+          H N hN beta hbeta)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearMap
+          H N hN beta hbeta) x) =
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
+        H N hN beta hbeta x
   rfl
 
 /-- Full-core norm identification between the native Hilbert tensor norm and
@@ -245,6 +260,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativePairIsometry
           H N hN beta hbeta n x) =
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEvolvedEmbedding
         H N hN beta hbeta n x := by
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbeddingNativeLinearIsometry_apply]
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEvolvedEmbedding
   change
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
         H N hN beta hbeta
