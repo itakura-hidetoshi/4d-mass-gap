@@ -91,7 +91,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedOperatorE
         (u : PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2 H N)‖ ≤
       ‖(u : PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2 H N)‖ :=
         realL2HilbertSchmidtRectangularKernelOperator_norm_le _
-    _ = ‖u‖ := rfl
+    _ = ‖u‖ :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorEmbedding_norm
+        H N hN beta hbeta u
 
 /-- Operator norm of the completed state-to-operator map is at most one. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedOperatorEmbedding_opNorm_le_one
@@ -104,7 +106,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedOperatorE
         H N hN beta hbeta) ≤ 1 := by
   apply ContinuousLinearMap.opNorm_le_bound zero_le_one
   intro u
-  simpa using
+  rw [one_mul]
+  exact
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedOperatorEmbedding_apply_norm_le
       H N hN beta hbeta u
 
@@ -238,11 +241,67 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedEvolvedOp
         (-2 * (n : ℝ) *
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
             H N hN beta hbeta) := by
-  apply ContinuousLinearMap.opNorm_le_bound (Real.exp_pos _).le
-  intro u
-  exact
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedEvolvedOperatorEmbedding_apply_norm_le_exp_of_pos
-      H N hN beta hbeta n hn u
+  change
+    ContinuousLinearMap.opNorm
+      ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedOperatorEmbedding
+          H N hN beta hbeta).comp
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+          H N hN beta hbeta n)) ≤
+      Real.exp
+        (-2 * (n : ℝ) *
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+            H N hN beta hbeta)
+  have hEmbedding :
+      ContinuousLinearMap.opNorm
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedOperatorEmbedding
+          H N hN beta hbeta) ≤ 1 :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedOperatorEmbedding_opNorm_le_one
+      H N hN beta hbeta
+  have hTransfer :
+      ContinuousLinearMap.opNorm
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+          H N hN beta hbeta n) ≤
+        Real.exp
+          (-2 * (n : ℝ) *
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+              H N hN beta hbeta) :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_norm_le_exp_of_pos
+      H N hN beta hbeta n hn
+  have hTransferNonneg :
+      0 ≤ ContinuousLinearMap.opNorm
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+          H N hN beta hbeta n) := by
+    exact norm_nonneg _
+  calc
+    ContinuousLinearMap.opNorm
+        ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedOperatorEmbedding
+            H N hN beta hbeta).comp
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+            H N hN beta hbeta n)) ≤
+      ContinuousLinearMap.opNorm
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedOperatorEmbedding
+            H N hN beta hbeta) *
+        ContinuousLinearMap.opNorm
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+            H N hN beta hbeta n) := by
+      exact
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedOperatorEmbedding
+          H N hN beta hbeta).opNorm_comp_le
+            (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+              H N hN beta hbeta n)
+    _ ≤ 1 * ContinuousLinearMap.opNorm
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+            H N hN beta hbeta n) :=
+      mul_le_mul_of_nonneg_right hEmbedding hTransferNonneg
+    _ ≤ 1 * Real.exp
+          (-2 * (n : ℝ) *
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+              H N hN beta hbeta) :=
+      mul_le_mul_of_nonneg_left hTransfer zero_le_one
+    _ = Real.exp
+          (-2 * (n : ℝ) *
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+              H N hN beta hbeta) := one_mul _
 
 /-- On the dense algebraic image, the completed operator realization is
 exactly the pre-existing algebraic Hilbert--Schmidt operator embedding. -/
@@ -282,7 +341,16 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedEvolvedOp
         H N hN beta hbeta n x := by
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedEvolvedOperatorEmbedding_apply]
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedOperatorEmbedding_apply]
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorEmbedding_transfer_apply_algebraic_evolved]
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_apply_algebraic_pairL2]
+  have hx :
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
+          H N hN beta hbeta n x =
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorTransfer
+          H N hN beta hbeta n x := by
+    exact LinearMap.congr_fun
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_toLinearMap
+        H N hN beta hbeta n) x
+  rw [hx]
   rfl
 
 /-- Pure tensors therefore recover the exact rank-one Hilbert--Schmidt
