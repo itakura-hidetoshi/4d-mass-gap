@@ -12,6 +12,111 @@ open scoped TensorProduct InnerProductSpace
 
 noncomputable section
 
+/-- Conjugate a bounded endomorphism by a linear isometry equivalence.  Keeping
+this construction generic prevents the dependent physical carrier parameters
+from being unfolded while proving the semigroup and norm statements below. -/
+noncomputable def continuousLinearMapConjugateLinearIsometryEquiv
+    {𝕜 E F : Type*}
+    [NontriviallyNormedField 𝕜]
+    [NormedAddCommGroup E]
+    [NormedSpace 𝕜 E]
+    [NormedAddCommGroup F]
+    [NormedSpace 𝕜 F]
+    (U : E ≃ₗᵢ[𝕜] F)
+    (A : E →L[𝕜] E) :
+    F →L[𝕜] F :=
+  ((U : E →L[𝕜] F) ∘L A) ∘L (U.symm : F →L[𝕜] E)
+
+/-- Pointwise form of isometric conjugation. -/
+@[simp] theorem continuousLinearMapConjugateLinearIsometryEquiv_apply
+    {𝕜 E F : Type*}
+    [NontriviallyNormedField 𝕜]
+    [NormedAddCommGroup E]
+    [NormedSpace 𝕜 E]
+    [NormedAddCommGroup F]
+    [NormedSpace 𝕜 F]
+    (U : E ≃ₗᵢ[𝕜] F)
+    (A : E →L[𝕜] E)
+    (y : F) :
+    continuousLinearMapConjugateLinearIsometryEquiv U A y =
+      U (A (U.symm y)) :=
+  rfl
+
+/-- On an element already presented through the isometry, conjugation simply
+applies the source operator and maps back. -/
+@[simp] theorem continuousLinearMapConjugateLinearIsometryEquiv_apply_image
+    {𝕜 E F : Type*}
+    [NontriviallyNormedField 𝕜]
+    [NormedAddCommGroup E]
+    [NormedSpace 𝕜 E]
+    [NormedAddCommGroup F]
+    [NormedSpace 𝕜 F]
+    (U : E ≃ₗᵢ[𝕜] F)
+    (A : E →L[𝕜] E)
+    (x : E) :
+    continuousLinearMapConjugateLinearIsometryEquiv U A (U x) =
+      U (A x) := by
+  simp [continuousLinearMapConjugateLinearIsometryEquiv]
+
+/-- Isometric conjugation preserves the identity. -/
+@[simp] theorem continuousLinearMapConjugateLinearIsometryEquiv_id
+    {𝕜 E F : Type*}
+    [NontriviallyNormedField 𝕜]
+    [NormedAddCommGroup E]
+    [NormedSpace 𝕜 E]
+    [NormedAddCommGroup F]
+    [NormedSpace 𝕜 F]
+    (U : E ≃ₗᵢ[𝕜] F) :
+    continuousLinearMapConjugateLinearIsometryEquiv U
+        (ContinuousLinearMap.id 𝕜 E) =
+      ContinuousLinearMap.id 𝕜 F := by
+  apply ContinuousLinearMap.ext
+  intro y
+  simp [continuousLinearMapConjugateLinearIsometryEquiv]
+
+/-- Isometric conjugation is multiplicative for composition. -/
+theorem continuousLinearMapConjugateLinearIsometryEquiv_comp
+    {𝕜 E F : Type*}
+    [NontriviallyNormedField 𝕜]
+    [NormedAddCommGroup E]
+    [NormedSpace 𝕜 E]
+    [NormedAddCommGroup F]
+    [NormedSpace 𝕜 F]
+    (U : E ≃ₗᵢ[𝕜] F)
+    (A B : E →L[𝕜] E) :
+    continuousLinearMapConjugateLinearIsometryEquiv U (A ∘L B) =
+      continuousLinearMapConjugateLinearIsometryEquiv U A ∘L
+        continuousLinearMapConjugateLinearIsometryEquiv U B := by
+  apply ContinuousLinearMap.ext
+  intro y
+  simp [continuousLinearMapConjugateLinearIsometryEquiv]
+
+/-- Conjugation by a linear isometry equivalence transports an operator-norm
+upper bound without loss. -/
+theorem continuousLinearMapConjugateLinearIsometryEquiv_opNorm_le
+    {𝕜 E F : Type*}
+    [NontriviallyNormedField 𝕜]
+    [NormedAddCommGroup E]
+    [NormedSpace 𝕜 E]
+    [NormedAddCommGroup F]
+    [NormedSpace 𝕜 F]
+    (U : E ≃ₗᵢ[𝕜] F)
+    (A : E →L[𝕜] E)
+    {C : ℝ}
+    (hC : 0 ≤ C)
+    (hA : ContinuousLinearMap.opNorm A ≤ C) :
+    ContinuousLinearMap.opNorm
+        (continuousLinearMapConjugateLinearIsometryEquiv U A) ≤ C := by
+  apply ContinuousLinearMap.opNorm_le_bound hC
+  intro y
+  rw [continuousLinearMapConjugateLinearIsometryEquiv_apply, U.norm_map]
+  calc
+    ‖A (U.symm y)‖ ≤ ContinuousLinearMap.opNorm A * ‖U.symm y‖ :=
+      A.le_opNorm (U.symm y)
+    _ ≤ C * ‖U.symm y‖ :=
+      mul_le_mul_of_nonneg_right hA (norm_nonneg _)
+    _ = C * ‖y‖ := by rw [U.symm.norm_map]
+
 local instance osBoundaryExcitationCompletedPairSemigroupSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
@@ -229,22 +334,11 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilb
         H N hN beta hbeta →L[ℝ]
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
         H N hN beta hbeta :=
-  ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector
-      H N hN beta hbeta :
-      UniformSpace.Completion
-          (PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
-            H N hN beta hbeta) →L[ℝ]
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-          H N hN beta hbeta) ∘L
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
-      H N hN beta hbeta n) ∘L
-    ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector
-      H N hN beta hbeta).symm :
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-          H N hN beta hbeta →L[ℝ]
-        UniformSpace.Completion
-          (PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
-            H N hN beta hbeta))
+  continuousLinearMapConjugateLinearIsometryEquiv
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector
+      H N hN beta hbeta)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
+      H N hN beta hbeta n)
 
 /-- Pointwise formula for the conjugated pair-Hilbert sector transfer. -/
 @[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_apply
@@ -263,7 +357,7 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilb
           H N hN beta hbeta n
           ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector
             H N hN beta hbeta).symm y)) := by
-  rfl
+  exact continuousLinearMapConjugateLinearIsometryEquiv_apply _ _ _
 
 /-- The concrete pair-Hilbert transfer starts at the identity. -/
 @[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_zero
@@ -276,9 +370,9 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilb
       ContinuousLinearMap.id ℝ
         (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
           H N hN beta hbeta) := by
-  apply ContinuousLinearMap.ext
-  intro y
-  simp [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer]
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer_zero]
+  exact continuousLinearMapConjugateLinearIsometryEquiv_id _
 
 /-- The conjugated transfer is an exact discrete semigroup on the entire
 completed concrete pair-Hilbert sector. -/
@@ -294,12 +388,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
           H N hN beta hbeta m ∘L
         periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
           H N hN beta hbeta n := by
-  apply ContinuousLinearMap.ext
-  intro y
-  simp only [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_apply,
-    ContinuousLinearMap.comp_apply]
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer_add]
-  simp
+  exact continuousLinearMapConjugateLinearIsometryEquiv_comp _ _ _
 
 /-- Conjugation by the canonical linear isometry equivalence does not weaken
 the doubled exponential operator bound. -/
@@ -317,48 +408,16 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
         (-2 * (n : ℝ) *
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
             H N hN beta hbeta) := by
-  have hA :
-      ContinuousLinearMap.opNorm
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
-            H N hN beta hbeta n) ≤
-        Real.exp
-          (-2 * (n : ℝ) *
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-              H N hN beta hbeta) :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer_norm_le_exp_of_pos
-      H N hN beta hbeta n hn
-  apply ContinuousLinearMap.opNorm_le_bound
-  · exact (Real.exp_pos _).le
-  · intro y
-    rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_apply]
-    rw [(periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector
-      H N hN beta hbeta).norm_map]
-    calc
-      ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
-          H N hN beta hbeta n
-          ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector
-            H N hN beta hbeta).symm y)‖ ≤
-        ContinuousLinearMap.opNorm
-            (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
-              H N hN beta hbeta n) *
-          ‖(periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector
-            H N hN beta hbeta).symm y‖ := by
-        exact
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
-            H N hN beta hbeta n).le_opNorm _
-      _ ≤ Real.exp
-          (-2 * (n : ℝ) *
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-              H N hN beta hbeta) *
-          ‖(periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector
-            H N hN beta hbeta).symm y‖ :=
-        mul_le_mul_of_nonneg_right hA (norm_nonneg _)
-      _ = Real.exp
-          (-2 * (n : ℝ) *
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-              H N hN beta hbeta) * ‖y‖ := by
-        rw [(periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector
-          H N hN beta hbeta).symm.norm_map]
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+  exact
+    continuousLinearMapConjugateLinearIsometryEquiv_opNorm_le
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector
+        H N hN beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
+        H N hN beta hbeta n)
+      (Real.exp_pos _).le
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer_norm_le_exp_of_pos
+        H N hN beta hbeta n hn)
 
 /-- The completed concrete transfer exactly extends the pre-existing algebraic
 sector-valued excitation transfer on the canonical dense image. -/
@@ -380,8 +439,8 @@ sector-valued excitation transfer on the canonical dense image. -/
           H N hN beta hbeta n x) := by
   rw [← periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector_apply_coe
       H N hN beta hbeta x]
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_apply]
-  rw [LinearIsometryEquiv.symm_apply_apply]
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+  rw [continuousLinearMapConjugateLinearIsometryEquiv_apply_image]
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer_apply_coe]
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector_apply_coe]
 
