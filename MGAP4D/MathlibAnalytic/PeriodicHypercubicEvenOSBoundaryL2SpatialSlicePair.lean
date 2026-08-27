@@ -191,11 +191,10 @@ theorem periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundary_leftInverse
   change MeasureTheory.Lp.compMeasurePreserving e h
       (MeasureTheory.Lp.compMeasurePreserving e.symm hs f) = f
   rw [← MeasureTheory.Lp.compMeasurePreserving_comp_apply f hs h]
-  have he : (e.symm : _ → _) ∘ e = id := by
-    funext x
-    simp
-  rw [he]
-  simpa using MeasureTheory.Lp.compMeasurePreserving_id_apply f
+  rw [Lp.ext_iff]
+  exact
+    (MeasureTheory.Lp.coeFn_compMeasurePreserving f (hs.comp h)).trans
+      (Filter.Eventually.of_forall fun x => by simp)
 
 /-- Pulling an endpoint-pair `L²` vector back to the shared boundary and then
 forward again is exactly the identity. -/
@@ -223,11 +222,10 @@ theorem periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePair_rightInverse
   change MeasureTheory.Lp.compMeasurePreserving e.symm hs
       (MeasureTheory.Lp.compMeasurePreserving e h f) = f
   rw [← MeasureTheory.Lp.compMeasurePreserving_comp_apply f h hs]
-  have he : (e : _ → _) ∘ e.symm = id := by
-    funext x
-    simp
-  rw [he]
-  simpa using MeasureTheory.Lp.compMeasurePreserving_id_apply f
+  rw [Lp.ext_iff]
+  exact
+    (MeasureTheory.Lp.coeFn_compMeasurePreserving f (h.comp hs)).trans
+      (Filter.Eventually.of_forall fun x => by simp)
 
 /-- Audit-visible package for the exact shared-boundary/two-endpoint `L²`
 identification used before inserting the physical transfer operator. -/
