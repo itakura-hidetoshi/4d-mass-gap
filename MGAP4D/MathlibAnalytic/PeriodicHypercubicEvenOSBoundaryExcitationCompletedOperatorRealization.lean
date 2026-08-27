@@ -40,6 +40,21 @@ local instance osBoundaryExcitationCompletedOperatorSpatialSliceHaarSFinite
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
 
+/-- Generic norm-one lifting lemma kept separate from the dependent physical
+carriers.  This prevents the operator-norm proof from asking definitional
+equality to normalize the full Yang--Mills carrier at every point. -/
+theorem continuousLinearMap_opNorm_le_one_of_apply_norm_le
+    {E F : Type*}
+    [NormedAddCommGroup E] [NormedSpace ℝ E]
+    [NormedAddCommGroup F] [NormedSpace ℝ F]
+    (A : E →L[ℝ] F)
+    (hA : ∀ x, ‖A x‖ ≤ ‖x‖) :
+    ContinuousLinearMap.opNorm A ≤ 1 := by
+  apply ContinuousLinearMap.opNorm_le_bound zero_le_one
+  intro x
+  rw [one_mul]
+  exact hA x
+
 /-- Every completed pair-Hilbert excitation state has a canonical bounded
 operator realization on the one-slice real Haar `L²` space.  The construction
 uses the exact sector inclusion into pair-`L²` followed by the already
@@ -103,13 +118,12 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedOperatorE
     (hbeta : 0 ≤ beta) :
     ContinuousLinearMap.opNorm
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedOperatorEmbedding
-        H N hN beta hbeta) ≤ 1 := by
-  apply ContinuousLinearMap.opNorm_le_bound zero_le_one
-  intro u
-  rw [one_mul]
-  exact
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedOperatorEmbedding_apply_norm_le
-      H N hN beta hbeta u
+        H N hN beta hbeta) ≤ 1 :=
+  continuousLinearMap_opNorm_le_one_of_apply_norm_le
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedOperatorEmbedding
+      H N hN beta hbeta)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedOperatorEmbedding_apply_norm_le
+      H N hN beta hbeta)
 
 /-- Evolve a completed excitation state for `n` Euclidean slabs and then
 realize the resulting pair kernel as a bounded one-slice operator. -/
@@ -347,9 +361,12 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedEvolvedOp
           H N hN beta hbeta n x =
         periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorTransfer
           H N hN beta hbeta n x := by
-    exact LinearMap.congr_fun
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_toLinearMap
-        H N hN beta hbeta n) x
+    change
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
+          H N hN beta hbeta n).toLinearMap x =
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorTransfer
+          H N hN beta hbeta n x
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_toLinearMap]
   rw [hx]
   rfl
 
