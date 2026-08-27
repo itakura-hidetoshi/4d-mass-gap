@@ -53,7 +53,11 @@ private theorem realContinuousLinearMap_smul_pow_apply
   induction n generalizing f with
   | zero => simp
   | succ n ih =>
-      simp [pow_succ, ContinuousLinearMap.mul_def, ih, smul_smul]
+      rw [pow_succ, pow_succ]
+      change ((c • T) ^ n) (c • T f) =
+        c ^ (n + 1) • (T ^ n) (T f)
+      rw [ih]
+      rw [map_smul, smul_smul, pow_succ]
 
 /-- Powers of the invariant top-eigenspace orthogonal restriction are exactly
 the ambient powers after coercion back to the Hilbert carrier. -/
@@ -126,20 +130,17 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderExcitati
       periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPositiveHalfCylinderTransferOperator
         H N hN beta hbeta
         (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) := by
-  simpa [
-    periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderExcitationTransferOperator,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace,
-    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPositiveHalfCylinderTransferOperator
-  ] using
-    (realHilbertTopEigenspaceOrthogonalRestriction_pow_coe
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderExcitationTransferOperator
+  unfold periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPositiveHalfCylinderTransferOperator
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+  exact
+    realHilbertTopEigenspaceOrthogonalRestriction_pow_coe
       (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
         H N hN beta hbeta)
       (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
         H N hN beta hbeta)
       (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)
-      f)
+      f
 
 /-- Transfer-normalized endpoint coefficient extracted from the canonical
 normalized OS Gram feature.
