@@ -239,10 +239,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
   rfl
 
 /-- The tensor-transfer operator norm is bounded by the product of the two
-one-slice operator norms.  The proof is factored through the one-sided tensor
-maps so that the physical dependent carrier never has to be compared against a
-fully polymorphic four-carrier tensor-map theorem in one `isDefEq` step. -/
-set_option maxHeartbeats 1000000 in
+one-slice operator norms.  The right-tensor estimate is rebuilt pointwise on
+the exact physical carrier to avoid a large dependent `isDefEq` comparison. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_norm_le_mul
     (H N : ℕ)
     (hN : 0 < N)
@@ -264,12 +262,14 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
       H N hN beta hbeta) ^ n
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_eq_hilbertTensorMap]
   unfold hilbertTensorMap
+  have hR : ContinuousLinearMap.opNorm (hilbertTensorRTensor T K) ≤ ‖T‖ := by
+    refine ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg T) ?_
+    intro x
+    exact hilbertTensorRTensor_bound (E := K) (F := K) (G := K) T x
+  have hL : ContinuousLinearMap.opNorm (hilbertTensorLTensor T K) ≤ ‖T‖ := by
+    exact hilbertTensorLTensor_norm_le (E := K) (G := K) (H := K) T
   refine le_trans (ContinuousLinearMap.opNorm_comp_le _ _) ?_
-  exact mul_le_mul
-    (hilbertTensorRTensor_norm_le (G := K) T)
-    (hilbertTensorLTensor_norm_le (E := K) T)
-    (norm_nonneg (hilbertTensorLTensor T K))
-    (norm_nonneg T)
+  exact mul_le_mul hR hL (norm_nonneg (hilbertTensorLTensor T K)) (norm_nonneg T)
 
 /-- Positive Euclidean times inherit the doubled finite-volume exponential
 operator-norm decay on the whole native Hilbert tensor carrier. -/
