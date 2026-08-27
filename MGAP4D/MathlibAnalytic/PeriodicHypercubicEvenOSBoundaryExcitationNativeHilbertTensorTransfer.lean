@@ -242,6 +242,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
 one-slice operator norms.  The proof is factored through the one-sided tensor
 maps so that the physical dependent carrier never has to be compared against a
 fully polymorphic four-carrier tensor-map theorem in one `isDefEq` step. -/
+set_option maxHeartbeats 1000000 in
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_norm_le_mul
     (H N : ℕ)
     (hN : 0 < N)
