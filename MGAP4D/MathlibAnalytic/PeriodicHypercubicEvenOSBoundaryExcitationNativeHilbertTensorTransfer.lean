@@ -44,7 +44,7 @@ local instance osBoundaryExcitationNativeHilbertTensorTransferSpatialSliceHaarSF
 /-- Mathlib's native Hilbert-tensor norm on the physical excitation tensor
 carrier, kept local to this file so that it does not replace the canonical
 algebraic tensor module path used by the concrete pair-`L²` embedding. -/
-local instance osBoundaryExcitationNativeHilbertTensorTransferNormedAddCommGroup
+@[reducible] local instance osBoundaryExcitationNativeHilbertTensorTransferNormedAddCommGroup
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
@@ -60,7 +60,7 @@ local instance osBoundaryExcitationNativeHilbertTensorTransferNormedAddCommGroup
       H N hN beta hbeta)
 
 /-- The matching native Mathlib inner product, again intentionally file-local. -/
-local instance osBoundaryExcitationNativeHilbertTensorTransferInnerProductSpace
+@[reducible] local instance osBoundaryExcitationNativeHilbertTensorTransferInnerProductSpace
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
@@ -102,8 +102,6 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHi
       H N hN beta hbeta)
     T T
 
-set_option maxHeartbeats 1000000
-
 /-- The physical tensor-square wrapper inherits the generic product operator
 norm bound without reconstructing its factor topology from a large transfer
 expression. -/
@@ -123,8 +121,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
       (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
         H N hN beta hbeta)
       T
-
-set_option maxHeartbeats 200000
 
 /-- The continuous two-endpoint excitation transfer on Mathlib's native
 Hilbert tensor norm.  It evolves both physical one-slice excitation factors by
@@ -266,8 +262,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_add]
   rfl
 
-set_option maxHeartbeats 1000000
-
 /-- The tensor-transfer operator norm is bounded by the product of the two
 one-slice operator norms. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_norm_le_mul
@@ -288,8 +282,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
       H N hN beta hbeta
       ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
         H N hN beta hbeta) ^ n)
-
-set_option maxHeartbeats 200000
 
 /-- Positive Euclidean times inherit the doubled finite-volume exponential
 operator-norm decay on the whole native Hilbert tensor carrier. -/
