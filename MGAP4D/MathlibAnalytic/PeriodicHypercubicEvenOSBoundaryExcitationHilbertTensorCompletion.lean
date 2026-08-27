@@ -150,7 +150,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_
       H N hN beta hbeta)
 
 /-- The topological-closure carrier is complete in the native Mathlib subtype
-structure. -/
+structure.  We name the native instance explicitly to avoid expensive generic
+instance search through the large physical `L²` carrier. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete
     (H N : ℕ)
     (hN : 0 < N)
@@ -158,8 +159,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_
     (hbeta : 0 ≤ beta) :
     CompleteSpace
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-        H N hN beta hbeta) :=
-  inferInstance
+        H N hN beta hbeta) := by
+  exact Submodule.topologicalClosure.completeSpace
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairAlgebraicRange
+      H N hN beta hbeta)
 
 /-- Inclusion of the completed excitation sector into pair-`L²` as an exact
 linear isometry. -/
