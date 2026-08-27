@@ -7,7 +7,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory
-open scoped InnerProductSpace
+open scoped TensorProduct InnerProductSpace
 
 noncomputable section
 
@@ -63,6 +63,50 @@ local instance osBoundaryExcitationCompletedBoundaryMatrixElementSpatialSliceHaa
     SFinite (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := by
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
+
+/-- Use exactly the native Hilbert tensor norm chosen by the completed
+semigroup spine.  Naming it locally keeps norms on the dependent algebraic
+carrier definitionally aligned with the #2365/#2372 isometries. -/
+@[reducible] local instance osBoundaryExcitationCompletedBoundaryMatrixElementNormedAddCommGroup
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    NormedAddCommGroup
+      (PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
+        H N hN beta hbeta) :=
+  TensorProduct.instNormedAddCommGroup
+    (𝕜 := ℝ)
+    (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+    (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+
+@[reducible] local instance osBoundaryExcitationCompletedBoundaryMatrixElementAddCommGroup
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    AddCommGroup
+      (PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
+        H N hN beta hbeta) :=
+  (osBoundaryExcitationCompletedBoundaryMatrixElementNormedAddCommGroup
+    H N hN beta hbeta).toAddCommGroup
+
+@[reducible] local instance osBoundaryExcitationCompletedBoundaryMatrixElementInnerProductSpace
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    InnerProductSpace ℝ
+      (PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
+        H N hN beta hbeta) :=
+  TensorProduct.instInnerProductSpace
+    (𝕜 := ℝ)
+    (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+    (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
 
 /-- The completed two-endpoint excitation matrix element on the actual shared
 Wilson-boundary `L²` carrier.  Both vectors are represented through the exact
@@ -187,9 +231,21 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedBoundaryM
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
               H N hN beta hbeta) *
         ‖u‖ ^ 2 := by
-  simpa [pow_two] using
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedBoundaryMatrixElement_abs_le_exp_of_pos
-      H N hN beta hbeta n hn u u
+  calc
+    |periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedBoundaryMatrixElement
+        H N hN beta hbeta n u u| ≤
+      Real.exp
+          (-2 * (n : ℝ) *
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+              H N hN beta hbeta) *
+        ‖u‖ * ‖u‖ :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedBoundaryMatrixElement_abs_le_exp_of_pos
+        H N hN beta hbeta n hn u u
+    _ = Real.exp
+          (-2 * (n : ℝ) *
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+              H N hN beta hbeta) *
+        ‖u‖ ^ 2 := by ring
 
 /-- In the concrete pair-`L²` realization, completed evolution on the dense
 algebraic image is exactly the already-defined evolved algebraic endpoint-pair
