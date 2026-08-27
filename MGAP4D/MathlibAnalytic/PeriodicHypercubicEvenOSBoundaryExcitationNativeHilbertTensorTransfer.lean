@@ -262,11 +262,11 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
       H N hN beta hbeta) ^ n
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_eq_hilbertTensorMap]
   unfold hilbertTensorMap
-  have hR : ContinuousLinearMap.opNorm (hilbertTensorRTensor T K) ≤ ‖T‖ := by
-    refine ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg T) ?_
+  have hR : ‖hilbertTensorRTensor T K‖ ≤ ‖T‖ := by
+    refine ContinuousLinearMap.opNorm_le_bound (hilbertTensorRTensor T K) (norm_nonneg T) ?_
     intro x
     exact hilbertTensorRTensor_bound (E := K) (F := K) (G := K) T x
-  have hL : ContinuousLinearMap.opNorm (hilbertTensorLTensor T K) ≤ ‖T‖ := by
+  have hL : ‖hilbertTensorLTensor T K‖ ≤ ‖T‖ := by
     exact hilbertTensorLTensor_norm_le (E := K) (G := K) (H := K) T
   refine le_trans (ContinuousLinearMap.opNorm_comp_le _ _) ?_
   exact mul_le_mul hR hL (norm_nonneg (hilbertTensorLTensor T K)) (norm_nonneg T)
