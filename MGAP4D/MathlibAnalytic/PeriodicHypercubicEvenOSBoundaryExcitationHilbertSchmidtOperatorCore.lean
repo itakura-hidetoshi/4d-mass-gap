@@ -58,7 +58,7 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebrai
         H N hN beta hbeta →ₗ[ℝ]
       (PeriodicHypercubicEvenSpecialUnitarySpatialSliceRealL2 H N →L[ℝ]
         PeriodicHypercubicEvenSpecialUnitarySpatialSliceRealL2 H N) :=
-  (realL2HilbertSchmidtRectangularKernelOperatorContinuousLinearMap
+  (realL2HilbertSchmidtRectangularKernelToOperatorContinuousLinearMap
       (μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
       (ν := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)).toLinearMap.comp
     (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding
