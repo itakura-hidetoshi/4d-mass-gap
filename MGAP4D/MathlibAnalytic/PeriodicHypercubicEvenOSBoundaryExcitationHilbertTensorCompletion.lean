@@ -151,7 +151,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_
 
 /-- The topological-closure carrier is complete in the native Mathlib subtype
 structure.  We name the native instance explicitly to avoid expensive generic
-instance search through the large physical `L²` carrier. -/
+resolution through the large physical `L²` carrier. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete
     (H N : ℕ)
     (hN : 0 < N)
