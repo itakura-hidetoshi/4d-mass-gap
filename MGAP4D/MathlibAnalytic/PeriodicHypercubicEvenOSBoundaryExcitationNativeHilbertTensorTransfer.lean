@@ -218,16 +218,18 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
   rfl
 
 /-- The tensor-transfer operator norm is bounded by the product of the two
-one-slice operator norms.  This is derived from the generic pointwise tensor
-bound, avoiding construction of a specialized `‖hilbertTensorMap ...‖` term. -/
+one-slice operator norms.  `ContinuousLinearMap.opNorm` is written explicitly
+so the physical tensor specialization does not invoke the `Norm` instance
+wrapper during declaration elaboration. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_norm_le_mul
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta)
     (n : ℕ) :
-    ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
-        H N hN beta hbeta n‖ ≤
+    ContinuousLinearMap.opNorm
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
+        H N hN beta hbeta n) ≤
       ‖(periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
         H N hN beta hbeta) ^ n‖ *
       ‖(periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
@@ -272,8 +274,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
     (hbeta : 0 ≤ beta)
     (n : ℕ)
     (hn : 0 < n) :
-    ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
-        H N hN beta hbeta n‖ ≤
+    ContinuousLinearMap.opNorm
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
+        H N hN beta hbeta n) ≤
       Real.exp
         (-2 * (n : ℝ) *
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
@@ -291,8 +294,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
   have hNorm : 0 ≤ ‖T ^ n‖ := norm_nonneg (T ^ n)
   have hExp : 0 ≤ Real.exp (-(n : ℝ) * r) := (Real.exp_pos _).le
   calc
-    ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
-        H N hN beta hbeta n‖ ≤ ‖T ^ n‖ * ‖T ^ n‖ := by
+    ContinuousLinearMap.opNorm
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
+          H N hN beta hbeta n) ≤ ‖T ^ n‖ * ‖T ^ n‖ := by
       exact
         periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_norm_le_mul
           H N hN beta hbeta n
@@ -323,10 +327,12 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
   calc
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
         H N hN beta hbeta n x‖ ≤
-      ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
-        H N hN beta hbeta n‖ * ‖x‖ :=
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
-        H N hN beta hbeta n).le_opNorm x
+      ContinuousLinearMap.opNorm
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
+          H N hN beta hbeta n) * ‖x‖ := by
+      exact
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
+          H N hN beta hbeta n).le_opNorm x
     _ ≤ Real.exp
         (-2 * (n : ℝ) *
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
@@ -360,8 +366,9 @@ structure PeriodicHypercubicEvenOSBoundaryExcitationNativeHilbertTensorTransferP
             H N hN beta hbeta n
   doubledOperatorDecay :
     ∀ n : ℕ, 0 < n →
-      ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
-          H N hN beta hbeta n‖ ≤
+      ContinuousLinearMap.opNorm
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
+          H N hN beta hbeta n) ≤
         Real.exp
           (-2 * (n : ℝ) *
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
