@@ -102,9 +102,10 @@ subspace topology before constructing the native tensor map. -/
       H N hN beta hbeta)
     T T
 
-/-- The physical tensor-square wrapper inherits the generic product operator
-norm bound without reconstructing its factor topology from a large transfer
-expression. -/
+/-- The canonical native Hilbert tensor map for a physical one-slice operator
+inherits the generic product operator-norm bound.  The statement is kept on
+`hilbertTensorMap` itself so no wrapper equality is asked of definitional
+equality inside the norm. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorMap_norm_le
     (H N : ℕ)
     (hN : 0 < N)
@@ -114,8 +115,16 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
         H N hN beta hbeta →L[ℝ]
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
         H N hN beta hbeta) :
-    ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorMap
-        H N hN beta hbeta T‖ ≤ ‖T‖ * ‖T‖ := by
+    ‖hilbertTensorMap
+        (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta)
+        (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta)
+        (G := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta)
+        (H := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta)
+        T T‖ ≤ ‖T‖ * ‖T‖ := by
   exact
     hilbertTensorMap_self_norm_le
       (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
@@ -276,7 +285,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
         H N hN beta hbeta) ^ n‖ *
       ‖(periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
         H N hN beta hbeta) ^ n‖ := by
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_eq_map]
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_eq_hilbertTensorMap]
   exact
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorMap_norm_le
       H N hN beta hbeta
