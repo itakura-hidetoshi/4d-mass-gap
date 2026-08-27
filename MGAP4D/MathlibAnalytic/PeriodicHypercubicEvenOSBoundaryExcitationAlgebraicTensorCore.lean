@@ -43,11 +43,13 @@ noncomputable def realL2ExternalTensorBilinear
   toFun := realL2ExternalTensorLinearMapRight
   map_add' := by
     intro f₁ f₂
-    ext g
+    apply LinearMap.ext
+    intro g
     exact realL2ExternalTensor_add_left f₁ f₂ g
   map_smul' := by
     intro c f
-    ext g
+    apply LinearMap.ext
+    intro g
     exact realL2ExternalTensor_smul_left c f g
 
 @[simp] theorem realL2ExternalTensorBilinear_apply
