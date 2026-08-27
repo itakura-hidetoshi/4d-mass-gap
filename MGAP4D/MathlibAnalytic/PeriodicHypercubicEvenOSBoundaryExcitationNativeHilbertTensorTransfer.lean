@@ -125,7 +125,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
   · unfold hilbertTensorRTensor
     apply LinearMap.mkContinuous_norm_le
     exact norm_nonneg T
-  · simp_rw [hilbertTensorLTensor,
+  · set_option maxHeartbeats 2000000 in
+    simp_rw [hilbertTensorLTensor,
       ← LinearIsometryEquiv.toContinuousLinearMap_toLinearIsometry]
     grw [ContinuousLinearMap.opNorm_comp_le,
       ContinuousLinearMap.opNorm_comp_le,
