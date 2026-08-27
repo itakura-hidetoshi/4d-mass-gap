@@ -76,8 +76,7 @@ algebraic tensor module path used by the concrete pair-`L²` embedding. -/
       H N hN beta hbeta)
 
 /-- Tensor-square a single bounded operator on the physical one-slice
-excitation Hilbert space.  Binding the factor operator first pins the inherited
-subspace topology before constructing the native tensor map. -/
+excitation Hilbert space. -/
 @[reducible] noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorMap
     (H N : ℕ)
     (hN : 0 < N)
@@ -103,8 +102,7 @@ subspace topology before constructing the native tensor map. -/
     T T
 
 /-- The continuous two-endpoint excitation transfer on Mathlib's native
-Hilbert tensor norm.  It evolves both physical one-slice excitation factors by
-the same transfer power. -/
+Hilbert tensor norm. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
     (H N : ℕ)
     (hN : 0 < N)
@@ -120,8 +118,7 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHi
     ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta) ^ n)
 
-/-- Exact definitional receipt exposing the typed physical tensor-square wrapper
-underlying the transfer. -/
+/-- Exact definitional receipt exposing the typed physical tensor-square wrapper. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_eq_map
     (H N : ℕ)
     (hN : 0 < N)
@@ -132,6 +129,30 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
         H N hN beta hbeta n =
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorMap
         H N hN beta hbeta
+        ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta) ^ n) :=
+  rfl
+
+/-- Exact receipt exposing the generic Hilbert tensor map underlying the transfer. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_eq_hilbertTensorMap
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (n : ℕ) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
+        H N hN beta hbeta n =
+      hilbertTensorMap
+        (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta)
+        (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta)
+        (G := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta)
+        (H := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta)
+        ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta) ^ n)
         ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
           H N hN beta hbeta) ^ n) :=
   rfl
@@ -218,9 +239,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
   rfl
 
 /-- The tensor-transfer operator norm is bounded by the product of the two
-one-slice operator norms.  `ContinuousLinearMap.opNorm` is written explicitly
-so the physical tensor specialization does not invoke the `Norm` instance
-wrapper during declaration elaboration. -/
+one-slice operator norms. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_norm_le_mul
     (H N : ℕ)
     (hN : 0 < N)
@@ -234,36 +253,16 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
         H N hN beta hbeta) ^ n‖ *
       ‖(periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
         H N hN beta hbeta) ^ n‖ := by
-  let T :=
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-      H N hN beta hbeta) ^ n
-  refine ContinuousLinearMap.opNorm_le_bound
-    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
-      H N hN beta hbeta n)
-    (mul_nonneg (norm_nonneg T) (norm_nonneg T)) ?_
-  intro x
-  change
-    ‖hilbertTensorMap
-        (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta)
-        (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta)
-        (G := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta)
-        (H := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta)
-        T T x‖ ≤ (‖T‖ * ‖T‖) * ‖x‖
   exact
-    hilbertTensorMap_apply_norm_le
-      (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta)
-      (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta)
-      (G := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta)
-      (H := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta)
-      T T x
+    hilbertTensorMap_opNorm_le_of_eq
+      (A := periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
+        H N hN beta hbeta n)
+      (f := (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta) ^ n)
+      (g := (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta) ^ n)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_eq_hilbertTensorMap
+        H N hN beta hbeta n)
 
 /-- Positive Euclidean times inherit the doubled finite-volume exponential
 operator-norm decay on the whole native Hilbert tensor carrier. -/
