@@ -33,6 +33,28 @@ local instance osWeakStarPolarizedFiniteIntegralSpecialUnitaryBorelSpace
     (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
+/-- Explicit positive-time addition through the ambient observable algebra.
+
+Writing the subtype addition this way keeps the polarization proof independent
+of an expensive typeclass search for `HAdd` on the nested subalgebra carrier. -/
+private def physicalYangMillsOSPositiveTimeAdd
+    {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
+    (D : PhysicalYangMillsGaugeInvariantOSReflectionData S)
+    (F G : D.positiveTimeSubalgebra) : D.positiveTimeSubalgebra :=
+  ⟨(F : physicalYangMillsGaugeInvariantObservableSubalgebra S) +
+      (G : physicalYangMillsGaugeInvariantObservableSubalgebra S),
+    D.positiveTimeSubalgebra.add_mem F.property G.property⟩
+
+@[simp] private theorem physicalYangMillsOSPositiveTimeAdd_coe
+    {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
+    (D : PhysicalYangMillsGaugeInvariantOSReflectionData S)
+    (F G : D.positiveTimeSubalgebra) :
+    ((physicalYangMillsOSPositiveTimeAdd D F G : D.positiveTimeSubalgebra) :
+        physicalYangMillsGaugeInvariantObservableSubalgebra S) =
+      (F : physicalYangMillsGaugeInvariantObservableSubalgebra S) +
+        (G : physicalYangMillsGaugeInvariantObservableSubalgebra S) :=
+  rfl
+
 /-- Real Osterwalder--Schrader polarization on the physical positive-time
 observable algebra.
 
@@ -52,7 +74,7 @@ theorem PhysicalYangMillsGaugeInvariantOSReflectionData.osBilinForm_eq_quadratic
     let Gm : D.positiveTimeSubalgebra.toSubmodule :=
       ⟨(G : physicalYangMillsGaugeInvariantObservableSubalgebra S), G.property⟩
     D.osBilinForm omega Fm Gm =
-      (omega (D.quadraticObservable (F + G)) -
+      (omega (D.quadraticObservable (physicalYangMillsOSPositiveTimeAdd D F G)) -
           omega (D.quadraticObservable F) -
           omega (D.quadraticObservable G)) / 2 := by
   dsimp only
@@ -62,7 +84,7 @@ theorem PhysicalYangMillsGaugeInvariantOSReflectionData.osBilinForm_eq_quadratic
     ⟨(G : physicalYangMillsGaugeInvariantObservableSubalgebra S), G.property⟩
   have hpol :=
     (D.osBilinForm_isSymm omega hInvariant).polarization Fm Gm
-  simpa [Fm, Gm,
+  simpa [Fm, Gm, physicalYangMillsOSPositiveTimeAdd,
     PhysicalYangMillsGaugeInvariantOSReflectionData.osBilinForm_apply,
     PhysicalYangMillsGaugeInvariantOSReflectionData.quadraticObservable] using hpol
 
@@ -84,7 +106,7 @@ noncomputable def physicalYangMillsEvenPeriodicWilsonOSFinitePolarizedReflectedI
       S D halfExtent N hN beta hbeta)
     (n : ℕ)
     (F G : D.positiveTimeSubalgebra) : ℝ :=
-  let BFG := B.finiteBridge (F + G)
+  let BFG := B.finiteBridge (physicalYangMillsOSPositiveTimeAdd D F G)
   let BF := B.finiteBridge F
   let BG := B.finiteBridge G
   ((∫ A,
@@ -143,6 +165,7 @@ theorem physical_yang_mills_evenPeriodicWilsonOS_approximating_osBilinForm_eq_fi
     ⟨(F : physicalYangMillsGaugeInvariantObservableSubalgebra S), F.property⟩
   let Gm : D.positiveTimeSubalgebra.toSubmodule :=
     ⟨(G : physicalYangMillsGaugeInvariantObservableSubalgebra S), G.property⟩
+  let FG : D.positiveTimeSubalgebra := physicalYangMillsOSPositiveTimeAdd D F G
   have hpolarization :=
     D.osBilinForm_eq_quadratic_polarization omega (hInvariant n) F G
   change D.osBilinForm omega Fm Gm = _
@@ -151,8 +174,8 @@ theorem physical_yang_mills_evenPeriodicWilsonOS_approximating_osBilinForm_eq_fi
     physical_yang_mills_evenPeriodicWilsonOS_approximating_expectation_eq_finite_reflectedIntegral
       S.toPhysicalFourDimensionalYangMillsWeakLimit
       halfExtent N hN beta hbeta
-      (D.quadraticBoundedContinuousFunction (F + G))
-      (B.finiteBridge (F + G)) n
+      (D.quadraticBoundedContinuousFunction FG)
+      (B.finiteBridge FG) n
   have hF :=
     physical_yang_mills_evenPeriodicWilsonOS_approximating_expectation_eq_finite_reflectedIntegral
       S.toPhysicalFourDimensionalYangMillsWeakLimit
@@ -166,11 +189,11 @@ theorem physical_yang_mills_evenPeriodicWilsonOS_approximating_osBilinForm_eq_fi
       (D.quadraticBoundedContinuousFunction G)
       (B.finiteBridge G) n
   have hFG' :
-      omega (D.quadraticObservable (F + G)) =
+      omega (D.quadraticObservable FG) =
         ∫ A,
           periodicHypercubicEvenFullReflectedObservable
             (halfExtent n)
-            ((B.finiteBridge (F + G)).positiveHalfObservable n) A
+            ((B.finiteBridge FG).positiveHalfObservable n) A
           ∂(periodicHypercubicSpecialUnitaryWilsonSystem
             (PeriodicHypercubicEvenSideLength (halfExtent n))
             N hN (beta n) (hbeta n)).gibbsMeasure := by
@@ -210,6 +233,7 @@ theorem physical_yang_mills_evenPeriodicWilsonOS_approximating_osBilinForm_eq_fi
       physicalYangMillsApproximatingGaugeInvariantExpectation_apply]
     simpa [PhysicalYangMillsGaugeInvariantOSReflectionData.quadraticBoundedContinuousFunction]
       using hG
+  rw [show physicalYangMillsOSPositiveTimeAdd D F G = FG by rfl]
   rw [hFG', hF', hG']
   rfl
 
