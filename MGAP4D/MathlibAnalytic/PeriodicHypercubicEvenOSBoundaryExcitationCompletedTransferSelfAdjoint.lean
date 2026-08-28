@@ -102,8 +102,7 @@ theorem continuousLinearMap_isSelfAdjoint_of_inner_symm
   exact hA
 
 /-- A bounded endomorphism is self-adjoint when it intertwines, along a dense
-linear isometry, a symmetric bounded endomorphism on the dense source.  This
-packages the standard dense-core argument using Mathlib's `DenseRange.induction_on₂`. -/
+linear isometry, a symmetric bounded endomorphism on the dense source. -/
 theorem continuousLinearMap_isSelfAdjoint_of_dense_linearIsometry_intertwining
     {E F : Type*}
     [NormedAddCommGroup E]
@@ -129,6 +128,28 @@ theorem continuousLinearMap_isSelfAdjoint_of_dense_linearIsometry_intertwining
         _ = inner ℝ x (S y) := hS x y
         _ = inner ℝ (J x) (J (S y)) := (J.inner_map_map _ _).symm)
     u v
+
+/-- It is enough to know the symmetry equation directly on the dense image of
+a linear isometry.  This version keeps all induction invariants on the complete
+target Hilbert carrier and does not ask Lean to normalize the source carrier's
+inner-product expression away from the dense generators. -/
+theorem continuousLinearMap_isSelfAdjoint_of_dense_linearIsometry_matrix_symm
+    {E F : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [NormedAddCommGroup F]
+    [InnerProductSpace ℝ F]
+    [CompleteSpace F]
+    (J : E →ₗᵢ[ℝ] F)
+    (hDense : DenseRange J)
+    (T : F →L[ℝ] F)
+    (hDenseSymm : ∀ x y, inner ℝ (T (J x)) (J y) = inner ℝ (J x) (T (J y))) :
+    IsSelfAdjoint T := by
+  apply continuousLinearMap_isSelfAdjoint_of_inner_symm
+  intro u v
+  exact hDense.induction_on₂
+    (isClosed_eq (by fun_prop) (by fun_prop))
+    hDenseSymm u v
 
 local instance osBoundaryExcitationCompletedTransferSelfAdjointSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -294,10 +315,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogon
             rw [pow_succ]
             rfl
 
-/-- The completed two-endpoint excitation transfer is self-adjoint.  Instead
-of reopening the completion equivalence, we use its already-proved dense
-algebraic realization and the exact intertwining theorem for the completed
-pair transfer. -/
+/-- The completed two-endpoint excitation transfer is self-adjoint.  The dense
+symmetry invariant is kept on the concrete completed pair-Hilbert carrier; we
+descend to the native tensor inner product only for pure tensor generators. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isSelfAdjoint
     (H N : ℕ)
     (hN : 0 < N)
@@ -308,41 +328,66 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
         H N hN beta hbeta n) := by
   apply
-    continuousLinearMap_isSelfAdjoint_of_dense_linearIsometry_intertwining
+    continuousLinearMap_isSelfAdjoint_of_dense_linearIsometry_matrix_symm
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorToPairHilbertSectorNativeLinearIsometry
         H N hN beta hbeta)
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorToPairHilbertSectorNativeLinearIsometry_denseRange
         H N hN beta hbeta)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
-        H N hN beta hbeta n)
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
         H N hN beta hbeta n)
-  · intro x y
-    induction x using TensorProduct.induction_on with
-    | zero =>
-        simp only [map_zero, inner_zero_left]
-    | tmul x₁ x₂ =>
-        induction y using TensorProduct.induction_on with
-        | zero =>
-            simp only [map_zero, inner_zero_right]
-        | tmul y₁ y₂ =>
-            rw [
-              periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_tmul,
-              periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_tmul,
-              TensorProduct.inner_tmul,
-              TensorProduct.inner_tmul,
-              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
-                H N hN beta hbeta n x₁ y₁,
-              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
-                H N hN beta hbeta n x₂ y₂]
-        | add y z hy hz =>
-            simp only [map_add, inner_add_right, hy, hz]
-    | add x z hx hz =>
-        simp only [map_add, inner_add_left, hx, hz]
-  · intro x
-    exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_apply_algebraic
-        H N hN beta hbeta n x
+  intro x y
+  induction x using TensorProduct.induction_on with
+  | zero =>
+      simp only [map_zero, inner_zero_left]
+  | tmul x₁ x₂ =>
+      induction y using TensorProduct.induction_on with
+      | zero =>
+          simp only [map_zero, inner_zero_right]
+      | tmul y₁ y₂ =>
+          calc
+            inner ℝ
+                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+                  H N hN beta hbeta n
+                  (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorToPairHilbertSectorNativeLinearIsometry
+                    H N hN beta hbeta (x₁ ⊗ₜ[ℝ] x₂)))
+                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorToPairHilbertSectorNativeLinearIsometry
+                  H N hN beta hbeta (y₁ ⊗ₜ[ℝ] y₂)) =
+              inner ℝ
+                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
+                  H N hN beta hbeta n (x₁ ⊗ₜ[ℝ] x₂))
+                (y₁ ⊗ₜ[ℝ] y₂) := by
+              rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_apply_algebraic]
+              exact
+                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorToPairHilbertSectorNativeLinearIsometry
+                  H N hN beta hbeta).inner_map_map _ _
+            _ = inner ℝ
+                (x₁ ⊗ₜ[ℝ] x₂)
+                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
+                  H N hN beta hbeta n (y₁ ⊗ₜ[ℝ] y₂)) := by
+              rw [
+                periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_tmul,
+                periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_tmul,
+                TensorProduct.inner_tmul,
+                TensorProduct.inner_tmul,
+                periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
+                  H N hN beta hbeta n x₁ y₁,
+                periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
+                  H N hN beta hbeta n x₂ y₂]
+            _ = inner ℝ
+                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorToPairHilbertSectorNativeLinearIsometry
+                  H N hN beta hbeta (x₁ ⊗ₜ[ℝ] x₂))
+                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+                  H N hN beta hbeta n
+                  (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorToPairHilbertSectorNativeLinearIsometry
+                    H N hN beta hbeta (y₁ ⊗ₜ[ℝ] y₂))) := by
+              rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_apply_algebraic]
+              exact
+                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorToPairHilbertSectorNativeLinearIsometry
+                  H N hN beta hbeta).inner_map_map _ _ |>.symm
+      | add y z hy hz =>
+          simp only [map_add, inner_add_right, hy, hz]
+  | add x z hx hz =>
+      simp only [map_add, inner_add_left, hx, hz]
 
 /-- The completed Wilson-boundary matrix elements inherit exact endpoint
 symmetry from self-adjoint completed excitation dynamics. -/
