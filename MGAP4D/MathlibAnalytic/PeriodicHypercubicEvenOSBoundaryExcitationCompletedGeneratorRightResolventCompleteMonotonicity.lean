@@ -99,36 +99,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorR
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily_analyticAt
       H N hN beta hbeta lambda hlambda
 
-/-- The concrete completed right resolvent satisfies the sole differential
-hypothesis required by the generic all-order complete-monotonicity theorem.
-Keeping this bridge at first order avoids forcing Lean to normalize a giant
-dependent `iteratedDeriv` expression on the concrete carrier. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily_hasDerivWithinAt_neg_sq
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (lambda : ℝ)
-    (hlambda : 1 < lambda) :
-    HasDerivWithinAt
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily
-        H N hN beta hbeta)
-      (-((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily
-        H N hN beta hbeta lambda) ^ 2))
-      (Set.Ioi 1) lambda := by
-  have h :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily_hasDerivAt
-      H N hN beta hbeta lambda hlambda
-  have h' :
-      HasDerivAt
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily
-          H N hN beta hbeta)
-        (-((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily
-          H N hN beta hbeta lambda) ^ 2))
-        lambda := by
-    simpa only [pow_two] using h
-  exact h'.hasDerivWithinAt
-
 /-- Above one, the proof-independent right resolvent is self-adjoint. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily_isSelfAdjoint
     (H N : ℕ)
@@ -254,10 +224,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorR
 
 /-- After multiplying the exact abstract derivative value by its alternating
 sign, the two signs cancel and the remaining completed quadratic factor is
-nonnegative.  Together with
-`rightResolvent_quadratic_iteratedDeriv_eq_alternating_factorial` and the
-concrete first-order bridge above, this is the completed complete-monotonicity
-receipt without re-normalizing `iteratedDeriv` on the dependent carrier. -/
+nonnegative.  The exact abstract derivative identity is
+`rightResolvent_quadratic_iteratedDeriv_eq_alternating_factorial`; its only
+concrete differential input is already supplied by #2449 through
+`periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily_hasDerivAt`. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventAlternatingFactorialQuadratic_signCorrected_nonneg
     (H N : ℕ)
     (hN : 0 < N)
@@ -301,9 +271,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorR
       rw [← mul_assoc, hs, one_mul]
 
 /-- Audit-visible completed above-one complete-monotonicity package.  The exact
-all-order `iteratedDeriv` identity lives once in the generic layer; this
-concrete package supplies precisely its derivative hypothesis and the positive
-factor needed after alternating-sign cancellation. -/
+all-order `iteratedDeriv` identity is proved once in the generic layer; #2449
+already supplies its concrete first-order derivative hypothesis. -/
 structure PeriodicHypercubicEvenOSBoundaryExcitationCompletedGeneratorRightResolventCompleteMonotonicityPackage
     (H N : ℕ)
     (hN : 0 < N)
@@ -314,14 +283,6 @@ structure PeriodicHypercubicEvenOSBoundaryExcitationCompletedGeneratorRightResol
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily
         H N hN beta hbeta)
       (Set.Ioi 1)
-  derivativeHypothesis :
-    ∀ (lambda : ℝ), 1 < lambda →
-      HasDerivWithinAt
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily
-          H N hN beta hbeta)
-        (-((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily
-          H N hN beta hbeta lambda) ^ 2))
-        (Set.Ioi 1) lambda
   factorialDistanceBound :
     ∀ (n : ℕ) (lambda : ℝ), 1 < lambda →
       ‖((-1 : ℝ) ^ n) •
@@ -348,9 +309,6 @@ theorem periodicHypercubicEvenOSBoundaryExcitationCompletedGeneratorRightResolve
       H N hN beta hbeta :=
   { analyticOnNhd :=
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily_analyticOnNhd
-        H N hN beta hbeta
-    derivativeHypothesis :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily_hasDerivWithinAt_neg_sq
         H N hN beta hbeta
     factorialDistanceBound :=
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventAlternatingFactorialPower_norm_le
