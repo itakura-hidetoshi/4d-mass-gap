@@ -216,11 +216,57 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogon
             rw [pow_succ]
             rfl
 
-/-- The completed two-endpoint excitation transfer is self-adjoint.  Every
-native tensor is represented once as a finite sum of pure tensors; the exact
-pure-tensor transfer formula and the one-slice symmetry equation then reduce
-the dense-core symmetry to a finite double sum, avoiding recursive dependent
-tensor induction. -/
+/-- The native two-endpoint excitation transfer is symmetric for Mathlib's
+native Hilbert tensor inner product.  Arbitrary tensors are expanded once as
+finite sums of pure tensors, and symmetry is checked termwise. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_inner_symm
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (n : ℕ) :
+    ∀ x y : PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
+        H N hN beta hbeta,
+      inner ℝ
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
+            H N hN beta hbeta n x) y =
+        inner ℝ x
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
+            H N hN beta hbeta n y) := by
+  intro x y
+  obtain ⟨m, f, g, hx⟩ := TensorProduct.exists_sum_tmul_eq x
+  obtain ⟨k, p, q, hy⟩ := TensorProduct.exists_sum_tmul_eq y
+  rw [hx, hy]
+  simp only [map_sum, inner_sum, sum_inner,
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_tmul]
+  refine Finset.sum_congr rfl ?_
+  intro j hj
+  refine Finset.sum_congr rfl ?_
+  intro i hi
+  change
+    inner ℝ
+        ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta ^ n) (f i))
+        (p j) *
+      inner ℝ
+        ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta ^ n) (g i))
+        (q j) =
+    inner ℝ (f i)
+        ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta ^ n) (p j)) *
+      inner ℝ (g i)
+        ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta ^ n) (q j))
+  exact congrArg₂ (fun a b : ℝ => a * b)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
+      H N hN beta hbeta n (f i) (p j))
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
+      H N hN beta hbeta n (g i) (q j))
+
+/-- The completed two-endpoint excitation transfer is self-adjoint.  Native
+symmetry is transported along the dense algebraic isometry using the exact
+completed-transfer intertwining receipt. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isSelfAdjoint
     (H N : ℕ)
     (hN : 0 < N)
@@ -230,7 +276,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     IsSelfAdjoint
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
         H N hN beta hbeta n) := by
-  apply
+  exact
     continuousLinearMap_isSelfAdjoint_of_dense_linearIsometry_intertwining
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorToPairHilbertSectorNativeLinearIsometry
         H N hN beta hbeta)
@@ -240,40 +286,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
         H N hN beta hbeta n)
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
         H N hN beta hbeta n)
-  · intro x y
-    obtain ⟨m, f, g, hx⟩ := TensorProduct.exists_sum_tmul_eq x
-    obtain ⟨k, p, q, hy⟩ := TensorProduct.exists_sum_tmul_eq y
-    rw [hx, hy]
-    simp only [map_sum, inner_sum, sum_inner,
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_tmul]
-    refine Finset.sum_congr rfl ?_
-    intro j hj
-    refine Finset.sum_congr rfl ?_
-    intro i hi
-    change
-      inner ℝ
-          ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-            H N hN beta hbeta ^ n) (f i))
-          (p j) *
-        inner ℝ
-          ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-            H N hN beta hbeta ^ n) (g i))
-          (q j) =
-      inner ℝ (f i)
-          ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-            H N hN beta hbeta ^ n) (p j)) *
-        inner ℝ (g i)
-          ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-            H N hN beta hbeta ^ n) (q j))
-    rw [
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
-        H N hN beta hbeta n (f i) (p j),
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
-        H N hN beta hbeta n (g i) (q j)]
-  · intro x
-    exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_apply_algebraic
-        H N hN beta hbeta n x
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_inner_symm
+        H N hN beta hbeta n)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_apply_algebraic
+        H N hN beta hbeta n)
 
 /-- The completed Wilson-boundary matrix elements inherit exact endpoint
 symmetry from self-adjoint completed excitation dynamics. -/
