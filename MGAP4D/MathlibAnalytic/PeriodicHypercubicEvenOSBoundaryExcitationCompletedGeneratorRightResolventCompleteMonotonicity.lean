@@ -51,33 +51,6 @@ local instance osBoundaryExcitationCompletedRightCompleteMonotonicityPairHilbert
   periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete
     H N hN beta hbeta
 
-/-- The completed right resolvent satisfies the signed square derivative law
-within the whole open half-line above one. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily_hasDerivWithinAt
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (lambda : ℝ)
-    (hlambda : 1 < lambda) :
-    HasDerivWithinAt
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily
-        H N hN beta hbeta)
-      (-((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily
-        H N hN beta hbeta lambda) ^ 2))
-      (Set.Ioi 1) lambda := by
-  have h :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily_hasDerivAt
-      H N hN beta hbeta lambda hlambda
-  have h' :
-      HasDerivAt
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily
-          H N hN beta hbeta)
-        (-((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily
-          H N hN beta hbeta lambda) ^ 2)) lambda := by
-    simpa only [pow_two] using h
-  exact h'.hasDerivWithinAt
-
 /-- The completed right-resolvent family is analytic at every parameter above
 its sharp upper spectral endpoint. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily_analyticAt
@@ -161,18 +134,34 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorR
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventAlternatingDerivativeFamily
         H N hN beta hbeta (n + 1) lambda)
       (Set.Ioi 1) lambda := by
+  have hres :
+      ∀ {mu : ℝ}, 1 < mu →
+        HasDerivWithinAt
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily
+            H N hN beta hbeta)
+          (-((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily
+            H N hN beta hbeta mu) ^ 2))
+          (Set.Ioi 1) mu := by
+    intro mu hmu
+    have h :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily_hasDerivAt
+        H N hN beta hbeta mu hmu
+    have h' :
+        HasDerivAt
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily
+            H N hN beta hbeta)
+          (-((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily
+            H N hN beta hbeta mu) ^ 2)) mu := by
+      simpa only [pow_two] using h
+    exact h'.hasDerivWithinAt
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventAlternatingDerivativeFamily
   exact
     rightResolvent_alternatingFactorialDerivativeStep_hasDerivWithinAt
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily
         H N hN beta hbeta)
-      1
-      (fun {mu} hmu =>
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily_hasDerivWithinAt
-          H N hN beta hbeta mu hmu)
-      n hlambda
+      1 hres n hlambda
 
-/-- Fixed-vector evaluation of the operator hierarchy. -/
+/-- Fixed-vector evaluation of the operator derivative hierarchy. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventQuadraticDerivativeFamily
     (H N : ℕ)
     (hN : 0 < N)
@@ -187,8 +176,8 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilb
         H N hN beta hbeta n lambda u)
       u
 
-/-- The scalar sign-weighted derivative candidates obey the same all-order
-recurrence on the completed carrier. -/
+/-- The scalar derivative candidates obey the same all-order recurrence on the
+completed carrier. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventQuadraticDerivativeFamily_hasDerivWithinAt
     (H N : ℕ)
     (hN : 0 < N)
@@ -250,31 +239,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorR
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightShiftedOneStepGreenOperator_inner_nonneg
       H N hN beta hbeta lambda hlambda u
 
-/-- Every power of the positive right resolvent has nonnegative quadratic form. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily_pow_inner_nonneg
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (lambda : ℝ)
-    (hlambda : 1 < lambda)
-    (n : ℕ)
-    (u : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-      H N hN beta hbeta) :
-    0 ≤ inner ℝ
-      ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily
-        H N hN beta hbeta lambda ^ n) u)
-      u := by
-  exact
-    realContinuousLinearMap_pow_inner_nonneg_of_selfAdjoint_of_inner_nonneg
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily
-        H N hN beta hbeta lambda)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily_isSelfAdjoint
-        H N hN beta hbeta lambda hlambda)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily_inner_nonneg
-        H N hN beta hbeta lambda hlambda)
-      n u
-
 /-- The all-order operator candidate obeys the sharp factorial distance bound. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventAlternatingDerivativeFamily_norm_le
     (H N : ℕ)
@@ -306,8 +270,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorR
       S n ((lambda - 1)⁻¹) hnorm
 
 /-- The sign correction of every fixed-vector formal derivative value is
-nonnegative. Combined with the exact abstract iterated-derivative theorem in
-the generic layer, this is the completed-carrier complete-monotonicity receipt. -/
+nonnegative. The generic layer identifies these values with the exact abstract
+iterated derivatives. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventQuadraticDerivativeFamily_signCorrected_nonneg
     (H N : ℕ)
     (hN : 0 < N)
@@ -321,6 +285,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorR
     0 ≤ ((-1 : ℝ) ^ n) *
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventQuadraticDerivativeFamily
         H N hN beta hbeta u n lambda := by
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventQuadraticDerivativeFamily
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventAlternatingDerivativeFamily
+  simp only [Pi.smul_apply, ContinuousLinearMap.smul_apply,
+    real_inner_smul_left, smul_eq_mul]
   let s : ℝ := (-1 : ℝ) ^ n
   let b : ℝ :=
     (n.factorial : ℝ) *
@@ -342,10 +310,19 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorR
       realContinuousLinearMap_factorial_mul_pow_inner_nonneg
         (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily
           H N hN beta hbeta lambda)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily_isSelfAdjoint
-          H N hN beta hbeta lambda hlambda)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily_inner_nonneg
-          H N hN beta hbeta lambda hlambda)
+        (by
+          rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily_eq_green
+            H N hN beta hbeta lambda hlambda]
+          exact
+            periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightShiftedOneStepGreenOperator_isSelfAdjoint
+              H N hN beta hbeta lambda hlambda)
+        (by
+          intro v
+          rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightResolventFamily_eq_green
+            H N hN beta hbeta lambda hlambda]
+          exact
+            periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightShiftedOneStepGreenOperator_inner_nonneg
+              H N hN beta hbeta lambda hlambda v)
         n u
   change 0 ≤ s * (s * b)
   calc
