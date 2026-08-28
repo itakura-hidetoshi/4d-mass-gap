@@ -245,10 +245,31 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     obtain ⟨k, p, q, hy⟩ := TensorProduct.exists_sum_tmul_eq y
     rw [hx, hy]
     simp only [map_sum, inner_sum, sum_inner,
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_tmul,
-      TensorProduct.inner_tmul,
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_tmul]
+    refine Finset.sum_congr rfl ?_
+    intro j hj
+    refine Finset.sum_congr rfl ?_
+    intro i hi
+    change
+      inner ℝ
+          ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+            H N hN beta hbeta ^ n) (f i))
+          (p j) *
+        inner ℝ
+          ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+            H N hN beta hbeta ^ n) (g i))
+          (q j) =
+      inner ℝ (f i)
+          ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+            H N hN beta hbeta ^ n) (p j)) *
+        inner ℝ (g i)
+          ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+            H N hN beta hbeta ^ n) (q j))
+    rw [
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
-        H N hN beta hbeta n]
+        H N hN beta hbeta n (f i) (p j),
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
+        H N hN beta hbeta n (g i) (q j)]
   · intro x
     exact
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_apply_algebraic
