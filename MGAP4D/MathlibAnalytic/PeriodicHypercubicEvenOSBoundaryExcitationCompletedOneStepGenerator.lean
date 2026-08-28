@@ -72,7 +72,8 @@ theorem realContinuousLinearMap_one_sub_isSelfAdjoint
   have hSymm : T.toLinearMap.IsSymmetric :=
     (ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric).mp hT
   change inner ℝ (x - T x) y = inner ℝ x (y - T y)
-  rw [inner_sub_left, inner_sub_right, hSymm x y]
+  rw [inner_sub_left, inner_sub_right]
+  exact congrArg (fun z : ℝ => inner ℝ x y - z) (hSymm x y)
 
 local instance osBoundaryExcitationCompletedOneStepGeneratorSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -129,12 +130,12 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
         H N hN beta hbeta 1) ^ n := by
   induction n with
   | zero =>
-      simpa using
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_zero
-          H N hN beta hbeta
+      rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_zero,
+        pow_zero]
+      ext u
+      rfl
   | succ n ih =>
-      rw [Nat.succ_eq_add_one,
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_add,
+      rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_add,
         ih, pow_succ]
       rfl
 
@@ -152,7 +153,11 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
         H N hN beta hbeta m) ^ n := by
   induction n with
   | zero =>
-      simp [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_zero]
+      rw [Nat.mul_zero,
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_zero,
+        pow_zero]
+      ext u
+      rfl
   | succ n ih =>
       rw [Nat.mul_succ,
         periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_add,
@@ -301,8 +306,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorO
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_one_mem_resolventSet_of_pos
       H N hN beta hbeta 1 (by norm_num)
   rw [spectrum.mem_resolventSet_iff] at hres
-  simpa [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGenerator,
-    Algebra.algebraMap_eq_smul_one] using hres
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGenerator
+  simpa only [map_one] using hres
 
 /-- Audit-visible package linking the completed discrete semigroup to its
 one-step power generator and its coercive bounded discrete Hamiltonian. -/
