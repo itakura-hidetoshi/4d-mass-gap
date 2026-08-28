@@ -19,7 +19,7 @@ theorem realContinuousLinearMap_pow_inner_nonneg_of_isPositive
     [NormedAddCommGroup E]
     [InnerProductSpace ℝ E]
     (A : E →L[ℝ] E)
-    (hA : A.toLinearMap.IsPositive)
+    (hA : LinearMap.IsPositive A.toLinearMap)
     (n : ℕ)
     (u : E) :
     0 ≤ inner ℝ ((A ^ n) u) u := by
@@ -37,7 +37,11 @@ theorem realContinuousLinearMap_pow_inner_nonneg_of_isPositive
                 rw [show k + 1 = 1 + k by omega, pow_add, pow_one]
           rw [hpow]
           change 0 ≤ inner ℝ (A ((A ^ k) (A u))) u
-          rw [hA.isSymmetric ((A ^ k) (A u)) u]
+          have hs :
+              inner ℝ (A ((A ^ k) (A u))) u =
+                inner ℝ ((A ^ k) (A u)) (A u) := by
+            exact hA.isSymmetric ((A ^ k) (A u)) u
+          rw [hs]
           exact ih k (by omega) (A u)
 
 /-- The matrix of positive-operator matrix coefficients on any finite family
@@ -50,9 +54,9 @@ theorem realContinuousLinearMap_positiveCoefficientMatrix_posSemidef
     {ι : Type*}
     [Fintype ι]
     (A : E →L[ℝ] E)
-    (hA : A.toLinearMap.IsPositive)
+    (hA : LinearMap.IsPositive A.toLinearMap)
     (v : ι → E) :
-    (fun i j : ι => inner ℝ (A (v i)) (v j)).PosSemidef := by
+    Matrix.PosSemidef (fun i j : ι => inner ℝ (A (v i)) (v j)) := by
   apply Matrix.PosSemidef.of_dotProduct_mulVec_nonneg
   · apply Matrix.IsHermitian.ext
     intro i j
@@ -77,7 +81,7 @@ theorem hilbertTensorMap_self_inner_nonneg_of_isPositive
     [NormedAddCommGroup E]
     [InnerProductSpace ℝ E]
     (A : E →L[ℝ] E)
-    (hA : A.toLinearMap.IsPositive)
+    (hA : LinearMap.IsPositive A.toLinearMap)
     (z : E ⊗[ℝ] E) :
     0 ≤ inner ℝ (hilbertTensorMap A A z) z := by
   obtain ⟨k, x, y, rfl⟩ := TensorProduct.exists_sum_tmul_eq z
@@ -91,11 +95,16 @@ theorem hilbertTensorMap_self_inner_nonneg_of_isPositive
   have hN : N.PosSemidef := by
     simpa [N] using
       realContinuousLinearMap_positiveCoefficientMatrix_posSemidef A hA y
-  have hMN : (M ⊙ N).PosSemidef := hM.hadamard hN
-  have hones := hMN.dotProduct_mulVec_nonneg (fun _ : Fin k => (1 : ℝ))
-  simpa [M, N, Matrix.dotProduct, Matrix.mulVec, Matrix.hadamard_apply,
-    hilbertTensorMap, map_sum, inner_sum, sum_inner, TensorProduct.inner_tmul,
-    Finset.mul_sum, mul_comm, mul_left_comm, mul_assoc] using hones
+  have hMN : (Matrix.hadamard M N).PosSemidef :=
+    Matrix.PosSemidef.hadamard hM hN
+  have hones :=
+    hMN.dotProduct_mulVec_nonneg (fun _ : Fin k => (1 : ℝ))
+  have hsum : 0 ≤ ∑ i : Fin k, ∑ j : Fin k, M i j * N i j := by
+    simpa [Matrix.dotProduct, Matrix.mulVec, Matrix.hadamard,
+      Finset.mul_sum] using hones
+  simp only [map_sum, inner_sum, sum_inner, hilbertTensorMap_tmul,
+    TensorProduct.inner_tmul]
+  simpa [M, N] using hsum
 
 /-- Quadratic nonnegativity transports from a dense Hilbert source along a
 linear isometry intertwining the source and target bounded endomorphisms. -/
@@ -113,12 +122,13 @@ theorem continuousLinearMap_inner_nonneg_of_dense_linearIsometry_intertwining
     (hIntertwine : ∀ x, T (J x) = J (S x)) :
     ∀ u : F, 0 ≤ inner ℝ (T u) u := by
   intro u
-  exact hDense.induction_on
-    (isClosed_le (by fun_prop) (by fun_prop))
-    (fun x => by
-      rw [hIntertwine x]
-      simpa using hS x)
-    u
+  have hcontinuous : Continuous (fun y : F => inner ℝ (T y) y) := by
+    fun_prop
+  refine hDense.induction_on u (isClosed_le continuous_const hcontinuous) ?_
+  intro x
+  change 0 ≤ inner ℝ (T (J x)) (J x)
+  rw [hIntertwine x]
+  simpa using hS x
 
 local instance osBoundaryExcitationCompletedTransferPositivitySpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -222,12 +232,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogon
     periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isPositive
       H N hN beta hbeta
   have hR :
-      ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-          H N hN beta hbeta :
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-            H N hN beta hbeta →L[ℝ]
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-            H N hN beta hbeta).toLinearMap).IsPositive := by
+      LinearMap.IsPositive
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta).toLinearMap := by
     simpa [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator,
       S] using realHilbertTopEigenspaceOrthogonalRestriction_isPositive S hS
   exact
@@ -250,20 +257,24 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
         H N hN beta hbeta n z) z := by
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_eq_hilbertTensorMap]
-  let A :=
+  let A :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta →L[ℝ]
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta :=
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta) ^ n
-  have hAself : IsSelfAdjoint A := by
-    exact continuousLinearMap_isSelfAdjoint_of_inner_symm A
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
-        H N hN beta hbeta n)
-  have hA : A.toLinearMap.IsPositive := by
-    refine (LinearMap.isPositive_iff A.toLinearMap).2 ⟨?_, ?_⟩
-    · exact
-        (ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric).mp hAself
-    · exact
+  have hA : LinearMap.IsPositive A.toLinearMap := by
+    refine ⟨?_, ?_⟩
+    · intro x y
+      simpa [A] using
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
+          H N hN beta hbeta n x y
+    · intro x
+      simpa [A] using
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_nonneg
-          H N hN beta hbeta n
+          H N hN beta hbeta n x
+  change 0 ≤ inner ℝ (hilbertTensorMap A A z) z
   exact hilbertTensorMap_self_inner_nonneg_of_isPositive A hA z
 
 /-- Completed pair-Hilbert transfer quadratic forms are nonnegative, by dense
