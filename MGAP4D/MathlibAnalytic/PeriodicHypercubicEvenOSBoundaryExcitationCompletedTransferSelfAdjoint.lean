@@ -313,8 +313,19 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
       | zero =>
           simpa only [map_zero, inner_zero_right]
       | tmul y₁ y₂ =>
-          simp only [hilbertTensorMap_tmul, TensorProduct.inner_tmul]
-          rw [
+          change
+            inner ℝ
+                (((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+                  H N hN beta hbeta ^ n) x₁) ⊗ₜ[ℝ]
+                ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+                  H N hN beta hbeta ^ n) x₂))
+              (y₁ ⊗ₜ[ℝ] y₂) =
+              inner ℝ (x₁ ⊗ₜ[ℝ] x₂)
+                (((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+                  H N hN beta hbeta ^ n) y₁) ⊗ₜ[ℝ]
+                ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+                  H N hN beta hbeta ^ n) y₂))
+          rw [TensorProduct.inner_tmul, TensorProduct.inner_tmul,
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
               H N hN beta hbeta n x₁ y₁,
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
