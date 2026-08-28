@@ -101,6 +101,30 @@ theorem continuousLinearMap_isSelfAdjoint_of_inner_symm
   rw [ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric]
   exact hA
 
+/-- Generic Hilbert-space engine for the completed two-endpoint construction:
+a symmetric bounded endomorphism remains self-adjoint after taking its Hilbert
+tensor square, completing, and conjugating by a linear isometry equivalence. -/
+theorem hilbertTensorMap_completion_conjugate_isSelfAdjoint
+    {E F : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [NormedAddCommGroup F]
+    [InnerProductSpace ℝ F]
+    [CompleteSpace F]
+    (U : UniformSpace.Completion (E ⊗[ℝ] E) ≃ₗᵢ[ℝ] F)
+    (A : E →L[ℝ] E)
+    (hA : ∀ x y, inner ℝ (A x) y = inner ℝ x (A y)) :
+    IsSelfAdjoint
+      (continuousLinearMapConjugateLinearIsometryEquiv U
+        (hilbertTensorMap A A).completion) := by
+  apply continuousLinearMap_isSelfAdjoint_of_inner_symm
+  exact
+    continuousLinearMapConjugateLinearIsometryEquiv_inner_symm U
+      (hilbertTensorMap A A).completion
+      (continuousLinearMap_completion_inner_symm
+        (hilbertTensorMap A A)
+        (hilbertTensorMap_inner_symm A A hA hA))
+
 local instance osBoundaryExcitationCompletedTransferSelfAdjointSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
@@ -265,10 +289,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogon
             rw [pow_succ]
             rfl
 
-/-- The completed two-endpoint excitation transfer is self-adjoint.  The full
-inner-product symmetry route is kept inside this proof, so the elaborator does
-not have to materialize a global theorem whose signature expands the dependent
-completed tensor carrier. -/
+/-- The completed two-endpoint excitation transfer is self-adjoint.  All
+completion/tensor/conjugation reasoning has already been discharged by the
+generic Hilbert-space theorem above; the concrete proof only identifies the
+existing physical transfer with that generic construction. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isSelfAdjoint
     (H N : ℕ)
     (hN : 0 < N)
@@ -278,44 +302,17 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     IsSelfAdjoint
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
         H N hN beta hbeta n) := by
-  apply continuousLinearMap_isSelfAdjoint_of_inner_symm
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-  refine
-    continuousLinearMapConjugateLinearIsometryEquiv_inner_symm
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector
-        H N hN beta hbeta)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
-        H N hN beta hbeta n) ?_
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_eq_hilbertTensorMap]
   exact
-    continuousLinearMap_completion_inner_symm
-      (hilbertTensorMap
-        (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta)
-        (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta)
-        (G := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta)
-        (H := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta)
-        ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-          H N hN beta hbeta) ^ n)
-        ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-          H N hN beta hbeta) ^ n))
-      (hilbertTensorMap_inner_symm
-        (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta)
-        (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta)
-        ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-          H N hN beta hbeta) ^ n)
-        ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-          H N hN beta hbeta) ^ n)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
-          H N hN beta hbeta n)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
-          H N hN beta hbeta n))
+    hilbertTensorMap_completion_conjugate_isSelfAdjoint
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector
+        H N hN beta hbeta)
+      ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta) ^ n)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
+        H N hN beta hbeta n)
 
 /-- The completed Wilson-boundary matrix elements inherit exact endpoint
 symmetry from self-adjoint completed excitation dynamics. -/
@@ -334,30 +331,18 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedBoundaryM
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedBoundaryMatrixElement_eq_pair_inner,
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationCompletedBoundaryMatrixElement_eq_pair_inner]
-  have hsymm :
-      ∀ x y : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-          H N hN beta hbeta,
-        inner ℝ
-            (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-              H N hN beta hbeta n x) y =
-          inner ℝ x
-            (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-              H N hN beta hbeta n y) := by
-    rw [← ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric]
-    exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isSelfAdjoint
-        H N hN beta hbeta n
+  let T :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+      H N hN beta hbeta n
+  have hT : IsSelfAdjoint T :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isSelfAdjoint
+      H N hN beta hbeta n
+  have hSymm : T.toLinearMap.IsSymmetric :=
+    (ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric).mp hT
+  change inner ℝ u (T v) = inner ℝ v (T u)
   calc
-    inner ℝ u
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-          H N hN beta hbeta n v) =
-      inner ℝ
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-          H N hN beta hbeta n u) v :=
-      (hsymm u v).symm
-    _ = inner ℝ v
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-          H N hN beta hbeta n u) := real_inner_comm _ _
+    inner ℝ u (T v) = inner ℝ (T u) v := (hSymm u v).symm
+    _ = inner ℝ v (T u) := real_inner_comm _ _
 
 /-- Audit-visible package for the completed finite-volume self-adjoint transfer
 spine. -/
