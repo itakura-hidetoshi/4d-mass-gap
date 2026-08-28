@@ -268,7 +268,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogon
       n u
 
 /-- The native algebraic two-endpoint transfer has nonnegative quadratic form
-at every Euclidean time. -/
+at every Euclidean time.  The proof expands the concrete tensor once as a
+finite sum of pure tensors and applies the Schur-product theorem directly;
+it deliberately avoids rewriting the full dependent transfer map to a generic
+`hilbertTensorMap`, which would force expensive normalization. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_inner_nonneg
     (H N : ℕ)
     (hN : 0 < N)
@@ -280,7 +283,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
     0 ≤ inner ℝ
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
         H N hN beta hbeta n z) z := by
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_eq_hilbertTensorMap]
   let A :
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
           H N hN beta hbeta →L[ℝ]
@@ -298,10 +300,32 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
     simpa [A] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_nonneg
         H N hN beta hbeta n x
-  change 0 ≤ inner ℝ (hilbertTensorMap A A z) z
-  exact
-    hilbertTensorMap_self_inner_nonneg_of_inner_symm_of_inner_nonneg
-      A hSymm hpos z
+  obtain ⟨k, x, y, hz⟩ := TensorProduct.exists_sum_tmul_eq z
+  rw [hz]
+  let M : Matrix (Fin k) (Fin k) ℝ :=
+    fun i j => inner ℝ (A (x i)) (x j)
+  let N : Matrix (Fin k) (Fin k) ℝ :=
+    fun i j => inner ℝ (A (y i)) (y j)
+  have hM : M.PosSemidef := by
+    simpa [M] using
+      realContinuousLinearMap_positiveCoefficientMatrix_posSemidef_of_inner_symm_of_inner_nonneg
+        A hSymm hpos x
+  have hN : N.PosSemidef := by
+    simpa [N] using
+      realContinuousLinearMap_positiveCoefficientMatrix_posSemidef_of_inner_symm_of_inner_nonneg
+        A hSymm hpos y
+  have hMN : (Matrix.hadamard M N).PosSemidef :=
+    Matrix.PosSemidef.hadamard hM hN
+  have hones :=
+    hMN.dotProduct_mulVec_nonneg (fun _ : Fin k => (1 : ℝ))
+  have hsum : 0 ≤ ∑ i : Fin k, ∑ j : Fin k, M i j * N i j := by
+    simpa [dotProduct, Matrix.mulVec, Matrix.hadamard,
+      Finset.mul_sum] using hones
+  rw [Finset.sum_comm] at hsum
+  simp only [map_sum, inner_sum, sum_inner,
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_tmul,
+    TensorProduct.inner_tmul]
+  simpa [A, M, N] using hsum
 
 /-- Completed pair-Hilbert transfer quadratic forms are nonnegative, by dense
 transport of the algebraic Schur-product positivity theorem. -/
