@@ -42,7 +42,8 @@ theorem realContinuousLinearMap_shiftedInverse_resolvent_identity
     _ = (lambda - mu) • (Rlambda * Rmu) := by
       rw [mul_smul_comm, mul_one, smul_mul_assoc]
 
-/-- Norm form of the first resolvent identity. -/
+/-- Norm form of the first resolvent identity, kept generic so that normed
+endomorphism instances are synthesized only on an abstract carrier. -/
 theorem realContinuousLinearMap_shiftedInverse_resolvent_identity_norm
     {E : Type*}
     [NormedAddCommGroup E]
@@ -58,6 +59,33 @@ theorem realContinuousLinearMap_shiftedInverse_resolvent_identity_norm
   rw [realContinuousLinearMap_shiftedInverse_resolvent_identity
     G Rlambda Rmu lambda mu hlambda hmu]
   simp only [norm_smul, Real.norm_eq_abs]
+
+/-- Quantitative first-resolvent estimate from separate inverse norm bounds.
+This theorem is deliberately generic so the completed dependent carrier stays
+opaque during norm algebra. -/
+theorem realContinuousLinearMap_shiftedInverse_resolvent_norm_le
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [NormedSpace ℝ E]
+    (G Rlambda Rmu : E →L[ℝ] E)
+    (lambda mu a b : ℝ)
+    (hlambda :
+      Rlambda * (G - lambda • (1 : E →L[ℝ] E)) = 1)
+    (hmu :
+      (G - mu • (1 : E →L[ℝ] E)) * Rmu = 1)
+    (hRlambda : ‖Rlambda‖ ≤ a)
+    (hRmu : ‖Rmu‖ ≤ b)
+    (ha : 0 ≤ a) :
+    ‖Rlambda - Rmu‖ ≤ |lambda - mu| * (a * b) := by
+  calc
+    ‖Rlambda - Rmu‖ = |lambda - mu| * ‖Rlambda * Rmu‖ :=
+      realContinuousLinearMap_shiftedInverse_resolvent_identity_norm
+        G Rlambda Rmu lambda mu hlambda hmu
+    _ ≤ |lambda - mu| * (‖Rlambda‖ * ‖Rmu‖) :=
+      mul_le_mul_of_nonneg_left (norm_mul_le Rlambda Rmu) (abs_nonneg _)
+    _ ≤ |lambda - mu| * (a * b) := by
+      apply mul_le_mul_of_nonneg_left _ (abs_nonneg _)
+      exact mul_le_mul hRlambda hRmu (norm_nonneg Rmu) ha
 
 local instance osBoundaryExcitationCompletedResolventIdentitySpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -139,33 +167,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorS
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator_mul_green
         H N hN beta hbeta mu hmu)
 
-/-- Exact operator-norm form of the completed first resolvent identity. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator_sub_norm_eq
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (lambda mu : ℝ)
-    (hlambda :
-      lambda <
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
-          H N hN beta hbeta)
-    (hmu :
-      mu <
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
-          H N hN beta hbeta) :
-    ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator
-          H N hN beta hbeta lambda hlambda -
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator
-          H N hN beta hbeta mu hmu‖ =
-      |lambda - mu| *
-        ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator
-            H N hN beta hbeta lambda hlambda *
-          periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator
-            H N hN beta hbeta mu hmu‖ := by
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator_sub]
-  simp only [norm_smul, Real.norm_eq_abs]
-
 /-- The below-gap Green family is quantitatively Lipschitz, with the sharp
 product of inverse spectral distances furnished by the coercive bounds. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator_sub_norm_le
@@ -191,48 +192,28 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorS
               H N hN beta hbeta - lambda)⁻¹ *
           (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
               H N hN beta hbeta - mu)⁻¹) := by
-  let Rlambda :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator
-      H N hN beta hbeta lambda hlambda
-  let Rmu :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator
-      H N hN beta hbeta mu hmu
-  have hRlambda :
-      ‖Rlambda‖ ≤
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
-            H N hN beta hbeta - lambda)⁻¹ :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator_norm_le
-      H N hN beta hbeta lambda hlambda
-  have hRmu :
-      ‖Rmu‖ ≤
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
-            H N hN beta hbeta - mu)⁻¹ :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator_norm_le
-      H N hN beta hbeta mu hmu
-  have hinvLambda :
-      0 ≤
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
-            H N hN beta hbeta - lambda)⁻¹ :=
-    inv_nonneg.mpr (sub_nonneg.mpr hlambda.le)
-  have hproduct :
-      ‖Rlambda‖ * ‖Rmu‖ ≤
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
-              H N hN beta hbeta - lambda)⁻¹ *
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
-              H N hN beta hbeta - mu)⁻¹ :=
-    mul_le_mul hRlambda hRmu (norm_nonneg Rmu) hinvLambda
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator_sub_norm_eq]
-  calc
-    |lambda - mu| * ‖Rlambda * Rmu‖ ≤
-        |lambda - mu| * (‖Rlambda‖ * ‖Rmu‖) :=
-      mul_le_mul_of_nonneg_left (norm_mul_le Rlambda Rmu) (abs_nonneg _)
-    _ ≤
-        |lambda - mu| *
-          ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
-                H N hN beta hbeta - lambda)⁻¹ *
-            (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
-                H N hN beta hbeta - mu)⁻¹) :=
-      mul_le_mul_of_nonneg_left hproduct (abs_nonneg _)
+  exact
+    realContinuousLinearMap_shiftedInverse_resolvent_norm_le
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGenerator
+        H N hN beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator
+        H N hN beta hbeta lambda hlambda)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator
+        H N hN beta hbeta mu hmu)
+      lambda mu
+      ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
+        H N hN beta hbeta - lambda)⁻¹)
+      ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
+        H N hN beta hbeta - mu)⁻¹)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreen_mul_generator
+        H N hN beta hbeta lambda hlambda)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator_mul_green
+        H N hN beta hbeta mu hmu)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator_norm_le
+        H N hN beta hbeta lambda hlambda)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator_norm_le
+        H N hN beta hbeta mu hmu)
+      (inv_nonneg.mpr (sub_nonneg.mpr hlambda.le))
 
 /-- Audit-visible first-resolvent-identity and quantitative regularity package
 for the completed below-gap Green family. -/
