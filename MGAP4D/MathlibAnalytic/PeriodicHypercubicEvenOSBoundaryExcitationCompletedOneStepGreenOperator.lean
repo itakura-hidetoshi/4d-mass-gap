@@ -203,8 +203,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorO
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGenerator
           H N hN beta hbeta *
         ↑(hG.unit⁻¹) = 1
-  rw [← hG.unit_spec]
-  exact Units.mul_inv _
+  simpa only [hG.unit_spec] using hG.unit.mul_inv
 
 /-- The completed Green operator followed by the generator is also the identity. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGreen_mul_generator
@@ -223,8 +222,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorO
     ↑(hG.unit⁻¹) *
         periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGenerator
           H N hN beta hbeta = 1
-  rw [← hG.unit_spec]
-  exact Units.inv_mul _
+  simpa only [hG.unit_spec] using hG.unit.inv_mul
 
 /-- The completed one-step Green operator satisfies the explicit inverse-gap
 operator norm estimate. -/
