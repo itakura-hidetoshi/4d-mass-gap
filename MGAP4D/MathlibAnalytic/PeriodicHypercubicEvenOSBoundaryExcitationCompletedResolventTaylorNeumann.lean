@@ -285,8 +285,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorS
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator_norm_le
         H N hN beta hbeta lambda hlambda
   calc
-    ‖h • res‖ = |h| * ‖res‖ := by
-      rw [norm_smul, Real.norm_eq_abs]
+    ‖h • res‖ ≤ |h| * ‖res‖ := by
+      simpa only [Real.norm_eq_abs] using
+        ContinuousLinearMap.opNorm_smul_le h res
     _ ≤ |h| * (gap - lambda)⁻¹ :=
       mul_le_mul_of_nonneg_left hres (abs_nonneg h)
     _ < 1 := by
@@ -449,8 +450,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorS
   have ht :
       ‖h • res‖ ≤ |h| * (gap - lambda)⁻¹ := by
     calc
-      ‖h • res‖ = |h| * ‖res‖ := by
-        rw [norm_smul, Real.norm_eq_abs]
+      ‖h • res‖ ≤ |h| * ‖res‖ := by
+        simpa only [Real.norm_eq_abs] using
+          ContinuousLinearMap.opNorm_smul_le h res
       _ ≤ |h| * (gap - lambda)⁻¹ :=
         mul_le_mul_of_nonneg_left hres (abs_nonneg h)
   change ‖(h • res) ^ n * shifted‖ ≤
