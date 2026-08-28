@@ -33,7 +33,7 @@ theorem smul_pow_mul_eq_smul_pow_succ
     (h • x) ^ n * x = h ^ n • x ^ (n + 1) := by
   rw [smul_pow, Algebra.smul_mul_assoc, pow_succ]
 
-/-- Generic resolvent factorization around a unit base point.  If
+/-- Generic resolvent factorization around a unit base point. If
 `A = G - lambda • 1`, `R = A⁻¹`, and `‖h • R‖ < 1`, then
 
 `(G - (lambda + h) • 1)⁻¹ = (1 - h • R)⁻¹ R`.
@@ -70,7 +70,8 @@ theorem ringInverse_sub_add_smul_one_factor
     calc
       A * (1 - t) = A - A * t := by rw [mul_sub, mul_one]
       _ = A - h • (A * res) := by
-        rw [t, Algebra.mul_smul_comm]
+        change A - A * (h • res) = A - h • (A * res)
+        rw [Algebra.mul_smul_comm]
       _ = A - h • (1 : R) := by rw [hAr]
       _ = G - (lambda + h) • (1 : R) := by
         dsimp [A]
@@ -97,7 +98,7 @@ theorem ringInverse_sub_add_smul_one_factor
   have huniq := left_inv_eq_right_inv hcandidateLeft hringRight
   simpa only [t, res, A] using huniq.symm
 
-/-- Exact finite Taylor-Neumann expansion with algebraic remainder.  For every
+/-- Exact finite Taylor-Neumann expansion with algebraic remainder. For every
 `n`, the shifted resolvent is the first `n` Taylor coefficients plus
 `(hR)^n R(lambda+h)`. -/
 theorem ringInverse_sub_add_smul_one_eq_sum_range_add_remainder
@@ -123,12 +124,18 @@ theorem ringInverse_sub_add_smul_one_eq_sum_range_add_remainder
         Ring.inverse (1 - t) * res := by
     simpa only [t, res] using
       ringInverse_sub_add_smul_one_factor G lambda h hunit hsmall
+  have hneumann :
+      Ring.inverse (1 - t) =
+        (∑ i ∈ Finset.range n, t ^ i) +
+          t ^ n * Ring.inverse (1 - t) :=
+    NormedRing.inverse_one_sub_nth_order' n
+      (by simpa only [t, res] using hsmall)
   calc
     Ring.inverse (G - (lambda + h) • (1 : R)) =
         Ring.inverse (1 - t) * res := hfactor
     _ = ((∑ i ∈ Finset.range n, t ^ i) +
-          t ^ n * Ring.inverse (1 - t)) * res := by
-      rw [NormedRing.inverse_one_sub_nth_order' n (by simpa only [t, res] using hsmall)]
+          t ^ n * Ring.inverse (1 - t)) * res :=
+      congrArg (fun z : R => z * res) hneumann
     _ = (∑ i ∈ Finset.range n,
           h ^ i • res ^ (i + 1)) +
         t ^ n * (Ring.inverse (1 - t) * res) := by
@@ -143,7 +150,6 @@ theorem ringInverse_sub_add_smul_one_eq_sum_range_add_remainder
         (h • Ring.inverse (G - lambda • (1 : R))) ^ n *
           Ring.inverse (G - (lambda + h) • (1 : R)) := by
       rw [hfactor]
-      rfl
 
 /-- Infinite Taylor-Neumann expansion of the generic affine resolvent. -/
 theorem ringInverse_sub_add_smul_one_hasSum
@@ -178,6 +184,30 @@ theorem ringInverse_sub_add_smul_one_hasSum
   rw [hfactor]
   simpa only [t, res, smul_pow_mul_eq_smul_pow_succ] using
     hgeom.mul_right res
+
+/-- A small generic operator-norm lemma used to keep power and multiplication
+instance synthesis away from the huge concrete completed carrier. -/
+theorem continuousLinearMap_pow_mul_norm_le
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [NormedSpace ℝ E]
+    (A B : E →L[ℝ] E)
+    (n : ℕ)
+    (q M : ℝ)
+    (hA : ‖A‖ ≤ q)
+    (hB : ‖B‖ ≤ M) :
+    ‖A ^ n * B‖ ≤ q ^ n * M := by
+  cases n with
+  | zero =>
+      simpa using hB
+  | succ n =>
+      have hpow : ‖A ^ (n + 1)‖ ≤ q ^ (n + 1) := by
+        calc
+          ‖A ^ (n + 1)‖ ≤ ‖A‖ ^ (n + 1) :=
+            norm_pow_le' A (Nat.succ_pos n)
+          _ ≤ q ^ (n + 1) :=
+            pow_le_pow_left₀ (norm_nonneg A) hA (n + 1)
+      exact norm_mul_le_of_le hpow hB
 
 local instance osBoundaryExcitationCompletedResolventTaylorNeumannSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -255,12 +285,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorS
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator_norm_le
         H N hN beta hbeta lambda hlambda
   calc
-    ‖h • res‖ = |h| * ‖res‖ := by simp [norm_smul, Real.norm_eq_abs]
+    ‖h • res‖ = |h| * ‖res‖ := by
+      rw [norm_smul, Real.norm_eq_abs]
     _ ≤ |h| * (gap - lambda)⁻¹ :=
       mul_le_mul_of_nonneg_left hres (abs_nonneg h)
     _ < 1 := by
       rw [mul_inv_lt_iff₀ hgap]
-      simpa using hh
+      simpa only [one_mul] using hh
 
 /-- The completed resolvent Taylor-Neumann series converges in operator norm
 throughout the explicit radius `|h| < gap - lambda`. -/
@@ -399,7 +430,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorS
   have hshift : lambda + h < gap := by
     have hle : h ≤ |h| := le_abs_self h
     linarith
-  have hgap : 0 ≤ gap - lambda := sub_nonneg.mpr hlambda.le
   have hres : ‖res‖ ≤ (gap - lambda)⁻¹ := by
     dsimp [res, gap]
     rw [
@@ -419,20 +449,19 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorS
   have ht :
       ‖h • res‖ ≤ |h| * (gap - lambda)⁻¹ := by
     calc
-      ‖h • res‖ = |h| * ‖res‖ := by simp [norm_smul, Real.norm_eq_abs]
+      ‖h • res‖ = |h| * ‖res‖ := by
+        rw [norm_smul, Real.norm_eq_abs]
       _ ≤ |h| * (gap - lambda)⁻¹ :=
         mul_le_mul_of_nonneg_left hres (abs_nonneg h)
-  have hpow :
-      ‖(h • res) ^ n‖ ≤
-        (|h| * (gap - lambda)⁻¹) ^ n := by
-    calc
-      ‖(h • res) ^ n‖ ≤ ‖h • res‖ ^ n := norm_pow_le _ _
-      _ ≤ (|h| * (gap - lambda)⁻¹) ^ n :=
-        pow_le_pow_left₀ (norm_nonneg (h • res)) ht n
   change ‖(h • res) ^ n * shifted‖ ≤
     (|h| * (gap - lambda)⁻¹) ^ n *
       (gap - (lambda + h))⁻¹
-  exact norm_mul_le_of_le hpow hshifted
+  exact
+    continuousLinearMap_pow_mul_norm_le
+      (h • res) shifted n
+      (|h| * (gap - lambda)⁻¹)
+      ((gap - (lambda + h))⁻¹)
+      ht hshifted
 
 /-- Audit-visible package for the completed finite-volume Taylor-Neumann
 resolvent expansion. -/
