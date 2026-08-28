@@ -39,7 +39,11 @@ theorem ringInverse_sub_smul_one_analyticAt
       AnalyticAt ℝ Ring.inverse (G - lambda • (1 : R)) := by
     simpa only [hunit.unit_spec] using
       (analyticAt_inverse (𝕜 := ℝ) hunit.unit)
-  simpa only [Function.comp_def] using hinverse.comp' hshift
+  exact AnalyticAt.comp'
+    (𝕜 := ℝ)
+    (g := fun x : R => Ring.inverse x)
+    (f := fun mu : ℝ => G - mu • (1 : R))
+    hinverse hshift
 
 /-- Abstract resolvent-power differentiation within an open below-gap
 interval. If `R' = R^2`, then `(R^k)' = k • R^(k+1)`. -/
