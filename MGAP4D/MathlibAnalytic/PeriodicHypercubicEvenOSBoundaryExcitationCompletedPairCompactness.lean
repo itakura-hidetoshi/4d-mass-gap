@@ -196,14 +196,23 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
         H N hN beta hbeta
   have hRn : IsCompactOperator Rn := by
     exact
-      realContinuousLinearMap_isCompact_pow_of_pos
-        (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      @realContinuousLinearMap_isCompact_pow_of_pos
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta)
+        inferInstance
+        (osBoundaryExcitationCompletedPairCompactnessExcitationSliceNormedSpace
           H N hN beta hbeta)
         R hR n hn
   have hTensor :
       IsCompactOperator ((hilbertTensorMap Rn Rn).completion) :=
-    realHilbertCompact_tensorSquareCompletion_isCompact
-      (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+    @realHilbertCompact_tensorSquareCompletion_isCompact
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta)
+      inferInstance
+      (Submodule.innerProductSpace
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta))
+      (osBoundaryExcitationCompletedPairCompactnessExcitationSliceComplete
         H N hN beta hbeta)
       Rn hRn
   change
