@@ -11,15 +11,17 @@ open scoped TensorProduct InnerProductSpace InnerProduct BigOperators
 
 noncomputable section
 
-/-- Natural powers of a positive bounded real-Hilbert endomorphism have
-nonnegative quadratic forms.  The proof uses only positivity and symmetry,
-not a square root or a spectral theorem. -/
-theorem realContinuousLinearMap_pow_inner_nonneg_of_isPositive
+/-- Natural powers of a symmetric bounded real-Hilbert endomorphism with
+nonnegative quadratic form have nonnegative quadratic forms.  This is the
+positivity statement needed below, expressed without asking typeclass
+inference to reconstruct `LinearMap.IsPositive` on a dependent carrier. -/
+theorem realContinuousLinearMap_pow_inner_nonneg_of_inner_symm_of_inner_nonneg
     {E : Type*}
     [NormedAddCommGroup E]
     [InnerProductSpace ℝ E]
     (A : E →L[ℝ] E)
-    (hA : LinearMap.IsPositive A.toLinearMap)
+    (hSymm : ∀ x y : E, inner ℝ (A x) y = inner ℝ x (A y))
+    (hpos : ∀ x : E, 0 ≤ inner ℝ (A x) x)
     (n : ℕ)
     (u : E) :
     0 ≤ inner ℝ ((A ^ n) u) u := by
@@ -28,7 +30,7 @@ theorem realContinuousLinearMap_pow_inner_nonneg_of_isPositive
       rcases n with _ | n
       · simpa [real_inner_self_eq_norm_sq] using sq_nonneg ‖u‖
       · rcases n with _ | k
-        · simpa using hA.inner_nonneg_left u
+        · simpa using hpos u
         · have hpow : A ^ (k + 2) = A * (A ^ k) * A := by
             calc
               A ^ (k + 2) = A ^ (k + 1) * A := by
@@ -39,49 +41,53 @@ theorem realContinuousLinearMap_pow_inner_nonneg_of_isPositive
           change 0 ≤ inner ℝ (A ((A ^ k) (A u))) u
           have hs :
               inner ℝ (A ((A ^ k) (A u))) u =
-                inner ℝ ((A ^ k) (A u)) (A u) := by
-            exact hA.isSymmetric ((A ^ k) (A u)) u
+                inner ℝ ((A ^ k) (A u)) (A u) :=
+            hSymm ((A ^ k) (A u)) u
           rw [hs]
           exact ih k (by omega) (A u)
 
-/-- The matrix of positive-operator matrix coefficients on any finite family
-is positive semidefinite.  This is the Gram-type input for the Schur product
-argument on tensor squares. -/
-theorem realContinuousLinearMap_positiveCoefficientMatrix_posSemidef
+/-- The matrix of symmetric positive-operator coefficients on any finite
+family is positive semidefinite.  This is the Gram-type input for the Schur
+product argument on tensor squares. -/
+theorem realContinuousLinearMap_positiveCoefficientMatrix_posSemidef_of_inner_symm_of_inner_nonneg
     {E : Type*}
     [NormedAddCommGroup E]
     [InnerProductSpace ℝ E]
     {ι : Type*}
     [Fintype ι]
     (A : E →L[ℝ] E)
-    (hA : LinearMap.IsPositive A.toLinearMap)
+    (hSymm : ∀ x y : E, inner ℝ (A x) y = inner ℝ x (A y))
+    (hpos : ∀ x : E, 0 ≤ inner ℝ (A x) x)
     (v : ι → E) :
     Matrix.PosSemidef (fun i j : ι => inner ℝ (A (v i)) (v j)) := by
+  have hcoeff (i j : ι) :
+      inner ℝ (A (v i)) (v j) = inner ℝ (A (v j)) (v i) := by
+    calc
+      inner ℝ (A (v i)) (v j) = inner ℝ (v i) (A (v j)) :=
+        hSymm (v i) (v j)
+      _ = inner ℝ (A (v j)) (v i) := real_inner_comm _ _
   apply Matrix.PosSemidef.of_dotProduct_mulVec_nonneg
   · apply Matrix.IsHermitian.ext
     intro i j
-    simp only [star_trivial]
-    calc
-      inner ℝ (A (v j)) (v i) = inner ℝ (v j) (A (v i)) :=
-        hA.isSymmetric (v j) (v i)
-      _ = inner ℝ (A (v i)) (v j) := real_inner_comm _ _
+    simpa only [star_trivial] using hcoeff j i
   · intro c
-    have hquad := hA.inner_nonneg_left (∑ i, c i • v i)
-    simpa [Matrix.dotProduct, Matrix.mulVec, map_sum, inner_sum, sum_inner,
-      inner_smul_left, inner_smul_right, Finset.mul_sum,
+    have hquad := hpos (∑ i, c i • v i)
+    simpa [dotProduct, Matrix.mulVec, map_sum, inner_sum, sum_inner,
+      inner_smul_left, inner_smul_right, Finset.mul_sum, hcoeff,
       mul_comm, mul_left_comm, mul_assoc] using hquad
 
-/-- The tensor square of a positive bounded real-Hilbert endomorphism has a
-nonnegative quadratic form on the whole algebraic Hilbert tensor product.
-For a finite presentation `z = Σᵢ xᵢ ⊗ yᵢ`, the quadratic form is the sum of
-all entries of the Hadamard product of the two positive coefficient matrices;
-Mathlib's Schur product theorem makes this nonnegative. -/
-theorem hilbertTensorMap_self_inner_nonneg_of_isPositive
+/-- The tensor square of a symmetric positive bounded real-Hilbert
+endomorphism has a nonnegative quadratic form on the whole algebraic Hilbert
+tensor product.  For a finite presentation `z = Σᵢ xᵢ ⊗ yᵢ`, the quadratic
+form is the sum of all entries of the Hadamard product of the two positive
+coefficient matrices; Mathlib's Schur product theorem makes this nonnegative. -/
+theorem hilbertTensorMap_self_inner_nonneg_of_inner_symm_of_inner_nonneg
     {E : Type*}
     [NormedAddCommGroup E]
     [InnerProductSpace ℝ E]
     (A : E →L[ℝ] E)
-    (hA : LinearMap.IsPositive A.toLinearMap)
+    (hSymm : ∀ x y : E, inner ℝ (A x) y = inner ℝ x (A y))
+    (hpos : ∀ x : E, 0 ≤ inner ℝ (A x) x)
     (z : E ⊗[ℝ] E) :
     0 ≤ inner ℝ (hilbertTensorMap A A z) z := by
   obtain ⟨k, x, y, rfl⟩ := TensorProduct.exists_sum_tmul_eq z
@@ -91,17 +97,20 @@ theorem hilbertTensorMap_self_inner_nonneg_of_isPositive
     fun i j => inner ℝ (A (y i)) (y j)
   have hM : M.PosSemidef := by
     simpa [M] using
-      realContinuousLinearMap_positiveCoefficientMatrix_posSemidef A hA x
+      realContinuousLinearMap_positiveCoefficientMatrix_posSemidef_of_inner_symm_of_inner_nonneg
+        A hSymm hpos x
   have hN : N.PosSemidef := by
     simpa [N] using
-      realContinuousLinearMap_positiveCoefficientMatrix_posSemidef A hA y
+      realContinuousLinearMap_positiveCoefficientMatrix_posSemidef_of_inner_symm_of_inner_nonneg
+        A hSymm hpos y
   have hMN : (Matrix.hadamard M N).PosSemidef :=
     Matrix.PosSemidef.hadamard hM hN
   have hones :=
     hMN.dotProduct_mulVec_nonneg (fun _ : Fin k => (1 : ℝ))
   have hsum : 0 ≤ ∑ i : Fin k, ∑ j : Fin k, M i j * N i j := by
-    simpa [Matrix.dotProduct, Matrix.mulVec, Matrix.hadamard,
+    simpa [dotProduct, Matrix.mulVec, Matrix.hadamard,
       Finset.mul_sum] using hones
+  rw [Finset.sum_comm] at hsum
   simp only [map_sum, inner_sum, sum_inner, hilbertTensorMap_tmul,
     TensorProduct.inner_tmul]
   simpa [M, N] using hsum
@@ -212,6 +221,29 @@ local instance osBoundaryExcitationCompletedTransferPositivityPairHilbertSectorC
   periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete
     H N hN beta hbeta
 
+/-- The one-slice top-eigenspace-orthogonal transfer has nonnegative quadratic
+form, directly inherited from positivity of the ambient normalized physical
+transfer. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_nonneg
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (u : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta) :
+    0 ≤ inner ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta u) u := by
+  change 0 ≤ inner ℝ
+    (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+      H N hN beta hbeta
+      (u : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
+    (u : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+  exact
+    (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isPositive
+      H N hN beta hbeta).inner_nonneg_left
+        (u : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+
 /-- Every natural power of the one-slice top-eigenspace-orthogonal transfer
 has nonnegative quadratic form. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_nonneg
@@ -225,23 +257,15 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogon
     0 ≤ inner ℝ
       (((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
         H N hN beta hbeta) ^ n) u) u := by
-  let S :=
-    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-      H N hN beta hbeta
-  let hS :=
-    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isPositive
-      H N hN beta hbeta
-  have hR :
-      LinearMap.IsPositive
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-          H N hN beta hbeta).toLinearMap := by
-    simpa [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator,
-      S] using realHilbertTopEigenspaceOrthogonalRestriction_isPositive S hS
   exact
-    realContinuousLinearMap_pow_inner_nonneg_of_isPositive
+    realContinuousLinearMap_pow_inner_nonneg_of_inner_symm_of_inner_nonneg
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
         H N hN beta hbeta)
-      hR n u
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_symm
+        H N hN beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_nonneg
+        H N hN beta hbeta)
+      n u
 
 /-- The native algebraic two-endpoint transfer has nonnegative quadratic form
 at every Euclidean time. -/
@@ -264,18 +288,20 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
           H N hN beta hbeta :=
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta) ^ n
-  have hA : LinearMap.IsPositive A.toLinearMap := by
-    refine ⟨?_, ?_⟩
-    · intro x y
-      simpa [A] using
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
-          H N hN beta hbeta n x y
-    · intro x
-      simpa [A] using
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_nonneg
-          H N hN beta hbeta n x
+  have hSymm : ∀ x y, inner ℝ (A x) y = inner ℝ x (A y) := by
+    intro x y
+    simpa [A] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
+        H N hN beta hbeta n x y
+  have hpos : ∀ x, 0 ≤ inner ℝ (A x) x := by
+    intro x
+    simpa [A] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_nonneg
+        H N hN beta hbeta n x
   change 0 ≤ inner ℝ (hilbertTensorMap A A z) z
-  exact hilbertTensorMap_self_inner_nonneg_of_isPositive A hA z
+  exact
+    hilbertTensorMap_self_inner_nonneg_of_inner_symm_of_inner_nonneg
+      A hSymm hpos z
 
 /-- Completed pair-Hilbert transfer quadratic forms are nonnegative, by dense
 transport of the algebraic Schur-product positivity theorem. -/
