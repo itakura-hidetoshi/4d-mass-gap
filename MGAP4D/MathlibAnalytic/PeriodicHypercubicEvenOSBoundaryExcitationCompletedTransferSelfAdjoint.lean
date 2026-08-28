@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOSBoundaryExcitationCompletedRealEigenvalueExclusion
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOSBoundaryExcitationCompletedBoundaryMatrixElement
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import Mathlib.Tactic
 
@@ -29,10 +29,12 @@ theorem hilbertTensorMap_isSymmetric
       (E ⊗[ℝ] F) →ₗ[ℝ] (E ⊗[ℝ] F)).IsSymmetric := by
   intro x y
   induction x using TensorProduct.induction_on with
-  | zero => simp
+  | zero =>
+      simp only [map_zero, inner_zero_left, inner_zero_right]
   | tmul x₁ x₂ =>
       induction y using TensorProduct.induction_on with
-      | zero => simp
+      | zero =>
+          simp only [map_zero, inner_zero_left, inner_zero_right]
       | tmul y₁ y₂ =>
           simp only [hilbertTensorMap_tmul, TensorProduct.inner_tmul]
           rw [hA x₁ y₁, hB x₂ y₂]
@@ -129,6 +131,22 @@ local instance osBoundaryExcitationCompletedTransferSelfAdjointSpatialSliceHaarS
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
 
+/-- Expose the canonical submodule Hilbert structure of the physical
+one-slice excitation factor explicitly.  This keeps later coercions to
+`LinearMap.IsSymmetric` on the same module path as the already constructed
+continuous transfer operator. -/
+@[reducible] local instance osBoundaryExcitationCompletedTransferSelfAdjointFactorInnerProductSpace
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    InnerProductSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta) :=
+  Submodule.innerProductSpace
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+
 @[reducible] local instance osBoundaryExcitationCompletedTransferSelfAdjointNormedAddCommGroup
     (H N : ℕ)
     (hN : 0 < N)
@@ -143,17 +161,6 @@ local instance osBoundaryExcitationCompletedTransferSelfAdjointSpatialSliceHaarS
       H N hN beta hbeta)
     (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
       H N hN beta hbeta)
-
-@[reducible] local instance osBoundaryExcitationCompletedTransferSelfAdjointAddCommGroup
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    AddCommGroup
-      (PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
-        H N hN beta hbeta) :=
-  (osBoundaryExcitationCompletedTransferSelfAdjointNormedAddCommGroup
-    H N hN beta hbeta).toAddCommGroup
 
 @[reducible] local instance osBoundaryExcitationCompletedTransferSelfAdjointInnerProductSpace
     (H N : ℕ)
@@ -225,12 +232,12 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
         PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
           H N hN beta hbeta).IsSymmetric := by
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_eq_map]
+  have hOne :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_isSymmetric
+      H N hN beta hbeta
   apply hilbertTensorMap_isSymmetric
-  all_goals
-    apply continuousLinearMap_pow_isSymmetric
-    exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_isSymmetric
-        H N hN beta hbeta
+  · simpa using hOne.pow n
+  · simpa using hOne.pow n
 
 /-- The symmetric native tensor transfer remains symmetric after Hilbert
 completion. -/
@@ -300,11 +307,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     (n : ℕ) :
     IsSelfAdjoint
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-        H N hN beta hbeta n) := by
-  rw [ContinuousLinearMap.isSelfAdjoint_iff']
-  exact
-    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isSymmetric
-      H N hN beta hbeta n).clm_adjoint_eq
+        H N hN beta hbeta n) :=
+  (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isSymmetric
+    H N hN beta hbeta n).isSelfAdjoint
 
 /-- The completed Wilson-boundary matrix elements inherit exact endpoint
 symmetry from self-adjoint completed excitation dynamics. -/
