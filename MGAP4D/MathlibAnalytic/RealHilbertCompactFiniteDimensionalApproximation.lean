@@ -74,12 +74,19 @@ theorem realHilbertCompact_exists_finiteDimensional_factor_approx
           rw [norm_smul, Real.norm_eq_abs, abs_inv, abs_of_pos hxpos]
           exact inv_mul_cancel₀ hxpos.ne'
         have hu := hunit u (by rw [hu_norm])
-        have hscale :
-            ‖x‖ • (A - V.subtypeL ∘L B) u = (A - V.subtypeL ∘L B) x := by
+        have hx_repr : x = ‖x‖ • u := by
           dsimp [u]
-          rw [map_smul, smul_smul, mul_inv_cancel₀ hxpos.ne', one_smul]
-        rw [← hscale, norm_smul, Real.norm_eq_abs, abs_of_nonneg (norm_nonneg x)]
-        simpa [mul_comm] using mul_le_mul_of_nonneg_left hu (norm_nonneg x)
+          rw [smul_smul, mul_inv_cancel₀ hxpos.ne', one_smul]
+        calc
+          ‖(A - V.subtypeL ∘L B) x‖ =
+              ‖(A - V.subtypeL ∘L B) (‖x‖ • u)‖ :=
+            congrArg (fun z : E => ‖(A - V.subtypeL ∘L B) z‖) hx_repr
+          _ = ‖x‖ * ‖(A - V.subtypeL ∘L B) u‖ := by
+            rw [map_smul, norm_smul, Real.norm_eq_abs, abs_of_nonneg (norm_nonneg x)]
+          _ ≤ ‖x‖ * (ε / 2) :=
+            mul_le_mul_of_nonneg_left hu (norm_nonneg x)
+          _ = (ε / 2) * ‖x‖ := by
+            rw [mul_comm]
   refine ⟨V, inferInstance, B, lt_of_le_of_lt hop ?_⟩
   linarith
 
