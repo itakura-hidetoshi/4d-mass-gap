@@ -15,7 +15,7 @@ noncomputable section
 
 /-- In a real normed Banach algebra, the inverse of the affine shift
 `G - lambda • 1` is real analytic at every parameter where the shift is a
-unit.  This is the abstract analytic resolvent receipt. -/
+unit. This is the abstract analytic resolvent receipt. -/
 theorem ringInverse_sub_smul_one_analyticAt
     {R : Type*}
     [NormedRing R]
@@ -39,12 +39,10 @@ theorem ringInverse_sub_smul_one_analyticAt
       AnalyticAt ℝ Ring.inverse (G - lambda • (1 : R)) := by
     simpa only [hunit.unit_spec] using
       (analyticAt_inverse (𝕜 := ℝ) hunit.unit)
-  simpa only [Function.comp_def] using hinverse.comp hshift
+  simpa only [Function.comp_def] using hinverse.comp' hshift
 
-/-- Abstract resolvent-power differentiation.  If `R' = R^2` throughout an
-open below-gap interval, then `(R^k)' = k • R^(k+1)` there.  The proof is
-carried out once in an arbitrary real normed algebra so concrete completed
-carriers only need to supply their first-derivative receipt. -/
+/-- Abstract resolvent-power differentiation within an open below-gap
+interval. If `R' = R^2`, then `(R^k)' = k • R^(k+1)`. -/
 theorem resolvent_pow_hasDerivWithinAt
     {A : Type*}
     [NormedRing A]
@@ -112,8 +110,8 @@ theorem resolvent_pow_hasDerivWithinAt
       exact hmul'
 
 /-- Abstract all-order resolvent derivative formula on an open real interval.
-The entire iterated-derivative induction is kept generic, so specialization to
-large dependent completed Hilbert carriers is a small exact application. -/
+The iterated-derivative induction is proved once in an arbitrary real normed
+algebra rather than on a large dependent completed carrier. -/
 theorem resolvent_iteratedDerivWithin_eq_factorial
     {A : Type*}
     [NormedRing A]
@@ -155,30 +153,15 @@ theorem resolvent_iteratedDerivWithin_eq_factorial
           (HasDerivWithinAt.const_smul
             (𝕜 := ℝ) (R := ℝ) (F := A)
             (n.factorial : ℝ) hpow)
-      let derivValue : A :=
-        (n.factorial : ℝ) •
-          (((n + 1 : ℕ) : ℝ) • res lambda ^ (n + 2))
-      have hfscaled :
-          HasFDerivWithinAt
-            (fun mu => (n.factorial : ℝ) • res mu ^ (n + 1))
-            (toSpanSingleton ℝ derivValue)
-            (Set.Iio gap) lambda := by
-        simpa [derivValue] using hscaled.hasFDerivWithinAt
-      have hfderiv :
-          fderivWithin ℝ
-              (fun mu => (n.factorial : ℝ) • res mu ^ (n + 1))
-              (Set.Iio gap) lambda =
-            toSpanSingleton ℝ derivValue :=
-        hfscaled.fderivWithin (isOpen_Iio.uniqueDiffOn lambda hlambda)
       have hscaledDeriv :
           derivWithin
               (fun mu => (n.factorial : ℝ) • res mu ^ (n + 1))
-              (Set.Iio gap) lambda = derivValue := by
-        unfold derivWithin
-        rw [hfderiv]
-        simp [derivValue]
+              (Set.Iio gap) lambda =
+            (n.factorial : ℝ) •
+              (((n + 1 : ℕ) : ℝ) • res lambda ^ (n + 2)) :=
+        hscaled.derivWithin (isOpen_Iio.uniqueDiffOn lambda hlambda)
       rw [hscaledDeriv]
-      simp [derivValue, Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ,
+      simp [Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ,
         smul_smul, mul_comm, Nat.add_assoc]
 
 /-- Ordinary all-order version of the abstract resolvent derivative formula at
@@ -206,7 +189,98 @@ theorem resolvent_iteratedDeriv_eq_factorial
       resolvent_iteratedDerivWithin_eq_factorial
         res gap hres n hlambda
 
-/-- A reusable factorial norm estimate for powers of a bounded endomorphism. -/
+/-- Pointwise version of the abstract resolvent-power derivative identity. -/
+theorem resolvent_pow_hasDerivAt
+    {A : Type*}
+    [NormedRing A]
+    [NormedAlgebra ℝ A]
+    (res : ℝ → A)
+    (k : ℕ)
+    {lambda : ℝ}
+    (hres : HasDerivAt res (res lambda ^ 2) lambda) :
+    HasDerivAt
+      (fun mu => res mu ^ k)
+      ((k : ℝ) • res lambda ^ (k + 1))
+      lambda := by
+  induction k with
+  | zero =>
+      simpa using
+        (hasDerivAt_const (x := lambda) (c := (1 : A)))
+  | succ k ih =>
+      have hmul := HasDerivAt.mul
+        (𝕜 := ℝ)
+        (𝔸 := A)
+        ih hres
+      have hmul' :
+          HasDerivAt
+            (fun mu => res mu ^ (k + 1))
+            ((k : ℝ) • res lambda ^ (k + 1) * res lambda +
+              res lambda ^ k * res lambda ^ 2)
+            lambda := by
+        simpa only [Pi.mul_apply, pow_succ] using hmul
+      have hderiv :
+          ((k : ℝ) • res lambda ^ (k + 1) * res lambda +
+              res lambda ^ k * res lambda ^ 2) =
+            ((Nat.succ k : ℕ) : ℝ) •
+              res lambda ^ (Nat.succ k + 1) := by
+        let x := res lambda
+        change
+          ((k : ℝ) • x ^ (k + 1)) * x + x ^ k * x ^ 2 =
+            ((Nat.succ k : ℕ) : ℝ) • x ^ (Nat.succ k + 1)
+        have hsmul :
+            ((k : ℝ) • x ^ (k + 1)) * x =
+              (k : ℝ) • (x ^ (k + 1) * x) :=
+          Algebra.smul_mul_assoc (k : ℝ) (x ^ (k + 1)) x
+        rw [hsmul]
+        have hfirst : x ^ (k + 1) * x = x ^ (k + 2) := by
+          simpa [Nat.add_assoc] using (pow_succ x (k + 1)).symm
+        have hsecond : x ^ k * x ^ 2 = x ^ (k + 2) := by
+          simpa using (pow_add x k 2).symm
+        rw [hfirst, hsecond]
+        calc
+          (k : ℝ) • x ^ (k + 2) + x ^ (k + 2) =
+              (k : ℝ) • x ^ (k + 2) +
+                (1 : ℝ) • x ^ (k + 2) := by
+            rw [one_smul ℝ]
+          _ = ((k : ℝ) + 1) • x ^ (k + 2) :=
+            (add_smul (k : ℝ) (1 : ℝ) (x ^ (k + 2))).symm
+          _ = ((Nat.succ k : ℕ) : ℝ) •
+              x ^ (Nat.succ k + 1) := by
+            rw [Nat.cast_succ]
+      rw [hderiv] at hmul'
+      exact hmul'
+
+/-- Fundamental factorial recurrence for the formal derivative values of a
+resolvent. It packages the step from `n! R^(n+1)` to `(n+1)! R^(n+2)` using
+only a pointwise `HasDerivAt R R^2` receipt. -/
+theorem resolvent_factorialDerivativeStep_hasDerivAt
+    {A : Type*}
+    [NormedRing A]
+    [NormedAlgebra ℝ A]
+    (res : ℝ → A)
+    (n : ℕ)
+    {lambda : ℝ}
+    (hres : HasDerivAt res (res lambda ^ 2) lambda) :
+    HasDerivAt
+      (fun mu => (n.factorial : ℝ) • res mu ^ (n + 1))
+      (((n + 1).factorial : ℝ) • res lambda ^ (n + 2))
+      lambda := by
+  have hpow := resolvent_pow_hasDerivAt res (n + 1) hres
+  have hscaled :
+      HasDerivAt
+        (fun mu => (n.factorial : ℝ) • res mu ^ (n + 1))
+        ((n.factorial : ℝ) •
+          (((n + 1 : ℕ) : ℝ) • res lambda ^ (n + 2)))
+        lambda := by
+    simpa only [Pi.smul_apply] using
+      (HasDerivAt.const_smul
+        (𝕜 := ℝ) (R := ℝ) (F := A)
+        (n.factorial : ℝ) hpow)
+  simpa [Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ,
+    smul_smul, mul_comm, Nat.add_assoc] using hscaled
+
+/-- A reusable factorial norm estimate for powers of a bounded real
+endomorphism. -/
 theorem continuousLinearMap_factorial_smul_pow_norm_le
     {E : Type*}
     [NormedAddCommGroup E]
@@ -327,10 +401,11 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorS
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_analyticAt
       H N hN beta hbeta lambda hlambda
 
-/-- Exact all-order operator-norm derivative hierarchy for the completed
-finite-volume below-gap resolvent:
-`R^(n)(lambda) = n! • R(lambda)^(n+1)`. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_iteratedDeriv
+/-- Fundamental concrete all-order recurrence. For each `n`, the candidate
+`n`-th derivative value `n! R^(n+1)` has derivative
+`(n+1)! R^(n+2)`. Keeping this as `HasDerivAt` avoids normalizing Mathlib's
+derived `iteratedDeriv` predicate on the huge completed dependent carrier. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_factorialDerivativeStep_hasDerivAt
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
@@ -341,34 +416,35 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorS
       lambda <
         periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
           H N hN beta hbeta) :
-    iteratedDeriv n
+    HasDerivAt
+      (fun mu =>
+        (n.factorial : ℝ) •
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
+            H N hN beta hbeta mu) ^ (n + 1))
+      (((n + 1).factorial : ℝ) •
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
+          H N hN beta hbeta lambda) ^ (n + 2))
+      lambda := by
+  have hbase0 :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_hasDerivAt
+      H N hN beta hbeta lambda hlambda
+  have hbase :
+      HasDerivAt
         (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
           H N hN beta hbeta)
-        lambda =
-      (n.factorial : ℝ) •
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
-          H N hN beta hbeta lambda) ^ (n + 1) := by
-  let res :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
-      H N hN beta hbeta
-  let gap :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
-      H N hN beta hbeta
-  have hres :
-      ∀ {mu : ℝ}, mu < gap →
-        HasDerivWithinAt res (res mu ^ 2) (Set.Iio gap) mu := by
-    intro mu hmu
-    have hderiv :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_hasDerivAt
-        H N hN beta hbeta mu hmu
-    simpa only [res, pow_two] using hderiv.hasDerivWithinAt
-  exact resolvent_iteratedDeriv_eq_factorial
-    res gap hres n hlambda
+        ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
+          H N hN beta hbeta lambda) ^ 2)
+        lambda := by
+    simpa only [pow_two] using hbase0
+  exact
+    resolvent_factorialDerivativeStep_hasDerivAt
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
+        H N hN beta hbeta)
+      n hbase
 
-/-- Every all-order derivative of the completed finite-volume resolvent obeys
-the factorial inverse-gap estimate
-`‖R^(n)(lambda)‖ ≤ n! (gap - lambda)^(-(n+1))`. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_iteratedDeriv_norm_le
+/-- The exact formal `n`-th derivative value `n! R^(n+1)` obeys the
+factorial inverse-gap operator-norm estimate. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_factorialDerivativeValue_norm_le
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
@@ -379,16 +455,12 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorS
       lambda <
         periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
           H N hN beta hbeta) :
-    ‖iteratedDeriv n
+    ‖(n.factorial : ℝ) •
         (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
-          H N hN beta hbeta)
-        lambda‖ ≤
+          H N hN beta hbeta lambda) ^ (n + 1)‖ ≤
       (n.factorial : ℝ) *
         ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
           H N hN beta hbeta - lambda)⁻¹) ^ (n + 1) := by
-  rw [
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_iteratedDeriv
-      H N hN beta hbeta n lambda hlambda]
   let Rlambda :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
       H N hN beta hbeta lambda
@@ -403,15 +475,17 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorS
     exact
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator_norm_le
         H N hN beta hbeta lambda hlambda
-  exact continuousLinearMap_factorial_smul_pow_norm_le
-    Rlambda n
-    ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
-      H N hN beta hbeta - lambda)⁻¹)
-    hnorm
+  exact
+    continuousLinearMap_factorial_smul_pow_norm_le
+      Rlambda n
+      ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
+        H N hN beta hbeta - lambda)⁻¹)
+      hnorm
 
 /-- Audit-visible package for the completed finite-volume analytic resolvent
-hierarchy.  It records analyticity on the full below-gap interval, the exact
-factorial all-order derivative formula, and its inverse-gap norm hierarchy. -/
+hierarchy. The concrete carrier records fundamental analytic and `HasDerivAt`
+receipts; the exact Mathlib `iteratedDeriv` factorial formula is proved once by
+`resolvent_iteratedDeriv_eq_factorial` in the generic Banach-algebra layer. -/
 structure PeriodicHypercubicEvenOSBoundaryExcitationCompletedResolventAnalyticHierarchyPackage
     (H N : ℕ)
     (hN : 0 < N)
@@ -424,35 +498,36 @@ structure PeriodicHypercubicEvenOSBoundaryExcitationCompletedResolventAnalyticHi
       (Set.Iio
         (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
           H N hN beta hbeta))
-  iteratedDerivative :
+  factorialDerivativeStep :
     ∀ (n : ℕ) (lambda : ℝ)
       (hlambda :
         lambda <
           periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
             H N hN beta hbeta),
-      iteratedDeriv n
+      HasDerivAt
+        (fun mu =>
+          (n.factorial : ℝ) •
+            (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
+              H N hN beta hbeta mu) ^ (n + 1))
+        (((n + 1).factorial : ℝ) •
           (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
-            H N hN beta hbeta)
-          lambda =
-        (n.factorial : ℝ) •
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
-            H N hN beta hbeta lambda) ^ (n + 1)
-  iteratedDerivativeNormBound :
+            H N hN beta hbeta lambda) ^ (n + 2))
+        lambda
+  factorialDerivativeValueNormBound :
     ∀ (n : ℕ) (lambda : ℝ)
       (hlambda :
         lambda <
           periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
             H N hN beta hbeta),
-      ‖iteratedDeriv n
+      ‖(n.factorial : ℝ) •
           (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
-            H N hN beta hbeta)
-          lambda‖ ≤
+            H N hN beta hbeta lambda) ^ (n + 1)‖ ≤
         (n.factorial : ℝ) *
           ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
             H N hN beta hbeta - lambda)⁻¹) ^ (n + 1)
 
 /-- The completed finite-volume below-gap resolvent satisfies the full analytic
-hierarchy package. -/
+hierarchy package without unfolding any proof-dependent inverse unit. -/
 theorem periodicHypercubicEvenOSBoundaryExcitationCompletedResolventAnalyticHierarchyPackage
     (H N : ℕ)
     (hN : 0 < N)
@@ -466,11 +541,11 @@ theorem periodicHypercubicEvenOSBoundaryExcitationCompletedResolventAnalyticHier
         H N hN beta hbeta
   · intro n lambda hlambda
     exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_iteratedDeriv
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_factorialDerivativeStep_hasDerivAt
         H N hN beta hbeta n lambda hlambda
   · intro n lambda hlambda
     exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_iteratedDeriv_norm_le
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_factorialDerivativeValue_norm_le
         H N hN beta hbeta n lambda hlambda
 
 end
