@@ -33,10 +33,9 @@ theorem hilbertTensorMap_comp
       hilbertTensorMap f₂ g₂ ∘L hilbertTensorMap f₁ g₁ := by
   apply ContinuousLinearMap.ext
   intro x
-  induction x using TensorProduct.induction_on with
-  | zero => simp
-  | tmul x y => simp
-  | add x y hx hy => simp [hx, hy]
+  simpa only [hilbertTensorMap_apply, ContinuousLinearMap.comp_apply] using
+    (TensorProduct.map_map
+      f₂.toLinearMap g₂.toLinearMap f₁.toLinearMap g₁.toLinearMap x).symm
 
 /-- Difference identity for tensor squares.  It is the operator analogue of
 `A⊗A - B⊗B = (A-B)⊗A + B⊗(A-B)`. -/
@@ -54,9 +53,11 @@ theorem hilbertTensorMap_self_sub_self
   | tmul x y =>
       simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.add_apply,
         hilbertTensorMap_tmul]
-      simp only [sub_tmul, tmul_sub]
+      rw [sub_eq_add_neg, sub_eq_add_neg, sub_eq_add_neg]
+      simp only [add_tmul, tmul_add, neg_tmul, tmul_neg]
       abel
-  | add x y hx hy => simp [hx, hy]
+  | add x y hx hy =>
+      rw [map_add, map_add, hx, hy]
 
 /-- Operator-norm Lipschitz estimate for tensor squares. -/
 theorem hilbertTensorMap_self_sub_self_norm_le
@@ -70,7 +71,7 @@ theorem hilbertTensorMap_self_sub_self_norm_le
   calc
     ‖hilbertTensorMap (A - B) A + hilbertTensorMap B (A - B)‖ ≤
         ‖hilbertTensorMap (A - B) A‖ + ‖hilbertTensorMap B (A - B)‖ :=
-      norm_add_le _ _
+      ContinuousLinearMap.opNorm_add_le _ _
     _ ≤ ‖A - B‖ * ‖A‖ + ‖B‖ * ‖A - B‖ :=
       add_le_add
         (hilbertTensorMap_norm_le (A - B) A)
@@ -93,7 +94,11 @@ theorem continuousLinearMap_completion_sub_opNorm_le
     refine UniformSpace.Completion.induction_on x ?_ ?_
     · exact isClosed_le (by fun_prop) (by fun_prop)
     · intro a
-      simpa using (f - g).le_opNorm a
+      simpa only [ContinuousLinearMap.sub_apply,
+          ContinuousLinearMap.completion_apply_coe,
+          ← UniformSpace.Completion.coe_sub,
+          UniformSpace.Completion.norm_coe] using
+        (f - g).le_opNorm a
 
 /-- The completion of the tensor square of a map factoring through a
 finite-dimensional Hilbert subspace is compact.  The proof keeps the actual
@@ -111,6 +116,9 @@ theorem realHilbertFiniteDimensionalFactor_tensorSquareCompletion_isCompact
     IsCompactOperator
       ((hilbertTensorMap (V.subtypeL ∘L B) (V.subtypeL ∘L B)).completion) := by
   let W := V ⊗[ℝ] V
+  letI : FiniteDimensional ℝ W := by
+    dsimp [W]
+    infer_instance
   let e : W ≃ₗᵢ[ℝ] W := LinearIsometryEquiv.refl ℝ W
   have h_dense : DenseRange e.toLinearIsometry := by
     rw [DenseRange]
@@ -154,6 +162,10 @@ theorem realHilbertCompact_tensorSquareCompletion_isCompact
     (A : E →L[ℝ] E)
     (hA : IsCompactOperator A) :
     IsCompactOperator ((hilbertTensorMap A A).completion) := by
+  change
+    (hilbertTensorMap A A).completion ∈
+      {T : UniformSpace.Completion (E ⊗[ℝ] E) →L[ℝ]
+          UniformSpace.Completion (E ⊗[ℝ] E) | IsCompactOperator T}
   rw [← isClosed_setOf_isCompactOperator.closure_eq]
   apply mem_closure_iff.2
   intro ε hε
