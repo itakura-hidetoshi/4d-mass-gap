@@ -11,83 +11,6 @@ open scoped TensorProduct InnerProductSpace InnerProduct
 
 noncomputable section
 
-/-- Tensoring two bounded real-Hilbert endomorphisms that are symmetric at the
-level of inner products again gives an inner-product symmetric endomorphism. -/
-theorem hilbertTensorMap_inner_symm
-    {E F : Type*}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [NormedAddCommGroup F]
-    [InnerProductSpace ℝ F]
-    (A : E →L[ℝ] E)
-    (B : F →L[ℝ] F)
-    (hA : ∀ x y, inner ℝ (A x) y = inner ℝ x (A y))
-    (hB : ∀ x y, inner ℝ (B x) y = inner ℝ x (B y)) :
-    ∀ x y : E ⊗[ℝ] F,
-      inner ℝ (hilbertTensorMap A B x) y =
-        inner ℝ x (hilbertTensorMap A B y) := by
-  intro x y
-  induction x using TensorProduct.induction_on with
-  | zero =>
-      simp only [map_zero, inner_zero_left]
-  | tmul x₁ x₂ =>
-      induction y using TensorProduct.induction_on with
-      | zero =>
-          simp only [map_zero, inner_zero_right]
-      | tmul y₁ y₂ =>
-          change
-            inner ℝ (A x₁ ⊗ₜ[ℝ] B x₂) (y₁ ⊗ₜ[ℝ] y₂) =
-              inner ℝ (x₁ ⊗ₜ[ℝ] x₂) (A y₁ ⊗ₜ[ℝ] B y₂)
-          rw [TensorProduct.inner_tmul, TensorProduct.inner_tmul,
-            hA x₁ y₁, hB x₂ y₂]
-      | add y z hy hz =>
-          simp only [map_add, inner_add_right, hy, hz]
-  | add x z hx hz =>
-      simp only [map_add, inner_add_left, hx, hz]
-
-/-- Inner-product symmetry survives Mathlib's native completion functor. -/
-theorem continuousLinearMap_completion_inner_symm
-    {E : Type*}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    (A : E →L[ℝ] E)
-    (hA : ∀ x y, inner ℝ (A x) y = inner ℝ x (A y)) :
-    ∀ x y : UniformSpace.Completion E,
-      inner ℝ (A.completion x) y = inner ℝ x (A.completion y) := by
-  intro x y
-  refine UniformSpace.Completion.induction_on x ?_ ?_
-  · exact isClosed_eq (by fun_prop) (by fun_prop)
-  · intro a
-    refine UniformSpace.Completion.induction_on y ?_ ?_
-    · exact isClosed_eq (by fun_prop) (by fun_prop)
-    · intro b
-      simpa using hA a b
-
-/-- Isometric conjugation preserves inner-product symmetry. -/
-theorem continuousLinearMapConjugateLinearIsometryEquiv_inner_symm
-    {E F : Type*}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [NormedAddCommGroup F]
-    [InnerProductSpace ℝ F]
-    (U : E ≃ₗᵢ[ℝ] F)
-    (A : E →L[ℝ] E)
-    (hA : ∀ x y, inner ℝ (A x) y = inner ℝ x (A y)) :
-    ∀ x y : F,
-      inner ℝ (continuousLinearMapConjugateLinearIsometryEquiv U A x) y =
-        inner ℝ x (continuousLinearMapConjugateLinearIsometryEquiv U A y) := by
-  intro x y
-  change
-    inner ℝ (U (A (U.symm x))) y =
-      inner ℝ x (U (A (U.symm y)))
-  calc
-    inner ℝ (U (A (U.symm x))) y =
-        inner ℝ (A (U.symm x)) (U.symm y) := by
-      simpa using U.inner_map_map (A (U.symm x)) (U.symm y)
-    _ = inner ℝ (U.symm x) (A (U.symm y)) := hA _ _
-    _ = inner ℝ x (U (A (U.symm y))) := by
-      simpa using (U.inner_map_map (U.symm x) (A (U.symm y))).symm
-
 /-- On a complete real Hilbert space, the inner-product symmetry equation is
 exactly enough to obtain Mathlib self-adjointness for a bounded endomorphism. -/
 theorem continuousLinearMap_isSelfAdjoint_of_inner_symm
@@ -128,28 +51,6 @@ theorem continuousLinearMap_isSelfAdjoint_of_dense_linearIsometry_intertwining
         _ = inner ℝ x (S y) := hS x y
         _ = inner ℝ (J x) (J (S y)) := (J.inner_map_map _ _).symm)
     u v
-
-/-- It is enough to know the symmetry equation directly on the dense image of
-a linear isometry.  This version keeps all induction invariants on the complete
-target Hilbert carrier and does not ask Lean to normalize the source carrier's
-inner-product expression away from the dense generators. -/
-theorem continuousLinearMap_isSelfAdjoint_of_dense_linearIsometry_matrix_symm
-    {E F : Type*}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [NormedAddCommGroup F]
-    [InnerProductSpace ℝ F]
-    [CompleteSpace F]
-    (J : E →ₗᵢ[ℝ] F)
-    (hDense : DenseRange J)
-    (T : F →L[ℝ] F)
-    (hDenseSymm : ∀ x y, inner ℝ (T (J x)) (J y) = inner ℝ (J x) (T (J y))) :
-    IsSelfAdjoint T := by
-  apply continuousLinearMap_isSelfAdjoint_of_inner_symm
-  intro u v
-  exact hDense.induction_on₂
-    (isClosed_eq (by fun_prop) (by fun_prop))
-    hDenseSymm u v
 
 local instance osBoundaryExcitationCompletedTransferSelfAdjointSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -315,9 +216,11 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogon
             rw [pow_succ]
             rfl
 
-/-- The completed two-endpoint excitation transfer is self-adjoint.  The dense
-symmetry invariant is kept on the concrete completed pair-Hilbert carrier; we
-descend to the native tensor inner product only for pure tensor generators. -/
+/-- The completed two-endpoint excitation transfer is self-adjoint.  Every
+native tensor is represented once as a finite sum of pure tensors; the exact
+pure-tensor transfer formula and the one-slice symmetry equation then reduce
+the dense-core symmetry to a finite double sum, avoiding recursive dependent
+tensor induction. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isSelfAdjoint
     (H N : ℕ)
     (hN : 0 < N)
@@ -328,66 +231,28 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
         H N hN beta hbeta n) := by
   apply
-    continuousLinearMap_isSelfAdjoint_of_dense_linearIsometry_matrix_symm
+    continuousLinearMap_isSelfAdjoint_of_dense_linearIsometry_intertwining
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorToPairHilbertSectorNativeLinearIsometry
         H N hN beta hbeta)
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorToPairHilbertSectorNativeLinearIsometry_denseRange
         H N hN beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
+        H N hN beta hbeta n)
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
         H N hN beta hbeta n)
-  intro x y
-  induction x using TensorProduct.induction_on with
-  | zero =>
-      simp only [map_zero, inner_zero_left]
-  | tmul x₁ x₂ =>
-      induction y using TensorProduct.induction_on with
-      | zero =>
-          simp only [map_zero, inner_zero_right]
-      | tmul y₁ y₂ =>
-          calc
-            inner ℝ
-                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-                  H N hN beta hbeta n
-                  (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorToPairHilbertSectorNativeLinearIsometry
-                    H N hN beta hbeta (x₁ ⊗ₜ[ℝ] x₂)))
-                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorToPairHilbertSectorNativeLinearIsometry
-                  H N hN beta hbeta (y₁ ⊗ₜ[ℝ] y₂)) =
-              inner ℝ
-                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
-                  H N hN beta hbeta n (x₁ ⊗ₜ[ℝ] x₂))
-                (y₁ ⊗ₜ[ℝ] y₂) := by
-              rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_apply_algebraic]
-              exact
-                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorToPairHilbertSectorNativeLinearIsometry
-                  H N hN beta hbeta).inner_map_map _ _
-            _ = inner ℝ
-                (x₁ ⊗ₜ[ℝ] x₂)
-                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
-                  H N hN beta hbeta n (y₁ ⊗ₜ[ℝ] y₂)) := by
-              rw [
-                periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_tmul,
-                periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_tmul,
-                TensorProduct.inner_tmul,
-                TensorProduct.inner_tmul,
-                periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
-                  H N hN beta hbeta n x₁ y₁,
-                periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
-                  H N hN beta hbeta n x₂ y₂]
-            _ = inner ℝ
-                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorToPairHilbertSectorNativeLinearIsometry
-                  H N hN beta hbeta (x₁ ⊗ₜ[ℝ] x₂))
-                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-                  H N hN beta hbeta n
-                  (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorToPairHilbertSectorNativeLinearIsometry
-                    H N hN beta hbeta (y₁ ⊗ₜ[ℝ] y₂))) := by
-              rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_apply_algebraic]
-              exact
-                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorToPairHilbertSectorNativeLinearIsometry
-                  H N hN beta hbeta).inner_map_map _ _ |>.symm
-      | add y z hy hz =>
-          simp only [map_add, inner_add_right, hy, hz]
-  | add x z hx hz =>
-      simp only [map_add, inner_add_left, hx, hz]
+  · intro x y
+    obtain ⟨m, f, g, hx⟩ := TensorProduct.exists_sum_tmul_eq x
+    obtain ⟨k, p, q, hy⟩ := TensorProduct.exists_sum_tmul_eq y
+    rw [hx, hy]
+    simp_rw [map_sum, inner_sum, sum_inner,
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_tmul,
+      TensorProduct.inner_tmul,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
+        H N hN beta hbeta n]
+  · intro x
+    exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_apply_algebraic
+        H N hN beta hbeta n x
 
 /-- The completed Wilson-boundary matrix elements inherit exact endpoint
 symmetry from self-adjoint completed excitation dynamics. -/
