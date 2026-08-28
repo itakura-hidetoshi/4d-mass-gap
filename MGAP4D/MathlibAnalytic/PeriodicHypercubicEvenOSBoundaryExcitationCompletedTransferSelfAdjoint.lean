@@ -46,7 +46,9 @@ theorem hilbertTensorMap_inner_symm
       simp only [map_add, inner_add_left, hx, hz]
 
 /-- Inner-product symmetry of a bounded real-Hilbert endomorphism is inherited
-by every composition power. -/
+by every composition power.  The proof stays at the continuous-operator level,
+so no coercion between continuous-linear-map powers and linear-map powers is
+needed. -/
 theorem continuousLinearMap_pow_inner_symm
     {E : Type*}
     [NormedAddCommGroup E]
@@ -56,8 +58,22 @@ theorem continuousLinearMap_pow_inner_symm
     (n : ℕ) :
     ∀ x y : E,
       inner ℝ ((A ^ n) x) y = inner ℝ x ((A ^ n) y) := by
-  have hSymm : (A : E →ₗ[ℝ] E).IsSymmetric := hA
-  exact hSymm.pow n
+  induction n with
+  | zero =>
+      intro x y
+      simp
+  | succ n ih =>
+      intro x y
+      calc
+        inner ℝ ((A ^ Nat.succ n) x) y =
+            inner ℝ (A ((A ^ n) x)) y := by
+          rw [pow_succ']
+          rfl
+        _ = inner ℝ ((A ^ n) x) (A y) := hA _ _
+        _ = inner ℝ x ((A ^ n) (A y)) := ih _ _
+        _ = inner ℝ x ((A ^ Nat.succ n) y) := by
+          rw [pow_succ]
+          rfl
 
 /-- Inner-product symmetry survives Mathlib's native completion functor. -/
 theorem continuousLinearMap_completion_inner_symm
@@ -217,7 +233,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogon
       H N hN beta hbeta).isSymmetric _ _
 
 /-- Every power of the physical one-slice excitation transfer satisfies the
-same exact symmetry equation. -/
+same exact symmetry equation.  This proof is specialized directly to the
+already constructed transfer carrier, avoiding any re-synthesis of its module
+instance. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
     (H N : ℕ)
     (hN : 0 < N)
@@ -231,16 +249,46 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogon
             H N hN beta hbeta ^ n) x) y =
         inner ℝ x
           ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-            H N hN beta hbeta ^ n) y) :=
-  continuousLinearMap_pow_inner_symm
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-      H N hN beta hbeta)
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_symm
-      H N hN beta hbeta)
-    n
+            H N hN beta hbeta ^ n) y) := by
+  induction n with
+  | zero =>
+      intro x y
+      simp
+  | succ n ih =>
+      intro x y
+      calc
+        inner ℝ
+            ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+              H N hN beta hbeta ^ Nat.succ n) x) y =
+          inner ℝ
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+              H N hN beta hbeta
+              ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+                H N hN beta hbeta ^ n) x)) y := by
+            rw [pow_succ']
+            rfl
+        _ = inner ℝ
+            ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+              H N hN beta hbeta ^ n) x)
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+              H N hN beta hbeta y) :=
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_symm
+            H N hN beta hbeta _ _
+        _ = inner ℝ x
+            ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+              H N hN beta hbeta ^ n)
+              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+                H N hN beta hbeta y)) := ih _ _
+        _ = inner ℝ x
+            ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+              H N hN beta hbeta ^ Nat.succ n) y) := by
+            rw [pow_succ]
+            rfl
 
 /-- Every native algebraic two-endpoint excitation transfer satisfies the exact
-Hilbert-tensor symmetry equation. -/
+Hilbert-tensor symmetry equation.  The tensor induction is carried out after
+rewriting to the already typed native map, so no new dependent operator type
+has to be inferred. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_inner_symm
     (H N : ℕ)
     (hN : 0 < N)
@@ -256,16 +304,25 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
           (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
             H N hN beta hbeta n y) := by
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_eq_map]
-  exact
-    hilbertTensorMap_inner_symm
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-        H N hN beta hbeta ^ n)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-        H N hN beta hbeta ^ n)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
-        H N hN beta hbeta n)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
-        H N hN beta hbeta n)
+  intro x y
+  induction x using TensorProduct.induction_on with
+  | zero =>
+      simpa only [map_zero, inner_zero_left]
+  | tmul x₁ x₂ =>
+      induction y using TensorProduct.induction_on with
+      | zero =>
+          simpa only [map_zero, inner_zero_right]
+      | tmul y₁ y₂ =>
+          simp only [hilbertTensorMap_tmul, TensorProduct.inner_tmul]
+          rw [
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
+              H N hN beta hbeta n x₁ y₁,
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
+              H N hN beta hbeta n x₂ y₂]
+      | add y z hy hz =>
+          simp only [map_add, inner_add_right, hy, hz]
+  | add x z hx hz =>
+      simp only [map_add, inner_add_left, hx, hz]
 
 /-- The native two-endpoint symmetry equation survives Hilbert completion. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer_inner_symm
