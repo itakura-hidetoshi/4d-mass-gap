@@ -48,11 +48,40 @@ theorem realContinuousLinearMap_sub_smul_one_isSelfAdjoint
   intro x y
   have hSymm : G.toLinearMap.IsSymmetric :=
     (ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric).mp hG
+  have hxy : inner ℝ (G x) y = inner ℝ x (G y) := hSymm x y
   change
     inner ℝ (G x - lambda • x) y =
       inner ℝ x (G y - lambda • y)
-  rw [inner_sub_left, inner_sub_right, hSymm x y,
+  rw [inner_sub_left, inner_sub_right, hxy,
     real_inner_smul_left, real_inner_smul_right]
+
+/-- Abstractly, `G - lambda I` for `G = I - T` is exactly the transfer
+resolvent normal form `(1-lambda)I - T`.  Keeping this algebra identity generic
+avoids instance search through the concrete dependent completed carrier. -/
+theorem realContinuousLinearMap_one_sub_sub_smul_one_eq_transfer_resolvent_form
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [NormedSpace ℝ E]
+    (T : E →L[ℝ] E)
+    (lambda : ℝ) :
+    (1 - T) - lambda • (1 : E →L[ℝ] E) =
+      algebraMap ℝ (E →L[ℝ] E) (1 - lambda) - T := by
+  rw [Algebra.algebraMap_eq_smul_one, sub_smul, one_smul]
+  abel
+
+/-- If `G - lambda I` is a unit, then `lambda` belongs to the real resolvent set
+of `G`.  This generic wrapper keeps scalar-algebra normalization away from the
+concrete completed carrier. -/
+theorem realContinuousLinearMap_mem_resolventSet_of_sub_smul_one_isUnit
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [NormedSpace ℝ E]
+    (G : E →L[ℝ] E)
+    (lambda : ℝ)
+    (h : IsUnit (G - lambda • (1 : E →L[ℝ] E))) :
+    lambda ∈ resolventSet ℝ G := by
+  rw [spectrum.mem_resolventSet_iff, IsUnit.sub_iff]
+  simpa only [Algebra.algebraMap_eq_smul_one] using h
 
 local instance osBoundaryExcitationCompletedShiftedGeneratorSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -95,9 +124,8 @@ local instance osBoundaryExcitationCompletedShiftedGeneratorPairHilbertSectorCom
   periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete
     H N hN beta hbeta
 
-/-- The completed one-step generator shifted by a real spectral parameter.
-It is written in the transfer-resolvent normal form `(1-lambda)I - T₁`, which
-is exactly `G - lambda I`. -/
+/-- The completed one-step discrete generator shifted by a real spectral
+parameter. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator
     (H N : ℕ)
     (hN : 0 < N)
@@ -108,18 +136,18 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilb
         H N hN beta hbeta →L[ℝ]
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
         H N hN beta hbeta :=
-  algebraMap ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-          H N hN beta hbeta →L[ℝ]
+  periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGenerator
+      H N hN beta hbeta -
+    lambda •
+      (1 :
         periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-          H N hN beta hbeta)
-      (1 - lambda) -
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-      H N hN beta hbeta 1
+            H N hN beta hbeta →L[ℝ]
+          periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
+            H N hN beta hbeta)
 
-/-- The transfer-resolvent normal form is exactly the ordinary shifted
-discrete generator `G - lambda I`. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator_eq_generator_sub_smul_one
+/-- The shifted generator is exactly the transfer-resolvent normal form
+`(1-lambda)I - T₁`. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator_eq_transfer_resolvent_form
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
@@ -127,18 +155,21 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorS
     (lambda : ℝ) :
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator
         H N hN beta hbeta lambda =
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGenerator
-          H N hN beta hbeta -
-        lambda •
-          (1 :
+      algebraMap ℝ
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
+              H N hN beta hbeta →L[ℝ]
             periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-                H N hN beta hbeta →L[ℝ]
-              periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-                H N hN beta hbeta) := by
+              H N hN beta hbeta)
+          (1 - lambda) -
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+          H N hN beta hbeta 1 := by
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGenerator
-  rw [map_sub, map_one, Algebra.algebraMap_eq_smul_one]
-  module
+  exact
+    realContinuousLinearMap_one_sub_sub_smul_one_eq_transfer_resolvent_form
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+        H N hN beta hbeta 1)
+      lambda
 
 /-- The shifted generator inherits the sharp shifted coercive lower bound. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator_inner_lower_bound
@@ -155,7 +186,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorS
         (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator
           H N hN beta hbeta lambda u)
         u := by
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator_eq_generator_sub_smul_one]
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator
   exact
     realContinuousLinearMap_sub_smul_one_inner_lower_bound
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGenerator
@@ -184,7 +215,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorS
           H N hN beta hbeta - lambda :=
   sub_pos.mpr hlambda
 
-/-- Every below-gap shifted completed generator is self-adjoint. -/
+/-- Every real shift of the completed one-step generator is self-adjoint. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator_isSelfAdjoint
     (H N : ℕ)
     (hN : 0 < N)
@@ -194,7 +225,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorS
     IsSelfAdjoint
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator
         H N hN beta hbeta lambda) := by
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator_eq_generator_sub_smul_one]
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator
   exact
     realContinuousLinearMap_sub_smul_one_isSelfAdjoint
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGenerator
@@ -204,7 +235,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorS
       lambda
 
 /-- For every real `lambda` strictly below the finite-volume generator gap,
-`(1-lambda)I - T₁ = G-lambda I` is invertible. -/
+`G-lambda I` is invertible. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator_isUnit_of_lt_gap
     (H N : ℕ)
     (hN : 0 < N)
@@ -236,8 +267,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorS
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_mem_resolventSet_of_decayRadius_lt_abs
         H N hN beta hbeta 1 (by norm_num) (1 - lambda)
     simpa [abs_of_pos hpos] using hradlt
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator
-  exact spectrum.mem_resolventSet_iff.mp hres
+  rw [spectrum.mem_resolventSet_iff] at hres
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator_eq_transfer_resolvent_form]
+  exact hres
 
 /-- Equivalently, every real `lambda` below the explicit finite-volume gap is
 in the real resolvent set of the completed one-step discrete generator. -/
@@ -254,29 +286,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorO
     lambda ∈ resolventSet ℝ
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGenerator
         H N hN beta hbeta) := by
-  rw [spectrum.mem_resolventSet_iff]
-  have hshift :
-      IsUnit
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator
-          H N hN beta hbeta lambda) :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator_isUnit_of_lt_gap
-      H N hN beta hbeta lambda hlambda
-  have hEq :
-      algebraMap ℝ
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-              H N hN beta hbeta →L[ℝ]
-            periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-              H N hN beta hbeta)
-          lambda -
-          periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGenerator
-            H N hN beta hbeta =
-        -periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator
-          H N hN beta hbeta lambda := by
-    rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator_eq_generator_sub_smul_one]
-    rw [Algebra.algebraMap_eq_smul_one]
-    module
-  rw [hEq]
-  exact IsUnit.neg_iff.mpr hshift
+  exact
+    realContinuousLinearMap_mem_resolventSet_of_sub_smul_one_isUnit
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGenerator
+        H N hN beta hbeta)
+      lambda
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator_isUnit_of_lt_gap
+        H N hN beta hbeta lambda hlambda)
 
 /-- The canonical unit of a below-gap shifted completed generator. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGeneratorUnit
