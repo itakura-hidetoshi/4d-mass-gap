@@ -264,8 +264,6 @@ theorem realContinuousLinearMap_resolventQuadratic_eq_stieltjesIntegral
             ⟨fun x : spectrum ℝ G => (x.1 - lambda)⁻¹,
               hkernelCont.restrict⟩ := by
         congr 1
-        ext x
-        rfl
       _ = cfc (fun x : ℝ => (x - lambda)⁻¹) G :=
         (cfc_apply (fun x : ℝ => (x - lambda)⁻¹) G
           hself hkernelCont).symm
