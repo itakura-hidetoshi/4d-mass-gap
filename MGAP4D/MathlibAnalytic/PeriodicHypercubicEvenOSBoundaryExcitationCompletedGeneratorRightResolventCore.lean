@@ -60,6 +60,21 @@ theorem realContinuousLinearMap_smul_one_sub_isSelfAdjoint
     _ = inner ℝ x (lambda • y - G y) := by
       rw [inner_sub_right, real_inner_smul_right]
 
+/-- Quadratic nonnegativity of `T` gives the sharp upper quadratic bound for `I-T`. -/
+theorem realContinuousLinearMap_one_sub_inner_le_norm_sq_of_inner_nonneg
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    (T : E →L[ℝ] E)
+    (hT : ∀ u : E, 0 ≤ inner ℝ (T u) u)
+    (u : E) :
+    inner ℝ ((1 - T) u) u ≤ ‖u‖ ^ 2 := by
+  change inner ℝ (u - T u) u ≤ ‖u‖ ^ 2
+  calc
+    inner ℝ (u - T u) u = ‖u‖ ^ 2 - inner ℝ (T u) u := by
+      rw [inner_sub_left, real_inner_self_eq_norm_sq]
+    _ ≤ ‖u‖ ^ 2 := sub_le_self _ (hT u)
+
 local instance osBoundaryExcitationCompletedGeneratorRightResolventCoreSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
@@ -113,20 +128,14 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorO
         (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGenerator
           H N hN beta hbeta u)
         u ≤ ‖u‖ ^ 2 := by
-  have hT :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_inner_nonneg
-      H N hN beta hbeta 1 u
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGenerator
-  let T :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-      H N hN beta hbeta 1
-  change inner ℝ (u - T u) u ≤ ‖u‖ ^ 2
-  have hsplit :
-      inner ℝ (u - T u) u = inner ℝ u u - inner ℝ (T u) u := by
-    simpa only [inner_sub_left]
-  rw [hsplit, real_inner_self_eq_norm_sq]
-  change 0 ≤ inner ℝ (T u) u at hT
-  linarith
+  exact
+    realContinuousLinearMap_one_sub_inner_le_norm_sq_of_inner_nonneg
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+        H N hN beta hbeta 1)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_inner_nonneg
+        H N hN beta hbeta 1)
+      u
 
 /-- The positive right spectral shift `lambda I - G`. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorRightShiftedOneStepGenerator
