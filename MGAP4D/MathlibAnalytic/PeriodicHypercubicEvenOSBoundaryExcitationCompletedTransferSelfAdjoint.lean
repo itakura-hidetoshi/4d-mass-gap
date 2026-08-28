@@ -244,7 +244,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     obtain ⟨m, f, g, hx⟩ := TensorProduct.exists_sum_tmul_eq x
     obtain ⟨k, p, q, hy⟩ := TensorProduct.exists_sum_tmul_eq y
     rw [hx, hy]
-    simp_rw [map_sum, inner_sum, sum_inner,
+    simp only [map_sum, inner_sum, sum_inner,
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_tmul,
       TensorProduct.inner_tmul,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
