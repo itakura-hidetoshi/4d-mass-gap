@@ -1,9 +1,9 @@
 import MGAP4D.MathlibAnalytic.ContinuousLinearMapCompletionFunctor
-import MGAP4D.MathlibAnalytic.DenseLinearIsometryCompletionEquiv
 import MGAP4D.MathlibAnalytic.HilbertTensorContinuousMap
 import MGAP4D.MathlibAnalytic.RealHilbertCompactFiniteDimensionalApproximation
 import Mathlib.Analysis.Normed.Module.FiniteDimension
 import Mathlib.Analysis.Normed.Operator.Compact
+import Mathlib.Analysis.Normed.Operator.Extend
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -54,7 +54,8 @@ theorem hilbertTensorMap_self_sub_self
       simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.add_apply,
         hilbertTensorMap_tmul]
       rw [sub_eq_add_neg, sub_eq_add_neg, sub_eq_add_neg]
-      simp only [add_tmul, tmul_add, neg_tmul, tmul_neg]
+      simp only [TensorProduct.add_tmul, TensorProduct.tmul_add,
+        TensorProduct.neg_tmul, TensorProduct.tmul_neg]
       abel
   | add x y hx hy =>
       rw [map_add, map_add, hx, hy]
@@ -101,11 +102,11 @@ theorem continuousLinearMap_completion_sub_opNorm_le
         (f - g).le_opNorm a
 
 /-- The completion of the tensor square of a map factoring through a
-finite-dimensional Hilbert subspace is compact.  The proof keeps the actual
-finite-dimensional intermediate tensor `V ⊗ V`: its canonical completion is
-cancelled by the dense identity isometry, so compactness follows from the
-locally compact intermediate carrier rather than from any ad hoc finite-rank
-predicate. -/
+finite-dimensional Hilbert subspace is compact.  Instead of completing the
+finite-dimensional intermediate carrier and then cancelling that completion,
+we extend the incoming tensor map directly along the canonical dense embedding
+into the completed source.  The intermediate tensor square remains literally
+finite-dimensional and hence locally compact. -/
 theorem realHilbertFiniteDimensionalFactor_tensorSquareCompletion_isCompact
     {E : Type u₁}
     [NormedAddCommGroup E]
@@ -115,38 +116,55 @@ theorem realHilbertFiniteDimensionalFactor_tensorSquareCompletion_isCompact
     (B : E →L[ℝ] V) :
     IsCompactOperator
       ((hilbertTensorMap (V.subtypeL ∘L B) (V.subtypeL ∘L B)).completion) := by
+  let X := E ⊗[ℝ] E
   let W := V ⊗[ℝ] V
   letI : FiniteDimensional ℝ W := by
     dsimp [W]
     infer_instance
-  let e : W ≃ₗᵢ[ℝ] W := LinearIsometryEquiv.refl ℝ W
-  have h_dense : DenseRange e.toLinearIsometry := by
-    rw [DenseRange]
-    simp [e]
-  let U : UniformSpace.Completion W ≃ₗᵢ[ℝ] W :=
-    denseLinearIsometryCompletionEquiv e.toLinearIsometry h_dense
-  let C₀ : (E ⊗[ℝ] E) →L[ℝ] W := hilbertTensorMap B B
-  let D₀ : W →L[ℝ] (E ⊗[ℝ] E) := hilbertTensorMap V.subtypeL V.subtypeL
-  let C : UniformSpace.Completion (E ⊗[ℝ] E) →L[ℝ] W :=
-    (U : UniformSpace.Completion W →L[ℝ] W) ∘L C₀.completion
-  let D : W →L[ℝ] UniformSpace.Completion (E ⊗[ℝ] E) :=
-    D₀.completion ∘L (U.symm : W →L[ℝ] UniformSpace.Completion W)
+  let e : X →L[ℝ] UniformSpace.Completion X :=
+    (UniformSpace.Completion.toComplL :
+      X →L[ℝ] UniformSpace.Completion X)
+  have he_dense : DenseRange e := by
+    simpa [e] using
+      (UniformSpace.Completion.denseRange_coe (α := X))
+  have he_uniform : IsUniformInducing e := by
+    simpa [e] using
+      (UniformSpace.Completion.isUniformInducing_coe X)
+  let C₀ : X →L[ℝ] W := hilbertTensorMap B B
+  let D₀ : W →L[ℝ] X := hilbertTensorMap V.subtypeL V.subtypeL
+  let C : UniformSpace.Completion X →L[ℝ] W := C₀.extend e
+  let D : W →L[ℝ] UniformSpace.Completion X :=
+    (UniformSpace.Completion.toComplL :
+        X →L[ℝ] UniformSpace.Completion X) ∘L D₀
   have hC : IsCompactOperator C :=
     isCompactOperator_of_locallyCompactSpace_dom C
   have hDC : IsCompactOperator (D ∘L C) := hC.clm_comp D
   have hfactor :
       D ∘L C =
         (hilbertTensorMap (V.subtypeL ∘L B) (V.subtypeL ∘L B)).completion := by
-    calc
-      D ∘L C = D₀.completion ∘L C₀.completion := by
-        apply ContinuousLinearMap.ext
-        intro x
-        simp [D, C]
-      _ = (D₀ ∘L C₀).completion := by
-        symm
-        exact continuousLinearMap_completion_comp D₀ C₀
-      _ = (hilbertTensorMap (V.subtypeL ∘L B) (V.subtypeL ∘L B)).completion := by
-        rw [hilbertTensorMap_comp]
+    apply ContinuousLinearMap.ext
+    intro x
+    refine UniformSpace.Completion.induction_on x ?_ ?_
+    · exact isClosed_eq (by fun_prop) (by fun_prop)
+    · intro a
+      calc
+        (D ∘L C) (a : UniformSpace.Completion X) =
+            (D₀ (C₀ a) : UniformSpace.Completion X) := by
+          simp only [D, C, ContinuousLinearMap.comp_apply,
+            UniformSpace.Completion.coe_toComplL]
+          rw [show (a : UniformSpace.Completion X) = e a by rfl]
+          rw [ContinuousLinearMap.extend_eq C₀ he_dense he_uniform a]
+        _ =
+            (hilbertTensorMap (V.subtypeL ∘L B) (V.subtypeL ∘L B) a :
+              UniformSpace.Completion X) := by
+          congr 1
+          exact
+            (DFunLike.congr_fun
+              (hilbertTensorMap_comp B V.subtypeL B V.subtypeL) a).symm
+        _ =
+            (hilbertTensorMap (V.subtypeL ∘L B) (V.subtypeL ∘L B)).completion
+              (a : UniformSpace.Completion X) := by
+          rw [ContinuousLinearMap.completion_apply_coe]
   rw [← hfactor]
   exact hDC
 
@@ -167,7 +185,7 @@ theorem realHilbertCompact_tensorSquareCompletion_isCompact
       {T : UniformSpace.Completion (E ⊗[ℝ] E) →L[ℝ]
           UniformSpace.Completion (E ⊗[ℝ] E) | IsCompactOperator T}
   rw [← isClosed_setOf_isCompactOperator.closure_eq]
-  apply mem_closure_iff.2
+  refine Metric.mem_closure_iff.2 ?_
   intro ε hε
   let c : ℝ := 2 * ‖A‖ + 1
   have hc : 0 < c := by
@@ -192,7 +210,7 @@ theorem realHilbertCompact_tensorSquareCompletion_isCompact
     have hF_eq : F = A - (A - F) := by abel
     rw [hF_eq]
     exact (norm_sub_le A (A - F)).trans
-      (add_le_add_left hAF_one ‖A‖)
+      (add_le_add_right hAF_one ‖A‖)
   have hTensor :
       ‖hilbertTensorMap A A - Q‖ ≤ ‖A - F‖ * c := by
     calc
@@ -201,7 +219,7 @@ theorem realHilbertCompact_tensorSquareCompletion_isCompact
       _ ≤ ‖A - F‖ * ‖A‖ + ‖F‖ * ‖A - F‖ :=
         hilbertTensorMap_self_sub_self_norm_le A F
       _ ≤ ‖A - F‖ * ‖A‖ + (‖A‖ + 1) * ‖A - F‖ := by
-        exact add_le_add_left
+        exact add_le_add_right
           (mul_le_mul_of_nonneg_right hF_norm (norm_nonneg (A - F))) _
       _ = ‖A - F‖ * c := by
         dsimp [c]
