@@ -318,22 +318,27 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
         H N hN beta hbeta n)
   · intro x y
-    rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_eq_hilbertTensorMap]
-    exact
-      hilbertTensorMap_inner_symm
-        (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta)
-        (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta)
-        ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-          H N hN beta hbeta) ^ n)
-        ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-          H N hN beta hbeta) ^ n)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
-          H N hN beta hbeta n)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
-          H N hN beta hbeta n)
-        x y
+    induction x using TensorProduct.induction_on with
+    | zero =>
+        simp only [map_zero, inner_zero_left]
+    | tmul x₁ x₂ =>
+        induction y using TensorProduct.induction_on with
+        | zero =>
+            simp only [map_zero, inner_zero_right]
+        | tmul y₁ y₂ =>
+            rw [
+              periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_tmul,
+              periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_tmul,
+              TensorProduct.inner_tmul,
+              TensorProduct.inner_tmul,
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
+                H N hN beta hbeta n x₁ y₁,
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
+                H N hN beta hbeta n x₂ y₂]
+        | add y z hy hz =>
+            simp only [map_add, inner_add_right, hy, hz]
+    | add x z hx hz =>
+        simp only [map_add, inner_add_left, hx, hz]
   · intro x
     exact
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_apply_algebraic
