@@ -34,7 +34,7 @@ theorem realHilbertCompact_exists_finiteDimensional_factor_approx
     simpa [K] using hA.isCompact_closure_image_closedBall (1 : ℝ)
   have hδ : 0 < ε / 2 := half_pos hε
   obtain ⟨t, htK, htfinite, hcover⟩ :=
-    Metric.finite_approx_of_totallyBounded hKcompact.isTotallyBounded (ε / 2) hδ
+    Metric.finite_approx_of_totallyBounded hKcompact.totallyBounded (ε / 2) hδ
   let V : Submodule ℝ E := Submodule.span ℝ t
   letI : FiniteDimensional ℝ V :=
     FiniteDimensional.span_of_finite ℝ htfinite
@@ -74,11 +74,12 @@ theorem realHilbertCompact_exists_finiteDimensional_factor_approx
           rw [norm_smul, Real.norm_eq_abs, abs_inv, abs_of_pos hxpos]
           exact inv_mul_cancel₀ hxpos.ne'
         have hu := hunit u (by rw [hu_norm])
-        have hx_repr : x = ‖x‖ • u := by
+        have hscale :
+            ‖x‖ • (A - V.subtypeL ∘L B) u = (A - V.subtypeL ∘L B) x := by
           dsimp [u]
-          rw [smul_smul, mul_inv_cancel₀ hxpos.ne', one_smul]
-        rw [hx_repr, map_smul, norm_smul, Real.norm_eq_abs, abs_of_nonneg (norm_nonneg x)]
-        exact mul_le_mul_of_nonneg_left hu (norm_nonneg x)
+          rw [map_smul, smul_smul, mul_inv_cancel₀ hxpos.ne', one_smul]
+        rw [← hscale, norm_smul, Real.norm_eq_abs, abs_of_nonneg (norm_nonneg x)]
+        simpa [mul_comm] using mul_le_mul_of_nonneg_left hu (norm_nonneg x)
   refine ⟨V, inferInstance, B, lt_of_le_of_lt hop ?_⟩
   linarith
 
