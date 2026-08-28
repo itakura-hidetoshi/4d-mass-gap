@@ -322,10 +322,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
     simpa [dotProduct, Matrix.mulVec, Matrix.hadamard,
       Finset.mul_sum] using hones
   rw [Finset.sum_comm] at hsum
+  have hsum' :
+      0 ≤ ∑ j : Fin k, ∑ i : Fin k,
+        inner ℝ (A (x i)) (x j) * inner ℝ (A (y i)) (y j) := by
+    simpa only [M, N] using hsum
   simp only [map_sum, inner_sum, sum_inner,
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_tmul,
-    TensorProduct.inner_tmul]
-  simpa [A, M, N] using hsum
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_tmul]
+  exact hsum'
 
 /-- Completed pair-Hilbert transfer quadratic forms are nonnegative, by dense
 transport of the algebraic Schur-product positivity theorem. -/
