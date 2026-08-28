@@ -14,7 +14,7 @@ noncomputable section
 
 /-- In a real normed Banach algebra, the inverse of the affine shift
 `G - lambda • 1` has derivative equal to the square of the inverse whenever
-the shift is a unit. -/
+the shift is a unit.  This is the abstract resolvent derivative identity. -/
 theorem ringInverse_sub_smul_one_hasDerivAt
     {R : Type*}
     [NormedRing R]
@@ -72,55 +72,6 @@ theorem norm_mul_self_le_sq
     _ ≤ M * M := mul_le_mul hx hx (norm_nonneg x) hM
     _ = M ^ 2 := by ring
 
-/-- Coercivity bounds the ring inverse of a bounded real-Hilbert
-endomorphism whenever the operator is a unit. -/
-theorem realContinuousLinearMap_ringInverse_norm_le_inv_of_coercive
-    {E : Type*}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [CompleteSpace E]
-    (G : E →L[ℝ] E)
-    (gap : ℝ)
-    (hgap : 0 < gap)
-    (hcoercive : ∀ x : E, gap * ‖x‖ ^ 2 ≤ inner ℝ (G x) x)
-    (hunit : IsUnit G) :
-    ‖Ring.inverse G‖ ≤ gap⁻¹ := by
-  exact
-    realContinuousLinearMap_rightInverse_norm_le_inv_of_coercive
-      G (Ring.inverse G) gap hgap hcoercive
-      (mul_ringInverse_eq_one_of_isUnit G hunit)
-
-/-- The inverse derivative bound follows from coercivity and the Banach
-algebra inverse derivative formula. -/
-theorem ringInverse_sub_smul_one_deriv_norm_le
-    {E : Type*}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [CompleteSpace E]
-    (G : E →L[ℝ] E)
-    (gap lambda : ℝ)
-    (hgap : 0 < gap - lambda)
-    (hcoercive :
-      ∀ x : E,
-        (gap - lambda) * ‖x‖ ^ 2 ≤
-          inner ℝ ((G - lambda • (1 : E →L[ℝ] E)) x) x)
-    (hunit : IsUnit (G - lambda • (1 : E →L[ℝ] E))) :
-    ‖deriv (fun mu : ℝ => Ring.inverse (G - mu • (1 : E →L[ℝ] E))) lambda‖ ≤
-      (gap - lambda)⁻¹ ^ 2 := by
-  have hderiv := ringInverse_sub_smul_one_hasDerivAt G lambda hunit
-  have hnorm :
-      ‖Ring.inverse (G - lambda • (1 : E →L[ℝ] E))‖ ≤
-        (gap - lambda)⁻¹ :=
-    realContinuousLinearMap_ringInverse_norm_le_inv_of_coercive
-      (G - lambda • (1 : E →L[ℝ] E)) (gap - lambda) hgap hcoercive hunit
-  calc
-    ‖deriv (fun mu : ℝ => Ring.inverse (G - mu • (1 : E →L[ℝ] E))) lambda‖ =
-        ‖Ring.inverse (G - lambda • (1 : E →L[ℝ] E)) *
-          Ring.inverse (G - lambda • (1 : E →L[ℝ] E))‖ :=
-      congrArg norm hderiv.deriv
-    _ ≤ (gap - lambda)⁻¹ ^ 2 :=
-      norm_mul_self_le_sq _ _ (inv_nonneg.mpr hgap.le) hnorm
-
 local instance osBoundaryExcitationCompletedResolventDifferentiabilitySpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
@@ -163,7 +114,8 @@ local instance osBoundaryExcitationCompletedResolventDifferentiabilityPairHilber
     H N hN beta hbeta
 
 /-- A proof-independent total real resolvent family for the completed
-one-step generator. -/
+one-step generator.  Below the explicit finite-volume gap it agrees with the
+positive shifted Green operator already constructed. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
     (H N : ℕ)
     (hN : 0 < N)
@@ -238,8 +190,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorS
         H N hN beta hbeta lambda hlambda)
       hright).symm
 
-/-- The completed below-gap resolvent family is operator-norm differentiable,
-and its derivative is the square of the resolvent. -/
+/-- The completed below-gap resolvent family is operator-norm differentiable.
+Its exact derivative value is the square of the resolvent itself. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_hasDerivAt
     (H N : ℕ)
     (hN : 0 < N)
@@ -278,8 +230,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorS
         H N hN beta hbeta)
       lambda hunit
 
-/-- The ordinary derivative of the below-gap resolvent family is its square. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_deriv_eq_sq
+/-- The exact derivative value furnished by `HasDerivAt` obeys the explicit
+finite-volume inverse-gap square bound. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_derivativeValue_norm_le
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
@@ -289,157 +242,36 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorS
       lambda <
         periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
           H N hN beta hbeta) :
-    deriv
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
-          H N hN beta hbeta)
-        lambda =
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
           H N hN beta hbeta lambda *
         periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
-          H N hN beta hbeta lambda :=
-  (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_hasDerivAt
-    H N hN beta hbeta lambda hlambda).deriv
-
-/-- The derivative is also the square of the already-constructed positive
-shifted Green operator. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_deriv_eq_green_sq
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (lambda : ℝ)
-    (hlambda :
-      lambda <
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
-          H N hN beta hbeta) :
-    deriv
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
-          H N hN beta hbeta)
-        lambda =
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator
-          H N hN beta hbeta lambda hlambda *
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator
-          H N hN beta hbeta lambda hlambda := by
-  calc
-    deriv
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
-          H N hN beta hbeta)
-        lambda =
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
-          H N hN beta hbeta lambda *
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
-          H N hN beta hbeta lambda :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_deriv_eq_sq
-        H N hN beta hbeta lambda hlambda
-    _ =
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator
-          H N hN beta hbeta lambda hlambda *
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator
-          H N hN beta hbeta lambda hlambda := by
-      rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_eq_green
-        H N hN beta hbeta lambda hlambda]
-
-/-- Quantitative derivative bound furnished by the explicit finite-volume
-gap: `‖R'(lambda)‖ ≤ (gap-lambda)⁻²`. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_deriv_norm_le
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (lambda : ℝ)
-    (hlambda :
-      lambda <
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
-          H N hN beta hbeta) :
-    ‖deriv
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
-          H N hN beta hbeta)
-        lambda‖ ≤
+          H N hN beta hbeta lambda‖ ≤
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
           H N hN beta hbeta - lambda)⁻¹ ^ 2 := by
-  have hunit :
-      IsUnit
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGenerator
-            H N hN beta hbeta -
-          lambda •
-            (1 :
-              periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-                  H N hN beta hbeta →L[ℝ]
-                periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-                  H N hN beta hbeta)) := by
-    simpa only [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator] using
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator_isUnit_of_lt_gap
-        H N hN beta hbeta lambda hlambda
-  have hcoercive :
-      ∀ x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-          H N hN beta hbeta,
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
-            H N hN beta hbeta - lambda) * ‖x‖ ^ 2 ≤
-          inner ℝ
-            ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGenerator
-                H N hN beta hbeta -
-              lambda •
-                (1 :
-                  periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-                      H N hN beta hbeta →L[ℝ]
-                    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-                      H N hN beta hbeta)) x)
-            x := by
-    intro x
-    simpa only [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator] using
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGenerator_inner_lower_bound
-        H N hN beta hbeta lambda x
-  simpa only [
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily] using
-    ringInverse_sub_smul_one_deriv_norm_le
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGenerator
-        H N hN beta hbeta)
+  have hgreen :
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator
+          H N hN beta hbeta lambda hlambda *
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator
+          H N hN beta hbeta lambda hlambda‖ ≤
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
-        H N hN beta hbeta)
-      lambda
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGap_pos
+          H N hN beta hbeta - lambda)⁻¹ ^ 2 :=
+    norm_mul_self_le_sq
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator
         H N hN beta hbeta lambda hlambda)
-      hcoercive hunit
-
-/-- Pointwise differentiability at every below-gap real spectral parameter. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_differentiableAt_of_lt_gap
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (lambda : ℝ)
-    (hlambda :
-      lambda <
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
-          H N hN beta hbeta) :
-    DifferentiableAt ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
-        H N hN beta hbeta)
-      lambda :=
-  (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_hasDerivAt
-    H N hN beta hbeta lambda hlambda).differentiableAt
-
-/-- Pointwise operator-norm continuity at every below-gap real spectral
-parameter. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_continuousAt_of_lt_gap
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (lambda : ℝ)
-    (hlambda :
-      lambda <
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
-          H N hN beta hbeta) :
-    ContinuousAt
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
-        H N hN beta hbeta)
-      lambda :=
-  (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_hasDerivAt
-    H N hN beta hbeta lambda hlambda).continuousAt
+      ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
+          H N hN beta hbeta - lambda)⁻¹)
+      (inv_nonneg.mpr
+        (sub_nonneg.mpr hlambda.le))
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator_norm_le
+        H N hN beta hbeta lambda hlambda)
+  simpa only [
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_eq_green
+      H N hN beta hbeta lambda hlambda] using hgreen
 
 /-- Audit-visible package for the completed finite-volume below-gap resolvent
-calculus. -/
+calculus.  `HasDerivAt` is retained as the primary operator-norm
+Fréchet-differentiability receipt, avoiding any proof-irrelevant rewrapping of
+the huge dependent carrier. -/
 structure PeriodicHypercubicEvenOSBoundaryExcitationCompletedResolventDifferentiabilityPackage
     (H N : ℕ)
     (hN : 0 < N)
@@ -455,50 +287,32 @@ structure PeriodicHypercubicEvenOSBoundaryExcitationCompletedResolventDifferenti
           H N hN beta hbeta lambda =
         periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator
           H N hN beta hbeta lambda hlambda
-  derivativeSquare :
+  hasDerivativeSquare :
     ∀ (lambda : ℝ)
       (hlambda :
         lambda <
           periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
             H N hN beta hbeta),
-      deriv
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
-            H N hN beta hbeta)
-          lambda =
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator
-            H N hN beta hbeta lambda hlambda *
-          periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenOperator
-            H N hN beta hbeta lambda hlambda
-  derivativeNormBound :
+      HasDerivAt
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
+          H N hN beta hbeta)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
+            H N hN beta hbeta lambda *
+          periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
+            H N hN beta hbeta lambda)
+        lambda
+  derivativeValueNormBound :
     ∀ (lambda : ℝ)
       (hlambda :
         lambda <
           periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
             H N hN beta hbeta),
-      ‖deriv
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
-            H N hN beta hbeta)
-          lambda‖ ≤
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
+            H N hN beta hbeta lambda *
+          periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
+            H N hN beta hbeta lambda‖ ≤
         (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
             H N hN beta hbeta - lambda)⁻¹ ^ 2
-  differentiableBelowGap :
-    ∀ (lambda : ℝ),
-      lambda <
-          periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
-            H N hN beta hbeta →
-        DifferentiableAt ℝ
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
-            H N hN beta hbeta)
-          lambda
-  continuousBelowGap :
-    ∀ (lambda : ℝ),
-      lambda <
-          periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorOneStepGeneratorGap
-            H N hN beta hbeta →
-        ContinuousAt
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily
-            H N hN beta hbeta)
-          lambda
 
 /-- Construct the completed finite-volume below-gap resolvent-calculus
 package. -/
@@ -512,17 +326,11 @@ theorem periodicHypercubicEvenOSBoundaryExcitationCompletedResolventDifferentiab
   { agreesWithGreen :=
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_eq_green
         H N hN beta hbeta
-    derivativeSquare :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_deriv_eq_green_sq
+    hasDerivativeSquare :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_hasDerivAt
         H N hN beta hbeta
-    derivativeNormBound :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_deriv_norm_le
-        H N hN beta hbeta
-    differentiableBelowGap :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_differentiableAt_of_lt_gap
-        H N hN beta hbeta
-    continuousBelowGap :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_continuousAt_of_lt_gap
+    derivativeValueNormBound :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorShiftedOneStepGreenResolventFamily_derivativeValue_norm_le
         H N hN beta hbeta }
 
 end
