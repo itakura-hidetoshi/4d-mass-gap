@@ -26,8 +26,8 @@ noncomputable def realContinuousLinearMap_quadraticEvaluation
        simp only [ContinuousLinearMap.add_apply, inner_add_left]
      map_smul' := by
        intro c A
-       change c * inner ℝ (A u) u = c * inner ℝ (A u) u
-       rfl } :
+       simp only [ContinuousLinearMap.smul_apply, real_inner_smul_left,
+         RingHom.id_apply, smul_eq_mul] } :
       (E →L[ℝ] E) →ₗ[ℝ] ℝ).mkContinuous
     (‖u‖ ^ 2)
     (by
