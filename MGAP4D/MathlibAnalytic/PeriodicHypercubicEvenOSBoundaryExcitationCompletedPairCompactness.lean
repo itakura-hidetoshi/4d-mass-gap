@@ -119,6 +119,20 @@ excitation tensor carrier whose completion is used by the pair semigroup. -/
     (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
       H N hN beta hbeta)
 
+/-- Expose the additive parent of the chosen native tensor norm explicitly.
+Completion requests this parent before the normed structure, and naming it
+avoids rebuilding the dependent tensor alias through typeclass search. -/
+@[reducible] local instance osBoundaryExcitationCompletedPairCompactnessAddCommGroup
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    AddCommGroup
+      (PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
+        H N hN beta hbeta) :=
+  (osBoundaryExcitationCompletedPairCompactnessNormedAddCommGroup
+    H N hN beta hbeta).toAddCommGroup
+
 /-- The matching native tensor inner product. -/
 @[reducible] local instance osBoundaryExcitationCompletedPairCompactnessInnerProductSpace
     (H N : ℕ)
@@ -154,9 +168,42 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogon
       (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isCompact
         H N hN beta hbeta)
 
+/-- The completed native excitation transfer is compact at one Euclidean time
+step.  This is the only concrete point where tensor-square compactness is
+needed; all later positive times follow from the exact completed semigroup law. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer_one_isCompact
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    IsCompactOperator
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
+        H N hN beta hbeta 1) := by
+  have hTensor :=
+    @realHilbertCompact_tensorSquareCompletion_isCompact
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta)
+      inferInstance
+      (Submodule.innerProductSpace
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta))
+      (osBoundaryExcitationCompletedPairCompactnessExcitationSliceComplete
+        H N hN beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_isCompact
+        H N hN beta hbeta)
+  change
+    IsCompactOperator
+      ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
+        H N hN beta hbeta 1).completion)
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_eq_hilbertTensorMap]
+  simpa only [pow_one] using hTensor
+
 /-- Every positive-time native completed excitation tensor transfer is compact.
-This is the direct concrete specialization of the generic completed Hilbert
-tensor-square compactness theorem. -/
+Compactness is propagated from the one-step transfer by the already-proved
+completed semigroup law, avoiding repeated elaboration of dependent operator
+powers in the concrete carrier. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer_isCompact_of_pos
     (H N : ℕ)
     (hN : 0 < N)
@@ -167,34 +214,16 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
     IsCompactOperator
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
         H N hN beta hbeta n) := by
-  let R :
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta →L[ℝ]
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-      H N hN beta hbeta
-  have hR : IsCompactOperator R := by
-    simpa [R] using
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_isCompact
-        H N hN beta hbeta
-  have hTensor :=
-    @realHilbertCompact_pow_tensorSquareCompletion_isCompact_of_pos
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta)
-      inferInstance
-      (Submodule.innerProductSpace
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta))
-      (osBoundaryExcitationCompletedPairCompactnessExcitationSliceComplete
-        H N hN beta hbeta)
-      R hR n hn
-  change
-    IsCompactOperator
-      ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
-        H N hN beta hbeta n).completion)
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_eq_hilbertTensorMap]
-  simpa [R] using hTensor
+  cases n with
+  | zero => omega
+  | succ k =>
+      rw [show Nat.succ k = 1 + k by omega,
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer_add]
+      exact
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer_one_isCompact
+          H N hN beta hbeta).comp_clm
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
+            H N hN beta hbeta k)
 
 /-- The actual completed transfer on the concrete pair-Hilbert excitation
 sector is compact at every positive Euclidean time. -/
