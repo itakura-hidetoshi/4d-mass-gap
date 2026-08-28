@@ -121,11 +121,10 @@ theorem realHilbertFiniteDimensionalFactor_tensorSquareCompletion_isCompact
   letI : FiniteDimensional ℝ W := by
     dsimp [W]
     infer_instance
-  letI : IsBoundedSMul ℝ W := NormedSpace.toIsBoundedSMul
-  letI : UniformContinuousConstSMul ℝ W :=
-    IsBoundedSMul.toUniformContinuousConstSMul
-  letI : ContinuousConstSMul ℝ W :=
-    UniformContinuousConstSMul.to_continuousConstSMul
+  letI : IsBoundedSMul ℝ W :=
+    NormedSpace.toIsBoundedSMul (𝕜 := ℝ) (E := W)
+  letI : UniformContinuousConstSMul ℝ W := by infer_instance
+  letI : ContinuousConstSMul ℝ W := by infer_instance
   let e : X →L[ℝ] UniformSpace.Completion X :=
     (UniformSpace.Completion.toComplL :
       X →L[ℝ] UniformSpace.Completion X)
