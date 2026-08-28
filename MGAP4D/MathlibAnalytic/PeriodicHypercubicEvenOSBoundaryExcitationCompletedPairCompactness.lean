@@ -85,6 +85,22 @@ local instance osBoundaryExcitationCompletedPairCompactnessPhysicalSliceComplete
   (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule_isClosed
     H N).completeSpace_coe
 
+/-- Expose the standard inherited real normed-space structure on the nested
+orthogonal subtype explicitly.  This prevents dependent typeclass search from
+reconstructing the same `Submodule.normedSpace` through the long physical
+carrier definition during compact-power specialization. -/
+@[reducible] local instance osBoundaryExcitationCompletedPairCompactnessExcitationSliceNormedSpace
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta) :=
+  Submodule.normedSpace
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+
 /-- The orthogonal excitation one-slice carrier is complete as a closed
 subspace of the complete physical one-slice Hilbert space. -/
 local instance osBoundaryExcitationCompletedPairCompactnessExcitationSliceComplete
@@ -170,8 +186,12 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
     simpa [R] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_isCompact
         H N hN beta hbeta
-  have hRn : IsCompactOperator (R ^ n) :=
-    realContinuousLinearMap_isCompact_pow_of_pos R hR n hn
+  have hRn : IsCompactOperator (R ^ n) := by
+    cases n with
+    | zero => omega
+    | succ k =>
+        rw [pow_succ']
+        exact hR.comp_clm (R ^ k)
   have hTensor :
       IsCompactOperator ((hilbertTensorMap (R ^ n) (R ^ n)).completion) :=
     realHilbertCompact_tensorSquareCompletion_isCompact (R ^ n) hRn
