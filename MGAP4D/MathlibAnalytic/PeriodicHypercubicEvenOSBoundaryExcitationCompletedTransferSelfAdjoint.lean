@@ -29,11 +29,11 @@ theorem hilbertTensorMap_inner_symm
   intro x y
   induction x using TensorProduct.induction_on with
   | zero =>
-      simpa only [map_zero, inner_zero_left]
+      simp only [map_zero, inner_zero_left]
   | tmul x₁ x₂ =>
       induction y using TensorProduct.induction_on with
       | zero =>
-          simpa only [map_zero, inner_zero_right]
+          simp only [map_zero, inner_zero_right]
       | tmul y₁ y₂ =>
           change
             inner ℝ (A x₁ ⊗ₜ[ℝ] B x₂) (y₁ ⊗ₜ[ℝ] y₂) =
@@ -44,36 +44,6 @@ theorem hilbertTensorMap_inner_symm
           simp only [map_add, inner_add_right, hy, hz]
   | add x z hx hz =>
       simp only [map_add, inner_add_left, hx, hz]
-
-/-- Inner-product symmetry of a bounded real-Hilbert endomorphism is inherited
-by every composition power.  The proof stays at the continuous-operator level,
-so no coercion between continuous-linear-map powers and linear-map powers is
-needed. -/
-theorem continuousLinearMap_pow_inner_symm
-    {E : Type*}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    (A : E →L[ℝ] E)
-    (hA : ∀ x y, inner ℝ (A x) y = inner ℝ x (A y))
-    (n : ℕ) :
-    ∀ x y : E,
-      inner ℝ ((A ^ n) x) y = inner ℝ x ((A ^ n) y) := by
-  induction n with
-  | zero =>
-      intro x y
-      simp
-  | succ n ih =>
-      intro x y
-      calc
-        inner ℝ ((A ^ Nat.succ n) x) y =
-            inner ℝ (A ((A ^ n) x)) y := by
-          rw [pow_succ']
-          rfl
-        _ = inner ℝ ((A ^ n) x) (A y) := hA _ _
-        _ = inner ℝ x ((A ^ n) (A y)) := ih _ _
-        _ = inner ℝ x ((A ^ Nat.succ n) y) := by
-          rw [pow_succ]
-          rfl
 
 /-- Inner-product symmetry survives Mathlib's native completion functor. -/
 theorem continuousLinearMap_completion_inner_symm
@@ -176,9 +146,7 @@ local instance osBoundaryExcitationCompletedTransferSelfAdjointSpatialSliceHaarS
     (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
       H N hN beta hbeta)
 
-/-- Expose the additive parent of the native tensor norm explicitly.  This is
-the same instance discipline used by the canonical completed-pair semigroup
-and prevents completion from reconstructing the large dependent tensor carrier. -/
+/-- Expose the additive parent of the native tensor norm explicitly. -/
 @[reducible] local instance osBoundaryExcitationCompletedTransferSelfAdjointAddCommGroup
     (H N : ℕ)
     (hN : 0 < N)
@@ -247,9 +215,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogon
       H N hN beta hbeta).isSymmetric _ _
 
 /-- Every power of the physical one-slice excitation transfer satisfies the
-same exact symmetry equation.  This proof is specialized directly to the
-already constructed transfer carrier, avoiding any re-synthesis of its module
-instance. -/
+same exact symmetry equation. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
     (H N : ℕ)
     (hN : 0 < N)
@@ -299,26 +265,31 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogon
             rw [pow_succ]
             rfl
 
-/-- The native tensor square is symmetric before completion, and this exact
-symmetry is transported directly through Mathlib's completion functor.  The
-intermediate dependent theorem is deliberately not materialized as a global
-specialized declaration; the canonical `eq_hilbertTensorMap` receipt keeps the
-elaboration path small. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer_inner_symm
+/-- The actual bounded transfer on the concrete completed pair-Hilbert
+excitation sector satisfies the exact symmetry equation.  The heavy dependent
+completion carrier is kept local to the proof instead of being materialized as
+a separate global theorem signature. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_inner_symm
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta)
     (n : ℕ) :
-    ∀ x y : UniformSpace.Completion
-        (PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
-          H N hN beta hbeta),
+    ∀ x y : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
+        H N hN beta hbeta,
       inner ℝ
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
             H N hN beta hbeta n x) y =
         inner ℝ x
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
             H N hN beta hbeta n y) := by
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+  refine
+    continuousLinearMapConjugateLinearIsometryEquiv_inner_symm
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector
+        H N hN beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
+        H N hN beta hbeta n) ?_
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_eq_hilbertTensorMap]
   exact
@@ -349,32 +320,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
           H N hN beta hbeta n)
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_inner_symm
           H N hN beta hbeta n))
-
-/-- The actual bounded transfer on the concrete completed pair-Hilbert
-excitation sector satisfies the exact symmetry equation. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_inner_symm
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (n : ℕ) :
-    ∀ x y : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-        H N hN beta hbeta,
-      inner ℝ
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-            H N hN beta hbeta n x) y =
-        inner ℝ x
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-            H N hN beta hbeta n y) := by
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-  exact
-    continuousLinearMapConjugateLinearIsometryEquiv_inner_symm
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionEquivPairHilbertSector
-        H N hN beta hbeta)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer
-        H N hN beta hbeta n)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer_inner_symm
-        H N hN beta hbeta n)
 
 /-- On the complete pair-Hilbert excitation sector, the exact symmetry equation
 upgrades to Mathlib self-adjointness. -/
