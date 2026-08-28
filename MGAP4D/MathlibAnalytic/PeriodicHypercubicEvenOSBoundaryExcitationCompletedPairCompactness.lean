@@ -217,7 +217,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTenso
   cases n with
   | zero => omega
   | succ k =>
-      rw [show Nat.succ k = 1 + k by omega,
+      rw [show k + 1 = 1 + k by omega,
         periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer_add]
       exact
         (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorCompletionTransfer_one_isCompact
