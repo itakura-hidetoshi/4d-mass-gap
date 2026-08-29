@@ -10,6 +10,8 @@ open scoped InnerProductSpace lp LinearPMap
 
 noncomputable section
 
+set_option maxHeartbeats 800000
+
 universe u
 
 local instance spectralSupportLogGeneratorQuadraticCoerciveComplete
