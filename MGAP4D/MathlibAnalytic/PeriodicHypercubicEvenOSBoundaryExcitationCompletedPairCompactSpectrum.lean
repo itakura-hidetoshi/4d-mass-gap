@@ -6,7 +6,7 @@ import Mathlib.Tactic
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open MeasureTheory Set Module
+open MeasureTheory Set Module End
 open scoped InnerProductSpace TensorProduct
 
 noncomputable section
@@ -41,7 +41,7 @@ theorem realHilbertCompactPositive_spectrum_zero_or_positive_finiteDimensional_e
     have hFinite :
         FiniteDimensional ℝ (eigenspace (T : Module.End ℝ E) lambda) :=
       ContinuousLinearMap.finite_dimensional_eigenspace hCompact lambda hzero
-    exact ⟨lt_of_le_of_ne hNonneg hzero.symm, hEigen, hFinite⟩
+    exact ⟨lt_of_le_of_ne hNonneg (Ne.symm hzero), hEigen, hFinite⟩
 
 /-- The spectral theorem for compact positive operators, phrased in the exact
 submodule form needed for the later logarithmic generator: the joint
