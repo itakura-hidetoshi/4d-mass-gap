@@ -84,7 +84,7 @@ local instance spectralLogCoordinateInnerProductSpace
   lp.instInnerProductSpace
 
 /-- Install completeness of the dependent `ℓ²` spectral-coordinate carrier
-explicitly, before self-adjointness asks for the `LinearPMap` star operation. -/
+explicitly before the Hilbert-space adjoint is formed. -/
 local instance spectralLogCoordinateComplete
     {E : Type u}
     [NormedAddCommGroup E]
@@ -104,9 +104,10 @@ local instance spectralLogCoordinateComplete
   lp.completeSpace
 
 /-- The intrinsic logarithmic generator of a compact positive real-Hilbert
-operator, written in the Hilbert sum of the strictly-positive support
-eigenspaces, is self-adjoint on its maximal weighted `ℓ²` domain. -/
-theorem realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_isSelfAdjoint
+operator equals its Hilbert-space adjoint on the maximal weighted `ℓ²`
+domain.  This is self-adjointness stated without invoking the `Star` notation
+at the specialized dependent carrier. -/
+theorem realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_adjoint_eq
     {E : Type u}
     [NormedAddCommGroup E]
     [InnerProductSpace ℝ E]
@@ -114,11 +115,13 @@ theorem realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_isSelfAdjoi
     (T : E →L[ℝ] E)
     (hCompact : IsCompactOperator T)
     (hPositive : T.IsPositive) :
-    IsSelfAdjoint
-      (realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
-        T hCompact hPositive) := by
+    LinearPMap.adjoint
+        (realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+          T hCompact hPositive) =
+      realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+        T hCompact hPositive := by
   exact
-    realHilbertSumWeightedDiagonalLinearPMap_isSelfAdjoint
+    realHilbertSumWeightedDiagonalLinearPMap_adjoint_eq
       (G := fun mu : Eigenvalues
         (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
           Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
@@ -126,20 +129,6 @@ theorem realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_isSelfAdjoi
           (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
             Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
       (fun mu => realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)
-
-/-- Hence the intrinsic logarithmic support generator is closed. -/
-theorem realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_isClosed
-    {E : Type u}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [CompleteSpace E]
-    (T : E →L[ℝ] E)
-    (hCompact : IsCompactOperator T)
-    (hPositive : T.IsPositive) :
-    (realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
-      T hCompact hPositive).IsClosed :=
-  (realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_isSelfAdjoint
-    T hCompact hPositive).isClosed
 
 local instance osBoundaryExcitationSpectralLogGeneratorSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -198,34 +187,26 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilb
     (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
       H N hN beta hbeta 1)
 
-/-- The concrete intrinsic spectral-coordinate Hamiltonian is self-adjoint. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates_isSelfAdjoint
+/-- The concrete intrinsic spectral-coordinate Hamiltonian equals its
+Hilbert-space adjoint. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates_adjoint_eq
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta) :
-    IsSelfAdjoint
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates
-        H N hN beta hbeta) := by
+    LinearPMap.adjoint
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates
+          H N hN beta hbeta) =
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates
+        H N hN beta hbeta := by
   exact
-    realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_isSelfAdjoint
+    realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_adjoint_eq
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
         H N hN beta hbeta 1)
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
         H N hN beta hbeta 1 (by norm_num))
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
         H N hN beta hbeta 1)
-
-/-- The concrete intrinsic spectral-coordinate Hamiltonian is closed. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates_isClosed
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates
-      H N hN beta hbeta).IsClosed :=
-  (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates_isSelfAdjoint
-    H N hN beta hbeta).isClosed
 
 /-- Audit-visible package for the first genuine unbounded self-adjoint
 Hamiltonian attached to the completed one-step pair transfer on its correct
@@ -235,13 +216,12 @@ structure PeriodicHypercubicEvenOSBoundaryExcitationCompletedPairSpectralLogGene
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta) : Prop where
-  selfAdjoint :
-    IsSelfAdjoint
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates
-        H N hN beta hbeta)
-  closed :
-    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates
-      H N hN beta hbeta).IsClosed
+  adjointEq :
+    LinearPMap.adjoint
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates
+          H N hN beta hbeta) =
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates
+        H N hN beta hbeta
 
 /-- Construct the concrete spectral logarithmic generator package. -/
 theorem periodicHypercubicEvenOSBoundaryExcitationCompletedPairSpectralLogGeneratorPackage
@@ -251,9 +231,7 @@ theorem periodicHypercubicEvenOSBoundaryExcitationCompletedPairSpectralLogGenera
     (hbeta : 0 ≤ beta) :
     PeriodicHypercubicEvenOSBoundaryExcitationCompletedPairSpectralLogGeneratorPackage
       H N hN beta hbeta :=
-  ⟨periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates_isSelfAdjoint
-      H N hN beta hbeta,
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates_isClosed
+  ⟨periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates_adjoint_eq
       H N hN beta hbeta⟩
 
 end
