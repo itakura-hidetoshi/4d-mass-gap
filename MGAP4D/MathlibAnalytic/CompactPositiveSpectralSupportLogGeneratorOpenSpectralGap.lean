@@ -236,17 +236,6 @@ local instance osBoundaryExcitationLogGeneratorOpenGapPairHilbertSectorRealNorme
         H N hN beta hbeta) := by
   infer_instance
 
-local instance osBoundaryExcitationLogGeneratorOpenGapSpectralSupportNormedSpace
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    NormedSpace ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) := by
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-  infer_instance
-
 local instance osBoundaryExcitationLogGeneratorOpenGapSpectralSupportComplete
     (H N : ℕ)
     (hN : 0 < N)
@@ -282,8 +271,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     osBoundaryExcitationLogGeneratorOpenGapPairHilbertSectorRealNormedSpace H N hN beta hbeta
   letI : NormedSpace ℝ
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) :=
-    osBoundaryExcitationLogGeneratorOpenGapSpectralSupportNormedSpace H N hN beta hbeta
+        H N hN beta hbeta) := by
+    unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+    infer_instance
   exact
     realLinearPMap_mem_realResolventSet_of_abs_lt_norm_lower_bound
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
@@ -323,8 +313,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     osBoundaryExcitationLogGeneratorOpenGapPairHilbertSectorRealNormedSpace H N hN beta hbeta
   letI : NormedSpace ℝ
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) :=
-    osBoundaryExcitationLogGeneratorOpenGapSpectralSupportNormedSpace H N hN beta hbeta
+        H N hN beta hbeta) := by
+    unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+    infer_instance
   exact
     realLinearPMap_realSpectrum_disjoint_Ioo_neg_pos_of_norm_lower_bound
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
