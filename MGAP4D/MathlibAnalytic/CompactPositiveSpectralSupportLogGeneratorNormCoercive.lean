@@ -130,7 +130,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
   have hnorm :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_norm_lower_bound
       H N hN beta hbeta x
-  rw [hx, norm_zero] at hnorm
+  rw [hx] at hnorm
+  have hnormZero :
+      2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+          H N hN beta hbeta *
+        ‖(x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+          H N hN beta hbeta)‖ ≤ 0 := by
+    simpa using hnorm
   have hcoef :
       0 < 2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
         H N hN beta hbeta := by
