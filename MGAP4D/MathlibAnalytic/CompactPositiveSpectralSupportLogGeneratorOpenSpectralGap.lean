@@ -265,8 +265,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
         H N hN beta hbeta) := by
   letI : NormedSpace ℝ
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) :=
-    osBoundaryExcitationLogGeneratorOpenGapSpectralSupportNormedSpace H N hN beta hbeta
+        H N hN beta hbeta) := by
+    unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+    infer_instance
   exact
     realLinearPMap_mem_realResolventSet_of_abs_lt_norm_lower_bound
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
@@ -302,8 +303,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
           H N hN beta hbeta)) := by
   letI : NormedSpace ℝ
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) :=
-    osBoundaryExcitationLogGeneratorOpenGapSpectralSupportNormedSpace H N hN beta hbeta
+        H N hN beta hbeta) := by
+    unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+    infer_instance
   exact
     realLinearPMap_realSpectrum_disjoint_Ioo_neg_pos_of_norm_lower_bound
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
