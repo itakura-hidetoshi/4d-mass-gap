@@ -130,8 +130,7 @@ local instance osBoundaryExcitationLogGeneratorRangeDenseSpectralSupportComplete
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
         H N hN beta hbeta 1)).completeSpace_coe
 
-set_option synthInstance.maxHeartbeats 200000
-
+set_option maxHeartbeats 1000000 in
 /-- The actual range of the completed one-step support logarithmic Hamiltonian
 is dense in the positive spectral-support Hilbert carrier. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_range_topologicalClosure_eq_top
