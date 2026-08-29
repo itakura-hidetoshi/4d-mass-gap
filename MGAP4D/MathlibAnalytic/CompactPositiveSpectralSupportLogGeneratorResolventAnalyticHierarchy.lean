@@ -315,6 +315,9 @@ theorem realLinearPMapAmbientResolventFamily_hasSum_taylorNeumann
     simpa [F] using
       realLinearPMapAmbientResolventFamily_eq_mul_ringInverse_one_sub
         A c hc hNorm hKer hSurj lambda (lambda + h) hlambda hdist
+  change HasSum
+    (fun n : ℕ => h ^ n • F lambda ^ (n + 1))
+    (F (lambda + h))
   rw [hfactor]
   simpa only [t, F, mul_smul_pow_eq_smul_pow_succ] using
     hgeom.mul_left (F lambda)
