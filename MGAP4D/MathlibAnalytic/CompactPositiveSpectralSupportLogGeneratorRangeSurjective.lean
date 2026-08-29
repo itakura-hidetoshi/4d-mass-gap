@@ -19,8 +19,11 @@ theorem realLinearPMap_range_eq_top_of_isClosed_of_topologicalClosure_eq_top
     {F : Type v}
     [AddCommGroup E]
     [Module ℝ E]
-    [NormedAddCommGroup F]
-    [NormedSpace ℝ F]
+    [AddCommGroup F]
+    [Module ℝ F]
+    [TopologicalSpace F]
+    [ContinuousAdd F]
+    [ContinuousConstSMul ℝ F]
     (A : E →ₗ.[ℝ] F)
     (hClosed : IsClosed (LinearMap.range A.toFun : Set F))
     (hDense : (LinearMap.range A.toFun).topologicalClosure = ⊤) :
