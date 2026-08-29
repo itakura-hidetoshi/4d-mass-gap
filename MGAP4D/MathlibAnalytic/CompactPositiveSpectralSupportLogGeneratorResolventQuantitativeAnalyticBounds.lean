@@ -252,8 +252,6 @@ theorem realLinearPMapAmbientResolventFamily_taylorRemainder_norm_le
       simp
   have hpow : ‖F lambda ^ n‖ ≤ ‖F lambda‖ ^ n :=
     norm_pow_le_of_norm_one_le_mgap hone (F lambda) n
-  have hmuInvNonneg : 0 ≤ (c - |lambda + h|)⁻¹ :=
-    (inv_pos.mpr (sub_pos.mpr hmu)).le
   change ‖F (lambda + h) -
       ∑ i ∈ Finset.range n, h ^ i • F lambda ^ (i + 1)‖ ≤
     |h| ^ n * ((c - |lambda + h|)⁻¹ * (c - |lambda|)⁻¹ ^ n)
@@ -270,7 +268,6 @@ theorem realLinearPMapAmbientResolventFamily_taylorRemainder_norm_le
     _ ≤ |h| ^ n *
         ((c - |lambda + h|)⁻¹ * (c - |lambda|)⁻¹ ^ n) := by
       gcongr
-      exact hmuInvNonneg
 
 /-- Distance-to-boundary-only Taylor remainder estimate.  The denominator
 `c - |λ| - |h|` is positive exactly on the natural Neumann ball, and the
@@ -307,10 +304,6 @@ theorem realLinearPMapAmbientResolventFamily_taylorRemainder_norm_le_gap
     linarith
   have hinv : (c - |lambda + h|)⁻¹ ≤ (c - |lambda| - |h|)⁻¹ :=
     inv_anti₀ hinner hcompare
-  have hlambdaInvNonneg : 0 ≤ (c - |lambda|)⁻¹ :=
-    (inv_pos.mpr (sub_pos.mpr hlambda)).le
-  have hlambdaInvPowNonneg : 0 ≤ (c - |lambda|)⁻¹ ^ n :=
-    pow_nonneg hlambdaInvNonneg n
   change ‖F (lambda + h) -
       ∑ i ∈ Finset.range n, h ^ i • F lambda ^ (i + 1)‖ ≤
     |h| ^ n * ((c - |lambda| - |h|)⁻¹ * (c - |lambda|)⁻¹ ^ n)
@@ -322,7 +315,6 @@ theorem realLinearPMapAmbientResolventFamily_taylorRemainder_norm_le_gap
     _ ≤ |h| ^ n *
         ((c - |lambda| - |h|)⁻¹ * (c - |lambda|)⁻¹ ^ n) := by
       gcongr
-      exact hlambdaInvPowNonneg
 
 /-- Audit-visible quantitative analytic package for the bounded support
 resolvent.  It records the all-order Cauchy bound together with exact and
