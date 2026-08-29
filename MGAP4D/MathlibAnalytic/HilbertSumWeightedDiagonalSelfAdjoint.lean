@@ -38,7 +38,7 @@ theorem realHilbertSumWeightedDiagonalLinearPMap_adjoint_apply_coord
       realHilbertSumWeightedDiagonalLinearPMap_dense_domain (G := G) w
   have hAdj : (LinearPMap.adjoint H).IsFormalAdjoint H :=
     LinearPMap.adjoint_isFormalAdjoint hDense
-  apply (Set.univ_dense.eq_of_inner_left ℝ)
+  apply (dense_univ : Dense (Set.univ : Set (G i))).eq_of_inner_left ℝ
   intro a ha
   let s0 : lp G 2 := lp.single 2 i a
   have hs0 : s0 ∈ H.domain := by
