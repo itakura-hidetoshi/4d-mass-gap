@@ -236,26 +236,6 @@ local instance osBoundaryExcitationLogGeneratorOpenGapPairHilbertSectorRealNorme
         H N hN beta hbeta) := by
   infer_instance
 
-/-- The transfer spectral support inherits the ambient real normed-space law
-for the already fixed real scalar action. -/
-local instance osBoundaryExcitationLogGeneratorOpenGapSpectralSupportRealNormedSpace
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    NormedSpace ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) where
-  norm_smul_le c x := by
-    change
-      ‖c • (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-        H N hN beta hbeta)‖ ≤
-        ‖c‖ * ‖(x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-          H N hN beta hbeta)‖
-    exact norm_smul_le c
-      (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-        H N hN beta hbeta)
-
 local instance osBoundaryExcitationLogGeneratorOpenGapSpectralSupportComplete
     (H N : ℕ)
     (hN : 0 < N)
@@ -287,8 +267,16 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
         H N hN beta hbeta) := by
   letI : NormedSpace ℝ
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) :=
-    osBoundaryExcitationLogGeneratorOpenGapSpectralSupportRealNormedSpace H N hN beta hbeta
+        H N hN beta hbeta) where
+    norm_smul_le c x := by
+      change
+        ‖c • (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
+          H N hN beta hbeta)‖ ≤
+          ‖c‖ * ‖(x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
+            H N hN beta hbeta)‖
+      exact norm_smul_le c
+        (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
+          H N hN beta hbeta)
   exact
     realLinearPMap_mem_realResolventSet_of_abs_lt_norm_lower_bound
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
@@ -324,8 +312,16 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
           H N hN beta hbeta)) := by
   letI : NormedSpace ℝ
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) :=
-    osBoundaryExcitationLogGeneratorOpenGapSpectralSupportRealNormedSpace H N hN beta hbeta
+        H N hN beta hbeta) where
+    norm_smul_le c x := by
+      change
+        ‖c • (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
+          H N hN beta hbeta)‖ ≤
+          ‖c‖ * ‖(x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
+            H N hN beta hbeta)‖
+      exact norm_smul_le c
+        (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
+          H N hN beta hbeta)
   exact
     realLinearPMap_realSpectrum_disjoint_Ioo_neg_pos_of_norm_lower_bound
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
