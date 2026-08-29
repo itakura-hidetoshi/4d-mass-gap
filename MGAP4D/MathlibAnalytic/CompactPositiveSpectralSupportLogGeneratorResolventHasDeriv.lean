@@ -49,7 +49,8 @@ theorem realLinearPMapAmbientResolventFamily_hasDerivAt
     have hopen : IsOpen {x : ℝ | |x| < d} :=
       isOpen_lt continuous_abs continuous_const
     have hmem : lambda ∈ {x : ℝ | |x| < d} := hld
-    exact (hopen.mem_nhds hmem).mono fun mu hmu => hmu.le
+    filter_upwards [hopen.mem_nhds hmem] with mu hmu
+    exact hmu.le
   have hO :
       (fun mu : ℝ =>
         F mu - F lambda - (mu - lambda) • (F lambda).comp (F lambda))
