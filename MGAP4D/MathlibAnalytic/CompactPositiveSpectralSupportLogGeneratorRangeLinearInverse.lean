@@ -56,7 +56,7 @@ theorem realLinearPMapRangeLinearEquiv_symm_norm_le_div_of_norm_lower_bound
     (hNorm : ∀ x : A.domain, c * ‖(x : E)‖ ≤ ‖A x‖)
     (hKer : ∀ x : A.domain, A x = 0 → x = 0)
     (y : LinearMap.range A.toFun) :
-    ‖((realLinearPMapRangeLinearEquiv_of_eq_zero A hKer).symm y : A.domain : E)‖ ≤
+    ‖(((realLinearPMapRangeLinearEquiv_of_eq_zero A hKer).symm y : A.domain) : E)‖ ≤
       ‖(y : F)‖ / c := by
   let e := realLinearPMapRangeLinearEquiv_of_eq_zero A hKer
   have hyRange : e (e.symm y) = y := e.apply_symm_apply y
@@ -136,10 +136,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     (y : LinearMap.range
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
         H N hN beta hbeta).toFun) :
-    ‖((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_rangeLinearEquiv
+    ‖(((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_rangeLinearEquiv
         H N hN beta hbeta).symm y :
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-        H N hN beta hbeta).domain :
+        H N hN beta hbeta).domain) :
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
         H N hN beta hbeta)‖ ≤
       ‖(y : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
