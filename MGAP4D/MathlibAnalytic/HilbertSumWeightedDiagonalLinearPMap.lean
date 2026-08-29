@@ -22,7 +22,8 @@ noncomputable def realHilbertSumWeightedDiagonalDomain
     (w : ι → ℝ) : Submodule ℝ (lp G 2) where
   carrier := {x | Memℓp (fun i => w i • x i) 2}
   zero_mem' := by
-    simpa using (zero_memℓp : Memℓp (0 : (i : ι) → G i) (2 : ℝ≥0∞))
+    have hzero : Memℓp (0 : (i : ι) → G i) 2 := zero_memℓp
+    simpa using hzero
   add_mem' := by
     intro x y hx hy
     simpa [smul_add] using hx.add hy
