@@ -42,22 +42,25 @@ theorem realLinearPMap_range_isClosed_of_isClosed_of_norm_lower_bound
     intro m hm n hn
     have hLower := hNorm (x m - x n)
     have hRange : A (x m - x n) = y m - y n := by
-      rw [LinearPMap.map_sub, hx m, hx n]
+      rw [LinearPMap.map_sub]
+      change A.toFun (x m) - A.toFun (x n) = y m - y n
+      rw [hx m, hx n]
+    rw [hRange] at hLower
     have hLower' : c * ‖((x m : E) - (x n : E))‖ ≤ ‖y m - y n‖ := by
-      simpa [hRange] using hLower
+      simpa using hLower
     have hY : ‖y m - y n‖ < c * eps := by
       simpa [dist_eq_norm] using hN m hm n hn
     have hX : ‖((x m : E) - (x n : E))‖ < eps := by
       nlinarith
     simpa [dist_eq_norm] using hX
   obtain ⟨xlim, hxlim⟩ := cauchySeq_tendsto_of_complete hxCauchy
+  have hAlim : Tendsto (fun n => A (x n)) atTop (𝓝 z) := by
+    convert hz using 1
+    funext n
+    exact hx n
   have hPair :
-      Tendsto (fun n => ((x n : E), A (x n))) atTop (𝓝 (xlim, z)) := by
-    have hAy : (fun n => A (x n)) = y := by
-      funext n
-      exact hx n
-    rw [hAy]
-    exact hxlim.prodMk_nhds hz
+      Tendsto (fun n => ((x n : E), A (x n))) atTop (𝓝 (xlim, z)) :=
+    hxlim.prodMk_nhds hAlim
   have hGraph : (xlim, z) ∈ (A.graph : Set (E × F)) :=
     hClosed.mem_of_tendsto hPair
       (Eventually.of_forall fun n =>
@@ -106,6 +109,20 @@ local instance osBoundaryExcitationLogGeneratorRangeClosedPairHilbertSectorCompl
   periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete
     H N hN beta hbeta
 
+local instance osBoundaryExcitationLogGeneratorRangeClosedSpectralSupportComplete
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    CompleteSpace
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta) := by
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+  exact
+    (realHilbertZeroEigenspaceSupport_isClosed
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+        H N hN beta hbeta 1)).completeSpace_coe
+
 /-- The actual range of the completed one-step support logarithmic Hamiltonian
 is a closed subspace of the positive spectral-support Hilbert carrier. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_range_isClosed
@@ -120,15 +137,18 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
         Set
           (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
             H N hN beta hbeta)) := by
-  apply realLinearPMap_range_isClosed_of_isClosed_of_norm_lower_bound
-    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-      H N hN beta hbeta)
-    (2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-      H N hN beta hbeta)
-  · exact mul_pos (by norm_num)
+  let A :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
+      H N hN beta hbeta
+  let c :=
+    2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+      H N hN beta hbeta
+  have hc : 0 < c := by
+    exact mul_pos (by norm_num)
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate_pos
         H N hN beta hbeta)
-  · simpa [
+  have hClosed : A.IsClosed := by
+    simpa [A,
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator,
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport]
       using
@@ -139,9 +159,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
             H N hN beta hbeta 1 (by norm_num))
           (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
             H N hN beta hbeta 1))
-  · exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_norm_lower_bound
-        H N hN beta hbeta
+  have hNorm : ∀ x : A.domain, c * ‖(x :
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta)‖ ≤ ‖A x‖ := by
+    simpa [A, c] using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_norm_lower_bound
+        H N hN beta hbeta)
+  exact realLinearPMap_range_isClosed_of_isClosed_of_norm_lower_bound A c hc hClosed hNorm
 
 end
 
