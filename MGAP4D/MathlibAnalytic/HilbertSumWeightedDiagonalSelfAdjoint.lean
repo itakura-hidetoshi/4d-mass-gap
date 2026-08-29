@@ -108,6 +108,26 @@ theorem realHilbertSumWeightedDiagonalLinearPMap_adjoint_le
   congr 1
   exact congrArg (fun z : lp G 2 => z i) hxy
 
+/-- The maximal real weighted diagonal operator equals its Hilbert-space
+adjoint.  This is the self-adjointness statement in a form that does not ask
+callers to synthesize the `Star` instance for a large specialized carrier. -/
+theorem realHilbertSumWeightedDiagonalLinearPMap_adjoint_eq
+    {ι : Type u}
+    {G : ι → Type v}
+    [∀ i, NormedAddCommGroup (G i)]
+    [∀ i, InnerProductSpace ℝ (G i)]
+    [∀ i, CompleteSpace (G i)]
+    (w : ι → ℝ) :
+    LinearPMap.adjoint
+        (realHilbertSumWeightedDiagonalLinearPMap (G := G) w) =
+      realHilbertSumWeightedDiagonalLinearPMap (G := G) w := by
+  apply le_antisymm
+  · exact realHilbertSumWeightedDiagonalLinearPMap_adjoint_le (G := G) w
+  · exact
+      (realHilbertSumWeightedDiagonalLinearPMap_isFormalAdjoint_self
+        (G := G) w).le_adjoint
+          (realHilbertSumWeightedDiagonalLinearPMap_dense_domain (G := G) w)
+
 /-- A real multiplication operator on a dependent Hilbert sum, with its
 maximal weighted `ℓ²` domain, is self-adjoint. -/
 theorem realHilbertSumWeightedDiagonalLinearPMap_isSelfAdjoint
@@ -120,12 +140,7 @@ theorem realHilbertSumWeightedDiagonalLinearPMap_isSelfAdjoint
     IsSelfAdjoint
       (realHilbertSumWeightedDiagonalLinearPMap (G := G) w) := by
   rw [LinearPMap.isSelfAdjoint_def]
-  apply le_antisymm
-  · exact realHilbertSumWeightedDiagonalLinearPMap_adjoint_le (G := G) w
-  · exact
-      (realHilbertSumWeightedDiagonalLinearPMap_isFormalAdjoint_self
-        (G := G) w).le_adjoint
-          (realHilbertSumWeightedDiagonalLinearPMap_dense_domain (G := G) w)
+  exact realHilbertSumWeightedDiagonalLinearPMap_adjoint_eq (G := G) w
 
 /-- In particular the maximal real weighted diagonal operator is closed. -/
 theorem realHilbertSumWeightedDiagonalLinearPMap_isClosed
