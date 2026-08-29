@@ -43,6 +43,46 @@ local instance spectralLogSupportEigenspaceComplete
     (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric)
     (mu : ℝ)).completeSpace_coe
 
+/-- Install the official `lp` normed-space instance explicitly for the
+dependent spectral-coordinate carrier. -/
+local instance spectralLogCoordinateNormedSpace
+    {E : Type u}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [CompleteSpace E]
+    (T : E →L[ℝ] E)
+    (hPositive : T.IsPositive) :
+    NormedSpace ℝ
+      (lp
+        (fun mu : Eigenvalues
+          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+          eigenspace
+            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
+        2) :=
+  lp.normedSpace
+
+/-- Install the official Hilbert-sum inner product explicitly, avoiding a
+large dependent-instance search when constructing the unbounded adjoint. -/
+local instance spectralLogCoordinateInnerProductSpace
+    {E : Type u}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [CompleteSpace E]
+    (T : E →L[ℝ] E)
+    (hPositive : T.IsPositive) :
+    InnerProductSpace ℝ
+      (lp
+        (fun mu : Eigenvalues
+          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+          eigenspace
+            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
+        2) :=
+  lp.instInnerProductSpace
+
 /-- Install completeness of the dependent `ℓ²` spectral-coordinate carrier
 explicitly, before self-adjointness asks for the `LinearPMap` star operation. -/
 local instance spectralLogCoordinateComplete
