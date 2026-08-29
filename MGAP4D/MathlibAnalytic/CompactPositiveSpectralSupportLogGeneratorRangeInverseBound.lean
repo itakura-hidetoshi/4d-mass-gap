@@ -19,9 +19,9 @@ theorem realLinearPMap_existsUnique_preimage_on_range_of_norm_lower_bound
     {E : Type u}
     {F : Type v}
     [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
+    [Module ℝ E]
     [NormedAddCommGroup F]
-    [NormedSpace ℝ F]
+    [Module ℝ F]
     (A : E →ₗ.[ℝ] F)
     (c : ℝ)
     (hNorm : ∀ x : A.domain, c * ‖(x : E)‖ ≤ ‖A x‖)
@@ -29,8 +29,11 @@ theorem realLinearPMap_existsUnique_preimage_on_range_of_norm_lower_bound
     (y : LinearMap.range A.toFun) :
     ∃! x : A.domain,
       A x = (y : F) ∧ c * ‖(x : E)‖ ≤ ‖(y : F)‖ := by
-  have hKerBot : A.ker = ⊥ := LinearPMap.ker_eq_bot'.2 hKer
-  have hInjective : Function.Injective A := LinearPMap.ker_eq_bot.mp hKerBot
+  have hInjective : Function.Injective A := by
+    intro x z hxz
+    have hzero : A (x - z) = 0 := by
+      rw [LinearPMap.map_sub, hxz, sub_self]
+    exact sub_eq_zero.mp (hKer (x - z) hzero)
   rcases y.property with ⟨x, hx⟩
   have hx' : A x = (y : F) := hx
   have hxNorm : c * ‖(x : E)‖ ≤ ‖(y : F)‖ := by
