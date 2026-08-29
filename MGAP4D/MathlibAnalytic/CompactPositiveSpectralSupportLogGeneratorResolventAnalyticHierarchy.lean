@@ -11,7 +11,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory Set Module End Filter
-open scoped InnerProductSpace LinearPMap Topology BigOperators
+open scoped InnerProductSpace LinearPMap Topology BigOperators ContDiff
 
 noncomputable section
 
@@ -404,6 +404,29 @@ theorem realLinearPMapAmbientResolventFamily_analyticOnNhd
   intro lambda hlambda
   exact realLinearPMapAmbientResolventFamily_analyticAt
     A c hc hNorm hKer hSurj lambda hlambda
+
+/-- Explicit `C^∞` receipt for the canonical ambient support resolvent on the
+open coercive gap.  This is obtained from the stronger local analyticity
+receipt and still concerns only the bounded resolvent carrier. -/
+theorem realLinearPMapAmbientResolventFamily_contDiffAt_infty
+    {E : Type u}
+    [NormedAddCommGroup E]
+    [NormedSpace ℝ E]
+    [CompleteSpace E]
+    (A : E →ₗ.[ℝ] E)
+    (c : ℝ)
+    (hc : 0 < c)
+    (hNorm : ∀ x : A.domain, c * ‖(x : E)‖ ≤ ‖A x‖)
+    (hKer : ∀ x : A.domain, A x = 0 → x = 0)
+    (hSurj : Function.Surjective A.toFun)
+    (lambda : ℝ)
+    (hlambda : |lambda| < c) :
+    ContDiffAt ℝ ∞
+      (realLinearPMapAmbientResolventFamily_of_norm_lower_bound
+        A c hc hNorm hKer hSurj)
+      lambda :=
+  (realLinearPMapAmbientResolventFamily_analyticAt
+    A c hc hNorm hKer hSurj lambda hlambda).contDiffAt
 
 /-- Audit-visible coherent package: all-order derivatives, Taylor-Neumann
 expansion, and local real analyticity of the bounded ambient resolvent. -/
