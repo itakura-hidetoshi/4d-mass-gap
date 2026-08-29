@@ -294,7 +294,15 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_eq_factor
           A c hc hNorm hKer hSurj mu habs
         simpa only [F, pow_two] using h0)
       n hlambda' u
-  simpa only [F, realLinearPMapAmbientResolventQuadraticAmplitude_apply] using hformula
+  have hq :
+      realLinearPMapAmbientResolventQuadraticAmplitude
+          A c hc hNorm hKer hSurj u =
+        fun mu => inner ℝ (F mu u) u := by
+    funext mu
+    exact realLinearPMapAmbientResolventQuadraticAmplitude_apply
+      A c hc hNorm hKer hSurj u mu
+  rw [hq]
+  simpa only [F] using hformula
 
 /-- Every derivative of the quadratic support-resolvent amplitude is
 nonnegative on the full coercive gap: the precise absolute-monotonicity
