@@ -11,16 +11,10 @@ noncomputable section
 
 universe u
 
-local instance realHilbertZeroEigenspaceSupportComplete
-    {E : Type u}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [CompleteSpace E]
-    (T : E →L[ℝ] E) :
-    CompleteSpace (realHilbertZeroEigenspaceSupport T) :=
-  (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
-
-local instance realHilbertZeroEigenspaceSupportEigenspaceComplete
+/-- Eigenspaces of the bounded support restriction are complete because they
+are closed subspaces of the complete support Hilbert space.  We construct the
+instance directly to avoid dependent subtype typeclass search. -/
+local instance spectralLogSupportEigenspaceComplete
     {E : Type u}
     [NormedAddCommGroup E]
     [InnerProductSpace ℝ E]
@@ -33,8 +27,10 @@ local instance realHilbertZeroEigenspaceSupportEigenspaceComplete
     CompleteSpace
       (eigenspace
         (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu) := by
-  infer_instance
+          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu) :=
+  (ContinuousLinearMap.isClosed_eigenspace
+    (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric)
+    (mu : ℝ)).completeSpace_coe
 
 /-- The intrinsic logarithmic generator of a compact positive real-Hilbert
 operator, written in the Hilbert sum of the strictly-positive support
@@ -73,29 +69,6 @@ theorem realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_isClosed
       T hCompact hPositive).IsClosed :=
   (realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_isSelfAdjoint
     T hCompact hPositive).isClosed
-
-/-- Its maximal weighted domain is dense in the intrinsic support spectral
-coordinate Hilbert space. -/
-theorem realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_dense_domain
-    {E : Type u}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [CompleteSpace E]
-    (T : E →L[ℝ] E)
-    (hCompact : IsCompactOperator T)
-    (hPositive : T.IsPositive) :
-    Dense
-      ((realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
-        T hCompact hPositive).domain : Set _) := by
-  exact
-    realHilbertSumWeightedDiagonalLinearPMap_dense_domain
-      (G := fun mu : Eigenvalues
-        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
-        eigenspace
-          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
-      (fun mu => realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)
 
 local instance osBoundaryExcitationSpectralLogGeneratorSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
