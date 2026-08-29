@@ -47,17 +47,16 @@ theorem realHilbertSumWeightedDiagonalLinearPMap_dense_domain
     Dense
       (((realHilbertSumWeightedDiagonalLinearPMap (G := G) w).domain :
         Submodule ℝ (lp G 2)) : Set (lp G 2)) := by
+  classical
   rw [dense_iff_closure_eq]
   apply Set.eq_univ_of_forall
   intro x
   refine mem_closure_of_tendsto
     (lp.hasSum_single (p := 2) (by norm_num) x)
-    (Eventually.of_forall ?_)
+    (Filter.Eventually.of_forall ?_)
   intro s
-  rw [SetLike.mem_coe]
-  refine Submodule.sum_mem _ ?_
-  intro i hi
-  exact realHilbertSumWeightedDiagonal_single_mem_domain (G := G) w i (x i)
+  exact Submodule.sum_mem _ fun i hi =>
+    realHilbertSumWeightedDiagonal_single_mem_domain (G := G) w i (x i)
 
 /-- A real diagonal multiplication operator on its maximal weighted domain is
 formally symmetric. -/
@@ -78,61 +77,35 @@ theorem realHilbertSumWeightedDiagonalLinearPMap_isFormalAdjoint_self
     realHilbertSumWeightedDiagonalLinearPMap_apply,
     real_inner_smul_left, real_inner_smul_right]
 
-/-- The intrinsic logarithmic generator coordinates of every compact positive
-real-Hilbert operator have dense domain. -/
-theorem realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_dense_domain
-    {E : Type u}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [CompleteSpace E]
-    (T : E →L[ℝ] E)
-    (hCompact : IsCompactOperator T)
-    (hPositive : T.IsPositive) :
+/-- Generic audit receipt: maximal real weighted diagonal operators on
+Hilbert sums are densely defined and formally symmetric.  The logarithmic
+support generator is an immediate definitional specialization with
+`w(mu) = -log mu`. -/
+structure RealHilbertSumWeightedDiagonalDenseSymmetricPackage
+    {ι : Type u}
+    {G : ι → Type v}
+    [∀ i, NormedAddCommGroup (G i)]
+    [∀ i, InnerProductSpace ℝ (G i)]
+    (w : ι → ℝ) : Prop where
+  denseDomain :
     Dense
-      (((realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
-        T hCompact hPositive).domain :
-        Submodule ℝ
-          (lp
-            (fun mu : Module.End.Eigenvalues
-              (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-                Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
-              Module.End.eigenspace
-                (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-                  Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
-            2)) : Set _) := by
-  exact
-    realHilbertSumWeightedDiagonalLinearPMap_dense_domain
-      (G := fun mu : Module.End.Eigenvalues
-        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
-        Module.End.eigenspace
-          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
-      (fun mu => realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)
-
-/-- The intrinsic logarithmic generator coordinates are formally symmetric. -/
-theorem realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_isFormalAdjoint_self
-    {E : Type u}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [CompleteSpace E]
-    (T : E →L[ℝ] E)
-    (hCompact : IsCompactOperator T)
-    (hPositive : T.IsPositive) :
+      (((realHilbertSumWeightedDiagonalLinearPMap (G := G) w).domain :
+        Submodule ℝ (lp G 2)) : Set (lp G 2))
+  formallySymmetric :
     LinearPMap.IsFormalAdjoint (𝕜 := ℝ)
-      (realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
-        T hCompact hPositive)
-      (realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
-        T hCompact hPositive) := by
-  exact
-    realHilbertSumWeightedDiagonalLinearPMap_isFormalAdjoint_self
-      (G := fun mu : Module.End.Eigenvalues
-        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
-        Module.End.eigenspace
-          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
-      (fun mu => realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)
+      (realHilbertSumWeightedDiagonalLinearPMap (G := G) w)
+      (realHilbertSumWeightedDiagonalLinearPMap (G := G) w)
+
+/-- Construct the generic dense/symmetric weighted-diagonal package. -/
+theorem realHilbertSumWeightedDiagonalDenseSymmetricPackage
+    {ι : Type u}
+    {G : ι → Type v}
+    [∀ i, NormedAddCommGroup (G i)]
+    [∀ i, InnerProductSpace ℝ (G i)]
+    (w : ι → ℝ) :
+    RealHilbertSumWeightedDiagonalDenseSymmetricPackage (G := G) w :=
+  ⟨realHilbertSumWeightedDiagonalLinearPMap_dense_domain (G := G) w,
+    realHilbertSumWeightedDiagonalLinearPMap_isFormalAdjoint_self (G := G) w⟩
 
 end
 
