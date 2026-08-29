@@ -267,8 +267,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
         H N hN beta hbeta) := by
   letI : NormedSpace ℝ
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) where
-    norm_smul_le c x := by
+        H N hN beta hbeta) := {
+    norm_smul_le := by
+      intro c x
       change
         ‖c • (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
           H N hN beta hbeta)‖ ≤
@@ -276,7 +277,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
             H N hN beta hbeta)‖
       exact norm_smul_le c
         (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-          H N hN beta hbeta)
+          H N hN beta hbeta) }
   exact
     realLinearPMap_mem_realResolventSet_of_abs_lt_norm_lower_bound
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
@@ -312,8 +313,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
           H N hN beta hbeta)) := by
   letI : NormedSpace ℝ
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) where
-    norm_smul_le c x := by
+        H N hN beta hbeta) := {
+    norm_smul_le := by
+      intro c x
       change
         ‖c • (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
           H N hN beta hbeta)‖ ≤
@@ -321,7 +323,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
             H N hN beta hbeta)‖
       exact norm_smul_le c
         (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-          H N hN beta hbeta)
+          H N hN beta hbeta) }
   exact
     realLinearPMap_realSpectrum_disjoint_Ioo_neg_pos_of_norm_lower_bound
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
