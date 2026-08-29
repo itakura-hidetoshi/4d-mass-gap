@@ -111,12 +111,14 @@ theorem realLinearPMap_mem_realResolventSet_of_abs_lt_norm_lower_bound
       A c hc hNorm hKer hSurj
   let B : E →L[ℝ] E :=
     realLinearPMapAmbientInverse_of_norm_lower_bound A c hc hNorm hKer hSurj
+  have hBR (z : E) : B z = ((R z : A.domain) : E) := by
+    rfl
   have hB : ‖B‖ ≤ c⁻¹ :=
     realLinearPMapAmbientInverse_norm_le_inv_of_norm_lower_bound
       A c hc hNorm hKer hSurj
   have hscaled : ‖lambda • B‖ < 1 := by
     calc
-      ‖lambda • B‖ = |lambda| * ‖B‖ := by simp [Real.norm_eq_abs]
+      ‖lambda • B‖ = |lambda| * ‖B‖ := by rw [norm_smul, Real.norm_eq_abs]
       _ ≤ |lambda| * c⁻¹ := mul_le_mul_of_nonneg_left hB (abs_nonneg lambda)
       _ < c * c⁻¹ := by
         exact mul_lt_mul_of_pos_right hlambda (inv_pos.mpr hc)
@@ -126,10 +128,10 @@ theorem realLinearPMap_mem_realResolventSet_of_abs_lt_norm_lower_bound
   let Rlambda : E →L[ℝ] A.domain := R.comp S
   have hSleft : S * (1 - lambda • B) = 1 := by
     change (↑(U⁻¹) : E →L[ℝ] E) * (↑U : E →L[ℝ] E) = 1
-    exact congrArg Units.val U.inv_mul
+    exact U.inv_mul
   have hSright : (1 - lambda • B) * S = 1 := by
     change (↑U : E →L[ℝ] E) * (↑(U⁻¹) : E →L[ℝ] E) = 1
-    exact congrArg Units.val U.mul_inv
+    exact U.mul_inv
   rw [realLinearPMapRealResolventSet]
   refine ⟨Rlambda, ?_, ?_⟩
   · intro x
@@ -153,9 +155,9 @@ theorem realLinearPMap_mem_realResolventSet_of_abs_lt_norm_lower_bound
     have hfactor :
         realLinearPMapDomainShift A lambda (Rlambda y) =
           (1 - lambda • B) (S y) := by
-      simp [realLinearPMapDomainShift, Rlambda, R, B,
+      simp [realLinearPMapDomainShift, Rlambda, R,
         realLinearPMap_operator_apply_inverse A c hc hNorm hKer hSurj,
-        sub_eq_add_neg]
+        hBR, sub_eq_add_neg]
     rw [hfactor, hcancel]
 
 /-- Hence the real spectrum of a coercive bijective partially defined operator
@@ -220,6 +222,17 @@ local instance osBoundaryExcitationLogGeneratorOpenGapPairHilbertSectorComplete
         H N hN beta hbeta) :=
   periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete
     H N hN beta hbeta
+
+local instance osBoundaryExcitationLogGeneratorOpenGapSpectralSupportNormedSpace
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta) := by
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+  infer_instance
 
 local instance osBoundaryExcitationLogGeneratorOpenGapSpectralSupportComplete
     (H N : ℕ)
