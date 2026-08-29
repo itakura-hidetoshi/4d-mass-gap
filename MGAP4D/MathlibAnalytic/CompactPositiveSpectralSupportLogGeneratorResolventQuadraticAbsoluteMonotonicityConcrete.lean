@@ -2,6 +2,7 @@ import MGAP4D.MathlibAnalytic.CompactPositiveSpectralSupportLogGeneratorResolven
 import MGAP4D.MathlibAnalytic.CompactPositiveSpectralSupportLogGeneratorNormCoercive
 import MGAP4D.MathlibAnalytic.CompactPositiveSpectralSupportLogGeneratorRangeSurjective
 import MGAP4D.MathlibAnalytic.CompactPositiveSpectralSupportLogGeneratorSelfAdjoint
+import MGAP4D.MathlibAnalytic.CompactPositiveSpectralSupportLogGeneratorResolventNormBound
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -11,6 +12,8 @@ open MeasureTheory Set Module End Filter
 open scoped InnerProductSpace LinearPMap Topology BigOperators
 
 noncomputable section
+
+set_option maxHeartbeats 800000
 
 local instance osBoundaryExcitationSupportResolventAbsoluteMonotonicitySpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -51,6 +54,17 @@ local instance osBoundaryExcitationSupportResolventAbsoluteMonotonicityPairHilbe
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
         H N hN beta hbeta) :=
   periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete
+    H N hN beta hbeta
+
+local instance osBoundaryExcitationSupportResolventAbsoluteMonotonicitySpectralSupportRealNormedSpace
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta) :=
+  periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRealNormedSpace
     H N hN beta hbeta
 
 local instance osBoundaryExcitationSupportResolventAbsoluteMonotonicitySpectralSupportComplete
