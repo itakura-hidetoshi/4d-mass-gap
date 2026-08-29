@@ -236,8 +236,6 @@ theorem realLinearPMapAmbientResolventFamily_firstOrderRemainder_eq
       module
     _ = (mu - lambda) • ((F mu - F lambda).comp (F lambda)) := by
       congr 1
-      ext y
-      simp
 
 /-- Quadratic Taylor remainder on every strictly smaller symmetric interval.
 This gives the quantitative `O(|μ-λ|²)` estimate behind the derivative
