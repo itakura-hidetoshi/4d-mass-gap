@@ -24,7 +24,10 @@ local instance spectralLogSupportComplete
   (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
 
 /-- Eigenspaces of the bounded support restriction are complete because they
-are closed subspaces of the complete support Hilbert space. -/
+are closed subspaces of the complete support Hilbert space.  Once these fibre
+instances are available, the canonical Mathlib `lp` normed-space,
+inner-product, module, and complete-space instances are used unchanged; this
+avoids a duplicate module path on the dependent Hilbert sum. -/
 local instance spectralLogSupportEigenspaceComplete
     {E : Type u}
     [NormedAddCommGroup E]
@@ -42,66 +45,6 @@ local instance spectralLogSupportEigenspaceComplete
   (ContinuousLinearMap.isClosed_eigenspace
     (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric)
     (mu : ℝ)).completeSpace_coe
-
-/-- Install the official `lp` normed-space instance explicitly for the
-dependent spectral-coordinate carrier. -/
-local instance spectralLogCoordinateNormedSpace
-    {E : Type u}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [CompleteSpace E]
-    (T : E →L[ℝ] E)
-    (hPositive : T.IsPositive) :
-    NormedSpace ℝ
-      (lp
-        (fun mu : Eigenvalues
-          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
-          eigenspace
-            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
-        2) :=
-  lp.instNormedSpace
-
-/-- Install the official Hilbert-sum inner product explicitly, avoiding a
-large dependent-instance search when constructing the unbounded adjoint. -/
-local instance spectralLogCoordinateInnerProductSpace
-    {E : Type u}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [CompleteSpace E]
-    (T : E →L[ℝ] E)
-    (hPositive : T.IsPositive) :
-    InnerProductSpace ℝ
-      (lp
-        (fun mu : Eigenvalues
-          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
-          eigenspace
-            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
-        2) :=
-  lp.instInnerProductSpace
-
-/-- Install completeness of the dependent `ℓ²` spectral-coordinate carrier
-explicitly before the Hilbert-space adjoint is formed. -/
-local instance spectralLogCoordinateComplete
-    {E : Type u}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [CompleteSpace E]
-    (T : E →L[ℝ] E)
-    (hPositive : T.IsPositive) :
-    CompleteSpace
-      (lp
-        (fun mu : Eigenvalues
-          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
-          eigenspace
-            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
-        2) :=
-  lp.completeSpace
 
 /-- The intrinsic logarithmic generator of a compact positive real-Hilbert
 operator equals its Hilbert-space adjoint on the maximal weighted `ℓ²`
