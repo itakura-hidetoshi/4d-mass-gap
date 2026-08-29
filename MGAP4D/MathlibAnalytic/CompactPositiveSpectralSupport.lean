@@ -271,6 +271,17 @@ local instance osBoundaryExcitationPositiveSpectralSupportPairHilbertSectorCompl
   periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete
     H N hN beta hbeta
 
+local instance osBoundaryExcitationPositiveSpectralSupportUnderlyingInnerProductSpace
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    InnerProductSpace ℝ
+      (realHilbertZeroEigenspaceSupport
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+          H N hN beta hbeta 1)) :=
+  Submodule.innerProductSpace _
+
 /-- Spectral support of the actual completed one-step pair transfer. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
     (H N : ℕ)
@@ -320,9 +331,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
         H N hN beta hbeta 1 (by norm_num))
 
 /-- The concrete completed transfer has a positive restriction on the
-underlying zero-eigenspace support.  Stating the receipt before passing through
-the concrete support alias avoids a duplicate subtype module instance while
-retaining the full `LinearMap.IsPositive` conclusion. -/
+underlying zero-eigenspace support. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction_isPositive
     (H N : ℕ)
     (hN : 0 < N)
