@@ -22,7 +22,7 @@ noncomputable def realHilbertSumWeightedDiagonalDomain
     (w : ι → ℝ) : Submodule ℝ (lp G 2) where
   carrier := {x | Memℓp (fun i => w i • x i) 2}
   zero_mem' := by
-    simpa using (zero_mem_ℓp' (E := G) (p := (2 : ℝ≥0∞)))
+    simpa using (zero_memℓp : Memℓp (0 : ∀ i, G i) (2 : ℝ≥0∞))
   add_mem' := by
     intro x y hx hy
     simpa [smul_add] using hx.add hy
@@ -37,7 +37,7 @@ noncomputable def realHilbertSumWeightedDiagonalDomain
     [∀ i, NormedSpace ℝ (G i)]
     (w : ι → ℝ)
     (x : lp G 2) :
-    x ∈ realHilbertSumWeightedDiagonalDomain w ↔
+    x ∈ realHilbertSumWeightedDiagonalDomain (G := G) w ↔
       Memℓp (fun i => w i • x i) 2 :=
   Iff.rfl
 
@@ -50,20 +50,26 @@ noncomputable def realHilbertSumWeightedDiagonalLinearPMap
     [∀ i, NormedAddCommGroup (G i)]
     [∀ i, NormedSpace ℝ (G i)]
     (w : ι → ℝ) : lp G 2 →ₗ.[ℝ] lp G 2 where
-  domain := realHilbertSumWeightedDiagonalDomain w
+  domain := realHilbertSumWeightedDiagonalDomain (G := G) w
   toFun :=
     { toFun := fun x =>
-        ⟨fun i => w i • ((x : realHilbertSumWeightedDiagonalDomain w) : lp G 2) i,
+        ⟨fun i => w i • ((x : realHilbertSumWeightedDiagonalDomain (G := G) w) : lp G 2) i,
           x.property⟩
       map_add' := by
         intro x y
         apply lp.ext
         funext i
-        simp [smul_add]
+        change w i • (((x : realHilbertSumWeightedDiagonalDomain (G := G) w) : lp G 2) i +
+            ((y : realHilbertSumWeightedDiagonalDomain (G := G) w) : lp G 2) i) =
+          w i • ((x : realHilbertSumWeightedDiagonalDomain (G := G) w) : lp G 2) i +
+            w i • ((y : realHilbertSumWeightedDiagonalDomain (G := G) w) : lp G 2) i
+        exact smul_add _ _ _
       map_smul' := by
         intro c x
         apply lp.ext
         funext i
+        change w i • (c • ((x : realHilbertSumWeightedDiagonalDomain (G := G) w) : lp G 2) i) =
+          c • (w i • ((x : realHilbertSumWeightedDiagonalDomain (G := G) w) : lp G 2) i)
         simp [smul_smul, mul_comm] }
 
 @[simp] theorem realHilbertSumWeightedDiagonalLinearPMap_domain
@@ -72,8 +78,8 @@ noncomputable def realHilbertSumWeightedDiagonalLinearPMap
     [∀ i, NormedAddCommGroup (G i)]
     [∀ i, NormedSpace ℝ (G i)]
     (w : ι → ℝ) :
-    (realHilbertSumWeightedDiagonalLinearPMap w).domain =
-      realHilbertSumWeightedDiagonalDomain w :=
+    (realHilbertSumWeightedDiagonalLinearPMap (G := G) w).domain =
+      realHilbertSumWeightedDiagonalDomain (G := G) w :=
   rfl
 
 @[simp] theorem realHilbertSumWeightedDiagonalLinearPMap_apply
@@ -82,10 +88,10 @@ noncomputable def realHilbertSumWeightedDiagonalLinearPMap
     [∀ i, NormedAddCommGroup (G i)]
     [∀ i, NormedSpace ℝ (G i)]
     (w : ι → ℝ)
-    (x : (realHilbertSumWeightedDiagonalLinearPMap w).domain)
+    (x : (realHilbertSumWeightedDiagonalLinearPMap (G := G) w).domain)
     (i : ι) :
-    realHilbertSumWeightedDiagonalLinearPMap w x i =
-      w i • ((x : (realHilbertSumWeightedDiagonalLinearPMap w).domain) : lp G 2) i :=
+    realHilbertSumWeightedDiagonalLinearPMap (G := G) w x i =
+      w i • ((x : (realHilbertSumWeightedDiagonalLinearPMap (G := G) w).domain) : lp G 2) i :=
   rfl
 
 /-- The logarithmic generator in intrinsic Hilbert-sum coordinates of the
@@ -116,6 +122,10 @@ noncomputable def realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
               Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
         2 :=
   realHilbertSumWeightedDiagonalLinearPMap
+    (G := fun mu =>
+      eigenspace
+        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
     (fun mu => realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)
 
 @[simp] theorem realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_domain_mem_iff
