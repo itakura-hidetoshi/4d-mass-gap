@@ -47,6 +47,8 @@ theorem realHilbertCompactSymmetric_eigenspaces_isHilbertSum
     fun _ => by infer_instance
   exact
     IsHilbertSum.mkInternal
+      (F := fun mu : Eigenvalues (T : Module.End ℝ E) =>
+        eigenspace (T : Module.End ℝ E) mu)
       hSymm.orthogonalFamily_eigenspaces'
       hTotal
 
