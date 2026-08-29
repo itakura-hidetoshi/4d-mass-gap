@@ -2,7 +2,6 @@ import MGAP4D.MathlibAnalytic.CompactPositiveSpectralSupportLogGeneratorResolven
 import MGAP4D.MathlibAnalytic.CompactPositiveSpectralSupportLogGeneratorNormCoercive
 import MGAP4D.MathlibAnalytic.CompactPositiveSpectralSupportLogGeneratorRangeSurjective
 import MGAP4D.MathlibAnalytic.CompactPositiveSpectralSupportLogGeneratorSelfAdjoint
-import MGAP4D.MathlibAnalytic.CompactPositiveSpectralSupportLogGeneratorResolventNormBound
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -56,58 +55,234 @@ local instance osBoundaryExcitationSupportResolventAbsoluteMonotonicityPairHilbe
   periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete
     H N hN beta hbeta
 
-local instance osBoundaryExcitationSupportResolventAbsoluteMonotonicitySpectralSupportRealNormedSpace
+/-- Canonical spelling of the actual positive spectral-support Hilbert carrier.
+This is definitionally the same carrier as the long physical support alias, but
+keeps Mathlib's native submodule Hilbert instances visible to typeclass search. -/
+abbrev periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventCarrier
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    NormedSpace ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) :=
-  periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRealNormedSpace
-    H N hN beta hbeta
+    (hbeta : 0 ≤ beta) :=
+  realHilbertZeroEigenspaceSupport
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+      H N hN beta hbeta 1)
 
-local instance osBoundaryExcitationSupportResolventAbsoluteMonotonicitySpectralSupportComplete
+local instance osBoundaryExcitationSupportResolventAbsoluteMonotonicityCarrierComplete
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta) :
     CompleteSpace
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) := by
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-  exact
-    (realHilbertZeroEigenspaceSupport_isClosed
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-        H N hN beta hbeta 1)).completeSpace_coe
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventCarrier
+        H N hN beta hbeta) :=
+  (realHilbertZeroEigenspaceSupport_isClosed
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+      H N hN beta hbeta 1)).completeSpace_coe
 
-/-- The actual completed one-step support logarithmic Hamiltonian is
-self-adjoint on its genuine maximal logarithmic domain. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_isSelfAdjoint
+/-- The actual unbounded logarithmic Hamiltonian on the canonical spelling of
+the completed positive spectral support. -/
+noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventCarrier
+        H N hN beta hbeta →ₗ.[ℝ]
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventCarrier
+        H N hN beta hbeta :=
+  realHilbertCompactPositiveZeroSupportLogGenerator
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+      H N hN beta hbeta 1)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
+      H N hN beta hbeta 1 (by norm_num))
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
+      H N hN beta hbeta 1)
+
+/-- The finite-volume coercive support gap used by the canonical resolvent. -/
+noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventGap
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) : ℝ :=
+  2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+    H N hN beta hbeta
+
+@[simp]
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventGap_pos
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    0 < periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventGap
+      H N hN beta hbeta := by
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventGap
+  exact mul_pos (by norm_num)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate_pos
+      H N hN beta hbeta)
+
+/-- Native-carrier form of the whole-domain quadratic coercive receipt. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator_quadratic_lower_bound
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (x : (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator
+      H N hN beta hbeta).domain) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventGap
+          H N hN beta hbeta *
+        ‖(x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventCarrier
+          H N hN beta hbeta)‖ ^ 2 ≤
+      inner ℝ
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator
+          H N hN beta hbeta x)
+        (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventCarrier
+          H N hN beta hbeta) := by
+  simpa [
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventGap,
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator,
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventCarrier,
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator,
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport]
+    using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_quadratic_lower_bound
+        H N hN beta hbeta x)
+
+/-- Native-carrier form of the graph-norm coercive receipt. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator_norm_lower_bound
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (x : (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator
+      H N hN beta hbeta).domain) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventGap
+          H N hN beta hbeta *
+        ‖(x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventCarrier
+          H N hN beta hbeta)‖ ≤
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator
+          H N hN beta hbeta x‖ := by
+  simpa [
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventGap,
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator,
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventCarrier,
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator,
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport]
+    using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_norm_lower_bound
+        H N hN beta hbeta x)
+
+/-- The native-carrier logarithmic generator has trivial kernel. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator_eq_zero_of_apply_eq_zero
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (x : (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator
+      H N hN beta hbeta).domain)
+    (hx : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator
+      H N hN beta hbeta x = 0) :
+    x = 0 := by
+  simpa [
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator,
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventCarrier,
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator,
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport]
+    using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_eq_zero_of_apply_eq_zero
+        H N hN beta hbeta x hx)
+
+/-- The native-carrier logarithmic generator is onto the completed positive
+spectral support. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator_surjective
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    Function.Surjective
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator
+        H N hN beta hbeta).toFun := by
+  simpa [
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator,
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventCarrier,
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator,
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport]
+    using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_surjective
+        H N hN beta hbeta)
+
+/-- The actual support logarithmic generator is self-adjoint on the native
+Hilbert carrier. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator_isSelfAdjoint
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta) :
     IsSelfAdjoint
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator
         H N hN beta hbeta) := by
-  simpa [
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator,
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport]
-    using
-      (realHilbertCompactPositiveZeroSupportLogGenerator_isSelfAdjoint
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-          H N hN beta hbeta 1)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
-          H N hN beta hbeta 1 (by norm_num))
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
-          H N hN beta hbeta 1))
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator
+  exact
+    realHilbertCompactPositiveZeroSupportLogGenerator_isSelfAdjoint
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+        H N hN beta hbeta 1)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
+        H N hN beta hbeta 1 (by norm_num))
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
+        H N hN beta hbeta 1)
 
-/-- Every power of the canonical bounded resolvent of the actual support
-logarithmic Hamiltonian has nonnegative quadratic form throughout the full
-symmetric gap `|λ| < 2r`.  The forward logarithmic Hamiltonian remains a
-partially defined operator. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_resolvent_pow_inner_nonneg
+/-- Canonical bounded ambient resolvent of the physical support logarithmic
+Hamiltonian. -/
+noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventFamily
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (lambda : ℝ) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventCarrier
+        H N hN beta hbeta →L[ℝ]
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventCarrier
+        H N hN beta hbeta :=
+  realLinearPMapAmbientResolventFamily_of_norm_lower_bound
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator
+      H N hN beta hbeta)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventGap
+      H N hN beta hbeta)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventGap_pos
+      H N hN beta hbeta)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator_norm_lower_bound
+      H N hN beta hbeta)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator_eq_zero_of_apply_eq_zero
+      H N hN beta hbeta)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator_surjective
+      H N hN beta hbeta)
+    lambda
+
+/-- Diagonal scalar amplitude of the canonical physical support resolvent. -/
+noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventQuadraticAmplitude
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (u : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventCarrier
+      H N hN beta hbeta) : ℝ → ℝ :=
+  realLinearPMapAmbientResolventQuadraticAmplitude
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator
+      H N hN beta hbeta)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventGap
+      H N hN beta hbeta)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventGap_pos
+      H N hN beta hbeta)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator_norm_lower_bound
+      H N hN beta hbeta)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator_eq_zero_of_apply_eq_zero
+      H N hN beta hbeta)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator_surjective
+      H N hN beta hbeta)
+    u
+
+/-- Every power of the canonical bounded physical support resolvent has
+nonnegative quadratic form throughout the full symmetric gap. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventFamily_pow_inner_nonneg
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
@@ -115,181 +290,102 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     (lambda : ℝ)
     (hlambda :
       |lambda| <
-        2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventGap
           H N hN beta hbeta)
     (n : ℕ)
-    (u : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+    (u : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventCarrier
       H N hN beta hbeta) :
-    let A :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-        H N hN beta hbeta
-    let c :=
-      2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-        H N hN beta hbeta
-    let hc : 0 < c := by
-      exact mul_pos (by norm_num)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate_pos
-          H N hN beta hbeta)
     0 ≤ inner ℝ
-      ((realLinearPMapAmbientResolventFamily_of_norm_lower_bound
-        A c hc
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_norm_lower_bound
-          H N hN beta hbeta)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_eq_zero_of_apply_eq_zero
-          H N hN beta hbeta)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_surjective
-          H N hN beta hbeta)
-        lambda ^ n) u)
+      ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventFamily
+        H N hN beta hbeta lambda ^ n) u)
       u := by
-  dsimp only
-  let c :=
-    2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-      H N hN beta hbeta
-  have hc : 0 < c := by
-    dsimp [c]
-    exact mul_pos (by norm_num)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate_pos
-        H N hN beta hbeta)
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventFamily
   exact
     realLinearPMapAmbientResolventFamily_pow_inner_nonneg
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator
         H N hN beta hbeta)
-      c hc
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_norm_lower_bound
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventGap
         H N hN beta hbeta)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_eq_zero_of_apply_eq_zero
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventGap_pos
         H N hN beta hbeta)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_surjective
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator_norm_lower_bound
         H N hN beta hbeta)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_isSelfAdjoint
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator_eq_zero_of_apply_eq_zero
         H N hN beta hbeta)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_quadratic_lower_bound
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator_surjective
+        H N hN beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator_isSelfAdjoint
+        H N hN beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator_quadratic_lower_bound
         H N hN beta hbeta)
       lambda hlambda n u
 
 /-- Exact all-order derivative formula for the physical support-resolvent
-quadratic amplitude on the full finite-volume spectral gap. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_resolventQuadratic_iteratedDeriv_eq_factorial
+quadratic amplitude. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventQuadraticAmplitude_iteratedDeriv_eq_factorial
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta)
-    (u : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+    (u : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventCarrier
       H N hN beta hbeta)
     (n : ℕ)
     (lambda : ℝ)
     (hlambda :
       |lambda| <
-        2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventGap
           H N hN beta hbeta) :
-    let A :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-        H N hN beta hbeta
-    let c :=
-      2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-        H N hN beta hbeta
-    let hc : 0 < c := by
-      exact mul_pos (by norm_num)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate_pos
-          H N hN beta hbeta)
     iteratedDeriv n
-        (realLinearPMapAmbientResolventQuadraticAmplitude
-          A c hc
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_norm_lower_bound
-            H N hN beta hbeta)
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_eq_zero_of_apply_eq_zero
-            H N hN beta hbeta)
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_surjective
-            H N hN beta hbeta)
-          u)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventQuadraticAmplitude
+          H N hN beta hbeta u)
         lambda =
       (n.factorial : ℝ) * inner ℝ
-        ((realLinearPMapAmbientResolventFamily_of_norm_lower_bound
-          A c hc
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_norm_lower_bound
-            H N hN beta hbeta)
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_eq_zero_of_apply_eq_zero
-            H N hN beta hbeta)
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_surjective
-            H N hN beta hbeta)
-          lambda ^ (n + 1)) u)
+        ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventFamily
+          H N hN beta hbeta lambda ^ (n + 1)) u)
         u := by
-  dsimp only
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventQuadraticAmplitude
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventFamily
   exact
     realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_eq_factorial
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator
         H N hN beta hbeta)
-      (2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventGap
         H N hN beta hbeta)
-      (mul_pos (by norm_num)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate_pos
-          H N hN beta hbeta))
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_norm_lower_bound
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventGap_pos
         H N hN beta hbeta)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_eq_zero_of_apply_eq_zero
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator_norm_lower_bound
         H N hN beta hbeta)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_surjective
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator_eq_zero_of_apply_eq_zero
+        H N hN beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventLogGenerator_surjective
         H N hN beta hbeta)
       u n lambda hlambda
 
 /-- Absolute monotonicity of the physical support-resolvent quadratic
-amplitude: every ordinary derivative is nonnegative at every point of the
-full symmetric finite-volume spectral gap `|λ| < 2r`. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_resolventQuadratic_iteratedDeriv_nonneg
+amplitude: every ordinary derivative is nonnegative throughout the full
+finite-volume symmetric gap. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventQuadraticAmplitude_iteratedDeriv_nonneg
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta)
-    (u : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+    (u : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventCarrier
       H N hN beta hbeta)
     (n : ℕ)
     (lambda : ℝ)
     (hlambda :
       |lambda| <
-        2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventGap
           H N hN beta hbeta) :
-    let A :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-        H N hN beta hbeta
-    let c :=
-      2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-        H N hN beta hbeta
-    let hc : 0 < c := by
-      exact mul_pos (by norm_num)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate_pos
-          H N hN beta hbeta)
     0 ≤ iteratedDeriv n
-      (realLinearPMapAmbientResolventQuadraticAmplitude
-        A c hc
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_norm_lower_bound
-          H N hN beta hbeta)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_eq_zero_of_apply_eq_zero
-          H N hN beta hbeta)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_surjective
-          H N hN beta hbeta)
-        u)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventQuadraticAmplitude
+        H N hN beta hbeta u)
       lambda := by
-  dsimp only
-  exact
-    realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_nonneg
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-        H N hN beta hbeta)
-      (2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-        H N hN beta hbeta)
-      (mul_pos (by norm_num)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate_pos
-          H N hN beta hbeta))
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_norm_lower_bound
-        H N hN beta hbeta)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_eq_zero_of_apply_eq_zero
-        H N hN beta hbeta)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_surjective
-        H N hN beta hbeta)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_isSelfAdjoint
-        H N hN beta hbeta)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_quadratic_lower_bound
-        H N hN beta hbeta)
-      u n lambda hlambda
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventQuadraticAmplitude_iteratedDeriv_eq_factorial
+    H N hN beta hbeta u n lambda hlambda]
+  exact mul_nonneg (by positivity)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneSupportResolventFamily_pow_inner_nonneg
+      H N hN beta hbeta lambda hlambda (n + 1) u)
 
 end
 
