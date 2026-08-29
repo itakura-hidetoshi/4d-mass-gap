@@ -157,7 +157,12 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
             H N hN beta hbeta 1 (by norm_num))
           (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
             H N hN beta hbeta 1))
-  have hDense : Dense (A.domain : Set _) := by
+  have hDense :
+      Dense
+        (A.domain :
+          Set
+            (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+              H N hN beta hbeta)) := by
     simpa [A,
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator,
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport]
