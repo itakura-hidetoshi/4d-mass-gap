@@ -56,7 +56,6 @@ resolvent associated with a coercive partially defined real-linear operator. -/
 noncomputable def realLinearPMapAmbientResolventMatrixElement
     {E : Type u}
     [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
     [InnerProductSpace ℝ E]
     [CompleteSpace E]
     (A : E →ₗ.[ℝ] E)
@@ -75,7 +74,6 @@ noncomputable def realLinearPMapAmbientResolventMatrixElement
 theorem realLinearPMapAmbientResolventMatrixElement_apply
     {E : Type u}
     [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
     [InnerProductSpace ℝ E]
     [CompleteSpace E]
     (A : E →ₗ.[ℝ] E)
@@ -98,7 +96,6 @@ operator-norm analytic bounded resolvent family. -/
 theorem realLinearPMapAmbientResolventMatrixElement_analyticAt
     {E : Type u}
     [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
     [InnerProductSpace ℝ E]
     [CompleteSpace E]
     (A : E →ₗ.[ℝ] E)
@@ -132,7 +129,6 @@ theorem realLinearPMapAmbientResolventMatrixElement_analyticAt
 theorem realLinearPMapAmbientResolventMatrixElement_analyticOnNhd
     {E : Type u}
     [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
     [InnerProductSpace ℝ E]
     [CompleteSpace E]
     (A : E →ₗ.[ℝ] E)
@@ -156,7 +152,6 @@ series. -/
 theorem realLinearPMapAmbientResolventMatrixElement_hasSum_taylorNeumann
     {E : Type u}
     [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
     [InnerProductSpace ℝ E]
     [CompleteSpace E]
     (A : E →ₗ.[ℝ] E)
@@ -187,7 +182,6 @@ theorem realLinearPMapAmbientResolventMatrixElement_hasSum_taylorNeumann
 theorem realLinearPMapAmbientResolventMatrixElement_taylorRemainder_eq
     {E : Type u}
     [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
     [InnerProductSpace ℝ E]
     [CompleteSpace E]
     (A : E →ₗ.[ℝ] E)
@@ -221,7 +215,6 @@ remainder estimate and Cauchy--Schwarz. -/
 theorem realLinearPMapAmbientResolventMatrixElement_taylorRemainder_abs_le
     {E : Type u}
     [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
     [InnerProductSpace ℝ E]
     [CompleteSpace E]
     (A : E →ₗ.[ℝ] E)
@@ -255,23 +248,27 @@ theorem realLinearPMapAmbientResolventMatrixElement_taylorRemainder_abs_le
   rw [continuousLinearMapRealMatrixElement_apply] at hmatrix
   have hop := realLinearPMapAmbientResolventFamily_taylorRemainder_norm_le_gap
     A c hc hNorm hKer hSurj lambda h hlambda hh n
+  have heq := realLinearPMapAmbientResolventFamily_taylorRemainder_eq
+    A c hc hNorm hKer hSurj lambda h hlambda hh n
+  rw [heq, norm_smul, Real.norm_eq_abs, abs_pow] at hop
   have hterm :
       |h| ^ n * ‖F (lambda + h) * F lambda ^ n‖ ≤
         |h| ^ n *
           ((c - |lambda| - |h|)⁻¹ * (c - |lambda|)⁻¹ ^ n) := by
-    simpa [F, norm_smul, Real.norm_eq_abs, abs_pow] using hop
+    simpa [F] using hop
   calc
     |h| ^ n * |⟪y, (F (lambda + h) * F lambda ^ n) x⟫_ℝ| ≤
         |h| ^ n * (‖y‖ *
-          (‖F (lambda + h) * F lambda ^ n‖ * ‖x‖)) := by
-      gcongr
+          (‖F (lambda + h) * F lambda ^ n‖ * ‖x‖)) :=
+      mul_le_mul_of_nonneg_left hmatrix (pow_nonneg (abs_nonneg h) n)
     _ = ‖y‖ *
         ((|h| ^ n * ‖F (lambda + h) * F lambda ^ n‖) * ‖x‖) := by
       ring
     _ ≤ ‖y‖ *
         ((|h| ^ n *
           ((c - |lambda| - |h|)⁻¹ * (c - |lambda|)⁻¹ ^ n)) * ‖x‖) := by
-      gcongr
+      apply mul_le_mul_of_nonneg_left _ (norm_nonneg y)
+      exact mul_le_mul_of_nonneg_right hterm (norm_nonneg x)
     _ = ‖y‖ *
         (|h| ^ n *
           ((c - |lambda| - |h|)⁻¹ *
@@ -282,7 +279,6 @@ theorem realLinearPMapAmbientResolventMatrixElement_taylorRemainder_abs_le
 structure RealLinearPMapAmbientResolventMatrixElementAnalyticPackage
     {E : Type u}
     [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
     [InnerProductSpace ℝ E]
     [CompleteSpace E]
     (A : E →ₗ.[ℝ] E)
@@ -318,7 +314,6 @@ boundedness hypothesis on the forward partially defined operator. -/
 theorem realLinearPMapAmbientResolventMatrixElementAnalyticPackage
     {E : Type u}
     [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
     [InnerProductSpace ℝ E]
     [CompleteSpace E]
     (A : E →ₗ.[ℝ] E)
