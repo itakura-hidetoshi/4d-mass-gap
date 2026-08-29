@@ -265,7 +265,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     lambda ∈ realLinearPMapRealResolventSet
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
         H N hN beta hbeta) := by
-  letI : NormedSpace ℝ
+  let hSupportRealNormedSpace : NormedSpace ℝ
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
         H N hN beta hbeta) := {
     norm_smul_le := by
@@ -279,7 +279,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
         (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
           H N hN beta hbeta) }
   exact
-    realLinearPMap_mem_realResolventSet_of_abs_lt_norm_lower_bound
+    @realLinearPMap_mem_realResolventSet_of_abs_lt_norm_lower_bound
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta)
+      _ hSupportRealNormedSpace _
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
         H N hN beta hbeta)
       (2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
@@ -311,7 +314,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
           H N hN beta hbeta))
         (2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
           H N hN beta hbeta)) := by
-  letI : NormedSpace ℝ
+  let hSupportRealNormedSpace : NormedSpace ℝ
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
         H N hN beta hbeta) := {
     norm_smul_le := by
@@ -325,7 +328,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
         (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
           H N hN beta hbeta) }
   exact
-    realLinearPMap_realSpectrum_disjoint_Ioo_neg_pos_of_norm_lower_bound
+    @realLinearPMap_realSpectrum_disjoint_Ioo_neg_pos_of_norm_lower_bound
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta)
+      _ hSupportRealNormedSpace _
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
         H N hN beta hbeta)
       (2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
