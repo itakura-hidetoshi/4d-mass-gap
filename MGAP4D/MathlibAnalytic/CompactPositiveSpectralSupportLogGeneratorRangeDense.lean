@@ -168,22 +168,28 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     exact
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
         H N hN beta hbeta 1
+  have hGenerator :
+      realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive =
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
+          H N hN beta hbeta := by
+    dsimp [T, hCompact, hPositive]
+    unfold
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+    rfl
   have hKer :
       ∀ x : (realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive).domain,
         realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive x = 0 →
           x = 0 := by
-    simpa [T, hCompact, hPositive,
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator,
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport]
-      using
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_eq_zero_of_apply_eq_zero
-          H N hN beta hbeta)
-  simpa [T, hCompact, hPositive,
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator,
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport]
-    using
-      (realHilbertCompactPositiveZeroSupportLogGenerator_range_topologicalClosure_eq_top
-        T hCompact hPositive hKer)
+    rw [hGenerator]
+    exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_eq_zero_of_apply_eq_zero
+        H N hN beta hbeta
+  have hDense :=
+    realHilbertCompactPositiveZeroSupportLogGenerator_range_topologicalClosure_eq_top
+      T hCompact hPositive hKer
+  rw [hGenerator] at hDense
+  exact hDense
 
 end
 
