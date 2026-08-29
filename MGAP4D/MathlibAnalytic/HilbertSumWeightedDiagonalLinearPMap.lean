@@ -32,7 +32,9 @@ noncomputable def realHilbertSumWeightedDiagonalDomain
   smul_mem' := by
     intro c x hx
     change Memℓp (fun i => w i • (c • x) i) 2
-    simpa only [lp.coeFn_smul, Pi.smul_apply, smul_smul, mul_comm] using hx.const_smul c
+    have h := hx.const_smul c
+    change Memℓp (fun i => c • (w i • x i)) 2 at h
+    simpa only [lp.coeFn_smul, Pi.smul_apply, smul_smul, mul_comm] using h
 
 @[simp] theorem mem_realHilbertSumWeightedDiagonalDomain
     {ι : Type u}
