@@ -203,7 +203,7 @@ theorem abs_lt_gap_of_abs_sub_lt_gap_sub_abs
   have htri : |mu| ≤ |lambda| + |mu - lambda| := by
     calc
       |mu| = |lambda + (mu - lambda)| := by ring_nf
-      _ ≤ |lambda| + |mu - lambda| := abs_add _ _
+      _ ≤ |lambda| + |mu - lambda| := abs_add_le _ _
   linarith
 
 /-- Exact local bounded-ring factorization of the support resolvent.  The
@@ -300,7 +300,7 @@ theorem realLinearPMapAmbientResolventFamily_hasSum_taylorNeumann
   have hdist : |(lambda + h) - lambda| < c - |lambda| := by
     simpa using hh
   have ht : ‖t‖ < 1 := by
-    simpa only [t, F] using
+    simpa [t, F] using
       realLinearPMapAmbientResolventFamily_neumannSmall_of_abs_sub_lt_gap
         A c hc hNorm hKer hSurj lambda (lambda + h) hlambda hdist
   have hsumm : Summable (fun n : ℕ => t ^ n) :=
@@ -310,9 +310,11 @@ theorem realLinearPMapAmbientResolventFamily_hasSum_taylorNeumann
   have hgeom : HasSum (fun n : ℕ => t ^ n) (Ring.inverse (1 - t)) := by
     rw [hinvTsum]
     exact hsumm.hasSum
-  have hfactor :=
-    realLinearPMapAmbientResolventFamily_eq_mul_ringInverse_one_sub
-      A c hc hNorm hKer hSurj lambda (lambda + h) hlambda hdist
+  have hfactor :
+      F (lambda + h) = F lambda * Ring.inverse (1 - h • F lambda) := by
+    simpa [F] using
+      realLinearPMapAmbientResolventFamily_eq_mul_ringInverse_one_sub
+        A c hc hNorm hKer hSurj lambda (lambda + h) hlambda hdist
   rw [hfactor]
   simpa only [t, F, mul_smul_pow_eq_smul_pow_succ] using
     hgeom.mul_left (F lambda)
