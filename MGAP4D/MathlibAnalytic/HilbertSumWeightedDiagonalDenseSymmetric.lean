@@ -51,7 +51,7 @@ theorem realHilbertSumWeightedDiagonalLinearPMap_dense_domain
   apply Set.eq_univ_of_forall
   intro x
   refine mem_closure_of_tendsto
-    (lp.hasSum_single (p := (2 : ℝ≥0∞)) (by norm_num) x)
+    (lp.hasSum_single (p := 2) (by norm_num) x)
     (Eventually.of_forall ?_)
   intro s
   rw [SetLike.mem_coe]
@@ -67,7 +67,8 @@ theorem realHilbertSumWeightedDiagonalLinearPMap_isFormalAdjoint_self
     [∀ i, NormedAddCommGroup (G i)]
     [∀ i, InnerProductSpace ℝ (G i)]
     (w : ι → ℝ) :
-    (realHilbertSumWeightedDiagonalLinearPMap (G := G) w).IsFormalAdjoint
+    LinearPMap.IsFormalAdjoint (𝕜 := ℝ)
+      (realHilbertSumWeightedDiagonalLinearPMap (G := G) w)
       (realHilbertSumWeightedDiagonalLinearPMap (G := G) w) := by
   intro x y
   rw [lp.inner_eq_tsum, lp.inner_eq_tsum]
@@ -77,10 +78,9 @@ theorem realHilbertSumWeightedDiagonalLinearPMap_isFormalAdjoint_self
     realHilbertSumWeightedDiagonalLinearPMap_apply,
     real_inner_smul_left, real_inner_smul_right]
 
-/-- Consequently the intrinsic logarithmic generator coordinates of every
-compact positive real-Hilbert operator are densely defined and formally
-symmetric. -/
-theorem realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_dense_domain_and_formallySymmetric
+/-- The intrinsic logarithmic generator coordinates of every compact positive
+real-Hilbert operator have dense domain. -/
+theorem realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_dense_domain
     {E : Type u}
     [NormedAddCommGroup E]
     [InnerProductSpace ℝ E]
@@ -89,40 +89,50 @@ theorem realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_dense_domai
     (hCompact : IsCompactOperator T)
     (hPositive : T.IsPositive) :
     Dense
-        (((realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
-          T hCompact hPositive).domain :
-          Submodule ℝ
-            (lp
-              (fun mu : Module.End.Eigenvalues
+      (((realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+        T hCompact hPositive).domain :
+        Submodule ℝ
+          (lp
+            (fun mu : Module.End.Eigenvalues
+              (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+                Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+              Module.End.eigenspace
                 (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-                  Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
-                Module.End.eigenspace
-                  (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-                    Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
-              2)) : Set _) ∧
+                  Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
+            2)) : Set _) := by
+  exact
+    realHilbertSumWeightedDiagonalLinearPMap_dense_domain
+      (G := fun mu : Module.End.Eigenvalues
+        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+        Module.End.eigenspace
+          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
+      (fun mu => realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)
+
+/-- The intrinsic logarithmic generator coordinates are formally symmetric. -/
+theorem realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_isFormalAdjoint_self
+    {E : Type u}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [CompleteSpace E]
+    (T : E →L[ℝ] E)
+    (hCompact : IsCompactOperator T)
+    (hPositive : T.IsPositive) :
+    LinearPMap.IsFormalAdjoint (𝕜 := ℝ)
       (realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
-        T hCompact hPositive).IsFormalAdjoint
-        (realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
-          T hCompact hPositive) := by
-  constructor
-  · exact
-      realHilbertSumWeightedDiagonalLinearPMap_dense_domain
-        (G := fun mu : Module.End.Eigenvalues
+        T hCompact hPositive)
+      (realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+        T hCompact hPositive) := by
+  exact
+    realHilbertSumWeightedDiagonalLinearPMap_isFormalAdjoint_self
+      (G := fun mu : Module.End.Eigenvalues
+        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+        Module.End.eigenspace
           (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
-          Module.End.eigenspace
-            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
-        (fun mu => realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)
-  · exact
-      realHilbertSumWeightedDiagonalLinearPMap_isFormalAdjoint_self
-        (G := fun mu : Module.End.Eigenvalues
-          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
-          Module.End.eigenspace
-            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
-        (fun mu => realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)
+            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
+      (fun mu => realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)
 
 end
 
