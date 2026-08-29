@@ -224,8 +224,8 @@ local instance osBoundaryExcitationLogGeneratorOpenGapPairHilbertSectorComplete
   periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete
     H N hN beta hbeta
 
-/-- The complex physical pair Hilbert sector, regarded canonically as a real
-normed space.  This is restriction of scalars only; the norm is unchanged. -/
+/-- The physical pair Hilbert sector already carries its native real normed-space
+structure; no scalar reconstruction is needed here. -/
 local instance osBoundaryExcitationLogGeneratorOpenGapPairHilbertSectorRealNormedSpace
     (H N : ℕ)
     (hN : 0 < N)
@@ -233,10 +233,8 @@ local instance osBoundaryExcitationLogGeneratorOpenGapPairHilbertSectorRealNorme
     (hbeta : 0 ≤ beta) :
     NormedSpace ℝ
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-        H N hN beta hbeta) :=
-  NormedSpace.restrictScalars ℝ ℂ
-    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-      H N hN beta hbeta)
+        H N hN beta hbeta) := by
+  infer_instance
 
 local instance osBoundaryExcitationLogGeneratorOpenGapSpectralSupportNormedSpace
     (H N : ℕ)
