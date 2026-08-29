@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.CompactPositiveSpectralSupportHilbertSumEquiv
-import MGAP4D.MathlibAnalytic.CompactPositiveSpectralLogWeights
+import MGAP4D.MathlibAnalytic.HilbertSumWeightedDiagonalLinearPMap
 import Mathlib.Analysis.InnerProductSpace.LinearPMap
 import Mathlib.Tactic
 
@@ -23,8 +23,8 @@ local instance spectralSupportLogGeneratorComplete
   (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
 
 /-- Natural domain of the logarithmic generator on the actual positive spectral
-support.  A support vector is in the domain exactly when its intrinsic spectral
-coordinates remain square-summable after multiplication by `-log mu`. -/
+support.  It is the inverse image, under the canonical spectral-coordinate
+isometry, of the maximal weighted diagonal domain with weight `-log mu`. -/
 noncomputable def realHilbertCompactPositiveZeroSupportLogGeneratorDomain
     {E : Type u}
     [NormedAddCommGroup E]
@@ -33,36 +33,11 @@ noncomputable def realHilbertCompactPositiveZeroSupportLogGeneratorDomain
     (T : E →L[ℝ] E)
     (hCompact : IsCompactOperator T)
     (hPositive : T.IsPositive) :
-    Submodule ℝ (realHilbertZeroEigenspaceSupport T) where
-  carrier := {x |
-    Memℓp
-      (fun mu =>
-        realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
-          (realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
-            T hCompact hPositive x) mu)
-      2}
-  zero_mem' := by
-    have hzero : Memℓp
-        (0 : (mu : Eigenvalues
-          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-            Module.End ℝ (realHilbertZeroEigenspaceSupport T))) →
-          eigenspace
-            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu) 2 := zero_memℓp
-    simpa using hzero
-  add_mem' := by
-    intro x y hx hy
-    simpa only [LinearIsometryEquiv.map_add, lp.coeFn_add, Pi.add_apply, smul_add] using hx.add hy
-  smul_mem' := by
-    intro c x hx
-    have h := hx.const_smul c
-    change Memℓp
-      (fun mu => c •
-        (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
-          (realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
-            T hCompact hPositive x) mu)) 2 at h
-    simpa only [LinearIsometryEquiv.map_smul, lp.coeFn_smul, Pi.smul_apply,
-      smul_smul, mul_comm] using h
+    Submodule ℝ (realHilbertZeroEigenspaceSupport T) :=
+  (realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+      T hCompact hPositive).domain.comap
+    (realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
+      T hCompact hPositive).toLinearEquiv.toLinearMap
 
 @[simp] theorem mem_realHilbertCompactPositiveZeroSupportLogGeneratorDomain
     {E : Type u}
@@ -74,16 +49,15 @@ noncomputable def realHilbertCompactPositiveZeroSupportLogGeneratorDomain
     (hPositive : T.IsPositive)
     (x : realHilbertZeroEigenspaceSupport T) :
     x ∈ realHilbertCompactPositiveZeroSupportLogGeneratorDomain T hCompact hPositive ↔
-      Memℓp
-        (fun mu =>
-          realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
-            (realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
-              T hCompact hPositive x) mu)
-        2 := Iff.rfl
+      realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
+          T hCompact hPositive x ∈
+        (realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+          T hCompact hPositive).domain :=
+  Iff.rfl
 
 /-- The logarithmic Hamiltonian directly on the actual positive spectral
-support.  It is the intrinsic diagonal multiplication by `-log mu`, transported
-back through the canonical eigenspace Hilbert-sum equivalence. -/
+support.  It is the maximal weighted diagonal operator in intrinsic spectral
+coordinates, transported back by the canonical Hilbert-sum isometry. -/
 noncomputable def realHilbertCompactPositiveZeroSupportLogGenerator
     {E : Type u}
     [NormedAddCommGroup E]
@@ -93,31 +67,27 @@ noncomputable def realHilbertCompactPositiveZeroSupportLogGenerator
     (hCompact : IsCompactOperator T)
     (hPositive : T.IsPositive) :
     realHilbertZeroEigenspaceSupport T →ₗ.[ℝ]
-      realHilbertZeroEigenspaceSupport T where
-  domain := realHilbertCompactPositiveZeroSupportLogGeneratorDomain T hCompact hPositive
-  toFun :=
-    { toFun := fun x =>
-        (realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
-          T hCompact hPositive).symm
-          ⟨fun mu =>
-              realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
-                (realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
-                  T hCompact hPositive (x : realHilbertZeroEigenspaceSupport T)) mu,
-            x.property⟩
+      realHilbertZeroEigenspaceSupport T := by
+  let U :=
+    realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
+      T hCompact hPositive
+  let A :=
+    realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+      T hCompact hPositive
+  let D := realHilbertCompactPositiveZeroSupportLogGeneratorDomain T hCompact hPositive
+  let lift : D →ₗ[ℝ] A.domain :=
+    { toFun := fun x => ⟨U (x : realHilbertZeroEigenspaceSupport T), x.property⟩
       map_add' := by
         intro x y
-        apply (realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
-          T hCompact hPositive).injective
-        apply lp.ext
-        funext mu
-        simp [smul_add]
+        apply Subtype.ext
+        exact U.map_add (x : realHilbertZeroEigenspaceSupport T) y
       map_smul' := by
         intro c x
-        apply (realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
-          T hCompact hPositive).injective
-        apply lp.ext
-        funext mu
-        simp [smul_smul, mul_comm] }
+        apply Subtype.ext
+        exact U.map_smul c (x : realHilbertZeroEigenspaceSupport T) }
+  exact
+    { domain := D
+      toFun := U.symm.toLinearEquiv.toLinearMap.comp (A.toFun.comp lift) }
 
 @[simp] theorem realHilbertCompactPositiveZeroSupportLogGenerator_domain
     {E : Type u}
@@ -128,9 +98,12 @@ noncomputable def realHilbertCompactPositiveZeroSupportLogGenerator
     (hCompact : IsCompactOperator T)
     (hPositive : T.IsPositive) :
     (realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive).domain =
-      realHilbertCompactPositiveZeroSupportLogGeneratorDomain T hCompact hPositive := rfl
+      realHilbertCompactPositiveZeroSupportLogGeneratorDomain T hCompact hPositive := by
+  rfl
 
-/-- Exact coordinate formula for the support logarithmic generator. -/
+/-- Exact coordinate formula for the support logarithmic generator: applying
+the canonical spectral-coordinate isometry recovers the maximal weighted
+coordinate operator. -/
 theorem realHilbertCompactPositiveZeroSupportLogGenerator_coordinates
     {E : Type u}
     [NormedAddCommGroup E]
@@ -143,12 +116,12 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_coordinates
     realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
         T hCompact hPositive
         (realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive x) =
-      ⟨fun mu =>
-          realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
-            (realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
-              T hCompact hPositive
-              (x : realHilbertZeroEigenspaceSupport T)) mu,
-        x.property⟩ := by
+      realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+        T hCompact hPositive
+        ⟨realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
+            T hCompact hPositive
+            (x : realHilbertZeroEigenspaceSupport T),
+          x.property⟩ := by
   exact (realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
     T hCompact hPositive).apply_symm_apply _
 
