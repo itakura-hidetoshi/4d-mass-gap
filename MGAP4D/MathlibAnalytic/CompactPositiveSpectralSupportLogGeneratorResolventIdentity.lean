@@ -32,16 +32,21 @@ theorem realLinearPMap_ambientResolvent_sub_eq_smul_comp
       realLinearPMapDomainShift A lambda x =
         realLinearPMapDomainShift A mu x + (mu - lambda) • (x : E) := by
     simp [realLinearPMapDomainShift, sub_smul]
-    abel
   have hleft := hBlambdaLeft x
   rw [hshift, map_add, map_smul, hx, ← hBmu] at hleft
   change Blambda y - Bmu y = (lambda - mu) • Blambda (Bmu y)
-  rw [sub_eq_iff_eq_add]
+  have hstep :
+      Blambda y - Bmu y = -((mu - lambda) • Blambda (Bmu y)) := by
+    calc
+      Blambda y - Bmu y =
+          (Blambda y + (mu - lambda) • Blambda (Bmu y)) - Bmu y -
+            (mu - lambda) • Blambda (Bmu y) := by abel
+      _ = -((mu - lambda) • Blambda (Bmu y)) := by
+        rw [hleft]
+        simp
   calc
-    Blambda y = Bmu y - (mu - lambda) • Blambda (Bmu y) := by
-      linarith
-    _ = Bmu y + (lambda - mu) • Blambda (Bmu y) := by
-      congr 1
+    Blambda y - Bmu y = -((mu - lambda) • Blambda (Bmu y)) := hstep
+    _ = (lambda - mu) • Blambda (Bmu y) := by
       rw [← neg_smul, neg_sub]
 
 /-- Quantitative two-point resolvent estimate. -/
@@ -65,20 +70,29 @@ theorem realLinearPMap_ambientResolvent_sub_norm_le
       |lambda - mu| * (c - |lambda|)⁻¹ * (c - |mu|)⁻¹ := by
   rw [realLinearPMap_ambientResolvent_sub_eq_smul_comp
     A lambda mu Blambda Bmu hBlambdaLeft hBmuRight]
+  have habs : 0 ≤ |lambda - mu| := abs_nonneg _
+  have hinvlambda : 0 ≤ (c - |lambda|)⁻¹ :=
+    inv_nonneg.mpr (sub_nonneg.mpr (le_of_lt hlambda))
+  have hinvmu : 0 ≤ (c - |mu|)⁻¹ :=
+    inv_nonneg.mpr (sub_nonneg.mpr (le_of_lt hmu))
+  have hcomp : ‖Blambda.comp Bmu‖ ≤ ‖Blambda‖ * ‖Bmu‖ :=
+    ContinuousLinearMap.opNorm_comp_le Blambda Bmu
+  have hprod :
+      ‖Blambda‖ * ‖Bmu‖ ≤ (c - |lambda|)⁻¹ * (c - |mu|)⁻¹ := by
+    calc
+      ‖Blambda‖ * ‖Bmu‖ ≤ ‖Blambda‖ * (c - |mu|)⁻¹ :=
+        mul_le_mul_of_nonneg_left hBmuNorm (norm_nonneg Blambda)
+      _ ≤ (c - |lambda|)⁻¹ * (c - |mu|)⁻¹ :=
+        mul_le_mul_of_nonneg_right hBlambdaNorm hinvmu
   calc
     ‖(lambda - mu) • Blambda.comp Bmu‖ =
         |lambda - mu| * ‖Blambda.comp Bmu‖ := by
       rw [norm_smul, Real.norm_eq_abs]
-    _ ≤ |lambda - mu| * (‖Blambda‖ * ‖Bmu‖) := by
-      gcongr
-      exact ContinuousLinearMap.opNorm_comp_le Blambda Bmu
+    _ ≤ |lambda - mu| * (‖Blambda‖ * ‖Bmu‖) :=
+      mul_le_mul_of_nonneg_left hcomp habs
     _ ≤ |lambda - mu| *
-        ((c - |lambda|)⁻¹ * (c - |mu|)⁻¹) := by
-      gcongr
-      · exact abs_nonneg _
-      · exact norm_nonneg _
-      · exact hBlambdaNorm
-      · exact hBmuNorm
+        ((c - |lambda|)⁻¹ * (c - |mu|)⁻¹) :=
+      mul_le_mul_of_nonneg_left hprod habs
     _ = |lambda - mu| * (c - |lambda|)⁻¹ * (c - |mu|)⁻¹ := by ring
 
 /-- Coercivity supplies two ambient resolvents simultaneously, together with the
@@ -165,19 +179,28 @@ theorem realLinearPMap_exists_ambientResolvent_pair_lipschitz_on_inner_gap
   have hcd : 0 < c - d := sub_pos.mpr hdc
   have hclambda : c - d ≤ c - |lambda| := sub_le_sub_left hlambda c
   have hcmu : c - d ≤ c - |mu| := sub_le_sub_left hmu c
-  have hinvlambda : (c - |lambda|)⁻¹ ≤ (c - d)⁻¹ := by
-    exact inv_anti₀ hcd hclambda
-  have hinvmu : (c - |mu|)⁻¹ ≤ (c - d)⁻¹ := by
-    exact inv_anti₀ hcd hcmu
+  have hinvlambda : (c - |lambda|)⁻¹ ≤ (c - d)⁻¹ :=
+    inv_anti₀ hcd hclambda
+  have hinvmu : (c - |mu|)⁻¹ ≤ (c - d)⁻¹ :=
+    inv_anti₀ hcd hcmu
+  have habs : 0 ≤ |lambda - mu| := abs_nonneg _
+  have hinnerInv : 0 ≤ (c - d)⁻¹ := inv_nonneg.mpr hcd.le
+  have hfirst :
+      |lambda - mu| * (c - |lambda|)⁻¹ * (c - |mu|)⁻¹ ≤
+        |lambda - mu| * (c - d)⁻¹ * (c - |mu|)⁻¹ := by
+    exact mul_le_mul_of_nonneg_right
+      (mul_le_mul_of_nonneg_left hinvlambda habs)
+      (inv_nonneg.mpr (sub_nonneg.mpr (le_of_lt hmu')))
+  have hsecond :
+      |lambda - mu| * (c - d)⁻¹ * (c - |mu|)⁻¹ ≤
+        |lambda - mu| * (c - d)⁻¹ * (c - d)⁻¹ := by
+    exact mul_le_mul_of_nonneg_left hinvmu
+      (mul_nonneg habs hinnerInv)
   calc
     ‖Blambda - Bmu‖ ≤
         |lambda - mu| * (c - |lambda|)⁻¹ * (c - |mu|)⁻¹ := hdiff
-    _ ≤ |lambda - mu| * (c - d)⁻¹ * (c - d)⁻¹ := by
-      gcongr
-      · exact abs_nonneg _
-      · exact inv_nonneg.mpr (sub_nonneg.mpr (le_of_lt hdc))
-      · exact hinvlambda
-      · exact hinvmu
+    _ ≤ |lambda - mu| * (c - d)⁻¹ * (c - |mu|)⁻¹ := hfirst
+    _ ≤ |lambda - mu| * (c - d)⁻¹ * (c - d)⁻¹ := hsecond
     _ = |lambda - mu| * (c - d)⁻¹ ^ 2 := by ring
 
 end
