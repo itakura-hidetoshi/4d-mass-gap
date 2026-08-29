@@ -11,6 +11,31 @@ noncomputable section
 
 universe u
 
+local instance realHilbertZeroEigenspaceSupportComplete
+    {E : Type u}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [CompleteSpace E]
+    (T : E →L[ℝ] E) :
+    CompleteSpace (realHilbertZeroEigenspaceSupport T) :=
+  (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
+
+local instance realHilbertZeroEigenspaceSupportEigenspaceComplete
+    {E : Type u}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [CompleteSpace E]
+    (T : E →L[ℝ] E)
+    (hPositive : T.IsPositive)
+    (mu : Eigenvalues
+      (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+        Module.End ℝ (realHilbertZeroEigenspaceSupport T))) :
+    CompleteSpace
+      (eigenspace
+        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu) := by
+  infer_instance
+
 /-- The intrinsic logarithmic generator of a compact positive real-Hilbert
 operator, written in the Hilbert sum of the strictly-positive support
 eigenspaces, is self-adjoint on its maximal weighted `ℓ²` domain. -/
@@ -60,26 +85,8 @@ theorem realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_dense_domai
     (hCompact : IsCompactOperator T)
     (hPositive : T.IsPositive) :
     Dense
-      (((realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
-        T hCompact hPositive).domain :
-        Submodule ℝ
-          (lp
-            (fun mu : Eigenvalues
-              (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-                Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
-              eigenspace
-                (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-                  Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
-            2)) :
-        Set
-          (lp
-            (fun mu : Eigenvalues
-              (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-                Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
-              eigenspace
-                (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-                  Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
-            2)) := by
+      ((realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+        T hCompact hPositive).domain : Set _) := by
   exact
     realHilbertSumWeightedDiagonalLinearPMap_dense_domain
       (G := fun mu : Eigenvalues
@@ -131,90 +138,21 @@ local instance osBoundaryExcitationSpectralLogGeneratorPairHilbertSectorComplete
   periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete
     H N hN beta hbeta
 
-/-- Intrinsic strictly-positive spectral coordinate Hilbert space for the
-completed one-step pair transfer. -/
-abbrev periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralCoordinateSpace
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :=
-  lp
-    (fun mu : Eigenvalues
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
-        H N hN beta hbeta :
-        Module.End ℝ
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-            H N hN beta hbeta)) =>
-      eigenspace
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
-          H N hN beta hbeta :
-          Module.End ℝ
-            (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-              H N hN beta hbeta)) mu)
-    2
-
 /-- The actual completed one-step pair-transfer Hamiltonian in intrinsic
-strictly-positive spectral coordinates.  No eigenvalue enumeration is chosen:
-the index is Mathlib's `Eigenvalues` subtype of the support restriction. -/
+strictly-positive spectral coordinates.  It is the generic compact-positive
+support logarithm specialized to the actual completed transfer. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralCoordinateSpace
-        H N hN beta hbeta →ₗ.[ℝ]
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralCoordinateSpace
-        H N hN beta hbeta :=
-  realHilbertSumWeightedDiagonalLinearPMap
-    (G := fun mu : Eigenvalues
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
-        H N hN beta hbeta :
-        Module.End ℝ
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-            H N hN beta hbeta)) =>
-      eigenspace
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
-          H N hN beta hbeta :
-          Module.End ℝ
-            (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-              H N hN beta hbeta)) mu)
-    (fun mu =>
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogEnergy
-        H N hN beta hbeta mu)
-
-@[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates_apply
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (x : (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates
-      H N hN beta hbeta).domain)
-    (mu : Eigenvalues
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
-        H N hN beta hbeta :
-        Module.End ℝ
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-            H N hN beta hbeta))) :
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates
-        H N hN beta hbeta x mu =
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogEnergy
-          H N hN beta hbeta mu •
-        (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralCoordinateSpace
-          H N hN beta hbeta) mu := by
-  exact
-    realHilbertSumWeightedDiagonalLinearPMap_apply
-      (G := fun nu : Eigenvalues
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
-          H N hN beta hbeta :
-          Module.End ℝ
-            (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-              H N hN beta hbeta)) =>
-        eigenspace
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
-            H N hN beta hbeta :
-            Module.End ℝ
-              (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-                H N hN beta hbeta)) nu)
-      (fun nu =>
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogEnergy
-          H N hN beta hbeta nu) x mu
+    (hbeta : 0 ≤ beta) :=
+  realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+      H N hN beta hbeta 1)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
+      H N hN beta hbeta 1 (by norm_num))
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
+      H N hN beta hbeta 1)
 
 /-- The concrete intrinsic spectral-coordinate Hamiltonian is self-adjoint. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates_isSelfAdjoint
@@ -226,22 +164,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates
         H N hN beta hbeta) := by
   exact
-    realHilbertSumWeightedDiagonalLinearPMap_isSelfAdjoint
-      (G := fun mu : Eigenvalues
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
-          H N hN beta hbeta :
-          Module.End ℝ
-            (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-              H N hN beta hbeta)) =>
-        eigenspace
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
-            H N hN beta hbeta :
-            Module.End ℝ
-              (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-                H N hN beta hbeta)) mu)
-      (fun mu =>
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogEnergy
-          H N hN beta hbeta mu)
+    realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_isSelfAdjoint
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+        H N hN beta hbeta 1)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
+        H N hN beta hbeta 1 (by norm_num))
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
+        H N hN beta hbeta 1)
 
 /-- The concrete intrinsic spectral-coordinate Hamiltonian is closed. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates_isClosed
