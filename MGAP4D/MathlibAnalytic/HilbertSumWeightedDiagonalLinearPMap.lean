@@ -23,13 +23,13 @@ noncomputable def realHilbertSumWeightedDiagonalDomain
   carrier := {x | Memℓp (fun i => w i • x i) 2}
   zero_mem' := by
     have hzero : Memℓp (0 : (i : ι) → G i) 2 := zero_memℓp
-    simpa using hzero
+    simpa only [lp.coeFn_zero, Pi.zero_apply, smul_zero] using hzero
   add_mem' := by
     intro x y hx hy
-    simpa [smul_add] using hx.add hy
+    simpa only [lp.coeFn_add, Pi.add_apply, smul_add] using hx.add hy
   smul_mem' := by
     intro c x hx
-    simpa [smul_smul, mul_comm] using hx.const_smul c
+    simpa only [lp.coeFn_smul, Pi.smul_apply, smul_smul, mul_comm] using hx.const_smul c
 
 @[simp] theorem mem_realHilbertSumWeightedDiagonalDomain
     {ι : Type u}
