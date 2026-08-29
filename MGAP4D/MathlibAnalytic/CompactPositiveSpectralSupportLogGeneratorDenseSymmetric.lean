@@ -39,14 +39,23 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_dense_domain
           T hCompact hPositive).domain :
         Submodule ℝ (realHilbertZeroEigenspaceSupport T)) :
         Set (realHilbertZeroEigenspaceSupport T)) := by
+  let Coord : Type u :=
+    lp
+      (fun mu : Eigenvalues
+        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+        eigenspace
+          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
+      2
   let U :=
     realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
       T hCompact hPositive
   have hDenseCoord :
       Dense
-        (((realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
-          T hCompact hPositive).domain : Submodule ℝ _) : Set _) := by
-    simpa [realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates] using
+        ((realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+          T hCompact hPositive).domain : Set Coord) := by
+    simpa [Coord, realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates] using
       realHilbertSumWeightedDiagonalLinearPMap_dense_domain
         (G := fun mu : Eigenvalues
           (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
@@ -57,8 +66,8 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_dense_domain
         (fun mu => realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)
   change Dense
     (U ⁻¹'
-      (((realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
-        T hCompact hPositive).domain : Submodule ℝ _) : Set _))
+      ((realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+        T hCompact hPositive).domain : Set Coord))
   rw [dense_iff_closure_eq]
   rw [← U.toHomeomorph.preimage_closure]
   rw [hDenseCoord.closure_eq]
@@ -144,8 +153,16 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_isFormalAdjoint_self
       apply tsum_congr
       intro mu
       rw [realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_apply,
-        realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_apply,
-        real_inner_smul_left, real_inner_smul_right]
+        realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_apply]
+      change inner ℝ
+          (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
+            (U (x : realHilbertZeroEigenspaceSupport T)) mu)
+          ((U (y : realHilbertZeroEigenspaceSupport T)) mu) =
+        inner ℝ
+          ((U (x : realHilbertZeroEigenspaceSupport T)) mu)
+          (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
+            (U (y : realHilbertZeroEigenspaceSupport T)) mu)
+      rw [real_inner_smul_left, real_inner_smul_right]
     _ = inner ℝ
         (U (x : realHilbertZeroEigenspaceSupport T))
         (U (realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive y)) := by
