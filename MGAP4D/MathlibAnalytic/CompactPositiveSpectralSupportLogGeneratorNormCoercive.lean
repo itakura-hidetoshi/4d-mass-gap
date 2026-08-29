@@ -72,8 +72,9 @@ local instance osBoundaryExcitationLogGeneratorNormCoercivePairHilbertSectorComp
     H N hN beta hbeta
 
 /-- The whole-domain quadratic gap controls the graph norm of the completed
-one-step logarithmic Hamiltonian from below.  This is the quantitative
-injectivity estimate needed before constructing an inverse on its range. -/
+one-step logarithmic Hamiltonian from below.  The Cauchy--Schwarz step is
+performed in the ambient completed pair Hilbert sector, avoiding any
+specialized subtype instance diamond. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_norm_lower_bound
     (H N : ℕ)
     (hN : 0 < N)
@@ -87,66 +88,65 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
           H N hN beta hbeta)‖ ≤
       ‖periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
           H N hN beta hbeta x‖ := by
-  apply realHilbert_norm_lower_bound_of_quadratic_lower_bound
-  · have hr :=
+  let c :=
+    2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+      H N hN beta hbeta
+  let u : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
+      H N hN beta hbeta :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
+      H N hN beta hbeta x
+  let v : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
+      H N hN beta hbeta :=
+    (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+      H N hN beta hbeta)
+  have hc : 0 ≤ c := by
+    dsimp [c]
+    have hr :=
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate_pos
         H N hN beta hbeta
     positivity
-  · exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_quadratic_lower_bound
-        H N hN beta hbeta x
+  have hquad :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_quadratic_lower_bound
+      H N hN beta hbeta x
+  have hquadAmbient : c * ‖v‖ ^ 2 ≤ inner ℝ u v := by
+    simpa [c, u, v] using hquad
+  have hnorm := realHilbert_norm_lower_bound_of_quadratic_lower_bound c hc u v hquadAmbient
+  simpa [c, u, v] using hnorm
 
 /-- The completed one-step support logarithmic Hamiltonian has trivial kernel
-on its natural domain. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_injective
+on its natural domain.  This is the kernel form of injectivity needed for the
+subsequent inverse-on-range construction. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_eq_zero_of_apply_eq_zero
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta)
-    {x y : (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-      H N hN beta hbeta).domain}
-    (hxy :
+    (x : (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
+      H N hN beta hbeta).domain)
+    (hx :
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-          H N hN beta hbeta x =
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-          H N hN beta hbeta y) :
-    x = y := by
-  let A :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-      H N hN beta hbeta
-  let z : A.domain := x - y
-  have hzA : A z = 0 := by
-    dsimp [z, A]
-    rw [map_sub, hxy, sub_self]
+        H N hN beta hbeta x = 0) :
+    x = 0 := by
   have hnorm :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_norm_lower_bound
-      H N hN beta hbeta z
-  have hr :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate_pos
-      H N hN beta hbeta
-  have hzNorm :
-      ‖(z : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+      H N hN beta hbeta x
+  rw [hx, norm_zero] at hnorm
+  have hcoef :
+      0 < 2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+        H N hN beta hbeta := by
+    have hr :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate_pos
+        H N hN beta hbeta
+    positivity
+  have hxnonneg :
+      0 ≤ ‖(x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta)‖ := norm_nonneg _
+  have hxnorm :
+      ‖(x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
         H N hN beta hbeta)‖ = 0 := by
-    rw [hzA, norm_zero] at hnorm
-    have hcoef :
-        0 < 2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-          H N hN beta hbeta := by
-      positivity
-    have hznonneg :
-        0 ≤ ‖(z : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-          H N hN beta hbeta)‖ := norm_nonneg _
     nlinarith
-  have hz :
-      (z : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) = 0 := norm_eq_zero.mp hzNorm
   apply Subtype.ext
-  have :
-      (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) -
-        (y : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-          H N hN beta hbeta) = 0 := by
-    simpa [z, A] using hz
-  exact sub_eq_zero.mp this
+  exact norm_eq_zero.mp hxnorm
 
 end
 
