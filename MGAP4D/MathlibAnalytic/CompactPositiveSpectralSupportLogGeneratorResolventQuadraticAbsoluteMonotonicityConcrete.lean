@@ -302,50 +302,105 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneNativeS
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_quadratic_lower_bound
         H N hN beta hbeta x)
 
+/-- Scalar diagonal amplitude of the actual one-step logarithmic Hamiltonian
+on the native positive spectral-support carrier.  All Hilbert-space instance
+choices are confined to the definition body, so the public type is merely
+`ℝ → ℝ`. -/
+noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneNativeSupportResolventQuadraticAmplitude
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (u : realHilbertZeroEigenspaceSupport
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+        H N hN beta hbeta 1)) : ℝ → ℝ := by
+  let T :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+      H N hN beta hbeta 1
+  let hCompact : IsCompactOperator T :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
+      H N hN beta hbeta 1 (by norm_num)
+  let hPositive : T.IsPositive :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
+      H N hN beta hbeta 1
+  letI : CompleteSpace (realHilbertZeroEigenspaceSupport T) :=
+    (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
+  let A := realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive
+  let c :=
+    2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+      H N hN beta hbeta
+  have hc : 0 < c := by
+    exact mul_pos (by norm_num)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate_pos
+        H N hN beta hbeta)
+  have hSelf : IsSelfAdjoint A :=
+    realHilbertCompactPositiveZeroSupportLogGenerator_isSelfAdjoint
+      T hCompact hPositive
+  have hQuad : ∀ x : A.domain,
+      c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ^ 2 ≤
+        inner ℝ (A x) (x : realHilbertZeroEigenspaceSupport T) := by
+    simpa [T, A, c] using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneNativeSupportLogGenerator_quadratic_lower_bound
+        H N hN beta hbeta)
+  exact
+    realLinearPMapAmbientResolventQuadraticAmplitude_of_selfAdjoint_of_quadratic_lower_bound
+      A c hc hSelf hQuad u
+
 /-- Physical specialization: every derivative of every diagonal matrix element
 of the actual one-step support logarithmic resolvent is nonnegative throughout
-`|λ| < 2r`, expressed on the canonical positive spectral-support carrier. -/
+`|λ| < 2r`. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneNativeSupportResolventQuadratic_iteratedDeriv_nonneg
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    let T :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-        H N hN beta hbeta 1
-    let hCompact : IsCompactOperator T :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
-        H N hN beta hbeta 1 (by norm_num)
-    let hPositive : T.IsPositive :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
-        H N hN beta hbeta 1
-    let A := realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive
-    let c :=
-      2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-        H N hN beta hbeta
-    let hc : 0 < c := by
-      exact mul_pos (by norm_num)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate_pos
-          H N hN beta hbeta)
-    let hSelf : IsSelfAdjoint A :=
-      realHilbertCompactPositiveZeroSupportLogGenerator_isSelfAdjoint
-        T hCompact hPositive
-    let hQuad : ∀ x : A.domain,
-        c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ^ 2 ≤
-          inner ℝ (A x) (x : realHilbertZeroEigenspaceSupport T) :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneNativeSupportLogGenerator_quadratic_lower_bound
-        H N hN beta hbeta
-    ∀ (u : realHilbertZeroEigenspaceSupport T) (n : ℕ) (lambda : ℝ),
-      |lambda| < c →
-        0 ≤ iteratedDeriv n
-          (realLinearPMapAmbientResolventQuadraticAmplitude_of_selfAdjoint_of_quadratic_lower_bound
-            A c hc hSelf hQuad u)
-          lambda := by
-  dsimp only
-  intro u n lambda hlambda
-  exact
+    (hbeta : 0 ≤ beta)
+    (u : realHilbertZeroEigenspaceSupport
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+        H N hN beta hbeta 1))
+    (n : ℕ)
+    (lambda : ℝ)
+    (hlambda :
+      |lambda| <
+        2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+          H N hN beta hbeta) :
+    0 ≤ iteratedDeriv n
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneNativeSupportResolventQuadraticAmplitude
+        H N hN beta hbeta u)
+      lambda := by
+  let T :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+      H N hN beta hbeta 1
+  let hCompact : IsCompactOperator T :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
+      H N hN beta hbeta 1 (by norm_num)
+  let hPositive : T.IsPositive :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
+      H N hN beta hbeta 1
+  letI : CompleteSpace (realHilbertZeroEigenspaceSupport T) :=
+    (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
+  let A := realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive
+  let c :=
+    2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+      H N hN beta hbeta
+  have hc : 0 < c := by
+    exact mul_pos (by norm_num)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate_pos
+        H N hN beta hbeta)
+  have hSelf : IsSelfAdjoint A :=
+    realHilbertCompactPositiveZeroSupportLogGenerator_isSelfAdjoint
+      T hCompact hPositive
+  have hQuad : ∀ x : A.domain,
+      c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ^ 2 ≤
+        inner ℝ (A x) (x : realHilbertZeroEigenspaceSupport T) := by
+    simpa [T, A, c] using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneNativeSupportLogGenerator_quadratic_lower_bound
+        H N hN beta hbeta)
+  have hmono :=
     realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_nonneg_of_selfAdjoint_of_quadratic_lower_bound
-      _ _ _ _ _ u n lambda hlambda
+      A c hc hSelf hQuad u n lambda (by simpa [c] using hlambda)
+  simpa [
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationTransferOneNativeSupportResolventQuadraticAmplitude,
+    T, hCompact, hPositive, A, c] using hmono
 
 end
 
