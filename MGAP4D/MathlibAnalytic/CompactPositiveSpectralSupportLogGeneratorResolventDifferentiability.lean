@@ -222,12 +222,22 @@ theorem realLinearPMapAmbientResolventFamily_firstOrderRemainder_eq
         (mu - lambda) • (F lambda).comp (F lambda) =
       (mu - lambda) • ((F mu - F lambda).comp (F lambda)) := by
   dsimp only
-  have hid := realLinearPMapAmbientResolventFamily_sub_eq_smul_comp
-    A c hc hNorm hKer hSurj mu lambda hmu hlambda
-  rw [hid]
-  ext y
-  simp [ContinuousLinearMap.comp_apply]
-  module
+  let F := realLinearPMapAmbientResolventFamily_of_norm_lower_bound
+    A c hc hNorm hKer hSurj
+  have hid : F mu - F lambda = (mu - lambda) • (F mu).comp (F lambda) :=
+    realLinearPMapAmbientResolventFamily_sub_eq_smul_comp
+      A c hc hNorm hKer hSurj mu lambda hmu hlambda
+  calc
+    F mu - F lambda - (mu - lambda) • (F lambda).comp (F lambda) =
+        (mu - lambda) • (F mu).comp (F lambda) -
+          (mu - lambda) • (F lambda).comp (F lambda) := by rw [hid]
+    _ = (mu - lambda) •
+        ((F mu).comp (F lambda) - (F lambda).comp (F lambda)) := by
+      module
+    _ = (mu - lambda) • ((F mu - F lambda).comp (F lambda)) := by
+      congr 1
+      ext y
+      simp
 
 /-- Quadratic Taylor remainder on every strictly smaller symmetric interval.
 This gives the quantitative `O(|μ-λ|²)` estimate behind the derivative
