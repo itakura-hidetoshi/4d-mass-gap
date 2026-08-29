@@ -70,17 +70,24 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_quadratic_lower_bound
         exact
           realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_apply
             T hCompact hPositive _ mu]
-    rw [real_inner_smul_left, real_inner_smul_left]
-    exact mul_le_mul_of_nonneg_right (hLower mu) real_inner_self_nonneg
+    have hself :
+        0 ≤ inner ℝ
+          (xv mu : realHilbertZeroEigenspaceSupport T)
+          (xv mu : realHilbertZeroEigenspaceSupport T) :=
+      real_inner_self_nonneg
+    have hmul := mul_le_mul_of_nonneg_right (hLower mu) hself
+    simpa [real_inner_smul_left] using hmul
   have hCoord :=
     realHilbertCompactPositiveZeroSupportLogGenerator_coordinates
       T hCompact hPositive x
+  have hnorm : ‖xv‖ = ‖(x : realHilbertZeroEigenspaceSupport T)‖ := by
+    dsimp [xv]
+    exact U.norm_map _
   calc
     c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ^ 2 = c * ‖xv‖ ^ 2 := by
-      dsimp [xv]
-      rw [U.norm_map]
+      rw [hnorm]
     _ = inner ℝ (c • xv) xv := by
-      simp [real_inner_smul_left]
+      rw [real_inner_smul_left, real_inner_self_eq_norm_sq]
     _ = ∑' mu, inner ℝ ((c • xv) mu) (xv mu) := lp.inner_eq_tsum _ _
     _ ≤ ∑' mu, inner ℝ (Ax mu) (xv mu) := hLeft.tsum_le_tsum hPoint hRight
     _ = inner ℝ Ax xv := (lp.inner_eq_tsum _ _).symm
@@ -89,7 +96,6 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_quadratic_lower_bound
           T hCompact hPositive x))
         (U (x : realHilbertZeroEigenspaceSupport T)) := by
       rw [hCoord]
-      rfl
     _ = inner ℝ
         (realHilbertCompactPositiveZeroSupportLogGenerator
           T hCompact hPositive x)
