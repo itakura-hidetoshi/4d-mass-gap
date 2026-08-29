@@ -1,0 +1,176 @@
+import MGAP4D.MathlibAnalytic.CompactPositiveSpectralLogWeights
+import Mathlib.Analysis.InnerProductSpace.LinearPMap
+import Mathlib.Tactic
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+open MeasureTheory Set Module End
+open scoped InnerProductSpace lp
+
+noncomputable section
+
+universe u v
+
+/-- Natural weighted domain in a dependent Hilbert sum: those square-summable
+vectors whose coordinatewise weighted image is again square-summable. -/
+noncomputable def realHilbertSumWeightedDiagonalDomain
+    {ι : Type u}
+    {G : ι → Type v}
+    [∀ i, NormedAddCommGroup (G i)]
+    [∀ i, NormedSpace ℝ (G i)]
+    (w : ι → ℝ) : Submodule ℝ (lp G 2) where
+  carrier := {x | Memℓp (fun i => w i • x i) 2}
+  zero_mem' := by
+    simpa using (zero_mem_ℓp' (E := G) (p := (2 : ℝ≥0∞)))
+  add_mem' := by
+    intro x y hx hy
+    simpa [smul_add] using hx.add hy
+  smul_mem' := by
+    intro c x hx
+    simpa [smul_smul, mul_comm] using hx.const_smul c
+
+@[simp] theorem mem_realHilbertSumWeightedDiagonalDomain
+    {ι : Type u}
+    {G : ι → Type v}
+    [∀ i, NormedAddCommGroup (G i)]
+    [∀ i, NormedSpace ℝ (G i)]
+    (w : ι → ℝ)
+    (x : lp G 2) :
+    x ∈ realHilbertSumWeightedDiagonalDomain w ↔
+      Memℓp (fun i => w i • x i) 2 :=
+  Iff.rfl
+
+/-- Coordinatewise multiplication by a real weight, as a genuinely
+partially-defined linear operator on the Hilbert sum with its maximal natural
+weighted `ℓ²` domain. -/
+noncomputable def realHilbertSumWeightedDiagonalLinearPMap
+    {ι : Type u}
+    {G : ι → Type v}
+    [∀ i, NormedAddCommGroup (G i)]
+    [∀ i, NormedSpace ℝ (G i)]
+    (w : ι → ℝ) : lp G 2 →ₗ.[ℝ] lp G 2 where
+  domain := realHilbertSumWeightedDiagonalDomain w
+  toFun :=
+    { toFun := fun x =>
+        ⟨fun i => w i • ((x : realHilbertSumWeightedDiagonalDomain w) : lp G 2) i,
+          x.property⟩
+      map_add' := by
+        intro x y
+        apply lp.ext
+        funext i
+        simp [smul_add]
+      map_smul' := by
+        intro c x
+        apply lp.ext
+        funext i
+        simp [smul_smul, mul_comm] }
+
+@[simp] theorem realHilbertSumWeightedDiagonalLinearPMap_domain
+    {ι : Type u}
+    {G : ι → Type v}
+    [∀ i, NormedAddCommGroup (G i)]
+    [∀ i, NormedSpace ℝ (G i)]
+    (w : ι → ℝ) :
+    (realHilbertSumWeightedDiagonalLinearPMap w).domain =
+      realHilbertSumWeightedDiagonalDomain w :=
+  rfl
+
+@[simp] theorem realHilbertSumWeightedDiagonalLinearPMap_apply
+    {ι : Type u}
+    {G : ι → Type v}
+    [∀ i, NormedAddCommGroup (G i)]
+    [∀ i, NormedSpace ℝ (G i)]
+    (w : ι → ℝ)
+    (x : (realHilbertSumWeightedDiagonalLinearPMap w).domain)
+    (i : ι) :
+    realHilbertSumWeightedDiagonalLinearPMap w x i =
+      w i • ((x : (realHilbertSumWeightedDiagonalLinearPMap w).domain) : lp G 2) i :=
+  rfl
+
+/-- The logarithmic generator in intrinsic Hilbert-sum coordinates of the
+strictly-positive support of a compact positive real-Hilbert operator.  Its
+domain is exactly the maximal weighted `ℓ²` domain for `E(mu) = -log mu`. -/
+noncomputable def realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+    {E : Type u}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [CompleteSpace E]
+    (T : E →L[ℝ] E)
+    (hCompact : IsCompactOperator T)
+    (hPositive : T.IsPositive) :
+    lp
+        (fun mu : Eigenvalues
+          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+          eigenspace
+            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
+        2 →ₗ.[ℝ]
+      lp
+        (fun mu : Eigenvalues
+          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+          eigenspace
+            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
+        2 :=
+  realHilbertSumWeightedDiagonalLinearPMap
+    (fun mu => realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)
+
+@[simp] theorem realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_domain_mem_iff
+    {E : Type u}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [CompleteSpace E]
+    (T : E →L[ℝ] E)
+    (hCompact : IsCompactOperator T)
+    (hPositive : T.IsPositive)
+    (x : lp
+      (fun mu : Eigenvalues
+        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+        eigenspace
+          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
+      2) :
+    x ∈ (realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+        T hCompact hPositive).domain ↔
+      Memℓp
+        (fun mu =>
+          realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • x mu)
+        2 :=
+  Iff.rfl
+
+@[simp] theorem realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_apply
+    {E : Type u}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [CompleteSpace E]
+    (T : E →L[ℝ] E)
+    (hCompact : IsCompactOperator T)
+    (hPositive : T.IsPositive)
+    (x : (realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+      T hCompact hPositive).domain)
+    (mu : Eigenvalues
+      (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+        Module.End ℝ (realHilbertZeroEigenspaceSupport T))) :
+    realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+        T hCompact hPositive x mu =
+      realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
+        ((x : (realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+          T hCompact hPositive).domain) :
+          lp
+            (fun nu : Eigenvalues
+              (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+                Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+              eigenspace
+                (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+                  Module.End ℝ (realHilbertZeroEigenspaceSupport T)) nu)
+            2) mu :=
+  rfl
+
+end
+
+end MathlibAnalytic
+end MGAP4D
