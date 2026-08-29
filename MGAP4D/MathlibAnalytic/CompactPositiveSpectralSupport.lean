@@ -31,6 +31,16 @@ theorem realHilbertZeroEigenspaceSupport_isClosed
     IsClosed ((realHilbertZeroEigenspaceSupport T : Submodule ℝ E) : Set E) := by
   exact (eigenspace (T : Module.End ℝ E) 0).isClosed_orthogonal
 
+local instance realHilbertZeroEigenspaceSupportComplete
+    {E : Type u}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [CompleteSpace E]
+    (T : E →L[ℝ] E) :
+    CompleteSpace (realHilbertZeroEigenspaceSupport T) := by
+  dsimp [realHilbertZeroEigenspaceSupport]
+  infer_instance
+
 /-- Symmetry makes the zero-eigenspace support invariant. -/
 theorem realHilbertZeroEigenspaceSupport_invariant
     {E : Type u}
@@ -86,7 +96,8 @@ theorem realHilbertZeroEigenspaceSupportRestriction_isPositive
     [InnerProductSpace ℝ E]
     (T : E →L[ℝ] E)
     (hPositive : T.IsPositive) :
-    (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric).IsPositive := by
+    ContinuousLinearMap.IsPositive
+      (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric) := by
   apply (ContinuousLinearMap.isPositive_iff
     (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric)).2
   constructor
@@ -178,11 +189,16 @@ theorem realHilbertZeroEigenspaceSupportRestriction_eigenvalue_pos
   have hNonneg : 0 ≤ (mu : ℝ) :=
     eigenvalue_nonneg_of_nonneg mu.property
       (fun x =>
-        (realHilbertZeroEigenspaceSupportRestriction_isPositive T hPositive).inner_nonneg_left x)
+        (realHilbertZeroEigenspaceSupportRestriction_isPositive T hPositive).re_inner_nonneg_right x)
   have hNe : (mu : ℝ) ≠ 0 := by
     intro hmu
     apply realHilbertZeroEigenspaceSupportRestriction_not_hasEigenvalue_zero T hPositive.isSymmetric
-    simpa [hmu] using mu.property
+    have hEigen : HasEigenvalue
+        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) (mu : ℝ) :=
+      mu.property
+    rw [hmu] at hEigen
+    exact hEigen
   exact lt_of_le_of_ne hNonneg (Ne.symm hNe)
 
 /-- A compact positive operator decomposes, on its spectral support, as a
@@ -309,8 +325,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta) :
-    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
-      H N hN beta hbeta).IsPositive := by
+    ContinuousLinearMap.IsPositive
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
+        H N hN beta hbeta) := by
   exact
     realHilbertZeroEigenspaceSupportRestriction_isPositive
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
@@ -371,8 +388,9 @@ structure PeriodicHypercubicEvenOSBoundaryExcitationPositiveSpectralSupportPacka
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
         H N hN beta hbeta)
   supportPositive :
-    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
-      H N hN beta hbeta).IsPositive
+    ContinuousLinearMap.IsPositive
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
+        H N hN beta hbeta)
   zeroNotEigenvalue :
     ¬ HasEigenvalue
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
