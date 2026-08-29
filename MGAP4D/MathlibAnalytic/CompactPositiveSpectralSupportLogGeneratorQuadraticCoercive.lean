@@ -58,12 +58,6 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_quadratic_lower_bound
       T hCompact hPositive x
   have hQuad :=
     realHilbertSumWeightedDiagonalLinearPMap_quadratic_lower_bound
-      (G := fun mu : Eigenvalues
-        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
-        eigenspace
-          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
       (fun mu => realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)
       c hLower y
   calc
