@@ -11,6 +11,18 @@ noncomputable section
 
 universe u
 
+/-- Reinstall completeness of the zero-eigenspace support locally in this
+module.  The defining support module keeps its own instance local, so imports
+do not carry that instance forward. -/
+local instance spectralLogSupportComplete
+    {E : Type u}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [CompleteSpace E]
+    (T : E →L[ℝ] E) :
+    CompleteSpace (realHilbertZeroEigenspaceSupport T) :=
+  (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
+
 /-- Eigenspaces of the bounded support restriction are complete because they
 are closed subspaces of the complete support Hilbert space.  We construct the
 instance directly to avoid dependent subtype typeclass search. -/
