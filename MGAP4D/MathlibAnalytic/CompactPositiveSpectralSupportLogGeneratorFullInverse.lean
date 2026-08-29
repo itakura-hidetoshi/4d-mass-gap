@@ -29,7 +29,10 @@ noncomputable def realLinearPMapLinearEquiv_of_eq_zero_of_surjective
   have hInjective : Function.Injective A.toFun := by
     intro x z hxz
     have hzero : A (x - z) = 0 := by
-      rw [LinearPMap.map_sub, hxz, sub_self]
+      rw [LinearPMap.map_sub]
+      apply sub_eq_zero.mpr
+      change A.toFun x = A.toFun z
+      exact hxz
     exact sub_eq_zero.mp (hKer (x - z) hzero)
   exact LinearEquiv.ofBijective A.toFun ⟨hInjective, hSurj⟩
 
