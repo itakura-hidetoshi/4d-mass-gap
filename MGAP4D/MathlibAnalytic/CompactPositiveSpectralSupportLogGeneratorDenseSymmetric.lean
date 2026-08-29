@@ -69,6 +69,10 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_dense_domain
       ((realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
         T hCompact hPositive).domain : Set Coord))
   rw [dense_iff_closure_eq]
+  change closure
+      (U.toHomeomorph ⁻¹'
+        ((realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+          T hCompact hPositive).domain : Set Coord)) = Set.univ
   rw [← U.toHomeomorph.preimage_closure]
   rw [hDenseCoord.closure_eq]
   simp
@@ -154,14 +158,20 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_isFormalAdjoint_self
       intro mu
       rw [realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_apply,
         realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_apply]
+      let vx : realHilbertZeroEigenspaceSupport T :=
+        ((U (x : realHilbertZeroEigenspaceSupport T)) mu :
+          eigenspace
+            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
+      let vy : realHilbertZeroEigenspaceSupport T :=
+        ((U (y : realHilbertZeroEigenspaceSupport T)) mu :
+          eigenspace
+            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
       change inner ℝ
-          (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
-            (U (x : realHilbertZeroEigenspaceSupport T)) mu)
-          ((U (y : realHilbertZeroEigenspaceSupport T)) mu) =
-        inner ℝ
-          ((U (x : realHilbertZeroEigenspaceSupport T)) mu)
-          (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
-            (U (y : realHilbertZeroEigenspaceSupport T)) mu)
+          (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • vx) vy =
+        inner ℝ vx
+          (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • vy)
       rw [real_inner_smul_left, real_inner_smul_right]
     _ = inner ℝ
         (U (x : realHilbertZeroEigenspaceSupport T))
