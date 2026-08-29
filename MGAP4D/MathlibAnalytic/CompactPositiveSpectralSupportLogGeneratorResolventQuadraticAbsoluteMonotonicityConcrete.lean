@@ -55,6 +55,16 @@ local instance osBoundaryExcitationSupportResolventAbsoluteMonotonicityPairHilbe
   periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete
     H N hN beta hbeta
 
+local instance osBoundaryExcitationSupportResolventAbsoluteMonotonicityPairHilbertSectorRealNormedSpace
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
+        H N hN beta hbeta) := by
+  infer_instance
+
 /-- Canonical spelling of the actual positive spectral-support Hilbert carrier.
 This is definitionally the same carrier as the long physical support alias, but
 keeps Mathlib's native submodule Hilbert instances visible to typeclass search. -/
