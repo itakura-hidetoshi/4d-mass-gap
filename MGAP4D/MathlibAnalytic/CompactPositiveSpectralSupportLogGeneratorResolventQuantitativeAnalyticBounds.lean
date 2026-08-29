@@ -12,6 +12,26 @@ noncomputable section
 
 universe u
 
+/-- Power-norm estimate in a normed ring under the weaker hypothesis
+`‖1‖ ≤ 1`.  Unlike the standard `norm_pow_le`, this does not require a
+`NormOneClass`; that distinction matters for continuous endomorphisms of a
+possibly zero-dimensional normed space. -/
+theorem norm_pow_le_of_norm_one_le_mgap
+    {B : Type*}
+    [NormedRing B]
+    (hone : ‖(1 : B)‖ ≤ 1)
+    (x : B)
+    (n : ℕ) :
+    ‖x ^ n‖ ≤ ‖x‖ ^ n := by
+  induction n with
+  | zero => simpa only [pow_zero] using hone
+  | succ n ih =>
+      rw [pow_succ, pow_succ]
+      calc
+        ‖x ^ n * x‖ ≤ ‖x ^ n‖ * ‖x‖ := norm_mul_le _ _
+        _ ≤ ‖x‖ ^ n * ‖x‖ :=
+          mul_le_mul_of_nonneg_right ih (norm_nonneg x)
+
 /-- Generic exact finite Taylor remainder for a resolvent identity.
 If `Rμ - Rλ = h • (Rμ * Rλ)`, then after subtracting the first `n`
 Neumann-Taylor coefficients the remainder is exactly
@@ -58,7 +78,7 @@ theorem resolvent_taylorRemainder_eq_of_sub_eq_smul_mul
         _ = h ^ n • (h • (Rmu * Rlambda ^ (n + 1))) := by
           rw [hstep]
         _ = h ^ (n + 1) • (Rmu * Rlambda ^ (n + 1)) := by
-          rw [smul_smul, pow_succ]
+          simpa only [smul_smul, pow_succ]
 
 /-- Exact finite Taylor-Neumann remainder for the canonical bounded ambient
 support resolvent on the natural distance-to-boundary ball.  The forward
@@ -127,6 +147,13 @@ theorem realLinearPMapAmbientResolventFamily_iteratedDeriv_norm_le
   have hF : ‖F lambda‖ ≤ (c - |lambda|)⁻¹ :=
     realLinearPMapAmbientResolventFamily_norm_le
       A c hc hNorm hKer hSurj lambda hlambda
+  have hone : ‖(1 : E →L[ℝ] E)‖ ≤ 1 := by
+    apply ContinuousLinearMap.opNorm_le_bound
+    · norm_num
+    · intro x
+      simp
+  have hpow : ‖F lambda ^ (n + 1)‖ ≤ ‖F lambda‖ ^ (n + 1) :=
+    norm_pow_le_of_norm_one_le_mgap hone (F lambda) (n + 1)
   change ‖iteratedDeriv n F lambda‖ ≤
     (n.factorial : ℝ) * (c - |lambda|)⁻¹ ^ (n + 1)
   rw [hformula]
@@ -136,7 +163,6 @@ theorem realLinearPMapAmbientResolventFamily_iteratedDeriv_norm_le
     (n.factorial : ℝ) * ‖F lambda ^ (n + 1)‖ ≤
         (n.factorial : ℝ) * ‖F lambda‖ ^ (n + 1) := by
       gcongr
-      exact norm_pow_le (F lambda) (n + 1)
     _ ≤ (n.factorial : ℝ) * (c - |lambda|)⁻¹ ^ (n + 1) := by
       gcongr
 
@@ -166,12 +192,18 @@ theorem realLinearPMapAmbientResolventFamily_taylorTerm_norm_le
   have hF : ‖F lambda‖ ≤ (c - |lambda|)⁻¹ :=
     realLinearPMapAmbientResolventFamily_norm_le
       A c hc hNorm hKer hSurj lambda hlambda
+  have hone : ‖(1 : E →L[ℝ] E)‖ ≤ 1 := by
+    apply ContinuousLinearMap.opNorm_le_bound
+    · norm_num
+    · intro x
+      simp
+  have hpow : ‖F lambda ^ (n + 1)‖ ≤ ‖F lambda‖ ^ (n + 1) :=
+    norm_pow_le_of_norm_one_le_mgap hone (F lambda) (n + 1)
   rw [norm_smul, Real.norm_eq_abs, abs_pow]
   calc
     |h| ^ n * ‖F lambda ^ (n + 1)‖ ≤
         |h| ^ n * ‖F lambda‖ ^ (n + 1) := by
       gcongr
-      exact norm_pow_le (F lambda) (n + 1)
     _ ≤ |h| ^ n * (c - |lambda|)⁻¹ ^ (n + 1) := by
       gcongr
 
@@ -213,6 +245,15 @@ theorem realLinearPMapAmbientResolventFamily_taylorRemainder_norm_le
   have hFlambda : ‖F lambda‖ ≤ (c - |lambda|)⁻¹ :=
     realLinearPMapAmbientResolventFamily_norm_le
       A c hc hNorm hKer hSurj lambda hlambda
+  have hone : ‖(1 : E →L[ℝ] E)‖ ≤ 1 := by
+    apply ContinuousLinearMap.opNorm_le_bound
+    · norm_num
+    · intro x
+      simp
+  have hpow : ‖F lambda ^ n‖ ≤ ‖F lambda‖ ^ n :=
+    norm_pow_le_of_norm_one_le_mgap hone (F lambda) n
+  have hmuInvNonneg : 0 ≤ (c - |lambda + h|)⁻¹ :=
+    (inv_pos.mpr (sub_pos.mpr hmu)).le
   change ‖F (lambda + h) -
       ∑ i ∈ Finset.range n, h ^ i • F lambda ^ (i + 1)‖ ≤
     |h| ^ n * ((c - |lambda + h|)⁻¹ * (c - |lambda|)⁻¹ ^ n)
@@ -226,10 +267,10 @@ theorem realLinearPMapAmbientResolventFamily_taylorRemainder_norm_le
       exact norm_mul_le _ _
     _ ≤ |h| ^ n * (‖F (lambda + h)‖ * ‖F lambda‖ ^ n) := by
       gcongr
-      exact norm_pow_le (F lambda) n
     _ ≤ |h| ^ n *
         ((c - |lambda + h|)⁻¹ * (c - |lambda|)⁻¹ ^ n) := by
       gcongr
+      exact hmuInvNonneg
 
 /-- Distance-to-boundary-only Taylor remainder estimate.  The denominator
 `c - |λ| - |h|` is positive exactly on the natural Neumann ball, and the
@@ -260,12 +301,16 @@ theorem realLinearPMapAmbientResolventFamily_taylorRemainder_norm_le_gap
     A c hc hNorm hKer hSurj
   have hbase := realLinearPMapAmbientResolventFamily_taylorRemainder_norm_le
     A c hc hNorm hKer hSurj lambda h hlambda hh n
-  have htri : |lambda + h| ≤ |lambda| + |h| := abs_add _ _
+  have htri : |lambda + h| ≤ |lambda| + |h| := abs_add_le _ _
   have hinner : 0 < c - |lambda| - |h| := by linarith
   have hcompare : c - |lambda| - |h| ≤ c - |lambda + h| := by
     linarith
   have hinv : (c - |lambda + h|)⁻¹ ≤ (c - |lambda| - |h|)⁻¹ :=
     inv_anti₀ hinner hcompare
+  have hlambdaInvNonneg : 0 ≤ (c - |lambda|)⁻¹ :=
+    (inv_pos.mpr (sub_pos.mpr hlambda)).le
+  have hlambdaInvPowNonneg : 0 ≤ (c - |lambda|)⁻¹ ^ n :=
+    pow_nonneg hlambdaInvNonneg n
   change ‖F (lambda + h) -
       ∑ i ∈ Finset.range n, h ^ i • F lambda ^ (i + 1)‖ ≤
     |h| ^ n * ((c - |lambda| - |h|)⁻¹ * (c - |lambda|)⁻¹ ^ n)
@@ -277,6 +322,7 @@ theorem realLinearPMapAmbientResolventFamily_taylorRemainder_norm_le_gap
     _ ≤ |h| ^ n *
         ((c - |lambda| - |h|)⁻¹ * (c - |lambda|)⁻¹ ^ n) := by
       gcongr
+      exact hlambdaInvPowNonneg
 
 /-- Audit-visible quantitative analytic package for the bounded support
 resolvent.  It records the all-order Cauchy bound together with exact and
