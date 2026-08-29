@@ -61,7 +61,7 @@ local instance spectralLogCoordinateNormedSpace
             (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
               Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
         2) :=
-  lp.normedSpace
+  lp.instNormedSpace
 
 /-- Install the official Hilbert-sum inner product explicitly, avoiding a
 large dependent-instance search when constructing the unbounded adjoint. -/
