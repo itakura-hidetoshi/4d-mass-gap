@@ -208,7 +208,8 @@ theorem realLinearPMapAmbientResolventMatrixElement_taylorRemainder_eq
   have hop := realLinearPMapAmbientResolventFamily_taylorRemainder_eq
     A c hc hNorm hKer hSurj lambda h hlambda hh n
   have hm := congrArg M hop
-  simpa [M, continuousLinearMapRealMatrixElement, F] using hm
+  simpa [M, continuousLinearMapRealMatrixElement, F,
+    inner_sub_right, inner_sum, real_inner_smul_right] using hm
 
 /-- Quantitative scalar Taylor remainder obtained from the exact operator
 remainder estimate and Cauchy--Schwarz. -/
@@ -250,6 +251,7 @@ theorem realLinearPMapAmbientResolventMatrixElement_taylorRemainder_abs_le
     A c hc hNorm hKer hSurj lambda h hlambda hh n
   have heq := realLinearPMapAmbientResolventFamily_taylorRemainder_eq
     A c hc hNorm hKer hSurj lambda h hlambda hh n
+  dsimp only at hop heq
   rw [heq, norm_smul, Real.norm_eq_abs, abs_pow] at hop
   have hterm :
       |h| ^ n * ‖F (lambda + h) * F lambda ^ n‖ ≤
