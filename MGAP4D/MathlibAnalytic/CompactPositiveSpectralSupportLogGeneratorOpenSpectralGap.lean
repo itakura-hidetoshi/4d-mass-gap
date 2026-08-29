@@ -1,6 +1,5 @@
 import MGAP4D.MathlibAnalytic.CompactPositiveSpectralSupportLogGeneratorZeroResolvent
 import Mathlib.Analysis.Normed.Ring.Units
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Restrict
 import Mathlib.Tactic
 
 namespace MGAP4D
