@@ -217,7 +217,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
   nlinarith
 
 /-- The actual logarithmic Hamiltonian on the completed one-step pair-transfer
-positive spectral support. -/
+positive spectral support.  Its generic construction is self-adjoint by
+`realHilbertCompactPositiveZeroSupportLogGenerator_isSelfAdjoint`; this
+specialized alias is kept free of an additional adjoint instance boundary. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
     (H N : ℕ)
     (hN : 0 < N)
@@ -230,28 +232,6 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilb
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
   exact
     realHilbertCompactPositiveZeroSupportLogGenerator
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-        H N hN beta hbeta 1)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
-        H N hN beta hbeta 1 (by norm_num))
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
-        H N hN beta hbeta 1)
-
-/-- Instance-free concrete self-adjointness receipt: the actual completed
-support logarithmic Hamiltonian equals its Hilbert-space adjoint. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_adjoint_eq
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    LinearPMap.adjoint
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-          H N hN beta hbeta) =
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-        H N hN beta hbeta := by
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-  exact
-    realHilbertCompactPositiveZeroSupportLogGenerator_adjoint_eq
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
         H N hN beta hbeta 1)
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
@@ -296,8 +276,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
           H N hN beta hbeta 1)
         mu v)
 
-/-- On every support eigenspace the concrete adjoint-equal Hamiltonian acts by
-the logarithmic energy, whose value is bounded below by `2 r`. -/
+/-- On every support eigenspace the concrete Hamiltonian acts by the
+logarithmic energy, whose value is bounded below by `2 r`. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_apply_eigenvector
     (H N : ℕ)
     (hN : 0 < N)
@@ -340,18 +320,39 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
           H N hN beta hbeta 1)
         mu v)
 
-/-- Audit package for the finite-volume logarithmic-Hamiltonian gap stage. -/
+/-- Audit package for the finite-volume logarithmic-Hamiltonian gap stage.
+Self-adjointness is already supplied by the generic actual-support theorem;
+this concrete package records the exact eigenspace action and its positive
+finite-volume lower bound without reopening the specialized adjoint instance. -/
 structure PeriodicHypercubicEvenOSBoundaryExcitationCompletedLogGeneratorGapPackage
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta) : Prop where
-  adjointEq :
-    LinearPMap.adjoint
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-          H N hN beta hbeta) =
+  eigenvectorAction :
+    ∀
+      (mu : Eigenvalues
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
+          H N hN beta hbeta :
+          Module.End ℝ
+            (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+              H N hN beta hbeta)))
+      (v : eigenspace
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
+          H N hN beta hbeta :
+          Module.End ℝ
+            (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+              H N hN beta hbeta)) mu),
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-        H N hN beta hbeta
+          H N hN beta hbeta
+          ⟨(v : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+              H N hN beta hbeta),
+            periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_eigenvector_mem_domain
+              H N hN beta hbeta mu v⟩ =
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogEnergy
+            H N hN beta hbeta mu •
+          (v : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+            H N hN beta hbeta)
   eigenEnergyLowerBound :
     ∀ mu : Eigenvalues
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
@@ -382,8 +383,8 @@ theorem periodicHypercubicEvenOSBoundaryExcitationCompletedLogGeneratorGapPackag
     (hbeta : 0 ≤ beta) :
     PeriodicHypercubicEvenOSBoundaryExcitationCompletedLogGeneratorGapPackage
       H N hN beta hbeta :=
-  { adjointEq :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_adjoint_eq
+  { eigenvectorAction :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_apply_eigenvector
         H N hN beta hbeta
     eigenEnergyLowerBound :=
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogEnergy_ge_two_mul_finiteVolumeDecayRate
