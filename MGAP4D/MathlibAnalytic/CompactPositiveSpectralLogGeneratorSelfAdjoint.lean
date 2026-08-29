@@ -24,8 +24,7 @@ local instance spectralLogSupportComplete
   (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
 
 /-- Eigenspaces of the bounded support restriction are complete because they
-are closed subspaces of the complete support Hilbert space.  We construct the
-instance directly to avoid dependent subtype typeclass search. -/
+are closed subspaces of the complete support Hilbert space. -/
 local instance spectralLogSupportEigenspaceComplete
     {E : Type u}
     [NormedAddCommGroup E]
@@ -43,6 +42,26 @@ local instance spectralLogSupportEigenspaceComplete
   (ContinuousLinearMap.isClosed_eigenspace
     (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric)
     (mu : ℝ)).completeSpace_coe
+
+/-- Install completeness of the dependent `ℓ²` spectral-coordinate carrier
+explicitly, before self-adjointness asks for the `LinearPMap` star operation. -/
+local instance spectralLogCoordinateComplete
+    {E : Type u}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [CompleteSpace E]
+    (T : E →L[ℝ] E)
+    (hPositive : T.IsPositive) :
+    CompleteSpace
+      (lp
+        (fun mu : Eigenvalues
+          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+          eigenspace
+            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
+        2) :=
+  lp.completeSpace
 
 /-- The intrinsic logarithmic generator of a compact positive real-Hilbert
 operator, written in the Hilbert sum of the strictly-positive support
