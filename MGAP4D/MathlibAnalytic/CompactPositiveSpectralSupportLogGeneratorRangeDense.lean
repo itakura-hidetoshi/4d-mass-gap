@@ -14,43 +14,40 @@ universe u
 
 /-- A self-adjoint partially defined real-linear operator with trivial kernel
 has dense actual range.  The proof identifies the orthogonal complement of
-the range with the kernel of the adjoint, then uses self-adjointness. -/
+the range with the kernel of the adjoint, then uses `A† = A`. -/
 theorem realLinearPMap_range_topologicalClosure_eq_top_of_isSelfAdjoint_of_eq_zero
     {E : Type u}
     [NormedAddCommGroup E]
     [InnerProductSpace ℝ E]
     [CompleteSpace E]
     (A : E →ₗ.[ℝ] E)
-    (hSelf : IsSelfAdjoint A)
+    (hAdj : A.adjoint = A)
+    (hDense : Dense (A.domain : Set E))
     (hKer : ∀ x : A.domain, A x = 0 → x = 0) :
     (LinearMap.range A.toFun).topologicalClosure = ⊤ := by
   rw [Submodule.topologicalClosure_eq_top_iff, Submodule.eq_bot_iff]
   intro y hy
   have hOrth : ∀ x : A.domain, inner ℝ y (A x) = 0 := by
     intro x
+    rw [real_inner_comm]
     exact hy (A x) ⟨x, rfl⟩
   have hyAdj : y ∈ A.adjoint.domain := by
     apply LinearPMap.mem_adjoint_domain_of_exists
     refine ⟨0, ?_⟩
     intro x
-    simpa using hOrth x
+    simpa using (hOrth x).symm
   let yAdj : A.adjoint.domain := ⟨y, hyAdj⟩
   have hAdjZero : A.adjoint yAdj = 0 := by
-    apply LinearPMap.adjoint_apply_eq hSelf.dense_domain yAdj
+    apply LinearPMap.adjoint_apply_eq hDense yAdj
     intro x
-    simpa using hOrth x
-  have hAdj : A.adjoint = A := LinearPMap.isSelfAdjoint_def.mp hSelf
-  have hyDom : y ∈ A.domain := by
-    rw [← hAdj]
-    exact hyAdj
-  let yDom : A.domain := ⟨y, hyDom⟩
+    simpa using (hOrth x).symm
+  have hle : A.adjoint ≤ A := le_of_eq hAdj
+  let yDom : A.domain := Submodule.inclusion hle.1 yAdj
   have hAZero : A yDom = 0 := by
-    have hyAdjEq : yAdj = ⟨y, by rw [hAdj]; exact hyDom⟩ := by
-      apply Subtype.ext
-      rfl
-    rw [hyAdjEq, hAdj] at hAdjZero
+    rw [← LinearPMap.apply_comp_inclusion hle yAdj]
     exact hAdjZero
-  exact congrArg Subtype.val (hKer yDom hAZero)
+  have hyDomZero := congrArg Subtype.val (hKer yDom hAZero)
+  simpa [yDom, yAdj] using hyDomZero
 
 local instance osBoundaryExcitationLogGeneratorRangeDenseSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -120,12 +117,24 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
   let A :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
       H N hN beta hbeta
-  have hSelf : IsSelfAdjoint A := by
+  have hAdj : A.adjoint = A := by
     simpa [A,
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator,
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport]
       using
-        (realHilbertCompactPositiveZeroSupportLogGenerator_isSelfAdjoint
+        (realHilbertCompactPositiveZeroSupportLogGenerator_adjoint_eq
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+            H N hN beta hbeta 1)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
+            H N hN beta hbeta 1 (by norm_num))
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
+            H N hN beta hbeta 1))
+  have hDense : Dense (A.domain : Set _) := by
+    simpa [A,
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator,
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport]
+      using
+        (realHilbertCompactPositiveZeroSupportLogGenerator_dense_domain
           (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
             H N hN beta hbeta 1)
           (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
@@ -138,7 +147,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
         H N hN beta hbeta)
   exact
     realLinearPMap_range_topologicalClosure_eq_top_of_isSelfAdjoint_of_eq_zero
-      A hSelf hKer
+      A hAdj hDense hKer
 
 end
 
