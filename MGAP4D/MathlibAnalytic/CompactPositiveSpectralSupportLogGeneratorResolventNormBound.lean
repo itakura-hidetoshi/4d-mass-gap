@@ -89,6 +89,55 @@ theorem realLinearPMap_exists_resolventInverse_norm_le_of_abs_lt_norm_lower_boun
       (realLinearPMap_mem_realResolventSet_of_abs_lt_norm_lower_bound
         A c hc hNorm hKer hSurj lambda hlambda)
 
+/-- Ambient realization of the actual-domain resolvent inverse.  This is useful for
+concrete unbounded operators because its codomain is the ambient Banach space while
+the witnesses still record both inverse identities on the genuine domain. -/
+theorem realLinearPMap_exists_ambientResolvent_norm_le_of_abs_lt_norm_lower_bound
+    {E : Type u}
+    [NormedAddCommGroup E]
+    [NormedSpace ℝ E]
+    [CompleteSpace E]
+    (A : E →ₗ.[ℝ] E)
+    (c : ℝ)
+    (hc : 0 < c)
+    (hNorm : ∀ x : A.domain, c * ‖(x : E)‖ ≤ ‖A x‖)
+    (hKer : ∀ x : A.domain, A x = 0 → x = 0)
+    (hSurj : Function.Surjective A.toFun)
+    (lambda : ℝ)
+    (hlambda : |lambda| < c) :
+    lambda ∈ realLinearPMapRealResolventSet A ∧
+      ∃ Blambda : E →L[ℝ] E,
+        (∀ x : A.domain,
+          Blambda (realLinearPMapDomainShift A lambda x) = (x : E)) ∧
+        (∀ y : E, ∃ x : A.domain,
+          realLinearPMapDomainShift A lambda x = y ∧ Blambda y = (x : E)) ∧
+        ‖Blambda‖ ≤ (c - |lambda|)⁻¹ := by
+  have hres :=
+    realLinearPMap_mem_realResolventSet_of_abs_lt_norm_lower_bound
+      A c hc hNorm hKer hSurj lambda hlambda
+  refine ⟨hres, ?_⟩
+  rcases
+    realLinearPMap_exists_resolventInverse_norm_le_of_mem_and_abs_lt
+      A c hNorm lambda hlambda hres with
+    ⟨Rlambda, hleft, hright, hRnorm⟩
+  let Blambda : E →L[ℝ] E := A.domain.subtypeL.comp Rlambda
+  refine ⟨Blambda, ?_, ?_, ?_⟩
+  · intro x
+    change ((Rlambda (realLinearPMapDomainShift A lambda x) : A.domain) : E) = (x : E)
+    exact congrArg Subtype.val (hleft x)
+  · intro y
+    refine ⟨Rlambda y, hright y, ?_⟩
+    rfl
+  · have hgap : 0 < c - |lambda| := sub_pos.mpr hlambda
+    apply ContinuousLinearMap.opNorm_le_bound
+    · exact inv_nonneg.mpr hgap.le
+    · intro y
+      change ‖Rlambda y‖ ≤ (c - |lambda|)⁻¹ * ‖y‖
+      calc
+        ‖Rlambda y‖ ≤ ‖Rlambda‖ * ‖y‖ := Rlambda.le_opNorm y
+        _ ≤ (c - |lambda|)⁻¹ * ‖y‖ :=
+          mul_le_mul_of_nonneg_right hRnorm (norm_nonneg y)
+
 local instance osBoundaryExcitationLogGeneratorResolventNormSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
@@ -154,10 +203,8 @@ local instance osBoundaryExcitationLogGeneratorResolventNormSpectralSupportCompl
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
         H N hN beta hbeta 1)).completeSpace_coe
 
-/-- Explicit native real normed-space structure on the completed transfer support.
-Keeping this structure named prevents large concrete support expressions from forcing
-fragile typeclass search in quantitative resolvent statements. -/
-noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRealNormedSpace
+/-- Explicit native real normed-space structure on the completed transfer support. -/
+@[reducible] noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRealNormedSpace
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
@@ -177,9 +224,9 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilb
         H N hN beta hbeta) }
 
 /-- Inside the completed support logarithmic Hamiltonian gap, the actual-domain
-resolvent has the quantitative norm bound
+resolvent exists and its ambient realization satisfies
 `‖(Hsupp - λI)⁻¹‖ ≤ (2r - |λ|)⁻¹`. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_exists_resolventInverse_norm_le_two_decayRate_sub_abs
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_exists_ambientResolvent_norm_le_two_decayRate_sub_abs
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
@@ -195,14 +242,19 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     letI :=
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRealNormedSpace
         H N hN beta hbeta
-    ∃ Rlambda :
+    lambda ∈ realLinearPMapRealResolventSet A ∧
+      ∃ Blambda :
         periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-            H N hN beta hbeta →L[ℝ] A.domain,
-      Function.LeftInverse Rlambda (realLinearPMapDomainShift A lambda) ∧
-      Function.RightInverse Rlambda (realLinearPMapDomainShift A lambda) ∧
-      ‖Rlambda‖ ≤
-        (2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-          H N hN beta hbeta - |lambda|)⁻¹ := by
+            H N hN beta hbeta →L[ℝ]
+          periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+            H N hN beta hbeta,
+        (∀ x : A.domain,
+          Blambda (realLinearPMapDomainShift A lambda x) = (x : _)) ∧
+        (∀ y, ∃ x : A.domain,
+          realLinearPMapDomainShift A lambda x = y ∧ Blambda y = (x : _)) ∧
+        ‖Blambda‖ ≤
+          (2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+            H N hN beta hbeta - |lambda|)⁻¹ := by
   dsimp only
   let hSupportRealNormedSpace : NormedSpace ℝ
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
@@ -210,7 +262,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRealNormedSpace
       H N hN beta hbeta
   exact
-    @realLinearPMap_exists_resolventInverse_norm_le_of_abs_lt_norm_lower_bound
+    @realLinearPMap_exists_ambientResolvent_norm_le_of_abs_lt_norm_lower_bound
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
         H N hN beta hbeta)
       _ hSupportRealNormedSpace _
