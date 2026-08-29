@@ -65,6 +65,8 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_range_topologicalClosu
     (LinearMap.range
       (realHilbertCompactPositiveZeroSupportLogGenerator
         T hCompact hPositive).toFun).topologicalClosure = ⊤ := by
+  letI : CompleteSpace (realHilbertZeroEigenspaceSupport T) :=
+    (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
   apply realLinearPMap_range_topologicalClosure_eq_top_of_isSelfAdjoint_of_eq_zero
     (realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive)
   · exact realHilbertCompactPositiveZeroSupportLogGenerator_adjoint_eq
@@ -127,6 +129,8 @@ local instance osBoundaryExcitationLogGeneratorRangeDenseSpectralSupportComplete
     (realHilbertZeroEigenspaceSupport_isClosed
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
         H N hN beta hbeta 1)).completeSpace_coe
+
+set_option synthInstance.maxHeartbeats 200000
 
 /-- The actual range of the completed one-step support logarithmic Hamiltonian
 is dense in the positive spectral-support Hilbert carrier. -/
