@@ -319,22 +319,32 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
         H N hN beta hbeta 1 (by norm_num))
 
-/-- The concrete support restriction is positive. -/
+/-- The concrete completed transfer has a positive restriction on the
+underlying zero-eigenspace support.  Stating the receipt before passing through
+the concrete support alias avoids a duplicate subtype module instance while
+retaining the full `LinearMap.IsPositive` conclusion. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction_isPositive
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta) :
-    ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
-        H N hN beta hbeta :
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-          H N hN beta hbeta →L[ℝ]
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-          H N hN beta hbeta) :
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta →ₗ[ℝ]
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta).IsPositive := by
+    ((realHilbertZeroEigenspaceSupportRestriction
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+          H N hN beta hbeta 1)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
+          H N hN beta hbeta 1).isSymmetric :
+      realHilbertZeroEigenspaceSupport
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+            H N hN beta hbeta 1) →L[ℝ]
+        realHilbertZeroEigenspaceSupport
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+            H N hN beta hbeta 1)) :
+      realHilbertZeroEigenspaceSupport
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+            H N hN beta hbeta 1) →ₗ[ℝ]
+        realHilbertZeroEigenspaceSupport
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+            H N hN beta hbeta 1)).IsPositive := by
   exact
     realHilbertZeroEigenspaceSupportRestriction_isPositive
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
@@ -395,16 +405,23 @@ structure PeriodicHypercubicEvenOSBoundaryExcitationPositiveSpectralSupportPacka
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
         H N hN beta hbeta)
   supportPositive :
-    ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
-        H N hN beta hbeta :
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-          H N hN beta hbeta →L[ℝ]
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-          H N hN beta hbeta) :
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta →ₗ[ℝ]
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta).IsPositive
+    ((realHilbertZeroEigenspaceSupportRestriction
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+          H N hN beta hbeta 1)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
+          H N hN beta hbeta 1).isSymmetric :
+      realHilbertZeroEigenspaceSupport
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+            H N hN beta hbeta 1) →L[ℝ]
+        realHilbertZeroEigenspaceSupport
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+            H N hN beta hbeta 1)) :
+      realHilbertZeroEigenspaceSupport
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+            H N hN beta hbeta 1) →ₗ[ℝ]
+        realHilbertZeroEigenspaceSupport
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+            H N hN beta hbeta 1)).IsPositive
   zeroNotEigenvalue :
     ¬ HasEigenvalue
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
