@@ -22,7 +22,7 @@ noncomputable def realHilbertSumWeightedDiagonalDomain
     (w : ι → ℝ) : Submodule ℝ (lp G 2) where
   carrier := {x | Memℓp (fun i => w i • x i) 2}
   zero_mem' := by
-    simpa using (zero_memℓp : Memℓp (0 : ∀ i, G i) (2 : ℝ≥0∞))
+    simpa using (zero_memℓp : Memℓp (0 : (i : ι) → G i) (2 : ℝ≥0∞))
   add_mem' := by
     intro x y hx hy
     simpa [smul_add] using hx.add hy
@@ -122,7 +122,9 @@ noncomputable def realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
               Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
         2 :=
   realHilbertSumWeightedDiagonalLinearPMap
-    (G := fun mu =>
+    (G := fun mu : Eigenvalues
+      (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+        Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
       eigenspace
         (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
           Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
@@ -149,8 +151,23 @@ noncomputable def realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
       Memℓp
         (fun mu =>
           realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • x mu)
-        2 :=
-  Iff.rfl
+        2 := by
+  change x ∈ realHilbertSumWeightedDiagonalDomain
+      (G := fun mu : Eigenvalues
+        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+        eigenspace
+          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
+      (fun mu => realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu) ↔ _
+  exact mem_realHilbertSumWeightedDiagonalDomain
+    (G := fun mu : Eigenvalues
+      (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+        Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+      eigenspace
+        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
+    (fun mu => realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu) x
 
 @[simp] theorem realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_apply
     {E : Type u}
@@ -177,8 +194,15 @@ noncomputable def realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
               eigenspace
                 (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
                   Module.End ℝ (realHilbertZeroEigenspaceSupport T)) nu)
-            2) mu :=
-  rfl
+            2) mu := by
+  exact realHilbertSumWeightedDiagonalLinearPMap_apply
+    (G := fun nu : Eigenvalues
+      (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+        Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+      eigenspace
+        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) nu)
+    (fun nu => realHilbertZeroEigenspaceSupportLogEnergy T hPositive nu) x mu
 
 end
 
