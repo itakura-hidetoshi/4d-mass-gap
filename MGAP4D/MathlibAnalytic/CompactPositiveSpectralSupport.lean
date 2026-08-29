@@ -37,9 +37,8 @@ local instance realHilbertZeroEigenspaceSupportComplete
     [InnerProductSpace ℝ E]
     [CompleteSpace E]
     (T : E →L[ℝ] E) :
-    CompleteSpace (realHilbertZeroEigenspaceSupport T) := by
-  dsimp [realHilbertZeroEigenspaceSupport]
-  infer_instance
+    CompleteSpace (realHilbertZeroEigenspaceSupport T) :=
+  (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
 
 /-- Symmetry makes the zero-eigenspace support invariant. -/
 theorem realHilbertZeroEigenspaceSupport_invariant
@@ -96,15 +95,16 @@ theorem realHilbertZeroEigenspaceSupportRestriction_isPositive
     [InnerProductSpace ℝ E]
     (T : E →L[ℝ] E)
     (hPositive : T.IsPositive) :
-    ContinuousLinearMap.IsPositive
-      (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric) := by
-  apply (ContinuousLinearMap.isPositive_iff
-    (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric)).2
-  constructor
+    ((realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+        realHilbertZeroEigenspaceSupport T →L[ℝ]
+          realHilbertZeroEigenspaceSupport T) :
+      realHilbertZeroEigenspaceSupport T →ₗ[ℝ]
+        realHilbertZeroEigenspaceSupport T).IsPositive := by
+  refine ⟨?_, ?_⟩
   · exact realHilbertZeroEigenspaceSupportRestriction_isSymmetric T hPositive.isSymmetric
   · intro x
-    change 0 ≤ inner ℝ (T (x : E)) (x : E)
-    exact hPositive.inner_nonneg_left (x : E)
+    change 0 ≤ RCLike.re (inner ℝ (T (x : E)) (x : E))
+    exact hPositive.re_inner_nonneg_left (x : E)
 
 /-- Compactness descends to the invariant closed spectral support. -/
 theorem realHilbertZeroEigenspaceSupportRestriction_isCompact
@@ -325,9 +325,16 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta) :
-    ContinuousLinearMap.IsPositive
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
-        H N hN beta hbeta) := by
+    ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
+        H N hN beta hbeta :
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+          H N hN beta hbeta →L[ℝ]
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+          H N hN beta hbeta) :
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta →ₗ[ℝ]
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta).IsPositive := by
   exact
     realHilbertZeroEigenspaceSupportRestriction_isPositive
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
@@ -388,9 +395,16 @@ structure PeriodicHypercubicEvenOSBoundaryExcitationPositiveSpectralSupportPacka
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
         H N hN beta hbeta)
   supportPositive :
-    ContinuousLinearMap.IsPositive
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
-        H N hN beta hbeta)
+    ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
+        H N hN beta hbeta :
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+          H N hN beta hbeta →L[ℝ]
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+          H N hN beta hbeta) :
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta →ₗ[ℝ]
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta).IsPositive
   zeroNotEigenvalue :
     ¬ HasEigenvalue
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
