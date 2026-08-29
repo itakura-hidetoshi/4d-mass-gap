@@ -57,13 +57,14 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_quadratic_lower_bound
   let Ax :=
     realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
       T hCompact hPositive y
-  have hLeft : Summable (fun mu => inner ℝ ((c • xv) mu) (xv mu)) :=
-    lp.summable_inner (c • xv) xv
+  have hSelf : Summable (fun mu => inner ℝ (xv mu) (xv mu)) :=
+    lp.summable_inner xv xv
+  have hLeft : Summable (fun mu => c * inner ℝ (xv mu) (xv mu)) :=
+    hSelf.mul_left c
   have hRight : Summable (fun mu => inner ℝ (Ax mu) (xv mu)) :=
     lp.summable_inner Ax xv
-  have hPoint : ∀ mu, inner ℝ ((c • xv) mu) (xv mu) ≤ inner ℝ (Ax mu) (xv mu) := by
+  have hPoint : ∀ mu, c * inner ℝ (xv mu) (xv mu) ≤ inner ℝ (Ax mu) (xv mu) := by
     intro mu
-    change inner ℝ (c • xv mu) (xv mu) ≤ inner ℝ (Ax mu) (xv mu)
     rw [show Ax mu =
       realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • xv mu by
         dsimp [Ax, xv, y]
@@ -86,9 +87,12 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_quadratic_lower_bound
   calc
     c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ^ 2 = c * ‖xv‖ ^ 2 := by
       rw [hnorm]
-    _ = inner ℝ (c • xv) xv := by
-      rw [real_inner_smul_left, real_inner_self_eq_norm_sq]
-    _ = ∑' mu, inner ℝ ((c • xv) mu) (xv mu) := lp.inner_eq_tsum _ _
+    _ = c * inner ℝ xv xv := by
+      rw [real_inner_self_eq_norm_sq]
+    _ = c * ∑' mu, inner ℝ (xv mu) (xv mu) := by
+      rw [lp.inner_eq_tsum]
+    _ = ∑' mu, c * inner ℝ (xv mu) (xv mu) := by
+      rw [tsum_mul_left]
     _ ≤ ∑' mu, inner ℝ (Ax mu) (xv mu) := hLeft.tsum_le_tsum hPoint hRight
     _ = inner ℝ Ax xv := (lp.inner_eq_tsum _ _).symm
     _ = inner ℝ
