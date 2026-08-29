@@ -131,6 +131,25 @@ local instance osBoundaryExcitationSpectralLogGeneratorPairHilbertSectorComplete
   periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete
     H N hN beta hbeta
 
+/-- Intrinsic strictly-positive spectral coordinate Hilbert space for the
+completed one-step pair transfer. -/
+abbrev periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralCoordinateSpace
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :=
+  lp
+    (fun mu : Eigenvalues
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
+        H N hN beta hbeta :
+        Module.End ℝ
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+            H N hN beta hbeta)) =>
+      eigenspace
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
+          H N hN beta hbeta :
+          Module.End ℝ
+            (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+              H N hN beta hbeta)) mu)
+    2
+
 /-- The actual completed one-step pair-transfer Hamiltonian in intrinsic
 strictly-positive spectral coordinates.  No eigenvalue enumeration is chosen:
 the index is Mathlib's `Eigenvalues` subtype of the support restriction. -/
@@ -139,34 +158,10 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilb
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta) :
-    lp
-        (fun mu : Eigenvalues
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
-            H N hN beta hbeta :
-            Module.End ℝ
-              (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-                H N hN beta hbeta)) =>
-          eigenspace
-            (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
-              H N hN beta hbeta :
-              Module.End ℝ
-                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-                  H N hN beta hbeta)) mu)
-        2 →ₗ.[ℝ]
-      lp
-        (fun mu : Eigenvalues
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
-            H N hN beta hbeta :
-            Module.End ℝ
-              (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-                H N hN beta hbeta)) =>
-          eigenspace
-            (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
-              H N hN beta hbeta :
-              Module.End ℝ
-                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-                  H N hN beta hbeta)) mu)
-        2 :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralCoordinateSpace
+        H N hN beta hbeta →ₗ.[ℝ]
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralCoordinateSpace
+        H N hN beta hbeta :=
   realHilbertSumWeightedDiagonalLinearPMap
     (G := fun mu : Eigenvalues
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
@@ -201,22 +196,8 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilb
         H N hN beta hbeta x mu =
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogEnergy
           H N hN beta hbeta mu •
-        ((x : (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogGeneratorCoordinates
-          H N hN beta hbeta).domain) :
-          lp
-            (fun nu : Eigenvalues
-              (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
-                H N hN beta hbeta :
-                Module.End ℝ
-                  (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-                    H N hN beta hbeta)) =>
-              eigenspace
-                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRestriction
-                  H N hN beta hbeta :
-                  Module.End ℝ
-                    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-                      H N hN beta hbeta)) nu)
-            2) mu := by
+        (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralCoordinateSpace
+          H N hN beta hbeta) mu := by
   exact
     realHilbertSumWeightedDiagonalLinearPMap_apply
       (G := fun nu : Eigenvalues
