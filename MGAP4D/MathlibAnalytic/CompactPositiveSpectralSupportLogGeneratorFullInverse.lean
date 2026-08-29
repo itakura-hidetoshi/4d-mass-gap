@@ -56,9 +56,9 @@ theorem realLinearPMapLinearEquiv_symm_norm_le_div_of_norm_lower_bound
     ‖(((realLinearPMapLinearEquiv_of_eq_zero_of_surjective A hKer hSurj).symm y :
       A.domain) : E)‖ ≤ ‖y‖ / c := by
   let e := realLinearPMapLinearEquiv_of_eq_zero_of_surjective A hKer hSurj
-  have hyEquiv : e (e.symm y) = y := e.apply_symm_apply y
   have hy : A (e.symm y) = y := by
-    simpa [e, realLinearPMapLinearEquiv_of_eq_zero_of_surjective] using hyEquiv
+    change e (e.symm y) = y
+    exact e.apply_symm_apply y
   have h := hNorm (e.symm y)
   rw [hy] at h
   apply (le_div_iff₀ hc).2
