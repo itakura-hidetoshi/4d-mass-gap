@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.CompactPositiveSpectralSupportLogGeneratorZeroResolvent
+import Mathlib.Analysis.Normed.Module.RCLike.Basic
 import Mathlib.Analysis.Normed.Ring.Units
 import Mathlib.Tactic
 
@@ -223,6 +224,20 @@ local instance osBoundaryExcitationLogGeneratorOpenGapPairHilbertSectorComplete
   periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete
     H N hN beta hbeta
 
+/-- The complex physical pair Hilbert sector, regarded canonically as a real
+normed space.  This is restriction of scalars only; the norm is unchanged. -/
+local instance osBoundaryExcitationLogGeneratorOpenGapPairHilbertSectorRealNormedSpace
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
+        H N hN beta hbeta) :=
+  NormedSpace.restrictScalars ℝ ℂ
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
+      H N hN beta hbeta)
+
 local instance osBoundaryExcitationLogGeneratorOpenGapSpectralSupportNormedSpace
     (H N : ℕ)
     (hN : 0 < N)
@@ -264,10 +279,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
         H N hN beta hbeta) := by
   letI : NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
+        H N hN beta hbeta) :=
+    osBoundaryExcitationLogGeneratorOpenGapPairHilbertSectorRealNormedSpace H N hN beta hbeta
+  letI : NormedSpace ℝ
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) := by
-    unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-    infer_instance
+        H N hN beta hbeta) :=
+    osBoundaryExcitationLogGeneratorOpenGapSpectralSupportNormedSpace H N hN beta hbeta
   exact
     realLinearPMap_mem_realResolventSet_of_abs_lt_norm_lower_bound
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
@@ -302,10 +320,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
         (2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
           H N hN beta hbeta)) := by
   letI : NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
+        H N hN beta hbeta) :=
+    osBoundaryExcitationLogGeneratorOpenGapPairHilbertSectorRealNormedSpace H N hN beta hbeta
+  letI : NormedSpace ℝ
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) := by
-    unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-    infer_instance
+        H N hN beta hbeta) :=
+    osBoundaryExcitationLogGeneratorOpenGapSpectralSupportNormedSpace H N hN beta hbeta
   exact
     realLinearPMap_realSpectrum_disjoint_Ioo_neg_pos_of_norm_lower_bound
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
