@@ -121,22 +121,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
           H N hN beta hbeta :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
       H N hN beta hbeta
-  have hDense : Dense (A.domain : Set _) := by
-    simpa [A,
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator,
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport]
-      using
-        (realHilbertCompactPositiveZeroSupportLogGenerator_dense_domain
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-            H N hN beta hbeta 1)
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
-            H N hN beta hbeta 1 (by norm_num))
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
-            H N hN beta hbeta 1))
-  have hKer : ∀ x : A.domain, A x = 0 → x = 0 := by
-    simpa [A] using
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_eq_zero_of_apply_eq_zero
-        H N hN beta hbeta)
   apply realLinearPMap_range_topologicalClosure_eq_top_of_isSelfAdjoint_of_eq_zero A
   · simpa [A,
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator,
@@ -149,8 +133,20 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
             H N hN beta hbeta 1 (by norm_num))
           (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
             H N hN beta hbeta 1))
-  · exact hDense
-  · exact hKer
+  · simpa [A,
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator,
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport]
+      using
+        (realHilbertCompactPositiveZeroSupportLogGenerator_dense_domain
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+            H N hN beta hbeta 1)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
+            H N hN beta hbeta 1 (by norm_num))
+          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
+            H N hN beta hbeta 1))
+  · simpa [A] using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_eq_zero_of_apply_eq_zero
+        H N hN beta hbeta)
 
 end
 
