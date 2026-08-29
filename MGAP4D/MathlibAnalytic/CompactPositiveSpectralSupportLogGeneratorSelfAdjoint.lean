@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.CompactPositiveSpectralSupportLogGeneratorDenseSymmetric
-import MGAP4D.MathlibAnalytic.HilbertSumWeightedDiagonalSelfAdjoint
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -21,11 +20,174 @@ local instance spectralSupportLogGeneratorSelfAdjointComplete
     CompleteSpace (realHilbertZeroEigenspaceSupport T) :=
   (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
 
+open Classical in
+/-- The adjoint of the logarithmic generator on the actual positive spectral
+support has the expected logarithmic coordinate action.  This is proved
+entirely on the actual support carrier: a one-eigenspace test vector is pulled
+back through the canonical spectral isometry, so no adjoint is ever formed on
+the specialized `lp` carrier and the `lp` module-instance diamond is avoided. -/
+theorem realHilbertCompactPositiveZeroSupportLogGenerator_adjoint_apply_coord
+    {E : Type u}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [CompleteSpace E]
+    (T : E →L[ℝ] E)
+    (hCompact : IsCompactOperator T)
+    (hPositive : T.IsPositive)
+    (y : (LinearPMap.adjoint
+      (realHilbertCompactPositiveZeroSupportLogGenerator
+        T hCompact hPositive)).domain)
+    (mu : Eigenvalues
+      (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+        Module.End ℝ (realHilbertZeroEigenspaceSupport T))) :
+    (realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
+        T hCompact hPositive)
+        (LinearPMap.adjoint
+          (realHilbertCompactPositiveZeroSupportLogGenerator
+            T hCompact hPositive) y) mu =
+      realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
+        (realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
+          T hCompact hPositive)
+          (y : realHilbertZeroEigenspaceSupport T) mu := by
+  let H := realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive
+  let U :=
+    realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
+      T hCompact hPositive
+  have hDenseH : Dense (H.domain : Set (realHilbertZeroEigenspaceSupport T)) := by
+    simpa [H] using
+      realHilbertCompactPositiveZeroSupportLogGenerator_dense_domain
+        T hCompact hPositive
+  have hAdjH : (LinearPMap.adjoint H).IsFormalAdjoint H :=
+    LinearPMap.adjoint_isFormalAdjoint hDenseH
+  have hInner (p q : realHilbertZeroEigenspaceSupport T) :
+      inner ℝ (U p) (U q) = inner ℝ p q := by
+    simpa [U] using
+      realHilbertCompactPositive_zeroSupportHilbertSumEquiv_inner_map_map
+        T hCompact hPositive p q
+  change U (LinearPMap.adjoint H y) mu =
+    realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
+      U (y : realHilbertZeroEigenspaceSupport T) mu
+  apply
+    (dense_univ : Dense
+      (Set.univ : Set
+        (eigenspace
+          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu))).eq_of_inner_left ℝ
+  intro a ha
+  let s0 :
+      lp
+        (fun nu : Eigenvalues
+          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+          eigenspace
+            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) nu)
+        2 :=
+    lp.single 2 mu a
+  have hs0 :
+      s0 ∈
+        (realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+          T hCompact hPositive).domain := by
+    rw [realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_domain_mem_iff]
+    have hsingle :
+        Memℓp
+          (fun nu =>
+            (lp.single 2 mu
+              (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • a) :
+              lp
+                (fun rho : Eigenvalues
+                  (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+                    Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+                  eigenspace
+                    (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+                      Module.End ℝ (realHilbertZeroEigenspaceSupport T)) rho)
+                2) nu)
+          2 :=
+      (lp.single 2 mu
+        (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • a) :
+        lp
+          (fun rho : Eigenvalues
+            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+            eigenspace
+              (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+                Module.End ℝ (realHilbertZeroEigenspaceSupport T)) rho)
+          2).property
+    convert hsingle using 1
+    funext nu
+    by_cases hnu : nu = mu
+    · subst nu
+      simp [s0]
+    · simp [s0, lp.single_apply, hnu]
+  have hsBase : U.symm s0 ∈ H.domain := by
+    change
+      U (U.symm s0) ∈
+        (realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+          T hCompact hPositive).domain
+    simpa using hs0
+  let s : H.domain := ⟨U.symm s0, hsBase⟩
+  have hsCoord : U (s : realHilbertZeroEigenspaceSupport T) = s0 := by
+    simp [s]
+  have hHsingle :
+      U (H s) =
+        lp.single 2 mu
+          (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • a) := by
+    apply lp.ext
+    funext nu
+    have hcoord := congrArg (fun z => z nu)
+      (realHilbertCompactPositiveZeroSupportLogGenerator_coordinates
+        T hCompact hPositive s)
+    calc
+      U (H s) nu =
+          realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+            T hCompact hPositive
+            ⟨U (s : realHilbertZeroEigenspaceSupport T), s.property⟩ nu := by
+        simpa [H, U] using hcoord
+      _ = realHilbertZeroEigenspaceSupportLogEnergy T hPositive nu •
+          U (s : realHilbertZeroEigenspaceSupport T) nu := by
+        exact
+          realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_apply
+            T hCompact hPositive
+            ⟨U (s : realHilbertZeroEigenspaceSupport T), s.property⟩ nu
+      _ = realHilbertZeroEigenspaceSupportLogEnergy T hPositive nu • s0 nu := by
+        rw [hsCoord]
+      _ =
+          (lp.single 2 mu
+            (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • a) :
+            lp
+              (fun rho : Eigenvalues
+                (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+                  Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+                eigenspace
+                  (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+                    Module.End ℝ (realHilbertZeroEigenspaceSupport T)) rho)
+              2) nu := by
+        by_cases hnu : nu = mu
+        · subst nu
+          simp [s0]
+        · simp [s0, lp.single_apply, hnu]
+  have hAdj := hAdjH y s
+  have hAdjCoord :
+      inner ℝ (U (LinearPMap.adjoint H y))
+          (U (s : realHilbertZeroEigenspaceSupport T)) =
+        inner ℝ (U (y : realHilbertZeroEigenspaceSupport T)) (U (H s)) := by
+    calc
+      inner ℝ (U (LinearPMap.adjoint H y))
+          (U (s : realHilbertZeroEigenspaceSupport T)) =
+          inner ℝ (LinearPMap.adjoint H y)
+            (s : realHilbertZeroEigenspaceSupport T) := hInner _ _
+      _ = inner ℝ (y : realHilbertZeroEigenspaceSupport T) (H s) := hAdj
+      _ = inner ℝ (U (y : realHilbertZeroEigenspaceSupport T)) (U (H s)) := by
+        symm
+        exact hInner _ _
+  rw [hsCoord, hHsingle, lp.inner_single_right, lp.inner_single_right] at hAdjCoord
+  simpa [real_inner_smul_left, real_inner_smul_right] using hAdjCoord
+
 /-- Every vector in the adjoint domain of the logarithmic generator on the
 actual positive spectral support already lies in its maximal logarithmic
-domain.  The proof transports the adjoint identity to intrinsic spectral
-coordinates, invokes maximality of the real weighted diagonal there, and then
-pulls the resulting domain membership back to the actual support carrier. -/
+domain.  The proof uses the actual-support adjoint coordinate formula above
+and square summability of the transported adjoint vector; no coordinate-space
+adjoint is instantiated. -/
 theorem realHilbertCompactPositiveZeroSupportLogGenerator_adjoint_domain_le
     {E : Type u}
     [NormedAddCommGroup E]
@@ -44,69 +206,23 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_adjoint_domain_le
   let U :=
     realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
       T hCompact hPositive
-  let A := realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
-    T hCompact hPositive
-  have hDenseH : Dense (H.domain : Set (realHilbertZeroEigenspaceSupport T)) := by
-    simpa [H] using
-      realHilbertCompactPositiveZeroSupportLogGenerator_dense_domain
-        T hCompact hPositive
-  have hAdjH : (LinearPMap.adjoint H).IsFormalAdjoint H :=
-    LinearPMap.adjoint_isFormalAdjoint hDenseH
-  have hInner (p q : realHilbertZeroEigenspaceSupport T) :
-      inner ℝ (U p) (U q) = inner ℝ p q := by
-    simpa [U] using
-      realHilbertCompactPositive_zeroSupportHilbertSumEquiv_inner_map_map
-        T hCompact hPositive p q
   intro y hy
   let ya : (LinearPMap.adjoint H).domain := ⟨y, hy⟩
-  have hUyAdj : U y ∈ (LinearPMap.adjoint A).domain := by
-    apply LinearPMap.mem_adjoint_domain_of_exists
-    refine ⟨U (LinearPMap.adjoint H ya), ?_⟩
-    intro a
-    have hxmem : U.symm (a : _) ∈ H.domain := by
-      change U (U.symm (a : _)) ∈ A.domain
-      simpa using a.property
-    let x : H.domain := ⟨U.symm (a : _), hxmem⟩
-    have haU : (a : _) = U (x : realHilbertZeroEigenspaceSupport T) := by
-      simpa [x] using (U.apply_symm_apply (a : _)).symm
-    have hHcoord : U (H x) = A a := by
-      calc
-        U (H x) =
-            A ⟨U (x : realHilbertZeroEigenspaceSupport T), x.property⟩ := by
-              simpa [H, U, A] using
-                realHilbertCompactPositiveZeroSupportLogGenerator_coordinates
-                  T hCompact hPositive x
-        _ = A a := by
-          congr 1
-          exact Subtype.ext (U.apply_symm_apply (a : _))
-    calc
-      inner ℝ (U (LinearPMap.adjoint H ya)) (a : _) =
-          inner ℝ (U (LinearPMap.adjoint H ya))
-            (U (x : realHilbertZeroEigenspaceSupport T)) := by rw [haU]
-      _ = inner ℝ (LinearPMap.adjoint H ya)
-            (x : realHilbertZeroEigenspaceSupport T) :=
-          hInner _ _
-      _ = inner ℝ (ya : realHilbertZeroEigenspaceSupport T) (H x) :=
-          hAdjH ya x
-      _ = inner ℝ (U (ya : realHilbertZeroEigenspaceSupport T)) (U (H x)) := by
-          symm
-          exact hInner _ _
-      _ = inner ℝ (U y) (A a) := by
-          rw [hHcoord]
-          rfl
-  have hUyDom : U y ∈ A.domain := by
-    have h :=
-      (realHilbertSumWeightedDiagonalLinearPMap_adjoint_domain_le
-        (G := fun mu : Eigenvalues
-          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
-          eigenspace
-            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
-        (fun mu => realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)) hUyAdj
-    simpa [A, realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates] using h
-  change U y ∈ A.domain
-  exact hUyDom
+  change
+    U y ∈
+      (realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+        T hCompact hPositive).domain
+  rw [realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_domain_mem_iff]
+  have hz :
+      Memℓp
+        (fun mu => U (LinearPMap.adjoint H ya) mu)
+        2 :=
+    (U (LinearPMap.adjoint H ya)).property
+  convert hz using 1
+  funext mu
+  exact
+    (realHilbertCompactPositiveZeroSupportLogGenerator_adjoint_apply_coord
+      T hCompact hPositive ya mu).symm
 
 /-- The adjoint of the actual-support logarithmic generator is contained in the
 generator itself. -/
@@ -194,7 +310,10 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_isClosed
 
 open Classical in
 /-- Every vector in a positive support eigenspace belongs to the logarithmic
-generator domain. -/
+generator domain.  Instead of specializing the generic `lp.single` domain
+lemma, square summability is proved from the transported vector itself; this
+keeps the intrinsic `Eigenvalues` decidable-equality instance out of the
+statement. -/
 theorem realHilbertCompactPositiveZeroSupportLogGenerator_eigenvector_mem_domain
     {E : Type u}
     [NormedAddCommGroup E]
@@ -215,25 +334,38 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_eigenvector_mem_domain
   let U :=
     realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
       T hCompact hPositive
-  let A := realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
-    T hCompact hPositive
   have hUv : U (v : realHilbertZeroEigenspaceSupport T) = lp.single 2 mu v := by
     have h := congrArg (fun z => U z)
       (realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv_symm_single
         T hCompact hPositive mu v)
     simpa [U] using h.symm
-  change U (v : realHilbertZeroEigenspaceSupport T) ∈ A.domain
-  rw [hUv]
-  simpa [A, realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates] using
-    (realHilbertSumWeightedDiagonal_single_mem_domain
-      (G := fun nu : Eigenvalues
-        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
-        eigenspace
-          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) nu)
-      (fun nu => realHilbertZeroEigenspaceSupportLogEnergy T hPositive nu)
-      mu v)
+  have hzero (nu : Eigenvalues
+      (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+        Module.End ℝ (realHilbertZeroEigenspaceSupport T)))
+      (hnu : nu ≠ mu) :
+      U (v : realHilbertZeroEigenspaceSupport T) nu = 0 := by
+    have hpoint := congrArg (fun z => z nu) hUv
+    simpa [lp.single_apply, hnu] using hpoint
+  change
+    U (v : realHilbertZeroEigenspaceSupport T) ∈
+      (realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+        T hCompact hPositive).domain
+  rw [realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_domain_mem_iff]
+  have hmem :
+      Memℓp
+        (fun nu =>
+          realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
+            U (v : realHilbertZeroEigenspaceSupport T) nu)
+        2 :=
+    (U (v : realHilbertZeroEigenspaceSupport T)).property.const_smul
+      (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)
+  convert hmem using 1
+  funext nu
+  by_cases hnu : nu = mu
+  · subst nu
+    rfl
+  · rw [hzero nu hnu]
+    simp
 
 open Classical in
 /-- On each support eigenspace the actual logarithmic generator acts exactly by
@@ -258,13 +390,11 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_apply_eigenvector
             T hCompact hPositive mu v⟩ =
       realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
         (v : realHilbertZeroEigenspaceSupport T) := by
+  let H := realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive
   let U :=
     realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
       T hCompact hPositive
-  let A := realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
-    T hCompact hPositive
-  let xv : (realHilbertCompactPositiveZeroSupportLogGenerator
-      T hCompact hPositive).domain :=
+  let xv : H.domain :=
     ⟨(v : realHilbertZeroEigenspaceSupport T),
       realHilbertCompactPositiveZeroSupportLogGenerator_eigenvector_mem_domain
         T hCompact hPositive mu v⟩
@@ -273,23 +403,47 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_apply_eigenvector
       (realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv_symm_single
         T hCompact hPositive mu v)
     simpa [U] using h.symm
+  have hzero (nu : Eigenvalues
+      (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+        Module.End ℝ (realHilbertZeroEigenspaceSupport T)))
+      (hnu : nu ≠ mu) :
+      U (v : realHilbertZeroEigenspaceSupport T) nu = 0 := by
+    have hpoint := congrArg (fun z => z nu) hUv
+    simpa [lp.single_apply, hnu] using hpoint
+  change H xv =
+    realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
+      (v : realHilbertZeroEigenspaceSupport T)
   apply U.injective
   rw [U.map_smul]
-  have hcoord :=
-    realHilbertCompactPositiveZeroSupportLogGenerator_coordinates
-      T hCompact hPositive xv
-  change U
-      (realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive xv) =
-    A ⟨U (xv : realHilbertZeroEigenspaceSupport T), xv.property⟩ at hcoord
-  rw [hcoord]
-  rw [hUv]
   apply lp.ext
   funext nu
-  rw [realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_apply]
-  by_cases hnu : nu = mu
-  · subst nu
-    simp [hUv, xv]
-  · simp [hUv, xv, lp.single_apply, hnu]
+  have hcoord := congrArg (fun z => z nu)
+    (realHilbertCompactPositiveZeroSupportLogGenerator_coordinates
+      T hCompact hPositive xv)
+  calc
+    U (H xv) nu =
+        realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
+          T hCompact hPositive
+          ⟨U (xv : realHilbertZeroEigenspaceSupport T), xv.property⟩ nu := by
+      simpa [H, U] using hcoord
+    _ = realHilbertZeroEigenspaceSupportLogEnergy T hPositive nu •
+        U (xv : realHilbertZeroEigenspaceSupport T) nu := by
+      exact
+        realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_apply
+          T hCompact hPositive
+          ⟨U (xv : realHilbertZeroEigenspaceSupport T), xv.property⟩ nu
+    _ = realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
+        U (v : realHilbertZeroEigenspaceSupport T) nu := by
+      change
+        realHilbertZeroEigenspaceSupportLogEnergy T hPositive nu •
+            U (v : realHilbertZeroEigenspaceSupport T) nu =
+          realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
+            U (v : realHilbertZeroEigenspaceSupport T) nu
+      by_cases hnu : nu = mu
+      · subst nu
+        rfl
+      · rw [hzero nu hnu]
+        simp
 
 /-- On a support eigenvector, exponentiating the negative logarithmic
 eigenvalue reproduces the original support-restricted transfer action exactly.
@@ -301,7 +455,6 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_exp_neg_eigenvalue_smu
     [InnerProductSpace ℝ E]
     [CompleteSpace E]
     (T : E →L[ℝ] E)
-    (hCompact : IsCompactOperator T)
     (hPositive : T.IsPositive)
     (mu : Eigenvalues
       (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
@@ -372,7 +525,7 @@ theorem realHilbertCompactPositiveZeroSupportLogGeneratorSelfAdjointPackage
     realHilbertCompactPositiveZeroSupportLogGenerator_apply_eigenvector
       T hCompact hPositive,
     realHilbertCompactPositiveZeroSupportLogGenerator_exp_neg_eigenvalue_smul_eq_transfer
-      T hCompact hPositive⟩
+      T hPositive⟩
 
 end
 
