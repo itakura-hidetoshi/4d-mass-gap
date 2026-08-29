@@ -1,6 +1,6 @@
 import MGAP4D.MathlibAnalytic.CompactPositiveSpectralSupportLogGenerator
 import MGAP4D.MathlibAnalytic.HilbertSumWeightedDiagonalDenseSymmetric
-import Mathlib.Analysis.InnerProductSpace.LinearMap
+import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Topology.Homeomorph.Defs
 import Mathlib.Tactic
 
@@ -42,26 +42,8 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_dense_domain
   let U :=
     realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
       T hCompact hPositive
-  have hDenseCoord :
-      Dense
-        ((((realHilbertSumWeightedDiagonalLinearPMap
-          (G := fun mu : Eigenvalues
-            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
-            eigenspace
-              (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-                Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
-          (fun mu => realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)).domain :
-            Submodule ℝ
-              (lp
-                (fun mu : Eigenvalues
-                  (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-                    Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
-                  eigenspace
-                    (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-                      Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
-                2)) : Set _) :=
-    realHilbertSumWeightedDiagonalLinearPMap_dense_domain
+  let D :=
+    realHilbertSumWeightedDiagonalDomain
       (G := fun mu : Eigenvalues
         (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
           Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
@@ -69,28 +51,55 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_dense_domain
           (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
             Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
       (fun mu => realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)
-  change Dense
-    (U ⁻¹'
-      ((((realHilbertSumWeightedDiagonalLinearPMap
+  have hDenseCoord : Dense (D : Set _) := by
+    simpa [D, realHilbertSumWeightedDiagonalLinearPMap_domain] using
+      realHilbertSumWeightedDiagonalLinearPMap_dense_domain
         (G := fun mu : Eigenvalues
           (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
             Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
           eigenspace
             (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
               Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu)
-        (fun mu => realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)).domain :
-          Submodule ℝ _) : Set _))
+        (fun mu => realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)
+  change Dense (U ⁻¹' (D : Set _))
   rw [dense_iff_closure_eq]
   rw [← U.toHomeomorph.preimage_closure]
   rw [hDenseCoord.closure_eq]
   simp
 
+/-- A real linear isometric equivalence preserves inner products even when its
+target carries two propositionally equal but non-definitional module-instance
+paths.  The proof only uses the metric data of the equivalence and real
+polarization, so it does not ask Lean to identify those module structures. -/
+theorem realHilbertCompactPositive_zeroSupportHilbertSumEquiv_inner_map_map
+    {E : Type u}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [CompleteSpace E]
+    (T : E →L[ℝ] E)
+    (hCompact : IsCompactOperator T)
+    (hPositive : T.IsPositive)
+    (x y : realHilbertZeroEigenspaceSupport T) :
+    inner ℝ
+        (realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
+          T hCompact hPositive x)
+        (realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
+          T hCompact hPositive y) =
+      inner ℝ x y := by
+  let U :=
+    realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
+      T hCompact hPositive
+  rw [real_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two
+      (U x) (U y),
+    real_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two x y]
+  rw [← U.map_add]
+  rw [U.norm_map, U.norm_map, U.norm_map]
+
 /-- The actual support logarithmic generator is formally symmetric.  The proof
-stays entirely on the support Hilbert carrier: both inner products are
-transported to intrinsic spectral coordinates, expanded by `lp.inner_eq_tsum`,
-and compared pointwise using the reality of the logarithmic weights.  No
-adjoint or formal-adjoint structure is instantiated on the dependent `lp`
-carrier, avoiding the algebraic/Hilbert module-instance diamond there. -/
+stays entirely on the support Hilbert carrier: metric polarization transports
+the two inner products to intrinsic spectral coordinates, then
+`lp.inner_eq_tsum` reduces symmetry to the reality of the logarithmic weights.
+No adjoint structure is instantiated on the dependent `lp` carrier. -/
 theorem realHilbertCompactPositiveZeroSupportLogGenerator_isFormalAdjoint_self
     {E : Type u}
     [NormedAddCommGroup E]
@@ -113,8 +122,9 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_isFormalAdjoint_self
       inner ℝ
         (U (realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive x))
         (U (y : realHilbertZeroEigenspaceSupport T)) := by
-          symm
-          exact U.inner_map_map _ _
+      symm
+      exact realHilbertCompactPositive_zeroSupportHilbertSumEquiv_inner_map_map
+        T hCompact hPositive _ _
     _ = inner ℝ
         (⟨fun mu =>
             realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
@@ -139,7 +149,8 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_isFormalAdjoint_self
     _ = inner ℝ
         (x : realHilbertZeroEigenspaceSupport T)
         (realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive y) :=
-      U.inner_map_map _ _
+      realHilbertCompactPositive_zeroSupportHilbertSumEquiv_inner_map_map
+        T hCompact hPositive _ _
 
 /-- Audit package for the first actual-support operator-theoretic stage of the
 spectral logarithm. -/
