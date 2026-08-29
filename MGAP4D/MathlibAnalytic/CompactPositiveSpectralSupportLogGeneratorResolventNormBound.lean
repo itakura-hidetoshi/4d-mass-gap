@@ -15,7 +15,7 @@ universe u
 with the sharp elementary coercive estimate `‖Rλ‖ ≤ (c - |λ|)⁻¹`.
 
 The proof uses only the actual-domain identity `(A - λI) Rλ = I`, coercivity of
-`A`, and the triangle inequality.  In particular, no boundedness or continuity of
+`A`, and the triangle inequality. In particular, no boundedness or continuity of
 the forward operator `A` is assumed. -/
 theorem realLinearPMap_exists_resolventInverse_norm_le_of_mem_and_abs_lt
     {E : Type u}
@@ -154,6 +154,28 @@ local instance osBoundaryExcitationLogGeneratorResolventNormSpectralSupportCompl
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
         H N hN beta hbeta 1)).completeSpace_coe
 
+/-- Explicit native real normed-space structure on the completed transfer support.
+Keeping this structure named prevents large concrete support expressions from forcing
+fragile typeclass search in quantitative resolvent statements. -/
+noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRealNormedSpace
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta) := {
+  norm_smul_le := by
+    intro c x
+    change
+      ‖c • (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
+        H N hN beta hbeta)‖ ≤
+        ‖c‖ * ‖(x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
+          H N hN beta hbeta)‖
+    exact norm_smul_le c
+      (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
+        H N hN beta hbeta) }
+
 /-- Inside the completed support logarithmic Hamiltonian gap, the actual-domain
 resolvent has the quantitative norm bound
 `‖(Hsupp - λI)⁻¹‖ ≤ (2r - |λ|)⁻¹`. -/
@@ -167,37 +189,26 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
       |lambda| <
         2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
           H N hN beta hbeta) :
+    let A :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
+        H N hN beta hbeta
+    letI :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRealNormedSpace
+        H N hN beta hbeta
     ∃ Rlambda :
         periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-            H N hN beta hbeta →L[ℝ]
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-            H N hN beta hbeta).domain,
-      Function.LeftInverse Rlambda
-        (realLinearPMapDomainShift
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-            H N hN beta hbeta)
-          lambda) ∧
-      Function.RightInverse Rlambda
-        (realLinearPMapDomainShift
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-            H N hN beta hbeta)
-          lambda) ∧
+            H N hN beta hbeta →L[ℝ] A.domain,
+      Function.LeftInverse Rlambda (realLinearPMapDomainShift A lambda) ∧
+      Function.RightInverse Rlambda (realLinearPMapDomainShift A lambda) ∧
       ‖Rlambda‖ ≤
         (2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
           H N hN beta hbeta - |lambda|)⁻¹ := by
+  dsimp only
   let hSupportRealNormedSpace : NormedSpace ℝ
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) := {
-    norm_smul_le := by
-      intro c x
-      change
-        ‖c • (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-          H N hN beta hbeta)‖ ≤
-          ‖c‖ * ‖(x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-            H N hN beta hbeta)‖
-      exact norm_smul_le c
-        (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
-          H N hN beta hbeta) }
+        H N hN beta hbeta) :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportRealNormedSpace
+      H N hN beta hbeta
   exact
     @realLinearPMap_exists_resolventInverse_norm_le_of_abs_lt_norm_lower_bound
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
