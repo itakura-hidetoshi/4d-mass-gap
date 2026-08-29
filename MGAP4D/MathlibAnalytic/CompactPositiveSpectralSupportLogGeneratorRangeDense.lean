@@ -143,7 +143,7 @@ local instance osBoundaryExcitationLogGeneratorRangeDenseSpectralSupportComplete
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
         H N hN beta hbeta 1)).completeSpace_coe
 
-set_option maxHeartbeats 1000000 in
+set_option maxHeartbeats 3000000 in
 set_option synthInstance.maxHeartbeats 200000 in
 /-- The actual range of the completed one-step support logarithmic Hamiltonian
 is dense in the positive spectral-support Hilbert carrier. -/
@@ -158,21 +158,17 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
   let T :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
       H N hN beta hbeta 1
-  let hCompact : IsCompactOperator T := by
-    dsimp [T]
-    exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
-        H N hN beta hbeta 1 (by norm_num)
-  let hPositive : T.IsPositive := by
-    dsimp [T]
-    exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
-        H N hN beta hbeta 1
+  let hCompact : IsCompactOperator T :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
+      H N hN beta hbeta 1 (by norm_num)
+  let hPositive : T.IsPositive :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
+      H N hN beta hbeta 1
   have hGenerator :
       realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive =
         periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
           H N hN beta hbeta := by
-    dsimp [T, hCompact, hPositive]
+    dsimp only [T]
     unfold
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
