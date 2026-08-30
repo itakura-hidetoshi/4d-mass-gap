@@ -19,9 +19,10 @@ eigenmode of the original partially defined operator.  The eigenvalues are relat
 by the exact reciprocal shift `ρ = λ + r⁻¹`.
 
 The proof uses the canonical actual-domain preimage receipt for the resolvent.
-If `Fλ u = r u`, injectivity of `Fλ` gives `r ≠ 0`.  The preimage `x` satisfies
-`(A - λI)x = u` and `x = r u`; rescaling `x` by `r⁻¹` therefore places `u`
-itself in the true operator domain and yields the claimed generator eigenvalue. -/
+If `Fλ u = r u`, its actual-domain preimage `x` satisfies `(A - λI)x = u` and
+`x = r u`.  Thus `r = 0` would force `x = 0` and hence `u = 0`; for nonzero `u`,
+rescaling `x` by `r⁻¹` places `u` itself in the true operator domain and yields
+the claimed generator eigenvalue. -/
 theorem realLinearPMapAmbientResolventFamily_eigenmode_to_domain_eigenmode
     {E : Type u} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     (A : E →ₗ.[ℝ] E) (c : ℝ) (hc : 0 < c)
@@ -37,15 +38,6 @@ theorem realLinearPMapAmbientResolventFamily_eigenmode_to_domain_eigenmode
         (x : E) = u ∧ A x = (lambda + r⁻¹) • u := by
   let F := realLinearPMapAmbientResolventFamily_of_norm_lower_bound
     A c hc hNorm hKer hSurj lambda
-  have hFinj : Function.Injective F := by
-    simpa [F] using
-      (realLinearPMapAmbientResolventFamily_injective
-        A c hc hNorm hKer hSurj lambda hlambda)
-  have hr0 : r ≠ 0 := by
-    intro hr0
-    apply hu
-    apply hFinj
-    simpa [F, hr0] using hr
   rcases realLinearPMapAmbientResolventFamily_exists_domain_preimage
       A c hc hNorm hKer hSurj lambda hlambda u with
     ⟨x, hshift, hFx⟩
@@ -53,6 +45,15 @@ theorem realLinearPMapAmbientResolventFamily_eigenmode_to_domain_eigenmode
     calc
       (x : E) = F u := by simpa [F] using hFx.symm
       _ = r • u := by simpa [F] using hr
+  have hr0 : r ≠ 0 := by
+    intro hrzero
+    have hxcoe : (x : E) = 0 := by simpa [hrzero] using hxeq
+    have hx : x = 0 := by
+      apply Subtype.ext
+      exact hxcoe
+    apply hu
+    rw [hx] at hshift
+    simpa [realLinearPMapDomainShift] using hshift.symm
   let z : A.domain := r⁻¹ • x
   have hzcoe : (z : E) = u := by
     change r⁻¹ • (x : E) = u
@@ -61,17 +62,20 @@ theorem realLinearPMapAmbientResolventFamily_eigenmode_to_domain_eigenmode
   have hAx : A x = u + lambda • (x : E) := by
     change A x - lambda • (x : E) = u at hshift
     exact sub_eq_iff_eq_add.mp hshift
-  have hcoef : r⁻¹ * lambda * r = lambda := by
+  have hcoef : r⁻¹ * (lambda * r) = lambda := by
     calc
-      r⁻¹ * lambda * r = lambda * (r⁻¹ * r) := by ring
+      r⁻¹ * (lambda * r) = lambda * (r⁻¹ * r) := by ring
       _ = lambda := by simp [hr0]
   refine ⟨hr0, z, hzcoe, ?_⟩
   calc
-    A z = r⁻¹ • A x := by simp [z]
+    A z = r⁻¹ • A x := by
+      change A (r⁻¹ • x) = r⁻¹ • A x
+      exact map_smul A r⁻¹ x
     _ = r⁻¹ • (u + lambda • (x : E)) := by rw [hAx]
     _ = r⁻¹ • (u + lambda • (r • u)) := by rw [hxeq]
     _ = (lambda + r⁻¹) • u := by
-      simp only [smul_add, smul_smul, hcoef, add_smul]
+      simp only [smul_add, smul_smul]
+      rw [hcoef, add_smul]
       exact add_comm _ _
 
 /-- Conversely, an actual-domain eigenmode of the original partially defined
@@ -115,11 +119,8 @@ theorem realLinearPMapAmbientResolventFamily_domain_eigenmode_to_eigenmode
     exact hleft
   refine ⟨hrholambda, ?_⟩
   calc
-    F u = 1 • F u := by simp
-    _ = ((rho - lambda)⁻¹ * (rho - lambda)) • F u := by
-      rw [inv_mul_cancel₀ hdiff0]
-    _ = (rho - lambda)⁻¹ • ((rho - lambda) • F u) := by
-      rw [smul_smul]
+    F u = (rho - lambda)⁻¹ • ((rho - lambda) • F u) := by
+      rw [smul_smul, inv_mul_cancel₀ hdiff0, one_smul]
     _ = (rho - lambda)⁻¹ • u := by rw [hscaled]
 
 /-- Single spectral modes of the bounded ambient resolvent are exactly the
