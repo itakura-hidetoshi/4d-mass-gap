@@ -64,7 +64,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     have hOne : 1 / R m ≤ 1 / R n :=
       one_div_le_one_div_of_le hRnPos hRatio'
     simpa [one_div] using hOne
-  exact add_le_add_left hInv lambda
+  linarith
 
 /-- Every effective energy in the derivative hierarchy remains above the
 finite-volume coercive gap, uniformly in derivative order. -/
@@ -133,7 +133,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
   have hRnPos : 0 < Rn := by
     simpa [Rn, q] using hn.1
   have hRn1Pos : 0 < Rn1 := by
-    simpa [Rn1, q] using hn1.1
+    convert hn1.1 using 1 <;> norm_num <;> ring
   have hRatioIff :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_derivativeRatio_lt_succ_iff_not_logGeneratorMode
       H N hN beta hbeta v hv n lambda hlambda
@@ -200,7 +200,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     have hiff :=
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_effectiveEnergy_succ_lt_iff_not_logGeneratorMode
         H N hN beta hbeta v hv 0 lambda hlambda
-    exact hiff.1 (by simpa [rho, q] using h01)
+    apply hiff.1
+    convert h01 using 1 <;> norm_num <;> ring
   · intro hnot
     have hRatioStrict :=
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_derivativeRatio_strictMono_iff_not_logGeneratorMode
@@ -228,9 +229,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
       one_div_lt_one_div_of_lt hRnPos hlt
     have hInv : Rm⁻¹ < Rn⁻¹ := by
       simpa [one_div] using hOne
-    change rho m < rho n
-    dsimp [rho, Rn, Rm]
-    simpa [q] using (add_lt_add_left hInv lambda)
+    change lambda + Rm⁻¹ < lambda + Rn⁻¹
+    linarith
 
 /-- Strict effective-energy decrease is intrinsic to the state and therefore
 independent of which resolvent parameter in the coercive gap is used. -/
