@@ -156,8 +156,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
       H N hN beta hbeta x
   have hquad' : c * ‖v‖ ^ 2 ≤ rho * ‖v‖ ^ 2 := by
     have h := hquad
-    rw [hAx, hxv, real_inner_smul_left] at h
-    simpa [c] using h
+    rw [hAx, hxv] at h
+    change c * ‖(v : E)‖ ^ 2 ≤ inner ℝ (rho • (v : E)) (v : E) at h
+    rw [real_inner_smul_left] at h
+    simpa using h
   have hvnorm : 0 < ‖v‖ := norm_pos_iff.mpr hv
   have hvnormsq : 0 < ‖v‖ ^ 2 := by positivity
   have hcrho : c ≤ rho := by
