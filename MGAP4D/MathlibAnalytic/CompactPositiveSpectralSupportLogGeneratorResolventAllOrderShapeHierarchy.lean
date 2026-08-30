@@ -95,39 +95,18 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_injOn
 `x < y < z` in the coercive gap, the adjacent secant slope of the `n`-th
 response level strictly increases from `[x,y]` to `[y,z]`. -/
 theorem realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_slope_strict_mono_adjacent
-    {E : Type u}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [CompleteSpace E]
-    (A : E →ₗ.[ℝ] E)
-    (c : ℝ)
-    (hc : 0 < c)
+    {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (A : E →ₗ.[ℝ] E) (c : ℝ) (hc : 0 < c)
     (hNorm : ∀ x : A.domain, c * ‖(x : E)‖ ≤ ‖A x‖)
-    (hKer : ∀ x : A.domain, A x = 0 → x = 0)
-    (hSurj : Function.Surjective A.toFun)
+    (hKer : ∀ x : A.domain, A x = 0 → x = 0) (hSurj : Function.Surjective A.toFun)
     (hSelf : IsSelfAdjoint A)
-    (hQuad : ∀ x : A.domain,
-      c * ‖(x : E)‖ ^ 2 ≤ inner ℝ (A x) (x : E))
-    (u : E)
-    (hu : u ≠ 0)
-    (n : ℕ)
-    {x y z : ℝ}
-    (hx : x ∈ Set.Ioo (-c) c)
-    (hz : z ∈ Set.Ioo (-c) c)
-    (hxy : x < y)
-    (hyz : y < z) :
-    ((iteratedDeriv n
-        (realLinearPMapAmbientResolventQuadraticAmplitude
-          A c hc hNorm hKer hSurj u)) y -
-      (iteratedDeriv n
-        (realLinearPMapAmbientResolventQuadraticAmplitude
-          A c hc hNorm hKer hSurj u)) x) / (y - x) <
-    ((iteratedDeriv n
-        (realLinearPMapAmbientResolventQuadraticAmplitude
-          A c hc hNorm hKer hSurj u)) z -
-      (iteratedDeriv n
-        (realLinearPMapAmbientResolventQuadraticAmplitude
-          A c hc hNorm hKer hSurj u)) y) / (z - y) := by
+    (hQuad : ∀ x : A.domain, c * ‖(x : E)‖ ^ 2 ≤ inner ℝ (A x) (x : E))
+    (u : E) (hu : u ≠ 0) (n : ℕ) {x y z : ℝ}
+    (hx : x ∈ Set.Ioo (-c) c) (hz : z ∈ Set.Ioo (-c) c) (hxy : x < y) (hyz : y < z) :
+    let q := iteratedDeriv n
+      (realLinearPMapAmbientResolventQuadraticAmplitude A c hc hNorm hKer hSurj u)
+    (q y - q x) / (y - x) < (q z - q y) / (z - y) := by
+  dsimp only
   exact
     (realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_strictConvexOn
       A c hc hNorm hKer hSurj hSelf hQuad u hu n).slope_strict_mono_adjacent
