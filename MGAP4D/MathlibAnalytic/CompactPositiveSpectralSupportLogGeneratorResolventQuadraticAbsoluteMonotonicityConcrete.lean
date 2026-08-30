@@ -11,6 +11,9 @@ open scoped InnerProductSpace LinearPMap Topology BigOperators
 
 noncomputable section
 
+set_option maxHeartbeats 3000000
+set_option synthInstance.maxHeartbeats 200000
+
 local instance supportResolventConcreteSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
@@ -150,13 +153,17 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     simpa [A] using
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_surjective
         H N hN beta hbeta)
-  have hSelf : IsSelfAdjoint A := by
-    simpa [A, T,
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator,
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport]
-      using
-        (realHilbertCompactPositiveZeroSupportLogGenerator_isSelfAdjoint
-          T hCompact hPositive)
+  have hGenerator :
+      realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive = A := by
+    dsimp only [T, A]
+    unfold
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+    rfl
+  have hSelfNative :=
+    realHilbertCompactPositiveZeroSupportLogGenerator_isSelfAdjoint
+      T hCompact hPositive
+  rw [hGenerator] at hSelfNative
   have hQuad : ∀ x : A.domain,
       c * ‖(x :
         periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
@@ -171,7 +178,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
         H N hN beta hbeta x)
   have hmono :=
     realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_nonneg
-      A c hc hNorm hKer hSurj hSelf hQuad u n lambda
+      A c hc hNorm hKer hSurj hSelfNative hQuad u n lambda
       (by simpa [c] using hlambda)
   simpa [
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude,
