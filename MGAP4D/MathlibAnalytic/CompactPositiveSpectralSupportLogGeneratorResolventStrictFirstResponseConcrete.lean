@@ -14,6 +14,40 @@ noncomputable section
 set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 200000
 
+universe u
+
+/-- Native-support bridge for strict first resolvent response.  The support
+inner-product structure is synthesized here from the ambient Hilbert space,
+so concrete long aliases never become typeclass search keys. -/
+private theorem realHilbertZeroEigenspaceSupport_resolventQuadraticAmplitude_iteratedDeriv_one_pos
+    {E : Type u}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [CompleteSpace E]
+    (T : E →L[ℝ] E)
+    (A : realHilbertZeroEigenspaceSupport T →ₗ.[ℝ]
+      realHilbertZeroEigenspaceSupport T)
+    (c : ℝ)
+    (hc : 0 < c)
+    (hNorm : ∀ x : A.domain,
+      c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ≤ ‖A x‖)
+    (hKer : ∀ x : A.domain, A x = 0 → x = 0)
+    (hSurj : Function.Surjective A.toFun)
+    (hSelf : IsSelfAdjoint A)
+    (v : realHilbertZeroEigenspaceSupport T)
+    (hv : v ≠ 0)
+    (lambda : ℝ)
+    (hlambda : |lambda| < c) :
+    0 < iteratedDeriv 1
+      (realLinearPMapAmbientResolventQuadraticAmplitude
+        A c hc hNorm hKer hSurj v)
+      lambda := by
+  letI : CompleteSpace (realHilbertZeroEigenspaceSupport T) :=
+    (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
+  exact
+    realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_one_pos
+      A c hc hNorm hKer hSurj hSelf v hv lambda hlambda
+
 local instance supportResolventFirstResponseConcreteSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
@@ -76,10 +110,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta)
-    (u :
+    (v :
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
         H N hN beta hbeta)
-    (hu : u ≠ 0)
+    (hv : v ≠ 0)
     (lambda : ℝ)
     (hlambda :
       |lambda| <
@@ -87,13 +121,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
           H N hN beta hbeta) :
     0 < iteratedDeriv 1
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude
-        H N hN beta hbeta u)
+        H N hN beta hbeta v)
       lambda := by
-  letI : InnerProductSpace ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) := by
-    unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-    infer_instance
   let T :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
       H N hN beta hbeta 1
@@ -142,8 +171,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
       T hCompact hPositive
   rw [hGenerator] at hSelfNative
   have hstrict :=
-    realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_one_pos
-      A c hc hNorm hKer hSurj hSelfNative u hu lambda
+    realHilbertZeroEigenspaceSupport_resolventQuadraticAmplitude_iteratedDeriv_one_pos
+      T A c hc hNorm hKer hSurj hSelfNative v hv lambda
       (by simpa [c] using hlambda)
   simpa [
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude,
