@@ -32,9 +32,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
   dsimp only
   apply monotone_nat_of_le_succ
   intro n
-  exact
+  have h :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_derivativeRatio_mono
       H N hN beta hbeta v hv n lambda hlambda
+  convert h using 1 <;> norm_num <;> ring
 
 /-- Physical global order comparison for the normalized derivative ratios. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_derivativeRatio_le_of_le
