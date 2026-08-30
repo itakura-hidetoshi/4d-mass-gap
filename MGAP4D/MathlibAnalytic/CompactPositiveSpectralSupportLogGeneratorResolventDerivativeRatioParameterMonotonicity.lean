@@ -57,6 +57,13 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_deriv_p
     simpa only [iteratedDeriv_succ] using hdiffn1.hasDerivAt
   have hden_ne : (n + 1 : ℝ) * iteratedDeriv n q lambda ≠ 0 := by positivity
   have hratio := hderivn1.div (hderivn.const_mul (n + 1 : ℝ)) hden_ne
+  change HasDerivAt (fun t : ℝ =>
+      iteratedDeriv (n + 1) q t /
+        ((n + 1 : ℝ) * iteratedDeriv n q t))
+      ((iteratedDeriv (n + 2) q lambda * ((n + 1 : ℝ) * iteratedDeriv n q lambda) -
+          iteratedDeriv (n + 1) q lambda *
+            ((n + 1 : ℝ) * iteratedDeriv (n + 1) q lambda)) /
+        ((n + 1 : ℝ) * iteratedDeriv n q lambda) ^ 2) lambda at hratio
   have hturan :=
     realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_turan
       A c hc hNorm hKer hSurj hSelf hQuad u hu n lambda hlambda
