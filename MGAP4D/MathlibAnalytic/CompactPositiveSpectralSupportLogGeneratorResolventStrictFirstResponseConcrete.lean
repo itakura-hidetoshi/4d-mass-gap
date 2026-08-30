@@ -16,15 +16,17 @@ set_option synthInstance.maxHeartbeats 200000
 
 universe u
 
-/-- Native-support bridge for strict first resolvent response.  The support
-inner-product structure is synthesized here from the ambient Hilbert space,
-so concrete long aliases never become typeclass search keys. -/
+/-- Native-support bridge for strict first resolvent response.  Completeness of
+the closed spectral support is supplied before the partially defined operator
+is formed, so the native adjoint/star structure is available without searching
+through the concrete long alias. -/
 private theorem realHilbertZeroEigenspaceSupport_resolventQuadraticAmplitude_iteratedDeriv_one_pos
     {E : Type u}
     [NormedAddCommGroup E]
     [InnerProductSpace ℝ E]
     [CompleteSpace E]
     (T : E →L[ℝ] E)
+    [CompleteSpace (realHilbertZeroEigenspaceSupport T)]
     (A : realHilbertZeroEigenspaceSupport T →ₗ.[ℝ]
       realHilbertZeroEigenspaceSupport T)
     (c : ℝ)
@@ -42,8 +44,6 @@ private theorem realHilbertZeroEigenspaceSupport_resolventQuadraticAmplitude_ite
       (realLinearPMapAmbientResolventQuadraticAmplitude
         A c hc hNorm hKer hSurj v)
       lambda := by
-  letI : CompleteSpace (realHilbertZeroEigenspaceSupport T) :=
-    (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
   exact
     realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_one_pos
       A c hc hNorm hKer hSurj hSelf v hv lambda hlambda
@@ -126,6 +126,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
   let T :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
       H N hN beta hbeta 1
+  letI : CompleteSpace (realHilbertZeroEigenspaceSupport T) := by
+    exact (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
   let hCompact : IsCompactOperator T :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
       H N hN beta hbeta 1 (by norm_num)
