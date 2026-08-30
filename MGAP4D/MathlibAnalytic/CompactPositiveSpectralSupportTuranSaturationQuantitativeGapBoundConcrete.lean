@@ -165,7 +165,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
             rho * inner ℝ (v : E) (v : E) := by
           exact real_inner_smul_left (v : E) (v : E) rho
         _ = rho * ‖(v : E)‖ ^ 2 := by
-          rw [inner_self_eq_norm_sq_to_K]
+          rw [real_inner_self_eq_norm_sq]
     rw [hinner] at h
     exact h
   have hvE : (v : E) ≠ 0 := by
