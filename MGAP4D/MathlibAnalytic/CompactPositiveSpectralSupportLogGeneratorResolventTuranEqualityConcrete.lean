@@ -51,6 +51,22 @@ local instance supportResolventTuranEqualityConcretePairHilbertSectorComplete
   periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete
     H N hN beta hbeta
 
+local instance supportResolventTuranEqualityConcreteSpectralSupportNormedSpace
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
+    NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta) := by
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+  infer_instance
+
+local instance supportResolventTuranEqualityConcreteSpectralSupportInnerProductSpace
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
+    InnerProductSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta) := by
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+  infer_instance
+
 local instance supportResolventTuranEqualityConcreteSpectralSupportComplete
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     CompleteSpace
