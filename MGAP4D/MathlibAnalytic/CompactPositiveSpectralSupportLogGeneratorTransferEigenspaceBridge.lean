@@ -71,8 +71,20 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_eigenvector_domain_act
           2 :=
       lp.single 2 mu
         (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • v)
-    have hmem := hsingle.property
-    simpa only [hsingle, lp.single_apply] using hmem
+    have hweighted :
+        (fun nu =>
+          realHilbertZeroEigenspaceSupportLogEnergy T hPositive nu •
+            Pi.single mu v nu) =
+        (fun nu =>
+          Pi.single mu
+            (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • v) nu) := by
+      funext nu
+      by_cases hnu : nu = mu
+      · subst nu
+        simp
+      · simp [hnu]
+    rw [hweighted]
+    simpa [hsingle] using hsingle.property
   let x : A.domain := ⟨(v : realHilbertZeroEigenspaceSupport T), hvDomain⟩
   refine ⟨x, rfl, ?_⟩
   apply U.injective
