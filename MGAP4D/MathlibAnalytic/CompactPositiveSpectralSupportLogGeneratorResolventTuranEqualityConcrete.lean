@@ -51,44 +51,25 @@ local instance supportResolventTuranEqualityConcretePairHilbertSectorComplete
   periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete
     H N hN beta hbeta
 
-local instance supportResolventTuranEqualityConcreteSpectralSupportNormedSpace
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
-    NormedSpace ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) := by
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-  infer_instance
-
-local instance supportResolventTuranEqualityConcreteSpectralSupportInnerProductSpace
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
-    InnerProductSpace ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) := by
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-  infer_instance
-
-local instance supportResolventTuranEqualityConcreteSpectralSupportComplete
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
-    CompleteSpace
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) := by
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-  exact
-    (realHilbertZeroEigenspaceSupport_isClosed
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-        H N hN beta hbeta 1)).completeSpace_coe
-
 /-- The actual bounded resolvent on the one-step positive physical spectral
-support.  It is defined from the support logarithmic generator and the sharp
-finite-volume coercive constant, using the already established kernel and
-surjectivity receipts. -/
+support.  The public return type is written through the native zero-eigenspace
+support rather than the long physical alias, so Hilbert-space instance search
+stays on the already established subtype structure. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventFamily
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) (lambda : ℝ) :
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta →L[ℝ]
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta := by
-  let A :=
+    let T :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+        H N hN beta hbeta 1
+    realHilbertZeroEigenspaceSupport T →L[ℝ] realHilbertZeroEigenspaceSupport T := by
+  dsimp only
+  let T :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+      H N hN beta hbeta 1
+  change realHilbertZeroEigenspaceSupport T →L[ℝ] realHilbertZeroEigenspaceSupport T
+  letI : CompleteSpace (realHilbertZeroEigenspaceSupport T) := by
+    exact (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
+  let A : realHilbertZeroEigenspaceSupport T →ₗ.[ℝ]
+      realHilbertZeroEigenspaceSupport T :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
       H N hN beta hbeta
   let c :=
@@ -99,11 +80,9 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilb
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate_pos
         H N hN beta hbeta)
   have hNorm : ∀ x : A.domain,
-      c * ‖(x :
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-          H N hN beta hbeta)‖ ≤ ‖A x‖ := by
+      c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ≤ ‖A x‖ := by
     intro x
-    simpa [A, c] using
+    simpa [A, c, T] using
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_norm_lower_bound
         H N hN beta hbeta x)
   have hKer : ∀ x : A.domain, A x = 0 → x = 0 := by
@@ -154,9 +133,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
   let hPositive : T.IsPositive :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
       H N hN beta hbeta 1
-  let A :=
+  let A : realHilbertZeroEigenspaceSupport T →ₗ.[ℝ]
+      realHilbertZeroEigenspaceSupport T :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
       H N hN beta hbeta
+  let u : realHilbertZeroEigenspaceSupport T := v
+  have hu : u ≠ 0 := by
+    simpa [u] using hv
   let c :=
     2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
       H N hN beta hbeta
@@ -165,11 +148,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate_pos
         H N hN beta hbeta)
   have hNorm : ∀ x : A.domain,
-      c * ‖(x :
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-          H N hN beta hbeta)‖ ≤ ‖A x‖ := by
+      c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ≤ ‖A x‖ := by
     intro x
-    simpa [A, c] using
+    simpa [A, c, T] using
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_norm_lower_bound
         H N hN beta hbeta x)
   have hKer : ∀ x : A.domain, A x = 0 → x = 0 := by
@@ -182,14 +163,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_surjective
         H N hN beta hbeta)
   have hQuad : ∀ x : A.domain,
-      c * ‖(x :
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-          H N hN beta hbeta)‖ ^ 2 ≤
-        inner ℝ (A x)
-          (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-            H N hN beta hbeta) := by
+      c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ^ 2 ≤
+        inner ℝ (A x) (x : realHilbertZeroEigenspaceSupport T) := by
     intro x
-    simpa [A, c] using
+    simpa [A, c, T] using
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_quadratic_lower_bound
         H N hN beta hbeta x)
   have hGenerator :
@@ -205,12 +182,12 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
   rw [hGenerator] at hSelfNative
   have hiff :=
     realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_eq_succ_iff_eigenmode
-      A c hc hNorm hKer hSurj hSelfNative hQuad v hv n lambda
+      A c hc hNorm hKer hSurj hSelfNative hQuad u hu n lambda
       (by simpa [c] using hlambda)
   simpa [
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude,
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventFamily,
-    A, c] using hiff
+    A, c, T, u] using hiff
 
 end
 
