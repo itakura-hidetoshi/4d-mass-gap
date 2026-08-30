@@ -89,6 +89,11 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude
         H N hN beta hbeta u)
       lambda := by
+  letI : InnerProductSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta) := by
+    unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+    infer_instance
   let T :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
       H N hN beta hbeta 1
