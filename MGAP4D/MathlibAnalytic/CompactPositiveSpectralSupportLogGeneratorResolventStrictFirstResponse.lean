@@ -251,6 +251,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
   rw [hGenerator] at hSelfNative
   have hstrict :=
     realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_one_pos
+      (E := realHilbertZeroEigenspaceSupport T)
       A c hc hNorm hKer hSurj hSelfNative u hu lambda
       (by simpa [c] using hlambda)
   simpa [
