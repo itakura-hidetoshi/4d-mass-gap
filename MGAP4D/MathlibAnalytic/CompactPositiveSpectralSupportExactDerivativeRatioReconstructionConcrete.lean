@@ -115,7 +115,6 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_recover_domain_eigenval
     exact inv_ne_zero hdiff
   · rw [hR]
     simp
-    ring
 
 /-- Native zero-eigenspace-support bridge for the exact derivative-ratio formula.
 Keeping the support as `realHilbertZeroEigenspaceSupport T` fixes its Hilbert
@@ -359,7 +358,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
   have hreconstruct : rho = lambda + R⁻¹ := by
     rw [hR]
     simp
-    ring
   refine ⟨tau, rho, htau, htaurho, hrhotau, hR, hR0, hreconstruct, ?_⟩
   calc
     tau = Real.exp (-rho) := htaurho
