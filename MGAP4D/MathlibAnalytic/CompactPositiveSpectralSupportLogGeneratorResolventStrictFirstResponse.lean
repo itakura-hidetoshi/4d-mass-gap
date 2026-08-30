@@ -205,6 +205,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
   let T :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
       H N hN beta hbeta 1
+  letI : InnerProductSpace ℝ (realHilbertZeroEigenspaceSupport T) :=
+    Submodule.innerProductSpace (realHilbertZeroEigenspaceSupport T)
   let hCompact : IsCompactOperator T :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
       H N hN beta hbeta 1 (by norm_num)
