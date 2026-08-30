@@ -155,7 +155,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_quadratic_lower_bound
       H N hN beta hbeta x
   have hquad' : c * ‖v‖ ^ 2 ≤ rho * ‖v‖ ^ 2 := by
-    simpa [A, c, hAx, hxv, real_inner_smul_left, real_inner_self_eq_norm_sq] using hquad
+    have h := hquad
+    rw [hAx, hxv, real_inner_smul_left] at h
+    simpa [c] using h
   have hvnorm : 0 < ‖v‖ := norm_pos_iff.mpr hv
   have hvnormsq : 0 < ‖v‖ ^ 2 := by positivity
   have hcrho : c ≤ rho := by
