@@ -138,6 +138,9 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_strictConvexOn
     simpa only [iteratedDeriv_one] using
       (realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_strictMonoOn
         A c hc hNorm hKer hSurj hSelf hQuad u hu 1)
+  have hderivMonoInterior :
+      StrictMonoOn (deriv q) (interior (Set.Ioo (-c) c)) := by
+    simpa only [interior_Ioo] using hderivMono
   have hcont : ContinuousOn q (Set.Ioo (-c) c) := by
     intro lambda hlambda
     have hfirst :=
@@ -148,7 +151,8 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_strictConvexOn
       simpa only [iteratedDeriv_one] using hfirst
     exact
       (differentiableAt_of_deriv_ne_zero hdpos.ne').continuousAt.continuousWithinAt
-  exact hderivMono.strictConvexOn_of_deriv (convex_Ioo (-c) c) hcont
+  change StrictConvexOn ℝ (Set.Ioo (-c) c) q
+  exact hderivMonoInterior.strictConvexOn_of_deriv (convex_Ioo (-c) c) hcont
 
 end
 
