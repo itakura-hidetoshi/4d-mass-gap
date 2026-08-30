@@ -13,6 +13,49 @@ noncomputable section
 set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 200000
 
+universe u
+
+/-- Generic native-support bridge from derivative-ratio equality directly to a
+strictly-positive bounded transfer eigenmode.  Keeping the ambient support
+explicitly indexed by `T` prevents concrete type synonyms from reopening the
+support-subtype Hilbert instance diamond. -/
+private theorem realHilbertZeroEigenspaceSupport_resolventQuadraticAmplitude_derivativeRatio_eq_succ_iff_transferEigenmode
+    {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (T : E →L[ℝ] E)
+    [CompleteSpace (realHilbertZeroEigenspaceSupport T)]
+    (hCompact : IsCompactOperator T) (hPositive : T.IsPositive)
+    (A : realHilbertZeroEigenspaceSupport T →ₗ.[ℝ] realHilbertZeroEigenspaceSupport T)
+    (hGenerator :
+      realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive = A)
+    (c : ℝ) (hc : 0 < c)
+    (hNorm : ∀ x : A.domain,
+      c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ≤ ‖A x‖)
+    (hKer : ∀ x : A.domain, A x = 0 → x = 0)
+    (hSurj : Function.Surjective A.toFun)
+    (hSelf : IsSelfAdjoint A)
+    (hQuad : ∀ x : A.domain,
+      c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ^ 2 ≤
+        inner ℝ (A x) (x : realHilbertZeroEigenspaceSupport T))
+    (v : realHilbertZeroEigenspaceSupport T) (hv : v ≠ 0)
+    (n : ℕ) (lambda : ℝ) (hlambda : |lambda| < c) :
+    let q := realLinearPMapAmbientResolventQuadraticAmplitude
+      A c hc hNorm hKer hSurj v
+    iteratedDeriv (n + 1) q lambda /
+        ((n + 1 : ℝ) * iteratedDeriv n q lambda) =
+      iteratedDeriv (n + 2) q lambda /
+        ((n + 2 : ℝ) * iteratedDeriv (n + 1) q lambda) ↔
+      ∃ tau : ℝ, 0 < tau ∧
+        realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric v = tau • v := by
+  dsimp only
+  have hDomain :=
+    realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_eq_succ_iff_domain_eigenmode
+      A c hc hNorm hKer hSurj hSelf hQuad v hv n lambda hlambda
+  have hTransfer :=
+    realHilbertCompactPositiveZeroSupportLogGenerator_domain_eigenmode_iff_transfer_eigenmode
+      T hCompact hPositive v hv
+  rw [hGenerator] at hTransfer
+  exact hDomain.trans hTransfer
+
 local instance transferModeRigidityConcreteSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
@@ -68,10 +111,7 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilb
     realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric v = tau • v
 
 /-- Turán equality for consecutive factorial-normalized derivative ratios is
-exactly one-step physical transfer spectral purity.  The proof goes directly
-through the explicit actual-domain eigenmode proposition and the generic
-support transfer bridge, avoiding the private packaging used by the older
-log-generator-language theorem. -/
+exactly one-step physical transfer spectral purity. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_derivativeRatio_eq_succ_iff_transferMode
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (v : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
@@ -148,15 +188,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     realHilbertCompactPositiveZeroSupportLogGenerator_isSelfAdjoint
       T hCompact hPositive
   rw [hGenerator] at hSelfNative
-  have hDomain :=
-    realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_eq_succ_iff_domain_eigenmode
-      A c hc hNorm hKer hSurj hSelfNative hQuad v hv n lambda
+  have hiff :=
+    realHilbertZeroEigenspaceSupport_resolventQuadraticAmplitude_derivativeRatio_eq_succ_iff_transferEigenmode
+      T hCompact hPositive A hGenerator c hc hNorm hKer hSurj hSelfNative hQuad v hv n lambda
       (by simpa [c] using hlambda)
-  have hTransfer :=
-    realHilbertCompactPositiveZeroSupportLogGenerator_domain_eigenmode_iff_transfer_eigenmode
-      T hCompact hPositive v hv
-  rw [hGenerator] at hTransfer
-  have hiff := hDomain.trans hTransfer
   simpa [
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude,
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportIsSingleTransferMode,
