@@ -171,6 +171,20 @@ local instance supportResolventFirstResponsePairHilbertSectorComplete
   periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete
     H N hN beta hbeta
 
+local instance supportResolventFirstResponseSpectralSupportComplete
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    CompleteSpace
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta) := by
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+  exact
+    (realHilbertZeroEigenspaceSupport_isClosed
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+        H N hN beta hbeta 1)).completeSpace_coe
+
 /-- Physical strict first-response receipt for the actual one-step support
 logarithmic resolvent. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_iteratedDeriv_one_pos
@@ -191,22 +205,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude
         H N hN beta hbeta u)
       lambda := by
-  letI : CompleteSpace
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) := by
-    change CompleteSpace
-      (realHilbertZeroEigenspaceSupport
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-          H N hN beta hbeta 1))
-    exact
-      (realHilbertZeroEigenspaceSupport_isClosed
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-          H N hN beta hbeta 1)).completeSpace_coe
   let T :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
       H N hN beta hbeta 1
-  letI : InnerProductSpace ℝ (realHilbertZeroEigenspaceSupport T) :=
-    Submodule.innerProductSpace (realHilbertZeroEigenspaceSupport T)
   let hCompact : IsCompactOperator T :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
       H N hN beta hbeta 1 (by norm_num)
@@ -253,7 +254,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
   rw [hGenerator] at hSelfNative
   have hstrict :=
     realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_one_pos
-      (E := realHilbertZeroEigenspaceSupport T)
       A c hc hNorm hKer hSurj hSelfNative u hu lambda
       (by simpa [c] using hlambda)
   simpa [
