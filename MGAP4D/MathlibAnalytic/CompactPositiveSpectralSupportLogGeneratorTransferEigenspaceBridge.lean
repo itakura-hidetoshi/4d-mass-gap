@@ -60,10 +60,19 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_eigenvector_domain_act
     change U (v : realHilbertZeroEigenspaceSupport T) ∈ C.domain
     rw [hUv]
     rw [realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_domain_mem_iff]
-    have hmem :=
-      (lp.single 2 mu
-        (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • v)).property
-    simpa only [lp.single_apply] using hmem
+    let hsingle :
+        lp
+          (fun nu : Eigenvalues
+            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+            eigenspace
+              (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+                Module.End ℝ (realHilbertZeroEigenspaceSupport T)) nu)
+          2 :=
+      lp.single 2 mu
+        (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • v)
+    have hmem := hsingle.property
+    simpa only [hsingle, lp.single_apply] using hmem
   let x : A.domain := ⟨(v : realHilbertZeroEigenspaceSupport T), hvDomain⟩
   refine ⟨x, rfl, ?_⟩
   apply U.injective
@@ -87,7 +96,7 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_eigenvector_domain_act
   by_cases hnu : nu = mu
   · subst nu
     simp
-  · simp [lp.single_apply_ne, hnu]
+  · simp [hnu]
 
 open Classical in
 /-- On each positive support eigenspace, the bounded transfer and its
