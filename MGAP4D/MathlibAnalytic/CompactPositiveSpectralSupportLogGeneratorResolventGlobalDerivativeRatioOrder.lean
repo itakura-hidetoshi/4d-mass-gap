@@ -31,9 +31,10 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_monoton
   dsimp only
   apply monotone_nat_of_le_succ
   intro n
-  simpa [Nat.add_assoc] using
-    (realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_mono
-      A c hc hNorm hKer hSurj hSelf hQuad u hu n lambda hlambda)
+  have h :=
+    realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_mono
+      A c hc hNorm hKer hSurj hSelf hQuad u hu n lambda hlambda
+  convert h using 1 <;> norm_num <;> ring
 
 /-- Global order comparison form: any lower derivative-ratio order is bounded
 by any higher one, not merely by the adjacent successor. -/
