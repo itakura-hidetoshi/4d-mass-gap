@@ -52,7 +52,7 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_strictMon
         A c hc hNorm hKer hSurj hSelf hQuad u hu (n + 1) lambda
         (abs_lt.mpr hlambda)
     simpa only [iteratedDeriv_succ] using hnext
-  apply strictMonoOn_of_deriv_pos convex_Ioo
+  apply strictMonoOn_of_deriv_pos (convex_Ioo (-c) c)
   · intro lambda hlambda
     exact
       (differentiableAt_of_deriv_ne_zero (hdpos lambda hlambda).ne').continuousAt.continuousWithinAt
@@ -148,7 +148,7 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_strictConvexOn
       simpa only [iteratedDeriv_one] using hfirst
     exact
       (differentiableAt_of_deriv_ne_zero hdpos.ne').continuousAt.continuousWithinAt
-  exact hderivMono.strictConvexOn_of_deriv convex_Ioo hcont
+  exact hderivMono.strictConvexOn_of_deriv (convex_Ioo (-c) c) hcont
 
 end
 
