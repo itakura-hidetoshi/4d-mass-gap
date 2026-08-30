@@ -117,11 +117,18 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_one_pos
     apply realLinearPMapAmbientResolventFamily_injective
       A c hc hNorm hKer hSurj lambda hlambda
     simpa [F] using hzero
+  have hsymm :
+      inner ℝ (F lambda (F lambda u)) u =
+        inner ℝ (F lambda u) (F lambda u) := by
+    exact hFsymm (F lambda u) u
   rw [hformula]
   norm_num
   change 0 < inner ℝ (F lambda (F lambda u)) u
-  rw [hFsymm (F lambda u) u, real_inner_self_eq_norm_sq]
-  exact sq_pos_of_pos (norm_pos_iff.mpr hFu)
+  calc
+    0 < inner ℝ (F lambda u) (F lambda u) := by
+      rw [real_inner_self_eq_norm_sq]
+      exact sq_pos_of_pos (norm_pos_iff.mpr hFu)
+    _ = inner ℝ (F lambda (F lambda u)) u := hsymm.symm
 
 local instance supportResolventFirstResponseSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -184,10 +191,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude
         H N hN beta hbeta u)
       lambda := by
-  letI : InnerProductSpace ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) := by
-    infer_instance
   letI : CompleteSpace
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
         H N hN beta hbeta) := by
