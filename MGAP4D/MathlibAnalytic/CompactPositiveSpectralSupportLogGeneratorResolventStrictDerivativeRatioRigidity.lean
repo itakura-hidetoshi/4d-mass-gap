@@ -47,7 +47,8 @@ theorem real_inner_sq_lt_inner_self_mul_of_not_smul
   dsimp [z] at hzpos
   simp only [inner_sub_left, inner_sub_right,
     real_inner_smul_left, real_inner_smul_right] at hzpos
-  rw [real_inner_comm x y] at hzpos
+  rw [real_inner_comm y x] at hzpos
+  ring_nf at hzpos
   change d ^ 2 < a * inner ℝ y y
   dsimp [a, d] at hzpos ⊢
   nlinarith
