@@ -91,40 +91,16 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
 /-- Physical three-point form: at every derivative order, adjacent secant
 slopes strictly increase across any `x < y < z` inside the full coercive gap. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_iteratedDeriv_slope_strict_mono_adjacent
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (v :
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta)
-    (hv : v ≠ 0)
-    (n : ℕ)
-    {x y z : ℝ}
-    (hx : x ∈ Set.Ioo
-      (-(2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-        H N hN beta hbeta))
-      (2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-        H N hN beta hbeta))
-    (hz : z ∈ Set.Ioo
-      (-(2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-        H N hN beta hbeta))
-      (2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-        H N hN beta hbeta))
-    (hxy : x < y)
-    (hyz : y < z) :
-    ((iteratedDeriv n
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude
-          H N hN beta hbeta v)) y -
-      (iteratedDeriv n
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude
-          H N hN beta hbeta v)) x) / (y - x) <
-    ((iteratedDeriv n
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude
-          H N hN beta hbeta v)) z -
-      (iteratedDeriv n
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude
-          H N hN beta hbeta v)) y) / (z - y) := by
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (v : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport H N hN beta hbeta)
+    (hv : v ≠ 0) (n : ℕ) {x y z : ℝ}
+    (hx : x ∈ Set.Ioo (-(2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate H N hN beta hbeta)) (2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate H N hN beta hbeta))
+    (hz : z ∈ Set.Ioo (-(2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate H N hN beta hbeta)) (2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate H N hN beta hbeta))
+    (hxy : x < y) (hyz : y < z) :
+    let q := iteratedDeriv n
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude H N hN beta hbeta v)
+    (q y - q x) / (y - x) < (q z - q y) / (z - y) := by
+  dsimp only
   exact
     (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_iteratedDeriv_strictConvexOn
       H N hN beta hbeta v hv n).slope_strict_mono_adjacent hx hz hxy hyz
