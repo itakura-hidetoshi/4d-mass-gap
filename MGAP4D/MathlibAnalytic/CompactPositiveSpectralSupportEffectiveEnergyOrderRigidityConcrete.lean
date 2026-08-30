@@ -196,12 +196,42 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
       H N hN beta hbeta v
   constructor
   · intro hanti
-    have h01 := hanti (Nat.lt_succ_self 0)
-    have hiff :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_effectiveEnergy_succ_lt_iff_not_logGeneratorMode
-        H N hN beta hbeta v hv 0 lambda hlambda
-    apply hiff.1
-    convert h01 using 1 <;> norm_num <;> ring
+    have hRatioStrict :
+        StrictMono (fun n : ℕ =>
+          iteratedDeriv (n + 1) q lambda /
+            ((n + 1 : ℝ) * iteratedDeriv n q lambda)) := by
+      intro n m hnm
+      let Rn := iteratedDeriv (n + 1) q lambda /
+        ((n + 1 : ℝ) * iteratedDeriv n q lambda)
+      let Rm := iteratedDeriv (m + 1) q lambda /
+        ((m + 1 : ℝ) * iteratedDeriv m q lambda)
+      have hn :=
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_derivativeRatio_quantitativeEffectiveEnergyGap
+          H N hN beta hbeta v hv n lambda hlambda
+      have hm :=
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_derivativeRatio_quantitativeEffectiveEnergyGap
+          H N hN beta hbeta v hv m lambda hlambda
+      dsimp only at hn hm
+      have hRnPos : 0 < Rn := by
+        simpa [Rn, q] using hn.1
+      have hRmPos : 0 < Rm := by
+        simpa [Rm, q] using hm.1
+      have hEnergy := hanti hnm
+      have hInv : Rm⁻¹ < Rn⁻¹ := by
+        change lambda + Rm⁻¹ < lambda + Rn⁻¹ at hEnergy
+        linarith
+      have hlt : Rn < Rm := by
+        by_contra hnot
+        have hle : Rm ≤ Rn := le_of_not_gt hnot
+        have hOne : 1 / Rn ≤ 1 / Rm :=
+          one_div_le_one_div_of_le hRmPos hle
+        have hInvLe : Rn⁻¹ ≤ Rm⁻¹ := by
+          simpa [one_div] using hOne
+        exact (not_lt_of_ge hInvLe) hInv
+      simpa [Rn, Rm] using hlt
+    exact
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_derivativeRatio_strictMono_iff_not_logGeneratorMode
+        H N hN beta hbeta v hv lambda hlambda).1 hRatioStrict
   · intro hnot
     have hRatioStrict :=
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_derivativeRatio_strictMono_iff_not_logGeneratorMode
