@@ -69,8 +69,8 @@ theorem realLinearPMapAmbientResolventFamily_eigenmode_to_domain_eigenmode
   refine ⟨hr0, z, hzcoe, ?_⟩
   calc
     A z = r⁻¹ • A x := by
-      change A (r⁻¹ • x) = r⁻¹ • A x
-      exact map_smul A r⁻¹ x
+      change A.toFun (r⁻¹ • x) = r⁻¹ • A.toFun x
+      exact A.toFun.map_smul r⁻¹ x
     _ = r⁻¹ • (u + lambda • (x : E)) := by rw [hAx]
     _ = r⁻¹ • (u + lambda • (r • u)) := by rw [hxeq]
     _ = (lambda + r⁻¹) • u := by
