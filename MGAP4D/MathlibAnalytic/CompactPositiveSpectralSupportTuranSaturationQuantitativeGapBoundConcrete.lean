@@ -154,14 +154,28 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
   have hquad :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_quadratic_lower_bound
       H N hN beta hbeta x
-  have hquad' : c * ‖v‖ ^ 2 ≤ rho * ‖v‖ ^ 2 := by
+  have hambient : c * ‖(v : E)‖ ^ 2 ≤ rho * ‖(v : E)‖ ^ 2 := by
     have h := hquad
     rw [hAx, hxv] at h
     change c * ‖(v : E)‖ ^ 2 ≤ inner ℝ (rho • (v : E)) (v : E) at h
-    rw [real_inner_smul_left] at h
-    simpa using h
-  have hvnorm : 0 < ‖v‖ := norm_pos_iff.mpr hv
-  have hvnormsq : 0 < ‖v‖ ^ 2 := by positivity
+    have hinner :
+        inner ℝ (rho • (v : E)) (v : E) = rho * ‖(v : E)‖ ^ 2 := by
+      calc
+        inner ℝ (rho • (v : E)) (v : E) =
+            rho * inner ℝ (v : E) (v : E) := by
+          exact real_inner_smul_left (v : E) (v : E) rho
+        _ = rho * ‖(v : E)‖ ^ 2 := by
+          rw [inner_self_eq_norm_sq_to_K]
+    rw [hinner] at h
+    exact h
+  have hvE : (v : E) ≠ 0 := by
+    intro hvE
+    apply hv
+    apply Subtype.ext
+    simpa using hvE
+  have hvnormsqE : 0 < ‖(v : E)‖ ^ 2 := by
+    have hvnormE : 0 < ‖(v : E)‖ := norm_pos_iff.mpr hvE
+    positivity
   have hcrho : c ≤ rho := by
     nlinarith
   have hcR : c ≤ lambda + R⁻¹ := by
