@@ -101,6 +101,7 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_recover_domain_eigenval
     A c hc hNorm hKer hSurj u
   let R := iteratedDeriv (n + 1) q lambda /
     ((n + 1 : ℝ) * iteratedDeriv n q lambda)
+  change R ≠ 0 ∧ rho = lambda + R⁻¹
   have hR : R = (rho - lambda)⁻¹ := by
     simpa [R, q] using
       (realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_eq_of_domain_eigenmode
@@ -115,6 +116,36 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_recover_domain_eigenval
   · rw [hR]
     simp
     ring
+
+/-- Native zero-eigenspace-support bridge for the exact derivative-ratio formula.
+Keeping the support as `realHilbertZeroEigenspaceSupport T` fixes its Hilbert
+instances before the partially defined generator enters adjoint search. -/
+private theorem realHilbertZeroEigenspaceSupport_resolventQuadraticAmplitude_derivativeRatio_eq_of_domain_eigenmode
+    {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (T : E →L[ℝ] E) [CompleteSpace (realHilbertZeroEigenspaceSupport T)]
+    (A : realHilbertZeroEigenspaceSupport T →ₗ.[ℝ] realHilbertZeroEigenspaceSupport T)
+    (c : ℝ) (hc : 0 < c)
+    (hNorm : ∀ x : A.domain,
+      c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ≤ ‖A x‖)
+    (hKer : ∀ x : A.domain, A x = 0 → x = 0)
+    (hSurj : Function.Surjective A.toFun)
+    (hSelf : IsSelfAdjoint A)
+    (hQuad : ∀ x : A.domain,
+      c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ^ 2 ≤
+        inner ℝ (A x) (x : realHilbertZeroEigenspaceSupport T))
+    (u : realHilbertZeroEigenspaceSupport T) (hu : u ≠ 0)
+    (rho : ℝ) (x : A.domain)
+    (hxu : (x : realHilbertZeroEigenspaceSupport T) = u)
+    (hAx : A x = rho • u)
+    (n : ℕ) (lambda : ℝ) (hlambda : |lambda| < c) :
+    let q := realLinearPMapAmbientResolventQuadraticAmplitude
+      A c hc hNorm hKer hSurj u
+    iteratedDeriv (n + 1) q lambda /
+        ((n + 1 : ℝ) * iteratedDeriv n q lambda) =
+      (rho - lambda)⁻¹ := by
+  exact
+    realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_eq_of_domain_eigenmode
+      A c hc hNorm hKer hSurj hSelf hQuad u hu rho x hxu hAx n lambda hlambda
 
 local instance exactDerivativeRatioConcreteSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -186,6 +217,12 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
       H N hN beta hbeta 1
   letI : CompleteSpace (realHilbertZeroEigenspaceSupport T) := by
     exact (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
+  let hCompact : IsCompactOperator T :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
+      H N hN beta hbeta 1 (by norm_num)
+  let hPositive : T.IsPositive :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
+      H N hN beta hbeta 1
   let A :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
       H N hN beta hbeta
@@ -222,28 +259,20 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     simpa [A, c] using
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_quadratic_lower_bound
         H N hN beta hbeta y)
-  have hSelf : IsSelfAdjoint A := by
-    let hCompact : IsCompactOperator T :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
-        H N hN beta hbeta 1 (by norm_num)
-    let hPositive : T.IsPositive :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
-        H N hN beta hbeta 1
-    have hGenerator :
-        realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive = A := by
-      dsimp only [T, A]
-      unfold
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-      rfl
-    have hSelfNative :=
-      realHilbertCompactPositiveZeroSupportLogGenerator_isSelfAdjoint
-        T hCompact hPositive
-    rw [hGenerator] at hSelfNative
-    exact hSelfNative
+  have hGenerator :
+      realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive = A := by
+    dsimp only [T, A]
+    unfold
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+    rfl
+  have hSelfNative :=
+    realHilbertCompactPositiveZeroSupportLogGenerator_isSelfAdjoint
+      T hCompact hPositive
+  rw [hGenerator] at hSelfNative
   have h :=
-    realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_eq_of_domain_eigenmode
-      A c hc hNorm hKer hSurj hSelf hQuad v hv rho x hxv hAx n lambda
+    realHilbertZeroEigenspaceSupport_resolventQuadraticAmplitude_derivativeRatio_eq_of_domain_eigenmode
+      T A c hc hNorm hKer hSurj hSelfNative hQuad v hv rho x hxv hAx n lambda
       (by simpa [c] using hlambda)
   simpa [
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude,
@@ -314,11 +343,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     intro heq
     have hzero : (rho - lambda)⁻¹ = 0 := by simp [heq]
     have hpos : 0 < R := by
-      let c :=
-        2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-          H N hN beta hbeta
-      let Ac := A
-      let qc := q
       have hn :=
         periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_iteratedDeriv_pos
           H N hN beta hbeta v hv n lambda hlambda
@@ -337,8 +361,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     simp
     ring
   refine ⟨tau, rho, htau, htaurho, hrhotau, hR, hR0, hreconstruct, ?_⟩
-  rw [hreconstruct] at htaurho
-  exact htaurho
+  calc
+    tau = Real.exp (-rho) := htaurho
+    _ = Real.exp (-(lambda + R⁻¹)) := by rw [hreconstruct]
 
 end
 
