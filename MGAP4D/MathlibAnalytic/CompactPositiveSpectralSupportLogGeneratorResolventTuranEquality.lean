@@ -173,11 +173,6 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_eq_succ
       A c hc hNorm hKer hSurj hSelf hQuad lambda hlambda (n + 1) u hu
   have hmomentIff' : y ^ 2 = x * z ↔ ∃ r : ℝ, F u = r • u := by
     simpa [x, y, z, F, Nat.add_assoc] using hmomentIff
-  have hfac1 : ((n + 1).factorial : ℝ) = (n + 1 : ℝ) * (n.factorial : ℝ) := by
-    norm_num [Nat.factorial_succ]
-  have hfac2 : ((n + 2).factorial : ℝ) =
-      (n + 2 : ℝ) * ((n + 1).factorial : ℝ) := by
-    norm_num [Nat.factorial_succ]
   have hcoef : 0 < (n + 2 : ℝ) * (n + 1 : ℝ) ^ 2 * ((n.factorial : ℝ) ^ 2) := by
     positivity
   constructor
@@ -194,7 +189,8 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_eq_succ
           ((n + 2 : ℝ) * (((n + 1).factorial : ℝ) * y)) =
         (((n + 2).factorial : ℝ) * z) *
           ((n + 1 : ℝ) * ((n.factorial : ℝ) * x)) at hcross
-    rw [hfac1, hfac2, hfac1] at hcross
+    norm_num [Nat.factorial_succ] at hcross
+    ring_nf at hcross
     have hmoment : y ^ 2 = x * z := by
       nlinarith
     exact hmomentIff'.mp hmoment
@@ -204,7 +200,17 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_eq_succ
     rw [realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_eq_factorial
         A c hc hNorm hKer hSurj u n lambda hlambda,
       realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_eq_factorial
-        A c hc hNorm hNorm hKer hSurj u (n + 1) lambda hlambda]
+        A c hc hNorm hKer hSurj u (n + 1) lambda hlambda,
+      realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_eq_factorial
+        A c hc hNorm hKer hSurj u (n + 2) lambda hlambda]
+    change
+      (((n + 1).factorial : ℝ) * y) *
+          ((n + 2 : ℝ) * (((n + 1).factorial : ℝ) * y)) =
+        (((n + 2).factorial : ℝ) * z) *
+          ((n + 1 : ℝ) * ((n.factorial : ℝ) * x))
+    norm_num [Nat.factorial_succ]
+    ring_nf
+    nlinarith
 
 end
 
