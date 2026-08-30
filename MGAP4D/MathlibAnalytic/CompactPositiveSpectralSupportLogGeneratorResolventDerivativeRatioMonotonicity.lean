@@ -55,7 +55,6 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_mono
         ((n + 2 : ℝ) * iteratedDeriv (n + 1) q lambda) ≤
       iteratedDeriv (n + 2) q lambda *
         ((n + 1 : ℝ) * iteratedDeriv n q lambda)
-  dsimp [q] at hturan
   nlinarith
 
 end
