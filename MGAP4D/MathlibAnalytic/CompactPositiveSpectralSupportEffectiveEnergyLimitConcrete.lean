@@ -172,7 +172,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
   have hstrict :=
     (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_effectiveEnergy_strictAnti_iff_not_logGeneratorMode
       H N hN beta hbeta v hv lambda hlambda).2 hnot
-  dsimp only at hstrict
   intro n
   have hnext :
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_effectiveEnergyLimit
