@@ -165,10 +165,21 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_eq_succ
         A c hc hNorm hKer hSurj hSelf hQuad u hu (n + 1) lambda hlambda)
   have hden0 : 0 < (n + 1 : ℝ) * iteratedDeriv n q lambda := by positivity
   have hden1 : 0 < (n + 2 : ℝ) * iteratedDeriv (n + 1) q lambda := by positivity
+  set x : ℝ := inner ℝ ((F ^ (n + 1)) u) u
+  set y : ℝ := inner ℝ ((F ^ (n + 2)) u) u
+  set z : ℝ := inner ℝ ((F ^ (n + 3)) u) u
   have hmomentIff :=
     realLinearPMapAmbientResolventFamily_pow_inner_logConvex_eq_iff_eigenmode
       A c hc hNorm hKer hSurj hSelf hQuad lambda hlambda (n + 1) u hu
-  dsimp only at hmomentIff
+  have hmomentIff' : y ^ 2 = x * z ↔ ∃ r : ℝ, F u = r • u := by
+    simpa [x, y, z, F, Nat.add_assoc] using hmomentIff
+  have hfac1 : ((n + 1).factorial : ℝ) = (n + 1 : ℝ) * (n.factorial : ℝ) := by
+    norm_num [Nat.factorial_succ]
+  have hfac2 : ((n + 2).factorial : ℝ) =
+      (n + 2 : ℝ) * ((n + 1).factorial : ℝ) := by
+    norm_num [Nat.factorial_succ]
+  have hcoef : 0 < (n + 2 : ℝ) * (n + 1 : ℝ) ^ 2 * ((n.factorial : ℝ) ^ 2) := by
+    positivity
   constructor
   · intro hratio
     have hcross := (div_eq_div_iff hden0.ne' hden1.ne').mp hratio
@@ -179,40 +190,21 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_eq_succ
       realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_eq_factorial
         A c hc hNorm hKer hSurj u (n + 2) lambda hlambda] at hcross
     change
-      (((n + 1).factorial : ℝ) * inner ℝ ((F ^ (n + 2)) u) u) *
-          ((n + 2 : ℝ) *
-            (((n + 1).factorial : ℝ) * inner ℝ ((F ^ (n + 2)) u) u)) =
-        (((n + 2).factorial : ℝ) * inner ℝ ((F ^ (n + 3)) u) u) *
-          ((n + 1 : ℝ) *
-            ((n.factorial : ℝ) * inner ℝ ((F ^ (n + 1)) u) u)) at hcross
-    have hcoef : 0 < (n + 2 : ℝ) * (n + 1 : ℝ) ^ 2 * ((n.factorial : ℝ) ^ 2) := by
-      positivity
-    have hmoment :
-        (inner ℝ ((F ^ (n + 2)) u) u) ^ 2 =
-          inner ℝ ((F ^ (n + 1)) u) u * inner ℝ ((F ^ (n + 3)) u) u := by
-      norm_num [Nat.factorial_succ] at hcross
-      ring_nf at hcross
+      (((n + 1).factorial : ℝ) * y) *
+          ((n + 2 : ℝ) * (((n + 1).factorial : ℝ) * y)) =
+        (((n + 2).factorial : ℝ) * z) *
+          ((n + 1 : ℝ) * ((n.factorial : ℝ) * x)) at hcross
+    rw [hfac1, hfac2, hfac1] at hcross
+    have hmoment : y ^ 2 = x * z := by
       nlinarith
-    exact hmomentIff.mp hmoment
+    exact hmomentIff'.mp hmoment
   · intro hmode
-    have hmoment := hmomentIff.mpr hmode
+    have hmoment : y ^ 2 = x * z := hmomentIff'.mpr hmode
     apply (div_eq_div_iff hden0.ne' hden1.ne').mpr
     rw [realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_eq_factorial
         A c hc hNorm hKer hSurj u n lambda hlambda,
       realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_eq_factorial
-        A c hc hNorm hKer hSurj u (n + 1) lambda hlambda,
-      realLinearPMapAmbientResolventQuadraticAmplitude_iteratedDeriv_eq_factorial
-        A c hc hNorm hKer hSurj u (n + 2) lambda hlambda]
-    change
-      (((n + 1).factorial : ℝ) * inner ℝ ((F ^ (n + 2)) u) u) *
-          ((n + 2 : ℝ) *
-            (((n + 1).factorial : ℝ) * inner ℝ ((F ^ (n + 2)) u) u)) =
-        (((n + 2).factorial : ℝ) * inner ℝ ((F ^ (n + 3)) u) u) *
-          ((n + 1 : ℝ) *
-            ((n.factorial : ℝ) * inner ℝ ((F ^ (n + 1)) u) u))
-    norm_num [Nat.factorial_succ]
-    ring_nf
-    nlinarith
+        A c hc hNorm hNorm hKer hSurj u (n + 1) lambda hlambda]
 
 end
 
