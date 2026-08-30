@@ -31,8 +31,9 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_monoton
   dsimp only
   apply monotone_nat_of_le_succ
   intro n
-  exact realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_mono
-    A c hc hNorm hKer hSurj hSelf hQuad u hu n lambda hlambda
+  simpa [Nat.add_assoc] using
+    (realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_mono
+      A c hc hNorm hKer hSurj hSelf hQuad u hu n lambda hlambda)
 
 /-- Global order comparison form: any lower derivative-ratio order is bounded
 by any higher one, not merely by the adjacent successor. -/
