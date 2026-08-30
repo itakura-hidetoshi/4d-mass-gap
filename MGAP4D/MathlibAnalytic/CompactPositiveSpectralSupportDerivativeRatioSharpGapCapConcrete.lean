@@ -74,8 +74,6 @@ theorem realLinearPMapAmbientResolventFamily_inner_le_gap_sub_inv_mul_norm_sq
   have hcoerc := realLinearPMapAmbientResolventFamily_gap_sub_mul_norm_sq_le_inner
     A c hc hNorm hKer hSurj hQuad lambda hlambda y
   have hcsabs := abs_real_inner_le_norm (F lambda y) y
-  have hinnerPos := realLinearPMapAmbientResolventFamily_inner_pos_of_quadratic_lower_bound
-    A c hc hNorm hKer hSurj hQuad lambda hlambda y hy
   have hcs : inner ℝ (F lambda y) y ≤ ‖F lambda y‖ * ‖y‖ := by
     exact le_trans (le_abs_self _) hcsabs
   have hnormLinear : (c - lambda) * ‖F lambda y‖ ≤ ‖y‖ := by
@@ -85,8 +83,11 @@ theorem realLinearPMapAmbientResolventFamily_inner_le_gap_sub_inv_mul_norm_sq
     have hyNorm : 0 ≤ ‖y‖ := norm_nonneg y
     have hmul := mul_le_mul_of_nonneg_right hnormLinear hyNorm
     nlinarith
+  have hscaled' :
+      inner ℝ (F lambda y) y * (c - lambda) ≤ ‖y‖ ^ 2 := by
+    simpa [mul_comm] using hscaled
   have hdiv : inner ℝ (F lambda y) y ≤ ‖y‖ ^ 2 / (c - lambda) := by
-    exact (le_div_iff₀ hgap).2 hscaled
+    exact (le_div_iff₀ hgap).2 hscaled'
   simpa [div_eq_mul_inv, mul_comm] using hdiv
 
 /-- A self-adjoint bounded operator whose first two adjacent moment inequalities
@@ -106,7 +107,8 @@ theorem realContinuousLinearMap_pow_inner_succ_le_of_base_bounds
       · rcases n with _ | k
         · have hs := realContinuousLinearMap_pow_inner_shift_two F hSelf 0 u
           simp at hs
-          rw [hs, real_inner_self_eq_norm_sq]
+          change inner ℝ (F (F u)) u ≤ M * inner ℝ (F u) u
+          rw [hs]
           exact h1 u
         · have hind := ih k (by omega) (F u)
           have hs0 := realContinuousLinearMap_pow_inner_shift_two F hSelf k u
@@ -147,8 +149,11 @@ theorem realLinearPMapAmbientResolventFamily_pow_inner_succ_le_gap_sub_inv
     intro z
     have hcoerc := realLinearPMapAmbientResolventFamily_gap_sub_mul_norm_sq_le_inner
       A c hc hNorm hKer hSurj hQuad lambda hlambda z
+    have hcoerc' :
+        ‖F z‖ ^ 2 * (c - lambda) ≤ inner ℝ (F z) z := by
+      simpa [F, mul_comm] using hcoerc
     have hdiv : ‖F z‖ ^ 2 ≤ inner ℝ (F z) z / (c - lambda) := by
-      exact (le_div_iff₀ hgap).2 (by simpa [F] using hcoerc)
+      exact (le_div_iff₀ hgap).2 hcoerc'
     simpa [div_eq_mul_inv, mul_comm] using hdiv
   exact realContinuousLinearMap_pow_inner_succ_le_of_base_bounds
     F hFself (c - lambda)⁻¹ h0 h1 n u
@@ -209,6 +214,32 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_le_gap_
       ((n + 1 : ℝ) * iteratedDeriv n q lambda) ≤ (c - lambda)⁻¹ := by
     exact (div_le_iff₀ hden).2 hnum
   exact ⟨hRpos, hupper⟩
+
+/-- Native zero-eigenspace-support bridge for the saturation-free sharp cap.
+Fixing the support carrier before invoking the generic theorem avoids subtype
+inner-product instance diamonds in the concrete physical specialization. -/
+private theorem realHilbertZeroEigenspaceSupport_resolventQuadraticAmplitude_derivativeRatio_le_gap_sub_inv
+    {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (T : E →L[ℝ] E) [CompleteSpace (realHilbertZeroEigenspaceSupport T)]
+    (A : realHilbertZeroEigenspaceSupport T →ₗ.[ℝ] realHilbertZeroEigenspaceSupport T)
+    (c : ℝ) (hc : 0 < c)
+    (hNorm : ∀ x : A.domain,
+      c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ≤ ‖A x‖)
+    (hKer : ∀ x : A.domain, A x = 0 → x = 0)
+    (hSurj : Function.Surjective A.toFun)
+    (hSelf : IsSelfAdjoint A)
+    (hQuad : ∀ x : A.domain,
+      c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ^ 2 ≤
+        inner ℝ (A x) (x : realHilbertZeroEigenspaceSupport T))
+    (v : realHilbertZeroEigenspaceSupport T) (hv : v ≠ 0)
+    (n : ℕ) (lambda : ℝ) (hlambda : |lambda| < c) :
+    let q := realLinearPMapAmbientResolventQuadraticAmplitude
+      A c hc hNorm hKer hSurj v
+    let R := iteratedDeriv (n + 1) q lambda /
+      ((n + 1 : ℝ) * iteratedDeriv n q lambda)
+    0 < R ∧ R ≤ (c - lambda)⁻¹ := by
+  exact realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_le_gap_sub_inv
+    A c hc hNorm hKer hSurj hSelf hQuad v hv n lambda hlambda
 
 local instance sharpGapCapSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -332,9 +363,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
   have hSelfNative := realHilbertCompactPositiveZeroSupportLogGenerator_isSelfAdjoint
     T hCompact hPositive
   rw [hGenerator] at hSelfNative
-  have hcap := realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_le_gap_sub_inv
-    A c hc hNorm hKer hSurj hSelfNative hQuad v hv n lambda
-      (by simpa [c] using hlambda)
+  have hcap :=
+    realHilbertZeroEigenspaceSupport_resolventQuadraticAmplitude_derivativeRatio_le_gap_sub_inv
+      T A c hc hNorm hKer hSurj hSelfNative hQuad v hv n lambda
+        (by simpa [c] using hlambda)
   simpa [
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude,
     A, c] using hcap
