@@ -361,7 +361,7 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_transfer_eigenmode_to_
         calc
           (U v) nu = s nu := congrArg (fun q => q nu) hUv
           _ = 0 := hs0
-      rw [huv0, smul_zero]
+      simp only [huv0, smul_zero]
   have hAxEnergy :
       realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive x =
         realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • v := by
