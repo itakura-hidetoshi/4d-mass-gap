@@ -50,7 +50,7 @@ theorem realLinearPMapAmbientResolventFamily_inner_pos_of_quadratic_lower_bound
     intro hx
     apply hy
     rw [← hxy, hx]
-    rfl
+    simp [realLinearPMapDomainShift]
   have hxcoe : (x : E) ≠ 0 := by
     intro hx0
     apply hx
@@ -125,6 +125,17 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     0 <
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude
         H N hN beta hbeta u lambda := by
+  letI : CompleteSpace
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta) := by
+    change CompleteSpace
+      (realHilbertZeroEigenspaceSupport
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+          H N hN beta hbeta 1))
+    exact
+      (realHilbertZeroEigenspaceSupport_isClosed
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+          H N hN beta hbeta 1)).completeSpace_coe
   let A :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
       H N hN beta hbeta
