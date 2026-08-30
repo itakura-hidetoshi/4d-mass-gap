@@ -88,15 +88,7 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_domain_eigenmode_to_tr
       (U v) mu ≠ 0 →
         realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu = rho := by
     intro mu hmu
-    have hzero :
-        (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu - rho) • (U v) mu = 0 := by
-      change
-        realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • (U v) mu -
-          rho • (U v) mu = 0
-      exact sub_eq_zero.mpr (hComponent mu)
-    rcases smul_eq_zero.mp hzero with hscalar | hcoordzero
-    · exact sub_eq_zero.mp hscalar
-    · exact (hmu hcoordzero).elim
+    exact smul_left_injective ℝ hmu (hComponent mu)
   have hUvNe : U v ≠ 0 := by
     intro hzero
     apply hv
@@ -139,11 +131,33 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_domain_eigenmode_to_tr
     funext nu
     by_cases hnu : nu = mu
     · subst nu
-      change (U v) mu = Pi.single mu ((U v) mu) mu
-      exact (Pi.single_eq_same mu ((U v) mu)).symm
-    · change (U v) nu = Pi.single mu ((U v) mu) nu
-      rw [Pi.single_eq_of_ne hnu]
-      exact hZeroAway nu hnu
+      exact
+        (lp.single_apply_self
+          (E := fun nu : Eigenvalues
+            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+            eigenspace
+              (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+                Module.End ℝ (realHilbertZeroEigenspaceSupport T)) nu)
+          2 mu ((U v) mu)).symm
+    · calc
+        (U v) nu = 0 := hZeroAway nu hnu
+        _ = (lp.single
+          (E := fun eta : Eigenvalues
+            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+            eigenspace
+              (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+                Module.End ℝ (realHilbertZeroEigenspaceSupport T)) eta)
+          2 mu ((U v) mu)) nu :=
+            (lp.single_apply_ne
+              (E := fun eta : Eigenvalues
+                (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+                  Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+                eigenspace
+                  (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+                    Module.End ℝ (realHilbertZeroEigenspaceSupport T)) eta)
+              2 mu ((U v) mu) hnu).symm
   have hReconstruct :
       (((U v) mu : eigenspace
           (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
@@ -166,7 +180,7 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_domain_eigenmode_to_tr
             simpa [U] using
               (realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv_symm_single
                 T hCompact hPositive mu ((U v) mu)).symm
-      _ = U.symm (U v) := by rw [hSingle]
+      _ = U.symm (U v) := congrArg U.symm hSingle.symm
       _ = v := U.symm_apply_apply v
   rw [← hReconstruct]
   calc
@@ -284,20 +298,37 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_transfer_eigenmode_to_
       by_cases hnu : nu = mu
       · subst nu
         simp only [s, z, lp.single_apply_self]
-      · simp only [s, z, lp.single_apply_ne 2 mu y hnu,
-          lp.single_apply_ne 2 mu
-            (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • y) hnu,
-          smul_zero]
+      · have hs0 : s nu = 0 := by
+          dsimp [s]
+          exact lp.single_apply_ne
+            (E := fun eta : Eigenvalues
+              (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+                Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+              eigenspace
+                (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+                  Module.End ℝ (realHilbertZeroEigenspaceSupport T)) eta)
+            2 mu y hnu
+        have hz0 : z nu = 0 := by
+          dsimp [z]
+          exact lp.single_apply_ne
+            (E := fun eta : Eigenvalues
+              (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+                Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+              eigenspace
+                (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+                  Module.End ℝ (realHilbertZeroEigenspaceSupport T)) eta)
+            2 mu (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • y) hnu
+        rw [hs0, hz0, smul_zero]
     rw [hfun]
     exact hz
   have hUvDomain :
       U v ∈
         (realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates
           T hCompact hPositive).domain := by
-    rw [hUv]
     exact
       (realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_domain_mem_iff
-        T hCompact hPositive s).mpr hWeightedSingle
+        T hCompact hPositive (U v)).mpr
+        (by simpa only [hUv] using hWeightedSingle)
   have hvDomain :
       v ∈ realHilbertCompactPositiveZeroSupportLogGeneratorDomain T hCompact hPositive := by
     exact
@@ -312,12 +343,25 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_transfer_eigenmode_to_
     apply lp.ext
     funext nu
     rw [realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_apply]
-    rw [hUv]
+    simp only [lp.coeFn_smul, Pi.smul_apply]
     by_cases hnu : nu = mu
     · subst nu
-      simp only [s, lp.single_apply_self, lp.coeFn_smul, Pi.smul_apply]
-    · simp only [s, lp.single_apply_ne 2 mu y hnu, smul_zero,
-        lp.coeFn_smul, Pi.smul_apply]
+      rfl
+    · have hs0 : s nu = 0 := by
+        dsimp [s]
+        exact lp.single_apply_ne
+          (E := fun eta : Eigenvalues
+            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+            eigenspace
+              (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+                Module.End ℝ (realHilbertZeroEigenspaceSupport T)) eta)
+          2 mu y hnu
+      have huv0 : (U v) nu = 0 := by
+        calc
+          (U v) nu = s nu := congrArg (fun q => q nu) hUv
+          _ = 0 := hs0
+      rw [huv0, smul_zero]
   have hAxEnergy :
       realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive x =
         realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • v := by
