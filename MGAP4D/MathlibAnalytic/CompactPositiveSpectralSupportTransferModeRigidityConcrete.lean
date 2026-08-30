@@ -67,49 +67,11 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilb
   exact ∃ tau : ℝ, 0 < tau ∧
     realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric v = tau • v
 
-/-- On the concrete physical one-step support, a genuine actual-domain mode of
-`-log T` is exactly a strictly-positive spectral mode of the bounded one-step
-transfer.  This is the physical specialization of the generic support bridge. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport_logGeneratorMode_iff_transferMode
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
-    (v : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-      H N hN beta hbeta) (hv : v ≠ 0) :
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportIsSingleLogGeneratorMode
-        H N hN beta hbeta v ↔
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportIsSingleTransferMode
-        H N hN beta hbeta v := by
-  let T :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-      H N hN beta hbeta 1
-  letI : CompleteSpace (realHilbertZeroEigenspaceSupport T) := by
-    exact (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
-  let hCompact : IsCompactOperator T :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
-      H N hN beta hbeta 1 (by norm_num)
-  let hPositive : T.IsPositive :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
-      H N hN beta hbeta 1
-  let A :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-      H N hN beta hbeta
-  have hGenerator :
-      realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive = A := by
-    dsimp only [T, A]
-    unfold
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-    rfl
-  have hiff :=
-    realHilbertCompactPositiveZeroSupportLogGenerator_domain_eigenmode_iff_transfer_eigenmode
-      T hCompact hPositive v hv
-  rw [hGenerator] at hiff
-  simpa [
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportIsSingleLogGeneratorMode,
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportIsSingleTransferMode,
-    T, A, hPositive] using hiff
-
 /-- Turán equality for consecutive factorial-normalized derivative ratios is
-exactly one-step physical transfer spectral purity. -/
+exactly one-step physical transfer spectral purity.  The proof goes directly
+through the explicit actual-domain eigenmode proposition and the generic
+support transfer bridge, avoiding the private packaging used by the older
+log-generator-language theorem. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_derivativeRatio_eq_succ_iff_transferMode
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (v : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
@@ -128,11 +90,105 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportIsSingleTransferMode
         H N hN beta hbeta v := by
   dsimp only
-  exact
-    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_derivativeRatio_eq_succ_iff_logGeneratorMode
-      H N hN beta hbeta v hv n lambda hlambda).trans
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport_logGeneratorMode_iff_transferMode
-        H N hN beta hbeta v hv)
+  let T :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+      H N hN beta hbeta 1
+  letI : CompleteSpace (realHilbertZeroEigenspaceSupport T) := by
+    exact (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
+  let hCompact : IsCompactOperator T :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
+      H N hN beta hbeta 1 (by norm_num)
+  let hPositive : T.IsPositive :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
+      H N hN beta hbeta 1
+  let A :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
+      H N hN beta hbeta
+  let c :=
+    2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+      H N hN beta hbeta
+  have hc : 0 < c := by
+    exact mul_pos (by norm_num)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate_pos
+        H N hN beta hbeta)
+  have hNorm : ∀ x : A.domain,
+      c * ‖(x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta)‖ ≤ ‖A x‖ := by
+    intro x
+    simpa [A, c] using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_norm_lower_bound
+        H N hN beta hbeta x)
+  have hKer : ∀ x : A.domain, A x = 0 → x = 0 := by
+    intro x hx
+    exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_eq_zero_of_apply_eq_zero
+        H N hN beta hbeta x hx
+  have hSurj : Function.Surjective A.toFun := by
+    simpa [A] using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_surjective
+        H N hN beta hbeta)
+  have hQuad : ∀ x : A.domain,
+      c * ‖(x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta)‖ ^ 2 ≤
+        inner ℝ (A x)
+          (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+            H N hN beta hbeta) := by
+    intro x
+    simpa [A, c] using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_quadratic_lower_bound
+        H N hN beta hbeta x)
+  have hGenerator :
+      realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive = A := by
+    dsimp only [T, A]
+    unfold
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+    rfl
+  have hSelfNative :=
+    realHilbertCompactPositiveZeroSupportLogGenerator_isSelfAdjoint
+      T hCompact hPositive
+  rw [hGenerator] at hSelfNative
+  have hDomain :=
+    realLinearPMapAmbientResolventQuadraticAmplitude_derivativeRatio_eq_succ_iff_domain_eigenmode
+      A c hc hNorm hKer hSurj hSelfNative hQuad v hv n lambda
+      (by simpa [c] using hlambda)
+  have hTransfer :=
+    realHilbertCompactPositiveZeroSupportLogGenerator_domain_eigenmode_iff_transfer_eigenmode
+      T hCompact hPositive v hv
+  rw [hGenerator] at hTransfer
+  have hiff := hDomain.trans hTransfer
+  simpa [
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude,
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportIsSingleTransferMode,
+    A, c, T, hPositive] using hiff
+
+/-- On the concrete physical one-step support, a genuine actual-domain mode of
+`-log T` is exactly a strictly-positive spectral mode of the bounded one-step
+transfer.  The comparison is made through the common Turán-equality
+characterization, so no private helper declaration needs to be unfolded. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport_logGeneratorMode_iff_transferMode
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (v : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+      H N hN beta hbeta) (hv : v ≠ 0) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportIsSingleLogGeneratorMode
+        H N hN beta hbeta v ↔
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportIsSingleTransferMode
+        H N hN beta hbeta v := by
+  have hzero :
+      |(0 : ℝ)| <
+        2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+          H N hN beta hbeta := by
+    simpa using
+      (mul_pos (show (0 : ℝ) < 2 by norm_num)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate_pos
+          H N hN beta hbeta))
+  have hlog :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_derivativeRatio_eq_succ_iff_logGeneratorMode
+      H N hN beta hbeta v hv 0 0 hzero
+  have htransfer :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_derivativeRatio_eq_succ_iff_transferMode
+      H N hN beta hbeta v hv 0 0 hzero
+  exact hlog.symm.trans htransfer
 
 /-- Strict growth from derivative order `n` to `n+1` occurs exactly when the
 physical state is not spectrally pure for the one-step transfer. -/
