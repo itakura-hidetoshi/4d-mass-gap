@@ -10,30 +10,41 @@ open scoped InnerProductSpace lp LinearPMap Topology BigOperators
 
 noncomputable section
 
+/-- The real point-energy set of a partially-defined real-linear operator,
+formulated against the operator's actual module structure.  This algebraic
+presentation is intentionally independent of any particular bundled Hilbert
+instance path. -/
+noncomputable def realLinearPMapPointEnergySet
+    {E : Type} [AddCommGroup E] [Module ℝ E]
+    (A : E →ₗ.[ℝ] E) : Set ℝ :=
+  {a | ∃ x : A.domain, (x : E) ≠ 0 ∧ A x = a • (x : E)}
+
 /-- Operator-level unitary intertwining data for partially-defined real-linear
-operators.  The bridge records the Hilbert-space equivalence, exact domain
-transport in both directions, and operator intertwining on the source domain.
-Point-spectrum identification is derived from these data rather than assumed. -/
+operators.  `equiv` uses the operators' actual module structures, while
+`norm_map` records the Hilbert-isometric content explicitly.  This avoids
+making the bridge depend on a particular definitional path to the Module
+instance of a closed spectral-support subtype. -/
 structure RealLinearPMapUnitaryIntertwining
     {E F : Type}
-    [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    [NormedAddCommGroup F] [InnerProductSpace ℝ F]
+    [NormedAddCommGroup E] [Module ℝ E]
+    [NormedAddCommGroup F] [Module ℝ F]
     (A : E →ₗ.[ℝ] E) (B : F →ₗ.[ℝ] F) where
-  equiv : E ≃ₗᵢ[ℝ] F
+  equiv : E ≃ₗ[ℝ] F
+  norm_map : ∀ x : E, ‖equiv x‖ = ‖x‖
   domain_iff : ∀ x : E, x ∈ A.domain ↔ equiv x ∈ B.domain
   intertwines : ∀ x : A.domain,
     B ⟨equiv (x : E), (domain_iff (x : E)).1 x.property⟩ =
       equiv (A x)
 
 /-- Unitary intertwining with exact domain transport preserves the real point
-spectrum of a partially-defined operator. -/
-theorem realLinearPMapPointSpectrum_eq_of_unitaryIntertwining
+energies of a partially-defined operator. -/
+theorem realLinearPMapPointEnergySet_eq_of_unitaryIntertwining
     {E F : Type}
-    [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    [NormedAddCommGroup F] [InnerProductSpace ℝ F]
+    [NormedAddCommGroup E] [Module ℝ E]
+    [NormedAddCommGroup F] [Module ℝ F]
     (A : E →ₗ.[ℝ] E) (B : F →ₗ.[ℝ] F)
     (I : RealLinearPMapUnitaryIntertwining A B) :
-    realLinearPMapPointSpectrum A = realLinearPMapPointSpectrum B := by
+    realLinearPMapPointEnergySet A = realLinearPMapPointEnergySet B := by
   ext a
   constructor
   · rintro ⟨x, hx, hAx⟩
@@ -65,7 +76,6 @@ theorem realLinearPMapPointSpectrum_eq_of_unitaryIntertwining
     refine ⟨x, ?_, ?_⟩
     · intro hx0
       apply hy
-      change (y : F) = 0
       rw [← hxy, hx0]
       simp
     · apply I.equiv.injective
@@ -120,8 +130,8 @@ local instance logGeneratorWightmanSpectralSupportComplete
 
 /-- The operator-level OS/Wightman bridge required at the present frontier.
 It does not assume equality of spectra: it identifies the physical transfer
-support Hilbert space with `Ω⊥`, transports the generator domain exactly, and
-intertwines the two actual partially-defined operators. -/
+support Hilbert space with `Ω⊥`, preserves its norm, transports the generator
+domain exactly, and intertwines the two actual partially-defined operators. -/
 structure PeriodicHypercubicEvenSpecialUnitaryTransferLogGeneratorWightmanIntertwining
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (M : ExplicitWightmanOSReconstructedModel) where
@@ -142,13 +152,21 @@ theorem periodicHypercubicEvenSpecialUnitaryTransferLogGenerator_pointSpectrum_e
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGeneratorPointEnergySet
         H N hN beta hbeta =
       M.canonicalVacuumOrthogonalPointSpectrum := by
-  change
-    realLinearPMapPointSpectrum
+  have h := realLinearPMapPointEnergySet_eq_of_unitaryIntertwining
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
+      H N hN beta hbeta)
+    M.canonicalVacuumOrthogonalHamiltonian
+    I.unitaryIntertwining
+  calc
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGeneratorPointEnergySet
+        H N hN beta hbeta =
+      realLinearPMapPointEnergySet
         (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-          H N hN beta hbeta) =
-      realLinearPMapPointSpectrum M.canonicalVacuumOrthogonalHamiltonian
-  exact realLinearPMapPointSpectrum_eq_of_unitaryIntertwining
-    _ _ I.unitaryIntertwining
+          H N hN beta hbeta) := by
+            rfl
+    _ = realLinearPMapPointEnergySet M.canonicalVacuumOrthogonalHamiltonian := h
+    _ = M.canonicalVacuumOrthogonalPointSpectrum := by
+      rfl
 
 /-- Hence the intrinsic physical spectral floor is the infimum of the actual
 Wightman `Ω⊥` Hamiltonian point spectrum. -/
