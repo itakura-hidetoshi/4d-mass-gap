@@ -121,32 +121,30 @@ local instance supportEffectiveEnergySingleModeExactConcretePairHilbertSectorCom
   periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete
     H N hN beta hbeta
 
-/-- A genuine physical support log-generator eigenmode is reconstructed exactly
-by every finite-order effective-energy estimator. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_effectiveEnergy_eq_logGeneratorEigenvalue
+/-- A physical state on the single-log-generator-mode locus carries one genuine
+generator energy `rho` which is reconstructed exactly by every derivative order
+at every admissible resolvent parameter.  The asymptotic effective-energy limit
+is the same `rho` simultaneously for the whole coercive gap. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_singleLogGeneratorMode_exactEffectiveEnergy
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (v : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-      H N hN beta hbeta) (hv : v ≠ 0) (rho : ℝ)
-    (x : (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-      H N hN beta hbeta).domain)
-    (hxu :
-      (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) = v)
-    (hAx :
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-        H N hN beta hbeta x = rho • v)
-    (n : ℕ) (lambda : ℝ)
-    (hlambda :
+      H N hN beta hbeta) (hv : v ≠ 0)
+    (hmode :
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportIsSingleLogGeneratorMode
+        H N hN beta hbeta v) :
+    ∃ rho : ℝ, ∀ lambda : ℝ,
       |lambda| <
-        2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-          H N hN beta hbeta) :
-    let q :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude
-        H N hN beta hbeta v
-    lambda +
-        (iteratedDeriv (n + 1) q lambda /
-          ((n + 1 : ℝ) * iteratedDeriv n q lambda))⁻¹ = rho := by
-  dsimp only
+          2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
+            H N hN beta hbeta →
+        let q :=
+          periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude
+            H N hN beta hbeta v
+        (∀ n : ℕ,
+          lambda +
+              (iteratedDeriv (n + 1) q lambda /
+                ((n + 1 : ℝ) * iteratedDeriv n q lambda))⁻¹ = rho) ∧
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_effectiveEnergyLimit
+          H N hN beta hbeta v lambda = rho := by
   let T :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
       H N hN beta hbeta 1
@@ -178,48 +176,34 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     simpa [A] using
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator_surjective
         H N hN beta hbeta)
-  have h :=
-    realLinearPMapAmbientResolventQuadraticAmplitude_effectiveEnergy_eq_domain_eigenvalue
-      A c hc hNorm hKer hSurj v hv rho x hxu hAx n lambda
-      (by simpa [c] using hlambda)
-  simpa [
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude,
-    A, c, T] using h
-
-/-- On a physical single log-generator mode, the asymptotic effective-energy
-limit is the genuine generator eigenvalue, so the analytic infimum construction
-has an exact spectral meaning on the pure-mode locus. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_effectiveEnergyLimit_eq_logGeneratorEigenvalue
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
-    (v : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-      H N hN beta hbeta) (hv : v ≠ 0) (rho : ℝ)
-    (x : (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-      H N hN beta hbeta).domain)
-    (hxu :
-      (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) = v)
-    (hAx :
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-        H N hN beta hbeta x = rho • v)
-    (lambda : ℝ)
-    (hlambda :
-      |lambda| <
-        2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-          H N hN beta hbeta) :
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_effectiveEnergyLimit
-      H N hN beta hbeta v lambda = rho := by
+  change ∃ rho : ℝ, ∃ x : A.domain,
+    (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+      H N hN beta hbeta) = v ∧ A x = rho • v at hmode
+  rcases hmode with ⟨rho, x, hxu, hAx⟩
+  refine ⟨rho, ?_⟩
+  intro lambda hlambda
+  dsimp only
   let q :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude
       H N hN beta hbeta v
+  have hlambda' : |lambda| < c := by
+    simpa [c] using hlambda
+  have hfinite : ∀ n : ℕ,
+      lambda +
+          (iteratedDeriv (n + 1) q lambda /
+            ((n + 1 : ℝ) * iteratedDeriv n q lambda))⁻¹ = rho := by
+    intro n
+    have h :=
+      realLinearPMapAmbientResolventQuadraticAmplitude_effectiveEnergy_eq_domain_eigenvalue
+        A c hc hNorm hKer hSurj v hv rho x hxu hAx n lambda hlambda'
+    simpa [
+      q,
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude,
+      A, c, T] using h
   let energy := fun n : ℕ =>
     lambda +
       (iteratedDeriv (n + 1) q lambda /
         ((n + 1 : ℝ) * iteratedDeriv n q lambda))⁻¹
-  have hfinite : ∀ n : ℕ, energy n = rho := by
-    intro n
-    simpa [energy, q] using
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_effectiveEnergy_eq_logGeneratorEigenvalue
-        H N hN beta hbeta v hv rho x hxu hAx n lambda hlambda)
   have ht :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_tendsto_effectiveEnergyLimit
       H N hN beta hbeta v hv lambda hlambda
@@ -230,62 +214,19 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
           H N hN beta hbeta v lambda)) := by
     simpa [energy, q] using ht
   have hconst : Tendsto energy atTop (𝓝 rho) := by
-    have hfun : energy = fun _ : ℕ => rho := funext hfinite
+    have hfun : energy = fun _ : ℕ => rho := by
+      funext n
+      exact hfinite n
     rw [hfun]
     exact tendsto_const_nhds
-  exact tendsto_nhds_unique ht' hconst
-
-/-- A state on the single-log-generator-mode locus admits one genuine generator
-energy which is reconstructed by every finite derivative order and by the
-asymptotic effective-energy limit. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_singleLogGeneratorMode_exactEffectiveEnergy
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
-    (v : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-      H N hN beta hbeta) (hv : v ≠ 0)
-    (hmode :
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportIsSingleLogGeneratorMode
-        H N hN beta hbeta v)
-    (lambda : ℝ)
-    (hlambda :
-      |lambda| <
-        2 * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-          H N hN beta hbeta) :
-    let A :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-        H N hN beta hbeta
-    let q :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude
-        H N hN beta hbeta v
-    ∃ rho : ℝ, ∃ x : A.domain,
-      (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) = v ∧
-      A x = rho • v ∧
-      (∀ n : ℕ,
-        lambda +
-            (iteratedDeriv (n + 1) q lambda /
-              ((n + 1 : ℝ) * iteratedDeriv n q lambda))⁻¹ = rho) ∧
+  have hlimit :
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_effectiveEnergyLimit
-        H N hN beta hbeta v lambda = rho := by
-  dsimp only
-  let A :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-      H N hN beta hbeta
-  change ∃ rho : ℝ, ∃ x : A.domain,
-    (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-      H N hN beta hbeta) = v ∧ A x = rho • v at hmode
-  rcases hmode with ⟨rho, x, hxu, hAx⟩
-  refine ⟨rho, x, hxu, hAx, ?_, ?_⟩
-  · intro n
-    exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_effectiveEnergy_eq_logGeneratorEigenvalue
-        H N hN beta hbeta v hv rho x hxu hAx n lambda hlambda
-  · exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_effectiveEnergyLimit_eq_logGeneratorEigenvalue
-        H N hN beta hbeta v hv rho x hxu hAx lambda hlambda
+        H N hN beta hbeta v lambda = rho :=
+    tendsto_nhds_unique ht' hconst
+  exact ⟨hfinite, hlimit⟩
 
-/-- On the single-log-generator-mode locus the asymptotic effective energy is
-independent of the admissible resolvent parameter: both values are the same
-true generator eigenenergy. -/
+/-- On the single-log-generator-mode locus, the asymptotic effective energy is
+independent of the resolvent parameter throughout the full coercive gap. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_effectiveEnergyLimit_parameter_independent_of_logGeneratorMode
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (v : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
@@ -306,17 +247,14 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
         H N hN beta hbeta v lambda =
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_effectiveEnergyLimit
         H N hN beta hbeta v mu := by
-  let A :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-      H N hN beta hbeta
-  change ∃ rho : ℝ, ∃ x : A.domain,
-    (x : periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-      H N hN beta hbeta) = v ∧ A x = rho • v at hmode
-  rcases hmode with ⟨rho, x, hxu, hAx⟩
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_effectiveEnergyLimit_eq_logGeneratorEigenvalue
-      H N hN beta hbeta v hv rho x hxu hAx lambda hlambda,
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_effectiveEnergyLimit_eq_logGeneratorEigenvalue
-      H N hN beta hbeta v hv rho x hxu hAx mu hmu]
+  rcases
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_singleLogGeneratorMode_exactEffectiveEnergy
+        H N hN beta hbeta v hv hmode with
+    ⟨rho, hall⟩
+  have hl := hall lambda hlambda
+  have hm := hall mu hmu
+  dsimp only at hl hm
+  rw [hl.2, hm.2]
 
 end
 
