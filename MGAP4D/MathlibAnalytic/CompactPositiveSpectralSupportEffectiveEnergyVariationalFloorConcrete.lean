@@ -98,11 +98,30 @@ private theorem realHilbertCompactPositiveZeroSupportSpectralModeVector_domain_a
       (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
         Module.End ℝ (realHilbertZeroEigenspaceSupport T)) nu
   have hUv : U (v : realHilbertZeroEigenspaceSupport T) =
-      lp.single (E := F) 2 mu v := by
-    have h := congrArg U
-      (realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv_symm_single
-        T hCompact hPositive mu v)
-    simpa [U, F] using h.symm
+      lp.single
+        (E := fun nu : Eigenvalues
+          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+          eigenspace
+            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) nu)
+        2 mu v := by
+    have hsymm :
+        U.symm
+            (lp.single
+              (E := fun nu : Eigenvalues
+                (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+                  Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+                eigenspace
+                  (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+                    Module.End ℝ (realHilbertZeroEigenspaceSupport T)) nu)
+              2 mu v) =
+          (v : realHilbertZeroEigenspaceSupport T) := by
+      exact
+        realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv_symm_single
+          T hCompact hPositive mu v
+    have h := congrArg U hsymm
+    simpa using h.symm
   have hvDomain : (v : realHilbertZeroEigenspaceSupport T) ∈ A.domain := by
     change U (v : realHilbertZeroEigenspaceSupport T) ∈ C.domain
     rw [hUv]
