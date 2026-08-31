@@ -41,7 +41,7 @@ theorem realHilbertCompactPositiveZeroSupportVisibleLogEnergySet_nonempty_iff
   · rintro ⟨rho, mu, hmu, henergy⟩
     intro hv
     subst v
-    simp [U] at hmu
+    exact hmu rfl
   · intro hv
     have hUv : U v ≠ 0 := by
       intro hz
