@@ -43,6 +43,7 @@ theorem realHilbertCompactPositiveZeroSupportVisibleLogEnergySet_nonempty_iff
     subst v
     apply hmu
     rw [U.map_zero]
+    simp
   · intro hv
     have hUv : U v ≠ 0 := by
       intro hz
