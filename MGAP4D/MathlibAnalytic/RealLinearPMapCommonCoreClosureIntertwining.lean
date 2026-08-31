@@ -9,29 +9,38 @@ open Function Set
 
 noncomputable section
 
+/-- The canonical map from the inverse-image domain of `B` to `B.domain`
+induced by a real linear-isometric equivalence. -/
+noncomputable def realLinearPMapPullbackDomainMap
+    {E F : Type}
+    [NormedAddCommGroup E] [NormedSpace ℝ E]
+    [NormedAddCommGroup F] [NormedSpace ℝ F]
+    (U : E ≃ₗᵢ[ℝ] F) (B : F →ₗ.[ℝ] F) :
+    (B.domain.comap U.toLinearEquiv.toLinearMap) →ₗ[ℝ] B.domain where
+  toFun := fun x => ⟨U (x : E), x.property⟩
+  map_add' := by
+    intro x y
+    ext
+    exact U.map_add (x : E) (y : E)
+  map_smul' := by
+    intro c x
+    ext
+    exact U.map_smul c (x : E)
+
 /-- Pull a partially-defined real-linear operator back through a real linear-isometric
-equivalence.  Its domain is the exact inverse image of the target domain and its
+equivalence. Its domain is the exact inverse image of the target domain and its
 action is conjugation by the equivalence. -/
 noncomputable def realLinearPMapPullback
-    {E F : Type*}
+    {E F : Type}
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     [NormedAddCommGroup F] [NormedSpace ℝ F]
     (U : E ≃ₗᵢ[ℝ] F) (B : F →ₗ.[ℝ] F) : E →ₗ.[ℝ] E where
   domain := B.domain.comap U.toLinearEquiv.toLinearMap
-  toFun :=
-    { toFun := fun x =>
-        U.symm (B ⟨U x, x.property⟩)
-      map_add' := by
-        intro x y
-        simp only [AddMemClass.mk_add_mk, LinearIsometryEquiv.map_add,
-          LinearPMap.map_add]
-      map_smul' := by
-        intro c x
-        simp only [SMulMemClass.mk_smul_mk, LinearIsometryEquiv.map_smul,
-          LinearPMap.map_smul] }
+  toFun := U.symm.toLinearEquiv.toLinearMap.comp
+    (B.toFun.comp (realLinearPMapPullbackDomainMap U B))
 
 @[simp] theorem realLinearPMapPullback_domain_iff
-    {E F : Type*}
+    {E F : Type}
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     [NormedAddCommGroup F] [NormedSpace ℝ F]
     (U : E ≃ₗᵢ[ℝ] F) (B : F →ₗ.[ℝ] F) (x : E) :
@@ -39,7 +48,7 @@ noncomputable def realLinearPMapPullback
   Iff.rfl
 
 @[simp] theorem realLinearPMapPullback_apply
-    {E F : Type*}
+    {E F : Type}
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     [NormedAddCommGroup F] [NormedSpace ℝ F]
     (U : E ≃ₗᵢ[ℝ] F) (B : F →ₗ.[ℝ] F)
@@ -51,7 +60,7 @@ noncomputable def realLinearPMapPullback
 /-- Equality with the pullback operator is exactly an operator-level unitary
 intertwining certificate. -/
 noncomputable def realLinearPMapUnitaryIntertwining_of_eq_pullback
-    {E F : Type*}
+    {E F : Type}
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     [NormedAddCommGroup F] [NormedSpace ℝ F]
     (A : E →ₗ.[ℝ] E) (B : F →ₗ.[ℝ] F)
@@ -73,13 +82,13 @@ noncomputable def realLinearPMapUnitaryIntertwining_of_eq_pullback
 partially-defined operator.
 
 The Hilbert equivalence is not an input: it is generated canonically from the
-two dense isometric realizations.  The operator assumptions live only at the
-common algebraic core.  `source_hasCore` says that closing the source operator
+two dense isometric realizations. The operator assumptions live only at the
+common algebraic core. `source_hasCore` says that closing the source operator
 restricted to the source realization recovers `A`; `pullback_hasCore` says the
-same after transporting `B` back by the generated equivalence.  Thus neither
+same after transporting `B` back by the generated equivalence. Thus neither
 exact global domain transport nor global intertwining is assumed. -/
 structure RealLinearPMapCommonCoreClosureIntertwining
-    {C E F : Type*}
+    {C E F : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
@@ -105,7 +114,7 @@ structure RealLinearPMapCommonCoreClosureIntertwining
 /-- On the source realization of the common core, the pullback target operator
 has exactly the same value as the source operator. -/
 theorem RealLinearPMapCommonCoreClosureIntertwining.eq_on_source
-    {C E F : Type*}
+    {C E F : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
@@ -127,7 +136,7 @@ theorem RealLinearPMapCommonCoreClosureIntertwining.eq_on_source
 /-- The two common-core restrictions are literally the same `LinearPMap` after
 pulling the target operator back by the generated unitary. -/
 theorem RealLinearPMapCommonCoreClosureIntertwining.domRestrict_eq
-    {C E F : Type*}
+    {C E F : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
@@ -164,7 +173,7 @@ theorem RealLinearPMapCommonCoreClosureIntertwining.domRestrict_eq
 exact equality of the full source operator and the pullback of the target
 operator. -/
 theorem RealLinearPMapCommonCoreClosureIntertwining.eq_pullback
-    {C E F : Type*}
+    {C E F : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
@@ -185,10 +194,10 @@ theorem RealLinearPMapCommonCoreClosureIntertwining.eq_pullback
     _ = PB := D.pullback_hasCore.closure_eq
 
 /-- A common operator core therefore generates the full unitary intertwining
-receipt.  This is the closure-level bridge needed to replace a generator-level
+receipt. This is the closure-level bridge needed to replace a generator-level
 OS/Wightman assumption by algebraic-core data. -/
 noncomputable def RealLinearPMapCommonCoreClosureIntertwining.toUnitaryIntertwining
-    {C E F : Type*}
+    {C E F : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
