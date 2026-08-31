@@ -91,21 +91,22 @@ private theorem realHilbertCompactPositiveZeroSupportSpectralModeVector_domain_a
       T hCompact hPositive
   let A := realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive
   let C := realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates T hCompact hPositive
-  have hUv : U (v : realHilbertZeroEigenspaceSupport T) = lp.single 2 mu v := by
+  let F := fun nu : Eigenvalues
+      (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+        Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+    eigenspace
+      (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+        Module.End ℝ (realHilbertZeroEigenspaceSupport T)) nu
+  have hUv : U (v : realHilbertZeroEigenspaceSupport T) =
+      lp.single (E := F) 2 mu v := by
     have h := congrArg U
       (realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv_symm_single
         T hCompact hPositive mu v)
-    simpa [U] using h.symm
+    simpa [U, F] using h.symm
   have hvDomain : (v : realHilbertZeroEigenspaceSupport T) ∈ A.domain := by
     change U (v : realHilbertZeroEigenspaceSupport T) ∈ C.domain
     rw [hUv]
     rw [realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_domain_mem_iff]
-    let F := fun nu : Eigenvalues
-        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
-      eigenspace
-        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) nu
     let hsingle : lp F 2 :=
       lp.single (E := F) 2 mu
         (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • v)
