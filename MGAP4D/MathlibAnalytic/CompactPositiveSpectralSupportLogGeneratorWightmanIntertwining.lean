@@ -22,8 +22,8 @@ noncomputable def realLinearPMapPointEnergySet
 /-- Operator-level unitary intertwining data for partially-defined real-linear
 operators.  `equiv` uses the operators' actual module structures, while
 `norm_map` records the Hilbert-isometric content explicitly.  This avoids
-making the bridge depend on a particular definitional path to the Module
-instance of a closed spectral-support subtype. -/
+making the bridge depend on the definitional Module-instance path attached to
+a closed spectral-support subtype. -/
 structure RealLinearPMapUnitaryIntertwining
     {E F : Type}
     [NormedAddCommGroup E] [Module ℝ E]
