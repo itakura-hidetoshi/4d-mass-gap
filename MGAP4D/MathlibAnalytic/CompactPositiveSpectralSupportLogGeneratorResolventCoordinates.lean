@@ -15,6 +15,15 @@ set_option synthInstance.maxHeartbeats 200000
 
 universe u
 
+local instance spectralSupportResolventCoordinatesComplete
+    {E : Type u}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    [CompleteSpace E]
+    (T : E →L[ℝ] E) :
+    CompleteSpace (realHilbertZeroEigenspaceSupport T) :=
+  (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
+
 /-- The ambient resolvent of the compact-positive support logarithmic generator
 is exactly diagonal in the intrinsic Hilbert-sum spectral coordinates.
 
