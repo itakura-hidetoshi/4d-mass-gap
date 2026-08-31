@@ -107,6 +107,16 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
         H N hN beta hbeta v := by
   let T := periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
     H N hN beta hbeta 1
+  letI nativeSupportNormedSpace : NormedSpace ℝ (realHilbertZeroEigenspaceSupport T) := by
+    change NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta)
+    exact effectiveVisibleEdgeSpectralSupportNormedSpace H N hN beta hbeta
+  letI nativeSupportComplete : CompleteSpace (realHilbertZeroEigenspaceSupport T) := by
+    change CompleteSpace
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta)
+    exact effectiveVisibleEdgeSpectralSupportComplete H N hN beta hbeta
   let hCompact : IsCompactOperator T :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
       H N hN beta hbeta 1 (by norm_num)
