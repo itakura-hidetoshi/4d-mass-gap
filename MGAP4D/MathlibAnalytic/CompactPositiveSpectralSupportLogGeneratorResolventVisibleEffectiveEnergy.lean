@@ -133,7 +133,8 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolvent_effec
       realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu = e} - lambda :=
     sub_pos.mpr (hlambda_lt_c.trans_le hcInf)
   have hinv := hratio.inv₀ (inv_ne_zero hshift.ne')
-  simpa [inv_div] using tendsto_const_nhds.add hinv
+  have hconst : Tendsto (fun _ : ℕ => lambda) atTop (𝓝 lambda) := tendsto_const_nhds
+  simpa [inv_div] using hconst.add hinv
 
 end
 
