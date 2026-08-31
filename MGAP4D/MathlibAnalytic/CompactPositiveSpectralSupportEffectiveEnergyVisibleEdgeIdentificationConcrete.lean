@@ -114,11 +114,15 @@ private theorem realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolve
     simpa [rho, q, F] using
       (realLinearPMapAmbientResolventQuadraticAmplitude_effectiveEnergy_eq_powInnerRatio
         A c hc hNorm hKer hSurj hSelfA hQuad v hv n lambda hlambda)
-  rw [show rho = (fun n : ℕ =>
-      lambda + inner ℝ ((F ^ (n + 1)) v) v / inner ℝ ((F ^ (n + 2)) v) v) by
-    funext n
-    exact hrhoPoint n]
-  exact hVisible
+  have hrho : Tendsto rho atTop
+      (𝓝 (sInf (realHilbertCompactPositiveZeroSupportVisibleLogEnergySet T hCompact hPositive v))) := by
+    have hfun : rho = (fun n : ℕ =>
+        lambda + inner ℝ ((F ^ (n + 1)) v) v / inner ℝ ((F ^ (n + 2)) v) v) := by
+      funext n
+      exact hrhoPoint n
+    rw [hfun]
+    exact hVisible
+  simpa [rho, q] using hrho
 
 local instance effectiveVisibleEdgeSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
