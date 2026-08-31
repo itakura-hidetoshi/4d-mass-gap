@@ -6,7 +6,7 @@ namespace MathlibAnalytic
 noncomputable section
 
 example
-    {C E : Type*}
+    {C E : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     {S : Submodule ℝ E}
