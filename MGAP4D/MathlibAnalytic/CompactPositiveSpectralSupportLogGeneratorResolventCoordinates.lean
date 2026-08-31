@@ -117,7 +117,10 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolvent_coord
         rw [hAxCoord]
       _ = (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu - lambda) •
           (U (x : realHilbertZeroEigenspaceSupport T)) mu := by
-        rw [sub_smul]
+        exact (sub_smul
+          (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)
+          lambda
+          ((U (x : realHilbertZeroEigenspaceSupport T)) mu)).symm
   have hxCoord :
       (U (x : realHilbertZeroEigenspaceSupport T)) mu =
         (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu - lambda)⁻¹ •
