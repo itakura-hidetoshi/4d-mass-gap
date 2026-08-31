@@ -16,7 +16,7 @@ The range-density hypothesis is deliberately phrased in the ambient space.
 This keeps model-facing constructions away from fragile typeclass paths on
 closed spectral-support subtypes until the final corestriction step. -/
 structure RealHilbertClosedSubspaceDenseCoreRealization
-    {C E : Type*}
+    {C E : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     (S : Submodule ℝ E) where
@@ -27,7 +27,7 @@ structure RealHilbertClosedSubspaceDenseCoreRealization
 /-- The underlying linear map of the corestriction, with its codomain fixed
 before any normed-space synthesis is attempted. -/
 noncomputable def RealHilbertClosedSubspaceDenseCoreRealization.corestrictLinearMap
-    {C E : Type*}
+    {C E : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     {S : Submodule ℝ E}
@@ -46,7 +46,7 @@ noncomputable def RealHilbertClosedSubspaceDenseCoreRealization.corestrictLinear
 /-- Corestrict a stable ambient linear isometry to the subspace in which its
 range actually lands. -/
 noncomputable def RealHilbertClosedSubspaceDenseCoreRealization.corestrict
-    {C E : Type*}
+    {C E : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     {S : Submodule ℝ E}
@@ -61,7 +61,7 @@ noncomputable def RealHilbertClosedSubspaceDenseCoreRealization.corestrict
     exact R.ambient.norm_map x
 
 @[simp] theorem RealHilbertClosedSubspaceDenseCoreRealization.corestrict_coe
-    {C E : Type*}
+    {C E : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     {S : Submodule ℝ E}
@@ -75,7 +75,7 @@ noncomputable def RealHilbertClosedSubspaceDenseCoreRealization.corestrict
 /-- Ambient density in a subspace becomes ordinary dense range after
 corestriction. -/
 theorem RealHilbertClosedSubspaceDenseCoreRealization.corestrict_denseRange
-    {C E : Type*}
+    {C E : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     {S : Submodule ℝ E}
@@ -105,12 +105,12 @@ theorem RealHilbertClosedSubspaceDenseCoreRealization.corestrict_denseRange
             (C := C) (E := E) (S := S) R) x,
           ⟨x, rfl⟩, rfl⟩
   rw [h_range, R.closure_range]
-  exact y.property
+  exact hy
 
 /-- If the ambient target is complete and the target subspace is closed, the
 common core completion is canonically the subspace itself. -/
 noncomputable def RealHilbertClosedSubspaceDenseCoreRealization.completionEquiv
-    {C E : Type*}
+    {C E : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     {S : Submodule ℝ E}
@@ -128,7 +128,7 @@ noncomputable def RealHilbertClosedSubspaceDenseCoreRealization.completionEquiv
 a canonical isometric equivalence of the subspaces without requiring either
 subspace's inherited normed-space instance to be named in the input data. -/
 noncomputable def realHilbertClosedSubspaceDenseCoreLinearIsometryEquiv
-    {C E F : Type*}
+    {C E F : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
@@ -146,7 +146,7 @@ noncomputable def realHilbertClosedSubspaceDenseCoreLinearIsometryEquiv
 /-- On the common dense core, the generated closed-subspace equivalence is
 exactly the pair of original ambient realizations after corestriction. -/
 @[simp] theorem realHilbertClosedSubspaceDenseCoreLinearIsometryEquiv_apply_corestrict
-    {C E F : Type*}
+    {C E F : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
@@ -177,7 +177,6 @@ exactly the pair of original ambient realizations after corestriction. -/
       (C := C) (E := E) (S := S) source)
     (RealHilbertClosedSubspaceDenseCoreRealization.corestrict_denseRange
       (C := C) (E := E) (S := S) source) x]
-  simp only [LinearIsometryEquiv.symm_apply_apply]
   exact denseLinearIsometryCompletionEquiv_apply_coe
     (RealHilbertClosedSubspaceDenseCoreRealization.corestrict
       (C := C) (E := F) (S := T) target)
@@ -187,7 +186,7 @@ exactly the pair of original ambient realizations after corestriction. -/
 /-- Operator-specific data on two closed subspaces, while both dense core
 realizations are supplied on their stable ambient carriers. -/
 structure RealLinearPMapClosedSubspaceDenseCoreIntertwining
-    {C E F : Type*}
+    {C E F : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
@@ -214,7 +213,7 @@ structure RealLinearPMapClosedSubspaceDenseCoreIntertwining
 /-- Ambient closed-subspace dense-core data generate the already-canonical
 operator-level unitary intertwining certificate. -/
 noncomputable def RealLinearPMapClosedSubspaceDenseCoreIntertwining.toUnitaryIntertwining
-    {C E F : Type*}
+    {C E F : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
@@ -237,7 +236,7 @@ noncomputable def RealLinearPMapClosedSubspaceDenseCoreIntertwining.toUnitaryInt
 /-- Consequently the actual nonzero point-energy sets agree, with no globally
 chosen subspace equivalence as independent input. -/
 theorem realLinearPMapPointEnergySet_eq_of_closedSubspaceDenseCoreIntertwining
-    {C E F : Type*}
+    {C E F : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
