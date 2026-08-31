@@ -120,24 +120,6 @@ local instance logGeneratorWightmanSpectralSupportComplete
     (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
       H N hN beta hbeta 1)).completeSpace_coe
 
-/-- The actual one-step logarithmic generator on the strictly-positive physical
-transfer support, packaged as a named partially-defined operator. -/
-noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta →ₗ.[ℝ]
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta := by
-  let T := periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-    H N hN beta hbeta 1
-  let hCompact : IsCompactOperator T :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
-      H N hN beta hbeta 1 (by norm_num)
-  let hPositive : T.IsPositive :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
-      H N hN beta hbeta 1
-  exact realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive
-
 /-- The operator-level OS/Wightman bridge required at the present frontier.
 It does not assume equality of spectra: it identifies the physical transfer
 support Hilbert space with `Ω⊥`, transports the generator domain exactly, and
