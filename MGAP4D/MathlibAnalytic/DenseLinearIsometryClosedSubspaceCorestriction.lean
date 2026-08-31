@@ -125,8 +125,9 @@ noncomputable def RealHilbertClosedSubspaceDenseCoreRealization.completionEquiv
       (C := C) (E := E) (S := S) R)
 
 /-- Two ambient dense-core realizations into closed Hilbert subspaces generate
-a canonical isometric equivalence of the subspaces without requiring either
-subspace's inherited normed-space instance to be named in the input data. -/
+a canonical isometric equivalence of the subspaces.  We reuse the generic
+common-dense-core equivalence after installing completeness of the closed
+subspaces, so no additional equivalence construction is duplicated here. -/
 noncomputable def realHilbertClosedSubspaceDenseCoreLinearIsometryEquiv
     {C E F : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
@@ -137,11 +138,18 @@ noncomputable def realHilbertClosedSubspaceDenseCoreLinearIsometryEquiv
     (target : RealHilbertClosedSubspaceDenseCoreRealization (C := C) T)
     (hS : IsClosed (S : Set E))
     (hT : IsClosed (T : Set F)) :
-    S ≃ₗᵢ[ℝ] T :=
-  (RealHilbertClosedSubspaceDenseCoreRealization.completionEquiv
-      (C := C) (E := E) (S := S) source hS).symm.trans
-    (RealHilbertClosedSubspaceDenseCoreRealization.completionEquiv
-      (C := C) (E := F) (S := T) target hT)
+    S ≃ₗᵢ[ℝ] T := by
+  letI : CompleteSpace S := hS.completeSpace_coe
+  letI : CompleteSpace T := hT.completeSpace_coe
+  exact realHilbertDenseCoreLinearIsometryEquiv
+    (RealHilbertClosedSubspaceDenseCoreRealization.corestrict
+      (C := C) (E := E) (S := S) source)
+    (RealHilbertClosedSubspaceDenseCoreRealization.corestrict_denseRange
+      (C := C) (E := E) (S := S) source)
+    (RealHilbertClosedSubspaceDenseCoreRealization.corestrict
+      (C := C) (E := F) (S := T) target)
+    (RealHilbertClosedSubspaceDenseCoreRealization.corestrict_denseRange
+      (C := C) (E := F) (S := T) target)
 
 /-- On the common dense core, the generated closed-subspace equivalence is
 exactly the pair of original ambient realizations after corestriction. -/
@@ -163,25 +171,32 @@ exactly the pair of original ambient realizations after corestriction. -/
           (C := C) (E := E) (S := S) source) x) =
       (RealHilbertClosedSubspaceDenseCoreRealization.corestrict
         (C := C) (E := F) (S := T) target) x := by
+  letI : CompleteSpace S := hS.completeSpace_coe
+  letI : CompleteSpace T := hT.completeSpace_coe
   change
-    RealHilbertClosedSubspaceDenseCoreRealization.completionEquiv
-        (C := C) (E := F) (S := T) target hT
-        ((RealHilbertClosedSubspaceDenseCoreRealization.completionEquiv
-            (C := C) (E := E) (S := S) source hS).symm
-          ((RealHilbertClosedSubspaceDenseCoreRealization.corestrict
-            (C := C) (E := E) (S := S) source) x)) =
+    realHilbertDenseCoreLinearIsometryEquiv
+        (RealHilbertClosedSubspaceDenseCoreRealization.corestrict
+          (C := C) (E := E) (S := S) source)
+        (RealHilbertClosedSubspaceDenseCoreRealization.corestrict_denseRange
+          (C := C) (E := E) (S := S) source)
+        (RealHilbertClosedSubspaceDenseCoreRealization.corestrict
+          (C := C) (E := F) (S := T) target)
+        (RealHilbertClosedSubspaceDenseCoreRealization.corestrict_denseRange
+          (C := C) (E := F) (S := T) target)
+        ((RealHilbertClosedSubspaceDenseCoreRealization.corestrict
+          (C := C) (E := E) (S := S) source) x) =
       (RealHilbertClosedSubspaceDenseCoreRealization.corestrict
         (C := C) (E := F) (S := T) target) x
-  rw [← denseLinearIsometryCompletionEquiv_apply_coe
+  exact realHilbertDenseCoreLinearIsometryEquiv_apply_source
     (RealHilbertClosedSubspaceDenseCoreRealization.corestrict
       (C := C) (E := E) (S := S) source)
     (RealHilbertClosedSubspaceDenseCoreRealization.corestrict_denseRange
-      (C := C) (E := E) (S := S) source) x]
-  exact denseLinearIsometryCompletionEquiv_apply_coe
+      (C := C) (E := E) (S := S) source)
     (RealHilbertClosedSubspaceDenseCoreRealization.corestrict
       (C := C) (E := F) (S := T) target)
     (RealHilbertClosedSubspaceDenseCoreRealization.corestrict_denseRange
-      (C := C) (E := F) (S := T) target) x
+      (C := C) (E := F) (S := T) target)
+    x
 
 /-- Operator-specific data on two closed subspaces, while both dense core
 realizations are supplied on their stable ambient carriers. -/
