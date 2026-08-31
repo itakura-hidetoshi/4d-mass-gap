@@ -67,7 +67,7 @@ private theorem realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolve
     (hQuad : ∀ x : A.domain, c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ^ 2 ≤ inner ℝ (A x) (x : realHilbertZeroEigenspaceSupport T))
     (v : realHilbertZeroEigenspaceSupport T) (hv : v ≠ 0) (lambda : ℝ) (hlambda : |lambda| < c) :
     Tendsto (fun n : ℕ => lambda + (iteratedDeriv (n + 1) (realLinearPMapAmbientResolventQuadraticAmplitude A c hc hNorm hKer hSurj v) lambda / ((n + 1 : ℝ) * iteratedDeriv n (realLinearPMapAmbientResolventQuadraticAmplitude A c hc hNorm hKer hSurj v) lambda))⁻¹)
-      atTop (𝓝 (sInf (realHilbertZeroEigenspaceSupportVisibleLogEnergySet T hPositive v))) := by
+      atTop (𝓝 (sInf (realHilbertCompactPositiveZeroSupportVisibleLogEnergySet T hCompact hPositive v))) := by
   let G := realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive
   have hNormG : ∀ x : G.domain,
       c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ≤ ‖G x‖ := by
@@ -100,8 +100,8 @@ private theorem realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolve
       (fun n : ℕ =>
         lambda + inner ℝ ((F ^ (n + 1)) v) v / inner ℝ ((F ^ (n + 2)) v) v)
       atTop
-      (𝓝 (sInf (realHilbertZeroEigenspaceSupportVisibleLogEnergySet T hPositive v))) := by
-    simpa [G, F, hGenerator] using hVisibleRaw
+      (𝓝 (sInf (realHilbertCompactPositiveZeroSupportVisibleLogEnergySet T hCompact hPositive v))) := by
+    simpa [G, F, hGenerator, realHilbertCompactPositiveZeroSupportVisibleLogEnergySet] using hVisibleRaw
   let q := realLinearPMapAmbientResolventQuadraticAmplitude
     A c hc hNorm hKer hSurj v
   let rho := fun n : ℕ =>
