@@ -194,16 +194,9 @@ theorem realHilbertCompactPositiveZeroSupportLogGeneratorPointEnergySet_subset_l
         rho • (U (x : realHilbertZeroEigenspaceSupport T)) mu := by
     simpa only [realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_apply,
       lp.coeFn_smul, Pi.smul_apply] using hmuEq
-  have hzero :
-      (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu - rho) •
-        (U (x : realHilbertZeroEigenspaceSupport T)) mu = 0 := by
-    rw [sub_smul]
-    exact sub_eq_zero.mpr hmuEq'
-  have hscalar : realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu - rho = 0 := by
-    rcases smul_eq_zero.mp hzero with h | h
-    · exact h
-    · exact (hmu h).elim
-  exact ⟨mu, sub_eq_zero.mp hscalar⟩
+  have henergy : realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu = rho := by
+    exact smul_left_injective ℝ hmu hmuEq'
+  exact ⟨mu, henergy⟩
 
 /-- The point-energy set of the actual logarithmic generator is exactly the
 transfer logarithmic spectrum. -/
