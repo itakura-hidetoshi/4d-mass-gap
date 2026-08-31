@@ -43,58 +43,35 @@ same weighted expansion proves that every ratio is at most the supremum of
 the visible `x_mu`.  Hence the ratio tends exactly to that state-visible
 reciprocal spectral edge. -/
 theorem realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolvent_momentRatio_tendsto_visibleReciprocalSup
-    {E : Type u}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    [CompleteSpace E]
-    (T : E →L[ℝ] E)
-    (hCompact : IsCompactOperator T)
-    (hPositive : T.IsPositive)
-    (c : ℝ)
-    (hc : 0 < c)
-    (hLower : ∀ mu : Eigenvalues
-      (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-        Module.End ℝ (realHilbertZeroEigenspaceSupport T)),
+    {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (T : E →L[ℝ] E) (hCompact : IsCompactOperator T) (hPositive : T.IsPositive)
+    (c : ℝ) (hc : 0 < c)
+    (hLower : ∀ mu : Eigenvalues (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+      Module.End ℝ (realHilbertZeroEigenspaceSupport T)),
       c ≤ realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)
-    (hNorm : ∀ z : (realHilbertCompactPositiveZeroSupportLogGenerator
-      T hCompact hPositive).domain,
+    (hNorm : ∀ z : (realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive).domain,
       c * ‖(z : realHilbertZeroEigenspaceSupport T)‖ ≤
         ‖realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive z‖)
-    (hKer : ∀ z : (realHilbertCompactPositiveZeroSupportLogGenerator
-      T hCompact hPositive).domain,
+    (hKer : ∀ z : (realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive).domain,
       realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive z = 0 → z = 0)
     (hSurj : Function.Surjective
       (realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive).toFun)
-    (hQuad : ∀ z : (realHilbertCompactPositiveZeroSupportLogGenerator
-      T hCompact hPositive).domain,
+    (hQuad : ∀ z : (realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive).domain,
       c * ‖(z : realHilbertZeroEigenspaceSupport T)‖ ^ 2 ≤
         inner ℝ (realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive z)
           (z : realHilbertZeroEigenspaceSupport T))
-    (v : realHilbertZeroEigenspaceSupport T)
-    (hv : v ≠ 0)
-    (lambda : ℝ)
-    (hlambda : |lambda| < c) :
+    (v : realHilbertZeroEigenspaceSupport T) (hv : v ≠ 0) (lambda : ℝ) (hlambda : |lambda| < c) :
     let A := realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive
-    let U :=
-      realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
-        T hCompact hPositive
-    let F := realLinearPMapAmbientResolventFamily_of_norm_lower_bound
-      A c hc hNorm hKer hSurj
-    let x := fun mu : Eigenvalues
-        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+    let U := realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv T hCompact hPositive
+    let F := realLinearPMapAmbientResolventFamily_of_norm_lower_bound A c hc hNorm hKer hSurj
+    let x := fun mu : Eigenvalues (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+      Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
       (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu - lambda)⁻¹
-    let a := fun mu : Eigenvalues
-        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
-      x mu * ‖(U v) mu‖ ^ 2
+    let a := fun mu : Eigenvalues (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+      Module.End ℝ (realHilbertZeroEigenspaceSupport T)) => x mu * ‖(U v) mu‖ ^ 2
     let X : Set ℝ := {y | ∃ mu, 0 < a mu ∧ x mu = y}
-    Tendsto
-      (fun n : ℕ =>
-        inner ℝ (((F lambda) ^ (n + 2)) v) v /
-          inner ℝ (((F lambda) ^ (n + 1)) v) v)
-      atTop
-      (𝓝 (sSup X)) := by
+    Tendsto (fun n : ℕ => inner ℝ (((F lambda) ^ (n + 2)) v) v /
+      inner ℝ (((F lambda) ^ (n + 1)) v) v) atTop (𝓝 (sSup X)) := by
   dsimp only
   let A := realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive
   let U :=
