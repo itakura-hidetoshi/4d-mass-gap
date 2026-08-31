@@ -10,14 +10,12 @@ open scoped InnerProductSpace lp LinearPMap Topology BigOperators
 
 noncomputable section
 
-universe u v
-
 /-- Operator-level unitary intertwining data for partially-defined real-linear
 operators.  The bridge records the Hilbert-space equivalence, exact domain
 transport in both directions, and operator intertwining on the source domain.
 Point-spectrum identification is derived from these data rather than assumed. -/
 structure RealLinearPMapUnitaryIntertwining
-    {E : Type u} {F : Type v}
+    {E F : Type}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [NormedAddCommGroup F] [InnerProductSpace ℝ F]
     (A : E →ₗ.[ℝ] E) (B : F →ₗ.[ℝ] F) where
@@ -30,7 +28,7 @@ structure RealLinearPMapUnitaryIntertwining
 /-- Unitary intertwining with exact domain transport preserves the real point
 spectrum of a partially-defined operator. -/
 theorem realLinearPMapPointSpectrum_eq_of_unitaryIntertwining
-    {E : Type u} {F : Type v}
+    {E F : Type}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [NormedAddCommGroup F] [InnerProductSpace ℝ F]
     (A : E →ₗ.[ℝ] E) (B : F →ₗ.[ℝ] F)
