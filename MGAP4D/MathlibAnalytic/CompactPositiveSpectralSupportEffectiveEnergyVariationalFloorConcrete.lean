@@ -100,16 +100,14 @@ private theorem realHilbertCompactPositiveZeroSupportSpectralModeVector_domain_a
     change U (v : realHilbertZeroEigenspaceSupport T) ∈ C.domain
     rw [hUv]
     rw [realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_domain_mem_iff]
-    let hsingle :
-        lp
-          (fun nu : Eigenvalues
-            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
-            eigenspace
-              (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-                Module.End ℝ (realHilbertZeroEigenspaceSupport T)) nu)
-          2 :=
-      lp.single 2 mu
+    let F := fun nu : Eigenvalues
+        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+      eigenspace
+        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) nu
+    let hsingle : lp F 2 :=
+      lp.single (E := F) 2 mu
         (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • v)
     have hweighted :
         (fun nu =>
@@ -123,7 +121,7 @@ private theorem realHilbertCompactPositiveZeroSupportSpectralModeVector_domain_a
         simp
       · simp [hnu]
     rw [hweighted]
-    simpa [hsingle] using hsingle.property
+    simpa [F, hsingle] using hsingle.property
   let x : A.domain := ⟨(v : realHilbertZeroEigenspaceSupport T), hvDomain⟩
   refine ⟨x, rfl, ?_⟩
   apply U.injective
@@ -416,16 +414,30 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
         H N hN beta hbeta mu)
   have h := realHilbertCompactPositiveZeroSupportLogEnergyInf_eq_visibleLogEnergyInfSet_inf
     T hCompact hPositive c hLower hSupport
+  have hV :
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportVisibleLogEnergyInfSet
+          H N hN beta hbeta =
+        realHilbertCompactPositiveZeroSupportVisibleLogEnergyInfSet T hCompact hPositive := by
+    ext rho
+    constructor
+    · rintro ⟨v, hv, hvrho⟩
+      refine ⟨v, hv, ?_⟩
+      simpa [
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportVisibleLogEnergyInf,
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportVisibleLogEnergySet,
+        T, hCompact, hPositive] using hvrho
+    · rintro ⟨v, hv, hvrho⟩
+      refine ⟨v, hv, ?_⟩
+      simpa [
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportVisibleLogEnergyInf,
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportVisibleLogEnergySet,
+        T, hCompact, hPositive] using hvrho
+  rw [hV]
   simpa [
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogEnergyInf,
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogEnergySet,
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportVisibleLogEnergyInfSet,
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportVisibleLogEnergyInf,
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportVisibleLogEnergySet,
-    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport,
     realHilbertCompactPositiveZeroSupportLogEnergyInf,
-    realHilbertCompactPositiveZeroSupportVisibleLogEnergyInfSet,
-    T, hCompact, hPositive] using h
+    T, hPositive] using h
 
 /-- The existing finite-volume coercive scale is a lower bound for the intrinsic
 physical support spectral floor. -/
