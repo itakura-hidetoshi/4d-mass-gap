@@ -42,7 +42,7 @@ theorem realHilbertCompactPositiveZeroSupportVisibleLogEnergySet_nonempty_iff
     intro hv
     subst v
     apply hmu
-    simpa using congrArg (fun y => y mu) U.map_zero
+    rfl
   · intro hv
     have hUv : U v ≠ 0 := by
       intro hz
