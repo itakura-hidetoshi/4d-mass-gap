@@ -185,10 +185,19 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
           (x : realHilbertZeroEigenspaceSupport T) := by
     rw [hGenerator]
     exact hQuad
+  let vNative : realHilbertZeroEigenspaceSupport T := by
+    simpa [T,
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport] using v
+  have hvNative : vNative ≠ 0 := by
+    intro hz
+    apply hv
+    simpa [vNative, T,
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport] using hz
   have hVisibleRaw :=
     realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolvent_effectiveEnergy_tendsto_visibleEnergyInf
+      (E := periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector H N hN beta hbeta)
       T hCompact hPositive c hc hLower hNormNative hKerNative hSurjNative hQuadNative
-      v hv lambda (by simpa [c] using hlambda)
+      vNative hvNative lambda (by simpa [c] using hlambda)
   let F := realLinearPMapAmbientResolventFamily_of_norm_lower_bound
     A c hc hNorm hKer hSurj lambda
   have hVisible : Tendsto
@@ -196,9 +205,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
       atTop
       (𝓝 (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportVisibleLogEnergyInf
         H N hN beta hbeta v)) := by
-    simpa [F, hGenerator,
+    simpa [F, hGenerator, vNative,
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportVisibleLogEnergyInf,
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportVisibleLogEnergySet,
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport,
       T, hCompact, hPositive] using hVisibleRaw
   let q := periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude
     H N hN beta hbeta v
