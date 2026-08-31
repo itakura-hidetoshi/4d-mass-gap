@@ -77,21 +77,27 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolvent_pow_c
     A c hc hNorm hKer hSurj
   induction k with
   | zero =>
-      simp [F, U]
+      simp
   | succ k ih =>
-      rw [pow_succ]
-      change (U (F lambda (((F lambda) ^ k) v))) mu = _
-      have hcoord :=
-        realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolvent_coordinates
-          T hCompact hPositive c hc hLower hNorm hKer hSurj
-          lambda hlambda (((F lambda) ^ k) v) mu
-      rw [show (U (F lambda (((F lambda) ^ k) v))) mu =
-          (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu - lambda)⁻¹ •
-            (U (((F lambda) ^ k) v)) mu by
-        simpa [A, U, F] using hcoord]
-      rw [ih, smul_smul]
-      simp only [pow_succ]
-      rw [mul_comm]
+      calc
+        (U (((F lambda) ^ (k + 1)) v)) mu =
+            (U (F lambda (((F lambda) ^ k) v))) mu := by
+          rw [pow_succ']
+          rfl
+        _ = (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu - lambda)⁻¹ •
+            (U (((F lambda) ^ k) v)) mu := by
+          have hcoord :=
+            realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolvent_coordinates
+              T hCompact hPositive c hc hLower hNorm hKer hSurj
+              lambda hlambda (((F lambda) ^ k) v) mu
+          simpa [A, U, F] using hcoord
+        _ = (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu - lambda)⁻¹ •
+            (((realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu - lambda)⁻¹ ^ k) •
+              (U v) mu) := by
+          rw [ih]
+        _ = ((realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu - lambda)⁻¹ ^ (k + 1)) •
+            (U v) mu := by
+          rw [smul_smul, pow_succ']
 
 /-- The quadratic resolvent moment is the positive weighted sum of shifted
 spectral reciprocals.  The weight of coordinate `mu` is exactly
@@ -149,8 +155,8 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolvent_pow_q
   calc
     inner ℝ (((F lambda) ^ k) v) v =
         inner ℝ (U (((F lambda) ^ k) v)) (U v) := by
-      symm
-      exact U.inner_map_map _ _
+      exact
+        (LinearIsometryEquiv.inner_map_map (𝕜 := ℝ) U (((F lambda) ^ k) v) v).symm
     _ = ∑' mu, inner ℝ ((U (((F lambda) ^ k) v)) mu) ((U v) mu) :=
       lp.inner_eq_tsum _ _
     _ = ∑' mu,
@@ -165,7 +171,7 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolvent_pow_q
           (realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolvent_pow_coordinates
             T hCompact hPositive c hc hLower hNorm hKer hSurj
             lambda hlambda k v mu)]
-      rw [real_inner_smul_left, real_inner_self_eq_norm_sq]
+      simp [real_inner_smul_left]
 
 end
 
