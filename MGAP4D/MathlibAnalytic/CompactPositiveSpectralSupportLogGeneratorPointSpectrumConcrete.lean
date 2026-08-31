@@ -188,14 +188,16 @@ theorem realHilbertCompactPositiveZeroSupportLogGeneratorPointEnergySet_subset_l
   rw [hcoords] at hUA
   rw [U.map_smul] at hUA
   have hmuEq := congrArg (fun y => y mu) hUA
-  rw [realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_apply] at hmuEq
-  change realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
-      (U (x : realHilbertZeroEigenspaceSupport T)) mu =
-    rho • (U (x : realHilbertZeroEigenspaceSupport T)) mu at hmuEq
+  have hmuEq' :
+      realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
+          (U (x : realHilbertZeroEigenspaceSupport T)) mu =
+        rho • (U (x : realHilbertZeroEigenspaceSupport T)) mu := by
+    simpa only [realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_apply,
+      lp.coeFn_smul, Pi.smul_apply] using hmuEq
   have hzero :
       (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu - rho) •
         (U (x : realHilbertZeroEigenspaceSupport T)) mu = 0 := by
-    rw [sub_smul, hmuEq, sub_self]
+    rw [sub_smul, hmuEq', sub_self]
   have hscalar : realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu - rho = 0 := by
     rcases smul_eq_zero.mp hzero with h | h
     · exact h
