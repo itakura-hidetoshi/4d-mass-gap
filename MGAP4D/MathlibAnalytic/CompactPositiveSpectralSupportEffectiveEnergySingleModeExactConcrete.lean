@@ -83,6 +83,32 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_effectiveEnergy_eq_doma
   rw [hratio]
   simp [r]
 
+/-- Native zero-eigenspace-support bridge for exact pure-mode effective-energy
+reconstruction. Fixing the support carrier before invoking the generic theorem
+avoids subtype inner-product instance diamonds in the physical specialization. -/
+private theorem realHilbertZeroEigenspaceSupport_resolventQuadraticAmplitude_effectiveEnergy_eq_domain_eigenvalue
+    {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (T : E →L[ℝ] E) [CompleteSpace (realHilbertZeroEigenspaceSupport T)]
+    (A : realHilbertZeroEigenspaceSupport T →ₗ.[ℝ] realHilbertZeroEigenspaceSupport T)
+    (c : ℝ) (hc : 0 < c)
+    (hNorm : ∀ x : A.domain,
+      c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ≤ ‖A x‖)
+    (hKer : ∀ x : A.domain, A x = 0 → x = 0)
+    (hSurj : Function.Surjective A.toFun)
+    (u : realHilbertZeroEigenspaceSupport T) (hu : u ≠ 0)
+    (rho : ℝ) (x : A.domain)
+    (hxu : (x : realHilbertZeroEigenspaceSupport T) = u)
+    (hAx : A x = rho • u)
+    (n : ℕ) (lambda : ℝ) (hlambda : |lambda| < c) :
+    let q := realLinearPMapAmbientResolventQuadraticAmplitude
+      A c hc hNorm hKer hSurj u
+    lambda +
+        (iteratedDeriv (n + 1) q lambda /
+          ((n + 1 : ℝ) * iteratedDeriv n q lambda))⁻¹ = rho := by
+  exact
+    realLinearPMapAmbientResolventQuadraticAmplitude_effectiveEnergy_eq_domain_eigenvalue
+      A c hc hNorm hKer hSurj u hu rho x hxu hAx n lambda hlambda
+
 local instance supportEffectiveEnergySingleModeExactConcreteSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
@@ -123,7 +149,7 @@ local instance supportEffectiveEnergySingleModeExactConcretePairHilbertSectorCom
 
 /-- A physical state on the single-log-generator-mode locus carries one genuine
 generator energy `rho` which is reconstructed exactly by every derivative order
-at every admissible resolvent parameter.  The asymptotic effective-energy limit
+at every admissible resolvent parameter. The asymptotic effective-energy limit
 is the same `rho` simultaneously for the whole coercive gap. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_singleLogGeneratorMode_exactEffectiveEnergy
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
@@ -194,12 +220,12 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
             ((n + 1 : ℝ) * iteratedDeriv n q lambda))⁻¹ = rho := by
     intro n
     have h :=
-      realLinearPMapAmbientResolventQuadraticAmplitude_effectiveEnergy_eq_domain_eigenvalue
-        A c hc hNorm hKer hSurj v hv rho x hxu hAx n lambda hlambda'
+      realHilbertZeroEigenspaceSupport_resolventQuadraticAmplitude_effectiveEnergy_eq_domain_eigenvalue
+        T A c hc hNorm hKer hSurj v hv rho x hxu hAx n lambda hlambda'
     simpa [
       q,
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude,
-      A, c, T] using h
+      A, c] using h
   let energy := fun n : ℕ =>
     lambda +
       (iteratedDeriv (n + 1) q lambda /
