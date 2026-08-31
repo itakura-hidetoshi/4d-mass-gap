@@ -197,7 +197,14 @@ theorem realHilbertCompactPositiveZeroSupportLogGeneratorPointEnergySet_subset_l
   have hzero :
       (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu - rho) •
         (U (x : realHilbertZeroEigenspaceSupport T)) mu = 0 := by
-    rw [sub_smul, hmuEq', sub_self]
+    calc
+      (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu - rho) •
+          (U (x : realHilbertZeroEigenspaceSupport T)) mu =
+        realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
+            (U (x : realHilbertZeroEigenspaceSupport T)) mu -
+          rho • (U (x : realHilbertZeroEigenspaceSupport T)) mu :=
+        sub_smul _ _ _
+      _ = 0 := sub_eq_zero.mpr hmuEq'
   have hscalar : realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu - rho = 0 := by
     rcases smul_eq_zero.mp hzero with h | h
     · exact h
