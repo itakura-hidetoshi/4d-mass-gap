@@ -126,10 +126,10 @@ private theorem realHilbertCompactPositiveZeroSupportSpectralModeVector_domain_a
     change U (v : realHilbertZeroEigenspaceSupport T) ∈ C.domain
     rw [hUv]
     rw [realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_domain_mem_iff]
-    refine (memℓp_zero ?_).of_exponent_ge zero_le
+    refine (memℓp_zero ?_).of_exponent_ge (show (0 : ℝ≥0∞) ≤ 2 by norm_num)
     refine (Set.finite_singleton mu).subset ?_
     intro nu hnu
-    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
+    simp only [Set.mem_singleton_iff]
     by_contra hne
     apply hnu
     simp [hne]
