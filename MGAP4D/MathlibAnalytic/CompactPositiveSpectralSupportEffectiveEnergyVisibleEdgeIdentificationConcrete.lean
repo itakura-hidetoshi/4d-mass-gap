@@ -50,6 +50,95 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_effectiveEnergy_eq_powI
   field_simp [hmN1]
   <;> ring
 
+/-- Native zero-eigenspace-support bridge from the adjacent resolvent-moment
+limit to the factorial-normalized derivative effective-energy limit.  Keeping
+both the resolvent family and the derivative amplitude on the native support
+prevents the concrete physical support alias from entering normed-space
+instance synthesis. -/
+private theorem realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolvent_derivativeEffectiveEnergy_tendsto_visibleEnergyInf_native
+    {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (T : E →L[ℝ] E)
+    [CompleteSpace (realHilbertZeroEigenspaceSupport T)]
+    (hCompact : IsCompactOperator T) (hPositive : T.IsPositive)
+    (A : realHilbertZeroEigenspaceSupport T →ₗ.[ℝ] realHilbertZeroEigenspaceSupport T)
+    (hGenerator : realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive = A)
+    (c : ℝ) (hc : 0 < c)
+    (hLower : ∀ mu : Eigenvalues
+      (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+        Module.End ℝ (realHilbertZeroEigenspaceSupport T)),
+      c ≤ realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)
+    (hNorm : ∀ x : A.domain,
+      c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ≤ ‖A x‖)
+    (hKer : ∀ x : A.domain, A x = 0 → x = 0)
+    (hSurj : Function.Surjective A.toFun)
+    (hQuad : ∀ x : A.domain,
+      c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ^ 2 ≤
+        inner ℝ (A x) (x : realHilbertZeroEigenspaceSupport T))
+    (v : realHilbertZeroEigenspaceSupport T) (hv : v ≠ 0)
+    (lambda : ℝ) (hlambda : |lambda| < c) :
+    Tendsto
+      (fun n : ℕ =>
+        lambda +
+          (iteratedDeriv (n + 1)
+              (realLinearPMapAmbientResolventQuadraticAmplitude
+                A c hc hNorm hKer hSurj v) lambda /
+            ((n + 1 : ℝ) * iteratedDeriv n
+              (realLinearPMapAmbientResolventQuadraticAmplitude
+                A c hc hNorm hKer hSurj v) lambda))⁻¹)
+      atTop
+      (𝓝 (sInf (realHilbertZeroEigenspaceSupportVisibleLogEnergySet T hPositive v))) := by
+  let G := realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive
+  have hNormG : ∀ x : G.domain,
+      c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ≤ ‖G x‖ := by
+    rw [show G = A by exact hGenerator]
+    exact hNorm
+  have hKerG : ∀ x : G.domain, G x = 0 → x = 0 := by
+    rw [show G = A by exact hGenerator]
+    exact hKer
+  have hSurjG : Function.Surjective G.toFun := by
+    rw [show G = A by exact hGenerator]
+    exact hSurj
+  have hQuadG : ∀ x : G.domain,
+      c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ^ 2 ≤
+        inner ℝ (G x) (x : realHilbertZeroEigenspaceSupport T) := by
+    rw [show G = A by exact hGenerator]
+    exact hQuad
+  have hSelfG : IsSelfAdjoint G := by
+    exact realHilbertCompactPositiveZeroSupportLogGenerator_isSelfAdjoint
+      T hCompact hPositive
+  have hSelfA : IsSelfAdjoint A := by
+    rw [← hGenerator]
+    exact hSelfG
+  have hVisibleRaw :=
+    realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolvent_effectiveEnergy_tendsto_visibleEnergyInf
+      T hCompact hPositive c hc hLower hNormG hKerG hSurjG hQuadG
+      v hv lambda hlambda
+  let F := realLinearPMapAmbientResolventFamily_of_norm_lower_bound
+    A c hc hNorm hKer hSurj lambda
+  have hVisible : Tendsto
+      (fun n : ℕ =>
+        lambda + inner ℝ ((F ^ (n + 1)) v) v / inner ℝ ((F ^ (n + 2)) v) v)
+      atTop
+      (𝓝 (sInf (realHilbertZeroEigenspaceSupportVisibleLogEnergySet T hPositive v))) := by
+    simpa [G, F, hGenerator] using hVisibleRaw
+  let q := realLinearPMapAmbientResolventQuadraticAmplitude
+    A c hc hNorm hKer hSurj v
+  let rho := fun n : ℕ =>
+    lambda +
+      (iteratedDeriv (n + 1) q lambda /
+        ((n + 1 : ℝ) * iteratedDeriv n q lambda))⁻¹
+  have hrhoPoint : ∀ n : ℕ,
+      rho n = lambda + inner ℝ ((F ^ (n + 1)) v) v / inner ℝ ((F ^ (n + 2)) v) v := by
+    intro n
+    simpa [rho, q, F] using
+      (realLinearPMapAmbientResolventQuadraticAmplitude_effectiveEnergy_eq_powInnerRatio
+        A c hc hNorm hKer hSurj hSelfA hQuad v hv n lambda hlambda)
+  rw [show rho = (fun n : ℕ =>
+      lambda + inner ℝ ((F ^ (n + 1)) v) v / inner ℝ ((F ^ (n + 2)) v) v) by
+    funext n
+    exact hrhoPoint n]
+  exact hVisible
+
 local instance effectiveVisibleEdgeSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
@@ -107,16 +196,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
         H N hN beta hbeta v := by
   let T := periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
     H N hN beta hbeta 1
-  letI nativeSupportNormedSpace : NormedSpace ℝ (realHilbertZeroEigenspaceSupport T) := by
-    change NormedSpace ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta)
-    exact effectiveVisibleEdgeSpectralSupportNormedSpace H N hN beta hbeta
-  letI nativeSupportComplete : CompleteSpace (realHilbertZeroEigenspaceSupport T) := by
-    change CompleteSpace
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta)
-    exact effectiveVisibleEdgeSpectralSupportComplete H N hN beta hbeta
+  letI : CompleteSpace (realHilbertZeroEigenspaceSupport T) := by
+    exact (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
   let hCompact : IsCompactOperator T :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
       H N hN beta hbeta 1 (by norm_num)
@@ -162,9 +243,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
     rfl
-  have hSelfNative := realHilbertCompactPositiveZeroSupportLogGenerator_isSelfAdjoint
-    T hCompact hPositive
-  rw [hGenerator] at hSelfNative
   have hLower : ∀ mu : Eigenvalues
       (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
         Module.End ℝ (realHilbertZeroEigenspaceSupport T)),
@@ -176,78 +254,30 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport] using
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralLogEnergy_ge_two_mul_finiteVolumeDecayRate
         H N hN beta hbeta mu)
-  have hNormNative : ∀ x : (realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive).domain,
-      c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ≤
-        ‖realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive x‖ := by
-    rw [hGenerator]
-    exact hNorm
-  have hKerNative : ∀ x : (realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive).domain,
-      realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive x = 0 → x = 0 := by
-    rw [hGenerator]
-    exact hKer
-  have hSurjNative : Function.Surjective
-      (realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive).toFun := by
-    rw [hGenerator]
-    exact hSurj
-  have hQuadNative : ∀ x : (realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive).domain,
-      c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ^ 2 ≤
-        inner ℝ (realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive x)
-          (x : realHilbertZeroEigenspaceSupport T) := by
-    rw [hGenerator]
-    exact hQuad
-  let vNative : realHilbertZeroEigenspaceSupport T := by
-    simpa [T,
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport] using v
-  have hvNative : vNative ≠ 0 := by
-    intro hz
-    apply hv
-    simpa [vNative, T,
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport] using hz
-  have hVisibleRaw :=
-    realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolvent_effectiveEnergy_tendsto_visibleEnergyInf
-      (E := periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector H N hN beta hbeta)
-      T hCompact hPositive c hc hLower hNormNative hKerNative hSurjNative hQuadNative
-      vNative hvNative lambda (by simpa [c] using hlambda)
-  let F := realLinearPMapAmbientResolventFamily_of_norm_lower_bound
-    A c hc hNorm hKer hSurj lambda
-  have hVisible : Tendsto
-      (fun n : ℕ => lambda + inner ℝ ((F ^ (n + 1)) v) v / inner ℝ ((F ^ (n + 2)) v) v)
-      atTop
-      (𝓝 (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportVisibleLogEnergyInf
-        H N hN beta hbeta v)) := by
-    simpa [F, hGenerator, vNative,
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportVisibleLogEnergyInf,
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportVisibleLogEnergySet,
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport,
-      T, hCompact, hPositive] using hVisibleRaw
+  have hVisibleNative :=
+    realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolvent_derivativeEffectiveEnergy_tendsto_visibleEnergyInf_native
+      T hCompact hPositive A hGenerator c hc hLower hNorm hKer hSurj hQuad
+      v hv lambda (by simpa [c] using hlambda)
   let q := periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude
     H N hN beta hbeta v
   let rho := fun n : ℕ => lambda +
     (iteratedDeriv (n + 1) q lambda / ((n + 1 : ℝ) * iteratedDeriv n q lambda))⁻¹
-  have hrhoPoint : ∀ n : ℕ,
-      rho n = lambda + inner ℝ ((F ^ (n + 1)) v) v / inner ℝ ((F ^ (n + 2)) v) v := by
-    intro n
-    have h := realLinearPMapAmbientResolventQuadraticAmplitude_effectiveEnergy_eq_powInnerRatio
-      A c hc hNorm hKer hSurj hSelfNative hQuad v hv n lambda
-      (by simpa [c] using hlambda)
-    simpa [rho, q, F,
-      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude,
-      A, c] using h
-  have hVisibleRho : Tendsto rho atTop
+  have hVisible : Tendsto rho atTop
       (𝓝 (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportVisibleLogEnergyInf
         H N hN beta hbeta v)) := by
-    rw [show rho = (fun n : ℕ => lambda +
-      inner ℝ ((F ^ (n + 1)) v) v / inner ℝ ((F ^ (n + 2)) v) v) by
-        funext n
-        exact hrhoPoint n]
-    exact hVisible
+    simpa [rho, q,
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude,
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportVisibleLogEnergyInf,
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportVisibleLogEnergySet,
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport,
+      A, c, T, hCompact, hPositive] using hVisibleNative
   have hEffective : Tendsto rho atTop
       (𝓝 (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_effectiveEnergyLimit
         H N hN beta hbeta v lambda)) := by
     simpa [rho, q] using
       (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_tendsto_effectiveEnergyLimit
         H N hN beta hbeta v hv lambda hlambda)
-  exact tendsto_nhds_unique hEffective hVisibleRho
+  exact tendsto_nhds_unique hEffective hVisible
 
 /-- Consequently the asymptotic effective energy is independent of the
 admissible resolvent parameter. -/
