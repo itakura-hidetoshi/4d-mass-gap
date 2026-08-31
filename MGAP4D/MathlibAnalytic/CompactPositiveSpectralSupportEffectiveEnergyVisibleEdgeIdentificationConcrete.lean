@@ -51,10 +51,9 @@ theorem realLinearPMapAmbientResolventQuadraticAmplitude_effectiveEnergy_eq_powI
   <;> ring
 
 /-- Native zero-eigenspace-support bridge from the adjacent resolvent-moment
-limit to the factorial-normalized derivative effective-energy limit.  Keeping
+limit to the factorial-normalized derivative effective-energy limit. Keeping
 both the resolvent family and the derivative amplitude on the native support
-prevents the concrete physical support alias from entering normed-space
-instance synthesis. -/
+prevents the concrete physical support alias from entering typeclass search. -/
 private theorem realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolvent_derivativeEffectiveEnergy_tendsto_visibleEnergyInf_native
     {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (T : E →L[ℝ] E)
