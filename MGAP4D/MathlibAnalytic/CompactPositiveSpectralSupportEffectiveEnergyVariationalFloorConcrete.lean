@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.CompactPositiveSpectralSupportEffectiveEnergyVisibleEdgeIdentificationConcrete
+import MGAP4D.MathlibAnalytic.CompactPositiveSpectralSupportLogGeneratorTransferEigenspaceBridge
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -52,8 +53,8 @@ noncomputable def realHilbertCompactPositiveZeroSupportSpectralModeVector
     eigenspace
       (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
         Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu :=
-  ⟨Classical.choose mu.property.exists_hasEigenvector,
-    (Classical.choose_spec mu.property.exists_hasEigenvector).1⟩
+  ⟨Classical.choose mu.property.exists_hasUnifEigenvector,
+    (Classical.choose_spec mu.property.exists_hasUnifEigenvector).1⟩
 
 /-- The canonical chosen spectral-mode vector is nonzero. -/
 theorem realHilbertCompactPositiveZeroSupportSpectralModeVector_ne_zero
@@ -64,7 +65,7 @@ theorem realHilbertCompactPositiveZeroSupportSpectralModeVector_ne_zero
         Module.End ℝ (realHilbertZeroEigenspaceSupport T))) :
     (realHilbertCompactPositiveZeroSupportSpectralModeVector T hPositive mu :
       realHilbertZeroEigenspaceSupport T) ≠ 0 := by
-  exact (Classical.choose_spec mu.property.exists_hasEigenvector).2
+  exact (Classical.choose_spec mu.property.exists_hasUnifEigenvector).2
 
 /-- A state concentrated in one transfer eigenspace sees exactly one
 logarithmic energy. -/
@@ -341,6 +342,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportVisibleLogEnergyInf,
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportVisibleLogEnergySet,
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport,
+    realHilbertCompactPositiveZeroSupportLogEnergyInf,
+    realHilbertCompactPositiveZeroSupportVisibleLogEnergyInfSet,
     T, hCompact, hPositive] using h
 
 /-- The existing finite-volume coercive scale is a lower bound for the intrinsic
@@ -380,6 +383,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogEnergyInf,
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogEnergySet,
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport,
+    realHilbertCompactPositiveZeroSupportLogEnergyInf,
     T, hPositive] using h
 
 /-- The set of asymptotic effective-energy limits over all nonzero physical
