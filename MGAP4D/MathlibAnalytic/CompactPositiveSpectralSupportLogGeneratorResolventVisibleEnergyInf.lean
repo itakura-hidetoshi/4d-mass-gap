@@ -103,12 +103,13 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_visibleReciprocalSup_e
       have hInfLe : sInf Y ≤ energy mu := hYGLB.1 henergyY
       exact inv_anti₀ hInfShift (sub_le_sub_right hInfLe lambda)
     · intro z hz
-      rcases hXne with ⟨y, hy⟩
-      rcases hy with ⟨mu0, ha0, hxy0⟩
+      rcases hXne with ⟨y, hyX⟩
+      have hyUpper : y ≤ z := hz hyX
+      rcases hyX with ⟨mu0, ha0, hxy0⟩
       have hypos : 0 < y := by
         rw [← hxy0]
         exact hxpos mu0
-      have hzpos : 0 < z := hypos.trans_le (hz hy)
+      have hzpos : 0 < z := hypos.trans_le hyUpper
       have hlowerZ : lambda + 1 / z ∈ lowerBounds Y := by
         rintro e ⟨mu, hmu, rfl⟩
         have ha : 0 < a mu := (haPosIff mu).2 hmu
