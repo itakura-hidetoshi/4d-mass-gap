@@ -41,7 +41,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorT
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_effectiveEnergyLimit_lt_of_not_logGeneratorMode
         H N hN beta hbeta v hv lambda hlambda hnot
     have hlt := hltRaw n
-    dsimp only at hlt
     have hlt' :
         periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportResolventQuadraticAmplitude_effectiveEnergyLimit
             H N hN beta hbeta v lambda <
