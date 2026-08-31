@@ -56,36 +56,18 @@ both the resolvent family and the derivative amplitude on the native support
 prevents the concrete physical support alias from entering typeclass search. -/
 private theorem realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolvent_derivativeEffectiveEnergy_tendsto_visibleEnergyInf_native
     {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    (T : E →L[ℝ] E)
-    [CompleteSpace (realHilbertZeroEigenspaceSupport T)]
+    (T : E →L[ℝ] E) [CompleteSpace (realHilbertZeroEigenspaceSupport T)]
     (hCompact : IsCompactOperator T) (hPositive : T.IsPositive)
     (A : realHilbertZeroEigenspaceSupport T →ₗ.[ℝ] realHilbertZeroEigenspaceSupport T)
     (hGenerator : realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive = A)
     (c : ℝ) (hc : 0 < c)
-    (hLower : ∀ mu : Eigenvalues
-      (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-        Module.End ℝ (realHilbertZeroEigenspaceSupport T)),
-      c ≤ realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)
-    (hNorm : ∀ x : A.domain,
-      c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ≤ ‖A x‖)
-    (hKer : ∀ x : A.domain, A x = 0 → x = 0)
-    (hSurj : Function.Surjective A.toFun)
-    (hQuad : ∀ x : A.domain,
-      c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ^ 2 ≤
-        inner ℝ (A x) (x : realHilbertZeroEigenspaceSupport T))
-    (v : realHilbertZeroEigenspaceSupport T) (hv : v ≠ 0)
-    (lambda : ℝ) (hlambda : |lambda| < c) :
-    Tendsto
-      (fun n : ℕ =>
-        lambda +
-          (iteratedDeriv (n + 1)
-              (realLinearPMapAmbientResolventQuadraticAmplitude
-                A c hc hNorm hKer hSurj v) lambda /
-            ((n + 1 : ℝ) * iteratedDeriv n
-              (realLinearPMapAmbientResolventQuadraticAmplitude
-                A c hc hNorm hKer hSurj v) lambda))⁻¹)
-      atTop
-      (𝓝 (sInf (realHilbertZeroEigenspaceSupportVisibleLogEnergySet T hPositive v))) := by
+    (hLower : ∀ mu : Eigenvalues (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric : Module.End ℝ (realHilbertZeroEigenspaceSupport T)), c ≤ realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu)
+    (hNorm : ∀ x : A.domain, c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ≤ ‖A x‖)
+    (hKer : ∀ x : A.domain, A x = 0 → x = 0) (hSurj : Function.Surjective A.toFun)
+    (hQuad : ∀ x : A.domain, c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ^ 2 ≤ inner ℝ (A x) (x : realHilbertZeroEigenspaceSupport T))
+    (v : realHilbertZeroEigenspaceSupport T) (hv : v ≠ 0) (lambda : ℝ) (hlambda : |lambda| < c) :
+    Tendsto (fun n : ℕ => lambda + (iteratedDeriv (n + 1) (realLinearPMapAmbientResolventQuadraticAmplitude A c hc hNorm hKer hSurj v) lambda / ((n + 1 : ℝ) * iteratedDeriv n (realLinearPMapAmbientResolventQuadraticAmplitude A c hc hNorm hKer hSurj v) lambda))⁻¹)
+      atTop (𝓝 (sInf (realHilbertZeroEigenspaceSupportVisibleLogEnergySet T hPositive v))) := by
   let G := realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive
   have hNormG : ∀ x : G.domain,
       c * ‖(x : realHilbertZeroEigenspaceSupport T)‖ ≤ ‖G x‖ := by
