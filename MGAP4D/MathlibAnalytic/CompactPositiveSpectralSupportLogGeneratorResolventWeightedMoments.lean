@@ -155,8 +155,17 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolvent_pow_q
   calc
     inner ℝ (((F lambda) ^ k) v) v =
         inner ℝ (U (((F lambda) ^ k) v)) (U v) := by
-      exact
-        (LinearIsometryEquiv.inner_map_map (𝕜 := ℝ) U (((F lambda) ^ k) v) v).symm
+      let x := ((F lambda) ^ k) v
+      calc
+        inner ℝ x v =
+            (‖x + v‖ * ‖x + v‖ - ‖x‖ * ‖x‖ - ‖v‖ * ‖v‖) / 2 :=
+          real_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two x v
+        _ =
+            (‖U x + U v‖ * ‖U x + U v‖ - ‖U x‖ * ‖U x‖ - ‖U v‖ * ‖U v‖) / 2 := by
+          rw [← U.norm_map (x + v), ← U.norm_map x, ← U.norm_map v, U.map_add]
+        _ = inner ℝ (U x) (U v) :=
+          (real_inner_eq_norm_add_mul_self_sub_norm_mul_self_sub_norm_mul_self_div_two
+            (U x) (U v)).symm
     _ = ∑' mu, inner ℝ ((U (((F lambda) ^ k) v)) mu) ((U v) mu) :=
       lp.inner_eq_tsum _ _
     _ = ∑' mu,
