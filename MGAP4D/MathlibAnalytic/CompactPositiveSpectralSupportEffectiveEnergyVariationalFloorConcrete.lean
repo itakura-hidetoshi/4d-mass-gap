@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.CompactPositiveSpectralSupportEffectiveEnergyVisibleEdgeIdentificationConcrete
-import MGAP4D.MathlibAnalytic.CompactPositiveSpectralSupportLogGeneratorTransferEigenspaceBridge
+import MGAP4D.MathlibAnalytic.CompactPositiveSpectralSupportLogGenerator
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -67,6 +67,87 @@ theorem realHilbertCompactPositiveZeroSupportSpectralModeVector_ne_zero
       realHilbertZeroEigenspaceSupport T) ≠ 0 := by
   exact (Classical.choose_spec mu.property.exists_hasUnifEigenvector).2
 
+/-- A chosen support eigenspace vector belongs to the actual logarithmic-generator
+domain, where the generator acts by its exact logarithmic energy. -/
+private theorem realHilbertCompactPositiveZeroSupportSpectralModeVector_domain_action
+    {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (T : E →L[ℝ] E) (hCompact : IsCompactOperator T) (hPositive : T.IsPositive)
+    (mu : Eigenvalues
+      (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+        Module.End ℝ (realHilbertZeroEigenspaceSupport T)))
+    (v : eigenspace
+      (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+        Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu) :
+    ∃ x : (realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive).domain,
+      (x : realHilbertZeroEigenspaceSupport T) = (v : realHilbertZeroEigenspaceSupport T) ∧
+      realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive x =
+        realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
+          (v : realHilbertZeroEigenspaceSupport T) := by
+  classical
+  letI : CompleteSpace (realHilbertZeroEigenspaceSupport T) :=
+    (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
+  let U :=
+    realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
+      T hCompact hPositive
+  let A := realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive
+  let C := realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates T hCompact hPositive
+  have hUv : U (v : realHilbertZeroEigenspaceSupport T) = lp.single 2 mu v := by
+    have h := congrArg U
+      (realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv_symm_single
+        T hCompact hPositive mu v)
+    simpa [U] using h.symm
+  have hvDomain : (v : realHilbertZeroEigenspaceSupport T) ∈ A.domain := by
+    change U (v : realHilbertZeroEigenspaceSupport T) ∈ C.domain
+    rw [hUv]
+    rw [realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_domain_mem_iff]
+    let hsingle :
+        lp
+          (fun nu : Eigenvalues
+            (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+              Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
+            eigenspace
+              (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+                Module.End ℝ (realHilbertZeroEigenspaceSupport T)) nu)
+          2 :=
+      lp.single 2 mu
+        (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • v)
+    have hweighted :
+        (fun nu =>
+          realHilbertZeroEigenspaceSupportLogEnergy T hPositive nu • Pi.single mu v nu) =
+        (fun nu =>
+          Pi.single mu
+            (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • v) nu) := by
+      funext nu
+      by_cases hnu : nu = mu
+      · subst nu
+        simp
+      · simp [hnu]
+    rw [hweighted]
+    simpa [hsingle] using hsingle.property
+  let x : A.domain := ⟨(v : realHilbertZeroEigenspaceSupport T), hvDomain⟩
+  refine ⟨x, rfl, ?_⟩
+  apply U.injective
+  have hcoords :=
+    realHilbertCompactPositiveZeroSupportLogGenerator_coordinates T hCompact hPositive x
+  change U (A x) =
+    U (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
+      (v : realHilbertZeroEigenspaceSupport T))
+  rw [hcoords]
+  apply lp.ext
+  funext nu
+  rw [realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_apply]
+  change realHilbertZeroEigenspaceSupportLogEnergy T hPositive nu •
+      (U (v : realHilbertZeroEigenspaceSupport T)) nu =
+    (U (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
+      (v : realHilbertZeroEigenspaceSupport T))) nu
+  rw [hUv]
+  rw [U.map_smul]
+  rw [hUv]
+  by_cases hnu : nu = mu
+  · subst nu
+    simp
+  · simp [hnu]
+
 /-- A state concentrated in one transfer eigenspace sees exactly one
 logarithmic energy. -/
 theorem realHilbertCompactPositiveZeroSupportVisibleLogEnergySet_spectralModeVector
@@ -84,7 +165,7 @@ theorem realHilbertCompactPositiveZeroSupportVisibleLogEnergySet_spectralModeVec
     simpa [v, v0] using
       realHilbertCompactPositiveZeroSupportSpectralModeVector_ne_zero T hPositive mu
   obtain ⟨x, hxv, hAx⟩ :=
-    realHilbertCompactPositiveZeroSupportLogGenerator_eigenvector_domain_action
+    realHilbertCompactPositiveZeroSupportSpectralModeVector_domain_action
       T hCompact hPositive mu v0
   have hnonempty :=
     (realHilbertCompactPositiveZeroSupportVisibleLogEnergySet_nonempty_iff
