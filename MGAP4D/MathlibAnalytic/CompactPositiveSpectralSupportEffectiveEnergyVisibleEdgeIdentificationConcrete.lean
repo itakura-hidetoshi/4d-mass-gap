@@ -76,6 +76,13 @@ local instance effectiveVisibleEdgePairHilbertSectorComplete
     CompleteSpace (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
       H N hN beta hbeta) :=
   periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete H N hN beta hbeta
+local instance effectiveVisibleEdgeSpectralSupportNormedSpace
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
+    NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta) := by
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+  infer_instance
 local instance effectiveVisibleEdgeSpectralSupportComplete
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     CompleteSpace
