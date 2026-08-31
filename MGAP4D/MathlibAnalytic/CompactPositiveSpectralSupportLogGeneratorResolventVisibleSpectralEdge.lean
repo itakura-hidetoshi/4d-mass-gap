@@ -119,7 +119,7 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolvent_momen
         lambda hlambda k v)
   have hsummable : ∀ k : ℕ, Summable (fun mu => x mu ^ k * w mu) := by
     intro k
-    have hs := lp.summable_inner
+    have hs := lp.summable_inner (𝕜 := ℝ)
       (U (((F lambda) ^ k) v)) (U v)
     refine hs.congr ?_
     intro mu
@@ -154,7 +154,7 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolvent_momen
     have hlog :=
       realLinearPMapAmbientResolventFamily_pow_inner_logConvex
         A c hc hNorm hKer hSurj hself hQuad lambda hlambda (n + 1) v hv
-    simpa [m, F, mul_comm] using hlog
+    simpa [m, F, pow_two, mul_comm] using hlog
   have hUv : U v ≠ 0 := by
     intro hzero
     apply hv
@@ -162,10 +162,14 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolvent_momen
     simpa using hzero
   have hmuVisible : ∃ mu, (U v) mu ≠ 0 := by
     by_contra hnone
-    push_neg at hnone
+    have hzero : ∀ mu, (U v) mu = 0 := by
+      intro mu
+      by_contra hmu
+      exact hnone ⟨mu, hmu⟩
     apply hUv
-    ext mu
-    exact hnone mu
+    apply Subtype.ext
+    funext mu
+    simpa using hzero mu
   have hXne : X.Nonempty := by
     rcases hmuVisible with ⟨mu, hmu⟩
     refine ⟨x mu, ?_⟩
@@ -180,13 +184,6 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolvent_momen
       sub_le_sub_right (hLower mu) lambda
     simpa [x] using inv_anti₀ hclambda hshift
   have hXLUB : IsLUB X (sSup X) := isLUB_csSup hXne hXbdd
-  have hSpos : 0 < sSup X := by
-    rcases hXne with ⟨y, hy⟩
-    rcases hy with ⟨mu, hmu, hxy⟩
-    have hypos : 0 < y := by
-      rw [← hxy]
-      exact hxpos mu
-    exact hypos.trans_le (hXLUB.1 ⟨mu, hmu, hxy⟩)
   have hupper : ∀ n : ℕ, m (n + 1) / m n ≤ sSup X := by
     intro n
     apply (div_le_iff₀ (hmpos n)).2
@@ -208,15 +205,22 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_ambientResolvent_momen
             ring
           _ ≤ sSup X * (x mu ^ (n + 1) * w mu) :=
             mul_le_mul_of_nonneg_right hxS hnonneg
-    have hleft := (hsummable (n + 2)).hasSum
-    have hright := ((hsummable (n + 1)).hasSum.const_mul (sSup X))
+    have hrightSummable :
+        Summable (fun mu => sSup X * (x mu ^ (n + 1) * w mu)) :=
+      (hsummable (n + 1)).mul_left (sSup X)
+    have htsum0 :=
+      (hsummable (n + 2)).tsum_le_tsum hterm hrightSummable
     have htsum :
         (∑' mu, x mu ^ (n + 2) * w mu) ≤
           sSup X * (∑' mu, x mu ^ (n + 1) * w mu) := by
-      exact hasSum_le hterm hleft (by
-        simpa only [← tsum_mul_left] using hright)
-    rw [hmoment (n + 2), hmoment (n + 1)]
-    exact htsum
+      simpa only [tsum_mul_left] using htsum0
+    calc
+      m (n + 1) = ∑' mu, x mu ^ (n + 2) * w mu := by
+        simpa [m, Nat.add_assoc] using hmoment (n + 2)
+      _ ≤ sSup X * (∑' mu, x mu ^ (n + 1) * w mu) := htsum
+      _ = sSup X * m n := by
+        congr 1
+        simpa [m] using (hmoment (n + 1)).symm
   have hlimit :=
     positiveWeightedMomentRatio_tendsto_sSup
       m a x hmpos hcoordLower hmono X rfl hXne hXbdd hupper
