@@ -126,28 +126,13 @@ private theorem realHilbertCompactPositiveZeroSupportSpectralModeVector_domain_a
     change U (v : realHilbertZeroEigenspaceSupport T) ∈ C.domain
     rw [hUv]
     rw [realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_domain_mem_iff]
-    have hsingle : Memℓp
-        (fun nu => Pi.single mu
-          (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • v) nu) 2 := by
-      refine (memℓp_zero ?_).of_exponent_ge zero_le
-      refine (Set.finite_singleton mu).subset ?_
-      intro nu hnu
-      simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
-      by_contra hne
-      simp [hne] at hnu
-    have hweighted :
-        (fun nu =>
-          realHilbertZeroEigenspaceSupportLogEnergy T hPositive nu • Pi.single mu v nu) =
-        (fun nu =>
-          Pi.single mu
-            (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • v) nu) := by
-      funext nu
-      by_cases hnu : nu = mu
-      · subst nu
-        simp
-      · simp [hnu]
-    rw [hweighted]
-    exact hsingle
+    refine (memℓp_zero ?_).of_exponent_ge zero_le
+    refine (Set.finite_singleton mu).subset ?_
+    intro nu hnu
+    simp only [Set.mem_setOf_eq, Set.mem_singleton_iff]
+    by_contra hne
+    apply hnu
+    simp [hne]
   let x : A.domain := ⟨(v : realHilbertZeroEigenspaceSupport T), hvDomain⟩
   refine ⟨x, rfl, ?_⟩
   apply U.injective
