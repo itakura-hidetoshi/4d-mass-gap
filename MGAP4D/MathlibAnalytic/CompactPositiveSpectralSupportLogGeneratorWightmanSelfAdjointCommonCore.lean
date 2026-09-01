@@ -159,6 +159,114 @@ noncomputable def
       M.canonicalVacuumOrthogonalHamiltonian :=
   D.toUnitaryIntertwining
 
+local instance commonCoreSpecialUnitaryCompactSpace
+    (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+local instance commonCoreSpecialUnitarySecondCountableTopology
+    (N : ℕ) : SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+local instance commonCoreSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+local instance commonCoreSpecialUnitaryBorelSpace
+    (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+local instance commonCoreSpatialLinkFintype
+    (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+local instance commonCoreSpatialSliceHaarSFinite
+    (H N : ℕ) : SFinite (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+local instance commonCorePairHilbertSectorComplete
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
+    CompleteSpace
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
+        H N hN beta hbeta) :=
+  periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete
+    H N hN beta hbeta
+local instance commonCoreSpectralSupportNormedSpace
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
+    NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta) := by
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+  infer_instance
+local instance commonCoreSpectralSupportComplete
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
+    CompleteSpace
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+        H N hN beta hbeta) := by
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+  exact
+    (realHilbertZeroEigenspaceSupport_isClosed
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+        H N hN beta hbeta 1)).completeSpace_coe
+
+/-- Common-core input specialized to the actual one-step SU(N) physical
+excitation-pair transfer.  The compactness and positivity proofs are canonical,
+so they are not fields of this model-facing package. -/
+abbrev PeriodicHypercubicEvenSpecialUnitaryTransferLogGeneratorWightmanCommonCoreData
+    {C : Type} [NormedAddCommGroup C] [NormedSpace ℝ C]
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (M : ExplicitWightmanOSReconstructedModel) :=
+  CompactPositiveTransferLogGeneratorWightmanCommonCoreData
+    (C := C)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+      H N hN beta hbeta 1)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
+      H N hN beta hbeta 1 (by norm_num))
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
+      H N hN beta hbeta 1)
+    M
+
+/-- The former hard operator-level physical transfer/Wightman bridge is now a
+theorem-generated consequence of concrete common-core data. -/
+noncomputable def
+    PeriodicHypercubicEvenSpecialUnitaryTransferLogGeneratorWightmanCommonCoreData.toIntertwining
+    {C : Type} [NormedAddCommGroup C] [NormedSpace ℝ C]
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (M : ExplicitWightmanOSReconstructedModel)
+    (D : PeriodicHypercubicEvenSpecialUnitaryTransferLogGeneratorWightmanCommonCoreData
+      (C := C) H N hN beta hbeta M) :
+    PeriodicHypercubicEvenSpecialUnitaryTransferLogGeneratorWightmanIntertwining
+      H N hN beta hbeta M := by
+  let T :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
+      H N hN beta hbeta 1
+  let hCompact : IsCompactOperator T :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isCompact_of_pos
+      H N hN beta hbeta 1 (by norm_num)
+  let hPositive : T.IsPositive :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer_isPositive
+      H N hN beta hbeta 1
+  have I :
+      RealLinearPMapUnitaryIntertwining
+        (realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive)
+        M.canonicalVacuumOrthogonalHamiltonian := by
+    exact
+      (show CompactPositiveTransferLogGeneratorWightmanCommonCoreData
+          (C := C) T hCompact hPositive M from D).toUnitaryIntertwining
+  refine ⟨?_⟩
+  simpa only [
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator,
+    T, hCompact, hPositive] using I
+
+/-- Thus concrete common-core data already imply the physical transfer
+point-spectrum/Wightman point-spectrum equality used by the terminal mass-gap
+certificate. -/
+theorem periodicHypercubicEvenSpecialUnitaryTransferLogGenerator_pointSpectrum_eq_wightman_of_commonCore
+    {C : Type} [NormedAddCommGroup C] [NormedSpace ℝ C]
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (M : ExplicitWightmanOSReconstructedModel)
+    (D : PeriodicHypercubicEvenSpecialUnitaryTransferLogGeneratorWightmanCommonCoreData
+      (C := C) H N hN beta hbeta M) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGeneratorPointEnergySet
+        H N hN beta hbeta =
+      M.canonicalVacuumOrthogonalPointSpectrum :=
+  periodicHypercubicEvenSpecialUnitaryTransferLogGenerator_pointSpectrum_eq_wightman
+    H N hN beta hbeta M (D.toIntertwining H N hN beta hbeta M)
+
 end
 
 end MathlibAnalytic
