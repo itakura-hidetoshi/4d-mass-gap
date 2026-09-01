@@ -74,12 +74,24 @@ theorem range_physicalHilbertBoundaryMomentLinearIsometry_eq_closure_actualSynth
   constructor
   · rintro ⟨F, rfl⟩
     refine ⟨F, ?_⟩
+    change
+      physicalYangMillsEvenPeriodicWilsonOSActualBoundarySynthesisOperator
+          halfExtent N hN beta hbeta n
+          (Q.positiveHalfL2LinearMap hInvariant n F) =
+        physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2
+          S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n F
     rw [Q.positiveHalfL2LinearMap_apply]
     exact
       (physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2_eq_actualSynthesis
         S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n F).symm
   · rintro ⟨F, rfl⟩
     refine ⟨F, ?_⟩
+    change
+      physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2
+          S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n F =
+        physicalYangMillsEvenPeriodicWilsonOSActualBoundarySynthesisOperator
+          halfExtent N hN beta hbeta n
+          (Q.positiveHalfL2LinearMap hInvariant n F)
     rw [Q.positiveHalfL2LinearMap_apply]
     exact
       physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2_eq_actualSynthesis
