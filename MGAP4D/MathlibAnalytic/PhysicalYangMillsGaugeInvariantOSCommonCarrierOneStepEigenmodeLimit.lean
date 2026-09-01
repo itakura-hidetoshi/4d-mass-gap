@@ -46,7 +46,7 @@ its scalar convergence and the eigenvalue equation on the canonical finite
 approximants supplied by `A.approximate`.  The conclusion is the continuum
 one-step eigenvalue equation on the already-constructed OS physical Hilbert
 space.  No Hamiltonian-domain or generator compatibility hypothesis is used. -/
-theorem PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer.physicalOperator_one_apply_of_approximating_eigen
+theorem physicalOperator_one_apply_of_approximating_eigen
     (A : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer
       S D halfExtent N hN beta hbeta B hInvariant P T C G)
     (psi : P.PhysicalHilbert)
@@ -93,7 +93,7 @@ theorem PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer.physicalOp
 
 /-- Fixed-eigenvalue specialization of the common-carrier one-step mode
 transport. -/
-theorem PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer.physicalOperator_one_apply_of_fixed_approximating_eigen
+theorem physicalOperator_one_apply_of_fixed_approximating_eigen
     (A : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer
       S D halfExtent N hN beta hbeta B hInvariant P T C G)
     (psi : P.PhysicalHilbert)
@@ -102,14 +102,14 @@ theorem PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer.physicalOp
       C.finiteOperator n 1 (A.approximate n psi) =
         mu • A.approximate n psi) :
     T.toPhysicalSemigroup.operator 1 psi = mu • psi := by
-  exact A.physicalOperator_one_apply_of_approximating_eigen
-    psi (fun _ => mu) mu tendsto_const_nhds hOne
+  exact physicalOperator_one_apply_of_approximating_eigen
+    A psi (fun _ => mu) mu tendsto_const_nhds hOne
 
 /-- Positive cutoff eigenvalues converging to a positive continuum eigenvalue
 already generate an actual continuum vacuum-orthogonal OS Hamiltonian mode.
 All unbounded-domain information is supplied downstream by the one-step mode
 theorem, rather than assumed at finite cutoff. -/
-theorem PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer.exists_vacuumOrthogonalClosedRightHamiltonian_mode_of_approximating_eigen
+theorem exists_vacuumOrthogonalClosedRightHamiltonian_mode_of_approximating_eigen
     (A : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer
       S D halfExtent N hN beta hbeta B hInvariant P T C G)
     (hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
@@ -131,8 +131,8 @@ theorem PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer.exists_vac
   have hContinuumOne :
       T.toPhysicalSemigroup.operator 1 (psi : P.PhysicalHilbert) =
         muLimit • (psi : P.PhysicalHilbert) :=
-    A.physicalOperator_one_apply_of_approximating_eigen
-      (psi : P.PhysicalHilbert) mu muLimit hmu hOne
+    physicalOperator_one_apply_of_approximating_eigen
+      A (psi : P.PhysicalHilbert) mu muLimit hmu hOne
   let z : (T.vacuumOrthogonalClosedRightHamiltonian hHamiltonianSymmetric).domain :=
     ⟨psi,
       T.exponential_orbit_mem_vacuumOrthogonalClosedRightHamiltonianDomain
