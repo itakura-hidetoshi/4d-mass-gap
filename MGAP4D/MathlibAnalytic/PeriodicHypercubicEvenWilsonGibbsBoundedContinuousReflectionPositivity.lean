@@ -8,27 +8,28 @@ open scoped ENNReal
 
 noncomputable section
 
-local instance (H : ℕ) : NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+local instance wilsonGibbsBoundedContinuousReflectionEvenSideLengthNeZero
+    (H : ℕ) : NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
   simp [PeriodicHypercubicEvenSideLength]⟩
 
-local instance (N : ℕ) :
-    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance wilsonGibbsBoundedContinuousReflectionSpecialUnitaryIsTopologicalGroup
+    (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 
-local instance (N : ℕ) :
-    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance wilsonGibbsBoundedContinuousReflectionSpecialUnitaryCompactSpace
+    (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
-local instance (N : ℕ) :
-    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance wilsonGibbsBoundedContinuousReflectionSpecialUnitarySecondCountableTopology
+    (N : ℕ) : SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupSecondCountableTopology N
 
-local instance (N : ℕ) :
-    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance wilsonGibbsBoundedContinuousReflectionSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
 
-local instance (N : ℕ) :
-    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance wilsonGibbsBoundedContinuousReflectionSpecialUnitaryBorelSpace
+    (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
 /-- The completed positive scalar Gram feature is nonnegative. -/
@@ -167,7 +168,7 @@ theorem periodicHypercubicEvenBoundaryObservableGramFeature_measurable_of_bounde
     (periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_measurable
       H N hN beta hbeta b).mul f.continuous.measurable
 
-/-- Sup-norm control of the observable-weighted scalar boundary Gram feature. -/
+/-- Sup-norm control of the reflected observable in boundary coordinates. -/
 theorem periodicHypercubicEvenBoundaryObservableGramFeature_norm_le_of_boundedContinuous
     (H N : ℕ) (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
