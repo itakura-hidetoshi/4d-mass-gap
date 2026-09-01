@@ -134,7 +134,7 @@ theorem range_physicalHilbertBoundaryMomentLinearIsometry_eq_closure_actualSynth
       (fun x =>
         physicalYangMillsEvenPeriodicWilsonOSActualBoundarySynthesisOperator
           halfExtent 2 physicalTransferModePositiveTimeSubmoduleTwoRankPositive beta hbeta n
-          (Q.positiveTimeSubmoduleL2LinearMap n x)) hG.symm
+          (Q.positiveTimeSubmoduleL2LinearMap n x)) hG
 
 /-- Wrapper-free positive-time-submodule realization of the one-sided endpoint
 pair.  The model-facing sequence now lives directly in the positive-time
