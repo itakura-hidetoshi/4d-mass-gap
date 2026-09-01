@@ -17,11 +17,6 @@ local instance canonicalSpectralCoreSupportComplete
     CompleteSpace (realHilbertZeroEigenspaceSupport T) :=
   (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
 
-local instance canonicalSpectralCoreWightmanVacuumOrthogonalComplete
-    (M : ExplicitWightmanOSReconstructedModel) :
-    CompleteSpace M.vacuumOrthogonal :=
-  M.closed_vacuumOrthogonal.completeSpace_coe
-
 /-- The canonical source realization used by the transfer/Wightman bridge is
 just inclusion of the intrinsic algebraic spectral core into the strictly
 positive transfer support. -/
