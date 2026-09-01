@@ -10,27 +10,28 @@ open scoped InnerProductSpace
 namespace MGAP4D
 namespace MathlibAnalytic
 
-local instance (H : ℕ) : NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+local instance approximatingBoundaryMomentGapEvenSideLengthNeZero
+    (H : ℕ) : NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
   simp [PeriodicHypercubicEvenSideLength]⟩
 
-local instance (N : ℕ) :
-    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance approximatingBoundaryMomentGapSpecialUnitaryIsTopologicalGroup
+    (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 
-local instance (N : ℕ) :
-    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance approximatingBoundaryMomentGapSpecialUnitaryCompactSpace
+    (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
-local instance (N : ℕ) :
-    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance approximatingBoundaryMomentGapSpecialUnitarySecondCountableTopology
+    (N : ℕ) : SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupSecondCountableTopology N
 
-local instance (N : ℕ) :
-    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance approximatingBoundaryMomentGapSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
 
-local instance (N : ℕ) :
-    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance approximatingBoundaryMomentGapSpecialUnitaryBorelSpace
+    (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
 /-- The scalar Bochner moment of a positive-half observable in one fixed
