@@ -128,10 +128,16 @@ theorem RealLinearPMapCommonCoreClosureIntertwining.eq_on_source
           rw [realLinearPMapPullback_domain_iff]
           simpa using D.target_mem c⟩ =
       A ⟨D.source c, D.source_mem c⟩ := by
+  let U : E ≃ₗᵢ[ℝ] F :=
+    realHilbertDenseCoreLinearIsometryEquiv
+      D.source D.source_dense D.target D.target_dense
+  change realLinearPMapPullback U B ⟨D.source c, _⟩ =
+    A ⟨D.source c, D.source_mem c⟩
   rw [realLinearPMapPullback_apply]
-  rw [realHilbertDenseCoreLinearIsometryEquiv_apply_source]
-  rw [D.core_intertwines]
-  simp
+  apply U.injective
+  simp only [U.apply_symm_apply]
+  simpa only [U, realHilbertDenseCoreLinearIsometryEquiv_apply_source] using
+    D.core_intertwines c
 
 /-- The two common-core restrictions are literally the same `LinearPMap` after
 pulling the target operator back by the generated unitary. -/
@@ -158,16 +164,26 @@ theorem RealLinearPMapCommonCoreClosureIntertwining.domRestrict_eq
   · rw [LinearPMap.domRestrict_domain, LinearPMap.domRestrict_domain,
       inf_eq_left.mpr hAS, inf_eq_left.mpr hPBS]
   · intro x hxA hxPB
-    have hxS : x ∈ S := by
-      exact hxA.1
+    have hxS : x ∈ S := hxA.1
     rcases hxS with ⟨c, hc⟩
     have hxc : D.source c = x := by
       simpa [S] using hc
     subst x
-    rw [LinearPMap.domRestrict_apply rfl, LinearPMap.domRestrict_apply rfl]
-    change A ⟨D.source c, _⟩ = PB ⟨D.source c, _⟩
-    symm
-    exact D.eq_on_source c
+    have hsourceS : D.source c ∈ S := hxA.1
+    calc
+      A.domRestrict S ⟨D.source c, hxA⟩ =
+          A ⟨D.source c, D.source_mem c⟩ :=
+        LinearPMap.domRestrict_apply
+          (x := ⟨D.source c, hxA⟩)
+          (y := ⟨D.source c, D.source_mem c⟩) rfl
+      _ = PB ⟨D.source c, hPBS hsourceS⟩ := by
+        symm
+        simpa only [PB, U] using D.eq_on_source c
+      _ = PB.domRestrict S ⟨D.source c, hxPB⟩ := by
+        symm
+        exact LinearPMap.domRestrict_apply
+          (x := ⟨D.source c, hxPB⟩)
+          (y := ⟨D.source c, hPBS hsourceS⟩) rfl
 
 /-- Mathlib's `HasCore` closure identity upgrades common-core action equality to
 exact equality of the full source operator and the pullback of the target
