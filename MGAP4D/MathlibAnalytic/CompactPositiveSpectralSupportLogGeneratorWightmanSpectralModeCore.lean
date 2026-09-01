@@ -89,6 +89,107 @@ theorem realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCoreModeSet_spa
     exact hdc
   simpa [SC, hEq] using hdSpan
 
+/-- Model-facing data reduced to genuine positive-transfer eigenmodes.
+
+The target realization is a dense isometric realization of the canonical
+transfer spectral core into reconstructed Wightman `Ω⊥`.  Domain membership and
+Hamiltonian action are required only on actual transfer eigenspace vectors. -/
+structure CompactPositiveTransferLogGeneratorWightmanSpectralModeData
+    {E : Type}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (T : E →L[ℝ] E)
+    (hCompact : IsCompactOperator T)
+    (hPositive : T.IsPositive)
+    (M : ExplicitWightmanOSReconstructedModel) where
+  target :
+    RealHilbertClosedSubspaceDenseCoreRealization
+      (C := realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCore
+        T hPositive)
+      M.vacuumOrthogonal
+  mode_mem :
+    ∀ (mu : Eigenvalues
+        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+          Module.End ℝ (realHilbertZeroEigenspaceSupport T)))
+      (v : eigenspace
+        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu),
+      RealHilbertClosedSubspaceDenseCoreRealization.corestrict target
+          ⟨(v : realHilbertZeroEigenspaceSupport T),
+            realHilbertCompactPositiveZeroSupportLogGenerator_eigenvector_mem_spectralCore
+              T hPositive mu v⟩ ∈
+        M.canonicalVacuumOrthogonalHamiltonian.domain
+  mode_action :
+    ∀ (mu : Eigenvalues
+        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+          Module.End ℝ (realHilbertZeroEigenspaceSupport T)))
+      (v : eigenspace
+        (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+          Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu),
+      let c :
+          realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCore
+            T hPositive :=
+        ⟨(v : realHilbertZeroEigenspaceSupport T),
+          realHilbertCompactPositiveZeroSupportLogGenerator_eigenvector_mem_spectralCore
+            T hPositive mu v⟩
+      M.canonicalVacuumOrthogonalHamiltonian
+          ⟨RealHilbertClosedSubspaceDenseCoreRealization.corestrict target c,
+            mode_mem mu v⟩ =
+        realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
+          RealHilbertClosedSubspaceDenseCoreRealization.corestrict target c
+
+/-- Mode-wise Wightman domain membership extends to every vector in the
+canonical spectral core: the inverse image of the Wightman domain is a
+submodule containing every mode and hence their full span. -/
+theorem CompactPositiveTransferLogGeneratorWightmanSpectralModeData.target_mem
+    {E : Type}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {T : E →L[ℝ] E}
+    {hCompact : IsCompactOperator T}
+    {hPositive : T.IsPositive}
+    {M : ExplicitWightmanOSReconstructedModel}
+    (D : CompactPositiveTransferLogGeneratorWightmanSpectralModeData
+      T hCompact hPositive M)
+    (c : realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCore
+      T hPositive) :
+    RealHilbertClosedSubspaceDenseCoreRealization.corestrict D.target c ∈
+      M.canonicalVacuumOrthogonalHamiltonian.domain := by
+  let targetMap :=
+    (RealHilbertClosedSubspaceDenseCoreRealization.corestrict D.target).toLinearMap
+  have hModes :
+      realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCoreModeSet
+          T hPositive ≤
+        (M.canonicalVacuumOrthogonalHamiltonian.domain.comap targetMap :
+          Set (realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCore
+            T hPositive)) := by
+    intro d hd
+    change
+      (d : realHilbertZeroEigenspaceSupport T) ∈
+        realHilbertCompactPositiveZeroSupportLogGeneratorSpectralModeSet
+          T hPositive at hd
+    rcases hd with ⟨mu, v, hv⟩
+    have hdEq :
+        d =
+          ⟨(v : realHilbertZeroEigenspaceSupport T),
+            realHilbertCompactPositiveZeroSupportLogGenerator_eigenvector_mem_spectralCore
+              T hPositive mu v⟩ := by
+      apply Subtype.ext
+      exact hv.symm
+    subst d
+    exact D.mode_mem mu v
+  have hSpan :
+      Submodule.span ℝ
+          (realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCoreModeSet
+            T hPositive) ≤
+        M.canonicalVacuumOrthogonalHamiltonian.domain.comap targetMap :=
+    Submodule.span_le.2 hModes
+  have hcSpan :
+      c ∈ Submodule.span ℝ
+        (realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCoreModeSet
+          T hPositive) := by
+    rw [realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCoreModeSet_span_eq_top]
+    exact Submodule.mem_top
+  exact hSpan hcSpan
+
 end
 
 end MathlibAnalytic
