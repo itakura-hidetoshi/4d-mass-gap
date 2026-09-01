@@ -21,7 +21,7 @@ local instance spectralCoreSupportComplete
   (realHilbertZeroEigenspaceSupport_isClosed T).completeSpace_coe
 
 /-- The algebraic spectral-mode set on the strictly-positive support of a
-compact positive real-Hilbert operator.  A vector belongs to this set exactly
+compact positive real-Hilbert operator. A vector belongs to this set exactly
 when it lies in one of the actual support eigenspaces. -/
 noncomputable def realHilbertCompactPositiveZeroSupportLogGeneratorSpectralModeSet
     {E : Type u}
@@ -40,7 +40,7 @@ noncomputable def realHilbertCompactPositiveZeroSupportLogGeneratorSpectralModeS
       (v : realHilbertZeroEigenspaceSupport T) = x}
 
 /-- The canonical algebraic spectral core is the real linear span of all actual
-positive-support eigenspaces.  No enumeration of the compact spectrum is
+positive-support eigenspaces. No enumeration of the compact spectrum is
 chosen. -/
 noncomputable def realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCore
     {E : Type u}
@@ -92,7 +92,7 @@ theorem realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCore_le_domain
       T hCompact hPositive mu v
 
 /-- The algebraic span of actual positive-support eigenmodes is dense in the
-whole positive-support Hilbert space.  This is the intrinsic, enumeration-free
+whole positive-support Hilbert space. This is the intrinsic, enumeration-free
 finite-spectral-support density statement. -/
 theorem realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCore_topologicalClosure_eq_top
     {E : Type u}
@@ -108,42 +108,44 @@ theorem realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCore_topologica
   let U :=
     realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
       T hCompact hPositive
+  let I := Eigenvalues
+    (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+      Module.End ℝ (realHilbertZeroEigenspaceSupport T))
   apply top_unique
   intro x hx
   rw [← SetLike.mem_coe, Submodule.topologicalClosure_coe]
+  let mode : I → realHilbertZeroEigenspaceSupport T := fun mu =>
+    U.symm (lp.single 2 mu ((U x) mu))
   have hsum0 :
       HasSum
-        (fun mu => lp.single 2 mu (U x mu))
+        (fun mu : I => lp.single 2 mu ((U x) mu))
         (U x) :=
     lp.hasSum_single ENNReal.ofNat_ne_top (U x)
-  have hsum1 :
-      HasSum
-        (fun mu => U.symm (lp.single 2 mu (U x mu)))
-        (U.symm (U x)) :=
-    (↑U.symm.toContinuousLinearEquiv).hasSum hsum0
-  have hsum :
-      HasSum
-        (fun mu => ((U x mu : eigenspace
-          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu) :
-          realHilbertZeroEigenspaceSupport T))
-        x := by
-    simpa only [U, LinearIsometryEquiv.symm_apply_apply,
-      realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv_symm_single]
-      using hsum1
+  have hsum : HasSum mode x := by
+    have hmap :=
+      U.symm.toContinuousLinearEquiv.toContinuousLinearMap.hasSum hsum0
+    simpa only [mode, LinearIsometryEquiv.symm_apply_apply] using hmap
   refine mem_closure_of_tendsto hsum (Eventually.of_forall ?_)
   intro s
-  exact Submodule.sum_mem _ fun mu hmu =>
+  apply Submodule.sum_mem
+  intro mu hmu
+  have hmode :
+      ((U x) mu : realHilbertZeroEigenspaceSupport T) ∈
+        realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCore
+          T hPositive :=
     realHilbertCompactPositiveZeroSupportLogGenerator_eigenvector_mem_spectralCore
-      T hPositive mu (U x mu)
+      T hPositive mu ((U x) mu)
+  simpa only [mode,
+    realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv_symm_single]
+    using hmode
 
 /-- The algebraic spectral span is a genuine Mathlib operator core for the
 self-adjoint logarithmic generator on the actual positive spectral support.
 
-The proof closes the graph by unconditional Hilbert-sum expansion.  For a graph
+The proof closes the graph by unconditional Hilbert-sum expansion. For a graph
 point `(x,Hx)`, `lp.hasSum_single` expands both `x` and `Hx` into the same
 spectral coordinates; every coordinate pair is already a graph point because
-`H` acts on a support eigenspace by the exact weight `-log mu`.  Finite partial
+`H` acts on a support eigenspace by the exact weight `-log mu`. Finite partial
 sums therefore lie in the restricted graph and converge to the full graph
 point. -/
 theorem realHilbertCompactPositiveZeroSupportLogGenerator_hasCore_spectralCore
@@ -164,6 +166,9 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_hasCore_spectralCore
   let U :=
     realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv
       T hCompact hPositive
+  let I := Eigenvalues
+    (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
+      Module.End ℝ (realHilbertZeroEigenspaceSupport T))
   let R := H.domRestrict C
   have hC : C ≤ H.domain := by
     simpa only [C, H] using
@@ -174,7 +179,8 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_hasCore_spectralCore
       realHilbertCompactPositiveZeroSupportLogGenerator_isClosed
         T hCompact hPositive
   have hRleH : R ≤ H := by
-    simpa only [R] using (LinearPMap.domRestrict_le (f := H) (p := C))
+    simpa only [R] using
+      (LinearPMap.domRestrict_le : H.domRestrict C ≤ H)
   have hRClosable : R.IsClosable :=
     hHClosed.isClosable.leIsClosable hRleH
   have hGraphClosure : R.graph.topologicalClosure = H.graph := by
@@ -189,79 +195,83 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_hasCore_spectralCore
         exact Prod.ext hxBase hxValue
       rw [← hpEq]
       rw [← SetLike.mem_coe, Submodule.topologicalClosure_coe]
-      let base := fun mu : Eigenvalues
-          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
-        ((U (x : realHilbertZeroEigenspaceSupport T) mu : eigenspace
-          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu) :
-          realHilbertZeroEigenspaceSupport T)
-      let value := fun mu : Eigenvalues
-          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) =>
-        ((U (H x) mu : eigenspace
-          (realHilbertZeroEigenspaceSupportRestriction T hPositive.isSymmetric :
-            Module.End ℝ (realHilbertZeroEigenspaceSupport T)) mu) :
-          realHilbertZeroEigenspaceSupport T)
+      let base : I → realHilbertZeroEigenspaceSupport T := fun mu =>
+        U.symm
+          (lp.single 2 mu
+            ((U (x : realHilbertZeroEigenspaceSupport T)) mu))
+      let value : I → realHilbertZeroEigenspaceSupport T := fun mu =>
+        U.symm (lp.single 2 mu ((U (H x)) mu))
       have hBase0 :
           HasSum
-            (fun mu => lp.single 2 mu (U (x : realHilbertZeroEigenspaceSupport T) mu))
+            (fun mu : I =>
+              lp.single 2 mu
+                ((U (x : realHilbertZeroEigenspaceSupport T)) mu))
             (U (x : realHilbertZeroEigenspaceSupport T)) :=
         lp.hasSum_single ENNReal.ofNat_ne_top
           (U (x : realHilbertZeroEigenspaceSupport T))
-      have hBase1 :
-          HasSum
-            (fun mu => U.symm
-              (lp.single 2 mu (U (x : realHilbertZeroEigenspaceSupport T) mu)))
-            (U.symm (U (x : realHilbertZeroEigenspaceSupport T))) :=
-        (↑U.symm.toContinuousLinearEquiv).hasSum hBase0
-      have hBase : HasSum base (x : realHilbertZeroEigenspaceSupport T) := by
-        simpa only [base, U, LinearIsometryEquiv.symm_apply_apply,
-          realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv_symm_single]
-          using hBase1
+      have hBase :
+          HasSum base (x : realHilbertZeroEigenspaceSupport T) := by
+        have hmap :=
+          U.symm.toContinuousLinearEquiv.toContinuousLinearMap.hasSum hBase0
+        simpa only [base, LinearIsometryEquiv.symm_apply_apply] using hmap
       have hValue0 :
           HasSum
-            (fun mu => lp.single 2 mu (U (H x) mu))
+            (fun mu : I => lp.single 2 mu ((U (H x)) mu))
             (U (H x)) :=
         lp.hasSum_single ENNReal.ofNat_ne_top (U (H x))
-      have hValue1 :
-          HasSum
-            (fun mu => U.symm (lp.single 2 mu (U (H x) mu)))
-            (U.symm (U (H x))) :=
-        (↑U.symm.toContinuousLinearEquiv).hasSum hValue0
       have hValue : HasSum value (H x) := by
-        simpa only [value, U, LinearIsometryEquiv.symm_apply_apply,
-          realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv_symm_single]
-          using hValue1
-      have hGraph : HasSum (fun mu => (base mu, value mu))
-          ((x : realHilbertZeroEigenspaceSupport T), H x) :=
+        have hmap :=
+          U.symm.toContinuousLinearEquiv.toContinuousLinearMap.hasSum hValue0
+        simpa only [value, LinearIsometryEquiv.symm_apply_apply] using hmap
+      have hGraph :
+          HasSum (fun mu : I => (base mu, value mu))
+            ((x : realHilbertZeroEigenspaceSupport T), H x) :=
         hBase.prodMk hValue
       refine mem_closure_of_tendsto hGraph (Eventually.of_forall ?_)
       intro s
       apply Submodule.sum_mem
       intro mu hmu
+      let v := (U (x : realHilbertZeroEigenspaceSupport T)) mu
+      have hbaseEq : base mu = (v : realHilbertZeroEigenspaceSupport T) := by
+        simpa only [base, v] using
+          realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv_symm_single
+            T hCompact hPositive mu v
       have hbaseC : base mu ∈ C := by
-        simpa only [base, C, U] using
+        rw [hbaseEq]
+        exact
           realHilbertCompactPositiveZeroSupportLogGenerator_eigenvector_mem_spectralCore
-            T hPositive mu (U (x : realHilbertZeroEigenspaceSupport T) mu)
+            T hPositive mu v
       have hbaseDomain : base mu ∈ H.domain := hC hbaseC
       have hcoord := congrArg (fun z => z mu)
         (realHilbertCompactPositiveZeroSupportLogGenerator_coordinates
           T hCompact hPositive x)
+      have hcoordPoint :
+          (U (H x)) mu =
+            realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
+              (U (x : realHilbertZeroEigenspaceSupport T)) mu := by
+        simpa only [H, U,
+          realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_apply]
+          using hcoord
       have hvalueEnergy :
           value mu =
             realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • base mu := by
-        apply Subtype.ext
-        simpa only [value, base, U,
-          realHilbertCompactPositiveZeroSupportLogGeneratorCoordinates_apply,
-          lp.coeFn_smul, Pi.smul_apply] using congrArg Subtype.val hcoord
+        apply U.injective
+        simp only [value, base, LinearIsometryEquiv.apply_symm_apply,
+          LinearIsometryEquiv.map_smul]
+        rw [hcoordPoint]
+        apply lp.ext
+        funext nu
+        by_cases hnu : nu = mu
+        · subst nu
+          simp
+        · simp [lp.single_apply, hnu]
       have hHbase :
           H ⟨base mu, hbaseDomain⟩ =
             realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • base mu := by
-        simpa only [H, base, U] using
+        rw [hbaseEq]
+        simpa only [H] using
           realHilbertCompactPositiveZeroSupportLogGenerator_apply_eigenvector
-            T hCompact hPositive mu
-              (U (x : realHilbertZeroEigenspaceSupport T) mu)
+            T hCompact hPositive mu v
       apply (LinearPMap.mem_graph_iff' R).2
       let y : R.domain :=
         ⟨base mu, by
@@ -275,7 +285,8 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_hasCore_spectralCore
           R y = H ⟨base mu, hbaseDomain⟩ := by
             exact LinearPMap.domRestrict_apply
               (x := y) (y := ⟨base mu, hbaseDomain⟩) rfl
-          _ = realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • base mu := hHbase
+          _ = realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • base mu :=
+            hHbase
           _ = value mu := hvalueEnergy.symm
   refine ⟨hC, ?_⟩
   apply LinearPMap.eq_of_eq_graph
