@@ -225,6 +225,176 @@ noncomputable def RealLinearPMapCommonCoreClosureIntertwining.toUnitaryIntertwin
       D.source D.source_dense D.target D.target_dense)
     D.eq_pullback
 
+/-- Closed-subspace version of the common-core closure bridge.
+
+The dense algebraic core is realized in stable ambient Hilbert spaces and only
+then corestricted to the two closed physical subspaces. This keeps model-facing
+proofs away from fragile subtype `NormedSpace` synthesis while retaining exactly
+the same Mathlib `HasCore` closure argument. -/
+structure RealLinearPMapClosedSubspaceCommonCoreClosureIntertwining
+    {C E F : Type}
+    [NormedAddCommGroup C] [NormedSpace ℝ C]
+    [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+    [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
+    {S : Submodule ℝ E} {T : Submodule ℝ F}
+    (hS : IsClosed (S : Set E))
+    (hT : IsClosed (T : Set F))
+    (A : S →ₗ.[ℝ] S) (B : T →ₗ.[ℝ] T) where
+  source : RealHilbertClosedSubspaceDenseCoreRealization (C := C) S
+  target : RealHilbertClosedSubspaceDenseCoreRealization (C := C) T
+  source_hasCore :
+    A.HasCore
+      (LinearMap.range
+        (RealHilbertClosedSubspaceDenseCoreRealization.corestrict source).toLinearMap)
+  pullback_hasCore :
+    (realLinearPMapPullback
+      (realHilbertClosedSubspaceDenseCoreLinearIsometryEquiv
+        source target hS hT) B).HasCore
+      (LinearMap.range
+        (RealHilbertClosedSubspaceDenseCoreRealization.corestrict source).toLinearMap)
+  source_mem : ∀ c : C,
+    RealHilbertClosedSubspaceDenseCoreRealization.corestrict source c ∈ A.domain
+  target_mem : ∀ c : C,
+    RealHilbertClosedSubspaceDenseCoreRealization.corestrict target c ∈ B.domain
+  core_intertwines : ∀ c : C,
+    B ⟨RealHilbertClosedSubspaceDenseCoreRealization.corestrict target c,
+        target_mem c⟩ =
+      realHilbertClosedSubspaceDenseCoreLinearIsometryEquiv
+        source target hS hT
+        (A ⟨RealHilbertClosedSubspaceDenseCoreRealization.corestrict source c,
+          source_mem c⟩)
+
+/-- On the corestricted source realization, the pulled-back target operator and
+the source operator agree pointwise. -/
+theorem RealLinearPMapClosedSubspaceCommonCoreClosureIntertwining.eq_on_source
+    {C E F : Type}
+    [NormedAddCommGroup C] [NormedSpace ℝ C]
+    [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+    [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
+    {S : Submodule ℝ E} {T : Submodule ℝ F}
+    {hS : IsClosed (S : Set E)} {hT : IsClosed (T : Set F)}
+    {A : S →ₗ.[ℝ] S} {B : T →ₗ.[ℝ] T}
+    (D : RealLinearPMapClosedSubspaceCommonCoreClosureIntertwining
+      (C := C) hS hT A B)
+    (c : C) :
+    realLinearPMapPullback
+        (realHilbertClosedSubspaceDenseCoreLinearIsometryEquiv
+          D.source D.target hS hT) B
+        ⟨RealHilbertClosedSubspaceDenseCoreRealization.corestrict D.source c, by
+          rw [realLinearPMapPullback_domain_iff]
+          simpa using D.target_mem c⟩ =
+      A ⟨RealHilbertClosedSubspaceDenseCoreRealization.corestrict D.source c,
+        D.source_mem c⟩ := by
+  let U : S ≃ₗᵢ[ℝ] T :=
+    realHilbertClosedSubspaceDenseCoreLinearIsometryEquiv
+      D.source D.target hS hT
+  change realLinearPMapPullback U B ⟨_, _⟩ = A ⟨_, D.source_mem c⟩
+  rw [realLinearPMapPullback_apply]
+  apply U.injective
+  simp only [U.apply_symm_apply]
+  simpa only [U,
+    realHilbertClosedSubspaceDenseCoreLinearIsometryEquiv_apply_corestrict] using
+    D.core_intertwines c
+
+/-- Equality of the two restrictions to the same corestricted algebraic core. -/
+theorem RealLinearPMapClosedSubspaceCommonCoreClosureIntertwining.domRestrict_eq
+    {C E F : Type}
+    [NormedAddCommGroup C] [NormedSpace ℝ C]
+    [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+    [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
+    {S : Submodule ℝ E} {T : Submodule ℝ F}
+    {hS : IsClosed (S : Set E)} {hT : IsClosed (T : Set F)}
+    {A : S →ₗ.[ℝ] S} {B : T →ₗ.[ℝ] T}
+    (D : RealLinearPMapClosedSubspaceCommonCoreClosureIntertwining
+      (C := C) hS hT A B) :
+    let K : Submodule ℝ S :=
+      LinearMap.range
+        (RealHilbertClosedSubspaceDenseCoreRealization.corestrict D.source).toLinearMap
+    A.domRestrict K =
+      (realLinearPMapPullback
+        (realHilbertClosedSubspaceDenseCoreLinearIsometryEquiv
+          D.source D.target hS hT) B).domRestrict K := by
+  dsimp only
+  let sourceCore :=
+    RealHilbertClosedSubspaceDenseCoreRealization.corestrict D.source
+  let K : Submodule ℝ S := LinearMap.range sourceCore.toLinearMap
+  let U : S ≃ₗᵢ[ℝ] T :=
+    realHilbertClosedSubspaceDenseCoreLinearIsometryEquiv
+      D.source D.target hS hT
+  let PB : S →ₗ.[ℝ] S := realLinearPMapPullback U B
+  have hAK : K ≤ A.domain := D.source_hasCore.le_domain
+  have hPBK : K ≤ PB.domain := D.pullback_hasCore.le_domain
+  apply LinearPMap.ext
+  · rw [LinearPMap.domRestrict_domain, LinearPMap.domRestrict_domain,
+      inf_eq_left.mpr hAK, inf_eq_left.mpr hPBK]
+  · intro x hxA hxPB
+    have hxK : x ∈ K := hxA.1
+    rcases hxK with ⟨c, hc⟩
+    have hxc : sourceCore c = x := by
+      simpa [K] using hc
+    subst x
+    have hsourceK : sourceCore c ∈ K := hxA.1
+    calc
+      A.domRestrict K ⟨sourceCore c, hxA⟩ =
+          A ⟨sourceCore c, D.source_mem c⟩ :=
+        LinearPMap.domRestrict_apply
+          (x := ⟨sourceCore c, hxA⟩)
+          (y := ⟨sourceCore c, D.source_mem c⟩) rfl
+      _ = PB ⟨sourceCore c, hPBK hsourceK⟩ := by
+        symm
+        simpa only [PB, U, sourceCore] using D.eq_on_source c
+      _ = PB.domRestrict K ⟨sourceCore c, hxPB⟩ := by
+        symm
+        exact LinearPMap.domRestrict_apply
+          (x := ⟨sourceCore c, hxPB⟩)
+          (y := ⟨sourceCore c, hPBK hsourceK⟩) rfl
+
+/-- Mathlib `HasCore` on the two corestricted realizations upgrades core action
+equality to equality of the full closed operators. -/
+theorem RealLinearPMapClosedSubspaceCommonCoreClosureIntertwining.eq_pullback
+    {C E F : Type}
+    [NormedAddCommGroup C] [NormedSpace ℝ C]
+    [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+    [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
+    {S : Submodule ℝ E} {T : Submodule ℝ F}
+    {hS : IsClosed (S : Set E)} {hT : IsClosed (T : Set F)}
+    {A : S →ₗ.[ℝ] S} {B : T →ₗ.[ℝ] T}
+    (D : RealLinearPMapClosedSubspaceCommonCoreClosureIntertwining
+      (C := C) hS hT A B) :
+    A = realLinearPMapPullback
+      (realHilbertClosedSubspaceDenseCoreLinearIsometryEquiv
+        D.source D.target hS hT) B := by
+  let sourceCore :=
+    RealHilbertClosedSubspaceDenseCoreRealization.corestrict D.source
+  let K : Submodule ℝ S := LinearMap.range sourceCore.toLinearMap
+  let PB : S →ₗ.[ℝ] S :=
+    realLinearPMapPullback
+      (realHilbertClosedSubspaceDenseCoreLinearIsometryEquiv
+        D.source D.target hS hT) B
+  calc
+    A = (A.domRestrict K).closure := D.source_hasCore.closure_eq.symm
+    _ = (PB.domRestrict K).closure := by
+      rw [D.domRestrict_eq]
+    _ = PB := D.pullback_hasCore.closure_eq
+
+/-- Ambient dense-core realizations into closed physical subspaces therefore
+generate the exact global unitary intertwining receipt. -/
+noncomputable def RealLinearPMapClosedSubspaceCommonCoreClosureIntertwining.toUnitaryIntertwining
+    {C E F : Type}
+    [NormedAddCommGroup C] [NormedSpace ℝ C]
+    [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+    [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F]
+    {S : Submodule ℝ E} {T : Submodule ℝ F}
+    {hS : IsClosed (S : Set E)} {hT : IsClosed (T : Set F)}
+    {A : S →ₗ.[ℝ] S} {B : T →ₗ.[ℝ] T}
+    (D : RealLinearPMapClosedSubspaceCommonCoreClosureIntertwining
+      (C := C) hS hT A B) :
+    RealLinearPMapUnitaryIntertwining A B :=
+  realLinearPMapUnitaryIntertwining_of_eq_pullback A B
+    (realHilbertClosedSubspaceDenseCoreLinearIsometryEquiv
+      D.source D.target hS hT)
+    D.eq_pullback
+
 end
 
 end MathlibAnalytic
