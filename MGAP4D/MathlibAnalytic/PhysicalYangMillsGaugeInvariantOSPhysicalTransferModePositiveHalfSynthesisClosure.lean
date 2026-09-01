@@ -74,12 +74,16 @@ theorem range_physicalHilbertBoundaryMomentLinearIsometry_eq_closure_actualSynth
   constructor
   · rintro ⟨F, rfl⟩
     refine ⟨F, ?_⟩
-    rw [physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2_eq_actualSynthesis,
-      Q.positiveHalfL2LinearMap_apply]
+    rw [Q.positiveHalfL2LinearMap_apply]
+    exact
+      (physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2_eq_actualSynthesis
+        S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n F).symm
   · rintro ⟨F, rfl⟩
     refine ⟨F, ?_⟩
-    rw [physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2_eq_actualSynthesis,
-      Q.positiveHalfL2LinearMap_apply]
+    rw [Q.positiveHalfL2LinearMap_apply]
+    exact
+      physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2_eq_actualSynthesis
+        S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n F
 
 /-- If an open-half `L²` vector lies in the closure of the actual coherent
 positive-half pullback range, then applying actual Wilson adjoint synthesis
@@ -123,7 +127,7 @@ theorem actualBoundarySynthesis_mem_physicalBoundaryImage_of_mem_closure_positiv
 approximating sequence.
 
 The sequence is required to converge before synthesis, both at time zero and
-after one unit of actual observable translation.  The endpoint boundary vectors
+after one unit of actual observable translation. The endpoint boundary vectors
 are then obtained by the already-constructed actual Wilson adjoint synthesis.
 This is strictly upstream of `OneSidedBoundaryClosureAt`: boundary-moment
 convergence becomes theorem-generated from continuity of synthesis. -/
@@ -168,7 +172,7 @@ structure OneSidedPositiveHalfSynthesisClosureAt
 
 /-- Actual positive-half `L²` closure realization generates the boundary-moment
 closure realization used by the finite OS eigenlift. -/
-theorem OneSidedPositiveHalfSynthesisClosureAt.toOneSidedBoundaryClosureAt
+def OneSidedPositiveHalfSynthesisClosureAt.toOneSidedBoundaryClosureAt
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
       S D halfExtent N hN beta hbeta)
     (hInvariant : ∀ n,
@@ -264,7 +268,8 @@ theorem exists_finiteOperator_one_eigen_of_normalizedPhysicalTransferModePositiv
   exact
     Q.exists_finiteOperator_one_eigen_of_normalizedPhysicalTransferModeBoundaryClosure
       hInvariant C n f mu hf
-      (W.toOneSidedBoundaryClosureAt Q hInvariant C n
+      (OneSidedPositiveHalfSynthesisClosureAt.toOneSidedBoundaryClosureAt
+        Q hInvariant C n
         (periodicHypercubicEvenSpecialUnitaryPhysicalModeLp
           (halfExtent n) N f)
         (periodicHypercubicEvenSpecialUnitaryPhysicalTopModeLp
@@ -272,7 +277,7 @@ theorem exists_finiteOperator_one_eigen_of_normalizedPhysicalTransferModePositiv
         (periodicHypercubicEvenSpecialUnitaryPhysicalModeOneStepLp
           (halfExtent n) N hN (beta n) (hbeta n) f)
         (periodicHypercubicEvenSpecialUnitaryPhysicalTopModeOneStepLp
-          (halfExtent n) N hN (beta n) (hbeta n)))
+          (halfExtent n) N hN (beta n) (hbeta n)) W)
 
 end PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
 
