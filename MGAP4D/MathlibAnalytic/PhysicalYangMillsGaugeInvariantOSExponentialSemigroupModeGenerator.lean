@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSRightHamiltonianLinearPMapClosure
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSVacuumOrthogonalHamiltonian
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSExponentialGapSlope
 import Mathlib.Tactic
 
@@ -143,6 +143,66 @@ theorem closedRightHamiltonian_apply_of_logarithmic_semigroup_mode
               simpa using hOrbit t)⟩ =
       (-Real.log mu) • psi := by
   apply T.closedRightHamiltonian_apply_of_exponential_orbit
+  intro t
+  simpa using hOrbit t
+
+/-- An exact exponential orbit already lying in the physical excitation sector
+belongs automatically to the restricted closed-Hamiltonian domain. -/
+theorem exponential_orbit_mem_vacuumOrthogonalClosedRightHamiltonianDomain
+    (T : P.StronglyContinuousPhysicalSemigroup)
+    (psi : P.VacuumOrthogonalHilbert) (energy : ℝ)
+    (hOrbit : ∀ t : NNReal,
+      T.toPhysicalSemigroup.operator t (psi : P.PhysicalHilbert) =
+        Real.exp (-energy * (t : ℝ)) • (psi : P.PhysicalHilbert)) :
+    psi ∈ T.vacuumOrthogonalClosedRightHamiltonianDomain :=
+  T.exponential_orbit_mem_closedRightHamiltonianDomain
+    (psi : P.PhysicalHilbert) energy hOrbit
+
+/-- On the vacuum-orthogonal excitation carrier, exact exponential semigroup
+modes are eigenvectors of the restricted graph-closed Hamiltonian. -/
+theorem vacuumOrthogonalClosedRightHamiltonian_apply_of_exponential_orbit
+    (T : P.StronglyContinuousPhysicalSemigroup)
+    (hSymmetric :
+      T.closedRightHamiltonian.IsFormalAdjoint T.closedRightHamiltonian)
+    (psi : P.VacuumOrthogonalHilbert) (energy : ℝ)
+    (hOrbit : ∀ t : NNReal,
+      T.toPhysicalSemigroup.operator t (psi : P.PhysicalHilbert) =
+        Real.exp (-energy * (t : ℝ)) • (psi : P.PhysicalHilbert)) :
+    T.vacuumOrthogonalClosedRightHamiltonian hSymmetric
+        ⟨psi,
+          T.exponential_orbit_mem_vacuumOrthogonalClosedRightHamiltonianDomain
+            psi energy hOrbit⟩ =
+      energy • psi := by
+  apply Subtype.ext
+  change T.closedRightHamiltonian
+      (T.vacuumOrthogonalAmbientDomainPoint
+        ⟨psi,
+          T.exponential_orbit_mem_vacuumOrthogonalClosedRightHamiltonianDomain
+            psi energy hOrbit⟩) =
+    energy • (psi : P.PhysicalHilbert)
+  simpa only [vacuumOrthogonalAmbientDomainPoint] using
+    T.closedRightHamiltonian_apply_of_exponential_orbit
+      (psi : P.PhysicalHilbert) energy hOrbit
+
+/-- Transfer-logarithmic form on the physical excitation carrier.  A bounded OS
+mode with full-time orbit `exp (log(mu) t)` has restricted closed-Hamiltonian
+energy exactly `-log(mu)`. -/
+theorem vacuumOrthogonalClosedRightHamiltonian_apply_of_logarithmic_semigroup_mode
+    (T : P.StronglyContinuousPhysicalSemigroup)
+    (hSymmetric :
+      T.closedRightHamiltonian.IsFormalAdjoint T.closedRightHamiltonian)
+    (psi : P.VacuumOrthogonalHilbert) (mu : ℝ)
+    (hOrbit : ∀ t : NNReal,
+      T.toPhysicalSemigroup.operator t (psi : P.PhysicalHilbert) =
+        Real.exp (Real.log mu * (t : ℝ)) • (psi : P.PhysicalHilbert)) :
+    T.vacuumOrthogonalClosedRightHamiltonian hSymmetric
+        ⟨psi,
+          T.exponential_orbit_mem_vacuumOrthogonalClosedRightHamiltonianDomain
+            psi (-Real.log mu) (by
+              intro t
+              simpa using hOrbit t)⟩ =
+      (-Real.log mu) • psi := by
+  apply T.vacuumOrthogonalClosedRightHamiltonian_apply_of_exponential_orbit
   intro t
   simpa using hOrbit t
 
