@@ -60,7 +60,7 @@ realizations of one normed algebraic core, Mathlib `HasCore` receipts for the
 two closed operators after canonical pullback, and equality of their actions on
 that core. -/
 abbrev PeriodicHypercubicEvenSpecialUnitaryTransferLogGeneratorWightmanCommonCoreClosure
-    (C : Type*) [NormedAddCommGroup C] [NormedSpace ℝ C]
+    (C : Type) [NormedAddCommGroup C] [NormedSpace ℝ C]
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (M : ExplicitWightmanOSReconstructedModel) :=
   RealLinearPMapCommonCoreClosureIntertwining (C := C)
@@ -71,7 +71,7 @@ abbrev PeriodicHypercubicEvenSpecialUnitaryTransferLogGeneratorWightmanCommonCor
 /-- Common algebraic operator-core closure data generate the exact global
 transfer/Wightman generator intertwining structure used by the spectral bridge. -/
 noncomputable def PeriodicHypercubicEvenSpecialUnitaryTransferLogGeneratorWightmanCommonCoreClosure.toIntertwining
-    {C : Type*} [NormedAddCommGroup C] [NormedSpace ℝ C]
+    {C : Type} [NormedAddCommGroup C] [NormedSpace ℝ C]
     {H N : ℕ} {hN : 0 < N} {beta : ℝ} {hbeta : 0 ≤ beta}
     {M : ExplicitWightmanOSReconstructedModel}
     (D : PeriodicHypercubicEvenSpecialUnitaryTransferLogGeneratorWightmanCommonCoreClosure
@@ -84,7 +84,7 @@ noncomputable def PeriodicHypercubicEvenSpecialUnitaryTransferLogGeneratorWightm
 point energies of the transfer support log-generator with the reconstructed
 Wightman Hamiltonian point spectrum on `Ω⊥`. -/
 theorem periodicHypercubicEvenSpecialUnitaryTransferLogGenerator_pointSpectrum_eq_wightman_of_commonCoreClosure
-    {C : Type*} [NormedAddCommGroup C] [NormedSpace ℝ C]
+    {C : Type} [NormedAddCommGroup C] [NormedSpace ℝ C]
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (M : ExplicitWightmanOSReconstructedModel)
     (D : PeriodicHypercubicEvenSpecialUnitaryTransferLogGeneratorWightmanCommonCoreClosure
@@ -98,7 +98,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTransferLogGenerator_pointSpectrum_e
 /-- The Wightman `Ω⊥` point-spectrum lower bound therefore follows from
 common-core closure data rather than a generator-level intertwining assumption. -/
 theorem periodicHypercubicEvenSpecialUnitaryTransferLogGenerator_wightmanPointSpectrum_inf_ge_two_mul_finiteVolumeDecayRate_of_commonCoreClosure
-    {C : Type*} [NormedAddCommGroup C] [NormedSpace ℝ C]
+    {C : Type} [NormedAddCommGroup C] [NormedSpace ℝ C]
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (M : ExplicitWightmanOSReconstructedModel)
     (D : PeriodicHypercubicEvenSpecialUnitaryTransferLogGeneratorWightmanCommonCoreClosure
