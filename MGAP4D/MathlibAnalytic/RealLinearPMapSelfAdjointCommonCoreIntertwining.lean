@@ -17,7 +17,7 @@ proof stays inside Mathlib's `LinearPMap` API: density is transported by the
 homeomorphism, formal symmetry by preservation of the real inner product, and
 adjoint-domain maximality by transporting the defining adjoint pairing. -/
 theorem realLinearPMapPullback_isSelfAdjoint
-    {E F : Type*}
+    {E F : Type}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
     (U : E ≃ₗᵢ[ℝ] F)
@@ -103,7 +103,7 @@ theorem realLinearPMapPullback_isSelfAdjoint
 
 /-- A closed `LinearPMap` is equal to its Mathlib graph closure. -/
 theorem realLinearPMap_closure_eq_self_of_isClosed
-    {E F : Type*}
+    {E F : Type}
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     [NormedAddCommGroup F] [NormedSpace ℝ F]
     (A : E →ₗ.[ℝ] F)
@@ -120,7 +120,7 @@ If `A ≤ B` and both operators are self-adjoint, symmetry of `B` makes `B` a
 formal adjoint extension of `A`; maximality of the Mathlib adjoint then forces
 `B ≤ A† = A`. -/
 theorem realLinearPMap_eq_of_le_of_isSelfAdjoint
-    {E : Type*}
+    {E : Type}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (A B : E →ₗ.[ℝ] E)
     (hA : IsSelfAdjoint A)
@@ -158,7 +158,7 @@ maximality upgrades the inclusion to equality.
 Compared with `RealLinearPMapCommonCoreClosureIntertwining`, there is no
 independent `pullback_hasCore` field and no global domain/intertwining field. -/
 structure RealLinearPMapSelfAdjointCommonCoreIntertwining
-    {C E F : Type*}
+    {C E F : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
@@ -180,7 +180,7 @@ structure RealLinearPMapSelfAdjointCommonCoreIntertwining
 /-- Membership of the source realization in the source operator domain is
 already contained in `source_hasCore`; it is not an extra hypothesis. -/
 theorem RealLinearPMapSelfAdjointCommonCoreIntertwining.source_mem
-    {C E F : Type*}
+    {C E F : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
@@ -193,7 +193,7 @@ theorem RealLinearPMapSelfAdjointCommonCoreIntertwining.source_mem
 /-- The generated unitary sends the source realization of every core vector to
 the target realization. -/
 theorem RealLinearPMapSelfAdjointCommonCoreIntertwining.eq_on_source
-    {C E F : Type*}
+    {C E F : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
@@ -222,7 +222,7 @@ theorem RealLinearPMapSelfAdjointCommonCoreIntertwining.eq_on_source
 /-- The source restriction to the realized algebraic core equals the pullback
 target restriction on that same core. -/
 theorem RealLinearPMapSelfAdjointCommonCoreIntertwining.domRestrict_eq
-    {C E F : Type*}
+    {C E F : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
@@ -274,7 +274,7 @@ theorem RealLinearPMapSelfAdjointCommonCoreIntertwining.domRestrict_eq
 
 /-- The source core restriction is contained in the pulled-back target operator. -/
 theorem RealLinearPMapSelfAdjointCommonCoreIntertwining.domRestrict_le_pullback
-    {C E F : Type*}
+    {C E F : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
@@ -292,7 +292,7 @@ core action agreement force equality of the full operators after unitary
 pullback.  The target `HasCore` condition from the previous closure bridge is a
 theorem, not an assumption, in this self-adjoint setting. -/
 theorem RealLinearPMapSelfAdjointCommonCoreIntertwining.eq_pullback
-    {C E F : Type*}
+    {C E F : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
@@ -325,7 +325,7 @@ theorem RealLinearPMapSelfAdjointCommonCoreIntertwining.eq_pullback
 used by the transfer/Wightman spectral bridge, without a second graph-core
 assumption. -/
 noncomputable def RealLinearPMapSelfAdjointCommonCoreIntertwining.toUnitaryIntertwining
-    {C E F : Type*}
+    {C E F : Type}
     [NormedAddCommGroup C] [NormedSpace ℝ C]
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F]
