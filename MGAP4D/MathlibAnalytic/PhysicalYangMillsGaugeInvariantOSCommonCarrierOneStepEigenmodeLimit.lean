@@ -18,15 +18,9 @@ variable {P : D.OSPreHilbertData}
 
 namespace StronglyContinuousPhysicalSemigroup
 
-/-- Exact finite one-step eigenmodes pass through the actual Wilson OS
-common-carrier limit.
+section CommonCarrier
 
-The finite eigenvalue is allowed to depend on the cutoff.  The only inputs are
-its scalar convergence and the eigenvalue equation on the canonical finite
-approximants supplied by `A.approximate`.  The conclusion is the continuum
-one-step eigenvalue equation on the already-constructed OS physical Hilbert
-space.  No Hamiltonian-domain or generator compatibility hypothesis is used. -/
-theorem PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer.physicalOperator_one_apply_of_approximating_eigen
+variable
     {halfExtent : ℕ → ℕ}
     {N : ℕ}
     {hN : 0 < N}
@@ -43,6 +37,16 @@ theorem PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer.physicalOp
       S D halfExtent N hN beta hbeta B hInvariant}
     {G : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingVacuumGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C}
+
+/-- Exact finite one-step eigenmodes pass through the actual Wilson OS
+common-carrier limit.
+
+The finite eigenvalue is allowed to depend on the cutoff.  The only inputs are
+its scalar convergence and the eigenvalue equation on the canonical finite
+approximants supplied by `A.approximate`.  The conclusion is the continuum
+one-step eigenvalue equation on the already-constructed OS physical Hilbert
+space.  No Hamiltonian-domain or generator compatibility hypothesis is used. -/
+theorem PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer.physicalOperator_one_apply_of_approximating_eigen
     (A : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer
       S D halfExtent N hN beta hbeta B hInvariant P T C G)
     (psi : P.PhysicalHilbert)
@@ -90,22 +94,6 @@ theorem PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer.physicalOp
 /-- Fixed-eigenvalue specialization of the common-carrier one-step mode
 transport. -/
 theorem PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer.physicalOperator_one_apply_of_fixed_approximating_eigen
-    {halfExtent : ℕ → ℕ}
-    {N : ℕ}
-    {hN : 0 < N}
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    {beta : ℕ → ℝ}
-    {hbeta : ∀ n, 0 ≤ beta n}
-    {B : PhysicalYangMillsEvenPeriodicWilsonOSWeakStarBridge
-      S D halfExtent N hN beta hbeta}
-    {hInvariant : ∀ n,
-      D.WeakStarReflectionInvariant
-        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)}
-    {T : P.StronglyContinuousPhysicalSemigroup}
-    {C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
-      S D halfExtent N hN beta hbeta B hInvariant}
-    {G : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingVacuumGapCertificate
-      S D halfExtent N hN beta hbeta B hInvariant C}
     (A : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer
       S D halfExtent N hN beta hbeta B hInvariant P T C G)
     (psi : P.PhysicalHilbert)
@@ -122,22 +110,6 @@ already generate an actual continuum vacuum-orthogonal OS Hamiltonian mode.
 All unbounded-domain information is supplied downstream by the one-step mode
 theorem, rather than assumed at finite cutoff. -/
 theorem PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer.exists_vacuumOrthogonalClosedRightHamiltonian_mode_of_approximating_eigen
-    {halfExtent : ℕ → ℕ}
-    {N : ℕ}
-    {hN : 0 < N}
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    {beta : ℕ → ℝ}
-    {hbeta : ∀ n, 0 ≤ beta n}
-    {B : PhysicalYangMillsEvenPeriodicWilsonOSWeakStarBridge
-      S D halfExtent N hN beta hbeta}
-    {hInvariant : ∀ n,
-      D.WeakStarReflectionInvariant
-        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)}
-    {T : P.StronglyContinuousPhysicalSemigroup}
-    {C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
-      S D halfExtent N hN beta hbeta B hInvariant}
-    {G : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingVacuumGapCertificate
-      S D halfExtent N hN beta hbeta B hInvariant C}
     (A : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer
       S D halfExtent N hN beta hbeta B hInvariant P T C G)
     (hInnerSymmetric : T.toPhysicalSemigroup.IsInnerSymmetric)
@@ -174,6 +146,8 @@ theorem PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer.exists_vac
   dsimp [z]
   exact T.vacuumOrthogonalClosedRightHamiltonian_apply_of_one_eigen
     hInnerSymmetric hHamiltonianSymmetric psi muLimit hmuLimit hContinuumOne
+
+end CommonCarrier
 
 end StronglyContinuousPhysicalSemigroup
 
