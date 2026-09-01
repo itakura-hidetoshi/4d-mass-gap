@@ -33,37 +33,49 @@ local instance commonCoreClosurePairHilbertSectorComplete
     CompleteSpace (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
       H N hN beta hbeta) :=
   periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector_complete H N hN beta hbeta
-local instance commonCoreClosureSpectralSupportNormedSpace
+
+/-- The transfer spectral support is closed inside the stable physical pair
+Hilbert carrier. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport_isClosed
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
-    NormedSpace ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) := by
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-  infer_instance
-local instance commonCoreClosureSpectralSupportComplete
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
-    CompleteSpace
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-        H N hN beta hbeta) := by
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
-  exact (realHilbertZeroEigenspaceSupport_isClosed
+    IsClosed
+      ((periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+          H N hN beta hbeta :
+        Set (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSector
+          H N hN beta hbeta))) :=
+  realHilbertZeroEigenspaceSupport_isClosed
     (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransfer
-      H N hN beta hbeta 1)).completeSpace_coe
+      H N hN beta hbeta 1)
+
+/-- The reconstructed non-vacuum sector `Ω⊥` is a closed Hilbert subspace. -/
+theorem ExplicitWightmanOSReconstructedModel.vacuumOrthogonal_isClosed
+    (M : ExplicitWightmanOSReconstructedModel) :
+    IsClosed (M.vacuumOrthogonal : Set M.H) := by
+  simpa [ExplicitWightmanOSReconstructedModel.vacuumOrthogonal] using
+    M.vacuumLine.isClosed_orthogonal
 
 /-- Model-facing common-core closure hypothesis at the actual transfer/Wightman
 frontier.
 
 Unlike `PeriodicHypercubicEvenSpecialUnitaryTransferLogGeneratorWightmanIntertwining`,
 this does not contain a global Hilbert equivalence, global domain transport, or
-an all-domain intertwining identity.  It asks only for two dense isometric
-realizations of one normed algebraic core, Mathlib `HasCore` receipts for the
-two closed operators after canonical pullback, and equality of their actions on
-that core. -/
+an all-domain intertwining identity. The common algebraic core is realized in
+the stable ambient physical pair Hilbert carrier and in the reconstructed
+Wightman Hilbert carrier, and is corestricted only at the final closed-subspace
+step. This follows the Mathlib closed-subspace route and avoids fragile direct
+`NormedSpace` synthesis on the spectral-support subtype. -/
 abbrev PeriodicHypercubicEvenSpecialUnitaryTransferLogGeneratorWightmanCommonCoreClosure
     (C : Type) [NormedAddCommGroup C] [NormedSpace ℝ C]
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (M : ExplicitWightmanOSReconstructedModel) :=
-  RealLinearPMapCommonCoreClosureIntertwining (C := C)
+  RealLinearPMapClosedSubspaceCommonCoreClosureIntertwining
+    (C := C)
+    (S := periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport
+      H N hN beta hbeta)
+    (T := M.vacuumOrthogonal)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupport_isClosed
+      H N hN beta hbeta)
+    M.vacuumOrthogonal_isClosed
     (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationPairHilbertSectorTransferOneSpectralSupportLogGenerator
       H N hN beta hbeta)
     M.canonicalVacuumOrthogonalHamiltonian
