@@ -17,6 +17,39 @@ variable
     {beta : ℕ → ℝ}
     {hbeta : ∀ n, 0 ≤ beta n}
 
+/-- The actual finite Wilson OS pre-Hilbert datum at one cutoff, named locally
+on the canonical reflection object so later spectral statements do not need to
+repeat the entire dependent construction. -/
+abbrev approximatingPreHilbertDataAt
+    (R : PhysicalYangMillsEvenPeriodicWilsonOSCanonicalFiberReflection
+      S halfExtent N hN beta hbeta)
+    (n : ℕ) : R.reflectionData.OSPreHilbertData :=
+  physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
+    S R.reflectionData halfExtent N hN beta hbeta
+      R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+      R.approximatingReflectionInvariantFamily n
+
+/-- The canonical shared-boundary `L²` moment of one finite OS carrier state. -/
+noncomputable def canonicalBoundaryMomentAt
+    (R : PhysicalYangMillsEvenPeriodicWilsonOSCanonicalFiberReflection
+      S halfExtent N hN beta hbeta)
+    (n : ℕ) (F : (R.approximatingPreHilbertDataAt n).Carrier) :
+    PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N :=
+  physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2
+    S R.reflectionData halfExtent N hN beta hbeta
+      R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
+      R.approximatingReflectionInvariantFamily n F
+
+/-- The same canonical boundary moment in the actual two-spatial-slice pair-Haar
+`L²` coordinates carrying the one-slab Wilson kernel. -/
+noncomputable def canonicalSpatialSlicePairMomentAt
+    (R : PhysicalYangMillsEvenPeriodicWilsonOSCanonicalFiberReflection
+      S halfExtent N hN beta hbeta)
+    (n : ℕ) (F : (R.approximatingPreHilbertDataAt n).Carrier) :
+    PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairL2 (halfExtent n) N :=
+  periodicHypercubicEvenSpecialUnitaryBoundaryL2ToSpatialSlicePairL2
+    (halfExtent n) N (R.canonicalBoundaryMomentAt n F)
+
 /-- Equality after the canonical completed OS-to-two-slice pair realization
 reflects back to equality in the actual finite Wilson OS Hilbert space.
 
@@ -30,11 +63,7 @@ theorem finiteOperator_apply_eq_smul_of_completedSpatialSlicePairMoment
       S R.reflectionData halfExtent N hN beta hbeta
         R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
         R.approximatingReflectionInvariantFamily)
-    (n : ℕ) (t : NNReal)
-    (phi : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-      S R.reflectionData halfExtent N hN beta hbeta
-        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
-        R.approximatingReflectionInvariantFamily n).PhysicalHilbert)
+    (n : ℕ) (t : NNReal) (phi : (R.approximatingPreHilbertDataAt n).PhysicalHilbert)
     (mu : ℝ)
     (hPair : R.toCompletedSpatialSlicePairMomentLinearIsometryAutomatic n
         (C.finiteOperator n t phi) =
@@ -55,34 +84,15 @@ theorem finiteOperator_on_positiveTimeObservable_of_pairMoment_eigen
         R.approximatingReflectionInvariantFamily)
     (n : ℕ) (t : NNReal) (F : R.reflectionData.positiveTimeSubalgebra) (mu : ℝ)
     (hPair :
-      periodicHypercubicEvenSpecialUnitaryBoundaryL2ToSpatialSlicePairL2
-          (halfExtent n) N
-          (physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2
-            S R.reflectionData halfExtent N hN beta hbeta
-              R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
-              R.approximatingReflectionInvariantFamily n
-              ((physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-                S R.reflectionData halfExtent N hN beta hbeta
-                  R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
-                  R.approximatingReflectionInvariantFamily n).carrierOfPositiveTime
-                    (C.translate t F))) =
-        mu • periodicHypercubicEvenSpecialUnitaryBoundaryL2ToSpatialSlicePairL2
-          (halfExtent n) N
-          (physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2
-            S R.reflectionData halfExtent N hN beta hbeta
-              R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
-              R.approximatingReflectionInvariantFamily n
-              ((physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-                S R.reflectionData halfExtent N hN beta hbeta
-                  R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
-                  R.approximatingReflectionInvariantFamily n).carrierOfPositiveTime F))) :
-    let P := physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-      S R.reflectionData halfExtent N hN beta hbeta
-        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
-        R.approximatingReflectionInvariantFamily n
-    C.finiteOperator n t (P.physicalState (P.carrierOfPositiveTime F)) =
-      mu • P.physicalState (P.carrierOfPositiveTime F) := by
-  dsimp only
+      R.canonicalSpatialSlicePairMomentAt n
+          ((R.approximatingPreHilbertDataAt n).carrierOfPositiveTime (C.translate t F)) =
+        mu • R.canonicalSpatialSlicePairMomentAt n
+          ((R.approximatingPreHilbertDataAt n).carrierOfPositiveTime F)) :
+    C.finiteOperator n t
+        ((R.approximatingPreHilbertDataAt n).physicalState
+          ((R.approximatingPreHilbertDataAt n).carrierOfPositiveTime F)) =
+      mu • (R.approximatingPreHilbertDataAt n).physicalState
+        ((R.approximatingPreHilbertDataAt n).carrierOfPositiveTime F) := by
   apply R.finiteOperator_apply_eq_smul_of_completedSpatialSlicePairMoment C
   rw [R.toCompletedSpatialSlicePairMomentLinearIsometryAutomatic_finiteOperator_on_positiveTimeObservable
     C n t F]
@@ -102,30 +112,17 @@ theorem finiteOperator_on_positiveTimeObservable_of_boundaryMoment_eigen
         R.approximatingReflectionInvariantFamily)
     (n : ℕ) (t : NNReal) (F : R.reflectionData.positiveTimeSubalgebra) (mu : ℝ)
     (hMoment :
-      physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2
-          S R.reflectionData halfExtent N hN beta hbeta
-            R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
-            R.approximatingReflectionInvariantFamily n
-            ((physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-              S R.reflectionData halfExtent N hN beta hbeta
-                R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
-                R.approximatingReflectionInvariantFamily n).carrierOfPositiveTime
-                  (C.translate t F)) =
-        mu • physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2
-          S R.reflectionData halfExtent N hN beta hbeta
-            R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
-            R.approximatingReflectionInvariantFamily n
-            ((physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-              S R.reflectionData halfExtent N hN beta hbeta
-                R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
-                R.approximatingReflectionInvariantFamily n).carrierOfPositiveTime F)) :
-    let P := physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-      S R.reflectionData halfExtent N hN beta hbeta
-        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
-        R.approximatingReflectionInvariantFamily n
-    C.finiteOperator n t (P.physicalState (P.carrierOfPositiveTime F)) =
-      mu • P.physicalState (P.carrierOfPositiveTime F) := by
+      R.canonicalBoundaryMomentAt n
+          ((R.approximatingPreHilbertDataAt n).carrierOfPositiveTime (C.translate t F)) =
+        mu • R.canonicalBoundaryMomentAt n
+          ((R.approximatingPreHilbertDataAt n).carrierOfPositiveTime F)) :
+    C.finiteOperator n t
+        ((R.approximatingPreHilbertDataAt n).physicalState
+          ((R.approximatingPreHilbertDataAt n).carrierOfPositiveTime F)) =
+      mu • (R.approximatingPreHilbertDataAt n).physicalState
+        ((R.approximatingPreHilbertDataAt n).carrierOfPositiveTime F) := by
   apply R.finiteOperator_on_positiveTimeObservable_of_pairMoment_eigen C n t F mu
+  unfold canonicalSpatialSlicePairMomentAt
   rw [hMoment]
   simp
 
@@ -141,29 +138,15 @@ theorem finiteOperator_one_on_positiveTimeObservable_of_boundaryMoment_eigen
         R.approximatingReflectionInvariantFamily)
     (n : ℕ) (F : R.reflectionData.positiveTimeSubalgebra) (mu : ℝ)
     (hMoment :
-      physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2
-          S R.reflectionData halfExtent N hN beta hbeta
-            R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
-            R.approximatingReflectionInvariantFamily n
-            ((physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-              S R.reflectionData halfExtent N hN beta hbeta
-                R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
-                R.approximatingReflectionInvariantFamily n).carrierOfPositiveTime
-                  (C.translate 1 F)) =
-        mu • physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2
-          S R.reflectionData halfExtent N hN beta hbeta
-            R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
-            R.approximatingReflectionInvariantFamily n
-            ((physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-              S R.reflectionData halfExtent N hN beta hbeta
-                R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
-                R.approximatingReflectionInvariantFamily n).carrierOfPositiveTime F)) :
-    let P := physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-      S R.reflectionData halfExtent N hN beta hbeta
-        R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
-        R.approximatingReflectionInvariantFamily n
-    C.finiteOperator n 1 (P.physicalState (P.carrierOfPositiveTime F)) =
-      mu • P.physicalState (P.carrierOfPositiveTime F) := by
+      R.canonicalBoundaryMomentAt n
+          ((R.approximatingPreHilbertDataAt n).carrierOfPositiveTime (C.translate 1 F)) =
+        mu • R.canonicalBoundaryMomentAt n
+          ((R.approximatingPreHilbertDataAt n).carrierOfPositiveTime F)) :
+    C.finiteOperator n 1
+        ((R.approximatingPreHilbertDataAt n).physicalState
+          ((R.approximatingPreHilbertDataAt n).carrierOfPositiveTime F)) =
+      mu • (R.approximatingPreHilbertDataAt n).physicalState
+        ((R.approximatingPreHilbertDataAt n).carrierOfPositiveTime F) := by
   exact R.finiteOperator_on_positiveTimeObservable_of_boundaryMoment_eigen
     C n 1 F mu hMoment
 
