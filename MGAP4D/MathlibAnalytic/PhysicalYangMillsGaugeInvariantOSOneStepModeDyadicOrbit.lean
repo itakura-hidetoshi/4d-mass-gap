@@ -39,7 +39,9 @@ theorem physicalOperator_inner_self_nonneg_of_innerSymmetric
     (t : NNReal) (psi : P.PhysicalHilbert) :
     0 ≤ inner ℝ (T.toPhysicalSemigroup.operator t psi) psi := by
   have ht : t / 2 + t / 2 = t := by
-    module
+    calc
+      t / 2 + t / 2 = (t / 2) * 2 := by ring
+      _ = t := by simp
   have hsplit :
       T.toPhysicalSemigroup.operator t psi =
         T.toPhysicalSemigroup.operator (t / 2)
@@ -117,14 +119,13 @@ theorem physicalOperator_half_apply_of_exponential_eigen
     dsimp [lambda]
     positivity
   have htime : t / 2 + t / 2 = t := by
-    module
+    calc
+      t / 2 + t / 2 = (t / 2) * 2 := by ring
+      _ = t := by simp
   have hlambdaSq : lambda ^ 2 = Real.exp (c * (t : ℝ)) := by
     dsimp [lambda]
     rw [sq, ← Real.exp_add]
     congr 1
-    have hcoe : (((t / 2 : NNReal) : ℝ)) = (t : ℝ) / 2 := by
-      norm_cast
-    rw [hcoe]
     ring
   apply T.physicalOperator_apply_eq_of_double_time_square_eigen
     hSymmetric (t / 2) psi lambda hlambda
