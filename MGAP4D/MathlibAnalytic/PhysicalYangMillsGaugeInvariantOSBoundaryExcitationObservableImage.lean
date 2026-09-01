@@ -10,6 +10,10 @@ open MeasureTheory
 
 noncomputable section
 
+local instance osBoundaryExcitationObservableImageSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 local instance osBoundaryExcitationObservableImageSpatialSliceHaarSFinite
     (H N : ℕ) :
     SFinite (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := by
