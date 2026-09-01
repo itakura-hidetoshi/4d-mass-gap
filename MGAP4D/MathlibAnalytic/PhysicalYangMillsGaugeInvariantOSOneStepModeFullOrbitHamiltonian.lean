@@ -36,9 +36,13 @@ theorem dyadicUnitTime_eq_pow (n : ℕ) :
 /-- The dyadic mesh tends to zero. -/
 theorem tendsto_dyadicUnitTime_zero :
     Tendsto dyadicUnitTime atTop (𝓝 0) := by
-  simpa only [dyadicUnitTime_eq_pow] using
-    (NNReal.tendsto_pow_atTop_nhds_zero_of_lt_one
-      (by norm_num : (1 / 2 : NNReal) < 1))
+  have hpow :
+      dyadicUnitTime = fun n : ℕ => (1 / 2 : NNReal) ^ n := by
+    funext n
+    exact dyadicUnitTime_eq_pow n
+  rw [hpow]
+  exact NNReal.tendsto_pow_atTop_nhds_zero_of_lt_one
+    (by norm_num : (1 / 2 : NNReal) < 1)
 
 /-- The lower dyadic index at mesh level `n`. -/
 def dyadicFloorIndex (t : NNReal) (n : ℕ) : ℕ :=
