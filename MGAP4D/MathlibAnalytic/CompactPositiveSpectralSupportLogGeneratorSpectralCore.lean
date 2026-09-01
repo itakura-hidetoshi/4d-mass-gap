@@ -124,7 +124,8 @@ theorem realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCore_topologica
   have hsum : HasSum mode x := by
     have hmap :=
       U.symm.toContinuousLinearEquiv.toContinuousLinearMap.hasSum hsum0
-    simpa only [mode, LinearIsometryEquiv.symm_apply_apply] using hmap
+    simpa only [mode, LinearIsometryEquiv.coe_toContinuousLinearEquiv,
+      LinearIsometryEquiv.symm_apply_apply] using hmap
   refine mem_closure_of_tendsto hsum (Eventually.of_forall ?_)
   intro s
   apply Submodule.sum_mem
@@ -135,7 +136,7 @@ theorem realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCore_topologica
           T hPositive :=
     realHilbertCompactPositiveZeroSupportLogGenerator_eigenvector_mem_spectralCore
       T hPositive mu ((U x) mu)
-  simpa only [mode,
+  simpa only [mode, U,
     realHilbertCompactPositive_zeroEigenspaceSupport_eigenspacesHilbertSumEquiv_symm_single]
     using hmode
 
@@ -213,7 +214,8 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_hasCore_spectralCore
           HasSum base (x : realHilbertZeroEigenspaceSupport T) := by
         have hmap :=
           U.symm.toContinuousLinearEquiv.toContinuousLinearMap.hasSum hBase0
-        simpa only [base, LinearIsometryEquiv.symm_apply_apply] using hmap
+        simpa only [base, LinearIsometryEquiv.coe_toContinuousLinearEquiv,
+          LinearIsometryEquiv.symm_apply_apply] using hmap
       have hValue0 :
           HasSum
             (fun mu : I => lp.single 2 mu ((U (H x)) mu))
@@ -222,7 +224,8 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_hasCore_spectralCore
       have hValue : HasSum value (H x) := by
         have hmap :=
           U.symm.toContinuousLinearEquiv.toContinuousLinearMap.hasSum hValue0
-        simpa only [value, LinearIsometryEquiv.symm_apply_apply] using hmap
+        simpa only [value, LinearIsometryEquiv.coe_toContinuousLinearEquiv,
+          LinearIsometryEquiv.symm_apply_apply] using hmap
       have hGraph :
           HasSum (fun mu : I => (base mu, value mu))
             ((x : realHilbertZeroEigenspaceSupport T), H x) :=
@@ -265,13 +268,25 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_hasCore_spectralCore
         · subst nu
           simp
         · simp [lp.single_apply, hnu]
+      have hvDomain : (v : realHilbertZeroEigenspaceSupport T) ∈ H.domain := by
+        rw [← hbaseEq]
+        exact hbaseDomain
+      let xv : H.domain := ⟨(v : realHilbertZeroEigenspaceSupport T), hvDomain⟩
+      have hxv : (⟨base mu, hbaseDomain⟩ : H.domain) = xv := by
+        apply Subtype.ext
+        exact hbaseEq
       have hHbase :
           H ⟨base mu, hbaseDomain⟩ =
             realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • base mu := by
-        rw [hbaseEq]
-        simpa only [H] using
-          realHilbertCompactPositiveZeroSupportLogGenerator_apply_eigenvector
-            T hCompact hPositive mu v
+        calc
+          H ⟨base mu, hbaseDomain⟩ = H xv := by rw [hxv]
+          _ = realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
+              (v : realHilbertZeroEigenspaceSupport T) := by
+            simpa only [H, xv] using
+              realHilbertCompactPositiveZeroSupportLogGenerator_apply_eigenvector
+                T hCompact hPositive mu v
+          _ = realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • base mu := by
+            rw [hbaseEq]
       apply (LinearPMap.mem_graph_iff' R).2
       let y : R.domain :=
         ⟨base mu, by
