@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSBoundaryMomentFiniteEigenmode
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopEigenspaceContraction
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOSBoundaryL2SpatialSlicePair
 import MGAP4D.MathlibAnalytic.RealL2ExternalTensor
 import Mathlib.Tactic
@@ -8,7 +7,6 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory
-open scoped InnerProductSpace
 
 noncomputable section
 
@@ -18,112 +16,82 @@ local instance osBoundaryExcitationObservableImageSpatialSliceHaarSFinite
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
 
-/-- A one-particle transfer mode is placed on the primary endpoint while the
-antipodal endpoint is kept in the chosen normalized top mode.
+/-- A one-particle endpoint-pair mode: the primary endpoint carries `f`, while
+`omega` is the companion top/vacuum endpoint vector.
 
-This is deliberately not the excitation tensor square `K ⊗ K`: the second
-factor is a transfer-fixed top mode.  Consequently an eigenvalue `mu` on the
-first factor remains `mu`, rather than being doubled to `mu^2`. -/
-noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalModeTopPairL2
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
-    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+Keeping the two factors explicit is important.  The one-particle route needs a
+transfer-fixed companion mode, not a second excitation; otherwise the finite
+transfer eigenvalue would be squared. -/
+noncomputable def periodicHypercubicEvenSpecialUnitaryOneSidedPairL2
+    (H N : ℕ)
+    (f omega : Lp ℝ 2
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) :
     PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2 H N :=
-  realL2ExternalTensor
-    ((f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
-      Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
-    (((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
-        H N hN beta hbeta :
-      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
-      Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))
+  realL2ExternalTensor f omega
 
-/-- Evolve both endpoints by one normalized physical one-slab transfer before
-forming the endpoint-pair mode.  The second factor will collapse back to the
-top mode by the finite-volume vacuum-fixed theorem. -/
-noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalModeTopPairOneStepL2
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
-    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+/-- The same endpoint-pair construction after one transfer step, with both
+endpoint vectors supplied explicitly. -/
+noncomputable def periodicHypercubicEvenSpecialUnitaryOneSidedPairOneStepL2
+    (H N : ℕ)
+    (fOne omegaOne : Lp ℝ 2
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) :
     PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2 H N :=
-  realL2ExternalTensor
-    (((periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-        H N hN beta hbeta) f :
-      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
-      Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
-    (((periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-        H N hN beta hbeta)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
-        H N hN beta hbeta) :
-      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
-      Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+  realL2ExternalTensor fOne omegaOne
 
-/-- The antipodal top factor is transfer-fixed, so the genuine two-endpoint
-one-step mode is exactly the static one-sided pair built from the transferred
-primary mode. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalModeTopPairOneStepL2_eq
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
-    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
-    periodicHypercubicEvenSpecialUnitaryPhysicalModeTopPairOneStepL2
-        H N hN beta hbeta f =
-      periodicHypercubicEvenSpecialUnitaryPhysicalModeTopPairL2
-        H N hN beta hbeta
-        ((periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-          H N hN beta hbeta) f) := by
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalModeTopPairOneStepL2
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalModeTopPairL2
-  rw [periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_vacuum_fixed]
-
-/-- Hence an exact one-slice eigenmode with eigenvalue `mu` becomes a genuine
-one-particle pair mode with the same eigenvalue, not its square. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalModeTopPairOneStepL2_eq_smul
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
-    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+/-- If the primary endpoint scales by `mu` and the companion endpoint is fixed,
+the genuine two-endpoint one-step pair scales by exactly `mu`, not `mu^2`. -/
+theorem periodicHypercubicEvenSpecialUnitaryOneSidedPairOneStepL2_eq_smul
+    (H N : ℕ)
+    (f omega fOne omegaOne : Lp ℝ 2
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
     (mu : ℝ)
-    (hf : periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-      H N hN beta hbeta f = mu • f) :
-    periodicHypercubicEvenSpecialUnitaryPhysicalModeTopPairOneStepL2
-        H N hN beta hbeta f =
-      mu • periodicHypercubicEvenSpecialUnitaryPhysicalModeTopPairL2
-        H N hN beta hbeta f := by
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalModeTopPairOneStepL2_eq]
-  rw [hf]
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalModeTopPairL2
-  rw [realL2ExternalTensor_smul_left]
+    (hf : fOne = mu • f)
+    (homega : omegaOne = omega) :
+    periodicHypercubicEvenSpecialUnitaryOneSidedPairOneStepL2
+        H N fOne omegaOne =
+      mu • periodicHypercubicEvenSpecialUnitaryOneSidedPairL2 H N f omega := by
+  rw [hf, homega]
+  unfold periodicHypercubicEvenSpecialUnitaryOneSidedPairOneStepL2
+  unfold periodicHypercubicEvenSpecialUnitaryOneSidedPairL2
+  exact realL2ExternalTensor_smul_left mu f omega
 
-/-- Pull the one-particle endpoint-pair mode back to the genuine shared Wilson
+/-- Pull a one-particle endpoint-pair vector back to the genuine shared Wilson
 reflection boundary. -/
-noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalModeTopBoundaryL2
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
-    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+noncomputable def periodicHypercubicEvenSpecialUnitaryOneSidedBoundaryL2
+    (H N : ℕ)
+    (f omega : Lp ℝ 2
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) :
     PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 H N :=
   periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundaryLinearIsometry H N
-    (periodicHypercubicEvenSpecialUnitaryPhysicalModeTopPairL2
-      H N hN beta hbeta f)
+    (periodicHypercubicEvenSpecialUnitaryOneSidedPairL2 H N f omega)
 
-/-- The corresponding boundary vector after evolving both endpoints for one
-normalized physical transfer step. -/
-noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalModeTopBoundaryOneStepL2
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
-    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+/-- Pull the one-step endpoint-pair vector back to the same genuine Wilson
+boundary carrier. -/
+noncomputable def periodicHypercubicEvenSpecialUnitaryOneSidedBoundaryOneStepL2
+    (H N : ℕ)
+    (fOne omegaOne : Lp ℝ 2
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) :
     PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 H N :=
   periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundaryLinearIsometry H N
-    (periodicHypercubicEvenSpecialUnitaryPhysicalModeTopPairOneStepL2
-      H N hN beta hbeta f)
+    (periodicHypercubicEvenSpecialUnitaryOneSidedPairOneStepL2
+      H N fOne omegaOne)
 
-/-- Boundary reindexing is linear, so the same exact one-particle eigenvalue
-survives on the actual reflection-fixed Wilson boundary. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalModeTopBoundaryOneStepL2_eq_smul
-    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
-    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+/-- Boundary reindexing is linear, so the one-particle eigenvalue survives
+unchanged on the actual reflection-fixed Wilson boundary. -/
+theorem periodicHypercubicEvenSpecialUnitaryOneSidedBoundaryOneStepL2_eq_smul
+    (H N : ℕ)
+    (f omega fOne omegaOne : Lp ℝ 2
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
     (mu : ℝ)
-    (hf : periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-      H N hN beta hbeta f = mu • f) :
-    periodicHypercubicEvenSpecialUnitaryPhysicalModeTopBoundaryOneStepL2
-        H N hN beta hbeta f =
-      mu • periodicHypercubicEvenSpecialUnitaryPhysicalModeTopBoundaryL2
-        H N hN beta hbeta f := by
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalModeTopBoundaryOneStepL2
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalModeTopBoundaryL2
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalModeTopPairOneStepL2_eq_smul
-    H N hN beta hbeta f mu hf]
+    (hf : fOne = mu • f)
+    (homega : omegaOne = omega) :
+    periodicHypercubicEvenSpecialUnitaryOneSidedBoundaryOneStepL2
+        H N fOne omegaOne =
+      mu • periodicHypercubicEvenSpecialUnitaryOneSidedBoundaryL2 H N f omega := by
+  unfold periodicHypercubicEvenSpecialUnitaryOneSidedBoundaryOneStepL2
+  unfold periodicHypercubicEvenSpecialUnitaryOneSidedBoundaryL2
+  rw [periodicHypercubicEvenSpecialUnitaryOneSidedPairOneStepL2_eq_smul
+    H N f omega fOne omegaOne mu hf homega]
   simp
 
 namespace PhysicalYangMillsEvenPeriodicWilsonOSCanonicalFiberReflection
@@ -137,13 +105,13 @@ variable
     {beta : ℕ → ℝ}
     {hbeta : ∀ n, 0 ≤ beta n}
 
-/-- Exact remaining observable-image datum for one finite one-particle mode.
+/-- Exact observable-image datum for a one-sided endpoint mode at one cutoff.
 
-The same positive-time observable must realize the one-sided physical boundary
-mode at time zero and, after the already-given observable translation, the
-boundary mode obtained by evolving both physical endpoints for one normalized
-one-slab step.  No surjectivity of the positive-time algebra is asserted. -/
-structure PhysicalModeTopBoundaryObservableImageAt
+The same positive-time observable realizes the initial one-particle boundary
+vector and, after observable translation by one unit, the supplied one-step
+endpoint vector.  This package asserts no surjectivity or richness theorem for
+the positive-time algebra. -/
+structure OneSidedBoundaryObservableImageAt
     (R : PhysicalYangMillsEvenPeriodicWilsonOSCanonicalFiberReflection
       S halfExtent N hN beta hbeta)
     (C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
@@ -151,26 +119,31 @@ structure PhysicalModeTopBoundaryObservableImageAt
         R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
         R.approximatingReflectionInvariantFamily)
     (n : ℕ)
-    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
-      (halfExtent n) N) where
+    (f omega fOne omegaOne : Lp ℝ 2
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+        (halfExtent n) N)) where
   observable : R.reflectionData.positiveTimeSubalgebra
   momentZero :
     R.canonicalBoundaryMomentAt n
         ((R.approximatingPreHilbertDataAt n).carrierOfPositiveTime observable) =
-      periodicHypercubicEvenSpecialUnitaryPhysicalModeTopBoundaryL2
-        (halfExtent n) N hN (beta n) (hbeta n) f
+      periodicHypercubicEvenSpecialUnitaryOneSidedBoundaryL2
+        (halfExtent n) N f omega
   momentOne :
     R.canonicalBoundaryMomentAt n
         ((R.approximatingPreHilbertDataAt n).carrierOfPositiveTime
           (C.translate 1 observable)) =
-      periodicHypercubicEvenSpecialUnitaryPhysicalModeTopBoundaryOneStepL2
-        (halfExtent n) N hN (beta n) (hbeta n) f
+      periodicHypercubicEvenSpecialUnitaryOneSidedBoundaryOneStepL2
+        (halfExtent n) N fOne omegaOne
 
-/-- Once the exact observable-image square is supplied, a genuine one-slice
-physical transfer eigenmode becomes an exact eigenvector of the actual finite
-Wilson OS time-one operator.  This feeds directly into the canonical
-finite-to-continuum common-carrier theorem. -/
-theorem finiteOperator_one_eigen_of_physicalModeTopBoundaryObservableImage
+/-- A translation-compatible observable image of a one-particle endpoint mode
+is an exact finite Wilson OS eigenvector whenever the primary endpoint scales
+by `mu` and the companion endpoint is fixed.
+
+The physical transfer specialization will supply these two endpoint equations;
+this theorem is independent of that transfer module so the actual OS boundary
+and transfer import graphs remain separated until their instance diamond is
+made coherent. -/
+theorem finiteOperator_one_eigen_of_oneSidedBoundaryObservableImage
     (R : PhysicalYangMillsEvenPeriodicWilsonOSCanonicalFiberReflection
       S halfExtent N hN beta hbeta)
     (C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
@@ -178,12 +151,14 @@ theorem finiteOperator_one_eigen_of_physicalModeTopBoundaryObservableImage
         R.toLinearHalfSupportReflection.toCommonPositiveHalfPullback.toWeakStarBridge
         R.approximatingReflectionInvariantFamily)
     (n : ℕ)
-    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
-      (halfExtent n) N)
+    (f omega fOne omegaOne : Lp ℝ 2
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+        (halfExtent n) N))
     (mu : ℝ)
-    (hf : periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-      (halfExtent n) N hN (beta n) (hbeta n) f = mu • f)
-    (W : PhysicalModeTopBoundaryObservableImageAt R C n f) :
+    (hf : fOne = mu • f)
+    (homega : omegaOne = omega)
+    (W : OneSidedBoundaryObservableImageAt
+      R C n f omega fOne omegaOne) :
     C.finiteOperator n 1
         ((R.approximatingPreHilbertDataAt n).physicalState
           ((R.approximatingPreHilbertDataAt n).carrierOfPositiveTime W.observable)) =
@@ -193,8 +168,8 @@ theorem finiteOperator_one_eigen_of_physicalModeTopBoundaryObservableImage
     C n W.observable mu
   rw [W.momentOne, W.momentZero]
   exact
-    periodicHypercubicEvenSpecialUnitaryPhysicalModeTopBoundaryOneStepL2_eq_smul
-      (halfExtent n) N hN (beta n) (hbeta n) f mu hf
+    periodicHypercubicEvenSpecialUnitaryOneSidedBoundaryOneStepL2_eq_smul
+      (halfExtent n) N f omega fOne omegaOne mu hf homega
 
 end PhysicalYangMillsEvenPeriodicWilsonOSCanonicalFiberReflection
 
