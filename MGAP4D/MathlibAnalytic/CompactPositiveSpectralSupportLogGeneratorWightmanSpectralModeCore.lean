@@ -190,6 +190,222 @@ theorem CompactPositiveTransferLogGeneratorWightmanSpectralModeData.target_mem
     exact Submodule.mem_top
   exact hSpan hcSpan
 
+/-- Wightman Hamiltonian action on the canonical transfer spectral core as an
+ordinary linear map. -/
+noncomputable def CompactPositiveTransferLogGeneratorWightmanSpectralModeData.wightmanCoreAction
+    {E : Type}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {T : E →L[ℝ] E}
+    {hCompact : IsCompactOperator T}
+    {hPositive : T.IsPositive}
+    {M : ExplicitWightmanOSReconstructedModel}
+    (D : CompactPositiveTransferLogGeneratorWightmanSpectralModeData
+      T hCompact hPositive M) :
+    realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCore T hPositive
+      →ₗ[ℝ] M.vacuumOrthogonal :=
+  M.canonicalVacuumOrthogonalHamiltonian.toFun.comp
+    ((RealHilbertClosedSubspaceDenseCoreRealization.corestrict D.target).toLinearMap.codRestrict
+      M.canonicalVacuumOrthogonalHamiltonian.domain D.target_mem)
+
+/-- Transfer logarithmic-generator action on the same canonical core, transported
+through the dense-core equivalence generated canonically from its source and
+target realizations. -/
+noncomputable def CompactPositiveTransferLogGeneratorWightmanSpectralModeData.transferCoreAction
+    {E : Type}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {T : E →L[ℝ] E}
+    {hCompact : IsCompactOperator T}
+    {hPositive : T.IsPositive}
+    {M : ExplicitWightmanOSReconstructedModel}
+    (D : CompactPositiveTransferLogGeneratorWightmanSpectralModeData
+      T hCompact hPositive M) :
+    realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCore T hPositive
+      →ₗ[ℝ] M.vacuumOrthogonal :=
+  let source :=
+    realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCoreInclusion
+      T hPositive
+  let sourceDense :=
+    realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCoreInclusion_denseRange
+      T hCompact hPositive
+  let target :=
+    RealHilbertClosedSubspaceDenseCoreRealization.corestrict D.target
+  let targetDense :=
+    RealHilbertClosedSubspaceDenseCoreRealization.corestrict_denseRange D.target
+  let H :=
+    realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive
+  let sourceHasCore :=
+    realHilbertCompactPositiveZeroSupportLogGenerator_hasCore_canonicalSpectralCoreRange
+      T hCompact hPositive
+  let sourceDomainMap :
+      realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCore T hPositive
+        →ₗ[ℝ] H.domain :=
+    source.toLinearMap.codRestrict H.domain
+      (fun c => sourceHasCore.le_domain ⟨c, rfl⟩)
+  (realHilbertDenseCoreLinearIsometryEquiv
+      source sourceDense target targetDense).toLinearMap.comp
+    (H.toFun.comp sourceDomainMap)
+
+/-- The two ordinary core-action maps agree on every genuine transfer mode. -/
+theorem CompactPositiveTransferLogGeneratorWightmanSpectralModeData.coreAction_eqOn_modes
+    {E : Type}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {T : E →L[ℝ] E}
+    {hCompact : IsCompactOperator T}
+    {hPositive : T.IsPositive}
+    {M : ExplicitWightmanOSReconstructedModel}
+    (D : CompactPositiveTransferLogGeneratorWightmanSpectralModeData
+      T hCompact hPositive M) :
+    Set.EqOn D.wightmanCoreAction D.transferCoreAction
+      (realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCoreModeSet
+        T hPositive) := by
+  intro c hc
+  change
+    (c : realHilbertZeroEigenspaceSupport T) ∈
+      realHilbertCompactPositiveZeroSupportLogGeneratorSpectralModeSet
+        T hPositive at hc
+  rcases hc with ⟨mu, v, hv⟩
+  have hcEq :
+      c =
+        ⟨(v : realHilbertZeroEigenspaceSupport T),
+          realHilbertCompactPositiveZeroSupportLogGenerator_eigenvector_mem_spectralCore
+            T hPositive mu v⟩ := by
+    apply Subtype.ext
+    exact hv.symm
+  subst c
+  let cMode :
+      realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCore T hPositive :=
+    ⟨(v : realHilbertZeroEigenspaceSupport T),
+      realHilbertCompactPositiveZeroSupportLogGenerator_eigenvector_mem_spectralCore
+        T hPositive mu v⟩
+  let source :=
+    realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCoreInclusion
+      T hPositive
+  let sourceDense :=
+    realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCoreInclusion_denseRange
+      T hCompact hPositive
+  let target :=
+    RealHilbertClosedSubspaceDenseCoreRealization.corestrict D.target
+  let targetDense :=
+    RealHilbertClosedSubspaceDenseCoreRealization.corestrict_denseRange D.target
+  let U :=
+    realHilbertDenseCoreLinearIsometryEquiv
+      source sourceDense target targetDense
+  let H :=
+    realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive
+  have hHMode :
+      H ⟨source cMode,
+        (realHilbertCompactPositiveZeroSupportLogGenerator_hasCore_canonicalSpectralCoreRange
+          T hCompact hPositive).le_domain ⟨cMode, rfl⟩⟩ =
+        realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu • source cMode := by
+    simpa only [H, source, cMode,
+      realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCoreInclusion] using
+      realHilbertCompactPositiveZeroSupportLogGenerator_apply_eigenvector
+        T hCompact hPositive mu v
+  calc
+    D.wightmanCoreAction cMode =
+        M.canonicalVacuumOrthogonalHamiltonian
+          ⟨target cMode, D.target_mem cMode⟩ := by
+      rfl
+    _ = realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
+        target cMode := by
+      simpa only [cMode, target] using D.mode_action mu v
+    _ = U
+        (realHilbertZeroEigenspaceSupportLogEnergy T hPositive mu •
+          source cMode) := by
+      rw [U.map_smul]
+      rw [realHilbertDenseCoreLinearIsometryEquiv_apply_source]
+    _ = U
+        (H ⟨source cMode,
+          (realHilbertCompactPositiveZeroSupportLogGenerator_hasCore_canonicalSpectralCoreRange
+            T hCompact hPositive).le_domain ⟨cMode, rfl⟩⟩) := by
+      rw [hHMode]
+    _ = D.transferCoreAction cMode := by
+      rfl
+
+/-- Equality on genuine modes extends to the complete algebraic spectral core
+because those modes span the whole subtype carrier. -/
+theorem CompactPositiveTransferLogGeneratorWightmanSpectralModeData.coreAction_eq
+    {E : Type}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {T : E →L[ℝ] E}
+    {hCompact : IsCompactOperator T}
+    {hPositive : T.IsPositive}
+    {M : ExplicitWightmanOSReconstructedModel}
+    (D : CompactPositiveTransferLogGeneratorWightmanSpectralModeData
+      T hCompact hPositive M) :
+    D.wightmanCoreAction = D.transferCoreAction := by
+  apply LinearMap.ext
+  intro c
+  exact
+    (LinearMap.eqOn_span' D.coreAction_eqOn_modes)
+      (by
+        rw [realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCoreModeSet_span_eq_top]
+        exact Submodule.mem_top)
+
+/-- Mode-wise logarithmic energy identities therefore generate the exact
+whole-core intertwining equation required by the self-adjoint maximality layer. -/
+theorem CompactPositiveTransferLogGeneratorWightmanSpectralModeData.core_intertwines
+    {E : Type}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {T : E →L[ℝ] E}
+    {hCompact : IsCompactOperator T}
+    {hPositive : T.IsPositive}
+    {M : ExplicitWightmanOSReconstructedModel}
+    (D : CompactPositiveTransferLogGeneratorWightmanSpectralModeData
+      T hCompact hPositive M)
+    (c : realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCore
+      T hPositive) :
+    M.canonicalVacuumOrthogonalHamiltonian
+        ⟨RealHilbertClosedSubspaceDenseCoreRealization.corestrict D.target c,
+          D.target_mem c⟩ =
+      realHilbertDenseCoreLinearIsometryEquiv
+        (realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCoreInclusion
+          T hPositive)
+        (realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCoreInclusion_denseRange
+          T hCompact hPositive)
+        (RealHilbertClosedSubspaceDenseCoreRealization.corestrict D.target)
+        (RealHilbertClosedSubspaceDenseCoreRealization.corestrict_denseRange D.target)
+        (realHilbertCompactPositiveZeroSupportLogGenerator
+          T hCompact hPositive
+          ⟨realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCoreInclusion
+              T hPositive c,
+            (realHilbertCompactPositiveZeroSupportLogGenerator_hasCore_canonicalSpectralCoreRange
+              T hCompact hPositive).le_domain ⟨c, rfl⟩⟩) := by
+  exact LinearMap.congr_fun D.coreAction_eq c
+
+/-- Spectral-mode data generate the canonical-spectral-core package of PR #3020.
+Thus no span-wide operator identity remains as an independent input. -/
+noncomputable def CompactPositiveTransferLogGeneratorWightmanSpectralModeData.toCanonicalSpectralCoreData
+    {E : Type}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {T : E →L[ℝ] E}
+    {hCompact : IsCompactOperator T}
+    {hPositive : T.IsPositive}
+    {M : ExplicitWightmanOSReconstructedModel}
+    (D : CompactPositiveTransferLogGeneratorWightmanSpectralModeData
+      T hCompact hPositive M) :
+    CompactPositiveTransferLogGeneratorWightmanCanonicalSpectralCoreData
+      T hCompact hPositive M where
+  target := D.target
+  target_mem := D.target_mem
+  core_intertwines := D.core_intertwines
+
+/-- Consequently the full unitary transfer/Wightman operator intertwining is
+generated from mode-wise Wightman logarithmic-energy identities alone. -/
+noncomputable def CompactPositiveTransferLogGeneratorWightmanSpectralModeData.toUnitaryIntertwining
+    {E : Type}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    {T : E →L[ℝ] E}
+    {hCompact : IsCompactOperator T}
+    {hPositive : T.IsPositive}
+    {M : ExplicitWightmanOSReconstructedModel}
+    (D : CompactPositiveTransferLogGeneratorWightmanSpectralModeData
+      T hCompact hPositive M) :
+    RealLinearPMapUnitaryIntertwining
+      (realHilbertCompactPositiveZeroSupportLogGenerator T hCompact hPositive)
+      M.canonicalVacuumOrthogonalHamiltonian :=
+  D.toCanonicalSpectralCoreData.toUnitaryIntertwining
+
 end
 
 end MathlibAnalytic
