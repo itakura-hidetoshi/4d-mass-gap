@@ -171,7 +171,6 @@ theorem finiteOperator_one_eigen_of_normalizedPhysicalTransferModeObservableImag
       (halfExtent n) N hN (beta n) (hbeta n) f mu hf
   · exact periodicHypercubicEvenSpecialUnitaryPhysicalTopModeOneStepLp_eq
       (halfExtent n) N hN (beta n) (hbeta n)
-  · exact W
 
 end PhysicalYangMillsEvenPeriodicWilsonOSCanonicalFiberReflection
 
