@@ -12,10 +12,8 @@ open scoped InnerProductSpace LinearPMap
 
 noncomputable section
 
-universe u
-
 local instance compactPositiveWightmanSupportComplete
-    {E : Type u}
+    {E : Type}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (T : E →L[ℝ] E) :
     CompleteSpace (realHilbertZeroEigenspaceSupport T) :=
@@ -38,7 +36,7 @@ receipt, on the transfer side, remains together with exact action agreement on
 the algebraic core. -/
 structure CompactPositiveTransferLogGeneratorWightmanCommonCoreData
     {C : Type} [NormedAddCommGroup C] [NormedSpace ℝ C]
-    {E : Type u}
+    {E : Type}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (T : E →L[ℝ] E)
     (hCompact : IsCompactOperator T)
@@ -78,7 +76,7 @@ physical sectors is generated, not supplied. -/
 noncomputable def
     CompactPositiveTransferLogGeneratorWightmanCommonCoreData.toClosedSubspaceSelfAdjointCommonCore
     {C : Type} [NormedAddCommGroup C] [NormedSpace ℝ C]
-    {E : Type u}
+    {E : Type}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     {T : E →L[ℝ] E}
     {hCompact : IsCompactOperator T}
@@ -108,7 +106,7 @@ Wightman Hamiltonian on `Ω⊥`. -/
 noncomputable def
     CompactPositiveTransferLogGeneratorWightmanCommonCoreData.toUnitaryIntertwining
     {C : Type} [NormedAddCommGroup C] [NormedSpace ℝ C]
-    {E : Type u}
+    {E : Type}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     {T : E →L[ℝ] E}
     {hCompact : IsCompactOperator T}
@@ -126,7 +124,7 @@ generator and the Wightman `Ω⊥` Hamiltonian agree without assuming spectral
 identity or a global operator-level bridge. -/
 theorem compactPositiveTransferLogGenerator_pointEnergySet_eq_wightman
     {C : Type} [NormedAddCommGroup C] [NormedSpace ℝ C]
-    {E : Type u}
+    {E : Type}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (T : E →L[ℝ] E)
     (hCompact : IsCompactOperator T)
@@ -142,13 +140,13 @@ theorem compactPositiveTransferLogGenerator_pointEnergySet_eq_wightman
     M.canonicalVacuumOrthogonalHamiltonian
     D.toUnitaryIntertwining
 
-/-- The generic common-core package can therefore be consumed anywhere the old
-operator-level transfer/Wightman bridge was expected, after a concrete transfer
+/-- The generic common-core package can therefore be consumed anywhere a full
+operator-level transfer/Wightman bridge is expected, after a concrete transfer
 operator is substituted. -/
 noncomputable def
     compactPositiveTransferLogGeneratorWightmanIntertwining_of_commonCore
     {C : Type} [NormedAddCommGroup C] [NormedSpace ℝ C]
-    {E : Type u}
+    {E : Type}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (T : E →L[ℝ] E)
     (hCompact : IsCompactOperator T)
