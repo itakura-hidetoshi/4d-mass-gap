@@ -7,7 +7,7 @@ import Mathlib.Tactic
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open Function Set Module End
+open Function Set Module End MeasureTheory
 open scoped InnerProductSpace LinearPMap
 
 noncomputable section
