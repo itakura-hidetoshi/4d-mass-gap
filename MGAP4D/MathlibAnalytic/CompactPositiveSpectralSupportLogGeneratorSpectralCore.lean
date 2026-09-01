@@ -124,7 +124,8 @@ theorem realHilbertCompactPositiveZeroSupportLogGeneratorSpectralCore_topologica
   have hsum : HasSum mode x := by
     have hmap :=
       U.symm.toContinuousLinearEquiv.toContinuousLinearMap.hasSum hsum0
-    simpa only [mode, LinearIsometryEquiv.coe_toContinuousLinearEquiv,
+    simpa only [mode, ContinuousLinearEquiv.coe_coe,
+      LinearIsometryEquiv.coe_toContinuousLinearEquiv,
       LinearIsometryEquiv.symm_apply_apply] using hmap
   refine mem_closure_of_tendsto hsum (Eventually.of_forall ?_)
   intro s
@@ -214,7 +215,8 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_hasCore_spectralCore
           HasSum base (x : realHilbertZeroEigenspaceSupport T) := by
         have hmap :=
           U.symm.toContinuousLinearEquiv.toContinuousLinearMap.hasSum hBase0
-        simpa only [base, LinearIsometryEquiv.coe_toContinuousLinearEquiv,
+        simpa only [base, ContinuousLinearEquiv.coe_coe,
+          LinearIsometryEquiv.coe_toContinuousLinearEquiv,
           LinearIsometryEquiv.symm_apply_apply] using hmap
       have hValue0 :
           HasSum
@@ -224,7 +226,8 @@ theorem realHilbertCompactPositiveZeroSupportLogGenerator_hasCore_spectralCore
       have hValue : HasSum value (H x) := by
         have hmap :=
           U.symm.toContinuousLinearEquiv.toContinuousLinearMap.hasSum hValue0
-        simpa only [value, LinearIsometryEquiv.coe_toContinuousLinearEquiv,
+        simpa only [value, ContinuousLinearEquiv.coe_coe,
+          LinearIsometryEquiv.coe_toContinuousLinearEquiv,
           LinearIsometryEquiv.symm_apply_apply] using hmap
       have hGraph :
           HasSum (fun mu : I => (base mu, value mu))
