@@ -245,6 +245,7 @@ theorem RealLinearPMapSelfAdjointCommonCoreIntertwining.domRestrict_eq
       simpa [S] using hc
     subst x
     rw [realLinearPMapPullback_domain_iff]
+    change U (D.source c) ∈ B.domain
     simpa only [U, realHilbertDenseCoreLinearIsometryEquiv_apply_source] using
       D.target_mem c
   apply LinearPMap.ext
