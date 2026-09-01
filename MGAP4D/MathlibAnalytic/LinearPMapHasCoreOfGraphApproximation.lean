@@ -33,7 +33,8 @@ theorem realLinearPMap_hasCore_of_seq_graph_approximation
     A.HasCore C := by
   let R : E →ₗ.[ℝ] F := A.domRestrict C
   have hRleA : R ≤ A := by
-    simpa only [R] using (LinearPMap.domRestrict_le (f := A) (S := C))
+    change A.domRestrict C ≤ A
+    exact LinearPMap.domRestrict_le
   have hRClosable : R.IsClosable :=
     hAClosed.isClosable.leIsClosable hRleA
   have hGraphClosure : R.graph.topologicalClosure = A.graph := by
@@ -54,19 +55,25 @@ theorem realLinearPMap_hasCore_of_seq_graph_approximation
         ((u n : E), A ⟨(u n : E), hC (u n).property⟩)
       refine ⟨v, ?_, ?_⟩
       · intro n
-        rw [LinearPMap.mem_graph_iff]
+        change v n ∈ R.graph
+        apply (LinearPMap.mem_graph_iff' R).2
         let y : R.domain :=
           ⟨(u n : E), by
             change (u n : E) ∈ C ⊓ A.domain
             exact ⟨(u n).property, hC (u n).property⟩⟩
-        refine ⟨y, rfl, ?_⟩
-        exact LinearPMap.domRestrict_apply
-          (x := y)
-          (y := ⟨(u n : E), hC (u n).property⟩) rfl
+        refine ⟨y, ?_⟩
+        apply Prod.ext
+        · rfl
+        · change R y = A ⟨(u n : E), hC (u n).property⟩
+          simpa only [R] using
+            (LinearPMap.domRestrict_apply
+              (x := y)
+              (y := ⟨(u n : E), hC (u n).property⟩) rfl)
       · change Tendsto
           (fun n => ((u n : E), A ⟨(u n : E), hC (u n).property⟩))
           atTop
           (𝓝 ((x : E), A x))
+        rw [nhds_prod_eq]
         exact huBase.prodMk huValue
   refine ⟨hC, ?_⟩
   apply LinearPMap.eq_of_eq_graph
