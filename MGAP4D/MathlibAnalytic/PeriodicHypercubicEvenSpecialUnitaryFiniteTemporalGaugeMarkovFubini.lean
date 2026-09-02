@@ -171,14 +171,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugePathKernel_
             PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
           0).symm (A₀, tail)) =
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta A₀ (tail 0) *
+          H N beta A₀ (tail ⟨0, periodicHypercubicEvenPositiveHalfCylinderSlabCount_pos H⟩) *
         ∏ i : Fin H,
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
             H N beta (tail i.castSucc) (tail i.succ) := by
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight
-  simp only [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
   simp only [MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv,
     Fin.prod_univ_succ, Fin.insertNth_zero, Equiv.coe_fn_mk, Fin.cons_zero,
     Fin.cons_succ, Fin.zero_succAbove, cast_eq, Fin.succ_castSucc]
@@ -203,7 +202,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugePath_integr
               (fun _ : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H + 1) =>
                 PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) 0).symm
               (A₀, tail)) *
-            (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A₀ (tail 0) *
+            (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A₀
+                (tail ⟨0, periodicHypercubicEvenPositiveHalfCylinderSlabCount_pos H⟩) *
               ∏ i : Fin H, periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
                 H N beta (tail i.castSucc) (tail i.succ))
           ∂(Measure.pi (fun _ : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H) =>
