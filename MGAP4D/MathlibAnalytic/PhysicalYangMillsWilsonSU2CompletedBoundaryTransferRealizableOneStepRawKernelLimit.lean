@@ -109,7 +109,8 @@ def RealizableOneStepPhysicalTopRawKernelLimitAtFor
           atTop
           (𝓝 (Q.completedBoundaryProjectedPhysicalState hInvariant n
             (periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundaryLinearIsometry
-              (halfExtent n) N (physicalTopPairInput n f)))) →
+              (halfExtent n) N
+              (physicalTopPairInput (hN := hN) (beta := beta) (hbeta := hbeta) n f)))) →
         Tendsto
           (fun k => inner ℝ
             (periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry
@@ -118,7 +119,9 @@ def RealizableOneStepPhysicalTopRawKernelLimitAtFor
                 halfExtent N hN beta hbeta n
                 (Q.positiveHalfL2LinearMap hInvariant n
                   (R.realizableCarrierTranslation hInvariant n 1 (F k))))) z)
-          atTop (𝓝 (physicalTopRawKernelCoefficient n f z))
+          atTop
+          (𝓝 (physicalTopRawKernelCoefficient
+            (hN := hN) (beta := beta) (hbeta := hbeta) n f z))
 
 /-- Projected synthesis density plus uniqueness of scalar limits turns the
 finite realizable one-step raw-kernel limit into the completed raw-kernel weak
@@ -138,7 +141,8 @@ theorem completedBoundaryTransferOneSlabPhysicalTopRawKernelWeakAtFor_of_realiza
     Q.CompletedBoundaryTransferOneSlabPhysicalTopRawKernelWeakAtFor
       hInvariant C n f := by
   intro z
-  let x := physicalTopPairInput n f
+  let x := physicalTopPairInput
+    (hN := hN) (beta := beta) (hbeta := hbeta) n f
   rcases R.exists_actualSynthesis_realizableOneStep_pair_inner_tendsto_completedBoundaryTransfer_two_pair
       hInvariant C n hCoherent x z with ⟨F, hstate, hCompleted⟩
   have hRawLimit : Tendsto
@@ -149,7 +153,9 @@ theorem completedBoundaryTransferOneSlabPhysicalTopRawKernelWeakAtFor_of_realiza
             halfExtent N hN beta hbeta n
             (Q.positiveHalfL2LinearMap hInvariant n
               (R.realizableCarrierTranslation hInvariant n 1 (F k))))) z)
-      atTop (𝓝 (physicalTopRawKernelCoefficient n f z)) := by
+      atTop
+      (𝓝 (physicalTopRawKernelCoefficient
+        (hN := hN) (beta := beta) (hbeta := hbeta) n f z)) := by
     apply hRaw z F
     simpa [x, physicalTopPairInput] using hstate
   have hEq := tendsto_nhds_unique hCompleted hRawLimit
