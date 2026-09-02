@@ -13,27 +13,21 @@ open scoped InnerProductSpace InnerProduct
 local instance realizableRawKernelLimitSideLengthNeZero (H : ℕ) :
     NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
   simp [PeriodicHypercubicEvenSideLength]⟩
-
 local instance realizableRawKernelLimitTopologicalGroup (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
-
 local instance realizableRawKernelLimitCompactSpace (N : ℕ) :
     CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
-
 local instance realizableRawKernelLimitSecondCountable (N : ℕ) :
     SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupSecondCountableTopology N
-
 local instance realizableRawKernelLimitMeasurableSpace (N : ℕ) :
     MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
-
 local instance realizableRawKernelLimitBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
-
 local instance realizableRawKernelLimitSpatialLinkFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
@@ -87,14 +81,12 @@ noncomputable def physicalTopRawKernelCoefficient
 
 Take any sequence of actual OS carriers whose completed physical states tend to
 the orthogonal projection of the selected endpoint pair into the completed OS
-boundary image.  After one *realizable integer lattice step*, actual Wilson
+boundary image. After one realizable integer lattice step, actual Wilson
 adjoint synthesis is required to have pair-Haar coefficient tending to the
 literal normalized one-slab Wilson kernel coefficient.
 
 This statement contains no abstract common-semigroup translation, no finite or
-continuum eigen-equation, and no Hamiltonian input.  It is precisely the
-continuity/Fubini statement still to be discharged from the finite Wilson
-kernel. -/
+continuum eigen-equation, and no Hamiltonian input. -/
 def RealizableOneStepPhysicalTopRawKernelLimitAtFor
     (R : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveTemporalCovariance
       S D halfExtent N hN beta hbeta Q E)
@@ -130,7 +122,7 @@ def RealizableOneStepPhysicalTopRawKernelLimitAtFor
 
 /-- Projected synthesis density plus uniqueness of scalar limits turns the
 finite realizable one-step raw-kernel limit into the completed raw-kernel weak
-identity.  Completion contributes no additional model assumption. -/
+identity. Completion contributes no additional model assumption. -/
 theorem completedBoundaryTransferOneSlabPhysicalTopRawKernelWeakAtFor_of_realizableOneStepLimit
     (R : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveTemporalCovariance
       S D halfExtent N hN beta hbeta Q E)
@@ -146,7 +138,7 @@ theorem completedBoundaryTransferOneSlabPhysicalTopRawKernelWeakAtFor_of_realiza
     Q.CompletedBoundaryTransferOneSlabPhysicalTopRawKernelWeakAtFor
       hInvariant C n f := by
   intro z
-  let x := R.physicalTopPairInput n f
+  let x := physicalTopPairInput n f
   rcases R.exists_actualSynthesis_realizableOneStep_pair_inner_tendsto_completedBoundaryTransfer_two_pair
       hInvariant C n hCoherent x z with ⟨F, hstate, hCompleted⟩
   have hRawLimit : Tendsto
@@ -157,15 +149,14 @@ theorem completedBoundaryTransferOneSlabPhysicalTopRawKernelWeakAtFor_of_realiza
             halfExtent N hN beta hbeta n
             (Q.positiveHalfL2LinearMap hInvariant n
               (R.realizableCarrierTranslation hInvariant n 1 (F k))))) z)
-      atTop (𝓝 (R.physicalTopRawKernelCoefficient n f z)) := by
+      atTop (𝓝 (physicalTopRawKernelCoefficient n f z)) := by
     apply hRaw z F
     simpa [x, physicalTopPairInput] using hstate
   have hEq := tendsto_nhds_unique hCompleted hRawLimit
   simpa [x, physicalTopPairInput, physicalTopRawKernelCoefficient] using hEq
 
-/-- The preceding finite-limit theorem generates the selected endpoint-pair
-weak intertwining itself; the old completed `hWeak` is no longer an independent
-input once the finite raw-kernel limit is known. -/
+/-- The finite-limit theorem generates the selected endpoint-pair weak
+intertwining; the old completed `hWeak` is no longer an independent input. -/
 theorem completedBoundaryTransferOneSlabPairWeakAtFor_physicalTop_of_realizableOneStepLimit
     (R : PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveTemporalCovariance
       S D halfExtent N hN beta hbeta Q E)
@@ -237,8 +228,8 @@ theorem su2CompletedBoundaryTransferPhysicalModeWeakAt_of_realizableOneStepRawKe
       hInvariant C n hCoherent f hRaw
 
 /-- Exact-gap continuum time-one eigenmode with the old completed weak family
-replaced by two upstream finite-model obligations: explicit common/realizable
-one-step coherence and the literal raw-kernel limit property. -/
+replaced by explicit common/realizable one-step coherence and the finite
+raw-kernel limit property. -/
 theorem physicalOperator_one_apply_exactGapClusterContractionRatio_of_realizableOneStepRawKernelLimit
     (A : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer
       S D halfExtent 2 su2RealizableRawKernelLimitRankPositive beta hbeta
@@ -264,7 +255,7 @@ theorem physicalOperator_one_apply_exactGapClusterContractionRatio_of_realizable
     n (f n) (hCoherent n) (hRaw n)
 
 /-- Public graph-closed vacuum-orthogonal Hamiltonian exact-gap mode with no
-completed-boundary weak hypothesis.  The selected model seam now lives entirely
+completed-boundary weak hypothesis. The selected model seam now lives entirely
 at the realizable finite one-step/raw-kernel limit level. -/
 theorem exists_vacuumOrthogonalClosedRightHamiltonian_exactGapValueReal_mode_of_realizableOneStepRawKernelLimit
     (A : PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer
