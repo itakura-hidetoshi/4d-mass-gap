@@ -80,6 +80,80 @@ theorem periodicHypercubicEvenWilsonBoundaryGramPairing_eq_rawPath_integral
   rw [hpK, hpTensor]
   simp [realL2ExternalTensorFunction, realL2Scalar_inner_eq_mul]
 
+/-- The complete positive-half spatial-path Haar law splits exactly into its
+first spatial slice and the remaining `H+1` spatial slices.  This is the finite
+product-measure statement underlying the Markov recursion. -/
+theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaar_headTail_measurePreserving
+    (H N : ℕ) :
+    MeasurePreserving
+      (MeasurableEquiv.piFinSuccAbove
+        (fun _ : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H + 1) =>
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+        0)
+      (periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N)
+      ((periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N).prod
+        (Measure.pi
+          (fun _ : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H) =>
+            periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))) := by
+  simpa [periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure] using
+    (MeasureTheory.measurePreserving_piFinSuccAbove
+      (fun _ : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H + 1) =>
+        periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
+      (0 : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H + 1)))
+
+/-- Finite Fubini decomposition of an integrable spatial-path functional into
+the initial slice and the remaining path.  Keeping the canonical
+`piFinSuccAbove` equivalence explicit avoids any ad-hoc tuple encoding and makes
+this theorem directly reusable for induction over adjacent Wilson slabs. -/
+theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaar_integral_headTail
+    (H N : ℕ)
+    (F : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N → ℝ)
+    (hF : Integrable F
+      (periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N)) :
+    ∫ path,
+        F path
+      ∂(periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N) =
+      ∫ A₀ : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
+        ∫ tail : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H) →
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
+          F
+            ((MeasurableEquiv.piFinSuccAbove
+              (fun _ : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H + 1) =>
+                PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+              0).symm (A₀, tail))
+          ∂(Measure.pi
+            (fun _ : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H) =>
+              periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+        ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := by
+  let e :=
+    MeasurableEquiv.piFinSuccAbove
+      (fun _ : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H + 1) =>
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+      0
+  let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
+  let ν := Measure.pi
+    (fun _ : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H) => μ)
+  have he :
+      MeasurePreserving e
+        (periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N)
+        (μ.prod ν) := by
+    simpa [e, μ, ν] using
+      periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaar_headTail_measurePreserving
+        H N
+  have hcomp : Integrable (F ∘ e.symm) (μ.prod ν) := by
+    exact
+      (he.symm.integrable_comp_emb e.symm.measurableEmbedding).2 hF
+  calc
+    (∫ path,
+        F path
+      ∂(periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N)) =
+        ∫ q, F (e.symm q) ∂(μ.prod ν) := by
+      exact (he.symm.integral_comp' F).symm
+    _ = ∫ A₀, ∫ tail, F (e.symm (A₀, tail)) ∂ν ∂μ := by
+      simpa [Function.comp_def] using MeasureTheory.integral_prod _ hcomp
+    _ = _ := by
+      rfl
+
 end
 
 end MathlibAnalytic
