@@ -198,9 +198,11 @@ theorem OneSidedPositiveTimeSubmoduleBoundaryPairClosureAt.existsOneSidedBoundar
     momentOne := ?_ }⟩
   · simpa only [
       physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2_eq_actualSynthesis,
+      Q.positiveHalfL2LinearMap_apply,
       Q.positiveHalfL2LinearMap_carrierEquiv_symm] using huZero
   · simpa only [
       physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2_eq_actualSynthesis,
+      Q.positiveHalfL2LinearMap_apply,
       Q.positiveHalfL2LinearMap_carrierTranslation_carrierEquiv_symm] using huOne
 
 /-- Product-space positive-time boundary closure specialized to the actual
