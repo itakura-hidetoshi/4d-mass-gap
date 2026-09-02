@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSCanonicalRealizableActualSynthesisPairKernel
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryPositiveHalfClosureTransferKernelBridge
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonGibbsBoundaryHilbertSchmidtOperatorFactorization
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -12,7 +13,8 @@ open scoped InnerProductSpace InnerProduct
 
 local instance canonicalRealizableRawPathGramSideLengthNeZero (H : ℕ) :
     NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
-  simp [PeriodicHypercubicEvenSideLength]⟩
+  change 2 * (H + 1) ≠ 0
+  omega⟩
 
 local instance canonicalRealizableRawPathGramTopologicalGroup (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
