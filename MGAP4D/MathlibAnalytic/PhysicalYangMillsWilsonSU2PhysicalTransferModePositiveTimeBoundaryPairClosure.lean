@@ -67,7 +67,7 @@ private abbrev physicalTransferModePositiveTimeBoundaryPairPreHilbert
 positive-time-submodule observable before and after one unit of the canonical
 positive-time translation.
 
-The two components are generated from the same positive-time vector.  This is
+The two components are generated from the same positive-time vector. This is
 the graph-like object whose range closure records simultaneous endpoint
 realization without introducing separate pre-synthesis `L²` limits. -/
 noncomputable def physicalTransferPositiveTimeBoundaryPair
@@ -97,7 +97,7 @@ map.
 
 This is weaker than `OneSidedPositiveTimeSubmoduleSynthesisClosureAt`: it asks
 only for convergence after actual Wilson boundary synthesis and does not assume
-that either open-half `L²` sequence converges before synthesis.  The use of one
+that either open-half `L²` sequence converges before synthesis. The use of one
 range in a product space preserves the essential same-approximant coupling of
 the two endpoints. -/
 def OneSidedPositiveTimeSubmoduleBoundaryPairClosureAt
@@ -119,14 +119,17 @@ def OneSidedPositiveTimeSubmoduleBoundaryPairClosureAt
       (halfExtent n) 2 fOne omegaOne) ∈
     closure (Set.range (Q.physicalTransferPositiveTimeBoundaryPair hInvariant C n))
 
-/-- Product-space closure realization generates the already-canonical
-carrier-level boundary closure datum.
+/-- Product-space closure realization guarantees the existence of the already
+canonical carrier-level boundary closure datum.
 
-The proof extracts one common positive-time-submodule approximating sequence
-from product closure, projects its convergence to each endpoint, and transports
-the sequence through the tautological carrier/positive-time equivalence.  No
+The target is `Nonempty` so that the model-facing closure condition remains a
+pure proposition: no computational elimination from an existential proposition
+into OS carrier data is required. Inside this proposition-valued bridge, one
+common positive-time-submodule approximating sequence is extracted from product
+closure, its convergence is projected to both endpoints, and the sequence is
+transported through the tautological carrier/positive-time equivalence. No
 ambient `L²` surjectivity or pre-synthesis convergence is used. -/
-theorem OneSidedPositiveTimeSubmoduleBoundaryPairClosureAt.toOneSidedBoundaryClosureAt
+theorem OneSidedPositiveTimeSubmoduleBoundaryPairClosureAt.existsOneSidedBoundaryClosureAt
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
       S D halfExtent 2 physicalTransferModePositiveTimeBoundaryPairTwoRankPositive beta hbeta)
     (hInvariant : ∀ n,
@@ -141,7 +144,7 @@ theorem OneSidedPositiveTimeSubmoduleBoundaryPairClosureAt.toOneSidedBoundaryClo
         (halfExtent n) 2))
     (W : OneSidedPositiveTimeSubmoduleBoundaryPairClosureAt
       Q hInvariant C n f omega fOne omegaOne) :
-    OneSidedBoundaryClosureAt Q hInvariant C n f omega fOne omegaOne := by
+    Nonempty (OneSidedBoundaryClosureAt Q hInvariant C n f omega fOne omegaOne) := by
   rw [OneSidedPositiveTimeSubmoduleBoundaryPairClosureAt,
     mem_closure_iff_seq_limit] at W
   rcases W with ⟨u, huRange, huTendsto⟩
@@ -189,10 +192,10 @@ theorem OneSidedPositiveTimeSubmoduleBoundaryPairClosureAt.toOneSidedBoundaryClo
     rfl
   rw [hzeroEq] at huZero
   rw [honeEq] at huOne
-  refine
-    { approximants := fun k => E.symm (F k)
-      momentZero := ?_
-      momentOne := ?_ }
+  refine ⟨{
+    approximants := fun k => E.symm (F k)
+    momentZero := ?_
+    momentOne := ?_ }⟩
   · simpa only [
       physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2_eq_actualSynthesis,
       Q.positiveHalfL2LinearMap_carrierEquiv_symm] using huZero
@@ -266,10 +269,8 @@ theorem exists_finiteOperator_one_eigen_of_normalizedPhysicalTransferModePositiv
               (halfExtent n) 2 physicalTransferModePositiveTimeBoundaryPairTwoRankPositive
                 (beta n) (hbeta n)) ∧
       C.finiteOperator n 1 psi = mu • psi := by
-  exact
-    Q.exists_finiteOperator_one_eigen_of_normalizedPhysicalTransferModeBoundaryClosure
-      hInvariant C n f mu hf
-      (OneSidedPositiveTimeSubmoduleBoundaryPairClosureAt.toOneSidedBoundaryClosureAt
+  rcases
+      OneSidedPositiveTimeSubmoduleBoundaryPairClosureAt.existsOneSidedBoundaryClosureAt
         Q hInvariant C n
         (periodicHypercubicEvenSpecialUnitaryPhysicalModeLp
           (halfExtent n) 2 f)
@@ -281,7 +282,10 @@ theorem exists_finiteOperator_one_eigen_of_normalizedPhysicalTransferModePositiv
             (beta n) (hbeta n) f)
         (periodicHypercubicEvenSpecialUnitaryPhysicalTopModeOneStepLp
           (halfExtent n) 2 physicalTransferModePositiveTimeBoundaryPairTwoRankPositive
-            (beta n) (hbeta n)) W)
+            (beta n) (hbeta n)) W with ⟨Wboundary⟩
+  exact
+    Q.exists_finiteOperator_one_eigen_of_normalizedPhysicalTransferModeBoundaryClosure
+      hInvariant C n f mu hf Wboundary
 
 end PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
 
