@@ -1,6 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSCanonicalRealizableActualSynthesisPairKernel
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryPositiveHalfClosureTransferKernelBridge
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenWilsonGibbsBoundaryHilbertSchmidtOperatorFactorization
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -52,71 +51,57 @@ local instance canonicalRealizableRawPathGramOpenHalfHaarSFinite (H N : ℕ) :
     FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
   infer_instance
 
-/-- Literal raw Wilson path form of the boundary Gram analysis section.
-
-The completed positive Gram feature is rewritten pointwise through the existing
-positive-closure transfer coordinates.  Thus the only kernel visible here is
-the partition-normalized unfixed `H+1`-slab Wilson path kernel; no abstract
-operator or semigroup occurs in the definition. -/
-noncomputable def periodicHypercubicEvenWilsonBoundaryGramRawPathAnalysisSection
+/-- Literal normalized unfixed Wilson path kernel on the same boundary ×
+open-half carrier used by the canonical rectangular Gram `L²` kernel. -/
+noncomputable def periodicHypercubicEvenWilsonBoundaryGramRawPathRectangularKernel
     (H N : ℕ) (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ) (hbeta : 0 ≤ beta)
-    (f : Lp ℝ 2 (periodicHypercubicEvenBoundaryHaarMeasure H N))
-    (x : PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H N) : ℝ :=
-  ∫ b : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H N,
-    (periodicHypercubicEvenBoundaryPositiveHalfPartitionSqrtNormalization
-        H N hN beta hbeta *
-      periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel
-        H N beta
-        (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
-          H N (b, x)).1
-        (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
-          H N (b, x)).2) * f b
-    ∂(periodicHypercubicEvenBoundaryHaarMeasure H N)
+    (p : PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H N ×
+      PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H N) : ℝ :=
+  periodicHypercubicEvenBoundaryPositiveHalfPartitionSqrtNormalization
+      H N hN beta hbeta *
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderUnfixedPathKernel
+      H N beta
+      (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+        H N p).1
+      (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+        H N p).2
 
-/-- The canonical Gram analysis section is exactly its literal normalized
-unfixed Wilson path-kernel form, pointwise on the open-half configuration
-space. -/
-theorem periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisSection_eq_rawPath
+/-- The canonical rectangular boundary/open-half Gram `L²` kernel has the
+literal normalized unfixed `H+1`-slab Wilson path kernel as an almost-everywhere
+representative.  This bypasses any auxiliary scalar-analysis-section layer. -/
+theorem periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureRectangularL2_coeFn_eq_rawPath
     (H N : ℕ) (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (beta : ℝ) (hbeta : 0 ≤ beta)
-    (f : Lp ℝ 2 (periodicHypercubicEvenBoundaryHaarMeasure H N))
-    (x : PeriodicHypercubicEvenSpecialUnitaryOpenHalfConfiguration H N) :
-    periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisSection
-        H N hN beta hbeta f x =
-      periodicHypercubicEvenWilsonBoundaryGramRawPathAnalysisSection
-        H N hN beta hbeta f x := by
-  unfold periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisSection
-  unfold periodicHypercubicEvenWilsonBoundaryGramRawPathAnalysisSection
-  apply integral_congr_ae
-  filter_upwards with b
-  rw [periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_eq_normalizedUnfixedPathKernel]
-
-/-- The bounded Fréchet--Riesz Gram analysis operator itself therefore has the
-literal normalized unfixed Wilson path-analysis representative almost
-everywhere.  This is the exact bridge needed before applying temporal-gauge
-reduction and one-step Markov/Fubini decomposition. -/
-theorem periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator_coeFn_eq_rawPath
-    (H N : ℕ) (hN : 0 < N)
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (beta : ℝ) (hbeta : 0 ≤ beta)
-    (f : Lp ℝ 2 (periodicHypercubicEvenBoundaryHaarMeasure H N)) :
-    (fun x => periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator
-      H N hN beta hbeta f x) =ᵐ[
-        periodicHypercubicEvenOpenHalfHaarMeasure H N]
-      periodicHypercubicEvenWilsonBoundaryGramRawPathAnalysisSection
-        H N hN beta hbeta f := by
-  have hSection :=
-    periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisSectionL2_coeFn
-      H N hN beta hbeta f
-  rw [periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisSectionL2_eq_analysisOperator]
-    at hSection
-  filter_upwards [hSection] with x hx
-  rw [hx]
-  exact periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisSection_eq_rawPath
-    H N hN beta hbeta f x
+    (beta : ℝ) (hbeta : 0 ≤ beta) :
+    (fun p =>
+      periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureRectangularL2
+        H N hN beta hbeta p) =ᵐ[
+      (periodicHypercubicEvenBoundaryHaarMeasure H N).prod
+        (periodicHypercubicEvenOpenHalfHaarMeasure H N)]
+      periodicHypercubicEvenWilsonBoundaryGramRawPathRectangularKernel
+        H N hN beta hbeta := by
+  let hmem :=
+    periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_product_memLp_two
+      H N hN beta hbeta
+  have hKernel :
+      (fun p =>
+        periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureRectangularL2
+          H N hN beta hbeta p) =ᵐ[
+        (periodicHypercubicEvenBoundaryHaarMeasure H N).prod
+          (periodicHypercubicEvenOpenHalfHaarMeasure H N)]
+        (fun p =>
+          periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+            H N hN beta hbeta p.1 p.2) := by
+    simpa [periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureRectangularL2,
+      periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureProductL2,
+      periodicHypercubicEvenBoundaryOpenHalfHaarMeasure] using hmem.coeFn_toLp
+  filter_upwards [hKernel] with p hp
+  rw [hp]
+  simpa [periodicHypercubicEvenWilsonBoundaryGramRawPathRectangularKernel] using
+    (periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_eq_normalizedUnfixedPathKernel
+      H N hN beta hbeta p.1 p.2)
 
 /-- Pair-coordinate diagonal Gram identity.
 
@@ -180,18 +165,11 @@ variable
 
 /-- Raw-path Gram receipt for one actual realizable lattice step.
 
-For an arbitrary OS carrier and arbitrary endpoint-pair test vector, the actual
-synthesis coefficient is now an inner product of two open-half `L²` vectors
-whose representatives are both explicit:
-
-* the left vector is the normalized unfixed Wilson path analysis of the pair
-  test kernel;
-* the right vector is the original positive-half observable evaluated after one
-  literal integer temporal-section step.
-
-This removes the rectangular Hilbert--Schmidt wrapper from the remaining
-finite-model calculation.  The next equality is therefore purely the finite
-Haar/Markov/Fubini reduction extracting the adjacent temporal-gauge one-slab
+For an arbitrary OS carrier and endpoint-pair test vector, the actual synthesis
+coefficient remains exactly the canonical rectangular Gram pairing, while the
+rectangular Gram kernel and the translated open-half input are now both exposed
+by literal finite Wilson representatives.  The next theorem is therefore only
+the finite Haar/Markov/Fubini decomposition extracting the adjacent one-slab
 kernel. -/
 theorem canonicalRealizableOneStepActualSynthesis_rawPathGramReceipt
     (R₀ : PhysicalYangMillsEvenPeriodicWilsonOSCanonicalFiberReflection
@@ -211,9 +189,6 @@ theorem canonicalRealizableOneStepActualSynthesis_rawPathGramReceipt
     let fz :=
       periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundaryLinearIsometry
         (halfExtent n) N z
-    let a :=
-      periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator
-        (halfExtent n) N hN (beta n) (hbeta n) fz
     let u :=
       R₀.toCanonicalCoherentPositiveTimePullback.positiveHalfL2LinearMap
         hInvariant n (R.realizableCarrierTranslation hInvariant n 1 F)
@@ -222,11 +197,16 @@ theorem canonicalRealizableOneStepActualSynthesis_rawPathGramReceipt
           (halfExtent n) N
           (physicalYangMillsEvenPeriodicWilsonOSActualBoundarySynthesisOperator
             halfExtent N hN beta hbeta n u)) z =
-      inner ℝ a u ∧
-    (fun x => a x) =ᵐ[
-      periodicHypercubicEvenOpenHalfHaarMeasure (halfExtent n) N]
-      periodicHypercubicEvenWilsonBoundaryGramRawPathAnalysisSection
-        (halfExtent n) N hN (beta n) (hbeta n) fz ∧
+      realL2HilbertSchmidtKernelPairing
+        (periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureRectangularL2
+          (halfExtent n) N hN (beta n) (hbeta n)) fz u ∧
+    (fun p =>
+      periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureRectangularL2
+        (halfExtent n) N hN (beta n) (hbeta n) p) =ᵐ[
+      (periodicHypercubicEvenBoundaryHaarMeasure (halfExtent n) N).prod
+        (periodicHypercubicEvenOpenHalfHaarMeasure (halfExtent n) N)]
+      periodicHypercubicEvenWilsonBoundaryGramRawPathRectangularKernel
+        (halfExtent n) N hN (beta n) (hbeta n) ∧
     (fun x => u x) =ᵐ[
       periodicHypercubicEvenOpenHalfHaarMeasure (halfExtent n) N]
       (fun x =>
@@ -240,9 +220,6 @@ theorem canonicalRealizableOneStepActualSynthesis_rawPathGramReceipt
   let fz :=
     periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundaryLinearIsometry
       (halfExtent n) N z
-  let a :=
-    periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator
-      (halfExtent n) N hN (beta n) (hbeta n) fz
   let u :=
     R₀.toCanonicalCoherentPositiveTimePullback.positiveHalfL2LinearMap
       hInvariant n (R.realizableCarrierTranslation hInvariant n 1 F)
@@ -250,25 +227,11 @@ theorem canonicalRealizableOneStepActualSynthesis_rawPathGramReceipt
     R₀.canonicalRealizableOneStepActualSynthesis_pairKernelReceipt
       R hInvariant n F z
   constructor
-  · calc
-      inner ℝ
-          (periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry
-            (halfExtent n) N
-            (physicalYangMillsEvenPeriodicWilsonOSActualBoundarySynthesisOperator
-              halfExtent N hN beta hbeta n u)) z =
-        realL2HilbertSchmidtKernelPairing
-          (periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureRectangularL2
-            (halfExtent n) N hN (beta n) (hbeta n)) fz u := by
-              simpa [fz, u] using hPair.1
-      _ = inner ℝ a u := by
-        symm
-        simpa [fz, a] using
-          periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator_inner
-            (halfExtent n) N hN (beta n) (hbeta n) fz u
+  · simpa [fz, u] using hPair.1
   · constructor
-    · simpa [fz, a] using
-        periodicHypercubicEvenWilsonBoundaryGramFeatureAnalysisOperator_coeFn_eq_rawPath
-          (halfExtent n) N hN (beta n) (hbeta n) fz
+    · exact
+        periodicHypercubicEvenBoundaryCompletedPositiveGramFeatureRectangularL2_coeFn_eq_rawPath
+          (halfExtent n) N hN (beta n) (hbeta n)
     · simpa [u] using hPair.2
 
 end PhysicalYangMillsEvenPeriodicWilsonOSCanonicalFiberReflection
