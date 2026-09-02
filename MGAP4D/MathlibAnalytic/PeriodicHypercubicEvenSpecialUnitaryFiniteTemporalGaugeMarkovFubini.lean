@@ -188,36 +188,26 @@ path functional, the complete positive-half path integral can be written as a
 one-slice Haar integral followed by the remaining path integral, with the
 literal adjacent one-slab Wilson kernel exposed as the first Markov factor. -/
 theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugePath_integral_headTail
-    (H N : ℕ)
-    (beta : ℝ)
+    (H N : ℕ) (beta : ℝ)
     (F : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N → ℝ)
-    (hF : Integrable
-      (fun path =>
-        F path *
-          periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
-            H N beta path)
+    (hF : Integrable (fun path => F path *
+      periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel H N beta path)
       (periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N)) :
-    (∫ path,
-      F path *
-        periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
-          H N beta path
+    (∫ path, F path *
+      periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel H N beta path
       ∂(periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N)) =
       ∫ A₀ : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
         ∫ tail : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H) →
-            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
-          F
-              ((MeasurableEquiv.piFinSuccAbove
-                (fun _ : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H + 1) =>
-                  PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
-                0).symm (A₀, tail)) *
-            (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-                H N beta A₀ (tail 0) *
-              ∏ i : Fin H,
-                periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-                  H N beta (tail i.castSucc) (tail i.succ))
-          ∂(Measure.pi
-            (fun _ : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H) =>
-              periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
+          F ((MeasurableEquiv.piFinSuccAbove
+              (fun _ : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H + 1) =>
+                PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) 0).symm
+              (A₀, tail)) *
+            (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A₀ (tail 0) *
+              ∏ i : Fin H, periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                H N beta (tail i.castSucc) (tail i.succ))
+          ∂(Measure.pi (fun _ : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H) =>
+            periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
         ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := by
   rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaar_integral_headTail
     H N
