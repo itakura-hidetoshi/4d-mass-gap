@@ -42,22 +42,13 @@ local instance physicalTransferModePositiveTimeSubmoduleOpenHalfHaarFinite (H : 
     FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
   infer_instance
 
-local instance physicalTransferModePositiveTimeSubmoduleSU2Nontrivial :
-    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
-  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
-  intro h
-  have h00 := congrArg
-    (fun U : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
-      (U : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
-  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
-
 namespace PhysicalYangMillsGaugeInvariantOSReflectionData.OSPreHilbertData
 
 variable {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
 variable {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
 
 /-- Forget the OS carrier wrapper when forming the physical-transfer closure
-interface.  This is only the tautological positive-time repackaging map. -/
+interface. This is only the tautological positive-time repackaging map. -/
 def physicalTransferCarrierToPositiveTimeLinearMap (P : D.OSPreHilbertData) :
     P.Carrier →ₗ[ℝ] D.positiveTimeSubalgebra.toSubmodule where
   toFun := P.toPositiveTime
@@ -77,7 +68,7 @@ private theorem physicalTransferCarrierToPositiveTimeLinearMap_injective
     (fun x : D.positiveTimeSubalgebra.toSubmodule => x.1.1) hFG
 
 /-- Every positive-time submodule vector has its tautological OS carrier
-representative.  This is wrapper surjectivity, not Wilson-pullback surjectivity. -/
+representative. This is wrapper surjectivity, not Wilson-pullback surjectivity. -/
 theorem physicalTransferCarrierToPositiveTimeLinearMap_surjective
     (P : D.OSPreHilbertData) :
     Function.Surjective P.physicalTransferCarrierToPositiveTimeLinearMap := by
@@ -89,7 +80,7 @@ theorem physicalTransferCarrierToPositiveTimeLinearMap_surjective
   exact ⟨F, rfl⟩
 
 /-- Canonical linear equivalence removing only the definitional OS carrier
-wrapper.  No ambient Hilbert-space equivalence is introduced. -/
+wrapper. No ambient Hilbert-space equivalence is introduced. -/
 noncomputable def physicalTransferCarrierPositiveTimeLinearEquiv
     (P : D.OSPreHilbertData) :
     P.Carrier ≃ₗ[ℝ] D.positiveTimeSubalgebra.toSubmodule :=
@@ -107,6 +98,7 @@ variable
     {halfExtent : ℕ → ℕ}
     {beta : ℕ → ℝ}
     {hbeta : ∀ n, 0 ≤ beta n}
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ)]
 
 private abbrev physicalTransferModePositiveTimeSubmodulePreHilbert
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
@@ -169,7 +161,7 @@ theorem positiveHalfL2LinearMap_apply_eq_physicalTransferPositiveTimeSubmoduleL2
 
 /-- Canonical positive-time-submodule translation, obtained by transporting the
 already-constructed observable translation across the carrier/submodule
-repackaging equivalence.  This introduces no new Hilbert-space equivalence. -/
+repackaging equivalence. This introduces no new Hilbert-space equivalence. -/
 noncomputable def positiveTimeSubmoduleTranslationLinearMap
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
       S D halfExtent 2 physicalTransferModePositiveTimeSubmoduleTwoRankPositive beta hbeta)
@@ -183,10 +175,10 @@ noncomputable def positiveTimeSubmoduleTranslationLinearMap
     D.positiveTimeSubalgebra.toSubmodule →ₗ[ℝ]
       D.positiveTimeSubalgebra.toSubmodule := by
   let P := physicalTransferModePositiveTimeSubmodulePreHilbert Q hInvariant n
-  exact
-    P.physicalTransferCarrierPositiveTimeLinearEquiv.toLinearMap.comp
-      ((C.toPositiveTimeObservableContractionSemigroup n).carrierTranslation t).comp
-      P.physicalTransferCarrierPositiveTimeLinearEquiv.symm.toLinearMap
+  let E := P.physicalTransferCarrierPositiveTimeLinearEquiv
+  exact E.toLinearMap.comp
+    (((C.toPositiveTimeObservableContractionSemigroup n).carrierTranslation t).comp
+      E.symm.toLinearMap)
 
 /-- Pulling a positive-time submodule vector back through the wrapper equivalence
 and then applying the carrier-level `L²` map is exactly the direct
@@ -246,12 +238,27 @@ theorem range_physicalHilbertBoundaryMomentLinearIsometry_eq_closure_actualSynth
   constructor
   · rintro ⟨F, rfl⟩
     refine ⟨(physicalTransferModePositiveTimeSubmodulePreHilbert Q hInvariant n).physicalTransferCarrierToPositiveTimeLinearMap F, ?_⟩
+    change
+      physicalYangMillsEvenPeriodicWilsonOSActualBoundarySynthesisOperator
+          halfExtent 2 physicalTransferModePositiveTimeSubmoduleTwoRankPositive beta hbeta n
+          (Q.physicalTransferPositiveTimeSubmoduleL2LinearMap n
+            ((physicalTransferModePositiveTimeSubmodulePreHilbert Q hInvariant n).toPositiveTime F)) =
+        physicalYangMillsEvenPeriodicWilsonOSActualBoundarySynthesisOperator
+          halfExtent 2 physicalTransferModePositiveTimeSubmoduleTwoRankPositive beta hbeta n
+          (Q.positiveHalfL2LinearMap hInvariant n F)
     rw [Q.positiveHalfL2LinearMap_apply_eq_physicalTransferPositiveTimeSubmoduleL2LinearMap]
   · rintro ⟨F, rfl⟩
     rcases
         (physicalTransferModePositiveTimeSubmodulePreHilbert Q hInvariant n).physicalTransferCarrierToPositiveTimeLinearMap_surjective F with
       ⟨G, hG⟩
     refine ⟨G, ?_⟩
+    change
+      physicalYangMillsEvenPeriodicWilsonOSActualBoundarySynthesisOperator
+          halfExtent 2 physicalTransferModePositiveTimeSubmoduleTwoRankPositive beta hbeta n
+          (Q.positiveHalfL2LinearMap hInvariant n G) =
+        physicalYangMillsEvenPeriodicWilsonOSActualBoundarySynthesisOperator
+          halfExtent 2 physicalTransferModePositiveTimeSubmoduleTwoRankPositive beta hbeta n
+          (Q.physicalTransferPositiveTimeSubmoduleL2LinearMap n F)
     rw [Q.positiveHalfL2LinearMap_apply_eq_physicalTransferPositiveTimeSubmoduleL2LinearMap]
     exact congrArg
       (fun x =>
@@ -260,7 +267,7 @@ theorem range_physicalHilbertBoundaryMomentLinearIsometry_eq_closure_actualSynth
           (Q.physicalTransferPositiveTimeSubmoduleL2LinearMap n x)) hG
 
 /-- Wrapper-free positive-time-submodule realization of the one-sided endpoint
-pair.  The model-facing sequence now lives directly in the positive-time
+pair. The model-facing sequence now lives directly in the positive-time
 submodule, and both time-zero and time-one convergence are stated before
 boundary synthesis. -/
 structure OneSidedPositiveTimeSubmoduleSynthesisClosureAt
@@ -362,7 +369,7 @@ abbrev PhysicalTransferModePositiveTimeSubmoduleSynthesisClosureAt
 
 /-- A normalized physical SU(2) one-slice transfer eigenmode lifts to a genuine
 finite Wilson OS Hilbert eigenvector from a closure hypothesis stated entirely
-on the positive-time submodule.  The opaque OS carrier is absent from the
+on the positive-time submodule. The opaque OS carrier is absent from the
 model-facing assumption. -/
 theorem exists_finiteOperator_one_eigen_of_normalizedPhysicalTransferModePositiveTimeSubmoduleSynthesisClosure
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
