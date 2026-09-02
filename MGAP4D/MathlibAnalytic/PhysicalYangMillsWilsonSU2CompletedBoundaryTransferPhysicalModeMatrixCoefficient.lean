@@ -228,7 +228,6 @@ theorem completedBoundaryTransfer_two_oneSidedBoundary_of_oneSlabPairWeakAtFor
     _ = periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundaryLinearIsometry
         (halfExtent n) N x := by
       rw [hForward]
-      rfl
     _ = periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundaryLinearIsometry
         (halfExtent n) N y := by
       rw [hPairApply]
