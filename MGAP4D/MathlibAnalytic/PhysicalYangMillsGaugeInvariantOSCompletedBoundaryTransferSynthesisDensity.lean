@@ -136,42 +136,26 @@ For every fixed ambient pair-Haar test vector `z`, the completed transfer matrix
 coefficient is the limit of matrix coefficients of actual Wilson
 adjoint-synthesis outputs.  No pure-tensor density theorem is needed. -/
 theorem exists_actualSynthesis_translatedPositiveHalf_pair_inner_tendsto_completedBoundaryTransfer
-    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
-      S D halfExtent N hN beta hbeta)
-    (hInvariant : ∀ n,
-      D.WeakStarReflectionInvariant
-        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
-    (C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
-      S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant)
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback S D halfExtent N hN beta hbeta)
+    (hInvariant : ∀ n, D.WeakStarReflectionInvariant (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
+    (C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant)
     (n : ℕ) (t : NNReal)
-    (psi : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-      S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n).PhysicalHilbert)
-    (z : PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
-      (halfExtent n) N) :
-    ∃ F : ℕ →
-        (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-          S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n).Carrier,
+    (psi : (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n).PhysicalHilbert)
+    (z : PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2 (halfExtent n) N) :
+    ∃ F : ℕ → (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n).Carrier,
       Tendsto
-          (fun k =>
-            (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData
-              S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n).physicalState
-              (F k))
+          (fun k => (physical_yang_mills_evenPeriodicWilsonOS_approximating_preHilbertData S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n).physicalState (F k))
           atTop (𝓝 psi) ∧
         Tendsto
-          (fun k =>
-            inner ℝ
-              (periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry
-                (halfExtent n) N
-                (physicalYangMillsEvenPeriodicWilsonOSActualBoundarySynthesisOperator
-                  halfExtent N hN beta hbeta n
-                  (Q.translatedPositiveHalfL2LinearMap hInvariant C n t (F k)))) z)
+          (fun k => inner ℝ
+            (periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry (halfExtent n) N
+              (physicalYangMillsEvenPeriodicWilsonOSActualBoundarySynthesisOperator halfExtent N hN beta hbeta n
+                (Q.translatedPositiveHalfL2LinearMap hInvariant C n t (F k)))) z)
           atTop
-          (𝓝
-            (inner ℝ
-              (periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry
-                (halfExtent n) N
-                (Q.completedBoundaryTransfer hInvariant C n t
-                  (Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n psi))) z)) := by
+          (𝓝 (inner ℝ
+            (periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry (halfExtent n) N
+              (Q.completedBoundaryTransfer hInvariant C n t
+                (Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n psi))) z)) := by
   rcases Q.exists_actualSynthesis_translatedPositiveHalf_tendsto_completedBoundaryTransfer
       hInvariant C n t psi with ⟨F, hstate, hvec⟩
   refine ⟨F, hstate, ?_⟩
