@@ -154,6 +154,85 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaar_integral
     _ = _ := by
       rfl
 
+/-- Under the same head/tail coordinates, the literal `H+1`-slab temporal-gauge
+Wilson kernel factors pointwise as the first adjacent one-slab kernel times the
+remaining `H` adjacent kernels.  This is the finite Markov factorization at the
+integrand level. -/
+theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugePathKernel_headTail
+    (H N : ℕ)
+    (beta : ℝ)
+    (A₀ : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (tail : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H) →
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
+        H N beta
+        ((MeasurableEquiv.piFinSuccAbove
+          (fun _ : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H + 1) =>
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+          0).symm (A₀, tail)) =
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta A₀ (tail 0) *
+        ∏ i : Fin H,
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+            H N beta (tail i.castSucc) (tail i.succ) := by
+  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
+  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft
+  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight
+  simp only [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
+  simp only [MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv,
+    Fin.prod_univ_succ, Fin.insertNth_zero, Equiv.coe_fn_mk, Fin.cons_zero,
+    Fin.cons_succ, Fin.zero_succAbove, cast_eq, Fin.succ_castSucc]
+
+/-- Finite temporal-gauge Markov/Fubini decomposition.  For every integrable
+path functional, the complete positive-half path integral can be written as a
+one-slice Haar integral followed by the remaining path integral, with the
+literal adjacent one-slab Wilson kernel exposed as the first Markov factor. -/
+theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugePath_integral_headTail
+    (H N : ℕ)
+    (beta : ℝ)
+    (F : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N → ℝ)
+    (hF : Integrable
+      (fun path =>
+        F path *
+          periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
+            H N beta path)
+      (periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N)) :
+    (∫ path,
+      F path *
+        periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
+          H N beta path
+      ∂(periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N)) =
+      ∫ A₀ : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
+        ∫ tail : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H) →
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
+          F
+              ((MeasurableEquiv.piFinSuccAbove
+                (fun _ : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H + 1) =>
+                  PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+                0).symm (A₀, tail)) *
+            (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                H N beta A₀ (tail 0) *
+              ∏ i : Fin H,
+                periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                  H N beta (tail i.castSucc) (tail i.succ))
+          ∂(Measure.pi
+            (fun _ : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H) =>
+              periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+        ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := by
+  rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaar_integral_headTail
+    H N
+    (fun path =>
+      F path *
+        periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
+          H N beta path)
+    hF]
+  apply integral_congr_ae
+  filter_upwards with A₀
+  apply integral_congr_ae
+  filter_upwards with tail
+  rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugePathKernel_headTail
+    H N beta A₀ tail]
+
 end
 
 end MathlibAnalytic
