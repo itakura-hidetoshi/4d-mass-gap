@@ -39,6 +39,12 @@ local instance canonicalRealizableSynthesisPairKernelSpatialLinkFintype (H : ℕ
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+local instance canonicalRealizableSynthesisPairKernelBoundaryHaarSFinite (H N : ℕ) :
+    SFinite (periodicHypercubicEvenBoundaryHaarMeasure H N) := by
+  dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
+  infer_instance
+
 /-- In ordered spatial-endpoint coordinates, every matrix coefficient of the
 actual Wilson adjoint synthesis operator is exactly the rectangular Wilson
 Gram-kernel pairing.
