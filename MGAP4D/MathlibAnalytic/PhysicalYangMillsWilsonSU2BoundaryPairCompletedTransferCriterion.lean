@@ -92,8 +92,13 @@ theorem mem_range_completedPhysicalTransferGraph_iff_mem_range_and_completedBoun
       Q.completedBoundaryTransfer hInvariant C n 2 xZero = xOne := by
   constructor
   · rintro ⟨psi, hpsi⟩
-    have hZero := congrArg Prod.fst hpsi
-    have hOne := congrArg Prod.snd hpsi
+    have hZero :
+        Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n psi = xZero := by
+      simpa using congrArg Prod.fst hpsi
+    have hOne :
+        Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n
+            (C.finiteOperator n 1 psi) = xOne := by
+      simpa using congrArg Prod.snd hpsi
     refine ⟨⟨psi, hZero⟩, ?_⟩
     calc
       Q.completedBoundaryTransfer hInvariant C n 2 xZero =
