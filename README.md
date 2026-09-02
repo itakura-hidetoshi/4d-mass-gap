@@ -465,10 +465,10 @@ MGAP4D/MathlibAnalytic/
   # common / realizable one-step coherence
   PhysicalYangMillsGaugeInvariantOSCommonRealizableOneStepCoherence.lean
   PhysicalYangMillsGaugeInvariantOSCanonicalRealizablePositiveHalfTemporalStep.lean
-  PhysicalYangMillsGaugeInvariantOSCanonicalRealizablePositiveHalfL2Step.lean
+  PhysicalYangMillsGaugeInvariantOSCanonicalRealizablePositiveHalfL2TemporalStep.lean
 
   # completed-boundary synthesis density
-  PhysicalYangMillsGaugeInvariantOSCompletedBoundaryTransferTranslatedSynthesisDensity.lean
+  PhysicalYangMillsGaugeInvariantOSCompletedBoundaryTransferSynthesisDensity.lean
   PhysicalYangMillsGaugeInvariantOSCompletedBoundaryTransferProjectedSynthesisDensity.lean
 
   # downstream exact-gap / Hamiltonian transport
