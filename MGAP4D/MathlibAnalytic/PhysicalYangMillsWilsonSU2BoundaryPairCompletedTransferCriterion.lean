@@ -94,11 +94,11 @@ theorem mem_range_completedPhysicalTransferGraph_iff_mem_range_and_completedBoun
   · rintro ⟨psi, hpsi⟩
     have hZero := congrArg Prod.fst hpsi
     have hOne := congrArg Prod.snd hpsi
-    refine ⟨⟨psi, hZero.symm⟩, ?_⟩
+    refine ⟨⟨psi, hZero⟩, ?_⟩
     calc
       Q.completedBoundaryTransfer hInvariant C n 2 xZero =
           Q.completedBoundaryTransfer hInvariant C n 2
-            (Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n psi) := by rw [hZero]
+            (Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n psi) := by rw [← hZero]
       _ = Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n
             (C.finiteOperator n (2 / 2) psi) := by
         rw [Q.completedBoundaryTransfer_apply_physicalHilbertBoundaryMoment]
@@ -157,7 +157,7 @@ theorem oneSidedPositiveTimeSubmoduleBoundaryPairClosureAt_iff_mem_range_and_com
     hInvariant C n f omega fOne omegaOne]
   constructor
   · rintro ⟨psi, hZero, hOne⟩
-    refine ⟨⟨psi, hZero.symm⟩, ?_⟩
+    refine ⟨⟨psi, hZero⟩, ?_⟩
     calc
       Q.completedBoundaryTransfer hInvariant C n 2
           (periodicHypercubicEvenSpecialUnitaryOneSidedBoundaryL2
