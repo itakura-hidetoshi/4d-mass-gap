@@ -179,8 +179,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugePathKernel_
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight
   simp only [MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv,
-    Fin.prod_univ_succ, Fin.insertNth_zero, Equiv.coe_fn_mk, Fin.cons_zero,
-    Fin.cons_succ, Fin.zero_succAbove, cast_eq, Fin.succ_castSucc]
+    Fin.insertNth_zero, Equiv.coe_fn_mk, Fin.cons_succ, Fin.zero_succAbove, cast_eq]
+  change
+    (∏ x : Fin (H + 1),
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta
+        (Fin.cons A₀ (fun j => tail j) x.castSucc) (tail x)) = _
+  rw [Fin.prod_univ_succ]
+  simp only [Fin.cons_zero, Fin.cons_succ, Fin.succ_castSucc, cast_eq]
 
 /-- Finite temporal-gauge Markov/Fubini decomposition.  For every integrable
 path functional, the complete positive-half path integral can be written as a
