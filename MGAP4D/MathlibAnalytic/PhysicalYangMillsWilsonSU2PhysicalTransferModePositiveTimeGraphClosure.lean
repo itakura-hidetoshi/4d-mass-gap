@@ -58,7 +58,7 @@ private abbrev physicalTransferModePositiveTimeGraphOpenHalfL2
   PhysicalYangMillsEvenPeriodicWilsonOSOpenHalfFeatureL2 halfExtent 2 n
 
 /-- The actual positive-time readout together with its one-step translated
-readout.  Its range is the graph-level realizability object needed for a common
+readout. Its range is the graph-level realizability object needed for a common
 approximating sequence. -/
 noncomputable def physicalTransferPositiveTimeGraphL2LinearMap
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
@@ -111,7 +111,7 @@ noncomputable def physicalTransferPositiveTimeGraphL2LinearMap
       Q.physicalTransferPositiveTimeSubmoduleL2LinearMap n
         (Q.positiveTimeSubmoduleTranslationLinearMap hInvariant C n 1 F) := rfl
 
-/-- Graph-closure formulation of one-sided endpoint realizability.  Unlike the
+/-- Graph-closure formulation of one-sided endpoint realizability. Unlike the
 sequence-based synthesis closure, this datum does not choose approximants: it
 only asks that the desired time-zero/time-one pair lie in the closure of the
 single actual graph range. -/
@@ -148,7 +148,7 @@ structure OneSidedPositiveTimeSubmoduleGraphClosureAt
         (halfExtent n) 2 fOne omegaOne
 
 /-- Mathlib's sequential characterization of closure extracts one common
-positive-time sequence from graph closure.  Projecting convergence in the
+positive-time sequence from graph closure. Projecting convergence in the
 product gives the two limits required by the already-canonical synthesis
 closure interface. -/
 noncomputable def OneSidedPositiveTimeSubmoduleGraphClosureAt.toSynthesisClosureAt
@@ -169,9 +169,16 @@ noncomputable def OneSidedPositiveTimeSubmoduleGraphClosureAt.toSynthesisClosure
     OneSidedPositiveTimeSubmoduleSynthesisClosureAt
       Q hInvariant C n f omega fOne omegaOne := by
   let G := Q.physicalTransferPositiveTimeGraphL2LinearMap hInvariant C n
-  rcases (mem_closure_iff_seq_limit.mp W.pair_mem_closure) with
-    ⟨u, huRange, huTendsto⟩
-  choose Fseq hFseq using huRange
+  let hSeq := mem_closure_iff_seq_limit.mp W.pair_mem_closure
+  let u := Classical.choose hSeq
+  have huSpec := Classical.choose_spec hSeq
+  have huRange : ∀ k, u k ∈ LinearMap.range G := huSpec.1
+  have huTendsto : Tendsto u atTop
+      (𝓝 (W.positiveHalfLimit, W.translatedPositiveHalfLimit)) := huSpec.2
+  let Fseq : ℕ → D.positiveTimeSubalgebra.toSubmodule := fun k =>
+    Classical.choose (huRange k)
+  have hFseq (k : ℕ) : G (Fseq k) = u k :=
+    Classical.choose_spec (huRange k)
   have hSeqEq : (fun k => G (Fseq k)) = u := by
     funext k
     exact hFseq k
