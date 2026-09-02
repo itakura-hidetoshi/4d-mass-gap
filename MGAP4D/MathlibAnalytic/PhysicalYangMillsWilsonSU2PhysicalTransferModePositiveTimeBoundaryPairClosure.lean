@@ -192,18 +192,60 @@ theorem OneSidedPositiveTimeSubmoduleBoundaryPairClosureAt.existsOneSidedBoundar
     rfl
   rw [hzeroEq] at huZero
   rw [honeEq] at huOne
+  have hDirect (G : D.positiveTimeSubalgebra.toSubmodule) :
+      Q.positiveHalfL2LinearMap hInvariant n (E.symm G) =
+        Q.physicalTransferPositiveTimeSubmoduleL2LinearMap n G := by
+    exact Q.positiveHalfL2LinearMap_carrierEquiv_symm hInvariant n G
+  have hTranslated (G : D.positiveTimeSubalgebra.toSubmodule) :
+      Q.positiveHalfL2LinearMap hInvariant n
+          ((C.toPositiveTimeObservableContractionSemigroup n).carrierTranslation 1
+            (E.symm G)) =
+        Q.physicalTransferPositiveTimeSubmoduleL2LinearMap n
+          (Q.positiveTimeSubmoduleTranslationLinearMap hInvariant C n 1 G) := by
+    exact
+      Q.positiveHalfL2LinearMap_carrierTranslation_carrierEquiv_symm
+        hInvariant C n 1 G
+  have hzeroCarrierEq :
+      (fun k =>
+        physicalYangMillsEvenPeriodicWilsonOSActualBoundarySynthesisOperator
+          halfExtent 2 physicalTransferModePositiveTimeBoundaryPairTwoRankPositive
+            beta hbeta n
+          (Q.physicalTransferPositiveTimeSubmoduleL2LinearMap n (F k))) =
+        (fun k =>
+          physicalYangMillsEvenPeriodicWilsonOSActualBoundarySynthesisOperator
+            halfExtent 2 physicalTransferModePositiveTimeBoundaryPairTwoRankPositive
+              beta hbeta n
+            (Q.positiveHalfL2LinearMap hInvariant n (E.symm (F k)))) := by
+    funext k
+    rw [hDirect]
+  have honeCarrierEq :
+      (fun k =>
+        physicalYangMillsEvenPeriodicWilsonOSActualBoundarySynthesisOperator
+          halfExtent 2 physicalTransferModePositiveTimeBoundaryPairTwoRankPositive
+            beta hbeta n
+          (Q.physicalTransferPositiveTimeSubmoduleL2LinearMap n
+            (Q.positiveTimeSubmoduleTranslationLinearMap hInvariant C n 1 (F k)))) =
+        (fun k =>
+          physicalYangMillsEvenPeriodicWilsonOSActualBoundarySynthesisOperator
+            halfExtent 2 physicalTransferModePositiveTimeBoundaryPairTwoRankPositive
+              beta hbeta n
+            (Q.positiveHalfL2LinearMap hInvariant n
+              ((C.toPositiveTimeObservableContractionSemigroup n).carrierTranslation 1
+                (E.symm (F k))))) := by
+    funext k
+    rw [hTranslated]
+  rw [hzeroCarrierEq] at huZero
+  rw [honeCarrierEq] at huOne
   refine ⟨{
     approximants := fun k => E.symm (F k)
     momentZero := ?_
     momentOne := ?_ }⟩
   · simpa only [
       physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2_eq_actualSynthesis,
-      Q.positiveHalfL2LinearMap_apply,
-      Q.positiveHalfL2LinearMap_carrierEquiv_symm] using huZero
+      Q.positiveHalfL2LinearMap_apply] using huZero
   · simpa only [
       physicalYangMillsEvenPeriodicWilsonOSCanonicalBoundaryMomentL2_eq_actualSynthesis,
-      Q.positiveHalfL2LinearMap_apply,
-      Q.positiveHalfL2LinearMap_carrierTranslation_carrierEquiv_symm] using huOne
+      Q.positiveHalfL2LinearMap_apply] using huOne
 
 /-- Product-space positive-time boundary closure specialized to the actual
 normalized SU(2) physical one-slice transfer mode and its fixed top/vacuum
