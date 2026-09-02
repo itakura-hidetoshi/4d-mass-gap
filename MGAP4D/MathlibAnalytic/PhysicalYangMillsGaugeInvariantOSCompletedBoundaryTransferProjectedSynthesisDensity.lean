@@ -200,7 +200,23 @@ theorem exists_actualSynthesis_realizableOneStep_pair_inner_tendsto_completedBou
         (Q.completedBoundaryTransfer hInvariant C n 2 y))) :=
     (periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry
       (halfExtent n) N).continuous.continuousAt.tendsto.comp hvec
-  have hinner := hpair.inner tendsto_const_nhds
+  have hz : Tendsto
+      (fun _ : ℕ => z) atTop (𝓝 z) :=
+    tendsto_const_nhds
+  have hinner : Tendsto
+      (fun k => inner ℝ
+        (periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry
+          (halfExtent n) N
+          (physicalYangMillsEvenPeriodicWilsonOSActualBoundarySynthesisOperator
+            halfExtent N hN beta hbeta n
+            (Q.positiveHalfL2LinearMap hInvariant n
+              (R.realizableCarrierTranslation hInvariant n 1 (F k))))) z)
+      atTop
+      (𝓝 (inner ℝ
+        (periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry
+          (halfExtent n) N
+          (Q.completedBoundaryTransfer hInvariant C n 2 y)) z)) :=
+    hpair.inner hz
   simpa only [y, periodicHypercubicEvenBoundaryL2OperatorToSpatialSlicePair_apply] using hinner
 
 end PhysicalYangMillsEvenPeriodicWilsonOSRealizablePositiveTemporalCovariance
