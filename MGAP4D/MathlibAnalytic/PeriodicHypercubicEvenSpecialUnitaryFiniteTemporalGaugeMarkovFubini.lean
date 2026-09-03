@@ -156,12 +156,11 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaar_integral
 
 private theorem finiteTemporalGaugeMarkovFubini_prod_headTail
     {C : Type*} (H : ℕ) (K : C → C → ℝ) (A₀ : C) (tail : Fin (H + 1) → C) :
-    (∏ x : Fin (H + 1), K (Fin.cons A₀ tail x.castSucc) (Fin.cons A₀ tail x.succ)) =
+    (∏ x : Fin (H + 1), K (Fin.cons A₀ tail x.castSucc) (tail x)) =
       K A₀ (tail 0) * ∏ i : Fin H, K (tail i.castSucc) (tail i.succ) := by
   simpa only [Fin.cons_zero, Fin.cons_succ, Fin.succ_castSucc, cast_eq] using
     (Fin.prod_univ_succ
-      (fun x : Fin (H + 1) =>
-        K (Fin.cons A₀ tail x.castSucc) (Fin.cons A₀ tail x.succ)))
+      (fun x : Fin (H + 1) => K (Fin.cons A₀ tail x.castSucc) (tail x)))
 
 /-- Under the same head/tail coordinates, the literal `H+1`-slab temporal-gauge
 Wilson kernel factors pointwise as the first adjacent one-slab kernel times the
@@ -180,7 +179,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugePathKernel_
             PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
           0).symm (A₀, tail)) =
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta A₀ (tail 0) *
+          H N beta A₀
+            (tail ⟨0, periodicHypercubicEvenPositiveHalfCylinderSlabCount_pos H⟩) *
         ∏ i : Fin H,
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
             H N beta (tail i.castSucc) (tail i.succ) := by
@@ -199,7 +199,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugePathKernel_
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight
-  simpa only [periodicHypercubicEvenPositiveHalfCylinderSlabCount] using
+  simpa only [periodicHypercubicEvenPositiveHalfCylinderSlabCount, Fin.cons_succ] using
     (finiteTemporalGaugeMarkovFubini_prod_headTail H
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta) A₀ tail)
 
