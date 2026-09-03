@@ -45,8 +45,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_right_mem
     (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
     MemLp
       (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta A B)
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A B)
       2
       (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := by
   let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
@@ -55,8 +54,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_right_mem
     infer_instance
   have hcont : Continuous
       (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta A B) :=
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A B) :=
     (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
       H N beta).comp (continuous_id.prodMk continuous_const)
   exact MemLp.of_bound hcont.aestronglyMeasurable 1
@@ -76,9 +74,7 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
     Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) :=
   (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_right_memLp_two
     H N hN beta hbeta B).toLp
-      (fun A =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta A B)
+      (fun A => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A B)
 
 /-- The ambient `L²` right kernel section has the literal Wilson-kernel
 representative almost everywhere. -/
@@ -92,9 +88,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelRightL2_co
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelRightL2
         H N hN beta hbeta B A) =ᵐ[
           periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N]
-      (fun A =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta A B) :=
+      (fun A => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A B) :=
   (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_right_memLp_two
     H N hN beta hbeta B).coeFn_toLp
 
@@ -150,12 +144,11 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_inne
       H N hN beta hbeta f.property
   have hrem : g - P g ∈ Kᗮ := by
     simpa [K, P] using
-      periodicHypercubicEvenSpecialUnitarySpatialSlice_sub_GaussLawProjection_mem_orthogonal
-        H N g
+      periodicHypercubicEvenSpecialUnitarySpatialSlice_sub_GaussLawProjection_mem_orthogonal H N g
   have horth : inner ℝ x (g - P g) = 0 :=
     (Submodule.mem_orthogonal K (g - P g)).1 hrem x hx
   change inner ℝ x (P g) = inner ℝ x g
-  rw [real_inner_sub_right] at horth
+  rw [inner_sub_right] at horth
   linarith
 
 /-- Raw-integral form of the previous projection bridge.  The right test vector
@@ -176,11 +169,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_inne
         (periodicHypercubicEvenSpecialUnitaryGaussLawProjectedPhysicalVector H N g) =
       ∫ p : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-            H N beta p.1 p.2 *
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta p.1 p.2 *
           ((f : Lp ℝ 2
-              (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) p.1 *
-            g p.2)
+              (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) p.1 * g p.2)
         ∂(periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) := by
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_inner_projected_eq_ambient]
   exact
@@ -207,12 +198,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_inne
             H N hN beta hbeta B)) =
       ∫ p : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-            H N beta p.1 p.2 *
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta p.1 p.2 *
           ((f : Lp ℝ 2
               (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) p.1 *
-            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-              H N beta p.2 B)
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta p.2 B)
         ∂(periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) := by
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_inner_projected_eq_rawIntegral]
   let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
@@ -224,59 +213,12 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_inne
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelRightL2
           H N hN beta hbeta B p.2) =ᵐ[μ.prod μ]
-      (fun p =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta p.2 B) := by
+      (fun p => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta p.2 B) := by
     simpa [μ] using
       (Measure.quasiMeasurePreserving_snd (μ := μ) (ν := μ)).ae_eq hsection
   apply integral_congr_ae
   simpa [periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure, μ] using
     hsectionPair.mono fun p hp => by rw [hp]
-
-/-- Integrated projected-tail form.  A later temporal path may choose the next
-boundary `B` and an arbitrary scalar remainder `R`; pointwise the two first
-Wilson slabs are replaced by an actual physical transfer coefficient against
-the projected right-kernel section. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_inner_projectedKernelRight_integral_laterTail
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
-    (B : (Fin H → PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) →
-      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
-    (R : (Fin H → PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ) :
-    (∫ laterTail : Fin H →
-          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
-        inner ℝ
-            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-              H N hN beta hbeta f)
-            (periodicHypercubicEvenSpecialUnitaryGaussLawProjectedPhysicalVector H N
-              (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelRightL2
-                H N hN beta hbeta (B laterTail))) *
-          R laterTail
-      ∂(Measure.pi
-        (fun _ : Fin H =>
-          periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))) =
-      ∫ laterTail : Fin H →
-          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
-        (∫ p : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-              PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
-            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-                H N beta p.1 p.2 *
-              ((f : Lp ℝ 2
-                  (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) p.1 *
-                periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-                  H N beta p.2 (B laterTail)) *
-              R laterTail
-          ∂(periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N))
-      ∂(Measure.pi
-        (fun _ : Fin H =>
-          periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) := by
-  apply integral_congr_ae
-  filter_upwards with laterTail
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_inner_projectedKernelRight_eq_rawTwoSlab]
-  rw [MeasureTheory.integral_mul_const]
 
 end
 
