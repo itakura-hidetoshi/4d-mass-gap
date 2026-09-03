@@ -387,26 +387,20 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundarySectorTran
     H N hN beta hbeta
   let T := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
     H N hN beta hbeta
-  change
-    ‖continuousLinearMapConjugateLinearIsometryEquiv
-        (𝕜 := ℝ)
-        (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta)
-        (F := periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundarySector
-          H N hN beta hbeta)
-        U (T ^ n) y‖ ≤
-      Real.exp
+  calc
+    ‖periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundarySectorTransfer
+        H N hN beta hbeta n y‖ =
+      ‖periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundarySectorTransfer
+        H N hN beta hbeta n (U (U.symm y))‖ := by
+      rw [U.apply_symm_apply]
+    _ = ‖U ((T ^ n) (U.symm y))‖ := by
+      rw [periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundarySectorTransfer_apply_image]
+    _ = ‖(T ^ n) (U.symm y)‖ := by
+      exact U.norm_map _
+    _ ≤ Real.exp
           (-(n : ℝ) *
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-              H N hN beta hbeta) * ‖y‖
-  rw [continuousLinearMapConjugateLinearIsometryEquiv_apply]
-  rw [U.norm_map]
-  calc
-    ‖(T ^ n) (U.symm y)‖ ≤
-        Real.exp
-            (-(n : ℝ) *
-              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
-                H N hN beta hbeta) * ‖U.symm y‖ := by
+              H N hN beta hbeta) * ‖U.symm y‖ := by
       exact
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_apply_norm_le_exp_of_pos
           H N hN beta hbeta n hn (U.symm y)
