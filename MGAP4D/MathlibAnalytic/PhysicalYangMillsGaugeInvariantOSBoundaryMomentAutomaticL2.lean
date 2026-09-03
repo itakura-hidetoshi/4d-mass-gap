@@ -149,6 +149,14 @@ theorem periodicHypercubicEvenBoundaryObservableMoment_integrable_of_boundedCont
       (periodicHypercubicEvenBoundaryObservableMoment
         H N hN beta hbeta f)
       (periodicHypercubicEvenBoundaryHaarMeasure H N) := by
+  letI : IsFiniteMeasure (periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
+    dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
+      FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+    infer_instance
+  letI : IsFiniteMeasure (periodicHypercubicEvenBoundaryHaarMeasure H N) := by
+    dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
+      FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
+    infer_instance
   have hjoint :=
     periodicHypercubicEvenBoundaryObservableGramFeature_joint_integrable_of_boundedContinuous
       H N hN beta hbeta f
