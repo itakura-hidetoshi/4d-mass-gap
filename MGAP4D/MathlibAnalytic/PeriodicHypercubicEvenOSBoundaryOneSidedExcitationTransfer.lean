@@ -41,6 +41,23 @@ local instance osBoundaryOneSidedExcitationTransferSpatialSliceHaarSFinite (H N 
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
 
+/-- Expose the restricted real normed-space structure on the named physical
+orthogonal submodule.  Generic continuous conjugation cannot reliably unfold
+this dependent named submodule during typeclass search, although the structure
+is exactly the standard submodule norm inherited from the Gauss-law Hilbert
+carrier. -/
+@[reducible] local instance osBoundaryOneSidedExcitationTransferPhysicalOrthogonalNormedSpace
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta) :=
+  Submodule.normedSpace
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+
 /-- The normalized physical top mode, viewed in the ambient spatial-slice Haar
 `L²` carrier. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2
@@ -83,8 +100,10 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryOneSidedExcitationPairLine
         H N hN beta hbeta)
   map_add' f g := by
     rw [map_add, realL2ExternalTensor_add_left]
+    rfl
   map_smul' c f := by
     rw [map_smul, realL2ExternalTensor_smul_left]
+    rfl
 
 /-- Fixing a unit top mode makes the one-sided pair embedding an exact linear
 isometry. -/
@@ -391,13 +410,15 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundarySectorTran
     simpa [q, r] using
       periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundarySectorTransfer_apply_norm_le_exp_of_pos
         H N hN beta hbeta n hn y
+  have hqnorm : 0 ≤ q * ‖y‖ := by
+    dsimp [q]
+    positivity
   have hsq :
       ‖periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundarySectorTransfer
           H N hN beta hbeta n y‖ ^ 2 ≤ (q * ‖y‖) ^ 2 := by
     nlinarith [norm_nonneg
       (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundarySectorTransfer
-        H N hN beta hbeta n y),
-      mul_nonneg (Real.exp_pos _).le (norm_nonneg y)]
+        H N hN beta hbeta n y), hqnorm]
   calc
     ‖periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundarySectorTransfer
         H N hN beta hbeta n y‖ ^ 2 ≤ (q * ‖y‖) ^ 2 := hsq
