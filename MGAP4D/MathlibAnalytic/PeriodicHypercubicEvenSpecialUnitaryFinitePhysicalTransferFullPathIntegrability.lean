@@ -43,7 +43,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePat
       (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
         H N beta) := by
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
-  apply continuous_finsetProd
+  refine continuous_finset_prod Finset.univ ?_
   intro i hi
   have hp : Continuous
       (fun path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N =>
@@ -137,7 +137,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeTwoEndedPathIntegrand_i
     exact continuous_mul.comp_aestronglyMeasurable₂
       (continuous_mul.comp_aestronglyMeasurable₂ hfMeas hkMeas) hgMeas
   apply hdom.mono' hmeas
-  intro path
+  filter_upwards with path
   have hk :=
     periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel_abs_le_one
       (h + 1) N hN beta hbeta path
