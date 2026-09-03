@@ -182,8 +182,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugePathKernel_
       0
   have hpath : e.symm (A₀, tail) = Fin.cons A₀ tail := by
     funext i
-    simp [e, MeasurableEquiv.piFinSuccAbove_symm_apply,
-      Fin.insertNthEquiv, Fin.insertNth_zero]
+    simp [e, MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv]
   change
     periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
         H N beta (e.symm (A₀, tail)) = _
@@ -191,10 +190,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugePathKernel_
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight
-  change
-    (∏ x : Fin (H + 1),
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta
-        (Fin.cons A₀ tail x.castSucc) (Fin.cons A₀ tail x.succ)) = _
+  simp only [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
   rw [Fin.prod_univ_succ]
   simp only [Fin.cons_zero, Fin.cons_succ, Fin.succ_castSucc, cast_eq]
 
