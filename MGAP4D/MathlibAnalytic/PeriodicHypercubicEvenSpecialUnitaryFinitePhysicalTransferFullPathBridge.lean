@@ -69,10 +69,24 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPositiveHalfFirstPairLater
     (periodicHypercubicEvenSpecialUnitaryPositiveHalfFirstPairLaterTailMeasurableEquiv
         h N).symm (p, laterTail) =
       Fin.cons p.1 (Fin.cons p.2 laterTail) := by
+  let e₀ :=
+    MeasurableEquiv.piFinSuccAbove
+      (fun _ : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount (h + 1) + 1) =>
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration (h + 1) N)
+      0
+  let e₁ :=
+    MeasurableEquiv.piFinSuccAbove
+      (fun _ : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount (h + 1)) =>
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration (h + 1) N)
+      0
+  change e₀.symm (p.1, e₁.symm (p.2, laterTail)) =
+    Fin.cons p.1 (Fin.cons p.2 laterTail)
+  have h₁ : e₁.symm (p.2, laterTail) = Fin.cons p.2 laterTail := by
+    funext i
+    simp [e₁, MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv]
+  rw [h₁]
   funext i
-  simp [periodicHypercubicEvenSpecialUnitaryPositiveHalfFirstPairLaterTailMeasurableEquiv,
-    periodicHypercubicEvenPositiveHalfCylinderSlabCount,
-    MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv]
+  simp [e₀, MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv]
 
 /-- The first-pair/later-tail coordinates preserve exactly pair Haar times the
 remaining finite product Haar law. -/
@@ -146,7 +160,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeTwoEndedPathAmplitude_e
       periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
         (h + 1) N beta path *
       ((g : Lp ℝ 2 μ)
-        (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount (h + 1))))
+        (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount (h + 1)))))
   have he : MeasurePreserving e
       (periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure (h + 1) N)
       ((μ.prod μ).prod ν) := by
