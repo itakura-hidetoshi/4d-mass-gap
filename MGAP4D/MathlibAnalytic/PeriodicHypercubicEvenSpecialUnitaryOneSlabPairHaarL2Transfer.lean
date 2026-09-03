@@ -99,38 +99,38 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_conti
 measurable one-slab scalar kernel and the four coordinate projections.  This
 avoids asking for an `OpensMeasurableSpace` instance on the nested four-fold
 product presentation. -/
+set_option maxHeartbeats 1000000 in
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_measurable
     (H N : ℕ)
     (beta : ℝ) :
     Measurable
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
         H N beta) := by
-  set_option maxHeartbeats 1000000 in
-    unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
-    have hK :=
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-        H N beta).measurable
-    have hleft : Measurable
-        (fun p :
-          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
-          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
-          (p.1.1, p.2.1)) := by
-      exact
-        (measurable_fst.comp measurable_fst).prodMk
-          (measurable_fst.comp measurable_snd)
-    have hright : Measurable
-        (fun p :
-          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
-          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
-          (p.1.2, p.2.2)) := by
-      exact
-        (measurable_snd.comp measurable_fst).prodMk
-          (measurable_snd.comp measurable_snd)
-    exact (hK.comp hleft).mul (hK.comp hright)
+  unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
+  have hK :=
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      H N beta).measurable
+  have hleft : Measurable
+      (fun p :
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
+        (p.1.1, p.2.1)) := by
+    exact
+      (measurable_fst.comp measurable_fst).prodMk
+        (measurable_fst.comp measurable_snd)
+  have hright : Measurable
+      (fun p :
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
+        (p.1.2, p.2.2)) := by
+    exact
+      (measurable_snd.comp measurable_fst).prodMk
+        (measurable_snd.comp measurable_snd)
+  exact (hK.comp hleft).mul (hK.comp hright)
 
 /-- At nonnegative coupling the pair one-step kernel has absolute value at most
 one. -/
