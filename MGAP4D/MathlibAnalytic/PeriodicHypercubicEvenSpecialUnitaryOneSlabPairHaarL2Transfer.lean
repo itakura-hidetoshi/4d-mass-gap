@@ -78,7 +78,8 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_conti
         (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
         (p.1.1, p.2.1)) := by
-    exact (continuous_fst.comp continuous_fst).prod_mk
+    exact continuous_prod_mk _ _
+      (continuous_fst.comp continuous_fst)
       (continuous_fst.comp continuous_snd)
   have hright : Continuous
       (fun p :
@@ -87,7 +88,8 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_conti
         (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
         (p.1.2, p.2.2)) := by
-    exact (continuous_snd.comp continuous_fst).prod_mk
+    exact continuous_prod_mk _ _
+      (continuous_snd.comp continuous_fst)
       (continuous_snd.comp continuous_snd)
   exact (hK.comp hleft).mul (hK.comp hright)
 
@@ -112,7 +114,8 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_measu
         (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
         (p.1.1, p.2.1)) := by
-    exact (measurable_fst.comp measurable_fst).prod_mk
+    exact Measurable.prod
+      (measurable_fst.comp measurable_fst)
       (measurable_fst.comp measurable_snd)
   have hright : Measurable
       (fun p :
@@ -121,7 +124,8 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_measu
         (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
         (p.1.2, p.2.2)) := by
-    exact (measurable_snd.comp measurable_fst).prod_mk
+    exact Measurable.prod
+      (measurable_snd.comp measurable_fst)
       (measurable_snd.comp measurable_snd)
   exact (hK.comp hleft).mul (hK.comp hright)
 
