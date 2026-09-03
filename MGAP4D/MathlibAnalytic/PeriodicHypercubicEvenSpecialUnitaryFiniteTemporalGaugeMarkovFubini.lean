@@ -154,6 +154,15 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaar_integral
     _ = _ := by
       rfl
 
+private theorem finiteTemporalGaugeMarkovFubini_prod_headTail
+    {C : Type*} (H : ℕ) (K : C → C → ℝ) (A₀ : C) (tail : Fin (H + 1) → C) :
+    (∏ x : Fin (H + 1), K (Fin.cons A₀ tail x.castSucc) (Fin.cons A₀ tail x.succ)) =
+      K A₀ (tail 0) * ∏ i : Fin H, K (tail i.castSucc) (tail i.succ) := by
+  simpa only [Fin.cons_zero, Fin.cons_succ, Fin.succ_castSucc, cast_eq] using
+    (Fin.prod_univ_succ
+      (fun x : Fin (H + 1) =>
+        K (Fin.cons A₀ tail x.castSucc) (Fin.cons A₀ tail x.succ)))
+
 /-- Under the same head/tail coordinates, the literal `H+1`-slab temporal-gauge
 Wilson kernel factors pointwise as the first adjacent one-slab kernel times the
 remaining `H` adjacent kernels.  This is the finite Markov factorization at the
@@ -162,7 +171,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugePathKernel_
     (H N : ℕ)
     (beta : ℝ)
     (A₀ : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
-    (tail : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H) →
+    (tail : Fin (H + 1) →
       PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
     periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
         H N beta
@@ -171,7 +180,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugePathKernel_
             PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
           0).symm (A₀, tail)) =
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta A₀ (tail ⟨0, periodicHypercubicEvenPositiveHalfCylinderSlabCount_pos H⟩) *
+          H N beta A₀ (tail 0) *
         ∏ i : Fin H,
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
             H N beta (tail i.castSucc) (tail i.succ) := by
@@ -190,9 +199,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugePathKernel_
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight
-  simp only [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
-  rw [Fin.prod_univ_succ]
-  simp only [Fin.cons_zero, Fin.cons_succ, Fin.succ_castSucc, cast_eq]
+  simpa only [periodicHypercubicEvenPositiveHalfCylinderSlabCount] using
+    (finiteTemporalGaugeMarkovFubini_prod_headTail H
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta) A₀ tail)
 
 /-- Finite temporal-gauge Markov/Fubini decomposition.  For every integrable
 path functional, the complete positive-half path integral can be written as a
