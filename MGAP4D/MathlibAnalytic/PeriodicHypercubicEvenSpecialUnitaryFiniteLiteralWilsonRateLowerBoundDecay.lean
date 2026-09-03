@@ -105,15 +105,16 @@ theorem
     mul_le_mul_of_nonneg_right
       (mul_le_mul_of_nonneg_right hexp (norm_nonneg f))
       (norm_nonneg g)
+  have htoppos :
+      0 < ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+        (h + 1) N hN beta hbeta‖ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+      (h + 1) N hN beta hbeta
   exact
     (periodicHypercubicEvenSpecialUnitaryLiteralTwoEndedWilsonAmplitude_norm_le_physicalNormPow_mul_exp_h_add_two
       h N hN beta hbeta f g).trans
       (mul_le_mul_of_nonneg_left hinner
-        (pow_nonneg
-          (norm_nonneg
-            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-              (h + 1) N hN beta hbeta))
-          (h + 2)))
+        (pow_nonneg htoppos.le (h + 2)))
 
 end
 
