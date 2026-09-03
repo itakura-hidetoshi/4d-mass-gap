@@ -431,6 +431,11 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundarySectorTran
         (-(n : ℝ) *
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
             H N hN beta hbeta) := by
+  letI : NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta) :=
+    osBoundaryOneSidedExcitationTransferPhysicalOrthogonalNormedSpace
+      H N hN beta hbeta
   apply ContinuousLinearMap.opNorm_le_bound
   · exact (Real.exp_pos _).le
   · intro y
@@ -456,6 +461,11 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundarySectorTran
           (-2 * (n : ℝ) *
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
               H N hN beta hbeta) * ‖y‖ ^ 2 := by
+  letI : NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta) :=
+    osBoundaryOneSidedExcitationTransferPhysicalOrthogonalNormedSpace
+      H N hN beta hbeta
   let r :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
       H N hN beta hbeta
