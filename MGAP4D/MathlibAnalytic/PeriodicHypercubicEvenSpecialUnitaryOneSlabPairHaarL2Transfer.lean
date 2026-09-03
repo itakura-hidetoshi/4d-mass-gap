@@ -95,43 +95,6 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_conti
       (continuous_snd.comp continuous_snd)
   exact h₁.mul h₂
 
-/-- Measurability of the literal pair kernel, assembled from the already
-measurable one-slab scalar kernel and the four coordinate projections.  This
-avoids asking for an `OpensMeasurableSpace` instance on the nested four-fold
-product presentation. -/
-set_option maxHeartbeats 1000000 in
-theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_measurable
-    (H N : ℕ)
-    (beta : ℝ) :
-    Measurable
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
-        H N beta) := by
-  unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
-  have hK :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta).measurable
-  have hleft : Measurable
-      (fun p :
-        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
-        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
-        (p.1.1, p.2.1)) := by
-    exact
-      (measurable_fst.comp measurable_fst).prodMk
-        (measurable_fst.comp measurable_snd)
-  have hright : Measurable
-      (fun p :
-        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
-        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
-        (p.1.2, p.2.2)) := by
-    exact
-      (measurable_snd.comp measurable_fst).prodMk
-        (measurable_snd.comp measurable_snd)
-  exact (hK.comp hleft).mul (hK.comp hright)
-
 /-- At nonnegative coupling the pair one-step kernel has absolute value at most
 one. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_abs_le_one
@@ -161,9 +124,51 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_abs_l
       exact mul_le_mul h₁ h₂ (abs_nonneg _) (by norm_num)
     _ = 1 := by norm_num
 
+/-- The continuous literal pair kernel is almost-everywhere strongly measurable
+for the actual pair-Haar product measure.  Keeping the measure explicit avoids
+materializing a global four-fold-product `Measurable` theorem. -/
+theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_aestronglyMeasurable
+    (H N : ℕ)
+    (beta : ℝ) :
+    AEStronglyMeasurable
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel H N beta)
+      ((periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N).prod
+        (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N)) := by
+  exact
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_continuous
+      H N beta).aestronglyMeasurable
+
+/-- The literal pair one-step Wilson kernel belongs to
+`L²(pair-Haar × pair-Haar)` directly from finite Haar mass and the uniform
+pointwise bound. -/
+theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_memLp_two
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    MemLp
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
+        H N beta)
+      2
+      ((periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N).prod
+        (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N)) := by
+  let μ := periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N
+  letI : IsFiniteMeasure (μ.prod μ) := by
+    dsimp [μ, periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure,
+      periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure]
+    infer_instance
+  exact MemLp.of_bound
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_aestronglyMeasurable
+      H N beta)
+    1
+    (Filter.Eventually.of_forall fun p => by
+      simpa [Real.norm_eq_abs] using
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_abs_le_one
+          H N hN beta hbeta p)
+
 /-- The squared literal pair kernel is integrable on pair-Haar × pair-Haar.
-The normalized Haar measures are finite and the pointwise kernel is bounded by
-one. -/
+This is now a consequence of the direct finite-measure `L²` theorem rather than
+a separate four-fold measurability proof. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_norm_sq_integrable
     (H N : ℕ)
     (hN : 0 < N)
@@ -178,53 +183,11 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_norm_
         ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
           H N beta p‖ ^ 2)
       ((periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N).prod
-        (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N)) := by
-  let μ := periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N
-  letI : IsFiniteMeasure (μ.prod μ) := by
-    dsimp [μ, periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure,
-      periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure]
-    infer_instance
-  have hm :=
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_measurable
-      H N beta
-  have hsqMeasurable : Measurable
-      (fun p :
-        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
-        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
-        ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
-          H N beta p‖ ^ 2) :=
-    hm.norm.pow_const 2
-  exact Integrable.of_bound hsqMeasurable.aestronglyMeasurable 1
-    (Filter.Eventually.of_forall fun p => by
-      have hk :=
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_abs_le_one
-          H N hN beta hbeta p
-      change |‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
-        H N beta p‖ ^ 2| ≤ (1 : ℝ)
-      rw [abs_of_nonneg (sq_nonneg _), Real.norm_eq_abs]
-      nlinarith [abs_nonneg
-        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
-          H N beta p)])
-
-/-- The literal pair one-step Wilson kernel belongs to
-`L²(pair-Haar × pair-Haar)`. -/
-theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_memLp_two
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    MemLp
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
-        H N beta)
-      2
-      ((periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N).prod
         (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N)) :=
   (memLp_two_iff_integrable_sq_norm
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_measurable
-      H N beta).aestronglyMeasurable).2
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_norm_sq_integrable
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_aestronglyMeasurable
+      H N beta)).1
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_memLp_two
       H N hN beta hbeta)
 
 /-- Canonical pair-Haar product-`L²` vector of the literal two-endpoint
