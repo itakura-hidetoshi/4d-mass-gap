@@ -72,7 +72,10 @@ theorem
         (g : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
           (h + 1) N) := by
   unfold periodicHypercubicEvenSpecialUnitaryTransferNormalizedLiteralTwoEndedWilsonAmplitude
-  rw [periodicHypercubicEvenSpecialUnitaryLiteralTwoEndedWilsonAmplitude_eq_physicalPositiveHalfCylinderTransfer_inner]
+  rw [periodicHypercubicEvenSpecialUnitaryLiteralTwoEndedWilsonAmplitude_eq_physicalPositiveHalfCylinderTransfer_inner
+    h N hN beta hbeta
+    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule (h + 1) N)
+    (g : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule (h + 1) N)]
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderExcitationTransferOperator_coe]
   rw [periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPositiveHalfCylinderTransferOperator_apply_eq_invNormPow_smul_physical]
   simp [inner_smul_left]
