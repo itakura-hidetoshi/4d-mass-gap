@@ -9,6 +9,30 @@ noncomputable section
 open MeasureTheory
 open scoped InnerProductSpace InnerProduct
 
+local instance finitePhysicalTransferMarkovStepTopologicalGroup (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance finitePhysicalTransferMarkovStepCompactSpace (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance finitePhysicalTransferMarkovStepSecondCountable (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance finitePhysicalTransferMarkovStepMeasurableSpace (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance finitePhysicalTransferMarkovStepBorelSpace (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
+local instance finitePhysicalTransferMarkovStepSpatialLinkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
 /-- The first Markov tail itself splits canonically into its first spatial slice
 `A₁` and the later `H` spatial slices.  This is the second finite product-measure
 step needed to isolate the first two temporal boundaries `(A₀,A₁)`. -/
