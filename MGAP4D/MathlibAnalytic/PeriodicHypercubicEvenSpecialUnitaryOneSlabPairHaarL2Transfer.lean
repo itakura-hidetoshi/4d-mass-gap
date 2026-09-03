@@ -98,15 +98,16 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_conti
 /-- The literal pair kernel is measurable because its jointly continuous
 representative is Borel measurable on the finite product of compact spatial
 slice configuration spaces. -/
-set_option maxHeartbeats 1000000 in
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_measurable
     (H N : ℕ)
     (beta : ℝ) :
     Measurable
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
-        H N beta) :=
-  (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_continuous
-    H N beta).measurable
+        H N beta) := by
+  set_option maxHeartbeats 1000000 in
+    exact
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_continuous
+        H N beta).measurable
 
 /-- At nonnegative coupling the pair one-step kernel has absolute value at most
 one. -/
