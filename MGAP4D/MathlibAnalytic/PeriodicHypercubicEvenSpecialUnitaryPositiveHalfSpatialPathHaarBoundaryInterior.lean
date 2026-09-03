@@ -131,6 +131,12 @@ def periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInter
     periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv H
         (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)) =
       Sum.inl 1 := by
+  rw [←
+    (periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv H).apply_symm_apply
+      (Sum.inl (1 : Fin 2))]
+  apply
+    (periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv H).injective
+  apply Fin.ext
   simp [periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv,
     periodicHypercubicEvenPositiveHalfCylinderSlabCount]
 
