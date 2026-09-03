@@ -33,10 +33,55 @@ local instance finitePhysicalTransferProjectedTailSpatialLinkFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+/-- With the right spatial boundary fixed, the temporal crossing kernel is
+continuous in the left boundary.  This direct finite-link induction avoids
+routing the section through the full product-space continuity theorem. -/
+theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_right_continuous
+    (H N : ℕ)
+    (beta : ℝ)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
+    Continuous
+      (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel H N beta A B) := by
+  unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
+  generalize periodicHypercubicEvenSpatialSliceLinkList H = es
+  induction es with
+  | nil =>
+      simpa using
+        (continuous_const : Continuous
+          (fun _ : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+            (1 : ℝ)))
+  | cons e es ih =>
+      simp only [List.map_cons, List.prod_cons]
+      have hleft : Continuous
+          (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N => A e) :=
+        continuous_apply e
+      have hlocal : Continuous
+          (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+            specialUnitaryWilsonRelativeKernel N beta (A e) (B e)) :=
+        (continuous_specialUnitaryWilsonRelativeKernel N beta).comp₂ hleft continuous_const
+      exact hlocal.mul ih
+
+/-- With the right boundary fixed, the complete one-slab Wilson kernel is
+continuous in the left boundary. -/
+theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_right_continuous
+    (H N : ℕ)
+    (beta : ℝ)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
+    Continuous
+      (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A B) := by
+  unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+  have hw := periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight_continuous H N beta
+  have hcross :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_right_continuous
+      H N beta B
+  exact (hw.mul hcross).mul continuous_const
+
 /-- For a fixed right boundary `B`, the literal adjacent Wilson one-slab kernel
 `A ↦ K(A,B)` is an ambient spatial-slice Haar `L²` vector.  The proof uses only
-joint measurability and the canonical pointwise bound `|K| ≤ 1` on Haar
-probability space. -/
+the fixed-boundary continuity and the canonical pointwise bound `|K| ≤ 1` on
+Haar probability space. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_right_memLp_two
     (H N : ℕ)
     (hN : 0 < N)
@@ -48,12 +93,9 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_right_mem
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A B)
       2
       (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := by
-  have hmeas : Measurable
-      (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A B) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta).measurable.comp (measurable_id.prodMk measurable_const)
-  refine MemLp.of_bound hmeas.aestronglyMeasurable 1 ?_
+  refine MemLp.of_bound
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_right_continuous
+      H N beta B).aestronglyMeasurable 1 ?_
   exact Filter.Eventually.of_forall fun A => by
     simpa [Real.norm_eq_abs] using
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
@@ -221,6 +263,17 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_inne
             periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
               H N beta p.2 B := by
         simpa using hp
+      change
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta p.1 p.2 *
+            ((f : Lp ℝ 2
+              (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) p.1 *
+              periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelRightL2
+                H N hN beta hbeta B p.2) =
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta p.1 p.2 *
+            ((f : Lp ℝ 2
+              (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) p.1 *
+              periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                H N beta p.2 B)
       rw [hp']
 
 end
