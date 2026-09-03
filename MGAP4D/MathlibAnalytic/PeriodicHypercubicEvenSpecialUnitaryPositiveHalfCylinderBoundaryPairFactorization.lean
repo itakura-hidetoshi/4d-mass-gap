@@ -80,13 +80,14 @@ noncomputable def
     (H N : ℕ)
     (beta : ℝ)
     (path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N) : ℝ :=
-  ∏ i in
-      (Finset.univ.erase
-        (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderFirstSlabIndex H)).erase
-        (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderLastSlabIndex H),
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta
-      (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft path i)
-      (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight path i)
+  Finset.prod
+    ((Finset.univ.erase
+      (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderFirstSlabIndex H)).erase
+      (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderLastSlabIndex H))
+    (fun i =>
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta
+        (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft path i)
+        (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight path i))
 
 private theorem finset_prod_eq_two_distinct_factors_mul_remainder
     {ι M : Type*}
@@ -98,17 +99,17 @@ private theorem finset_prod_eq_two_distinct_factors_mul_remainder
     (ha : a ∈ s)
     (hb : b ∈ s)
     (hab : a ≠ b) :
-    (∏ i in s, f i) =
-      f a * f b * ∏ i in (s.erase a).erase b, f i := by
+    Finset.prod s f =
+      f a * f b * Finset.prod ((s.erase a).erase b) f := by
   have hb' : b ∈ s.erase a :=
     Finset.mem_erase.mpr ⟨Ne.symm hab, hb⟩
   calc
-    (∏ i in s, f i) = f a * ∏ i in s.erase a, f i := by
+    Finset.prod s f = f a * Finset.prod (s.erase a) f := by
       symm
       exact Finset.mul_prod_erase s f ha
-    _ = f a * (f b * ∏ i in (s.erase a).erase b, f i) := by
+    _ = f a * (f b * Finset.prod ((s.erase a).erase b) f) := by
       rw [Finset.mul_prod_erase (s.erase a) f hb']
-    _ = f a * f b * ∏ i in (s.erase a).erase b, f i := by
+    _ = f a * f b * Finset.prod ((s.erase a).erase b) f := by
       ac_rfl
 
 /-- Pure finite-product Markov factorization: for a nondegenerate positive
