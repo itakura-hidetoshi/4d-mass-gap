@@ -10,10 +10,6 @@ open scoped InnerProductSpace
 namespace MGAP4D
 namespace MathlibAnalytic
 
-local instance osBoundaryMomentPathBridgeEvenSideLengthNeZero
-    (H : ℕ) : NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
-  simp [PeriodicHypercubicEvenSideLength]⟩
-
 local instance osBoundaryMomentPathBridgeSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
