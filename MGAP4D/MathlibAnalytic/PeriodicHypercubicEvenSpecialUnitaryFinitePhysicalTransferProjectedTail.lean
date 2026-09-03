@@ -35,7 +35,7 @@ local instance finitePhysicalTransferProjectedTailSpatialLinkFintype (H : ℕ) :
 
 /-- For a fixed right boundary `B`, the literal adjacent Wilson one-slab kernel
 `A ↦ K(A,B)` is an ambient spatial-slice Haar `L²` vector.  The proof uses only
-joint continuity and the canonical pointwise bound `|K| ≤ 1` on Haar
+joint measurability and the canonical pointwise bound `|K| ≤ 1` on Haar
 probability space. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_right_memLp_two
     (H N : ℕ)
@@ -48,20 +48,16 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_right_mem
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A B)
       2
       (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := by
-  let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
-  letI : IsFiniteMeasure μ := by
-    dsimp [μ]
-    infer_instance
-  have hcont : Continuous
+  have hmeas : Measurable
       (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A B) :=
     (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta).comp (continuous_id.prodMk continuous_const)
-  exact MemLp.of_bound hcont.aestronglyMeasurable 1
-    (Filter.Eventually.of_forall fun A => by
-      simpa [Real.norm_eq_abs] using
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
-          H N hN beta hbeta A B)
+      H N beta).measurable.comp (measurable_id.prodMk measurable_const)
+  refine MemLp.of_bound hmeas.aestronglyMeasurable 1 ?_
+  exact Filter.Eventually.of_forall fun A => by
+    simpa [Real.norm_eq_abs] using
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
+        H N hN beta hbeta A B
 
 /-- Ambient Haar-`L²` realization of the right one-slab kernel section
 `A ↦ K(A,B)`. -/
@@ -218,7 +214,14 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_inne
       (Measure.quasiMeasurePreserving_snd (μ := μ) (ν := μ)).ae_eq hsection
   apply integral_congr_ae
   simpa [periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure, μ] using
-    hsectionPair.mono fun p hp => by rw [hp]
+    hsectionPair.mono fun p hp => by
+      have hp' :
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelRightL2
+              H N hN beta hbeta B p.2 =
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+              H N beta p.2 B := by
+        simpa using hp
+      rw [hp']
 
 end
 
