@@ -71,7 +71,59 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_conti
   have hK :=
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
       H N beta
-  exact (hK.comp (by fun_prop)).mul (hK.comp (by fun_prop))
+  have hleft : Continuous
+      (fun p :
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
+        (p.1.1, p.2.1)) := by
+    exact (continuous_fst.comp continuous_fst).prod_mk
+      (continuous_fst.comp continuous_snd)
+  have hright : Continuous
+      (fun p :
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
+        (p.1.2, p.2.2)) := by
+    exact (continuous_snd.comp continuous_fst).prod_mk
+      (continuous_snd.comp continuous_snd)
+  exact (hK.comp hleft).mul (hK.comp hright)
+
+/-- Measurability of the literal pair kernel, proved directly from the
+measurability of the one-slab kernel and coordinate projections.  Keeping this
+separate from continuity avoids requiring an `OpensMeasurableSpace` instance on
+the four-fold product presentation. -/
+theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_measurable
+    (H N : ℕ)
+    (beta : ℝ) :
+    Measurable
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
+        H N beta) := by
+  unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
+  have hK :=
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      H N beta).measurable
+  have hleft : Measurable
+      (fun p :
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
+        (p.1.1, p.2.1)) := by
+    exact (measurable_fst.comp measurable_fst).prod_mk
+      (measurable_fst.comp measurable_snd)
+  have hright : Measurable
+      (fun p :
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
+        (p.1.2, p.2.2)) := by
+    exact (measurable_snd.comp measurable_fst).prod_mk
+      (measurable_snd.comp measurable_snd)
+  exact (hK.comp hleft).mul (hK.comp hright)
 
 /-- At nonnegative coupling the pair one-step kernel has absolute value at most
 one. -/
@@ -126,8 +178,8 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_norm_
       periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure]
     infer_instance
   have hm :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_continuous
-      H N beta).measurable
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_measurable
+      H N beta
   have hsqMeasurable : Measurable
       (fun p :
         (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
@@ -163,8 +215,8 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_memLp
       ((periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N).prod
         (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N)) :=
   (memLp_two_iff_integrable_sq_norm
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_continuous
-      H N beta).measurable.aestronglyMeasurable).2
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_measurable
+      H N beta).aestronglyMeasurable).2
     (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_norm_sq_integrable
       H N hN beta hbeta)
 
