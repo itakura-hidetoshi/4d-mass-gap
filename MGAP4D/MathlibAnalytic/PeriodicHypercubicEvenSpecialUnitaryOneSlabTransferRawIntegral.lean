@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryFiniteTemporalGaugeMarkovFubini
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferFactorization
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryDensityGramKernel
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -9,6 +10,10 @@ noncomputable section
 
 open MeasureTheory
 open scoped InnerProductSpace InnerProduct
+
+local instance oneSlabTransferRawIntegralSpecialUnitaryMeasurableSpace (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
 
 local instance oneSlabTransferRawIntegralSpatialSliceHaarSFinite (H N : ℕ) :
     SFinite (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := by
@@ -35,18 +40,39 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
           (f p.1 * g p.2)
         ∂(periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) := by
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_inner]
-  rw [realL2HilbertSchmidtKernelPairing, MeasureTheory.L2.inner_def]
-  apply integral_congr_ae
-  have hK :=
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2_coeFn
-      H N hN beta hbeta
-  have hTensor :=
-    realL2ExternalTensor_coeFn
-      (μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
-      (ν := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) f g
-  filter_upwards [hK, hTensor] with p hpK hpTensor
-  rw [hpK, hpTensor]
-  simp [realL2ExternalTensorFunction, realL2Scalar_inner_eq_mul]
+  unfold realL2HilbertSchmidtKernelPairing
+  calc
+    inner ℝ
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
+          H N hN beta hbeta)
+        (realL2ExternalTensor f g) =
+      ∫ p, inner ℝ
+          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
+            H N hN beta hbeta p)
+          (realL2ExternalTensor f g p)
+        ∂(periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) := by
+      simpa [periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure] using
+        (MeasureTheory.L2.inner_def
+          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
+            H N hN beta hbeta)
+          (realL2ExternalTensor f g))
+    _ = ∫ p,
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+            H N beta p.1 p.2 *
+          (f p.1 * g p.2)
+        ∂(periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) := by
+      apply integral_congr_ae
+      have hK :=
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2_coeFn
+          H N hN beta hbeta
+      have hTensor :=
+        realL2ExternalTensor_coeFn
+          (μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
+          (ν := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) f g
+      filter_upwards [hK, hTensor] with p hpK hpTensor
+      rw [hpK, hpTensor]
+      simp only [realL2ExternalTensorFunction]
+      rw [periodicHypercubicEven_real_inner_eq_mul]
 
 /-- On the closed Gauss-law Hilbert sector, the physical one-slab transfer has
 the same literal Wilson-kernel matrix coefficient after coercing the physical
