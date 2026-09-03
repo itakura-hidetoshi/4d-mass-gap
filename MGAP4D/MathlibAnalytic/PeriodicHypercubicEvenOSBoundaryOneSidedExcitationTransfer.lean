@@ -42,10 +42,9 @@ local instance osBoundaryOneSidedExcitationTransferSpatialSliceHaarSFinite (H N 
   infer_instance
 
 /-- Expose the restricted real normed-space structure on the named physical
-orthogonal submodule.  Generic continuous conjugation cannot reliably unfold
-this dependent named submodule during typeclass search, although the structure
-is exactly the standard submodule norm inherited from the Gauss-law Hilbert
-carrier. -/
+orthogonal submodule. Generic continuous conjugation is given this instance
+explicitly at the few sites where Lean would otherwise have to unfold the
+dependent named submodule during typeclass search. -/
 @[reducible] local instance osBoundaryOneSidedExcitationTransferPhysicalOrthogonalNormedSpace
     (H N : ℕ)
     (hN : 0 < N)
@@ -82,7 +81,7 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2
 
 /-- Embed one physical excitation into the ordered endpoint-pair Haar `L²`
 carrier by tensoring it with the normalized physical top mode on the companion
-endpoint.  This is the one-particle, rather than excitation-tensor-square,
+endpoint. This is the one-particle, rather than excitation-tensor-square,
 realization. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryOneSidedExcitationPairLinearMap
     (H N : ℕ)
@@ -240,7 +239,7 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundaryLinearIsom
   rfl
 
 /-- Concrete finite-volume physical transfer on the one-particle pair-`L²`
-sector.  It is exactly the normalized physical excitation transfer power,
+sector. It is exactly the normalized physical excitation transfer power,
 conjugated through the one-sided endpoint-pair isometry. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryOneSidedExcitationPairSectorTransfer
     (H N : ℕ)
@@ -251,12 +250,23 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryOneSidedExcitationPairSect
     periodicHypercubicEvenSpecialUnitaryOneSidedExcitationPairSector
         H N hN beta hbeta →L[ℝ]
       periodicHypercubicEvenSpecialUnitaryOneSidedExcitationPairSector
-        H N hN beta hbeta :=
-  continuousLinearMapConjugateLinearIsometryEquiv
-    (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationPairEquiv
-      H N hN beta hbeta)
-    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-      H N hN beta hbeta) ^ n)
+        H N hN beta hbeta := by
+  letI : NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta) :=
+    osBoundaryOneSidedExcitationTransferPhysicalOrthogonalNormedSpace
+      H N hN beta hbeta
+  exact
+    continuousLinearMapConjugateLinearIsometryEquiv
+      (𝕜 := ℝ)
+      (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta)
+      (F := periodicHypercubicEvenSpecialUnitaryOneSidedExcitationPairSector
+        H N hN beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationPairEquiv
+        H N hN beta hbeta)
+      ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta) ^ n)
 
 /-- The concrete one-sided pair transfer acts exactly by physical excitation
 transfer on every represented one-particle vector. -/
@@ -276,7 +286,19 @@ transfer on every represented one-particle vector. -/
         H N hN beta hbeta
         (((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
           H N hN beta hbeta) ^ n) f) := by
-  exact continuousLinearMapConjugateLinearIsometryEquiv_apply_image _ _ _
+  letI : NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta) :=
+    osBoundaryOneSidedExcitationTransferPhysicalOrthogonalNormedSpace
+      H N hN beta hbeta
+  exact
+    continuousLinearMapConjugateLinearIsometryEquiv_apply_image
+      (𝕜 := ℝ)
+      (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta)
+      (F := periodicHypercubicEvenSpecialUnitaryOneSidedExcitationPairSector
+        H N hN beta hbeta)
+      _ _ _
 
 /-- Concrete finite-volume physical transfer on the actual shared-boundary
 one-particle sector. -/
@@ -289,12 +311,23 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundary
     periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundarySector
         H N hN beta hbeta →L[ℝ]
       periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundarySector
-        H N hN beta hbeta :=
-  continuousLinearMapConjugateLinearIsometryEquiv
-    (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundaryEquiv
-      H N hN beta hbeta)
-    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-      H N hN beta hbeta) ^ n)
+        H N hN beta hbeta := by
+  letI : NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta) :=
+    osBoundaryOneSidedExcitationTransferPhysicalOrthogonalNormedSpace
+      H N hN beta hbeta
+  exact
+    continuousLinearMapConjugateLinearIsometryEquiv
+      (𝕜 := ℝ)
+      (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta)
+      (F := periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundarySector
+        H N hN beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundaryEquiv
+        H N hN beta hbeta)
+      ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta) ^ n)
 
 /-- Exact physical-transfer/shared-boundary intertwining on the complete
 one-particle boundary sector. -/
@@ -314,7 +347,19 @@ one-particle boundary sector. -/
         H N hN beta hbeta
         (((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
           H N hN beta hbeta) ^ n) f) := by
-  exact continuousLinearMapConjugateLinearIsometryEquiv_apply_image _ _ _
+  letI : NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta) :=
+    osBoundaryOneSidedExcitationTransferPhysicalOrthogonalNormedSpace
+      H N hN beta hbeta
+  exact
+    continuousLinearMapConjugateLinearIsometryEquiv_apply_image
+      (𝕜 := ℝ)
+      (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta)
+      (F := periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundarySector
+        H N hN beta hbeta)
+      _ _ _
 
 /-- The one-particle boundary transfer inherits the single-excitation
 finite-volume exponential decay rate without the doubled tensor-square rate. -/
@@ -333,12 +378,23 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundarySectorTran
           (-(n : ℝ) *
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
               H N hN beta hbeta) * ‖y‖ := by
+  letI : NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta) :=
+    osBoundaryOneSidedExcitationTransferPhysicalOrthogonalNormedSpace
+      H N hN beta hbeta
   let U := periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundaryEquiv
     H N hN beta hbeta
   let T := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
     H N hN beta hbeta
   change
-    ‖continuousLinearMapConjugateLinearIsometryEquiv U (T ^ n) y‖ ≤
+    ‖continuousLinearMapConjugateLinearIsometryEquiv
+        (𝕜 := ℝ)
+        (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta)
+        (F := periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundarySector
+          H N hN beta hbeta)
+        U (T ^ n) y‖ ≤
       Real.exp
           (-(n : ℝ) *
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
@@ -382,7 +438,7 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundarySectorTran
       periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundarySectorTransfer_apply_norm_le_exp_of_pos
         H N hN beta hbeta n hn y
 
-/-- Squared-norm form of the same concrete contraction.  This is the exact
+/-- Squared-norm form of the same concrete contraction. This is the exact
 finite-volume quadratic estimate naturally consumed by the boundary-gap lane;
 no scale-uniform lower bound on the finite-volume rate is asserted here. -/
 theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundarySectorTransfer_apply_norm_sq_le_exp_of_pos
