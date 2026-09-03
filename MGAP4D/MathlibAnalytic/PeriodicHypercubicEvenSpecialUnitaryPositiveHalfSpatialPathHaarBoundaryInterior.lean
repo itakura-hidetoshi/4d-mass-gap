@@ -10,6 +10,30 @@ open MeasureTheory
 
 noncomputable section
 
+local instance positiveHalfSpatialPathBoundaryInteriorIsTopologicalGroup (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance positiveHalfSpatialPathBoundaryInteriorCompactSpace (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance positiveHalfSpatialPathBoundaryInteriorSecondCountableTopology (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance positiveHalfSpatialPathBoundaryInteriorMeasurableSpace (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance positiveHalfSpatialPathBoundaryInteriorBorelSpace (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
+local instance positiveHalfSpatialPathBoundaryInteriorSpatialLinkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
 /-- The strict interior spatial path consists of the slices at Euclidean times
 `1, ..., H`.  It is deliberately a single `Fin H`-indexed path.  In
 particular, for `H = 1` there is one central slice rather than two independent
@@ -51,44 +75,55 @@ instance periodicHypercubicEvenSpecialUnitaryPositiveHalfBoundaryInteriorSpatial
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfBoundaryInteriorSpatialHaarMeasure
   infer_instance
 
-/-- Exact time-index classification of a complete positive-half spatial path:
-`0` and `H+1` are the two outer boundary slices, while `1, ..., H` are the
-strict interior slices.  The boundary indices are ordered primary first,
-antipodal second. -/
+/-- Exact time-index classification of the actual complete positive-half path
+carrier.  Its source is written with the canonical slab-count index rather
+than a propositionally equal `Fin (H+2)`, so all downstream measurable-space
+and Haar statements live on exactly the existing carrier. -/
 def periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv
-    (H : ℕ) : Fin (H + 2) ≃ (Fin 2 ⊕ Fin H) where
+    (H : ℕ) :
+    Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H + 1) ≃
+      (Fin 2 ⊕ Fin H) where
   toFun j :=
     if h0 : j.1 = 0 then
       Sum.inl 0
     else if hlast : j.1 = H + 1 then
       Sum.inl 1
     else
-      Sum.inr ⟨j.1 - 1, by omega⟩
+      Sum.inr ⟨j.1 - 1, by
+        simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount] at j
+        omega⟩
   invFun z :=
     match z with
     | Sum.inl i =>
         if hi : i.1 = 0 then
           0
         else
-          ⟨H + 1, by omega⟩
-    | Sum.inr k => ⟨k.1 + 1, by omega⟩
+          ⟨H + 1, by
+            simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+    | Sum.inr k => ⟨k.1 + 1, by
+        simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
+        omega⟩
   left_inv j := by
     by_cases h0 : j.1 = 0
     · have hj : j = 0 := Fin.ext h0
-      subst j
+      rw [hj]
       simp
     · by_cases hlast : j.1 = H + 1
-      · have hj : j = ⟨H + 1, by omega⟩ := Fin.ext hlast
-        subst j
+      · have hj : j = ⟨H + 1, by
+          simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩ :=
+          Fin.ext hlast
+        rw [hj]
         simp
-      · simp [h0, hlast]
-        apply Fin.ext
-        simp
-        omega
+    · simp [h0, hlast]
+      apply Fin.ext
+      simp
+      omega
   right_inv z := by
     rcases z with i | k
     · fin_cases i <;> simp
-    · simp
+    · have h0 : k.1 + 1 ≠ 0 := by omega
+      have hlast : k.1 + 1 ≠ H + 1 := by omega
+      simp [h0, hlast]
 
 /-- Measurable equivalence separating a complete positive-half spatial path
 into its ordered outer boundary pair and its strict interior path.
@@ -126,8 +161,11 @@ theorem
     (path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N) :
     periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathBoundaryInteriorMeasurableEquiv
         H N path =
-      ((path 0, path (Fin.last (H + 1))),
-        fun k : Fin H => path ⟨k.1 + 1, by omega⟩) := by
+      ((path 0,
+          path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H))),
+        fun k : Fin H => path ⟨k.1 + 1, by
+          simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
+          omega⟩) := by
   apply Prod.ext
   · apply Prod.ext
     · rfl
