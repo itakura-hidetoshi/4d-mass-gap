@@ -124,8 +124,14 @@ inward slice `A_H`. -/
     (path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfInteriorSpatialPath (M + 2) N) :
     (periodicHypercubicEvenSpecialUnitaryPositiveHalfInteriorSpatialPathInnerPairMeasurableEquiv
       M N path).1.2 = path (Fin.last (M + 1)) := by
+  change
+    path
+        ((periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv M).symm
+          (Sum.inl (1 : Fin 2))) =
+      path (Fin.last (M + 1))
+  apply congrArg path
+  apply Fin.ext
   simp [
-    periodicHypercubicEvenSpecialUnitaryPositiveHalfInteriorSpatialPathInnerPairMeasurableEquiv,
     periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv,
     periodicHypercubicEvenPositiveHalfCylinderSlabCount]
 
@@ -139,10 +145,14 @@ slice, namely `A_{k+2}` in the original complete path. -/
     (periodicHypercubicEvenSpecialUnitaryPositiveHalfInteriorSpatialPathInnerPairMeasurableEquiv
       M N path).2 k =
       path ⟨k.1 + 1, by omega⟩ := by
-  simp [
-    periodicHypercubicEvenSpecialUnitaryPositiveHalfInteriorSpatialPathInnerPairMeasurableEquiv,
-    periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv,
-    periodicHypercubicEvenPositiveHalfCylinderSlabCount]
+  change
+    path
+        ((periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv M).symm
+          (Sum.inr k)) =
+      path ⟨k.1 + 1, by omega⟩
+  apply congrArg path
+  apply Fin.ext
+  rfl
 
 /-- Exact finite-product Haar independence of the two distinct inward endpoint
 slices for `H = M + 2`: strict-interior Haar is transported to inner pair-Haar
