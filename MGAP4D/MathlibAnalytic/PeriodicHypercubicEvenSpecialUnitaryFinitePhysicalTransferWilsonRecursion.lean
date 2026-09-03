@@ -124,7 +124,7 @@ theorem periodicHypercubicEvenSpecialUnitaryProjectedPhysicalCoefficient_integra
   apply integral_congr_ae
   filter_upwards with laterTail
   unfold periodicHypercubicEvenSpecialUnitaryRawTwoSlabCoefficient
-  rw [MeasureTheory.integral_mul_const]
+  rw [← MeasureTheory.integral_mul_const]
   apply integral_congr_ae
   filter_upwards with p
   ring
