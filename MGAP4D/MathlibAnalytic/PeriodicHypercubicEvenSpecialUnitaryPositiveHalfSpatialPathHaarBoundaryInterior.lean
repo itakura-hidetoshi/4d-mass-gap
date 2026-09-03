@@ -131,14 +131,11 @@ def periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInter
     periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv H
         (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)) =
       Sum.inl 1 := by
-  have hlast :
-      (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)).1 = H + 1 := by
-    simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
-  have hzero :
-      (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)).1 ≠ 0 := by
-    omega
-  simp [periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv,
-    hzero, hlast]
+  have hslab :
+      periodicHypercubicEvenPositiveHalfCylinderSlabCount H = H + 1 := by
+    rfl
+  rw [hslab]
+  simp [periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv]
 
 @[simp] theorem
     periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv_interior
