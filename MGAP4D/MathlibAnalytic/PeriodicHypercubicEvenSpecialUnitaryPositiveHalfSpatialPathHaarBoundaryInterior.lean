@@ -101,15 +101,14 @@ def periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInter
           ⟨H + 1, by
             simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
     | Sum.inr k => ⟨k.1 + 1, by
-        simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
-        omega⟩
+        simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
   left_inv j := by
     by_cases h0 : j.1 = 0
     · apply Fin.ext
       simp [h0]
     · by_cases hlast : j.1 = H + 1
       · apply Fin.ext
-        simp [h0, hlast]
+        simp [hlast]
       · have hjpos : 1 ≤ j.1 := Nat.one_le_iff_ne_zero.mpr h0
         apply Fin.ext
         simp [h0, hlast, Nat.sub_add_cancel hjpos]
@@ -132,8 +131,14 @@ def periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInter
     periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv H
         (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)) =
       Sum.inl 1 := by
+  have hlast :
+      (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)).1 = H + 1 := by
+    simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
+  have hzero :
+      (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)).1 ≠ 0 := by
+    omega
   simp [periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv,
-    periodicHypercubicEvenPositiveHalfCylinderSlabCount]
+    hzero, hlast]
 
 @[simp] theorem
     periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv_interior
@@ -141,8 +146,7 @@ def periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInter
     (k : Fin H) :
     periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv H
         ⟨k.1 + 1, by
-          simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
-          omega⟩ =
+          simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩ =
       Sum.inr k := by
   have hk : k.1 ≠ H := ne_of_lt k.2
   simp [periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv, hk]
