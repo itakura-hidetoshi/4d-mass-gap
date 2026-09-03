@@ -124,9 +124,10 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_abs_l
       exact mul_le_mul h₁ h₂ (abs_nonneg _) (by norm_num)
     _ = 1 := by norm_num
 
-/-- The continuous literal pair kernel is almost-everywhere strongly measurable
-for the actual pair-Haar product measure.  Keeping the measure explicit avoids
-materializing a global four-fold-product `Measurable` theorem. -/
+/-- The literal pair kernel is almost-everywhere strongly measurable for the
+actual pair-Haar product measure.  It is assembled measurably from two copies
+of the one-slab kernel and the four coordinate projections, so no
+`OpensMeasurableSpace` instance for the whole four-fold product is required. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_aestronglyMeasurable
     (H N : ℕ)
     (beta : ℝ) :
@@ -134,9 +135,31 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_aestr
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel H N beta)
       ((periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N).prod
         (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N)) := by
-  exact
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_continuous
-      H N beta).aestronglyMeasurable
+  unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
+  have hK :=
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      H N beta).measurable
+  have hleft : Measurable
+      (fun p :
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
+        (p.1.1, p.2.1)) := by
+    exact
+      (measurable_fst.comp measurable_fst).prodMk
+        (measurable_fst.comp measurable_snd)
+  have hright : Measurable
+      (fun p :
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
+        (p.1.2, p.2.2)) := by
+    exact
+      (measurable_snd.comp measurable_fst).prodMk
+        (measurable_snd.comp measurable_snd)
+  exact ((hK.comp hleft).mul (hK.comp hright)).aestronglyMeasurable
 
 /-- The literal pair one-step Wilson kernel belongs to
 `L²(pair-Haar × pair-Haar)` directly from finite Haar mass and the uniform
