@@ -131,16 +131,13 @@ def periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInter
     periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv H
         (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)) =
       Sum.inl 1 := by
-  let e := periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv H
-  calc
-    e (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)) =
-        e (e.symm (Sum.inl (1 : Fin 2))) := by
-      exact congrArg e (by
-        apply Fin.ext
-        simp [e,
-          periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv,
-          periodicHypercubicEvenPositiveHalfCylinderSlabCount])
-    _ = Sum.inl 1 := e.apply_symm_apply _
+  let j : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H + 1) :=
+    ⟨H + 1, by simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
+  have hj : Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H) = j := by
+    apply Fin.ext
+    simp [j, periodicHypercubicEvenPositiveHalfCylinderSlabCount]
+  rw [hj]
+  simp [j, periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv]
 
 @[simp] theorem
     periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv_interior
