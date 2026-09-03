@@ -175,15 +175,26 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugePathKernel_
         ∏ i : Fin H,
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
             H N beta (tail i.castSucc) (tail i.succ) := by
+  let e :=
+    MeasurableEquiv.piFinSuccAbove
+      (fun _ : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H + 1) =>
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+      0
+  have hpath : e.symm (A₀, tail) = Fin.cons A₀ tail := by
+    funext i
+    simp [e, MeasurableEquiv.piFinSuccAbove_symm_apply,
+      Fin.insertNthEquiv, Fin.insertNth_zero]
+  change
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
+        H N beta (e.symm (A₀, tail)) = _
+  rw [hpath]
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight
-  simp only [MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv,
-    Fin.insertNth_zero, Equiv.coe_fn_mk, Fin.cons_succ, Fin.zero_succAbove, cast_eq]
   change
     (∏ x : Fin (H + 1),
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta
-        (Fin.cons A₀ (fun j => tail j) x.castSucc) (tail x)) = _
+        (Fin.cons A₀ tail x.castSucc) (Fin.cons A₀ tail x.succ)) = _
   rw [Fin.prod_univ_succ]
   simp only [Fin.cons_zero, Fin.cons_succ, Fin.succ_castSucc, cast_eq]
 
