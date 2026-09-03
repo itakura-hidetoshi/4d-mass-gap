@@ -95,41 +95,18 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_conti
       (continuous_snd.comp continuous_snd)
   exact h₁.mul h₂
 
-/-- Measurability of the literal pair kernel, proved directly from the
-measurability of the one-slab kernel and coordinate projections.  Keeping this
-separate from continuity avoids requiring an `OpensMeasurableSpace` instance on
-the four-fold product presentation. -/
+/-- The literal pair kernel is measurable because its jointly continuous
+representative is Borel measurable on the finite product of compact spatial
+slice configuration spaces. -/
+set_option maxHeartbeats 1000000 in
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_measurable
     (H N : ℕ)
     (beta : ℝ) :
     Measurable
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
-        H N beta) := by
-  unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
-  have hK :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta).measurable
-  have hleft : Measurable
-      (fun p :
-        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
-        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
-        (p.1.1, p.2.1)) := by
-    exact
-      (measurable_fst.comp measurable_fst).prodMk
-        (measurable_fst.comp measurable_snd)
-  have hright : Measurable
-      (fun p :
-        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
-        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
-        (p.1.2, p.2.2)) := by
-    exact
-      (measurable_snd.comp measurable_fst).prodMk
-        (measurable_snd.comp measurable_snd)
-  exact (hK.comp hleft).mul (hK.comp hright)
+        H N beta) :=
+  (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_continuous
+    H N beta).measurable
 
 /-- At nonnegative coupling the pair one-step kernel has absolute value at most
 one. -/
