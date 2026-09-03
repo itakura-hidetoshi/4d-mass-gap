@@ -156,11 +156,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaar_integral
 
 private theorem finiteTemporalGaugeMarkovFubini_prod_headTail
     {C : Type*} (H : ℕ) (K : C → C → ℝ) (A₀ : C) (tail : Fin (H + 1) → C) :
-    (∏ x : Fin (H + 1), K (Fin.cons A₀ tail x.castSucc) (tail x)) =
+    (∏ x : Fin (H + 1),
+      K ((Fin.cons A₀ tail : Fin ((H + 1) + 1) → C) x.castSucc) (tail x)) =
       K A₀ (tail 0) * ∏ i : Fin H, K (tail i.castSucc) (tail i.succ) := by
   simpa only [Fin.cons_zero, Fin.cons_succ, Fin.succ_castSucc, cast_eq] using
     (Fin.prod_univ_succ
-      (fun x : Fin (H + 1) => K (Fin.cons A₀ tail x.castSucc) (tail x)))
+      (fun x : Fin (H + 1) =>
+        K ((Fin.cons A₀ tail : Fin ((H + 1) + 1) → C) x.castSucc) (tail x)))
 
 /-- Under the same head/tail coordinates, the literal `H+1`-slab temporal-gauge
 Wilson kernel factors pointwise as the first adjacent one-slab kernel times the
