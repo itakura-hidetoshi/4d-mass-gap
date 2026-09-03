@@ -34,25 +34,6 @@ local instance finitePhysicalTransferFullPathIntegrabilitySpatialLinkFintype (H 
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
-/-- The complete finite temporal-gauge path kernel is continuous in every
-spatial slice.  This is the finite-product lift of the jointly continuous
-one-slab Wilson kernel. -/
-theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel_continuous
-    (H N : ℕ) (beta : ℝ) :
-    Continuous
-      (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
-        H N beta) := by
-  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
-  refine continuous_finset_prod Finset.univ ?_
-  intro i hi
-  have hp : Continuous
-      (fun path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N =>
-        (path i.castSucc, path i.succ)) := by
-    fun_prop
-  exact
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta).comp hp
-
 /-- For physical Haar-`L²` endpoint vectors and nonnegative coupling, the
 complete two-ended finite temporal-gauge path integrand is automatically
 Bochner integrable.  No separate path-integrability hypothesis is needed:
@@ -109,9 +90,13 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeTwoEndedPathIntegrand_i
     hfSqPath.add hgSqPath
   have hkMeas : AEStronglyMeasurable
       (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
-        (h + 1) N beta) ρ :=
-    (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel_continuous
-      (h + 1) N beta).aestronglyMeasurable
+        (h + 1) N beta) ρ := by
+    unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
+    refine Finset.aestronglyMeasurable_fun_prod Finset.univ ?_
+    intro i hi
+    exact
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+        (h + 1) N beta).aestronglyMeasurable.comp_measurable (by fun_prop)
   have hfMeas : AEStronglyMeasurable
       (fun path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath (h + 1) N =>
         fL2 (path 0)) ρ :=
