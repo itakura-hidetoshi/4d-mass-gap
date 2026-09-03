@@ -35,9 +35,9 @@ local instance positiveHalfSpatialPathBoundaryInteriorSpatialLinkFintype (H : �
   Fintype.ofFinite _
 
 /-- The strict interior spatial path consists of the slices at Euclidean times
-`1, ..., H`.  It is deliberately a single `Fin H`-indexed path.  In
-particular, for `H = 1` there is one central slice rather than two independent
-copies of that slice. -/
+`1, ..., H`.  It is deliberately a single `Fin H`-indexed path.  Thus for
+`H = 1` there is one central Haar variable, not two artificially independent
+copies of the same geometric slice. -/
 abbrev PeriodicHypercubicEvenSpecialUnitaryPositiveHalfInteriorSpatialPath
     (H N : ℕ) : Type :=
   Fin H → PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N
@@ -76,9 +76,8 @@ instance periodicHypercubicEvenSpecialUnitaryPositiveHalfBoundaryInteriorSpatial
   infer_instance
 
 /-- Exact time-index classification of the actual complete positive-half path
-carrier.  Its source is written with the canonical slab-count index rather
-than a propositionally equal `Fin (H+2)`, so all downstream measurable-space
-and Haar statements live on exactly the existing carrier. -/
+carrier.  The two distinguished `Fin 2` coordinates are ordered primary then
+antipodal; `Fin H` carries the strict interior times `1, ..., H`. -/
 def periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv
     (H : ℕ) :
     Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount H + 1) ≃
@@ -90,7 +89,8 @@ def periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInter
       Sum.inl 1
     else
       Sum.inr ⟨j.1 - 1, by
-        simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount] at j
+        have hjlt : j.1 < H + 2 := by
+          simpa [periodicHypercubicEvenPositiveHalfCylinderSlabCount] using j.2
         omega⟩
   invFun z :=
     match z with
@@ -105,31 +105,52 @@ def periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInter
         omega⟩
   left_inv j := by
     by_cases h0 : j.1 = 0
-    · have hj : j = 0 := Fin.ext h0
-      rw [hj]
-      simp
+    · apply Fin.ext
+      simp [h0]
     · by_cases hlast : j.1 = H + 1
-      · have hj : j = ⟨H + 1, by
-          simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩ :=
-          Fin.ext hlast
-        rw [hj]
-        simp
-    · simp [h0, hlast]
-      apply Fin.ext
-      simp
-      omega
+      · apply Fin.ext
+        simp [h0, hlast]
+      · have hjpos : 1 ≤ j.1 := Nat.one_le_iff_ne_zero.mpr h0
+        apply Fin.ext
+        simp [h0, hlast, Nat.sub_add_cancel hjpos]
   right_inv z := by
     rcases z with i | k
     · fin_cases i <;> simp
-    · have h0 : k.1 + 1 ≠ 0 := by omega
-      have hlast : k.1 + 1 ≠ H + 1 := by omega
-      simp [h0, hlast]
+    · have hk : k.1 ≠ H := ne_of_lt k.2
+      simp [hk]
+
+@[simp] theorem
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv_primary
+    (H : ℕ) :
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv H 0 =
+      Sum.inl 0 := by
+  rfl
+
+@[simp] theorem
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv_antipodal
+    (H : ℕ) :
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv H
+        (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)) =
+      Sum.inl 1 := by
+  simp [periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv,
+    periodicHypercubicEvenPositiveHalfCylinderSlabCount]
+
+@[simp] theorem
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv_interior
+    (H : ℕ)
+    (k : Fin H) :
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv H
+        ⟨k.1 + 1, by
+          simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
+          omega⟩ =
+      Sum.inr k := by
+  have hk : k.1 ≠ H := ne_of_lt k.2
+  simp [periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv, hk]
 
 /-- Measurable equivalence separating a complete positive-half spatial path
-into its ordered outer boundary pair and its strict interior path.
-
-This is constructed only from canonical finite-product measurable
-reindexing/splitting equivalences. -/
+into its ordered outer boundary pair and its single strict-interior path.
+It is assembled entirely from Mathlib's finite-product reindexing and splitting
+measurable equivalences. -/
 noncomputable def
     periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathBoundaryInteriorMeasurableEquiv
     (H N : ℕ) :
@@ -147,56 +168,17 @@ noncomputable def
     MeasurableEquiv.piFinTwo
       (fun _ : Fin 2 =>
         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
-  reindex.trans
-    (split.trans
-      (MeasurableEquiv.prodCongr pair
-        (MeasurableEquiv.refl
-          (PeriodicHypercubicEvenSpecialUnitaryPositiveHalfInteriorSpatialPath H N))))
-
-/-- The boundary/interior measurable equivalence returns the two literal outer
-path slices and the literal strict interior slices in Euclidean-time order. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathBoundaryInteriorMeasurableEquiv_apply
-    (H N : ℕ)
-    (path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N) :
-    periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathBoundaryInteriorMeasurableEquiv
-        H N path =
-      ((path 0,
-          path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H))),
-        fun k : Fin H => path ⟨k.1 + 1, by
-          simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
-          omega⟩) := by
-  apply Prod.ext
-  · apply Prod.ext
-    · rfl
-    · rfl
-  · funext k
-    rfl
-
-/-- The first component of the Haar decomposition is exactly the outer
-boundary pair already used by the pointwise Markov factorization. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathBoundaryInteriorMeasurableEquiv_fst_eq_outerBoundaryPair
-    (H N : ℕ)
-    (path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath H N) :
-    (periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathBoundaryInteriorMeasurableEquiv
-      H N path).1 =
-      periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathOuterBoundaryPair path := by
-  rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathBoundaryInteriorMeasurableEquiv_apply]
-  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathOuterBoundaryPair
-  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft
-  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight
-  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderFirstSlabIndex
-  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderLastSlabIndex
-  rfl
+  let interior :=
+    MeasurableEquiv.refl
+      (PeriodicHypercubicEvenSpecialUnitaryPositiveHalfInteriorSpatialPath H N)
+  reindex.trans (split.trans (MeasurableEquiv.prodCongr pair interior))
 
 /-- The complete positive-half spatial-path product Haar law is exactly the
 product of pair-Haar on the two outer reflection boundaries and product Haar
 on the `H` strict interior spatial slices.
 
-This theorem is the finite-product Fubini coordinate theorem needed before
-lifting the pointwise boundary-pair Markov factorization to an integral and
-then to the ambient pair-Haar transfer operator. -/
+No diagonal is replaced by an independent product: at `H = 1` the interior
+factor remains the single central-slice Haar law. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathBoundaryInteriorMeasurableEquiv_measurePreserving
     (H N : ℕ) :
@@ -205,35 +187,69 @@ theorem
         H N)
       (periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N)
       (periodicHypercubicEvenSpecialUnitaryPositiveHalfBoundaryInteriorSpatialHaarMeasure H N) := by
-  let mu := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
+  let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
   let X : Fin 2 ⊕ Fin H → Type :=
     fun _ => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N
-  have hReindex :=
-    MeasureTheory.measurePreserving_piCongrLeft
-      (fun _ : Fin 2 ⊕ Fin H => mu)
-      (periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv H)
-  have hSplit :=
-    MeasureTheory.measurePreserving_sumPiEquivProdPi
-      (fun _ : Fin 2 ⊕ Fin H => mu)
-  have hPair :=
-    MeasureTheory.measurePreserving_piFinTwo
-      (fun _ : Fin 2 => mu)
+  let e :=
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv H
+  let reindex := MeasurableEquiv.piCongrLeft X e
+  let split := MeasurableEquiv.sumPiEquivProdPi X
+  let pair :=
+    MeasurableEquiv.piFinTwo
+      (fun _ : Fin 2 =>
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+  let interior :=
+    MeasurableEquiv.refl
+      (PeriodicHypercubicEvenSpecialUnitaryPositiveHalfInteriorSpatialPath H N)
+  let nested := MeasurableEquiv.prodCongr pair interior
+
+  have hReindex :
+      MeasurePreserving reindex
+        (periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure H N)
+        (Measure.pi (fun _ : Fin 2 ⊕ Fin H => μ)) := by
+    simpa [reindex, e, X,
+      periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure] using
+      (MeasureTheory.measurePreserving_piCongrLeft
+        (fun _ : Fin 2 ⊕ Fin H => μ) e)
+
+  have hSplit :
+      MeasurePreserving split
+        (Measure.pi (fun _ : Fin 2 ⊕ Fin H => μ))
+        ((Measure.pi (fun _ : Fin 2 => μ)).prod
+          (Measure.pi (fun _ : Fin H => μ))) := by
+    simpa [split, X] using
+      (MeasureTheory.measurePreserving_sumPiEquivProdPi
+        (fun _ : Fin 2 ⊕ Fin H => μ))
+
+  have hPair :
+      MeasurePreserving pair
+        (Measure.pi (fun _ : Fin 2 => μ))
+        (μ.prod μ) := by
+    simpa [pair] using
+      (MeasureTheory.measurePreserving_piFinTwo
+        (fun _ : Fin 2 => μ))
+
   have hInterior :
-      MeasurePreserving
-        (MeasurableEquiv.refl
-          (PeriodicHypercubicEvenSpecialUnitaryPositiveHalfInteriorSpatialPath H N))
-        (Measure.pi (fun _ : Fin H => mu))
-        (Measure.pi (fun _ : Fin H => mu)) :=
-    MeasurePreserving.id _
-  have hNested := hPair.prod hInterior
+      MeasurePreserving interior
+        (Measure.pi (fun _ : Fin H => μ))
+        (Measure.pi (fun _ : Fin H => μ)) := by
+    simpa [interior] using
+      (MeasurePreserving.id (Measure.pi (fun _ : Fin H => μ)))
+
+  have hNested :
+      MeasurePreserving nested
+        ((Measure.pi (fun _ : Fin 2 => μ)).prod
+          (Measure.pi (fun _ : Fin H => μ)))
+        ((μ.prod μ).prod (Measure.pi (fun _ : Fin H => μ))) := by
+    simpa [nested] using hPair.prod hInterior
+
+  have hAll := (hReindex.trans hSplit).trans hNested
   simpa [
     periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathBoundaryInteriorMeasurableEquiv,
-    periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure,
     periodicHypercubicEvenSpecialUnitaryPositiveHalfBoundaryInteriorSpatialHaarMeasure,
     periodicHypercubicEvenSpecialUnitaryPositiveHalfInteriorSpatialPathHaarMeasure,
     periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure,
-    X, mu] using
-      (hReindex.trans hSplit).trans hNested
+    reindex, split, pair, interior, nested, X, e, μ] using hAll
 
 end
 
