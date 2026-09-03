@@ -119,9 +119,56 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfFirstPairLaterTail_measu
     periodicHypercubicEvenPositiveHalfCylinderSlabCount, μ, ν] using
     h₀.trans (hmid.trans hassoc.symm)
 
+private theorem finitePhysicalTransferFullPath_prod_headTail
+    {C : Type*} (H : ℕ) (K : C → C → ℝ) (A₀ : C) (tail : Fin (H + 1) → C) :
+    (∏ x : Fin (H + 1),
+      K ((Fin.cons A₀ tail : Fin ((H + 1) + 1) → C) x.castSucc) (tail x)) =
+      K A₀ (tail 0) * ∏ i : Fin H, K (tail i.castSucc) (tail i.succ) := by
+  simpa only [Fin.cons_zero, Fin.cons_succ, Fin.succ_castSucc, cast_eq] using
+    (Fin.prod_univ_succ
+      (fun x : Fin (H + 1) =>
+        K ((Fin.cons A₀ tail : Fin ((H + 1) + 1) → C) x.castSucc) (tail x)))
+
+private theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugePathKernel_cons_cons
+    (h N : ℕ) (beta : ℝ)
+    (p : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration (h + 1) N ×
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration (h + 1) N)
+    (laterTail : Fin (h + 1) →
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration (h + 1) N) :
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
+        (h + 1) N beta (Fin.cons p.1 (Fin.cons p.2 laterTail)) =
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          (h + 1) N beta p.1 p.2 *
+        ∏ x : Fin (h + 1),
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+            (h + 1) N beta
+            ((Fin.cons p.2 laterTail : Fin ((h + 1) + 1) →
+              PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration (h + 1) N)
+              x.castSucc)
+            (laterTail x) := by
+  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
+  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft
+  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight
+  simpa only [periodicHypercubicEvenPositiveHalfCylinderSlabCount, Fin.cons_zero,
+    Fin.cons_succ] using
+    (finitePhysicalTransferFullPath_prod_headTail (h + 1)
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel (h + 1) N beta)
+      p.1 (Fin.cons p.2 laterTail))
+
+private theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfFirstPairLaterTail_last
+    (h N : ℕ)
+    (p : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration (h + 1) N ×
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration (h + 1) N)
+    (laterTail : Fin (h + 1) →
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration (h + 1) N) :
+    (Fin.cons p.1 (Fin.cons p.2 laterTail) :
+      PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath (h + 1) N)
+        (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount (h + 1))) =
+      laterTail (Fin.last h) := by
+  simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]
+
 /-- Pointwise integrand of the complete temporal-gauge two-ended endpoint
-amplitude.  Naming it keeps the Fubini interface independent of parser-level
-complexity in the endpoint `L²` coercions. -/
+amplitude. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryTemporalGaugeTwoEndedPathIntegrand
     (h N : ℕ) (beta : ℝ)
     (f g : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule (h + 1) N)
@@ -134,6 +181,34 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryTemporalGaugeTwoEndedPathI
       (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure (h + 1) N))
       (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount (h + 1)))))
 
+private theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeTwoEndedPathIntegrand_cons_cons
+    (h N : ℕ) (beta : ℝ)
+    (f g : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule (h + 1) N)
+    (p : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration (h + 1) N ×
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration (h + 1) N)
+    (laterTail : Fin (h + 1) →
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration (h + 1) N) :
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeTwoEndedPathIntegrand
+        h N beta f g (Fin.cons p.1 (Fin.cons p.2 laterTail)) =
+      ((f : Lp ℝ 2
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure (h + 1) N)) p.1) *
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+            (h + 1) N beta p.1 p.2 *
+          ∏ x : Fin (h + 1),
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+              (h + 1) N beta
+              ((Fin.cons p.2 laterTail : Fin ((h + 1) + 1) →
+                PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration (h + 1) N)
+                x.castSucc)
+              (laterTail x)) *
+        ((g : Lp ℝ 2
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure (h + 1) N))
+          (laterTail (Fin.last h))) := by
+  unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeTwoEndedPathIntegrand
+  rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugePathKernel_cons_cons]
+  rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfFirstPairLaterTail_last]
+  rfl
+
 /-- The complete temporal-gauge two-ended endpoint path integral. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryTemporalGaugeTwoEndedPathAmplitude
     (h N : ℕ) (beta : ℝ)
@@ -145,7 +220,6 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryTemporalGaugeTwoEndedPathA
 /-- Once the endpoint path integrand is integrable, the complete temporal-gauge
 path integral is exactly the literal two-ended Wilson amplitude in
 `((A₀,A₁),laterTail)` coordinates. -/
-set_option maxHeartbeats 800000 in
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeTwoEndedPathAmplitude_eq_literal
     (h N : ℕ) (beta : ℝ)
     (f g : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule (h + 1) N)
@@ -180,27 +254,8 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeTwoEndedPathAmplitude_e
       apply integral_congr_ae
       filter_upwards with p
       rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfFirstPairLaterTailMeasurableEquiv_symm_apply]
-      have hk :=
-        periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugePathKernel_headTail
-          (h + 1) N beta p.1 (Fin.cons p.2 laterTail)
-      have hk' :
-          periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
-              (h + 1) N beta (Fin.cons p.1 (Fin.cons p.2 laterTail)) =
-            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-                (h + 1) N beta p.1 p.2 *
-              ∏ x : Fin (h + 1),
-                periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-                  (h + 1) N beta
-                  ((Fin.cons p.2 laterTail : Fin ((h + 1) + 1) →
-                    PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration (h + 1) N)
-                    x.castSucc)
-                  (laterTail x) := by
-        simpa [periodicHypercubicEvenPositiveHalfCylinderSlabCount,
-          MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv, Fin.insertNth_zero] using hk
-      rw [hk']
-      simp [F, periodicHypercubicEvenSpecialUnitaryTemporalGaugeTwoEndedPathIntegrand,
-        μ, periodicHypercubicEvenPositiveHalfCylinderSlabCount]
-      ring
+      exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeTwoEndedPathIntegrand_cons_cons
+        h N beta f g p laterTail
 
 end
 
