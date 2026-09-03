@@ -74,10 +74,9 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
         (h + 1) N hN beta hbeta
   have hrecover : t ^ n * Anorm = Araw := by
-    dsimp [Anorm, Araw, t, n]
-    unfold periodicHypercubicEvenSpecialUnitaryTransferNormalizedLiteralTwoEndedWilsonAmplitude
+    change t ^ n * (t⁻¹ ^ n * Araw) = Araw
     rw [← mul_assoc, ← mul_pow]
-    simp [htpos.ne']
+    rw [mul_inv_cancel₀ htpos.ne', one_pow, one_mul]
   have hdecay :
       ‖Anorm‖ ≤
         (Real.exp
@@ -96,13 +95,13 @@ theorem
   calc
     ‖Araw‖ = ‖t ^ n * Anorm‖ := by rw [hrecover]
     _ = t ^ n * ‖Anorm‖ := by
-      rw [norm_mul, Real.norm_eq_abs, abs_of_nonneg (pow_nonneg (norm_nonneg _) _)]
+      rw [norm_mul, Real.norm_eq_abs, abs_of_nonneg (pow_nonneg htpos.le n)]
     _ ≤ t ^ n *
         ((Real.exp
           (-(n : ℝ) *
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceFiniteVolumeDecayRate
               (h + 1) N hN beta hbeta) * ‖f‖) * ‖g‖) :=
-      mul_le_mul_of_nonneg_left hdecay (pow_nonneg (norm_nonneg _) _)
+      mul_le_mul_of_nonneg_left hdecay (pow_nonneg htpos.le n)
 
 /-- Audit-visible raw-path estimate with the exact geometric slab count `h+2`. -/
 theorem
