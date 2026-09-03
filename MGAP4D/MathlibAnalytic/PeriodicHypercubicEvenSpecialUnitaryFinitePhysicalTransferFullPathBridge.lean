@@ -145,6 +145,7 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryTemporalGaugeTwoEndedPathA
 /-- Once the endpoint path integrand is integrable, the complete temporal-gauge
 path integral is exactly the literal two-ended Wilson amplitude in
 `((A₀,A₁),laterTail)` coordinates. -/
+set_option maxHeartbeats 800000 in
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeTwoEndedPathAmplitude_eq_literal
     (h N : ℕ) (beta : ℝ)
     (f g : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule (h + 1) N)
