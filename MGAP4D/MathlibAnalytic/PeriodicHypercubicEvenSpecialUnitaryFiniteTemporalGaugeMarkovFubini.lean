@@ -245,6 +245,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugePath_integr
   filter_upwards with tail
   rw [periodicHypercubicEvenSpecialUnitaryPositiveHalfTemporalGaugePathKernel_headTail
     H N beta A₀ tail]
+  rfl
 
 end
 
