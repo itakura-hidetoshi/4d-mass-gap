@@ -71,27 +71,29 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_conti
   have hK :=
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
       H N beta
-  have hleft : Continuous
+  have h₁ : Continuous
       (fun p :
         (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
         (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
-        (p.1.1, p.2.1)) := by
-    exact
-      (continuous_fst.comp continuous_fst).prodMk
-        (continuous_fst.comp continuous_snd)
-  have hright : Continuous
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta p.1.1 p.2.1) :=
+    hK.comp₂
+      (continuous_fst.comp continuous_fst)
+      (continuous_fst.comp continuous_snd)
+  have h₂ : Continuous
       (fun p :
         (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
         (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
-        (p.1.2, p.2.2)) := by
-    exact
-      (continuous_snd.comp continuous_fst).prodMk
-        (continuous_snd.comp continuous_snd)
-  exact (hK.comp hleft).mul (hK.comp hright)
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta p.1.2 p.2.2) :=
+    hK.comp₂
+      (continuous_snd.comp continuous_fst)
+      (continuous_snd.comp continuous_snd)
+  exact h₁.mul h₂
 
 /-- Measurability of the literal pair kernel, proved directly from the
 measurability of the one-slab kernel and coordinate projections.  Keeping this
