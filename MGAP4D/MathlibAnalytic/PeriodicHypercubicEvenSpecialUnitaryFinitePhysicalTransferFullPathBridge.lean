@@ -82,11 +82,11 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPositiveHalfFirstPairLater
   change e₀.symm (p.1, e₁.symm (p.2, laterTail)) =
     Fin.cons p.1 (Fin.cons p.2 laterTail)
   have h₁ : e₁.symm (p.2, laterTail) = Fin.cons p.2 laterTail := by
-    funext i
-    simp [e₁, MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv]
+    simp [e₁, MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv,
+      Fin.insertNth_zero]
   rw [h₁]
-  funext i
-  simp [e₀, MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv]
+  simp [e₀, MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv,
+    Fin.insertNth_zero]
 
 /-- The first-pair/later-tail coordinates preserve exactly pair Haar times the
 remaining finite product Haar law. -/
@@ -154,13 +154,13 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeTwoEndedPathAmplitude_e
     periodicHypercubicEvenSpecialUnitaryPositiveHalfFirstPairLaterTailMeasurableEquiv h N
   let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure (h + 1) N
   let ν := Measure.pi (fun _ : Fin (h + 1) => μ)
-  let F := fun path :
-      PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath (h + 1) N =>
-    ((f : Lp ℝ 2 μ) (path 0)) *
-      periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
-        (h + 1) N beta path *
-      ((g : Lp ℝ 2 μ)
-        (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount (h + 1)))))
+  let F : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath (h + 1) N → ℝ :=
+    fun path =>
+      ((f : Lp ℝ 2 μ) (path 0)) *
+        periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
+          (h + 1) N beta path *
+        ((g : Lp ℝ 2 μ)
+          (path (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount (h + 1)))))
   have he : MeasurePreserving e
       (periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathHaarMeasure (h + 1) N)
       ((μ.prod μ).prod ν) := by
@@ -198,7 +198,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeTwoEndedPathAmplitude_e
                     x.castSucc)
                   (laterTail x) := by
         simpa [periodicHypercubicEvenPositiveHalfCylinderSlabCount,
-          MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv] using hk
+          MeasurableEquiv.piFinSuccAbove_symm_apply, Fin.insertNthEquiv, Fin.insertNth_zero] using hk
       rw [hk']
       simp [F, μ, periodicHypercubicEvenPositiveHalfCylinderSlabCount]
       ring
