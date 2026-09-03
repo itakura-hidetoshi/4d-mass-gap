@@ -88,15 +88,25 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeTwoEndedPathIntegrand_i
           ‖gL2 (path (Fin.last
             (periodicHypercubicEvenPositiveHalfCylinderSlabCount (h + 1))))‖ ^ 2) ρ :=
     hfSqPath.add hgSqPath
+  have hOneSlabMeas : Measurable
+      (fun p :
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration (h + 1) N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration (h + 1) N =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          (h + 1) N beta p.1 p.2) :=
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      (h + 1) N beta).measurable
   have hkMeas : AEStronglyMeasurable
       (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
         (h + 1) N beta) ρ := by
     unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderTemporalGaugePathKernel
     refine Finset.aestronglyMeasurable_fun_prod Finset.univ ?_
     intro i hi
-    exact
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-        (h + 1) N beta).aestronglyMeasurable.comp_measurable (by fun_prop)
+    have hpair : Measurable
+        (fun path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath (h + 1) N =>
+          (path i.castSucc, path i.succ)) :=
+      (measurable_pi_apply i.castSucc).prodMk (measurable_pi_apply i.succ)
+    exact (hOneSlabMeas.comp hpair).aestronglyMeasurable
   have hfMeas : AEStronglyMeasurable
       (fun path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderSpatialPath (h + 1) N =>
         fL2 (path 0)) ρ :=
