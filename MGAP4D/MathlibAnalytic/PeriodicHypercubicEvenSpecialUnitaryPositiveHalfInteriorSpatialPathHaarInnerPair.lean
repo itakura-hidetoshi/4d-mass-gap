@@ -124,7 +124,10 @@ inward slice `A_H`. -/
     (path : PeriodicHypercubicEvenSpecialUnitaryPositiveHalfInteriorSpatialPath (M + 2) N) :
     (periodicHypercubicEvenSpecialUnitaryPositiveHalfInteriorSpatialPathInnerPairMeasurableEquiv
       M N path).1.2 = path (Fin.last (M + 1)) := by
-  rfl
+  simp [
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfInteriorSpatialPathInnerPairMeasurableEquiv,
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv,
+    periodicHypercubicEvenPositiveHalfCylinderSlabCount]
 
 /-- The deeper-interior coordinate `k` is exactly the next strict-interior
 slice, namely `A_{k+2}` in the original complete path. -/
@@ -136,7 +139,10 @@ slice, namely `A_{k+2}` in the original complete path. -/
     (periodicHypercubicEvenSpecialUnitaryPositiveHalfInteriorSpatialPathInnerPairMeasurableEquiv
       M N path).2 k =
       path ⟨k.1 + 1, by omega⟩ := by
-  rfl
+  simp [
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfInteriorSpatialPathInnerPairMeasurableEquiv,
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv,
+    periodicHypercubicEvenPositiveHalfCylinderSlabCount]
 
 /-- Exact finite-product Haar independence of the two distinct inward endpoint
 slices for `H = M + 2`: strict-interior Haar is transported to inner pair-Haar
