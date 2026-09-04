@@ -61,8 +61,16 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopMode
     (hbeta : 0 ≤ beta) :
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopModeL2
       H N hN beta hbeta‖ = 1 := by
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopModeL2,
-    realL2ExternalTensor_norm,
+  change
+    ‖(realL2ExternalTensor
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2
+          H N hN beta hbeta)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2
+          H N hN beta hbeta) :
+      Lp ℝ 2
+        ((periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N).prod
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))‖ = 1
+  rw [realL2ExternalTensor_norm,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2_norm,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2_norm]
   norm_num
@@ -83,6 +91,11 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopModeL2_inner_o
         (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationPairLinearIsometry
           H N hN beta hbeta f) = 0 := by
   have hf := f.property
+  change
+    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
+      H N) ∈
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
+        H N hN beta hbeta)ᗮ at hf
   rw [Submodule.mem_orthogonal] at hf
   have hphysical :
       inner ℝ
