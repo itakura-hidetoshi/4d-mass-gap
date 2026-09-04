@@ -60,11 +60,15 @@ private theorem realHilbertTopEigenspaceOrthogonalRestriction_smul_pow_apply
   induction k generalizing f with
   | zero => simp
   | succ k ih =>
-      simp [pow_succ, mul_apply_eq_comp, ih, smul_smul]
+      rw [pow_succ, mul_apply_eq_comp, ih]
+      change
+        c ^ k • (R ^ k) (c • R f) =
+          c ^ Nat.succ k • (R ^ Nat.succ k) f
+      rw [map_smul, smul_smul, pow_succ, pow_succ, mul_apply_eq_comp, smul_smul]
 
 /-- Operator equality corresponding to the preceding pointwise power formula.
 It is derived by extensionality rather than `smul_pow`, deliberately avoiding
-the unavailable operator-space scalar-tower instance. -/
+an operator-space scalar-tower requirement. -/
 private theorem realHilbertTopEigenspaceOrthogonalRestriction_smul_pow
     {E : Type*}
     [NormedAddCommGroup E]
@@ -79,10 +83,11 @@ private theorem realHilbertTopEigenspaceOrthogonalRestriction_smul_pow
   intro f
   exact realHilbertTopEigenspaceOrthogonalRestriction_smul_pow_apply S hS c k f
 
-/-- Generic vector bound for powers of a normalized-transfer top-eigenspace
-orthogonal restriction.  Keeping the ambient Hilbert carrier abstract avoids
-concrete lattice subtype typeclass reduction. -/
-private theorem realHilbertTopEigenspaceOrthogonalRestriction_pow_apply_norm_le
+/-- The canonical bundled pointwise power bound sharpened by the standard
+positive-power operator estimate, with the zero power handled by `‖id‖ ≤ 1`.
+Keeping the ambient Hilbert carrier abstract avoids concrete subtype instance
+reconstruction. -/
+private theorem realHilbertTopEigenspaceOrthogonalRestriction_geometric_pow_apply_norm_le
     {E : Type*}
     [NormedAddCommGroup E]
     [InnerProductSpace ℝ E]
@@ -98,9 +103,10 @@ private theorem realHilbertTopEigenspaceOrthogonalRestriction_pow_apply_norm_le
   | zero => simp
   | succ k =>
       calc
-        ‖(R ^ (Nat.succ k)) f‖ ≤ ‖R ^ (Nat.succ k)‖ * ‖f‖ :=
-          (R ^ (Nat.succ k)).le_opNorm f
-        _ ≤ ‖R‖ ^ (Nat.succ k) * ‖f‖ :=
+        ‖(R ^ Nat.succ k) f‖ ≤ ‖R ^ Nat.succ k‖ * ‖f‖ :=
+          realHilbertTopEigenspaceOrthogonalRestriction_pow_apply_norm_le
+            S hS (Nat.succ k) f
+        _ ≤ ‖R‖ ^ Nat.succ k * ‖f‖ :=
           mul_le_mul_of_nonneg_right
             (norm_pow_le' R (Nat.succ_pos k))
             (norm_nonneg f)
@@ -192,11 +198,11 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTran
       exact ContinuousLinearMap.norm_id_le
   | succ k =>
       calc
-        ‖C ^ (Nat.succ k)‖ ≤ ‖C‖ ^ (Nat.succ k) :=
+        ‖C ^ Nat.succ k‖ ≤ ‖C‖ ^ Nat.succ k :=
           norm_pow_le' C (Nat.succ_pos k)
-        _ = (c * ‖R‖) ^ (Nat.succ k) := by
+        _ = (c * ‖R‖) ^ Nat.succ k := by
           rw [periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator_norm_eq_sq_physicalNorm_mul]
-        _ = c ^ (Nat.succ k) * ‖R‖ ^ (Nat.succ k) := by
+        _ = c ^ Nat.succ k * ‖R‖ ^ Nat.succ k := by
           rw [mul_pow]
 
 /-- Vector-level finite-volume geometric bound for powers of the represented
@@ -221,16 +227,26 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTran
   let S :=
     periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
       H N hN beta hbeta
-  let hS :=
-    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
-      H N hN beta hbeta
-  have hpow :=
-    realHilbertTopEigenspaceOrthogonalRestriction_smul_pow_apply S hS c k f
-  have hR :=
-    realHilbertTopEigenspaceOrthogonalRestriction_pow_apply_norm_le S hS k f
-  rw [← periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator] at hpow hR
-  rw [← periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator] at hpow
-  rw [hpow, norm_smul, Real.norm_eq_abs,
+  let hS :
+      (S :
+        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N →ₗ[ℝ]
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N).IsSymmetric := by
+    simpa [S] using
+      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+        H N hN beta hbeta
+  have hR :
+      ‖((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta) ^ k) f‖ ≤
+        ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta‖ ^ k * ‖f‖ := by
+    change
+      ‖((realHilbertTopEigenspaceOrthogonalRestriction S hS) ^ k) f‖ ≤
+        ‖realHilbertTopEigenspaceOrthogonalRestriction S hS‖ ^ k * ‖f‖
+    exact
+      realHilbertTopEigenspaceOrthogonalRestriction_geometric_pow_apply_norm_le
+        S hS k f
+  rw [periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator_pow_apply,
+    norm_smul, Real.norm_eq_abs,
     abs_of_nonneg (pow_nonneg (sq_nonneg _) k)]
   exact
     mul_le_mul_of_nonneg_left hR
