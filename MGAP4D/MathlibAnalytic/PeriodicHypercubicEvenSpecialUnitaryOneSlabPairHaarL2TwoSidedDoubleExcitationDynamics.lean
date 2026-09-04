@@ -464,7 +464,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
         _ = c ^ (k + 1) •
               realL2ExternalTensor (E ((R ^ k) (R f))) (E ((R ^ k) (R g))) := by
           rw [smul_smul, pow_succ]
-          ring_nf
+          ring
 
 /-- The double-excitation norm decays with the square of the normalized
 one-factor contraction. -/
@@ -487,6 +487,12 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
           H N hN beta hbeta‖ ^ 2) ^ k *
         (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
           H N hN beta hbeta‖ ^ 2) ^ k * ‖f‖ * ‖g‖ := by
+  letI : NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta) :=
+    Submodule.normedSpace
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta)
   let E := periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
     H N hN beta hbeta
   let R := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
@@ -503,11 +509,17 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
   have hf := continuousLinearMap_pow_apply_norm_le_norm_pow R k f
   have hg := continuousLinearMap_pow_apply_norm_le_norm_pow R k g
   have hc : 0 ≤ c ^ k := pow_nonneg (sq_nonneg _) k
-  have hRk : 0 ≤ ‖R‖ ^ k := pow_nonneg (norm_nonneg R) k
+  have hRf : 0 ≤ ‖(R ^ k) f‖ := norm_nonneg _
+  have hRgBound : 0 ≤ ‖R‖ ^ k * ‖g‖ :=
+    mul_nonneg (pow_nonneg (norm_nonneg R) k) (norm_nonneg g)
+  have hprod :
+      ‖(R ^ k) f‖ * ‖(R ^ k) g‖ ≤
+        (‖R‖ ^ k * ‖f‖) * (‖R‖ ^ k * ‖g‖) :=
+    mul_le_mul hf hg hRf hRgBound
   calc
     c ^ k * (‖(R ^ k) f‖ * ‖(R ^ k) g‖) ≤
-        c ^ k * ((‖R‖ ^ k * ‖f‖) * (‖R‖ ^ k * ‖g‖)) := by
-      gcongr
+        c ^ k * ((‖R‖ ^ k * ‖f‖) * (‖R‖ ^ k * ‖g‖)) :=
+      mul_le_mul_of_nonneg_left hprod hc
     _ = c ^ k * (‖R‖ ^ 2) ^ k * ‖f‖ * ‖g‖ := by
       rw [← mul_pow]
       ring
