@@ -56,18 +56,26 @@ local instance pairPhysicalCompressedTransferOrthogonalNormedSpace
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
       H N hN beta hbeta)
 
-/-- Exact real-scalar homogeneity of the operator norm, derived directly from
-`ContinuousLinearMap.opNorm_smul_le`.  We keep this local instead of requiring
-a `NormSMulClass` instance on the whole continuous-linear-map space. -/
-private theorem realContinuousLinearMap_norm_smul
-    {E F : Type*}
-    [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
-    [NormedAddCommGroup F]
-    [NormedSpace ℝ F]
+/-- Exact real-scalar homogeneity of the operator norm on the concrete
+physical top-eigenspace orthogonal carrier.  Specializing the carrier here
+keeps all subtype normed-space instances fixed in the theorem constant rather
+than asking later rewrites to synthesize them again. -/
+private theorem periodicHypercubicEvenSpecialUnitaryPhysicalOrthogonalContinuousLinearMap_norm_smul
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
     (c : ℝ)
-    (A : E →L[ℝ] F) :
+    (A :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta →L[ℝ]
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta) :
     ‖c • A‖ = |c| * ‖A‖ := by
+  letI : NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta) :=
+    pairPhysicalCompressedTransferOrthogonalNormedSpace H N hN beta hbeta
   apply le_antisymm
   · simpa [Real.norm_eq_abs] using
       (ContinuousLinearMap.opNorm_smul_le c A)
@@ -237,8 +245,10 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTran
           H N hN beta hbeta →L[ℝ]
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
           H N hN beta hbeta)‖ = c * ‖R‖
-  rw [realContinuousLinearMap_norm_smul]
-  rw [abs_of_nonneg]
+  have hsmul :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOrthogonalContinuousLinearMap_norm_smul
+      H N hN beta hbeta c R
+  rw [hsmul, abs_of_nonneg]
   dsimp [c]
   exact sq_nonneg _
 
