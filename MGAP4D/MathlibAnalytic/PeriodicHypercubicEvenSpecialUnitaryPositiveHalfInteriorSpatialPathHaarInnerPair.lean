@@ -131,7 +131,7 @@ inward slice `A_H`. -/
   let reindex := MeasurableEquiv.piCongrLeft X e
   change reindex path (Sum.inl (1 : Fin 2)) = path (Fin.last (M + 1))
   simpa [reindex, e, X, periodicHypercubicEvenPositiveHalfCylinderSlabCount] using
-    (MeasurableEquiv.piCongrLeft_apply_apply e path
+    (MeasurableEquiv.piCongrLeft_apply_apply (β := X) e path
       (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount M)))
 
 /-- The deeper-interior coordinate `k` is exactly the next strict-interior
@@ -151,7 +151,7 @@ slice, namely `A_{k+2}` in the original complete path. -/
   let reindex := MeasurableEquiv.piCongrLeft X e
   change reindex path (Sum.inr k) = path ⟨k.1 + 1, by omega⟩
   simpa [reindex, e, X, periodicHypercubicEvenPositiveHalfCylinderSlabCount] using
-    (MeasurableEquiv.piCongrLeft_apply_apply e path
+    (MeasurableEquiv.piCongrLeft_apply_apply (β := X) e path
       (⟨k.1 + 1, by
         simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩ :
         Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount M + 1)))
