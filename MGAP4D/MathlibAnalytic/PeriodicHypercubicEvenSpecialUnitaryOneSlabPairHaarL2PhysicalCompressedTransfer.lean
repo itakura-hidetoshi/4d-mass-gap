@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryOneSlabPairHaarL2PhysicalIntertwining
+import Mathlib.Analysis.InnerProductSpace.Subspace
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -38,18 +39,6 @@ local instance pairPhysicalCompressedTransferSpatialSliceHaarSFinite (H N : ℕ)
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
 
-@[reducible] local instance pairPhysicalCompressedTransferOrthogonalNormedSpace
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    NormedSpace ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta) :=
-  Submodule.normedSpace
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-      H N hN beta hbeta)
-
 /-- The bounded excitation-space operator represented by the literal raw
 ordered-pair transfer on the one-sided physical embedding `J f = f ⊠ Ω_top`.
 
@@ -65,44 +54,11 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompress
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
         H N hN beta hbeta →L[ℝ]
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta := by
-  let R :=
+        H N hN beta hbeta :=
+  (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+      H N hN beta hbeta‖ ^ 2 : ℝ) •
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta
-  let c : ℝ :=
-    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-      H N hN beta hbeta‖ ^ 2
-  let L :
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta →ₗ[ℝ]
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta :=
-    c • (R :
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta →ₗ[ℝ]
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta)
-  exact LinearMap.mkContinuous
-    (𝕜 := ℝ)
-    (𝕜₂ := ℝ)
-    (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-      H N hN beta hbeta)
-    (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-      H N hN beta hbeta)
-    (σ := RingHom.id ℝ)
-    L
-    (c * ‖R‖)
-    (by
-      intro x
-      change ‖c • R x‖ ≤ (c * ‖R‖) * ‖x‖
-      have hc : 0 ≤ c := by
-        dsimp [c]
-        exact sq_nonneg _
-      rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg hc]
-      calc
-        c * ‖R x‖ ≤ c * (‖R‖ * ‖x‖) :=
-          mul_le_mul_of_nonneg_left (ContinuousLinearMap.le_opNorm R x) hc
-        _ = (c * ‖R‖) * ‖x‖ := by ring)
 
 @[simp]
 theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator_apply
@@ -145,25 +101,56 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTran
         (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationPairLinearIsometry
           H N hN beta hbeta u) := by
   rw [periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator_apply]
+  let c : ℝ :=
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+      H N hN beta hbeta‖ ^ 2
+  let R :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+      H N hN beta hbeta
+  have hmatrix :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_oneSidedExcitation_matrixCoefficient_eq_sq_physicalNorm_mul
+      H N hN beta hbeta f u
   change
     inner ℝ
-        (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-            H N hN beta hbeta‖ ^ 2 •
-          (((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-              H N hN beta hbeta f :
+        (c •
+          (((R f :
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
               H N hN beta hbeta) :
             periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)))
         (u : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) = _
-  rw [real_inner_smul_left]
-  symm
-  exact
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_oneSidedExcitation_matrixCoefficient_eq_sq_physicalNorm_mul
-      H N hN beta hbeta f u
+  calc
+    inner ℝ
+        (c •
+          (((R f :
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+              H N hN beta hbeta) :
+            periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)))
+        (u : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) =
+      c *
+        inner ℝ
+          (((R f :
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+              H N hN beta hbeta) :
+            periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
+          (u : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) := by
+        exact real_inner_smul_left
+          (((R f :
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+              H N hN beta hbeta) :
+            periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
+          (u : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+          c
+    _ = inner ℝ
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
+          H N hN beta hbeta
+          (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationPairLinearIsometry
+            H N hN beta hbeta f))
+        (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationPairLinearIsometry
+          H N hN beta hbeta u) := by
+        simpa [c, R] using hmatrix.symm
 
-/- The represented raw compression norm factors exactly into the raw
+/-- The represented raw compression norm factors exactly into the raw
 pair-vacuum normalization squared and the normalized physical excitation norm. -/
-set_option maxHeartbeats 800000 in
 theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator_norm_eq_sq_physicalNorm_mul
     (H N : ℕ)
     (hN : 0 < N)
@@ -175,57 +162,12 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTran
           H N hN beta hbeta‖ ^ 2 *
         ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
           H N hN beta hbeta‖ := by
-  let C :=
-    periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator
-      H N hN beta hbeta
-  let R :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-      H N hN beta hbeta
-  let c : ℝ :=
-    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-      H N hN beta hbeta‖ ^ 2
-  change ‖C‖ = c * ‖R‖
-  have hc : 0 ≤ c := by
-    dsimp [c]
-    exact sq_nonneg _
-  have hcpos : 0 < c := by
-    dsimp [c]
-    exact pow_pos
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
-        H N hN beta hbeta) 2
-  have hCapply : ∀ x, C x = c • R x := by
-    intro x
-    simpa [C, R, c] using
-      periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator_apply
-        H N hN beta hbeta x
-  have hupper : ‖C‖ ≤ c * ‖R‖ := by
-    apply ContinuousLinearMap.opNorm_le_bound C (mul_nonneg hc (norm_nonneg R))
-    intro x
-    rw [hCapply x, norm_smul, Real.norm_eq_abs, abs_of_nonneg hc]
-    calc
-      c * ‖R x‖ ≤ c * (‖R‖ * ‖x‖) :=
-        mul_le_mul_of_nonneg_left (ContinuousLinearMap.le_opNorm R x) hc
-      _ = (c * ‖R‖) * ‖x‖ := by ring
-  have hpoint : ∀ x, R x = c⁻¹ • C x := by
-    intro x
-    rw [hCapply x, smul_smul, inv_mul_cancel₀ hcpos.ne', one_smul]
-  have hRle : ‖R‖ ≤ c⁻¹ * ‖C‖ := by
-    apply ContinuousLinearMap.opNorm_le_bound R
-      (mul_nonneg (inv_nonneg.mpr hc) (norm_nonneg C))
-    intro x
-    rw [hpoint x, norm_smul, Real.norm_eq_abs, abs_of_pos (inv_pos.mpr hcpos)]
-    calc
-      c⁻¹ * ‖C x‖ ≤ c⁻¹ * (‖C‖ * ‖x‖) :=
-        mul_le_mul_of_nonneg_left
-          (ContinuousLinearMap.le_opNorm C x) (inv_nonneg.mpr hc)
-      _ = (c⁻¹ * ‖C‖) * ‖x‖ := by ring
-  have hlower : c * ‖R‖ ≤ ‖C‖ := by
-    calc
-      c * ‖R‖ ≤ c * (c⁻¹ * ‖C‖) :=
-        mul_le_mul_of_nonneg_left hRle hc
-      _ = ‖C‖ := by
-        rw [← mul_assoc, mul_inv_cancel₀ hcpos.ne', one_mul]
-  exact le_antisymm hupper hlower
+  change
+    ‖(‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+        H N hN beta hbeta‖ ^ 2 : ℝ) •
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta‖ = _
+  rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _)]
 
 /-- Strict finite-volume contraction of the literal raw pair compression,
 measured relative to the exact raw pair-vacuum normalization `‖T_phys‖²`.
