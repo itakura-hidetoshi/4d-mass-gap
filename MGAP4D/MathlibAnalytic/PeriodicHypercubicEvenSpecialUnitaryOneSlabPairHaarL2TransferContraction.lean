@@ -97,7 +97,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernelL2_nor
       have hConst :=
         Lp.norm_const'
           (μ := μ₂)
-          (p := (2 : ℝ≥0∞))
+          (p := (2 : ENNReal))
           (c := (1 : ℝ))
           (by norm_num)
           (by norm_num)
