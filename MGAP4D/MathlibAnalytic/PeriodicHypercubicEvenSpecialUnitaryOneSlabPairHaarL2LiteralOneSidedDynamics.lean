@@ -311,6 +311,16 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
       (fun z : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N =>
         (z : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))
       hTphysR
+  have hOmegaPhys :
+      Tphys
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+            H N hN beta hbeta) =
+        lambda •
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+            H N hN beta hbeta := by
+    simpa [lambda, Tphys] using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector_eigen
+        H N hN beta hbeta)
   have hOmega : T Omega = lambda • Omega := by
     change
       ((Tphys
@@ -326,9 +336,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
     exact congrArg
       (fun z : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N =>
         (z : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))
-      (by simpa [lambda, Tphys] using
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector_eigen
-          H N hN beta hbeta)
+      hOmegaPhys
   change
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
         H N hN beta hbeta (realL2ExternalTensor (E f) Omega) =
@@ -473,7 +481,11 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
   let q :=
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta‖
-  refine ⟨q, norm_nonneg _, ?_, ?_⟩
+  refine ⟨q, ?_, ?_, ?_⟩
+  · simpa [q] using
+      (norm_nonneg
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta))
   · simpa [q] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
         H N hN beta hbeta
