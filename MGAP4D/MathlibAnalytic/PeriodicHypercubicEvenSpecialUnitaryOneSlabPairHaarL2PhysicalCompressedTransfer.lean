@@ -41,25 +41,11 @@ local instance pairPhysicalCompressedTransferSpatialSliceHaarSFinite (H N : ℕ)
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
 
-/-- Use the canonical restricted normed-space structure on the physical
-top-eigenspace orthogonal submodule.  This preserves the ambient scalar action
-used by the existing continuous-linear-map construction. -/
-local instance pairPhysicalCompressedTransferOrthogonalNormedSpace
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    NormedSpace ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta) :=
-  Submodule.normedSpace
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-      H N hN beta hbeta)
-
 /-- Exact real-scalar homogeneity of the operator norm on the concrete
-physical top-eigenspace orthogonal carrier.  Specializing the carrier here
-keeps all subtype normed-space instances fixed in the theorem constant rather
-than asking later rewrites to synthesize them again. -/
+physical top-eigenspace orthogonal carrier.  The orthogonal carrier uses the
+canonical `Submodule.innerProductSpace` structure supplied by `Subspace.lean`,
+so its normed-space superclass stays definitionally aligned with the existing
+physical restriction operator. -/
 private theorem periodicHypercubicEvenSpecialUnitaryPhysicalOrthogonalContinuousLinearMap_norm_smul
     (H N : ℕ)
     (hN : 0 < N)
@@ -72,10 +58,6 @@ private theorem periodicHypercubicEvenSpecialUnitaryPhysicalOrthogonalContinuous
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
           H N hN beta hbeta) :
     ‖c • A‖ = |c| * ‖A‖ := by
-  letI : NormedSpace ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta) :=
-    pairPhysicalCompressedTransferOrthogonalNormedSpace H N hN beta hbeta
   apply le_antisymm
   · simpa [Real.norm_eq_abs] using
       (ContinuousLinearMap.opNorm_smul_le c A)
