@@ -46,6 +46,7 @@ Its pointwise formula retains the exact raw pair-vacuum normalization
 `‖T_phys‖²`.  The literal compression property is proved below by equality of
 all physical ambient matrix coefficients; no invariance of the ambient
 one-sided range is assumed. -/
+set_option synthInstance.maxHeartbeats 100000 in
 noncomputable def periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator
     (H N : ℕ)
     (hN : 0 < N)
@@ -54,12 +55,25 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompress
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
         H N hN beta hbeta →L[ℝ]
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta :=
-  (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-      H N hN beta hbeta‖ ^ 2 : ℝ) •
+        H N hN beta hbeta := by
+  let R :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta →L[ℝ]
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta
+  let c : ℝ :=
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+      H N hN beta hbeta‖ ^ 2
+  exact
+    (c • R :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta →L[ℝ]
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta)
 
+set_option synthInstance.maxHeartbeats 100000 in
 @[simp]
 theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator_apply
     (H N : ℕ)
@@ -74,7 +88,7 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTran
           H N hN beta hbeta‖ ^ 2 •
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
           H N hN beta hbeta f := by
-  rfl
+  simp [periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator]
 
 /-- Exact compression characterization: every physical ambient matrix
 coefficient of the excitation-space operator is the corresponding coefficient
@@ -151,6 +165,7 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTran
 
 /-- The represented raw compression norm factors exactly into the raw
 pair-vacuum normalization squared and the normalized physical excitation norm. -/
+set_option synthInstance.maxHeartbeats 100000 in
 theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator_norm_eq_sq_physicalNorm_mul
     (H N : ℕ)
     (hN : 0 < N)
@@ -162,12 +177,25 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTran
           H N hN beta hbeta‖ ^ 2 *
         ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
           H N hN beta hbeta‖ := by
+  let R :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta →L[ℝ]
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+      H N hN beta hbeta
+  let c : ℝ :=
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+      H N hN beta hbeta‖ ^ 2
   change
-    ‖(‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-        H N hN beta hbeta‖ ^ 2 : ℝ) •
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-        H N hN beta hbeta‖ = _
-  rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _)]
+    ‖(c • R :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta →L[ℝ]
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta)‖ = c * ‖R‖
+  rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg (by
+    dsimp [c]
+    exact sq_nonneg _)]
 
 /-- Strict finite-volume contraction of the literal raw pair compression,
 measured relative to the exact raw pair-vacuum normalization `‖T_phys‖²`.
