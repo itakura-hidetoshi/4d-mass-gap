@@ -483,7 +483,9 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
       H N hN beta hbeta‖
   refine ⟨q, ?_, ?_, ?_⟩
   · dsimp [q]
-    exact norm_nonneg _
+    exact norm_nonneg
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta)
   · simpa [q] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
         H N hN beta hbeta
