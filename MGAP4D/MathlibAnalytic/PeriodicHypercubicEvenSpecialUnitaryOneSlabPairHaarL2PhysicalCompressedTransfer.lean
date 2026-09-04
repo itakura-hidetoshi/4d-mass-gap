@@ -41,38 +41,37 @@ local instance pairPhysicalCompressedTransferSpatialSliceHaarSFinite (H N : ℕ)
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
 
-/-- Exact real-scalar homogeneity of the operator norm on the concrete
-physical top-eigenspace orthogonal carrier.  The orthogonal carrier uses the
-canonical `Submodule.innerProductSpace` structure supplied by `Subspace.lean`,
-so its normed-space superclass stays definitionally aligned with the existing
-physical restriction operator. -/
-private theorem periodicHypercubicEvenSpecialUnitaryPhysicalOrthogonalContinuousLinearMap_norm_smul
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (c : ℝ)
-    (A :
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta →L[ℝ]
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta) :
-    ‖c • A‖ = |c| * ‖A‖ := by
+/-- Exact real-scalar homogeneity of the operator norm on a generic
+normalized-transfer top-eigenspace orthogonal restriction.  Keeping the
+ambient Hilbert carrier abstract avoids concrete lattice subtype typeclass
+reduction while retaining the exact operator norm. -/
+private theorem realHilbertTopEigenspaceOrthogonalRestriction_norm_smul
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    (S : E →L[ℝ] E)
+    (hS : (S : E →ₗ[ℝ] E).IsSymmetric)
+    (c : ℝ) :
+    ‖c • realHilbertTopEigenspaceOrthogonalRestriction S hS‖ =
+      |c| * ‖realHilbertTopEigenspaceOrthogonalRestriction S hS‖ := by
+  let R := realHilbertTopEigenspaceOrthogonalRestriction S hS
+  change ‖c • R‖ = |c| * ‖R‖
   apply le_antisymm
   · simpa [Real.norm_eq_abs] using
-      (ContinuousLinearMap.opNorm_smul_le c A)
+      (ContinuousLinearMap.opNorm_smul_le c R)
   · by_cases hc : c = 0
-    · simp [hc]
+    · subst c
+      simp
     · have hInv :=
-        ContinuousLinearMap.opNorm_smul_le c⁻¹ (c • A)
-      have hrecover : c⁻¹ • (c • A) = A := by
+        ContinuousLinearMap.opNorm_smul_le c⁻¹ (c • R)
+      have hrecover : c⁻¹ • (c • R) = R := by
         ext x
         simp [smul_smul, hc]
       rw [hrecover] at hInv
       have hcabs : 0 < |c| := abs_pos.mpr hc
-      have hInv' : ‖A‖ ≤ ‖c • A‖ / |c| := by
+      have hInv' : ‖R‖ ≤ ‖c • R‖ / |c| := by
         simpa [Real.norm_eq_abs, abs_inv, div_eq_mul_inv, mul_comm] using hInv
-      have hmul : ‖A‖ * |c| ≤ ‖c • A‖ :=
+      have hmul : ‖R‖ * |c| ≤ ‖c • R‖ :=
         (le_div_iff₀ hcabs).mp hInv'
       simpa [mul_comm] using hmul
 
@@ -211,26 +210,24 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTran
           H N hN beta hbeta‖ ^ 2 *
         ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
           H N hN beta hbeta‖ := by
-  let R :
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta →L[ℝ]
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-      H N hN beta hbeta
   let c : ℝ :=
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
       H N hN beta hbeta‖ ^ 2
   change
-    ‖(c • R :
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta →L[ℝ]
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta)‖ = c * ‖R‖
-  have hsmul :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOrthogonalContinuousLinearMap_norm_smul
-      H N hN beta hbeta c R
-  rw [hsmul, abs_of_nonneg]
+    ‖c •
+        realHilbertTopEigenspaceOrthogonalRestriction
+          (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+            H N hN beta hbeta)
+          (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+            H N hN beta hbeta)‖ =
+      c *
+        ‖realHilbertTopEigenspaceOrthogonalRestriction
+          (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+            H N hN beta hbeta)
+          (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+            H N hN beta hbeta)‖
+  rw [realHilbertTopEigenspaceOrthogonalRestriction_norm_smul]
+  rw [abs_of_nonneg]
   dsimp [c]
   exact sq_nonneg _
 
