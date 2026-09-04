@@ -76,7 +76,6 @@ theorem
             (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
               H 0 N hN beta hbeta) := by
               rw [pow_succ']
-              rfl
         _ =
           ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
               H N hN beta hbeta) ^ Nat.succ m)
@@ -128,7 +127,6 @@ theorem
             (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
               H 1 N hN beta hbeta) := by
               rw [pow_succ']
-              rfl
         _ =
           ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
               H N hN beta hbeta) ^ Nat.succ m)
