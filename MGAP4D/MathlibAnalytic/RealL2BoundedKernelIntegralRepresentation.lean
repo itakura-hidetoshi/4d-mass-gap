@@ -124,7 +124,7 @@ theorem realL2BoundedKernelPairing_eq_integralOutput
       apply integral_congr_ae
       filter_upwards [hK, hE] with p hk he
       rw [hk, he]
-      simp only [realL2ExternalTensorFunction, RCLike.inner_apply, conj_trivial]
+      simp only [realL2ExternalTensorFunction, RCLike.inner_apply', conj_trivial]
       ring
     _ = ∫ y, ∫ x, k x y * (f x * g y) ∂μ ∂μ := by
       exact integral_prod_symm _ hraw
@@ -163,8 +163,7 @@ theorem realL2HilbertSchmidtKernelOperator_apply_eq_integralOutputL2
     realL2BoundedKernelIntegralOutputL2_coeFn
       (μ := μ) k hkMeas hkBound f] with y hy
   rw [hy]
-  simp only [RCLike.inner_apply, conj_trivial]
-  ring
+  simpa only [RCLike.inner_apply', conj_trivial]
 
 end
 
