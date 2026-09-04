@@ -129,10 +129,17 @@ inward slice `A_H`. -/
   let e :=
     periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv M
   let reindex := MeasurableEquiv.piCongrLeft X e
+  let j : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount M + 1) :=
+    Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount M)
   change reindex path (Sum.inl (1 : Fin 2)) = path (Fin.last (M + 1))
-  simpa [reindex, e, X, periodicHypercubicEvenPositiveHalfCylinderSlabCount] using
-    (MeasurableEquiv.piCongrLeft_apply_apply (β := X) e path
-      (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount M)))
+  have hEval : reindex path (e j) = path j := by
+    simpa [reindex] using
+      (MeasurableEquiv.piCongrLeft_apply_apply (β := X) e path j)
+  have hj : e j = Sum.inl (1 : Fin 2) := by
+    simpa [e, j] using
+      (periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv_antipodal M)
+  rw [hj] at hEval
+  simpa [j, periodicHypercubicEvenPositiveHalfCylinderSlabCount] using hEval
 
 /-- The deeper-interior coordinate `k` is exactly the next strict-interior
 slice, namely `A_{k+2}` in the original complete path. -/
@@ -149,12 +156,18 @@ slice, namely `A_{k+2}` in the original complete path. -/
   let e :=
     periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv M
   let reindex := MeasurableEquiv.piCongrLeft X e
+  let j : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount M + 1) :=
+    ⟨k.1 + 1, by simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
   change reindex path (Sum.inr k) = path ⟨k.1 + 1, by omega⟩
-  simpa [reindex, e, X, periodicHypercubicEvenPositiveHalfCylinderSlabCount] using
-    (MeasurableEquiv.piCongrLeft_apply_apply (β := X) e path
-      (⟨k.1 + 1, by
-        simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩ :
-        Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount M + 1)))
+  have hEval : reindex path (e j) = path j := by
+    simpa [reindex] using
+      (MeasurableEquiv.piCongrLeft_apply_apply (β := X) e path j)
+  have hj : e j = Sum.inr k := by
+    simpa [e, j] using
+      (periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv_interior
+        M k)
+  rw [hj] at hEval
+  simpa [j, periodicHypercubicEvenPositiveHalfCylinderSlabCount] using hEval
 
 /-- Exact finite-product Haar independence of the two distinct inward endpoint
 slices for `H = M + 2`: strict-interior Haar is transported to inner pair-Haar
