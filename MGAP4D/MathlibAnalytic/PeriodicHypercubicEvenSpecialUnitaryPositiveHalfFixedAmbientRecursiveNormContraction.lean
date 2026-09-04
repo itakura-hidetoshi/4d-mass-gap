@@ -45,31 +45,31 @@ theorem
         H (R + 2) N hN beta hbeta‖ ≤
       ‖periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
         H R N hN beta hbeta‖ := by
-  let T :=
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
-      H N hN beta hbeta
   have hstep :=
     periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2_add_two_eq_pairTransferOperator
       H R N hN beta hbeta
-  have hT : ‖T‖ ≤ 1 := by
-    simpa [T] using
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_norm_le_one
-        H N hN beta hbeta
   calc
     ‖periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
         H (R + 2) N hN beta hbeta‖ =
-      ‖T
+      ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
+          H N hN beta hbeta
         (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
           H R N hN beta hbeta)‖ := by
-            simpa [T] using congrArg norm hstep
-    _ ≤ ‖T‖ *
+            simpa using congrArg norm hstep
+    _ ≤
+      ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
+          H N hN beta hbeta‖ *
         ‖periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
           H R N hN beta hbeta‖ :=
-      T.le_opNorm _
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
+        H N hN beta hbeta).le_opNorm _
     _ ≤ 1 *
         ‖periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
           H R N hN beta hbeta‖ := by
-      exact mul_le_mul_of_nonneg_right hT (norm_nonneg _)
+      exact mul_le_mul_of_nonneg_right
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_norm_le_one
+          H N hN beta hbeta)
+        (norm_nonneg _)
     _ =
       ‖periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
         H R N hN beta hbeta‖ := by
