@@ -36,9 +36,10 @@ local instance oneSlabPairHaarL2TransferSpectrumContractionSpatialLinkFintype (H
 /-- Every real spectral value of every finite discrete-time iterate of the
 canonical endpoint-pair transfer operator lies in the closed unit interval.
 
-The proof deliberately uses the general spectrum norm bound
-`‖λ‖ ≤ ‖T^k‖ * ‖1‖`, together with the already-canonical power contraction and
-`ContinuousLinearMap.norm_id_le`; no `NormOneClass` assumption is introduced. -/
+The proof first embeds the ordinary spectrum into the quasispectrum and then
+uses the non-unital Banach-algebra bound `quasispectrum.norm_le_norm_of_mem`.
+This avoids introducing or searching for a `Nontrivial` instance on the
+endomorphism algebra. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_pow_spectrum_mem_Icc
     (H k N : ℕ)
     (hN : 0 < N)
@@ -49,28 +50,23 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
       ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
         H N hN beta hbeta) ^ k)) :
     lambda ∈ Set.Icc (-1 : ℝ) 1 := by
-  let E :=
-    Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N)
-  let T : E →L[ℝ] E :=
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
-      H N hN beta hbeta
+  have hlambdaQuasi :
+      lambda ∈ quasispectrum ℝ
+        ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
+          H N hN beta hbeta) ^ k) :=
+    spectrum_subset_quasispectrum ℝ _ hlambda
   have hlambdaNorm :
-      ‖lambda‖ ≤ ‖T ^ k‖ * ‖(1 : E →L[ℝ] E)‖ := by
-    exact spectrum.norm_le_norm_mul_of_mem hlambda
-  have hTPow : ‖T ^ k‖ ≤ 1 := by
-    simpa [T, E] using
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_pow_norm_le_one
-        H k N hN beta hbeta)
-  have hOne : ‖(1 : E →L[ℝ] E)‖ ≤ 1 := by
-    rw [ContinuousLinearMap.one_def]
-    exact ContinuousLinearMap.norm_id_le
+      ‖lambda‖ ≤
+        ‖(periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
+          H N hN beta hbeta) ^ k‖ :=
+    quasispectrum.norm_le_norm_of_mem hlambdaQuasi
+  have hTPow :
+      ‖(periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
+          H N hN beta hbeta) ^ k‖ ≤ 1 :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_pow_norm_le_one
+      H k N hN beta hbeta
   have hlambdaAbs : |lambda| ≤ 1 := by
-    calc
-      |lambda| = ‖lambda‖ := by simp [Real.norm_eq_abs]
-      _ ≤ ‖T ^ k‖ * ‖(1 : E →L[ℝ] E)‖ := hlambdaNorm
-      _ ≤ 1 * 1 := by
-        exact mul_le_mul hTPow hOne (norm_nonneg _) zero_le_one
-      _ = 1 := by norm_num
+    simpa [Real.norm_eq_abs] using hlambdaNorm.trans hTPow
   exact abs_le.mp hlambdaAbs
 
 /-- The real spectrum of every finite pair-transfer iterate is contained in
