@@ -1,25 +1,25 @@
 # MGAP4D
 
-**MGAP4D** is Hidetoshi Itakura's Lean 4 / mathlib repository for a proof-carrying investigation of four-dimensional Yang--Mills theory, Osterwalder--Schrader reconstruction, transfer operators, and the mass-gap problem.
+**MGAP4D** is Hidetoshi Itakura's Lean 4 / mathlib repository for a proof-carrying investigation of four-dimensional Yang--Mills theory, finite Wilson lattice models, Osterwalder--Schrader reconstruction, transfer operators, and the mass-gap problem.
 
-The repository keeps a strict distinction between
+The repository keeps a strict distinction between:
 
-1. theorems derived from the actual finite periodic Wilson model;
+1. theorems proved from the actual finite periodic Wilson model;
 2. same-root continuum / OS / Hamiltonian constructions built from those finite objects;
-3. generic analytic and spectral implication machinery; and
-4. model-facing compatibility statements that are still open.
+3. reusable analytic and spectral implication machinery; and
+4. model-facing or scale-uniform statements that are still open.
 
 > **Claim boundary**
 >
 > This repository does **not** yet contain a completed proof of the Clay Millennium Yang--Mills existence and mass-gap problem.
 >
-> The authoritative branch contains a large formalized theorem chain: finite compact-`SU(N)` Wilson geometry and reflection positivity, same-root scalar continuum OS reconstruction, a graph-closed self-adjoint Hamiltonian framework, completed finite transfer spectral and logarithmic-generator machinery, transfer/Wightman common-core implication machinery, and a sharply reduced `SU(2)` exact-mode realization lane.
+> The canonical branch now contains a long same-root formal chain from the finite compact `SU(N)` Wilson model through finite Markov/Fubini transfer identities, OS reconstruction, completed Hilbert-space transfer operators, logarithmic-generator / spectral-floor machinery, and a fixed-ambient positive-half recursive transfer semigroup.
 >
-> The current model-facing seam is no longer the broad selected-mode matrix-coefficient statement described in the previous public README. It has been pushed upstream to an **actual realizable one-lattice-step Wilson synthesis / raw positive-half path-kernel problem**. The remaining finite calculation is now centered on Haar/Fubini/Markov decomposition of the literal normalized `H+1`-slab Wilson path Gram expression into the adjacent temporal-gauge one-slab coefficient.
+> The latest finite-transfer checkpoint proves that the canonical ambient endpoint-pair transfer is a self-adjoint contraction, all finite powers are contractions and self-adjoint, all Rayleigh quotients of those powers lie in `[-1,1]`, and the real spectrum of every finite power is contained in `[-1,1]`.
 >
-> A selected exact Hamiltonian mode, even when fully realized, is not by itself a proof of a global spectral gap; and the current same-root scalar continuum process is not yet the full four-dimensional continuum Yang--Mills field.
+> What is **not** yet proved by those results is a strict spectral gap below the top spectral value, a scale-uniform vacuum-orthogonal contraction, or the full four-dimensional continuum Yang--Mills field required for a Clay-level theorem.
 
-## Repository status — 2026-09-03 JST
+## Repository status — 2026-09-04 JST
 
 ```text
 Repository:
@@ -29,11 +29,11 @@ Authoritative theorem carrier:
   formal/real-hilbert-uniform-coercive-strong-limit
 
 Canonical exact SHA at this documentation checkpoint:
-  cfa8a7b31f1904699371882270fde21885a99079
+  e607fa92e169b47c16a240c0774bfc574a2c601e
 
 Latest merged mathematical checkpoint represented here:
-  PR #3197
-  Expose realizable one-step synthesis in raw Wilson path Gram form
+  PR #3368
+  Bound pair transfer spectra by the unit interval
 
 Public landing branch:
   main
@@ -42,7 +42,7 @@ Detailed development order:
   ROADMAP.md
 ```
 
-Only theorem results on `formal/real-hilbert-uniform-coercive-strong-limit` count as authoritative proof status. The `main` branch is the public landing surface.
+Only theorem results merged into `formal/real-hilbert-uniform-coercive-strong-limit` count as authoritative proof status. The `main` branch is the public landing surface.
 
 ---
 
@@ -52,64 +52,62 @@ Only theorem results on `formal/real-hilbert-uniform-coercive-strong-limit` coun
 A. ACTUAL FINITE WILSON ROOT
 
 periodic-even compact SU(N) Wilson Gibbs model
-  -> reflection geometry / Wilson OS positivity
+  -> reflection geometry / finite Wilson OS positivity
   -> boundary and spatial-slice Haar-L² carriers
-  -> normalized physical one-slab transfer
-  -> completed pair-Hilbert transfer
-  -> positivity / compact spectral support
-  -> logarithmic transfer generator / resolvent / spectral-floor machinery
+  -> literal one-slab Wilson kernels
+  -> physical one-slab transfer and finite transfer powers
+  -> full positive-half Wilson path identities
 
-B. SAME-ROOT SCALAR CONTINUUM OS LANE
+B. SAME-ROOT CONTINUUM / OS LANE
 
-finite Wilson primary scalar readout
-  -> rational-time path law
-  -> same-root Prokhorov continuum law
+finite Wilson scalar readout
+  -> rational-time path law / Prokhorov continuum law
   -> continuum reflection positivity
-  -> OS Hilbert reconstruction
-  -> real strongly continuous contraction semigroup
+  -> real OS Hilbert reconstruction
+  -> strongly continuous contraction semigroup
   -> graph-closed self-adjoint OS Hamiltonian
   -> normalized vacuum Ω and complete Ω⊥ sector
 
-C. TRANSFER / WIGHTMAN SPECTRAL LANE
+C. FINITE PATH -> TRANSFER LANE
 
-positive compact physical transfer
-  -> strictly-positive spectral support
-  -> partial logarithmic generator
-  -> spectral-mode operator core
-  -> common-core / self-adjoint intertwining machinery
-  -> transfer point energies <-> Wightman H|Ω⊥ point energies
-  -> spectral-floor / attained-gap implication machinery
+literal finite Wilson path
+  -> temporal-gauge Markov/Fubini decomposition
+  -> physical transfer-power matrix coefficients
+  -> transfer-normalized finite-volume excitation decay
+  -> boundary L² realization and one-sided boundary transfer
 
-D. SU(2) EXACT-MODE LANE
+D. AMBIENT PAIR-HAAR LANE
 
-selected physical one-slab mode f_n
-  + normalized one-slab top mode ω_n
-  -> boundary / pair realization
-  -> completed finite OS transfer
-  -> common-carrier continuum time-one mode
-  -> graph-closed Ω⊥ Hamiltonian mode at exactGapValueReal
+literal ordered-pair one-slab kernel K_pair
+  -> Hilbert-Schmidt pair transfer T_pair
+  -> positive-half outer/inner/deep Haar factorization
+  -> actual path amplitude = pair-transfer matrix coefficient
+  -> fixed-ambient recursive messages Ψ_R
+  -> Ψ_(R+2) = T_pair Ψ_R
+  -> Ψ_R = T_pair^(R/2) Ψ_(R mod 2)
 
-E. CURRENT RAW FINITE-MODEL SEAM
+E. CURRENT QUANTITATIVE PAIR-TRANSFER RECEIPTS
 
-actual realizable one-lattice-step carrier translation
-  -> open-half Haar-L² representative                         [Integrated]
-  -> actual boundary synthesis pair coefficient               [Integrated]
-  -> rectangular Wilson Gram Hilbert-Schmidt pairing          [Integrated]
-  -> raw normalized unfixed H+1-slab path Gram representative [Integrated]
-  -> Gauss endpoint temporal-link Haar reduction              [Integrated]
-  -> temporal-gauge path Markov/Fubini decomposition
-       to adjacent one-slab Wilson coefficient                [OPEN NOW]
-  -> RealizableOneStepPhysicalTopRawKernelLimitAtFor          [OPEN NOW]
-  -> selected completed-boundary weak identity                [already generated]
-  -> downstream exact-mode chain                              [already generated]
+‖T_pair‖ ≤ 1
+  -> ‖T_pair^k‖ ≤ 1
+  -> every T_pair^k is self-adjoint
+  -> every Rayleigh quotient lies in [-1,1]
+  -> spectrum_R(T_pair^k) ⊆ [-1,1]
 
-F. FULL CLAY-LEVEL COMPLETION
+F. NEXT GAP-RELEVANT FRONTIER
 
-selected exact mode -> global spectral lower bound             [OPEN]
-scalar continuum process -> sufficiently rich 4D YM field      [OPEN]
-full model-derived OS/Wightman physical carrier                [OPEN]
-strictly positive spectrum above the vacuum                    [OPEN]
-Clay-level existence + mass gap                                [OPEN]
+identify the physically relevant top/vacuum sector
+  -> prove a strict contraction / spectral separation on its complement
+  -> obtain parity-aware large-R exponential decay of Ψ_R
+  -> make the estimate uniform in the scaling sequence
+  -> transport it through the existing OS/Wightman machinery
+
+G. FULL CLAY-LEVEL COMPLETION
+
+sufficiently rich same-root 4D Yang--Mills continuum field/state   [OPEN]
+full model-derived physical OS/Wightman identification              [OPEN]
+strict positive spectrum above the vacuum on the full carrier       [OPEN]
+Clay-level existence + mass gap                                     [OPEN]
 ```
 
 ---
@@ -124,23 +122,21 @@ Matrix.specialUnitaryGroup (Fin N) ℂ
 
 with normalized compact Haar probability structure and an interacting periodic-even Wilson Gibbs law.
 
-Canonical finite-model infrastructure includes
+Canonical finite-model infrastructure includes:
 
 ```text
 oriented periodic lattice / edge / plaquette geometry
 Wilson action and Gibbs probability measure
 reflection geometry and positive-time decomposition
 finite Wilson reflection positivity / Gram identities
-gauge covariance of plaquette holonomy
-gauge invariance of normalized trace observables
+gauge covariance and gauge-invariant trace observables
 integer temporal translation and reflection covariance
 boundary and spatial-slice Haar-L² carriers
-normalized one-slab physical transfer
-completed excitation-pair transfer
-compactness / self-adjointness / positivity
+literal temporal-gauge one-slab kernels
+physical one-slab transfer operators
 ```
 
-The interacting Wilson law is not silently replaced by an unrelated abstract measure at the decisive model-facing steps.
+The interacting Wilson source remains visible at decisive model-facing steps; it is not silently replaced by an unrelated abstract probability model.
 
 ---
 
@@ -152,269 +148,195 @@ The constructive continuum lane currently uses a selected primary gauge-invarian
 ℚ -> ℝ.
 ```
 
-It is obtained from finite Wilson pushforwards and therefore remains connected to the finite root. The integrated route includes
+It is obtained from finite Wilson pushforwards. The integrated route includes:
 
 ```text
-primary positive-half locality
+finite primary positive-half readout
 reflection-completed rational-time paths
 tightness / Prokhorov subsequence
 continuum rational-cylinder reflection positivity
 continuum reflection invariance
 OS seminorm and null quotient
 fixed-slot real Hilbert completions
-directed-system / direct-limit Hilbert carrier
-```
-
-This is a genuine same-root continuum observable law. It is **not** yet the full continuum gauge connection or the complete local observable net on `ℝ⁴`.
-
----
-
-## 3. Real OS semigroup, Hamiltonian, vacuum, and `Ω⊥`
-
-The canonical OS lane contains a real strongly continuous contraction semigroup and a graph-closed self-adjoint Hamiltonian framework.
-
-Integrated analytic structure includes
-
-```text
-rational-time contraction and semigroup laws
-NNRat -> NNReal orbit extension
+directed-limit Hilbert carrier
 real C₀ contraction semigroup
-right difference-quotient generator
-H_OS = -A_OS
-dense generator domain
-graph closure as a Mathlib LinearPMap
-positive resolvents and Yosida approximation
-self-adjoint graph-closed Hamiltonian
-vacuum Ω with ‖Ω‖ = 1, T_t Ω = Ω, H Ω = 0
-complete vacuum-orthogonal carrier Ω⊥
+graph-closed self-adjoint Hamiltonian
+vacuum Ω and complete vacuum-orthogonal sector Ω⊥
 ```
 
-A Hamiltonian carrier is an essential structural step, not by itself a mass-gap theorem.
+This is a genuine same-root continuum observable process. It is **not** yet the full continuum gauge connection or complete four-dimensional Yang--Mills local observable theory.
 
 ---
 
-## 4. Completed transfer, logarithmic generator, and spectral floor machinery
+## 3. Full finite Wilson path and physical transfer are now connected
 
-The finite transfer lane has been developed well beyond a single norm estimate. Canonical results include
+The public documentation previously stopped before the finite raw-path Markov/Fubini calculation was completed. That is no longer the current state.
+
+The merged chain through PRs #3213--#3257 now includes:
 
 ```text
-completed pair-transfer construction
-self-adjoint contraction structure
-positivity from finite tensor / Schur-product arguments
-compact positive spectral support
-transfer/generator spectral relations
-below-gap and above-one resolvent calculus
-all-order scalar resolvent derivative hierarchies
-strictly-positive support logarithmic generator
-spectral-mode eigenvector/domain theorems
-intrinsic logarithmic spectral floor
-resolvent-moment / effective-energy variational identifications
+finite temporal-gauge Markov/Fubini decomposition
+raw one-slab physical transfer matrix coefficients
+Gauss-law projection of later kernel sections
+finite Wilson recursion with a physical terminal vector
+complete positive-half path integral
+automatic endpoint integrability
+literal full Wilson path = physical transfer-power matrix coefficient
+transfer-normalized finite-volume excitation decay
+raw-path decay with the exact physical top-transfer scale retained
 ```
 
-The logarithmic generator remains partially defined where the mathematics requires it; it is not replaced by an artificial everywhere-defined surrogate.
+Thus the old README statement that the immediate task was merely to extract one adjacent slab from the raw `H+1`-slab path is obsolete.
+
+These are finite-volume theorems. A positive lower bound uniform in the scaling sequence remains a separate requirement.
 
 ---
 
-## 5. Transfer-to-Wightman bridge machinery
+## 4. Boundary `L²` and one-sided physical transfer
 
-The transfer/Wightman architecture has been tightened from global assumptions to common-core data.
+PRs #3260--#3277 further connect actual Wilson OS boundary moments to completed boundary Hilbert-space data.
 
-Integrated reductions include
+Integrated components include:
 
 ```text
-two dense isometric core realizations -> canonical Hilbert equivalence
-closed-subspace corestriction
-Mathlib LinearPMap.HasCore closure transfer
-self-adjoint maximality
-positive-transfer spectral span as source operator core
-mode-wise source/target action -> common-core action
-common-core action -> full intertwining
-point-energy-set transport
-spectral-floor / Wightman gap-certificate implications
+boundary moments as inserted positive-half path amplitudes
+fixed-boundary unfixed path-kernel formulas
+automatic shared-boundary L² membership
+an automatic-analytic finite boundary-L² gap interface
+one-sided physical transfer inside ordered pair-Haar L²
+transport to the actual shared reflection-boundary carrier
+extension from the excitation subspace to the full physical slice
 ```
 
-This machinery precisely identifies what local model equations would be sufficient. It does not pretend that every required Wightman realization identity has already been derived from the finite Wilson root.
+No ambient boundary-`L²` surjectivity is inserted as a shortcut.
 
 ---
 
-## 6. The `SU(2)` exact-mode lane
+## 5. Ambient pair-Haar one-slab transfer
 
-A separate `SU(2)` lane carries the symbolic exact-mode quantity
-
-```text
-exactGapClusterContractionRatio = exp (-exactGapValueReal).
-```
-
-Once its finite realization hypotheses are supplied, the existing downstream chain produces a continuum OS time-one eigenmode and a graph-closed vacuum-orthogonal Hamiltonian mode with energy
+PR #3279 constructs the literal ordered-pair one-step kernel
 
 ```text
-exactGapValueReal.
+K_pair ((A,B),(A',B')) = K(A,A') * K(B,B')
 ```
 
-The dependency direction has been repeatedly tightened so that the downstream eigen-equation is not reused to prove its own finite input.
+on the pair-Haar carrier and its Hilbert-Schmidt transfer operator `T_pair`.
 
-Important claim discipline:
+The subsequent finite Markov/Fubini chain (#3291--#3322) proves, in the nondegenerate positive-half geometry, that the actual Wilson path can be split into outer pair, inner pair, and deeper interior coordinates, and that the resulting positive-half amplitude is exactly a pair-transfer matrix coefficient.
+
+The `H = 1` central-slice geometry remains separate. It is a diagonal central configuration and is **not** replaced by two falsely independent pair-Haar variables.
+
+---
+
+## 6. Fixed-ambient recursive transfer semigroup
+
+A key type-theoretic issue is now resolved canonically.
+
+A recursion that decrements a parameter tied to the ambient spatial size would change the Hilbert carrier and is therefore not a legitimate single-operator recursion. The canonical construction instead keeps ambient spatial extent `H` fixed and decreases only the remaining inward chain length `R`.
+
+The terminal geometries are exactly:
+
+```text
+R = 0 : literal central one-slab terminal
+R = 1 : diagonal central pair terminal (C,C)
+R+2   : peel one inward endpoint pair and recurse at the same ambient H
+```
+
+After measurability, Fubini, and `L²` lifting, the repository proves
+
+```text
+Ψ_(R+2) = T_pair Ψ_R
+```
+
+on one fixed pair-Haar `L²` carrier, and then the parity formulas
+
+```text
+Ψ_(2m)   = T_pair^m Ψ_0
+Ψ_(2m+1) = T_pair^m Ψ_1
+```
+
+as well as the parity-uniform normal form
+
+```text
+Ψ_R = T_pair^(R / 2) Ψ_(R % 2).
+```
+
+Representative merged milestones are PRs #3327--#3352.
+
+---
+
+## 7. Quantitative and spectral pair-transfer checkpoint
+
+The most recent merged sequence adds a clean operator-theoretic layer on the same ambient pair-Haar carrier:
+
+```text
+PR #3354  ‖T_pair‖ ≤ 1
+PR #3358  recursive-message norm contraction
+PR #3361  ‖T_pair^k‖ ≤ 1 and vector contraction for every k
+PR #3364  T_pair and every finite power are self-adjoint
+PR #3366  all finite-power Rayleigh quotients lie in [-1,1]
+PR #3368  spectrum ℝ (T_pair^k) ⊆ [-1,1] for every finite k
+```
+
+The final statement currently formalized is therefore
+
+```text
+spectrum ℝ (T_pair ^ k) ⊆ Set.Icc (-1 : ℝ) 1
+```
+
+for every finite `k`, together with the one-step specialization.
+
+This is a contraction/spectral-location theorem, **not** yet a strict mass-gap theorem. In particular, `[-1,1]` should not be silently tightened to `[0,1]` without a separate positivity theorem for this exact operator, and no strict separation from the top spectral value is presently being claimed here.
+
+---
+
+## 8. Existing transfer / Wightman and exact-mode machinery
+
+The repository also contains substantial downstream implication machinery:
+
+```text
+completed physical transfer spectral calculus
+partial logarithmic transfer generator
+intrinsic spectral-floor machinery
+canonical transfer spectral operator core
+common-core Hilbert equivalence and self-adjoint closure transfer
+transfer-energy <-> Wightman-Hamiltonian point-energy implications
+SU(2) selected exact-mode common-carrier chain
+```
+
+These theorems make the dependency graph precise. They do not turn a finite contraction estimate into a full physical mass gap unless the required same-root model and scale-uniform inputs are actually supplied.
+
+Important permanent distinctions are:
 
 ```text
 one positive Hamiltonian eigenmode != global spectral gap
-exactGapValueReal != a numerical literal unless Lean proves that equality
+finite-volume positive decay rate != scale-uniform continuum gap
 selected scalar continuum process != full 4D Yang--Mills field
+symbolic exactGapValueReal != a numerical literal without an explicit Lean theorem
 ```
 
 ---
 
-## 7. What changed after the previous public checkpoint
+## 9. Immediate frontier after PR #3368
 
-The previous README stopped at PR #3151, where the model-facing exact-mode seam had been reduced to selected pair-Haar matrix coefficients. The canonical branch has since moved substantially upstream.
+The finite-transfer problem is now positioned at a more genuinely spectral stage.
 
-### PR #3157 — raw one-slab coefficient
+The next useful proof targets are:
 
-The selected one-step right-hand side was rewritten as the literal normalized temporal-gauge one-slab Wilson Hilbert-Schmidt kernel coefficient. Arbitrary pair-Haar tests are retained; no decomposable-test density shortcut is used.
+1. identify the physically relevant top/vacuum sector for the ambient pair-transfer operator;
+2. derive any stronger positivity/nonnegative-spectrum statement only from the actual kernel/model structure, rather than assume it;
+3. prove a **strict** contraction or spectral separation on the appropriate vacuum-orthogonal / excitation sector;
+4. convert that separation into explicit parity-aware large-`R` exponential decay for the fixed-ambient recursive messages;
+5. prove the needed lower bound uniformly along the scaling sequence; and
+6. transport the resulting finite spectral control through the existing same-root OS/Wightman machinery.
 
-### PR #3162 — remove completion opacity
-
-Every completed boundary-transfer coefficient is approached by coefficients of actual Wilson synthesis outputs from dense raw OS carriers.
-
-### PR #3166 — expose finite/common one-step coherence
-
-The repository now isolates the exact scale-local predicate
-
-```lean
-R.CommonSemigroupOneStepCoherentAt hInvariant C n
-```
-
-meaning the common `C.translate 1` agrees with the actual realizable finite one-lattice-step translation at cutoff `n`. The equality is explicit rather than hidden in definitional simplification.
-
-### PR #3171 — projected synthesis density for arbitrary ambient inputs
-
-The density argument was extended through the canonical projected completed-boundary range without assuming surjectivity of the boundary embedding.
-
-### PR #3177 — push the old weak seam to a raw-kernel limit
-
-The former completed weak hypothesis is theorem-generated from
-
-```lean
-RealizableOneStepPhysicalTopRawKernelLimitAtFor
-```
-
-plus the explicit one-step coherence predicate. This new seam contains no continuum eigen-equation or Hamiltonian input.
-
-### PRs #3181 and #3185 — literal realizable lattice step
-
-The canonical positive-half pullback under realizable integer lattice time was computed pointwise and then lifted to the actual open-half Haar-`L²` representative. The one-step input can therefore be read as the original positive-half pullback evaluated on the literal temporal section step.
-
-### PR #3191 — actual synthesis coefficient = Wilson Gram pairing
-
-Every pair-Haar matrix coefficient of actual one-step adjoint synthesis was identified with the canonical rectangular Hilbert-Schmidt Wilson Gram-kernel pairing.
-
-### PR #3197 — raw `H+1`-slab path Gram representative
-
-The rectangular completed positive-boundary Gram `L²` kernel now has, almost everywhere, the literal partition-normalized unfixed Wilson positive-half path kernel as representative. The pair-coordinate Gram identity
-
-```text
-<A† A z, z> = ‖A z‖²
-```
-
-is also exposed without introducing a duplicate Gram construction.
-
-This matters because the remaining seam is now an explicit finite path-integral calculation rather than an opaque completed-Hilbert compatibility assumption.
+This is also where the older scale-uniform Poincaré/coercive lane remains relevant: it can provide a global lower-bound route if the required model-derived uniform estimate is established.
 
 ---
 
-## 8. A key finite Haar/gauge-reduction theorem is already present
+## 10. What remains open for a Clay-level theorem
 
-The repository already contains the exact Gauss-law endpoint identity
-
-```lean
-periodicHypercubicEvenSpecialUnitaryPositiveHalfGaussEndpoint_iteratedHaar_integral_eq_temporalGauge
-```
-
-in
-
-```text
-PeriodicHypercubicEvenSpecialUnitaryPositiveHalfHaarTemporalGaugeReduction.lean
-```
-
-It proves that after integrating the temporal-link field against normalized product Haar, an unfixed positive-half endpoint amplitude with a gauge-invariant terminal state equals the corresponding temporal-gauge spatial-path amplitude.
-
-Therefore the next frontier should **not** be described as “first prove temporal-link Haar gauge fixing.” That part is already formalized.
-
----
-
-## 9. Immediate frontier after PR #3197
-
-The remaining selected-mode finite theorem is the bridge
-
-```text
-raw normalized H+1-slab boundary/open-half Gram coefficient
-  + literal realizable one-step input
-    -> endpoint-amplitude / product-Haar form
-    -> existing Gauss endpoint iterated-Haar reduction
-    -> temporal-gauge spatial-path amplitude
-    -> finite Markov/Fubini decomposition
-    -> adjacent temporal-gauge one-slab Wilson coefficient
-```
-
-The target model predicate is
-
-```lean
-RealizableOneStepPhysicalTopRawKernelLimitAtFor
-```
-
-from
-
-```text
-PhysicalYangMillsWilsonSU2CompletedBoundaryTransferRealizableOneStepRawKernelLimit.lean
-```
-
-Once that predicate is proved for the selected `SU(2)` mode family, existing canonical theorems already convert it, together with explicit `CommonSemigroupOneStepCoherentAt`, into
-
-```text
-selected completed-boundary raw-kernel weak identity
-  -> selected pair weak intertwining
-  -> finite/common exact-mode chain
-  -> continuum OS time-one eigenmode
-  -> graph-closed Ω⊥ Hamiltonian mode at exactGapValueReal.
-```
-
-No downstream eigen-equation should be assumed in order to prove this finite path-integral identity.
-
----
-
-## 10. Finite/common-time coherence remains explicit
-
-Two dynamics remain logically distinct:
-
-```text
-C.translate 1
-```
-
-for the common `NNReal` semigroup family, and
-
-```text
-R.positiveTranslation n 1
-```
-
-for the actual cutoff one-lattice-step Wilson dynamics.
-
-PR #3166 made the required equality explicit as `CommonSemigroupOneStepCoherentAt`. Later PRs compute the actual lattice action cleanly, but the common-family equality is still a model-facing coherence statement and must not be silently assumed.
-
----
-
-## 11. Global gap and full four-dimensional Yang--Mills remain downstream
-
-The exact-mode lane and the global lower-bound lane are different tasks.
-
-The scale-uniform Poincaré/coercive machinery remains relevant for proving a **global vacuum-orthogonal spectral lower bound**, schematically through estimates such as
-
-```text
-(1 - exp(-m t)) * ‖v‖²
-  <= ‖v‖² - ‖K_(n,t) v‖²
-```
-
-uniformly in the approximating scale.
-
-Separately, a Clay-level theorem requires a sufficiently rich same-root continuum four-dimensional Yang--Mills theory with the required combination of
+A Clay-level completion still requires a sufficiently rich four-dimensional continuum Yang--Mills theory on one coherent physical carrier, with the required combination of
 
 ```text
 Euclidean covariance
@@ -423,84 +345,64 @@ reflection positivity
 regularity / distributional control
 physical nontriviality
 vacuum structure and clustering
-OS/Wightman reconstruction on the same model
-a strictly positive spectral gap above the vacuum
+OS/Wightman reconstruction from the same model
+and a strictly positive spectral gap above the vacuum
 ```
 
-The repository should therefore be read as a formalized constructive program with major theorem chains and sharply localized open seams, not as a completed Millennium-prize proof.
+The repository should therefore be read as a formalized constructive program with substantial proved theorem chains and increasingly sharp open interfaces, not as a completed Millennium-prize proof.
 
 ---
 
-## 12. Dobrushin lane: valid diagnostic, not the active continuum mechanism
+## 11. Dobrushin lane: correct diagnostic, not the active continuum mechanism
 
-The finite high-temperature covariance lane remains correct, with a single-link majorant
+The finite high-temperature covariance lane remains valid, with the active majorant
 
 ```text
-q(β) = (exp(4β)-1)/(exp(4β)+1)
+q(β) = (exp(4β)-1)/(exp(4β)+1).
 ```
 
-and a geometric factor based on `18 q(β)`. Since `q(β) -> 1` and `18 q(β) -> 18` as `β -> +∞`, this particular Dobrushin mechanism cannot provide a scale-independent `< 1` contraction in the large-`β` scaling regime. It remains a useful finite-volume theorem and obstruction diagnostic.
+Because `q(β) -> 1` and the associated geometric factor `18 q(β) -> 18` as `β -> +∞`, that particular Dobrushin mechanism cannot supply the desired scale-independent `< 1` contraction in the large-`β` scaling regime. It remains a useful finite-volume theorem and obstruction diagnostic.
 
 ---
 
-## 13. Key files near the current frontier
+## 12. Key files near the current finite-transfer frontier
 
 ```text
 MGAP4D/MathlibAnalytic/
 
-  # raw realizable one-step / exact-mode seam
-  PhysicalYangMillsWilsonSU2CompletedBoundaryTransferRealizableOneStepRawKernelLimit.lean
-  PhysicalYangMillsGaugeInvariantOSCanonicalRealizableActualSynthesisPairKernel.lean
-  PhysicalYangMillsGaugeInvariantOSCanonicalRealizableActualSynthesisRawPathGram.lean
+  # ambient pair transfer
+  PeriodicHypercubicEvenSpecialUnitaryOneSlabPairHaarL2Transfer.lean
+  PeriodicHypercubicEvenSpecialUnitaryOneSlabPairHaarL2TransferSelfAdjoint.lean
+  PeriodicHypercubicEvenSpecialUnitaryOneSlabPairHaarL2TransferRayleighContraction.lean
+  PeriodicHypercubicEvenSpecialUnitaryOneSlabPairHaarL2TransferSpectrumContraction.lean
 
-  # positive-half path coordinates and Haar / temporal-gauge reduction
-  PeriodicHypercubicEvenBoundaryPositiveHalfClosureTransferKernelBridge.lean
-  PeriodicHypercubicEvenSpecialUnitaryPositiveHalfHaarTemporalGaugeReduction.lean
-  PeriodicHypercubicEvenSpecialUnitaryPositiveHalfClosureCylinderActionIdentification.lean
-
-  # actual one-slab kernel / transfer factorization
-  PeriodicHypercubicEvenSpecialUnitaryOneSlabHaarL2TransferPositive.lean
-  PeriodicHypercubicEvenSpecialUnitaryOneSlabHaarL2TransferFactorization.lean
-
-  # common / realizable one-step coherence
-  PhysicalYangMillsGaugeInvariantOSCommonRealizableOneStepCoherence.lean
-  PhysicalYangMillsGaugeInvariantOSCanonicalRealizablePositiveHalfTemporalStep.lean
-  PhysicalYangMillsGaugeInvariantOSCanonicalRealizablePositiveHalfL2TemporalStep.lean
-
-  # completed-boundary synthesis density
-  PhysicalYangMillsGaugeInvariantOSCompletedBoundaryTransferSynthesisDensity.lean
-  PhysicalYangMillsGaugeInvariantOSCompletedBoundaryTransferProjectedSynthesisDensity.lean
-
-  # downstream exact-gap / Hamiltonian transport
-  PhysicalYangMillsGaugeInvariantOSApproximatingGapTransfer.lean
-  PhysicalYangMillsGaugeInvariantOSHamiltonianSpine.lean
+  # fixed-ambient recursion
+  PeriodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientPairPeel.lean
+  PeriodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveChainKernel.lean
+  PeriodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessage.lean
+  PeriodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveMeasurability.lean
+  PeriodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveOperator.lean
+  PeriodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveIteration.lean
 ```
 
-File names are listed to make the current proof boundary auditable from the code rather than only from prose.
+See `ROADMAP.md` for the ordered milestone chain and next completion criteria.
 
 ---
 
 ## Validation and repository discipline
 
-The theorem workflow is intentionally conservative:
+The authoritative workflow is conservative by design:
 
 ```text
-start proof work from the exact authoritative canonical SHA
-validate theorem units on Draft PRs
+start theorem work from the exact canonical SHA
 accept CI only when workflow / job / exact Lean step are terminal success
-never count queued or in_progress as a proof receipt
-repair failed heads only after terminal failure and log inspection
-forbid sorry / admit / axiom / placeholder-constant escapes
-close successful validation Drafts unmerged
-create independent non-Draft replacements from the fresh canonical base
-require independent exact-head CI on replacements
-fresh-check head/base/mergeability/reviews/threads before merge
-normal merge with expected proof-head SHA pinned
-verify post-merge canonical HEAD and both merge parents
+never count queued or in_progress as validation
+inspect a terminal failure before repairing it
+keep changes additive / tighten-only unless correcting an error
+forbid sorry / admit / axiom / placeholder constant escapes
+fresh-check base/head/mergeability/reviews/threads before merge
+normal-merge with expected head SHA pinned
+verify merge-parent order and the resulting canonical exact SHA
 ```
 
-The current validated proof heads report zero forbidden proof tokens across the audited Lean tree.
-
-## What to read next
-
-See [`ROADMAP.md`](ROADMAP.md) for the ordered proof-development plan, the PR #3157--#3197 reduction chain, the exact finite Haar/Markov/Fubini frontier, the separate common-time coherence obligation, and the still-open global spectral-gap / full four-dimensional Yang--Mills program.
+This discipline is part of the mathematical claim boundary, not merely repository housekeeping.
