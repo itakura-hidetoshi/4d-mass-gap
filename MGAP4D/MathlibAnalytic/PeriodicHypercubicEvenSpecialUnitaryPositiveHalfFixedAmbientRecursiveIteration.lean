@@ -42,8 +42,8 @@ theorem
     (hbeta : 0 ≤ beta) :
     periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
         H (2 * m) N hN beta hbeta =
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
-          H N hN beta hbeta) ^ m
+      ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
+          H N hN beta hbeta) ^ m)
         (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
           H 0 N hN beta hbeta) := by
   induction m with
@@ -78,8 +78,8 @@ theorem
               rw [pow_succ']
               rfl
         _ =
-          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
-              H N hN beta hbeta) ^ Nat.succ m
+          ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
+              H N hN beta hbeta) ^ Nat.succ m)
             (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
               H 0 N hN beta hbeta) := by
               rfl
@@ -94,8 +94,8 @@ theorem
     (hbeta : 0 ≤ beta) :
     periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
         H (2 * m + 1) N hN beta hbeta =
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
-          H N hN beta hbeta) ^ m
+      ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
+          H N hN beta hbeta) ^ m)
         (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
           H 1 N hN beta hbeta) := by
   induction m with
@@ -130,8 +130,8 @@ theorem
               rw [pow_succ']
               rfl
         _ =
-          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
-              H N hN beta hbeta) ^ Nat.succ m
+          ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
+              H N hN beta hbeta) ^ Nat.succ m)
             (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
               H 1 N hN beta hbeta) := by
               rfl
