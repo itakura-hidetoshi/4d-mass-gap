@@ -40,6 +40,71 @@ local instance pairPhysicalCompressedPowersSpatialSliceHaarSFinite (H N : ℕ) :
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
 
+/-- Power action of a real scalar multiple of a generic normalized-transfer
+orthogonal restriction.  The proof is pointwise, so it never asks for a
+scalar-tower structure on the operator algebra itself. -/
+private theorem realHilbertTopEigenspaceOrthogonalRestriction_smul_pow_apply
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    (S : E →L[ℝ] E)
+    (hS : (S : E →ₗ[ℝ] E).IsSymmetric)
+    (c : ℝ)
+    (k : ℕ)
+    (f : (realHilbertTopEigenspace S)ᗮ) :
+    ((c • realHilbertTopEigenspaceOrthogonalRestriction S hS) ^ k) f =
+      c ^ k •
+        ((realHilbertTopEigenspaceOrthogonalRestriction S hS) ^ k) f := by
+  let R := realHilbertTopEigenspaceOrthogonalRestriction S hS
+  change ((c • R) ^ k) f = c ^ k • (R ^ k) f
+  induction k generalizing f with
+  | zero => simp
+  | succ k ih =>
+      simp [pow_succ, mul_apply_eq_comp, ih, smul_smul]
+
+/-- Operator equality corresponding to the preceding pointwise power formula.
+It is derived by extensionality rather than `smul_pow`, deliberately avoiding
+the unavailable operator-space scalar-tower instance. -/
+private theorem realHilbertTopEigenspaceOrthogonalRestriction_smul_pow
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    (S : E →L[ℝ] E)
+    (hS : (S : E →ₗ[ℝ] E).IsSymmetric)
+    (c : ℝ)
+    (k : ℕ) :
+    (c • realHilbertTopEigenspaceOrthogonalRestriction S hS) ^ k =
+      c ^ k • (realHilbertTopEigenspaceOrthogonalRestriction S hS) ^ k := by
+  apply ContinuousLinearMap.ext
+  intro f
+  exact realHilbertTopEigenspaceOrthogonalRestriction_smul_pow_apply S hS c k f
+
+/-- Generic vector bound for powers of a normalized-transfer top-eigenspace
+orthogonal restriction.  Keeping the ambient Hilbert carrier abstract avoids
+concrete lattice subtype typeclass reduction. -/
+private theorem realHilbertTopEigenspaceOrthogonalRestriction_pow_apply_norm_le
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    (S : E →L[ℝ] E)
+    (hS : (S : E →ₗ[ℝ] E).IsSymmetric)
+    (k : ℕ)
+    (f : (realHilbertTopEigenspace S)ᗮ) :
+    ‖((realHilbertTopEigenspaceOrthogonalRestriction S hS) ^ k) f‖ ≤
+      ‖realHilbertTopEigenspaceOrthogonalRestriction S hS‖ ^ k * ‖f‖ := by
+  let R := realHilbertTopEigenspaceOrthogonalRestriction S hS
+  change ‖(R ^ k) f‖ ≤ ‖R‖ ^ k * ‖f‖
+  cases k with
+  | zero => simp
+  | succ k =>
+      calc
+        ‖(R ^ (Nat.succ k)) f‖ ≤ ‖R ^ (Nat.succ k)‖ * ‖f‖ :=
+          (R ^ (Nat.succ k)).le_opNorm f
+        _ ≤ ‖R‖ ^ (Nat.succ k) * ‖f‖ :=
+          mul_le_mul_of_nonneg_right
+            (norm_pow_le' R (Nat.succ_pos k))
+            (norm_nonneg f)
+
 /-- Exact algebraic power factorization of the represented one-sided physical
 compression.  This is a theorem about powers of the excitation-space operator
 `C` itself; it does not identify these powers with ambient literal pair-transfer
@@ -56,14 +121,19 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTran
           H N hN beta hbeta‖ ^ 2) ^ k •
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
           H N hN beta hbeta) ^ k := by
-  let c : ℝ :=
-    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-      H N hN beta hbeta‖ ^ 2
-  let R :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-      H N hN beta hbeta
-  change (c • R) ^ k = c ^ k • R ^ k
-  rw [smul_pow]
+  simpa only [
+      periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace] using
+    (realHilbertTopEigenspaceOrthogonalRestriction_smul_pow
+      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+        H N hN beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+        H N hN beta hbeta)
+      (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+        H N hN beta hbeta‖ ^ 2)
+      k)
 
 /-- Pointwise form of the exact compressed power factorization. -/
 theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator_pow_apply
@@ -80,14 +150,16 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTran
           H N hN beta hbeta‖ ^ 2) ^ k •
         ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
             H N hN beta hbeta) ^ k) f := by
-  rw [periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator_pow]
-  rfl
+  have h := congrArg
+    (fun A => A f)
+    (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator_pow
+      H N hN beta hbeta k)
+  exact h
 
 /-- The norm of the `k`th compressed power is bounded by the exact raw
 pair-vacuum normalization power times the `k`th power of the normalized
-physical excitation norm.  The `k = 0` case uses the general `‖id‖ ≤ 1`
-operator-norm bound, so no nontriviality assumption on the excitation space is
-introduced. -/
+physical excitation norm.  The zero-power case retains the general `‖id‖ ≤ 1`
+bound, so no nontriviality assumption on the excitation space is introduced. -/
 theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator_pow_norm_le
     (H N : ℕ)
     (hN : 0 < N)
@@ -100,25 +172,32 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTran
           H N hN beta hbeta‖ ^ 2) ^ k *
         ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
           H N hN beta hbeta‖ ^ k := by
+  let C :=
+    periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator
+      H N hN beta hbeta
   let c : ℝ :=
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
       H N hN beta hbeta‖ ^ 2
   let R :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta
-  change
-    ‖(c • R) ^ k‖ ≤ c ^ k * ‖R‖ ^ k
+  change ‖C ^ k‖ ≤ c ^ k * ‖R‖ ^ k
   cases k with
   | zero =>
-      change ‖ContinuousLinearMap.id ℝ _‖ ≤ 1
+      change ‖(1 :
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+            H N hN beta hbeta →L[ℝ]
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+            H N hN beta hbeta)‖ ≤ 1
       exact ContinuousLinearMap.norm_id_le
   | succ k =>
-      rw [smul_pow, norm_smul, Real.norm_eq_abs,
-        abs_of_nonneg (pow_nonneg (sq_nonneg _) (Nat.succ k))]
-      exact
-        mul_le_mul_of_nonneg_left
-          (norm_pow_le' R (Nat.succ_pos k))
-          (pow_nonneg (sq_nonneg _) (Nat.succ k))
+      calc
+        ‖C ^ (Nat.succ k)‖ ≤ ‖C‖ ^ (Nat.succ k) :=
+          norm_pow_le' C (Nat.succ_pos k)
+        _ = (c * ‖R‖) ^ (Nat.succ k) := by
+          rw [periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator_norm_eq_sq_physicalNorm_mul]
+        _ = c ^ (Nat.succ k) * ‖R‖ ^ (Nat.succ k) := by
+          rw [mul_pow]
 
 /-- Vector-level finite-volume geometric bound for powers of the represented
 compressed excitation dynamics. -/
@@ -136,22 +215,26 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTran
           H N hN beta hbeta‖ ^ 2) ^ k *
         ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
           H N hN beta hbeta‖ ^ k * ‖f‖ := by
-  calc
-    ‖(periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator
-          H N hN beta hbeta ^ k) f‖ ≤
-        ‖periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator
-          H N hN beta hbeta ^ k‖ * ‖f‖ :=
-      (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator
-        H N hN beta hbeta ^ k).le_opNorm f
-    _ ≤
-        ((‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-            H N hN beta hbeta‖ ^ 2) ^ k *
-          ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-            H N hN beta hbeta‖ ^ k) * ‖f‖ :=
-      mul_le_mul_of_nonneg_right
-        (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator_pow_norm_le
-          H N hN beta hbeta k)
-        (norm_nonneg f)
+  let c : ℝ :=
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+      H N hN beta hbeta‖ ^ 2
+  let S :=
+    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+      H N hN beta hbeta
+  let hS :=
+    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+      H N hN beta hbeta
+  have hpow :=
+    realHilbertTopEigenspaceOrthogonalRestriction_smul_pow_apply S hS c k f
+  have hR :=
+    realHilbertTopEigenspaceOrthogonalRestriction_pow_apply_norm_le S hS k f
+  rw [← periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator] at hpow hR
+  rw [← periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator] at hpow
+  rw [hpow, norm_smul, Real.norm_eq_abs,
+    abs_of_nonneg (pow_nonneg (sq_nonneg _) k)]
+  exact
+    mul_le_mul_of_nonneg_left hR
+      (pow_nonneg (sq_nonneg _) k)
 
 /-- Vacuum-normalized relative power bound.  The denominator is strictly
 positive because the raw physical one-slab transfer has positive norm. -/
@@ -202,8 +285,11 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTran
   let q : ℝ :=
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta‖
-  refine ⟨q, norm_nonneg _, ?_, ?_⟩
-  · exact
+  refine ⟨q, ?_, ?_, ?_⟩
+  · dsimp [q]
+    exact norm_nonneg _
+  · dsimp [q]
+    exact
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
         H N hN beta hbeta
   · intro k
