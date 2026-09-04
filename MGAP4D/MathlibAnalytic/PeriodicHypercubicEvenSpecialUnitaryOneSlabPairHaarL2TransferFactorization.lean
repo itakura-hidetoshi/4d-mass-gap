@@ -86,7 +86,7 @@ theorem realL2PairMiddleSwapMeasurableEquiv_measurePreserving
         (MeasurableEquiv.prodComm : (α × α) ≃ᵐ (α × α))
         (μ.prod μ)
         (μ.prod μ) := by
-    simpa using MeasureTheory.measurePreserving_swap (μ := μ) (ν := μ)
+    simpa using measurePreserving_swap (μ := μ) (ν := μ)
   let hSwapMiddle :
       MeasurePreserving
         (MeasurableEquiv.prodCongr
@@ -201,15 +201,39 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
         ∂(periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) := by
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_inner]
   unfold realL2HilbertSchmidtKernelPairing
-  rw [MeasureTheory.L2.inner_def]
-  apply integral_congr_ae
-  filter_upwards
-    [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2_coeFn
-      H N hN beta hbeta,
-      realL2ExternalTensor_coeFn f u] with p hK hfu
-  rw [hK, hfu, realScalarInner_eq_mul]
-  simp only [realL2ExternalTensorFunction]
-  ring
+  let K := periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
+    H N hN beta hbeta
+  let tensor := realL2ExternalTensor
+    (μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
+    (ν := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) f u
+  calc
+    inner ℝ K tensor =
+        ∫ p,
+          inner ℝ (K p) (tensor p)
+          ∂(periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) := by
+      change
+        inner ℝ K tensor =
+          ∫ p,
+            inner ℝ (K p) (tensor p)
+            ∂((periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N).prod
+              (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+      exact MeasureTheory.L2.inner_def K tensor
+    _ = _ := by
+      have hK :=
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2_coeFn
+          H N hN beta hbeta
+      have hfu := realL2ExternalTensor_coeFn
+        (μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
+        (ν := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) f u
+      apply integral_congr_ae
+      filter_upwards [hK, hfu] with p hpK hpfu
+      rw [show K p =
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+            H N beta p.1 p.2 by simpa [K] using hpK]
+      rw [show tensor p = f p.1 * u p.2 by
+        simpa [tensor, realL2ExternalTensorFunction] using hpfu]
+      rw [realScalarInner_eq_mul]
+      ring
 
 /-- Exact integral formula for a decomposable matrix coefficient of the raw
 ambient ordered-pair transfer.  The integrand is displayed as the crossed
@@ -272,10 +296,10 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
         (μ := μPair) (ν := μPair)
         (realL2ExternalTensor f g) (realL2ExternalTensor u v),
       hfg, huv] with q hK houter hfgq huvq
-  rw [hK, houter, hfgq, huvq, realScalarInner_eq_mul]
-  simp only [
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel,
-    realL2ExternalTensorFunction]
+  rw [hK, houter]
+  simp only [realL2ExternalTensorFunction]
+  rw [hfgq, huvq, realScalarInner_eq_mul]
+  simp only [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel]
   ring
 
 /-- The literal ambient ordered-pair transfer is exactly the tensor product of
