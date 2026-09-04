@@ -41,8 +41,9 @@ local instance pairPhysicalCompressedTransferSpatialSliceHaarSFinite (H N : ℕ)
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
 
-/-- Use the normed-space structure canonically induced by the already-present
-inner-product structure on the physical top-eigenspace orthogonal subtype. -/
+/-- Use the canonical restricted normed-space structure on the physical
+top-eigenspace orthogonal submodule.  This preserves the ambient scalar action
+used by the existing continuous-linear-map construction. -/
 local instance pairPhysicalCompressedTransferOrthogonalNormedSpace
     (H N : ℕ)
     (hN : 0 < N)
@@ -51,7 +52,9 @@ local instance pairPhysicalCompressedTransferOrthogonalNormedSpace
     NormedSpace ℝ
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
         H N hN beta hbeta) :=
-  InnerProductSpace.toNormedSpace
+  Submodule.normedSpace
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
 
 /-- Exact real-scalar homogeneity of the operator norm, derived directly from
 `ContinuousLinearMap.opNorm_smul_le`.  We keep this local instead of requiring
