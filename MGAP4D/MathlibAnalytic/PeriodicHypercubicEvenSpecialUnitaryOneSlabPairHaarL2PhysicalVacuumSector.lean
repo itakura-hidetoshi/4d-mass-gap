@@ -71,7 +71,6 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopMode
         ((periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N).prod
           (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))‖ = 1
   rw [realL2ExternalTensor_norm,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2_norm,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2_norm]
   norm_num
 
