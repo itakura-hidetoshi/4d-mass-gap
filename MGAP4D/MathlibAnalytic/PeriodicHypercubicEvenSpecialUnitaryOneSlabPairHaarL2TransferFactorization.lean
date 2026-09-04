@@ -299,9 +299,18 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
       hfg, huv] with q hK houter hfgq huvq
   rw [hK, houter, realScalarInner_eq_mul]
   simp only [realL2ExternalTensorFunction]
-  rw [hfgq, huvq]
-  simp only [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel]
-  ring
+  calc
+    _ = periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
+          H N beta q *
+        ((f q.1.1 * g q.1.2) * (u q.2.1 * v q.2.2)) := by
+      exact congrArg
+        (fun x : ℝ =>
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
+            H N beta q * x)
+        (congrArg₂ (· * ·) hfgq huvq)
+    _ = _ := by
+      simp only [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel]
+      ring
 
 /-- The literal ambient ordered-pair transfer is exactly the tensor product of
 the two raw one-slab transfers on all decomposable matrix coefficients.
