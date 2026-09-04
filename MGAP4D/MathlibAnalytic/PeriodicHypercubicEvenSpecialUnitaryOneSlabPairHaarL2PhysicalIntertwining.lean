@@ -39,7 +39,7 @@ local instance pairPhysicalIntertwiningSpatialSliceHaarSFinite (H N : ℕ) :
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
 
-/-- Exact one-sided physical matrix-coefficient intertwining for the literal
+/- Exact one-sided physical matrix-coefficient intertwining for the literal
 raw ordered-pair transfer.
 
 If `T_phys` is the raw Gauss-law one-slab transfer, `lambda = ‖T_phys‖`,
