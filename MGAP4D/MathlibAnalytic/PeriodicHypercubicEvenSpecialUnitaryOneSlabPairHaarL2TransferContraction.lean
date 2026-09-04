@@ -94,8 +94,14 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernelL2_nor
       Lp.norm_le_norm_of_ae_le hle
     _ = 1 := by
       rw [MemLp.toLp_const]
-      rw [Lp.norm_const' (by norm_num) (by norm_num)]
-      simp
+      have hConst :=
+        Lp.norm_const'
+          (μ := μ₂)
+          (p := (2 : ℝ≥0∞))
+          (c := (1 : ℝ))
+          (by norm_num)
+          (by norm_num)
+      simpa using hConst
 
 /-- The ambient ordered-pair one-step transfer operator is a contraction on
 pair-Haar `L²`. -/
