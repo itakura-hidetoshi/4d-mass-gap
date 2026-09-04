@@ -191,15 +191,19 @@ theorem
   let path₁ := e.symm (outer₁, rest)
   let path₂ := e.symm (outer₂, rest)
   have hStrict₁ : (outerSplit path₁).2 = innerSplit.symm rest := by
-    apply innerSplit.injective
     have hs := congrArg (fun z => z.2) (e.apply_symm_apply (outer₁, rest))
-    simpa [e, path₁, outerSplit, innerSplit,
-      periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathOuterInnerDeepMeasurableEquiv] using hs
-  have hStrict₂ : (outerSplit path₂).2 = innerSplit.symm rest := by
+    change innerSplit ((outerSplit path₁).2) = rest at hs
     apply innerSplit.injective
+    calc
+      innerSplit ((outerSplit path₁).2) = rest := hs
+      _ = innerSplit (innerSplit.symm rest) := (innerSplit.apply_symm_apply rest).symm
+  have hStrict₂ : (outerSplit path₂).2 = innerSplit.symm rest := by
     have hs := congrArg (fun z => z.2) (e.apply_symm_apply (outer₂, rest))
-    simpa [e, path₂, outerSplit, innerSplit,
-      periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathOuterInnerDeepMeasurableEquiv] using hs
+    change innerSplit ((outerSplit path₂).2) = rest at hs
+    apply innerSplit.injective
+    calc
+      innerSplit ((outerSplit path₂).2) = rest := hs
+      _ = innerSplit (innerSplit.symm rest) := (innerSplit.apply_symm_apply rest).symm
   have hStrict : (outerSplit path₁).2 = (outerSplit path₂).2 :=
     hStrict₁.trans hStrict₂.symm
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfOuterInnerDeepInteriorPathKernel
