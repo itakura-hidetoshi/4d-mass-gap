@@ -132,6 +132,77 @@ theorem
               H 1 N hN beta hbeta) := by
               rfl
 
+/-- Every fixed-ambient recursive Haar message has one parity-uniform normal
+form: iterate the ambient pair transfer operator `R / 2` times, then stop at
+the unique terminal message indexed by `R % 2` (`0` or `1`). -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2_eq_pairTransferOperator_pow_div_two_mod_two
+    (H R N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+        H R N hN beta hbeta =
+      ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
+          H N hN beta hbeta) ^ (R / 2))
+        (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+          H (R % 2) N hN beta hbeta) := by
+  have hmod : R % 2 = 0 ∨ R % 2 = 1 := by
+    omega
+  rcases hmod with hzero | hone
+  · have hR : R = 2 * (R / 2) := by
+      omega
+    calc
+      periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+          H R N hN beta hbeta =
+        periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+          H (2 * (R / 2)) N hN beta hbeta := by
+            exact congrArg
+              (fun r =>
+                periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+                  H r N hN beta hbeta)
+              hR
+      _ =
+        ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
+            H N hN beta hbeta) ^ (R / 2))
+          (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+            H 0 N hN beta hbeta) := by
+              simpa using
+                (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2_even_eq_pairTransferOperator_pow_zero
+                  H (R / 2) N hN beta hbeta)
+      _ =
+        ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
+            H N hN beta hbeta) ^ (R / 2))
+          (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+            H (R % 2) N hN beta hbeta) := by
+              rw [hzero]
+  · have hR : R = 2 * (R / 2) + 1 := by
+      omega
+    calc
+      periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+          H R N hN beta hbeta =
+        periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+          H (2 * (R / 2) + 1) N hN beta hbeta := by
+            exact congrArg
+              (fun r =>
+                periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+                  H r N hN beta hbeta)
+              hR
+      _ =
+        ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
+            H N hN beta hbeta) ^ (R / 2))
+          (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+            H 1 N hN beta hbeta) := by
+              simpa using
+                (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2_odd_eq_pairTransferOperator_pow_one
+                  H (R / 2) N hN beta hbeta)
+      _ =
+        ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
+            H N hN beta hbeta) ^ (R / 2))
+          (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+            H (R % 2) N hN beta hbeta) := by
+              rw [hone]
+
 end
 
 end MathlibAnalytic
