@@ -61,7 +61,7 @@ private theorem realHilbertTopEigenspaceOrthogonalRestriction_norm_smul
       (ContinuousLinearMap.opNorm_smul_le c R)
   · by_cases hc : c = 0
     · subst c
-      simp
+      simpa only [abs_zero, zero_mul] using (norm_nonneg (0 • R))
     · have hInv :=
         ContinuousLinearMap.opNorm_smul_le c⁻¹ (c • R)
       have hrecover : c⁻¹ • (c • R) = R := by
