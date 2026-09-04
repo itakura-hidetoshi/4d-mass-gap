@@ -454,8 +454,17 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
       rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_doubleExcitation_apply]
       change
         (T ^ k) (c • realL2ExternalTensor (E (R f)) (E (R g))) = _
-      rw [map_smul, ih (R f) (R g), smul_smul, pow_succ]
-      ring_nf
+      calc
+        (T ^ k) (c • realL2ExternalTensor (E (R f)) (E (R g))) =
+            c • (T ^ k) (realL2ExternalTensor (E (R f)) (E (R g))) := by
+          exact (T ^ k).map_smul c _
+        _ = c • (c ^ k •
+              realL2ExternalTensor (E ((R ^ k) (R f))) (E ((R ^ k) (R g)))) := by
+          rw [ih (R f) (R g)]
+        _ = c ^ (k + 1) •
+              realL2ExternalTensor (E ((R ^ k) (R f))) (E ((R ^ k) (R g))) := by
+          rw [smul_smul, pow_succ]
+          ring_nf
 
 /-- The double-excitation norm decays with the square of the normalized
 one-factor contraction. -/
@@ -486,6 +495,9 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
       H N hN beta hbeta‖ ^ 2
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_pow_doubleExcitation]
+  change
+    ‖c ^ k • realL2ExternalTensor (E ((R ^ k) f)) (E ((R ^ k) g))‖ ≤
+      c ^ k * (‖R‖ ^ 2) ^ k * ‖f‖ * ‖g‖
   rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg (pow_nonneg (sq_nonneg _) k)]
   rw [realL2ExternalTensor_norm, E.norm_map, E.norm_map]
   have hf := continuousLinearMap_pow_apply_norm_le_norm_pow R k f
@@ -529,7 +541,9 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
   let q := r ^ 2
   have hr0 : 0 ≤ r := by
     dsimp [r]
-    exact norm_nonneg _
+    exact norm_nonneg
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta)
   have hr1 : r < 1 := by
     simpa [r] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
