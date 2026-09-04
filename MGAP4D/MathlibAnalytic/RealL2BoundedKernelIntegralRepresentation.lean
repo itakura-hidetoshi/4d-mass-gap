@@ -139,7 +139,6 @@ theorem realL2BoundedKernelPairing_eq_integralOutput
       filter_upwards [hK, hE] with p hk he
       rw [hk, he, realL2BoundedKernelScalarInner_eq_mul]
       simp only [realL2ExternalTensorFunction]
-      ring
     _ = ∫ y, ∫ x, k x y * (f x * g y) ∂μ ∂μ := by
       exact integral_prod_symm _ hraw
     _ = ∫ y, realL2BoundedKernelIntegralOutput (μ := μ) k f y * g y ∂μ := by
