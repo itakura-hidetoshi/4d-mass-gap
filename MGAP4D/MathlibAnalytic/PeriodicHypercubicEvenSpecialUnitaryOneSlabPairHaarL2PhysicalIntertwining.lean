@@ -52,6 +52,7 @@ transfer on `f ⊠ Ω_top` carries the exact raw normalization `lambda²`:
 The square is essential: the literal raw pair operator acts on both endpoints,
 while the physical one-sided transfer used downstream is normalized so that the
 companion top mode is fixed. -/
+set_option maxHeartbeats 800000 in
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_oneSidedExcitation_matrixCoefficient_eq_sq_physicalNorm_mul
     (H N : ℕ)
     (hN : 0 < N)
