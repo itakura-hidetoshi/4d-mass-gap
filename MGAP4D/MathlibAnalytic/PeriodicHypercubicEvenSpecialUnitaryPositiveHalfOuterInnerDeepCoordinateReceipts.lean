@@ -89,7 +89,7 @@ local instance positiveHalfOuterInnerDeepCoordinatesSpatialLinkFintype (M : ℕ)
   let k : Fin (M + 2) := 0
   let j : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount (M + 2) + 1) :=
     ⟨k.1 + 1, by simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
-  change reindex path (Sum.inr (0 : Fin (M + 2))) =
+  change reindex path (Sum.inr k) =
     (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathInnerBoundaryPair path).1
   have hEval :=
     MeasurableEquiv.piCongrLeft_apply_apply (β := X) e path j
@@ -98,13 +98,13 @@ local instance positiveHalfOuterInnerDeepCoordinatesSpatialLinkFintype (M : ℕ)
       (periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv_interior
         (M + 2) k)
   rw [hj] at hEval
-  simpa [k] only using hEval.trans (by
-    unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathInnerBoundaryPair
-    unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight
-    unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderFirstSlabIndex
-    apply congrArg path
-    apply Fin.ext
-    simp [j])
+  rw [hEval]
+  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathInnerBoundaryPair
+  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabRight
+  unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderFirstSlabIndex
+  apply congrArg path
+  apply Fin.ext
+  simp [j, k]
 
 @[simp] theorem
     periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathBoundaryInteriorMeasurableEquiv_interior_last
@@ -121,7 +121,7 @@ local instance positiveHalfOuterInnerDeepCoordinatesSpatialLinkFintype (M : ℕ)
   let k : Fin (M + 2) := Fin.last (M + 1)
   let j : Fin (periodicHypercubicEvenPositiveHalfCylinderSlabCount (M + 2) + 1) :=
     ⟨k.1 + 1, by simp [periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
-  change reindex path (Sum.inr (Fin.last (M + 1))) =
+  change reindex path (Sum.inr k) =
     (periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathInnerBoundaryPair path).2
   have hEval :=
     MeasurableEquiv.piCongrLeft_apply_apply (β := X) e path j
@@ -130,8 +130,6 @@ local instance positiveHalfOuterInnerDeepCoordinatesSpatialLinkFintype (M : ℕ)
       (periodicHypercubicEvenSpecialUnitaryPositiveHalfSpatialPathTimeBoundaryInteriorEquiv_interior
         (M + 2) k)
   rw [hj] at hEval
-  have hk : k = Fin.last (M + 1) := by rfl
-  rw [hk] at hEval
   rw [hEval]
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathInnerBoundaryPair
   unfold periodicHypercubicEvenSpecialUnitaryPositiveHalfCylinderPathSlabLeft
