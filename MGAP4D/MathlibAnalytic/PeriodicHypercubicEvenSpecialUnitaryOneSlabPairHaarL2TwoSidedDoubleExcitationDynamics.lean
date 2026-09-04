@@ -41,6 +41,20 @@ local instance twoSidedDoubleDynamicsSpatialSliceHaarSFinite (H N : ℕ) :
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
 
+/-- Expose the inherited real normed-space structure on the named physical
+orthogonal submodule for generic power estimates. -/
+@[reducible] local instance twoSidedDoubleDynamicsPhysicalOrthogonalNormedSpace
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta) :=
+  Submodule.normedSpace
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+
 /-- The raw one-slab transfer acts on a physical excitation by the exact raw
 vacuum eigenvalue times the normalized top-eigenspace orthogonal restriction.
 This isolates the one-factor identity used by both endpoint sectors below. -/
@@ -464,7 +478,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
         _ = c ^ (k + 1) •
               realL2ExternalTensor (E ((R ^ k) (R f))) (E ((R ^ k) (R g))) := by
           rw [smul_smul, pow_succ]
-          ring
+          ring_nf
 
 /-- The double-excitation norm decays with the square of the normalized
 one-factor contraction. -/
@@ -487,12 +501,6 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
           H N hN beta hbeta‖ ^ 2) ^ k *
         (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
           H N hN beta hbeta‖ ^ 2) ^ k * ‖f‖ * ‖g‖ := by
-  letI : NormedSpace ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta) :=
-    Submodule.normedSpace
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta)
   let E := periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
     H N hN beta hbeta
   let R := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
@@ -509,13 +517,17 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
   have hf := continuousLinearMap_pow_apply_norm_le_norm_pow R k f
   have hg := continuousLinearMap_pow_apply_norm_le_norm_pow R k g
   have hc : 0 ≤ c ^ k := pow_nonneg (sq_nonneg _) k
-  have hRf : 0 ≤ ‖(R ^ k) f‖ := norm_nonneg _
-  have hRgBound : 0 ≤ ‖R‖ ^ k * ‖g‖ :=
-    mul_nonneg (pow_nonneg (norm_nonneg R) k) (norm_nonneg g)
+  have hRfBound : 0 ≤ ‖R‖ ^ k * ‖f‖ :=
+    mul_nonneg (pow_nonneg (norm_nonneg R) k) (norm_nonneg f)
   have hprod :
       ‖(R ^ k) f‖ * ‖(R ^ k) g‖ ≤
-        (‖R‖ ^ k * ‖f‖) * (‖R‖ ^ k * ‖g‖) :=
-    mul_le_mul hf hg hRf hRgBound
+        (‖R‖ ^ k * ‖f‖) * (‖R‖ ^ k * ‖g‖) := by
+    calc
+      ‖(R ^ k) f‖ * ‖(R ^ k) g‖ ≤
+          (‖R‖ ^ k * ‖f‖) * ‖(R ^ k) g‖ :=
+        mul_le_mul_of_nonneg_right hf (norm_nonneg _)
+      _ ≤ (‖R‖ ^ k * ‖f‖) * (‖R‖ ^ k * ‖g‖) :=
+        mul_le_mul_of_nonneg_left hg hRfBound
   calc
     c ^ k * (‖(R ^ k) f‖ * ‖(R ^ k) g‖) ≤
         c ^ k * ((‖R‖ ^ k * ‖f‖) * (‖R‖ ^ k * ‖g‖)) :=
