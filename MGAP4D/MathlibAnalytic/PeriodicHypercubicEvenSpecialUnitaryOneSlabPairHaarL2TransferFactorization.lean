@@ -185,7 +185,7 @@ local instance pairTransferFactorizationSpatialSliceHaarSFinite (H N : ℕ) :
 
 /-- Exact integral formula for an arbitrary one-slab matrix coefficient on the
 raw spatial-slice Haar `L²` carrier. -/
-theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_inner_eq_integral
+theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_inner_eq_raw_integral
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
@@ -302,8 +302,8 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
             H N hN beta hbeta g) v := by
   rw [
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_inner_externalTensor_eq_integral,
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_inner_eq_integral,
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_inner_eq_integral]
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_inner_eq_raw_integral,
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_inner_eq_raw_integral]
   exact realL2_integral_crossed_pair_mul
     (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
     (fun p =>
