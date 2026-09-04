@@ -57,7 +57,7 @@ private theorem realHilbertTopEigenspaceOrthogonalRestriction_norm_smul
   let R := realHilbertTopEigenspaceOrthogonalRestriction S hS
   change ‖c • R‖ = |c| * ‖R‖
   apply le_antisymm
-  · simpa [Real.norm_eq_abs] using
+  · simpa only [Real.norm_eq_abs] using
       (ContinuousLinearMap.opNorm_smul_le c R)
   · by_cases hc : c = 0
     · subst c
@@ -215,19 +215,26 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTran
       H N hN beta hbeta‖ ^ 2
   change
     ‖c •
-        realHilbertTopEigenspaceOrthogonalRestriction
-          (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-            H N hN beta hbeta)
-          (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
-            H N hN beta hbeta)‖ =
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta‖ =
       c *
-        ‖realHilbertTopEigenspaceOrthogonalRestriction
-          (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-            H N hN beta hbeta)
-          (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
-            H N hN beta hbeta)‖
-  rw [realHilbertTopEigenspaceOrthogonalRestriction_norm_smul]
-  rw [abs_of_nonneg]
+        ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta‖
+  have hsmul :
+      ‖c •
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+            H N hN beta hbeta‖ =
+        |c| *
+          ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+            H N hN beta hbeta‖ := by
+    simpa only [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator] using
+      (realHilbertTopEigenspaceOrthogonalRestriction_norm_smul
+        (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+          H N hN beta hbeta)
+        (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+          H N hN beta hbeta)
+        c)
+  rw [hsmul, abs_of_nonneg]
   dsimp [c]
   exact sq_nonneg _
 
