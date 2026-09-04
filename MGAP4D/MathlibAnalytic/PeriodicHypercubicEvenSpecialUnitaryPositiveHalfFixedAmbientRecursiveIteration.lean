@@ -62,7 +62,6 @@ theorem
           periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
             H (2 * m + 2) N hN beta hbeta := by
               congr 1
-              omega
         _ = T
             (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
               H (2 * m) N hN beta hbeta) := by
@@ -75,7 +74,7 @@ theorem
         _ = (T ^ Nat.succ m)
             (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
               H 0 N hN beta hbeta) := by
-              rw [pow_succ']
+              rw [pow_succ', ContinuousLinearMap.mul_def, ContinuousLinearMap.comp_apply]
         _ =
           ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
               H N hN beta hbeta) ^ Nat.succ m)
@@ -113,7 +112,6 @@ theorem
           periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
             H ((2 * m + 1) + 2) N hN beta hbeta := by
               congr 1
-              omega
         _ = T
             (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
               H (2 * m + 1) N hN beta hbeta) := by
@@ -126,7 +124,7 @@ theorem
         _ = (T ^ Nat.succ m)
             (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
               H 1 N hN beta hbeta) := by
-              rw [pow_succ']
+              rw [pow_succ', ContinuousLinearMap.mul_def, ContinuousLinearMap.comp_apply]
         _ =
           ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
               H N hN beta hbeta) ^ Nat.succ m)
