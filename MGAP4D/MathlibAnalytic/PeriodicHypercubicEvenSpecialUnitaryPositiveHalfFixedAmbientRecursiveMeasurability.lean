@@ -51,42 +51,14 @@ theorem
           PeriodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientInteriorSpatialPath H R N =>
           periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveChainKernel
             H N beta R p.1 p.2) := by
-  have hPairKernelMeasurable :
-      Measurable
-        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel H N beta) := by
-    unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
-    have hK :=
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-        H N beta).measurable
-    have hleft : Measurable
-        (fun p :
-          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
-          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
-          (p.1.1, p.2.1)) := by
-      exact
-        (measurable_fst.comp measurable_fst).prodMk
-          (measurable_fst.comp measurable_snd)
-    have hright : Measurable
-        (fun p :
-          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
-          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
-          (p.1.2, p.2.2)) := by
-      exact
-        (measurable_snd.comp measurable_fst).prodMk
-          (measurable_snd.comp measurable_snd)
-    exact (hK.comp hleft).mul (hK.comp hright)
+  have hK :=
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      H N beta).measurable
   intro R
   induction R using Nat.strong_induction_on with
   | h R ih =>
       cases R with
       | zero =>
-          have hK :=
-            (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-              H N beta).measurable
           simpa [
             periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveChainKernel] using
             hK.comp measurable_fst
@@ -101,18 +73,39 @@ theorem
                       PeriodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientInteriorSpatialPath
                         H 1 N => p.2 0) :=
                 (measurable_pi_apply 0).comp measurable_snd
-              have hInput :
+              have hLeftInput :
                   Measurable
                     (fun p :
                       (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
                         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
                       PeriodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientInteriorSpatialPath
                         H 1 N =>
-                      (p.1, (p.2 0, p.2 0))) :=
-                measurable_fst.prodMk (hCenter.prodMk hCenter)
+                      (p.1.1, p.2 0)) :=
+                (measurable_fst.comp measurable_fst).prodMk hCenter
+              have hRightInput :
+                  Measurable
+                    (fun p :
+                      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+                        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
+                      PeriodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientInteriorSpatialPath
+                        H 1 N =>
+                      (p.1.2, p.2 0)) :=
+                (measurable_snd.comp measurable_fst).prodMk hCenter
+              have hPair :
+                  Measurable
+                    (fun p :
+                      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+                        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
+                      PeriodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientInteriorSpatialPath
+                        H 1 N =>
+                      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                          H N beta p.1.1 (p.2 0) *
+                        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                          H N beta p.1.2 (p.2 0)) :=
+                (hK.comp hLeftInput).mul (hK.comp hRightInput)
               simpa [
-                periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveChainKernel] using
-                hPairKernelMeasurable.comp hInput
+                periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveChainKernel,
+                periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel] using hPair
           | succ R =>
               let e :=
                 periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientPairPeelMeasurableEquiv
@@ -125,15 +118,34 @@ theorem
                       PeriodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientInteriorSpatialPath
                         H (R + 2) N => e p.2) :=
                 e.measurable.comp measurable_snd
-              have hPairInput :
+              have hInnerPair :
+                  Measurable
+                    (fun p :
+                      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+                        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
+                      PeriodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientInteriorSpatialPath
+                        H (R + 2) N => (e p.2).1) :=
+                measurable_fst.comp hPeel
+              have hLeftInput :
                   Measurable
                     (fun p :
                       (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
                         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
                       PeriodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientInteriorSpatialPath
                         H (R + 2) N =>
-                      (p.1, (e p.2).1)) :=
-                measurable_fst.prodMk (measurable_fst.comp hPeel)
+                      (p.1.1, (e p.2).1.1)) :=
+                (measurable_fst.comp measurable_fst).prodMk
+                  (measurable_fst.comp hInnerPair)
+              have hRightInput :
+                  Measurable
+                    (fun p :
+                      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+                        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
+                      PeriodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientInteriorSpatialPath
+                        H (R + 2) N =>
+                      (p.1.2, (e p.2).1.2)) :=
+                (measurable_snd.comp measurable_fst).prodMk
+                  (measurable_snd.comp hInnerPair)
               have hPair :
                   Measurable
                     (fun p :
@@ -141,9 +153,11 @@ theorem
                         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
                       PeriodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientInteriorSpatialPath
                         H (R + 2) N =>
-                      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
-                        H N beta (p.1, (e p.2).1)) :=
-                hPairKernelMeasurable.comp hPairInput
+                      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                          H N beta p.1.1 (e p.2).1.1 *
+                        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                          H N beta p.1.2 (e p.2).1.2) :=
+                (hK.comp hLeftInput).mul (hK.comp hRightInput)
               have hRest :
                   Measurable
                     (fun p :
@@ -155,7 +169,8 @@ theorem
                         H N beta R (e p.2).1 (e p.2).2) := by
                 exact (ih R (by omega)).comp hPeel
               simpa [e,
-                periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveChainKernel] using
+                periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveChainKernel,
+                periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel] using
                 hPair.mul hRest
 
 /-- For every fixed boundary pair, the recursive chain kernel is strongly
