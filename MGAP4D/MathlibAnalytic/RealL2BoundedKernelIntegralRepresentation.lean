@@ -36,7 +36,8 @@ theorem realL2BoundedKernelIntegralOutput_aestronglyMeasurable
         (fun p : α × α => k p.1 p.2 * f p.1)
         (μ.prod μ) :=
     hkMeas.mul (Lp.aestronglyMeasurable f).comp_fst
-  simpa [realL2BoundedKernelIntegralOutput] using hjoint.integral_prod_left'
+  simpa [realL2BoundedKernelIntegralOutput, Function.comp_def] using
+    (hjoint.prod_swap).integral_prod_right'
 
 /-- On a probability space, a jointly measurable kernel bounded in absolute
 value by one sends every real `L²` representative to an `L²` fiber-integral
@@ -63,7 +64,7 @@ theorem realL2BoundedKernelIntegralOutput_memLp_two
     rw [norm_mul, Real.norm_eq_abs]
     have hk := hkBound x y
     nlinarith [norm_nonneg (f x), abs_nonneg (k x y)]
-  have htop : MemLp (realL2BoundedKernelIntegralOutput (μ := μ) k f) ∞ μ :=
+  have htop : MemLp (realL2BoundedKernelIntegralOutput (μ := μ) k f) ⊤ μ :=
     memLp_top_of_bound hmeas C (Filter.Eventually.of_forall hbound)
   exact htop.mono_exponent (by norm_num)
 
@@ -123,16 +124,21 @@ theorem realL2BoundedKernelPairing_eq_integralOutput
       apply integral_congr_ae
       filter_upwards [hK, hE] with p hk he
       rw [hk, he]
-      simp [realL2ExternalTensorFunction, realL2Scalar_inner_eq_mul]
+      change
+        k p.1 p.2 * (f p.1 * g p.2) =
+          k p.1 p.2 * (f p.1 * g p.2)
+      rfl
     _ = ∫ y, ∫ x, k x y * (f x * g y) ∂μ ∂μ := by
       exact integral_prod_symm _ hraw
     _ = ∫ y, realL2BoundedKernelIntegralOutput (μ := μ) k f y * g y ∂μ := by
       apply integral_congr_ae
       filter_upwards with y
+      change
+        (∫ x, k x y * (f x * g y) ∂μ) =
+          (∫ x, k x y * f x ∂μ) * g y
       rw [← integral_mul_const]
       apply integral_congr_ae
       filter_upwards with x
-      simp [realL2BoundedKernelIntegralOutput]
       ring
 
 /-- For a bounded measurable raw representative of an `L²` kernel, the
@@ -159,7 +165,10 @@ theorem realL2HilbertSchmidtKernelOperator_apply_eq_integralOutputL2
     realL2BoundedKernelIntegralOutputL2_coeFn
       (μ := μ) k hkMeas hkBound f] with y hy
   rw [hy]
-  simp [realL2Scalar_inner_eq_mul]
+  change
+    realL2BoundedKernelIntegralOutput (μ := μ) k f y * g y =
+      realL2BoundedKernelIntegralOutput (μ := μ) k f y * g y
+  rfl
 
 end
 
