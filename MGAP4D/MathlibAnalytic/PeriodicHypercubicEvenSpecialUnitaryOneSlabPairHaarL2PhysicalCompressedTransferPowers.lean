@@ -10,6 +10,7 @@ open scoped InnerProductSpace InnerProduct
 noncomputable section
 
 set_option synthInstance.maxHeartbeats 100000
+set_option maxHeartbeats 1000000
 
 local instance pairPhysicalCompressedPowersTopologicalGroup (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
