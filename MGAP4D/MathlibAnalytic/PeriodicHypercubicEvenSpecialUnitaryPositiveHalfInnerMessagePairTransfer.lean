@@ -411,16 +411,20 @@ theorem
         hMsgProd] with p hK hTensor hOne hMsg
       simp only [realL2ExternalTensorFunction] at hTensor
       rw [hK, hTensor, hOne, hMsg]
-      change
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
-            (M + 2) N beta p *
-          periodicHypercubicEvenSpecialUnitaryPositiveHalfInnerPairDeepHaarMessage
-            M N beta p.2 =
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
-            (M + 2) N beta p *
-          periodicHypercubicEvenSpecialUnitaryPositiveHalfInnerPairDeepHaarMessage
-            M N beta p.2
-      rfl
+      have hOneInner : inner ℝ (1 : ℝ) (1 : ℝ) = 1 := by
+        have h := InnerProductSpace.norm_sq_eq_re_inner (𝕜 := ℝ) (1 : ℝ)
+        norm_num at h ⊢
+        exact h.symm
+      have hRealInner (a b : ℝ) : inner ℝ a b = a * b := by
+        calc
+          inner ℝ a b = inner ℝ (a • (1 : ℝ)) (b • (1 : ℝ)) := by simp
+          _ = b * inner ℝ (a • (1 : ℝ)) (1 : ℝ) := by
+            rw [inner_smul_right]
+          _ = b * (a * inner ℝ (1 : ℝ) (1 : ℝ)) := by
+            rw [inner_smul_left]
+            simp
+          _ = a * b := by rw [hOneInner]; ring
+      simp [hRealInner]
     _ = ∫ outer, ∫ inner,
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
             (M + 2) N beta (outer, inner) *
