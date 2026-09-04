@@ -285,20 +285,15 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTran
             H N hN beta hbeta‖ ^ 2) ^ k ≤
       ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
           H N hN beta hbeta‖ ^ k := by
-  let c : ℝ :=
-    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-      H N hN beta hbeta‖ ^ 2
-  have hc : 0 < c :=
+  have hpos :
+      0 <
+        (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+            H N hN beta hbeta‖ ^ 2) ^ k :=
     pow_pos
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
-        H N hN beta hbeta) 2
-  have hck : 0 < c ^ k := pow_pos hc k
-  change
-    ‖periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator
-          H N hN beta hbeta ^ k‖ / c ^ k ≤
-      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-          H N hN beta hbeta‖ ^ k
-  apply (div_le_iff₀ hck).2
+      (pow_pos
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+          H N hN beta hbeta) 2) k
+  refine (div_le_iff₀ hpos).2 ?_
   simpa only [mul_comm] using
     (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator_pow_norm_le
       H N hN beta hbeta k)
