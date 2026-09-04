@@ -86,10 +86,48 @@ private theorem realHilbertTopEigenspaceOrthogonalRestriction_smul_pow
   intro f
   exact realHilbertTopEigenspaceOrthogonalRestriction_smul_pow_apply S hS c k f
 
-/-- Generic geometric operator-norm bound for powers of a nonnegative real
-scalar multiple of a normalized-transfer orthogonal restriction.  All scalar
-norm reasoning stays in the abstract real Hilbert carrier, avoiding concrete
-`Lp` subtype scalar-instance reconstruction. -/
+/-- Generic pointwise geometric bound for powers of a nonnegative real scalar
+multiple of a normalized-transfer orthogonal restriction.  Scalar norm
+homogeneity is used only on vectors, never on the operator space itself. -/
+private theorem realHilbertTopEigenspaceOrthogonalRestriction_smul_pow_apply_norm_le
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    (S : E →L[ℝ] E)
+    (hS : (S : E →ₗ[ℝ] E).IsSymmetric)
+    (c : ℝ)
+    (hc : 0 ≤ c)
+    (k : ℕ)
+    (f : (realHilbertTopEigenspace S)ᗮ) :
+    ‖((c • realHilbertTopEigenspaceOrthogonalRestriction S hS) ^ k) f‖ ≤
+      c ^ k * ‖realHilbertTopEigenspaceOrthogonalRestriction S hS‖ ^ k * ‖f‖ := by
+  let R := realHilbertTopEigenspaceOrthogonalRestriction S hS
+  change ‖((c • R) ^ k) f‖ ≤ c ^ k * ‖R‖ ^ k * ‖f‖
+  induction k generalizing f with
+  | zero => simp
+  | succ k ih =>
+      change
+        ‖((c • R) ^ k) ((c • R) f)‖ ≤
+          c ^ Nat.succ k * ‖R‖ ^ Nat.succ k * ‖f‖
+      calc
+        ‖((c • R) ^ k) ((c • R) f)‖ ≤
+            c ^ k * ‖R‖ ^ k * ‖(c • R) f‖ := ih ((c • R) f)
+        _ = c ^ k * ‖R‖ ^ k * (c * ‖R f‖) := by
+          change
+            c ^ k * ‖R‖ ^ k * ‖c • R f‖ =
+              c ^ k * ‖R‖ ^ k * (c * ‖R f‖)
+          rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg hc]
+        _ ≤ c ^ k * ‖R‖ ^ k * (c * (‖R‖ * ‖f‖)) := by
+          apply mul_le_mul_of_nonneg_left
+          · exact mul_le_mul_of_nonneg_left (ContinuousLinearMap.le_opNorm R f) hc
+          · exact mul_nonneg (pow_nonneg hc k) (pow_nonneg (norm_nonneg R) k)
+        _ = c ^ Nat.succ k * ‖R‖ ^ Nat.succ k * ‖f‖ := by
+          rw [pow_succ, pow_succ]
+          ring
+
+/-- Generic operator-norm consequence of the preceding pointwise bound.  This
+avoids requiring a `NormSMulClass` instance on the continuous-linear-map
+algebra. -/
 private theorem realHilbertTopEigenspaceOrthogonalRestriction_smul_pow_norm_le
     {E : Type*}
     [NormedAddCommGroup E]
@@ -103,44 +141,12 @@ private theorem realHilbertTopEigenspaceOrthogonalRestriction_smul_pow_norm_le
       c ^ k * ‖realHilbertTopEigenspaceOrthogonalRestriction S hS‖ ^ k := by
   let R := realHilbertTopEigenspaceOrthogonalRestriction S hS
   change ‖(c • R) ^ k‖ ≤ c ^ k * ‖R‖ ^ k
-  cases k with
-  | zero =>
-      simpa only [pow_zero, mul_one] using
-        (ContinuousLinearMap.norm_id_le :
-          ‖(1 : (realHilbertTopEigenspace S)ᗮ →L[ℝ]
-            (realHilbertTopEigenspace S)ᗮ)‖ ≤ 1)
-  | succ k =>
-      calc
-        ‖(c • R) ^ Nat.succ k‖ ≤ ‖c • R‖ ^ Nat.succ k :=
-          norm_pow_le' (c • R) (Nat.succ_pos k)
-        _ = (c * ‖R‖) ^ Nat.succ k := by
-          rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg hc]
-        _ = c ^ Nat.succ k * ‖R‖ ^ Nat.succ k := by
-          rw [mul_pow]
-
-/-- Generic vector-level consequence of the preceding power norm estimate. -/
-private theorem realHilbertTopEigenspaceOrthogonalRestriction_smul_pow_apply_norm_le
-    {E : Type*}
-    [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E]
-    (S : E →L[ℝ] E)
-    (hS : (S : E →ₗ[ℝ] E).IsSymmetric)
-    (c : ℝ)
-    (hc : 0 ≤ c)
-    (k : ℕ)
-    (f : (realHilbertTopEigenspace S)ᗮ) :
-    ‖((c • realHilbertTopEigenspaceOrthogonalRestriction S hS) ^ k) f‖ ≤
-      c ^ k * ‖realHilbertTopEigenspaceOrthogonalRestriction S hS‖ ^ k * ‖f‖ := by
-  calc
-    ‖((c • realHilbertTopEigenspaceOrthogonalRestriction S hS) ^ k) f‖ ≤
-        ‖(c • realHilbertTopEigenspaceOrthogonalRestriction S hS) ^ k‖ * ‖f‖ :=
-      ContinuousLinearMap.le_opNorm _ _
-    _ ≤
-        (c ^ k * ‖realHilbertTopEigenspaceOrthogonalRestriction S hS‖ ^ k) * ‖f‖ :=
-      mul_le_mul_of_nonneg_right
-        (realHilbertTopEigenspaceOrthogonalRestriction_smul_pow_norm_le
-          S hS c hc k)
-        (norm_nonneg f)
+  apply ContinuousLinearMap.opNorm_le_bound
+  · exact mul_nonneg (pow_nonneg hc k) (pow_nonneg (norm_nonneg R) k)
+  · intro f
+    exact
+      realHilbertTopEigenspaceOrthogonalRestriction_smul_pow_apply_norm_le
+        S hS c hc k f
 
 /-- Exact algebraic power factorization of the represented one-sided physical
 compression.  This is a theorem about powers of the excitation-space operator
