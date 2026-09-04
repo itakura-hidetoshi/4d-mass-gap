@@ -149,6 +149,26 @@ private theorem realHilbertTopEigenspaceOrthogonalRestriction_smul_pow_norm_le
       realHilbertTopEigenspaceOrthogonalRestriction_smul_pow_apply_norm_le
         S hS c hc k f
 
+/-- Generic vacuum-normalized relative power bound.  Division is discharged
+entirely on the abstract Hilbert carrier, before any concrete lattice subtype
+is introduced. -/
+private theorem realHilbertTopEigenspaceOrthogonalRestriction_smul_relative_pow_norm_le
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    (S : E →L[ℝ] E)
+    (hS : (S : E →ₗ[ℝ] E).IsSymmetric)
+    (c : ℝ)
+    (hc : 0 < c)
+    (k : ℕ) :
+    ‖(c • realHilbertTopEigenspaceOrthogonalRestriction S hS) ^ k‖ / c ^ k ≤
+      ‖realHilbertTopEigenspaceOrthogonalRestriction S hS‖ ^ k := by
+  have hck : 0 < c ^ k := pow_pos hc k
+  refine (div_le_iff₀ hck).2 ?_
+  simpa only [mul_comm] using
+    (realHilbertTopEigenspaceOrthogonalRestriction_smul_pow_norm_le
+      S hS c hc.le k)
+
 /-- Exact algebraic power factorization of the represented one-sided physical
 compression.  This is a theorem about powers of the excitation-space operator
 `C` itself; it does not identify these powers with ambient literal pair-transfer
@@ -286,18 +306,22 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTran
             H N hN beta hbeta‖ ^ 2) ^ k ≤
       ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
           H N hN beta hbeta‖ ^ k := by
-  have hpos :
-      0 <
-        (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-            H N hN beta hbeta‖ ^ 2) ^ k :=
-    pow_pos
+  simpa only [
+      periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace] using
+    (realHilbertTopEigenspaceOrthogonalRestriction_smul_relative_pow_norm_le
+      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+        H N hN beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+        H N hN beta hbeta)
+      (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+        H N hN beta hbeta‖ ^ 2)
       (pow_pos
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
-          H N hN beta hbeta) 2) k
-  refine (div_le_iff₀ hpos).2 ?_
-  simpa only [mul_comm] using
-    (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator_pow_norm_le
-      H N hN beta hbeta k)
+          H N hN beta hbeta) 2)
+      k)
 
 /-- Finite-volume relative exponential-decay package for the represented
 one-sided compressed dynamics.  The witness is the normalized physical
