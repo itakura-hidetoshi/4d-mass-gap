@@ -157,7 +157,11 @@ theorem
           H R N hN beta hbeta =
         periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
           H (2 * (R / 2)) N hN beta hbeta := by
-            rw [hR]
+            exact congrArg
+              (fun r =>
+                periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+                  H r N hN beta hbeta)
+              hR
       _ =
         ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
             H N hN beta hbeta) ^ (R / 2))
@@ -179,7 +183,11 @@ theorem
           H R N hN beta hbeta =
         periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
           H (2 * (R / 2) + 1) N hN beta hbeta := by
-            rw [hR]
+            exact congrArg
+              (fun r =>
+                periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+                  H r N hN beta hbeta)
+              hR
       _ =
         ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
             H N hN beta hbeta) ^ (R / 2))
