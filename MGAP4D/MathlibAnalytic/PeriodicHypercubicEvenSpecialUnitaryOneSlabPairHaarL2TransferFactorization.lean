@@ -86,7 +86,8 @@ theorem realL2PairMiddleSwapMeasurableEquiv_measurePreserving
         (MeasurableEquiv.prodComm : (α × α) ≃ᵐ (α × α))
         (μ.prod μ)
         (μ.prod μ) := by
-    simpa using measurePreserving_swap (μ := μ) (ν := μ)
+    refine ⟨MeasurableEquiv.prodComm.measurable, ?_⟩
+    simpa using (Measure.prod_swap (μ := μ) (ν := μ))
   let hSwapMiddle :
       MeasurePreserving
         (MeasurableEquiv.prodCongr
@@ -296,9 +297,9 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
         (μ := μPair) (ν := μPair)
         (realL2ExternalTensor f g) (realL2ExternalTensor u v),
       hfg, huv] with q hK houter hfgq huvq
-  rw [hK, houter]
+  rw [hK, houter, realScalarInner_eq_mul]
   simp only [realL2ExternalTensorFunction]
-  rw [hfgq, huvq, realScalarInner_eq_mul]
+  rw [hfgq, huvq]
   simp only [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel]
   ring
 
