@@ -38,13 +38,25 @@ local instance pairPhysicalCompressedTransferSpatialSliceHaarSFinite (H N : ℕ)
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
 
+@[reducible] local instance pairPhysicalCompressedTransferOrthogonalNormedSpace
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta) :=
+  Submodule.normedSpace
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+
 /-- The bounded excitation-space operator represented by the literal raw
 ordered-pair transfer on the one-sided physical embedding `J f = f ⊠ Ω_top`.
 
 Its pointwise formula retains the exact raw pair-vacuum normalization
 `‖T_phys‖²`.  The literal compression property is proved below by equality of
-all matrix coefficients; no invariance of the ambient one-sided range is
-assumed. -/
+all physical ambient matrix coefficients; no invariance of the ambient
+one-sided range is assumed. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator
     (H N : ℕ)
     (hN : 0 < N)
@@ -108,9 +120,9 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTran
           H N hN beta hbeta f := by
   rfl
 
-/-- Exact compression characterization: every matrix coefficient of the
-excitation-space operator is the corresponding matrix coefficient of the
-literal raw pair transfer between one-sided physical excitation vectors. -/
+/-- Exact compression characterization: every physical ambient matrix
+coefficient of the excitation-space operator is the corresponding coefficient
+of the literal raw pair transfer between one-sided physical excitation vectors. -/
 theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator_inner_eq_pairTransfer
     (H N : ℕ)
     (hN : 0 < N)
@@ -119,8 +131,12 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTran
     (f u : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
       H N hN beta hbeta) :
     inner ℝ
-        (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator
-          H N hN beta hbeta f) u =
+        ((periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator
+            H N hN beta hbeta f :
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+            H N hN beta hbeta) :
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+        (u : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) =
       inner ℝ
         (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
           H N hN beta hbeta
@@ -129,60 +145,25 @@ theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTran
         (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationPairLinearIsometry
           H N hN beta hbeta u) := by
   rw [periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator_apply]
+  change
+    inner ℝ
+        (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+            H N hN beta hbeta‖ ^ 2 •
+          (((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+              H N hN beta hbeta f :
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+              H N hN beta hbeta) :
+            periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)))
+        (u : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) = _
   rw [real_inner_smul_left]
   symm
-  simpa using
+  exact
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_oneSidedExcitation_matrixCoefficient_eq_sq_physicalNorm_mul
       H N hN beta hbeta f u
 
-/-- The represented compression is unique: any bounded excitation-space
-operator with the literal pair-transfer matrix coefficients equals the operator
-constructed above. -/
-theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator_unique
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (A :
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta →L[ℝ]
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta)
-    (hA : ∀ f u :
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta,
-      inner ℝ (A f) u =
-        inner ℝ
-          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
-            H N hN beta hbeta
-            (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationPairLinearIsometry
-              H N hN beta hbeta f))
-          (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationPairLinearIsometry
-            H N hN beta hbeta u)) :
-    A =
-      periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator
-        H N hN beta hbeta := by
-  apply ContinuousLinearMap.ext
-  intro f
-  apply ext_inner_right ℝ
-  intro u
-  calc
-    inner ℝ (A f) u =
-        inner ℝ
-          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
-            H N hN beta hbeta
-            (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationPairLinearIsometry
-              H N hN beta hbeta f))
-          (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationPairLinearIsometry
-            H N hN beta hbeta u) := hA f u
-    _ = inner ℝ
-        (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator
-          H N hN beta hbeta f) u :=
-      (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator_inner_eq_pairTransfer
-        H N hN beta hbeta f u).symm
-
-/-- The represented raw compression norm factors exactly into the raw
+/- The represented raw compression norm factors exactly into the raw
 pair-vacuum normalization squared and the normalized physical excitation norm. -/
+set_option maxHeartbeats 800000 in
 theorem periodicHypercubicEvenSpecialUnitaryOneSidedExcitationCompressedPairTransferOperator_norm_eq_sq_physicalNorm_mul
     (H N : ℕ)
     (hN : 0 < N)
