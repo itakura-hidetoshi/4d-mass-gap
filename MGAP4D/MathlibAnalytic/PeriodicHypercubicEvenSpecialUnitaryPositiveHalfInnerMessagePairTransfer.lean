@@ -184,7 +184,12 @@ theorem
   let μDeep :=
     periodicHypercubicEvenSpecialUnitaryPositiveHalfDeepInteriorSpatialPathHaarMeasure M N
   letI : IsFiniteMeasure μDeep := by infer_instance
-  have h := norm_integral_le_of_norm_le_const (μ := μDeep)
+  have h := norm_integral_le_of_norm_le_const
+    (μ := μDeep)
+    (f := fun deep =>
+      periodicHypercubicEvenSpecialUnitaryPositiveHalfInnerDeepInteriorPathKernel
+        M N beta (inner, deep))
+    (C := 1)
     (Filter.Eventually.of_forall fun deep => by
       simpa [Real.norm_eq_abs] using
         periodicHypercubicEvenSpecialUnitaryPositiveHalfInnerDeepInteriorPathKernel_abs_le_one
@@ -306,9 +311,9 @@ theorem
           periodicHypercubicEvenSpecialUnitaryPositiveHalfInnerPairDeepHaarMessage
             M N beta p.2)
       (μ.prod μ) := by
-    exact
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_continuous
-        (M + 2) N beta).measurable.aestronglyMeasurable.mul
+    simpa [μ] using
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_aestronglyMeasurable
+        (M + 2) N beta).mul
         ((periodicHypercubicEvenSpecialUnitaryPositiveHalfInnerPairDeepHaarMessage_stronglyMeasurable
           M N beta).aestronglyMeasurable.comp_snd)
   exact Integrable.of_bound hMeas 1
@@ -406,7 +411,16 @@ theorem
         hMsgProd] with p hK hTensor hOne hMsg
       simp only [realL2ExternalTensorFunction] at hTensor
       rw [hK, hTensor, hOne, hMsg]
-      simp
+      change
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
+            (M + 2) N beta p *
+          periodicHypercubicEvenSpecialUnitaryPositiveHalfInnerPairDeepHaarMessage
+            M N beta p.2 =
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
+            (M + 2) N beta p *
+          periodicHypercubicEvenSpecialUnitaryPositiveHalfInnerPairDeepHaarMessage
+            M N beta p.2
+      rfl
     _ = ∫ outer, ∫ inner,
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
             (M + 2) N beta (outer, inner) *
