@@ -119,11 +119,33 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
               H N hN beta hbeta))
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
             H N hN beta hbeta) = lambda
-    rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector_eigen]
-    rw [real_inner_smul_left]
-    rw [real_inner_self_eq_norm_sq]
-    rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector_norm]
-    simp [lambda, Tphys]
+    calc
+      inner ℝ
+          (Tphys
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+              H N hN beta hbeta))
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+            H N hN beta hbeta) =
+        inner ℝ
+          (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+              H N hN beta hbeta‖ •
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+              H N hN beta hbeta)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+            H N hN beta hbeta) := by
+          rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector_eigen]
+      _ = ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+              H N hN beta hbeta‖ *
+            inner ℝ
+              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+                H N hN beta hbeta)
+              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+                H N hN beta hbeta) := by
+          exact real_inner_smul_left _ _ _
+      _ = lambda := by
+          rw [real_inner_self_eq_norm_sq]
+          rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector_norm]
+          simp [lambda, Tphys]
   have hTphysEq :
       Tphys (f :
           periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) =
@@ -158,7 +180,30 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
                   H N hN beta hbeta) :
               periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
             (u : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) := by
-    rw [hTphysEq, real_inner_smul_left, hRcoe]
+    calc
+      inner ℝ
+          (Tphys (f :
+            periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
+          (u : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) =
+        inner ℝ
+          (lambda • S (f :
+            periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
+          (u : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) := by
+            rw [hTphysEq]
+      _ = lambda *
+          inner ℝ
+            (S (f :
+              periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
+            (u : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) := by
+            exact real_inner_smul_left _ _ _
+      _ = lambda *
+          inner ℝ
+            (((R f :
+                periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+                  H N hN beta hbeta) :
+              periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
+            (u : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) := by
+            rw [hRcoe]
   change
     inner ℝ
         (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
