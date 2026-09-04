@@ -203,6 +203,62 @@ theorem
             H (R % 2) N hN beta hbeta) := by
               rw [hone]
 
+/-- Advancing any fixed-ambient inward chain by `2 * k` slices is exactly the
+`k`-fold iterate of the same ambient pair transfer operator.  This is the
+semigroup form of the recursive transfer law, with no restriction on the
+starting parity of `R`. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2_add_two_mul_eq_pairTransferOperator_pow
+    (H R k N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+        H (R + 2 * k) N hN beta hbeta =
+      ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
+          H N hN beta hbeta) ^ k)
+        (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+          H R N hN beta hbeta) := by
+  induction k with
+  | zero =>
+      simp
+  | succ k ih =>
+      let T :=
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
+          H N hN beta hbeta
+      have hstep :=
+        periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2_add_two_eq_pairTransferOperator
+          H (R + 2 * k) N hN beta hbeta
+      calc
+        periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+            H (R + 2 * Nat.succ k) N hN beta hbeta =
+          periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+            H ((R + 2 * k) + 2) N hN beta hbeta := by
+              exact congrArg
+                (fun r =>
+                  periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+                    H r N hN beta hbeta)
+                (by omega)
+        _ = T
+            (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+              H (R + 2 * k) N hN beta hbeta) := by
+              simpa [T] using hstep
+        _ = T
+            ((T ^ k)
+              (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+                H R N hN beta hbeta)) := by
+              rw [ih]
+        _ = (T ^ Nat.succ k)
+            (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+              H R N hN beta hbeta) := by
+              rw [pow_succ', ContinuousLinearMap.mul_def, ContinuousLinearMap.comp_apply]
+        _ =
+          ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
+              H N hN beta hbeta) ^ Nat.succ k)
+            (periodicHypercubicEvenSpecialUnitaryPositiveHalfFixedAmbientRecursiveHaarMessageL2
+              H R N hN beta hbeta) := by
+              rfl
+
 end
 
 end MathlibAnalytic
