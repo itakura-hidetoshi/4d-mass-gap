@@ -141,7 +141,13 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
                 H N hN beta hbeta)
               (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
                 H N hN beta hbeta) := by
-          exact real_inner_smul_left _ _ _
+          exact real_inner_smul_left
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+              H N hN beta hbeta)
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+              H N hN beta hbeta)
+            (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+              H N hN beta hbeta‖ : ℝ)
       _ = lambda := by
           rw [real_inner_self_eq_norm_sq]
           rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector_norm]
@@ -195,7 +201,11 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
             (S (f :
               periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
             (u : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) := by
-            exact real_inner_smul_left _ _ _
+            exact real_inner_smul_left
+              (S (f :
+                periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
+              (u : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+              lambda
       _ = lambda *
           inner ℝ
             (((R f :
