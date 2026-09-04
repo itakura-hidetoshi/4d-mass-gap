@@ -14,6 +14,20 @@ universe u
 
 variable {α : Type u} [MeasurableSpace α] {μ : Measure α}
 
+/-- The real inner product on the one-dimensional scalar carrier is ordinary
+multiplication.  We derive this from the generic real Hilbert-space smul laws,
+rather than relying on `RCLike`-specific simplification. -/
+private theorem realScalar_inner_eq_mul (x y : ℝ) :
+    inner ℝ x y = x * y := by
+  have h11 : inner ℝ (1 : ℝ) (1 : ℝ) = 1 := by
+    rw [real_inner_self_eq_norm_sq]
+    norm_num
+  calc
+    inner ℝ x y = inner ℝ (x • (1 : ℝ)) (y • (1 : ℝ)) := by simp
+    _ = x * (y * inner ℝ (1 : ℝ) (1 : ℝ)) := by
+      rw [real_inner_smul_left, real_inner_smul_right]
+    _ = x * y := by rw [h11]; ring
+
 /-- Fiberwise integral output of a bounded real kernel on a probability space.
 This is the literal integral-operator representative that underlies the
 Fréchet--Riesz Hilbert--Schmidt construction. -/
@@ -123,8 +137,8 @@ theorem realL2BoundedKernelPairing_eq_integralOutput
         ∫ p : α × α, k p.1 p.2 * (f p.1 * g p.2) ∂(μ.prod μ) := by
       apply integral_congr_ae
       filter_upwards [hK, hE] with p hk he
-      rw [hk, he]
-      simp only [realL2ExternalTensorFunction, RCLike.inner_apply', conj_trivial]
+      rw [hk, he, realScalar_inner_eq_mul]
+      simp only [realL2ExternalTensorFunction]
       ring
     _ = ∫ y, ∫ x, k x y * (f x * g y) ∂μ ∂μ := by
       exact integral_prod_symm _ hraw
@@ -162,8 +176,7 @@ theorem realL2HilbertSchmidtKernelOperator_apply_eq_integralOutputL2
   filter_upwards [
     realL2BoundedKernelIntegralOutputL2_coeFn
       (μ := μ) k hkMeas hkBound f] with y hy
-  rw [hy]
-  simpa only [RCLike.inner_apply', conj_trivial]
+  rw [hy, realScalar_inner_eq_mul]
 
 end
 
