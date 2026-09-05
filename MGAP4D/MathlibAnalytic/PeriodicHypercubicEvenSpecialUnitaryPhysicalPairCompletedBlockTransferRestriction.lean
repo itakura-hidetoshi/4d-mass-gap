@@ -88,11 +88,21 @@ theorem periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperat
         (periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
           H N hN beta hbeta v)) = _
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_apply_top_top]
-  change c⁻¹ • (c • _) = _
-  rw [smul_smul, inv_mul_cancel₀ hc, one_smul]
+  change
+    c⁻¹ • c • realL2ExternalTensor
+      (periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
+        H N hN beta hbeta u)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
+        H N hN beta hbeta v) =
+    realL2ExternalTensor
+      (periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
+        H N hN beta hbeta u)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
+        H N hN beta hbeta v)
+  simp [hc]
 
-/-- The normalized pair transfer acts on the `K ⊠ F` decomposable block by the
-one-slice orthogonal restriction on the excitation factor. -/
+/-- The normalized pair transfer acts on `K ⊠ F` by the one-slice orthogonal
+restriction on the excitation factor. -/
 theorem periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator_apply_orthogonal_top
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (f : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
@@ -122,11 +132,25 @@ theorem periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperat
         (periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
           H N hN beta hbeta u)) = _
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_apply_orthogonal_top]
-  change c⁻¹ • (c • _) = _
-  rw [smul_smul, inv_mul_cancel₀ hc, one_smul]
+  change
+    c⁻¹ • c • realL2ExternalTensor
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+        H N hN beta hbeta
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta f))
+      (periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
+        H N hN beta hbeta u) =
+    realL2ExternalTensor
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+        H N hN beta hbeta
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta f))
+      (periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
+        H N hN beta hbeta u)
+  simp [hc]
 
-/-- The normalized pair transfer acts on the `F ⊠ K` decomposable block by the
-one-slice orthogonal restriction on the excitation factor. -/
+/-- The normalized pair transfer acts on `F ⊠ K` by the one-slice orthogonal
+restriction on the excitation factor. -/
 theorem periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator_apply_top_orthogonal
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (u : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
@@ -156,11 +180,25 @@ theorem periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperat
         (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
           H N hN beta hbeta f)) = _
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_apply_top_orthogonal]
-  change c⁻¹ • (c • _) = _
-  rw [smul_smul, inv_mul_cancel₀ hc, one_smul]
+  change
+    c⁻¹ • c • realL2ExternalTensor
+      (periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
+        H N hN beta hbeta u)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+        H N hN beta hbeta
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta f)) =
+    realL2ExternalTensor
+      (periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
+        H N hN beta hbeta u)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+        H N hN beta hbeta
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta f))
+  simp [hc]
 
-/-- The normalized pair transfer acts on the `K ⊠ K` decomposable block by the
-tensor square of the one-slice orthogonal restriction. -/
+/-- The normalized pair transfer acts on `K ⊠ K` by the tensor square of the
+one-slice orthogonal restriction. -/
 theorem periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator_apply_orthogonal_orthogonal
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (f g : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
@@ -190,8 +228,26 @@ theorem periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperat
         (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
           H N hN beta hbeta g)) = _
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_apply_orthogonal_orthogonal]
-  change c⁻¹ • (c • _) = _
-  rw [smul_smul, inv_mul_cancel₀ hc, one_smul]
+  change
+    c⁻¹ • c • realL2ExternalTensor
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+        H N hN beta hbeta
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta f))
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+        H N hN beta hbeta
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta g)) =
+    realL2ExternalTensor
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+        H N hN beta hbeta
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta f))
+      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+        H N hN beta hbeta
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta g))
+  simp [hc]
 
 section Invariance
 
@@ -230,8 +286,8 @@ private theorem continuousLinearMap_topologicalClosure_invariant
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     (A : E →L[ℝ] E)
     (V : Submodule ℝ E)
-    (hV : V ≤ V.comap A.toLinearMap) :
-    V.topologicalClosure ≤ V.topologicalClosure.comap A.toLinearMap := by
+    (hV : V ≤ (V).comap A.toLinearMap) :
+    V.topologicalClosure ≤ (V.topologicalClosure).comap A.toLinearMap := by
   apply V.topologicalClosure_minimal
   · intro x hx
     change A x ∈ V.topologicalClosure
@@ -241,7 +297,7 @@ private theorem continuousLinearMap_topologicalClosure_invariant
 
 /-- The algebraic top-top block is invariant under normalized pair transfer. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan_normalizedTransfer_invariant :
-    TTspan ≤ TTspan.comap S₂.toLinearMap := by
+    TTspan ≤ (TTspan).comap S₂.toLinearMap := by
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan]
   refine Submodule.span_le.2 ?_
   rintro z ⟨⟨u, v⟩, rfl⟩
@@ -257,7 +313,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan_normaliz
 
 /-- The algebraic `K ⊠ F` block is invariant under normalized pair transfer. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_normalizedTransfer_invariant :
-    OTspan ≤ OTspan.comap S₂.toLinearMap := by
+    OTspan ≤ (OTspan).comap S₂.toLinearMap := by
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan]
   refine Submodule.span_le.2 ?_
   rintro z ⟨⟨f, u⟩, rfl⟩
@@ -275,7 +331,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_n
 
 /-- The algebraic `F ⊠ K` block is invariant under normalized pair transfer. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan_normalizedTransfer_invariant :
-    TOspan ≤ TOspan.comap S₂.toLinearMap := by
+    TOspan ≤ (TOspan).comap S₂.toLinearMap := by
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan]
   refine Submodule.span_le.2 ?_
   rintro z ⟨⟨u, f⟩, rfl⟩
@@ -293,7 +349,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan_n
 
 /-- The algebraic `K ⊠ K` block is invariant under normalized pair transfer. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockSpan_normalizedTransfer_invariant :
-    OOspan ≤ OOspan.comap S₂.toLinearMap := by
+    OOspan ≤ (OOspan).comap S₂.toLinearMap := by
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockSpan]
   refine Submodule.span_le.2 ?_
   rintro z ⟨⟨f, g⟩, rfl⟩
@@ -314,8 +370,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBloc
 /-- The algebraic sum of all three non-top blocks is invariant under normalized
 pair transfer. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan_normalizedTransfer_invariant :
-    Nspan ≤ Nspan.comap S₂.toLinearMap := by
+    Nspan ≤ (Nspan).comap S₂.toLinearMap := by
   intro x hx
+  change S₂ x ∈ Nspan
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan] at hx ⊢
   rcases Submodule.mem_sup.1 hx with ⟨y, hy, z, hz, rfl⟩
   rcases Submodule.mem_sup.1 hy with ⟨a, ha, b, hb, rfl⟩
@@ -338,45 +395,50 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan_normaliz
 
 /-- The completed top-top block is invariant under normalized pair transfer. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockClosure_normalizedTransfer_invariant :
-    TT ≤ TT.comap S₂.toLinearMap := by
+    TT ≤ (TT).comap S₂.toLinearMap := by
   change
-    TTspan.topologicalClosure ≤ TTspan.topologicalClosure.comap S₂.toLinearMap
+    (TTspan).topologicalClosure ≤
+      ((TTspan).topologicalClosure).comap S₂.toLinearMap
   exact continuousLinearMap_topologicalClosure_invariant S₂ TTspan
     (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan_normalizedTransfer_invariant
       H N hN beta hbeta)
 
 /-- The completed `K ⊠ F` block is invariant under normalized pair transfer. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockClosure_normalizedTransfer_invariant :
-    OT ≤ OT.comap S₂.toLinearMap := by
+    OT ≤ (OT).comap S₂.toLinearMap := by
   change
-    OTspan.topologicalClosure ≤ OTspan.topologicalClosure.comap S₂.toLinearMap
+    (OTspan).topologicalClosure ≤
+      ((OTspan).topologicalClosure).comap S₂.toLinearMap
   exact continuousLinearMap_topologicalClosure_invariant S₂ OTspan
     (periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_normalizedTransfer_invariant
       H N hN beta hbeta)
 
 /-- The completed `F ⊠ K` block is invariant under normalized pair transfer. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockClosure_normalizedTransfer_invariant :
-    TO ≤ TO.comap S₂.toLinearMap := by
+    TO ≤ (TO).comap S₂.toLinearMap := by
   change
-    TOspan.topologicalClosure ≤ TOspan.topologicalClosure.comap S₂.toLinearMap
+    (TOspan).topologicalClosure ≤
+      ((TOspan).topologicalClosure).comap S₂.toLinearMap
   exact continuousLinearMap_topologicalClosure_invariant S₂ TOspan
     (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan_normalizedTransfer_invariant
       H N hN beta hbeta)
 
 /-- The completed `K ⊠ K` block is invariant under normalized pair transfer. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockClosure_normalizedTransfer_invariant :
-    OO ≤ OO.comap S₂.toLinearMap := by
+    OO ≤ (OO).comap S₂.toLinearMap := by
   change
-    OOspan.topologicalClosure ≤ OOspan.topologicalClosure.comap S₂.toLinearMap
+    (OOspan).topologicalClosure ≤
+      ((OOspan).topologicalClosure).comap S₂.toLinearMap
   exact continuousLinearMap_topologicalClosure_invariant S₂ OOspan
     (periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockSpan_normalizedTransfer_invariant
       H N hN beta hbeta)
 
 /-- The completed non-top block is invariant under normalized pair transfer. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockClosure_normalizedTransfer_invariant :
-    NN ≤ NN.comap S₂.toLinearMap := by
+    NN ≤ (NN).comap S₂.toLinearMap := by
   change
-    Nspan.topologicalClosure ≤ Nspan.topologicalClosure.comap S₂.toLinearMap
+    (Nspan).topologicalClosure ≤
+      ((Nspan).topologicalClosure).comap S₂.toLinearMap
   exact continuousLinearMap_topologicalClosure_invariant S₂ Nspan
     (periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan_normalizedTransfer_invariant
       H N hN beta hbeta)
@@ -384,12 +446,17 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockClosure_norma
 /-- The completed physical pair carrier is invariant under normalized pair
 transfer. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier_normalizedTransfer_invariant :
-    PP ≤ PP.comap S₂.toLinearMap := by
+    PP ≤ (PP).comap S₂.toLinearMap := by
+  intro x hx
+  change S₂ x ∈ PP
+  have hx' : x ∈ TT ⊔ NN := by
+    rw [← periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier_eq_topTopClosure_sup_nonTopClosure
+      H N hN beta hbeta]
+    exact hx
+  rcases Submodule.mem_sup.1 hx' with ⟨t, ht, n, hn, hsum⟩
+  rw [← hsum, map_add]
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier_eq_topTopClosure_sup_nonTopClosure
     H N hN beta hbeta]
-  intro x hx
-  rcases Submodule.mem_sup.1 hx with ⟨t, ht, n, hn, rfl⟩
-  rw [map_add]
   exact Submodule.add_mem _
     (le_sup_left
       (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockClosure_normalizedTransfer_invariant
@@ -403,13 +470,11 @@ private noncomputable def continuousLinearMapRestrictionOfInvariant
     [NormedAddCommGroup E] [NormedSpace ℝ E]
     (A : E →L[ℝ] E)
     (V : Submodule ℝ E)
-    (hV : V ≤ V.comap A.toLinearMap) :
+    (hV : V ≤ (V).comap A.toLinearMap) :
     V →L[ℝ] V := by
   let L : V →ₗ[ℝ] V :=
     { toFun := fun x =>
-        ⟨A (x : E), by
-          change A (x : E) ∈ V
-          exact hV x.property⟩
+        ⟨A (x : E), hV x.property⟩
       map_add' := by
         intro x y
         ext
@@ -458,16 +523,14 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransfer
     (periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockClosure_normalizedTransfer_invariant
       H N hN beta hbeta)
 
-/-- The bundled non-top restriction agrees exactly with the ambient normalized
-pair transfer after coercion. -/
-@[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_coe_apply
-    (x : NN) :
-    ((periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator
-        H N hN beta hbeta x : NN) : PairE) = S₂ (x : PairE) :=
+/-- The bundled restrictions agree exactly with the ambient normalized pair
+transfer after coercion. -/
+@[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockTransferOperator_coe_apply
+    (x : TT) :
+    ((periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockTransferOperator
+        H N hN beta hbeta x : TT) : PairE) = S₂ (x : PairE) :=
   rfl
 
-/-- The bundled mixed-block restrictions agree exactly with the ambient
-normalized pair transfer after coercion. -/
 @[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockTransferOperator_coe_apply
     (x : OT) :
     ((periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockTransferOperator
@@ -486,16 +549,22 @@ normalized pair transfer after coercion. -/
         H N hN beta hbeta x : OO) : PairE) = S₂ (x : PairE) :=
   rfl
 
+@[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_coe_apply
+    (x : NN) :
+    ((periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator
+        H N hN beta hbeta x : NN) : PairE) = S₂ (x : PairE) :=
+  rfl
+
 /-- Audit-visible receipt that the normalized pair transfer is now a genuine
 closed-sector dynamical operator, not only a family of decomposable formulas. -/
 structure PeriodicHypercubicEvenSpecialUnitaryPhysicalPairCompletedBlockTransferRestrictionPackage :
     Prop where
-  topTopInvariant : TT ≤ TT.comap S₂.toLinearMap
-  orthogonalTopInvariant : OT ≤ OT.comap S₂.toLinearMap
-  topOrthogonalInvariant : TO ≤ TO.comap S₂.toLinearMap
-  orthogonalOrthogonalInvariant : OO ≤ OO.comap S₂.toLinearMap
-  nonTopInvariant : NN ≤ NN.comap S₂.toLinearMap
-  physicalCarrierInvariant : PP ≤ PP.comap S₂.toLinearMap
+  topTopInvariant : TT ≤ (TT).comap S₂.toLinearMap
+  orthogonalTopInvariant : OT ≤ (OT).comap S₂.toLinearMap
+  topOrthogonalInvariant : TO ≤ (TO).comap S₂.toLinearMap
+  orthogonalOrthogonalInvariant : OO ≤ (OO).comap S₂.toLinearMap
+  nonTopInvariant : NN ≤ (NN).comap S₂.toLinearMap
+  physicalCarrierInvariant : PP ≤ (PP).comap S₂.toLinearMap
 
 /-- Construct the completed block-transfer restriction package. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairCompletedBlockTransferRestrictionPackage :
