@@ -12,7 +12,7 @@ open scoped TensorProduct InnerProductSpace InnerProduct
 noncomputable section
 
 set_option synthInstance.maxHeartbeats 100000
-set_option maxHeartbeats 4000000
+set_option maxHeartbeats 1000000
 
 local instance physicalPairAlgebraicContractionTopologicalGroup (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -492,9 +492,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTenso
       H N hN beta hbeta) :
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator
         H N hN beta hbeta y‖ ≤ ‖R‖ * ‖y‖ := by
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator
-  exact hilbertTensorRTensor_bound
-    (E := K) (F := K) (G := Ftop) R y
+  change ‖R.toLinearMap.rTensor Ftop y‖ ≤ ‖R‖ * ‖y‖
+  exact hilbertTensorRTensor_bound R y
 
 /-- Native `F ⊠ K` tensors obey the one-factor operator bound before concrete realization. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensorTransferOperator_apply_norm_le
@@ -502,14 +501,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTenso
       H N hN beta hbeta) :
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensorTransferOperator
         H N hN beta hbeta y‖ ≤ ‖R‖ * ‖y‖ := by
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensorTransferOperator
+  change ‖hilbertTensorLTensor R Ftop y‖ ≤ ‖R‖ * ‖y‖
   calc
-    ‖hilbertTensorLTensor (E := Ftop) (G := K) (H := K) R y‖ ≤
-        ‖hilbertTensorLTensor (E := Ftop) (G := K) (H := K) R‖ * ‖y‖ :=
-      (hilbertTensorLTensor (E := Ftop) (G := K) (H := K) R).le_opNorm y
+    ‖hilbertTensorLTensor R Ftop y‖ ≤ ‖hilbertTensorLTensor R Ftop‖ * ‖y‖ :=
+      (hilbertTensorLTensor R Ftop).le_opNorm y
     _ ≤ ‖R‖ * ‖y‖ :=
       mul_le_mul_of_nonneg_right
-        (hilbertTensorLTensor_norm_le (E := Ftop) (G := K) (H := K) R)
+        (hilbertTensorLTensor_norm_le R)
         (norm_nonneg y)
 
 /-- Every vector in the algebraic `K ⊠ F` block obeys the one-factor operator bound. -/
