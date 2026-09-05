@@ -384,12 +384,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan_normaliz
   have hz' :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockSpan_normalizedTransfer_invariant
       H N hN beta hbeta hz
-  exact
-    Submodule.add_mem _
-      (Submodule.add_mem _
-        (le_trans le_sup_left le_sup_left ha')
-        (le_trans le_sup_right le_sup_left hb'))
-      (le_sup_right hz')
+  refine Submodule.mem_sup.2 ?_
+  refine ⟨S₂ a + S₂ b, ?_, S₂ z, hz', rfl⟩
+  exact Submodule.mem_sup.2 ⟨S₂ a, ha', S₂ b, hb', rfl⟩
 
 /-- The completed top-top block is invariant under normalized pair transfer. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockClosure_normalizedTransfer_invariant :
@@ -455,13 +452,15 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier_normalizedTransf
   rw [← hsum, map_add]
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier_eq_topTopClosure_sup_nonTopClosure
     H N hN beta hbeta]
-  exact Submodule.add_mem _
-    (le_sup_left
-      (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockClosure_normalizedTransfer_invariant
-        H N hN beta hbeta ht))
-    (le_sup_right
-      (periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockClosure_normalizedTransfer_invariant
-        H N hN beta hbeta hn))
+  refine Submodule.mem_sup.2 ?_
+  exact
+    ⟨S₂ t,
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockClosure_normalizedTransfer_invariant
+        H N hN beta hbeta ht,
+      S₂ n,
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockClosure_normalizedTransfer_invariant
+        H N hN beta hbeta hn,
+      rfl⟩
 
 private noncomputable def continuousLinearMapRestrictionOfInvariant
     {E : Type*}
