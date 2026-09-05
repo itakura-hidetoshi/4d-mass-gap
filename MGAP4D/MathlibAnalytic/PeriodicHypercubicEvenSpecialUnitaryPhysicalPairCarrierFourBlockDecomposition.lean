@@ -72,33 +72,17 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier
     Submodule ℝ (PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2 H N) :=
   (periodicHypercubicEvenSpecialUnitaryPhysicalPairSpan H N).topologicalClosure
 
-/-- Every decomposable physical pair vector expands into the four blocks induced by
-`F ⊕ Fᗮ` on the two one-slice factors.  The statement retains the full top eigenspace
-and does not assume it is one-dimensional. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2_fourBlockExpansion
+/-- Every decomposable physical pair belongs to the algebraic sum of the top-top
+block and the three blocks carrying at least one orthogonal excitation.  This is
+the four-block expansion induced by the exact one-slice decomposition `F ⊕ Fᗮ`. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2_mem_topTop_sup_nonTop
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (x y : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
-    ∃ u : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
-        H N hN beta hbeta,
-      ∃ f : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta,
-        ∃ v : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
-            H N hN beta hbeta,
-          ∃ g : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-              H N hN beta hbeta,
-            x = (u : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) +
-                (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) ∧
-            y = (v : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) +
-                (g : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) ∧
-            periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2 H N x y =
-              periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopDecomposableL2
-                  H N hN beta hbeta u v +
-                ((periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopDecomposableL2
-                    H N hN beta hbeta f v +
-                  periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalDecomposableL2
-                    H N hN beta hbeta u g) +
-                  periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalDecomposableL2
-                    H N hN beta hbeta f g) := by
+    periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2 H N x y ∈
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan
+          H N hN beta hbeta ⊔
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan
+          H N hN beta hbeta := by
   obtain ⟨u0, hu0, f0, hf0, huf⟩ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_exists_top_add_orthogonal
       H N hN beta hbeta x
@@ -113,38 +97,106 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2_fourBlock
       H N hN beta hbeta := ⟨v0, hv0⟩
   let g : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
       H N hN beta hbeta := ⟨g0, hg0⟩
-  refine ⟨u, f, v, g, ?_, ?_, ?_⟩
-  · simpa [u, f] using huf.symm
-  · simpa [v, g] using hvg.symm
-  · rw [← huf, ← hvg]
-    change
+  have htt :
       realL2ExternalTensor
-          (((u0 + f0 : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
-            Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))
-          (((v0 + g0 : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
-            Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))) =
-        realL2ExternalTensor
-            (u0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
-            (v0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) +
-          ((realL2ExternalTensor
-              (f0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
-              (v0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) +
-            realL2ExternalTensor
-              (u0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
-              (g0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))) +
-            realL2ExternalTensor
-              (f0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
-              (g0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
-    change
+          (u0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+          (v0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) ∈
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan
+          H N hN beta hbeta := by
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan]
+    apply Submodule.subset_span
+    refine ⟨(u, v), ?_⟩
+    rfl
+  have hot :
       realL2ExternalTensor
-          ((u0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) +
-            (f0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))
-          ((v0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) +
-            (g0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))) = _
-    rw [realL2ExternalTensor_add_right,
-      realL2ExternalTensor_add_left,
-      realL2ExternalTensor_add_left]
-    abel
+          (f0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+          (v0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) ∈
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan
+          H N hN beta hbeta := by
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan]
+    apply Submodule.subset_span
+    refine ⟨(f, v), ?_⟩
+    rfl
+  have htopOrth :
+      realL2ExternalTensor
+          (u0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+          (g0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) ∈
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan
+          H N hN beta hbeta := by
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan]
+    apply Submodule.subset_span
+    refine ⟨(u, g), ?_⟩
+    rfl
+  have hoo :
+      realL2ExternalTensor
+          (f0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+          (g0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) ∈
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockSpan
+          H N hN beta hbeta := by
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockSpan]
+    apply Submodule.subset_span
+    refine ⟨(f, g), ?_⟩
+    rfl
+  have hOTle :
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan
+          H N hN beta hbeta ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan
+          H N hN beta hbeta := by
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan]
+    exact le_trans le_sup_left le_sup_left
+  have hTopOrthLe :
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan
+          H N hN beta hbeta ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan
+          H N hN beta hbeta := by
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan]
+    exact le_trans le_sup_right le_sup_left
+  have hOOle :
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockSpan
+          H N hN beta hbeta ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan
+          H N hN beta hbeta := by
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan]
+    exact le_sup_right
+  have httSup := (le_sup_left :
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan H N hN beta hbeta ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan H N hN beta hbeta ⊔
+          periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan
+            H N hN beta hbeta) htt
+  have hotSup := (le_sup_right :
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan H N hN beta hbeta ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan H N hN beta hbeta ⊔
+          periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan
+            H N hN beta hbeta) (hOTle hot)
+  have htopOrthSup := (le_sup_right :
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan H N hN beta hbeta ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan H N hN beta hbeta ⊔
+          periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan
+            H N hN beta hbeta) (hTopOrthLe htopOrth)
+  have hooSup := (le_sup_right :
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan H N hN beta hbeta ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan H N hN beta hbeta ⊔
+          periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan
+            H N hN beta hbeta) (hOOle hoo)
+  rw [← huf, ← hvg]
+  change
+    realL2ExternalTensor
+        ((u0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) +
+          (f0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))
+        ((v0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) +
+          (g0 : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))) ∈ _
+  rw [realL2ExternalTensor_add_right,
+    realL2ExternalTensor_add_left,
+    realL2ExternalTensor_add_left]
+  exact
+    (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan H N hN beta hbeta ⊔
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan H N hN beta hbeta).add_mem
+      ((periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan H N hN beta hbeta ⊔
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan H N hN beta hbeta).add_mem
+        httSup hotSup)
+      ((periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan H N hN beta hbeta ⊔
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan H N hN beta hbeta).add_mem
+        htopOrthSup hooSup)
 
 private theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan_le_physicalPairSpan
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
@@ -216,56 +268,25 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairSpan_eq_topTop_sup_nonTo
     refine Submodule.span_le.2 ?_
     intro z hz
     rcases hz with ⟨⟨x, y⟩, rfl⟩
-    obtain ⟨u, f, v, g, hx, hy, hexpand⟩ :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2_fourBlockExpansion
+    exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2_mem_topTop_sup_nonTop
         H N hN beta hbeta x y
-    let tt := periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopDecomposableL2
-      H N hN beta hbeta u v
-    let ot := periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopDecomposableL2
-      H N hN beta hbeta f v
-    let to := periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalDecomposableL2
-      H N hN beta hbeta u g
-    let oo := periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalDecomposableL2
-      H N hN beta hbeta f g
-    have htt : tt ∈ periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan
-        H N hN beta hbeta := by
-      rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan]
-      apply Submodule.subset_span
-      exact ⟨(u, v), rfl⟩
-    have hot : ot ∈ periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan
-        H N hN beta hbeta := by
-      rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan]
-      apply Submodule.subset_span
-      exact ⟨(f, v), rfl⟩
-    have hto : to ∈ periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan
-        H N hN beta hbeta := by
-      rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan]
-      apply Submodule.subset_span
-      exact ⟨(u, g), rfl⟩
-    have hoo : oo ∈ periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockSpan
-        H N hN beta hbeta := by
-      rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockSpan]
-      apply Submodule.subset_span
-      exact ⟨(f, g), rfl⟩
-    have hnontop : (ot + to) + oo ∈
-        periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan H N hN beta hbeta := by
+  · have hNon :
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan H N hN beta hbeta ≤
+          periodicHypercubicEvenSpecialUnitaryPhysicalPairSpan H N := by
       rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan]
-      refine Submodule.mem_sup.2 ⟨ot + to, ?_, oo, hoo, rfl⟩
-      exact Submodule.mem_sup.2 ⟨ot, hot, to, hto, rfl⟩
-    rw [hexpand]
-    exact Submodule.mem_sup.2 ⟨tt, htt, (ot + to) + oo, hnontop, rfl⟩
-  · refine sup_le
-      (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan_le_physicalPairSpan
-        H N hN beta hbeta) ?_
-    rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan]
-    exact sup_le
-      (sup_le
-        (periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_le_physicalPairSpan
+      exact sup_le
+        (sup_le
+          (periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_le_physicalPairSpan
+            H N hN beta hbeta)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan_le_physicalPairSpan
+            H N hN beta hbeta))
+        (periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockSpan_le_physicalPairSpan
           H N hN beta hbeta)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan_le_physicalPairSpan
-          H N hN beta hbeta))
-      (periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockSpan_le_physicalPairSpan
+    exact sup_le
+      (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan_le_physicalPairSpan
         H N hN beta hbeta)
+      hNon
 
 /-- The completed physical pair carrier is the closure of the algebraic top-top plus
 non-top block sum. -/
