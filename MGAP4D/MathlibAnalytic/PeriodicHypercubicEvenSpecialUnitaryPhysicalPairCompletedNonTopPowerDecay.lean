@@ -74,31 +74,45 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_p
         _ = (S₂ ^ k) (S₂ (x : PairE)) := by
           rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_coe_apply]
 
+/-- Pointwise geometric decay for powers of the bundled completed non-top
+restriction.  The proof is inductive and therefore does not require a
+`NormOneClass` instance on the continuous-linear-map endomorphism algebra. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_pow_apply_norm_le
+    (k : ℕ) (x : NN) :
+    ‖(SN ^ k) x‖ ≤ ‖R‖ ^ k * ‖x‖ := by
+  have hq0 : 0 ≤ ‖R‖ := norm_nonneg R
+  have hSN : ∀ y : NN, ‖SN y‖ ≤ ‖R‖ * ‖y‖ := by
+    intro y
+    calc
+      ‖SN y‖ ≤ ‖SN‖ * ‖y‖ := ContinuousLinearMap.le_opNorm SN y
+      _ ≤ ‖R‖ * ‖y‖ :=
+        mul_le_mul_of_nonneg_right
+          (periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_norm_le
+            H N hN beta hbeta)
+          (norm_nonneg y)
+  induction k generalizing x with
+  | zero => simp
+  | succ k ih =>
+      change
+        ‖(SN ^ k) (SN x)‖ ≤ ‖R‖ ^ Nat.succ k * ‖x‖
+      calc
+        ‖(SN ^ k) (SN x)‖ ≤ ‖R‖ ^ k * ‖SN x‖ := ih (SN x)
+        _ ≤ ‖R‖ ^ k * (‖R‖ * ‖x‖) :=
+          mul_le_mul_of_nonneg_left (hSN x) (pow_nonneg hq0 k)
+        _ = ‖R‖ ^ Nat.succ k * ‖x‖ := by
+          rw [pow_succ]
+          ring
+
 /-- The `k`th power of the completed non-top restriction has operator norm at
 most the `k`th power of the one-slice orthogonal contraction factor. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_pow_norm_le
     (k : ℕ) :
     ‖SN ^ k‖ ≤ ‖R‖ ^ k := by
-  calc
-    ‖SN ^ k‖ ≤ ‖SN‖ ^ k := norm_pow_le SN k
-    _ ≤ ‖R‖ ^ k :=
-      pow_le_pow_left₀ (norm_nonneg SN)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_norm_le
-          H N hN beta hbeta) k
-
-/-- Pointwise geometric decay for powers of the bundled completed non-top
-restriction. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_pow_apply_norm_le
-    (k : ℕ) (x : NN) :
-    ‖(SN ^ k) x‖ ≤ ‖R‖ ^ k * ‖x‖ := by
-  calc
-    ‖(SN ^ k) x‖ ≤ ‖SN ^ k‖ * ‖x‖ :=
-      ContinuousLinearMap.le_opNorm (SN ^ k) x
-    _ ≤ ‖R‖ ^ k * ‖x‖ :=
-      mul_le_mul_of_nonneg_right
-        (periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_pow_norm_le
-          H N hN beta hbeta k)
-        (norm_nonneg x)
+  apply ContinuousLinearMap.opNorm_le_bound (SN ^ k) (pow_nonneg (norm_nonneg R) k)
+  intro x
+  exact
+    periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_pow_apply_norm_le
+      H N hN beta hbeta k x
 
 /-- Ambient form of the finite-volume power decay: every vector in the
 completed physical non-top sector decays geometrically under normalized pair
