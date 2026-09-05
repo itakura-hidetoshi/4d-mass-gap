@@ -121,6 +121,18 @@ theorem hilbertTensorRTensor_norm_le
     (hilbertTensorRTensor f G) (norm_nonneg f) ?_
   exact fun x => hilbertTensorRTensor_bound f x
 
+/-- Pointwise form of the right-tensor operator bound.  This receipt keeps
+concrete closed-subspace specializations away from the Gram-matrix proof. -/
+theorem hilbertTensorRTensor_apply_norm_le
+    (f : E →L[ℝ] F)
+    (x : E ⊗[ℝ] G) :
+    ‖hilbertTensorRTensor f G x‖ ≤ ‖f‖ * ‖x‖ := by
+  calc
+    ‖hilbertTensorRTensor f G x‖ ≤ ‖hilbertTensorRTensor f G‖ * ‖x‖ :=
+      (hilbertTensorRTensor f G).le_opNorm x
+    _ ≤ ‖f‖ * ‖x‖ :=
+      mul_le_mul_of_nonneg_right (hilbertTensorRTensor_norm_le f) (norm_nonneg x)
+
 /-- Tensor a continuous real linear map on the left by the identity. -/
 noncomputable def hilbertTensorLTensor
     (g : G →L[ℝ] H)
@@ -155,6 +167,19 @@ theorem hilbertTensorLTensor_norm_le
     LinearIsometry.norm_toContinuousLinearMap_le,
     LinearIsometry.norm_toContinuousLinearMap_le,
     mul_one, one_mul, hilbertTensorRTensor_norm_le]
+
+/-- Pointwise form of the left-tensor operator bound.  This receipt keeps
+concrete closed-subspace specializations away from definitional normalization
+of the comm-isometry implementation. -/
+theorem hilbertTensorLTensor_apply_norm_le
+    (g : G →L[ℝ] H)
+    (x : E ⊗[ℝ] G) :
+    ‖hilbertTensorLTensor g E x‖ ≤ ‖g‖ * ‖x‖ := by
+  calc
+    ‖hilbertTensorLTensor g E x‖ ≤ ‖hilbertTensorLTensor g E‖ * ‖x‖ :=
+      (hilbertTensorLTensor g E).le_opNorm x
+    _ ≤ ‖g‖ * ‖x‖ :=
+      mul_le_mul_of_nonneg_right (hilbertTensorLTensor_norm_le g) (norm_nonneg x)
 
 /-- The continuous tensor product of two bounded real operators, implemented
 on the pinned Mathlib version where `TensorProduct.mapL` is not yet available. -/
