@@ -53,16 +53,17 @@ local notation "PairP" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier H N
 
 local instance physicalPairCompletedTopTopCompleteSpace : CompleteSpace PairT := by
-  apply IsClosed.completeSpace_coe
-  simpa [periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockClosure] using
-    Submodule.isClosed_topologicalClosure
-      (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan
-        H N hN beta hbeta)
+  have hclosed : IsClosed (PairT : Set PairE) := by
+    simpa [periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockClosure] using
+      Submodule.isClosed_topologicalClosure
+        (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan
+          H N hN beta hbeta)
+  exact hclosed.completeSpace_coe
 
 private theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalProjection_span_mem_nonTop
     {x : PairE}
     (hx : x ∈ periodicHypercubicEvenSpecialUnitaryPhysicalPairSpan H N) :
-    PairTᗮ.starProjection x ∈ PairN := by
+    ((PairT)ᗮ).starProjection x ∈ PairN := by
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairSpan_eq_topTop_sup_nonTop
     H N hN beta hbeta] at hx
   rcases Submodule.mem_sup.1 hx with ⟨t, ht, n, hn, rfl⟩
@@ -79,45 +80,46 @@ private theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalPro
   have hOrtho : PairT ⟂ PairN :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockClosure_isOrtho_nonTopBlockClosure
       H N hN beta hbeta
-  have hnOrth : n ∈ PairTᗮ := hOrtho.symm hnN
-  have hQt : PairTᗮ.starProjection t = 0 :=
+  have hnOrth : n ∈ (PairT)ᗮ := hOrtho.symm hnN
+  have hQt : ((PairT)ᗮ).starProjection t = 0 :=
     Submodule.starProjection_orthogonal_apply_eq_zero (K := PairT) htT
-  have hQn : PairTᗮ.starProjection n = n :=
-    (Submodule.starProjection_eq_self_iff (K := PairTᗮ)).2 hnOrth
+  have hQn : ((PairT)ᗮ).starProjection n = n :=
+    (Submodule.starProjection_eq_self_iff (K := (PairT)ᗮ)).2 hnOrth
   rw [map_add, hQt, hQn, zero_add]
   exact hnN
 
 private theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalProjection_nonTopPreimage_isClosed :
     IsClosed
-      ((PairN.comap PairTᗮ.starProjection.toLinearMap : Submodule ℝ PairE) : Set PairE) := by
+      ((((PairN).comap (((PairT)ᗮ).starProjection.toLinearMap)) : Submodule ℝ PairE) : Set PairE) := by
   have hNclosed : IsClosed (PairN : Set PairE) := by
     simpa [periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockClosure] using
       Submodule.isClosed_topologicalClosure
         (periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan
           H N hN beta hbeta)
-  change IsClosed (PairTᗮ.starProjection ⁻¹' (PairN : Set PairE))
-  exact hNclosed.preimage PairTᗮ.starProjection.continuous
+  change IsClosed (((PairT)ᗮ).starProjection ⁻¹' (PairN : Set PairE))
+  exact hNclosed.preimage ((PairT)ᗮ).starProjection.continuous
 
 /-- The orthogonal projection away from the completed top-top block maps the entire
 completed physical pair carrier into the completed non-top block.  This is the
 continuity step that upgrades the algebraic four-block decomposition to Hilbert
 completion. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalProjection_mem_nonTop
-    (x : PairE) (hx : x ∈ PairP) : PairTᗮ.starProjection x ∈ PairN := by
+    (x : PairE) (hx : x ∈ PairP) : ((PairT)ᗮ).starProjection x ∈ PairN := by
   have hSpan :
       periodicHypercubicEvenSpecialUnitaryPhysicalPairSpan H N ≤
-        PairN.comap PairTᗮ.starProjection.toLinearMap := by
+        (PairN).comap (((PairT)ᗮ).starProjection.toLinearMap) := by
     intro y hy
-    change PairTᗮ.starProjection y ∈ PairN
+    change ((PairT)ᗮ).starProjection y ∈ PairN
     exact
       periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalProjection_span_mem_nonTop
         H N hN beta hbeta hy
   have hPreClosed :
       IsClosed
-        ((PairN.comap PairTᗮ.starProjection.toLinearMap : Submodule ℝ PairE) : Set PairE) :=
+        (((PairN).comap (((PairT)ᗮ).starProjection.toLinearMap) : Submodule ℝ PairE) : Set PairE) :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalProjection_nonTopPreimage_isClosed
       H N hN beta hbeta
-  have hCarrier : PairP ≤ PairN.comap PairTᗮ.starProjection.toLinearMap := by
+  have hCarrier :
+      PairP ≤ (PairN).comap (((PairT)ᗮ).starProjection.toLinearMap) := by
     rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier]
     exact
       (periodicHypercubicEvenSpecialUnitaryPhysicalPairSpan H N).topologicalClosure_minimal
@@ -130,16 +132,20 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier_eq_topTopClosure
     PairP = PairT ⊔ PairN := by
   apply le_antisymm
   · intro x hx
-    have hNproj : PairTᗮ.starProjection x ∈ PairN :=
+    have hNproj : ((PairT)ᗮ).starProjection x ∈ PairN :=
       periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalProjection_mem_nonTop
         H N hN beta hbeta x hx
-    have hTproj : PairT.starProjection x ∈ PairT :=
-      Submodule.starProjection_apply_mem PairT x
-    have hsum : PairT.starProjection x + PairTᗮ.starProjection x = x := by
-      rw [Submodule.starProjection_orthogonal_val]
-      abel
+    have hTproj : (PairT).starProjection x ∈ PairT :=
+      Submodule.starProjection_apply_mem (PairT) x
+    have hsum : (PairT).starProjection x + ((PairT)ᗮ).starProjection x = x := by
+      calc
+        (PairT).starProjection x + ((PairT)ᗮ).starProjection x =
+            (PairT).starProjection x + (x - (PairT).starProjection x) := by
+          rw [Submodule.starProjection_orthogonal_val (K := PairT)]
+        _ = x := by abel
     exact Submodule.mem_sup.2
-      ⟨PairT.starProjection x, hTproj, PairTᗮ.starProjection x, hNproj, hsum⟩
+      ⟨(PairT).starProjection x, hTproj,
+        ((PairT)ᗮ).starProjection x, hNproj, hsum⟩
   · exact sup_le
       (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockClosure_le_physicalPairCarrier
         H N hN beta hbeta)
@@ -150,7 +156,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier_eq_topTopClosure
 orthogonal complement of the completed top-top block.  The ambient orthogonal
 complement may be larger; the intersection with the physical pair carrier is essential. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopClosure_eq_carrier_inf_topTopOrthogonal :
-    PairN = PairP ⊓ PairTᗮ := by
+    PairN = PairP ⊓ (PairT)ᗮ := by
   apply le_antisymm
   · intro x hx
     have hP : x ∈ PairP :=
@@ -162,11 +168,11 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopClosure_eq_carrier
     exact ⟨hP, hOrtho.symm hx⟩
   · intro x hx
     rcases hx with ⟨hxP, hxOrth⟩
-    have hQx : PairTᗮ.starProjection x ∈ PairN :=
+    have hQx : ((PairT)ᗮ).starProjection x ∈ PairN :=
       periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalProjection_mem_nonTop
         H N hN beta hbeta x hxP
-    have hfix : PairTᗮ.starProjection x = x :=
-      (Submodule.starProjection_eq_self_iff (K := PairTᗮ)).2 hxOrth
+    have hfix : ((PairT)ᗮ).starProjection x = x :=
+      (Submodule.starProjection_eq_self_iff (K := (PairT)ᗮ)).2 hxOrth
     rw [hfix] at hQx
     exact hQx
 
@@ -186,7 +192,7 @@ structure PeriodicHypercubicEvenSpecialUnitaryPhysicalPairCarrierCompletedOrthog
     Prop where
   completedDecomposition : PairP = PairT ⊔ PairN
   orthogonal : PairT ⟂ PairN
-  relativeOrthogonalComplement : PairN = PairP ⊓ PairTᗮ
+  relativeOrthogonalComplement : PairN = PairP ⊓ (PairT)ᗮ
   decomposes :
     ∀ x : PairE, x ∈ PairP →
       ∃ t : PairE, t ∈ PairT ∧ ∃ n : PairE, n ∈ PairN ∧ t + n = x
