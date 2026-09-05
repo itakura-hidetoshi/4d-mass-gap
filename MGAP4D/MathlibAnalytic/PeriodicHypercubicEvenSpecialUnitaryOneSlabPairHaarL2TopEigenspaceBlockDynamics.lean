@@ -334,18 +334,32 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
     H N hN beta hbeta
   let R := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
     H N hN beta hbeta
+  let E := periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+    H N hN beta hbeta
+  let U := periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
+    H N hN beta hbeta
   let c : ℝ := ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
     H N hN beta hbeta‖ ^ 2
-  change (T ^ k) _ = c ^ k • _
+  change
+    (T ^ k) (realL2ExternalTensor (E f) (U u)) =
+      c ^ k • realL2ExternalTensor (E ((R ^ k) f)) (U u)
   induction k generalizing f with
   | zero => simp
   | succ k ih =>
-      rw [pow_succ]
-      change (T ^ k) (T _) = _
+      change
+        (T ^ k) (T (realL2ExternalTensor (E f) (U u))) =
+          c ^ (k + 1) • realL2ExternalTensor (E ((R ^ k) (R f))) (U u)
       rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_apply_orthogonal_top]
-      rw [map_smul, ih]
-      simp only [pow_succ, smul_smul]
-      ring
+      change
+        (T ^ k) (c • realL2ExternalTensor (E (R f)) (U u)) = _
+      calc
+        (T ^ k) (c • realL2ExternalTensor (E (R f)) (U u)) =
+            c • (T ^ k) (realL2ExternalTensor (E (R f)) (U u)) := by
+          exact (T ^ k).map_smul c _
+        _ = c • (c ^ k • realL2ExternalTensor (E ((R ^ k) (R f))) (U u)) := by
+          exact congrArg (fun z => c • z) (ih (R f))
+        _ = c ^ (k + 1) • realL2ExternalTensor (E ((R ^ k) (R f))) (U u) := by
+          rw [smul_smul, pow_succ, mul_comm c (c ^ k)]
 
 /-- Exact natural powers on the left-top/right-excitation block. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_pow_top_orthogonal
@@ -375,18 +389,32 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
     H N hN beta hbeta
   let R := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
     H N hN beta hbeta
+  let E := periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+    H N hN beta hbeta
+  let U := periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
+    H N hN beta hbeta
   let c : ℝ := ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
     H N hN beta hbeta‖ ^ 2
-  change (T ^ k) _ = c ^ k • _
+  change
+    (T ^ k) (realL2ExternalTensor (U u) (E f)) =
+      c ^ k • realL2ExternalTensor (U u) (E ((R ^ k) f))
   induction k generalizing f with
   | zero => simp
   | succ k ih =>
-      rw [pow_succ]
-      change (T ^ k) (T _) = _
+      change
+        (T ^ k) (T (realL2ExternalTensor (U u) (E f))) =
+          c ^ (k + 1) • realL2ExternalTensor (U u) (E ((R ^ k) (R f)))
       rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_apply_top_orthogonal]
-      rw [map_smul, ih]
-      simp only [pow_succ, smul_smul]
-      ring
+      change
+        (T ^ k) (c • realL2ExternalTensor (U u) (E (R f))) = _
+      calc
+        (T ^ k) (c • realL2ExternalTensor (U u) (E (R f))) =
+            c • (T ^ k) (realL2ExternalTensor (U u) (E (R f))) := by
+          exact (T ^ k).map_smul c _
+        _ = c • (c ^ k • realL2ExternalTensor (U u) (E ((R ^ k) (R f)))) := by
+          exact congrArg (fun z => c • z) (ih (R f))
+        _ = c ^ (k + 1) • realL2ExternalTensor (U u) (E ((R ^ k) (R f))) := by
+          rw [smul_smul, pow_succ, mul_comm c (c ^ k)]
 
 /-- Exact natural powers on the double-excitation block. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_pow_orthogonal_orthogonal
@@ -416,18 +444,32 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
     H N hN beta hbeta
   let R := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
     H N hN beta hbeta
+  let E := periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+    H N hN beta hbeta
   let c : ℝ := ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
     H N hN beta hbeta‖ ^ 2
-  change (T ^ k) _ = c ^ k • _
+  change
+    (T ^ k) (realL2ExternalTensor (E f) (E g)) =
+      c ^ k • realL2ExternalTensor (E ((R ^ k) f)) (E ((R ^ k) g))
   induction k generalizing f g with
   | zero => simp
   | succ k ih =>
-      rw [pow_succ]
-      change (T ^ k) (T _) = _
+      change
+        (T ^ k) (T (realL2ExternalTensor (E f) (E g))) =
+          c ^ (k + 1) •
+            realL2ExternalTensor (E ((R ^ k) (R f))) (E ((R ^ k) (R g)))
       rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_apply_orthogonal_orthogonal]
-      rw [map_smul, ih]
-      simp only [pow_succ, smul_smul]
-      ring
+      change
+        (T ^ k) (c • realL2ExternalTensor (E (R f)) (E (R g))) = _
+      calc
+        (T ^ k) (c • realL2ExternalTensor (E (R f)) (E (R g))) =
+            c • (T ^ k) (realL2ExternalTensor (E (R f)) (E (R g))) := by
+          exact (T ^ k).map_smul c _
+        _ = c • (c ^ k • realL2ExternalTensor (E ((R ^ k) (R f))) (E ((R ^ k) (R g)))) := by
+          exact congrArg (fun z => c • z) (ih (R f) (R g))
+        _ = c ^ (k + 1) •
+              realL2ExternalTensor (E ((R ^ k) (R f))) (E ((R ^ k) (R g))) := by
+          rw [smul_smul, pow_succ, mul_comm c (c ^ k)]
 
 /-- Positive-time norm decay on the left-excitation/right-top block. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_pow_orthogonal_top_norm_le
@@ -448,19 +490,33 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
           H N hN beta hbeta‖ ^ 2) ^ k *
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
           H N hN beta hbeta) ^ k * ‖f‖ * ‖u‖ := by
+  let E := periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+    H N hN beta hbeta
+  let U := periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
+    H N hN beta hbeta
+  let R := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+    H N hN beta hbeta
+  let c : ℝ := ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+    H N hN beta hbeta‖ ^ 2
+  let q : ℝ := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
+    H N hN beta hbeta
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_pow_orthogonal_top]
-  rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg (pow_nonneg (sq_nonneg _) _),
-    realL2ExternalTensor_norm,
-    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
-      H N hN beta hbeta).norm_map,
-    (periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
-      H N hN beta hbeta).norm_map]
-  have hR :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_apply_norm_le_of_pos
-      H N hN beta hbeta k hk f
-  nlinarith [norm_nonneg u,
-    pow_nonneg (sq_nonneg
-      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator H N hN beta hbeta‖) k]
+  change
+    ‖c ^ k • realL2ExternalTensor (E ((R ^ k) f)) (U u)‖ ≤
+      c ^ k * q ^ k * ‖f‖ * ‖u‖
+  rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg (pow_nonneg (sq_nonneg _) k)]
+  rw [realL2ExternalTensor_norm, E.norm_map, U.norm_map]
+  have hR : ‖(R ^ k) f‖ ≤ q ^ k * ‖f‖ := by
+    simpa [R, q] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_apply_norm_le_of_pos
+        H N hN beta hbeta k hk f
+  have hc : 0 ≤ c ^ k := pow_nonneg (sq_nonneg _) k
+  have hu : 0 ≤ ‖u‖ := norm_nonneg _
+  calc
+    c ^ k * (‖(R ^ k) f‖ * ‖u‖) ≤
+        c ^ k * ((q ^ k * ‖f‖) * ‖u‖) :=
+      mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_right hR hu) hc
+    _ = c ^ k * q ^ k * ‖f‖ * ‖u‖ := by ring
 
 /-- Positive-time norm decay on the left-top/right-excitation block. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_pow_top_orthogonal_norm_le
@@ -481,19 +537,33 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
           H N hN beta hbeta‖ ^ 2) ^ k *
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
           H N hN beta hbeta) ^ k * ‖u‖ * ‖f‖ := by
+  let U := periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
+    H N hN beta hbeta
+  let E := periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+    H N hN beta hbeta
+  let R := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+    H N hN beta hbeta
+  let c : ℝ := ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+    H N hN beta hbeta‖ ^ 2
+  let q : ℝ := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
+    H N hN beta hbeta
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_pow_top_orthogonal]
-  rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg (pow_nonneg (sq_nonneg _) _),
-    realL2ExternalTensor_norm,
-    (periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
-      H N hN beta hbeta).norm_map,
-    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
-      H N hN beta hbeta).norm_map]
-  have hR :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_apply_norm_le_of_pos
-      H N hN beta hbeta k hk f
-  nlinarith [norm_nonneg u,
-    pow_nonneg (sq_nonneg
-      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator H N hN beta hbeta‖) k]
+  change
+    ‖c ^ k • realL2ExternalTensor (U u) (E ((R ^ k) f))‖ ≤
+      c ^ k * q ^ k * ‖u‖ * ‖f‖
+  rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg (pow_nonneg (sq_nonneg _) k)]
+  rw [realL2ExternalTensor_norm, U.norm_map, E.norm_map]
+  have hR : ‖(R ^ k) f‖ ≤ q ^ k * ‖f‖ := by
+    simpa [R, q] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_apply_norm_le_of_pos
+        H N hN beta hbeta k hk f
+  have hc : 0 ≤ c ^ k := pow_nonneg (sq_nonneg _) k
+  have hu : 0 ≤ ‖u‖ := norm_nonneg _
+  calc
+    c ^ k * (‖u‖ * ‖(R ^ k) f‖) ≤
+        c ^ k * (‖u‖ * (q ^ k * ‖f‖)) :=
+      mul_le_mul_of_nonneg_left (mul_le_mul_of_nonneg_left hR hu) hc
+    _ = c ^ k * q ^ k * ‖u‖ * ‖f‖ := by ring
 
 /-- Positive-time doubled decay on the double-excitation block. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_pow_orthogonal_orthogonal_norm_le
@@ -512,30 +582,50 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
           H N hN beta hbeta‖ ^ 2) ^ k *
         ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
           H N hN beta hbeta) ^ k) ^ 2 * ‖f‖ * ‖g‖ := by
+  let E := periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+    H N hN beta hbeta
+  let R := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+    H N hN beta hbeta
+  let c : ℝ := ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+    H N hN beta hbeta‖ ^ 2
+  let q : ℝ := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
+    H N hN beta hbeta
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_pow_orthogonal_orthogonal]
-  rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg (pow_nonneg (sq_nonneg _) _),
-    realL2ExternalTensor_norm,
-    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
-      H N hN beta hbeta).norm_map,
-    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
-      H N hN beta hbeta).norm_map]
-  have hf :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_apply_norm_le_of_pos
-      H N hN beta hbeta k hk f
-  have hg :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_apply_norm_le_of_pos
-      H N hN beta hbeta k hk g
-  have hc : 0 ≤
-      (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-          H N hN beta hbeta‖ ^ 2) ^ k :=
-    pow_nonneg (sq_nonneg _) _
-  have hq : 0 ≤
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
-        H N hN beta hbeta) ^ k :=
-    pow_nonneg
+  change
+    ‖c ^ k • realL2ExternalTensor (E ((R ^ k) f)) (E ((R ^ k) g))‖ ≤
+      c ^ k * (q ^ k) ^ 2 * ‖f‖ * ‖g‖
+  rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg (pow_nonneg (sq_nonneg _) k)]
+  rw [realL2ExternalTensor_norm, E.norm_map, E.norm_map]
+  have hf : ‖(R ^ k) f‖ ≤ q ^ k * ‖f‖ := by
+    simpa [R, q] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_apply_norm_le_of_pos
+        H N hN beta hbeta k hk f
+  have hg : ‖(R ^ k) g‖ ≤ q ^ k * ‖g‖ := by
+    simpa [R, q] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_pow_apply_norm_le_of_pos
+        H N hN beta hbeta k hk g
+  have hc : 0 ≤ c ^ k := pow_nonneg (sq_nonneg _) k
+  have hq0 : 0 ≤ q := by
+    simpa [q] using
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor_pos
-        H N hN beta hbeta).le _
-  nlinarith [norm_nonneg f, norm_nonneg g]
+        H N hN beta hbeta).le
+  have hq : 0 ≤ q ^ k := pow_nonneg hq0 k
+  have hRfBound : 0 ≤ q ^ k * ‖f‖ :=
+    mul_nonneg hq (norm_nonneg _)
+  have hprod :
+      ‖(R ^ k) f‖ * ‖(R ^ k) g‖ ≤
+        (q ^ k * ‖f‖) * (q ^ k * ‖g‖) := by
+    calc
+      ‖(R ^ k) f‖ * ‖(R ^ k) g‖ ≤
+          (q ^ k * ‖f‖) * ‖(R ^ k) g‖ :=
+        mul_le_mul_of_nonneg_right hf (norm_nonneg _)
+      _ ≤ (q ^ k * ‖f‖) * (q ^ k * ‖g‖) :=
+        mul_le_mul_of_nonneg_left hg hRfBound
+  calc
+    c ^ k * (‖(R ^ k) f‖ * ‖(R ^ k) g‖) ≤
+        c ^ k * ((q ^ k * ‖f‖) * (q ^ k * ‖g‖)) :=
+      mul_le_mul_of_nonneg_left hprod hc
+    _ = c ^ k * (q ^ k) ^ 2 * ‖f‖ * ‖g‖ := by ring
 
 /-- Audit-visible fixed-finite-volume block hierarchy.  The full top eigenspace
 is retained, so no vacuum-uniqueness assumption is hidden.  Mixed blocks decay
