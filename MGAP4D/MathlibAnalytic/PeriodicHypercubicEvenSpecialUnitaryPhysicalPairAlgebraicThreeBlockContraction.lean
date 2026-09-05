@@ -12,7 +12,7 @@ open scoped TensorProduct InnerProductSpace InnerProduct
 noncomputable section
 
 set_option synthInstance.maxHeartbeats 100000
-set_option maxHeartbeats 4000000
+set_option maxHeartbeats 1000000
 
 local instance physicalPairAlgebraicContractionTopologicalGroup (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -492,10 +492,22 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTenso
       H N hN beta hbeta) :
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator
         H N hN beta hbeta y‖ ≤ ‖R‖ * ‖y‖ := by
-  change
-    ‖hilbertTensorRTensor (E := K) (F := K) (G := Ftop) R y‖ ≤ ‖R‖ * ‖y‖
-  exact hilbertTensorRTensor_apply_norm_le
-    (E := K) (F := K) (G := Ftop) (f := R) (x := y)
+  have hT :
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator
+          H N hN beta hbeta‖ ≤ ‖R‖ := by
+    unfold periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator
+    unfold hilbertTensorRTensor
+    apply LinearMap.mkContinuous_norm_le
+    exact norm_nonneg R
+  calc
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator
+        H N hN beta hbeta y‖ ≤
+        ‖periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator
+          H N hN beta hbeta‖ * ‖y‖ :=
+      (periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator
+        H N hN beta hbeta).le_opNorm y
+    _ ≤ ‖R‖ * ‖y‖ :=
+      mul_le_mul_of_nonneg_right hT (norm_nonneg y)
 
 /-- Native `F ⊠ K` tensors obey the one-factor operator bound before concrete realization. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensorTransferOperator_apply_norm_le
@@ -503,10 +515,23 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTenso
       H N hN beta hbeta) :
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensorTransferOperator
         H N hN beta hbeta y‖ ≤ ‖R‖ * ‖y‖ := by
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensorTransferOperator
+  unfold hilbertTensorLTensor
   change
-    ‖hilbertTensorLTensor (E := Ftop) (G := K) (H := K) R y‖ ≤ ‖R‖ * ‖y‖
-  exact hilbertTensorLTensor_apply_norm_le
-    (E := Ftop) (G := K) (H := K) (g := R) (x := y)
+    ‖TensorProduct.commIsometry ℝ K Ftop
+        (periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator
+          H N hN beta hbeta
+          (TensorProduct.commIsometry ℝ Ftop K y))‖ ≤ ‖R‖ * ‖y‖
+  rw [(TensorProduct.commIsometry ℝ K Ftop).norm_map]
+  calc
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator
+        H N hN beta hbeta
+        (TensorProduct.commIsometry ℝ Ftop K y)‖ ≤
+        ‖R‖ * ‖TensorProduct.commIsometry ℝ Ftop K y‖ :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator_apply_norm_le
+        H N hN beta hbeta (TensorProduct.commIsometry ℝ Ftop K y)
+    _ = ‖R‖ * ‖y‖ := by
+      rw [(TensorProduct.commIsometry ℝ Ftop K).norm_map]
 
 /-- Every vector in the algebraic `K ⊠ F` block obeys the one-factor operator bound. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_normalizedTransfer_norm_le
