@@ -352,6 +352,11 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBloc
     refine Submodule.span_le.2 ?_
     rintro z ⟨⟨f, g⟩, rfl⟩
     refine ⟨f ⊗ₜ[ℝ] g, ?_⟩
+    change
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbeddingNativeLinearIsometry
+          H N hN beta hbeta (f ⊗ₜ[ℝ] g) =
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalDecomposableL2
+          H N hN beta hbeta f g
     rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbeddingNativeLinearIsometry_apply]
     exact periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding_tmul
       H N hN beta hbeta f g
@@ -404,7 +409,9 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopN
         H N hN beta hbeta →L[ℝ]
       PeriodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopAlgebraicTensorCore
         H N hN beta hbeta :=
-  hilbertTensorRTensor R Ftop
+  hilbertTensorRTensor
+    (E := K) (F := K) (G := Ftop)
+    R Ftop
 
 /-- Native `I ⊗ R` action on the whole algebraic `F ⊠ K` tensor core. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensorTransferOperator :
@@ -412,7 +419,9 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalN
         H N hN beta hbeta →L[ℝ]
       PeriodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalAlgebraicTensorCore
         H N hN beta hbeta :=
-  hilbertTensorLTensor R Ftop
+  hilbertTensorLTensor
+    (E := Ftop) (G := K) (H := K)
+    R Ftop
 
 /-- On the whole algebraic `K ⊠ F` tensor core, normalized pair transfer is exactly `R ⊗ I`. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensor_intertwines_normalizedTransfer
@@ -425,12 +434,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTenso
   induction x using TensorProduct.induction_on with
   | zero => simp
   | tmul f u =>
-      change
-        S₂
-            (periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopDecomposableL2
-              H N hN beta hbeta f u) =
-          periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopDecomposableL2
-            H N hN beta hbeta (R f) u
+      simp only [periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator,
+        hilbertTensorRTensor_tmul,
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopAlgebraicTensorLinearIsometry_tmul]
       exact
         periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator_apply_orthogonal_top
           H N hN beta hbeta f u
@@ -448,12 +454,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTenso
   induction x using TensorProduct.induction_on with
   | zero => simp
   | tmul u f =>
-      change
-        S₂
-            (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalDecomposableL2
-              H N hN beta hbeta u f) =
-          periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalDecomposableL2
-            H N hN beta hbeta u (R f)
+      simp only [periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensorTransferOperator,
+        hilbertTensorLTensor_tmul,
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalAlgebraicTensorLinearIsometry_tmul]
       exact
         periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator_apply_top_orthogonal
           H N hN beta hbeta u f
@@ -500,8 +503,12 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_n
   change ‖S₂ (JOT y)‖ ≤ ‖R‖ * ‖JOT y‖
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensor_intertwines_normalizedTransfer]
   rw [(JOT).norm_map, (JOT).norm_map]
-  change ‖hilbertTensorRTensor R Ftop y‖ ≤ ‖R‖ * ‖y‖
-  exact hilbertTensorRTensor_bound R y
+  change
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator
+        H N hN beta hbeta y‖ ≤ ‖R‖ * ‖y‖
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator
+  exact hilbertTensorRTensor_bound
+    (E := K) (F := K) (G := Ftop) R y
 
 /-- Every vector in the algebraic `F ⊠ K` block obeys the one-factor operator bound. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan_normalizedTransfer_norm_le
@@ -520,13 +527,17 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan_n
   change ‖S₂ (JTO y)‖ ≤ ‖R‖ * ‖JTO y‖
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensor_intertwines_normalizedTransfer]
   rw [(JTO).norm_map, (JTO).norm_map]
-  change ‖hilbertTensorLTensor R Ftop y‖ ≤ ‖R‖ * ‖y‖
+  change
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensorTransferOperator
+        H N hN beta hbeta y‖ ≤ ‖R‖ * ‖y‖
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensorTransferOperator
   calc
-    ‖hilbertTensorLTensor R Ftop y‖ ≤ ‖hilbertTensorLTensor R Ftop‖ * ‖y‖ :=
-      (hilbertTensorLTensor R Ftop).le_opNorm y
+    ‖hilbertTensorLTensor (E := Ftop) (G := K) (H := K) R Ftop y‖ ≤
+        ‖hilbertTensorLTensor (E := Ftop) (G := K) (H := K) R Ftop‖ * ‖y‖ :=
+      (hilbertTensorLTensor (E := Ftop) (G := K) (H := K) R Ftop).le_opNorm y
     _ ≤ ‖R‖ * ‖y‖ :=
       mul_le_mul_of_nonneg_right
-        (hilbertTensorLTensor_norm_le (E := Ftop) R)
+        (hilbertTensorLTensor_norm_le (E := Ftop) (G := K) (H := K) R)
         (norm_nonneg y)
 
 /-- Every vector in the algebraic `K ⊠ K` block obeys the two-factor operator bound. -/
