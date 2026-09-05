@@ -107,6 +107,116 @@ abbrev PeriodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalAlgebraicTen
     (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
       H N hN beta hbeta)
 
+@[reducible] local instance physicalPairOrthogonalOrthogonalTensorNormedAddCommGroup
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
+    NormedAddCommGroup
+      (PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
+        H N hN beta hbeta) :=
+  TensorProduct.instNormedAddCommGroup
+    (𝕜 := ℝ)
+    (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+    (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+
+@[reducible] local instance physicalPairOrthogonalOrthogonalTensorInnerProductSpace
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
+    InnerProductSpace ℝ
+      (PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
+        H N hN beta hbeta) :=
+  TensorProduct.instInnerProductSpace
+    (𝕜 := ℝ)
+    (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+    (F := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+
+@[reducible] local instance physicalPairAlgebraicContractionL2TensorNormedAddCommGroup
+    (H N : ℕ) :
+    NormedAddCommGroup
+      (Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) ⊗[ℝ]
+        Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) :=
+  TensorProduct.instNormedAddCommGroup
+    (𝕜 := ℝ)
+    (E := Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+    (F := Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+
+@[reducible] local instance physicalPairAlgebraicContractionL2TensorInnerProductSpace
+    (H N : ℕ) :
+    InnerProductSpace ℝ
+      (Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) ⊗[ℝ]
+        Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) :=
+  TensorProduct.instInnerProductSpace
+    (𝕜 := ℝ)
+    (E := Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+    (F := Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+
+/-- Tensor the one-slice `K` and `F` inclusions before passing to pair `L²`. -/
+noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopAlgebraicTensorFactorLinearIsometry
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
+    PeriodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopAlgebraicTensorCore
+        H N hN beta hbeta →ₗᵢ[ℝ]
+      (Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) ⊗[ℝ]
+        Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) :=
+  hilbertTensorLinearIsometry
+    (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+    (F := Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+    (G := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
+      H N hN beta hbeta)
+    (H := Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+      H N hN beta hbeta)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
+      H N hN beta hbeta)
+
+/-- Tensor the one-slice `F` and `K` inclusions before passing to pair `L²`. -/
+noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalAlgebraicTensorFactorLinearIsometry
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
+    PeriodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalAlgebraicTensorCore
+        H N hN beta hbeta →ₗᵢ[ℝ]
+      (Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) ⊗[ℝ]
+        Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) :=
+  hilbertTensorLinearIsometry
+    (E := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
+      H N hN beta hbeta)
+    (F := Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+    (G := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+    (H := Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+    (periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
+      H N hN beta hbeta)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+      H N hN beta hbeta)
+
+@[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopAlgebraicTensorFactorLinearIsometry_tmul
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+    (u : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
+      H N hN beta hbeta) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopAlgebraicTensorFactorLinearIsometry
+        H N hN beta hbeta (f ⊗ₜ[ℝ] u) =
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+          H N hN beta hbeta f ⊗ₜ[ℝ]
+        periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
+          H N hN beta hbeta u := by
+  rfl
+
+@[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalAlgebraicTensorFactorLinearIsometry_tmul
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (u : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
+      H N hN beta hbeta)
+    (f : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalAlgebraicTensorFactorLinearIsometry
+        H N hN beta hbeta (u ⊗ₜ[ℝ] f) =
+      periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
+          H N hN beta hbeta u ⊗ₜ[ℝ]
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+          H N hN beta hbeta f := by
+  rfl
+
 /-- Exact native-Hilbert isometry from `K ⊠ F` algebraic tensors into pair `L²`. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopAlgebraicTensorLinearIsometry
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
@@ -116,11 +226,8 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopA
   (realL2ExternalTensorLiftLinearIsometry
       (μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
       (ν := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)).comp
-    (hilbertTensorLinearIsometry
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
-        H N hN beta hbeta)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
-        H N hN beta hbeta))
+    (periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopAlgebraicTensorFactorLinearIsometry
+      H N hN beta hbeta)
 
 /-- Exact native-Hilbert isometry from `F ⊠ K` algebraic tensors into pair `L²`. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalAlgebraicTensorLinearIsometry
@@ -131,11 +238,8 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalA
   (realL2ExternalTensorLiftLinearIsometry
       (μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
       (ν := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)).comp
-    (hilbertTensorLinearIsometry
-      (periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
-        H N hN beta hbeta)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
-        H N hN beta hbeta))
+    (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalAlgebraicTensorFactorLinearIsometry
+      H N hN beta hbeta)
 
 @[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopAlgebraicTensorLinearIsometry_tmul
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
@@ -147,6 +251,11 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalA
         H N hN beta hbeta (f ⊗ₜ[ℝ] u) =
       periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopDecomposableL2
         H N hN beta hbeta f u := by
+  change
+    realL2ExternalTensorLift
+        (periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopAlgebraicTensorFactorLinearIsometry
+          H N hN beta hbeta (f ⊗ₜ[ℝ] u)) = _
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopAlgebraicTensorFactorLinearIsometry_tmul]
   rfl
 
 @[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalAlgebraicTensorLinearIsometry_tmul
@@ -159,6 +268,11 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalA
         H N hN beta hbeta (u ⊗ₜ[ℝ] f) =
       periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalDecomposableL2
         H N hN beta hbeta u f := by
+  change
+    realL2ExternalTensorLift
+        (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalAlgebraicTensorFactorLinearIsometry
+          H N hN beta hbeta (u ⊗ₜ[ℝ] f)) = _
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalAlgebraicTensorFactorLinearIsometry_tmul]
   rfl
 
 /-- The algebraic `K ⊠ F` block span is exactly the range of its native tensor isometry. -/
@@ -172,10 +286,16 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_e
   apply le_antisymm
   · rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan]
     refine Submodule.span_le.2 ?_
-    intro z hz
-    rcases hz with ⟨⟨f, u⟩, rfl⟩
-    exact ⟨f ⊗ₜ[ℝ] u, rfl⟩
+    rintro z ⟨⟨f, u⟩, rfl⟩
+    refine ⟨f ⊗ₜ[ℝ] u, ?_⟩
+    exact periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopAlgebraicTensorLinearIsometry_tmul
+      H N hN beta hbeta f u
   · rintro z ⟨x, rfl⟩
+    change
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopAlgebraicTensorLinearIsometry
+          H N hN beta hbeta x ∈
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan
+          H N hN beta hbeta
     induction x using TensorProduct.induction_on with
     | zero => simp
     | tmul f u =>
@@ -198,10 +318,16 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan_e
   apply le_antisymm
   · rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan]
     refine Submodule.span_le.2 ?_
-    intro z hz
-    rcases hz with ⟨⟨u, f⟩, rfl⟩
-    exact ⟨u ⊗ₜ[ℝ] f, rfl⟩
+    rintro z ⟨⟨u, f⟩, rfl⟩
+    refine ⟨u ⊗ₜ[ℝ] f, ?_⟩
+    exact periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalAlgebraicTensorLinearIsometry_tmul
+      H N hN beta hbeta u f
   · rintro z ⟨x, rfl⟩
+    change
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalAlgebraicTensorLinearIsometry
+          H N hN beta hbeta x ∈
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan
+          H N hN beta hbeta
     induction x using TensorProduct.induction_on with
     | zero => simp
     | tmul u f =>
@@ -213,8 +339,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan_e
         rw [map_add]
         exact Submodule.add_mem _ hx hy
 
-/-- The algebraic `K ⊠ K` block span is exactly the range of the pre-existing
-native excitation-tensor isometry. -/
+/-- The algebraic `K ⊠ K` block span is exactly the range of the existing native tensor isometry. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockSpan_eq_range_nativeTensorIsometry
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockSpan
@@ -225,18 +350,22 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBloc
   apply le_antisymm
   · rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockSpan]
     refine Submodule.span_le.2 ?_
-    intro z hz
-    rcases hz with ⟨⟨f, g⟩, rfl⟩
-    exact ⟨f ⊗ₜ[ℝ] g, rfl⟩
+    rintro z ⟨⟨f, g⟩, rfl⟩
+    refine ⟨f ⊗ₜ[ℝ] g, ?_⟩
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbeddingNativeLinearIsometry_apply]
+    exact periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding_tmul
+      H N hN beta hbeta f g
   · rintro z ⟨x, rfl⟩
+    change
+      periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbeddingNativeLinearIsometry
+          H N hN beta hbeta x ∈
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockSpan
+          H N hN beta hbeta
     induction x using TensorProduct.induction_on with
     | zero => simp
     | tmul f g =>
-        change
-          periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalDecomposableL2
-              H N hN beta hbeta f g ∈
-            periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockSpan
-              H N hN beta hbeta
+        rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbeddingNativeLinearIsometry_apply]
+        rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbedding_tmul]
         rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockSpan]
         apply Submodule.subset_span
         exact ⟨(f, g), rfl⟩
@@ -250,7 +379,7 @@ variable (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
 
 local notation "PairE" =>
   PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2 H N
-local notation "F" =>
+local notation "Ftop" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace H N hN beta hbeta
 local notation "K" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal H N hN beta hbeta
@@ -269,12 +398,30 @@ local notation "JOO" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbeddingNativeLinearIsometry
     H N hN beta hbeta
 
-/-- On the whole algebraic `K ⊠ F` tensor core, normalized pair transfer is
-exactly `R ⊗ I`. -/
+/-- Native `R ⊗ I` action on the whole algebraic `K ⊠ F` tensor core. -/
+noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator :
+    PeriodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopAlgebraicTensorCore
+        H N hN beta hbeta →L[ℝ]
+      PeriodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopAlgebraicTensorCore
+        H N hN beta hbeta :=
+  hilbertTensorRTensor R Ftop
+
+/-- Native `I ⊗ R` action on the whole algebraic `F ⊠ K` tensor core. -/
+noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensorTransferOperator :
+    PeriodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalAlgebraicTensorCore
+        H N hN beta hbeta →L[ℝ]
+      PeriodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalAlgebraicTensorCore
+        H N hN beta hbeta :=
+  hilbertTensorLTensor R Ftop
+
+/-- On the whole algebraic `K ⊠ F` tensor core, normalized pair transfer is exactly `R ⊗ I`. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensor_intertwines_normalizedTransfer
     (x : PeriodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopAlgebraicTensorCore
       H N hN beta hbeta) :
-    S₂ (JOT x) = JOT (hilbertTensorRTensor R F x) := by
+    S₂ (JOT x) =
+      JOT
+        (periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator
+          H N hN beta hbeta x) := by
   induction x using TensorProduct.induction_on with
   | zero => simp
   | tmul f u =>
@@ -288,14 +435,16 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTenso
         periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator_apply_orthogonal_top
           H N hN beta hbeta f u
   | add x y hx hy =>
-      rw [map_add, map_add, map_add, hx, hy]
+      simp only [map_add, hx, hy]
 
-/-- On the whole algebraic `F ⊠ K` tensor core, normalized pair transfer is
-exactly `I ⊗ R`. -/
+/-- On the whole algebraic `F ⊠ K` tensor core, normalized pair transfer is exactly `I ⊗ R`. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensor_intertwines_normalizedTransfer
     (x : PeriodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalAlgebraicTensorCore
       H N hN beta hbeta) :
-    S₂ (JTO x) = JTO (hilbertTensorLTensor R F x) := by
+    S₂ (JTO x) =
+      JTO
+        (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensorTransferOperator
+          H N hN beta hbeta x) := by
   induction x using TensorProduct.induction_on with
   | zero => simp
   | tmul u f =>
@@ -309,10 +458,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTenso
         periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator_apply_top_orthogonal
           H N hN beta hbeta u f
   | add x y hx hy =>
-      rw [map_add, map_add, map_add, hx, hy]
+      simp only [map_add, hx, hy]
 
-/-- On the whole algebraic `K ⊠ K` tensor core, normalized pair transfer is
-exactly the native tensor-square transfer at one time step. -/
+/-- On the whole algebraic `K ⊠ K` tensor core, normalized pair transfer is the existing tensor-square transfer at one step. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalNativeTensor_intertwines_normalizedTransfer
     (x : PeriodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorCore
       H N hN beta hbeta) :
@@ -333,73 +481,84 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalNati
         periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator_apply_orthogonal_orthogonal
           H N hN beta hbeta f g
   | add x y hx hy =>
-      rw [map_add, map_add, map_add, hx, hy]
+      simp only [map_add, hx, hy]
 
-/-- Every vector in the algebraic `K ⊠ F` block obeys the sharp one-factor
-operator bound `‖S₂ x‖ ≤ ‖R‖ ‖x‖`. -/
+/-- Every vector in the algebraic `K ⊠ F` block obeys the one-factor operator bound. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_normalizedTransfer_norm_le
     (x : PairE)
     (hx : x ∈ periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan
       H N hN beta hbeta) :
     ‖S₂ x‖ ≤ ‖R‖ * ‖x‖ := by
-  have hxRange : x ∈ LinearMap.range JOT.toLinearMap := by
+  have hxRange :
+      x ∈ LinearMap.range
+        (periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopAlgebraicTensorLinearIsometry
+          H N hN beta hbeta).toLinearMap := by
     rw [← periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_eq_range_nativeTensorIsometry
       H N hN beta hbeta]
     exact hx
   rcases hxRange with ⟨y, rfl⟩
+  change ‖S₂ (JOT y)‖ ≤ ‖R‖ * ‖JOT y‖
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensor_intertwines_normalizedTransfer]
-  rw [JOT.norm_map, JOT.norm_map]
+  rw [(JOT).norm_map, (JOT).norm_map]
+  change ‖hilbertTensorRTensor R Ftop y‖ ≤ ‖R‖ * ‖y‖
   exact hilbertTensorRTensor_bound R y
 
-/-- Every vector in the algebraic `F ⊠ K` block obeys the sharp one-factor
-operator bound `‖S₂ x‖ ≤ ‖R‖ ‖x‖`. -/
+/-- Every vector in the algebraic `F ⊠ K` block obeys the one-factor operator bound. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan_normalizedTransfer_norm_le
     (x : PairE)
     (hx : x ∈ periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan
       H N hN beta hbeta) :
     ‖S₂ x‖ ≤ ‖R‖ * ‖x‖ := by
-  have hxRange : x ∈ LinearMap.range JTO.toLinearMap := by
+  have hxRange :
+      x ∈ LinearMap.range
+        (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalAlgebraicTensorLinearIsometry
+          H N hN beta hbeta).toLinearMap := by
     rw [← periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan_eq_range_nativeTensorIsometry
       H N hN beta hbeta]
     exact hx
   rcases hxRange with ⟨y, rfl⟩
+  change ‖S₂ (JTO y)‖ ≤ ‖R‖ * ‖JTO y‖
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensor_intertwines_normalizedTransfer]
-  rw [JTO.norm_map, JTO.norm_map]
-  exact hilbertTensorLTensor_norm_le R |>.trans
-    (by
-      have h := (hilbertTensorLTensor R F).le_opNorm y
-      exact le_trans h
-        (mul_le_mul_of_nonneg_right
-          (hilbertTensorLTensor_norm_le (E := F) R) (norm_nonneg y)))
+  rw [(JTO).norm_map, (JTO).norm_map]
+  change ‖hilbertTensorLTensor R Ftop y‖ ≤ ‖R‖ * ‖y‖
+  calc
+    ‖hilbertTensorLTensor R Ftop y‖ ≤ ‖hilbertTensorLTensor R Ftop‖ * ‖y‖ :=
+      (hilbertTensorLTensor R Ftop).le_opNorm y
+    _ ≤ ‖R‖ * ‖y‖ :=
+      mul_le_mul_of_nonneg_right
+        (hilbertTensorLTensor_norm_le (E := Ftop) R)
+        (norm_nonneg y)
 
-/-- Every vector in the algebraic `K ⊠ K` block obeys the two-factor operator
-bound `‖S₂ x‖ ≤ ‖R‖² ‖x‖`. -/
+/-- Every vector in the algebraic `K ⊠ K` block obeys the two-factor operator bound. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockSpan_normalizedTransfer_norm_le
     (x : PairE)
     (hx : x ∈ periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockSpan
       H N hN beta hbeta) :
     ‖S₂ x‖ ≤ (‖R‖ * ‖R‖) * ‖x‖ := by
-  have hxRange : x ∈ LinearMap.range JOO.toLinearMap := by
+  have hxRange :
+      x ∈ LinearMap.range
+        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationAlgebraicTensorEmbeddingNativeLinearIsometry
+          H N hN beta hbeta).toLinearMap := by
     rw [← periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockSpan_eq_range_nativeTensorIsometry
       H N hN beta hbeta]
     exact hx
   rcases hxRange with ⟨y, rfl⟩
+  change ‖S₂ (JOO y)‖ ≤ (‖R‖ * ‖R‖) * ‖JOO y‖
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalNativeTensor_intertwines_normalizedTransfer]
+  rw [(JOO).norm_map, (JOO).norm_map]
   let T :=
     periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer
       H N hN beta hbeta 1
   have hT : ‖T‖ ≤ ‖R‖ * ‖R‖ := by
-    simpa [T] using
+    simpa [T, pow_one] using
       periodicHypercubicEvenSpecialUnitaryPhysicalExcitationNativeHilbertTensorTransfer_norm_le_mul
         H N hN beta hbeta 1
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalNativeTensor_intertwines_normalizedTransfer]
-  rw [JOO.norm_map, JOO.norm_map]
   calc
     ‖T y‖ ≤ ‖T‖ * ‖y‖ := T.le_opNorm y
     _ ≤ (‖R‖ * ‖R‖) * ‖y‖ :=
       mul_le_mul_of_nonneg_right hT (norm_nonneg y)
 
-/-- Audit-visible algebraic three-block contraction package.  It is entirely
-finite-volume and makes no scale-uniform or continuum claim. -/
+/-- Audit-visible algebraic three-block contraction package. -/
 structure PeriodicHypercubicEvenSpecialUnitaryPhysicalPairAlgebraicThreeBlockContractionPackage :
     Prop where
   orthogonalTop :
