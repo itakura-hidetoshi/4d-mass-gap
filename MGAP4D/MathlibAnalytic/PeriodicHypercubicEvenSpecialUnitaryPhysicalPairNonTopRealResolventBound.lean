@@ -12,6 +12,38 @@ noncomputable section
 set_option synthInstance.maxHeartbeats 100000
 set_option maxHeartbeats 1000000
 
+/-- Generic right-inverse identity for the native real resolvent of a continuous
+linear endomorphism.  Keeping this carrier-independent avoids elaborating the
+physical-pair carrier inside the algebraic inverse calculation. -/
+private theorem continuousLinearMap_realShift_resolvent_apply
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    (T : E →L[ℝ] E) (lambda : ℝ)
+    (hres : lambda ∈ resolventSet ℝ T) (y : E) :
+    lambda • (resolvent T lambda) y - T ((resolvent T lambda) y) = y := by
+  have hmul :
+      (algebraMap ℝ (E →L[ℝ] E) lambda - T) * resolvent T lambda = 1 := by
+    unfold resolvent
+    exact Ring.mul_inverse_cancel _ hres
+  have happly := congrArg (fun F : E →L[ℝ] E => F y) hmul
+  simpa [ContinuousLinearMap.algebraMap_apply] using happly
+
+/-- Generic reciprocal-distance resolvent estimate obtained from a shifted
+coercive estimate. -/
+private theorem continuousLinearMap_resolvent_norm_bound_of_shifted_coercive
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    (T : E →L[ℝ] E) (q lambda : ℝ)
+    (hres : lambda ∈ resolventSet ℝ T)
+    (hpositive : 0 < |lambda| - q)
+    (hcoerc : ∀ x : E,
+      (|lambda| - q) * ‖x‖ ≤ ‖lambda • x - T x‖)
+    (y : E) :
+    ‖(resolvent T lambda) y‖ ≤ (|lambda| - q)⁻¹ * ‖y‖ := by
+  have h := hcoerc ((resolvent T lambda) y)
+  rw [continuousLinearMap_realShift_resolvent_apply T lambda hres y] at h
+  rw [inv_mul_eq_div]
+  apply (le_div_iff₀ hpositive).2
+  simpa [mul_comm] using h
+
 local instance physicalPairNonTopRealResolventBoundTopologicalGroup (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
@@ -53,40 +85,22 @@ local notation "NN" =>
 local notation "SN" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator H N hN beta hbeta
 
-/-- Outside the finite-volume contraction disk, the native real resolvent is a
-right inverse for the shifted completed non-top transfer. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShift_resolvent
-    (lambda : ℝ) (hlambda : ‖R‖ < |lambda|) (y : NN) :
-    lambda • (resolvent SN lambda) y - SN ((resolvent SN lambda) y) = y := by
-  have hres : lambda ∈ resolventSet ℝ SN :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_mem_realResolventSet_of_factor_lt_abs
-      H N hN beta hbeta lambda hlambda
-  have hmul :
-      (algebraMap ℝ (NN →L[ℝ] NN) lambda - SN) * resolvent SN lambda = 1 := by
-    unfold resolvent
-    exact Ring.mul_inverse_cancel _ hres
-  have happly := congrArg (fun F : NN →L[ℝ] NN => F y) hmul
-  simpa [ContinuousLinearMap.algebraMap_apply] using happly
-
 /-- Sharp pointwise finite-volume real resolvent estimate in reciprocal-distance
 form. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent_norm_bound
     (lambda : ℝ) (hlambda : ‖R‖ < |lambda|) (y : NN) :
     ‖(resolvent SN lambda) y‖ ≤ (|lambda| - ‖R‖)⁻¹ * ‖y‖ := by
-  let x : NN := (resolvent SN lambda) y
-  have hcoerc :=
+  have hres : lambda ∈ resolventSet ℝ SN :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_mem_realResolventSet_of_factor_lt_abs
+      H N hN beta hbeta lambda hlambda
+  have hpositive : 0 < |lambda| - ‖R‖ := sub_pos.mpr hlambda
+  apply
+    continuousLinearMap_resolvent_norm_bound_of_shifted_coercive
+      SN ‖R‖ lambda hres hpositive
+  intro x
+  exact
     periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_shifted_coercive
       H N hN beta hbeta lambda x
-  have hshift : lambda • x - SN x = y := by
-    dsimp [x]
-    exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShift_resolvent
-        H N hN beta hbeta lambda hlambda y
-  rw [hshift] at hcoerc
-  have hpositive : 0 < |lambda| - ‖R‖ := sub_pos.mpr hlambda
-  rw [inv_mul_eq_div]
-  apply (le_div_iff₀ hpositive).2
-  simpa [x, mul_comm] using hcoerc
 
 /-- Operator norm of the finite-volume real resolvent is controlled by the
 inverse distance from `lambda` to the contraction disk. -/
