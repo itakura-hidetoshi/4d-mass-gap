@@ -96,25 +96,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_m
         (algebraMap ℝ (NN →L[ℝ] NN) lambda *
           ((1 : NN →L[ℝ] NN) - lambda⁻¹ • SN)) :=
     hscalar.mul hgeom
-  have hinv :
-      algebraMap ℝ (NN →L[ℝ] NN) lambda *
-          algebraMap ℝ (NN →L[ℝ] NN) lambda⁻¹ = 1 := by
-    rw [← map_mul]
-    simp [hlambda0]
   have hfactor :
       algebraMap ℝ (NN →L[ℝ] NN) lambda *
           ((1 : NN →L[ℝ] NN) - lambda⁻¹ • SN) =
         algebraMap ℝ (NN →L[ℝ] NN) lambda - SN := by
-    rw [Algebra.smul_def]
-    calc
-      algebraMap ℝ (NN →L[ℝ] NN) lambda *
-            (1 - algebraMap ℝ (NN →L[ℝ] NN) lambda⁻¹ * SN) =
-          algebraMap ℝ (NN →L[ℝ] NN) lambda -
-            (algebraMap ℝ (NN →L[ℝ] NN) lambda *
-              algebraMap ℝ (NN →L[ℝ] NN) lambda⁻¹) * SN := by
-        noncomm_ring
-      _ = algebraMap ℝ (NN →L[ℝ] NN) lambda - SN := by
-        rw [hinv, one_mul]
+    rw [Algebra.algebraMap_eq_smul_one]
+    rw [smul_mul_assoc, one_mul, smul_sub, smul_smul]
+    simp [hlambda0]
   change IsUnit (algebraMap ℝ (NN →L[ℝ] NN) lambda - SN)
   rw [← hfactor]
   exact hprod
