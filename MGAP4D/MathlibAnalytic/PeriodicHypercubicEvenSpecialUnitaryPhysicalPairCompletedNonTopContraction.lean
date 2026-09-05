@@ -142,13 +142,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan_normaliz
   rcases Submodule.mem_sup.1 hy with ⟨a, ha, b, hb, rfl⟩
   have hab : inner ℝ a b = 0 :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_isOrtho_topOrthogonalBlockSpan
-      H N hN beta hbeta a ha b hb
+      H N hN beta hbeta a b ha hb
   have hac : inner ℝ a c = 0 :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_isOrtho_orthogonalOrthogonalBlockSpan
-      H N hN beta hbeta a ha c hc
+      H N hN beta hbeta a c ha hc
   have hbc : inner ℝ b c = 0 :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan_isOrtho_orthogonalOrthogonalBlockSpan
-      H N hN beta hbeta b hb c hc
+      H N hN beta hbeta b c hb hc
   have haS : S₂ a ∈ OTspan :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_normalizedTransfer_invariant
       H N hN beta hbeta ha
@@ -160,13 +160,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan_normaliz
       H N hN beta hbeta hc
   have habS : inner ℝ (S₂ a) (S₂ b) = 0 :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_isOrtho_topOrthogonalBlockSpan
-      H N hN beta hbeta (S₂ a) haS (S₂ b) hbS
+      H N hN beta hbeta (S₂ a) (S₂ b) haS hbS
   have hacS : inner ℝ (S₂ a) (S₂ c) = 0 :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_isOrtho_orthogonalOrthogonalBlockSpan
-      H N hN beta hbeta (S₂ a) haS (S₂ c) hcS
+      H N hN beta hbeta (S₂ a) (S₂ c) haS hcS
   have hbcS : inner ℝ (S₂ b) (S₂ c) = 0 :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan_isOrtho_orthogonalOrthogonalBlockSpan
-      H N hN beta hbeta (S₂ b) hbS (S₂ c) hcS
+      H N hN beta hbeta (S₂ b) (S₂ c) hbS hcS
   have haBound : ‖S₂ a‖ ≤ ‖R‖ * ‖a‖ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_normalizedTransfer_norm_le
       H N hN beta hbeta a ha
@@ -197,7 +197,9 @@ pair sector by sequential closure and continuity of normalized pair transfer. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockClosure_normalizedTransfer_norm_le
     (x : PairE) (hx : x ∈ NN) :
     ‖S₂ x‖ ≤ ‖R‖ * ‖x‖ := by
-  change x ∈ Nspan.topologicalClosure at hx
+  change x ∈
+    (periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan
+      H N hN beta hbeta).topologicalClosure at hx
   rw [← SetLike.mem_coe, Submodule.topologicalClosure_coe,
     mem_closure_iff_seq_limit] at hx
   rcases hx with ⟨u, hu, hux⟩
