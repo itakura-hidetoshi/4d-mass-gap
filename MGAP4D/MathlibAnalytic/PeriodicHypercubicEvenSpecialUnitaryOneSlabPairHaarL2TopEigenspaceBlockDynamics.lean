@@ -543,48 +543,30 @@ at one factor `q^k`, the double-excitation block at `q^(2k)`, while the top-top
 block is the noncontracting raw-normalization block. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_topEigenspaceBlockFiniteVolumeDecay
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
-    ∃ q : ℝ,
-      0 < q ∧ q < 1 ∧
+    ∃ q : ℝ, 0 < q ∧ q < 1 ∧
       (∀ (k : ℕ), 0 < k →
-        ∀ (f : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-            H N hN beta hbeta)
-          (u : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
-            H N hN beta hbeta),
-          ‖(periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
-              H N hN beta hbeta ^ k)
+        ∀ (f : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal H N hN beta hbeta)
+          (u : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace H N hN beta hbeta),
+          ‖(periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator H N hN beta hbeta ^ k)
               (realL2ExternalTensor
-                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
-                  H N hN beta hbeta f)
-                (periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
-                  H N hN beta hbeta u))‖ ≤
-            (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-                H N hN beta hbeta‖ ^ 2) ^ k * q ^ k * ‖f‖ * ‖u‖) ∧
+                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry H N hN beta hbeta f)
+                (periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry H N hN beta hbeta u))‖ ≤
+            (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator H N hN beta hbeta‖ ^ 2) ^ k * q ^ k * ‖f‖ * ‖u‖) ∧
       (∀ (k : ℕ), 0 < k →
-        ∀ (u : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
-            H N hN beta hbeta)
-          (f : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-            H N hN beta hbeta),
-          ‖(periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
-              H N hN beta hbeta ^ k)
+        ∀ (u : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace H N hN beta hbeta)
+          (f : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal H N hN beta hbeta),
+          ‖(periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator H N hN beta hbeta ^ k)
               (realL2ExternalTensor
-                (periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry
-                  H N hN beta hbeta u)
-                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
-                  H N hN beta hbeta f))‖ ≤
-            (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-                H N hN beta hbeta‖ ^ 2) ^ k * q ^ k * ‖u‖ * ‖f‖) ∧
+                (periodicHypercubicEvenSpecialUnitaryPhysicalTopEigenspaceL2LinearIsometry H N hN beta hbeta u)
+                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry H N hN beta hbeta f))‖ ≤
+            (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator H N hN beta hbeta‖ ^ 2) ^ k * q ^ k * ‖u‖ * ‖f‖) ∧
       (∀ (k : ℕ), 0 < k →
-        ∀ f g : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-            H N hN beta hbeta,
-          ‖(periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator
-              H N hN beta hbeta ^ k)
+        ∀ f g : periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal H N hN beta hbeta,
+          ‖(periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator H N hN beta hbeta ^ k)
               (realL2ExternalTensor
-                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
-                  H N hN beta hbeta f)
-                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
-                  H N hN beta hbeta g))‖ ≤
-            (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-                H N hN beta hbeta‖ ^ 2) ^ k * (q ^ k) ^ 2 * ‖f‖ * ‖g‖) := by
+                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry H N hN beta hbeta f)
+                (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry H N hN beta hbeta g))‖ ≤
+            (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator H N hN beta hbeta‖ ^ 2) ^ k * (q ^ k) ^ 2 * ‖f‖ * ‖g‖) := by
   let q := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceDecayFactor
     H N hN beta hbeta
   refine ⟨q, ?_, ?_, ?_, ?_, ?_⟩
