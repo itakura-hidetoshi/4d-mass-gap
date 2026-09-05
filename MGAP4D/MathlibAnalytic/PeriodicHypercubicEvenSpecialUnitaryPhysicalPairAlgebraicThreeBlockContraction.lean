@@ -486,50 +486,22 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalNati
   | add x y hx hy =>
       simp only [map_add, hx, hy]
 
-/-- Every vector in the algebraic `K ⊠ F` block obeys the one-factor operator bound. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_normalizedTransfer_norm_le
-    (x : PairE)
-    (hx : x ∈ periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan
+/-- Native `K ⊠ F` tensors obey the one-factor operator bound before concrete realization. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator_apply_norm_le
+    (y : PeriodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopAlgebraicTensorCore
       H N hN beta hbeta) :
-    ‖S₂ x‖ ≤ ‖R‖ * ‖x‖ := by
-  have hxRange :
-      x ∈ LinearMap.range
-        (periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopAlgebraicTensorLinearIsometry
-          H N hN beta hbeta).toLinearMap := by
-    rw [← periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_eq_range_nativeTensorIsometry
-      H N hN beta hbeta]
-    exact hx
-  rcases hxRange with ⟨y, rfl⟩
-  change ‖S₂ (JOT y)‖ ≤ ‖R‖ * ‖JOT y‖
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensor_intertwines_normalizedTransfer]
-  rw [(JOT).norm_map, (JOT).norm_map]
-  change
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator
-        H N hN beta hbeta y‖ ≤ ‖R‖ * ‖y‖
+        H N hN beta hbeta y‖ ≤ ‖R‖ * ‖y‖ := by
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator
   exact hilbertTensorRTensor_bound
     (E := K) (F := K) (G := Ftop) R y
 
-/-- Every vector in the algebraic `F ⊠ K` block obeys the one-factor operator bound. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan_normalizedTransfer_norm_le
-    (x : PairE)
-    (hx : x ∈ periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan
+/-- Native `F ⊠ K` tensors obey the one-factor operator bound before concrete realization. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensorTransferOperator_apply_norm_le
+    (y : PeriodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalAlgebraicTensorCore
       H N hN beta hbeta) :
-    ‖S₂ x‖ ≤ ‖R‖ * ‖x‖ := by
-  have hxRange :
-      x ∈ LinearMap.range
-        (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalAlgebraicTensorLinearIsometry
-          H N hN beta hbeta).toLinearMap := by
-    rw [← periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan_eq_range_nativeTensorIsometry
-      H N hN beta hbeta]
-    exact hx
-  rcases hxRange with ⟨y, rfl⟩
-  change ‖S₂ (JTO y)‖ ≤ ‖R‖ * ‖JTO y‖
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensor_intertwines_normalizedTransfer]
-  rw [(JTO).norm_map, (JTO).norm_map]
-  change
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensorTransferOperator
-        H N hN beta hbeta y‖ ≤ ‖R‖ * ‖y‖
+        H N hN beta hbeta y‖ ≤ ‖R‖ * ‖y‖ := by
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensorTransferOperator
   calc
     ‖hilbertTensorLTensor (E := Ftop) (G := K) (H := K) R y‖ ≤
@@ -539,6 +511,52 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan_n
       mul_le_mul_of_nonneg_right
         (hilbertTensorLTensor_norm_le (E := Ftop) (G := K) (H := K) R)
         (norm_nonneg y)
+
+/-- Every vector in the algebraic `K ⊠ F` block obeys the one-factor operator bound. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_normalizedTransfer_norm_le
+    (x : PairE)
+    (hx : x ∈ periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan
+      H N hN beta hbeta) :
+    ‖S₂ x‖ ≤ ‖R‖ * ‖x‖ := by
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_eq_range_nativeTensorIsometry
+    H N hN beta hbeta] at hx
+  rcases hx with ⟨y, hy⟩
+  subst x
+  calc
+    ‖S₂ (JOT y)‖ =
+        ‖JOT
+          (periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator
+            H N hN beta hbeta y)‖ := by
+      rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensor_intertwines_normalizedTransfer]
+    _ = ‖periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator
+          H N hN beta hbeta y‖ := (JOT).norm_map _
+    _ ≤ ‖R‖ * ‖y‖ :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator_apply_norm_le
+        H N hN beta hbeta y
+    _ = ‖R‖ * ‖JOT y‖ := by rw [(JOT).norm_map]
+
+/-- Every vector in the algebraic `F ⊠ K` block obeys the one-factor operator bound. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan_normalizedTransfer_norm_le
+    (x : PairE)
+    (hx : x ∈ periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan
+      H N hN beta hbeta) :
+    ‖S₂ x‖ ≤ ‖R‖ * ‖x‖ := by
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan_eq_range_nativeTensorIsometry
+    H N hN beta hbeta] at hx
+  rcases hx with ⟨y, hy⟩
+  subst x
+  calc
+    ‖S₂ (JTO y)‖ =
+        ‖JTO
+          (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensorTransferOperator
+            H N hN beta hbeta y)‖ := by
+      rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensor_intertwines_normalizedTransfer]
+    _ = ‖periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensorTransferOperator
+          H N hN beta hbeta y‖ := (JTO).norm_map _
+    _ ≤ ‖R‖ * ‖y‖ :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensorTransferOperator_apply_norm_le
+        H N hN beta hbeta y
+    _ = ‖R‖ * ‖JTO y‖ := by rw [(JTO).norm_map]
 
 /-- Every vector in the algebraic `K ⊠ K` block obeys the two-factor operator bound. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockSpan_normalizedTransfer_norm_le
