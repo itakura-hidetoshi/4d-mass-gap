@@ -86,7 +86,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_i
   have hSN : ‖SN‖ ≤ ‖R‖ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_norm_le
       H N hN beta hbeta
-  have hApply0 : ‖SN x‖ ≤ ‖SN‖ * ‖x‖ := SN.le_opNorm x
+  have hApply0 : ‖SN x‖ ≤ ‖SN‖ * ‖x‖ :=
+    ContinuousLinearMap.le_opNorm
+      (periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator
+        H N hN beta hbeta) x
   have hApply : ‖SN x‖ ≤ ‖R‖ * ‖x‖ :=
     hApply0.trans
       (mul_le_mul_of_nonneg_right hSN (norm_nonneg x))
