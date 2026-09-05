@@ -46,6 +46,8 @@ section NonTopRealSpectrumResolvent
 
 variable (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
 
+local notation "PairE" =>
+  PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2 H N
 local notation "R" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
     H N hN beta hbeta
@@ -53,6 +55,14 @@ local notation "NN" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockClosure H N hN beta hbeta
 local notation "SN" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator H N hN beta hbeta
+
+local instance physicalPairNonTopRealSpectrumNonTopCompleteSpace : CompleteSpace NN := by
+  have hclosed : IsClosed (NN : Set PairE) := by
+    change IsClosed
+      (((periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan
+          H N hN beta hbeta).topologicalClosure : Submodule ℝ PairE) : Set PairE)
+    exact Submodule.isClosed_topologicalClosure _
+  exact hclosed.completeSpace_coe
 
 /-- Every real scalar whose modulus lies strictly outside the finite-volume
 non-top contraction factor belongs to the real resolvent set of the bundled
@@ -86,10 +96,28 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_m
         (algebraMap ℝ (NN →L[ℝ] NN) lambda *
           ((1 : NN →L[ℝ] NN) - lambda⁻¹ • SN)) :=
     hscalar.mul hgeom
+  have hinv :
+      algebraMap ℝ (NN →L[ℝ] NN) lambda *
+          algebraMap ℝ (NN →L[ℝ] NN) lambda⁻¹ = 1 := by
+    rw [← map_mul]
+    simp [hlambda0]
+  have hfactor :
+      algebraMap ℝ (NN →L[ℝ] NN) lambda *
+          ((1 : NN →L[ℝ] NN) - lambda⁻¹ • SN) =
+        algebraMap ℝ (NN →L[ℝ] NN) lambda - SN := by
+    rw [Algebra.smul_def]
+    calc
+      algebraMap ℝ (NN →L[ℝ] NN) lambda *
+            (1 - algebraMap ℝ (NN →L[ℝ] NN) lambda⁻¹ * SN) =
+          algebraMap ℝ (NN →L[ℝ] NN) lambda -
+            (algebraMap ℝ (NN →L[ℝ] NN) lambda *
+              algebraMap ℝ (NN →L[ℝ] NN) lambda⁻¹) * SN := by
+        noncomm_ring
+      _ = algebraMap ℝ (NN →L[ℝ] NN) lambda - SN := by
+        rw [hinv, one_mul]
   change IsUnit (algebraMap ℝ (NN →L[ℝ] NN) lambda - SN)
-  convert hprod using 1
-  ext x
-  simp [ContinuousLinearMap.algebraMap_apply, hlambda0]
+  rw [← hfactor]
+  exact hprod
 
 /-- The full real spectrum, not merely the point spectrum, is bounded in modulus
 by the finite-volume contraction factor inherited from the one-slice orthogonal
