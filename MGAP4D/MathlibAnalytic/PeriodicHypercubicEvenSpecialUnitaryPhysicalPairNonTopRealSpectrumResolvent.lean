@@ -77,7 +77,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_m
         (inv_mul_lt_one₀ habs).2 hSNlt
     exact hscale_le.trans_lt hscale_lt
   have hgeom : IsUnit ((1 : NN →L[ℝ] NN) - lambda⁻¹ • SN) :=
-    isUnit_one_sub_of_norm_lt_one (R := (NN →L[ℝ] NN)) hscaled
+    isUnit_one_sub_of_norm_lt_one (x := lambda⁻¹ • SN) hscaled
   have hscalar : IsUnit (algebraMap ℝ (NN →L[ℝ] NN) lambda) :=
     IsUnit.map (algebraMap ℝ (NN →L[ℝ] NN))
       (isUnit_iff_ne_zero.mpr hlambda0)
