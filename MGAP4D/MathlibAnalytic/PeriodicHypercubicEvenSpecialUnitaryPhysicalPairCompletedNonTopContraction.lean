@@ -141,14 +141,14 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan_normaliz
   rcases Submodule.mem_sup.1 hx with ⟨y, hy, c, hc, rfl⟩
   rcases Submodule.mem_sup.1 hy with ⟨a, ha, b, hb, rfl⟩
   have hab : inner ℝ a b = 0 :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_isOrtho_topOrthogonalBlockSpan
-      H N hN beta hbeta a b ha hb
+    (periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_isOrtho_topOrthogonalBlockSpan
+      H N hN beta hbeta).inner_eq ha hb
   have hac : inner ℝ a c = 0 :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_isOrtho_orthogonalOrthogonalBlockSpan
-      H N hN beta hbeta a c ha hc
+    (periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_isOrtho_orthogonalOrthogonalBlockSpan
+      H N hN beta hbeta).inner_eq ha hc
   have hbc : inner ℝ b c = 0 :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan_isOrtho_orthogonalOrthogonalBlockSpan
-      H N hN beta hbeta b c hb hc
+    (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan_isOrtho_orthogonalOrthogonalBlockSpan
+      H N hN beta hbeta).inner_eq hb hc
   have haS : S₂ a ∈ OTspan :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_normalizedTransfer_invariant
       H N hN beta hbeta ha
@@ -159,14 +159,14 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan_normaliz
     periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalOrthogonalBlockSpan_normalizedTransfer_invariant
       H N hN beta hbeta hc
   have habS : inner ℝ (S₂ a) (S₂ b) = 0 :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_isOrtho_topOrthogonalBlockSpan
-      H N hN beta hbeta (S₂ a) (S₂ b) haS hbS
+    (periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_isOrtho_topOrthogonalBlockSpan
+      H N hN beta hbeta).inner_eq haS hbS
   have hacS : inner ℝ (S₂ a) (S₂ c) = 0 :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_isOrtho_orthogonalOrthogonalBlockSpan
-      H N hN beta hbeta (S₂ a) (S₂ c) haS hcS
+    (periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_isOrtho_orthogonalOrthogonalBlockSpan
+      H N hN beta hbeta).inner_eq haS hcS
   have hbcS : inner ℝ (S₂ b) (S₂ c) = 0 :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan_isOrtho_orthogonalOrthogonalBlockSpan
-      H N hN beta hbeta (S₂ b) (S₂ c) hbS hcS
+    (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalBlockSpan_isOrtho_orthogonalOrthogonalBlockSpan
+      H N hN beta hbeta).inner_eq hbS hcS
   have haBound : ‖S₂ a‖ ≤ ‖R‖ * ‖a‖ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_normalizedTransfer_norm_le
       H N hN beta hbeta a ha
@@ -204,7 +204,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockClosure_norma
     mem_closure_iff_seq_limit] at hx
   rcases hx with ⟨u, hu, hux⟩
   have hSu : Tendsto (fun n => S₂ (u n)) atTop (nhds (S₂ x)) :=
-    (S₂.continuous.tendsto x).comp hux
+    ((periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator
+      H N hN beta hbeta).continuous.tendsto x).comp hux
   have hleft : Tendsto (fun n => ‖S₂ (u n)‖) atTop (nhds ‖S₂ x‖) :=
     (continuous_norm.tendsto (S₂ x)).comp hSu
   have hunorm : Tendsto (fun n => ‖u n‖) atTop (nhds ‖x‖) :=
