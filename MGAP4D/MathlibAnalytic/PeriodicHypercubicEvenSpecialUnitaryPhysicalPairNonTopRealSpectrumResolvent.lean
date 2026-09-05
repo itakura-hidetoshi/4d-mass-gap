@@ -71,13 +71,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_m
   have hSNlt : ‖SN‖ < |lambda| := hSN.trans_lt hlambda
   have hscaled : ‖lambda⁻¹ • SN‖ < 1 := by
     have hscale_le : ‖lambda⁻¹ • SN‖ ≤ ‖lambda⁻¹‖ * ‖SN‖ :=
-      norm_smul_le _ _
+      ContinuousLinearMap.opNorm_smul_le lambda⁻¹ SN
     have hscale_lt : ‖lambda⁻¹‖ * ‖SN‖ < 1 := by
       simpa only [Real.norm_eq_abs, abs_inv] using
         (inv_mul_lt_one₀ habs).2 hSNlt
     exact hscale_le.trans_lt hscale_lt
   have hgeom : IsUnit ((1 : NN →L[ℝ] NN) - lambda⁻¹ • SN) :=
-    isUnit_one_sub_of_norm_lt_one (R := NN →L[ℝ] NN) hscaled
+    isUnit_one_sub_of_norm_lt_one (R := (NN →L[ℝ] NN)) hscaled
   have hscalar : IsUnit (algebraMap ℝ (NN →L[ℝ] NN) lambda) :=
     IsUnit.map (algebraMap ℝ (NN →L[ℝ] NN))
       (isUnit_iff_ne_zero.mpr hlambda0)
