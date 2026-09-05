@@ -81,8 +81,6 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
     H N hN beta hbeta
   let R := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
     H N hN beta hbeta
-  let E := periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
-    H N hN beta hbeta
   let lambda : ℝ := ‖Tphys‖
   have hlambdaPos : 0 < lambda := by
     simpa [lambda, Tphys] using
@@ -479,6 +477,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
               realL2ExternalTensor (E ((R ^ k) (R f))) (E ((R ^ k) (R g))) := by
           rw [smul_smul, pow_succ]
           ring_nf
+          rfl
 
 /-- The double-excitation norm decays with the square of the normalized
 one-factor contraction. -/
@@ -514,8 +513,14 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
       c ^ k * (‖R‖ ^ 2) ^ k * ‖f‖ * ‖g‖
   rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg (pow_nonneg (sq_nonneg _) k)]
   rw [realL2ExternalTensor_norm, E.norm_map, E.norm_map]
-  have hf := continuousLinearMap_pow_apply_norm_le_norm_pow R k f
-  have hg := continuousLinearMap_pow_apply_norm_le_norm_pow R k g
+  have hf : ‖(R ^ k) f‖ ≤ ‖R‖ ^ k * ‖f‖ :=
+    @continuousLinearMap_pow_apply_norm_le_norm_pow
+      _ _ (twoSidedDoubleDynamicsPhysicalOrthogonalNormedSpace H N hN beta hbeta)
+      R k f
+  have hg : ‖(R ^ k) g‖ ≤ ‖R‖ ^ k * ‖g‖ :=
+    @continuousLinearMap_pow_apply_norm_le_norm_pow
+      _ _ (twoSidedDoubleDynamicsPhysicalOrthogonalNormedSpace H N hN beta hbeta)
+      R k g
   have hc : 0 ≤ c ^ k := pow_nonneg (sq_nonneg _) k
   have hRfBound : 0 ≤ ‖R‖ ^ k * ‖f‖ :=
     mul_nonneg (pow_nonneg (norm_nonneg R) k) (norm_nonneg f)
