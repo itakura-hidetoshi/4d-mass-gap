@@ -88,7 +88,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier_id_sub_normalize
       _ = (t + n) - (t + S₂ n) := by rw [map_add, hfix]
       _ = n - S₂ n := by abel
   rw [heq]
-  exact NN.sub_mem hn hSn
+  exact (NN).sub_mem hn hSn
 
 /-- Every completed non-top vector has a completed non-top preimage under
 `I - S₂`, with the finite-volume Green bound.  This is a reduced inverse
@@ -122,7 +122,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockClosure_exist
 completed non-top block.  Together with the fixed-space theorem, this gives the
 finite-volume kernel/range split without asserting top-sector simplicity. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier_map_id_sub_normalizedTransfer_eq_nonTopBlockClosure :
-    PP.map D.toLinearMap = NN := by
+    (PP).map D.toLinearMap = NN := by
   apply le_antisymm
   · intro z hz
     rcases hz with ⟨x, hx, rfl⟩
@@ -146,7 +146,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier_map_id_sub_norma
 complement of the completed top-top block relative to the physical pair carrier.
 The intersection with `PP` is essential; no ambient full-Haar equality is claimed. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier_map_id_sub_normalizedTransfer_eq_carrier_inf_topTopOrthogonal :
-    PP.map D.toLinearMap = PP ⊓ (TT)ᗮ := by
+    (PP).map D.toLinearMap = PP ⊓ (TT)ᗮ := by
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier_map_id_sub_normalizedTransfer_eq_nonTopBlockClosure
     H N hN beta hbeta]
   exact
@@ -176,9 +176,9 @@ structure PeriodicHypercubicEvenSpecialUnitaryPhysicalPairReducedTransferRangePa
   carrierDifferenceNonTop :
     ∀ x : PairE, x ∈ PP → x - S₂ x ∈ NN
   rangeEqNonTop :
-    PP.map D.toLinearMap = NN
+    (PP).map D.toLinearMap = NN
   relativeOrthogonalRange :
-    PP.map D.toLinearMap = PP ⊓ (TT)ᗮ
+    (PP).map D.toLinearMap = PP ⊓ (TT)ᗮ
   quantitativePreimage :
     ∀ n : PairE, n ∈ NN →
       ∃ y : PairE,
