@@ -54,10 +54,10 @@ local notation "PairP" =>
 
 local instance physicalPairCompletedTopTopCompleteSpace : CompleteSpace PairT := by
   have hclosed : IsClosed (PairT : Set PairE) := by
-    simpa [periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockClosure] using
-      Submodule.isClosed_topologicalClosure
-        (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan
-          H N hN beta hbeta)
+    change IsClosed
+      (((periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan
+          H N hN beta hbeta).topologicalClosure : Submodule ℝ PairE) : Set PairE)
+    exact Submodule.isClosed_topologicalClosure _
   exact hclosed.completeSpace_coe
 
 private theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalProjection_span_mem_nonTop
@@ -92,10 +92,10 @@ private theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalPro
     IsClosed
       ((((PairN).comap (((PairT)ᗮ).starProjection.toLinearMap)) : Submodule ℝ PairE) : Set PairE) := by
   have hNclosed : IsClosed (PairN : Set PairE) := by
-    simpa [periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockClosure] using
-      Submodule.isClosed_topologicalClosure
-        (periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan
-          H N hN beta hbeta)
+    change IsClosed
+      (((periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockSpan
+          H N hN beta hbeta).topologicalClosure : Submodule ℝ PairE) : Set PairE)
+    exact Submodule.isClosed_topologicalClosure _
   change IsClosed (((PairT)ᗮ).starProjection ⁻¹' (PairN : Set PairE))
   exact hNclosed.preimage ((PairT)ᗮ).starProjection.continuous
 
