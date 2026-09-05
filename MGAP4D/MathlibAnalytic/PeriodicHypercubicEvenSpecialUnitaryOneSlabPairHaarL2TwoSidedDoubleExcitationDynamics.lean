@@ -472,12 +472,10 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOper
           exact (T ^ k).map_smul c _
         _ = c • (c ^ k •
               realL2ExternalTensor (E ((R ^ k) (R f))) (E ((R ^ k) (R g)))) := by
-          rw [ih (R f) (R g)]
+          exact congrArg (fun z => c • z) (ih (R f) (R g))
         _ = c ^ (k + 1) •
               realL2ExternalTensor (E ((R ^ k) (R f))) (E ((R ^ k) (R g))) := by
-          rw [smul_smul, pow_succ]
-          ring_nf
-          rfl
+          rw [smul_smul, pow_succ, mul_comm c (c ^ k)]
 
 /-- The double-excitation norm decays with the square of the normalized
 one-factor contraction. -/
