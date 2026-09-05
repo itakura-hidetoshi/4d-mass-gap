@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopRealSpectrumResolvent
-import Mathlib.Topology.Algebra.Module.Equiv
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -59,112 +58,122 @@ transfer is a unit in the native continuous-endomorphism algebra. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShift_isUnit_of_factor_lt_abs
     (lambda : ℝ) (hlambda : ‖R‖ < |lambda|) :
     IsUnit (algebraMap ℝ (NN →L[ℝ] NN) lambda - SN) := by
-  have hres : lambda ∈ resolventSet ℝ SN :=
+  exact
     periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_mem_realResolventSet_of_factor_lt_abs
       H N hN beta hbeta lambda hlambda
-  change IsUnit (algebraMap ℝ (NN →L[ℝ] NN) lambda - SN) at hres
-  exact hres
 
-/-- The unit witnessing invertibility of the real shifted non-top transfer. -/
-noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShiftUnit
-    (lambda : ℝ) (hlambda : ‖R‖ < |lambda|) :
-    (NN →L[ℝ] NN)ˣ :=
-  (periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShift_isUnit_of_factor_lt_abs
-    H N hN beta hbeta lambda hlambda).unit
+/-- The finite-volume real resolvent is the native ring resolvent of the
+completed non-top transfer.  It is defined without carrying a proof argument. -/
+noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
+    (lambda : ℝ) : NN →L[ℝ] NN :=
+  resolvent SN lambda
 
-@[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShiftUnit_coe
+/-- The shifted transfer followed by its real resolvent is the identity outside
+the contraction disk. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShift_mul_realResolvent_eq_one
     (lambda : ℝ) (hlambda : ‖R‖ < |lambda|) :
-    ((periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShiftUnit
-        H N hN beta hbeta lambda hlambda : (NN →L[ℝ] NN)ˣ) : NN →L[ℝ] NN) =
-      algebraMap ℝ (NN →L[ℝ] NN) lambda - SN := by
-  exact
+    (algebraMap ℝ (NN →L[ℝ] NN) lambda - SN) *
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
+          H N hN beta hbeta lambda = 1 := by
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
+  unfold resolvent
+  exact Ring.mul_inverse_cancel _
     (periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShift_isUnit_of_factor_lt_abs
-      H N hN beta hbeta lambda hlambda).unit_spec
-
-/-- The real shifted transfer outside the contraction disk, bundled directly
-from its algebraic unit as a continuous linear equivalence. -/
-noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShiftEquiv
-    (lambda : ℝ) (hlambda : ‖R‖ < |lambda|) :
-    NN ≃L[ℝ] NN :=
-  ContinuousLinearEquiv.ofUnit
-    (periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShiftUnit
       H N hN beta hbeta lambda hlambda)
 
-@[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShiftEquiv_apply
-    (lambda : ℝ) (hlambda : ‖R‖ < |lambda|) (x : NN) :
-    periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShiftEquiv
-        H N hN beta hbeta lambda hlambda x =
-      lambda • x - SN x := by
-  change
-    ((periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShiftUnit
-        H N hN beta hbeta lambda hlambda : (NN →L[ℝ] NN)ˣ) : NN →L[ℝ] NN) x = _
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShiftUnit_coe]
-  rfl
+/-- The real resolvent followed by the shifted transfer is also the identity. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent_mul_realShift_eq_one
+    (lambda : ℝ) (hlambda : ‖R‖ < |lambda|) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
+          H N hN beta hbeta lambda *
+      (algebraMap ℝ (NN →L[ℝ] NN) lambda - SN) = 1 := by
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
+  unfold resolvent
+  exact Ring.inverse_mul_cancel _
+    (periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShift_isUnit_of_factor_lt_abs
+      H N hN beta hbeta lambda hlambda)
+
+/-- Applying the shifted transfer to its real resolvent recovers the input. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShift_realResolvent_operator
+    (lambda : ℝ) (hlambda : ‖R‖ < |lambda|) (y : NN) :
+    (algebraMap ℝ (NN →L[ℝ] NN) lambda - SN)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
+        H N hN beta hbeta lambda y) = y := by
+  have h := congrArg (fun F : NN →L[ℝ] NN => F y)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShift_mul_realResolvent_eq_one
+      H N hN beta hbeta lambda hlambda)
+  simpa only [mul_apply_eq_comp, one_apply_eq_self] using h
+
+/-- Pointwise form of the shifted right-inverse identity. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShift_realResolvent
+    (lambda : ℝ) (hlambda : ‖R‖ < |lambda|) (y : NN) :
+    lambda •
+        periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
+          H N hN beta hbeta lambda y -
+      SN
+        (periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
+          H N hN beta hbeta lambda y) = y := by
+  simpa [ContinuousLinearMap.algebraMap_apply] using
+    periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShift_realResolvent_operator
+      H N hN beta hbeta lambda hlambda y
+
+/-- The shifted operator is injective outside the contraction disk. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShift_injective_of_factor_lt_abs
+    (lambda : ℝ) (hlambda : ‖R‖ < |lambda|) :
+    Function.Injective (algebraMap ℝ (NN →L[ℝ] NN) lambda - SN) := by
+  intro x y hxy
+  have hleft :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent_mul_realShift_eq_one
+      H N hN beta hbeta lambda hlambda
+  have hx := congrArg (fun F : NN →L[ℝ] NN => F x) hleft
+  have hy := congrArg (fun F : NN →L[ℝ] NN => F y) hleft
+  have hmap := congrArg
+    (fun z : NN =>
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
+        H N hN beta hbeta lambda z) hxy
+  calc
+    x = periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
+        H N hN beta hbeta lambda
+          ((algebraMap ℝ (NN →L[ℝ] NN) lambda - SN) x) := by
+      symm
+      simpa only [mul_apply_eq_comp, one_apply_eq_self] using hx
+    _ = periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
+        H N hN beta hbeta lambda
+          ((algebraMap ℝ (NN →L[ℝ] NN) lambda - SN) y) := hmap
+    _ = y := by
+      simpa only [mul_apply_eq_comp, one_apply_eq_self] using hy
+
+/-- The shifted operator is surjective outside the contraction disk. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShift_surjective_of_factor_lt_abs
+    (lambda : ℝ) (hlambda : ‖R‖ < |lambda|) :
+    Function.Surjective (algebraMap ℝ (NN →L[ℝ] NN) lambda - SN) := by
+  intro y
+  refine ⟨periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
+    H N hN beta hbeta lambda y, ?_⟩
+  exact
+    periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShift_realResolvent_operator
+      H N hN beta hbeta lambda hlambda y
 
 /-- Outside the finite-volume non-top contraction disk, the shifted completed
 non-top transfer is bijective. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShift_bijective_of_factor_lt_abs
     (lambda : ℝ) (hlambda : ‖R‖ < |lambda|) :
-    Function.Bijective
-      (algebraMap ℝ (NN →L[ℝ] NN) lambda - SN) := by
-  let E : NN ≃L[ℝ] NN :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShiftEquiv
-      H N hN beta hbeta lambda hlambda
-  constructor
-  · intro x y hxy
-    apply E.injective
-    rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShiftEquiv_apply,
-      periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShiftEquiv_apply]
-    change lambda • x - SN x = lambda • y - SN y at hxy
-    exact hxy
-  · intro y
-    refine ⟨E.symm y, ?_⟩
-    change lambda • E.symm y - SN (E.symm y) = y
-    simpa only [E,
-      periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShiftEquiv_apply] using
-      E.apply_symm_apply y
-
-/-- The finite-volume completed non-top real resolvent operator at a scalar
-strictly outside the contraction disk. -/
-noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
-    (lambda : ℝ) (hlambda : ‖R‖ < |lambda|) :
-    NN →L[ℝ] NN :=
-  ((periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShiftEquiv
-      H N hN beta hbeta lambda hlambda).symm : NN →L[ℝ] NN)
-
-@[simp] theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent_apply
-    (lambda : ℝ) (hlambda : ‖R‖ < |lambda|) (y : NN) :
-    periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
-        H N hN beta hbeta lambda hlambda y =
-      (periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShiftEquiv
-        H N hN beta hbeta lambda hlambda).symm y :=
-  rfl
-
-/-- Applying the shifted transfer to its bundled real resolvent recovers the
-input vector. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShift_realResolvent
-    (lambda : ℝ) (hlambda : ‖R‖ < |lambda|) (y : NN) :
-    lambda •
-        periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
-          H N hN beta hbeta lambda hlambda y -
-      SN
-        (periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
-          H N hN beta hbeta lambda hlambda y) = y := by
-  simpa only [periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent_apply,
-    periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShiftEquiv_apply] using
-    (periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShiftEquiv
-      H N hN beta hbeta lambda hlambda).apply_symm_apply y
+    Function.Bijective (algebraMap ℝ (NN →L[ℝ] NN) lambda - SN) :=
+  ⟨periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShift_injective_of_factor_lt_abs
+      H N hN beta hbeta lambda hlambda,
+    periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShift_surjective_of_factor_lt_abs
+      H N hN beta hbeta lambda hlambda⟩
 
 /-- Sharp pointwise finite-volume real resolvent estimate in reciprocal-distance
 form. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent_norm_bound
     (lambda : ℝ) (hlambda : ‖R‖ < |lambda|) (y : NN) :
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
-        H N hN beta hbeta lambda hlambda y‖ ≤
+        H N hN beta hbeta lambda y‖ ≤
       (|lambda| - ‖R‖)⁻¹ * ‖y‖ := by
   let x : NN :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
-      H N hN beta hbeta lambda hlambda y
+      H N hN beta hbeta lambda y
   have hcoerc :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_shifted_coercive
       H N hN beta hbeta lambda x
@@ -184,7 +193,7 @@ inverse distance from `lambda` to the contraction disk. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent_norm_le
     (lambda : ℝ) (hlambda : ‖R‖ < |lambda|) :
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
-        H N hN beta hbeta lambda hlambda‖ ≤
+        H N hN beta hbeta lambda‖ ≤
       (|lambda| - ‖R‖)⁻¹ := by
   apply ContinuousLinearMap.opNorm_le_bound
   · exact inv_nonneg.mpr (sub_nonneg.mpr hlambda.le)
@@ -200,7 +209,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_r
     ∃! x : NN, lambda • x - SN x = y := by
   let G : NN →L[ℝ] NN :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
-      H N hN beta hbeta lambda hlambda
+      H N hN beta hbeta lambda
   have hG : lambda • G y - SN (G y) = y := by
     dsimp [G]
     exact
@@ -212,33 +221,31 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_r
     periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realShift_bijective_of_factor_lt_abs
       H N hN beta hbeta lambda hlambda
   apply hbij.1
-  change lambda • x - SN x = lambda • G y - SN (G y)
-  rw [hx, hG]
+  simpa [ContinuousLinearMap.algebraMap_apply] using hx.trans hG.symm
 
 /-- Audit-visible finite-volume real resolvent bound package. -/
 structure PeriodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopRealResolventBoundPackage :
     Prop where
   shiftedBijective :
     ∀ (lambda : ℝ), ‖R‖ < |lambda| →
-      Function.Bijective
-        (algebraMap ℝ (NN →L[ℝ] NN) lambda - SN)
+      Function.Bijective (algebraMap ℝ (NN →L[ℝ] NN) lambda - SN)
   rightInverse :
     ∀ (lambda : ℝ) (hlambda : ‖R‖ < |lambda|) (y : NN),
       lambda •
           periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
-            H N hN beta hbeta lambda hlambda y -
+            H N hN beta hbeta lambda y -
         SN
           (periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
-            H N hN beta hbeta lambda hlambda y) = y
+            H N hN beta hbeta lambda y) = y
   pointwiseResolventBound :
     ∀ (lambda : ℝ) (hlambda : ‖R‖ < |lambda|) (y : NN),
       ‖periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
-          H N hN beta hbeta lambda hlambda y‖ ≤
+          H N hN beta hbeta lambda y‖ ≤
         (|lambda| - ‖R‖)⁻¹ * ‖y‖
   operatorResolventBound :
     ∀ (lambda : ℝ) (hlambda : ‖R‖ < |lambda|),
       ‖periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopTransferOperator_realResolvent
-          H N hN beta hbeta lambda hlambda‖ ≤
+          H N hN beta hbeta lambda‖ ≤
         (|lambda| - ‖R‖)⁻¹
   uniqueShiftedSolution :
     ∀ (lambda : ℝ) (hlambda : ‖R‖ < |lambda|) (y : NN),
