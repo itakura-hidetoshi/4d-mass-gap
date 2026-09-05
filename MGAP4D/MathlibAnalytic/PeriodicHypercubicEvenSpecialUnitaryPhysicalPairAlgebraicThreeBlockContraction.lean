@@ -492,9 +492,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTenso
       H N hN beta hbeta) :
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator
         H N hN beta hbeta y‖ ≤ ‖R‖ * ‖y‖ := by
-  simpa only [
-    periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator] using
-    (hilbertTensorRTensor_apply_norm_le (f := R) (x := y))
+  set_option maxHeartbeats 4000000 in
+    simpa only [
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopNativeTensorTransferOperator] using
+      (hilbertTensorRTensor_apply_norm_le (f := R) (x := y))
 
 /-- Native `F ⊠ K` tensors obey the one-factor operator bound before concrete realization. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensorTransferOperator_apply_norm_le
@@ -502,9 +503,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTenso
       H N hN beta hbeta) :
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensorTransferOperator
         H N hN beta hbeta y‖ ≤ ‖R‖ * ‖y‖ := by
-  simpa only [
-    periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensorTransferOperator] using
-    (hilbertTensorLTensor_apply_norm_le (g := R) (x := y))
+  set_option maxHeartbeats 4000000 in
+    simpa only [
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalNativeTensorTransferOperator] using
+      (hilbertTensorLTensor_apply_norm_le (g := R) (x := y))
 
 /-- Every vector in the algebraic `K ⊠ F` block obeys the one-factor operator bound. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairOrthogonalTopBlockSpan_normalizedTransfer_norm_le
