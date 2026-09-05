@@ -37,7 +37,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace_isCompl
   letI : CompleteSpace F := hFclosed.completeSpace_coe
   simpa [F,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal] using
-    (Submodule.isCompl_orthogonal (K := F))
+    (Submodule.isCompl_orthogonal_of_hasOrthogonalProjection (K := F))
 
 /-- The full top eigenspace and its orthogonal complement span the entire
 finite-volume physical one-slice Hilbert carrier. -/
