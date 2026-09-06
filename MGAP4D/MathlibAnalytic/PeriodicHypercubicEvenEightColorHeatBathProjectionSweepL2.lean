@@ -32,13 +32,15 @@ theorem realHilbertProjection_residual_norm_sq
     rw [hIdemApply] at h
     rw [real_inner_self_eq_norm_sq] at h
     exact h.symm
+  have hPxx : inner ℝ (P x) x = ‖P x‖ ^ 2 := by
+    rw [real_inner_comm]
+    exact hxxP
   calc
     ‖x - P x‖ ^ 2 = inner ℝ (x - P x) (x - P x) := by
       simpa using (real_inner_self_eq_norm_sq (x - P x)).symm
     _ = ‖x‖ ^ 2 - ‖P x‖ ^ 2 := by
       simp only [inner_sub_left, inner_sub_right]
-      rw [real_inner_self_eq_norm_sq, real_inner_self_eq_norm_sq,
-        real_inner_comm (P x) x, hxxP]
+      rw [real_inner_self_eq_norm_sq, real_inner_self_eq_norm_sq, hPxx]
       ring
 
 /-- Ordered finite composition of a family of continuous linear endomorphisms.
