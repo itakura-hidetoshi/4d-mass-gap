@@ -61,9 +61,9 @@ theorem periodicHypercubicEvenSpecialUnitaryFixedColorHeatBathStep_rightCommutat
       (periodicHypercubicEvenSpecialUnitary_singleLinkConditionalExpectationContinuousBCF_commute_of_sameColor
         H N hN beta hBeta O hEq hColor)
 
-/-- Folding the fixed-color one-link updates depends only on the multiset/order
-the edge-list order class.  In particular, any permutation gives the same bounded-
-continuous observable. -/
+/-- Folding the fixed-color one-link updates depends only on the edge-list
+order class.  In particular, any permutation gives the same bounded-continuous
+observable. -/
 theorem periodicHypercubicEvenSpecialUnitaryFixedColorHeatBathFold_eq_of_perm
     (H N : ℕ)
     (hN : 0 < N)
@@ -75,7 +75,7 @@ theorem periodicHypercubicEvenSpecialUnitaryFixedColorHeatBathFold_eq_of_perm
       (PeriodicHypercubicEvenEdge H →
         Matrix.specialUnitaryGroup (Fin N) ℂ) ℝ)
     {l₁ l₂ : List (PeriodicHypercubicEvenFixedColorEdge H color)}
-    (hPerm : l₁ ~ l₂) :
+    (hPerm : List.Perm l₁ l₂) :
     l₁.foldl
         (periodicHypercubicEvenSpecialUnitaryFixedColorHeatBathStep
           H N hN beta hBeta color) O =
@@ -125,7 +125,7 @@ theorem periodicHypercubicEvenSpecialUnitaryFixedColorHeatBathBlock_eq_fold_of_p
         Matrix.specialUnitaryGroup (Fin N) ℂ) ℝ)
     (l : List (PeriodicHypercubicEvenFixedColorEdge H color))
     (hPerm :
-      l ~
+      List.Perm l
         (Finset.univ :
           Finset (PeriodicHypercubicEvenFixedColorEdge H color)).toList) :
     l.foldl
