@@ -36,9 +36,14 @@ theorem periodicHypercubicEvenCoordinateParity_shift
         (periodicHypercubicShift (PeriodicHypercubicEvenSideLength H) x mu) i =
       periodicHypercubicEvenCoordinateParity H x i +
         if i = mu then 1 else 0 := by
-  simp [periodicHypercubicEvenCoordinateParity,
-    periodicHypercubicEvenParityHom,
-    periodicHypercubicShift_apply]
+  by_cases hi : i = mu
+  · subst i
+    simp [periodicHypercubicEvenCoordinateParity,
+      periodicHypercubicEvenParityHom,
+      periodicHypercubicShift_apply]
+  · simp [periodicHypercubicEvenCoordinateParity,
+      periodicHypercubicEvenParityHom,
+      periodicHypercubicShift_apply, hi]
 
 /-- Checkerboard parity of a periodic vertex: the sum modulo two of all four
 coordinate parities. -/
