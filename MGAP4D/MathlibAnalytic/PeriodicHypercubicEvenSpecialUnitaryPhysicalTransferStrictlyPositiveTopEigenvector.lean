@@ -141,24 +141,27 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_exists_un
       ∀ A B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
         m ≤ periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
           H N beta A B := by
-  let X := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N
-  let k : X × X → ℝ := fun p =>
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-      H N beta p.1 p.2
-  have hkcont : Continuous k := by
-    simpa [X, k] using
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-        H N beta
+  have hkcont :
+      Continuous (fun p :
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta p.1 p.2) :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      H N beta
   obtain ⟨p, _hp, hmin⟩ :=
     isCompact_univ.exists_isMinOn
-      (Set.univ_nonempty : (Set.univ : Set (X × X)).Nonempty)
+      (Set.univ_nonempty :
+        (Set.univ : Set (
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)).Nonempty)
       hkcont.continuousOn
-  refine ⟨k p, ?_, ?_⟩
-  · dsimp [k]
-    exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
+  refine ⟨periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+    H N beta p.1 p.2, ?_, ?_⟩
+  · exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
       H N beta p.1 p.2
   · intro A B
-    exact hmin (by simp : (A, B) ∈ (Set.univ : Set (X × X)))
+    exact hmin (by simp)
 
 /-- A uniform lower bound on the literal Wilson kernel yields the corresponding
 rank-one lower bound on every nonnegative matrix coefficient of the actual
