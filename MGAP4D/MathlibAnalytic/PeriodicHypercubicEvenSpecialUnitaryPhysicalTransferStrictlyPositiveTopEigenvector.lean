@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferNonnegativeTopEigenvector
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferNormalization
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -162,12 +161,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_exists_un
 
 /-- A uniform lower bound on the literal Wilson kernel yields the corresponding
 rank-one lower bound on every nonnegative matrix coefficient of the actual
-ambient Haar-`L²` transfer:
-
-`m (∫f)(∫g) ≤ ⟪T f, g⟫`.
-
-The proof stays entirely at the matrix-coefficient level, so it does not need
-a pointwise formula for the Fréchet--Riesz Hilbert--Schmidt output. -/
+ambient Haar-`L²` transfer. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_inner_lower_bound
     (H N : ℕ)
     (hN : 0 < N)
@@ -240,8 +234,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
 
 /-- The actual ambient Wilson transfer improves every normalized nonnegative
 `L²` vector to a vector bounded below by a strictly positive constant almost
-everywhere.  This is an `L²` cone statement obtained from matrix coefficients,
-not a pointwise integral-operator formula. -/
+everywhere. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_ae_ge_pos_const
     (H N : ℕ)
     (hN : 0 < N)
@@ -308,6 +301,74 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
   rw [hEq] at hA
   linarith
 
+/-- The constant physical unit vector has strictly positive transfer
+expectation, now derived from the uniform Wilson-kernel floor. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_transfer_expectation_pos_from_uniform_kernel_floor
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    0 < inner ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+        H N hN beta hbeta
+        (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H N))
+      (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H N) := by
+  let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
+  let oneP := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H N
+  obtain ⟨m, hmpos, hm⟩ :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_exists_uniform_pos_lower_bound
+      H N beta
+  have honeNonneg : ∀ᵐ A ∂μ, 0 ≤ (oneP : Lp ℝ 2 μ) A := by
+    change ∀ᵐ A ∂μ, 0 ≤ (Lp.const 2 μ (1 : ℝ)) A
+    filter_upwards [Lp.coeFn_const (μ := μ) (p := 2) (c := (1 : ℝ))] with A hA
+    rw [hA]
+    simp
+  have honeNorm : ‖(oneP : Lp ℝ 2 μ)‖ = 1 := by
+    change ‖oneP‖ = 1
+    exact periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_norm H N
+  have honeIntPos : 0 < ∫ A, (oneP : Lp ℝ 2 μ) A ∂μ :=
+    realL2_integral_pos_of_ae_nonnegative_norm_one
+      (oneP : Lp ℝ 2 μ) honeNonneg honeNorm
+  have hpair :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_inner_lower_bound
+      H N hN beta hbeta m hm
+      (oneP : Lp ℝ 2 μ) (oneP : Lp ℝ 2 μ) honeNonneg honeNonneg
+  have hleftPos :
+      0 < m * (∫ A, (oneP : Lp ℝ 2 μ) A ∂μ) *
+        (∫ A, (oneP : Lp ℝ 2 μ) A ∂μ) :=
+    mul_pos (mul_pos hmpos honeIntPos) honeIntPos
+  change 0 < inner ℝ
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
+      H N hN beta hbeta (oneP : Lp ℝ 2 μ))
+    (oneP : Lp ℝ 2 μ)
+  exact lt_of_lt_of_le hleftPos hpair
+
+/-- The physical one-slab transfer norm is strictly positive by the same
+uniform-kernel-floor route. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos_from_uniform_kernel_floor
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    0 < ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+      H N hN beta hbeta‖ := by
+  let T := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+    H N hN beta hbeta
+  have hExpPos :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_transfer_expectation_pos_from_uniform_kernel_floor
+      H N hN beta hbeta
+  have hT : T ≠ 0 := by
+    intro hzero
+    rw [show T = 0 from hzero] at hExpPos
+    simp at hExpPos
+  have hnormNe : ‖T‖ ≠ 0 := by
+    intro hnorm
+    have hTzero : T = 0 := by
+      rw [← ContinuousLinearMap.opNorm_zero_iff]
+      exact hnorm
+    exact hT hTzero
+  exact lt_of_le_of_ne (norm_nonneg T) (Ne.symm hnormNe)
+
 /-- The canonical nonnegative physical top eigenvector from the previous unit
 is in fact strictly positive almost everywhere.  No simplicity or uniqueness
 of the top eigenspace is used. -/
@@ -338,7 +399,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenve
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_ae_ge_pos_const
       H N hN beta hbeta f hfNonneg hfnorm
   have hlambdaPos : 0 < lambda := by
-    exact periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+    exact periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos_from_uniform_kernel_floor
       H N hN beta hbeta
   have heigenP :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_eigen
@@ -411,7 +472,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabStrictlyPositiveTopEi
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_eigen
         H N hN beta hbeta
     topNormPositive :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos_from_uniform_kernel_floor
         H N hN beta hbeta }
 
 end
