@@ -9,11 +9,13 @@ open scoped InnerProductSpace InnerProduct
 
 noncomputable section
 
+set_option maxHeartbeats 1000000
+
 /-- For the restriction of a bounded real Hilbert-space operator to the
 orthogonal complement of its full eigenvalue-one space, the squared norm defect
 is bounded below by the exact operator-norm coefficient `1 - ‖R‖²`.
 
-This is purely variational and does not use compactness.  Compactness is needed
+This is purely variational and does not use compactness. Compactness is needed
 upstream only to know that the coefficient is positive at each fixed finite
 volume. -/
 theorem realHilbertTopEigenspaceOrthogonalRestriction_sq_defect_lower_bound
@@ -41,7 +43,7 @@ theorem realHilbertTopEigenspaceOrthogonalRestriction_sq_defect_lower_bound
 /-- Elementary square-root comparison used to turn a squared-defect coefficient
 into a linear transfer-gap coefficient. -/
 theorem real_sqrt_one_sub_le_one_sub_half
-    {δ : ℝ} (hδ0 : 0 ≤ δ) (hδ1 : δ ≤ 1) :
+    {δ : ℝ} (_hδ0 : 0 ≤ δ) (hδ1 : δ ≤ 1) :
     Real.sqrt (1 - δ) ≤ 1 - δ / 2 := by
   have hsub : 0 ≤ 1 - δ := sub_nonneg.mpr hδ1
   have hright : 0 ≤ 1 - δ / 2 := by linarith
@@ -60,7 +62,7 @@ theorem realHilbertTopEigenspaceOrthogonalRestriction_norm_le_sqrt_of_sq_defect
     [InnerProductSpace ℝ E]
     (S : E →L[ℝ] E)
     (hSymm : (S : E →ₗ[ℝ] E).IsSymmetric)
-    (δ : ℝ) (hδ0 : 0 ≤ δ) (hδ1 : δ ≤ 1)
+    (δ : ℝ) (_hδ0 : 0 ≤ δ) (hδ1 : δ ≤ 1)
     (hdefect : ∀ y : (realHilbertTopEigenspace S)ᗮ,
       δ * ‖(y : E)‖ ^ 2 ≤
         ‖(y : E)‖ ^ 2 - ‖S (y : E)‖ ^ 2) :
@@ -81,7 +83,7 @@ theorem realHilbertTopEigenspaceOrthogonalRestriction_norm_le_sqrt_of_sq_defect
   nlinarith
 
 /-- A squared-defect coefficient `δ ∈ [0,1]` yields the explicit linear gap
-`δ/2 ≤ 1 - ‖R‖`.  This deliberately avoids hiding a scale-dependent square
+`δ/2 ≤ 1 - ‖R‖`. This deliberately avoids hiding a scale-dependent square
 root in downstream finite-volume estimates. -/
 theorem realHilbertTopEigenspaceOrthogonalRestriction_gap_lower_bound_of_sq_defect
     {E : Type*}
@@ -102,7 +104,7 @@ theorem realHilbertTopEigenspaceOrthogonalRestriction_gap_lower_bound_of_sq_defe
   linarith
 
 /-- Conversely, a linear lower bound `ε ≤ 1 - ‖R‖` forces the squared norm
-defect coefficient `2 ε - ε²`.  Thus uniform transfer separation and uniform
+defect coefficient `2 ε - ε²`. Thus uniform transfer separation and uniform
 squared-defect coercivity are quantitatively equivalent up to explicit
 constants. -/
 theorem realHilbertTopEigenspaceOrthogonalRestriction_sq_defect_lower_bound_of_gap
@@ -172,7 +174,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_raw_normalized_norm_
       H N hN beta hbeta
   change ‖T‖ * ‖‖T‖⁻¹ • T (x : G)‖ = ‖T (x : G)‖
   rw [norm_smul, Real.norm_eq_abs, abs_inv, abs_of_pos hTpos]
-  rw [mul_assoc, mul_inv_cancel₀ hTpos.ne', one_mul]
+  rw [mul_inv_cancel_left₀ hTpos.ne']
 
 /-- A raw squared-defect lower bound becomes the corresponding normalized
 squared-defect lower bound with exactly the same dimensionless coefficient. -/
@@ -200,14 +202,17 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_raw_sq_defect_to_nor
     δ * ‖T‖ ^ 2 * ‖(x : G)‖ ^ 2 ≤
       ‖T‖ ^ 2 * ‖(x : G)‖ ^ 2 - ‖T (x : G)‖ ^ 2 at hraw
   have hT2pos : 0 < ‖T‖ ^ 2 := sq_pos_of_pos hTpos
-  apply (mul_le_mul_left hT2pos).mp
-  calc
-    ‖T‖ ^ 2 * (δ * ‖(x : G)‖ ^ 2) =
-        δ * ‖T‖ ^ 2 * ‖(x : G)‖ ^ 2 := by ring
-    _ ≤ ‖T‖ ^ 2 * ‖(x : G)‖ ^ 2 - ‖T (x : G)‖ ^ 2 := hraw
-    _ = ‖T‖ ^ 2 * (‖(x : G)‖ ^ 2 - ‖S (x : G)‖ ^ 2) := by
-      rw [← hscaleSq]
-      ring
+  have hmul :
+      ‖T‖ ^ 2 * (δ * ‖(x : G)‖ ^ 2) ≤
+        ‖T‖ ^ 2 * (‖(x : G)‖ ^ 2 - ‖S (x : G)‖ ^ 2) := by
+    calc
+      ‖T‖ ^ 2 * (δ * ‖(x : G)‖ ^ 2) =
+          δ * ‖T‖ ^ 2 * ‖(x : G)‖ ^ 2 := by ring
+      _ ≤ ‖T‖ ^ 2 * ‖(x : G)‖ ^ 2 - ‖T (x : G)‖ ^ 2 := hraw
+      _ = ‖T‖ ^ 2 * (‖(x : G)‖ ^ 2 - ‖S (x : G)‖ ^ 2) := by
+        rw [← hscaleSq]
+        ring
+  exact (mul_le_mul_iff_of_pos_left hT2pos).mp hmul
 
 /-- The reverse normalization transport: a normalized squared-defect estimate
 can be stated as a raw Wilson one-slab estimate after multiplication by the
@@ -252,26 +257,28 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_rawDefect_lower_boun
     δ / 2 ≤
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap
         H N hN beta hbeta := by
-  let S0 := S
-  have hsymm :=
-    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
-      H N hN beta hbeta
   have hdefect : ∀ x : K,
       δ * ‖(x : G)‖ ^ 2 ≤
         ‖(x : G)‖ ^ 2 - ‖S (x : G)‖ ^ 2 := by
     intro x
     exact periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_raw_sq_defect_to_normalized
       H N hN beta hbeta δ x (hraw x)
-  have h :=
-    realHilbertTopEigenspaceOrthogonalRestriction_gap_lower_bound_of_sq_defect
-      S0 hsymm δ hδ0 hδ1 (by
-        simpa [S0,
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal,
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace] using hdefect)
-  simpa [S0,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator]
-    using h
+  have hRle : ‖R‖ ≤ Real.sqrt (1 - δ) := by
+    apply ContinuousLinearMap.opNorm_le_bound R (Real.sqrt_nonneg _)
+    intro x
+    have hd := hdefect x
+    change ‖S (x : G)‖ ≤ Real.sqrt (1 - δ) * ‖(x : G)‖
+    apply (sq_le_sq₀ (norm_nonneg _)
+      (mul_nonneg (Real.sqrt_nonneg _) (norm_nonneg _))).mp
+    have hsqrt : (Real.sqrt (1 - δ)) ^ 2 = 1 - δ :=
+      Real.sq_sqrt (sub_nonneg.mpr hδ1)
+    simp only [pow_two] at hd ⊢
+    have hsqrt' : Real.sqrt (1 - δ) * Real.sqrt (1 - δ) = 1 - δ := by
+      simpa [pow_two] using hsqrt
+    nlinarith
+  have hsqrt := real_sqrt_one_sub_le_one_sub_half hδ0 hδ1
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap]
+  linarith
 
 /-- Conversely, a lower bound on the finite-volume transfer gap produces a raw
 one-slab squared-defect lower bound with coefficient `2 ε - ε²`. -/
@@ -284,25 +291,25 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_transferGap_lower_bo
     (2 * ε - ε ^ 2) * ‖T‖ ^ 2 * ‖(x : G)‖ ^ 2 ≤
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabRawTopOrthogonalSquaredDefect
         H N hN beta hbeta x := by
-  let S0 := S
-  have hsymm :=
-    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
-      H N hN beta hbeta
-  have hgap' :
-      ε ≤ 1 - ‖realHilbertTopEigenspaceOrthogonalRestriction S0 hsymm‖ := by
-    simpa [S0,
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap,
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator]
+  have hgap' : ε ≤ 1 - ‖R‖ := by
+    simpa [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap]
       using hgap
-  have hnorm :=
-    realHilbertTopEigenspaceOrthogonalRestriction_sq_defect_lower_bound_of_gap
-      S0 hsymm ε hgap'
-      (show (realHilbertTopEigenspace S0)ᗮ from x)
-  apply periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_normalized_sq_defect_to_raw
-    H N hN beta hbeta (2 * ε - ε ^ 2) x
-  simpa [S0,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace] using hnorm
+  have hq : ‖R‖ ≤ 1 - ε := by linarith
+  have hRx := ContinuousLinearMap.le_opNorm R x
+  change ‖S (x : G)‖ ≤ ‖R‖ * ‖(x : G)‖ at hRx
+  have hRxSq :
+      ‖S (x : G)‖ * ‖S (x : G)‖ ≤
+        (‖R‖ * ‖(x : G)‖) * (‖R‖ * ‖(x : G)‖) :=
+    mul_self_le_mul_self (norm_nonneg _) hRx
+  have hqSq : ‖R‖ * ‖R‖ ≤ (1 - ε) * (1 - ε) :=
+    mul_self_le_mul_self (norm_nonneg R) hq
+  have hnorm :
+      (2 * ε - ε ^ 2) * ‖(x : G)‖ ^ 2 ≤
+        ‖(x : G)‖ ^ 2 - ‖S (x : G)‖ ^ 2 := by
+    simp only [pow_two]
+    nlinarith [sq_nonneg ‖(x : G)‖]
+  exact periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_normalized_sq_defect_to_raw
+    H N hN beta hbeta (2 * ε - ε ^ 2) x hnorm
 
 end PhysicalOneSlab
 
@@ -352,7 +359,7 @@ theorem periodicHypercubicEvenSpecialUnitary_uniformRawDefect_implies_uniformTra
     δ hδpos.le hδ1 (fun x => hraw n x)
 
 /-- Uniform positive transfer separation implies a uniform raw squared-defect
-coercivity estimate.  The coefficient is `δ = 2 ε - ε²`; positivity and the
+coercivity estimate. The coefficient is `δ = 2 ε - ε²`; positivity and the
 normalization `δ ≤ 1` follow automatically because every transfer gap is at
 most one. -/
 theorem periodicHypercubicEvenSpecialUnitary_uniformTransferGap_implies_uniformRawDefect
@@ -391,7 +398,7 @@ actual raw finite physical one-slab transfers satisfy a positive
 scale-independent squared norm defect on their full top-orthogonal sectors.
 
 Therefore the remaining global-gap problem is now exactly a raw-model
-inequality.  Compactness alone proves only pointwise positivity and cannot
+inequality. Compactness alone proves only pointwise positivity and cannot
 supply either side of this equivalence uniformly. -/
 theorem periodicHypercubicEvenSpecialUnitary_uniformRawDefect_iff_uniformTransferGap :
     PeriodicHypercubicEvenSpecialUnitaryHasUniformRawTopOrthogonalSquaredDefect
