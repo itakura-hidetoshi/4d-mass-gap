@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferNonnegativeTopEigenvector
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferNormalization
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -29,8 +30,8 @@ theorem realL2_integral_pos_of_ae_nonnegative_norm_one
     have hae0 : (fun x => f x) =ᵐ[μ] (fun _ => (0 : ℝ)) :=
       (integral_eq_zero_iff_of_nonneg_ae hf hfInt).1 hzero
     have hf0 : f = 0 := by
-      apply Lp.ext
-      simpa using hae0
+      rw [Lp.eq_zero_iff_ae_eq_zero]
+      simpa only [Pi.zero_apply] using hae0
     rw [hf0, norm_zero] at hnorm
     norm_num at hnorm
   exact lt_of_le_of_ne hnonneg (Ne.symm hne)
@@ -46,8 +47,8 @@ theorem realL2_inner_const_one_eq_integral
   apply integral_congr_ae
   filter_upwards [Lp.coeFn_const (μ := μ) (p := 2) (c := (1 : ℝ))] with x hx
   rw [hx]
-  simp only [real_inner_eq_re_inner (𝕜 := ℝ), RCLike.inner_apply,
-    RCLike.re_to_real, conj_trivial, mul_one]
+  simp [real_inner_eq_re_inner (𝕜 := ℝ), RCLike.inner_apply,
+    RCLike.re_to_real, Function.const_apply]
 
 /-- More generally, pairing a scalar multiple of the constant-one vector with
 `g` is the scalar times the integral of `g`. -/
@@ -96,7 +97,7 @@ theorem realL2_ae_nonnegative_of_inner_negPart_nonneg
   have hnegZero : Lp.negPart h = 0 := norm_eq_zero.mp hnorm
   have hzero : ∀ᵐ x ∂μ, Lp.negPart h x = 0 := by
     rw [hnegZero]
-    simp
+    simpa only [Pi.zero_apply] using (Lp.coeFn_zero ℝ 2 μ)
   filter_upwards [Lp.coeFn_negPart_eq_max h, hzero] with x hx hz
   rw [hx] at hz
   have hle : -h x ≤ 0 := by
@@ -132,6 +133,7 @@ local instance (H : ℕ) :
 /-- Joint continuity and compactness upgrade pointwise positivity of the actual
 one-slab Wilson kernel to a uniform positive floor on each fixed finite
 volume. -/
+set_option maxHeartbeats 800000 in
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_exists_uniform_pos_lower_bound
     (H N : ℕ)
     (beta : ℝ) :
@@ -147,8 +149,9 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_exists_un
     simpa [X, k] using
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
         H N beta
-  obtain ⟨p, hp, hmin⟩ :=
-    isCompact_univ.exists_isMinOn (Set.univ_nonempty : (Set.univ : Set (X × X)).Nonempty)
+  obtain ⟨p, _hp, hmin⟩ :=
+    isCompact_univ.exists_isMinOn
+      (Set.univ_nonempty : (Set.univ : Set (X × X)).Nonempty)
       hkcont.continuousOn
   refine ⟨k p, ?_, ?_⟩
   · dsimp [k]
@@ -190,7 +193,10 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
     H N hN beta hbeta
   let E := realL2ExternalTensor f g
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_inner,
-    realL2HilbertSchmidtKernelPairing, MeasureTheory.L2.inner_def]
+    realL2HilbertSchmidtKernelPairing]
+  change
+    m * (∫ A, f A ∂μ) * (∫ B, g B ∂μ) ≤
+      ∫ z, inner ℝ (K z) (E z) ∂(μ.prod μ)
   have hfgInt : Integrable (realL2ExternalTensorFunction f g) (μ.prod μ) := by
     rw [← memLp_one_iff_integrable]
     exact (realL2ExternalTensorFunction_memLp_two f g).mono_exponent (by norm_num)
@@ -275,10 +281,9 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
     simpa [oneL2] using realL2_inner_smul_const_one_eq_integral c g
   have hh : 0 ≤ inner ℝ h g := by
     rw [show h = T f - c • oneL2 by rfl, inner_sub_left, honePair]
-    change 0 ≤ inner ℝ (T f) g - c * ∫ A, g A ∂μ
-    change
-      m * (∫ A, f A ∂μ) * (∫ A, g A ∂μ) ≤ inner ℝ (T f) g
-    simpa [c, μ, T] using hpair
+    have hpair' : c * (∫ A, g A ∂μ) ≤ inner ℝ (T f) g := by
+      simpa [c, μ, T] using hpair
+    linarith
   have hNonneg : ∀ᵐ A ∂μ, 0 ≤ h A :=
     realL2_ae_nonnegative_of_inner_negPart_nonneg h hh
   have hTsub :
@@ -287,62 +292,21 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
     have hsmul := Lp.coeFn_smul c oneL2
     have hone := Lp.coeFn_const (μ := μ) (p := 2) (c := (1 : ℝ))
     filter_upwards [hsub, hsmul, hone] with A hs hsc ho
-    dsimp [h]
-    rw [hs, hsc, ho]
-    simp
+    have hs' : h A = T f A - (c • oneL2) A := by
+      change (T f - c • oneL2 : Lp ℝ 2 μ) A = T f A - (c • oneL2) A
+      simpa only [Pi.sub_apply] using hs
+    have hsc' : (c • oneL2) A = c * oneL2 A := by
+      simpa only [Pi.smul_apply, smul_eq_mul] using hsc
+    have ho' : oneL2 A = 1 := by
+      simpa [oneL2, Function.const_apply] using ho
+    calc
+      h A = T f A - (c • oneL2) A := hs'
+      _ = T f A - c * oneL2 A := by rw [hsc']
+      _ = T f A - c := by rw [ho']; ring
   refine ⟨c, hcpos, ?_⟩
   filter_upwards [hNonneg, hTsub] with A hA hEq
   rw [hEq] at hA
   linarith
-
-/-- A second, kernel-floor proof that the physical one-slab transfer norm is
-strictly positive.  The canonical positivity statement already exists in the
-normalization layer; this receipt records the stronger route used by the
-strict-vacuum argument. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos_from_uniform_kernel_floor
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    0 < ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-      H N hN beta hbeta‖ := by
-  let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
-  let oneP := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H N
-  let T := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-    H N hN beta hbeta
-  obtain ⟨m, hmpos, hm⟩ :=
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_exists_uniform_pos_lower_bound
-      H N beta
-  have honeNonneg :
-      ∀ᵐ A ∂μ, 0 ≤ (oneP : Lp ℝ 2 μ) A := by
-    have hone := Lp.coeFn_const (μ := μ) (p := 2) (c := (1 : ℝ))
-    simpa [oneP, periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector] using
-      hone.mono (fun _ h => by rw [h])
-  have honeInt : ∫ A, (oneP : Lp ℝ 2 μ) A ∂μ = 1 := by
-    apply Eq.trans (integral_congr_ae (by
-      have hone := Lp.coeFn_const (μ := μ) (p := 2) (c := (1 : ℝ))
-      simpa [oneP, periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector] using hone))
-    simp [integral_const, probReal_univ]
-  have hlower : m ≤ inner ℝ (T oneP) oneP := by
-    change m ≤ inner ℝ
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
-        H N hN beta hbeta (oneP : Lp ℝ 2 μ))
-      (oneP : Lp ℝ 2 μ)
-    have hpair :=
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_inner_lower_bound
-        H N hN beta hbeta m hm
-        (oneP : Lp ℝ 2 μ) (oneP : Lp ℝ 2 μ) honeNonneg honeNonneg
-    rw [honeInt, honeInt] at hpair
-    simpa using hpair
-  have hunit : ‖oneP‖ = 1 :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_norm H N
-  have hupper : inner ℝ (T oneP) oneP ≤ ‖T‖ := by
-    calc
-      inner ℝ (T oneP) oneP ≤ ‖T oneP‖ * ‖oneP‖ := real_inner_le_norm _ _
-      _ ≤ (‖T‖ * ‖oneP‖) * ‖oneP‖ :=
-        mul_le_mul_of_nonneg_right (T.le_opNorm oneP) (norm_nonneg oneP)
-      _ = ‖T‖ := by rw [hunit]; ring
-  exact lt_of_lt_of_le hmpos (hlower.trans hupper)
 
 /-- The canonical nonnegative physical top eigenvector from the previous unit
 is in fact strictly positive almost everywhere.  No simplicity or uniqueness
@@ -360,7 +324,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenve
   let Ω := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
     H N hN beta hbeta
   let f : Lp ℝ 2 μ := Ω.1
-  let λ := ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+  let lambda := ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
     H N hN beta hbeta‖
   have hfNonneg : ∀ᵐ A ∂μ, 0 ≤ f A := by
     simpa [f, Ω] using
@@ -373,7 +337,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenve
   obtain ⟨c, hcpos, hTc⟩ :=
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_ae_ge_pos_const
       H N hN beta hbeta f hfNonneg hfnorm
-  have hλpos : 0 < λ := by
+  have hlambdaPos : 0 < lambda := by
     exact periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
       H N hN beta hbeta
   have heigenP :=
@@ -381,24 +345,23 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenve
       H N hN beta hbeta
   have heigenAmbient :
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
-          H N hN beta hbeta f = λ • f := by
+          H N hN beta hbeta f = lambda • f := by
     have hval := congrArg Subtype.val heigenP
-    simpa [f, Ω, λ] using hval
+    simpa [f, Ω, lambda] using hval
   have hcoe :
       (fun A =>
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
           H N hN beta hbeta f A) =ᵐ[μ]
-        fun A => λ * f A := by
+        fun A => lambda * f A := by
     rw [heigenAmbient]
-    simpa using Lp.coeFn_smul λ f
+    simpa only [Pi.smul_apply, smul_eq_mul] using Lp.coeFn_smul lambda f
   filter_upwards [hTc, hcoe] with A hc hEq
   rw [hEq] at hc
-  have : 0 < f A := by
-    by_contra hnot
-    have hfa : f A ≤ 0 := le_of_not_gt hnot
-    have hnonpos : λ * f A ≤ 0 := mul_nonpos_of_nonneg_of_nonpos hλpos.le hfa
-    linarith
-  exact this
+  by_contra hnot
+  have hfa : f A ≤ 0 := le_of_not_gt hnot
+  have hnonpos : lambda * f A ≤ 0 :=
+    mul_nonpos_of_nonneg_of_nonpos hlambdaPos.le hfa
+  linarith
 
 /-- Audit-visible strict-positivity receipt for the finite-volume physical
 Wilson vacuum.  This package deliberately stops short of claiming uniqueness
