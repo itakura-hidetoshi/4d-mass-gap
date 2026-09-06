@@ -133,114 +133,101 @@ theorem periodicHypercubicEvenSpecialUnitaryEightColorHeatBathDirectNormalizedRe
     (halfExtent n) N hN (beta n) (hbeta n) (Q.boundaryAnalysis n t v) z hz]
   exact (Q.boundaryAnalyzedEightColorResidualEnergy_eq_directNormalizedResidual n t v).symm
 
-/-- Relative/centered form of the eight-color boundary Poincare reduction.
+/-- All model-facing data for the centered eight-color boundary frame route.
 
-The model-facing frame estimate may be proved after subtracting any Gibbs
-component fixed by every one-link heat-bath projection.  Exact residual
-translation invariance converts that centered frame estimate to the already
-established typed boundary residual, leaving the comparison and downstream
-OS/continuum route unchanged. -/
+Packaging these fields makes the quotient-space geometry explicit: `fixedPart`
+is required to lie in the full one-link common fixed space, `frame_bound` is
+proved only after subtracting it, and `residual_compare` remains the literal
+comparison with the typed factorized boundary transfer defect. -/
+structure EightColorRelativeBoundaryFrameData
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingDobrushinGibbsBoundaryL2TransferGapCertificate
+      S D halfExtent N hN beta hbeta B hInvariant C) where
+  kappa : NNReal → ℝ
+  eta : NNReal → ℝ
+  kappa_nonneg : ∀ t, 0 ≤ kappa t
+  eta_nonneg : ∀ t, 0 ≤ eta t
+  eta_mul_kappa_le_one : ∀ t, eta t * kappa t ≤ 1
+  fixedPart : ∀ (n : ℕ) (t : NNReal),
+    PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N →
+      PeriodicHypercubicEvenSpecialUnitaryGibbsL2
+        (halfExtent n) N hN (beta n) (hbeta n)
+  fixedPart_singleLink_fixed : ∀ (n : ℕ) (t : NNReal)
+    (v : PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N)
+    (e : PeriodicHypercubicEvenEdge (halfExtent n)),
+    (periodicHypercubicSpecialUnitaryWilsonSystem
+      (PeriodicHypercubicEvenSideLength (halfExtent n)) N hN
+      (beta n) (hbeta n)).singleLinkHeatBathProjectionL2 e
+        (fixedPart n t v) = fixedPart n t v
+  frame_bound : ∀ (n : ℕ) (t : NNReal)
+    (v : PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N),
+    kappa t * ‖v‖ ^ 2 ≤
+      periodicHypercubicEvenSpecialUnitaryEightColorHeatBathDirectNormalizedResidualEnergyL2
+        (halfExtent n) N hN (beta n) (hbeta n)
+        (Q.boundaryAnalysis n t v - fixedPart n t v)
+  residual_compare : ∀ (n : ℕ) (t : NNReal)
+    (v : PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N),
+    eta t * Q.boundaryAnalyzedEightColorResidualEnergy n t v ≤
+      Q.factorizedBoundarySquaredDefect n t v
+
+/-- Relative/centered form of the eight-color boundary Poincare reduction.
+The common-fixed component is quotiented out before the frame estimate, while
+translation invariance returns to the existing boundary residual for the
+literal transfer comparison. -/
 theorem boundaryPoincareDefect_of_eightColorRelativeResidual
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingDobrushinGibbsBoundaryL2TransferGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C)
-    (kappa eta : NNReal → ℝ)
-    (heta0 : ∀ t, 0 ≤ eta t)
-    (fixedPart : ∀ (n : ℕ) (t : NNReal),
-      PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N →
-        PeriodicHypercubicEvenSpecialUnitaryGibbsL2
-          (halfExtent n) N hN (beta n) (hbeta n))
-    (hfixed : ∀ (n : ℕ) (t : NNReal)
-      (v : PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N)
-      (e : PeriodicHypercubicEvenEdge (halfExtent n)),
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength (halfExtent n)) N hN
-        (beta n) (hbeta n)).singleLinkHeatBathProjectionL2 e
-          (fixedPart n t v) = fixedPart n t v)
-    (hframe : ∀ (n : ℕ) (t : NNReal)
-      (v : PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N),
-      kappa t * ‖v‖ ^ 2 ≤
-        periodicHypercubicEvenSpecialUnitaryEightColorHeatBathDirectNormalizedResidualEnergyL2
-          (halfExtent n) N hN (beta n) (hbeta n)
-          (Q.boundaryAnalysis n t v - fixedPart n t v))
-    (hcompare : ∀ (n : ℕ) (t : NNReal)
-      (v : PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N),
-      eta t * Q.boundaryAnalyzedEightColorResidualEnergy n t v ≤
-        Q.factorizedBoundarySquaredDefect n t v)
+    (R : EightColorRelativeBoundaryFrameData Q)
     (n : ℕ) (t : NNReal)
     (v : PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N) :
-    (eta t * kappa t) * ‖v‖ ^ 2 ≤
+    (R.eta t * R.kappa t) * ‖v‖ ^ 2 ≤
       Q.factorizedBoundarySquaredDefect n t v := by
-  apply Q.boundaryPoincareDefect_of_eightColorResidual kappa eta heta0
+  apply Q.boundaryPoincareDefect_of_eightColorResidual R.kappa R.eta R.eta_nonneg
   · intro m s w
     calc
-      kappa s * ‖w‖ ^ 2 ≤
+      R.kappa s * ‖w‖ ^ 2 ≤
           periodicHypercubicEvenSpecialUnitaryEightColorHeatBathDirectNormalizedResidualEnergyL2
             (halfExtent m) N hN (beta m) (hbeta m)
-            (Q.boundaryAnalysis m s w - fixedPart m s w) := hframe m s w
+            (Q.boundaryAnalysis m s w - R.fixedPart m s w) := R.frame_bound m s w
       _ = Q.boundaryAnalyzedEightColorResidualEnergy m s w :=
         Q.periodicHypercubicEvenSpecialUnitaryEightColorHeatBathDirectNormalizedResidualEnergyL2_sub_commonFixed_eq_boundaryAnalyzed
-          m s w (fixedPart m s w) (hfixed m s w)
-  · exact hcompare
+          m s w (R.fixedPart m s w) (R.fixedPart_singleLink_fixed m s w)
+  · exact R.residual_compare
   · exact n
   · exact t
   · exact v
 
-/-- Centered eight-color frame estimates can be fed directly into the existing
-shared-boundary `L²` Poincare certificate constructor.  This preserves the
-established continuum slope field and changes only the model-facing
-presentation of the frame obligation. -/
+/-- Centered eight-color frame data feeds directly into the existing
+shared-boundary `L²` Poincare certificate constructor.  The established
+continuum slope field is preserved exactly. -/
 noncomputable def toApproximatingBoundaryL2PoincareGapCertificate_of_eightColorRelativeResidual
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingDobrushinGibbsBoundaryL2TransferGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C)
+    (R : EightColorRelativeBoundaryFrameData Q)
     (mass : ℝ)
     (hmass : 0 < mass)
-    (kappa eta : NNReal → ℝ)
-    (hkappa0 : ∀ t, 0 ≤ kappa t)
-    (heta0 : ∀ t, 0 ≤ eta t)
-    (hetaKappa_le_one : ∀ t, eta t * kappa t ≤ 1)
     (hslope :
       Tendsto
         (fun t : NNReal =>
           (t : ℝ)⁻¹ *
-            (1 - Real.sqrt (1 - eta (t + t) * kappa (t + t))))
+            (1 - Real.sqrt (1 - R.eta (t + t) * R.kappa (t + t))))
         (nhdsWithin 0 (Ioi 0))
-        (nhds mass))
-    (fixedPart : ∀ (n : ℕ) (t : NNReal),
-      PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N →
-        PeriodicHypercubicEvenSpecialUnitaryGibbsL2
-          (halfExtent n) N hN (beta n) (hbeta n))
-    (hfixed : ∀ (n : ℕ) (t : NNReal)
-      (v : PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N)
-      (e : PeriodicHypercubicEvenEdge (halfExtent n)),
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength (halfExtent n)) N hN
-        (beta n) (hbeta n)).singleLinkHeatBathProjectionL2 e
-          (fixedPart n t v) = fixedPart n t v)
-    (hframe : ∀ (n : ℕ) (t : NNReal)
-      (v : PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N),
-      kappa t * ‖v‖ ^ 2 ≤
-        periodicHypercubicEvenSpecialUnitaryEightColorHeatBathDirectNormalizedResidualEnergyL2
-          (halfExtent n) N hN (beta n) (hbeta n)
-          (Q.boundaryAnalysis n t v - fixedPart n t v))
-    (hcompare : ∀ (n : ℕ) (t : NNReal)
-      (v : PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N),
-      eta t * Q.boundaryAnalyzedEightColorResidualEnergy n t v ≤
-        Q.factorizedBoundarySquaredDefect n t v) :
+        (nhds mass)) :
     PhysicalYangMillsEvenPeriodicWilsonOSApproximatingBoundaryL2PoincareGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C :=
   Q.toApproximatingBoundaryL2PoincareGapCertificate_of_eightColorResidual
-    mass hmass kappa eta hkappa0 heta0 hetaKappa_le_one hslope
+    mass hmass R.kappa R.eta R.kappa_nonneg R.eta_nonneg
+    R.eta_mul_kappa_le_one hslope
     (by
       intro n t v
       calc
-        kappa t * ‖v‖ ^ 2 ≤
+        R.kappa t * ‖v‖ ^ 2 ≤
             periodicHypercubicEvenSpecialUnitaryEightColorHeatBathDirectNormalizedResidualEnergyL2
               (halfExtent n) N hN (beta n) (hbeta n)
-              (Q.boundaryAnalysis n t v - fixedPart n t v) := hframe n t v
+              (Q.boundaryAnalysis n t v - R.fixedPart n t v) := R.frame_bound n t v
         _ = Q.boundaryAnalyzedEightColorResidualEnergy n t v :=
           Q.periodicHypercubicEvenSpecialUnitaryEightColorHeatBathDirectNormalizedResidualEnergyL2_sub_commonFixed_eq_boundaryAnalyzed
-            n t v (fixedPart n t v) (hfixed n t v))
-    hcompare
+            n t v (R.fixedPart n t v) (R.fixedPart_singleLink_fixed n t v))
+    R.residual_compare
 
 end PhysicalYangMillsEvenPeriodicWilsonOSApproximatingDobrushinGibbsBoundaryL2TransferGapCertificate
 
