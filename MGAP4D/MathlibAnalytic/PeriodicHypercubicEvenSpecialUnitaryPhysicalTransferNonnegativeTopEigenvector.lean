@@ -27,7 +27,9 @@ theorem realL2Abs_coeFn
   filter_upwards [Lp.coeFn_add (Lp.posPart f) (Lp.negPart f),
     Lp.coeFn_posPart f, Lp.coeFn_negPart_eq_max f] with x hadd hpos hneg
   change (Lp.posPart f + Lp.negPart f : Lp ℝ 2 μ) x = |f x|
-  rw [hadd, hpos, hneg]
+  rw [hadd]
+  change Lp.posPart f x + Lp.negPart f x = |f x|
+  rw [hpos, hneg]
   by_cases hx : 0 ≤ f x
   · rw [max_eq_left hx, max_eq_right (neg_nonpos.mpr hx), abs_of_nonneg hx]
     ring
@@ -60,6 +62,45 @@ theorem realL2Abs_ae_nonnegative
   (realL2Abs_coeFn f).mono fun x hx => by
     rw [hx]
     exact abs_nonneg _
+
+/-- A unit vector whose quadratic value is the operator norm is an eigenvector
+at that norm.  This uses only the equality case of real Cauchy--Schwarz. -/
+theorem realHilbert_eigen_of_unit_inner_eq_opNorm
+    {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (T : E →L[ℝ] E)
+    (x : E)
+    (hx : ‖x‖ = 1)
+    (hquad : inner ℝ (T x) x = ‖T‖) :
+    T x = ‖T‖ • x := by
+  have hTx_le : ‖T x‖ ≤ ‖T‖ := by
+    calc
+      ‖T x‖ ≤ ‖T‖ * ‖x‖ := T.le_opNorm x
+      _ = ‖T‖ := by rw [hx, mul_one]
+  have hT_le : ‖T‖ ≤ ‖T x‖ := by
+    calc
+      ‖T‖ = inner ℝ (T x) x := hquad.symm
+      _ ≤ ‖T x‖ * ‖x‖ := real_inner_le_norm _ _
+      _ = ‖T x‖ := by rw [hx, mul_one]
+  have hTx_norm : ‖T x‖ = ‖T‖ := le_antisymm hTx_le hT_le
+  have hCS : inner ℝ (T x) x = ‖T x‖ * ‖x‖ := by
+    rw [hquad, hTx_norm, hx, mul_one]
+  have halign := (inner_eq_norm_mul_iff_real).1 hCS
+  rw [hx, hTx_norm, one_smul] at halign
+  exact halign
+
+/-- The diagonal quadratic value of a normalized eigenvector at `‖T‖` is
+exactly `‖T‖`. -/
+theorem realHilbert_inner_eq_opNorm_of_unit_eigen
+    {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (T : E →L[ℝ] E)
+    (x : E)
+    (hx : ‖x‖ = 1)
+    (heigen : T x = ‖T‖ • x) :
+    inner ℝ (T x) x = ‖T‖ := by
+  calc
+    inner ℝ (T x) x = inner ℝ (‖T‖ • x) x := by rw [heigen]
+    _ = ‖T‖ * inner ℝ x x := real_inner_smul_left x x ‖T‖
+    _ = ‖T‖ := by rw [real_inner_self_eq_norm_sq, hx]; ring
 
 /-- A nonnegative real Hilbert--Schmidt kernel can only increase its diagonal
 quadratic pairing after replacing a test vector by its pointwise absolute
@@ -98,7 +139,8 @@ theorem realL2HilbertSchmidtKernelPairing_le_abs
     rw [hff, haa]
     simp only [realL2ExternalTensorFunction]
     rw [haf, has]
-    simp only [RCLike.inner_apply, conj_trivial]
+    simp only [real_inner_eq_re_inner (𝕜 := ℝ), RCLike.inner_apply,
+      RCLike.re_to_real, conj_trivial]
     apply mul_le_mul_of_nonneg_right _ hk
     calc
       f z.1 * f z.2 ≤ |f z.1 * f z.2| := le_abs_self _
@@ -317,7 +359,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenve
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
       H N hN beta hbeta)
 
-/-- The nonnegative vacuum candidate still attains the top physical Rayleigh
+/-- The nonnegative vacuum candidate still attains the top physical quadratic
 value and therefore is itself a top eigenvector. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_eigen
     (H N : ℕ)
@@ -338,28 +380,55 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenve
     H N hN beta hbeta
   let Ωa := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
     H N hN beta hbeta
-  have hΩnorm : ‖Ω‖ = 1 :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector_norm
+  change T Ωa = ‖T‖ • Ωa
+  have hΩnorm : ‖Ω‖ = 1 := by
+    change
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+        H N hN beta hbeta‖ = 1
+    exact periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector_norm
       H N hN beta hbeta
-  have hΩanorm : ‖Ωa‖ = 1 :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_norm
+  have hΩanorm : ‖Ωa‖ = 1 := by
+    change
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+        H N hN beta hbeta‖ = 1
+    exact periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_norm
       H N hN beta hbeta
   have hΩeig : T Ω = ‖T‖ • Ω := by
-    simpa [T, Ω] using
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector_eigen
-        H N hN beta hbeta
-  have hΩquad : inner ℝ (T Ω) Ω = ‖T‖ := by
-    rw [hΩeig, real_inner_smul_left, real_inner_self_eq_norm_sq, hΩnorm]
-    ring
+    change
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+            H N hN beta hbeta) =
+        ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta‖ •
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+            H N hN beta hbeta
+    exact periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector_eigen
+      H N hN beta hbeta
+  have hΩquad : inner ℝ (T Ω) Ω = ‖T‖ :=
+    realHilbert_inner_eq_opNorm_of_unit_eigen T Ω hΩnorm hΩeig
   have hdom : inner ℝ (T Ω) Ω ≤ inner ℝ (T Ωa) Ωa := by
-    simpa [T, Ω, Ωa] using
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_inner_le_abs
-        H N hN beta hbeta Ω
-  have hinnerBound : inner ℝ (T Ωa) Ωa ≤ ‖T Ωa‖ * ‖Ωa‖ :=
-    real_inner_le_norm _ _
+    change inner ℝ
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+            H N hN beta hbeta))
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+          H N hN beta hbeta) ≤
+      inner ℝ
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+            H N hN beta hbeta))
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+          H N hN beta hbeta)
+    exact periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_inner_le_abs
+      H N hN beta hbeta
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+        H N hN beta hbeta)
   have hquadUpper : inner ℝ (T Ωa) Ωa ≤ ‖T‖ := by
     calc
-      inner ℝ (T Ωa) Ωa ≤ ‖T Ωa‖ * ‖Ωa‖ := hinnerBound
+      inner ℝ (T Ωa) Ωa ≤ ‖T Ωa‖ * ‖Ωa‖ := real_inner_le_norm _ _
       _ ≤ (‖T‖ * ‖Ωa‖) * ‖Ωa‖ :=
         mul_le_mul_of_nonneg_right (T.le_opNorm Ωa) (norm_nonneg Ωa)
       _ = ‖T‖ := by rw [hΩanorm]; ring
@@ -367,21 +436,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenve
     apply le_antisymm hquadUpper
     rw [← hΩquad]
     exact hdom
-  have hTΩa_le : ‖T Ωa‖ ≤ ‖T‖ := by
-    calc
-      ‖T Ωa‖ ≤ ‖T‖ * ‖Ωa‖ := T.le_opNorm Ωa
-      _ = ‖T‖ := by rw [hΩanorm, mul_one]
-  have hT_le : ‖T‖ ≤ ‖T Ωa‖ := by
-    calc
-      ‖T‖ = inner ℝ (T Ωa) Ωa := hΩaquad.symm
-      _ ≤ ‖T Ωa‖ * ‖Ωa‖ := real_inner_le_norm _ _
-      _ = ‖T Ωa‖ := by rw [hΩanorm, mul_one]
-  have hTΩa_norm : ‖T Ωa‖ = ‖T‖ := le_antisymm hTΩa_le hT_le
-  have hCS : inner ℝ (T Ωa) Ωa = ‖T Ωa‖ * ‖Ωa‖ := by
-    rw [hΩaquad, hTΩa_norm, hΩanorm, mul_one]
-  have halign := (inner_eq_norm_mul_iff_real).1 hCS
-  rw [hΩanorm, hTΩa_norm, one_smul] at halign
-  simpa [T, Ωa] using halign
+  exact realHilbert_eigen_of_unit_inner_eq_opNorm T Ωa hΩanorm hΩaquad
 
 /-- Audit-visible receipt: the actual physical one-slab Wilson transfer admits
 a normalized top eigenvector with a nonnegative Haar-`L²` representative,
