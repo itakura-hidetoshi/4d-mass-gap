@@ -172,8 +172,8 @@ theorem periodicHypercubicEvenSpecialUnitary_singleLinkHeatBathTransform_commute
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ)
     (hBeta : 0 ≤ beta)
-    (O : PeriodicHypercubicEvenEdge H →
-      Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ)
+    (O : (PeriodicHypercubicEvenEdge H →
+      Matrix.specialUnitaryGroup (Fin N) ℂ) → ℝ)
     (hO : Continuous O)
     {target source : PeriodicHypercubicEvenEdge H}
     (hNe : source ≠ target)
