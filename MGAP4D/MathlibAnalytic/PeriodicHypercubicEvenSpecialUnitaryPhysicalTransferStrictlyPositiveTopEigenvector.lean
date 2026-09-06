@@ -295,10 +295,11 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
   rw [hEq] at hA
   linarith
 
-/-- The physical one-slab transfer norm is strictly positive.  A uniform
-positive Wilson-kernel floor already gives a positive quadratic coefficient on
-the constant Gauss-law unit vector. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+/-- A second, kernel-floor proof that the physical one-slab transfer norm is
+strictly positive.  The canonical positivity statement already exists in the
+normalization layer; this receipt records the stronger route used by the
+strict-vacuum argument. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos_from_uniform_kernel_floor
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
@@ -395,7 +396,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenve
   have : 0 < f A := by
     by_contra hnot
     have hfa : f A ≤ 0 := le_of_not_gt hnot
-    have : λ * f A ≤ 0 := mul_nonpos_of_nonneg_of_nonpos hλpos.le hfa
+    have hnonpos : λ * f A ≤ 0 := mul_nonpos_of_nonneg_of_nonpos hλpos.le hfa
     linarith
   exact this
 
