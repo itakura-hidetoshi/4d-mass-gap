@@ -51,10 +51,18 @@ local notation "R" =>
     H N hN beta hbeta
 local notation "S₂" =>
   periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator H N hN beta hbeta
+local notation "TTspan" =>
+  periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan H N hN beta hbeta
 local notation "TT" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockClosure H N hN beta hbeta
 local notation "PP" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier H N
+
+local instance physicalPairRelativePoincareTopTopCompleteSpace : CompleteSpace TT := by
+  have hclosed : IsClosed (TT : Set PairE) := by
+    change IsClosed ((TTspan.topologicalClosure : Submodule ℝ PairE) : Set PairE)
+    exact Submodule.isClosed_topologicalClosure _
+  exact hclosed.completeSpace_coe
 
 /-- At each fixed finite volume, the one-step transfer residual controls the
 component orthogonal to the full completed top-top block.  The proof is a direct
