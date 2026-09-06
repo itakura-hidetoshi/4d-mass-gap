@@ -35,7 +35,12 @@ theorem realHilbert_idempotent_symmetric_residual_sq_le_of_fixed
   have hfixedDiff : P (P x - z) = P x - z := by
     rw [map_sub, hPpx, hz]
   have horth : inner ℝ (x - P x) (P x - z) = 0 := by
-    rw [inner_sub_left, hPsymm x (P x - z), hfixedDiff, sub_self]
+    rw [inner_sub_left]
+    have hs :
+        inner ℝ (P x) (P x - z) =
+          inner ℝ x (P (P x - z)) :=
+      hPsymm x (P x - z)
+    rw [hs, hfixedDiff, sub_self]
   have hdecomp : x - z = (x - P x) + (P x - z) := by
     abel
   rw [hdecomp, norm_add_sq_real, horth]
@@ -55,10 +60,12 @@ theorem realHilbert_idempotent_symmetric_residual_sq_eq_defect
   have hQQ : Q (Q x) = Q x := by
     have h := congrArg (fun R : E →L[ℝ] E => R x) hQid
     simpa using h
+  have hs : inner ℝ (Q x) (Q x) = inner ℝ x (Q (Q x)) :=
+    hQsymm x (Q x)
+  rw [hQQ] at hs
   have hinner : inner ℝ x (Q x) = ‖Q x‖ ^ 2 := by
     calc
-      inner ℝ x (Q x) = inner ℝ (Q x) (Q x) := by
-        rw [hQsymm x (Q x), hQQ]
+      inner ℝ x (Q x) = inner ℝ (Q x) (Q x) := hs.symm
       _ = ‖Q x‖ ^ 2 := real_inner_self_eq_norm_sq _
   rw [norm_sub_sq_real, hinner]
   ring
@@ -78,13 +85,13 @@ theorem boundedColorNormalizedResidualEnergy_le_coarseProjectionResidual_sq
     (hPid : ∀ c, (P c).comp (P c) = P c)
     (hPsymm : ∀ c, ((P c : E →L[ℝ] E) : E →ₗ[ℝ] E).IsSymmetric)
     (Q : E →L[ℝ] E)
-    (hQfixed : ∀ c x, P c (Q x) = Q x)
-    (x : E) :
+    (x : E)
+    (hQfixed : ∀ c, P c (Q x) = Q x) :
     boundedColorNormalizedResidualEnergy P x ≤ ‖x - Q x‖ ^ 2 := by
   have hterm : ∀ c : C, ‖x - P c x‖ ^ 2 ≤ ‖x - Q x‖ ^ 2 := by
     intro c
     exact realHilbert_idempotent_symmetric_residual_sq_le_of_fixed
-      (P c) (hPid c) (hPsymm c) x (Q x) (hQfixed c x)
+      (P c) (hPid c) (hPsymm c) x (Q x) (hQfixed c)
   have hsum :
       (∑ c : C, ‖x - P c x‖ ^ 2) ≤
         (Fintype.card C : ℝ) * ‖x - Q x‖ ^ 2 := by
@@ -174,9 +181,8 @@ theorem WilsonMarginalCondExpComparisonData.analysisNormSq_mul_residual_le_analy
         ‖y - D.marginalCondExp y‖ ^ 2 :=
     boundedColorNormalizedResidualEnergy_le_coarseProjectionResidual_sq
       D.marginalColor D.color_idempotent D.color_symmetric
-      D.marginalCondExp
-      (fun c _y => D.coarse_fixed_by_color c x)
-      y
+      D.marginalCondExp y
+      (fun c => D.coarse_fixed_by_color c x)
   have hResidualScale :
       boundedColorNormalizedResidualEnergy D.marginalColor y =
         ‖A‖ ^ 2 * boundedColorNormalizedResidualEnergy P x := by
@@ -189,12 +195,21 @@ theorem WilsonMarginalCondExpComparisonData.analysisNormSq_mul_residual_le_analy
         dsimp [y]
         rw [map_sub, D.lift_color_intertwining]
       rw [← hliftSub, D.lift_norm_sq]
-    rw [Finset.mul_sum]
-    apply congrArg
-      (fun s : ℝ => ((Fintype.card C : ℝ)⁻¹) * s)
-    apply Finset.sum_congr rfl
-    intro c _hc
-    exact hterm c
+    calc
+      (Fintype.card C : ℝ)⁻¹ *
+          (∑ c : C, ‖y - D.marginalColor c y‖ ^ 2) =
+        (Fintype.card C : ℝ)⁻¹ *
+          (∑ c : C, ‖A‖ ^ 2 * ‖x - P c x‖ ^ 2) := by
+            apply congrArg
+              (fun s : ℝ => ((Fintype.card C : ℝ)⁻¹) * s)
+            apply Finset.sum_congr rfl
+            intro c _hc
+            exact hterm c
+      _ = ‖A‖ ^ 2 *
+          ((Fintype.card C : ℝ)⁻¹ *
+            ∑ c : C, ‖x - P c x‖ ^ 2) := by
+        rw [← Finset.mul_sum]
+        ring
   have hCoarsePythagoras :
       ‖y - D.marginalCondExp y‖ ^ 2 =
         ‖A‖ ^ 2 * ‖x‖ ^ 2 - ‖A x‖ ^ 2 := by
@@ -252,6 +267,11 @@ local notation "K" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
     H N hN beta hbeta
 
+local instance periodicHypercubicEvenSpecialUnitaryPhysicalWilsonMarginal_completeSpace :
+    CompleteSpace G :=
+  (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule_isClosed
+    H N).completeSpace_coe
+
 /-- A Wilson marginal / conditional-expectation realization discharges the raw
 model-side comparison obligation for the physical one-slab transfer.
 
@@ -300,10 +320,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_hcompare_of_wilsonMa
       mul_nonneg (by positivity) hResidualNonneg
     nlinarith
   have hFinal := hEtaScale.trans hCombined
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabRawTopOrthogonalSquaredDefect
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_eq_analysis_sq
     H N hN beta hbeta]
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabRawTopOrthogonalSquaredDefect
-  simpa only [pow_two] using hFinal
+  convert hFinal using 1 <;> ring
 
 end PhysicalOneSlabWilsonMarginal
 
