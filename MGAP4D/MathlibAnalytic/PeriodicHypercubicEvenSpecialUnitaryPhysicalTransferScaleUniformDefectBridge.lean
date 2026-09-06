@@ -257,28 +257,21 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_rawDefect_lower_boun
     δ / 2 ≤
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap
         H N hN beta hbeta := by
-  have hdefect : ∀ x : K,
-      δ * ‖(x : G)‖ ^ 2 ≤
-        ‖(x : G)‖ ^ 2 - ‖S (x : G)‖ ^ 2 := by
-    intro x
+  have hsymm :=
+    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+      H N hN beta hbeta
+  have hdefect : ∀ y : (realHilbertTopEigenspace S)ᗮ,
+      δ * ‖(y : G)‖ ^ 2 ≤
+        ‖(y : G)‖ ^ 2 - ‖S (y : G)‖ ^ 2 := by
+    intro y
+    have yK : K := y
     exact periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_raw_sq_defect_to_normalized
-      H N hN beta hbeta δ x (hraw x)
-  have hRle : ‖R‖ ≤ Real.sqrt (1 - δ) := by
-    apply ContinuousLinearMap.opNorm_le_bound R (Real.sqrt_nonneg _)
-    intro x
-    have hd := hdefect x
-    change ‖S (x : G)‖ ≤ Real.sqrt (1 - δ) * ‖(x : G)‖
-    apply (sq_le_sq₀ (norm_nonneg _)
-      (mul_nonneg (Real.sqrt_nonneg _) (norm_nonneg _))).mp
-    have hsqrt : (Real.sqrt (1 - δ)) ^ 2 = 1 - δ :=
-      Real.sq_sqrt (sub_nonneg.mpr hδ1)
-    simp only [pow_two] at hd ⊢
-    have hsqrt' : Real.sqrt (1 - δ) * Real.sqrt (1 - δ) = 1 - δ := by
-      simpa [pow_two] using hsqrt
-    nlinarith
-  have hsqrt := real_sqrt_one_sub_le_one_sub_half hδ0 hδ1
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap]
-  linarith
+      H N hN beta hbeta δ yK (hraw yK)
+  have hgeneric :=
+    realHilbertTopEigenspaceOrthogonalRestriction_gap_lower_bound_of_sq_defect
+      S hsymm δ hδ0 hδ1 hdefect
+  change δ / 2 ≤ 1 - ‖R‖
+  exact hgeneric
 
 /-- Conversely, a lower bound on the finite-volume transfer gap produces a raw
 one-slab squared-defect lower bound with coefficient `2 ε - ε²`. -/
@@ -291,25 +284,20 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_transferGap_lower_bo
     (2 * ε - ε ^ 2) * ‖T‖ ^ 2 * ‖(x : G)‖ ^ 2 ≤
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabRawTopOrthogonalSquaredDefect
         H N hN beta hbeta x := by
-  have hgap' : ε ≤ 1 - ‖R‖ := by
-    simpa [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap]
-      using hgap
-  have hq : ‖R‖ ≤ 1 - ε := by linarith
-  have hRx := ContinuousLinearMap.le_opNorm R x
-  change ‖S (x : G)‖ ≤ ‖R‖ * ‖(x : G)‖ at hRx
-  have hRxSq :
-      ‖S (x : G)‖ * ‖S (x : G)‖ ≤
-        (‖R‖ * ‖(x : G)‖) * (‖R‖ * ‖(x : G)‖) :=
-    mul_self_le_mul_self (norm_nonneg _) hRx
-  have hqSq : ‖R‖ * ‖R‖ ≤ (1 - ε) * (1 - ε) :=
-    mul_self_le_mul_self (norm_nonneg R) hq
-  have hnorm :
-      (2 * ε - ε ^ 2) * ‖(x : G)‖ ^ 2 ≤
-        ‖(x : G)‖ ^ 2 - ‖S (x : G)‖ ^ 2 := by
-    simp only [pow_two]
-    nlinarith [sq_nonneg ‖(x : G)‖]
-  exact periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_normalized_sq_defect_to_raw
-    H N hN beta hbeta (2 * ε - ε ^ 2) x hnorm
+  have hsymm :=
+    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+      H N hN beta hbeta
+  have hgap' :
+      ε ≤ 1 - ‖realHilbertTopEigenspaceOrthogonalRestriction S hsymm‖ := by
+    change ε ≤ 1 - ‖R‖ at hgap
+    exact hgap
+  have xGeneric : (realHilbertTopEigenspace S)ᗮ := x
+  have hnorm :=
+    realHilbertTopEigenspaceOrthogonalRestriction_sq_defect_lower_bound_of_gap
+      S hsymm ε hgap' xGeneric
+  apply periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_normalized_sq_defect_to_raw
+    H N hN beta hbeta (2 * ε - ε ^ 2) x
+  exact hnorm
 
 end PhysicalOneSlab
 
