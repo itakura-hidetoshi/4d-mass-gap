@@ -13,7 +13,7 @@ set_option maxHeartbeats 1000000
 
 /-- The common fixed set of a finite family of local/block operators.
 
-This is deliberately the full common fixed set.  In the physical application it
+This is deliberately the full common fixed set. In the physical application it
 is to be identified with the full eigenvalue-one space of the normalized
 one-slab transfer; no one-dimensional vacuum hypothesis is built into the
 definition. -/
@@ -27,7 +27,7 @@ def boundedColorCommonFixedSpace
 /-- The normalized residual energy of a finite family of local/block operators.
 
 The normalization is by the number of colors/blocks, not by the number of
-lattice sites.  Thus a fixed finite color type can carry a volume-independent
+lattice sites. Thus a fixed finite color type can carry a volume-independent
 coercive constant without introducing a spurious `1 / volume` factor. -/
 def boundedColorNormalizedResidualEnergy
     {E C : Type*}
@@ -66,7 +66,7 @@ theorem boundedColorNormalizedResidualEnergy_eq_zero_of_mem_commonFixedSpace
 
 A frame/Poincare estimate for the normalized local residual energy and a
 comparison of that residual energy with a squared transfer defect multiply
-without any volume factor.  The theorem is intentionally agnostic about the
+without any volume factor. The theorem is intentionally agnostic about the
 construction of the local operators: the model-facing work is exactly the two
 hypotheses `hframe` and `hcompare`. -/
 theorem boundedColorCoercivity_sq_defect_lower_bound
@@ -108,7 +108,7 @@ explicit finite-volume transfer gap on the full top-orthogonal sector.
 The local family `P` acts on the actual physical Gauss-law Hilbert carrier.
 `hframe` is the local/common-fixed-space Poincare obligation and `hcompare` is
 the model-facing comparison with the literal raw physical one-slab squared
-norm defect.  Neither hypothesis singles out a vacuum vector: both are required
+norm defect. Neither hypothesis singles out a vacuum vector: both are required
 on the full canonical top-orthogonal carrier `K`.
 
 If `κ` and `η` can be chosen uniformly over a scaling family while the color
@@ -117,8 +117,10 @@ This theorem itself does not assert that those model estimates hold. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_boundedColorCoercivity_implies_transferGap
     {C : Type*}
     [Fintype C]
+    [Nonempty C]
     (P : C → G →L[ℝ] G)
     (κ η : ℝ)
+    (hκ0 : 0 ≤ κ)
     (hη0 : 0 ≤ η)
     (hκη1 : η * κ ≤ 1)
     (hframe : ∀ x : K,
@@ -131,16 +133,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_boundedColorCoercivi
     (η * κ) / 2 ≤
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap
         H N hN beta hbeta := by
-  have hκ0 : 0 ≤ κ := by
-    by_contra hnot
-    have hκneg : κ < 0 := lt_of_not_ge hnot
-    have hηκ : η * κ ≤ 0 := mul_nonpos_of_nonneg_of_nonpos hη0 (le_of_lt hκneg)
-    have hzero : (0 : G) ∈ K := by simp
-    have hf := hframe ⟨0, hzero⟩
-    simp only [norm_zero, zero_pow, mul_zero] at hf
-    exact False.elim (by
-      have := boundedColorNormalizedResidualEnergy_nonneg P (0 : G)
-      linarith)
   have hδ0 : 0 ≤ η * κ := mul_nonneg hη0 hκ0
   apply
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_rawDefect_lower_bound_implies_transferGap
@@ -165,6 +157,7 @@ below by the explicit positive number `(η * κ) / 2`. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_boundedColorCoercivity_positive_transferGap
     {C : Type*}
     [Fintype C]
+    [Nonempty C]
     (P : C → G →L[ℝ] G)
     (κ η : ℝ)
     (hκ : 0 < κ)
@@ -181,7 +174,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_boundedColorCoercivi
       H N hN beta hbeta := by
   have hgap :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_boundedColorCoercivity_implies_transferGap
-      H N hN beta hbeta P κ η (le_of_lt hη) hκη1 hframe hcompare
+      H N hN beta hbeta P κ η (le_of_lt hκ) (le_of_lt hη) hκη1 hframe hcompare
   have hprod : 0 < η * κ := mul_pos hη hκ
   linarith
 
