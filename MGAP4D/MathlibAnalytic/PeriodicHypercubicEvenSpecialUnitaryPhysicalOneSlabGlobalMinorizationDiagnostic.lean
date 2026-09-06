@@ -119,8 +119,8 @@ noncomputable def
     (H : ℕ)
     (beta : ℝ) : ℝ :=
   Real.exp
-    (-beta *
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H)
+    (-(beta *
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H))
 
 /-- The global floor is strictly positive for every fixed finite slab. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor_pos
@@ -198,8 +198,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFlo
         atTop atBot :=
     tendsto_neg_atTop_atBot.comp hExtensive
   have hexp := Real.tendsto_exp_atBot.comp hneg
-  simpa [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor,
-    neg_mul] using hexp
+  simpa only [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor,
+    Function.comp_apply] using hexp
 
 /-- Under the same extensive scaling, the crude global-minorization certificate
 cannot possess any positive scale-independent lower bound.
