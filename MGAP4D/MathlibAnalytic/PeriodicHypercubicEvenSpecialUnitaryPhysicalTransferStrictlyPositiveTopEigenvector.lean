@@ -129,10 +129,11 @@ local instance (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+set_option maxHeartbeats 2000000
+
 /-- Joint continuity and compactness upgrade pointwise positivity of the actual
 one-slab Wilson kernel to a uniform positive floor on each fixed finite
 volume. -/
-set_option maxHeartbeats 800000 in
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_exists_uniform_pos_lower_bound
     (H N : ℕ)
     (beta : ℝ) :
@@ -211,6 +212,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
     m * (∫ A, f A ∂μ) * (∫ B, g B ∂μ) =
         m * ∫ z : _ × _, f z.1 * g z.2 ∂(μ.prod μ) := by
       rw [integral_prod_mul]
+      exact mul_assoc m _ _
     _ = ∫ z : _ × _, m * (f z.1 * g z.2) ∂(μ.prod μ) := by
       rw [integral_const_mul]
     _ = ∫ z : _ × _, m * realL2ExternalTensorFunction f g z ∂(μ.prod μ) := by
@@ -357,9 +359,12 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm
   have hExpPos :=
     periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_transfer_expectation_pos_from_uniform_kernel_floor
       H N hN beta hbeta
+  change 0 < inner ℝ
+    (T (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H N))
+    (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H N) at hExpPos
   have hT : T ≠ 0 := by
     intro hzero
-    rw [show T = 0 from hzero] at hExpPos
+    rw [hzero] at hExpPos
     simp at hExpPos
   have hnormNe : ‖T‖ ≠ 0 := by
     intro hnorm
