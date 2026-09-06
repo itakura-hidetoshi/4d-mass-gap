@@ -105,6 +105,27 @@ theorem realL2_ae_nonnegative_of_inner_negPart_nonneg
       _ = 0 := hz
   linarith
 
+/-- A strictly positive continuous real function on a nonempty compact space
+has a strictly positive uniform lower bound.  Keeping this compactness step
+generic prevents large concrete configuration types from entering the minimum
+proof's definitional-equality obligations. -/
+theorem continuousRealFunction_exists_uniform_pos_lower_bound_of_compact
+    {X : Type u}
+    [TopologicalSpace X]
+    [CompactSpace X]
+    [Nonempty X]
+    (k : X → ℝ)
+    (hk : Continuous k)
+    (hpos : ∀ x, 0 < k x) :
+    ∃ m : ℝ, 0 < m ∧ ∀ x, m ≤ k x := by
+  obtain ⟨p, _hp, hmin⟩ :=
+    isCompact_univ.exists_isMinOn
+      (Set.univ_nonempty : (Set.univ : Set X).Nonempty)
+      hk.continuousOn
+  refine ⟨k p, hpos p, ?_⟩
+  intro x
+  exact hmin (by simp)
+
 local instance (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
@@ -141,27 +162,21 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_exists_un
       ∀ A B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
         m ≤ periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
           H N beta A B := by
-  have hkcont :
-      Continuous (fun p :
+  obtain ⟨m, hmpos, hm⟩ :=
+    continuousRealFunction_exists_uniform_pos_lower_bound_of_compact
+      (fun p :
         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta p.1 p.2) :=
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta
-  obtain ⟨p, _hp, hmin⟩ :=
-    isCompact_univ.exists_isMinOn
-      (Set.univ_nonempty :
-        (Set.univ : Set (
-          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)).Nonempty)
-      hkcont.continuousOn
-  refine ⟨periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-    H N beta p.1 p.2, ?_, ?_⟩
-  · exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
-      H N beta p.1 p.2
-  · intro A B
-    exact hmin (by simp)
+          H N beta p.1 p.2)
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+        H N beta)
+      (fun p =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
+          H N beta p.1 p.2)
+  refine ⟨m, hmpos, ?_⟩
+  intro A B
+  exact hm (A, B)
 
 /-- A uniform lower bound on the literal Wilson kernel yields the corresponding
 rank-one lower bound on every nonnegative matrix coefficient of the actual
