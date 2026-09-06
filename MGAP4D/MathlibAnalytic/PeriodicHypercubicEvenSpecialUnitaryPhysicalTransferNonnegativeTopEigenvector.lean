@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopEigenvector
-import Mathlib.Analysis.InnerProductSpace.Rayleigh
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -27,6 +26,7 @@ theorem realL2Abs_coeFn
     realL2Abs f =ᵐ[μ] fun x => |f x| := by
   filter_upwards [Lp.coeFn_add (Lp.posPart f) (Lp.negPart f),
     Lp.coeFn_posPart f, Lp.coeFn_negPart_eq_max f] with x hadd hpos hneg
+  change (Lp.posPart f + Lp.negPart f : Lp ℝ 2 μ) x = |f x|
   rw [hadd, hpos, hneg]
   by_cases hx : 0 ≤ f x
   · rw [max_eq_left hx, max_eq_right (neg_nonpos.mpr hx), abs_of_nonneg hx]
@@ -98,8 +98,8 @@ theorem realL2HilbertSchmidtKernelPairing_le_abs
     rw [hff, haa]
     simp only [realL2ExternalTensorFunction]
     rw [haf, has]
-    change K z * (f z.1 * f z.2) ≤ K z * (|f z.1| * |f z.2|)
-    apply mul_le_mul_of_nonneg_left _ hk
+    simp only [RCLike.inner_apply, conj_trivial]
+    apply mul_le_mul_of_nonneg_right _ hk
     calc
       f z.1 * f z.2 ≤ |f z.1 * f z.2| := le_abs_self _
       _ = |f z.1| * |f z.2| := abs_mul _ _
@@ -127,13 +127,6 @@ local instance (N : ℕ) :
 local instance (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
-
-local instance periodicHypercubicEvenSpecialUnitaryPhysicalNonnegativeTop_completeSpace
-    (H N : ℕ) :
-    CompleteSpace
-      (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :=
-  (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule_isClosed
-    H N).completeSpace_coe
 
 /-- Spatial gauge pullback commutes with the canonical real `L²` absolute
 value.  This is the key order-theoretic fact showing that the Gauss-law sector
@@ -200,9 +193,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalRealL2Abs_ae_nonnegative
     (H N : ℕ)
     (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
     ∀ᵐ A ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N),
-      0 ≤
-        (periodicHypercubicEvenSpecialUnitaryPhysicalRealL2Abs H N f :
-          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) A :=
+      0 ≤ (periodicHypercubicEvenSpecialUnitaryPhysicalRealL2Abs H N f).1 A :=
   realL2Abs_ae_nonnegative
     (f : Lp ℝ 2
       (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
@@ -219,6 +210,9 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2_ae_
         H N hN beta hbeta z :=
   (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2_coeFn
     H N hN beta hbeta).mono fun z hz => by
+      change 0 <
+        (fun p => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
+          H N hN beta hbeta p) z
       rw [hz]
       exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
         H N beta z.1 z.2
@@ -278,8 +272,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_inne
             (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))))
       (realL2Abs
         (f : Lp ℝ 2
-          (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
-        )
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))
   exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_inner_le_abs
     H N hN beta hbeta
     (f : Lp ℝ 2
@@ -319,8 +312,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenve
     ∀ᵐ A ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N),
       0 ≤
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
-          H N hN beta hbeta :
-          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) A := by
+          H N hN beta hbeta).1 A := by
   exact periodicHypercubicEvenSpecialUnitaryPhysicalRealL2Abs_ae_nonnegative H N
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
       H N hN beta hbeta)
@@ -357,25 +349,14 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenve
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector_eigen
         H N hN beta hbeta
   have hΩquad : inner ℝ (T Ω) Ω = ‖T‖ := by
-    rw [hΩeig]
-    simp [hΩnorm, real_inner_self_eq_norm_sq]
+    rw [hΩeig, real_inner_smul_left, real_inner_self_eq_norm_sq, hΩnorm]
+    ring
   have hdom : inner ℝ (T Ω) Ω ≤ inner ℝ (T Ωa) Ωa := by
     simpa [T, Ω, Ωa] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_inner_le_abs
         H N hN beta hbeta Ω
-  have hPositive : (T :
-      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N →ₗ[ℝ]
-        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N).IsPositive := by
-    simpa [T] using
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_isPositive
-        H N hN beta hbeta
-  have hΩa_nonneg : 0 ≤ inner ℝ (T Ωa) Ωa := by
-    simpa [ContinuousLinearMap.reApplyInnerSelf_apply] using
-      hPositive.re_inner_nonneg_left Ωa
-  have hinnerBound : inner ℝ (T Ωa) Ωa ≤ ‖T Ωa‖ * ‖Ωa‖ := by
-    have h := norm_inner_le_norm (T Ωa) Ωa
-    rw [Real.norm_eq_abs, abs_of_nonneg hΩa_nonneg] at h
-    exact h
+  have hinnerBound : inner ℝ (T Ωa) Ωa ≤ ‖T Ωa‖ * ‖Ωa‖ :=
+    real_inner_le_norm _ _
   have hquadUpper : inner ℝ (T Ωa) Ωa ≤ ‖T‖ := by
     calc
       inner ℝ (T Ωa) Ωa ≤ ‖T Ωa‖ * ‖Ωa‖ := hinnerBound
@@ -386,34 +367,21 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenve
     apply le_antisymm hquadUpper
     rw [← hΩquad]
     exact hdom
-  have hMax : IsMaxOn T.reApplyInnerSelf (sphere (0 : _) ‖Ωa‖) Ωa := by
-    refine ⟨by simp, ?_⟩
-    intro y hy
-    have hynorm : ‖y‖ = ‖Ωa‖ := by simpa using hy
-    have hy_nonneg : 0 ≤ inner ℝ (T y) y := by
-      simpa [ContinuousLinearMap.reApplyInnerSelf_apply] using
-        hPositive.re_inner_nonneg_left y
-    have hyInnerBound : inner ℝ (T y) y ≤ ‖T y‖ * ‖y‖ := by
-      have h := norm_inner_le_norm (T y) y
-      rw [Real.norm_eq_abs, abs_of_nonneg hy_nonneg] at h
-      exact h
-    change inner ℝ (T y) y ≤ inner ℝ (T Ωa) Ωa
-    rw [hΩaquad]
+  have hTΩa_le : ‖T Ωa‖ ≤ ‖T‖ := by
     calc
-      inner ℝ (T y) y ≤ ‖T y‖ * ‖y‖ := hyInnerBound
-      _ ≤ (‖T‖ * ‖y‖) * ‖y‖ :=
-        mul_le_mul_of_nonneg_right (T.le_opNorm y) (norm_nonneg y)
-      _ = ‖T‖ := by rw [hynorm, hΩanorm]; ring
-  have hSymm : (T :
-      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N →ₗ[ℝ]
-        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N).IsSymmetric :=
-    hPositive.isSymmetric
-  have hLocal : IsLocalExtrOn T.reApplyInnerSelf (sphere (0 : _) ‖Ωa‖) Ωa :=
-    Or.inr hMax.localize
-  have heq := hSymm.toSelfAdjoint.prop.eq_smul_self_of_isLocalExtrOn_real hLocal
-  have hRayleigh : T.rayleighQuotient Ωa = ‖T‖ := by
-    simp [ContinuousLinearMap.rayleighQuotient, hΩanorm, hΩaquad]
-  simpa [T, Ωa, hRayleigh] using heq
+      ‖T Ωa‖ ≤ ‖T‖ * ‖Ωa‖ := T.le_opNorm Ωa
+      _ = ‖T‖ := by rw [hΩanorm, mul_one]
+  have hT_le : ‖T‖ ≤ ‖T Ωa‖ := by
+    calc
+      ‖T‖ = inner ℝ (T Ωa) Ωa := hΩaquad.symm
+      _ ≤ ‖T Ωa‖ * ‖Ωa‖ := real_inner_le_norm _ _
+      _ = ‖T Ωa‖ := by rw [hΩanorm, mul_one]
+  have hTΩa_norm : ‖T Ωa‖ = ‖T‖ := le_antisymm hTΩa_le hT_le
+  have hCS : inner ℝ (T Ωa) Ωa = ‖T Ωa‖ * ‖Ωa‖ := by
+    rw [hΩaquad, hTΩa_norm, hΩanorm, mul_one]
+  have halign := (inner_eq_norm_mul_iff_real).1 hCS
+  rw [hΩanorm, hTΩa_norm, one_smul] at halign
+  simpa [T, Ωa] using halign
 
 /-- Audit-visible receipt: the actual physical one-slab Wilson transfer admits
 a normalized top eigenvector with a nonnegative Haar-`L²` representative,
@@ -430,8 +398,7 @@ structure PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigen
     ∀ᵐ A ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N),
       0 ≤
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
-          H N hN beta hbeta :
-          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) A
+          H N hN beta hbeta).1 A
   topEigen :
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
         H N hN beta hbeta
