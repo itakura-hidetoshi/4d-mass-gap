@@ -28,15 +28,18 @@ local notation "A" =>
 local notation "K" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
     H N hN beta hbeta
-local notation "Color" => PeriodicHypercubicEvenEdgeColor
+local notation "Color" => Fin 8
 
 local instance periodicHypercubicEvenSpecialUnitaryPhysicalEightColor_completeSpace :
     CompleteSpace G :=
   (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule_isClosed
     H N).completeSpace_coe
 
-/-- The canonical eight-color physical residual energy.  The color type is the
-fixed Wilson eight-color type, so this normalization carries no volume factor. -/
+/-- The fixed eight-color physical residual energy.  The index type is `Fin 8`,
+so this normalization carries exactly the coefficient `1 / 8` and no volume
+factor.  Identifying these eight indices with the concrete Wilson edge-color
+blocks is deliberately left to the raw-model realization of the comparison
+data. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabEightColorResidualEnergy
     (P : Color → G →L[ℝ] G)
     (x : G) : ℝ :=
