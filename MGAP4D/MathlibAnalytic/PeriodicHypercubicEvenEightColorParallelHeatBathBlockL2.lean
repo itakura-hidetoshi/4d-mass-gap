@@ -25,7 +25,7 @@ private theorem periodic_even_bcf_abs_le_norm_l2
 `SU(N)` Wilson system.  Naming this carrier as an ordinary declaration avoids
 syntax-quotation ambiguity when it is reused throughout the fixed-color block
 construction. -/
-abbrev PeriodicHypercubicEvenSpecialUnitaryGibbsL2
+abbrev PeriodicHypercubicEvenSpecialUnitaryFixedColorGibbsL2
     (H N : ℕ)
     (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
@@ -46,7 +46,7 @@ local notation "C" =>
   periodicHypercubicSpecialUnitaryWilsonSystem
     (PeriodicHypercubicEvenSideLength H) N hN beta hBeta
 local notation "L2" =>
-  PeriodicHypercubicEvenSpecialUnitaryGibbsL2 H N hN beta hBeta
+  PeriodicHypercubicEvenSpecialUnitaryFixedColorGibbsL2 H N hN beta hBeta
 
 /-- On bounded-continuous observables, the concrete one-link heat-bath
 projections at distinct links of one canonical eight-color class commute.
