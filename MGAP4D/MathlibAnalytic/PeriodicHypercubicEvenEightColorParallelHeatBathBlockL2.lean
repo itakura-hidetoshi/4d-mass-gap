@@ -239,7 +239,7 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryFixedColorProjectionListL2
   | [] => ContinuousLinearMap.id ℝ L2
   | e :: es =>
       (periodicHypercubicEvenSpecialUnitaryFixedColorProjectionListL2
-        H N hN beta hBeta color es).comp
+        color es).comp
         ((C).singleLinkHeatBathProjectionL2 e.1)
 
 @[simp] theorem periodicHypercubicEvenSpecialUnitaryFixedColorProjectionListL2_nil_apply
