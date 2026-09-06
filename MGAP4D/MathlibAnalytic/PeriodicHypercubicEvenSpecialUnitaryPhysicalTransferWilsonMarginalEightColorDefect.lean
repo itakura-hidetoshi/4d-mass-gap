@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonMarginalCondExpComparison
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferStrictlyPositiveTopEigenvector
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -63,7 +62,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabEightColor_rawDefect_
   simpa [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabEightColorResidualEnergy,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabRawTopOrthogonalSquaredDefect] using h
 
-/-- After dividing by the strictly positive physical transfer norm, the same
+/-- After dividing by the positive physical transfer norm, the same
 Wilson-marginal comparison is the dimensionless normalized-transfer defect
 estimate `η E₈ ≤ ‖x‖² - ‖Sx‖²`. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabEightColor_normalizedDefect_of_wilsonMarginalCondExp
@@ -80,7 +79,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabEightColor_normalized
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabEightColor_rawDefect_of_wilsonMarginalCondExp
       H N hN beta hbeta P D eta heta0 heta1 x
   have hTpos : 0 < ‖T‖ :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos_from_uniform_kernel_floor
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
       H N hN beta hbeta
   have hscale :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_raw_normalized_norm_scale
