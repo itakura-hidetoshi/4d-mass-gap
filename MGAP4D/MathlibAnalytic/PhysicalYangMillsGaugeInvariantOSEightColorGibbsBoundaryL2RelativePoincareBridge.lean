@@ -192,9 +192,6 @@ theorem boundaryPoincareDefect_of_eightColorRelativeResidual
         Q.periodicHypercubicEvenSpecialUnitaryEightColorHeatBathDirectNormalizedResidualEnergyL2_sub_commonFixed_eq_boundaryAnalyzed
           m s w (R.fixedPart m s w) (R.fixedPart_singleLink_fixed m s w)
   · exact R.residual_compare
-  · exact n
-  · exact t
-  · exact v
 
 /-- Centered eight-color frame data feeds directly into the existing
 shared-boundary `L²` Poincare certificate constructor.  The established
