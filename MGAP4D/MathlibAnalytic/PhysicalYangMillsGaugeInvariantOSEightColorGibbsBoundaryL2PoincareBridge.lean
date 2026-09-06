@@ -1,38 +1,15 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingDobrushinGibbsBoundaryL2TransferGap
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSApproximatingBoundaryL2PoincareGap
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenEightColorHeatBathBoundedColorBridge
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenEightColorParallelHeatBathBlockL2
 import Mathlib.Tactic
 
 noncomputable section
 
 open Filter MeasureTheory Set Topology
-open scoped InnerProductSpace
+open scoped BigOperators InnerProductSpace
 
 namespace MGAP4D
 namespace MathlibAnalytic
-
-local instance (H : ℕ) : NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
-  simp [PeriodicHypercubicEvenSideLength]⟩
-
-local instance (N : ℕ) :
-    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
-  specialUnitaryGroupIsTopologicalGroup N
-
-local instance (N : ℕ) :
-    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
-  specialUnitaryGroupCompactSpace N
-
-local instance (N : ℕ) :
-    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
-  specialUnitaryGroupSecondCountableTopology N
-
-local instance (N : ℕ) :
-    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
-  specialUnitaryGroupMeasurableSpace N
-
-local instance (N : ℕ) :
-    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
-  specialUnitaryGroupBorelSpace N
 
 namespace PhysicalYangMillsEvenPeriodicWilsonOSApproximatingDobrushinGibbsBoundaryL2TransferGapCertificate
 
@@ -56,29 +33,38 @@ variable
 /-- The canonical eight-color Gibbs residual seen from the shared-boundary
 carrier through the already existing typed `boundaryAnalysis` map.
 
+The formula is kept at the low-level eight-color block layer so this bridge does
+not import the physical one-slab bounded-color reduction back into the higher
+Gibbs-boundary certificate hierarchy.  It is the same fixed-color-count
+normalization: the inverse cardinality of the canonical eight-color type times
+the sum of squared block residuals.
+
 No carrier identification is made here: the input is a boundary-Haar `L²`
 vector, `boundaryAnalysis` sends it to the global finite Wilson Gibbs `L²`
-carrier, and only there is the canonical eight-color residual evaluated. -/
+carrier, and only there is the eight-color residual evaluated. -/
 noncomputable def boundaryAnalyzedEightColorResidualEnergy
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingDobrushinGibbsBoundaryL2TransferGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C)
     (n : ℕ) (t : NNReal)
     (v : PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N) : ℝ :=
-  periodicHypercubicEvenSpecialUnitaryEightColorHeatBathNormalizedResidualEnergyL2
-    (halfExtent n) N hN (beta n) (hbeta n)
-    (Q.boundaryAnalysis n t v)
+  let f := Q.boundaryAnalysis n t v
+  ((Fintype.card PeriodicHypercubicEvenEdgeColor : ℝ)⁻¹) *
+    ∑ color : PeriodicHypercubicEvenEdgeColor,
+      ‖f -
+        periodicHypercubicEvenSpecialUnitaryEightColorHeatBathBlockL2
+          (halfExtent n) N hN (beta n) (hbeta n) color f‖ ^ 2
 
-/-- The boundary-analyzed eight-color residual is nonnegative because it is
-measured on the genuine Gibbs `L²` carrier after explicit analysis. -/
+/-- The boundary-analyzed eight-color residual is nonnegative because it is a
+fixed positive normalization of a finite sum of squared Gibbs-`L²` block
+residuals. -/
 theorem boundaryAnalyzedEightColorResidualEnergy_nonneg
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingDobrushinGibbsBoundaryL2TransferGapCertificate
       S D halfExtent N hN beta hbeta B hInvariant C)
     (n : ℕ) (t : NNReal)
     (v : PeriodicHypercubicEvenSpecialUnitaryBoundaryL2 (halfExtent n) N) :
     0 ≤ Q.boundaryAnalyzedEightColorResidualEnergy n t v := by
-  exact
-    periodicHypercubicEvenSpecialUnitaryEightColorHeatBathNormalizedResidualEnergyL2_nonneg
-      (halfExtent n) N hN (beta n) (hbeta n) (Q.boundaryAnalysis n t v)
+  unfold boundaryAnalyzedEightColorResidualEnergy
+  positivity
 
 /-- The literal squared-norm defect of the already existing typed
 analysis/evolution/synthesis boundary transfer. -/
