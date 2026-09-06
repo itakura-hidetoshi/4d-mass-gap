@@ -42,7 +42,7 @@ theorem compact_oriented_replaceLink_commute_of_ne
   funext e
   by_cases ht : e = target
   · subst e
-    simp [CompactOrientedGaugeWilsonSystem.replaceLink, hNe]
+    simp [CompactOrientedGaugeWilsonSystem.replaceLink, hNe.symm]
   · by_cases hs : e = source
     · subst e
       simp [CompactOrientedGaugeWilsonSystem.replaceLink, ht]
