@@ -40,7 +40,7 @@ theorem realHilbertProjection_residual_norm_sq
       simpa using (real_inner_self_eq_norm_sq (x - P x)).symm
     _ = ‖x‖ ^ 2 - ‖P x‖ ^ 2 := by
       simp only [inner_sub_left, inner_sub_right]
-      rw [real_inner_self_eq_norm_sq, real_inner_self_eq_norm_sq, hPxx]
+      rw [real_inner_self_eq_norm_sq, real_inner_self_eq_norm_sq, hPxx, hxxP]
       ring
 
 /-- Ordered finite composition of a family of continuous linear endomorphisms.
