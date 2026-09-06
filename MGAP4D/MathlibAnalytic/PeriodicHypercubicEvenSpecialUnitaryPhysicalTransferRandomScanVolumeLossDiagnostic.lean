@@ -177,9 +177,12 @@ theorem boundedColorNormalizedResidualEnergy_frame_of_card_mul_sum_lower_bound
   unfold boundedColorNormalizedResidualEnergy
   calc
     κ * ‖x‖ ^ 2 =
-        ((Fintype.card C : ℝ)⁻¹) *
+        ((((Fintype.card C : ℝ)⁻¹) * (Fintype.card C : ℝ)) * κ) *
+          ‖x‖ ^ 2 := by
+      rw [inv_mul_cancel₀ (ne_of_gt hCardPos), one_mul]
+    _ = ((Fintype.card C : ℝ)⁻¹) *
           (((Fintype.card C : ℝ) * κ) * ‖x‖ ^ 2) := by
-      rw [← mul_assoc, inv_mul_cancel₀ (ne_of_gt hCardPos), one_mul]
+      ring
     _ ≤ ((Fintype.card C : ℝ)⁻¹) *
         (∑ c : C, ‖x - P c x‖ ^ 2) := hscaled
 
