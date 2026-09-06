@@ -264,9 +264,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_rawDefect_lower_boun
       δ * ‖(y : G)‖ ^ 2 ≤
         ‖(y : G)‖ ^ 2 - ‖S (y : G)‖ ^ 2 := by
     intro y
-    have yK : K := y
     exact periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_raw_sq_defect_to_normalized
-      H N hN beta hbeta δ yK (hraw yK)
+      H N hN beta hbeta δ y (hraw y)
   have hgeneric :=
     realHilbertTopEigenspaceOrthogonalRestriction_gap_lower_bound_of_sq_defect
       S hsymm δ hδ0 hδ1 hdefect
@@ -291,10 +290,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_transferGap_lower_bo
       ε ≤ 1 - ‖realHilbertTopEigenspaceOrthogonalRestriction S hsymm‖ := by
     change ε ≤ 1 - ‖R‖ at hgap
     exact hgap
-  have xGeneric : (realHilbertTopEigenspace S)ᗮ := x
   have hnorm :=
     realHilbertTopEigenspaceOrthogonalRestriction_sq_defect_lower_bound_of_gap
-      S hsymm ε hgap' xGeneric
+      S hsymm ε hgap' x
   apply periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_normalized_sq_defect_to_raw
     H N hN beta hbeta (2 * ε - ε ^ 2) x
   exact hnorm
