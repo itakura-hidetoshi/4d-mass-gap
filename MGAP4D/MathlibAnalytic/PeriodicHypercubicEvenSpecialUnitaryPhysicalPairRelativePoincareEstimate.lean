@@ -51,8 +51,6 @@ local notation "R" =>
     H N hN beta hbeta
 local notation "S₂" =>
   periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator H N hN beta hbeta
-local notation "TTspan" =>
-  periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan H N hN beta hbeta
 local notation "TT" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockClosure H N hN beta hbeta
 local notation "PP" =>
@@ -60,7 +58,9 @@ local notation "PP" =>
 
 local instance physicalPairRelativePoincareTopTopCompleteSpace : CompleteSpace TT := by
   have hclosed : IsClosed (TT : Set PairE) := by
-    change IsClosed ((TTspan.topologicalClosure : Submodule ℝ PairE) : Set PairE)
+    change IsClosed
+      (((periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan
+          H N hN beta hbeta).topologicalClosure : Submodule ℝ PairE) : Set PairE)
     exact Submodule.isClosed_topologicalClosure _
   exact hclosed.completeSpace_coe
 
