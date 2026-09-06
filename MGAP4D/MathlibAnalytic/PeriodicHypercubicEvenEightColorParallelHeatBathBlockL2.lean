@@ -21,6 +21,20 @@ private theorem periodic_even_bcf_abs_le_norm_l2
     |O A| ≤ ‖O‖ := by
   simpa [Real.norm_eq_abs] using O.norm_coe_le_norm A
 
+/-- The genuine global Gibbs `L²` carrier for the even-periodic compact
+`SU(N)` Wilson system.  Naming this carrier as an ordinary declaration avoids
+syntax-quotation ambiguity when it is reused throughout the fixed-color block
+construction. -/
+abbrev PeriodicHypercubicEvenSpecialUnitaryGibbsL2
+    (H N : ℕ)
+    (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ)
+    (hBeta : 0 ≤ beta) : Type :=
+  Lp ℝ 2
+    (periodicHypercubicSpecialUnitaryWilsonSystem
+      (PeriodicHypercubicEvenSideLength H) N hN beta hBeta).gibbsMeasure
+
 section FixedColorL2
 
 variable (H N : ℕ)
@@ -31,7 +45,8 @@ variable (beta : ℝ) (hBeta : 0 ≤ beta)
 local notation "C" =>
   periodicHypercubicSpecialUnitaryWilsonSystem
     (PeriodicHypercubicEvenSideLength H) N hN beta hBeta
-local notation "L2" => Lp ℝ 2 (C).gibbsMeasure
+local notation "L2" =>
+  PeriodicHypercubicEvenSpecialUnitaryGibbsL2 H N hN beta hBeta
 
 /-- On bounded-continuous observables, the concrete one-link heat-bath
 projections at distinct links of one canonical eight-color class commute.
