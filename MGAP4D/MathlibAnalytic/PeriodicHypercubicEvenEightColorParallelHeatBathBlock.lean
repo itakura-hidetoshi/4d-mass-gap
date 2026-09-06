@@ -62,7 +62,7 @@ theorem periodicHypercubicEvenSpecialUnitaryFixedColorHeatBathStep_rightCommutat
         H N hN beta hBeta O hEq hColor)
 
 /-- Folding the fixed-color one-link updates depends only on the multiset/order
-class of the edge list.  In particular, any permutation gives the same bounded-
+the edge-list order class.  In particular, any permutation gives the same bounded-
 continuous observable. -/
 theorem periodicHypercubicEvenSpecialUnitaryFixedColorHeatBathFold_eq_of_perm
     (H N : ℕ)
