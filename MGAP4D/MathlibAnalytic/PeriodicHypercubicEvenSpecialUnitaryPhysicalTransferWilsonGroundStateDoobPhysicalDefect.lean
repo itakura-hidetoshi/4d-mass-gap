@@ -165,12 +165,30 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateBoundaryHa
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointWeight,
         uf, ug, periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumFunction,
         Ω, lambda]
-      field_simp [hΩ1ne, hΩ2ne]
-      ring
+      have hΩ1ne' :
+          ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+              H N hN beta hbeta).1 :
+            Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) z.1 ≠ 0 := by
+        simpa [Ω, μ] using hΩ1ne
+      have hΩ2ne' :
+          ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+              H N hN beta hbeta).1 :
+            Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) z.2 ≠ 0 := by
+        simpa [Ω, μ] using hΩ2ne
+      have hcancel :
+          ∀ {a b k x y l : ℝ}, a ≠ 0 → b ≠ 0 →
+            a * k * b * x * y * a⁻¹ * b⁻¹ * l = k * x * y * l := by
+        intro a b k x y l ha hb
+        calc
+          a * k * b * x * y * a⁻¹ * b⁻¹ * l =
+              (a * a⁻¹) * (b * b⁻¹) * k * x * y * l := by ring
+          _ = k * x * y * l := by simp [ha, hb]
+      exact hcancel hΩ1ne' hΩ2ne'
     _ = lambda⁻¹ * ∫ z, inner ℝ (K z) (E z) ∂(μ.prod μ) := by
       rw [integral_const_mul]
     _ = lambda⁻¹ * inner ℝ K E := by
       rw [MeasureTheory.L2.inner_def]
+      simpa [μ, periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure]
     _ = lambda⁻¹ * realL2HilbertSchmidtKernelPairing K g f := by rfl
     _ = lambda⁻¹ * realL2HilbertSchmidtKernelPairing K f g := by
       rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairing_symmetric
@@ -317,8 +335,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNormalizedTransfer_no
   by_cases hzero : ‖Tf‖ = 0
   · simp [hzero]
   · have hpos : 0 < ‖Tf‖ := lt_of_le_of_ne (norm_nonneg Tf) (Ne.symm hzero)
-    apply (mul_le_mul_right hpos).mp
-    simpa [pow_two, mul_assoc] using hmain
+    nlinarith [hmain]
 
 /-- Consequently the Doob squared defect of a transformed physical vector is
 no larger than the squared defect of the normalized physical transfer. -/
@@ -492,7 +509,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColor
       simpa [E, lambda, t, mul_assoc] using hmul
     _ = lambda ^ 2 * ‖f‖ ^ 2 - t ^ 2 := by
       field_simp [hlambda_ne]
-      ring
 
 end GroundStatePhysicalEightColorComparison
 
