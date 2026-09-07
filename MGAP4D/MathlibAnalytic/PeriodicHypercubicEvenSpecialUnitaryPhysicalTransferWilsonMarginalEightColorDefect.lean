@@ -57,7 +57,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabEightColor_rawDefect_
     (heta1 : eta ≤ 1)
     (x : K) :
     eta * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabEightColorResidualEnergy
-        H N hN beta hbeta P (x : G) * ‖T‖ ^ 2 ≤
+        H N P (x : G) * ‖T‖ ^ 2 ≤
       ‖T‖ ^ 2 * ‖(x : G)‖ ^ 2 - ‖T (x : G)‖ ^ 2 := by
   have h :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_hcompare_of_wilsonMarginalCondExp
@@ -76,7 +76,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabEightColor_normalized
     (heta1 : eta ≤ 1)
     (x : K) :
     eta * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabEightColorResidualEnergy
-        H N hN beta hbeta P (x : G) ≤
+        H N P (x : G) ≤
       ‖(x : G)‖ ^ 2 - ‖S (x : G)‖ ^ 2 := by
   have hraw :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabEightColor_rawDefect_of_wilsonMarginalCondExp
@@ -96,14 +96,14 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabEightColor_normalized
   have hmul :
       ‖T‖ ^ 2 *
           (eta * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabEightColorResidualEnergy
-            H N hN beta hbeta P (x : G)) ≤
+            H N P (x : G)) ≤
         ‖T‖ ^ 2 * (‖(x : G)‖ ^ 2 - ‖S (x : G)‖ ^ 2) := by
     calc
       ‖T‖ ^ 2 *
           (eta * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabEightColorResidualEnergy
-            H N hN beta hbeta P (x : G)) =
+            H N P (x : G)) =
         eta * periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabEightColorResidualEnergy
-            H N hN beta hbeta P (x : G) * ‖T‖ ^ 2 := by ring
+            H N P (x : G) * ‖T‖ ^ 2 := by ring
       _ ≤ ‖T‖ ^ 2 * ‖(x : G)‖ ^ 2 - ‖T (x : G)‖ ^ 2 := hraw
       _ = ‖T‖ ^ 2 * (‖(x : G)‖ ^ 2 - ‖S (x : G)‖ ^ 2) := by
         rw [← hscaleSq]
