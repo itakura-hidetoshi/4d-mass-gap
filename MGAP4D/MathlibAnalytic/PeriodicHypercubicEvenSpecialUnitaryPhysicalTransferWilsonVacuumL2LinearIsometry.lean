@@ -102,6 +102,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2_add
         g A /
           ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
             H N hN beta hbeta).1 A)
+  simp only [Pi.add_apply] at hfgA
   rw [hfgA]
   ring
 
