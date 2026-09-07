@@ -1,6 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateDoobSixSpatialTwoTemporalFamily
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateDoobPhysicalDefect
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenEightColorEdgeMatching
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonBoundaryEightColorGeometry
 import Mathlib.Data.Fintype.EquivFin
 import Mathlib.MeasureTheory.Function.ConditionalExpectation.CondexpL2
 import Mathlib.Tactic
@@ -39,15 +39,16 @@ local instance (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
-/-- The six spatial colors on one temporal-gauge boundary slice: one of the
-three non-time directions together with checkerboard parity. -/
+/-- Reuse the canonical six-color spatial-boundary carrier in the ground-state
+joint conditional-expectation lane. -/
 abbrev PeriodicHypercubicEvenGroundStateSpatialColor : Type :=
-  PeriodicHypercubicEvenSpatialDirection × ZMod 2
+  PeriodicHypercubicEvenSpatialBoundaryColor
 
 /-- There are exactly six spatial colors, independently of the finite volume. -/
 theorem periodicHypercubicEvenGroundStateSpatialColor_card :
     Fintype.card PeriodicHypercubicEvenGroundStateSpatialColor = 6 := by
-  change Fintype.card (PeriodicHypercubicOtherAxis (0 : PeriodicHypercubicAxis) × ZMod 2) = 6
+  change Fintype.card
+    (PeriodicHypercubicOtherAxis (0 : PeriodicHypercubicAxis) × ZMod 2) = 6
   rw [Fintype.card_prod, periodicHypercubicOtherAxis_card]
   native_decide
 
@@ -56,25 +57,6 @@ noncomputable def periodicHypercubicEvenGroundStateSpatialColorEquivFin :
     PeriodicHypercubicEvenGroundStateSpatialColor ≃ Fin 6 := by
   simpa only [periodicHypercubicEvenGroundStateSpatialColor_card] using
     (Fintype.equivFin PeriodicHypercubicEvenGroundStateSpatialColor)
-
-/-- Spatial color of a link in one boundary slice.  This is exactly the spatial
-part of the canonical four-dimensional eight-color assignment. -/
-def periodicHypercubicEvenSpatialSliceLinkColor
-    (H : ℕ)
-    (e : PeriodicHypercubicEvenSpatialSliceLink H) :
-    PeriodicHypercubicEvenGroundStateSpatialColor :=
-  (e.2, periodicHypercubicEvenCheckerboardParity H e.1.1)
-
-/-- Forget the subtype witness and recover the canonical four-dimensional
-edge color of the embedded spatial link. -/
-theorem periodicHypercubicEvenSpatialSliceLinkColor_to_edgeColor
-    (H : ℕ)
-    (e : PeriodicHypercubicEvenSpatialSliceLink H) :
-    ((periodicHypercubicEvenSpatialSliceLinkColor H e).1.1,
-        (periodicHypercubicEvenSpatialSliceLinkColor H e).2) =
-      periodicHypercubicEvenEdgeColor H
-        (periodicHypercubicEvenSpatialSliceLinkEmbedding H e) := by
-  rfl
 
 /-- Spatial links outside one selected color class. -/
 abbrev PeriodicHypercubicEvenSpatialSliceOffColorLink
@@ -342,9 +324,6 @@ theorem
   let π :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
       H N hN beta hbeta
-  let ν :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
-      H N hN beta hbeta
   let m :=
     periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
       H N color
@@ -487,22 +466,40 @@ theorem
         H N hN beta hbeta
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
           H N hN beta hbeta u) := by
-  have hcoarse :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp_rightBoundary
-      H N hN beta hbeta u
-  have hleft :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_leftBoundary_fixed
+  let P :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2
       H N hN beta hbeta
       (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateDoobBoundaryOperator
-        H N hN beta hbeta u)
-  simpa [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift] using
-    congrArg
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2
+  let Q :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp
+      H N hN beta hbeta
+  let R :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
+      H N hN beta hbeta
+  let JL :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftBoundaryL2Isometry
+      H N hN beta hbeta
+  let D :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateDoobBoundaryOperator
+      H N hN beta hbeta
+  have hcoarse0 :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp_rightBoundary
+      H N hN beta hbeta u
+  have hcoarse : Q (R u) = JL (D u) := by
+    simpa [Q, R, JL, D,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift] using
+      hcoarse0
+  have hleft : P (JL (D u)) = JL (D u) := by
+    exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_leftBoundary_fixed
         H N hN beta hbeta
-        (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c))
-      hcoarse |>.trans hleft
+        (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c)
+        (D u)
+  change P (Q (R u)) = Q (R u)
+  calc
+    P (Q (R u)) = P (JL (D u)) := by rw [hcoarse]
+    _ = JL (D u) := hleft
+    _ = Q (R u) := hcoarse.symm
 
 /-- The fully concrete eight-color boundary family: six genuine joint
 conditional expectations and two identity temporal colors. -/
