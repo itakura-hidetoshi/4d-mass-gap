@@ -159,7 +159,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointWeigh
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumIndicatorL2_coeFn
       H N hN beta hbeta s hs
   have hsndQMP :
-      QuasiMeasurePreserving
+      Measure.QuasiMeasurePreserving
         (fun z :
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
             PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N => z.2)
@@ -296,7 +296,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasu
         (ae_of_all _ fun A => sq_nonneg
           ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
             H N hN beta hbeta).1 A))),
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight_setIntegral_snd]
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight_setIntegral_snd
+      H N hN beta hbeta s hs]
 
 /-- The second boundary coordinate is measure preserving from the Wilson
 one-slab ground-state joint law to the vacuum law. -/
