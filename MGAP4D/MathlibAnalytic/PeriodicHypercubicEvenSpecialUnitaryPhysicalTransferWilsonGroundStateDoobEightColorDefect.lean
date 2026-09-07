@@ -126,20 +126,29 @@ theorem groundStateJointColorNormalizedResidualEnergy_le_coarseResidual_sq
     _ = ‖x - Q x‖ ^ 2 := by
       rw [← mul_assoc, inv_mul_cancel₀ hcard.ne', one_mul]
 
+/-- Vacuum-weighted real `L²` carrier for the one-slab ground-state law. -/
+abbrev PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateVacuumL2
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) : Type :=
+  Lp ℝ 2
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
+      H N hN beta hbeta)
+
+/-- Joint two-boundary real `L²` carrier for the one-slab ground-state law. -/
+abbrev PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) : Type :=
+  Lp ℝ 2
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+      H N hN beta hbeta)
+
 section GroundStateDoobMarginal
 
 variable (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
 
 local notation "V" =>
-  Lp ℝ 2
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
-      H N hN beta hbeta)
+  PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateVacuumL2
+    H N hN beta hbeta
 local notation "J" =>
-  Lp ℝ 2
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
-      H N hN beta hbeta)
-local notation "R" =>
-  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryL2Isometry
+  PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
     H N hN beta hbeta
 local notation "Q" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp
@@ -153,7 +162,8 @@ local notation "Color" => Fin 8
 genuine ground-state one-slab joint Hilbert carrier. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift :
     V →L[ℝ] J :=
-  R.toContinuousLinearMap
+  (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryL2Isometry
+    H N hN beta hbeta).toContinuousLinearMap
 
 /-- Exact norm-square preservation of the ground-state right-boundary lift. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift_norm_sq
@@ -161,7 +171,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBound
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
         H N hN beta hbeta u‖ ^ 2 = ‖u‖ ^ 2 := by
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift]
-  rw [R.norm_map]
+  rw [(periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryL2Isometry
+    H N hN beta hbeta).norm_map]
 
 /-- The actual eight-color residual energy on the ground-state one-slab joint
 carrier.  The normalization is exactly `1/8` through the fixed type `Fin 8`. -/
