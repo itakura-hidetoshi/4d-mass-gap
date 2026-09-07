@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateJointTwoSidedTwelveSpatialConditionalExpectation
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferScaleUniformDefectBridge
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -32,9 +31,6 @@ local notation "J" =>
 local notation "R" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
     H N hN beta hbeta
-local notation "PR" =>
-  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2
-    H N hN beta hbeta
 local notation "PL" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftSixSpatialCondExpL2
     H N hN beta hbeta
@@ -46,9 +42,6 @@ local notation "U" =>
     H N hN beta hbeta
 local notation "T" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-    H N hN beta hbeta
-local notation "K" =>
-  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
     H N hN beta hbeta
 
 /-- Two-sided twelve-spatial-color residual with the physical eight-color
@@ -103,28 +96,28 @@ theorem
   rw [hleft, mul_zero, add_zero]
   rfl
 
-/-- A frame estimate for the genuine two-sided joint conditional-expectation
-energy on transformed physical top-orthogonal vectors gives the literal raw
-physical squared-defect lower bound with the same dimensionless coefficient.
+/-- A pointwise frame estimate for the genuine two-sided joint
+conditional-expectation energy gives the literal raw physical squared defect
+with the same dimensionless coefficient.
 
-This theorem introduces no frame coefficient: `hframe` is exactly the remaining
-model-facing `L²` obligation.  The Wilson marginal / conditional-expectation
-comparison itself is lossless (`eta = 1`). -/
+This theorem deliberately stops before the scale-uniform top-eigenspace gap
+layer.  The only input is the model-facing `L²` frame inequality for the chosen
+physical vector; the Wilson marginal / conditional-expectation comparison is
+then applied losslessly at `eta = 1`.  Keeping this theorem in the ground-state
+joint import lane avoids identifying its carrier with the independent global
+Gibbs `L²` hierarchy. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedTwelveSpatialFrame_mul_transferNormSq_le_rawPhysicalDefect
     (kappa : ℝ)
-    (hframe : ∀ x : K,
-      kappa * ‖(x : Phys)‖ ^ 2 ≤
+    (f : Phys)
+    (hframe :
+      kappa * ‖f‖ ^ 2 ≤
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedTwelveSpatialEightNormalizedResidualEnergy
           H N hN beta hbeta
-          (R (U ((x : Phys) : HaarL2))))
-    (x : K) :
-    kappa * ‖T‖ ^ 2 * ‖(x : Phys)‖ ^ 2 ≤
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabRawTopOrthogonalSquaredDefect
-        H N hN beta hbeta x := by
-  let f : Phys := x
+          (R (U (f : HaarL2)))) :
+    kappa * ‖T‖ ^ 2 * ‖f‖ ^ 2 ≤
+      ‖T‖ ^ 2 * ‖f‖ ^ 2 - ‖T f‖ ^ 2 := by
   let u : V := U (f : HaarL2)
-  have hframe_x := hframe x
   have henergy :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedTwelveSpatialEightNormalizedResidualEnergy_rightBoundary_eq_eightColorResidual
       H N hN beta hbeta u
@@ -132,7 +125,7 @@ theorem
       kappa * ‖f‖ ^ 2 ≤
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColorResidualEnergy
           H N hN beta hbeta P8 u := by
-    simpa [f, u] using hframe_x.trans_eq henergy
+    simpa [u] using hframe.trans_eq henergy
   have hscaled :
       kappa * ‖f‖ ^ 2 * ‖T‖ ^ 2 ≤
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColorResidualEnergy
@@ -146,9 +139,6 @@ theorem
           H N hN beta hbeta P8 u * ‖T‖ ^ 2 ≤
         ‖T‖ ^ 2 * ‖f‖ ^ 2 - ‖T f‖ ^ 2 := by
     simpa [u] using hraw0
-  change
-    kappa * ‖T‖ ^ 2 * ‖f‖ ^ 2 ≤
-      ‖T‖ ^ 2 * ‖f‖ ^ 2 - ‖T f‖ ^ 2
   calc
     kappa * ‖T‖ ^ 2 * ‖f‖ ^ 2 =
         kappa * ‖f‖ ^ 2 * ‖T‖ ^ 2 := by ring
@@ -156,33 +146,27 @@ theorem
           H N hN beta hbeta P8 u * ‖T‖ ^ 2 := hscaled
     _ ≤ ‖T‖ ^ 2 * ‖f‖ ^ 2 - ‖T f‖ ^ 2 := hraw
 
-/-- Once the two-sided joint frame coefficient is known on the physical
-full-top-orthogonal sector, the existing squared-defect bridge turns it into an
-explicit transfer-gap lower bound `kappa / 2`.
-
-The entire remaining quantitative problem is therefore the proof of `hframe`
-with a scale-uniform positive `kappa`; Wilson marginal comparison contributes no
-additional `eta` loss. -/
+/-- Family form of the same reduction.  Any predicate may be used to describe
+the sector on which the joint frame estimate is available; no sector is
+silently strengthened here.  A downstream top-eigenspace file can instantiate
+`sector` by the canonical full top-orthogonal carrier without adding imports to
+this joint conditional-expectation module. -/
 theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedTwelveSpatialFrame_implies_transferGap
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedTwelveSpatialFrame_family_mul_transferNormSq_le_rawPhysicalDefect
+    (sector : Phys → Prop)
     (kappa : ℝ)
-    (hkappa0 : 0 ≤ kappa)
-    (hkappa1 : kappa ≤ 1)
-    (hframe : ∀ x : K,
-      kappa * ‖(x : Phys)‖ ^ 2 ≤
+    (hframe : ∀ f : Phys, sector f →
+      kappa * ‖f‖ ^ 2 ≤
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedTwelveSpatialEightNormalizedResidualEnergy
           H N hN beta hbeta
-          (R (U ((x : Phys) : HaarL2)))) :
-    kappa / 2 ≤
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap
-        H N hN beta hbeta := by
-  apply
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_rawDefect_lower_bound_implies_transferGap
-      H N hN beta hbeta kappa hkappa0 hkappa1
-  intro x
+          (R (U (f : HaarL2)))) :
+    ∀ f : Phys, sector f →
+      kappa * ‖T‖ ^ 2 * ‖f‖ ^ 2 ≤
+        ‖T‖ ^ 2 * ‖f‖ ^ 2 - ‖T f‖ ^ 2 := by
+  intro f hf
   exact
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedTwelveSpatialFrame_mul_transferNormSq_le_rawPhysicalDefect
-      H N hN beta hbeta kappa hframe x
+      H N hN beta hbeta kappa f (hframe f hf)
 
 end TwoSidedTwelveSpatialFrame
 
