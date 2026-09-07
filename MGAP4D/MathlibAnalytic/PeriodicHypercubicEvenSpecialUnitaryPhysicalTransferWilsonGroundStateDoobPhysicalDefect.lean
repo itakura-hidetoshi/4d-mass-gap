@@ -370,56 +370,48 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateDoobDefect
   change ‖f‖ ^ 2 - b ^ 2 ≤ ‖f‖ ^ 2 - a ^ 2
   linarith
 
+section GroundStatePhysicalEightColorComparison
+
+variable (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+
+local notation "HaarL2" =>
+  Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
+local notation "Phys" =>
+  periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N
+local notation "J" =>
+  PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+    H N hN beta hbeta
+local notation "Q" =>
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp
+    H N hN beta hbeta
+local notation "R" =>
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
+    H N hN beta hbeta
+local notation "U" =>
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2LinearIsometry
+    H N hN beta hbeta
+local notation "T" =>
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+    H N hN beta hbeta
+local notation "E8" =>
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColorResidualEnergy
+    H N hN beta hbeta
+local notation "Color" => Fin 8
+
 /-- The already-proved joint eight-color Doob comparison therefore descends
 to the normalized physical squared transfer defect, without identifying the
 joint carrier with global Gibbs `L²`. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColorResidual_eta_le_normalizedPhysicalDefect
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (P : Fin 8 →
-      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-        H N hN beta hbeta →L[ℝ]
-      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-        H N hN beta hbeta)
+    (P : Color → J →L[ℝ] J)
     (hPid : ∀ c, (P c).comp (P c) = P c)
-    (hPsymm : ∀ c,
-      ((P c :
-        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-          H N hN beta hbeta →L[ℝ]
-        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-          H N hN beta hbeta) :
-        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-          H N hN beta hbeta →ₗ[ℝ]
-        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-          H N hN beta hbeta).IsSymmetric)
-    (hfixed : ∀ c u,
-      P c
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp
-            H N hN beta hbeta
-            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
-              H N hN beta hbeta u)) =
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp
-          H N hN beta hbeta
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
-            H N hN beta hbeta u))
+    (hPsymm : ∀ c, ((P c : J →L[ℝ] J) : J →ₗ[ℝ] J).IsSymmetric)
+    (hfixed : ∀ c u, P c (Q (R u)) = Q (R u))
     (eta : ℝ)
     (heta0 : 0 ≤ eta)
     (heta1 : eta ≤ 1)
-    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
-    eta *
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColorResidualEnergy
-          H N hN beta hbeta P
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2LinearIsometry
-            H N hN beta hbeta
-            (f : Lp ℝ 2
-              (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))) ≤
-      ‖f‖ ^ 2 -
-        (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-            H N hN beta hbeta‖⁻¹ *
-          ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-            H N hN beta hbeta f‖) ^ 2 := by
+    (f : Phys) :
+    eta * E8 P (U (f : HaarL2)) ≤
+      ‖f‖ ^ 2 - (‖T‖⁻¹ * ‖T f‖) ^ 2 := by
   let u :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2LinearIsometry
       H N hN beta hbeta
@@ -462,53 +454,16 @@ raw physical squared defect comparison.  The color family remains abstract in
 this theorem; concrete six-spatial plus two temporal conditional expectations
 are discharged separately. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColorResidual_eta_mul_transferNormSq_le_rawPhysicalDefect
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (P : Fin 8 →
-      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-        H N hN beta hbeta →L[ℝ]
-      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-        H N hN beta hbeta)
+    (P : Color → J →L[ℝ] J)
     (hPid : ∀ c, (P c).comp (P c) = P c)
-    (hPsymm : ∀ c,
-      ((P c :
-        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-          H N hN beta hbeta →L[ℝ]
-        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-          H N hN beta hbeta) :
-        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-          H N hN beta hbeta →ₗ[ℝ]
-        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-          H N hN beta hbeta).IsSymmetric)
-    (hfixed : ∀ c u,
-      P c
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp
-            H N hN beta hbeta
-            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
-              H N hN beta hbeta u)) =
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp
-          H N hN beta hbeta
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
-            H N hN beta hbeta u))
+    (hPsymm : ∀ c, ((P c : J →L[ℝ] J) : J →ₗ[ℝ] J).IsSymmetric)
+    (hfixed : ∀ c u, P c (Q (R u)) = Q (R u))
     (eta : ℝ)
     (heta0 : 0 ≤ eta)
     (heta1 : eta ≤ 1)
-    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
-    eta *
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColorResidualEnergy
-          H N hN beta hbeta P
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2LinearIsometry
-            H N hN beta hbeta
-            (f : Lp ℝ 2
-              (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))) *
-      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-        H N hN beta hbeta‖ ^ 2 ≤
-    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-        H N hN beta hbeta‖ ^ 2 * ‖f‖ ^ 2 -
-      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-        H N hN beta hbeta f‖ ^ 2 := by
+    (f : Phys) :
+    eta * E8 P (U (f : HaarL2)) * ‖T‖ ^ 2 ≤
+      ‖T‖ ^ 2 * ‖f‖ ^ 2 - ‖T f‖ ^ 2 := by
   let lambda := ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
     H N hN beta hbeta‖
   let t := ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
@@ -538,6 +493,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColor
     _ = lambda ^ 2 * ‖f‖ ^ 2 - t ^ 2 := by
       field_simp [hlambda_ne]
       ring
+
+end GroundStatePhysicalEightColorComparison
 
 end
 
