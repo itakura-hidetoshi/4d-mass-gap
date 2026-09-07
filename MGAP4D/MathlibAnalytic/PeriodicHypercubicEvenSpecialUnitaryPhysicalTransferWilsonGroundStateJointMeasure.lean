@@ -253,8 +253,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointWeigh
       integral_congr_ae hcoreEq.symm
     _ = inner ℝ (T f) f := by
       symm
-      rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_inner,
-        realL2HilbertSchmidtKernelPairing, MeasureTheory.L2.inner_def]
+      rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_inner]
+      change inner ℝ K E = ∫ z, inner ℝ (K z) (E z) ∂(μ.prod μ)
+      exact MeasureTheory.L2.inner_def K E
     _ = lambda := by
       rw [heigenAmbient, real_inner_smul_left, real_inner_self_eq_norm_sq, hfnorm]
       ring
@@ -319,8 +320,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNorma
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight
         H N hN beta hbeta z
       ∂(periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) = 1 := by
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight,
-    integral_const_mul,
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight
+  rw [integral_const_mul,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointWeight_integral]
   exact inv_mul_cancel₀
     (ne_of_gt
