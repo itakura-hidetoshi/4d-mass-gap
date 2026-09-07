@@ -177,12 +177,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateBoundaryHa
         simpa [Ω, μ] using hΩ2ne
       have hcancel :
           ∀ {a b k x y l : ℝ}, a ≠ 0 → b ≠ 0 →
-            a * k * b * x * y * a⁻¹ * b⁻¹ * l = k * x * y * l := by
+            l * (a * k * b) * (x / a * (y / b)) = l * (x * y * k) := by
         intro a b k x y l ha hb
-        calc
-          a * k * b * x * y * a⁻¹ * b⁻¹ * l =
-              (a * a⁻¹) * (b * b⁻¹) * k * x * y * l := by ring
-          _ = k * x * y * l := by simp [ha, hb]
+        field_simp [ha, hb] <;> ring
       exact hcancel hΩ1ne' hΩ2ne'
     _ = lambda⁻¹ * ∫ z, inner ℝ (K z) (E z) ∂(μ.prod μ) := by
       rw [integral_const_mul]
