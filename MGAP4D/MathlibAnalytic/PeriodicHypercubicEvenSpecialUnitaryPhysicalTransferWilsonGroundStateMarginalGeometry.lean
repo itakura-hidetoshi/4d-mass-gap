@@ -185,9 +185,11 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointWeigh
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointWeight
             H N hN beta hbeta) := by
     filter_upwards [hKrep, hErep, hgrepProd] with z hk hE hg
-    rw [hk, hE, hg]
-    simp only [realL2ExternalTensorFunction, real_inner_eq_re_inner (𝕜 := ℝ),
-      RCLike.inner_apply, RCLike.re_to_real, conj_trivial]
+    rw [hk, hE]
+    simp only [realL2ExternalTensorFunction]
+    rw [hg]
+    simp only [real_inner_eq_re_inner (𝕜 := ℝ), RCLike.inner_apply,
+      RCLike.re_to_real, conj_trivial]
     by_cases hz : z.2 ∈ s
     · rw [Set.indicator_of_mem hz]
       have hzpre : z ∈ Prod.snd ⁻¹' s := hz
