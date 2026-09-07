@@ -41,9 +41,10 @@ theorem WilsonMarginalCondExpComparisonData.analysis_residual_eq_zero
   have horth : inner ℝ (D.lift u) q = 0 := by
     rw [hliftResidual, inner_sub_left]
     have hs := D.color_symmetric c y q
+    have hsub := congrArg (fun t : ℝ => inner ℝ y q - t) hs
     calc
       inner ℝ y q - inner ℝ (D.marginalColor c y) q =
-          inner ℝ y q - inner ℝ y (D.marginalColor c q) := by rw [hs]
+          inner ℝ y q - inner ℝ y (D.marginalColor c q) := hsub
       _ = 0 := by rw [hqfixed, sub_self]
   have hQq : D.marginalCondExp q = q := by
     have h := congrArg
