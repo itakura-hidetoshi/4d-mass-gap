@@ -1,171 +1,130 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateBoundaryProjection
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonMarginalCondExpComparison
 import Mathlib.Tactic
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open Set
 open scoped BigOperators InnerProductSpace InnerProduct
 
 noncomputable section
 
 set_option maxHeartbeats 1000000
 
-/-- The old physical-descent interface is substantially stronger than a mere
-carrier realization.  For every color it forces the feature analysis to kill
-the corresponding physical residual.
-
-This audit theorem is useful when deciding whether a proposed concrete
-`WilsonMarginalCondExpComparisonData` can exist: an exact color intertwining
-with a coarser projection fixed by that color implies `A (x - P_c x) = 0`. -/
-theorem WilsonMarginalCondExpComparisonData.analysis_residual_eq_zero
-    {G H C : Type*}
-    [NormedAddCommGroup G]
-    [InnerProductSpace ℝ G]
-    [NormedAddCommGroup H]
-    [InnerProductSpace ℝ H]
-    [CompleteSpace G]
-    [CompleteSpace H]
+/-- Normalized residual energy for a finite family of orthogonal projections on
+the ground-state joint Hilbert carrier.  This definition is intentionally kept
+inside the ground-state lane so no global-Gibbs carrier import is required. -/
+def groundStateJointColorNormalizedResidualEnergy
+    {E C : Type*}
+    [NormedAddCommGroup E]
+    [NormedSpace ℝ E]
     [Fintype C]
-    (P : C → G →L[ℝ] G)
-    (A : G →L[ℝ] H)
-    (D : WilsonMarginalCondExpComparisonData P A)
-    (c : C)
-    (x : G) :
-    A (x - P c x) = 0 := by
-  let u : G := x - P c x
-  let y : D.Marginal := D.lift x
-  let q : D.Marginal := D.marginalCondExp (D.lift u)
-  have hliftResidual : D.lift u = y - D.marginalColor c y := by
-    dsimp [u, y]
-    rw [map_sub, D.lift_color_intertwining]
-  have hqfixed : D.marginalColor c q = q := by
-    simpa [q] using D.coarse_fixed_by_color c u
-  have horth : inner ℝ (D.lift u) q = 0 := by
-    rw [hliftResidual, inner_sub_left]
-    have hs := D.color_symmetric c y q
-    rw [hqfixed] at hs
-    exact sub_eq_zero.mpr hs.symm
-  have hQq : D.marginalCondExp q = q := by
-    have h := congrArg
-      (fun R : D.Marginal →L[ℝ] D.Marginal => R (D.lift u))
-      D.coarse_idempotent
-    simpa [q] using h
-  have hinner : inner ℝ (D.lift u) q = inner ℝ q q := by
-    have hs := D.coarse_symmetric (D.lift u) q
-    rw [hQq] at hs
-    simpa [q] using hs.symm
-  have hqnorm : ‖q‖ ^ 2 = 0 := by
-    rw [← real_inner_self_eq_norm_sq]
-    rw [← hinner, horth]
-  have hAuSq : ‖A u‖ ^ 2 = 0 := by
-    rw [← D.coarse_norm_sq u]
-    simpa [q] using hqnorm
-  have hAu : ‖A u‖ = 0 := by
-    nlinarith [norm_nonneg (A u)]
-  exact norm_eq_zero.mp hAu
+    (P : C → E →L[ℝ] E)
+    (x : E) : ℝ :=
+  ((Fintype.card C : ℝ)⁻¹) * ∑ c : C, ‖x - P c x‖ ^ 2
 
-/-- Equivalently, every color operator admitted by the old exact-descent
-interface is invisible to the analysis map: `A (P_c x) = A x`. -/
-theorem WilsonMarginalCondExpComparisonData.analysis_color_eq
-    {G H C : Type*}
-    [NormedAddCommGroup G]
-    [InnerProductSpace ℝ G]
-    [NormedAddCommGroup H]
-    [InnerProductSpace ℝ H]
-    [CompleteSpace G]
-    [CompleteSpace H]
+/-- Ground-state joint finite-color residual energy is nonnegative. -/
+theorem groundStateJointColorNormalizedResidualEnergy_nonneg
+    {E C : Type*}
+    [NormedAddCommGroup E]
+    [NormedSpace ℝ E]
     [Fintype C]
-    (P : C → G →L[ℝ] G)
-    (A : G →L[ℝ] H)
-    (D : WilsonMarginalCondExpComparisonData P A)
-    (c : C)
-    (x : G) :
-    A (P c x) = A x := by
-  have hzero := D.analysis_residual_eq_zero P A c x
-  have hmap : A (x - P c x) = A x - A (P c x) := by
-    rw [map_sub]
-  rw [hmap] at hzero
-  exact sub_eq_zero.mp hzero |>.symm
+    (P : C → E →L[ℝ] E)
+    (x : E) :
+    0 ≤ groundStateJointColorNormalizedResidualEnergy P x := by
+  unfold groundStateJointColorNormalizedResidualEnergy
+  positivity
 
-/-- Correct squared-defect comparison when the color conditional expectations
-are kept on the genuine marginal Hilbert carrier instead of being forced to
-descend to physical projections.
+/-- A self-adjoint idempotent is the metric projection against every vector
+already fixed by it. -/
+theorem realHilbert_groundStateJoint_projection_residual_sq_le_of_fixed
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    (P : E →L[ℝ] E)
+    (hPid : P.comp P = P)
+    (hPsymm : (P : E →ₗ[ℝ] E).IsSymmetric)
+    (x z : E)
+    (hz : P z = z) :
+    ‖x - P x‖ ^ 2 ≤ ‖x - z‖ ^ 2 := by
+  have hPpx : P (P x) = P x := by
+    have h := congrArg (fun Q : E →L[ℝ] E => Q x) hPid
+    simpa using h
+  have hfixedDiff : P (P x - z) = P x - z := by
+    rw [map_sub, hPpx, hz]
+  have horth : inner ℝ (x - P x) (P x - z) = 0 := by
+    rw [inner_sub_left]
+    have hs :
+        inner ℝ (P x) (P x - z) =
+          inner ℝ x (P (P x - z)) :=
+      hPsymm x (P x - z)
+    rw [hs, hfixedDiff, sub_self]
+  have hdecomp : x - z = (x - P x) + (P x - z) := by
+    abel
+  rw [hdecomp, norm_add_sq_real, horth]
+  nlinarith [sq_nonneg ‖P x - z‖]
 
-The lift only has to be isometric.  If every color projection fixes the coarse
-conditional-expectation image, Pythagoras gives the marginal color energy
-below the squared defect of the target operator `S`. -/
-theorem boundedColorMarginalResidualEnergy_le_squaredDefect_of_isometricLift
-    {G M C : Type*}
-    [NormedAddCommGroup G]
-    [InnerProductSpace ℝ G]
-    [NormedAddCommGroup M]
-    [InnerProductSpace ℝ M]
+/-- Pythagoras for a self-adjoint idempotent on the joint Hilbert carrier. -/
+theorem realHilbert_groundStateJoint_projection_residual_sq_eq_defect
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    (Q : E →L[ℝ] E)
+    (hQid : Q.comp Q = Q)
+    (hQsymm : (Q : E →ₗ[ℝ] E).IsSymmetric)
+    (x : E) :
+    ‖x - Q x‖ ^ 2 = ‖x‖ ^ 2 - ‖Q x‖ ^ 2 := by
+  have hQQ : Q (Q x) = Q x := by
+    have h := congrArg (fun R : E →L[ℝ] E => R x) hQid
+    simpa using h
+  have hs : inner ℝ (Q x) (Q x) = inner ℝ x (Q (Q x)) :=
+    hQsymm x (Q x)
+  rw [hQQ] at hs
+  have hinner : inner ℝ x (Q x) = ‖Q x‖ ^ 2 := by
+    calc
+      inner ℝ x (Q x) = inner ℝ (Q x) (Q x) := hs.symm
+      _ = ‖Q x‖ ^ 2 := real_inner_self_eq_norm_sq _
+  rw [norm_sub_sq_real, hinner]
+  ring
+
+/-- Averaging finitely many joint conditional-expectation residuals cannot
+exceed one coarser conditional-expectation residual when the coarse image is
+fixed by every color projection. -/
+theorem groundStateJointColorNormalizedResidualEnergy_le_coarseResidual_sq
+    {E C : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
     [Fintype C]
     [Nonempty C]
-    (L : G →L[ℝ] M)
-    (hL : ∀ x, ‖L x‖ ^ 2 = ‖x‖ ^ 2)
-    (P : C → M →L[ℝ] M)
+    (P : C → E →L[ℝ] E)
     (hPid : ∀ c, (P c).comp (P c) = P c)
-    (hPsymm : ∀ c, ((P c : M →L[ℝ] M) : M →ₗ[ℝ] M).IsSymmetric)
-    (Q : M →L[ℝ] M)
-    (hQid : Q.comp Q = Q)
-    (hQsymm : (Q : M →ₗ[ℝ] M).IsSymmetric)
-    (S : G →L[ℝ] G)
-    (hfixed : ∀ c x, P c (Q (L x)) = Q (L x))
-    (hcoarse : ∀ x, ‖Q (L x)‖ ^ 2 = ‖S x‖ ^ 2)
-    (x : G) :
-    boundedColorNormalizedResidualEnergy P (L x) ≤
-      ‖x‖ ^ 2 - ‖S x‖ ^ 2 := by
-  have hMarginal :=
-    boundedColorNormalizedResidualEnergy_le_coarseProjectionResidual_sq
-      P hPid hPsymm Q (L x) (fun c => hfixed c x)
-  have hPyth :=
-    realHilbert_idempotent_symmetric_residual_sq_eq_defect
-      Q hQid hQsymm (L x)
+    (hPsymm : ∀ c, ((P c : E →L[ℝ] E) : E →ₗ[ℝ] E).IsSymmetric)
+    (Q : E →L[ℝ] E)
+    (x : E)
+    (hQfixed : ∀ c, P c (Q x) = Q x) :
+    groundStateJointColorNormalizedResidualEnergy P x ≤
+      ‖x - Q x‖ ^ 2 := by
+  have hterm : ∀ c : C, ‖x - P c x‖ ^ 2 ≤ ‖x - Q x‖ ^ 2 := by
+    intro c
+    exact realHilbert_groundStateJoint_projection_residual_sq_le_of_fixed
+      (P c) (hPid c) (hPsymm c) x (Q x) (hQfixed c)
+  have hsum :
+      (∑ c : C, ‖x - P c x‖ ^ 2) ≤
+        (Fintype.card C : ℝ) * ‖x - Q x‖ ^ 2 := by
+    calc
+      (∑ c : C, ‖x - P c x‖ ^ 2) ≤
+          ∑ _c : C, ‖x - Q x‖ ^ 2 :=
+        Finset.sum_le_sum fun c _hc => hterm c
+      _ = (Fintype.card C : ℝ) * ‖x - Q x‖ ^ 2 := by simp
+  have hcard : 0 < (Fintype.card C : ℝ) := by
+    exact_mod_cast Fintype.card_pos_iff.mpr inferInstance
+  unfold groundStateJointColorNormalizedResidualEnergy
   calc
-    boundedColorNormalizedResidualEnergy P (L x) ≤
-        ‖L x - Q (L x)‖ ^ 2 := hMarginal
-    _ = ‖L x‖ ^ 2 - ‖Q (L x)‖ ^ 2 := hPyth
-    _ = ‖x‖ ^ 2 - ‖S x‖ ^ 2 := by rw [hL, hcoarse]
-
-/-- A coefficient `eta ∈ [0,1]` may be retained without changing the exact
-marginal theorem. -/
-theorem eta_mul_boundedColorMarginalResidualEnergy_le_squaredDefect_of_isometricLift
-    {G M C : Type*}
-    [NormedAddCommGroup G]
-    [InnerProductSpace ℝ G]
-    [NormedAddCommGroup M]
-    [InnerProductSpace ℝ M]
-    [Fintype C]
-    [Nonempty C]
-    (L : G →L[ℝ] M)
-    (hL : ∀ x, ‖L x‖ ^ 2 = ‖x‖ ^ 2)
-    (P : C → M →L[ℝ] M)
-    (hPid : ∀ c, (P c).comp (P c) = P c)
-    (hPsymm : ∀ c, ((P c : M →L[ℝ] M) : M →ₗ[ℝ] M).IsSymmetric)
-    (Q : M →L[ℝ] M)
-    (hQid : Q.comp Q = Q)
-    (hQsymm : (Q : M →ₗ[ℝ] M).IsSymmetric)
-    (S : G →L[ℝ] G)
-    (hfixed : ∀ c x, P c (Q (L x)) = Q (L x))
-    (hcoarse : ∀ x, ‖Q (L x)‖ ^ 2 = ‖S x‖ ^ 2)
-    (eta : ℝ)
-    (heta0 : 0 ≤ eta)
-    (heta1 : eta ≤ 1)
-    (x : G) :
-    eta * boundedColorNormalizedResidualEnergy P (L x) ≤
-      ‖x‖ ^ 2 - ‖S x‖ ^ 2 := by
-  have hmain :=
-    boundedColorMarginalResidualEnergy_le_squaredDefect_of_isometricLift
-      L hL P hPid hPsymm Q hQid hQsymm S hfixed hcoarse x
-  have hE0 := boundedColorNormalizedResidualEnergy_nonneg P (L x)
-  have hetaE :
-      eta * boundedColorNormalizedResidualEnergy P (L x) ≤
-        boundedColorNormalizedResidualEnergy P (L x) := by
-    nlinarith
-  exact hetaE.trans hmain
+    (Fintype.card C : ℝ)⁻¹ * (∑ c : C, ‖x - P c x‖ ^ 2) ≤
+        (Fintype.card C : ℝ)⁻¹ *
+          ((Fintype.card C : ℝ) * ‖x - Q x‖ ^ 2) :=
+      mul_le_mul_of_nonneg_left hsum (by positivity)
+    _ = ‖x - Q x‖ ^ 2 := by
+      rw [← mul_assoc, inv_mul_cancel₀ hcard.ne', one_mul]
 
 section GroundStateDoobMarginal
 
@@ -190,8 +149,8 @@ local notation "D" =>
     H N hN beta hbeta
 local notation "Color" => Fin 8
 
-/-- The right-boundary pullback, viewed as a continuous linear isometric lift
-into the genuine ground-state one-slab joint Hilbert carrier. -/
+/-- The right-boundary pullback as a continuous linear isometric lift into the
+genuine ground-state one-slab joint Hilbert carrier. -/
 noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift :
     V →L[ℝ] J :=
   R.toContinuousLinearMap
@@ -204,11 +163,18 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBound
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift]
   rw [R.norm_map]
 
+/-- The actual eight-color residual energy on the ground-state one-slab joint
+carrier.  The normalization is exactly `1/8` through the fixed type `Fin 8`. -/
+noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColorResidualEnergy
+    (P : Color → J →L[ℝ] J)
+    (u : V) : ℝ :=
+  groundStateJointColorNormalizedResidualEnergy P
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
+      H N hN beta hbeta u)
+
 /-- Any genuine eight-color orthogonal conditional-expectation family on the
 joint law whose fixed ranges contain the coarse left-boundary image has its
-normalized residual energy bounded by the exact Doob squared defect.
-
-No physical-carrier descent is assumed or needed. -/
+normalized residual energy bounded by the exact Doob squared defect. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColorResidual_le_doobDefect
     (P : Color → J →L[ℝ] J)
     (hPid : ∀ c, (P c).comp (P c) = P c)
@@ -219,27 +185,43 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColor
         Q (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
           H N hN beta hbeta u))
     (u : V) :
-    boundedColorNormalizedResidualEnergy P
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
-          H N hN beta hbeta u) ≤
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColorResidualEnergy
+        H N hN beta hbeta P u ≤
       ‖u‖ ^ 2 - ‖D u‖ ^ 2 := by
-  apply boundedColorMarginalResidualEnergy_le_squaredDefect_of_isometricLift
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
-      H N hN beta hbeta)
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift_norm_sq
-      H N hN beta hbeta)
-    P hPid hPsymm Q
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp_idempotent
-      H N hN beta hbeta)
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp_inner_symm
-      H N hN beta hbeta)
-    D hfixed
-  intro v
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift]
+  let y :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
+      H N hN beta hbeta u
+  have hMarginal :
+      groundStateJointColorNormalizedResidualEnergy P y ≤ ‖y - Q y‖ ^ 2 :=
+    groundStateJointColorNormalizedResidualEnergy_le_coarseResidual_sq
+      P hPid hPsymm Q y (fun c => hfixed c u)
+  have hPyth :
+      ‖y - Q y‖ ^ 2 = ‖y‖ ^ 2 - ‖Q y‖ ^ 2 :=
+    realHilbert_groundStateJoint_projection_residual_sq_eq_defect
+      Q
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp_idempotent
+        H N hN beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp_inner_symm
+        H N hN beta hbeta)
+      y
+  have hy : ‖y‖ ^ 2 = ‖u‖ ^ 2 := by
+    simpa [y] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift_norm_sq
+        H N hN beta hbeta u
   have hnorm :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp_rightBoundary_norm
-      H N hN beta hbeta v
-  nlinarith [norm_nonneg (Q (R v)), norm_nonneg (D v)]
+      H N hN beta hbeta u
+  have hQsq : ‖Q y‖ ^ 2 = ‖D u‖ ^ 2 := by
+    have hnorm' : ‖Q y‖ = ‖D u‖ := by
+      simpa [y,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift] using hnorm
+    rw [hnorm']
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColorResidualEnergy
+  change groundStateJointColorNormalizedResidualEnergy P y ≤ _
+  calc
+    groundStateJointColorNormalizedResidualEnergy P y ≤ ‖y - Q y‖ ^ 2 := hMarginal
+    _ = ‖y‖ ^ 2 - ‖Q y‖ ^ 2 := hPyth
+    _ = ‖u‖ ^ 2 - ‖D u‖ ^ 2 := by rw [hy, hQsq]
 
 /-- The same concrete Doob comparison with a retained loss factor
 `eta ∈ [0,1]`. -/
@@ -256,23 +238,24 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColor
     (heta0 : 0 ≤ eta)
     (heta1 : eta ≤ 1)
     (u : V) :
-    eta * boundedColorNormalizedResidualEnergy P
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
-          H N hN beta hbeta u) ≤
+    eta *
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColorResidualEnergy
+          H N hN beta hbeta P u ≤
       ‖u‖ ^ 2 - ‖D u‖ ^ 2 := by
   have hmain :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColorResidual_le_doobDefect
       H N hN beta hbeta P hPid hPsymm hfixed u
-  have hE0 := boundedColorNormalizedResidualEnergy_nonneg P
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
-      H N hN beta hbeta u)
+  have hE0 :
+      0 ≤ periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColorResidualEnergy
+        H N hN beta hbeta P u := by
+    unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColorResidualEnergy
+    exact groundStateJointColorNormalizedResidualEnergy_nonneg P _
   have hetaE :
-      eta * boundedColorNormalizedResidualEnergy P
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
-            H N hN beta hbeta u) ≤
-        boundedColorNormalizedResidualEnergy P
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
-            H N hN beta hbeta u) := by
+      eta *
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColorResidualEnergy
+            H N hN beta hbeta P u ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColorResidualEnergy
+          H N hN beta hbeta P u := by
     nlinarith
   exact hetaE.trans hmain
 
