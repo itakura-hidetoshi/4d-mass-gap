@@ -4,6 +4,7 @@ import Mathlib.Tactic
 namespace MGAP4D
 namespace MathlibAnalytic
 
+open MeasureTheory
 open scoped BigOperators InnerProductSpace InnerProduct
 
 noncomputable section
