@@ -89,8 +89,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2_add
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2
       H N hN beta hbeta g)
   filter_upwards [hfg, hUfg, hUf, hUg, hUadd] with A hfgA hUfgA hUfA hUgA hUaddA
-  rw [hUfgA, hUaddA, hUfA, hUgA]
-  simp only [Pi.add_apply] at hfgA ⊢
+  rw [hUfgA, hUaddA]
+  simp only [Pi.add_apply]
+  rw [hUfA, hUgA]
+  simp only [Pi.add_apply] at hfgA
   simp [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumFunction,
     hfgA, add_div]
 
@@ -128,8 +130,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2_smul
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2
       H N hN beta hbeta f)
   filter_upwards [hcf, hUcf, hUf, hUsmul] with A hcfA hUcfA hUfA hUsmulA
-  rw [hUcfA, hUsmulA, hUfA]
-  simp only [Pi.smul_apply, smul_eq_mul] at hcfA ⊢
+  rw [hUcfA, hUsmulA]
+  simp only [Pi.smul_apply, smul_eq_mul]
+  rw [hUfA]
+  simp only [Pi.smul_apply, smul_eq_mul] at hcfA
   simp [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumFunction,
     hcfA, mul_div_assoc]
 
