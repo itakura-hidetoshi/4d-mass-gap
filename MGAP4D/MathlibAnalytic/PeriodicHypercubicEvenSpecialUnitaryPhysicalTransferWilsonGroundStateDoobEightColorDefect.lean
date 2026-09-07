@@ -171,9 +171,18 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBound
     (u : V) :
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
         H N hN beta hbeta u‖ ^ 2 = ‖u‖ ^ 2 := by
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift]
-  rw [(periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryL2Isometry
-    H N hN beta hbeta).norm_map]
+  change
+    ‖(periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryL2Isometry
+        H N hN beta hbeta).toContinuousLinearMap u‖ ^ 2 = ‖u‖ ^ 2
+  have hnorm :
+      ‖(periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryL2Isometry
+          H N hN beta hbeta).toContinuousLinearMap u‖ = ‖u‖ := by
+    change
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryL2Isometry
+          H N hN beta hbeta u‖ = ‖u‖
+    exact (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryL2Isometry
+      H N hN beta hbeta).norm_map u
+  rw [hnorm]
 
 /-- The actual eight-color residual energy on the ground-state one-slab joint
 carrier.  The normalization is exactly `1/8` through the fixed type `Fin 8`. -/
