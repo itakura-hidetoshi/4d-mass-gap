@@ -29,8 +29,8 @@ theorem periodicHypercubicEvenSpatialBoundaryColorEmbedding_injective :
   intro c d h
   apply Prod.ext
   · apply Subtype.ext
-    exact congrArg Prod.fst h
-  · exact congrArg Prod.snd h
+    exact congrArg (fun x : PeriodicHypercubicEvenEdgeColor => x.1) h
+  · exact congrArg (fun x : PeriodicHypercubicEvenEdgeColor => x.2) h
 
 /-- A color is visible on the spatial boundary exactly when its direction is
 not the time direction `0`.  Thus the canonical eight colors split without
