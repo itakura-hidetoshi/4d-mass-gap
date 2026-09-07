@@ -150,7 +150,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatial
       Psp (Q (R v)) (fun s => hfixed s v) c
   · exact heta0
   · exact heta1
-  · exact u
 
 end GroundStateDoobSixSpatialTwoTemporal
 
