@@ -41,6 +41,7 @@ theorem WilsonMarginalCondExpComparisonData.analysis_residual_eq_zero
   have horth : inner ℝ (D.lift u) q = 0 := by
     rw [hliftResidual, inner_sub_left]
     apply sub_eq_zero.mpr
+    symm
     calc
       inner ℝ (D.marginalColor c y) q =
           inner ℝ y (D.marginalColor c q) :=
