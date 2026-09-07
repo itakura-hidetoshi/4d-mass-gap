@@ -1,0 +1,652 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateDoobSixSpatialTwoTemporalFamily
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateDoobPhysicalDefect
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenEightColorEdgeMatching
+import Mathlib.Data.Fintype.EquivFin
+import Mathlib.MeasureTheory.Function.ConditionalExpectation.CondexpL2
+import Mathlib.Tactic
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+open MeasureTheory
+open scoped InnerProductSpace InnerProduct
+
+noncomputable section
+
+set_option maxHeartbeats 2000000
+
+local instance (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
+local instance (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
+/-- The six spatial colors on one temporal-gauge boundary slice: one of the
+three non-time directions together with checkerboard parity. -/
+abbrev PeriodicHypercubicEvenGroundStateSpatialColor : Type :=
+  PeriodicHypercubicEvenSpatialDirection × ZMod 2
+
+/-- There are exactly six spatial colors, independently of the finite volume. -/
+theorem periodicHypercubicEvenGroundStateSpatialColor_card :
+    Fintype.card PeriodicHypercubicEvenGroundStateSpatialColor = 6 := by
+  change Fintype.card (PeriodicHypercubicOtherAxis (0 : PeriodicHypercubicAxis) × ZMod 2) = 6
+  rw [Fintype.card_prod, periodicHypercubicOtherAxis_card]
+  native_decide
+
+/-- Canonical finite indexing of the six spatial colors. -/
+noncomputable def periodicHypercubicEvenGroundStateSpatialColorEquivFin :
+    PeriodicHypercubicEvenGroundStateSpatialColor ≃ Fin 6 := by
+  simpa only [periodicHypercubicEvenGroundStateSpatialColor_card] using
+    (Fintype.equivFin PeriodicHypercubicEvenGroundStateSpatialColor)
+
+/-- Spatial color of a link in one boundary slice.  This is exactly the spatial
+part of the canonical four-dimensional eight-color assignment. -/
+def periodicHypercubicEvenSpatialSliceLinkColor
+    (H : ℕ)
+    (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+    PeriodicHypercubicEvenGroundStateSpatialColor :=
+  (e.2, periodicHypercubicEvenCheckerboardParity H e.1.1)
+
+/-- Forget the subtype witness and recover the canonical four-dimensional
+edge color of the embedded spatial link. -/
+theorem periodicHypercubicEvenSpatialSliceLinkColor_to_edgeColor
+    (H : ℕ)
+    (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+    ((periodicHypercubicEvenSpatialSliceLinkColor H e).1.1,
+        (periodicHypercubicEvenSpatialSliceLinkColor H e).2) =
+      periodicHypercubicEvenEdgeColor H
+        (periodicHypercubicEvenSpatialSliceLinkEmbedding H e) := by
+  rfl
+
+/-- Spatial links outside one selected color class. -/
+abbrev PeriodicHypercubicEvenSpatialSliceOffColorLink
+    (H : ℕ)
+    (color : PeriodicHypercubicEvenGroundStateSpatialColor) : Type :=
+  {e : PeriodicHypercubicEvenSpatialSliceLink H //
+    periodicHypercubicEvenSpatialSliceLinkColor H e ≠ color}
+
+/-- Restrict a boundary configuration to links outside one spatial color. -/
+def periodicHypercubicEvenSpatialSliceOffColorRestriction
+    {H : ℕ}
+    {Gauge : Type*}
+    (color : PeriodicHypercubicEvenGroundStateSpatialColor)
+    (A : PeriodicHypercubicEvenSpatialSliceConfiguration H Gauge) :
+    PeriodicHypercubicEvenSpatialSliceOffColorLink H color → Gauge :=
+  fun e => A e.1
+
+/-- The off-color coordinate restriction is measurable on the finite product
+boundary configuration space. -/
+theorem measurable_periodicHypercubicEvenSpecialUnitarySpatialSliceOffColorRestriction
+    (H N : ℕ)
+    (color : PeriodicHypercubicEvenGroundStateSpatialColor) :
+    Measurable
+      (periodicHypercubicEvenSpatialSliceOffColorRestriction
+        (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) color :
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N →
+          PeriodicHypercubicEvenSpatialSliceOffColorLink H color →
+            Matrix.specialUnitaryGroup (Fin N) ℂ) := by
+  refine measurable_pi_lambda _ ?_
+  intro e
+  exact measurable_pi_apply e.1
+
+/-- The information retained by one joint spatial-color conditional
+expectation: the complete left boundary and all right-boundary coordinates
+outside the selected color. -/
+def periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorRestriction
+    (H N : ℕ)
+    (color : PeriodicHypercubicEvenGroundStateSpatialColor)
+    (z :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
+    PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+      (PeriodicHypercubicEvenSpatialSliceOffColorLink H color →
+        Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  (z.1, periodicHypercubicEvenSpatialSliceOffColorRestriction color z.2)
+
+/-- The joint retained-coordinate map is measurable in the ambient product
+Borel structure. -/
+theorem measurable_periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorRestriction
+    (H N : ℕ)
+    (color : PeriodicHypercubicEvenGroundStateSpatialColor) :
+    Measurable
+      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorRestriction
+        H N color) := by
+  exact measurable_fst.prod_mk
+    ((measurable_periodicHypercubicEvenSpecialUnitarySpatialSliceOffColorRestriction
+      H N color).comp measurable_snd)
+
+/-- Sigma-algebra generated by the complete left boundary and the right
+boundary outside one selected spatial color. -/
+@[reducible] def
+    periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+    (H N : ℕ)
+    (color : PeriodicHypercubicEvenGroundStateSpatialColor) :
+    MeasurableSpace
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :=
+  MeasurableSpace.comap
+    (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorRestriction
+      H N color)
+    inferInstance
+
+/-- The retained-coordinate sigma-algebra is a sub-sigma-algebra of the
+ambient joint product structure. -/
+theorem periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
+    (H N : ℕ)
+    (color : PeriodicHypercubicEvenGroundStateSpatialColor) :
+    periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+        H N color ≤
+      (inferInstance : MeasurableSpace
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)) := by
+  change
+    MeasurableSpace.comap
+        (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorRestriction
+          H N color) inferInstance ≤ inferInstance
+  exact
+    (measurable_periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorRestriction
+      H N color).comap_le
+
+/-- Genuine conditional expectation on the ground-state joint law onto the
+information consisting of all left-boundary coordinates and all right-boundary
+coordinates outside one selected spatial color. -/
+noncomputable def
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (color : PeriodicHypercubicEvenGroundStateSpatialColor) :
+    PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+        H N hN beta hbeta →L[ℝ]
+      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+        H N hN beta hbeta :=
+  let π :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+      H N hN beta hbeta
+  let m :=
+    periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+      H N color
+  (Submodule.subtypeL (lpMeas ℝ ℝ m 2 π)).comp
+    (condExpL2 ℝ ℝ
+      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
+        H N color))
+
+@[simp] theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_apply
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (color : PeriodicHypercubicEvenGroundStateSpatialColor)
+    (f : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+      H N hN beta hbeta) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2
+        H N hN beta hbeta color f =
+      (condExpL2 ℝ ℝ
+        (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
+          H N color) f :
+        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+          H N hN beta hbeta) := by
+  rfl
+
+/-- A joint spatial-color conditional expectation fixes exactly its measurable
+L2 subspace. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_eq_self_iff_mem_lpMeas
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (color : PeriodicHypercubicEvenGroundStateSpatialColor)
+    (f : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+      H N hN beta hbeta) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2
+        H N hN beta hbeta color f = f ↔
+      f ∈ lpMeas ℝ ℝ
+        (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+          H N color) 2
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+          H N hN beta hbeta) := by
+  let π :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+      H N hN beta hbeta
+  let m :=
+    periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+      H N color
+  let hm :=
+    periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
+      H N color
+  letI : Fact
+      (m ≤ (inferInstance : MeasurableSpace
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))) :=
+    ⟨hm⟩
+  constructor
+  · intro hFixed
+    let q : lpMeas ℝ ℝ m 2 π := condExpL2 ℝ ℝ hm f
+    have hCoe : (q : Lp ℝ 2 π) = f := by
+      simpa [q, m, π, hm,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_apply] using
+        hFixed
+    have hMem : (q : Lp ℝ 2 π) ∈ lpMeas ℝ ℝ m 2 π := q.property
+    rw [hCoe] at hMem
+    simpa [m, π] using hMem
+  · intro hMem
+    let q : lpMeas ℝ ℝ m 2 π := ⟨f, by simpa [m, π] using hMem⟩
+    have hq :
+        (condExpL2 ℝ ℝ hm (q : Lp ℝ 2 π) : lpMeas ℝ ℝ m 2 π) = q := by
+      unfold condExpL2
+      exact Submodule.orthogonalProjection_mem_subspace_eq_self q
+    have hCoe := congrArg (fun x : lpMeas ℝ ℝ m 2 π => (x : Lp ℝ 2 π)) hq
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_apply]
+    simpa [q, m, π, hm] using hCoe
+
+/-- Each genuine joint spatial-color conditional expectation is idempotent. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_idempotent
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (color : PeriodicHypercubicEvenGroundStateSpatialColor) :
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2
+      H N hN beta hbeta color).comp
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2
+        H N hN beta hbeta color) =
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2
+      H N hN beta hbeta color := by
+  apply ContinuousLinearMap.ext
+  intro f
+  rw [ContinuousLinearMap.comp_apply]
+  apply
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_eq_self_iff_mem_lpMeas
+      H N hN beta hbeta color
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2
+        H N hN beta hbeta color f)).2
+  let m :=
+    periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+      H N color
+  let π :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+      H N hN beta hbeta
+  let hm :=
+    periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
+      H N color
+  let q : lpMeas ℝ ℝ m 2 π := condExpL2 ℝ ℝ hm f
+  change (q : Lp ℝ 2 π) ∈ lpMeas ℝ ℝ m 2 π
+  exact q.property
+
+/-- Each genuine joint spatial-color conditional expectation is symmetric. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_symmetric
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (color : PeriodicHypercubicEvenGroundStateSpatialColor) :
+    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2
+      H N hN beta hbeta color :
+      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+          H N hN beta hbeta →L[ℝ]
+        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+          H N hN beta hbeta) :
+      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+          H N hN beta hbeta →ₗ[ℝ]
+        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+          H N hN beta hbeta).IsSymmetric := by
+  intro f g
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_apply,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_apply]
+  exact inner_condExpL2_left_eq_right
+    (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
+      H N color)
+
+/-- Every left-boundary pullback is measurable with respect to every retained
+spatial-color sigma-algebra because the full left boundary is retained. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftBoundaryL2Isometry_mem_spatialColor_lpMeas
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (color : PeriodicHypercubicEvenGroundStateSpatialColor)
+    (u : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateVacuumL2
+      H N hN beta hbeta) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftBoundaryL2Isometry
+        H N hN beta hbeta u ∈
+      lpMeas ℝ ℝ
+        (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+          H N color) 2
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+          H N hN beta hbeta) := by
+  let X := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N
+  let π :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+      H N hN beta hbeta
+  let ν :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
+      H N hN beta hbeta
+  let m :=
+    periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+      H N color
+  let R :=
+    periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorRestriction
+      H N color
+  let JL :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftBoundaryL2Isometry
+      H N hN beta hbeta
+  rw [mem_lpMeas_iff_aestronglyMeasurable]
+  have huMap :
+      AEStronglyMeasurable (fun A : X => u A) (Measure.map Prod.fst π) := by
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_map_fst
+      H N hN beta hbeta]
+    exact Lp.aestronglyMeasurable u
+  have hcomp :
+      AEStronglyMeasurable[MeasurableSpace.comap Prod.fst inferInstance]
+        ((fun A : X => u A) ∘ Prod.fst) π :=
+    AEStronglyMeasurable.comp_ae_measurable'
+      huMap measurable_fst.aemeasurable
+  have hRmeas :
+      @Measurable
+        (X × X)
+        (X × (PeriodicHypercubicEvenSpatialSliceOffColorLink H color →
+          Matrix.specialUnitaryGroup (Fin N) ℂ))
+        m inferInstance R := by
+    exact measurable_iff_comap_le.mpr le_rfl
+  have hfstMeas : @Measurable (X × X) X m inferInstance Prod.fst :=
+    measurable_fst.comp hRmeas
+  have hcompM : AEStronglyMeasurable[m]
+      ((fun A : X => u A) ∘ Prod.fst) π :=
+    hcomp.mono hfstMeas.comap_le
+  have hJL : JL u =ᵐ[π] fun z => u z.1 := by
+    simpa [JL, Function.comp_def] using
+      (MeasureTheory.Lp.coeFn_compMeasurePreserving u
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_fst_measurePreserving
+          H N hN beta hbeta))
+  exact hcompM.congr hJL.symm
+
+/-- Every genuine spatial-color conditional expectation fixes the complete
+left-boundary subspace. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_leftBoundary_fixed
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (color : PeriodicHypercubicEvenGroundStateSpatialColor)
+    (u : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateVacuumL2
+      H N hN beta hbeta) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2
+        H N hN beta hbeta color
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftBoundaryL2Isometry
+          H N hN beta hbeta u) =
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftBoundaryL2Isometry
+        H N hN beta hbeta u := by
+  apply
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_eq_self_iff_mem_lpMeas
+      H N hN beta hbeta color _).2
+  exact
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftBoundaryL2Isometry_mem_spatialColor_lpMeas
+      H N hN beta hbeta color u
+
+/-- The six genuine spatial conditional expectations, indexed by `Fin 6` for
+direct use by the six-spatial/two-temporal reduction. -/
+noncomputable def
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    Fin 6 →
+      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+          H N hN beta hbeta →L[ℝ]
+        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+          H N hN beta hbeta :=
+  fun c =>
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2
+      H N hN beta hbeta
+      (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c)
+
+/-- Every member of the concrete six-spatial family is idempotent. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2_idempotent
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (c : Fin 6) :
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2
+      H N hN beta hbeta c).comp
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2
+        H N hN beta hbeta c) =
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2
+      H N hN beta hbeta c :=
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_idempotent
+    H N hN beta hbeta
+    (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c)
+
+/-- Every member of the concrete six-spatial family is symmetric. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2_symmetric
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (c : Fin 6) :
+    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2
+      H N hN beta hbeta c :
+      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+          H N hN beta hbeta →L[ℝ]
+        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+          H N hN beta hbeta) :
+      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+          H N hN beta hbeta →ₗ[ℝ]
+        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+          H N hN beta hbeta).IsSymmetric :=
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_symmetric
+    H N hN beta hbeta
+    (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c)
+
+/-- Every concrete spatial conditional expectation fixes the coarse left-boundary
+image of every right-boundary vector. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2_coarse_fixed
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (c : Fin 6)
+    (u : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateVacuumL2
+      H N hN beta hbeta) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2
+        H N hN beta hbeta c
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp
+          H N hN beta hbeta
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
+            H N hN beta hbeta u)) =
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp
+        H N hN beta hbeta
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
+          H N hN beta hbeta u) := by
+  have hcoarse :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp_rightBoundary
+      H N hN beta hbeta u
+  have hleft :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_leftBoundary_fixed
+      H N hN beta hbeta
+      (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateDoobBoundaryOperator
+        H N hN beta hbeta u)
+  simpa [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift] using
+    congrArg
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2
+        H N hN beta hbeta
+        (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c))
+      hcoarse |>.trans hleft
+
+/-- The fully concrete eight-color boundary family: six genuine joint
+conditional expectations and two identity temporal colors. -/
+noncomputable def
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateConcreteEightColorCondExpL2
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    Fin 8 →
+      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+          H N hN beta hbeta →L[ℝ]
+        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+          H N hN beta hbeta :=
+  groundStateJointSixSpatialTwoTemporalFamily
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2
+      H N hN beta hbeta)
+
+/-- The concrete eight-color family is idempotent color by color. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateConcreteEightColorCondExpL2_idempotent
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (c : Fin 8) :
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateConcreteEightColorCondExpL2
+      H N hN beta hbeta c).comp
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateConcreteEightColorCondExpL2
+        H N hN beta hbeta c) =
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateConcreteEightColorCondExpL2
+      H N hN beta hbeta c := by
+  exact groundStateJointSixSpatialTwoTemporalFamily_idempotent
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2
+      H N hN beta hbeta)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2_idempotent
+      H N hN beta hbeta)
+    c
+
+/-- The concrete eight-color family is symmetric color by color. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateConcreteEightColorCondExpL2_symmetric
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (c : Fin 8) :
+    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateConcreteEightColorCondExpL2
+      H N hN beta hbeta c :
+      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+          H N hN beta hbeta →L[ℝ]
+        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+          H N hN beta hbeta) :
+      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+          H N hN beta hbeta →ₗ[ℝ]
+        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+          H N hN beta hbeta).IsSymmetric := by
+  exact groundStateJointSixSpatialTwoTemporalFamily_symmetric
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2
+      H N hN beta hbeta)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2_symmetric
+      H N hN beta hbeta)
+    c
+
+/-- The concrete eight-color family fixes every coarse left-boundary image. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateConcreteEightColorCondExpL2_coarse_fixed
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (c : Fin 8)
+    (u : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateVacuumL2
+      H N hN beta hbeta) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateConcreteEightColorCondExpL2
+        H N hN beta hbeta c
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp
+          H N hN beta hbeta
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
+            H N hN beta hbeta u)) =
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp
+        H N hN beta hbeta
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
+          H N hN beta hbeta u) := by
+  exact groundStateJointSixSpatialTwoTemporalFamily_fixed
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2
+      H N hN beta hbeta)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp
+      H N hN beta hbeta
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryLift
+        H N hN beta hbeta u))
+    (fun s =>
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2_coarse_fixed
+        H N hN beta hbeta s u)
+    c
+
+/-- Fully concrete raw physical squared-defect comparison.  No abstract color
+projection remains: the six spatial colors are genuine joint conditional
+expectations and the two temporal colors are identities on the temporal-gauge
+boundary carrier. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateConcreteEightColorResidual_eta_mul_transferNormSq_le_rawPhysicalDefect
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (eta : ℝ)
+    (heta0 : 0 ≤ eta)
+    (heta1 : eta ≤ 1)
+    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+    eta *
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColorResidualEnergy
+          H N hN beta hbeta
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateConcreteEightColorCondExpL2
+            H N hN beta hbeta)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2LinearIsometry
+            H N hN beta hbeta
+            (f : Lp ℝ 2
+              (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))) *
+        ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta‖ ^ 2 ≤
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta‖ ^ 2 * ‖f‖ ^ 2 -
+        ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta f‖ ^ 2 := by
+  apply
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColorResidual_eta_mul_transferNormSq_le_rawPhysicalDefect
+      H N hN beta hbeta
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateConcreteEightColorCondExpL2
+        H N hN beta hbeta)
+  · exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateConcreteEightColorCondExpL2_idempotent
+        H N hN beta hbeta
+  · exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateConcreteEightColorCondExpL2_symmetric
+        H N hN beta hbeta
+  · exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateConcreteEightColorCondExpL2_coarse_fixed
+        H N hN beta hbeta
+  · exact heta0
+  · exact heta1
+  · exact f
+
+end
+
+end MathlibAnalytic
+end MGAP4D
