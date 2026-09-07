@@ -69,7 +69,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumFunction_
     fun A => (Ω.1 : Lp ℝ 2 μ) A
   let u : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ :=
     fun A => f A * (omega A)⁻¹
-  let rho : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ≥0∞ :=
+  let rho : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ENNReal :=
     fun A => ENNReal.ofReal (omega A ^ 2)
   have huStrongμ : AEStronglyMeasurable u μ := by
     exact (Lp.aestronglyMeasurable f).mul
@@ -153,7 +153,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2_norm_s
     fun A => (Ω.1 : Lp ℝ 2 μ) A
   let u : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ :=
     fun A => f A * (omega A)⁻¹
-  let rho : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ≥0∞ :=
+  let rho : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ENNReal :=
     fun A => ENNReal.ofReal (omega A ^ 2)
   let U := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2
     H N hN beta hbeta f
