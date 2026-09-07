@@ -44,9 +44,9 @@ noncomputable def periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuu
     (hbeta : 0 ≤ beta)
     (f : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
     (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) : ℝ :=
-  f A *
+  f A /
     ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
-      H N hN beta hbeta).1 A)⁻¹
+      H N hN beta hbeta).1 A)
 
 /-- The representative `f / Ω` belongs to the vacuum-weighted `L²` space.
 The key cancellation is the a.e. identity `Ω² (f / Ω)² = f²`. -/
@@ -68,15 +68,15 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumFunction_
   let omega : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ :=
     fun A => (Ω.1 : Lp ℝ 2 μ) A
   let u : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ :=
-    fun A => f A * (omega A)⁻¹
+    fun A => f A / omega A
   let rho : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ENNReal :=
     fun A => ENNReal.ofReal (omega A ^ 2)
   have huStrongμ : AEStronglyMeasurable u μ := by
-    exact (Lp.aestronglyMeasurable f).mul
-      ((Lp.aestronglyMeasurable (Ω.1 : Lp ℝ 2 μ)).inv₀)
+    exact (Lp.aestronglyMeasurable f).div₀
+      (Lp.aestronglyMeasurable (Ω.1 : Lp ℝ 2 μ))
   have hrhoAE : AEMeasurable rho μ := by
     exact ((Lp.aestronglyMeasurable (Ω.1 : Lp ℝ 2 μ)).pow 2).aemeasurable.ennreal_ofReal
-  have hrhoTop : ∀ᵐ A ∂μ, rho A < ∞ := by
+  have hrhoTop : ∀ᵐ A ∂μ, rho A < (⊤ : ENNReal) := by
     filter_upwards with A
     simp [rho]
   have hνac : μ.withDensity rho ≪ μ := withDensity_absolutelyContinuous _ _
@@ -152,7 +152,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2_norm_s
   let omega : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ :=
     fun A => (Ω.1 : Lp ℝ 2 μ) A
   let u : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ :=
-    fun A => f A * (omega A)⁻¹
+    fun A => f A / omega A
   let rho : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ENNReal :=
     fun A => ENNReal.ofReal (omega A ^ 2)
   let U := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2
@@ -162,7 +162,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2_norm_s
       H N hN beta hbeta f
   have hrhoAE : AEMeasurable rho μ := by
     exact ((Lp.aestronglyMeasurable (Ω.1 : Lp ℝ 2 μ)).pow 2).aemeasurable.ennreal_ofReal
-  have hrhoTop : ∀ᵐ A ∂μ, rho A < ∞ := by
+  have hrhoTop : ∀ᵐ A ∂μ, rho A < (⊤ : ENNReal) := by
     filter_upwards with A
     simp [rho]
   have hΩpos :=
