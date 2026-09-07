@@ -173,7 +173,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointWeigh
           s.indicator (fun A =>
             (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
               H N hN beta hbeta).1 A) z.2 := by
-    exact hsndQMP.ae hgrep
+    simpa [Function.comp_def] using hgrep.comp_tendsto hsndQMP.tendsto_ae
   have hpre : MeasurableSet (Prod.snd ⁻¹' s) := measurable_snd hs
   have hcoreEq :
       (fun z => inner ℝ (K z) (E z)) =ᵐ[μ.prod μ]
