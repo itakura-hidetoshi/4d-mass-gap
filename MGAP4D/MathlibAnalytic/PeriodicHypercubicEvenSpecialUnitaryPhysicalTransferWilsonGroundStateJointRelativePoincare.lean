@@ -147,11 +147,19 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateConcreteEightColorResidual_centered_eq
       H N hN beta hbeta u
   rw [hcenter] at hframe_u
-  have hscaled :=
-    mul_le_mul_of_nonneg_right hframe_u (sq_nonneg ‖T‖)
-  have hraw :=
+  have hscaled :
+      kappa * ‖R u - Q (R u)‖ ^ 2 * ‖T‖ ^ 2 ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColorResidualEnergy
+          H N hN beta hbeta P8 u * ‖T‖ ^ 2 := by
+    exact mul_le_mul_of_nonneg_right hframe_u (sq_nonneg ‖T‖)
+  have hraw0 :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateConcreteEightColorResidual_eta_mul_transferNormSq_le_rawPhysicalDefect
       H N hN beta hbeta 1 (by norm_num) (by norm_num) f
+  have hraw :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateEightColorResidualEnergy
+          H N hN beta hbeta P8 u * ‖T‖ ^ 2 ≤
+        ‖T‖ ^ 2 * ‖f‖ ^ 2 - ‖T f‖ ^ 2 := by
+    simpa [u] using hraw0
   simpa [u] using hscaled.trans hraw
 
 /-- Equivalent Doob-defect presentation of the centered-frame reduction. -/
