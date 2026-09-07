@@ -148,7 +148,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatial
   · intro c v
     exact groundStateJointSixSpatialTwoTemporalFamily_fixed
       Psp (Q (R v)) (fun s => hfixed s v) c
-  · exact eta
   · exact heta0
   · exact heta1
   · exact u
