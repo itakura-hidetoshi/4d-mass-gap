@@ -67,7 +67,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftBounda
   let J := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftBoundaryL2Isometry
     H N hN beta hbeta
   let L := J.toContinuousLinearMap
-  change L† (L u) = u
+  change (L†) (L u) = u
   apply ext_inner_right ℝ
   intro v
   rw [ContinuousLinearMap.adjoint_inner_left]
@@ -138,13 +138,13 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCond
   let J := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftBoundaryL2Isometry
     H N hN beta hbeta
   let L := J.toContinuousLinearMap
-  change inner ℝ (L (L† x)) y = inner ℝ x (L (L† y))
+  change inner ℝ (L ((L†) x)) y = inner ℝ x (L ((L†) y))
   calc
-    inner ℝ (L (L† x)) y = inner ℝ (L† x) (L† y) := by
+    inner ℝ (L ((L†) x)) y = inner ℝ ((L†) x) ((L†) y) := by
       symm
-      exact ContinuousLinearMap.adjoint_inner_right L (L† x) y
-    _ = inner ℝ x (L (L† y)) :=
-      ContinuousLinearMap.adjoint_inner_left L (L† y) x
+      exact ContinuousLinearMap.adjoint_inner_right L ((L†) x) y
+    _ = inner ℝ x (L ((L†) y)) :=
+      ContinuousLinearMap.adjoint_inner_left L ((L†) y) x
 
 /-- The Doob boundary operator is the right-boundary pullback followed by
 conditional expectation to the left boundary. -/
