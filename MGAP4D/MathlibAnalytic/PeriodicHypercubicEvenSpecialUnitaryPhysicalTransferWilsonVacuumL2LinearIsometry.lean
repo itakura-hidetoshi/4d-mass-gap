@@ -92,9 +92,18 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2_add
   rw [hUfgA, hUaddA]
   simp only [Pi.add_apply]
   rw [hUfA, hUgA]
-  simp only [Pi.add_apply] at hfgA
-  simp [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumFunction,
-    hfgA, add_div]
+  change
+    (f + g) A /
+        ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+          H N hN beta hbeta).1 A) =
+      f A /
+          ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+            H N hN beta hbeta).1 A) +
+        g A /
+          ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+            H N hN beta hbeta).1 A)
+  rw [hfgA]
+  ring
 
 /-- The ground-state transform commutes with real scalar multiplication in
 vacuum `L²`. -/
