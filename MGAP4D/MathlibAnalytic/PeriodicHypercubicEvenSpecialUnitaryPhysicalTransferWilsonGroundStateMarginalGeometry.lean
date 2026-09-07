@@ -158,14 +158,22 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointWeigh
   have hgrep :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumIndicatorL2_coeFn
       H N hN beta hbeta s hs
+  have hgrepProd :
+      ∀ᵐ z :
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ∂(μ.prod μ),
+        g z.2 =
+          s.indicator (fun A =>
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+              H N hN beta hbeta).1 A) z.2 := by
+    exact (Measure.quasiMeasurePreserving_snd (μ := μ) (ν := μ)).ae hgrep
   have hpre : MeasurableSet (Prod.snd ⁻¹' s) := measurable_snd hs
   have hcoreEq :
       (fun z => inner ℝ (K z) (E z)) =ᵐ[μ.prod μ]
         (Prod.snd ⁻¹' s).indicator
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointWeight
             H N hN beta hbeta) := by
-    filter_upwards [hKrep, hErep,
-      (Measure.quasiMeasurePreserving_snd (μ := μ) (ν := μ)).ae hgrep] with z hk hE hg
+    filter_upwards [hKrep, hErep, hgrepProd] with z hk hE hg
     rw [hk, hE, hg]
     simp only [realL2ExternalTensorFunction, real_inner_eq_re_inner (𝕜 := ℝ),
       RCLike.inner_apply, RCLike.re_to_real, conj_trivial]
@@ -242,7 +250,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNorma
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumWeight
           H N hN beta hbeta A
         ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) = _
-  rw [inv_mul_cancel₀ hlambda.ne', one_mul]
+  rw [← mul_assoc, inv_mul_cancel₀ hlambda.ne', one_mul]
 
 /-- The right-coordinate pushforward of the ground-state joint law is exactly
 the vacuum boundary law. -/
@@ -256,14 +264,15 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasu
           H N hN beta hbeta) =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
         H N hN beta hbeta := by
-  let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
-  let Π := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
-    H N hN beta hbeta
-  let ν := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
-    H N hN beta hbeta
+  let jointMeasure :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+      H N hN beta hbeta
+  let vacuumMeasure :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
+      H N hN beta hbeta
   refine Measure.ext fun s hs => ?_
   rw [Measure.map_apply measurable_snd hs]
-  change Π (Prod.snd ⁻¹' s) = ν s
+  change jointMeasure (Prod.snd ⁻¹' s) = vacuumMeasure s
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure,
     withDensity_apply _ (measurable_snd hs)]
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure,
