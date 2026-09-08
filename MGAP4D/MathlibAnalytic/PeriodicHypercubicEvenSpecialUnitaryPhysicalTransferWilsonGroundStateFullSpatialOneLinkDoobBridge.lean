@@ -208,25 +208,42 @@ theorem
       evariance X
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFullSpatialLinkDoobMeasure
           H N hN beta hbeta A target) := by
-  haveI :
-      IsProbabilityMeasure
-        ((periodicHypercubicSpecialUnitaryWilsonSystem
-          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).singleLinkConditionalMeasure
-            A (periodicHypercubicEvenSpatialSliceLinkEmbedding H target)) :=
-    continuous_compact_oriented_singleLinkConditionalMeasure_isProbabilityMeasure
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
-      A (periodicHypercubicEvenSpatialSliceLinkEmbedding H target)
-  have h :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkDoob_evariance_lower_bound
+  let C := periodicHypercubicSpecialUnitaryWilsonSystem
+    (PeriodicHypercubicEvenSideLength H) N hN beta hbeta
+  let Omega :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumFullConfigurationWeight
       H N hN beta hbeta
-      ((periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).singleLinkConditionalMeasure
-          A (periodicHypercubicEvenSpatialSliceLinkEmbedding H target))
-      (periodicHypercubicEvenSpatialSliceRestriction A) target D X hX
-  rw [← periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFullSpatialLinkDoobMeasure_eq
-    H N hN beta hbeta A target] at h
-  exact h
+  let fullTarget := periodicHypercubicEvenSpatialSliceLinkEmbedding H target
+  have hWeight :
+      C.singleLinkDoobWeight Omega A fullTarget =
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSpatialLinkFiberWeight
+          H N hN beta hbeta
+          (periodicHypercubicEvenSpatialSliceRestriction A) target := by
+    funext g
+    exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_singleLinkDoobWeight_eq_spatialFiberWeight
+        H N hN beta hbeta A target g
+  have hw :
+      AEMeasurable (C.singleLinkDoobWeight Omega A fullTarget)
+        (C.singleLinkConditionalMeasure A fullTarget) := by
+    rw [hWeight]
+    exact D.measurable
+  have hLower : ∀ g, D.m ≤ C.singleLinkDoobWeight Omega A fullTarget g := by
+    intro g
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_singleLinkDoobWeight_eq_spatialFiberWeight
+      H N hN beta hbeta A target g]
+    exact D.lower g
+  have hUpper : ∀ g, C.singleLinkDoobWeight Omega A fullTarget g ≤ D.M := by
+    intro g
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlab_singleLinkDoobWeight_eq_spatialFiberWeight
+      H N hN beta hbeta A target g]
+    exact D.upper g
+  have h :=
+    continuous_compact_oriented_singleLinkDoob_evariance_lower_bound
+      C Omega A fullTarget X D.m D.M hw D.lower_pos D.upper_finite hLower hUpper hX
+  simpa [C, Omega, fullTarget,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFullSpatialLinkDoobMeasure]
+    using h
 
 end
 
