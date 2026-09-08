@@ -52,6 +52,7 @@ private theorem continuousVacuumPointwiseHarnackLpTwo_integrable
 one-slab Wilson kernel is Haar-integrable.  The proof uses only `Ω ∈ L²`, the
 probability normalization of Haar measure, continuity of the kernel section,
 and the uniform pointwise bound `|K| ≤ 1`. -/
+set_option maxHeartbeats 1000000 in
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumKernelProduct_integrable
     (H N : ℕ)
     (hN : 0 < N)
@@ -151,6 +152,7 @@ physical Wilson vacuum.  Replacing one spatial link changes the continuous
 vacuum by at most the explicit factor `exp (8 * beta)`.  The proof uses no
 global compactness minimum and never evaluates the old `L²` quotient vacuum at
 a prescribed fiber point. -/
+set_option maxHeartbeats 1000000 in
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuousVacuumReplaceLink_le_exp_eight_mul
     (H N : ℕ)
     (hN : 0 < N)
