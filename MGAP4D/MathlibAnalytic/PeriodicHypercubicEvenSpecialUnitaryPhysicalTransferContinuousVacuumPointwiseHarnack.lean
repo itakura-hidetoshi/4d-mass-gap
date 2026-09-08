@@ -9,6 +9,8 @@ open scoped InnerProductSpace InnerProduct
 
 noncomputable section
 
+set_option maxHeartbeats 1000000
+
 local instance continuousVacuumPointwiseHarnackSpecialUnitaryIsTopologicalGroup
     (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
