@@ -75,7 +75,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumKernelProduct_i
   have hPairContinuous : Continuous
       (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
         (A, B)) :=
-    continuous_id.prod_mk continuous_const
+    continuous_id.prodMk continuous_const
   have hKContinuous : Continuous
       (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
