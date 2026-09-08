@@ -15,17 +15,11 @@ local instance (H : ℕ) : NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
 
 local instance (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
-  inferInstanceAs
-    (Fintype
-      (PeriodicHypercubicEvenSpatialSliceVertex H ×
-        PeriodicHypercubicEvenSpatialDirection))
+  Fintype.ofFinite _
 
 local instance (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSlicePlaquette H) :=
-  inferInstanceAs
-    (Fintype
-      (PeriodicHypercubicEvenSpatialSliceVertex H ×
-        PeriodicHypercubicEvenSpatialDirectionPair))
+  Fintype.ofFinite _
 
 /-- One-link replacement used by the continuous-vacuum Harnack layer.
 
@@ -219,7 +213,11 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_eq_finset_s
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction
   unfold periodicHypercubicEvenSpatialSlicePlaquetteList
   rw [Finset.sum_map_toList]
-  rfl
+  apply Finset.sum_congr
+  · ext p
+    simp
+  · intro p hp
+    rfl
 
 /-- The crossing action is likewise its finite-universe link sum. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_eq_finset_sum
@@ -231,7 +229,11 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_eq_finse
   unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction
   unfold periodicHypercubicEvenSpatialSliceLinkList
   rw [Finset.sum_map_toList]
-  rfl
+  apply Finset.sum_congr
+  · ext e
+    simp
+  · intro e he
+    rfl
 
 /-- Any two `SU(N)` Wilson plaquette energies differ by at most two. -/
 theorem specialUnitaryWilsonPlaquetteEnergy_sub_abs_le_two
