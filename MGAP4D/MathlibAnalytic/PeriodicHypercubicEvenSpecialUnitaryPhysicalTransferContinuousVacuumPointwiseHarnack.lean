@@ -52,7 +52,6 @@ private theorem continuousVacuumPointwiseHarnackLpTwo_integrable
 one-slab Wilson kernel is Haar-integrable.  The proof uses only `Ω ∈ L²`, the
 probability normalization of Haar measure, continuity of the kernel section,
 and the uniform pointwise bound `|K| ≤ 1`. -/
-set_option maxHeartbeats 1000000 in
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumKernelProduct_integrable
     (H N : ℕ)
     (hN : 0 < N)
@@ -73,23 +72,40 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumKernelProduct_i
       H N hN beta hbeta).1
   have hfInt : Integrable (fun A => f A) μ :=
     continuousVacuumPointwiseHarnackLpTwo_integrable μ f
+  have hPairContinuous : Continuous
+      (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+        (A, B)) :=
+    continuous_id.prod_mk continuous_const
   have hKContinuous : Continuous
       (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta A B) := by
-    exact
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-        H N beta).comp (by fun_prop)
-  have hKBound :
-      ∀ᵐ A ∂μ,
-        ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta A B‖ ≤ 1 := by
+          H N beta A B) :=
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      H N beta).comp hPairContinuous
+  have hProductMeasurable : AEStronglyMeasurable
+      (fun A => f A *
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta A B) μ :=
+    hfInt.aestronglyMeasurable.mul hKContinuous.aestronglyMeasurable
+  have hDom : ∀ᵐ A ∂μ,
+      ‖f A * periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta A B‖ ≤ ‖f A‖ := by
     filter_upwards with A
-    simpa [Real.norm_eq_abs] using
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
-        H N hN beta hbeta A B
-  have hMul := hfInt.bdd_mul hKContinuous.aestronglyMeasurable hKBound
-  simpa [μ, f, mul_comm] using hMul
+    rw [norm_mul]
+    calc
+      ‖f A‖ * ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta A B‖ ≤ ‖f A‖ * 1 := by
+        apply mul_le_mul_of_nonneg_left _ (norm_nonneg (f A))
+        simpa [Real.norm_eq_abs] using
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
+            H N hN beta hbeta A B
+      _ = ‖f A‖ := mul_one _
+  have hProduct : Integrable
+      (fun A => f A *
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta A B) μ :=
+    hfInt.mono' hProductMeasurable hDom
+  simpa [μ, f] using hProduct
 
 /-- The unscaled continuous physical-vacuum synthesis is the literal Wilson
 kernel integral against the existing nonnegative Haar-`L²` vacuum.  Pointwise
@@ -152,7 +168,6 @@ physical Wilson vacuum.  Replacing one spatial link changes the continuous
 vacuum by at most the explicit factor `exp (8 * beta)`.  The proof uses no
 global compactness minimum and never evaluates the old `L²` quotient vacuum at
 a prescribed fiber point. -/
-set_option maxHeartbeats 1000000 in
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuousVacuumReplaceLink_le_exp_eight_mul
     (H N : ℕ)
     (hN : 0 < N)
