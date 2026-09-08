@@ -114,8 +114,12 @@ theorem
   unfold ContinuousCompactOrientedGaugeWilsonSystem.singleLinkDoobWeight
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumFullConfigurationWeight
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumSpatialLinkFiberWeight
-  rw [periodicHypercubicEvenSpecialUnitarySpatialSliceRestriction_replaceLink_continuousVacuum
-    H N hN beta hbeta A target g]
+  apply congrArg ENNReal.ofReal
+  apply congrArg
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+      H N hN beta hbeta)
+  exact periodicHypercubicEvenSpecialUnitarySpatialSliceRestriction_replaceLink_continuousVacuum
+    H N hN beta hbeta A target g
 
 /-- Actual full-carrier ground-state one-link Doob law, now based on the
 canonical continuous physical vacuum rather than an arbitrary `L²`
@@ -203,6 +207,14 @@ theorem
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumFullSpatialLinkDoobMeasure
           H N hN beta hbeta A target) := by
   dsimp only
+  letI : IsProbabilityMeasure
+      ((periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).singleLinkConditionalMeasure
+          A (periodicHypercubicEvenSpatialSliceLinkEmbedding H target)) :=
+    continuous_compact_oriented_singleLinkConditionalMeasure_isProbabilityMeasure
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
+      A (periodicHypercubicEvenSpatialSliceLinkEmbedding H target)
   have h :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumSpatialLinkDoob_evariance_lower_bound
       H N hN beta hbeta
