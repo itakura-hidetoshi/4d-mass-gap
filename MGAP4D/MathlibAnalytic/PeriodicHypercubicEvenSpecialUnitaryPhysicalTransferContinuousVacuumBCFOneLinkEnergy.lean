@@ -72,20 +72,21 @@ theorem periodicHypercubicEvenSpecialUnitaryWilsonFullSpatialLinkCenteredFiberBC
   have hBound : ∀ g, ‖X g‖ ≤ 2 * ‖O‖ := by
     intro g
     rw [Real.norm_eq_abs]
+    have hO : |O (C.base.replaceLink A fullTarget g)| ≤ ‖O‖ :=
+      O.norm_coe_le_norm _
+    have hP : |C.singleLinkHeatBathProjection fullTarget O A| ≤ ‖O‖ :=
+      continuous_compact_oriented_singleLinkHeatBathProjection_abs_le_norm
+        C fullTarget O A
     calc
       |X g| ≤ |O (C.base.replaceLink A fullTarget g)| +
           |C.singleLinkHeatBathProjection fullTarget O A| := abs_sub _ _
-      _ ≤ ‖O‖ + ‖O‖ := add_le_add
-        (by simpa [Real.norm_eq_abs] using O.norm_coe_le_norm
-          (C.base.replaceLink A fullTarget g))
-        (continuous_compact_oriented_singleLinkHeatBathProjection_abs_le_norm
-          C fullTarget O A)
+      _ ≤ ‖O‖ + ‖O‖ := add_le_add hO hP
       _ = 2 * ‖O‖ := by ring
   have hLp : MemLp X 2 (C.singleLinkConditionalMeasure A fullTarget) :=
     MemLp.of_bound hStrong.aestronglyMeasurable (2 * ‖O‖)
       (Filter.Eventually.of_forall hBound)
-  simpa [X, C, fullTarget,
-    periodicHypercubicEvenSpecialUnitaryWilsonFullSpatialLinkCenteredFiberBCF] using hLp
+  change MemLp X 2 (C.singleLinkConditionalMeasure A fullTarget)
+  exact hLp
 
 /-- The canonical BCF fiber is exactly centered under the literal Wilson
 one-link conditional law. -/
@@ -109,17 +110,35 @@ theorem periodicHypercubicEvenSpecialUnitaryWilsonFullSpatialLinkCenteredFiberBC
     (PeriodicHypercubicEvenSideLength H) N hN beta hbeta
   let fullTarget := periodicHypercubicEvenSpatialSliceLinkEmbedding H target
   let μ := C.singleLinkConditionalMeasure A fullTarget
+  let X : C.base.Gauge → ℝ := fun g =>
+    O (C.base.replaceLink A fullTarget g) -
+      C.singleLinkHeatBathProjection fullTarget O A
   have hprob : IsProbabilityMeasure μ :=
     continuous_compact_oriented_singleLinkConditionalMeasure_isProbabilityMeasure
       C A fullTarget
   letI : IsProbabilityMeasure μ := hprob
-  have hObs : Integrable (fun g : C.base.Gauge =>
-      O (C.base.replaceLink A fullTarget g)) μ :=
-    continuous_compact_oriented_singleLinkObservable_integrable
-      C O A fullTarget
+  have hXLp : MemLp X 2 μ := by
+    change MemLp
+      (periodicHypercubicEvenSpecialUnitaryWilsonFullSpatialLinkCenteredFiberBCF
+        H N hN beta hbeta O A target) 2
+      ((periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).singleLinkConditionalMeasure
+          A (periodicHypercubicEvenSpatialSliceLinkEmbedding H target))
+    exact
+      periodicHypercubicEvenSpecialUnitaryWilsonFullSpatialLinkCenteredFiberBCF_memLp
+        H N hN beta hbeta O A target
+  have hXInt : Integrable X μ := hXLp.integrable (by norm_num)
   have hConst : Integrable
       (fun _g : C.base.Gauge => C.singleLinkHeatBathProjection fullTarget O A) μ :=
     integrable_const _
+  have hObs : Integrable (fun g : C.base.Gauge =>
+      O (C.base.replaceLink A fullTarget g)) μ := by
+    have hEq : (fun g : C.base.Gauge => O (C.base.replaceLink A fullTarget g)) =
+        fun g => X g + C.singleLinkHeatBathProjection fullTarget O A := by
+      funext g
+      simp [X]
+    rw [hEq]
+    exact hXInt.add hConst
   change ∫ g : C.base.Gauge,
     (O (C.base.replaceLink A fullTarget g) -
       C.singleLinkHeatBathProjection fullTarget O A) ∂μ = 0
@@ -158,14 +177,22 @@ theorem periodicHypercubicEvenSpecialUnitaryWilsonFullSpatialLinkCenteredFiberBC
   let X := periodicHypercubicEvenSpecialUnitaryWilsonFullSpatialLinkCenteredFiberBCF
     H N hN beta hbeta O A target
   have hX : MemLp X 2 μ := by
-    simpa [X, μ, C, fullTarget] using
+    change MemLp
+      (periodicHypercubicEvenSpecialUnitaryWilsonFullSpatialLinkCenteredFiberBCF
+        H N hN beta hbeta O A target) 2
+      ((periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).singleLinkConditionalMeasure
+          A (periodicHypercubicEvenSpatialSliceLinkEmbedding H target))
+    exact
       periodicHypercubicEvenSpecialUnitaryWilsonFullSpatialLinkCenteredFiberBCF_memLp
         H N hN beta hbeta O A target
   have hSq : Integrable (fun g => (X g) ^ 2) μ := by
     simpa only [Pi.pow_apply] using hX.integrable_sq
-  rw [doobCenteredSquaredResidual,
-    ← ofReal_integral_eq_lintegral_ofReal hSq
-      (ae_of_all μ fun g => sq_nonneg (X g))]
+  change (∫⁻ g, ENNReal.ofReal ((X g - 0) ^ 2) ∂μ) =
+    ENNReal.ofReal (C.singleLinkConditionalVarianceBCF fullTarget O A)
+  simp only [sub_zero]
+  rw [← ofReal_integral_eq_lintegral_ofReal hSq
+    (ae_of_all μ fun g => sq_nonneg (X g))]
   congr 1
   unfold ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalVarianceBCF
   apply integral_congr_ae
