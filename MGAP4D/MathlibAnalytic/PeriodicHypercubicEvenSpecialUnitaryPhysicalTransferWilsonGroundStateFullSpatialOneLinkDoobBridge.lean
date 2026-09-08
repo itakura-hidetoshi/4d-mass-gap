@@ -59,15 +59,19 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSliceRestriction_replaceLink
   funext e
   by_cases he : e = target
   · subst e
-    simp [periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink,
-      CompactOrientedGaugeWilsonSystem.replaceLink]
+    simp only [periodicHypercubicEvenSpatialSliceRestriction_apply,
+      compact_oriented_replaceLink_same,
+      periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink_self]
   · have hEmbedding :
         periodicHypercubicEvenSpatialSliceLinkEmbedding H e ≠
           periodicHypercubicEvenSpatialSliceLinkEmbedding H target := by
       intro hEq
       exact he (periodicHypercubicEvenSpatialSliceLinkEmbedding_injective H hEq)
-    simp [periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink,
-      CompactOrientedGaugeWilsonSystem.replaceLink, he, hEmbedding]
+    rw [periodicHypercubicEvenSpatialSliceRestriction_apply]
+    rw [compact_oriented_replaceLink_other _ _ _ _ _ hEmbedding]
+    rw [periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink_of_ne
+      H N _ target e g he]
+    rfl
 
 /-- The physical top-vacuum amplitude pulled back from a full four-dimensional
 configuration by spatial restriction. -/
@@ -109,8 +113,15 @@ theorem
   unfold ContinuousCompactOrientedGaugeWilsonSystem.singleLinkDoobWeight
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumFullConfigurationWeight
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSpatialLinkFiberWeight
-  rw [periodicHypercubicEvenSpecialUnitarySpatialSliceRestriction_replaceLink
-    H N hN beta hbeta A target g]
+  have hRestr :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceRestriction_replaceLink
+      H N hN beta hbeta A target g
+  exact congrArg
+    (fun B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+      ENNReal.ofReal
+        ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+          H N hN beta hbeta).1 B))
+    hRestr
 
 /-- The actual physical ground-state one-link Doob law attached to an embedded
 spatial link, written directly on the full periodic Wilson configuration
@@ -197,16 +208,21 @@ theorem
       evariance X
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFullSpatialLinkDoobMeasure
           H N hN beta hbeta A target) := by
-  let C := periodicHypercubicSpecialUnitaryWilsonSystem
-    (PeriodicHypercubicEvenSideLength H) N hN beta hbeta
-  let nu := C.singleLinkConditionalMeasure A
-    (periodicHypercubicEvenSpatialSliceLinkEmbedding H target)
-  letI : IsProbabilityMeasure nu :=
+  haveI :
+      IsProbabilityMeasure
+        ((periodicHypercubicSpecialUnitaryWilsonSystem
+          (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).singleLinkConditionalMeasure
+            A (periodicHypercubicEvenSpatialSliceLinkEmbedding H target)) :=
     continuous_compact_oriented_singleLinkConditionalMeasure_isProbabilityMeasure
-      C A (periodicHypercubicEvenSpatialSliceLinkEmbedding H target)
+      (periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
+      A (periodicHypercubicEvenSpatialSliceLinkEmbedding H target)
   have h :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkDoob_evariance_lower_bound
-      H N hN beta hbeta nu
+      H N hN beta hbeta
+      ((periodicHypercubicSpecialUnitaryWilsonSystem
+        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).singleLinkConditionalMeasure
+          A (periodicHypercubicEvenSpatialSliceLinkEmbedding H target))
       (periodicHypercubicEvenSpatialSliceRestriction A) target D X hX
   rw [← periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFullSpatialLinkDoobMeasure_eq
     H N hN beta hbeta A target] at h
