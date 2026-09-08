@@ -61,6 +61,7 @@ private theorem continuousVacuumPointwiseHarnack_integrable_mul_of_norm_le_one
     Integrable (fun x => f x * k x) μ := by
   apply hf.norm.mono' (hf.aestronglyMeasurable.mul hk)
   filter_upwards [hbound] with x hx
+  change ‖f x * k x‖ ≤ ‖f x‖
   rw [norm_mul]
   calc
     ‖f x‖ * ‖k x‖ ≤ ‖f x‖ * 1 :=
