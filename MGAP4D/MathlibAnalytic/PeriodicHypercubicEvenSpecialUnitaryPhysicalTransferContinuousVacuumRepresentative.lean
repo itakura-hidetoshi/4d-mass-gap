@@ -203,7 +203,8 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureSynthesis
       rw [hB]
       rw [realL2Scalar_inner_eq_mul]
       rw [real_inner_smul_right]
-      rfl
+      simp [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureSynthesisFunction,
+        C, mul_comm]
     _ = inner ℝ v (∫ B, f B • C.feature B ∂μ) := by
       exact integral_inner hfInt v
     _ = inner ℝ v (A f) := by
