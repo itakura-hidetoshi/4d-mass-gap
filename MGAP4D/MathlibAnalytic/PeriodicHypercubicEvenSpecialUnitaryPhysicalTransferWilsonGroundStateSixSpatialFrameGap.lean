@@ -112,7 +112,14 @@ theorem
       H N hN beta hbeta ((3 / 4 : ℝ) * κ) hcoeff0 hcoeff1
       (fun x => by
         rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateConcreteEightColorResidual_eq_three_fourths_sixSpatial]
-        exact mul_le_mul_of_nonneg_left (hframe x) (by norm_num))
+        calc
+          (3 / 4 : ℝ) * κ * ‖(x : G)‖ ^ 2 =
+              (3 / 4 : ℝ) * (κ * ‖(x : G)‖ ^ 2) := by ring
+          _ ≤ (3 / 4 : ℝ) *
+                periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialResidualEnergy
+                  H N hN beta hbeta (U ((x : G) : HaarL2)) := by
+            exact mul_le_mul_of_nonneg_left (hframe x)
+              (show 0 ≤ (3 / 4 : ℝ) by norm_num))
   nlinarith
 
 /-- Positive six-spatial ground-state frame coercivity implies a positive
