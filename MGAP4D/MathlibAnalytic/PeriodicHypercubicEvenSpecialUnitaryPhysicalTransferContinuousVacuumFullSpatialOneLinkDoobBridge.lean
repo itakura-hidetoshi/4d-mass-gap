@@ -210,14 +210,14 @@ theorem
   let C := periodicHypercubicSpecialUnitaryWilsonSystem
     (PeriodicHypercubicEvenSideLength H) N hN beta hbeta
   let fullTarget := periodicHypercubicEvenSpatialSliceLinkEmbedding H target
-  letI : IsProbabilityMeasure (C.singleLinkConditionalMeasure A fullTarget) :=
+  have hprob : IsProbabilityMeasure (C.singleLinkConditionalMeasure A fullTarget) :=
     continuous_compact_oriented_singleLinkConditionalMeasure_isProbabilityMeasure
       C A fullTarget
   have hX' : MemLp X 2 (C.singleLinkConditionalMeasure A fullTarget) := by
     simpa [C, fullTarget] using hX
   have h :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumSpatialLinkDoob_evariance_lower_bound
-      H N hN beta hbeta (C.singleLinkConditionalMeasure A fullTarget)
+    @periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumSpatialLinkDoob_evariance_lower_bound
+      H N hN beta hbeta (C.singleLinkConditionalMeasure A fullTarget) hprob
       (periodicHypercubicEvenSpatialSliceRestriction A) target X hX'
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumFullSpatialLinkDoobMeasure_eq]
   simpa [C, fullTarget] using h
