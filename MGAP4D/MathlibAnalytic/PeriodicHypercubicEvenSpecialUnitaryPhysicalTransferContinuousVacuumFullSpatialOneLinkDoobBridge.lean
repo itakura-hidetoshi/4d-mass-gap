@@ -207,23 +207,22 @@ theorem
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumFullSpatialLinkDoobMeasure
           H N hN beta hbeta A target) := by
   dsimp only
-  letI : IsProbabilityMeasure
-      ((periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).singleLinkConditionalMeasure
-          A (periodicHypercubicEvenSpatialSliceLinkEmbedding H target)) :=
-    continuous_compact_oriented_singleLinkConditionalMeasure_isProbabilityMeasure
-      (periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta)
-      A (periodicHypercubicEvenSpatialSliceLinkEmbedding H target)
+  let C := periodicHypercubicSpecialUnitaryWilsonSystem
+    (PeriodicHypercubicEvenSideLength H) N hN beta hbeta
+  let fullTarget := periodicHypercubicEvenSpatialSliceLinkEmbedding H target
+  let nu := C.singleLinkConditionalMeasure A fullTarget
+  have hprob : IsProbabilityMeasure nu := by
+    exact continuous_compact_oriented_singleLinkConditionalMeasure_isProbabilityMeasure
+      C A fullTarget
+  letI : IsProbabilityMeasure nu := hprob
+  have hXnu : MemLp X 2 nu := by
+    simpa [nu, C, fullTarget] using hX
   have h :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumSpatialLinkDoob_evariance_lower_bound
-      H N hN beta hbeta
-      ((periodicHypercubicSpecialUnitaryWilsonSystem
-        (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).singleLinkConditionalMeasure
-          A (periodicHypercubicEvenSpatialSliceLinkEmbedding H target))
-      (periodicHypercubicEvenSpatialSliceRestriction A) target X hX
+      H N hN beta hbeta nu
+      (periodicHypercubicEvenSpatialSliceRestriction A) target X hXnu
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumFullSpatialLinkDoobMeasure_eq]
-  exact h
+  simpa [nu, C, fullTarget] using h
 
 end
 
