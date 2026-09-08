@@ -5,7 +5,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory Set
-open scoped InnerProductSpace InnerProduct
+open scoped ENNReal InnerProductSpace InnerProduct
 
 noncomputable section
 
@@ -176,8 +176,8 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureSynthesis
         H N hN beta hbeta).FeatureHilbert) :
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureSynthesisL2
         H N hN beta hbeta v =
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureAnalysisOperator
-        H N hN beta hbeta)† v := by
+      ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureAnalysisOperator
+        H N hN beta hbeta)†) v := by
   let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
   let C :=
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelFeature
@@ -211,8 +211,8 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureSynthesis
     _ = inner ℝ ((A†) v) f := by
       exact (ContinuousLinearMap.adjoint_inner_left A f v).symm
     _ = inner ℝ
-        ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureAnalysisOperator
-          H N hN beta hbeta)† v) f := by
+        (((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureAnalysisOperator
+          H N hN beta hbeta)†) v) f := by
       rfl
 
 /-- Unscaled continuous synthesis attached to the canonical nonnegative
@@ -402,6 +402,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepre
         H N hN beta hbeta)
   let S := periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureSynthesisL2
     H N hN beta hbeta v
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentativeL2
   apply Lp.ext
   filter_upwards [
     MemLp.coeFn_toLp
@@ -411,8 +412,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepre
       H N hN beta hbeta v,
     Lp.coeFn_smul lambda⁻¹ S] with B hC hS hsmul
   change
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentativeL2
-      H N hN beta hbeta B = (lambda⁻¹ • S) B
+    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_memLp_two
+      H N hN beta hbeta).toLp
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+        H N hN beta hbeta)) B = (lambda⁻¹ • S) B
   rw [hC]
   change lambda⁻¹ *
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureSynthesisFunction
