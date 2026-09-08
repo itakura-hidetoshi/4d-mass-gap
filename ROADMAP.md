@@ -1,6 +1,6 @@
 # MGAP4D Roadmap
 
-This roadmap records the proof-development order of `itakura-hidetoshi/4d-mass-gap` as of **2026-09-04 JST**.
+This roadmap records the current proof-development order of `itakura-hidetoshi/4d-mass-gap` as of **2026-09-09 JST**.
 
 The authoritative theorem carrier is
 
@@ -8,39 +8,54 @@ The authoritative theorem carrier is
 formal/real-hilbert-uniform-coercive-strong-limit
 ```
 
-and the canonical exact checkpoint represented here is
+The latest merged canonical checkpoint at the start of this documentation refresh is
 
 ```text
-e607fa92e169b47c16a240c0774bfc574a2c601e
+97945a33d872de268b8f0cd14831f40fb12d733f
 ```
 
-which is the normal merge of PR #3368,
+which is the normal merge of PR #3704,
 
 ```text
-Bound pair transfer spectra by the unit interval.
+Reduce six-spatial ground-state frame to mean-projection contraction.
 ```
 
-The public `main` branch is a landing surface. Only theorem results merged into the authoritative theorem carrier count as current proof status.
+The active validated mathematical unit is PR #3707,
+
+```text
+Route twelve-spatial joint Poincare to the physical transfer gap.
+```
+
+Its exact Lean proof head before this docs-only refresh is
+
+```text
+eb8ae2b7e4c07fe266810076a416d4da80f3122a
+```
+
+with PR Lean Fast Check #13406 completed / success, including the `Run changed Lean fast check` step.
+
+The public `main` branch is a landing surface. Only theorem results merged into the authoritative theorem carrier count as canonical proof status. A green open PR is a validated candidate unit, not yet canonical mathematics.
 
 > **Current frontier**
 >
-> The finite raw-path / Markov / Fubini seam that dominated the 2026-09-03 public roadmap has now been developed through an actual physical-transfer-power identity, boundary-`L²` realization, an ambient pair-Haar one-slab transfer, and a fixed-ambient recursive transfer semigroup.
+> The fixed-finite-volume physical-pair program is mature: decomposition, strict contraction, power decay, strong convergence, fixed-space characterization, coercivity, real spectral confinement, resolvent estimates, Green operator, exact reduced range, and a relative Poincaré estimate are already integrated.
 >
-> The latest merged layer is quantitative and spectral: `T_pair` is contractive and self-adjoint, every finite power is contractive and self-adjoint, its Rayleigh quotients lie in `[-1,1]`, and its real spectrum lies in `[-1,1]`.
+> The active mass-gap route has now been pushed upstream into the **actual ground-state Wilson joint law**. Six genuine right spatial conditional expectations and six genuine left spatial conditional expectations have been constructed on one joint `L²` carrier. The concrete physical eight-color defect has been reduced to the six genuine spatial residuals, and the six-spatial frame problem has been reduced exactly to a mean-projection contraction theorem.
 >
-> The immediate gap-relevant task is no longer to expose the first slab. It is to identify the physically relevant top/vacuum sector and prove a **strict** model-derived contraction or spectral separation on the appropriate complement, then make that bound scale-uniform and transport it through the existing OS/Wightman machinery.
+> PR #3707 further proves, at its green proof head, that the conventional twelve-color residual is one half of the six-spatial residual on right-boundary lifts. Consequently a twelve-color Poincaré coefficient `κ` yields the physical transfer-gap lower bound `3κ/4`.
 >
-> This does **not** mean the Clay Millennium problem is solved. No strict global gap below the top pair-transfer spectral value is claimed here, the current same-root continuum process is still only a selected scalar process, and the full four-dimensional Yang--Mills continuum carrier remains open.
+> The immediate genuine analytic/geometric problem is therefore to prove the **common-fixed-space identification and a positive scale-independent `L²` Poincaré coefficient for the actual twelve-spatial ground-state conditional-expectation dynamics**, using Wilson / Doob / Harnack structure rather than a new abstract hypothesis.
 
 ---
 
 ## Status legend
 
 - **Integrated** — theorem/model result is merged on the authoritative branch.
-- **Integrated implication machinery** — the theorem chain is formalized, but a model-facing or scale-uniform input remains.
+- **Green candidate** — exact Lean proof is green on an open PR but not yet merged.
+- **Integrated implication machinery** — theorem chain is formalized, but a model-facing input remains.
 - **Open now** — immediate constructive frontier.
 - **Open downstream** — required after the current frontier.
-- **Diagnostic only** — correct theorem or obstruction that is not the active mass-gap mechanism.
+- **Diagnostic only** — correct theorem/obstruction that is not the active gap mechanism.
 
 ---
 
@@ -49,66 +64,92 @@ The public `main` branch is a landing surface. Only theorem results merged into 
 ```text
 A. FINITE WILSON ROOT
 
-periodic-even compact SU(N) Wilson Gibbs model                       [Integrated]
-  -> reflection positivity / OS boundary geometry                   [Integrated]
-  -> boundary and spatial-slice Haar-L² carriers                    [Integrated]
-  -> literal one-slab and full-path Wilson kernels                  [Integrated]
+periodic-even compact SU(N) Wilson Gibbs model                         [Integrated]
+  -> reflection positivity / boundary geometry                       [Integrated]
+  -> physical spatial-slice transfer                                 [Integrated]
+  -> positive / ground-state transfer geometry                       [Integrated]
 
 B. SAME-ROOT SCALAR CONTINUUM OS
 
-finite Wilson scalar readout                                        [Integrated]
-  -> rational path law / Prokhorov continuum law                    [Integrated]
-  -> continuum OS positivity                                        [Integrated]
-  -> direct-limit real Hilbert carrier                              [Integrated]
-  -> real C₀ contraction semigroup                                  [Integrated]
-  -> graph-closed self-adjoint OS Hamiltonian                       [Integrated]
-  -> normalized vacuum Ω / complete Ω⊥                             [Integrated]
+finite Wilson scalar readout                                         [Integrated]
+  -> rational/continuum scalar law                                   [Integrated]
+  -> continuum OS positivity                                         [Integrated]
+  -> direct-limit Hilbert carrier                                    [Integrated]
+  -> real C₀ semigroup                                               [Integrated]
+  -> graph-closed self-adjoint Hamiltonian                           [Integrated]
+  -> vacuum Ω / complete Ω⊥                                          [Integrated]
 
-C. FINITE PATH -> PHYSICAL TRANSFER
+C. FINITE PHYSICAL-PAIR THEORY
 
-temporal-gauge Markov/Fubini decomposition                          [Integrated]
-  -> raw one-slab physical transfer coefficients                    [Integrated]
-  -> full Wilson path = physical transfer power                     [Integrated]
-  -> finite-volume excitation decay package                         [Integrated]
-  -> boundary L² / one-sided physical transfer                      [Integrated]
+one-slice F ⊕ Fᗮ                                                    [Integrated]
+  -> completed TT / NN decomposition inside PP                       [Integrated]
+  -> q = ‖R‖ < 1                                                     [Integrated]
+  -> q^k decay / strong convergence to P_TT                           [Integrated]
+  -> Fix(S₂|PP)=TT                                                   [Integrated]
+  -> coercivity / spectrum / resolvent / Green                       [Integrated]
+  -> exact reduced range / relative Poincaré                          [Integrated]
 
-D. AMBIENT PAIR-HAAR TRANSFER
+D. GROUND-STATE WILSON JOINT-LAW GEOMETRY
 
-literal endpoint-pair kernel K_pair                                [Integrated]
-  -> Hilbert-Schmidt T_pair                                         [Integrated]
-  -> outer/inner/deep Haar factorization                            [Integrated]
-  -> positive-half path = pair-transfer matrix coefficient          [Integrated]
+one-slab ground-state joint probability law                          [Integrated]
+  -> left/right boundary L² isometries                               [Integrated]
+  -> Doob/coarse conditional-expectation geometry                     [Integrated]
+  -> 6 right spatial condExp projections                             [Integrated]
+  -> 6 left spatial condExp projections                              [Integrated]
+  -> genuine two-sided 12-spatial family                             [Integrated]
+  -> qualitative common-fixed iff right-six fixed and left-six fixed [Integrated]
 
-E. FIXED-AMBIENT RECURSION
+E. CONCRETE PHYSICAL DEFECT ROUTE
 
-hold ambient H fixed, recurse only in inward length R               [Integrated]
-  -> recursive kernel / Haar message / measurability                [Integrated]
-  -> Ψ_(R+2) = T_pair Ψ_R                                           [Integrated]
-  -> Ψ_R = T_pair^(R/2) Ψ_(R mod 2)                                 [Integrated]
+6 spatial + 2 temporal identities = concrete 8-color family          [Integrated]
+  -> 8-color residual = 3/4 * 6-spatial residual                     [Integrated]
+  -> η=1 residual-to-raw-physical-defect comparison                  [Integrated]
+  -> six-spatial frame κ -> physical gap >= 3κ/8                     [Integrated]
 
-F. CURRENT PAIR-TRANSFER SPECTRAL LAYER
+F. SIX-SPATIAL DIRICHLET / CONTRACTION REDUCTION
 
-‖T_pair‖ ≤ 1                                                        [Integrated]
-  -> ‖T_pair^k‖ ≤ 1                                                 [Integrated]
-  -> T_pair^k self-adjoint                                          [Integrated]
-  -> Rayleigh(T_pair^k) ∈ [-1,1]                                   [Integrated]
-  -> spectrum_R(T_pair^k) ⊆ [-1,1]                                 [Integrated]
+E₆(u) = ‖u‖² - (1/6)Σ_c ‖P_c R u‖²                                 [Integrated: #3704]
+  -> frame κ <-> mean-projection contraction 1-κ                     [Integrated]
+  -> q<1 -> physical transfer gap >= 3(1-q)/8                        [Integrated]
 
-G. NEXT GAP-RELEVANT LAYER
+G. TWELVE-SPATIAL POINCARE ROUTING
 
-identify top/vacuum sector                                          [OPEN NOW]
-  -> model-derived positivity / sharper spectral location if valid  [OPEN NOW]
-  -> strict contraction on excitation/vacuum-orthogonal sector      [OPEN NOW]
-  -> parity-aware exponential decay of Ψ_R                           [OPEN DOWNSTREAM]
-  -> scale-uniform lower bound                                      [OPEN DOWNSTREAM]
-  -> OS/Wightman transport                                           [OPEN DOWNSTREAM]
+E₁₂(z) = 1/2(E₆,right(z)+E₆,left(z))                                [Green candidate: #3707]
+  -> on right lift E₁₂(Ru)=1/2 E₆(u)                                [Green candidate]
+  -> 12-color Poincaré κ -> six-spatial frame 2κ                     [Green candidate]
+  -> physical transfer gap >= 3κ/4                                  [Green candidate]
 
-H. FULL PHYSICAL MASS GAP / 4D YM
+H. PRESENT MODEL-FACING FRONTIER
 
-selected scalar continuum -> sufficiently rich 4D YM field/state   [OPEN]
-full same-root physical OS/Wightman carrier                         [OPEN]
-strictly positive spectrum above the vacuum                         [OPEN]
-Clay-level existence + mass gap                                     [OPEN]
+identify actual 12-color common-fixed space                          [OPEN NOW]
+  + prove global L² Poincaré/coercivity for the 12-block dynamics    [OPEN NOW]
+  + make κ scale-independent along the physical family               [OPEN NOW]
+  using Wilson / Doob / Harnack conditional-law structure            [OPEN NOW]
+  -> scale-uniform physical transfer gap                             [OPEN DOWNSTREAM]
+
+I. CONTINUUM / THERMODYNAMIC PROPAGATION
+
+uniform finite-volume physical transfer gap                          [OPEN DOWNSTREAM]
+  -> stable Green/Poincaré/resolvent control                         [OPEN DOWNSTREAM]
+  -> thermodynamic/scaling-limit physical carrier                    [OPEN DOWNSTREAM]
+  -> OS/Wightman spectral lower bound on actual physical sector      [OPEN DOWNSTREAM]
+
+J. SU(2) EXACT-MODE LANE
+
+selected physical/top endpoint pair                                 [Integrated]
+  -> literal raw one-slab kernel coefficient                         [Integrated]
+  -> realizable raw one-step limit/coherence                         [OPEN NOW, parallel]
+  -> selected completed-boundary weak identity                       [generated downstream]
+  -> exact common-carrier mode                                       [Integrated implication machinery]
+  -> Ω⊥ Hamiltonian mode at exactGapValueReal                        [Integrated implication machinery]
+
+K. CLAY-LEVEL COMPLETION
+
+full same-root 4D continuum gauge field/state                        [OPEN]
+correct vacuum structure                                             [OPEN]
+full physical OS/Wightman identification                             [OPEN]
+strict positive spectrum above vacuum                                [OPEN]
+Clay-level existence + mass gap                                      [OPEN]
 ```
 
 ---
@@ -117,33 +158,37 @@ Clay-level existence + mass gap                                     [OPEN]
 
 **Status: Integrated and permanent.**
 
-The theorem workflow is intentionally conservative:
+Repository-operation rules for theorem work:
 
 ```text
 start from the exact authoritative canonical SHA
-accept CI only after workflow / job / exact Lean step are terminal success
-never count queued or in_progress as a validation receipt
-inspect terminal failures before changing the proof head
-keep proof changes additive / tighten-only unless correcting an error
-forbid sorry / admit / axiom / placeholder-constant escapes
-fresh-check exact base/head/mergeability/reviews/threads before merge
-normal merge with expected head SHA pinned
-verify merge parent 1 = old canonical
-verify merge parent 2 = green proof head
-verify the canonical branch points exactly at the merge SHA
+use GitHub-mediated repository operations
+accept CI only when workflow/job/Lean step are terminal success
+never treat queued or in_progress as success
+write-freeze while exact-head CI is running
+inspect terminal failure logs before editing
+keep proof development additive/tighten-only
+forbid proof placeholders in theorem source
+fresh-check exact head/base/mergeability/reviews/threads before merge
+normal-merge with expected head SHA fixed
+verify merge parents and canonical branch pointer
+verify post-merge canonical CI and trusted cache
 ```
 
-Permanent claim discipline:
+Claim discipline:
 
 ```text
 finite theorem != continuum theorem
-finite-volume decay != scale-uniform continuum decay
-self-adjoint contraction != strict spectral gap
-spectrum ⊆ [-1,1] != spectrum ⊆ [0,1]
-one positive eigenmode != global spectral gap
-selected scalar process != full 4D Yang--Mills field
-symbolic exactGapValueReal != a numerical literal without a Lean theorem
+q_n < 1 for every n != inf_n(1-q_n)>0
+local conditional-law comparison != global L² Poincaré theorem
+qualitative common-fixed characterization != quantitative spectral gap
+relative top block != unique vacuum line
+one positive exact mode != global spectral floor
+same-root scalar continuum != full 4D Yang--Mills field
+green open PR != merged canonical theorem status
 ```
+
+Current authoritative CI uses Lean `4.30.0-rc2` and Lake `5.0.0-src+3dc1a08` at this checkpoint.
 
 ---
 
@@ -157,7 +202,7 @@ Integrated components include:
 
 ```text
 oriented lattice / edge / plaquette geometry
-normalized compact Haar probability structure
+normalized Haar probability structure
 Wilson action / Gibbs density / probability measure
 reflection-fixed geometry and positive-time decomposition
 finite Wilson reflection positivity
@@ -165,433 +210,629 @@ boundary and spatial-slice coordinate systems
 gauge-covariant holonomy
 gauge-invariant normalized trace observables
 integer temporal translation / reflection covariance
-literal temporal-gauge one-slab and multi-slab kernels
+finite support geometry
+one-slab Wilson kernels and transfer operators
 ```
 
-Permanent rule: keep the interacting Wilson source visible through decisive bridges. Do not replace the model by an unrelated abstract probability space at the point where a finite Wilson identity must be proved.
+### Permanent rule
+
+Keep the interacting Wilson model visible through every decisive physical bridge. Do not replace it by a product measure or abstract projection family unless an explicit theorem justifies the replacement.
 
 ---
 
-# Phase 2 — Same-root scalar continuum law and OS Hamiltonian
+# Phase 2 — Same-root primary scalar continuum law
 
 **Status: Integrated.**
 
-The current constructive continuum lane uses a primary gauge-invariant scalar Wilson readout.
+Integrated route:
 
 ```text
-finite primary positive-half readout
+finite primary gauge-invariant scalar readout
   -> reflection-completed rational-time path
   -> scalar path carrier ℚ -> ℝ
   -> tight finite pushforward laws
-  -> Prokhorov subsequential continuum law
-  -> continuum reflection positivity
-  -> OS null quotient and real Hilbert completion
-  -> directed-limit carrier
-  -> real strongly continuous contraction semigroup
-  -> graph-closed self-adjoint OS Hamiltonian
-  -> normalized vacuum Ω
-  -> complete vacuum-orthogonal sector Ω⊥
+  -> Prokhorov subsequential continuum probability law
 ```
 
-This is a genuine same-root continuum observable construction. It is not yet the complete four-dimensional gauge field or local observable net.
+This is a same-root continuum observable process, not yet the complete gauge field on `ℝ⁴`.
 
 ---
 
-# Phase 3 — Completed physical transfer and spectral implication machinery
+# Phase 3 — Continuum OS Hilbert reconstruction and Hamiltonian
 
 **Status: Integrated.**
 
-Before the newer pair-Haar recursion, the repository already contained a substantial completed physical-transfer and spectral lane:
+Integrated chain:
 
 ```text
-physical spatial-slice gauge-invariant L² carriers
-normalized one-slab physical transfer
-completed excitation-pair transfer
-compact/self-adjoint/positive transfer machinery
-strictly-positive spectral support machinery
-partial logarithmic transfer generator
-resolvent / moment / effective-energy hierarchy
+continuum rational-cylinder OS positivity
+continuum reflection invariance
+OS null quotient
+fixed-slot real Hilbert completions
+isometric directed system
+completed direct-limit carrier
+NNReal strongly continuous contraction semigroup
+right generator / right Hamiltonian
+graph closure as a mathlib linear partial operator
+self-adjoint graph-closed Hamiltonian
+resolvent / Yosida recovery
+normalized vacuum Ω
+complete vacuum-orthogonal sector Ω⊥
+```
+
+This phase is not the immediate blocker.
+
+---
+
+# Phase 4 — Transfer spectral / logarithmic-generator / Wightman lane
+
+**Status: Integrated analytic machinery; model realization remains relevant.**
+
+Canonical machinery includes:
+
+```text
+positive compact transfer spectral support
+strictly-positive transfer support
+partially-defined logarithmic generator
+resolvent/effective-energy identities
 intrinsic logarithmic spectral floor
-transfer spectral modes and operator cores
+spectral-mode eigenvector/domain theorems
+canonical spectral span as an operator core
+common-core Hilbert equivalence machinery
+self-adjoint maximality / closure transfer
+transfer point-energy <-> target Hamiltonian point-energy implications
+attained mass-gap certificate implications
 ```
 
-The repository also contains transfer/Wightman common-core implication machinery that can propagate suitable same-root finite/continuum spectral inputs to Hamiltonian statements.
-
-This phase provides downstream infrastructure; it does not manufacture the missing scale-uniform model estimate.
+The abstract operator theory is not the present bottleneck. The key issue is model-derived uniform coercivity on the actual physical carrier.
 
 ---
 
-# Phase 4 — Close the raw finite Markov/Fubini path seam
+# Phase 5 — Completed finite-volume physical-pair geometry and dynamics
 
 **Status: Integrated.**
 
-This was the immediate frontier in the previous public roadmap. It is now historical context.
-
-The merged sequence PRs #3213--#3257 establishes, among other results:
+Let
 
 ```text
-PR #3213  finite temporal-gauge Markov/Fubini decomposition
-PR #3215  one-slab physical transfer coefficients as raw Haar integrals
-PR #3218  first Markov slab lifted to physical transfer
-PR #3221  later kernel sections projected to the Gauss-law physical sector
-PR #3226  projected two-slab coefficients integrated over the finite tail
-PR #3228  specialization to the literal finite Wilson recursion
-PR #3231  terminal physical vector carried through the recursion
-PR #3234  finite physical recursion = full temporal-gauge path integral
-PR #3241  endpoint integrability generated automatically
-PR #3246  literal full Wilson path = physical transfer-power coefficient
-PR #3249  transfer-normalized literal path inherits excitation decay
-PR #3252  raw literal path bound retains the exact top-transfer scale
-PR #3255  finite literal-Wilson/spectral-decay package
-PR #3257  explicit transport from a rate lower bound to literal Wilson decay
+F  = full eigenvalue-one subspace of normalized one-slice physical transfer
+K  = Fᗮ
+PP = completed physical pair carrier
+TT = completed top-top block
+NN = completed non-top block inside PP
+R  = one-slice orthogonal transfer restriction
+q  = ‖R‖
+S₂ = normalized physical pair transfer
+SN = restriction of S₂ to NN
 ```
 
-Completion consequence: “extract the first adjacent slab from the raw path by Markov/Fubini” is no longer the active frontier.
+The integrated chain proves:
 
-Remaining limitation: the rate lower bound needed for a continuum mass gap must still be supplied uniformly along the scaling sequence.
+```text
+TT ⟂ NN
+PP = TT ⊕ NN
+NN = PP ⊓ TTᗮ
+q < 1
+‖SN‖ ≤ q
+‖SN^k x‖ ≤ q^k ‖x‖
+S₂^k x -> P_TT x
+Fix(S₂|PP)=TT
+(1-q)‖x‖ ≤ ‖x-SN x‖
+spectrum ℝ SN ⊆ [-q,q]
+real resolvent bound outside [-q,q]
+G=(I-SN)⁻¹ with ‖G‖≤(1-q)⁻¹
+range(I-S₂|PP)=NN
+relative Poincaré estimate on PP
+```
+
+### Current role
+
+This theory is now downstream infrastructure. It shows what follows from finite-volume separation, but the active proof program seeks a stronger model-facing quantitative source of separation in the actual ground-state Wilson dynamics.
 
 ---
 
-# Phase 5 — Boundary `L²` and one-sided physical transfer
+# Phase 6 — Physical ground state, joint law, and Doob geometry
 
 **Status: Integrated.**
 
-PRs #3260--#3277 move the finite Wilson path identities into the actual OS boundary Hilbert setting:
+The repository has constructed the actual physical ground-state route needed to avoid an abstract color-projection seam.
+
+Integrated objects and theorems include:
 
 ```text
-boundary moments -> inserted positive-half path amplitudes
-fixed-boundary unfixed path-kernel representation
-automatic shared-boundary L² membership
-automatic-analytic boundary-L² gap interface
-one-sided physical transfer in ordered endpoint-pair Haar L²
-transport to shared reflection-boundary Haar L²
-extension to the full Gauss-invariant physical slice
+positive / strictly-positive top eigenvector structure
+ground-state normalized one-slab law
+genuine left/right joint probability measure
+left-boundary L² isometry
+right-boundary L² isometry
+coarse conditional expectation
+Doob boundary operator
+Wilson marginal / conditional-measure comparison
+continuous-vacuum normalization
 ```
 
-No ambient boundary-Hilbert surjectivity is introduced.
+### Carrier rule
+
+The ground-state joint `L²` carrier is not silently identified with the independent global Gibbs `L²` carrier. Any bridge between them must be explicit.
 
 ---
 
-# Phase 6 — Ambient pair-Haar one-slab transfer and positive-half factorization
+# Phase 7 — Genuine right six and left six spatial conditional expectations
 
 **Status: Integrated.**
 
-PR #3279 constructs the literal ordered-pair kernel
+For each spatial color, the right-side update is a genuine `condExpL2` projection retaining the opposite boundary plus the off-color right data. The left-side construction is its exact counterpart.
+
+Integrated facts:
 
 ```text
-K_pair ((A,B),(A',B')) = K(A,A') * K(B,B')
+6 genuine right spatial conditional expectations
+6 genuine left spatial conditional expectations
+idempotence of every projection
+Hilbert symmetry of every projection
+explicit two-sided color type Sum (Fin 6) (Fin 6)
+12-color family on one joint L² carrier
+cardinality = 12
+common fixed by all 12
+  <-> fixed by all right 6 and all left 6
+all left 6 fix every right-boundary lift
 ```
 
-and the associated Hilbert-Schmidt operator `T_pair` on pair-Haar `L²`.
+### What is not yet integrated
 
-PRs #3291--#3322 then provide the finite path-composition layer:
+The qualitative fixed-space equivalence is not yet a theorem identifying the common-fixed sector with the precise physical vacuum/coarse sector needed for a global Poincaré theorem.
 
-```text
-positive-half path kernel = boundary-pair kernel * interior kernel
-complete path Haar = boundary pair-Haar × interior Haar
-strict interior = inner pair-Haar × deeper Haar in the nondegenerate regime
-outer/inner/deep three-factor measure-preserving coordinates
-Fubini exposure of all three variables
-outer-independent inward message
-positive-half path amplitude = pair-transfer matrix coefficient
-```
-
-Geometry discipline:
-
-```text
-H >= 2 nondegenerate interior pair geometry
-H = 1 diagonal central-slice geometry remains separate
-```
-
-No false independence is asserted for the coincident central pair.
+That identification is part of the immediate frontier.
 
 ---
 
-# Phase 7 — Fixed-ambient recursive inward transfer
+# Phase 8 — Concrete eight-color residual to raw physical defect
 
 **Status: Integrated.**
 
-This phase resolves the carrier mismatch that appears if one naively lets the recursion index also control ambient spatial size.
-
-The correct architecture is:
+The model-facing eight-color family is now
 
 ```text
-ambient spatial extent H : fixed
-remaining inward chain R  : recursive
+6 genuine ground-state spatial condExp projections
++ 2 identity temporal slots.
 ```
 
-with terminal structure:
+The temporal slots contribute zero residual, so the eight-color residual is exactly the six-spatial residual with the normalization factor inherited from `1/8` rather than `1/6`.
+
+The canonical theorem route gives, at `η=1`,
 
 ```text
-R = 0   literal central one-slab terminal
-R = 1   diagonal central pair terminal (C,C)
-R+2     one pair-kernel peel times the shorter fixed-ambient chain
+actual ground-state color residual
+  -> raw physical one-slab squared defect.
 ```
 
-Merged milestones:
-
-```text
-PR #3327  fixed-ambient pair peel and product-Haar preservation
-PR #3329  fixed-ambient recursive inward chain kernel
-PR #3331  recursive Haar message seam
-PR #3333  recursive message measurability
-PR #3338  exact Markov/Fubini message recursion
-PR #3340  common pair-Haar L² recursive messages
-PR #3342  Ψ_(R+2) = T_pair Ψ_R
-PR #3344  even/odd iteration formulas
-PR #3349  Ψ_R = T_pair^(R/2) Ψ_(R mod 2)
-PR #3352  Ψ_(R+2k) = T_pair^k Ψ_R
-```
-
-This phase gives an exact discrete semigroup normal form on one fixed ambient Hilbert carrier.
+Combining this with the top-orthogonal transfer-gap bridge removes the old independent abstract comparison hypothesis from the final model-facing route.
 
 ---
 
-# Phase 8 — Pair-transfer contraction and recursive-message bounds
+# Phase 9 — Six-spatial frame reduction
 
 **Status: Integrated.**
 
-## PR #3354 — one-step contraction
-
-Using the pointwise Wilson bound and pair-Haar probability structure:
+The concrete eight-color route is reduced to the actual six-spatial residual
 
 ```text
-‖K_pair‖_L² ≤ 1
-‖T_pair‖ ≤ 1.
+E₆(u) = (1/6) Σ_{c:Fin 6} ‖R u - P_c R u‖².
 ```
 
-## PR #3358 — recursive messages
-
-The operator contraction is transported to the fixed-ambient recursion, giving one-pair-step and arbitrary even-step `L²` contraction and a norm bound by the parity terminal message.
-
-## PR #3361 — discrete semigroup power contraction
-
-For every finite `k`:
+A six-spatial frame coefficient `κ` gives the physical top-eigenspace transfer-gap bound
 
 ```text
-‖T_pair^k‖ ≤ 1
-‖T_pair^k ψ‖ ≤ ‖ψ‖.
+physical transfer gap >= 3κ/8.
 ```
 
-Completion consequence: the fixed-ambient recursive semigroup has a canonical nonexpansive operator bound at every finite depth.
+This factor is the exact consequence of the `1/8` physical color normalization versus the six active spatial slots.
 
 ---
 
-# Phase 9 — Pair-transfer self-adjointness, Rayleigh bounds, and real spectrum
+# Phase 10 — Mean-projection formulation of the six-spatial problem
 
-**Status: Integrated through PR #3368.**
+**Status: Integrated through PR #3704.**
 
-## PR #3364 — self-adjointness
-
-Representative symmetry of the literal pair kernel is lifted through the generic symmetric Hilbert-Schmidt-kernel bridge:
+For the six genuine orthogonal projections,
 
 ```text
-T_pair is symmetric
-T_pair is self-adjoint
-T_pair^k is self-adjoint for every finite k.
+E₆(u)
+  = ‖u‖² - (1/6) Σ_c ‖P_c R u‖².
 ```
 
-## PR #3366 — variational contraction
-
-For every vector and every finite power:
+Therefore
 
 ```text
-|Rayleigh(T_pair^k, ψ)| ≤ 1,
+κ ‖u‖² ≤ E₆(u)
 ```
 
-so the Rayleigh quotient lies in `[-1,1]`.
-
-## PR #3368 — real spectral location
-
-For every finite `k`:
+is equivalent to
 
 ```text
-spectrum ℝ (T_pair ^ k) ⊆ Set.Icc (-1 : ℝ) 1.
+(1/6) Σ_c ‖P_c R u‖² ≤ (1-κ) ‖u‖².
 ```
 
-The proof explicitly handles both subsingleton and nontrivial `Lp` carriers, avoiding an invalid hidden assumption that the operator algebra is automatically nontrivial.
-
-Permanent non-claim at this checkpoint:
+For a contraction coefficient `q≤1`,
 
 ```text
-self-adjoint + contraction + spectrum ⊆ [-1,1]
-does not by itself prove
-positivity, spectrum ⊆ [0,1], or a strict gap below 1.
+mean projected norm² ≤ q ‖u‖²
 ```
+
+gives
+
+```text
+physical transfer gap >= 3(1-q)/8.
+```
+
+For `q<1`, the finite-volume gap is positive.
+
+### Meaning
+
+The unresolved frame theorem has been converted into a concrete spectral/contraction question for the actual six ground-state conditional expectations.
 
 ---
 
-# Phase 10 — Identify the top/vacuum sector and sharpen the pair spectrum
+# Phase 11 — Twelve-spatial normalization and physical routing
 
-**Status: OPEN NOW.**
+**Status: Green candidate in PR #3707.**
 
-The next gap-relevant step should stay on the actual pair-Haar/Wilson carrier.
-
-Useful targets include:
+Define the conventional twelve-spatial residual on the joint carrier by
 
 ```text
-identify a canonical top/vacuum vector or top spectral subspace for T_pair
-prove its invariance/eigenvalue relation from the literal finite model
-transport any available kernel positivity to operator positivity, if mathematically valid
-sharpen real spectral location only after that positivity is proved
-characterize the excitation/vacuum-orthogonal complement
+E₁₂(z) = (1/12) Σ_{c:12 colors} ‖z-P_c z‖².
 ```
 
-Completion criterion for this phase is not a preferred theorem name but a mathematically explicit decomposition of the pair-transfer carrier into its top/vacuum sector and the sector on which a strict contraction can meaningfully be stated.
-
-Forbidden shortcut:
+The green proof unit establishes
 
 ```text
-do not infer spectrum ⊆ [0,1] merely from self-adjointness and ‖T_pair‖ ≤ 1.
+E₁₂(z)=1/2(E₆,right(z)+E₆,left(z)).
 ```
 
----
-
-# Phase 11 — Prove a strict excitation-sector contraction / spectral separation
-
-**Status: OPEN NOW, after the sector identification.**
-
-The mass-gap-relevant finite target is stronger than nonexpansiveness.
-
-Schematic forms include either
+Since every left projection fixes every right-boundary lift,
 
 ```text
-‖T_pair ψ‖ ≤ q ‖ψ‖    with q < 1
+E₁₂(Ru)=1/2 E₆(u).
 ```
 
-on the relevant top-orthogonal/excitation sector, or an equivalent spectral statement such as
+Hence
 
 ```text
-spectrum(T_pair | excitation sector) ⊆ [-q,q]
+κ ‖x‖² ≤ E₁₂(RUx)
 ```
 
-or, if positivity has first been proved for the exact restricted operator,
+implies
 
 ```text
-spectrum(T_pair | excitation sector) ⊆ [0,q].
+2κ ‖x‖² ≤ E₆(Ux)
 ```
 
-The constant `q < 1` must come from the model or a proved coercive/Poincaré estimate; it must not be inserted as a hidden assumption and later presented as a derived Wilson theorem.
-
----
-
-# Phase 12 — Convert strict pair contraction to large-`R` recursive decay
-
-**Status: OPEN DOWNSTREAM; exact semigroup machinery already integrated.**
-
-Once a strict sector contraction is available, the canonical normal form
+and therefore
 
 ```text
-Ψ_R = T_pair^(R / 2) Ψ_(R % 2)
+physical transfer gap >= 3κ/4.
 ```
 
-should make the parity-aware decay theorem algebraically direct.
+The condition `κ≤1/2` only keeps the induced six-spatial frame coefficient `2κ` inside the normalized interval; an arbitrary positive coefficient can be reduced if necessary.
 
-Expected schematic consequence:
+### Merge criterion
 
-```text
-‖P_exc Ψ_R‖
-  ≤ q^(R / 2) * terminal_norm
-```
-
-with the even and odd terminal geometries retained exactly.
-
-This phase must preserve the distinction between
+Before this phase becomes canonical:
 
 ```text
-R = 0 one-slab terminal
-R = 1 diagonal-central terminal.
+exact PR head/base fresh
+PR open / merged=false / mergeable=true
+exact-head CI terminal success
+reviews and inline threads checked
+normal merge with expected head
+merge parents verified
+post-merge canonical CI terminal success
 ```
 
 ---
 
-# Phase 13 — Establish scale-uniform control
+# Phase 12 — Identify the actual twelve-color common-fixed space
+
+**Status: OPEN NOW — highest-priority geometric frontier.**
+
+The repository already proves
+
+```text
+fixed by all 12
+  <-> fixed by right 6 and fixed by left 6.
+```
+
+The next theorem must identify the intersection of the retained sigma-algebras / projection ranges on the **actual ground-state joint law**.
+
+The target should be stated at the strongest level that is really justified by the Wilson geometry. Candidate forms include identification with:
+
+```text
+the genuinely coarse joint sigma-algebra;
+a boundary-vacuum-generated common sector; or
+the exact common-fixed subspace needed to exclude physical top-orthogonal right lifts.
+```
+
+Do not assert “the common fixed space is constants” unless the sigma-algebra and measure-theoretic proof really establishes it.
+
+### Completion criterion
+
+Produce a theorem that lets a physical top-orthogonal right-boundary lift be placed in the orthogonal complement of the twelve-color common-fixed sector without adding an independent hypothesis.
+
+---
+
+# Phase 13 — Prove twelve-block `L²` Poincaré coercivity from Wilson / Doob / Harnack data
+
+**Status: OPEN NOW — highest-priority analytic frontier.**
+
+The repository already contains local conditional-law structure, including one-link Wilson/Doob/Harnack comparison and strict positivity information.
+
+The desired global theorem is schematically
+
+```text
+κ ‖z‖² ≤ E₁₂(z)
+```
+
+on the orthogonal complement of the twelve-color common-fixed sector, with `κ>0` derived from the actual model.
+
+A plausible proof architecture is:
+
+```text
+1. one-link conditional density / Doob comparison;
+2. conditional variance lower bounds;
+3. aggregate one-link variances into one spatial color block;
+4. aggregate six right and six left blocks;
+5. identify the common-fixed kernel of the resulting Dirichlet form;
+6. establish a spectral/Poincaré lower bound on its orthogonal complement.
+```
+
+### Critical rule
+
+Total-variation or Dobrushin influence control is not itself an `L²` Poincaré theorem. The passage must be formalized explicitly.
+
+### Completion criterion
+
+A theorem on the actual ground-state joint `L²` carrier supplies a positive `κ` with no abstract replacement projection family and no independent frame/comparison assumption.
+
+---
+
+# Phase 14 — Make the twelve-color coefficient scale-independent
+
+**Status: OPEN NOW — coupled to Phase 13.**
+
+A positive coefficient at each finite scale is not enough. For the physical scaling family we ultimately need
+
+```text
+∃ κ_* > 0, ∀ n,
+  κ_* ‖x‖² ≤ E₁₂,n(R U x)
+```
+
+for the relevant physical top-orthogonal sector.
+
+The coefficient must be derived from model quantities whose dependence on lattice size/coupling is controlled.
+
+### Two acceptable outcomes
+
+#### Route A — uniform twelve-block coercivity succeeds
+
+Prove a model-derived `κ_*>0` and immediately obtain
+
+```text
+uniform physical transfer gap >= 3κ_*/4.
+```
+
+#### Route B — the candidate coefficient degenerates
+
+Prove the degeneration honestly, identify which local-to-global estimate loses scale, and replace it by a stronger block, multiscale, or geometry-aware coercive quantity.
+
+Do not hide degeneration behind a uniform assumption.
+
+---
+
+# Phase 15 — Uniform finite-volume consequences
 
 **Status: OPEN DOWNSTREAM.**
 
-A finite-volume strict contraction is not yet a continuum mass gap. The decisive estimate must survive the scaling sequence.
-
-Possible routes already represented in the repository include:
+Once a model-derived uniform physical transfer gap exists, specialize the already-integrated Hilbert/spectral machinery to obtain stable estimates such as
 
 ```text
-scale-uniform Poincaré / coercive inequalities
-uniform lower bounds on finite excitation decay rates
-uniform logarithmic spectral-floor estimates
-uniform recursive-message decay
+uniform non-top contraction / decay as appropriate
+uniform coercivity
+uniform resolvent control
+uniform Green bounds
+uniform Poincaré estimates
+stable reduced-range control
 ```
 
-The existing finite Dobrushin covariance theorem is not expected to supply this in the large-`β` scaling regime: its active factor tends in the wrong direction (`18 q(β) -> 18`). That lane remains a diagnostic, not the active continuum mechanism.
-
-Completion criterion: a same-root bound with a strictly positive lower spectral scale, or equivalently a strict transfer contraction parameter bounded away from `1`, uniformly along the continuum scaling sequence.
+The exact form must respect the relevant physical carrier and top/common-fixed sector proved in Phases 12–14.
 
 ---
 
-# Phase 14 — Transport the uniform finite spectral control through OS/Wightman reconstruction
-
-**Status: OPEN DOWNSTREAM; implication machinery largely integrated.**
-
-The repository already contains substantial common-core and self-adjoint closure machinery for transporting transfer spectral information into Hamiltonian point-energy statements.
-
-The remaining task is to feed that machinery with model-derived, scale-uniform data on the same-root physical carrier rather than an external abstract certificate.
-
-Target shape:
-
-```text
-uniform finite transfer separation
-  -> continuum OS semigroup decay / spectral lower bound
-  -> graph-closed Hamiltonian lower bound on Ω⊥
-  -> same-root Wightman spectral statement
-```
-
-One selected exact mode may be useful evidence or an attained spectral point, but it is not a substitute for the lower-bound theorem excluding spectrum below it.
-
----
-
-# Phase 15 — Full four-dimensional Yang--Mills completion
+# Phase 16 — Thermodynamic and scaling-limit propagation
 
 **Status: OPEN DOWNSTREAM.**
 
-The same-root scalar continuum process and the finite/OS transfer machinery are substantial, but a Clay-level result requires a sufficiently rich four-dimensional Yang--Mills theory on one coherent physical carrier.
+The next task is to propagate the uniform finite-volume information without losing same-root provenance.
 
-The final construction must support the required combination of:
+Required ingredients may include:
 
 ```text
+tightness / compactness for the relevant physical state family
+compatibility of finite-volume Hilbert carriers
+convergence of transfer / semigroup forms
+Mosco/strong-resolvent/form convergence as appropriate
+stability of the vacuum/common-fixed sector
+passage of the positive lower spectral bound to the limit
+```
+
+No continuum gap is obtained merely by writing a uniform finite-volume inequality. The limiting operator and physical carrier must be constructed and identified.
+
+---
+
+# Phase 17 — Full same-root physical continuum carrier
+
+**Status: OPEN DOWNSTREAM.**
+
+The scalar continuum OS lane is already substantial, but a Clay-level theorem needs a sufficiently rich four-dimensional Yang--Mills field/state and its physical Hilbert reconstruction.
+
+Required work includes some coherent version of:
+
+```text
+continuum gauge-invariant local observable algebra / distributions
 Euclidean covariance
-gauge-invariant local observable content / gauge structure
 reflection positivity
-regularity / distributional control
-physical nontriviality
-vacuum structure and clustering
-OS/Wightman reconstruction from the same model
-strictly positive spectrum above the vacuum
+regularity needed for OS reconstruction
+nontriviality
+physical Hilbert carrier
+Hamiltonian and vacuum
+connection to the finite Wilson approximants
 ```
 
-Only after those model and spectral requirements are simultaneously closed is a Clay-level existence-and-mass-gap claim appropriate.
+The existing same-root scalar process is a building block, not the full endpoint.
 
 ---
 
-# Permanent research rules
+# Phase 18 — SU(2) selected exact-mode lane
 
-The following distinctions should remain visible in future PRs and documentation:
+**Status: Integrated implication machinery; raw-model input remains open in parallel.**
 
-```text
-1. Keep ambient H fixed when using the fixed-ambient inward recursion.
-2. Keep H=1 diagonal-central geometry separate from independent pair-Haar geometry.
-3. Do not turn ‖T‖ ≤ 1 into a strict contraction without a proved q < 1.
-4. Do not turn self-adjoint spectrum ⊆ [-1,1] into positivity without a proof.
-5. Keep finite-volume, scale-uniform, continuum-OS, and full-Wightman claims separate.
-6. Keep one exact mode distinct from a global spectral-floor theorem.
-7. Keep the selected scalar continuum process distinct from full 4D Yang--Mills.
-8. Preserve exact-SHA CI and merge-parent audit discipline.
-```
-
-The immediate mathematical program after the present checkpoint is therefore:
+The selected exact-mode route has been pushed upstream to
 
 ```text
-top/vacuum sector
-  -> strict excitation-sector spectral separation
-  -> fixed-ambient recursive exponential decay
-  -> scale-uniform estimate
-  -> same-root OS/Wightman mass-gap transport
-  -> full 4D Yang--Mills completion.
+selected physical/top endpoint pair
+  -> literal one-slab Wilson Hilbert-Schmidt kernel coefficient
+  -> projected synthesis approximation
+  -> realizable integer one-step raw-kernel limit
+  -> explicit finite/common-time coherence
+  -> theorem-generated selected weak identity
+  -> exact common-carrier mode
+  -> graph-closed Ω⊥ Hamiltonian mode at exactGapValueReal.
 ```
+
+### Remaining seam
+
+Prove the realizable raw one-step kernel limit and coherence directly from the finite Wilson model.
+
+### Relationship to the global Poincaré route
+
+```text
+selected exact mode != global spectral floor
+```
+
+The exact-mode theorem may identify an attained positive energy, while the twelve-color program seeks control of the entire relevant orthogonal sector.
+
+---
+
+# Phase 19 — Vacuum/common-fixed structure
+
+**Status: OPEN DOWNSTREAM.**
+
+The finite physical-pair theory deliberately does not prove top-sector simplicity, and the twelve-color joint dynamics has its own common-fixed geometry.
+
+Any final mass-gap theorem must state precisely which zero-energy/fixed sector is being quotiented out and prove the needed identification.
+
+Potential requirements include:
+
+```text
+vacuum uniqueness or a correct replacement formulation
+relation between finite top eigenspaces and continuum vacuum sector
+relation between twelve-color common-fixed subspace and physical vacuum data
+absence of hidden zero-energy sectors in the final carrier
+```
+
+Do not collapse these distinctions prematurely.
+
+---
+
+# Phase 20 — OS/Wightman physical spectral gap
+
+**Status: OPEN DOWNSTREAM.**
+
+After the full same-root physical continuum carrier and Hamiltonian are established, transfer the uniform coercivity into a theorem of the form
+
+```text
+spectrum(H_phys | Ω⊥) ⊆ [m,∞)
+```
+
+for some `m>0`, or the mathematically correct equivalent formulation if the vacuum sector is not one-dimensional.
+
+This is where a finite-volume transfer-gap theorem becomes a continuum mass-gap theorem.
+
+---
+
+# Phase 21 — Clay-level completion
+
+**Status: OPEN.**
+
+A completed theorem must combine, on one coherent same-root construction,
+
+```text
+4D continuum Yang--Mills existence
+Euclidean covariance
+reflection positivity / OS axioms in the required form
+regularity / distributional field structure
+physical nontriviality
+correct vacuum structure
+Wightman/OS physical Hilbert realization
+strictly positive spectral gap above the vacuum sector
+```
+
+Only after those obligations are actually discharged should the repository claim a complete Yang--Mills existence-and-mass-gap theorem.
+
+---
+
+# Diagnostic lane — high-temperature Dobrushin control
+
+**Status: Diagnostic only for the continuum gap question.**
+
+The repository contains explicit finite-volume Wilson/Dobrushin results. They are useful for checking local conditional-law dependence and for strong-coupling/high-temperature finite-volume analysis.
+
+The simple coefficient based on
+
+```text
+(exp(4β)-1)/(exp(4β)+1)
+```
+
+approaches `1` as `β -> +∞`. Therefore a naive use of that coefficient alone cannot produce the required scale-independent continuum gap in the relevant large-`β` scaling regime.
+
+This obstruction is informative: it motivates the present ground-state Doob / two-sided block-Poincaré route rather than invalidating it.
+
+---
+
+# Immediate execution order
+
+The recommended next sequence is now:
+
+```text
+1. finish / merge the green twelve-spatial normalization bridge when the fresh merge gate is satisfied;
+2. prove the twelve-color common-fixed-space identification on the genuine joint law;
+3. derive a finite-volume twelve-block L² Poincaré theorem from Wilson/Doob/Harnack conditional variance;
+4. tighten the coefficient to a scale-independent model-derived κ_* > 0;
+5. invoke the existing exact route
+     E₁₂ -> E₆ -> raw physical defect -> transfer gap
+   to obtain gap >= 3κ_*/4;
+6. propagate the uniform estimate through finite-volume Green/resolvent/Poincaré machinery;
+7. prove thermodynamic/scaling-limit stability on the same-root physical carrier;
+8. complete the continuum OS/Wightman spectral-gap theorem;
+9. separately discharge the remaining full-field, vacuum, and exact-mode obligations needed for Clay-level completion.
+```
+
+This sequence avoids reintroducing abstract projection hypotheses and keeps the decisive analytic work attached to the actual Wilson ground-state probability law.
+
+---
+
+# Definition of success for the present milestone
+
+The present ground-state block-dynamics milestone is complete only when Lean contains a theorem whose assumptions are model-derived and which provides a positive scale-independent coefficient for the actual twelve-color joint conditional-expectation Dirichlet form, sufficient to conclude a uniform positive physical transfer gap.
+
+Schematically:
+
+```text
+actual Wilson / ground-state data
+  -> common-fixed identification
+  -> ∃κ_*>0 uniform twelve-color Poincaré
+  -> six-spatial frame coefficient 2κ_*
+  -> raw physical squared-defect coercivity
+  -> physical transfer gap >= 3κ_*/4
+```
+
+Until that coefficient is proved from the model, the global mass-gap boundary remains open.
