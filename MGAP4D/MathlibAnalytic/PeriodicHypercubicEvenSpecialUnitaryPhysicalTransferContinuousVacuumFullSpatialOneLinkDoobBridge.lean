@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumDoobVariance
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateFullSpatialOneLinkDoobBridge
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryWilsonSystem
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -55,9 +55,10 @@ noncomputable def
       H N hN beta hbeta
       (periodicHypercubicEvenSpatialSliceRestriction A))
 
-/-- Restricting a full Wilson one-link replacement is also exactly the
-continuous-vacuum one-link replacement.  This is the carrier-identification
-step that avoids evaluating any `L²` quotient representative. -/
+/-- Restricting a full Wilson one-link replacement is exactly the intrinsic
+continuous-vacuum spatial replacement.  This carrier proof is repeated here
+rather than importing the older quotient-vacuum bridge, keeping the continuous
+route independent of quotient-representative instance declarations. -/
 theorem periodicHypercubicEvenSpecialUnitarySpatialSliceRestriction_replaceLink_continuousVacuum
     (H N : ℕ)
     (hN : 0 < N)
@@ -74,9 +75,19 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSliceRestriction_replaceLink_
             A (periodicHypercubicEvenSpatialSliceLinkEmbedding H target) g) =
       periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
         H N (periodicHypercubicEvenSpatialSliceRestriction A) target g := by
-  rw [periodicHypercubicEvenSpecialUnitarySpatialSliceRestriction_replaceLink
-    H N hN beta hbeta A target g]
-  rfl
+  funext e
+  by_cases he : e = target
+  · subst e
+    simp [periodicHypercubicEvenSpatialSliceRestriction_apply,
+      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink]
+  · have hEmbedding :
+        periodicHypercubicEvenSpatialSliceLinkEmbedding H e ≠
+          periodicHypercubicEvenSpatialSliceLinkEmbedding H target := by
+      intro hEq
+      exact he (periodicHypercubicEvenSpatialSliceLinkEmbedding_injective H hEq)
+    rw [periodicHypercubicEvenSpatialSliceRestriction_apply]
+    rw [compact_oriented_replaceLink_other _ _ _ _ _ hEmbedding]
+    simp [periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink, he]
 
 /-- The generic full Wilson one-link Doob fiber weight is literally the
 continuous physical-vacuum fiber weight on the intrinsic spatial slice. -/
