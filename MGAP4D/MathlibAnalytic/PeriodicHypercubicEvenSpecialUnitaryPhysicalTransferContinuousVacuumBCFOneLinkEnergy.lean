@@ -38,7 +38,7 @@ def periodicHypercubicEvenSpecialUnitaryWilsonFullSpatialLinkCenteredFiberBCF
 
 /-- The canonical centered BCF fiber is square-integrable under the literal
 full Wilson one-link conditional probability law.  Compactness and the
-heat-bath norm contraction give the uniform bound `2 * ‖O‖`; no extra local
+heat-bath fluctuation bound give the uniform bound `2 * ‖O‖`; no extra local
 integrability hypothesis is introduced. -/
 theorem periodicHypercubicEvenSpecialUnitaryWilsonFullSpatialLinkCenteredFiberBCF_memLp
     (H N : ℕ)
@@ -60,32 +60,46 @@ theorem periodicHypercubicEvenSpecialUnitaryWilsonFullSpatialLinkCenteredFiberBC
   let C := periodicHypercubicSpecialUnitaryWilsonSystem
     (PeriodicHypercubicEvenSideLength H) N hN beta hbeta
   let fullTarget := periodicHypercubicEvenSpatialSliceLinkEmbedding H target
+  let μ := C.singleLinkConditionalMeasure A fullTarget
   let X : C.base.Gauge → ℝ := fun g =>
     O (C.base.replaceLink A fullTarget g) -
       C.singleLinkHeatBathProjection fullTarget O A
+  have hprob : IsProbabilityMeasure μ :=
+    continuous_compact_oriented_singleLinkConditionalMeasure_isProbabilityMeasure
+      C A fullTarget
+  letI : IsProbabilityMeasure μ := hprob
   have hStrong : StronglyMeasurable X := by
     apply StronglyMeasurable.sub
     · exact
         (O.continuous.comp
           (continuous_compact_oriented_replaceLink C A fullTarget)).stronglyMeasurable
     · exact stronglyMeasurable_const
+  have hOStrong : StronglyMeasurable
+      (O : C.base.Configuration → ℝ) := O.continuous.stronglyMeasurable
+  have hM0 : 0 ≤ ‖O‖ := norm_nonneg _
+  have hOBound : ∀ B : C.base.Configuration, |O B| ≤ ‖O‖ := fun B =>
+    O.norm_coe_le_norm B
   have hBound : ∀ g, ‖X g‖ ≤ 2 * ‖O‖ := by
     intro g
     rw [Real.norm_eq_abs]
-    have hO : |O (C.base.replaceLink A fullTarget g)| ≤ ‖O‖ :=
-      O.norm_coe_le_norm _
-    have hP : |C.singleLinkHeatBathProjection fullTarget O A| ≤ ‖O‖ :=
-      continuous_compact_oriented_singleLinkHeatBathProjection_abs_le_norm
-        C fullTarget O A
-    calc
-      |X g| ≤ |O (C.base.replaceLink A fullTarget g)| +
-          |C.singleLinkHeatBathProjection fullTarget O A| := abs_sub _ _
-      _ ≤ ‖O‖ + ‖O‖ := add_le_add hO hP
-      _ = 2 * ‖O‖ := by ring
-  have hLp : MemLp X 2 (C.singleLinkConditionalMeasure A fullTarget) :=
+    have hProjection :
+        C.singleLinkHeatBathProjection fullTarget O
+            (C.base.replaceLink A fullTarget g) =
+          C.singleLinkHeatBathProjection fullTarget O A := by
+      change C.singleLinkConditionalExpectation O
+          (C.base.replaceLink A fullTarget g) fullTarget =
+        C.singleLinkConditionalExpectation O A fullTarget
+      exact continuous_compact_oriented_singleLinkConditionalExpectation_replaceLink
+        C O A fullTarget g
+    rw [← hProjection]
+    change |C.singleLinkHeatBathFluctuation fullTarget O
+      (C.base.replaceLink A fullTarget g)| ≤ 2 * ‖O‖
+    exact continuous_compact_oriented_singleLinkHeatBathFluctuation_abs_le
+      C fullTarget O hOStrong ‖O‖ hM0 hOBound _
+  have hLp : MemLp X 2 μ :=
     MemLp.of_bound hStrong.aestronglyMeasurable (2 * ‖O‖)
       (Filter.Eventually.of_forall hBound)
-  change MemLp X 2 (C.singleLinkConditionalMeasure A fullTarget)
+  change MemLp X 2 μ
   exact hLp
 
 /-- The canonical BCF fiber is exactly centered under the literal Wilson
@@ -191,14 +205,18 @@ theorem periodicHypercubicEvenSpecialUnitaryWilsonFullSpatialLinkCenteredFiberBC
   change (∫⁻ g, ENNReal.ofReal ((X g - 0) ^ 2) ∂μ) =
     ENNReal.ofReal (C.singleLinkConditionalVarianceBCF fullTarget O A)
   simp only [sub_zero]
-  rw [← ofReal_integral_eq_lintegral_ofReal hSq
-    (ae_of_all μ fun g => sq_nonneg (X g))]
-  congr 1
-  unfold ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalVarianceBCF
-  apply integral_congr_ae
-  filter_upwards [] with g
-  simp [X, C, fullTarget,
-    periodicHypercubicEvenSpecialUnitaryWilsonFullSpatialLinkCenteredFiberBCF]
+  calc
+    (∫⁻ g, ENNReal.ofReal ((X g) ^ 2) ∂μ) =
+        ENNReal.ofReal (∫ g, (X g) ^ 2 ∂μ) :=
+      (ofReal_integral_eq_lintegral_ofReal hSq
+        (ae_of_all μ fun g => sq_nonneg (X g))).symm
+    _ = ENNReal.ofReal (C.singleLinkConditionalVarianceBCF fullTarget O A) := by
+      congr 1
+      unfold ContinuousCompactOrientedGaugeWilsonSystem.singleLinkConditionalVarianceBCF
+      apply integral_congr_ae
+      filter_upwards [] with g
+      simp [X, C, fullTarget,
+        periodicHypercubicEvenSpecialUnitaryWilsonFullSpatialLinkCenteredFiberBCF]
 
 /-- Canonical observable form of the volume-uniform continuous-vacuum one-link
 coercivity.  The left side is now the native Wilson conditional variance used
