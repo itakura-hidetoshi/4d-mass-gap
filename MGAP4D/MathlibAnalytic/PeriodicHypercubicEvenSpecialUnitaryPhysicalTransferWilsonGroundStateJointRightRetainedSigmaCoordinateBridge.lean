@@ -23,11 +23,11 @@ def periodicHypercubicEvenSpecialUnitaryGroundStateJointRightRetainedPairDataToC
       (periodicHypercubicEvenGroundStateJointRightRetainedCoordinateSet H c →
         Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   fun p i =>
-    match i.1 with
-    | Sum.inl e => p.1 e
-    | Sum.inr e =>
+    match i with
+    | ⟨Sum.inl e, _⟩ => p.1 e
+    | ⟨Sum.inr e, hi⟩ =>
         p.2 ⟨e, by
-          simpa [periodicHypercubicEvenGroundStateJointRightRetainedCoordinateSet] using i.2⟩
+          simpa [periodicHypercubicEvenGroundStateJointRightRetainedCoordinateSet] using hi⟩
 
 /-- Recover the concrete right retained pair data from the literal retained
 coordinate function. -/
@@ -62,7 +62,9 @@ theorem
     rfl
   · funext e
     change p.2 ⟨e.1, _⟩ = p.2 e
-    congr
+    apply congrArg p.2
+    apply Subtype.ext
+    rfl
 
 /-- The two right retained presentations are inverse in the other direction. -/
 theorem
@@ -79,7 +81,9 @@ theorem
   | inl e => rfl
   | inr e =>
       change f ⟨Sum.inr e, _⟩ = f ⟨Sum.inr e, hi⟩
-      congr
+      apply congrArg f
+      apply Subtype.ext
+      rfl
 
 /-- The map from right retained pair data to literal retained coordinates is
 measurable. -/
@@ -99,8 +103,10 @@ theorem
   | inr e =>
       exact
         (measurable_pi_apply
-          ⟨e, by
-            simpa [periodicHypercubicEvenGroundStateJointRightRetainedCoordinateSet] using hi⟩).comp
+          (⟨e, by
+            simpa [periodicHypercubicEvenGroundStateJointRightRetainedCoordinateSet] using hi⟩ :
+            PeriodicHypercubicEvenSpatialSliceOffColorLink H
+              (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c))).comp
           measurable_snd
 
 /-- The inverse map from literal right retained coordinates back to pair data
@@ -116,13 +122,15 @@ theorem
   · rw [measurable_pi_iff]
     intro e
     exact measurable_pi_apply
-      ⟨Sum.inl e, by
-        simp [periodicHypercubicEvenGroundStateJointRightRetainedCoordinateSet]⟩
+      (⟨Sum.inl e, by
+        simp [periodicHypercubicEvenGroundStateJointRightRetainedCoordinateSet]⟩ :
+        periodicHypercubicEvenGroundStateJointRightRetainedCoordinateSet H c)
   · rw [measurable_pi_iff]
     intro e
     exact measurable_pi_apply
-      ⟨Sum.inr e.1, by
-        simpa [periodicHypercubicEvenGroundStateJointRightRetainedCoordinateSet] using e.2⟩
+      (⟨Sum.inr e.1, by
+        simpa [periodicHypercubicEvenGroundStateJointRightRetainedCoordinateSet] using e.2⟩ :
+        periodicHypercubicEvenGroundStateJointRightRetainedCoordinateSet H c)
 
 /-- The old pair-data presentation and the literal retained-coordinate
 presentation are measurably equivalent. -/
