@@ -39,7 +39,7 @@ theorem periodicHypercubicEvenSpatialSliceOffColorSet_iInter_eq_empty
   intro h
   exact
     (h (periodicHypercubicEvenSpatialSliceLinkOmittedColorIndex H e))
-      (periodicHypercubicEvenGroundStateSpatialColorEquivFin_symm_omittedColorIndex H e)
+      (periodicHypercubicEvenGroundStateSpatialColorEquivFin_symm_omittedColorIndex H e).symm
 
 /-- Coordinate carrier for the two spatial boundaries of one slab.  `Sum.inl`
 labels left-boundary links and `Sum.inr` labels right-boundary links. -/
@@ -111,7 +111,7 @@ theorem
       · intro h
         exact
           (h (periodicHypercubicEvenSpatialSliceLinkOmittedColorIndex H e))
-            (periodicHypercubicEvenGroundStateSpatialColorEquivFin_symm_omittedColorIndex H e)
+            (periodicHypercubicEvenGroundStateSpatialColorEquivFin_symm_omittedColorIndex H e).symm
       · intro h
         exact False.elim h
 
@@ -134,7 +134,7 @@ theorem
       · intro h
         exact
           (h (periodicHypercubicEvenSpatialSliceLinkOmittedColorIndex H e))
-            (periodicHypercubicEvenGroundStateSpatialColorEquivFin_symm_omittedColorIndex H e)
+            (periodicHypercubicEvenGroundStateSpatialColorEquivFin_symm_omittedColorIndex H e).symm
       · intro h
         exact False.elim h
   | inr e =>
