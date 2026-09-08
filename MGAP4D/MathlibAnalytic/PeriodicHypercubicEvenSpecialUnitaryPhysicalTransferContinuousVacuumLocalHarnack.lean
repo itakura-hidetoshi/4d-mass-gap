@@ -117,7 +117,11 @@ theorem periodicHypercubicEvenSpatialSliceTouchingPlaquettes_card_le_six
   have hfull : fullTouch.card ≤ 6 := by
     exact periodicHypercubicTouchingPlaquettes_card_le_six
       (PeriodicHypercubicEvenSideLength H) fullTarget
-  omega
+  have hsfull : s.card ≤ fullTouch.card := by
+    rw [← hcardImage]
+    exact hle
+  have hsix : s.card ≤ 6 := le_trans hsfull hfull
+  simpa [s] using hsix
 
 @[simp] theorem periodicHypercubicEvenSpatialSlicePlaquetteEmbedding_boundary_zero
     (H : ℕ)
@@ -194,17 +198,9 @@ theorem periodicHypercubicEvenSpatialSlicePlaquetteHolonomy_continuousVacuumRepl
     apply hNotTouches
     refine ⟨3, ?_⟩
     simpa using congrArg (periodicHypercubicEvenSpatialSliceLinkEmbedding H) h
-  unfold periodicHypercubicEvenSpatialSlicePlaquetteHolonomy
-  rw [periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_of_ne
-      H N A target (p.1, p.2.1.1) g h0]
-  rw [periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_of_ne
-      H N A target
-      (periodicHypercubicEvenSpatialSliceShift H p.1 p.2.1.1, p.2.1.2) g h1]
-  rw [periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_of_ne
-      H N A target
-      (periodicHypercubicEvenSpatialSliceShift H p.1 p.2.1.2, p.2.1.1) g h2]
-  rw [periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_of_ne
-      H N A target (p.1, p.2.1.2) g h3]
+  simp [periodicHypercubicEvenSpatialSlicePlaquetteHolonomy,
+    periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink,
+    h0, h1, h2, h3]
 
 /-- The intrinsic spatial action is the corresponding finite-universe sum. -/
 theorem periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_eq_finset_sum
@@ -216,8 +212,12 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_eq_finset_s
           (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A p) := by
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction
   unfold periodicHypercubicEvenSpatialSlicePlaquetteList
-  exact Finset.sum_map_toList (Finset.univ :
-    Finset (PeriodicHypercubicEvenSpatialSlicePlaquette H)) _
+  simpa using
+    (Finset.sum_map_toList
+      (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSlicePlaquette H))
+      (fun p : PeriodicHypercubicEvenSpatialSlicePlaquette H =>
+        specialUnitaryWilsonPlaquetteEnergy N
+          (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A p)))
 
 /-- The crossing action is likewise its finite-universe link sum. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_eq_finset_sum
@@ -228,8 +228,11 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_eq_finse
         specialUnitaryWilsonPlaquetteEnergy N ((A e)⁻¹ * B e) := by
   unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction
   unfold periodicHypercubicEvenSpatialSliceLinkList
-  exact Finset.sum_map_toList (Finset.univ :
-    Finset (PeriodicHypercubicEvenSpatialSliceLink H)) _
+  simpa using
+    (Finset.sum_map_toList
+      (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H))
+      (fun e : PeriodicHypercubicEvenSpatialSliceLink H =>
+        specialUnitaryWilsonPlaquetteEnergy N ((A e)⁻¹ * B e)))
 
 /-- Any two `SU(N)` Wilson plaquette energies differ by at most two. -/
 theorem specialUnitaryWilsonPlaquetteEnergy_sub_abs_le_two
@@ -393,7 +396,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction_continuou
         |(1 / 2 : ℝ) *
           (periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N Bg -
             periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N Bh)| :=
-      abs_add _ _
+      abs_add_le _ _
     _ = |periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H N A Bg -
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H N A Bh| +
         (1 / 2 : ℝ) *
