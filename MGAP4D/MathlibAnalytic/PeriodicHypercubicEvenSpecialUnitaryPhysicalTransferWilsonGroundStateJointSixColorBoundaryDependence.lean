@@ -17,9 +17,9 @@ theorem functionDependsOn_inter
     {β : Type*}
     {f : (∀ i, α i) → β}
     {s t : Set ι}
-    (hs : Function.DependsOn f s)
-    (ht : Function.DependsOn f t) :
-    Function.DependsOn f (s ∩ t) := by
+    (hs : DependsOn f s)
+    (ht : DependsOn f t) :
+    DependsOn f (s ∩ t) := by
   intro x y hxy
   classical
   let z : ∀ i, α i := fun i => if hi : i ∈ s then x i else y i
@@ -41,8 +41,8 @@ theorem functionDependsOn_iInter_finSix
     {β : Type*}
     {f : (∀ i, α i) → β}
     (s : Fin 6 → Set ι)
-    (h : ∀ c : Fin 6, Function.DependsOn f (s c)) :
-    Function.DependsOn f (⋂ c : Fin 6, s c) := by
+    (h : ∀ c : Fin 6, DependsOn f (s c)) :
+    DependsOn f (⋂ c : Fin 6, s c) := by
   have h01 := functionDependsOn_inter (h (0 : Fin 6)) (h (1 : Fin 6))
   have h012 := functionDependsOn_inter h01 (h (2 : Fin 6))
   have h0123 := functionDependsOn_inter h012 (h (3 : Fin 6))
@@ -69,9 +69,9 @@ theorem periodicHypercubicEvenGroundStateJoint_dependsOn_leftBoundary_of_rightSi
     (f :
       (PeriodicHypercubicEvenGroundStateJointSpatialCoordinate H → Gauge) → β)
     (h : ∀ c : Fin 6,
-      Function.DependsOn f
+      DependsOn f
         (periodicHypercubicEvenGroundStateJointRightRetainedCoordinateSet H c)) :
-    Function.DependsOn f
+    DependsOn f
       (periodicHypercubicEvenGroundStateJointLeftBoundaryCoordinateSet H) := by
   have hInter := functionDependsOn_iInter_finSix
     (f := f)
@@ -89,9 +89,9 @@ theorem periodicHypercubicEvenGroundStateJoint_dependsOn_rightBoundary_of_leftSi
     (f :
       (PeriodicHypercubicEvenGroundStateJointSpatialCoordinate H → Gauge) → β)
     (h : ∀ c : Fin 6,
-      Function.DependsOn f
+      DependsOn f
         (periodicHypercubicEvenGroundStateJointLeftRetainedCoordinateSet H c)) :
-    Function.DependsOn f
+    DependsOn f
       (periodicHypercubicEvenGroundStateJointRightBoundaryCoordinateSet H) := by
   have hInter := functionDependsOn_iInter_finSix
     (f := f)
