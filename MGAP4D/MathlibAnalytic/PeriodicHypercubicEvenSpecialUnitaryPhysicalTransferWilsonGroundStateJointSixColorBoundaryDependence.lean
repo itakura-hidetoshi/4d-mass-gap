@@ -101,6 +101,97 @@ theorem periodicHypercubicEvenGroundStateJoint_dependsOn_rightBoundary_of_leftSi
     at hInter
   exact hInter
 
+local instance groundStateSixColorBoundaryDependenceMeasurableSpace (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+/-- On the actual two-boundary pair presentation, if a function factors
+through every right-color retained-coordinate restriction, then it factors
+through the complete left boundary alone. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryGroundStateJoint_factorsThrough_fst_of_rightSix
+    (H N : ℕ)
+    {β : Type*}
+    (f :
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → β)
+    (h : ∀ c : Fin 6,
+      Function.FactorsThrough f
+        (periodicHypercubicEvenSpecialUnitaryGroundStateJointRightRetainedCoordinateRestriction
+          H N c)) :
+    Function.FactorsThrough f Prod.fst := by
+  let E :=
+    periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv H N
+  let g :
+      (PeriodicHypercubicEvenGroundStateJointSpatialCoordinate H →
+        Matrix.specialUnitaryGroup (Fin N) ℂ) → β :=
+    fun x => f (E.symm x)
+  have hg : ∀ c : Fin 6,
+      DependsOn g
+        (periodicHypercubicEvenGroundStateJointRightRetainedCoordinateSet H c) := by
+    intro c x y hxy
+    apply h c
+    funext i
+    simpa [periodicHypercubicEvenSpecialUnitaryGroundStateJointRightRetainedCoordinateRestriction,
+      E] using hxy i.1 i.2
+  have hgLeft :=
+    periodicHypercubicEvenGroundStateJoint_dependsOn_leftBoundary_of_rightSix H g hg
+  intro z₁ z₂ hz
+  have hcoord :
+      ∀ i ∈ periodicHypercubicEvenGroundStateJointLeftBoundaryCoordinateSet H,
+        E z₁ i = E z₂ i := by
+    intro i hi
+    cases i with
+    | inl e =>
+        simpa [E] using congrFun hz e
+    | inr e =>
+        simp [periodicHypercubicEvenGroundStateJointLeftBoundaryCoordinateSet] at hi
+  have heq : g (E z₁) = g (E z₂) := hgLeft hcoord
+  simpa [g, E] using heq
+
+/-- Symmetrically, factoring through every left-color retained-coordinate
+restriction forces factorization through the complete right boundary alone. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryGroundStateJoint_factorsThrough_snd_of_leftSix
+    (H N : ℕ)
+    {β : Type*}
+    (f :
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → β)
+    (h : ∀ c : Fin 6,
+      Function.FactorsThrough f
+        (periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftRetainedCoordinateRestriction
+          H N c)) :
+    Function.FactorsThrough f Prod.snd := by
+  let E :=
+    periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv H N
+  let g :
+      (PeriodicHypercubicEvenGroundStateJointSpatialCoordinate H →
+        Matrix.specialUnitaryGroup (Fin N) ℂ) → β :=
+    fun x => f (E.symm x)
+  have hg : ∀ c : Fin 6,
+      DependsOn g
+        (periodicHypercubicEvenGroundStateJointLeftRetainedCoordinateSet H c) := by
+    intro c x y hxy
+    apply h c
+    funext i
+    simpa [periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftRetainedCoordinateRestriction,
+      E] using hxy i.1 i.2
+  have hgRight :=
+    periodicHypercubicEvenGroundStateJoint_dependsOn_rightBoundary_of_leftSix H g hg
+  intro z₁ z₂ hz
+  have hcoord :
+      ∀ i ∈ periodicHypercubicEvenGroundStateJointRightBoundaryCoordinateSet H,
+        E z₁ i = E z₂ i := by
+    intro i hi
+    cases i with
+    | inl e =>
+        simp [periodicHypercubicEvenGroundStateJointRightBoundaryCoordinateSet] at hi
+    | inr e =>
+        simpa [E] using congrFun hz e
+  have heq : g (E z₁) = g (E z₂) := hgRight hcoord
+  simpa [g, E] using heq
+
 end
 
 end MathlibAnalytic
