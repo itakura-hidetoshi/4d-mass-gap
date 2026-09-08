@@ -56,12 +56,14 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumKernelProduct_i
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
           H N beta A B)
       (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := by
-  let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
-  let Ω := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
-    H N hN beta hbeta
-  have hΩInt : Integrable (fun A => Ω.1 A) μ := by
+  let μ : Measure (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
+  let f : Lp ℝ 2 μ :=
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+      H N hN beta hbeta).1
+  have hfInt : Integrable (fun A => f A) μ := by
     rw [← memLp_one_iff_integrable]
-    exact (Lp.memLp Ω.1).mono_exponent (by norm_num)
+    exact (Lp.memLp f).mono_exponent (by norm_num)
   have hKContinuous : Continuous
       (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
@@ -77,8 +79,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumKernelProduct_i
     simpa [Real.norm_eq_abs] using
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
         H N hN beta hbeta A B
-  have hMul := hΩInt.bdd_mul hKContinuous.aestronglyMeasurable hKBound
-  simpa [μ, Ω, mul_comm] using hMul
+  have hMul := hfInt.bdd_mul hKContinuous.aestronglyMeasurable hKBound
+  simpa [μ, f, mul_comm] using hMul
 
 /-- The unscaled continuous physical-vacuum synthesis is the literal Wilson
 kernel integral against the existing nonnegative Haar-`L²` vacuum.  Pointwise
@@ -98,37 +100,43 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFuncti
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
           H N beta A B
         ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := by
-  let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
+  let μ : Measure (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
   let C := periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelFeature
     H N hN beta hbeta
-  let Ω := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
-    H N hN beta hbeta
-  have hVecInt : Integrable (fun A => Ω.1 A • C.feature A) μ := by
-    simpa [μ, C, Ω] using
+  let f : Lp ℝ 2 μ :=
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+      H N hN beta hbeta).1
+  have hVecInt : Integrable (fun A => f A • C.feature A) μ := by
+    simpa [μ, C, f] using
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelFeature_weighted_integrable
-        H N hN beta hbeta Ω.1
+        H N hN beta hbeta f
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFunction
   unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureSynthesisFunction
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFeatureAnalysisOperator_apply]
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureAnalysisOperator_apply]
   change
-    inner ℝ (∫ A, Ω.1 A • C.feature A ∂μ) (C.feature B) =
-      ∫ A, Ω.1 A *
+    inner ℝ (∫ A, f A • C.feature A ∂μ) (C.feature B) =
+      ∫ A, f A *
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A B ∂μ
   calc
-    inner ℝ (∫ A, Ω.1 A • C.feature A ∂μ) (C.feature B) =
-        inner ℝ (C.feature B) (∫ A, Ω.1 A • C.feature A ∂μ) :=
+    inner ℝ (∫ A, f A • C.feature A ∂μ) (C.feature B) =
+        inner ℝ (C.feature B) (∫ A, f A • C.feature A ∂μ) :=
       real_inner_comm _ _
-    _ = ∫ A, inner ℝ (C.feature B) (Ω.1 A • C.feature A) ∂μ := by
+    _ = ∫ A, inner ℝ (C.feature B) (f A • C.feature A) ∂μ := by
       exact (integral_inner hVecInt (C.feature B)).symm
-    _ = ∫ A, Ω.1 A *
+    _ = ∫ A, f A *
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
           H N beta A B ∂μ := by
       apply integral_congr_ae
       filter_upwards with A
       rw [real_inner_smul_right]
-      rw [real_inner_comm (C.feature B) (C.feature A)]
-      rw [← C.kernel_eq_inner A B]
+      apply congrArg (fun x : ℝ => f A * x)
+      calc
+        inner ℝ (C.feature B) (C.feature A) =
+            inner ℝ (C.feature A) (C.feature B) := real_inner_comm _ _
+        _ = periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+              H N beta A B := (C.kernel_eq_inner A B).symm
 
 /-- Volume-uniform pointwise Harnack inequality for the canonical continuous
 physical Wilson vacuum.  Replacing one spatial link changes the continuous
@@ -152,70 +160,73 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepre
           H N hN beta hbeta
           (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
             H N B target h) := by
-  let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
-  let Ω := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
-    H N hN beta hbeta
+  let μ : Measure (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
+  let f : Lp ℝ 2 μ :=
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+      H N hN beta hbeta).1
   let Bg := periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
     H N B target g
   let Bh := periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
     H N B target h
-  let R := Real.exp (8 * beta)
-  let lambda := ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-    H N hN beta hbeta‖
+  let R : ℝ := Real.exp (8 * beta)
+  let lambda : ℝ :=
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+      H N hN beta hbeta‖
   have hIg : Integrable
-      (fun A => Ω.1 A *
+      (fun A => f A *
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
           H N beta A Bg) μ := by
-    simpa [μ, Ω, Bg] using
+    simpa [μ, f, Bg] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumKernelProduct_integrable
         H N hN beta hbeta Bg
   have hIh : Integrable
-      (fun A => Ω.1 A *
+      (fun A => f A *
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
           H N beta A Bh) μ := by
-    simpa [μ, Ω, Bh] using
+    simpa [μ, f, Bh] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumKernelProduct_integrable
         H N hN beta hbeta Bh
   have hScaled : Integrable
-      (fun A => Ω.1 A *
+      (fun A => f A *
         (R * periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
           H N beta A Bh)) μ := by
-    have h := hIh.const_mul R
-    simpa [mul_assoc, mul_left_comm, mul_comm] using h
-  have hΩNonneg : ∀ᵐ A ∂μ, 0 ≤ Ω.1 A := by
-    simpa [μ, Ω] using
+    have hscaled := hIh.const_mul R
+    simpa [mul_assoc, mul_left_comm, mul_comm] using hscaled
+  have hfNonneg : ∀ᵐ A ∂μ, 0 ≤ f A := by
+    simpa [μ, f] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_ae_nonnegative
         H N hN beta hbeta
   have hIntegral :
-      (∫ A, Ω.1 A *
+      (∫ A, f A *
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
             H N beta A Bg ∂μ) ≤
         R *
-          ∫ A, Ω.1 A *
+          ∫ A, f A *
             periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
               H N beta A Bh ∂μ := by
     calc
-      (∫ A, Ω.1 A *
+      (∫ A, f A *
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
             H N beta A Bg ∂μ) ≤
-          ∫ A, Ω.1 A *
+          ∫ A, f A *
             (R * periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
               H N beta A Bh) ∂μ := by
         apply integral_mono_ae hIg hScaled
-        filter_upwards [hΩNonneg] with A hΩ
+        filter_upwards [hfNonneg] with A hf
         have hK :=
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuousVacuumReplaceLink_le_exp_eight_mul
             H N hN beta hbeta A B target g h
         change
-          Ω.1 A *
+          f A *
               periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
                 H N beta A Bg ≤
-            Ω.1 A *
+            f A *
               (R * periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
                 H N beta A Bh)
-        exact mul_le_mul_of_nonneg_left (by simpa [R, Bg, Bh] using hK) hΩ
+        exact mul_le_mul_of_nonneg_left (by simpa [R, Bg, Bh] using hK) hf
       _ = R *
-          ∫ A, Ω.1 A *
+          ∫ A, f A *
             periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
               H N beta A Bh ∂μ := by
         rw [← integral_const_mul]
@@ -234,17 +245,21 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepre
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFunction_eq_integral_kernel
     H N hN beta hbeta Bh]
   change lambda⁻¹ *
-      (∫ A, Ω.1 A *
+      (∫ A, f A *
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
           H N beta A Bg ∂μ) ≤
     R *
       (lambda⁻¹ *
-        ∫ A, Ω.1 A *
+        ∫ A, f A *
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
             H N beta A Bh ∂μ)
-  have hlambdaInv : 0 ≤ lambda⁻¹ := inv_nonneg.mpr (norm_nonneg _)
-  have h := mul_le_mul_of_nonneg_left hIntegral hlambdaInv
-  simpa [mul_assoc, mul_left_comm, mul_comm] using h
+  have hlambdaPos : 0 < lambda := by
+    simpa [lambda] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos_from_uniform_kernel_floor
+        H N hN beta hbeta
+  have hlambdaInv : 0 ≤ lambda⁻¹ := (inv_pos.mpr hlambdaPos).le
+  have hscaled := mul_le_mul_of_nonneg_left hIntegral hlambdaInv
+  simpa [mul_assoc, mul_left_comm, mul_comm] using hscaled
 
 /-- Reverse one-link Harnack comparison with the same volume-independent
 factor. -/
