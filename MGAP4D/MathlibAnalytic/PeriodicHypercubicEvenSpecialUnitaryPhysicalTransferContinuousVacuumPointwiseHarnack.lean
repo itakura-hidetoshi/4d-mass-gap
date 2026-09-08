@@ -39,6 +39,15 @@ local instance continuousVacuumPointwiseHarnackSpatialLinkFintype
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+private theorem continuousVacuumPointwiseHarnackLpTwo_integrable
+    {α : Type*}
+    [MeasurableSpace α]
+    (μ : Measure α)
+    [IsFiniteMeasure μ]
+    (f : Lp ℝ 2 μ) :
+    Integrable (fun x => f x) μ := by
+  exact (Lp.memLp f).integrable (by norm_num)
+
 /-- For every fixed second boundary, the physical nonnegative vacuum times the
 one-slab Wilson kernel is Haar-integrable.  The proof uses only `Ω ∈ L²`, the
 probability normalization of Haar measure, continuity of the kernel section,
@@ -61,8 +70,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumKernelProduct_i
   let f : Lp ℝ 2 μ :=
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
       H N hN beta hbeta).1
-  have hfInt : Integrable (fun A => f A) μ := by
-    exact (Lp.memLp f).integrable (by norm_num)
+  have hfInt : Integrable (fun A => f A) μ :=
+    continuousVacuumPointwiseHarnackLpTwo_integrable μ f
   have hKContinuous : Continuous
       (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
