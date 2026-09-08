@@ -51,8 +51,7 @@ theorem
     _ = R⁻¹ * R⁻¹ := by
       field_simp [hRNe]
     _ = Real.exp (-(8 * beta)) * Real.exp (-(8 * beta)) := by
-      rw [Real.exp_neg, Real.exp_neg]
-      rfl
+      simp [R, Real.exp_neg]
     _ = Real.exp (-(8 * beta) + -(8 * beta)) := by
       rw [← Real.exp_add]
     _ = Real.exp (-16 * beta) := by ring_nf
@@ -83,7 +82,6 @@ theorem
         H N hN beta hbeta A
   have hRPos : 0 < R := by
     simpa [R] using Real.exp_pos (8 * beta)
-  have hnumNonneg : 0 ≤ omega A / R := le_of_lt (div_pos homegaPos hRPos)
   have hdenPos : 0 < R * omega A := mul_pos hRPos homegaPos
   rw [← ENNReal.ofReal_div_of_pos hdenPos]
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuum_harnackEndpointRatio_eq_exp_neg_sixteen
@@ -118,6 +116,7 @@ theorem
   have h :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumFullSpatialLinkDoob_evariance_lower_bound
       H N hN beta hbeta A target X hX
+  dsimp only at h
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuum_harnackENNRealRatio_eq_exp_neg_sixteen
     H N hN beta hbeta (periodicHypercubicEvenSpatialSliceRestriction A)] at h
   exact h
