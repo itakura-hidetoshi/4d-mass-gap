@@ -62,8 +62,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumKernelProduct_i
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
       H N hN beta hbeta).1
   have hfInt : Integrable (fun A => f A) μ := by
-    rw [← memLp_one_iff_integrable]
-    exact (Lp.memLp f).mono_exponent (by norm_num)
+    exact (Lp.memLp f).integrable (by norm_num)
   have hKContinuous : Continuous
       (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
