@@ -13,14 +13,6 @@ noncomputable section
 local instance (H : ℕ) : NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
   simp [PeriodicHypercubicEvenSideLength]⟩
 
-local instance (H : ℕ) :
-    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
-  Fintype.ofFinite _
-
-local instance (H : ℕ) :
-    Fintype (PeriodicHypercubicEvenSpatialSlicePlaquette H) :=
-  Fintype.ofFinite _
-
 /-- One-link replacement used by the continuous-vacuum Harnack layer.
 
 This definition is intentionally independent of the older quotient-representative
