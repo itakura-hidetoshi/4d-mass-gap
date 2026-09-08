@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumRepresentative
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateSpatialLinkFiberDistortion
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicPlaquetteIncidenceCompleteness
 import Mathlib.Tactic
 
@@ -21,6 +20,44 @@ local instance (H : ℕ) :
 local instance (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSlicePlaquette H) :=
   Fintype.ofFinite _
+
+/-- One-link replacement used by the continuous-vacuum Harnack layer.
+
+This definition is intentionally independent of the older quotient-representative
+fiber-distortion module.  The Harnack argument therefore remains pointwise only
+on the canonical continuous vacuum representative. -/
+noncomputable def
+    periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+    (H N : ℕ)
+    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (g : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N := by
+  classical
+  exact Function.update A target g
+
+@[simp] theorem
+    periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_self
+    (H N : ℕ)
+    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (g : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+      H N A target g target = g := by
+  classical
+  simp [periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink]
+
+@[simp] theorem
+    periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_of_ne
+    (H N : ℕ)
+    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (target e : PeriodicHypercubicEvenSpatialSliceLink H)
+    (g : Matrix.specialUnitaryGroup (Fin N) ℂ)
+    (he : e ≠ target) :
+    periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+      H N A target g e = A e := by
+  classical
+  simp [periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink, he]
 
 /-- A spatial-slice plaquette touches an intrinsic spatial link when their
 canonical four-dimensional embeddings have a physical boundary incidence. -/
@@ -122,7 +159,7 @@ theorem periodicHypercubicEvenSpatialSliceTouchingPlaquettes_card_le_six
 
 /-- Replacing a spatial link outside an intrinsic plaquette leaves its
 plaquette holonomy unchanged. -/
-theorem periodicHypercubicEvenSpatialSlicePlaquetteHolonomy_replaceLink_eq_of_not_touches
+theorem periodicHypercubicEvenSpatialSlicePlaquetteHolonomy_continuousVacuumReplaceLink_eq_of_not_touches
     (H N : ℕ)
     (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
     (target : PeriodicHypercubicEvenSpatialSliceLink H)
@@ -131,7 +168,8 @@ theorem periodicHypercubicEvenSpatialSlicePlaquetteHolonomy_replaceLink_eq_of_no
     (hNotTouches :
       ¬ periodicHypercubicEvenSpatialSlicePlaquetteTouchesLink H p target) :
     periodicHypercubicEvenSpatialSlicePlaquetteHolonomy
-        (periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink H N A target g) p =
+        (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+          H N A target g) p =
       periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A p := by
   classical
   have h0 : (p.1, p.2.1.1) ≠ target := by
@@ -157,15 +195,15 @@ theorem periodicHypercubicEvenSpatialSlicePlaquetteHolonomy_replaceLink_eq_of_no
     refine ⟨3, ?_⟩
     simpa using congrArg (periodicHypercubicEvenSpatialSliceLinkEmbedding H) h
   unfold periodicHypercubicEvenSpatialSlicePlaquetteHolonomy
-  rw [periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink_of_ne
+  rw [periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_of_ne
       H N A target (p.1, p.2.1.1) g h0]
-  rw [periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink_of_ne
+  rw [periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_of_ne
       H N A target
       (periodicHypercubicEvenSpatialSliceShift H p.1 p.2.1.1, p.2.1.2) g h1]
-  rw [periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink_of_ne
+  rw [periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_of_ne
       H N A target
       (periodicHypercubicEvenSpatialSliceShift H p.1 p.2.1.2, p.2.1.1) g h2]
-  rw [periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink_of_ne
+  rw [periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_of_ne
       H N A target (p.1, p.2.1.2) g h3]
 
 /-- The intrinsic spatial action is the corresponding finite-universe sum. -/
@@ -210,19 +248,23 @@ theorem specialUnitaryWilsonPlaquetteEnergy_sub_abs_le_two
 /-- Replacing one spatial link changes the full spatial Wilson action by at
 most twelve.  The constant comes from the volume-independent four-dimensional
 incidence bound `6` and the exact plaquette-energy width `2`. -/
-theorem periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_replaceLink_sub_abs_le_twelve
+theorem periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuousVacuumReplaceLink_sub_abs_le_twelve
     (H N : ℕ)
     (hN : 0 < N)
     (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
     (target : PeriodicHypercubicEvenSpatialSliceLink H)
     (g h : Matrix.specialUnitaryGroup (Fin N) ℂ) :
     |periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
-        (periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink H N B target g) -
+        (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+          H N B target g) -
       periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
-        (periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink H N B target h)| ≤ 12 := by
+        (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+          H N B target h)| ≤ 12 := by
   classical
-  let Bg := periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink H N B target g
-  let Bh := periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink H N B target h
+  let Bg := periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+    H N B target g
+  let Bh := periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+    H N B target h
   let Fg := fun p : PeriodicHypercubicEvenSpatialSlicePlaquette H =>
     specialUnitaryWilsonPlaquetteEnergy N
       (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy Bg p)
@@ -245,10 +287,10 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_replaceLink
           ¬ periodicHypercubicEvenSpatialSlicePlaquetteTouchesLink H p target := by
         simpa [s, periodicHypercubicEvenSpatialSliceTouchingPlaquettes] using hps
       have hgEq :=
-        periodicHypercubicEvenSpatialSlicePlaquetteHolonomy_replaceLink_eq_of_not_touches
+        periodicHypercubicEvenSpatialSlicePlaquetteHolonomy_continuousVacuumReplaceLink_eq_of_not_touches
           H N B target g p hNotTouches
       have hhEq :=
-        periodicHypercubicEvenSpatialSlicePlaquetteHolonomy_replaceLink_eq_of_not_touches
+        periodicHypercubicEvenSpatialSlicePlaquetteHolonomy_continuousVacuumReplaceLink_eq_of_not_touches
           H N B target h p hNotTouches
       change |Fg p - Fh p| = 0
       simp [Fg, Fh, Bg, Bh, hgEq, hhEq]
@@ -265,19 +307,23 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_replaceLink
 
 /-- Replacing one boundary link changes the temporal crossing action by at most
 two, since exactly one summand can change. -/
-theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_replaceLink_sub_abs_le_two
+theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_continuousVacuumReplaceLink_sub_abs_le_two
     (H N : ℕ)
     (hN : 0 < N)
     (A B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
     (target : PeriodicHypercubicEvenSpatialSliceLink H)
     (g h : Matrix.specialUnitaryGroup (Fin N) ℂ) :
     |periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H N A
-        (periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink H N B target g) -
+        (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+          H N B target g) -
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H N A
-        (periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink H N B target h)| ≤ 2 := by
+        (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+          H N B target h)| ≤ 2 := by
   classical
-  let Bg := periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink H N B target g
-  let Bh := periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink H N B target h
+  let Bg := periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+    H N B target g
+  let Bh := periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+    H N B target h
   let Fg := fun e : PeriodicHypercubicEvenSpatialSliceLink H =>
     specialUnitaryWilsonPlaquetteEnergy N ((A e)⁻¹ * Bg e)
   let Fh := fun e : PeriodicHypercubicEvenSpatialSliceLink H =>
@@ -290,10 +336,12 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_replaceL
       (∑ e, (Fg e - Fh e)) = Fg target - Fh target := by
     rw [Finset.sum_eq_single target]
     · intro e _he hne
-      have hgEq := periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink_of_ne
-        H N B target e g hne
-      have hhEq := periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink_of_ne
-        H N B target e h hne
+      have hgEq :=
+        periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_of_ne
+          H N B target e g hne
+      have hhEq :=
+        periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_of_ne
+          H N B target e h hne
       simp [Fg, Fh, Bg, Bh, hgEq, hhEq]
     · simp
   rw [hsum]
@@ -301,23 +349,27 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_replaceL
 
 /-- The complete symmetric one-slab action has a volume-independent one-link
 oscillation bound of eight on the second boundary. -/
-theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction_replaceLink_sub_abs_le_eight
+theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction_continuousVacuumReplaceLink_sub_abs_le_eight
     (H N : ℕ)
     (hN : 0 < N)
     (A B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
     (target : PeriodicHypercubicEvenSpatialSliceLink H)
     (g h : Matrix.specialUnitaryGroup (Fin N) ℂ) :
     |periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H N A
-        (periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink H N B target g) -
+        (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+          H N B target g) -
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H N A
-        (periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink H N B target h)| ≤ 8 := by
-  let Bg := periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink H N B target g
-  let Bh := periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink H N B target h
+        (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+          H N B target h)| ≤ 8 := by
+  let Bg := periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+    H N B target g
+  let Bh := periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+    H N B target h
   have hcross :=
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_replaceLink_sub_abs_le_two
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_continuousVacuumReplaceLink_sub_abs_le_two
       H N hN A B target g h
   have hspatial :=
-    periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_replaceLink_sub_abs_le_twelve
+    periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuousVacuumReplaceLink_sub_abs_le_twelve
       H N hN B target g h
   have hEq :
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H N A Bg -
@@ -356,7 +408,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction_replaceLi
 /-- Volume-independent local kernel comparison.  Changing one link of the
 second spatial boundary costs at most the explicit factor `exp (8 * beta)`.
 No compactness minimum and no lattice-volume cardinality enters this bound. -/
-theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_replaceLink_le_exp_eight_mul
+theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuousVacuumReplaceLink_le_exp_eight_mul
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
@@ -365,16 +417,20 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_replaceLi
     (target : PeriodicHypercubicEvenSpatialSliceLink H)
     (g h : Matrix.specialUnitaryGroup (Fin N) ℂ) :
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A
-        (periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink H N B target g) ≤
+        (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+          H N B target g) ≤
       Real.exp (8 * beta) *
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A
-          (periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink H N B target h) := by
-  let Bg := periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink H N B target g
-  let Bh := periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink H N B target h
+          (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+            H N B target h) := by
+  let Bg := periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+    H N B target g
+  let Bh := periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+    H N B target h
   let Sg := periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H N A Bg
   let Sh := periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H N A Bh
   have hosc :=
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction_replaceLink_sub_abs_le_eight
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction_continuousVacuumReplaceLink_sub_abs_le_eight
       H N hN A B target g h
   have hdiff : Sh - Sg ≤ 8 := by
     have hlower : -8 ≤ Sg - Sh := (abs_le.mp hosc).1
@@ -382,7 +438,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_replaceLi
   have hmul : beta * (Sh - Sg) ≤ beta * 8 :=
     mul_le_mul_of_nonneg_left hdiff hbeta
   have hexp : -beta * Sg ≤ 8 * beta + (-beta * Sh) := by
-    nlinarith
+    nlinarith [hmul]
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_eq_boltzmann,
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_eq_boltzmann]
   calc
@@ -392,7 +448,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_replaceLi
       rw [Real.exp_add]
 
 /-- The reverse comparison has the same volume-independent factor. -/
-theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_replaceLink_ge_exp_eight_inv
+theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuousVacuumReplaceLink_reverse_le_exp_eight_mul
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
@@ -401,12 +457,15 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_replaceLi
     (target : PeriodicHypercubicEvenSpatialSliceLink H)
     (g h : Matrix.specialUnitaryGroup (Fin N) ℂ) :
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A
-        (periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink H N B target h) ≤
+        (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+          H N B target h) ≤
       Real.exp (8 * beta) *
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A
-          (periodicHypercubicEvenSpecialUnitarySpatialSliceReplaceLink H N B target g) := by
-  exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_replaceLink_le_exp_eight_mul
-    H N hN beta hbeta A B target h g
+          (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+            H N B target g) := by
+  exact
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuousVacuumReplaceLink_le_exp_eight_mul
+      H N hN beta hbeta A B target h g
 
 end
 
