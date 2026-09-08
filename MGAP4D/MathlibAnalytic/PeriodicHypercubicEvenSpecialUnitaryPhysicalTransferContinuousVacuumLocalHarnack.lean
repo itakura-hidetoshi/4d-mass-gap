@@ -213,6 +213,7 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_eq_finset_s
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction
   unfold periodicHypercubicEvenSpatialSlicePlaquetteList
   rw [Finset.sum_map_toList]
+  rfl
 
 /-- The crossing action is likewise its finite-universe link sum. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_eq_finset_sum
@@ -224,6 +225,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_eq_finse
   unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction
   unfold periodicHypercubicEvenSpatialSliceLinkList
   rw [Finset.sum_map_toList]
+  rfl
 
 /-- Any two `SU(N)` Wilson plaquette energies differ by at most two. -/
 theorem specialUnitaryWilsonPlaquetteEnergy_sub_abs_le_two
