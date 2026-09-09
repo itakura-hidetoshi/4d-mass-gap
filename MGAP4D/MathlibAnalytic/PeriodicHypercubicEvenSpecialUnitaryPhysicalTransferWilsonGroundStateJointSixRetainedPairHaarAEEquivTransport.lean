@@ -32,63 +32,42 @@ theorem aestronglyMeasurable_sharedBase_of_measurePreserving_equiv
   let τ : Measure ((γ × α) × β) := (ρ.prod μ).prod ν
   let f' : ((γ × α) × β) → ℝ := fun y => f (e.symm y)
   have he_symm : MeasurePreserving e.symm τ ω :=
-    MeasurePreserving.symm e.symm he
+    MeasurePreserving.symm e he
 
+  have hgLeft := hleft.stronglyMeasurable_mk
+  obtain ⟨L, hL, hLfac⟩ := hgLeft.exists_eq_measurable_comp
   have hleft' :
       AEStronglyMeasurable[
         MeasurableSpace.comap Prod.fst
           (inferInstance : MeasurableSpace (γ × α))]
         f' τ := by
-    rcases hleft with ⟨g, hg, hfg⟩
-    refine ⟨fun y => g (e.symm y), ?_, ?_⟩
-    · apply hg.comp_measurable
-      apply measurable_iff_comap_le.mpr
-      simp only [MeasurableSpace.comap_comap, Function.comp_def]
-      simpa using
-        (show
-          MeasurableSpace.comap
-              (fun y : (γ × α) × β => (e (e.symm y)).1)
-              (inferInstance : MeasurableSpace (γ × α)) ≤
-            MeasurableSpace.comap Prod.fst
-              (inferInstance : MeasurableSpace (γ × α)) by
-          simp)
-    · have h := he_symm.quasiMeasurePreserving.ae hfg
-      simpa [f', Function.comp_def] using h
+    refine ⟨fun y => L y.1, ?_, ?_⟩
+    · exact hL.comp_measurable (measurable_iff_comap_le.mpr le_rfl)
+    · have h := he_symm.quasiMeasurePreserving.ae hleft.ae_eq_mk
+      simpa [f', hLfac, Function.comp_def] using h
 
+  have hgRight := hright.stronglyMeasurable_mk
+  obtain ⟨R, hR, hRfac⟩ := hgRight.exists_eq_measurable_comp
   have hright' :
       AEStronglyMeasurable[
         MeasurableSpace.comap
           (fun y : (γ × α) × β => (y.1.1, y.2))
           (inferInstance : MeasurableSpace (γ × β))]
         f' τ := by
-    rcases hright with ⟨g, hg, hfg⟩
-    refine ⟨fun y => g (e.symm y), ?_, ?_⟩
-    · apply hg.comp_measurable
-      apply measurable_iff_comap_le.mpr
-      simp only [MeasurableSpace.comap_comap, Function.comp_def]
-      simpa using
-        (show
-          MeasurableSpace.comap
-              (fun y : (γ × α) × β =>
-                ((e (e.symm y)).1.1, (e (e.symm y)).2))
-              (inferInstance : MeasurableSpace (γ × β)) ≤
-            MeasurableSpace.comap
-              (fun y : (γ × α) × β => (y.1.1, y.2))
-              (inferInstance : MeasurableSpace (γ × β)) by
-          simp)
-    · have h := he_symm.quasiMeasurePreserving.ae hfg
-      simpa [f', Function.comp_def] using h
+    refine ⟨fun y => R (y.1.1, y.2), ?_, ?_⟩
+    · exact hR.comp_measurable (measurable_iff_comap_le.mpr le_rfl)
+    · have h := he_symm.quasiMeasurePreserving.ae hright.ae_eq_mk
+      simpa [f', hRfac, Function.comp_def] using h
 
   have hbase' :=
     aestronglyMeasurable_sharedBase_of_left_right
       ρ μ ν f' hleft' hright'
-  rcases hbase' with ⟨g, hg, hfg⟩
-  refine ⟨fun x => g (e x), ?_, ?_⟩
-  · apply hg.comp_measurable
-    apply measurable_iff_comap_le.mpr
-    simp only [MeasurableSpace.comap_comap, Function.comp_def]
-  · have h := he.quasiMeasurePreserving.ae hfg
-    simpa [f', Function.comp_def] using h
+  have hgBase := hbase'.stronglyMeasurable_mk
+  obtain ⟨K, hK, hKfac⟩ := hgBase.exists_eq_measurable_comp
+  refine ⟨fun x => K (e x).1.1, ?_, ?_⟩
+  · exact hK.comp_measurable (measurable_iff_comap_le.mpr le_rfl)
+  · have h := he.quasiMeasurePreserving.ae hbase'.ae_eq_mk
+    simpa [f', hKfac, Function.comp_def] using h
 
 end
 
