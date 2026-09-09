@@ -9,21 +9,21 @@ open MeasureTheory
 
 noncomputable section
 
-/-- Coordinates common to two retained supports. -/
-abbrev PairHaarPiCommonIndex {ι : Type*} (s t : Set ι) :=
-  {i : ι // i ∈ s ∩ t}
+/-- Coordinates common to two retained predicates. -/
+abbrev PairHaarPiCommonIndex {ι : Type*} (p q : ι → Prop) :=
+  {i : ι // p i ∧ q i}
 
 /-- Coordinates outside the common support. -/
-abbrev PairHaarPiRestIndex {ι : Type*} (s t : Set ι) :=
-  {i : ι // i ∉ s ∩ t}
+abbrev PairHaarPiRestIndex {ι : Type*} (p q : ι → Prop) :=
+  {i : ι // ¬ (p i ∧ q i)}
 
-/-- Among the non-common coordinates, those retained by the left support. -/
-abbrev PairHaarPiLeftOnlyIndex {ι : Type*} (s t : Set ι) :=
-  {i : PairHaarPiRestIndex s t // i.1 ∈ s}
+/-- Among the non-common coordinates, those retained by the left predicate. -/
+abbrev PairHaarPiLeftOnlyIndex {ι : Type*} (p q : ι → Prop) :=
+  {i : PairHaarPiRestIndex p q // p i.1}
 
-/-- Among the non-common coordinates, those not retained by the left support. -/
-abbrev PairHaarPiRightOnlyIndex {ι : Type*} (s t : Set ι) :=
-  {i : PairHaarPiRestIndex s t // i.1 ∉ s}
+/-- Among the non-common coordinates, those not retained by the left predicate. -/
+abbrev PairHaarPiRightOnlyIndex {ι : Type*} (p q : ι → Prop) :=
+  {i : PairHaarPiRestIndex p q // ¬ p i.1}
 
 /-- Exact measurable reindexing of a finite coordinate product into
 `common × left-only × right-only` blocks.  No measure assertion is bundled
@@ -31,22 +31,23 @@ into the equivalence itself. -/
 noncomputable def pairHaarPiThreeWayMeasurableEquiv
     {ι K : Type*}
     [MeasurableSpace K]
-    (s t : Set ι) :
+    (p q : ι → Prop)
+    [DecidablePred p]
+    [DecidablePred q] :
     (ι → K) ≃ᵐ
-      (((PairHaarPiCommonIndex s t → K) ×
-          (PairHaarPiLeftOnlyIndex s t → K)) ×
-        (PairHaarPiRightOnlyIndex s t → K)) := by
-  classical
+      (((PairHaarPiCommonIndex p q → K) ×
+          (PairHaarPiLeftOnlyIndex p q → K)) ×
+        (PairHaarPiRightOnlyIndex p q → K)) := by
   let e0 :=
     MeasurableEquiv.piEquivPiSubtypeProd
-      (fun _ : ι => K) (fun i => i ∈ s ∩ t)
+      (fun _ : ι => K) (fun i => p i ∧ q i)
   let e1 :=
     MeasurableEquiv.piEquivPiSubtypeProd
-      (fun _ : PairHaarPiRestIndex s t => K) (fun i => i.1 ∈ s)
+      (fun _ : PairHaarPiRestIndex p q => K) (fun i => p i.1)
   exact
     e0.trans
       ((MeasurableEquiv.prodCongr
-          (MeasurableEquiv.refl (PairHaarPiCommonIndex s t → K)) e1).trans
+          (MeasurableEquiv.refl (PairHaarPiCommonIndex p q → K)) e1).trans
         MeasurableEquiv.prodAssoc.symm)
 
 /-- The three-way finite coordinate reindexing preserves the corresponding
@@ -57,52 +58,52 @@ theorem pairHaarPiThreeWayMeasurableEquiv_measurePreserving
     [MeasurableSpace K]
     (η : Measure K)
     [IsProbabilityMeasure η]
-    (s t : Set ι)
-    [DecidablePred (fun i => i ∈ s)]
-    [DecidablePred (fun i => i ∈ t)] :
+    (p q : ι → Prop)
+    [DecidablePred p]
+    [DecidablePred q] :
     MeasurePreserving
-      (pairHaarPiThreeWayMeasurableEquiv (K := K) s t)
+      (pairHaarPiThreeWayMeasurableEquiv (K := K) p q)
       (Measure.pi (fun _ : ι => η))
-      (((Measure.pi (fun _ : PairHaarPiCommonIndex s t => η)).prod
-          (Measure.pi (fun _ : PairHaarPiLeftOnlyIndex s t => η))).prod
-        (Measure.pi (fun _ : PairHaarPiRightOnlyIndex s t => η))) := by
-  let ρ := Measure.pi (fun _ : PairHaarPiCommonIndex s t => η)
-  let τ := Measure.pi (fun _ : PairHaarPiRestIndex s t => η)
-  let μ := Measure.pi (fun _ : PairHaarPiLeftOnlyIndex s t => η)
-  let ν := Measure.pi (fun _ : PairHaarPiRightOnlyIndex s t => η)
+      (((Measure.pi (fun _ : PairHaarPiCommonIndex p q => η)).prod
+          (Measure.pi (fun _ : PairHaarPiLeftOnlyIndex p q => η))).prod
+        (Measure.pi (fun _ : PairHaarPiRightOnlyIndex p q => η))) := by
+  let ρ := Measure.pi (fun _ : PairHaarPiCommonIndex p q => η)
+  let τ := Measure.pi (fun _ : PairHaarPiRestIndex p q => η)
+  let μ := Measure.pi (fun _ : PairHaarPiLeftOnlyIndex p q => η)
+  let ν := Measure.pi (fun _ : PairHaarPiRightOnlyIndex p q => η)
   have h0 :
       MeasurePreserving
         (MeasurableEquiv.piEquivPiSubtypeProd
-          (fun _ : ι => K) (fun i => i ∈ s ∩ t))
+          (fun _ : ι => K) (fun i => p i ∧ q i))
         (Measure.pi (fun _ : ι => η)) (ρ.prod τ) := by
     simpa [ρ, τ] using
       (MeasureTheory.measurePreserving_piEquivPiSubtypeProd
-        (fun _ : ι => η) (fun i => i ∈ s ∩ t))
+        (fun _ : ι => η) (fun i => p i ∧ q i))
   have h1 :
       MeasurePreserving
         (MeasurableEquiv.piEquivPiSubtypeProd
-          (fun _ : PairHaarPiRestIndex s t => K) (fun i => i.1 ∈ s))
+          (fun _ : PairHaarPiRestIndex p q => K) (fun i => p i.1))
         τ (μ.prod ν) := by
     simpa [τ, μ, ν] using
       (MeasureTheory.measurePreserving_piEquivPiSubtypeProd
-        (fun _ : PairHaarPiRestIndex s t => η) (fun i => i.1 ∈ s))
+        (fun _ : PairHaarPiRestIndex p q => η) (fun i => p i.1))
   have hp :
       MeasurePreserving
         (MeasurableEquiv.prodCongr
-          (MeasurableEquiv.refl (PairHaarPiCommonIndex s t → K))
+          (MeasurableEquiv.refl (PairHaarPiCommonIndex p q → K))
           (MeasurableEquiv.piEquivPiSubtypeProd
-            (fun _ : PairHaarPiRestIndex s t => K) (fun i => i.1 ∈ s)))
+            (fun _ : PairHaarPiRestIndex p q => K) (fun i => p i.1)))
         (ρ.prod τ) (ρ.prod (μ.prod ν)) := by
     exact MeasurePreserving.prod (MeasurePreserving.id ρ) h1
   have ha :
       MeasurePreserving
         (MeasurableEquiv.prodAssoc.symm :
-          (PairHaarPiCommonIndex s t → K) ×
-              ((PairHaarPiLeftOnlyIndex s t → K) ×
-                (PairHaarPiRightOnlyIndex s t → K)) ≃ᵐ
-            (((PairHaarPiCommonIndex s t → K) ×
-                (PairHaarPiLeftOnlyIndex s t → K)) ×
-              (PairHaarPiRightOnlyIndex s t → K)))
+          (PairHaarPiCommonIndex p q → K) ×
+              ((PairHaarPiLeftOnlyIndex p q → K) ×
+                (PairHaarPiRightOnlyIndex p q → K)) ≃ᵐ
+            (((PairHaarPiCommonIndex p q → K) ×
+                (PairHaarPiLeftOnlyIndex p q → K)) ×
+              (PairHaarPiRightOnlyIndex p q → K)))
         (ρ.prod (μ.prod ν)) ((ρ.prod μ).prod ν) := by
     exact
       MeasurePreserving.symm MeasurableEquiv.prodAssoc
