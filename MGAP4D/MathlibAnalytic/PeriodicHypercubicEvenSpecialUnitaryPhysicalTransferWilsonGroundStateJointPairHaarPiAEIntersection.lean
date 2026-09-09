@@ -104,9 +104,9 @@ theorem pairHaarPiLeftDecoder_threeWay
   funext i
   by_cases hq : q i.1
   · simp [pairHaarPiLeftDecoder, pairHaarPiThreeWayMeasurableEquiv,
-      pairHaarPiRestriction, hq]
+      pairHaarPiRestriction, MeasurableEquiv.prodCongr, MeasurableEquiv.prodAssoc, hq]
   · simp [pairHaarPiLeftDecoder, pairHaarPiThreeWayMeasurableEquiv,
-      pairHaarPiRestriction, hq]
+      pairHaarPiRestriction, MeasurableEquiv.prodCongr, MeasurableEquiv.prodAssoc, hq]
 
 /-- The common/right-only output of the three-way reindex recovers exactly the
 original `q`-restriction. -/
@@ -124,9 +124,9 @@ theorem pairHaarPiRightDecoder_threeWay
   funext i
   by_cases hp : p i.1
   · simp [pairHaarPiRightDecoder, pairHaarPiThreeWayMeasurableEquiv,
-      pairHaarPiRestriction, hp]
+      pairHaarPiRestriction, MeasurableEquiv.prodCongr, MeasurableEquiv.prodAssoc, hp]
   · simp [pairHaarPiRightDecoder, pairHaarPiThreeWayMeasurableEquiv,
-      pairHaarPiRestriction, hp]
+      pairHaarPiRestriction, MeasurableEquiv.prodCongr, MeasurableEquiv.prodAssoc, hp]
 
 /-- The common block of the three-way reindex is literally restriction to
 `p ∧ q`. -/
@@ -140,7 +140,8 @@ theorem pairHaarPiThreeWay_base_eq_restriction
         (pairHaarPiThreeWayMeasurableEquiv (K := K) p q x).1.1) =
       pairHaarPiRestriction (fun i => p i ∧ q i) := by
   funext x i
-  simp [pairHaarPiThreeWayMeasurableEquiv, pairHaarPiRestriction]
+  simp [pairHaarPiThreeWayMeasurableEquiv, pairHaarPiRestriction,
+    MeasurableEquiv.prodCongr, MeasurableEquiv.prodAssoc]
 
 /-- On a finite independent product probability space, a real function which
 is a.e. measurable with respect to the coordinates selected by `p` and also
@@ -187,7 +188,7 @@ theorem aestronglyMeasurable_piRestriction_and
       f (Measure.pi (fun _ : ι => η)) := by
     refine ⟨fun x => L (pairHaarPiLeftDecoder (K := K) p q (e x).1), ?_, ?_⟩
     · exact
-        (hL.comp (measurable_pairHaarPiLeftDecoder (K := K) p q)).comp_measurable
+        (hL.comp_measurable (measurable_pairHaarPiLeftDecoder (K := K) p q)).comp_measurable
           (measurable_iff_comap_le.mpr le_rfl)
     · have hrep := hp.ae_eq_mk
       rw [hLfac] at hrep
@@ -203,7 +204,7 @@ theorem aestronglyMeasurable_piRestriction_and
       f (Measure.pi (fun _ : ι => η)) := by
     refine ⟨fun x => R (pairHaarPiRightDecoder (K := K) p q ((e x).1.1, (e x).2)), ?_, ?_⟩
     · exact
-        (hR.comp (measurable_pairHaarPiRightDecoder (K := K) p q)).comp_measurable
+        (hR.comp_measurable (measurable_pairHaarPiRightDecoder (K := K) p q)).comp_measurable
           (measurable_iff_comap_le.mpr le_rfl)
     · have hrep := hq.ae_eq_mk
       rw [hRfac] at hrep
