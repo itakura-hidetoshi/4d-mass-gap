@@ -10,20 +10,40 @@ open MeasureTheory
 noncomputable section
 
 /-- Coordinates common to two retained supports. -/
-abbrev PairHaarPiCommonIndex {ι : Type*} (s t : Set ι) : Type :=
+abbrev PairHaarPiCommonIndex {ι : Type*} (s t : Set ι) :=
   {i : ι // i ∈ s ∩ t}
 
 /-- Coordinates outside the common support. -/
-abbrev PairHaarPiRestIndex {ι : Type*} (s t : Set ι) : Type :=
+abbrev PairHaarPiRestIndex {ι : Type*} (s t : Set ι) :=
   {i : ι // i ∉ s ∩ t}
 
 /-- Among the non-common coordinates, those retained by the left support. -/
-abbrev PairHaarPiLeftOnlyIndex {ι : Type*} (s t : Set ι) : Type :=
+abbrev PairHaarPiLeftOnlyIndex {ι : Type*} (s t : Set ι) :=
   {i : PairHaarPiRestIndex s t // i.1 ∈ s}
 
 /-- Among the non-common coordinates, those not retained by the left support. -/
-abbrev PairHaarPiRightOnlyIndex {ι : Type*} (s t : Set ι) : Type :=
+abbrev PairHaarPiRightOnlyIndex {ι : Type*} (s t : Set ι) :=
   {i : PairHaarPiRestIndex s t // i.1 ∉ s}
+
+noncomputable instance pairHaarPiCommonIndexFintype
+    {ι : Type*} [Fintype ι] (s t : Set ι) :
+    Fintype (PairHaarPiCommonIndex s t) :=
+  Fintype.ofFinite _
+
+noncomputable instance pairHaarPiRestIndexFintype
+    {ι : Type*} [Fintype ι] (s t : Set ι) :
+    Fintype (PairHaarPiRestIndex s t) :=
+  Fintype.ofFinite _
+
+noncomputable instance pairHaarPiLeftOnlyIndexFintype
+    {ι : Type*} [Fintype ι] (s t : Set ι) :
+    Fintype (PairHaarPiLeftOnlyIndex s t) :=
+  Fintype.ofFinite _
+
+noncomputable instance pairHaarPiRightOnlyIndexFintype
+    {ι : Type*} [Fintype ι] (s t : Set ι) :
+    Fintype (PairHaarPiRightOnlyIndex s t) :=
+  Fintype.ofFinite _
 
 /-- Exact measurable reindexing of a finite coordinate product into
 `common × left-only × right-only` blocks.  No measure assertion is bundled
