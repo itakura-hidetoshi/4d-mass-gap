@@ -47,6 +47,11 @@ theorem aestronglyMeasurable_piRestriction_and_of_measurePreserving_equiv
 
   have hpmk := hp.stronglyMeasurable_mk
   obtain ⟨P, hP, hPfac⟩ := hpmk.exists_eq_measurable_comp
+  have hpRep :
+      f =ᵐ[ω] fun x => P (pairHaarPiRestriction (K := K) p (e x)) := by
+    have h := hp.ae_eq_mk
+    rw [hPfac] at h
+    simpa [Function.comp_def] using h
   have hp' : AEStronglyMeasurable[
       MeasurableSpace.comap
         (pairHaarPiRestriction (K := K) p)
@@ -54,11 +59,16 @@ theorem aestronglyMeasurable_piRestriction_and_of_measurePreserving_equiv
       f' τ := by
     refine ⟨fun y => P (pairHaarPiRestriction (K := K) p y), ?_, ?_⟩
     · exact hP.comp_measurable (measurable_iff_comap_le.mpr le_rfl)
-    · have h := he_symm.quasiMeasurePreserving.ae hp.ae_eq_mk
-      simpa [f', hPfac, τ, Function.comp_def] using h
+    · have h := he_symm.quasiMeasurePreserving.ae hpRep
+      simpa [f', τ, Function.comp_def] using h
 
   have hqmk := hq.stronglyMeasurable_mk
   obtain ⟨Q, hQ, hQfac⟩ := hqmk.exists_eq_measurable_comp
+  have hqRep :
+      f =ᵐ[ω] fun x => Q (pairHaarPiRestriction (K := K) q (e x)) := by
+    have h := hq.ae_eq_mk
+    rw [hQfac] at h
+    simpa [Function.comp_def] using h
   have hq' : AEStronglyMeasurable[
       MeasurableSpace.comap
         (pairHaarPiRestriction (K := K) q)
@@ -66,18 +76,24 @@ theorem aestronglyMeasurable_piRestriction_and_of_measurePreserving_equiv
       f' τ := by
     refine ⟨fun y => Q (pairHaarPiRestriction (K := K) q y), ?_, ?_⟩
     · exact hQ.comp_measurable (measurable_iff_comap_le.mpr le_rfl)
-    · have h := he_symm.quasiMeasurePreserving.ae hq.ae_eq_mk
-      simpa [f', hQfac, τ, Function.comp_def] using h
+    · have h := he_symm.quasiMeasurePreserving.ae hqRep
+      simpa [f', τ, Function.comp_def] using h
 
   have hand' :=
     aestronglyMeasurable_piRestriction_and η p q f' hp' hq'
   have handmk := hand'.stronglyMeasurable_mk
   obtain ⟨A, hA, hAfac⟩ := handmk.exists_eq_measurable_comp
+  have handRep :
+      f' =ᵐ[τ]
+        fun y => A (pairHaarPiRestriction (K := K) (fun i => p i ∧ q i) y) := by
+    have h := hand'.ae_eq_mk
+    rw [hAfac] at h
+    simpa [Function.comp_def] using h
   refine ⟨fun x =>
       A (pairHaarPiRestriction (K := K) (fun i => p i ∧ q i) (e x)), ?_, ?_⟩
   · exact hA.comp_measurable (measurable_iff_comap_le.mpr le_rfl)
-  · have h := he.quasiMeasurePreserving.ae hand'.ae_eq_mk
-    simpa [f', hAfac, τ, Function.comp_def] using h
+  · have h := he.quasiMeasurePreserving.ae handRep
+    simpa [f', τ, Function.comp_def] using h
 
 end
 
