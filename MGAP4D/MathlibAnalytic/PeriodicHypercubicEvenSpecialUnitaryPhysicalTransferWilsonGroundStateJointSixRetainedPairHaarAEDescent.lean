@@ -100,22 +100,25 @@ theorem aestronglyMeasurable_sharedBase_of_left_right
       (∫ a, L (c, a) ∂μ) = ∫ a, R (c, b) ∂μ := integral_congr_ae hb
       _ = R (c, b) := by simp
 
+  have hcaR :
+      ∀ᵐ ca ∂ρ.prod μ, ∀ᵐ b ∂ν, k ca.1 = R (ca.1, b) := by
+    exact (Measure.quasiMeasurePreserving_fst (μ := ρ) (ν := μ)).ae hcR
+
   have hKR :
       (fun z : (γ × α) × β => k z.1.1) =ᵐ[(ρ.prod μ).prod ν]
         (fun z => R (z.1.1, z.2)) := by
+    change ∀ᵐ z ∂(ρ.prod μ).prod ν, k z.1.1 = R (z.1.1, z.2)
     rw [Measure.ae_prod_iff_ae_ae]
-    · rw [Measure.ae_prod_iff_ae_ae]
-      · filter_upwards [hcR] with c hcR'
-        exact Filter.Eventually.of_forall (fun _ => hcR')
-      · measurability
+    · exact hcaR
     · measurability
 
   have hfbase :
       f =ᵐ[(ρ.prod μ).prod ν] (fun z : (γ × α) × β => k z.1.1) := by
     have hrightRep :
         f =ᵐ[(ρ.prod μ).prod ν] (fun z => R (z.1.1, z.2)) := by
-      rw [hRfac] at hright.ae_eq_mk
-      simpa [rightMap, Function.comp_def] using hright.ae_eq_mk
+      have hrightAE := hright.ae_eq_mk
+      rw [hRfac] at hrightAE
+      simpa [rightMap, Function.comp_def] using hrightAE
     exact hrightRep.trans hKR.symm
 
   refine ⟨fun z => k (baseMap z), ?_, ?_⟩
