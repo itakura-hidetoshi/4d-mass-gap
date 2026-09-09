@@ -84,6 +84,93 @@ theorem
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialCondExpL2_fixed_iff_ae_const
         H N hN beta hbeta z)
 
+/-- The canonical constant vector in the actual Wilson ground-state joint `L²`.
+This is deliberately constructed inside the same measure-space carrier as `z`;
+no identification with a transfer-operator top eigenvector is used. -/
+noncomputable def
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (c : ℝ) :
+    PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+      H N hN beta hbeta := by
+  let μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+      H N hN beta hbeta
+  letI : IsProbabilityMeasure μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_isProbabilityMeasure
+      H N hN beta hbeta
+  exact
+    (memLp_const c).toLp
+      (fun _ :
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N => c)
+
+/-- The canonical joint `L²` constant vector has the expected a.e. representative. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2_coeFn
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (c : ℝ) :
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2
+      H N hN beta hbeta c :
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ) =ᵐ[
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+        H N hN beta hbeta]
+      fun _ => c := by
+  let μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+      H N hN beta hbeta
+  letI : IsProbabilityMeasure μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_isProbabilityMeasure
+      H N hN beta hbeta
+  simpa [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2, μ] using
+    (MemLp.coeFn_toLp
+      (memLp_const c :
+        MemLp
+          (fun _ :
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+              PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N => c)
+          2 μ))
+
+/-- Hilbert-space form of the twelve-spatial residual kernel: zero energy is
+exactly equality to an actual constant vector in the ground-state joint `L²`.
+
+This upgrades the representative-level a.e.-constant statement to equality in
+`Lp` using only the already-proved probability normalization, `MemLp.coeFn_toLp`,
+and `Lp.ext`. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialResidualEnergy_eq_zero_iff_eq_constantL2
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (z : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+      H N hN beta hbeta) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialResidualEnergy
+        H N hN beta hbeta z = 0 ↔
+      ∃ c : ℝ,
+        z =
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2
+            H N hN beta hbeta c := by
+  rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialResidualEnergy_eq_zero_iff_ae_const]
+  constructor
+  · rintro ⟨c, hc⟩
+    refine ⟨c, ?_⟩
+    apply Lp.ext
+    exact hc.trans
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2_coeFn
+        H N hN beta hbeta c).symm
+  · rintro ⟨c, rfl⟩
+    exact ⟨c,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2_coeFn
+        H N hN beta hbeta c⟩
+
 end
 
 end MathlibAnalytic
