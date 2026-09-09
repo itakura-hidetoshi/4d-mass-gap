@@ -46,6 +46,14 @@ theorem ae_eq_integral_of_product_fst_snd_aestronglyMeasurable
         g (μ.prod ν) :=
     hf_snd.congr hfg
   have hg_int : Integrable g (μ.prod ν) := hf_int.congr hfg
+  have hle_fst :
+      MeasurableSpace.comap Prod.fst (inferInstance : MeasurableSpace α) ≤
+        (inferInstance : MeasurableSpace (α × β)) := by
+    exact measurable_fst
+  have hle_snd :
+      MeasurableSpace.comap Prod.snd (inferInstance : MeasurableSpace β) ≤
+        (inferInstance : MeasurableSpace (α × β)) := by
+    exact measurable_snd
   have hindep :
       Indep
         (MeasurableSpace.comap Prod.fst (inferInstance : MeasurableSpace α))
@@ -58,10 +66,10 @@ theorem ae_eq_integral_of_product_fst_snd_aestronglyMeasurable
         measurable_id measurable_id)
   have hself :=
     condExp_of_aestronglyMeasurable'
-      (μ := μ.prod ν) measurable_snd hg_snd hg_int
+      (μ := μ.prod ν) hle_snd hg_snd hg_int
   have hmean :=
     condExp_indep_eq
-      (μ := μ.prod ν) measurable_fst measurable_snd hg_fst hindep
+      (μ := μ.prod ν) hle_fst hle_snd hg_fst hindep
   have hg_mean :
       g =ᵐ[μ.prod ν] fun _ => ∫ z, g z ∂(μ.prod ν) :=
     hself.symm.trans hmean
