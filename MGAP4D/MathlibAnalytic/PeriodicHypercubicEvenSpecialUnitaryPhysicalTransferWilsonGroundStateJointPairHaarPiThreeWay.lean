@@ -95,7 +95,7 @@ theorem pairHaarPiThreeWayMeasurableEquiv_measurePreserving
           (fun _ : ι => K) (fun i => i ∈ s ∩ t))
         (Measure.pi (fun _ : ι => η)) (ρ.prod τ) := by
     simpa [ρ, τ] using
-      (Measure.measurePreserving_piEquivPiSubtypeProd
+      (MeasureTheory.measurePreserving_piEquivPiSubtypeProd
         (fun _ : ι => η) (fun i => i ∈ s ∩ t))
   have h1 :
       MeasurePreserving
@@ -103,7 +103,7 @@ theorem pairHaarPiThreeWayMeasurableEquiv_measurePreserving
           (fun _ : PairHaarPiRestIndex s t => K) (fun i => i.1 ∈ s))
         τ (μ.prod ν) := by
     simpa [τ, μ, ν] using
-      (Measure.measurePreserving_piEquivPiSubtypeProd
+      (MeasureTheory.measurePreserving_piEquivPiSubtypeProd
         (fun _ : PairHaarPiRestIndex s t => η) (fun i => i.1 ∈ s))
   have hp :
       MeasurePreserving
