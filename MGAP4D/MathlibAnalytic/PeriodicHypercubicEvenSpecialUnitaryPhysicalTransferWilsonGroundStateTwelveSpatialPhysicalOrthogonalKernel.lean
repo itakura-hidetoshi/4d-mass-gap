@@ -10,12 +10,50 @@ open scoped InnerProductSpace InnerProduct
 
 noncomputable section
 
+local instance (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
+local instance (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
 section FiniteVolume
 
 variable (H N : ℕ)
 variable (hN : 0 < N)
 variable (beta : ℝ)
 variable (hbeta : 0 ≤ beta)
+
+local instance groundStatePhysicalOrthogonalVacuumProbability :
+    IsProbabilityMeasure
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
+        H N hN beta hbeta) :=
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure_isProbabilityMeasure
+    H N hN beta hbeta
+
+local instance groundStatePhysicalOrthogonalJointProbability :
+    IsProbabilityMeasure
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+        H N hN beta hbeta) :=
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_isProbabilityMeasure
+    H N hN beta hbeta
 
 local notation "HaarL2" =>
   Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
@@ -42,6 +80,8 @@ local notation "R" =>
 local notation "Omega" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
     H N hN beta hbeta
+
+set_option maxHeartbeats 1000000
 
 /-- The ground-state transform sends the canonical strictly positive physical
 top vector to the constant-one vector in the vacuum-weighted `L²` carrier.
@@ -174,7 +214,9 @@ theorem
         using hRU
     have hHaar :
         (((x : G) : HaarL2)) = c • ((Omega : G) : HaarL2) := by
-      apply U.injective
+      apply
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2LinearIsometry
+          H N hN beta hbeta).injective
       simpa using hUeq
     have hxG : (x : G) = c • Omega := by
       apply Subtype.ext
@@ -191,12 +233,16 @@ theorem
       rw [smul_smul, inv_mul_cancel₀ hnorm.ne', one_smul]
     have hxF : (x : G) ∈ F := by
       rw [hxG]
-      exact F.smul_mem c hOmegaF
+      exact
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
+          H N hN beta hbeta).smul_mem c hOmegaF
     have hxOrth : (x : G) ∈ Fᗮ := by
       simpa [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal]
         using x.property
     have hxBot : (x : G) ∈ (⊥ : Submodule ℝ G) := by
-      have h := F.orthogonal_disjoint.le_bot ⟨hxF, hxOrth⟩
+      have h :=
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
+          H N hN beta hbeta).orthogonal_disjoint.le_bot ⟨hxF, hxOrth⟩
       simpa using h
     have hxGzero : (x : G) = 0 := by
       simpa using hxBot
