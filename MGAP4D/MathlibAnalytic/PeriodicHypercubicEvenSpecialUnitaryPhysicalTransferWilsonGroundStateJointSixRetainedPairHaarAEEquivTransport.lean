@@ -14,37 +14,21 @@ product theorem to finite Haar coordinate reindexings without identifying
 unrelated measurable presentations. -/
 theorem aestronglyMeasurable_sharedBase_of_measurePreserving_equiv
     {Ω γ α β : Type*}
-    [MeasurableSpace Ω]
-    [MeasurableSpace γ]
-    [MeasurableSpace α]
-    [MeasurableSpace β]
-    (ω : Measure Ω)
-    (ρ : Measure γ)
-    (μ : Measure α)
-    (ν : Measure β)
-    [IsProbabilityMeasure ρ]
-    [IsProbabilityMeasure μ]
-    [IsProbabilityMeasure ν]
+    [MeasurableSpace Ω] [MeasurableSpace γ] [MeasurableSpace α] [MeasurableSpace β]
+    (ω : Measure Ω) (ρ : Measure γ) (μ : Measure α) (ν : Measure β)
+    [IsProbabilityMeasure ρ] [IsProbabilityMeasure μ] [IsProbabilityMeasure ν]
     (e : Ω ≃ᵐ ((γ × α) × β))
     (he : MeasurePreserving e ω ((ρ.prod μ).prod ν))
     (f : Ω → ℝ)
-    (hleft :
-      AEStronglyMeasurable[
-        MeasurableSpace.comap
-          (fun x : Ω => (e x).1)
-          (inferInstance : MeasurableSpace (γ × α))]
-        f ω)
-    (hright :
-      AEStronglyMeasurable[
-        MeasurableSpace.comap
-          (fun x : Ω => ((e x).1.1, (e x).2))
-          (inferInstance : MeasurableSpace (γ × β))]
-        f ω) :
+    (hleft : AEStronglyMeasurable[
+      MeasurableSpace.comap (fun x : Ω => (e x).1)
+        (inferInstance : MeasurableSpace (γ × α))] f ω)
+    (hright : AEStronglyMeasurable[
+      MeasurableSpace.comap (fun x : Ω => ((e x).1.1, (e x).2))
+        (inferInstance : MeasurableSpace (γ × β))] f ω) :
     AEStronglyMeasurable[
-      MeasurableSpace.comap
-        (fun x : Ω => (e x).1.1)
-        (inferInstance : MeasurableSpace γ)]
-      f ω := by
+      MeasurableSpace.comap (fun x : Ω => (e x).1.1)
+        (inferInstance : MeasurableSpace γ)] f ω := by
   let τ : Measure ((γ × α) × β) := (ρ.prod μ).prod ν
   let f' : ((γ × α) × β) → ℝ := fun y => f (e.symm y)
   have he_symm : MeasurePreserving e.symm τ ω :=
