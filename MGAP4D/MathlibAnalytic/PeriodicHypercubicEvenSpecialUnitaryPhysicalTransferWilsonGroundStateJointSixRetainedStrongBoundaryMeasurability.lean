@@ -49,26 +49,26 @@ theorem
     at h0
   obtain ⟨φ, hφ, hfφ⟩ := h0.exists_eq_measurable_comp
   let y0 : X := fun _ => 1
-  let section : X → X × X := fun x => (x, y0)
-  have hsection : Measurable section := by
+  let sec : X → X × X := fun x => (x, y0)
+  have hsec : Measurable sec := by
     exact measurable_id.prodMk measurable_const
   have hpair :
       Measurable
         (periodicHypercubicEvenSpecialUnitaryGroundStateJointRightRetainedPairData
-          H N (0 : Fin 6) ∘ section) :=
+          H N (0 : Fin 6) ∘ sec) :=
     (measurable_periodicHypercubicEvenSpecialUnitaryGroundStateJointRightRetainedPairData
-      H N (0 : Fin 6)).comp hsection
+      H N (0 : Fin 6)).comp hsec
   let k : X → ℝ := fun x =>
     φ (periodicHypercubicEvenSpecialUnitaryGroundStateJointRightRetainedPairData
-      H N (0 : Fin 6) (section x))
+      H N (0 : Fin 6) (sec x))
   have hk : StronglyMeasurable k := by
     exact hφ.comp_measurable hpair
   have hfk : f = k ∘ Prod.fst := by
     funext z
     calc
-      f z = f (section z.1) := hfst rfl
+      f z = f (sec z.1) := hfst rfl
       _ = φ (periodicHypercubicEvenSpecialUnitaryGroundStateJointRightRetainedPairData
-            H N (0 : Fin 6) (section z.1)) := congrFun hfφ (section z.1)
+            H N (0 : Fin 6) (sec z.1)) := congrFun hfφ (sec z.1)
       _ = (k ∘ Prod.fst) z := rfl
   rw [hfk]
   exact hk.comp_measurable (measurable_iff_comap_le.mpr le_rfl)
@@ -108,26 +108,26 @@ theorem
     at h0
   obtain ⟨φ, hφ, hfφ⟩ := h0.exists_eq_measurable_comp
   let x0 : X := fun _ => 1
-  let section : X → X × X := fun y => (x0, y)
-  have hsection : Measurable section := by
+  let sec : X → X × X := fun y => (x0, y)
+  have hsec : Measurable sec := by
     exact measurable_const.prodMk measurable_id
   have hpair :
       Measurable
         (periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftRetainedPairData
-          H N (0 : Fin 6) ∘ section) :=
+          H N (0 : Fin 6) ∘ sec) :=
     (measurable_periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftRetainedPairData
-      H N (0 : Fin 6)).comp hsection
+      H N (0 : Fin 6)).comp hsec
   let k : X → ℝ := fun y =>
     φ (periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftRetainedPairData
-      H N (0 : Fin 6) (section y))
+      H N (0 : Fin 6) (sec y))
   have hk : StronglyMeasurable k := by
     exact hφ.comp_measurable hpair
   have hfk : f = k ∘ Prod.snd := by
     funext z
     calc
-      f z = f (section z.2) := hsnd rfl
+      f z = f (sec z.2) := hsnd rfl
       _ = φ (periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftRetainedPairData
-            H N (0 : Fin 6) (section z.2)) := congrFun hfφ (section z.2)
+            H N (0 : Fin 6) (sec z.2)) := congrFun hfφ (sec z.2)
       _ = (k ∘ Prod.snd) z := rfl
   rw [hfk]
   exact hk.comp_measurable (measurable_iff_comap_le.mpr le_rfl)
