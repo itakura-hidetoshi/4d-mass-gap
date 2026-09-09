@@ -95,6 +95,63 @@ theorem aestronglyMeasurable_piRestriction_and_of_measurePreserving_equiv
   · have h := he.quasiMeasurePreserving.ae handRep
     simpa [f', τ, Function.comp_def] using h
 
+/-- Six-fold finite support intersection across an exact measure-preserving
+coordinate presentation.  This iterates the two-support Fubini theorem rather
+than exchanging completion with a six-fold sigma-algebra intersection. -/
+theorem aestronglyMeasurable_piRestriction_iInter_finSix_of_measurePreserving_equiv
+    {Ω ι K : Type*}
+    [MeasurableSpace Ω]
+    [Fintype ι]
+    [MeasurableSpace K]
+    (ω : Measure Ω)
+    (η : Measure K)
+    [IsProbabilityMeasure η]
+    (e : Ω ≃ᵐ (ι → K))
+    (he : MeasurePreserving e ω (Measure.pi (fun _ : ι => η)))
+    (p : Fin 6 → ι → Prop)
+    [∀ c, DecidablePred (p c)]
+    (f : Ω → ℝ)
+    (h : ∀ c : Fin 6,
+      AEStronglyMeasurable[
+        MeasurableSpace.comap
+          ((pairHaarPiRestriction (K := K) (p c)) ∘ e)
+          (inferInstance : MeasurableSpace ({i : ι // p c i} → K))]
+        f ω) :
+    AEStronglyMeasurable[
+      MeasurableSpace.comap
+        ((pairHaarPiRestriction (K := K) (fun i => ∀ c : Fin 6, p c i)) ∘ e)
+        (inferInstance : MeasurableSpace ({i : ι // ∀ c : Fin 6, p c i} → K))]
+      f ω := by
+  have h01 :=
+    aestronglyMeasurable_piRestriction_and_of_measurePreserving_equiv
+      ω η e he (p 0) (p 1) f (h 0) (h 1)
+  have h012 :=
+    aestronglyMeasurable_piRestriction_and_of_measurePreserving_equiv
+      ω η e he (fun i => p 0 i ∧ p 1 i) (p 2) f h01 (h 2)
+  have h0123 :=
+    aestronglyMeasurable_piRestriction_and_of_measurePreserving_equiv
+      ω η e he (fun i => (p 0 i ∧ p 1 i) ∧ p 2 i) (p 3) f h012 (h 3)
+  have h01234 :=
+    aestronglyMeasurable_piRestriction_and_of_measurePreserving_equiv
+      ω η e he (fun i => ((p 0 i ∧ p 1 i) ∧ p 2 i) ∧ p 3 i) (p 4) f h0123 (h 4)
+  have h012345 :=
+    aestronglyMeasurable_piRestriction_and_of_measurePreserving_equiv
+      ω η e he
+        (fun i => (((p 0 i ∧ p 1 i) ∧ p 2 i) ∧ p 3 i) ∧ p 4 i)
+        (p 5) f h01234 (h 5)
+  have hpred :
+      (fun i => ((((p 0 i ∧ p 1 i) ∧ p 2 i) ∧ p 3 i) ∧ p 4 i) ∧ p 5 i) =
+        (fun i => ∀ c : Fin 6, p c i) := by
+    funext i
+    apply propext
+    constructor
+    · rintro ⟨⟨⟨⟨⟨h0, h1⟩, h2⟩, h3⟩, h4⟩, h5⟩ c
+      fin_cases c <;> assumption
+    · intro hall
+      exact ⟨⟨⟨⟨⟨hall 0, hall 1⟩, hall 2⟩, hall 3⟩, hall 4⟩, hall 5⟩
+  rw [hpred] at h012345
+  exact h012345
+
 end
 
 end MathlibAnalytic
