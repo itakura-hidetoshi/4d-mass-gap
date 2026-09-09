@@ -95,17 +95,55 @@ noncomputable def
     (hbeta : 0 ≤ beta)
     (c : ℝ) :
     PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-      H N hN beta hbeta :=
-  (memLp_const c).toLp
-    (fun _ :
-      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N => c)
+      H N hN beta hbeta := by
+  let μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+      H N hN beta hbeta
+  letI : IsProbabilityMeasure μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_isProbabilityMeasure
+      H N hN beta hbeta
+  exact
+    (memLp_const c).toLp
+      (fun _ :
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N => c)
+
+/-- The canonical joint `L²` constant vector has the expected a.e. representative. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2_coeFn
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (c : ℝ) :
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2
+      H N hN beta hbeta c :
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ) =ᵐ[
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+        H N hN beta hbeta]
+      fun _ => c := by
+  let μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+      H N hN beta hbeta
+  letI : IsProbabilityMeasure μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_isProbabilityMeasure
+      H N hN beta hbeta
+  simpa [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2, μ] using
+    (MemLp.coeFn_toLp
+      (memLp_const c :
+        MemLp
+          (fun _ :
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+              PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N => c)
+          2 μ))
 
 /-- Hilbert-space form of the twelve-spatial residual kernel: zero energy is
 exactly equality to an actual constant vector in the ground-state joint `L²`.
 
 This upgrades the representative-level a.e.-constant statement to equality in
-`Lp` using only `MemLp.coeFn_toLp` and `Lp.ext`. -/
+`Lp` using only the already-proved probability normalization, `MemLp.coeFn_toLp`,
+and `Lp.ext`. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialResidualEnergy_eq_zero_iff_eq_constantL2
     (H N : ℕ)
@@ -125,10 +163,13 @@ theorem
   · rintro ⟨c, hc⟩
     refine ⟨c, ?_⟩
     apply Lp.ext
-    exact hc.trans (MemLp.coeFn_toLp (memLp_const c)).symm
+    exact hc.trans
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2_coeFn
+        H N hN beta hbeta c).symm
   · rintro ⟨c, rfl⟩
-    refine ⟨c, ?_⟩
-    exact MemLp.coeFn_toLp (memLp_const c)
+    exact ⟨c,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2_coeFn
+        H N hN beta hbeta c⟩
 
 end
 
