@@ -194,15 +194,22 @@ theorem
     rcases i with ⟨i, hi⟩
     cases i with
     | inl e =>
-        change Measurable[
-          MeasurableSpace.comap Prod.fst
-            (inferInstance : MeasurableSpace X)]
-          (fun z : X × X => z.1 e)
+        have heq :
+            (fun x : X × X =>
+              ((pairHaarPiRestriction (K := G)
+                (fun i : I => i ∈
+                  periodicHypercubicEvenGroundStateJointLeftBoundaryCoordinateSet H)) ∘ E)
+                x ⟨Sum.inl e, hi⟩) =
+              (fun x : X × X => x.1 e) := by
+          funext x
+          rfl
+        rw [heq]
         exact
           (measurable_pi_apply e).comp
             (measurable_iff_comap_le.mpr le_rfl)
     | inr e =>
-        simp [periodicHypercubicEvenGroundStateJointLeftBoundaryCoordinateSet] at hi
+        change False at hi
+        contradiction
   exact hall.mono (measurable_iff_comap_le.mp hboundaryMeasurable)
 
 /-- Left/right symmetric result: actual left-six retained membership forces
@@ -303,12 +310,19 @@ theorem
     rcases i with ⟨i, hi⟩
     cases i with
     | inl e =>
-        simp [periodicHypercubicEvenGroundStateJointRightBoundaryCoordinateSet] at hi
+        change False at hi
+        contradiction
     | inr e =>
-        change Measurable[
-          MeasurableSpace.comap Prod.snd
-            (inferInstance : MeasurableSpace X)]
-          (fun z : X × X => z.2 e)
+        have heq :
+            (fun x : X × X =>
+              ((pairHaarPiRestriction (K := G)
+                (fun i : I => i ∈
+                  periodicHypercubicEvenGroundStateJointRightBoundaryCoordinateSet H)) ∘ E)
+                x ⟨Sum.inr e, hi⟩) =
+              (fun x : X × X => x.2 e) := by
+          funext x
+          rfl
+        rw [heq]
         exact
           (measurable_pi_apply e).comp
             (measurable_iff_comap_le.mpr le_rfl)
