@@ -79,6 +79,35 @@ theorem ae_eq_integral_of_product_fst_snd_aestronglyMeasurable
     _ =ᵐ[μ.prod ν] (fun _ => ∫ z, f z ∂(μ.prod ν)) := by
       rw [integral_congr_ae hfg]
 
+/-- The product-space intersection statement directly on the real L² carrier: membership in both
+coordinate `lpMeas` submodules forces the represented function to be mean-valued almost
+everywhere. -/
+theorem ae_eq_integral_of_product_fst_snd_mem_lpMeas
+    {α β : Type*}
+    [MeasurableSpace α]
+    [MeasurableSpace β]
+    (μ : Measure α)
+    (ν : Measure β)
+    [IsProbabilityMeasure μ]
+    [IsProbabilityMeasure ν]
+    (f : Lp ℝ 2 (μ.prod ν))
+    (hf_fst :
+      f ∈ lpMeas ℝ ℝ
+        (MeasurableSpace.comap Prod.fst (inferInstance : MeasurableSpace α))
+        2 (μ.prod ν))
+    (hf_snd :
+      f ∈ lpMeas ℝ ℝ
+        (MeasurableSpace.comap Prod.snd (inferInstance : MeasurableSpace β))
+        2 (μ.prod ν)) :
+    (f : α × β → ℝ) =ᵐ[μ.prod ν]
+      fun _ => ∫ z, f z ∂(μ.prod ν) := by
+  have hf_int : Integrable (f : α × β → ℝ) (μ.prod ν) :=
+    memLp_one_iff_integrable.mp ((Lp.memLp f).mono_exponent one_le_two)
+  exact ae_eq_integral_of_product_fst_snd_aestronglyMeasurable
+    μ ν f hf_int
+      (mem_lpMeas_iff_aestronglyMeasurable.mp hf_fst)
+      (mem_lpMeas_iff_aestronglyMeasurable.mp hf_snd)
+
 local instance (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
@@ -150,6 +179,52 @@ theorem
     f =ᵐ[μ.prod μ] fun _ => ∫ z, f z ∂(μ.prod μ)
   exact ae_eq_integral_of_product_fst_snd_aestronglyMeasurable
     μ μ f hf_int hf_fst hf_snd
+
+/-- The preceding product-space result specialized to the actual spatial pair-Haar real L²
+carrier. -/
+theorem
+    periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaar_ae_eq_integral_of_mem_fst_snd_lpMeas
+    (H N : ℕ)
+    (f : Lp ℝ 2
+      (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N))
+    (hf_fst :
+      f ∈ lpMeas ℝ ℝ
+        (MeasurableSpace.comap Prod.fst
+          (inferInstance : MeasurableSpace
+            (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)))
+        2 (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N))
+    (hf_snd :
+      f ∈ lpMeas ℝ ℝ
+        (MeasurableSpace.comap Prod.snd
+          (inferInstance : MeasurableSpace
+            (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)))
+        2 (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N)) :
+    (f :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ) =ᵐ[
+          periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N]
+      fun _ =>
+        ∫ z, f z
+          ∂(periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) := by
+  let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
+  change
+    f ∈ lpMeas ℝ ℝ
+      (MeasurableSpace.comap Prod.fst
+        (inferInstance : MeasurableSpace
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)))
+      2 (μ.prod μ) at hf_fst
+  change
+    f ∈ lpMeas ℝ ℝ
+      (MeasurableSpace.comap Prod.snd
+        (inferInstance : MeasurableSpace
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)))
+      2 (μ.prod μ) at hf_snd
+  change
+    (f :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ) =ᵐ[μ.prod μ]
+      fun _ => ∫ z, f z ∂(μ.prod μ)
+  exact ae_eq_integral_of_product_fst_snd_mem_lpMeas μ μ f hf_fst hf_snd
 
 end
 
