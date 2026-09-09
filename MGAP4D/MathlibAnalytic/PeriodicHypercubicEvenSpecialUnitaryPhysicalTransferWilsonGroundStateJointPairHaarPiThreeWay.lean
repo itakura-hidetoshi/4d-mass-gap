@@ -25,26 +25,6 @@ abbrev PairHaarPiLeftOnlyIndex {ι : Type*} (s t : Set ι) :=
 abbrev PairHaarPiRightOnlyIndex {ι : Type*} (s t : Set ι) :=
   {i : PairHaarPiRestIndex s t // i.1 ∉ s}
 
-noncomputable instance pairHaarPiCommonIndexFintype
-    {ι : Type*} [Fintype ι] (s t : Set ι) :
-    Fintype (PairHaarPiCommonIndex s t) :=
-  Fintype.ofFinite _
-
-noncomputable instance pairHaarPiRestIndexFintype
-    {ι : Type*} [Fintype ι] (s t : Set ι) :
-    Fintype (PairHaarPiRestIndex s t) :=
-  Fintype.ofFinite _
-
-noncomputable instance pairHaarPiLeftOnlyIndexFintype
-    {ι : Type*} [Fintype ι] (s t : Set ι) :
-    Fintype (PairHaarPiLeftOnlyIndex s t) :=
-  Fintype.ofFinite _
-
-noncomputable instance pairHaarPiRightOnlyIndexFintype
-    {ι : Type*} [Fintype ι] (s t : Set ι) :
-    Fintype (PairHaarPiRightOnlyIndex s t) :=
-  Fintype.ofFinite _
-
 /-- Exact measurable reindexing of a finite coordinate product into
 `common × left-only × right-only` blocks.  No measure assertion is bundled
 into the equivalence itself. -/
@@ -77,14 +57,15 @@ theorem pairHaarPiThreeWayMeasurableEquiv_measurePreserving
     [MeasurableSpace K]
     (η : Measure K)
     [IsProbabilityMeasure η]
-    (s t : Set ι) :
+    (s t : Set ι)
+    [DecidablePred (fun i => i ∈ s)]
+    [DecidablePred (fun i => i ∈ t)] :
     MeasurePreserving
       (pairHaarPiThreeWayMeasurableEquiv (K := K) s t)
       (Measure.pi (fun _ : ι => η))
       (((Measure.pi (fun _ : PairHaarPiCommonIndex s t => η)).prod
           (Measure.pi (fun _ : PairHaarPiLeftOnlyIndex s t => η))).prod
         (Measure.pi (fun _ : PairHaarPiRightOnlyIndex s t => η))) := by
-  classical
   let ρ := Measure.pi (fun _ : PairHaarPiCommonIndex s t => η)
   let τ := Measure.pi (fun _ : PairHaarPiRestIndex s t => η)
   let μ := Measure.pi (fun _ : PairHaarPiLeftOnlyIndex s t => η)
