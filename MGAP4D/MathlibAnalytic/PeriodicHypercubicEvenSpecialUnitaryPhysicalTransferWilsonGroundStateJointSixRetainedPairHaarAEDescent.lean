@@ -110,7 +110,10 @@ theorem aestronglyMeasurable_sharedBase_of_left_right
     change ∀ᵐ z ∂(ρ.prod μ).prod ν, k z.1.1 = R (z.1.1, z.2)
     rw [Measure.ae_prod_iff_ae_ae]
     · exact hcaR
-    · measurability
+    · exact measurableSet_eq_fun
+        (hk.measurable.comp (measurable_fst.comp measurable_fst))
+        (hR.measurable.comp
+          ((measurable_fst.comp measurable_fst).prodMk measurable_snd))
 
   have hfbase :
       f =ᵐ[(ρ.prod μ).prod ν] (fun z : (γ × α) × β => k z.1.1) := by
