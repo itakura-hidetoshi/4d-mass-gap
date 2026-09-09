@@ -204,9 +204,9 @@ theorem
           funext x
           rfl
         rw [heq]
-        exact
-          (measurable_pi_apply e).comp
-            (measurable_iff_comap_le.mpr le_rfl)
+        intro s hs
+        rw [MeasurableSpace.measurableSet_comap]
+        exact ⟨(fun x : X => x e) ⁻¹' s, (measurable_pi_apply e) hs, rfl⟩
     | inr e =>
         change False at hi
         contradiction
@@ -323,9 +323,9 @@ theorem
           funext x
           rfl
         rw [heq]
-        exact
-          (measurable_pi_apply e).comp
-            (measurable_iff_comap_le.mpr le_rfl)
+        intro s hs
+        rw [MeasurableSpace.measurableSet_comap]
+        exact ⟨(fun x : X => x e) ⁻¹' s, (measurable_pi_apply e) hs, rfl⟩
   exact hall.mono (measurable_iff_comap_le.mp hboundaryMeasurable)
 
 end
