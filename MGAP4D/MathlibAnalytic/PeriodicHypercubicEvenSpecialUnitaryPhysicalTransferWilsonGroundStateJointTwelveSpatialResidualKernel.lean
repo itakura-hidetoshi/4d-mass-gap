@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateJointTwelveSpatialQualitativeConstantCollapse
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateTwelveSpatialPoincareSixSpatialGap
+import Mathlib.Analysis.InnerProductSpace.Orthogonal
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -170,6 +171,114 @@ theorem
     exact ⟨c,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2_coeFn
         H N hN beta hbeta c⟩
+
+/-- Constants in the genuine ground-state joint `L²` form the scalar line through
+its canonical constant-one vector. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2_eq_smul_one
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (c : ℝ) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2
+        H N hN beta hbeta c =
+      c • periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2
+        H N hN beta hbeta 1 := by
+  apply Lp.ext
+  filter_upwards [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2_coeFn
+      H N hN beta hbeta c,
+    Lp.coeFn_smul c
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2
+        H N hN beta hbeta 1),
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2_coeFn
+      H N hN beta hbeta 1] with x hc hsmul hone
+  rw [hc, hsmul, Pi.smul_apply, hone]
+  simp
+
+/-- The intrinsic constant line in the genuine Wilson ground-state joint `L²`.
+It is defined entirely on the joint carrier and is not identified here with any
+separate transfer-operator top eigenspace. -/
+noncomputable def
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    Submodule ℝ
+      (PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+        H N hN beta hbeta) :=
+  ℝ ∙ periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2
+    H N hN beta hbeta 1
+
+/-- Exact Hilbert-space kernel identity for the twelve-spatial Dirichlet energy:
+its zero set is precisely the intrinsic real constant line. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialResidualEnergy_eq_zero_iff_mem_constantLine
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (z : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+      H N hN beta hbeta) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialResidualEnergy
+        H N hN beta hbeta z = 0 ↔
+      z ∈ periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
+        H N hN beta hbeta := by
+  constructor
+  · intro hzero
+    rcases
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialResidualEnergy_eq_zero_iff_eq_constantL2
+        H N hN beta hbeta z).1 hzero with ⟨c, rfl⟩
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2_eq_smul_one]
+    exact Submodule.smul_mem _ c (Submodule.mem_span_singleton_self _)
+  · intro hline
+    change z ∈
+      (ℝ ∙ periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2
+        H N hN beta hbeta 1) at hline
+    rcases Submodule.mem_span_singleton.mp hline with ⟨c, hc⟩
+    apply
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialResidualEnergy_eq_zero_iff_eq_constantL2
+        H N hN beta hbeta z).2
+    refine ⟨c, ?_⟩
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2_eq_smul_one]
+    exact hc.symm
+
+/-- On the orthogonal complement of the intrinsic constant line, the qualitative
+twelve-spatial residual kernel is trivial.  This is the exact mathlib
+`V ⊓ Vᗮ = ⊥` mechanism and still makes no quantitative spectral-gap claim. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialResidualKernel_orthogonal_eq_zero
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (z : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+      H N hN beta hbeta)
+    (horth :
+      z ∈
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
+          H N hN beta hbeta)ᗮ)
+    (hzero :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialResidualEnergy
+        H N hN beta hbeta z = 0) :
+    z = 0 := by
+  have hline :
+      z ∈ periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
+        H N hN beta hbeta :=
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialResidualEnergy_eq_zero_iff_mem_constantLine
+      H N hN beta hbeta z).1 hzero
+  have hbot :
+      z ∈
+        (⊥ : Submodule ℝ
+          (PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+            H N hN beta hbeta)) := by
+    rw [←
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
+        H N hN beta hbeta).inf_orthogonal_eq_bot]
+    exact ⟨hline, horth⟩
+  simpa using hbot
 
 end
 
