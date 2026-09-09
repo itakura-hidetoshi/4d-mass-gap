@@ -189,6 +189,12 @@ theorem
         ((pairHaarPiRestriction (K := G)
           (fun i : I => i ∈
             periodicHypercubicEvenGroundStateJointLeftBoundaryCoordinateSet H)) ∘ E) := by
+    letI : MeasurableSpace (X × X) :=
+      MeasurableSpace.comap Prod.fst (inferInstance : MeasurableSpace X)
+    change Measurable
+      ((pairHaarPiRestriction (K := G)
+        (fun i : I => i ∈
+          periodicHypercubicEvenGroundStateJointLeftBoundaryCoordinateSet H)) ∘ E)
     rw [measurable_pi_iff]
     intro i
     rcases i with ⟨i, hi⟩
@@ -204,13 +210,9 @@ theorem
           funext x
           rfl
         rw [heq]
-        intro s hs
-        rw [MeasurableSpace.measurableSet_comap]
-        have hsX :
-            MeasurableSet[(inferInstance : MeasurableSpace X)]
-              ((fun x : X => x e) ⁻¹' s) := by
-          exact (show Measurable (fun x : X => x e) from measurable_pi_apply e) hs
-        exact ⟨(fun x : X => x e) ⁻¹' s, hsX, rfl⟩
+        exact
+          (measurable_pi_apply e).comp
+            (measurable_iff_comap_le.mpr le_rfl)
     | inr e =>
         change False at hi
         contradiction
@@ -309,6 +311,12 @@ theorem
         ((pairHaarPiRestriction (K := G)
           (fun i : I => i ∈
             periodicHypercubicEvenGroundStateJointRightBoundaryCoordinateSet H)) ∘ E) := by
+    letI : MeasurableSpace (X × X) :=
+      MeasurableSpace.comap Prod.snd (inferInstance : MeasurableSpace X)
+    change Measurable
+      ((pairHaarPiRestriction (K := G)
+        (fun i : I => i ∈
+          periodicHypercubicEvenGroundStateJointRightBoundaryCoordinateSet H)) ∘ E)
     rw [measurable_pi_iff]
     intro i
     rcases i with ⟨i, hi⟩
@@ -327,13 +335,9 @@ theorem
           funext x
           rfl
         rw [heq]
-        intro s hs
-        rw [MeasurableSpace.measurableSet_comap]
-        have hsX :
-            MeasurableSet[(inferInstance : MeasurableSpace X)]
-              ((fun x : X => x e) ⁻¹' s) := by
-          exact (show Measurable (fun x : X => x e) from measurable_pi_apply e) hs
-        exact ⟨(fun x : X => x e) ⁻¹' s, hsX, rfl⟩
+        exact
+          (measurable_pi_apply e).comp
+            (measurable_iff_comap_le.mpr le_rfl)
   exact hall.mono (measurable_iff_comap_le.mp hboundaryMeasurable)
 
 end
