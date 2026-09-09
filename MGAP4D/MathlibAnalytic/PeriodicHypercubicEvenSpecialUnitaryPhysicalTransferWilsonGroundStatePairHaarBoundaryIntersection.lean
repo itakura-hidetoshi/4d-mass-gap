@@ -49,11 +49,11 @@ theorem ae_eq_integral_of_product_fst_snd_aestronglyMeasurable
   have hle_fst :
       MeasurableSpace.comap Prod.fst (inferInstance : MeasurableSpace α) ≤
         (inferInstance : MeasurableSpace (α × β)) := by
-    exact measurable_fst
+    exact measurable_fst.comap_le
   have hle_snd :
       MeasurableSpace.comap Prod.snd (inferInstance : MeasurableSpace β) ≤
         (inferInstance : MeasurableSpace (α × β)) := by
-    exact measurable_snd
+    exact measurable_snd.comap_le
   have hindep :
       Indep
         (MeasurableSpace.comap Prod.fst (inferInstance : MeasurableSpace α))
