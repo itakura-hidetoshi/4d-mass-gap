@@ -206,7 +206,11 @@ theorem
         rw [heq]
         intro s hs
         rw [MeasurableSpace.measurableSet_comap]
-        exact ⟨(fun x : X => x e) ⁻¹' s, (measurable_pi_apply e) hs, rfl⟩
+        have hsX :
+            MeasurableSet[(inferInstance : MeasurableSpace X)]
+              ((fun x : X => x e) ⁻¹' s) := by
+          exact (show Measurable (fun x : X => x e) from measurable_pi_apply e) hs
+        exact ⟨(fun x : X => x e) ⁻¹' s, hsX, rfl⟩
     | inr e =>
         change False at hi
         contradiction
@@ -325,7 +329,11 @@ theorem
         rw [heq]
         intro s hs
         rw [MeasurableSpace.measurableSet_comap]
-        exact ⟨(fun x : X => x e) ⁻¹' s, (measurable_pi_apply e) hs, rfl⟩
+        have hsX :
+            MeasurableSet[(inferInstance : MeasurableSpace X)]
+              ((fun x : X => x e) ⁻¹' s) := by
+          exact (show Measurable (fun x : X => x e) from measurable_pi_apply e) hs
+        exact ⟨(fun x : X => x e) ⁻¹' s, hsX, rfl⟩
   exact hall.mono (measurable_iff_comap_le.mp hboundaryMeasurable)
 
 end
