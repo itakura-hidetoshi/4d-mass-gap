@@ -269,54 +269,55 @@ theorem
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2
           H N hN beta hbeta
           (periodicHypercubicEvenSpatialSliceLinkColor H target) f‖ := by
-  let m₁ :=
-    periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
-      H N (periodicHypercubicEvenSpatialSliceLinkColor H target)
-  let m₂ :=
-    periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
-      H N target
-  have hm₁ : m₁ ≤ (inferInstance : MeasurableSpace
-      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)) := by
-    simpa [m₁] using
-      periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
-        H N (periodicHypercubicEvenSpatialSliceLinkColor H target)
-  have hm₂ : m₂ ≤ (inferInstance : MeasurableSpace
-      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)) := by
-    simpa [m₂] using
-      periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace_le
-        H N target
-  letI : Fact (m₁ ≤ (inferInstance : MeasurableSpace
-      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))) := ⟨hm₁⟩
-  letI : Fact (m₂ ≤ (inferInstance : MeasurableSpace
-      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))) := ⟨hm₂⟩
-  let U : Submodule ℝ
-      (PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-        H N hN beta hbeta) :=
-    lpMeas ℝ ℝ m₁ 2
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
-        H N hN beta hbeta)
-  let V : Submodule ℝ
-      (PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-        H N hN beta hbeta) :=
-    lpMeas ℝ ℝ m₂ 2
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
-        H N hN beta hbeta)
-  have hUV : U ≤ V := by
+  letI : Fact
+      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+          H N (periodicHypercubicEvenSpatialSliceLinkColor H target) ≤
+        (inferInstance : MeasurableSpace
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))) :=
+    ⟨periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
+      H N (periodicHypercubicEvenSpatialSliceLinkColor H target)⟩
+  letI : Fact
+      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
+          H N target ≤
+        (inferInstance : MeasurableSpace
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))) :=
+    ⟨periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace_le
+      H N target⟩
+  have hUV :
+      lpMeas ℝ ℝ
+          (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+            H N (periodicHypercubicEvenSpatialSliceLinkColor H target)) 2
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+            H N hN beta hbeta) ≤
+        lpMeas ℝ ℝ
+          (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
+            H N target) 2
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+            H N hN beta hbeta) := by
     intro g hg
     rw [mem_lpMeas_iff_aestronglyMeasurable] at hg ⊢
-    exact hg.mono (by
-      simpa [m₁, m₂] using
-        periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le_spatialLink
-          H N target)
-  have hproj := real_starProjection_residual_norm_mono_of_le U V hUV f
+    exact hg.mono
+      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le_spatialLink
+        H N target)
+  have hproj :=
+    real_starProjection_residual_norm_mono_of_le
+      (lpMeas ℝ ℝ
+        (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+          H N (periodicHypercubicEvenSpatialSliceLinkColor H target)) 2
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+          H N hN beta hbeta))
+      (lpMeas ℝ ℝ
+        (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
+          H N target) 2
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+          H N hN beta hbeta))
+      hUV f
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2_apply,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_apply]
-  simpa [U, V, m₁, m₂, condExpL2, Submodule.starProjection_apply] using hproj
+  simpa [condExpL2, Submodule.starProjection_apply] using hproj
 
 /-- Squared-energy form of the preceding monotonicity theorem. -/
 theorem
