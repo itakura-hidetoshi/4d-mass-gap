@@ -113,7 +113,7 @@ example
             F left retained targetCfg
           ∂(Measure.pi
             (fun _ : PeriodicHypercubicEvenSpatialSliceTargetLink H target =>
-              normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)) := by
+              normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)))) := by
   rfl
 
 end
