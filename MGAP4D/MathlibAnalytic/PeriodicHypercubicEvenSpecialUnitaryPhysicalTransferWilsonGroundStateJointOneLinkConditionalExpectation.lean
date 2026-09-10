@@ -240,8 +240,8 @@ theorem real_condExpL2_residual_norm_mono_of_le
     (hm₂ : m₂ ≤ (inferInstance : MeasurableSpace α))
     (h₁₂ : m₁ ≤ m₂)
     (f : Lp ℝ 2 μ) :
-    ‖f - (condExpL2 ℝ ℝ hm₂ f : Lp ℝ 2 μ)‖ ≤
-      ‖f - (condExpL2 ℝ ℝ hm₁ f : Lp ℝ 2 μ)‖ := by
+    ‖f - ((condExpL2 ℝ ℝ hm₂ f : lpMeas ℝ ℝ m₂ 2 μ) : Lp ℝ 2 μ)‖ ≤
+      ‖f - ((condExpL2 ℝ ℝ hm₁ f : lpMeas ℝ ℝ m₁ 2 μ) : Lp ℝ 2 μ)‖ := by
   letI : Fact (m₁ ≤ (inferInstance : MeasurableSpace α)) := ⟨hm₁⟩
   letI : Fact (m₂ ≤ (inferInstance : MeasurableSpace α)) := ⟨hm₂⟩
   let U : Submodule ℝ (Lp ℝ 2 μ) := lpMeas ℝ ℝ m₁ 2 μ
