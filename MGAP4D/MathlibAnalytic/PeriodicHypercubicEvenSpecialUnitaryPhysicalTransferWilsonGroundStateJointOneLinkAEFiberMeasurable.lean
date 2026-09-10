@@ -139,8 +139,8 @@ theorem
     simpa [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitDensity,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointDensity, split] using
       hsplitReal.aemeasurable
-  have hsections := hsplitDensity.aestronglyMeasurable.prodMk_right
-  simpa [μTarget, μOff] using hsections
+  filter_upwards [hsplitDensity.aestronglyMeasurable.prodMk_right] with retained hretained
+  exact hretained.aemeasurable
 
 end
 
