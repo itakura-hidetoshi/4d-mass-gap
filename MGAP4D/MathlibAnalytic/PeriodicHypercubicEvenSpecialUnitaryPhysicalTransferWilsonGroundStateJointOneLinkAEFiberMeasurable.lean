@@ -57,7 +57,7 @@ noncomputable def
       (PeriodicHypercubicEvenSpatialSliceTargetLink H target →
         Matrix.specialUnitaryGroup (Fin N) ℂ) ×
       (PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
-        Matrix.specialUnitaryGroup (Fin N) ℂ)) : ℝ≥0∞ :=
+        Matrix.specialUnitaryGroup (Fin N) ℂ)) : ENNReal :=
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointDensity
     H N hN beta hbeta left
       ((periodicHypercubicEvenSpatialSliceTargetOffTargetMeasurableEquiv
@@ -135,10 +135,9 @@ theorem
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitDensity
           H N hN beta hbeta left target)
         (μTarget.prod μOff) := by
-    apply AEMeasurable.ennreal_ofReal
     simpa [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitDensity,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointDensity, split] using
-      hsplitReal.aemeasurable
+      hsplitReal.aemeasurable.ennreal_ofReal
   filter_upwards [hsplitDensity.aestronglyMeasurable.prodMk_right] with retained hretained
   exact hretained.aemeasurable
 
