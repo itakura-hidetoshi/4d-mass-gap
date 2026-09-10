@@ -44,8 +44,11 @@ theorem periodicHypercubicEvenSpatialSliceLink_sameColor_not_mem_compactPlaquett
         (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.plaquetteNeighbors
         (periodicHypercubicEvenSpatialSliceLinkEmbedding H e) := by
   intro hmem
-  rw [compact_oriented_mem_plaquetteNeighbors_iff] at hmem
-  rcases hmem with ⟨p, hpE, hpF⟩
+  rcases (compact_oriented_mem_plaquetteNeighbors_iff
+    (periodicHypercubicSpecialUnitaryWilsonSystem
+      (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base
+    (periodicHypercubicEvenSpatialSliceLinkEmbedding H e)
+    (periodicHypercubicEvenSpatialSliceLinkEmbedding H f)).mp hmem with ⟨p, hpE, hpF⟩
   apply periodicHypercubicEvenSpatialSliceLink_sameColor_no_common_plaquette
     H hColor hne
   refine ⟨p, ?_, ?_⟩
