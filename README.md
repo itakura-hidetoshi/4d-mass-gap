@@ -2,25 +2,19 @@
 
 **MGAP4D** is Hidetoshi Itakura's Lean 4 / mathlib repository for a proof-carrying investigation of four-dimensional Yang--Mills theory, Wilson lattice gauge theory, Osterwalder--Schrader reconstruction, transfer operators, ground-state conditional-expectation geometry, and the mass-gap problem.
 
-The repository deliberately separates
-
-1. exact finite periodic compact `SU(N)` Wilson theorems;
-2. same-root continuum / Osterwalder--Schrader constructions;
-3. finite-volume physical transfer and top-orthogonal operator theory;
-4. genuine ground-state joint-law conditional expectations;
-5. raw Wilson / heat-bath / Doob locality and comparison theorems;
-6. quantitative implication machinery whose decisive scale-uniform input is still open; and
-7. the remaining thermodynamic, continuum, and Clay-level obligations.
+The repository is organized around a strict distinction between what is already formalized on an exact carrier and what remains open. In particular, finite-volume positivity, qualitative kernel triviality, local Harnack control, raw Wilson heat-bath commutation, and continuum mass-gap conclusions are not silently identified with one another.
 
 > **Current claim boundary**
 >
 > This repository does **not** yet contain a completed proof of the Clay Millennium Yang--Mills existence and mass-gap problem.
 >
-> The qualitative twelve-spatial kernel obstruction is closed: on the genuine physical full-top-orthogonal sector, zero twelve-spatial residual occurs only at zero.
+> The qualitative twelve-spatial kernel problem is closed on the genuine physical full-top-orthogonal sector. The raw Wilson same-color locality/heat-bath chain is also formalized, and the Doob remote-replacement law has been reduced to an explicit vacuum-weight obstruction. Most recently, a genuine one-link conditional-expectation geometry has been constructed directly on the ground-state one-slab joint `L²` carrier, with the exact monotonicity
 >
-> Since that checkpoint, the canonical theorem branch has also closed a concrete same-color Wilson locality chain through exact six-spatial-color heat-bath commutation and an order-independent bounded-continuous Feller color block.
+> ```text
+> one-link residual <= containing six-color residual.
+> ```
 >
-> The next unresolved seam is to connect that raw Wilson/Feller same-color block to the **actual vacuum-weighted / ground-state Doob conditional-expectation carrier without adding an abstract independence hypothesis**. Only after that carrier compatibility is explicit can the proof program legitimately build the quantitative same-color block estimate needed for a scale-independent Poincaré/coercivity coefficient.
+> The immediate mathematical frontier is therefore no longer merely “prove same-color Doob commutation.” The more direct route is to identify or quantitatively compare the **actual ground-state joint one-link conditional law / conditional variance** with the already-formalized physical one-link Doob fiber, and then derive a block/global estimate without losing a volume-dependent factor.
 
 ---
 
@@ -33,15 +27,19 @@ Repository:
 Authoritative theorem carrier:
   formal/real-hilbert-uniform-coercive-strong-limit
 
-Authoritative exact canonical SHA:
-  2e294f5c9f95484c42809048cea4d08f284adba2
+Authoritative exact canonical theorem SHA:
+  c0cda8667a3d94eb2576ac602a93943980c9c0c3
 
-Latest canonical theorem merge:
-  PR #3791
-  Build order-independent six-color spatial Wilson heat-bath block
+Latest theorem merge:
+  PR #3798
+  Add ground-state joint one-link conditional expectation geometry
 
-Canonical merge-push validation:
-  PR Lean Fast Check #13491 = completed / success
+Validated theorem head before merge:
+  d5abb70632ea4429041732d88a795dcf4e40592f
+
+Post-merge validation:
+  PR Lean Fast Check #13502
+  completed / success
 
 Public landing/docs branch:
   main
@@ -51,12 +49,9 @@ Lean:
 
 Mathlib:
   5450b53e5ddc75d46418fabb605edbf36bd0beb6
-
-Detailed development order:
-  ROADMAP.md
 ```
 
-Only results merged into `formal/real-hilbert-uniform-coercive-strong-limit` count as authoritative theorem status. The public `main` branch is a landing/documentation surface and must not be confused with the theorem carrier.
+Only theorem results merged into `formal/real-hilbert-uniform-coercive-strong-limit` count as authoritative theorem status. `main` is the public landing/documentation surface and is intentionally kept distinct from the theorem carrier.
 
 ---
 
@@ -89,68 +84,80 @@ full normalized-transfer top eigenspace F
   -> completed physical pair carrier PP = TT ⊕ NN
   -> strict finite-volume non-top contraction
   -> power decay / strong convergence / resolvent / Green operator
-  -> finite-volume relative Poincaré and spectral exclusion machinery
+  -> finite-volume relative Poincaré and spectral-exclusion machinery
 
 D. LOCAL WILSON / DOOB / HARNACK LANE
 
 continuous positive physical vacuum
   -> one-link replacement geometry
   -> volume-independent local Harnack ratio exp(8 beta)
-  -> Doob one-link conditional law
+  -> physical one-link Doob conditional law
   -> centered one-link resampling gap = 1
   -> explicit local variance comparison exp(-16 beta)
   -> native Wilson conditional-variance / projection-defect bridge
 
 E. GROUND-STATE TWELVE-SPATIAL LANE
 
-actual ground-state one-slab joint probability law Π
+actual one-slab ground-state joint probability law Π
   -> 6 right + 6 left genuine spatial condExp projections
   -> common fixed by all 12 = ground-state-a.e. constants
-  -> kernel(E₁₂) = intrinsic real constant line
-  -> on physical full-top-orthogonal sector:
-       E₁₂(R U x) = 0  <->  x = 0
+  -> kernel(E12) = intrinsic real constant line
+  -> on the genuine physical full-top-orthogonal sector:
+       E12(R U x) = 0  <->  x = 0
 
-F. SAME-COLOR WILSON HEAT-BATH LANE
+F. SAME-COLOR WILSON / DOOB NORMAL-FORM LANE
 
 same-color Wilson plaquette separation                         [#3779]
-  -> six-spatial-color plaquette separation                   [#3781]
-  -> compact plaquette-neighbor / local-action separation     [#3783]
-  -> normalized one-link conditional-law locality             [#3787]
-  -> exact six-color raw heat-bath commutation                 [#3789]
-  -> bounded-continuous Feller commutation
-  -> RightCommutative fixed-color update family
-  -> permutation-independent finite fold
-  -> canonical six-color parallel Feller block                [#3791]
+  -> actual six-spatial-color separation                      [#3781]
+  -> compact Wilson local-action separation                   [#3783]
+  -> normalized raw one-link conditional-law locality         [#3787]
+  -> exact same-color raw heat-bath commutation               [#3789]
+  -> order-independent fixed-color raw/Feller block           [#3791]
+  -> remote-replacement Doob law normal form                  [#3795]
+       = same raw target law + explicit two-link Ω weight
 
-G. CURRENT CARRIER SEAM
+G. GENUINE JOINT ONE-LINK CONDITIONAL EXPECTATION
 
-raw Wilson/Feller same-color block
-  -/-> automatically the ground-state Doob block
+ground-state joint one-slab L²
+  -> retain full left boundary + right boundary off one target
+  -> genuine one-link condExpL2 projection                    [#3798]
+  -> off-color sigma algebra <= off-target sigma algebra
+  -> Hilbert projection nearest-point monotonicity
+  -> ||f - P_target f|| <= ||f - P_color(target) f||
+  -> squared one-link defect <= containing color defect
 
-Need an explicit theorem derived from the actual vacuum-weighted law:
+H. CURRENT QUANTITATIVE SEAM
 
-same color + separation
-  -> remote resampling preserves the relevant Doob one-link law
-  -> same-color Doob conditional expectations commute
-  -> order-independent six-color Doob / ground-state block
+physical one-link Doob fiber variance
+  -/-> exact genuine ground-state joint one-link defect
 
-H. CURRENT QUANTITATIVE FRONTIER
+Need an explicit same-root theorem such as:
 
-from actual Wilson/Doob/ground-state geometry prove one scale-independent
-κ > 0 with
+  joint one-link disintegration identity
+or
+  quantitative Doob-fiber -> joint-one-link comparison.
 
-  κ ||x||² <= E₁₂,n(R U x)
+Then one must globalize without a volume-dependent loss:
 
-for every scale n and every physical x in K_n.
+  local one-link information
+    -> six-color / twelve-spatial block estimate
+    -> scale-independent κ > 0
 
-Then the already-canonical implication machinery routes
+I. TARGET
+
+for every scale n and every physical x in K_n,
+
+  κ ||x||² <= E12,n(R U x)
+
+with one κ > 0 independent of n.
+
+Existing implication machinery then gives
 
   twelve-spatial Poincaré κ
     -> six-spatial frame coefficient 2κ
-    -> physical top-eigenspace transfer gap >= 3κ/4
-    -> scale-uniform positive physical transfer gap
+    -> physical transfer gap >= 3κ/4.
 
-I. DOWNSTREAM CONTINUUM / CLAY COMPLETION
+J. DOWNSTREAM CONTINUUM / CLAY COMPLETION
 
 uniform finite-volume physical gap
   -> stable thermodynamic/scaling control                 [OPEN]
@@ -159,230 +166,201 @@ uniform finite-volume physical gap
   -> full 4D Yang--Mills existence + mass gap             [OPEN]
 ```
 
-The current conceptual boundary is therefore
-
-```text
-qualitative common-fixed identification                     DONE
-physical twelve-spatial kernel triviality                  DONE
-same-color raw Wilson conditional locality                 DONE
-same-color raw heat-bath commutation                       DONE
-order-independent six-color raw/Feller heat-bath block     DONE
-same-color ground-state Doob compatibility                 OPEN
-scale-independent quantitative coercivity                  OPEN
-```
-
 ---
 
 # 1. Actual finite periodic compact `SU(N)` Wilson root
 
-The finite model is built from the genuine compact gauge group
+The finite model uses the genuine compact gauge group
 
 ```lean
 Matrix.specialUnitaryGroup (Fin N) ℂ
 ```
 
-with normalized Haar probability structure and an interacting periodic-even Wilson Gibbs law.
+with normalized Haar probability structure and an interacting periodic-even Wilson Gibbs law. The formalized root includes oriented lattice and plaquette geometry, Wilson action and Gibbs measure, reflection positivity, gauge-covariant holonomy, gauge-invariant trace observables, boundary/spatial-slice carriers, one-slab kernels, and normalized physical transfer operators.
 
-Canonical infrastructure includes
-
-```text
-oriented periodic lattice / edge / plaquette geometry
-Wilson action and Gibbs probability measure
-reflection geometry and finite Wilson reflection positivity
-gauge covariance of plaquette holonomy
-gauge invariance of normalized trace observables
-integer temporal translation and reflection covariance
-spatial-slice and boundary Haar-L² carriers
-one-slab Wilson kernels
-normalized physical transfer operators
-```
-
-The interacting Wilson law is not replaced by product Haar at nonzero coupling unless an explicit theorem performs the required comparison or transport.
+The interacting Wilson law is not replaced by product Haar at nonzero coupling unless an explicit theorem provides the transport or comparison.
 
 ---
 
 # 2. Same-root continuum OS construction
 
-The repository contains a constructive same-root scalar continuum OS lane obtained from actual finite Wilson pushforwards.
+A same-root scalar continuum OS lane is built from actual finite Wilson pushforwards. It includes rational-time path laws, subsequential continuum probability laws, continuum reflection positivity, OS quotient/completion, a real strongly continuous contraction semigroup, a graph-closed self-adjoint Hamiltonian, a normalized vacuum, and the complete vacuum-orthogonal sector.
 
-Integrated structure includes
-
-```text
-primary gauge-invariant scalar Wilson readout
-reflection-completed rational-time paths
-tightness / Prokhorov subsequential continuum law
-continuum rational-cylinder reflection positivity
-continuum reflection invariance
-OS seminorm and null quotient
-fixed-slot real Hilbert completions
-directed-limit Hilbert carrier
-real strongly continuous contraction semigroup
-right generator and graph closure
-self-adjoint graph-closed OS Hamiltonian
-normalized vacuum Ω
-complete vacuum-orthogonal sector Ω⊥
-```
-
-This is a genuine same-root continuum observable process. It is **not** yet the complete four-dimensional continuum gauge field on `ℝ⁴`.
+This is a genuine continuum observable process, but it is **not** yet the complete four-dimensional continuum gauge field required by the Clay formulation.
 
 ---
 
-# 3. Finite-volume physical transfer and pair theory
+# 3. Finite-volume physical transfer theory
 
-At fixed finite-volume data, write schematically
+At fixed finite volume the repository has a completed top/non-top operator-theoretic package: top eigenspace, top-orthogonal sector, completed pair decomposition, strict non-top contraction, power decay, strong convergence, coercivity, spectral confinement, resolvent estimates, Green operator, and relative finite-volume Poincaré estimates.
 
-```text
-F   = full eigenvalue-one subspace of normalized physical transfer
-K   = Fᗮ
-PP  = completed physical pair carrier
-TT  = completed top-top block
-NN  = completed non-top block inside PP
-R   = normalized one-slice restriction to K
-q   = ||R||
-S₂  = normalized physical pair transfer
-```
-
-The canonical branch contains, without assuming one-dimensionality of `F` or uniqueness of a vacuum vector,
+The essential limitation is permanent:
 
 ```text
-PP = TT ⊕ NN
-NN = PP ⊓ TTᗮ
-q < 1 at each fixed finite volume
-non-top power decay
-strong convergence to the top-top projection
-fixed-space characterization
-coercivity and real spectral confinement
-resolvent estimates
-non-top Green operator
-exact reduced range
-relative finite-volume Poincaré estimates
+q_n < 1 for every fixed n
 ```
 
-These results provide downstream operator theory. They do **not** by themselves supply a scale-independent physical gap.
+does not imply
+
+```text
+inf_n (1 - q_n) > 0.
+```
+
+The missing model-facing input is scale-uniform quantitative coercivity.
 
 ---
 
-# 4. Local continuous-vacuum Harnack and one-link Doob control
+# 4. Local physical Doob control
 
-The model-facing local route contains a genuinely volume-independent Wilson estimate:
+The continuous-vacuum route contains a volume-independent local Harnack estimate. Schematically,
 
 ```text
-one-link Wilson-action oscillation bound
-  -> one-slab kernel ratio <= exp(8 beta)
-  -> continuous positive-vacuum local Harnack control
-  -> Doob one-link conditional law
-  -> centered one-link resampling gap = 1
-  -> raw Wilson variance * exp(-16 beta)
-       <= continuous-vacuum Doob variance
+R^{-1} Ω(A) <= Ω(A[e <- g]) <= R Ω(A),
+R = exp(8 beta),
 ```
 
-For bounded continuous Wilson observables this is connected to the native conditional variance and global Gibbs `L²` one-link projection defect.
+which yields a quantitative comparison between the raw Wilson one-link variance and the physical Doob one-link variance, with the canonical factor `exp(-16 beta)` in the lower comparison direction.
 
-The local constant is useful but is not, by itself, a global same-color factorization theorem or a scale-uniform Poincaré inequality.
+This is a strong local theorem. It is not a global Poincaré inequality and does not itself identify the physical Doob fiber with the conditional law of the ground-state joint measure.
 
 ---
 
-# 5. Genuine twelve-spatial conditional-expectation geometry
+# 5. Qualitative twelve-spatial kernel closure
 
-On the actual one-slab ground-state joint `L²` carrier the repository constructs six right-boundary and six left-boundary genuine conditional-expectation projections.
-
-The qualitative chain is now complete:
+The genuine ground-state one-slab joint carrier supports six right and six left conditional-expectation projections. The canonical qualitative chain now includes
 
 ```text
 #3746  common fixed by all 12 = ground-state-a.e. constants
-#3768  E₁₂(z)=0 iff represented function is ground-state-a.e. constant
+#3768  E12(z)=0 iff represented function is ground-state-a.e. constant
 #3770  a.e. constant iff equality with an actual constant vector in joint L²
-#3773  kernel(E₁₂) = intrinsic real constant line
+#3773  kernel(E12) = intrinsic real constant line
 #3775  on the genuine physical full-top-orthogonal sector,
-       E₁₂(R U x)=0 iff x=0
+       E12(R U x)=0 iff x=0
 ```
 
-No positive Poincaré coefficient is inferred merely from this trivial-kernel statement.
+This proves qualitative injectivity of the twelve-spatial residual on the relevant physical sector. It does **not** produce a positive uniform lower bound.
 
 ---
 
-# 6. New same-color Wilson heat-bath chain
+# 6. Same-color Wilson locality and raw/Feller block
 
-The theorem sequence after #3775 closes the concrete locality prerequisites that were previously only prospective.
+The same-color chain is concrete and model-derived:
 
 | PR | Canonical result |
 |---|---|
-| #3779 | distinct same-colored physical links cannot share a Wilson plaquette |
-| #3781 | the separation descends to the actual six spatial color classes |
-| #3783 | six-color separation is connected to compact Wilson plaquette-neighbor and local-action locality |
-| #3787 | the exact normalized target one-link conditional law is unchanged by remote same-color resampling |
-| #3789 | exact pointwise/function-level six-color Wilson heat-bath transforms commute |
-| #3791 | the commutation is lifted to the bounded-continuous Feller carrier and assembled into an order-independent parallel fixed-color block |
+| #3779 | distinct same-colored physical spatial links cannot share a Wilson plaquette |
+| #3781 | separation descends to the actual six spatial color classes |
+| #3783 | compact plaquette-neighbor and local-action separation |
+| #3787 | exact raw normalized target one-link conditional law is unchanged by remote same-color replacement |
+| #3789 | exact same-color raw heat-bath transforms commute |
+| #3791 | bounded-continuous Feller commutation and an order-independent full fixed-color update block |
+| #3795 | exact remote-replacement normal form for the Doob one-link law |
 
-The #3791 block is mathematically concrete: the one-link update family is `RightCommutative`, `List.Perm.foldl_eq` gives permutation invariance, and a canonical full-color block is defined by updating every link in the selected six-color class exactly once.
+PR #3795 is especially important for claim discipline. After a remote same-color replacement, the target Doob law is rewritten using the **same raw target Wilson measure** and an explicit two-link vacuum weight. Thus the remaining obstruction to Doob locality is isolated entirely in the vacuum-weight term rather than hidden in the raw Wilson measure.
 
-This route uses the actual compact Wilson conditional measures and the existing replacement geometry. It does **not** introduce a new abstract independence hypothesis.
-
----
-
-# 7. The present carrier obstruction: Wilson/Feller versus ground-state Doob
-
-The current raw same-color commutation theorem is not silently promoted to the genuine ground-state Doob carrier.
-
-The reason is structural. The vacuum-weighted one-link law is schematically
-
-```text
-μ^Ω_{e,A}(dg) ∝ Ω(A[e <- g]) μ_{e,A}(dg).
-```
-
-Even if the raw Wilson conditional law `μ_{e,A}` is unchanged by a remote same-color update, the vacuum factor must also be transported correctly before one may conclude invariance of `μ^Ω_{e,A}`.
-
-Therefore the next exact bridge should have the form
-
-```text
-same color + distinct links + actual Wilson separation
-  -> vacuum-weighted one-link law is compatible with remote resampling
-  -> same-color Doob conditional expectations commute
-  -> genuine six-color Doob block is order-independent
-```
-
-If the relevant carrier already exists under different notation, it must be connected by an explicit theorem. Unrelated Gibbs, Feller, vacuum-`L²`, and ground-state joint carriers are not identified by convention.
+No abstract independence hypothesis is introduced.
 
 ---
 
-# 8. Quantitative target after the Doob carrier seam
+# 7. Genuine one-link conditional expectation on the ground-state joint carrier
 
-The decisive quantitative target remains the scale-family estimate
+PR #3798 changes the shape of the active frontier.
+
+For a target spatial link, the repository now defines the sigma algebra retaining
+
+```text
+complete left boundary
++ all right-boundary spatial coordinates except the target link.
+```
+
+This gives a genuine one-link `condExpL2` projection on the existing ground-state joint `L²` carrier.
+
+Because the off-color sigma algebra is contained in the off-target sigma algebra, Mathlib's Hilbert-space nearest-point theorem for orthogonal projections gives
+
+```text
+||f - P_target f|| <= ||f - P_color(target) f||,
+```
+
+and hence
+
+```text
+||f - P_target f||² <= ||f - P_color(target) f||².
+```
+
+This theorem is carrier-safe: it uses the genuine joint law directly and does not identify the raw Feller carrier, vacuum `L²`, and ground-state joint `L²` by convention.
+
+It also shows that same-color Doob commutation is **not logically required** before every quantitative attack. A direct local-to-joint comparison route is now available.
+
+---
+
+# 8. Present obstruction: local one-link control must enter the genuine joint carrier
+
+The next decisive theorem should connect the local physical Doob fiber to the new genuine joint one-link projection. Acceptable forms include an exact conditional-disintegration identity or a quantitative variance comparison derived from the actual ground-state joint density.
+
+The desired bridge is conceptually
+
+```text
+physical Doob one-link variance
+  -> genuine ground-state joint one-link conditional variance
+  = ||f - P_target f||²
+  <= containing six-color defect.
+```
+
+The arrow must be proved on the actual same-root measure. It must not be inserted as a new independence or carrier-identification assumption.
+
+---
+
+# 9. The second obstruction: avoid volume-dependent globalization loss
+
+The new monotonicity theorem is necessary but not sufficient for a scale-uniform gap. If a color contains many links, inequalities of the form
+
+```text
+color defect >= each individual one-link defect
+```
+
+do not by themselves imply a volume-independent lower bound by the **sum** of all one-link defects. Naive averaging may introduce a factor proportional to the inverse number of links.
+
+Therefore a successful global argument must contain a genuinely uniform mechanism, for example a block Poincaré estimate, tensorization/approximate tensorization theorem, martingale variance decomposition, comparison of block conditional expectations, canonical-path/frame estimate, or another scale-independent mixing theorem derived from the actual Wilson/Doob structure.
+
+This is now one of the clearest mathematical bottlenecks in the repository.
+
+---
+
+# 10. Quantitative target
+
+The decisive scale-family theorem remains
 
 ```text
 ∃ κ > 0,
-  κ <= 1/2,
-  and for every scale n and every x in the physical top-orthogonal sector K_n,
+  ∀ n,
+  ∀ x ∈ K_n,
 
-  κ ||x||² <= E₁₂,n(R U x).
+  κ ||x||² <= E12,n(R U x).
 ```
 
-The existing canonical normalization/routing gives
+The existing theorem network already contains the downstream routing
 
 ```text
-E₁₂(right lift) = 1/2 * E₆(right)
-
 uniform twelve-spatial Poincaré κ
   -> uniform six-spatial frame coefficient 2κ
   -> physical top-eigenspace transfer gap >= 3κ/4.
 ```
 
-The newly integrated six-color heat-bath commutation is an important structural prerequisite for a genuine block-dynamics or variance-decomposition argument. It is not yet the quantitative lower bound itself.
-
-Potentially valid next mechanisms include an exact block conditional-expectation comparison, martingale/variance decomposition, block contraction theorem, canonical-path estimate, or another rigorous global mixing argument derived from the actual Wilson/Doob structure.
+Thus the main unresolved work is not algebraic propagation after `κ`; it is the production of `κ` from the actual model without a scale-dependent loss.
 
 ---
 
-# 9. Forbidden shortcuts
+# 11. Forbidden shortcuts
 
-The repository keeps the following distinctions explicit:
+The repository keeps the following implications explicitly invalid unless a theorem supplies the missing hypothesis:
 
 ```text
 trivial kernel => uniform spectral gap                     false in general
 q_n < 1 for every n => inf_n (1-q_n) > 0                  false in general
 mutual absolute continuity => uniform L² norm equivalence false without bounds
-raw Wilson locality => Doob locality                       needs vacuum-weight transport
-pairwise commutation => quantitative Poincaré             needs an estimate
+raw Wilson locality => Doob locality                       needs vacuum-weight control
+one-link residual <= color residual => tensorized sum      false without a block estimate
+pairwise commutation => quantitative Poincaré              needs an estimate
 local Harnack/TV control => global L² Poincaré             needs a theorem
 selected vacuum vector => full top eigenspace              not assumed
 finite-volume theorem => continuum theorem                 requires a limit theorem
@@ -391,86 +369,40 @@ same-root scalar continuum => full 4D gauge field          not the same claim
 
 ---
 
-# 10. Downstream path after uniform coercivity
+# 12. Downstream Clay-level obligations
 
-Once a scale-independent physical twelve-spatial Poincaré coefficient is genuinely proved, the existing theorem network is designed to propagate it through
+After a genuine scale-independent physical transfer gap is obtained, the remaining program still includes controlled thermodynamic/scaling passage, a full same-root four-dimensional continuum gauge field/state, physical OS/Wightman identification on the relevant continuum carrier, the required vacuum structure, and a strictly positive continuum spectrum above vacuum.
 
-```text
-uniform twelve-spatial Poincaré
-  -> uniform physical top-eigenspace transfer gap
-  -> uniform non-top resolvent / Green / decay control
-  -> stable thermodynamic/scaling passage
-  -> physical continuum OS/Hamiltonian spectral lower bound
-  -> continuum clustering / spectral consequences
-```
-
-Every step still requires same-root carrier compatibility. A uniform finite-volume transfer gap is a major milestone, not automatically the final Clay theorem.
+A uniform finite-volume transfer gap would be a major milestone, not automatically the final Clay theorem.
 
 ---
 
-# 11. What remains for Clay-level completion
+# 13. Authority and CI discipline
 
-Major open obligations include
-
-```text
-explicit ground-state Doob same-color compatibility
-scale-independent model-derived physical coercivity
-controlled thermodynamic / continuum physical limit
-full same-root four-dimensional continuum gauge field/state
-physical OS/Wightman identification on the relevant continuum carrier
-vacuum structure at the required level
-strictly positive continuum spectrum above the vacuum
-final existence + mass-gap theorem satisfying the Clay formulation
-```
-
-The repository intentionally records these as open rather than hiding them behind implication packages.
-
----
-
-# 12. Authority, provenance, and CI discipline
-
-For authoritative theorem work:
+For theorem development:
 
 ```text
-start from the exact canonical SHA
-use the authoritative theorem branch
+start from the exact authoritative canonical SHA
+use the authoritative theorem carrier, not main
 keep changes additive/tighten-only
 never weaken physical assumptions silently
 never identify unrelated carriers silently
 no sorry / admit / new axiom / placeholder theorem
 freeze writes while exact-head CI is running
-inspect the first real Lean error before editing a failed head
-require terminal workflow success, not queued/in_progress state
+inspect the first genuine Lean error before editing a failed head
+require terminal workflow success
 fresh-check base/head/mergeability/reviews/threads before merge
 normal-merge with expected head SHA
-verify the post-merge branch pointer and push CI
+verify merge parents, theorem-branch pointer, and post-merge push CI
 ```
 
-The authoritative theorem checkpoint for this README is
+The authoritative theorem checkpoint represented by this README is
 
 ```text
-2e294f5c9f95484c42809048cea4d08f284adba2
+formal/real-hilbert-uniform-coercive-strong-limit
+@ c0cda8667a3d94eb2576ac602a93943980c9c0c3
 ```
 
-with merge-push `PR Lean Fast Check #13491` completed successfully.
+with post-merge `PR Lean Fast Check #13502 = completed / success`.
 
----
-
-# 13. Reading the repository
-
-For the development order and active obligations, see [`ROADMAP.md`](ROADMAP.md).
-
-For external review, the repository also contains audit/replay material such as
-
-```text
-EXTERNAL_AUDIT_PACKET.md
-EXTERNAL_REVIEW_CHECKLIST.md
-INDEPENDENT_REPLAY.md
-```
-
-Preferred reading rule:
-
-```text
-README/ROADMAP explain the state and intended route.
-The authoritative theorem branch and exact SHA determine what is actually proved.
-```
+For the detailed order of the next proof units, see [`ROADMAP.md`](ROADMAP.md).
