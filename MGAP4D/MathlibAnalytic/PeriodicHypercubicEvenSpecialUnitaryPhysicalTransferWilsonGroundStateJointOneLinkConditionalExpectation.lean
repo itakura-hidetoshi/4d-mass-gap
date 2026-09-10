@@ -244,14 +244,13 @@ theorem real_condExpL2_residual_norm_mono_of_le
       ‖f - (condExpL2 ℝ ℝ hm₁ f : Lp ℝ 2 μ)‖ := by
   letI : Fact (m₁ ≤ (inferInstance : MeasurableSpace α)) := ⟨hm₁⟩
   letI : Fact (m₂ ≤ (inferInstance : MeasurableSpace α)) := ⟨hm₂⟩
-  let U := lpMeas ℝ ℝ m₁ 2 μ
-  let V := lpMeas ℝ ℝ m₂ 2 μ
+  let U : Submodule ℝ (Lp ℝ 2 μ) := lpMeas ℝ ℝ m₁ 2 μ
+  let V : Submodule ℝ (Lp ℝ 2 μ) := lpMeas ℝ ℝ m₂ 2 μ
   have hUV : U ≤ V := by
     intro g hg
     rw [mem_lpMeas_iff_aestronglyMeasurable] at hg ⊢
     exact hg.mono h₁₂
-  let qU : U := condExpL2 ℝ ℝ (μ := μ) hm₁ f
-  let qV : V := ⟨(qU : Lp ℝ 2 μ), hUV qU.2⟩
+  let qV : V := ⟨U.starProjection f, hUV (U.starProjection_apply_mem f)⟩
   have hmin :
       ‖f - V.starProjection f‖ = ⨅ x : V, ‖f - (x : Lp ℝ 2 μ)‖ :=
     Submodule.starProjection_minimal f
@@ -262,7 +261,7 @@ theorem real_condExpL2_residual_norm_mono_of_le
   have hproj :
       ‖f - V.starProjection f‖ ≤ ‖f - U.starProjection f‖ := by
     rw [hmin]
-    simpa [qV, qU, U, V, Submodule.starProjection_apply] using hiInf
+    simpa [qV] using hiInf
   simpa [U, V, condExpL2, Submodule.starProjection_apply] using hproj
 
 /-- Consequently, the genuine ground-state joint one-link defect is bounded by
