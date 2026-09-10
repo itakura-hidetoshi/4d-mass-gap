@@ -87,6 +87,43 @@ theorem exists_doobWeightedMarkovKernel_ae_eq
     rw [← hb, ← hmassEq]
   exact hpatch.symm.trans ((hκ₀_apply a).trans hmeasure)
 
+/-- Global exact normalization/disintegration identity for a jointly
+AE-measurable Doob weight.  The outer measure is the reference measure `μ`,
+while the exact fiber mass `doobWeightMass ν (w a)` is kept explicitly in the
+integrand.  Equivalently, this is integration against the corresponding
+weighted outer marginal, without yet identifying the kernel as an RCD. -/
+theorem exists_doobWeightedMarkovKernel_lintegral_identity
+    {α β : Type*}
+    [MeasurableSpace α]
+    [MeasurableSpace β]
+    (μ : Measure α)
+    (ν : Measure β)
+    [SFinite ν]
+    (w F : α → β → ℝ≥0∞)
+    (hw : AEMeasurable (Function.uncurry w) (μ.prod ν))
+    (hF : AEMeasurable (Function.uncurry F) (μ.prod ν))
+    (hμ : μ ≠ 0)
+    (hMass : ∀ᵐ a ∂μ,
+      0 < doobWeightMass ν (w a) ∧ doobWeightMass ν (w a) < ∞) :
+    ∃ κ : Kernel α β,
+      IsMarkovKernel κ ∧
+        (∀ᵐ a ∂μ, κ a = doobWeightedMeasure ν (w a)) ∧
+        (∫⁻ z, w z.1 z.2 * F z.1 z.2 ∂(μ.prod ν)) =
+          ∫⁻ a, doobWeightMass ν (w a) * (∫⁻ b, F a b ∂κ a) ∂μ := by
+  obtain ⟨κ, hκMarkov, hκ⟩ :=
+    exists_doobWeightedMarkovKernel_ae_eq μ ν w hw hμ hMass
+  have hwFiber : ∀ᵐ a ∂μ, AEMeasurable (w a) ν := by
+    exact hw.aestronglyMeasurable.prodMk_left.mono fun _ h => h.aemeasurable
+  have hFFiber : ∀ᵐ a ∂μ, AEMeasurable (F a) ν := by
+    exact hF.aestronglyMeasurable.prodMk_left.mono fun _ h => h.aemeasurable
+  refine ⟨κ, hκMarkov, hκ, ?_⟩
+  rw [lintegral_prod _ (hw.mul hF)]
+  apply lintegral_congr_ae
+  filter_upwards [hκ, hMass, hwFiber, hFFiber] with a hκa hmassa hwa hFa
+  rw [hκa]
+  exact (doobWeightMass_mul_lintegral_doobWeightedMeasure
+    ν (w a) (F a) hwa hFa (ne_of_gt hmassa.1) (ne_of_lt hmassa.2)).symm
+
 end
 
 end MathlibAnalytic
