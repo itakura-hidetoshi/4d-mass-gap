@@ -136,7 +136,7 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkFiberMeasure_apply
       H N hN beta hbeta left right target Set.univ MeasurableSet.univ]
   rw [MeasureTheory.lmarginal_singleton]
-  rfl
+  simp [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkFiberWeight]
 
 /-- Replacing the target coordinate does not change the retained off-target
 configuration. -/
