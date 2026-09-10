@@ -117,6 +117,9 @@ theorem exists_doobWeightedMarkovKernel_lintegral_identity
   have hFFiber : ∀ᵐ a ∂μ, AEMeasurable (F a) ν := by
     exact hF.aestronglyMeasurable.prodMk_left.mono fun _ h => h.aemeasurable
   refine ⟨κ, hκMarkov, hκ, ?_⟩
+  change
+    (∫⁻ z, Function.uncurry w z * Function.uncurry F z ∂(μ.prod ν)) =
+      ∫⁻ a, doobWeightMass ν (w a) * (∫⁻ b, F a b ∂κ a) ∂μ
   rw [lintegral_prod _ (hw.mul hF)]
   apply lintegral_congr_ae
   filter_upwards [hκ, hMass, hwFiber, hFFiber] with a hκa hmassa hwa hFa
