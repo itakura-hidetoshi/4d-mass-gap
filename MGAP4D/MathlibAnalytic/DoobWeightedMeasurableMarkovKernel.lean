@@ -58,7 +58,9 @@ theorem exists_doobWeightedMarkovKernel_ae_eq
     change Kernel.withDensity (Kernel.const α ν) q a =
       doobWeightedMeasure ν (w' a)
     rw [Kernel.withDensity_apply _ hq]
-    simp [q, Z', doobWeightedMeasure, doobWeightedDensity]
+    change ν.withDensity (fun b => w' a b / doobWeightMass ν (w' a)) =
+      ν.withDensity (fun b => w' a b / doobWeightMass ν (w' a))
+    rfl
   have hMassEq : ∀ᵐ a ∂μ,
       doobWeightMass ν (w a) = doobWeightMass ν (w' a) := by
     filter_upwards [hww'] with a ha
