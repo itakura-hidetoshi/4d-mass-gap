@@ -75,7 +75,16 @@ local instance periodicHypercubicEvenSpatialSliceTargetLinkFintypeForNormalizati
     Fintype (PeriodicHypercubicEvenSpatialSliceTargetLink H target) :=
   Subtype.fintype (fun e : PeriodicHypercubicEvenSpatialSliceLink H => e = target)
 
-example
+/-- For Haar-a.e. left boundary and Haar-a.e. retained off-target context,
+multiplying expectation against the literal normalized split target fiber by
+its exact target-fiber mass recovers the corresponding unnormalized weighted
+Haar integral.
+
+This is a fiberwise normalization identity only.  It does not assert outer
+measurability of the family of normalized fibers and does not identify them
+with a regular conditional distribution or with the Wilson one-link law. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetFiber_normalizationIdentity_ae
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
@@ -114,7 +123,61 @@ example
           ∂(Measure.pi
             (fun _ : PeriodicHypercubicEvenSpatialSliceTargetLink H target =>
               normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ))) := by
-  rfl
+  let μTarget := Measure.pi
+    (fun _ : PeriodicHypercubicEvenSpatialSliceTargetLink H target =>
+      normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ))
+  let μOff := Measure.pi
+    (fun _ : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target =>
+      normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ))
+  have hObs :
+      ∀ᵐ left ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N),
+        ∀ᵐ retained ∂μOff,
+          AEMeasurable (F left retained) μTarget := by
+    simpa [μTarget, μOff] using hF
+  have hWeight :
+      ∀ᵐ left ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N),
+        ∀ᵐ retained ∂μOff,
+          AEMeasurable
+            (fun targetCfg :
+                PeriodicHypercubicEvenSpatialSliceTargetLink H target →
+                  Matrix.specialUnitaryGroup (Fin N) ℂ =>
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitDensity
+                H N hN beta hbeta left target (targetCfg, retained)) μTarget := by
+    simpa [μTarget, μOff] using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitDensity_ae_targetFiber
+        H N hN beta hbeta target)
+  have hMass :
+      ∀ᵐ left ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N),
+        ∀ᵐ retained ∂μOff,
+          0 <
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetFiberMass
+                H N hN beta hbeta left target retained ∧
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetFiberMass
+                H N hN beta hbeta left target retained < ∞ := by
+    simpa [μOff] using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetFiberMass_ae_pos_lt_top
+        H N hN beta hbeta target)
+  filter_upwards [hObs, hWeight, hMass] with left hObsLeft hWeightLeft hMassLeft
+  filter_upwards [hObsLeft, hWeightLeft, hMassLeft] with retained hObs' hWeight' hMass'
+  let w :
+      (PeriodicHypercubicEvenSpatialSliceTargetLink H target →
+        Matrix.specialUnitaryGroup (Fin N) ℂ) → ENNReal :=
+    fun targetCfg =>
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitDensity
+        H N hN beta hbeta left target (targetCfg, retained)
+  have hMassZero : doobWeightMass μTarget w ≠ 0 := by
+    rw [← periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetFiberMass_eq_doobWeightMass
+      H N hN beta hbeta left target retained]
+    exact ne_of_gt hMass'.1
+  have hMassTop : doobWeightMass μTarget w ≠ ∞ := by
+    rw [← periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetFiberMass_eq_doobWeightMass
+      H N hN beta hbeta left target retained]
+    exact ne_of_lt hMass'.2
+  simpa [μTarget, w,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetNormalizedFiberMeasure,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetFiberMass_eq_doobWeightMass] using
+    (doobWeightMass_mul_lintegral_doobWeightedMeasure
+      μTarget w (F left retained) hWeight' hObs' hMassZero hMassTop)
 
 end
 
