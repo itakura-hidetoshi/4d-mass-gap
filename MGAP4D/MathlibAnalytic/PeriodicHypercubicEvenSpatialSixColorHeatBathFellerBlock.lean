@@ -113,7 +113,7 @@ theorem
       e.property.trans f.property.symm
     simpa [periodicHypercubicEvenSpecialUnitaryFixedSpatialColorHeatBathStep] using
       (periodicHypercubicEvenSpatialSliceLink_sameColor_singleLinkConditionalExpectationContinuousBCF_commute
-        H N hN beta hbeta O hColor hEq.symm)
+        H N hN beta hbeta O hColor (Ne.symm hEq))
 
 /-- Folding one fixed spatial six-color class is invariant under permutation of
 the link list. -/
