@@ -56,6 +56,26 @@ def CompactOrientedGaugeWilsonSystem.replaceLink
     simp
   · simp [CompactOrientedGaugeWilsonSystem.replaceLink, he]
 
+/-- Replacements at two distinct physical positive links commute.  This is the
+configuration-level square underlying commutation of conditionally independent
+single-link resampling updates. -/
+theorem compact_oriented_replaceLink_comm_of_ne
+    (L : CompactOrientedGaugeWilsonSystem)
+    (A : L.Configuration)
+    {e f : L.geometry.Edge}
+    (hef : e ≠ f)
+    (g h : L.Gauge) :
+    L.replaceLink (L.replaceLink A e g) f h =
+      L.replaceLink (L.replaceLink A f h) e g := by
+  funext k
+  by_cases hke : k = e
+  · subst k
+    simp [CompactOrientedGaugeWilsonSystem.replaceLink, hef]
+  · by_cases hkf : k = f
+    · subst k
+      simp [CompactOrientedGaugeWilsonSystem.replaceLink, hke]
+    · simp [CompactOrientedGaugeWilsonSystem.replaceLink, hke, hkf]
+
 /-- Two compact oriented configurations agree away from one physical link. -/
 def CompactOrientedGaugeWilsonSystem.AgreeOffLink
     (L : CompactOrientedGaugeWilsonSystem)
