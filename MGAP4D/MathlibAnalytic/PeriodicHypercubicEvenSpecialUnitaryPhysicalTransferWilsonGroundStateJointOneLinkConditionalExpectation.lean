@@ -317,7 +317,20 @@ theorem
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2_apply,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_apply]
-  simpa [condExpL2, Submodule.starProjection_apply] using hproj
+  change
+    ‖f -
+        (lpMeas ℝ ℝ
+          (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
+            H N target) 2
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+            H N hN beta hbeta)).starProjection f‖ ≤
+      ‖f -
+        (lpMeas ℝ ℝ
+          (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+            H N (periodicHypercubicEvenSpatialSliceLinkColor H target)) 2
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+            H N hN beta hbeta)).starProjection f‖
+  exact hproj
 
 /-- Squared-energy form of the preceding monotonicity theorem. -/
 theorem
