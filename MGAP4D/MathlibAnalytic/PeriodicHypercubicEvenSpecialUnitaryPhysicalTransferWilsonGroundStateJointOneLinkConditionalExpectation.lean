@@ -90,10 +90,11 @@ theorem measurable_periodicHypercubicEvenSpecialUnitarySpatialSliceOffColorFromO
         (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target) := by
   refine measurable_pi_lambda _ ?_
   intro e
-  exact measurable_pi_apply ⟨e.1, by
+  let i : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target := ⟨e.1, by
     intro heq
     apply e.2
     exact congrArg (periodicHypercubicEvenSpatialSliceLinkColor H) heq⟩
+  exact measurable_pi_apply i
 
 /-- Off-color restriction factors exactly through off-target restriction. -/
 theorem periodicHypercubicEvenSpatialSliceOffColorRestriction_eq_fromOffTarget
@@ -241,13 +242,15 @@ theorem real_condExpL2_residual_norm_mono_of_le
     (f : Lp ℝ 2 μ) :
     ‖f - (condExpL2 ℝ ℝ hm₂ f : Lp ℝ 2 μ)‖ ≤
       ‖f - (condExpL2 ℝ ℝ hm₁ f : Lp ℝ 2 μ)‖ := by
+  letI : Fact (m₁ ≤ (inferInstance : MeasurableSpace α)) := ⟨hm₁⟩
+  letI : Fact (m₂ ≤ (inferInstance : MeasurableSpace α)) := ⟨hm₂⟩
   let U := lpMeas ℝ ℝ m₁ 2 μ
   let V := lpMeas ℝ ℝ m₂ 2 μ
   have hUV : U ≤ V := by
     intro g hg
     rw [mem_lpMeas_iff_aestronglyMeasurable] at hg ⊢
     exact hg.mono h₁₂
-  let qU : U := condExpL2 ℝ ℝ hm₁ f
+  let qU : U := condExpL2 ℝ ℝ (μ := μ) hm₁ f
   let qV : V := ⟨(qU : Lp ℝ 2 μ), hUV qU.2⟩
   have hmin :
       ‖f - V.starProjection f‖ = ⨅ x : V, ‖f - (x : Lp ℝ 2 μ)‖ :=
