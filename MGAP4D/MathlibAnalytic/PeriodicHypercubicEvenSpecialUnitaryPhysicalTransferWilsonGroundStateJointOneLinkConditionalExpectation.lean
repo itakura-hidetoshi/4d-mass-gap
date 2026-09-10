@@ -228,41 +228,27 @@ noncomputable def
           H N hN beta hbeta) := by
   rfl
 
-/-- For nested sigma-algebras, the `L²` residual from the finer conditional
-expectation is no larger than the residual from the coarser one.  This is just
-the nearest-point property of Mathlib's orthogonal projection. -/
-theorem real_condExpL2_residual_norm_mono_of_le
-    {α : Type*}
-    [MeasurableSpace α]
-    {μ : Measure α}
-    {m₁ m₂ : MeasurableSpace α}
-    (hm₁ : m₁ ≤ (inferInstance : MeasurableSpace α))
-    (hm₂ : m₂ ≤ (inferInstance : MeasurableSpace α))
-    (h₁₂ : m₁ ≤ m₂)
-    (f : Lp ℝ 2 μ) :
-    ‖f - ((condExpL2 ℝ ℝ hm₂ f : lpMeas ℝ ℝ m₂ 2 μ) : Lp ℝ 2 μ)‖ ≤
-      ‖f - ((condExpL2 ℝ ℝ hm₁ f : lpMeas ℝ ℝ m₁ 2 μ) : Lp ℝ 2 μ)‖ := by
-  letI : Fact (m₁ ≤ (inferInstance : MeasurableSpace α)) := ⟨hm₁⟩
-  letI : Fact (m₂ ≤ (inferInstance : MeasurableSpace α)) := ⟨hm₂⟩
-  let U : Submodule ℝ (Lp ℝ 2 μ) := lpMeas ℝ ℝ m₁ 2 μ
-  let V : Submodule ℝ (Lp ℝ 2 μ) := lpMeas ℝ ℝ m₂ 2 μ
-  have hUV : U ≤ V := by
-    intro g hg
-    rw [mem_lpMeas_iff_aestronglyMeasurable] at hg ⊢
-    exact hg.mono h₁₂
+/-- Orthogonal projection onto a larger Hilbert subspace leaves a no larger
+residual than projection onto a contained subspace. -/
+theorem real_starProjection_residual_norm_mono_of_le
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    (U V : Submodule ℝ E)
+    [U.HasOrthogonalProjection]
+    [V.HasOrthogonalProjection]
+    (hUV : U ≤ V)
+    (f : E) :
+    ‖f - V.starProjection f‖ ≤ ‖f - U.starProjection f‖ := by
   let qV : V := ⟨U.starProjection f, hUV (U.starProjection_apply_mem f)⟩
   have hmin :
-      ‖f - V.starProjection f‖ = ⨅ x : V, ‖f - (x : Lp ℝ 2 μ)‖ :=
+      ‖f - V.starProjection f‖ = ⨅ x : V, ‖f - (x : E)‖ :=
     Submodule.starProjection_minimal f
   have hiInf :
-      (⨅ x : V, ‖f - (x : Lp ℝ 2 μ)‖) ≤
-        ‖f - (qV : Lp ℝ 2 μ)‖ :=
+      (⨅ x : V, ‖f - (x : E)‖) ≤ ‖f - (qV : E)‖ :=
     ciInf_le ⟨0, Set.forall_mem_range.mpr fun _ => norm_nonneg _⟩ qV
-  have hproj :
-      ‖f - V.starProjection f‖ ≤ ‖f - U.starProjection f‖ := by
-    rw [hmin]
-    simpa [qV] using hiInf
-  simpa [U, V, condExpL2, Submodule.starProjection_apply] using hproj
+  rw [hmin]
+  simpa [qV] using hiInf
 
 /-- Consequently, the genuine ground-state joint one-link defect is bounded by
 the defect of the six-spatial color containing that link.  This uses only
@@ -283,19 +269,54 @@ theorem
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2
           H N hN beta hbeta
           (periodicHypercubicEvenSpatialSliceLinkColor H target) f‖ := by
-  simpa only [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2_apply,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_apply] using
-    real_condExpL2_residual_norm_mono_of_le
-      (μ := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+  let m₁ :=
+    periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+      H N (periodicHypercubicEvenSpatialSliceLinkColor H target)
+  let m₂ :=
+    periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
+      H N target
+  have hm₁ : m₁ ≤ (inferInstance : MeasurableSpace
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)) := by
+    simpa [m₁] using
+      periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
+        H N (periodicHypercubicEvenSpatialSliceLinkColor H target)
+  have hm₂ : m₂ ≤ (inferInstance : MeasurableSpace
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)) := by
+    simpa [m₂] using
+      periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace_le
+        H N target
+  letI : Fact (m₁ ≤ (inferInstance : MeasurableSpace
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))) := ⟨hm₁⟩
+  letI : Fact (m₂ ≤ (inferInstance : MeasurableSpace
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))) := ⟨hm₂⟩
+  let U : Submodule ℝ
+      (PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+        H N hN beta hbeta) :=
+    lpMeas ℝ ℝ m₁ 2
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
         H N hN beta hbeta)
-      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
-        H N (periodicHypercubicEvenSpatialSliceLinkColor H target))
-      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace_le
-        H N target)
-      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le_spatialLink
-        H N target)
-      f
+  let V : Submodule ℝ
+      (PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+        H N hN beta hbeta) :=
+    lpMeas ℝ ℝ m₂ 2
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+        H N hN beta hbeta)
+  have hUV : U ≤ V := by
+    intro g hg
+    rw [mem_lpMeas_iff_aestronglyMeasurable] at hg ⊢
+    exact hg.mono (by
+      simpa [m₁, m₂] using
+        periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le_spatialLink
+          H N target)
+  have hproj := real_starProjection_residual_norm_mono_of_le U V hUV f
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2_apply,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_apply]
+  simpa [U, V, m₁, m₂, condExpL2, Submodule.starProjection_apply] using hproj
 
 /-- Squared-energy form of the preceding monotonicity theorem. -/
 theorem
