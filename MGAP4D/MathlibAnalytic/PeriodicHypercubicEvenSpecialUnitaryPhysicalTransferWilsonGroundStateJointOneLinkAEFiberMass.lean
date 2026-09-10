@@ -137,7 +137,7 @@ theorem
           0 <
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight
               H N hN beta hbeta (left, right) :=
-    ae_ae_of_ae_prod hglobalPos
+    Measure.ae_ae_of_ae_prod hglobalPos
   have hfiberMeas :
       ∀ᵐ left ∂μ,
         ∀ᵐ retained ∂μOff,
@@ -185,7 +185,7 @@ theorem
           0 <
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight
               H N hN beta hbeta (left, split.symm (targetCfg, retained)) := by
-    simpa [Prod.swap] using (ae_ae_of_ae_prod hsplitPosSwap)
+    simpa [Prod.swap] using (Measure.ae_ae_of_ae_prod hsplitPosSwap)
   filter_upwards [hfiberInt, hfiberPosReal, hleftMeas] with retained hint hposReal hmeas
   constructor
   · change 0 < ∫⁻ targetCfg,
@@ -210,7 +210,7 @@ theorem
     have hfalse : ∀ᵐ targetCfg ∂μTarget, False := by
       filter_upwards [hposDensity, hzeroFiber] with targetCfg htarget htargetZero
       exact (ne_of_gt htarget) htargetZero
-    exact hfalse.exists.elim
+    exact (hfalse.exists).elim fun _ h => h
   · change (∫⁻ targetCfg,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitDensity
         H N hN beta hbeta left target (targetCfg, retained) ∂μTarget) < ∞
