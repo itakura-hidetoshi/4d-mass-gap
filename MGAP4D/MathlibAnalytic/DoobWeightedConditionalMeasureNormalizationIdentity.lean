@@ -45,6 +45,77 @@ theorem doobWeightMass_mul_lintegral_doobWeightedMeasure
     _ = ∫⁻ x, w x * g x ∂μ := by
       rw [ENNReal.mul_inv_cancel hMassZero hMassTop, mul_one]
 
+local instance (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
+local instance (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
+local instance periodicHypercubicEvenSpatialSliceTargetLinkFintypeForNormalizationIdentity
+    (H : ℕ)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceTargetLink H target) :=
+  Subtype.fintype (fun e : PeriodicHypercubicEvenSpatialSliceLink H => e = target)
+
+example
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (F :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N →
+      (PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
+        Matrix.specialUnitaryGroup (Fin N) ℂ) →
+      (PeriodicHypercubicEvenSpatialSliceTargetLink H target →
+        Matrix.specialUnitaryGroup (Fin N) ℂ) → ENNReal)
+    (hF :
+      ∀ᵐ left ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N),
+        ∀ᵐ retained ∂(Measure.pi
+          (fun _ : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target =>
+            normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ))),
+          AEMeasurable
+            (F left retained)
+            (Measure.pi
+              (fun _ : PeriodicHypercubicEvenSpatialSliceTargetLink H target =>
+                normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)))) :
+    ∀ᵐ left ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N),
+      ∀ᵐ retained ∂(Measure.pi
+        (fun _ : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target =>
+          normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ))),
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetFiberMass
+            H N hN beta hbeta left target retained *
+          (∫⁻ targetCfg,
+            F left retained targetCfg
+            ∂(periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetNormalizedFiberMeasure
+              H N hN beta hbeta left target retained)) =
+        ∫⁻ targetCfg,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitDensity
+              H N hN beta hbeta left target (targetCfg, retained) *
+            F left retained targetCfg
+          ∂(Measure.pi
+            (fun _ : PeriodicHypercubicEvenSpatialSliceTargetLink H target =>
+              normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)) := by
+  rfl
+
 end
 
 end MathlibAnalytic
