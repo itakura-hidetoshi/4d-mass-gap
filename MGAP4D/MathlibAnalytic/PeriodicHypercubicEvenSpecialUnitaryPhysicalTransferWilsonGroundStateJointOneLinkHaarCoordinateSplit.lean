@@ -39,6 +39,17 @@ abbrev PeriodicHypercubicEvenSpatialSliceTargetLink
     (target : PeriodicHypercubicEvenSpatialSliceLink H) : Type :=
   {e : PeriodicHypercubicEvenSpatialSliceLink H // e = target}
 
+/-- Use the generic subtype product indexing chosen by
+`measurePreserving_piEquivPiSubtypeProd`.  This local instance is mathematically
+the same singleton finite type as `Fintype.subtypeEq`; fixing its presentation
+prevents `Measure.pi` from depending on two definitionally different Fintype
+receipts for the target subtype. -/
+local instance periodicHypercubicEvenSpatialSliceTargetLinkFintype
+    (H : ℕ)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceTargetLink H target) :=
+  Subtype.fintype (fun e : PeriodicHypercubicEvenSpatialSliceLink H => e = target)
+
 /-- Split a complete right-boundary configuration into the selected target
 coordinate and all off-target coordinates.  The first factor is deliberately
 kept as the singleton target subtype: this is exactly the presentation used by
