@@ -51,7 +51,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          fetch-depth: 2
+          fetch-depth: 0
           show-progress: false
 
       - name: Preflight changed Lean static audit
