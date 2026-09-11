@@ -34,6 +34,14 @@ local instance (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+/-- Keep the singleton target subtype on the same explicit `Fintype`
+presentation as the canonical split target-fiber layer. -/
+local instance periodicHypercubicEvenSpatialSliceTargetLinkFintypeForSplitDirectFiber
+    (H : ℕ)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceTargetLink H target) :=
+  Subtype.fintype (fun e : PeriodicHypercubicEvenSpatialSliceLink H => e = target)
+
 /-- Evaluation through the canonical singleton-target measurable equivalence is
 literal evaluation at the selected link. -/
 @[simp] theorem periodicHypercubicEvenSpatialSliceTargetEvaluationMeasurableEquiv_apply
