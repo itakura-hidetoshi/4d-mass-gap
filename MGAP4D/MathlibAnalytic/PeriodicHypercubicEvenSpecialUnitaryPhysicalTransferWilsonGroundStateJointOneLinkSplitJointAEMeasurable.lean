@@ -10,27 +10,27 @@ open scoped ENNReal
 
 noncomputable section
 
-local instance (N : ℕ) :
+local instance specialUnitaryGroupIsTopologicalGroupForSplitJointAE (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 
-local instance (N : ℕ) :
+local instance specialUnitaryGroupCompactSpaceForSplitJointAE (N : ℕ) :
     CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
-local instance (N : ℕ) :
+local instance specialUnitaryGroupSecondCountableTopologyForSplitJointAE (N : ℕ) :
     SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupSecondCountableTopology N
 
-local instance (N : ℕ) :
+local instance specialUnitaryGroupMeasurableSpaceForSplitJointAE (N : ℕ) :
     MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
 
-local instance (N : ℕ) :
+local instance specialUnitaryGroupBorelSpaceForSplitJointAE (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-local instance (H : ℕ) :
+local instance periodicHypercubicEvenSpatialSliceLinkFintypeForSplitJointAE (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
