@@ -104,7 +104,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_mul_integ
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A B) μ := by
     have hpair : Continuous
         (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N => (A, B)) :=
-      continuous_id.prod_mk continuous_const
+      Continuous.prodMk continuous_id continuous_const
     exact
       ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous H N beta).comp
         hpair).aestronglyMeasurable
