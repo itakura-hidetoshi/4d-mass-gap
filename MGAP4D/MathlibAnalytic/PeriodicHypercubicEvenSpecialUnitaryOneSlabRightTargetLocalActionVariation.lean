@@ -9,10 +9,10 @@ open scoped BigOperators
 
 noncomputable section
 
-/-- RED specification: a right-boundary target-link update changes the complete
-one-slab action by the target crossing-energy difference plus one half of the
-sum of spatial Wilson-energy differences over intrinsic plaquettes touching the
-target.  No quantitative estimate is asserted here. -/
+/-- A right-boundary target-link update changes the complete one-slab action by
+the target crossing-energy difference plus one half of the sum of spatial
+Wilson-energy differences over intrinsic plaquettes touching the target.  This
+is an exact composition theorem; no quantitative estimate is asserted here. -/
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction_update_right_sub_eq_targetLocal
     (H N : ℕ)
     (A B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
@@ -30,7 +30,38 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction_update_ri
               (Function.update B target g) p) -
           specialUnitaryWilsonPlaquetteEnergy N
             (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy B p)) := by
-  rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction_update_right_sub_eq]
+  calc
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H N A
+          (Function.update B target g) -
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H N A B =
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H N A
+          (Function.update B target g) -
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H N A B) +
+      (1 / 2 : ℝ) *
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
+            (Function.update B target g) -
+          periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N B) :=
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction_update_right_sub_eq
+        H N A B target g
+    _ =
+      (specialUnitaryWilsonPlaquetteEnergy N ((A target)⁻¹ * g) -
+        specialUnitaryWilsonPlaquetteEnergy N ((A target)⁻¹ * B target)) +
+      (1 / 2 : ℝ) *
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
+            (Function.update B target g) -
+          periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N B) := by
+      rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_update_right_sub_eq]
+    _ =
+      (specialUnitaryWilsonPlaquetteEnergy N ((A target)⁻¹ * g) -
+        specialUnitaryWilsonPlaquetteEnergy N ((A target)⁻¹ * B target)) +
+      (1 / 2 : ℝ) *
+        ∑ p ∈ periodicHypercubicEvenSpatialSliceTouchingPlaquettes H target,
+          (specialUnitaryWilsonPlaquetteEnergy N
+              (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy
+                (Function.update B target g) p) -
+            specialUnitaryWilsonPlaquetteEnergy N
+              (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy B p)) := by
+      rw [periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_update_sub_eq_targetTouching]
 
 end
 
