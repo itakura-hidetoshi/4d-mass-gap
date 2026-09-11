@@ -42,6 +42,17 @@ local instance periodicHypercubicEvenSpatialSliceTargetLinkFintypeForSplitDirect
     Fintype (PeriodicHypercubicEvenSpatialSliceTargetLink H target) :=
   Subtype.fintype (fun e : PeriodicHypercubicEvenSpatialSliceLink H => e = target)
 
+/-- The selected-link subtype is literally a singleton.  Keep this local so the
+carrier remains the canonical subtype used by the split layer. -/
+local instance periodicHypercubicEvenSpatialSliceTargetLinkUniqueForSplitDirectFiber
+    (H : ℕ)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H) :
+    Unique (PeriodicHypercubicEvenSpatialSliceTargetLink H target) where
+  default := ⟨target, rfl⟩
+  uniq e := by
+    apply Subtype.ext
+    exact e.property
+
 /-- Evaluation through the canonical singleton-target measurable equivalence is
 literal evaluation at the selected link. -/
 @[simp] theorem periodicHypercubicEvenSpatialSliceTargetEvaluationMeasurableEquiv_apply
@@ -160,9 +171,10 @@ theorem
   let eval := periodicHypercubicEvenSpatialSliceTargetEvaluationMeasurableEquiv
     (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target
   have heval : MeasurePreserving eval μTarget μGroup := by
-    simpa [eval, μTarget, μGroup] using
-      (periodicHypercubicEvenSpatialSliceTargetEvaluation_measurePreserving
-        (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target μGroup)
+    simpa [eval, μTarget, μGroup,
+      periodicHypercubicEvenSpatialSliceTargetEvaluationMeasurableEquiv] using
+      (measurePreserving_funUnique μGroup
+        (PeriodicHypercubicEvenSpatialSliceTargetLink H target))
   have htransport := heval.lintegral_comp_emb eval.measurableEmbedding
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkFiberWeight
       H N hN beta hbeta left right target)
