@@ -29,6 +29,26 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_update_sub_
   rw [periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_eq_finset_sum,
     periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_eq_finset_sum,
     ← Finset.sum_sub_distrib]
+  symm
+  apply Finset.sum_subset
+    (Finset.subset_univ
+      (periodicHypercubicEvenSpatialSliceTouchingPlaquettes H target))
+  intro p _hp hNotMem
+  have hNotTouches :
+      ¬ periodicHypercubicEvenSpatialSlicePlaquetteTouchesLink H p target := by
+    simpa [periodicHypercubicEvenSpatialSliceTouchingPlaquettes] using hNotMem
+  have hHolonomy :=
+    periodicHypercubicEvenSpatialSlicePlaquetteHolonomy_continuousVacuumReplaceLink_eq_of_not_touches
+      H N A target g p hNotTouches
+  have hHolonomyUpdate :
+      periodicHypercubicEvenSpatialSlicePlaquetteHolonomy
+          (Function.update A target g) p =
+        periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A p := by
+    simpa [
+      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+    ] using hHolonomy
+  rw [hHolonomyUpdate]
+  simp
 
 end
 
