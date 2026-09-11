@@ -102,11 +102,12 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_mul_integ
   have hKmeas : AEStronglyMeasurable
       (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A B) μ := by
-    have hcont : Continuous
-        (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
-          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A B) := by
-      fun_prop
-    exact hcont.aestronglyMeasurable
+    have hpair : Continuous
+        (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N => (A, B)) :=
+      continuous_id.prod_mk continuous_const
+    exact
+      ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous H N beta).comp
+        hpair).aestronglyMeasurable
   have hmeas : AEStronglyMeasurable
       (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
         f A * periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
@@ -266,6 +267,20 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepre
       H N beta A Bg ∂μ) ≤
       c * ∫ A, Omega A * periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
         H N beta A Bh ∂μ at hIntegral
+  have hEigG' :
+      lambda *
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+            H N hN beta hbeta Bg =
+        ∫ A, Omega A * periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta A Bg ∂μ := by
+    simpa [lambda, Omega, μ] using hEigG
+  have hEigH' :
+      lambda *
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+            H N hN beta hbeta Bh =
+        ∫ A, Omega A * periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta A Bh ∂μ := by
+    simpa [lambda, Omega, μ] using hEigH
   have hScaled :
       lambda *
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
@@ -274,10 +289,46 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepre
           (c *
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
               H N hN beta hbeta Bh) := by
-    rw [hEigG, hEigH]
-    simpa [mul_assoc, mul_comm, mul_left_comm] using hIntegral
-  have hVac := (mul_le_mul_left hlambda).mp hScaled
-  simpa [Bg, Bh, c] using hVac
+    calc
+      lambda *
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+            H N hN beta hbeta Bg =
+        ∫ A, Omega A * periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta A Bg ∂μ := hEigG'
+      _ ≤ c * ∫ A, Omega A * periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta A Bh ∂μ := hIntegral
+      _ = c *
+          (lambda *
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+              H N hN beta hbeta Bh) := by rw [← hEigH']
+      _ = lambda *
+          (c *
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+              H N hN beta hbeta Bh) := by ring
+  change
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+        H N hN beta hbeta Bg ≤
+      c *
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta Bh
+  by_contra hnot
+  have hlt :
+      c *
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+            H N hN beta hbeta Bh <
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta Bg :=
+    lt_of_not_ge hnot
+  have hmul :
+      lambda *
+          (c *
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+              H N hN beta hbeta Bh) <
+        lambda *
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+            H N hN beta hbeta Bg :=
+    mul_lt_mul_of_pos_left hlt hlambda
+  exact (not_lt_of_ge hScaled) hmul
 
 /-- Symmetric pairwise one-link Harnack comparison for the canonical continuous
 physical vacuum representative. -/
