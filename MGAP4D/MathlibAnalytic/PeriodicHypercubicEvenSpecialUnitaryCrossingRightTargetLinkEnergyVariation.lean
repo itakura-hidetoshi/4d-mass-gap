@@ -4,6 +4,8 @@ import Mathlib.Tactic
 namespace MGAP4D
 namespace MathlibAnalytic
 
+open scoped BigOperators
+
 noncomputable section
 
 /-- Updating one right-boundary spatial link changes the temporal-gauge crossing
@@ -19,7 +21,32 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction_update_r
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H N A B =
     specialUnitaryWilsonPlaquetteEnergy N ((A target)⁻¹ * g) -
       specialUnitaryWilsonPlaquetteEnergy N ((A target)⁻¹ * B target) := by
+  classical
   unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction
+  calc
+    ((periodicHypercubicEvenSpatialSliceLinkList H).map fun e =>
+        specialUnitaryWilsonPlaquetteEnergy N
+          ((A e)⁻¹ * Function.update B target g e)).sum -
+        ((periodicHypercubicEvenSpatialSliceLinkList H).map fun e =>
+          specialUnitaryWilsonPlaquetteEnergy N ((A e)⁻¹ * B e)).sum =
+      (∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+        specialUnitaryWilsonPlaquetteEnergy N
+          ((A e)⁻¹ * Function.update B target g e)) -
+      ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+        specialUnitaryWilsonPlaquetteEnergy N ((A e)⁻¹ * B e) := by
+      simp [periodicHypercubicEvenSpatialSliceLinkList]
+    _ = ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+        (specialUnitaryWilsonPlaquetteEnergy N
+            ((A e)⁻¹ * Function.update B target g e) -
+          specialUnitaryWilsonPlaquetteEnergy N ((A e)⁻¹ * B e)) := by
+      rw [← Finset.sum_sub_distrib]
+    _ = specialUnitaryWilsonPlaquetteEnergy N ((A target)⁻¹ * g) -
+        specialUnitaryWilsonPlaquetteEnergy N ((A target)⁻¹ * B target) := by
+      rw [Finset.sum_eq_single target]
+      · simp
+      · intro e _he hne
+        simp [hne]
+      · simp
 
 end
 
