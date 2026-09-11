@@ -8,6 +8,10 @@ open scoped BigOperators
 
 noncomputable section
 
+local instance (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSlicePlaquette H) :=
+  Fintype.ofFinite _
+
 /-- Updating one intrinsic spatial target link changes the spatial Wilson action
 by exactly the sum of Wilson-energy differences over intrinsic spatial
 plaquettes touching that target. -/
