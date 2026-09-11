@@ -170,11 +170,27 @@ theorem
   let μGroup := normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)
   let eval := periodicHypercubicEvenSpatialSliceTargetEvaluationMeasurableEquiv
     (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target
+  have hevalEval :
+      MeasurePreserving
+        (Function.eval
+          (⟨target, rfl⟩ : PeriodicHypercubicEvenSpatialSliceTargetLink H target))
+        μTarget μGroup := by
+    simpa [μTarget, μGroup] using
+      (MeasureTheory.measurePreserving_eval
+        (μ := fun _ : PeriodicHypercubicEvenSpatialSliceTargetLink H target => μGroup)
+        (⟨target, rfl⟩ : PeriodicHypercubicEvenSpatialSliceTargetLink H target))
   have heval : MeasurePreserving eval μTarget μGroup := by
-    simpa [eval, μTarget, μGroup,
-      periodicHypercubicEvenSpatialSliceTargetEvaluationMeasurableEquiv] using
-      (measurePreserving_funUnique μGroup
-        (PeriodicHypercubicEvenSpatialSliceTargetLink H target))
+    have hfun :
+        (eval :
+          (PeriodicHypercubicEvenSpatialSliceTargetLink H target →
+            Matrix.specialUnitaryGroup (Fin N) ℂ) →
+          Matrix.specialUnitaryGroup (Fin N) ℂ) =
+        Function.eval
+          (⟨target, rfl⟩ : PeriodicHypercubicEvenSpatialSliceTargetLink H target) := by
+      funext targetCfg
+      simp [eval]
+    rw [hfun]
+    exact hevalEval
   have htransport := heval.lintegral_comp_emb eval.measurableEmbedding
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkFiberWeight
       H N hN beta hbeta left right target)
