@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryOneSlabKernel
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumLocalHarnack
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -8,20 +8,9 @@ open scoped BigOperators
 
 noncomputable section
 
-/-- An intrinsic spatial-slice plaquette touches a spatial link when the link is
-one of the plaquette's four boundary links. -/
-def periodicHypercubicEvenSpatialSlicePlaquetteTouchesLink
-    (H : ℕ)
-    (p : PeriodicHypercubicEvenSpatialSlicePlaquette H)
-    (target : PeriodicHypercubicEvenSpatialSliceLink H) : Prop :=
-  target = (p.1, p.2.1.1) ∨
-    target = (periodicHypercubicEvenSpatialSliceShift H p.1 p.2.1.1, p.2.1.2) ∨
-    target = (periodicHypercubicEvenSpatialSliceShift H p.1 p.2.1.2, p.2.1.1) ∨
-    target = (p.1, p.2.1.2)
-
-/-- RED specification: updating one spatial target link changes the spatial
-Wilson action only through plaquettes whose intrinsic boundary contains that
-link. -/
+/-- Updating one intrinsic spatial target link changes the spatial Wilson action
+by exactly the sum of Wilson-energy differences over intrinsic spatial
+plaquettes touching that target. -/
 theorem periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_update_sub_eq_targetTouching
     (H N : ℕ)
     (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
@@ -30,18 +19,16 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_update_sub_
     periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N
         (Function.update A target g) -
       periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N A =
-    ∑ p : PeriodicHypercubicEvenSpatialSlicePlaquette H,
-      if periodicHypercubicEvenSpatialSlicePlaquetteTouchesLink H p target then
+    ∑ p ∈ periodicHypercubicEvenSpatialSliceTouchingPlaquettes H target,
+      (specialUnitaryWilsonPlaquetteEnergy N
+          (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy
+            (Function.update A target g) p) -
         specialUnitaryWilsonPlaquetteEnergy N
-            (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy
-              (Function.update A target g) p) -
-          specialUnitaryWilsonPlaquetteEnergy N
-            (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A p)
-      else 0 := by
+          (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A p)) := by
   classical
-  simp [periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction,
-    periodicHypercubicEvenSpatialSlicePlaquetteList,
-    periodicHypercubicEvenSpatialSlicePlaquetteTouchesLink]
+  rw [periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_eq_finset_sum,
+    periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_eq_finset_sum,
+    ← Finset.sum_sub_distrib]
 
 end
 
