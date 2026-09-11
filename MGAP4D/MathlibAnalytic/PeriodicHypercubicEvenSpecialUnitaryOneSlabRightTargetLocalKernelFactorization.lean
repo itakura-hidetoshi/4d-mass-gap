@@ -34,6 +34,40 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_update_ri
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A B := by
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_eq_boltzmann,
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_eq_boltzmann]
+  have hAction :
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H N A
+          (Function.update B target g) =
+        ((specialUnitaryWilsonPlaquetteEnergy N ((A target)⁻¹ * g) -
+            specialUnitaryWilsonPlaquetteEnergy N ((A target)⁻¹ * B target)) +
+          (1 / 2 : ℝ) *
+            ∑ p ∈ periodicHypercubicEvenSpatialSliceTouchingPlaquettes H target,
+              (specialUnitaryWilsonPlaquetteEnergy N
+                  (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy
+                    (Function.update B target g) p) -
+                specialUnitaryWilsonPlaquetteEnergy N
+                  (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy B p))) +
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H N A B := by
+    calc
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H N A
+            (Function.update B target g) =
+          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H N A
+              (Function.update B target g) -
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H N A B) +
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H N A B := by
+        ring
+      _ =
+          ((specialUnitaryWilsonPlaquetteEnergy N ((A target)⁻¹ * g) -
+              specialUnitaryWilsonPlaquetteEnergy N ((A target)⁻¹ * B target)) +
+            (1 / 2 : ℝ) *
+              ∑ p ∈ periodicHypercubicEvenSpatialSliceTouchingPlaquettes H target,
+                (specialUnitaryWilsonPlaquetteEnergy N
+                    (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy
+                      (Function.update B target g) p) -
+                  specialUnitaryWilsonPlaquetteEnergy N
+                    (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy B p))) +
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H N A B := by
+        rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction_update_right_sub_eq_targetLocal]
+  rw [hAction, mul_add, Real.exp_add]
 
 end
 
