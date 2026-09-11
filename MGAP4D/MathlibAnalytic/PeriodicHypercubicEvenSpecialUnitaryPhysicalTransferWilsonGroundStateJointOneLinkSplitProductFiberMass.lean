@@ -11,27 +11,27 @@ open scoped ENNReal
 
 noncomputable section
 
-local instance (N : ℕ) :
+local instance specialUnitaryGroupIsTopologicalGroupForSplitProductMass (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 
-local instance (N : ℕ) :
+local instance specialUnitaryGroupCompactSpaceForSplitProductMass (N : ℕ) :
     CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
-local instance (N : ℕ) :
+local instance specialUnitaryGroupSecondCountableTopologyForSplitProductMass (N : ℕ) :
     SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupSecondCountableTopology N
 
-local instance (N : ℕ) :
+local instance specialUnitaryGroupMeasurableSpaceForSplitProductMass (N : ℕ) :
     MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
 
-local instance (N : ℕ) :
+local instance specialUnitaryGroupBorelSpaceForSplitProductMass (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-local instance (H : ℕ) :
+local instance periodicHypercubicEvenSpatialSliceLinkFintypeForSplitProductMass (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
