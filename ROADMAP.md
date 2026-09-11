@@ -1,6 +1,6 @@
 # MGAP4D Roadmap
 
-This roadmap records the proof-development order of `itakura-hidetoshi/4d-mass-gap` as of **2026-09-11 JST**.
+This roadmap records the proof-development order of `itakura-hidetoshi/4d-mass-gap` as of **2026-09-12 JST**.
 
 The authoritative theorem carrier is
 
@@ -8,43 +8,38 @@ The authoritative theorem carrier is
 formal/real-hilbert-uniform-coercive-strong-limit
 ```
 
-and the current authoritative exact canonical theorem SHA is
+at the exact canonical theorem SHA
 
 ```text
-f65c0fc75c56ffdcba103331768b8aa73fbfba65
+015d3cceb59e696f692b6d67e017b3aee4664715
 ```
 
-which is the normal merge commit of PR #3880,
+which is the normal merge commit of PR #3887:
 
 ```text
-Bound one-slab right target local Boltzmann factor.
+Transport sharp one-link Harnack to continuous physical vacuum
 ```
 
 Validated exact theorem head:
 
 ```text
-6f33df5b7d7f1c4258101b55a7d1372edfb15680
+6b281139612a2c1188f2b6a616b2e1d986fb51c6
 ```
 
 Validation:
 
 ```text
-PR Lean Fast Check #13579 = completed / success.
+PR Lean Fast Check #13589 = completed / success
+post-merge PR Lean Fast Check #13590 = completed / success
 ```
 
 The public `main` branch is a landing/documentation surface. Only theorem results merged into the authoritative theorem carrier count as canonical proof status.
 
 > **Current frontier**
 >
-> The former one-link disintegration seam has been substantially closed at the explicit fiber/measure level. The repository now has target/off-target Haar splitting, a.e. finite-positive target fibers, normalized target probability fibers, a measurable Markov-kernel representative with exact global integral identity, transport back to original right-boundary coordinates, direct `SU(N)` target-coordinate bridges, and direct ground-state one-link weight factorization.
+> The explicit one-link fiber/disintegration layer is no longer the primary obstruction, and neither is the first target-local Wilson factorization. The canonical chain now contains the direct ground-state one-link weight, target-local Boltzmann factorization, uniform factor bounds, a pairwise target-local-factor comparison, the sharp raw-kernel one-link Harnack bound with factor `exp(8 beta)`, and the same `exp(8 beta)` Harnack bound for the canonical continuous physical vacuum representative.
 >
-> The latest chain then localizes a literal right-target update of the one-slab Wilson kernel and proves the volume-independent factor bound
->
-> ```text
-> exp(-8 beta) <= localFactor <= exp(8 beta).
-> ```
->
-> Therefore the highest-priority next unit is no longer “construct the one-link disintegration.” It is to **normalize the target-local factor inside the actual ground-state one-link fiber and obtain an explicit volume-independent normalized comparison / minorization theorem**. After that, the problem is to convert the one-link estimate into genuine joint conditional-variance control and globalize it to six-color / twelve-spatial coercivity without inverse-volume loss.
+> The highest-priority next theorem is to compose the raw-kernel and continuous-vacuum Harnack controls **on the exact direct ground-state one-link fiber carrier**, obtaining an explicit pairwise comparison for the complete unnormalized one-link weight. That result must then be normalized with explicit denominator control before any Doeblin/minorization or conditional-variance conclusion is claimed. The subsequent bottleneck is globalization to six-color / twelve-spatial coercivity without inverse-volume loss.
 
 ---
 
@@ -55,7 +50,7 @@ The public `main` branch is a landing/documentation surface. Only theorem result
 - **Open now** — immediate constructive frontier.
 - **Open next** — directly follows the current seam.
 - **Open downstream** — required after the present quantitative frontier.
-- **Parallel route** — mathematically useful but not mandatory for the main path.
+- **Parallel route** — useful independent route, not the immediate main line.
 - **Diagnostic only** — correct information that must not be mistaken for the missing theorem.
 
 ---
@@ -67,8 +62,9 @@ A. FINITE WILSON ROOT
 
 periodic-even compact SU(N) Wilson Gibbs model                         [Integrated]
   -> reflection positivity / boundary geometry                       [Integrated]
+  -> literal one-slab Wilson kernel                                  [Integrated]
   -> physical spatial-slice transfer                                 [Integrated]
-  -> positive / strictly-positive ground-state transfer structure    [Integrated]
+  -> positive / strictly-positive ground-state structure             [Integrated]
 
 B. SAME-ROOT SCALAR CONTINUUM OS
 
@@ -87,110 +83,103 @@ full top eigenspace F and K = F-perp                                 [Integrated
   -> decay / strong convergence / resolvent / Green                  [Integrated]
   -> finite-volume relative Poincare                                 [Integrated]
 
-D. LOCAL PHYSICAL DOOB CONTROL
-
-continuous positive physical vacuum                                  [Integrated]
-  -> volume-independent local Harnack control                        [Integrated]
-  -> physical one-link Doob law                                      [Integrated]
-  -> centered one-link resampling gap = 1                            [Integrated]
-  -> explicit local variance comparison                              [Integrated]
-
-E. GROUND-STATE TWELVE-SPATIAL GEOMETRY
+D. GROUND-STATE TWELVE-SPATIAL GEOMETRY
 
 one-slab ground-state joint probability law                          [Integrated]
   -> 6 right + 6 left genuine spatial condExp projections            [Integrated]
   -> common fixed by all 12 = a.e. constants                         [Integrated]
   -> kernel(E12) = intrinsic constant line                           [Integrated]
-  -> E12(RUx)=0 <-> x=0 on physical K                               [Integrated]
+  -> E12(R U x)=0 <-> x=0 on physical K                             [Integrated]
 
-F. SAME-COLOR RAW WILSON BLOCK
+E. SAME-COLOR / GENUINE ONE-LINK GEOMETRY
 
-same-color plaquette / action locality                               [Integrated]
-  -> exact raw one-link conditional-law locality                     [Integrated]
-  -> exact same-color raw heat-bath commutation                      [Integrated]
+same-color plaquette separation                                      [Integrated]
+  -> raw Wilson target locality                                      [Integrated]
+  -> same-color raw heat-bath commutation                            [Integrated]
   -> permutation-independent fixed-color Feller block                [Integrated]
-  -> remote-replacement Doob normal form                             [Integrated]
-
-G. GENUINE JOINT ONE-LINK CONDEXP
-
-off-target sigma algebra                                             [Integrated]
-  -> genuine joint target condExpL2                                  [Integrated]
-  -> off-color sigma <= off-target sigma                             [Integrated]
+  -> genuine joint target condExp                                    [Integrated]
   -> target residual <= containing color residual                    [Integrated]
 
-H. GROUND-STATE ONE-LINK FIBER / MARKOV LAYER
+F. EXPLICIT GROUND-STATE ONE-LINK FIBER / MARKOV LAYER
 
 literal target fiber measure                                         [Integrated]
   -> target/off-target Haar split                                    [Integrated]
-  -> a.e. measurable target sections                                [Integrated]
-  -> a.e. 0 < fiberMass < infinity                                  [Integrated]
-  -> normalized a.e. probability fibers                             [Integrated]
-  -> exact fiber normalization identity                             [Integrated]
-  -> measurable normalized Markov-kernel representative             [Integrated]
-  -> exact global lintegral identity                                [Integrated]
-  -> ground-state split specialization                              [Integrated]
-  -> original-coordinate Markov identity                            [Integrated]
-  -> singleton target <-> direct SU(N) coordinate bridge            [Integrated]
-  -> normalized split fiber -> direct target coordinate             [Integrated]
+  -> a.e. measurable finite-positive fibers                          [Integrated]
+  -> normalized target probability fibers                            [Integrated]
+  -> measurable normalized Markov-kernel representative              [Integrated]
+  -> exact global lintegral identity                                 [Integrated]
+  -> original complete-right coordinate transport                    [Integrated]
+  -> direct SU(N) target-coordinate bridge                           [Integrated]
+  -> direct ground-state one-link Wilson/vacuum weight               [Integrated]
 
-I. DIRECT GROUND-STATE ONE-LINK WEIGHT
+G. TARGET-LOCAL ONE-SLAB FACTORIZATION
 
-direct one-link fiber density                                        [Integrated]
-  -> left vacuum * literal one-slab Wilson kernel * right vacuum     [Integrated]
+right target update of one-slab action                               [Integrated]
+  -> crossing target-link localization                               [Integrated]
+  -> spatial target-link localization                                [Integrated]
+  -> complete target-local action variation                          [Integrated]
+  -> exact division-free kernel multiplier                           [Integrated]
+  -> named localFactor                                                [Integrated]
+  -> exp(-8 beta) <= localFactor <= exp(8 beta)                      [Integrated]
 
-J. TARGET-LOCAL ONE-SLAB FACTORIZATION
+H. PAIRWISE HARNACK LAYER
 
-right target update of one-slab action                              [Integrated]
-  -> crossing target-link localization                              [Integrated]
-  -> spatial target-link localization                               [Integrated]
-  -> complete target-local action variation                         [Integrated]
-  -> exact division-free kernel multiplier                          [Integrated]
-  -> named local Boltzmann factor                                   [Integrated]
-  -> exp(-8 beta) <= localFactor <= exp(8 beta)                     [Integrated: #3880]
+direct ground-state weight -> localFactor bridge                     [Integrated: #3883]
+localFactor(g) <= exp(16 beta) * localFactor(h)                       [Integrated: #3884]
+raw kernel K(A,B[g]) <= exp(8 beta) * K(A,B[h])                      [Integrated: #3885]
+RKHS synthesis = raw-kernel integral                                 [Integrated: #3887]
+continuous-vacuum pointwise integral eigen-equation                  [Integrated: #3887]
+Omega_c(B[g]) <= exp(8 beta) * Omega_c(B[h])                         [Integrated: #3887]
 
-K. NORMALIZED TARGET-FIBER COMPARISON
+I. DIRECT GROUND-STATE ONE-LINK WEIGHT HARNACK
 
-unnormalized local factor bounds
-  -> normalization denominator bounds                               [OPEN NOW]
-  -> explicit normalized one-link density ratio bounds              [OPEN NOW]
-  -> volume-independent minorization / Harnack comparison           [OPEN NOW]
+kernel Harnack + continuous-vacuum Harnack
+  -> verify exact representative/carrier bridge used by direct fiber [OPEN NOW]
+  -> complete one-link weight pairwise comparison                    [OPEN NOW]
 
-L. GENUINE JOINT ONE-LINK QUANTITATIVE CONTROL
+J. NORMALIZED TARGET-FIBER COMPARISON
+
+unnormalized one-link weight comparison
+  -> normalization denominator control                               [OPEN NEXT]
+  -> normalized density-ratio / Harnack bounds                       [OPEN NEXT]
+  -> volume-independent minorization / Doeblin-type estimate         [OPEN NEXT]
+
+K. GENUINE JOINT ONE-LINK QUANTITATIVE CONTROL
 
 normalized target-fiber comparison
-  -> lower bound on genuine target conditional variance             [OPEN NEXT]
+  -> lower bound on genuine target conditional variance              [OPEN NEXT]
   -> lower bound on target projection defect                         [OPEN NEXT]
-  -> containing six-color residual receives same local information  [OPEN NEXT]
+  -> containing six-color residual receives the local information    [OPEN NEXT]
 
-M. BLOCK / GLOBAL QUANTITATIVE SEAM
+L. BLOCK / GLOBAL QUANTITATIVE SEAM
 
 one-link information
   -> color/twelve-spatial estimate without 1/(number of links) loss [OPEN NEXT]
 
-N. SCALE-UNIFORM TARGET
+M. SCALE-UNIFORM TARGET
 
 there exists kappa > 0, independent of n,
-  for every n and every x in K_n,
+  for every scale n and every x in K_n,
 
   kappa ||x||^2 <= E12,n(R U x)                                      [OPEN]
 
   -> six-spatial frame coefficient 2 kappa                           [Integrated implication machinery]
   -> physical transfer gap >= 3 kappa / 4                            [Integrated implication machinery]
 
-O. THERMODYNAMIC / CONTINUUM PHYSICAL PROPAGATION
+N. THERMODYNAMIC / CONTINUUM PHYSICAL PROPAGATION
 
-uniform physical transfer gap                                       [OPEN DOWNSTREAM]
-  -> stable Green / resolvent / decay bounds                         [OPEN DOWNSTREAM]
-  -> controlled thermodynamic/scaling limit                          [OPEN DOWNSTREAM]
-  -> physical OS/Wightman/Hamiltonian spectral lower bound           [OPEN DOWNSTREAM]
+uniform physical transfer gap                                       [Open downstream]
+  -> stable Green / resolvent / decay bounds                         [Open downstream]
+  -> controlled thermodynamic/scaling limit                          [Open downstream]
+  -> physical OS/Wightman/Hamiltonian spectral lower bound           [Open downstream]
 
-P. CLAY-LEVEL COMPLETION
+O. CLAY-LEVEL COMPLETION
 
-full same-root 4D continuum gauge field/state                        [OPEN]
-correct vacuum structure                                             [OPEN]
-full physical OS/Wightman identification                             [OPEN]
-strictly positive continuum spectrum above vacuum                    [OPEN]
-Clay-level existence + mass gap                                      [OPEN]
+full same-root 4D continuum gauge field/state                        [Open]
+correct vacuum structure                                             [Open]
+full physical OS/Wightman identification                             [Open]
+strictly positive continuum spectrum above vacuum                    [Open]
+Clay-level existence + mass gap                                      [Open]
 ```
 
 ---
@@ -204,17 +193,18 @@ Repository-operation rules for theorem work:
 ```text
 start from the exact authoritative canonical SHA
 use the theorem carrier, not public main, for theorem status
-accept CI only at terminal success
-never treat queued/in_progress as success
+accept CI only at terminal completed / success
+never treat queued / in_progress as success
 write-freeze while exact-head CI is running
 inspect the first genuine Lean error before editing a failed head
 keep theorem development additive / tighten-only
 never weaken physical assumptions silently
 never identify unrelated carriers silently
 forbid sorry / admit / new axiom / placeholder theorem declarations
-fresh-check exact head / base / mergeability / reviews / threads before merge
+fresh-check exact head / base / branch pointer before merge
 normal-merge with expected head SHA fixed
 verify merge parents and theorem-branch pointer after merge
+verify post-merge CI
 ```
 
 Pinned environment:
@@ -229,18 +219,18 @@ Permanent logical boundaries:
 ```text
 finite-volume theorem != continuum theorem
 trivial kernel != quantitative coercivity
-q_n < 1 for all n != inf_n(1-q_n)>0
+q_n < 1 for all n != inf_n (1-q_n) > 0
 mutual absolute continuity != uniform L2 norm equivalence
 raw Wilson locality != vacuum-weighted Doob locality without transport
 measurable normalized fiber != RCD unless proved
-unnormalized factor bound != normalized minorization without denominator control
-one-link residual <= color residual != tensorization over all links
+unnormalized Harnack != normalized minorization without denominator control
+one-link Harnack != global Poincare without a globalization theorem
 pairwise commutation != Poincare lower bound
-local Harnack/TV comparison != global Poincare without a theorem
 selected vacuum vector != full top eigenspace
 one exact mode != global spectral floor
 same-root scalar continuum != full 4D Yang--Mills field
 green open PR != merged canonical theorem
+public main != theorem authority
 ```
 
 ---
@@ -259,7 +249,7 @@ The root is the actual periodic-even compact special-unitary Wilson Gibbs model.
 
 **Status: Integrated.**
 
-The canonical lane contains finite gauge-invariant scalar readout, rational-time path laws, tight finite pushforward families, subsequential continuum probability laws, continuum reflection positivity, OS quotient/completion, real strongly continuous contraction semigroup, graph-closed self-adjoint Hamiltonian, normalized vacuum, and complete vacuum-orthogonal sector.
+The canonical lane contains finite gauge-invariant scalar readout, rational-time path laws, tight finite pushforward families, subsequential continuum probability laws, continuum reflection positivity, OS quotient/completion, a real strongly continuous contraction semigroup, a graph-closed self-adjoint Hamiltonian, normalized vacuum, and complete vacuum-orthogonal sector.
 
 This is a same-root continuum scalar observable process, not yet the complete continuum gauge field on `R^4`.
 
@@ -275,21 +265,23 @@ At fixed volume the canonical branch contains the full top eigenspace, its ortho
 
 ---
 
-# Phase 4 — Local physical Doob / Harnack control
+# Phase 4 — Genuine twelve-spatial geometry and qualitative kernel closure
 
 **Status: Integrated.**
 
-The local physical route already contains a one-link Wilson action oscillation bound, volume-independent Harnack control, physical one-link Doob laws, one-link resampling gap `1`, and explicit one-link variance comparisons.
+The actual ground-state joint `L2` carrier supports six right and six left spatial conditional expectations. The canonical qualitative milestones include
 
-**Boundary:** these local theorems are not yet the desired global Poincare inequality.
+```text
+#3746  twelve-color common-fixed sector = ground-state-a.e. constants
+#3768  E12(z)=0 iff represented function is ground-state-a.e. constant
+#3770  a.e. constant iff equality with an actual constant vector
+#3773  kernel(E12) = intrinsic real constant line
+#3775  E12(R U x)=0 iff x=0 on the genuine physical full-top-orthogonal sector
+```
 
----
+The qualitative kernel problem is closed.
 
-# Phase 5 — Genuine twelve-spatial conditional-expectation geometry
-
-**Status: Integrated.**
-
-The actual ground-state joint `L2` carrier supports six right and six left spatial conditional expectations. The downstream implication
+The downstream implication
 
 ```text
 12-spatial Poincare kappa
@@ -299,367 +291,385 @@ The actual ground-state joint `L2` carrier supports six right and six left spati
 
 is already formalized.
 
-The missing object remains a model-derived scale-uniform `kappa`.
+**Permanent warning:** injectivity is not a positive scale-uniform coercivity constant.
 
 ---
 
-# Phase 6 — Qualitative kernel closure
+# Phase 5 — Same-color Wilson locality and genuine one-link condExp
 
 **Status: Integrated.**
 
-Canonical milestones:
+The model-derived same-color chain includes
 
 ```text
-#3746  twelve-color common-fixed sector = ground-state-a.e. constants
-#3768  E12(z)=0 iff represented function is ground-state-a.e. constant
-#3770  a.e. constant iff equality with an actual constant vector
-#3773  kernel(E12) = intrinsic real constant line
-#3775  E12(RUx)=0 iff x=0 on the genuine physical full-top-orthogonal sector
+#3779  distinct same-colored physical links cannot share a Wilson plaquette
+#3781  separation descends to the actual six spatial color classes
+#3783  compact Wilson target-local action separation
+#3787  exact raw target one-link conditional-law locality
+#3789  exact same-color raw heat-bath commutation
+#3791  permutation-independent fixed-color Feller block
+#3795  remote-replacement Doob normal form
+#3798  genuine joint target condExp and target/color residual comparison
 ```
 
-The qualitative kernel problem is closed.
+For the genuine target projection `P_target` and containing color projection `P_color`, the canonical geometry gives
 
-**Permanent warning:** injectivity is not a positive uniform coercivity constant.
+```text
+||f - P_target f|| <= ||f - P_color f||.
+```
+
+Thus a quantitative target-link lower bound can feed the containing color residual directly. The hard step remains obtaining such a bound and globalizing it uniformly.
 
 ---
 
-# Phase 7 — Same-color Wilson locality and raw block dynamics
+# Phase 6 — Explicit ground-state one-link fiber and measurable Markov layer
 
 **Status: Integrated.**
 
-```text
-#3779  same-colored distinct physical links cannot share a Wilson plaquette
-#3781  separation descends to actual six spatial color classes
-#3783  compact Wilson target-local action is unchanged by remote same-color replacement
-#3787  exact normalized raw target one-link conditional law is unchanged
-#3789  exact same-color raw heat-bath transforms commute
-#3791  bounded-continuous Feller commutation + permutation-independent fixed-color block
-#3795  exact remote-replacement normal form for the Doob one-link law
-```
-
-This route is model-derived. No abstract independence axiom is introduced.
-
-Same-color Doob commutation remains a useful **parallel route**, but it is not the only path to quantitative progress.
-
----
-
-# Phase 8 — Genuine joint one-link conditional expectation
-
-**Status: Integrated: PR #3798.**
-
-For a target right-boundary spatial link, the canonical layer defines the sigma algebra retaining the complete left boundary and all right-boundary spatial coordinates except the target. It constructs the genuine one-link `condExpL2` directly on the ground-state joint law and proves
+The former abstract disintegration frontier is now concrete:
 
 ```text
-||f - P_target f|| <= ||f - P_color(target) f||.
-```
-
-Thus a future one-link lower bound can feed the containing color residual directly.
-
----
-
-# Phase 9 — Explicit ground-state one-link fiber
-
-**Status: Integrated.**
-
-The one-link fiber layer now contains:
-
-```text
-#3807  literal target fiber measure and mass
-#3810  normalization under explicit fixed-context receipts
-#3812  target/off-target Haar split
+#3807  literal ground-state target fiber measure
+#3810  normalize fixed fibers under explicit receipts
+#3812  split target/off-target Haar coordinates measure-preservingly
 #3815  a.e. target-fiber measurability
-#3820  a.e. positive finite fiber mass
-#3823  normalized a.e. probability fibers
-#3825  exact normalization identity
-```
-
-This replaced the old abstract “we need a fiber model” frontier with a concrete same-root target-fiber construction.
-
----
-
-# Phase 10 — Measurable Markov representative and exact global identity
-
-**Status: Integrated.**
-
-The generic normalized-weight layer and its ground-state specialization contain:
-
-```text
+#3820  a.e. finite positive target-fiber mass
+#3823  normalized a.e. target probability fibers
+#3825  exact one-link fiber normalization identity
 #3832  measurable normalized Markov-kernel representative
        + exact global lintegral identity
-#3840  joint AE measurability after target/off-target split
-#3842  product-a.e. finite-positive fiber mass
-#3845  measurable Markov disintegration specialized to ground-state split
+#3840  joint AE measurability in split coordinates
+#3842  product-a.e. finite-positive fiber-mass control
+#3845  ground-state split specialization
 #3848  split-context Haar coordinate equivalence
-#3850  original complete-right coordinate Markov identity
+#3850  original complete-right coordinate identity
+#3852  singleton target <-> direct SU(N) measurable coordinate
+#3854  split density/mass -> direct gauge coordinate
+#3859  normalized split fiber -> direct target coordinate
+#3861  direct one-link Wilson/vacuum weight factorization
 ```
 
-**Claim boundary:** this layer is not silently promoted to an RCD statement unless that exact identification is separately formalized.
+**Claim boundary:** this measurable normalized kernel is not silently promoted to an RCD unless an exact identification theorem is supplied.
 
 ---
 
-# Phase 11 — Direct `SU(N)` target coordinate and density bridge
+# Phase 7 — Target-local one-slab action and kernel factorization
 
 **Status: Integrated.**
 
-```text
-#3852  singleton target configuration <-> direct gauge-group coordinate
-#3854  split density and split mass = direct target density and mass
-#3859  normalized split fiber pushes exactly to direct target coordinate
-#3861  direct ground-state one-link weight
-       = normalization * left vacuum * literal one-slab kernel * updated-right vacuum
-```
-
-This is the carrier bridge needed for a direct local Boltzmann-factor analysis.
-
----
-
-# Phase 12 — Target-local one-slab action and kernel factorization
-
-**Status: Integrated.**
-
-The newest theorem stack is:
+The exact local chain is
 
 ```text
 #3863  right target update -> crossing variation + half right-spatial variation
-#3866  crossing variation localizes exactly to the target-link Wilson energy change
-#3869  intrinsic spatial Wilson action variation localizes to target-touching plaquettes
+#3866  crossing variation localizes exactly to target-link energy change
+#3869  intrinsic spatial action variation localizes to target-touching plaquettes
 #3874  complete one-slab action variation is target-local
 #3877  K(A, B[target <- g])
        = exp(-beta * DeltaS_targetLocal) * K(A,B)
-#3880  define named localFactor and prove, for 0 <= beta,
+#3880  name localFactor and prove
        exp(-8 beta) <= localFactor <= exp(8 beta)
 ```
 
-The #3880 constants are independent of configuration and lattice volume.
-
-**What this does not yet prove:** normalized one-link minorization, contraction, Poincare/coercivity, spectral gap, or mass gap.
+All constants here are configuration- and volume-independent.
 
 ---
 
-# Phase 13 — Normalize the target-local factor inside the ground-state fiber
+# Phase 8 — Pairwise Harnack layer
 
-**Status: Open now. Highest priority.**
+**Status: Integrated through PR #3887.**
 
-The next proof unit should combine the direct ground-state one-link weight factorization from #3861 with the exact one-slab kernel multiplier and bounds from #3877/#3880.
+This is the principal advance beyond the previous public roadmap.
 
-A useful normalized target is one of the following equivalent-strength forms.
+## 8.1 Direct ground-state weight / local-factor bridge — PR #3883
 
-### Route A — normalized density-ratio bounds
-
-Prove, with explicit volume-independent constants,
+The direct one-link fiber weight is connected exactly to the target-local factorization. Schematically the weight has the visible structure
 
 ```text
-c_-(beta) <= d nu_context1 / d nu_context2 <= c_+(beta)
+transfer normalization
+  * left vacuum
+  * localFactor
+  * base one-slab kernel
+  * updated-right vacuum.
 ```
 
-for the relevant target-link probability fibers, under the exact same-root context relation used by the theorem.
+This exposes precisely which factors still vary with the target coordinate.
 
-### Route B — Doeblin minorization
+## 8.2 Pairwise local-factor Harnack — PR #3884
 
-Prove
+From the pointwise bounds of #3880, the canonical theorem gives
 
 ```text
-nu_context >= epsilon(beta) * nu_reference
+localFactor(g) <= exp(16 beta) * localFactor(h)
 ```
 
-for an explicit `epsilon(beta) > 0` independent of volume.
+for arbitrary `g,h`, with the symmetric reverse comparison.
 
-### Route C — conditional-variance comparison
+This is useful but is not the sharpest kernel statement.
 
-If normalization algebra is cleaner in variance form, prove directly
+## 8.3 Sharp raw one-slab kernel Harnack — PR #3885
+
+Rebasing the exact factorization at the comparison target value yields
 
 ```text
-Var_target,ground(f) >= c(beta) * Var_target,reference(f)
+K(A, B[target <- g])
+  <= exp(8 beta) * K(A, B[target <- h]),
 ```
 
-with `c(beta) > 0` independent of volume.
+again symmetrically, with a constant independent of the lattice volume.
 
-### Required ingredients
+The proof is division-free and uses the exact target-local kernel factorization, the local-factor upper bound, and kernel positivity.
+
+## 8.4 Continuous physical vacuum Harnack — PR #3887
+
+The canonical continuous physical vacuum representative now satisfies
 
 ```text
-#3861 direct ground-state fiber weight factorization
-#3877 exact target-local kernel multiplier
-#3880 exp(+-8 beta) multiplier bounds
-strict positivity of the relevant vacuum factors
-exact target-fiber normalization identities
-existing measurable Markov representative
+Omega_c(B[target <- g])
+  <= exp(8 beta) * Omega_c(B[target <- h])
 ```
 
-### Non-negotiable boundary
+for arbitrary `g,h`, together with the reverse comparison.
 
-The denominator must be controlled explicitly. An unnormalized pointwise factor bound cannot simply be renamed as a probability-measure minorization.
+The proof first closes two pointwise bridges:
+
+```text
+RKHS synthesis of Analysis(f)
+  = integral_A f(A) K(A,B) dmu(A)
+
+||T_phys|| * Omega_c(B)
+  = integral_A Omega(A) K(A,B) dmu(A).
+```
+
+The raw-kernel Harnack is then integrated against the a.e. nonnegative top eigenvector and the strictly positive transfer norm is cancelled.
+
+**Crucial carrier rule:** this avoids identifying an `L2` equivalence class with a pointwise eigenfunction. The pointwise theorem is about the already-canonical continuous representative.
 
 ---
 
-# Phase 14 — Convert normalized one-link control to the genuine joint projection defect
+# Phase 9 — Direct ground-state one-link weight Harnack
 
-**Status: Open next.**
+**Status: Open now.**
 
-Once Phase 13 supplies a normalized one-link comparison, prove a lower bound for the actual ground-state joint target conditional variance, equivalently the genuine target projection defect
+This is the immediate theorem frontier.
 
-```text
-||f - P_target f||^2.
-```
-
-The ideal output is a theorem whose constant depends on local coupling data such as `beta` but not on lattice volume.
-
-Then use the already-integrated #3798 monotonicity
+The direct ground-state one-link fiber already has a complete Wilson/vacuum factorization, while both varying ingredients now have pointwise pairwise Harnack bounds:
 
 ```text
-||f - P_target f||^2
-  <= ||f - P_color(target) f||^2
+raw one-slab kernel:      factor exp(8 beta)
+continuous right vacuum: factor exp(8 beta)
 ```
 
-to inject the local estimate into the six-color residual.
-
----
-
-# Phase 15 — Globalize without inverse-volume loss
-
-**Status: Open next. Major obstruction.**
-
-The main danger is a bound of the form
+A natural direct product route therefore suggests a complete-weight factor of order
 
 ```text
-color residual >= max_e oneLinkResidual(e)
+exp(16 beta),
 ```
 
-followed by a naive average over all links of that color. This typically introduces a factor proportional to `1 / numberOfLinks`, which is useless for a scale-uniform gap.
+but this is **not yet canonical**. Before asserting that constant, the proof must verify that the vacuum representative occurring in the exact direct-fiber factorization is definitionally the same as, or is connected by an explicit pointwise bridge to, the canonical continuous vacuum representative of #3887.
 
-A successful theorem must therefore use a genuinely uniform block mechanism, for example:
+Target theorem shape:
 
 ```text
-block Poincare
-approximate tensorization
-a martingale variance decomposition
-block conditional-expectation comparison
-Dobrushin / Doeblin contraction
-canonical paths / frame geometry
-another same-root uniform mixing estimate
+w_context(g) <= C(beta) * w_context(h)
 ```
 
-The best route should be selected from the actual formal structure available after Phase 13 rather than imposed abstractly in advance.
-
----
-
-# Phase 16 — Scale-uniform twelve-spatial coercivity
-
-**Status: Open. Central quantitative target.**
-
-Prove
+with
 
 ```text
-there exists kappa > 0 such that
-  for every scale n and every x in K_n,
-
-  kappa ||x||^2 <= E12,n(R U x).
+C(beta)
 ```
+
+explicit and independent of lattice volume and context.
 
 Requirements:
 
+1. stay on the exact direct `SU(N)` target coordinate;
+2. use the literal ground-state one-link weight already canonicalized;
+3. make every vacuum-representative bridge explicit;
+4. use no division when a positivity-preserving multiplicative proof suffices;
+5. introduce no new assumptions and no RCD identification.
+
+---
+
+# Phase 10 — Normalize the target fiber
+
+**Status: Open next.**
+
+An unnormalized pairwise comparison is not yet a conditional-law theorem. The normalization denominator must be controlled explicitly.
+
+Required chain:
+
 ```text
-kappa > 0
-kappa independent of n
-same-root physical carrier
-no finite-dimensional compactness shortcut depending on n
-no hidden weakening of the physical top-orthogonal sector
+w(g) <= C w(h)
+  -> comparison of fiber masses / normalizers
+  -> normalized density-ratio bounds
+  -> pairwise normalized Harnack comparison
+  -> or a uniform minorization / Doeblin-type estimate.
 ```
 
-The implication machinery after this input is already largely formalized:
+The exact constant after normalization must be derived rather than guessed. Depending on the direction and normalization argument, constants can square or otherwise change; the roadmap therefore intentionally does not hard-code a normalized constant before the Lean theorem exists.
+
+**Permanent warning:**
 
 ```text
-uniform twelve-spatial Poincare kappa
-  -> uniform six-spatial frame coefficient 2 kappa
-  -> physical transfer gap >= 3 kappa / 4.
+unnormalized Harnack != normalized minorization.
 ```
 
 ---
 
-# Phase 17 — Uniform finite-volume physical transfer gap
+# Phase 11 — Genuine joint one-link quantitative control
 
-**Status: Open downstream.**
+**Status: Open next.**
 
-Once a scale-independent `kappa` exists, package the resulting uniform physical transfer gap together with scale-uniform decay, resolvent, and Green estimates needed for a controlled limit.
+Once the normalized target-fiber law has an explicit volume-independent comparison/minorization theorem, convert it into a lower bound on genuine one-link conditional variance or, equivalently, a lower bound on the target projection defect.
 
-Do not confuse the fixed-volume theorem network with the uniform family theorem.
+Desired form:
+
+```text
+Var_target(f | off-target context)
+  >= c(beta) * local_reference_variance(f)
+```
+
+or an equivalent spectral-gap / resampling inequality with `c(beta) > 0` independent of lattice volume.
+
+Because #3798 already proves that the target residual is dominated by the containing color residual in the required direction, this result can feed the genuine six-color energy without rebuilding the sigma-algebra geometry.
 
 ---
 
-# Phase 18 — Thermodynamic/scaling propagation
+# Phase 12 — Block/global quantitative seam
 
-**Status: Open downstream.**
+**Status: Open next; principal structural bottleneck after the one-link theorem.**
 
-Required tasks include a same-root limit theorem that transports the uniform finite-volume physical information into the relevant continuum theory while preserving the vacuum/non-vacuum spectral separation.
+The central problem is to globalize one-link information without losing a factor proportional to the number of links.
 
-This phase must control the relation between the finite Wilson physical transfer carrier and the continuum OS/Wightman carrier actually used for the final claim.
+Naive averaging of linkwise inequalities can produce
+
+```text
+kappa_n ~ 1 / (# links at scale n),
+```
+
+which is useless for the continuum mass-gap objective.
+
+Acceptable routes may use the already-formalized six-color geometry, commuting/fixed-color blocks, conditional-expectation identities, or another exact finite-color mechanism, but the final theorem must produce a coefficient independent of scale.
+
+**Forbidden shortcut:** qualitative kernel triviality cannot supply this coefficient by itself.
 
 ---
 
-# Phase 19 — Clay-level completion
+# Phase 13 — Scale-uniform twelve-spatial coercivity
 
 **Status: Open.**
 
-Even after a uniform finite-volume transfer gap, the final Clay-level program still requires:
+The decisive finite-volume target is
 
 ```text
-full same-root four-dimensional continuum gauge field/state
-required Euclidean/Wightman axiomatic control
-physical OS reconstruction on that full carrier
-correct vacuum structure
-strictly positive continuum spectrum above vacuum
-precise identification of the continuum mass gap
+exists kappa > 0,
+  forall scale n,
+  forall physical x in K_n,
+    kappa * ||x||^2 <= E12,n(R U x).
 ```
 
-The repository should continue to state these obligations explicitly rather than folding them into the finite-lattice gap theorem.
+with one `kappa` independent of `n`.
+
+The downstream operator implication machinery is already integrated:
+
+```text
+scale-uniform twelve-spatial Poincare kappa
+  -> six-spatial frame coefficient 2 kappa
+  -> physical transfer gap >= 3 kappa / 4.
+```
+
+This is the point at which the local finite Wilson geometry becomes a genuine scale-uniform spectral statement.
 
 ---
 
-# Immediate execution order from PR #3880
+# Phase 14 — Thermodynamic/scaling propagation
 
-The recommended mathematical order is:
+**Status: Open downstream.**
 
-```text
-1. Normalize the #3880 localFactor inside the direct ground-state target fiber.
+Even a scale-uniform finite-volume transfer gap is not automatically the complete continuum Yang--Mills mass-gap theorem. Further work must preserve the quantitative lower bound through the relevant thermodynamic/scaling construction and connect the resulting physical continuum carrier to the required field-theoretic formulation.
 
-2. Prove explicit probability-density ratio bounds or a Doeblin minorization
-   with constants independent of volume.
-
-3. Convert that normalized one-link theorem to a lower bound on the genuine
-   ground-state joint target conditional variance / projection defect.
-
-4. Feed the one-link bound into the containing six-color residual using the
-   already-canonical #3798 nested-sigma monotonicity.
-
-5. Prove a block/global theorem that avoids inverse-volume loss.
-
-6. Deduce the scale-uniform twelve-spatial Poincare coefficient kappa.
-
-7. Route kappa through the existing frame machinery to the physical transfer gap.
-
-8. Only then attack the thermodynamic/scaling and full continuum physical bridge.
-```
-
-The current highest-priority theorem is therefore **normalized local-factor control on the actual ground-state one-link fiber**, not another qualitative kernel theorem and not a downstream continuum claim.
+Required downstream objects include stable resolvent/Green/decay control, controlled limiting state/field construction, and a continuum Hamiltonian spectral lower bound above the vacuum.
 
 ---
 
-# Checkpoint
+# Phase 15 — Clay-level completion
 
-This roadmap is synchronized to the authoritative theorem checkpoint
+**Status: Open.**
 
-```text
-formal/real-hilbert-uniform-coercive-strong-limit
-@ f65c0fc75c56ffdcba103331768b8aa73fbfba65
-```
-
-with exact validated head
+The final target requires, on one justified same-root chain:
 
 ```text
-6f33df5b7d7f1c4258101b55a7d1372edfb15680
+full four-dimensional continuum gauge field/state
+  + Osterwalder-Schrader / Wightman structure
+  + correct physical vacuum sector
+  + self-adjoint Hamiltonian
+  + strictly positive spectrum above the vacuum
+  + the existence/regularity requirements of the Clay formulation.
 ```
 
-and
+The existing same-root scalar continuum OS lane is important infrastructure, but it is not identified with this full target.
+
+---
+
+# Recent canonical milestones
+
+| PR | Result | Status |
+|---|---|---|
+| #3861 | direct ground-state one-link Wilson/vacuum factorization | Integrated |
+| #3863 | one-slab right-target action variation bridge | Integrated |
+| #3866 | right target-link crossing-action localization | Integrated |
+| #3869 | spatial target-link Wilson action localization | Integrated |
+| #3874 | complete target-local one-slab action variation | Integrated |
+| #3877 | exact right-target kernel multiplier | Integrated |
+| #3880 | localFactor with `exp(+-8 beta)` pointwise bounds | Integrated |
+| #3883 | ground-state direct one-link weight -> target-local factor bridge | Integrated |
+| #3884 | pairwise localFactor Harnack with `exp(16 beta)` | Integrated |
+| #3885 | sharp raw one-slab kernel Harnack with `exp(8 beta)` | Integrated |
+| #3887 | continuous physical vacuum Harnack with `exp(8 beta)` | Integrated |
+
+---
+
+# What should be proved next
+
+The next mathematically coherent unit is:
 
 ```text
-PR Lean Fast Check #13579 = completed / success.
+Direct ground-state one-link weight pairwise Harnack
 ```
+
+not another abstract measure wrapper and not another fixed-volume spectral corollary.
+
+A successful next PR should:
+
+1. start exactly from canonical `015d3cceb59e696f692b6d67e017b3aee4664715`;
+2. reuse the direct one-link weight factorization from #3861/#3883;
+3. reuse the raw-kernel Harnack from #3885;
+4. reuse the continuous-vacuum Harnack from #3887;
+5. prove or expose the exact pointwise representative bridge needed by the direct fiber;
+6. state an explicit pairwise weight comparison with a volume-independent constant;
+7. make **no** normalized-law, coercivity, spectral-gap, or mass-gap claim unless separately proved.
+
+After that theorem is canonical, normalization is the next coherent unit.
+
+---
+
+# Success criterion for the present quantitative program
+
+The current finite-volume quantitative program is complete only when the repository contains a model-derived constant
+
+```text
+kappa > 0
+```
+
+that is independent of lattice scale and satisfies
+
+```text
+kappa ||x||^2 <= E12,n(R U x)
+```
+
+on every physical top-orthogonal sector `K_n`, with all carrier bridges explicit.
+
+Until then, the correct public statement is:
+
+> the qualitative physical kernel problem is closed; explicit one-link fibers and sharp volume-independent kernel/vacuum Harnack estimates are formalized; normalized one-link quantitative control and its volume-loss-free globalization remain open.
