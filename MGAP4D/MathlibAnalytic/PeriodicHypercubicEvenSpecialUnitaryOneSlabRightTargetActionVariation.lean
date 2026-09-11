@@ -26,6 +26,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction_update_ri
           (Function.update B target g) -
         periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H N B) := by
   unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction
+  ring
 
 end
 
