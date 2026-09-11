@@ -1,6 +1,18 @@
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import Mathlib.MeasureTheory.Integral.CompactlySupported
 
+/-!
+# Normalized exponential weights under oscillation control
+
+This file supplies the measure-theoretic normalization lemma needed by the continuous compact
+Wilson one-link conditional route.  On a compact probability space, an oscillation bound on the
+difference of two continuous log-weights yields mutual pointwise likelihood-ratio bounds after
+normalization.
+
+The result is completely generic and introduces no lattice, gauge, Dobrushin, clustering,
+spectral-gap, or mass assumption.
+-/
+
 namespace MGAP4D
 namespace MathlibAnalytic
 
@@ -8,8 +20,7 @@ open MeasureTheory
 
 noncomputable section
 
-/-- Partition function of a continuous exponential weight over a compact
-probability space. -/
+/-- Partition function of a continuous exponential weight over a compact probability space. -/
 def continuousExpPartition
     {X : Type*}
     [TopologicalSpace X] [CompactSpace X]
@@ -28,8 +39,8 @@ def continuousNormalizedExp
     (x : X) : ℝ :=
   Real.exp (logWeight x) / continuousExpPartition μ logWeight
 
-/-- A continuous exponential partition function over a compact probability
-space is strictly positive. -/
+/-- A continuous exponential partition function over a compact probability space is strictly
+positive. -/
 theorem continuousExpPartition_pos
     {X : Type*}
     [TopologicalSpace X] [CompactSpace X]
@@ -44,8 +55,8 @@ theorem continuousExpPartition_pos
     ((Real.continuous_exp.comp hContinuous).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _))
 
-/-- Oscillation control of a continuous log-weight difference gives the sharp
-mutual likelihood-ratio bound after integral normalization. -/
+/-- Oscillation control of a continuous log-weight difference gives the mutual likelihood-ratio
+bound after integral normalization. -/
 theorem continuousNormalizedExp_mutual_le_exp_mul_of_difference_oscillation
     {X : Type*}
     [TopologicalSpace X] [CompactSpace X]

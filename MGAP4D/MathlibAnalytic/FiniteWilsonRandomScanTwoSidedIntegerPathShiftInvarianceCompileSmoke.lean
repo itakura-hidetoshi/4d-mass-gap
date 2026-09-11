@@ -1,0 +1,11 @@
+import MGAP4D.MathlibAnalytic.FiniteWilsonRandomScanTwoSidedIntegerPathShiftInvariance
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+#check finite_lattice_randomScanTwoSidedIntegerPathMeasure_map_shift
+#check finite_lattice_randomScanTwoSidedIntegerPathMeasure_map_natShift
+#check finite_lattice_randomScanTwoSidedIntegerPathMeasure_map_negNatShift
+
+end MathlibAnalytic
+end MGAP4D

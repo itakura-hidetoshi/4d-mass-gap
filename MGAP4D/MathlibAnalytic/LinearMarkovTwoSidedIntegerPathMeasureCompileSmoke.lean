@@ -1,0 +1,17 @@
+import MGAP4D.MathlibAnalytic.LinearMarkovTwoSidedIntegerPathMeasure
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+open MeasureTheory
+
+noncomputable section
+
+#check linearMarkovIntegerFiniteMarginalMeasure_projective
+#check linearMarkovTwoSidedIntegerPathMeasure
+#check linearMarkovTwoSidedIntegerPathMeasure_isProjectiveLimit
+
+end
+
+end MathlibAnalytic
+end MGAP4D

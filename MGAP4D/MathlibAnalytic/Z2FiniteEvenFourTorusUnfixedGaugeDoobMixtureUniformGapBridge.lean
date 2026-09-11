@@ -1,0 +1,188 @@
+import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusUnfixedGaugeDoobMixtureCoordinateInfluence
+import MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusSpatialSandwichStabilityCertificate
+import Mathlib.Tactic
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+open scoped InnerProduct
+
+noncomputable section
+
+/-- All-volume coordinate-influence certificate for the exact-marginal actual
+geometric Perron Doob mixture coupling.  Once a common strict column norm is
+proved, every downstream weighted-Doob, full-transfer Rayleigh, Poincare,
+uniform-gap, and natural-time decay statement is generated without changing
+the geometric time operator. -/
+structure Z2UnfixedGaugeDoobMixtureUniformInfluenceCertificate
+    (β energyIdentity energyNontrivial : ℝ)
+    (hβ : 0 < β)
+    (hEnergy : energyIdentity < energyNontrivial)
+    (C : Z2PerronPosteriorActualHighTemperatureContinuationData
+      energyIdentity energyNontrivial hEnergy)
+    (hβCutoff : β ≤ C.couplingCutoff) where
+  rate : ℝ
+  crossingRate_le_rate :
+    z2WilsonTemporalCrossingRate
+        β energyIdentity energyNontrivial ≤ rate
+  rate_lt_one : rate < 1
+  volumeInfluence : ∀ H : ℕ,
+    Z2UnfixedGaugeDoobMixtureVolumeInfluenceData
+      H β energyIdentity energyNontrivial hβ hEnergy C hβCutoff
+  coefficient_le_rate : ∀ H : ℕ,
+    (volumeInfluence H).coefficient ≤ rate
+
+namespace Z2UnfixedGaugeDoobMixtureUniformInfluenceCertificate
+
+variable
+  {β energyIdentity energyNontrivial : ℝ}
+  {hβ : 0 < β}
+  {hEnergy : energyIdentity < energyNontrivial}
+  {C : Z2PerronPosteriorActualHighTemperatureContinuationData
+    energyIdentity energyNontrivial hEnergy}
+  {hβCutoff : β ≤ C.couplingCutoff}
+
+/-- The actual-mixture influence certificate supplies genuine coordinate
+couplings of the full geometric Perron Doob rows with the same common rate. -/
+noncomputable def toUniformCouplingCertificate
+    (K : Z2UnfixedGaugeDoobMixtureUniformInfluenceCertificate
+      β energyIdentity energyNontrivial hβ hEnergy C hβCutoff) :
+    Z2UnfixedGaugeDoobParallelUniformCouplingCertificate
+      β energyIdentity energyNontrivial hβ hEnergy :=
+  { rate := K.rate
+    crossingRate_le_rate := K.crossingRate_le_rate
+    rate_lt_one := K.rate_lt_one
+    couplingData := fun H =>
+      (K.volumeInfluence H).toDoobParallelVolumeCouplingData
+    coefficient_le_rate := by
+      intro H
+      simpa using K.coefficient_le_rate H }
+
+@[simp] theorem toUniformCouplingCertificate_rate
+    (K : Z2UnfixedGaugeDoobMixtureUniformInfluenceCertificate
+      β energyIdentity energyNontrivial hβ hEnergy C hβCutoff) :
+    K.toUniformCouplingCertificate.rate = K.rate :=
+  rfl
+
+/-- Coordinatewise actual-mixture influence gives the common weighted
+mean-zero Rayleigh estimate for the reversible Perron Doob chain. -/
+theorem weightedDoobRayleigh
+    (K : Z2UnfixedGaugeDoobMixtureUniformInfluenceCertificate
+      β energyIdentity energyNontrivial hβ hEnergy C hβCutoff)
+    (H : ℕ)
+    (f : FiniteEvenFourTorusZ2SliceHilbert H)
+    (hMean :
+      (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+          H β energyIdentity energyNontrivial hβ.le hEnergy.le).weightedMean f = 0) :
+    (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+        H β energyIdentity energyNontrivial hβ.le hEnergy.le).weightedDoobQuadratic f ≤
+      K.rate *
+        (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+          H β energyIdentity energyNontrivial hβ.le hEnergy.le).weightedNormSq f := by
+  exact K.toUniformCouplingCertificate.weightedDoobRayleigh H f hMean
+
+/-- The same actual-mixture coordinate estimate is the Perron-orthogonal
+Rayleigh bound for the ambient normalized full one-slab transfer. -/
+theorem ambientFullTransferRayleigh
+    (K : Z2UnfixedGaugeDoobMixtureUniformInfluenceCertificate
+      β energyIdentity energyNontrivial hβ hEnergy C hβCutoff)
+    (H : ℕ)
+    (x : FiniteEvenFourTorusZ2SliceHilbert H)
+    (hx : inner ℝ x
+      (finiteEvenFourTorusZ2UnfixedGaugeAmbientPositiveGround
+        H β energyIdentity energyNontrivial hβ.le hEnergy.le) = 0) :
+    inner ℝ
+        (finiteEvenFourTorusZ2UnfixedGaugeOneSlabTransfer
+          H β energyIdentity energyNontrivial hβ.le hEnergy.le x) x ≤
+      K.rate * ‖x‖ ^ 2 := by
+  exact
+    (finiteEvenFourTorusZ2UnfixedGaugeGroundStateDoobData
+      H β energyIdentity energyNontrivial hβ.le hEnergy.le).transfer_rayleigh_le_of_weightedDoob
+        K.rate (K.weightedDoobRayleigh H) x hx
+
+/-- Exact conversion to the repository's local spatial-sandwich stability
+interface.  The degradation is `rate - crossingRate`, hence remains strictly
+below the crossing coercivity because `rate < 1`. -/
+noncomputable def toSpatialSandwichCertificate
+    (K : Z2UnfixedGaugeDoobMixtureUniformInfluenceCertificate
+      β energyIdentity energyNontrivial hβ hEnergy C hβCutoff) :
+    Z2UnfixedGaugeSpatialSandwichUniformStabilityCertificate
+      β energyIdentity energyNontrivial hβ hEnergy :=
+  K.toUniformCouplingCertificate.toSpatialSandwichCertificate
+
+/-- The full geometric contraction rate generated by the actual-mixture
+coordinate influence certificate. -/
+def fullRate
+    (K : Z2UnfixedGaugeDoobMixtureUniformInfluenceCertificate
+      β energyIdentity energyNontrivial hβ hEnergy C hβCutoff) : ℝ :=
+  K.toSpatialSandwichCertificate.fullRate
+
+@[simp] theorem fullRate_eq_rate
+    (K : Z2UnfixedGaugeDoobMixtureUniformInfluenceCertificate
+      β energyIdentity energyNontrivial hβ hEnergy C hβCutoff) :
+    K.fullRate = K.rate := by
+  unfold fullRate
+  change
+    z2WilsonTemporalCrossingRate β energyIdentity energyNontrivial +
+        (K.rate -
+          z2WilsonTemporalCrossingRate β energyIdentity energyNontrivial) =
+      K.rate
+  ring
+
+/-- The resulting full-transfer coercivity is exactly `1 - rate`. -/
+def fullCoercivity
+    (K : Z2UnfixedGaugeDoobMixtureUniformInfluenceCertificate
+      β energyIdentity energyNontrivial hβ hEnergy C hβCutoff) : ℝ :=
+  K.toSpatialSandwichCertificate.fullCoercivity
+
+@[simp] theorem fullCoercivity_eq_one_sub_rate
+    (K : Z2UnfixedGaugeDoobMixtureUniformInfluenceCertificate
+      β energyIdentity energyNontrivial hβ hEnergy C hβCutoff) :
+    K.fullCoercivity = 1 - K.rate := by
+  unfold fullCoercivity
+  change
+    z2WilsonTemporalCrossingCoercivity β energyIdentity energyNontrivial -
+        (K.rate -
+          z2WilsonTemporalCrossingRate β energyIdentity energyNontrivial) =
+      1 - K.rate
+  unfold z2WilsonTemporalCrossingCoercivity
+  ring
+
+/-- The full geometric coercivity is positive. -/
+theorem fullCoercivity_pos
+    (K : Z2UnfixedGaugeDoobMixtureUniformInfluenceCertificate
+      β energyIdentity energyNontrivial hβ hEnergy C hβCutoff) :
+    0 < K.fullCoercivity := by
+  rw [K.fullCoercivity_eq_one_sub_rate]
+  linarith [K.rate_lt_one]
+
+/-- Terminal construction of the complete actual full-transfer uniform
+Poincare, excitation-gap, and natural-time decay package. -/
+noncomputable def toSpatialSandwichStabilityCompletePackage
+    (K : Z2UnfixedGaugeDoobMixtureUniformInfluenceCertificate
+      β energyIdentity energyNontrivial hβ hEnergy C hβCutoff) :
+    Z2FiniteEvenFourTorusSpatialSandwichStabilityCompletePackage
+      β energyIdentity energyNontrivial hβ hEnergy :=
+  finiteEvenFourTorusZ2SpatialSandwichStabilityCompletePackage
+    β energyIdentity energyNontrivial hβ hEnergy
+    K.toSpatialSandwichCertificate
+
+@[simp] theorem
+    toSpatialSandwichStabilityCompletePackage_coercivity_eq_one_sub_rate
+    (K : Z2UnfixedGaugeDoobMixtureUniformInfluenceCertificate
+      β energyIdentity energyNontrivial hβ hEnergy C hβCutoff) :
+    K.toSpatialSandwichStabilityCompletePackage.uniformFullTransfer.centeredPoincare.coercivity =
+      1 - K.rate := by
+  calc
+    K.toSpatialSandwichStabilityCompletePackage.uniformFullTransfer.centeredPoincare.coercivity =
+        K.toSpatialSandwichStabilityCompletePackage.stability.fullCoercivity :=
+      K.toSpatialSandwichStabilityCompletePackage.uniformFullTransfer_coercivity_eq
+    _ = K.fullCoercivity := rfl
+    _ = 1 - K.rate := K.fullCoercivity_eq_one_sub_rate
+
+end Z2UnfixedGaugeDoobMixtureUniformInfluenceCertificate
+
+end
+
+end MathlibAnalytic
+end MGAP4D

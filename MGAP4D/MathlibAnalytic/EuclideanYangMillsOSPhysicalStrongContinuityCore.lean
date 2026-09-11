@@ -3,6 +3,8 @@ import MGAP4D.MathlibAnalytic.EuclideanYangMillsOSPhysicalTimeTranslationCore
 namespace MGAP4D
 namespace MathlibAnalytic
 
+open Filter Topology
+
 noncomputable section
 
 structure EuclideanYangMillsOSPhysicalStrongContinuityCore

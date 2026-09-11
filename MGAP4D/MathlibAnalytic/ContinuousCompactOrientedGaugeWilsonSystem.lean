@@ -104,6 +104,14 @@ theorem continuous_compact_oriented_gibbsMeasure_isProbabilityMeasure
   exact compactOriented_gibbsMeasure_isProbabilityMeasure C.base
     (continuous_compact_oriented_boltzmannIntegrable C)
 
+/-- Typeclass registration of the already-proved canonical Gibbs probability
+normalization.  This lets generic Mathlib pushforward/product probability
+lemmas consume the actual continuous compact Wilson Gibbs measure directly. -/
+instance continuousCompactOriented_gibbsMeasure_isProbabilityMeasure
+    (C : ContinuousCompactOrientedGaugeWilsonSystem) :
+    IsProbabilityMeasure C.gibbsMeasure :=
+  continuous_compact_oriented_gibbsMeasure_isProbabilityMeasure C
+
 end
 
 end MathlibAnalytic

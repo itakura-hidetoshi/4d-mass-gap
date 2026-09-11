@@ -1,0 +1,11 @@
+import MGAP4D.MathlibAnalytic.LinearMarkovTwoSidedIntegerPathNatShiftInvariance
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+#check linearMarkovIntegerFiniteMarginalMeasure_map_natShiftReindex
+#check linearMarkovTwoSidedIntegerPathMeasure_map_natShift_isProjectiveLimit
+#check linearMarkovTwoSidedIntegerPathMeasure_map_natShift
+
+end MathlibAnalytic
+end MGAP4D

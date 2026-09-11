@@ -1,0 +1,432 @@
+import MGAP4D.MathlibAnalytic.FiniteNonnegativeInfluenceKernelMaximumRow
+import Mathlib.Tactic
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+open scoped BigOperators
+
+noncomputable section
+
+/-- Exact row-oriented sum identity for one target update. -/
+theorem finiteInfluenceKernelUpdatedVariation_sum_source_eq
+    {ι : Type}
+    [DecidableEq ι]
+    [Fintype ι]
+    (K : FiniteNonnegativeInfluenceKernelData ι)
+    (variation : ι → ℝ)
+    (target : ι) :
+    (∑ source : ι,
+      finiteInfluenceKernelUpdatedVariation K variation target source) =
+      finiteProductVariationTotal variation - variation target +
+        finiteInfluenceKernelRowSum K target * variation target := by
+  classical
+  have hPointwise (source : ι) :
+      finiteInfluenceKernelUpdatedVariation K variation target source =
+        variation source + K.influence target source * variation target -
+          (if source = target then variation target else 0) := by
+    by_cases hEq : source = target
+    · subst source
+      simp [finiteInfluenceKernelUpdatedVariation,
+        K.influence_diagonal_zero]
+    · simp [finiteInfluenceKernelUpdatedVariation, hEq]
+  calc
+    (∑ source : ι,
+      finiteInfluenceKernelUpdatedVariation K variation target source) =
+      ∑ source : ι,
+        (variation source + K.influence target source * variation target -
+          (if source = target then variation target else 0)) := by
+      apply Finset.sum_congr rfl
+      intro source _
+      exact hPointwise source
+    _ = finiteProductVariationTotal variation - variation target +
+        finiteInfluenceKernelRowSum K target * variation target := by
+      unfold finiteProductVariationTotal finiteInfluenceKernelRowSum
+      rw [Finset.sum_sub_distrib, Finset.sum_add_distrib]
+      simp only [Finset.sum_ite_eq', Finset.mem_univ, if_true]
+      rw [← Finset.sum_mul]
+      ring
+
+/-- A uniform row bound contracts total variation under one random-scan
+kernel update. -/
+theorem finiteInfluenceKernelRandomScanUpdatedVariation_total_le_rate_mul
+    {ι : Type}
+    [DecidableEq ι]
+    [Fintype ι]
+    (K : FiniteNonnegativeInfluenceKernelData ι)
+    (hCard : 0 < Fintype.card ι)
+    (rowCoefficient : ℝ)
+    (hRowNonneg : 0 ≤ rowCoefficient)
+    (hRowSum :
+      ∀ target : ι,
+        finiteInfluenceKernelRowSum K target ≤ rowCoefficient)
+    (variation : ι → ℝ)
+    (hVariationNonneg : ∀ e : ι, 0 ≤ variation e) :
+    finiteProductVariationTotal
+        (finiteInfluenceKernelRandomScanUpdatedVariation K variation) ≤
+      finiteInfluenceKernelReciprocalRandomScanRate
+        ι rowCoefficient * finiteProductVariationTotal variation := by
+  have hInvNonneg : 0 ≤ (Fintype.card ι : ℝ)⁻¹ :=
+    inv_nonneg.mpr (Nat.cast_nonneg _)
+  have hWeighted :
+      (∑ target : ι,
+        finiteInfluenceKernelRowSum K target * variation target) ≤
+      rowCoefficient * finiteProductVariationTotal variation := by
+    calc
+      (∑ target : ι,
+        finiteInfluenceKernelRowSum K target * variation target) ≤
+        ∑ target : ι, rowCoefficient * variation target := by
+          apply Finset.sum_le_sum
+          intro target _
+          exact mul_le_mul_of_nonneg_right
+            (hRowSum target) (hVariationNonneg target)
+      _ = rowCoefficient * finiteProductVariationTotal variation := by
+        unfold finiteProductVariationTotal
+        rw [Finset.mul_sum]
+  calc
+    finiteProductVariationTotal
+        (finiteInfluenceKernelRandomScanUpdatedVariation K variation) =
+      (Fintype.card ι : ℝ)⁻¹ *
+        ∑ target : ι,
+          (finiteProductVariationTotal variation - variation target +
+            finiteInfluenceKernelRowSum K target * variation target) := by
+      unfold finiteProductVariationTotal
+        finiteInfluenceKernelRandomScanUpdatedVariation
+      rw [← Finset.mul_sum, Finset.sum_comm]
+      congr 1
+      apply Finset.sum_congr rfl
+      intro target _
+      exact finiteInfluenceKernelUpdatedVariation_sum_source_eq
+        K variation target
+    _ = (Fintype.card ι : ℝ)⁻¹ *
+        (((Fintype.card ι : ℝ) - 1) *
+            finiteProductVariationTotal variation +
+          ∑ target : ι,
+            finiteInfluenceKernelRowSum K target * variation target) := by
+      congr 1
+      unfold finiteProductVariationTotal
+      rw [Finset.sum_add_distrib, Finset.sum_sub_distrib]
+      simp only [Finset.sum_const, nsmul_eq_mul, Finset.card_univ]
+      ring
+    _ ≤ (Fintype.card ι : ℝ)⁻¹ *
+        (((Fintype.card ι : ℝ) - 1) *
+            finiteProductVariationTotal variation +
+          rowCoefficient * finiteProductVariationTotal variation) :=
+      mul_le_mul_of_nonneg_left
+        (add_le_add (le_refl _) hWeighted)
+        hInvNonneg
+    _ = finiteInfluenceKernelReciprocalRandomScanRate
+        ι rowCoefficient * finiteProductVariationTotal variation := by
+      unfold finiteInfluenceKernelReciprocalRandomScanRate
+      ring
+
+/-- Iterated total-variation contraction generated by a uniform row bound. -/
+theorem finiteInfluenceKernelRandomScanVariationIterate_total_le_rate_pow_mul
+    {ι : Type}
+    [DecidableEq ι]
+    [Fintype ι]
+    (K : FiniteNonnegativeInfluenceKernelData ι)
+    (hCard : 0 < Fintype.card ι)
+    (rowCoefficient : ℝ)
+    (hRowNonneg : 0 ≤ rowCoefficient)
+    (hRowSum :
+      ∀ target : ι,
+        finiteInfluenceKernelRowSum K target ≤ rowCoefficient)
+    (variation : ι → ℝ)
+    (hVariationNonneg : ∀ e : ι, 0 ≤ variation e)
+    (n : ℕ) :
+    finiteProductVariationTotal
+        (finiteInfluenceKernelRandomScanVariationIterate K variation n) ≤
+      finiteInfluenceKernelReciprocalRandomScanRate
+          ι rowCoefficient ^ n *
+        finiteProductVariationTotal variation := by
+  let rate := finiteInfluenceKernelReciprocalRandomScanRate
+    ι rowCoefficient
+  have hRateNonneg : 0 ≤ rate :=
+    finiteInfluenceKernelReciprocalRandomScanRate_nonneg
+      hCard rowCoefficient hRowNonneg
+  induction n with
+  | zero => simp
+  | succ n ih =>
+      have hIterNonneg :
+          ∀ e : ι,
+            0 ≤ finiteInfluenceKernelRandomScanVariationIterate
+              K variation n e :=
+        finiteInfluenceKernelRandomScanVariationIterate_nonneg
+          K variation hVariationNonneg n
+      rw [finiteInfluenceKernelRandomScanVariationIterate_succ]
+      calc
+        finiteProductVariationTotal
+            (finiteInfluenceKernelRandomScanUpdatedVariation K
+              (finiteInfluenceKernelRandomScanVariationIterate
+                K variation n)) ≤
+          rate * finiteProductVariationTotal
+            (finiteInfluenceKernelRandomScanVariationIterate
+              K variation n) :=
+          finiteInfluenceKernelRandomScanUpdatedVariation_total_le_rate_mul
+            K hCard rowCoefficient hRowNonneg hRowSum
+            (finiteInfluenceKernelRandomScanVariationIterate
+              K variation n) hIterNonneg
+        _ ≤ rate * (rate ^ n * finiteProductVariationTotal variation) :=
+          mul_le_mul_of_nonneg_left ih hRateNonneg
+        _ = rate ^ (n + 1) * finiteProductVariationTotal variation := by
+          rw [pow_succ]
+          ring
+
+/-- The total mass of a singleton variation is its magnitude. -/
+theorem finiteInfluenceKernelSingletonVariation_total
+    {ι : Type}
+    [DecidableEq ι]
+    [Fintype ι]
+    (magnitude : ℝ)
+    (source : ι) :
+    finiteProductVariationTotal
+        (finiteInfluenceKernelSingletonVariation magnitude source) =
+      magnitude := by
+  classical
+  unfold finiteProductVariationTotal
+    finiteInfluenceKernelSingletonVariation
+  rw [Finset.sum_eq_single source]
+  · simp
+  · intro coordinate _ hCoordinate
+    simp [hCoordinate]
+  · intro hSource
+    exact False.elim (hSource (Finset.mem_univ source))
+
+/-- Repeating one terminal profile over all targets produces the expected
+cardinality factor, controlled by the row coefficient. -/
+theorem finiteInfluenceKernelSingletonVariation_iterate_total_sum_target_le
+    {ι : Type}
+    [DecidableEq ι]
+    [Fintype ι]
+    (K : FiniteNonnegativeInfluenceKernelData ι)
+    (hCard : 0 < Fintype.card ι)
+    (rowCoefficient : ℝ)
+    (hRowNonneg : 0 ≤ rowCoefficient)
+    (hRowSum :
+      ∀ target : ι,
+        finiteInfluenceKernelRowSum K target ≤ rowCoefficient)
+    (magnitude : ℝ)
+    (hMagnitude : 0 ≤ magnitude)
+    (source : ι)
+    (n : ℕ) :
+    (∑ _target : ι,
+      finiteProductVariationTotal
+        (finiteInfluenceKernelRandomScanVariationIterate
+          K (finiteInfluenceKernelSingletonVariation magnitude source) n)) ≤
+      (Fintype.card ι : ℝ) *
+        (finiteInfluenceKernelReciprocalRandomScanRate
+          ι rowCoefficient ^ n * magnitude) := by
+  have hSingletonNonneg :
+      ∀ e : ι,
+        0 ≤ finiteInfluenceKernelSingletonVariation magnitude source e := by
+    intro e
+    unfold finiteInfluenceKernelSingletonVariation
+    split
+    · exact hMagnitude
+    · exact le_rfl
+  have hIter :=
+    finiteInfluenceKernelRandomScanVariationIterate_total_le_rate_pow_mul
+      K hCard rowCoefficient hRowNonneg hRowSum
+      (finiteInfluenceKernelSingletonVariation magnitude source)
+      hSingletonNonneg n
+  rw [finiteInfluenceKernelSingletonVariation_total magnitude source] at hIter
+  calc
+    (∑ _target : ι,
+      finiteProductVariationTotal
+        (finiteInfluenceKernelRandomScanVariationIterate
+          K (finiteInfluenceKernelSingletonVariation magnitude source) n)) =
+      (Fintype.card ι : ℝ) *
+        finiteProductVariationTotal
+          (finiteInfluenceKernelRandomScanVariationIterate
+            K (finiteInfluenceKernelSingletonVariation magnitude source) n) := by
+      simp [nsmul_eq_mul]
+    _ ≤ (Fintype.card ι : ℝ) *
+        (finiteInfluenceKernelReciprocalRandomScanRate
+          ι rowCoefficient ^ n * magnitude) :=
+      mul_le_mul_of_nonneg_left hIter (Nat.cast_nonneg _)
+
+/-- Summing singleton source envelopes over their centers converts the source
+pairing into total variation. -/
+theorem finiteInfluenceKernelSourceError_singletonEnvelope_sum_target
+    {ι : Type}
+    [DecidableEq ι]
+    [Fintype ι]
+    (envelopeMagnitude : ℝ)
+    (variation : ι → ℝ) :
+    (∑ target : ι,
+      finiteInfluenceKernelSourceError
+        (finiteInfluenceKernelSingletonVariation envelopeMagnitude target)
+        variation) =
+      (Fintype.card ι : ℝ)⁻¹ * envelopeMagnitude *
+        finiteProductVariationTotal variation := by
+  classical
+  unfold finiteInfluenceKernelSourceError
+  calc
+    (∑ target : ι,
+      (Fintype.card ι : ℝ)⁻¹ *
+        ∑ coordinate : ι,
+          finiteInfluenceKernelSingletonVariation
+              envelopeMagnitude target coordinate * variation coordinate) =
+      (Fintype.card ι : ℝ)⁻¹ *
+        ∑ coordinate : ι,
+          ∑ target : ι,
+            finiteInfluenceKernelSingletonVariation
+              envelopeMagnitude target coordinate * variation coordinate := by
+      rw [← Finset.mul_sum, Finset.sum_comm]
+    _ = (Fintype.card ι : ℝ)⁻¹ *
+        ∑ coordinate : ι,
+          (∑ target : ι,
+            finiteInfluenceKernelSingletonVariation
+              envelopeMagnitude target coordinate) * variation coordinate := by
+      congr 1
+      apply Finset.sum_congr rfl
+      intro coordinate _
+      rw [Finset.sum_mul]
+    _ = (Fintype.card ι : ℝ)⁻¹ *
+        ∑ coordinate : ι, envelopeMagnitude * variation coordinate := by
+      congr 1
+      apply Finset.sum_congr rfl
+      intro coordinate _
+      rw [finiteInfluenceKernelSingletonVariation_sum_source]
+    _ = (Fintype.card ι : ℝ)⁻¹ * envelopeMagnitude *
+        finiteProductVariationTotal variation := by
+      unfold finiteProductVariationTotal
+      calc
+        (Fintype.card ι : ℝ)⁻¹ *
+            ∑ coordinate : ι, envelopeMagnitude * variation coordinate =
+          ∑ coordinate : ι,
+            ((Fintype.card ι : ℝ)⁻¹ * envelopeMagnitude) *
+              variation coordinate := by
+            rw [Finset.mul_sum]
+            apply Finset.sum_congr rfl
+            intro coordinate _
+            ring
+        _ = ((Fintype.card ι : ℝ)⁻¹ * envelopeMagnitude) *
+            ∑ coordinate : ι, variation coordinate := by
+              rw [Finset.mul_sum]
+
+/-- Target-summed finite accumulated response controlled by a row coefficient.
+No strict contraction is assumed. -/
+theorem finiteInfluenceKernelPartialSource_singletonEnvelope_sum_target_le
+    {ι : Type}
+    [DecidableEq ι]
+    [Fintype ι]
+    (K : FiniteNonnegativeInfluenceKernelData ι)
+    (hCard : 0 < Fintype.card ι)
+    (rowCoefficient : ℝ)
+    (hRowNonneg : 0 ≤ rowCoefficient)
+    (hRowSum :
+      ∀ target : ι,
+        finiteInfluenceKernelRowSum K target ≤ rowCoefficient)
+    (envelopeMagnitude : ℝ)
+    (hEnvelopeMagnitude : 0 ≤ envelopeMagnitude)
+    (variation : ι → ℝ)
+    (hVariationNonneg : ∀ e : ι, 0 ≤ variation e)
+    (n : ℕ) :
+    (∑ target : ι,
+      finiteInfluenceKernelPartialSource
+        K (finiteInfluenceKernelSingletonVariation envelopeMagnitude target)
+        variation n) ≤
+      (Fintype.card ι : ℝ)⁻¹ * envelopeMagnitude *
+        finiteProductVariationTotal variation *
+          finiteRealGeometricSeries
+            (finiteInfluenceKernelReciprocalRandomScanRate
+              ι rowCoefficient) n := by
+  let rate := finiteInfluenceKernelReciprocalRandomScanRate
+    ι rowCoefficient
+  have hFactorNonneg :
+      0 ≤ (Fintype.card ι : ℝ)⁻¹ * envelopeMagnitude :=
+    mul_nonneg (inv_nonneg.mpr (Nat.cast_nonneg _)) hEnvelopeMagnitude
+  induction n with
+  | zero =>
+      simp [finiteInfluenceKernelPartialSource, finiteRealGeometricSeries]
+  | succ n ih =>
+      have hIter :=
+        finiteInfluenceKernelRandomScanVariationIterate_total_le_rate_pow_mul
+          K hCard rowCoefficient hRowNonneg hRowSum
+          variation hVariationNonneg n
+      have hStepEq :=
+        finiteInfluenceKernelSourceError_singletonEnvelope_sum_target
+          envelopeMagnitude
+          (finiteInfluenceKernelRandomScanVariationIterate K variation n)
+      have hStep :
+          (∑ target : ι,
+            finiteInfluenceKernelSourceError
+              (finiteInfluenceKernelSingletonVariation envelopeMagnitude target)
+              (finiteInfluenceKernelRandomScanVariationIterate
+                K variation n)) ≤
+            (Fintype.card ι : ℝ)⁻¹ * envelopeMagnitude *
+              (rate ^ n * finiteProductVariationTotal variation) := by
+        rw [hStepEq]
+        exact mul_le_mul_of_nonneg_left hIter hFactorNonneg
+      simp only [finiteInfluenceKernelPartialSource_succ,
+        Finset.sum_add_distrib, finiteRealGeometricSeries_succ]
+      calc
+        (∑ target : ι,
+            finiteInfluenceKernelPartialSource
+              K (finiteInfluenceKernelSingletonVariation envelopeMagnitude target)
+                variation n) +
+            ∑ target : ι,
+              finiteInfluenceKernelSourceError
+                (finiteInfluenceKernelSingletonVariation envelopeMagnitude target)
+                (finiteInfluenceKernelRandomScanVariationIterate
+                  K variation n) ≤
+          (Fintype.card ι : ℝ)⁻¹ * envelopeMagnitude *
+              finiteProductVariationTotal variation *
+                finiteRealGeometricSeries rate n +
+            (Fintype.card ι : ℝ)⁻¹ * envelopeMagnitude *
+              (rate ^ n * finiteProductVariationTotal variation) :=
+          add_le_add ih hStep
+        _ = (Fintype.card ι : ℝ)⁻¹ * envelopeMagnitude *
+            finiteProductVariationTotal variation *
+              (finiteRealGeometricSeries rate n + rate ^ n) := by
+          ring
+
+/-- Finite response scalar shared by the row- and column-oriented estimates. -/
+noncomputable def finiteInfluenceKernelBidirectionalFiniteResponseCoefficient
+    (ι : Type)
+    [Fintype ι]
+    (iterations : ℕ)
+    (coefficient envelopeMagnitude sourceMagnitude : ℝ) : ℝ :=
+  let rate := finiteInfluenceKernelReciprocalRandomScanRate ι coefficient
+  (Fintype.card ι : ℝ)⁻¹ * envelopeMagnitude * sourceMagnitude *
+      finiteRealGeometricSeries rate iterations +
+    2 * (Fintype.card ι : ℝ) *
+      (rate ^ iterations * sourceMagnitude)
+
+/-- The finite bidirectional response scalar is nonnegative. -/
+theorem finiteInfluenceKernelBidirectionalFiniteResponseCoefficient_nonneg
+    {ι : Type}
+    [Fintype ι]
+    (hCard : 0 < Fintype.card ι)
+    (iterations : ℕ)
+    (coefficient envelopeMagnitude sourceMagnitude : ℝ)
+    (hCoefficient : 0 ≤ coefficient)
+    (hEnvelopeMagnitude : 0 ≤ envelopeMagnitude)
+    (hSourceMagnitude : 0 ≤ sourceMagnitude) :
+    0 ≤ finiteInfluenceKernelBidirectionalFiniteResponseCoefficient
+      ι iterations coefficient envelopeMagnitude sourceMagnitude := by
+  let rate := finiteInfluenceKernelReciprocalRandomScanRate ι coefficient
+  have hRate : 0 ≤ rate :=
+    finiteInfluenceKernelReciprocalRandomScanRate_nonneg
+      hCard coefficient hCoefficient
+  have hSeries : 0 ≤ finiteRealGeometricSeries rate iterations := by
+    unfold finiteRealGeometricSeries
+    exact Finset.sum_nonneg fun k _ => pow_nonneg hRate k
+  unfold finiteInfluenceKernelBidirectionalFiniteResponseCoefficient
+  exact add_nonneg
+    (mul_nonneg
+      (mul_nonneg
+        (mul_nonneg (inv_nonneg.mpr (Nat.cast_nonneg _))
+          hEnvelopeMagnitude)
+        hSourceMagnitude)
+      hSeries)
+    (mul_nonneg
+      (mul_nonneg (by norm_num) (Nat.cast_nonneg _))
+      (mul_nonneg (pow_nonneg hRate iterations) hSourceMagnitude))
+
+end
+
+end MathlibAnalytic
+end MGAP4D

@@ -3,6 +3,8 @@ import MGAP4D.MathlibAnalytic.EuclideanYangMillsSpectralMeasureLaplaceRepresenta
 namespace MGAP4D
 namespace MathlibAnalytic
 
+open MeasureTheory
+
 noncomputable section
 
 structure ExplicitWightmanOSScalarSpectralMeasureRealization

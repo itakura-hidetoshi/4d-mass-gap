@@ -1,0 +1,16 @@
+import MGAP4D.MathlibAnalytic.LinearMarkovIntegerPathShift
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+#check linearMarkovIntegerPathShift
+#check linearMarkovIntegerPathShiftEquiv
+#check linearMarkovIntegerPathShift_measurable
+#check linearMarkovPairPMF_map_snd_eq_bind
+#check linearMarkovInitialPMF_bind_transition_of_detailedBalanceReal
+#check linearMarkovFinitePathPMF_bind_transition_initial
+#check linearMarkovFinitePathPMF_succ_map_tail
+#check linearMarkovFinitePathPMF_succ_map_tail_of_detailedBalanceReal
+
+end MathlibAnalytic
+end MGAP4D
