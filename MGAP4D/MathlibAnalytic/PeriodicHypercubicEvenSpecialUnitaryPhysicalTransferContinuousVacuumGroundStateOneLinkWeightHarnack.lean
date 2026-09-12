@@ -129,6 +129,8 @@ theorem
       Real.exp (16 * beta) *
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumGroundStateSpatialLinkFiberWeightReal
           H N hN beta hbeta left right target h := by
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumGroundStateSpatialLinkFiberWeightReal
   let Bg := Function.update right target g
   let Bh := Function.update right target h
   let R : ℝ := Real.exp (8 * beta)
@@ -183,10 +185,32 @@ theorem
         H N hN beta hbeta left
   have hc : 0 ≤ c :=
     (mul_pos (inv_pos.mpr hlambda) hleft).le
-  have hscaled := mul_le_mul_of_nonneg_left hcore hc
-  simpa [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumGroundStateSpatialLinkFiberWeightReal,
-    Bg, Bh, R, omega, kernel, c, mul_assoc, mul_left_comm, mul_comm] using hscaled
+  have hscaled :
+      c * (kernel left Bg * omega Bg) ≤
+        c * (Real.exp (16 * beta) * (kernel left Bh * omega Bh)) :=
+    mul_le_mul_of_nonneg_left hcore hc
+  change
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+        H N hN beta hbeta‖⁻¹ *
+        (omega left * kernel left Bg * omega Bg) ≤
+      Real.exp (16 * beta) *
+        (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+            H N hN beta hbeta‖⁻¹ *
+          (omega left * kernel left Bh * omega Bh))
+  calc
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+        H N hN beta hbeta‖⁻¹ *
+        (omega left * kernel left Bg * omega Bg) =
+      c * (kernel left Bg * omega Bg) := by
+        dsimp only [c]
+        ring
+    _ ≤ c * (Real.exp (16 * beta) * (kernel left Bh * omega Bh)) := hscaled
+    _ = Real.exp (16 * beta) *
+        (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+            H N hN beta hbeta‖⁻¹ *
+          (omega left * kernel left Bh * omega Bh)) := by
+        dsimp only [c]
+        ring
 
 /-- `ENNReal` form of the complete direct one-link Harnack comparison. -/
 theorem
