@@ -141,6 +141,15 @@ theorem
       H N hN beta hbeta target X hXLpAE
   filter_upwards [h] with left hleft
   filter_upwards [hleft] with retained hretained
+  have hfiber :
+      (fun targetCfg => X left retained (eval targetCfg)) =
+        (fun targetCfg => f left (split.symm (targetCfg, retained))) := by
+    funext targetCfg
+    change
+      f left (split.symm (eval.symm (eval targetCfg), retained)) =
+        f left (split.symm (targetCfg, retained))
+    rw [eval.symm_apply_apply]
+  rw [hfiber] at hretained
   simpa [X, split, eval] using hretained
 
 end
