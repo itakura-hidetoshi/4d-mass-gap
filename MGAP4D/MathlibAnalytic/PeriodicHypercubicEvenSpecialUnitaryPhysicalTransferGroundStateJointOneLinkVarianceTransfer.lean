@@ -40,7 +40,7 @@ local instance groundStateJointOneLinkVarianceTransferOffTargetLinkFintype
     (H : ℕ)
     (target : PeriodicHypercubicEvenSpatialSliceLink H) :
     Fintype (PeriodicHypercubicEvenSpatialSliceOffTargetLink H target) :=
-  Fintype.ofFinite _
+  Subtype.fintype (fun e : PeriodicHypercubicEvenSpatialSliceLink H => e ≠ target)
 
 /-- The sharp `exp (-16 * beta)` one-link variance lower bound transfers,
 almost everywhere in the genuine ground-state joint outer context, from the
