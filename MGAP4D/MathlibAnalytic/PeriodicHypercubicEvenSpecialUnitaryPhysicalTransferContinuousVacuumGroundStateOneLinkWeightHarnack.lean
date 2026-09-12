@@ -10,6 +10,8 @@ open scoped ENNReal
 
 noncomputable section
 
+set_option maxHeartbeats 1000000
+
 /-- The complete direct ground-state one-link weight built from the canonical
 continuous physical vacuum representative, before applying `ENNReal.ofReal`.
 
