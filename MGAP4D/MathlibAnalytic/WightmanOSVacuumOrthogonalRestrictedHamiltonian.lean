@@ -65,9 +65,17 @@ def ExplicitWightmanOSVacuumOrthogonalHamiltonianInvariant.restrictedLinearMap
   map_smul' := by
     intro c x
     apply Subtype.ext
-    simpa [ExplicitWightmanOSReconstructedModel.vacuumOrthogonalAmbientDomainPoint]
-      using M.hamiltonian.toFun.map_smul c
-        (M.vacuumOrthogonalAmbientDomainPoint x)
+    have hDomain :
+        M.vacuumOrthogonalAmbientDomainPoint (c • x) =
+          c • M.vacuumOrthogonalAmbientDomainPoint x := by
+      apply Subtype.ext
+      rfl
+    change
+      M.hamiltonian (M.vacuumOrthogonalAmbientDomainPoint (c • x)) =
+        c • M.hamiltonian (M.vacuumOrthogonalAmbientDomainPoint x)
+    rw [hDomain]
+    exact M.hamiltonian.toFun.map_smul c
+      (M.vacuumOrthogonalAmbientDomainPoint x)
 
 /-- The actual partially-defined Hamiltonian restricted to the physical
 vacuum-orthogonal Hilbert sector. -/
@@ -97,33 +105,6 @@ theorem vacuum_orthogonal_restrictedHamiltonian_apply
     ((I.restrictedHamiltonian x : M.VacuumOrthogonalHilbert) : M.H) =
       M.hamiltonian (M.vacuumOrthogonalAmbientDomainPoint x) := by
   rfl
-
-/-- A theorem-level bridge joining the actual restricted operator to the
-previously isolated non-vacuum spectral set.  Self-adjointness of the restricted
-operator and equality with its operator-theoretic spectrum remain explicit
-inputs rather than being hidden in the set-theoretic bridge. -/
-structure ExplicitWightmanOSVacuumOrthogonalRestrictedHamiltonianBridge
-    (M : ExplicitWightmanOSReconstructedModel) extends
-      ExplicitWightmanOSVacuumOrthogonalSpectrumBridge M where
-  invariant : ExplicitWightmanOSVacuumOrthogonalHamiltonianInvariant M
-  restrictedHamiltonianSelfAdjoint :
-    IsSelfAdjoint invariant.restrictedHamiltonian
-
-/-- The restricted-Hamiltonian bridge exposes an actual Mathlib `LinearPMap` on
-`Ω⊥`, not merely a set named as a restricted spectrum. -/
-def ExplicitWightmanOSVacuumOrthogonalRestrictedHamiltonianBridge.operator
-    {M : ExplicitWightmanOSReconstructedModel}
-    (B : ExplicitWightmanOSVacuumOrthogonalRestrictedHamiltonianBridge M) :
-    M.VacuumOrthogonalHilbert →ₗ.[ℝ]
-      M.VacuumOrthogonalHilbert :=
-  B.invariant.restrictedHamiltonian
-
-/-- The actual restricted operator is self-adjoint by the bridge input. -/
-theorem vacuum_orthogonal_restrictedHamiltonian_isSelfAdjoint
-    {M : ExplicitWightmanOSReconstructedModel}
-    (B : ExplicitWightmanOSVacuumOrthogonalRestrictedHamiltonianBridge M) :
-    IsSelfAdjoint B.operator :=
-  B.restrictedHamiltonianSelfAdjoint
 
 end
 

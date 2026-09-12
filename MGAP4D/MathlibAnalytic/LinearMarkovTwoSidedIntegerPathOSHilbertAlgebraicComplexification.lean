@@ -1,0 +1,133 @@
+import MGAP4D.MathlibAnalytic.RealTensorComplexificationLinearMap
+import MGAP4D.MathlibAnalytic.LinearMarkovTwoSidedIntegerPathOSHilbertSymmetricContractionSemigroup
+import Mathlib.Tactic
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+noncomputable section
+
+namespace LinearMarkovTwoSidedIntegerPathOSPreHilbertData
+
+variable {Ω : Type*} [Fintype Ω]
+  [MeasurableSpace Ω] [MeasurableSingletonClass Ω]
+
+/-- Algebraic complexification of the completed real temporal OS Hilbert
+space.  No topology or completion is imposed on the tensor product yet. -/
+abbrev HilbertAlgebraicComplexification
+    (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) :=
+  RealTensorComplexification.Space D.Hilbert
+
+/-- Algebraic complexification of the completed one-step temporal OS shift. -/
+def hilbertShiftAlgebraicComplexification
+    (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) :
+    D.HilbertAlgebraicComplexification →ₗ[ℂ]
+      D.HilbertAlgebraicComplexification :=
+  RealTensorComplexification.ofContinuousLinearMap
+    D.hilbertShiftContinuousLinearMap
+
+/-- Algebraic complexification of the natural-time temporal OS semigroup. -/
+def hilbertShiftSemigroupAlgebraicComplexification
+    (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
+    (n : ℕ) :
+    D.HilbertAlgebraicComplexification →ₗ[ℂ]
+      D.HilbertAlgebraicComplexification :=
+  RealTensorComplexification.ofContinuousLinearMap
+    (D.hilbertShiftSemigroup n)
+
+@[simp] theorem hilbertShiftAlgebraicComplexification_tmul
+    (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
+    (z : ℂ)
+    (x : D.Hilbert) :
+    D.hilbertShiftAlgebraicComplexification (z ⊗ₜ[ℝ] x) =
+      z ⊗ₜ[ℝ] D.hilbertShiftContinuousLinearMap x :=
+  RealTensorComplexification.ofContinuousLinearMap_tmul
+    D.hilbertShiftContinuousLinearMap z x
+
+@[simp] theorem hilbertShiftSemigroupAlgebraicComplexification_tmul
+    (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
+    (n : ℕ)
+    (z : ℂ)
+    (x : D.Hilbert) :
+    D.hilbertShiftSemigroupAlgebraicComplexification n (z ⊗ₜ[ℝ] x) =
+      z ⊗ₜ[ℝ] D.hilbertShiftSemigroup n x :=
+  RealTensorComplexification.ofContinuousLinearMap_tmul
+    (D.hilbertShiftSemigroup n) z x
+
+@[simp] theorem hilbertShiftSemigroupAlgebraicComplexification_zero
+    (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) :
+    D.hilbertShiftSemigroupAlgebraicComplexification 0 = 1 := by
+  rw [hilbertShiftSemigroupAlgebraicComplexification,
+    D.hilbertShiftSemigroup_zero]
+  exact RealTensorComplexification.ofContinuousLinearMap_one
+
+@[simp] theorem hilbertShiftSemigroupAlgebraicComplexification_one
+    (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω) :
+    D.hilbertShiftSemigroupAlgebraicComplexification 1 =
+      D.hilbertShiftAlgebraicComplexification := by
+  rw [hilbertShiftSemigroupAlgebraicComplexification,
+    hilbertShiftAlgebraicComplexification,
+    D.hilbertShiftSemigroup_one]
+
+@[simp] theorem hilbertShiftSemigroupAlgebraicComplexification_succ
+    (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
+    (n : ℕ) :
+    D.hilbertShiftSemigroupAlgebraicComplexification (n + 1) =
+      D.hilbertShiftAlgebraicComplexification.comp
+        (D.hilbertShiftSemigroupAlgebraicComplexification n) := by
+  rw [hilbertShiftSemigroupAlgebraicComplexification,
+    hilbertShiftAlgebraicComplexification,
+    hilbertShiftSemigroupAlgebraicComplexification,
+    D.hilbertShiftSemigroup_succ]
+  exact RealTensorComplexification.ofContinuousLinearMap_comp
+    D.hilbertShiftContinuousLinearMap (D.hilbertShiftSemigroup n)
+
+/-- The algebraically complexified temporal OS operators retain the additive
+semigroup law. -/
+theorem hilbertShiftSemigroupAlgebraicComplexification_add
+    (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
+    (m n : ℕ) :
+    D.hilbertShiftSemigroupAlgebraicComplexification (m + n) =
+      (D.hilbertShiftSemigroupAlgebraicComplexification m).comp
+        (D.hilbertShiftSemigroupAlgebraicComplexification n) := by
+  rw [hilbertShiftSemigroupAlgebraicComplexification,
+    hilbertShiftSemigroupAlgebraicComplexification,
+    hilbertShiftSemigroupAlgebraicComplexification,
+    D.hilbertShiftSemigroup_add]
+  exact RealTensorComplexification.ofContinuousLinearMap_comp
+    (D.hilbertShiftSemigroup m) (D.hilbertShiftSemigroup n)
+
+/-- Any two members of the algebraically complexified temporal OS semigroup
+commute. -/
+theorem hilbertShiftSemigroupAlgebraicComplexification_comp_comm
+    (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
+    (m n : ℕ) :
+    (D.hilbertShiftSemigroupAlgebraicComplexification m).comp
+        (D.hilbertShiftSemigroupAlgebraicComplexification n) =
+      (D.hilbertShiftSemigroupAlgebraicComplexification n).comp
+        (D.hilbertShiftSemigroupAlgebraicComplexification m) := by
+  rw [← D.hilbertShiftSemigroupAlgebraicComplexification_add,
+    Nat.add_comm,
+    D.hilbertShiftSemigroupAlgebraicComplexification_add]
+
+/-- The algebraically complexified temporal OS semigroup is generated by the
+complexified one-step shift. -/
+theorem hilbertShiftSemigroupAlgebraicComplexification_eq_pow
+    (D : LinearMarkovTwoSidedIntegerPathOSPreHilbertData Ω)
+    (n : ℕ) :
+    D.hilbertShiftSemigroupAlgebraicComplexification n =
+      D.hilbertShiftAlgebraicComplexification ^ n := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+      rw [D.hilbertShiftSemigroupAlgebraicComplexification_succ,
+        ih,
+        pow_succ',
+        Module.End.mul_eq_comp]
+
+end LinearMarkovTwoSidedIntegerPathOSPreHilbertData
+
+end
+
+end MathlibAnalytic
+end MGAP4D

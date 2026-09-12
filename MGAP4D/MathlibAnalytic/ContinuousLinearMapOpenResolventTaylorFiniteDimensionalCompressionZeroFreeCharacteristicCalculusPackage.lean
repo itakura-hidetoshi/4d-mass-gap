@@ -1,0 +1,17 @@
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapFiniteDimensionalZeroFreeCharacteristicCalculusCore
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapOpenResolventTaylorFiniteDimensionalCompressionZeroFreeCharacteristicCalculusCompact
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapOpenResolventTaylorFiniteDimensionalCompressionZeroFreeCharacteristicCalculusClosedBox
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapOpenResolventTaylorFiniteDimensionalCompressionZeroFreeCharacteristicCalculusClosedBoxDiagonal
+
+/-!
+# Finite-dimensional compressed zero-free characteristic calculus
+
+This aggregate exports the generic package for reciprocal characteristic
+determinants, logarithmic absolute characteristic determinants and two-point
+characteristic determinant ratios after arbitrary finite-dimensional
+compression.
+
+The package includes compact fixed-derivative forms, simultaneous finite
+Taylor jets, complete closed Taylor-box joint nets and diagonal
+variable-degree limits without rate assumptions.
+-/

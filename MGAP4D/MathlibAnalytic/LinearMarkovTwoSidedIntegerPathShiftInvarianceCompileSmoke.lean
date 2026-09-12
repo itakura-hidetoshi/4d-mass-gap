@@ -1,0 +1,10 @@
+import MGAP4D.MathlibAnalytic.LinearMarkovTwoSidedIntegerPathShiftInvariance
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+#check linearMarkovTwoSidedIntegerPathMeasure_map_negNatShift
+#check linearMarkovTwoSidedIntegerPathMeasure_map_shift
+
+end MathlibAnalytic
+end MGAP4D

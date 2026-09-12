@@ -10,27 +10,28 @@ open scoped InnerProductSpace
 namespace MGAP4D
 namespace MathlibAnalytic
 
-local instance (H : ℕ) : NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+local instance approximatingBoundaryL2TransferGapEvenSideLengthNeZero
+    (H : ℕ) : NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
   simp [PeriodicHypercubicEvenSideLength]⟩
 
-local instance (N : ℕ) :
-    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance approximatingBoundaryL2TransferGapSpecialUnitaryIsTopologicalGroup
+    (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 
-local instance (N : ℕ) :
-    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance approximatingBoundaryL2TransferGapSpecialUnitaryCompactSpace
+    (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
-local instance (N : ℕ) :
-    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance approximatingBoundaryL2TransferGapSpecialUnitarySecondCountableTopology
+    (N : ℕ) : SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupSecondCountableTopology N
 
-local instance (N : ℕ) :
-    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance approximatingBoundaryL2TransferGapSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
 
-local instance (N : ℕ) :
-    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance approximatingBoundaryL2TransferGapSpecialUnitaryBorelSpace
+    (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
 /-- The real `L²` Hilbert space of shared-boundary functions for one finite

@@ -1,54 +1,45 @@
-import MGAP4D.MathlibAnalytic.FiniteOrientedLatticeWilsonSingleLinkHeatBathDetailedBalance
+import MGAP4D.MathlibAnalytic.FiniteOrientedWilsonPairingCore
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
 noncomputable section
 
-@[simp] theorem finite_oriented_replaceLink_replaceLink
+/-- Exchanging the old and resampled value of one physical link is an
+involution on configuration-value pairs. -/
+noncomputable def
+    FiniteOrientedLatticeWilsonSystem.singleLinkUpdateSwapEquiv
     (L : FiniteOrientedLatticeWilsonSystem)
-    (A : L.Configuration)
-    (target : L.Edge)
-    (h g : L.Gauge) :
-    L.replaceLink (L.replaceLink A target h) target g =
-      L.replaceLink A target g := by
-  classical
-  funext e
-  by_cases he : e = target
-  · subst e
-    simp
-  · simp [FiniteOrientedLatticeWilsonSystem.replaceLink, he]
-
-noncomputable def FiniteOrientedLatticeWilsonSystem.singleLinkUpdateSwapEquiv
-    (L : FiniteOrientedLatticeWilsonSystem)
-    (target : L.Edge) :
-    (L.Configuration × L.Gauge) ≃ (L.Configuration × L.Gauge) where
-  toFun := fun x => (L.replaceLink x.1 target x.2, x.1 target)
-  invFun := fun x => (L.replaceLink x.1 target x.2, x.1 target)
+    (e : L.Edge) :
+    (L.Configuration × L.Gauge) ≃
+      (L.Configuration × L.Gauge) where
+  toFun := fun x => (L.replaceLink x.1 e x.2, x.1 e)
+  invFun := fun x => (L.replaceLink x.1 e x.2, x.1 e)
   left_inv := by
     rintro ⟨A, g⟩
     apply Prod.ext
-    · change L.replaceLink (L.replaceLink A target g) target (A target) = A
-      rw [finite_oriented_replaceLink_replaceLink,
-        finite_oriented_replaceLink_current]
+    · simp
     · simp
   right_inv := by
     rintro ⟨A, g⟩
     apply Prod.ext
-    · change L.replaceLink (L.replaceLink A target g) target (A target) = A
-      rw [finite_oriented_replaceLink_replaceLink,
-        finite_oriented_replaceLink_current]
+    · simp
     · simp
 
+/-- The first component of the oriented link-exchange involution restores the
+original physical-link configuration. -/
 @[simp] theorem finite_oriented_singleLinkUpdateSwap_first_roundTrip
     (L : FiniteOrientedLatticeWilsonSystem)
     (A : L.Configuration)
-    (target : L.Edge)
-    (g : L.Gauge) :
-    L.replaceLink (L.replaceLink A target g) target (A target) = A := by
-  rw [finite_oriented_replaceLink_replaceLink,
-    finite_oriented_replaceLink_current]
+    (e : L.Edge)
+    (h : L.Gauge) :
+    L.replaceLink (L.replaceLink A e h) e (A e) = A := by
+  simpa
+    [FiniteOrientedLatticeWilsonSystem.singleLinkUpdateSwapEquiv]
+    using congrArg Prod.fst
+      ((L.singleLinkUpdateSwapEquiv e).left_inv (A, h))
 
 end
+
 end MathlibAnalytic
 end MGAP4D

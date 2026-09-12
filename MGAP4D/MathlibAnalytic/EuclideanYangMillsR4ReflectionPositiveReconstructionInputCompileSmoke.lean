@@ -1,0 +1,18 @@
+import MGAP4D.MathlibAnalytic.EuclideanYangMillsR4ReflectionPositiveReconstructionInputClosure
+import Mathlib.Tactic
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+noncomputable section
+
+def euclideanYangMillsR4ReflectionPositiveReconstructionInputCompileSmoke : Prop := True
+
+theorem euclideanYangMillsR4ReflectionPositiveReconstructionInputCompileSmoke_holds :
+    euclideanYangMillsR4ReflectionPositiveReconstructionInputCompileSmoke :=
+  trivial
+
+end
+
+end MathlibAnalytic
+end MGAP4D

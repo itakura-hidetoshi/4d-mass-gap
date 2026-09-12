@@ -43,7 +43,10 @@ if ! git diff --name-only "${BASE}"...HEAD >/dev/null 2>&1; then
   BASE="HEAD^"
 fi
 
-changed_files="$(git diff --name-only "${BASE}"...HEAD || true)"
+# Downstream source-integrity and Lean preflight audits operate on files that
+# exist at HEAD.  Exclude deletions from the diff while retaining added,
+# copied, modified, and renamed destination paths.
+changed_files="$(git diff --name-only --diff-filter=ACMR "${BASE}"...HEAD || true)"
 changed_lean_files="$(printf '%s\n' "${changed_files}" | grep '^MGAP4D/.*\.lean$\|^MGAP4D\.lean$' || true)"
 
 printf '[preflight] base: %s\n' "${BASE}"
@@ -57,6 +60,11 @@ fi
 if [ -f scripts/test_audit_lean_source_integrity.py ]; then
   echo "[preflight] Lean source integrity regression tests"
   python3 scripts/test_audit_lean_source_integrity.py
+fi
+
+if [ -f scripts/test_audit_changed_lean_preflight.py ]; then
+  echo "[preflight] changed Lean path regression tests"
+  python3 scripts/test_audit_changed_lean_preflight.py
 fi
 
 if [ -z "${changed_lean_files}" ]; then

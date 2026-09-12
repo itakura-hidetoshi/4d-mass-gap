@@ -20,6 +20,7 @@ on:
   push:
     branches:
       - main
+      - formal/real-hilbert-uniform-coercive-strong-limit
     paths:
       - ".github/workflows/pr-lean-fast-check.yml"
       - "lean-toolchain"
@@ -50,7 +51,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          fetch-depth: 2
+          fetch-depth: 0
           show-progress: false
 
       - name: Preflight changed Lean static audit
@@ -76,11 +77,14 @@ jobs:
 
           required=false
           while IFS= read -r changed_path; do
-            if [[ "${changed_path}" =~ ^MGAP4D/.+\.lean$ ]] \
-                && [[ "${changed_path}" != "MGAP4D/MathlibAnalytic.lean" ]]; then
-              required=true
-              break
-            fi
+            case "${changed_path}" in
+              MGAP4D/*.lean)
+                if [ "${changed_path}" != "MGAP4D/MathlibAnalytic.lean" ]; then
+                  required=true
+                  break
+                fi
+                ;;
+            esac
           done < "${changed_file_list}"
           if grep -Eq '^(lean-toolchain|lakefile\.lean|lake-manifest\.json)$' "${changed_file_list}"; then
             required=true
@@ -182,24 +186,17 @@ jobs:
         if: ${{ steps.lake-mode.outputs.required == 'true' }}
         shell: bash
         run: |
-          set -uo pipefail
-          log_file="${RUNNER_TEMP}/changed-lean-fast-check.log"
+          set -euxo pipefail
           echo "[fast] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
-          set +e
-          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}" >"${log_file}" 2>&1
-          status=$?
-          set -e
-          tail -n 250 "${log_file}"
-          exit "${status}"
+          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}" 2>&1 | tee "${RUNNER_TEMP}/lean-fast.log"
 
-      - name: Upload failed Lean build log
-        if: ${{ failure() && steps.lake-mode.outputs.required == 'true' }}
-        uses: actions/upload-artifact@v4
+      - name: Upload Lean fast-check diagnostics
+        if: ${{ always() && steps.lake-mode.outputs.required == 'true' }}
+        uses: actions/upload-artifact@v6
         with:
-          name: changed-lean-fast-check-log
-          path: ${{ runner.temp }}/changed-lean-fast-check.log
-          if-no-files-found: ignore
-          retention-days: 7
+          name: lean-fast-check-log
+          path: ${{ runner.temp }}/lean-fast.log
+          if-no-files-found: warn
 
       - name: Check Lake cache is saveable
         if: ${{ steps.lake-mode.outputs.required == 'true' }}
@@ -212,8 +209,8 @@ jobs:
             echo "ready=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Save Lake build cache from main only
-        if: ${{ steps.lake-mode.outputs.required == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.lake-cache.outputs.cache-hit != 'true' && steps.lake-cache-ready.outputs.ready == 'true' }}
+      - name: Save Lake build cache from trusted branches
+        if: ${{ steps.lake-mode.outputs.required == 'true' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/formal/real-hilbert-uniform-coercive-strong-limit') && steps.lake-cache.outputs.cache-hit != 'true' && steps.lake-cache-ready.outputs.ready == 'true' }}
         uses: actions/cache/save@v5
         with:
           path: |

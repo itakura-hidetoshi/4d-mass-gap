@@ -1,0 +1,16 @@
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapOpenResolventTaylorFiniteDimensionalCompressionZeroFreeCharacteristicCalculusPackage
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSCanonicalZeroFreeCharacteristicCalculusCompact
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSCanonicalZeroFreeCharacteristicCalculusClosedBox
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSCanonicalZeroFreeCharacteristicCalculusClosedBoxDiagonal
+
+/-!
+# Canonical OS compressed zero-free characteristic calculus
+
+This aggregate exports the canonical OS specialization of reciprocal
+characteristic determinant profiles, logarithmic absolute characteristic
+profiles and two-point characteristic determinant ratios.
+
+All assertions remain after arbitrary finite-dimensional compression, use the
+unchanged strict half-mass Taylor threshold, and require explicit positive
+continuum determinant margins on the denominator spectral sets.
+-/

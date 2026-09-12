@@ -1,0 +1,9 @@
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapOpenResolventTaylorFiniteDimensionalCompressionRealResolventJointParameterRemainderBanachDependentPiFiniteRootedBlockHierarchyToleranceCompact
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapOpenResolventTaylorFiniteDimensionalCompressionRealResolventJointParameterRemainderBanachDependentPiFiniteRootedBlockHierarchyToleranceClosedBox
+
+/-!
+# Dependent Pi finite rooted block hierarchy tolerance package
+
+Compact-uniform and arbitrary-joint-net closed-box calculus for arbitrary
+finite-depth rooted hierarchies of finite coordinate partitions.
+-/

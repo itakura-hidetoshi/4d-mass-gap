@@ -5,6 +5,8 @@ namespace MathlibAnalytic
 
 noncomputable section
 
+open Filter Topology
+
 /-- Generator identification for the reconstructed OS time-translation
 semigroup.
 

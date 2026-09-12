@@ -1,0 +1,9 @@
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapFiniteDimensionalRealResolventJointParameterRemainderBanachDependentPiProductToleranceAggregate
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSCanonicalRealResolventJointParameterRemainderBanachDependentPiProductToleranceAggregate
+
+/-!
+# Certificate package for dependent Pi-product vector tolerances
+
+Combines the generic finite-dimensional calculus with the canonical OS
+finite-compression wrappers.
+-/

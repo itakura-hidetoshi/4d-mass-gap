@@ -32,24 +32,24 @@ theorem integral_measurePreserving_involutive_transport
     _ = ∫ x, density x * observable (c x) ∂mu :=
       hmp.integral_comp hme (fun x => density x * observable (c x))
 
-local instance (N : ℕ) :
-    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance boundaryObservableIntegralTransportSpecialUnitaryIsTopologicalGroup
+    (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 
-local instance (N : ℕ) :
-    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance boundaryObservableIntegralTransportSpecialUnitaryCompactSpace
+    (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
-local instance (N : ℕ) :
-    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance boundaryObservableIntegralTransportSpecialUnitarySecondCountableTopology
+    (N : ℕ) : SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupSecondCountableTopology N
 
-local instance (N : ℕ) :
-    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance boundaryObservableIntegralTransportSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
 
-local instance (N : ℕ) :
-    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance boundaryObservableIntegralTransportSpecialUnitaryBorelSpace
+    (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
 /-- Haar invariance removes the orientation correction from the density argument

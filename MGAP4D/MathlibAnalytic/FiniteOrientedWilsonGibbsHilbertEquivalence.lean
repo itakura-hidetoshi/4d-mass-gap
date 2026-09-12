@@ -1,10 +1,12 @@
-import MGAP4D.MathlibAnalytic.FiniteOrientedWilsonGibbsHilbertRealization
+import MGAP4D.MathlibAnalytic.FiniteOrientedWilsonGibbsHilbertVacuum
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
 noncomputable section
 
+/-- Every oriented finite-volume Gibbs configuration has strictly positive real
+probability. -/
 theorem finite_oriented_gibbsProbabilityReal_pos
     (L : FiniteOrientedLatticeWilsonSystem)
     (A : L.Configuration) :
@@ -18,13 +20,18 @@ theorem finite_oriented_gibbsProbabilityReal_pos
         (finite_oriented_partitionFunction_ne_top L))
   · exact L.gibbsPMF.apply_ne_top A
 
+/-- The square root of every oriented Gibbs probability is nonzero. -/
 theorem finite_oriented_sqrt_gibbsProbabilityReal_ne_zero
     (L : FiniteOrientedLatticeWilsonSystem)
     (A : L.Configuration) :
     Real.sqrt (L.gibbsProbabilityReal A) ≠ 0 :=
-  ne_of_gt (Real.sqrt_pos.2 (finite_oriented_gibbsProbabilityReal_pos L A))
+  ne_of_gt
+    (Real.sqrt_pos.2 (finite_oriented_gibbsProbabilityReal_pos L A))
 
-noncomputable def FiniteOrientedLatticeWilsonSystem.gibbsHilbertObserveLinearMap
+/-- Recover an observable from a native Gibbs Hilbert vector by pointwise
+division by `sqrt(mu)`. -/
+noncomputable def
+    FiniteOrientedLatticeWilsonSystem.gibbsHilbertObserveLinearMap
     (L : FiniteOrientedLatticeWilsonSystem) :
     L.GibbsHilbertSpace →ₗ[ℝ] (L.Configuration → ℝ) where
   toFun x := fun A => x A / Real.sqrt (L.gibbsProbabilityReal A)
@@ -50,6 +57,7 @@ noncomputable def FiniteOrientedLatticeWilsonSystem.gibbsHilbertObserveLinearMap
       x A / Real.sqrt (L.gibbsProbabilityReal A) :=
   rfl
 
+/-- Observing an embedded oriented observable recovers the observable. -/
 theorem finite_oriented_gibbsHilbert_observe_embed
     (L : FiniteOrientedLatticeWilsonSystem)
     (f : L.Configuration → ℝ) :
@@ -60,6 +68,8 @@ theorem finite_oriented_gibbsHilbert_observe_embed
     finite_oriented_gibbsHilbertEmbedLinearMap_apply]
   field_simp [finite_oriented_sqrt_gibbsProbabilityReal_ne_zero L A]
 
+/-- Embedding the observable recovered from a native Gibbs Hilbert vector
+returns the vector. -/
 theorem finite_oriented_gibbsHilbert_embed_observe
     (L : FiniteOrientedLatticeWilsonSystem)
     (x : L.GibbsHilbertSpace) :
@@ -70,7 +80,10 @@ theorem finite_oriented_gibbsHilbert_embed_observe
     finite_oriented_gibbsHilbertObserveLinearMap_apply]
   field_simp [finite_oriented_sqrt_gibbsProbabilityReal_ne_zero L A]
 
-noncomputable def FiniteOrientedLatticeWilsonSystem.gibbsHilbertLinearEquiv
+/-- Multiplication by `sqrt(mu)` is a linear equivalence from oriented
+observables to the concrete native Gibbs Hilbert space. -/
+noncomputable def
+    FiniteOrientedLatticeWilsonSystem.gibbsHilbertLinearEquiv
     (L : FiniteOrientedLatticeWilsonSystem) :
     (L.Configuration → ℝ) ≃ₗ[ℝ] L.GibbsHilbertSpace :=
   LinearEquiv.ofBijective L.gibbsHilbertEmbedLinearMap
@@ -91,6 +104,8 @@ noncomputable def FiniteOrientedLatticeWilsonSystem.gibbsHilbertLinearEquiv
       exact ⟨L.gibbsHilbertObserveLinearMap x,
         finite_oriented_gibbsHilbert_embed_observe L x⟩⟩
 
+/-- Vacuum centering of an arbitrary native Gibbs Hilbert vector has squared
+norm equal to the Gibbs variance of its recovered observable. -/
 theorem finite_oriented_gibbsHilbert_vacuumCentered_norm_sq_observe
     (L : FiniteOrientedLatticeWilsonSystem)
     (x : L.GibbsHilbertSpace) :
@@ -107,5 +122,6 @@ theorem finite_oriented_gibbsHilbert_vacuumCentered_norm_sq_observe
         L (L.gibbsHilbertObserveLinearMap x)
 
 end
+
 end MathlibAnalytic
 end MGAP4D

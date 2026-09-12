@@ -160,14 +160,16 @@ theorem explicit_wightman_os_vacuum_orthogonal_complete_compile_smoke
     CompleteSpace M.VacuumOrthogonalHilbert := by
   infer_instance
 
-/-- Integration theorem forcing the actual partially-defined restriction
-`H|Ω⊥` to elaborate with its intersection domain and self-adjointness surface. -/
+/-- Integration theorem forcing the canonical partially-defined restriction
+`H|Ω⊥` to elaborate with its intersection domain and derived self-adjointness. -/
 theorem explicit_wightman_os_restricted_hamiltonian_compile_smoke
-    {M : ExplicitWightmanOSReconstructedModel}
-    (B : ExplicitWightmanOSVacuumOrthogonalRestrictedHamiltonianBridge M) :
-    IsSelfAdjoint B.operator ∧
-      B.operator.domain = M.vacuumOrthogonalHamiltonianDomain := by
-  exact ⟨vacuum_orthogonal_restrictedHamiltonian_isSelfAdjoint B, rfl⟩
+    (M : ExplicitWightmanOSReconstructedModel) :
+    IsSelfAdjoint M.canonicalVacuumOrthogonalHamiltonian ∧
+      M.canonicalVacuumOrthogonalHamiltonian.domain =
+        M.vacuumOrthogonalHamiltonianDomain := by
+  exact
+    ⟨explicit_wightman_os_canonical_vacuum_orthogonal_hamiltonian_isSelfAdjoint M,
+      canonical_vacuum_orthogonal_hamiltonian_domain M⟩
 
 /-- The restricted operator agrees with the ambient Hamiltonian after inclusion
 of both its domain point and its value into the physical Hilbert space. -/
@@ -179,15 +181,16 @@ theorem explicit_wightman_os_restricted_hamiltonian_action_compile_smoke
       M.hamiltonian (M.vacuumOrthogonalAmbientDomainPoint x) := by
   exact vacuum_orthogonal_restrictedHamiltonian_apply I x
 
-/-- Self-adjointness of the restricted Hamiltonian is compiled through its dense
-intersection domain and closed graph consequences. -/
+/-- Derived self-adjointness of the canonical restricted Hamiltonian is compiled
+through its dense intersection domain and closed graph consequences. -/
 theorem explicit_wightman_os_restricted_hamiltonian_operator_package_compile_smoke
-    {M : ExplicitWightmanOSReconstructedModel}
-    (B : ExplicitWightmanOSVacuumOrthogonalRestrictedHamiltonianBridge M) :
-    B.operator.domain = M.vacuumOrthogonalHamiltonianDomain ∧
-      Dense ((B.operator.domain : Set M.VacuumOrthogonalHilbert)) ∧
-      LinearPMap.IsClosed B.operator := by
-  exact vacuum_orthogonal_restrictedHamiltonian_operator_package B
+    (M : ExplicitWightmanOSReconstructedModel) :
+    M.canonicalVacuumOrthogonalHamiltonian.domain =
+        M.vacuumOrthogonalHamiltonianDomain ∧
+      Dense ((M.canonicalVacuumOrthogonalHamiltonian.domain :
+        Set M.VacuumOrthogonalHilbert)) ∧
+      LinearPMap.IsClosed M.canonicalVacuumOrthogonalHamiltonian := by
+  exact vacuum_orthogonal_restrictedHamiltonian_operator_package M
 
 end
 

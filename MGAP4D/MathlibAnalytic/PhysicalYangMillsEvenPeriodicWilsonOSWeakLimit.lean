@@ -9,27 +9,28 @@ open Filter MeasureTheory
 
 noncomputable section
 
-local instance (H : ℕ) : NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+local instance physicalYangMillsEvenPeriodicWilsonOSWeakLimitSideLengthNeZero (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
   simp [PeriodicHypercubicEvenSideLength]⟩
 
-local instance (N : ℕ) :
-    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance physicalYangMillsEvenPeriodicWilsonOSWeakLimitSpecialUnitaryIsTopologicalGroup
+    (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 
-local instance (N : ℕ) :
-    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance physicalYangMillsEvenPeriodicWilsonOSWeakLimitSpecialUnitaryCompactSpace
+    (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
-local instance (N : ℕ) :
-    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance physicalYangMillsEvenPeriodicWilsonOSWeakLimitSpecialUnitarySecondCountableTopology
+    (N : ℕ) : SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupSecondCountableTopology N
 
-local instance (N : ℕ) :
-    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance physicalYangMillsEvenPeriodicWilsonOSWeakLimitSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
 
-local instance (N : ℕ) :
-    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance physicalYangMillsEvenPeriodicWilsonOSWeakLimitSpecialUnitaryBorelSpace
+    (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
 /-- Nonnegativity of expectations of a fixed bounded continuous physical

@@ -1,0 +1,13 @@
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapOpenResolventTaylorFiniteDimensionalCompressionRealResolventLinearResponsePackage
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSCanonicalRealResolventLinearResponseCompact
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSCanonicalRealResolventLinearResponseClosedBox
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSCanonicalRealResolventLinearResponseClosedBoxDiagonal
+
+/-!
+# Canonical OS finite-dimensional real-resolvent linear response package
+
+Aggregate root for canonical OS compact, finite-rectangular, complete
+closed-half-mass-box, arbitrary joint-net, and diagonal no-rate convergence of
+finite continuous-linear spectral response families and the basis-independent
+trace response after arbitrary finite-dimensional compression.
+-/

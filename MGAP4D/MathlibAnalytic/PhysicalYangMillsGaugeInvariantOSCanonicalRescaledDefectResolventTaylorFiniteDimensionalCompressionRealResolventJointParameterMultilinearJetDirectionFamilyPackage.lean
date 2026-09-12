@@ -1,0 +1,14 @@
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapOpenResolventTaylorFiniteDimensionalCompressionRealResolventJointParameterMultilinearJetDirectionFamilyPackage
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSCanonicalRealResolventJointParameterMultilinearJetDirectionFamilyCompact
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSCanonicalRealResolventJointParameterMultilinearJetDirectionFamilyClosedBox
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsGaugeInvariantOSCanonicalRealResolventJointParameterMultilinearJetDirectionFamilyClosedBoxDiagonal
+
+/-!
+# Canonical OS moving-direction complete joint Fréchet jet package
+
+This aggregate root closes the generic and canonical finite-compression layers for
+compact-uniform, arbitrary closed-box joint-net, and diagonal no-rate convergence
+when the complete finite operator-direction family moves with admissible defect time.
+It exposes the carrier, Banach-valued response, and basis-independent trace jets
+without adding an uncompressed operator-norm or trace claim.
+-/

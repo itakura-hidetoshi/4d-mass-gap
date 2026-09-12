@@ -1,0 +1,11 @@
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapFiniteDimensionalRealResolventJointParameterRemainderBanachDependentPiProductToleranceOrderCore
+import MGAP4D.MathlibAnalytic.ContinuousLinearMapFiniteDimensionalRealResolventJointParameterRemainderBanachDependentPiProductToleranceRestrictionCore
+
+/-!
+# Dependent Pi-product vector-tolerance core
+
+This stable import path exposes finite maximum and vector-tolerance order
+calculus together with finite-subfamily restriction and simultaneous
+reindexing.  The factorization keeps dependent codomain inference local while
+preserving every public theorem name.
+-/
