@@ -218,6 +218,7 @@ theorem
       exact
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitDensity_offTargetRestriction_eq_directFiberWeight
           H N hN beta hbeta left right target targetCfg]
+    dsimp [wNew]
     unfold
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkFiberWeight
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointDensity
