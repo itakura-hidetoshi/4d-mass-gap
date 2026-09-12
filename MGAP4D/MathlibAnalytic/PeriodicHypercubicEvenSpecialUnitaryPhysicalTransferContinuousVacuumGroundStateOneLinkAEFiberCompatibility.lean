@@ -1,6 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumGroundStateOneLinkNormalizedVariance
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateJointOneLinkSplitDirectNormalizedFiberBridge
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateJointOneLinkWeightFactorization
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -219,8 +218,11 @@ theorem
       exact
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitDensity_offTargetRestriction_eq_directFiberWeight
           H N hN beta hbeta left right target targetCfg]
-    rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkFiberWeight_eq_transferNorm_vacuum_kernel_vacuum]
     unfold
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkFiberWeight
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointDensity
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointWeight
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumGroundStateSpatialLinkFiberWeight
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumGroundStateSpatialLinkFiberWeightReal
     rw [hUpdate]
