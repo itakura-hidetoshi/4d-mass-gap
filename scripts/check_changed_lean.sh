@@ -42,6 +42,24 @@ fetch_base_ref() {
 
 fetch_base_ref "${BASE}"
 
+# A sync PR can be thousands of files ahead of public main while carrying an
+# exactly identical Lean/toolchain tree from the authoritative theorem branch.
+# Reuse that validated source tree only when a common authoritative ancestor is
+# present and every proof/toolchain input is byte-identical from it to HEAD.
+authoritative_theorem_ref="${AUTHORITATIVE_THEOREM_REF-origin/formal/real-hilbert-uniform-coercive-strong-limit}"
+if [ -n "${authoritative_theorem_ref}" ]; then
+  fetch_base_ref "${authoritative_theorem_ref}"
+  if git rev-parse --verify "${authoritative_theorem_ref}^{commit}" >/dev/null 2>&1; then
+    authoritative_ancestor="$(git merge-base "${authoritative_theorem_ref}" HEAD || true)"
+    if [ -n "${authoritative_ancestor}" ] && \
+       git diff --quiet "${authoritative_ancestor}" HEAD -- \
+         MGAP4D.lean MGAP4D lean-toolchain lakefile.lean lake-manifest.json; then
+      BASE="${authoritative_ancestor}"
+      echo "[fast] reusing authoritative Lean/toolchain tree at ${authoritative_ancestor}"
+    fi
+  fi
+fi
+
 if ! git diff --name-only "${BASE}"...HEAD >/dev/null 2>&1; then
   echo "[fast] base ${BASE} is unavailable for triple-dot diff; falling back to HEAD^"
   BASE="HEAD^"
