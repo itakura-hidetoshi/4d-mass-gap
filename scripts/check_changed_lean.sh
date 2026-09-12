@@ -48,7 +48,7 @@ if ! git diff --name-only "${BASE}"...HEAD >/dev/null 2>&1; then
 fi
 
 # Every downstream audit/elaboration below consumes paths that must exist at
-# HEAD.  Keep added/copied/modified/renamed destination paths and exclude
+# HEAD. Keep added/copied/modified/renamed destination paths and exclude
 # deletions from the changed-file lane.
 changed_files="$(git diff --name-only --diff-filter=ACMR "${BASE}"...HEAD || true)"
 changed_lean_files="$(printf '%s\n' "${changed_files}" | grep '^MGAP4D/.*\.lean$\|^MGAP4D\.lean$' || true)"
@@ -216,14 +216,19 @@ fi
 ensure_lake_manifest
 ensure_mathlib_cache
 
-# Directly elaborate each changed leaf against restored project and Mathlib olean
-# caches. This avoids Lake scheduling the full transitive build graph on the
-# common path. Toolchain or manifest changes deliberately retain the Lake build
-# path because their cache compatibility cannot be assumed.
+# Directly elaborate small changed sets against restored project and Mathlib
+# olean caches. Large synchronization PRs are routed to Lake's dependency-aware
+# maximal-target build below so Lake can exploit the cache and parallel graph
+# scheduling instead of elaborating thousands of source files serially.
 direct_lean_allowed=true
+direct_lean_max_files="${DIRECT_LEAN_MAX_FILES:-128}"
+changed_leaf_count="$(printf '%s\n' "${non_root_changed_lean_files}" | sed '/^$/d' | wc -l | tr -d '[:space:]')"
 if [ -n "${changed_lake_inputs}" ]; then
   direct_lean_allowed=false
   echo "[fast] Lake inputs changed; use dependency-aware lake build"
+elif [ "${changed_leaf_count}" -gt "${direct_lean_max_files}" ]; then
+  direct_lean_allowed=false
+  echo "[fast] ${changed_leaf_count} changed Lean leaf files exceed direct elaboration limit ${direct_lean_max_files}; use dependency-aware lake build"
 fi
 
 if [ "${direct_lean_allowed}" = true ]; then
