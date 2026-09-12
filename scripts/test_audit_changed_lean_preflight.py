@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Regression tests for changed-Lean deletion handling."""
+"""Regression tests for changed-Lean deletion and bulk-check handling."""
 
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
 import tempfile
@@ -39,6 +40,20 @@ def commit(root: Path, message: str) -> str:
         capture_output=True,
         text=True,
     ).stdout.strip()
+
+
+def install_fast_audit_stubs(scripts: Path) -> None:
+    (scripts / "audit_changed_lean_preflight.py").write_text(
+        "raise SystemExit(0)\n", encoding="utf-8"
+    )
+    for name in (
+        "audit_lean_forbidden_tokens.py",
+        "audit_hard_physical_residual_ledger.py",
+        "audit_bridge_coherence.py",
+        "audit_final_physical_carrier_routing.py",
+        "audit_os_wightman_mass_gap_bridge.py",
+    ):
+        (scripts / name).write_text("raise SystemExit(0)\n", encoding="utf-8")
 
 
 class ChangedLeanPreflightTest(unittest.TestCase):
@@ -104,14 +119,7 @@ class ChangedLeanPreflightTest(unittest.TestCase):
             lean_dir.mkdir()
 
             shutil.copy2(FAST_CHECK_SCRIPT, scripts / FAST_CHECK_SCRIPT.name)
-            for name in (
-                "audit_lean_forbidden_tokens.py",
-                "audit_hard_physical_residual_ledger.py",
-                "audit_bridge_coherence.py",
-                "audit_final_physical_carrier_routing.py",
-                "audit_os_wightman_mass_gap_bridge.py",
-            ):
-                (scripts / name).write_text("raise SystemExit(0)\n", encoding="utf-8")
+            install_fast_audit_stubs(scripts)
             (scripts / "audit_changed_lean_preflight.py").write_text(
                 "raise SystemExit('deleted Lean path reached changed-file audit')\n",
                 encoding="utf-8",
@@ -138,6 +146,56 @@ class ChangedLeanPreflightTest(unittest.TestCase):
             self.assertIn("[fast] changed Lean files:\n<none>", output)
             self.assertIn("[fast] no Lean files changed", output)
             self.assertNotIn("deleted Lean path reached changed-file audit", output)
+
+    def test_fast_check_uses_lake_build_for_bulk_changed_leaf_set(self) -> None:
+        with tempfile.TemporaryDirectory() as raw_dir:
+            root = Path(raw_dir)
+            scripts = root / "scripts"
+            lean_dir = root / "MGAP4D"
+            fake_bin = root / "bin"
+            scripts.mkdir()
+            lean_dir.mkdir()
+            fake_bin.mkdir()
+
+            shutil.copy2(FAST_CHECK_SCRIPT, scripts / FAST_CHECK_SCRIPT.name)
+            install_fast_audit_stubs(scripts)
+            (root / "lake-manifest.json").write_text('{"packages": []}\n', encoding="utf-8")
+            lake_log = root / "lake.log"
+            fake_lake = fake_bin / "lake"
+            fake_lake.write_text(
+                '#!/usr/bin/env bash\nprintf "%s\\n" "$*" >> "$FAKE_LAKE_LOG"\nexit 0\n',
+                encoding="utf-8",
+            )
+            fake_lake.chmod(0o755)
+
+            init_repo(root)
+            (root / "README.md").write_text("base\n", encoding="utf-8")
+            base = commit(root, "base")
+            for index in range(5):
+                (lean_dir / f"Bulk{index}.lean").write_text(
+                    f"theorem bulk{index} : True := by trivial\n",
+                    encoding="utf-8",
+                )
+            commit(root, "bulk Lean change")
+
+            env = os.environ.copy()
+            env["PATH"] = f"{fake_bin}{os.pathsep}{env['PATH']}"
+            env["FAKE_LAKE_LOG"] = str(lake_log)
+            env["DIRECT_LEAN_MAX_FILES"] = "4"
+            result = subprocess.run(
+                ["bash", f"scripts/{FAST_CHECK_SCRIPT.name}", base],
+                cwd=root,
+                env=env,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            output = result.stdout + result.stderr
+
+            self.assertEqual(result.returncode, 0, output)
+            self.assertIn("5 changed Lean leaf files exceed direct elaboration limit 4", output)
+            self.assertNotIn("[fast] direct Lean elaboration:", output)
+            self.assertIn("build", lake_log.read_text(encoding="utf-8"))
 
 
 if __name__ == "__main__":
