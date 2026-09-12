@@ -10,27 +10,33 @@ open scoped InnerProductSpace InnerProduct
 
 noncomputable section
 
-local instance (N : ℕ) :
+local instance groundStateJointMeasureSpecialUnitaryIsTopologicalGroup
+    (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 
-local instance (N : ℕ) :
+local instance groundStateJointMeasureSpecialUnitaryCompactSpace
+    (N : ℕ) :
     CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
-local instance (N : ℕ) :
+local instance groundStateJointMeasureSpecialUnitarySecondCountableTopology
+    (N : ℕ) :
     SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupSecondCountableTopology N
 
-local instance (N : ℕ) :
+local instance groundStateJointMeasureSpecialUnitaryMeasurableSpace
+    (N : ℕ) :
     MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
 
-local instance (N : ℕ) :
+local instance groundStateJointMeasureSpecialUnitaryBorelSpace
+    (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-local instance (H : ℕ) :
+local instance groundStateJointMeasureSpatialLinkFintype
+    (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
