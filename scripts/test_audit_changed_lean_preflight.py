@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Regression tests for changed-Lean deletion and bulk-check handling."""
+"""Regression tests for changed-Lean deletion, reuse, and bulk-check handling."""
 
 from __future__ import annotations
 
@@ -147,6 +147,44 @@ class ChangedLeanPreflightTest(unittest.TestCase):
             self.assertIn("[fast] no Lean files changed", output)
             self.assertNotIn("deleted Lean path reached changed-file audit", output)
 
+    def test_fast_check_reuses_identical_authoritative_lean_tree(self) -> None:
+        with tempfile.TemporaryDirectory() as raw_dir:
+            root = Path(raw_dir)
+            scripts = root / "scripts"
+            lean_dir = root / "MGAP4D"
+            scripts.mkdir()
+            lean_dir.mkdir()
+
+            shutil.copy2(FAST_CHECK_SCRIPT, scripts / FAST_CHECK_SCRIPT.name)
+            install_fast_audit_stubs(scripts)
+            init_repo(root)
+            (root / "README.md").write_text("base\n", encoding="utf-8")
+            base = commit(root, "main base")
+
+            (lean_dir / "Authoritative.lean").write_text(
+                "theorem authoritative : True := by trivial\n", encoding="utf-8"
+            )
+            theorem_ref = commit(root, "validated theorem tree")
+            (root / "README.md").write_text("sync docs only\n", encoding="utf-8")
+            commit(root, "docs after theorem tree")
+
+            env = os.environ.copy()
+            env["AUTHORITATIVE_THEOREM_REF"] = theorem_ref
+            result = subprocess.run(
+                ["bash", f"scripts/{FAST_CHECK_SCRIPT.name}", base],
+                cwd=root,
+                env=env,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            output = result.stdout + result.stderr
+
+            self.assertEqual(result.returncode, 0, output)
+            self.assertIn("reusing authoritative Lean/toolchain tree", output)
+            self.assertIn("[fast] changed Lean files:\n<none>", output)
+            self.assertIn("[fast] no Lean files changed", output)
+
     def test_fast_check_uses_lake_build_for_bulk_changed_leaf_set(self) -> None:
         with tempfile.TemporaryDirectory() as raw_dir:
             root = Path(raw_dir)
@@ -182,6 +220,7 @@ class ChangedLeanPreflightTest(unittest.TestCase):
             env["PATH"] = f"{fake_bin}{os.pathsep}{env['PATH']}"
             env["FAKE_LAKE_LOG"] = str(lake_log)
             env["DIRECT_LEAN_MAX_FILES"] = "4"
+            env["AUTHORITATIVE_THEOREM_REF"] = ""
             result = subprocess.run(
                 ["bash", f"scripts/{FAST_CHECK_SCRIPT.name}", base],
                 cwd=root,
