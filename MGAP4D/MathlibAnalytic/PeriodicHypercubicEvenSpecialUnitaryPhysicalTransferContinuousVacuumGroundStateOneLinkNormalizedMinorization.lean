@@ -98,11 +98,6 @@ theorem
   let update : Matrix.specialUnitaryGroup (Fin N) ℂ →
       PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N :=
     fun g => Function.update right target g
-  let omega :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-      H N hN beta hbeta
-  let kernel :=
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta
   have hUpdate : Continuous update := by
     simpa [update,
       periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink] using
@@ -111,29 +106,27 @@ theorem
   have hPair : Continuous
       (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ => (left, update g)) :=
     continuous_const.prodMk hUpdate
-  have hKernelJoint : Continuous
-      (fun p :
-          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta p.1 p.2) :=
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta
-  have hKernel : Continuous (fun g => kernel left (update g)) := by
-    change Continuous (fun g =>
+  have hKernel : Continuous (fun g =>
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-        H N beta left (update g))
-    exact hKernelJoint.comp hPair
-  have hOmega : Continuous (fun g => omega (update g)) := by
-    exact
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
-        H N hN beta hbeta).comp hUpdate
-  unfold
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumGroundStateSpatialLinkFiberWeight
-  apply ENNReal.continuous_ofReal.comp
-  unfold
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumGroundStateSpatialLinkFiberWeightReal
-  simpa [update, omega, kernel, mul_assoc] using
+        H N beta left (update g)) :=
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      H N beta).comp hPair
+  have hOmega : Continuous (fun g =>
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+        H N hN beta hbeta (update g)) :=
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
+      H N hN beta hbeta).comp hUpdate
+  change Continuous (fun g =>
+    ENNReal.ofReal
+      (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta‖⁻¹ *
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+            H N hN beta hbeta left *
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+            H N beta left (update g) *
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+            H N hN beta hbeta (update g))))
+  exact ENNReal.continuous_ofReal.comp
     (continuous_const.mul ((continuous_const.mul hKernel).mul hOmega))
 
 /-- The complete one-link weight is measurable for normalized Haar. -/
