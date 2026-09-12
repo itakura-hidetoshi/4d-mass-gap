@@ -82,54 +82,9 @@ noncomputable def
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumGroundStateSpatialLinkFiberWeight
       H N hN beta hbeta left right target)
 
-/-- The complete continuous-vacuum ground-state one-link weight is continuous
-in the inserted target-link value. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumGroundStateSpatialLinkFiberWeight_continuous
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (left right : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
-    (target : PeriodicHypercubicEvenSpatialSliceLink H) :
-    Continuous
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumGroundStateSpatialLinkFiberWeight
-        H N hN beta hbeta left right target) := by
-  let update : Matrix.specialUnitaryGroup (Fin N) ℂ →
-      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N :=
-    fun g => Function.update right target g
-  have hUpdate : Continuous update := by
-    simpa [update,
-      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink] using
-      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_continuous
-        H N right target
-  have hPair : Continuous
-      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ => (left, update g)) :=
-    continuous_const.prodMk hUpdate
-  have hKernel : Continuous (fun g =>
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-        H N beta left (update g)) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta).comp hPair
-  have hOmega : Continuous (fun g =>
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-        H N hN beta hbeta (update g)) :=
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
-      H N hN beta hbeta).comp hUpdate
-  change Continuous (fun g =>
-    ENNReal.ofReal
-      (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-          H N hN beta hbeta‖⁻¹ *
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-            H N hN beta hbeta left *
-          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-            H N beta left (update g) *
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-            H N hN beta hbeta (update g))))
-  exact ENNReal.continuous_ofReal.comp
-    (continuous_const.mul ((continuous_const.mul hKernel).mul hOmega))
-
-/-- The complete one-link weight is measurable for normalized Haar. -/
+/-- The complete one-link weight is measurable for normalized Haar.  This is
+proved directly from the continuous target-link update, kernel, and vacuum
+factors, avoiding a large reducibility check on the packaged ENNReal weight. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumGroundStateSpatialLinkFiberWeight_aemeasurable
     (H N : ℕ)
@@ -141,9 +96,51 @@ theorem
     AEMeasurable
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumGroundStateSpatialLinkFiberWeight
         H N hN beta hbeta left right target)
+      (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)) := by
+  let update : Matrix.specialUnitaryGroup (Fin N) ℂ →
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N :=
+    fun g => Function.update right target g
+  have hUpdate : Continuous update := by
+    simpa [update,
+      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink] using
+      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_continuous
+        H N right target
+  have hKernel : Continuous (fun g =>
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+        H N beta left (update g)) :=
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      H N beta).comp (continuous_const.prodMk hUpdate)
+  have hOmega : Continuous (fun g =>
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+        H N hN beta hbeta (update g)) :=
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
+      H N hN beta hbeta).comp hUpdate
+  have hReal : Measurable (fun g =>
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta‖⁻¹ *
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+            H N hN beta hbeta left *
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+            H N beta left (update g) *
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+            H N hN beta hbeta (update g))) :=
+    (continuous_const.mul ((continuous_const.mul hKernel).mul hOmega)).measurable
+  have hENN : AEMeasurable (fun g =>
+      ENNReal.ofReal
+        (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+            H N hN beta hbeta‖⁻¹ *
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+              H N hN beta hbeta left *
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+              H N beta left (update g) *
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+              H N hN beta hbeta (update g))))
       (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)) :=
-  (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumGroundStateSpatialLinkFiberWeight_continuous
-    H N hN beta hbeta left right target).measurable.aemeasurable
+    (ENNReal.measurable_ofReal.comp hReal).aemeasurable
+  simpa only [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumGroundStateSpatialLinkFiberWeight,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumGroundStateSpatialLinkFiberWeightReal,
+    update] using hENN
 
 /-- Every complete one-link weight value is finite. -/
 theorem
@@ -228,7 +225,7 @@ theorem
     w h = ∫⁻ _g : Matrix.specialUnitaryGroup (Fin N) ℂ, w h ∂μ := by simp [μ]
     _ ≤ ∫⁻ g, R * w g ∂μ := lintegral_mono hPoint
     _ = R * ∫⁻ g, w g ∂μ := by
-      rw [lintegral_const_mul _ hw]
+      rw [lintegral_const_mul'' _ hw]
 
 /-- The exact complete-weight normalization denominator is strictly positive. -/
 theorem
@@ -317,10 +314,8 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumGroundStateSpatialLinkNormalizedFiberDensity
     doobWeightedDensity
   change R⁻¹ ≤ w g / Z
-  rw [← one_div]
   apply (ENNReal.le_div_iff_mul_le (Or.inl hZ0) (Or.inl hZtop)).2
-  change Z / R ≤ w g
-  exact (ENNReal.div_le_iff hR0 hRtop).2 (by simpa [mul_comm] using hMass)
+  exact (ENNReal.inv_mul_le_iff hR0 hRtop).2 hMass
 
 /-- Sharp normalized upper density bound with the same single Harnack factor. -/
 theorem
