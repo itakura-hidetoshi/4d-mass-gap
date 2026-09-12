@@ -47,7 +47,10 @@ if ! git diff --name-only "${BASE}"...HEAD >/dev/null 2>&1; then
   BASE="HEAD^"
 fi
 
-changed_files="$(git diff --name-only "${BASE}"...HEAD || true)"
+# Every downstream audit/elaboration below consumes paths that must exist at
+# HEAD.  Keep added/copied/modified/renamed destination paths and exclude
+# deletions from the changed-file lane.
+changed_files="$(git diff --name-only --diff-filter=ACMR "${BASE}"...HEAD || true)"
 changed_lean_files="$(printf '%s\n' "${changed_files}" | grep '^MGAP4D/.*\.lean$\|^MGAP4D\.lean$' || true)"
 changed_scripts="$(printf '%s\n' "${changed_files}" | grep -E '^scripts/.*\.(py|sh)$' || true)"
 changed_lake_inputs="$(printf '%s\n' "${changed_files}" | grep -E '^(lean-toolchain|lakefile\.lean|lake-manifest\.json)$' || true)"
