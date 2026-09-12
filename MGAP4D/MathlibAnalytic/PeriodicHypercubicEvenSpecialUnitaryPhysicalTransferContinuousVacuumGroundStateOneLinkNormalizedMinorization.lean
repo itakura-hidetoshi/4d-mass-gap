@@ -108,10 +108,22 @@ theorem
       periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink] using
       periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_continuous
         H N right target
+  have hPair : Continuous
+      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ => (left, update g)) :=
+    continuous_const.prodMk hUpdate
+  have hKernelJoint : Continuous
+      (fun p :
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta p.1 p.2) :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      H N beta
   have hKernel : Continuous (fun g => kernel left (update g)) := by
-    exact
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-        H N beta).comp (continuous_const.prodMk hUpdate)
+    change Continuous (fun g =>
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+        H N beta left (update g))
+    exact hKernelJoint.comp hPair
   have hOmega : Continuous (fun g => omega (update g)) := by
     exact
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
