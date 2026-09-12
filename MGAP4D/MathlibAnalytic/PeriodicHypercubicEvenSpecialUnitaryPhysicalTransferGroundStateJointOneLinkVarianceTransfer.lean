@@ -77,10 +77,12 @@ theorem
   classical
   let eval := periodicHypercubicEvenSpatialSliceTargetEvaluationMeasurableEquiv
     (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target
-  filter_upwards [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetNormalizedFiberMeasure_ae_map_eq_continuousVacuumDirect
-      H N hN beta hbeta target] with left hleft
-  filter_upwards [hleft] with retained hmap
+  refine
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetNormalizedFiberMeasure_ae_map_eq_continuousVacuumDirect
+      H N hN beta hbeta target).mono ?_
+  intro left hleft
+  refine hleft.mono ?_
+  intro retained hmap
   let right := periodicHypercubicEvenSpecialUnitarySpatialSliceRightFromOffTarget
     H N target retained
   let ν :=
