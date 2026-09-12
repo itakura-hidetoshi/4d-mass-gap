@@ -230,7 +230,6 @@ theorem
     simp only [Prod.fst, Prod.snd]
     dsimp [omegaC, omega] at hleft htarget
     rw [← hleft, ← htarget]
-    rfl
   have hMassEq : doobWeightMass μTarget wOld = doobWeightMass μTarget wNew := by
     simpa [doobWeightMass] using lintegral_congr_ae hWeight
   unfold
