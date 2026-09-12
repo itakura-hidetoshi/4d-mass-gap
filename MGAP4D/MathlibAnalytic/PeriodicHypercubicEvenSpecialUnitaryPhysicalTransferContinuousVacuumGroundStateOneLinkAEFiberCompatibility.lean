@@ -180,8 +180,8 @@ theorem
         omegaC (split.symm (targetCfg, retained)) =
           omega (split.symm (targetCfg, retained)) := by
     simpa [Prod.swap] using Measure.ae_ae_of_ae_prod hOmegaSwap
-  filter_upwards [hOmega, hOmegaSections] with left hleft hsections
-  filter_upwards [hsections] with retained hright
+  filter_upwards [hOmega] with left hleft
+  filter_upwards [hOmegaSections] with retained hright
   let right := periodicHypercubicEvenSpecialUnitarySpatialSliceRightFromOffTarget
     H N target retained
   let wOld := fun targetCfg :
