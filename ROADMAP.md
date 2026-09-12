@@ -1,6 +1,6 @@
 # MGAP4D Roadmap
 
-This roadmap records the proof-development order of `itakura-hidetoshi/4d-mass-gap` as of **2026-09-12 JST**.
+This roadmap records the proof-development order of `itakura-hidetoshi/4d-mass-gap` as of **2026-09-13 JST**.
 
 The authoritative theorem carrier is
 
@@ -8,33 +8,53 @@ The authoritative theorem carrier is
 formal/real-hilbert-uniform-coercive-strong-limit
 ```
 
-The latest mathematical checkpoint before this documentation-only refresh is
+The latest mathematical baseline before this documentation refresh is
 
 ```text
-f74b992b8548734af7225c64314ad8fa18e21c0f
+282913e02c660d0181ee69e552bf374549adc8d4
 ```
 
-which is the normal merge of PR #3909,
+which is the normal merge of PR #3926,
 
 ```text
-Identify continuous-vacuum and joint one-link fibers a.e.
+Transfer sharp one-link variance to ground-state joint split fibers
 ```
 
-Its exact proof head
+with first parent
 
 ```text
-12445afbe35e0ed9645234355a4074ffce440243
+4cce50198af53abd6449edafcd16f0fab4f4b2e3
 ```
 
-passed `PR Lean Fast Check #13627` with terminal `completed / success`, including `Run changed Lean fast check = success`.
+which is the normal merge of PR #3921,
+
+```text
+Transfer sharp one-link variance to actual ground-state split fiber
+```
+
+Exact proof heads and validation:
+
+```text
+PR #3921
+  head: 1c755f07b1add1480ab1ae8287d847da8462d1bb
+  PR Lean Fast Check #13632
+  workflow run 34699024449
+  completed / success
+
+PR #3926
+  head: db95f664ed50084cd68fc42621793d97189c0d81
+  PR Lean Fast Check #13637
+  workflow run 34722528934
+  completed / success
+```
 
 The public `main` branch is a landing surface. Only theorem results merged into the authoritative theorem carrier count as canonical proof status.
 
 > **Current frontier**
 >
-> The repository now has a sharp volume-independent continuous-vacuum one-link Harnack theorem, sharp normalization / Doeblin comparison with only one `exp(16 beta)` factor, a corresponding sharp `exp(-16 beta)` one-link variance lower bound, and an almost-everywhere bridge from that direct normalized one-link law to the actual ground-state joint split target fiber.
+> The repository now has the complete sharp local chain from continuous-vacuum one-link Harnack through normalization, Doeblin comparison, sharp `exp(-16 beta)` one-link variance, a.e. identification with the actual ground-state split fiber, and transfer of the variance / residual estimate to that actual split fiber for a.e. outer context.
 >
-> The immediate constructive task is therefore to consume the #3909 a.e. compatibility theorem inside the genuine ground-state conditional-expectation hierarchy, transfer the sharp one-link variance estimate to the actual joint one-link update, and then aggregate it to spatial block / color coercivity. Only after that step should the proof attempt the scale-independent twelve-block Poincaré theorem that feeds the already-integrated physical transfer-gap route.
+> The immediate constructive task is **not** another one-link Harnack or another fiber-identification theorem. It is to connect the canonical #3921/#3926 fiberwise estimate to the genuine ground-state `condExpL2` residual on the actual joint `L²` carrier, integrate over outer contexts, and then aggregate to spatial color blocks.
 
 ---
 
@@ -44,7 +64,7 @@ The public `main` branch is a landing surface. Only theorem results merged into 
 - **Integrated routing** — implication chain is formalized, but a model-derived quantitative input is still missing.
 - **Open now** — immediate constructive frontier.
 - **Open downstream** — required after the current frontier.
-- **Parallel** — independent proof lane that should not be substituted for the global gap route.
+- **Parallel** — independent proof lane that must not be substituted for the global gap route.
 - **Diagnostic only** — correct theorem/obstruction that informs strategy but is not the final mechanism.
 
 ---
@@ -82,48 +102,59 @@ physical top/non-top decomposition                                   [Integrated
 
 D. SHARP CONTINUOUS-VACUUM ONE-LINK CONTROL
 
-complete one-link weight Wc                                          [Integrated: #3894]
+complete one-link weight Wc                                          [#3894, Integrated]
   -> strict positivity / pairwise Harnack exp(16 beta)               [Integrated]
-  -> normalized density rho                                         [Integrated: #3898]
+  -> normalized density rho                                         [#3898, Integrated]
   -> exp(-16 beta) <= rho <= exp(16 beta)                            [Integrated]
   -> exp(-16 beta) Haar <= nu <= exp(16 beta) Haar                   [Integrated]
-  -> exp(-16 beta) one-link variance lower bound                     [Integrated: #3907]
+  -> exp(-16 beta) one-link variance lower bound                     [#3907, Integrated]
 
 E. ACTUAL JOINT-FIBER COMPATIBILITY
 
 continuous-vacuum direct one-link law
   -> target/off-target Haar split                                    [Integrated]
-  -> a.e. equality with legacy ground-state split target fiber       [Integrated: #3909]
+  -> a.e. equality with legacy ground-state split target fiber       [#3909, Integrated]
   -> exact target-evaluation Measure.map back to SU(N)               [Integrated]
 
-F. IMMEDIATE LOCAL-TO-GENUINE UPDATE BRIDGE
+F. ACTUAL GROUND-STATE SPLIT-FIBER VARIANCE
 
-sharp direct one-link variance
-  + #3909 a.e. fiber compatibility
-  -> actual joint one-link conditional variance / residual            [OPEN NOW]
+sharp direct one-link residual / variance
+  + a.e. actual split-fiber compatibility
+  -> a.e. fixed-center residual lower bound                          [#3921, Integrated]
+  -> a.e. best-constant residual lower bound                         [#3921, Integrated]
+  -> a.e. evariance lower bound                                      [#3921, Integrated]
+  -> IdentDistrib target-evaluation transport                        [#3926, Integrated]
+  -> sharp exp(-16 beta) actual joint split-fiber variance           [#3926, Integrated]
 
-G. BLOCK / COLOR AGGREGATION
+G. GENUINE CONDITIONAL-EXPECTATION BRIDGE
 
-actual one-link residuals
+a.e. actual split-fiber variance
+  -> actual joint condExpL2 residual coercivity                       [OPEN NOW]
+  -> outer-context integration / measurable residual identity         [OPEN NOW]
+
+H. BLOCK / COLOR AGGREGATION
+
+genuine one-link condExp residuals
   -> one spatial color block                                         [OPEN NOW]
   -> six right blocks + six left blocks                              [OPEN NOW]
   -> quantitative E12 control                                        [OPEN NOW]
 
-H. GLOBAL COERCIVITY
+I. GLOBAL FINITE-VOLUME COERCIVITY
 
 identify relevant 12-block common-fixed sector                       [OPEN NOW]
-  -> Poincare on its orthogonal complement                           [OPEN NOW]
-  -> positive scale-independent kappa_*                              [OPEN NOW]
+  -> finite-volume Poincare on its orthogonal complement              [OPEN NOW]
+  -> positive model-derived kappa(H,N,beta)                          [OPEN NOW]
+  -> scale-independent kappa_*                                       [OPEN NOW]
   -> physical transfer gap >= 3 kappa_*/4                            [Integrated routing]
 
-I. THERMODYNAMIC / CONTINUUM PROPAGATION
+J. THERMODYNAMIC / CONTINUUM PROPAGATION
 
 uniform finite-volume physical transfer gap                          [OPEN DOWNSTREAM]
   -> stable Green/resolvent/Poincare control                         [OPEN DOWNSTREAM]
   -> thermodynamic/scaling-limit physical carrier                    [OPEN DOWNSTREAM]
   -> physical OS/Wightman spectral lower bound                       [OPEN DOWNSTREAM]
 
-J. CLAY-LEVEL COMPLETION
+K. CLAY-LEVEL COMPLETION
 
 sufficiently rich same-root 4D continuum Yang--Mills field/state     [OPEN]
 correct vacuum structure / nontriviality                             [OPEN]
@@ -159,14 +190,13 @@ Claim discipline:
 finite theorem != continuum theorem
 positive coefficient at each scale != uniform positive coefficient
 local Harnack / Doeblin / variance != global L2 Poincare
+fiberwise a.e. variance != global condExpL2 residual coercivity
 qualitative fixed-space statement != quantitative coercivity
 relative top-sector control != unique-vacuum control
 one selected positive mode != global spectral floor
 same-root scalar continuum != full 4D Yang--Mills field
 green open PR != merged canonical theorem status
 ```
-
-At the #3909 proof checkpoint, CI used Lean `4.30.0-rc2` and Lake `5.0.0-src+3dc1a08`.
 
 ---
 
@@ -180,7 +210,7 @@ Integrated components include:
 
 ```text
 oriented lattice / edge / plaquette geometry
-normalized Haar probability structure
+normalized compact Haar probability structure
 Wilson action / Gibbs density / probability measure
 reflection-fixed geometry and positive-time decomposition
 finite Wilson reflection positivity
@@ -191,7 +221,7 @@ integer temporal translation / reflection covariance
 one-slab Wilson kernels and transfer operators
 ```
 
-Permanent rule: keep the interacting Wilson model visible through every decisive physical bridge. Product Haar may be used as a reference measure only through explicit comparison theorems.
+Permanent rule: keep the interacting Wilson model visible through every decisive physical bridge. Product Haar is a reference measure only through explicit comparison theorems.
 
 ---
 
@@ -214,7 +244,7 @@ finite primary gauge-invariant scalar readout
   -> complete vacuum-orthogonal sector Omega-perp
 ```
 
-This is a genuine same-root continuum observable process, not yet the complete four-dimensional gauge field.
+This is a genuine same-root continuum observable process, not yet the complete four-dimensional gauge field/state.
 
 ---
 
@@ -236,7 +266,7 @@ exact reduced range
 relative Poincare estimates
 ```
 
-This machinery is now downstream infrastructure. The active proof program seeks a model-derived quantitative source of separation in the actual ground-state conditional-expectation dynamics.
+This machinery is downstream infrastructure. The active proof program seeks a model-derived quantitative source of separation from the actual ground-state conditional-expectation dynamics.
 
 ---
 
@@ -244,7 +274,7 @@ This machinery is now downstream infrastructure. The active proof program seeks 
 
 **Status: Integrated.**
 
-The canonical branch contains:
+The authoritative branch contains:
 
 ```text
 strictly positive physical ground-state structure
@@ -258,7 +288,7 @@ explicit two-sided 12-spatial family
 qualitative common-fixed characterization
 ```
 
-The twelve-spatial physical routing introduced earlier is now canonical. In particular, on right-boundary lifts the conventional twelve-block residual reduces to one half of the six-right residual, and the integrated implication chain gives
+The twelve-spatial physical routing is canonical. On the relevant right-boundary lifts, the normalization bookkeeping yields the integrated implication chain
 
 ```text
 12-block Poincare coefficient kappa
@@ -274,17 +304,7 @@ This is an implication route. It does not supply `kappa` by itself.
 
 **Status: Integrated through PR #3894.**
 
-Define the complete direct one-link weight using the canonical continuous physical-vacuum representative:
-
-```text
-Wc(g)
-  = ||T||^{-1}
-    * Omega_c(left)
-    * K(left, right[target <- g])
-    * Omega_c(right[target <- g]).
-```
-
-The canonical branch proves:
+For the complete direct one-link weight `Wc`, the authoritative branch proves
 
 ```text
 0 < Wc(g)
@@ -293,9 +313,9 @@ Wc(g) <= exp(16 beta) Wc(h)
 
 for all one-link values `g,h`.
 
-The proof combines the raw-kernel and continuous-vacuum Harnack factors without evaluating an arbitrary `L²` representative pointwise.
+The proof combines the raw-kernel and continuous-vacuum factors without pointwise evaluation of an arbitrary `L²` quotient representative.
 
-Completion criterion: already satisfied.
+Completion criterion: satisfied.
 
 ---
 
@@ -313,7 +333,7 @@ nu  = rho * mu
 R   = exp(16 beta).
 ```
 
-By integrating the pairwise Harnack inequality directly, the canonical branch proves
+The authoritative branch proves
 
 ```text
 0 < Z < infinity
@@ -321,9 +341,9 @@ R^{-1} <= rho(g) <= R
 R^{-1} mu <= nu <= R mu.
 ```
 
-The direct pairwise route is important: it avoids the unnecessary `R^2 = exp(32 beta)` loss that would arise from separately anchoring global lower and upper weight bounds.
+The pairwise Harnack inequality is integrated directly. No artificial `R^2 = exp(32 beta)` loss is introduced.
 
-Completion criterion: already satisfied.
+Completion criterion: satisfied.
 
 ---
 
@@ -331,9 +351,7 @@ Completion criterion: already satisfied.
 
 **Status: Integrated through PR #3907.**
 
-The canonical branch consumes the normalized measure comparison directly at the centered-residual / best-constant / variance layer.
-
-For appropriate `L²` observables,
+For appropriate Haar-`L²` observables,
 
 ```text
 R^{-1} * evariance_mu(X) <= evariance_nu(X)
@@ -345,11 +363,9 @@ with
 R^{-1} = exp(-16 beta).
 ```
 
-The proof also transports `MemLp` from Haar to `nu` using the upper measure bound.
+The proof also transports `MemLp` from Haar to the normalized one-link law using the upper measure comparison.
 
-This is the sharp local quantitative input currently available for the block-dynamics program.
-
-Completion criterion: already satisfied.
+Completion criterion: satisfied.
 
 ---
 
@@ -368,130 +384,185 @@ The integrated route:
 4. proves equality of normalized split target fibers for
    Haar-a.e. left boundary and Haar-a.e. retained off-target context;
 5. proves exact singleton-target Measure.map transport back to SU(N);
-6. combines the two into an a.e. compatibility theorem for the actual
-   ground-state split one-link fiber.
+6. combines these into a.e. compatibility with the actual split fiber.
 ```
 
-This theorem deliberately preserves exceptional outer contexts. It does not claim RCD identification and does not promote an arbitrary `L²` representative to a pointwise function.
+This theorem preserves exceptional contexts. It does not claim an RCD identification and does not promote an arbitrary `L²` representative to a pointwise function.
 
-Completion criterion: already satisfied.
+Completion criterion: satisfied.
 
 ---
 
-# Phase 9 — Transfer sharp one-link variance to the genuine joint update
+# Phase 9 — Transfer sharp variance to the actual ground-state split fiber
+
+**Status: Integrated through PRs #3921 and #3926.**
+
+This phase was the previous immediate frontier and is now complete.
+
+PR #3921 adds the model-facing transfer layer through files including
+
+```text
+PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumGroundStateOneLinkContextVarianceTransfer.lean
+PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumGroundStateOneLinkJointVarianceTransfer.lean
+PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointObservableOneLinkVariance.lean
+```
+
+It transfers the sharp direct one-link control through the #3909 a.e. fiber compatibility theorem and establishes, for a.e. outer context, the actual split-fiber analogues of:
+
+```text
+fixed-center squared-residual lower bounds
+best-constant squared-residual lower bounds
+extended variance lower bounds.
+```
+
+PR #3926 adds the focused theorem file
+
+```text
+PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointOneLinkVarianceTransfer.lean
+```
+
+and uses exact target-evaluation pushforward plus `ProbabilityTheory.IdentDistrib` to transport `evariance` without an extra constant loss.
+
+The resulting quantitative statement preserves
+
+```text
+exp(-16 beta)
+```
+
+as the local lower-bound coefficient on the actual ground-state joint split fiber for a.e. outer context.
+
+### Permanent constraints retained by the integrated theorem
+
+```text
+no pointwise evaluation of the legacy quotient representative
+no promotion of a.e. fiber equality to universal equality
+no implicit RCD identification
+no extra exp(-32 beta) loss
+```
+
+Completion criterion: satisfied.
+
+---
+
+# Phase 10 — Connect split-fiber variance to the genuine `condExpL2` residual
 
 **Status: OPEN NOW — immediate frontier.**
 
-The next theorem should consume Phase 8 rather than reprove local Harnack information.
+This is the next mathematically coherent unit.
 
-Target architecture:
+The goal is to consume Phase 9 inside the actual ground-state joint conditional-expectation API:
 
 ```text
-sharp direct normalized one-link variance theorem
-  + a.e. equality of actual split target fibers
-  + exact target-coordinate measure equivalence
-  -> variance / centered-residual lower bound for the actual joint
-     one-link update used by the ground-state conditional-expectation lane.
+a.e. actual split-fiber variance lower bound
+  + measurable outer-context dependence
+  + actual joint disintegration / conditional-expectation identities
+  -> global one-link condExpL2 residual lower bound.
 ```
 
-The theorem should be stated on the actual joint probability carrier and should preserve the `exp(-16 beta)` factor whenever the measure-theoretic transport permits it.
+The desired result should live on the actual joint `L²` carrier and should be stated in the same residual language used by the genuine spatial conditional expectations.
 
 ### Critical constraints
 
 ```text
-no pointwise evaluation of the legacy quotient representative
-no replacement of a.e. fiber equality by universal equality
-no implicit RCD identification
-no new exp(-32 beta) loss unless mathematically forced
+fiberwise evariance is not yet condExpL2 coercivity
+keep all a.e. quantifiers tied to their correct measures
+do not combine unrelated Eventually statements casually
+do not evaluate arbitrary L2 representatives pointwise
+do not assert RCD identification unless explicitly proved
+preserve exp(-16 beta) unless a genuine integration step forces loss
 ```
 
 ### Completion criterion
 
-A canonical theorem applies the sharp one-link variance estimate directly to the genuine joint one-link conditional update for a.e. outer context, in the exact form needed by block/color aggregation.
+A canonical theorem bounds the squared residual of the genuine one-link `condExpL2` update from below by the corresponding Haar variance datum with a model-controlled coefficient, on the actual joint probability carrier.
 
 ---
 
-# Phase 10 — Aggregate one-link variance to spatial color blocks
+# Phase 11 — Aggregate genuine one-link residuals to one spatial color block
 
 **Status: OPEN NOW.**
 
-Once Phase 9 is available, aggregate the genuine one-link residuals belonging to one spatial color class.
+Once Phase 10 is available, aggregate the actual one-link residuals belonging to one spatial color class.
 
-The target is not merely a sum of unrelated inequalities. The proof should use the actual spatial matching / disjoint-update geometry already present in the repository so that the coefficient does not acquire artificial volume dependence.
+The proof must use the existing spatial matching / disjoint-update geometry rather than merely summing unrelated local inequalities.
 
 Desired schematic result:
 
 ```text
-sum of one-link conditional variances in color c
+sum of genuine one-link conditional residuals in color c
   -> lower bound for the color-c conditional-expectation residual
-  -> coefficient controlled by model parameters rather than number of links.
+  -> coefficient controlled by model parameters rather than link count.
 ```
 
 ### Completion criterion
 
-A theorem on the ground-state joint carrier bounds the residual of each genuine spatial-color conditional expectation from below by explicit local variance data with controlled constants.
+A theorem on the actual ground-state joint carrier bounds each spatial-color conditional-expectation residual by explicit local variance data with volume dependence under control.
 
 ---
 
-# Phase 11 — Assemble six-right and six-left block coercivity
+# Phase 12 — Assemble six-right and six-left block coercivity
 
 **Status: OPEN NOW.**
 
 Combine the six right spatial color blocks and the six left spatial color blocks on the same joint `L²` carrier.
 
-The integrated twelve-spatial identity already supplies the normalization bookkeeping. What is still required is a genuine lower bound for the corresponding Dirichlet form.
-
 Target:
 
 ```text
 E12(z)
-  = (1/12) sum over 12 spatial blocks ||z - P_c z||^2
+  = (1/12) sum over the 12 genuine spatial blocks ||z - P_c z||^2
   >= explicit model-derived coercive quantity.
 ```
 
-This phase should stay on the actual ground-state joint law and avoid introducing an abstract replacement projection family.
+The theorem must stay on the actual ground-state joint law and must not replace the genuine conditional expectations with an abstract projection family.
 
 ---
 
-# Phase 12 — Identify the relevant twelve-block common-fixed sector
+# Phase 13 — Identify the relevant twelve-block common-fixed sector
 
 **Status: OPEN NOW.**
 
-The repository already proves qualitative simultaneous fixedness under the right-six and left-six halves. The next geometric theorem must identify the common-fixed sector strongly enough to place the relevant physical top-orthogonal right-boundary lifts in its orthogonal complement.
+The repository already contains qualitative simultaneous-fixedness information for the right-six and left-six halves. The next geometric theorem must identify the common-fixed sector strongly enough to place the relevant physical top-orthogonal right-boundary lifts in its orthogonal complement.
 
-Do **not** assert that the common-fixed space is constants unless the retained sigma-algebras and joint measure actually prove that statement.
+Do **not** assert that the common-fixed space is constants unless the retained sigma-algebras and actual joint measure prove that statement.
 
 ### Completion criterion
 
-A theorem identifies the exact common-fixed sector needed by the block Poincaré theorem and connects it to the physical top/common sector without an independent assumption.
+A theorem identifies the exact common-fixed sector required by the block Poincare argument and connects it to the physical top/common sector without an independent assumption.
 
 ---
 
-# Phase 13 — Prove a finite-volume twelve-block `L²` Poincaré theorem
+# Phase 14 — Prove a finite-volume twelve-block `L²` Poincare theorem
 
 **Status: OPEN NOW.**
 
-After Phases 9--12, prove
+After Phases 10--13, prove
 
 ```text
 kappa(H,N,beta) * ||z||^2 <= E12(z)
 ```
 
-on the orthogonal complement of the identified common-fixed sector, with `kappa(H,N,beta) > 0` derived from the actual model.
+on the orthogonal complement of the identified common-fixed sector, with
 
-This theorem must be a genuine `L²` coercivity statement. Total-variation / Dobrushin influence control may support it but may not be silently substituted for it.
+```text
+kappa(H,N,beta) > 0
+```
+
+derived from the actual model.
+
+This must be a genuine `L²` coercivity theorem. Total-variation or Dobrushin influence control may support it but may not be silently substituted for it.
 
 ### Completion criterion
 
-A model-derived finite-volume positive coefficient is proved on the actual ground-state twelve-block dynamics.
+A model-derived positive finite-volume coefficient is proved on the genuine ground-state twelve-block dynamics.
 
 ---
 
-# Phase 14 — Make the coefficient scale-independent
+# Phase 15 — Make the coefficient scale-independent
 
 **Status: OPEN NOW — decisive quantitative milestone.**
 
-A positive coefficient at each finite scale is not sufficient. Along the physical scaling family we need a uniform lower bound
+A positive coefficient at each finite scale is not enough. Along the physical scaling family one needs
 
 ```text
 exists kappa_* > 0, for every relevant scale n,
@@ -506,7 +577,7 @@ Two acceptable outcomes:
 A. uniform coercivity succeeds
    -> retain explicit kappa_* > 0;
 
-B. the candidate coefficient degenerates
+B. the proposed coefficient degenerates
    -> prove the degeneration honestly;
    -> identify the losing estimate;
    -> replace it with stronger block / multiscale / geometry-aware control.
@@ -516,24 +587,24 @@ Never hide scale degeneration behind a uniform hypothesis.
 
 ---
 
-# Phase 15 — Invoke the integrated physical transfer-gap route
+# Phase 16 — Invoke the integrated physical transfer-gap route
 
-**Status: Integrated routing; waiting for Phase 14 input.**
+**Status: Integrated routing; waiting for Phase 15 input.**
 
-Once a uniform twelve-block coefficient exists, no new abstract gap lemma is needed. The canonical route already gives
+Once a uniform twelve-block coefficient exists, no new abstract gap architecture is needed. The canonical route already gives
 
 ```text
 uniform twelve-block Poincare kappa_*
   -> six-spatial frame coefficient 2 kappa_*
   -> raw physical squared-defect coercivity
-  -> physical transfer gap >= 3 kappa_* / 4.
+  -> physical transfer gap >= 3 kappa_*/4.
 ```
 
-The main theorem work here should therefore be specialization and carrier bookkeeping, not a new replacement proof architecture.
+The theorem work here should therefore be specialization and carrier bookkeeping, not a new replacement proof architecture.
 
 ---
 
-# Phase 16 — Uniform finite-volume analytic consequences
+# Phase 17 — Uniform finite-volume analytic consequences
 
 **Status: OPEN DOWNSTREAM.**
 
@@ -552,31 +623,31 @@ on the correct physical/common-fixed sector.
 
 ---
 
-# Phase 17 — Thermodynamic and scaling-limit propagation
+# Phase 18 — Thermodynamic and scaling-limit propagation
 
 **Status: OPEN DOWNSTREAM.**
 
 Propagate the uniform finite-volume information without losing same-root provenance.
 
-Possible ingredients include:
+Possible ingredients include
 
 ```text
 tightness / compactness for the physical state family
 compatibility of finite-volume Hilbert carriers
 form / Mosco / strong-resolvent convergence as appropriate
 stability of the vacuum/common-fixed sector
-passage of a positive lower spectral bound to the limiting operator
+passage of a positive lower spectral bound to the limiting operator.
 ```
 
 A uniform finite-volume inequality alone is not yet a continuum mass-gap theorem. The limiting physical carrier and operator must be constructed and identified.
 
 ---
 
-# Phase 18 — Full same-root physical continuum carrier
+# Phase 19 — Full same-root physical continuum carrier
 
 **Status: OPEN DOWNSTREAM.**
 
-The existing scalar continuum OS lane is substantial but not yet the complete four-dimensional Yang--Mills field/state required for Clay-level completion.
+The existing scalar continuum OS lane is substantial but is not yet the complete four-dimensional Yang--Mills field/state required for Clay-level completion.
 
 Required work includes a coherent version of
 
@@ -588,14 +659,14 @@ regularity sufficient for OS reconstruction
 physical nontriviality
 physical Hilbert carrier
 Hamiltonian and vacuum
-connection to the finite Wilson approximants
+connection to the finite Wilson approximants.
 ```
 
 ---
 
-# Phase 19 — Physical OS/Wightman spectral gap
+# Phase 20 — Physical OS/Wightman spectral gap and Clay-level completion
 
-**Status: OPEN DOWNSTREAM.**
+**Status: OPEN DOWNSTREAM / OPEN.**
 
 After the full same-root physical continuum carrier is established, transfer the uniform finite-volume coercivity into a statement of the form
 
@@ -605,15 +676,7 @@ spectrum(H_phys | Omega-perp) subset [m, infinity)
 
 for some `m > 0`, or the correct equivalent formulation if the vacuum sector is not one-dimensional.
 
-This is where the finite-volume transfer-gap program becomes a continuum mass-gap theorem.
-
----
-
-# Phase 20 — Clay-level completion
-
-**Status: OPEN.**
-
-A completed theorem must combine, on one coherent same-root construction,
+A Clay-level completion must combine, on one coherent same-root construction,
 
 ```text
 4D continuum Yang--Mills existence
@@ -623,7 +686,7 @@ regularity / distributional field structure
 physical nontriviality
 correct vacuum structure
 physical OS/Wightman Hilbert realization
-strictly positive spectral gap above the vacuum sector
+strictly positive spectral gap above the vacuum sector.
 ```
 
 Only after those obligations are discharged should the repository claim a complete Yang--Mills existence-and-mass-gap theorem.
@@ -632,9 +695,9 @@ Only after those obligations are discharged should the repository claim a comple
 
 # Parallel lane — SU(2) selected exact mode
 
-**Status: Parallel; implication machinery is integrated, raw-model realization remains separate.**
+**Status: Parallel.**
 
-The selected exact-mode route seeks an attained positive-energy mode from raw Wilson data. It is useful but logically different from the twelve-block Poincaré program.
+The selected exact-mode route seeks an attained positive-energy mode from raw Wilson data. It is useful but logically different from the twelve-block Poincare program.
 
 Permanent distinction:
 
@@ -649,17 +712,11 @@ Do not substitute exact-mode realization for the global coercivity theorem.
 
 # Diagnostic lane — finite-volume Dobrushin / influence control
 
-**Status: Diagnostic only for the continuum gap question.**
+**Status: Diagnostic only for the continuum-gap question.**
 
 The repository contains explicit finite-volume Wilson/Dobrushin information. Such bounds remain useful for local conditional-law dependence and may enter a block argument.
 
-However the simple coefficient based on
-
-```text
-(exp(4 beta)-1)/(exp(4 beta)+1)
-```
-
-approaches `1` as `beta -> +infinity`. That mechanism alone therefore cannot be presented as the final scale-independent continuum-gap proof in the relevant large-`beta` regime.
+However simple influence coefficients that approach `1` in the relevant large-coupling regime cannot by themselves be presented as a final scale-independent continuum-gap proof.
 
 This obstruction motivates stronger ground-state / block / geometry-aware coercivity rather than invalidating the program.
 
@@ -667,40 +724,40 @@ This obstruction motivates stronger ground-state / block / geometry-aware coerci
 
 # Immediate execution order
 
-The recommended next sequence is:
-
 ```text
-1. consume PR #3909 and transfer the sharp exp(-16 beta) variance bound
-   to the genuine ground-state joint one-link update;
-2. express that theorem directly in the conditional-expectation residual API;
-3. aggregate one-link residuals to one spatial color block using the actual
-   matching/disjoint-update geometry;
+1. consume #3921/#3926 and prove the genuine one-link condExpL2 residual
+   inequality on the actual ground-state joint carrier;
+2. integrate the a.e. split-fiber estimate over outer contexts while
+   preserving the sharp exp(-16 beta) factor whenever possible;
+3. aggregate genuine one-link residuals to one spatial color block using
+   the actual matching/disjoint-update geometry;
 4. prove corresponding right-six and left-six block estimates;
 5. combine them into quantitative twelve-block Dirichlet control;
 6. identify the exact twelve-block common-fixed sector relevant to physical
    top-orthogonal right-boundary lifts;
 7. prove a positive finite-volume twelve-block Poincare coefficient;
 8. make the coefficient scale-independent or prove precisely where the
-   candidate coefficient degenerates;
+   proposed coefficient degenerates;
 9. invoke the already-integrated E12 -> E6 -> raw defect -> transfer-gap route;
-10. propagate the uniform physical gap through the same-root thermodynamic /
-    continuum construction.
+10. propagate the resulting uniform physical gap through a same-root
+    thermodynamic / continuum construction.
 ```
 
-This order avoids redoing solved local analysis and keeps the next theorem attached to the actual ground-state joint probability law.
+This order avoids reopening solved local analysis and keeps the proof attached to the actual ground-state joint probability law.
 
 ---
 
 # Definition of success for the present milestone
 
-The present local-to-block milestone is complete only when Lean contains a theorem chain of the form
+The current local-to-block milestone is complete only when Lean contains a theorem chain of the form
 
 ```text
 sharp continuous-vacuum one-link variance
   + a.e. actual joint-fiber compatibility
-  -> genuine joint one-link residual inequality
-  -> spatial color-block residual inequality
-  -> quantitative twelve-block Dirichlet control.
+  -> a.e. actual split-fiber variance                         [DONE]
+  -> genuine joint one-link condExpL2 residual inequality     [NEXT]
+  -> spatial color-block residual inequality                  [OPEN]
+  -> quantitative twelve-block Dirichlet control              [OPEN].
 ```
 
 The next major mass-gap milestone is complete only when that chain further yields
@@ -709,7 +766,7 @@ The next major mass-gap milestone is complete only when that chain further yield
 actual ground-state twelve-block dynamics
   -> identified common-fixed sector
   -> exists kappa_* > 0 uniformly across the physical scaling family
-  -> physical transfer gap >= 3 kappa_* / 4.
+  -> physical transfer gap >= 3 kappa_*/4.
 ```
 
 Until the uniform model-derived coefficient and its same-root continuum propagation are proved, the global Yang--Mills mass-gap boundary remains open.
