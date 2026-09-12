@@ -10,14 +10,17 @@ open scoped BigOperators InnerProductSpace
 
 noncomputable section
 
-local instance (H : ℕ) : NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+local instance continuousVacuumLocalHarnackEvenSideLengthNeZero
+    (H : ℕ) : NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
   simp [PeriodicHypercubicEvenSideLength]⟩
 
-local instance (H : ℕ) :
+local instance continuousVacuumLocalHarnackSpatialSliceLinkFintype
+    (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
-local instance (H : ℕ) :
+local instance continuousVacuumLocalHarnackSpatialSlicePlaquetteFintype
+    (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSlicePlaquette H) :=
   Fintype.ofFinite _
 

@@ -9,27 +9,33 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-local instance (N : ℕ) :
+local instance continuousVacuumKernelHarnackSpecialUnitaryIsTopologicalGroup
+    (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 
-local instance (N : ℕ) :
+local instance continuousVacuumKernelHarnackSpecialUnitaryCompactSpace
+    (N : ℕ) :
     CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
-local instance (N : ℕ) :
+local instance continuousVacuumKernelHarnackSpecialUnitarySecondCountableTopology
+    (N : ℕ) :
     SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupSecondCountableTopology N
 
-local instance (N : ℕ) :
+local instance continuousVacuumKernelHarnackSpecialUnitaryMeasurableSpace
+    (N : ℕ) :
     MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
 
-local instance (N : ℕ) :
+local instance continuousVacuumKernelHarnackSpecialUnitaryBorelSpace
+    (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-local instance (H : ℕ) :
+local instance continuousVacuumKernelHarnackSpatialSliceLinkFintype
+    (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 

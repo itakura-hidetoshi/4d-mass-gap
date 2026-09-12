@@ -9,27 +9,33 @@ open scoped ENNReal InnerProductSpace InnerProduct
 
 noncomputable section
 
-local instance (N : ℕ) :
+local instance continuousVacuumRepresentativeSpecialUnitaryIsTopologicalGroup
+    (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 
-local instance (N : ℕ) :
+local instance continuousVacuumRepresentativeSpecialUnitaryCompactSpace
+    (N : ℕ) :
     CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
-local instance (N : ℕ) :
+local instance continuousVacuumRepresentativeSpecialUnitarySecondCountableTopology
+    (N : ℕ) :
     SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupSecondCountableTopology N
 
-local instance (N : ℕ) :
+local instance continuousVacuumRepresentativeSpecialUnitaryMeasurableSpace
+    (N : ℕ) :
     MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
 
-local instance (N : ℕ) :
+local instance continuousVacuumRepresentativeSpecialUnitaryBorelSpace
+    (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-local instance (H : ℕ) :
+local instance continuousVacuumRepresentativeSpatialLinkFintype
+    (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
