@@ -36,6 +36,12 @@ local instance groundStateJointOneLinkVarianceTransferSpecialUnitaryBorelSpace
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
+local instance groundStateJointOneLinkVarianceTransferOffTargetLinkFintype
+    (H : ℕ)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceOffTargetLink H target) :=
+  Fintype.ofFinite _
+
 /-- The sharp `exp (-16 * beta)` one-link variance lower bound transfers,
 almost everywhere in the genuine ground-state joint outer context, from the
 canonical continuous-vacuum direct `SU(N)` fiber to the actual normalized
