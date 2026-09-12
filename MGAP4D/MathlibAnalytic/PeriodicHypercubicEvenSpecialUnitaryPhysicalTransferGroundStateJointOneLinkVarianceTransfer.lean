@@ -36,6 +36,10 @@ local instance groundStateJointOneLinkVarianceTransferSpecialUnitaryBorelSpace
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
+local instance groundStateJointOneLinkVarianceTransferSpatialLinkFintype
+    (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
 local instance groundStateJointOneLinkVarianceTransferOffTargetLinkFintype
     (H : ℕ)
     (target : PeriodicHypercubicEvenSpatialSliceLink H) :
