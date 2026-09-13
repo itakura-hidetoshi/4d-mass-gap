@@ -102,7 +102,7 @@ theorem
     rw [hKernelStat]
     exact hfRestr
   have hFubini :=
-    ProbabilityTheory.integral_comp
+    Kernel.integral_comp
       (κ := Kernel.const Unit μBoff)
       (η := Koff)
       (a := ())
