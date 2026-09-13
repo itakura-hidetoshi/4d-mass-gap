@@ -298,7 +298,7 @@ theorem
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_lintegral
               H N hN beta hbeta B target source fiber k g₂ A FInter hFInter
       _ = 0 := by
-          apply lintegral_eq_zero.mpr
+          apply lintegral_eq_zero_of_ae_eq_zero
           filter_upwards [] with g
           have hBg : Function.update A fiber g ∉ Bset := by
             intro hg
