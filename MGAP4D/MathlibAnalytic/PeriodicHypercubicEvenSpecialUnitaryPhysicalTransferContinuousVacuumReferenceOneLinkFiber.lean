@@ -82,59 +82,10 @@ theorem
       (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
         H N A fiber g)
 
-/-- Along one selected spatial coordinate the complete reference weight is a
-continuous real function of the inserted `SU(N)` value.  This is deliberately
-a fiber-local continuity statement; no full-configuration product-continuity
-result is introduced here. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight_continuous
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
-    (target source fiber : PeriodicHypercubicEvenSpatialSliceLink H)
-    (k g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ)
-    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
-    Continuous
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight
-        H N hN beta hbeta B target source fiber k g₂ A) := by
-  let replace : Matrix.specialUnitaryGroup (Fin N) ℂ →
-      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N :=
-    fun g =>
-      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
-        H N A fiber g
-  have hReplace : Continuous replace := by
-    simpa [replace] using
-      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_continuous
-        H N A fiber
-  have hOmega : Continuous
-      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-          H N hN beta hbeta (replace g)) :=
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
-      H N hN beta hbeta).comp hReplace
-  have hLocal : Continuous
-      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
-          H N beta (replace g) B target g₂) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_continuous_left
-      H N beta B target g₂).comp hReplace
-  have hKernel : Continuous
-      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta (replace g) (Function.update B source k)) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta).comp
-      (hReplace.prodMk continuous_const)
-  unfold
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
-  simpa [replace] using (hOmega.mul hLocal).mul hKernel
-
 /-- The literal reference density is Haar-integrable on every selected
-one-link fiber.  Compactness is used only after restricting to that one
-coordinate. -/
+one-link fiber.  Only the vacuum factor is integrated by one-link continuity;
+the target-local factor and kernel are handled by the same uniform domination
+used for the full reference normalization. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight_integrable
     (H N : ℕ)
@@ -149,10 +100,84 @@ theorem
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight
         H N hN beta hbeta B target source fiber k g₂ A)
       (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)) := by
-  exact
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight_continuous
-      H N hN beta hbeta B target source fiber k g₂ A).integrable_of_hasCompactSupport
-      (HasCompactSupport.of_compactSpace _)
+  let μ := normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)
+  let replace : Matrix.specialUnitaryGroup (Fin N) ℂ →
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N :=
+    fun g =>
+      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+        H N A fiber g
+  let Omega : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ :=
+    fun g =>
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+        H N hN beta hbeta (replace g)
+  let Local : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ :=
+    fun g =>
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+        H N beta (replace g) B target g₂
+  let K : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ :=
+    fun g =>
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+        H N beta (replace g) (Function.update B source k)
+  let C : ℝ := Real.exp (8 * beta)
+  have hReplace : Continuous replace := by
+    simpa [replace] using
+      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_continuous
+        H N A fiber
+  have hOmegaCont : Continuous Omega := by
+    simpa [Omega] using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
+        H N hN beta hbeta).comp hReplace
+  have hOmegaInt : Integrable Omega μ :=
+    hOmegaCont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  have hLocalMeas : AEStronglyMeasurable Local μ := by
+    exact
+      ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_continuous_left
+        H N beta B target g₂).comp hReplace).aestronglyMeasurable
+  have hKernelMeas : AEStronglyMeasurable K μ := by
+    exact
+      ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+        H N beta).comp (hReplace.prodMk continuous_const)).aestronglyMeasurable
+  have hwEq :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight
+          H N hN beta hbeta B target source fiber k g₂ A =
+        fun g => (Omega g * Local g) * K g := by
+    funext g
+    rfl
+  rw [hwEq]
+  have hdom : Integrable (fun g => C * Omega g) μ := hOmegaInt.const_mul C
+  apply hdom.mono' ((hOmegaInt.aestronglyMeasurable.mul hLocalMeas).mul hKernelMeas)
+  filter_upwards with g
+  have hOmegaNonneg : 0 ≤ Omega g := by
+    exact
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos
+        H N hN beta hbeta (replace g)).le
+  have hLocalNonneg : 0 ≤ Local g := by
+    exact
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_pos
+        H N beta (replace g) B target g₂).le
+  have hKernelNonneg : 0 ≤ K g := by
+    exact
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
+        H N beta (replace g) (Function.update B source k)).le
+  have hLocalBound : Local g ≤ C := by
+    simpa [Local, C] using
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_le_exp_eight_mul
+        H N hN beta hbeta (replace g) B target g₂
+  have hKernelBound : K g ≤ 1 := by
+    simpa [K] using
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_le_one
+        H N hN beta hbeta (replace g) (Function.update B source k)
+  have hCNonneg : 0 ≤ C := by
+    exact (Real.exp_pos (8 * beta)).le
+  rw [Real.norm_eq_abs, Real.norm_eq_abs]
+  rw [abs_of_nonneg (mul_nonneg (mul_nonneg hOmegaNonneg hLocalNonneg) hKernelNonneg)]
+  rw [abs_of_nonneg (mul_nonneg hCNonneg hOmegaNonneg)]
+  calc
+    (Omega g * Local g) * K g ≤ (Omega g * Local g) * 1 :=
+      mul_le_mul_of_nonneg_left hKernelBound (mul_nonneg hOmegaNonneg hLocalNonneg)
+    _ = Omega g * Local g := by ring
+    _ ≤ Omega g * C := mul_le_mul_of_nonneg_left hLocalBound hOmegaNonneg
+    _ = C * Omega g := by ring
 
 /-- Real normalizing mass of the literal reference weight on one selected
 spatial-link fiber. -/
@@ -213,7 +238,7 @@ theorem
 /-- Normalized probability law associated with the literal one-coordinate
 restriction of the continuous-vacuum reference weight.  At this layer it is a
 normalized fiber density; identification as a conditional distribution of the
-full reference law is deferred to the split/Fubini compatibility theorem. -/
+full reference law is deferred to the split/Fubini compatibility result. -/
 def
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
     (H N : ℕ)
