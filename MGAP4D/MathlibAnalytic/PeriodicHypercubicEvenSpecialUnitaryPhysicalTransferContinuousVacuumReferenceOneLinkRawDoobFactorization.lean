@@ -72,42 +72,6 @@ def
     (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
       H N A fiber g)
 
-/-- The C5 raw one-link weight is continuous on the compact `SU(N)` fiber. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkRawWeight_continuous
-    (H N : ℕ)
-    (beta : ℝ)
-    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
-    (target source fiber : PeriodicHypercubicEvenSpatialSliceLink H)
-    (k g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ)
-    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
-    Continuous
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkRawWeight
-        H N beta B target source fiber k g₂ A) := by
-  let replace : Matrix.specialUnitaryGroup (Fin N) ℂ →
-      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N :=
-    fun g =>
-      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
-        H N A fiber g
-  have hReplace : Continuous replace := by
-    simpa [replace] using
-      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_continuous
-        H N A fiber
-  have hLocal : Continuous (fun g =>
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
-        H N beta (replace g) B target g₂) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_continuous_left
-      H N beta B target g₂).comp hReplace
-  have hKernel : Continuous (fun g =>
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-        H N beta (replace g) (Function.update B source k)) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta).comp (hReplace.prodMk continuous_const)
-  simpa [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkRawWeight,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRawWeight,
-    replace] using hLocal.mul hKernel
-
 /-- The C5 raw one-link weight is strictly positive. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkRawWeight_pos
