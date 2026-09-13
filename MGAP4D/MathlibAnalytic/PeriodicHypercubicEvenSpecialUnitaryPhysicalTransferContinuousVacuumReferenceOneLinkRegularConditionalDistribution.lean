@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceOneLinkConditionalExpectation
 import Mathlib.Probability.Kernel.Condexp
+import Mathlib.Probability.Kernel.CompProdEqIff
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -20,10 +21,15 @@ local instance continuousVacuumReferenceOneLinkRegularConditionalDistributionSpe
     CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
+local instance continuousVacuumReferenceOneLinkRegularConditionalDistributionAmbientMatrixSecondCountableTopology
+    (N : ℕ) :
+    SecondCountableTopology (Matrix (Fin N) (Fin N) ℂ) :=
+  specialUnitaryAmbientMatrixSecondCountableTopology N
+
 local instance continuousVacuumReferenceOneLinkRegularConditionalDistributionAmbientMatrixPolishSpace
     (N : ℕ) :
     PolishSpace (Matrix (Fin N) (Fin N) ℂ) := by
-  constructor <;> infer_instance
+  infer_instance
 
 local instance continuousVacuumReferenceOneLinkRegularConditionalDistributionSpecialUnitaryPolishSpace
     (N : ℕ) :
@@ -85,7 +91,73 @@ theorem
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
           H N hN beta hbeta B target source k g₂)
         (periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber) := by
-  rfl
+  let Koff :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel
+      H N hN beta hbeta B target source fiber k g₂
+  let μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
+      H N hN beta hbeta B target source k g₂
+  let m :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber
+  let hle : m ≤ (inferInstance : MeasurableSpace
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)) :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace_le H N fiber
+  let μoff : @Measure
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) m :=
+    μ.trim hle
+  have hDiagMeas :
+      @Measurable
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+        ((PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))
+        (inferInstance : MeasurableSpace
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))
+        (m.prod (inferInstance : MeasurableSpace
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)))
+        (fun A => (id A, id A)) :=
+    (measurable_id'' hle).prodMk measurable_id
+  have hJointKoff :
+      μoff ⊗ₘ Koff =
+        @Measure.map
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+          ((PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
+            (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))
+          (inferInstance : MeasurableSpace
+            (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))
+          (m.prod (inferInstance : MeasurableSpace
+            (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)))
+          (fun A => (id A, id A)) μ := by
+    apply Measure.ext_prod
+    intro s t hs ht
+    rw [Measure.compProd_apply_prod hs ht,
+      Measure.map_apply hDiagMeas (hs.prod ht), Set.mk_preimage_prod]
+    simp only [preimage_id_eq]
+    rw [show μoff = μ.trim hle by rfl,
+      setLIntegral_trim hle (Koff.measurable_coe ht) hs]
+    simpa [Koff, μ, inter_comm] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel_setLIntegral_eq_inter
+        H N hN beta hbeta B target source fiber k g₂ t s ht hs
+  have hJointCondExp :
+      μoff ⊗ₘ ProbabilityTheory.condExpKernel μ m =
+        @Measure.map
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+          ((PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
+            (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))
+          (inferInstance : MeasurableSpace
+            (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))
+          (m.prod (inferInstance : MeasurableSpace
+            (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)))
+          (fun A => (id A, id A)) μ := by
+    simpa [μoff] using
+      (ProbabilityTheory.compProd_trim_condExpKernel (μ := μ) (m := m) hle)
+  have hProd :
+      μoff ⊗ₘ Koff =
+        μoff ⊗ₘ ProbabilityTheory.condExpKernel μ m :=
+    hJointKoff.trans hJointCondExp.symm
+  have hAE :
+      Koff =ᵐ[μoff] ProbabilityTheory.condExpKernel μ m :=
+    ProbabilityTheory.Kernel.ae_eq_of_compProd_eq hProd
+  simpa [Koff, μ, m, hle, μoff] using hAE
 
 end
 
