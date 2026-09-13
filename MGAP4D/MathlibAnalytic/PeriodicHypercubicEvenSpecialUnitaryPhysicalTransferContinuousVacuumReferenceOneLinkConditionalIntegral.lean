@@ -83,17 +83,31 @@ theorem
   have hfComp : Integrable f (Koff ∘ₘ μ.restrict Bset) := by
     rw [hRestricted]
     exact hfRestr
-  rw [Measure.comp_eq_comp_const_apply] at hfComp
+  have hCompConst :
+      Koff ∘ₘ μ.restrict Bset =
+        (Koff ∘ₖ Kernel.const Unit (μ.restrict Bset)) () :=
+    Measure.comp_eq_comp_const_apply
+  have hfKernelComp :
+      Integrable f ((Koff ∘ₖ Kernel.const Unit (μ.restrict Bset)) ()) :=
+    hCompConst ▸ hfComp
   have hFubini :=
     ProbabilityTheory.integral_comp
       (κ := Kernel.const Unit (μ.restrict Bset))
       (η := Koff)
       (a := ())
-      hfComp
+      hfKernelComp
+  have hFubiniKernel :
+      (∫ C, f C ∂((Koff ∘ₖ Kernel.const Unit (μ.restrict Bset)) ())) =
+        ∫ A, (∫ C, f C ∂Koff A) ∂μ.restrict Bset := by
+    simpa only [Kernel.const_apply] using hFubini
+  have hIntegralCompConst :
+      (∫ C, f C ∂(Koff ∘ₘ μ.restrict Bset)) =
+        ∫ C, f C ∂((Koff ∘ₖ Kernel.const Unit (μ.restrict Bset)) ()) :=
+    congrArg (fun ν => ∫ C, f C ∂ν) hCompConst
   have hFubiniMeasure :
       (∫ C, f C ∂(Koff ∘ₘ μ.restrict Bset)) =
-        ∫ A, (∫ C, f C ∂Koff A) ∂μ.restrict Bset := by
-    simpa only [Measure.comp_eq_comp_const_apply, Kernel.const_apply] using hFubini
+        ∫ A, (∫ C, f C ∂Koff A) ∂μ.restrict Bset :=
+    hIntegralCompConst.trans hFubiniKernel
   have hFinal :
       (∫ A, (∫ C, f C ∂Koff A) ∂μ.restrict Bset) =
         ∫ A, f A ∂μ.restrict Bset := by
