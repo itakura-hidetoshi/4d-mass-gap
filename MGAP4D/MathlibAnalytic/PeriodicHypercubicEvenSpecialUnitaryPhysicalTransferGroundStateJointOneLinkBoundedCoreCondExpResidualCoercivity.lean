@@ -11,6 +11,50 @@ open scoped ENNReal
 
 noncomputable section
 
+local instance groundStateJointOneLinkResidualCoercivitySpecialUnitaryIsTopologicalGroup
+    (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance groundStateJointOneLinkResidualCoercivitySpecialUnitaryCompactSpace
+    (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance groundStateJointOneLinkResidualCoercivitySpecialUnitarySecondCountableTopology
+    (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance groundStateJointOneLinkResidualCoercivitySpecialUnitaryMeasurableSpace
+    (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance groundStateJointOneLinkResidualCoercivitySpecialUnitaryBorelSpace
+    (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
+local instance groundStateJointOneLinkResidualCoercivitySpatialLinkFintype
+    (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
+local instance groundStateJointOneLinkResidualCoercivityTargetLinkFintype
+    (H : ℕ)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceTargetLink H target) :=
+  Subtype.fintype (fun e : PeriodicHypercubicEvenSpatialSliceLink H => e = target)
+
+local instance groundStateJointOneLinkResidualCoercivityTargetLinkUnique
+    (H : ℕ)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H) :
+    Unique (PeriodicHypercubicEvenSpatialSliceTargetLink H target) where
+  default := ⟨target, rfl⟩
+  uniq e := by
+    apply Subtype.ext
+    exact e.property
+
 /-- Once an outer-context representative of the genuine one-link `condExpL2`
 is fixed, the bounded-core centered residual functional is exactly the squared
 real `L²` norm of the genuine conditional-expectation residual.
