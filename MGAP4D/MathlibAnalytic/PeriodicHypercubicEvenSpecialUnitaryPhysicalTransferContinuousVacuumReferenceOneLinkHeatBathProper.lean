@@ -257,7 +257,7 @@ theorem
   have hInter : MeasurableSet (Aset ∩ Bset) := hA.inter hBambient
   have hFInter : Measurable FInter := measurable_const.indicator hInter
   by_cases hAB : A ∈ Bset
-  · rw [Set.indicator_of_mem hAB, one_mul]
+  · simp only [Set.indicator_of_mem hAB, Pi.one_apply, one_mul]
     let FA :
         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ≥0∞ :=
       Aset.indicator (fun _ => 1)
@@ -287,7 +287,7 @@ theorem
       _ = periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel
           H N hN beta hbeta B target source fiber k g₂ A Aset := by
           simp [K, FA, hA]
-  · rw [Set.indicator_of_not_mem hAB, zero_mul]
+  · simp only [Set.indicator_of_not_mem' hAB, zero_mul]
     calc
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel
           H N hN beta hbeta B target source fiber k g₂ A (Aset ∩ Bset) =
