@@ -27,7 +27,23 @@ theorem realIntegralWeightedCovarianceNumerator_const_mul_right
     (c : ℝ) :
     realIntegralWeightedCovarianceNumerator μ w f (fun x => c * g x) =
       c * realIntegralWeightedCovarianceNumerator μ w f g := by
-  rfl
+  unfold realIntegralWeightedCovarianceNumerator
+  have hJoint :
+      (∫ x, w x * (f x * (c * g x)) ∂μ) =
+        c * ∫ x, w x * (f x * g x) ∂μ := by
+    rw [← integral_const_mul]
+    apply integral_congr_ae
+    filter_upwards with x
+    ring
+  have hSource :
+      (∫ x, w x * (c * g x) ∂μ) =
+        c * ∫ x, w x * g x ∂μ := by
+    rw [← integral_const_mul]
+    apply integral_congr_ae
+    filter_upwards with x
+    ring
+  rw [hJoint, hSource]
+  ring
 
 /-- A four-integral cross-ratio defect with common left weight `a` is exactly
 the unnormalized covariance numerator of the target ratio `p/q` and source
