@@ -10,6 +10,10 @@ open MeasureTheory
 
 noncomputable section
 
+local instance physicalContinuousVacuumCrossRatioSpecialUnitaryMeasurableSpace (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 /-- RED specification: the same-color remote four-point defect of the scaled
 physical continuous-vacuum representative is exactly the unnormalized weighted
 covariance numerator, under the reference left-boundary weight built from the
