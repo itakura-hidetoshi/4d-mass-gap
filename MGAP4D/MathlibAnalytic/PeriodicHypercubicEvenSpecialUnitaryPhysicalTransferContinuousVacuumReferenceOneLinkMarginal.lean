@@ -57,9 +57,10 @@ def
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
       H N hN beta hbeta B target source k g₂ A)
 
-/-- RED test for the exact law-side bridge: the `ofReal` image of the real
-one-link partition function must be Mathlib's singleton marginal of the full
-reference density at the same background configuration. -/
+/-- The `ofReal` image of the real one-link partition function is exactly
+Mathlib's singleton marginal of the full ENNReal reference density at the same
+background configuration.  This is an exact one-coordinate marginal identity;
+it does not yet identify the normalized pointwise fiber as an RCD. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberPartitionFunction_ofReal_eq_lmarginal_singleton
     (H N : ℕ)
@@ -80,6 +81,31 @@ theorem
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceENNRealDensity
           H N hN beta hbeta B target source k g₂)
         A := by
+  classical
+  let μ := normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)
+  let w :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight
+      H N hN beta hbeta B target source fiber k g₂ A
+  have hwInt : Integrable w μ := by
+    simpa [μ, w] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight_integrable
+        H N hN beta hbeta B target source fiber k g₂ A
+  have hwNonneg : ∀ᵐ g ∂μ, 0 ≤ w g :=
+    ae_of_all μ fun g =>
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight_pos
+        H N hN beta hbeta B target source fiber k g₂ A g).le
+  rw [MeasureTheory.lmarginal_singleton]
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberPartitionFunction
+  change
+    ENNReal.ofReal (∫ g, w g ∂μ) =
+      ∫⁻ g,
+        ENNReal.ofReal
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
+            H N hN beta hbeta B target source k g₂ (Function.update A fiber g)) ∂μ
+  rw [ofReal_integral_eq_lintegral_ofReal hwInt hwNonneg]
+  apply lintegral_congr
+  intro g
   rfl
 
 end
