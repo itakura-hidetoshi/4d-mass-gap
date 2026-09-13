@@ -28,8 +28,8 @@ local instance continuousVacuumReferenceOneLinkRegularConditionalDistributionAmb
 
 local instance continuousVacuumReferenceOneLinkRegularConditionalDistributionAmbientMatrixIsCompletelyMetrizableSpace
     (N : ℕ) :
-    IsCompletelyMetrizableSpace (Matrix (Fin N) (Fin N) ℂ) := by
-  change IsCompletelyMetrizableSpace (Fin N → Fin N → ℂ)
+    TopologicalSpace.IsCompletelyMetrizableSpace (Matrix (Fin N) (Fin N) ℂ) := by
+  change TopologicalSpace.IsCompletelyMetrizableSpace (Fin N → Fin N → ℂ)
   infer_instance
 
 local instance continuousVacuumReferenceOneLinkRegularConditionalDistributionAmbientMatrixPolishSpace
@@ -103,14 +103,11 @@ theorem
   let μ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
       H N hN beta hbeta B target source k g₂
-  let m : MeasurableSpace
-      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :=
-    periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber
-  let hle : m ≤ MeasurableSpace.pi := by
-    simpa [m] using
-      periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace_le H N fiber
+  let hle :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace_le H N fiber
   let μoff : @Measure
-      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) m :=
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber) :=
     μ.trim hle
   have hDiagMeas :
       @Measurable
@@ -118,7 +115,8 @@ theorem
         ((PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
           (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))
         MeasurableSpace.pi
-        (m.prod MeasurableSpace.pi)
+        ((periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber).prod
+          MeasurableSpace.pi)
         (fun A => (id A, id A)) :=
     (measurable_id'' hle).prodMk measurable_id
   have hJointKoff :
@@ -128,7 +126,8 @@ theorem
           ((PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
             (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))
           MeasurableSpace.pi
-          (m.prod MeasurableSpace.pi)
+          ((periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber).prod
+            MeasurableSpace.pi)
           (fun A => (id A, id A)) μ := by
     apply Measure.ext_prod
     intro s t hs ht
@@ -137,28 +136,36 @@ theorem
     simp only [preimage_id_eq]
     rw [show μoff = μ.trim hle by rfl,
       setLIntegral_trim hle (Koff.measurable_coe ht) hs]
-    simpa [Koff, μ, m, inter_comm] using
+    simpa [Koff, μ, inter_comm] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel_setLIntegral_eq_inter
         H N hN beta hbeta B target source fiber k g₂ t s ht hs
   have hJointCondExp :
-      μoff ⊗ₘ ProbabilityTheory.condExpKernel μ m =
+      μoff ⊗ₘ ProbabilityTheory.condExpKernel μ
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber) =
         @Measure.map
           (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
           ((PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
             (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))
           MeasurableSpace.pi
-          (m.prod MeasurableSpace.pi)
+          ((periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber).prod
+            MeasurableSpace.pi)
           (fun A => (id A, id A)) μ := by
     simpa [μoff] using
-      (ProbabilityTheory.compProd_trim_condExpKernel (μ := μ) (m := m) hle)
+      (ProbabilityTheory.compProd_trim_condExpKernel
+        (μ := μ)
+        (m := periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber)
+        hle)
   have hProd :
       μoff ⊗ₘ Koff =
-        μoff ⊗ₘ ProbabilityTheory.condExpKernel μ m :=
+        μoff ⊗ₘ ProbabilityTheory.condExpKernel μ
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber) :=
     hJointKoff.trans hJointCondExp.symm
   have hAE :
-      Koff =ᵐ[μoff] ProbabilityTheory.condExpKernel μ m :=
+      Koff =ᵐ[μoff]
+        ProbabilityTheory.condExpKernel μ
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber) :=
     ProbabilityTheory.Kernel.ae_eq_of_compProd_eq hProd
-  simpa [Koff, μ, m, hle, μoff] using hAE
+  simpa [Koff, μ, hle, μoff] using hAE
 
 end
 
