@@ -8,7 +8,7 @@ The authoritative theorem carrier is
 formal/real-hilbert-uniform-coercive-strong-limit
 ```
 
-The current exact canonical theorem HEAD is
+The latest mathematical theorem baseline before this documentation refresh is
 
 ```text
 1696ba98d930c5f59293319fc562d057d4b7586e
@@ -31,7 +31,7 @@ workflow run 34787609915
 completed / success
 ```
 
-`main` is a public landing surface. Only theorem results merged into the authoritative theorem carrier count as canonical proof status.
+A documentation-only merge may advance the authoritative branch pointer without changing this mathematical theorem baseline. `main` is a public landing surface. Only theorem results merged into the authoritative theorem carrier count as canonical proof status.
 
 > **Current frontier**
 >
@@ -487,12 +487,18 @@ The repository must continue to distinguish these goals from the already-integra
 
 # Immediate next action
 
-The next theorem unit should start from exact canonical SHA
+Before starting the next theorem unit, re-observe the exact HEAD of
+
+```text
+formal/real-hilbert-uniform-coercive-strong-limit
+```
+
+because this documentation merge may advance the branch pointer. The latest mathematical theorem baseline represented here is
 
 ```text
 1696ba98d930c5f59293319fc562d057d4b7586e
 ```
 
-and use the #4070/#4077 actual reference RCD together with #4080's exact raw-Doob factorization to derive the first genuinely summable remote conditional-law estimate.
+The next unit should use the #4070/#4077 actual reference RCD together with #4080's exact raw-Doob factorization to derive the first genuinely summable remote conditional-law estimate.
 
 Do **not** spend the next unit reproving Fubini, measurability, properness, conditional expectation, or RCD existence: those interfaces are now canonical.
