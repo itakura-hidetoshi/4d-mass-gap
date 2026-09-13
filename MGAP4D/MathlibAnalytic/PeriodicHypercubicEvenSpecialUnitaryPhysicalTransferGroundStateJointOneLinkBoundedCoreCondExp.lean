@@ -6,6 +6,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory Filter
+open ProbabilityTheory
 open scoped ENNReal
 
 noncomputable section
