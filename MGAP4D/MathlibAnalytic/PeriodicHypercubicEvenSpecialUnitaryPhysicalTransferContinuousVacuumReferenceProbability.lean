@@ -154,12 +154,9 @@ theorem
           H N beta A (Function.update B source k) ≤ 1 :=
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_le_one
       H N hN beta hbeta A (Function.update B source k)
-  have hCNonneg : 0 ≤ C := (Real.exp_pos _).le
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
   dsimp [Omega, C] at hOmegaNonneg ⊢
-  rw [Real.norm_eq_abs,
-    abs_of_nonneg (mul_nonneg (mul_nonneg hOmegaNonneg hLocalNonneg) hKernelNonneg),
-    abs_of_nonneg (mul_nonneg hCNonneg hOmegaNonneg)]
+  rw [abs_of_nonneg (mul_nonneg (mul_nonneg hOmegaNonneg hLocalNonneg) hKernelNonneg)]
   calc
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
           H N hN beta hbeta A *
@@ -367,7 +364,21 @@ theorem
           (fun A =>
             specialUnitaryWilsonRelativeKernel N beta (A source) h /
               specialUnitaryWilsonRelativeKernel N beta (A source) k)) := by
-  rfl
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_sameColor_remote_crossRatio_defect_eq_sourceSpatialRatio_mul_continuousReferenceWeightedCovarianceNumerator_sourceCrossingRatio
+      H N hN beta hbeta B (target := target) (source := source)
+      hColor hne h k g₁ g₂]
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight_weightedCovarianceNumerator_eq_partition_sq_mul_probabilityCovariance
+      H N hN beta hbeta B target source k g₂
+      (fun A =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+            H N beta A B target g₁ /
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+            H N beta A B target g₂)
+      (fun A =>
+        specialUnitaryWilsonRelativeKernel N beta (A source) h /
+          specialUnitaryWilsonRelativeKernel N beta (A source) k)]
 
 end
 
