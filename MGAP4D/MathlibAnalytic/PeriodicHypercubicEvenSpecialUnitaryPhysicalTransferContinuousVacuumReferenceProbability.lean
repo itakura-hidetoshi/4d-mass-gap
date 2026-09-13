@@ -48,11 +48,10 @@ local instance physicalContinuousVacuumReferenceProbabilityHaarIsProbability
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
 
-/-- For fixed right boundary data, the exact target-local Boltzmann factor is
-continuous in the left boundary.  The proof avoids reopening its plaquette
-formula: strict positivity of the base kernel and the exact update
-factorization identify the factor with a quotient of two continuous kernel
-sections. -/
+/-- For fixed right-boundary data, the exact target-local Boltzmann factor is
+continuous in the left boundary.  In the explicit local formula the spatial
+half-update term is constant in the left boundary; only the target crossing
+energies vary with `A`. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_continuous_left
     (H N : ℕ)
@@ -64,43 +63,19 @@ theorem
       (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
           H N beta A B target g) := by
-  let Bg : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N :=
-    Function.update B target g
-  have hUpdated : Continuous
+  unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+  have hAg : Continuous
       (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A Bg) := by
-    exact
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous H N beta).comp
-        (Continuous.prodMk continuous_id continuous_const)
-  have hBase : Continuous
+        specialUnitaryWilsonPlaquetteEnergy N ((A target)⁻¹ * g)) := by
+    apply (continuous_specialUnitaryWilsonPlaquetteEnergy N).comp
+    fun_prop
+  have hAB : Continuous
       (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A B) := by
-    exact
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous H N beta).comp
-        (Continuous.prodMk continuous_id continuous_const)
-  have hQuot : Continuous
-      (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A Bg /
-          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A B) := by
-    exact hUpdated.div hBase fun A =>
-      ne_of_gt
-        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos H N beta A B)
-  have hEq :
-      (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
-          H N beta A B target g) =
-      (fun A =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A Bg /
-          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A B) := by
-    funext A
-    apply (eq_div_iff
-      (ne_of_gt
-        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos H N beta A B))).2
-    simpa [Bg] using
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_update_right_eq_localFactor_mul
-        H N beta A B target g).symm
-  rw [hEq]
-  exact hQuot
+        specialUnitaryWilsonPlaquetteEnergy N ((A target)⁻¹ * B target)) := by
+    apply (continuous_specialUnitaryWilsonPlaquetteEnergy N).comp
+    fun_prop
+  apply Real.continuous_exp.comp
+  exact continuous_const.mul ((hAg.sub hAB).add continuous_const)
 
 /-- The canonical physical covariance reference weight is continuous on the
 compact left-boundary configuration space. -/
