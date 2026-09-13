@@ -70,14 +70,16 @@ theorem
       H N fiber
   ext s hs
   rw [Measure.bind_apply hs (Koff.measurable.mono hle le_rfl).aemeasurable]
-  have hStat := congrArg (fun ν : Measure
-      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) => ν s)
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_comp_referenceProbabilityMeasure
-      H N hN beta hbeta B target source fiber k g₂)
+  have hStat : (K ∘ₘ μ) s = μ s := by
+    simpa [K, μ] using
+      congrArg (fun ν : Measure
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) => ν s)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_comp_referenceProbabilityMeasure
+          H N hN beta hbeta B target source fiber k g₂)
   rw [Measure.bind_apply hs K.aemeasurable] at hStat
   simpa [Koff, K, μ] using hStat
 
-/-- RED: for every ambient measurable event `Aset` and every event `Bset`
+/-- For every ambient measurable event `Aset` and every event `Bset`
 measurable from the off-fiber coordinates, the reference heat-bath transition
 probability satisfies the exact defining setwise conditional identity. -/
 theorem
@@ -101,7 +103,38 @@ theorem
         H N hN beta hbeta B target source k g₂) =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
         H N hN beta hbeta B target source k g₂ (Aset ∩ Bset) := by
-  rfl
+  let Koff :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel
+      H N hN beta hbeta B target source fiber k g₂
+  let μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
+      H N hN beta hbeta B target source k g₂
+  let hle :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace_le
+      H N fiber
+  have hProper : Kernel.IsProper Koff := by
+    simpa [Koff] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel_isProper
+        H N hN beta hbeta B target source fiber k g₂
+  calc
+    (∫⁻ A in Bset,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel
+          H N hN beta hbeta B target source fiber k g₂ A Aset
+        ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
+          H N hN beta hbeta B target source k g₂) =
+      (Koff ∘ₘ μ) (Aset ∩ Bset) := by
+        simpa [Koff, μ] using
+          hProper.setLIntegral_eq_comp hle hA hB
+    _ = μ (Aset ∩ Bset) := by
+      have hStat : Koff ∘ₘ μ = μ := by
+        simpa [Koff, μ] using
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel_comp_referenceProbabilityMeasure
+            H N hN beta hbeta B target source fiber k g₂
+      exact congrArg (fun ν : Measure
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) => ν (Aset ∩ Bset)) hStat
+    _ = periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
+        H N hN beta hbeta B target source k g₂ (Aset ∩ Bset) := by
+      rfl
 
 end
 
