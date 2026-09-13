@@ -152,6 +152,34 @@ theorem
   simp [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor,
     hne, Ne.symm hne, hSpatial]
 
+/-- On the raw one-slab Wilson kernel, two distinct right-boundary spatial links
+in the same six-color class have exact four-point cross-ratio one.
+
+Equivalently, changing the remote source value only changes the source-dependent
+base kernel factor; the target-update multiplier is independent of that source
+value.  This is the exact `K = 1` cancellation that is lost as an immediate
+local statement after integrating the kernel against the physical top
+eigenvector. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_sameColor_remote_crossRatio_eq
+    (H N : ℕ)
+    (beta : ℝ)
+    (A B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    {target source : PeriodicHypercubicEvenSpatialSliceLink H}
+    (hColor : periodicHypercubicEvenSpatialSliceLinkColor H target =
+      periodicHypercubicEvenSpatialSliceLinkColor H source)
+    (hne : target ≠ source)
+    (h k g₁ g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A
+          (Function.update (Function.update B source h) target g₁) *
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A
+          (Function.update (Function.update B source k) target g₂) =
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A
+          (Function.update (Function.update B source k) target g₁) *
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A
+          (Function.update (Function.update B source h) target g₂) := by
+  simp only [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_update_right_eq_localFactor_mul]
+
 end
 
 end MathlibAnalytic
