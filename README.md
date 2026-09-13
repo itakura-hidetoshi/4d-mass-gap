@@ -25,7 +25,7 @@ Repository:
 Authoritative theorem carrier:
   formal/real-hilbert-uniform-coercive-strong-limit
 
-Current exact canonical HEAD:
+Latest mathematical theorem baseline before this documentation refresh:
   1696ba98d930c5f59293319fc562d057d4b7586e
 
 This is the normal merge of:
@@ -47,7 +47,7 @@ Detailed proof order:
   ROADMAP.md
 ```
 
-Only theorem results merged into `formal/real-hilbert-uniform-coercive-strong-limit` count as canonical theorem status. `main` is a public landing surface and must not be used as theorem authority when the histories differ.
+Only theorem results merged into `formal/real-hilbert-uniform-coercive-strong-limit` count as canonical theorem status. A documentation-only merge may advance that branch pointer without changing the mathematical theorem baseline named above. `main` is a public landing surface and must not be used as theorem authority when the histories differ.
 
 ---
 
