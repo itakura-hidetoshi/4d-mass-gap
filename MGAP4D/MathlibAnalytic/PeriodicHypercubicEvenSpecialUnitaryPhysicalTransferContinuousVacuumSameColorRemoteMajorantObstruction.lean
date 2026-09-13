@@ -118,7 +118,7 @@ noncomputable def
     (H : ℕ)
     (target : PeriodicHypercubicEvenSpatialSliceLink H)
     (beta : ℝ) : ℝ :=
-  ∑ _source in periodicHypercubicEvenSpatialSliceSameColorRemoteLinks H target,
+  ∑ source in periodicHypercubicEvenSpatialSliceSameColorRemoteLinks H target,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuum_sameColorRemoteBoundedTestMajorant
       beta
 
