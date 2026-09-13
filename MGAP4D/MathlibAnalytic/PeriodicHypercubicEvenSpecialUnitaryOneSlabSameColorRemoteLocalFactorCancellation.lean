@@ -150,7 +150,7 @@ theorem
               (Function.update B source k) p) := by
     rw [hUpdated, hBase]
   simp [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor,
-    hne, Ne.symm hne, hSpatial]
+    hne, hSpatial]
 
 /-- On the raw one-slab Wilson kernel, two distinct right-boundary spatial links
 in the same six-color class have exact four-point cross-ratio one.
@@ -179,6 +179,12 @@ theorem
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A
           (Function.update (Function.update B source h) target g₂) := by
   simp only [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_update_right_eq_localFactor_mul]
+  rw [
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_sameColor_remote_update_eq
+      H N beta A B (target := target) (source := source) hColor hne h k g₁,
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_sameColor_remote_update_eq
+      H N beta A B (target := target) (source := source) hColor hne h k g₂]
+  ring
 
 end
 
