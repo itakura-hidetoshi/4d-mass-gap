@@ -65,6 +65,7 @@ private theorem doobWeightedMeasure_doobWeightedMeasure_eq_mul
     (μ.withDensity (doobWeightedDensity μ q)).withDensity
         (doobWeightedDensity (doobWeightedMeasure μ q) omega) =
       μ.withDensity (doobWeightedDensity μ (q * omega))
+  unfold doobWeightedDensity
   rw [← withDensity_mul₀
     (hq.div_const (doobWeightMass μ q))
     (homega.div_const (doobWeightMass (doobWeightedMeasure μ q) omega))]
@@ -208,9 +209,7 @@ theorem
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
         H N beta (replace g) (Function.update B source k)
   let q : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ≥0∞ :=
-    fun g => ENNReal.ofReal
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkRawWeight
-        H N beta B target source fiber k g₂ A g)
+    fun g => ENNReal.ofReal (Local g * K g)
   let omega : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ≥0∞ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumSpatialLinkFiberWeight
       H N hN beta hbeta A fiber
@@ -234,16 +233,14 @@ theorem
     exact
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
         H N beta).comp (hReplace.prodMk continuous_const)
-  have hqMeas : Measurable q := by
-    change Measurable (fun g => ENNReal.ofReal (Local g * K g))
-    exact ENNReal.measurable_ofReal.comp (hLocalCont.mul hKernelCont).measurable
+  have hqMeas : Measurable q :=
+    ENNReal.measurable_ofReal.comp (hLocalCont.mul hKernelCont).measurable
   have homegaMeas : Measurable omega := by
     simpa [omega] using
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumSpatialLinkFiberWeight_continuous
         H N hN beta hbeta A fiber).measurable
   have hqPos : ∀ g, 0 < q g := by
     intro g
-    change 0 < ENNReal.ofReal (Local g * K g)
     exact ENNReal.ofReal_pos.mpr
       (mul_pos
         (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_pos
@@ -253,7 +250,6 @@ theorem
   have hqUpper : ∀ g, q g ≤ ENNReal.ofReal C := by
     intro g
     apply ENNReal.ofReal_le_ofReal
-    change Local g * K g ≤ C
     have hLocalNonneg : 0 ≤ Local g :=
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_pos
         H N beta (replace g) B target g₂).le
@@ -289,6 +285,21 @@ theorem
     doobWeightedMeasure_doobWeightedMeasure_eq_mul
       μ q omega hqMeas.aemeasurable homegaMeas.aemeasurable
       (ne_of_gt hMassPos) hMassTop
+  have hRawMeasure :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkRawProbabilityMeasure
+          H N beta B target source fiber k g₂ A =
+        doobWeightedMeasure μ q := by
+    unfold
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkRawProbabilityMeasure
+      realIntegralWeightedProbabilityMeasure
+    change doobWeightedMeasure μ
+        (fun g => ENNReal.ofReal
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkRawWeight
+            H N beta B target source fiber k g₂ A g)) =
+      doobWeightedMeasure μ q
+    apply congrArg (doobWeightedMeasure μ)
+    funext g
+    rfl
   have hFull : full = q * omega := by
     funext g
     have hReal := congrFun
@@ -303,9 +314,17 @@ theorem
     rw [hReal, ENNReal.ofReal_mul hOmegaNonneg]
     change omega g * q g = q g * omega g
     exact mul_comm _ _
-  change doobWeightedMeasure μ full =
-    doobWeightedMeasure (doobWeightedMeasure μ q) omega
-  rw [hFull]
+  have hFullMeasure :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
+          H N hN beta hbeta B target source fiber k g₂ A =
+        doobWeightedMeasure μ (q * omega) := by
+    unfold
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
+      realIntegralWeightedProbabilityMeasure
+    change doobWeightedMeasure μ full = doobWeightedMeasure μ (q * omega)
+    rw [hFull]
+  rw [hFullMeasure, hRawMeasure]
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumSpatialLinkDoobMeasure
   exact hCompose.symm
 
 end
