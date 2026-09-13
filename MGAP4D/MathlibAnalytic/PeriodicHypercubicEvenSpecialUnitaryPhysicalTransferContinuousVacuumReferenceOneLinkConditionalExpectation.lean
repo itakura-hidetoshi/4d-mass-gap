@@ -72,6 +72,10 @@ theorem
   let μ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
       H N hN beta hbeta B target source k g₂
+  letI : IsProbabilityMeasure μ := by
+    simpa [μ] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure_isProbabilityMeasure
+        H N hN beta hbeta B target source k g₂
   let hle :=
     periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace_le
       H N fiber
@@ -105,7 +109,8 @@ theorem
     apply integrable_of_integrable_trim hle
     simpa [μoff] using hgOff
   have hgmTrim :
-      AEStronglyMeasurable
+      AEStronglyMeasurable[
+        periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber]
         (fun A => ∫ C, f C ∂Koff A) (μ.trim hle) := by
     simpa [μoff] using hgOff.aestronglyMeasurable
   have hgm :
