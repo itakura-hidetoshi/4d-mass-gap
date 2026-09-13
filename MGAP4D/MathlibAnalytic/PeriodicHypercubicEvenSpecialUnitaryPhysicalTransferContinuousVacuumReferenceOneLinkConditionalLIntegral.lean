@@ -39,7 +39,7 @@ local instance continuousVacuumReferenceOneLinkConditionalLIntegralSpatialLinkFi
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
-/-- RED: restricting the stationary reference law to any off-fiber measurable
+/-- Restricting the stationary reference law to any off-fiber measurable
 set preserves stationarity for the proper off-fiber heat-bath kernel. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel_comp_restrict_referenceProbabilityMeasure
@@ -60,9 +60,23 @@ theorem
         H N hN beta hbeta B target source k g₂).restrict Bset =
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
         H N hN beta hbeta B target source k g₂).restrict Bset := by
-  rfl
+  let Koff :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel
+      H N hN beta hbeta B target source fiber k g₂
+  let μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
+      H N hN beta hbeta B target source k g₂
+  let hle :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace_le
+      H N fiber
+  ext Aset hA
+  rw [Measure.bind_apply hA (Koff.measurable.mono hle le_rfl).aemeasurable,
+    Measure.restrict_apply hA]
+  simpa [Koff, μ] using
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel_setLIntegral_eq_inter
+      H N hN beta hbeta B target source fiber k g₂ Aset Bset hA hB
 
-/-- RED: the proper off-fiber heat-bath kernel satisfies the conditional
+/-- The proper off-fiber heat-bath kernel satisfies the conditional
 nonnegative integral identity under the reference probability law. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel_setLIntegral_lintegral_eq
@@ -88,7 +102,28 @@ theorem
       ∫⁻ A in Bset, f A ∂
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
           H N hN beta hbeta B target source k g₂ := by
-  rfl
+  let Koff :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel
+      H N hN beta hbeta B target source fiber k g₂
+  let μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
+      H N hN beta hbeta B target source k g₂
+  let hle :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace_le
+      H N fiber
+  have hRestricted : Koff ∘ₘ μ.restrict Bset = μ.restrict Bset := by
+    simpa [Koff, μ] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel_comp_restrict_referenceProbabilityMeasure
+        H N hN beta hbeta B target source fiber k g₂ Bset hB
+  have hIntegral :
+      (∫⁻ C, f C ∂(Koff ∘ₘ μ.restrict Bset)) =
+        ∫⁻ C, f C ∂μ.restrict Bset := by
+    exact congrArg (fun ν : Measure
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
+        ∫⁻ C, f C ∂ν) hRestricted
+  rw [Measure.lintegral_bind
+    (Koff.measurable.mono hle le_rfl).aemeasurable hf.aemeasurable] at hIntegral
+  simpa [Koff, μ] using hIntegral
 
 end
 
