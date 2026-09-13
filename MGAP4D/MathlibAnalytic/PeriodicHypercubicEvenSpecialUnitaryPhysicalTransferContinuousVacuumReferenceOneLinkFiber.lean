@@ -167,11 +167,8 @@ theorem
     simpa [K] using
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_le_one
         H N hN beta hbeta (replace g) (Function.update B source k)
-  have hCNonneg : 0 ≤ C := by
-    exact (Real.exp_pos (8 * beta)).le
-  rw [Real.norm_eq_abs, Real.norm_eq_abs]
+  change |(Omega g * Local g) * K g| ≤ C * Omega g
   rw [abs_of_nonneg (mul_nonneg (mul_nonneg hOmegaNonneg hLocalNonneg) hKernelNonneg)]
-  rw [abs_of_nonneg (mul_nonneg hCNonneg hOmegaNonneg)]
   calc
     (Omega g * Local g) * K g ≤ (Omega g * Local g) * 1 :=
       mul_le_mul_of_nonneg_left hKernelBound (mul_nonneg hOmegaNonneg hLocalNonneg)
