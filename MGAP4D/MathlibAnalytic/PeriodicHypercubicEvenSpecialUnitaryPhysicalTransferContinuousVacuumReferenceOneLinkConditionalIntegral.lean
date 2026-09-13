@@ -40,7 +40,7 @@ local instance continuousVacuumReferenceOneLinkConditionalIntegralSpatialLinkFin
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
-/-- RED: for every integrable real observable and every off-fiber measurable event,
+/-- For every integrable real observable and every off-fiber measurable event,
 the off-fiber heat-bath kernel satisfies the exact conditional Bochner-integral identity. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel_setIntegral_integral_eq
@@ -68,7 +68,40 @@ theorem
       ∫ A in Bset, f A ∂
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
           H N hN beta hbeta B target source k g₂ := by
-  rfl
+  let Koff :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel
+      H N hN beta hbeta B target source fiber k g₂
+  let μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
+      H N hN beta hbeta B target source k g₂
+  have hRestricted : Koff ∘ₘ μ.restrict Bset = μ.restrict Bset := by
+    simpa [Koff, μ] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel_comp_restrict_referenceProbabilityMeasure
+        H N hN beta hbeta B target source fiber k g₂ Bset hB
+  have hfRestr : Integrable f (μ.restrict Bset) := by
+    simpa [μ] using (hf.restrict (s := Bset))
+  have hfComp : Integrable f (Koff ∘ₘ μ.restrict Bset) := by
+    rw [hRestricted]
+    exact hfRestr
+  rw [Measure.comp_eq_comp_const_apply] at hfComp
+  have hFubini :=
+    ProbabilityTheory.integral_comp
+      (κ := Kernel.const Unit (μ.restrict Bset))
+      (η := Koff)
+      (a := ())
+      hfComp
+  have hFubiniMeasure :
+      (∫ C, f C ∂(Koff ∘ₘ μ.restrict Bset)) =
+        ∫ A, (∫ C, f C ∂Koff A) ∂μ.restrict Bset := by
+    simpa only [Measure.comp_eq_comp_const_apply, Kernel.const_apply] using hFubini
+  have hFinal :
+      (∫ A, (∫ C, f C ∂Koff A) ∂μ.restrict Bset) =
+        ∫ A, f A ∂μ.restrict Bset := by
+    calc
+      (∫ A, (∫ C, f C ∂Koff A) ∂μ.restrict Bset) =
+          ∫ C, f C ∂(Koff ∘ₘ μ.restrict Bset) := hFubiniMeasure.symm
+      _ = ∫ C, f C ∂μ.restrict Bset := by rw [hRestricted]
+  simpa [Koff, μ] using hFinal
 
 end
 
