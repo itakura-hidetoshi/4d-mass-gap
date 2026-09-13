@@ -85,7 +85,7 @@ theorem
 /-- Along one selected spatial coordinate the complete reference weight is a
 continuous real function of the inserted `SU(N)` value.  This is deliberately
 a fiber-local continuity statement; no full-configuration product-continuity
-theorem is introduced. -/
+result is introduced here. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight_continuous
     (H N : ℕ)
