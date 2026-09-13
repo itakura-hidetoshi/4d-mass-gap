@@ -116,7 +116,12 @@ theorem
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
           H N hN beta hbeta B target source k g₂)
         f g := by
-  rfl
+  apply realIntegralWeightedCovarianceNumerator_congr_weight_ae
+  filter_upwards [
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_ae_eq_existing
+      H N hN beta hbeta).symm] with A hA
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
+  rw [hA]
 
 end
 
