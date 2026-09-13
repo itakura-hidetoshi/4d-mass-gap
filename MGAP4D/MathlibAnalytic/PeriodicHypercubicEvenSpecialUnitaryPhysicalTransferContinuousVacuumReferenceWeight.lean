@@ -126,7 +126,7 @@ theorem
 /-- The localized same-color remote physical cross-ratio defect can be stated
 entirely with the canonical continuous reference weight.  This hides the
 arbitrary pointwise representative of the physical vacuum `L²` class from all
-downstream mixing arguments. -/
+downstream mixing and conditional-law arguments. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_sameColor_remote_crossRatio_defect_eq_sourceSpatialRatio_mul_continuousReferenceWeightedCovarianceNumerator_sourceCrossingRatio
     (H N : ℕ)
