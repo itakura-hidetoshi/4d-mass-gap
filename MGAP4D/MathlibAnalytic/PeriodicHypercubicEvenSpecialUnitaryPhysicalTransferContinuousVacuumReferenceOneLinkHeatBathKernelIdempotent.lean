@@ -101,7 +101,7 @@ theorem
       H N hN beta hbeta B target source fiber k g₂ A g₀ F hF
   simpa [F, hs] using hInv
 
-/-- RED: the exact measurable reference one-link heat-bath Markov kernel is an
+/-- The exact measurable reference one-link heat-bath Markov kernel is an
 idempotent kernel, hence already has the algebraic projection law required by
 the subsequent conditional-expectation identification. -/
 theorem
@@ -119,7 +119,44 @@ theorem
         H N hN beta hbeta B target source fiber k g₂ =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
         H N hN beta hbeta B target source fiber k g₂ := by
-  rfl
+  apply Kernel.ext_fun
+  intro A F hF
+  rw [Kernel.lintegral_comp _ _ A hF,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_lintegral
+      H N hN beta hbeta B target source fiber k g₂ A
+      (fun C =>
+        ∫⁻ D, F D
+          ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
+            H N hN beta hbeta B target source fiber k g₂ C)
+      hF.lintegral_kernel]
+  letI : IsProbabilityMeasure
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
+        H N hN beta hbeta B target source fiber k g₂ A) :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_isProbabilityMeasure
+      H N hN beta hbeta B target source fiber k g₂ A
+  calc
+    ∫⁻ g,
+        (∫⁻ D, F D
+          ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
+            H N hN beta hbeta B target source fiber k g₂
+            (Function.update A fiber g))
+        ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
+          H N hN beta hbeta B target source fiber k g₂ A =
+      ∫⁻ _g,
+        (∫⁻ D, F D
+          ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
+            H N hN beta hbeta B target source fiber k g₂ A)
+        ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
+          H N hN beta hbeta B target source fiber k g₂ A := by
+      apply lintegral_congr
+      intro g
+      exact
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_lintegral_update_fiber
+          H N hN beta hbeta B target source fiber k g₂ A g F hF
+    _ = ∫⁻ D, F D
+        ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
+          H N hN beta hbeta B target source fiber k g₂ A := by
+      simp
 
 end
 
