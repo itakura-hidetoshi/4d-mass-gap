@@ -17,9 +17,9 @@ def realIntegralWeightedCovarianceNumerator
   (∫ x, w x ∂μ) * (∫ x, w x * (f x * g x) ∂μ) -
     (∫ x, w x * f x ∂μ) * (∫ x, w x * g x ∂μ)
 
-/-- RED specification: a four-integral cross-ratio defect with common left
-weight `a` is exactly the unnormalized covariance numerator of the target ratio
-`p/q` and source ratio `r/s` under the reference weight `a*q*s`.
+/-- A four-integral cross-ratio defect with common left weight `a` is exactly
+the unnormalized covariance numerator of the target ratio `p/q` and source
+ratio `r/s` under the reference weight `a*q*s`.
 
 The only hypotheses are the pointwise nonvanishing conditions needed to form
 and cancel the two ratios.  No probability normalization, independence, or
@@ -36,7 +36,30 @@ theorem real_integral_crossRatio_defect_eq_weightedCovarianceNumerator
         (fun x => a x * q x * s x)
         (fun x => p x / q x)
         (fun x => r x / s x) := by
-  rfl
+  unfold realIntegralWeightedCovarianceNumerator
+  have hJoint :
+      (∫ x, (a x * q x * s x) * ((p x / q x) * (r x / s x)) ∂μ) =
+        ∫ x, a x * p x * r x ∂μ := by
+    apply integral_congr_ae
+    filter_upwards with x
+    field_simp [hq x, hs x]
+    <;> ring
+  have hTarget :
+      (∫ x, (a x * q x * s x) * (p x / q x) ∂μ) =
+        ∫ x, a x * p x * s x ∂μ := by
+    apply integral_congr_ae
+    filter_upwards with x
+    field_simp [hq x]
+    <;> ring
+  have hSource :
+      (∫ x, (a x * q x * s x) * (r x / s x) ∂μ) =
+        ∫ x, a x * q x * r x ∂μ := by
+    apply integral_congr_ae
+    filter_upwards with x
+    field_simp [hs x]
+    <;> ring
+  rw [hJoint, hTarget, hSource]
+  ring
 
 end
 
