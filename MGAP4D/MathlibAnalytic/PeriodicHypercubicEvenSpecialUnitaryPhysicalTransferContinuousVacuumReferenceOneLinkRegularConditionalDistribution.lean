@@ -26,6 +26,12 @@ local instance continuousVacuumReferenceOneLinkRegularConditionalDistributionAmb
     SecondCountableTopology (Matrix (Fin N) (Fin N) ℂ) :=
   specialUnitaryAmbientMatrixSecondCountableTopology N
 
+local instance continuousVacuumReferenceOneLinkRegularConditionalDistributionAmbientMatrixIsCompletelyMetrizableSpace
+    (N : ℕ) :
+    IsCompletelyMetrizableSpace (Matrix (Fin N) (Fin N) ℂ) := by
+  change IsCompletelyMetrizableSpace (Fin N → Fin N → ℂ)
+  infer_instance
+
 local instance continuousVacuumReferenceOneLinkRegularConditionalDistributionAmbientMatrixPolishSpace
     (N : ℕ) :
     PolishSpace (Matrix (Fin N) (Fin N) ℂ) := by
@@ -97,11 +103,12 @@ theorem
   let μ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
       H N hN beta hbeta B target source k g₂
-  let m :=
+  let m : MeasurableSpace
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :=
     periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber
-  let hle : m ≤ (inferInstance : MeasurableSpace
-      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)) :=
-    periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace_le H N fiber
+  let hle : m ≤ MeasurableSpace.pi := by
+    simpa [m] using
+      periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace_le H N fiber
   let μoff : @Measure
       (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) m :=
     μ.trim hle
@@ -110,10 +117,8 @@ theorem
         (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
         ((PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
           (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))
-        (inferInstance : MeasurableSpace
-          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))
-        (m.prod (inferInstance : MeasurableSpace
-          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)))
+        MeasurableSpace.pi
+        (m.prod MeasurableSpace.pi)
         (fun A => (id A, id A)) :=
     (measurable_id'' hle).prodMk measurable_id
   have hJointKoff :
@@ -122,10 +127,8 @@ theorem
           (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
           ((PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
             (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))
-          (inferInstance : MeasurableSpace
-            (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))
-          (m.prod (inferInstance : MeasurableSpace
-            (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)))
+          MeasurableSpace.pi
+          (m.prod MeasurableSpace.pi)
           (fun A => (id A, id A)) μ := by
     apply Measure.ext_prod
     intro s t hs ht
@@ -134,7 +137,7 @@ theorem
     simp only [preimage_id_eq]
     rw [show μoff = μ.trim hle by rfl,
       setLIntegral_trim hle (Koff.measurable_coe ht) hs]
-    simpa [Koff, μ, inter_comm] using
+    simpa [Koff, μ, m, inter_comm] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel_setLIntegral_eq_inter
         H N hN beta hbeta B target source fiber k g₂ t s ht hs
   have hJointCondExp :
@@ -143,10 +146,8 @@ theorem
           (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
           ((PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
             (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))
-          (inferInstance : MeasurableSpace
-            (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))
-          (m.prod (inferInstance : MeasurableSpace
-            (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)))
+          MeasurableSpace.pi
+          (m.prod MeasurableSpace.pi)
           (fun A => (id A, id A)) μ := by
     simpa [μoff] using
       (ProbabilityTheory.compProd_trim_condExpKernel (μ := μ) (m := m) hle)
