@@ -20,6 +20,11 @@ local instance continuousVacuumReferenceOneLinkRegularConditionalDistributionSpe
     CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
+local instance continuousVacuumReferenceOneLinkRegularConditionalDistributionSpecialUnitaryPolishSpace
+    (N : ℕ) :
+    PolishSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  (specialUnitaryGroup_isClosed N).polishSpace
+
 local instance continuousVacuumReferenceOneLinkRegularConditionalDistributionSpecialUnitarySecondCountableTopology
     (N : ℕ) :
     SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
