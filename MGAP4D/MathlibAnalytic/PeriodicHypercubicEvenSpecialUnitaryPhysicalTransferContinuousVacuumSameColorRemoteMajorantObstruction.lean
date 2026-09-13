@@ -109,7 +109,7 @@ theorem
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuum_sameColor_remoteDoob_boundedTest_influence
       H N hN beta hbeta
       (target := target) (source := source)
-      hremote.1.symm hremote.2 A h k phi hphi hphiBound)
+      hremote.1.symm hremote.2.symm A h k phi hphi hphiBound)
 
 /-- The row sum obtained by assigning the same available one-source bounded-test
 majorant to every distinct source in the target's six-color class. -/
