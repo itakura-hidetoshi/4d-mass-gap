@@ -14,8 +14,8 @@ local instance physicalContinuousVacuumCrossRatioSpecialUnitaryMeasurableSpace (
     MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
 
-/-- RED specification: the same-color remote four-point defect of the scaled
-physical continuous-vacuum representative is exactly the unnormalized weighted
+/-- The same-color remote four-point defect of the scaled physical
+continuous-vacuum representative is exactly the unnormalized weighted
 covariance numerator, under the reference left-boundary weight built from the
 second target value and second source value, of the target-local ratio and the
 source-conditioned one-slab-kernel ratio.
@@ -73,7 +73,54 @@ theorem
               H N beta A (Function.update B source h) /
             periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
               H N beta A (Function.update B source k)) := by
-  rfl
+  have h11 :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_sameColor_remote_integral_normal_form
+      H N hN beta hbeta B (target := target) (source := source) hColor hne h g₁
+  have h22 :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_sameColor_remote_integral_normal_form
+      H N hN beta hbeta B (target := target) (source := source) hColor hne k g₂
+  have h12 :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_sameColor_remote_integral_normal_form
+      H N hN beta hbeta B (target := target) (source := source) hColor hne k g₁
+  have h21 :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_sameColor_remote_integral_normal_form
+      H N hN beta hbeta B (target := target) (source := source) hColor hne h g₂
+  rw [h11, h22, h12, h21]
+  have hq :
+      ∀ A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+            H N beta A B target g₂ ≠ 0 := by
+    intro A
+    exact ne_of_gt
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_pos
+        H N beta A B target g₂)
+  have hs :
+      ∀ A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+            H N beta A (Function.update B source k) ≠ 0 := by
+    intro A
+    exact ne_of_gt
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
+        H N beta A (Function.update B source k))
+  simpa [mul_assoc] using
+    (real_integral_crossRatio_defect_eq_weightedCovarianceNumerator
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
+      (fun A =>
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+          H N hN beta hbeta).1 A)
+      (fun A =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+          H N beta A B target g₁)
+      (fun A =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+          H N beta A B target g₂)
+      (fun A =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta A (Function.update B source h))
+      (fun A =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta A (Function.update B source k))
+      hq hs)
 
 end
 
