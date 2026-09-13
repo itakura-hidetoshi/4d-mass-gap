@@ -41,9 +41,23 @@ local instance continuousVacuumReferenceOneLinkRawDoobSpatialLinkFintype
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
-/-- The non-vacuum part of the C5 literal reference fiber density.  This is a
-one-slab fiber weight, not the full four-dimensional Wilson single-link Gibbs
-weight. -/
+/-- The one-slab part of the C5 reference weight before the continuous-vacuum
+factor is inserted.  This is not the full four-dimensional Wilson Gibbs weight. -/
+def
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRawWeight
+    (H N : ℕ)
+    (beta : ℝ)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (target source : PeriodicHypercubicEvenSpatialSliceLink H)
+    (k g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ)
+    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) : ℝ :=
+  periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+      H N beta A B target g₂ *
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+      H N beta A (Function.update B source k)
+
+/-- Restriction of the one-slab raw reference weight to the selected spatial
+link fiber. -/
 def
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkRawWeight
     (H N : ℕ)
@@ -53,13 +67,10 @@ def
     (k g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ)
     (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
     (g : Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
-  let A' :=
-    periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
-      H N A fiber g
-  periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
-      H N beta A' B target g₂ *
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-      H N beta A' (Function.update B source k)
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRawWeight
+    H N beta B target source k g₂
+    (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+      H N A fiber g)
 
 /-- The C5 raw one-link weight is continuous, hence Haar-integrable. -/
 theorem
@@ -96,6 +107,7 @@ theorem
   have hCont := hLocal.mul hKernel
   simpa [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkRawWeight,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRawWeight,
     replace] using
     hCont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
 
@@ -114,6 +126,7 @@ theorem
         H N beta B target source fiber k g₂ A g := by
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkRawWeight
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRawWeight
   exact mul_pos
     (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_pos
       H N beta _ B target g₂)
@@ -162,6 +175,7 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkRawWeight
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRawWeight
   ring
 
 /-- RED specification: after normalizing `local × kernel`, inserting only the
