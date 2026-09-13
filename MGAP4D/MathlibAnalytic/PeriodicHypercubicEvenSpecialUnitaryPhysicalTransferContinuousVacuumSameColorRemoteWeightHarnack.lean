@@ -108,13 +108,13 @@ theorem
       using hVac.2
   constructor
   · unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumFullConfigurationWeight
-    rw [hRestrictG, hRestrictH]
     rw [← ENNReal.ofReal_mul (le_of_lt (Real.exp_pos _))]
-    exact ENNReal.ofReal_le_ofReal hVacG
+    apply ENNReal.ofReal_le_ofReal
+    simpa only [hRestrictG, hRestrictH] using hVacG
   · unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumFullConfigurationWeight
-    rw [hRestrictH, hRestrictG]
     rw [← ENNReal.ofReal_mul (le_of_lt (Real.exp_pos _))]
-    exact ENNReal.ofReal_le_ofReal hVacH
+    apply ENNReal.ofReal_le_ofReal
+    simpa only [hRestrictH, hRestrictG] using hVacH
 
 /-- After a target value has been fixed, changing any second spatial link still
 changes the physical continuous-vacuum Doob weight by at most `exp (8 * beta)`
