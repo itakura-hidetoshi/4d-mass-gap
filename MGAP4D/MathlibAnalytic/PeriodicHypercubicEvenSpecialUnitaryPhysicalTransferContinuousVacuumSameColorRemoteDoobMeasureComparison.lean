@@ -131,13 +131,25 @@ theorem
       (R * R) •
         C.singleLinkDoobConditionalMeasure Omega
           (C.base.replaceLink A sourceEdge h) targetEdge
-  calc
-    _ = (doobWeightedMeasure raw wh ≤
-          (R * R) • doobWeightedMeasure raw wk ∧
-        doobWeightedMeasure raw wk ≤
-          (R * R) • doobWeightedMeasure raw wh) := by
-      rw [hNormal.1, hNormal.2.1]
-    _ := hCmp
+  constructor
+  · calc
+      C.singleLinkDoobConditionalMeasure Omega
+          (C.base.replaceLink A sourceEdge h) targetEdge =
+          doobWeightedMeasure raw wh := hNormal.1
+      _ ≤ (R * R) • doobWeightedMeasure raw wk := hCmp.1
+      _ = (R * R) •
+          C.singleLinkDoobConditionalMeasure Omega
+            (C.base.replaceLink A sourceEdge k) targetEdge := by
+        exact congrArg (fun μ => (R * R) • μ) hNormal.2.1.symm
+  · calc
+      C.singleLinkDoobConditionalMeasure Omega
+          (C.base.replaceLink A sourceEdge k) targetEdge =
+          doobWeightedMeasure raw wk := hNormal.2.1
+      _ ≤ (R * R) • doobWeightedMeasure raw wh := hCmp.2
+      _ = (R * R) •
+          C.singleLinkDoobConditionalMeasure Omega
+            (C.base.replaceLink A sourceEdge h) targetEdge := by
+        exact congrArg (fun μ => (R * R) • μ) hNormal.1.symm
 
 end
 
