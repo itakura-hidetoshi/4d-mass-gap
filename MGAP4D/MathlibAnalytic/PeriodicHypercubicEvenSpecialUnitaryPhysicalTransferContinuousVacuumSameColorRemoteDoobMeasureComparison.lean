@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumSameColorRemoteWeightHarnack
+import MGAP4D.MathlibAnalytic.DoobWeightedConditionalMeasurePairwiseComparison
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -83,7 +84,60 @@ theorem
             (periodicHypercubicEvenSpatialSliceLinkEmbedding H source) h)
           (periodicHypercubicEvenSpatialSliceLinkEmbedding H target) := by
   dsimp only
-  exact doobWeightedMeasure_pairwise_le_mul_sq_of_pointwise_le_mul
+  let C := periodicHypercubicSpecialUnitaryWilsonSystem
+    (PeriodicHypercubicEvenSideLength H) N hN beta hbeta
+  let Omega :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumFullConfigurationWeight
+      H N hN beta hbeta
+  let targetEdge := periodicHypercubicEvenSpatialSliceLinkEmbedding H target
+  let sourceEdge := periodicHypercubicEvenSpatialSliceLinkEmbedding H source
+  let raw := C.singleLinkConditionalMeasure A targetEdge
+  let wh := fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
+    Omega (C.base.replaceLink (C.base.replaceLink A targetEdge g) sourceEdge h)
+  let wk := fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
+    Omega (C.base.replaceLink (C.base.replaceLink A targetEdge g) sourceEdge k)
+  let R : ℝ≥0∞ := ENNReal.ofReal (Real.exp (8 * beta))
+  have hNormal :
+      C.singleLinkDoobConditionalMeasure Omega
+          (C.base.replaceLink A sourceEdge h) targetEdge =
+          doobWeightedMeasure raw wh ∧
+        C.singleLinkDoobConditionalMeasure Omega
+          (C.base.replaceLink A sourceEdge k) targetEdge =
+          doobWeightedMeasure raw wk ∧
+        (∀ g, wh g ≤ R * wk g ∧ wk g ≤ R * wh g) := by
+    simpa [C, Omega, targetEdge, sourceEdge, raw, wh, wk, R] using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuum_sameColor_remoteDoob_normalForm_weight_harnack
+        H N hN beta hbeta hColor hne A h k)
+  have hR0 : R ≠ 0 := by
+    apply ne_of_gt
+    dsimp [R]
+    exact ENNReal.ofReal_pos.mpr (Real.exp_pos _)
+  have hRtop : R ≠ ∞ := by
+    dsimp [R]
+    exact ENNReal.ofReal_ne_top
+  have hCmp :=
+    doobWeightedMeasure_pairwise_le_mul_sq_of_pointwise_le_mul
+      raw wh wk R hR0 hRtop
+      (fun g => (hNormal.2.2 g).1)
+      (fun g => (hNormal.2.2 g).2)
+  change
+    C.singleLinkDoobConditionalMeasure Omega
+        (C.base.replaceLink A sourceEdge h) targetEdge ≤
+      (R * R) •
+        C.singleLinkDoobConditionalMeasure Omega
+          (C.base.replaceLink A sourceEdge k) targetEdge ∧
+    C.singleLinkDoobConditionalMeasure Omega
+        (C.base.replaceLink A sourceEdge k) targetEdge ≤
+      (R * R) •
+        C.singleLinkDoobConditionalMeasure Omega
+          (C.base.replaceLink A sourceEdge h) targetEdge
+  calc
+    _ = (doobWeightedMeasure raw wh ≤
+          (R * R) • doobWeightedMeasure raw wk ∧
+        doobWeightedMeasure raw wk ≤
+          (R * R) • doobWeightedMeasure raw wh) := by
+      rw [hNormal.1, hNormal.2.1]
+    _ := hCmp
 
 end
 
