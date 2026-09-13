@@ -394,7 +394,7 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure_lintegral_oneLinkFiber
         H N hN beta hbeta B target source fiber k g₂ F hF
 
-/-- RED: the measurable full-configuration one-link heat-bath kernel leaves the
+/-- The measurable full-configuration one-link heat-bath kernel leaves the
 normalized continuous-vacuum reference probability law invariant exactly. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_comp_referenceProbabilityMeasure
@@ -411,7 +411,35 @@ theorem
         H N hN beta hbeta B target source k g₂ =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
         H N hN beta hbeta B target source k g₂ := by
-  rfl
+  ext s hs
+  rw [Measure.bind_apply hs (Kernel.aemeasurable _)]
+  let F : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ≥0∞ :=
+    s.indicator (fun _ => 1)
+  have hF : Measurable F := measurable_const.indicator hs
+  have hInv :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure_lintegral_oneLinkHeatBathKernel
+      H N hN beta hbeta B target source fiber k g₂ F hF
+  calc
+    (∫⁻ A,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
+        H N hN beta hbeta B target source fiber k g₂ A s
+      ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
+        H N hN beta hbeta B target source k g₂) =
+      ∫⁻ A,
+        (∫⁻ C, F C
+          ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
+            H N hN beta hbeta B target source fiber k g₂ A)
+        ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
+          H N hN beta hbeta B target source k g₂ := by
+      apply lintegral_congr
+      intro A
+      simp [F, hs]
+    _ = ∫⁻ A, F A
+        ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
+          H N hN beta hbeta B target source k g₂ := hInv
+    _ = periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
+          H N hN beta hbeta B target source k g₂ s := by
+      simp [F, hs]
 
 end
 
