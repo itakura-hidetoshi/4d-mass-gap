@@ -17,6 +17,34 @@ def realIntegralWeightedCovarianceNumerator
   (∫ x, w x ∂μ) * (∫ x, w x * (f x * g x) ∂μ) -
     (∫ x, w x * f x ∂μ) * (∫ x, w x * g x ∂μ)
 
+/-- Multiplying the right observable by a scalar multiplies the unnormalized
+weighted covariance numerator by the same scalar.  No normalization or
+integrability hypotheses are needed. -/
+theorem realIntegralWeightedCovarianceNumerator_const_mul_right
+    {α : Type*} [MeasurableSpace α]
+    (μ : Measure α)
+    (w f g : α → ℝ)
+    (c : ℝ) :
+    realIntegralWeightedCovarianceNumerator μ w f (fun x => c * g x) =
+      c * realIntegralWeightedCovarianceNumerator μ w f g := by
+  unfold realIntegralWeightedCovarianceNumerator
+  have hJoint :
+      (∫ x, w x * (f x * (c * g x)) ∂μ) =
+        c * ∫ x, w x * (f x * g x) ∂μ := by
+    rw [← integral_const_mul]
+    apply integral_congr_ae
+    filter_upwards with x
+    ring
+  have hSource :
+      (∫ x, w x * (c * g x) ∂μ) =
+        c * ∫ x, w x * g x ∂μ := by
+    rw [← integral_const_mul]
+    apply integral_congr_ae
+    filter_upwards with x
+    ring
+  rw [hJoint, hSource]
+  ring
+
 /-- A four-integral cross-ratio defect with common left weight `a` is exactly
 the unnormalized covariance numerator of the target ratio `p/q` and source
 ratio `r/s` under the reference weight `a*q*s`.
