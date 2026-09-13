@@ -100,7 +100,11 @@ theorem
             (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
               H N hN beta hbeta B target source k g₂)
             (periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber)) A) X) := by
-  rfl
+  filter_upwards [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel_ae_eq_condExpKernel
+      H N hN beta hbeta B target source fiber k g₂
+  ] with A hA
+  simpa only [hA]
 
 /-- Extended conditional variance is invariant under the same RCD replacement. -/
 theorem
@@ -126,7 +130,11 @@ theorem
             (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
               H N hN beta hbeta B target source k g₂)
             (periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber)) A)) := by
-  rfl
+  filter_upwards [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel_ae_eq_condExpKernel
+      H N hN beta hbeta B target source fiber k g₂
+  ] with A hA
+  simpa only [hA]
 
 end
 
