@@ -123,6 +123,60 @@ theorem
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
   rw [hA]
 
+/-- The localized same-color remote physical cross-ratio defect can be stated
+entirely with the canonical continuous reference weight.  This hides the
+arbitrary pointwise representative of the physical vacuum `L²` class from all
+downstream mixing arguments. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_sameColor_remote_crossRatio_defect_eq_sourceSpatialRatio_mul_continuousReferenceWeightedCovarianceNumerator_sourceCrossingRatio
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    {target source : PeriodicHypercubicEvenSpatialSliceLink H}
+    (hColor : periodicHypercubicEvenSpatialSliceLinkColor H target =
+      periodicHypercubicEvenSpatialSliceLinkColor H source)
+    (hne : target ≠ source)
+    (h k g₁ g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta‖ *
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta
+          (Function.update (Function.update B source h) target g₁)) *
+      (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta‖ *
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta
+          (Function.update (Function.update B source k) target g₂)) -
+      (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta‖ *
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta
+          (Function.update (Function.update B source k) target g₁)) *
+      (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta‖ *
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta
+          (Function.update (Function.update B source h) target g₂)) =
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetSpatialHalfUpdateFactor
+          H N beta B source h /
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetSpatialHalfUpdateFactor
+          H N beta B source k) *
+      realIntegralWeightedCovarianceNumerator
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
+          H N hN beta hbeta B target source k g₂)
+        (fun A =>
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+              H N beta A B target g₁ /
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+              H N beta A B target g₂)
+        (fun A =>
+          specialUnitaryWilsonRelativeKernel N beta (A source) h /
+            specialUnitaryWilsonRelativeKernel N beta (A source) k) := by
+  rfl
+
 end
 
 end MathlibAnalytic
