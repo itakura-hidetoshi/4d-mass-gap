@@ -98,13 +98,21 @@ theorem
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumFullSpatialLinkDoobMeasure
         H N hN beta hbeta Ah target)
     rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumFullSpatialLinkDoobMeasure_eq]
-    infer_instance
+    exact
+      @periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumSpatialLinkDoobMeasure_isProbability
+        H N hN beta hbeta
+        (C.singleLinkConditionalMeasure Ah targetEdge) hRawProbH
+        (periodicHypercubicEvenSpatialSliceRestriction Ah) target
   have hProbK : IsProbabilityMeasure μk := by
     change IsProbabilityMeasure
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumFullSpatialLinkDoobMeasure
         H N hN beta hbeta Ak target)
     rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumFullSpatialLinkDoobMeasure_eq]
-    infer_instance
+    exact
+      @periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumSpatialLinkDoobMeasure_isProbability
+        H N hN beta hbeta
+        (C.singleLinkConditionalMeasure Ak targetEdge) hRawProbK
+        (periodicHypercubicEvenSpatialSliceRestriction Ak) target
   letI : IsProbabilityMeasure μh := hProbH
   letI : IsProbabilityMeasure μk := hProbK
   have hCmpR :
