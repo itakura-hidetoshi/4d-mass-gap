@@ -29,7 +29,26 @@ theorem
           H N beta B source k) *
       (specialUnitaryWilsonRelativeKernel N beta (A source) h /
         specialUnitaryWilsonRelativeKernel N beta (A source) k) := by
-  rfl
+  have hpair :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_source_update_pairwise_likelihoodRatio
+      H N beta A B source h k
+  have hQk :
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A
+          (Function.update B source k) ≠ 0 := by
+    exact ne_of_gt
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
+        H N beta A (Function.update B source k))
+  have hSk :
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetSpatialHalfUpdateFactor
+          H N beta B source k ≠ 0 := by
+    exact ne_of_gt
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetSpatialHalfUpdateFactor_pos
+        H N beta B source k)
+  have hrk : specialUnitaryWilsonRelativeKernel N beta (A source) k ≠ 0 := by
+    unfold specialUnitaryWilsonRelativeKernel
+    unfold specialUnitaryWilsonBoltzmannCentralFunction
+    exact ne_of_gt (Real.exp_pos _)
+  field_simp [hQk, hSk, hrk] <;> nlinarith [hpair]
 
 end
 
