@@ -131,7 +131,7 @@ theorem
       H N hN beta hbeta B target source fiber k g₂]
   exact
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernelOffFiberRepresentative_measurable
-      H N hN beta hbeta B target source fiber k g₂).comp_measurable
+      H N hN beta hbeta B target source fiber k g₂).comp
       (comap_measurable
         (periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberRestriction H N fiber))
 
@@ -146,15 +146,23 @@ noncomputable def
     (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
     (target source fiber : PeriodicHypercubicEvenSpatialSliceLink H)
     (k g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ) :
-    Kernel[
-      periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber]
+    @Kernel
       (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
-      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :=
-  ⟨fun A =>
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber)
+      (inferInstance : MeasurableSpace
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)) :=
+  @Kernel.mk
+    (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber)
+    (inferInstance : MeasurableSpace
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))
+    (fun A =>
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
-        H N hN beta hbeta B target source fiber k g₂ A,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_offFiberMeasurable
-      H N hN beta hbeta B target source fiber k g₂⟩
+        H N hN beta hbeta B target source fiber k g₂ A)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_offFiberMeasurable
+      H N hN beta hbeta B target source fiber k g₂)
 
 @[simp] theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel_apply
@@ -169,7 +177,7 @@ noncomputable def
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel
         H N hN beta hbeta B target source fiber k g₂ A =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
-        H N hN beta hbeta B target source fiber k g₂ A :=
+        H N hN beta hbeta B target source fiber k g₂ A := by
   rfl
 
 instance
@@ -185,12 +193,38 @@ instance
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel
         H N hN beta hbeta B target source fiber k g₂) := by
   refine ⟨fun A => ?_⟩
-  change IsProbabilityMeasure
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
-      H N hN beta hbeta B target source fiber k g₂ A)
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel_apply]
   infer_instance
 
-/-- RED: the off-fiber-typed reference heat-bath kernel is proper. This is the
+/-- Membership in an off-fiber measurable event is unchanged by replacing the
+selected fiber coordinate. -/
+theorem
+    periodicHypercubicEvenSpecialUnitary_mem_offFiberMeasurableSet_iff_update_fiber
+    (H N : ℕ)
+    (fiber : PeriodicHypercubicEvenSpatialSliceLink H)
+    (s : Set (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))
+    (hs : MeasurableSet[
+      periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber] s)
+    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (g : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    A ∈ s ↔ Function.update A fiber g ∈ s := by
+  rw [MeasurableSpace.measurableSet_comap] at hs
+  rcases hs with ⟨t, ht, rfl⟩
+  change
+    periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberRestriction H N fiber A ∈ t ↔
+      periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberRestriction H N fiber
+        (Function.update A fiber g) ∈ t
+  have hRestriction :
+      periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberRestriction H N fiber
+          (Function.update A fiber g) =
+        periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberRestriction H N fiber A := by
+    funext e
+    simp [periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberRestriction,
+      Function.update, e.2]
+  rw [hRestriction]
+
+/-- The off-fiber-typed reference heat-bath kernel is proper. This is the
 kernel-level statement that an update at the selected fiber preserves every
 off-fiber measurable event. -/
 theorem
@@ -205,7 +239,73 @@ theorem
     Kernel.IsProper
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel
         H N hN beta hbeta B target source fiber k g₂) := by
-  rfl
+  let hle :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace_le
+      H N fiber
+  apply Kernel.IsProper.of_inter_eq_indicator_mul hle
+  intro Aset hA Bset hB A
+  let K :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
+      H N hN beta hbeta B target source fiber k g₂
+  let ν :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
+      H N hN beta hbeta B target source fiber k g₂ A
+  let FInter :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ≥0∞ :=
+    (Aset ∩ Bset).indicator (fun _ => 1)
+  have hBambient : MeasurableSet Bset := hle Bset hB
+  have hInter : MeasurableSet (Aset ∩ Bset) := hA.inter hBambient
+  have hFInter : Measurable FInter := measurable_const.indicator hInter
+  by_cases hAB : A ∈ Bset
+  · rw [Set.indicator_of_mem hAB, one_mul]
+    let FA :
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ≥0∞ :=
+      Aset.indicator (fun _ => 1)
+    have hFA : Measurable FA := measurable_const.indicator hA
+    calc
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel
+          H N hN beta hbeta B target source fiber k g₂ A (Aset ∩ Bset) =
+        ∫⁻ C, FInter C ∂K A := by
+          simp [K, FInter, hInter]
+      _ = ∫⁻ g, FInter (Function.update A fiber g) ∂ν := by
+          exact
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_lintegral
+              H N hN beta hbeta B target source fiber k g₂ A FInter hFInter
+      _ = ∫⁻ g, FA (Function.update A fiber g) ∂ν := by
+          apply lintegral_congr
+          intro g
+          have hBg : Function.update A fiber g ∈ Bset :=
+            (periodicHypercubicEvenSpecialUnitary_mem_offFiberMeasurableSet_iff_update_fiber
+              H N fiber Bset hB A g).mp hAB
+          by_cases hAg : Function.update A fiber g ∈ Aset
+          · simp [FInter, FA, hAg, hBg]
+          · simp [FInter, FA, hAg]
+      _ = ∫⁻ C, FA C ∂K A := by
+          exact
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_lintegral
+              H N hN beta hbeta B target source fiber k g₂ A FA hFA).symm
+      _ = periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel
+          H N hN beta hbeta B target source fiber k g₂ A Aset := by
+          simp [K, FA, hA]
+  · rw [Set.indicator_of_not_mem hAB, zero_mul]
+    calc
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel
+          H N hN beta hbeta B target source fiber k g₂ A (Aset ∩ Bset) =
+        ∫⁻ C, FInter C ∂K A := by
+          simp [K, FInter, hInter]
+      _ = ∫⁻ g, FInter (Function.update A fiber g) ∂ν := by
+          exact
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_lintegral
+              H N hN beta hbeta B target source fiber k g₂ A FInter hFInter
+      _ = 0 := by
+          apply lintegral_eq_zero.mpr
+          filter_upwards [] with g
+          have hBg : Function.update A fiber g ∉ Bset := by
+            intro hg
+            exact hAB
+              ((periodicHypercubicEvenSpecialUnitary_mem_offFiberMeasurableSet_iff_update_fiber
+                H N fiber Bset hB A g).mpr hg)
+          simp [FInter, hBg]
 
 end
 
