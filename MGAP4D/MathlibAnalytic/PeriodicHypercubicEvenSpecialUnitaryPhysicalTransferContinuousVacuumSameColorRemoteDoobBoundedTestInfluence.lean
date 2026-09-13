@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumSameColorRemoteDoobMeasureComparison
+import MGAP4D.MathlibAnalytic.ProbabilityMeasureMutualDominationBoundedTest
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -72,7 +73,65 @@ theorem
       (∫ g, phi g ∂C.singleLinkDoobConditionalMeasure Omega Ak targetEdge)| ≤
       2 * ((Real.exp (16 * beta) - 1) / (Real.exp (16 * beta) + 1)) := by
   dsimp only
-  exact probabilityMeasure_boundedTest_integral_difference_abs_le_of_pairwise_le_smul
+  let C := periodicHypercubicSpecialUnitaryWilsonSystem
+    (PeriodicHypercubicEvenSideLength H) N hN beta hbeta
+  let Omega :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumFullConfigurationWeight
+      H N hN beta hbeta
+  let targetEdge := periodicHypercubicEvenSpatialSliceLinkEmbedding H target
+  let sourceEdge := periodicHypercubicEvenSpatialSliceLinkEmbedding H source
+  let Ah := C.base.replaceLink A sourceEdge h
+  let Ak := C.base.replaceLink A sourceEdge k
+  let μh := C.singleLinkDoobConditionalMeasure Omega Ah targetEdge
+  let μk := C.singleLinkDoobConditionalMeasure Omega Ak targetEdge
+  let R : ℝ≥0∞ := ENNReal.ofReal (Real.exp (8 * beta))
+  have hRawProbH : IsProbabilityMeasure (C.singleLinkConditionalMeasure Ah targetEdge) :=
+    continuous_compact_oriented_singleLinkConditionalMeasure_isProbabilityMeasure
+      C Ah targetEdge
+  have hRawProbK : IsProbabilityMeasure (C.singleLinkConditionalMeasure Ak targetEdge) :=
+    continuous_compact_oriented_singleLinkConditionalMeasure_isProbabilityMeasure
+      C Ak targetEdge
+  letI : IsProbabilityMeasure (C.singleLinkConditionalMeasure Ah targetEdge) := hRawProbH
+  letI : IsProbabilityMeasure (C.singleLinkConditionalMeasure Ak targetEdge) := hRawProbK
+  have hProbH : IsProbabilityMeasure μh := by
+    change IsProbabilityMeasure
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumFullSpatialLinkDoobMeasure
+        H N hN beta hbeta Ah target)
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumFullSpatialLinkDoobMeasure_eq]
+    infer_instance
+  have hProbK : IsProbabilityMeasure μk := by
+    change IsProbabilityMeasure
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumFullSpatialLinkDoobMeasure
+        H N hN beta hbeta Ak target)
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumFullSpatialLinkDoobMeasure_eq]
+    infer_instance
+  letI : IsProbabilityMeasure μh := hProbH
+  letI : IsProbabilityMeasure μk := hProbK
+  have hCmpR :
+      μh ≤ (R * R) • μk ∧ μk ≤ (R * R) • μh := by
+    simpa [C, Omega, targetEdge, sourceEdge, Ah, Ak, μh, μk, R] using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuum_sameColor_remoteDoob_pairwise_measure_harnack
+        H N hN beta hbeta hColor hne A h k)
+  have hR2 : R * R = ENNReal.ofReal (Real.exp (16 * beta)) := by
+    dsimp [R]
+    rw [← ENNReal.ofReal_mul (le_of_lt (Real.exp_pos _))]
+    apply congrArg ENNReal.ofReal
+    rw [← Real.exp_add]
+    congr 1
+    ring
+  have hCmp :
+      μh ≤ ENNReal.ofReal (Real.exp (16 * beta)) • μk ∧
+        μk ≤ ENNReal.ofReal (Real.exp (16 * beta)) • μh := by
+    simpa only [hR2] using hCmpR
+  have hK : 1 ≤ Real.exp (16 * beta) := by
+    apply Real.one_le_exp
+    positivity
+  change
+    |(∫ g, phi g ∂μh) - (∫ g, phi g ∂μk)| ≤
+      2 * ((Real.exp (16 * beta) - 1) / (Real.exp (16 * beta) + 1))
+  exact
+    probabilityMeasure_boundedTest_integral_difference_abs_le_of_pairwise_le_smul
+      μh μk (Real.exp (16 * beta)) hK hCmp.1 hCmp.2 phi hphi hphiBound
 
 end
 
