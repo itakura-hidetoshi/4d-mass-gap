@@ -179,8 +179,16 @@ theorem
         periodicHypercubicEvenSpatialSliceOffTargetRestriction target
             (split.symm (targetCfg, retained)) = retained := by
     intro targetCfg retained
-    simpa [split] using
-      congrArg Prod.snd (split.apply_symm_apply (targetCfg, retained))
+    calc
+      periodicHypercubicEvenSpatialSliceOffTargetRestriction target
+          (split.symm (targetCfg, retained)) =
+        (split (split.symm (targetCfg, retained))).2 := by
+          symm
+          simpa only [split] using
+            (periodicHypercubicEvenSpatialSliceTargetOffTargetMeasurableEquiv_snd
+              target (split.symm (targetCfg, retained)))
+      _ = retained := by
+        exact congrArg Prod.snd (split.apply_symm_apply (targetCfg, retained))
   have hOuterSplit :
       ∀ (ctx :
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
@@ -204,8 +212,11 @@ theorem
             H N target F ctx.1 ctx.2 (eval targetCfg) =
           F (ctx.1, split.symm (targetCfg, ctx.2)) := by
     intro ctx targetCfg
-    simp [periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection,
-      eval, split]
+    unfold periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
+    change
+      F (ctx.1, split.symm (eval.symm (eval targetCfg), ctx.2)) =
+        F (ctx.1, split.symm (targetCfg, ctx.2))
+    rw [eval.symm_apply_apply]
   have hRK_R : RK =ᵐ[μ.prod μOff] R := by
     filter_upwards [hκae] with ctx hκctx
     dsimp [RK, R]
@@ -214,6 +225,11 @@ theorem
     unfold doobCenteredSquaredResidual
     apply lintegral_congr
     intro targetCfg
+    change
+      Gsplit ctx targetCfg =
+        ENNReal.ofReal
+          ((periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
+              H N target F ctx.1 ctx.2 (eval targetCfg) - C ctx) ^ 2)
     rw [hSectionSplit ctx targetCfg]
     simp [Gsplit, G, hOuterSplit ctx targetCfg]
   have hR : AEMeasurable R (μ.prod μOff) :=
@@ -259,8 +275,8 @@ theorem
                 H N hN beta hbeta z) *
             G z.1 z.2
           ∂(μ.prod μ)
-    rw [lintegral_withDensity_eq_lintegral_mul₀ hDensity hG]
-    rfl
+    simpa only [Function.uncurry] using
+      (lintegral_withDensity_eq_lintegral_mul₀ hDensity hG)
   calc
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkBoundedCoreCenteredResidualFunctional
         H N hN beta hbeta target F C =
