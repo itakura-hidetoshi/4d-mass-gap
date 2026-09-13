@@ -53,16 +53,13 @@ def
     (k g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ)
     (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
     (g : Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
+  let A' :=
+    periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+      H N A fiber g
   periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
-      H N beta
-      (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
-        H N A fiber g)
-      B target g₂ *
+      H N beta A' B target g₂ *
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-      H N beta
-      (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
-        H N A fiber g)
-      (Function.update B source k)
+      H N beta A' (Function.update B source k)
 
 /-- The C5 raw one-link weight is continuous, hence Haar-integrable. -/
 theorem
