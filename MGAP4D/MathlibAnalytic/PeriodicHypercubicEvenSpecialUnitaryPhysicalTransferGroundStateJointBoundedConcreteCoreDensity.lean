@@ -75,7 +75,7 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointBoundedConcreteCore
         H N hN beta hbeta := by
   let F := Lp.simpleFunc.toSimpleFunc g
-  let bound : ℝ := ∑ y in F.range, ‖y‖
+  let bound : ℝ := F.range.sum (fun y => ‖y‖)
   have hF : StronglyMeasurable (fun z => F z) := F.stronglyMeasurable
   have hbound : ∀ z, ‖F z‖ ≤ bound := by
     intro z
