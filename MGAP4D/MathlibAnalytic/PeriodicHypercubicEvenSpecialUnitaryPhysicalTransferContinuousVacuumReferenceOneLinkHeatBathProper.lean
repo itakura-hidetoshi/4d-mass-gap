@@ -287,7 +287,7 @@ theorem
       _ = periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel
           H N hN beta hbeta B target source fiber k g₂ A Aset := by
           simp [K, FA, hA]
-  · simp only [Set.indicator_of_not_mem' hAB, zero_mul]
+  · simp [hAB]
     calc
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel
           H N hN beta hbeta B target source fiber k g₂ A (Aset ∩ Bset) =
