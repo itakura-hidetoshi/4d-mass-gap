@@ -41,6 +41,41 @@ local instance continuousVacuumReferenceOneLinkRawDoobSpatialLinkFintype
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+/-- Successive normalized Doob tilts compose exactly to the normalized product
+weight once the first normalizing mass is nonzero and finite. -/
+private theorem doobWeightedMeasure_doobWeightedMeasure_eq_mul
+    {α : Type*}
+    [MeasurableSpace α]
+    (μ : Measure α)
+    (q omega : α → ℝ≥0∞)
+    (hq : AEMeasurable q μ)
+    (homega : AEMeasurable omega μ)
+    (hMassZero : doobWeightMass μ q ≠ 0)
+    (hMassTop : doobWeightMass μ q ≠ ∞) :
+    doobWeightedMeasure (doobWeightedMeasure μ q) omega =
+      doobWeightedMeasure μ (q * omega) := by
+  have hMass :
+      doobWeightMass μ q *
+          doobWeightMass (doobWeightedMeasure μ q) omega =
+        doobWeightMass μ (q * omega) := by
+    simpa [doobWeightMass] using
+      doobWeightMass_mul_lintegral_doobWeightedMeasure
+        μ q omega hq homega hMassZero hMassTop
+  change
+    (μ.withDensity (doobWeightedDensity μ q)).withDensity
+        (doobWeightedDensity (doobWeightedMeasure μ q) omega) =
+      μ.withDensity (doobWeightedDensity μ (q * omega))
+  rw [← withDensity_mul₀
+    (hq.div_const (doobWeightMass μ q))
+    (homega.div_const (doobWeightMass (doobWeightedMeasure μ q) omega))]
+  apply withDensity_congr_ae
+  filter_upwards with x
+  change
+    (q x / doobWeightMass μ q) *
+        (omega x / doobWeightMass (doobWeightedMeasure μ q) omega) =
+      (q x * omega x) / doobWeightMass μ (q * omega)
+  rw [div_mul_div_comm, hMass]
+
 /-- The one-slab part of the C5 reference weight before the continuous-vacuum
 factor is inserted.  This is not the full four-dimensional Wilson Gibbs weight. -/
 def
@@ -139,9 +174,8 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRawWeight
   ring
 
-/-- RED specification: after normalizing `local × kernel`, inserting only the
-continuous-vacuum fiber weight should reproduce the literal C5 reference fiber
-probability law exactly. -/
+/-- After normalizing `local × kernel`, inserting only the continuous-vacuum
+fiber weight reproduces the literal C5 reference fiber probability law exactly. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_eq_rawDoob
     (H N : ℕ)
@@ -159,7 +193,120 @@ theorem
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkRawProbabilityMeasure
           H N beta B target source fiber k g₂ A)
         A fiber := by
-  rfl
+  let μ := normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)
+  let replace : Matrix.specialUnitaryGroup (Fin N) ℂ →
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N :=
+    fun g =>
+      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+        H N A fiber g
+  let Local : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ :=
+    fun g =>
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+        H N beta (replace g) B target g₂
+  let K : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ :=
+    fun g =>
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+        H N beta (replace g) (Function.update B source k)
+  let q : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ≥0∞ :=
+    fun g => ENNReal.ofReal
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkRawWeight
+        H N beta B target source fiber k g₂ A g)
+  let omega : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ≥0∞ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumSpatialLinkFiberWeight
+      H N hN beta hbeta A fiber
+  let full : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ≥0∞ :=
+    fun g => ENNReal.ofReal
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight
+        H N hN beta hbeta B target source fiber k g₂ A g)
+  let C : ℝ := Real.exp (8 * beta)
+  letI : IsProbabilityMeasure μ := by
+    dsimp [μ]
+    infer_instance
+  have hReplace : Continuous replace := by
+    simpa [replace] using
+      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_continuous
+        H N A fiber
+  have hLocalCont : Continuous Local := by
+    exact
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_continuous_left
+        H N beta B target g₂).comp hReplace
+  have hKernelCont : Continuous K := by
+    exact
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+        H N beta).comp (hReplace.prodMk continuous_const)
+  have hqMeas : Measurable q := by
+    change Measurable (fun g => ENNReal.ofReal (Local g * K g))
+    exact ENNReal.measurable_ofReal.comp (hLocalCont.mul hKernelCont).measurable
+  have homegaMeas : Measurable omega := by
+    simpa [omega] using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumSpatialLinkFiberWeight_continuous
+        H N hN beta hbeta A fiber).measurable
+  have hqPos : ∀ g, 0 < q g := by
+    intro g
+    change 0 < ENNReal.ofReal (Local g * K g)
+    exact ENNReal.ofReal_pos.mpr
+      (mul_pos
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_pos
+          H N beta (replace g) B target g₂)
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
+          H N beta (replace g) (Function.update B source k)))
+  have hqUpper : ∀ g, q g ≤ ENNReal.ofReal C := by
+    intro g
+    apply ENNReal.ofReal_le_ofReal
+    change Local g * K g ≤ C
+    have hLocalNonneg : 0 ≤ Local g :=
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_pos
+        H N beta (replace g) B target g₂).le
+    have hKernelBound : K g ≤ 1 := by
+      simpa [K] using
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_le_one
+          H N hN beta hbeta (replace g) (Function.update B source k)
+    have hLocalBound : Local g ≤ C := by
+      simpa [Local, C] using
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_le_exp_eight_mul
+          H N hN beta hbeta (replace g) B target g₂
+    calc
+      Local g * K g ≤ Local g * 1 :=
+        mul_le_mul_of_nonneg_left hKernelBound hLocalNonneg
+      _ = Local g := mul_one _
+      _ ≤ C := hLocalBound
+  have hMassPos : 0 < doobWeightMass μ q := by
+    unfold doobWeightMass
+    rw [lintegral_pos_iff_support hqMeas]
+    have hsupp : Function.support q = Set.univ := by
+      ext g
+      simp only [Function.mem_support, Set.mem_univ, iff_true]
+      exact (hqPos g).ne'
+    rw [hsupp]
+    simp [μ]
+  have hMassUpper : doobWeightMass μ q ≤ ENNReal.ofReal C :=
+    doobWeightMass_upper_bound μ q (ENNReal.ofReal C) hqUpper
+  have hMassTop : doobWeightMass μ q ≠ ∞ :=
+    ne_of_lt (lt_of_le_of_lt hMassUpper ENNReal.ofReal_lt_top)
+  have hCompose :
+      doobWeightedMeasure (doobWeightedMeasure μ q) omega =
+        doobWeightedMeasure μ (q * omega) :=
+    doobWeightedMeasure_doobWeightedMeasure_eq_mul
+      μ q omega hqMeas.aemeasurable homegaMeas.aemeasurable
+      (ne_of_gt hMassPos) hMassTop
+  have hFull : full = q * omega := by
+    funext g
+    have hReal := congrFun
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight_eq_vacuum_mul_rawWeight
+        H N hN beta hbeta B target source fiber k g₂ A) g
+    have hOmegaNonneg :
+        0 ≤ periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta (replace g) :=
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos
+        H N hN beta hbeta (replace g)).le
+    dsimp [full]
+    rw [hReal, ENNReal.ofReal_mul hOmegaNonneg]
+    change omega g * q g = q g * omega g
+    exact mul_comm _ _
+  change doobWeightedMeasure μ full =
+    doobWeightedMeasure (doobWeightedMeasure μ q) omega
+  rw [hFull]
+  exact hCompose.symm
 
 end
 
