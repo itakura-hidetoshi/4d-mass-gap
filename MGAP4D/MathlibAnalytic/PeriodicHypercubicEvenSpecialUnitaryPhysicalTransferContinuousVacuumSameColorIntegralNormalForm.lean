@@ -43,6 +43,19 @@ theorem
               H N beta A (Function.update B source h))
         ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := by
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_topNorm_mul_eq_integral_kernel]
+  apply integral_congr_ae
+  filter_upwards with A
+  have hFactor :
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+          H N beta A (Function.update B source h) target g =
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+          H N beta A B target g := by
+    simpa using
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_sameColor_remote_update_eq
+        H N beta A B (target := target) (source := source)
+        hColor hne h (B source) g)
+  rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_update_right_eq_localFactor_mul,
+    hFactor]
 
 end
 
