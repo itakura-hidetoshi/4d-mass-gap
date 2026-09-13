@@ -20,6 +20,11 @@ local instance continuousVacuumReferenceOneLinkRegularConditionalDistributionSpe
     CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
+local instance continuousVacuumReferenceOneLinkRegularConditionalDistributionAmbientMatrixPolishSpace
+    (N : ℕ) :
+    PolishSpace (Matrix (Fin N) (Fin N) ℂ) := by
+  constructor <;> infer_instance
+
 local instance continuousVacuumReferenceOneLinkRegularConditionalDistributionSpecialUnitaryPolishSpace
     (N : ℕ) :
     PolishSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -44,6 +49,20 @@ local instance continuousVacuumReferenceOneLinkRegularConditionalDistributionSpa
     (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
+
+local instance continuousVacuumReferenceOneLinkRegularConditionalDistributionReferenceProbabilityMeasure
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (target source : PeriodicHypercubicEvenSpatialSliceLink H)
+    (k g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    IsProbabilityMeasure
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
+        H N hN beta hbeta B target source k g₂) :=
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure_isProbabilityMeasure
+    H N hN beta hbeta B target source k g₂
 
 /-- The off-fiber reference one-link heat-bath kernel is the regular conditional
 probability kernel of the ambient reference law given the off-fiber sigma-algebra,
