@@ -77,36 +77,11 @@ theorem
   apply Real.continuous_exp.comp
   exact continuous_const.mul ((hAg.sub hAB).add continuous_const)
 
-/-- The canonical physical covariance reference weight is continuous on the
-compact left-boundary configuration space. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight_continuous
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
-    (target source : PeriodicHypercubicEvenSpatialSliceLink H)
-    (k g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ) :
-    Continuous
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
-        H N hN beta hbeta B target source k g₂) := by
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
-  have hKernel : Continuous
-      (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta A (Function.update B source k)) := by
-    exact
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous H N beta).comp
-        (Continuous.prodMk continuous_id continuous_const)
-  exact
-    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
-        H N hN beta hbeta).mul
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_continuous_left
-        H N beta B target g₂)).mul hKernel
-
 /-- The canonical positive reference weight is integrable against spatial Haar
-measure by continuity on the compact finite-link configuration space. -/
+measure.  The proof uses only what normalization actually needs: the continuous
+vacuum is integrable on the compact slice, the exact target-local factor is
+uniformly bounded by `exp (8 * beta)`, and the raw one-slab kernel is in
+`[0,1]`.  No full-product continuity theorem is required. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight_integrable
     (H N : ℕ)
@@ -120,10 +95,93 @@ theorem
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
         H N hN beta hbeta B target source k g₂)
       (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := by
-  exact
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight_continuous
-      H N hN beta hbeta B target source k g₂).integrable_of_hasCompactSupport
-      (HasCompactSupport.of_compactSpace _)
+  let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
+  let Omega :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+      H N hN beta hbeta
+  let C : ℝ := Real.exp (8 * beta)
+  have hOmegaInt : Integrable Omega μ := by
+    exact
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
+        H N hN beta hbeta).integrable_of_hasCompactSupport
+        (HasCompactSupport.of_compactSpace _)
+  have hLocalMeas : AEStronglyMeasurable
+      (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+          H N beta A B target g₂) μ :=
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_continuous_left
+      H N beta B target g₂).aestronglyMeasurable
+  have hKernelMeas : AEStronglyMeasurable
+      (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta A (Function.update B source k)) μ := by
+    exact
+      ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous H N beta).comp
+        (Continuous.prodMk continuous_id continuous_const)).aestronglyMeasurable
+  have hwMeas : AEStronglyMeasurable
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
+        H N hN beta hbeta B target source k g₂) μ := by
+    unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
+    exact
+      ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
+        H N hN beta hbeta).aestronglyMeasurable.mul hLocalMeas).mul hKernelMeas
+  have hdom : Integrable (fun A => C * Omega A) μ :=
+    hOmegaInt.const_mul C
+  apply hdom.mono' hwMeas
+  filter_upwards with A
+  have hOmegaNonneg : 0 ≤ Omega A := by
+    exact
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos
+        H N hN beta hbeta A).le
+  have hLocalNonneg :
+      0 ≤ periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+        H N beta A B target g₂ :=
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_pos
+      H N beta A B target g₂).le
+  have hKernelNonneg :
+      0 ≤ periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+        H N beta A (Function.update B source k) :=
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
+      H N beta A (Function.update B source k)).le
+  have hLocalBound :
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+          H N beta A B target g₂ ≤ C := by
+    simpa [C] using
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_le_exp_eight_mul
+        H N hN beta hbeta A B target g₂
+  have hKernelBound :
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta A (Function.update B source k) ≤ 1 :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_le_one
+      H N hN beta hbeta A (Function.update B source k)
+  have hCNonneg : 0 ≤ C := (Real.exp_pos _).le
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
+  dsimp [Omega, C] at hOmegaNonneg ⊢
+  rw [Real.norm_eq_abs,
+    abs_of_nonneg (mul_nonneg (mul_nonneg hOmegaNonneg hLocalNonneg) hKernelNonneg),
+    abs_of_nonneg (mul_nonneg hCNonneg hOmegaNonneg)]
+  calc
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta A *
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+          H N beta A B target g₂) *
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta A (Function.update B source k) ≤
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta A *
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+          H N beta A B target g₂) * 1 :=
+      mul_le_mul_of_nonneg_left hKernelBound (mul_nonneg hOmegaNonneg hLocalNonneg)
+    _ = periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta A *
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+          H N beta A B target g₂ := by ring
+    _ ≤ periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta A * Real.exp (8 * beta) :=
+      mul_le_mul_of_nonneg_left hLocalBound hOmegaNonneg
+    _ = Real.exp (8 * beta) *
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta A := by ring
 
 /-- Real partition function of the localized continuous-vacuum reference
 weight. -/
