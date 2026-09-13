@@ -70,53 +70,128 @@ theorem
         R * Omega (C.base.replaceLink A
           (periodicHypercubicEvenSpatialSliceLinkEmbedding H source) g) := by
   dsimp only
-  let C := periodicHypercubicSpecialUnitaryWilsonSystem
-    (PeriodicHypercubicEvenSideLength H) N hN beta hbeta
   let B := periodicHypercubicEvenSpatialSliceRestriction A
+  let omega :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+      H N hN beta hbeta
   have hRestrictG :=
     periodicHypercubicEvenSpecialUnitarySpatialSliceRestriction_replaceLink_continuousVacuum
       H N hN beta hbeta A source g
   have hRestrictH :=
     periodicHypercubicEvenSpecialUnitarySpatialSliceRestriction_replaceLink_continuousVacuum
       H N hN beta hbeta A source h
+  have hRestrictG' :
+      periodicHypercubicEvenSpatialSliceRestriction
+          ((periodicHypercubicSpecialUnitaryWilsonSystem
+            (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.replaceLink
+            A (periodicHypercubicEvenSpatialSliceLinkEmbedding H source) g) =
+        periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+          H N B source g := by
+    simpa [B] using hRestrictG
+  have hRestrictH' :
+      periodicHypercubicEvenSpatialSliceRestriction
+          ((periodicHypercubicSpecialUnitaryWilsonSystem
+            (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.replaceLink
+            A (periodicHypercubicEvenSpatialSliceLinkEmbedding H source) h) =
+        periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+          H N B source h := by
+    simpa [B] using hRestrictH
+  have hValueG := congrArg omega hRestrictG'
+  have hValueH := congrArg omega hRestrictH'
   have hVac :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_update_right_pairwise_harnack
       H N hN beta hbeta B source g h
   have hVacG :
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-          H N hN beta hbeta
+      omega
           (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
             H N B source g) ≤
         Real.exp (8 * beta) *
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-            H N hN beta hbeta
+          omega
             (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
               H N B source h) := by
-    simpa [periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink]
+    simpa [omega, periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink]
       using hVac.1
   have hVacH :
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-          H N hN beta hbeta
+      omega
           (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
             H N B source h) ≤
         Real.exp (8 * beta) *
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-            H N hN beta hbeta
+          omega
             (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
               H N B source g) := by
-    simpa [periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink]
+    simpa [omega, periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink]
       using hVac.2
+  have hRealG :
+      omega
+          (periodicHypercubicEvenSpatialSliceRestriction
+            ((periodicHypercubicSpecialUnitaryWilsonSystem
+              (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.replaceLink
+              A (periodicHypercubicEvenSpatialSliceLinkEmbedding H source) g)) ≤
+        Real.exp (8 * beta) *
+          omega
+            (periodicHypercubicEvenSpatialSliceRestriction
+              ((periodicHypercubicSpecialUnitaryWilsonSystem
+                (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.replaceLink
+                A (periodicHypercubicEvenSpatialSliceLinkEmbedding H source) h)) := by
+    calc
+      omega
+          (periodicHypercubicEvenSpatialSliceRestriction
+            ((periodicHypercubicSpecialUnitaryWilsonSystem
+              (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.replaceLink
+              A (periodicHypercubicEvenSpatialSliceLinkEmbedding H source) g)) =
+        omega
+          (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+            H N B source g) := hValueG
+      _ ≤ Real.exp (8 * beta) *
+          omega
+            (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+              H N B source h) := hVacG
+      _ = Real.exp (8 * beta) *
+          omega
+            (periodicHypercubicEvenSpatialSliceRestriction
+              ((periodicHypercubicSpecialUnitaryWilsonSystem
+                (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.replaceLink
+                A (periodicHypercubicEvenSpatialSliceLinkEmbedding H source) h)) := by
+        exact congrArg (fun x : ℝ => Real.exp (8 * beta) * x) hValueH.symm
+  have hRealH :
+      omega
+          (periodicHypercubicEvenSpatialSliceRestriction
+            ((periodicHypercubicSpecialUnitaryWilsonSystem
+              (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.replaceLink
+              A (periodicHypercubicEvenSpatialSliceLinkEmbedding H source) h)) ≤
+        Real.exp (8 * beta) *
+          omega
+            (periodicHypercubicEvenSpatialSliceRestriction
+              ((periodicHypercubicSpecialUnitaryWilsonSystem
+                (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.replaceLink
+                A (periodicHypercubicEvenSpatialSliceLinkEmbedding H source) g)) := by
+    calc
+      omega
+          (periodicHypercubicEvenSpatialSliceRestriction
+            ((periodicHypercubicSpecialUnitaryWilsonSystem
+              (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.replaceLink
+              A (periodicHypercubicEvenSpatialSliceLinkEmbedding H source) h)) =
+        omega
+          (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+            H N B source h) := hValueH
+      _ ≤ Real.exp (8 * beta) *
+          omega
+            (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+              H N B source g) := hVacH
+      _ = Real.exp (8 * beta) *
+          omega
+            (periodicHypercubicEvenSpatialSliceRestriction
+              ((periodicHypercubicSpecialUnitaryWilsonSystem
+                (PeriodicHypercubicEvenSideLength H) N hN beta hbeta).base.replaceLink
+                A (periodicHypercubicEvenSpatialSliceLinkEmbedding H source) g)) := by
+        exact congrArg (fun x : ℝ => Real.exp (8 * beta) * x) hValueG.symm
   constructor
   · unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumFullConfigurationWeight
     rw [← ENNReal.ofReal_mul (le_of_lt (Real.exp_pos _))]
-    apply ENNReal.ofReal_le_ofReal
-    rw [hRestrictG, hRestrictH]
-    exact hVacG
+    exact ENNReal.ofReal_le_ofReal hRealG
   · unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumFullConfigurationWeight
     rw [← ENNReal.ofReal_mul (le_of_lt (Real.exp_pos _))]
-    apply ENNReal.ofReal_le_ofReal
-    rw [hRestrictH, hRestrictG]
-    exact hVacH
+    exact ENNReal.ofReal_le_ofReal hRealH
 
 /-- After a target value has been fixed, changing any second spatial link still
 changes the physical continuous-vacuum Doob weight by at most `exp (8 * beta)`
