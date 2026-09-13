@@ -75,7 +75,10 @@ private theorem doobWeightedMeasure_doobWeightedMeasure_eq_mul
     (q x / doobWeightMass μ q) *
         (omega x / doobWeightMass (doobWeightedMeasure μ q) omega) =
       (q x * omega x) / doobWeightMass μ (q * omega)
-  rw [div_mul_div_comm, hMass]
+  rw [← hMass]
+  simp only [div_eq_mul_inv]
+  rw [ENNReal.mul_inv (Or.inl hMassZero) (Or.inl hMassTop)]
+  ac_rfl
 
 /-- The one-slab part of the C5 reference weight before the continuous-vacuum
 factor is inserted.  This is not the full four-dimensional Wilson Gibbs weight. -/
@@ -225,16 +228,16 @@ theorem
     simpa [replace] using
       periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_continuous
         H N A fiber
-  have hLocalCont : Continuous Local := by
+  have hLocalMeas : Measurable Local := by
     exact
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_continuous_left
-        H N beta B target g₂).comp hReplace
-  have hKernelCont : Continuous K := by
+      ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_continuous_left
+        H N beta B target g₂).comp hReplace).measurable
+  have hKernelMeas : Measurable K := by
     exact
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-        H N beta).comp (hReplace.prodMk continuous_const)
+      ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+        H N beta).comp (hReplace.prodMk continuous_const)).measurable
   have hqMeas : Measurable q :=
-    ENNReal.measurable_ofReal.comp (hLocalCont.mul hKernelCont).measurable
+    ENNReal.measurable_ofReal.comp (hLocalMeas.mul hKernelMeas)
   have homegaMeas : Measurable omega := by
     simpa [omega] using
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumSpatialLinkFiberWeight_continuous
