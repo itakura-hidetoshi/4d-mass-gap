@@ -74,47 +74,59 @@ theorem
   let μ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
       H N hN beta hbeta B target source k g₂
+  let hle :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace_le
+      H N fiber
+  let μBoff : @Measure
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber) :=
+    (μ.restrict Bset).trim hle
   have hRestricted : Koff ∘ₘ μ.restrict Bset = μ.restrict Bset := by
     simpa [Koff, μ] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel_comp_restrict_referenceProbabilityMeasure
         H N hN beta hbeta B target source fiber k g₂ Bset hB
   have hfRestr : Integrable f (μ.restrict Bset) := by
     simpa [μ] using (hf.restrict (s := Bset))
-  have hfComp : Integrable f (Koff ∘ₘ μ.restrict Bset) := by
-    rw [hRestricted]
-    exact hfRestr
-  have hCompConst :
-      Koff ∘ₘ μ.restrict Bset =
-        (Koff ∘ₖ Kernel.const Unit (μ.restrict Bset)) () :=
-    Measure.comp_eq_comp_const_apply
+  have hCompTrim :
+      (Koff ∘ₖ Kernel.const Unit μBoff) () = Koff ∘ₘ μ.restrict Bset := by
+    ext s hs
+    rw [Kernel.comp_apply' _ _ _ hs, Kernel.const_apply,
+      Measure.bind_apply hs (Koff.measurable.mono hle le_rfl).aemeasurable]
+    simpa [μBoff] using
+      (lintegral_trim hle (Koff.measurable_coe hs))
+  have hKernelStat :
+      (Koff ∘ₖ Kernel.const Unit μBoff) () = μ.restrict Bset :=
+    hCompTrim.trans hRestricted
   have hfKernelComp :
-      Integrable f ((Koff ∘ₖ Kernel.const Unit (μ.restrict Bset)) ()) :=
-    hCompConst ▸ hfComp
+      Integrable f ((Koff ∘ₖ Kernel.const Unit μBoff) ()) := by
+    rw [hKernelStat]
+    exact hfRestr
   have hFubini :=
     ProbabilityTheory.integral_comp
-      (κ := Kernel.const Unit (μ.restrict Bset))
+      (κ := Kernel.const Unit μBoff)
       (η := Koff)
       (a := ())
       hfKernelComp
-  have hFubiniKernel :
-      (∫ C, f C ∂((Koff ∘ₖ Kernel.const Unit (μ.restrict Bset)) ())) =
-        ∫ A, (∫ C, f C ∂Koff A) ∂μ.restrict Bset := by
+  have hFubiniOff :
+      (∫ C, f C ∂((Koff ∘ₖ Kernel.const Unit μBoff) ())) =
+        ∫ A, (∫ C, f C ∂Koff A) ∂μBoff := by
     simpa only [Kernel.const_apply] using hFubini
-  have hIntegralCompConst :
-      (∫ C, f C ∂(Koff ∘ₘ μ.restrict Bset)) =
-        ∫ C, f C ∂((Koff ∘ₖ Kernel.const Unit (μ.restrict Bset)) ()) :=
-    congrArg (fun ν => ∫ C, f C ∂ν) hCompConst
-  have hFubiniMeasure :
-      (∫ C, f C ∂(Koff ∘ₘ μ.restrict Bset)) =
-        ∫ A, (∫ C, f C ∂Koff A) ∂μ.restrict Bset :=
-    hIntegralCompConst.trans hFubiniKernel
+  have hgOff :
+      Integrable (fun A => ∫ C, f C ∂Koff A) μBoff := by
+    simpa only [Kernel.const_apply] using hfKernelComp.integral_comp
+  have hOuterTrim :
+      (∫ A, (∫ C, f C ∂Koff A) ∂μ.restrict Bset) =
+        ∫ A, (∫ C, f C ∂Koff A) ∂μBoff := by
+    simpa [μBoff] using
+      (integral_trim_ae hle hgOff.aestronglyMeasurable)
   have hFinal :
       (∫ A, (∫ C, f C ∂Koff A) ∂μ.restrict Bset) =
         ∫ A, f A ∂μ.restrict Bset := by
     calc
       (∫ A, (∫ C, f C ∂Koff A) ∂μ.restrict Bset) =
-          ∫ C, f C ∂(Koff ∘ₘ μ.restrict Bset) := hFubiniMeasure.symm
-      _ = ∫ C, f C ∂μ.restrict Bset := by rw [hRestricted]
+          ∫ A, (∫ C, f C ∂Koff A) ∂μBoff := hOuterTrim
+      _ = ∫ C, f C ∂((Koff ∘ₖ Kernel.const Unit μBoff) ()) := hFubiniOff.symm
+      _ = ∫ C, f C ∂μ.restrict Bset := by rw [hKernelStat]
   simpa [Koff, μ] using hFinal
 
 end
