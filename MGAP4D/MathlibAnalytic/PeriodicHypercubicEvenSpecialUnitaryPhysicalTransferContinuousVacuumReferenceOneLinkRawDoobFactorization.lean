@@ -72,19 +72,18 @@ def
     (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
       H N A fiber g)
 
-/-- The C5 raw one-link weight is continuous, hence Haar-integrable. -/
+/-- The C5 raw one-link weight is continuous on the compact `SU(N)` fiber. -/
 theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkRawWeight_integrable
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkRawWeight_continuous
     (H N : ℕ)
     (beta : ℝ)
     (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
     (target source fiber : PeriodicHypercubicEvenSpatialSliceLink H)
     (k g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ)
     (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
-    Integrable
+    Continuous
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkRawWeight
-        H N beta B target source fiber k g₂ A)
-      (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)) := by
+        H N beta B target source fiber k g₂ A) := by
   let replace : Matrix.specialUnitaryGroup (Fin N) ℂ →
       PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N :=
     fun g =>
@@ -104,12 +103,10 @@ theorem
         H N beta (replace g) (Function.update B source k)) :=
     (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
       H N beta).comp (hReplace.prodMk continuous_const)
-  have hCont := hLocal.mul hKernel
   simpa [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkRawWeight,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRawWeight,
-    replace] using
-    hCont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    replace] using hLocal.mul hKernel
 
 /-- The C5 raw one-link weight is strictly positive. -/
 theorem
