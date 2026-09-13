@@ -135,7 +135,19 @@ theorem realIntegralWeightedCovarianceNumerator_eq_mass_sq_mul_probabilityCovari
       (∫ x, w x ∂μ) ^ 2 *
         realIntegralCovariance
           (realIntegralWeightedProbabilityMeasure μ w) f g := by
-  rfl
+  have hJoint :=
+    realIntegralWeightedProbabilityMeasure_integral
+      μ w (fun x => f x * g x) hwInt hwNonneg hMassPos
+  have hLeft :=
+    realIntegralWeightedProbabilityMeasure_integral
+      μ w f hwInt hwNonneg hMassPos
+  have hRight :=
+    realIntegralWeightedProbabilityMeasure_integral
+      μ w g hwInt hwNonneg hMassPos
+  unfold realIntegralWeightedCovarianceNumerator realIntegralCovariance
+  rw [hJoint, hLeft, hRight]
+  field_simp [ne_of_gt hMassPos]
+  <;> ring
 
 end
 
