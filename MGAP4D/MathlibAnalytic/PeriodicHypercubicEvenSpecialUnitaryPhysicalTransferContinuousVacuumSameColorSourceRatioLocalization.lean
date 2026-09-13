@@ -118,7 +118,50 @@ theorem
         (fun A =>
           specialUnitaryWilsonRelativeKernel N beta (A source) h /
             specialUnitaryWilsonRelativeKernel N beta (A source) k) := by
-  rfl
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_sameColor_remote_crossRatio_defect_eq_weightedCovarianceNumerator
+      H N hN beta hbeta B (target := target) (source := source)
+      hColor hne h k g₁ g₂]
+  have hSourceRatio :
+      (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A
+              (Function.update B source h) /
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A
+              (Function.update B source k)) =
+        (fun A =>
+          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetSpatialHalfUpdateFactor
+              H N beta B source h /
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetSpatialHalfUpdateFactor
+              H N beta B source k) *
+          (specialUnitaryWilsonRelativeKernel N beta (A source) h /
+            specialUnitaryWilsonRelativeKernel N beta (A source) k)) := by
+    funext A
+    exact
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_source_update_ratio_eq_spatialHalfUpdateFactor_ratio_mul_crossingRatio
+        H N beta A B source h k
+  rw [hSourceRatio]
+  exact
+    realIntegralWeightedCovarianceNumerator_const_mul_right
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
+      (fun A =>
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+            H N hN beta hbeta).1 A *
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+            H N beta A B target g₂ *
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+            H N beta A (Function.update B source k))
+      (fun A =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+            H N beta A B target g₁ /
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+            H N beta A B target g₂)
+      (fun A =>
+        specialUnitaryWilsonRelativeKernel N beta (A source) h /
+          specialUnitaryWilsonRelativeKernel N beta (A source) k)
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetSpatialHalfUpdateFactor
+          H N beta B source h /
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetSpatialHalfUpdateFactor
+          H N beta B source k)
 
 end
 
