@@ -66,7 +66,66 @@ theorem
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
           H N hN beta hbeta B target source k g₂)
         f := by
-  apply MeasureTheory.ae_eq_condExp_of_forall_setIntegral_eq
+  let Koff :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel
+      H N hN beta hbeta B target source fiber k g₂
+  let μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
+      H N hN beta hbeta B target source k g₂
+  let hle :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace_le
+      H N fiber
+  let μoff : @Measure
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber) :=
+    μ.trim hle
+  have hStat : Koff ∘ₘ μ = μ := by
+    simpa [Koff, μ] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel_comp_referenceProbabilityMeasure
+        H N hN beta hbeta B target source fiber k g₂
+  have hCompTrim :
+      (Koff ∘ₖ Kernel.const Unit μoff) () = Koff ∘ₘ μ := by
+    ext s hs
+    rw [Kernel.comp_apply' _ _ _ hs, Kernel.const_apply,
+      Measure.bind_apply hs (Koff.measurable.mono hle le_rfl).aemeasurable]
+    simpa [μoff] using
+      (lintegral_trim hle (Koff.measurable_coe hs))
+  have hKernelStat :
+      (Koff ∘ₖ Kernel.const Unit μoff) () = μ :=
+    hCompTrim.trans hStat
+  have hfKernelComp :
+      Integrable f ((Koff ∘ₖ Kernel.const Unit μoff) ()) := by
+    rw [hKernelStat]
+    simpa [μ] using hf
+  have hgOff :
+      Integrable (fun A => ∫ C, f C ∂Koff A) μoff := by
+    simpa only [Kernel.const_apply] using hfKernelComp.integral_comp
+  have hg :
+      Integrable (fun A => ∫ C, f C ∂Koff A) μ := by
+    apply integrable_of_integrable_trim hle
+    simpa [μoff] using hgOff
+  have hgmTrim :
+      AEStronglyMeasurable
+        (fun A => ∫ C, f C ∂Koff A) (μ.trim hle) := by
+    simpa [μoff] using hgOff.aestronglyMeasurable
+  have hgm :
+      AEStronglyMeasurable[
+        periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber]
+        (fun A => ∫ C, f C ∂Koff A) μ := by
+    exact hgmTrim.of_trim hle
+  have hCE :
+      (fun A => ∫ C, f C ∂Koff A) =ᵐ[μ]
+        MeasureTheory.condExp
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber)
+          μ f := by
+    refine MeasureTheory.ae_eq_condExp_of_forall_setIntegral_eq hle hf ?_ ?_ hgm
+    · intro s _ _
+      exact hg.integrableOn
+    · intro s hs _
+      simpa [Koff, μ] using
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel_setIntegral_integral_eq
+          H N hN beta hbeta B target source fiber k g₂ f hf s hs
+  simpa [Koff, μ] using hCE
 
 end
 
