@@ -140,14 +140,19 @@ theorem
   have hInt :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight_integrable
       H N hN beta hbeta B target source fiber (B source) g₂ A
-  have hUpdate : Function.update B source (B source) = B := by
-    exact Function.update_eq_self source B
-  simpa [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkDistinctSourceBaseFiberWeight,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkCommonTargetWeight,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight,
-    hUpdate] using hInt
+  have hEq :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight
+          H N hN beta hbeta B target source fiber (B source) g₂ A =
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkDistinctSourceBaseFiberWeight
+          H N hN beta hbeta B target fiber g₂ A := by
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight_eq_commonTargetWeight_mul_sourceKernel]
+    funext g
+    unfold
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkSourceKernel
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkDistinctSourceBaseFiberWeight
+    rw [Function.update_eq_self]
+  rw [← hEq]
+  exact hInt
 
 /-- For distinct source and fiber, the full literal C5 fiber weight is exactly a
 positive source scalar times one common base fiber weight. -/
