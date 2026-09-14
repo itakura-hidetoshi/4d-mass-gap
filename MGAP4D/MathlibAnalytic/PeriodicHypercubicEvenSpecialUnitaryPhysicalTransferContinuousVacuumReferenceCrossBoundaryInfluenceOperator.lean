@@ -98,6 +98,22 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundary_diagonalCoefficient_lt_one_of_beta_lt
       beta hBetaLt
 
+/-- RED theorem for the bounded-profile pointwise operator contraction. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator_abs_le_coefficient_mul
+    (H : ℕ)
+    (beta M : ℝ)
+    (hbeta : 0 ≤ beta)
+    (hM : 0 ≤ M)
+    (variation : PeriodicHypercubicEvenSpatialSliceLink H → ℝ)
+    (hvariation : ∀ source, |variation source| ≤ M)
+    (fiber : PeriodicHypercubicEvenSpatialSliceLink H) :
+    |periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator
+        H beta variation fiber| ≤
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+        beta * M := by
+  rfl
+
 end
 
 end MathlibAnalytic
