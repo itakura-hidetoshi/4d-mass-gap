@@ -68,8 +68,9 @@ theorem
         simp [
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedInfluence]
 
-/-- RED carrier: the global diagonal is structurally zero only after exposing
-the left/right `Sum` tag of the index. -/
+/-- The global diagonal is structurally zero because each tagged index lies
+entirely in one boundary copy, whereas the represented block runs from the
+right copy to the left copy. -/
 noncomputable def
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
     (H : ℕ)
@@ -87,7 +88,7 @@ noncomputable def
         H beta hbeta
     influence_diagonal_zero := by
       intro e
-      rfl }
+      cases e <;> rfl }
 
 end
 
