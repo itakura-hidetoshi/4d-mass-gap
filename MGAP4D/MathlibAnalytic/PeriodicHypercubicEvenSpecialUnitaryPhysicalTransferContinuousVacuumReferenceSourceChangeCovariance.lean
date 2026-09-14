@@ -28,7 +28,22 @@ theorem realIntegralWeightedProbabilityMeasure_sourceChange_cross_mul_eq_weighte
         ((∫ x, f x ∂realIntegralWeightedProbabilityMeasure μ (fun x => w x * r x)) -
           ∫ x, f x ∂realIntegralWeightedProbabilityMeasure μ w) =
       realIntegralWeightedCovarianceNumerator μ w f r := by
-  rfl
+  have hTilt :=
+    realIntegralWeightedProbabilityMeasure_integral
+      μ (fun x => w x * r x) f hwrInt hwrNonneg hTiltMassPos
+  have hBase :=
+    realIntegralWeightedProbabilityMeasure_integral
+      μ w f hwInt hwNonneg hMassPos
+  have hJoint :
+      (∫ x, (w x * r x) * f x ∂μ) =
+        ∫ x, w x * (f x * r x) ∂μ := by
+    apply integral_congr_ae
+    filter_upwards with x
+    ring
+  rw [hTilt, hBase, hJoint]
+  unfold realIntegralWeightedCovarianceNumerator
+  field_simp [ne_of_gt hMassPos, ne_of_gt hTiltMassPos]
+  <;> ring
 
 end
 
