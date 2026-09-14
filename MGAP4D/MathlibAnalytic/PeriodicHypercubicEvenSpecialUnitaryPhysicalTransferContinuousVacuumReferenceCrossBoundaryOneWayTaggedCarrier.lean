@@ -31,8 +31,7 @@ noncomputable def
         beta fiber source
   | _, _ => 0
 
-/-- RED theorem: nonnegativity is not definitionally reducible in the populated
-left-target/right-source block. -/
+/-- The one-way tagged influence is nonnegative at nonnegative coupling. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedInfluence_nonneg
     (H : ℕ)
@@ -45,7 +44,29 @@ theorem
     0 ≤
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedInfluence
         H beta target source := by
-  rfl
+  cases target with
+  | inl fiber =>
+      cases source with
+      | inl source =>
+          simp [
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedInfluence]
+      | inr source =>
+          by_cases hsource : source = fiber
+          · subst source
+            simpa [
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedInfluence,
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant,
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient] using
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient_nonneg
+                beta hbeta
+          · simp [
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedInfluence,
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant,
+              hsource]
+  | inr target =>
+      cases source <;>
+        simp [
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedInfluence]
 
 end
 
