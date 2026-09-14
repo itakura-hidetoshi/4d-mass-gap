@@ -67,7 +67,21 @@ theorem
     0 ≤
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
         beta := by
-  rfl
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+  have hExpOne : (1 : ℝ) ≤ Real.exp (8 * beta) := by
+    rw [← Real.exp_zero]
+    exact Real.exp_le_exp.mpr (by nlinarith)
+  have hNum : 0 ≤ (Real.exp (8 * beta)) ^ 2 - 1 := by
+    calc
+      0 ≤
+          (Real.exp (8 * beta) - 1) *
+            (Real.exp (8 * beta) + 1) :=
+        mul_nonneg (sub_nonneg.mpr hExpOne) (by positivity)
+      _ = (Real.exp (8 * beta)) ^ 2 - 1 := by ring
+  have hDen : 0 ≤ (Real.exp (8 * beta)) ^ 2 + 1 := by
+    positivity
+  exact mul_nonneg (by norm_num) (div_nonneg hNum hDen)
 
 end
 
