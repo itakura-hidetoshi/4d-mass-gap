@@ -84,7 +84,44 @@ theorem
                 (PeriodicHypercubicEvenSpatialSliceLink H))
               (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
                 beta) ^ n * magnitude) := by
-  exact le_rfl
+  have hSum :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTagged_expectationDiscrepancy_singleton_sum_source_le_resolvent_add_geometricResidual
+      H beta hbeta hBetaLt f P C hDomination sourceEnvelope
+      hEnvelopeNonneg hEnvelope magnitude hMagnitude hSingleton n
+  have hCard :
+      0 < Fintype.card
+        (Sum
+          (PeriodicHypercubicEvenSpatialSliceLink H)
+          (PeriodicHypercubicEvenSpatialSliceLink H)) :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedIndex_card_pos
+      H
+  have hInvNonneg :
+      0 ≤
+        (Fintype.card
+          (Sum
+            (PeriodicHypercubicEvenSpatialSliceLink H)
+            (PeriodicHypercubicEvenSpatialSliceLink H)) : ℝ)⁻¹ :=
+    inv_nonneg.mpr (Nat.cast_nonneg _)
+  have hScaled := mul_le_mul_of_nonneg_left hSum hInvNonneg
+  have hCardNe :
+      (Fintype.card
+        (Sum
+          (PeriodicHypercubicEvenSpatialSliceLink H)
+          (PeriodicHypercubicEvenSpatialSliceLink H)) : ℝ) ≠ 0 := by
+    exact_mod_cast Nat.ne_of_gt hCard
+  have hCoefficientLtOne :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+          beta < 1 :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient_lt_one_of_beta_lt
+      beta hBetaLt
+  have hGapNe :
+      1 -
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+            beta ≠ 0 :=
+    ne_of_gt (sub_pos.mpr hCoefficientLtOne)
+  exact hScaled.trans_eq (by
+    field_simp [hCardNe, hGapNe]
+    <;> ring)
 
 end
 
