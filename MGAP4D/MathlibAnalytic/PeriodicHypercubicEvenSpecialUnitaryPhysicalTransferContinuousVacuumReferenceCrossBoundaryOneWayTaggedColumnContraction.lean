@@ -202,6 +202,38 @@ theorem
           H beta hbeta source)
       variation hVariationNonneg bound hBoundNonneg hVariationBound source
 
+/-- RED probe: iteration of the same tagged one-way carrier should contract the
+supremum profile by the reciprocal rate to the `n`th power. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTagged_randomScanVariationIterate_le_rate_pow_mul
+    (H : ℕ)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (variation :
+      Sum
+        (PeriodicHypercubicEvenSpatialSliceLink H)
+        (PeriodicHypercubicEvenSpatialSliceLink H) → ℝ)
+    (hVariationNonneg : ∀ e, 0 ≤ variation e)
+    (bound : ℝ)
+    (hBoundNonneg : 0 ≤ bound)
+    (hVariationBound : ∀ e, variation e ≤ bound)
+    (n : ℕ)
+    (source :
+      Sum
+        (PeriodicHypercubicEvenSpatialSliceLink H)
+        (PeriodicHypercubicEvenSpatialSliceLink H)) :
+    finiteInfluenceKernelRandomScanVariationIterate
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+          H beta hbeta)
+        variation n source ≤
+      finiteInfluenceKernelReciprocalRandomScanRate
+          (Sum
+            (PeriodicHypercubicEvenSpatialSliceLink H)
+            (PeriodicHypercubicEvenSpatialSliceLink H))
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+            beta) ^ n * bound := by
+  rfl
+
 end
 
 end MathlibAnalytic
