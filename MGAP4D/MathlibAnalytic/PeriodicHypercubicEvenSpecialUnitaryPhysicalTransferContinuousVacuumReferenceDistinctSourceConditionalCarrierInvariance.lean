@@ -82,8 +82,10 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalKernel_eq_of_source_ne_fiber
       H N hN beta hbeta B target source fiber k₁ k₂ g₂ hNe]
 
-/-- RED probe for the analytic consequence of exact reference heat-bath kernel
-invariance under a distinct source-value change. -/
+/-- Every real test has exactly zero source-value influence under the C5
+reference heat-bath carrier whenever the changed source is distinct from the
+resampled fiber.  No boundedness, decay, or integrability hypothesis is needed:
+the two measures are literally equal before integration. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_realTest_influence_eq_zero_of_source_ne_fiber
     (H N : ℕ)
@@ -102,7 +104,38 @@ theorem
       (∫ C, F C
         ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
           H N hN beta hbeta B target source fiber k₂ g₂ A)| = 0 := by
-  rfl
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_eq_of_source_ne_fiber
+      H N hN beta hbeta B target source fiber k₁ k₂ g₂ hNe]
+  simp
+
+/-- Same-color remote specialization on the target fiber.  The color hypothesis
+records the intended block geometry; the exact cancellation itself is stronger
+and uses only `target ≠ source`. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReference_sameColor_remoteHeatBath_realTest_influence_eq_zero
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    {target source : PeriodicHypercubicEvenSpatialSliceLink H}
+    (hColor : periodicHypercubicEvenSpatialSliceLinkColor H target =
+      periodicHypercubicEvenSpatialSliceLinkColor H source)
+    (hne : target ≠ source)
+    (k₁ k₂ g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ)
+    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (F : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ) :
+    |(∫ C, F C
+        ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
+          H N hN beta hbeta B target source target k₁ g₂ A) -
+      (∫ C, F C
+        ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
+          H N hN beta hbeta B target source target k₂ g₂ A)| = 0 := by
+  have _hColor := hColor
+  exact
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_realTest_influence_eq_zero_of_source_ne_fiber
+      H N hN beta hbeta B target source target k₁ k₂ g₂ (Ne.symm hne) A F
 
 end
 
