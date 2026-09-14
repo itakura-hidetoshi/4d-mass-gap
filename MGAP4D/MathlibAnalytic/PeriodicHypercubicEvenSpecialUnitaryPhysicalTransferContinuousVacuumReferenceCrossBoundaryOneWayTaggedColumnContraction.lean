@@ -13,8 +13,8 @@ local instance referenceCrossBoundaryOneWayTaggedColumnSpatialLinkFintype
     (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
-/-- RED probe: a right-tag source column should collapse to the same single
-matching-coordinate C5 contraction coefficient. -/
+/-- A right-tag source column collapses to the same single matching-coordinate
+C5 contraction coefficient. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData_rightColumnSum_eq_coefficient
     (H : ℕ)
@@ -27,7 +27,23 @@ theorem
         (Sum.inr source) =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
         beta := by
-  rfl
+  classical
+  unfold finiteInfluenceKernelColumnSum
+  rw [Fintype.sum_sum_type]
+  simp only [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedInfluence,
+    Finset.sum_const_zero,
+    add_zero]
+  rw [Finset.sum_eq_single source]
+  · simp [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient]
+  · intro fiber _hfiber hne
+    simp [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant,
+      Ne.symm hne]
+  · simp
 
 end
 
