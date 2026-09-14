@@ -82,6 +82,28 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalKernel_eq_of_source_ne_fiber
       H N hN beta hbeta B target source fiber k₁ k₂ g₂ hNe]
 
+/-- RED probe for the analytic consequence of exact reference heat-bath kernel
+invariance under a distinct source-value change. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_realTest_influence_eq_zero_of_source_ne_fiber
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (target source fiber : PeriodicHypercubicEvenSpatialSliceLink H)
+    (k₁ k₂ g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ)
+    (hNe : source ≠ fiber)
+    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (F : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ) :
+    |(∫ C, F C
+        ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
+          H N hN beta hbeta B target source fiber k₁ g₂ A) -
+      (∫ C, F C
+        ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
+          H N hN beta hbeta B target source fiber k₂ g₂ A)| = 0 := by
+  rfl
+
 end
 
 end MathlibAnalytic
