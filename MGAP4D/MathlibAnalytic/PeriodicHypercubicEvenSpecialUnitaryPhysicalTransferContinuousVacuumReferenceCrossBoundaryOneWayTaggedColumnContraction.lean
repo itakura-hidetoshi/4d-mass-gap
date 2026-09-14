@@ -158,8 +158,8 @@ theorem
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient_lt_one_of_beta_lt
         beta hBetaLt)
 
-/-- RED probe: the tagged C5 column certificate should feed directly into the
-generic reciprocal random-scan one-step response bound. -/
+/-- The tagged C5 column certificate feeds directly into the generic reciprocal
+random-scan one-step response bound. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTagged_randomScanUpdatedVariation_le_rate_mul
     (H : ℕ)
@@ -187,7 +187,20 @@ theorem
             (PeriodicHypercubicEvenSpatialSliceLink H))
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
             beta) * bound := by
-  rfl
+  exact
+    finiteInfluenceKernelRandomScanUpdatedVariation_le_rate_mul
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+        H beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedIndex_card_pos
+        H)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+        beta)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient_nonneg
+        beta hbeta)
+      (fun source =>
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData_columnSum_le_coefficient
+          H beta hbeta source)
+      variation hVariationNonneg bound hBoundNonneg hVariationBound source
 
 end
 
