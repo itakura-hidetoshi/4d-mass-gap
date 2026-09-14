@@ -227,9 +227,15 @@ theorem
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
           H beta hbeta)
         target < 1 := by
-  exact
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData_leftRowSum_lt_one_of_beta_lt
-      H beta hbeta hBetaLt target
+  cases target with
+  | inl fiber =>
+      exact
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData_leftRowSum_lt_one_of_beta_lt
+          H beta hbeta hBetaLt fiber
+  | inr target =>
+      rw [
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData_rightRowSum_eq_zero]
+      norm_num
 
 end
 
