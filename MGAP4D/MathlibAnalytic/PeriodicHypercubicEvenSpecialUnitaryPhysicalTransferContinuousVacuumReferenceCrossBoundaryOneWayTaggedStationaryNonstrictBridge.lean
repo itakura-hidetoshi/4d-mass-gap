@@ -61,7 +61,36 @@ theorem
             (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
               H beta hbeta)
             P.variation n) := by
-  exact le_rfl
+  have hPartial :=
+    C.partialStationarySource_le_kernel
+      P
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+        H beta hbeta)
+      hDomination sourceEnvelope hEnvelopeNonneg hEnvelope n
+  have hTerminal :
+      finiteProductVariationTotal
+          (C.rightRandomScanIterateVariationBound P n).variation ≤
+        finiteProductVariationTotal
+          (finiteInfluenceKernelRandomScanVariationIterate
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+              H beta hbeta)
+            P.variation n) := by
+    unfold finiteProductVariationTotal
+    apply Finset.sum_le_sum
+    intro e _he
+    rw [C.rightRandomScanIterateVariation_eq P n]
+    exact
+      finitePositiveWeightNonstrictRandomScanVariationIterate_le_kernel
+        C.rightInfluence
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+          H beta hbeta)
+        hDomination P.variation P.variation_nonneg n e
+  have hFinite :=
+    C.expectationDiscrepancy_le_partialSource_add_two_mul_terminalVariation
+      P n
+  exact hFinite.trans
+    (add_le_add hPartial
+      (mul_le_mul_of_nonneg_left hTerminal (by norm_num)))
 
 end
 
