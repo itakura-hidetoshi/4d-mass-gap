@@ -60,6 +60,24 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_eq_of_source_ne_fiber
       H N hN beta hbeta B target source fiber k₁ k₂ g₂ A hNe
 
+/-- RED probe for lifting the carrier equality through the full heat-bath
+sampling-and-reinsertion construction. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_eq_of_source_ne_fiber
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (target source fiber : PeriodicHypercubicEvenSpatialSliceLink H)
+    (k₁ k₂ g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ)
+    (hNe : source ≠ fiber) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
+        H N hN beta hbeta B target source fiber k₁ g₂ =
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
+        H N hN beta hbeta B target source fiber k₂ g₂ := by
+  rfl
+
 end
 
 end MathlibAnalytic
