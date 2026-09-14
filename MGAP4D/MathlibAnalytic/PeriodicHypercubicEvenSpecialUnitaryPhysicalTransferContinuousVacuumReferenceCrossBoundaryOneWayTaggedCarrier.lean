@@ -141,6 +141,21 @@ theorem
         H beta hbeta).influence (Sum.inr target) (Sum.inr source) = 0 := by
   rfl
 
+/-- Every right-target row is exactly zero in the one-way carrier. This is a
+carrier-scope statement, not a theorem that the unrepresented reverse physical
+influence vanishes. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData_rightRowSum_eq_zero
+    (H : ℕ)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H) :
+    finiteInfluenceKernelRowSum
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+          H beta hbeta)
+        (Sum.inr target) = 0 := by
+  rfl
+
 /-- The full generic row sum at a left target has no copy-cardinality or
 spatial-volume factor: the left-source half is zero and the right-source half
 is exactly the one-point-supported C5 majorant row. -/
