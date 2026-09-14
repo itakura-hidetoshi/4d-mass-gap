@@ -122,7 +122,9 @@ theorem
   rw [abs_of_nonneg hCoeffNonneg]
   exact mul_le_mul_of_nonneg_left (hvariation fiber) hCoeffNonneg
 
-/-- RED theorem for strict pointwise contraction of unit-bounded profiles. -/
+/-- In the explicit small-coupling region, every unit-bounded source variation
+profile is strictly contracted pointwise by the C5 cross-boundary influence
+operator. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator_abs_lt_one_of_beta_lt
     (H : ℕ)
@@ -136,7 +138,17 @@ theorem
     (fiber : PeriodicHypercubicEvenSpatialSliceLink H) :
     |periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator
         H beta variation fiber| < 1 := by
-  rfl
+  have hBound :
+      |periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator
+          H beta variation fiber| ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+          beta := by
+    simpa using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator_abs_le_coefficient_mul
+        H beta 1 hbeta (by norm_num) variation hvariation fiber
+  exact lt_of_le_of_lt hBound
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient_lt_one_of_beta_lt
+      beta hBetaLt)
 
 end
 
