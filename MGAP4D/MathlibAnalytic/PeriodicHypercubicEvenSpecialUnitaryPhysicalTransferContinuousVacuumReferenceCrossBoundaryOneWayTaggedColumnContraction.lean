@@ -158,6 +158,37 @@ theorem
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient_lt_one_of_beta_lt
         beta hBetaLt)
 
+/-- RED probe: the tagged C5 column certificate should feed directly into the
+generic reciprocal random-scan one-step response bound. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTagged_randomScanUpdatedVariation_le_rate_mul
+    (H : ℕ)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (variation :
+      Sum
+        (PeriodicHypercubicEvenSpatialSliceLink H)
+        (PeriodicHypercubicEvenSpatialSliceLink H) → ℝ)
+    (hVariationNonneg : ∀ e, 0 ≤ variation e)
+    (bound : ℝ)
+    (hBoundNonneg : 0 ≤ bound)
+    (hVariationBound : ∀ e, variation e ≤ bound)
+    (source :
+      Sum
+        (PeriodicHypercubicEvenSpatialSliceLink H)
+        (PeriodicHypercubicEvenSpatialSliceLink H)) :
+    finiteInfluenceKernelRandomScanUpdatedVariation
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+          H beta hbeta)
+        variation source ≤
+      finiteInfluenceKernelReciprocalRandomScanRate
+          (Sum
+            (PeriodicHypercubicEvenSpatialSliceLink H)
+            (PeriodicHypercubicEvenSpatialSliceLink H))
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+            beta) * bound := by
+  rfl
+
 end
 
 end MathlibAnalytic
