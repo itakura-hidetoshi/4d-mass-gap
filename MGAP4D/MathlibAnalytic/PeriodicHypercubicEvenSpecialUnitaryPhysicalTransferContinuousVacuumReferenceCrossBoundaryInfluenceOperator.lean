@@ -122,6 +122,22 @@ theorem
   rw [abs_of_nonneg hCoeffNonneg]
   exact mul_le_mul_of_nonneg_left (hvariation fiber) hCoeffNonneg
 
+/-- RED theorem for strict pointwise contraction of unit-bounded profiles. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator_abs_lt_one_of_beta_lt
+    (H : ℕ)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (hBetaLt :
+      beta <
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBetaThreshold)
+    (variation : PeriodicHypercubicEvenSpatialSliceLink H → ℝ)
+    (hvariation : ∀ source, |variation source| ≤ 1)
+    (fiber : PeriodicHypercubicEvenSpatialSliceLink H) :
+    |periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator
+        H beta variation fiber| < 1 := by
+  rfl
+
 end
 
 end MathlibAnalytic
