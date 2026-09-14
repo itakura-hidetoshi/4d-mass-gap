@@ -1,8 +1,8 @@
 # MGAP4D Roadmap
 
-This roadmap records the proof-development order of `itakura-hidetoshi/4d-mass-gap` as of **2026-09-14 JST**.
+This roadmap records the current proof architecture and immediate theorem-development order of `itakura-hidetoshi/4d-mass-gap` as of **2026-09-15 JST**.
 
-The authoritative theorem carrier is
+The authoritative theorem-carrier branch is
 
 ```text
 formal/real-hilbert-uniform-coercive-strong-limit
@@ -11,156 +11,188 @@ formal/real-hilbert-uniform-coercive-strong-limit
 The latest mathematical theorem baseline before this documentation refresh is
 
 ```text
-1696ba98d930c5f59293319fc562d057d4b7586e
+b7bf4dc6e590f88c64e5a01d018da60155e8ace5
 ```
 
-which is the normal merge of PR #4080,
+which is the merge of PR #4177,
 
 ```text
-Factor C5 reference fiber through one-slab raw Doob law
+Lift C5 stationary average to sweep exponential residual
 ```
 
-with exact GREEN theorem head and validation
+with exact final GREEN head and CI receipt
 
 ```text
 head:
-  154c124671170bdf3975c7e3d1aeb351d9dda026
+  68fbb3385b7e3470ed7bb041c7e86efab69da286
 
-PR Lean Fast Check #13798
-workflow run 34787609915
-completed / success
+PR Lean Fast Check #13887
+workflow run 34908048470
+workflow / job / changed-Lean step: completed / success
 ```
 
-A documentation-only merge may advance the authoritative branch pointer without changing this mathematical theorem baseline. `main` is a public landing surface. Only theorem results merged into the authoritative theorem carrier count as canonical proof status.
+Tree at that theorem baseline:
+
+```text
+8c7cb7aade0be712df53702613f5b9fade64c699
+```
+
+`main` is a public landing surface, not theorem authority. The authority order is exact canonical SHA -> Lean artifacts -> README/ROADMAP -> CI receipts -> history/memory.
+
+A docs-only merge may advance the current branch pointer beyond the theorem baseline above without changing the latest mathematical theorem-bearing result.
 
 > **Current frontier**
 >
-> The full normalized reference-law one-link conditional-specification ladder is now integrated: exact Fubini compatibility, measurable heat-bath kernel, stationarity, idempotence, off-fiber factorization, properness, setwise and integral conditional identities, conditional expectation, RCD identification, and conditional-variance transport are all canonical through PR #4077.
+> The old normalized-scalar-cancellation frontier is closed. Distinct right-boundary source values now give literally equal normalized C5 fiber probability measures whenever `source != fiber`; the equality propagates to the conditional and heat-bath carriers, so the corresponding real-test influence is exactly zero.
 >
-> PR #4080 then exposes the C5 reference fiber as a continuous-vacuum Doob tilt of a normalized one-slab `local × kernel` raw law, without identifying that raw law with the full-4D Wilson `singleLinkConditionalMeasure`.
+> The remaining C5 cross-boundary influence is supported only on `source = fiber`. The whole source row therefore equals the single coefficient `q(beta)` with no volume factor. For `beta < log 3 / 16`, `q(beta) < 1`.
 >
-> The immediate open problem is quantitative rather than measure-theoretic: prove a distance-sensitive or otherwise summable remote conditional-law / covariance estimate that overcomes the link-count obstruction of #3969 and yields volume-independent same-color block coercivity.
+> This proved influence has been packaged as a one-way tagged carrier on `Sum Link Link`, propagated through reciprocal random-scan response bounds, and lifted to stationary comparison. The source resolvent has exact cardinality cancellation, source averaging removes the explicit terminal cardinality, and full-sweep time gives the volume-independent residual `exp(-(1-q(beta))*sweeps)`.
+>
+> The immediate open problem is now to **close the normalized stationary source term and the genuine comparison-data bridge** needed to connect the C5 carrier to the existing spatial Poincare/coercivity route. #4177 is still a conditional comparison theorem, not yet the desired physical coercivity theorem.
 
 ---
 
 ## Status legend
 
 - **Integrated** — theorem/model result is merged on the authoritative branch.
-- **Integrated on bounded core** — canonical on the explicit dense bounded concrete core; no arbitrary-`L²` pointwise statement is implied.
-- **Integrated routing** — implication chain is formalized, but a model-derived quantitative input is still missing.
-- **Obstruction integrated** — a rigorous negative result rules out a tempting route.
+- **Integrated on bounded core** — canonical on the explicit dense bounded concrete core only.
+- **Integrated routing** — implication chain is formalized but a quantitative model input is missing.
+- **Integrated conditional interface** — the theorem is proved, but application requires genuine comparison/model data supplied separately.
+- **Obstruction integrated** — a rigorous negative theorem closes a tempting route.
 - **Open now** — immediate constructive frontier.
-- **Open next** — next coherent unit after the current frontier.
-- **Open downstream** — required later in the global gap route.
+- **Open next** — next coherent unit after the present frontier.
+- **Open downstream** — required later in the global mass-gap route.
 
 ---
 
 # Roadmap in one view
 
 ```text
-A. FINITE WILSON ROOT
+A. FINITE WILSON ROOT                                                [Integrated]
 
-periodic-even compact SU(N) Wilson Gibbs model                         [Integrated]
-  -> reflection positivity / boundary geometry                       [Integrated]
-  -> physical one-slab transfer                                      [Integrated]
-  -> positive / strictly-positive ground-state transfer geometry     [Integrated]
+periodic-even compact SU(N) Wilson model
+  -> OS/reflection geometry
+  -> spatial-slice / boundary L2 carriers
+  -> physical one-slab transfer / ground-state structure
 
-B. SAME-ROOT SCALAR CONTINUUM OS
+B. SAME-ROOT SCALAR CONTINUUM OS                                    [Integrated]
 
-finite Wilson scalar readout                                         [Integrated]
-  -> continuum scalar law                                            [Integrated]
-  -> continuum OS positivity                                         [Integrated]
-  -> Hilbert carrier / real C0 semigroup / self-adjoint Hamiltonian  [Integrated]
-  -> vacuum Omega / complete Omega-perp                              [Integrated]
+finite Wilson scalar readout
+  -> continuum scalar law / OS positivity
+  -> OS Hilbert carrier
+  -> real C0 contraction semigroup
+  -> self-adjoint Hamiltonian / vacuum sector
 
-C. FINITE GROUND-STATE CONDITIONAL DYNAMICS
+C. FINITE GROUND-STATE CONDITIONAL DYNAMICS                         [Integrated routing]
 
-ground-state one-slab joint probability law                          [Integrated]
-  -> 6 right + 6 left genuine spatial condExp projections            [Integrated]
-  -> genuine 12-spatial family                                      [Integrated]
-  -> E12 -> E6 -> raw physical defect -> transfer gap                [Integrated routing]
+ground-state one-slab joint law
+  -> six right + six left genuine spatial condExp projections
+  -> twelve-spatial family
+  -> E12 -> E6 -> raw physical defect -> transfer-gap route
 
-D. SHARP ONE-LINK CONTROL
+D. SHARP ONE-LINK CONTROL                                           [Integrated]
 
-complete continuous-vacuum one-link weight                           [#3894]
-  -> sharp normalized Haar comparison                               [#3898]
-  -> exp(-16 beta) one-link variance lower bound                     [#3907]
-  -> a.e. actual joint split-fiber compatibility                     [#3909]
-  -> genuine joint condExpL2 residual on bounded core                [#3921-#3952]
-                                                                     [Integrated]
+complete continuous-vacuum one-link weight
+  -> pairwise Harnack
+  -> sharp normalized comparison
+  -> exp(-16 beta) variance lower bound
+  -> genuine joint condExpL2 residual on bounded core
 
-E. REMOTE-INFLUENCE OBSTRUCTION
+E. CONSTANT REMOTE-BOUND OBSTRUCTION                                [Obstruction integrated]
 
-single-source remote weight / Doob comparison                        [#3954, #3959]
-  -> bounded-test influence                                          [#3964]
-  -> naive row majorant carries remote-link cardinality              [#3969]
-                                                                     [Obstruction integrated]
+uniform nonzero remote coefficient
+  -> remote-link cardinality loss
+  -> cannot yield volume-independent row contraction by itself
 
-F. LOCALITY AND COVARIANCE LOCALIZATION
+F. LOCALITY / RCD / C5 FACTORIZATION                                [Integrated]
 
-raw same-color Wilson cancellation                                   [#3978]
-  -> source likelihood ratio is source-link local                    [#3991, #3994]
-  -> physical four-point defect = weighted covariance                [#3997, #4000]
-  -> target-local x source-local covariance                          [#4004]
-  -> canonical positive continuous-vacuum reference weight           [#4011]
-  -> normalized reference probability law                           [#4016]
-                                                                     [Integrated]
+raw same-color locality
+  -> covariance / cross-ratio localization
+  -> literal normalized one-link fiber
+  -> heat-bath / off-fiber RCD / conditional variance
+  -> C5 raw-Doob factorization
+  -> explicit source-kernel difference
+  -> distinct-source scalar factorization
 
-G. REFERENCE ONE-LINK DISINTEGRATION / RCD
+G. NORMALIZED DISTINCT-SOURCE INVARIANCE                            [Integrated]
 
-literal normalized fiber law                                         [#4019]
-  -> singleton marginal / normalized density                         [#4024, #4027]
-  -> local normalization identity                                    [#4030]
-  -> full-law Fubini compatibility                                   [#4035]
-  -> measurable heat-bath kernel + stationarity                      [#4039]
-  -> idempotence                                                      [#4042]
-  -> off-fiber sigma algebra factorization                           [#4045]
-  -> proper off-fiber kernel                                         [#4048]
-  -> setwise conditional identity                                    [#4054]
-  -> nonnegative / real conditional integral identities              [#4057, #4060]
-  -> conditional expectation                                         [#4066]
-  -> RCD / condExpKernel identification                              [#4070]
-  -> conditional variance transport                                  [#4077]
-                                                                     [Integrated]
+source != fiber
+  -> W_k = c_k W_base
+  -> Z_k = c_k Z_base
+  -> normalized C5 fiber law independent of k
+  -> conditional-kernel equality
+  -> heat-bath-kernel equality
+  -> exact zero real-test influence
 
-H. C5 RAW-DOOB FACTORIZATION
+H. CROSS-BOUNDARY SUPPORT / ROW SUM                                 [Integrated]
 
-q_A = local x one-slab kernel                                        [#4080]
-  -> normalized raw law nu_A                                         [Integrated]
-  -> reference fiber weight = Omega_cont x q_A                      [Integrated]
-  -> normalized Doob composition                                     [Integrated]
-  -> C5 fiber = Doob_{Omega_cont}(nu_A)                              [Integrated]
+off diagonal: 0
+source = fiber: diagonal Harnack coefficient
+  -> row support is one coordinate
+  -> rowSum = q(beta)
+  -> beta < log 3 / 16 => q(beta) < 1
 
-I. SUMMABLE REMOTE MIXING
+I. ONE-WAY TAGGED CARRIER                                           [Integrated]
 
-actual reference RCD + C5 raw-Doob factorization
-  -> quantitative remote conditional-law comparison                  [OPEN NOW]
-  -> distance-sensitive / summable covariance or influence          [OPEN NOW]
-  -> volume-independent same-color row bound                         [OPEN NEXT]
-  -> one color-block coercivity                                      [OPEN NEXT]
+ι_H = Sum Link Link
+right-source -> left-target block = proved C5 influence
+other blocks = carrier-scope zero
+  -> volume-independent row certificate
+  -> volume-independent column certificate
 
-J. GLOBAL FINITE-VOLUME COERCIVITY
+J. RECIPROCAL RANDOM-SCAN RESPONSE                                  [Integrated]
 
-six right + six left color/block estimates                           [OPEN]
-  -> quantitative E12 Poincare coefficient                          [OPEN]
-  -> model-derived kappa(H,N,beta) > 0                              [OPEN]
-  -> scale-independent kappa_* > 0                                  [OPEN]
-  -> physical transfer gap >= 3 kappa_*/4                           [Integrated routing]
+r_{H,beta} = reciprocal one-coordinate rate
+1-r = (1-q)/card(ι_H)
+  -> n-step variation <= r^n * magnitude
+  -> one-coordinate rate itself is not volume-uniform
 
-K. THERMODYNAMIC / CONTINUUM PROPAGATION
+K. STATIONARY COMPARISON / SOURCE RESOLVENT                         [Integrated conditional interface]
 
-uniform finite-volume physical transfer gap                          [OPEN DOWNSTREAM]
-  -> stable Green / resolvent / Poincare control                     [OPEN DOWNSTREAM]
-  -> thermodynamic / scaling-limit physical carrier                  [OPEN DOWNSTREAM]
-  -> physical OS/Wightman spectral lower bound                       [OPEN DOWNSTREAM]
+genuine finite positive-weight stationary non-strict comparison
++ entrywise C5 domination
+  -> kernel residual comparison
+  -> exact card/resolvent cancellation
+  -> source-summed discrepancy bound
+  -> source-average normalization
 
-L. CLAY-LEVEL COMPLETION
+L. SWEEP RESCALING                                                   [Integrated]
 
-sufficiently rich same-root 4D continuum Yang--Mills field/state     [OPEN]
-correct vacuum structure / nontriviality                             [OPEN]
-physical OS/Wightman identification                                  [OPEN]
-strict positive spectrum above the vacuum sector                     [OPEN]
-Clay-level existence + mass gap                                      [OPEN]
+r_{H,beta}^{card(ι_H)*sweeps}
+  <= exp(-(1-q(beta))*sweeps)
+
+M. STATIONARY SWEEP-AVERAGE COMPARISON                              [#4177 Integrated conditional interface]
+
+average expectation discrepancy
+  <= normalized source resolvent
+     + 2 exp(-(1-q(beta))*sweeps) * magnitude
+
+N. CLOSE NORMALIZED SOURCE TERM                                     [Open now]
+
+uniform normalized sourceEnvelope bound
++ genuine comparison-data realization
+  -> fully volume-independent stationary comparison
+
+O. PHYSICAL POINCARE / COERCIVITY BRIDGE                            [Open next]
+
+stationary comparison output
+  -> one same-color / relevant block coercivity
+  -> six right + six left blocks
+  -> quantitative twelve-spatial Poincare coefficient
+
+P. UNIFORM FINITE-VOLUME PHYSICAL GAP                               [Open downstream / routing integrated]
+
+scale-independent kappa_* > 0
+  -> physical transfer gap >= 3 kappa_*/4
+
+Q. THERMODYNAMIC / CONTINUUM PROPAGATION                            [Open downstream]
+
+uniform finite-volume physical gap
+  -> thermodynamic/scaling-limit physical carrier
+  -> physical OS/Wightman spectral lower bound
+  -> sufficiently rich same-root 4D Yang--Mills field/state
+  -> Clay-level existence + mass gap
 ```
 
 ---
@@ -172,16 +204,15 @@ Clay-level existence + mass gap                                      [OPEN]
 Repository-operation rules:
 
 ```text
-start from the exact authoritative canonical SHA
+start from the fresh exact authoritative SHA
 use GitHub-mediated repository operations
-accept CI only when workflow / job / Lean step are terminal success
-keep write-freeze while exact-head CI is active
+accept CI only when workflow, job, and Lean step are terminal success
 inspect the first genuine terminal Lean failure before editing
 keep theorem development additive / tighten-only
-never strengthen assumptions merely to make elaboration easier
+never weaken or invent assumptions merely to make elaboration pass
 forbid sorry / admit / new axiom / proof placeholders
-merge with expected head SHA fixed
-re-observe the canonical branch after merge
+merge against the exact expected work-head
+re-observe the authoritative branch after merge
 ```
 
 Permanent claim boundaries:
@@ -189,44 +220,36 @@ Permanent claim boundaries:
 ```text
 finite theorem != continuum theorem
 positive coefficient at each scale != uniform positive coefficient
-local Harnack / Doeblin / variance != global L2 Poincare
+local Harnack / variance != global L2 Poincare
 bounded-core theorem != arbitrary-L2 pointwise theorem
-raw Wilson K = 1 != continuous-vacuum Doob K = 1
 covariance localization != covariance decay
 RCD identification != quantitative mixing
-one-link RCD != full-Wilson singleLinkConditionalMeasure
-C5 raw law != full-4D Wilson single-link conditional law
-uniform pairwise remote bound != summable row bound
+C5 raw one-slab law != full-4D Wilson singleLinkConditionalMeasure
+C5 distinct-source invariance != arbitrary full-4D remote invariance
+one-way tagged carrier zero block != reverse physical influence zero
+Sum.inl link != Sum.inr link
+q(beta) < 1 != volume-uniform one-coordinate random-scan rate
+conditional stationary comparison != physical coercivity theorem
+CI success != theorem authority
 same-root scalar continuum != full 4D Yang--Mills field
+intermediate formal theorem != Clay-level mass-gap theorem
 ```
 
 ---
 
-# Phase 1 — Actual finite periodic compact `SU(N)` Wilson model
+# Phase 1 — Finite Wilson root
 
 **Status: Integrated.**
 
-The finite root contains the interacting periodic-even compact special-unitary Wilson Gibbs model, normalized compact Haar reference measure, lattice/plaquette geometry, Wilson action, reflection positivity, gauge covariance, spatial-slice carriers, one-slab kernels, normalized physical transfer operators, and positive ground-state structure.
-
-Completion criterion: satisfied for the finite root used by the downstream theorem chain.
+The finite root contains the interacting periodic-even compact `SU(N)` Wilson Gibbs model, normalized compact Haar reference measure, lattice/plaquette geometry, Wilson action, reflection positivity, gauge covariance, spatial-slice carriers, one-slab kernels, normalized physical transfer operators, and positive ground-state structure.
 
 ---
 
-# Phase 2 — Same-root scalar continuum OS construction
+# Phase 2 — Same-root scalar continuum OS lane
 
 **Status: Integrated as a scalar observable lane.**
 
-Canonical route:
-
-```text
-finite Wilson scalar readout
-  -> rational/continuum scalar law
-  -> continuum reflection positivity
-  -> OS Hilbert completion
-  -> real strongly continuous contraction semigroup
-  -> graph-closed self-adjoint Hamiltonian
-  -> normalized vacuum and vacuum-orthogonal sector.
-```
+The canonical route constructs a continuum scalar law from finite Wilson readouts, establishes continuum reflection positivity, forms the OS Hilbert carrier, obtains a real strongly continuous contraction semigroup and self-adjoint Hamiltonian, and identifies a normalized vacuum sector.
 
 Boundary: this is not yet the complete four-dimensional Yang--Mills gauge field/state.
 
@@ -236,9 +259,7 @@ Boundary: this is not yet the complete four-dimensional Yang--Mills gauge field/
 
 **Status: Integrated routing.**
 
-The fixed-volume theorem tree contains the top/non-top decomposition, contraction, power decay, fixed-space characterization, coercivity, spectral confinement, resolvent and Green machinery, plus the actual six-right / six-left ground-state spatial conditional expectations.
-
-The global implication route is already formalized:
+At fixed volume the theorem tree contains the physical top/non-top decomposition, contraction/coercivity/resolvent/Green machinery, the actual six-right and six-left ground-state spatial conditional expectations, and the implication route
 
 ```text
 12-block Poincare coefficient kappa
@@ -246,208 +267,344 @@ The global implication route is already formalized:
   -> physical transfer gap >= 3 kappa / 4.
 ```
 
-Open input: a model-derived, scale-uniform positive `kappa`.
+Open quantitative input: a model-derived coefficient with the required uniform scale behavior.
 
 ---
 
-# Phase 4 — Sharp direct one-link control
+# Phase 4 — Sharp one-link control
 
-**Status: Integrated through #3894, #3898, #3907.**
+**Status: Integrated.**
 
-For the complete continuous-vacuum one-link law the repository proves a pairwise Harnack estimate, sharp normalized Haar comparison, and the variance lower bound with coefficient
+The continuous-vacuum one-link law has a volume-independent Harnack/normalized-comparison/variance chain. The one-link variance scale `exp(-16 * beta)` is available and has been transported into the genuine joint conditional-residual setting on the explicit bounded core.
 
-```text
-exp(-16 * beta).
-```
-
-No artificial second Harnack loss is introduced.
+This is local control; it is not by itself a global block contraction theorem.
 
 ---
 
-# Phase 5 — Transport into the actual ground-state joint law
-
-**Status: Integrated through #3909 and #3921--#3952.**
-
-The direct continuous-vacuum one-link law is transported almost everywhere to the actual ground-state split fiber. The resulting one-link variance/residual information is then integrated into the genuine joint `condExpL2` API on an explicit dense bounded concrete core.
-
-Key boundary: no arbitrary `L²` quotient representative is evaluated pointwise.
-
----
-
-# Phase 6 — Diagnose remote same-color aggregation
+# Phase 5 — Constant remote influence obstruction
 
 **Status: Obstruction integrated through #3969.**
 
-The normalized same-color remote Doob laws admit a uniform single-source comparison and bounded-test influence estimate, but the naive same constant summed over all remote links grows with the number of remote sources.
+A nonzero constant pairwise remote coefficient summed over every source carries an explicit remote-link cardinality factor. This route cannot establish volume-independent same-color contraction.
 
-Completion criterion: satisfied as a negative theorem. The constant-row-majorant route is closed.
-
----
-
-# Phase 7 — Localize the true remote dependence
-
-**Status: Integrated through #3978--#4016.**
-
-The raw same-color Wilson target factor cancels exactly under a remote same-color source change. After continuous-vacuum integration, the remaining defect is localized to covariance between target-local and source-local observables.
-
-The reference weight is replaced by a canonical pointwise positive continuous-vacuum representative and normalized to a genuine probability law, yielding the exact form
-
-```text
-remote physical defect
-  = source scalar * Z^2 * Cov_nu_ref(target-local, source-local).
-```
-
-Completion criterion: exact localization achieved. Quantitative decay remains open.
+The result remains important as a permanent warning: if a later physical carrier retains genuine nonzero long-range dependence, a constant remote bound is still insufficient.
 
 ---
 
-# Phase 8 — Build the exact reference one-link conditional law
+# Phase 6 — Exact reference conditional law and C5 source structure
 
-**Status: Integrated through #4019--#4077.**
+**Status: Integrated.**
 
-This phase is now complete.
-
-## 8.1 Fiber normalization
+The completed infrastructure includes:
 
 ```text
-#4019  positive/integrable literal fiber and normalized fiber law
-#4024  fiber partition = singleton marginal
-#4027  exact normalized density and base-point invariance
-#4030  exact local normalization identity
-#4035  full normalized reference-law Fubini compatibility
+literal normalized one-link fiber
+  -> full-law Fubini compatibility
+  -> measurable heat-bath kernel / stationarity / idempotence
+  -> off-fiber factorization / properness
+  -> conditional expectation
+  -> condExpKernel / RCD identification
+  -> conditional-variance transport
+  -> C5 raw-Doob factorization
+  -> quotient-free two-source cross-ratio
+  -> explicit source-kernel difference
+  -> distinct-source scalar factorization.
 ```
 
-## 8.2 Heat-bath kernel
+The permanent boundary remains:
 
 ```text
-#4039  measurable full-space heat-bath Markov kernel + stationarity
-#4042  exact kernel idempotence
-#4045  factor heat-bath projection through off-fiber restriction
-#4048  proper off-fiber Markov kernel
+C5 raw one-slab law != full-4D Wilson singleLinkConditionalMeasure
 ```
 
-## 8.3 Conditional law and RCD
-
-```text
-#4054  setwise conditional identity
-#4057  nonnegative conditional integral identity
-#4060  integrable real conditional integral identity
-#4066  conditional-expectation representative
-#4070  a.e. equality with Mathlib condExpKernel / RCD
-#4077  transport doobBestConstantSquaredResidual and evariance
-```
-
-Completion criterion: satisfied. Do not reopen measurability/RCD existence unless a later theorem exposes a genuinely missing assumption or carrier bridge.
+unless a separate theorem proves such an identification.
 
 ---
 
-# Phase 9 — Expose the C5 conditional fiber as a raw-Doob composition
+# Phase 7 — Normalize away the distinct-source scalar
 
-**Status: Integrated by #4080.**
+**Status: Integrated.**
 
-Define the raw one-link weight
+This was the previous open frontier and is now closed.
 
-```text
-q_A(g) = local(A[fiber <- g]) * oneSlabKernel(A[fiber <- g], B[source <- k]).
-```
-
-Normalize it against compact Haar:
+For `source != fiber`, the theorem chain proves
 
 ```text
-nu_A = Normalize_Haar(q_A).
+W_k(g) = c_k * W_base(g),
 ```
 
-The literal C5 reference weight factors pointwise as
+where `c_k > 0` is independent of the fiber integration variable. The partition function scales by the same scalar, so
 
 ```text
-Omega_cont(A[fiber <- g]) * q_A(g).
+realIntegralWeightedProbabilityMeasure Haar W_{k1}
+  = realIntegralWeightedProbabilityMeasure Haar W_{k2}.
 ```
 
-PR #4080 proves the nonzero/finite first normalization mass and the exact composition theorem for successive normalized Doob tilts. Therefore
-
-```text
-C5 reference fiber = Doob_{Omega_cont along fiber}(nu_A).
-```
-
-Permanent boundary:
-
-```text
-nu_A is the normalized one-slab raw C5 law.
-It is not the full-4D Wilson singleLinkConditionalMeasure by definition or naming.
-```
-
-Completion criterion: satisfied.
+This equality is at the normalized measure level.
 
 ---
 
-# Phase 10 — Quantitative summable remote mixing
+# Phase 8 — Propagate invariance to the conditional carrier
+
+**Status: Integrated.**
+
+The normalized measure equality gives pointwise equality of the C5 one-link conditional kernels for distinct source/fiber coordinates. The equality is preserved by heat-bath sampling and reinsertion.
+
+Therefore every real test satisfies exact zero source-value influence whenever the changed source is distinct from the resampled fiber.
+
+The same-color remote specialization is formalized by taking the selected fiber to be the target link.
+
+---
+
+# Phase 9 — Identify the only surviving cross-boundary coordinate
+
+**Status: Integrated.**
+
+The diagonal case `source = fiber` is controlled by the sharp right-boundary one-slab Harnack estimate. After normalization, the bounded-test coefficient is
+
+```text
+q(beta)
+  = 2 * (((Real.exp (8 * beta))^2 - 1)
+          / ((Real.exp (8 * beta))^2 + 1)).
+```
+
+All off-diagonal source coordinates are exactly zero. Thus the source row is supported at one coordinate and
+
+```text
+rowSum = q(beta).
+```
+
+No source-cardinality or spatial-volume factor remains.
+
+The explicit threshold
+
+```text
+beta_c,C5 = log 3 / 16
+```
+
+satisfies
+
+```text
+0 <= beta < beta_c,C5
+  -> 0 <= q(beta) < 1.
+```
+
+No spatial-decay hypothesis is used.
+
+---
+
+# Phase 10 — Package the proved direction as a one-way tagged carrier
+
+**Status: Integrated by the #4141-era carrier.**
+
+The carrier index is
+
+```text
+ι_H = Sum Link Link.
+```
+
+Interpretation:
+
+```text
+Sum.inl = left target copy
+Sum.inr = right source copy.
+```
+
+Only the proved right-source -> left-target block is populated. Other blocks are zero by carrier definition.
+
+Important semantic boundary:
+
+```text
+right-target / left-source = 0 in the tagged carrier
+```
+
+does **not** assert that reverse physical influence vanishes.
+
+Both left-target row sums and right-source column sums reduce to the same `q(beta)`; the complementary tagged rows/columns are carrier-scope zero.
+
+---
+
+# Phase 11 — Reciprocal random-scan response
+
+**Status: Integrated.**
+
+Let
+
+```text
+N_H = card(ι_H)
+r_{H,beta} = finiteInfluenceKernelReciprocalRandomScanRate ι_H q(beta).
+```
+
+The exact complement identity is
+
+```text
+1 - r_{H,beta} = (1 - q(beta)) / N_H.
+```
+
+Hence `r_{H,beta} < 1` at every finite volume in the small-coupling region, but the one-coordinate rate is not uniformly separated from one as `N_H` grows.
+
+The generic variation iteration gives
+
+```text
+V_n <= r_{H,beta}^n * V_0.
+```
+
+---
+
+# Phase 12 — Genuine stationary non-strict comparison interface
+
+**Status: Integrated conditional interface.**
+
+For genuine finite positive-weight stationary non-strict comparison data `C`, assume its right influence is entrywise dominated by the proved C5 one-way tagged influence.
+
+Then expectation discrepancy is bounded by a C5 partial-source term plus a terminal variation residual.
+
+This theorem deliberately does **not** identify the continuous C5 law with a finite product weight and does not turn carrier-scope zeros into reverse physical theorems.
+
+---
+
+# Phase 13 — Source resolvent and source averaging
+
+**Status: Integrated through PRs #4165, #4168, #4171.**
+
+The reciprocal source resolvent contains an exact cardinality cancellation:
+
+```text
+card(ι_H)^-1 * (1-r_{H,beta})^-1
+  = (1-q(beta))^-1.
+```
+
+Accordingly the accumulated source term is bounded with no extra volume factor:
+
+```text
+sum_source partialSource
+  <= total(sourceEnvelope) * magnitude * (1-q(beta))^-1.
+```
+
+This lifts to source-summed expectation discrepancy, and then to the source-average form
+
+```text
+card(ι_H)^-1 * sum_source expectationDiscrepancy
+  <=
+    (card(ι_H)^-1 * total(sourceEnvelope))
+      * magnitude * (1-q(beta))^-1
+    + 2 * (r_{H,beta}^n * magnitude).
+```
+
+---
+
+# Phase 14 — Convert coordinate time to sweep time
+
+**Status: Integrated by PR #4174.**
+
+The correct volume-independent time scale is a full tagged sweep:
+
+```text
+r_{H,beta}^{N_H * sweeps}
+  <= exp(-(1-q(beta)) * sweeps).
+```
+
+This is the intended scaling statement. It does not claim a uniform one-coordinate rate.
+
+---
+
+# Phase 15 — Stationary source-average with exponential sweep residual
+
+**Status: Integrated by PR #4177.**
+
+Substituting the sweep envelope into the normalized stationary comparison gives
+
+```text
+card(ι_H)^-1 * sum_source expectationDiscrepancy
+  <=
+    (card(ι_H)^-1 * total(sourceEnvelope))
+      * magnitude * (1-q(beta))^-1
+    + 2 * exp(-(1-q(beta))*sweeps) * magnitude.
+```
+
+The explicit terminal residual is volume-independent in sweep time.
+
+The theorem remains conditional on genuine stationary comparison data and entrywise C5 domination. It is not yet a physical Poincare/coercivity theorem.
+
+---
+
+# Phase 16 — Close the normalized source term
 
 **Status: Open now.**
 
-This is the present theorem frontier.
+This is the immediate theorem frontier.
 
-The required next chain is:
+The cleanest intermediate target is a uniform normalized source-envelope estimate. For example, derive from actual model structure an estimate of the form
 
 ```text
-actual reference RCD
-+ exact C5 raw-Doob factorization
-+ raw Wilson same-color locality
-+ continuous-vacuum structure
-  -> quantitative remote RCD comparison
-  -> distance-sensitive or otherwise summable influence/covariance coefficient
-  -> same-color row sum bounded independently of volume.
+finiteProductVariationTotal sourceEnvelope
+  <= card(ι_H) * sigma
 ```
 
-A valid theorem must improve on the constant remote coefficient already ruled insufficient by #3969. Merely repackaging the existing `exp(16 * beta)` pairwise bound cannot close this phase.
+with `sigma` independent of the relevant volume.
 
-Preferred proof shape:
+Then #4177 would immediately imply
 
-1. keep target-local and source-local factors explicit;
-2. use the exact RCD rather than a heuristic conditional density;
-3. exploit the raw-Doob split from #4080 before estimating the continuous-vacuum contribution;
-4. derive a coefficient with geometric separation, finite interaction range, cancellation, or another summable structure;
-5. prove the resulting same-color row bound without a factor proportional to volume.
+```text
+average expectation discrepancy
+  <= sigma * magnitude * (1-q(beta))^-1
+     + 2 * exp(-(1-q(beta))*sweeps) * magnitude.
+```
+
+A generic corollary formalizing this algebraic discharge is useful only if it is paired with a concrete route for supplying `sigma` from genuine comparison data.
 
 Completion criterion:
 
 ```text
-sup_target sum_source c(target,source) < 1
+volume-independent bound on the normalized source term
 ```
 
-or another formally sufficient volume-independent block-coercivity criterion derived from the actual model.
+for the actual comparison carrier needed downstream.
 
 ---
 
-# Phase 11 — Same-color and twelve-spatial coercivity
+# Phase 17 — Realize the physical / spatial coercivity bridge
 
 **Status: Open next.**
 
-Once Phase 10 supplies a summable remote estimate:
+The next major bridge must identify how the proved C5 comparison theorem controls the physical spatial conditional dynamics already present in the repository.
+
+Required questions include:
 
 ```text
-one-link conditional variance / influence
-  -> one same-color block coercivity
-  -> six right color blocks
-  -> six left color blocks
-  -> quantitative 12-spatial Poincare inequality.
+1. Which genuine finite/stationary comparison data represent the relevant physical block?
+2. How is their influence dominated by the C5 one-way tagged carrier?
+3. What source envelope is produced by the actual model?
+4. How does the resulting comparison estimate feed the existing spatial Poincare/coercivity API?
 ```
 
-The target output is a model-derived coefficient `kappa(H,N,beta) > 0` with a proof of the required scale behavior.
+Forbidden shortcut:
+
+```text
+C5 one-way tagged contraction
+  => full physical same-color Poincare inequality
+```
+
+without the explicit carrier-identification theorem.
+
+Completion criterion: one model-derived block coercivity theorem with a volume-independent coefficient in the proved small-coupling region.
 
 ---
 
-# Phase 12 — Uniform finite-volume physical gap
+# Phase 18 — Twelve-spatial coercivity and uniform finite-volume gap
 
 **Status: Open downstream; routing already integrated.**
 
-Required target:
+Once the six right and six left block estimates are available, derive a quantitative twelve-spatial Poincare coefficient `kappa(H,N,beta)` and then a scale-independent lower bound
 
 ```text
 exists kappa_* > 0,
   kappa_* <= kappa(H,N,beta)
 ```
 
-uniformly over the relevant sequence of finite volumes/scales. The already-formalized routing then gives
+along the relevant finite-volume/scaling sequence.
+
+The existing routing then gives
 
 ```text
 physical transfer gap >= 3 * kappa_* / 4.
@@ -457,48 +614,20 @@ A positive coefficient separately at each finite volume is not enough.
 
 ---
 
-# Phase 13 — Thermodynamic / scaling-limit propagation
+# Phase 19 — Thermodynamic / scaling-limit propagation
 
 **Status: Open downstream.**
 
-A uniform finite-volume gap must be transported through the relevant limiting physical carrier with stable Poincare/resolvent/Green control and a justified connection to the OS/Wightman spectral generator.
+A uniform finite-volume physical gap must still be transported to the appropriate thermodynamic/scaling-limit physical carrier and connected to a physical OS/Wightman spectral lower bound.
 
-No claim of completion is made at this stage.
+The existing same-root scalar continuum construction is useful infrastructure but is not by itself the complete four-dimensional continuum Yang--Mills gauge field/state.
 
 ---
 
-# Phase 14 — Clay-level completion
+# Phase 20 — Clay-level completion
 
 **Status: Open.**
 
-The final target still requires, in a sufficiently rich same-root four-dimensional continuum Yang--Mills construction:
+The final program must still establish the complete continuum Yang--Mills existence statement, the required vacuum/nontriviality structure, and a strictly positive physical spectral gap above the vacuum in the sense required by the Clay problem.
 
-```text
-existence of the required continuum field/state
-Osterwalder--Schrader / Wightman structure
-correct vacuum sector and nontriviality
-physical Hamiltonian / energy-momentum interpretation
-strict positive spectral lower bound above the vacuum
-```
-
-The repository must continue to distinguish these goals from the already-integrated scalar continuum observable lane.
-
----
-
-# Immediate next action
-
-Before starting the next theorem unit, re-observe the exact HEAD of
-
-```text
-formal/real-hilbert-uniform-coercive-strong-limit
-```
-
-because this documentation merge may advance the branch pointer. The latest mathematical theorem baseline represented here is
-
-```text
-1696ba98d930c5f59293319fc562d057d4b7586e
-```
-
-The next unit should use the #4070/#4077 actual reference RCD together with #4080's exact raw-Doob factorization to derive the first genuinely summable remote conditional-law estimate.
-
-Do **not** spend the next unit reproving Fubini, measurability, properness, conditional expectation, or RCD existence: those interfaces are now canonical.
+These are mathematical boundaries, not documentation gaps.
