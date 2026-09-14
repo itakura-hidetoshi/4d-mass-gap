@@ -83,6 +83,18 @@ theorem
     positivity
   exact mul_nonneg (by norm_num) (div_nonneg hNum hDen)
 
+/-- The existing explicit small-coupling diagonal estimate is exactly an
+estimate on the named scalar cross-boundary contraction coefficient. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient_lt_one_of_beta_lt
+    (beta : ℝ)
+    (hBetaLt :
+      beta <
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBetaThreshold) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+        beta < 1 := by
+  rfl
+
 end
 
 end MathlibAnalytic
