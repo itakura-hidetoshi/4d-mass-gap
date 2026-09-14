@@ -115,7 +115,7 @@ theorem
     apply mul_le_mul_of_nonneg_left _ (by norm_num)
     apply mul_le_mul_of_nonneg_right _ hMagnitude
     simpa [N] using hSweep
-  exact hBase.trans (add_le_add_left hResidual _)
+  exact hBase.trans (add_le_add_right hResidual _)
 
 end
 
