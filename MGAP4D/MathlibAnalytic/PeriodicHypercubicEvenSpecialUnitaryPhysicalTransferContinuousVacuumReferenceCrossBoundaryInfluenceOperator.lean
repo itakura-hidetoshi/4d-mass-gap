@@ -32,10 +32,9 @@ noncomputable def
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant
         beta fiber source * variation source
 
-/-- RED probe: exact diagonal support should make the finite influence operator
-identically equal to scalar multiplication by the single surviving diagonal
-coefficient.  This is intentionally attempted by `rfl`; the finite sum must be
-reduced explicitly. -/
+/-- Exact diagonal support makes the finite cross-boundary influence operator
+identically equal to scalar multiplication by the single surviving coefficient.
+There is no spatial-volume factor. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator_eq_coefficient_mul
     (H : ℕ)
@@ -46,7 +45,18 @@ theorem
         H beta variation fiber =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
         beta * variation fiber := by
-  rfl
+  classical
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator
+  rw [Finset.sum_eq_single fiber]
+  · simp [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient]
+  · intro source _hsource hne
+    simp [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant,
+      hne]
+  · simp
 
 end
 
