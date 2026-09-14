@@ -28,7 +28,27 @@ theorem realIntegralWeightedProbabilityMeasure_twoTilt_cross_mul_eq_crossRatioDe
           ∫ x, f x ∂realIntegralWeightedProbabilityMeasure μ (fun x => w x * s x)) =
       (∫ x, w x * (f x * r x) ∂μ) * (∫ x, w x * s x ∂μ) -
         (∫ x, w x * (f x * s x) ∂μ) * (∫ x, w x * r x ∂μ) := by
-  aesop
+  have hR :=
+    realIntegralWeightedProbabilityMeasure_integral
+      μ (fun x => w x * r x) f hwrInt hwrNonneg hwrMassPos
+  have hS :=
+    realIntegralWeightedProbabilityMeasure_integral
+      μ (fun x => w x * s x) f hwsInt hwsNonneg hwsMassPos
+  have hRJoint :
+      (∫ x, (w x * r x) * f x ∂μ) =
+        ∫ x, w x * (f x * r x) ∂μ := by
+    apply integral_congr_ae
+    filter_upwards with x
+    ring
+  have hSJoint :
+      (∫ x, (w x * s x) * f x ∂μ) =
+        ∫ x, w x * (f x * s x) ∂μ := by
+    apply integral_congr_ae
+    filter_upwards with x
+    ring
+  rw [hR, hS, hRJoint, hSJoint]
+  field_simp [ne_of_gt hwrMassPos, ne_of_gt hwsMassPos]
+  <;> ring
 
 end
 
