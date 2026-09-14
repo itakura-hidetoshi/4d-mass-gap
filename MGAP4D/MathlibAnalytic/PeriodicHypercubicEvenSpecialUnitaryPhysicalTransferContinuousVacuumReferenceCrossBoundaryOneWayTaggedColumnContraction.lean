@@ -202,8 +202,8 @@ theorem
           H beta hbeta source)
       variation hVariationNonneg bound hBoundNonneg hVariationBound source
 
-/-- RED probe: iteration of the same tagged one-way carrier should contract the
-supremum profile by the reciprocal rate to the `n`th power. -/
+/-- Iteration of the same tagged one-way carrier contracts the supremum profile
+by the reciprocal random-scan rate to the `n`th power. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTagged_randomScanVariationIterate_le_rate_pow_mul
     (H : ℕ)
@@ -232,7 +232,20 @@ theorem
             (PeriodicHypercubicEvenSpatialSliceLink H))
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
             beta) ^ n * bound := by
-  rfl
+  exact
+    finiteInfluenceKernelRandomScanVariationIterate_le_rate_pow_mul
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+        H beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedIndex_card_pos
+        H)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+        beta)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient_nonneg
+        beta hbeta)
+      (fun source =>
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData_columnSum_le_coefficient
+          H beta hbeta source)
+      variation hVariationNonneg bound hBoundNonneg hVariationBound n source
 
 end
 
