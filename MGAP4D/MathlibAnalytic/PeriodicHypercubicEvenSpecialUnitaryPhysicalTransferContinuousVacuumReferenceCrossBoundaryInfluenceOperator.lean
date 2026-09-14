@@ -98,13 +98,14 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundary_diagonalCoefficient_lt_one_of_beta_lt
       beta hBetaLt
 
-/-- RED theorem for the bounded-profile pointwise operator contraction. -/
+/-- A uniform source-profile bound is contracted pointwise by exactly the
+single scalar C5 cross-boundary coefficient. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator_abs_le_coefficient_mul
     (H : ℕ)
     (beta M : ℝ)
     (hbeta : 0 ≤ beta)
-    (hM : 0 ≤ M)
+    (_hM : 0 ≤ M)
     (variation : PeriodicHypercubicEvenSpatialSliceLink H → ℝ)
     (hvariation : ∀ source, |variation source| ≤ M)
     (fiber : PeriodicHypercubicEvenSpatialSliceLink H) :
@@ -112,7 +113,14 @@ theorem
         H beta variation fiber| ≤
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
         beta * M := by
-  rfl
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator_eq_coefficient_mul,
+    abs_mul]
+  have hCoeffNonneg :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient_nonneg
+      beta hbeta
+  rw [abs_of_nonneg hCoeffNonneg]
+  exact mul_le_mul_of_nonneg_left (hvariation fiber) hCoeffNonneg
 
 end
 
