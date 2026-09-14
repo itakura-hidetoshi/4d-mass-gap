@@ -83,7 +83,166 @@ theorem
                 (PeriodicHypercubicEvenSpatialSliceLink H))
               (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
                 beta) ^ n * magnitude) := by
-  exact le_rfl
+  have hEach :
+      ∀ source :
+          Sum
+            (PeriodicHypercubicEvenSpatialSliceLink H)
+            (PeriodicHypercubicEvenSpatialSliceLink H),
+        C.expectationDiscrepancy (f source) ≤
+          finiteInfluenceKernelPartialSource
+              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+                H beta hbeta)
+              sourceEnvelope
+              (finiteInfluenceKernelSingletonVariation magnitude source) n +
+            2 * finiteProductVariationTotal
+              (finiteInfluenceKernelRandomScanVariationIterate
+                (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+                  H beta hbeta)
+                (finiteInfluenceKernelSingletonVariation magnitude source) n) := by
+    intro source
+    have h :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTagged_expectationDiscrepancy_le_kernelResidual
+        H beta hbeta (P source) C hDomination sourceEnvelope
+        hEnvelopeNonneg hEnvelope n
+    rw [hSingleton source] at h
+    exact h
+  have hSummed :
+      (∑ source :
+          Sum
+            (PeriodicHypercubicEvenSpatialSliceLink H)
+            (PeriodicHypercubicEvenSpatialSliceLink H),
+        C.expectationDiscrepancy (f source)) ≤
+        ∑ source :
+          Sum
+            (PeriodicHypercubicEvenSpatialSliceLink H)
+            (PeriodicHypercubicEvenSpatialSliceLink H),
+          (finiteInfluenceKernelPartialSource
+              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+                H beta hbeta)
+              sourceEnvelope
+              (finiteInfluenceKernelSingletonVariation magnitude source) n +
+            2 * finiteProductVariationTotal
+              (finiteInfluenceKernelRandomScanVariationIterate
+                (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+                  H beta hbeta)
+                (finiteInfluenceKernelSingletonVariation magnitude source) n)) := by
+    apply Finset.sum_le_sum
+    intro source _hsource
+    exact hEach source
+  have hSource :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTagged_partialSource_singleton_sum_source_le_resolvent
+      H beta hbeta hBetaLt sourceEnvelope hEnvelopeNonneg
+      magnitude hMagnitude n
+  have hTerminal :=
+    finiteInfluenceKernelSingletonVariation_iterate_total_sum_source_le
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+        H beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedIndex_card_pos
+        H)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+        beta)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient_nonneg
+        beta hbeta)
+      (fun source =>
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData_columnSum_le_coefficient
+          H beta hbeta source)
+      magnitude hMagnitude n
+  have hTerminalScaled :
+      (∑ source :
+          Sum
+            (PeriodicHypercubicEvenSpatialSliceLink H)
+            (PeriodicHypercubicEvenSpatialSliceLink H),
+        2 * finiteProductVariationTotal
+          (finiteInfluenceKernelRandomScanVariationIterate
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+              H beta hbeta)
+            (finiteInfluenceKernelSingletonVariation magnitude source) n)) ≤
+        2 *
+          ((Fintype.card
+            (Sum
+              (PeriodicHypercubicEvenSpatialSliceLink H)
+              (PeriodicHypercubicEvenSpatialSliceLink H)) : ℝ) *
+            (finiteInfluenceKernelReciprocalRandomScanRate
+                (Sum
+                  (PeriodicHypercubicEvenSpatialSliceLink H)
+                  (PeriodicHypercubicEvenSpatialSliceLink H))
+                (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+                  beta) ^ n * magnitude)) := by
+    rw [← Finset.mul_sum]
+    exact mul_le_mul_of_nonneg_left hTerminal (by norm_num)
+  calc
+    (∑ source :
+        Sum
+          (PeriodicHypercubicEvenSpatialSliceLink H)
+          (PeriodicHypercubicEvenSpatialSliceLink H),
+      C.expectationDiscrepancy (f source)) ≤
+        ∑ source :
+          Sum
+            (PeriodicHypercubicEvenSpatialSliceLink H)
+            (PeriodicHypercubicEvenSpatialSliceLink H),
+          (finiteInfluenceKernelPartialSource
+              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+                H beta hbeta)
+              sourceEnvelope
+              (finiteInfluenceKernelSingletonVariation magnitude source) n +
+            2 * finiteProductVariationTotal
+              (finiteInfluenceKernelRandomScanVariationIterate
+                (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+                  H beta hbeta)
+                (finiteInfluenceKernelSingletonVariation magnitude source) n)) := hSummed
+    _ =
+        (∑ source :
+            Sum
+              (PeriodicHypercubicEvenSpatialSliceLink H)
+              (PeriodicHypercubicEvenSpatialSliceLink H),
+          finiteInfluenceKernelPartialSource
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+              H beta hbeta)
+            sourceEnvelope
+            (finiteInfluenceKernelSingletonVariation magnitude source) n) +
+          (∑ source :
+            Sum
+              (PeriodicHypercubicEvenSpatialSliceLink H)
+              (PeriodicHypercubicEvenSpatialSliceLink H),
+            2 * finiteProductVariationTotal
+              (finiteInfluenceKernelRandomScanVariationIterate
+                (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+                  H beta hbeta)
+                (finiteInfluenceKernelSingletonVariation magnitude source) n)) := by
+          rw [Finset.sum_add_distrib]
+    _ ≤
+        finiteProductVariationTotal sourceEnvelope * magnitude *
+            (1 -
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+                beta)⁻¹ +
+          2 *
+            ((Fintype.card
+              (Sum
+                (PeriodicHypercubicEvenSpatialSliceLink H)
+                (PeriodicHypercubicEvenSpatialSliceLink H)) : ℝ) *
+              (finiteInfluenceKernelReciprocalRandomScanRate
+                  (Sum
+                    (PeriodicHypercubicEvenSpatialSliceLink H)
+                    (PeriodicHypercubicEvenSpatialSliceLink H))
+                  (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+                    beta) ^ n * magnitude)) :=
+        add_le_add hSource hTerminalScaled
+    _ =
+        finiteProductVariationTotal sourceEnvelope * magnitude *
+            (1 -
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+                beta)⁻¹ +
+          2 *
+            (Fintype.card
+              (Sum
+                (PeriodicHypercubicEvenSpatialSliceLink H)
+                (PeriodicHypercubicEvenSpatialSliceLink H)) : ℝ) *
+            (finiteInfluenceKernelReciprocalRandomScanRate
+                (Sum
+                  (PeriodicHypercubicEvenSpatialSliceLink H)
+                  (PeriodicHypercubicEvenSpatialSliceLink H))
+                (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+                  beta) ^ n * magnitude) := by ring
 
 end
 
