@@ -154,7 +154,12 @@ theorem
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
           H beta hbeta)
         (Sum.inr target) = 0 := by
-  rfl
+  classical
+  unfold finiteInfluenceKernelRowSum
+  rw [Fintype.sum_sum_type]
+  simp [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedInfluence]
 
 /-- The full generic row sum at a left target has no copy-cardinality or
 spatial-volume factor: the left-source half is zero and the right-source half
