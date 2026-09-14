@@ -34,8 +34,9 @@ local instance referenceDistinctSourceConditionalCarrierInvarianceSpatialLinkFin
     (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
-/-- RED probe: the measurable C5 one-link conditional carrier should be
-literally independent of a distinct right-boundary source value. -/
+/-- The measurable C5 one-link conditional carrier is literally independent of
+a distinct right-boundary source value.  The proof is pointwise at the kernel
+input and uses only the exact normalized fiber-law cancellation. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalKernel_eq_of_source_ne_fiber
     (H N : ℕ)
@@ -50,7 +51,14 @@ theorem
         H N hN beta hbeta B target source fiber k₁ g₂ =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalKernel
         H N hN beta hbeta B target source fiber k₂ g₂ := by
-  rfl
+  apply Kernel.ext
+  intro A
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalKernel_apply,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalKernel_apply]
+  exact
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_eq_of_source_ne_fiber
+      H N hN beta hbeta B target source fiber k₁ k₂ g₂ A hNe
 
 end
 
