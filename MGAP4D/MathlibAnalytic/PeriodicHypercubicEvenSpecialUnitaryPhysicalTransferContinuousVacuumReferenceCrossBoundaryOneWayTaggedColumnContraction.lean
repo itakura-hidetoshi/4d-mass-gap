@@ -117,6 +117,23 @@ theorem
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient_lt_one_of_beta_lt
       beta hBetaLt)
 
+/-- RED probe: the generic reciprocal random-scan rate induced by the tagged
+column coefficient should be strictly below one in the same C5 regime. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTagged_reciprocalRandomScanRate_lt_one
+    (H : ℕ)
+    (beta : ℝ)
+    (hBetaLt :
+      beta <
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBetaThreshold) :
+    finiteInfluenceKernelReciprocalRandomScanRate
+        (Sum
+          (PeriodicHypercubicEvenSpatialSliceLink H)
+          (PeriodicHypercubicEvenSpatialSliceLink H))
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+          beta) < 1 := by
+  rfl
+
 end
 
 end MathlibAnalytic
