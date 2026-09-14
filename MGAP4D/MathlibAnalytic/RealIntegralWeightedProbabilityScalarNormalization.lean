@@ -27,7 +27,7 @@ theorem doobWeightedMeasure_const_mul
   apply congrArg (fun ρ => μ.withDensity ρ)
   funext x
   unfold doobWeightMass
-  rw [lintegral_const_mul _ hw]
+  rw [lintegral_const_mul'' c hw]
   exact ENNReal.mul_div_mul_left
     (w x) (∫⁻ y, w y ∂μ) hcZero hcTop
 
@@ -50,7 +50,7 @@ theorem realIntegralWeightedProbabilityMeasure_const_mul
     simpa [Function.comp_def] using
       ENNReal.measurable_ofReal.comp_aemeasurable hw
   have hcZero : ENNReal.ofReal c ≠ 0 :=
-    ENNReal.ofReal_ne_zero.mpr hc
+    ne_of_gt (ENNReal.ofReal_pos.mpr hc)
   have hcTop : ENNReal.ofReal c ≠ ∞ :=
     ne_of_lt ENNReal.ofReal_lt_top
   have hScaled :
