@@ -68,6 +68,27 @@ theorem
         simp [
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedInfluence]
 
+/-- RED carrier: the global diagonal is structurally zero only after exposing
+the left/right `Sum` tag of the index. -/
+noncomputable def
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+    (H : ℕ)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    FiniteNonnegativeInfluenceKernelData
+      (Sum
+        (PeriodicHypercubicEvenSpatialSliceLink H)
+        (PeriodicHypercubicEvenSpatialSliceLink H)) :=
+  { influence :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedInfluence
+        H beta
+    influence_nonneg :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedInfluence_nonneg
+        H beta hbeta
+    influence_diagonal_zero := by
+      intro e
+      rfl }
+
 end
 
 end MathlibAnalytic
