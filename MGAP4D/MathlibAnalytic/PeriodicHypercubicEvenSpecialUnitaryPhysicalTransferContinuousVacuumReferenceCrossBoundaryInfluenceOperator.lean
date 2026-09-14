@@ -58,6 +58,17 @@ theorem
       hne]
   · simp
 
+/-- The scalar C5 cross-boundary contraction coefficient is nonnegative at
+nonnegative coupling. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient_nonneg
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    0 ≤
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+        beta := by
+  rfl
+
 end
 
 end MathlibAnalytic
