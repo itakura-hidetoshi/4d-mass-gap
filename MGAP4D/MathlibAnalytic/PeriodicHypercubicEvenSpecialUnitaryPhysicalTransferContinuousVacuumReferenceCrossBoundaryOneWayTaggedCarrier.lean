@@ -209,6 +209,28 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient_lt_one_of_beta_lt
       beta hBetaLt
 
+/-- In the explicit small-coupling region, every tagged target row is strictly
+contractive. The right-target case uses only the carrier-scope zero row. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData_rowSum_lt_one_of_beta_lt
+    (H : ℕ)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (hBetaLt :
+      beta <
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBetaThreshold)
+    (target :
+      Sum
+        (PeriodicHypercubicEvenSpatialSliceLink H)
+        (PeriodicHypercubicEvenSpatialSliceLink H)) :
+    finiteInfluenceKernelRowSum
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+          H beta hbeta)
+        target < 1 := by
+  exact
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData_leftRowSum_lt_one_of_beta_lt
+      H beta hbeta hBetaLt target
+
 end
 
 end MathlibAnalytic
