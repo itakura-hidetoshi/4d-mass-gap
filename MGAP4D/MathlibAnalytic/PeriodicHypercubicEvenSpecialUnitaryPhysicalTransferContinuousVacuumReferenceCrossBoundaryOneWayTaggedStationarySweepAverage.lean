@@ -86,7 +86,36 @@ theorem
                   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
                     beta) * (sweeps : ℝ)) *
             magnitude) := by
-  exact le_rfl
+  let N : ℕ :=
+    Fintype.card
+      (Sum
+        (PeriodicHypercubicEvenSpatialSliceLink H)
+        (PeriodicHypercubicEvenSpatialSliceLink H))
+  have hBase :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTagged_averageExpectationDiscrepancy_singleton_le_normalizedResolvent_add_geometricResidual
+      H beta hbeta hBetaLt f P C hDomination sourceEnvelope
+      hEnvelopeNonneg hEnvelope magnitude hMagnitude hSingleton (N * sweeps)
+  have hSweep :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTagged_reciprocalRandomScanRate_pow_card_mul_le_expSweep
+      H beta hbeta hBetaLt sweeps
+  have hResidual :
+      2 *
+          (finiteInfluenceKernelReciprocalRandomScanRate
+              (Sum
+                (PeriodicHypercubicEvenSpatialSliceLink H)
+                (PeriodicHypercubicEvenSpatialSliceLink H))
+              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+                beta) ^ (N * sweeps) * magnitude) ≤
+        2 *
+          (Real.exp
+              (-(1 -
+                  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+                    beta) * (sweeps : ℝ)) *
+            magnitude) := by
+    apply mul_le_mul_of_nonneg_left _ (by norm_num)
+    apply mul_le_mul_of_nonneg_right _ hMagnitude
+    simpa [N] using hSweep
+  exact hBase.trans (add_le_add_left hResidual _)
 
 end
 
