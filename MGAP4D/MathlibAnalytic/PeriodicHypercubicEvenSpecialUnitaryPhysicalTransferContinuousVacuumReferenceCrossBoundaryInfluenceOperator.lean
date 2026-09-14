@@ -58,6 +58,98 @@ theorem
       hne]
   · simp
 
+/-- The scalar C5 cross-boundary contraction coefficient is nonnegative at
+nonnegative coupling. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient_nonneg
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    0 ≤
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+        beta := by
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+  have hExpOne : (1 : ℝ) ≤ Real.exp (8 * beta) := by
+    rw [← Real.exp_zero]
+    exact Real.exp_le_exp.mpr (by nlinarith)
+  have hNum : 0 ≤ (Real.exp (8 * beta)) ^ 2 - 1 := by
+    calc
+      0 ≤
+          (Real.exp (8 * beta) - 1) *
+            (Real.exp (8 * beta) + 1) :=
+        mul_nonneg (sub_nonneg.mpr hExpOne) (by positivity)
+      _ = (Real.exp (8 * beta)) ^ 2 - 1 := by ring
+  have hDen : 0 ≤ (Real.exp (8 * beta)) ^ 2 + 1 := by
+    positivity
+  exact mul_nonneg (by norm_num) (div_nonneg hNum hDen)
+
+/-- The existing explicit small-coupling diagonal estimate is exactly an
+estimate on the named scalar cross-boundary contraction coefficient. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient_lt_one_of_beta_lt
+    (beta : ℝ)
+    (hBetaLt :
+      beta <
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBetaThreshold) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+        beta < 1 := by
+  simpa [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient] using
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundary_diagonalCoefficient_lt_one_of_beta_lt
+      beta hBetaLt
+
+/-- A uniform source-profile bound is contracted pointwise by exactly the
+single scalar C5 cross-boundary coefficient. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator_abs_le_coefficient_mul
+    (H : ℕ)
+    (beta M : ℝ)
+    (hbeta : 0 ≤ beta)
+    (_hM : 0 ≤ M)
+    (variation : PeriodicHypercubicEvenSpatialSliceLink H → ℝ)
+    (hvariation : ∀ source, |variation source| ≤ M)
+    (fiber : PeriodicHypercubicEvenSpatialSliceLink H) :
+    |periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator
+        H beta variation fiber| ≤
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+        beta * M := by
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator_eq_coefficient_mul,
+    abs_mul]
+  have hCoeffNonneg :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient_nonneg
+      beta hbeta
+  rw [abs_of_nonneg hCoeffNonneg]
+  exact mul_le_mul_of_nonneg_left (hvariation fiber) hCoeffNonneg
+
+/-- In the explicit small-coupling region, every unit-bounded source variation
+profile is strictly contracted pointwise by the C5 cross-boundary influence
+operator. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator_abs_lt_one_of_beta_lt
+    (H : ℕ)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (hBetaLt :
+      beta <
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBetaThreshold)
+    (variation : PeriodicHypercubicEvenSpatialSliceLink H → ℝ)
+    (hvariation : ∀ source, |variation source| ≤ 1)
+    (fiber : PeriodicHypercubicEvenSpatialSliceLink H) :
+    |periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator
+        H beta variation fiber| < 1 := by
+  have hBound :
+      |periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator
+          H beta variation fiber| ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+          beta := by
+    simpa using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator_abs_le_coefficient_mul
+        H beta 1 hbeta (by norm_num) variation hvariation fiber
+  exact lt_of_le_of_lt hBound
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient_lt_one_of_beta_lt
+      beta hBetaLt)
+
 end
 
 end MathlibAnalytic
