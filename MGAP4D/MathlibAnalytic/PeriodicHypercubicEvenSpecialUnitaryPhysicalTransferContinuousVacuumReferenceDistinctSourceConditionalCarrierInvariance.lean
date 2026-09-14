@@ -60,7 +60,7 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_eq_of_source_ne_fiber
       H N hN beta hbeta B target source fiber k₁ k₂ g₂ A hNe
 
-/-- RED probe for lifting the carrier equality through the full heat-bath
+/-- The exact distinct-source cancellation is preserved by the full heat-bath
 sampling-and-reinsertion construction. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_eq_of_source_ne_fiber
@@ -76,7 +76,11 @@ theorem
         H N hN beta hbeta B target source fiber k₁ g₂ =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
         H N hN beta hbeta B target source fiber k₂ g₂ := by
-  rfl
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalKernel_eq_of_source_ne_fiber
+      H N hN beta hbeta B target source fiber k₁ k₂ g₂ hNe]
 
 end
 
