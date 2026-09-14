@@ -141,6 +141,26 @@ theorem
         H beta hbeta).influence (Sum.inr target) (Sum.inr source) = 0 := by
   rfl
 
+/-- Every right-target row is exactly zero in the one-way carrier. This is a
+carrier-scope statement, not a theorem that the unrepresented reverse physical
+influence vanishes. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData_rightRowSum_eq_zero
+    (H : ℕ)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H) :
+    finiteInfluenceKernelRowSum
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+          H beta hbeta)
+        (Sum.inr target) = 0 := by
+  classical
+  unfold finiteInfluenceKernelRowSum
+  rw [Fintype.sum_sum_type]
+  simp [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedInfluence]
+
 /-- The full generic row sum at a left target has no copy-cardinality or
 spatial-volume factor: the left-source half is zero and the right-source half
 is exactly the one-point-supported C5 majorant row. -/
@@ -188,6 +208,34 @@ theorem
   exact
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient_lt_one_of_beta_lt
       beta hBetaLt
+
+/-- In the explicit small-coupling region, every tagged target row is strictly
+contractive. The right-target case uses only the carrier-scope zero row. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData_rowSum_lt_one_of_beta_lt
+    (H : ℕ)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (hBetaLt :
+      beta <
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBetaThreshold)
+    (target :
+      Sum
+        (PeriodicHypercubicEvenSpatialSliceLink H)
+        (PeriodicHypercubicEvenSpatialSliceLink H)) :
+    finiteInfluenceKernelRowSum
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+          H beta hbeta)
+        target < 1 := by
+  cases target with
+  | inl fiber =>
+      exact
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData_leftRowSum_lt_one_of_beta_lt
+          H beta hbeta hBetaLt fiber
+  | inr target =>
+      rw [
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData_rightRowSum_eq_zero]
+      norm_num
 
 end
 
