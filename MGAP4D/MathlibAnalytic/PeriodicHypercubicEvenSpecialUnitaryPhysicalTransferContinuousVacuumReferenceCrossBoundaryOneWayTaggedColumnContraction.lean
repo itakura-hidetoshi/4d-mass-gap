@@ -117,8 +117,25 @@ theorem
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient_lt_one_of_beta_lt
       beta hBetaLt)
 
-/-- RED probe: the generic reciprocal random-scan rate induced by the tagged
-column coefficient should be strictly below one in the same C5 regime. -/
+/-- The tagged left/right spatial-link index is nonempty for every even-periodic
+size parameter. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedIndex_card_pos
+    (H : ℕ) :
+    0 <
+      Fintype.card
+        (Sum
+          (PeriodicHypercubicEvenSpatialSliceLink H)
+          (PeriodicHypercubicEvenSpatialSliceLink H)) := by
+  let vertex : PeriodicHypercubicEvenSpatialSliceVertex H :=
+    ⟨(0 : PeriodicHypercubicEvenVertex H), by
+      simp [periodicHypercubicEvenOnPrimaryReflectionPlane]⟩
+  let direction : PeriodicHypercubicEvenSpatialDirection :=
+    ⟨1, by norm_num⟩
+  exact Fintype.card_pos_iff.mpr ⟨Sum.inl (vertex, direction)⟩
+
+/-- The generic reciprocal random-scan rate induced by the tagged column
+coefficient is strictly below one in the same C5 small-coupling regime. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTagged_reciprocalRandomScanRate_lt_one
     (H : ℕ)
@@ -132,7 +149,14 @@ theorem
           (PeriodicHypercubicEvenSpatialSliceLink H))
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
           beta) < 1 := by
-  rfl
+  exact
+    finiteInfluenceKernelReciprocalRandomScanRate_lt_one
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedIndex_card_pos
+        H)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+        beta)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient_lt_one_of_beta_lt
+        beta hBetaLt)
 
 end
 
