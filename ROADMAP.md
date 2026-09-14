@@ -8,36 +8,40 @@ The authoritative theorem-carrier branch is
 formal/real-hilbert-uniform-coercive-strong-limit
 ```
 
-The fresh exact canonical theorem HEAD observed before this documentation refresh is
+The fresh exact mathematical theorem baseline observed before this documentation refresh is
 
 ```text
-b4e38957f0264f1ed24b42fd4a4722a4238d94a7
+ad38daddab638cfc45ac47edd796505527291e78
 ```
 
-which is the merge of PR #4094,
+which is the merge of PR #4103,
 
 ```text
-Localize two-tilt normalized source change as cross-ratio defect
+Factor distinct C5 source change as a scalar
 ```
 
 with exact GREEN proof head and CI receipt
 
 ```text
 head:
-  7ce26ca96783e067862aac51db809f1d6042c1c6
+  c66fd63a13b28365e87ca0dcbc9f8f4afd698d67
 
-PR Lean Fast Check #13807
-workflow run 34806695310
+PR Lean Fast Check #13811
+workflow run 34809368834
 completed / success
 ```
 
 `main` is a public landing surface, not theorem authority. The authority order is exact canonical SHA -> Lean artifacts -> README/ROADMAP -> CI receipts -> history/memory.
 
+A docs-only merge may advance the current branch pointer beyond the theorem baseline above. Such a documentation commit does not by itself change the mathematical theorem frontier.
+
 > **Current frontier**
 >
-> The reference-law RCD/conditional-variance route is integrated. The literal C5 reference fiber has been factored as `Omega_cont × local × source-sensitive one-slab kernel`, with the raw C5 law kept distinct from the full-4D Wilson `singleLinkConditionalMeasure`. PRs #4094/#4095 now provide a quotient-free two-source normalized-change interface that retains both source kernels and both exact partition functions.
+> The reference-law RCD/conditional-variance route is integrated. The literal C5 reference fiber is factored as `Omega_cont × local × source-sensitive one-slab kernel`, while the C5 raw law remains explicitly distinct from the full-4D Wilson `singleLinkConditionalMeasure`.
 >
-> The next theorem unit is to expose `K_{k1} - K_{k2}` algebraically, before estimating it. Only after that exact carrier is available should target-source geometry be inserted. No exponential decay assumption is permitted unless it is actually derived on the present carrier.
+> PR #4101 exposed the literal source-kernel difference `K_1-K_2` inside the quotient-free normalized-change identity. PR #4103 then proved that, when `source != fiber`, this difference is a fiber-independent scalar difference times one common base one-slab kernel.
+>
+> The next theorem unit is therefore **normalized scalar cancellation**, not an assumed distance-decay estimate. The immediate goal is to prove that the individual positive source multiplier cancels from the normalized literal C5 fiber probability law. Only after that theorem is established should the exact result be bridged back to same-color influence and block coercivity.
 
 ---
 
@@ -86,7 +90,7 @@ complete continuous-vacuum one-link weight
   -> exp(-16 beta) variance lower bound
   -> genuine joint condExpL2 residual on bounded core
 
-E. REMOTE CONSTANT-BOUND OBSTRUCTION                                [Obstruction integrated]
+E. CONSTANT REMOTE-BOUND OBSTRUCTION                                [Obstruction integrated]
 
 single-source comparison
   -> bounded-test influence
@@ -125,36 +129,48 @@ I_j = integral w f K_j
 
 Z_1 Z_2 (E_1 f - E_2 f) = I_1 Z_2 - I_2 Z_1
 
-J. SOURCE-KERNEL DIFFERENCE                                         [Open now]
+J. SOURCE-KERNEL DIFFERENCE                                         [#4101 Integrated]
 
 I_1 Z_2 - I_2 Z_1
-  -> exact one-variable expression using K_1 - K_2
-  -> retain target, source, k_1, k_2 explicitly
-  -> no ratio K_1/K_2
-  -> no distance estimate yet
+  -> integral w f (K_1-K_2)
+  -> integral w   (K_1-K_2)
+  -> no K_1/K_2 quotient
 
-K. GEOMETRIC SOURCE INFLUENCE                                       [Open next]
+K. DISTINCT-SOURCE SCALAR FACTORIZATION                             [#4103 Integrated]
 
-K_1 - K_2
-  -> identify exact plaquette/support/incidence path
-  -> identify which existing locality/distance APIs apply to this carrier
-  -> prove finite-range, cancellation, distance-sensitive, or other summable variation
-  -> do not assume C exp(-m d) without derivation
+K_1(g)-K_2(g)
+  -> source-local factor difference x common base kernel
+  -> source != fiber makes source-local factors independent of g
+  -> (c_1-c_2) x common base kernel
 
-L. VOLUME-UNIFORM SAME-COLOR MIXING                                 [Open next]
+L. NORMALIZED SCALAR CANCELLATION                                   [Open now]
 
-source-sensitive coefficient c(target,source)
-  -> sup_target sum_source c(target,source) < 1
+source != fiber
+  -> individual positive scalar factorization W_k = c_k W_base
+  -> Z_k = c_k Z_base
+  -> normalized C5 fiber law independent of k
+  -> exact distinct-source C5 invariance
+
+M. C5-TO-SAME-COLOR BRIDGE                                          [Open next]
+
+exact C5 distinct-source invariance, if proved
+  -> identify the exact original conditional carrier it controls
+  -> transport zero influence only where justified
+  -> isolate any remaining incidence cases
+
+N. VOLUME-UNIFORM SAME-COLOR COERCIVITY                             [Open next]
+
+zero or summable source-sensitive coefficients
   -> one same-color block coercivity
+  -> six right + six left blocks
+  -> quantitative twelve-spatial Poincare coefficient
 
-M. GLOBAL FINITE-VOLUME COERCIVITY                                  [Open / routing integrated]
+O. UNIFORM FINITE-VOLUME PHYSICAL GAP                               [Open / routing integrated]
 
-six right + six left blocks
-  -> quantitative E12 Poincare coefficient
-  -> scale-independent kappa_* > 0
+scale-independent kappa_* > 0
   -> physical transfer gap >= 3 kappa_*/4
 
-N. THERMODYNAMIC / CONTINUUM PROPAGATION                            [Open downstream]
+P. THERMODYNAMIC / CONTINUUM PROPAGATION                            [Open downstream]
 
 uniform finite-volume physical gap
   -> thermodynamic/scaling-limit carrier
@@ -193,6 +209,8 @@ bounded-core theorem != arbitrary-L2 pointwise theorem
 covariance localization != covariance decay
 RCD identification != quantitative mixing
 C5 raw one-slab law != full-4D Wilson singleLinkConditionalMeasure
+source-kernel scalar factorization != normalized law equality
+normalized C5 law equality != automatic global same-color influence theorem
 uniform pairwise remote bound != summable row bound
 CI success != theorem authority
 same-root scalar continuum != full 4D Yang--Mills field
@@ -253,13 +271,15 @@ A uniform single-source remote comparison exists, but assigning the same nonzero
 
 Completion criterion: satisfied as a negative theorem. The constant-row-majorant route is closed.
 
+This obstruction remains important even after #4103: if a future carrier has genuinely nonzero long-range dependence, a uniform constant coefficient is still insufficient. What #4103 changes is that the present C5 distinct-source lane may admit exact cancellation before any such summation is needed.
+
 ---
 
 # Phase 6 — Localize the true remote dependence
 
 **Status: Integrated.**
 
-Raw same-color Wilson locality removes the irrelevant remote factor. The remaining source dependence after continuous-vacuum integration has been localized into covariance/cross-ratio expressions with target-local and source-local structure kept visible.
+Raw same-color Wilson locality removes irrelevant remote factors. The remaining source dependence after continuous-vacuum integration is localized into covariance/cross-ratio expressions with target-local and source-local structure kept visible.
 
 Completion criterion: exact localization, not decay.
 
@@ -291,7 +311,7 @@ Do not reopen this phase unless a later carrier exposes a genuinely missing hypo
 
 **Status: Integrated.**
 
-For a selected target fiber,
+For a selected fiber,
 
 ```text
 q_A(g)
@@ -334,97 +354,235 @@ Z_j = integral w(g) K_j(g) dg
 I_j = integral w(g) f(g) K_j(g) dg
 ```
 
-and the normalized source change satisfies
+and
 
 ```text
 Z_1 Z_2 (E_1 f - E_2 f)
   = I_1 Z_2 - I_2 Z_1.
 ```
 
-No likelihood-ratio quotient is needed. This is the preferred surface for retaining geometric source information.
+No likelihood-ratio quotient is needed. This remains the preferred normalization surface.
 
 ---
 
 # Phase 10 — Expose the source-kernel difference
 
-**Status: Open now.**
+**Status: Integrated by #4101.**
 
-The next theorem carrier should be algebraic and quotient-free. A preferred one-variable normal form is
+The previous open algebraic target is now closed.
+
+PR #4101 proves generic and C5-specialized identities that rewrite
 
 ```text
 I_1 Z_2 - I_2 Z_1
-  = (I_1 - I_2) Z_2 - I_2 (Z_1 - Z_2)
 ```
 
-with
+using the literal pointwise difference
 
 ```text
-I_1 - I_2 = integral w(g) f(g) (K_1(g) - K_2(g)) dg
-Z_1 - Z_2 = integral w(g)       (K_1(g) - K_2(g)) dg.
+K_1(g) - K_2(g).
 ```
 
-This carrier is preferred before a two-variable antisymmetrization because it does not introduce Fubini/product-integrability obligations solely for presentation.
+Schematically,
+
+```text
+I_1 Z_2 - I_2 Z_1
+  = Z_2 * integral w f (K_1-K_2)
+      - I_2 * integral w (K_1-K_2).
+```
+
+The added hypotheses are exactly the integrability assumptions needed for real-integral subtraction. No distance estimate or full-4D conditional-law identification is introduced.
+
+Completion criterion: satisfied.
+
+---
+
+# Phase 11 — Factor the exact source update
+
+**Status: Integrated by #4103.**
+
+PR #4103 proves the exact one-slab source-update structure
+
+```text
+K_1(g)-K_2(g)
+  = (L_source(k_1;g)-L_source(k_2;g)) * K_base(g),
+```
+
+where `L_source` is the exact right-boundary source-local Boltzmann factor and `K_base` is the one-slab kernel before the right source update.
+
+It then proves that if
+
+```text
+source != fiber,
+```
+
+the source-local factor is independent of the selected fiber value `g`:
+
+```text
+L_source(k;g) = L_source(k).
+```
+
+Therefore
+
+```text
+K_1(g)-K_2(g)
+  = (c_1-c_2) * K_base(g).
+```
+
+All fiber-variable dependence lies in the common base kernel.
+
+Completion criterion: satisfied for this exact scalar-difference carrier.
+
+---
+
+# Phase 12 — Normalize away the distinct-source scalar
+
+**Status: Open now.**
+
+This is the immediate theorem-development unit.
+
+The objective is to pass from the #4103 difference statement plus the existing individual source-update factorization to a pointwise weight factorization of the form
+
+```text
+W_k(g) = c_k * W_base(g)
+```
+
+for `source != fiber`, where
+
+```text
+c_k > 0
+```
+
+and `c_k` is independent of `g`.
+
+Then prove
+
+```text
+Z_k = c_k * Z_base
+```
+
+and cancel the scalar in the normalized law:
+
+```text
+realIntegralWeightedProbabilityMeasure Haar W_k
+  = realIntegralWeightedProbabilityMeasure Haar W_base.
+```
+
+A generic theorem for positive scalar rescaling of `realIntegralWeightedProbabilityMeasure` may be introduced if that is the cleanest exact interface.
+
+Preferred assumptions:
+
+- only the nonnegativity/integrability/mass-positivity required by the normalization API;
+- positivity/nonvanishing of the scalar from the already formalized Boltzmann factor;
+- no distance-decay assumption;
+- no new global conditional-law identification.
 
 Completion criterion:
 
 ```text
-the source values k_1,k_2 occur only through an explicit K_1-K_2 term,
-while target/source/fiber parameters remain visible.
+for source != fiber,
+  literal normalized C5 fiber law with source value k_1
+    =
+  literal normalized C5 fiber law with source value k_2.
 ```
 
-No geometric estimate is part of this phase.
+Until this equality is a Lean theorem, the roadmap treats it as an open target, not as an established consequence of #4103.
 
 ---
 
-# Phase 11 — Identify exact geometric support of `K_1-K_2`
+# Phase 13 — Convert normalized equality into exact zero source change
 
 **Status: Open next.**
 
-Canonical inspection must determine how the update
+Once Phase 12 proves equality of the literal C5 fiber probability measures for distinct source/fiber indices, derive the most useful corollaries:
 
 ```text
-B -> Function.update B source k
+E_{k_1}[f] - E_{k_2}[f] = 0
 ```
 
-changes the one-slab kernel. The kernel consists of the left spatial half-weight, the temporal crossing product, and the right spatial half-weight. Existing target-local factorization, touching-plaquette, same-color locality, finite-lattice incidence, and distance APIs are candidates, but each must be matched to the exact compact `SU(N)` C5 carrier.
+for every integrable/bounded observable on the relevant fiber, and corresponding zero influence statements on the exact C5 carrier.
 
-The objective is an exact statement of which local factors can differ, not yet an asymptotic estimate.
+Prefer measure equality as the primary theorem and expectation-zero results as corollaries, because measure equality is stronger and avoids duplicating observable-specific assumptions.
 
 ---
 
-# Phase 12 — Derive summable source variation
+# Phase 14 — Bridge exact C5 invariance back to same-color dynamics
 
 **Status: Open next.**
 
-From the exact support statement, derive a coefficient `c(target,source)` that is summable over same-color sources. Possible valid mechanisms include finite interaction range, exact cancellation, or a genuinely proved distance-decay estimate.
+This is a separate theorem phase. Do not collapse it into Phase 12.
+
+The exact questions are:
+
+```text
+1. Which original same-color conditional-law carrier is represented by the C5 fiber law?
+2. Under what hypotheses is a distinct same-color source mapped to source != fiber in the C5 coordinates?
+3. Does the existing RCD / raw-Doob / ground-state bridge transport the exact measure equality directly?
+4. Are there any source-incidence cases left where source = fiber or another local interaction survives?
+```
+
+Completion criterion: an explicit theorem transporting C5 distinct-source invariance to the actual coefficient used in the same-color/block-coercivity route.
 
 Forbidden shortcut:
+
+```text
+C5 normalized equality
+  => all full-4D remote coefficients are zero
+```
+
+without the formal carrier-identification theorem.
+
+---
+
+# Phase 15 — Decide whether any summable nonzero remainder remains
+
+**Status: Open after Phase 14.**
+
+There are now two logically possible outcomes.
+
+**Route A — exact locality/cancellation closes the remote part.**
+
+If the bridge proves that every distinct same-color remote source falls under the exact C5 invariance theorem, the corresponding off-diagonal influence coefficients may be exactly zero. Then no distance-decay theorem is needed for that part of the block argument.
+
+**Route B — a nonzero remainder survives.**
+
+If some legitimate carrier retains nonzero dependence, derive a coefficient `c(target,source)` from the actual remaining interaction. Valid mechanisms include finite interaction range, exact incidence bounds, or a genuinely proved distance-sensitive estimate.
+
+The old forbidden shortcut remains forbidden:
 
 ```text
 assume c(target,source) <= C * exp(-m * d(target,source))
 ```
 
-without a theorem deriving that estimate on the present carrier.
+without deriving it on the present carrier.
 
-Completion criterion:
+Completion criterion for any nonzero remainder:
 
 ```text
 sup_target sum_source c(target,source) < 1
 ```
 
-or another formally sufficient, volume-independent block-coercivity criterion derived from the actual model.
+or another formally sufficient volume-independent block-coercivity criterion.
 
 ---
 
-# Phase 13 — Same-color and twelve-spatial coercivity
+# Phase 16 — Same-color and twelve-spatial coercivity
 
-**Status: Open after Phase 12.**
+**Status: Open after the C5-to-same-color bridge.**
 
-A summable source estimate should feed the existing one-link variance/control machinery to obtain one same-color block coercivity, then all six right and six left blocks, and finally a quantitative twelve-spatial Poincare coefficient.
+Use exact zero remote influence and/or the remaining summable source estimate together with the existing one-link variance/control machinery to obtain one same-color block coercivity, then all six right and six left blocks, and finally a quantitative twelve-spatial Poincare coefficient.
+
+The repository should prefer the strongest exact input available:
+
+```text
+zero coefficient > finite-range coefficient > proved decay coefficient > uniform constant bound.
+```
+
+The last option alone is already known to lose volume uniformity.
 
 ---
 
-# Phase 14 — Uniform finite-volume physical gap
+# Phase 17 — Uniform finite-volume physical gap
 
 **Status: Open downstream; routing already integrated.**
 
@@ -443,7 +601,7 @@ physical transfer gap >= 3 * kappa_* / 4.
 
 ---
 
-# Phase 15 — Thermodynamic / continuum propagation
+# Phase 18 — Thermodynamic / continuum propagation
 
 **Status: Open downstream.**
 
@@ -451,7 +609,7 @@ A uniform finite-volume gap must still be transported to the appropriate thermod
 
 ---
 
-# Phase 16 — Clay-level completion
+# Phase 19 — Clay-level completion
 
 **Status: Open.**
 
