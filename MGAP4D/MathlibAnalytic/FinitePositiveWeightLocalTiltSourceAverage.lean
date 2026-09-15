@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.FinitePositiveWeightLocalTiltConditional
+import MGAP4D.MathlibAnalytic.FinitePositiveWeightNonstrictStationaryResponse
 import Mathlib.Tactic
 
 namespace MGAP4D
