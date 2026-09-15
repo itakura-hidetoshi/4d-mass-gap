@@ -76,11 +76,17 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator
   apply Finset.sum_le_sum
   intro source _hsource
-  exact
+  have hBound :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_fiberVariation_influence_le_crossBoundaryMajorant_mul
       H N hN beta hbeta B target source fiber
       (k₁ source) (k₂ source) g₂ A F hF
       (variation fiber) (hVariationNonneg fiber) hFiberVariation
+  by_cases hSource : source = fiber
+  · subst source
+    exact hBound
+  · simpa [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant,
+      hSource] using hBound
 
 end
 
