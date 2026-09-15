@@ -107,8 +107,10 @@ theorem
             periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuousVacuumReplaceLink_le_exp_eight_mul
               H N hN beta hbeta Br A backgroundFiber g h
         _ = Real.exp (8 * beta) * slab Ah Br := by
-          rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
-            H N hN beta hbeta Ah Br]
+          congr 1
+          simpa [slab] using
+            (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
+              H N hN beta hbeta Ah Br).symm
     have hOmegaAhNonneg : 0 ≤ Omega Ah :=
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos
         H N hN beta hbeta Ah).le
