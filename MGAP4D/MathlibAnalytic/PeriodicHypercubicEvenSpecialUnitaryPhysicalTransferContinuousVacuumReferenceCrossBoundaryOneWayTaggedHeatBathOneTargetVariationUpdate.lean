@@ -84,7 +84,14 @@ theorem
           H variation)
         (Sum.inl fiber)
         (Sum.inr source) := by
-  rfl
+  have hBound :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTagged_oneLinkHeatBath_fiberVariation_influence_le_kernel_mul
+      H N hN beta hbeta B target source fiber k₁ k₂ g₂ A F hF
+      (variation fiber) (hVariationNonneg fiber) hFiberVariation
+  simpa [
+    finiteInfluenceKernelUpdatedVariation,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedLeftVariation] using
+    hBound
 
 end
 
