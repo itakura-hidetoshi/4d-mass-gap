@@ -58,7 +58,7 @@ theorem
   · subst e
     simp [
       periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink,
-      hDistinct]
+      Ne.symm hDistinct]
   · by_cases heBackground : e = backgroundFiber
     · subst e
       simp [
