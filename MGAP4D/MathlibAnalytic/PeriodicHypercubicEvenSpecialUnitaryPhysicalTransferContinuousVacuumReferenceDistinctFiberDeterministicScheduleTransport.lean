@@ -199,7 +199,7 @@ theorem
             H N hN beta hbeta B target source fiber k g₂ A u,
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_update_fiber
             H N hN beta hbeta B target source fiber k g₂ A v]
-        simp
+        simp [finiteInfluenceKernelUpdatedVariation]
       · have hBound :=
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_distinctBackground_variation_le
             H N hN beta hbeta B target source fiber e hEq
@@ -243,7 +243,8 @@ theorem
   intro fibers
   induction fibers generalizing A with
   | nil =>
-      simp
+      simp [
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedLeftVariation]
   | cons fiber fibers ih =>
       let K₁ :=
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
