@@ -164,10 +164,16 @@ theorem
     intro k
     apply (hGnormIntegrable k).mono (hG k).aestronglyMeasurable
     filter_upwards with C
+    change
+      ‖∫ D, F D ∂K₂ k C‖ ≤
+        ‖∫ D, ‖F D‖ ∂K₂ k C‖
     have hNonneg : 0 ≤ ∫ D, ‖F D‖ ∂K₂ k C := by
       positivity
-    simpa [G, Gnorm, Real.norm_eq_abs, abs_of_nonneg hNonneg] using
-      (norm_integral_le_integral_norm (μ := K₂ k C) (f := F))
+    calc
+      ‖∫ D, F D ∂K₂ k C‖ ≤ ∫ D, ‖F D‖ ∂K₂ k C :=
+        norm_integral_le_integral_norm _
+      _ = ‖∫ D, ‖F D‖ ∂K₂ k C‖ := by
+        rw [Real.norm_eq_abs, abs_of_nonneg hNonneg]
   have hPoint :
       ∀ C : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
         |G k₁ C - G k₂ C| ≤ bound := by
