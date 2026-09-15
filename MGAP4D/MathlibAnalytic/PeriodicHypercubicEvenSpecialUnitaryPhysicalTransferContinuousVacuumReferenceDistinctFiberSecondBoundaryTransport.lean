@@ -164,7 +164,9 @@ theorem
     intro k
     apply (hGnormIntegrable k).mono (hG k).aestronglyMeasurable
     filter_upwards with C
-    simpa [G, Gnorm] using
+    have hNonneg : 0 ≤ ∫ D, ‖F D‖ ∂K₂ k C := by
+      positivity
+    simpa [G, Gnorm, Real.norm_eq_abs, abs_of_nonneg hNonneg] using
       (norm_integral_le_integral_norm (μ := K₂ k C) (f := F))
   have hPoint :
       ∀ C : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
