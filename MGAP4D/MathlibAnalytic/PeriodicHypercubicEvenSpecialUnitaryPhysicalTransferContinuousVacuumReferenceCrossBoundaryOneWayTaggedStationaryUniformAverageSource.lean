@@ -170,7 +170,7 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTagged_averageExpectationDiscrepancy_singleton_le_normalizedResolvent_add_expSweepResidual
       H beta hbeta hBetaLt f P C hDomination sourceEnvelope
       hEnvelopeNonneg hEnvelope magnitude hMagnitude hSingleton sweeps
-  exact hBase.trans (add_le_add_right hSourceTerm _)
+  exact hBase.trans (add_le_add_left hSourceTerm _)
 
 end
 
