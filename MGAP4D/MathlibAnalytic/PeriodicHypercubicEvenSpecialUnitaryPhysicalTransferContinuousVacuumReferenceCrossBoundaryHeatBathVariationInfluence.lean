@@ -66,7 +66,120 @@ theorem
           H N hN beta hbeta B target source fiber k₂ g₂ A)| ≤
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant
         beta fiber source * magnitude := by
-  rfl
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_integral
+      H N hN beta hbeta B target source fiber k₁ g₂ A F hF,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_integral
+      H N hN beta hbeta B target source fiber k₂ g₂ A F hF]
+  let h : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ :=
+    fun g => F (Function.update A fiber g)
+  let μ₁ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
+      H N hN beta hbeta B target source fiber k₁ g₂ A
+  let μ₂ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
+      H N hN beta hbeta B target source fiber k₂ g₂ A
+  letI : IsProbabilityMeasure μ₁ := by
+    dsimp [μ₁]
+    exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_isProbabilityMeasure
+        H N hN beta hbeta B target source fiber k₁ g₂ A
+  letI : IsProbabilityMeasure μ₂ := by
+    dsimp [μ₂]
+    exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_isProbabilityMeasure
+        H N hN beta hbeta B target source fiber k₂ g₂ A
+  have hUpdate : Measurable
+      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
+        Function.update A fiber g) := by
+    exact
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkUpdate_uncurry_measurable
+        H N fiber).comp (measurable_const.prodMk measurable_id)
+  have hh : StronglyMeasurable h := by
+    dsimp [h]
+    exact hF.comp_measurable hUpdate
+  let center : ℝ := h (1 : Matrix.specialUnitaryGroup (Fin N) ℂ)
+  change
+    |(∫ g, h g ∂μ₁) - (∫ g, h g ∂μ₂)| ≤
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant
+        beta fiber source * magnitude
+  by_cases hMagnitudeZero : magnitude = 0
+  · have hConst : h = fun _ : Matrix.specialUnitaryGroup (Fin N) ℂ => center := by
+      funext g
+      have hle : |h g - center| ≤ 0 := by
+        simpa [h, center, hMagnitudeZero] using
+          hFiberVariation g (1 : Matrix.specialUnitaryGroup (Fin N) ℂ)
+      have hz : |h g - center| = 0 := le_antisymm hle (abs_nonneg _)
+      exact sub_eq_zero.mp (abs_eq_zero.mp hz)
+    simp [hConst, hMagnitudeZero]
+  · have hMagnitudePos : 0 < magnitude :=
+      lt_of_le_of_ne hMagnitude (Ne.symm hMagnitudeZero)
+    let phi : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ :=
+      fun g => (h g - center) / magnitude
+    have hphi : StronglyMeasurable phi := by
+      dsimp [phi]
+      exact (hh.sub stronglyMeasurable_const).div_const magnitude
+    have hphiBound :
+        ∀ g : Matrix.specialUnitaryGroup (Fin N) ℂ, |phi g| ≤ 1 := by
+      intro g
+      dsimp [phi]
+      rw [abs_div, abs_of_pos hMagnitudePos]
+      apply (div_le_iff₀ hMagnitudePos).2
+      simpa [h, center] using
+        hFiberVariation g (1 : Matrix.specialUnitaryGroup (Fin N) ℂ)
+    have hInfluence :
+        |(∫ g, phi g ∂μ₁) - (∫ g, phi g ∂μ₂)| ≤
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant
+            beta fiber source := by
+      have hBound :=
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_boundedTest_influence_supported_on_diagonal
+          H N hN beta hbeta B target source fiber k₁ k₂ g₂ A
+          phi hphi hphiBound
+      simpa [
+        μ₁, μ₂,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant] using hBound
+    have hphiInt₁ : Integrable phi μ₁ := by
+      apply (integrable_const (1 : ℝ)).mono hphi.aestronglyMeasurable
+      filter_upwards with g
+      simpa [Real.norm_eq_abs] using hphiBound g
+    have hphiInt₂ : Integrable phi μ₂ := by
+      apply (integrable_const (1 : ℝ)).mono hphi.aestronglyMeasurable
+      filter_upwards with g
+      simpa [Real.norm_eq_abs] using hphiBound g
+    have hIdentity₁ :
+        (∫ g, h g ∂μ₁) = magnitude * (∫ g, phi g ∂μ₁) + center := by
+      calc
+        (∫ g, h g ∂μ₁) = ∫ g, magnitude * phi g + center ∂μ₁ := by
+          apply integral_congr_ae
+          filter_upwards [] with g
+          dsimp [phi]
+          field_simp [ne_of_gt hMagnitudePos]
+          ring
+        _ = magnitude * (∫ g, phi g ∂μ₁) + center := by
+          rw [integral_add (hphiInt₁.const_mul magnitude) (integrable_const center),
+            integral_const_mul]
+          simp
+    have hIdentity₂ :
+        (∫ g, h g ∂μ₂) = magnitude * (∫ g, phi g ∂μ₂) + center := by
+      calc
+        (∫ g, h g ∂μ₂) = ∫ g, magnitude * phi g + center ∂μ₂ := by
+          apply integral_congr_ae
+          filter_upwards [] with g
+          dsimp [phi]
+          field_simp [ne_of_gt hMagnitudePos]
+          ring
+        _ = magnitude * (∫ g, phi g ∂μ₂) + center := by
+          rw [integral_add (hphiInt₂.const_mul magnitude) (integrable_const center),
+            integral_const_mul]
+          simp
+    rw [hIdentity₁, hIdentity₂]
+    have hAlgebra :
+        magnitude * (∫ g, phi g ∂μ₁) + center -
+            (magnitude * (∫ g, phi g ∂μ₂) + center) =
+          magnitude * ((∫ g, phi g ∂μ₁) - ∫ g, phi g ∂μ₂) := by
+      ring
+    rw [hAlgebra, abs_mul, abs_of_pos hMagnitudePos]
+    exact mul_le_mul_of_nonneg_left hInfluence hMagnitudePos.le
 
 end
 
