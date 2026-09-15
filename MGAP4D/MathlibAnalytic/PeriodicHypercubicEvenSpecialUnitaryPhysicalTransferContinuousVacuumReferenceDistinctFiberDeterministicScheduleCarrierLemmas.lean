@@ -69,13 +69,14 @@ theorem
     0 ≤
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedDeterministicScheduleVariation
         H beta hbeta variation fibers e := by
-  apply
-    finiteInfluenceKernelDeterministicScheduleVariation_nonneg
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedKernel
-        H beta hbeta)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedLeftVariation
-        H variation)
-  · intro x
+  have hInitial :
+      ∀ x : Sum
+        (PeriodicHypercubicEvenSpatialSliceLink H)
+        (PeriodicHypercubicEvenSpatialSliceLink H),
+        0 ≤
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedLeftVariation
+            H variation x := by
+    intro x
     cases x with
     | inl x =>
         simpa [
@@ -84,8 +85,13 @@ theorem
     | inr x =>
         simp [
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedLeftVariation]
-  · exact fibers.map Sum.inl
-  · exact e
+  exact
+    finiteInfluenceKernelDeterministicScheduleVariation_nonneg
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedKernel
+        H beta hbeta)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedLeftVariation
+        H variation)
+      hInitial (fibers.map Sum.inl) e
 
 @[simp] theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedDeterministicScheduleVariation_cons_right
