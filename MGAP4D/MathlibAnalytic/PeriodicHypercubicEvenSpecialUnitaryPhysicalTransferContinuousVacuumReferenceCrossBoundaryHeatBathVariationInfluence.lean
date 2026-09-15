@@ -118,7 +118,8 @@ theorem
       fun g => (h g - center) / magnitude
     have hphi : StronglyMeasurable phi := by
       dsimp [phi]
-      exact (hh.sub stronglyMeasurable_const).div_const magnitude
+      simpa [div_eq_mul_inv] using
+        (hh.sub stronglyMeasurable_const).mul_const magnitude⁻¹
     have hphiBound :
         ∀ g : Matrix.specialUnitaryGroup (Fin N) ℂ, |phi g| ≤ 1 := by
       intro g
@@ -179,7 +180,16 @@ theorem
           magnitude * ((∫ g, phi g ∂μ₁) - ∫ g, phi g ∂μ₂) := by
       ring
     rw [hAlgebra, abs_mul, abs_of_pos hMagnitudePos]
-    exact mul_le_mul_of_nonneg_left hInfluence hMagnitudePos.le
+    calc
+      magnitude * |(∫ g, phi g ∂μ₁) - ∫ g, phi g ∂μ₂| ≤
+          magnitude *
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant
+              beta fiber source :=
+        mul_le_mul_of_nonneg_left hInfluence hMagnitudePos.le
+      _ =
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant
+            beta fiber source * magnitude := by
+        ring
 
 end
 
