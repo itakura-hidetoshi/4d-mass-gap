@@ -47,7 +47,7 @@ theorem
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberOffFiberInfluence
   have hExp : 1 ≤ Real.exp (32 * beta) := by
-    apply Real.one_le_exp.mpr
+    apply Real.one_le_exp
     nlinarith
   have hSq : 1 ≤ (Real.exp (32 * beta)) ^ 2 := by
     nlinarith [Real.exp_pos (32 * beta)]
@@ -334,7 +334,7 @@ theorem
       simpa [centerG] using
         hPhiGVariation u (1 : Matrix.specialUnitaryGroup (Fin N) ℂ)
     have hRaw : |phiG u| ≤ variation fiber + |centerG| :=
-      hTri.trans (add_le_add_right hVar _)
+      hTri.trans (add_le_add hVar (le_refl _))
     simpa [Real.norm_eq_abs,
       abs_of_nonneg (add_nonneg (hVariationNonneg fiber) (abs_nonneg centerG))] using hRaw
   have hPhiHBound :
@@ -352,7 +352,7 @@ theorem
       simpa [centerH] using
         hPhiHVariation u (1 : Matrix.specialUnitaryGroup (Fin N) ℂ)
     have hRaw : |phiH u| ≤ variation fiber + |centerH| :=
-      hTri.trans (add_le_add_right hVar _)
+      hTri.trans (add_le_add hVar (le_refl _))
     simpa [Real.norm_eq_abs,
       abs_of_nonneg (add_nonneg (hVariationNonneg fiber) (abs_nonneg centerH))] using hRaw
   have hPhiGIntG : Integrable phiG μg := by
