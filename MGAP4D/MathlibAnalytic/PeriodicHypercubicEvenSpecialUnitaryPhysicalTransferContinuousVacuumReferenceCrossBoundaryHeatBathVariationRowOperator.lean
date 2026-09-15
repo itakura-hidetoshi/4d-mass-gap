@@ -71,7 +71,16 @@ theorem
             H N hN beta hbeta B target source fiber (k₂ source) g₂ A)|) ≤
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator
         H beta variation fiber := by
-  rfl
+  classical
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator
+  apply Finset.sum_le_sum
+  intro source _hsource
+  exact
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_fiberVariation_influence_le_crossBoundaryMajorant_mul
+      H N hN beta hbeta B target source fiber
+      (k₁ source) (k₂ source) g₂ A F hF
+      (variation fiber) (hVariationNonneg fiber) hFiberVariation
 
 end
 
