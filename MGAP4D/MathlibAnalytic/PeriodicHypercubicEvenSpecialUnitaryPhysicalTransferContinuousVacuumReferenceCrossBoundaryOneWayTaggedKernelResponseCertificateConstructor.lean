@@ -77,7 +77,7 @@ noncomputable def
   by_cases h : e = source
   · subst e
     simp [finiteInfluenceKernelSingletonVariation, hMagnitude]
-  · simp [finiteInfluenceKernelSingletonVariation, h, hMagnitude]
+  · simp [finiteInfluenceKernelSingletonVariation, h]
 
 @[simp] theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTagged_kernelResponseCertificateOfResidual_discrepancy
@@ -188,7 +188,13 @@ theorem
                 (PeriodicHypercubicEvenSpatialSliceLink H))
               (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
                 beta) ^ n * magnitude) := by
-  exact le_rfl
+  exact
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTagged_kernelResponseCertificate_discrepancy_singleton_sum_source_le_resolvent_add_geometricResidual
+      H beta hbeta hBetaLt magnitude hMagnitude
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTagged_kernelResponseCertificateOfResidual
+        H beta hbeta magnitude hMagnitude discrepancy sourceBound
+        hSourceBoundNonneg hKernelResidual)
+      sourceEnvelope hEnvelopeNonneg hEnvelope n
 
 end
 
