@@ -25,7 +25,29 @@ theorem finitePositiveWeightLocalTiltConditionalSourceBound_total_le_card_mul
           support lower upper) ≤
       (Fintype.card ι : ℝ) *
         (2 * (1 - (upper / lower)⁻¹)) := by
-  exact le_rfl
+  have hRatioOne : 1 ≤ upper / lower :=
+    (le_div_iff₀ hLower).2 (by simpa using hLowerUpper)
+  have hRatioPos : 0 < upper / lower := div_pos hUpper hLower
+  have hInvLeOne : (upper / lower)⁻¹ ≤ 1 :=
+    (inv_le_one₀ hRatioPos).2 hRatioOne
+  have hConstNonneg :
+      0 ≤ 2 * (1 - (upper / lower)⁻¹) := by
+    nlinarith
+  unfold finiteProductVariationTotal
+  calc
+    (∑ target : ι,
+      finitePositiveWeightLocalTiltConditionalSourceBound
+        support lower upper target) ≤
+      ∑ _target : ι, (2 * (1 - (upper / lower)⁻¹)) := by
+        apply Finset.sum_le_sum
+        intro target _htarget
+        unfold finitePositiveWeightLocalTiltConditionalSourceBound
+        split
+        · exact le_rfl
+        · exact hConstNonneg
+    _ = (Fintype.card ι : ℝ) *
+        (2 * (1 - (upper / lower)⁻¹)) := by
+      simp
 
 end
 
