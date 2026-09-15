@@ -67,7 +67,12 @@ theorem
           H N hN beta hbeta B target source fiber k₂ g₂ A)| ≤
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
         H beta hbeta).influence (Sum.inl fiber) (Sum.inr source) * magnitude := by
-  rfl
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData_left_right]
+  exact
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_fiberVariation_influence_le_crossBoundaryMajorant_mul
+      H N hN beta hbeta B target source fiber k₁ k₂ g₂ A F hF
+      magnitude hMagnitude hFiberVariation
 
 end
 
