@@ -131,7 +131,66 @@ theorem
                   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
                     beta) * (sweeps : ℝ)) *
             magnitude) := by
-  exact le_rfl
+  have hCard :
+      0 <
+        Fintype.card
+          (Sum
+            (PeriodicHypercubicEvenSpatialSliceLink H)
+            (PeriodicHypercubicEvenSpatialSliceLink H)) :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedIndex_card_pos
+      H
+  let comparison :=
+    finitePositiveWeightLocalTiltStationaryNonstrictComparisonData
+      weight tilt hweight htilt support htiltSupport
+      lower upper hLower hUpper hLowerUpper htiltLower htiltUpper
+      hCard D
+  have hRatioOne : 1 ≤ upper / lower :=
+    (le_div_iff₀ hLower).2 (by simpa using hLowerUpper)
+  have hRatioPos : 0 < upper / lower := div_pos hUpper hLower
+  have hInvLeOne : (upper / lower)⁻¹ ≤ 1 :=
+    (inv_le_one₀ hRatioPos).2 hRatioOne
+  have hSourceAverageNonneg :
+      0 ≤ 2 * (1 - (upper / lower)⁻¹) := by
+    nlinarith
+  have hComparisonDomination :
+      FinitePositiveWeightNonstrictInfluenceDominatedBy
+        comparison.rightInfluence
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+          H beta hbeta).influence := by
+    change
+      FinitePositiveWeightNonstrictInfluenceDominatedBy
+        D
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData
+          H beta hbeta).influence
+    exact hDomination
+  have hSourceAverage :
+      finiteProductVariationTotal comparison.sourceBound ≤
+        (Fintype.card
+          (Sum
+            (PeriodicHypercubicEvenSpatialSliceLink H)
+            (PeriodicHypercubicEvenSpatialSliceLink H)) : ℝ) *
+          (2 * (1 - (upper / lower)⁻¹)) := by
+    change
+      finiteProductVariationTotal
+          (finitePositiveWeightLocalTiltConditionalSourceBound
+            support lower upper) ≤
+        (Fintype.card
+          (Sum
+            (PeriodicHypercubicEvenSpatialSliceLink H)
+            (PeriodicHypercubicEvenSpatialSliceLink H)) : ℝ) *
+          (2 * (1 - (upper / lower)⁻¹))
+    exact
+      finitePositiveWeightLocalTiltConditionalSourceBound_total_le_card_mul
+        support lower upper hLower hUpper hLowerUpper
+  have hBound :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTagged_averageExpectationDiscrepancy_singleton_le_uniformAverageSourceResolvent_add_expSweepResidual
+      H beta hbeta hBetaLt f P comparison hComparisonDomination
+      comparison.sourceBound comparison.sourceBound_nonneg
+      (fun _ => le_rfl)
+      (2 * (1 - (upper / lower)⁻¹)) hSourceAverageNonneg hSourceAverage
+      magnitude hMagnitude hSingleton sweeps
+  simpa only [
+    FinitePositiveWeightStationaryNonstrictComparisonData.expectationDiscrepancy] using hBound
 
 end
 
