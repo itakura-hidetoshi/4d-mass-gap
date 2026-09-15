@@ -95,6 +95,10 @@ theorem
           ring
         _ ≤ Real.exp (16 * beta) * Local Ah :=
           mul_le_mul_of_nonneg_left hLocalLower (Real.exp_pos _).le
+    have hSlabSymm : slab Br Ah = slab Ah Br := by
+      simpa [slab] using
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
+          H N hN beta hbeta Ah Br).symm
     have hSlab : slab Ag Br ≤ Real.exp (8 * beta) * slab Ah Br := by
       calc
         slab Ag Br = slab Br Ag := by
@@ -106,11 +110,7 @@ theorem
             periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink] using
             periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuousVacuumReplaceLink_le_exp_eight_mul
               H N hN beta hbeta Br A backgroundFiber g h
-        _ = Real.exp (8 * beta) * slab Ah Br := by
-          congr 1
-          simpa [slab] using
-            (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
-              H N hN beta hbeta Ah Br).symm
+        _ = Real.exp (8 * beta) * slab Ah Br := by rw [hSlabSymm]
     have hOmegaAhNonneg : 0 ≤ Omega Ah :=
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos
         H N hN beta hbeta Ah).le
