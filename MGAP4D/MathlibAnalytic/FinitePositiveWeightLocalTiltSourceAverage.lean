@@ -9,6 +9,10 @@ open scoped BigOperators
 
 noncomputable section
 
+local instance finitePositiveWeightLocalTiltSourceAverageSpatialLinkFintype
+    (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
 /-- The explicit source vector of a bounded local multiplicative tilt has
 volume-normalized total bounded by the same likelihood-ratio constant.  This
 is the generic source-average certificate needed by the stationary C5 bridge. -/
