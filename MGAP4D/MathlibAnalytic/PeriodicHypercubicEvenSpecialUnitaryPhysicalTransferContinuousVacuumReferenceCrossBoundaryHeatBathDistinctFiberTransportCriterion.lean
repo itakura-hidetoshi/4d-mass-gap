@@ -173,7 +173,6 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedLeftVariation,
     hDistinct,
     Ne.symm hDistinct]
-  ring
 
 /-- Literal two-step physical heat-bath expectation with independently chosen
 boundary-source parameters for the first and second updates.  This is only a
@@ -269,7 +268,8 @@ theorem
   change |x - z| ≤ _
   rw [hEq]
   calc
-    |(x - y) + (y - z)| ≤ |x - y| + |y - z| := abs_add _ _
+    |(x - y) + (y - z)| ≤ |x - y| + |y - z| := by
+      simpa [Real.norm_eq_abs] using norm_add_le (x - y) (y - z)
     _ ≤
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant
             beta fiber₁ source *
