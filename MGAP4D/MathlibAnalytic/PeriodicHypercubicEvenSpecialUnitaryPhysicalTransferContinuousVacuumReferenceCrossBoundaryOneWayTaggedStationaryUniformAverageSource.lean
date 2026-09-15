@@ -91,10 +91,86 @@ theorem
                   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
                     beta) * (sweeps : ℝ)) *
             magnitude) := by
-  exact
+  have hCardNat :
+      0 <
+        Fintype.card
+          (Sum
+            (PeriodicHypercubicEvenSpatialSliceLink H)
+            (PeriodicHypercubicEvenSpatialSliceLink H)) :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedIndex_card_pos
+      H
+  have hCard :
+      0 <
+        (Fintype.card
+          (Sum
+            (PeriodicHypercubicEvenSpatialSliceLink H)
+            (PeriodicHypercubicEvenSpatialSliceLink H)) : ℝ) := by
+    exact_mod_cast hCardNat
+  have hCardNe :
+      (Fintype.card
+        (Sum
+          (PeriodicHypercubicEvenSpatialSliceLink H)
+          (PeriodicHypercubicEvenSpatialSliceLink H)) : ℝ) ≠ 0 :=
+    ne_of_gt hCard
+  have hNormalizedSource :
+      (Fintype.card
+          (Sum
+            (PeriodicHypercubicEvenSpatialSliceLink H)
+            (PeriodicHypercubicEvenSpatialSliceLink H)) : ℝ)⁻¹ *
+          finiteProductVariationTotal sourceEnvelope ≤
+        sourceAverageBound := by
+    calc
+      (Fintype.card
+          (Sum
+            (PeriodicHypercubicEvenSpatialSliceLink H)
+            (PeriodicHypercubicEvenSpatialSliceLink H)) : ℝ)⁻¹ *
+          finiteProductVariationTotal sourceEnvelope ≤
+        (Fintype.card
+            (Sum
+              (PeriodicHypercubicEvenSpatialSliceLink H)
+              (PeriodicHypercubicEvenSpatialSliceLink H)) : ℝ)⁻¹ *
+          ((Fintype.card
+              (Sum
+                (PeriodicHypercubicEvenSpatialSliceLink H)
+                (PeriodicHypercubicEvenSpatialSliceLink H)) : ℝ) *
+            sourceAverageBound) := by
+              exact mul_le_mul_of_nonneg_left hSourceAverage
+                (inv_nonneg.mpr hCard.le)
+      _ = sourceAverageBound := by
+        field_simp [hCardNe]
+  have hqLtOne :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+          beta < 1 :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient_lt_one_of_beta_lt
+      beta hBetaLt
+  have hGapInvNonneg :
+      0 ≤
+        (1 -
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+            beta)⁻¹ :=
+    inv_nonneg.mpr (sub_nonneg.mpr hqLtOne.le)
+  have hSourceTerm :
+      ((Fintype.card
+          (Sum
+            (PeriodicHypercubicEvenSpatialSliceLink H)
+            (PeriodicHypercubicEvenSpatialSliceLink H)) : ℝ)⁻¹ *
+        finiteProductVariationTotal sourceEnvelope) *
+          magnitude *
+          (1 -
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+              beta)⁻¹ ≤
+        sourceAverageBound *
+          magnitude *
+          (1 -
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+              beta)⁻¹ := by
+    apply mul_le_mul_of_nonneg_right _ hGapInvNonneg
+    exact mul_le_mul_of_nonneg_right hNormalizedSource hMagnitude
+  have hBase :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTagged_averageExpectationDiscrepancy_singleton_le_normalizedResolvent_add_expSweepResidual
       H beta hbeta hBetaLt f P C hDomination sourceEnvelope
       hEnvelopeNonneg hEnvelope magnitude hMagnitude hSingleton sweeps
+  exact hBase.trans (add_le_add_right hSourceTerm _)
 
 end
 
