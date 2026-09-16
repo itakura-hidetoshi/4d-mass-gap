@@ -197,39 +197,25 @@ theorem finiteInfluenceKernelSumRestrictedTargetRandomScanUpdatedVariation_inr_e
 shrinking left forcing.  This is the restricted-target analogue of a geometric
 terminal residual: the right coordinate itself is not asserted to contract. -/
 theorem finiteInfluenceKernelSumRestrictedTargetRandomScanVariationIterate_inr_le_geometricResidual
-    {τ σ : Type}
-    [DecidableEq τ]
-    [Fintype τ]
-    [DecidableEq σ]
-    [Fintype σ]
+    {τ σ : Type} [DecidableEq τ] [Fintype τ] [DecidableEq σ] [Fintype σ]
     (K : FiniteNonnegativeInfluenceKernelData (Sum τ σ))
-    (hCard : 0 < Fintype.card τ)
-    (columnCoefficient : ℝ)
+    (hCard : 0 < Fintype.card τ) (columnCoefficient : ℝ)
     (hColumnNonneg : 0 ≤ columnCoefficient)
-    (hColumnSum :
-      ∀ source : τ,
-        finiteInfluenceKernelColumnSum
-          (finiteInfluenceKernelSumLeftRestriction K) source ≤
-            columnCoefficient)
+    (hColumnSum : ∀ source : τ,
+      finiteInfluenceKernelColumnSum (finiteInfluenceKernelSumLeftRestriction K) source ≤ columnCoefficient)
     (variation : Sum τ σ → ℝ)
     (hVariationNonneg : ∀ e : τ, 0 ≤ variation (Sum.inl e))
-    (bound : ℝ)
-    (hBoundNonneg : 0 ≤ bound)
+    (bound : ℝ) (hBoundNonneg : 0 ≤ bound)
     (hVariationBound : ∀ e : τ, variation (Sum.inl e) ≤ bound)
-    (source : σ)
-    (sourceCoefficient : ℝ)
-    (hSourceSum :
-      (∑ target : τ,
-        K.influence (Sum.inl target) (Sum.inr source)) ≤
-          sourceCoefficient)
+    (source : σ) (sourceCoefficient : ℝ)
+    (hSourceSum : (∑ target : τ, K.influence (Sum.inl target) (Sum.inr source)) ≤ sourceCoefficient)
     (n : ℕ) :
     finiteInfluenceKernelRestrictedTargetRandomScanVariationIterate
         K (fun target : τ => Sum.inl target) variation n (Sum.inr source) ≤
       variation (Sum.inr source) +
         (Fintype.card τ : ℝ)⁻¹ * sourceCoefficient * bound *
           ∑ j in Finset.range n,
-            finiteInfluenceKernelReciprocalRandomScanRate
-                τ columnCoefficient ^ j := by
+            finiteInfluenceKernelReciprocalRandomScanRate τ columnCoefficient ^ j := by
   let rate :=
     finiteInfluenceKernelReciprocalRandomScanRate τ columnCoefficient
   have hRateNonneg : 0 ≤ rate := by
