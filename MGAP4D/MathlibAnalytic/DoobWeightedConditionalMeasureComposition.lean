@@ -33,7 +33,8 @@ theorem doobWeightedMeasure_compose
     exact hr.div_const _
   have hOuterDensityMeas :
       AEMeasurable
-        (doobWeightedDensity (doobWeightedMeasure μ r) v) μ := by
+        (doobWeightedDensity
+          (μ.withDensity (doobWeightedDensity μ r)) v) μ := by
     unfold doobWeightedDensity
     exact hv.div_const _
   have hMass :
@@ -44,7 +45,7 @@ theorem doobWeightedMeasure_compose
       (∫⁻ x, v x ∂μ.withDensity (doobWeightedDensity μ r)) =
         (∫⁻ x, r x * v x ∂μ) / (∫⁻ x, r x ∂μ)
     rw [lintegral_withDensity_eq_lintegral_mul₀ hRawDensityMeas hv]
-    simp only [doobWeightedDensity, Pi.mul_apply, div_eq_mul_inv]
+    simp only [doobWeightedDensity, doobWeightMass, Pi.mul_apply, div_eq_mul_inv]
     rw [show
       (fun x => r x * (∫⁻ y, r y ∂μ)⁻¹ * v x) =
         (fun x => (r x * v x) * (∫⁻ y, r y ∂μ)⁻¹) by
