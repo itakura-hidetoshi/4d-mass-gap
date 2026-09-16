@@ -52,12 +52,16 @@ theorem doobWeightedMeasure_compose
           funext x
           ac_rfl]
     rw [lintegral_mul_const'' _ (hr.mul hv)]
+  have hMassUnfolded :
+      doobWeightMass (μ.withDensity (doobWeightedDensity μ r)) v =
+        doobWeightMass μ (fun x => r x * v x) / doobWeightMass μ r := by
+    simpa [doobWeightedMeasure] using hMass
   unfold doobWeightedMeasure
   rw [← withDensity_mul₀ hRawDensityMeas hOuterDensityMeas]
   apply withDensity_congr_ae
   filter_upwards with x
   simp only [Pi.mul_apply, doobWeightedDensity]
-  rw [hMass]
+  rw [hMassUnfolded]
   simp only [div_eq_mul_inv]
   rw [ENNReal.inv_div (Or.inl hMassRTop) (Or.inl hMassRZero)]
   simp only [div_eq_mul_inv]
