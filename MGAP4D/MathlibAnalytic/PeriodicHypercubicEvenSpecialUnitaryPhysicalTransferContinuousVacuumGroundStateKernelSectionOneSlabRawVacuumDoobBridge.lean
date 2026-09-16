@@ -52,11 +52,68 @@ theorem
           H N hN beta hbeta A target) =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkLocalNormalizedMeasure
         H N hN beta hbeta C A target := by
+  let μ := normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)
+  let r :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabKernelSectionRawSpatialLinkWeight
+      H N beta C A target
+  let v :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumSpatialLinkFiberWeight
+      H N hN beta hbeta A target
+  let wLocal :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkLocalENNRealWeight
+      H N hN beta hbeta C A target
+  let m : ℝ≥0∞ := ENNReal.ofReal (Real.exp (-8 * beta))
+  let M : ℝ≥0∞ := ENNReal.ofReal (Real.exp (8 * beta))
+  have hr : AEMeasurable r μ := by
+    exact
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabKernelSectionRawSpatialLinkWeight_continuous
+        H N beta C A target).measurable.aemeasurable
+  have hv : AEMeasurable v μ := by
+    exact
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumSpatialLinkFiberWeight_continuous
+        H N hN beta hbeta A target).measurable.aemeasurable
+  have hm : 0 < m := by
+    exact ENNReal.ofReal_pos.mpr (Real.exp_pos _)
+  have hM : M < ∞ := ENNReal.ofReal_lt_top
+  have hLower : ∀ g, m ≤ r g := by
+    intro g
+    apply ENNReal.ofReal_le_ofReal
+    exact
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_exp_neg_eight_mul_le
+        H N hN beta hbeta C A target g
+  have hUpper : ∀ g, r g ≤ M := by
+    intro g
+    apply ENNReal.ofReal_le_ofReal
+    exact
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_le_exp_eight_mul
+        H N hN beta hbeta C A target g
+  have hMassLower : m ≤ doobWeightMass μ r :=
+    doobWeightMass_lower_bound μ r m hLower
+  have hMassUpper : doobWeightMass μ r ≤ M :=
+    doobWeightMass_upper_bound μ r M hUpper
+  have hMassRZero : doobWeightMass μ r ≠ 0 :=
+    ne_of_gt (lt_of_lt_of_le hm hMassLower)
+  have hMassRTop : doobWeightMass μ r ≠ ∞ :=
+    ne_of_lt (lt_of_le_of_lt hMassUpper hM)
+  have hCompose :
+      doobWeightedMeasure (doobWeightedMeasure μ r) v =
+        doobWeightedMeasure μ (fun g => r g * v g) :=
+    doobWeightedMeasure_compose μ r v hr hv hMassRZero hMassRTop
+  have hProduct : (fun g => r g * v g) = wLocal := by
+    funext g
+    have hFactor :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkLocalWeight_ofReal_eq_vacuum_mul_raw
+        H N hN beta hbeta C A target g
+    simpa [r, v, wLocal,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkLocalENNRealWeight,
+      mul_comm] using hFactor.symm
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabKernelSectionRawSpatialLinkMeasure
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkLocalNormalizedMeasure
-  apply doobWeightedMeasure_compose
+  change doobWeightedMeasure (doobWeightedMeasure μ r) v =
+    doobWeightedMeasure μ wLocal
+  rw [hCompose, hProduct]
 
 end
 
