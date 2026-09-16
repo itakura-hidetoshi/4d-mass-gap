@@ -2,19 +2,25 @@
 
 **MGAP4D** is Hidetoshi Itakura's Lean 4 / mathlib repository for a proof-carrying investigation of four-dimensional Yang--Mills theory, Wilson lattice gauge theory, Osterwalder--Schrader reconstruction, physical transfer operators, conditional expectations, quantitative mixing, coercivity, and the mass-gap problem.
 
-The repository deliberately separates exact finite-volume theorems, conditional comparison interfaces, continuous-state realizations, thermodynamic/continuum passages, and the final Clay-level target.
+The repository deliberately separates exact finite-volume theorems, continuous-state realizations, generic comparison algebra, physical finite-step transport, thermodynamic/continuum passages, and the final Clay-level target.
 
 > **Claim boundary**
 >
 > This repository does **not** yet contain a completed proof of the Clay Millennium Yang--Mills existence and mass-gap problem.
 >
-> The current theorem frontier is much narrower than the earlier remote-influence problem. The C5 continuous `SU(N)` reference one-link law now has an exact off-diagonal cancellation theorem, an explicit diagonal influence coefficient, a one-way tagged influence carrier, generic reciprocal random-scan/resolvent algebra, a state-space-independent response-certificate interface, and an actual continuous one-link **fiber-variation** realization through a full represented right-source row.
+> The current C5 continuous `SU(N)` program has advanced substantially beyond one-link control. The actual physical continuous heat-bath chain is now represented by a **restricted random scan** that updates only physical `Sum.inl` fibers; represented `Sum.inr` boundary-source coordinates are never scanned. Strong measurability, finite-step variation domination, boundary-parameter transport, the generic restricted-target geometric forcing residual, and its physical C5 specialization are all formalized through PR #4266.
 >
-> What is still missing is the rigorous multi-step bridge from those physical continuous one-link estimates to the generic tagged finite-step variation iterate and hence to the continuous finite-step kernel residual required by the certificate. That bridge must be proved; the generic tagged random-scan process is not identified with a physical continuous random-scan chain by definition.
+> The immediate obstruction is now quantitative rather than semantic: the physical left-left off-fiber propagation produces the exact restricted-column coefficient
+>
+> ```text
+> (card Link - 1) * offFiberInfluence(beta).
+> ```
+>
+> Therefore the current finite-step residual theorem is rigorous, but it is **not yet a volume-uniform contraction theorem**. A sharper physical locality/support estimate, a geometry-sensitive coefficient, or another rigorously justified decomposition is required before this lane can feed a scale-independent coercivity/gap estimate.
 
 ---
 
-## Repository authority — 2026-09-15 JST
+## Repository authority — 2026-09-16 JST
 
 ```text
 Repository:
@@ -23,23 +29,23 @@ Repository:
 Authoritative theorem-carrier branch:
   formal/real-hilbert-uniform-coercive-strong-limit
 
-Latest theorem-bearing merge before this documentation refresh:
-  a05876f44f1bf387ad070889de6487bd37b2121b
+Current authoritative exact HEAD:
+  2ebe3ee4a69a662a2010d5e2a41ba1b1953289bc
 
-Tree:
-  2751d346ef5149f1e31848eeb5089c8d1ceb9061
+Current tree:
+  b87194cad77d5136d02797ca2a9a88689d9944d2
 
-Merge:
-  PR #4211
-  Lift continuous C5 heat-bath variation to row operator
+Latest theorem-bearing merge:
+  PR #4266
+  Specialize restricted-target geometric residual to physical C5
 
-Exact final GREEN proof head:
-  3e570acaacd62d1ce50c1558587d7b6d53917a07
+Exact GREEN proof head:
+  7c9d0662a30fd8d0006553aa7215014e6f577093
 
 Validation receipt:
-  PR Lean Fast Check #13919
-  workflow run 34961303873
-  workflow / job / changed-Lean step: completed / success
+  PR Lean Fast Check #13971
+  workflow run 35063053481
+  completed / success
 
 Public landing branch:
   main
@@ -55,7 +61,7 @@ The authority order is fixed:
 5. historical summaries or memory
 ```
 
-`main` is a public landing surface, not theorem authority when histories differ. A docs-only merge can advance a branch pointer without changing the latest theorem-bearing result, so always fresh-fetch the authoritative theorem-carrier branch before starting theorem work.
+`main` is a public landing surface, not theorem authority when histories differ. Always fresh-fetch the theorem-carrier branch before theorem work.
 
 ---
 
@@ -69,75 +75,70 @@ FINITE WILSON / OS ROOT
   -> spatial conditional-expectation / coercivity routing
                                                         [INTEGRATED]
 
+SAME-ROOT SCALAR CONTINUUM OS LANE
+  finite Wilson scalar readout
+  -> continuum scalar law
+  -> reflection positivity
+  -> OS Hilbert carrier / C0 semigroup / Hamiltonian
+                                                        [INTEGRATED]
+
 C5 CONTINUOUS ONE-LINK LAW
   literal normalized continuous SU(N) fiber law
   -> measurable heat-bath sampling and reinsertion
-  -> source-local factorization
-  -> exact distinct-source normalized invariance
+  -> exact right-boundary distinct-source cancellation
+  -> sharp surviving diagonal right-source coefficient
                                                         [INTEGRATED]
 
-C5 CROSS-BOUNDARY INFLUENCE
-  source != fiber
-    -> normalized fiber laws equal
-    -> conditional kernels equal
-    -> heat-bath kernels equal
-    -> real-test influence = 0
-
-  source = fiber
-    -> sharp normalized Harnack comparison
-    -> coefficient
-       q(beta) = 2 * (exp(16 beta)-1)/(exp(16 beta)+1)
+ONE-WAY RIGHT-BOUNDARY CARRIER
+  Sum.inl target <- Sum.inr source
+  exact represented support
+  row / right-source-column coefficient q(beta)
+  beta < log 3 / 16 -> q(beta) < 1
                                                         [INTEGRATED]
 
-ONE-WAY TAGGED CARRIER
-  index ι_H = Sum Link Link
-  populated block only:
-    Sum.inl target <- Sum.inr source
-  row sum = q(beta)
-  right-source column sum = q(beta)
-  other blocks = carrier-scope zeros only
+ACTUAL PHYSICAL LEFT-LEFT TRANSPORT
+  same-fiber two-step propagation
+  -> distinct-fiber Harnack / conditional-law comparison
+  -> explicit off-fiber coefficient
+  -> assumption-free two-step transport
                                                         [INTEGRATED]
 
-SMALL-COUPLING / GENERIC KERNEL ALGEBRA
-  beta < log 3 / 16
-    -> 0 <= q(beta) < 1
-
-  r_{H,beta}
-    = 1 - (1-q(beta))/|ι_H|
-
-  r_{H,beta}^{|ι_H| * sweeps}
-    <= exp(-(1-q(beta))*sweeps)
+DETERMINISTIC SCHEDULES
+  generic finite update lists
+  -> exact tagged schedule recursion
+  -> continuous C5 physical schedule transport
                                                         [INTEGRATED]
 
-STATE-SPACE-INDEPENDENT RESPONSE INTERFACE
-  FiniteKernelStationaryResponseFamilyCertificate
-  -> discrepancy
-  -> sourceBound
-  -> nonnegative variation profile
-  -> finite-step kernel residual
-  -> source-summed resolvent / geometric residual
-                                                        [INTEGRATED INTERFACE]
-
-ACTUAL CONTINUOUS SU(N) REALIZATION
-  bounded-test influence
-  -> fiber-variation-scaled influence                  [#4201]
-  -> represented tagged kernel coefficient            [#4205]
-  -> one generic tagged target-update domination       [#4208]
-  -> full represented right-source row
-     <= physical cross-boundary influence operator     [#4211]
+RESTRICTED RANDOM SCAN
+  generic restricted-target scan
+  -> physical targets exactly Sum.inl fiber
+  -> Sum.inr boundary-source coordinates remain static
+  -> one-step physical scan
+  -> finite-step measurable expectation iterate
+  -> left-variation domination
+  -> boundary-parameter transport domination
                                                         [INTEGRATED]
 
-NEXT BRIDGE
-  actual continuous one-link update sequence
-  -> rigorous multi-step variation domination
-  -> finite-step continuous kernel residual
-  -> actual continuous response certificate
+GEOMETRIC FORCING RESIDUAL
+  generic Sum tau sigma left restriction
+  -> left-only reciprocal random-scan estimate
+  -> static right-source forcing accumulation
+  -> finite-step geometric residual
+  -> physical C5 specialization
+                                                        [INTEGRATED THROUGH #4266]
+
+QUANTITATIVE FRONTIER
+  physical left-restricted column sum
+    = (card Link - 1) * offFiberInfluence(beta)
+  -> rigorous finite-step residual exists
+  -> volume-uniform contraction NOT YET proved
                                                         [OPEN NOW]
 
 DOWNSTREAM
-  actual continuous certificate
-  -> already-proved source resolvent / sweep residual
-  -> physical block Poincare / coercivity bridge
+  sharpen physical left-left locality / column control
+  -> actual continuous response certificate
+  -> source resolvent / sweep algebra
+  -> physical Poincare / coercivity
   -> uniform finite-volume transfer gap
   -> thermodynamic/scaling-limit physical carrier
   -> sufficiently rich 4D Yang--Mills field/state
@@ -147,271 +148,218 @@ DOWNSTREAM
 
 ---
 
-# 1. Exact C5 support and the scalar coefficient
+# 1. Two distinct influence structures must not be conflated
 
-For the literal C5 continuous reference fiber law, changing a right-boundary source value at a coordinate distinct from the resampled fiber changes the unnormalized weight only by a positive scalar independent of the fiber integration variable. The same scalar multiplies the partition function, so it cancels after normalization.
+The current C5 lane contains two mathematically different influence mechanisms.
 
-Thus, for
+## 1.1 Right-boundary source -> left target
 
-```text
-source != fiber,
-```
+For the literal C5 reference one-link law, changing a represented right-boundary source at a coordinate distinct from the resampled fiber multiplies the unnormalized density by a positive scalar independent of the integration variable. The same scalar multiplies the partition function and cancels after normalization.
 
-the normalized fiber probability measures are literally equal. This equality propagates through the conditional kernel and the full heat-bath sampling/reinsertion kernel. The corresponding real-test source influence is exactly zero.
-
-The only surviving represented C5 cross-boundary source is
+Hence
 
 ```text
-source = fiber.
+source != fiber
 ```
 
-Its coefficient is
-
-```text
-q(beta)
-  = 2 * (((exp (8*beta))^2 - 1) / ((exp (8*beta))^2 + 1))
-  = 2 * (exp (16*beta) - 1) / (exp (16*beta) + 1).
-```
-
-Therefore the complete represented source row has one-point support and
-
-```text
-rowSum = q(beta),
-```
-
-with no spatial-volume or color-class cardinality factor. For nonnegative coupling,
-
-```text
-beta < log 3 / 16
-```
-
-implies
-
-```text
-0 <= q(beta) < 1.
-```
-
-No spatial hypothesis of the form `C * exp(-m*d)` is used in this C5 contraction route.
-
----
-
-# 2. One-way tagged carrier: exact mathematics, restricted semantics
-
-The proved direction is packaged on
-
-```text
-ι_H = Sum Link Link.
-```
-
-with
-
-```text
-Sum.inl = left target copy
-Sum.inr = right source copy.
-```
+implies exact equality of the normalized fiber laws, conditional kernels, and heat-bath kernels. The represented real-test influence is exactly zero.
 
 Only
 
 ```text
-Sum.inl target <- Sum.inr source
+source = fiber
 ```
 
-contains the proved C5 cross-boundary coefficient. The remaining blocks are zero by definition of the **one-way carrier**.
-
-This must not be overinterpreted. In particular,
+survives, with
 
 ```text
-K.influence (Sum.inr target) (Sum.inl source) = 0
+q(beta)
+  = 2 * (exp(16*beta) - 1) / (exp(16*beta) + 1).
 ```
 
-inside the carrier is not a theorem that reverse physical influence vanishes. Likewise `Sum.inl link` and `Sum.inr link` are distinct tagged coordinates and must not be collapsed.
-
-The tagged carrier has the exact row/column structure required by the generic finite-kernel machinery. In the small-coupling region its reciprocal random-scan rate is
+Thus the represented right-source row is one-point supported and
 
 ```text
-r_{H,beta} = 1 - (1-q(beta))/|ι_H|.
+rowSum = q(beta).
 ```
 
-The one-coordinate rate is volume dependent. The volume-independent statement appears only after measuring time in full tagged sweeps:
+For `0 <= beta < log 3 / 16`, one has `0 <= q(beta) < 1` with no spatial-volume factor.
+
+## 1.2 Left background fiber -> different left resampling fiber
+
+Finite-step physical composition introduces a different question: after one physical heat-bath update, how much can changing another **left** background fiber alter the next one-link law?
+
+This is not covered by the structurally-zero left-left block of the old one-way carrier. PRs #4220--#4237 construct and discharge the missing physical theorem instead.
+
+The literal comparison currently gives the explicit off-fiber coefficient
 
 ```text
-r_{H,beta}^{|ι_H| * sweeps}
-  <= exp(-(1-q(beta))*sweeps).
+offFiberInfluence(beta)
+  = 2 * (((exp(32*beta))^2 - 1)
+         / ((exp(32*beta))^2 + 1)).
+```
+
+The coefficient is volume-independent pointwise, but when the physical restricted scan sums over all left targets, PR #4266 proves the exact column identity
+
+```text
+columnSum
+  = (card Link - 1) * offFiberInfluence(beta).
+```
+
+This explicit cardinality factor is the present quantitative bottleneck.
+
+---
+
+# 2. Why the scan is restricted
+
+The physical chain does **not** update all coordinates of
+
+```text
+Sum Link Link.
+```
+
+Its meanings are:
+
+```text
+Sum.inl fiber  = physical left fiber that may be heat-bath updated
+Sum.inr source = represented right-boundary source parameter
+```
+
+Only `Sum.inl` coordinates are physical scan targets. `Sum.inr` coordinates are static bookkeeping coordinates that accumulate forcing from the evolving left variation profile.
+
+This distinction is now built into the formalization rather than left as an interpretation:
+
+```text
+#4249  generic restricted-target random scan
+#4252  actual physical continuous C5 restricted random scan
+#4254  one-step affine transport / measurability induction nucleus
+#4257  finite-step physical expectation iterate and transport domination
+#4260  generic restricted-target geometric forcing residual
+#4266  physical C5 specialization
+```
+
+Accordingly, the repository no longer needs to identify the physical continuous process with the older full random scan over `Sum Link Link`.
+
+---
+
+# 3. Finite-step bridge now proved
+
+The earlier documentation frontier was the passage from one-link continuous variation estimates to a genuine multi-step physical process. That bridge is now integrated.
+
+The formal chain is:
+
+```text
+one-link continuous C5 variation estimate
+  -> physical same-fiber two-step propagation
+  -> physical distinct-fiber transport
+  -> arbitrary finite deterministic schedules
+  -> restricted random-scan one-step transport
+  -> finite-step physical expectation iterate
+  -> tagged restricted-target variation iterate domination
+  -> right-source geometric forcing residual.
+```
+
+The final #4266 theorem bounds the actual finite-step boundary-parameter response of the physical continuous C5 restricted random-scan expectation by the same geometric forcing residual obtained from the tagged kernel.
+
+This is a genuine physical-to-generic bridge. It is not merely an interface declaration.
+
+---
+
+# 4. What #4266 proves — and what it does not
+
+PR #4266 proves three key facts.
+
+First, the physical spatial-link carrier is nonempty, so the generic reciprocal random-scan denominator is legitimate without adding a new geometric assumption.
+
+Second, the left-restricted tagged-kernel column sum is computed exactly:
+
+```text
+(card Link - 1) * offFiberInfluence(beta).
+```
+
+Third, the actual finite-step physical boundary response is bounded by a residual of the form
+
+```text
+(card Link)^(-1)
+* sourceCoefficient
+* initialVariationBound
+* sum_{j < n} rate(columnCoefficient)^j.
+```
+
+The word **geometric** here describes the proved algebraic form. It does not by itself imply decay. Decay requires a contraction hypothesis strong enough to make the relevant reciprocal random-scan rate strictly below one.
+
+At present the theorem does not remove the `card Link - 1` factor from the physical left-left column coefficient. Therefore #4266 is not yet a uniform mixing, uniform Poincare, or uniform mass-gap theorem.
+
+---
+
+# 5. Current theorem-development frontier
+
+The next mathematical unit is to improve or reorganize the physical left-left propagation so that the finite-step theorem becomes useful uniformly in volume.
+
+Admissible routes include proving, from the literal C5/Wilson structure rather than assumption, one of the following:
+
+```text
+finite-range support of left-left influence;
+geometry-sensitive neighbor coefficients with uniformly bounded row/column sum;
+additional exact cancellation;
+a color/block schedule whose proved interaction degree is volume independent;
+or another physical decomposition that avoids all-to-all cardinality growth.
+```
+
+An unproved `C * exp(-m*d)` assumption must not simply be inserted to close this gap.
+
+Once a scale-independent physical contraction coefficient is available, the intended route is
+
+```text
+uniform restricted-scan contraction
+  -> package actual continuous discrepancy/sourceBound witnesses
+  -> FiniteKernelStationaryResponseFamilyCertificate
+  -> existing source-resolvent / sweep machinery
+  -> physical Poincare / coercivity
+  -> uniform finite-volume transfer gap.
 ```
 
 ---
 
-# 3. Generic response algebra is already factored away from the local state space
+# 6. Permanent semantic boundaries
 
-The downstream response machinery no longer requires the local state space itself to be finite.
-
-`FiniteKernelStationaryResponseFamilyCertificate` retains only the information needed by the kernel algebra:
+The following distinctions remain part of the proof discipline:
 
 ```text
-discrepancy
-sourceBound
-sourceBound_nonneg
-variation profile
-variation_nonneg
-finite-step kernel residual inequality
+finite theorem != continuum theorem
+local one-link control != global Poincare inequality
+right-boundary exact cancellation != arbitrary left-left cancellation
+one-way tagged zero block != reverse or left-left physical influence zero
+Sum.inl link != Sum.inr link
+full tagged random scan != physical restricted random scan
+geometric residual formula != geometric decay without rate < 1
+finite-step physical transport != volume-uniform contraction
+state-space-independent certificate interface != existence of physical witnesses
+stationary response control != physical coercivity theorem
+finite-volume gap != thermodynamic/continuum mass gap
+same-root scalar continuum != complete 4D Yang--Mills field/state
+formal intermediate theorem != Clay-level completion
 ```
-
-PR #4192 factors the source-summed resolvent/geometric-residual argument through this certificate. PR #4198 adds a continuous-state packaging entry point that constructs the certificate once the actual discrepancy, source bound, and finite-step residual witnesses have been proved.
-
-That is an interface, not an existence theorem. No finite `G` should be reintroduced merely to satisfy it.
-
-The finite positive-weight lane remains useful as one realization of the interface. In that lane, the normalized source-average term has also been sharpened, including the local-tilt source average and pointwise stationary source-bound route from PRs #4187 and #4190. Those results do not by themselves construct the actual continuous physical certificate.
 
 ---
 
-# 4. What #4201, #4205, #4208, and #4211 add
+# 7. Near-term target
 
-The continuous-state realization now reaches the profile-operator level.
-
-### PR #4201 — fiber variation, not only `|F| <= 1`
-
-For the actual continuous `SU(N)` one-link C5 heat-bath kernel, if the oscillation of an observable along the resampled fiber is bounded by `magnitude`, then changing the represented right-boundary source value changes the heat-bath expectation by at most
+Starting from exact canonical HEAD
 
 ```text
-CrossBoundaryBoundedTestMajorant beta fiber source * magnitude.
+2ebe3ee4a69a662a2010d5e2a41ba1b1953289bc
 ```
 
-This uses no finite local state space.
-
-### PR #4205 — transport into the tagged kernel coefficient
-
-The same bound is rewritten exactly as the represented tagged kernel entry
+the preferred next sequence is:
 
 ```text
-K.influence (Sum.inl fiber) (Sum.inr source) * magnitude.
+1. inspect the literal C5 left-left dependence geometrically;
+2. determine which background fibers can actually affect a resampled fiber;
+3. replace the all-to-all offFiberInfluence majorant by the sharpest proved support/coefficient structure;
+4. recompute the restricted left column sum;
+5. prove a volume-uniform contraction criterion if the model permits it;
+6. only then instantiate the continuous response certificate and re-enter the existing resolvent/coercivity route.
 ```
 
-This is only a transport theorem; it adds no reverse physical semantics.
-
-### PR #4208 — one target-update recurrence nucleus
-
-A physical left-fiber variation profile is lifted to the tagged carrier by
-
-```text
-Sum.inl fiber  -> variation fiber
-Sum.inr source -> 0.
-```
-
-The right-copy zero is bookkeeping for a left-fiber observable, not a reverse-influence theorem. The actual continuous one-source heat-bath influence is then bounded by one generic
-
-```text
-finiteInfluenceKernelUpdatedVariation
-```
-
-step at the represented `(Sum.inl fiber, Sum.inr source)` pair.
-
-### PR #4211 — full represented source row
-
-The one-source theorem is summed over all represented right-boundary sources. The actual continuous one-link source row is bounded by
-
-```text
-periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryInfluenceOperator
-  H beta variation fiber.
-```
-
-The proof unfolds the influence operator, applies the continuous fiber-variation estimate source-by-source, and uses exact diagonal support for the off-diagonal terms.
-
-This is the strongest current physical continuous C5 variation theorem in this lane.
-
----
-
-# 5. Immediate frontier: finite-step continuous variation propagation
-
-The next missing theorem is **not** another one-step coefficient estimate. It is the descent from the actual continuous update dynamics to the already-existing finite-kernel iteration algebra.
-
-The generic objects
-
-```text
-finiteInfluenceKernelUpdatedVariation
-finiteInfluenceKernelRandomScanUpdatedVariation
-finiteInfluenceKernelRandomScanVariationIterate
-finiteInfluenceKernelPartialSource
-```
-
-are already implemented and have the needed positivity, monotonicity, scaling, and resolvent infrastructure.
-
-What is not yet proved is that an actual continuous sequence of C5 heat-bath updates is dominated, step after step, by the relevant generic tagged variation update/iterate.
-
-A crucial obstruction must remain explicit:
-
-```text
-generic tagged random scan over Sum Link Link
-  != by definition
-actual physical continuous random scan/update sequence.
-```
-
-The next proof must therefore either:
-
-1. construct the physical update sequence and prove compatibility/domination by the tagged operator; or
-2. formulate a narrower continuous update composition whose variation recurrence is exactly sufficient for the finite-step residual, without claiming an unjustified process identity.
-
-Only after this bridge is proved should the project claim the continuous finite-step residual required by #4198.
-
----
-
-# 6. Target finite-step residual
-
-The intended continuous witness has the same state-space-independent shape already consumed downstream:
-
-```text
-discrepancy source
-  <= finiteInfluenceKernelPartialSource
-       K sourceEnvelope variation n
-     + 2 * finiteProductVariationTotal
-       (finiteInfluenceKernelRandomScanVariationIterate
-         K variation n).
-```
-
-For the singleton family used by the C5 source-summed theorem, `variation` is the corresponding singleton tagged variation profile.
-
-Once this inequality and the genuine continuous `sourceBound` witnesses are obtained, #4198 can package them directly into `FiniteKernelStationaryResponseFamilyCertificate`, after which #4192 and the existing C5 resolvent/sweep algebra apply without referring to a finite local state space.
-
----
-
-# 7. Permanent claim boundaries
-
-The present theorem tree does **not** license any of the following identifications or conclusions:
-
-- C5 raw one-slab law = full-4D Wilson `singleLinkConditionalMeasure`;
-- distinct-source C5 invariance = arbitrary full-4D remote influence zero;
-- one-way tagged zero block = reverse physical influence zero;
-- `Sum.inl link` = `Sum.inr link`;
-- generic tagged random scan = actual continuous physical random scan;
-- one-coordinate random-scan rate = volume-uniform contraction rate;
-- finite positive-weight comparison = continuous `SU(N)` comparison;
-- `FiniteKernelStationaryResponseFamilyCertificate` = automatic existence of physical witnesses;
-- PR #4198 = construction of the actual physical continuous certificate;
-- stationary comparison = physical Poincare/coercivity theorem;
-- finite-volume contraction = thermodynamic/continuum mass gap;
-- same-root scalar continuum lane = complete 4D Yang--Mills field/state;
-- any unproved spatial decay `C * exp(-m*d)`;
-- completion of the Clay Yang--Mills mass-gap problem.
-
----
-
-# 8. Verification discipline
-
-The active theorem-development workflow is intentionally strict:
-
-```text
-fresh-fetch exact canonical branch
--> branch from exact SHA
--> RED theorem / Draft PR
--> terminal failed Lean receipt
--> inspect actual root cause
--> minimal GREEN patch
--> terminal successful workflow/job/Lean-step receipt
--> record exact GREEN SHA and CI run
--> Ready for review
--> merge with expected_head_sha
--> fresh re-observe canonical branch and tree
-```
-
-Queued, pending, or in-progress CI is never treated as success. New `sorry`, `admit`, axioms, assumption weakening, and semantic broadening of one-way carrier zeros are not acceptable substitutes for proof.
-
-For the detailed theorem-development order, see [`ROADMAP.md`](ROADMAP.md).
+The repository therefore stands at a clear boundary: the **multi-step physical bridge is closed**, while the **volume-uniform quantitative control of physical left-left propagation remains open**.
