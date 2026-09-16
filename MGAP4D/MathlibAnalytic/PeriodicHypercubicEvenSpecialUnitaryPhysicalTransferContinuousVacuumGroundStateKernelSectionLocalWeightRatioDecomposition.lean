@@ -31,7 +31,22 @@ theorem
           H N beta C A target g₁ /
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
           H N beta C A target g₂) := by
-  rfl
+  have hOmega₂ :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta (Function.update A target g₂) ≠ 0 :=
+    ne_of_gt
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos
+        H N hN beta hbeta (Function.update A target g₂))
+  have hFactor₂ :
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+          H N beta C A target g₂ ≠ 0 :=
+    ne_of_gt
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_pos
+        H N beta C A target g₂)
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkLocalWeight
+  field_simp [hOmega₂, hFactor₂]
+  <;> ring
 
 end
 
