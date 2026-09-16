@@ -69,8 +69,11 @@ theorem periodicHypercubicEvenSpatialSlice_influenceColumnSum_le_eighteen_mul_ad
     _ ≤ 18 * eta +
       ∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
         residual target source := by
-          exact add_le_add_right
-            (mul_le_mul_of_nonneg_right hCard hEtaNonneg) _
+          simpa [add_comm] using
+            add_le_add_right
+              (mul_le_mul_of_nonneg_right hCard hEtaNonneg)
+              (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
+                residual target source)
 
 /-- A uniform bound on the residual column sum turns the local-plus-residual
 split into a volume-independent column bound. -/
@@ -96,7 +99,9 @@ theorem periodicHypercubicEvenSpatialSlice_influenceColumnSum_le_eighteen_mul_ad
   exact
     (periodicHypercubicEvenSpatialSlice_influenceColumnSum_le_eighteen_mul_add_residual
       H influence residual eta hEtaNonneg hResidualNonneg hPointwise source).trans
-      (add_le_add_left (hResidualColumn source) (18 * eta))
+      (by
+        simpa [add_comm] using
+          add_le_add_left (hResidualColumn source) (18 * eta))
 
 /-- Consequently, the scalar gate `18 * eta + rho < 1` is sufficient for every
 spatial influence column to be strictly contractive once the pointwise
