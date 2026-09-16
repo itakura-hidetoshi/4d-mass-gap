@@ -53,7 +53,7 @@ theorem
     by_cases he : e = target
     · subst e
       simp
-    · simp [Function.update_noteq he]
+    · simp [he]
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkWeight
   rw [hUpdate]
