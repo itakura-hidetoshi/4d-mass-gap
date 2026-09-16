@@ -9,6 +9,10 @@ open MeasureTheory
 
 noncomputable section
 
+local instance physicalContinuousVacuumRemoteNoShareGroundStateKernelSectionSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 /-- For a geometrically remote target/source pair, the reference weight used in
 the continuous-vacuum covariance localization is exactly a left ground-state
 kernel section.  The target-local factor is absorbed back into the literal
