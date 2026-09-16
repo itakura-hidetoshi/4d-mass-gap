@@ -8,6 +8,10 @@ open MeasureTheory
 
 noncomputable section
 
+local instance kernelSectionTargetRatioTwoSourceResponseSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 /-- Changing one fixed right-boundary source from `k` to `h` changes the
 kernel-section expectation of the target-local update ratio by exactly the
 covariance of that target ratio with the one-link Wilson crossing ratio at the
