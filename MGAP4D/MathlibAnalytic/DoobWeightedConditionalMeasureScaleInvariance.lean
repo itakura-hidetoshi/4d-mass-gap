@@ -10,16 +10,15 @@ open scoped ENNReal
 noncomputable section
 
 /-- Multiplying a nonnegative Doob weight by a positive finite constant does
-not change its normalized weighted measure.  This is the exact normalization
-invariance used to remove fiber-independent factors from physical one-link
-laws. -/
+not change its normalized weighted measure.  Finiteness of the constant is
+enough for the `lintegral` scaling identity, so no measurability hypothesis on
+the weight is needed. -/
 theorem doobWeightedMeasure_mul_const_eq
     {α : Type*}
     [MeasurableSpace α]
     (μ : Measure α)
     (w : α → ℝ≥0∞)
     (c : ℝ≥0∞)
-    (hw : AEMeasurable w μ)
     (hcZero : c ≠ 0)
     (hcTop : c ≠ ∞) :
     doobWeightedMeasure μ (fun x => w x * c) =
@@ -28,7 +27,7 @@ theorem doobWeightedMeasure_mul_const_eq
       doobWeightMass μ (fun x => w x * c) =
         doobWeightMass μ w * c := by
     unfold doobWeightMass
-    rw [lintegral_mul_const'' _ hw]
+    exact lintegral_mul_const' c w hcTop
   unfold doobWeightedMeasure
   apply withDensity_congr_ae
   filter_upwards with x
