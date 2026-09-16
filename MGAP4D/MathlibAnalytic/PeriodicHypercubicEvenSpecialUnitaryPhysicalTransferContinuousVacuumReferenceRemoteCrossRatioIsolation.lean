@@ -88,23 +88,31 @@ theorem
   have hSlabRight :=
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_remote_background_crossRatio_eq
       H N beta Br A fiber backgroundFiber u v g h hFiberBackground hNoShare
+  have hSymUg : slab Cug Br = slab Br Cug := by
+    simpa [slab] using
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
+        H N hN beta hbeta Cug Br
+  have hSymVh : slab Cvh Br = slab Br Cvh := by
+    simpa [slab] using
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
+        H N hN beta hbeta Cvh Br
+  have hSymUh : slab Cuh Br = slab Br Cuh := by
+    simpa [slab] using
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
+        H N hN beta hbeta Cuh Br
+  have hSymVg : slab Cvg Br = slab Br Cvg := by
+    simpa [slab] using
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
+        H N hN beta hbeta Cvg Br
   have hSlab :
       slab Cug Br * slab Cvh Br = slab Cuh Br * slab Cvg Br := by
     calc
       slab Cug Br * slab Cvh Br = slab Br Cug * slab Br Cvh := by
-        rw [
-          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
-            H N hN beta hbeta Cug Br,
-          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
-            H N hN beta hbeta Cvh Br]
+        rw [hSymUg, hSymVh]
       _ = slab Br Cuh * slab Br Cvg := by
         simpa [slab, Br, Cug, Cvh, Cuh, Cvg, Au, Av] using hSlabRight
       _ = slab Cuh Br * slab Cvg Br := by
-        rw [←
-          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
-            H N hN beta hbeta Cuh Br,
-          ← periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
-            H N hN beta hbeta Cvg Br]
+        rw [← hSymUh, ← hSymVg]
   change
     (((Omega Cug * Local Cug) * slab Cug Br) *
         ((Omega Cvh * Local Cvh) * slab Cvh Br)) *
