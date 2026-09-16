@@ -11,6 +11,8 @@ open scoped ENNReal
 
 noncomputable section
 
+set_option maxHeartbeats 1000000
+
 local instance kernelSectionLeftFiberNormalizedSpecialUnitaryIsTopologicalGroup
     (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
