@@ -53,8 +53,7 @@ theorem finiteInfluenceKernelSumRestrictedTargetRandomScanUpdatedVariation_inl_e
   · subst target
     simp [finiteInfluenceKernelUpdatedVariation,
       finiteInfluenceKernelSumLeftRestriction]
-  · simp [finiteInfluenceKernelUpdatedVariation,
-      finiteInfluenceKernelSumLeftRestriction, hEq]
+  · simp [finiteInfluenceKernelUpdatedVariation, hEq]
 
 /-- The entire left projection of the restricted-target iterate agrees exactly
 with the existing full random-scan iterate of the left-restricted kernel. -/
@@ -214,8 +213,8 @@ theorem finiteInfluenceKernelSumRestrictedTargetRandomScanVariationIterate_inr_l
         K (fun target : τ => Sum.inl target) variation n (Sum.inr source) ≤
       variation (Sum.inr source) +
         (Fintype.card τ : ℝ)⁻¹ * sourceCoefficient * bound *
-          ∑ j in Finset.range n,
-            finiteInfluenceKernelReciprocalRandomScanRate τ columnCoefficient ^ j := by
+          Finset.sum (Finset.range n)
+            (fun j => finiteInfluenceKernelReciprocalRandomScanRate τ columnCoefficient ^ j) := by
   let rate :=
     finiteInfluenceKernelReciprocalRandomScanRate τ columnCoefficient
   have hRateNonneg : 0 ≤ rate := by
@@ -279,7 +278,7 @@ theorem finiteInfluenceKernelSumRestrictedTargetRandomScanVariationIterate_inr_l
                     K (fun e : τ => Sum.inl e) variation n (Sum.inl target) ≤
           (variation (Sum.inr source) +
             (Fintype.card τ : ℝ)⁻¹ * sourceCoefficient * bound *
-              ∑ j in Finset.range n, rate ^ j) +
+              Finset.sum (Finset.range n) (fun j => rate ^ j)) +
             (Fintype.card τ : ℝ)⁻¹ *
               (sourceCoefficient * (rate ^ n * bound)) := by
           exact add_le_add ih
@@ -287,7 +286,7 @@ theorem finiteInfluenceKernelSumRestrictedTargetRandomScanVariationIterate_inr_l
               (inv_nonneg.mpr (Nat.cast_nonneg _)))
         _ = variation (Sum.inr source) +
             (Fintype.card τ : ℝ)⁻¹ * sourceCoefficient * bound *
-              ∑ j in Finset.range (n + 1), rate ^ j := by
+              Finset.sum (Finset.range (n + 1)) (fun j => rate ^ j) := by
           rw [Finset.sum_range_succ]
           ring
 
