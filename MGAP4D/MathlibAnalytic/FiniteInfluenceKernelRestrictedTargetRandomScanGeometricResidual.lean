@@ -53,7 +53,11 @@ theorem finiteInfluenceKernelSumRestrictedTargetRandomScanUpdatedVariation_inl_e
   · subst target
     simp [finiteInfluenceKernelUpdatedVariation,
       finiteInfluenceKernelSumLeftRestriction]
-  · simp [finiteInfluenceKernelUpdatedVariation, hEq]
+  · have hEqSum : (Sum.inl source : Sum τ σ) ≠ Sum.inl target := by
+      intro h
+      exact hEq (Sum.inl.inj h)
+    simp only [finiteInfluenceKernelUpdatedVariation, hEqSum, hEq, if_false]
+    rfl
 
 /-- The entire left projection of the restricted-target iterate agrees exactly
 with the existing full random-scan iterate of the left-restricted kernel. -/
