@@ -73,10 +73,11 @@ theorem periodicHypercubicEvenSpatialSlice_C5_influenceColumnSum_le_twenty_mul_a
     _ ≤ 20 * eta +
       ∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
         residual target source := by
-          exact add_le_add_right
-            (mul_le_mul_of_nonneg_right hCard hEtaNonneg)
-            (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
-              residual target source)
+          simpa [add_comm] using
+            (add_le_add_right
+              (mul_le_mul_of_nonneg_right hCard hEtaNonneg)
+              (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
+                residual target source))
 
 /-- A uniform bound on the C5 vacuum-residual column sum yields a
 volume-independent complete column bound. -/
@@ -104,7 +105,9 @@ theorem periodicHypercubicEvenSpatialSlice_C5_influenceColumnSum_le_twenty_mul_a
   exact
     (periodicHypercubicEvenSpatialSlice_C5_influenceColumnSum_le_twenty_mul_add_residual
       H distinguishedTarget influence residual eta hEtaNonneg hPointwise source).trans
-      (add_le_add_left (hResidualColumn source) (20 * eta))
+      (by
+        simpa [add_comm] using
+          (add_le_add_left (hResidualColumn source) (20 * eta)))
 
 /-- Hence `20 * eta + rho < 1` is a sufficient scalar C5 contraction gate
 once the pointwise exceptional-plus-vacuum decomposition and a uniform vacuum
