@@ -1,11 +1,16 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpatialSliceActiveNeighborBound
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceRemoteCrossRatioIsolation
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumRemoteNoShareCovarianceLocalization
 import Mathlib.Tactic
 
 namespace MGAP4D
 namespace MathlibAnalytic
 
 noncomputable section
+
+local instance physicalContinuousVacuumC5ExceptionalSupportSpecialUnitaryMeasurableSpace (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
 
 /-- The only background fibers not covered by the exact remote C5
 cross-ratio isolation theorem are the resampled fiber itself, the distinguished
@@ -131,6 +136,77 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight_remote_background_crossRatio_isolates_vacuum
       H N hN beta hbeta B target source fiber backgroundFiber
       hFiberBackground hBackgroundTarget hNoShare k g₂ A u v g h
+
+/-- Every background link outside the volume-independent C5 exceptional set
+admits the exact local-observable covariance normal form for the remaining
+continuous-vacuum four-point defect.  The first observable is local at the
+remote background link and the second is the one-link Wilson crossing ratio at
+the resampled fiber.
+
+Together with the cardinality bound `≤ 20`, this separates a uniformly finite
+geometric contribution from the genuinely global vacuum-correlation residual.
+No covariance decay or summability estimate is asserted here. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_remote_crossRatio_defect_eq_sourceSpatialRatio_mul_weightedCovarianceNumerator_sourceCrossingRatio_of_not_mem_C5Exceptional
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (fiber distinguishedTarget backgroundFiber : PeriodicHypercubicEvenSpatialSliceLink H)
+    (hRemote : backgroundFiber ∉
+      periodicHypercubicEvenSpatialSliceC5ExceptionalBackgroundFibers
+        H fiber distinguishedTarget)
+    (h k g₁ g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta‖ *
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta
+          (Function.update (Function.update B fiber h) backgroundFiber g₁)) *
+      (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta‖ *
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta
+          (Function.update (Function.update B fiber k) backgroundFiber g₂)) -
+      (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta‖ *
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta
+          (Function.update (Function.update B fiber k) backgroundFiber g₁)) *
+      (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta‖ *
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta
+          (Function.update (Function.update B fiber h) backgroundFiber g₂)) =
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetSpatialHalfUpdateFactor
+          H N beta B fiber h /
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetSpatialHalfUpdateFactor
+          H N beta B fiber k) *
+      realIntegralWeightedCovarianceNumerator
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
+        (fun A =>
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+              H N hN beta hbeta).1 A *
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+              H N beta A B backgroundFiber g₂ *
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+              H N beta A (Function.update B fiber k))
+        (fun A =>
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+              H N beta A B backgroundFiber g₁ /
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+              H N beta A B backgroundFiber g₂)
+        (fun A =>
+          specialUnitaryWilsonRelativeKernel N beta (A fiber) h /
+            specialUnitaryWilsonRelativeKernel N beta (A fiber) k) := by
+  rcases
+    periodicHypercubicEvenSpatialSlice_not_mem_C5ExceptionalBackgroundFibers
+      H fiber distinguishedTarget backgroundFiber hRemote with
+    ⟨hFiberBackground, _hBackgroundTarget, hNoShare⟩
+  exact
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_remote_noShare_crossRatio_defect_eq_sourceSpatialRatio_mul_weightedCovarianceNumerator_sourceCrossingRatio
+      H N hN beta hbeta B (target := backgroundFiber) (source := fiber)
+      (Ne.symm hFiberBackground) hNoShare h k g₁ g₂
 
 end
 
