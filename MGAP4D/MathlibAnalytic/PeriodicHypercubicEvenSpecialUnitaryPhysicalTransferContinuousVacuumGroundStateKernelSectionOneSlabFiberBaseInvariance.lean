@@ -46,7 +46,17 @@ theorem
         H N hN beta hbeta C (Function.update A target h) target g =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkWeight
         H N hN beta hbeta C A target g := by
-  rfl
+  have hUpdate :
+      Function.update (Function.update A target h) target g =
+        Function.update A target g := by
+    funext e
+    by_cases he : e = target
+    · subst e
+      simp
+    · simp [Function.update_noteq he]
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkWeight
+  rw [hUpdate]
 
 /-- Consequently the normalized nonconstant one-link law is independent of the
 representative target value in the base configuration.  This is the exact
@@ -65,7 +75,23 @@ theorem
         H N hN beta hbeta C (Function.update A target h) target =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkLocalNormalizedMeasure
         H N hN beta hbeta C A target := by
-  rfl
+  rw [←
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure_eq_local
+      H N hN beta hbeta C (Function.update A target h) target]
+  rw [←
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure_eq_local
+      H N hN beta hbeta C A target]
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
+  apply congrArg
+    (doobWeightedMeasure
+      (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)))
+  funext g
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkENNRealWeight
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkWeight_replaceBaseTarget_eq
+      H N hN beta hbeta C A target h g]
 
 end
 
