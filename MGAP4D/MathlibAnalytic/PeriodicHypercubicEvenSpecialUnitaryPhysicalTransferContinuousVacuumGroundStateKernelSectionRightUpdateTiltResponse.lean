@@ -208,7 +208,6 @@ theorem
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos
         H N hN beta hbeta C)
   field_simp [ne_of_gt hDenomPos]
-  ring
 
 end
 
