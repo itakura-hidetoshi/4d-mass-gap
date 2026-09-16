@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumGroundStateKernelSectionLeftFiberDensityRatio
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumFiberDistortion
 import MGAP4D.MathlibAnalytic.DoobWeightedConditionalMeasureScaleInvariance
 import Mathlib.Tactic
 
@@ -10,8 +9,6 @@ open MeasureTheory
 open scoped ENNReal
 
 noncomputable section
-
-set_option maxHeartbeats 1000000
 
 local instance kernelSectionLeftFiberNormalizedSpecialUnitaryIsTopologicalGroup
     (N : ℕ) :
@@ -100,49 +97,6 @@ noncomputable def
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkLocalENNRealWeight
       H N hN beta hbeta C A target)
 
-/-- The complete one-link section density is continuous. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkENNRealWeight_continuous
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (C A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
-    (target : PeriodicHypercubicEvenSpatialSliceLink H) :
-    Continuous
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkENNRealWeight
-        H N hN beta hbeta C A target) := by
-  have hUpdate : Continuous
-      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
-        Function.update A target g) := by
-    simpa [periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink] using
-      (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_continuous
-        H N A target)
-  have hOmega : Continuous
-      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-          H N hN beta hbeta (Function.update A target g)) :=
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
-      H N hN beta hbeta).comp hUpdate
-  have hPair : Continuous
-      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
-        (Function.update A target g, C)) :=
-    hUpdate.prodMk continuous_const
-  have hKernel : Continuous
-      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta (Function.update A target g) C) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta).comp hPair
-  unfold
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkENNRealWeight
-  apply ENNReal.continuous_ofReal.comp
-  unfold
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkWeight
-  unfold
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousWeight
-  exact hOmega.mul hKernel
-
 /-- The complete section and the local section differ exactly by the positive
 finite `g`-independent base kernel factor after conversion to `ENNReal`. -/
 theorem
@@ -206,10 +160,6 @@ theorem
   have hcTop : c ≠ ∞ := ENNReal.ofReal_ne_top
   have hcInvZero : c⁻¹ ≠ 0 := ENNReal.inv_ne_zero.mpr hcTop
   have hcInvTop : c⁻¹ ≠ ∞ := ENNReal.inv_ne_top.mpr hcZero
-  have hSectionMeas : AEMeasurable wSection μ := by
-    exact
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkENNRealWeight_continuous
-        H N hN beta hbeta C A target).measurable.aemeasurable
   have hLocalScaled :
       wLocal = fun g => wSection g * c⁻¹ := by
     funext g
@@ -225,7 +175,7 @@ theorem
   change doobWeightedMeasure μ wSection = doobWeightedMeasure μ wLocal
   rw [hLocalScaled]
   exact
-    (doobWeightedMeasure_mul_const_eq μ wSection c⁻¹ hSectionMeas hcInvZero hcInvTop).symm
+    (doobWeightedMeasure_mul_const_eq μ wSection c⁻¹ hcInvZero hcInvTop).symm
 
 end
 
