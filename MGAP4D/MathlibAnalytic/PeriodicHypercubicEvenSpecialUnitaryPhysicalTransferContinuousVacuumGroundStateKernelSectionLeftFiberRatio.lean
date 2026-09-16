@@ -27,7 +27,10 @@ theorem
         H N hN beta hbeta C A target g₂ *
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkLocalWeight
         H N hN beta hbeta C A target g₁ := by
-  rfl
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkWeight_eq_localWeight_mul_baseKernel,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkWeight_eq_localWeight_mul_baseKernel]
+  ring
 
 end
 
