@@ -126,6 +126,8 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberDeterministicScheduleExpectation_transport_le
         H N hN beta hbeta B target source g₂ k₁ k₂ A F₁ hF₁
         physicalVariation hPhysicalNonneg hVariation₁ [fiber]
+    rw [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedDeterministicScheduleVariation_cons_right] at hDirectRaw
     have hDirect :
         |periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberDeterministicScheduleExpectation
             H N hN beta hbeta B target source g₂ [fiber] k₁ A F₁ -
