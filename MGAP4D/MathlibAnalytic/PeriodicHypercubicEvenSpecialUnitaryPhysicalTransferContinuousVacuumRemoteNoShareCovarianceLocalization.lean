@@ -43,6 +43,9 @@ theorem
   apply integral_congr_ae
   filter_upwards with A
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_update_right_eq_localFactor_mul]
+  rw [
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_update_rightBase_remote
+      H N beta A B target source h g (Ne.symm hne) hNoShare]
 
 end
 
