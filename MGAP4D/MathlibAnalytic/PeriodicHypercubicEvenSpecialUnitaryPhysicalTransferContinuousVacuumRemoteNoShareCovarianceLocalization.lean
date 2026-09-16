@@ -160,6 +160,128 @@ theorem
           H N beta A (Function.update B source k))
       hq hs)
 
+/-- Outside the literal Wilson interaction neighborhood, the same remote
+four-point defect is an explicit source spatial-half-update ratio times a
+weighted covariance numerator of two one-link observables on the left
+boundary: the target local-factor ratio and the source Wilson crossing ratio.
+
+This isolates the remaining long-range obstruction to the canonical vacuum
+weight itself.  No summability or decay estimate is asserted. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_remote_noShare_crossRatio_defect_eq_sourceSpatialRatio_mul_weightedCovarianceNumerator_sourceCrossingRatio
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    {target source : PeriodicHypercubicEvenSpatialSliceLink H}
+    (hne : target ≠ source)
+    (hNoShare :
+      ¬ periodicHypercubicEvenSpatialSliceLinksSharePlaquette H target source)
+    (h k g₁ g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta‖ *
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta
+          (Function.update (Function.update B source h) target g₁)) *
+      (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta‖ *
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta
+          (Function.update (Function.update B source k) target g₂)) -
+      (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta‖ *
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta
+          (Function.update (Function.update B source k) target g₁)) *
+      (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta‖ *
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta
+          (Function.update (Function.update B source h) target g₂)) =
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetSpatialHalfUpdateFactor
+          H N beta B source h /
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetSpatialHalfUpdateFactor
+          H N beta B source k) *
+      realIntegralWeightedCovarianceNumerator
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
+        (fun A =>
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+              H N hN beta hbeta).1 A *
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+              H N beta A B target g₂ *
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+              H N beta A (Function.update B source k))
+        (fun A =>
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+              H N beta A B target g₁ /
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+              H N beta A B target g₂)
+        (fun A =>
+          specialUnitaryWilsonRelativeKernel N beta (A source) h /
+            specialUnitaryWilsonRelativeKernel N beta (A source) k) := by
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_remote_noShare_crossRatio_defect_eq_weightedCovarianceNumerator
+      H N hN beta hbeta B (target := target) (source := source)
+      hne hNoShare h k g₁ g₂]
+  have hSourceRatio :
+      (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A
+              (Function.update B source h) /
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A
+              (Function.update B source k)) =
+        (fun A =>
+          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetSpatialHalfUpdateFactor
+              H N beta B source h /
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetSpatialHalfUpdateFactor
+              H N beta B source k) *
+          (specialUnitaryWilsonRelativeKernel N beta (A source) h /
+            specialUnitaryWilsonRelativeKernel N beta (A source) k)) := by
+    funext A
+    have hpair :=
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_source_update_pairwise_likelihoodRatio
+        H N beta A B source h k
+    have hQk :
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta A
+            (Function.update B source k) ≠ 0 := by
+      exact ne_of_gt
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
+          H N beta A (Function.update B source k))
+    have hSk :
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetSpatialHalfUpdateFactor
+            H N beta B source k ≠ 0 := by
+      exact ne_of_gt
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetSpatialHalfUpdateFactor_pos
+          H N beta B source k)
+    have hrk : specialUnitaryWilsonRelativeKernel N beta (A source) k ≠ 0 := by
+      unfold specialUnitaryWilsonRelativeKernel
+      unfold specialUnitaryWilsonBoltzmannCentralFunction
+      exact ne_of_gt (Real.exp_pos _)
+    field_simp [hQk, hSk, hrk] <;> nlinarith [hpair]
+  rw [hSourceRatio]
+  exact
+    realIntegralWeightedCovarianceNumerator_const_mul_right
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
+      (fun A =>
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+            H N hN beta hbeta).1 A *
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+            H N beta A B target g₂ *
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+            H N beta A (Function.update B source k))
+      (fun A =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+            H N beta A B target g₁ /
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+            H N beta A B target g₂)
+      (fun A =>
+        specialUnitaryWilsonRelativeKernel N beta (A source) h /
+          specialUnitaryWilsonRelativeKernel N beta (A source) k)
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetSpatialHalfUpdateFactor
+          H N beta B source h /
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetSpatialHalfUpdateFactor
+          H N beta B source k)
+
 end
 
 end MathlibAnalytic
