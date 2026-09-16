@@ -63,12 +63,15 @@ theorem doobWeightedMeasure_compose
   simp only [Pi.mul_apply, doobWeightedDensity]
   rw [hMassUnfolded]
   simp only [div_eq_mul_inv]
-  rw [ENNReal.inv_div (Or.inl hMassRTop) (Or.inl hMassRZero)]
-  simp only [div_eq_mul_inv]
+  rw [ENNReal.mul_inv
+    (Or.inr (ENNReal.inv_ne_top.mpr hMassRZero))
+    (Or.inr (ENNReal.inv_ne_zero.mpr hMassRTop))]
+  simp only [inv_inv]
   calc
     r x * (doobWeightMass μ r)⁻¹ *
-        (v x * (doobWeightMass μ r *
-          (doobWeightMass μ (fun y => r y * v y))⁻¹)) =
+        (v x *
+          ((doobWeightMass μ (fun y => r y * v y))⁻¹ *
+            doobWeightMass μ r)) =
       (r x * v x) *
         ((doobWeightMass μ r)⁻¹ * doobWeightMass μ r) *
           (doobWeightMass μ (fun y => r y * v y))⁻¹ := by
