@@ -10,6 +10,26 @@ open scoped ENNReal ProbabilityTheory BigOperators
 
 noncomputable section
 
+local instance referenceDistinctFiberRestrictedRandomScanGeometricResidualSpecialUnitaryIsTopologicalGroup
+    (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance referenceDistinctFiberRestrictedRandomScanGeometricResidualSpecialUnitaryCompactSpace
+    (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance referenceDistinctFiberRestrictedRandomScanGeometricResidualSpecialUnitarySecondCountableTopology
+    (N : ℕ) : SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance referenceDistinctFiberRestrictedRandomScanGeometricResidualSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance referenceDistinctFiberRestrictedRandomScanGeometricResidualSpecialUnitaryBorelSpace
+    (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
 local instance referenceDistinctFiberRestrictedRandomScanGeometricResidualSpatialLinkFintype
     (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
