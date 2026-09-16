@@ -10,6 +10,10 @@ open MeasureTheory
 
 noncomputable section
 
+local instance physicalContinuousVacuumRemoteNoShareSpecialUnitaryMeasurableSpace (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 /-- Exact integral normal form for a continuous-vacuum value after changing a
 geometrically remote source link and then fixing the target value.  The
 hypothesis is the literal Wilson condition that the two links share no spatial
