@@ -26,7 +26,22 @@ theorem
         H N hN beta hbeta C A target g₁ /
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkLocalWeight
         H N hN beta hbeta C A target g₂ := by
-  rfl
+  have hSection₂ :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkWeight
+          H N hN beta hbeta C A target g₂ ≠ 0 :=
+    ne_of_gt
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkWeight_pos
+        H N hN beta hbeta C A target g₂)
+  have hLocal₂ :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkLocalWeight
+          H N hN beta hbeta C A target g₂ ≠ 0 :=
+    ne_of_gt
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkLocalWeight_pos
+        H N hN beta hbeta C A target g₂)
+  apply (div_eq_div_iff hSection₂ hLocal₂).2
+  simpa [mul_comm] using
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkWeight_cross_mul_localWeight
+      H N hN beta hbeta C A target g₁ g₂)
 
 end
 
