@@ -39,7 +39,22 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousProbabilityMeasure
         H N hN beta hbeta
         (Function.update (Function.update B source k) target g₂) := by
-  rfl
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousProbabilityMeasure
+  apply congrArg
+    (realIntegralWeightedProbabilityMeasure
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+  funext A
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousWeight
+  rw [
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_update_right_eq_localFactor_mul
+      H N beta A (Function.update B source k) target g₂,
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_update_rightBase_remote
+      H N beta A B target source k g₂ (Ne.symm hne) hNoShare]
+  exact mul_assoc _ _ _
 
 end
 
