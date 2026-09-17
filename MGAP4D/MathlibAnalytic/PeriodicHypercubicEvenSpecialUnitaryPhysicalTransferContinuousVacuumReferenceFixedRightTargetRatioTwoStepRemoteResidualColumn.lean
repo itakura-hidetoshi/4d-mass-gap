@@ -168,7 +168,161 @@ theorem
           beta * Real.exp (16 * beta)) +
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalRemoteColumn
         H N hN beta hbeta B source distinguishedTarget g₁ g₂ h k := by
-  rfl
+  classical
+  let remote :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceC5RemoteTargetFibers
+      H source distinguishedTarget
+  have hGeometry :
+      ∀ target ∈ remote,
+        target ≠ source ∧
+          ¬ periodicHypercubicEvenSpatialSliceLinksSharePlaquette H target source := by
+    intro target hTarget
+    have hRemote :
+        target ∉
+          periodicHypercubicEvenSpatialSliceC5ExceptionalBackgroundFibers
+            H source distinguishedTarget := by
+      simpa [remote,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceC5RemoteTargetFibers] using
+        hTarget
+    rcases
+      periodicHypercubicEvenSpatialSlice_not_mem_C5ExceptionalBackgroundFibers
+        H source distinguishedTarget target hRemote with
+      ⟨hSourceTarget, _hTargetDistinguished, hNoShare⟩
+    exact ⟨Ne.symm hSourceTarget, hNoShare⟩
+  have hPoint :
+      ∀ target ∈ remote,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioResponseAbs
+            H N hN beta hbeta B target source g₁ g₂ h k ≤
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate
+              H beta hbeta
+              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation
+                H beta target)
+              2 (Sum.inr source) +
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalResponseAbs
+              H N hN beta hbeta B target source g₁ g₂ h k := by
+    intro target hTarget
+    rcases hGeometry target hTarget with ⟨hne, hNoShare⟩
+    have hRaw :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousProbabilityMeasure_fixedRightTargetRatio_response_abs_le_taggedTransport_add_terminal_of_remote
+        H N hN beta hbeta B (target := target) (source := source)
+        hne hNoShare g₁ g₂ h k 2
+    simpa [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioResponseAbs,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalResponseAbs] using
+      hRaw
+  have hRemoteSubset : remote ⊆ Finset.univ.erase source := by
+    intro target hTarget
+    have hne : target ≠ source := (hGeometry target hTarget).1
+    exact Finset.mem_erase.mpr ⟨hne, Finset.mem_univ target⟩
+  have hTransportSumLe :
+      (∑ target ∈ remote,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate
+          H beta hbeta
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation
+            H beta target)
+          2 (Sum.inr source)) ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation_twoStep_remoteRightColumnSum
+          H beta hbeta source := by
+    unfold
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation_twoStep_remoteRightColumnSum
+    apply Finset.sum_le_sum_of_subset_of_nonneg
+    · exact hRemoteSubset
+    · intro target _ _
+      exact
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate_nonneg
+          H beta hbeta
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation
+            H beta target)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation_nonneg
+            H beta target)
+          2 (Sum.inr source)
+  have hResponseSum :
+      (∑ target ∈ remote,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioResponseAbs
+          H N hN beta hbeta B target source g₁ g₂ h k) ≤
+        (∑ target ∈ remote,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate
+            H beta hbeta
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation
+              H beta target)
+            2 (Sum.inr source)) +
+        (∑ target ∈ remote,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalResponseAbs
+            H N hN beta hbeta B target source g₁ g₂ h k) := by
+    calc
+      (∑ target ∈ remote,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioResponseAbs
+          H N hN beta hbeta B target source g₁ g₂ h k) ≤
+          ∑ target ∈ remote,
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate
+                H beta hbeta
+                (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation
+                  H beta target)
+                2 (Sum.inr source) +
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalResponseAbs
+                H N hN beta hbeta B target source g₁ g₂ h k) := by
+        apply Finset.sum_le_sum
+        intro target hTarget
+        exact hPoint target hTarget
+      _ =
+          (∑ target ∈ remote,
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate
+              H beta hbeta
+              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation
+                H beta target)
+              2 (Sum.inr source)) +
+          (∑ target ∈ remote,
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalResponseAbs
+              H N hN beta hbeta B target source g₁ g₂ h k) := by
+        rw [Finset.sum_add_distrib]
+  have hFullTransport :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation_twoStep_remoteRightColumnSum_le
+      H beta hbeta source
+  have hCombined :
+      (∑ target ∈ remote,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioResponseAbs
+          H N hN beta hbeta B target source g₁ g₂ h k) ≤
+        2 * (((Real.exp (8 * beta)) ^ 2 - 1) /
+          ((Real.exp (8 * beta)) ^ 2 + 1)) *
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberOffFiberInfluence
+            beta * Real.exp (16 * beta)) +
+        (∑ target ∈ remote,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalResponseAbs
+            H N hN beta hbeta B target source g₁ g₂ h k) := by
+    calc
+      (∑ target ∈ remote,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioResponseAbs
+          H N hN beta hbeta B target source g₁ g₂ h k) ≤
+          (∑ target ∈ remote,
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate
+              H beta hbeta
+              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation
+                H beta target)
+              2 (Sum.inr source)) +
+          (∑ target ∈ remote,
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalResponseAbs
+              H N hN beta hbeta B target source g₁ g₂ h k) := hResponseSum
+      _ ≤
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation_twoStep_remoteRightColumnSum
+              H beta hbeta source +
+          (∑ target ∈ remote,
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalResponseAbs
+              H N hN beta hbeta B target source g₁ g₂ h k) :=
+        add_le_add_right hTransportSumLe _
+      _ ≤
+          2 * (((Real.exp (8 * beta)) ^ 2 - 1) /
+            ((Real.exp (8 * beta)) ^ 2 + 1)) *
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberOffFiberInfluence
+              beta * Real.exp (16 * beta)) +
+          (∑ target ∈ remote,
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalResponseAbs
+              H N hN beta hbeta B target source g₁ g₂ h k) :=
+        add_le_add_right hFullTransport _
+  simpa [
+    remote,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioRemoteResponseColumn,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalRemoteColumn] using
+    hCombined
 
 end
 
