@@ -25,7 +25,25 @@ theorem
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioRemoteAggregateVariation
           H beta source distinguishedTarget)
         1 (Sum.inr source) = 0 := by
-  rfl
+  classical
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioRemoteAggregateVariation_iterate_eq_sum]
+  apply Finset.sum_eq_zero
+  intro target hTarget
+  have hRemote :
+      target ∉
+        periodicHypercubicEvenSpatialSliceC5ExceptionalBackgroundFibers
+          H source distinguishedTarget := by
+    simpa [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceC5RemoteTargetFibers] using
+      hTarget
+  rcases
+    periodicHypercubicEvenSpatialSlice_not_mem_C5ExceptionalBackgroundFibers
+      H source distinguishedTarget target hRemote with
+    ⟨hSourceTarget, _hTargetDistinguished, _hNoShare⟩
+  exact
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation_oneStep_remoteRightSource_eq_zero
+      H beta hbeta (Ne.symm hSourceTarget)
 
 end
 
