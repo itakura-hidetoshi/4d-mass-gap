@@ -29,7 +29,35 @@ theorem
       (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ)⁻¹ *
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberOffFiberInfluence
             beta * Real.exp (16 * beta)) := by
-  rfl
+  classical
+  rw [show (1 : ℕ) = 0 + 1 by norm_num]
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate_succ,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate_zero]
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanUpdatedVariation
+  unfold finiteInfluenceKernelRestrictedTargetRandomScanUpdatedVariation
+  congr 1
+  rw [Finset.sum_eq_single target]
+  · unfold finiteInfluenceKernelUpdatedVariation
+    simp only [Sum.inl.injEq, Ne.symm hne, if_false]
+    rw [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedKernel_left_left_of_ne
+        H beta hbeta target source hne]
+    simp [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedLeftVariation,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation,
+      Ne.symm hne]
+  · intro fiber _hmem hFiber
+    by_cases hFiberSource : fiber = source
+    · subst fiber
+      simp [finiteInfluenceKernelUpdatedVariation]
+    · unfold finiteInfluenceKernelUpdatedVariation
+      simp [
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedLeftVariation,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation,
+        Ne.symm hne, hFiber, hFiberSource]
+  · simp
 
 end
 
