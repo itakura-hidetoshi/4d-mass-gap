@@ -150,7 +150,6 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatio_le_exp_sixteen
       H N hN beta hbeta A B target g₁ g₂
   dsimp [M]
-  simp only [Real.norm_eq_abs]
   rw [abs_of_pos hPos, abs_of_pos (Real.exp_pos _)]
   exact hBound
 
