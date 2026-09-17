@@ -1,3 +1,4 @@
+import email.message
 import io
 import json
 import unittest
@@ -143,6 +144,21 @@ class HttpDiagnosticsTests(unittest.TestCase):
         self.assertIn("HTTP 403 Forbidden", detail)
         self.assertIn("Resource not accessible by integration", detail)
         self.assertIn("rest/issues/comments", detail)
+
+    def test_http_error_detail_includes_accepted_github_permissions_header(self):
+        headers = email.message.Message()
+        headers["X-Accepted-GitHub-Permissions"] = "issues=write; pull_requests=write"
+        headers["X-GitHub-Request-Id"] = "ABC0:1234:5678:9ABC"
+        error = urllib.error.HTTPError(
+            url="https://api.github.com/repos/o/r/issues/1/comments",
+            code=403,
+            msg="Forbidden",
+            hdrs=headers,
+            fp=io.BytesIO(b'{"message":"Resource not accessible by integration"}'),
+        )
+        detail = http_error_detail(error)
+        self.assertIn("accepted_permissions=issues=write; pull_requests=write", detail)
+        self.assertIn("request_id=ABC0:1234:5678:9ABC", detail)
 
 
 class MarkerTests(unittest.TestCase):
