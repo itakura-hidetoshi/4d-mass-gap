@@ -121,10 +121,24 @@ theorem probabilityMeasure_integral_difference_abs_le_two_mul_updateVariationSum
     simpa [Real.norm_eq_abs, abs_of_nonneg hMNonneg] using hGlobal A
   have hFIntMu : Integrable f μ := by
     have hSum := hCenteredIntMu.add (integrable_const (μ := μ) (f A₀))
-    simpa using hSum
+    change
+      Integrable (fun A : ι → G => (f A - f A₀) + f A₀) μ at hSum
+    have hEq :
+        (fun A : ι → G => (f A - f A₀) + f A₀) = f := by
+      funext A
+      ring
+    rw [hEq] at hSum
+    exact hSum
   have hFIntNu : Integrable f ν := by
     have hSum := hCenteredIntNu.add (integrable_const (μ := ν) (f A₀))
-    simpa using hSum
+    change
+      Integrable (fun A : ι → G => (f A - f A₀) + f A₀) ν at hSum
+    have hEq :
+        (fun A : ι → G => (f A - f A₀) + f A₀) = f := by
+      funext A
+      ring
+    rw [hEq] at hSum
+    exact hSum
   have hCenterEqMu :
       (∫ A : ι → G, f A - f A₀ ∂μ) =
         (∫ A : ι → G, f A ∂μ) - f A₀ := by
@@ -222,7 +236,97 @@ theorem
             (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation
               H beta target)
             2 (Sum.inl e) := by
-  rfl
+  classical
+  let F :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ :=
+    fun C =>
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+            H N beta C B target g₁ /
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+            H N beta C B target g₂
+  let variation : PeriodicHypercubicEvenSpatialSliceLink H → ℝ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation
+      H beta target
+  let smoothed :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberRestrictedRandomScanExpectationIterate
+      H N hN beta hbeta B target source g₂ k F 2
+  let propagated : PeriodicHypercubicEvenSpatialSliceLink H → ℝ :=
+    fun e =>
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate
+        H beta hbeta variation 2 (Sum.inl e)
+  let μh :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousProbabilityMeasure
+      H N hN beta hbeta
+      (Function.update (Function.update B source h) target g₂)
+  let μk :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousProbabilityMeasure
+      H N hN beta hbeta
+      (Function.update (Function.update B source k) target g₂)
+  have hF : StronglyMeasurable F := by
+    simpa [F] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatio_stronglyMeasurable
+        H N beta B target g₁ g₂
+  have hVariationNonneg : ∀ e, 0 ≤ variation e := by
+    simpa [variation] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation_nonneg
+        H beta target
+  have hVariation :
+      ∀ (e : PeriodicHypercubicEvenSpatialSliceLink H)
+        (C : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+        (u v : Matrix.specialUnitaryGroup (Fin N) ℂ),
+        |F (Function.update C e u) - F (Function.update C e v)| ≤
+          variation e := by
+    simpa [F, variation] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatio_variation_le
+        H N hN beta hbeta B target g₁ g₂
+  have hSmoothedMeas : StronglyMeasurable smoothed := by
+    dsimp [smoothed]
+    exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberRestrictedRandomScanExpectationIterate_stronglyMeasurable
+        H N hN beta hbeta B target source g₂ k F hF 2
+  have hPropagatedNonneg : ∀ e, 0 ≤ propagated e := by
+    intro e
+    dsimp [propagated]
+    exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate_nonneg
+        H beta hbeta variation hVariationNonneg 2 (Sum.inl e)
+  have hPropagatedVariation :
+      ∀ (e : PeriodicHypercubicEvenSpatialSliceLink H)
+        (C : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+        (u v : Matrix.specialUnitaryGroup (Fin N) ℂ),
+        |smoothed (Function.update C e u) -
+          smoothed (Function.update C e v)| ≤ propagated e := by
+    intro e C u v
+    dsimp [smoothed, propagated]
+    exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberRestrictedRandomScanExpectationIterate_fiberVariation_le
+        H N hN beta hbeta B target source g₂ k F hF variation
+        hVariationNonneg hVariation 2 e C u v
+  have hμh : IsProbabilityMeasure μh := by
+    dsimp [μh]
+    exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousProbabilityMeasure_isProbabilityMeasure
+        H N hN beta hbeta
+        (Function.update (Function.update B source h) target g₂)
+  have hμk : IsProbabilityMeasure μk := by
+    dsimp [μk]
+    exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousProbabilityMeasure_isProbabilityMeasure
+        H N hN beta hbeta
+        (Function.update (Function.update B source k) target g₂)
+  have hBound :=
+    probabilityMeasure_integral_difference_abs_le_two_mul_updateVariationSum
+      smoothed hSmoothedMeas propagated hPropagatedNonneg
+      hPropagatedVariation μh μk hμh hμk B
+  simpa only [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalResponseAbs,
+    smoothed,
+    propagated,
+    F,
+    variation,
+    μh,
+    μk] using hBound
 
 /-- Summing the targetwise terminal descent over the remote C5 set and using
 exact finite superposition turns the whole two-step terminal remote column into
@@ -245,7 +349,67 @@ theorem
             (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioRemoteAggregateVariation
               H beta source distinguishedTarget)
             2 (Sum.inl e) := by
-  rfl
+  classical
+  let remote :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceC5RemoteTargetFibers
+      H source distinguishedTarget
+  calc
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalRemoteColumn
+        H N hN beta hbeta B source distinguishedTarget g₁ g₂ h k =
+      ∑ target ∈ remote,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalResponseAbs
+          H N hN beta hbeta B target source g₁ g₂ h k := by
+            rfl
+    _ ≤
+      ∑ target ∈ remote,
+        2 *
+          ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate
+              H beta hbeta
+              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation
+                H beta target)
+              2 (Sum.inl e) := by
+      apply Finset.sum_le_sum
+      intro target hTarget
+      exact
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalResponseAbs_le_two_mul_leftVariationTotal
+          H N hN beta hbeta B target source g₁ g₂ h k
+    _ =
+      2 *
+        ∑ target ∈ remote,
+          ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate
+              H beta hbeta
+              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation
+                H beta target)
+              2 (Sum.inl e) := by
+      rw [Finset.mul_sum]
+    _ =
+      2 *
+        ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+          ∑ target ∈ remote,
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate
+              H beta hbeta
+              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation
+                H beta target)
+              2 (Sum.inl e) := by
+      congr 1
+      rw [Finset.sum_comm]
+    _ =
+      2 *
+        ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate
+            H beta hbeta
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioRemoteAggregateVariation
+              H beta source distinguishedTarget)
+            2 (Sum.inl e) := by
+      congr 1
+      apply Finset.sum_congr rfl
+      intro e hE
+      symm
+      simpa [remote] using
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioRemoteAggregateVariation_iterate_eq_sum
+          H beta hbeta source distinguishedTarget 2 (Sum.inl e)
 
 end
 
