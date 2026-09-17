@@ -1,0 +1,128 @@
+import MGAP4D.MathlibAnalytic.FinitePositiveWeightCanonicalVariationDefiniteness
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceFixedRightTargetRatioTwoStepRemoteResidualColumn
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceFixedRightTargetRatioRemoteAggregateIterateSuperposition
+import Mathlib.Tactic
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+open MeasureTheory ProbabilityTheory
+open scoped ENNReal ProbabilityTheory BigOperators
+
+noncomputable section
+
+/-- Finite-coordinate telescoping needs only a finite coordinate carrier, not a
+finite value space.  This is the continuous-state analogue needed for SU(N)
+boundary configurations. -/
+theorem finiteProductUpdateVariation_difference_abs_le_sum
+    {ι G : Type}
+    [DecidableEq ι]
+    [Fintype ι]
+    (f : (ι → G) → ℝ)
+    (variation : ι → ℝ)
+    (hVariation :
+      ∀ (e : ι) (C : ι → G) (u v : G),
+        |f (Function.update C e u) - f (Function.update C e v)| ≤ variation e)
+    (A B : ι → G) :
+    |f A - f B| ≤ ∑ e : ι, variation e := by
+  rfl
+
+/-- If a strongly measurable observable has a declared coordinatewise update
+variation profile on a finite coordinate carrier, then its expectations under
+any two probability measures differ by at most twice the total variation
+profile.  The value space itself may be infinite or continuous. -/
+theorem probabilityMeasure_integral_difference_abs_le_two_mul_updateVariationSum
+    {ι G : Type}
+    [DecidableEq ι]
+    [Fintype ι]
+    [MeasurableSpace G]
+    (f : (ι → G) → ℝ)
+    (hF : StronglyMeasurable f)
+    (variation : ι → ℝ)
+    (hVariationNonneg : ∀ e, 0 ≤ variation e)
+    (hVariation :
+      ∀ (e : ι) (C : ι → G) (u v : G),
+        |f (Function.update C e u) - f (Function.update C e v)| ≤ variation e)
+    (μ ν : Measure (ι → G))
+    (hμ : IsProbabilityMeasure μ)
+    (hν : IsProbabilityMeasure ν)
+    (A₀ : ι → G) :
+    |(∫ A, f A ∂μ) - (∫ A, f A ∂ν)| ≤
+      2 * ∑ e : ι, variation e := by
+  rfl
+
+local instance fixedRightTargetRatioTwoStepTerminalLeftVariationMassSpecialUnitaryIsTopologicalGroup
+    (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance fixedRightTargetRatioTwoStepTerminalLeftVariationMassSpecialUnitaryCompactSpace
+    (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance fixedRightTargetRatioTwoStepTerminalLeftVariationMassSpecialUnitarySecondCountableTopology
+    (N : ℕ) : SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance fixedRightTargetRatioTwoStepTerminalLeftVariationMassSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance fixedRightTargetRatioTwoStepTerminalLeftVariationMassSpecialUnitaryBorelSpace
+    (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
+local instance fixedRightTargetRatioTwoStepTerminalLeftVariationMassSpatialLinkFintype
+    (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
+/-- The exact two-step terminal response for one target is controlled by the
+left-coordinate total mass of the propagated singleton target-ratio variation.
+This removes the opaque stationary-measure response without assuming a global
+contraction or a finite SU(N) state space. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalResponseAbs_le_two_mul_leftVariationTotal
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (target source : PeriodicHypercubicEvenSpatialSliceLink H)
+    (g₁ g₂ h k : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalResponseAbs
+        H N hN beta hbeta B target source g₁ g₂ h k ≤
+      2 *
+        ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate
+            H beta hbeta
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation
+              H beta target)
+            2 (Sum.inl e) := by
+  rfl
+
+/-- Summing the targetwise terminal descent over the remote C5 set and using
+exact finite superposition turns the whole two-step terminal remote column into
+one aggregate propagated left-total-mass obstruction. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalRemoteColumn_le_two_mul_remoteAggregateLeftVariationTotal
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (source distinguishedTarget : PeriodicHypercubicEvenSpatialSliceLink H)
+    (g₁ g₂ h k : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalRemoteColumn
+        H N hN beta hbeta B source distinguishedTarget g₁ g₂ h k ≤
+      2 *
+        ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate
+            H beta hbeta
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioRemoteAggregateVariation
+              H beta source distinguishedTarget)
+            2 (Sum.inl e) := by
+  rfl
+
+end
+
+end MathlibAnalytic
+end MGAP4D
