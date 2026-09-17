@@ -149,7 +149,10 @@ theorem
   have hBound :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatio_le_exp_sixteen
       H N hN beta hbeta A B target g₁ g₂
-  simpa [M, Real.norm_eq_abs, abs_of_pos hPos] using hBound
+  dsimp [M]
+  simp only [Real.norm_eq_abs]
+  rw [abs_of_pos hPos, abs_of_pos (Real.exp_pos _)]
+  exact hBound
 
 /-- The singleton target-ratio variation profile is nonnegative. -/
 theorem
@@ -164,9 +167,10 @@ theorem
   intro e
   by_cases he : e = target
   · subst e
-    simp [
+    simp only [
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation,
-      Real.exp_pos]
+      if_pos]
+    exact (Real.exp_pos _).le
   · simp [
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation,
       he]
@@ -226,7 +230,7 @@ theorem
                 H N beta (Function.update C e v) B target g₂ := by
         simp [
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor,
-          he]
+          Ne.symm he]
     rw [hEq, sub_self, abs_zero]
     simp [
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation,
@@ -356,7 +360,6 @@ theorem
   have hBridgeK :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure_eq_kernelSection_source_then_target_of_remote
       H N hN beta hbeta B hne hNoShare k g₂
-  dsimp [μh, μk] at hBridgeH hBridgeK
   rw [hBridgeH, hBridgeK] at hBase
   simpa [F, variation] using hBase
 
