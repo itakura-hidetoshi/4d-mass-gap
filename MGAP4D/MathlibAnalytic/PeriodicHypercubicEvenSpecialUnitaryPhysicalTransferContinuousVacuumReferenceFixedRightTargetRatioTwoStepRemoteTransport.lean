@@ -32,7 +32,39 @@ theorem
           ((Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ)⁻¹ *
             (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberOffFiberInfluence
               beta * Real.exp (16 * beta)))) := by
-  rfl
+  classical
+  rw [show (2 : ℕ) = 1 + 1 by norm_num]
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate_succ]
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanUpdatedVariation
+  unfold finiteInfluenceKernelRestrictedTargetRandomScanUpdatedVariation
+  congr 1
+  rw [Finset.sum_eq_single source]
+  · unfold finiteInfluenceKernelUpdatedVariation
+    simp only [reduceCtorEq, if_false]
+    rw [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation_oneStep_remoteRightSource_eq_zero
+        H beta hbeta hne]
+    rw [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedKernel_left_right]
+    rw [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation_oneStep_remoteLeft_eq
+        H beta hbeta hne]
+    simp [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant]
+  · intro fiber _hmem hFiber
+    unfold finiteInfluenceKernelUpdatedVariation
+    simp only [reduceCtorEq, if_false]
+    rw [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation_oneStep_remoteRightSource_eq_zero
+        H beta hbeta hne]
+    rw [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedKernel_left_right]
+    simp [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant,
+      Ne.symm hFiber]
+  · simp
 
 end
 
