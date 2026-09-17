@@ -96,7 +96,85 @@ theorem probabilityMeasure_integral_difference_abs_le_two_mul_updateVariationSum
     (A₀ : ι → G) :
     |(∫ A, f A ∂μ) - (∫ A, f A ∂ν)| ≤
       2 * ∑ e : ι, variation e := by
-  rfl
+  classical
+  let M : ℝ := ∑ e : ι, variation e
+  letI : IsProbabilityMeasure μ := hμ
+  letI : IsProbabilityMeasure ν := hν
+  have hMNonneg : 0 ≤ M := by
+    dsimp [M]
+    exact Finset.sum_nonneg (fun e _ => hVariationNonneg e)
+  have hGlobal (A : ι → G) : |f A - f A₀| ≤ M := by
+    dsimp [M]
+    exact
+      finiteProductUpdateVariation_difference_abs_le_sum
+        f variation hVariation A A₀
+  have hCenteredMeas :
+      StronglyMeasurable (fun A : ι → G => f A - f A₀) :=
+    hF.sub stronglyMeasurable_const
+  have hCenteredIntMu : Integrable (fun A : ι → G => f A - f A₀) μ := by
+    apply (integrable_const M).mono hCenteredMeas.aestronglyMeasurable
+    filter_upwards with A
+    simpa [Real.norm_eq_abs, abs_of_nonneg hMNonneg] using hGlobal A
+  have hCenteredIntNu : Integrable (fun A : ι → G => f A - f A₀) ν := by
+    apply (integrable_const M).mono hCenteredMeas.aestronglyMeasurable
+    filter_upwards with A
+    simpa [Real.norm_eq_abs, abs_of_nonneg hMNonneg] using hGlobal A
+  have hFIntMu : Integrable f μ := by
+    have hSum := hCenteredIntMu.add (integrable_const (μ := μ) (f A₀))
+    simpa using hSum
+  have hFIntNu : Integrable f ν := by
+    have hSum := hCenteredIntNu.add (integrable_const (μ := ν) (f A₀))
+    simpa using hSum
+  have hCenterEqMu :
+      (∫ A : ι → G, f A - f A₀ ∂μ) =
+        (∫ A : ι → G, f A ∂μ) - f A₀ := by
+    rw [integral_sub hFIntMu (integrable_const (μ := μ) (f A₀))]
+    simp
+  have hCenterEqNu :
+      (∫ A : ι → G, f A - f A₀ ∂ν) =
+        (∫ A : ι → G, f A ∂ν) - f A₀ := by
+    rw [integral_sub hFIntNu (integrable_const (μ := ν) (f A₀))]
+    simp
+  have hCenteredBoundMu :
+      |∫ A : ι → G, f A - f A₀ ∂μ| ≤ M := by
+    have hNorm :=
+      norm_integral_le_of_norm_le_const
+        (μ := μ)
+        (C := M)
+        (f := fun A : ι → G => f A - f A₀)
+        (ae_of_all _ fun A => by
+          simpa [Real.norm_eq_abs] using hGlobal A)
+    simpa [Real.norm_eq_abs] using hNorm
+  have hCenteredBoundNu :
+      |∫ A : ι → G, f A - f A₀ ∂ν| ≤ M := by
+    have hNorm :=
+      norm_integral_le_of_norm_le_const
+        (μ := ν)
+        (C := M)
+        (f := fun A : ι → G => f A - f A₀)
+        (ae_of_all _ fun A => by
+          simpa [Real.norm_eq_abs] using hGlobal A)
+    simpa [Real.norm_eq_abs] using hNorm
+  have hRewrite :
+      (∫ A : ι → G, f A ∂μ) - (∫ A : ι → G, f A ∂ν) =
+        (∫ A : ι → G, f A - f A₀ ∂μ) -
+          (∫ A : ι → G, f A - f A₀ ∂ν) := by
+    rw [hCenterEqMu, hCenterEqNu]
+    ring
+  rw [hRewrite]
+  calc
+    |(∫ A : ι → G, f A - f A₀ ∂μ) -
+        (∫ A : ι → G, f A - f A₀ ∂ν)| ≤
+      |∫ A : ι → G, f A - f A₀ ∂μ| +
+        |∫ A : ι → G, f A - f A₀ ∂ν| := by
+          simpa using
+            abs_sub_le
+              (∫ A : ι → G, f A - f A₀ ∂μ)
+              0
+              (∫ A : ι → G, f A - f A₀ ∂ν)
+    _ ≤ M + M := add_le_add hCenteredBoundMu hCenteredBoundNu
+    _ = 2 * M := by ring
+    _ = 2 * ∑ e : ι, variation e := by rfl
 
 local instance fixedRightTargetRatioTwoStepTerminalLeftVariationMassSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
