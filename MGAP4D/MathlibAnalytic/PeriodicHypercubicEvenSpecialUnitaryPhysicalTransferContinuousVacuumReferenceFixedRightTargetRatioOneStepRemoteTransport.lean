@@ -25,7 +25,40 @@ theorem
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation
           H beta target)
         1 (Sum.inr source) = 0 := by
-  rfl
+  classical
+  rw [show (1 : ℕ) = 0 + 1 by norm_num]
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate_succ,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate_zero]
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanUpdatedVariation
+  unfold finiteInfluenceKernelRestrictedTargetRandomScanUpdatedVariation
+  have hzero (fiber : PeriodicHypercubicEvenSpatialSliceLink H) :
+      finiteInfluenceKernelUpdatedVariation
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedKernel
+            H beta hbeta)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedLeftVariation
+            H
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation
+              H beta target))
+          (Sum.inl fiber) (Sum.inr source) = 0 := by
+    simp only [
+      finiteInfluenceKernelUpdatedVariation,
+      reduceCtorEq,
+      if_false,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedLeftVariation,
+      zero_add,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedKernel_left_right]
+    by_cases hFiber : fiber = target
+    · subst fiber
+      simp [
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation,
+        Ne.symm hne]
+    · simp [
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation,
+        hFiber]
+  simp [hzero]
 
 end
 
