@@ -136,6 +136,10 @@ theorem
     exact_mod_cast
       (Nat.ne_of_gt
         (periodicHypercubicEvenSpatialSliceLink_card_pos_for_stationaryFiniteStepResponse H))
+  have hCardUniv :
+      (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)).card =
+        Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) := by
+    exact Finset.card_univ
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberRestrictedRandomScanExpectation
   rw [integral_const_mul]
@@ -160,7 +164,7 @@ theorem
     _ = (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ)⁻¹ *
         ((Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ) *
           ∫ A, F A ∂μ) := by
-        rw [Finset.sum_const, nsmul_eq_mul, Finset.card_univ]
+        rw [Finset.sum_const, nsmul_eq_mul, hCardUniv]
     _ = ∫ A, F A ∂μ := by
         rw [← mul_assoc, inv_mul_cancel₀ hCardNe, one_mul]
 
