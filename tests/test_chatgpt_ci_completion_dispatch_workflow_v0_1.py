@@ -14,7 +14,8 @@ class WorkflowWiringTests(unittest.TestCase):
         self.assertIn("actions: read", text)
         self.assertIn("contents: read", text)
         self.assertIn("issues: write", text)
-        self.assertIn("pull-requests: read", text)
+        self.assertIn("pull-requests: write", text)
+        self.assertNotIn("pull-requests: read", text)
         self.assertIn("ref: main", text)
         self.assertIn("persist-credentials: false", text)
         self.assertIn(
