@@ -1,6 +1,6 @@
 # MGAP4D Roadmap
 
-This roadmap records the theorem architecture and development order of `itakura-hidetoshi/4d-mass-gap` as of **2026-09-16 JST**.
+This roadmap records the current theorem architecture and development order of `itakura-hidetoshi/4d-mass-gap` as of **2026-09-17 JST**.
 
 The authoritative theorem-carrier branch is
 
@@ -8,42 +8,44 @@ The authoritative theorem-carrier branch is
 formal/real-hilbert-uniform-coercive-strong-limit
 ```
 
-The latest theorem-bearing canonical merge at the time of this documentation update is
+The theorem-bearing baseline used for this documentation refresh is
 
 ```text
-5c392b82ef522006885740ad85588a792d340a2a
+37b3caa7b20344d0ba8b4951ae93719190da4814
 ```
 
 with tree
 
 ```text
-75bc12fa5f2e2dae613e3f051a89fff470522310.
+bc5c85cfe0804eb4076325c170e2b7d57cfa6c4a.
 ```
 
-This is the merge of PR #4270,
+This is the merge of PR #4367,
 
 ```text
-Sharpen C5 distinct-background Harnack off target
+Specialize stationary C5 residual to fixed-right target ratio
 ```
 
 from exact GREEN proof head
 
 ```text
-236e9d0e31b88c7ca103915ea8dd38b0e5e41f21
+686c673a776d0b9fc819e6b6834a3db2ab17a60a
 ```
 
 validated by
 
 ```text
-PR Lean Fast Check #13994
-workflow run 35086312903
+PR Lean Fast Check #14071
+workflow run 35211640508
 completed / success.
 ```
 
-`main` remains a public landing surface, not theorem authority. The authority order is
+This file is documentation, not live theorem authority. A docs-only merge can advance the authoritative branch pointer without changing the theorem-bearing Lean baseline. Before theorem work, fresh-fetch the branch and re-establish the exact current SHA.
+
+Authority order:
 
 ```text
-exact canonical SHA
+exact current canonical GitHub SHA
 -> formal Lean artifacts
 -> README / ROADMAP
 -> CI/runtime receipts
@@ -52,32 +54,34 @@ exact canonical SHA
 
 > **Current frontier**
 >
-> The physical restricted random scan, finite-step transport, and geometric forcing residual are already integrated. PR #4270 changes the interpretation of the remaining left-left problem: the old coefficient
+> The main structural bridge that was missing after PR #4270 is now integrated. Remote continuous-C5 defects are not only reduced to a fixed-right ground-state probability covariance: they are converted exactly to a fixed-right source response, and that response is propagated through the actual stationary restricted continuous-C5 random scan to a finite-step residual.
+>
+> PR #4367 specializes the residual to the literal target-local-factor ratio and gives it a singleton physical coordinate-variation profile of magnitude `exp(16*beta)` at the target and zero elsewhere.
+>
+> The immediate open problem is now to turn
 >
 > ```text
-> (card Link - 1) * offFiberInfluence(beta)
+> tagged finite-step transport + terminal response
 > ```
 >
-> remains a correct dense majorant, but it no longer describes the sharp local Wilson geometry. Direct spatial Wilson interaction has degree at most `18`; after adding the resampled fiber and distinguished right target, the C5 exceptional background set has cardinality at most `20`. Outside that set, all local Wilson four-point distortion cancels and the remaining defect is exactly a probability covariance under a normalized fixed-right ground-state kernel-section law.
->
-> The immediate open problem is therefore to prove a **volume-independent summable bound on that remote probability-covariance residual**. The abstract C5 contraction gate
+> into a **volume-independent remote column bound** `rho`, and then combine it with the already-formalized exceptional-set gate
 >
 > ```text
-> column <= 20 * eta + rho
+> column <= 20 * eta + rho.
 > ```
 >
-> is already formalized; the concrete physical `rho` is not.
+> No strict continuous-SU(N) physical contraction is claimed until a concrete `rho` and a parameter regime satisfying `20 * eta + rho < 1` are proved.
 
 ---
 
 ## Status legend
 
-- **Integrated** — merged theorem/model result on the authoritative branch.
-- **Integrated routing** — implication chain is formalized, but a quantitative physical input remains open.
-- **Integrated interface** — theorem is proved, but concrete physical witnesses remain to be supplied.
-- **Obstruction integrated** — a tempting route has been exposed as insufficient or semantically invalid.
+- **Integrated** — theorem/model result is merged on the authoritative theorem-carrier history.
+- **Integrated routing** — the implication route is formalized, but a quantitative physical input remains open.
+- **Integrated interface** — the theorem is proved, but concrete model-derived witnesses remain to be supplied.
+- **Obstruction integrated** — a tempting route has been formalized or exposed as insufficient and should not be reused as if it solved the stronger problem.
 - **Open now** — immediate theorem-development frontier.
-- **Open next** — next coherent unit after the present frontier.
+- **Open next** — next coherent unit after the current frontier.
 - **Open downstream** — required later in the global mass-gap route.
 
 ---
@@ -106,22 +110,22 @@ ground-state joint law
   -> block Poincare/coercivity routing
   -> physical transfer-gap route
 
-D. SHARP CONTINUOUS ONE-LINK CONTROL                           [INTEGRATED]
+D. CONTINUOUS C5 ONE-LINK LAW                                  [INTEGRATED]
 
-continuous-vacuum one-link law
-  -> Harnack / normalized comparison
-  -> one-link variance lower bound
+normalized continuous SU(N) one-link law
+  -> measurable heat-bath sampling and reinsertion
+  -> sharp one-link Harnack / variation control
   -> physical one-link Doob bridge
 
-E. RIGHT-BOUNDARY C5 EXACT LOCALITY                            [INTEGRATED]
+E. RIGHT-BOUNDARY EXACT LOCALITY                               [INTEGRATED]
 
-right source != resampled fiber
-  -> scalar multiple of common weight
+source != resampled fiber
+  -> scalar multiple of common unnormalized weight
   -> normalization cancellation
-  -> normalized laws / kernels equal
+  -> exact equality of normalized laws / kernels
   -> represented influence exactly zero
 
-right source = resampled fiber
+source = resampled fiber
   -> q(beta) = 2*(exp(16 beta)-1)/(exp(16 beta)+1)
   -> beta < log 3/16 => q(beta) < 1
 
@@ -129,107 +133,109 @@ F. ONE-WAY TAGGED CARRIER + RESPONSE ALGEBRA                   [INTEGRATED]
 
 Sum.inl target <- Sum.inr source
   -> represented C5 coefficient
-  -> source-resolvent / sweep machinery
-  -> state-space-independent response certificate interface
+  -> source-response / resolvent / sweep interfaces
+  -> state-space-independent certificate layer
 
-G. ACTUAL PHYSICAL TWO-STEP TRANSPORT                          [INTEGRATED]
+G. ACTUAL PHYSICAL MULTI-STEP TRANSPORT                        [INTEGRATED]
 
-#4217 same-fiber propagation
-#4220 explicit left-left carrier
-#4223 distinct-fiber continuous C5 comparison
-#4237 assumption-free two-step transport
+same-fiber transport
+  -> distinct-fiber transport
+  -> deterministic schedules
+  -> restricted random scan
+  -> finite-step measurable expectation iterate
+  -> tagged variation propagation
 
-H. DETERMINISTIC / RESTRICTED RANDOM SCAN                      [INTEGRATED]
+H. LOCAL C5 GEOMETRY SHARPENING                                [INTEGRATED]
 
-#4242 deterministic schedules
-#4249 generic restricted-target scan
-#4252 actual continuous C5 restricted scan
-#4254 one-step measurable affine transport
-#4257 finite-step physical expectation iterate
-
-Only Sum.inl physical fibers are scanned.
-Sum.inr source coordinates remain static parameters.
-
-I. RESTRICTED GEOMETRIC FORCING RESIDUAL                       [INTEGRATED]
-
-#4260 generic restricted-target residual
-#4266 physical C5 specialization
-  -> exact dense-majorant left column coefficient
-     (card Link - 1) * offFiberInfluence(beta)
-  -> finite-step physical boundary-response residual
-
-J. LOCAL C5 GEOMETRY SHARPENING                                [INTEGRATED]
-
-#4270 off-target local-factor invariance
-  -> raw off-target Harnack exp(32 beta) -> exp(16 beta)
-  -> active-neighbor degree <= 18
+target-local-factor locality
+  -> active spatial-neighbor degree <= 18
   -> C5 exceptional set <= 20
+  -> dense all-links Harnack majorant separated from bare geometry
 
-K. REMOTE WILSON CANCELLATION                                  [INTEGRATED]
+I. REMOTE WILSON CANCELLATION                                  [INTEGRATED]
 
 outside exceptional set:
   target-local factor cancels
-  + raw slab four-point defect cancels
-  -> full C5 defect = canonical vacuum defect
-  -> weighted covariance normal form
+  + raw slab four-point distortion cancels
+  -> remaining defect = canonical ground-state/vacuum defect
 
-L. GROUND-STATE KERNEL-SECTION PROBABILITY                     [INTEGRATED]
+J. FIXED-RIGHT GROUND-STATE PROBABILITY                        [INTEGRATED]
 
-w_C(A) = Omega_eig(A) * K(A,C)
-  -> exact kernel-section form
-  -> integrable / a.e. nonnegative
-  -> mass Z_C = ||T|| * Omega_cont(C) > 0
+w_C(A) = Omega(A) * K(A,C)
+  -> positive finite mass
   -> normalized probability nu_C
-  -> WeightedCovNum = Z_C^2 * Cov_{nu_C}
+  -> weighted remote defect = Z_C^2 * Cov_{nu_C}
 
-outside exceptional set:
-  remote C5 defect
-  = sourceSpatialRatio * Z_C^2 * probability covariance
+K. FIXED-RIGHT SOURCE-RESPONSE IDENTITIES                      [INTEGRATED]
 
-M. VOLUME-INDEPENDENT C5 COLUMN GATE                           [INTEGRATED INTERFACE]
+#4337 one-link vacuum ratio = kernel-section expectation
+#4339 right update = normalized local tilt/covariance response
+#4342 two-source response = crossing covariance / crossing mean
+#4345 specialize to remote target ratio
+#4348 remote full reference law = fixed-right kernel-section law
+#4353 remote physical covariance = fixed-right expectation response
+#4355 exceptional-set remote residual = fixed-right response
+
+L. STATIONARY RESTRICTED C5 RESPONSE                           [INTEGRATED]
+
+#4360 exact stationarity under the restricted continuous-C5 dynamics
+#4363 finite-step response <= tagged source transport + terminal response
+#4367 literal fixed-right target-ratio specialization
+       with singleton variation exp(16 beta) at target and zero elsewhere
+
+M. VOLUME-INDEPENDENT EXCEPTIONAL + RESIDUAL GATE              [INTEGRATED INTERFACE]
 
 exceptional contribution <= 20 * eta
 remote residual column <= rho
   -> column <= 20 * eta + rho
-  -> 20 * eta + rho < 1 => strict contraction
+  -> 20 * eta + rho < 1 => strict column contraction
 
-N. SUMMABLE GROUND-STATE COVARIANCE RESIDUAL                   [OPEN NOW]
+N. CLOSE THE #4367 FINITE-STEP RESIDUAL                        [OPEN NOW]
 
-prove a concrete continuous-SU(N) bound
-  sup_source sum_remote residual(target,source) <= rho
-with rho independent of periodic volume
+control, without circularity:
+  1. tagged restricted-scan propagation from singleton target variation
+  2. terminal fixed-right response after n scan steps
 
-O. ACTUAL CONTINUOUS RESPONSE CERTIFICATE                      [OPEN NEXT]
+then prove a remote-column-summable response bound independent of volume
 
-uniform physical residual
+O. CONCRETE PHYSICAL rho                                       [OPEN NEXT]
+
+transport the fixed-right response estimate back through #4353/#4355
+  -> physical remote residual(target,source)
+  -> sup_source sum_remote residual <= rho
+  -> exhibit regime 20*eta + rho < 1
+
+P. ACTUAL CONTINUOUS RESPONSE CERTIFICATE                      [OPEN NEXT]
+
+strict physical column bound
   + concrete discrepancy/sourceBound witnesses
   -> instantiate response certificate
-  -> reuse source-resolvent / sweep machinery
+  -> source resolvent / sweep machinery
 
-P. PHYSICAL POINCARE / COERCIVITY                              [OPEN DOWNSTREAM]
+Q. PHYSICAL POINCARE / COERCIVITY                              [OPEN DOWNSTREAM]
 
 physical response control
   -> quantitative block coercivity
   -> spatial conditional inequalities
 
-Q. UNIFORM FINITE-VOLUME TRANSFER GAP                          [OPEN DOWNSTREAM]
+R. UNIFORM FINITE-VOLUME TRANSFER GAP                          [OPEN DOWNSTREAM]
 
 scale-independent kappa_* > 0
   -> physical transfer-gap lower bound
 
-R. THERMODYNAMIC / CONTINUUM PHYSICAL LIMIT                    [OPEN DOWNSTREAM]
+S. THERMODYNAMIC / CONTINUUM PHYSICAL LIMIT                    [OPEN DOWNSTREAM]
 
 uniform finite-volume gap
   -> limiting physical carrier
   -> OS/Wightman spectral lower bound
   -> sufficiently rich same-root 4D Yang--Mills field/state
 
-S. CLAY-LEVEL EXISTENCE + MASS GAP                             [OPEN]
+T. CLAY-LEVEL EXISTENCE + MASS GAP                             [OPEN]
 ```
 
 ---
 
-# Phase 0 — Authority and proof discipline
+# Phase 0 — Authority, CI, and proof discipline
 
 **Status: Integrated and permanent.**
 
@@ -238,16 +244,19 @@ For theorem-bearing work:
 ```text
 fresh-fetch authoritative branch
 -> lock exact canonical SHA
--> inspect exact existing theorem interfaces
--> make the smallest coherent theorem unit
--> inspect actual CI failures
--> apply the minimal proof-preserving fix
--> require terminal completed/success receipt
--> merge with expected_head_sha
--> fresh-fetch canonical branch again.
+-> inspect exact theorem interfaces
+-> state the smallest coherent theorem unit
+-> run exact-head CI
+-> inspect the first genuine Lean error if RED
+-> apply the smallest proof-preserving fix
+-> require terminal completed/success evidence
+-> merge against the expected exact head
+-> fresh-fetch the canonical branch again.
 ```
 
-Queued or in-progress CI is not success. New `sorry`, `admit`, axioms, assumption weakening, or semantic broadening are not acceptable substitutes for proof.
+The GitHub completion push lane is notification infrastructure only. A PR comment containing `CHATGPT_CI_COMPLETION_PUSH_V0_1` is a wake-up signal, not CI truth, merge authority, or write authority. Governed action requires fresh observation of the exact workflow run and exact head SHA. Secondary direct checks may supplement notification delivery, but terminal GitHub state remains authoritative.
+
+Queued or in-progress CI is not GREEN. New `sorry`, `admit`, axioms, assumption weakening, theorem weakening, or semantic broadening are not acceptable substitutes for proof.
 
 Permanent distinctions include:
 
@@ -255,13 +264,14 @@ Permanent distinctions include:
 finite theorem != continuum theorem
 local one-link control != global Poincare inequality
 right-boundary exact cancellation != arbitrary left-left cancellation
-one-way carrier zero != reverse physical influence zero
-Sum.inl link != Sum.inr link
-full tagged random scan != physical restricted random scan
+one-way represented influence zero != reverse physical influence zero
+Sum.inl physical link != Sum.inr represented source
+full tagged scan != physical restricted scan
 old dense Harnack majorant != actual Wilson interaction graph
-bounded local degree != decay of a global ground-state covariance
-probability normalization != conditional independence
-finite-step transport != volume-uniform contraction
+bounded local degree != decay of global ground-state correlations
+probability normalization != Gibbs/RCD or conditional independence
+exact covariance identity != covariance decay
+finite-step response decomposition != volume-uniform contraction
 uniform finite-volume gap != thermodynamic/continuum mass gap
 same-root scalar continuum != complete 4D Yang--Mills field/state
 formal intermediate theorem != Clay-level completion.
@@ -273,9 +283,9 @@ formal intermediate theorem != Clay-level completion.
 
 **Status: Integrated.**
 
-The finite theorem root contains the periodic-even compact `SU(N)` Wilson Gibbs construction, lattice geometry, normalized Haar reference measure, Wilson action, reflection positivity, gauge-covariant structures, spatial-slice carriers, one-slab transfer operators, and positive ground-state architecture.
+The finite theorem root contains the periodic-even compact `SU(N)` Wilson construction, lattice geometry, Haar reference measure, Wilson action, reflection positivity, gauge-compatible structures, spatial-slice carriers, one-slab transfer operators, and positive ground-state architecture.
 
-The route from spatial conditional estimates to a finite-volume physical transfer gap is formalized as routing. A model-derived volume-uniform quantitative coefficient remains a downstream obligation.
+The implication route from spatial conditional estimates to a finite-volume physical transfer gap exists. A model-derived volume-uniform quantitative coefficient remains a downstream obligation.
 
 ---
 
@@ -283,26 +293,25 @@ The route from spatial conditional estimates to a finite-volume physical transfe
 
 **Status: Integrated as a scalar observable lane.**
 
-The repository constructs a continuum scalar law from finite Wilson readouts, establishes continuum reflection positivity, forms an OS Hilbert carrier, and obtains a real strongly continuous contraction semigroup with self-adjoint Hamiltonian and vacuum structure.
+The repository constructs a continuum scalar law from finite Wilson readouts, establishes continuum reflection positivity, forms an OS Hilbert carrier, and obtains a real strongly continuous contraction semigroup with a self-adjoint Hamiltonian and vacuum structure.
 
 Boundary: this is a same-root scalar continuum lane, not yet the complete four-dimensional Yang--Mills gauge field/state required by the Clay problem.
 
 ---
 
-# Phase 3 — Right-boundary C5 normalized locality
+# Phase 3 — Continuous C5 local control and bounded geometry
 
 **Status: Integrated.**
 
-For the literal C5 reference one-link law, changing a represented right-boundary source distinct from the resampled fiber changes the unnormalized density only by a positive scalar independent of the fiber integration variable. The scalar cancels after normalization.
+The continuous C5 one-link law supplies measurable normalized heat-bath kernels and sharp one-link comparison control.
 
-Consequently:
+For represented right-boundary sources:
 
 ```text
 source != fiber
--> normalized fiber law equality
--> conditional-kernel equality
--> heat-bath-kernel equality
--> exact zero represented real-test influence.
+-> exact equality of normalized fiber laws
+-> exact equality of conditional/heat-bath kernels
+-> exact zero represented influence.
 ```
 
 At `source = fiber`, the surviving coefficient is
@@ -312,196 +321,211 @@ q(beta)
   = 2 * (exp(16*beta)-1)/(exp(16*beta)+1).
 ```
 
-For `0 <= beta < log 3 / 16`, `q(beta) < 1` with no volume factor.
+For `0 <= beta < log 3 / 16`, `q(beta) < 1` without a volume factor.
 
-This right-boundary theorem is not a left-left cancellation theorem.
+For physical left geometry, a spatial link has at most `18` distinct intrinsic spatial plaquette-neighbors. Adding the resampled fiber and distinguished right target produces a C5 exceptional set of size at most `20`.
+
+This proves bounded bare/local interaction degree. It does **not** by itself prove decay of the nonlocal ground-state contribution.
 
 ---
 
-# Phase 4 — Physical multi-step bridge
+# Phase 4 — Physical multi-step restricted scan
 
-**Status: Integrated through #4266.**
+**Status: Integrated.**
 
-The physical lane now contains:
+The physical lane contains
 
 ```text
 same-fiber two-step propagation
 -> distinct-fiber transport
 -> arbitrary deterministic schedules
--> actual restricted random scan
+-> generic restricted-target random scan
+-> actual continuous C5 restricted random scan
+-> measurable one-step affine transport
 -> finite-step expectation iterate
--> tagged variation domination
--> physical finite-step boundary-response residual.
+-> tagged variation domination.
 ```
 
-The older distinct-fiber Harnack route supplied the uniform off-fiber coefficient
+Only `Sum.inl` physical fibers are scanned. `Sum.inr` source coordinates remain static parameters.
 
-```text
-offFiberInfluence(beta)
-  = 2 * (((exp(32*beta))^2 - 1)
-         / ((exp(32*beta))^2 + 1)).
-```
-
-and #4266 computed the corresponding dense-majorant column coefficient
-
-```text
-(card Link - 1) * offFiberInfluence(beta).
-```
-
-That theorem remains correct. Its interpretation is now sharpened by #4270: it is a bound obtained by assigning the same off-fiber coefficient to every distinct link, not a theorem that every distinct pair has direct Wilson interaction.
+The older all-links off-fiber Harnack coefficient remains a valid dense majorant. It is retained as an obstruction/baseline theorem, not as the sharp description of direct Wilson geometry.
 
 ---
 
-# Phase 5 — Bounded local geometry
+# Phase 5 — Remote defect localization and fixed-right probability law
 
-**Status: Integrated by #4270.**
+**Status: Integrated.**
 
-The target-local factor depends on the relevant background only through the target coordinate. Therefore an update at a distinct background fiber leaves that factor exactly unchanged, reducing the raw off-target Harnack cost from
+Outside the exceptional set, a background source is distinct from the resampled fiber, distinct from the distinguished target, and shares no spatial Wilson plaquette with the relevant local interaction.
 
-```text
-exp(32 * beta)
-```
-
-to
+Under those literal geometric hypotheses:
 
 ```text
-exp(16 * beta).
-```
-
-Separately, the intrinsic spatial Wilson geometry is counted exactly enough to prove
-
-```text
-card activeNeighbors(fiber) <= 18.
-```
-
-The C5 exceptional background set is then
-
-```text
-insert fiber (insert distinguishedTarget activeNeighbors(fiber))
-```
-
-with
-
-```text
-card exceptional <= 20
-```
-
-uniformly in periodic volume.
-
-This establishes bounded **bare/local** interaction degree. It does not establish decay of the global vacuum contribution.
-
----
-
-# Phase 6 — Remote C5 four-point cancellation
-
-**Status: Integrated by #4270.**
-
-Outside the exceptional set, a background fiber is distinct from the resampled fiber, distinct from the distinguished target, and shares no spatial Wilson plaquette with the resampled fiber.
-
-Under these literal geometric conditions:
-
-```text
-target-local factor contribution cancels exactly;
+target-local-factor contribution cancels exactly;
 raw one-slab four-point contribution cancels exactly;
-full C5 reference-weight defect reduces to the vacuum defect.
+remaining full C5 defect is the ground-state/vacuum defect.
 ```
 
-The remaining vacuum defect is then localized as a weighted covariance numerator of two one-link observables:
+The remaining weighted covariance is rewritten using
 
 ```text
-target observable:
-  ratio of target-local factors;
-
-source observable:
-  ratio of one-link Wilson crossing kernels.
+w_C(A) = Omega(A) * K(A,C).
 ```
 
-No distance decay is asserted at this stage.
-
----
-
-# Phase 7 — Fixed-right ground-state kernel-section probability
-
-**Status: Integrated by #4270.**
-
-The covariance weight is exactly rewritten as
+The formalization proves enough positivity/integrability to define
 
 ```text
-w_C(A)
-  = Omega_eig(A) * K(A,C),
+nu_C = w_C dmu / Z_C,
+Z_C > 0,
 ```
 
-where `C` is the doubly updated right boundary.
-
-The formalization proves:
-
-```text
-w_C is integrable;
-w_C >= 0 almost everywhere;
-Z_C = integral w_C dmu
-    = ||T|| * Omega_cont(C) > 0.
-```
-
-Thus
-
-```text
-nu_C = w_C dmu / Z_C
-```
-
-is a genuine probability measure.
-
-The generic weighted normalization identity then gives
+and obtains the exact normalization identity
 
 ```text
 WeightedCovarianceNumerator(w_C; f,g)
   = Z_C^2 * Cov_{nu_C}(f,g).
 ```
 
-Finally, outside the C5 exceptional set, the literal remote four-point defect is exactly
-
-```text
-sourceSpatialRatio
-* Z_C^2
-* Cov_{nu_C}(targetLocalRatio, sourceCrossingRatio).
-```
-
-This result deliberately stops short of identifying `nu_C` with a regular conditional probability. No such identification is needed for the covariance normal form.
+No RCD/Gibbs interpretation is required for this result.
 
 ---
 
-# Phase 8 — Volume-independent exceptional-plus-residual gate
+# Phase 6 — Exact fixed-right source-response chain
+
+**Status: Integrated through #4355.**
+
+This phase converts the probability covariance from Phase 5 into a source-response problem that can be acted on by the physical scan.
+
+The sequence is:
+
+```text
+#4337
+  one-link vacuum right-boundary ratio
+  = expectation of a literal target-local factor under nu_C
+
+#4339
+  changing one right-boundary link
+  = normalized local tilt
+  -> exact covariance response for arbitrary real observables
+
+#4342
+  two-source kernel-section response
+  = crossing covariance / crossing mean
+
+#4345
+  specialize the arbitrary observable to the literal target-local ratio
+
+#4348
+  identify the remote full reference probability law exactly with the
+  fixed-right kernel-section law at the source-then-target updated boundary
+
+#4353
+  remote C5 covariance
+  = positive crossing mean * fixed-right target response
+  with the pre-existing physical factors retained explicitly
+
+#4355
+  insert that exact response into the exceptional-set remote residual lane.
+```
+
+The important boundary is that these are exact identities and rewrites. They do not yet provide decay or summability.
+
+---
+
+# Phase 7 — Stationary restricted-C5 finite-step response
+
+**Status: Integrated through #4367.**
+
+This is the major change since the previous ROADMAP.
+
+## 7.1 Exact stationarity
+
+PR #4360 proves the required stationarity of the normalized continuous-vacuum reference law under the physical restricted C5 heat-bath dynamics and lifts it through schedule/random-scan iteration.
+
+## 7.2 Generic finite-step response residual
+
+PR #4363 proves the actual finite-step recursion of the form
+
+```text
+stationary response
+<= accumulated tagged source forcing
+ + terminal response after n scans.
+```
+
+This is the physical `R <= D + Q R` iteration interface, not merely an abstract comparison statement.
+
+## 7.3 Literal target-ratio specialization
+
+PR #4367 takes
+
+```text
+F_target(A)
+  = localFactor(A,target,g1) / localFactor(A,target,g2)
+```
+
+and proves:
+
+```text
+F_target > 0;
+F_target <= exp(16*beta);
+F_target is strongly measurable;
+F_target is integrable under every relevant probability law.
+```
+
+Its coordinate variation is bounded by the singleton profile
+
+```text
+variation_target(e)
+  = exp(16*beta) if e = target
+    0            otherwise.
+```
+
+For a remote target/source pair, the exact fixed-right source response therefore satisfies schematically
+
+```text
+|E_{nu_h} F_target - E_{nu_k} F_target|
+<= TaggedVariationIterate(variation_target, n, Sum.inr source)
+ + |E_{nu_h}(Q_k^n F_target) - E_{nu_k}(Q_k^n F_target)|.
+```
+
+Here the notation is schematic: the Lean theorem uses the concrete restricted-random-scan expectation iterate and exact source/target-updated kernel-section probability laws.
+
+This removes the earlier need to assign a volume-wide initial variation to the target-ratio observable.
+
+---
+
+# Phase 8 — Volume-independent exceptional-plus-residual interface
 
 **Status: Integrated interface.**
 
-For any influence/residual pair satisfying the pointwise decomposition
+The already-proved geometry gives the abstract column estimate
 
 ```text
 influence(target,source)
-  <= (if target in exceptional(source) then eta else 0)
+  <= exceptionalContribution(target,source)
      + residual(target,source),
 ```
 
-one has
+with at most `20` exceptional targets per source. Hence
 
 ```text
 sum_target influence(target,source)
-  <= 20 * eta
-     + sum_target residual(target,source).
+  <= 20 * eta + sum_target residual(target,source).
 ```
 
 If
 
 ```text
-sum_target residual(target,source) <= rho
+sup_source sum_target residual(target,source) <= rho,
 ```
 
-uniformly in source, then
+then
 
 ```text
 columnSum <= 20 * eta + rho.
 ```
 
-Therefore
+Thus
 
 ```text
 20 * eta + rho < 1
@@ -509,136 +533,211 @@ Therefore
 
 is a sufficient volume-independent strict-contraction gate.
 
-This theorem is already available. The missing task is to produce a concrete physical `residual` and a volume-independent `rho` from the continuous ground-state covariance structure.
+The interface is complete. The concrete continuous-SU(N) `rho` remains open.
 
 ---
 
-# Phase 9 — Summable ground-state probability covariance
+# Phase 9 — Close the #4367 residual
 
 **Status: OPEN NOW.**
 
-This is the immediate theorem-development frontier after #4270.
+The exact remaining quantity has two pieces:
 
-The required result is schematically
+```text
+A. tagged restricted-scan propagation from the singleton target variation;
+B. terminal response of the common k-smoothed target-ratio observable.
+```
+
+The next theorem must control these terms in a way that is remote-column summable uniformly in periodic volume.
+
+A valid route must avoid the circular implication
+
+```text
+assume global C5 contraction
+-> prove terminal response decay
+-> use terminal response decay to prove global C5 contraction.
+```
+
+Possible proof interfaces already present in the repository include finite-step transport, response/certificate algebra, sweep/resolvent machinery, and transfer/conditional-expectation structures. They may be used only through hypotheses that are already independently established for the continuous physical model.
+
+The target output is schematically
+
+```text
+fixedRightResponse(target,source)
+<= responseResidual(target,source)
+```
+
+with
+
+```text
+sup_source
+  sum_{remote target} responseResidual(target,source)
+<= rho_response
+```
+
+uniformly in volume.
+
+A uniform pointwise constant followed by summation over all remote targets is not sufficient if it recreates `card Link`.
+
+---
+
+# Phase 10 — Convert response closure to the physical remote residual
+
+**Status: OPEN NEXT.**
+
+Once Phase 9 supplies a summable fixed-right response profile, transport it back through the exact #4353/#4355 identities while retaining the explicit source spatial factor, kernel-section mass factors, and crossing mean.
+
+The goal is a genuine physical residual bound
 
 ```text
 sup_source
   sum_{remote target}
-    residualOmega(target,source)
+    physicalResidual(target,source)
 <= rho
 ```
 
-with `rho` independent of the periodic spatial volume.
+with `rho` independent of periodic volume.
 
-A uniform pointwise covariance bound followed by a sum over all remote links is **not** enough; that would simply reconstruct a cardinality factor.
-
-Preferred theorem-development route:
-
-```text
-1. use the canonical continuous vacuum representative and its
-   a.e. equality with the existing top-eigenvector L2 class;
-
-2. express the fixed-right kernel-section probability density using
-   this continuous positive representative where useful;
-
-3. connect one-link conditionals/responses to the already-formalized
-   continuous-vacuum Doob / Wilson one-link machinery;
-
-4. derive a geometry-sensitive covariance or resolvent profile without
-   assuming the global C5 contraction being proved;
-
-5. sum that profile with the existing finite Dobrushin/resolvent
-   geometric-support machinery;
-
-6. obtain a volume-independent residual-column bound rho.
-```
-
-Circularity is forbidden: the same global contraction cannot be assumed in order to prove its own covariance decay.
-
-Z2-specific covariance-decay lanes remain useful as structural references only. They do not prove the continuous `SU(N)` estimate.
-
----
-
-# Phase 10 — Instantiate the actual continuous response certificate
-
-**Status: OPEN NEXT.**
-
-Once a concrete volume-independent residual column is proved, combine it with the exceptional-set bound:
+Then combine with Phase 8:
 
 ```text
 column <= 20 * eta + rho.
 ```
 
-If the resulting coefficient is strictly below one, package the actual physical discrepancy and source-bound witnesses into the existing state-space-independent response certificate and re-enter the already-integrated source-resolvent / sweep algebra.
-
-No new generic response architecture should be introduced unless the existing interface is genuinely insufficient.
-
----
-
-# Phase 11 — Physical Poincare / coercivity
-
-**Status: OPEN DOWNSTREAM.**
-
-The intended route remains
+The first decisive continuous-SU(N) contraction milestone is a proved parameter regime satisfying
 
 ```text
-uniform physical response control
--> spatial block coercivity
--> quantitative conditional inequalities
--> physical Poincare/coercivity theorem.
+20 * eta + rho < 1.
 ```
 
-This phase requires the concrete continuous physical witnesses from Phase 10.
+Until that inequality is established with concrete physical witnesses, the repository should not describe the continuous physical C5 lane as globally contractive.
 
 ---
 
-# Phase 12 — Uniform finite-volume transfer gap
+# Phase 11 — Actual continuous response certificate and resolvent/sweep closure
+
+**Status: OPEN NEXT.**
+
+After a strict physical column bound is available:
+
+```text
+physical source discrepancy
++ concrete sourceBound / residual witnesses
++ strict column control
+-> instantiate the existing response certificate
+-> source resolvent
+-> sweep comparison
+-> quantitative response closure.
+```
+
+The generic algebra is not the current obstruction. The obstruction is supplying the continuous physical witnesses without circularity and without a volume-growing bound.
+
+---
+
+# Phase 12 — Physical Poincare/coercivity
 
 **Status: OPEN DOWNSTREAM.**
 
-A scale-independent coercive coefficient must produce a uniform finite-volume physical transfer-gap lower bound.
+The intended route is
 
-A fixed-volume gap or finite-step contraction is not sufficient.
+```text
+continuous physical response control
+-> block/conditional variance estimate
+-> quantitative Poincare/coercivity inequality
+-> uniform control on the physical transfer sector.
+```
+
+This phase must use the actual physical continuous witnesses, not Z2-specific decay theorems or abstract coefficients that have not been instantiated for `SU(N)`.
 
 ---
 
-# Phase 13 — Thermodynamic / continuum physical carrier
+# Phase 13 — Uniform finite-volume transfer gap
 
 **Status: OPEN DOWNSTREAM.**
 
-Required tasks include stability of the physical carrier under increasing volume/scaling, preservation of the relevant OS/Wightman structures, and transport of the spectral lower bound into a sufficiently rich continuum four-dimensional Yang--Mills field/state.
+The required target is a scale-independent positive constant
 
-The existing same-root scalar continuum construction is an important formal lane but is not by itself the complete gauge-field construction.
+```text
+kappa_* > 0
+```
+
+feeding the physical transfer/Hamiltonian route uniformly over the finite periodic volumes used in the limiting construction.
+
+A finite-volume gap theorem whose constant collapses with volume is insufficient for the final program.
 
 ---
 
-# Phase 14 — Clay-level Yang--Mills existence and mass gap
+# Phase 14 — Thermodynamic/continuum physical limit
+
+**Status: OPEN DOWNSTREAM.**
+
+After a uniform finite-volume physical gap is established, the remaining program includes:
+
+```text
+tight/compatible limiting physical states
+-> same-root OS/Wightman carrier
+-> limiting semigroup/Hamiltonian
+-> nontrivial sufficiently rich 4D Yang--Mills field/state
+-> spectral lower bound above vacuum.
+```
+
+The already-integrated scalar continuum OS lane is infrastructure and evidence of a same-root continuum construction pattern; it is not by itself the complete Yang--Mills field/state required here.
+
+---
+
+# Phase 15 — Clay-level target
 
 **Status: OPEN.**
 
-The final target requires all earlier finite-volume, uniformity, limiting, field-richness, spectral, and existence obligations to be closed without changing the mathematical problem.
+The final target remains a mathematically complete construction meeting the Yang--Mills existence and mass-gap requirements in the intended four-dimensional setting.
 
-No intermediate Lean theorem, repository routing result, or exact finite-volume coefficient should be described as completion of the Clay problem.
+The present repository contains a large formal finite/continuous proof spine and increasingly concrete quantitative physical interfaces, but it deliberately keeps the final claim boundary open until every finite-volume, uniformity, limiting, field-content, and spectral obligation is discharged.
 
 ---
 
-# Immediate next theorem unit
+# Immediate theorem-development checklist
 
-Starting from theorem-bearing merge
-
-```text
-5c392b82ef522006885740ad85588a792d340a2a
-```
-
-the next coherent unit should stay close to the actual continuous kernel-section probability law rather than adding another generic abstraction.
-
-Preferred target:
+Starting from theorem-bearing baseline #4367:
 
 ```text
-construct an exact one-link conditional/response bridge for nu_C
-using the canonical continuous vacuum representative,
-then expose the remote covariance to the existing Dobrushin/resolvent
-geometric-support machinery.
+1. Inspect the exact tagged variation iterate generated by
+   variation_target = exp(16*beta) * 1_{target}.
+
+2. Derive the strongest available non-circular estimate for its transport
+   from target to represented source under the actual restricted scan.
+
+3. Analyze the terminal term
+   |E_{nu_h}(Q_k^n F_target) - E_{nu_k}(Q_k^n F_target)|
+   using only independently established stationarity/transfer structure.
+
+4. Choose/optimize n only after the two estimates are explicit; do not hide
+   a volume-dependent choice in the notation.
+
+5. Package the result as a geometry-sensitive remote response profile.
+
+6. Prove uniform remote-column summability of that profile.
+
+7. Push it through #4353/#4355 to obtain the concrete physical rho.
+
+8. Combine with the exceptional contribution 20*eta.
+
+9. Establish, if possible, a concrete parameter regime
+   20*eta + rho < 1.
+
+10. Instantiate the existing response certificate/resolvent/sweep route and
+    continue toward physical Poincare/coercivity.
 ```
 
-The success criterion for that unit is **not** yet the mass gap. It is a theorem that turns the currently exact probability-covariance localization into a quantitatively summable, volume-independent residual estimate without circular assumptions.
+The conceptual transition is therefore:
+
+```text
+#4270 frontier:
+  remote defect identified as a fixed-right probability covariance
+
+#4367 frontier:
+  that covariance has been converted to an exact physical stationary
+  finite-step response residual with singleton initial variation
+
+next frontier:
+  prove that exact residual is uniformly summable in volume.
+```
