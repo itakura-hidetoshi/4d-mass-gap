@@ -130,7 +130,33 @@ theorem
           H beta hbeta source distinguishedTarget n +
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioNStepTerminalRemoteColumn
           H N hN beta hbeta B source distinguishedTarget g₁ g₂ h k n := by
-  rfl
+  classical
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioRemoteResponseColumn
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioNStepRemoteTransportColumn
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioNStepTerminalRemoteColumn
+  rw [← Finset.sum_add_distrib]
+  apply Finset.sum_le_sum
+  intro target hTarget
+  have hRemote :
+      target ∉
+        periodicHypercubicEvenSpatialSliceC5ExceptionalBackgroundFibers
+          H source distinguishedTarget := by
+    simpa [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceC5RemoteTargetFibers] using
+      hTarget
+  rcases
+    periodicHypercubicEvenSpatialSlice_not_mem_C5ExceptionalBackgroundFibers
+      H source distinguishedTarget target hRemote with
+    ⟨hSourceTarget, _hTargetDistinguished, hNoShare⟩
+  have hRaw :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousProbabilityMeasure_fixedRightTargetRatio_response_abs_le_taggedTransport_add_terminal_of_remote
+      H N hN beta hbeta B (target := target) (source := source)
+      (Ne.symm hSourceTarget) hNoShare g₁ g₂ h k n
+  simpa [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioResponseAbs,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioNStepTerminalResponseAbs] using
+    hRaw
 
 end
 
