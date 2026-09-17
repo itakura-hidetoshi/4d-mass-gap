@@ -100,7 +100,8 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionProbabilityMeasure_eq_continuous
       H N hN beta hbeta
       (Function.update (Function.update B fiber k) backgroundFiber g₂)]
-  rw [← hReference]
+  conv_lhs =>
+    rw [← hReference]
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure_targetRatio_crossingRatio_covariance_eq_crossingRatioExpectation_mul_fixedRight_response_of_remote
       H N hN beta hbeta B (target := backgroundFiber) (source := fiber)
