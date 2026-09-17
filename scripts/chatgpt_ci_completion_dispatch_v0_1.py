@@ -6,6 +6,7 @@ import json
 import os
 import re
 import time
+import urllib.error
 import urllib.request
 from dataclasses import dataclass
 from typing import Any, Callable, Mapping, Protocol
@@ -19,6 +20,22 @@ WORKFLOWS = {
     "itakura-hidetoshi/4d-mass-gap": "PR Lean Fast Check",
 }
 DEFAULT_DELAYS = (0.0, 1.0, 2.0, 4.0, 8.0, 16.0, 30.0)
+
+
+def http_error_detail(error: urllib.error.HTTPError) -> str:
+    try:
+        raw = error.read()
+    except Exception:
+        raw = b""
+    try:
+        body = raw.decode("utf-8", errors="replace").strip()
+    except AttributeError:
+        body = str(raw).strip()
+    reason = str(getattr(error, "reason", "") or getattr(error, "msg", "") or "").strip()
+    head = f"HTTP {getattr(error, 'code', 'unknown')}"
+    if reason:
+        head += f" {reason}"
+    return head if not body else f"{head}: {body}"
 
 
 @dataclass(frozen=True)
@@ -259,10 +276,13 @@ class GitHubApi:
         request = urllib.request.Request(
             url, data=data, headers=headers, method=method
         )
-        with urllib.request.urlopen(request, timeout=30) as response:
-            if response.status == 204:
-                return None
-            return json.load(response)
+        try:
+            with urllib.request.urlopen(request, timeout=30) as response:
+                if response.status == 204:
+                    return None
+                return json.load(response)
+        except urllib.error.HTTPError as error:
+            raise RuntimeError(http_error_detail(error)) from error
 
     def get_workflow_run(self, repository: str, run_id: int) -> dict[str, Any]:
         result = self._request(
