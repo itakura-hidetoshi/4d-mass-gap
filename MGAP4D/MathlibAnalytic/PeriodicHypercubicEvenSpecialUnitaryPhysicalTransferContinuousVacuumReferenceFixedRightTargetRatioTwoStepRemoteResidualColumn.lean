@@ -308,7 +308,7 @@ theorem
           (∑ target ∈ remote,
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalResponseAbs
               H N hN beta hbeta B target source g₁ g₂ h k) :=
-        add_le_add_right hTransportSumLe _
+        add_le_add_left hTransportSumLe _
       _ ≤
           2 * (((Real.exp (8 * beta)) ^ 2 - 1) /
             ((Real.exp (8 * beta)) ^ 2 + 1)) *
