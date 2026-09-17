@@ -35,7 +35,17 @@ def http_error_detail(error: urllib.error.HTTPError) -> str:
     head = f"HTTP {getattr(error, 'code', 'unknown')}"
     if reason:
         head += f" {reason}"
-    return head if not body else f"{head}: {body}"
+    headers = getattr(error, "headers", None) or getattr(error, "hdrs", None)
+    metadata: list[str] = []
+    if headers is not None:
+        accepted = headers.get("X-Accepted-GitHub-Permissions")
+        request_id = headers.get("X-GitHub-Request-Id")
+        if accepted:
+            metadata.append(f"accepted_permissions={accepted}")
+        if request_id:
+            metadata.append(f"request_id={request_id}")
+    detail = head if not body else f"{head}: {body}"
+    return detail if not metadata else f"{detail} [{' '.join(metadata)}]"
 
 
 @dataclass(frozen=True)
