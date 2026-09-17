@@ -25,7 +25,10 @@ theorem
             H source distinguishedTarget then
         Real.exp (16 * beta)
       else 0 := by
-  rfl
+  classical
+  simp [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioRemoteAggregateVariation,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation]
 
 end
 
