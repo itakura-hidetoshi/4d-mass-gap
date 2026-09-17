@@ -160,7 +160,7 @@ theorem
     _ = (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ)⁻¹ *
         ((Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ) *
           ∫ A, F A ∂μ) := by
-        rw [Finset.sum_const, nsmul_eq_mul]
+        rw [Finset.sum_const, nsmul_eq_mul, Finset.card_univ]
     _ = ∫ A, F A ∂μ := by
         rw [← mul_assoc, inv_mul_cancel₀ hCardNe, one_mul]
 
