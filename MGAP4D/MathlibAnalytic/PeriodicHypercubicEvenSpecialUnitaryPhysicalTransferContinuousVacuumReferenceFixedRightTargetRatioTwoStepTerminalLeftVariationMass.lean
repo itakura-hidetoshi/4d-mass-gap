@@ -25,7 +25,54 @@ theorem finiteProductUpdateVariation_difference_abs_le_sum
         |f (Function.update C e u) - f (Function.update C e v)| ≤ variation e)
     (A B : ι → G) :
     |f A - f B| ≤ ∑ e : ι, variation e := by
-  rfl
+  classical
+  have hAgreeBound
+      (e : ι)
+      (X Y : ι → G)
+      (hAgree : FiniteProductAgreeOff X Y e) :
+      |f X - f Y| ≤ variation e := by
+    have hRaw := hVariation e X (X e) (Y e)
+    rw [
+      finiteProductUpdate_current,
+      finiteProductUpdate_right_of_agreeOff X Y e hAgree] at hRaw
+    exact hRaw
+  have hPatch :
+      ∀ s : Finset ι,
+        |f A - f (finiteProductPatch A B s)| ≤
+          ∑ e ∈ s, variation e := by
+    intro s
+    induction s using Finset.induction_on with
+    | empty => simp
+    | @insert e s he ih =>
+        have hStep :
+            |f (finiteProductPatch A B s) -
+                f (finiteProductPatch A B (insert e s))| ≤
+              variation e :=
+          hAgreeBound e
+            (finiteProductPatch A B s)
+            (finiteProductPatch A B (insert e s))
+            (finiteProductPatch_agreeOff_insert A B s e)
+        have hSplit :
+            f A - f (finiteProductPatch A B (insert e s)) =
+              (f A - f (finiteProductPatch A B s)) +
+                (f (finiteProductPatch A B s) -
+                  f (finiteProductPatch A B (insert e s))) := by
+          ring
+        rw [hSplit]
+        calc
+          |(f A - f (finiteProductPatch A B s)) +
+              (f (finiteProductPatch A B s) -
+                f (finiteProductPatch A B (insert e s)))| ≤
+              |f A - f (finiteProductPatch A B s)| +
+                |f (finiteProductPatch A B s) -
+                  f (finiteProductPatch A B (insert e s))| :=
+            abs_add_le _ _
+          _ ≤ (∑ i ∈ s, variation i) + variation e :=
+            add_le_add ih hStep
+          _ = ∑ i ∈ insert e s, variation i := by
+            rw [Finset.sum_insert he]
+            ring
+  simpa using hPatch Finset.univ
 
 /-- If a strongly measurable observable has a declared coordinatewise update
 variation profile on a finite coordinate carrier, then its expectations under
