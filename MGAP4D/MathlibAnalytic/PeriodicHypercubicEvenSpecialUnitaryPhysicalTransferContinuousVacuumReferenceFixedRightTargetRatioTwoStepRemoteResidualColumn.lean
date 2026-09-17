@@ -111,7 +111,7 @@ noncomputable def
         H N hN beta hbeta
         (Function.update (Function.update B source k) target g₂))|
 
-/-- Remote fixed-right response column outside the C5 exceptional set. -/
+/-- Remote fixed-right target-ratio response column outside the C5 exceptional set. -/
 noncomputable def
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioRemoteResponseColumn
     (H N : ℕ)
@@ -317,7 +317,7 @@ theorem
           (∑ target ∈ remote,
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalResponseAbs
               H N hN beta hbeta B target source g₁ g₂ h k) :=
-        add_le_add_right hFullTransport _
+        add_le_add_left hFullTransport _
   simpa [
     remote,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioRemoteResponseColumn,
