@@ -319,14 +319,10 @@ theorem
     probabilityMeasure_integral_difference_abs_le_two_mul_updateVariationSum
       smoothed hSmoothedMeas propagated hPropagatedNonneg
       hPropagatedVariation μh μk hμh hμk B
-  simpa only [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalResponseAbs,
-    smoothed,
-    propagated,
-    F,
-    variation,
-    μh,
-    μk] using hBound
+  change
+    |(∫ A, smoothed A ∂μh) - (∫ A, smoothed A ∂μk)| ≤
+      2 * ∑ e : PeriodicHypercubicEvenSpatialSliceLink H, propagated e
+  exact hBound
 
 /-- Summing the targetwise terminal descent over the remote C5 set and using
 exact finite superposition turns the whole two-step terminal remote column into
