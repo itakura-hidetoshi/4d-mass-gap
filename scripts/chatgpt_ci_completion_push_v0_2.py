@@ -5,6 +5,28 @@ import urllib.request
 from typing import Any
 
 
+COMMIT_STATUS_CONTEXT_PREFIX = "chatgpt-ci-receipt/"
+
+
+def completion_status_state(conclusion: str) -> str:
+    if conclusion == "success":
+        return "success"
+    if conclusion in {
+        "failure",
+        "timed_out",
+        "cancelled",
+        "action_required",
+        "startup_failure",
+        "stale",
+    }:
+        return "failure"
+    return "error"
+
+
+def completion_status_context(workflow_name: str) -> str:
+    return (COMMIT_STATUS_CONTEXT_PREFIX + workflow_name)[:100]
+
+
 def resolve_pr_numbers(
     event_pull_requests: list[dict[str, Any]],
     associated_pull_requests: list[dict[str, Any]],
@@ -73,6 +95,34 @@ def main() -> int:
         "User-Agent": user_agent,
     }
 
+    workflow_name = os.environ["WORKFLOW_NAME"]
+    run_conclusion = os.environ["RUN_CONCLUSION"]
+    run_url = os.environ["RUN_URL"]
+    status_context = completion_status_context(workflow_name)
+    status_payload = {
+        "state": completion_status_state(run_conclusion),
+        "target_url": run_url,
+        "description": (
+            "wake-up receipt only; "
+            f"run {run_id} attempt {run_attempt}: {run_conclusion}"
+        )[:140],
+        "context": status_context,
+    }
+    status_url = (
+        f"https://api.github.com/repos/{repository}/statuses/{head_sha}"
+    )
+    request_json(
+        status_url,
+        {**headers, "Content-Type": "application/json"},
+        data=json.dumps(status_payload, ensure_ascii=False).encode("utf-8"),
+        method="POST",
+    )
+    print(
+        "CHATGPT_CI_COMPLETION_MCP_STATUS_PUBLISHED "
+        f"head_sha={head_sha} run_id={run_id} attempt={run_attempt} "
+        f"state={status_payload['state']} context={status_context}"
+    )
+
     associated_pull_requests: list[dict[str, Any]] = []
     resolution_source = "workflow_run.pull_requests"
     if not event_pull_requests:
@@ -107,14 +157,18 @@ def main() -> int:
             "version": "chatgpt_ci_completion_push_v0_2",
             "repository": repository,
             "pull_request": pr_number,
-            "workflow": os.environ["WORKFLOW_NAME"],
+            "workflow": workflow_name,
             "run_id": int(run_id),
             "run_attempt": int(run_attempt),
             "status": os.environ["RUN_STATUS"],
-            "conclusion": os.environ["RUN_CONCLUSION"],
+            "conclusion": run_conclusion,
             "head_sha": head_sha,
             "head_branch": os.environ["HEAD_BRANCH"],
-            "run_url": os.environ["RUN_URL"],
+            "run_url": run_url,
+            "mcp_commit_status_context": status_context,
+            "mcp_run_api_url": (
+                f"https://api.github.com/repos/{repository}/actions/runs/{run_id}"
+            ),
             "updated_at": os.environ["UPDATED_AT"],
             "pr_resolution_source": resolution_source,
             "event_is_wakeup_signal_only": True,
