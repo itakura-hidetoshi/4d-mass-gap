@@ -100,11 +100,11 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceC5RemoteTargetFibers
       H source source
   let cutoff : Nat :=
-    (∑ target in remote, radius target) + 1
+    Finset.sum remote radius + 1
   refine ⟨radius, cutoff, ?_, ?_, ?_⟩
   · intro target hTarget
     have hLe :
-        radius target <= ∑ t in remote, radius t := by
+        radius target <= Finset.sum remote radius := by
       exact
         Finset.single_le_sum
           (fun t _ht => Nat.zero_le (radius t))
