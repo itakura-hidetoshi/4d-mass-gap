@@ -135,13 +135,13 @@ theorem
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_integral
       H N hN beta hbeta B target source fiber k g2 A F hF]
-  change |F A - integral phi nu| <= variation fiber
+  change |F A - ∫ u, phi u ∂nu| <= variation fiber
   calc
-    |F A - integral phi nu| =
-        |integral (fun _u : Matrix.specialUnitaryGroup (Fin N) Complex => F A) nu -
-          integral phi nu| := by
+    |F A - ∫ u, phi u ∂nu| =
+        |(∫ _u : Matrix.specialUnitaryGroup (Fin N) Complex, F A ∂nu) -
+          ∫ u, phi u ∂nu| := by
       simp
-    _ = |integral (fun u => F A - phi u) nu| := by
+    _ = |∫ u, F A - phi u ∂nu| := by
       rw [integral_sub (integrable_const (F A)) hPhiInt]
     _ <= integral (fun u => |F A - phi u|) nu :=
       abs_integral_le_integral_abs
