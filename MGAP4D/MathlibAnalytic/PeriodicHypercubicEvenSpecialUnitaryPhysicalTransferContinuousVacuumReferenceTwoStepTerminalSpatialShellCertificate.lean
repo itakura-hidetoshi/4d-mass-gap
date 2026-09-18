@@ -69,9 +69,9 @@ def
                     H source source ->
                 radius target < cutoff) /\
             (forall r, r < cutoff ->
-              ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceC5RemoteTargetFibers
+              (((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceC5RemoteTargetFibers
                     H source source).filter
-                  (fun target => radius target = r)).card <=
+                  (fun target => radius target = r)).card : Real) <=
                 shellCardMajorant r) /\
             (forall target,
               target ∈
