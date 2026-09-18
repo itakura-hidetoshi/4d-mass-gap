@@ -86,8 +86,8 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioRemoteAggregateVariation_iterate_eq_sum
         H beta hbeta source distinguishedTarget n (Sum.inr source)
   have hLeft :
-      (∑ target ∈ remote,
-        ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+      (∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+        ∑ target ∈ remote,
           Q (q target) n (Sum.inl e)) =
       ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate
@@ -95,7 +95,6 @@ theorem
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioRemoteAggregateVariation
             H beta source distinguishedTarget)
           n (Sum.inl e) := by
-    rw [Finset.sum_comm]
     apply Finset.sum_congr rfl
     intro e hE
     symm
