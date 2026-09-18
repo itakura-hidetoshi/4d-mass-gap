@@ -264,32 +264,26 @@ The influence majorant is attached to the actual updated pair
 `(fiber, backgroundFiber)` in the base configuration `A`. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_remote_boundedTest_integral_difference_abs_le_worstCaseCrossRatioInfluenceMajorant
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
     (distinguishedTarget distinguishedSource fiber backgroundFiber :
       PeriodicHypercubicEvenSpatialSliceLink H)
     (hFiberTarget : fiber ≠ distinguishedTarget)
     (hBackgroundFiberDistinct : backgroundFiber ≠ fiber)
-    (hNoShare :
-      ¬ periodicHypercubicEvenSpatialSliceLinksSharePlaquette H fiber backgroundFiber)
+    (hNoShare : ¬ periodicHypercubicEvenSpatialSliceLinksSharePlaquette H fiber backgroundFiber)
     (k g₂ u v : Matrix.specialUnitaryGroup (Fin N) ℂ)
     (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
     (phi : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ)
-    (hphi : StronglyMeasurable phi)
-    (hphiBound : ∀ g, |phi g| ≤ 1) :
-    |(∫ g, phi g ∂
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
-          H N hN beta hbeta B distinguishedTarget distinguishedSource fiber k g₂
-          (Function.update A backgroundFiber u)) -
-      (∫ g, phi g ∂
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
-          H N hN beta hbeta B distinguishedTarget distinguishedSource fiber k g₂
-          (Function.update A backgroundFiber v))| ≤
+    (hphi : StronglyMeasurable phi) (hphiBound : ∀ g, |phi g| ≤ 1) :
+    |(∫ g, phi g ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
+        H N hN beta hbeta B distinguishedTarget distinguishedSource fiber k g₂
+        (Function.update A backgroundFiber u)) -
+      (∫ g, phi g ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
+        H N hN beta hbeta B distinguishedTarget distinguishedSource fiber k g₂
+        (Function.update A backgroundFiber v))| ≤
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioWorstCaseCrossRatioInfluenceMajorant
         H N hN beta hbeta A fiber backgroundFiber := by
+
   have hPair :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_remote_pair_eq_commonRaw_vacuumDoob
       H N hN beta hbeta B
