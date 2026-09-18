@@ -1,3 +1,4 @@
+import MGAP4D.MathlibAnalytic.FiniteDistanceShellGeometricSum
 import Mathlib.Analysis.SpecificLimits.Normed
 import Mathlib.Tactic
 
@@ -9,7 +10,10 @@ open scoped BigOperators
 noncomputable section
 
 /-- A finite sum can be decomposed exactly into radius shells once every point
-of the finite carrier lies below a common radius cutoff. -/
+of the finite carrier lies below a common radius cutoff.
+
+This is the finite-subset analogue of
+`FiniteDistanceShellGeometricSum.sum_pow_distance_eq_shell_sum`. -/
 theorem finiteRealSum_eq_sum_radiusShells
     {alpha : Type*} [DecidableEq alpha]
     (s : Finset alpha)
@@ -17,45 +21,38 @@ theorem finiteRealSum_eq_sum_radiusShells
     (cutoff : Nat)
     (f : alpha -> Real)
     (hRadius : forall x, x ∈ s -> radius x < cutoff) :
-    (∑ x ∈ s, f x) =
-      ∑ r ∈ Finset.range cutoff,
-        ∑ x ∈ s.filter (fun y => radius y = r), f x := by
+    Finset.sum s f =
+      Finset.sum (Finset.range cutoff) (fun r =>
+        Finset.sum (s.filter (fun y => radius y = r)) f) := by
   classical
   calc
-    (∑ x ∈ s, f x) =
-        ∑ x ∈ s,
-          ∑ r ∈ Finset.range cutoff,
-            if radius x = r then f x else 0 := by
+    Finset.sum s f =
+        Finset.sum s (fun x =>
+          Finset.sum (Finset.range cutoff) (fun r =>
+            if radius x = r then f x else 0)) := by
       apply Finset.sum_congr rfl
       intro x hx
-      have hrange : radius x ∈ Finset.range cutoff :=
-        Finset.mem_range.mpr (hRadius x hx)
-      have hsingle :
-          (∑ r ∈ Finset.range cutoff,
-            if radius x = r then f x else 0) = f x := by
-        simpa using
-          (Finset.sum_eq_single
-            (s := Finset.range cutoff)
-            (f := fun r => if radius x = r then f x else 0)
-            (radius x)
-            (by
-              intro b hb hne
-              simp [Ne.symm hne])
-            (by
-              intro hnot
-              exact (hnot hrange).elim))
-      exact hsingle.symm
+      symm
+      rw [Finset.sum_eq_single (radius x)]
+      · simp
+      · intro r hr hne
+        simp [Ne.symm hne]
+      · intro hnot
+        exact (hnot (Finset.mem_range.mpr (hRadius x hx))).elim
     _ =
-        ∑ r ∈ Finset.range cutoff,
-          ∑ x ∈ s,
-            if radius x = r then f x else 0 := by
+        Finset.sum (Finset.range cutoff) (fun r =>
+          Finset.sum s (fun x =>
+            if radius x = r then f x else 0)) := by
       rw [Finset.sum_comm]
     _ =
-        ∑ r ∈ Finset.range cutoff,
-          ∑ x ∈ s.filter (fun y => radius y = r), f x := by
+        Finset.sum (Finset.range cutoff) (fun r =>
+          Finset.sum (s.filter (fun y => radius y = r)) f) := by
       apply Finset.sum_congr rfl
-      intro r hr
-      rw [Finset.sum_filter]
+      intro r _hr
+      rw [<- Finset.sum_filter]
+      apply Finset.sum_congr rfl
+      intro x _hx
+      by_cases hxr : radius x = r <;> simp [hxr]
 
 /-- If every finite radius shell is bounded by a nonnegative summable profile,
 then the complete finite carrier sum is bounded by the infinite profile mass. -/
@@ -71,25 +68,24 @@ theorem finiteRealSum_le_tsum_of_radiusShellBound
     (hShellSummable : Summable shell)
     (hShellBound :
       forall r, r < cutoff ->
-        (∑ x ∈ s.filter (fun y => radius y = r), f x) <= shell r) :
-    (∑ x ∈ s, f x) <= ∑' r : Nat, shell r := by
+        Finset.sum (s.filter (fun y => radius y = r)) f <= shell r) :
+    Finset.sum s f <= ∑' r : Nat, shell r := by
   rw [finiteRealSum_eq_sum_radiusShells s radius cutoff f hRadius]
   calc
-    (∑ r ∈ Finset.range cutoff,
-      ∑ x ∈ s.filter (fun y => radius y = r), f x) <=
-        ∑ r ∈ Finset.range cutoff, shell r := by
+    Finset.sum (Finset.range cutoff) (fun r =>
+      Finset.sum (s.filter (fun y => radius y = r)) f) <=
+        Finset.sum (Finset.range cutoff) shell := by
       apply Finset.sum_le_sum
       intro r hr
       exact hShellBound r (Finset.mem_range.mp hr)
     _ <= ∑' r : Nat, shell r :=
-      sum_le_tsum
+      hShellSummable.sum_le_tsum
         (Finset.range cutoff)
-        (fun r hr => hShellNonneg r)
-        hShellSummable
+        (fun r _hr => hShellNonneg r)
 
 /-- Pointwise radial decay together with a volume-independent shell-cardinality
 profile yields a volume-independent bound by the corresponding infinite shell
-series.  Geometry enters only through the shell-cardinality profile. -/
+series. Geometry enters only through the shell-cardinality profile. -/
 theorem finiteRealSum_le_tsum_of_pointwiseDecay_shellCardinality
     {alpha : Type*} [DecidableEq alpha]
     (s : Finset alpha)
@@ -112,7 +108,7 @@ theorem finiteRealSum_le_tsum_of_pointwiseDecay_shellCardinality
     (hSummable :
       Summable (fun r : Nat =>
         shellCardMajorant r * (C * q ^ r))) :
-    (∑ x ∈ s, f x) <=
+    Finset.sum s f <=
       ∑' r : Nat, shellCardMajorant r * (C * q ^ r) := by
   refine
     finiteRealSum_le_tsum_of_radiusShellBound
@@ -127,9 +123,9 @@ theorem finiteRealSum_le_tsum_of_pointwiseDecay_shellCardinality
       ?_
   intro r hr
   calc
-    (∑ x ∈ s.filter (fun y => radius y = r), f x) <=
-        ∑ x ∈ s.filter (fun y => radius y = r),
-          C * q ^ r := by
+    Finset.sum (s.filter (fun y => radius y = r)) f <=
+        Finset.sum (s.filter (fun y => radius y = r))
+          (fun _x => C * q ^ r) := by
       apply Finset.sum_le_sum
       intro x hx
       have hxs : x ∈ s := (Finset.mem_filter.mp hx).1
@@ -138,7 +134,7 @@ theorem finiteRealSum_le_tsum_of_pointwiseDecay_shellCardinality
     _ =
         (((s.filter (fun y => radius y = r)).card : Nat) : Real) *
           (C * q ^ r) := by
-      simp [nsmul_eq_mul]
+      simp
     _ <=
         shellCardMajorant r * (C * q ^ r) := by
       exact
