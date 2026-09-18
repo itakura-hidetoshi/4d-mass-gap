@@ -14,6 +14,10 @@ local instance physicalResidualMaximumColumnSpatialLinkFintype
     (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+local instance physicalResidualMaximumColumnSpatialLinkNonempty
+    (H : ℕ) : Nonempty (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.card_pos_iff.mp (periodicHypercubicEvenSpatialSliceLink_card_pos H)
+
 /-- The source-aligned remote residual, packaged by itself as a finite
 nonnegative influence kernel.  This keeps the local active-neighbor Harnack
 term separate. -/
@@ -107,7 +111,12 @@ theorem
   have hRemote :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRemoteResidual_columnSum_le_maximum
       H N hN beta hbeta A source
-  exact hLocal.trans (add_le_add_left hRemote _)
+  exact hLocal.trans (by
+    simpa [add_comm] using
+      add_le_add_right hRemote
+        (18 *
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceBackgroundUpdateHarnackInfluence
+            beta))
 
 /-- The exact maximum physical envelope column obeys the same concrete
 eighteen-neighbor plus remote-maximum estimate. -/
