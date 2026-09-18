@@ -227,7 +227,7 @@ theorem
                   (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation
                     H beta target)
                   n (Sum.inl e) :=
-        add_le_add_left hTerminal _
+        add_le_add_right hTerminal _
   calc
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioCrossRatioInfluenceMajorant
         H N hN beta hbeta B target source g₁ g₂ h k ≤
