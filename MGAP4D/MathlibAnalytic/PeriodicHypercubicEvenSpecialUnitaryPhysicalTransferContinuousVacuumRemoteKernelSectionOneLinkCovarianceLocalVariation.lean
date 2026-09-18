@@ -156,9 +156,9 @@ theorem
     (hbeta : 0 <= beta)
     (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
     {target source : PeriodicHypercubicEvenSpatialSliceLink H}
-    (hne : target != source)
+    (hne : target ≠ source)
     (hNoShare :
-      not periodicHypercubicEvenSpatialSliceLinksSharePlaquette H target source)
+      ¬ periodicHypercubicEvenSpatialSliceLinksSharePlaquette H target source)
     (fiber : PeriodicHypercubicEvenSpatialSliceLink H)
     (k g2 : Matrix.specialUnitaryGroup (Fin N) Complex)
     (F G : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N -> Real)
