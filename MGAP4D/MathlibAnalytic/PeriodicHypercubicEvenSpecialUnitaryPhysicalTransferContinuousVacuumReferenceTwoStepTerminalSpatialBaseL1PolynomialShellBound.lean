@@ -15,7 +15,7 @@ local instance spatialBaseL1PolynomialShellSpatialLinkFintype
 
 local instance spatialBaseL1PolynomialShellSpatialDirectionFintype :
     Fintype PeriodicHypercubicEvenSpatialDirection :=
-  Fintype.ofFinite _
+  inferInstance
 
 /-- There are exactly three spatial coordinate directions. -/
 theorem periodicHypercubicEvenSpatialDirection_card :
@@ -128,9 +128,13 @@ noncomputable def periodicHypercubicEvenSpatialSliceLinkBaseDisplacementBox
 theorem periodicHypercubicEvenSpatialSliceSignedInterval_card
     (r : Nat) :
     (Finset.Icc (-(r : Int)) (r : Int)).card = 2 * r + 1 := by
-  have h :=
-    Int.card_Icc_of_le (a := -(r : Int)) (b := (r : Int)) (by omega)
-  exact_mod_cast h
+  rw [Int.card_Icc]
+  have hInt :
+      (r : Int) + 1 - (-(r : Int)) =
+        (((2 * r + 1 : Nat) : Int)) := by
+    push_cast
+    ring
+  rw [hInt, Int.toNat_natCast]
 
 /-- The three-dimensional signed-displacement cube has cardinality
 (2r+1)^3, uniformly in the periodic side length. -/
@@ -141,8 +145,8 @@ theorem periodicHypercubicEvenSpatialSliceBaseDisplacementBox_card
   classical
   rw [periodicHypercubicEvenSpatialSliceBaseDisplacementBox,
     Fintype.card_piFinset]
-  simp [periodicHypercubicEvenSpatialSliceSignedInterval_card,
-    periodicHypercubicEvenSpatialDirection_card]
+  simp_rw [periodicHypercubicEvenSpatialSliceSignedInterval_card]
+  simp [periodicHypercubicEvenSpatialDirection_card]
 
 /-- Including the three link orientations gives at most—and in fact exactly—
 three copies of the spatial displacement cube. -/
@@ -203,7 +207,8 @@ theorem periodicHypercubicEvenSpatialSliceBaseDisplacementCode_mem_box_of_baseL1
     have h :=
       periodicHypercubicEvenSpatialSliceSignedBaseDisplacement_natAbs_le_baseL1Distance
         H source target rho
-    simpa [z, hDistance] using h
+    rw [hDistance] at h
+    simpa only [z] using h
   have hCast : (z.natAbs : Int) ≤ (r : Int) := by
     exact_mod_cast hNatAbs
   have hAbs : |z| ≤ (r : Int) := by
