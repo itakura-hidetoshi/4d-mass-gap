@@ -58,7 +58,25 @@ theorem
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_pos
       H N beta A B target g₂
   apply (eq_div_iff (ne_of_gt hL₂Pos)).2
-  nlinarith
+  apply mul_right_cancel₀ (ne_of_gt hKPos)
+  calc
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+          H N beta A (Function.update B target g₂) target g₁ *
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+          H N beta A B target g₂) *
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta A B =
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+          H N beta A (Function.update B target g₂) target g₁ *
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+            H N beta A B target g₂ *
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+            H N beta A B) := by ring
+    _ =
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+          H N beta A B target g₁ *
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta A B := hK₂₁.symm
 
 /-- The literal fixed-right target-factor ratio has the matching
 volume-independent lower Harnack bound. -/
