@@ -38,6 +38,7 @@ theorem realIntegralCovariance_add_left_of_memLp_two
   have hfhInt : Integrable (f * h) mu := hf.integrable_mul hh
   have hghInt : Integrable (g * h) mu := hg.integrable_mul hh
   unfold realIntegralCovariance
+  simp only [Pi.add_apply]
   rw [show
       (∫ x, (f x + g x) * h x ∂mu) =
         (∫ x, f x * h x ∂mu) + ∫ x, g x * h x ∂mu by
@@ -67,6 +68,7 @@ theorem realIntegralCovariance_add_right_of_memLp_two
   have hhfInt : Integrable (h * f) mu := hh.integrable_mul hf
   have hhgInt : Integrable (h * g) mu := hh.integrable_mul hg
   unfold realIntegralCovariance
+  simp only [Pi.add_apply]
   rw [show
       (∫ x, h x * (f x + g x) ∂mu) =
         (∫ x, h x * f x ∂mu) + ∫ x, h x * g x ∂mu by
@@ -96,6 +98,7 @@ theorem realIntegralCovariance_sub_left_of_memLp_two
   have hfhInt : Integrable (f * h) mu := hf.integrable_mul hh
   have hghInt : Integrable (g * h) mu := hg.integrable_mul hh
   unfold realIntegralCovariance
+  simp only [Pi.sub_apply]
   rw [show
       (∫ x, (f x - g x) * h x ∂mu) =
         (∫ x, f x * h x ∂mu) - ∫ x, g x * h x ∂mu by
@@ -125,6 +128,7 @@ theorem realIntegralCovariance_sub_right_of_memLp_two
   have hhfInt : Integrable (h * f) mu := hh.integrable_mul hf
   have hhgInt : Integrable (h * g) mu := hh.integrable_mul hg
   unfold realIntegralCovariance
+  simp only [Pi.sub_apply]
   rw [show
       (∫ x, h x * (f x - g x) ∂mu) =
         (∫ x, h x * f x ∂mu) - ∫ x, h x * g x ∂mu by
