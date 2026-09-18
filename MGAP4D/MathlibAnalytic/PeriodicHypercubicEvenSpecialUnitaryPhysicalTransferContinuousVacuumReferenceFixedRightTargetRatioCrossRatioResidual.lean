@@ -157,7 +157,7 @@ theorem
                 H N beta A B target g₂
           ∂μ := by
       exact integral_mono hConst hRatio
-        (Filter.Eventually.of_forall fun A =>
+        (fun A =>
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatio_exp_neg_sixteen_le
             H N hN beta hbeta A B target g₁ g₂)
 
@@ -301,7 +301,6 @@ theorem
       H N hN beta hbeta
       (Function.update (Function.update B source k) target g₂)
   field_simp [ne_of_gt hh₁, ne_of_gt hh₂, ne_of_gt hk₁, ne_of_gt hk₂]
-  ring
 
 /-- The actual remote canonical-vacuum cross ratio is at most one plus the
 fixed-right response residual multiplied by the volume-independent local
