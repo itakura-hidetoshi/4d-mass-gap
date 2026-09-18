@@ -156,7 +156,7 @@ theorem
       simp [hDistinct]
     · by_cases heb : e = backgroundFiber
       · subst e
-        simp [hDistinct]
+        simp [hef]
       · simp [hef, heb]
   have hwv : ∀ x, w x ≤ R * vWeight x := by
     intro x
