@@ -165,12 +165,16 @@ theorem
           simpa [remote, radius] using hShell r (Finset.mem_range.mp hr)
         calc
           Finset.sum (remote.filter (fun target => radius target = r)) terminal =
-              (((remote.filter (fun target => radius target = r)).card : Nat) : Real) *
-                (terminalPrefactor * terminalRatio ^ r) := by
+              Finset.sum (remote.filter (fun target => radius target = r))
+                (fun _target => terminalPrefactor * terminalRatio ^ r) := by
             apply Finset.sum_congr rfl
             intro target hTarget
             have hEq : radius target = r := (Finset.mem_filter.mp hTarget).2
             simp [terminal, hEq]
+          _ =
+              (((remote.filter (fun target => radius target = r)).card : Nat) : Real) *
+                (terminalPrefactor * terminalRatio ^ r) := by
+            simp [nsmul_eq_mul]
           _ <=
               (shellPrefactor * shellGrowth ^ r) *
                 (terminalPrefactor * terminalRatio ^ r) :=
