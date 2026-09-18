@@ -13,9 +13,21 @@ local instance twoStepTerminalCrossingDenominatorFloorSpecialUnitaryIsTopologica
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 
+local instance twoStepTerminalCrossingDenominatorFloorSpecialUnitaryCompactSpace
+    (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance twoStepTerminalCrossingDenominatorFloorSpecialUnitarySecondCountableTopology
+    (N : ℕ) : SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
 local instance twoStepTerminalCrossingDenominatorFloorSpecialUnitaryMeasurableSpace
     (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
+
+local instance twoStepTerminalCrossingDenominatorFloorSpecialUnitaryBorelSpace
+    (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
 
 /-- The one-link Wilson crossing ratio is uniformly trapped between
 exp (-2 beta) and exp (2 beta), independently of the group elements. -/
