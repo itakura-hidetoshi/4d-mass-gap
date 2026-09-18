@@ -16,7 +16,9 @@ local instance physicalResidualMaximumColumnSpatialLinkFintype
 
 local instance physicalResidualMaximumColumnSpatialLinkNonempty
     (H : ℕ) : Nonempty (PeriodicHypercubicEvenSpatialSliceLink H) :=
-  Fintype.card_pos_iff.mp (periodicHypercubicEvenSpatialSliceLink_card_pos H)
+  ⟨(⟨(0 : PeriodicHypercubicEvenVertex H), by
+      simp [periodicHypercubicEvenOnPrimaryReflectionPlane]⟩,
+    ⟨(1 : PeriodicHypercubicAxis), by norm_num⟩)⟩
 
 /-- The source-aligned remote residual, packaged by itself as a finite
 nonnegative influence kernel.  This keeps the local active-neighbor Harnack
