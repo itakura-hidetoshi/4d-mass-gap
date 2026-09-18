@@ -252,6 +252,7 @@ jobs:
               state="error"
               ;;
           esac
+          export STATUS_STATE="${state}"
 
           payload="${RUNNER_TEMP}/chatgpt-ci-status-receipt.json"
           python3 - "${payload}" <<'PY'
@@ -284,5 +285,3 @@ jobs:
             --header "Content-Type: application/json" \
             --data-binary "@${payload}" \
             "${GITHUB_API_URL}/repos/${REPOSITORY}/statuses/${HEAD_SHA}"
-        env:
-          STATUS_STATE: ${{ needs.pr-lean-fast-check.result == 'success' && 'success' || (needs.pr-lean-fast-check.result == 'failure' || needs.pr-lean-fast-check.result == 'cancelled') && 'failure' || 'error' }}
