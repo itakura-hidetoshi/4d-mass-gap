@@ -56,15 +56,11 @@ noncomputable def
         have hNotActive :
             source ∉ periodicHypercubicEvenSpatialSliceActiveNeighbors H source := by
           simp [periodicHypercubicEvenSpatialSlice_mem_activeNeighbors_iff]
-        rw [show
-          (if source ∈ periodicHypercubicEvenSpatialSliceActiveNeighbors H source then
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceBackgroundUpdateHarnackInfluence
-              beta
-          else 0) = 0 by simp [hNotActive]]
-        exact add_eq_zero.mpr
-          ⟨rfl,
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceAlignedRemotePhysicalInfluenceResidual_self
-              H N hN beta hbeta A source⟩ }
+        rw [if_neg hNotActive]
+        rw [
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceAlignedRemotePhysicalInfluenceResidual_self
+            H N hN beta hbeta A source]
+        norm_num }
 
 /-- Every actual source-value update of the literal normalized one-link law is
 uniformly dominated by the physical envelope kernel, for every bounded strongly
