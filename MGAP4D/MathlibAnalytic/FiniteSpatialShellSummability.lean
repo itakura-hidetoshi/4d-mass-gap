@@ -17,21 +17,21 @@ theorem finiteRealSum_eq_sum_radiusShells
     (cutoff : Nat)
     (f : alpha -> Real)
     (hRadius : forall x, x ∈ s -> radius x < cutoff) :
-    (∑ x in s, f x) =
-      ∑ r in Finset.range cutoff,
-        ∑ x in s.filter (fun y => radius y = r), f x := by
+    (∑ x ∈ s, f x) =
+      ∑ r ∈ Finset.range cutoff,
+        ∑ x ∈ s.filter (fun y => radius y = r), f x := by
   classical
   calc
-    (∑ x in s, f x) =
+    (∑ x ∈ s, f x) =
         ∑ x in s,
-          ∑ r in Finset.range cutoff,
+          ∑ r ∈ Finset.range cutoff,
             if radius x = r then f x else 0 := by
       apply Finset.sum_congr rfl
       intro x hx
       have hrange : radius x ∈ Finset.range cutoff :=
         Finset.mem_range.mpr (hRadius x hx)
       have hsingle :
-          (∑ r in Finset.range cutoff,
+          (∑ r ∈ Finset.range cutoff,
             if radius x = r then f x else 0) = f x := by
         simpa using
           (Finset.sum_eq_single
@@ -46,13 +46,13 @@ theorem finiteRealSum_eq_sum_radiusShells
               exact (hnot hrange).elim))
       exact hsingle.symm
     _ =
-        ∑ r in Finset.range cutoff,
-          ∑ x in s,
+        ∑ r ∈ Finset.range cutoff,
+          ∑ x ∈ s,
             if radius x = r then f x else 0 := by
       rw [Finset.sum_comm]
     _ =
-        ∑ r in Finset.range cutoff,
-          ∑ x in s.filter (fun y => radius y = r), f x := by
+        ∑ r ∈ Finset.range cutoff,
+          ∑ x ∈ s.filter (fun y => radius y = r), f x := by
       apply Finset.sum_congr rfl
       intro r hr
       rw [Finset.sum_filter]
@@ -71,13 +71,13 @@ theorem finiteRealSum_le_tsum_of_radiusShellBound
     (hShellSummable : Summable shell)
     (hShellBound :
       forall r, r < cutoff ->
-        (∑ x in s.filter (fun y => radius y = r), f x) <= shell r) :
-    (∑ x in s, f x) <= ∑' r : Nat, shell r := by
+        (∑ x ∈ s.filter (fun y => radius y = r), f x) <= shell r) :
+    (∑ x ∈ s, f x) <= ∑' r : Nat, shell r := by
   rw [finiteRealSum_eq_sum_radiusShells s radius cutoff f hRadius]
   calc
-    (∑ r in Finset.range cutoff,
-      ∑ x in s.filter (fun y => radius y = r), f x) <=
-        ∑ r in Finset.range cutoff, shell r := by
+    (∑ r ∈ Finset.range cutoff,
+      ∑ x ∈ s.filter (fun y => radius y = r), f x) <=
+        ∑ r ∈ Finset.range cutoff, shell r := by
       apply Finset.sum_le_sum
       intro r hr
       exact hShellBound r (Finset.mem_range.mp hr)
@@ -112,7 +112,7 @@ theorem finiteRealSum_le_tsum_of_pointwiseDecay_shellCardinality
     (hSummable :
       Summable (fun r : Nat =>
         shellCardMajorant r * (C * q ^ r))) :
-    (∑ x in s, f x) <=
+    (∑ x ∈ s, f x) <=
       ∑' r : Nat, shellCardMajorant r * (C * q ^ r) := by
   refine
     finiteRealSum_le_tsum_of_radiusShellBound
@@ -127,8 +127,8 @@ theorem finiteRealSum_le_tsum_of_pointwiseDecay_shellCardinality
       ?_
   intro r hr
   calc
-    (∑ x in s.filter (fun y => radius y = r), f x) <=
-        ∑ x in s.filter (fun y => radius y = r),
+    (∑ x ∈ s.filter (fun y => radius y = r), f x) <=
+        ∑ x ∈ s.filter (fun y => radius y = r),
           C * q ^ r := by
       apply Finset.sum_le_sum
       intro x hx
