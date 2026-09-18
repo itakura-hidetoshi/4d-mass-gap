@@ -73,6 +73,35 @@ theorem
   let Q :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate
       H beta hbeta
+  have hRight :
+      (∑ target ∈ remote,
+        Q (q target) n (Sum.inr source)) =
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate
+        H beta hbeta
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioRemoteAggregateVariation
+          H beta source distinguishedTarget)
+        n (Sum.inr source) := by
+    symm
+    simpa [remote, Q, q] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioRemoteAggregateVariation_iterate_eq_sum
+        H beta hbeta source distinguishedTarget n (Sum.inr source)
+  have hLeft :
+      (∑ target ∈ remote,
+        ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+          Q (q target) n (Sum.inl e)) =
+      ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate
+          H beta hbeta
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioRemoteAggregateVariation
+            H beta source distinguishedTarget)
+          n (Sum.inl e) := by
+    rw [Finset.sum_comm]
+    apply Finset.sum_congr rfl
+    intro e hE
+    symm
+    simpa [remote, Q, q] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioRemoteAggregateVariation_iterate_eq_sum
+        H beta hbeta source distinguishedTarget n (Sum.inl e)
   calc
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioWorstCaseRemoteCrossRatioInfluenceColumn
         H N hN beta hbeta B source distinguishedTarget =
@@ -114,11 +143,39 @@ theorem
             ∑ target ∈ remote,
               ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
                 Q (q target) n (Sum.inl e)) := by
-      rw [Finset.mul_sum]
-      congr 1
-      rw [Finset.sum_add_distrib]
-      congr 1
-      rw [Finset.mul_sum]
+      calc
+        (∑ target ∈ remote,
+          Real.exp (16 * beta) *
+            (Q (q target) n (Sum.inr source) +
+              2 *
+                ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+                  Q (q target) n (Sum.inl e))) =
+          Real.exp (16 * beta) *
+            ∑ target ∈ remote,
+              (Q (q target) n (Sum.inr source) +
+                2 *
+                  ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+                    Q (q target) n (Sum.inl e)) := by
+              rw [Finset.mul_sum]
+        _ =
+          Real.exp (16 * beta) *
+            ((∑ target ∈ remote,
+                Q (q target) n (Sum.inr source)) +
+              ∑ target ∈ remote,
+                2 *
+                  ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+                    Q (q target) n (Sum.inl e)) := by
+              rw [Finset.sum_add_distrib]
+        _ =
+          Real.exp (16 * beta) *
+            ((∑ target ∈ remote,
+                Q (q target) n (Sum.inr source)) +
+              2 *
+                ∑ target ∈ remote,
+                  ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+                    Q (q target) n (Sum.inl e)) := by
+              congr 1
+              rw [Finset.mul_sum]
     _ =
       Real.exp (16 * beta) *
         (∑ target ∈ remote,
@@ -144,18 +201,7 @@ theorem
                 (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioRemoteAggregateVariation
                   H beta source distinguishedTarget)
                 n (Sum.inl e)) := by
-      congr 1
-      · symm
-        simpa [remote, Q, q] using
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioRemoteAggregateVariation_iterate_eq_sum
-            H beta hbeta source distinguishedTarget n (Sum.inr source)
-      · congr 1
-        apply Finset.sum_congr rfl
-        intro e hE
-        symm
-        simpa [remote, Q, q] using
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioRemoteAggregateVariation_iterate_eq_sum
-            H beta hbeta source distinguishedTarget n (Sum.inl e)
+      rw [hRight, hLeft]
 
 end
 
