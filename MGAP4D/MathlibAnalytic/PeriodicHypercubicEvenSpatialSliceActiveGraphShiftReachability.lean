@@ -29,9 +29,10 @@ theorem periodicHypercubicEvenSpatialDirection_exists_ne
     intro hEq
     have hVal := congrArg
       (fun z : PeriodicHypercubicEvenSpatialDirection => z.1) hEq
+    have hNat := congrArg Fin.val hVal
     norm_num [one, two,
       periodicHypercubicEvenSpatialDirectionOne,
-      periodicHypercubicEvenSpatialDirectionTwo] at hVal
+      periodicHypercubicEvenSpatialDirectionTwo] at hNat
   · exact ⟨one, Ne.symm h⟩
 
 /-- A positive unit base shift in any spatial direction is reachable while
