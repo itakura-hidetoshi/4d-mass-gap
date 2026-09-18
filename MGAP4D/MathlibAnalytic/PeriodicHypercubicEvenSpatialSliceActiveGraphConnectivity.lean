@@ -117,11 +117,17 @@ theorem periodicHypercubicEvenSpatialSliceAdjustAllCoordinates_eq
           (periodicHypercubicEvenSpatialSliceAdjustCoordinate H x y d1) y d2)
         y d3).1 1 = y.1 1
     rw [periodicHypercubicEvenSpatialSliceAdjustCoordinate_apply_of_ne
-      H _ y d3 1 (by norm_num [d3,
-        periodicHypercubicEvenSpatialConnectivityDirectionThree])]
+      H _ y d3 1 (by
+        intro hEq
+        have hVal := congrArg Fin.val hEq
+        norm_num [d3,
+          periodicHypercubicEvenSpatialConnectivityDirectionThree] at hVal)]
     rw [periodicHypercubicEvenSpatialSliceAdjustCoordinate_apply_of_ne
-      H _ y d2 1 (by norm_num [d2,
-        periodicHypercubicEvenSpatialConnectivityDirectionTwo])]
+      H _ y d2 1 (by
+        intro hEq
+        have hVal := congrArg Fin.val hEq
+        norm_num [d2,
+          periodicHypercubicEvenSpatialConnectivityDirectionTwo] at hVal)]
     simpa [d1, periodicHypercubicEvenSpatialConnectivityDirectionOne] using
       periodicHypercubicEvenSpatialSliceAdjustCoordinate_apply_self
         H x y d1
@@ -134,8 +140,11 @@ theorem periodicHypercubicEvenSpatialSliceAdjustAllCoordinates_eq
           (periodicHypercubicEvenSpatialSliceAdjustCoordinate H x y d1) y d2)
         y d3).1 2 = y.1 2
     rw [periodicHypercubicEvenSpatialSliceAdjustCoordinate_apply_of_ne
-      H _ y d3 2 (by norm_num [d3,
-        periodicHypercubicEvenSpatialConnectivityDirectionThree])]
+      H _ y d3 2 (by
+        intro hEq
+        have hVal := congrArg Fin.val hEq
+        norm_num [d3,
+          periodicHypercubicEvenSpatialConnectivityDirectionThree] at hVal)]
     simpa [d2, periodicHypercubicEvenSpatialConnectivityDirectionTwo] using
       periodicHypercubicEvenSpatialSliceAdjustCoordinate_apply_self
         H (periodicHypercubicEvenSpatialSliceAdjustCoordinate H x y d1) y d2
