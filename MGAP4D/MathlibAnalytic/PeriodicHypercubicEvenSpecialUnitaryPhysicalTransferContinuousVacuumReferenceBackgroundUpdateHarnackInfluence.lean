@@ -77,7 +77,7 @@ theorem
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceBackgroundUpdateHarnackInfluence
   change 2 * ((K - 1) / (K + 1)) < 2
-  rw [mul_div_assoc]
+  rw [← mul_div_assoc]
   apply (div_lt_iff₀ hden).2
   nlinarith
 
@@ -151,9 +151,13 @@ theorem
           Function.update (Function.update A fiber x) backgroundFiber z := by
     intro z x
     funext e
-    by_cases hef : e = fiber <;>
-      by_cases heb : e = backgroundFiber <;>
-        simp_all
+    by_cases hef : e = fiber
+    · subst e
+      simp [hDistinct]
+    · by_cases heb : e = backgroundFiber
+      · subst e
+        simp [hDistinct]
+      · simp [hef, heb]
   have hwv : ∀ x, w x ≤ R * vWeight x := by
     intro x
     have hReal :=
