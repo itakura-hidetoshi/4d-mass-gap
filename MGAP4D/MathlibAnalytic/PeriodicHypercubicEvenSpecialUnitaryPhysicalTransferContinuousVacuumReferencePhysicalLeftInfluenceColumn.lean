@@ -184,10 +184,12 @@ theorem
   have hRemote :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRemotePhysicalInfluenceResidual_columnSum_le_exp_sixteen_mul_nStepAggregate
       H N hN beta hbeta A source source n
-  exact hLocal.trans (add_le_add_left hRemote
-    (18 *
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceBackgroundUpdateHarnackInfluence
-        beta))
+  exact hLocal.trans (by
+    simpa [add_comm] using
+      add_le_add_right hRemote
+        (18 *
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceBackgroundUpdateHarnackInfluence
+            beta))
 
 end
 
