@@ -108,21 +108,51 @@ theorem periodicHypercubicEvenSpatialSliceAdjustAllCoordinates_eq
     have hy := y.2
     unfold periodicHypercubicEvenOnPrimaryReflectionPlane at hout hy
     exact hout.trans hy.symm
-  · simp [
-      periodicHypercubicEvenSpatialSliceAdjustAllCoordinates,
-      periodicHypercubicEvenSpatialConnectivityDirectionOne,
-      periodicHypercubicEvenSpatialConnectivityDirectionTwo,
-      periodicHypercubicEvenSpatialConnectivityDirectionThree]
-  · simp [
-      periodicHypercubicEvenSpatialSliceAdjustAllCoordinates,
-      periodicHypercubicEvenSpatialConnectivityDirectionOne,
-      periodicHypercubicEvenSpatialConnectivityDirectionTwo,
-      periodicHypercubicEvenSpatialConnectivityDirectionThree]
-  · simp [
-      periodicHypercubicEvenSpatialSliceAdjustAllCoordinates,
-      periodicHypercubicEvenSpatialConnectivityDirectionOne,
-      periodicHypercubicEvenSpatialConnectivityDirectionTwo,
-      periodicHypercubicEvenSpatialConnectivityDirectionThree]
+  · let d1 := periodicHypercubicEvenSpatialConnectivityDirectionOne
+    let d2 := periodicHypercubicEvenSpatialConnectivityDirectionTwo
+    let d3 := periodicHypercubicEvenSpatialConnectivityDirectionThree
+    change
+      (periodicHypercubicEvenSpatialSliceAdjustCoordinate H
+        (periodicHypercubicEvenSpatialSliceAdjustCoordinate H
+          (periodicHypercubicEvenSpatialSliceAdjustCoordinate H x y d1) y d2)
+        y d3).1 1 = y.1 1
+    rw [periodicHypercubicEvenSpatialSliceAdjustCoordinate_apply_of_ne
+      H _ y d3 1 (by norm_num [d3,
+        periodicHypercubicEvenSpatialConnectivityDirectionThree])]
+    rw [periodicHypercubicEvenSpatialSliceAdjustCoordinate_apply_of_ne
+      H _ y d2 1 (by norm_num [d2,
+        periodicHypercubicEvenSpatialConnectivityDirectionTwo])]
+    simpa [d1, periodicHypercubicEvenSpatialConnectivityDirectionOne] using
+      periodicHypercubicEvenSpatialSliceAdjustCoordinate_apply_self
+        H x y d1
+  · let d1 := periodicHypercubicEvenSpatialConnectivityDirectionOne
+    let d2 := periodicHypercubicEvenSpatialConnectivityDirectionTwo
+    let d3 := periodicHypercubicEvenSpatialConnectivityDirectionThree
+    change
+      (periodicHypercubicEvenSpatialSliceAdjustCoordinate H
+        (periodicHypercubicEvenSpatialSliceAdjustCoordinate H
+          (periodicHypercubicEvenSpatialSliceAdjustCoordinate H x y d1) y d2)
+        y d3).1 2 = y.1 2
+    rw [periodicHypercubicEvenSpatialSliceAdjustCoordinate_apply_of_ne
+      H _ y d3 2 (by norm_num [d3,
+        periodicHypercubicEvenSpatialConnectivityDirectionThree])]
+    simpa [d2, periodicHypercubicEvenSpatialConnectivityDirectionTwo] using
+      periodicHypercubicEvenSpatialSliceAdjustCoordinate_apply_self
+        H (periodicHypercubicEvenSpatialSliceAdjustCoordinate H x y d1) y d2
+  · let d1 := periodicHypercubicEvenSpatialConnectivityDirectionOne
+    let d2 := periodicHypercubicEvenSpatialConnectivityDirectionTwo
+    let d3 := periodicHypercubicEvenSpatialConnectivityDirectionThree
+    change
+      (periodicHypercubicEvenSpatialSliceAdjustCoordinate H
+        (periodicHypercubicEvenSpatialSliceAdjustCoordinate H
+          (periodicHypercubicEvenSpatialSliceAdjustCoordinate H x y d1) y d2)
+        y d3).1 3 = y.1 3
+    simpa [d3, periodicHypercubicEvenSpatialConnectivityDirectionThree] using
+      periodicHypercubicEvenSpatialSliceAdjustCoordinate_apply_self
+        H
+        (periodicHypercubicEvenSpatialSliceAdjustCoordinate H
+          (periodicHypercubicEvenSpatialSliceAdjustCoordinate H x y d1) y d2)
+        y d3
 
 /-- Any two spatial links with the same link direction are reachable by
 successively matching the three spatial coordinates of their base vertices. -/
