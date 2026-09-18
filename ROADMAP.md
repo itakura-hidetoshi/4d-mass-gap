@@ -11,24 +11,24 @@ formal/real-hilbert-uniform-coercive-strong-limit
 The exact merged theorem-carrier baseline used for this refresh is
 
 ```text
-9fbe314d4245c19fffa5762f8de683d3ab7d35fe
+83f4bc73d01b2cd9f2b6061d8417ebd1b324a3c8
 ```
 
 with tree
 
 ```text
-8bb7d9e4928b132256dae655fea73e0620986397
+6adda32de936b35b1881d85986773003275e244a
 ```
 
-This commit merges PR #4421:
+This commit merges PR #4460:
 
 ```text
-Descend two-step terminal response to aggregate left variation mass
+Convert cross-ratio influence majorants to Doob bounded-test control
 ```
 
 The SHA printed here is documentation history, not live authority. The theorem-carrier branch must be fresh-fetched before theorem work.
 
-Authority order remains:
+Authority order:
 
 ```text
 1. exact current GitHub theorem-carrier SHA
@@ -47,8 +47,8 @@ Authority order remains:
 ```text
 A. FINITE PERIODIC WILSON / OS ROOT                           [INTEGRATED]
    -> compact SU(N) finite lattice
-   -> reflection positivity
-   -> transfer and ground-state structure
+   -> reflection positivity / OS carriers
+   -> one-slab transfer and ground-state structure
    -> conditional-expectation / coercivity interfaces
 
 B. SAME-ROOT SCALAR CONTINUUM OS LANE                        [INTEGRATED]
@@ -59,12 +59,12 @@ B. SAME-ROOT SCALAR CONTINUUM OS LANE                        [INTEGRATED]
 C. CONTINUOUS C5 ONE-LINK LAW                                [INTEGRATED]
    -> normalized measurable SU(N) fiber law
    -> exact reinsertion
-   -> off-target represented-source cancellation
+   -> represented-source cancellation
    -> surviving q(beta)
 
 D. LOCAL C5 GEOMETRY                                         [INTEGRATED]
    -> intrinsic spatial plaquette-neighbor degree <= 18
-   -> exceptional set <= 20
+   -> C5 exceptional set <= 20
    -> remote raw Wilson cancellation
 
 E. FIXED-RIGHT GROUND-STATE RESPONSE                         [INTEGRATED]
@@ -79,72 +79,100 @@ F. PHYSICAL RESTRICTED-SCAN TRANSPORT                        [INTEGRATED]
    -> finite-step expectation iterate
    -> tagged physical variation propagation
 
-G. REMOTE TARGET-RATIO AGGREGATION                           [INTEGRATED]
+G. REMOTE AGGREGATE VARIATION                                [INTEGRATED]
    #4399 source-coordinate aggregate identity
    #4403 pointwise aggregate support
    #4406 all-coordinate finite superposition
    #4409 one-step represented-source aggregate response = 0
-
-H. FIRST NONTRIVIAL AGGREGATE TRANSPORT                      [INTEGRATED]
    #4412 exact one-step left carrier
-   #4415 exact first nonzero two-step right-source response
-   #4418 volume-independent two-step right-source transport bound
+   #4415 first nonzero two-step represented-source response
+   #4418 volume-independent two-step right-source transport
 
-I. TWO-STEP TERMINAL DESCENT                                 [INTEGRATED]
-   #4421 continuous-state finite-coordinate telescoping
-   #4421 probability expectation difference <= 2 * total variation
-   #4421 two-step terminal remote column
-         <= 2 * aggregate propagated left total mass
+H. ARBITRARY-STEP TERMINAL / RESPONSE REDUCTION              [INTEGRATED]
+   #4421 two-step terminal descent
+   #4433 arbitrary-n terminal descent
+   -> RemoteResponseColumn
+      <= aggregate right-source iterate
+       + 2 * aggregate physical-left total mass
 
-J. ARBITRARY-STEP TERMINAL / RESPONSE REDUCTION              [ACTIVE DRAFT]
-   #4433 targetwise n-step terminal descent
-   -> remote target summation
-   -> full remote response column
-      <= aggregate right-source term
-       + 2 * aggregate left-total-mass term
-   [NOT AUTHORITY UNTIL MERGED]
+I. ABSTRACT SPARSE / LOCAL RESTRICTED-SCAN CLOSURE           [INTEGRATED]
+   #4437 active-neighbor eta + residual rho
+   -> left column <= 18*eta + rho
+   -> full-sweep exponential envelope when < 1
+   #4439 right-source resolvent
+   -> reciprocal-card cancellation
+   -> denominator (1 - (18*eta + rho))^-1
 
-K. UNIFORM AGGREGATE LEFT-MASS CLOSURE                       [OPEN NOW]
-   control
-     sum_e Q^n(RemoteAggregateVariation)(Sum.inl e)
-   without dense all-links volume growth
+J. TARGET-INDEXED FIXED-RIGHT RESPONSE                       [INTEGRATED]
+   #4442 independent targetwise g1,g2,h,k
+   -> same aggregate arbitrary-step RHS
 
-L. TARGET-INDEXED WORST-CASE RESPONSE FAMILY                 [OPEN NEXT]
-   allow g1,g2,h,k to depend on target
-   -> match genuine Dobrushin column quantifiers
-   -> preserve one aggregate RHS
+K. CARDINALITY-FREE CROSS-RATIO ALGEBRA                      [INTEGRATED]
+   #4444 sum transform(log(1+x_i)) <= sum x_i
+   -> target-dependent/common multipliers
+   -> no finite-family cardinality penalty
 
-M. RESPONSE -> PHYSICAL REMOTE INFLUENCE                     [OPEN NEXT]
-   normalization-aware response/cross-ratio comparison
-   -> remote influence profile
-   -> volume-uniform remote column rho
+L. ACTUAL VACUUM CROSS-RATIO / RESPONSE BRIDGE               [INTEGRATED]
+   #4446 actual remote continuous-vacuum cross ratio
+   <= 1 + exp(16*beta) * ResponseAbs
 
-N. EXCEPTIONAL + REMOTE GATE                                 [INTEGRATED INTERFACE]
-   exceptional <= 20*eta
-   remote <= rho
-   -> column <= 20*eta + rho
-   -> strict contraction if 20*eta + rho < 1
+M. TARGET-INDEXED CROSS-RATIO TRANSPORT                      [INTEGRATED]
+   #4450 chosen targetwise transformed remote cross-ratio column
+   <= exp(16*beta) * target-indexed response column
+   <= aggregate arbitrary-step tagged transport
 
-O. CONTINUOUS RESPONSE CERTIFICATE / RESOLVENT               [OPEN DOWNSTREAM]
-   concrete physical discrepancy/sourceBound witnesses
-   -> existing certificate constructor
-   -> source resolvent / sweep algebra
+N. TARGETWISE WORST-CASE MAJORANTS                           [INTEGRATED]
+   #4452 sSup over all targetwise SU(N) test values
+   -> nonempty / bounded
+   -> 0 <= worst-case majorant <= 2
+   -> remote targetwise transport bound
+   #4456 sum targetwise sSup majorants over remote family
+   -> no sSup/sum exchange
+   -> no remote-cardinality factor
 
-P. PHYSICAL POINCARE / COERCIVITY                            [OPEN DOWNSTREAM]
-   strict physical response control
-   -> conditional variance / block coercivity
-   -> Poincare-type estimate
+O. GENERIC DOOB BOUNDED-TEST BRIDGE                          [INTEGRATED]
+   #4460 transformed pairwise cross-ratio radius <= M
+   with 0 <= M <= 2
+   -> normalized Doob bounded-test difference <= M
+   -> endpoint M=2 handled without supremum attainment
 
-Q. UNIFORM FINITE-VOLUME TRANSFER GAP                        [OPEN DOWNSTREAM]
+P. ACTUAL SU(N) CONDITIONAL-LAW INFLUENCE                    [OPEN NOW]
+   off-target reference one-link law
+   = raw one-slab law Doob-weighted by vacuum fiber weight
+   -> instantiate #4460
+   -> actual remote bounded-test influence
+      <= targetwise worst-case cross-ratio majorant
+
+Q. CONCRETE PHYSICAL REMOTE COLUMN                           [OPEN NEXT]
+   sum_remote physicalRemoteInfluence(target,source)
+   -> use #4456
+   -> obtain source-summed volume-uniform residual rho
+
+R. PHYSICAL SPARSE / LOCAL COLUMN CLOSURE                    [OPEN NEXT]
+   actual left-left influence
+   <= active-neighbor eta + residual
+   sum residual <= rho
+   -> 18*eta + rho < 1
+   -> physical whole-sweep contraction
+   -> represented-source resolvent
+
+S. PHYSICAL RESPONSE CERTIFICATE / COERCIVITY                [OPEN]
+   concrete witnesses
+   -> response certificate
+   -> source resolvent / sweep
+   -> Poincare / coercivity
+
+T. UNIFORM FINITE-VOLUME TRANSFER GAP                        [OPEN]
    volume-independent coercive constant
-   -> physical transfer / Hamiltonian spectral gap
+   -> uniform physical transfer/Hamiltonian gap
 
-R. THERMODYNAMIC / CONTINUUM PHYSICAL LIMIT                  [OPEN DOWNSTREAM]
-   tight compatible finite-volume physical states
-   -> limiting physical carrier / field content
-   -> OS/Wightman spectral lower bound
+U. THERMODYNAMIC / CONTINUUM PHYSICAL LIMIT                  [OPEN]
+   compatible limiting physical states
+   -> same-root OS/Wightman carrier
+   -> sufficiently rich 4D Yang--Mills field/state
+   -> spectral lower bound above vacuum
 
-S. CLAY-LEVEL EXISTENCE + MASS GAP                           [OPEN]
+V. CLAY-LEVEL EXISTENCE + MASS GAP                           [OPEN]
 ```
 
 ---
@@ -165,12 +193,12 @@ fresh-fetch authoritative theorem-carrier branch
 -> make the smallest proof-preserving fix
 -> require completed/success for exact head
 -> merge against expected exact head
--> fresh-fetch canonical again.
+-> fresh-fetch canonical again
 ```
 
 Queued or in-progress CI is not GREEN.
 
-GitHub completion comments are wake-up signals only. They are not CI truth, merge authority, or write authority. Direct fresh observation of the exact workflow run and exact head SHA remains authoritative.
+GitHub completion comments and commit-status receipts are wake-up/backstop signals only. They are not CI truth, merge authority, or theorem authority. The terminal workflow run, exact head SHA, and terminal job/step conclusion must be fresh-observed before merge.
 
 No new `sorry`, `admit`, axioms, hidden constants, assumption weakening, theorem weakening, or semantic broadening may be introduced as a substitute for proof.
 
@@ -190,7 +218,7 @@ This is the finite theorem root. It is not itself a continuum Yang--Mills existe
 
 **Status: Integrated as a scalar observable lane.**
 
-The repository also contains a same-root scalar continuum construction:
+The repository contains a same-root scalar continuum construction:
 
 ```text
 finite Wilson scalar readout
@@ -198,427 +226,475 @@ finite Wilson scalar readout
 -> continuum reflection positivity
 -> OS Hilbert carrier
 -> strongly continuous contraction semigroup
--> self-adjoint Hamiltonian / vacuum structure.
+-> self-adjoint Hamiltonian / vacuum structure
 ```
 
 Boundary: this scalar lane is not yet the full four-dimensional Yang--Mills field/state required for the final problem.
 
 ---
 
-# Phase 3 — Continuous C5 one-link law and local geometry
+# Phase 3 — Continuous C5 one-link law and geometry
 
 **Status: Integrated.**
-
-The continuous C5 one-link law is a genuine normalized `SU(N)` probability kernel.
 
 For represented right-boundary sources:
 
 ```text
-source != resampled fiber
--> normalization cancels the source-dependent scalar exactly
--> represented influence = 0.
+source != resampled physical fiber
+-> source-dependent scalar cancels under normalization
+-> represented influence = 0
 ```
 
-For the matching source:
+For the matching represented source:
 
 ```text
 q(beta)
-  = 2 * (exp(16*beta)-1)/(exp(16*beta)+1).
+  = 2 * (exp(16*beta)-1)/(exp(16*beta)+1)
 ```
 
-For
+and
 
 ```text
-0 <= beta < log 3 / 16,
+0 <= beta < log 3 / 16
 ```
 
-one has `q(beta) < 1`.
+implies `q(beta) < 1`.
 
-The bare spatial Wilson geometry is bounded degree:
+The bare spatial Wilson geometry supplies:
 
 ```text
-intrinsic spatial plaquette-neighbor degree <= 18
-C5 exceptional set size <= 20.
+intrinsic active plaquette-neighbor degree <= 18
+C5 exceptional set size <= 20
 ```
 
-This bounded geometry is a central resource for the current sparse/local closure problem.
+These are local geometry bounds, not correlation-decay theorems.
 
 ---
 
-# Phase 4 — Fixed-right probability and response identities
+# Phase 4 — Fixed-right response identities
 
 **Status: Integrated.**
 
-The continuous physical ground-state kernel section is normalized to a probability law.
-
-The exact response chain is:
+The exact chain is:
 
 ```text
 ground-state kernel section
 -> positive finite normalization
--> right update as normalized local Boltzmann tilt
+-> right update as normalized local tilt
 -> covariance response
 -> two-source crossing response
 -> literal target-ratio specialization
--> remote reference law = source-then-target fixed-right kernel-section law
--> remote C5 covariance = fixed-right target-ratio response.
+-> remote reference law / kernel-section identity
+-> fixed-right target-ratio response
 ```
 
-No decay is asserted by these identities.
+These are exact identities. They do not assert decay.
 
 ---
 
-# Phase 5 — Physical restricted-scan transport
+# Phase 5 — Physical restricted scan and remote aggregate transport
 
 **Status: Integrated.**
 
-The actual C5 scan is represented on a tagged carrier:
+The tagged carrier distinguishes
 
 ```text
-Sum.inl e  = physical left link
-Sum.inr s  = represented right source.
+Sum.inl e = physical left link
+Sum.inr s = represented right source
 ```
 
-Only `Sum.inl` coordinates are scan targets.
+and only `Sum.inl` coordinates are scan targets.
 
-The repository formalizes:
+The target-ratio observable begins with singleton physical variation
 
 ```text
-one-link expectation transport
--> deterministic schedules
--> restricted random scan
--> finite-step expectation iterate
--> physical fiber-variation propagation
--> represented-source transport.
+exp(16*beta) at the selected target,
+0 elsewhere
 ```
 
-The target-ratio observable has singleton initial physical variation
+and the remote aggregate profile is the exact sum of these singleton target profiles.
+
+For every finite depth `n` and every tagged coordinate,
 
 ```text
-exp(16*beta) at target,
-0 elsewhere.
+Q^n(RemoteAggregateVariation)(e)
+=
+sum_remote Q^n(singleton_target_variation)(e)
 ```
 
-This avoids a volume-wide initial variation profile.
+exactly.
+
+This exact superposition remains the algebraic base for all later source-summed bounds.
 
 ---
 
-# Phase 6 — Remote aggregate variation
+# Phase 6 — Arbitrary-step terminal descent
 
-**Status: Integrated through #4409.**
+**Status: Integrated through #4433.**
 
-Define the remote aggregate target-ratio variation by summing singleton target profiles over the remote C5 target set.
+The two-step terminal theorem of #4421 has been generalized to arbitrary finite scan depth.
 
-The merged formalization proves:
-
-```text
-#4399
-  source-coordinate aggregate finite-superposition identity
-
-#4403
-  exact pointwise profile:
-  exp(16*beta) on remote target fibers, zero elsewhere
-
-#4406
-  for every tagged coordinate e and every n:
-  Q^n(RemoteAggregateVariation)(e)
-    = sum_remote Q^n(singleton_target_variation)(e)
-
-#4409
-  one restricted-scan step cannot yet reach the represented source:
-  Q(RemoteAggregateVariation)(Sum.inr source) = 0.
-```
-
-This exact superposition is the key algebraic step that permits remote-column summation before estimates are imposed.
-
----
-
-# Phase 7 — First nontrivial aggregate transport
-
-**Status: Integrated through #4418.**
-
-## 7.1 Exact one-step left carrier — #4412
-
-The first physical-left carrier generated by the remote aggregate profile is computed exactly.
-
-Its finite-volume normalization appears as
-
-```text
-remote.card / card(Link),
-```
-
-not as a naked remote cardinality.
-
-## 7.2 Exact first nonzero right-source response — #4415
-
-The represented source is not reached at one step. At two steps the first nonzero response is computed exactly.
-
-This proves the concrete route
-
-```text
-remote target
--> physical left fiber
--> represented right source.
-```
-
-## 7.3 Uniform two-step right-source transport — #4418
-
-The remote set is embedded into the complete non-source two-step column, all summands are nonnegative, and the already-established full two-step column bound is reused.
-
-The resulting represented-source transport term is volume-independent.
-
-This closes the transport half of the two-step stationary residual.
-
----
-
-# Phase 8 — Two-step terminal descent
-
-**Status: Integrated through #4421.**
-
-The previous terminal term was a difference of expectations of one common two-step-smoothed target-ratio observable under two fixed-right probability laws.
-
-PR #4421 introduces the required continuous-state telescoping machinery.
-
-## 8.1 Continuous-value finite-coordinate telescoping
-
-For a finite coordinate carrier and arbitrary coordinate value type `G`:
-
-```text
-coordinate update bound:
-  |f(update C e u) - f(update C e v)| <= variation(e)
-
-implies
-
-  |f(A) - f(B)| <= sum_e variation(e).
-```
-
-No `Fintype G` assumption is used. This is essential for `SU(N)`.
-
-## 8.2 Arbitrary probability measures
-
-The current generic expectation theorem gives
-
-```text
-|E_mu f - E_nu f|
-<= 2 * sum_e variation(e)
-```
-
-for arbitrary probability measures on the finite coordinate carrier.
-
-The factor `2` is safe and proof-complete. It is not currently claimed to be sharp.
-
-## 8.3 Application to the two-step terminal response
-
-The two-step smoothed target-ratio observable has physical-coordinate variation bounded by the two-step tagged iterate.
-
-Therefore
-
-```text
-TerminalResponseAbs(target,source)
-<= 2 *
-   sum_e Q^2(variation_target)(Sum.inl e).
-```
-
-Summing over remote targets and commuting the finite sums via #4406 yields
-
-```text
-TerminalRemoteColumn
-<= 2 *
-   sum_e Q^2(RemoteAggregateVariation)(Sum.inl e).
-```
-
-The stationary terminal has thus been converted from an opaque measure discrepancy into a concrete aggregate propagated-left-mass obstruction.
-
----
-
-# Phase 9 — Arbitrary-step terminal descent
-
-**Status: Active draft; not theorem authority.**
-
-Draft PR #4433 is extending Phase 8 from the fixed depth `2` to arbitrary `n`.
-
-The intended target is:
-
-```text
-NStepTerminalRemoteColumn
-<= 2 *
-   sum_e Q^n(RemoteAggregateVariation)(Sum.inl e),
-```
-
-combined with the already-proved arbitrary-step remote residual decomposition to obtain
+The canonical response reduction is
 
 ```text
 RemoteResponseColumn
-<= Q^n(RemoteAggregateVariation)(Sum.inr source)
-   + 2 *
-     sum_e Q^n(RemoteAggregateVariation)(Sum.inl e).
-```
-
-Until #4433 merges GREEN, these formulas are development targets, not canonical theorem claims.
-
----
-
-# Phase 10 — Uniform aggregate-left-mass closure
-
-**Status: OPEN NOW.**
-
-This is the main quantitative obstruction after #4421.
-
-The quantity to control is
-
-```text
+<=
+Q^n(RemoteAggregateVariation)(Sum.inr source)
++
+2 *
 sum_{physical e}
-  Q^n(RemoteAggregateVariation)(Sum.inl e).
+  Q^n(RemoteAggregateVariation)(Sum.inl e)
 ```
 
-A direct use of the generic dense distinct-fiber coefficient produces a term comparable to
+for arbitrary `n`.
 
-```text
-(card Link - 1) * offFiberInfluence(beta),
-```
-
-which reintroduces volume growth.
-
-That route is therefore insufficient for the desired uniform column estimate.
-
-A valid proof must instead exploit additional structure already present in the repository, for example:
-
-```text
-bounded local Wilson degree <= 18,
-exceptional-set support <= 20,
-exact remote target support,
-exact fixed-right response identities,
-normalization cancellation,
-finite-step tagged transport,
-response / residual recursion that is independently established.
-```
-
-The proof must remain non-circular.
+The terminal measure discrepancy is no longer opaque. The open issue is how to close these tagged quantities uniformly in volume using physical local structure.
 
 ---
 
-# Phase 11 — Target-indexed worst-case response family
+# Phase 7 — Abstract sparse/local sweep theorem
 
-**Status: OPEN NEXT.**
+**Status: Integrated through #4437 and #4439.**
 
-The current remote response-column definitions use one common tuple
+Suppose the physical left-left block admits
 
 ```text
-g1, g2, h, k
+influence(target,source)
+<=
+  activeNeighbor(target,source) * eta
+  + residual(target,source)
 ```
 
-for all remote targets.
+with nonnegative residual and
 
-A genuine Dobrushin column estimate must allow the worst-case group values to vary with the target. The next robust interface should therefore admit functions such as
+```text
+sum_target residual(target,source) <= rho.
+```
+
+Then the intrinsic degree bound gives
+
+```text
+leftColumnCoefficient <= 18 * eta + rho.
+```
+
+Under
+
+```text
+18 * eta + rho < 1
+```
+
+the reciprocal random scan contracts over complete physical-link sweeps with envelope
+
+```text
+exp (-(1 - (18*eta + rho)) * sweeps).
+```
+
+PR #4439 further proves that the accumulated represented-source forcing is bounded by a volume-independent resolvent with denominator
+
+```text
+1 - (18 * eta + rho).
+```
+
+Boundary: the old dense distinct-fiber carrier is not asserted to satisfy this sparse hypothesis.
+
+---
+
+# Phase 8 — Target-indexed response
+
+**Status: Integrated through #4442.**
+
+The remote response now allows
 
 ```text
 g1(target), g2(target), h(target), k(target)
 ```
 
-or an equivalent supremum-compatible family.
+independently at every remote target.
 
-The existing targetwise finite-step bounds are independent of the chosen values, so the planned strengthening should preserve the same aggregate tagged right-hand side.
+The same aggregate tagged RHS survives unchanged.
 
-This is a quantifier-strengthening step, not a new decay assumption.
+This is the correct quantifier shape for later Dobrushin-style targetwise worst cases.
 
 ---
 
-# Phase 12 — Response to physical remote influence
+# Phase 9 — Cross-ratio linearization
+
+**Status: Integrated through #4444.**
+
+For any finite nonnegative family,
+
+```text
+sum_i InfluenceTransform(log(1 + x_i))
+<=
+sum_i x_i.
+```
+
+No finite-family cardinality factor is introduced.
+
+The theorem also supports target-dependent multipliers and a common multiplier envelope. This is the normalization algebra required to keep source-summed remote influence linear in the response residual.
+
+---
+
+# Phase 10 — Actual continuous-vacuum remote cross ratio
+
+**Status: Integrated through #4446.**
+
+For a geometrically remote target/source pair, the actual continuous-vacuum cross ratio satisfies
+
+```text
+crossRatio
+<=
+1 + exp(16*beta) * ResponseAbs.
+```
+
+The proof uses the same-target local-factor cocycle, an `exp(-16*beta)` lower bound for the relevant target-ratio average, and the exact expectation quotient.
+
+This is already a model-specific SU(N) theorem.
+
+Boundary: a cross-ratio estimate is not yet an L1/TV conditional-law influence theorem.
+
+---
+
+# Phase 11 — Target-indexed transformed cross-ratio column
+
+**Status: Integrated through #4450.**
+
+For arbitrary independent targetwise SU(N) tuples,
+
+```text
+TargetIndexedRemoteCrossRatioInfluenceColumn
+<=
+exp(16*beta) * TargetIndexedRemoteResponseColumn
+```
+
+and therefore
+
+```text
+<=
+exp(16*beta) *
+[
+  aggregate right-source term
+  +
+  2 * aggregate physical-left total mass
+].
+```
+
+This is still a chosen-family theorem.
+
+---
+
+# Phase 12 — Targetwise worst-case supremum
+
+**Status: Integrated through #4452.**
+
+At every target/source pair, define
+
+```text
+WorstCaseCrossRatioInfluenceMajorant
+=
+sSup over all g1,g2,h,k in SU(N)
+```
+
+of the transformed logarithmic cross-ratio majorant.
+
+The set is nonempty and bounded, and the canonical theorem gives
+
+```text
+0 <= WorstCaseCrossRatioInfluenceMajorant <= 2.
+```
+
+The remote targetwise worst case is controlled by the same group-value-independent arbitrary-step tagged RHS.
+
+No maximizing tuple is assumed to exist.
+
+---
+
+# Phase 13 — Summed targetwise worst-case remote column
+
+**Status: Integrated through #4456.**
+
+The finite remote column
+
+```text
+sum_remote WorstCaseCrossRatioInfluenceMajorant(target,source)
+```
+
+is bounded by
+
+```text
+exp(16*beta) *
+[
+  Q^n(RemoteAggregateVariation)(Sum.inr source)
+  +
+  2 *
+  sum_e Q^n(RemoteAggregateVariation)(Sum.inl e)
+].
+```
+
+The proof is termwise. It does not exchange `sSup` with finite summation.
+
+This closes the source-summed worst-case cross-ratio side once an actual conditional-law influence is shown to lie below the majorant.
+
+---
+
+# Phase 14 — Generic Doob cross-ratio influence theorem
+
+**Status: Integrated through #4460.**
+
+For arbitrary normalized Doob laws built from two weights over one common reference measure, suppose all pairwise logarithmic cross-ratio radii satisfy
+
+```text
+InfluenceTransform(radius(x,y)) <= M
+```
+
+with
+
+```text
+0 <= M <= 2.
+```
+
+Then every strongly measurable real test with `|phi| <= 1` satisfies
+
+```text
+|E_mu_w phi - E_mu_v phi| <= M.
+```
+
+The endpoint `M=2` is handled directly by the probability bound.
+
+For `M<2`, the proof uses
+
+```text
+K = (2 + M) / (2 - M)
+```
+
+to recover uniform multiplicative domination, then applies the existing sharp normalized-measure bounded-test theorem.
+
+No compactness or supremum attainment is required.
+
+---
+
+# Phase 15 — Actual SU(N) conditional-law influence
+
+**Status: OPEN NOW.**
+
+The repository already proves that the off-target one-link reference conditional law is exactly
+
+```text
+doobWeightedMeasure(
+  raw one-slab local probability law,
+  continuous-vacuum spatial-link fiber weight
+).
+```
+
+The raw local law is a genuine probability measure. The vacuum fiber weight is continuous, positive, and has finite upper/lower distortion data.
+
+The next theorem should instantiate #4460 for two remote background/source values and prove, for every bounded measurable real test,
+
+```text
+actual remote conditional-law bounded-test difference
+<=
+WorstCaseCrossRatioInfluenceMajorant(target,source).
+```
+
+This is the current model-specific normalization bridge.
+
+It must be proved without silently replacing:
+
+```text
+fixed-right response
+by
+actual influence
+```
+
+or
+
+```text
+cross-ratio majorant
+by
+TV/L1 coefficient
+```
+
+before the Doob theorem has been applied.
+
+---
+
+# Phase 16 — Concrete source-summed physical remote residual
 
 **Status: OPEN NEXT.**
 
-After a target-indexed response family is available, the next task is to convert fixed-right response size into the actual physical remote influence coefficient.
-
-The repository already contains normalization-aware ingredients:
+After Phase 15, #4456 yields
 
 ```text
-positive local-factor ratios,
-continuous-vacuum Harnack bounds,
-Doob weighted-measure cross-ratio comparison,
-cross-ratio influence transforms,
-log(1+x) linearization:
-  influenceTransform(log(1+x)) <= x.
+sum_remote physicalRemoteInfluence(target,source)
+<=
+sum_remote WorstCaseCrossRatioInfluenceMajorant(target,source)
 ```
 
-A promising route is to derive a targetwise multiplicative residual of the form
+and therefore an arbitrary-step aggregate tagged upper bound.
 
-```text
-1 + const(beta) * response(target,source)
-```
+The task is to package this as the concrete residual column `rho` needed by the sparse/local physical left-left decomposition.
 
-and then use the existing logarithmic influence transform so that the resulting physical influence is linear in the proved response rather than a uniform constant summed over all remote targets.
-
-This route is **not yet a theorem**. It is the current normalization-aware bridge to investigate.
+The desired `rho` must be independent of periodic volume.
 
 ---
 
-# Phase 13 — Concrete volume-uniform remote column rho
+# Phase 17 — Physical sparse/local closure
 
-**Status: OPEN.**
+**Status: OPEN NEXT.**
 
-The target is
+The concrete target is
 
 ```text
-sup_source
-  sum_{remote target}
-    physicalRemoteInfluence(target,source)
-<= rho
+physicalLeftInfluence(target,source)
+<=
+  activeNeighbor(target,source) * eta
+  + vacuumResidual(target,source),
 ```
 
-with `rho` independent of periodic volume.
+with
 
-The remote summation must be performed after the targetwise response has been tied to a summable aggregate quantity. A target-independent pointwise constant is not sufficient.
+```text
+sum_target vacuumResidual(target,source) <= rho
+```
+
+uniformly in source and volume.
+
+Then the already-integrated theorem gives
+
+```text
+leftColumn <= 18 * eta + rho.
+```
+
+The decisive contraction milestone is a concrete physical regime satisfying
+
+```text
+18 * eta + rho < 1.
+```
+
+An older exceptional-set interface involving `20 * eta + rho` remains available where its own hypotheses are used. It is not the same theorem as the intrinsic active-neighbor sparse gate.
 
 ---
 
-# Phase 14 — Exceptional plus remote strict-contraction gate
-
-**Status: Integrated interface; physical constants open.**
-
-The geometric decomposition already gives
-
-```text
-exceptional contribution <= 20 * eta
-remote contribution <= rho
-```
-
-and hence
-
-```text
-columnSum <= 20 * eta + rho.
-```
-
-The first decisive continuous-`SU(N)` contraction milestone is a concrete parameter regime satisfying
-
-```text
-20 * eta + rho < 1.
-```
-
-Until this inequality is established with physical witnesses, the repository should not describe the continuous physical C5 lane as globally contractive.
-
----
-
-# Phase 15 — Continuous response certificate and resolvent/sweep closure
+# Phase 18 — Response certificate, resolvent, and sweep closure
 
 **Status: OPEN DOWNSTREAM.**
 
-The repository already contains state-space-independent response-certificate and source-resolvent interfaces.
-
-Once a strict physical column estimate and concrete discrepancy/source-bound witnesses are available:
+Once the actual physical sparse/local witnesses are available:
 
 ```text
-physical response witnesses
+physical influence witnesses
+-> strict left-column coefficient
+-> whole-sweep contraction
+-> represented-source resolvent
 -> response certificate
--> source resolvent
--> sweep comparison
--> quantitative response closure.
+-> quantitative response closure
 ```
 
-The generic algebra is not the present bottleneck. The bottleneck is the continuous physical witness with volume-independent constants.
+The abstract algebra is now substantially ahead of the model-specific witness construction.
 
 ---
 
-# Phase 16 — Physical Poincare and coercivity
+# Phase 19 — Physical Poincare / coercivity
 
 **Status: OPEN DOWNSTREAM.**
 
@@ -628,14 +704,14 @@ The intended route is
 strict continuous physical response control
 -> block / conditional variance estimate
 -> physical Poincare or coercivity inequality
--> volume-uniform control of the transfer sector.
+-> volume-uniform transfer-sector control
 ```
 
-This must use actual continuous `SU(N)` data. Z2-only decay results or abstract uninstantiated coefficients are not substitutes.
+This must be instantiated with actual continuous `SU(N)` quantities.
 
 ---
 
-# Phase 17 — Uniform finite-volume transfer gap
+# Phase 20 — Uniform finite-volume transfer gap
 
 **Status: OPEN DOWNSTREAM.**
 
@@ -645,87 +721,94 @@ The required target is a scale-independent constant
 kappa_* > 0
 ```
 
-that produces a finite-volume physical transfer/Hamiltonian spectral lower bound uniform over the periodic volumes used in the limiting construction.
+producing a physical transfer/Hamiltonian spectral lower bound uniform over the periodic volumes used in the limiting construction.
 
-A gap whose constant collapses with volume is insufficient.
+A positive gap whose constant collapses with volume is insufficient.
 
 ---
 
-# Phase 18 — Thermodynamic / continuum physical limit
+# Phase 21 — Thermodynamic / continuum physical limit
 
 **Status: OPEN DOWNSTREAM.**
 
-After a uniform finite-volume physical gap is established, the remaining program includes:
+After a uniform finite-volume physical gap is established, the remaining program includes
 
 ```text
 compatible limiting physical states
 -> same-root OS/Wightman carrier
 -> limiting semigroup / Hamiltonian
 -> sufficiently rich nontrivial 4D Yang--Mills field/state
--> spectral lower bound above the vacuum.
+-> spectral lower bound above the vacuum
 ```
 
-The existing scalar continuum OS lane is valuable same-root infrastructure, but it is not by itself the complete gauge-field construction required here.
+The existing scalar continuum OS lane is same-root infrastructure, not a substitute for the full gauge-field construction.
 
 ---
 
-# Phase 19 — Clay-level target
+# Phase 22 — Clay-level target
 
 **Status: OPEN.**
 
 The final target remains a mathematically complete four-dimensional Yang--Mills existence and mass-gap construction in the intended setting.
 
-The present repository contains a large formal proof spine and an increasingly concrete quantitative continuous-`SU(N)` response program, but the final claim boundary remains open until finite-volume uniformity, physical field content, limiting construction, and spectral obligations are all discharged.
+The present repository contains a large formal proof spine and a substantially sharpened continuous-`SU(N)` quantitative response program, but the final claim remains open until the physical conditional-law influence, volume-uniform sparse/local closure, coercivity, finite-volume uniform gap, and limiting field/state obligations are all discharged.
 
 ---
 
 # Immediate theorem-development checklist
 
-Starting from merged theorem baseline #4421:
+Starting from theorem-bearing baseline #4460:
 
 ```text
-1. finish arbitrary-n terminal descent and merge only after exact-head GREEN;
+1. instantiate the generic Doob cross-ratio theorem for the actual remote
+   continuous-SU(N) one-link conditional laws;
 
-2. derive the full arbitrary-n remote response reduction to
-   aggregate right-source + aggregate physical-left mass;
+2. prove
+     physicalRemoteInfluence(target,source)
+     <= WorstCaseCrossRatioInfluenceMajorant(target,source);
 
-3. strengthen the response column to target-indexed worst-case SU(N) values;
+3. sum the physical remote column using the already-merged #4456 theorem;
 
-4. formalize the sharpest normalization-aware response-to-influence bridge;
+4. define the concrete vacuum residual and prove a source-summed
+   volume-uniform bound rho;
 
-5. derive a sparse/local recursion or support-sensitive estimate for
-   the aggregate physical-left mass without the dense all-links majorant;
+5. combine the physical residual with the active-neighbor local term eta;
 
-6. prove a volume-uniform remote column rho;
+6. prove a concrete regime with 18*eta + rho < 1;
 
-7. combine rho with the exceptional contribution 20*eta;
+7. instantiate the whole-sweep contraction and represented-source resolvent;
 
-8. establish a concrete regime 20*eta + rho < 1;
+8. close the physical response certificate / Poincare / coercivity route;
 
-9. instantiate the existing response certificate / source resolvent / sweep
-   machinery with the actual continuous physical witnesses;
+9. derive a volume-uniform finite-volume transfer/Hamiltonian gap;
 
-10. derive physical Poincare/coercivity and a volume-uniform finite-volume gap;
-
-11. only then advance the thermodynamic/continuum physical Yang--Mills limit.
+10. only then advance the thermodynamic/continuum physical Yang--Mills limit
+    and final mass-gap statement.
 ```
 
-The conceptual transition is now:
+The current conceptual transition is:
 
 ```text
-#4367:
-  exact fixed-right stationary finite-step response residual
+#4433:
+  stationary remote response reduced at arbitrary finite depth
 
-#4406:
-  exact remote aggregate superposition at every tagged coordinate
+#4437/#4439:
+  sparse/local sweep and source resolvent available abstractly
 
-#4418:
-  volume-independent first nontrivial aggregate represented-source transport
+#4442:
+  correct target-indexed response quantifiers
 
-#4421:
-  terminal response converted to aggregate propagated physical-left mass
+#4446/#4450:
+  actual SU(N) vacuum cross ratio transported into the response algebra
+
+#4452/#4456:
+  targetwise worst-case remote cross-ratio majorants summed without
+  cardinality loss
+
+#4460:
+  generic cross-ratio majorant -> normalized Doob bounded-test control
 
 current frontier:
-  prove that aggregate propagated left mass and the induced physical response
-  are uniformly summable in volume.
+  apply that generic theorem to the actual SU(N) one-link conditional laws,
+  then construct the concrete physical residual rho needed by the sparse gate.
 ```
