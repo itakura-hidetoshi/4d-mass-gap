@@ -115,9 +115,18 @@ theorem
   have hConstInt :
       Integrable (fun _u : Matrix.specialUnitaryGroup (Fin N) Complex => variation fiber) nu :=
     integrable_const (variation fiber)
-  have hBridge :=
+  have hBridgeRaw :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabRemoteKernelSectionOneLinkProjection_schedule_eq_schedule_cons
       H N hN beta hbeta B target source fiber [] k g2 F
+  have hBridge :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabRemoteKernelSectionOneLinkProjection
+          H N hN beta hbeta B target source fiber k g2 F =
+        (fun A =>
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberDeterministicScheduleExpectation
+            H N hN beta hbeta B target source g2 [fiber] k A F) := by
+    simpa only [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberDeterministicScheduleExpectation_nil] using
+      hBridgeRaw
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabRemoteKernelSectionOneLinkFluctuation
   rw [hBridge]
   simp only [
@@ -208,11 +217,11 @@ theorem
     memLp_one_iff_integrable.1 (hF.mono_exponent one_le_two)
   have hGInt : Integrable G mu :=
     memLp_one_iff_integrable.1 (hG.mono_exponent one_le_two)
-  have hQFZero : integral QF mu = 0 := by
+  have hQFZero : (∫ A, QF A ∂mu) = 0 := by
     simpa [QF, mu] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabRemoteKernelSectionOneLinkFluctuation_integral_eq_zero
         H N hN beta hbeta B hne hNoShare fiber k g2 F hFInt
-  have hQGZero : integral QG mu = 0 := by
+  have hQGZero : (∫ A, QG A ∂mu) = 0 := by
     simpa [QG, mu] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabRemoteKernelSectionOneLinkFluctuation_integral_eq_zero
         H N hN beta hbeta B hne hNoShare fiber k g2 G hGInt
@@ -260,16 +269,11 @@ theorem
   rw [hQFZero, hQGZero]
   simp only [zero_mul, sub_zero]
   calc
-    |integral (QF * QG) mu| <=
-        integral (fun A => |QF A * QG A|) mu := by
-      simpa [Pi.mul_apply] using
-        (abs_integral_le_integral_abs :
-          |integral (fun A => QF A * QG A) mu| <=
-            integral (fun A => |QF A * QG A|) mu)
-    _ <= integral
-        (fun _A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
-          variationF fiber * variationG fiber)
-        mu := by
+    |∫ A, QF A * QG A ∂mu| <=
+        ∫ A, |QF A * QG A| ∂mu := by
+      exact abs_integral_le_integral_abs
+    _ <= ∫ _A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
+        variationF fiber * variationG fiber ∂mu := by
       apply integral_mono hAbsProductInt hConstInt
       intro A
       exact hPointwise A
