@@ -104,8 +104,8 @@ theorem
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabRemoteKernelSectionOneLinkFluctuation
           H N hN beta hbeta B target source fiber k g2 g)
   rw [hCross, add_zero] at hProjectedRight
-  rw [hProjectedRight]
-  exact sub_eq_iff_eq_add.mpr hOrth
+  rw [hProjectedRight, hOrth]
+  ring
 
 end
 
