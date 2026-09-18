@@ -62,23 +62,19 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousProbabilityMeasure
       H N hN beta hbeta
       (Function.update (Function.update B source k) target g2)
-  let m :=
-    periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber
   have hfInt : Integrable f mu :=
     memLp_one_iff_integrable.1 (hf.mono_exponent one_le_two)
   have hAE :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabRemoteKernelSectionOneLinkProjection_ae_eq_condExp
       H N hN beta hbeta B hne hNoShare fiber k g2 f hfInt
-  have hCond : MemLp (MeasureTheory.condExp m mu f) 2 mu := by
-    simpa [m] using (hf.condExp
+  have hCond : MemLp
+      (MeasureTheory.condExp
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber)
+        mu f)
+      2 mu := by
+    simpa using (hf.condExp
       (m := periodicHypercubicEvenSpecialUnitarySpatialSliceOffFiberMeasurableSpace H N fiber))
-  have hProjectionMeas :
-      AEStronglyMeasurable
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabRemoteKernelSectionOneLinkProjection
-          H N hN beta hbeta B target source fiber k g2 f)
-        mu := by
-    exact hCond.aestronglyMeasurable.congr hAE.symm
-  apply hCond.congr_norm hProjectionMeas
+  apply hCond.congr_norm (hCond.aestronglyMeasurable.congr hAE.symm)
   filter_upwards [hAE] with A hA
   rw [hA]
 
