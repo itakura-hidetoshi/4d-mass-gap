@@ -212,7 +212,8 @@ theorem periodicHypercubicEvenSpatialSliceBaseDisplacementCode_mem_box_of_baseL1
   have hCast : (z.natAbs : Int) ≤ (r : Int) := by
     exact_mod_cast hNatAbs
   have hAbs : |z| ≤ (r : Int) := by
-    simpa [Int.abs_eq_natAbs] using hCast
+    rw [Int.abs_eq_natAbs]
+    exact hCast
   exact (abs_le.mp hAbs)
 
 /-- Uniform polynomial bound for every exact base-L1 shell of spatial links.
