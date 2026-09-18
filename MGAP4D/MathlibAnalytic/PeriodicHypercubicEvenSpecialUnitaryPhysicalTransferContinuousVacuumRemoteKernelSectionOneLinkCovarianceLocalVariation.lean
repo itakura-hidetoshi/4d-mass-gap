@@ -143,10 +143,9 @@ theorem
       simp
     _ = |∫ u, F A - phi u ∂nu| := by
       rw [integral_sub (integrable_const (F A)) hPhiInt]
-    _ <= integral (fun u => |F A - phi u|) nu :=
+    _ <= ∫ u, |F A - phi u| ∂nu :=
       abs_integral_le_integral_abs
-    _ <= integral
-        (fun _u : Matrix.specialUnitaryGroup (Fin N) Complex => variation fiber) nu := by
+    _ <= ∫ _u : Matrix.specialUnitaryGroup (Fin N) Complex, variation fiber ∂nu := by
       apply integral_mono hAbsDiffInt hConstInt
       intro u
       exact hPhiVariation u
