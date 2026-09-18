@@ -71,7 +71,7 @@ def
             (forall r, r < cutoff ->
               (((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceC5RemoteTargetFibers
                     H source source).filter
-                  (fun target => radius target = r)).card : Nat) <=
+                  (fun target => radius target = r)).card : Nat) : Real) <=
                 shellCardMajorant r) /\
             (forall target,
               target ∈
