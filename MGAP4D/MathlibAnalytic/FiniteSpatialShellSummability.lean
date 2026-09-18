@@ -134,7 +134,7 @@ theorem finiteRealSum_le_tsum_of_pointwiseDecay_shellCardinality
     _ =
         (((s.filter (fun y => radius y = r)).card : Nat) : Real) *
           (C * q ^ r) := by
-      simp
+      simp [nsmul_eq_mul]
     _ <=
         shellCardMajorant r * (C * q ^ r) := by
       exact
