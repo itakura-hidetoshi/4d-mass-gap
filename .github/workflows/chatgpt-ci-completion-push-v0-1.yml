@@ -10,6 +10,7 @@ permissions:
   contents: read
   issues: write
   pull-requests: write
+  statuses: write
 
 concurrency:
   group: chatgpt-ci-completion-push-v01-${{ github.event.workflow_run.id }}-${{ github.event.workflow_run.run_attempt }}
@@ -62,8 +63,8 @@ jobs:
             echo '- Trigger: `workflow_run: completed` for `PR Lean Fast Check`.'
             echo '- If `workflow_run.pull_requests` is empty, resolve the PR once from the completed run `head_sha` via GitHub commit association.'
             echo '- Exact head SHA and repository identity are required for fallback association.'
-            echo '- Delivery surface: deduplicated pull-request comment for ChatGPT Work webhook activation.'
-            echo '- The comment is a wake-up signal only, not CI truth.'
-            echo '- After activation, perform one fresh exact GitHub MCP observation; do not poll for completion.'
+            echo '- Delivery surfaces: deduplicated pull-request comment plus an exact-head GitHub commit-status receipt readable through MCP.'
+            echo '- The comment and commit status are wake-up receipts only, not CI truth.'
+            echo '- MCP backstop: read commit status context `chatgpt-ci-receipt/PR Lean Fast Check`, then fresh-read the exact Actions run/jobs before governed action.'
             echo '- Existing durable sender/source-inbox remains independent fallback storage.'
           } >> "$GITHUB_STEP_SUMMARY"
