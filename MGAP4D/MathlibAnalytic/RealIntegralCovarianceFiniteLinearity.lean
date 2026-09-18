@@ -66,8 +66,8 @@ theorem realIntegralCovariance_finset_sum_right_of_memLp_two
     (g : ι -> alpha -> Real)
     (hf : MemLp f 2 mu)
     (hg : forall i, i ∈ s -> MemLp (g i) 2 mu) :
-    realIntegralCovariance mu f (fun x => ∑ i in s, g i x) =
-      ∑ i in s, realIntegralCovariance mu f (g i) := by
+    realIntegralCovariance mu f (fun x => ∑ i ∈ s, g i x) =
+      ∑ i ∈ s, realIntegralCovariance mu f (g i) := by
   have hGInt :
       forall i, i ∈ s -> Integrable (g i) mu := by
     intro i hi
@@ -80,18 +80,18 @@ theorem realIntegralCovariance_finset_sum_right_of_memLp_two
     exact hf.integrable_mul (hg i hi)
   unfold realIntegralCovariance
   rw [show
-      (∫ x, f x * (∑ i in s, g i x) ∂mu) =
-        ∑ i in s, ∫ x, f x * g i x ∂mu by
+      (∫ x, f x * (∑ i ∈ s, g i x) ∂mu) =
+        ∑ i ∈ s, ∫ x, f x * g i x ∂mu by
       have hPointwise :
-          (fun x => f x * (∑ i in s, g i x)) =
-            fun x => ∑ i in s, f x * g i x := by
+          (fun x => f x * (∑ i ∈ s, g i x)) =
+            fun x => ∑ i ∈ s, f x * g i x := by
         funext x
         rw [Finset.mul_sum]
       rw [hPointwise]
       exact integral_finset_sum s hFGInt]
   rw [show
-      (∫ x, ∑ i in s, g i x ∂mu) =
-        ∑ i in s, ∫ x, g i x ∂mu by
+      (∫ x, ∑ i ∈ s, g i x ∂mu) =
+        ∑ i ∈ s, ∫ x, g i x ∂mu by
       exact integral_finset_sum s hGInt]
   rw [Finset.mul_sum, ← Finset.sum_sub_distrib]
 
