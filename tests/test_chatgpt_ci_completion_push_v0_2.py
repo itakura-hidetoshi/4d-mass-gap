@@ -1,6 +1,10 @@
 import unittest
 
-from scripts.chatgpt_ci_completion_push_v0_2 import resolve_pr_numbers
+from scripts.chatgpt_ci_completion_push_v0_2 import (
+    completion_status_context,
+    completion_status_state,
+    resolve_pr_numbers,
+)
 
 
 class ResolvePrNumbersTests(unittest.TestCase):
@@ -80,6 +84,33 @@ class ResolvePrNumbersTests(unittest.TestCase):
             ),
             [4342],
         )
+
+
+class CompletionStatusReceiptTests(unittest.TestCase):
+    def test_success_maps_to_success(self):
+        self.assertEqual(completion_status_state("success"), "success")
+
+    def test_terminal_failures_map_to_failure(self):
+        for conclusion in (
+            "failure",
+            "timed_out",
+            "cancelled",
+            "action_required",
+            "startup_failure",
+            "stale",
+        ):
+            with self.subTest(conclusion=conclusion):
+                self.assertEqual(completion_status_state(conclusion), "failure")
+
+    def test_non_green_terminal_values_do_not_look_successful(self):
+        self.assertEqual(completion_status_state("neutral"), "error")
+        self.assertEqual(completion_status_state("skipped"), "error")
+        self.assertEqual(completion_status_state(""), "error")
+
+    def test_context_is_stable_and_within_github_limit(self):
+        context = completion_status_context("PR Lean Fast Check")
+        self.assertEqual(context, "chatgpt-ci-receipt/PR Lean Fast Check")
+        self.assertLessEqual(len(completion_status_context("x" * 200)), 100)
 
 
 if __name__ == "__main__":
