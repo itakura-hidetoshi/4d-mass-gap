@@ -277,7 +277,6 @@ theorem
           simp_rw [mul_add]
           rw [Finset.sum_add_distrib]
           rw [← Finset.mul_sum, ← Finset.mul_sum]
-          ring
     _ ≤
       Real.exp (16 * beta) *
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceTwoStepRemoteTransportCoefficient
