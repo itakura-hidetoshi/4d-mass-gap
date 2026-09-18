@@ -118,7 +118,7 @@ theorem doobWeightedMeasure_boundedTest_integral_difference_abs_le_crossRatioInf
       let z : ℝ := Real.exp (radius x y)
       have hz : 1 ≤ z := by
         dsimp [z]
-        exact Real.exp_le_exp.mpr (hRadiusNonneg x y)
+        simpa using Real.exp_le_exp.mpr (hRadiusNonneg x y)
       have hzDen : 0 < z + 1 := by positivity
       have hT := hInfluence x y
       unfold finitePositiveWeightCrossRatioInfluenceTransform at hT
