@@ -23,7 +23,7 @@ theorem finiteRealSum_eq_sum_radiusShells
   classical
   calc
     (∑ x ∈ s, f x) =
-        ∑ x in s,
+        ∑ x ∈ s,
           ∑ r ∈ Finset.range cutoff,
             if radius x = r then f x else 0 := by
       apply Finset.sum_congr rfl
