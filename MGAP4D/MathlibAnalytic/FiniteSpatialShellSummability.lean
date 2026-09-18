@@ -50,7 +50,6 @@ theorem finiteRealSum_eq_sum_radiusShells
       apply Finset.sum_congr rfl
       intro r _hr
       rw [<- Finset.sum_filter]
-      simp
 
 /-- If every finite radius shell is bounded by a nonnegative summable profile,
 then the complete finite carrier sum is bounded by the infinite profile mass. -/
