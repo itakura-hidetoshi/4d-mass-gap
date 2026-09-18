@@ -281,7 +281,7 @@ theorem
               (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioRemoteAggregateVariation
                 H beta source distinguishedTarget)
               n (Sum.inl e) := by
-      exact add_le_add_left hTerminal _
+      exact add_le_add_right hTerminal _
     _ =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate
           H beta hbeta
