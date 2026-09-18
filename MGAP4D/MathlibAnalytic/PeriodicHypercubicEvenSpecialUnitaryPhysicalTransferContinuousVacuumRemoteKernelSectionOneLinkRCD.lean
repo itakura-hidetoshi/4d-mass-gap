@@ -51,6 +51,18 @@ local instance remoteKernelSectionOneLinkRcdSpatialLinkFintype
     (H : Nat) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+local instance remoteKernelSectionOneLinkRcdKernelSectionProbabilityMeasure
+    (H N : Nat)
+    (hN : 0 < N)
+    (beta : Real)
+    (hbeta : 0 <= beta)
+    (C : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
+    IsProbabilityMeasure
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousProbabilityMeasure
+        H N hN beta hbeta C) :=
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousProbabilityMeasure_isProbabilityMeasure
+    H N hN beta hbeta C
+
 /-- Outside the target/source interaction neighborhood, the already-constructed
 reference one-link heat-bath kernel is an actual regular conditional
 distribution for the fixed-right ground-state kernel-section law obtained by
@@ -88,8 +100,7 @@ theorem
   have hRcd :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel_ae_eq_condExpKernel
       H N hN beta hbeta B target source fiber k g2
-  rw [hMeasure] at hRcd
-  exact hRcd
+  simpa only [hMeasure] using hRcd
 
 /-- The same remote full-law identification transports the exact one-link
 conditional-expectation representative to the fixed-right ground-state
@@ -137,8 +148,7 @@ theorem
   have hCond :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOffFiberHeatBathKernel_ae_eq_condExp
       H N hN beta hbeta B target source fiber k g2 f hfReference
-  rw [hMeasure] at hCond
-  exact hCond
+  simpa only [hMeasure] using hCond
 
 end
 
