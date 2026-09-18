@@ -159,7 +159,7 @@ theorem
         (Fintype.card Link : ℝ)⁻¹ *
           sourceCoefficient * bound *
             (1 - rate)⁻¹ := by
-      exact add_le_add_left
+      exact add_le_add_right
         (mul_le_mul_of_nonneg_left hGeom hFactorNonneg)
         (variation (Sum.inr source))
     _ =
