@@ -36,32 +36,6 @@ theorem
     periodicHypercubicEvenSpatialSliceC5ExceptionalBackgroundFibers,
     periodicHypercubicEvenSpatialSlice_mem_activeNeighbors_iff]
 
-/-- The older distinct-background physical conditional-law coefficient is
-nonnegative for nonnegative coupling.  In the local/residual decomposition it
-will be used only on the at-most-eighteen intrinsic active neighbors, not as a
-dense all-links carrier. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberOffFiberInfluence_nonneg
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    0 ≤
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberOffFiberInfluence
-        beta := by
-  let x : ℝ := Real.exp (32 * beta)
-  have hx : 1 ≤ x := by
-    dsimp [x]
-    exact Real.one_le_exp (by nlinarith)
-  have hxPos : 0 < x := by
-    dsimp [x]
-    exact Real.exp_pos _
-  have hNum : 0 ≤ x ^ 2 - 1 := by
-    nlinarith [mul_self_nonneg (x - 1)]
-  have hDen : 0 ≤ x ^ 2 + 1 := by positivity
-  unfold
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberOffFiberInfluence
-  change 0 ≤ 2 * ((x ^ 2 - 1) / (x ^ 2 + 1))
-  exact mul_nonneg (by norm_num) (div_nonneg hNum hDen)
-
 /-- Actual physical left-background influence splits into a local active-neighbor
 term plus the new remote vacuum residual.
 
@@ -117,10 +91,22 @@ theorem
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_boundedTest_influence_update_distinct_background
           H N hN beta hbeta B source distinguishedSource target source
           (Ne.symm hEq) k g₂ A u v phi hphi hphiBound
+      have hLocal' :
+          |(∫ g, phi g ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
+              H N hN beta hbeta B source distinguishedSource target k g₂
+              (Function.update A source u)) -
+            (∫ g, phi g ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
+              H N hN beta hbeta B source distinguishedSource target k g₂
+              (Function.update A source v))| ≤
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberOffFiberInfluence
+              beta := by
+        simpa [
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberOffFiberInfluence] using
+          hLocal
       have hResidual :=
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRemotePhysicalInfluenceResidual_nonneg
           H N hN beta hbeta A source source target
-      exact hLocal.trans (by
+      exact hLocal'.trans (by
         simpa [hActive] using
           (le_add_of_nonneg_right hResidual :
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberOffFiberInfluence beta ≤
