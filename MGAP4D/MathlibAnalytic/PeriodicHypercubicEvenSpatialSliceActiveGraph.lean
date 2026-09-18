@@ -42,9 +42,7 @@ def periodicHypercubicEvenSpatialSliceActiveGraph
       exact
         (periodicHypercubicEvenSpatialSliceLinksSharePlaquette_comm
           H target source).mp h.2
-    loopless := { irrefl := by
-      intro target h
-      exact h.1 rfl } }
+    loopless := { irrefl := fun target h => h.1 rfl } }
 
 /-- Graph adjacency is exactly membership in the already-canonical intrinsic
 active-neighbor finset. -/
@@ -61,27 +59,30 @@ active-neighbor finset. -/
     (periodicHypercubicEvenSpatialSlice_mem_activeNeighbors_iff
       H target source).symm
 
-/-- The explicit finite adjacency row of the spatial-link graph is exactly the
-existing active-neighbor finset. -/
-theorem periodicHypercubicEvenSpatialSliceActiveGraph_adjFinset_eq_activeNeighbors
+/-- The canonical finite adjacency row of the spatial-link graph.  Reusing
+the already-formalized active-neighbor finset avoids introducing a second
+decidable presentation of the same relation. -/
+noncomputable def periodicHypercubicEvenSpatialSliceActiveGraphAdjFinset
     (H : Nat)
     (target : PeriodicHypercubicEvenSpatialSliceLink H) :
-    (Finset.univ.filter fun source =>
-      (periodicHypercubicEvenSpatialSliceActiveGraph H).Adj target source) =
-        periodicHypercubicEvenSpatialSliceActiveNeighbors H target := by
-  classical
-  ext source
-  simp
+    Finset (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  periodicHypercubicEvenSpatialSliceActiveNeighbors H target
+
+@[simp] theorem periodicHypercubicEvenSpatialSliceActiveGraph_mem_adjFinset_iff
+    (H : Nat)
+    (target source : PeriodicHypercubicEvenSpatialSliceLink H) :
+    source ∈ periodicHypercubicEvenSpatialSliceActiveGraphAdjFinset H target ↔
+      (periodicHypercubicEvenSpatialSliceActiveGraph H).Adj target source := by
+  rw [periodicHypercubicEvenSpatialSliceActiveGraph_adj_iff_mem_activeNeighbors]
+  rfl
 
 /-- Consequently every spatial-link graph adjacency row has cardinality at
 most eighteen, uniformly in the periodic volume. -/
 theorem periodicHypercubicEvenSpatialSliceActiveGraph_adjFinset_card_le_eighteen
     (H : Nat)
     (target : PeriodicHypercubicEvenSpatialSliceLink H) :
-    ((Finset.univ.filter fun source =>
-      (periodicHypercubicEvenSpatialSliceActiveGraph H).Adj target source).card) ≤
-        18 := by
-  rw [periodicHypercubicEvenSpatialSliceActiveGraph_adjFinset_eq_activeNeighbors]
+    (periodicHypercubicEvenSpatialSliceActiveGraphAdjFinset H target).card ≤
+      18 := by
   exact periodicHypercubicEvenSpatialSliceActiveNeighbors_card_le_eighteen H target
 
 /-- One intrinsic spatial-link graph edge embeds into the full four-dimensional
