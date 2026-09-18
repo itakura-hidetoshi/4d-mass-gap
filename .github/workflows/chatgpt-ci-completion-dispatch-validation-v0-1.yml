@@ -1,0 +1,32 @@
+name: ChatGPT CI Status Receipt Validation v0.2
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/chatgpt-ci-completion-dispatch-validation-v0-1.yml"
+      - ".github/workflows/pr-lean-fast-check.yml"
+      - "tests/test_chatgpt_ci_completion_dispatch_workflow_v0_1.py"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate direct MCP CI status receipt
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out PR code read-only
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run focused status-receipt wiring tests
+        run: >-
+          python3 -m unittest -v
+          tests.test_chatgpt_ci_completion_dispatch_workflow_v0_1
