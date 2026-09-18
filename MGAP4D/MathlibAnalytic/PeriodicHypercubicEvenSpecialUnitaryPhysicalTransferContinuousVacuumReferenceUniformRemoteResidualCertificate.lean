@@ -12,6 +12,12 @@ local instance uniformRemoteResidualCertificateSpatialLinkFintype
     (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+local instance uniformRemoteResidualCertificateSpatialLinkNonempty
+    (H : ℕ) : Nonempty (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  ⟨(⟨(0 : PeriodicHypercubicEvenVertex H), by
+      simp [periodicHypercubicEvenOnPrimaryReflectionPlane]⟩,
+    ⟨(1 : PeriodicHypercubicAxis), by norm_num⟩)⟩
+
 /-- A volume- and background-uniform bound on the exact remote residual
 maximum column.  This predicate is the remaining analytic certificate needed
 to turn the finite-volume physical envelope contraction into a genuinely
@@ -71,7 +77,7 @@ theorem
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftInfluenceEnvelopeColumnCoefficient
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceUniformEnvelopeColumnCoefficient
-  exact add_le_add_left (hUniform H A) _
+  exact add_le_add_right (hUniform H A) _
 
 /-- Every finite-volume physical envelope source column is controlled by the
 same uniform coefficient once a uniform remote residual certificate is
