@@ -62,8 +62,6 @@ theorem
   | cons fiber fibers ih =>
       ext s hs
       rw [
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceHaarRefreshScheduleKernel_cons,
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceHaarRefreshScheduleKernel_cons,
         Kernel.comp_apply' _ _ _ hs,
         Kernel.comp_apply' _ _ _ hs,
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHaarRefreshKernel_apply,
