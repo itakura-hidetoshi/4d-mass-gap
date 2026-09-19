@@ -49,9 +49,9 @@ theorem
   intro source₁ source₂ hne₁ hne₂
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation_oneStep_remoteLeft_eq
-      H beta hbeta hne₁,
+      H beta hbeta (target := target) (source := source₁) (Ne.symm hne₁),
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation_oneStep_remoteLeft_eq
-      H beta hbeta hne₂]
+      H beta hbeta (target := target) (source := source₂) (Ne.symm hne₂)]
 
 /-- Even when two off-target sources have different terminal base-L1 radii,
 the current coarse one-step restricted-scan profile assigns them the same
