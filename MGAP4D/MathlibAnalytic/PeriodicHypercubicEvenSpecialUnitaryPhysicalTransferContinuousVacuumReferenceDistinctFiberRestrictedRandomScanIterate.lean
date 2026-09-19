@@ -33,10 +33,9 @@ local instance referenceDistinctFiberRestrictedRandomScanIterateSpatialLinkFinty
     (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
-/- The one-step strong-measurability theorem is provided by
+/- Shared one-step strong measurability comes from
 `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumRemoteKernelSectionRestrictedRandomScanIterate`.
-This compatibility layer keeps the affine two-boundary transport theorem
-without redeclaring the shared public API. -/
+This file retains only the affine two-boundary transport result. -/
 /-- Affine one-step transport: if two input observables already differ by the
 right-source component of a nonnegative tagged profile, and both have left-fiber
 variation controlled by that profile, then updating them with boundary values
