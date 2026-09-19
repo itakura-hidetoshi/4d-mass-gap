@@ -2,41 +2,43 @@
 
 **MGAP4D** is Hidetoshi Itakura's Lean 4 / mathlib repository for a proof-carrying investigation of four-dimensional Yang--Mills theory, Wilson lattice gauge theory, Osterwalder--Schrader reconstruction, transfer operators, conditional expectation, quantitative mixing, coercivity, and the mass-gap problem.
 
-The repository is deliberately layered. Exact finite-volume statements, continuous one-link probability laws, ground-state kernel-section laws, local and remote influence bounds, covariance identities, spatial propagation estimates, and continuum/OS targets are kept separate so that a finite-volume or conditional theorem is never silently promoted into a continuum mass-gap theorem.
+The repository is deliberately layered. Exact finite-volume statements, continuous one-link probability laws, kernel-section conditional expectations, local and remote influence kernels, covariance identities, spatial propagation estimates, coercivity interfaces, and continuum/OS targets are kept separate so that a finite-volume or conditional theorem is never silently promoted into a continuum mass-gap theorem.
 
 > **Claim boundary**
 >
 > This repository does **not** yet contain a completed proof of the Clay Millennium Yang--Mills existence and mass-gap problem.
 >
-> The current continuous-`SU(N)` frontier has moved past a purely global finite-resolvent estimate. The repository now contains:
+> The current continuous-`SU(N)` frontier has advanced beyond merely identifying a local physical carrier. The repository now contains:
 >
-> - an exact source-singleton finite-resolvent reduction for the terminal kernel-section covariance;
-> - a formal obstruction showing that the old coarse distinct-fiber carrier is spatially flat off the target;
-> - a plaquette-local to base-`L1` separation bridge;
-> - a singleton geometric finite-resolvent theorem in the sparse Dobrushin proxy lane;
-> - an actual physical local Harnack influence kernel, separated exactly from the remote residual;
-> - a fixed-target physical influence envelope for the exact kernel-section law;
-> - and base-`L1` propagation/vanishing theorems for powers of the actual local Harnack kernel.
+> - exact source-singleton localization of the terminal covariance resolvent;
+> - a formal obstruction showing that the old coarse distinct-fiber carrier is spatially flat off target;
+> - a rigorous plaquette-local to base-`L1` bridge;
+> - the actual physical local Harnack kernel and its exact decomposition from the remote physical residual;
+> - base-`L1` finite propagation for powers of that actual local kernel;
+> - a geometric finite local resolvent bound under the strict local threshold;
+> - an exact local-plus-remote perturbation identity with the remote term retained as forcing;
+> - a singleton local Green estimate with explicit remote and finite-local remainders;
+> - a reduction of the remote contribution first to source-column mass and then, more sharply, to a **base-`L1` weighted remote convolution**.
 >
-> The remaining central task is therefore **not** to sharpen the old dense carrier. It is to combine the now-formalized local spatial Green/resolvent structure with the exact remote residual and the finite covariance remainder, without circularly assuming the very covariance decay needed to control that residual.
+> The central analytic problem is now to control that weighted remote convolution **without** assuming the final terminal covariance decay, and to close the separate restricted-random-scan covariance remainder.
 
 ---
 
-## Repository authority — documentation baseline 2026-09-19 JST
+## Repository authority — theorem baseline 2026-09-19 JST
 
 The authoritative theorem-carrier branch is:
 
     formal/real-hilbert-uniform-coercive-strong-limit
 
-The exact theorem-bearing commit used for this documentation refresh is:
+The exact current theorem-bearing commit used for this documentation refresh is:
 
-    550a84c972ac3c289d1b70ba7ec9c2beab0b3501
+    7e07ea2d7579839f20d08559b39dcb397bf42ebc
 
-This is the merge commit of PR #4521:
+This is the merge commit of PR #4527:
 
-    Propagate physical local Harnack influence in base-L1
+    Preserve base-L1 geometry in remote local-Green convolution
 
-This README/ROADMAP refresh is documentation-only. After the docs PR merges, the branch pointer will advance while the theorem-bearing mathematical baseline remains PR #4521 until a later theorem PR lands. Always fresh-fetch the theorem-carrier branch before theorem work.
+This README/ROADMAP refresh is documentation-only. After the docs PR merges, the branch pointer may advance, while the mathematical theorem baseline remains the most recent theorem-bearing merge unless another theorem PR lands first. Always fresh-fetch the theorem-carrier branch before theorem work.
 
 Authority order:
 
@@ -81,6 +83,7 @@ Authority order:
       -> cubic base-L1 shell bound
       -> terminal covariance decay => uniform residual rho
                                                         [INTEGRATED #4479-#4494]
+                                                        [DOWNSTREAM INPUT STILL OPEN]
 
     EXACT KERNEL-SECTION COVARIANCE MECHANICS
       -> remote one-link conditional expectation
@@ -90,306 +93,512 @@ Authority order:
       -> restricted-random-scan finite resolvent
                                                         [INTEGRATED #4495-#4513]
 
-    SPATIAL RESOLVENT REFINEMENT
-      -> source crossing variation is exactly singleton-supported
-      -> terminal finite-resolvent sum collapses to one source entry
-      -> coarse distinct-fiber carrier proven spatially flat off target
+    SOURCE LOCALIZATION + DENSE-CARRIER OBSTRUCTION
+      -> source crossing variation is singleton-supported
+      -> finite-resolvent pairing collapses to one source entry
+      -> old coarse distinct-fiber carrier is spatially flat off target
                                                         [INTEGRATED #4515-#4516]
 
     PLAQUETTE-LOCAL / BASE-L1 GEOMETRY
-      -> one plaquette-local step changes link-base L1 by <= 2
+      -> one local step changes link-base L1 by <= 2
       -> length-d local path has base-L1 distance <= 2d
-      -> base-L1 distance >= 2D implies local path separation D
+      -> distance >= 2D implies local path separation D
                                                         [INTEGRATED #4518]
 
     SPARSE PROXY GREEN BOUND
       -> singleton forcing
-      -> base-L1 separated finite resolvent
-      -> geometric bound under a strict sparse Dobrushin proxy gate
+      -> separated finite-resolvent geometric tail
                                                         [INTEGRATED #4519]
                                                         [PROXY ONLY]
 
     ACTUAL PHYSICAL LOCAL HARNACK KERNEL
-      -> exact local kernel supported on active neighbors
-      -> nonzero local influence => shared Wilson plaquette
+      -> exact active-neighbor local kernel
       -> physical envelope = local Harnack + remote residual
-      -> local row/column mass <= 18 * eta_local(beta)
+      -> row/column mass <= 18 * eta_local(beta)
+      -> powers have exact base-L1 finite propagation
                                                         [INTEGRATED #4520-#4521]
 
-    ACTUAL LOCAL BASE-L1 PROPAGATION
-      -> local Harnack kernel powers
-      -> degree-d row mass <= (18 * eta_local(beta))^d
-      -> nonzero degree-d coefficient => base-L1 distance <= 2d
-      -> distance >= 2D => all degrees d < D vanish exactly
-                                                        [INTEGRATED #4521]
+    ACTUAL LOCAL GREEN / RESOLVENT
+      -> exact finite local resolvent
+      -> all degrees d < D vanish at distance >= 2D
+      -> finite tail <= rho_local^D / (1-rho_local)
+                                                        [INTEGRATED #4523]
+
+    LOCAL + REMOTE PERTURBATION
+      -> w <= v + (K_local + R_remote)w
+      -> reorganized as local Green with explicit remote forcing
+      -> no remote-smallness assumption used
+      -> finite local power remainder retained explicitly
+                                                        [INTEGRATED #4524]
+
+    SINGLETON SOURCE THROUGH LOCAL GREEN
+      -> generic powers/resolvents matched to actual local kernel entries
+      -> direct singleton term gets base-L1 geometric decay
+      -> remaining terms:
+           G_local(R_remote w)
+           + finite local remainder
+                                                        [INTEGRATED #4525]
+
+    REMOTE COLUMN-MASS REDUCTION
+      -> local Green of nonnegative forcing <= inverse local gap * L1 mass
+      -> remote forcing mass = weighted source-column pairing exactly
+      -> optional column bound gives global-L1 estimate
+                                                        [INTEGRATED #4526]
+                                                        [COARSE FALLBACK]
+
+    BASE-L1 WEIGHTED REMOTE CONVOLUTION
+      -> arbitrary local resolvent decomposes sourcewise
+      -> canonical depth = floor(baseL1Distance / 2)
+      -> local Green weight retains target/intermediate geometry
+      -> remote forcing propagated as:
+           sum_source [
+             sum_mid G_local_weight(target,mid) * R_remote(source,mid)
+           ] * w(source)
+                                                        [INTEGRATED #4527]
+                                                        [CURRENT THEOREM FRONTIER]
 
     CURRENT ANALYTIC FRONTIER
-      -> sum the actual local Harnack powers into a geometric local resolvent
-      -> insert the exact remote residual as a perturbation
-      -> control the finite random-scan covariance remainder
-      -> obtain non-circular terminal kernel-section covariance decay
-      -> feed cubic shell theorem to get uniform remote residual rho
+      -> control the weighted remote column non-circularly
+      -> connect the source-aligned perturbation route to the exact
+         fixed-target kernel-section law where needed
+      -> close the distinct restricted-random-scan covariance remainder
+      -> obtain exact terminal kernel-section base-L1 covariance decay
                                                         [OPEN NOW]
 
     DOWNSTREAM
-      uniform physical sweep contraction
+      terminal covariance decay
+      -> cubic shell summability
+      -> uniform remote residual rho
+      -> strict physical sweep gate
       -> physical Poincare / coercivity
       -> uniform finite-volume transfer/Hamiltonian gap
-      -> thermodynamic/scaling-limit physical carrier
+      -> thermodynamic/continuum physical carrier
       -> sufficiently rich 4D Yang--Mills field/state
       -> Clay-level existence + mass gap
                                                         [OPEN]
 
 ---
 
-# 1. The old dense carrier is now a proved obstruction, not a candidate final route
+# 1. The old dense carrier is an obstruction, not the final spatial mechanism
 
-PR #4516 formalizes a key negative result about the existing coarse distinct-fiber restricted-scan carrier.
+PR #4516 formalizes a negative result about the old coarse distinct-fiber restricted-scan carrier.
 
-Starting from a singleton fixed-right target variation, the one-step coarse profile is spatially flat across all off-target sources. In particular, two off-target sources at different base-`L1` radii receive the same value.
+Starting from a singleton fixed-right target variation, the one-step coarse profile is spatially flat across off-target sources. Different off-target sources at different base-`L1` radii can receive the same value.
 
-This is a statement about the **coarse carrier**, not about the exact physical covariance. Its role is architectural: it proves that no amount of algebraic sharpening of the same distance-blind coefficient can produce the required spatial decay.
+This is a statement about the **carrier**, not about the exact physical covariance. Its architectural consequence is permanent:
 
-Therefore the intended route is now fixed:
+    do not try to extract spatial decay
+    by repeatedly sharpening the same distance-blind dense coefficient.
 
-    local spatial kernel / Green propagation
-      + genuinely remote physical residual
-      + exact covariance telescope,
-
-rather than:
-
-    dense off-fiber coefficient
-      -> global contraction
-      -> hoped-for spatial decay.
+The final route must keep local finite propagation and the genuinely remote physical residual separate.
 
 ---
 
-# 2. The terminal finite-resolvent estimate is spatially localized at the source
+# 2. Source localization and the covariance telescope
 
 PR #4515 refines the #4513 covariance-resolvent telescope.
 
-The source crossing-ratio observable has an exact physical-left variation profile supported on a single source fiber:
+The source crossing-ratio observable has an exact physical-left variation profile supported on one source fiber:
 
     variation_source(e)
       = exp(2*beta) - exp(-2*beta)   if e = source
       = 0                            otherwise.
 
-The actual two-step terminal target observable has an explicit propagated variation profile.
+Therefore the generic finite-resolvent pairing collapses to one source coordinate.
 
-Because the source profile is singleton-supported, the generic finite-resolvent pairing collapses from a sum over all fibers to a single source entry of the terminal finite resolvent.
+The covariance telescope still has the form
 
-This is a genuine spatial refinement, but it is still finite-volume and finite-`M`. It does **not** remove the covariance remainder and does **not** by itself prove exponential decay.
+    Cov(F,G)
+      = finite covariance decrement contribution
+        + Cov(F, P_scan^M G),
 
----
+schematically. The first term is now highly localized. The second term is a **separate covariance remainder** and remains open.
 
-# 3. Plaquette locality is now connected rigorously to base-L1 distance
+Permanent boundary:
 
-PR #4518 supplies the geometry needed to convert sparse propagation depth into the canonical spatial distance used by the terminal shell theorems.
-
-One actual Wilson-plaquette-local step changes periodic link-base `L1` distance by at most two:
-
-    localStep(target, source)
-      -> baseL1Distance(target, source) <= 2.
-
-Hence a plaquette-local path of length `d` satisfies:
-
-    baseL1Distance(target, source) <= 2*d.
-
-Conversely, if:
-
-    2*D <= baseL1Distance(target, source),
-
-then singleton supports at target and source are separated by at least `D` plaquette-local propagation steps.
-
-This is the bridge that lets a genuinely sparse local influence kernel produce base-`L1` spatial decay.
+    finite resolvent
+      != vanishing covariance remainder
+      != ergodicity.
 
 ---
 
-# 4. A sparse singleton resolvent theorem exists, but it is a proxy theorem
+# 3. The physical local kernel now has exact base-L1 finite propagation
 
-PR #4519 proves a geometric finite-resolvent estimate for singleton forcing in the sparse Dobrushin proxy lane.
+PRs #4520-#4521 isolate the genuinely local part of the actual physical influence envelope:
 
-Under its own strict proxy hypothesis, base-`L1` separation forces a geometric tail of the form
+    K_local(target, source)
+      = eta_local(beta)   on intrinsic active neighbors
+      = 0                 otherwise.
 
-    const * q^D / (1 - q)
-
-after converting distance to a minimum propagation depth.
-
-This theorem is useful because it formalizes the algebra and geometry of the desired Green-function mechanism.
-
-However:
-
-> **The #4519 kernel is not identified with the actual continuous-vacuum physical kernel-section law.**
-
-In particular, its coefficient must not be silently equated with the physical Harnack coefficient introduced below. The theorem is a reusable proxy/model lemma, not the final physical decay theorem.
-
----
-
-# 5. The actual physical local Harnack kernel is now explicit
-
-PR #4520 extracts the genuinely local part of the actual physical left influence envelope.
-
-Define a local influence kernel that is:
-
-    eta_local(beta)   on intrinsic active neighbors,
-    0                 elsewhere,
-
-where `eta_local(beta)` is the already-formalized background-update Harnack influence coefficient.
-
-The repository proves:
-
-    local influence = 0 off the active-neighbor graph,
-
-    nonzero local influence
-      -> intrinsic active-neighbor relation
-      -> shared spatial Wilson plaquette,
-
-and, crucially, the exact decomposition:
+The repository proves the exact decomposition
 
     PhysicalLeftInfluenceEnvelope
-      = LocalHarnackKernel
-      + SourceAlignedRemotePhysicalResidual.
+      = K_local + R_remote,
 
-Every source column of the local kernel is bounded by:
+where `R_remote` is the source-aligned remote physical residual.
 
-    18 * eta_local(beta).
-
-The actual bounded-test one-link response is controlled by the same local kernel plus the unchanged remote residual.
-
-This is the physical sparse/remote decomposition needed after the dense-carrier obstruction.
-
----
-
-# 6. The exact fixed-target kernel-section law also has a sparse/remote envelope
-
-PR #4517 builds a fixed-target physical left-left influence envelope for the exact kernel-section one-link law used by the terminal covariance.
-
-For an off-diagonal target/source pair:
-
-    C5-exceptional pair
-      -> background-update Harnack coefficient,
-
-    C5-remote pair
-      -> target-specific actual remote cross-ratio residual.
-
-The law-level bounded-test response is dominated by this fixed-target envelope.
-
-This distinction matters:
-
-    source-aligned envelope
-      != fixed-target kernel-section envelope.
-
-The repository now has both interfaces, and they must remain separate unless an explicit theorem connects them.
-
----
-
-# 7. Powers of the actual local Harnack kernel now propagate in base-L1
-
-PR #4521 is the current theorem-bearing frontier.
-
-The physical local Harnack kernel is symmetric, so row and column sums agree. Every row is bounded by:
+Define
 
     rho_local(beta) := 18 * eta_local(beta).
 
-Recursive powers of the actual local kernel are formalized. For degree `d`:
+The local kernel is symmetric; its row and column masses are bounded by `rho_local(beta)`. Recursive powers satisfy
 
-    rowMass(K_local^d)
-      <= rho_local(beta)^d.
+    rowMass(K_local^d) <= rho_local(beta)^d,
 
-More importantly, spatial support is exact:
+and, crucially,
 
     K_local^d(target, source) != 0
       -> baseL1Distance(target, source) <= 2*d.
 
-Therefore, if:
+Hence
 
-    2*D <= baseL1Distance(target, source),
+    2*D <= baseL1Distance(target, source)
 
-then for every `d < D`:
+implies
 
-    K_local^d(target, source) = 0.
+    K_local^d(target, source) = 0
 
-This is the first actual physical local-kernel theorem in the repository that simultaneously carries:
+for every `d < D`.
 
-    volume-independent mass control
-    + finite propagation speed
-    + canonical base-L1 spatial information.
+This is actual physical local-kernel propagation, not the older sparse proxy theorem.
 
 ---
 
-# 8. What remains open now
+# 4. The actual local Green tail is now formalized
 
-The next theorem layer should sum the actual local powers into a finite/infinite geometric local resolvent under:
+PR #4523 sums the powers of the actual local Harnack kernel into a finite local resolvent.
 
-    rho_local(beta) < 1.
+For every finite truncation `M`, base-`L1` separation removes the complete low-degree prefix exactly. Under
 
-Because all degrees below the spatial separation threshold vanish exactly, the local Green tail should have the schematic form:
+    rho_local(beta) < 1,
 
-    G_local(target, source)
+the finite resolvent entry satisfies
+
+    R_local,M(target, source)
       <= rho_local(beta)^D / (1 - rho_local(beta))
 
-whenever the base-`L1` distance is at least `2D`.
+whenever
 
-That local result alone is still insufficient. The exact physical law contains the remote term:
+    2*D <= baseL1Distance(target, source).
 
-    K_physical = K_local + R_remote.
+The bound is uniform in `M`.
 
-The next nontrivial step is therefore a local-plus-remote perturbation theorem that preserves distance information. Schematically, one needs to reorganize a response/subinvariant inequality such as
+This closes the previously open “sum the actual local powers” step.
 
-    w <= v + K_local^T w + R_remote^T w
+Boundary:
 
-through the local Green operator, without assuming the final covariance decay in order to bound `R_remote`.
+    local Green decay
+      != control of the full physical law,
 
-The second unresolved issue is the finite random-scan remainder:
-
-    Cov(F, P_scan^M G).
-
-The #4513/#4515 finite-resolvent theorem controls only the first `M` covariance decrements. It does not prove that this remainder vanishes as `M -> infinity`.
-
-Thus the current central analytic problem has two coupled parts:
-
-    1. local spatial Green decay + remote perturbation control;
-    2. a justified treatment of the covariance remainder.
-
-Only after those are closed can the #4493 terminal covariance-decay predicate be established non-circularly.
+because the exact physical envelope still contains `R_remote`.
 
 ---
 
-# 9. Existing uniform-residual pipeline remains ready downstream
+# 5. The full physical comparison is reorganized through the local Green operator
 
-The earlier #4479-#4494 route is unchanged and remains available once terminal covariance decay is proved.
+PR #4524 formalizes the perturbative algebra.
 
-The exact terminal response is bounded by:
+A comparison inequality of the form
 
-    exp(2*beta) * |kernelSectionCovariance|,
+    w <= v + (K_local + R_remote) w
 
-because the crossing expectation denominator obeys the volume-independent floor:
+is reorganized exactly as
 
-    crossingExpectation >= exp(-2*beta).
+    w <= (v + R_remote w) + K_local w.
 
-The source-aligned remote base-`L1` shell satisfies:
+Only `K_local` is iterated. The remote contribution remains explicit forcing.
 
-    shellCard(r) <= 3 * (2*r + 1)^3,
+For finite truncation `M` one obtains schematically
 
-and the cubic shell majorant times `q^r` is summable for every:
+    w
+      <= G_local,M v
+        + G_local,M(R_remote w)
+        + K_local^M w.
 
-    0 <= q < 1.
+Using the local row-mass bound, the final local remainder is bounded by
 
-Therefore an eventual volume-uniform exponential terminal covariance bound feeds directly into:
+    rho_local(beta)^M * distanceBound.
+
+No remote smallness is used in this step, and no terminal covariance-decay assumption is imported.
+
+---
+
+# 6. Singleton forcing now receives the actual physical local Green decay
+
+PR #4525 identifies the generic finite kernel powers and partial resolvent with the recursive local-Harnack kernel entries.
+
+For singleton forcing of amplitude `a` at `source`, the direct local contribution therefore obeys
+
+    G_local,M(singleton_source * a)(target)
+      <= rho_local(beta)^D / (1-rho_local(beta)) * a
+
+at base-`L1` separation at least `2D`.
+
+Combining this with #4524 gives
+
+    w(target)
+      <= rho_local^D/(1-rho_local) * a
+        + G_local,M(R_remote w)(target)
+        + rho_local^M * distanceBound.
+
+This is the first theorem in the current route that simultaneously carries:
+
+    actual physical local coefficient
+    + source-singleton localization
+    + base-L1 geometric decay
+    + explicit remote perturbation
+    + explicit finite local remainder.
+
+---
+
+# 7. The remote perturbation can be reduced to column mass, but that is intentionally not the final route
+
+PR #4526 proves a useful coarse reduction.
+
+For nonnegative forcing `b`,
+
+    G_local,M b(target)
+      <= 1/(1-rho_local) * sum_source b(source).
+
+For the physical remote forcing, its total mass is identified exactly as
+
+    sum_target (R_remote w)(target)
+      =
+    sum_source [
+      remoteColumnMass(source) * w(source)
+    ].
+
+Therefore any independent source-column bound can be inserted to obtain a global-`L1` estimate.
+
+This theorem is canonical and useful as a fallback or scalar-gate interface. But it deliberately loses spatial information in `w`. It is **not** the preferred route to terminal covariance decay.
+
+---
+
+# 8. PR #4527 preserves the spatial geometry of the remote perturbation
+
+PR #4527 is the current theorem-bearing frontier.
+
+Define the canonical local propagation depth
+
+    depth(target, mid)
+      := floor(baseL1Distance(target, mid) / 2).
+
+Define the corresponding local Green weight
+
+    G_weight(target, mid)
+      :=
+    rho_local(beta)^depth(target,mid)
+      / (1 - rho_local(beta)).
+
+The repository proves every finite local resolvent entry is bounded by this weight:
+
+    R_local,M(target, mid)
+      <= G_weight(target, mid).
+
+For a general nonnegative forcing `b`:
+
+    G_local,M b(target)
+      <=
+    sum_mid G_weight(target, mid) * b(mid).
+
+Applying this to the exact physical remote forcing gives the weighted convolution
+
+    G_local,M(R_remote w)(target)
+      <=
+    sum_source [
+      W_remote(target, source) * w(source)
+    ],
+
+where
+
+    W_remote(target, source)
+      :=
+    sum_mid
+      G_weight(target, mid)
+      * R_remote(source, mid).
+
+Thus the full singleton comparison becomes schematically
+
+    w(target)
+      <=
+    rho_local^D/(1-rho_local) * amplitude
+      +
+    sum_source W_remote(target,source) * w(source)
+      +
+    rho_local^M * distanceBound.
+
+This is strictly sharper than the #4526 global-`L1` collapse: target/intermediate base-`L1` geometry is retained all the way through the remote perturbation.
+
+---
+
+# 9. The present obstruction is now a weighted remote-column problem
+
+The local Green mechanism itself is no longer the open problem.
+
+The new central object is
+
+    W_remote(target, source)
+      =
+    sum_mid
+      G_weight(target, mid)
+      * R_remote(source, mid).
+
+The next analytic theorem must control this object in a way that preserves enough target/source distance information to close the terminal covariance argument.
+
+A useful result would have one of the following shapes:
+
+    W_remote(target, source)
+      <= C_remote * q_remote^distance(target,source),
+
+or a weighted Schur/subinvariant estimate strong enough to absorb
+
+    sum_source W_remote(target,source) * w(source)
+
+without collapsing back to a volume-dependent global norm.
+
+The critical non-circularity constraint remains:
+
+> Do not prove the weighted remote bound by assuming the same terminal covariance decay that the weighted remote bound is intended to help prove.
+
+The already-formalized terminal-covariance-decay => uniform-remote-residual route remains downstream infrastructure, not an admissible upstream premise for this closure.
+
+---
+
+# 10. The fixed-target law and source-aligned perturbation route remain distinct
+
+The source-aligned physical envelope used in #4520-#4527 and the fixed-target kernel-section envelope introduced earlier are different objects.
+
+The repository also has a fixed-target physical left-left envelope for the exact kernel-section law:
+
+    C5-exceptional pair
+      -> Harnack coefficient,
+
+    C5-remote pair
+      -> target-specific actual remote residual.
+
+Permanent boundary:
+
+    source-aligned envelope
+      != fixed-target kernel-section envelope.
+
+The current route therefore still needs an explicit theorem-level connection at the point where the weighted perturbation mechanism is instantiated for the exact terminal kernel-section covariance.
+
+No identification is assumed merely because both decompositions use local Harnack and remote terms.
+
+---
+
+# 11. The covariance remainder is still independently open
+
+The covariance telescope controls
+
+    Cov(F,G) - Cov(F,P_scan^M G),
+
+not `Cov(F,G)` alone.
+
+The new local comparison remainder
+
+    rho_local(beta)^M * distanceBound
+
+is **not** the same object as
+
+    Cov(F,P_scan^M G).
+
+Even though `rho_local^M` is geometrically small under `rho_local < 1`, the repository still requires a valid theorem to close or absorb the restricted-random-scan covariance remainder.
+
+Possible valid routes include:
+
+    P_scan^M G -> constant
+      in a sufficiently strong sense,
+
+or
+
+    a finite closure / absorption theorem
+      that directly controls Cov(F,P_scan^M G).
+
+No such conclusion is currently inferred from the finite resolvent alone.
+
+---
+
+# 12. The downstream cubic-shell and uniform-residual pipeline is already ready
+
+PRs #4479-#4494 remain valid downstream infrastructure.
+
+Once the exact terminal kernel-section covariance satisfies a volume-uniform base-`L1` exponential bound
+
+    |Cov(target,source)| <= C * q^distance,
+    0 <= q < 1,
+
+the repository already proves:
 
     terminal covariance decay
       -> terminal response decay
-      -> uniform shell mass
-      -> explicit remote residual rho
+      -> cubic base-L1 shell summability
+      -> uniform terminal shell mass
+      -> explicit uniform remote residual rho
       -> strict physical sweep gate.
 
-No artificial shell-growth condition such as `18*q < 1` is needed for this downstream cubic-shell summation.
+The source-aligned remote shell satisfies the volume-independent polynomial bound
+
+    shellCard(r) <= 3 * (2*r + 1)^3,
+
+so polynomial shell growth against any `q^r` with `0 <= q < 1` is summable. No artificial condition such as `18*q < 1` is needed in that downstream shell summation.
+
+The circularity warning is essential:
+
+    terminal covariance decay -> uniform remote residual
+
+is a valid downstream implication,
+
+but
+
+    assume that uniform remote residual
+      -> prove the same terminal covariance decay
+
+would not close the proof unless an independent route supplies the residual bound.
 
 ---
 
-# 10. Permanent semantic boundaries
+# 13. Immediate next theorem route
 
-These distinctions are part of the proof discipline:
+Starting from PR #4527, the intended order is now:
+
+    source-singleton terminal variation
+
+      -> actual local Harnack Green weight
+
+      -> base-L1 weighted remote convolution
+
+      -> independent weighted-remote control
+         preserving target/source spatial information
+
+      -> explicit bridge to the exact fixed-target
+         kernel-section comparison
+
+      + restricted-random-scan covariance-remainder closure
+
+      -> exact terminal kernel-section base-L1 covariance decay
+
+      -> cubic shell summability
+
+      -> uniform remote residual rho
+
+      -> strict physical sweep contraction
+
+      -> physical Poincare / coercivity
+
+      -> uniform finite-volume transfer/Hamiltonian gap
+
+      -> thermodynamic / continuum physical carrier
+
+      -> Clay-level Yang--Mills existence + mass gap.
+
+The immediate mathematical target is therefore **not another local-resolvent theorem**. It is a non-circular estimate on the weighted remote convolution or an equivalent weighted comparison operator.
+
+---
+
+# 14. Permanent semantic boundaries
+
+These distinctions remain part of the proof discipline:
 
     finite-volume theorem != continuum theorem
     one-link conditional expectation != full Gibbs-law identification
@@ -401,22 +610,24 @@ These distinctions are part of the proof discipline:
     source-aligned envelope != fixed-target envelope
     sparse proxy kernel != actual physical local Harnack kernel
     local Harnack propagation != control of the remote residual
-    finite resolvent != infinite resolvent / vanishing remainder
+    finite local Green resolvent != infinite resolvent automatically
+    finite local power remainder != covariance remainder
+    weighted remote convolution != proved weighted remote decay
     strict finite-volume gate != uniform-in-volume gate
-    uniform finite-volume gap != thermodynamic/continuum Yang--Mills mass gap
+    uniform finite-volume gap != thermodynamic/continuum Yang--Mills mass gap.
 
-No `sorry`, `admit`, new axioms, hidden constants, weakened hypotheses, or theorem weakening are accepted as substitutes for proof.
+No `sorry`, `admit`, new axioms, hidden constants, weakened hypotheses, theorem weakening, or semantic broadening are accepted as substitutes for proof.
 
 ---
 
 ## Toolchain
 
-The formalization currently tracks Lean `v4.30.0-rc2` with the repository-pinned mathlib revision. The exact repository lockfiles and current GitHub theorem-carrier state are authoritative over this prose.
+The formalization currently tracks Lean `v4.30.0-rc2` with the repository-pinned mathlib revision. Repository lockfiles and the exact current GitHub theorem-carrier state are authoritative over this prose.
 
 ---
 
 ## Short status
 
-**Closed:** actual remote conditional influence; physical local/remote envelope; terminal covariance normal form and denominator floor; cubic base-`L1` shell geometry; exact kernel-section conditional expectation and `L2` projection identities; deterministic/restricted-random-scan covariance telescopes; source-singleton finite-resolvent reduction; formal dense-carrier spatial-flatness obstruction; plaquette-local/base-`L1` separation; sparse proxy singleton Green estimate; actual local Harnack kernel; fixed-target physical envelope; and actual local-Harnack base-`L1` propagation.
+**Closed through #4527:** actual remote conditional influence; physical local/remote envelope; terminal covariance normal form and denominator floor; cubic base-`L1` shell geometry; exact kernel-section conditional expectation and `L2` projection identities; deterministic/restricted-random-scan covariance telescopes; source-singleton finite-resolvent reduction; dense-carrier spatial-flatness obstruction; plaquette-local/base-`L1` separation; sparse proxy singleton Green theorem; actual local Harnack kernel; actual local-Harnack base-`L1` propagation; actual local geometric finite resolvent; exact local-plus-remote perturbation algebra; singleton local Green reduction; remote column-mass reduction; and base-`L1` weighted remote convolution.
 
-**Open now:** sum the actual local Harnack powers into a distance-sensitive geometric resolvent, combine that local Green operator with the exact remote residual without circularity, control the finite covariance remainder, and thereby prove volume-uniform base-`L1` decay of the exact terminal kernel-section covariance.
+**Open now:** prove an independent spatial estimate or absorption principle for the weighted remote convolution, connect that mechanism to the exact fixed-target kernel-section comparison, and close the restricted-random-scan covariance remainder. Those are the immediate missing ingredients before volume-uniform terminal kernel-section covariance decay can feed the already-built uniform-residual, contraction, coercivity, finite-gap, and continuum pipelines.
