@@ -51,8 +51,6 @@ noncomputable def
       PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
         Matrix.specialUnitaryGroup (Fin N) ℂ =>
       Function.update z.1 fiber z.2)
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkUpdate_uncurry_measurable
-      H N fiber)
 
 /-- The Haar-refresh kernel evaluates pointwise to exactly the Haar-refresh
 measure used in the one-link Doeblin lower bound. -/
