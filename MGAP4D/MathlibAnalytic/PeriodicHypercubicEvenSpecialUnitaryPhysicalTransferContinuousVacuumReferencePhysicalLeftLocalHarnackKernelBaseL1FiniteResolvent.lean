@@ -153,7 +153,7 @@ theorem
             rho hRho hRhoLt M)
           (pow_nonneg hRho D)
     _ = rho ^ D / (1 - rho) := by
-      rw [div_eq_mul_inv]
+      simp [div_eq_mul_inv]
     _ =
         (18 *
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceBackgroundUpdateHarnackInfluence
@@ -188,11 +188,24 @@ theorem
   have hPrefix :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackIterateKernel_prefix_eq_zero_of_two_mul_le_baseL1Distance
       H D beta hbeta target source hDistance
-  unfold
+  calc
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackFiniteResolventEntry
-  rw [show M = D + (M - D) by omega]
-  rw [Finset.sum_range_add]
-  rw [hPrefix, zero_add]
+        H beta hbeta M target source =
+      (∑ d ∈ Finset.range D,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackIterateKernel
+          H beta hbeta d target source) +
+      ∑ k ∈ Finset.range (M - D),
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackIterateKernel
+          H beta hbeta (D + k) target source := by
+      unfold
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackFiniteResolventEntry
+      conv_lhs =>
+        rw [show M = D + (M - D) by omega]
+        rw [Finset.sum_range_add]
+    _ = ∑ k ∈ Finset.range (M - D),
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackIterateKernel
+          H beta hbeta (D + k) target source := by
+      rw [hPrefix, zero_add]
 
 /-- Uniform-in-`M` base-L1 geometric bound for the finite resolvent of the
 actual physical local Harnack kernel. -/
