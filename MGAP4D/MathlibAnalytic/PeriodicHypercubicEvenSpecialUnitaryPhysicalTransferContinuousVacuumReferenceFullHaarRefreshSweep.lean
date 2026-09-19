@@ -107,7 +107,7 @@ theorem
         by_cases hef : e = fiber
         · subst e
           simp
-        · simp only [Function.update_noteq hef]
+        · simp [Function.update, hef]
           exact hAB e (by simp [hef, he])
       rw [hTailEq]
 
