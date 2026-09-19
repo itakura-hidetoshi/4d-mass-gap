@@ -103,7 +103,7 @@ theorem
   intro e C u v
   by_cases he : e = source
   · subst e
-    simp only [Function.update_same]
+    simp [Function.update_apply]
     have hu :=
       specialUnitaryWilsonRelativeKernel_ratio_mem_Icc_exp_neg_two_exp_two
         N hN beta hbeta u h k
@@ -116,9 +116,9 @@ theorem
     rw [abs_le]
     constructor <;> linarith [hu.1, hu.2, hv.1, hv.2]
   · have hsu : (Function.update C e u) source = C source := by
-      simp [he]
+      simp [Function.update_apply, he, Ne.symm he]
     have hsv : (Function.update C e v) source = C source := by
-      simp [he]
+      simp [Function.update_apply, he, Ne.symm he]
     rw [hsu, hsv, sub_self, abs_zero]
     simp [
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceCrossingRatioVariation,
@@ -231,7 +231,7 @@ theorem
   have hF : MemLp F 2 mu := by
     refine MemLp.of_bound hFStrong.aestronglyMeasurable (Real.exp (16 * beta)) ?_
     exact ae_of_all _ fun C => by
-      rw [Real.norm_eq_abs, abs_of_pos
+      rw [abs_of_pos
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatio_pos
           H N beta C B target g1 g2)]
       exact
