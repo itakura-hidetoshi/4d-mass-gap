@@ -123,7 +123,7 @@ theorem
       (periodicHypercubicEvenSingletonForcing_eq_zero_off
         target amplitude)
       M source (by simp)
-  simpa using hGeom
+  simpa [periodicHypercubicEvenSingletonForcing] using hGeom
 
 end
 
