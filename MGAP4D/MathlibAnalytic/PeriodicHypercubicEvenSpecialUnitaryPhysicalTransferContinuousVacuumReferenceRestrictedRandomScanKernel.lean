@@ -15,6 +15,27 @@ local instance referenceRestrictedRandomScanKernelSpatialLinkFintype
     (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+local instance referenceRestrictedRandomScanKernelSpecialUnitaryIsTopologicalGroup
+    (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance referenceRestrictedRandomScanKernelSpecialUnitaryCompactSpace
+    (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance referenceRestrictedRandomScanKernelSpecialUnitarySecondCountableTopology
+    (N : ℕ) : SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance referenceRestrictedRandomScanKernelSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance referenceRestrictedRandomScanKernelSpecialUnitaryBorelSpace
+    (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
+
 /-- The exact uniform random-scan coefficient on the finite physical left-link
 set, represented in the measure scalar field. -/
 noncomputable def
@@ -142,14 +163,17 @@ theorem
       H N hN beta hbeta B target source k g₂ A := by
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanKernel_apply]
+  apply Measure.le_iff.2
+  intro s hs
+  simp only [Measure.smul_apply _ hs, Measure.finset_sum_apply _ hs]
+  apply mul_le_mul_left'
   exact
-    smul_le_smul_left'
-      (Finset.single_le_sum
-        (fun e _ =>
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
-            H N hN beta hbeta B target source e k g₂ A)
-        (Finset.mem_univ fiber))
-      _
+    Finset.single_le_sum
+      (fun e _ => measure_nonneg
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
+          H N hN beta hbeta B target source e k g₂ A)
+        s)
+      (Finset.mem_univ fiber)
 
 /-- The normalized continuous-vacuum reference law remains stationary under
 the actual restricted random-scan kernel. -/
