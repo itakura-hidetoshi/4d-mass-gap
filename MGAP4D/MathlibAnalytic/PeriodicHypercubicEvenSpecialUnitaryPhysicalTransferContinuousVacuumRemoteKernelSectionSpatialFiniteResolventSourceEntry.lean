@@ -202,9 +202,9 @@ theorem
     (hbeta : 0 <= beta)
     (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
     {target source : PeriodicHypercubicEvenSpatialSliceLink H}
-    (hne : target != source)
+    (hne : target ≠ source)
     (hNoShare :
-      ! periodicHypercubicEvenSpatialSliceLinksSharePlaquette H target source)
+      ¬ periodicHypercubicEvenSpatialSliceLinksSharePlaquette H target source)
     (g1 g2 k : Matrix.specialUnitaryGroup (Fin N) Complex) :
     MemLp
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioTwoStepTerminalObservable
@@ -474,7 +474,8 @@ theorem
     simp [
       crossingVariation,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceCrossingRatioVariation]
-  simpa [mu, crossing, terminal, terminalVariation] using hBound.trans_eq hCollapsed
+  rw [hCollapsed] at hBound
+  simpa [mu, crossing, terminal, terminalVariation] using hBound
 
 end
 
