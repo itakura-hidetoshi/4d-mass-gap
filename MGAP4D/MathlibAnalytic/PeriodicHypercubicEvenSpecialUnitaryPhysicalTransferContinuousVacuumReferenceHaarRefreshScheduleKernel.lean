@@ -11,6 +11,26 @@ open scoped ENNReal ProbabilityTheory
 
 noncomputable section
 
+local instance referenceHaarRefreshScheduleKernelSpecialUnitaryIsTopologicalGroup
+    (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance referenceHaarRefreshScheduleKernelSpecialUnitaryCompactSpace
+    (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance referenceHaarRefreshScheduleKernelSpecialUnitarySecondCountableTopology
+    (N : ℕ) : SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance referenceHaarRefreshScheduleKernelSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance referenceHaarRefreshScheduleKernelSpecialUnitaryBorelSpace
+    (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
 /-- The single-coordinate Haar refresh is an actual Markov kernel. -/
 noncomputable instance
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHaarRefreshKernel_isMarkovKernel
@@ -22,7 +42,7 @@ noncomputable instance
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHaarRefreshKernel]
   exact
-    IsMarkovKernel.map
+    Kernel.IsMarkovKernel.map
       (Kernel.id ×ₖ
         Kernel.const
           (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
