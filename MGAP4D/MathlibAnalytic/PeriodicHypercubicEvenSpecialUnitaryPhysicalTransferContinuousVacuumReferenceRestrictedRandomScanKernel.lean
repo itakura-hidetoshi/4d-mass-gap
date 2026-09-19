@@ -132,7 +132,7 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanKernel
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanKernelSum
   rw [Kernel.withDensity_apply _ measurable_const]
-  rw [Measure.withDensity_const]
+  rw [withDensity_const]
   rw [Kernel.sum_fintype]
   rw [Kernel.finset_sum_apply]
 
@@ -163,6 +163,7 @@ instance
   simp only [Measure.smul_apply, MeasurableSet.univ,
     Finset.sum_apply, Measure.finset_sum_apply, measure_univ]
   rw [Finset.sum_const, Finset.card_univ]
+  simp only [smul_eq_mul, nsmul_eq_mul, mul_one]
   exact ENNReal.inv_mul_cancel hCardNe (by simp)
 
 /-- Each concrete one-link update appears in the random-scan kernel with exactly
@@ -192,10 +193,7 @@ theorem
   apply mul_le_mul_left'
   exact
     Finset.single_le_sum
-      (fun e _ => measure_nonneg
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
-          H N hN beta hbeta B target source e k g₂ A)
-        s)
+      (fun _ _ => zero_le)
       (Finset.mem_univ fiber)
 
 /-- The normalized continuous-vacuum reference law remains stationary under
