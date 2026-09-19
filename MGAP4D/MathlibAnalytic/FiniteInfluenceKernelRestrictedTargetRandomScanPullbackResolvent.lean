@@ -77,7 +77,7 @@ theorem finiteInfluenceKernelRestrictedTargetRandomScanVariationIterate_target_e
       finiteInfluenceKernelRandomScanVariationIterate
         (finiteInfluenceKernelRestrictedTargetPullback K target)
         (fun t => variation (target t)) n source := by
-  induction n with
+  induction n generalizing source with
   | zero =>
       rfl
   | succ n ih =>
