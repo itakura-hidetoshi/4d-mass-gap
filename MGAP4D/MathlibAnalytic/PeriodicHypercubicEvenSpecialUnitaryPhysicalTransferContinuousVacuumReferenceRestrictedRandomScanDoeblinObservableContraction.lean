@@ -111,8 +111,8 @@ theorem
       |f X| = |(f X - f A₀) + f A₀| := by
         congr 1
         ring
-      _ ≤ |f X - f A₀| + |f A₀| := abs_add _ _
-      _ ≤ R + |f A₀| := add_le_add_right (hOsc X A₀) _
+      _ ≤ |f X - f A₀| + |f A₀| := abs_add_le _ _
+      _ ≤ R + |f A₀| := add_le_add (hOsc X A₀) le_rfl
   have hFstIntegrable :
       Integrable
         (fun z :
