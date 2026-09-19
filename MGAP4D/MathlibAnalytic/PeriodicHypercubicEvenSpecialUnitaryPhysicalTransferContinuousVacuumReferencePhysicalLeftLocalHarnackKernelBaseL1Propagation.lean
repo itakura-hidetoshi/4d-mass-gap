@@ -56,35 +56,41 @@ theorem
   have hMem :
       target ∈ periodicHypercubicEvenSpatialSliceActiveNeighbors H source ↔
         source ∈ periodicHypercubicEvenSpatialSliceActiveNeighbors H target := by
-    rw [
-      periodicHypercubicEvenSpatialSlice_mem_activeNeighbors_iff,
-      periodicHypercubicEvenSpatialSlice_mem_activeNeighbors_iff]
     constructor
-    · rintro ⟨hNe, hShare⟩
+    · intro hActive
+      have hAdj :
+          (periodicHypercubicEvenSpatialSliceActiveGraph H).Adj source target :=
+        (periodicHypercubicEvenSpatialSliceActiveGraph_adj_iff_mem_activeNeighbors
+          H source target).mpr hActive
       exact
-        ⟨Ne.symm hNe,
-          (periodicHypercubicEvenSpatialSliceLinksSharePlaquette_comm
-            H source target).mpr hShare⟩
-    · rintro ⟨hNe, hShare⟩
+        (periodicHypercubicEvenSpatialSliceActiveGraph_adj_iff_mem_activeNeighbors
+          H target source).mp hAdj.symm
+    · intro hActive
+      have hAdj :
+          (periodicHypercubicEvenSpatialSliceActiveGraph H).Adj target source :=
+        (periodicHypercubicEvenSpatialSliceActiveGraph_adj_iff_mem_activeNeighbors
+          H target source).mpr hActive
       exact
-        ⟨Ne.symm hNe,
-          (periodicHypercubicEvenSpatialSliceLinksSharePlaquette_comm
-            H target source).mpr hShare⟩
+        (periodicHypercubicEvenSpatialSliceActiveGraph_adj_iff_mem_activeNeighbors
+          H source target).mp hAdj.symm
+  change
+    (if target ∈ periodicHypercubicEvenSpatialSliceActiveNeighbors H source then
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceBackgroundUpdateHarnackInfluence beta
+    else 0) =
+    (if source ∈ periodicHypercubicEvenSpatialSliceActiveNeighbors H target then
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceBackgroundUpdateHarnackInfluence beta
+    else 0)
   by_cases hActive :
       target ∈ periodicHypercubicEvenSpatialSliceActiveNeighbors H source
   · have hActive' :
         source ∈ periodicHypercubicEvenSpatialSliceActiveNeighbors H target :=
       hMem.mp hActive
-    simp [
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackKernel,
-      hActive, hActive']
+    simp only [hActive, hActive', if_true]
   · have hActive' :
         source ∉ periodicHypercubicEvenSpatialSliceActiveNeighbors H target := by
       intro h
       exact hActive (hMem.mpr h)
-    simp [
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackKernel,
-      hActive, hActive']
+    simp only [hActive, hActive', if_false]
 
 /-- For the local Harnack kernel, row and column sums agree exactly. -/
 theorem
@@ -162,7 +168,9 @@ theorem
   induction d with
   | zero =>
       intro target source
-      simp [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackIterateKernel]
+      by_cases hEq : target = source
+      · simp [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackIterateKernel, hEq]
+      · simp [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackIterateKernel, hEq]
   | succ d ih =>
       intro target source
       simp only [
@@ -311,7 +319,7 @@ theorem
               periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackIterateKernel
                 H beta hbeta d mid source ≠ 0 := by
         by_contra hNone
-        push_neg at hNone
+        push Not at hNone
         apply hNe
         change
           (∑ mid : PeriodicHypercubicEvenSpatialSliceLink H,
