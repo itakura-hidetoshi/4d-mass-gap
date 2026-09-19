@@ -40,7 +40,7 @@ local instance physicalLeftLocalHarnackRemotePerturbationSpatialLinkFintype
 
 /-- Finite partial resolvents are additive in their forcing profile. -/
 theorem finiteNonnegativeKernelPartialResolvent_add
-    {ι : Type*}
+    {ι : Type}
     [Fintype ι]
     (kernel : ι → ι → ℝ)
     (b r : ι → ℝ)
