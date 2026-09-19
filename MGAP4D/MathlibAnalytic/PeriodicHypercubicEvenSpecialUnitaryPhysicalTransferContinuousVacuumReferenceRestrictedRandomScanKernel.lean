@@ -63,8 +63,8 @@ noncomputable def
       H N hN beta hbeta B target source fiber k g₂
 
 /-- The finite sum of actual one-link heat-bath kernels is s-finite.  We prove
-this through the pinned finite-sum interface explicitly instead of asking type
-class search to synthesize the dependent family required by `Kernel.sum`. -/
+this through the pinned finite-sum interface explicitly instead of relying on
+implicit synthesis of the dependent family required by `Kernel.sum`. -/
 noncomputable instance
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanKernelSum_isSFiniteKernel
     (H N : ℕ)
