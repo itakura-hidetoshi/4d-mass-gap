@@ -85,11 +85,11 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanFullBlockDoeblinCoefficient
   exact
     ENNReal.pow_pos
-      (ENNReal.mul_pos
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanCoefficient_pos
-          H).ne'
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHaarMinorizationCoefficient_pos
-          beta).ne')
+      (ENNReal.mul_pos_iff.2
+        ⟨periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanCoefficient_pos
+            H,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHaarMinorizationCoefficient_pos
+            beta⟩)
       _
 
 /-- The full-block Doeblin coefficient cannot exceed one, because its common
