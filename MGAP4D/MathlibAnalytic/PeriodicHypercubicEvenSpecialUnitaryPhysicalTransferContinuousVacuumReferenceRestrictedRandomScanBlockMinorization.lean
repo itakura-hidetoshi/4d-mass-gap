@@ -292,8 +292,14 @@ theorem
               H N) ≤
         q ^ fibers.length •
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDeterministicScheduleKernel
-            H N hN beta hbeta B target source k g₂ fibers A :=
-    smul_le_smul_left (q ^ fibers.length) hSweep
+            H N hN beta hbeta B target source k g₂ fibers A := by
+    apply Measure.le_iff.2
+    intro s hs
+    simp only [Measure.smul_apply, smul_eq_mul]
+    exact
+      mul_le_mul_left'
+        (Measure.le_iff.1 hSweep s hs)
+        (q ^ fibers.length)
   calc
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanFullBlockDoeblinCoefficient
           H beta •
