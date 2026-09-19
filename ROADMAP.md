@@ -8,11 +8,11 @@ The authoritative theorem-carrier branch is:
 
 The exact theorem-bearing baseline used for this refresh is:
 
-    3a04b0c4fe02dcfffe4b02b9efc39be56c3deb48
+    172973dac7222ff66f8332580888916dfa202a82
 
-This is the merge commit of PR #4542:
+This is the merge commit of PR #4545:
 
-    Iterate Doeblin block observable contraction geometrically
+    Identify the Doeblin block limit with the stationary reference mean
 
 This ROADMAP update is documentation-only. After its merge, the branch pointer may advance while the theorem-bearing mathematical baseline remains the latest theorem-bearing merge unless another theorem PR lands first.
 
@@ -108,12 +108,15 @@ Authority order:
        -> n blocks: oscillation <= rho^n * R
        -> strong measurability preserved under iteration
 
-    O. FIXED-VOLUME ERGODIC LIMIT                              [OPEN NOW]
-       -> prove rho.toReal^n -> 0
-       -> initial-state independence of the block-iterate limit
-       -> identify the limit with the stationary reference expectation
+    O. FIXED-VOLUME ERGODIC LIMIT                               [INTEGRATED #4543-#4545]
+       -> rho.toReal < 1
+       -> rho.toReal^n -> 0
+       -> every complete-block iterate preserves E_mu[f]
+       -> |P_block^n f(A) - E_mu[f]| <= rho.toReal^n * R
+       -> P_block^n f(A) -> E_mu[f]
 
-    P. RANDOM-SCAN COVARIANCE REMAINDER CLOSURE                 [OPEN NEXT]
+    P. BLOCK/STEP BRIDGE + COVARIANCE REMAINDER CLOSURE         [OPEN NOW]
+       -> prove P_block^n f = P_scan^(n*L_H) f
        -> evaluate the existing covariance remainder at complete-block times
        -> prove Cov(F, P_scan^(n*L_H) G) -> 0
        -> no volume-uniform Doeblin rate required
@@ -411,64 +414,65 @@ For every `n`:
     |P_block^n f(A) - P_block^n f(C)|
       <= rho.toReal^n * R.
 
-This is the current theorem-bearing endpoint of the fixed-volume Doeblin route.
+This is the geometric pairwise-contraction input for the fixed-volume ergodic route.
 
 ---
 
 # Phase 15 — Fixed-volume ergodic convergence
 
-**Status: OPEN NOW.**
+**Status: integrated through #4543 and #4545.**
 
-Immediate target:
+PR #4543 proves the real residual factor satisfies
 
-    rho < 1
-      -> rho.toReal < 1
-      -> rho.toReal^n -> 0.
+    rho.toReal < 1
 
-Use #4542 to deduce that `P_block^n f(A)` becomes independent of the initial configuration.
+and hence
 
-Then use exact stationarity of the normalized continuous-vacuum reference law to identify the common limit with
+    rho.toReal^n -> 0.
 
-    E_mu[f].
+PR #4545 proves one complete block preserves the exact normalized reference mean for every integrable real observable. Under strong measurability and a finite global pairwise oscillation bound, every complete-block iterate preserves the same mean.
 
-A useful quantitative output is
+Combining this stationarity with #4542 yields the explicit quantitative estimate
 
     |P_block^n f(A) - E_mu[f]|
-      <= rho.toReal^n * Osc(f),
+      <= rho.toReal^n * R.
 
-or an equivalent theorem strong enough for the covariance remainder.
+Therefore, at every fixed finite volume,
 
-This phase is fixed-volume. A coefficient that decays with volume is acceptable.
+    P_block^n f(A) -> E_mu[f].
+
+The Doeblin coefficient may decay with volume; no volume-uniform fixed-volume mixing claim is made.
 
 ---
 
-# Phase 16 — Restricted-random-scan covariance remainder
+# Phase 16 — Block/step bridge and restricted-random-scan covariance remainder
 
-**Status: OPEN NEXT.**
+**Status: OPEN NOW.**
 
 The existing covariance telescope contains
 
     Cov_mu(F, P_scan^M G).
 
-The new block theory naturally controls complete-block times.
+The complete-block theory now already gives convergence to the exact stationary reference mean. What remains is the exact identification between the block iterate and the original step iterate.
 
-Preferred route:
+Set
 
-    M_n := n * L_H
+    M_n := n * L_H.
 
-and prove an explicit identification between
+Prove
 
-    P_scan^(M_n) G
+    P_block^n G
+      = P_scan^(M_n) G
 
-and
+with the existing recursive conventions matched exactly.
 
-    P_block^n G.
+Then #4545 immediately supplies the decay needed to conclude
 
-Then combine Phase 15 with integrability/boundedness of the relevant observables to conclude
+    Cov_mu(F, P_scan^(n*L_H) G) -> 0
 
-    Cov_mu(F, P_scan^(n*L_H) G) -> 0.
+for the relevant bounded/finite-oscillation observables.
 
-That is sufficient to close the finite-resolvent covariance telescope along a subsequence if the preceding identity is exact.
+That closes the finite-resolvent covariance telescope along the complete-block subsequence once the bridge theorem is in place.
 
 Do not confuse this remainder with the unrelated local-power remainder `rho_local^M * distanceBound`.
 
@@ -476,7 +480,7 @@ Do not confuse this remainder with the unrelated local-power remainder `rho_loca
 
 # Phase 17 — Fixed-right weighted spatial control
 
-**Status: OPEN IN PARALLEL WITH PHASES 15-16.**
+**Status: OPEN IN PARALLEL WITH PHASE 16.**
 
 The configuration-independent fixed-right weighted response profile supplied by #4529 still needs an independent spatial estimate.
 
@@ -595,44 +599,34 @@ The current repository should therefore be read as a rigorous formalization prog
 
 # Immediate theorem-development checklist
 
-Starting from theorem-bearing baseline #4542:
+Starting from theorem-bearing baseline #4545:
 
-    1. prove the real contraction-factor facts needed for limits:
-         0 <= rho.toReal < 1;
+    1. prove the exact complete-block/step-iterate identity
+         P_block^n f = P_scan^(n * L_H) f;
 
-    2. prove
-         Tendsto (fun n => rho.toReal^n) atTop (nhds 0);
+    2. use #4545 to close
+         Cov_mu(F, P_scan^(n * L_H) G) -> 0;
 
-    3. use #4542 to prove initial-state independence of
-         P_block^n f;
+    3. discharge the #4513 covariance remainder along complete-block times;
 
-    4. use exact stationarity to identify the common limit with
-         integral f dmu;
-
-    5. connect block iteration to the original restricted-random-scan
-       iterate at times M = n * L_H;
-
-    6. close
-         Cov_mu(F, P_scan^(n*L_H) G) -> 0;
-
-    7. in parallel, prove a non-circular base-L1 decay or weighted
+    4. in parallel, prove a non-circular base-L1 decay or weighted
        operator estimate for the #4529 fixed-right weighted profile;
 
-    8. combine the spatial route and covariance-remainder closure to
+    5. combine the spatial route and covariance-remainder closure to
        prove exact terminal kernel-section base-L1 covariance decay;
 
-    9. invoke the existing cubic-shell pipeline to obtain a
+    6. invoke the existing cubic-shell pipeline to obtain a
        volume-uniform remote residual;
 
-    10. close the strict physical sweep gate;
+    7. close the strict physical sweep gate;
 
-    11. derive physical Poincare/coercivity;
+    8. derive physical Poincare/coercivity;
 
-    12. derive a volume-uniform finite-volume transfer/Hamiltonian gap;
+    9. derive a volume-uniform finite-volume transfer/Hamiltonian gap;
 
-    13. advance the thermodynamic/continuum physical Yang--Mills carrier;
+    10. advance the thermodynamic/continuum physical Yang--Mills carrier;
 
-    14. only then close the Clay-level existence and mass-gap statement.
+    11. only then close the Clay-level existence and mass-gap statement.
 
 ---
 
@@ -672,9 +666,18 @@ Starting from theorem-bearing baseline #4542:
       one-block observable contraction
       -> geometric rho^n contraction
 
+    #4543
+      rho.toReal < 1
+      -> rho.toReal^n -> 0
+
+    #4545
+      complete-block mean preservation
+      -> |P_block^n f(A) - E_mu[f]| <= rho.toReal^n * R
+      -> P_block^n f(A) -> E_mu[f]
+
     current frontier
-      (A) convert geometric block contraction into stationary convergence
-          and covariance-remainder vanishing;
+      (A) prove the exact complete-block / original-step iterate bridge
+          and close the covariance remainder;
       (B) prove non-circular spatial control of the fixed-right weighted
           remote profile;
       (C) combine A+B with the local Green route to obtain terminal

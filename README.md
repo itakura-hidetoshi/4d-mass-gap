@@ -11,9 +11,9 @@ The repository is deliberately layered. Finite-volume probability statements, co
 > The current continuous-`SU(N)` development has now closed two substantial finite-volume subroutes:
 >
 > 1. a spatial local-Green route through a base-`L1` weighted remote convolution and an explicit bridge to a fixed-right finite-step response;
-> 2. an independent restricted-random-scan Doeblin route through a common Haar minorization, coupling, one-block oscillation contraction, and geometric `rho^n` block contraction.
+> 2. an independent restricted-random-scan Doeblin route through a common Haar minorization, coupling, geometric `rho^n` contraction, vanishing residual factor, and explicit convergence of complete-block iterates to the stationary reference expectation.
 >
-> The immediate open work is to turn the geometric block contraction into convergence to the stationary reference expectation and hence close the covariance remainder, while separately proving a non-circular spatial estimate for the fixed-right weighted remote response.
+> The immediate open work is now narrower: identify the complete-block iterate exactly with the original restricted-random-scan iterate at times `M = n * L_H` and use that bridge to close the covariance remainder, while separately proving a non-circular spatial estimate for the fixed-right weighted remote response.
 
 ---
 
@@ -25,11 +25,11 @@ The authoritative theorem-carrier branch is:
 
 The exact theorem-bearing baseline used for this documentation refresh is:
 
-    3a04b0c4fe02dcfffe4b02b9efc39be56c3deb48
+    172973dac7222ff66f8332580888916dfa202a82
 
-This is the merge commit of PR #4542:
+This is the merge commit of PR #4545:
 
-    Iterate Doeblin block observable contraction geometrically
+    Identify the Doeblin block limit with the stationary reference mean
 
 This README/ROADMAP refresh is documentation-only. After the docs PR merges, the branch pointer may advance while the mathematical theorem baseline remains the most recent theorem-bearing merge unless another theorem PR lands first.
 
@@ -109,17 +109,21 @@ Authority order:
       -> exact two-row Doeblin coupling
                                                         [INTEGRATED #4537-#4540]
 
-    OBSERVABLE CONTRACTION
+    OBSERVABLE CONTRACTION AND FIXED-VOLUME ERGODIC LIMIT
       -> one complete block contracts pairwise oscillation by rho
       -> n complete blocks contract by rho^n
-      -> strong measurability is preserved under block iteration
-                                                        [INTEGRATED #4541-#4542]
+      -> rho.toReal < 1 and rho.toReal^n -> 0
+      -> every complete-block iterate preserves the exact reference mean
+      -> |P_block^n f(A) - E_mu[f]| <= rho.toReal^n * R
+      -> P_block^n f(A) -> E_mu[f] at every fixed finite volume
+                                                        [INTEGRATED #4541-#4545]
 
     CURRENT FRONTIER
-      ERGODIC SIDE:
-        rho^n -> 0
-        -> identify the common limit with stationary reference expectation
-        -> close Cov(F, P_scan^M G) along complete-block times
+      ERGODIC / COVARIANCE SIDE:
+        prove the exact bridge
+          P_block^n f = P_scan^(n * L_H) f
+        for the original restricted-random-scan observable iterate
+        -> close Cov(F, P_scan^(n * L_H) G) -> 0
 
       SPATIAL SIDE:
         prove a non-circular base-L1 decay / weighted operator estimate
@@ -236,7 +240,7 @@ The covariance telescope from #4513 has the schematic form
 
 The second term cannot be discarded merely because the finite resolvent is controlled.
 
-To close it independently of terminal covariance decay, PRs #4530-#4542 build a fixed-volume Doeblin route.
+To close it independently of terminal covariance decay, PRs #4530-#4545 build a fixed-volume Doeblin/ergodic route.
 
 ## 3.1 One-link Haar minorization
 
@@ -291,25 +295,49 @@ PR #4542 iterates the estimate:
     |P_block^n f(A) - P_block^n f(C)|
       <= rho.toReal^n * R.
 
-This is the current theorem-bearing endpoint of the ergodic route.
+PR #4543 proves
+
+    rho.toReal < 1
+
+and
+
+    rho.toReal^n -> 0.
+
+PR #4545 then uses exact block stationarity and Fubini to prove that every complete-block iterate preserves the exact normalized reference mean, and sharpens the pairwise contraction to
+
+    |P_block^n f(A) - E_mu[f]|
+      <= rho.toReal^n * R.
+
+Consequently, at every fixed finite volume,
+
+    P_block^n f(A) -> E_mu[f]
+
+for every initial configuration `A` under the stated strong-measurability and finite global oscillation hypotheses.
 
 ---
 
-# 4. Immediate open theorem on the ergodic side
+# 4. Immediate open theorem on the covariance-remainder side
 
-The next step is not another minorization theorem. The minorization/coupling machinery is already in place.
+The fixed-volume stationary-limit identification is now closed. The next task is to connect that block theory to the exact observable iterate already appearing in the #4513 covariance telescope.
 
-The required closure is:
+Let
 
-    rho.toReal < 1
-      -> rho.toReal^n -> 0
-      -> P_block^n f loses dependence on the initial configuration
-      -> identify the common limit with the stationary reference expectation
-      -> Cov_mu(F, P_block^n G) -> 0.
+    L_H := length(allSpatialLinkSchedule H).
 
-After that, the block iterate must be connected explicitly to the original restricted-random-scan covariance remainder. A natural route is to evaluate the existing remainder along complete-block times `M = n * L_H`, where `L_H` is the full schedule length.
+The required bridge is an exact theorem of the form
 
-This is a fixed-volume closure. No volume-uniform Doeblin coefficient is required.
+    P_block^n f
+      = P_scan^(n * L_H) f,
+
+with the repository's existing recursive conventions on kernel composition and observable iteration matched explicitly.
+
+Once this bridge is formalized, #4545 gives the complete-block-time remainder limit
+
+    Cov_mu(F, P_scan^(n * L_H) G) -> 0
+
+for the relevant bounded/finite-oscillation observables. This is enough to close the covariance telescope along the complete-block subsequence, provided the exact step/block identification is proved.
+
+This remains a fixed-volume closure. No volume-uniform Doeblin coefficient is required.
 
 ---
 
@@ -387,6 +415,6 @@ The formalization currently tracks Lean `v4.30.0-rc2` with the repository-pinned
 
 ## Short status
 
-**Closed through #4542:** exact kernel-section covariance mechanics; source-singleton localization; dense-carrier obstruction; actual local-Harnack finite propagation; actual local Green tail; exact local-plus-remote perturbation; base-`L1` weighted remote convolution; fixed-right finite-step bridge; one-link Haar minorization; deterministic full-sweep Haar refresh; actual restricted-random-scan Markov kernel and stationarity; complete-block Doeblin minorization; residual decomposition; exact coupling; one-block oscillation contraction; and geometric `rho^n` block contraction.
+**Closed through #4545:** exact kernel-section covariance mechanics; source-singleton localization; dense-carrier obstruction; actual local-Harnack finite propagation; actual local Green tail; exact local-plus-remote perturbation; base-`L1` weighted remote convolution; fixed-right finite-step bridge; one-link Haar minorization; deterministic full-sweep Haar refresh; actual restricted-random-scan Markov kernel and stationarity; complete-block Doeblin minorization; residual decomposition; exact coupling; geometric `rho^n` oscillation contraction; `rho.toReal^n -> 0`; exact preservation of the stationary reference mean by all complete-block iterates; the bound `|P_block^n f(A) - E_mu[f]| <= rho.toReal^n * R`; and pointwise convergence to the reference expectation at every fixed finite volume.
 
-**Open now:** convert `rho^n` contraction into convergence to the stationary reference expectation and covariance-remainder vanishing; independently prove spatial decay or weighted absorption for the fixed-right weighted remote profile; then combine the two to obtain exact terminal kernel-section base-`L1` covariance decay.
+**Open now:** prove the exact complete-block/step-iterate bridge `P_block^n = P_scan^(n * L_H)` and use it to close the #4513 covariance remainder; independently prove spatial decay or weighted absorption for the fixed-right weighted remote profile; then combine the two to obtain exact terminal kernel-section base-`L1` covariance decay.
