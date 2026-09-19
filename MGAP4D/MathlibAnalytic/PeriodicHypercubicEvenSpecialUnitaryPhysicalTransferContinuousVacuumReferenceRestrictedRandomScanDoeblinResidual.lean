@@ -92,6 +92,16 @@ theorem
             beta⟩)
       _
 
+/-- The finite-volume full-block Doeblin coefficient is nonzero. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanFullBlockDoeblinCoefficient_ne_zero
+    (H : ℕ)
+    (beta : ℝ) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanFullBlockDoeblinCoefficient
+        H beta ≠ 0 :=
+  (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanFullBlockDoeblinCoefficient_pos
+    H beta).ne'
+
 /-- The full-block Doeblin coefficient cannot exceed one, because its common
 Haar component is dominated by an actual probability row. -/
 theorem
