@@ -12,6 +12,26 @@ open scoped ENNReal ProbabilityTheory
 
 noncomputable section
 
+local instance referenceHaarRefreshScheduleMinorizationSpecialUnitaryIsTopologicalGroup
+    (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance referenceHaarRefreshScheduleMinorizationSpecialUnitaryCompactSpace
+    (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance referenceHaarRefreshScheduleMinorizationSpecialUnitarySecondCountableTopology
+    (N : ℕ) : SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance referenceHaarRefreshScheduleMinorizationSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance referenceHaarRefreshScheduleMinorizationSpecialUnitaryBorelSpace
+    (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
 /-- The one-link Doeblin coefficient supplied by the literal C5 pairwise
 Harnack estimate. -/
 noncomputable def
@@ -30,7 +50,7 @@ noncomputable instance
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHaarRefreshKernel
   exact
-    IsMarkovKernel.map
+    Kernel.IsMarkovKernel.map
       (Kernel.id ×ₖ
         Kernel.const
           (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
@@ -115,12 +135,12 @@ theorem finiteMarkovKernel_comp_measure_minorization
     have h := Measure.le_iff.1 (hTail C) s hs
     simpa only [Measure.smul_apply, smul_eq_mul] using h
   have hFunction :
-      (∫⁻ C : X, b * Rtail C s ∂Rhead A) ≤
-        ∫⁻ C : X, Ktail C s ∂Rhead A := by
+      (∫⁻ C : X, b * Rtail C s ∂(Rhead A)) ≤
+        ∫⁻ C : X, Ktail C s ∂(Rhead A) := by
     exact lintegral_mono hTailPoint
   have hMeasure :
       (∫⁻ C : X, Ktail C s ∂(a • Rhead A)) ≤
-        ∫⁻ C : X, Ktail C s ∂Khead A := by
+        ∫⁻ C : X, Ktail C s ∂(Khead A) := by
     exact lintegral_mono' hHead le_rfl
   rw [
     Measure.smul_apply,
@@ -128,17 +148,17 @@ theorem finiteMarkovKernel_comp_measure_minorization
     Kernel.comp_apply' _ _ _ hs,
     smul_eq_mul]
   calc
-    (a * b) * (∫⁻ C : X, Rtail C s ∂Rhead A) =
-        a * (b * (∫⁻ C : X, Rtail C s ∂Rhead A)) := by
+    (a * b) * (∫⁻ C : X, Rtail C s ∂(Rhead A)) =
+        a * (b * (∫⁻ C : X, Rtail C s ∂(Rhead A))) := by
           ac_rfl
-    _ = a * (∫⁻ C : X, b * Rtail C s ∂Rhead A) := by
+    _ = a * (∫⁻ C : X, b * Rtail C s ∂(Rhead A)) := by
           rw [lintegral_const_mul b (Kernel.measurable_coe Rtail hs)]
-    _ ≤ a * (∫⁻ C : X, Ktail C s ∂Rhead A) := by
+    _ ≤ a * (∫⁻ C : X, Ktail C s ∂(Rhead A)) := by
           exact mul_le_mul_left' hFunction a
     _ = ∫⁻ C : X, Ktail C s ∂(a • Rhead A) := by
           rw [lintegral_smul_measure]
           rfl
-    _ ≤ ∫⁻ C : X, Ktail C s ∂Khead A := hMeasure
+    _ ≤ ∫⁻ C : X, Ktail C s ∂(Khead A) := hMeasure
 
 /-- Every finite literal C5 deterministic heat-bath schedule dominates the
 corresponding independent Haar-refresh schedule.  The coefficient is exactly
