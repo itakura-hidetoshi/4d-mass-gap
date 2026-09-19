@@ -172,9 +172,9 @@ theorem
               _ = |(fn X - fn A₀) + fn A₀| := by
                 congr 1
                 ring
-              _ ≤ |fn X - fn A₀| + |fn A₀| := abs_add _ _
+              _ ≤ |fn X - fn A₀| + |fn A₀| := abs_add_le _ _
               _ ≤ rho ^ n * R + |fn A₀| :=
-                add_le_add_right (hfnOsc X A₀) _
+                add_le_add (hfnOsc X A₀) le_rfl
       calc
         (∫ A,
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanFullBlockExpectationIterate
@@ -356,8 +356,14 @@ theorem
             H beta).toReal ^ n * R)
         atTop
         (𝓝 0) := by
-    have hMul :=
-      hPow.mul tendsto_const_nhds
+    have hMul :
+        Tendsto
+          (fun n : ℕ =>
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanFullBlockResidualMass
+              H beta).toReal ^ n * R)
+          atTop
+          (𝓝 (0 * R)) :=
+      hPow.mul_const R
     simpa using hMul
   exact squeeze_zero (fun _ => dist_nonneg) hBound hLimit
 
