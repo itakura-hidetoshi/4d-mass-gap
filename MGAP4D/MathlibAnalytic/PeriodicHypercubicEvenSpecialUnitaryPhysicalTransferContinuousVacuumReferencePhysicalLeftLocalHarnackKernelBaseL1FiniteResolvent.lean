@@ -44,7 +44,7 @@ noncomputable def
     (hbeta : 0 ≤ beta)
     (M : ℕ)
     (target source : PeriodicHypercubicEvenSpatialSliceLink H) : ℝ :=
-  ∑ d in Finset.range M,
+  ∑ d ∈ Finset.range M,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackIterateKernel
       H beta hbeta d target source
 
@@ -81,7 +81,7 @@ theorem
           (PeriodicHypercubicEvenSideLength H)
           (periodicHypercubicEvenSpatialSliceLinkEmbedding H target)
           (periodicHypercubicEvenSpatialSliceLinkEmbedding H source)) :
-    (∑ d in Finset.range D,
+    (∑ d ∈ Finset.range D,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackIterateKernel
         H beta hbeta d target source) = 0 := by
   classical
@@ -104,7 +104,7 @@ theorem
             beta <
         1)
     (target source : PeriodicHypercubicEvenSpatialSliceLink H) :
-    (∑ k in Finset.range M,
+    (∑ k ∈ Finset.range M,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackIterateKernel
         H beta hbeta (D + k) target source) ≤
       (18 *
@@ -131,20 +131,20 @@ theorem
   have hRhoLt : rho < 1 := by
     simpa [rho] using hThreshold
   calc
-    (∑ k in Finset.range M,
+    (∑ k ∈ Finset.range M,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackIterateKernel
         H beta hbeta (D + k) target source) ≤
-        ∑ k in Finset.range M, rho ^ (D + k) := by
+        ∑ k ∈ Finset.range M, rho ^ (D + k) := by
       apply Finset.sum_le_sum
       intro k hk
       simpa [rho] using
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackIterateKernel_le_pow
           H beta hbeta (D + k) target source)
-    _ = ∑ k in Finset.range M, rho ^ D * rho ^ k := by
+    _ = ∑ k ∈ Finset.range M, rho ^ D * rho ^ k := by
       apply Finset.sum_congr rfl
       intro k hk
       rw [pow_add]
-    _ = rho ^ D * ∑ k in Finset.range M, rho ^ k := by
+    _ = rho ^ D * ∑ k ∈ Finset.range M, rho ^ k := by
       rw [Finset.mul_sum]
     _ ≤ rho ^ D * (1 / (1 - rho)) := by
       exact
@@ -181,7 +181,7 @@ theorem
     (hDM : D ≤ M) :
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackFiniteResolventEntry
         H beta hbeta M target source =
-      ∑ k in Finset.range (M - D),
+      ∑ k ∈ Finset.range (M - D),
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackIterateKernel
           H beta hbeta (D + k) target source := by
   classical
