@@ -393,12 +393,13 @@ theorem
           finiteNonnegativeKernelPartialResolvent
             localKernel.influence remoteForcing M target +
           rho ^ M * distanceBound := by
-      have hFirst :=
-        add_le_add_right hLocal
-          (finiteNonnegativeKernelPartialResolvent
-            localKernel.influence remoteForcing M target)
       exact
-        add_le_add_right hFirst (rho ^ M * distanceBound)
+        add_le_add
+          (add_le_add hLocal
+            (le_refl
+              (finiteNonnegativeKernelPartialResolvent
+                localKernel.influence remoteForcing M target)))
+          (le_refl (rho ^ M * distanceBound))
     _ =
       ((18 *
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceBackgroundUpdateHarnackInfluence
