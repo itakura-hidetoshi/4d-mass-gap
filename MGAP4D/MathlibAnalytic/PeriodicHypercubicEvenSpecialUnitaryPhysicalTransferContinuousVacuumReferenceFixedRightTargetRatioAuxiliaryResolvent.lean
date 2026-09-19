@@ -25,7 +25,7 @@ theorem
         (((Real.exp (8 * beta)) ^ 2 - 1) /
           ((Real.exp (8 * beta)) ^ 2 + 1)) := by
   have hExp : 1 ≤ Real.exp (8 * beta) := by
-    apply Real.one_le_exp.mpr
+    apply Real.one_le_exp
     nlinarith
   have hSq : 1 ≤ (Real.exp (8 * beta)) ^ 2 := by
     nlinarith [Real.exp_pos (8 * beta)]
