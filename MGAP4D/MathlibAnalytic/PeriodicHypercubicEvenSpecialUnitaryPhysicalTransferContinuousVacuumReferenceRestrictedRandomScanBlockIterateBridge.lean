@@ -190,7 +190,9 @@ theorem
   induction n with
   | zero =>
       intro A
-      simp
+      rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanBlockKernel_zero]
+      rw [Kernel.id_apply]
+      exact integral_dirac' f A hf
   | succ n ih =>
       intro A
       let K :=
@@ -268,8 +270,9 @@ theorem
   | zero =>
       simp
   | succ n ih =>
-      rw [Nat.add_succ]
-      simp only [
+      rw [
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberRestrictedRandomScanExpectationIterate_succ,
+        Nat.add_succ,
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberRestrictedRandomScanExpectationIterate_succ]
       rw [ih]
 
@@ -354,12 +357,12 @@ theorem
         ring
       _ ≤ |f X - f A₀| + |f A₀| := abs_add_le _ _
       _ ≤ R + |f A₀| := by
-        exact add_le_add_right (hOsc X A₀) _
+        exact add_le_add (hOsc X A₀) le_rfl
   intro n
   induction n with
   | zero =>
       intro A
-      simp
+      rfl
   | succ n ih =>
       intro A
       let L :=
