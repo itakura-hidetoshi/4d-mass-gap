@@ -23,7 +23,18 @@ local-Green-plus-remote-perturbation argument.
 namespace MGAP4D
 namespace MathlibAnalytic
 
+open MeasureTheory ProbabilityTheory
+open scoped ENNReal ProbabilityTheory BigOperators
+
 noncomputable section
+
+local instance physicalLeftLocalHarnackKernelSpatialLinkFintype
+    (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
+local instance physicalLeftLocalHarnackKernelSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
 
 /-- The genuinely local part of the actual physical left influence envelope:
 one Harnack coefficient on intrinsic spatial active neighbors and zero
