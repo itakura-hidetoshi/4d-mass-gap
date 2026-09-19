@@ -135,12 +135,20 @@ theorem
           H N hN beta hbeta B target source k g₂ fn hfnStrong
           (rho ^ n * R) hBoundNonneg (fun X Y => by
             simpa [fn, rho] using ih X Y) A C
-      simpa [
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanFullBlockExpectationIterate,
-        fn,
-        rho,
-        pow_succ
-      ] using hOne
+      calc
+        |periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanFullBlockExpectationIterate
+            H N hN beta hbeta B target source k g₂ f (n + 1) A -
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanFullBlockExpectationIterate
+            H N hN beta hbeta B target source k g₂ f (n + 1) C| ≤
+            rho * (rho ^ n * R) := by
+              simpa [
+                periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanFullBlockExpectationIterate,
+                fn,
+                rho
+              ] using hOne
+        _ = rho ^ (n + 1) * R := by
+          rw [pow_succ]
+          ring
 
 end
 
