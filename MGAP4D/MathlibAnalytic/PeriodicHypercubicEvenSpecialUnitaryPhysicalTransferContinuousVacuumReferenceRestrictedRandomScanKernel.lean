@@ -62,6 +62,29 @@ noncomputable def
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
       H N hN beta hbeta B target source fiber k g₂
 
+/-- The finite sum of actual one-link heat-bath kernels is s-finite.  We prove
+this through the pinned finite-sum interface explicitly instead of asking type
+class search to synthesize the dependent family required by `Kernel.sum`. -/
+noncomputable instance
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanKernelSum_isSFiniteKernel
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (target source : PeriodicHypercubicEvenSpatialSliceLink H)
+    (k g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    IsSFiniteKernel
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanKernelSum
+        H N hN beta hbeta B target source k g₂) := by
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanKernelSum
+  rw [Kernel.sum_fintype]
+  exact
+    Kernel.IsSFiniteKernel.finset_sum Finset.univ (by
+      intro fiber _
+      infer_instance)
+
 /-- Actual continuous-C5 uniform restricted random-scan Markov kernel.
 
 It is the normalized finite sum of the exact one-link heat-bath kernels already
@@ -140,7 +163,7 @@ instance
   simp only [Measure.smul_apply, MeasurableSet.univ,
     Finset.sum_apply, Measure.finset_sum_apply, measure_univ]
   rw [Finset.sum_const, Finset.card_univ]
-  simp [hCardNe]
+  exact ENNReal.inv_mul_cancel hCardNe (by simp)
 
 /-- Each concrete one-link update appears in the random-scan kernel with exactly
 the uniform selection weight.  This is the kernel-order input used later to
@@ -165,7 +188,7 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanKernel_apply]
   apply Measure.le_iff.2
   intro s hs
-  simp only [Measure.smul_apply _ hs, Measure.finset_sum_apply _ hs]
+  simp only [Measure.smul_apply, Measure.finset_sum_apply, smul_eq_mul]
   apply mul_le_mul_left'
   exact
     Finset.single_le_sum
@@ -194,7 +217,7 @@ theorem
         H N hN beta hbeta B target source k g₂ := by
   ext s hs
   rw [Measure.bind_apply hs (Kernel.aemeasurable _)]
-  rw [
+  simp_rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanKernel_apply]
   have hCardPos :
       0 < Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) :=
@@ -202,16 +225,43 @@ theorem
   have hCardNe :
       (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ≥0∞) ≠ 0 := by
     exact_mod_cast Nat.ne_of_gt hCardPos
+  have hCardTop :
+      (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ≥0∞) ≠ ∞ := by
+    simp
+  have hFiberMeas :
+      ∀ fiber : PeriodicHypercubicEvenSpatialSliceLink H,
+        Measurable
+          (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
+              H N hN beta hbeta B target source fiber k g₂ A s) := by
+    intro fiber
+    exact
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
+        H N hN beta hbeta B target source fiber k g₂).measurable_coe hs
+  have hFiberInv :
+      ∀ fiber : PeriodicHypercubicEvenSpatialSliceLink H,
+        (∫⁻ A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
+              H N hN beta hbeta B target source fiber k g₂ A s
+          ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
+            H N hN beta hbeta B target source k g₂) =
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
+          H N hN beta hbeta B target source k g₂ s := by
+    intro fiber
+    rw [← Measure.bind_apply hs (Kernel.aemeasurable _)]
+    rw [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_comp_referenceProbabilityMeasure]
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanCoefficient
-  simp_rw [Measure.smul_apply _ hs, Measure.finset_sum_apply _ hs]
-  rw [lintegral_const_mul]
-  · rw [lintegral_finset_sum_measure]
-    simp_rw [
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_comp_referenceProbabilityMeasure]
-    rw [Finset.sum_const, Finset.card_univ]
-    simp [hCardNe]
-  · exact measurable_const
+  simp_rw [Measure.smul_apply, Measure.finset_sum_apply, smul_eq_mul]
+  rw [
+    lintegral_const_mul _
+      (Finset.measurable_fun_sum Finset.univ (fun fiber _ => hFiberMeas fiber)),
+    lintegral_finset_sum Finset.univ (fun fiber _ => hFiberMeas fiber)]
+  simp_rw [hFiberInv]
+  rw [Finset.sum_const, Finset.card_univ]
+  simp only [nsmul_eq_mul]
+  rw [← mul_assoc, ENNReal.inv_mul_cancel hCardNe hCardTop, one_mul]
 
 end
 
