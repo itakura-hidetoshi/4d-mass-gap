@@ -362,7 +362,11 @@ theorem
   induction n with
   | zero =>
       intro A
-      rfl
+      unfold
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRestrictedRandomScanFullBlockExpectationIterate
+      rw [
+        Nat.zero_mul,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberRestrictedRandomScanExpectationIterate_zero]
   | succ n ih =>
       intro A
       let L :=
