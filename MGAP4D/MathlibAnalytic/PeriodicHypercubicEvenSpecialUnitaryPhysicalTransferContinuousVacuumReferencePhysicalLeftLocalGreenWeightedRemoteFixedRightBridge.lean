@@ -85,9 +85,17 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceAlignedRemotePhysicalInfluenceResidual,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRemotePhysicalInfluenceResidual,
       hRemote] using hWorst
-  · have hVariationNonneg :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation_nonneg
-        H beta target
+  · have hVariationNonneg :
+        ∀ e : PeriodicHypercubicEvenSpatialSliceLink H,
+          0 ≤
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation
+              H beta target e := by
+      intro e
+      unfold
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation
+      split_ifs
+      · exact (Real.exp_pos _).le
+      · exact le_rfl
     have hRight :
         0 ≤
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberTaggedRestrictedRandomScanVariationIterate
