@@ -194,6 +194,7 @@ theorem
       _ ≤ ∫ X, (rho ^ n * R) * |F X| ∂μ := by
         apply integral_mono hAbsCenteredProductInt hMajorInt
         intro X
+        change |F X * (Gn X - c)| ≤ (rho ^ n * R) * |F X|
         rw [abs_mul]
         calc
           |F X| * |Gn X - c| ≤ |F X| * (rho ^ n * R) :=
