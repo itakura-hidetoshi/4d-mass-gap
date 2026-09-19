@@ -1,7 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicL1SpatialCovariance
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPlaquetteLocalPathSeparation
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicSpecialUnitaryExplicitDobrushin
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceTwoStepTerminalExponentialShellCertificate
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -151,29 +150,6 @@ theorem periodicHypercubicEven_singletons_plaquetteLocalSeparatedBy_of_two_mul_l
     periodicHypercubicEvenPlaquetteLocalPath_edgeBaseL1Distance_le_two_mul
       H d hPath
   omega
-
-/-- The terminal problem's canonical spatial base-`L¹` radius therefore
-supplies the singleton plaquette-local separation needed by the sparse
-Dobrushin finite-resolvent geometry. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceTwoStepTerminal_singletons_plaquetteLocalSeparatedBy_of_two_mul_le_spatialBaseL1Distance
-    (H D : ℕ)
-    (target source : PeriodicHypercubicEvenSpatialSliceLink H)
-    (hDistance :
-      2 * D ≤
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceTwoStepTerminalSpatialBaseL1Distance
-          H target source) :
-    periodicHypercubicEvenSupportsPlaquetteLocalSeparatedBy
-      H D
-      {periodicHypercubicEvenSpatialSliceLinkEmbedding H target}
-      {periodicHypercubicEvenSpatialSliceLinkEmbedding H source} := by
-  apply
-    periodicHypercubicEven_singletons_plaquetteLocalSeparatedBy_of_two_mul_le_edgeBaseL1Distance
-      H D
-      (periodicHypercubicEvenSpatialSliceLinkEmbedding H target)
-      (periodicHypercubicEvenSpatialSliceLinkEmbedding H source)
-  simpa [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceTwoStepTerminalSpatialBaseL1Distance]
 
 end
 
