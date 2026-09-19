@@ -133,8 +133,11 @@ theorem kernel_comp_pointwise_smul_lower_bound
       rw [lintegral_smul_measure, smul_eq_mul,
         lintegral_const_mul d (L'.measurable_coe hs)]
       ac_rfl
+    _ ≤ ∫⁻ b, d * L' b s ∂K a := by
+      exact lintegral_mono' (hK a) le_rfl
     _ ≤ ∫⁻ b, L b s ∂K a := by
-      gcongr with b
+      apply lintegral_mono
+      intro b
       simpa only [Measure.smul_apply, smul_eq_mul] using
         Measure.le_iff'.1 (hL b) s
 
