@@ -44,49 +44,6 @@ noncomputable def
       Function.update A fiber g)
     (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ))
 
-/-- Pointwise form of the full-configuration heat-bath kernel: sample the
-literal normalized one-link law, then insert the sampled value into the selected
-coordinate. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_apply_eq_map_fiberProbabilityMeasure
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
-    (target source fiber : PeriodicHypercubicEvenSpatialSliceLink H)
-    (k g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ)
-    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
-        H N hN beta hbeta B target source fiber k g₂ A =
-      Measure.map
-        (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
-          Function.update A fiber g)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
-          H N hN beta hbeta B target source fiber k g₂ A) := by
-  ext s hs
-  have hUpdate :
-      Measurable
-        (fun z :
-          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-            Matrix.specialUnitaryGroup (Fin N) ℂ =>
-          Function.update z.1 fiber z.2) :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkUpdate_uncurry_measurable
-      H N fiber
-  have hReplace :
-      Measurable
-        (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
-          Function.update A fiber g) := by
-    exact hUpdate.comp (measurable_const.prodMk measurable_id)
-  rw [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel,
-    Kernel.map_apply' _ hUpdate _ hs,
-    Kernel.id_prod_apply' _ A (hUpdate hs),
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalKernel_apply,
-    Measure.map_apply hReplace hs
-  ]
-  rfl
-
 /-- The actual full-configuration one-link heat-bath update dominates an
 explicit configuration-space Haar refresh with the same volume-independent
 coefficient as the fiber law.
@@ -120,11 +77,22 @@ theorem
       H N hN beta hbeta B target source fiber k g₂ A
   have hMapped :=
     Measure.map_mono hFiber hReplace
-  rw [Measure.map_smul _ hReplace] at hMapped
+  have hMapped' :
+      (ENNReal.ofReal (Real.exp (32 * beta)))⁻¹ •
+          Measure.map
+            (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
+              Function.update A fiber g)
+            (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)) ≤
+        Measure.map
+          (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
+            Function.update A fiber g)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
+            H N hN beta hbeta B target source fiber k g₂ A) := by
+    simpa only [Measure.map_smul] using hMapped
   simpa [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHaarRefreshMeasure,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel_apply_eq_map_fiberProbabilityMeasure
-  ] using hMapped
+  ] using hMapped'
 
 end
 
