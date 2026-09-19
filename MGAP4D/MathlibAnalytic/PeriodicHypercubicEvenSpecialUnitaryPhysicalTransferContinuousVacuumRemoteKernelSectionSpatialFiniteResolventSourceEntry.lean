@@ -231,6 +231,11 @@ theorem
   have hF : MemLp F 2 mu := by
     refine MemLp.of_bound hFStrong.aestronglyMeasurable (Real.exp (16 * beta)) ?_
     exact ae_of_all _ fun C => by
+      change
+        |periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+              H N beta C B target g1 /
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+              H N beta C B target g2| <= Real.exp (16 * beta)
       rw [abs_of_pos
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatio_pos
           H N beta C B target g1 g2)]
@@ -403,8 +408,10 @@ theorem
   have hCrossingMemLp : MemLp crossing 2 mu := by
     refine MemLp.of_bound hCrossingStrong.aestronglyMeasurable (Real.exp (2 * beta)) ?_
     exact ae_of_all _ fun A => by
-      dsimp [crossing]
-      rw [Real.norm_eq_abs, abs_of_pos
+      change
+        |specialUnitaryWilsonRelativeKernel N beta (A source) h /
+          specialUnitaryWilsonRelativeKernel N beta (A source) k| <= Real.exp (2 * beta)
+      rw [abs_of_pos
         (div_pos
           (specialUnitaryWilsonRelativeKernel_pos hN hbeta (A source) h)
           (specialUnitaryWilsonRelativeKernel_pos hN hbeta (A source) k))]
