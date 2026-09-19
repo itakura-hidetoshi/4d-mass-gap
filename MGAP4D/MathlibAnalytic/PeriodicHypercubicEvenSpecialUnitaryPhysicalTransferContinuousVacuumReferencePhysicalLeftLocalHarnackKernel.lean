@@ -190,7 +190,10 @@ theorem
         beta)
       hEta
       (by intro target source; simp [zeroResidual])
-      (by intro target source; rfl)
+      (by
+        intro target source
+        simp [K, zeroResidual,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackKernel])
       source
   simpa [K, zeroResidual, finiteInfluenceKernelColumnSum] using hBound
 
