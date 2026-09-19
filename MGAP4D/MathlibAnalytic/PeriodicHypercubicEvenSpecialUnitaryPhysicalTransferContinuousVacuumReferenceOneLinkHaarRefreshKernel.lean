@@ -76,11 +76,14 @@ theorem
     Kernel.const_apply]
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHaarRefreshMeasure
-  rw [
-    Measure.map_apply
-      ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkUpdate_uncurry_measurable
-        H N fiber).comp (measurable_const.prodMk measurable_id))
-      hs]
+  have hSingle :
+      Measurable
+        (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
+          Function.update A fiber g) := by
+    exact
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkUpdate_uncurry_measurable
+        H N fiber).comp (measurable_const.prodMk measurable_id)
+  rw [Measure.map_apply hSingle hs]
   rfl
 
 /-- Kernel-level form of the actual one-link Doeblin minorization.  The
