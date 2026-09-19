@@ -33,11 +33,9 @@ local instance referenceDistinctFiberRestrictedRandomScanFiniteStepSpatialLinkFi
     (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
-/- The iterate definition, zero/succ equations, finite-step strong measurability,
-and physical-fiber variation theorem are provided by
+/- Shared iterate declarations come from
 `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumRemoteKernelSectionRestrictedRandomScanIterate`.
-This compatibility layer retains the distinct-boundary finite-step transport
-theorem without redeclaring that shared iterate API. -/
+This file retains only the distinct-boundary finite-step transport result. -/
 
 /-- The actual `n`-step physical continuous-C5 restricted random-scan boundary
 response is dominated by the right-source component of the same `n`-step
