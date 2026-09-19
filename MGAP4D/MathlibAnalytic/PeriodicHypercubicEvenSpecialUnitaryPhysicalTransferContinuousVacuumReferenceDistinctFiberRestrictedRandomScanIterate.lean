@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceDistinctFiberRestrictedRandomScanTransport
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumRemoteKernelSectionRestrictedRandomScanIterate
 import Mathlib.Tactic
 
 namespace MGAP4D
@@ -33,38 +33,10 @@ local instance referenceDistinctFiberRestrictedRandomScanIterateSpatialLinkFinty
     (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
-/-- One physical restricted random-scan step preserves strong measurability of
-its observable as a function of the initial spatial configuration. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberRestrictedRandomScanExpectation_stronglyMeasurable
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
-    (target source : PeriodicHypercubicEvenSpatialSliceLink H)
-    (g₂ k : Matrix.specialUnitaryGroup (Fin N) ℂ)
-    (F : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ)
-    (hF : StronglyMeasurable F) :
-    StronglyMeasurable
-      (fun A =>
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberRestrictedRandomScanExpectation
-          H N hN beta hbeta B target source g₂ k A F) := by
-  classical
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberRestrictedRandomScanExpectation
-  have hSum :
-      StronglyMeasurable
-        (fun A =>
-          ∑ fiber : PeriodicHypercubicEvenSpatialSliceLink H,
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberDeterministicScheduleExpectation
-              H N hN beta hbeta B target source g₂ [fiber] k A F) := by
-    exact Finset.stronglyMeasurable_fun_sum Finset.univ (by
-      intro fiber _
-      exact
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberDeterministicScheduleExpectation_stronglyMeasurable
-          H N hN beta hbeta B target source g₂ k [fiber] F hF)
-  exact hSum.const_mul _
-
+/-- The one-step strong-measurability theorem is provided by
+`PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumRemoteKernelSectionRestrictedRandomScanIterate`.
+This compatibility layer keeps the affine two-boundary transport theorem
+without redeclaring the shared public API. -/
 /-- Affine one-step transport: if two input observables already differ by the
 right-source component of a nonnegative tagged profile, and both have left-fiber
 variation controlled by that profile, then updating them with boundary values
