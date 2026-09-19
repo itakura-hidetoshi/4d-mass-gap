@@ -109,9 +109,6 @@ theorem finiteNonnegativeKernelPartialResolvent_fintype_sum
       rw [hPrevious]
       rw [finiteNonnegativeKernelApply_fintype_sum]
       rw [← Finset.sum_add_distrib]
-      apply Finset.sum_congr rfl
-      intro j _hj
-      rfl
 
 /-- Every profile is the finite sum of its singleton components. -/
 theorem
@@ -469,6 +466,7 @@ theorem
       apply Finset.sum_congr rfl
       intro source _hsource
       rw [Finset.sum_mul]
+  exact le_rfl
 
 /-- Singleton physical-envelope comparison with the remote contribution kept as
 a spatially weighted remote convolution.
