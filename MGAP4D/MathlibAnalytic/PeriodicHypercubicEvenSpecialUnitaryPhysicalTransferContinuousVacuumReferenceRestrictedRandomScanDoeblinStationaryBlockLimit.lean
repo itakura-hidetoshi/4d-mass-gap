@@ -262,9 +262,9 @@ theorem
           _ = |(fn X - fn A₀) + fn A₀| := by
             congr 1
             ring
-          _ ≤ |fn X - fn A₀| + |fn A₀| := abs_add _ _
+          _ ≤ |fn X - fn A₀| + |fn A₀| := abs_add_le _ _
           _ ≤ rho ^ n * R + |fn A₀| :=
-            add_le_add_right (hfnOsc X A₀) _
+            add_le_add (hfnOsc X A₀) le_rfl
   have hConstInt : Integrable (fun _X :
       PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N => fn A) μ :=
     integrable_const (fn A)
