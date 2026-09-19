@@ -193,7 +193,10 @@ theorem
   apply mul_le_mul_left'
   exact
     Finset.single_le_sum
-      (fun _ _ => zero_le)
+      (fun e _ =>
+        zero_le
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
+            H N hN beta hbeta B target source e k g₂ A s))
       (Finset.mem_univ fiber)
 
 /-- The normalized continuous-vacuum reference law remains stationary under
