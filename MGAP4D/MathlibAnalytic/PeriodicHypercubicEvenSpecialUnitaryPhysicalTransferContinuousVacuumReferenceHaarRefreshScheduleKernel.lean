@@ -20,7 +20,14 @@ noncomputable instance
         H N fiber) := by
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHaarRefreshKernel]
-  infer_instance
+  exact
+    IsMarkovKernel.map
+      (Kernel.id ×ₖ
+        Kernel.const
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+          (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)))
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkUpdate_uncurry_measurable
+        H N fiber)
 
 /-- Pure Haar-refresh comparison kernel for a finite ordered list of spatial
 links. The head coordinate is refreshed first, matching the convention used by
