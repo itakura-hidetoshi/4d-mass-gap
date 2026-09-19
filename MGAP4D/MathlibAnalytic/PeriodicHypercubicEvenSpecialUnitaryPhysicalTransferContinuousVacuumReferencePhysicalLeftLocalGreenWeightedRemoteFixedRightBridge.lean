@@ -361,15 +361,23 @@ theorem
         (18 *
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceBackgroundUpdateHarnackInfluence
             beta) ^ M * distanceBound := by
-      apply add_le_add_right
-      apply add_le_add_left
-      apply Finset.sum_le_sum
-      intro s _hs
-      exact
-        mul_le_mul_of_nonneg_right
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalGreenWeightedRemoteColumn_le_nStepFixedRightTargetBound
-            H N hN beta hbeta hThreshold A target s n)
-          (hwNonneg s)
+      have hRemoteSum :
+          (∑ s : PeriodicHypercubicEvenSpatialSliceLink H,
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalGreenWeightedRemoteColumn
+                H N hN beta hbeta A target s *
+              w s) ≤
+            ∑ s : PeriodicHypercubicEvenSpatialSliceLink H,
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalGreenWeightedRemoteNStepFixedRightTargetBound
+                  H beta hbeta target s n *
+                w s := by
+        apply Finset.sum_le_sum
+        intro s _hs
+        exact
+          mul_le_mul_of_nonneg_right
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalGreenWeightedRemoteColumn_le_nStepFixedRightTargetBound
+              H N hN beta hbeta hThreshold A target s n)
+            (hwNonneg s)
+      linarith
 
 end
 
