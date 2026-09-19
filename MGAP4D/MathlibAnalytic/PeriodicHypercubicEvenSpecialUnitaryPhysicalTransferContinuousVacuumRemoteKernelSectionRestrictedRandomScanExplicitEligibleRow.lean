@@ -112,7 +112,6 @@ theorem
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberOffFiberInfluence
           beta) := by
       rw [hCardNat]
-      rfl
 
 /-- The exact eligible row coefficient is nonnegative. -/
 theorem
