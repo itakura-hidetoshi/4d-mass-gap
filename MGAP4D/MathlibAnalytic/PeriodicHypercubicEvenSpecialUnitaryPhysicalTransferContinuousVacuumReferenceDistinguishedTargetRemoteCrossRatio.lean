@@ -233,7 +233,7 @@ theorem
     let omega :=
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
         H N hN beta hbeta
-    let local :=
+    let targetLocal :=
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
         H N beta
     let slab :=
@@ -253,29 +253,29 @@ theorem
       funext e
       simp [Vy, Ay, hne, Ne.symm hne]
     have hLocalUx :
-        local Ux B distinguishedTarget g₂ =
-          local Ax B distinguishedTarget g₂ := by
+        targetLocal Ux B distinguishedTarget g₂ =
+          targetLocal Ax B distinguishedTarget g₂ := by
       rw [hCommUx]
       exact
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_update_left_of_ne
           H N beta Ax B distinguishedTarget backgroundSource u g₂ (Ne.symm hne)
     have hLocalVx :
-        local Vx B distinguishedTarget g₂ =
-          local Ax B distinguishedTarget g₂ := by
+        targetLocal Vx B distinguishedTarget g₂ =
+          targetLocal Ax B distinguishedTarget g₂ := by
       rw [hCommVx]
       exact
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_update_left_of_ne
           H N beta Ax B distinguishedTarget backgroundSource v g₂ (Ne.symm hne)
     have hLocalUy :
-        local Uy B distinguishedTarget g₂ =
-          local Ay B distinguishedTarget g₂ := by
+        targetLocal Uy B distinguishedTarget g₂ =
+          targetLocal Ay B distinguishedTarget g₂ := by
       rw [hCommUy]
       exact
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_update_left_of_ne
           H N beta Ay B distinguishedTarget backgroundSource u g₂ (Ne.symm hne)
     have hLocalVy :
-        local Vy B distinguishedTarget g₂ =
-          local Ay B distinguishedTarget g₂ := by
+        targetLocal Vy B distinguishedTarget g₂ =
+          targetLocal Ay B distinguishedTarget g₂ := by
       rw [hCommVy]
       exact
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_update_left_of_ne
@@ -315,8 +315,8 @@ theorem
       (div_le_iff₀ hVacDen).mp hVacRatio
     have hCommonNonneg :
         0 ≤
-          (local Ux B distinguishedTarget g₂ *
-            local Vy B distinguishedTarget g₂) *
+          (targetLocal Ux B distinguishedTarget g₂ *
+            targetLocal Vy B distinguishedTarget g₂) *
           (slab Ux Br * slab Vy Br) := by
       positivity
     have hFullMul :
@@ -332,22 +332,22 @@ theorem
       unfold
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
       calc
-        (omega Ux * local Ux B distinguishedTarget g₂ * slab Ux Br) *
-            (omega Vy * local Vy B distinguishedTarget g₂ * slab Vy Br) =
+        (omega Ux * targetLocal Ux B distinguishedTarget g₂ * slab Ux Br) *
+            (omega Vy * targetLocal Vy B distinguishedTarget g₂ * slab Vy Br) =
           (omega Ux * omega Vy) *
-            ((local Ux B distinguishedTarget g₂ *
-                local Vy B distinguishedTarget g₂) *
+            ((targetLocal Ux B distinguishedTarget g₂ *
+                targetLocal Vy B distinguishedTarget g₂) *
               (slab Ux Br * slab Vy Br)) := by ring
         _ ≤
           (Real.exp (radius x y) * (omega Vx * omega Uy)) *
-            ((local Ux B distinguishedTarget g₂ *
-                local Vy B distinguishedTarget g₂) *
+            ((targetLocal Ux B distinguishedTarget g₂ *
+                targetLocal Vy B distinguishedTarget g₂) *
               (slab Ux Br * slab Vy Br)) :=
           mul_le_mul_of_nonneg_right hVacMul hCommonNonneg
         _ =
           Real.exp (radius x y) *
-            ((omega Vx * local Vx B distinguishedTarget g₂ * slab Vx Br) *
-              (omega Uy * local Uy B distinguishedTarget g₂ * slab Uy Br)) := by
+            ((omega Vx * targetLocal Vx B distinguishedTarget g₂ * slab Vx Br) *
+              (omega Uy * targetLocal Uy B distinguishedTarget g₂ * slab Uy Br)) := by
           rw [hLocalUx, hLocalVx, hLocalUy, hLocalVy, hSlabCross]
           ring
     have hUxPos :
