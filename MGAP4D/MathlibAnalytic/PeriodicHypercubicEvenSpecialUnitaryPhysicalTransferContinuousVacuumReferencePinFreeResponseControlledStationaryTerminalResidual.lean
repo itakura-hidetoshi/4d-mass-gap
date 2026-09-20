@@ -184,7 +184,8 @@ theorem
       simpa [Real.norm_eq_abs, abs_of_nonneg hErrNonneg] using hCenter A
   have hGnIntH : Integrable Gn μh := by
     have hAux := hDiffInt.add (integrable_const c)
-    simpa only [Pi.add_apply, sub_add_cancel] using hAux
+    change Integrable (fun A => (Gn A - c) + c) μh at hAux
+    simpa using hAux
   have hAbsDiffInt : Integrable (fun A => |Gn A - c|) μh := by
     simpa [Real.norm_eq_abs] using hDiffInt.norm
   have hErrInt :
