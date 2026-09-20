@@ -131,9 +131,8 @@ theorem
           simp only [
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackKernel]
           rw [if_pos hActive]
-          rfl
         rw [hLocalEq, if_neg hDist]
-        simp
+        simpa [eta]
       · have hNotExceptional :
             target ∉
               periodicHypercubicEvenSpatialSliceC5ExceptionalBackgroundFibers
