@@ -340,7 +340,7 @@ theorem
           (fun background =>
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledRandomScanVariationIterate_nonneg
               H beta hbeta target R hRNonneg variation hVariationNonneg n background)
-          (fun background C a b => ih C background a b)
+          (fun background C a b => ih background C a b)
           e A u v
 
 /-- Two physical restricted random-scan orbits with distinct represented
