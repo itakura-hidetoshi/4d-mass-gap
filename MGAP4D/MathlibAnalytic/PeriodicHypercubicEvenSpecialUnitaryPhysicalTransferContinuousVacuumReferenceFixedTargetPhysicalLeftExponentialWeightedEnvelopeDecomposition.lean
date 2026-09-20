@@ -125,9 +125,15 @@ theorem
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetPhysicalLeftInfluenceEnvelopeKernel_eq_harnack_of_exceptional
             H N hN beta hbeta A distinguishedTarget target source hEq hExceptional,
           hRemoteZero]
-        simp [
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackKernel,
-          hActive, hDist, eta]
+        have hLocalEq :
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackKernel
+                H beta hbeta).influence target source = eta := by
+          simp only [
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackKernel]
+          rw [if_pos hActive]
+          rfl
+        rw [hLocalEq, if_neg hDist]
+        simp
       · have hNotExceptional :
             target ∉
               periodicHypercubicEvenSpatialSliceC5ExceptionalBackgroundFibers
@@ -164,10 +170,9 @@ theorem
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceAlignedRemotePhysicalInfluenceResidual
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceRemotePhysicalInfluenceResidual
           rw [if_pos hDistRemote, if_pos hSourceRemote]
-        rw [hFixedRemote, hResidualEq]
-        simp [
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackKernel,
-          hActive, hDist]
+        rw [hFixedRemote, hResidualEq, if_neg hDist]
+        simp only [add_zero]
+        exact le_add_of_nonneg_left hLocal
 
 /-- The target-centered weighted fixed-target envelope column is controlled by
 the genuine local weighted coefficient, one distinguished-target Harnack pin,
@@ -300,13 +305,10 @@ theorem
           H s distinguishedTarget distinguishedTarget +
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftExponentialWeightedRemoteResidualColumn
         H N hN beta hbeta A s distinguishedTarget source := by
-      exact add_le_add_right
-        (add_le_add_right hLocal
-          (eta *
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight
-              H s distinguishedTarget distinguishedTarget))
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftExponentialWeightedRemoteResidualColumn
-          H N hN beta hbeta A s distinguishedTarget source)
+      exact
+        add_le_add
+          (add_le_add hLocal (le_refl _))
+          (le_refl _)
     _ =
       (18 *
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceBackgroundUpdateHarnackInfluence
