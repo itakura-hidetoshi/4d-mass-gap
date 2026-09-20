@@ -132,11 +132,21 @@ theorem
         (fun n : ℕ => bound + rho ^ n * Real.exp (16 * beta))
         atTop (𝓝 bound) := by
     simpa using hConst.add hTail
+  have hLeft :
+      Tendsto
+        (fun _n : ℕ =>
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioResponseAbs
+            H N hN beta hbeta B target source g₁ g₂ h k)
+        atTop
+        (𝓝
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioResponseAbs
+            H N hN beta hbeta B target source g₁ g₂ h k)) :=
+    tendsto_const_nhds
   have hFinal :
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioResponseAbs
           H N hN beta hbeta B target source g₁ g₂ h k ≤
         bound :=
-    le_of_tendsto hLimit (Filter.Eventually.of_forall hFinite)
+    le_of_tendsto_of_tendsto' hLeft hLimit hFinite
   simpa [bound] using hFinal
 
 end
