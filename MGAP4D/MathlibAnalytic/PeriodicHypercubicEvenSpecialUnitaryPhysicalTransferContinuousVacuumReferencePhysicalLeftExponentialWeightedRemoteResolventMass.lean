@@ -273,40 +273,11 @@ theorem
       rw [finiteNonnegativeKernelPartialResolvent_eq_sum_powerApply_explicit]]
   simp_rw [Finset.sum_mul]
   rw [Finset.sum_comm]
-  calc
-    (∑ d ∈ Finset.range M,
-      ∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
-        finiteNonnegativeKernelPowerApply
-            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackKernel
-              H beta hbeta).influence
-            w d target *
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight
-            H s center target) ≤
-      ∑ d ∈ Finset.range M,
-        (18 *
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceBackgroundUpdateHarnackInfluence
-              beta *
-          s ^ 2) ^ d *
-          (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
-            w source *
-              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight
-                H s center source) := by
-      apply Finset.sum_le_sum
-      intro d _hd
-      exact
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackPowerApply_exponentialWeightedMass_le
-          H beta hbeta s hs center w hwNonneg d
-    _ =
-      (∑ d ∈ Finset.range M,
-        (18 *
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceBackgroundUpdateHarnackInfluence
-              beta *
-          s ^ 2) ^ d) *
-        (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
-          w source *
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight
-              H s center source) := by
-      rw [Finset.sum_mul]
+  apply Finset.sum_le_sum
+  intro d _hd
+  exact
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackPowerApply_exponentialWeightedMass_le
+      H beta hbeta s hs center w hwNonneg d
 
 /-- Under the strict weighted local threshold, the finite local resolvent has
 the volume-independent weighted-mass amplification factor `(1-rho_s)^{-1}`. -/
