@@ -282,8 +282,7 @@ theorem
           ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight
               H s target e) := by
-        rw [← Finset.mul_sum, ← Finset.mul_sum]
-        ring
+        rw [← Finset.mul_sum]
 
 /-- At fixed finite volume, strict response-controlled weighted coefficient
 forces the terminal fixed-right response to vanish as scan depth tends to
