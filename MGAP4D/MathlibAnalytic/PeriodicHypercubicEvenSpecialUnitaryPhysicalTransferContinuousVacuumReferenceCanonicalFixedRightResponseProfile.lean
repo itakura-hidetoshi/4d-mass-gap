@@ -115,9 +115,9 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatio_le_exp_sixteen
         H N hN beta hbeta A B target g₁ g₂
   have hIntHNonneg : 0 ≤ ∫ A, F A ∂μh :=
-    integral_nonneg (Filter.Eventually.of_forall hFNonneg)
+    integral_nonneg hFNonneg
   have hIntKNonneg : 0 ≤ ∫ A, F A ∂μk :=
-    integral_nonneg (Filter.Eventually.of_forall hFNonneg)
+    integral_nonneg hFNonneg
   have hIntHLe : (∫ A, F A ∂μh) ≤ Real.exp (16 * beta) := by
     calc
       (∫ A, F A ∂μh) ≤ ∫ _A, Real.exp (16 * beta) ∂μh := by
