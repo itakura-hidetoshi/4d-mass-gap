@@ -242,16 +242,40 @@ theorem
     let Br := Function.update B distinguishedSource k
     have hCommUx : Ux = Function.update Ax backgroundSource u := by
       funext e
-      simp [Ux, Ax, hne, Ne.symm hne]
+      by_cases heTarget : e = distinguishedTarget
+      · subst e
+        simp [Ux, Ax, hne, Ne.symm hne]
+      · by_cases heBackground : e = backgroundSource
+        · subst e
+          simp [Ux, Ax, hne, Ne.symm hne]
+        · simp [Ux, Ax, heTarget, heBackground]
     have hCommVx : Vx = Function.update Ax backgroundSource v := by
       funext e
-      simp [Vx, Ax, hne, Ne.symm hne]
+      by_cases heTarget : e = distinguishedTarget
+      · subst e
+        simp [Vx, Ax, hne, Ne.symm hne]
+      · by_cases heBackground : e = backgroundSource
+        · subst e
+          simp [Vx, Ax, hne, Ne.symm hne]
+        · simp [Vx, Ax, heTarget, heBackground]
     have hCommUy : Uy = Function.update Ay backgroundSource u := by
       funext e
-      simp [Uy, Ay, hne, Ne.symm hne]
+      by_cases heTarget : e = distinguishedTarget
+      · subst e
+        simp [Uy, Ay, hne, Ne.symm hne]
+      · by_cases heBackground : e = backgroundSource
+        · subst e
+          simp [Uy, Ay, hne, Ne.symm hne]
+        · simp [Uy, Ay, heTarget, heBackground]
     have hCommVy : Vy = Function.update Ay backgroundSource v := by
       funext e
-      simp [Vy, Ay, hne, Ne.symm hne]
+      by_cases heTarget : e = distinguishedTarget
+      · subst e
+        simp [Vy, Ay, hne, Ne.symm hne]
+      · by_cases heBackground : e = backgroundSource
+        · subst e
+          simp [Vy, Ay, hne, Ne.symm hne]
+        · simp [Vy, Ay, heTarget, heBackground]
     have hLocalUx :
         targetLocal Ux B distinguishedTarget g₂ =
           targetLocal Ax B distinguishedTarget g₂ := by
@@ -286,6 +310,7 @@ theorem
         (Ne.symm hne) hNoShare
     have hSlabCross :
         slab Ux Br * slab Vy Br = slab Vx Br * slab Uy Br := by
+      dsimp [slab]
       rw [
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
           H N hN beta hbeta Ux Br,
@@ -295,7 +320,16 @@ theorem
           H N hN beta hbeta Vx Br,
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
           H N hN beta hbeta Uy Br]
-      simpa [Ux, Uy, Vx, Vy, Br] using hSlabCrossRaw
+      calc
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta Br Ux *
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta Br Vy =
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta Br Uy *
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta Br Vx := by
+              simpa [Ux, Uy, Vx, Vy, Br] using hSlabCrossRaw
+        _ =
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta Br Vx *
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta Br Uy := by
+              exact mul_comm _ _
     have hVacRatio :
         omega Ux * omega Vy /
             (omega Vx * omega Uy) ≤
@@ -318,7 +352,25 @@ theorem
           (targetLocal Ux B distinguishedTarget g₂ *
             targetLocal Vy B distinguishedTarget g₂) *
           (slab Ux Br * slab Vy Br) := by
-      positivity
+      exact mul_nonneg
+        (mul_nonneg
+          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_pos
+            H N beta Ux B distinguishedTarget g₂).le
+          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_pos
+            H N beta Vy B distinguishedTarget g₂).le)
+        (mul_nonneg
+          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
+            H N beta Ux Br).le
+          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
+            H N beta Vy Br).le)
+    have hCommonEq :
+        (targetLocal Ux B distinguishedTarget g₂ *
+            targetLocal Vy B distinguishedTarget g₂) *
+          (slab Ux Br * slab Vy Br) =
+        (targetLocal Vx B distinguishedTarget g₂ *
+            targetLocal Uy B distinguishedTarget g₂) *
+          (slab Vx Br * slab Uy Br) := by
+      rw [hLocalUx, hLocalVx, hLocalUy, hLocalVy, hSlabCross]
     have hFullMul :
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
               H N hN beta hbeta B distinguishedTarget distinguishedSource k g₂ Ux *
@@ -348,7 +400,7 @@ theorem
           Real.exp (radius x y) *
             ((omega Vx * targetLocal Vx B distinguishedTarget g₂ * slab Vx Br) *
               (omega Uy * targetLocal Uy B distinguishedTarget g₂ * slab Uy Br)) := by
-          rw [hLocalUx, hLocalVx, hLocalUy, hLocalVy, hSlabCross]
+          rw [hCommonEq]
           ring
     have hUxPos :
         0 <
