@@ -40,6 +40,26 @@ local instance responseControlledRandomScanFiniteStepSpatialLinkFintype
     (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+local instance responseControlledRandomScanFiniteStepSpecialUnitaryIsTopologicalGroup
+    (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance responseControlledRandomScanFiniteStepSpecialUnitaryCompactSpace
+    (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance responseControlledRandomScanFiniteStepSpecialUnitarySecondCountableTopology
+    (N : ℕ) : SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance responseControlledRandomScanFiniteStepSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance responseControlledRandomScanFiniteStepSpecialUnitaryBorelSpace
+    (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
 /-- Iterated response-controlled physical left-variation profile. -/
 noncomputable def
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledRandomScanVariationIterate
@@ -113,7 +133,7 @@ theorem
     0 ≤
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledRandomScanVariationIterate
         H beta hbeta distinguishedTarget R hRNonneg variation n source := by
-  induction n with
+  induction n generalizing source with
   | zero =>
       simpa using hVariationNonneg source
   | succ n ih =>
@@ -219,11 +239,17 @@ theorem
   · exact inv_nonneg.mpr (Nat.cast_nonneg _)
   · apply Finset.sum_nonneg
     intro fiber _hFiber
+    have hMajorant :
+        0 ≤
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant
+            beta fiber source := by
+      have hTagged :=
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedInfluence_nonneg
+          H beta hbeta (Sum.inl fiber) (Sum.inr source)
+      simpa [
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedInfluence] using hTagged
     exact add_nonneg hDiscrepancy
-      (mul_nonneg
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant_nonneg
-          H beta hbeta fiber source)
-        (hVariationNonneg fiber))
+      (mul_nonneg hMajorant (hVariationNonneg fiber))
 
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledAccumulatedSourceDiscrepancy_nonneg
@@ -294,7 +320,7 @@ theorem
         H N hN beta hbeta B target source g₂ k F n (Function.update A e v)| ≤
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledRandomScanVariationIterate
         H beta hbeta target R hRNonneg variation n e := by
-  induction n generalizing A with
+  induction n generalizing e A u v with
   | zero =>
       simpa using hVariation e A u v
   | succ n ih =>
