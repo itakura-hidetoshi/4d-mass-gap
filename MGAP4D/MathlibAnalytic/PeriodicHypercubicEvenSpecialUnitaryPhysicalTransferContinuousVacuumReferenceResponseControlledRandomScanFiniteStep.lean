@@ -186,7 +186,7 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryRandomScanSourceForcing
   simp only [Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ,
     nsmul_eq_mul]
-  field_simp [hCard] <;> ring
+  field_simp [hCard]
 
 /-- Accumulated right-source discrepancy along the response-controlled left
 variation orbit. -/
@@ -290,7 +290,7 @@ theorem
     (n : ℕ) :
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledAccumulatedSourceDiscrepancy
         H beta hbeta distinguishedTarget source R hRNonneg variation n =
-      ∑ j in Finset.range n,
+      ∑ j ∈ Finset.range n,
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryRandomScanSourceForcing
           H beta source
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledRandomScanVariationIterate
