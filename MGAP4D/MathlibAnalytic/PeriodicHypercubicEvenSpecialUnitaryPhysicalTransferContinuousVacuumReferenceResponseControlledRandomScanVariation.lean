@@ -32,6 +32,26 @@ local instance responseControlledRandomScanVariationSpatialLinkFintype
     (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+local instance responseControlledRandomScanVariationSpecialUnitaryIsTopologicalGroup
+    (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance responseControlledRandomScanVariationSpecialUnitaryCompactSpace
+    (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance responseControlledRandomScanVariationSpecialUnitarySecondCountableTopology
+    (N : ℕ) : SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance responseControlledRandomScanVariationSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance responseControlledRandomScanVariationSpecialUnitaryBorelSpace
+    (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
 /-- One response-controlled physical random-scan update of a left variation
 profile. -/
 noncomputable def
@@ -258,10 +278,16 @@ theorem
   · exact inv_nonneg.mpr (Nat.cast_nonneg _)
   · apply Finset.sum_nonneg
     intro fiber _hFiber
-    exact mul_nonneg
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant_nonneg
-        H beta hbeta fiber source)
-      (hVariationNonneg fiber)
+    have hMajorant :
+        0 ≤
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant
+            beta fiber source := by
+      have hTagged :=
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedInfluence_nonneg
+          H beta hbeta (Sum.inl fiber) (Sum.inr source)
+      simpa [
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedInfluence] using hTagged
+    exact mul_nonneg hMajorant (hVariationNonneg fiber)
 
 
 /-- The direct effect of changing the represented right-boundary source value
