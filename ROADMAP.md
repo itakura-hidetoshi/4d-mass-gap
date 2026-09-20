@@ -2,19 +2,19 @@
 
 This roadmap records the theorem architecture and current development order of `itakura-hidetoshi/4d-mass-gap` as of **2026-09-20 JST**.
 
-The authoritative theorem-carrier branch is:
+Authoritative theorem-carrier branch:
 
     formal/real-hilbert-uniform-coercive-strong-limit
 
-The exact theorem-bearing baseline used for this refresh is:
+Exact theorem-bearing baseline for this refresh:
 
-    2fba0b625f39e581881bee1c2979b44c462bc62a
+    e56ea50823fb70d6fb6f50e33ae79ea2a9d9ac01
 
-This is the merge commit of PR #4561:
+This is the merge commit of PR #4575:
 
-    Isolate exponential weighted remote envelope column
+    Iterate response-controlled random-scan recurrence
 
-This ROADMAP update is documentation-only. After its merge, the branch pointer may advance while the theorem-bearing mathematical baseline remains the latest theorem-bearing merge unless another theorem PR lands first.
+This ROADMAP update is documentation-only. If it merges before another theorem PR, the branch pointer will advance while the theorem-bearing mathematical baseline remains the merge above.
 
 Authority order:
 
@@ -30,12 +30,12 @@ Authority order:
 
 # Current dependency graph
 
-    A. FINITE PERIODIC WILSON / OS ROOT                          [INTEGRATED]
+    A. FINITE PERIODIC WILSON / OS ROOT                         [INTEGRATED]
        -> compact SU(N) finite lattice
        -> reflection positivity / OS carriers
        -> one-slab transfer / ground-state architecture
 
-    B. CONTINUOUS ONE-LINK LAW + PHYSICAL LOCAL GEOMETRY        [INTEGRATED]
+    B. CONTINUOUS ONE-LINK LAW + LOCAL GEOMETRY                 [INTEGRATED]
        -> normalized one-link law
        -> measurable heat-bath reinsertion
        -> stationarity / represented-source cancellation
@@ -45,71 +45,90 @@ Authority order:
     C. EXACT KERNEL-SECTION / COVARIANCE MECHANICS              [INTEGRATED]
        -> conditional expectation identities
        -> L2 projection / fluctuation
-       -> deterministic and random-scan telescopes
+       -> deterministic/random-scan telescopes
        -> finite covariance resolvent
 
     D. FIXED-VOLUME RANDOM-SCAN ERGODIC ROUTE                   [INTEGRATED]
-       -> Haar minorization
        -> complete-block Doeblin contraction
-       -> stationary mean convergence
        -> exact block/step bridge
        -> covariance remainder vanishes at M=n*L_H
-                                                                  [#4530-#4548]
+                                                                 [#4547-#4548]
 
-    E. COARSE TAGGED ELIGIBLE-ROW RESOLVENT                     [INTEGRATED]
+    E. COARSE TAGGED FIXED-RIGHT RESPONSE ROUTE                 [INTEGRATED]
        -> eligible pullback resolvent
-       -> exact row coefficient
+       -> exact volume-growing row coefficient
        -> auxiliary unscanned response
-       -> represented right-source bound
-       -> fixed-right finite-step response
-       -> asymptotic fixed-right response
-                                                                  [#4551-#4557]
+       -> represented fixed-right finite-step/asymptotic response
+       -> transport back to actual source-aligned remote forcing
+                                                                 [#4551-#4558]
 
-    F. ACTUAL PHYSICAL LOCAL / REMOTE BRIDGE                    [INTEGRATED]
-       -> actual local Harnack kernel
-       -> exact local + remote perturbation
-       -> source-aligned remote residual
-       -> asymptotic fixed-right bound transported back
-                                                                  [through #4558]
-
-    G. EXPONENTIAL LOCAL WEIGHTED THEORY                        [INTEGRATED]
-       -> W_center(x)=s^baseL1Distance(center,x)
-       -> weighted row/column <= rho_s W
-       -> rho_s = 18*eta(beta)*s^2
+    F. GENUINE LOCAL EXPONENTIAL THEORY                         [INTEGRATED]
+       -> W_center=s^baseL1Distance
+       -> rho_s=18*eta(beta)*s^2
+       -> weighted local row/column
        -> K_local^d W <= rho_s^d W
        -> G_local,M W <= (1-rho_s)^(-1) W
-                                                                  [#4559-#4560]
+                                                                 [#4559-#4560]
 
-    H. FULL PHYSICAL WEIGHTED COLUMN DECOMPOSITION              [INTEGRATED]
-       -> C_full weighted column
-          = local weighted column + actual remote weighted column
-       -> local <= rho_s W(source)
-       -> abstract absorption interface for remote coefficient
-                                                                  [#4561]
+    G. FIXED-TARGET WEIGHTED PHYSICAL ENVELOPE                  [INTEGRATED]
+       -> local + target pin + actual remote residual
+       -> absorb local/pin terms into weight bookkeeping
+       -> weighted response-bootstrap interfaces
+       -> variation-scaled one-link heat-bath propagation
+       -> fixed-target physical tagged carrier
+                                                                 [#4563-#4569]
 
-    I. ACTUAL REMOTE WEIGHTED COEFFICIENT                       [OPEN NOW]
-       -> derive concrete volume-independent kappa_s
-       -> prove R_remote,weighted <= kappa_s W
-       -> prove rho_s + kappa_s < 1 in a nonempty parameter regime
-       -> no circular terminal-covariance input
+    H. REMOTE RESIDUAL / RESPONSE LINEARIZATION                 [INTEGRATED]
+       -> uniform remote certificate isolated as an interface only
+       -> weighted random-scan superposition
+       -> remote residual <= exp(16 beta) * fixed-right response
+       -> response profile R defines configuration-independent K_R
+       -> actual fixed-target envelope <= K_R
+                                                                 [#4570-#4573]
 
-    J. STRICT WEIGHTED PHYSICAL INFLUENCE / SPATIAL DECAY       [OPEN]
+    I. RESPONSE-CONTROLLED RANDOM-SCAN DYNAMICS                 [INTEGRATED]
+       -> actual one-step left variation propagated by K_R
+       -> right-boundary source forcing tracked separately
+       -> v_(n+1)=Q_R v_n
+       -> accumulated source discrepancy d_n
+       -> finite-step left variation <= v_n
+       -> finite-step boundary discrepancy <= d_n
+                                                                 [#4574-#4575]
+
+    J. SELF-CONSISTENT FIXED-RIGHT RESPONSE CLOSURE             [OPEN NOW]
+       -> normalize d_(n+1)=d_n+forcing(v_n)
+       -> explicit finite sum for d_n
+       -> stationary finite-step response inequality using K_R
+       -> weighted norm estimate for Q_R
+       -> terminal discrepancy control
+       -> asymptotic self-consistent response inequality
+       -> solve for weighted response profile R
+
+    K. ACTUAL REMOTE WEIGHTED COEFFICIENT                       [OPEN]
+       -> apply #4572 to solved response profile
+       -> derive concrete volume-independent kappa_s(beta,s)
+       -> prove
+            18*eta(beta)*s^2 + eta(beta) + kappa_s < 1
+          in a nonempty parameter regime
+       -> instantiate #4570 certificate interface
+
+    L. STRICT WEIGHTED PHYSICAL INFLUENCE / SPATIAL DECAY       [OPEN]
        -> full weighted subinvariance
-       -> spatial response decay
+       -> source-to-target response decay
        -> terminal kernel-section base-L1 covariance decay
 
-    K. UNIFORM REMOTE RESIDUAL / PHYSICAL SWEEP GATE            [OPEN]
+    M. UNIFORM REMOTE RESIDUAL / PHYSICAL SWEEP GATE            [OPEN]
        -> cubic shell summability
        -> volume-uniform remote residual
        -> strict physical sweep contraction
 
-    L. PHYSICAL POINCARE / COERCIVITY                           [OPEN]
+    N. PHYSICAL POINCARE / COERCIVITY                            [OPEN]
 
-    M. UNIFORM FINITE-VOLUME TRANSFER / HAMILTONIAN GAP         [OPEN]
+    O. UNIFORM FINITE-VOLUME TRANSFER / HAMILTONIAN GAP          [OPEN]
 
-    N. THERMODYNAMIC / CONTINUUM PHYSICAL LIMIT                 [OPEN]
+    P. THERMODYNAMIC / CONTINUUM PHYSICAL LIMIT                  [OPEN]
 
-    O. CLAY-LEVEL EXISTENCE + MASS GAP                          [OPEN]
+    Q. CLAY-LEVEL EXISTENCE + MASS GAP                           [OPEN]
 
 ---
 
@@ -120,23 +139,23 @@ Authority order:
 For theorem-bearing work:
 
     fresh-fetch theorem-carrier
-    -> lock exact canonical SHA
-    -> inspect exact Lean interfaces and full changed files
-    -> state one mathematically coherent theorem unit
-    -> push and fresh-observe PR current head
-    -> query CI for that exact head
-    -> if head moves, abandon the old run immediately
-    -> repair genuine Lean/API/syntax errors without weakening
-    -> require completed/success on the exact current head
-    -> require exact-head CI receipt success
-    -> merge against expected head SHA
-    -> fresh-fetch theorem-carrier again.
+      -> lock exact canonical SHA
+      -> inspect full Lean files and imported interfaces
+      -> formulate one mathematically coherent theorem unit
+      -> push and fresh-observe current PR head
+      -> follow CI for that exact head
+      -> if head changes, discard the old CI authority
+      -> repair Lean/API/syntax errors without weakening
+      -> require completed/success on exact current head
+      -> require exact-head CI receipt success
+      -> merge with expected_head_sha
+      -> fresh-fetch theorem-carrier again.
 
 A stale run attached to an older PR head is not CI authority for a moved PR.
 
-Queued or in-progress CI is not GREEN.
+Queued/in-progress CI is not GREEN.
 
-No new `sorry`, `admit`, axioms, hidden constants, assumption weakening, theorem weakening, or semantic broadening may be introduced as substitutes for proof.
+No new `sorry`, `admit`, axioms, hidden constants, hypothesis weakening, theorem weakening, or semantic broadening may replace proof.
 
 ---
 
@@ -144,7 +163,7 @@ No new `sorry`, `admit`, axioms, hidden constants, assumption weakening, theorem
 
 **Status: integrated.**
 
-The finite periodic compact-`SU(N)` Wilson model, reflection-positive structures, one-slab transfer operators, nonnegative ground-state architecture, and downstream coercivity/spectral interfaces form the theorem root.
+The repository contains the finite periodic compact-`SU(N)` Wilson model, reflection-positive structures, one-slab transfer architecture, nonnegative ground-state framework, and downstream coercivity/spectral interfaces.
 
 Boundary:
 
@@ -157,11 +176,11 @@ Boundary:
 
 **Status: integrated.**
 
-The repository contains the normalized continuous one-link law, measurable heat-bath reinsertion, one-link stationarity/properness machinery, and the physical C5/local-neighbor geometry.
+The continuous one-link law is normalized and measurable; the repository contains one-link heat-bath reinsertion, stationarity/properness machinery, represented-source cancellation, and the physical C5/local-neighbor geometry.
 
-Key local facts include the volume-independent active-neighbor degree bound and the base-L1 locality needed by the genuine local Harnack kernel.
+The volume-independent active-neighbor degree and base-L1 locality are the geometric input for the genuine local Harnack kernel.
 
-The old dense distinct-fiber tagged carrier remains a valid coarse upper-bound mechanism but is not the final sparse spatial carrier.
+The dense distinct-fiber tagged carrier remains a valid finite-volume upper-bound mechanism, but not the final sparse spatial carrier.
 
 ---
 
@@ -169,7 +188,7 @@ The old dense distinct-fiber tagged carrier remains a valid coarse upper-bound m
 
 **Status: integrated.**
 
-The exact kernel-section one-link update is identified with conditional expectation on the relevant off-fiber sigma-algebra. The repository contains the associated `L2` projection/fluctuation identities, covariance self-adjointness, one-link Dirichlet identities, deterministic schedule telescopes, and restricted-random-scan finite covariance resolvents.
+The one-link kernel section is identified with the relevant conditional expectation. The repository contains the associated `L2` projection/fluctuation identities, covariance self-adjointness, one-link Dirichlet identities, deterministic-schedule telescopes, and restricted-random-scan covariance resolvents.
 
 Permanent boundary:
 
@@ -178,289 +197,396 @@ Permanent boundary:
 
 ---
 
-# Phase 4 — Source localization and local/remote separation
-
-**Status: integrated.**
-
-The source crossing variation is singleton-supported.
-
-The coarse distinct-fiber carrier is spatially flat off target, so repeated sharpening of that carrier cannot yield volume-uniform base-L1 decay.
-
-The actual physical comparison is therefore separated into:
-
-    genuine local Harnack propagation
-      +
-    actual remote physical forcing.
-
-This is the structural split used by all later weighted arguments.
-
----
-
-# Phase 5 — Actual local Harnack finite propagation and Green control
-
-**Status: integrated.**
-
-A nonzero local Harnack step changes periodic link-base L1 distance by at most two.
-
-The actual local Harnack kernel has volume-independent row/column mass control. Its powers have exact finite propagation, and the finite local Green kernel inherits geometric spatial control under the local strictness condition.
-
-The local part is therefore analytically understood without using the coarse all-to-all tagged carrier.
-
----
-
-# Phase 6 — Weighted remote geometry and fixed-right bridge
-
-**Status: integrated through #4558.**
-
-The source-aligned actual remote residual is propagated through the local Green geometry rather than collapsed to a global L1 norm.
-
-Earlier work connects this actual remote forcing to a fixed-right response profile.
-
-PRs #4551-#4557 then develop an explicit restricted-random-scan resolvent for the coarse tagged carrier:
-
-    eligible-coordinate pullback
-      -> geometric eligible-total contraction
-      -> auxiliary unscanned response
-      -> represented right-source bound
-      -> fixed-right finite-step response
-      -> asymptotic fixed-right response.
-
-PR #4553 computes the exact physical eligible row coefficient:
-
-    (card(Link) - 1) * DistinctFiberOffFiberInfluence(beta).
-
-This makes the limitation explicit: the coarse tagged criterion is fixed-volume and is not a uniform spatial contraction mechanism.
-
-PR #4558 transports the asymptotic fixed-right response back to the actual source-aligned remote residual while retaining the exact C5 remote support.
-
-Result:
-
-    scan-depth dependence removed
-    but volume-independent spatial decay still open.
-
----
-
-# Phase 7 — Fixed-volume block/step bridge and covariance remainder
+# Phase 4 — Fixed-volume block/step covariance remainder
 
 **Status: CLOSED through #4547-#4548.**
 
-This phase was the main open item in the previous roadmap and is now complete.
-
-PR #4547 proves the exact complete-block/original-step identity
+PR #4547 proves the complete-block/original-step identity
 
     P_block^n f
-      = P_scan^(n * L_H) f
+      = P_scan^(n * L_H) f.
 
-under the established fixed-volume observable hypotheses.
-
-PR #4548 combines this with the stationary Doeblin block limit and proves
+PR #4548 combines this with fixed-volume Doeblin convergence and proves
 
     Cov_mu(F, P_scan^(n * L_H) G) -> 0.
 
-Therefore the finite-volume covariance remainder is no longer an open dependency.
+The covariance remainder is therefore closed at fixed finite volume.
 
-Important boundary:
+Boundary:
 
     fixed-volume covariance-remainder vanishing
       != volume-uniform spatial covariance decay.
 
 ---
 
-# Phase 8 — Exponentially weighted local Harnack row/column
+# Phase 5 — Coarse tagged fixed-right response
 
-**Status: CLOSED through #4559.**
+**Status: integrated through #4558.**
+
+PRs #4551-#4557 build the eligible-coordinate pullback and fixed-right response resolvent.
+
+The exact physical eligible-row coefficient includes
+
+    (card(Link)-1) * DistinctFiberOffFiberInfluence(beta),
+
+which records the fixed-volume obstruction explicitly.
+
+PR #4558 transports the asymptotic fixed-right bound back to the actual source-aligned remote residual while retaining its real C5 support.
+
+Result:
+
+    useful finite-volume response machinery
+    but not a uniform spatial contraction mechanism.
+
+---
+
+# Phase 6 — Exponentially weighted genuine local Harnack theory
+
+**Status: CLOSED through #4560.**
 
 Define
 
     W_center(x)
       := s ^ baseL1Distance(center,x),
 
+with `s >= 1`.
+
+PR #4559 proves
+
+    K_local W
+      <= rho_s W,
+
 with
-
-    s >= 1.
-
-Using the genuine active-neighbor carrier and the already-proved distance-step bound, PR #4559 proves
-
-    sum_source
-      K_local(target,source) * W_center(source)
-      <=
-      rho_s * W_center(target),
-
-where
 
     rho_s
       := 18 * eta(beta) * s^2.
 
-By symmetry, the same coefficient controls the weighted column.
+PR #4560 proves
 
-This estimate is volume-independent.
+    K_local^d W
+      <= rho_s^d W
 
-If
+and, if
 
     rho_s < 1,
 
-the local carrier is strictly subinvariant in the exponential weight.
-
----
-
-# Phase 9 — Iterated exponential local resolvent
-
-**Status: CLOSED through #4560.**
-
-PR #4560 iterates the weighted local inequality:
-
-    K_local^d W
-      <= rho_s^d W.
-
-It also proves the finite local resolvent bound
-
     G_local,M W
-      <= (1-rho_s)^(-1) W
+      <= (1-rho_s)^(-1) W.
 
-uniformly in the resolvent depth `M`, under
-
-    rho_s < 1.
-
-This is the current reusable weighted local Green mechanism.
-
-It uses no remote-response estimate, terminal covariance decay, physical sweep contraction, Poincare/coercivity, or mass-gap input.
+This is the reusable volume-independent local Green mechanism.
 
 ---
 
-# Phase 10 — Full physical weighted column decomposition
+# Phase 7 — Fixed-target weighted local/pin/remote decomposition
 
-**Status: CLOSED through #4561.**
+**Status: integrated through #4565.**
 
-Define the actual source-aligned weighted remote residual column by
+The actual fixed-target envelope is decomposed into
 
-    R_remote,weighted(center,source)
-      :=
-    sum_target
-      R_remote(source,target)
-      * W_center(target).
+    genuine local Harnack contribution
+      + distinguished-target pin
+      + actual source-aligned remote residual.
 
-PR #4561 proves the exact full-envelope decomposition
+The distinguished-target pin contributes an additional `eta(beta)` to the later full weighted coefficient.
 
-    sum_target
-      C_full(target,source) * W_center(target)
-
-      =
-
-    sum_target
-      K_local(target,source) * W_center(target)
-
-      +
-
-    R_remote,weighted(center,source).
-
-The local term satisfies
-
-    local weighted column
-      <= rho_s * W_center(source).
-
-No remote coefficient is assumed.
-
-The formal absorption interface is:
-
-    if
-      R_remote,weighted(center,source)
-        <= kappa_s * W_center(source),
-
-    then
-      full weighted column
-        <= (rho_s + kappa_s) * W_center(source).
-
-If additionally
-
-    rho_s + kappa_s < 1,
-
-the full physical envelope is strictly subinvariant in the exponential weight.
-
-This theorem isolates the remaining analytic problem exactly.
+The corresponding local/pin terms are now explicitly compatible with exponential weighting.
 
 ---
 
-# Phase 11 — Derive the actual remote weighted coefficient
+# Phase 8 — Weighted response bootstrap and variation propagation
 
-**Status: OPEN NOW.**
+**Status: integrated through #4569.**
 
-This is the immediate theorem-development frontier.
+PR #4566 lifts the fixed-target decomposition into a weighted response-bootstrap interface.
 
-Target:
+PR #4567 scales the physical influence bound by an arbitrary nonnegative variation profile.
 
-    R_remote,weighted(center,source)
-      <= kappa_s(beta,s) * W_center(source)
+PR #4568 transports that variation through the actual one-link heat-bath update.
 
-with a concrete coefficient independent of periodic spatial volume.
+PR #4569 packages the resulting fixed-target physical structure into a tagged carrier usable by random-scan algebra.
 
-Required final strictness:
+These theorems preserve the actual fixed-target law structure and do not identify the old coarse left-left carrier with the desired physical spatial kernel.
 
-    rho_s + kappa_s(beta,s) < 1
+---
 
-for a nonempty parameter regime.
+# Phase 9 — Uniform remote certificate interface
 
-Preferred proof architecture:
+**Status: integrated through #4570, but certificate existence remains open.**
 
-    actual one-link law / fixed-target physical envelope
-      -> weighted response inequality
-      -> local Green propagation
-      -> self-consistent remote forcing estimate
-      -> weighted bootstrap / absorption
-      -> explicit kappa_s.
+PR #4570 defines the interface
 
-A schematic form is
+    actual weighted remote residual
+      <= kappa * W.
 
-    response
-      <= direct local term
-        + G_local (remote forcing(response)).
+If such a `kappa` is supplied, the full weighted coefficient becomes
 
-The weight should be preserved throughout the argument.
+    c_s
+      = 18 * eta(beta) * s^2
+        + eta(beta)
+        + kappa.
+
+It proves the downstream algebraic consequences, including weighted kernel/resolvent bootstrap under `c_s < 1`.
+
+Important boundary:
+
+    certificate interface
+      != derivation of kappa.
+
+---
+
+# Phase 10 — Weighted superposition and remote-response linearization
+
+**Status: CLOSED through #4572.**
+
+PR #4571 establishes the weighted superposition needed to move target-dependent weights into variation profiles.
+
+PR #4572 proves that if `R(target,source)` bounds the actual fixed-right target-ratio response, then on remote targets
+
+    actual remote influence
+      <= exp(16 * beta) * R(target,source),
+
+and therefore
+
+    actual weighted remote residual
+      <= exp(16 * beta)
+         * weighted_mass(R).
+
+This is the key carrier-free bridge from fixed-right response to the actual remote residual.
+
+It uses no terminal covariance decay, physical sweep contraction, Poincare/coercivity, or mass-gap input.
+
+---
+
+# Phase 11 — Response-controlled physical kernel
+
+**Status: CLOSED through #4573.**
+
+For a nonnegative fixed-right response profile `R`, define the response-controlled kernel `K_R` by the physical cases:
+
+    diagonal:
+      0
+
+    C5/local exceptional:
+      eta(beta)
+
+    remote:
+      exp(16 * beta) * R(target,source).
+
+PR #4573 proves that the actual configuration-dependent fixed-target envelope is pointwise dominated by `K_R`.
+
+It then transports this domination to the actual bounded-test and arbitrary-variation one-link heat-bath estimates.
+
+Conceptual transition:
+
+    actual update
+      -> response-controlled physical kernel K_R
+
+replaces the old use of the coarse all-to-all left-left carrier as the spatial recurrence.
+
+Open point:
+
+    R is still an input profile;
+    it has not yet been constructed self-consistently.
+
+---
+
+# Phase 12 — One-step response-controlled random scan
+
+**Status: CLOSED through #4574.**
+
+PR #4574 proves that one actual restricted-random-scan step propagates left variation through `K_R`.
+
+Schematically,
+
+    v_next = Q_R v.
+
+It separately defines the represented right-source forcing
+
+    CrossBoundaryRandomScanSourceForcing(source,v).
+
+This separation is structural: the dense left-left block of the old augmented tagged carrier does not enter the physical left-variation recurrence.
+
+---
+
+# Phase 13 — Finite-step response-controlled recurrence
+
+**Status: CLOSED through #4575.**
+
+Define
+
+    v_0 = variation
+    v_(n+1) = Q_R v_n.
+
+PR #4575 proves that every actual `n`-step restricted-random-scan observable has left-fiber variation bounded by `v_n`.
+
+For the represented right-boundary source, define
+
+    d_0 = 0
+
+and
+
+    d_(n+1)
+      = card(Link)^(-1)
+        * sum_fiber [
+            d_n
+            + CrossBoundaryBoundedTestMajorant(beta,fiber,source)
+              * v_n(fiber)
+          ].
+
+PR #4575 proves that two random-scan orbits with different represented right-boundary source values differ pointwise by at most `d_n`.
+
+The coarse tagged carrier is used only to justify the right-source affine identity. Its volume-growing left-left block is not used in the recurrence that propagates spatial variation.
+
+---
+
+# Phase 14 — Normalize the source-discrepancy recurrence
+
+**Status: OPEN — next coherent theorem unit.**
+
+Because the spatial-link finite type is nonempty, the averaging term should simplify exactly to
+
+    d_(n+1)
+      = d_n
+        + CrossBoundaryRandomScanSourceForcing(source,v_n).
+
+Formal goals:
+
+1. prove positivity/nonzeroness of
+
+       card(PeriodicHypercubicEvenSpatialSliceLink H);
+
+2. normalize the averaged discrepancy step;
+
+3. prove the finite-sum identity
+
+       d_n
+         = sum_{j < n}
+             CrossBoundaryRandomScanSourceForcing(source,v_j).
+
+This removes avoidable averaging syntax before the stationary-response closure.
+
+---
+
+# Phase 15 — Stationary fixed-right response through K_R
+
+**Status: OPEN — immediate analytic frontier.**
+
+Replace the older coarse left-left finite-step response transport with the response-controlled recurrence.
+
+Desired schematic theorem:
+
+    actual fixed-right response
+      <= accumulated_source_forcing(v_0,...,v_(n-1))
+         + terminal_n_step_discrepancy.
+
+The left profile must remain
+
+    v_j = Q_R^j v_0,
+
+not an iterate of the dense tagged carrier.
+
+The terminal term should then be controlled or sent to zero under a strict weighted condition on `K_R`.
+
+---
+
+# Phase 16 — Self-consistent weighted response inequality
+
+**Status: OPEN — central closure problem.**
+
+Since the remote part of `K_R` itself contains `R`,
+
+    K_R(remote)
+      = exp(16 * beta) * R,
+
+the closure is self-consistent.
+
+The target is a weighted scalar/profile inequality such as
+
+    M_R
+      <= A(beta,s)
+         + B(beta,s) * M_R,
+
+where
+
+    M_R
+      := sup/source-normalized weighted mass of R,
+
+and
+
+    B(beta,s) < 1.
+
+Then
+
+    M_R
+      <= A(beta,s) / (1-B(beta,s)).
+
+The proof must derive this from the actual fixed-right law-level response and the response-controlled finite-step recurrence.
 
 Do **not** close this phase by:
 
-    * postulating the desired kappa_s as a terminal assumption;
-    * reverting to the coarse all-to-all tagged carrier as the spatial mechanism;
-    * using the fixed-volume asymptotic constant from #4557 as though it decayed with distance;
-    * using terminal covariance decay, a physical contraction,
-      Poincare/coercivity, or a mass gap upstream.
-
-The final theorem must derive the remote coefficient from already-authorized physical law/envelope machinery.
+    * assuming the final response bound;
+    * assuming the final remote certificate;
+    * reverting to the coarse all-to-all left-left coefficient;
+    * using terminal covariance decay;
+    * importing a physical contraction, Poincare/coercivity, or mass gap.
 
 ---
 
-# Phase 12 — Strict weighted physical influence and spatial response decay
+# Phase 17 — Derive the actual remote coefficient
 
-**Status: OPEN AFTER PHASE 11.**
+**Status: OPEN AFTER PHASE 16.**
 
-Once Phase 11 supplies a concrete `kappa_s`, combine it with #4561:
+Feed the solved response profile into #4572:
 
-    full weighted column
-      <= (rho_s + kappa_s) W.
+    weighted remote residual
+      <= exp(16 * beta) * weighted_mass(R).
 
-Under
+This should produce an explicit volume-independent
 
-    rho_s + kappa_s < 1,
+    kappa_s(beta,s).
 
-derive strict weighted physical influence control and the corresponding weighted response/resolvent estimates.
+Then instantiate the #4570 interface and prove a nonempty regime satisfying
 
-The target is a genuine volume-independent spatial mechanism.
+    18 * eta(beta) * s^2
+      + eta(beta)
+      + kappa_s(beta,s)
+      < 1.
 
-This phase should convert weighted operator control into explicit source-to-target decay without reintroducing the dense tagged carrier.
+This is the first point at which strict full weighted physical subinvariance is authorized.
 
 ---
 
-# Phase 13 — Terminal kernel-section base-L1 covariance decay
+# Phase 18 — Strict weighted physical influence and spatial decay
 
-**Status: OPEN AFTER PHASE 12.**
+**Status: OPEN AFTER PHASE 17.**
+
+From the strict coefficient derive:
+
+    full weighted physical influence
+      <= c_s W,
+
+with
+
+    c_s < 1.
+
+Then obtain volume-independent source-to-target response/resolvent decay.
+
+The target is a genuine sparse physical spatial mechanism, with no return to the dense tagged carrier.
+
+---
+
+# Phase 19 — Terminal kernel-section base-L1 covariance decay
+
+**Status: OPEN DOWNSTREAM.**
 
 Combine:
 
     source-singleton terminal variation
-      + fixed-volume covariance-remainder closure from #4548
-      + strict weighted physical influence control
+      + fixed-volume covariance-remainder closure (#4548)
+      + strict weighted physical influence
       + exact kernel-section covariance mechanics.
 
-Target schematic form:
+Target:
 
     |Cov_mu(crossing_source, terminal_target)|
       <= C * q^baseL1Distance(target,source),
@@ -470,58 +596,54 @@ uniformly in periodic volume, with
     C >= 0,
     0 <= q < 1.
 
-This is the missing analytic input for the already-built downstream uniform-residual pipeline.
-
 ---
 
-# Phase 14 — Uniform remote residual and physical sweep gate
+# Phase 20 — Uniform remote residual and physical sweep gate
 
 **Status: OPEN DOWNSTREAM.**
 
-Once Phase 13 is proved:
+Use cubic base-L1 shell summability:
 
     terminal covariance decay
       -> terminal response decay
-      -> cubic base-L1 shell summability
       -> volume-uniform remote residual
-      -> strict physical sweep gate.
-
-The source-aligned remote shell has a volume-independent polynomial growth bound, so a fixed exponential decay factor is summable.
+      -> strict physical sweep contraction.
 
 Directionality is permanent:
 
-    covariance decay -> uniform remote residual
+    covariance decay
+      -> uniform remote residual,
 
-is downstream and must not be used circularly to prove the same covariance decay.
+not the reverse.
 
 ---
 
-# Phase 15 — Physical Poincare / coercivity
+# Phase 21 — Physical Poincare / coercivity
 
 **Status: OPEN DOWNSTREAM.**
 
-After a volume-independent strict physical sweep contraction:
+After a volume-independent strict physical sweep estimate:
 
     physical response control
       -> conditional/block variance control
       -> Poincare / coercivity
       -> transfer-sector estimate.
 
-The target is a volume-independent coercive constant.
+The required coercive constant must remain uniform in volume.
 
 ---
 
-# Phase 16 — Uniform finite-volume transfer/Hamiltonian gap
+# Phase 22 — Uniform finite-volume transfer/Hamiltonian gap
 
 **Status: OPEN DOWNSTREAM.**
 
-The required output is a positive spectral lower bound uniform over the finite periodic volumes used in the limiting construction.
+Target: a positive spectral lower bound uniform over the finite periodic volumes used in the limiting construction.
 
-A gap constant that collapses with volume is insufficient for the continuum target.
+A fixed-volume spectral gap that collapses with volume is insufficient.
 
 ---
 
-# Phase 17 — Thermodynamic / continuum physical limit
+# Phase 23 — Thermodynamic / continuum physical limit
 
 **Status: OPEN DOWNSTREAM.**
 
@@ -533,102 +655,110 @@ After a uniform finite-volume physical gap, the program still requires:
       -> sufficiently rich nontrivial 4D Yang--Mills field/state
       -> spectral lower bound above the vacuum.
 
-Existing scalar or auxiliary continuum lanes are infrastructure, not substitutes for the full gauge-field construction.
+Existing auxiliary/scalar continuum lanes remain infrastructure, not substitutes for the full gauge-field construction.
 
 ---
 
-# Phase 18 — Clay-level target
+# Phase 24 — Clay-level target
 
 **Status: OPEN.**
 
 The final target remains a mathematically complete four-dimensional Yang--Mills existence and mass-gap construction in the intended setting.
 
-The current repository should therefore be read as a rigorous formalization program with substantial finite-volume and analytic infrastructure, not as an already completed Clay solution.
+The repository should therefore be read as a rigorous formalization program with substantial finite-volume and analytic infrastructure, not as an already completed Clay solution.
 
 ---
 
 # Immediate theorem-development checklist
 
-Starting from theorem-bearing baseline #4561:
+Starting from theorem-bearing baseline PR #4575:
 
-    1. inspect the actual fixed-target / source-aligned physical envelope
-       interfaces already proved at law level;
+    1. prove spatial-link cardinality is nonzero in the exact local context;
 
-    2. formulate a weighted response inequality using
-         W_center(x)=s^baseL1Distance(center,x)
-       and the merged local resolvent from #4560;
+    2. normalize
+         CrossBoundaryRandomScanSourceDiscrepancyStep
+       into
+         discrepancy + CrossBoundaryRandomScanSourceForcing;
 
-    3. derive the actual weighted remote residual coefficient
-         R_remote,weighted <= kappa_s W
-       without assuming it;
+    3. derive
+         d_n = sum_{j<n} forcing(v_j);
 
-    4. prove a nonempty parameter regime with
-         18*eta(beta)*s^2 + kappa_s < 1;
+    4. rebuild the stationary fixed-right finite-step response theorem
+       using v_j = Q_R^j v_0 rather than the coarse left-left carrier;
 
-    5. instantiate #4561 to obtain strict weighted subinvariance
-       of the full physical-left influence envelope;
+    5. identify a weighted norm M_R for the actual response profile R;
 
-    6. derive the corresponding volume-independent weighted
-       response / spatial decay theorem;
+    6. prove a strict weighted estimate for Q_R in terms of M_R;
 
-    7. combine that result with the already-closed #4548
-       covariance remainder to obtain terminal base-L1
-       covariance decay;
+    7. control the terminal n-step discrepancy and pass n -> infinity;
 
-    8. invoke the cubic-shell pipeline to obtain a
-       volume-uniform remote residual;
+    8. derive a self-consistent inequality
+         M_R <= A + B*M_R;
 
-    9. close the strict physical sweep gate;
+    9. prove B < 1 on a nonempty parameter regime and solve for M_R;
 
-    10. derive physical Poincare/coercivity;
+    10. use #4572 to obtain the actual volume-independent kappa_s;
 
-    11. derive a volume-uniform finite-volume transfer/Hamiltonian gap;
+    11. instantiate #4570 and prove
+          18*eta(beta)*s^2 + eta(beta) + kappa_s < 1;
 
-    12. advance the thermodynamic/continuum physical Yang--Mills carrier;
+    12. derive strict weighted physical influence and spatial response decay;
 
-    13. only then close the Clay-level existence and mass-gap statement.
+    13. combine with #4548 to obtain terminal base-L1 covariance decay;
+
+    14. run the cubic-shell / uniform-remote-residual pipeline;
+
+    15. close physical sweep contraction, Poincare/coercivity,
+        and the uniform finite-volume spectral gap;
+
+    16. only then advance the thermodynamic/continuum Yang--Mills carrier
+        and the Clay-level statement.
 
 ---
 
 # Current conceptual transition
 
-    #4547
-      exact complete-block / original-step iterate identity
+    #4547-#4548
+      fixed-volume covariance remainder closed
 
-    #4548
-      fixed-volume covariance remainder
-        Cov(F, P_scan^(n*L_H) G) -> 0
-
-    #4551-#4553
-      eligible pullback random-scan resolvent
-      + exact coarse physical row coefficient
+    #4551-#4558
+      coarse tagged fixed-right response route
       + explicit fixed-volume obstruction
+      + transport back to actual remote forcing
 
-    #4554-#4557
-      auxiliary unscanned response
-      -> represented fixed-right source
-      -> finite-step fixed-right response
-      -> asymptotic fixed-right response
+    #4559-#4560
+      genuine local exponential weighted Schur/resolvent theory
 
-    #4558
-      asymptotic fixed-right response transported back to
-      actual source-aligned remote physical forcing
+    #4563-#4569
+      actual fixed-target local/pin/remote decomposition
+      -> weighted response bootstrap
+      -> variation-scaled heat-bath propagation
 
-    #4559
-      exponential weighted genuine local-Harnack Schur bound
+    #4570
+      remote-certificate interface only
 
-    #4560
-      K_local^d W <= rho_s^d W
-      + G_local,M W <= (1-rho_s)^(-1) W
+    #4571-#4572
+      weighted superposition
+      -> actual remote residual linearized through fixed-right response
 
-    #4561
-      exact full weighted column
-        = local weighted column + actual remote weighted column
-      + abstract absorption gate
+    #4573
+      response profile R
+      -> response-controlled physical kernel K_R
+
+    #4574
+      one actual random-scan step
+      -> left variation propagated by K_R
+      + right-source forcing isolated
+
+    #4575
+      v_(n+1)=Q_R v_n
+      + finite-step accumulated right-source discrepancy d_n
 
     current frontier
-      derive the actual remote coefficient kappa_s
-      non-circularly and volume-independently.
+      actual stationary fixed-right response
+      -> self-consistent weighted inequality for R
+      -> explicit volume-independent kappa_s
+      -> strict full weighted physical subinvariance.
 
 ---
 
@@ -642,9 +772,10 @@ Starting from theorem-bearing baseline #4561:
     one-link conditional expectation != full Gibbs-law identification
     coarse tagged carrier != actual sparse physical carrier
     local weighted resolvent != remote weighted closure
-    fixed-right asymptotic bound != volume-uniform spatial decay
-    exact weighted decomposition != proof of a remote coefficient
-    abstract absorption interface != proof of strict absorption
+    fixed-right response profile input != self-consistent construction of that profile
+    response-controlled kernel K_R != proof of a bound for R
+    uniform remote certificate != derivation of its coefficient
+    exact weighted decomposition != strict absorption
     uniform finite-volume gap != thermodynamic/continuum Yang--Mills mass gap.
 
-These boundaries remain part of the formal proof architecture, not editorial caveats.
+These boundaries are part of the formal theorem architecture, not editorial caveats.
