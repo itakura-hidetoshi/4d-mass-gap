@@ -102,7 +102,8 @@ theorem
         simp [
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation,
           hENe]
-      · simpa [remote] using he
+      · intro hNotMem
+        exact (hNotMem (by simpa [remote] using he)).elim
     · simpa [remote] using he
   · rw [if_neg]
     · unfold
@@ -497,7 +498,7 @@ theorem
           m +
         rho ^ n * Real.exp (16 * beta) * ∑ target ∈ remote, W target := by
           rw [hDiscrepancyEq]
-          exact add_le_add_left hTerminalSum _
+          exact add_le_add_right hTerminalSum _
     _ ≤
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant
           beta source source *
@@ -507,7 +508,7 @@ theorem
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledExponentialWeightedColumnCoefficient
             beta s responseCoefficient)⁻¹ +
         rho ^ n * Real.exp (16 * beta) * ∑ target ∈ remote, W target := by
-          exact add_le_add_right hAccum _
+          exact add_le_add_left hAccum _
     _ =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant
           beta source source *
@@ -612,7 +613,7 @@ theorem
         H N hN beta hbeta s hs center source R hRNonneg hResponse
         responseCoefficient hResponseCoefficient hResponseWeighted hCoefficientLtOne
         B g₁ g₂ h k n
-    simpa [left, bound, terminalMass, rho] using h
+    simpa [left, bound, terminalMass, rho, mul_assoc] using h
   have hPow :
       Tendsto (fun n : ℕ => rho ^ n) atTop (𝓝 0) := by
     dsimp [rho]
