@@ -124,13 +124,14 @@ theorem
     have h :=
       hPow.mul_const (Real.exp (16 * beta))
     simpa using h
+  have hConst :
+      Tendsto (fun _n : ℕ => bound) atTop (𝓝 bound) :=
+    tendsto_const_nhds
   have hLimit :
       Tendsto
         (fun n : ℕ => bound + rho ^ n * Real.exp (16 * beta))
         atTop (𝓝 bound) := by
-    have h :=
-      tendsto_const_nhds.add hTail
-    simpa using h
+    simpa using hConst.add hTail
   have hFinal :
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioResponseAbs
           H N hN beta hbeta B target source g₁ g₂ h k ≤
