@@ -160,7 +160,7 @@ theorem
       kappa *
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight
           H s center source := by
-      exact add_le_add_left hRemote _
+      exact add_le_add (le_refl _) hRemote
     _ =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceUniformExponentialWeightedEnvelopeCoefficient
           beta s kappa *
@@ -296,7 +296,7 @@ theorem
           w source *
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight
               H s center source) := by
-      exact add_le_add_left hRemote _
+      exact add_le_add (le_refl _) hRemote
     _ =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceUniformExponentialWeightedEnvelopeCoefficient
           beta s kappa *
@@ -394,7 +394,7 @@ theorem
           w source *
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight
               H s center source) := by
-      exact add_le_add_left hRemote _
+      exact add_le_add (le_refl _) hRemote
     _ =
       (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
         v target *
