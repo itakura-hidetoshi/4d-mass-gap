@@ -394,7 +394,7 @@ theorem
           w source *
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight
               H s center source) := by
-      exact add_le_add_left (add_le_add_left hRemote _) _
+      exact add_le_add_left hRemote _
     _ =
       (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
         v target *
