@@ -257,9 +257,6 @@ theorem
               family k fiber := by
         rw [Finset.sum_comm]
   rw [hInside, Finset.mul_sum]
-  apply Finset.sum_congr rfl
-  intro k _hk
-  rfl
 
 /-- The pin-free accumulated source discrepancy commutes with scalar
 multiplication of its initial variation profile. -/
@@ -289,8 +286,19 @@ theorem
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledAccumulatedSourceDiscrepancy_succ_eq_add_sourceForcing,
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledAccumulatedSourceDiscrepancy_succ_eq_add_sourceForcing,
         ih]
+      have hIterate :
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledRandomScanVariationIterate
+              H beta hbeta R hRNonneg (fun e => a * variation e) n =
+            fun e =>
+              a *
+                periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledRandomScanVariationIterate
+                  H beta hbeta R hRNonneg variation n e := by
+        funext e
+        exact
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledRandomScanVariationIterate_const_mul
+            H beta hbeta R hRNonneg a variation n e
+      rw [hIterate]
       rw [
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledRandomScanVariationIterate_const_mul,
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryRandomScanSourceForcing_const_mul]
       ring
 
