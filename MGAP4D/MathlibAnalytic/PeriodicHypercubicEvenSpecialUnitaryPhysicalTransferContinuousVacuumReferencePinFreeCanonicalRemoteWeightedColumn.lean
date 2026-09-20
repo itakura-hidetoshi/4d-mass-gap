@@ -199,7 +199,14 @@ theorem
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioResponseAbs
               H N hN beta hbeta B target source g₁ g₂ h k := by
     intro target
-    simpa [S] using hxMem target
+    have hx := hxMem target
+    change ∃
+      (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+      (g₁ g₂ h k : Matrix.specialUnitaryGroup (Fin N) ℂ),
+      x target =
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioResponseAbs
+          H N hN beta hbeta B target source g₁ g₂ h k at hx
+    exact hx
   choose B g₁ g₂ h k hxWitnessEq using hWitness
   have hDeltaCancel :
       ∀ target : PeriodicHypercubicEvenSpatialSliceLink H,
@@ -253,8 +260,8 @@ theorem
           (∑ target ∈ remote, W target * x target) +
             (∑ target ∈ remote, W target * delta target) := by
               simp only [Finset.sum_add_distrib]
-      _ ≤ (∑ target ∈ remote, W target * x target) + ε :=
-        add_le_add_left hErrorSum _
+      _ ≤ (∑ target ∈ remote, W target * x target) + ε := by
+        exact add_le_add (le_refl _) hErrorSum
   have hFamily :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioRemoteWeightedResponseFamily_le_pinFreeAggregateResolvent
       H N hN beta hbeta s hs center source Rcan hRNonneg hUniform
@@ -286,7 +293,8 @@ theorem
       ∑ target ∈ remote, W target * Rcan target source := by
         rfl
     _ ≤ (∑ target ∈ remote, W target * x target) + ε := hApproxSum
-    _ ≤ K + ε := add_le_add_right hWitnessSum ε
+    _ ≤ K + ε := by
+      exact add_le_add hWitnessSum (le_refl ε)
     _ =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant
           beta source source *
