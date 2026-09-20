@@ -188,7 +188,9 @@ theorem
         terminal n := by
           simpa [terminal] using hStationary
       _ ≤ K + terminal n := by
-        exact add_le_add_right (by simpa [K] using hAccum) _
+        exact add_le_add
+          (by simpa [K] using hAccum)
+          (le_refl (terminal n))
   have hLimit :
       |(∫ A,
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
