@@ -280,10 +280,17 @@ theorem
               (if target = distinguishedTarget then eta else 0) * W target) =
               eta * W distinguishedTarget := by
           simp
-        rw [hPinSum, Finset.mul_sum]
-        apply Finset.sum_congr rfl
-        intro target _hTarget
-        ring
+        have hRemoteSum :
+            (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
+              Real.exp (16 * beta) * R target source * W target) =
+              Real.exp (16 * beta) *
+                (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
+                  R target source * W target) := by
+          rw [Finset.mul_sum]
+          apply Finset.sum_congr rfl
+          intro target _hTarget
+          ring
+        rw [hPinSum, hRemoteSum]
     _ ≤
       (18 *
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceBackgroundUpdateHarnackInfluence
