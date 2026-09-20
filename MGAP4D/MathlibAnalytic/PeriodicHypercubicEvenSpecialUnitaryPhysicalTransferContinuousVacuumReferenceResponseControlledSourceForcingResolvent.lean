@@ -71,7 +71,7 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant
   simp only [if_pos rfl]
   have hExp : 1 ≤ Real.exp (8 * beta) := by
-    apply Real.one_le_exp.mpr
+    apply Real.one_le_exp
     nlinarith
   have hSq : 1 ≤ (Real.exp (8 * beta)) ^ 2 := by
     nlinarith [Real.exp_pos (8 * beta)]
@@ -128,8 +128,9 @@ theorem
         (bound *
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight
             H s distinguishedTarget source) := by
-      exact mul_le_mul_of_nonneg_left
-        (mul_le_mul_of_nonneg_left hVariationBound hMajorant) hInv
+      simpa [mul_assoc] using
+        (mul_le_mul_of_nonneg_left
+          (mul_le_mul_of_nonneg_left hVariationBound hMajorant) hInv)
     _ =
       (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ)⁻¹ *
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant
