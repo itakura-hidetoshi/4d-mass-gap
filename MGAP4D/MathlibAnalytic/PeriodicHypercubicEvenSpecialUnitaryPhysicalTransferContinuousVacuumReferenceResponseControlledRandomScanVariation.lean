@@ -263,6 +263,108 @@ theorem
         H beta hbeta fiber source)
       (hVariationNonneg fiber)
 
+
+/-- The direct effect of changing the represented right-boundary source value
+in one actual restricted random-scan step is bounded by the isolated
+cross-boundary source forcing. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberRestrictedRandomScanExpectation_boundarySource_difference_le_sourceForcing
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (target source : PeriodicHypercubicEvenSpatialSliceLink H)
+    (g₂ k₁ k₂ : Matrix.specialUnitaryGroup (Fin N) ℂ)
+    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (F : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ)
+    (hF : StronglyMeasurable F)
+    (variation : PeriodicHypercubicEvenSpatialSliceLink H → ℝ)
+    (hVariationNonneg : ∀ e, 0 ≤ variation e)
+    (hVariation :
+      ∀ (e : PeriodicHypercubicEvenSpatialSliceLink H)
+        (C : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+        (u v : Matrix.specialUnitaryGroup (Fin N) ℂ),
+        |F (Function.update C e u) - F (Function.update C e v)| ≤ variation e) :
+    |periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberRestrictedRandomScanExpectation
+        H N hN beta hbeta B target source g₂ k₁ A F -
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberRestrictedRandomScanExpectation
+        H N hN beta hbeta B target source g₂ k₂ A F| ≤
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryRandomScanSourceForcing
+        H beta source variation := by
+  have hInvNonneg :
+      0 ≤ (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ)⁻¹ :=
+    inv_nonneg.mpr (Nat.cast_nonneg _)
+  have hTarget (fiber : PeriodicHypercubicEvenSpatialSliceLink H) :
+      |periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberDeterministicScheduleExpectation
+          H N hN beta hbeta B target source g₂ [fiber] k₁ A F -
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberDeterministicScheduleExpectation
+          H N hN beta hbeta B target source g₂ [fiber] k₂ A F| ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant
+          beta fiber source * variation fiber := by
+    have hBound :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTagged_oneLinkHeatBath_fiberVariation_influence_le_kernel_mul
+        H N hN beta hbeta B target source fiber k₁ k₂ g₂ A F hF
+        (variation fiber) (hVariationNonneg fiber)
+        (hVariation fiber A)
+    simpa [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberDeterministicScheduleExpectation,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedKernelData_left_right] using hBound
+  have hSum :
+      |∑ fiber : PeriodicHypercubicEvenSpatialSliceLink H,
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberDeterministicScheduleExpectation
+              H N hN beta hbeta B target source g₂ [fiber] k₁ A F -
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberDeterministicScheduleExpectation
+              H N hN beta hbeta B target source g₂ [fiber] k₂ A F)| ≤
+        ∑ fiber : PeriodicHypercubicEvenSpatialSliceLink H,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant
+            beta fiber source * variation fiber := by
+    calc
+      |∑ fiber : PeriodicHypercubicEvenSpatialSliceLink H,
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberDeterministicScheduleExpectation
+              H N hN beta hbeta B target source g₂ [fiber] k₁ A F -
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberDeterministicScheduleExpectation
+              H N hN beta hbeta B target source g₂ [fiber] k₂ A F)| ≤
+        ∑ fiber : PeriodicHypercubicEvenSpatialSliceLink H,
+          |periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberDeterministicScheduleExpectation
+              H N hN beta hbeta B target source g₂ [fiber] k₁ A F -
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberDeterministicScheduleExpectation
+              H N hN beta hbeta B target source g₂ [fiber] k₂ A F| :=
+        Finset.abs_sum_le_sum_abs _ _
+      _ ≤
+        ∑ fiber : PeriodicHypercubicEvenSpatialSliceLink H,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant
+            beta fiber source * variation fiber := by
+        apply Finset.sum_le_sum
+        intro fiber _hFiber
+        exact hTarget fiber
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberRestrictedRandomScanExpectation
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryRandomScanSourceForcing
+  calc
+    |(Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ)⁻¹ *
+          (∑ fiber : PeriodicHypercubicEvenSpatialSliceLink H,
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberDeterministicScheduleExpectation
+              H N hN beta hbeta B target source g₂ [fiber] k₁ A F) -
+        (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ)⁻¹ *
+          (∑ fiber : PeriodicHypercubicEvenSpatialSliceLink H,
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberDeterministicScheduleExpectation
+              H N hN beta hbeta B target source g₂ [fiber] k₂ A F)| =
+      (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ)⁻¹ *
+        |∑ fiber : PeriodicHypercubicEvenSpatialSliceLink H,
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberDeterministicScheduleExpectation
+              H N hN beta hbeta B target source g₂ [fiber] k₁ A F -
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberDeterministicScheduleExpectation
+              H N hN beta hbeta B target source g₂ [fiber] k₂ A F)| := by
+      rw [← mul_sub, ← Finset.sum_sub_distrib, abs_mul,
+        abs_of_nonneg hInvNonneg]
+    _ ≤
+      (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ)⁻¹ *
+        ∑ fiber : PeriodicHypercubicEvenSpatialSliceLink H,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant
+            beta fiber source * variation fiber :=
+      mul_le_mul_of_nonneg_left hSum hInvNonneg
+
 end
 
 end MathlibAnalytic
