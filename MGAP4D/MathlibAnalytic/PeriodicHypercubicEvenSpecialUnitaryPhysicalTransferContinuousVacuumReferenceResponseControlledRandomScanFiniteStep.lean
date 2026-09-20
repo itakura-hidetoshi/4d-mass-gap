@@ -160,6 +160,34 @@ noncomputable def
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant
           beta fiber source * variation fiber)
 
+/-- A right-source discrepancy step is exactly the previous discrepancy plus
+the isolated one-scan source forcing.  The normalization uses only the
+nonemptiness already witnessed by `source`. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryRandomScanSourceDiscrepancyStep_eq_add_sourceForcing
+    (H : ℕ)
+    (beta : ℝ)
+    (source : PeriodicHypercubicEvenSpatialSliceLink H)
+    (variation : PeriodicHypercubicEvenSpatialSliceLink H → ℝ)
+    (discrepancy : ℝ) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryRandomScanSourceDiscrepancyStep
+        H beta source variation discrepancy =
+      discrepancy +
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryRandomScanSourceForcing
+          H beta source variation := by
+  have hCardNat :
+      0 < Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) :=
+    Fintype.card_pos_iff.mpr ⟨source⟩
+  have hCard :
+      (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ) ≠ 0 := by
+    exact_mod_cast (ne_of_gt hCardNat)
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryRandomScanSourceDiscrepancyStep
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryRandomScanSourceForcing
+  simp only [Finset.sum_add_distrib, Finset.sum_const, Finset.card_univ,
+    nsmul_eq_mul]
+  field_simp [hCard] <;> ring
+
 /-- Accumulated right-source discrepancy along the response-controlled left
 variation orbit. -/
 noncomputable def
@@ -219,6 +247,62 @@ noncomputable def
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledAccumulatedSourceDiscrepancy
           H beta hbeta distinguishedTarget source R hRNonneg variation n) := by
   rfl
+
+/-- The accumulated source discrepancy satisfies the normalized affine
+recurrence `d_(n+1) = d_n + forcing(v_n)`. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledAccumulatedSourceDiscrepancy_succ_eq_add_sourceForcing
+    (H : ℕ)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (distinguishedTarget source : PeriodicHypercubicEvenSpatialSliceLink H)
+    (R :
+      PeriodicHypercubicEvenSpatialSliceLink H →
+        PeriodicHypercubicEvenSpatialSliceLink H → ℝ)
+    (hRNonneg : ∀ target source, 0 ≤ R target source)
+    (variation : PeriodicHypercubicEvenSpatialSliceLink H → ℝ)
+    (n : ℕ) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledAccumulatedSourceDiscrepancy
+        H beta hbeta distinguishedTarget source R hRNonneg variation (n + 1) =
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledAccumulatedSourceDiscrepancy
+          H beta hbeta distinguishedTarget source R hRNonneg variation n +
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryRandomScanSourceForcing
+          H beta source
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledRandomScanVariationIterate
+            H beta hbeta distinguishedTarget R hRNonneg variation n) := by
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledAccumulatedSourceDiscrepancy_succ,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryRandomScanSourceDiscrepancyStep_eq_add_sourceForcing]
+
+/-- The accumulated right-source discrepancy is exactly the finite sum of the
+one-scan forcings along the response-controlled left-variation orbit. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledAccumulatedSourceDiscrepancy_eq_sum_sourceForcing
+    (H : ℕ)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (distinguishedTarget source : PeriodicHypercubicEvenSpatialSliceLink H)
+    (R :
+      PeriodicHypercubicEvenSpatialSliceLink H →
+        PeriodicHypercubicEvenSpatialSliceLink H → ℝ)
+    (hRNonneg : ∀ target source, 0 ≤ R target source)
+    (variation : PeriodicHypercubicEvenSpatialSliceLink H → ℝ)
+    (n : ℕ) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledAccumulatedSourceDiscrepancy
+        H beta hbeta distinguishedTarget source R hRNonneg variation n =
+      ∑ j in Finset.range n,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryRandomScanSourceForcing
+          H beta source
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledRandomScanVariationIterate
+            H beta hbeta distinguishedTarget R hRNonneg variation j) := by
+  induction n with
+  | zero =>
+      simp
+  | succ n ih =>
+      rw [
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledAccumulatedSourceDiscrepancy_succ_eq_add_sourceForcing,
+        ih,
+        Finset.sum_range_succ]
 
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryRandomScanSourceDiscrepancyStep_nonneg
