@@ -209,11 +209,11 @@ theorem
       H N hN beta hbeta B distinguishedTarget distinguishedSource
       distinguishedTarget k g₂ (Function.update A backgroundSource v)
   have hMassU0 : doobWeightMass μ wu ≠ 0 := by
-    rw [hMassU]
-    exact ENNReal.ofReal_ne_zero.mpr hMassUPos.ne'
+    rw [hMassU, ENNReal.ofReal_ne_zero_iff]
+    exact hMassUPos
   have hMassV0 : doobWeightMass μ wv ≠ 0 := by
-    rw [hMassV]
-    exact ENNReal.ofReal_ne_zero.mpr hMassVPos.ne'
+    rw [hMassV, ENNReal.ofReal_ne_zero_iff]
+    exact hMassVPos
   have hMassUtop : doobWeightMass μ wu ≠ ∞ := by
     rw [hMassU]
     exact ENNReal.ofReal_ne_top
@@ -466,6 +466,7 @@ theorem
                   H N hN beta hbeta B distinguishedTarget distinguishedSource k g₂ Uy) := by
               rw [ENNReal.ofReal_mul (Real.exp_pos _).le]
               rw [ENNReal.ofReal_mul hVxPos.le]
+              ac_rfl
     simpa [
       wu,
       wv,
