@@ -313,8 +313,10 @@ theorem
           w source * W source) +
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetPhysicalLeftExponentialWeightedRemoteBilinearForcing
         H N hN beta hbeta A s distinguishedTarget w) := by
-      apply add_le_add_left
-      simpa [K, W] using hApply
+      exact
+        add_le_add
+          (le_refl _)
+          (by simpa [K, W] using hApply)
     _ =
       (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
         v target *
@@ -332,7 +334,7 @@ theorem
               H s distinguishedTarget source) +
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetPhysicalLeftExponentialWeightedRemoteBilinearForcing
         H N hN beta hbeta A s distinguishedTarget w := by
-      rfl
+      simpa [W, add_assoc]
 
 end
 
