@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferencePhysicalLeftLocalHarnackKernelBaseL1Propagation
-import Mathlib.Algebra.Order.GroupWithZero.Basic
 import Mathlib.Tactic
 
 /-!
