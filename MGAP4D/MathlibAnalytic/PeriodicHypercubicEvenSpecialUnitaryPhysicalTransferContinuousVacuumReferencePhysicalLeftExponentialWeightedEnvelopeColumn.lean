@@ -203,10 +203,10 @@ theorem
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftInfluenceEnvelopeKernel_exponentialWeightedColumn_eq_local_add_remote]
   exact
-    add_le_add_right
+    add_le_add
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackKernel_exponentialWeightedColumnSum_le
         H beta hbeta s hs center source)
-      _
+      (le_refl _)
 
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftInfluenceEnvelopeKernel_exponentialWeightedColumnSum_le_totalCoefficient
@@ -263,7 +263,7 @@ theorem
       kappa *
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight
           H s center source :=
-      add_le_add_left hRemote _
+      add_le_add (le_refl _) hRemote
     _ =
       (18 *
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceBackgroundUpdateHarnackInfluence
