@@ -115,6 +115,26 @@ theorem
       H beta hbeta s hs center target
   have hResponse := hResponseRow target
   have hExpNonneg : 0 ≤ Real.exp (16 * beta) := (Real.exp_pos _).le
+  have hPinSum :
+      (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
+        (if target = distinguishedTarget then eta else 0) * W source) =
+        (if target = distinguishedTarget then
+          eta * ∑ source : PeriodicHypercubicEvenSpatialSliceLink H, W source
+        else 0) := by
+    by_cases hDist : target = distinguishedTarget
+    · simp only [hDist, if_pos]
+      rw [Finset.mul_sum]
+    · simp [hDist]
+  have hResponseSum :
+      (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
+        (Real.exp (16 * beta) * R target source) * W source) =
+        Real.exp (16 * beta) *
+          (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
+            R target source * W source) := by
+    rw [Finset.mul_sum]
+    apply Finset.sum_congr rfl
+    intro source _hSource
+    ring
   calc
     (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledPhysicalLeftKernel
@@ -137,16 +157,7 @@ theorem
         (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
           R target source * W source) := by
         simp_rw [add_mul]
-        rw [Finset.sum_add_distrib, Finset.sum_add_distrib]
-        by_cases hDist : target = distinguishedTarget
-        · rw [if_pos hDist]
-          simp only [Finset.sum_const_zero, add_zero]
-          rw [Finset.mul_sum]
-          ring
-        · rw [if_neg hDist]
-          simp
-          rw [Finset.mul_sum]
-          ring
+        rw [Finset.sum_add_distrib, Finset.sum_add_distrib, hPinSum, hResponseSum]
     _ ≤
       (18 *
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceBackgroundUpdateHarnackInfluence
