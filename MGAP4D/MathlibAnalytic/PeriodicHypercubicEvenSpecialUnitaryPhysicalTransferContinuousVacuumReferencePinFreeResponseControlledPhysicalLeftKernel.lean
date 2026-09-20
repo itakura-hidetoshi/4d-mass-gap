@@ -141,13 +141,20 @@ theorem
   classical
   by_cases hActive :
       target ∈ periodicHypercubicEvenSpatialSliceActiveNeighbors H source
-  · have hLocal :=
+  · have hAdj :
+        (periodicHypercubicEvenSpatialSliceActiveGraph H).Adj source target :=
+      (periodicHypercubicEvenSpatialSliceActiveGraph_adj_iff_mem_activeNeighbors
+        H source target).mpr hActive
+    have hShare :
+        periodicHypercubicEvenSpatialSliceLinksSharePlaquette H source target :=
+      hAdj.2
+    have hLocal :=
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_backgroundUpdate_boundedTest_difference_le_harnackInfluence
         H N hN beta hbeta B distinguishedTarget distinguishedSource target source
         hne k g₂ u v A phi hphi hphiBound
     simpa [
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledPhysicalLeftKernel,
-      hne, hActive] using hLocal
+      hne, hActive, hShare] using hLocal
   · have hNoShare :
         ¬ periodicHypercubicEvenSpatialSliceLinksSharePlaquette H target source :=
       periodicHypercubicEvenSpatialSlice_not_sharePlaquette_of_not_active
@@ -181,6 +188,12 @@ theorem
         H N hN beta hbeta A target source
         (R target source) (hRNonneg target source)
         (fun g₁ g₂ h k => hResponse A target source g₁ g₂ h k)
+    have hNoShareRev :
+        ¬ periodicHypercubicEvenSpatialSliceLinksSharePlaquette H source target := by
+      intro hShareRev
+      exact hNoShare
+        ((periodicHypercubicEvenSpatialSliceLinksSharePlaquette_comm
+          H target source).mpr hShareRev)
     calc
       |(∫ g, phi g
           ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
@@ -198,7 +211,7 @@ theorem
           H beta hbeta R hRNonneg).influence target source := by
           simp [
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledPhysicalLeftKernel,
-            hne, hActive]
+            hne, hActive, hNoShareRev]
 
 /-- Pointwise, the pin-free kernel is bounded by the genuine local Harnack
 kernel plus the response feedback. -/
@@ -221,9 +234,12 @@ theorem
   have hResponseNonneg : 0 ≤ Real.exp (16 * beta) * R target source :=
     mul_nonneg (Real.exp_pos _).le (hRNonneg target source)
   by_cases hEq : target = source
-  · rw [
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledPhysicalLeftKernel
-        H beta hbeta R hRNonneg).influence_diagonal_zero source]
+  · subst target
+    change
+      0 ≤
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackKernel
+          H beta hbeta).influence source source +
+        Real.exp (16 * beta) * R source source
     exact add_nonneg
       ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackKernel
         H beta hbeta).influence_nonneg source source)
@@ -241,6 +257,7 @@ theorem
       simp only [
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledPhysicalLeftKernel,
         hEq, if_false, hActive, hLocalZero, zero_add]
+      exact le_rfl
 
 /-- The pin-free response-controlled kernel has a fully volume-independent
 exponentially weighted row bound. -/
