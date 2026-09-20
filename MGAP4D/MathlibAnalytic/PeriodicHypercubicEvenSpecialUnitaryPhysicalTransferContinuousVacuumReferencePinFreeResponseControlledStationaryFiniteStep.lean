@@ -27,27 +27,27 @@ open scoped ENNReal ProbabilityTheory BigOperators
 
 noncomputable section
 
-local instance responseControlledStationaryFiniteStepSpatialLinkFintype
+local instance pinFreeResponseControlledStationaryFiniteStepSpatialLinkFintype
     (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
-local instance responseControlledStationaryFiniteStepSpecialUnitaryIsTopologicalGroup
+local instance pinFreeResponseControlledStationaryFiniteStepSpecialUnitaryIsTopologicalGroup
     (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 
-local instance responseControlledStationaryFiniteStepSpecialUnitaryCompactSpace
+local instance pinFreeResponseControlledStationaryFiniteStepSpecialUnitaryCompactSpace
     (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
-local instance responseControlledStationaryFiniteStepSpecialUnitarySecondCountableTopology
+local instance pinFreeResponseControlledStationaryFiniteStepSpecialUnitarySecondCountableTopology
     (N : ℕ) : SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupSecondCountableTopology N
 
-local instance responseControlledStationaryFiniteStepSpecialUnitaryMeasurableSpace
+local instance pinFreeResponseControlledStationaryFiniteStepSpecialUnitaryMeasurableSpace
     (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
 
-local instance responseControlledStationaryFiniteStepSpecialUnitaryBorelSpace
+local instance pinFreeResponseControlledStationaryFiniteStepSpecialUnitaryBorelSpace
     (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
