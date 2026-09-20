@@ -1,6 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferencePinFreeWeightedRemoteResponseFamily
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightResponseProfile
-import Mathlib.Algebra.Order.Archimedean.Real.Basic
 import Mathlib.Tactic
 
 /-!
