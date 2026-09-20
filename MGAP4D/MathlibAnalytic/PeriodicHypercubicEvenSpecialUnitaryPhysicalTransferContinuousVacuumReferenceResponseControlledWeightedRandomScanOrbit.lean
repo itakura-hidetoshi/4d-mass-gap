@@ -137,23 +137,22 @@ theorem
         H beta hbeta distinguishedTarget R hRNonneg).influence_diagonal_zero source]
     exact add_nonneg (add_nonneg hLocal (by split <;> positivity)) hResponse
   · by_cases hDist : target = distinguishedTarget
-    · have hExceptional :
-          target ∈
+    · subst target
+      have hExceptional :
+          distinguishedTarget ∈
             periodicHypercubicEvenSpatialSliceC5ExceptionalBackgroundFibers
               H source distinguishedTarget := by
         simp [
-          periodicHypercubicEvenSpatialSliceC5ExceptionalBackgroundFibers,
-          hDist]
-      simp only [
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledPhysicalLeftKernel,
-        hEq, if_false, hExceptional, if_true, hDist]
-      change eta ≤
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackKernel
-            H beta hbeta).influence target source +
-          eta + Real.exp (16 * beta) * R target source
-      exact
-        (le_add_of_nonneg_left hLocal).trans
-          (le_add_of_nonneg_right hResponse)
+          periodicHypercubicEvenSpatialSliceC5ExceptionalBackgroundFibers]
+      have hKernelEq :
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledPhysicalLeftKernel
+              H beta hbeta distinguishedTarget R hRNonneg).influence
+              distinguishedTarget source = eta := by
+        simp [
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledPhysicalLeftKernel,
+          hEq, hExceptional, eta]
+      rw [hKernelEq, if_pos rfl]
+      nlinarith
     · by_cases hActive :
         target ∈ periodicHypercubicEvenSpatialSliceActiveNeighbors H source
       · have hExceptional :
@@ -172,7 +171,7 @@ theorem
         simp only [
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledPhysicalLeftKernel,
           hEq, if_false, hExceptional, if_true, hDist, hLocalEq]
-        exact le_add_of_nonneg_right hResponse
+        nlinarith
       · have hNotExceptional :
             target ∉
               periodicHypercubicEvenSpatialSliceC5ExceptionalBackgroundFibers
@@ -180,15 +179,15 @@ theorem
           simp [
             periodicHypercubicEvenSpatialSliceC5ExceptionalBackgroundFibers,
             hEq, hDist, hActive]
-        have hLocalEq :
-            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackKernel
-                H beta hbeta).influence target source = 0 := by
+        have hKernelEq :
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledPhysicalLeftKernel
+                H beta hbeta distinguishedTarget R hRNonneg).influence target source =
+              Real.exp (16 * beta) * R target source := by
           simp [
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackKernel,
-            hActive]
-        simp [
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledPhysicalLeftKernel,
-          hEq, hNotExceptional, hDist, hLocalEq]
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledPhysicalLeftKernel,
+            hEq, hNotExceptional]
+        rw [hKernelEq, if_neg hDist]
+        nlinarith
 
 /-- The response-controlled physical kernel inherits a volume-independent
 weighted column bound from the weighted mass of the response profile itself. -/
@@ -282,8 +281,6 @@ theorem
               eta * W distinguishedTarget := by
           simp
         rw [hPinSum, Finset.mul_sum]
-        apply congrArg₂ (· + ·) rfl
-        apply congrArg₂ (· + ·) rfl
         apply Finset.sum_congr rfl
         intro target _hTarget
         ring
@@ -423,8 +420,8 @@ theorem
       (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
         finiteInfluenceKernelUpdatedVariation K variation target source) ≤
       n⁻¹ * (n - 1 + coefficient) * bound * W source
-  exact
-    mul_le_mul_of_nonneg_left hTargetSum (le_of_lt (inv_pos.mpr hn))
+  simpa [mul_assoc] using
+    (mul_le_mul_of_nonneg_left hTargetSum (le_of_lt (inv_pos.mpr hn)))
 
 /-- The complete response-controlled random-scan orbit obeys the corresponding
 target-centered geometric weighted bound. -/
@@ -515,7 +512,22 @@ theorem
           (mul_nonneg (pow_nonneg hRateNonneg n) hBoundNonneg)
           (fun e => by simpa [rate, mul_assoc] using ih e)
           source
-      simpa [rate, pow_succ, mul_assoc] using hStep
+      calc
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledRandomScanUpdatedVariation
+            H beta hbeta distinguishedTarget R hRNonneg
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedTargetResponseControlledRandomScanVariationIterate
+              H beta hbeta distinguishedTarget R hRNonneg variation n)
+            source ≤
+          rate * (rate ^ n * bound) *
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight
+              H s distinguishedTarget source := by
+                simpa [rate, mul_assoc] using hStep
+        _ =
+          rate ^ (n + 1) * bound *
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight
+              H s distinguishedTarget source := by
+                rw [pow_succ]
+                ring
 
 end
 
