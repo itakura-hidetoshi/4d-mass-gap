@@ -235,11 +235,9 @@ theorem
     mul_nonneg (Real.exp_pos _).le (hRNonneg target source)
   by_cases hEq : target = source
   · subst target
-    change
-      0 ≤
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackKernel
-          H beta hbeta).influence source source +
-        Real.exp (16 * beta) * R source source
+    simp only [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledPhysicalLeftKernel,
+      if_pos rfl]
     exact add_nonneg
       ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackKernel
         H beta hbeta).influence_nonneg source source)
