@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferNormalizedOneSlabBetaContinuity
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferGeometry
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransfer
 import Mathlib.Analysis.Normed.Algebra.Spectrum
 import Mathlib.Analysis.Normed.Ring.Units
 import Mathlib.Topology.MetricSpace.Lipschitz
@@ -13,7 +13,7 @@ nonnegative Wilson-coupling half-line.  The existing Riesz/CFC top-sector
 machinery lives on the genuine complex physical Hilbert space, so the next
 step is to transport that continuity through the canonical scalar extension.
 
-The scalar-extension map is an isometry in operator norm.  Hence the genuine
+The canonical scalar-extension map is bounded linearly in operator norm.  Hence the genuine
 complex normalized one-slab transfer is continuous in beta.  At every fixed
 complex spectral parameter belonging to the resolvent set at a base coupling,
 openness of the invertible bounded operators then gives local stability of the
@@ -94,21 +94,27 @@ private theorem
   · simp [periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_apply]
 
 /-- Canonical scalar extension from real physical bounded operators to genuine
-complex physical bounded operators is an operator-norm isometry, hence
-1-Lipschitz. -/
+complex physical bounded operators is globally Lipschitz.  The pre-existing
+pointwise estimate loses at most the harmless factor two, which is entirely
+sufficient for beta-continuity and avoids importing the later exact-isometry
+geometry layer. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_lipschitz
     (H N : ℕ) :
-    LipschitzWith 1
+    LipschitzWith (2 : NNReal)
       (fun T :
           periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N →L[ℝ]
             periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N =>
         periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N T) := by
-  apply LipschitzWith.mk_one
+  apply LipschitzWith.of_dist_le_mul
   intro T U
-  simp only [dist_eq_norm]
-  rw [← physicalOperatorComplexification_sub_for_beta_continuity]
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_norm]
+  rw [dist_eq_norm, dist_eq_norm, ← physicalOperatorComplexification_sub_for_beta_continuity]
+  apply ContinuousLinearMap.opNorm_le_bound
+  · positivity
+  · intro f
+    simpa [mul_assoc] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexificationFun_norm_le
+        H N (T - U) f
 
 /-- The genuine complex normalized physical transfer as a family over the fixed
 nonnegative Wilson-coupling half-line. -/
@@ -132,20 +138,6 @@ noncomputable def
         H N hN beta =
       periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator
         H N hN beta.1 beta.2 := rfl
-
-/-- Every member of the complex normalized half-line family has operator norm
-exactly one. -/
-@[simp] theorem
-    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine_norm
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : Set.Ici (0 : ℝ)) :
-    ‖periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
-      H N hN beta‖ = 1 := by
-  simpa [
-    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine] using
-    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_norm
-      H N hN beta.1 beta.2
 
 /-- The genuine complex normalized physical transfer is continuous in operator
 norm on the entire nonnegative coupling half-line. -/
