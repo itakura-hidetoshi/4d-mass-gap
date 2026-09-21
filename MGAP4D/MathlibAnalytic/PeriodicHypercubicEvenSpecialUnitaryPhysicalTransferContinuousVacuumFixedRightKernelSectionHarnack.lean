@@ -32,6 +32,10 @@ open scoped ENNReal ProbabilityTheory
 
 noncomputable section
 
+local instance fixedRightKernelSectionHarnackSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 /-- Normalized-law Harnack influence for one fixed right-boundary update. -/
 noncomputable def
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFixedRightKernelSectionBoundaryUpdateHarnackInfluence
