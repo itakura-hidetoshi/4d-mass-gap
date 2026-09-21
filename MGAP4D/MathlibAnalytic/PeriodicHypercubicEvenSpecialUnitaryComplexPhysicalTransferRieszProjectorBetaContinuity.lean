@@ -226,8 +226,9 @@ theorem
     (𝓝
       (periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_fixedCanonicalRieszProjector
         H N hN beta0 beta0))
-  apply Metric.tendsto_nhds.2
-  intro eps heps
+  rw [Uniform.tendsto_nhds_right, tendsto_def]
+  intro W hW
+  rcases Metric.mem_uniformity_dist.1 hW with ⟨eps, heps, hWdist⟩
   let C : ℝ := eps / (2 * r)
   have hC : 0 < C := by
     dsimp [C]
@@ -290,7 +291,8 @@ theorem
           (∮ z in C((1 : ℂ), r),
             (resolvent (S beta) z - resolvent (S beta0) z)) := by
               rw [circleIntegral.integral_sub hbetaIntegrable hbaseIntegrable]
-  rw [dist_eq_norm, hdiff]
+  apply hWdist
+  rw [dist_comm, dist_eq_norm, hdiff]
   calc
     ‖(2 * Real.pi * Complex.I : ℂ)⁻¹ •
         (∮ z in C((1 : ℂ), r),
