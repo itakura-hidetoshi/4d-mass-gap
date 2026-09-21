@@ -185,6 +185,8 @@ theorem
         periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_fixedCanonicalRieszProjector
           H N hN beta0 beta)
       beta0 := by
+  let E := PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N
+  let A := E →L[ℂ] E
   let S :=
     periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
       H N hN
@@ -228,7 +230,11 @@ theorem
         H N hN beta0 beta0))
   rw [Uniform.tendsto_nhds_right, tendsto_def]
   intro W hW
-  rcases Metric.mem_uniformity_dist.1 hW with ⟨eps, heps, hWdist⟩
+  have hWmetric :
+      W ∈ @uniformity A PseudoMetricSpace.toUniformSpace := by
+    with_reducible_and_instances
+      exact hW
+  rcases Metric.mem_uniformity_dist.1 hWmetric with ⟨eps, heps, hWdist⟩
   let C : ℝ := eps / (2 * r)
   have hC : 0 < C := by
     dsimp [C]
