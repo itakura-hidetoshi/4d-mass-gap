@@ -209,11 +209,19 @@ theorem
       ContinuousOn
         (fun p : Set.Ici (0 : ℝ) × K => f p.1 p.2)
         (U ×ˢ (Set.univ : Set K)) := by
+    have hfst :
+        Continuous
+          (fun p : Set.Ici (0 : ℝ) × K => p.1) :=
+      continuous_fst
+    have hsnd :
+        Continuous
+          (fun p : Set.Ici (0 : ℝ) × K => p.2.val) :=
+      continuous_subtype_val.comp continuous_snd
     have hg :
         Continuous
           (fun p : Set.Ici (0 : ℝ) × K =>
             (p.1, p.2.val)) :=
-      continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd)
+      hfst.prodMk hsnd
     exact hJoint.comp hg.continuousOn (by
       intro p hp
       exact ⟨hp.1, p.2.property⟩)
@@ -234,8 +242,17 @@ theorem
             (fun p : Set.Ici (0 : ℝ) × ℂ =>
               resolvent (S p.1) p.2) (beta, z))
           (Metric.sphere (1 : ℂ) r) := by
+      have hconst :
+          Continuous (fun _z : ℂ => beta) :=
+        continuous_const
+      have hid :
+          Continuous (fun z : ℂ => z) :=
+        continuous_id
+      have hpair :
+          Continuous (fun z : ℂ => (beta, z)) :=
+        hconst.prodMk hid
       exact hJoint.comp
-        (continuous_const.prod_mk continuous_id).continuousOn
+        hpair.continuousOn
         (by
           intro z hz
           exact ⟨hbeta, hz⟩)
