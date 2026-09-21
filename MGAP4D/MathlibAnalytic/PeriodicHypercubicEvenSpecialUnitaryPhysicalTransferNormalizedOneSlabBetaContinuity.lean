@@ -118,6 +118,31 @@ theorem
   (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperatorHalfLine_lipschitz
     H N hN).continuous
 
+/-- The positive top-transfer norm is itself globally Lipschitz on
+the nonnegative coupling half-line.  Proving this directly from the scalar
+estimate avoids any ambiguity between the generic seminorm instance and the
+operator norm instance on continuous linear maps. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperatorHalfLine_norm_lipschitz
+    (H N : ℕ)
+    (hN : 0 < N) :
+    LipschitzWith
+      (⟨periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H,
+        by
+          unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget
+          positivity⟩ : NNReal)
+      (fun beta : Set.Ici (0 : ℝ) =>
+        ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperatorHalfLine
+          H N hN beta‖) := by
+  apply LipschitzWith.of_dist_le_mul
+  intro beta gamma
+  have h :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_norm_sub_le_beta
+      H N hN gamma.1 beta.1 gamma.2 beta.2
+  simpa [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperatorHalfLine,
+    Real.dist_eq] using h
+
 /-- The positive top-transfer norm is a continuous scalar function of beta on
 the physical half-line. -/
 theorem
@@ -128,8 +153,8 @@ theorem
       (fun beta : Set.Ici (0 : ℝ) =>
         ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperatorHalfLine
           H N hN beta‖) :=
-  (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperatorHalfLine_continuous
-    H N hN).norm
+  (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperatorHalfLine_norm_lipschitz
+    H N hN).continuous
 
 /-- The half-line top-transfer norm never vanishes. -/
 theorem
@@ -183,8 +208,10 @@ theorem
     simpa [T] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperatorHalfLine_continuous
         H N hN
-  have hNorm : Continuous (fun beta => ‖T beta‖) :=
-    hT.norm
+  have hNorm : Continuous (fun beta => ‖T beta‖) := by
+    simpa [T] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperatorHalfLine_norm_continuous
+        H N hN
   have hInv : Continuous (fun beta => ‖T beta‖⁻¹) :=
     hNorm.inv₀ (by
       intro beta
