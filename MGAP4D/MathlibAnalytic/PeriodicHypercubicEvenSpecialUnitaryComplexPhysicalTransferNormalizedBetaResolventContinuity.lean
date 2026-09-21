@@ -1,0 +1,266 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferNormalizedOneSlabBetaContinuity
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransfer
+import Mathlib.Analysis.Normed.Algebra.Spectrum
+import Mathlib.Analysis.Normed.Ring.Units
+import Mathlib.Topology.MetricSpace.Lipschitz
+import Mathlib.Tactic
+
+/-!
+# Complex normalized one-slab transfer: beta continuity and local resolvent stability
+
+The real normalized physical transfer is continuous in operator norm on the
+nonnegative Wilson-coupling half-line.  The existing Riesz/CFC top-sector
+machinery lives on the genuine complex physical Hilbert space, so the next
+step is to transport that continuity through the canonical scalar extension.
+
+The canonical scalar-extension map is bounded linearly in operator norm.  Hence the genuine
+complex normalized one-slab transfer is continuous in beta.  At every fixed
+complex spectral parameter belonging to the resolvent set at a base coupling,
+openness of the invertible bounded operators then gives local stability of the
+resolvent set and continuity of the actual resolvent in beta.
+
+This is the pointwise-in-contour input for the next compact-circle argument.
+No continuity of the excited-sector gap is assumed.
+-/
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+open Set Filter Topology
+open scoped InnerProductSpace Ring Topology
+
+noncomputable section
+
+set_option maxHeartbeats 5000000
+set_option synthInstance.maxHeartbeats 750000
+
+local instance complexNormalizedBetaContinuitySpecialUnitaryIsTopologicalGroup
+    (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance complexNormalizedBetaContinuitySpecialUnitaryCompactSpace
+    (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance complexNormalizedBetaContinuitySpecialUnitarySecondCountableTopology
+    (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance complexNormalizedBetaContinuitySpecialUnitaryMeasurableSpace
+    (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance complexNormalizedBetaContinuitySpecialUnitaryBorelSpace
+    (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
+local instance complexNormalizedBetaContinuitySpatialLinkFintype
+    (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
+local instance complexNormalizedBetaContinuityRealCompleteSpace
+    (H N : ℕ) :
+    CompleteSpace
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :=
+  (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule_isClosed
+    H N).completeSpace_coe
+
+local instance complexNormalizedBetaContinuityComplexCompleteSpace
+    (H N : ℕ) :
+    CompleteSpace (PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) :=
+  periodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert_completeSpace H N
+
+/-- Real-part extraction respects subtraction on the genuine complex physical carrier. -/
+private theorem
+    complexPhysicalRealPart_sub_for_beta_continuity
+    (H N : ℕ)
+    (f g : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) :
+    periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N (f - g) =
+      periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N f -
+        periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N g := by
+  apply Subtype.ext
+  exact map_sub _ _ _
+
+/-- Imaginary-part extraction respects subtraction on the genuine complex physical carrier. -/
+private theorem
+    complexPhysicalImagPart_sub_for_beta_continuity
+    (H N : ℕ)
+    (f g : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) :
+    periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N (f - g) =
+      periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N f -
+        periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N g := by
+  apply Subtype.ext
+  exact map_sub _ _ _
+
+/-- The canonical real embedding respects subtraction. -/
+private theorem
+    physicalOfReal_sub_for_beta_continuity
+    (H N : ℕ)
+    (f g :
+      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N (f - g) =
+      periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N f -
+        periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N g := by
+  apply Subtype.ext
+  exact map_sub _ _ _
+
+/-- Scalar extension respects subtraction.  Kept local here so beta-resolvent
+continuity does not import the later top-CFC centered-transfer layer. -/
+private theorem
+    physicalOperatorComplexification_sub_for_beta_continuity
+    (H N : ℕ)
+    (T U :
+      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N →L[ℝ]
+        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N (T - U) =
+      periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N T -
+        periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N U := by
+  apply ContinuousLinearMap.ext
+  intro f
+  apply periodicHypercubicEvenSpecialUnitaryComplexPhysical_ext_components H N
+  · simp [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_apply,
+      complexPhysicalRealPart_sub_for_beta_continuity]
+  · simp [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_apply,
+      complexPhysicalImagPart_sub_for_beta_continuity]
+
+/-- Canonical scalar extension from real physical bounded operators to genuine
+complex physical bounded operators is globally Lipschitz.  The pre-existing
+pointwise estimate loses at most the harmless factor two, which is entirely
+sufficient for beta-continuity and avoids importing the later exact-isometry
+geometry layer. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_lipschitz
+    (H N : ℕ) :
+    LipschitzWith (2 : NNReal)
+      (fun T :
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N →L[ℝ]
+            periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N =>
+        periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N T) := by
+  apply LipschitzWith.of_dist_le_mul
+  intro T U
+  rw [dist_eq_norm, dist_eq_norm, ← physicalOperatorComplexification_sub_for_beta_continuity]
+  apply ContinuousLinearMap.opNorm_le_bound
+  · positivity
+  · intro f
+    simpa [mul_assoc] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexificationFun_norm_le
+        H N (T - U) f
+
+/-- The genuine complex normalized physical transfer as a family over the fixed
+nonnegative Wilson-coupling half-line. -/
+noncomputable def
+    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
+    (H N : ℕ)
+    (hN : 0 < N) :
+    Set.Ici (0 : ℝ) →
+      PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N →L[ℂ]
+        PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N :=
+  fun beta =>
+    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator
+      H N hN beta.1 beta.2
+
+@[simp] theorem
+    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine_apply
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : Set.Ici (0 : ℝ)) :
+    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
+        H N hN beta =
+      periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator
+        H N hN beta.1 beta.2 := rfl
+
+/-- The genuine complex normalized physical transfer is continuous in operator
+norm on the entire nonnegative coupling half-line. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine_continuous
+    (H N : ℕ)
+    (hN : 0 < N) :
+    Continuous
+      (periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
+        H N hN) := by
+  let C :=
+    fun T :
+        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N →L[ℝ]
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N =>
+      periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N T
+  let T :=
+    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperatorHalfLine
+      H N hN
+  have hC : Continuous C := by
+    simpa [C] using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_lipschitz
+        H N).continuous
+  have hT : Continuous T := by
+    simpa [T] using
+      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperatorHalfLine_continuous
+        H N hN
+  have hcomp : Continuous (C ∘ T) := hC.comp hT
+  simpa [
+    C, T, Function.comp_def,
+    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine,
+    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator] using hcomp
+
+/-- At every fixed spectral parameter in the base resolvent set, the genuine
+complex normalized Wilson resolvent is operator-norm continuous in beta. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_resolvent_continuousAt_beta
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta0 : Set.Ici (0 : ℝ))
+    (z : ℂ)
+    (hz :
+      z ∈ resolventSet ℂ
+        (periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
+          H N hN beta0)) :
+    ContinuousAt
+      (fun beta : Set.Ici (0 : ℝ) =>
+        resolvent
+          (periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
+            H N hN beta) z)
+      beta0 := by
+  let E := PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N
+  let A := E →L[ℂ] E
+  let S :=
+    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
+      H N hN
+  let shift : Set.Ici (0 : ℝ) → A :=
+    fun beta => algebraMap ℂ A z - S beta
+  have hS : Continuous S := by
+    simpa [S] using
+      periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine_continuous
+        H N hN
+  have hshift : Continuous shift := by
+    simpa [shift] using
+      (continuous_const.sub hS)
+  have hzUnit : IsUnit (shift beta0) := by
+    simpa [shift, S] using hz
+  rcases hzUnit with ⟨u, hu⟩
+  have hub : (↑u : A) = shift beta0 := by
+    simpa using hu
+  have hshiftAt :
+      Tendsto shift (𝓝 beta0) (𝓝 (↑u : A)) := by
+    rw [hub]
+    exact hshift.continuousAt
+  have hinvAt :=
+    @NormedRing.inverse_continuousAt A _ _ u
+  have hinv :=
+    hinvAt.tendsto.comp hshiftAt
+  change Tendsto
+    (fun beta : Set.Ici (0 : ℝ) =>
+      resolvent (S beta) z)
+    (𝓝 beta0)
+    (𝓝 (resolvent (S beta0) z))
+  simpa [resolvent, shift, Function.comp_def, hub] using hinv
+
+end
+
+end MathlibAnalytic
+end MGAP4D
