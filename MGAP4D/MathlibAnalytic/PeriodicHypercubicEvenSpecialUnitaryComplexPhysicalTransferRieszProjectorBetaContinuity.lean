@@ -218,11 +218,6 @@ theorem
         (fun z : ℂ => resolvent (S beta0) z)
         (1 : ℂ) r :=
     hbaseContinuous.circleIntegrable hr.le
-  let E :=
-    PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N
-  let A := E →L[ℂ] E
-  letI : PseudoMetricSpace A :=
-    ContinuousLinearMap.toPseudoMetricSpace
   change Tendsto
     (fun beta : Set.Ici (0 : ℝ) =>
       periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_fixedCanonicalRieszProjector
@@ -244,17 +239,8 @@ theorem
     (isCompact_sphere (1 : ℂ) r).mem_uniformity_of_prod
       (f := fun beta z => resolvent (S beta) z)
       hJoint hbeta0U (Metric.dist_mem_uniformity hC)
-  have hUeq :
-      U =ᶠ[𝓝 beta0] (Set.univ : Set (Set.Ici (0 : ℝ))) := by
-    filter_upwards [hU] with beta hbeta
-    simp [hbeta]
-  have hnhdsWithin :
-      𝓝[U] beta0 = 𝓝 beta0 := by
-    rw [← nhdsWithin_univ beta0]
-    exact nhdsWithin_eq_iff_eventuallyEq.mpr hUeq
-  have hvNhds : v ∈ 𝓝 beta0 := by
-    rw [← hnhdsWithin]
-    exact hvWithin
+  have hvNhds : v ∈ 𝓝 beta0 :=
+    nhds_of_nhdsWithin_of_nhds hU hvWithin
   filter_upwards [hvNhds, hcontEvent] with beta hbetaV hbetaContinuous
   have hbetaIntegrable :
       CircleIntegrable
@@ -290,8 +276,20 @@ theorem
         (2 * Real.pi * Complex.I : ℂ)⁻¹ •
           (∮ z in C((1 : ℂ), r),
             (resolvent (S beta) z - resolvent (S beta0) z))
-    rw [← smul_sub]
-    rw [← circleIntegral.integral_sub hbetaIntegrable hbaseIntegrable]
+    calc
+      (2 * Real.pi * Complex.I : ℂ)⁻¹ •
+            (∮ z in C((1 : ℂ), r), resolvent (S beta) z) -
+          (2 * Real.pi * Complex.I : ℂ)⁻¹ •
+            (∮ z in C((1 : ℂ), r), resolvent (S beta0) z) =
+        (2 * Real.pi * Complex.I : ℂ)⁻¹ •
+          ((∮ z in C((1 : ℂ), r), resolvent (S beta) z) -
+            (∮ z in C((1 : ℂ), r), resolvent (S beta0) z)) := by
+              exact (smul_sub _ _ _).symm
+      _ =
+        (2 * Real.pi * Complex.I : ℂ)⁻¹ •
+          (∮ z in C((1 : ℂ), r),
+            (resolvent (S beta) z - resolvent (S beta0) z)) := by
+              rw [circleIntegral.integral_sub hbetaIntegrable hbaseIntegrable]
   rw [dist_eq_norm, hdiff]
   calc
     ‖(2 * Real.pi * Complex.I : ℂ)⁻¹ •
