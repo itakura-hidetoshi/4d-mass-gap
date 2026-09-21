@@ -381,6 +381,38 @@ private theorem circleIntegral_resolvent_eq_of_radii_in_radial_gap
       resolvent_differentiableAt_of_mem_radial_annulus
         S c hgap hsmallWin hlargeWin hz.1
 
+
+/-- Fubini for two circle integrals, reduced explicitly to Mathlib's Fubini
+theorem for interval integrals.  The hypothesis is stated on the actual
+parameter-space integrand so no hidden circle-integrability inference is
+required. -/
+private theorem circleIntegral_circleIntegral_swap_of_integrable_parameter
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [NormedSpace ℂ E]
+    [CompleteSpace E]
+    (f : ℂ → ℂ → E)
+    (c : ℂ)
+    (r₁ r₂ : ℝ)
+    (hInt :
+      IntegrableOn
+        (fun p : ℝ × ℝ =>
+          (deriv (circleMap c r₁) p.1 *
+              deriv (circleMap c r₂) p.2) •
+            f (circleMap c r₁ p.1) (circleMap c r₂ p.2))
+        (Set.uIoc 0 (2 * Real.pi) ×ˢ Set.uIoc 0 (2 * Real.pi))) :
+    (∮ z in C(c, r₁), ∮ w in C(c, r₂), f z w) =
+      ∮ w in C(c, r₂), ∮ z in C(c, r₁), f z w := by
+  unfold circleIntegral
+  simp_rw [← intervalIntegral.integral_smul, smul_smul]
+  simpa only [mul_comm] using
+    (MeasureTheory.intervalIntegral_intervalIntegral_swap
+      (F := fun theta phi =>
+        (deriv (circleMap c r₁) theta *
+            deriv (circleMap c r₂) phi) •
+          f (circleMap c r₁ theta) (circleMap c r₂ phi))
+      hInt)
+
 end
 
 end MathlibAnalytic
