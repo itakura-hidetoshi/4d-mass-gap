@@ -163,7 +163,7 @@ theorem
                 H N hN target source beta *
               W target)
         K := by
-    exact continuousOn_finsetSum Finset.univ hTerms
+    exact continuousOn_finset_sum Finset.univ hTerms
   have hDiv :
       ContinuousOn
         (fun beta =>
@@ -173,9 +173,19 @@ theorem
               W target) / W source)
         K := by
     exact hSum.div continuousOn_const (fun _ _ => hWSource)
-  simpa [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioNormalizedExponentialWeightedColumnPath_eq_sum_div,
-    W] using hDiv
+  rw [show
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioNormalizedExponentialWeightedColumnPath
+        H N hN s center source =
+      fun beta =>
+        (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioResponseProfilePath
+              H N hN target source beta *
+            W target) / W source by
+      funext beta
+      simpa [W] using
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioNormalizedExponentialWeightedColumnPath_eq_sum_div
+          H N hN s center source beta]
+  exact hDiv
 
 /-- The exact coefficient path is the finite supremum of the normalized
 source-column paths. -/
@@ -253,10 +263,21 @@ theorem
     apply ContinuousOn.finset_sup'_apply
     intro source hSource
     exact hColumns source
-  simpa [
-    S,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioExponentialWeightedColumnCoefficientPath_eq_sup'] using
-    hSup
+  rw [show
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioExponentialWeightedColumnCoefficientPath
+        H N hN s center =
+      fun beta =>
+        S.sup' (by simpa [S] using
+          (Finset.univ_nonempty :
+            (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)).Nonempty))
+          (fun source =>
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioNormalizedExponentialWeightedColumnPath
+              H N hN s center source beta) by
+      funext beta
+      simpa [S] using
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioExponentialWeightedColumnCoefficientPath_eq_sup'
+          H N hN s center beta]
+  exact hSup
 
 /-- Pairwise canonical response continuity is sufficient for continuity of the
 exact finite-volume coefficient path. -/
