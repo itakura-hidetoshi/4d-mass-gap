@@ -104,6 +104,12 @@ private theorem complexContinuousLinearMap_resolvent_mul_apply_eq
           IsUnit (algebraMap ℂ (E →L[ℂ] E) z - S) ↔
             IsUnit (algebraMap ℂ (E →L[ℂ] E) w - S) from
           iff_of_true hz hw))
+  have hshift :
+      ((algebraMap ℂ (E →L[ℂ] E) w - S) -
+          (algebraMap ℂ (E →L[ℂ] E) z - S)) =
+        (w - z) • (1 : E →L[ℂ] E) := by
+    rw [Algebra.algebraMap_eq_smul_one, Algebra.algebraMap_eq_smul_one]
+    module
   have hDiff :
       resolvent S z - resolvent S w =
         (w - z) • (resolvent S z * resolvent S w) := by
@@ -113,9 +119,10 @@ private theorem complexContinuousLinearMap_resolvent_mul_apply_eq
             ((algebraMap ℂ (E →L[ℂ] E) w - S) -
               (algebraMap ℂ (E →L[ℂ] E) z - S)) *
             resolvent S w := hInv
+      _ = resolvent S z * ((w - z) • (1 : E →L[ℂ] E)) *
+            resolvent S w := by rw [hshift]
       _ = (w - z) • (resolvent S z * resolvent S w) := by
-        simp [Algebra.algebraMap_eq_smul_one, mul_assoc, smul_mul_assoc,
-          mul_smul_comm, smul_mul]
+        rw [mul_smul_comm, mul_one, smul_mul_assoc]
   have hwz : w - z ≠ 0 := sub_ne_zero.mpr hzw.symm
   have hScaled :=
     congrArg
@@ -247,7 +254,7 @@ private theorem exists_radial_resolvent_margin
   have hrcompl : r ∈ Kᶜ := by simpa using hrnot
   obtain ⟨eps, heps, hball⟩ := Metric.isOpen_iff.mp hopen r hrcompl
   refine ⟨eps, heps, ?_⟩
-  apply Set.eq_empty_iff_forall_not_mem.mpr
+  apply Set.eq_empty_of_forall_notMem
   intro x hx
   exact (hball hx.1) hx.2
 
@@ -279,9 +286,10 @@ private theorem mem_resolventSet_of_radial_mem_ball
     ⟨hz, hradSpec⟩
   simpa [hgap] using hinter
 
-/-- Resolvent differentiability on a radial annulus protected by the radial
-spectral margin. -/
-private theorem resolvent_differentiableOn_radial_annulus
+/-- Resolvent differentiability at every point of a radial annulus protected
+by the radial spectral margin.  The pointwise `DifferentiableAt` conclusion is
+the form required by Mathlib's annulus contour-deformation theorem. -/
+private theorem resolvent_differentiableAt_of_mem_radial_annulus
     {E : Type*}
     [NormedAddCommGroup E]
     [NormedSpace ℂ E]
@@ -293,10 +301,10 @@ private theorem resolvent_differentiableOn_radial_annulus
       Metric.ball r eps ∩
         ((fun z : ℂ => dist z c) '' spectrum ℂ S) = ∅)
     (hinner : r - eps < rin)
-    (houter : rout < r + eps) :
-    DifferentiableOn ℂ (resolvent S)
-      (Metric.ball c rout \ Metric.closedBall c rin) := by
-  intro z hz
+    (houter : rout < r + eps)
+    {z : ℂ}
+    (hz : z ∈ Metric.ball c rout \ Metric.closedBall c rin) :
+    DifferentiableAt ℂ (resolvent S) z := by
   have hzBounds : rin < dist z c ∧ dist z c < rout := by
     constructor
     · have hzNotClosed := hz.2
@@ -304,12 +312,11 @@ private theorem resolvent_differentiableOn_radial_annulus
       exact lt_of_not_ge hzNotClosed
     · simpa [Metric.mem_ball] using hz.1
   have hzRad : dist z c ∈ Metric.ball r eps := by
-    rw [Metric.mem_ball, Real.dist_eq]
-    rw [abs_lt]
+    rw [Metric.mem_ball, Real.dist_eq, abs_lt]
     constructor <;> linarith
   have hzRes : z ∈ resolventSet ℂ S :=
     mem_resolventSet_of_radial_mem_ball S c hgap hzRad
-  exact (spectrum.hasDerivAt_resolvent_const_left hzRes).differentiableAt.differentiableWithinAt
+  exact (spectrum.hasDerivAt_resolvent_const_left hzRes).differentiableAt
 
 /-- Resolvent continuity on the corresponding closed annulus. -/
 private theorem resolvent_continuousOn_closed_radial_annulus
@@ -371,8 +378,8 @@ private theorem circleIntegral_resolvent_eq_of_radii_in_radial_gap
         S c hgap hsmallWin hlargeWin
   · intro z hz
     exact
-      resolvent_differentiableOn_radial_annulus
-        S c hgap hsmallWin hlargeWin z hz.1
+      resolvent_differentiableAt_of_mem_radial_annulus
+        S c hgap hsmallWin hlargeWin hz.1
 
 end
 
