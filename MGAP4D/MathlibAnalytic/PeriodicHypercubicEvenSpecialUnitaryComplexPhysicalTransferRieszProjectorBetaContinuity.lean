@@ -185,8 +185,6 @@ theorem
         periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_fixedCanonicalRieszProjector
           H N hN beta0 beta)
       beta0 := by
-  let E := PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N
-  let A := E →L[ℂ] E
   let S :=
     periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
       H N hN
@@ -200,68 +198,26 @@ theorem
   obtain ⟨U, hU, hJoint⟩ :=
     periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_resolvent_joint_continuousOn_fixedCanonicalCircle
       H N hN beta0
-  let K := {z : ℂ // z ∈ Metric.sphere (1 : ℂ) r}
-  letI : CompactSpace K :=
-    isCompact_iff_compactSpace.mp (isCompact_sphere (1 : ℂ) r)
-  let f : Set.Ici (0 : ℝ) → K → A :=
-    fun beta z => resolvent (S beta) z.1
-  have hfJoint :
-      ContinuousOn
-        (fun p : Set.Ici (0 : ℝ) × K => f p.1 p.2)
-        (U ×ˢ (Set.univ : Set K)) := by
-    have hfst :
-        Continuous
-          (fun p : Set.Ici (0 : ℝ) × K => p.1) :=
-      continuous_fst
-    have hsnd :
-        Continuous
-          (fun p : Set.Ici (0 : ℝ) × K => p.2.val) :=
-      continuous_subtype_val.comp continuous_snd
-    have hg :
-        Continuous
-          (fun p : Set.Ici (0 : ℝ) × K =>
-            (p.1, p.2.val)) :=
-      continuous_prodMk.2 ⟨hfst, hsnd⟩
-    exact hJoint.comp hg.continuousOn (by
-      intro p hp
-      exact ⟨hp.1, p.2.property⟩)
-  have hUnif :
-      TendstoUniformly f (f beta0) (𝓝 beta0) :=
-    ContinuousOn.tendstoUniformly (f := f) hU hfJoint
   have hbeta0U : beta0 ∈ U :=
     mem_of_mem_nhds hU
-  have hcontSphere :
-      ∀ beta ∈ U,
+  have hcontEvent :
+      ∀ᶠ beta in 𝓝 beta0,
         ContinuousOn
           (fun z : ℂ => resolvent (S beta) z)
           (Metric.sphere (1 : ℂ) r) := by
-    intro beta hbeta
-    have hvertical :
-        ContinuousOn
-          (fun z : ℂ =>
-            (fun p : Set.Ici (0 : ℝ) × ℂ =>
-              resolvent (S p.1) p.2) (beta, z))
-          (Metric.sphere (1 : ℂ) r) := by
-      have hconst :
-          Continuous (fun _z : ℂ => beta) :=
-        continuous_const
-      have hid :
-          Continuous (fun z : ℂ => z) :=
-        continuous_id
-      have hpair :
-          Continuous (fun z : ℂ => (beta, z)) :=
-        continuous_prodMk.2 ⟨hconst, hid⟩
-      exact hJoint.comp
-        hpair.continuousOn
-        (by
-          intro z hz
-          exact ⟨hbeta, hz⟩)
-    simpa using hvertical
+    simpa [S, r] using
+      periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_resolvent_continuousOn_canonicalRieszCircle_eventually_beta
+        H N hN beta0
+  have hbaseContinuous :
+      ContinuousOn
+        (fun z : ℂ => resolvent (S beta0) z)
+        (Metric.sphere (1 : ℂ) r) :=
+    mem_of_mem_nhds hcontEvent
   have hbaseIntegrable :
       CircleIntegrable
         (fun z : ℂ => resolvent (S beta0) z)
         (1 : ℂ) r :=
-    (hcontSphere beta0 hbeta0U).circleIntegrable hr.le
+    hbaseContinuous.circleIntegrable hr.le
   change Tendsto
     (fun beta : Set.Ici (0 : ℝ) =>
       periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_fixedCanonicalRieszProjector
@@ -276,24 +232,36 @@ theorem
   have hC : 0 < C := by
     dsimp [C]
     positivity
-  have hclose :=
-    (Metric.tendstoUniformly_iff.mp hUnif) C hC
-  filter_upwards [hU, hclose] with beta hbetaU hbetaClose
+  obtain ⟨v, hvWithin, hv⟩ :
+      ∃ v ∈ 𝓝[U] beta0,
+        ∀ beta ∈ v, ∀ z ∈ Metric.sphere (1 : ℂ) r,
+          dist (resolvent (S beta) z) (resolvent (S beta0) z) < C :=
+    (isCompact_sphere (1 : ℂ) r).mem_uniformity_of_prod
+      (f := fun beta z => resolvent (S beta) z)
+      hJoint hbeta0U (Metric.dist_mem_uniformity hC)
+  have hUeq :
+      U =ᶠ[𝓝 beta0] (Set.univ : Set (Set.Ici (0 : ℝ))) := by
+    filter_upwards [hU] with beta hbeta
+    simp [hbeta]
+  have hnhdsWithin :
+      𝓝[U] beta0 = 𝓝 beta0 := by
+    rw [← nhdsWithin_univ beta0]
+    exact nhdsWithin_eq_iff_eventuallyEq.mpr hUeq
+  have hvNhds : v ∈ 𝓝 beta0 := by
+    rw [← hnhdsWithin]
+    exact hvWithin
+  filter_upwards [hvNhds, hcontEvent] with beta hbetaV hbetaContinuous
   have hbetaIntegrable :
       CircleIntegrable
         (fun z : ℂ => resolvent (S beta) z)
         (1 : ℂ) r :=
-    (hcontSphere beta hbetaU).circleIntegrable hr.le
+    hbetaContinuous.circleIntegrable hr.le
   have hpoint :
       ∀ z ∈ Metric.sphere (1 : ℂ) r,
         ‖resolvent (S beta) z - resolvent (S beta0) z‖ ≤ C := by
     intro z hz
-    let zk : K := ⟨z, hz⟩
-    have hzClose := hbetaClose zk
-    have hzClose' :
-        ‖f beta zk - f beta0 zk‖ < C := by
-      simpa [dist_eq_norm, norm_sub_rev] using hzClose
-    simpa [f, zk] using hzClose'.le
+    have hzClose := hv beta hbetaV z hz
+    simpa [dist_eq_norm] using hzClose.le
   have hbound :
       ‖(2 * Real.pi * Complex.I : ℂ)⁻¹ •
           (∮ z in C((1 : ℂ), r),
@@ -309,9 +277,14 @@ theorem
       (2 * Real.pi * Complex.I : ℂ)⁻¹ •
         (∮ z in C((1 : ℂ), r),
           (resolvent (S beta) z - resolvent (S beta0) z)) := by
-    simp only [
-      periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_fixedCanonicalRieszProjector,
-      r, S]
+    change
+      (2 * Real.pi * Complex.I : ℂ)⁻¹ •
+          (∮ z in C((1 : ℂ), r), resolvent (S beta) z) -
+        (2 * Real.pi * Complex.I : ℂ)⁻¹ •
+          (∮ z in C((1 : ℂ), r), resolvent (S beta0) z) =
+        (2 * Real.pi * Complex.I : ℂ)⁻¹ •
+          (∮ z in C((1 : ℂ), r),
+            (resolvent (S beta) z - resolvent (S beta0) z))
     rw [← smul_sub]
     rw [← circleIntegral.integral_sub hbetaIntegrable hbaseIntegrable]
   rw [dist_eq_norm, hdiff]
@@ -337,9 +310,9 @@ theorem
         H N hN beta0 beta0 =
       periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCFCTopSpectralProjection
         H N hN beta0.1 beta0.2 := by
-  simpa [
+  simpa only [
     periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_fixedCanonicalRieszProjector,
-    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine] using
+    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine_apply] using
     periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_rieszProjector_eq_cfcTopProjection
       H N hN beta0.1 beta0.2
 
