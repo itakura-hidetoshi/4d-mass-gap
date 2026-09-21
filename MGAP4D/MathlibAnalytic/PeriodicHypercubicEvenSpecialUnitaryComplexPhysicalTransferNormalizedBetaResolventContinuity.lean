@@ -192,28 +192,13 @@ theorem
       (continuous_const.sub hS)
   have hzUnit : IsUnit (shift beta0) := by
     simpa [shift, S] using hz
-  rcases hzUnit with ⟨u, hu⟩
-  let e : E ≃L[ℂ] E := ContinuousLinearEquiv.ofUnit u
-  have he : (e : E →L[ℂ] E) = shift beta0 := by
-    apply ContinuousLinearMap.ext
-    intro x
-    simpa [e, ContinuousLinearEquiv.toContinuousLinearMap,
-      ContinuousLinearEquiv.ofUnit] using
-      congrArg (fun f : A => f x) hu
-  have hopen :
-      Set.range ((↑) : (E ≃L[ℂ] E) → A) ∈ 𝓝 (shift beta0) := by
-    rw [← he]
-    exact ContinuousLinearEquiv.nhds e
+  have hopen : {x : A | IsUnit x} ∈ 𝓝 (shift beta0) :=
+    Units.isOpen.mem_nhds hzUnit
   have hnear :
-      ∀ᶠ beta in 𝓝 beta0,
-        shift beta ∈ Set.range ((↑) : (E ≃L[ℂ] E) → A) :=
+      ∀ᶠ beta in 𝓝 beta0, IsUnit (shift beta) :=
     hshift.continuousAt.eventually_mem hopen
   filter_upwards [hnear] with beta hbeta
-  rcases Set.mem_range.mp hbeta with ⟨ebeta, hebeta⟩
-  change IsUnit (shift beta)
-  rw [← hebeta]
-  exact ContinuousLinearMap.isUnit_iff_bijective.mpr (by
-    simpa using ebeta.bijective)
+  simpa [shift, S] using hbeta
 
 /-- At every fixed spectral parameter in the base resolvent set, the genuine
 complex normalized Wilson resolvent is operator-norm continuous in beta. -/
