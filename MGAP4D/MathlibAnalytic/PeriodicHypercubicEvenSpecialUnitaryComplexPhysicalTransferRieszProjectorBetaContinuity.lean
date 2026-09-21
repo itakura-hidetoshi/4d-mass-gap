@@ -241,10 +241,15 @@ theorem
     positivity
   let dEnt : Set (A × A) :=
     {p | dist p.1 p.2 < C}
-  have hdEnt : dEnt ∈ uniformity A := by
+  have hdEntMetric :
+      dEnt ∈ @uniformity A PseudoMetricSpace.toUniformSpace := by
     simpa [dEnt] using
       (Metric.dist_mem_uniformity hC :
-        {p : A × A | dist p.1 p.2 < C} ∈ uniformity A)
+        {p : A × A | dist p.1 p.2 < C} ∈
+          @uniformity A PseudoMetricSpace.toUniformSpace)
+  have hdEnt : dEnt ∈ uniformity A := by
+    with_reducible_and_instances
+      exact hdEntMetric
   obtain ⟨v, hvWithin, hvEnt⟩ :=
     (isCompact_sphere (1 : ℂ) r).mem_uniformity_of_prod
       (f := fun beta z => resolvent (S beta) z)
@@ -267,7 +272,8 @@ theorem
         ‖resolvent (S beta) z - resolvent (S beta0) z‖ ≤ C := by
     intro z hz
     have hzClose := hv beta hbetaV z hz
-    simpa [dist_eq_norm] using hzClose.le
+    with_reducible_and_instances
+      simpa [dist_eq_norm] using hzClose.le
   have hbound :
       ‖(2 * Real.pi * Complex.I : ℂ)⁻¹ •
           (∮ z in C((1 : ℂ), r),
@@ -306,7 +312,8 @@ theorem
             (resolvent (S beta) z - resolvent (S beta0) z)) := by
               rw [circleIntegral.integral_sub hbetaIntegrable hbaseIntegrable]
   apply hWdist
-  rw [dist_comm, dist_eq_norm, hdiff]
+  with_reducible_and_instances
+    rw [dist_comm, dist_eq_norm, hdiff]
   calc
     ‖(2 * Real.pi * Complex.I : ℂ)⁻¹ •
         (∮ z in C((1 : ℂ), r),
