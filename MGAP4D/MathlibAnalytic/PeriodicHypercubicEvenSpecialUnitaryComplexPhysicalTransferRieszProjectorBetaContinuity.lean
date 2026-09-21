@@ -221,7 +221,7 @@ theorem
         Continuous
           (fun p : Set.Ici (0 : ℝ) × K =>
             (p.1, p.2.val)) :=
-      hfst.prodMk hsnd
+      continuous_prodMk.2 ⟨hfst, hsnd⟩
     exact hJoint.comp hg.continuousOn (by
       intro p hp
       exact ⟨hp.1, p.2.property⟩)
@@ -250,7 +250,7 @@ theorem
         continuous_id
       have hpair :
           Continuous (fun z : ℂ => (beta, z)) :=
-        hconst.prodMk hid
+        continuous_prodMk.2 ⟨hconst, hid⟩
       exact hJoint.comp
         hpair.continuousOn
         (by
