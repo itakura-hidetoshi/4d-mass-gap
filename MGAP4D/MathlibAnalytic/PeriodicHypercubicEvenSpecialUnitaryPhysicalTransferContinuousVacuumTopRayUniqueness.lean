@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumFiberDistortion
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumKernelHarnack
 import Mathlib.Topology.Order
 import Mathlib.Tactic
 
@@ -108,7 +109,13 @@ theorem realL2_integral_pos_of_ae_nonnegative_ne_zero
       _ = ‖f‖⁻¹ * ∫ x, f x ∂μ := by
             rw [integral_const_mul]
   rw [hScale] at huIntPos
-  exact (mul_pos_iff.mp huIntPos).resolve_left (not_lt_of_ge (inv_nonneg.mpr (norm_nonneg f))) |>.2
+  have hInvPos : 0 < ‖f‖⁻¹ := inv_pos.mpr hnormPos
+  by_contra hNot
+  have hIntNonpos : (∫ x, f x ∂μ) ≤ 0 := le_of_not_gt hNot
+  have hProdNonpos :
+      ‖f‖⁻¹ * (∫ x, f x ∂μ) ≤ 0 :=
+    mul_nonpos_of_nonneg_of_nonpos hInvPos.le hIntNonpos
+  linarith
 
 /-- Continuous pointwise representative attached to an arbitrary physical
 one-slab vector by the same normalized RKHS synthesis used for the canonical
@@ -235,7 +242,7 @@ theorem
     dsimp [S]
     rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureSynthesisL2_eq_adjoint]
     rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFeatureAnalysisOperator_apply]
-    rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_eq_adjoint_comp_analysis]
+    rw [← periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_eq_adjoint_comp_analysis]
     have hval := congrArg Subtype.val hfEigen
     simpa [lambda] using hval
   have hScalarAE :=
@@ -266,7 +273,8 @@ theorem
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousTopRepresentative
   rw [hSynEq]
-  field_simp [hlambda.ne']
+  change lambda⁻¹ * (lambda * f.1 B) = f.1 B
+  rw [← mul_assoc, inv_mul_cancel₀ hlambda.ne', one_mul]
 
 /-- The canonical continuous vacuum representative is exactly the arbitrary
 top-representative construction applied to the chosen nonnegative top vector. -/
@@ -371,10 +379,40 @@ theorem
     simpa [gC, μ] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousTopRepresentative_ae_eq_of_topEigen
         H N hN beta hbeta g hgEigen
+  have hcpAE :=
+    Lp.coeFn_smul c
+      (((p : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+        Lp ℝ 2 μ))
+  have hsubAE :=
+    Lp.coeFn_sub
+      (c •
+        (((p : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+          Lp ℝ 2 μ)))
+      (((g : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+        Lp ℝ 2 μ))
   have hhAE :
       hC =ᵐ[μ] fun B => h.1 B := by
-    filter_upwards [hpAE, hgAE] with B hpB hgB
-    simp [hC, h, hpB, hgB, smul_eq_mul]
+    filter_upwards [hpAE, hgAE, hcpAE, hsubAE] with B hpB hgB hcpB hsubB
+    change c * pC B - gC B = h.1 B
+    rw [hpB, hgB]
+    change c * p.1 B - g.1 B = h.1 B
+    have hcpB' :
+        (c •
+          (((p : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+            Lp ℝ 2 μ))) B = c * p.1 B := by
+      simpa only [Pi.smul_apply, smul_eq_mul] using hcpB
+    have hsubB' :
+        ((c •
+            (((p : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+              Lp ℝ 2 μ))) -
+          (((g : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+            Lp ℝ 2 μ))) B =
+          (c •
+            (((p : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+              Lp ℝ 2 μ))) B - g.1 B := by
+      simpa only [Pi.sub_apply] using hsubB
+    rw [← hcpB', ← hsubB']
+    rfl
   have hhNonneg : ∀ᵐ B ∂μ, 0 ≤ h.1 B := by
     filter_upwards [hhAE] with B hEq
     rw [← hEq]
