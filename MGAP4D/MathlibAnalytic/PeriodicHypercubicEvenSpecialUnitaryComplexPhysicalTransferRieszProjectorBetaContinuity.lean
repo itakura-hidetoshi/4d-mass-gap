@@ -239,13 +239,21 @@ theorem
   have hC : 0 < C := by
     dsimp [C]
     positivity
-  obtain ⟨v, hvWithin, hv⟩ :
-      ∃ v ∈ 𝓝[U] beta0,
-        ∀ beta ∈ v, ∀ z ∈ Metric.sphere (1 : ℂ) r,
-          dist (resolvent (S beta) z) (resolvent (S beta0) z) < C :=
+  let dEnt : Set (A × A) :=
+    {p | dist p.1 p.2 < C}
+  have hdEnt : dEnt ∈ uniformity A := by
+    simpa [dEnt] using
+      (Metric.dist_mem_uniformity hC :
+        {p : A × A | dist p.1 p.2 < C} ∈ uniformity A)
+  obtain ⟨v, hvWithin, hvEnt⟩ :=
     (isCompact_sphere (1 : ℂ) r).mem_uniformity_of_prod
       (f := fun beta z => resolvent (S beta) z)
-      hJoint hbeta0U (Metric.dist_mem_uniformity hC)
+      hJoint hbeta0U hdEnt
+  have hv :
+      ∀ beta ∈ v, ∀ z ∈ Metric.sphere (1 : ℂ) r,
+        dist (resolvent (S beta) z) (resolvent (S beta0) z) < C := by
+    intro beta hbeta z hz
+    simpa [dEnt] using hvEnt beta hbeta z hz
   have hvNhds : v ∈ 𝓝 beta0 :=
     nhds_of_nhdsWithin_of_nhds hU hvWithin
   filter_upwards [hvNhds, hcontEvent] with beta hbetaV hbetaContinuous
