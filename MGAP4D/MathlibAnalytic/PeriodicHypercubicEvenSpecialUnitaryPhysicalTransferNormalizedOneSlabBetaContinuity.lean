@@ -28,6 +28,9 @@ open scoped InnerProductSpace Topology
 
 noncomputable section
 
+set_option maxHeartbeats 5000000
+set_option synthInstance.maxHeartbeats 750000
+
 local instance normalizedOneSlabBetaContinuitySpecialUnitaryIsTopologicalGroup
     (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -94,6 +97,7 @@ theorem
           positivity⟩ : NNReal)
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperatorHalfLine
         H N hN) := by
+  apply LipschitzWith.of_dist_le_mul
   intro beta gamma
   have h :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_sub_le_beta
