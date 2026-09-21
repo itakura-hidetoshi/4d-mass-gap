@@ -172,44 +172,6 @@ theorem
     have hScaled :=
       congrArg (fun X : A => (z - 1)⁻¹ • X) hResidue
     simpa [smul_smul, hzNe] using hScaled
-  have hpoleIntegral :
-      (∮ z in C((1 : ℂ), r), (z - 1)⁻¹ • P) =
-        (2 * Real.pi * Complex.I : ℂ) • P := by
-    rw [circleIntegral.integral_smul_const]
-    have hmem : (1 : ℂ) ∈ Metric.ball (1 : ℂ) r := by
-      rw [Metric.mem_ball]
-      simpa using hr
-    rw [circleIntegral.integral_sub_inv_of_mem_ball hmem]
-  have hrightIntegral :
-      (∮ z in C((1 : ℂ), r), resolvent (S beta) z * P) =
-        (2 * Real.pi * Complex.I : ℂ) • P := by
-    calc
-      (∮ z in C((1 : ℂ), r), resolvent (S beta) z * P) =
-          ∮ z in C((1 : ℂ), r), (z - 1)⁻¹ • P := by
-            apply circleIntegral.integral_congr hr.le
-            intro z hz
-            exact hrightPoint z hz
-      _ = (2 * Real.pi * Complex.I : ℂ) • P := hpoleIntegral
-  have hleftIntegral :
-      (∮ z in C((1 : ℂ), r), P * resolvent (S beta) z) =
-        (2 * Real.pi * Complex.I : ℂ) • P := by
-    calc
-      (∮ z in C((1 : ℂ), r), P * resolvent (S beta) z) =
-          ∮ z in C((1 : ℂ), r), (z - 1)⁻¹ • P := by
-            apply circleIntegral.integral_congr hr.le
-            intro z hz
-            exact hleftPoint z hz
-      _ = (2 * Real.pi * Complex.I : ℂ) • P := hpoleIntegral
-  have hrightIntegrable :
-      CircleIntegrable
-        (fun z : ℂ => resolvent (S beta) z * P)
-        (1 : ℂ) r :=
-    (hcont.mul continuousOn_const).circleIntegrable hr.le
-  have hleftIntegrable :
-      CircleIntegrable
-        (fun z : ℂ => P * resolvent (S beta) z)
-        (1 : ℂ) r :=
-    (continuousOn_const.mul hcont).circleIntegrable hr.le
   have hcircleApply :
       ∀ (f : ℂ → A),
         CircleIntegrable f (1 : ℂ) r →
@@ -234,7 +196,12 @@ theorem
             f (circleMap (1 : ℂ) r theta) x := by
               apply intervalIntegral.integral_congr
               intro theta htheta
-              rw [ContinuousLinearMap.smul_apply]
+              change
+                (deriv (circleMap (1 : ℂ) r) theta •
+                    f (circleMap (1 : ℂ) r theta)) x =
+                  deriv (circleMap (1 : ℂ) r) theta •
+                    f (circleMap (1 : ℂ) r theta) x
+              simpa only [ContinuousLinearMap.smul_apply]
   have hcircleComp :
       ∀ (g : ℂ → E),
         CircleIntegrable g (1 : ℂ) r →
@@ -275,52 +242,16 @@ theorem
       simpa [Function.comp_def] using
         (ContinuousLinearMap.apply ℂ E x).continuous.comp_continuousOn hcont
     exact hxContinuous.circleIntegrable hr.le
-  have hrightPush :
-      (∮ z in C((1 : ℂ), r), resolvent (S beta) z) * P =
-        ∮ z in C((1 : ℂ), r), resolvent (S beta) z * P := by
-    apply ContinuousLinearMap.ext
+  have hpoleIntegral_apply :
+      ∀ x : E,
+        (∮ z in C((1 : ℂ), r), (z - 1)⁻¹ • P x) =
+          (2 * Real.pi * Complex.I : ℂ) • P x := by
     intro x
-    calc
-      ((∮ z in C((1 : ℂ), r), resolvent (S beta) z) * P) x =
-          (∮ z in C((1 : ℂ), r), resolvent (S beta) z) (P x) := by
-            rw [ContinuousLinearMap.mul_apply]
-      _ = ∮ z in C((1 : ℂ), r), resolvent (S beta) z (P x) :=
-        hcircleApply
-          (fun z : ℂ => resolvent (S beta) z)
-          hresIntegrable (P x)
-      _ = ∮ z in C((1 : ℂ), r), (resolvent (S beta) z * P) x := by
-        apply circleIntegral.integral_congr hr.le
-        intro z hz
-        rw [ContinuousLinearMap.mul_apply]
-      _ = (∮ z in C((1 : ℂ), r), resolvent (S beta) z * P) x :=
-        (hcircleApply
-          (fun z : ℂ => resolvent (S beta) z * P)
-          hrightIntegrable x).symm
-  have hleftPush :
-      P * (∮ z in C((1 : ℂ), r), resolvent (S beta) z) =
-        ∮ z in C((1 : ℂ), r), P * resolvent (S beta) z := by
-    apply ContinuousLinearMap.ext
-    intro x
-    calc
-      (P * (∮ z in C((1 : ℂ), r), resolvent (S beta) z)) x =
-          P ((∮ z in C((1 : ℂ), r), resolvent (S beta) z) x) := by
-            rw [ContinuousLinearMap.mul_apply]
-      _ = P (∮ z in C((1 : ℂ), r), resolvent (S beta) z x) := by
-            rw [hcircleApply
-              (fun z : ℂ => resolvent (S beta) z)
-              hresIntegrable x]
-      _ = ∮ z in C((1 : ℂ), r), P (resolvent (S beta) z x) :=
-        hcircleComp
-          (fun z : ℂ => resolvent (S beta) z x)
-          (hvecIntegrable x) P
-      _ = ∮ z in C((1 : ℂ), r), (P * resolvent (S beta) z) x := by
-        apply circleIntegral.integral_congr hr.le
-        intro z hz
-        rw [ContinuousLinearMap.mul_apply]
-      _ = (∮ z in C((1 : ℂ), r), P * resolvent (S beta) z) x :=
-        (hcircleApply
-          (fun z : ℂ => P * resolvent (S beta) z)
-          hleftIntegrable x).symm
+    rw [circleIntegral.integral_smul_const]
+    have hmem : (1 : ℂ) ∈ Metric.ball (1 : ℂ) r := by
+      rw [Metric.mem_ball]
+      simpa using hr
+    rw [circleIntegral.integral_sub_inv_of_mem_ball hmem]
   have hpi : (Real.pi : ℂ) ≠ 0 := by
     exact_mod_cast Real.pi_ne_zero
   have htwoPiI : (2 * Real.pi * Complex.I : ℂ) ≠ 0 := by
@@ -330,56 +261,48 @@ theorem
           (∮ z in C((1 : ℂ), r), resolvent (S beta) z)) * P = P ∧
       P * ((2 * Real.pi * Complex.I : ℂ)⁻¹ •
           (∮ z in C((1 : ℂ), r), resolvent (S beta) z)) = P
-  have hrightRaw :
-      (∮ z in C((1 : ℂ), r), resolvent (S beta) z) * P =
-        (2 * Real.pi * Complex.I : ℂ) • P :=
-    hrightPush.trans hrightIntegral
-  have hleftRaw :
-      P * (∮ z in C((1 : ℂ), r), resolvent (S beta) z) =
-        (2 * Real.pi * Complex.I : ℂ) • P :=
-    hleftPush.trans hleftIntegral
   constructor
   · apply ContinuousLinearMap.ext
     intro x
-    have hx :
-        (∮ z in C((1 : ℂ), r), resolvent (S beta) z) (P x) =
-          (2 * Real.pi * Complex.I : ℂ) • P x := by
-      have hxRaw := congrArg (fun T : A => T x) hrightRaw
-      simpa only [
-        ContinuousLinearMap.mul_apply,
-        ContinuousLinearMap.smul_apply
-      ] using hxRaw
     calc
       (((2 * Real.pi * Complex.I : ℂ)⁻¹ •
           (∮ z in C((1 : ℂ), r), resolvent (S beta) z)) * P) x =
         ((2 * Real.pi * Complex.I : ℂ)⁻¹ •
           (∮ z in C((1 : ℂ), r), resolvent (S beta) z)) (P x) := by
-            rw [ContinuousLinearMap.mul_apply]
+            simpa only [ContinuousLinearMap.mul_apply]
       _ = (2 * Real.pi * Complex.I : ℂ)⁻¹ •
           (∮ z in C((1 : ℂ), r), resolvent (S beta) z) (P x) := by
-            rw [ContinuousLinearMap.smul_apply]
+            simpa only [ContinuousLinearMap.smul_apply]
+      _ = (2 * Real.pi * Complex.I : ℂ)⁻¹ •
+          (∮ z in C((1 : ℂ), r), resolvent (S beta) z (P x)) := by
+            rw [hcircleApply
+              (fun z : ℂ => resolvent (S beta) z)
+              hresIntegrable (P x)]
+      _ = (2 * Real.pi * Complex.I : ℂ)⁻¹ •
+          (∮ z in C((1 : ℂ), r), (z - 1)⁻¹ • P x) := by
+            congr 1
+            apply circleIntegral.integral_congr hr.le
+            intro z hz
+            have hzx :=
+              congrArg (fun T : A => T x) (hrightPoint z hz)
+            simpa only [
+              ContinuousLinearMap.mul_apply,
+              ContinuousLinearMap.smul_apply
+            ] using hzx
       _ = (2 * Real.pi * Complex.I : ℂ)⁻¹ •
           ((2 * Real.pi * Complex.I : ℂ) • P x) := by
-            rw [hx]
+            rw [hpoleIntegral_apply x]
       _ = P x := by
             rw [smul_smul, inv_mul_cancel₀ htwoPiI, one_smul]
   · apply ContinuousLinearMap.ext
     intro x
-    have hx :
-        P ((∮ z in C((1 : ℂ), r), resolvent (S beta) z) x) =
-          (2 * Real.pi * Complex.I : ℂ) • P x := by
-      have hxRaw := congrArg (fun T : A => T x) hleftRaw
-      simpa only [
-        ContinuousLinearMap.mul_apply,
-        ContinuousLinearMap.smul_apply
-      ] using hxRaw
     calc
       (P * ((2 * Real.pi * Complex.I : ℂ)⁻¹ •
           (∮ z in C((1 : ℂ), r), resolvent (S beta) z))) x =
         P
           (((2 * Real.pi * Complex.I : ℂ)⁻¹ •
             (∮ z in C((1 : ℂ), r), resolvent (S beta) z)) x) := by
-              rw [ContinuousLinearMap.mul_apply]
+              simpa only [ContinuousLinearMap.mul_apply]
       _ = P
           ((2 * Real.pi * Complex.I : ℂ)⁻¹ •
             (∮ z in C((1 : ℂ), r), resolvent (S beta) z) x) := by
@@ -388,8 +311,29 @@ theorem
           P ((∮ z in C((1 : ℂ), r), resolvent (S beta) z) x) := by
             exact P.map_smul _ _
       _ = (2 * Real.pi * Complex.I : ℂ)⁻¹ •
+          P (∮ z in C((1 : ℂ), r), resolvent (S beta) z x) := by
+            rw [hcircleApply
+              (fun z : ℂ => resolvent (S beta) z)
+              hresIntegrable x]
+      _ = (2 * Real.pi * Complex.I : ℂ)⁻¹ •
+          (∮ z in C((1 : ℂ), r), P (resolvent (S beta) z x)) := by
+            rw [hcircleComp
+              (fun z : ℂ => resolvent (S beta) z x)
+              (hvecIntegrable x) P]
+      _ = (2 * Real.pi * Complex.I : ℂ)⁻¹ •
+          (∮ z in C((1 : ℂ), r), (z - 1)⁻¹ • P x) := by
+            congr 1
+            apply circleIntegral.integral_congr hr.le
+            intro z hz
+            have hzx :=
+              congrArg (fun T : A => T x) (hleftPoint z hz)
+            simpa only [
+              ContinuousLinearMap.mul_apply,
+              ContinuousLinearMap.smul_apply
+            ] using hzx
+      _ = (2 * Real.pi * Complex.I : ℂ)⁻¹ •
           ((2 * Real.pi * Complex.I : ℂ) • P x) := by
-            rw [hx]
+            rw [hpoleIntegral_apply x]
       _ = P x := by
             rw [smul_smul, inv_mul_cancel₀ htwoPiI, one_smul]
 
