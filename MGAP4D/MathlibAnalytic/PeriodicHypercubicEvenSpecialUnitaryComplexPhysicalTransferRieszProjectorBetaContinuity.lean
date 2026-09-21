@@ -226,6 +226,7 @@ theorem
     (𝓝
       (periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_fixedCanonicalRieszProjector
         H N hN beta0 beta0))
+  rw [tendsto_iff_norm_sub_tendsto_zero]
   rw [Metric.tendsto_nhds]
   intro eps heps
   let C : ℝ := eps / (2 * r)
@@ -287,7 +288,7 @@ theorem
             (resolvent (S beta) z - resolvent (S beta0) z))
     rw [← smul_sub]
     rw [← circleIntegral.integral_sub hbetaIntegrable hbaseIntegrable]
-  rw [dist_eq_norm, hdiff]
+  rw [dist_zero_right, norm_norm, hdiff]
   calc
     ‖(2 * Real.pi * Complex.I : ℂ)⁻¹ •
         (∮ z in C((1 : ℂ), r),
