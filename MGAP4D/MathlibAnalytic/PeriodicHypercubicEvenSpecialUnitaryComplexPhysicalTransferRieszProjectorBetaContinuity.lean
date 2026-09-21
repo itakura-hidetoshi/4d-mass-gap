@@ -130,8 +130,15 @@ private theorem
         with_reducible_and_instances
           exact SeminormedAddCommGroup.dist_eq x y
       _ = ‖x - y‖ := by
-        have hxy : -x + y = -(x - y) := by abel
-        rw [hxy, norm_neg]
+        rw [← ContinuousLinearMap.opNorm_neg, neg_add, neg_neg, sub_eq_add_neg]
+  have hdistNormRev (x y : A) : dist x y = ‖y - x‖ := by
+    calc
+      dist x y = ‖-x + y‖ := by
+        with_reducible_and_instances
+          exact SeminormedAddCommGroup.dist_eq x y
+      _ = ‖y - x‖ := by
+        congr 1
+        abel
   let r :=
     periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCFCRieszRadius
       H N hN beta0.1 beta0.2
@@ -320,7 +327,7 @@ theorem
             (resolvent (S beta) z - resolvent (S beta0) z)) := by
               rw [circleIntegral.integral_sub hbetaIntegrable hbaseIntegrable]
   apply hWdist
-  rw [hdistNorm, hdiff]
+  rw [hdistNormRev, hdiff]
   calc
     ‖(2 * Real.pi * Complex.I : ℂ)⁻¹ •
         (∮ z in C((1 : ℂ), r),
