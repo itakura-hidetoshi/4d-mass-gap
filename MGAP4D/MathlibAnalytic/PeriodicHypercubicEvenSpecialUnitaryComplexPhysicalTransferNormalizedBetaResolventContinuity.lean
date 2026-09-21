@@ -115,6 +115,20 @@ noncomputable def
       periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator
         H N hN beta.1 beta.2 := rfl
 
+/-- Every member of the complex normalized half-line family has operator norm
+exactly one. -/
+@[simp] theorem
+    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine_norm
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : Set.Ici (0 : ℝ)) :
+    ‖periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
+      H N hN beta‖ = 1 := by
+  simpa [
+    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine] using
+    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_norm
+      H N hN beta.1 beta.2
+
 /-- The genuine complex normalized physical transfer is continuous in operator
 norm on the entire nonnegative coupling half-line. -/
 theorem
