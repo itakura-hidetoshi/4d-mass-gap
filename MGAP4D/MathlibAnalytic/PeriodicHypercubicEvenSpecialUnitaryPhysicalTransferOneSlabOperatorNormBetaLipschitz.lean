@@ -333,6 +333,19 @@ theorem
   have hAmbient :=
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_norm_sub_le_beta
       H N hN beta gamma hbeta hgamma
+  have hAmbientC :
+      ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
+            H N hN gamma hgamma -
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
+            H N hN beta hbeta‖ ≤ C := by
+    change
+      ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
+            H N hN gamma hgamma -
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
+            H N hN beta hbeta‖ ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H *
+          ‖gamma - beta‖
+    exact hAmbient
   change ‖D‖ ≤ C
   apply ContinuousLinearMap.opNorm_le_bound D hC
   intro f
@@ -371,7 +384,7 @@ theorem
             (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))‖ :=
           norm_nonneg _
         exact mul_le_mul_of_nonneg_right
-          (by simpa [C] using hAmbient)
+          hAmbientC
           hf0)
 
 /-- The physical top-transfer norm is Lipschitz in beta with the same
