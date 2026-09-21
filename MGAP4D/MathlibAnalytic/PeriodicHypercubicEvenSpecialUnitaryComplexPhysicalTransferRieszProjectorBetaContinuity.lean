@@ -212,15 +212,14 @@ theorem
     have hg :
         Continuous
           (fun p : Set.Ici (0 : ℝ) × K =>
-            (p.1, (p.2.1 : ℂ))) := by
-      fun_prop
+            (p.1, p.2.val)) :=
+      continuous_fst.prod_mk (continuous_subtype_val.comp continuous_snd)
     exact hJoint.comp hg.continuousOn (by
       intro p hp
-      exact ⟨hp.1, p.2.2⟩)
+      exact ⟨hp.1, p.2.property⟩)
   have hUnif :
-      TendstoUniformly f (f beta0) (𝓝 beta0) := by
-    apply ContinuousOn.tendstoUniformly (f := f) hU
-    simpa [f] using hfJoint
+      TendstoUniformly f (f beta0) (𝓝 beta0) :=
+    ContinuousOn.tendstoUniformly (f := f) hU hfJoint
   have hbeta0U : beta0 ∈ U :=
     mem_of_mem_nhds hU
   have hcontSphere :
