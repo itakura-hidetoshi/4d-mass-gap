@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferNormalizedOneSlabBetaContinuity
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalCenteredTransferConvergence
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferGeometry
+import Mathlib.Analysis.Normed.Algebra.Spectrum
 import Mathlib.Analysis.Normed.Ring.Units
 import Mathlib.Topology.MetricSpace.Lipschitz
 import Mathlib.Tactic
@@ -75,6 +76,23 @@ local instance complexNormalizedBetaContinuityComplexCompleteSpace
     CompleteSpace (PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) :=
   periodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert_completeSpace H N
 
+/-- Scalar extension respects subtraction.  Kept local here so beta-resolvent
+continuity does not import the later top-CFC centered-transfer layer. -/
+private theorem
+    physicalOperatorComplexification_sub_for_beta_continuity
+    (H N : ℕ)
+    (T U :
+      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N →L[ℝ]
+        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N (T - U) =
+      periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N T -
+        periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification H N U := by
+  apply ContinuousLinearMap.ext
+  intro f
+  apply periodicHypercubicEvenSpecialUnitaryComplexPhysical_ext_components H N
+  · simp [periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_apply]
+  · simp [periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_apply]
+
 /-- Canonical scalar extension from real physical bounded operators to genuine
 complex physical bounded operators is an operator-norm isometry, hence
 1-Lipschitz. -/
@@ -89,7 +107,7 @@ theorem
   apply LipschitzWith.mk_one
   intro T U
   simp only [dist_eq_norm]
-  rw [← periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_sub]
+  rw [← physicalOperatorComplexification_sub_for_beta_continuity]
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_norm]
 
 /-- The genuine complex normalized physical transfer as a family over the fixed
