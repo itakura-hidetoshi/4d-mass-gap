@@ -1,6 +1,6 @@
 # MGAP4D Roadmap
 
-This roadmap records the theorem architecture and current development order of `itakura-hidetoshi/4d-mass-gap` as of **2026-09-20 JST**.
+This roadmap records the theorem architecture and current development order of itakura-hidetoshi/4d-mass-gap as of **2026-09-21 JST**.
 
 Authoritative theorem-carrier branch:
 
@@ -8,13 +8,11 @@ Authoritative theorem-carrier branch:
 
 Exact theorem-bearing baseline for this refresh:
 
-    e56ea50823fb70d6fb6f50e33ae79ea2a9d9ac01
+    295700014db3661c046c3d56f57e6cca809c63c2
 
-This is the merge commit of PR #4575:
+This is the merge commit of PR #4613:
 
-    Iterate response-controlled random-scan recurrence
-
-This ROADMAP update is documentation-only. If it merges before another theorem PR, the branch pointer will advance while the theorem-bearing mathematical baseline remains the merge above.
+    Prove canonical Riesz contour beta stability
 
 Authority order:
 
@@ -24,111 +22,107 @@ Authority order:
     4. CI/runtime receipts
     5. historical summaries or memory
 
-`main` is not theorem authority when histories differ.
+When histories differ, main is not theorem authority.
 
 ---
 
-# Current dependency graph
+# Development map
 
-    A. FINITE PERIODIC WILSON / OS ROOT                         [INTEGRATED]
-       -> compact SU(N) finite lattice
+    A. FINITE WILSON / OS / PHYSICAL TRANSFER ROOT             [INTEGRATED]
+       -> finite periodic compact SU(N) model
        -> reflection positivity / OS carriers
-       -> one-slab transfer / ground-state architecture
+       -> physical one-slab transfer
+       -> top / excited-sector spectral architecture
 
-    B. CONTINUOUS ONE-LINK LAW + LOCAL GEOMETRY                 [INTEGRATED]
-       -> normalized one-link law
-       -> measurable heat-bath reinsertion
-       -> stationarity / represented-source cancellation
+    B. EXACT ONE-LINK / COVARIANCE MECHANICS                  [INTEGRATED]
+       -> normalized continuous one-link law
+       -> conditional expectation / L2 projection
+       -> deterministic / random-scan telescopes
+       -> fixed-volume covariance remainder closure
+
+    C. GENUINE LOCAL EXPONENTIAL SPATIAL THEORY               [INTEGRATED]
        -> active-neighbor degree <= 18
-       -> C5 exceptional geometry
+       -> base-L1 exponential weights
+       -> local Harnack kernel
+       -> local weighted Green/resolvent bound
 
-    C. EXACT KERNEL-SECTION / COVARIANCE MECHANICS              [INTEGRATED]
-       -> conditional expectation identities
-       -> L2 projection / fluctuation
-       -> deterministic/random-scan telescopes
-       -> finite covariance resolvent
+    D. CANONICAL FIXED-RIGHT RESPONSE                          [CLOSED]
+       -> exact literal response value sets
+       -> canonical supremum profile R_can
+       -> minimality among uniform response profiles
+       -> crude 0 <= R_can <= exp(16 beta)
 
-    D. FIXED-VOLUME RANDOM-SCAN ERGODIC ROUTE                   [INTEGRATED]
-       -> complete-block Doeblin contraction
-       -> exact block/step bridge
-       -> covariance remainder vanishes at M=n*L_H
-                                                                 [#4547-#4548]
+    E. PIN-FREE RESPONSE-CONTROLLED DYNAMICS                   [CLOSED]
+       -> remove distinguished-target pin
+       -> pin-free physical kernel
+       -> law-level variation propagation
+       -> random-scan orbit
+       -> exact source-forcing recurrence
+       -> stationary finite-step decomposition
+       -> fixed-volume terminal removal
 
-    E. COARSE TAGGED FIXED-RIGHT RESPONSE ROUTE                 [INTEGRATED]
-       -> eligible pullback resolvent
-       -> exact volume-growing row coefficient
-       -> auxiliary unscanned response
-       -> represented fixed-right finite-step/asymptotic response
-       -> transport back to actual source-aligned remote forcing
-                                                                 [#4551-#4558]
+    F. AGGREGATE REMOTE FAMILY / CANONICAL COLUMN              [CLOSED]
+       -> weighted target aggregation
+       -> exact finite superposition of discrepancies
+       -> aggregate remote resolvent
+       -> canonical weighted remote column
+       -> no target-cardinality loss
 
-    F. GENUINE LOCAL EXPONENTIAL THEORY                         [INTEGRATED]
-       -> W_center=s^baseL1Distance
-       -> rho_s=18*eta(beta)*s^2
-       -> weighted local row/column
-       -> K_local^d W <= rho_s^d W
-       -> G_local,M W <= (1-rho_s)^(-1) W
-                                                                 [#4559-#4560]
+    G. LOCAL C5 EXCEPTIONAL COLUMN                             [CLOSED]
+       -> fixed-right Harnack comparison
+       -> canonical pointwise response bound
+       -> finite C5 weighted-column estimate
 
-    G. FIXED-TARGET WEIGHTED PHYSICAL ENVELOPE                  [INTEGRATED]
-       -> local + target pin + actual remote residual
-       -> absorb local/pin terms into weight bookkeeping
-       -> weighted response-bootstrap interfaces
-       -> variation-scaled one-link heat-bath propagation
-       -> fixed-target physical tagged carrier
-                                                                 [#4563-#4569]
+    H. EXACT CANONICAL COEFFICIENT M_can                       [CLOSED]
+       -> exact finite source maximum
+       -> self-certificate
+       -> bootstrap map Phi
+       -> M_can(0)=0
+       -> half-barrier exclusion M_can != 1/2
 
-    H. REMOTE RESIDUAL / RESPONSE LINEARIZATION                 [INTEGRATED]
-       -> uniform remote certificate isolated as an interface only
-       -> weighted random-scan superposition
-       -> remote residual <= exp(16 beta) * fixed-right response
-       -> response profile R defines configuration-independent K_R
-       -> actual fixed-target envelope <= K_R
-                                                                 [#4570-#4573]
+    I. CONTINUATION REDUCTION                                  [CLOSED]
+       -> continuity of M_can implies M_can < 1/2
+       -> continuity of M_can reduced to coordinate response continuity
 
-    I. RESPONSE-CONTROLLED RANDOM-SCAN DYNAMICS                 [INTEGRATED]
-       -> actual one-step left variation propagated by K_R
-       -> right-boundary source forcing tracked separately
-       -> v_(n+1)=Q_R v_n
-       -> accumulated source discrepancy d_n
-       -> finite-step left variation <= v_n
-       -> finite-step boundary discrepancy <= d_n
-                                                                 [#4574-#4575]
+    J. FINITE-VOLUME SPECTRAL BETA CONTINUATION                [CLOSED THROUGH #4613]
+       -> top-ray uniqueness
+       -> transfer Lipschitz in beta
+       -> normalized transfer continuity
+       -> complex fixed-z resolvent beta-continuity
+       -> fixed canonical Riesz contour persistence
+       -> spectral-parameter continuity on nearby fixed contour
 
-    J. SELF-CONSISTENT FIXED-RIGHT RESPONSE CLOSURE             [OPEN NOW]
-       -> normalize d_(n+1)=d_n+forcing(v_n)
-       -> explicit finite sum for d_n
-       -> stationary finite-step response inequality using K_R
-       -> weighted norm estimate for Q_R
-       -> terminal discrepancy control
-       -> asymptotic self-consistent response inequality
-       -> solve for weighted response profile R
+    K. RIESZ PROJECTOR / VACUUM BETA CONTINUITY                [OPEN NOW]
+       -> beta-continuity of contour integral
+       -> beta-continuous CFC top projector
+       -> continuous positive normalized top vector
+       -> continuous canonical vacuum / ground-state data
 
-    K. ACTUAL REMOTE WEIGHTED COEFFICIENT                       [OPEN]
-       -> apply #4572 to solved response profile
-       -> derive concrete volume-independent kappa_s(beta,s)
-       -> prove
-            18*eta(beta)*s^2 + eta(beta) + kappa_s < 1
-          in a nonempty parameter regime
-       -> instantiate #4570 certificate interface
+    L. CANONICAL RESPONSE BETA CONTINUITY                      [OPEN NEXT]
+       -> fixed-right kernel-section law continuity
+       -> coordinatewise R_can continuity
+       -> M_can continuity
+       -> discharge #4607 continuation theorem
 
-    L. STRICT WEIGHTED PHYSICAL INFLUENCE / SPATIAL DECAY       [OPEN]
-       -> full weighted subinvariance
+    M. STRICT PIN-FREE WEIGHTED PHYSICAL INFLUENCE             [OPEN]
+       -> M_can < 1/2 in nonempty high-temperature regime
+       -> c_pf(beta,s,M_can) < 1
+       -> strict weighted physical response propagation
+
+    N. SPATIAL COVARIANCE DECAY / UNIFORM REMOTE RESIDUAL      [OPEN]
        -> source-to-target response decay
        -> terminal kernel-section base-L1 covariance decay
-
-    M. UNIFORM REMOTE RESIDUAL / PHYSICAL SWEEP GATE            [OPEN]
        -> cubic shell summability
        -> volume-uniform remote residual
        -> strict physical sweep contraction
 
-    N. PHYSICAL POINCARE / COERCIVITY                            [OPEN]
+    O. PHYSICAL POINCARE / COERCIVITY                           [OPEN]
 
-    O. UNIFORM FINITE-VOLUME TRANSFER / HAMILTONIAN GAP          [OPEN]
+    P. UNIFORM FINITE-VOLUME TRANSFER / HAMILTONIAN GAP        [OPEN]
 
-    P. THERMODYNAMIC / CONTINUUM PHYSICAL LIMIT                  [OPEN]
+    Q. THERMODYNAMIC / CONTINUUM PHYSICAL LIMIT                [OPEN]
 
-    Q. CLAY-LEVEL EXISTENCE + MASS GAP                           [OPEN]
+    R. CLAY-LEVEL EXISTENCE + MASS GAP                          [OPEN]
 
 ---
 
@@ -153,9 +147,9 @@ For theorem-bearing work:
 
 A stale run attached to an older PR head is not CI authority for a moved PR.
 
-Queued/in-progress CI is not GREEN.
+Queued or in-progress CI is not GREEN.
 
-No new `sorry`, `admit`, axioms, hidden constants, hypothesis weakening, theorem weakening, or semantic broadening may replace proof.
+No new sorry, admit, axioms, hidden constants, hypothesis weakening, theorem weakening, or semantic broadening may replace proof.
 
 ---
 
@@ -163,7 +157,7 @@ No new `sorry`, `admit`, axioms, hidden constants, hypothesis weakening, theorem
 
 **Status: integrated.**
 
-The repository contains the finite periodic compact-`SU(N)` Wilson model, reflection-positive structures, one-slab transfer architecture, nonnegative ground-state framework, and downstream coercivity/spectral interfaces.
+The repository contains the finite periodic compact-SU(N) Wilson model, reflection-positive structures, one-slab transfer architecture, physical Hilbert carriers, nonnegative ground-state framework, and downstream spectral/coercivity interfaces.
 
 Boundary:
 
@@ -172,421 +166,441 @@ Boundary:
 
 ---
 
-# Phase 2 — Continuous one-link law and local geometry
+# Phase 2 — Continuous one-link law and exact covariance mechanics
 
 **Status: integrated.**
 
-The continuous one-link law is normalized and measurable; the repository contains one-link heat-bath reinsertion, stationarity/properness machinery, represented-source cancellation, and the physical C5/local-neighbor geometry.
+The continuous one-link law is normalized and measurable. The repository contains heat-bath reinsertion, stationarity/properness machinery, one-link conditional expectation, L2 projection/fluctuation identities, covariance self-adjointness, deterministic-schedule telescopes, and restricted-random-scan covariance resolvents.
 
-The volume-independent active-neighbor degree and base-L1 locality are the geometric input for the genuine local Harnack kernel.
-
-The dense distinct-fiber tagged carrier remains a valid finite-volume upper-bound mechanism, but not the final sparse spatial carrier.
-
----
-
-# Phase 3 — Exact kernel-section covariance mechanics
-
-**Status: integrated.**
-
-The one-link kernel section is identified with the relevant conditional expectation. The repository contains the associated `L2` projection/fluctuation identities, covariance self-adjointness, one-link Dirichlet identities, deterministic-schedule telescopes, and restricted-random-scan covariance resolvents.
-
-Permanent boundary:
-
-    finite covariance resolvent
-      != spatial covariance decay.
-
----
-
-# Phase 4 — Fixed-volume block/step covariance remainder
-
-**Status: CLOSED through #4547-#4548.**
-
-PR #4547 proves the complete-block/original-step identity
-
-    P_block^n f
-      = P_scan^(n * L_H) f.
-
-PR #4548 combines this with fixed-volume Doeblin convergence and proves
+PRs #4547-#4548 close the fixed-volume covariance remainder along complete blocks:
 
     Cov_mu(F, P_scan^(n * L_H) G) -> 0.
 
-The covariance remainder is therefore closed at fixed finite volume.
-
 Boundary:
 
-    fixed-volume covariance-remainder vanishing
+    fixed-volume remainder vanishing
       != volume-uniform spatial covariance decay.
 
 ---
 
-# Phase 5 — Coarse tagged fixed-right response
+# Phase 3 — Genuine local weighted Harnack theory
 
-**Status: integrated through #4558.**
+**Status: closed through #4560.**
 
-PRs #4551-#4557 build the eligible-coordinate pullback and fixed-right response resolvent.
+For
 
-The exact physical eligible-row coefficient includes
+    W_center(x) := s ^ baseL1Distance(center,x),
 
-    (card(Link)-1) * DistinctFiberOffFiberInfluence(beta),
+with s >= 1, the sparse local physical kernel obeys
 
-which records the fixed-volume obstruction explicitly.
+    K_local W <= rho_s W,
 
-PR #4558 transports the asymptotic fixed-right bound back to the actual source-aligned remote residual while retaining its real C5 support.
+where
 
-Result:
+    rho_s := 18 * eta(beta) * s^2.
 
-    useful finite-volume response machinery
-    but not a uniform spatial contraction mechanism.
+The iterated local estimate and finite Green/resolvent bound are formalized under rho_s < 1.
 
----
-
-# Phase 6 — Exponentially weighted genuine local Harnack theory
-
-**Status: CLOSED through #4560.**
-
-Define
-
-    W_center(x)
-      := s ^ baseL1Distance(center,x),
-
-with `s >= 1`.
-
-PR #4559 proves
-
-    K_local W
-      <= rho_s W,
-
-with
-
-    rho_s
-      := 18 * eta(beta) * s^2.
-
-PR #4560 proves
-
-    K_local^d W
-      <= rho_s^d W
-
-and, if
-
-    rho_s < 1,
-
-    G_local,M W
-      <= (1-rho_s)^(-1) W.
-
-This is the reusable volume-independent local Green mechanism.
+This is the volume-independent local geometric input used later in the response-controlled theory.
 
 ---
 
-# Phase 7 — Fixed-target weighted local/pin/remote decomposition
+# Phase 4 — Fixed-target decomposition and response-controlled kernel
 
-**Status: integrated through #4565.**
+**Status: integrated through #4573, superseded in part by the later pin-free refinement.**
 
-The actual fixed-target envelope is decomposed into
+The actual fixed-target envelope was decomposed into local, target-pin, and remote pieces.
 
-    genuine local Harnack contribution
-      + distinguished-target pin
-      + actual source-aligned remote residual.
+Weighted superposition and remote-response linearization then connected the actual remote residual to a fixed-right response profile.
 
-The distinguished-target pin contributes an additional `eta(beta)` to the later full weighted coefficient.
+PR #4573 introduced the response-controlled physical kernel K_R.
 
-The corresponding local/pin terms are now explicitly compatible with exponential weighting.
+This stage established the architecture, but the later #4586-#4588 work removed the distinguished-target pin from the actual physical-left kernel. The pin-free formulation is now the preferred route.
 
 ---
 
-# Phase 8 — Weighted response bootstrap and variation propagation
+# Phase 5 — Exact response-controlled finite-step dynamics
 
-**Status: integrated through #4569.**
+**Status: closed through #4582.**
 
-PR #4566 lifts the fixed-target decomposition into a weighted response-bootstrap interface.
+PR #4577 normalizes the accumulated source discrepancy and proves the exact forcing-sum identity.
 
-PR #4567 scales the physical influence bound by an arbitrary nonnegative variation profile.
+PR #4578 rebuilds the stationary fixed-right response decomposition using the response-controlled physical recurrence rather than the old dense tagged left-left carrier.
 
-PR #4568 transports that variation through the actual one-link heat-bath update.
+PRs #4579-#4580 derive weighted random-scan and source-forcing resolvent bounds.
 
-PR #4569 packages the resulting fixed-target physical structure into a tagged carrier usable by random-scan algebra.
+PR #4581 proves the finite-volume terminal response tends to zero under the strict response-controlled weighted coefficient.
 
-These theorems preserve the actual fixed-target law structure and do not identify the old coarse left-left carrier with the desired physical spatial kernel.
+PR #4582 removes that terminal term and obtains a direct asymptotic fixed-right response bound.
 
----
-
-# Phase 9 — Uniform remote certificate interface
-
-**Status: integrated through #4570, but certificate existence remains open.**
-
-PR #4570 defines the interface
-
-    actual weighted remote residual
-      <= kappa * W.
-
-If such a `kappa` is supplied, the full weighted coefficient becomes
-
-    c_s
-      = 18 * eta(beta) * s^2
-        + eta(beta)
-        + kappa.
-
-It proves the downstream algebraic consequences, including weighted kernel/resolvent bootstrap under `c_s < 1`.
-
-Important boundary:
-
-    certificate interface
-      != derivation of kappa.
+This closes the finite-step-to-asymptotic response route without using terminal covariance decay or coercivity.
 
 ---
 
-# Phase 10 — Weighted superposition and remote-response linearization
+# Phase 6 — Canonical fixed-right response profile
 
-**Status: CLOSED through #4572.**
+**Status: closed through #4584.**
 
-PR #4571 establishes the weighted superposition needed to move target-dependent weights into variation profiles.
+PR #4583 constructs the literal fixed-right response value sets and the canonical pointwise supremum profile R_can.
 
-PR #4572 proves that if `R(target,source)` bounds the actual fixed-right target-ratio response, then on remote targets
+It proves:
 
-    actual remote influence
-      <= exp(16 * beta) * R(target,source),
+    0 <= R_can(target,source) <= exp(16 * beta),
 
-and therefore
+and that R_can dominates every literal fixed-right response.
 
-    actual weighted remote residual
-      <= exp(16 * beta)
-         * weighted_mass(R).
+PR #4584 proves R_can is pointwise minimal among nonnegative uniform response profiles and transports any weighted-column certificate to this canonical object.
 
-This is the key carrier-free bridge from fixed-right response to the actual remote residual.
-
-It uses no terminal covariance decay, physical sweep contraction, Poincare/coercivity, or mass-gap input.
+The former circularity of solving for an arbitrary assumed profile has therefore been removed.
 
 ---
 
-# Phase 11 — Response-controlled physical kernel
+# Phase 7 — Remove the distinguished-target pin
 
-**Status: CLOSED through #4573.**
+**Status: closed through #4595.**
 
-For a nonnegative fixed-right response profile `R`, define the response-controlled kernel `K_R` by the physical cases:
+PR #4585 isolates the distinguished-target pin as the remaining obstruction in the older response-controlled weighted row.
+
+PR #4586 proves a direct remote cross-ratio comparison for the distinguished-target fiber.
+
+PR #4587 uses that result to define the pin-free response-controlled physical-left kernel:
 
     diagonal:
       0
 
-    C5/local exceptional:
+    intrinsic active-neighbor term:
       eta(beta)
 
-    remote:
+    otherwise:
       exp(16 * beta) * R(target,source).
 
-PR #4573 proves that the actual configuration-dependent fixed-target envelope is pointwise dominated by `K_R`.
+Its weighted coefficient is
 
-It then transports this domination to the actual bounded-test and arbitrary-variation one-link heat-bath estimates.
+    c_pf(beta,s,M)
+      := 18 * eta(beta) * s^2
+         + exp(16 * beta) * M.
 
-Conceptual transition:
+PRs #4588-#4594 carry this coefficient through weighted random scan, literal law variation, source forcing, stationary response, terminal control, and asymptotic terminal removal.
 
-    actual update
-      -> response-controlled physical kernel K_R
+PR #4595 transports the resulting remote estimate to the canonical response profile.
 
-replaces the old use of the coarse all-to-all left-left carrier as the spatial recurrence.
-
-Open point:
-
-    R is still an input profile;
-    it has not yet been constructed self-consistently.
+The obsolete standalone distinguished-target +eta(beta) term is no longer part of the preferred physical-left recurrence.
 
 ---
 
-# Phase 12 — One-step response-controlled random scan
+# Phase 8 — Aggregate the complete remote target family
 
-**Status: CLOSED through #4574.**
+**Status: closed through #4600.**
 
-PR #4574 proves that one actual restricted-random-scan step propagates left variation through `K_R`.
+PR #4597 defines the exponentially weighted aggregate of all singleton target-ratio variation profiles and proves the exact identity
 
-Schematically,
+    sum_target W_center(target) * V_target(e)
+      = exp(16 * beta) * W_center(e).
 
-    v_next = Q_R v.
+PR #4598 proves exact scalar and finite-superposition linearity of the pin-free orbit, source forcing, and accumulated discrepancy.
 
-It separately defines the represented right-source forcing
+PR #4599 applies the aggregate resolvent to arbitrary target-indexed response witnesses and removes the fixed-volume terminal term before taking the spatial conclusion.
 
-    CrossBoundaryRandomScanSourceForcing(source,v).
+PR #4600 lifts the result to the canonical supremum profile without assuming one common maximizing witness.
 
-This separation is structural: the dense left-left block of the old augmented tagged carrier does not enter the physical left-variation recurrence.
-
----
-
-# Phase 13 — Finite-step response-controlled recurrence
-
-**Status: CLOSED through #4575.**
-
-Define
-
-    v_0 = variation
-    v_(n+1) = Q_R v_n.
-
-PR #4575 proves that every actual `n`-step restricted-random-scan observable has left-fiber variation bounded by `v_n`.
-
-For the represented right-boundary source, define
-
-    d_0 = 0
-
-and
-
-    d_(n+1)
-      = card(Link)^(-1)
-        * sum_fiber [
-            d_n
-            + CrossBoundaryBoundedTestMajorant(beta,fiber,source)
-              * v_n(fiber)
-          ].
-
-PR #4575 proves that two random-scan orbits with different represented right-boundary source values differ pointwise by at most `d_n`.
-
-The coarse tagged carrier is used only to justify the right-source affine identity. Its volume-growing left-left block is not used in the recurrence that propagates spatial variation.
+This is the key step that removes target-cardinality loss from the full remote weighted column.
 
 ---
 
-# Phase 14 — Normalize the source-discrepancy recurrence
+# Phase 9 — Control the local C5 exceptional column
 
-**Status: OPEN — next coherent theorem unit.**
+**Status: closed through #4603.**
 
-Because the spatial-link finite type is nonempty, the averaging term should simplify exactly to
+PR #4601 proves a volume-independent Harnack comparison for the fixed-right ground-state kernel-section law.
 
-    d_(n+1)
-      = d_n
-        + CrossBoundaryRandomScanSourceForcing(source,v_n).
+PR #4602 transports that comparison to every literal fixed-right response and then to the canonical profile.
 
-Formal goals:
+PR #4603 uses the finite C5 exceptional-set cardinality and weighted base-L1 geometry to obtain the explicit volume-independent exceptional-column coefficient
 
-1. prove positivity/nonzeroness of
+    20 * s^2 * exp(16 * beta) * eta_R(beta).
 
-       card(PeriodicHypercubicEvenSpatialSliceLink H);
-
-2. normalize the averaged discrepancy step;
-
-3. prove the finite-sum identity
-
-       d_n
-         = sum_{j < n}
-             CrossBoundaryRandomScanSourceForcing(source,v_j).
-
-This removes avoidable averaging syntax before the stationary-response closure.
+This coefficient vanishes at beta = 0.
 
 ---
 
-# Phase 15 — Stationary fixed-right response through K_R
+# Phase 10 — Exact canonical weighted coefficient and bootstrap map
 
-**Status: OPEN — immediate analytic frontier.**
+**Status: closed through #4605.**
 
-Replace the older coarse left-left finite-step response transport with the response-controlled recurrence.
+PR #4604 combines the exceptional and remote pieces into the explicit improvement map
 
-Desired schematic theorem:
+    Phi(beta,s,M).
 
-    actual fixed-right response
-      <= accumulated_source_forcing(v_0,...,v_(n-1))
-         + terminal_n_step_discrepancy.
+Its pin-free denominator is controlled by
 
-The left profile must remain
+    c_pf(beta,s,M)
+      = 18 * eta(beta) * s^2
+        + exp(16 * beta) * M.
 
-    v_j = Q_R^j v_0,
+PR #4605 defines M_can as the actual finite maximum over source-normalized weighted canonical response columns.
 
-not an iterate of the dense tagged carrier.
+It proves:
 
-The terminal term should then be controlled or sent to zero under a strict weighted condition on `K_R`.
+    M_can >= 0,
 
----
+    M_can is a valid certificate for its own canonical response profile,
 
-# Phase 16 — Self-consistent weighted response inequality
+    c_pf(beta,s,M_can) < 1
+      -> M_can <= Phi(beta,s,M_can),
 
-**Status: OPEN — central closure problem.**
+and exactly
 
-Since the remote part of `K_R` itself contains `R`,
+    M_can(beta = 0) = 0.
 
-    K_R(remote)
-      = exp(16 * beta) * R,
-
-the closure is self-consistent.
-
-The target is a weighted scalar/profile inequality such as
-
-    M_R
-      <= A(beta,s)
-         + B(beta,s) * M_R,
-
-where
-
-    M_R
-      := sup/source-normalized weighted mass of R,
-
-and
-
-    B(beta,s) < 1.
-
-Then
-
-    M_R
-      <= A(beta,s) / (1-B(beta,s)).
-
-The proof must derive this from the actual fixed-right law-level response and the response-controlled finite-step recurrence.
-
-Do **not** close this phase by:
-
-    * assuming the final response bound;
-    * assuming the final remote certificate;
-    * reverting to the coarse all-to-all left-left coefficient;
-    * using terminal covariance decay;
-    * importing a physical contraction, Poincare/coercivity, or mass gap.
+At this point the closure variable is the actual model coefficient, not an auxiliary unknown.
 
 ---
 
-# Phase 17 — Derive the actual remote coefficient
+# Phase 11 — High-temperature half-barrier architecture
+
+**Status: closed through #4608 except for the model-facing continuity input.**
+
+PR #4606 fixes the barrier 1/2 and proves that for a strictly positive, volume-independent beta cutoff:
+
+    c_pf(beta,s,1/2) < 1,
+
+    Phi(beta,s,1/2) < 1/2,
+
+and hence the actual canonical coefficient cannot equal the barrier:
+
+    M_can != 1/2.
+
+PR #4607 proves the continuation theorem:
+
+    continuity of beta -> M_can
+      + M_can(0)=0
+      + exclusion of M_can=1/2
+      -> M_can < 1/2
+
+throughout the selected high-temperature interval.
+
+PR #4608 reduces continuity of M_can to coordinatewise beta-continuity of the canonical fixed-right response profile.
+
+Therefore the remaining problem in this phase is not scalar algebra. It is the beta-continuity of the underlying canonical physical response coordinates.
+
+---
+
+# Phase 12 — Top-ray uniqueness
+
+**Status: closed through #4609.**
+
+PR #4609 proves finite-volume uniqueness of the physical top ray.
+
+For every fixed finite volume and nonnegative beta, every physical top eigenvector is a real scalar multiple of the canonical nonnegative top vector.
+
+This removes the ambiguity that would otherwise obstruct a canonical continuous choice of top mode.
+
+Boundary:
+
+    top-ray uniqueness at each beta
+      != continuity of the selected top vector in beta.
+
+---
+
+# Phase 13 — Physical transfer continuity in beta
+
+**Status: closed through #4611.**
+
+PR #4610 proves operator-norm Lipschitz continuity in beta of the genuine finite-volume physical one-slab transfer.
+
+The same estimate controls its top-transfer norm.
+
+PR #4611 packages beta >= 0 as the fixed half-line Set.Ici 0, proves continuity of the positive top norm and its reciprocal, and obtains operator-norm continuity of the normalized physical transfer.
+
+The normalized top spectral point is fixed at
+
+    1.
+
+The constants here are allowed to depend on finite volume; this stage is local spectral continuation, not the later uniform mass-gap estimate.
+
+---
+
+# Phase 14 — Complex normalized resolvent continuity
+
+**Status: closed through #4612.**
+
+PR #4612 proves that canonical real-to-complex physical scalar extension is globally Lipschitz in operator norm.
+
+It follows that
+
+    beta -> S_beta
+
+for the normalized complex physical one-slab transfer is operator-norm continuous.
+
+For every fixed z belonging to the base resolvent set, the theorem then proves
+
+    beta -> resolvent(S_beta,z)
+
+is continuous at the base beta.
+
+The proof uses continuity of inversion at a unit, not a spectral-gap continuity assumption.
+
+This is pointwise-in-z continuity only.
+
+---
+
+# Phase 15 — Canonical Riesz contour beta stability
+
+**Status: closed through #4613.**
+
+At beta0, let the canonical Riesz radius be the existing positive half-gap radius around the isolated normalized top point 1.
+
+PR #4613 proves:
+
+    for all sufficiently nearby beta,
+      Metric.sphere(1,r_beta0)
+        subset resolventSet(S_beta).
+
+The contour is fixed at the beta0 radius while the operator moves.
+
+The proof uses:
+
+    normalized transfer continuity
+      -> joint shift continuity
+      -> openness of the unit locus
+      -> base-circle spectral isolation
+      -> compactness of the circle
+      -> generalized tube lemma.
+
+On the same fixed contour, PR #4613 also proves that for every sufficiently nearby beta,
+
+    z -> resolvent(S_beta,z)
+
+is ContinuousOn the contour.
+
+This is the compact spectral-persistence bridge needed before moving the Riesz projector itself.
+
+---
+
+# Phase 16 — Beta-continuity of the Riesz / CFC top projector
+
+**Status: OPEN — immediate theorem frontier.**
+
+The repository already proves at each fixed beta that the normalized contour integral equals the existing CFC top spectral projection:
+
+    (2*pi*i)^(-1)
+      * integral_circle resolvent(S_beta,z)
+      = P_top(beta).
+
+The next task is to make this identity vary continuously in beta.
+
+The intended route is:
+
+    fixed beta0 contour persists for nearby beta
+      -> obtain joint or uniform-enough resolvent control on that contour
+      -> pass beta-continuity through the circle integral
+      -> obtain ContinuousAt beta0 of the Riesz projector
+      -> identify it with P_top(beta).
+
+Care is required because:
+
+    pointwise beta-continuity for each z
+      != automatically uniform contour continuity.
+
+The proof should use compactness of the fixed circle rather than assume continuity of the excited-sector gap.
+
+---
+
+# Phase 17 — Continuous canonical positive top mode
 
 **Status: OPEN AFTER PHASE 16.**
 
-Feed the solved response profile into #4572:
+Use:
 
-    weighted remote residual
-      <= exp(16 * beta) * weighted_mass(R).
+    beta-continuous top projector
+      + top-ray uniqueness
+      + existing positivity of the canonical top representative
+      + fixed normalization
 
-This should produce an explicit volume-independent
+to construct a canonical positive normalized top vector continuously in beta.
 
-    kappa_s(beta,s).
+The selection must remain compatible with the existing physical and CFC carriers.
 
-Then instantiate the #4570 interface and prove a nonempty regime satisfying
-
-    18 * eta(beta) * s^2
-      + eta(beta)
-      + kappa_s(beta,s)
-      < 1.
-
-This is the first point at which strict full weighted physical subinvariance is authorized.
+Do not infer vector continuity merely from one-dimensionality without an explicit local selection/normalization theorem.
 
 ---
 
-# Phase 18 — Strict weighted physical influence and spatial decay
+# Phase 18 — Fixed-right kernel-section and response beta-continuity
 
 **Status: OPEN AFTER PHASE 17.**
 
-From the strict coefficient derive:
+Transport the continuous top mode into the ground-state kernel-section law used by the fixed-right response.
 
-    full weighted physical influence
-      <= c_s W,
+Then prove, for each fixed target/source coordinate,
 
-with
+    beta -> R_can(beta,target,source)
 
-    c_s < 1.
+is continuous on the required high-temperature interval.
 
-Then obtain volume-independent source-to-target response/resolvent decay.
+After coordinatewise continuity is established, apply #4608 to obtain continuity of the exact finite maximum M_can.
 
-The target is a genuine sparse physical spatial mechanism, with no return to the dense tagged carrier.
+This closes the only remaining premise of the #4607 continuation theorem.
 
 ---
 
-# Phase 19 — Terminal kernel-section base-L1 covariance decay
+# Phase 19 — Discharge the canonical half-barrier continuation
+
+**Status: OPEN AFTER PHASE 18.**
+
+Combine:
+
+    M_can(0)=0
+      + M_can continuous
+      + M_can != 1/2 on the selected interval
+
+to conclude
+
+    M_can < 1/2.
+
+Because the cutoff also has
+
+    c_pf(beta,s,1/2) < 1,
+
+the monotonic dependence on M then yields the strict canonical pin-free weighted coefficient required for the physical response recurrence.
+
+This is the point where the current high-temperature response closure becomes unconditional within the proved interval.
+
+---
+
+# Phase 20 — Strict weighted physical influence and spatial response decay
+
+**Status: OPEN DOWNSTREAM.**
+
+Instantiate the pin-free physical kernel with the actual canonical response profile and exact strict coefficient.
+
+Target:
+
+    K_can W <= c_s W,
+
+with
+
+    c_s < 1
+
+uniformly in periodic spatial volume in the selected high-temperature regime.
+
+Then derive volume-independent source-to-target response/resolvent decay.
+
+The sparse physical kernel, not the old dense tagged carrier, must remain the propagation mechanism.
+
+---
+
+# Phase 21 — Terminal kernel-section base-L1 covariance decay
 
 **Status: OPEN DOWNSTREAM.**
 
 Combine:
 
-    source-singleton terminal variation
-      + fixed-volume covariance-remainder closure (#4548)
-      + strict weighted physical influence
-      + exact kernel-section covariance mechanics.
+    strict weighted physical response
+      + fixed-volume covariance-remainder closure
+      + exact kernel-section covariance mechanics
+      + source-singleton terminal variation
 
-Target:
+to obtain a bound of the form
 
     |Cov_mu(crossing_source, terminal_target)|
       <= C * q^baseL1Distance(target,source),
@@ -596,29 +610,31 @@ uniformly in periodic volume, with
     C >= 0,
     0 <= q < 1.
 
+This is the first genuine spatial covariance-decay theorem in the downstream route.
+
 ---
 
-# Phase 20 — Uniform remote residual and physical sweep gate
+# Phase 22 — Uniform remote residual and physical sweep gate
 
 **Status: OPEN DOWNSTREAM.**
 
 Use cubic base-L1 shell summability:
 
-    terminal covariance decay
-      -> terminal response decay
+    spatial covariance decay
+      -> summable remote response
       -> volume-uniform remote residual
       -> strict physical sweep contraction.
 
 Directionality is permanent:
 
-    covariance decay
+    covariance/response decay
       -> uniform remote residual,
 
 not the reverse.
 
 ---
 
-# Phase 21 — Physical Poincare / coercivity
+# Phase 23 — Physical Poincare / coercivity
 
 **Status: OPEN DOWNSTREAM.**
 
@@ -633,21 +649,23 @@ The required coercive constant must remain uniform in volume.
 
 ---
 
-# Phase 22 — Uniform finite-volume transfer/Hamiltonian gap
+# Phase 24 — Uniform finite-volume transfer / Hamiltonian gap
 
 **Status: OPEN DOWNSTREAM.**
 
-Target: a positive spectral lower bound uniform over the finite periodic volumes used in the limiting construction.
+Target a positive spectral lower bound uniform over the finite periodic volumes used in the limiting construction.
 
-A fixed-volume spectral gap that collapses with volume is insufficient.
+A fixed-volume gap that collapses with volume is insufficient.
+
+The finite-volume top isolation used in #4609-#4613 is a local spectral-continuation tool and must not be confused with this later volume-uniform gap.
 
 ---
 
-# Phase 23 — Thermodynamic / continuum physical limit
+# Phase 25 — Thermodynamic / continuum physical limit
 
 **Status: OPEN DOWNSTREAM.**
 
-After a uniform finite-volume physical gap, the program still requires:
+After the required volume-uniform physical estimates, the program still requires:
 
     compatible limiting physical states
       -> same-root OS/Wightman carrier
@@ -655,110 +673,109 @@ After a uniform finite-volume physical gap, the program still requires:
       -> sufficiently rich nontrivial 4D Yang--Mills field/state
       -> spectral lower bound above the vacuum.
 
-Existing auxiliary/scalar continuum lanes remain infrastructure, not substitutes for the full gauge-field construction.
+Existing auxiliary or scalar continuum lanes remain infrastructure, not substitutes for the full gauge-field construction.
 
 ---
 
-# Phase 24 — Clay-level target
+# Phase 26 — Clay-level target
 
 **Status: OPEN.**
 
 The final target remains a mathematically complete four-dimensional Yang--Mills existence and mass-gap construction in the intended setting.
 
-The repository should therefore be read as a rigorous formalization program with substantial finite-volume and analytic infrastructure, not as an already completed Clay solution.
+The repository should therefore be read as a rigorous formalization program with substantial finite-volume, response-theoretic, and spectral-continuation infrastructure, not as an already completed Clay solution.
 
 ---
 
 # Immediate theorem-development checklist
 
-Starting from theorem-bearing baseline PR #4575:
+Starting from theorem-bearing baseline PR #4613:
 
-    1. prove spatial-link cardinality is nonzero in the exact local context;
+    1. work on the fixed beta0 canonical Riesz circle;
 
-    2. normalize
-         CrossBoundaryRandomScanSourceDiscrepancyStep
-       into
-         discrepancy + CrossBoundaryRandomScanSourceForcing;
+    2. strengthen the available pointwise beta-resolvent continuity to the
+       joint/uniform contour control needed by the circle integral;
 
-    3. derive
-         d_n = sum_{j<n} forcing(v_j);
+    3. prove beta-continuity of the normalized Riesz projector;
 
-    4. rebuild the stationary fixed-right finite-step response theorem
-       using v_j = Q_R^j v_0 rather than the coarse left-left carrier;
+    4. transport the result to the existing CFC top spectral projection;
 
-    5. identify a weighted norm M_R for the actual response profile R;
+    5. combine projector continuity with top-ray uniqueness and positivity
+       to construct a continuous normalized positive top vector;
 
-    6. prove a strict weighted estimate for Q_R in terms of M_R;
+    6. prove continuity of the fixed-right ground-state kernel-section law;
 
-    7. control the terminal n-step discrepancy and pass n -> infinity;
+    7. prove coordinatewise beta-continuity of the canonical response profile;
 
-    8. derive a self-consistent inequality
-         M_R <= A + B*M_R;
+    8. invoke #4608 to obtain continuity of M_can;
 
-    9. prove B < 1 on a nonempty parameter regime and solve for M_R;
+    9. invoke #4607 to prove M_can < 1/2 on the selected nonempty
+       high-temperature interval;
 
-    10. use #4572 to obtain the actual volume-independent kappa_s;
+    10. instantiate the strict pin-free canonical weighted coefficient;
 
-    11. instantiate #4570 and prove
-          18*eta(beta)*s^2 + eta(beta) + kappa_s < 1;
+    11. derive volume-independent source-to-target spatial response decay;
 
-    12. derive strict weighted physical influence and spatial response decay;
+    12. combine with the fixed-volume covariance remainder route to obtain
+        terminal base-L1 covariance decay;
 
-    13. combine with #4548 to obtain terminal base-L1 covariance decay;
+    13. run the cubic-shell / uniform-remote-residual pipeline;
 
-    14. run the cubic-shell / uniform-remote-residual pipeline;
-
-    15. close physical sweep contraction, Poincare/coercivity,
+    14. close physical sweep contraction, Poincare/coercivity,
         and the uniform finite-volume spectral gap;
 
-    16. only then advance the thermodynamic/continuum Yang--Mills carrier
+    15. only then advance the thermodynamic/continuum Yang--Mills carrier
         and the Clay-level statement.
 
 ---
 
 # Current conceptual transition
 
-    #4547-#4548
-      fixed-volume covariance remainder closed
+    #4577-#4582
+      exact source-forcing recurrence
+      -> stationary response
+      -> terminal removal
 
-    #4551-#4558
-      coarse tagged fixed-right response route
-      + explicit fixed-volume obstruction
-      + transport back to actual remote forcing
+    #4583-#4584
+      arbitrary response profile
+      -> actual canonical response profile R_can
 
-    #4559-#4560
-      genuine local exponential weighted Schur/resolvent theory
+    #4586-#4595
+      remove distinguished-target pin
+      -> pin-free response-controlled recurrence
+      -> canonical remote resolvent
 
-    #4563-#4569
-      actual fixed-target local/pin/remote decomposition
-      -> weighted response bootstrap
-      -> variation-scaled heat-bath propagation
+    #4597-#4600
+      aggregate complete remote target family
+      -> no target-cardinality loss
+      -> canonical weighted remote column
 
-    #4570
-      remote-certificate interface only
+    #4601-#4603
+      fixed-right Harnack comparison
+      -> finite C5 exceptional weighted column
 
-    #4571-#4572
-      weighted superposition
-      -> actual remote residual linearized through fixed-right response
+    #4604-#4605
+      combine local + remote columns
+      -> exact canonical coefficient M_can
+      -> self-bootstrap inequality
 
-    #4573
-      response profile R
-      -> response-controlled physical kernel K_R
+    #4606-#4608
+      high-temperature half-barrier exclusion
+      -> continuation theorem
+      -> reduce M_can continuity to response-coordinate continuity
 
-    #4574
-      one actual random-scan step
-      -> left variation propagated by K_R
-      + right-source forcing isolated
-
-    #4575
-      v_(n+1)=Q_R v_n
-      + finite-step accumulated right-source discrepancy d_n
+    #4609-#4613
+      top-ray uniqueness
+      -> transfer beta-continuity
+      -> complex resolvent beta-continuity
+      -> fixed Riesz contour persistence
 
     current frontier
-      actual stationary fixed-right response
-      -> self-consistent weighted inequality for R
-      -> explicit volume-independent kappa_s
-      -> strict full weighted physical subinvariance.
+      fixed-contour resolvent control
+      -> beta-continuous Riesz/CFC top projector
+      -> beta-continuous canonical positive vacuum
+      -> beta-continuous fixed-right response
+      -> discharge M_can half-barrier continuation.
 
 ---
 
@@ -771,11 +788,15 @@ Starting from theorem-bearing baseline PR #4575:
     covariance decay != mass gap
     one-link conditional expectation != full Gibbs-law identification
     coarse tagged carrier != actual sparse physical carrier
-    local weighted resolvent != remote weighted closure
-    fixed-right response profile input != self-consistent construction of that profile
-    response-controlled kernel K_R != proof of a bound for R
-    uniform remote certificate != derivation of its coefficient
-    exact weighted decomposition != strict absorption
-    uniform finite-volume gap != thermodynamic/continuum Yang--Mills mass gap.
+    local weighted resolvent != canonical remote weighted closure
+    canonical response profile != continuity of that profile
+    exact M_can != strict bound on M_can without continuation
+    M_can != 1/2 != M_can < 1/2 without continuity
+    top-ray uniqueness != continuous top-vector selection
+    operator-norm transfer continuity != projector continuity
+    pointwise resolvent continuity != uniform contour-integral continuity
+    fixed Riesz contour persistence != beta-continuous vacuum
+    finite-volume top isolation != uniform thermodynamic mass gap
+    uniform finite-volume gap != continuum Yang--Mills mass gap.
 
-These boundaries are part of the formal theorem architecture, not editorial caveats.
+These boundaries are part of the theorem architecture, not editorial caveats.
