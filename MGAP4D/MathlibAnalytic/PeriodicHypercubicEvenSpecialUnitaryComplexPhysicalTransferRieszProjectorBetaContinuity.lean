@@ -124,21 +124,6 @@ private theorem
   let S :=
     periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
       H N hN
-  have hdistNorm (x y : A) : dist x y = ‖x - y‖ := by
-    calc
-      dist x y = ‖-x + y‖ := by
-        with_reducible_and_instances
-          exact SeminormedAddCommGroup.dist_eq x y
-      _ = ‖x - y‖ := by
-        rw [← ContinuousLinearMap.opNorm_neg, neg_add, neg_neg, sub_eq_add_neg]
-  have hdistNormRev (x y : A) : dist x y = ‖y - x‖ := by
-    calc
-      dist x y = ‖-x + y‖ := by
-        with_reducible_and_instances
-          exact SeminormedAddCommGroup.dist_eq x y
-      _ = ‖y - x‖ := by
-        congr 1
-        abel
   let r :=
     periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCFCRieszRadius
       H N hN beta0.1 beta0.2
@@ -205,6 +190,21 @@ theorem
   let S :=
     periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
       H N hN
+  have hdistNorm (x y : A) : dist x y = ‖x - y‖ := by
+    calc
+      dist x y = ‖-x + y‖ := by
+        with_reducible_and_instances
+          exact SeminormedAddCommGroup.dist_eq x y
+      _ = ‖x - y‖ := by
+        rw [← ContinuousLinearMap.opNorm_neg, neg_add, neg_neg, sub_eq_add_neg]
+  have hdistNormRev (x y : A) : dist x y = ‖y - x‖ := by
+    calc
+      dist x y = ‖-x + y‖ := by
+        with_reducible_and_instances
+          exact SeminormedAddCommGroup.dist_eq x y
+      _ = ‖y - x‖ := by
+        congr 1
+        abel
   let r :=
     periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCFCRieszRadius
       H N hN beta0.1 beta0.2
