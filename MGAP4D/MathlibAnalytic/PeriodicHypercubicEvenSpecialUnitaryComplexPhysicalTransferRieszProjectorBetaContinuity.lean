@@ -213,7 +213,7 @@ theorem
         Continuous
           (fun p : Set.Ici (0 : ℝ) × K =>
             (p.1, p.2.val)) :=
-      continuous_fst.prod_mk (continuous_subtype_val.comp continuous_snd)
+      continuous_fst.prodMk (continuous_subtype_val.comp continuous_snd)
     exact hJoint.comp hg.continuousOn (by
       intro p hp
       exact ⟨hp.1, p.2.property⟩)
