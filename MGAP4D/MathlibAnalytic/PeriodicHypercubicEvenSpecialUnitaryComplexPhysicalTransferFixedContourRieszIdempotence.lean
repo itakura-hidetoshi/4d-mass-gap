@@ -381,6 +381,61 @@ private theorem circleIntegral_resolvent_eq_of_radii_in_radial_gap
       resolvent_differentiableAt_of_mem_radial_annulus
         S c hgap hsmallWin hlargeWin hz.1
 
+
+/-- Pinned-mathlib backport of the two-interval Fubini wrapper.  The project is
+pinned before `MeasureTheory.intervalIntegral_intervalIntegral_swap` was added,
+so we derive exactly that statement from the already available one-interval
+Fubini theorem instead of depending on a newer API name. -/
+private theorem intervalIntegral_intervalIntegral_swap_pinned
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [NormedSpace ℝ E]
+    {F : ℝ → ℝ → E}
+    {a b c d : ℝ}
+    (h : MeasureTheory.IntegrableOn F.uncurry
+      (Set.uIoc a b ×ˢ Set.uIoc c d)) :
+    (∫ x in a..b, ∫ y in c..d, F x y) =
+      ∫ y in c..d, ∫ x in a..b, F x y := by
+  rw [intervalIntegral.intervalIntegral_eq_integral_uIoc,
+    ← MeasureTheory.intervalIntegral_integral_swap,
+    ← intervalIntegral.integral_smul]
+  · simp_rw [intervalIntegral.intervalIntegral_eq_integral_uIoc]
+  · rwa [← MeasureTheory.integrable_swap_iff,
+      MeasureTheory.Measure.prod_restrict,
+      ← MeasureTheory.Measure.volume_eq_prod,
+      ← MeasureTheory.IntegrableOn]
+
+/-- Fubini for two circle integrals, reduced explicitly to Mathlib's Fubini
+theorem for interval integrals.  The hypothesis is stated on the actual
+parameter-space integrand so no hidden circle-integrability inference is
+required. -/
+private theorem circleIntegral_circleIntegral_swap_of_integrable_parameter
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [NormedSpace ℂ E]
+    [CompleteSpace E]
+    (f : ℂ → ℂ → E)
+    (c : ℂ)
+    (r₁ r₂ : ℝ)
+    (hInt :
+      MeasureTheory.IntegrableOn
+        (fun p : ℝ × ℝ =>
+          (deriv (circleMap c r₁) p.1 *
+              deriv (circleMap c r₂) p.2) •
+            f (circleMap c r₁ p.1) (circleMap c r₂ p.2))
+        (Set.uIoc 0 (2 * Real.pi) ×ˢ Set.uIoc 0 (2 * Real.pi))) :
+    (∮ z in C(c, r₁), ∮ w in C(c, r₂), f z w) =
+      ∮ w in C(c, r₂), ∮ z in C(c, r₁), f z w := by
+  unfold circleIntegral
+  simp_rw [← intervalIntegral.integral_smul, smul_smul]
+  simpa only [mul_comm] using
+    (intervalIntegral_intervalIntegral_swap_pinned
+      (F := fun theta phi =>
+        (deriv (circleMap c r₁) theta *
+            deriv (circleMap c r₂) phi) •
+          f (circleMap c r₁ theta) (circleMap c r₂ phi))
+      hInt)
+
 end
 
 end MathlibAnalytic
