@@ -76,6 +76,40 @@ local instance complexNormalizedBetaContinuityComplexCompleteSpace
     CompleteSpace (PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) :=
   periodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert_completeSpace H N
 
+/-- Real-part extraction respects subtraction on the genuine complex physical carrier. -/
+private theorem
+    complexPhysicalRealPart_sub_for_beta_continuity
+    (H N : ℕ)
+    (f g : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) :
+    periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N (f - g) =
+      periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N f -
+        periodicHypercubicEvenSpecialUnitaryComplexPhysicalRealPart H N g := by
+  apply Subtype.ext
+  exact map_sub _ _ _
+
+/-- Imaginary-part extraction respects subtraction on the genuine complex physical carrier. -/
+private theorem
+    complexPhysicalImagPart_sub_for_beta_continuity
+    (H N : ℕ)
+    (f g : PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N) :
+    periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N (f - g) =
+      periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N f -
+        periodicHypercubicEvenSpecialUnitaryComplexPhysicalImagPart H N g := by
+  apply Subtype.ext
+  exact map_sub _ _ _
+
+/-- The canonical real embedding respects subtraction. -/
+private theorem
+    physicalOfReal_sub_for_beta_continuity
+    (H N : ℕ)
+    (f g :
+      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N (f - g) =
+      periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N f -
+        periodicHypercubicEvenSpecialUnitaryPhysicalOfReal H N g := by
+  apply Subtype.ext
+  exact map_sub _ _ _
+
 /-- Scalar extension respects subtraction.  Kept local here so beta-resolvent
 continuity does not import the later top-CFC centered-transfer layer. -/
 private theorem
@@ -90,8 +124,12 @@ private theorem
   apply ContinuousLinearMap.ext
   intro f
   apply periodicHypercubicEvenSpecialUnitaryComplexPhysical_ext_components H N
-  · simp [periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_apply]
-  · simp [periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_apply]
+  · simp [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_apply,
+      complexPhysicalRealPart_sub_for_beta_continuity]
+  · simp [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOperatorComplexification_apply,
+      complexPhysicalImagPart_sub_for_beta_continuity]
 
 /-- Canonical scalar extension from real physical bounded operators to genuine
 complex physical bounded operators is globally Lipschitz.  The pre-existing
@@ -202,8 +240,10 @@ theorem
       (continuous_const.sub hS)
   have hzUnit : IsUnit (shift beta0) := by
     simpa [shift, S] using hz
+  have hopenSet : IsOpen {x : A | IsUnit x} :=
+    (Units.isOpen : IsOpen {x : A | IsUnit x})
   have hopen : {x : A | IsUnit x} ∈ 𝓝 (shift beta0) :=
-    Units.isOpen.mem_nhds hzUnit
+    hopenSet.mem_nhds hzUnit
   have hnear :
       ∀ᶠ beta in 𝓝 beta0, IsUnit (shift beta) :=
     hshift.continuousAt.eventually_mem hopen
@@ -251,9 +291,8 @@ theorem
       Tendsto shift (𝓝 beta0) (𝓝 (↑u : A)) := by
     rw [hub]
     exact hshift.continuousAt
-  have hinvAt :
-      ContinuousAt (fun x : A => Ring.inverse x) (↑u : A) :=
-    NormedRing.inverse_continuousAt u
+  have hinvAt :=
+    @NormedRing.inverse_continuousAt A _ _ u
   have hinv :=
     hinvAt.tendsto.comp hshiftAt
   change Tendsto
