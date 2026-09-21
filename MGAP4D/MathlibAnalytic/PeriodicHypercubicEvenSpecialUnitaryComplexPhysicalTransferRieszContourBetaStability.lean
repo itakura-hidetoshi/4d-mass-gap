@@ -105,7 +105,7 @@ private theorem isOpen_isUnit_preimage_of_continuous
     (Metric.tendsto_nhds.1 hf.continuousAt) _ hpos
   filter_upwards [hnear] with y hy
   have hnorm : ‖f y - (↑u : A)‖ < ‖(↑u⁻¹ : A)‖⁻¹ := by
-    rw [hu] at hy
+    rw [← hu] at hy
     simpa [dist_eq_norm] using hy
   exact (u.ofNearby (f y) hnorm).isUnit
 
