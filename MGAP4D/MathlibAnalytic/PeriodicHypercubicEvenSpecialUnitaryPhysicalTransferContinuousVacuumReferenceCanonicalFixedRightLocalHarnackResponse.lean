@@ -419,10 +419,18 @@ theorem
       have hScaleEq :
           |(∫ A, F A ∂μh) - (∫ A, F A ∂μk)| =
             M * |((∫ A, F A ∂μh) / M) - ((∫ A, F A ∂μk) / M)| := by
-        rw [← abs_mul, abs_of_pos hMPos]
-        congr 1
-        field_simp [ne_of_gt hMPos]
-        <;> ring
+        symm
+        calc
+          M * |((∫ A, F A ∂μh) / M) - ((∫ A, F A ∂μk) / M)| =
+              |M| * |((∫ A, F A ∂μh) / M) - ((∫ A, F A ∂μk) / M)| := by
+                rw [abs_of_pos hMPos]
+          _ =
+              |M * (((∫ A, F A ∂μh) / M) - ((∫ A, F A ∂μk) / M))| := by
+                rw [abs_mul]
+          _ = |(∫ A, F A ∂μh) - (∫ A, F A ∂μk)| := by
+                congr 1
+                field_simp [ne_of_gt hMPos]
+                <;> ring
       rw [hScaleEq]
       exact mul_le_mul_of_nonneg_left hScaled' hMPos.le
     have hUpdateH :
