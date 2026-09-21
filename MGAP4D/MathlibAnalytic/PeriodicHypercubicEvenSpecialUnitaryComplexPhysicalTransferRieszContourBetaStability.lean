@@ -95,6 +95,7 @@ private theorem isOpen_isUnit_preimage_of_continuous
     (f : X → A)
     (hf : Continuous f) :
     IsOpen {x : X | IsUnit (f x)} := by
+  nontriviality A
   rw [isOpen_iff_mem_nhds]
   intro x hx
   rcases hx with ⟨u, hu⟩
@@ -215,7 +216,7 @@ theorem
     generalized_tube_lemma
       (s := ({beta0} : Set (Set.Ici (0 : ℝ))))
       (t := Metric.sphere (1 : ℂ) r)
-      isCompact_singleton Metric.isCompact_sphere hopen hbase
+      isCompact_singleton (isCompact_sphere (1 : ℂ) r) hopen hbase
   have hbeta0U : beta0 ∈ u := hbetaU (by simp)
   have huNhds : u ∈ 𝓝 beta0 := huOpen.mem_nhds hbeta0U
   filter_upwards [huNhds] with beta hbeta
@@ -275,7 +276,8 @@ theorem
             periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
               H N hN beta)
           (k := z) hzRes
-  exact hderiv.continuousAt.continuousWithinAt
+  with_reducible_and_instances
+    exact hderiv.continuousAt.continuousWithinAt
 
 end
 
