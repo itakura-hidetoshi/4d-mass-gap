@@ -493,14 +493,16 @@ private theorem circleIntegral_inv_sub_smul_const_of_mem_ball
           apply circleIntegral.integral_congr (le_of_lt (dist_nonneg.trans_lt hw))
           intro z hz
           have hsub : w - z = -(z - w) := by ring
-          simp [hsub]
+          rw [hsub, inv_neg, neg_smul, neg_one_smul]
     _ = (-1 : ℂ) • (∮ z in C(c, r), (z - w)⁻¹ • x) := by
           rw [circleIntegral.integral_smul]
     _ = (-1 : ℂ) • ((∮ z in C(c, r), (z - w)⁻¹) • x) := by
           rw [circleIntegral.integral_smul_const]
     _ = -(2 * Real.pi * Complex.I : ℂ) • x := by
           rw [circleIntegral.integral_sub_inv_of_mem_ball hw]
-          simp [smul_smul]
+          rw [smul_smul]
+          congr 1
+          ring
 
 end
 
