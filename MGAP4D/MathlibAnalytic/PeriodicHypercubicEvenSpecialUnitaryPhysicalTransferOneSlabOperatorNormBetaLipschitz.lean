@@ -209,8 +209,8 @@ theorem
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
           H N beta p.1 p.2
     rw [show D p = Kgamma p - Kbeta p by simpa [D] using hsubp, hgp, hbp]
-  have hDSqInt : Integrable (fun p => ‖D p‖ ^ 2) pairMu :=
-    (Lp.memLp D).integrable_sq
+  have hDSqInt : Integrable (fun p => ‖D p‖ ^ 2) pairMu := by
+    simpa [Real.norm_eq_abs, sq_abs] using (Lp.memLp D).integrable_sq
   have hConstInt : Integrable (fun _p :
       PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
@@ -349,8 +349,14 @@ theorem
             (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) := by
     simp [D,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_coe]
-  rw [← Subtype.norm_coe f]
-  rw [← Subtype.norm_coe (D f)]
+  change
+    ‖(((D f :
+        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+      Lp ℝ 2
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))‖ ≤
+      C *
+        ‖(f : Lp ℝ 2
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))‖
   rw [hcoe]
   exact
     (ContinuousLinearMap.le_opNorm
