@@ -436,6 +436,71 @@ private theorem circleIntegral_circleIntegral_swap_of_integrable_parameter
           f (circleMap c r₁ theta) (circleMap c r₂ phi))
       hInt)
 
+
+/-- If the pole lies outside the closed disk, the scalar Cauchy kernel has zero
+circle integral. -/
+private theorem circleIntegral_sub_inv_eq_zero_of_not_mem_closedBall
+    {c z : ℂ}
+    {r : ℝ}
+    (hr : 0 ≤ r)
+    (hz : z ∉ Metric.closedBall c r) :
+    (∮ w in C(c, r), (w - z)⁻¹) = 0 := by
+  apply
+    Complex.circleIntegral_eq_zero_of_differentiable_on_off_countable
+      hr (s := (∅ : Set ℂ)) Set.countable_empty
+  · exact
+      (continuousOn_id.sub continuousOn_const).inv₀
+        (fun w hw =>
+          sub_ne_zero.mpr (ne_of_mem_of_not_mem hw hz))
+  · intro w hw
+    have hwne : w ≠ z :=
+      ne_of_mem_of_not_mem (Metric.ball_subset_closedBall hw.1) hz
+    exact
+      (((hasDerivAt_id w).sub_const z).inv₀ (sub_ne_zero.mpr hwne)).differentiableAt
+
+/-- Vector-valued version of the exterior-pole Cauchy kernel integral. -/
+private theorem circleIntegral_sub_inv_smul_eq_zero_of_not_mem_closedBall
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [NormedSpace ℂ E]
+    [CompleteSpace E]
+    {c z : ℂ}
+    {r : ℝ}
+    (hr : 0 ≤ r)
+    (hz : z ∉ Metric.closedBall c r)
+    (x : E) :
+    (∮ w in C(c, r), (w - z)⁻¹ • x) = 0 := by
+  rw [circleIntegral.integral_smul_const]
+  rw [circleIntegral_sub_inv_eq_zero_of_not_mem_closedBall hr hz]
+  exact zero_smul ℂ x
+
+/-- With the pole inside the disk, the reversed kernel `(w-z)⁻¹` contributes
+the expected minus sign. -/
+private theorem circleIntegral_inv_sub_smul_const_of_mem_ball
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [NormedSpace ℂ E]
+    [CompleteSpace E]
+    {c w : ℂ}
+    {r : ℝ}
+    (hw : w ∈ Metric.ball c r)
+    (x : E) :
+    (∮ z in C(c, r), (w - z)⁻¹ • x) =
+      -(2 * Real.pi * Complex.I : ℂ) • x := by
+  calc
+    (∮ z in C(c, r), (w - z)⁻¹ • x) =
+        ∮ z in C(c, r), -((z - w)⁻¹ • x) := by
+          apply circleIntegral.integral_congr (le_of_lt (dist_nonneg.trans_lt hw))
+          intro z hz
+          simp [sub_eq_neg_sub]
+    _ = -(∮ z in C(c, r), (z - w)⁻¹ • x) := by
+          rw [circleIntegral.integral_neg]
+    _ = -((∮ z in C(c, r), (z - w)⁻¹) • x) := by
+          rw [circleIntegral.integral_smul_const]
+    _ = -(2 * Real.pi * Complex.I : ℂ) • x := by
+          rw [circleIntegral.integral_sub_inv_of_mem_ball hw]
+          simp
+
 end
 
 end MathlibAnalytic
