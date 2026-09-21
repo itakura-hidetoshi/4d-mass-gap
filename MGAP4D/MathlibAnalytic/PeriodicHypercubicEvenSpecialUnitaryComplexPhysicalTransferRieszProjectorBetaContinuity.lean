@@ -226,7 +226,7 @@ theorem
     (𝓝
       (periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_fixedCanonicalRieszProjector
         H N hN beta0 beta0))
-  apply Metric.tendsto_nhds.2
+  rw [Metric.tendsto_nhds]
   intro eps heps
   let C : ℝ := eps / (2 * r)
   have hC : 0 < C := by
