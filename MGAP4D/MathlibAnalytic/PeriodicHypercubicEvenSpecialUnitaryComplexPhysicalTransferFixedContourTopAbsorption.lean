@@ -208,18 +208,48 @@ theorem
       rightMul (∮ z in C((1 : ℂ), r), resolvent (S beta) z) =
         ∮ z in C((1 : ℂ), r), rightMul (resolvent (S beta) z) := by
     unfold circleIntegral
-    rw [← rightMul.intervalIntegral_comp_comm hresIntegrable.out]
-    apply intervalIntegral.integral_congr
-    intro theta htheta
-    rw [rightMul.map_smul]
+    calc
+      rightMul
+          (∫ theta in (0 : ℝ)..2 * Real.pi,
+            deriv (circleMap (1 : ℂ) r) theta •
+              resolvent (S beta) (circleMap (1 : ℂ) r theta)) =
+        ∫ theta in (0 : ℝ)..2 * Real.pi,
+          rightMul
+            (deriv (circleMap (1 : ℂ) r) theta •
+              resolvent (S beta) (circleMap (1 : ℂ) r theta)) := by
+              exact
+                (ContinuousLinearMap.intervalIntegral_comp_comm
+                  (𝕜 := ℂ) rightMul hresIntegrable.out).symm
+      _ =
+        ∫ theta in (0 : ℝ)..2 * Real.pi,
+          deriv (circleMap (1 : ℂ) r) theta •
+            rightMul (resolvent (S beta) (circleMap (1 : ℂ) r theta)) := by
+              apply intervalIntegral.integral_congr
+              intro theta htheta
+              exact rightMul.map_smul _ _
   have hleftMap :
       leftMul (∮ z in C((1 : ℂ), r), resolvent (S beta) z) =
         ∮ z in C((1 : ℂ), r), leftMul (resolvent (S beta) z) := by
     unfold circleIntegral
-    rw [← leftMul.intervalIntegral_comp_comm hresIntegrable.out]
-    apply intervalIntegral.integral_congr
-    intro theta htheta
-    rw [leftMul.map_smul]
+    calc
+      leftMul
+          (∫ theta in (0 : ℝ)..2 * Real.pi,
+            deriv (circleMap (1 : ℂ) r) theta •
+              resolvent (S beta) (circleMap (1 : ℂ) r theta)) =
+        ∫ theta in (0 : ℝ)..2 * Real.pi,
+          leftMul
+            (deriv (circleMap (1 : ℂ) r) theta •
+              resolvent (S beta) (circleMap (1 : ℂ) r theta)) := by
+              exact
+                (ContinuousLinearMap.intervalIntegral_comp_comm
+                  (𝕜 := ℂ) leftMul hresIntegrable.out).symm
+      _ =
+        ∫ theta in (0 : ℝ)..2 * Real.pi,
+          deriv (circleMap (1 : ℂ) r) theta •
+            leftMul (resolvent (S beta) (circleMap (1 : ℂ) r theta)) := by
+              apply intervalIntegral.integral_congr
+              intro theta htheta
+              exact leftMul.map_smul _ _
   have hrightPush :
       (∮ z in C((1 : ℂ), r), resolvent (S beta) z) * P =
         ∮ z in C((1 : ℂ), r), resolvent (S beta) z * P := by
