@@ -124,6 +124,14 @@ private theorem
   let S :=
     periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
       H N hN
+  have hdistNorm (x y : A) : dist x y = ‖x - y‖ := by
+    calc
+      dist x y = ‖-x + y‖ := by
+        with_reducible_and_instances
+          exact SeminormedAddCommGroup.dist_eq x y
+      _ = ‖x - y‖ := by
+        have hxy : -x + y = -(x - y) := by abel
+        rw [hxy, norm_neg]
   let r :=
     periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCFCRieszRadius
       H N hN beta0.1 beta0.2
@@ -272,8 +280,8 @@ theorem
         ‖resolvent (S beta) z - resolvent (S beta0) z‖ ≤ C := by
     intro z hz
     have hzClose := hv beta hbetaV z hz
-    with_reducible_and_instances
-      simpa [dist_eq_norm] using hzClose.le
+    rw [hdistNorm] at hzClose
+    exact hzClose.le
   have hbound :
       ‖(2 * Real.pi * Complex.I : ℂ)⁻¹ •
           (∮ z in C((1 : ℂ), r),
@@ -312,8 +320,7 @@ theorem
             (resolvent (S beta) z - resolvent (S beta0) z)) := by
               rw [circleIntegral.integral_sub hbetaIntegrable hbaseIntegrable]
   apply hWdist
-  with_reducible_and_instances
-    rw [dist_comm, dist_eq_norm, hdiff]
+  rw [hdistNorm, hdiff]
   calc
     ‖(2 * Real.pi * Complex.I : ℂ)⁻¹ •
         (∮ z in C((1 : ℂ), r),
