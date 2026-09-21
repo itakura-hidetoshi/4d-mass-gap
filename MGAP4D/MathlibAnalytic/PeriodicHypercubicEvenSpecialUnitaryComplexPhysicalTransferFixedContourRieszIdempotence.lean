@@ -400,8 +400,10 @@ private theorem intervalIntegral_intervalIntegral_swap_pinned
     ← MeasureTheory.intervalIntegral_integral_swap,
     ← intervalIntegral.integral_smul]
   · simp_rw [intervalIntegral.intervalIntegral_eq_integral_uIoc]
-  · rwa [← MeasureTheory.integrable_swap_iff, Measure.prod_restrict,
-      ← Measure.volume_eq_prod, ← MeasureTheory.IntegrableOn]
+  · rwa [← MeasureTheory.integrable_swap_iff,
+      MeasureTheory.Measure.prod_restrict,
+      ← MeasureTheory.Measure.volume_eq_prod,
+      ← MeasureTheory.IntegrableOn]
 
 /-- Fubini for two circle integrals, reduced explicitly to Mathlib's Fubini
 theorem for interval integrals.  The hypothesis is stated on the actual
