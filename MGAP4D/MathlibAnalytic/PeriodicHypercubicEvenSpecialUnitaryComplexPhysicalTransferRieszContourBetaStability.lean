@@ -257,37 +257,41 @@ theorem
       H N hN beta0
   filter_upwards [hres] with beta hbeta
   intro z hz
+  let E := PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N
+  let A := E →L[ℂ] E
+  let T :=
+    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
+      H N hN beta
+  let shift : ℂ → A :=
+    fun w => algebraMap ℂ A w - T
   have hzRes :
-      z ∈ resolventSet ℂ
-        (periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
-          H N hN beta) :=
-    Set.mem_of_subset_of_mem hbeta hz
-  have hderiv :
-      HasDerivAt
-        (resolvent
-          (periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
-            H N hN beta))
-        (-
-          resolvent
-              (periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
-                H N hN beta) z ^
-            2)
-        z := by
-    with_reducible_and_instances
-      exact
-        spectrum.hasDerivAt_resolvent_const_left
-          (a :=
-            periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
-              H N hN beta)
-          (k := z) hzRes
-  have hdiff :
-      DifferentiableAt ℂ
-        (resolvent
-          (periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
-            H N hN beta))
-        z :=
-    hderiv.differentiableAt
-  exact hdiff.continuousAt.continuousWithinAt
+      z ∈ resolventSet ℂ T := by
+    simpa [T] using Set.mem_of_subset_of_mem hbeta hz
+  have hzUnit : IsUnit (shift z) := by
+    simpa [shift, T] using (spectrum.mem_resolventSet_iff.mp hzRes)
+  rcases hzUnit with ⟨u, hu⟩
+  have hub : (↑u : A) = shift z := by
+    simpa using hu
+  have halg : Continuous (fun w : ℂ => algebraMap ℂ A w) := by
+    fun_prop
+  have hshift : Continuous shift := by
+    simpa [shift] using halg.sub continuous_const
+  have hshiftAt :
+      Tendsto shift (𝓝 z) (𝓝 (↑u : A)) := by
+    rw [hub]
+    exact hshift.continuousAt
+  have hinvAt :=
+    @NormedRing.inverse_continuousAt A _ _ u
+  have hinv :=
+    hinvAt.tendsto.comp hshiftAt
+  have hcontAt :
+      ContinuousAt (fun w : ℂ => resolvent T w) z := by
+    change Tendsto
+      (fun w : ℂ => resolvent T w)
+      (𝓝 z)
+      (𝓝 (resolvent T z))
+    simpa [resolvent, shift, Function.comp_def, hub] using hinv
+  exact hcontAt.continuousWithinAt
 
 end
 
