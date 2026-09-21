@@ -239,12 +239,37 @@ theorem
         lambda •
           ((f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
             Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) := by
+    let A :=
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureAnalysisOperator
+        H N hN beta hbeta
+    let T :=
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
+        H N hN beta hbeta
     dsimp [S]
     rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabFeatureSynthesisL2_eq_adjoint]
     rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabFeatureAnalysisOperator_apply]
-    rw [← periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_eq_adjoint_comp_analysis]
+    have hFactor :
+        T = (A†).comp A := by
+      simpa [T, A] using
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_eq_adjoint_comp_analysis
+          H N hN beta hbeta
     have hval := congrArg Subtype.val hfEigen
-    simpa [lambda] using hval
+    calc
+      (A†) (A
+          (((f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+            Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))) =
+          ((A†).comp A)
+            (((f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+              Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))) := by
+            rfl
+      _ = T
+            (((f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+              Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))) := by
+            rw [← hFactor]
+      _ = lambda •
+            (((f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+              Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))) := by
+            simpa [T, lambda] using hval
   have hScalarAE :=
     Lp.coeFn_smul lambda
       (((f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
@@ -521,8 +546,9 @@ theorem
               periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
                 H N beta A B0 ∂μ := by
             apply integral_congr_ae
-            filter_upwards with A
-            rfl
+            filter_upwards [hhAE, hpAE, hgAE] with A hhA hpA hgA
+            rw [← hhA]
+            simp [hC, hpA, hgA]
         _ =
           c * (∫ A, p.1 A *
               periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
@@ -574,6 +600,7 @@ theorem
     rw [hhCB0] at hIntegralEq
     simp at hIntegralEq
     rw [hIntegralEq] at hIntegralPos
+    exfalso
     exact (lt_irrefl 0) hIntegralPos
 
 end
