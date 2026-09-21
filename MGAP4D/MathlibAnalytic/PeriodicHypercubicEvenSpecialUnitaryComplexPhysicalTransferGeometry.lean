@@ -15,27 +15,33 @@ noncomputable section
 set_option maxHeartbeats 5000000
 set_option synthInstance.maxHeartbeats 750000
 
-local instance (N : ℕ) :
+local instance complexPhysicalTransferGeometrySpecialUnitaryIsTopologicalGroup
+    (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 
-local instance (N : ℕ) :
+local instance complexPhysicalTransferGeometrySpecialUnitaryCompactSpace
+    (N : ℕ) :
     CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
-local instance (N : ℕ) :
+local instance complexPhysicalTransferGeometrySpecialUnitarySecondCountableTopology
+    (N : ℕ) :
     SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupSecondCountableTopology N
 
-local instance (N : ℕ) :
+local instance complexPhysicalTransferGeometrySpecialUnitaryMeasurableSpace
+    (N : ℕ) :
     MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
 
-local instance (N : ℕ) :
+local instance complexPhysicalTransferGeometrySpecialUnitaryBorelSpace
+    (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-local instance (H : ℕ) :
+local instance complexPhysicalTransferGeometrySpatialLinkFintype
+    (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
