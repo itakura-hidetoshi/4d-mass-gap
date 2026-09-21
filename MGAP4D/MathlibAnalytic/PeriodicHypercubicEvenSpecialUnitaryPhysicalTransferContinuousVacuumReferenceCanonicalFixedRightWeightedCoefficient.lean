@@ -308,11 +308,11 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioExponentialWeightedColumnCoefficient
         H N hN 0 (by norm_num) s center = 0 := by
   classical
-  unfold
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioExponentialWeightedColumnCoefficient
-  rw [Finset.max'_le_iff]
   apply le_antisymm
-  · intro value hValue
+  · unfold
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioExponentialWeightedColumnCoefficient
+    rw [Finset.max'_le_iff]
+    intro value hValue
     rcases Finset.mem_image.mp hValue with ⟨source, _hSource, rfl⟩
     unfold
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioNormalizedExponentialWeightedColumn
