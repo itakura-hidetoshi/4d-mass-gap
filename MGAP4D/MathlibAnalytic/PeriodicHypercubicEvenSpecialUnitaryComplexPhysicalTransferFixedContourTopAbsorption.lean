@@ -201,7 +201,7 @@ theorem
                     f (circleMap (1 : ℂ) r theta)) x =
                   deriv (circleMap (1 : ℂ) r) theta •
                     f (circleMap (1 : ℂ) r theta) x
-              simpa only [ContinuousLinearMap.smul_apply]
+              rw [ContinuousLinearMap.smul_apply]
   have hcircleComp :
       ∀ (g : ℂ → E),
         CircleIntegrable g (1 : ℂ) r →
@@ -269,7 +269,7 @@ theorem
           (∮ z in C((1 : ℂ), r), resolvent (S beta) z)) * P) x =
         ((2 * Real.pi * Complex.I : ℂ)⁻¹ •
           (∮ z in C((1 : ℂ), r), resolvent (S beta) z)) (P x) := by
-            simpa only [ContinuousLinearMap.mul_apply]
+            rw [ContinuousLinearMap.mul_def, ContinuousLinearMap.comp_apply]
       _ = (2 * Real.pi * Complex.I : ℂ)⁻¹ •
           (∮ z in C((1 : ℂ), r), resolvent (S beta) z) (P x) := by
             simpa only [ContinuousLinearMap.smul_apply]
@@ -286,7 +286,8 @@ theorem
             have hzx :=
               congrArg (fun T : A => T x) (hrightPoint z hz)
             simpa only [
-              ContinuousLinearMap.mul_apply,
+              ContinuousLinearMap.mul_def,
+              ContinuousLinearMap.comp_apply,
               ContinuousLinearMap.smul_apply
             ] using hzx
       _ = (2 * Real.pi * Complex.I : ℂ)⁻¹ •
@@ -302,7 +303,7 @@ theorem
         P
           (((2 * Real.pi * Complex.I : ℂ)⁻¹ •
             (∮ z in C((1 : ℂ), r), resolvent (S beta) z)) x) := by
-              simpa only [ContinuousLinearMap.mul_apply]
+              rw [ContinuousLinearMap.mul_def, ContinuousLinearMap.comp_apply]
       _ = P
           ((2 * Real.pi * Complex.I : ℂ)⁻¹ •
             (∮ z in C((1 : ℂ), r), resolvent (S beta) z) x) := by
@@ -328,7 +329,8 @@ theorem
             have hzx :=
               congrArg (fun T : A => T x) (hleftPoint z hz)
             simpa only [
-              ContinuousLinearMap.mul_apply,
+              ContinuousLinearMap.mul_def,
+              ContinuousLinearMap.comp_apply,
               ContinuousLinearMap.smul_apply
             ] using hzx
       _ = (2 * Real.pi * Complex.I : ℂ)⁻¹ •
