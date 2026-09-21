@@ -208,48 +208,6 @@ theorem
     periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine,
     periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator] using hcomp
 
-/-- A fixed complex resolvent point at a base coupling remains in the resolvent
-set for all sufficiently nearby nonnegative couplings. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_resolventSet_eventually_beta
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta0 : Set.Ici (0 : ℝ))
-    (z : ℂ)
-    (hz :
-      z ∈ resolventSet ℂ
-        (periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
-          H N hN beta0)) :
-    ∀ᶠ beta in 𝓝 beta0,
-      z ∈ resolventSet ℂ
-        (periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
-          H N hN beta) := by
-  let E := PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N
-  let A := E →L[ℂ] E
-  let S :=
-    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
-      H N hN
-  let shift : Set.Ici (0 : ℝ) → A :=
-    fun beta => algebraMap ℂ A z - S beta
-  have hS : Continuous S := by
-    simpa [S] using
-      periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine_continuous
-        H N hN
-  have hshift : Continuous shift := by
-    simpa [shift] using
-      (continuous_const.sub hS)
-  have hzUnit : IsUnit (shift beta0) := by
-    simpa [shift, S] using hz
-  have hopenSet : IsOpen {x : A | IsUnit x} :=
-    (Units.isOpen : IsOpen {x : A | IsUnit x})
-  have hopen : {x : A | IsUnit x} ∈ 𝓝 (shift beta0) :=
-    hopenSet.mem_nhds hzUnit
-  have hnear :
-      ∀ᶠ beta in 𝓝 beta0, IsUnit (shift beta) :=
-    hshift.continuousAt.eventually_mem hopen
-  filter_upwards [hnear] with beta hbeta
-  simpa [shift, S] using hbeta
-
 /-- At every fixed spectral parameter in the base resolvent set, the genuine
 complex normalized Wilson resolvent is operator-norm continuous in beta. -/
 theorem
