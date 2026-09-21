@@ -456,7 +456,7 @@ private theorem circleIntegral_sub_inv_eq_zero_of_not_mem_closedBall
     have hwne : w ≠ z :=
       ne_of_mem_of_not_mem (Metric.ball_subset_closedBall hw.1) hz
     exact
-      (((hasDerivAt_id w).sub_const z).inv₀ (sub_ne_zero.mpr hwne)).differentiableAt
+      (((hasDerivAt_id w).sub_const z).inv (sub_ne_zero.mpr hwne)).differentiableAt
 
 /-- Vector-valued version of the exterior-pole Cauchy kernel integral. -/
 private theorem circleIntegral_sub_inv_smul_eq_zero_of_not_mem_closedBall
@@ -489,17 +489,18 @@ private theorem circleIntegral_inv_sub_smul_const_of_mem_ball
       -(2 * Real.pi * Complex.I : ℂ) • x := by
   calc
     (∮ z in C(c, r), (w - z)⁻¹ • x) =
-        ∮ z in C(c, r), -((z - w)⁻¹ • x) := by
+        ∮ z in C(c, r), (-1 : ℂ) • ((z - w)⁻¹ • x) := by
           apply circleIntegral.integral_congr (le_of_lt (dist_nonneg.trans_lt hw))
           intro z hz
-          simp [sub_eq_neg_sub]
-    _ = -(∮ z in C(c, r), (z - w)⁻¹ • x) := by
-          rw [circleIntegral.integral_neg]
-    _ = -((∮ z in C(c, r), (z - w)⁻¹) • x) := by
+          have hsub : w - z = -(z - w) := by ring
+          simp [hsub]
+    _ = (-1 : ℂ) • (∮ z in C(c, r), (z - w)⁻¹ • x) := by
+          rw [circleIntegral.integral_smul]
+    _ = (-1 : ℂ) • ((∮ z in C(c, r), (z - w)⁻¹) • x) := by
           rw [circleIntegral.integral_smul_const]
     _ = -(2 * Real.pi * Complex.I : ℂ) • x := by
           rw [circleIntegral.integral_sub_inv_of_mem_ball hw]
-          simp
+          simp [smul_smul]
 
 end
 
