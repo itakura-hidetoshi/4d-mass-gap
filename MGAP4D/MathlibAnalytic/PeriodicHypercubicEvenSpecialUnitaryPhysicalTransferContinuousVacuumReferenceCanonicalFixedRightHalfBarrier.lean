@@ -89,7 +89,11 @@ theorem
     (continuous_const.mul
       ((hK.sub continuous_const).div
         (hK.add continuous_const)
-        (fun beta => by positivity))).continuousAt
+        (fun beta => by
+          dsimp
+          have hsq : 0 < (Real.exp (32 * beta)) ^ 2 :=
+            pow_pos (Real.exp_pos _) 2
+          exact ne_of_gt (by linarith)))).continuousAt
 
 /-- The fixed-right boundary-update Harnack influence is continuous at the
 decoupled point. -/
@@ -108,7 +112,11 @@ theorem
     (continuous_const.mul
       ((hK.sub continuous_const).div
         (hK.add continuous_const)
-        (fun beta => by positivity))).continuousAt
+        (fun beta => by
+          dsimp
+          have hsq : 0 < (Real.exp (8 * beta)) ^ 2 :=
+            pow_pos (Real.exp_pos _) 2
+          exact ne_of_gt (by linarith)))).continuousAt
 
 /-- The pin-free coefficient at the half barrier is continuous at zero
 coupling. -/
