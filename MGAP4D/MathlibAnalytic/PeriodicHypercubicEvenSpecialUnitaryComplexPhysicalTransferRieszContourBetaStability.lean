@@ -256,28 +256,15 @@ theorem
     periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_canonicalRieszCircle_eventually_subset_resolventSet
       H N hN beta0
   filter_upwards [hres] with beta hbeta
-  intro z hz
-  have hzRes := hbeta hz
-  have hderiv :
-      HasDerivAt
-        (resolvent
-          (periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
-            H N hN beta))
-        (-
-          resolvent
-              (periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
-                H N hN beta) z ^
-            2)
-        z := by
-    with_reducible_and_instances
-      exact
-        spectrum.hasDerivAt_resolvent_const_left
-          (a :=
-            periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
-              H N hN beta)
-          (k := z) hzRes
-  with_reducible_and_instances
-    exact hderiv.continuousAt.continuousWithinAt
+  exact
+    HasDerivAt.continuousOn (fun z hz => by
+      with_reducible_and_instances
+        exact
+          spectrum.hasDerivAt_resolvent_const_left
+            (a :=
+              periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
+                H N hN beta)
+            (k := z) (hbeta hz))
 
 end
 
