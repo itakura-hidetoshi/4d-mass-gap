@@ -98,7 +98,9 @@ theorem
       1 -
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierPinFreeCoefficient
           s 0 ≠ 0 := by
-    simp [
+    rw [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierPinFreeCoefficient_zero]
+    norm_num [
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHighTemperatureBarrier]
   have hInv :
       ContinuousAt
@@ -107,7 +109,7 @@ theorem
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierPinFreeCoefficient
               s beta)⁻¹)
         0 :=
-    hGap.fun_inv₀ hGapZero
+    hGap.inv₀ hGapZero
   have hOscTwo :
       ContinuousAt
         (fun beta : ℝ =>
@@ -146,9 +148,10 @@ theorem
       ((hK.sub continuous_const).div
         (hK.add continuous_const)
         (fun beta => by
+          simp only [Pi.add_apply]
           have hsq : 0 < (Real.exp (8 * beta)) ^ 2 :=
             pow_pos (Real.exp_pos _) 2
-          linarith)).continuousAt
+          exact ne_of_gt (by linarith))).continuousAt
   have hOff :
       ContinuousAt
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceDistinctFiberOffFiberInfluence
