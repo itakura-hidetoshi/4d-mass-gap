@@ -71,7 +71,8 @@ theorem periodicHypercubicEdgeBaseL1Distance_comm
       a.1 i - b.1 i = -(b.1 i - a.1 i) := by
     abel
   rw [hsub]
-  simp
+  exact
+    (ZMod.natAbs_valMinAbs_neg (b.1 i - a.1 i)).symm
 
 /-- Singleton source variation profile for the one-link Wilson crossing ratio. -/
 def
@@ -229,7 +230,7 @@ theorem
         (specialUnitaryWilsonRelativeKernel_pos hN hbeta (A source) h)
         (specialUnitaryWilsonRelativeKernel_pos hN hbeta (A source) k)
     dsimp [F]
-    rw [Real.norm_eq_abs, abs_of_pos hPos]
+    rw [abs_of_pos hPos]
     exact hBounds.2
   have hGMem : MemLp G0 2 mu := by
     refine MemLp.of_bound hGStrong.aestronglyMeasurable
@@ -242,7 +243,7 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatio_le_exp_sixteen
         H N hN beta hbeta A B target g₁ g₂
     dsimp [G0]
-    rw [Real.norm_eq_abs, abs_of_pos hPos]
+    rw [abs_of_pos hPos]
     exact hBound
   have hVariationFNonneg : ∀ e, 0 ≤ variationF e := by
     simpa [variationF] using
@@ -451,9 +452,22 @@ theorem
   have hq :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierPinFreeCoefficient_nonneg_lt_one
       s beta hbeta hcut
+  have hGapNonneg :
+      0 ≤
+        1 -
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierPinFreeCoefficient
+            s beta :=
+    sub_nonneg.mpr hq.2.le
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHighTemperatureTerminalCovariancePrefactor
-  positivity
+  exact
+    mul_nonneg
+      (mul_nonneg
+        (mul_nonneg
+          (by norm_num)
+          (inv_nonneg.mpr hGapNonneg))
+        (Real.exp_nonneg _))
+      (Real.exp_nonneg _)
 
 
 end
