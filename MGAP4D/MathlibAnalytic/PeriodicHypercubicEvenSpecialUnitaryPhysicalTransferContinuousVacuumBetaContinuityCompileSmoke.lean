@@ -4,6 +4,12 @@ namespace MGAP4D.MathlibAnalytic
 
 noncomputable section
 
+-- The compact-open bridge must not require first countability or a metric on P.
+example {P X : Type*} [TopologicalSpace P] [TopologicalSpace X]
+    (k : P → C(X, ℝ))
+    (h : Continuous (fun q : P × X => k q.1 q.2)) : Continuous k :=
+  (ContinuousMap.curry ⟨_, h⟩).continuous
+
 local instance (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 local instance (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -49,6 +55,28 @@ example (H N : ℕ) (hN : 0 < N) :
           H N hN p.1.1 p.1.2 p.2)⁻¹) :=
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_inv_joint_continuous
     H N hN
+
+-- The raw-kernel endpoint is valid on all real couplings.
+example (H N : ℕ) :
+    Continuous
+      (fun p : ℝ ×
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N p.1 p.2.1 p.2.2) :=
+  periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_joint_continuous H N
+
+-- The vacuum endpoint includes beta = 0, in the half-line's subspace topology.
+example (H N : ℕ) (hN : 0 < N)
+    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
+    ContinuousAt
+      (fun p : Set.Ici (0 : ℝ) ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN p.1.1 p.1.2 p.2)
+      (⟨0, le_rfl⟩, A) :=
+  (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_joint_continuous
+    H N hN).continuousAt
 
 end
 
