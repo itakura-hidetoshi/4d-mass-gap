@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightResponseProfile
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumGroundStateKernelSectionBetaContinuity
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceFixedRightTargetRatioResponseBetaContinuity
 
 namespace MGAP4D.MathlibAnalytic
 
@@ -60,7 +60,7 @@ example (H N : ℕ) (hN : 0 < N)
     ContinuousAt (fun beta : Set.Ici (0 : ℝ) =>
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioResponseAbs
         H N hN beta.1 beta.2 B target target g₁ g₂ h k)
-      ⟨0, le_rfl⟩ :=
+      ⟨0, by change (0 : ℝ) ≤ 0; exact le_rfl⟩ :=
   (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioResponseAbs_continuous_param
     H N hN target target (fun beta => beta) (fun _ => B)
     (fun _ => g₁) (fun _ => g₂) (fun _ => h) (fun _ => k)
