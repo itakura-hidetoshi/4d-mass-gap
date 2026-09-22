@@ -94,49 +94,6 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossingRatioOscillationVariation,
       he]
 
-/-- The fixed-right target ratio also has the lower endpoint supplied by the
-two pointwise exp(±8 beta) local-factor bounds. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatio_exp_neg_sixteen_le
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (A B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
-    (target : PeriodicHypercubicEvenSpatialSliceLink H)
-    (g₁ g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ) :
-    Real.exp (-16 * beta) ≤
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
-            H N beta A B target g₁ /
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
-            H N beta A B target g₂ := by
-  have hDenPos :
-      0 <
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
-          H N beta A B target g₂ :=
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_pos
-      H N beta A B target g₂
-  apply (le_div_iff₀ hDenPos).2
-  calc
-    Real.exp (-16 * beta) *
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
-          H N beta A B target g₂ ≤
-      Real.exp (-16 * beta) * Real.exp (8 * beta) := by
-        exact
-          mul_le_mul_of_nonneg_left
-            (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_le_exp_eight_mul
-              H N hN beta hbeta A B target g₂)
-            (Real.exp_nonneg _)
-    _ = Real.exp (-8 * beta) := by
-      rw [← Real.exp_add]
-      congr 1
-      ring
-    _ ≤
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
-        H N beta A B target g₁ :=
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_exp_neg_eight_mul_le
-        H N hN beta hbeta A B target g₁
-
 /-- Genuine singleton oscillation profile of the fixed-right target ratio. -/
 def
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioOscillationVariation
@@ -413,7 +370,7 @@ theorem
                 specialUnitaryWilsonRelativeKernel N beta v k)| ≤
             Real.exp (2 * beta) - Real.exp (-2 * beta) := by
         rw [abs_le]
-        constructor <;> linarith
+        constructor <;> linarith [hu.1, hu.2, hv.1, hv.2]
       simpa [
         F,
         variationF,
