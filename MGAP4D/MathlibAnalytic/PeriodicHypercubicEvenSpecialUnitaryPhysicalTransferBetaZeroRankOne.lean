@@ -90,10 +90,9 @@ theorem
         (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H N) := by
   apply ContinuousLinearMap.ext
   intro f
-  rw [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_zero_apply
-      H N hN f,
-    InnerProductSpace.rankOne_apply]
+  simpa only [InnerProductSpace.rankOne_apply] using
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_zero_apply
+      H N hN f)
 
 /-- The physical beta-zero one-slab transfer has exact operator norm one. -/
 @[simp] theorem
@@ -135,12 +134,13 @@ theorem
         H N hN 0 (by norm_num) =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
         H N hN 0 (by norm_num) := by
-  unfold
-    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+  apply ContinuousLinearMap.ext
+  intro f
   rw [
+    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_apply,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_zero_norm
       H N hN]
-  norm_num
+  simp only [inv_one, one_smul]
 
 /-- Hence the normalized physical beta-zero transfer is the same self rank-one
 projection. -/
@@ -153,11 +153,11 @@ theorem
       InnerProductSpace.rankOne ℝ
         (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H N)
         (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H N) := by
-  rw [
-    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_zero_eq
-      H N hN,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_zero_eq_rankOne
-      H N hN]
+  exact
+    (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_zero_eq
+      H N hN).trans
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_zero_eq_rankOne
+        H N hN)
 
 /-- The normalized beta-zero physical transfer fixes the canonical constant
 unit vector. -/
