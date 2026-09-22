@@ -46,7 +46,9 @@ jobs:
   pr-lean-fast-check:
     name: Changed Lean fast check
     runs-on: ubuntu-22.04
-    timeout-minutes: 30
+    # Cold project-cache recovery must finish before judging the changed proofs.
+    # Keep every Lean check and its heartbeat budget unchanged.
+    timeout-minutes: 60
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
