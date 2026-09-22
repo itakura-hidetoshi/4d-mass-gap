@@ -685,13 +685,15 @@ private theorem separatedCircle_doubleResolvent_apply_eq
           (fun w : ℂ => (w - z)⁻¹ • resolvent S z x)
           c rin := by
       simpa only [zpow_neg_one] using
-        hconst.sub_zpow_smul (-1 : ℤ) hzNotSphere
+        CircleIntegrable.sub_zpow_smul
+          (-1 : ℤ) hconst hzNotSphere
     have hB :
         CircleIntegrable
           (fun w : ℂ => (w - z)⁻¹ • resolvent S w x)
           c rin := by
       simpa only [zpow_neg_one] using
-        hvecIn.sub_zpow_smul (-1 : ℤ) hzNotSphere
+        CircleIntegrable.sub_zpow_smul
+          (-1 : ℤ) hvecIn hzNotSphere
     calc
       (∮ w in C(c, rin),
           resolvent S z (resolvent S w x)) =
@@ -753,8 +755,16 @@ private theorem separatedCircle_doubleResolvent_apply_eq
             (w - z)⁻¹ • resolvent S w x) := by
               apply circleIntegral.integral_congr hrout
               intro z hz
-              rw [hinner z hz]
-              exact (neg_one_smul ℂ _).symm
+              calc
+                (∮ w in C(c, rin),
+                    resolvent S z (resolvent S w x)) =
+                  -(∮ w in C(c, rin),
+                      (w - z)⁻¹ • resolvent S w x) :=
+                    hinner z hz
+                _ = (-1 : ℂ) •
+                    (∮ w in C(c, rin),
+                      (w - z)⁻¹ • resolvent S w x) :=
+                    (neg_one_smul ℂ _).symm
     _ = (-1 : ℂ) •
         (∮ z in C(c, rout),
           ∮ w in C(c, rin),
