@@ -99,7 +99,6 @@ theorem finiteInfluenceColumnIterateKernel_weightedColumn_le_pow
     (influence : α → α → ℝ)
     (hInfluence : ∀ target source : α, 0 ≤ influence target source)
     (weight : α → ℝ)
-    (hWeight : ∀ x : α, 0 ≤ weight x)
     (q : ℝ)
     (hq : 0 ≤ q)
     (hColumn :
@@ -206,7 +205,7 @@ theorem finiteInfluenceColumnIterateKernel_weightedColumn_finiteResolvent_le
           intro k hk
           exact
             finiteInfluenceColumnIterateKernel_weightedColumn_le_pow
-              influence hInfluence weight hWeight q hq hColumn k source
+              influence hInfluence weight q hq hColumn k source
     _ = finiteRealGeometricSeries q d * weight source := by
       unfold finiteRealGeometricSeries
       rw [Finset.sum_mul]
@@ -238,7 +237,7 @@ theorem finiteInfluenceColumnIterateKernel_weightedColumn_finiteResolvent_le_inv
       (1 - q)⁻¹ * weight source := by
   exact
     (finiteInfluenceColumnIterateKernel_weightedColumn_finiteResolvent_le
-      influence hInfluence weight hWeight q hq hColumn d source).trans
+      influence hInfluence weight q hq hColumn d source).trans
       (mul_le_mul_of_nonneg_right
         (finiteRealGeometricSeries_le_inv_one_sub q hq hqLtOne d)
         (hWeight source))
@@ -279,8 +278,7 @@ theorem finiteInfluenceColumnIterateKernel_entry_le_pow_mul_weight_div
         (Finset.mem_univ target)
   have hColumnD :=
     finiteInfluenceColumnIterateKernel_weightedColumn_le_pow
-      influence hInfluence weight (fun x => (hWeight x).le)
-      q hq hColumn d source
+      influence hInfluence weight q hq hColumn d source
   exact (le_div_iff₀ (hWeight target)).2 (hSingle.trans hColumnD)
 
 /-- The ORIGINAL canonical pin-free physical-left kernel has exponentially
@@ -328,11 +326,6 @@ theorem
   let q :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierPinFreeCoefficient
       s beta
-  have hW : ∀ x, 0 ≤ W x := by
-    intro x
-    exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight_nonneg
-        H s (zero_lt_one.trans_le hs).le center x
   have hq :
       0 ≤ q :=
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierPinFreeCoefficient_nonneg_lt_one
@@ -348,7 +341,7 @@ theorem
             H N hN s hs beta hbeta hcut center y)
   simpa only [K, R, hR, W, q] using
     finiteInfluenceColumnIterateKernel_weightedColumn_le_pow
-      K.influence K.influence_nonneg W hW q hq hColumn d source
+      K.influence K.influence_nonneg W q hq hColumn d source
 
 /-- Every finite Neumann prefix of the ORIGINAL canonical physical influence
 kernel is bounded by the volume/rank-independent scalar resolvent (1-q)^(-1)
