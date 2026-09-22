@@ -74,7 +74,7 @@ example (H N : ℕ) (hN : 0 < N)
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
           H N hN p.1.1 p.1.2 p.2)
-      (⟨0, le_rfl⟩, A) :=
+      (⟨0, by change (0 : ℝ) ≤ 0; exact le_rfl⟩, A) :=
   (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_joint_continuous
     H N hN).continuousAt
 
