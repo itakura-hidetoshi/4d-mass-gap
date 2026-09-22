@@ -25,8 +25,8 @@ open scoped InnerProductSpace InnerProduct Topology
 
 noncomputable section
 
-set_option maxHeartbeats 5000000
-set_option synthInstance.maxHeartbeats 750000
+set_option maxHeartbeats 500000
+set_option synthInstance.maxHeartbeats 50000
 
 local instance (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
