@@ -66,9 +66,7 @@ private theorem continuous_realL2_kernel_integral
     exact realL2_inner_continuousMapToLp_eq_integral mu (f p) (k p)
   exact Eq.mp (congrArg (fun g : P → ℝ => Continuous g) heq) hinner
 
-/-- Curry and pass to L2 while the kernel is still an abstract parameter.
-The concrete Wilson proof then consumes only an ordinary scalar integral;
-it never compares bundled maps containing expanded matrix-action expressions. -/
+/-- Curry and pass to L2 while the kernel is still an abstract parameter. -/
 private theorem continuous_realL2_jointKernel_integral
     {P X : Type*} [TopologicalSpace P] [TopologicalSpace X]
     [MeasurableSpace X] [BorelSpace X] [CompactSpace X]
@@ -145,8 +143,7 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_joint_con
             PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H N p.1 p.2) := by
     unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction
-    -- Match the defining expression (left + crossing) + right. Distributivity
-    -- of multiplication over addition is not definitional equality in Lean.
+    -- Match the defining expression (left + crossing) + right.
     exact ((continuous_const.mul hleft).add
       (crossingAction_continuous H N)).add (continuous_const.mul hright)
   have hexp := Real.continuous_exp.comp
@@ -175,7 +172,71 @@ private theorem topNorm_halfLine_continuous (H N : ℕ) (hN : 0 < N) :
         H N hN beta.1 gamma.1 beta.2 gamma.2
   exact hL.continuous
 
-set_option diagnostics true in
+/-- Forget gauge invariance through the existing subtype projection. -/
+private theorem vacuumAsL2_halfLine_continuous (H N : ℕ) (hN : 0 < N) :
+    Continuous (fun beta : Set.Ici (0 : ℝ) =>
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+        H N hN beta.1 beta.2).1) := by
+  exact continuous_subtype_val.comp
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_halfLine_continuous
+      H N hN)
+
+/-- The fixed integration variable is placed last before abstract currying. -/
+private theorem vacuumKernel_reindexed_continuous (H N : ℕ) :
+    Continuous (fun q : (Set.Ici (0 : ℝ) ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+        H N q.1.1.1 q.2 q.1.2) := by
+  have hp : Continuous
+      (fun q : (Set.Ici (0 : ℝ) ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+        (q.1.1.1, (q.2, q.1.2))) :=
+    (continuous_subtype_val.comp (continuous_fst.comp continuous_fst)).prodMk
+      (continuous_snd.prodMk (continuous_snd.comp continuous_fst))
+  exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_joint_continuous
+    H N).comp hp
+
+/-- Keep the concrete integral-continuity proof separate from the feature-space
+identification, so kernel checking does not replay both constructions together. -/
+private theorem vacuumKernel_integral_joint_continuous (H N : ℕ) (hN : 0 < N) :
+    Continuous (fun p : Set.Ici (0 : ℝ) ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+      ∫ A,
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+          H N hN p.1.1 p.1.2).1 A *
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N p.1.1 A p.2
+        ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) := by
+  exact continuous_realL2_jointKernel_integral
+    (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)
+    (fun p : Set.Ici (0 : ℝ) ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+        H N hN p.1.1 p.1.2).1)
+    (fun q => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+      H N q.1.1.1 q.2 q.1.2)
+    ((vacuumAsL2_halfLine_continuous H N hN).comp continuous_fst)
+    (vacuumKernel_reindexed_continuous H N)
+
+/-- Functional equality with the original synthesis is an independent opaque
+proof boundary, not a new definition of the physical vacuum. -/
+private theorem vacuumSynthesis_eq_kernelIntegral (H N : ℕ) (hN : 0 < N) :
+    (fun p : Set.Ici (0 : ℝ) ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFunction
+        H N hN p.1.1 p.1.2 p.2) =
+    (fun p : Set.Ici (0 : ℝ) ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+      ∫ A,
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+          H N hN p.1.1 p.1.2).1 A *
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N p.1.1 A p.2
+        ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) := by
+  funext p
+  exact periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFunction_eq_integral_kernel
+    H N hN p.1.1 p.1.2 p.2
+
 /-- Kernel smoothing transports the Hilbert-norm continuous canonical vacuum
 into the existing vacuum synthesis function, jointly in coupling and boundary. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFunction_joint_continuous
@@ -185,40 +246,11 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFuncti
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFunction
           H N hN p.1.1 p.1.2 p.2) := by
-  let X := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N
-  let mu := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
-  let Omega : Set.Ici (0 : ℝ) → Lp ℝ 2 mu := fun beta =>
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
-      H N hN beta.1 beta.2).1
-  let K : (Set.Ici (0 : ℝ) × X) × X → ℝ := fun q =>
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-      H N q.1.1.1 q.2 q.1.2
-  have hp : Continuous
-      (fun q : (Set.Ici (0 : ℝ) × X) × X => (q.1.1.1, (q.2, q.1.2))) :=
-    (continuous_subtype_val.comp (continuous_fst.comp continuous_fst)).prodMk
-      (continuous_snd.prodMk (continuous_snd.comp continuous_fst))
-  have hK : Continuous K :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_joint_continuous
-      H N).comp hp
-  have hOmega : Continuous Omega :=
-    continuous_subtype_val.comp
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_halfLine_continuous
-        H N hN)
-  have hs : Continuous
-      (fun p : Set.Ici (0 : ℝ) × X => ∫ A, Omega p.1 A * K (p, A) ∂mu) :=
-    continuous_realL2_jointKernel_integral mu (fun p => Omega p.1) K
-      (hOmega.comp continuous_fst) hK
-  have heq :
-      (fun p : Set.Ici (0 : ℝ) × X => ∫ A, Omega p.1 A * K (p, A) ∂mu) =
-      (fun p : Set.Ici (0 : ℝ) × X =>
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFunction
-          H N hN p.1.1 p.1.2 p.2) := by
-    funext p
-    exact
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFunction_eq_integral_kernel
-        H N hN p.1.1 p.1.2 p.2).symm
-  exact Eq.mp
-    (congrArg (fun g : (Set.Ici (0 : ℝ) × X) → ℝ => Continuous g) heq) hs
+  exact Eq.mpr
+    (congrArg (fun g : (Set.Ici (0 : ℝ) ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ => Continuous g)
+      (vacuumSynthesis_eq_kernelIntegral H N hN))
+    (vacuumKernel_integral_joint_continuous H N hN)
 
 /-- Joint continuity of the existing canonical continuous vacuum representative.
 Its defining denominator is the strictly positive finite-volume top norm. -/
