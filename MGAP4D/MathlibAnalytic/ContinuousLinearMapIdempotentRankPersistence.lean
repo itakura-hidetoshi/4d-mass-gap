@@ -14,8 +14,8 @@ If two bounded complex-linear endomorphisms `Q` and `P` satisfy
 * `‖Q - P‖ < 1`;
 
 then restriction of `P` to `range Q` is injective.  Consequently, whenever
-`range P` is finite-dimensional, `range Q` has finrank at most that of
-`range P`.
+`range P` is finite-dimensional, `range Q` is finite-dimensional and has
+finrank at most that of `range P`.
 
 No spectral input is used here.
 -/
@@ -80,9 +80,15 @@ theorem continuousLinearMap_rangeRestriction_injective_of_idempotent_norm_sub_lt
       ‖z‖ = ‖(Q - P) z‖ := congrArg norm hzEq
       _ ≤ ‖Q - P‖ * ‖z‖ := hbound
   have hz : z = 0 := by
-    by_contra hz0
-    have hnormPos : 0 < ‖z‖ := norm_pos_iff.mpr hz0
-    nlinarith
+    by_cases hz0 : z = 0
+    · exact hz0
+    · have hnormPos : 0 < ‖z‖ := norm_pos_iff.mpr hz0
+      have hstrict : ‖Q - P‖ * ‖z‖ < ‖z‖ := by
+        calc
+          ‖Q - P‖ * ‖z‖ < 1 * ‖z‖ :=
+            mul_lt_mul_of_pos_right hclose hnormPos
+          _ = ‖z‖ := one_mul ‖z‖
+      exact False.elim ((not_lt_of_ge hnorm) hstrict)
   exact sub_eq_zero.mp hz
 
 /-- Finrank cannot increase across a norm-<1 perturbation from an idempotent:
@@ -107,10 +113,15 @@ theorem continuousLinearMap_finrank_range_le_of_idempotent_norm_sub_lt_one
         apply Subtype.ext
         exact P.map_smul c x.1 }
   have hf : Function.Injective f := by
-    simpa [f] using
+    change Function.Injective
+      (fun x : Q.range =>
+        (⟨P x.1, ⟨x.1, rfl⟩⟩ : P.range))
+    exact
       continuousLinearMap_rangeRestriction_injective_of_idempotent_norm_sub_lt_one
         Q P hQidem hclose
-  exact LinearMap.finrank_le_finrank_of_injective hf
+  letI : FiniteDimensional ℂ Q.range :=
+    FiniteDimensional.of_injective f hf
+  exact LinearMap.finrank_le_finrank_of_injective (f := f) hf
 
 /-- In particular, if the comparison projection has finrank at most one, so
 does the norm-close idempotent. -/
