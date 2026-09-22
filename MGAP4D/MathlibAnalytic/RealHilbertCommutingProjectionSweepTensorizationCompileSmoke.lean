@@ -1,0 +1,18 @@
+import MGAP4D.MathlibAnalytic.RealHilbertCommutingProjectionSweepTensorization
+
+namespace MGAP4D.MathlibAnalytic
+
+noncomputable section
+
+#check realHilbertProjection_norm_le
+#check realHilbertProjection_defect_inner_eq_zero_of_fixed
+#check realHilbertProjectionSweep_commute
+#check realHilbertProjectionSweep_cons_defect_norm_sq_eq
+#check realHilbertProjection_projectedDefect_norm_le
+#check realHilbertProjectionSweep_projectedDefectSum_le
+#check realHilbertProjectionSweep_tensorization
+#check realHilbertProjectionFullSweep_tensorization
+
+end
+
+end MGAP4D.MathlibAnalytic
