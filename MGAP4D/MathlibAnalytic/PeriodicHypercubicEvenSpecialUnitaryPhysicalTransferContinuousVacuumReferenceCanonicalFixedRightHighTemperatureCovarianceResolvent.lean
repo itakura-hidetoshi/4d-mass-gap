@@ -318,7 +318,7 @@ theorem
       ((Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ)⁻¹ *
         finiteRealGeometricSeries rate M) * bound := by
           rw [finiteRealGeometricSeries]
-          rw [Finset.sum_mul]
+          rw [← Finset.sum_mul]
           ring
     _ ≤ (1 - q)⁻¹ * bound :=
       mul_le_mul_of_nonneg_right hPrefix hBoundNonneg
