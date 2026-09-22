@@ -163,6 +163,7 @@ private theorem topNorm_halfLine_continuous (H N : ℕ) (hN : 0 < N) :
         H N hN beta.1 gamma.1 beta.2 gamma.2
   exact hL.continuous
 
+set_option diagnostics true in
 /-- Kernel smoothing transports the Hilbert-norm continuous canonical vacuum
 into the existing vacuum synthesis function, jointly in coupling and boundary. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFunction_joint_continuous
