@@ -246,8 +246,9 @@ theorem
   have hgap :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialRandomScanRayleighContraction_implies_transferGap
       H N hN beta hbeta q hq0 hq1.le hRayleigh
-  have hpos : 0 < 3 * (1 - q) / 8 := by
-    positivity
+  have hdiff : 0 < 1 - q := sub_pos.mpr hq1
+  have hpos : 0 < 3 * (1 - q) / 8 :=
+    div_pos (mul_pos (by norm_num) hdiff) (by norm_num)
   exact lt_of_lt_of_le hpos hgap
 
 end FiniteVolume
@@ -307,8 +308,9 @@ theorem
     PeriodicHypercubicEvenSpecialUnitaryHasUniformTopEigenspaceTransferGap
       halfExtent N hN beta hbeta := by
   rcases hRayleigh with ⟨q, hq0, hq1, hRayleigh⟩
-  have hpos : 0 < 3 * (1 - q) / 8 := by
-    positivity
+  have hdiff : 0 < 1 - q := sub_pos.mpr hq1
+  have hpos : 0 < 3 * (1 - q) / 8 :=
+    div_pos (mul_pos (by norm_num) hdiff) (by norm_num)
   refine ⟨3 * (1 - q) / 8, hpos, ?_⟩
   intro n
   exact
