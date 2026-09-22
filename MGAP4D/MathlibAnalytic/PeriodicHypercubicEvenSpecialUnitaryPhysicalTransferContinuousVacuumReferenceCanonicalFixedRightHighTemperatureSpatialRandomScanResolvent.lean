@@ -592,7 +592,6 @@ theorem
             simp_rw [mul_assoc]
             rw [← Finset.sum_mul]
             rw [finiteRealGeometricSeries]
-            ring
     _ ≤
       (1 - coefficient)⁻¹ * (bound * W source) :=
         mul_le_mul_of_nonneg_right hPrefix
@@ -608,7 +607,8 @@ theorem
         bound *
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight
           H s center source := by
-      rfl
+      dsimp [q, W]
+      ring
 
 /-- If every nonzero initial variation coordinate lies at base-L1 distance at
 least D from one source, the canonical finite random-scan resolvent at that
@@ -741,10 +741,7 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightPinFreeRandomScanFiniteResolventProfile_subinvariant
         H N hN beta hbeta variation hVariationNonneg M y
   have hSelf : W source = 1 := by
-    simp [
-      W,
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight,
-      periodicHypercubicEdgeBaseL1Distance_self]
+    simp [W]
   have hTerm :
       ∀ k : ℕ,
         (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
@@ -910,7 +907,7 @@ theorem
       simpa using hPow.mul_const C
     simpa using tendsto_const_nhds.add hResidualTendsto
   change w source ≤ A
-  exact le_of_tendsto' hTendsto hForall
+  exact ge_of_tendsto' hTendsto hForall
 
 end
 
