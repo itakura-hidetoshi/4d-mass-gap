@@ -44,20 +44,24 @@ theorem continuousLinearMap_rangeRestriction_injective_of_idempotent_norm_sub_lt
   let z : E := x.1 - y.1
   have hQx : Q x.1 = x.1 := by
     rcases x.2 with ⟨u, hu⟩
+    -- Range membership uses the underlying LinearMap.  Normalize its witness
+    -- before transporting it through Q, rather than matching coercions with rw.
+    have huQ : Q u = x.1 := hu
     have happ := congrArg (fun T : E →L[ℂ] E => T u) hQidem
     change Q (Q u) = Q u at happ
     calc
-      Q x.1 = Q (Q u) := by rw [hu]
+      Q x.1 = Q (Q u) := congrArg (fun v : E => Q v) huQ.symm
       _ = Q u := happ
-      _ = x.1 := hu
+      _ = x.1 := huQ
   have hQy : Q y.1 = y.1 := by
     rcases y.2 with ⟨u, hu⟩
+    have huQ : Q u = y.1 := hu
     have happ := congrArg (fun T : E →L[ℂ] E => T u) hQidem
     change Q (Q u) = Q u at happ
     calc
-      Q y.1 = Q (Q u) := by rw [hu]
+      Q y.1 = Q (Q u) := congrArg (fun v : E => Q v) huQ.symm
       _ = Q u := happ
-      _ = y.1 := hu
+      _ = y.1 := huQ
   have hPxy : P x.1 = P y.1 := by
     exact congrArg Subtype.val hxy
   have hQz : Q z = z := by
