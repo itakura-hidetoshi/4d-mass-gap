@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.RealIntegralWeightedProbabilityNormalization
+import MGAP4D.MathlibAnalytic.RealIntegralWeightedProbabilityContinuity
 import Mathlib.MeasureTheory.Integral.Bochner.Set
 
 namespace MGAP4D.MathlibAnalytic
