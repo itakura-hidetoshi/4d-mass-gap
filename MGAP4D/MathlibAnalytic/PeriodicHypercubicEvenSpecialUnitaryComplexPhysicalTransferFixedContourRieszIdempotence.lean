@@ -545,13 +545,11 @@ private theorem separatedCircle_resolventKernel_parameter_integrable
     apply sub_ne_zero.mpr
     intro heq
     have hin :
-        dist (circleMap c rin p.2) c = rin := by
-      simpa [Metric.mem_sphere] using
-        (circleMap_mem_sphere c hrin p.2)
+        dist (circleMap c rin p.2) c = rin :=
+      Metric.mem_sphere.mp (circleMap_mem_sphere c hrin p.2)
     have hout :
-        dist (circleMap c rout p.1) c = rout := by
-      simpa [Metric.mem_sphere] using
-        (circleMap_mem_sphere c hrout p.1)
+        dist (circleMap c rout p.1) c = rout :=
+      Metric.mem_sphere.mp (circleMap_mem_sphere c hrout p.1)
     rw [heq] at hin
     linarith
   have hkernel :
@@ -578,12 +576,12 @@ private theorem separatedCircle_resolventKernel_parameter_integrable
     hkernel.smul hvec
   have hdout :
       Continuous (fun theta : ℝ => deriv (circleMap c rout) theta) := by
-    simpa only [deriv_circleMap] using
-      (continuous_circleMap 0 rout).mul_const Complex.I
+    rw [funext <| deriv_circleMap c rout]
+    exact (continuous_circleMap 0 rout).mul_const Complex.I
   have hdin :
       Continuous (fun theta : ℝ => deriv (circleMap c rin) theta) := by
-    simpa only [deriv_circleMap] using
-      (continuous_circleMap 0 rin).mul_const Complex.I
+    rw [funext <| deriv_circleMap c rin]
+    exact (continuous_circleMap 0 rin).mul_const Complex.I
   have hderiv :
       Continuous
         (fun p : ℝ × ℝ =>
