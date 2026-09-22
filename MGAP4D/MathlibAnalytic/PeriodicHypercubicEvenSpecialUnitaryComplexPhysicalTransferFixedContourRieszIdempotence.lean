@@ -792,6 +792,278 @@ private theorem separatedCircle_doubleResolvent_apply_eq
               ring
 
 
+/-- For beta sufficiently near beta0, the Riesz integral over the fixed
+canonical beta0 contour is idempotent.  The proof uses only local persistence
+of that contour in the resolvent set; no continuity of the excited-sector gap
+is assumed. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_fixedCanonicalRieszProjector_eventually_mul_self
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta0 : Set.Ici (0 : ℝ)) :
+    ∀ᶠ beta in 𝓝 beta0,
+      periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_fixedCanonicalRieszProjector
+          H N hN beta0 beta *
+        periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_fixedCanonicalRieszProjector
+          H N hN beta0 beta =
+        periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_fixedCanonicalRieszProjector
+          H N hN beta0 beta := by
+  let E := PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalHilbert H N
+  let A := E →L[ℂ] E
+  let S :=
+    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperatorHalfLine
+      H N hN
+  let r :=
+    periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCFCRieszRadius
+      H N hN beta0.1 beta0.2
+  let C : ℂ := 2 * Real.pi * Complex.I
+  have hr : 0 < r := by
+    simpa [r] using
+      periodicHypercubicEvenSpecialUnitaryComplexPhysicalOneSlabCFCRieszRadius_pos
+        H N hN beta0.1 beta0.2
+  have hC : C ≠ 0 := by
+    dsimp [C]
+    have hpi : (Real.pi : ℂ) ≠ 0 := by
+      exact_mod_cast Real.pi_ne_zero
+    exact mul_ne_zero (mul_ne_zero (by norm_num) hpi) Complex.I_ne_zero
+  have hresEvent :=
+    periodicHypercubicEvenSpecialUnitaryComplexNormalizedPhysicalOneSlabTransferOperator_canonicalRieszCircle_eventually_subset_resolventSet
+      H N hN beta0
+  filter_upwards [hresEvent] with beta hres
+  obtain ⟨eps0, heps0, hgap0⟩ :=
+    exists_radial_resolvent_margin (S beta) (1 : ℂ) hres
+  let delta := min (eps0 / 2) (r / 2)
+  have hdelta : 0 < delta := by
+    dsimp [delta]
+    exact lt_min (half_pos heps0) (half_pos hr)
+  have hdelta_lt_eps0 : delta < eps0 := by
+    dsimp [delta]
+    exact lt_of_le_of_lt (min_le_left _ _) (half_lt_self heps0)
+  have hdelta_lt_r : delta < r := by
+    dsimp [delta]
+    exact lt_of_le_of_lt (min_le_right _ _) (half_lt_self hr)
+  let rin := r - delta / 2
+  let rout := r + delta / 2
+  have hrin : 0 < rin := by
+    dsimp [rin]
+    linarith
+  have hrout : 0 < rout := by
+    dsimp [rout]
+    linarith
+  have hrin_lt_r : rin < r := by
+    dsimp [rin]
+    linarith
+  have hr_lt_rout : r < rout := by
+    dsimp [rout]
+    linarith
+  have hrin_lt_rout : rin < rout := hrin_lt_r.trans hr_lt_rout
+  have hwinIn : r - eps0 < rin := by
+    dsimp [rin]
+    linarith
+  have hwinOut : rout < r + eps0 := by
+    dsimp [rout]
+    linarith
+  have hwinRLeft : r - eps0 < r := by
+    linarith
+  have hwinRRight : r < r + eps0 := by
+    linarith
+  have hresIn :
+      Metric.sphere (1 : ℂ) rin ⊆ resolventSet ℂ (S beta) := by
+    intro z hz
+    have hzRad : dist z (1 : ℂ) ∈ Metric.ball r eps0 := by
+      rw [Metric.mem_ball, Real.dist_eq]
+      have hzEq : dist z (1 : ℂ) = rin := Metric.mem_sphere.mp hz
+      rw [hzEq]
+      dsimp [rin]
+      rw [abs_lt]
+      constructor <;> linarith
+    exact
+      mem_resolventSet_of_radial_mem_ball
+        (S beta) (1 : ℂ) hgap0 hzRad
+  have hresOut :
+      Metric.sphere (1 : ℂ) rout ⊆ resolventSet ℂ (S beta) := by
+    intro z hz
+    have hzRad : dist z (1 : ℂ) ∈ Metric.ball r eps0 := by
+      rw [Metric.mem_ball, Real.dist_eq]
+      have hzEq : dist z (1 : ℂ) = rout := Metric.mem_sphere.mp hz
+      rw [hzEq]
+      dsimp [rout]
+      rw [abs_lt]
+      constructor <;> linarith
+    exact
+      mem_resolventSet_of_radial_mem_ball
+        (S beta) (1 : ℂ) hgap0 hzRad
+  have hcontIn :
+      ContinuousOn
+        (fun z : ℂ => resolvent (S beta) z)
+        (Metric.sphere (1 : ℂ) rin) := by
+    intro z hz
+    exact
+      (spectrum.hasDerivAt_resolvent_const_left
+        (hresIn hz)).continuousAt.continuousWithinAt
+  have hcontOut :
+      ContinuousOn
+        (fun z : ℂ => resolvent (S beta) z)
+        (Metric.sphere (1 : ℂ) rout) := by
+    intro z hz
+    exact
+      (spectrum.hasDerivAt_resolvent_const_left
+        (hresOut hz)).continuousAt.continuousWithinAt
+  have hIntIn :
+      CircleIntegrable
+        (fun z : ℂ => resolvent (S beta) z)
+        (1 : ℂ) rin :=
+    hcontIn.circleIntegrable hrin.le
+  have hIntOut :
+      CircleIntegrable
+        (fun z : ℂ => resolvent (S beta) z)
+        (1 : ℂ) rout :=
+    hcontOut.circleIntegrable hrout.le
+  have hOuterDeform :
+      (∮ z in C((1 : ℂ), rout), resolvent (S beta) z) =
+        ∮ z in C((1 : ℂ), r), resolvent (S beta) z := by
+    exact
+      circleIntegral_resolvent_eq_of_radii_in_radial_gap
+        (S beta) (1 : ℂ) hgap0
+        hr hwinRLeft hr_lt_rout.le hwinOut
+  have hInnerDeform :
+      (∮ z in C((1 : ℂ), r), resolvent (S beta) z) =
+        ∮ z in C((1 : ℂ), rin), resolvent (S beta) z := by
+    exact
+      circleIntegral_resolvent_eq_of_radii_in_radial_gap
+        (S beta) (1 : ℂ) hgap0
+        hrin hwinIn hrin_lt_r.le hwinRRight
+  change
+    (C⁻¹ • (∮ z in C((1 : ℂ), r), resolvent (S beta) z)) *
+        (C⁻¹ • (∮ z in C((1 : ℂ), r), resolvent (S beta) z)) =
+      C⁻¹ • (∮ z in C((1 : ℂ), r), resolvent (S beta) z)
+  apply ContinuousLinearMap.ext
+  intro x
+  have hvecIn :
+      CircleIntegrable
+        (fun w : ℂ => resolvent (S beta) w x)
+        (1 : ℂ) rin := by
+    have hxCont :
+        ContinuousOn
+          (fun w : ℂ => resolvent (S beta) w x)
+          (Metric.sphere (1 : ℂ) rin) := by
+      simpa [Function.comp_def] using
+        (ContinuousLinearMap.apply ℂ E x).continuous.comp_continuousOn hcontIn
+    exact hxCont.circleIntegrable hrin.le
+  have hInnerEval :
+      (∮ w in C((1 : ℂ), rin), resolvent (S beta) w) x =
+        ∮ w in C((1 : ℂ), rin), resolvent (S beta) w x :=
+    circleIntegral_apply_continuousLinearMap hIntIn x
+  have hDouble :
+      (∮ z in C((1 : ℂ), rout), resolvent (S beta) z)
+          ((∮ w in C((1 : ℂ), rin), resolvent (S beta) w) x) =
+        ∮ z in C((1 : ℂ), rout),
+          ∮ w in C((1 : ℂ), rin),
+            resolvent (S beta) z (resolvent (S beta) w x) := by
+    calc
+      (∮ z in C((1 : ℂ), rout), resolvent (S beta) z)
+          ((∮ w in C((1 : ℂ), rin), resolvent (S beta) w) x) =
+        (∮ z in C((1 : ℂ), rout), resolvent (S beta) z)
+          (∮ w in C((1 : ℂ), rin), resolvent (S beta) w x) := by
+            exact congrArg
+              (fun y : E =>
+                (∮ z in C((1 : ℂ), rout), resolvent (S beta) z) y)
+              hInnerEval
+      _ =
+        ∮ z in C((1 : ℂ), rout),
+          resolvent (S beta) z
+            (∮ w in C((1 : ℂ), rin), resolvent (S beta) w x) := by
+              exact
+                circleIntegral_apply_continuousLinearMap
+                  hIntOut
+                  (∮ w in C((1 : ℂ), rin), resolvent (S beta) w x)
+      _ =
+        ∮ z in C((1 : ℂ), rout),
+          ∮ w in C((1 : ℂ), rin),
+            resolvent (S beta) z (resolvent (S beta) w x) := by
+              apply circleIntegral.integral_congr hrout.le
+              intro z hz
+              exact
+                continuousLinearMap_circleIntegral_comp
+                  hvecIn (resolvent (S beta) z)
+  have hDoubleValue :
+      (∮ z in C((1 : ℂ), rout), resolvent (S beta) z)
+          ((∮ w in C((1 : ℂ), rin), resolvent (S beta) w) x) =
+        C • (∮ w in C((1 : ℂ), rin), resolvent (S beta) w x) := by
+    rw [hDouble]
+    simpa [C] using
+      separatedCircle_doubleResolvent_apply_eq
+        (S beta) (1 : ℂ)
+        hrin.le hrout.le hrin_lt_rout
+        hresIn hresOut hcontIn x
+  have hOuterAction :
+      ∀ y : E,
+        (∮ z in C((1 : ℂ), r), resolvent (S beta) z) y =
+          (∮ z in C((1 : ℂ), rout), resolvent (S beta) z) y := by
+    intro y
+    exact congrArg (fun T : A => T y) hOuterDeform.symm
+  have hInnerAction :
+      (∮ z in C((1 : ℂ), r), resolvent (S beta) z) x =
+        (∮ z in C((1 : ℂ), rin), resolvent (S beta) z) x :=
+    congrArg (fun T : A => T x) hInnerDeform
+  have hIrIr :
+      (∮ z in C((1 : ℂ), r), resolvent (S beta) z)
+          ((∮ w in C((1 : ℂ), r), resolvent (S beta) w) x) =
+        (∮ z in C((1 : ℂ), rout), resolvent (S beta) z)
+          ((∮ w in C((1 : ℂ), rin), resolvent (S beta) w) x) := by
+    calc
+      (∮ z in C((1 : ℂ), r), resolvent (S beta) z)
+          ((∮ w in C((1 : ℂ), r), resolvent (S beta) w) x) =
+        (∮ z in C((1 : ℂ), rout), resolvent (S beta) z)
+          ((∮ w in C((1 : ℂ), r), resolvent (S beta) w) x) :=
+            hOuterAction _
+      _ =
+        (∮ z in C((1 : ℂ), rout), resolvent (S beta) z)
+          ((∮ w in C((1 : ℂ), rin), resolvent (S beta) w) x) := by
+            exact congrArg
+              (fun y : E =>
+                (∮ z in C((1 : ℂ), rout), resolvent (S beta) z) y)
+              hInnerAction
+  have hInnerApply :
+      (∮ z in C((1 : ℂ), rin), resolvent (S beta) z) x =
+        ∮ z in C((1 : ℂ), rin), resolvent (S beta) z x :=
+    circleIntegral_apply_continuousLinearMap hIntIn x
+  calc
+    (((C⁻¹ • (∮ z in C((1 : ℂ), r), resolvent (S beta) z)) *
+        (C⁻¹ • (∮ z in C((1 : ℂ), r), resolvent (S beta) z))) x) =
+      C⁻¹ •
+        (C⁻¹ •
+          (∮ z in C((1 : ℂ), r), resolvent (S beta) z)
+            ((∮ w in C((1 : ℂ), r), resolvent (S beta) w) x)) := by
+              rw [ContinuousLinearMap.mul_apply]
+              rw [ContinuousLinearMap.smul_apply]
+              rw [ContinuousLinearMap.smul_apply]
+              rw [map_smul]
+    _ =
+      C⁻¹ •
+        (C⁻¹ •
+          (∮ z in C((1 : ℂ), rout), resolvent (S beta) z)
+            ((∮ w in C((1 : ℂ), rin), resolvent (S beta) w) x)) := by
+              rw [hIrIr]
+    _ =
+      C⁻¹ •
+        (C⁻¹ •
+          (C • (∮ w in C((1 : ℂ), rin), resolvent (S beta) w x))) := by
+              rw [hDoubleValue]
+    _ =
+      C⁻¹ •
+        (∮ w in C((1 : ℂ), rin), resolvent (S beta) w x) := by
+              simp only [smul_smul, inv_mul_cancel₀ hC, one_smul]
+    _ =
+      C⁻¹ •
+        ((∮ w in C((1 : ℂ), r), resolvent (S beta) w) x) := by
+              rw [← hInnerApply]
+              rw [← hInnerAction]
+    _ =
+      (C⁻¹ •
+        (∮ w in C((1 : ℂ), r), resolvent (S beta) w)) x := by
+              rw [ContinuousLinearMap.smul_apply]
+
 end
 
 end MathlibAnalytic
