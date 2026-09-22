@@ -951,19 +951,42 @@ theorem
       simpa [Function.comp_def] using
         (ContinuousLinearMap.apply ℂ E x).continuous.comp_continuousOn hcontIn
     exact hxCont.circleIntegrable hrin.le
+  have hInnerEval :
+      (∮ w in C((1 : ℂ), rin), resolvent (S beta) w) x =
+        ∮ w in C((1 : ℂ), rin), resolvent (S beta) w x :=
+    circleIntegral_apply_continuousLinearMap hIntIn x
   have hDouble :
       (∮ z in C((1 : ℂ), rout), resolvent (S beta) z)
           ((∮ w in C((1 : ℂ), rin), resolvent (S beta) w) x) =
         ∮ z in C((1 : ℂ), rout),
           ∮ w in C((1 : ℂ), rin),
             resolvent (S beta) z (resolvent (S beta) w x) := by
-    rw [circleIntegral_apply_continuousLinearMap hIntIn x]
-    rw [circleIntegral_apply_continuousLinearMap hIntOut]
-    apply circleIntegral.integral_congr hrout.le
-    intro z hz
-    exact
-      continuousLinearMap_circleIntegral_comp
-        hvecIn (resolvent (S beta) z)
+    calc
+      (∮ z in C((1 : ℂ), rout), resolvent (S beta) z)
+          ((∮ w in C((1 : ℂ), rin), resolvent (S beta) w) x) =
+        (∮ z in C((1 : ℂ), rout), resolvent (S beta) z)
+          (∮ w in C((1 : ℂ), rin), resolvent (S beta) w x) := by
+            exact congrArg
+              (fun y : E =>
+                (∮ z in C((1 : ℂ), rout), resolvent (S beta) z) y)
+              hInnerEval
+      _ =
+        ∮ z in C((1 : ℂ), rout),
+          resolvent (S beta) z
+            (∮ w in C((1 : ℂ), rin), resolvent (S beta) w x) := by
+              exact
+                circleIntegral_apply_continuousLinearMap
+                  hIntOut
+                  (∮ w in C((1 : ℂ), rin), resolvent (S beta) w x)
+      _ =
+        ∮ z in C((1 : ℂ), rout),
+          ∮ w in C((1 : ℂ), rin),
+            resolvent (S beta) z (resolvent (S beta) w x) := by
+              apply circleIntegral.integral_congr hrout.le
+              intro z hz
+              exact
+                continuousLinearMap_circleIntegral_comp
+                  hvecIn (resolvent (S beta) z)
   have hDoubleValue :
       (∮ z in C((1 : ℂ), rout), resolvent (S beta) z)
           ((∮ w in C((1 : ℂ), rin), resolvent (S beta) w) x) =
@@ -984,6 +1007,24 @@ theorem
       (∮ z in C((1 : ℂ), r), resolvent (S beta) z) x =
         (∮ z in C((1 : ℂ), rin), resolvent (S beta) z) x :=
     congrArg (fun T : A => T x) hInnerDeform
+  have hIrIr :
+      (∮ z in C((1 : ℂ), r), resolvent (S beta) z)
+          ((∮ w in C((1 : ℂ), r), resolvent (S beta) w) x) =
+        (∮ z in C((1 : ℂ), rout), resolvent (S beta) z)
+          ((∮ w in C((1 : ℂ), rin), resolvent (S beta) w) x) := by
+    calc
+      (∮ z in C((1 : ℂ), r), resolvent (S beta) z)
+          ((∮ w in C((1 : ℂ), r), resolvent (S beta) w) x) =
+        (∮ z in C((1 : ℂ), rout), resolvent (S beta) z)
+          ((∮ w in C((1 : ℂ), r), resolvent (S beta) w) x) :=
+            hOuterAction _
+      _ =
+        (∮ z in C((1 : ℂ), rout), resolvent (S beta) z)
+          ((∮ w in C((1 : ℂ), rin), resolvent (S beta) w) x) := by
+            exact congrArg
+              (fun y : E =>
+                (∮ z in C((1 : ℂ), rout), resolvent (S beta) z) y)
+              hInnerAction
   have hInnerApply :
       (∮ z in C((1 : ℂ), rin), resolvent (S beta) z) x =
         ∮ z in C((1 : ℂ), rin), resolvent (S beta) z x :=
@@ -1003,19 +1044,8 @@ theorem
       C⁻¹ •
         (C⁻¹ •
           (∮ z in C((1 : ℂ), rout), resolvent (S beta) z)
-            ((∮ w in C((1 : ℂ), r), resolvent (S beta) w) x)) := by
-              congr 2
-              exact hOuterAction _
-    _ =
-      C⁻¹ •
-        (C⁻¹ •
-          (∮ z in C((1 : ℂ), rout), resolvent (S beta) z)
             ((∮ w in C((1 : ℂ), rin), resolvent (S beta) w) x)) := by
-              congr 2
-              exact congrArg
-                (fun y : E =>
-                  (∮ z in C((1 : ℂ), rout), resolvent (S beta) z) y)
-                hInnerAction
+              rw [hIrIr]
     _ =
       C⁻¹ •
         (C⁻¹ •
