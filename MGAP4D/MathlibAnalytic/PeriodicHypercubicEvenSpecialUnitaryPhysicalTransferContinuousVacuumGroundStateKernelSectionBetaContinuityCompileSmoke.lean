@@ -1,3 +1,5 @@
+-- Import the formerly colliding marginal branch first, reversing the implementation's order.
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateMarginalGeometry
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumGroundStateKernelSectionBetaContinuity
 import MGAP4D.MathlibAnalytic.RealIntegralWeightedProbabilityContinuity
 
@@ -7,17 +9,23 @@ open MeasureTheory
 
 noncomputable section
 
-local instance (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance groundStateKernelSectionBetaContinuitySmokeSpecialUnitaryIsTopologicalGroup
+    (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
-local instance (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance groundStateKernelSectionBetaContinuitySmokeSpecialUnitaryCompactSpace
+    (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
-local instance (N : ℕ) : SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance groundStateKernelSectionBetaContinuitySmokeSpecialUnitarySecondCountableTopology
+    (N : ℕ) : SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupSecondCountableTopology N
-local instance (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance groundStateKernelSectionBetaContinuitySmokeSpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
-local instance (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance groundStateKernelSectionBetaContinuitySmokeSpecialUnitaryBorelSpace
+    (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
-local instance (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+local instance groundStateKernelSectionBetaContinuitySmokeSpatialLinkFintype
+    (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
 -- No new vacuum choice or regularity input is supplied.
@@ -71,6 +79,20 @@ example (H N : ℕ) (hN : 0 < N)
           H N hN p.1.1 p.1.2 p.2)) :=
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionProbabilityMeasure_integral_beta_joint_continuous
     H N hN f hf
+
+-- The original law endpoint includes beta = 0 in the actual half-line topology.
+example (H N : ℕ) (hN : 0 < N)
+    (phi : C(PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N, ℝ))
+    (C : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
+    ContinuousAt
+      (fun p : Set.Ici (0 : ℝ) ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+        ∫ A, phi A ∂
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionProbabilityMeasure
+            H N hN p.1.1 p.1.2 p.2))
+      (⟨0, by change (0 : ℝ) ≤ 0; exact le_rfl⟩, C) :=
+  (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionProbabilityMeasure_integral_beta_joint_continuous
+    H N hN (fun _ A => phi A) (phi.continuous.comp continuous_snd)).continuousAt
 
 end
 
