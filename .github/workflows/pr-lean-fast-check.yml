@@ -40,7 +40,7 @@ permissions:
 env:
   MATHLIB_NO_CACHE_ON_UPDATE: "1"
   CHECK_CHANGED_LEAN_BASE_REF: ${{ github.event_name == 'push' && github.event.before || github.event_name == 'workflow_dispatch' && inputs.base_ref || github.event.pull_request.base.sha }}
-  LAKE_CACHE_REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.sha }}
+  LAKE_CACHE_REF_SHA: ${{ github.event_name == 'pull_request' && format('pr-{0}-{1}', github.event.pull_request.number, github.event.pull_request.head.sha) || github.sha }}
 
 jobs:
   pr-lean-fast-check:
@@ -62,6 +62,10 @@ jobs:
           set -euxo pipefail
           echo "[preflight] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
           bash scripts/audit_changed_lean_preflight.sh "${CHECK_CHANGED_LEAN_BASE_REF}"
+
+      - name: Test changed-Lean dependency routing
+        shell: bash
+        run: python3 scripts/test_changed_lean_dependency_check.py
 
       - name: Detect whether Lake is required
         id: lake-mode
@@ -125,11 +129,17 @@ jobs:
             lake-manifest.json
           key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ env.LAKE_CACHE_REF_SHA }}
           restore-keys: |
+            ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-pr-${{ github.event.pull_request.number }}-
             ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
             ${{ runner.os }}-lean-fast-lake-v4-
             ${{ runner.os }}-lean-fast-v3-
             ${{ runner.os }}-lean-fast-
             ${{ runner.os }}-lean-
+
+      - name: Restore the exact checkout's pinned manifest
+        if: ${{ steps.lake-mode.outputs.required == 'true' }}
+        shell: bash
+        run: git restore --source=HEAD -- lake-manifest.json
 
       - name: Install elan and Lean toolchain
         if: ${{ steps.lake-mode.outputs.required == 'true' }}
@@ -201,7 +211,7 @@ jobs:
           if-no-files-found: warn
 
       - name: Check Lake cache is saveable
-        if: ${{ steps.lake-mode.outputs.required == 'true' }}
+        if: ${{ always() && !cancelled() && steps.lake-mode.outputs.required == 'true' }}
         id: lake-cache-ready
         shell: bash
         run: |
@@ -210,6 +220,23 @@ jobs:
           else
             echo "ready=false" >> "$GITHUB_OUTPUT"
           fi
+          if [ -d ".lake/build/lib/lean/MGAP4D" ]; then
+            echo "project-ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "project-ready=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # PR caches are restricted by GitHub to this PR's merge ref. Preserve
+      # completed dependencies after a proof failure, without publishing them
+      # to a canonical branch or treating cache availability as proof success.
+      - name: Save Lake build cache for same-repository PR retries
+        if: ${{ always() && !cancelled() && steps.lake-mode.outputs.required == 'true' && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && steps.lake-cache.outputs.cache-hit != 'true' && steps.lake-cache-ready.outputs.ready == 'true' && steps.lake-cache-ready.outputs.project-ready == 'true' }}
+        uses: actions/cache/save@v5
+        with:
+          path: |
+            .lake
+            lake-manifest.json
+          key: ${{ steps.lake-cache.outputs.cache-primary-key }}
 
       - name: Save Lake build cache from trusted branches
         if: ${{ steps.lake-mode.outputs.required == 'true' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/formal/real-hilbert-uniform-coercive-strong-limit') && steps.lake-cache.outputs.cache-hit != 'true' && steps.lake-cache-ready.outputs.ready == 'true' }}

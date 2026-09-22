@@ -213,14 +213,17 @@ fi
 ensure_lake_manifest
 ensure_mathlib_cache
 
-# Directly elaborate each changed leaf against restored project and Mathlib olean
-# caches. This avoids Lake scheduling the full transitive build graph on the
-# common path. Toolchain or manifest changes deliberately retain the Lake build
-# path because their cache compatibility cannot be assumed.
+# A direct check is only an early diagnostic: it neither rebuilds imports nor
+# writes fresh project olean files. Always finish with dependency-aware Lake
+# validation, even when every direct check accepts the restored cache.
 direct_lean_allowed=true
 if [ -n "${changed_lake_inputs}" ]; then
   direct_lean_allowed=false
   echo "[fast] Lake inputs changed; use dependency-aware lake build"
+fi
+if [ ! -d ".lake/build/lib/lean/MGAP4D" ]; then
+  direct_lean_allowed=false
+  echo "[fast] project olean cache missing; build dependencies before judging changed proofs"
 fi
 
 if [ "${direct_lean_allowed}" = true ]; then
@@ -235,14 +238,13 @@ if [ "${direct_lean_allowed}" = true ]; then
     fi
   done <<< "$(printf '%s\n' "${non_root_changed_lean_files}" | sort -u)"
 
-  if [ "${direct_lean_ok}" = true ] && [ "${#audit_sensitive_targets[@]}" -eq 0 ]; then
-    echo "[fast] direct changed-file Lean elaboration passed"
-    exit 0
+  if [ "${direct_lean_ok}" = true ]; then
+    echo "[fast] direct elaboration passed; still validate dependency fingerprints through Lake"
   fi
 fi
 
-# Fallback: build only maximal changed non-aggregate modules. If changed module A
-# imports changed module B, building A already covers B.
+# Authoritative check: build only maximal changed non-aggregate modules. If
+# changed module A imports changed module B, building A already covers B.
 declare -A changed_target_set=()
 declare -A imported_by_changed=()
 targets=()
@@ -281,7 +283,7 @@ if [ "${#audit_sensitive_targets[@]}" -gt 0 ]; then
   maximal_targets+=("${audit_sensitive_targets[@]}")
 fi
 
-printf '[fast] fallback lake build maximal changed non-aggregate targets:'
+printf '[fast] dependency-aware lake build maximal changed non-aggregate targets:'
 printf ' %s' "${maximal_targets[@]}"
 printf '\n'
 lake build "${maximal_targets[@]}"
