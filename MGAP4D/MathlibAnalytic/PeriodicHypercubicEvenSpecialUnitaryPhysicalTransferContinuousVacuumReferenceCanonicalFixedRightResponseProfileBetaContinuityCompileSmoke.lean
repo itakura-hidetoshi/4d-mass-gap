@@ -1,8 +1,9 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceFixedRightTargetRatioResponseBetaContinuity
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightCoefficientContinuityLift
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightResponseProfileBetaContinuity
 
 /-! Regression contracts for the original canonical profile and coefficient.
-The initial test-first commit deliberately requires the missing new endpoints.
+Import existing consumers first to retain declaration-collision coverage.
 All ordered pairs, the zero endpoint, original weights, and cutoff are retained. -/
 
 namespace MGAP4D.MathlibAnalytic
