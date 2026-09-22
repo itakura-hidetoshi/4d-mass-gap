@@ -741,10 +741,10 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightPinFreeRandomScanFiniteResolventProfile_subinvariant
         H N hN beta hbeta variation hVariationNonneg M y
   have hSelf : W source = 1 := by
-    dsimp [W]
-    exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight_self
-        H s source
+    simp [
+      W,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight,
+      periodicHypercubicEdgeBaseL1Distance_self]
   have hTerm :
       ∀ k : ℕ,
         (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
