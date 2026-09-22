@@ -684,12 +684,14 @@ private theorem separatedCircle_doubleResolvent_apply_eq
         CircleIntegrable
           (fun w : ℂ => (w - z)⁻¹ • resolvent S z x)
           c rin := by
-      simpa using hconst.sub_zpow_smul (-1 : ℤ) hzNotSphere
+      simpa only [zpow_neg_one] using
+        hconst.sub_zpow_smul (-1 : ℤ) hzNotSphere
     have hB :
         CircleIntegrable
           (fun w : ℂ => (w - z)⁻¹ • resolvent S w x)
           c rin := by
-      simpa using hvecIn.sub_zpow_smul (-1 : ℤ) hzNotSphere
+      simpa only [zpow_neg_one] using
+        hvecIn.sub_zpow_smul (-1 : ℤ) hzNotSphere
     calc
       (∮ w in C(c, rin),
           resolvent S z (resolvent S w x)) =
@@ -701,7 +703,7 @@ private theorem separatedCircle_doubleResolvent_apply_eq
               have hres :=
                 complexContinuousLinearMap_resolvent_mul_apply_eq
                   S (hresOut hz) (hresIn hw) (hsep z hz w hw) x
-              exact hres
+              simpa only [smul_sub] using hres
       _ =
         (∮ w in C(c, rin), (w - z)⁻¹ • resolvent S z x) -
           (∮ w in C(c, rin), (w - z)⁻¹ • resolvent S w x) := by
@@ -735,8 +737,9 @@ private theorem separatedCircle_doubleResolvent_apply_eq
     intro w hw
     have hwBall : w ∈ Metric.ball c rout := by
       rw [Metric.mem_ball]
-      have hwEq : dist w c = rin := Metric.mem_sphere.mp hw
-      simpa [hwEq] using hlt
+      rw [Metric.mem_sphere] at hw
+      rw [hw]
+      exact hlt
     exact
       circleIntegral_inv_sub_smul_const_of_mem_ball
         hwBall (resolvent S w x)
