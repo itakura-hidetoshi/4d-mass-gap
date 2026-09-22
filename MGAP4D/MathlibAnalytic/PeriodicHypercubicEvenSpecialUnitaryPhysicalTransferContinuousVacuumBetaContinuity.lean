@@ -64,7 +64,8 @@ private theorem continuous_realL2_kernel_integral
       (fun p => ∫ A, f p A * k p A ∂mu) := by
     funext p
     exact realL2_inner_continuousMapToLp_eq_integral mu (f p) (k p)
-  exact heq ▸ hinner
+  -- Specify the continuity predicate rather than infer the motive of substitution.
+  exact Eq.mp (congrArg (fun g : P → ℝ => Continuous g) heq) hinner
 
 local instance (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
@@ -205,7 +206,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFuncti
     exact
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFunction_eq_integral_kernel
         H N hN p.1.1 p.1.2 p.2).symm
-  exact heq ▸ hs
+  -- Apply the same explicit transport at the concrete synthesis identification.
+  exact Eq.mp
+    (congrArg (fun g : (Set.Ici (0 : ℝ) × X) → ℝ => Continuous g) heq) hs
 
 /-- Joint continuity of the existing canonical continuous vacuum representative.
 Its defining denominator is the strictly positive finite-volume top norm. -/
