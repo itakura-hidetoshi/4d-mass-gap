@@ -178,7 +178,6 @@ theorem finiteInfluenceColumnIterateKernel_weightedColumn_finiteResolvent_le
     (influence : α → α → ℝ)
     (hInfluence : ∀ target source : α, 0 ≤ influence target source)
     (weight : α → ℝ)
-    (hWeight : ∀ x : α, 0 ≤ weight x)
     (q : ℝ)
     (hq : 0 ≤ q)
     (hColumn :
