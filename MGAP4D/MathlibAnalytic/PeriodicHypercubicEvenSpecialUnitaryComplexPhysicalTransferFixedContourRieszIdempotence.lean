@@ -639,17 +639,17 @@ private theorem separatedCircle_doubleResolvent_apply_eq
           resolvent S z (resolvent S w x)) =
       (2 * Real.pi * Complex.I : ℂ) •
         (∮ w in C(c, rin), resolvent S w x) := by
+  have hvecCont :
+      ContinuousOn
+        (fun w : ℂ => resolvent S w x)
+        (Metric.sphere c rin) := by
+    simpa [Function.comp_def] using
+      (ContinuousLinearMap.apply ℂ E x).continuous.comp_continuousOn hcontIn
   have hvecIn :
       CircleIntegrable
         (fun w : ℂ => resolvent S w x)
-        c rin := by
-    have hxCont :
-        ContinuousOn
-          (fun w : ℂ => resolvent S w x)
-          (Metric.sphere c rin) := by
-      simpa [Function.comp_def] using
-        (ContinuousLinearMap.apply ℂ E x).continuous.comp_continuousOn hcontIn
-    exact hxCont.circleIntegrable hrin
+        c rin :=
+    hvecCont.circleIntegrable hrin
   have hsep :
       ∀ z ∈ Metric.sphere c rout,
         ∀ w ∈ Metric.sphere c rin,
@@ -675,25 +675,24 @@ private theorem separatedCircle_doubleResolvent_apply_eq
       rw [abs_of_nonneg hrin]
       intro hzIn
       exact hzOutside (Metric.sphere_subset_closedBall hzIn)
-    have hconst :
-        CircleIntegrable
-          (fun _ : ℂ => resolvent S z x)
-          c rin :=
-      continuousOn_const.circleIntegrable hrin
+    have hkernelCont :
+        ContinuousOn
+          (fun w : ℂ => (w - z)⁻¹)
+          (Metric.sphere c rin) := by
+      exact
+        (continuousOn_id.sub continuousOn_const).inv₀
+          (fun w hw =>
+            sub_ne_zero.mpr (hsep z hz w hw).symm)
     have hA :
         CircleIntegrable
           (fun w : ℂ => (w - z)⁻¹ • resolvent S z x)
-          c rin := by
-      simpa only [zpow_neg_one] using
-        CircleIntegrable.sub_zpow_smul
-          (-1 : ℤ) hconst hzNotSphere
+          c rin :=
+      (hkernelCont.smul continuousOn_const).circleIntegrable hrin
     have hB :
         CircleIntegrable
           (fun w : ℂ => (w - z)⁻¹ • resolvent S w x)
-          c rin := by
-      simpa only [zpow_neg_one] using
-        CircleIntegrable.sub_zpow_smul
-          (-1 : ℤ) hvecIn hzNotSphere
+          c rin :=
+      (hkernelCont.smul hvecCont).circleIntegrable hrin
     calc
       (∮ w in C(c, rin),
           resolvent S z (resolvent S w x)) =
