@@ -434,6 +434,28 @@ theorem
       rw [inv_pow]
       ring
 
+
+/-- The explicit canonical terminal-covariance prefactor is nonnegative on the
+same high-temperature interval. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHighTemperatureTerminalCovariancePrefactor_nonneg
+    (s beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (hcut :
+      beta ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierCutoff
+          s) :
+    0 ≤
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHighTemperatureTerminalCovariancePrefactor
+        s beta := by
+  have hq :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierPinFreeCoefficient_nonneg_lt_one
+      s beta hbeta hcut
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHighTemperatureTerminalCovariancePrefactor
+  positivity
+
+
 end
 
 end MGAP4D.MathlibAnalytic
