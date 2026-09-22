@@ -12,15 +12,17 @@ local instance canonicalHighTemperatureInfluenceResolventCompileSmokeSpatialLink
     (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
-#check finiteInfluenceIterateKernel_weightedColumn_le_pow
-#check finiteInfluenceIterateKernel_weightedColumn_finiteResolvent_le
-#check finiteInfluenceIterateKernel_weightedColumn_finiteResolvent_le_inv_one_sub
-#check finiteInfluenceIterateKernel_entry_le_pow_mul_weight_div
+#check finiteInfluenceColumnIterateKernel
+#check finiteInfluenceColumnIterateKernel_nonneg
+#check finiteInfluenceColumnIterateKernel_weightedColumn_le_pow
+#check finiteInfluenceColumnIterateKernel_weightedColumn_finiteResolvent_le
+#check finiteInfluenceColumnIterateKernel_weightedColumn_finiteResolvent_le_inv_one_sub
+#check finiteInfluenceColumnIterateKernel_entry_le_pow_mul_weight_div
 #check periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightPinFreePhysicalLeftKernel_influenceIterate_exponentialWeightedColumn_le_pow_halfBarrierCoefficient
 #check periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightPinFreePhysicalLeftKernel_influenceFiniteResolvent_exponentialWeightedColumn_le_inv_gap
 #check periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightPinFreePhysicalLeftKernel_influenceIterate_le_pow_halfBarrierCoefficient_mul_sourceWeight_div_targetWeight
 
-/-- Arbitrary canonical finite iterate column. -/
+/-- Arbitrary canonical finite path column. -/
 example
     (H N : ℕ)
     (hN : 0 < N)
@@ -33,7 +35,7 @@ example
     (center source : PeriodicHypercubicEvenSpatialSliceLink H)
     (d : ℕ) :
     (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
-      finiteInfluenceIterateKernel
+      finiteInfluenceColumnIterateKernel
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledPhysicalLeftKernel
           H beta hbeta
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioResponseProfile
@@ -65,7 +67,7 @@ example
     (Finset.range d).sum
       (fun k =>
         ∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
-          finiteInfluenceIterateKernel
+          finiteInfluenceColumnIterateKernel
             (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledPhysicalLeftKernel
               H 0 le_rfl
               (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioResponseProfile
@@ -94,7 +96,7 @@ example
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierCutoff 1)
     (center target source : PeriodicHypercubicEvenSpatialSliceLink H)
     (d : ℕ) :
-    finiteInfluenceIterateKernel
+    finiteInfluenceColumnIterateKernel
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledPhysicalLeftKernel
         H beta hbeta
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioResponseProfile
@@ -124,7 +126,7 @@ example
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierCutoff s)
     (center source : PeriodicHypercubicEvenSpatialSliceLink H)
     (d : ℕ) :
-    finiteInfluenceIterateKernel
+    finiteInfluenceColumnIterateKernel
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledPhysicalLeftKernel
         H beta hbeta
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioResponseProfile
