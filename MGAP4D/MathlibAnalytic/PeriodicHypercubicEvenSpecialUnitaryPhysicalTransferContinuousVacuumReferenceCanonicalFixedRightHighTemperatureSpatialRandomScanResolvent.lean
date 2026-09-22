@@ -178,7 +178,7 @@ theorem finiteInfluenceColumnIterateKernel_subinvariant_le_partial_resolvent_add
 /-- Exact card-multiplied algebra for one generic finite-kernel random-scan
 variation update. -/
 theorem finiteInfluenceKernelRandomScanUpdatedVariation_card_mul_eq
-    {ι : Type*}
+    {ι : Type}
     [DecidableEq ι]
     [Fintype ι]
     (K : FiniteNonnegativeInfluenceKernelData ι)
@@ -205,7 +205,7 @@ theorem finiteInfluenceKernelRandomScanUpdatedVariation_card_mul_eq
 /-- Exact finite telescope for generic finite-kernel random-scan variation
 iterates. -/
 theorem finiteInfluenceKernelRandomScanVariationPartialSum_resolvent_identity
-    {ι : Type*}
+    {ι : Type}
     [DecidableEq ι]
     [Fintype ι]
     (K : FiniteNonnegativeInfluenceKernelData ι)
@@ -277,7 +277,7 @@ theorem finiteInfluenceKernelRandomScanVariationPartialSum_resolvent_identity
 /-- Generic normalized finite random-scan resolvent profile for a finite
 nonnegative influence kernel. -/
 noncomputable def finiteInfluenceKernelRandomScanFiniteResolventProfile
-    {ι : Type*}
+    {ι : Type}
     [DecidableEq ι]
     [Fintype ι]
     (K : FiniteNonnegativeInfluenceKernelData ι)
@@ -291,7 +291,7 @@ noncomputable def finiteInfluenceKernelRandomScanFiniteResolventProfile
 
 /-- The generic normalized finite random-scan resolvent is nonnegative. -/
 theorem finiteInfluenceKernelRandomScanFiniteResolventProfile_nonneg
-    {ι : Type*}
+    {ι : Type}
     [DecidableEq ι]
     [Fintype ι]
     (K : FiniteNonnegativeInfluenceKernelData ι)
@@ -311,7 +311,7 @@ theorem finiteInfluenceKernelRandomScanFiniteResolventProfile_nonneg
 /-- The generic normalized finite random-scan resolvent is a transpose
 subinvariant for the same finite influence kernel. -/
 theorem finiteInfluenceKernelRandomScanFiniteResolventProfile_subinvariant
-    {ι : Type*}
+    {ι : Type}
     [DecidableEq ι]
     [Fintype ι]
     (K : FiniteNonnegativeInfluenceKernelData ι)
