@@ -183,12 +183,14 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFuncti
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
         H N p.1.1).comp (continuous_id.prodMk continuous_const)⟩
   have hk : Continuous k := by
-    apply ContinuousMap.continuous_of_continuous_uncurry (f := k)
     have hp : Continuous
         (fun q : (Set.Ici (0 : ℝ) × X) × X => (q.1.1.1, (q.2, q.1.2))) := by
       fun_prop
-    exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_joint_continuous
-      H N).comp hp
+    have huncurry : Continuous (fun q : (Set.Ici (0 : ℝ) × X) × X => k q.1 q.2) :=
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_joint_continuous
+        H N).comp hp
+    -- Bundled compact-open currying does not require first countability of the parameter space.
+    exact (ContinuousMap.curry ⟨_, huncurry⟩).continuous
   have hOmega : Continuous Omega :=
     continuous_subtype_val.comp
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_halfLine_continuous
@@ -241,9 +243,9 @@ theorem
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
             H N hN beta.1 beta.2⟩ :
           C(PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N, ℝ))) := by
-  exact ContinuousMap.continuous_of_continuous_uncurry
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_joint_continuous
-      H N hN)
+  exact (ContinuousMap.curry ⟨_,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_joint_continuous
+      H N hN⟩).continuous
 
 /-- Strict positivity of the original representative discharges the reciprocal
 condition everywhere on the nonnegative coupling half-line. -/
