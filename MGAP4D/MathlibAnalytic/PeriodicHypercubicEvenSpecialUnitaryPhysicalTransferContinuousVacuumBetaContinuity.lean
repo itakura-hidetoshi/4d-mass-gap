@@ -64,8 +64,20 @@ private theorem continuous_realL2_kernel_integral
       (fun p => ∫ A, f p A * k p A ∂mu) := by
     funext p
     exact realL2_inner_continuousMapToLp_eq_integral mu (f p) (k p)
-  -- Specify the continuity predicate rather than infer the motive of substitution.
   exact Eq.mp (congrArg (fun g : P → ℝ => Continuous g) heq) hinner
+
+/-- Curry and pass to L2 while the kernel is still an abstract parameter.
+The concrete Wilson proof then consumes only an ordinary scalar integral;
+it never compares bundled maps containing expanded matrix-action expressions. -/
+private theorem continuous_realL2_jointKernel_integral
+    {P X : Type*} [TopologicalSpace P] [TopologicalSpace X]
+    [MeasurableSpace X] [BorelSpace X] [CompactSpace X]
+    (mu : Measure X) [IsFiniteMeasure mu]
+    (f : P → Lp ℝ 2 mu) (K : P × X → ℝ)
+    (hf : Continuous f) (hK : Continuous K) :
+    Continuous (fun p => ∫ A, f p A * K (p, A) ∂mu) := by
+  let k : C(P, C(X, ℝ)) := ContinuousMap.curry ⟨K, hK⟩
+  exact continuous_realL2_kernel_integral mu f k hf k.continuous
 
 local instance (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
@@ -178,30 +190,26 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFuncti
   let Omega : Set.Ici (0 : ℝ) → Lp ℝ 2 mu := fun beta =>
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
       H N hN beta.1 beta.2).1
-  let k : (Set.Ici (0 : ℝ) × X) → C(X, ℝ) := fun p =>
-    ⟨fun A => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-        H N p.1.1 A p.2,
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-        H N p.1.1).comp (continuous_id.prodMk continuous_const)⟩
-  have hk : Continuous k := by
-    have hp : Continuous
-        (fun q : (Set.Ici (0 : ℝ) × X) × X => (q.1.1.1, (q.2, q.1.2))) := by
-      fun_prop
-    have huncurry : Continuous (fun q : (Set.Ici (0 : ℝ) × X) × X => k q.1 q.2) :=
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_joint_continuous
-        H N).comp hp
-    -- Bundled compact-open currying does not require first countability of the parameter space.
-    exact (ContinuousMap.curry ⟨_, huncurry⟩).continuous
+  let K : (Set.Ici (0 : ℝ) × X) × X → ℝ := fun q =>
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+      H N q.1.1.1 q.2 q.1.2
+  have hp : Continuous
+      (fun q : (Set.Ici (0 : ℝ) × X) × X => (q.1.1.1, (q.2, q.1.2))) :=
+    (continuous_subtype_val.comp (continuous_fst.comp continuous_fst)).prodMk
+      (continuous_snd.prodMk (continuous_snd.comp continuous_fst))
+  have hK : Continuous K :=
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_joint_continuous
+      H N).comp hp
   have hOmega : Continuous Omega :=
     continuous_subtype_val.comp
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_halfLine_continuous
         H N hN)
   have hs : Continuous
-      (fun p : Set.Ici (0 : ℝ) × X => ∫ A, Omega p.1 A * k p A ∂mu) :=
-    continuous_realL2_kernel_integral mu (fun p => Omega p.1) k
-      (hOmega.comp continuous_fst) hk
+      (fun p : Set.Ici (0 : ℝ) × X => ∫ A, Omega p.1 A * K (p, A) ∂mu) :=
+    continuous_realL2_jointKernel_integral mu (fun p => Omega p.1) K
+      (hOmega.comp continuous_fst) hK
   have heq :
-      (fun p : Set.Ici (0 : ℝ) × X => ∫ A, Omega p.1 A * k p A ∂mu) =
+      (fun p : Set.Ici (0 : ℝ) × X => ∫ A, Omega p.1 A * K (p, A) ∂mu) =
       (fun p : Set.Ici (0 : ℝ) × X =>
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFunction
           H N hN p.1.1 p.1.2 p.2) := by
@@ -209,7 +217,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFuncti
     exact
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFunction_eq_integral_kernel
         H N hN p.1.1 p.1.2 p.2).symm
-  -- Apply the same explicit transport at the concrete synthesis identification.
   exact Eq.mp
     (congrArg (fun g : (Set.Ici (0 : ℝ) × X) → ℝ => Continuous g) heq) hs
 
