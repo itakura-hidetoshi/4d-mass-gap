@@ -614,6 +614,184 @@ private theorem separatedCircle_resolventKernel_parameter_integrable
     (hparam.continuousOn.integrableOn_compact hcompact).mono_set
       (Set.prod_mono Set.uIoc_subset_uIcc Set.uIoc_subset_uIcc)
 
+
+/-- On two strictly separated resolvent circles, the iterated resolvent product
+integral collapses to one factor of the inner resolvent integral.  This is the
+algebraic core of Riesz-projector idempotence. -/
+private theorem separatedCircle_doubleResolvent_apply_eq
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [NormedSpace ℂ E]
+    [CompleteSpace E]
+    (S : E →L[ℂ] E)
+    (c : ℂ)
+    {rin rout : ℝ}
+    (hrin : 0 ≤ rin)
+    (hrout : 0 ≤ rout)
+    (hlt : rin < rout)
+    (hresIn : Metric.sphere c rin ⊆ resolventSet ℂ S)
+    (hresOut : Metric.sphere c rout ⊆ resolventSet ℂ S)
+    (hcontIn :
+      ContinuousOn (fun w : ℂ => resolvent S w) (Metric.sphere c rin))
+    (x : E) :
+    (∮ z in C(c, rout),
+        ∮ w in C(c, rin),
+          resolvent S z (resolvent S w x)) =
+      (2 * Real.pi * Complex.I : ℂ) •
+        (∮ w in C(c, rin), resolvent S w x) := by
+  have hvecCont :
+      ContinuousOn
+        (fun w : ℂ => resolvent S w x)
+        (Metric.sphere c rin) := by
+    simpa [Function.comp_def] using
+      (ContinuousLinearMap.apply ℂ E x).continuous.comp_continuousOn hcontIn
+  have hvecIn :
+      CircleIntegrable
+        (fun w : ℂ => resolvent S w x)
+        c rin :=
+    hvecCont.circleIntegrable hrin
+  have hsep :
+      ∀ z ∈ Metric.sphere c rout,
+        ∀ w ∈ Metric.sphere c rin,
+          z ≠ w := by
+    intro z hz w hw hzw
+    subst w
+    have hzOut : dist z c = rout := Metric.mem_sphere.mp hz
+    have hzIn : dist z c = rin := Metric.mem_sphere.mp hw
+    linarith
+  have hinner :
+      ∀ z ∈ Metric.sphere c rout,
+        (∮ w in C(c, rin),
+            resolvent S z (resolvent S w x)) =
+          -(∮ w in C(c, rin),
+              (w - z)⁻¹ • resolvent S w x) := by
+    intro z hz
+    have hzOutside : z ∉ Metric.closedBall c rin := by
+      intro hzClosed
+      have hzOut : dist z c = rout := Metric.mem_sphere.mp hz
+      have hzLe : dist z c ≤ rin := Metric.mem_closedBall.mp hzClosed
+      linarith
+    have hzNotSphere : z ∉ Metric.sphere c |rin| := by
+      rw [abs_of_nonneg hrin]
+      intro hzIn
+      exact hzOutside (Metric.sphere_subset_closedBall hzIn)
+    have hkernelCont :
+        ContinuousOn
+          (fun w : ℂ => (w - z)⁻¹)
+          (Metric.sphere c rin) := by
+      exact
+        (continuousOn_id.sub continuousOn_const).inv₀
+          (fun w hw =>
+            sub_ne_zero.mpr (hsep z hz w hw).symm)
+    have hA :
+        CircleIntegrable
+          (fun w : ℂ => (w - z)⁻¹ • resolvent S z x)
+          c rin :=
+      (hkernelCont.smul continuousOn_const).circleIntegrable hrin
+    have hB :
+        CircleIntegrable
+          (fun w : ℂ => (w - z)⁻¹ • resolvent S w x)
+          c rin :=
+      (hkernelCont.smul hvecCont).circleIntegrable hrin
+    calc
+      (∮ w in C(c, rin),
+          resolvent S z (resolvent S w x)) =
+        ∮ w in C(c, rin),
+          ((w - z)⁻¹ • resolvent S z x) -
+            ((w - z)⁻¹ • resolvent S w x) := by
+              apply circleIntegral.integral_congr hrin
+              intro w hw
+              have hres :=
+                complexContinuousLinearMap_resolvent_mul_apply_eq
+                  S (hresOut hz) (hresIn hw) (hsep z hz w hw) x
+              simpa only [smul_sub] using hres
+      _ =
+        (∮ w in C(c, rin), (w - z)⁻¹ • resolvent S z x) -
+          (∮ w in C(c, rin), (w - z)⁻¹ • resolvent S w x) := by
+              exact circleIntegral.integral_sub hA hB
+      _ = 0 -
+          (∮ w in C(c, rin), (w - z)⁻¹ • resolvent S w x) := by
+              rw [
+                circleIntegral_sub_inv_smul_eq_zero_of_not_mem_closedBall
+                  hrin hzOutside (resolvent S z x)
+              ]
+      _ = -(∮ w in C(c, rin), (w - z)⁻¹ • resolvent S w x) := by
+              rw [zero_sub]
+  have hFubini :
+      (∮ z in C(c, rout),
+          ∮ w in C(c, rin),
+            (w - z)⁻¹ • resolvent S w x) =
+        ∮ w in C(c, rin),
+          ∮ z in C(c, rout),
+            (w - z)⁻¹ • resolvent S w x := by
+    exact
+      circleIntegral_circleIntegral_swap_of_integrable_parameter
+        (fun z w : ℂ => (w - z)⁻¹ • resolvent S w x)
+        c rout rin
+        (separatedCircle_resolventKernel_parameter_integrable
+          S c hrin hrout hlt hcontIn x)
+  have houterKernel :
+      ∀ w ∈ Metric.sphere c rin,
+        (∮ z in C(c, rout),
+            (w - z)⁻¹ • resolvent S w x) =
+          -(2 * Real.pi * Complex.I : ℂ) • resolvent S w x := by
+    intro w hw
+    have hwBall : w ∈ Metric.ball c rout := by
+      rw [Metric.mem_ball]
+      rw [Metric.mem_sphere] at hw
+      rw [hw]
+      exact hlt
+    exact
+      circleIntegral_inv_sub_smul_const_of_mem_ball
+        hwBall (resolvent S w x)
+  calc
+    (∮ z in C(c, rout),
+        ∮ w in C(c, rin),
+          resolvent S z (resolvent S w x)) =
+      ∮ z in C(c, rout),
+        (-1 : ℂ) •
+          (∮ w in C(c, rin),
+            (w - z)⁻¹ • resolvent S w x) := by
+              apply circleIntegral.integral_congr hrout
+              intro z hz
+              calc
+                (∮ w in C(c, rin),
+                    resolvent S z (resolvent S w x)) =
+                  -(∮ w in C(c, rin),
+                      (w - z)⁻¹ • resolvent S w x) :=
+                    hinner z hz
+                _ = (-1 : ℂ) •
+                    (∮ w in C(c, rin),
+                      (w - z)⁻¹ • resolvent S w x) :=
+                    (neg_one_smul ℂ _).symm
+    _ = (-1 : ℂ) •
+        (∮ z in C(c, rout),
+          ∮ w in C(c, rin),
+            (w - z)⁻¹ • resolvent S w x) := by
+              rw [circleIntegral.integral_smul]
+    _ = (-1 : ℂ) •
+        (∮ w in C(c, rin),
+          ∮ z in C(c, rout),
+            (w - z)⁻¹ • resolvent S w x) := by
+              rw [hFubini]
+    _ = (-1 : ℂ) •
+        (∮ w in C(c, rin),
+          (-(2 * Real.pi * Complex.I : ℂ)) • resolvent S w x) := by
+              congr 1
+              apply circleIntegral.integral_congr hrin
+              intro w hw
+              exact houterKernel w hw
+    _ = (-1 : ℂ) •
+        ((-(2 * Real.pi * Complex.I : ℂ)) •
+          (∮ w in C(c, rin), resolvent S w x)) := by
+              rw [circleIntegral.integral_smul]
+    _ = (2 * Real.pi * Complex.I : ℂ) •
+        (∮ w in C(c, rin), resolvent S w x) := by
+              rw [smul_smul]
+              congr 1
+              ring
+
+
 end
 
 end MathlibAnalytic
