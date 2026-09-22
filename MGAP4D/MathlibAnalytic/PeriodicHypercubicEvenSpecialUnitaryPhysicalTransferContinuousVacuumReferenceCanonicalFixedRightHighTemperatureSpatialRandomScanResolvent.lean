@@ -245,7 +245,9 @@ theorem finiteInfluenceKernelRandomScanVariationPartialSum_resolvent_identity
       have hRec :=
         finiteInfluenceKernelRandomScanUpdatedVariation_card_mul_eq
           K hCard u source
-      rw [Finset.sum_range_succ]
+      simp only [
+        Finset.sum_range_succ,
+        finiteInfluenceKernelRandomScanVariationIterate_succ]
       change
         S source + u source =
           n * variation source +
