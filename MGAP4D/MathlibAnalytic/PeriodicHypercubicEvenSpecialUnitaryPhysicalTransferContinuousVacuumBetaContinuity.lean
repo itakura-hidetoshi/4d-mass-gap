@@ -7,7 +7,7 @@ import Mathlib.Tactic
 
 Continuous kernel sections are mapped into the fixed Haar L2 space and paired
 with the existing nonnegative physical vacuum. The resulting continuous scalar
-is identified with the existing continuous top synthesis. Division by the
+is identified with the existing vacuum synthesis function. Division by the
 positive continuous top norm gives the original continuous vacuum representative.
 
 This avoids evaluating an L2 equivalence class at a point and avoids comparing
@@ -29,10 +29,11 @@ set_option maxHeartbeats 500000
 set_option synthInstance.maxHeartbeats 50000
 
 /-- Prove the pairing identity before specializing the L2 vector. This keeps
-rewriting independent of the construction of the canonical vacuum. -/
+rewriting independent of the construction of the canonical vacuum. The pinned
+`ContinuousMap.toLp` API uses a Borel space, not only measurable open sets. -/
 private theorem realL2_inner_continuousMapToLp_eq_integral
     {X : Type*} [TopologicalSpace X] [MeasurableSpace X]
-    [OpensMeasurableSpace X] [CompactSpace X]
+    [BorelSpace X] [CompactSpace X]
     (mu : Measure X) [IsFiniteMeasure mu] (f : Lp ℝ 2 mu) (k : C(X, ℝ)) :
     inner ℝ f (ContinuousMap.toLp (E := ℝ) 2 mu ℝ k) =
       ∫ A, f A * k A ∂mu := by
@@ -108,8 +109,10 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_joint_con
             PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H N p.1 p.2) := by
     unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction
-    exact (continuous_const.mul (hleft.add hright)).add
-      (crossingAction_continuous H N)
+    -- Match the defining expression (left + crossing) + right. Distributivity
+    -- of multiplication over addition is not definitional equality in Lean.
+    exact ((continuous_const.mul hleft).add
+      (crossingAction_continuous H N)).add (continuous_const.mul hright)
   have hexp := Real.continuous_exp.comp
     (continuous_fst.neg.mul (haction.comp continuous_snd))
   simpa only [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_eq_boltzmann]
@@ -124,24 +127,26 @@ private theorem topNorm_halfLine_continuous (H N : ℕ) (hN : 0 < N) :
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
       H N hN beta.1 beta.2‖
   have hL : LipschitzWith
-      (Real.toNNReal (periodicHypercubicEvenOneSlabActionBudget H)) lam := by
+      (Real.toNNReal
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H)) lam := by
     apply LipschitzWith.of_dist_le'
     intro gamma beta
     change |lam gamma - lam beta| ≤
-      periodicHypercubicEvenOneSlabActionBudget H * |gamma.1 - beta.1|
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H *
+        |gamma.1 - beta.1|
     simpa only [lam, Real.norm_eq_abs] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_norm_sub_le_beta
         H N hN beta.1 gamma.1 beta.2 gamma.2
   exact hL.continuous
 
 /-- Kernel smoothing transports the Hilbert-norm continuous canonical vacuum
-into the original continuous top synthesis, jointly in coupling and boundary. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousTopSynthesis_joint_continuous
+into the existing vacuum synthesis function, jointly in coupling and boundary. -/
+theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFunction_joint_continuous
     (H N : ℕ) (hN : 0 < N) :
     Continuous
       (fun p : Set.Ici (0 : ℝ) ×
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousTopSynthesis
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFunction
           H N hN p.1.1 p.1.2 p.2) := by
   let X := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N
   let mu := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
@@ -176,11 +181,11 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousTopSynthesi
       (fun p : Set.Ici (0 : ℝ) × X =>
         inner ℝ (Omega p.1) (ContinuousMap.toLp (E := ℝ) 2 mu ℝ (k p))) =
       (fun p : Set.Ici (0 : ℝ) × X =>
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousTopSynthesis
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFunction
           H N hN p.1.1 p.1.2 p.2) := by
     funext p
     exact (realL2_inner_continuousMapToLp_eq_integral mu (Omega p.1) (k p)).trans
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousTopSynthesis_eq_integral_kernel
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFunction_eq_integral_kernel
         H N hN p.1.1 p.1.2 p.2).symm
   exact heq ▸ hinner
 
@@ -200,7 +205,7 @@ theorem
       H N hN beta.1 beta.2).ne')
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
   exact (hinv.comp continuous_fst).mul
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousTopSynthesis_joint_continuous
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFunction_joint_continuous
       H N hN)
 
 /-- Continuity into the continuous-function space on the compact boundary.
