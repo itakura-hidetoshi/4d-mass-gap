@@ -233,7 +233,7 @@ theorem realHilbertProjectionSweep_tensorization
       rw [realHilbertProjectionSweep_cons_defect_norm_sq_eq
         P hIdem hSymm hComm c ds x]
       simp only [List.map_cons, List.sum_cons]
-      exact add_le_add_left
+      exact add_le_add_right
         ((ih (P c x)).trans
           (realHilbertProjectionSweep_projectedDefectSum_le
             P hIdem hSymm hComm c ds x))
