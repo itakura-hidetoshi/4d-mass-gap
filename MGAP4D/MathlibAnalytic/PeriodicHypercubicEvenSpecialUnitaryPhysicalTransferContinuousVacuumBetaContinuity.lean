@@ -43,6 +43,29 @@ private theorem realL2_inner_continuousMapToLp_eq_integral
   exact (realL2Scalar_inner_eq_mul (f A) _).trans
     (congrArg (fun t : ℝ => f A * t) hA)
 
+/-- Keep the inner-product topology and the `toLp` map abstract while proving
+continuity. Specializing this scalar-integral theorem does not elaborate a new
+inner-product expression over the concrete Wilson Haar measure. -/
+private theorem continuous_realL2_kernel_integral
+    {P X : Type*} [TopologicalSpace P] [TopologicalSpace X]
+    [MeasurableSpace X] [BorelSpace X] [CompactSpace X]
+    (mu : Measure X) [IsFiniteMeasure mu]
+    (f : P → Lp ℝ 2 mu) (k : P → C(X, ℝ))
+    (hf : Continuous f) (hk : Continuous k) :
+    Continuous (fun p => ∫ A, f p A * k p A ∂mu) := by
+  have hkL2 : Continuous
+      (fun p => ContinuousMap.toLp (E := ℝ) 2 mu ℝ (k p)) :=
+    (ContinuousMap.toLp (E := ℝ) 2 mu ℝ).continuous.comp hk
+  have hinner : Continuous
+      (fun p => inner ℝ (f p) (ContinuousMap.toLp (E := ℝ) 2 mu ℝ (k p))) :=
+    hf.inner hkL2
+  have heq :
+      (fun p => inner ℝ (f p) (ContinuousMap.toLp (E := ℝ) 2 mu ℝ (k p))) =
+      (fun p => ∫ A, f p A * k p A ∂mu) := by
+    funext p
+    exact realL2_inner_continuousMapToLp_eq_integral mu (f p) (k p)
+  exact heq ▸ hinner
+
 local instance (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 local instance (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -165,29 +188,24 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFuncti
       fun_prop
     exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_joint_continuous
       H N).comp hp
-  have hkL2 : Continuous
-      (fun p : Set.Ici (0 : ℝ) × X =>
-        ContinuousMap.toLp (E := ℝ) 2 mu ℝ (k p)) :=
-    (ContinuousMap.toLp (E := ℝ) 2 mu ℝ).continuous.comp hk
   have hOmega : Continuous Omega :=
     continuous_subtype_val.comp
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_halfLine_continuous
         H N hN)
-  have hinner : Continuous
-      (fun p : Set.Ici (0 : ℝ) × X =>
-        inner ℝ (Omega p.1) (ContinuousMap.toLp (E := ℝ) 2 mu ℝ (k p))) :=
-    (hOmega.comp continuous_fst).inner hkL2
+  have hs : Continuous
+      (fun p : Set.Ici (0 : ℝ) × X => ∫ A, Omega p.1 A * k p A ∂mu) :=
+    continuous_realL2_kernel_integral mu (fun p => Omega p.1) k
+      (hOmega.comp continuous_fst) hk
   have heq :
-      (fun p : Set.Ici (0 : ℝ) × X =>
-        inner ℝ (Omega p.1) (ContinuousMap.toLp (E := ℝ) 2 mu ℝ (k p))) =
+      (fun p : Set.Ici (0 : ℝ) × X => ∫ A, Omega p.1 A * k p A ∂mu) =
       (fun p : Set.Ici (0 : ℝ) × X =>
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFunction
           H N hN p.1.1 p.1.2 p.2) := by
     funext p
-    exact (realL2_inner_continuousMapToLp_eq_integral mu (Omega p.1) (k p)).trans
+    exact
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFunction_eq_integral_kernel
         H N hN p.1.1 p.1.2 p.2).symm
-  exact heq ▸ hinner
+  exact heq ▸ hs
 
 /-- Joint continuity of the existing canonical continuous vacuum representative.
 Its defining denominator is the strictly positive finite-volume top norm. -/
