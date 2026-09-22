@@ -131,7 +131,8 @@ theorem continuousLinearMap_finrank_range_le_of_idempotent_norm_sub_lt_one
         Q P hQidem hclose
   letI : FiniteDimensional ℂ Q.range :=
     FiniteDimensional.of_injective f hf
-  exact LinearMap.finrank_le_finrank_of_injective (f := f) hf
+  -- The typed proof determines the implicit map, without depending on its binder name.
+  exact LinearMap.finrank_le_finrank_of_injective hf
 
 /-- In particular, if the comparison projection has finrank at most one, so
 does the norm-close idempotent. -/
