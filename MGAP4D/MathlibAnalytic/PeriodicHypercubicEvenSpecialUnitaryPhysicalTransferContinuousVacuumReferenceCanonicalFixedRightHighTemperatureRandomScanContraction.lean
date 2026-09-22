@@ -33,6 +33,7 @@ namespace MGAP4D.MathlibAnalytic
 
 noncomputable section
 
+open MeasureTheory ProbabilityTheory
 open scoped BigOperators
 
 local instance canonicalHighTemperatureRandomScanSpatialLinkFintype
