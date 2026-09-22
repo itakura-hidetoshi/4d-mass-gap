@@ -101,11 +101,15 @@ theorem
     realL2ExternalTensor_coeFn oneL2 oneL2,
     hOneFst,
     hOneSnd] with z hK hTensor hfst hsnd
-  rw [hK, hTensor]
-  simp only [realL2ExternalTensorFunction]
-  rw [hfst, hsnd,
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_zero]
-  norm_num
+  rw [hK]
+  calc
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+        H N 0 z.1 z.2 = 1 := by
+      exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_zero
+        H N z.1 z.2
+    _ = realL2ExternalTensorFunction oneL2 oneL2 z := by
+      simp [realL2ExternalTensorFunction, hfst, hsnd]
+    _ = realL2ExternalTensor oneL2 oneL2 z := hTensor.symm
 
 /-- A square separable Hilbert-Schmidt kernel is the corresponding rank-one
 operator. -/
