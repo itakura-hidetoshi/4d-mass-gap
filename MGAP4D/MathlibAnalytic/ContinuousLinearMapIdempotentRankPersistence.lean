@@ -71,13 +71,19 @@ theorem continuousLinearMap_rangeRestriction_injective_of_idempotent_norm_sub_lt
       z = Q z := hQz.symm
       _ = Q z - P z := by rw [hPz, sub_zero]
       _ = (Q - P) z := by rw [ContinuousLinearMap.sub_apply]
+  -- The printed norm expressions can hide different inherited instance paths.
+  -- Unfold instances locally, without changing the ambient norm or hypotheses.
   have hbound :
-      ‖(Q - P) z‖ ≤ ‖Q - P‖ * ‖z‖ :=
-    ContinuousLinearMap.le_opNorm (Q - P) z
+      ‖(Q - P) z‖ ≤ ‖Q - P‖ * ‖z‖ := by
+    with_reducible_and_instances
+      exact ContinuousLinearMap.le_opNorm (Q - P) z
   have hnorm :
       ‖z‖ ≤ ‖Q - P‖ * ‖z‖ := by
+    -- Rewrite only the left norm; rewriting z globally changes the right side too.
     calc
-      ‖z‖ = ‖(Q - P) z‖ := congrArg norm hzEq
+      ‖z‖ = ‖(Q - P) z‖ := by
+        with_reducible_and_instances
+          exact congrArg (fun v : E => ‖v‖) hzEq
       _ ≤ ‖Q - P‖ * ‖z‖ := hbound
   have hz : z = 0 := by
     by_cases hz0 : z = 0
@@ -121,7 +127,7 @@ theorem continuousLinearMap_finrank_range_le_of_idempotent_norm_sub_lt_one
         Q P hQidem hclose
   letI : FiniteDimensional ℂ Q.range :=
     FiniteDimensional.of_injective f hf
-  exact LinearMap.finrank_le_finrank_of_injective (l := f) hf
+  exact LinearMap.finrank_le_finrank_of_injective (f := f) hf
 
 /-- In particular, if the comparison projection has finrank at most one, so
 does the norm-close idempotent. -/
