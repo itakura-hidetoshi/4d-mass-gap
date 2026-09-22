@@ -77,17 +77,25 @@ private theorem continuous_realL2_jointKernel_integral
   let k : C(P, C(X, ℝ)) := ContinuousMap.curry ⟨K, hK⟩
   exact continuous_realL2_kernel_integral mu f k hf k.continuous
 
-local instance (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+-- Local instance registration does not make the declaration name module-private.
+-- Explicit module-specific names keep this file compatible with the marginal-geometry imports.
+local instance continuousVacuumBetaContinuitySpecialUnitaryIsTopologicalGroup
+    (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
-local instance (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance continuousVacuumBetaContinuitySpecialUnitaryCompactSpace
+    (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
-local instance (N : ℕ) : SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance continuousVacuumBetaContinuitySpecialUnitarySecondCountableTopology
+    (N : ℕ) : SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupSecondCountableTopology N
-local instance (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance continuousVacuumBetaContinuitySpecialUnitaryMeasurableSpace
+    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
-local instance (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+local instance continuousVacuumBetaContinuitySpecialUnitaryBorelSpace
+    (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
-local instance (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+local instance continuousVacuumBetaContinuitySpatialLinkFintype
+    (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
 private theorem crossingAction_continuous (H N : ℕ) :
