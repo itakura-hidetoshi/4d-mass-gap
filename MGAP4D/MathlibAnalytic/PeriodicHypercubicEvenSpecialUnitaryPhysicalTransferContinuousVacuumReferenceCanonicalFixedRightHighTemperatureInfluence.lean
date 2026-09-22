@@ -81,7 +81,7 @@ theorem
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierPinFreeCoefficient
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledExponentialWeightedColumnCoefficient
-  exact add_lt_add_left
+  exact add_lt_add_right
     (mul_lt_mul_of_pos_left hM (Real.exp_pos (16 * beta))) _
 
 /-- No response/coefficient continuity or weighted response premise remains in
