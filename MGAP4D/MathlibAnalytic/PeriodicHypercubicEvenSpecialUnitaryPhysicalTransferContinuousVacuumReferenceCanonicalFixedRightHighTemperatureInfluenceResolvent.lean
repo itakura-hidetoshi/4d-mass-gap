@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightHighTemperatureInfluence
-import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonDobrushinIterateKernel
 import MGAP4D.MathlibAnalytic.FinitePositiveWeightReciprocalInfluenceKernelResponse
 import Mathlib.Tactic
 
@@ -13,9 +12,11 @@ physical-left influence kernel a strict exponentially weighted COLUMN bound
 
 with 0 <= q(s,beta) < 1 on the original closed cutoff interval.
 
-This file keeps that target/source orientation and propagates the weighted
-column estimate through the existing finite influence-iterate kernel.  No
-transpose kernel and no row-sum reinterpretation are introduced.
+This file keeps that target/source orientation.  To avoid importing the older,
+much broader compact-Dobrushin iterate spine merely for a finite recursive
+kernel, it defines one lightweight generic finite path iterate locally to this
+same mathematical lane.  The underlying physical influence kernel is NOT
+redefined: every specialization below uses the ORIGINAL #4638 kernel exactly.
 
 For every finite depth d,
 
@@ -47,10 +48,51 @@ local instance canonicalHighTemperatureInfluenceResolventSpatialLinkFintype
     (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+/-- Lightweight finite path iterate of a nonnegative influence kernel.
+The recursion has the same target/source orientation as the physical kernel:
+one new influence step is composed on the target side. -/
+noncomputable def finiteInfluenceColumnIterateKernel
+    {α : Type*}
+    [Fintype α]
+    (influence : α → α → ℝ) : ℕ → α → α → ℝ
+  | 0, target, source => by
+      classical
+      exact if target = source then 1 else 0
+  | d + 1, target, source =>
+      ∑ mid : α,
+        influence target mid *
+          finiteInfluenceColumnIterateKernel influence d mid source
+
+/-- Nonnegative influence entries give nonnegative entries at every finite
+path depth. -/
+theorem finiteInfluenceColumnIterateKernel_nonneg
+    {α : Type*}
+    [Fintype α]
+    [DecidableEq α]
+    (influence : α → α → ℝ)
+    (hInfluence : ∀ target source : α, 0 ≤ influence target source) :
+    ∀ d : ℕ, ∀ target source : α,
+      0 ≤ finiteInfluenceColumnIterateKernel influence d target source := by
+  intro d
+  induction d with
+  | zero =>
+      intro target source
+      simp only [finiteInfluenceColumnIterateKernel]
+      split_ifs <;> norm_num
+  | succ d ih =>
+      intro target source
+      change
+        0 ≤ ∑ mid : α,
+          influence target mid *
+            finiteInfluenceColumnIterateKernel influence d mid source
+      exact
+        Finset.sum_nonneg fun mid _ =>
+          mul_nonneg (hInfluence target mid) (ih mid source)
+
 /-- A nonnegative weighted column subinvariant propagates multiplicatively
-through every finite influence iterate.  The orientation is column/source:
+through every finite influence path iterate.  The orientation is column/source:
 the target index is summed and the source index is fixed. -/
-theorem finiteInfluenceIterateKernel_weightedColumn_le_pow
+theorem finiteInfluenceColumnIterateKernel_weightedColumn_le_pow
     {α : Type*}
     [Fintype α]
     [DecidableEq α]
@@ -67,12 +109,12 @@ theorem finiteInfluenceIterateKernel_weightedColumn_le_pow
     (d : ℕ)
     (source : α) :
     (∑ target : α,
-        finiteInfluenceIterateKernel influence d target source *
+        finiteInfluenceColumnIterateKernel influence d target source *
           weight target) ≤
       q ^ d * weight source := by
   induction d generalizing source with
   | zero =>
-      simp only [finiteInfluenceIterateKernel, pow_zero, one_mul]
+      simp only [finiteInfluenceColumnIterateKernel, pow_zero, one_mul]
       rw [Finset.sum_eq_single source]
       · simp
       · intro target _ hTarget
@@ -84,17 +126,17 @@ theorem finiteInfluenceIterateKernel_weightedColumn_le_pow
         (∑ target : α,
           (∑ mid : α,
             influence target mid *
-              finiteInfluenceIterateKernel influence d mid source) *
+              finiteInfluenceColumnIterateKernel influence d mid source) *
             weight target) ≤
           q ^ (d + 1) * weight source
       calc
         (∑ target : α,
           (∑ mid : α,
             influence target mid *
-              finiteInfluenceIterateKernel influence d mid source) *
+              finiteInfluenceColumnIterateKernel influence d mid source) *
             weight target) =
           ∑ mid : α,
-            finiteInfluenceIterateKernel influence d mid source *
+            finiteInfluenceColumnIterateKernel influence d mid source *
               (∑ target : α, influence target mid * weight target) := by
             simp_rw [Finset.sum_mul]
             rw [Finset.sum_comm]
@@ -106,18 +148,18 @@ theorem finiteInfluenceIterateKernel_weightedColumn_le_pow
             ring
         _ ≤
           ∑ mid : α,
-            finiteInfluenceIterateKernel influence d mid source *
+            finiteInfluenceColumnIterateKernel influence d mid source *
               (q * weight mid) := by
             apply Finset.sum_le_sum
             intro mid _
             exact
               mul_le_mul_of_nonneg_left
                 (hColumn mid)
-                (finiteInfluenceIterateKernel_nonneg
+                (finiteInfluenceColumnIterateKernel_nonneg
                   influence hInfluence d mid source)
         _ = q *
           (∑ mid : α,
-            finiteInfluenceIterateKernel influence d mid source *
+            finiteInfluenceColumnIterateKernel influence d mid source *
               weight mid) := by
             rw [Finset.mul_sum]
             apply Finset.sum_congr rfl
@@ -130,7 +172,7 @@ theorem finiteInfluenceIterateKernel_weightedColumn_le_pow
           ring
 
 /-- Finite Neumann prefixes inherit the same weighted-column geometry. -/
-theorem finiteInfluenceIterateKernel_weightedColumn_finiteResolvent_le
+theorem finiteInfluenceColumnIterateKernel_weightedColumn_finiteResolvent_le
     {α : Type*}
     [Fintype α]
     [DecidableEq α]
@@ -149,21 +191,21 @@ theorem finiteInfluenceIterateKernel_weightedColumn_finiteResolvent_le
     (Finset.range d).sum
         (fun k =>
           ∑ target : α,
-            finiteInfluenceIterateKernel influence k target source *
+            finiteInfluenceColumnIterateKernel influence k target source *
               weight target) ≤
       finiteRealGeometricSeries q d * weight source := by
   calc
     (Finset.range d).sum
         (fun k =>
           ∑ target : α,
-            finiteInfluenceIterateKernel influence k target source *
+            finiteInfluenceColumnIterateKernel influence k target source *
               weight target) ≤
       (Finset.range d).sum
         (fun k => q ^ k * weight source) := by
           apply Finset.sum_le_sum
           intro k hk
           exact
-            finiteInfluenceIterateKernel_weightedColumn_le_pow
+            finiteInfluenceColumnIterateKernel_weightedColumn_le_pow
               influence hInfluence weight hWeight q hq hColumn k source
     _ = finiteRealGeometricSeries q d * weight source := by
       unfold finiteRealGeometricSeries
@@ -171,7 +213,7 @@ theorem finiteInfluenceIterateKernel_weightedColumn_finiteResolvent_le
 
 /-- Under q < 1 every finite weighted-column resolvent prefix is bounded by
 the infinite scalar geometric resolvent. -/
-theorem finiteInfluenceIterateKernel_weightedColumn_finiteResolvent_le_inv_one_sub
+theorem finiteInfluenceColumnIterateKernel_weightedColumn_finiteResolvent_le_inv_one_sub
     {α : Type*}
     [Fintype α]
     [DecidableEq α]
@@ -191,19 +233,19 @@ theorem finiteInfluenceIterateKernel_weightedColumn_finiteResolvent_le_inv_one_s
     (Finset.range d).sum
         (fun k =>
           ∑ target : α,
-            finiteInfluenceIterateKernel influence k target source *
+            finiteInfluenceColumnIterateKernel influence k target source *
               weight target) ≤
       (1 - q)⁻¹ * weight source := by
   exact
-    (finiteInfluenceIterateKernel_weightedColumn_finiteResolvent_le
+    (finiteInfluenceColumnIterateKernel_weightedColumn_finiteResolvent_le
       influence hInfluence weight hWeight q hq hColumn d source).trans
       (mul_le_mul_of_nonneg_right
         (finiteRealGeometricSeries_le_inv_one_sub q hq hqLtOne d)
         (hWeight source))
 
 /-- A single nonnegative entry inherits the reciprocal target-weight decay
-from the full weighted iterate column. -/
-theorem finiteInfluenceIterateKernel_entry_le_pow_mul_weight_div
+from the full weighted path column. -/
+theorem finiteInfluenceColumnIterateKernel_entry_le_pow_mul_weight_div
     {α : Type*}
     [Fintype α]
     [DecidableEq α]
@@ -219,30 +261,30 @@ theorem finiteInfluenceIterateKernel_entry_le_pow_mul_weight_div
           q * weight source)
     (d : ℕ)
     (target source : α) :
-    finiteInfluenceIterateKernel influence d target source ≤
+    finiteInfluenceColumnIterateKernel influence d target source ≤
       (q ^ d * weight source) / weight target := by
   have hSingle :
-      finiteInfluenceIterateKernel influence d target source *
+      finiteInfluenceColumnIterateKernel influence d target source *
           weight target ≤
         ∑ other : α,
-          finiteInfluenceIterateKernel influence d other source *
+          finiteInfluenceColumnIterateKernel influence d other source *
             weight other := by
     exact
       Finset.single_le_sum
         (fun other _ =>
           mul_nonneg
-            (finiteInfluenceIterateKernel_nonneg
+            (finiteInfluenceColumnIterateKernel_nonneg
               influence hInfluence d other source)
             (hWeight other).le)
         (Finset.mem_univ target)
   have hColumnD :=
-    finiteInfluenceIterateKernel_weightedColumn_le_pow
+    finiteInfluenceColumnIterateKernel_weightedColumn_le_pow
       influence hInfluence weight (fun x => (hWeight x).le)
       q hq hColumn d source
   exact (le_div_iff₀ (hWeight target)).2 (hSingle.trans hColumnD)
 
 /-- The ORIGINAL canonical pin-free physical-left kernel has exponentially
-weighted finite iterate columns bounded by powers of the existing elementary
+weighted finite path columns bounded by powers of the existing elementary
 high-temperature envelope. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightPinFreePhysicalLeftKernel_influenceIterate_exponentialWeightedColumn_le_pow_halfBarrierCoefficient
@@ -257,7 +299,7 @@ theorem
     (center source : PeriodicHypercubicEvenSpatialSliceLink H)
     (d : ℕ) :
     (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
-      finiteInfluenceIterateKernel
+      finiteInfluenceColumnIterateKernel
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledPhysicalLeftKernel
           H beta hbeta
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioResponseProfile
@@ -305,7 +347,7 @@ theorem
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightPinFreePhysicalLeftKernel_exponentialWeightedColumn_lt_halfBarrierCoefficient
             H N hN s hs beta hbeta hcut center y)
   simpa only [K, R, hR, W, q] using
-    finiteInfluenceIterateKernel_weightedColumn_le_pow
+    finiteInfluenceColumnIterateKernel_weightedColumn_le_pow
       K.influence K.influence_nonneg W hW q hq hColumn d source
 
 /-- Every finite Neumann prefix of the ORIGINAL canonical physical influence
@@ -326,7 +368,7 @@ theorem
     (Finset.range d).sum
       (fun k =>
         ∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
-          finiteInfluenceIterateKernel
+          finiteInfluenceColumnIterateKernel
             (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledPhysicalLeftKernel
               H beta hbeta
               (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioResponseProfile
@@ -374,7 +416,7 @@ theorem
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightPinFreePhysicalLeftKernel_exponentialWeightedColumn_lt_halfBarrierCoefficient
             H N hN s hs beta hbeta hcut center y)
   simpa only [K, R, hR, W, q] using
-    finiteInfluenceIterateKernel_weightedColumn_finiteResolvent_le_inv_one_sub
+    finiteInfluenceColumnIterateKernel_weightedColumn_finiteResolvent_le_inv_one_sub
       K.influence K.influence_nonneg W hW q hqPair.1 hqPair.2
       hColumn d source
 
@@ -393,7 +435,7 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierCutoff s)
     (center target source : PeriodicHypercubicEvenSpatialSliceLink H)
     (d : ℕ) :
-    finiteInfluenceIterateKernel
+    finiteInfluenceColumnIterateKernel
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledPhysicalLeftKernel
         H beta hbeta
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioResponseProfile
@@ -440,7 +482,7 @@ theorem
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightPinFreePhysicalLeftKernel_exponentialWeightedColumn_lt_halfBarrierCoefficient
             H N hN s hs beta hbeta hcut center y)
   simpa only [K, R, hR, W, q] using
-    finiteInfluenceIterateKernel_entry_le_pow_mul_weight_div
+    finiteInfluenceColumnIterateKernel_entry_le_pow_mul_weight_div
       K.influence K.influence_nonneg W hW q hq hColumn d target source
 
 end
