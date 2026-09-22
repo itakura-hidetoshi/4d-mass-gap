@@ -1,7 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightHighTemperatureCovarianceResolvent
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightHighTemperatureInfluenceResolvent
-import MGAP4D.MathlibAnalytic.FiniteDobrushinTransposeResolventComparison
-import MGAP4D.MathlibAnalytic.FiniteInfluenceKernelBidirectionalFiniteResponseMonotone
 import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Tactic
 
@@ -55,25 +53,127 @@ local instance canonicalHighTemperatureSpatialRandomScanResolventSpatialLinkFint
     (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
-/-- The lightweight column iterate introduced in the canonical high-temperature
-lane is exactly the repository's pre-existing finite influence iterate. -/
-theorem finiteInfluenceColumnIterateKernel_eq_finiteInfluenceIterateKernel
+/-- One residual step for a transpose-subinvariant profile, using only the
+lightweight column iterate already introduced in the canonical high-temperature
+lane.  Keeping this algebra local avoids importing the older broad compact-
+Dobrushin iterate spine and its unrelated global instance graph. -/
+theorem finiteInfluenceColumnIterateKernel_weighted_subinvariant_step
     {α : Type*}
     [Fintype α]
     [DecidableEq α]
     (influence : α → α → ℝ)
+    (hInfluence : ∀ target source : α, 0 ≤ influence target source)
+    (v w : α → ℝ)
+    (hSub : ∀ source : α,
+      w source ≤ v source + ∑ target : α, influence target source * w target)
     (d : ℕ)
-    (target source : α) :
-    finiteInfluenceColumnIterateKernel influence d target source =
-      finiteInfluenceIterateKernel influence d target source := by
-  induction d generalizing target source with
-  | zero =>
-      simp [finiteInfluenceColumnIterateKernel, finiteInfluenceIterateKernel]
-  | succ d ih =>
-      simp only [finiteInfluenceColumnIterateKernel, finiteInfluenceIterateKernel]
+    (source : α) :
+    (∑ initial : α,
+        finiteInfluenceColumnIterateKernel influence d initial source * w initial) ≤
+      (∑ initial : α,
+        finiteInfluenceColumnIterateKernel influence d initial source * v initial) +
+      ∑ initial : α,
+        finiteInfluenceColumnIterateKernel influence (d + 1) initial source * w initial := by
+  calc
+    (∑ initial : α,
+        finiteInfluenceColumnIterateKernel influence d initial source * w initial) ≤
+      ∑ initial : α,
+        finiteInfluenceColumnIterateKernel influence d initial source *
+          (v initial + ∑ target : α, influence target initial * w target) := by
+      apply Finset.sum_le_sum
+      intro initial _
+      exact
+        mul_le_mul_of_nonneg_left
+          (hSub initial)
+          (finiteInfluenceColumnIterateKernel_nonneg
+            influence hInfluence d initial source)
+    _ =
+      (∑ initial : α,
+          finiteInfluenceColumnIterateKernel influence d initial source * v initial) +
+        ∑ initial : α,
+          finiteInfluenceColumnIterateKernel influence d initial source *
+            (∑ target : α, influence target initial * w target) := by
+      simp_rw [mul_add]
+      rw [Finset.sum_add_distrib]
+    _ =
+      (∑ initial : α,
+          finiteInfluenceColumnIterateKernel influence d initial source * v initial) +
+        ∑ target : α,
+          finiteInfluenceColumnIterateKernel influence (d + 1) target source * w target := by
+      congr 1
+      simp_rw [Finset.mul_sum]
+      rw [Finset.sum_comm]
       apply Finset.sum_congr rfl
-      intro mid _hmid
-      rw [ih]
+      intro target _
+      calc
+        (∑ initial : α,
+            finiteInfluenceColumnIterateKernel influence d initial source *
+              (influence target initial * w target)) =
+          ∑ initial : α,
+            (influence target initial *
+              finiteInfluenceColumnIterateKernel influence d initial source) * w target := by
+            apply Finset.sum_congr rfl
+            intro initial _
+            ring
+        _ =
+          (∑ initial : α,
+              influence target initial *
+                finiteInfluenceColumnIterateKernel influence d initial source) * w target := by
+            rw [Finset.sum_mul]
+        _ =
+          finiteInfluenceColumnIterateKernel influence (d + 1) target source * w target := by
+            rfl
+
+/-- Finite Neumann comparison for a transpose-subinvariant profile, stated
+directly with the canonical high-temperature column iterate. -/
+theorem finiteInfluenceColumnIterateKernel_subinvariant_le_partial_resolvent_add_residual
+    {α : Type*}
+    [Fintype α]
+    [DecidableEq α]
+    (influence : α → α → ℝ)
+    (hInfluence : ∀ target source : α, 0 ≤ influence target source)
+    (v w : α → ℝ)
+    (hSub : ∀ source : α,
+      w source ≤ v source + ∑ target : α, influence target source * w target)
+    (d : ℕ)
+    (source : α) :
+    w source ≤
+      (Finset.range d).sum
+        (fun k => ∑ initial : α,
+          finiteInfluenceColumnIterateKernel influence k initial source * v initial) +
+      ∑ initial : α,
+        finiteInfluenceColumnIterateKernel influence d initial source * w initial := by
+  induction d with
+  | zero =>
+      simp [finiteInfluenceColumnIterateKernel]
+  | succ d ih =>
+      have hStep :=
+        finiteInfluenceColumnIterateKernel_weighted_subinvariant_step
+          influence hInfluence v w hSub d source
+      calc
+        w source ≤
+          (Finset.range d).sum
+              (fun k => ∑ initial : α,
+                finiteInfluenceColumnIterateKernel influence k initial source * v initial) +
+            ∑ initial : α,
+              finiteInfluenceColumnIterateKernel influence d initial source * w initial := ih
+        _ ≤
+          (Finset.range d).sum
+              (fun k => ∑ initial : α,
+                finiteInfluenceColumnIterateKernel influence k initial source * v initial) +
+            ((∑ initial : α,
+                finiteInfluenceColumnIterateKernel influence d initial source * v initial) +
+              ∑ initial : α,
+                finiteInfluenceColumnIterateKernel influence (d + 1) initial source * w initial) := by
+          exact add_le_add_right hStep _
+        _ =
+          (Finset.range (d + 1)).sum
+              (fun k => ∑ initial : α,
+                finiteInfluenceColumnIterateKernel influence k initial source * v initial) +
+            ∑ initial : α,
+              finiteInfluenceColumnIterateKernel influence (d + 1) initial source * w initial := by
+          rw [Finset.sum_range_succ]
+          ring
 
 /-- Exact card-multiplied algebra for one generic finite-kernel random-scan
 variation update. -/
@@ -648,14 +748,14 @@ theorem
   have hTerm :
       ∀ k : ℕ,
         (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
-          finiteInfluenceIterateKernel
+          finiteInfluenceColumnIterateKernel
               K.influence k target source *
             variation target) ≤
           q ^ k * (s ^ D)⁻¹ * total := by
     intro k
     calc
       (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
-          finiteInfluenceIterateKernel
+          finiteInfluenceColumnIterateKernel
               K.influence k target source *
             variation target) ≤
         ∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
@@ -681,15 +781,12 @@ theorem
                 periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightPinFreePhysicalLeftKernel_influenceIterate_le_pow_halfBarrierCoefficient_mul_sourceWeight_div_targetWeight
                   H N hN s hs beta hbeta hcut source target source k
               have hEntry :
-                  finiteInfluenceIterateKernel
+                  finiteInfluenceColumnIterateKernel
                       K.influence k target source ≤
                     q ^ k * (W target)⁻¹ := by
-                rw [
-                  ← finiteInfluenceColumnIterateKernel_eq_finiteInfluenceIterateKernel
-                    K.influence k target source]
                 simpa [K, W, q, hSelf, div_eq_mul_inv] using hEntryColumn
               have hEntry' :
-                  finiteInfluenceIterateKernel
+                  finiteInfluenceColumnIterateKernel
                       K.influence k target source ≤
                     q ^ k * (s ^ D)⁻¹ := by
                 exact hEntry.trans
@@ -705,7 +802,7 @@ theorem
         (Finset.range d).sum
             (fun k =>
               ∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
-                finiteInfluenceIterateKernel
+                finiteInfluenceColumnIterateKernel
                     K.influence k target source *
                   variation target) ≤
           A := by
@@ -714,7 +811,7 @@ theorem
         (Finset.range d).sum
             (fun k =>
               ∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
-                finiteInfluenceIterateKernel
+                finiteInfluenceColumnIterateKernel
                     K.influence k target source *
                   variation target) ≤
           finiteRealGeometricSeries q d * ((s ^ D)⁻¹ * total) := by
@@ -722,7 +819,7 @@ theorem
         (Finset.range d).sum
             (fun k =>
               ∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
-                finiteInfluenceIterateKernel
+                finiteInfluenceColumnIterateKernel
                     K.influence k target source *
                   variation target) ≤
           (Finset.range d).sum
@@ -741,7 +838,7 @@ theorem
       (Finset.range d).sum
           (fun k =>
             ∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
-              finiteInfluenceIterateKernel
+              finiteInfluenceColumnIterateKernel
                   K.influence k target source *
                 variation target) ≤
         finiteRealGeometricSeries q d * ((s ^ D)⁻¹ * total) := hSeries
@@ -755,38 +852,36 @@ theorem
   have hResidual :
       ∀ d : ℕ,
         (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
-          finiteInfluenceIterateKernel K.influence d target source *
+          finiteInfluenceColumnIterateKernel K.influence d target source *
             w target) ≤
           q ^ d * C := by
     intro d
     have hColumn :
         (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
-          finiteInfluenceIterateKernel K.influence d target source *
+          finiteInfluenceColumnIterateKernel K.influence d target source *
             W target) ≤
           q ^ d * W source := by
-      simpa only [
-        K, W, q,
-        finiteInfluenceColumnIterateKernel_eq_finiteInfluenceIterateKernel] using
+      simpa only [K, W, q] using
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightPinFreePhysicalLeftKernel_influenceIterate_exponentialWeightedColumn_le_pow_halfBarrierCoefficient
           H N hN s hs beta hbeta hcut source source d
     calc
       (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
-          finiteInfluenceIterateKernel K.influence d target source *
+          finiteInfluenceColumnIterateKernel K.influence d target source *
             w target) ≤
         ∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
-          finiteInfluenceIterateKernel K.influence d target source *
+          finiteInfluenceColumnIterateKernel K.influence d target source *
             (C * W target) := by
               apply Finset.sum_le_sum
               intro target _htarget
               exact
                 mul_le_mul_of_nonneg_left
                   (hWBound target)
-                  (finiteInfluenceIterateKernel_nonneg
+                  (finiteInfluenceColumnIterateKernel_nonneg
                     K.influence K.influence_nonneg d target source)
       _ =
         C *
           (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
-            finiteInfluenceIterateKernel K.influence d target source *
+            finiteInfluenceColumnIterateKernel K.influence d target source *
               W target) := by
             rw [Finset.mul_sum]
             apply Finset.sum_congr rfl
@@ -801,7 +896,7 @@ theorem
       ∀ d : ℕ, w source ≤ A + q ^ d * C := by
     intro d
     have hUnroll :=
-      finiteInfluenceIterateKernel_subinvariant_le_partial_resolvent_add_residual
+      finiteInfluenceColumnIterateKernel_subinvariant_le_partial_resolvent_add_residual
         K.influence K.influence_nonneg variation w hSub d source
     exact hUnroll.trans
       (add_le_add (hPartial d) (hResidual d))
