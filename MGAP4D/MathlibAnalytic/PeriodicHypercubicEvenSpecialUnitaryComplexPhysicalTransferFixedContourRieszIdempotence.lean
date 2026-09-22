@@ -350,6 +350,29 @@ private theorem resolvent_continuousOn_closed_radial_annulus
   exact
     (spectrum.hasDerivAt_resolvent_const_left hzRes).continuousAt.continuousWithinAt
 
+/-- The resolvent is continuous on any set contained in its resolvent set.
+Keeping the operator algebra explicit here prevents Lean from having to infer
+the Banach-algebra target through a local type alias in larger Wilson-specific
+proofs. -/
+private theorem resolvent_continuousOn_of_subset_resolventSet
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [NormedSpace ℂ E]
+    [CompleteSpace E]
+    (S : E →L[ℂ] E)
+    {s : Set ℂ}
+    (hs : s ⊆ resolventSet ℂ S) :
+    ContinuousOn (fun z : ℂ => resolvent S z) s := by
+  intro z hz
+  have hzRes : z ∈ resolventSet ℂ S := hs hz
+  have hderiv :
+      HasDerivAt
+        (fun w : ℂ => resolvent S w)
+        (-(resolvent S z) ^ 2)
+        z := by
+    exact spectrum.hasDerivAt_resolvent_const_left hzRes
+  exact hderiv.continuousAt.continuousWithinAt
+
 /-- Within a protected radial spectral window, the resolvent circle integral is
 independent of the chosen positive radius. -/
 private theorem circleIntegral_resolvent_eq_of_radii_in_radial_gap
@@ -896,29 +919,25 @@ theorem
   have hcontIn :
       ContinuousOn
         (fun z : ℂ => resolvent (S beta) z)
-        (Metric.sphere (1 : ℂ) rin) := by
-    intro z hz
-    exact
-      (spectrum.hasDerivAt_resolvent_const_left
-        (hresIn hz)).continuousAt.continuousWithinAt
+        (Metric.sphere (1 : ℂ) rin) :=
+    resolvent_continuousOn_of_subset_resolventSet
+      (S beta) hresIn
   have hcontOut :
       ContinuousOn
         (fun z : ℂ => resolvent (S beta) z)
-        (Metric.sphere (1 : ℂ) rout) := by
-    intro z hz
-    exact
-      (spectrum.hasDerivAt_resolvent_const_left
-        (hresOut hz)).continuousAt.continuousWithinAt
+        (Metric.sphere (1 : ℂ) rout) :=
+    resolvent_continuousOn_of_subset_resolventSet
+      (S beta) hresOut
   have hIntIn :
       CircleIntegrable
         (fun z : ℂ => resolvent (S beta) z)
         (1 : ℂ) rin :=
-    hcontIn.circleIntegrable hrin.le
+    ContinuousOn.circleIntegrable hrin.le hcontIn
   have hIntOut :
       CircleIntegrable
         (fun z : ℂ => resolvent (S beta) z)
         (1 : ℂ) rout :=
-    hcontOut.circleIntegrable hrout.le
+    ContinuousOn.circleIntegrable hrout.le hcontOut
   have hOuterDeform :
       (∮ z in C((1 : ℂ), rout), resolvent (S beta) z) =
         ∮ z in C((1 : ℂ), r), resolvent (S beta) z := by
