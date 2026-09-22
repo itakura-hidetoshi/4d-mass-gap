@@ -28,6 +28,20 @@ noncomputable section
 set_option maxHeartbeats 500000
 set_option synthInstance.maxHeartbeats 50000
 
+/-- Prove the pairing identity before specializing the L2 vector. This keeps
+rewriting independent of the construction of the canonical vacuum. -/
+private theorem realL2_inner_continuousMapToLp_eq_integral
+    {X : Type*} [TopologicalSpace X] [MeasurableSpace X]
+    [OpensMeasurableSpace X] [CompactSpace X]
+    (mu : Measure X) [IsFiniteMeasure mu] (f : Lp ℝ 2 mu) (k : C(X, ℝ)) :
+    inner ℝ f (ContinuousMap.toLp (E := ℝ) 2 mu ℝ k) =
+      ∫ A, f A * k A ∂mu := by
+  rw [L2.inner_def]
+  apply integral_congr_ae
+  filter_upwards [ContinuousMap.coeFn_toLp (p := 2) (μ := mu) (𝕜 := ℝ) k] with A hA
+  exact (realL2Scalar_inner_eq_mul (f A) _).trans
+    (congrArg (fun t : ℝ => f A * t) hA)
+
 local instance (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 local instance (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -94,8 +108,8 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_joint_con
             PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H N p.1 p.2) := by
     unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction
-    exact ((continuous_const.mul hleft).add (crossingAction_continuous H N)).add
-      (continuous_const.mul hright)
+    exact (continuous_const.mul (hleft.add hright)).add
+      (crossingAction_continuous H N)
   have hexp := Real.continuous_exp.comp
     (continuous_fst.neg.mul (haction.comp continuous_snd))
   simpa only [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_eq_boltzmann]
@@ -165,12 +179,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousTopSynthesi
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousTopSynthesis
           H N hN p.1.1 p.1.2 p.2) := by
     funext p
-    rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousTopSynthesis_eq_integral_kernel,
-      L2.inner_def]
-    apply integral_congr_ae
-    filter_upwards [ContinuousMap.coeFn_toLp (p := 2) (μ := mu) (𝕜 := ℝ) (k p)] with A hA
-    rw [realL2Scalar_inner_eq_mul, hA]
-    rfl
+    exact (realL2_inner_continuousMapToLp_eq_integral mu (Omega p.1) (k p)).trans
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousTopSynthesis_eq_integral_kernel
+        H N hN p.1.1 p.1.2 p.2).symm
   exact heq ▸ hinner
 
 /-- Joint continuity of the existing canonical continuous vacuum representative.
