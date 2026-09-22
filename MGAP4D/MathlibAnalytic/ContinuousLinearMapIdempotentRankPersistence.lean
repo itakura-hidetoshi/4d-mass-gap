@@ -45,15 +45,19 @@ theorem continuousLinearMap_rangeRestriction_injective_of_idempotent_norm_sub_lt
   have hQx : Q x.1 = x.1 := by
     rcases x.2 with ⟨u, hu⟩
     have happ := congrArg (fun T : E →L[ℂ] E => T u) hQidem
-    rw [ContinuousLinearMap.mul_def, ContinuousLinearMap.comp_apply] at happ
-    rw [← hu]
-    exact happ
+    change Q (Q u) = Q u at happ
+    calc
+      Q x.1 = Q (Q u) := by rw [hu]
+      _ = Q u := happ
+      _ = x.1 := hu
   have hQy : Q y.1 = y.1 := by
     rcases y.2 with ⟨u, hu⟩
     have happ := congrArg (fun T : E →L[ℂ] E => T u) hQidem
-    rw [ContinuousLinearMap.mul_def, ContinuousLinearMap.comp_apply] at happ
-    rw [← hu]
-    exact happ
+    change Q (Q u) = Q u at happ
+    calc
+      Q y.1 = Q (Q u) := by rw [hu]
+      _ = Q u := happ
+      _ = y.1 := hu
   have hPxy : P x.1 = P y.1 := by
     exact congrArg Subtype.val hxy
   have hQz : Q z = z := by
@@ -67,10 +71,14 @@ theorem continuousLinearMap_rangeRestriction_injective_of_idempotent_norm_sub_lt
       z = Q z := hQz.symm
       _ = Q z - P z := by rw [hPz, sub_zero]
       _ = (Q - P) z := by rw [ContinuousLinearMap.sub_apply]
+  have hbound :
+      ‖(Q - P) z‖ ≤ ‖Q - P‖ * ‖z‖ :=
+    ContinuousLinearMap.le_opNorm (Q - P) z
   have hnorm :
       ‖z‖ ≤ ‖Q - P‖ * ‖z‖ := by
-    rw [hzEq]
-    exact ContinuousLinearMap.le_opNorm (Q - P) z
+    calc
+      ‖z‖ = ‖(Q - P) z‖ := congrArg norm hzEq
+      _ ≤ ‖Q - P‖ * ‖z‖ := hbound
   have hz : z = 0 := by
     by_contra hz0
     have hnormPos : 0 < ‖z‖ := norm_pos_iff.mpr hz0
