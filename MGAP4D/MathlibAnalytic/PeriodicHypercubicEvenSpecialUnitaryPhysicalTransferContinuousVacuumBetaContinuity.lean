@@ -159,7 +159,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumSynthesisFuncti
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
         H N p.1.1).comp (continuous_id.prodMk continuous_const)⟩
   have hk : Continuous k := by
-    apply ContinuousMap.continuous_of_continuous_uncurry k
+    apply ContinuousMap.continuous_of_continuous_uncurry (f := k)
     have hp : Continuous
         (fun q : (Set.Ici (0 : ℝ) × X) × X => (q.1.1.1, (q.2, q.1.2))) := by
       fun_prop
@@ -220,7 +220,7 @@ theorem
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
             H N hN beta.1 beta.2⟩ :
           C(PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N, ℝ))) := by
-  exact ContinuousMap.continuous_of_continuous_uncurry _
+  exact ContinuousMap.continuous_of_continuous_uncurry
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_joint_continuous
       H N hN)
 
