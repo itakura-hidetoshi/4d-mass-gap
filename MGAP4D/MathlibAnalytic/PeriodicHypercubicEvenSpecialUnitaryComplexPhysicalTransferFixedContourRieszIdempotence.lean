@@ -507,6 +507,113 @@ private theorem circleIntegral_inv_sub_smul_const_of_mem_ball
           congr 1
           ring
 
+
+/-- The parameter-space integrand needed to Fubini-swap the separated-circle
+resolvent Cauchy kernel is integrable.  Separation of the two radii removes the
+only possible scalar-kernel singularity. -/
+private theorem separatedCircle_resolventKernel_parameter_integrable
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [NormedSpace ℂ E]
+    [CompleteSpace E]
+    (S : E →L[ℂ] E)
+    (c : ℂ)
+    {rin rout : ℝ}
+    (hrin : 0 ≤ rin)
+    (hrout : 0 ≤ rout)
+    (hlt : rin < rout)
+    (hcontIn :
+      ContinuousOn (fun w : ℂ => resolvent S w) (Metric.sphere c rin))
+    (x : E) :
+    MeasureTheory.IntegrableOn
+      (fun p : ℝ × ℝ =>
+        (deriv (circleMap c rout) p.1 *
+            deriv (circleMap c rin) p.2) •
+          ((circleMap c rin p.2 - circleMap c rout p.1)⁻¹ •
+            resolvent S (circleMap c rin p.2) x))
+      (Set.uIoc 0 (2 * Real.pi) ×ˢ Set.uIoc 0 (2 * Real.pi)) := by
+  have houterCircle :
+      Continuous (fun p : ℝ × ℝ => circleMap c rout p.1) :=
+    (continuous_circleMap c rout).comp continuous_fst
+  have hinnerCircle :
+      Continuous (fun p : ℝ × ℝ => circleMap c rin p.2) :=
+    (continuous_circleMap c rin).comp continuous_snd
+  have hsep :
+      ∀ p : ℝ × ℝ,
+        circleMap c rin p.2 - circleMap c rout p.1 ≠ 0 := by
+    intro p
+    apply sub_ne_zero.mpr
+    intro heq
+    have hin :
+        dist (circleMap c rin p.2) c = rin :=
+      Metric.mem_sphere.mp (circleMap_mem_sphere c hrin p.2)
+    have hout :
+        dist (circleMap c rout p.1) c = rout :=
+      Metric.mem_sphere.mp (circleMap_mem_sphere c hrout p.1)
+    rw [heq] at hin
+    linarith
+  have hkernel :
+      Continuous
+        (fun p : ℝ × ℝ =>
+          (circleMap c rin p.2 - circleMap c rout p.1)⁻¹) :=
+    Continuous.inv₀ (hinnerCircle.sub houterCircle) hsep
+  have hresCurve :
+      Continuous (fun theta : ℝ => resolvent S (circleMap c rin theta)) := by
+    apply ContinuousOn.comp_continuous hcontIn (continuous_circleMap c rin)
+    exact fun theta => circleMap_mem_sphere c hrin theta
+  have hvecCurve :
+      Continuous (fun theta : ℝ => resolvent S (circleMap c rin theta) x) :=
+    (ContinuousLinearMap.apply ℂ E x).continuous.comp hresCurve
+  have hvec :
+      Continuous
+        (fun p : ℝ × ℝ => resolvent S (circleMap c rin p.2) x) :=
+    hvecCurve.comp continuous_snd
+  have hkernelVec :
+      Continuous
+        (fun p : ℝ × ℝ =>
+          (circleMap c rin p.2 - circleMap c rout p.1)⁻¹ •
+            resolvent S (circleMap c rin p.2) x) :=
+    hkernel.smul hvec
+  have hdout :
+      Continuous (fun theta : ℝ => deriv (circleMap c rout) theta) := by
+    have hderivEq :
+        (fun theta : ℝ => deriv (circleMap c rout) theta) =
+          fun theta : ℝ => circleMap 0 rout theta * Complex.I := by
+      funext theta
+      exact deriv_circleMap c rout theta
+    rw [hderivEq]
+    exact (continuous_circleMap 0 rout).mul_const Complex.I
+  have hdin :
+      Continuous (fun theta : ℝ => deriv (circleMap c rin) theta) := by
+    have hderivEq :
+        (fun theta : ℝ => deriv (circleMap c rin) theta) =
+          fun theta : ℝ => circleMap 0 rin theta * Complex.I := by
+      funext theta
+      exact deriv_circleMap c rin theta
+    rw [hderivEq]
+    exact (continuous_circleMap 0 rin).mul_const Complex.I
+  have hderiv :
+      Continuous
+        (fun p : ℝ × ℝ =>
+          deriv (circleMap c rout) p.1 *
+            deriv (circleMap c rin) p.2) :=
+    (hdout.comp continuous_fst).mul (hdin.comp continuous_snd)
+  have hparam :
+      Continuous
+        (fun p : ℝ × ℝ =>
+          (deriv (circleMap c rout) p.1 *
+              deriv (circleMap c rin) p.2) •
+            ((circleMap c rin p.2 - circleMap c rout p.1)⁻¹ •
+              resolvent S (circleMap c rin p.2) x)) :=
+    hderiv.smul hkernelVec
+  have hcompact :
+      IsCompact
+        (Set.uIcc 0 (2 * Real.pi) ×ˢ Set.uIcc 0 (2 * Real.pi)) :=
+    isCompact_uIcc.prod isCompact_uIcc
+  exact
+    (hparam.continuousOn.integrableOn_compact hcompact).mono_set
+      (Set.prod_mono Set.uIoc_subset_uIcc Set.uIoc_subset_uIcc)
+
 end
 
 end MathlibAnalytic
