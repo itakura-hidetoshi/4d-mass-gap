@@ -8,7 +8,8 @@ local instance canonicalHighTemperatureSpatialRandomScanResolventCompileSmokeSpa
     (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
-#check finiteInfluenceColumnIterateKernel_eq_finiteInfluenceIterateKernel
+#check finiteInfluenceColumnIterateKernel_weighted_subinvariant_step
+#check finiteInfluenceColumnIterateKernel_subinvariant_le_partial_resolvent_add_residual
 #check finiteInfluenceKernelRandomScanUpdatedVariation_card_mul_eq
 #check finiteInfluenceKernelRandomScanVariationPartialSum_resolvent_identity
 #check finiteInfluenceKernelRandomScanFiniteResolventProfile
