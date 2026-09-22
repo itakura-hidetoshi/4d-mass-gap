@@ -576,11 +576,21 @@ private theorem separatedCircle_resolventKernel_parameter_integrable
     hkernel.smul hvec
   have hdout :
       Continuous (fun theta : ℝ => deriv (circleMap c rout) theta) := by
-    rw [funext <| deriv_circleMap c rout]
+    have hderivEq :
+        (fun theta : ℝ => deriv (circleMap c rout) theta) =
+          fun theta : ℝ => circleMap 0 rout theta * Complex.I := by
+      funext theta
+      exact deriv_circleMap c rout theta
+    rw [hderivEq]
     exact (continuous_circleMap 0 rout).mul_const Complex.I
   have hdin :
       Continuous (fun theta : ℝ => deriv (circleMap c rin) theta) := by
-    rw [funext <| deriv_circleMap c rin]
+    have hderivEq :
+        (fun theta : ℝ => deriv (circleMap c rin) theta) =
+          fun theta : ℝ => circleMap 0 rin theta * Complex.I := by
+      funext theta
+      exact deriv_circleMap c rin theta
+    rw [hderivEq]
     exact (continuous_circleMap 0 rin).mul_const Complex.I
   have hderiv :
       Continuous
