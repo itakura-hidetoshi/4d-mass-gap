@@ -5,7 +5,6 @@ namespace MGAP4D.MathlibAnalytic
 noncomputable section
 
 #check realL2CastOfMeasureEq
-#check realL2CastOfMeasureEq_condExpL2
 #check realL2CastOfMeasureEq_compMeasurePreserving
 
 #check
