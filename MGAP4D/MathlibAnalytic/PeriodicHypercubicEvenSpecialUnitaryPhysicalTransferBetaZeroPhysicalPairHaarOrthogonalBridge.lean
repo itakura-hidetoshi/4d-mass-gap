@@ -106,9 +106,9 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2
         H N hN 0 (by norm_num) g A = u A
   rw [hUA]
-  simp [
+  simp only [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumFunction,
-    hOneA, hgA]
+    hOneA, hgA, div_one]
 
 /-- At beta zero, vanishing of the ambient Haar-L2 transfer image forces the
 Doob boundary image of the ground-state transform to vanish.  Surjectivity of
