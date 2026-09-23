@@ -114,6 +114,21 @@ zero continuous linear map. -/
     periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_zero_apply_topEigenspaceOrthogonal
       H N hN x
 
+/-- On the generic Hilbert carrier, an orthogonal restriction identified
+with the zero continuous linear map has zero operator norm.  Keeping this
+argument generic avoids reconstructing the real normed-space instance for an
+already bundled concrete orthogonal-subspace operator. -/
+theorem realHilbertTopEigenspaceOrthogonalRestriction_norm_eq_zero_of_eq_zero
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    (S : E →L[ℝ] E)
+    (hS : (S : E →ₗ[ℝ] E).IsSymmetric)
+    (hzero : realHilbertTopEigenspaceOrthogonalRestriction S hS = 0) :
+    ‖realHilbertTopEigenspaceOrthogonalRestriction S hS‖ = 0 := by
+  rw [hzero]
+  exact ContinuousLinearMap.opNorm_zero
+
 /-- Exact norm of the beta-zero top-orthogonal restriction. -/
 @[simp] theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_zero_norm
@@ -121,9 +136,22 @@ zero continuous linear map. -/
     (hN : 0 < N) :
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
         H N hN 0 (by norm_num)‖ = 0 := by
-  rw [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_zero_eq_zero,
-    ContinuousLinearMap.opNorm_zero]
+  let S :=
+    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+      H N hN 0 (by norm_num)
+  let hS : (S :
+      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N →ₗ[ℝ]
+        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N).IsSymmetric :=
+    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+      H N hN 0 (by norm_num)
+  change ‖realHilbertTopEigenspaceOrthogonalRestriction S hS‖ = 0
+  apply realHilbertTopEigenspaceOrthogonalRestriction_norm_eq_zero_of_eq_zero
+  change
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN 0 (by norm_num) = 0
+  exact
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_zero_eq_zero
+      H N hN
 
 /-- Exact finite-volume beta-zero transfer gap: it is one, independently of
 the finite spatial volume. -/
