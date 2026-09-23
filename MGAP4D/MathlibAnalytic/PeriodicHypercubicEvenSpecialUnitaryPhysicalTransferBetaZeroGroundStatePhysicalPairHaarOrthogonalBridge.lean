@@ -76,7 +76,7 @@ theorem realL2_product_snd_mean_zero_mem_fst_orthogonal
   have hgSnd : StronglyMeasurable[mSnd] g := by
     exact hfSnd.stronglyMeasurable_mk
   have hgLp : MemLp g 2 (μ.prod ν) := by
-    exact (Lp.memLp f).ae_eq hfg
+    exact (memLp_congr_ae hfg).1 (Lp.memLp f)
   have hIndepFstSnd : Indep mFst mSnd (μ.prod ν) := by
     change IndepFun Prod.fst Prod.snd (μ.prod ν)
     simpa using
