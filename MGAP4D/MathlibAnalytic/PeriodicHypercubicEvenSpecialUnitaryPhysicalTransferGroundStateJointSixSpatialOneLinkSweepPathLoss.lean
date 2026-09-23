@@ -325,9 +325,10 @@ noncomputable def
     (f : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
       H N hN beta hbeta) : ℝ :=
   (1 / 6 : ℝ) *
-    ∑ color : PeriodicHypercubicEvenGroundStateSpatialColor,
+    ∑ c : Fin 6,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkSweepPathLoss
-        H N hN beta hbeta color f
+        H N hN beta hbeta
+        (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c) f
 
 /-- The normalized six-color one-link sweep path loss is bounded by the genuine
 six-spatial block residual energy with coefficient one, uniformly in volume. -/
@@ -344,16 +345,19 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSixSpatialResidualEnergy
         H N hN beta hbeta f := by
   have hSum :
-      (∑ color : PeriodicHypercubicEvenGroundStateSpatialColor,
+      (∑ c : Fin 6,
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkSweepPathLoss
-          H N hN beta hbeta color f) ≤
-        ∑ color : PeriodicHypercubicEvenGroundStateSpatialColor,
+          H N hN beta hbeta
+          (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c) f) ≤
+        ∑ c : Fin 6,
           ‖f -
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2
-              H N hN beta hbeta color f‖ ^ 2 := by
-    exact Finset.sum_le_sum fun color _ =>
+              H N hN beta hbeta
+              (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c) f‖ ^ 2 := by
+    exact Finset.sum_le_sum fun c _ =>
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkSweepPathLoss_le_colorResidual
-        H N hN beta hbeta color f
+        H N hN beta hbeta
+        (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c) f
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialOneLinkSweepPathLoss
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSixSpatialResidualEnergy
@@ -361,7 +365,7 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2
   have hSix : (0 : ℝ) ≤ 1 / 6 := by norm_num
   have hScaled := mul_le_mul_of_nonneg_left hSum hSix
-  simpa [periodicHypercubicEvenGroundStateSpatialColor_card] using hScaled
+  simpa using hScaled
 
 end
 
