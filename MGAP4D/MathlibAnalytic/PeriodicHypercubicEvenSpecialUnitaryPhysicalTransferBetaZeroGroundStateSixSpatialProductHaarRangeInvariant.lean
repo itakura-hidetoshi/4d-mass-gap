@@ -628,7 +628,6 @@ theorem
       (Lp.memLp z).condExpL2_ae_eq_condExp
         (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
           H N (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c))
-        (Lp.memLp z)
 
   have hcMeas :
       AEStronglyMeasurable[md]
@@ -647,6 +646,14 @@ theorem
           ω := by
       simpa [md, mc, ω] using hcondMeas
     exact hce.congr hL2Cond.symm
+
+  letI : Fact
+      (md ≤
+        (inferInstance : MeasurableSpace
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))) :=
+    ⟨periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
+      H N (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm d)⟩
 
   let q : lpMeas ℝ ℝ md 2 ω :=
     ⟨
