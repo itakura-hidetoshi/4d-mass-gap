@@ -41,11 +41,17 @@ local instance betaZeroRangeInvariantBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
+local instance betaZeroRangeInvariantCompletelyMetrizableSpace (N : ℕ) :
+    TopologicalSpace.IsCompletelyMetrizableSpace
+      (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  TopologicalSpace.IsCompletelyMetrizableSpace.of_completeSpace_metrizable
+
 local instance betaZeroRangeInvariantPolishSpace (N : ℕ) :
     PolishSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) := by
   exact
     { toSecondCountableTopology := betaZeroRangeInvariantSecondCountableTopology N
-      toIsCompletelyMetrizableSpace := by infer_instance }
+      toIsCompletelyMetrizableSpace :=
+        betaZeroRangeInvariantCompletelyMetrizableSpace N }
 
 local instance betaZeroRangeInvariantStandardBorelSpace (N : ℕ) :
     StandardBorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
