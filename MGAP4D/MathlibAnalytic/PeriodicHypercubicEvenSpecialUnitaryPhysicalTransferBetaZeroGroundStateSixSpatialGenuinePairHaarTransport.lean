@@ -62,9 +62,8 @@ noncomputable def realL2CastOfMeasureEq
     (hμν : μ = ν) :
     Lp ℝ 2 μ → Lp ℝ 2 ν :=
   fun f =>
-    cast
-      (congrArg (fun ρ : Measure α => Lp ℝ 2 ρ) hμν)
-      f
+    match hμν with
+    | rfl => f
 
 @[simp] theorem realL2CastOfMeasureEq_rfl
     {α : Type*}
@@ -112,9 +111,9 @@ theorem realL2CastOfMeasureEq_coeFn
 sub-sigma-algebra. -/
 theorem realL2CastOfMeasureEq_condExpL2
     {α : Type*}
-    [MeasurableSpace α]
-    (m : MeasurableSpace α)
-    (hm : m ≤ (inferInstance : MeasurableSpace α))
+    [m0 : MeasurableSpace α]
+    {m : MeasurableSpace α}
+    (hm : m ≤ m0)
     {μ ν : Measure α}
     (hμν : μ = ν)
     (f : Lp ℝ 2 μ) :
@@ -146,6 +145,8 @@ theorem realL2CastOfMeasureEq_compMeasurePreserving
         (realL2CastOfMeasureEq hβ f) := by
   cases hα
   cases hβ
+  have hproof : hmp = hmp' := Subsingleton.elim _ _
+  cases hproof
   rfl
 
 /-- The genuine beta-zero vacuum L2 carrier cast to literal spatial Haar L2. -/
@@ -176,6 +177,23 @@ noncomputable def
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_zero_eq_pairHaar
       H N hN)
     z
+
+@[simp] theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2_norm
+    (H N : ℕ)
+    (hN : 0 < N)
+    (z :
+      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+        H N hN 0 (by norm_num)) :
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
+        H N hN z‖ = ‖z‖ := by
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
+  exact
+    realL2CastOfMeasureEq_norm
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_zero_eq_pairHaar
+        H N hN)
+      z
 
 /-- At beta zero the ground-state transform becomes the identity after the
 exact vacuum-measure cast. -/
@@ -222,6 +240,8 @@ theorem
   have hOne :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_zero_coeFn_ae_eq_one
       H N hN
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroVacuumToHaarL2
   apply Lp.ext
   filter_upwards [hCast, hUμ, hOne] with A hCastA hUA hOneA
   rw [hCastA, hUA]
@@ -303,8 +323,13 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorPairHaarProjection_apply]
   exact
     realL2CastOfMeasureEq_condExpL2
-      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
-        H N color)
+      (m0 := (Prod.instMeasurableSpace :
+        MeasurableSpace
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)))
+      (m :=
+        periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+          H N color)
       (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
         H N color)
       hJoint z
@@ -332,9 +357,8 @@ theorem
   apply Finset.sum_congr rfl
   intro c _hc
   have hnorm :=
-    realL2CastOfMeasureEq_norm
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_zero_eq_pairHaar
-        H N hN)
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2_norm
+      H N hN
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2
         H N hN 0 (by norm_num) c z)
   have hintertwine :=
@@ -476,7 +500,7 @@ theorem
       (fun x =>
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroPhysicalSixSpatialMeanProjection_five_six
           H N hN x)
-  norm_num at hGap ⊢
+  norm_num at hGap
   exact hGap
 
 /-- Consistency package: the six-spatial receiver yields 1/16, while the
