@@ -41,6 +41,14 @@ local instance betaZeroRangeInvariantBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
+local instance betaZeroRangeInvariantAmbientMatrixSecondCountableTopology (N : ℕ) :
+    SecondCountableTopology (Matrix (Fin N) (Fin N) ℂ) :=
+  specialUnitaryAmbientMatrixSecondCountableTopology N
+
+local instance betaZeroRangeInvariantAmbientMatrixPolishSpace (N : ℕ) :
+    PolishSpace (Matrix (Fin N) (Fin N) ℂ) :=
+  inferInstance
+
 local instance betaZeroRangeInvariantPolishSpace (N : ℕ) :
     PolishSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   (specialUnitaryGroup_isClosed N).polishSpace
@@ -487,7 +495,7 @@ theorem
           (inferInstance : MeasurableSpace
             ((PairHaarPiCommonIndex p q → G) ×
               (PairHaarPiRightOnlyIndex p q → G))) := by
-    have h := MeasurableSpace.comap_mono hrightLePi
+    have h := MeasurableSpace.comap_mono (g := E) hrightLePi
     simpa [e3, T, Function.comp_def, MeasurableSpace.comap_comp] using
       (show
         MeasurableSpace.comap E
@@ -540,7 +548,7 @@ theorem
         MeasurableSpace.comap
           ((pairHaarPiRestriction (K := G) q) ∘ E)
           (inferInstance : MeasurableSpace ({i : I // q i} → G)) := by
-    have h := MeasurableSpace.comap_mono hbaseLePi
+    have h := MeasurableSpace.comap_mono (g := E) hbaseLePi
     simpa [e3, T, Function.comp_def, MeasurableSpace.comap_comp] using
       (show
         MeasurableSpace.comap E
