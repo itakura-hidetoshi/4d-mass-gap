@@ -1,0 +1,21 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroPhysicalPairHaarOrthogonalBridge
+
+namespace MGAP4D.MathlibAnalytic
+
+noncomputable section
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2LinearIsometry_zero_surjective
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateDoobHaarToVacuum_zero_eq_zero_of_ambientTransfer_zero
+
+#check
+  periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_zero_apply_physicalTopOrthogonal
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp_zero_rightBoundary_physicalTopOrthogonal
+
+end
+
+end MGAP4D.MathlibAnalytic
