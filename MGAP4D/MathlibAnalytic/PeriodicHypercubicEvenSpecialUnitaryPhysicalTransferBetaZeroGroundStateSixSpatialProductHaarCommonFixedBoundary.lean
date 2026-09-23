@@ -142,11 +142,12 @@ theorem
   have h :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightSixRetainedLpMeas_eq_fst
       H N hN 0 (by norm_num)
-  simpa [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightSixRetainedLpMeas,
-    PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2,
+  rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_zero_eq_pairHaar
-      H N hN] using h
+      H N hN] at h
+  simpa [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightSixRetainedLpMeas]
+    using h
 
 /-- Canonical identification of the actual beta-zero six-spatial full-sweep
 fixed sector: it is precisely the complete left-boundary measurable L2
