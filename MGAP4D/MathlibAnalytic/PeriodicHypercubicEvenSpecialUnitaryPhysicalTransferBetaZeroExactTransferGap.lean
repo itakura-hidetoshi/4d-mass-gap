@@ -135,7 +135,10 @@ zero continuous linear map. -/
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
         H N hN 0 (by norm_num)‖ =
         ‖(0 : K →L[ℝ] K)‖ := congrArg norm hzero
-    _ = 0 := norm_zero
+    _ = 0 := by
+      have hzeroNorm : ‖(0 : K →L[ℝ] K)‖ = 0 :=
+        ContinuousLinearMap.opNorm_zero
+      exact hzeroNorm
 
 /-- Exact finite-volume beta-zero transfer gap: it is one, independently of
 the finite spatial volume. -/
