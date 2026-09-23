@@ -288,11 +288,7 @@ beta-zero finite-volume physical transfer gap = 1
 
 independently of finite volume.
 
-At the time of this docs refresh, its exact head is:
-
-**521e2524b821df4cc0c7c46f580b247c2c669aa7**
-
-and its PR Lean Fast Check is still in progress. Until merged, the authoritative theorem-bearing baseline remains #4656.
+Because #4657 is open and its head can move, this document does not pin its exact head or CI receipt. Re-observe the PR before using it. Until it is merged, the authoritative theorem-bearing baseline remains #4656.
 
 ## 6. Next L2 theorem unit after the exact beta-zero gap
 
