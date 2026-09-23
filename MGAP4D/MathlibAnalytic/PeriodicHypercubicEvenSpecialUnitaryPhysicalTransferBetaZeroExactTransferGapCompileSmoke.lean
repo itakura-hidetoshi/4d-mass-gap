@@ -1,0 +1,27 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroExactTransferGap
+
+namespace MGAP4D.MathlibAnalytic
+
+noncomputable section
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_mem_topEigenspace_zero
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal_zero_inner_constantUnit
+
+#check
+  periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_zero_apply_topEigenspaceOrthogonal
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_zero_eq_zero
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_zero_norm
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceTransferGap_zero
+
+end
+
+end MGAP4D.MathlibAnalytic
