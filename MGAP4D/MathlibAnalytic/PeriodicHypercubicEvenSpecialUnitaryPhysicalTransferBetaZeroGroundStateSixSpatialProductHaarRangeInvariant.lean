@@ -2,6 +2,7 @@ import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransf
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateJointSixRetainedPairHaarBoundaryAEMeasurability
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateJointPairHaarPiAEIntersection
 import MGAP4D.MathlibAnalytic.ProductProbabilitySharedBaseConditionalExpectation
+import Mathlib.MeasureTheory.Constructions.Polish.Basic
 import Mathlib.Probability.Kernel.CondDistrib
 import Mathlib.Tactic
 
@@ -39,6 +40,14 @@ local instance betaZeroRangeInvariantMeasurableSpace (N : ℕ) :
 local instance betaZeroRangeInvariantBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
+
+local instance betaZeroRangeInvariantPolishSpace (N : ℕ) :
+    PolishSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  (specialUnitaryGroup_isClosed N).polishSpace
+
+local instance betaZeroRangeInvariantStandardBorelSpace (N : ℕ) :
+    StandardBorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  inferInstance
 
 local instance betaZeroRangeInvariantSpatialSliceLinkFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
@@ -447,7 +456,6 @@ theorem
     rw [
       periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_eq_comap_rightRetainedCoordinateRestriction,
       periodicHypercubicEvenSpecialUnitaryGroundStateJointRightRetainedCoordinateRestriction_eq_piRestriction_comp]
-    rfl
 
   have hqSpace :
       periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
@@ -458,7 +466,6 @@ theorem
     rw [
       periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_eq_comap_rightRetainedCoordinateRestriction,
       periodicHypercubicEvenSpecialUnitaryGroundStateJointRightRetainedCoordinateRestriction_eq_piRestriction_comp]
-    rfl
 
   have hd' :
       AEStronglyMeasurable[
@@ -566,120 +573,149 @@ theorem
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaarProjection
         H N d).toLinearMap.range := by
   rcases hx with ⟨y, rfl⟩
-  let md :=
-    periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
-      H N (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm d)
-  let mc :=
-    periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
-      H N (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c)
-  let ω :=
-    periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N
-  let z :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaarProjection
-      H N d y
 
   have hzMeas :
-      AEStronglyMeasurable[md]
-        (z :
+      AEStronglyMeasurable[
+        periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+          H N (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm d)]
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaarProjection
+          H N d y :
           (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
             PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
-        ω := by
-    change AEStronglyMeasurable[md]
-      ((condExpL2 ℝ ℝ
-        (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
-          H N (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm d))
-        y :
-          lpMeas ℝ ℝ md 2 ω) :
-        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ) ω
+        (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) := by
+    change
+      AEStronglyMeasurable[
+        periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+          H N (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm d)]
+        ((condExpL2 ℝ ℝ
+          (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
+            H N (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm d))
+          y :
+            lpMeas ℝ ℝ
+              (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+                H N (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm d))
+              2
+              (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N)) :
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
+        (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N)
     exact lpMeas.aestronglyMeasurable _
 
   have hzInt :
       Integrable
-        (z :
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaarProjection
+          H N d y :
           (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
             PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
-        ω := by
+        (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) := by
     rw [← memLp_one_iff_integrable]
-    exact (Lp.memLp z).mono_exponent (by norm_num)
+    exact
+      (Lp.memLp
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaarProjection
+          H N d y)).mono_exponent (by norm_num)
 
   have hcondMeas :=
     periodicHypercubicEvenSpecialUnitaryGroundStatePairHaar_condExp_color_preserves_color
       H N c d
-      (z :
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaarProjection
+        H N d y :
         (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
-      (by simpa [md, ω] using hzMeas)
-      (by simpa [ω] using hzInt)
+      hzMeas hzInt
 
   let hcLe :=
     periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
       H N (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c)
 
   have hL2Cond :
-      (condExpL2 ℝ ℝ hcLe z :
-        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStatePairHaarL2 H N) =ᵐ[ω]
-      ω[
-        (z :
-          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ) |
-        mc] := by
-    simpa [mc, ω, hcLe] using
-      (Lp.memLp z).condExpL2_ae_eq_condExp
+      (condExpL2 ℝ ℝ hcLe
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaarProjection
+          H N d y) :
+        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStatePairHaarL2 H N) =ᵐ[
+          periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N]
+        (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N)[
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaarProjection
+            H N d y :
+            (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+              PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ) |
+          periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+            H N (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c)] := by
+    simpa [hcLe] using
+      (Lp.memLp
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaarProjection
+          H N d y)).condExpL2_ae_eq_condExp
         (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
           H N (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c))
 
   have hcMeas :
-      AEStronglyMeasurable[md]
-        ((condExpL2 ℝ ℝ hcLe z :
+      AEStronglyMeasurable[
+        periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+          H N (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm d)]
+        ((condExpL2 ℝ ℝ hcLe
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaarProjection
+            H N d y) :
           PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStatePairHaarL2 H N) :
           (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
             PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
-        ω := by
-    have hce :
-        AEStronglyMeasurable[md]
-          (ω[
-            (z :
-              (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-                PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ) |
-            mc])
-          ω := by
-      simpa [md, mc, ω] using hcondMeas
-    exact hce.congr hL2Cond.symm
+        (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) := by
+    exact hcondMeas.congr hL2Cond.symm
 
   letI : Fact
-      (md ≤
+      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+          H N (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm d) ≤
         (inferInstance : MeasurableSpace
           (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
             PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))) :=
     ⟨periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
       H N (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm d)⟩
 
-  let q : lpMeas ℝ ℝ md 2 ω :=
+  let q :
+      lpMeas ℝ ℝ
+        (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+          H N (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm d))
+        2
+        (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) :=
     ⟨
-      (condExpL2 ℝ ℝ hcLe z :
+      (condExpL2 ℝ ℝ hcLe
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaarProjection
+          H N d y) :
         PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStatePairHaarL2 H N),
       mem_lpMeas_iff_aestronglyMeasurable.mpr hcMeas
     ⟩
 
   refine ⟨
-    (condExpL2 ℝ ℝ hcLe z :
+    (condExpL2 ℝ ℝ hcLe
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaarProjection
+        H N d y) :
       PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStatePairHaarL2 H N), ?_⟩
-  change
-    (condExpL2 ℝ ℝ
-      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
-        H N (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm d))
-      (q :
-        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStatePairHaarL2 H N) :
-      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStatePairHaarL2 H N) =
-    (q :
-      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStatePairHaarL2 H N)
-  unfold condExpL2
-  exact congrArg
-    (fun u : lpMeas ℝ ℝ md 2 ω =>
-      (u : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStatePairHaarL2 H N))
-    (Submodule.orthogonalProjection_mem_subspace_eq_self q)
 
+  have hq :
+      (condExpL2 ℝ ℝ
+        (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
+          H N (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm d))
+        (q :
+          PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStatePairHaarL2 H N) :
+        lpMeas ℝ ℝ
+          (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+            H N (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm d))
+          2
+          (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N)) = q := by
+    unfold condExpL2
+    exact Submodule.orthogonalProjection_mem_subspace_eq_self q
+
+  have hCoe := congrArg
+    (fun u : lpMeas ℝ ℝ
+        (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+          H N (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm d))
+        2
+        (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) =>
+      (u :
+        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStatePairHaarL2 H N))
+    hq
+
+  simpa [q, hcLe,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaarProjection]
+    using hCoe
 end
 
 end MathlibAnalytic
