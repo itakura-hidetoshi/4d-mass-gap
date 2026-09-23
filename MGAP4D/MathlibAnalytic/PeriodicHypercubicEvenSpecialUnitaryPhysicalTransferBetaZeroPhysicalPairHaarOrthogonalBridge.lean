@@ -102,6 +102,9 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2_coeFn
       H N hN 0 (by norm_num) g
   filter_upwards [hU, hOneν, hgν] with A hUA hOneA hgA
+  change
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2
+        H N hN 0 (by norm_num) g A = u A
   rw [hUA, hgA]
   simp [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumFunction,
