@@ -1,0 +1,17 @@
+import MGAP4D.MathlibAnalytic.RealHilbertProjectionSweepStageProfile
+
+namespace MGAP4D.MathlibAnalytic
+
+noncomputable section
+
+#check realHilbertProjectionSweepStageResidualSqProfile
+#check realHilbertProjectionSweepStageResidualSqProfile_nonneg
+#check realHilbertProjectionSweepStageResidualSqProfile_sum_eq_pathLoss
+#check realHilbertProjectionSweepStageResidualAmplitude
+#check realHilbertProjectionSweepStageResidualAmplitude_nonneg
+#check realHilbertProjectionSweepStageResidualAmplitude_sq
+#check realHilbertProjectionSweepStageResidualAmplitude_sq_sum_eq_pathLoss
+
+end
+
+end MGAP4D.MathlibAnalytic
