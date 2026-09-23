@@ -158,8 +158,12 @@ theorem
     simpa [mAmbient, mRetained] using hmRetained
   have hGsmAmbient : StronglyMeasurable[mAmbient] G :=
     hGsmRetained.mono hmRetainedAmbient
-  have hGsm : StronglyMeasurable G := by
-    simpa [mAmbient] using hGsmAmbient
+  letI : MeasurableSpace
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :=
+    mAmbient
+  have hGsm : StronglyMeasurable G :=
+    hGsmAmbient
   have hS : MeasurableSet S := by
     dsimp [S]
     exact measurableSet_le hGsm.norm.measurable measurable_const
