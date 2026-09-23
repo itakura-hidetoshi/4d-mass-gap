@@ -51,11 +51,10 @@ theorem condDistrib_snd_fst_prod_ae_eq_const
     exact
       condDistrib_ae_eq_of_measure_eq_compProd
         (μ := μ.prod ν)
-        (X := Prod.fst)
         (Y := Prod.snd)
-        (hX := measurable_fst.aemeasurable)
-        (hY := measurable_snd.aemeasurable)
-        (hκ := hκ)
+        Prod.fst
+        measurable_snd.aemeasurable
+        hκ
   simpa using h
 
 /-- On a product probability space, conditional expectation onto the
