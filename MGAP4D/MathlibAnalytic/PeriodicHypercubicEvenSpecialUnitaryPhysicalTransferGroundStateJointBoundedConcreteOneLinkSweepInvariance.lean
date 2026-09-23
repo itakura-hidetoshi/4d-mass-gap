@@ -150,16 +150,16 @@ theorem
     filter_upwards [hGle, hleG] with z hzUpper hzLower
     rw [Real.norm_eq_abs]
     exact abs_le.mpr ⟨hzLower, hzUpper⟩
-  have hGsmRetained : StronglyMeasurable[m] G := by
+  have hGsmRetained : StronglyMeasurable[mRetained] G := by
     simpa [G] using
       (MeasureTheory.stronglyMeasurable_condExp
         (μ := μJ) (m := mRetained) (f := F))
+  have hmRetainedAmbient : mRetained ≤ mAmbient := by
+    simpa [mAmbient, mRetained] using hmRetained
+  have hGsmAmbient : StronglyMeasurable[mAmbient] G :=
+    hGsmRetained.mono hmRetainedAmbient
   have hGsm : StronglyMeasurable G := by
-    exact hGsmRetained.mono
-      (m := (inferInstance : MeasurableSpace
-        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)))
-      hm
+    simpa [mAmbient] using hGsmAmbient
   have hS : MeasurableSet S := by
     dsimp [S]
     exact measurableSet_le hGsm.norm.measurable measurable_const
