@@ -3,20 +3,20 @@ import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransf
 import Mathlib.Tactic
 
 /-!
-# Beta-zero six-spatial ground-state projections are product-Haar projections
+# Beta-zero pair-Haar carrier and six-spatial coordinate projections
 
 At beta = 0 the genuine ground-state joint law is exactly pair Haar.  This
-module makes that measure identity visible at the operator level.
+module exposes the corresponding literal pair-Haar L2 carrier and the six
+coordinate/color conditional-expectation projections on that carrier.
 
-For one spatial color we define the corresponding conditional-expectation
-orthogonal projection using pair Haar literally as the measure argument.  The
-target type is transported back to the canonical beta-zero ground-state joint
-L2 carrier through the already-proved exact measure equality.  We then identify
-the genuine Wilson ground-state conditional expectation with this product-Haar
-projection, first colorwise and then as the full Fin 6 family.
+The key design point is to keep the product-Haar operator definitions on their
+literal measure carrier.  The canonical ground-state beta-zero L2 carrier is
+identified with that carrier by a small type-equality theorem, rather than by
+rewriting a proof-indexed Lp type inside every continuous-linear-map
+definition.  This avoids expensive dependent elaboration and leaves operator
+transport to the next, dedicated theorem unit.
 
-No commutation statement is made here.  Pairwise commutation is the next
-product-Haar/Fubini unit.
+No commutation statement is made here.
 -/
 
 namespace MGAP4D.MathlibAnalytic
@@ -55,79 +55,56 @@ local instance betaZeroSixSpatialProductHaarProjectionSpatialLinkFintype
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
-/-- The literal pair-Haar conditional-expectation projection which forgets one
-right-boundary spatial color, transported to the canonical beta-zero
-ground-state joint L2 carrier by the exact equality of measures. -/
-noncomputable def
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorProductHaarProjection_zero
+/-- Literal pair-Haar real L2 carrier for two spatial slices. -/
+abbrev PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStatePairHaarL2
+    (H N : ℕ) : Type :=
+  Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N)
+
+/-- The canonical beta-zero ground-state joint L2 carrier is the literal
+pair-Haar L2 carrier.  This is the type-level form of the exact measure theorem
+from the preceding unit. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2_zero_eq_pairHaarL2
     (H N : ℕ)
-    (hN : 0 < N)
-    (color : PeriodicHypercubicEvenGroundStateSpatialColor) :
+    (hN : 0 < N) :
     PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-        H N hN 0 (by norm_num) →L[ℝ]
-      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-        H N hN 0 (by norm_num) := by
-  rw [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_zero_eq_pairHaar
-      H N hN]
-  exact
-    (Submodule.subtypeL
-      (lpMeas ℝ ℝ
-        (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
-          H N color) 2
-        (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N))).comp
-      (condExpL2 ℝ ℝ
-        (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
-          H N color))
-
-/-- At beta = 0 the genuine one-color Wilson ground-state conditional
-expectation is exactly the corresponding literal pair-Haar projection. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_zero_eq_productHaarProjection
-    (H N : ℕ)
-    (hN : 0 < N)
-    (color : PeriodicHypercubicEvenGroundStateSpatialColor) :
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2
-        H N hN 0 (by norm_num) color =
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorProductHaarProjection_zero
-        H N hN color := by
-  unfold
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorProductHaarProjection_zero
-  rw [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_zero_eq_pairHaar
-      H N hN]
-
-/-- The literal pair-Haar six-spatial projection family, indexed by Fin 6. -/
-noncomputable def
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialProductHaarProjection_zero
-    (H N : ℕ)
-    (hN : 0 < N) :
-    Fin 6 →
-      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-          H N hN 0 (by norm_num) →L[ℝ]
-        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-          H N hN 0 (by norm_num) :=
-  fun c =>
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorProductHaarProjection_zero
-      H N hN
-      (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c)
-
-/-- The whole genuine beta-zero six-spatial conditional-expectation family is
-the literal product-Haar family. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2_zero_eq_productHaarProjection
-    (H N : ℕ)
-    (hN : 0 < N) :
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2
         H N hN 0 (by norm_num) =
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialProductHaarProjection_zero
-        H N hN := by
-  funext c
-  exact
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_zero_eq_productHaarProjection
-      H N hN
-      (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c)
+      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStatePairHaarL2
+        H N := by
+  unfold
+    PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+    PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStatePairHaarL2
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_zero_eq_pairHaar
+      H N hN]
+
+/-- Literal pair-Haar orthogonal projection which forgets one right-boundary
+spatial color. -/
+noncomputable def
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorPairHaarProjection
+    (H N : ℕ)
+    (color : PeriodicHypercubicEvenGroundStateSpatialColor) :
+    PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStatePairHaarL2 H N →L[ℝ]
+      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStatePairHaarL2 H N :=
+  (Submodule.subtypeL
+    (lpMeas ℝ ℝ
+      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+        H N color) 2
+      (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N))).comp
+    (condExpL2 ℝ ℝ
+      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
+        H N color))
+
+/-- The six literal pair-Haar spatial projections, indexed by Fin 6. -/
+noncomputable def
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaarProjection
+    (H N : ℕ) :
+    Fin 6 →
+      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStatePairHaarL2 H N →L[ℝ]
+        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStatePairHaarL2 H N :=
+  fun c =>
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorPairHaarProjection
+      H N (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c)
 
 end
 
