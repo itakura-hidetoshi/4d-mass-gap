@@ -270,14 +270,7 @@ beta-zero finite-volume physical transfer gap = 1
 
 independently of finite volume.
 
-Current exact PR head at this docs refresh:
-
-**521e2524b821df4cc0c7c46f580b247c2c669aa7**
-
-Current CI state at this docs refresh:
-
-- PR Lean Fast Check #14785 / run 35804699825;
-- Changed Lean fast check is in progress.
+Because #4657 is open and its head can move, this roadmap does not pin its exact head or CI receipt. Re-observe the PR before using its theorem as authority.
 
 ### Acceptance criterion
 
