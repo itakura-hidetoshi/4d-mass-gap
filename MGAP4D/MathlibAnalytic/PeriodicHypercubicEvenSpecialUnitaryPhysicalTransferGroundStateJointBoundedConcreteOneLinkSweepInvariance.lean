@@ -130,7 +130,8 @@ theorem
     have h :=
       MeasureTheory.condExp_mono
         (m := m) hFint hConstB hFle
-    simpa [G, MeasureTheory.condExp_const hm] using h
+    rw [MeasureTheory.condExp_const hm B] at h
+    simpa [G] using h
   have hleG :
       (fun _ :
         (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
@@ -139,15 +140,18 @@ theorem
     have h :=
       MeasureTheory.condExp_mono
         (m := m) hConstNegB hFint hleF
-    simpa [G, MeasureTheory.condExp_const hm] using h
+    rw [MeasureTheory.condExp_const hm (-B)] at h
+    simpa [G] using h
   have hGabs : ∀ᵐ z ∂μJ, ‖G z‖ ≤ B := by
     filter_upwards [hGle, hleG] with z hzUpper hzLower
     rw [Real.norm_eq_abs]
     exact abs_le.mpr ⟨hzLower, hzUpper⟩
-  have hGsm : StronglyMeasurable G := by
+  have hGsmRetained : StronglyMeasurable[m] G := by
     simpa [G] using
       (MeasureTheory.stronglyMeasurable_condExp
         (μ := μJ) (m := m) (f := F))
+  have hGsm : StronglyMeasurable G :=
+    hGsmRetained.mono hm
   have hS : MeasurableSet S := by
     dsimp [S]
     exact measurableSet_le hGsm.norm.measurable measurable_const
@@ -157,7 +161,7 @@ theorem
     intro z
     by_cases hz : z ∈ S
     · simpa [G', Set.indicator_of_mem hz] using hz
-    · simp [G', Set.indicator_of_not_mem hz, hB0]
+    · simp [G', hz, hB0]
   have hG'eqG : G' =ᵐ[μJ] G := by
     filter_upwards [hGabs] with z hz
     have hzS : z ∈ S := by
