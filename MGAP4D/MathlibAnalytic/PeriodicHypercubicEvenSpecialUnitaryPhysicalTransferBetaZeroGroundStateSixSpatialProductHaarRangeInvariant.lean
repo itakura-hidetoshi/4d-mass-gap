@@ -47,7 +47,8 @@ local instance betaZeroRangeInvariantAmbientMatrixSecondCountableTopology (N : �
 
 local instance betaZeroRangeInvariantAmbientMatrixPolishSpace (N : ℕ) :
     PolishSpace (Matrix (Fin N) (Fin N) ℂ) :=
-  inferInstance
+  ⟨specialUnitaryAmbientMatrixSecondCountableTopology N,
+    MetricSpace.toIsCompletelyMetrizableSpace⟩
 
 local instance betaZeroRangeInvariantPolishSpace (N : ℕ) :
     PolishSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
