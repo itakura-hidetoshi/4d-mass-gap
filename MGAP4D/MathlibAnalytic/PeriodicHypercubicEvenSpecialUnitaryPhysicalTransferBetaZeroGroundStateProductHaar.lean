@@ -172,13 +172,19 @@ theorem
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumWeight
             H N hN 0 (by norm_num) A)) =
       μ
-  rw [← MeasureTheory.withDensity_one]
-  apply withDensity_congr_ae
-  filter_upwards [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumWeight_zero_ae_eq_one
-      H N hN] with A hA
-  rw [hA]
-  norm_num
+  calc
+    μ.withDensity
+        (fun A => ENNReal.ofReal
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumWeight
+            H N hN 0 (by norm_num) A)) =
+      μ.withDensity 1 := by
+        apply withDensity_congr_ae
+        filter_upwards [
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumWeight_zero_ae_eq_one
+            H N hN] with A hA
+        rw [hA]
+        norm_num
+    _ = μ := MeasureTheory.withDensity_one
 
 /-- At beta = 0 the genuine one-slab ground-state joint measure is exactly the
 product of the two spatial Haar laws. -/
@@ -197,13 +203,19 @@ theorem
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight
             H N hN 0 (by norm_num) z)) =
       μ
-  rw [← MeasureTheory.withDensity_one]
-  apply withDensity_congr_ae
-  filter_upwards [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight_zero_ae_eq_one
-      H N hN] with z hz
-  rw [hz]
-  norm_num
+  calc
+    μ.withDensity
+        (fun z => ENNReal.ofReal
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight
+            H N hN 0 (by norm_num) z)) =
+      μ.withDensity 1 := by
+        apply withDensity_congr_ae
+        filter_upwards [
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight_zero_ae_eq_one
+            H N hN] with z hz
+        rw [hz]
+        norm_num
+    _ = μ := MeasureTheory.withDensity_one
 
 end
 
