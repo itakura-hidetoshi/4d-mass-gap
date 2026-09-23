@@ -172,7 +172,7 @@ theorem
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumWeight
             H N hN 0 (by norm_num) A)) =
       μ
-  rw [← MeasureTheory.withDensity_one μ]
+  rw [← MeasureTheory.withDensity_one]
   apply withDensity_congr_ae
   filter_upwards [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumWeight_zero_ae_eq_one
@@ -197,7 +197,7 @@ theorem
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight
             H N hN 0 (by norm_num) z)) =
       μ
-  rw [← MeasureTheory.withDensity_one μ]
+  rw [← MeasureTheory.withDensity_one]
   apply withDensity_congr_ae
   filter_upwards [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight_zero_ae_eq_one
