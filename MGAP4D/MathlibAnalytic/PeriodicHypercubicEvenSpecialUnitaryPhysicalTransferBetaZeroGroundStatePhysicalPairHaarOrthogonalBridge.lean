@@ -141,12 +141,27 @@ theorem realL2_product_snd_mean_zero_mem_fst_orthogonal
     rw [← hToLp]
     exact hCondL2.trans hCondZero
   have hProjectionZero :
-      condExpL2 ℝ ℝ hleFst f = 0 := by
-    apply Subtype.ext
+      (condExpL2 ℝ ℝ hleFst f :
+        Lp ℝ 2 (μ.prod ν)) = 0 := by
     apply Lp.ext
-    simpa using hProjectionAE
-  rw [← Submodule.orthogonalProjection_eq_zero_iff]
-  simpa [condExpL2] using hProjectionZero
+    exact
+      hProjectionAE.trans
+        (Lp.coeFn_zero ℝ 2 (μ.prod ν)).symm
+  rw [Submodule.mem_orthogonal]
+  intro z hz
+  have hzMeas :
+      AEStronglyMeasurable[mFst]
+        (z : α × β → ℝ) (μ.prod ν) := by
+    exact mem_lpMeas_iff_aestronglyMeasurable.mp hz
+  have hInner :=
+    inner_condExpL2_eq_inner_fun
+      (𝕜 := ℝ) hleFst f z hzMeas
+  have hfz : inner ℝ f z = 0 := by
+    rw [hProjectionZero, inner_zero_left] at hInner
+    exact hInner.symm
+  calc
+    inner ℝ z f = inner ℝ f z := real_inner_comm _ _
+    _ = 0 := hfz
 
 local instance betaZeroPhysicalPairHaarBridgeTopologicalGroup
     (N : ℕ) :
