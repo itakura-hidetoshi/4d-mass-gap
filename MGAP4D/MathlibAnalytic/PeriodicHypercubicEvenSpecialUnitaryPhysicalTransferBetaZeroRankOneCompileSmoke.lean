@@ -1,0 +1,33 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroRankOne
+
+namespace MGAP4D.MathlibAnalytic
+
+noncomputable section
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_coe_eq_HaarOneL2
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_zero_apply
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_zero_eq_rankOne
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_zero_norm
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_zero_constantUnit
+
+#check
+  periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_zero_eq
+
+#check
+  periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_zero_eq_rankOne
+
+#check
+  periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_zero_constantUnit
+
+end
+
+end MGAP4D.MathlibAnalytic
