@@ -150,8 +150,12 @@ theorem
     simpa [G] using
       (MeasureTheory.stronglyMeasurable_condExp
         (μ := μJ) (m := m) (f := F))
-  have hGsm : StronglyMeasurable G :=
-    hGsmRetained.mono hm
+  have hGsm : StronglyMeasurable G := by
+    exact hGsmRetained.mono
+      (m := (inferInstance : MeasurableSpace
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)))
+      hm
   have hS : MeasurableSet S := by
     dsimp [S]
     exact measurableSet_le hGsm.norm.measurable measurable_const
