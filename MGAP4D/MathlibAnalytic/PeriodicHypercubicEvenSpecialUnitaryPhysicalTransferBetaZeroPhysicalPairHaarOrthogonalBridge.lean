@@ -63,21 +63,46 @@ theorem
     Function.Surjective
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2LinearIsometry
         H N hN 0 (by norm_num)) := by
-  have hmeasure :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure_zero_eq_Haar
-      H N hN
-  cases hmeasure
+  let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
+  let ν :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
+      H N hN 0 (by norm_num)
+  have hνμ : ν = μ := by
+    simpa [ν, μ] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure_zero_eq_Haar
+        H N hN
   intro u
-  refine ⟨u, ?_⟩
+  have huν : MemLp (fun A => u A) 2 ν := by
+    simpa [ν] using Lp.memLp u
+  have huμ : MemLp (fun A => u A) 2 μ := by
+    rw [← hνμ]
+    exact huν
+  let g : Lp ℝ 2 μ := huμ.toLp (fun A => u A)
+  have hgμ : (g :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ) =ᵐ[μ]
+      fun A => u A := by
+    exact huμ.coeFn_toLp
+  have hgν : (g :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ) =ᵐ[ν]
+      fun A => u A := by
+    rw [hνμ]
+    exact hgμ
+  have hOneμ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_zero_coeFn_ae_eq_one
+      H N hN
+  have hOneν :
+      ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+          H N hN 0 (by norm_num)).1 :
+        Lp ℝ 2 μ) =ᵐ[ν] (fun _ => (1 : ℝ)) := by
+    rw [hνμ]
+    simpa [μ] using hOneμ
+  refine ⟨g, ?_⟩
   apply Lp.ext
   have hU :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2_coeFn
-      H N hN 0 (by norm_num) u
-  have hOne :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_zero_coeFn_ae_eq_one
-      H N hN
-  filter_upwards [hU, hOne] with A hUA hOneA
-  rw [hUA]
+      H N hN 0 (by norm_num) g
+  filter_upwards [hU, hOneν, hgν] with A hUA hOneA hgA
+  rw [hUA, hgA]
   simp [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumFunction,
     hOneA]
