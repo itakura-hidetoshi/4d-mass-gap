@@ -107,6 +107,25 @@ theorem realL2CastOfMeasureEq_coeFn
   cases hμν
   exact Filter.Eventually.of_forall fun _ => rfl
 
+/-- Exact measure casts commute with L2 conditional expectation once both
+the retained and ambient measurable spaces are supplied explicitly. -/
+theorem realL2CastOfMeasureEq_condExpL2
+    {α : Type*}
+    [m0 : MeasurableSpace α]
+    {m : MeasurableSpace α}
+    (hm : m ≤ m0)
+    {μ ν : Measure α}
+    (hμν : μ = ν)
+    (f : Lp ℝ 2 μ) :
+    realL2CastOfMeasureEq hμν
+        ((condExpL2 (m := m) (m0 := m0) ℝ ℝ hm f : lpMeas ℝ ℝ m 2 μ) :
+          Lp ℝ 2 μ) =
+      ((condExpL2 (m := m) (m0 := m0) ℝ ℝ hm
+          (realL2CastOfMeasureEq hμν f) : lpMeas ℝ ℝ m 2 ν) :
+        Lp ℝ 2 ν) := by
+  cases hμν
+  rfl
+
 /-- Exact casts commute with pullback along a measure-preserving map when both
 source and target measures are identified by equality. -/
 theorem realL2CastOfMeasureEq_compMeasurePreserving
@@ -300,8 +319,21 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorPairHaarProjection
         H N color
         (realL2CastOfMeasureEq hJoint z)
-  cases hJoint
-  rfl
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_apply,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorPairHaarProjection_apply]
+  exact
+    realL2CastOfMeasureEq_condExpL2
+      (m0 := (Prod.instMeasurableSpace :
+        MeasurableSpace
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)))
+      (m :=
+        periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
+          H N color)
+      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
+        H N color)
+      hJoint z
 
 /-- The mean retained squared norm of the genuine beta-zero six-spatial
 family is exactly the literal pair-Haar mean after the joint cast. -/
