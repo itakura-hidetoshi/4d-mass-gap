@@ -43,7 +43,8 @@ theorem condDistrib_snd_fst_prod_ae_eq_const
         (fun z : α × β => (z.1, z.2)) = id := by
       funext z
       rfl
-    rw [hPair, Measure.map_id, Measure.map_fst_prod, Measure.compProd_const]
+    rw [hPair, Measure.map_id, Measure.map_fst_prod, measure_univ, one_smul,
+      Measure.compProd_const]
   have h :
       condDistrib Prod.snd Prod.fst (μ.prod ν) =ᵐ[(μ.prod ν).map Prod.fst]
         Kernel.const α ν := by
@@ -52,9 +53,9 @@ theorem condDistrib_snd_fst_prod_ae_eq_const
         (μ := μ.prod ν)
         (X := Prod.fst)
         (Y := Prod.snd)
-        measurable_fst.aemeasurable
-        measurable_snd.aemeasurable
-        hκ
+        (hX := measurable_fst.aemeasurable)
+        (hY := measurable_snd.aemeasurable)
+        (hκ := hκ)
   simpa using h
 
 /-- On a product probability space, conditional expectation onto the
