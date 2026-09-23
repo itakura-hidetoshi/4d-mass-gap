@@ -224,7 +224,6 @@ common fixed boundary sector: kappa_0 = 1/6. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaar_frame_one_six_of_mem_fst_orthogonal
     (H N : ℕ)
-    (hN : 0 < N)
     (x :
       PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStatePairHaarL2 H N)
     (hx : x ∈
@@ -268,7 +267,6 @@ orthogonal complement of the common fixed boundary sector: q_0 = 5/6. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaarRandomScan_rayleigh_five_six_of_mem_fst_orthogonal
     (H N : ℕ)
-    (hN : 0 < N)
     (x :
       PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStatePairHaarL2 H N)
     (hx : x ∈
@@ -285,7 +283,7 @@ theorem
       (5 / 6 : ℝ) * ‖x‖ ^ 2 := by
   have hframe :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaar_frame_one_six_of_mem_fst_orthogonal
-      H N hN x hx
+      H N x hx
   have hRayleigh :=
     (groundStateJointColorFrame_iff_randomScanRayleigh_le
       (fun c =>
