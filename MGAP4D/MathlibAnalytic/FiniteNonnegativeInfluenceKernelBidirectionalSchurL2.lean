@@ -176,13 +176,13 @@ theorem finiteInfluenceKernelBidirectionalSchurCoefficient_lt_one_iff
     finiteInfluenceKernelBidirectionalSchurCoefficient K < 1 ↔
       finiteInfluenceKernelMaximumRowSum K < 1 ∧
       finiteInfluenceKernelMaximumColumnSum K < 1 := by
-  simp [finiteInfluenceKernelBidirectionalSchurCoefficient, max_lt_iff]
+  simp [finiteInfluenceKernelBidirectionalSchurCoefficient]
 
 /-- A strict bidirectional influence coefficient plus a componentwise one-sided
 profile inequality yields the dimension-free squared profile coercivity used by
 the existing pair-residual/Poincare bridge. -/
 theorem finiteInfluenceKernelBidirectional_oneSided_global_energy_coercive
-    {ι : Type*}
+    {ι : Type}
     [DecidableEq ι]
     [Fintype ι]
     [Nonempty ι]
