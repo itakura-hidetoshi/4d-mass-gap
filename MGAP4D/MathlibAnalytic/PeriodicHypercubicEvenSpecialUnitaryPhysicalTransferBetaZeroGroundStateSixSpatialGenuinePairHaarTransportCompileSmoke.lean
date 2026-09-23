@@ -1,0 +1,34 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroGroundStateSixSpatialGenuinePairHaarTransport
+
+namespace MGAP4D.MathlibAnalytic
+
+noncomputable section
+
+#check realL2CastOfMeasureEq
+#check realL2CastOfMeasureEq_condExpL2
+#check realL2CastOfMeasureEq_compMeasurePreserving
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroVacuumToHaarL2_haarToVacuum
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2_rightBoundary
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2_sixSpatialCondExp
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZero_sixSpatialMeanProjectedNormSq_cast
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroPhysicalSixSpatialMeanProjection_five_six
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroSixSpatialRoute_transferGap_one_sixteen
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroSixSpatialRoute_consistent_with_exact_gap
+
+end
+
+end MGAP4D.MathlibAnalytic
