@@ -1,0 +1,8 @@
+import MGAP4D.MathlibAnalytic.ProductProbabilityConditionalExpectationFiberFormula
+
+namespace MGAP4D.MathlibAnalytic
+
+#check condDistrib_snd_fst_prod_ae_eq_const
+#check condExp_prod_fst_ae_eq_integral_snd
+
+end MGAP4D.MathlibAnalytic
