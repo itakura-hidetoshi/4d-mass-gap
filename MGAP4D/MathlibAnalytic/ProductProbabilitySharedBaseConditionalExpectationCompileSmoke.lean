@@ -1,0 +1,8 @@
+import MGAP4D.MathlibAnalytic.ProductProbabilitySharedBaseConditionalExpectation
+
+namespace MGAP4D.MathlibAnalytic
+
+#check condExp_triple_left_of_right_factor_ae_eq_common_integral
+#check condExp_triple_left_aestronglyMeasurable_common_of_right
+
+end MGAP4D.MathlibAnalytic
