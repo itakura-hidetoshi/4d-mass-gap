@@ -26,6 +26,30 @@ open scoped BigOperators InnerProductSpace InnerProduct
 
 noncomputable section
 
+local instance betaZeroPairHaarRayleighTopologicalGroup (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance betaZeroPairHaarRayleighCompactSpace (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance betaZeroPairHaarRayleighSecondCountableTopology (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance betaZeroPairHaarRayleighMeasurableSpace (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance betaZeroPairHaarRayleighBorelSpace (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
+local instance betaZeroPairHaarRayleighSpatialLinkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
 /-- An ordered sweep of pairwise commuting idempotents is idempotent. -/
 theorem realHilbertProjectionSweep_idempotent_of_pairwise_commute
     {E C : Type*}
@@ -143,7 +167,6 @@ the actual beta-zero six-spatial full sweep vanishes. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaarFullSweep_eq_zero_of_mem_fst_orthogonal
     (H N : ℕ)
-    (hN : 0 < N)
     (x :
       PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStatePairHaarL2 H N)
     (hx : x ∈
@@ -176,7 +199,7 @@ theorem
         (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) := by
     exact
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaarFullSweep_eq_self_iff_mem_fst
-        H N hN (S x)).1 hSfix
+        H N (S x)).1 hSfix
   have hxOrth := hx
   rw [Submodule.mem_orthogonal] at hxOrth
   have hOrth : inner ℝ (S x) x = 0 :=
@@ -222,7 +245,7 @@ theorem
       H N x
   have hzero :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaarFullSweep_eq_zero_of_mem_fst_orthogonal
-      H N hN x hx
+      H N x hx
   rw [hzero, sub_zero] at hten
   have hscaled :=
     mul_le_mul_of_nonneg_left hten (show 0 ≤ (1 / 6 : ℝ) by norm_num)
@@ -274,6 +297,9 @@ theorem
         H N)
       (1 / 6 : ℝ)
       x).1 hframe
+  have hcoeff : (1 - (6 : ℝ)⁻¹) = (5 / 6 : ℝ) := by
+    norm_num
+  rw [← hcoeff]
   simpa [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaarRandomScan] using
       hRayleigh
