@@ -78,7 +78,8 @@ theorem realHilbertProjection_commute_of_range_invariant
     exact hOrthInv
 
   have hComm : Commute Q.toLinearMap P.toLinearMap :=
-    (hQIdemElem.commute_iff).2 ⟨hRangeInv, hKerInv⟩
+    (LinearMap.IsIdempotentElem.commute_iff hQIdemElem).2
+      ⟨hRangeInv, hKerInv⟩
 
   have hx :=
     congrArg (fun T : E →ₗ[ℝ] E => T x) hComm.eq
