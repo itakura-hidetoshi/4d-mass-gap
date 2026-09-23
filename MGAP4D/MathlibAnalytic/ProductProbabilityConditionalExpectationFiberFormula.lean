@@ -36,22 +36,25 @@ theorem condDistrib_snd_fst_prod_ae_eq_const
     [IsProbabilityMeasure ν] :
     condDistrib Prod.snd Prod.fst (μ.prod ν) =ᵐ[μ]
       Kernel.const α ν := by
-  have h :
-      condDistrib Prod.snd Prod.fst (μ.prod ν) =ᵐ[(μ.prod ν).map Prod.fst]
-        Kernel.const α ν := by
-    apply
-      (condDistrib_ae_eq_iff_measure_eq_compProd
-        (μ := μ.prod ν)
-        (X := Prod.fst)
-        (Y := Prod.snd)
-        measurable_fst.aemeasurable
-        measurable_snd.aemeasurable
-        (Kernel.const α ν)).2
+  have hκ :
+      (μ.prod ν).map (fun z : α × β => (z.1, z.2)) =
+        (μ.prod ν).map Prod.fst ⊗ₘ Kernel.const α ν := by
     have hPair :
         (fun z : α × β => (z.1, z.2)) = id := by
       funext z
       rfl
     rw [hPair, Measure.map_id, Measure.map_fst_prod, Measure.compProd_const]
+  have h :
+      condDistrib Prod.snd Prod.fst (μ.prod ν) =ᵐ[(μ.prod ν).map Prod.fst]
+        Kernel.const α ν := by
+    exact
+      condDistrib_ae_eq_of_measure_eq_compProd
+        (μ := μ.prod ν)
+        (X := Prod.fst)
+        (Y := Prod.snd)
+        measurable_fst.aemeasurable
+        measurable_snd.aemeasurable
+        hκ
   simpa using h
 
 /-- On a product probability space, conditional expectation onto the
