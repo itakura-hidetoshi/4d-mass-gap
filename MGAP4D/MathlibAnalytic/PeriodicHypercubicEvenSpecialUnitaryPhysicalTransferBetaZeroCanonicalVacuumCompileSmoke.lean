@@ -1,0 +1,21 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroCanonicalVacuum
+
+namespace MGAP4D.MathlibAnalytic
+
+noncomputable section
+
+#check realL2Abs_smul
+
+#check periodicHypercubicEvenSpecialUnitaryPhysicalRealL2Abs_smul
+
+#check periodicHypercubicEvenSpecialUnitaryPhysicalRealL2Abs_constantUnit
+
+#check periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector_zero_eq_inner_smul_constantUnit
+
+#check abs_inner_physicalConstantUnit_topEigenvector_zero
+
+#check periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_zero
+
+end
+
+end MGAP4D.MathlibAnalytic
