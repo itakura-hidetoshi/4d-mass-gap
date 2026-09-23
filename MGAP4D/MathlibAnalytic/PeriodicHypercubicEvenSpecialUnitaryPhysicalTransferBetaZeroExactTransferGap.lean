@@ -56,8 +56,9 @@ theorem
         (x :
           periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
             H N) = 0 := by
-  rw [Submodule.mem_orthogonal] at x.property
-  exact x.property
+  have hxOrth := x.property
+  rw [Submodule.mem_orthogonal] at hxOrth
+  exact hxOrth
     (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H N)
     (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_mem_topEigenspace_zero
       H N hN)
@@ -113,8 +114,8 @@ zero continuous linear map. -/
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
         H N hN 0 (by norm_num)‖ = 0 := by
   rw [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_zero_eq_zero,
-    ContinuousLinearMap.opNorm_zero]
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_zero_eq_zero]
+  exact norm_zero
 
 /-- Exact finite-volume beta-zero transfer gap: it is one, independently of
 the finite spatial volume. -/
