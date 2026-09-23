@@ -1,0 +1,21 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroGroundStateSixSpatialProductHaarProjection
+
+namespace MGAP4D.MathlibAnalytic
+
+noncomputable section
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorProductHaarProjection_zero
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_zero_eq_productHaarProjection
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialProductHaarProjection_zero
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2_zero_eq_productHaarProjection
+
+end
+
+end MGAP4D.MathlibAnalytic
