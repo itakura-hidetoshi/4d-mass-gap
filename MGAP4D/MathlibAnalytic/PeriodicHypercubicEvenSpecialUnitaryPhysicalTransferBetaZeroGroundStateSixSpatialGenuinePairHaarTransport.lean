@@ -117,10 +117,10 @@ theorem realL2CastOfMeasureEq_condExpL2
     {μ ν : Measure α}
     (hμν : μ = ν)
     (f : Lp ℝ 2 μ) :
-    realL2CastOfMeasureEq hμν
+    @realL2CastOfMeasureEq α m0 μ ν hμν
         ((condExpL2 (m := m) (m0 := m0) ℝ ℝ hm) f) =
       ((condExpL2 (m := m) (m0 := m0) ℝ ℝ hm)
-        (realL2CastOfMeasureEq hμν f) : Lp ℝ 2 ν) := by
+        (@realL2CastOfMeasureEq α m0 μ ν hμν f) : Lp ℝ 2 ν) := by
   cases hμν
   rfl
 
