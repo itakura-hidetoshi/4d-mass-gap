@@ -188,7 +188,7 @@ theorem
         (f :
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ)
         (Measure.map Prod.snd (μ.prod μ)) := by
-    rw [MeasureTheory.map_snd_prod, measure_univ, one_smul]
+    rw [Measure.map_snd_prod, measure_univ, one_smul]
     exact Lp.aestronglyMeasurable f
   have hComp :
       AEStronglyMeasurable[
