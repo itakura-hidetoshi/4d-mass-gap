@@ -121,9 +121,9 @@ zero continuous linear map. -/
     (hN : 0 < N) :
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
         H N hN 0 (by norm_num)‖ = 0 := by
-  simpa only [
+  rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_zero_eq_zero,
-    norm_zero]
+    ContinuousLinearMap.opNorm_zero]
 
 /-- Exact finite-volume beta-zero transfer gap: it is one, independently of
 the finite spatial volume. -/
