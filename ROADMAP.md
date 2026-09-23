@@ -2,21 +2,19 @@
 
 ## Authority checkpoint — 2026-09-23 JST
 
-Repository:
-
-`itakura-hidetoshi/4d-mass-gap`
+Repository: **itakura-hidetoshi/4d-mass-gap**
 
 Unique authoritative theorem-carrier branch:
 
-`formal/real-hilbert-uniform-coercive-strong-limit`
+**formal/real-hilbert-uniform-coercive-strong-limit**
 
 The theorem-bearing baseline immediately before this documentation refresh is:
 
-`245d422bef931e769434e2e8607c3d465b9e639b`
+**245d422bef931e769434e2e8607c3d465b9e639b**
 
 This is the merge commit of PR #4656, **Identify exact beta-zero ground-state laws with Haar product laws**.
 
-The default branch `main` is not theorem authority.
+The default branch main is not theorem authority.
 
 Authority order:
 
@@ -52,21 +50,25 @@ Integrated at the current checkpoint:
 - exact beta-zero vacuum measure = Haar;
 - exact beta-zero ground-state joint measure = pair Haar.
 
+Open but not yet authoritative:
+
+- PR #4657 — exact beta-zero physical transfer gap = 1.
+
 Not yet integrated:
 
 - a strict volume-uniform genuine ground-state L2 frame / Poincare coefficient for positive beta;
-- the resulting scale-independent physical transfer/Hamiltonian gap;
+- the resulting scale-independent positive-beta physical transfer/Hamiltonian gap;
 - the full thermodynamic/infinite-volume physical construction;
-- the complete continuum OS/Wightman Yang--Mills construction;
+- the continuum OS/Wightman Yang--Mills construction;
 - the final continuum mass-gap theorem.
 
 ---
 
 ## 1. Integrated finite-volume foundation
 
-The older repository already contains the foundational finite-volume Wilson / OS machinery required by the current frontier:
+The existing repository already contains the foundation needed by the current frontier:
 
-```text
+~~~text
 periodic Wilson action / one-slab kernel
   -> product Haar L2
   -> symmetric Hilbert-Schmidt transfer
@@ -77,33 +79,19 @@ periodic Wilson action / one-slab kernel
   -> vacuum and joint probability laws
   -> genuine one-link conditional expectations
   -> six-spatial / twelve-spatial finite conditional-expectation families
-```
+~~~
 
 This foundation is not being restarted.
 
 ---
 
-## 2. Canonical high-temperature response and contraction spine — integrated
-
-### 2.1 Response continuity to half-barrier closure
-
-The current chain begins with the original fixed-right physical response, not a surrogate:
-
-```text
-#4634 literal fixed-right target-ratio response continuity
-  -> compact-supremum continuity of the canonical response profile
-  -> canonical coefficient continuity
-  -> half-barrier closure
-```
-
-The later high-temperature steps use the existing canonical vacuum and existing probability laws.
-
-### 2.2 Physical influence / random-scan / covariance chain
+## 2. Canonical high-temperature response and contraction spine — closed
 
 Integrated chain:
 
-```text
-#4637 half-barrier closure
+~~~text
+#4634 literal fixed-right target-ratio response continuity
+#4637 canonical half-barrier closure
 #4638 actual weighted physical influence / response decay
 #4639 finite influence-path and resolvent propagation
 #4640 canonical random-scan variation contraction
@@ -112,524 +100,391 @@ Integrated chain:
 #4643 actual spatial covariance clustering
 #4644 concrete two-step terminal covariance decay
 #4645 cubic-shell summability -> uniform remote residual
-```
+#4646 oscillation-sharpened terminal covariance
+#4647 beta-zero-vanishing sharpened remote residual
+#4648 strict positive high-temperature physical sweep gate
+~~~
 
-For one fixed (s>1), the spatial decay ratio is
+For fixed s > 1:
 
-[
-s^{-1}<1.
-]
+~~~text
+spatial decay ratio = s^(-1) < 1
+~~~
 
-The resulting bounds are uniform in finite random-scan truncation length and, where stated by the formal theorem, uniform in volume/background.
+The oscillation sharpening uses:
 
-### 2.3 Oscillation sharpening
+~~~text
+exp(-2*beta)  <= r <= exp(2*beta)
+exp(-16*beta) <= R <= exp(16*beta)
+~~~
 
-The coarse terminal covariance prefactor did not vanish at beta zero. PR #4646 replaces the coarse singleton variation masses by their exact oscillations:
+so the sharpened amplitude vanishes at beta = 0.
 
-[
-e^{2eta}-e^{-2eta},
-qquad
-e^{16eta}-e^{-16eta}.
-]
+The strict envelope coefficient is:
 
-Hence the sharpened terminal covariance prefactor vanishes exactly at beta zero.
+~~~text
+c_env(beta,rho) = 18*eta(beta) + rho
+~~~
 
-PR #4647 propagates this through the cubic-shell bridge, giving an oscillation-sharpened uniform remote residual
+and #4648 constructs a positive cutoff on which:
 
-[
-ho_{m osc}(s,eta)
-]
+~~~text
+c_env(beta, rho_osc(s,beta)) < 1
+~~~
 
-with
-
-[
-ho_{m osc}(s,0)=0.
-]
-
-### 2.4 Strict physical sweep gate
-
-The existing envelope coefficient is
-
-[
-c_{m env}(eta,ho)
-=
-18,eta(eta)+ho.
-]
-
-PR #4648 proves continuity of
-
-[
-etamapsto
-c_{m env}(eta,ho_{m osc}(s,eta))
-]
-
-at beta zero and proves its value there is zero.
-
-Therefore, for each fixed (s>1), a strictly positive cutoff exists inside the canonical half-barrier interval such that
-
-[
-c_{m env}(eta,ho_{m osc}(s,eta))<1.
-]
-
-Integrated consequences:
+Consequences already integrated:
 
 - strict maximum-column contraction for every finite volume/background;
 - volume-independent complete-sweep exponential contraction.
 
-### Status of this phase
-
-**Closed.**
-
-No further response/covariance/remote-residual work is needed before beginning the genuine L2 bridge.
+**Status: closed.**
 
 ---
 
-## 3. Ground-state L2 receiver — integrated
+## 3. Ground-state L2 receiver — closed as infrastructure
 
-The repository deliberately separates bounded-test / variation contraction from Hilbert-space Rayleigh contraction.
+### #4650: bounded-core closure
 
-A physical influence column bound is **not** treated as definitionally equivalent to a Poincare theorem.
+Integrated:
 
-### 3.1 Dense bounded-core closure — PR #4650
+- six-spatial normalized residual energy on the genuine ground-state joint L2 carrier;
+- continuity of the residual energy;
+- dense bounded strongly measurable concrete core;
+- coefficient-preserving extension from that core to the full joint L2 carrier.
 
-PR #4650 defines the six-spatial normalized residual energy directly on the genuine ground-state joint L2 carrier.
+### #4651: genuine six-spatial random-scan receiver
 
-It proves:
+For the six genuine projections P_c:
 
-- continuity of the six-spatial residual energy;
-- bounded strongly measurable concrete representatives form a dense core;
-- any relative six-spatial Poincare estimate proved on that dense bounded core extends to the full genuine joint L2 carrier with exactly the same coefficient.
+~~~text
+P_rs = (1/6) * sum_c P_c
+inner(P_rs x, x) = (1/6) * sum_c ||P_c x||^2
+~~~
 
-This removes quotient-representative / density closure as a future obstruction.
+Frame inequality:
 
-### 3.2 Genuine six-spatial random-scan receiver — PR #4651
+~~~text
+kappa * ||x||^2 <= (1/6) * sum_c ||x - P_c x||^2
+~~~
 
-Let (P_c) be the six genuine right-boundary spatial conditional expectations.
+is equivalent to:
 
-Define
+~~~text
+inner(P_rs x, x) <= (1-kappa) * ||x||^2
+~~~
 
-[
-P_{m rs}
-=
-rac1{6}sum_{c=1}^{6}P_c.
-]
+and any q < 1 in:
 
-Because each (P_c) is a self-adjoint idempotent,
+~~~text
+inner(P_rs x, x) <= q * ||x||^2
+~~~
 
-[
-langle P_{m rs}x,xangle
-=
-rac1{6}sum_c|P_cx|^2.
-]
+feeds the physical transfer receiver:
 
-Hence
+~~~text
+3*(1-q)/8 <= physical transfer gap
+~~~
 
-[
-kappa|x|^2
-le
-rac1{6}sum_c|x-P_cx|^2
-]
-
-is equivalent to
-
-[
-langle P_{m rs}x,xangle
-le
-(1-kappa)|x|^2.
-]
-
-The physical transfer receiver is already integrated:
-
-if
-
-[
-langle P_{m rs}x,xangle
-le
-q|x|^2
-qquad
-(0le q<1)
-]
-
-on the physical top-orthogonal sector, then
-
-[
-rac{3(1-q)}8
-le
-	ext{physical transfer gap}.
-]
-
-There is also a scale-uniform receiver.
-
-### Status of this phase
-
-**Receiver closed; quantitative model-facing premise still open.**
+**Status: receiver closed; positive-beta quantitative premise open.**
 
 ---
 
-## 4. Abstract beta-zero tensorization theorem — integrated
+## 4. Abstract commuting-projection tensorization — closed
 
-PR #4652 proves the finite real-Hilbert theorem needed for the decoupled endpoint.
+PR #4652 proves the real-Hilbert theorem:
 
-For a finite pairwise commuting family of self-adjoint idempotent projections (P_c), let (P_{m sweep}) be an ordered full sweep.
+~~~text
+||x - P_sweep x||^2 <= sum_c ||x - P_c x||^2
+~~~
 
-Then
-
-[
-|x-P_{m sweep}x|^2
-le
-sum_c|x-P_cx|^2.
-]
+for a finite pairwise commuting family of self-adjoint idempotent projections.
 
 Integrated ingredients:
 
-1. self-adjoint idempotents are norm contractions;
-2. pairwise commuting projections commute through finite ordered sweeps;
-3. coordinate residuals cannot increase under commuting projections;
-4. exact one-step Pythagorean decomposition;
-5. finite-list sweep tensorization;
+1. norm contraction of self-adjoint idempotents;
+2. pairwise commuting projections commute through finite sweeps;
+3. coordinate defects do not increase;
+4. one-step Pythagorean decomposition;
+5. finite-list tensorization;
 6. Fintype full-sweep tensorization.
 
-This theorem is pure Hilbert geometry and introduces no Wilson-specific assumption.
-
-### Status of this phase
-
-**Closed.**
-
-The remaining work is the model specialization.
+**Status: closed.**
 
 ---
 
-## 5. Exact beta-zero Wilson endpoint — integrated
+## 5. Exact beta-zero Wilson endpoint — closed through product laws
 
-### 5.1 Ambient Haar-L2 rank-one transfer — PR #4653
+### #4653: ambient rank-one transfer
 
-At beta zero:
+At beta = 0:
 
-[
-K_0(A,B)=1.
-]
+~~~text
+K_0(A,B) = 1
+T_0 = |1_Haar><1_Haar|
+~~~
 
-Let (1_{m Haar}) be the normalized constant-one spatial Haar L2 vector.
+### #4654: physical Gauss-law rank-one transfer
 
-The product-Haar kernel vector satisfies
+At beta = 0:
 
-[
-K_0
-=
-1_{m Haar}oxtimes1_{m Haar},
-]
+- physical transfer is the self rank-one projection generated by the canonical physical constant-one unit vector;
+- physical transfer norm = 1;
+- normalized physical transfer is unchanged;
+- the constant-one physical mode is fixed.
 
-and therefore
+### #4655: canonical nonnegative vacuum
 
-[
-T_0
-=
-|1_{m Haar}anglelangle1_{m Haar}|.
-]
+The selected abstract top eigenvector lies on the constant line and its canonical nonnegative representative is exactly the physical constant-one unit vector.
 
-The constant-one mode is fixed.
+### #4656: exact probability laws
 
-### 5.2 Physical Gauss-law rank-one transfer — PR #4654
+Exactly:
 
-The ambient identity descends to the genuine physical Gauss-law carrier.
+~~~text
+vacuum_measure(beta=0) = spatial_Haar_measure
+ground_state_joint_measure(beta=0) = pair_Haar_measure
+~~~
 
-At beta zero:
+No arbitrary L2 representative is evaluated pointwise.
 
-- the canonical physical constant-one vector is a unit vector;
-- the physical transfer is its self rank-one projection;
-- the physical transfer norm is exactly one;
-- the normalized physical transfer is unchanged;
-- the physical constant-one vector is fixed.
-
-### 5.3 Canonical nonnegative vacuum — PR #4655
-
-The selected abstract top eigenvector is shown to lie on the constant line.
-
-Unit normalization gives a scalar of absolute value one. Compatibility of real L2 absolute value with scalar multiplication removes the sign ambiguity.
-
-Therefore the canonical nonnegative physical top eigenvector at beta zero is exactly the canonical physical constant-one unit vector.
-
-### 5.4 Exact beta-zero probability laws — PR #4656
-
-The proof stays at the a.e. representative level until final measure equality.
-
-Integrated results:
-
-[
-Omega_0=1
-quad	ext{Haar-a.e.},
-]
-
-[
-rac{dmu_{m vac,0}}{dmu_{m Haar}}=1
-quad	ext{Haar-a.e.},
-]
-
-[
-rac{dmu_{m joint,0}}
- {d(mu_{m Haar}otimesmu_{m Haar})}=1
-quad	ext{pair-Haar-a.e.}.
-]
-
-Hence exactly:
-
-[
-oxed{
-mu_{m vac,0}
-=
-mu_{m Haar}
-}
-]
-
-and
-
-[
-oxed{
-mu_{m joint,0}
-=
-mu_{m Haar}otimesmu_{m Haar}.
-}
-]
-
-### Status of this phase
-
-**Closed.**
+**Status: closed.**
 
 ---
 
-## 6. Immediate frontier: specialize commuting tensorization to the genuine beta-zero joint law
+## 6. Current open theorem frontier — PR #4657
 
-This is the next exact mathematical obligation.
+PR #4657 is open and remains non-authoritative until merged.
 
-### 6.1 Identify beta-zero six-spatial conditional expectations with product-Haar projections
+Target theorem:
 
-Using
+~~~text
+normalized beta-zero physical transfer
+restricted to top-orthogonal sector = 0
+~~~
 
-[
-mu_{m joint,0}
-=
-mu_{m Haar}otimesmu_{m Haar},
-]
+Therefore:
 
-prove that the six genuine right-boundary spatial conditional expectations reduce to the expected product-Haar coordinate/color projections.
+~~~text
+beta-zero finite-volume physical transfer gap = 1
+~~~
 
-The theorem should be stated on the existing genuine ground-state joint L2 carrier, not on a substitute finite-state or auxiliary probability space.
+independently of finite volume.
 
-### 6.2 Prove pairwise commutation at beta zero
+Current exact PR head at this docs refresh:
 
-At the product endpoint, the selected beta-zero projections should satisfy the pairwise commutation hypotheses consumed by #4652.
+**521e2524b821df4cc0c7c46f580b247c2c669aa7**
 
-Required output:
+Current CI state at this docs refresh:
 
-[
-P_cP_d=P_dP_c
-]
+- PR Lean Fast Check #14785 / run 35804699825;
+- Changed Lean fast check is in progress.
 
-for the six genuine beta-zero ground-state spatial projections.
+### Acceptance criterion
 
-No positive-beta commutativity should be claimed.
-
-### 6.3 Identify the full sweep / common-fixed space
-
-The #4652 tensorization estimate controls
-
-[
-|x-P_{m sweep}x|^2.
-]
-
-For the physical receiver, identify the sweep/common-fixed component relevant to right-boundary physical lifts.
-
-The desired centered statement should use the already-defined ground-state coarse/retained sector, not introduce a new arbitrary center unless required by the formal API.
-
-### 6.4 Derive the beta-zero six-spatial frame estimate
-
-Combine the exact common-fixed identification with #4652:
-
-[
-|x-P_{m sweep}x|^2
-le
-sum_c|x-P_cx|^2.
-]
-
-Convert this to the normalized six-spatial residual.
-
-A strictly positive frame coefficient at beta zero should then follow on the appropriate physical top-orthogonal/right-boundary sector.
-
-The exact coefficient should be claimed only after the Lean theorem determines it.
-
-### 6.5 Feed the result through #4651
-
-Convert the frame estimate into a genuine six-spatial Rayleigh contraction
-
-[
-langle P_{m rs}x,xangle
-le
-q_0|x|^2,
-qquad q_0<1.
-]
-
-Then apply the existing receiver:
-
-[
-rac{3(1-q_0)}8
-le
-	ext{beta-zero physical transfer gap}.
-]
-
-### Acceptance criterion for the next phase
-
-A theorem on the genuine physical top-orthogonal sector with an explicit (q_0<1), or equivalently an explicit (kappa_0>0), obtained without inserting a new unproved Poincare assumption.
+Merge only after exact-head CI completion/success and then re-observe the theorem-carrier branch.
 
 ---
 
-## 7. Positive-beta / high-temperature L2 bridge
+## 7. Next structural L2 frontier: beta-zero tensorization on the genuine joint law
 
-After the exact beta-zero frame is integrated, the main finite-volume quantitative problem is to obtain a **volume-uniform** positive-beta version.
+After #4657, or independently of it, the next structural L2 unit is the model specialization of #4652.
 
-### Available inputs
+### 7.1 Identify beta-zero six-spatial conditional expectations
 
-Already integrated:
+Use the exact law:
+
+~~~text
+ground_state_joint_measure(beta=0) = pair_Haar_measure
+~~~
+
+to identify the six genuine right-boundary spatial conditional expectations with the corresponding product-Haar coordinate/color projections.
+
+### 7.2 Prove pairwise commutation at beta zero
+
+Required:
+
+~~~text
+P_c P_d = P_d P_c
+~~~
+
+for the genuine beta-zero six-spatial projection family.
+
+Do not claim positive-beta commutativity.
+
+### 7.3 Identify full sweep / common-fixed sector
+
+#4652 controls:
+
+~~~text
+||x - P_sweep x||^2
+~~~
+
+The model theorem must identify the relevant sweep/common-fixed component on right-boundary physical lifts.
+
+Prefer the already-defined ground-state coarse/retained center instead of inventing a parallel centering object.
+
+### 7.4 Obtain beta-zero six-spatial frame / Rayleigh contraction
+
+Apply #4652:
+
+~~~text
+||x - P_sweep x||^2 <= sum_c ||x - P_c x||^2
+~~~
+
+and convert it to the normalized six-spatial residual.
+
+Then convert through #4651 to:
+
+~~~text
+inner(P_rs x, x) <= q0 * ||x||^2
+~~~
+
+with q0 < 1 on the required centered physical sector.
+
+The exact q0 / kappa0 should be claimed only after the formal proof determines it.
+
+### Acceptance criterion
+
+A theorem on the genuine physical top-orthogonal/right-boundary sector with explicit q0 < 1 or kappa0 > 0, without inserting a new unproved Poincare assumption.
+
+---
+
+## 8. Positive-beta / high-temperature L2 bridge
+
+The central remaining finite-volume quantitative theorem is a **volume-uniform** positive-beta version.
+
+Available integrated inputs:
 
 1. exact one-link ground-state conditional laws;
 2. one-link conditional variance / residual identities;
 3. physical influence / response estimates;
-4. strict volume-independent complete-sweep variation contraction (#4648);
-5. beta-zero exact product law (#4656);
-6. dense-core closure (#4650);
-7. Rayleigh receiver (#4651).
+4. strict volume-independent physical sweep contraction (#4648);
+5. exact beta-zero product law (#4656);
+6. bounded-core closure (#4650);
+7. Rayleigh receiver (#4651);
+8. exact beta-zero transfer gap endpoint once #4657 is merged.
 
-### Missing theorem
+Missing theorem:
 
-Construct a rigorous bridge of the form
+~~~text
+physical interdependence coefficient < 1
+    =>
+genuine ground-state L2 Rayleigh coefficient < 1
+~~~
 
-[
-	ext{physical interdependence coefficient}<1
-quadLongrightarrowquad
-	ext{genuine ground-state L2 Rayleigh coefficient}<1,
-]
+with a coefficient independent of finite volume.
 
-with a constant independent of the finite volume.
-
-This may be formulated as a continuous-state Dobrushin / approximate-tensorization theorem, but the formal statement must match the actual ground-state conditional laws and the repository's target/source orientation.
+This may be formulated as a continuous-state Dobrushin / approximate-tensorization theorem, but it must match the actual ground-state conditional laws and the repository's target/source orientation.
 
 ### Required distinction
 
-Do not identify:
-
-- bounded-test / total-variation influence contraction;
-
-with
-
-- L2 Rayleigh / Poincare contraction.
-
-The latter must be proved.
+Do not identify bounded-test / total-variation-style influence contraction with L2 Rayleigh / Poincare contraction. The latter must be proved.
 
 ### Acceptance criterion
 
-Produce (q<1), independent of the finite volume in the selected scaling family, such that
+Produce q < 1, independent of the finite volume in the selected scaling family, such that:
 
-[
-langle P_{m rs}x,xangle
-le
-q|x|^2
-]
+~~~text
+inner(P_rs x, x) <= q * ||x||^2
+~~~
 
-for every physical top-orthogonal state in the high-temperature regime.
+for every physical top-orthogonal state in the selected high-temperature regime.
 
-Then #4651 gives the explicit uniform transfer-gap lower bound
+Then #4651 yields:
 
-[
-rac{3(1-q)}8>0.
-]
+~~~text
+uniform transfer-gap lower bound = 3*(1-q)/8 > 0
+~~~
 
 ---
 
-## 8. Uniform finite-volume transfer / Hamiltonian gap
+## 9. Uniform finite-volume Hamiltonian gap
 
-Once a scale-independent six-spatial Rayleigh factor (q<1) is available:
+Once a scale-independent Rayleigh factor q < 1 is available:
 
-1. apply the existing scale-uniform six-spatial transfer-gap receiver;
+1. apply the scale-uniform six-spatial transfer-gap receiver;
 2. obtain a positive volume-independent physical transfer gap;
-3. transport the lower bound to the exact Hamiltonian normalization already used in the physical OS lane;
+3. transport the bound to the exact Hamiltonian normalization;
 4. identify the vacuum-orthogonal coercive estimate;
-5. preserve the exact same-root physical carrier.
+5. preserve the same-root physical carrier.
 
 ### Acceptance criterion
 
-There exists a scale-independent (gamma>0) such that every member of the selected finite-volume/scaling family has physical excitation gap at least (gamma).
+There exists gamma > 0, independent of finite volume, such that every member of the selected scaling family has physical excitation gap at least gamma.
 
-This is still a lattice finite-volume theorem, not yet the continuum mass gap.
+This is still a lattice theorem, not yet the continuum mass gap.
 
 ---
 
-## 9. Thermodynamic / infinite-volume construction
+## 10. Thermodynamic / infinite-volume construction
 
 After the uniform finite-volume gap:
 
-1. choose and formalize the compatible finite-volume embedding / restriction system;
-2. prove consistency of the physical vacuum states;
-3. establish tightness / compactness or the selected projective/direct-limit replacement;
+1. formalize compatible finite-volume embeddings / restrictions;
+2. prove consistency of physical vacuum states;
+3. establish the selected compactness / projective / direct-limit mechanism;
 4. construct the infinite-volume Euclidean physical state;
-5. transport reflection positivity, gauge invariance, and the required correlation bounds;
+5. transport reflection positivity, gauge invariance, and correlation bounds;
 6. retain a nontrivial physical observable algebra.
 
-### Critical requirement
-
-The limiting carrier must be the same-root physical Wilson/OS construction. Auxiliary scalar or unrelated continuum models cannot substitute for this step.
+The limiting carrier must remain the same-root physical Wilson/OS construction.
 
 ---
 
-## 10. Continuum OS / Wightman construction
+## 11. Continuum OS / Wightman construction
 
-Required downstream theorem units include:
+Required downstream units include:
 
-- continuum Euclidean invariance in the chosen limiting framework;
+- continuum Euclidean invariance;
 - reflection positivity;
-- regularity / continuity properties needed by the reconstruction theorem;
-- cluster / decay statements strong enough for the physical spectral interpretation;
+- regularity needed by the reconstruction theorem;
+- cluster / decay statements strong enough for spectral interpretation;
 - nontriviality of the physical Hilbert space and observable content;
-- Wightman/OS reconstruction on the same physical theory.
+- Wightman / OS reconstruction on the same physical theory.
 
-Only after these are established can the continuum Hamiltonian and vacuum sector be interpreted as the target Yang--Mills theory.
-
----
-
-## 11. Continuum mass gap
-
-The final mass-gap theorem requires a continuum physical Hamiltonian with a unique vacuum line and a positive spectral lower edge on the vacuum-orthogonal sector.
-
-The finite-volume constant must survive every limiting/identification step actually used.
-
-No fixed-volume eigenvalue, auxiliary transfer matrix, or unrelated continuum limit is by itself the Clay mass-gap conclusion.
+Only after these are established can the continuum Hamiltonian be interpreted as the target Yang--Mills theory.
 
 ---
 
-## 12. Lean 4 / mathlib engineering rules
+## 12. Continuum mass gap
+
+The final theorem requires a continuum physical Hamiltonian with:
+
+- a unique vacuum line;
+- a positive spectral lower edge on the vacuum-orthogonal sector.
+
+The finite-volume constant must survive every limiting and identification step actually used.
+
+A fixed-volume eigenvalue, auxiliary transfer matrix, or unrelated continuum limit is not by itself the Clay mass-gap conclusion.
+
+---
+
+## 13. Lean 4 / mathlib engineering rules
 
 Pinned environment:
 
-- Lean `v4.30.0-rc2`;
-- mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`.
+- Lean v4.30.0-rc2
+- mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6
 
-Operational rules retained from the current proof spine:
+Operational rules:
 
 1. inspect the whole changed file, CompileSmoke, and import graph when CI fails;
 2. do not infer mathematical failure from an elaboration failure;
 3. match the existing universe declaration exactly;
-4. use theorem rewrites before `change` when equality is not definitional;
-5. verify `Finset.sum_mul`, `mul_sum`, and related rewrite direction;
-6. remember that `rw` can close a goal;
-7. use `ge_of_tendsto'` / `le_of_tendsto'` with the correct inequality orientation;
-8. keep local `SU(N)` topology/measurability instances narrowly scoped;
-9. avoid broad import diamonds that redeclare pinned global instances;
-10. at `Lp` / a.e. boundaries, prefer explicit representative lemmas and `calc` chains;
-11. avoid reversing a theorem with unconstrained implicit measure arguments;
-12. reduce large operator equalities pointwise before asking the elaborator to normalize them;
+4. use theorem rewrites before change when equality is not definitional;
+5. verify Finset.sum_mul / mul_sum rewrite direction;
+6. remember that rw can close a goal;
+7. use ge_of_tendsto' / le_of_tendsto' with the correct inequality orientation;
+8. keep local SU(N) topology/measurability instances narrowly scoped;
+9. avoid broad import diamonds that redeclare pinned instances;
+10. at Lp / a.e. boundaries, prefer explicit representative lemmas and calc chains;
+11. avoid reverse rewriting with unconstrained implicit measure arguments;
+12. reduce large operator equalities pointwise before elaborating global operator identities;
 13. raise heartbeat / recursion limits only after signature, orientation, local-instance, and definitional-equality checks.
 
 ---
 
-## 13. Recent canonical theorem units
+## 14. Recent canonical theorem units
 
 | PR | Status | Role |
 | --- | --- | --- |
@@ -643,33 +498,34 @@ Operational rules retained from the current proof spine:
 | #4654 | merged | beta-zero physical transfer is rank one |
 | #4655 | merged | beta-zero canonical nonnegative vacuum is constant one |
 | #4656 | merged | beta-zero vacuum/joint laws are Haar / pair Haar |
+| #4657 | open | exact beta-zero physical transfer gap = 1; non-authoritative until merged |
 
 Latest theorem-bearing merge before this docs refresh:
 
-`245d422bef931e769434e2e8607c3d465b9e639b`.
+**245d422bef931e769434e2e8607c3d465b9e639b**
 
-Latest validated theorem head:
+Latest validated integrated theorem head:
 
-`fd209bdf7d32b7658d96db018ee7984f6f9621c0`.
+**fd209bdf7d32b7658d96db018ee7984f6f9621c0**
 
 PR #4656 validation:
 
-- PR Lean Fast Check #14782;
-- run `35802423074`: success;
-- changed-Lean job `106995541127`: success;
-- MCP completion receipt `106996352439`: success;
-- exact-head status receipt: success.
+- PR Lean Fast Check #14782
+- run 35802423074: success
+- changed-Lean job 106995541127: success
+- MCP completion receipt 106996352439: success
+- exact-head status receipt: success
 
 ---
 
-## 14. Short restart instruction
+## 15. Short restart instruction
 
 At the start of the next theorem thread:
 
-1. fresh re-observe `formal/real-hilbert-uniform-coercive-strong-limit`;
-2. do not use `main` as theorem authority;
-3. distinguish any docs-only pointer advance from the theorem-bearing baseline;
-4. start from the exact beta-zero product-Haar theorem of #4656;
-5. specialize #4652 commuting-projection tensorization to the genuine six-spatial beta-zero ground-state conditional-expectation family;
-6. feed the resulting strict frame/Rayleigh estimate to #4651;
-7. only then begin the volume-uniform positive-beta L2 bridge.
+1. fresh re-observe formal/real-hilbert-uniform-coercive-strong-limit;
+2. do not use main as theorem authority;
+3. distinguish docs-only pointer advances from theorem-bearing merges;
+4. check #4657 state before using its exact beta-zero gap theorem;
+5. after #4657, continue with beta-zero product-Haar specialization of #4652;
+6. feed the resulting genuine six-spatial frame / Rayleigh theorem to #4651;
+7. then construct the volume-uniform positive-beta L2 bridge.
