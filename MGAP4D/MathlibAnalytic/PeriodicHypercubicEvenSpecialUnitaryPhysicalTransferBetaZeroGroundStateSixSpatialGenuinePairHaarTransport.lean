@@ -107,24 +107,6 @@ theorem realL2CastOfMeasureEq_coeFn
   cases hμν
   exact Filter.Eventually.of_forall fun _ => rfl
 
-/-- Exact measure casts commute with L2 conditional expectation onto a fixed
-sub-sigma-algebra. -/
-theorem realL2CastOfMeasureEq_condExpL2
-    {α : Type*}
-    [m0 : MeasurableSpace α]
-    {m : MeasurableSpace α}
-    (hm : m ≤ m0)
-    {μ ν : Measure α}
-    (hμν : μ = ν)
-    (f : Lp ℝ 2 μ) :
-    realL2CastOfMeasureEq hμν
-        (condExpL2 ℝ ℝ hm f : Lp ℝ 2 μ) =
-      (condExpL2 ℝ ℝ hm
-        (realL2CastOfMeasureEq hμν f) :
-        Lp ℝ 2 ν) := by
-  cases hμν
-  rfl
-
 /-- Exact casts commute with pullback along a measure-preserving map when both
 source and target measures are identified by equality. -/
 theorem realL2CastOfMeasureEq_compMeasurePreserving
@@ -318,21 +300,8 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorPairHaarProjection
         H N color
         (realL2CastOfMeasureEq hJoint z)
-  rw [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_apply,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorPairHaarProjection_apply]
-  exact
-    realL2CastOfMeasureEq_condExpL2
-      (m0 := (Prod.instMeasurableSpace :
-        MeasurableSpace
-          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)))
-      (m :=
-        periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
-          H N color)
-      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
-        H N color)
-      hJoint z
+  cases hJoint
+  rfl
 
 /-- The mean retained squared norm of the genuine beta-zero six-spatial
 family is exactly the literal pair-Haar mean after the joint cast. -/
@@ -500,7 +469,10 @@ theorem
       (fun x =>
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroPhysicalSixSpatialMeanProjection_five_six
           H N hN x)
-  norm_num at hGap
+  have hcoeff :
+      3 * (1 - (5 / 6 : ℝ)) / 8 = (1 / 16 : ℝ) := by
+    norm_num
+  rw [← hcoeff]
   exact hGap
 
 /-- Consistency package: the six-spatial receiver yields 1/16, while the
