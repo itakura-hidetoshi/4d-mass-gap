@@ -62,19 +62,27 @@ theorem realL2_product_snd_mean_zero_mem_fst_orthogonal
     MeasurableSpace.comap Prod.snd
       (inferInstance : MeasurableSpace β)
   have hleFst :
-      mFst ≤ (inferInstance : MeasurableSpace (α × β)) := by
-    simpa only [mFst] using
-      (measurable_fst.comap_le :
+      mFst ≤ (Prod.instMeasurableSpace :
+        MeasurableSpace (α × β)) := by
+    change
+      MeasurableSpace.comap Prod.fst
+          (inferInstance : MeasurableSpace α) ≤
         MeasurableSpace.comap Prod.fst
-            (inferInstance : MeasurableSpace α) ≤
-          (inferInstance : MeasurableSpace (α × β)))
+            (inferInstance : MeasurableSpace α) ⊔
+          MeasurableSpace.comap Prod.snd
+            (inferInstance : MeasurableSpace β)
+    exact le_sup_left
   have hleSnd :
-      mSnd ≤ (inferInstance : MeasurableSpace (α × β)) := by
-    simpa only [mSnd] using
-      (measurable_snd.comap_le :
-        MeasurableSpace.comap Prod.snd
-            (inferInstance : MeasurableSpace β) ≤
-          (inferInstance : MeasurableSpace (α × β)))
+      mSnd ≤ (Prod.instMeasurableSpace :
+        MeasurableSpace (α × β)) := by
+    change
+      MeasurableSpace.comap Prod.snd
+          (inferInstance : MeasurableSpace β) ≤
+        MeasurableSpace.comap Prod.fst
+            (inferInstance : MeasurableSpace α) ⊔
+          MeasurableSpace.comap Prod.snd
+            (inferInstance : MeasurableSpace β)
+    exact le_sup_right
   have hfSnd :
       AEStronglyMeasurable[mSnd] (f : α × β → ℝ) (μ.prod ν) := by
     exact mem_lpMeas_iff_aestronglyMeasurable.mp hf_snd
@@ -98,7 +106,8 @@ theorem realL2_product_snd_mean_zero_mem_fst_orthogonal
       condExp_indep_eq
         (m₁ := mSnd)
         (m₂ := mFst)
-        (m := (inferInstance : MeasurableSpace (α × β)))
+        (m := (Prod.instMeasurableSpace :
+          MeasurableSpace (α × β)))
         (μ := μ.prod ν)
         hleSnd hleFst hgSnd hIndepFstSnd.symm
   have hgMean : (∫ z, g z ∂(μ.prod ν)) = 0 := by
@@ -119,7 +128,8 @@ theorem realL2_product_snd_mean_zero_mem_fst_orthogonal
         (μ.prod ν)[g | mFst] := by
     exact
       MemLp.condExpL2_ae_eq_condExp
-        (m₀ := (inferInstance : MeasurableSpace (α × β)))
+        (m₀ := (Prod.instMeasurableSpace :
+          MeasurableSpace (α × β)))
         (m := mFst)
         (μ := μ.prod ν)
         (f := g)
