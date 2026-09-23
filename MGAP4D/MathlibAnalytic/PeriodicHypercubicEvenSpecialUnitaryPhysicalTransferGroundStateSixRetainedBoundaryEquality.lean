@@ -22,6 +22,30 @@ open MeasureTheory
 
 noncomputable section
 
+local instance groundStateSixRetainedBoundaryEqualityTopologicalGroup (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance groundStateSixRetainedBoundaryEqualityCompactSpace (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance groundStateSixRetainedBoundaryEqualitySecondCountableTopology (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance groundStateSixRetainedBoundaryEqualityMeasurableSpace (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance groundStateSixRetainedBoundaryEqualityBorelSpace (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
+local instance groundStateSixRetainedBoundaryEqualitySpatialSliceLinkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
 /-- The complete left-boundary measurable subspace is contained in every
 right-color retained subspace simultaneously. -/
 theorem
