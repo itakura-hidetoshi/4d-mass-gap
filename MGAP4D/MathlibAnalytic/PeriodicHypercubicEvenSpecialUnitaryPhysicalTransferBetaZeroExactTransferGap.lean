@@ -56,7 +56,15 @@ theorem
         (x :
           periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
             H N) = 0 := by
-  have hxOrth := x.property
+  have hxOrth :
+      (x :
+        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
+          H N) ∈
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
+          H N hN 0 (by norm_num))ᗮ := by
+    simpa [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal] using
+      x.property
   rw [Submodule.mem_orthogonal] at hxOrth
   exact hxOrth
     (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H N)
@@ -113,9 +121,21 @@ zero continuous linear map. -/
     (hN : 0 < N) :
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
         H N hN 0 (by norm_num)‖ = 0 := by
-  rw [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_zero_eq_zero]
-  exact norm_zero
+  let K :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN 0 (by norm_num)
+  have hzero :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN 0 (by norm_num) =
+        (0 : K →L[ℝ] K) := by
+    simpa [K] using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_zero_eq_zero
+        H N hN)
+  calc
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN 0 (by norm_num)‖ =
+        ‖(0 : K →L[ℝ] K)‖ := congrArg norm hzero
+    _ = 0 := norm_zero
 
 /-- Exact finite-volume beta-zero transfer gap: it is one, independently of
 the finite spatial volume. -/
