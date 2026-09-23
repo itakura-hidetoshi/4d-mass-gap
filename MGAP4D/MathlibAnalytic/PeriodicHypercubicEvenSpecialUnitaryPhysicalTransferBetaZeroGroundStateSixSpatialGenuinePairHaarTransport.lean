@@ -114,7 +114,7 @@ theorem realL2CastOfMeasureEq_condExpL2
     [m0 : MeasurableSpace α]
     {m : MeasurableSpace α}
     (hm : m ≤ m0)
-    {μ ν : Measure α}
+    {μ ν : @Measure α m0}
     (hμν : μ = ν)
     (f : Lp ℝ 2 μ) :
     @realL2CastOfMeasureEq α m0 μ ν hμν
