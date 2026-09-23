@@ -1,0 +1,13 @@
+import MGAP4D.MathlibAnalytic.RealHilbertNestedBlockProjectionSweepPathLoss
+
+namespace MGAP4D.MathlibAnalytic
+
+noncomputable section
+
+#check realHilbertNestedBlock_projectionSweep_absorb
+#check realHilbertNestedBlock_norm_le_projectionSweep
+#check realHilbertNestedBlock_projectionSweepPathLoss_le_residual
+
+end
+
+end MGAP4D.MathlibAnalytic
