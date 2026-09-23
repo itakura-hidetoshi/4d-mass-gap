@@ -65,10 +65,14 @@ theorem
   let μJ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
       H N hN beta hbeta
-  let m :=
+  let mAmbient : MeasurableSpace
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :=
+    inferInstance
+  let mRetained :=
     periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
       H N target
-  let hm :=
+  let hmRetained :=
     periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace_le
       H N target
   let hF2 :=
@@ -83,7 +87,7 @@ theorem
   let G :
       (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ :=
-    μJ[F | m]
+    μJ[F | mRetained]
   let S : Set
       (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :=
@@ -129,8 +133,8 @@ theorem
       G ≤ᵐ[μJ] fun _ => B := by
     have h :=
       MeasureTheory.condExp_mono
-        (m := m) hFint hConstB hFle
-    rw [MeasureTheory.condExp_const hm B] at h
+        (m := mRetained) hFint hConstB hFle
+    rw [MeasureTheory.condExp_const hmRetained B] at h
     simpa [G] using h
   have hleG :
       (fun _ :
@@ -139,8 +143,8 @@ theorem
         G := by
     have h :=
       MeasureTheory.condExp_mono
-        (m := m) hConstNegB hFint hleF
-    rw [MeasureTheory.condExp_const hm (-B)] at h
+        (m := mRetained) hConstNegB hFint hleF
+    rw [MeasureTheory.condExp_const hmRetained (-B)] at h
     simpa [G] using h
   have hGabs : ∀ᵐ z ∂μJ, ‖G z‖ ≤ B := by
     filter_upwards [hGle, hleG] with z hzUpper hzLower
@@ -149,7 +153,7 @@ theorem
   have hGsmRetained : StronglyMeasurable[m] G := by
     simpa [G] using
       (MeasureTheory.stronglyMeasurable_condExp
-        (μ := μJ) (m := m) (f := F))
+        (μ := μJ) (m := mRetained) (f := F))
   have hGsm : StronglyMeasurable G := by
     exact hGsmRetained.mono
       (m := (inferInstance : MeasurableSpace
@@ -177,8 +181,8 @@ theorem
           H N hN beta hbeta target fL2 z) =ᵐ[μJ] G := by
     rw [
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2_apply]
-    simpa [fL2, G, μJ, m, hm] using
-      (hF2.condExpL2_ae_eq_condExp (𝕜 := ℝ) hm)
+    simpa [fL2, G, μJ, mRetained, hmRetained] using
+      (hF2.condExpL2_ae_eq_condExp (𝕜 := ℝ) hmRetained)
   refine ⟨G', hG'sm, B, hG'bound, ?_⟩
   apply Lp.ext
   have hConcrete :=
