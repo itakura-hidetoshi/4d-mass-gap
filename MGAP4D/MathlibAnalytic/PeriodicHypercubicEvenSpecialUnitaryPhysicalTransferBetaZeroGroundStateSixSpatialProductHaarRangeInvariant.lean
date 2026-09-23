@@ -45,10 +45,17 @@ local instance betaZeroRangeInvariantAmbientMatrixSecondCountableTopology (N : �
     SecondCountableTopology (Matrix (Fin N) (Fin N) ℂ) :=
   specialUnitaryAmbientMatrixSecondCountableTopology N
 
+local instance betaZeroRangeInvariantAmbientMatrixSeparableSpace (N : ℕ) :
+    TopologicalSpace.SeparableSpace (Matrix (Fin N) (Fin N) ℂ) :=
+  TopologicalSpace.SecondCountableTopology.to_separableSpace
+
+local instance betaZeroRangeInvariantAmbientMatrixCompletelyMetrizableSpace (N : ℕ) :
+    TopologicalSpace.IsCompletelyMetrizableSpace (Matrix (Fin N) (Fin N) ℂ) :=
+  MetricSpace.toIsCompletelyMetrizableSpace
+
 local instance betaZeroRangeInvariantAmbientMatrixPolishSpace (N : ℕ) :
     PolishSpace (Matrix (Fin N) (Fin N) ℂ) :=
-  ⟨specialUnitaryAmbientMatrixSecondCountableTopology N,
-    MetricSpace.toIsCompletelyMetrizableSpace⟩
+  inferInstance
 
 local instance betaZeroRangeInvariantPolishSpace (N : ℕ) :
     PolishSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
