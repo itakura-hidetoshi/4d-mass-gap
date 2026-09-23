@@ -195,7 +195,12 @@ theorem
           ∑ e : PeriodicHypercubicEvenFixedSpatialColorLink H color,
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkSweepStageLocalProfile
               H N hN beta hbeta color f e ^ 2 := by
-      rw [Fintype.sum_sigma']
+      simpa using
+        (Fintype.sum_sigma'
+          (fun color : PeriodicHypercubicEvenGroundStateSpatialColor =>
+            fun e : PeriodicHypercubicEvenFixedSpatialColorLink H color =>
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkSweepStageLocalProfile
+                H N hN beta hbeta color f e ^ 2))
     _ =
         ∑ color : PeriodicHypercubicEvenGroundStateSpatialColor,
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkSweepPathLoss
