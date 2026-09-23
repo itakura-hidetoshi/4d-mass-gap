@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroGroundStatePhysicalPairHaarOrthogonalBridge
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroPhysicalPairHaarOrthogonalBridge
 import Mathlib.Tactic
 
 /-!
