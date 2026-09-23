@@ -49,39 +49,23 @@ measure-preserving measurable equivalence to a three-factor product
 probability space. -/
 theorem condExp_sharedBase_aestronglyMeasurable_of_measurePreserving_equiv
     {Ω γ α β : Type*}
-    [MeasurableSpace Ω]
-    [MeasurableSpace γ]
-    [MeasurableSpace α]
-    [MeasurableSpace β]
-    [StandardBorelSpace β]
-    [Nonempty β]
-    (ω : Measure Ω)
-    (ρ : Measure γ)
-    (μ : Measure α)
-    (ν : Measure β)
-    [IsProbabilityMeasure ω]
-    [IsProbabilityMeasure ρ]
-    [IsProbabilityMeasure μ]
-    [IsProbabilityMeasure ν]
+    [MeasurableSpace Ω] [MeasurableSpace γ] [MeasurableSpace α] [MeasurableSpace β]
+    [StandardBorelSpace β] [Nonempty β]
+    (ω : Measure Ω) (ρ : Measure γ) (μ : Measure α) (ν : Measure β)
+    [IsProbabilityMeasure ω] [IsProbabilityMeasure ρ]
+    [IsProbabilityMeasure μ] [IsProbabilityMeasure ν]
     (e : Ω ≃ᵐ ((γ × α) × β))
     (he : MeasurePreserving e ω ((ρ.prod μ).prod ν))
     (f : Ω → ℝ)
     (hright : AEStronglyMeasurable[
-      MeasurableSpace.comap
-        (fun x : Ω => ((e x).1.1, (e x).2))
-        (inferInstance : MeasurableSpace (γ × β))]
-      f ω)
+      MeasurableSpace.comap (fun x : Ω => ((e x).1.1, (e x).2))
+        (inferInstance : MeasurableSpace (γ × β))] f ω)
     (hfInt : Integrable f ω) :
     AEStronglyMeasurable[
-      MeasurableSpace.comap
-        (fun x : Ω => (e x).1.1)
+      MeasurableSpace.comap (fun x : Ω => (e x).1.1)
         (inferInstance : MeasurableSpace γ)]
-      (ω[
-        f |
-        MeasurableSpace.comap
-          (fun x : Ω => (e x).1)
-          (inferInstance : MeasurableSpace (γ × α))])
-      ω := by
+      (ω[f | MeasurableSpace.comap (fun x : Ω => (e x).1)
+        (inferInstance : MeasurableSpace (γ × α))]) ω := by
   let leftMap : Ω → γ × α := fun x => (e x).1
   let fiberMap : Ω → β := fun x => (e x).2
   let rightMap : Ω → γ × β := fun x => ((e x).1.1, (e x).2)
