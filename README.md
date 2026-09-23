@@ -1,196 +1,412 @@
 # MGAP4D
 
-MGAP4D is Hidetoshi Itakura's Lean 4 / mathlib program for a proof-carrying construction of four-dimensional Yang--Mills theory. Its integrated finite-volume development includes periodic Wilson lattice gauge theory, Osterwalder--Schrader carriers, physical transfer operators, conditional expectation, quantitative spatial response, and canonical-vacuum continuation.
+MGAP4D is Hidetoshi Itakura's Lean 4 / mathlib program for a proof-carrying construction of four-dimensional Yang--Mills theory. The repository contains a large finite-volume Wilson / Osterwalder--Schrader / physical-transfer development together with the quantitative response, covariance, conditional-expectation, and Hilbert-space infrastructure intended to support a later uniform finite-volume gap and continuum construction.
 
-**Current endpoint — 2026-09-22 JST:** the literal fixed-right target-ratio response is jointly continuous in the nonnegative coupling, boundary configuration, and all four group-valued test parameters. This uses the existing canonical vacuum and probability laws, not newly selected substitutes. The theorem is integrated through [PR #4634](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/4634).
+## Current status — 2026-09-23 JST
 
-**Next theorem unit:** pass from this joint continuity to the unchanged canonical supremum profile `R_can`, then apply the existing coordinate-to-`M_can` and half-barrier continuation theorems.
+The unique authoritative theorem-carrier branch is:
 
-> **Claim boundary.** This repository does not yet contain a completed proof of the Clay Millennium Yang--Mills existence and mass-gap problem. The new results concern fixed finite volume. Canonical-response supremum continuity, its strict high-temperature consequence, volume-uniform physical coercivity, and the thermodynamic/continuum construction remain separately tracked obligations. The detailed development order is in [ROADMAP.md](ROADMAP.md).
+**formal/real-hilbert-uniform-coercive-strong-limit**
+
+The theorem-bearing baseline immediately before this documentation refresh is:
+
+**245d422bef931e769434e2e8607c3d465b9e639b**
+
+This is the merge commit of PR #4656, **Identify exact beta-zero ground-state laws with Haar product laws**.
+
+The default branch main is a public landing/documentation branch and is **not** theorem authority.
+
+Fresh GitHub state always outranks this document. A later docs-only merge may advance a branch pointer without changing the theorem-bearing mathematical baseline.
+
+> **Claim boundary.**
+> This repository does **not** yet contain a completed proof of the Clay Millennium Yang--Mills existence and mass-gap problem.
+> What is integrated is a substantial finite-volume physical Wilson spine, including a canonical high-temperature strict physical sweep contraction and an exact beta-zero rank-one / product-Haar endpoint. The central remaining finite-volume obligation is a genuine L2 Poincare / Rayleigh estimate connecting the physical interdependence bounds to the ground-state conditional-expectation family. A uniform positive-beta finite-volume transfer/Hamiltonian gap and the thermodynamic/continuum construction remain downstream obligations.
 
 ## Repository authority
 
-| Item | Authoritative value for this refresh |
+| Item | Value for this refresh |
 | --- | --- |
-| Theorem-carrier branch | `formal/real-hilbert-uniform-coercive-strong-limit` |
-| Theorem-bearing mathematical baseline | `0bf8813960a5273da4348e4521b44c10bd20893d` |
-| Baseline theorem PR | #4634 — joint continuity of the literal fixed-right target-ratio response |
-| Validated PR head | `6c4f22b0788abef884a5f0aaef360d2c3171d369` |
-| Public landing/documentation branch | `main` — not theorem authority |
+| Theorem-carrier branch | formal/real-hilbert-uniform-coercive-strong-limit |
+| Theorem-bearing baseline before docs refresh | 245d422bef931e769434e2e8607c3d465b9e639b |
+| Latest integrated theorem PR | #4656 |
+| Latest validated integrated theorem head | fd209bdf7d32b7658d96db018ee7984f6f9621c0 |
+| Current open theorem PR | #4657 — exact beta-zero physical transfer gap; not yet authority |
+| Lean | v4.30.0-rc2 |
+| mathlib | 5450b53e5ddc75d46418fabb605edbf36bd0beb6 |
+| Default branch | main — not theorem authority |
 
-The baseline is the [#4634 merge commit](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/0bf8813960a5273da4348e4521b44c10bd20893d), not its tested PR head. Later documentation-only commits advance a branch pointer without changing the mathematical baseline. Synchronizing these two documents to `main` does not synchronize the theorem tree or promote `main` to theorem authority.
+Authority order:
 
-Authority order is: exact current GitHub theorem-carrier SHA; formal Lean artifacts; README/ROADMAP; CI/runtime receipts; historical summaries or memory. Re-observe the [theorem branch](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit) before continuing work; this document records a checkpoint, not a permanently current branch pointer.
+1. fresh exact GitHub theorem-carrier SHA;
+2. formal Lean artifacts;
+3. README / ROADMAP;
+4. CI receipts;
+5. historical summaries or memory.
 
 ## Proof spine at a glance
 
-```text
-FINITE WILSON / OS / PHYSICAL TRANSFER ROOT                  integrated
-  -> exact one-link laws and conditional expectations
-  -> fixed-volume covariance-remainder closure
-  -> volume-independent local weighted Harnack theory
+~~~text
+FINITE WILSON / OS / PHYSICAL TRANSFER ROOT
+  -> periodic SU(N) Wilson one-slab kernel
+  -> OS / Gauss-law physical carriers
+  -> physical transfer operator and top sector
+  -> ground-state transformed joint probability law
+  -> genuine one-link conditional expectations
 
-CANONICAL RESPONSE / BOOTSTRAP ARCHITECTURE                  #4583-#4608
-  -> actual supremum profile R_can and pin-free recurrence
-  -> aggregate remote family and local C5 exceptional column
-  -> exact coefficient M_can, self-certificate, M_can(0)=0
-  -> half-barrier exclusion and conditional continuity lift
+CANONICAL RESPONSE / HIGH-TEMPERATURE SPINE                 #4634-#4648
+  -> literal fixed-right response continuity
+  -> canonical compact-supremum / half-barrier closure
+  -> actual physical weighted influence
+  -> influence finite resolvent
+  -> random-scan contraction
+  -> covariance finite resolvent
+  -> spatial random-scan resolvent
+  -> actual spatial covariance clustering
+  -> two-step terminal covariance decay
+  -> cubic shell summability
+  -> uniform physical remote residual
+  -> oscillation sharpening vanishing at beta = 0
+  -> positive strict-sweep cutoff
+  -> volume-independent strict physical full-sweep contraction
 
-SPECTRAL CONTINUATION TO THE EXISTING VACUUM                 #4609-#4631
-  -> transfer/resolvent continuity and fixed Riesz contour
-  -> contour idempotence, rank persistence, Q_beta = P_beta
-  -> moving canonical projector norm-continuity
-  -> existing nonnegative normalized vacuum L2-continuity
-  -> existing continuous representative joint/sup-norm continuity
+GROUND-STATE L2 RECEIVER                                    #4650-#4652
+  -> six-spatial residual energy on genuine joint L2
+  -> bounded-concrete-core density closure
+  -> genuine six-spatial random-scan Rayleigh receiver
+  -> frame/Poincare <-> Rayleigh contraction identity
+  -> transfer-gap receiver 3*(1-q)/8
+  -> finite tensorization for commuting Hilbert projections
 
-ACTUAL FIXED-RIGHT LAW AND RESPONSE                         #4632-#4634
-  -> compact-domain normalized expectation continuity
-  -> actual kernel-section density and law expectations
-  -> literal target-ratio ResponseAbs joint continuity
+EXACT BETA-ZERO ENDPOINT                                    #4653-#4656
+  -> ambient one-slab transfer = |1><1|
+  -> physical Gauss-law transfer = |1><1|
+  -> canonical nonnegative top vacuum = physical constant-one vector
+  -> beta-zero vacuum measure = spatial Haar
+  -> beta-zero ground-state joint measure = pair Haar
 
-CURRENT FRONTIER                                           not yet integrated
-  -> identify the original response value set as a compact image
-  -> R_can coordinate continuity via compact supremum
-  -> M_can continuity via #4608
-  -> actual high-temperature half-barrier bound via #4607
+CURRENT OPEN FRONTIER                                       #4657
+  -> prove normalized beta-zero physical transfer kills the top-orthogonal sector
+  -> prove restricted transfer = 0
+  -> conclude exact finite-volume beta-zero transfer gap = 1
+  -> #4657 remains non-authoritative until merged
 
-DOWNSTREAM                                                 open
-  -> strict weighted physical influence and spatial decay
-  -> terminal covariance decay / uniform remote residual
-  -> physical sweep contraction / Poincare / coercivity
-  -> uniform finite-volume transfer/Hamiltonian gap
-  -> compatible thermodynamic and continuum physical construction
-```
+NEXT CANONICAL L2 UNIT
+  -> specialize #4652 commuting-projection tensorization to the
+     genuine beta-zero six-spatial ground-state conditional expectations
+  -> identify the common-fixed / centered sector
+  -> obtain a beta-zero six-spatial frame / Rayleigh contraction
+  -> then build the volume-uniform positive-beta L2 bridge
 
-## What changed since the fixed-contour checkpoint
+DOWNSTREAM
+  -> uniform positive-beta physical transfer/Hamiltonian gap
+  -> thermodynamic / infinite-volume physical construction
+  -> continuum OS / Wightman construction
+  -> continuum Yang--Mills mass-gap theorem
+~~~
 
-The previous documentation stopped at #4625. Its projector, vacuum, and kernel-law continuity tasks are no longer the immediate frontier.
+## 1. Canonical high-temperature physical contraction is integrated
 
-| Integrated PR | Mathematical contribution |
+The old documentation stopped at the continuity of the literal fixed-right response (#4634). That is no longer the active frontier.
+
+The integrated chain now runs through the actual physical influence and covariance machinery:
+
+| PR | Integrated result |
 | --- | --- |
-| [#4628](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/4628) | Norm-close idempotent range injection and rank comparison. |
-| [#4629](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/4629) | Finite-dimensional range control, nearby `Q_beta = P_beta`, exact local rank one, and moving canonical CFC projector norm-continuity. |
-| [#4630](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/4630) | Norm-continuity of the already defined nonnegative unit physical vacuum in real L2 and its canonical complex embedding. |
-| [#4631](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/4631) | Joint continuity of the original continuous vacuum representative, continuity into `C(X, R)` with its sup norm, and reciprocal continuity. |
-| [#4632](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/4632) | Generic compact-domain continuity of integrals, actual normalized densities, and expectations under the existing weighted probability measure. |
-| [#4633](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/4633) | Joint continuity of the actual fixed-right weight/density and continuous-test expectations, including the original L2-presented law. |
-| [#4634](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/4634) | Arbitrary-parameter expectation transport, local-factor continuity, and joint continuity of the literal target-ratio response. |
+| #4634 | Joint continuity of the literal fixed-right target-ratio response |
+| #4637 | Canonical half-barrier closure |
+| #4638 | Actual high-temperature physical weighted influence and response decay |
+| #4639 | Weighted finite influence-path / resolvent propagation |
+| #4640 | Canonical finite-volume random-scan contraction |
+| #4641 | Canonical covariance finite-resolvent bound |
+| #4642 | Spatial decay of the finite random-scan resolvent |
+| #4643 | Actual spatial covariance clustering |
+| #4644 | Concrete two-step terminal covariance spatial decay |
+| #4645 | Volume- and background-uniform remote residual bound |
+| #4646 | Oscillation-sharpened terminal covariance prefactor vanishing at beta zero |
+| #4647 | Oscillation-sharpened remote residual vanishing at beta zero |
+| #4648 | Strict physical sweep contraction on a positive canonical high-temperature interval |
 
-### 1. From a fixed contour to the canonical vacuum
+For a fixed s > 1, the concrete terminal covariance decay ratio is:
 
-At fixed finite volume, let `Q_beta` be the continuation along the contour fixed at `beta0`, and let `P_beta` be the moving canonical complex CFC top projector. The earlier contour calculus proves continuity of `Q_beta`, local idempotence, and bilateral absorption of `P_beta`.
+~~~text
+s^(-1) < 1
+~~~
 
-PRs #4628-#4629 complete the missing identification. A strict bound `||Q_beta - P_beta0|| < 1` makes the restriction of `P_beta0` to `range(Q_beta)` injective. Actual finite-dimensionality is established before using finite-dimensional range comparison. Idempotence and bilateral absorption then give operator equality `Q_beta = P_beta`; equality of ranges alone is not substituted for equality of operators.
+The oscillation-sharpened local amplitudes use the exact intervals already proved in the model:
 
-PR #4630 proves continuity of the existing nonnegative normalized vacuum `Omega_beta`, rather than selecting another continuous vector. Locally around `beta0`, it uses
+~~~text
+exp(-2*beta)  <= r <= exp(2*beta)
+exp(-16*beta) <= R <= exp(16*beta)
+~~~
 
-```text
-v_beta = P_beta^R Omega_beta0,
-Omega_beta = |v_beta| / ||v_beta||.
-```
+so the sharpened terminal covariance amplitude contains:
 
-Only local nonvanishing of `v_beta` is needed. The physical L2 absolute-value operation removes the sign ambiguity, and the original canonical normalization is retained.
+~~~text
+(exp(2*beta) - exp(-2*beta))
+*
+(exp(16*beta) - exp(-16*beta))
+~~~
 
-PR #4631 pairs the L2 vacuum with continuous kernel sections through mathlib's continuous linear map `ContinuousMap.toLp`, identifies the scalar integral with the existing synthesis function, and divides by the positive continuous top norm. The result is joint continuity of the original representative `Omega_cont(beta,A)`, its sup-norm continuity on the compact boundary, and joint continuity of its reciprocal. It does not evaluate an arbitrary L2 equivalence class pointwise.
+and therefore vanishes exactly at beta = 0.
 
-### 2. The actual normalized fixed-right law
+The sharpened remote residual is inserted into the existing uniform envelope coefficient:
 
-Write `X` for the finite boundary configuration space, `mu` for its Haar measure, and `C` for the fixed right boundary. The existing continuous weight and its actual mass are
+~~~text
+c_env(beta,rho) = 18 * eta(beta) + rho
+~~~
 
-```text
-w(beta,C,A) = Omega_cont(beta,A) * K(beta,A,C),
-Z(beta,C)   = integral_A w(beta,C,A) dmu(A) > 0.
-```
+PR #4648 proves continuity at beta = 0 and constructs a strictly positive cutoff, contained in the canonical half-barrier interval, on which:
 
-PRs #4632-#4633 prove joint continuity of `w` and `Z^(-1) * w`, and continuity of
+~~~text
+c_env(beta, rho_osc(s,beta)) < 1
+~~~
 
-```text
-(beta,C) -> integral_A f(beta,C,A) dnu_beta,C(A)
-```
+Integrated consequences:
 
-for jointly continuous real tests `f`. Here `nu_beta,C` is the existing probability law. Its continuous-density and original L2 presentations are connected by the already established exact measure equality. Positivity of the actual mass is supplied by the model, not an additional uniform lower-bound hypothesis.
+- strict maximum-column contraction for every finite volume and background;
+- volume-independent exponential contraction after a complete physical random-scan sweep.
 
-The global Haar-a.e. identity is used under full left-boundary integration only. It is not restricted to an arbitrary one-link fiber. These are density and expectation theorems; a separate total-variation or measure-topology theorem is not asserted here.
+This is a genuine physical finite-volume contraction result. It is **not** silently promoted to an L2 Poincare theorem.
 
-### 3. The literal response is jointly continuous
+## 2. The remaining L2 obligation is explicit
 
-For fixed ordered links `(target,source)`, define the shorthand
+PRs #4650 and #4651 isolate the exact Hilbert-space receiver.
 
-```text
-D_beta(B,g1,g2,h,k) = existing FixedRightTargetRatioResponseAbs.
-```
+The genuine ground-state joint carrier has six actual right-boundary spatial conditional-expectation projections. Their normalized residual energy is defined directly on the full joint L2 space, and any quantitative estimate proved first on the dense bounded concrete core extends to the full carrier with no loss of coefficient.
 
-PR #4634 proves joint continuity on
+PR #4651 defines the genuine six-spatial random-scan average:
 
-```text
-[0,infinity) x (X x ((SU(N) x SU(N)) x (SU(N) x SU(N)))).
-```
+~~~text
+P_rs = (1/6) * sum_c P_c
+~~~
 
-The theorem includes `beta=0` and `target=source`. It also exports an arbitrary-topological-parameter version, allowing the coupling, configuration, and four test values to vary continuously together.
+and proves:
 
-The local factor is recovered from the exact positive Wilson-kernel update identity as a quotient of updated and unupdated kernels. The same target-ratio observable is integrated against the two updated-boundary laws; subtraction and absolute value give the original response. Neither a surrogate response nor an assumed response-continuity certificate is used.
+~~~text
+inner(P_rs x, x) = (1/6) * sum_c ||P_c x||^2
+~~~
 
-The [implementation](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/0bf8813960a5273da4348e4521b44c10bd20893d/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceFixedRightTargetRatioResponseBetaContinuity.lean) and [four regression examples](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/0bf8813960a5273da4348e4521b44c10bd20893d/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceFixedRightTargetRatioResponseBetaContinuityCompileSmoke.lean) are available at the exact baseline.
+Therefore the six-spatial frame inequality
 
-## Immediate next step: the canonical supremum, not another vacuum construction
+~~~text
+kappa * ||x||^2 <= (1/6) * sum_c ||x - P_c x||^2
+~~~
 
-The existing definition is
+is equivalent to the Rayleigh contraction
 
-```text
-R_can(beta,target,source)
-  = max 0 (sSup {D_beta(B,g1,g2,h,k) | B,g1,g2,h,k}).
-```
+~~~text
+inner(P_rs x, x) <= (1-kappa) * ||x||^2
+~~~
 
-It must remain the same definition. The next proof should identify its existing value set with the image of the compact configuration/four-group-value domain, apply the pinned mathlib `IsCompact.continuous_sSup` theorem to #4634, and transport the result through `max 0`.
+The existing physical transfer receiver gives:
 
-This compact-supremum application is the next repository theorem obligation; #4634 itself does not yet assert `R_can` continuity. Once it is integrated, the existing [#4608](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/4608) lift supplies continuity of the exact finite coefficient `M_can`. The already proved `M_can(0)=0` and half-barrier exclusion then feed [#4607](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/4607) on its specified high-temperature interval.
+~~~text
+3*(1-q)/8 <= physical top-eigenspace transfer gap
+~~~
 
-The generic implication is integrated, but its model-facing continuity premise has not yet been discharged at this checkpoint:
+from any genuine six-spatial Rayleigh factor q <= 1, and gives a positive transfer gap when q < 1.
 
-```text
-R_can coordinate continuity
-  -> M_can continuity
-  -> M_can < 1/2 on the selected high-temperature interval
-  -> strict canonical pin-free weighted coefficient.
-```
+The finite-volume route therefore no longer has an ambiguous “Poincare step”: the missing model-facing theorem is the construction of a strict L2 frame / Rayleigh estimate for the genuine ground-state conditional-expectation family.
 
-## Earlier integrated quantitative structure
+## 3. Abstract commuting-projection tensorization is proved
 
-The continuation work serves an existing response-controlled program; it does not replace it. That program includes the canonical profile's nonnegativity, minimality, and coarse bound `R_can <= exp(16*beta)`; pin-free finite-step/source-forcing recurrences; fixed-volume terminal removal; aggregate remote-family closure without target-cardinality loss; and the local C5 exceptional-column estimate.
+PR #4652 proves the real-Hilbert theorem needed at the decoupled endpoint.
 
-The sparse local weighted coefficient is `rho_s = 18 * eta(beta) * s^2`. The pin-free coefficient is
+For a finite family of pairwise commuting self-adjoint idempotent projections and an ordered full sweep P_sweep:
 
-```text
-c_pf(beta,s,M) = 18 * eta(beta) * s^2 + exp(16*beta) * M.
-```
+~~~text
+||x - P_sweep x||^2 <= sum_c ||x - P_c x||^2
+~~~
 
-The exact canonical `M_can` supplies its own weighted-column certificate and a conditional bootstrap bound. These formulas and local estimates are not, by themselves, the downstream strict spatial-decay or physical-coercivity theorem.
+The proof establishes:
 
-## Downstream construction obligations
+- self-adjoint idempotents are norm contractions;
+- pairwise commuting projections commute through finite sweeps;
+- coordinate defects do not increase under commuting projections;
+- exact one-step Pythagorean decomposition;
+- finite-list and Fintype full-sweep tensorization.
 
-After the actual continuity/half-barrier connection, the program must separately derive strict weighted physical influence, source-to-target spatial response decay, terminal base-L1 covariance decay, cubic-shell summability, and a volume-uniform remote residual. The subsequent physical sweep contraction, Poincare/coercivity estimate, uniform finite-volume transfer/Hamiltonian gap, and compatible thermodynamic/continuum physical construction are still distinct stages.
+This theorem is pure Hilbert geometry and adds no Wilson-specific assumption.
 
-A fixed-volume isolated top eigenvalue is not a volume-uniform gap. A uniform finite-volume estimate is not automatically a continuum Yang--Mills field construction. Auxiliary or scalar continuum lanes do not replace the sufficiently rich same-root OS/Wightman physical carrier required at the end.
+## 4. Exact beta-zero transfer and vacuum are canonical
 
-## Toolchain and verification
+PRs #4653-#4656 close the decoupled endpoint normalization.
 
-The exact baseline uses `leanprover/lean4:v4.30.0-rc2` and mathlib revision `5450b53e5ddc75d46418fabb605edbf36bd0beb6`. The repository lockfiles, not newer online API signatures, control compilation.
+### Ambient transfer — #4653
 
-For #4634, [PR Lean Fast Check #14711 / run 35694577932](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/35694577932) is `completed/success` on head `6c4f22b0788abef884a5f0aaef360d2c3171d369`. The changed-Lean job, completion-receipt job, and exact-head `chatgpt-ci-receipt/PR Lean Fast Check` status succeeded. This records validation of the changed modules and their dependency closure, not a fresh whole-repository aggregate build or a new theorem verification by a later docs-only CI run.
+At beta = 0 the literal temporal-gauge one-slab Wilson kernel is exactly 1.
 
-Recent proof engineering uses uniquely named local instances to avoid cross-import declaration collisions, explicit product/projection types, pinned `Function.update_self` / `Function.update_of_ne`, and abstract private proof boundaries to avoid repeated expansion of concrete Wilson/vacuum definitions. The mathematical hypotheses and heartbeat budgets were not weakened or enlarged to obtain #4634's success.
+Let 1_Haar be the normalized constant-one spatial Haar L2 vector. Then:
 
-## Permanent distinctions
+~~~text
+K_0 = 1_Haar external-tensor 1_Haar
+T_0 = |1_Haar><1_Haar|
+~~~
 
-```text
-finite-volume continuity != volume-uniform estimates
-L2 vacuum continuity != point evaluation of an arbitrary L2 representative
-continuous-test expectations != an asserted total-variation theorem
-literal response joint continuity != the completed R_can supremum connection
-M_can != 1/2 does not imply M_can < 1/2 without continuation
-fixed-volume mixing != spatial covariance decay
-covariance identities != covariance decay != mass gap
-uniform finite-volume gap != continuum Yang--Mills construction
-```
+### Physical Gauss-law transfer — #4654
 
-The earlier fixed-contour/moving-projector distinction has been bridged by #4629, not ignored. Likewise, #4630-#4634 close specific vacuum/law/response connections without collapsing the later layers. No `sorry`, `admit`, new axioms, hidden constants, or weakened statements are substitutes for the remaining proofs.
+The ambient identity descends to the genuine physical Gauss-law carrier:
+
+- the physical transfer is the self rank-one projection generated by the canonical physical constant-one unit vector;
+- the physical transfer norm is exactly one;
+- the normalized physical transfer is unchanged;
+- the canonical physical constant-one vector is fixed.
+
+### Canonical nonnegative vacuum — #4655
+
+The selected abstract top eigenvector lies on the constant line. Unit normalization fixes the scalar absolute value, and compatibility of real L2 absolute value with scalar multiplication removes the sign ambiguity.
+
+Therefore the canonical nonnegative physical top eigenvector at beta = 0 is exactly the physical constant-one unit vector.
+
+### Exact probability laws — #4656
+
+The proof stays at the a.e. representative level until the final measure equalities. It proves exactly:
+
+~~~text
+vacuum_measure(beta=0) = spatial_Haar_measure
+ground_state_joint_measure(beta=0) = pair_Haar_measure
+~~~
+
+No arbitrary L2 equivalence-class representative is evaluated pointwise.
+
+## 5. Current open theorem PR: #4657
+
+PR #4657 is open and is **not** part of theorem authority yet.
+
+It uses the already integrated exact physical rank-one transfer to target the stronger endpoint statement:
+
+~~~text
+normalized beta-zero physical transfer
+restricted to the full top-orthogonal sector = 0
+~~~
+
+and therefore:
+
+~~~text
+beta-zero finite-volume physical transfer gap = 1
+~~~
+
+independently of finite volume.
+
+At the time of this docs refresh, its exact head is:
+
+**521e2524b821df4cc0c7c46f580b247c2c669aa7**
+
+and its PR Lean Fast Check is still in progress. Until merged, the authoritative theorem-bearing baseline remains #4656.
+
+## 6. Next L2 theorem unit after the exact beta-zero gap
+
+The next canonical L2 unit should use the exact product law from #4656 and the abstract tensorization theorem from #4652.
+
+Target sequence:
+
+1. identify the six beta-zero ground-state spatial conditional expectations with the corresponding product-Haar coordinate/color projections;
+2. prove the required pairwise commutation on the genuine joint L2 carrier;
+3. identify the full sweep / common-fixed component;
+4. apply #4652 to obtain the beta-zero six-spatial frame estimate;
+5. convert it through #4651 to a genuine six-spatial Rayleigh contraction.
+
+The exact transfer-gap theorem #4657 gives a strong independent endpoint check, but it does not replace the six-spatial L2 bridge needed for positive beta.
+
+## 7. Positive-beta high-temperature L2 bridge
+
+The repository already has:
+
+- exact one-link ground-state conditional laws;
+- one-link conditional variance / residual identities;
+- strict volume-independent physical influence contraction (#4648);
+- exact beta-zero product law (#4656);
+- dense-core closure (#4650);
+- genuine Rayleigh receiver (#4651).
+
+The missing theorem must rigorously connect:
+
+~~~text
+physical interdependence coefficient < 1
+~~~
+
+to
+
+~~~text
+genuine ground-state L2 Rayleigh coefficient < 1
+~~~
+
+with a constant independent of finite volume.
+
+The repository intentionally keeps bounded-test / total-variation-style influence control distinct from L2 Rayleigh / Poincare coercivity.
+
+## 8. Downstream obligations
+
+After a scale-independent positive L2 frame / Rayleigh coefficient is proved, existing receivers can produce a uniform finite-volume physical transfer gap.
+
+Still separate:
+
+- exact Hamiltonian coercive lower bound in the selected normalization;
+- scaling-family transport;
+- thermodynamic / infinite-volume physical state;
+- continuum OS construction;
+- Euclidean axioms / nontriviality on the same-root physical carrier;
+- Wightman reconstruction / spectral interpretation;
+- continuum Yang--Mills mass gap.
+
+A fixed-volume isolated top eigenvalue is not a volume-uniform gap. A volume-uniform lattice gap is not automatically a continuum Yang--Mills construction.
+
+## Lean / mathlib verification discipline
+
+Pinned environment:
+
+- Lean v4.30.0-rc2
+- mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6
+
+Recent proof-engineering rules:
+
+- match the universe declared by the existing structure; do not replace Type with Type* without checking;
+- change only closes definitional equality; perform theorem-level normalization first;
+- check Finset.sum_mul / mul_sum rewrite direction explicitly;
+- rw may close a goal, so a following tactic can legitimately report “no goals to be solved”;
+- at Lp / a.e. representative boundaries, prefer explicit calc chains to fragile rewrites;
+- avoid reverse rewriting with theorems whose important measure argument is still implicit and unconstrained;
+- reduce large operator equalities pointwise before asking the elaborator to normalize them;
+- keep local SU(N) topology/measurability instances narrowly scoped;
+- avoid broad import diamonds that redeclare pinned instances;
+- do not raise heartbeat / recursion depth before checking signatures, rewrite orientation, local instances, and definitional equality;
+- inspect the full changed module, CompileSmoke, and dependency graph, not only the highlighted CI line.
+
+### Latest integrated exact-head validation
+
+PR #4656:
+
+- validated head: fd209bdf7d32b7658d96db018ee7984f6f9621c0
+- PR Lean Fast Check #14782 / run 35802423074: success
+- Changed Lean fast check job 106995541127: success
+- MCP completion receipt 106996352439: success
+- exact-head status receipt: success
+
+The theorem-bearing merge commit is:
+
+**245d422bef931e769434e2e8607c3d465b9e639b**
+
+## Navigation
+
+- ROADMAP.md — detailed completed and remaining theorem units.
+- MGAP4D/MathlibAnalytic — formal analytic development.
+- Theorem-carrier branch: https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit
+
+## Status summary
+
+The repository has moved materially beyond response continuity.
+
+The integrated formal state includes:
+
+- canonical high-temperature response / influence control;
+- actual spatial covariance clustering;
+- terminal covariance and cubic-shell summability;
+- a uniform physical remote residual;
+- a positive strict physical full-sweep contraction interval;
+- genuine six-spatial L2 Poincare / Rayleigh receivers;
+- abstract commuting-projection tensorization;
+- exact beta-zero rank-one ambient and physical transfer;
+- exact canonical beta-zero vacuum;
+- exact beta-zero Haar / pair-Haar ground-state laws.
+
+Current open theorem work is #4657, targeting the exact beta-zero physical transfer gap = 1. The next structural L2 frontier is the beta-zero specialization of #4652 tensorization to the genuine six-spatial conditional-expectation family, followed by the volume-uniform positive-beta L2 bridge.
