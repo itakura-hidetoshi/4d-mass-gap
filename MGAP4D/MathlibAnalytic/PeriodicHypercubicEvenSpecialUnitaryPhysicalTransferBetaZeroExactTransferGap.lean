@@ -28,22 +28,6 @@ open scoped InnerProductSpace InnerProduct
 
 noncomputable section
 
-/-- Expose the inherited real normed-space structure on the named physical
-top-eigenspace orthogonal submodule.  This mirrors the established concrete
-subtype pattern used by downstream transfer-dynamics files and keeps generic
-continuous-linear-map norm lemmas from getting stuck on the named carrier. -/
-@[reducible] local instance betaZeroExactTransferGapPhysicalOrthogonalNormedSpace
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    NormedSpace ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta) :=
-  Submodule.normedSpace
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-      H N hN beta hbeta)
-
 /-- The canonical constant physical vector belongs to the full beta-zero
 eigenvalue-one top eigenspace. -/
 theorem
@@ -78,9 +62,13 @@ theorem
           H N) ∈
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
           H N hN 0 (by norm_num))ᗮ := by
-    simpa [
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal] using
-      x.property
+    change
+      (x :
+        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
+          H N) ∈
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN 0 (by norm_num)
+    exact x.property
   rw [Submodule.mem_orthogonal] at hxOrth
   exact hxOrth
     (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H N)
@@ -137,9 +125,22 @@ zero continuous linear map. -/
     (hN : 0 < N) :
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
         H N hN 0 (by norm_num)‖ = 0 := by
-  rw [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_zero_eq_zero,
-    ContinuousLinearMap.opNorm_zero]
+  let K :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN 0 (by norm_num)
+  letI : NormedSpace ℝ K := Submodule.normedSpace K
+  have hzero :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN 0 (by norm_num) =
+        (0 : K →L[ℝ] K) := by
+    simpa [K] using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_zero_eq_zero
+        H N hN)
+  calc
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN 0 (by norm_num)‖ =
+        ‖(0 : K →L[ℝ] K)‖ := congrArg norm hzero
+    _ = 0 := ContinuousLinearMap.opNorm_zero
 
 /-- Exact finite-volume beta-zero transfer gap: it is one, independently of
 the finite spatial volume. -/
