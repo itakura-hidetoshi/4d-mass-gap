@@ -49,11 +49,12 @@ theorem condDistrib_snd_fst_prod_ae_eq_const
       condDistrib Prod.snd Prod.fst (μ.prod ν) =ᵐ[(μ.prod ν).map Prod.fst]
         Kernel.const α ν := by
     exact
-      condDistrib_ae_eq_of_measure_eq_compProd
+      condDistrib_ae_eq_of_measure_eq_compProd_of_measurable
         (μ := μ.prod ν)
+        (X := Prod.fst)
         (Y := Prod.snd)
-        Prod.fst
-        measurable_snd.aemeasurable
+        measurable_fst
+        measurable_snd
         hκ
   simpa using h
 
