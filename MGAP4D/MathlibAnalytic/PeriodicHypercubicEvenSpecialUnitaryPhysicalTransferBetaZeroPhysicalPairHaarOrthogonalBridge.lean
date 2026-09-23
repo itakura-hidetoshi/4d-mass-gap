@@ -63,10 +63,11 @@ theorem
     Function.Surjective
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2LinearIsometry
         H N hN 0 (by norm_num)) := by
-  intro u
-  rw [
+  have hmeasure :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure_zero_eq_Haar
-      H N hN] at u ⊢
+      H N hN
+  cases hmeasure
+  intro u
   refine ⟨u, ?_⟩
   apply Lp.ext
   have hU :=
@@ -102,26 +103,23 @@ theorem
   let U :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2LinearIsometry
       H N hN 0 (by norm_num)
-  let JR :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryL2Isometry
-      H N hN 0 (by norm_num)
-  let JL :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftBoundaryL2Isometry
-      H N hN 0 (by norm_num)
   apply ext_inner_right ℝ
   intro v
   obtain ⟨g, rfl⟩ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2LinearIsometry_zero_surjective
       H N hN v
-  change inner ℝ
-      ((JL.toContinuousLinearMap†) (JR (U f)))
-      (U g) = 0
+  simp only [inner_zero_left]
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateDoobBoundaryOperator
+  simp only [ContinuousLinearMap.comp_apply]
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftBoundaryAdjoint
   rw [ContinuousLinearMap.adjoint_inner_left]
   have hpair :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateBoundaryHaarToVacuum_inner_eq_ambientTransfer
       H N hN 0 (by norm_num) f g
   rw [hf, inner_zero_left, mul_zero] at hpair
-  simpa [JR, JL, U] using hpair
+  simpa [U] using hpair
 
 /-- A genuine physical beta-zero top-orthogonal vector is killed already by
 the ambient Haar-L2 beta-zero transfer after forgetting the Gauss-law subtype. -/
