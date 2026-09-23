@@ -1,0 +1,18 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroGroundStateSixSpatialProductHaarTensorization
+
+namespace MGAP4D.MathlibAnalytic
+
+noncomputable section
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaarFullSweep
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaarFullSweep_tensorization
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialPairHaarFullSweep_eq_self_iff
+
+end
+
+end MGAP4D.MathlibAnalytic
