@@ -1,41 +1,47 @@
 # MGAP4D
 
-MGAP4D is Hidetoshi Itakura's Lean 4 / mathlib program for a proof-carrying construction of four-dimensional Yang--Mills theory. The repository develops a finite-volume periodic Wilson / Osterwalder--Schrader / physical-transfer framework, together with exact beta-zero geometry, response and covariance control, conditional expectations, Hilbert-space tensorization, spectral-gap receivers, and downstream thermodynamic/continuum infrastructure.
+MGAP4D is Hidetoshi Itakura's Lean 4 / mathlib program for a proof-carrying construction of four-dimensional Yang--Mills theory. The repository develops a finite-volume periodic Wilson / Osterwalder--Schrader / physical-transfer framework, exact beta-zero geometry, positive-beta response and covariance control, genuine ground-state conditional expectations, Hilbert-space coercivity receivers, and downstream thermodynamic/continuum infrastructure.
 
-## Current status — 2026-09-23 JST
+## Current status — 2026-09-24 JST
 
 The unique authoritative theorem-carrier branch is:
 
 **formal/real-hilbert-uniform-coercive-strong-limit**
 
-Fresh GitHub state at this documentation refresh:
+Fresh theorem-bearing baseline at this documentation refresh:
 
-**bbd064ddff7814a804c2ba319e6c365dabd9ecb4**
+**73d90bb97eb1a906d1d11eec10314e1ce1feb518**
 
-This is the merge commit of PR #4678, **Bridge beta-zero physical top-orthogonal sector to pair-Haar boundary geometry**. It also contains the immediately preceding merged PR #4677, **Prove beta-zero physical pair-Haar orthogonal bridge**.
+This is the merge commit of PR #4693, **Apply sharp Haar bound at ground-state sweep stages**.
 
 The default branch **main** is a public landing/documentation branch and is **not** theorem authority.
 
 > **Claim boundary**
 >
 > This repository does **not** yet contain a completed proof of the Clay Millennium Yang--Mills existence and mass-gap problem.
-> What is now integrated is a substantial finite-volume Wilson/OS/physical-transfer theorem spine. In particular, the beta-zero six-spatial pair-Haar projection geometry is closed through exact frame/Rayleigh constants, and the genuine physical beta-zero top-orthogonal sector has now been bridged into that pair-Haar boundary geometry. The main quantitative frontier is the volume-uniform positive-beta ground-state L2 bridge, followed by thermodynamic and continuum construction.
+>
+> What is integrated is a substantial finite-volume Wilson/OS/physical-transfer theorem spine. The beta-zero endpoint is closed, the positive-beta physical influence matrix has a volume-independent bidirectional Schur coefficient, the six-spatial local sweep energy has been realized as a genuine link-indexed L2 profile, and the bounded-concrete sharp one-link Haar theorem is now available at every canonical sweep stage.
+>
+> The current obstruction is no longer matrix contraction. It is the observable-specific analytic bridge: construct the actual ground-state physical profile (u_e(F)), prove its one-sided inequality against the already-defined physical envelope, and prove the corresponding global profile majorant. Only after that can the existing L2 receivers yield a volume-uniform positive-beta physical gap.
 
 ## Repository authority
 
 | Item | Current value |
 | --- | --- |
-| Theorem-carrier branch | formal/real-hilbert-uniform-coercive-strong-limit |
-| Current theorem-bearing baseline | bbd064ddff7814a804c2ba319e6c365dabd9ecb4 |
-| Latest merged theorem PR | #4678 |
-| Immediately preceding merged theorem PR | #4677 |
-| #4677 validated exact head | d5da7f0c97f4c736f2e7a41015c003ab1a899a3b |
-| #4677 CI | PR Lean Fast Check #14856 / run 35850382949 — success |
-| #4678 validated exact head | 43f73b187073e47b678fd5d9f229646c28d97f27 |
-| #4678 CI | PR Lean Fast Check #14855 / run 35850140311 — success |
+| Theorem-carrier branch | `formal/real-hilbert-uniform-coercive-strong-limit` |
+| Current theorem-bearing baseline | `73d90bb97eb1a906d1d11eec10314e1ce1feb518` |
+| Latest merged theorem PR | #4693 |
+| #4693 validated exact head | `9ab9afc48a411529f7ba50b2c79cb9b2cda63066` |
+| #4693 CI | PR Lean Fast Check #14910 / run 35933345632 — success |
+| #4692 validated exact head | `82adb2203f0fdf3a1be38804be441e13d926eee8` |
+| #4692 CI | PR Lean Fast Check #14908 / run 35932670460 — success |
+| #4691 validated exact head | `0ab14ea94146adf3c35328d23aca5d36d8d2fdb8` |
+| #4691 CI | PR Lean Fast Check #14901 / run 35929862853 — success |
+| #4690 validated exact head | `8788b40b4a70aefe3ed7b5f45064c01a00f39ec2` |
+| #4690 CI | PR Lean Fast Check #14899 / run 35929374564 — success |
 | Lean | v4.30.0-rc2 |
-| mathlib | 5450b53e5ddc75d46418fabb605edbf36bd0beb6 |
-| Default branch | main — not theorem authority |
+| mathlib | `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
+| Default branch | `main` — not theorem authority |
 
 Authority order:
 
@@ -45,7 +51,7 @@ Authority order:
 4. exact-head CI receipts;
 5. historical summaries or memory.
 
-A later docs-only merge may advance a branch pointer without changing the theorem-bearing mathematical baseline.
+A later docs-only merge may advance the branch pointer without changing the theorem-bearing mathematical baseline.
 
 ## Proof spine at a glance
 
@@ -54,304 +60,355 @@ FINITE WILSON / OS / PHYSICAL TRANSFER ROOT
   -> periodic SU(N) Wilson one-slab kernel
   -> OS / Gauss-law physical carrier
   -> compact positive physical transfer
-  -> top eigenspace / canonical nonnegative vacuum
+  -> canonical nonnegative vacuum
   -> ground-state transformed boundary and joint laws
-  -> genuine conditional-expectation families
+  -> genuine one-link / six-color conditional expectations
 
-HIGH-TEMPERATURE RESPONSE / PHYSICAL SWEEP                  #4634-#4648
+HIGH-TEMPERATURE PHYSICAL RESPONSE / INFLUENCE              #4634-#4648
   -> fixed-right response continuity
-  -> canonical half-barrier closure
-  -> actual physical influence / finite resolvent
-  -> random-scan contraction and covariance resolvent
-  -> spatial covariance clustering
-  -> terminal covariance decay / shell summability
-  -> beta-zero-vanishing sharpened residual
-  -> positive volume-independent strict physical full-sweep contraction
+  -> physical influence / resolvent propagation
+  -> covariance decay and shell summability
+  -> beta-zero-vanishing sharpened remote residual
+  -> positive volume-independent strict physical sweep contraction
 
-GROUND-STATE L2 RECEIVER / ABSTRACT TENSORIZATION           #4650-#4652
-  -> six-spatial residual energy on genuine joint L2
-  -> bounded-core closure
-  -> six-spatial random-scan Rayleigh receiver
-  -> frame/Poincare <-> Rayleigh identity
-  -> physical transfer-gap receiver 3*(1-q)/8
-  -> finite tensorization for pairwise commuting Hilbert projections
+GENUINE GROUND-STATE L2 RECEIVERS                           #4650-#4652
+  -> bounded-concrete -> full joint L2 closure
+  -> six-spatial frame / random-scan Rayleigh receiver
+  -> physical transfer-gap receiver
+  -> abstract commuting-projection tensorization
 
-EXACT BETA-ZERO PHYSICAL ENDPOINT                           #4653-#4657
-  -> ambient transfer = |1><1|
-  -> physical transfer = |1><1|
-  -> canonical nonnegative vacuum = constant-one
+EXACT BETA-ZERO PHYSICAL ENDPOINT                           #4653-#4682
+  -> ambient and physical transfer are rank one at beta=0
   -> vacuum law = spatial Haar
-  -> ground-state joint law = pair Haar
-  -> top-orthogonal normalized transfer = 0
-  -> exact finite-volume physical transfer gap = 1
+  -> joint law = pair Haar
+  -> exact physical transfer gap = 1
+  -> literal six-color pair-Haar geometry
+  -> kappa_0 = 1/6
+  -> q_0 = 5/6
+  -> physical endpoint bridge
+  -> genuine ground-state transport
+  -> six-spatial consistency lower bound gap >= 1/16
 
-BETA-ZERO SIX-SPATIAL PAIR-HAAR GEOMETRY                    #4662-#4676
-  -> literal pair-Haar L2 carrier and Fin 6 projections
-  -> color/off-color product decomposition
-  -> common-fixed intersection = boundary L2
-  -> idempotence / symmetry
-  -> product conditional-expectation fiber formula
-  -> range-invariance -> commutation Hilbert receiver
-  -> shared-base conditional-expectation collapse
-  -> Wilson-specific range invariance
-  -> actual pairwise commutation
-  -> actual full-sweep tensorization
-  -> full-sweep fixed sector = fst-boundary L2
-  -> sweep = orthogonal projection
-  -> exact frame coefficient kappa_0 = 1/6
-  -> exact random-scan Rayleigh factor q_0 = 5/6
+POSITIVE-BETA BIDIRECTIONAL SCHUR L2                        #4683-#4687
+  -> generic finite nonnegative bidirectional Schur theorem
+  -> isolate physical remote-row obstruction
+  -> close row obstruction using oscillation covariance decay
+  -> volume/background-independent q_phys(s,beta)
+  -> max row <= q_phys and max column <= q_phys
+  -> genuine L2 Schur estimate
+  -> one-sided profile coercivity receiver
 
-PHYSICAL BETA-ZERO -> PAIR-HAAR BOUNDARY BRIDGE             #4677-#4678
-  -> literal right-boundary pair-Haar L2 isometry
-  -> physical top-orthogonal -> fst-boundary orthogonal
-  -> beta-zero Haar-to-vacuum isometry is onto
-  -> ambient rank-one annihilation -> Doob boundary image = 0
-  -> coarse left-boundary projection of transformed right lift = 0
+SWEEP LOCAL-ENERGY BRIDGE                                   #4688-#4693
+  -> nested block projection dominates ordered sweep path loss
+  -> genuine six-color one-link path loss <= six-spatial residual energy
+  -> link-indexed nonnegative sweep-stage local profile ell_e
+  -> (1/6) sum_e ell_e^2 <= E_6sp
+  -> ell_e plugged into uniform Schur receiver
+  -> bounded-concrete core preserved by every one-link sweep prefix
+  -> sharp Haar one-link theorem available at every canonical sweep stage
 
-IMMEDIATE ENDPOINT PACKAGING
-  -> apply #4676 to the #4677 / #4678 physical bridge
-  -> package genuine physical beta-zero six-spatial kappa_0 = 1/6
-  -> package genuine physical beta-zero q_0 = 5/6
-  -> feed #4651 for the consistency lower bound 1/16
-  -> retain #4657 gap_beta=0 = 1 as the exact endpoint value
-
-MAIN QUANTITATIVE FRONTIER
-  -> volume-uniform positive-beta ground-state L2 bridge
-  -> uniform finite-volume physical transfer / Hamiltonian gap
-  -> thermodynamic / infinite-volume physical construction
-  -> continuum OS / Wightman construction
-  -> continuum Yang--Mills positive spectral gap
+CURRENT ANALYTIC FRONTIER
+  -> construct actual observable-specific physical profile u_e(F)
+  -> prove u_t <= ell_t + sum_s K_ts u_s
+  -> prove a genuine global profile majorant
+  -> combine with #4687/#4691 and #4690/#4693
+  -> bounded-core positive-beta six-spatial Poincare
+  -> #4650 full joint L2
+  -> #4651 volume-independent physical transfer gap
+  -> thermodynamic / continuum construction
 ~~~
 
-## 1. High-temperature physical contraction is integrated
+## 1. Beta-zero endpoint is closed
 
-The response/covariance chain #4634-#4648 is no longer the active obstruction. It reaches a genuine volume-independent strict physical sweep contraction on a positive high-temperature interval.
+The exact finite-volume beta-zero endpoint is no longer a frontier.
 
-This is a finite-volume physical contraction theorem. It is deliberately **not** identified with an L2 Poincare/Rayleigh theorem without an explicit bridge.
-
-## 2. The genuine L2 receiver is integrated
-
-PR #4650 closes the bounded-core-to-full-L2 extension for the six-spatial residual energy.
-
-PR #4651 defines the genuine six-spatial random scan
-
-~~~text
-P_rs = (1/6) * sum_c P_c
-~~~
-
-and proves the Hilbert identity behind
-
-~~~text
-kappa * ||x||^2 <= (1/6) * sum_c ||x - P_c x||^2
-~~~
-
-if and only if
-
-~~~text
-inner(P_rs x, x) <= (1-kappa) * ||x||^2.
-~~~
-
-The physical receiver converts any genuine q < 1 into
-
-~~~text
-3*(1-q)/8 <= physical transfer gap.
-~~~
-
-PR #4652 provides the finite tensorization inequality for pairwise commuting self-adjoint idempotent projections.
-
-## 3. The exact beta-zero physical endpoint is closed
-
-PRs #4653-#4657 prove, at beta = 0,
-
-~~~text
-ambient transfer = |1_Haar><1_Haar|
-physical transfer = |1_phys><1_phys|
-vacuum measure = spatial Haar
-ground-state joint measure = pair Haar
-~~~
-
-and on the full physical top-orthogonal sector
-
-~~~text
-normalized physical transfer = 0
-physical transfer gap = 1.
-~~~
-
-The exact gap value one is finite-volume and volume-independent. It is not by itself a positive-beta or continuum mass gap.
-
-## 4. Beta-zero six-spatial pair-Haar geometry is now closed
-
-The structural lane that was still open at #4668 is now complete.
-
-| PR | Integrated role |
-| --- | --- |
-| #4662 | Literal pair-Haar joint L2 carrier and Fin 6 spatial projections |
-| #4663 | Exact color/off-color Haar product decomposition |
-| #4664 | Six-retained common-fixed intersection = complete boundary L2 |
-| #4665 | Projection idempotence and symmetry |
-| #4666 | Product-probability conditional-expectation fiber formula |
-| #4667 | Hilbert receiver: range invariance -> projection commutation |
-| #4668 | Shared-base three-factor conditional-expectation collapse |
-| #4671 | Wilson-specific pair-Haar range invariance |
-| #4672 | Actual pairwise commutation of the six projections |
-| #4673 | Actual full-sweep tensorization and fixed-sector criterion |
-| #4674 | Full-sweep fixed sector = fst-boundary L2 |
-| #4676 | Sweep orthogonal geometry, exact kappa_0=1/6 and q_0=5/6 |
-
-PR #4675 was **closed unmerged and superseded by #4676**. It must not be revived as theorem authority.
-
-The exact beta-zero literal pair-Haar conclusions are:
-
-~~~text
-(1/6) * ||x||^2
-  <= (1/6) * sum_c ||x - P_c x||^2
-
-inner(P_rs x, x)
-  <= (5/6) * ||x||^2
-~~~
-
-for vectors in the complete fst-boundary orthogonal complement.
-
-## 5. The physical beta-zero boundary bridge is integrated
-
-PR #4677 proves the direct literal-carrier bridge:
-
-~~~text
-physical beta-zero top-orthogonal
-  -> literal pair-Haar right-boundary lift
-  -> fst-boundary orthogonal complement.
-~~~
-
-Its generic product-probability lemma says that a snd-measurable L2 vector with zero mean lies in the orthogonal complement of the complete fst-measurable L2 subspace.
-
-PR #4678 provides the complementary Doob/coarse-projection route:
-
-~~~text
-ambient beta-zero transfer kills f
-  -> D_0(U_0 f) = 0
-  -> Q_0(R_0(U_0 f)) = 0.
-~~~
-
-Together these close the obstruction that previously separated the genuine physical beta-zero excitation sector from the pair-Haar six-spatial geometry.
-
-## 6. Immediate next theorem unit
-
-The remaining beta-zero work is now packaging rather than new geometry.
-
-Use #4677 (or equivalently the #4678 coarse-projection route) to place the transformed physical top-orthogonal vector in the hypothesis of #4676, then use the existing linear isometries to transport norms.
-
-The expected packaged conclusions are:
+Canonical conclusions include
 
 ~~~text
 kappa_0 = 1/6
 q_0 = 5/6
+gap(0) >= 1/16        -- six-spatial receiver consistency bound
+gap(0) = 1            -- independent exact endpoint theorem
 ~~~
 
-on the genuine physical beta-zero six-spatial sector.
+The value (1/16) is intentionally retained as a **non-optimal consistency receipt** for the six-spatial L2 route. It is not the exact beta-zero gap.
 
-Feeding q_0 = 5/6 into #4651 gives the consistency lower bound
+## 2. Positive-beta physical matrix side is closed
+
+PRs #4683-#4687 close the finite-dimensional Schur side for the actual physical influence envelope.
+
+The canonical volume/background-independent scalar is
 
 ~~~text
-3*(1 - 5/6)/8 = 1/16.
+q_phys(s,beta)
+  = 18 * eta(beta) + rho_osc(s,beta)
 ~~~
 
-This is not the optimal beta-zero transfer gap: #4657 already proves the exact value
+on the strict physical-sweep interval, with
 
 ~~~text
-gap_beta=0 = 1.
+0 <= q_phys(s,beta) < 1.
 ~~~
 
-The value 1/16 is a consistency receipt for the six-spatial Rayleigh route.
-
-## 7. Main quantitative frontier: positive-beta volume-uniform L2 bridge
-
-The repository now has both sides that must be connected:
+For every finite volume (H) and physical background (A),
 
 ~~~text
-strict volume-independent physical influence/sweep contraction     #4648
-exact/genuine six-spatial L2 Rayleigh receiver                     #4651
-closed beta-zero pair-Haar tensorization and physical bridge       #4662-#4678
+maxRow(K_{H,A})    <= q_phys
+maxColumn(K_{H,A}) <= q_phys.
 ~~~
 
-The missing theorem is a volume-uniform implication of the form
+Hence for every real link profile (v),
 
 ~~~text
-physical interdependence coefficient < 1
-    =>
-genuine ground-state L2 Rayleigh coefficient < 1
+sum_t (sum_s K_ts v_s)^2
+  <= q_phys^2 * sum_s v_s^2.
 ~~~
 
-for positive beta in a high-temperature interval.
+And whenever nonnegative profiles (u,ell) satisfy
 
-Bounded-test / total-variation influence control and L2 Poincare/Rayleigh coercivity remain distinct until this theorem is proved.
+~~~text
+u_t <= ell_t + sum_s K_ts u_s,
+~~~
 
-## 8. Downstream obligations
+the existing receiver gives
 
-After a scale-independent positive-beta L2 coefficient is proved:
+~~~text
+(1-q_phys)^2 * sum_t u_t^2
+  <= sum_t ell_t^2.
+~~~
 
-1. obtain a uniform finite-volume physical transfer gap through the existing receiver;
-2. transport it to Hamiltonian vacuum-orthogonal coercivity;
-3. construct the thermodynamic/infinite-volume physical state;
-4. preserve reflection positivity, gauge invariance, nontrivial observables, and same-root authority;
-5. construct the continuum OS theory;
-6. perform Wightman/OS reconstruction;
-7. prove a unique continuum vacuum and a positive lower spectral edge on its orthogonal complement.
+This is a genuine L2 Schur/resolvent theorem. No bounded-test contraction is being relabeled as an L2 Poincare theorem.
 
-A fixed-volume gap is not automatically a continuum Yang--Mills mass gap.
+## 3. The local-energy side is now link-indexed and volume-independent
+
+PR #4688 proves a generic real-Hilbert theorem: if a stronger block projection (B) absorbs every projection in an ordered sweep, then without any commutativity assumption,
+
+~~~text
+PathLoss(P,cs,x) <= ||x - Bx||^2.
+~~~
+
+PR #4689 specializes this to the genuine ground-state six-spatial system. For every spatial color (c),
+
+~~~text
+PathLoss_c(f) <= ||f - P_c f||^2,
+~~~
+
+and therefore
+
+~~~text
+(1/6) * sum_c PathLoss_c(f)
+  <= E_6sp(f).
+~~~
+
+No color-class cardinality factor appears.
+
+PR #4690 then realizes those successive sweep residuals as a genuine nonnegative spatial-link profile (ell_e(f)):
+
+~~~text
+(1/6) * sum_e ell_e(f)^2
+  = SixSpatialOneLinkSweepPathLoss(f)
+  <= E_6sp(f).
+~~~
+
+This is the receiver-ready local profile.
+
+## 4. The Schur receiver is connected to the concrete sweep profile
+
+PR #4691 composes #4687 and #4690.
+
+For any nonnegative profile (u_e) satisfying the still-observable-specific inequality
+
+~~~text
+u_t <= ell_t(f) + sum_s K_ts u_s,
+~~~
+
+Lean now proves
+
+~~~text
+(1/6) * (1-q_phys)^2 * sum_e u_e^2
+  <= E_6sp(f).
+~~~
+
+A second theorem exposes the remaining global majorant as an explicit premise:
+
+~~~text
+||f - center(f)||^2 <= sum_e u_e^2
+~~~
+
+implies the corresponding relative Poincare inequality.
+
+The coefficient contributed by the already-closed receiver is therefore explicit. The final physical coefficient should **not** be frozen until the actual observable-specific profile normalization, sharp one-link factor, and global majorant are connected.
+
+## 5. Bounded-concrete sweep compatibility is closed
+
+The sharp one-link theorem is formulated on bounded strongly measurable concrete representatives. To use it at sweep intermediates, the bounded-concrete core must survive conditional-expectation updates.
+
+PR #4692 proves exactly this:
+
+~~~text
+f in boundedConcreteCore
+  -> P_e f in boundedConcreteCore
+  -> every finite same-color sweep of f is in boundedConcreteCore
+  -> every canonical sweep prefix is in boundedConcreteCore.
+~~~
+
+The proof uses the ordinary conditional expectation to construct a retained-sigma-algebra representative, proves its essential bound by monotonicity and constant conditional expectations, replaces it by an everywhere bounded representative on a full-measure set, and identifies its L2 class with the genuine `condExpL2` projection.
+
+No pointwise section of an arbitrary L2 quotient representative is used.
+
+## 6. Sharp Haar local coercivity is now available at every sweep stage
+
+PR #4693 combines #4692 with the pre-existing sharp bounded-core one-link theorem.
+
+For every bounded-concrete input, finite same-color sweep prefix (cs), and next link (e), the stage vector
+
+~~~text
+x_cs = realHilbertProjectionSweep P cs f
+~~~
+
+admits an explicit bounded strongly measurable representative (F_{cs}) such that
+
+~~~text
+SharpHaarVarianceFunctional(F_cs,e)
+  <= ENNReal.ofReal (||x_cs - P_e x_cs||^2).
+~~~
+
+Thus the sharp one-link local theorem can be applied at the exact intermediate vectors whose squared residuals form the #4690 path-loss profile.
+
+The exact sharp coefficient (e^{-16eta}) remains carried inside the existing sharp Haar functional.
+
+## 7. Current obstruction: construct the actual physical profile
+
+The next theorem is **not** another matrix norm theorem and is **not** another abstract receiver.
+
+For a bounded concrete ground-state observable (F), construct a genuine spatial-link profile (u_e(F)) from the already-integrated Wilson hybrid/trajectory machinery and prove
+
+~~~text
+u_t(F)
+  <= ell_t(F)
+     + sum_s K_ts u_s(F),
+~~~
+
+where
+
+- (K) is the actual physical influence envelope already controlled by #4687;
+- (ell_t(F)) is the canonical sweep-stage local profile from #4690;
+- the local term is justified stage-by-stage using #4692/#4693 and the existing sharp Haar one-link theorem.
+
+The older raw Wilson spine #852-#906 already contains the canonical hybrid pair profile, target trajectory, endpoint coupling, double trajectory, endpoint covariance, and conditional variance machinery. That infrastructure should be transported/reused rather than reconstructed from scratch.
+
+## 8. The second remaining analytic obligation: global profile majorant
+
+Even after the one-sided inequality, a genuine global comparison is required. Schematically:
+
+~~~text
+||F - center(F)||_L2^2
+  <= sum_e u_e(F)^2
+~~~
+
+or an equivalent independent-pair global energy majorant on the correct ground-state joint carrier.
+
+The raw Wilson hybrid profile already has a finite global pair majorant, but its direct canonical form includes the finite hybrid-path Cauchy cost. The positive-beta ground-state theorem must be connected without accidentally reintroducing an unacceptable volume-dependent constant.
+
+This global majorant is therefore kept explicit as a separate obligation.
+
+## 9. Intended positive-beta chain
+
+~~~text
+#4693 stagewise sharp one-link control
+        +
+#4690 sweep-stage local profile
+        +
+actual physical hybrid profile u_e(F)
+        |
+        v
+observable-specific one-sided inequality
+        |
+        v
+#4687 / #4691 uniform Schur coercivity
+        |
+        v
+genuine global profile majorant
+        |
+        v
+bounded-core six-spatial Poincare coefficient kappa(beta) > 0
+        |
+        v
+#4650 dense bounded-core -> full genuine joint L2
+        |
+        v
+#4651 genuine six-spatial Rayleigh q(beta) < 1
+        |
+        v
+volume-independent positive-beta physical transfer gap
+~~~
+
+Only after this finite-volume physical gap is established does the thermodynamic/continuum program become the active frontier.
+
+## 10. Recent theorem units
+
+| PR | Role | Merge commit |
+| --- | --- | --- |
+| #4681 | exact genuine beta-zero physical six-spatial frame/Rayleigh package | `c0e01312d99171ed9bf7b936e65fbff1f7bf9e2a` |
+| #4682 | transport beta-zero contraction to genuine ground-state L2; receiver lower bound | `1a37b2e19edf476eea37f3da54ec717bd28858ea` |
+| #4683 | generic bidirectional Schur L2 theorem | `38ccad587e4497126ff06c406910163e08c74fdd` |
+| #4684 | isolate physical remote-row obstruction | `3585bdafa89b4a266aec94dfb11bfc36f3e23f6c` |
+| #4685 | connect row/column contraction to bidirectional Schur | `aca7489bb085874703e18f31ad1d569f67af18eb` |
+| #4686 | close remote row with oscillation covariance decay | `6b60ae010004ae9224faeddadd76b17216c7909e` |
+| #4687 | package uniform physical bidirectional Schur coefficient | `e0975339e85cd6c0d9d52a83fe9116540256946d` |
+| #4688 | nested block projection dominates sweep path loss | `a4e6c95450945c10c0dc7257cd7a489b2cc2601a` |
+| #4689 | genuine six-color one-link path-loss bridge | `96047c2028dbdc315bc0fa8af4ddf61d9f2fac71` |
+| #4690 | realize path loss as link-indexed stage profile | `199507d12c903539aad9265f2b6969fb2fca375c` |
+| #4691 | feed sweep-stage profile into uniform Schur receiver | `c99af54a38a0338cee680817d806745a055031f6` |
+| #4692 | preserve bounded-concrete core through one-link sweeps | `911c5246f134e1ac4819e496c3bea2f2b288094c` |
+| #4693 | apply sharp Haar bound at every sweep stage | `73d90bb97eb1a906d1d11eec10314e1ce1feb518` |
+
+PR #4675 remains **closed / unmerged / superseded by #4676**.
 
 ## Lean / mathlib verification discipline
 
 Pinned environment:
 
 - Lean v4.30.0-rc2
-- mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6
+- mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`
 
-Current proof-engineering rules:
+Current engineering rules include:
 
-- inspect the whole changed module, imports, CompileSmoke, and dependent API when CI fails;
+- inspect the entire changed file, imports, CompileSmoke, and dependent API when CI fails;
 - treat the pinned mathlib revision as authority rather than current master;
-- keep dependent Lp measure transport narrow; do not rewrite a proof-indexed Lp type wholesale;
-- make product measurable spaces explicit when conditional-expectation APIs introduce independent ambient measurable-space metavariables;
-- prefer literal `Prod.instMeasurableSpace` when the product sigma-algebra must be definitionally shared;
-- keep ContinuousLinearMap / LinearMap / LinearIsometry coercion boundaries explicit;
-- use `change` only for definitional equality;
-- remember that `rw` needs a syntactic occurrence after elaboration; unfold wrappers before representative-level rewrites;
-- use `simp only` when global simp lemmas would destroy the local representative shape needed by the proof;
-- separate structural simplification from arithmetic normalization; use `norm_num` for exact rational identities;
-- avoid expensive orthogonal-projection instance synthesis when a direct inner-product characterization proves membership in an orthogonal complement;
-- validate the exact PR head and confirm the exact-head completion receipt before merging.
-
-### Recent exact-head validation
-
-- #4676 head `ca05fcd095e84d5f3f56b1ae3cb2c4bc56b3ae52` — Fast Check #14843 / run 35843054541: success.
-- #4677 head `d5da7f0c97f4c736f2e7a41015c003ab1a899a3b` — Fast Check #14856 / run 35850382949: success.
-- #4678 head `43f73b187073e47b678fd5d9f229646c28d97f27` — Fast Check #14855 / run 35850140311: success.
-
-Current theorem-bearing baseline before this docs refresh:
-
-**bbd064ddff7814a804c2ba319e6c365dabd9ecb4**
+- distinguish retained and ambient measurable spaces explicitly in `condExp` / `condExpL2` proofs;
+- if local measurable-space definitions can be inferred as typeclass instances, restore the ambient instance explicitly before ordinary `StronglyMeasurable` arguments;
+- keep dependent Lp transport narrow;
+- prefer typed `simpa using` over broad `rw` for dependent Sigma sums and proof-indexed carriers;
+- remember that `rw` may close a goal automatically;
+- inspect the type of `add_le_add_left/right` rather than relying on the name;
+- normalize finite color indices early when a receiver expects `Fin 6`;
+- after parallel or docs-only merges, fresh-reobserve the theorem-carrier and separate the current pointer from the theorem-bearing baseline;
+- merge only from an exact validated PR head with completed success and exact-head completion receipt.
 
 ## Navigation
 
-- `ROADMAP.md` — detailed completed and remaining theorem units.
+- `ROADMAP.md` — detailed theorem status and restart instructions.
 - `MGAP4D/MathlibAnalytic` — formal analytic development.
-- Theorem-carrier branch: `formal/real-hilbert-uniform-coercive-strong-limit`.
+- theorem-carrier branch: `formal/real-hilbert-uniform-coercive-strong-limit`.
 
 ## Status summary
 
-Integrated formal state now includes:
+The present formal frontier is:
 
-- volume-independent high-temperature physical response/influence contraction;
-- genuine six-spatial L2 Rayleigh receivers;
-- abstract finite tensorization for commuting Hilbert projections;
-- exact beta-zero rank-one ambient and physical transfer;
-- exact beta-zero vacuum and pair-Haar joint laws;
-- exact finite-volume beta-zero physical transfer gap = 1;
-- complete literal beta-zero six-spatial pair-Haar projection geometry;
-- actual pairwise commutation and full-sweep tensorization;
-- exact common-fixed boundary identification;
-- exact literal beta-zero frame coefficient `kappa_0 = 1/6`;
-- exact literal beta-zero random-scan factor `q_0 = 5/6`;
-- direct and Doob/coarse-projection bridges from the genuine physical beta-zero excitation sector into the pair-Haar boundary geometry.
+~~~text
+matrix / Schur side                  CLOSED
+six-spatial sweep local energy       CLOSED
+link-indexed local profile ell_e     CLOSED
+bounded-core sweep invariance        CLOSED
+stagewise sharp Haar coercivity      CLOSED
 
-The immediate small endpoint task is to package the genuine physical beta-zero six-spatial `kappa_0=1/6`, `q_0=5/6` theorem. The major finite-volume quantitative frontier is then the **volume-uniform positive-beta L2 bridge**.
+actual physical profile u_e(F)       OPEN
+one-sided physical profile inequality OPEN
+global profile majorant              OPEN
+positive-beta bounded-core Poincare  OPEN
+full-L2 positive-beta gap            OPEN
+continuum mass gap                   OPEN
+~~~
+
+The most natural next theorem unit is the **ground-state bounded-concrete physical hybrid one-sided profile**: reuse the #852-#906 hybrid/trajectory spine, specialize it to the current ground-state joint/physical conditional law, and prove the one-sided inequality against the #4687 physical envelope with #4690/#4693 providing the local term.
