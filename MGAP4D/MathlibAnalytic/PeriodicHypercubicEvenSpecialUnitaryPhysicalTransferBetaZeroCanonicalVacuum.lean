@@ -27,6 +27,11 @@ noncomputable section
 
 universe u
 
+local instance betaZeroCanonicalVacuumSpecialUnitaryMeasurableSpace
+    (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 /-- Pointwise absolute value on real L2 intertwines real scalar multiplication
 with the absolute value of the scalar. -/
 theorem realL2Abs_smul
@@ -42,8 +47,9 @@ theorem realL2Abs_smul
     Lp.coeFn_smul c f,
     realL2Abs_coeFn f,
     Lp.coeFn_smul |c| (realL2Abs f)] with x hAbs hSmul hF hOut
-  rw [hAbs, hOut, hSmul, hF]
-  exact abs_mul c (f x)
+  rw [hAbs, hOut, hSmul]
+  simp only [Pi.smul_apply, smul_eq_mul]
+  rw [hF, abs_mul]
 
 /-- The physical absolute-value operation obeys the same scalar rule. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalRealL2Abs_smul
