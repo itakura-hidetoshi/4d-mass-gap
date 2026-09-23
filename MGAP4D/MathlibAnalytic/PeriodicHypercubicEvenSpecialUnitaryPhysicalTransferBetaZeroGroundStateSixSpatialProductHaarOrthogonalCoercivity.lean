@@ -25,6 +25,30 @@ open scoped BigOperators InnerProductSpace InnerProduct
 
 noncomputable section
 
+local instance betaZeroPairHaarOrthogonalCoercivityTopologicalGroup (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance betaZeroPairHaarOrthogonalCoercivityCompactSpace (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance betaZeroPairHaarOrthogonalCoercivitySecondCountableTopology (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance betaZeroPairHaarOrthogonalCoercivityMeasurableSpace (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance betaZeroPairHaarOrthogonalCoercivityBorelSpace (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
+local instance betaZeroPairHaarOrthogonalCoercivitySpatialLinkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
 /-- If a projection occurs in a commuting idempotent sweep, pre-applying that
 projection does not change the final sweep. -/
 theorem realHilbertProjectionSweep_absorb_of_mem
