@@ -175,8 +175,8 @@ theorem
     _ ≤
         |a - b| +
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftInfluenceEnvelopeKernel
-              H N hN beta hbeta A).influence target source * profile target :=
-      add_le_add_left hLaw _
+              H N hN beta hbeta A).influence target source * profile target := by
+      exact add_le_add (le_refl |a - b|) hLaw
     _ = _ := by
       rfl
 
