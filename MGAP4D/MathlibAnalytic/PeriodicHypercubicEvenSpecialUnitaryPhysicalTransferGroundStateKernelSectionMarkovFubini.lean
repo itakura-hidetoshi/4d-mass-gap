@@ -37,6 +37,18 @@ open scoped ENNReal
 
 noncomputable section
 
+local instance groundStateKernelSectionMarkovFubiniSpecialUnitaryTopologicalGroup
+    (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance groundStateKernelSectionMarkovFubiniSpecialUnitaryCompactSpace
+    (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance groundStateKernelSectionMarkovFubiniSpecialUnitarySecondCountable
+    (N : ℕ) : SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
 local instance groundStateKernelSectionMarkovFubiniSpecialUnitaryMeasurableSpace
     (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
