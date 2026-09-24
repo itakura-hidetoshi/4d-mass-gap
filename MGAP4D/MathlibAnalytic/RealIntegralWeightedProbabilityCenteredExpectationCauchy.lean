@@ -191,9 +191,7 @@ theorem realIntegralWeightedProbabilityMeasure_centered_integral_sub_abs_le_full
   have hEnergy :
       Integrable
         (fun x => (X x - center) ^ 2 * (p x + q x)) μ := by
-    apply (hEnergyP.add hEnergyQ).congr
-    filter_upwards with x
-    ring
+    simpa only [Pi.add_apply, mul_add] using hEnergyP.add hEnergyQ
 
   have hCore :=
     centered_density_difference_integral_abs_le_fullL1_coefficient_mul_sqrt_energy
