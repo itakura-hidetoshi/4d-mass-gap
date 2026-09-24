@@ -1,0 +1,11 @@
+import MGAP4D.MathlibAnalytic.LikelihoodRatioCenteredExpectationCauchy
+
+namespace MGAP4D.MathlibAnalytic
+
+noncomputable section
+
+#check HaarLikelihoodRatioInfluence.centered_density_difference_integral_abs_le_fullL1_coefficient_mul_sqrt_energy
+
+end
+
+end MGAP4D.MathlibAnalytic
