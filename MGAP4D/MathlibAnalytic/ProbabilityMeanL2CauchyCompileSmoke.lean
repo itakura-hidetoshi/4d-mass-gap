@@ -1,0 +1,7 @@
+import MGAP4D.MathlibAnalytic.ProbabilityMeanL2Cauchy
+
+namespace MGAP4D.MathlibAnalytic
+
+#check integral_abs_le_sqrt_integral_sq_of_memLp_two_probability
+
+end MGAP4D.MathlibAnalytic
