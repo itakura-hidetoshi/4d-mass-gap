@@ -1,0 +1,12 @@
+import MGAP4D.MathlibAnalytic.RealIntegralPointwiseRMSResponseL2
+
+namespace MGAP4D.MathlibAnalytic
+
+noncomputable section
+
+#check RealIntegralPointwiseRMSResponseL2.sqrt_integral_sq_le_mul_sqrt_integral_of_pointwise
+#check RealIntegralPointwiseRMSResponseL2.sqrt_integral_sq_le_mul_of_pointwise_and_energy_majorant
+
+end
+
+end MGAP4D.MathlibAnalytic
