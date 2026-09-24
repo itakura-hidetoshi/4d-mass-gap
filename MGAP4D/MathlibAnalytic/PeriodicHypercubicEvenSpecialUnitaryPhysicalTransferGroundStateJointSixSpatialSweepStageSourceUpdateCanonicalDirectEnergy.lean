@@ -65,7 +65,7 @@ target is exactly restriction after updating the complete configuration. -/
 theorem
     periodicHypercubicEvenSpatialSliceOffTargetSourceUpdate_offTargetRestriction
     {H : ℕ}
-    {Gauge : Type*}
+    {Gauge : Type}
     [DecidableEq (PeriodicHypercubicEvenSpatialSliceLink H)]
     (target source : PeriodicHypercubicEvenSpatialSliceLink H)
     (hne : target ≠ source)
@@ -105,7 +105,7 @@ second value.  Kept explicit so downstream proofs do not depend on a particular
 simp presentation of `Function.update` in the pinned Lean environment. -/
 theorem periodicHypercubicEvenSpatialSliceSourceUpdate_update
     {H : ℕ}
-    {Gauge : Type*}
+    {Gauge : Type}
     [DecidableEq (PeriodicHypercubicEvenSpatialSliceLink H)]
     (A : PeriodicHypercubicEvenSpatialSliceConfiguration H Gauge)
     (source : PeriodicHypercubicEvenSpatialSliceLink H)
@@ -123,7 +123,7 @@ be read after first changing source to any `u`. -/
 theorem
     periodicHypercubicEvenSpatialSliceOffTargetSourceUpdate_offTargetRestriction_eq_after_firstUpdate
     {H : ℕ}
-    {Gauge : Type*}
+    {Gauge : Type}
     [DecidableEq (PeriodicHypercubicEvenSpatialSliceLink H)]
     (target source : PeriodicHypercubicEvenSpatialSliceLink H)
     (hne : target ≠ source)
