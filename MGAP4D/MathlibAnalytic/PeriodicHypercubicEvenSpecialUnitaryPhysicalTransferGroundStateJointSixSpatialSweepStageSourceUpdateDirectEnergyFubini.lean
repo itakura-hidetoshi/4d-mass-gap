@@ -23,8 +23,8 @@ No source/target heat-bath commutation and no change of coefficient is used.
 
 namespace MGAP4D.MathlibAnalytic
 
-open MeasureTheory Set
-open scoped ENNReal
+open MeasureTheory ProbabilityTheory Set
+open scoped ENNReal ProbabilityTheory
 
 noncomputable section
 
