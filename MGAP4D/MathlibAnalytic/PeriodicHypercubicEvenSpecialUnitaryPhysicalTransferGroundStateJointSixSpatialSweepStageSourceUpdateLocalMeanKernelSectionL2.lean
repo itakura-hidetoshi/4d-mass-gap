@@ -116,6 +116,10 @@ theorem
   let rightF :=
     fun C : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
       F (left, C)
+  letI : IsProbabilityMeasure μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousProbabilityMeasure_isProbabilityMeasure
+      H N hN beta hbeta
+      (Function.update (Function.update B distinguishedSource k) link g₂)
   have hRightLp : MemLp rightF 2 μ := by
     simpa [μ, rightF] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointKernelSectionRight_memLp_two_of_bounded
@@ -136,7 +140,6 @@ theorem
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabRemoteKernelSectionOneLinkFluctuation
   rw [hLocalC, hProjectionC]
-  rfl
 
 /-- The existing remote kernel-section fluctuation is L2 for a bounded concrete
 joint representative restricted to one fixed left configuration. -/
@@ -238,11 +241,19 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourceUpdateKernelSectionFluctuation_memLp_two_of_remote
       H N hN beta hbeta B link distinguishedSource hRefNe hNoShare
       k g₂ F hF bound hbound left
-  have hQRep :=
-    hQ.coeFn_toLp
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabRemoteKernelSectionOneLinkFluctuation
-        H N hN beta hbeta B link distinguishedSource link k g₂
-        (fun C => F (left, C)))
+  have hQRep :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourceUpdateLocalMeanKernelSectionL2
+          H N hN beta hbeta B link distinguishedSource hRefNe hNoShare
+          k g₂ F hF bound hbound left =ᵐ[
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousProbabilityMeasure
+          H N hN beta hbeta
+          (Function.update (Function.update B distinguishedSource k) link g₂)]
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabRemoteKernelSectionOneLinkFluctuation
+          H N hN beta hbeta B link distinguishedSource link k g₂
+          (fun C => F (left, C)) := by
+    simpa [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourceUpdateLocalMeanKernelSectionL2] using
+      hQ.coeFn_toLp
   have hLocal :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourceUpdateDiagonalLocalMean_ae_eq_kernelSectionFluctuation_of_remote
       H N hN beta hbeta B link distinguishedSource
