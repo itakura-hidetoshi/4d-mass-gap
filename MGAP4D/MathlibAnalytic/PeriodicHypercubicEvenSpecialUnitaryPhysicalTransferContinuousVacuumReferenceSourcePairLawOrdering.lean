@@ -118,6 +118,9 @@ theorem
   let κ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalIndependentPairKernel
       H N hN beta hbeta B source distinguishedSource source k g₂
+  letI : IsProbabilityMeasure μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure_isProbabilityMeasure
+      H N hN beta hbeta B source distinguishedSource k g₂
   have hPhi : Measurable
       (fun z :
         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
@@ -209,6 +212,9 @@ theorem
   let κ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalIndependentPairKernel
       H N hN beta hbeta B source distinguishedSource source k g₂
+  letI : IsProbabilityMeasure μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure_isProbabilityMeasure
+      H N hN beta hbeta B source distinguishedSource k g₂
   have hPhi : Measurable
       (fun z :
         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
@@ -320,7 +326,11 @@ theorem
       rw [← lintegral_indicator_one hPre]
       apply lintegral_congr
       intro z
-      simp [F]
+      by_cases hz :
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourcePairFirstUpdatedBackground
+            H N source z ∈ s
+      · simp [F, hz]
+      · simp [F, hz]
     _ = ∫⁻ A, F A
         ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
           H N hN beta hbeta B source distinguishedSource k g₂ := hMap
