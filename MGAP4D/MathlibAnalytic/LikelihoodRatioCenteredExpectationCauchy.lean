@@ -122,21 +122,37 @@ theorem centered_density_difference_integral_abs_le_fullL1_coefficient_mul_sqrt_
     dsimp [E]
     apply integral_congr_ae
     exact Filter.Eventually.of_forall fun x => by
-      rw [Real.rpow_two, Real.norm_eq_abs, sq_abs, hFSq]
+      calc
+        ‖F x‖ ^ (2 : ℝ) = ‖F x‖ ^ (2 : ℕ) :=
+          Real.rpow_two _
+        _ = F x ^ 2 := by
+          simp only [Real.norm_eq_abs, sq_abs]
+        _ = (X x - center) ^ 2 * s x :=
+          hFSq x
   have hGNormSq :
       (∫ x, ‖G x‖ ^ (2 : ℝ) ∂μ) = D := by
     dsimp [D]
     apply integral_congr_ae
     exact Filter.Eventually.of_forall fun x => by
-      rw [Real.rpow_two, Real.norm_eq_abs, sq_abs, hGSq]
+      calc
+        ‖G x‖ ^ (2 : ℝ) = ‖G x‖ ^ (2 : ℕ) :=
+          Real.rpow_two _
+        _ = G x ^ 2 := by
+          simp only [Real.norm_eq_abs, sq_abs]
+        _ = ((p x - q x) ^ 2) / s x :=
+          hGSq x
+  have hFMemOfReal : MemLp F (ENNReal.ofReal (2 : ℝ)) μ := by
+    simpa using hFMem
+  have hGMemOfReal : MemLp G (ENNReal.ofReal (2 : ℝ)) μ := by
+    simpa using hGMem
   have hHolderRaw :=
     integral_mul_norm_le_Lp_mul_Lq
-      Real.HolderConjugate.two_two hFMem hGMem
+      Real.HolderConjugate.two_two hFMemOfReal hGMemOfReal
   have hHolder :
       (∫ x, |F x| * |G x| ∂μ) ≤
         Real.sqrt E * Real.sqrt D := by
     rw [hFNormSq, hGNormSq] at hHolderRaw
-    simpa [Real.norm_eq_abs, ← Real.sqrt_eq_rpow] using hHolderRaw
+    simpa [Real.norm_eq_abs, Real.sqrt_eq_rpow] using hHolderRaw
   have hE0 : 0 ≤ E := by
     dsimp [E, s]
     exact integral_nonneg fun x =>
