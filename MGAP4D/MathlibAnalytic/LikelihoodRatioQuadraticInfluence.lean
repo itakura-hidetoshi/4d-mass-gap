@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonConditionalResidualWeightedInfluence
+import MGAP4D.MathlibAnalytic.FinitePositiveWeightCrossRatioInfluenceTransform
 import Mathlib.Tactic
 
 /-!
