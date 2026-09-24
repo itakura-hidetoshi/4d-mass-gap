@@ -111,7 +111,6 @@ theorem quadratic_defect_integral_le_fullL1_coefficient_sq
       exact ENNReal.toReal_mono ENNReal.ofReal_ne_top hBound
     _ = (2 * coefficient K) ^ 2 := by
       rw [ENNReal.toReal_ofReal (sq_nonneg _)]
-  simpa [d]
 
 end HaarLikelihoodRatioInfluence
 
