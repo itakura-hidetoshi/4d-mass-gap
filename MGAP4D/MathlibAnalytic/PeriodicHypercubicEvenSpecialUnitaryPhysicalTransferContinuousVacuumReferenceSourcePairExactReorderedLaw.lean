@@ -125,6 +125,12 @@ instance
     IsProbabilityMeasure
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceSecondBackgroundMeasure
         H N hN beta hbeta B distinguishedSource source k g₂) := by
+  let μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
+      H N hN beta hbeta B source distinguishedSource k g₂
+  letI : IsProbabilityMeasure μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure_isProbabilityMeasure
+      H N hN beta hbeta B source distinguishedSource k g₂
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceSecondBackgroundMeasure
   infer_instance
@@ -157,6 +163,9 @@ theorem
   let μ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
       H N hN beta hbeta B source distinguishedSource k g₂
+  letI : IsProbabilityMeasure μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure_isProbabilityMeasure
+      H N hN beta hbeta B source distinguishedSource k g₂
   let κ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalKernel
       H N hN beta hbeta B source distinguishedSource source k g₂
@@ -181,6 +190,9 @@ theorem
           Phi (Function.update A source uv.1, uv.2)) := by
       exact hPhi.comp
         (((measurable_update A).comp measurable_fst).prodMk measurable_snd)
+    unfold
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalIndependentPairKernel
+    rw [Kernel.prod_apply]
     change
       (∫⁻ uv,
         Phi (Function.update A source uv.1, uv.2)
@@ -234,15 +246,23 @@ theorem
       intro A
       exact hFiber A
     _ = ∫⁻ A, Hfun A ∂μ := by
-      have hStationary :=
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure_lintegral_oneLinkFiber
-          H N hN beta hbeta B source distinguishedSource source k g₂
-          Hfun hHfun
-      apply hStationary.trans'
-      apply lintegral_congr
-      intro A
-      rw [
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalKernel_apply]
+      calc
+        (∫⁻ A,
+          ∫⁻ u, Hfun (Function.update A source u) ∂κ A ∂μ) =
+          ∫⁻ A,
+            ∫⁻ u, Hfun (Function.update A source u)
+              ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
+                H N hN beta hbeta B source distinguishedSource source k g₂ A
+            ∂μ := by
+          apply lintegral_congr
+          intro A
+          rw [
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalKernel_apply]
+        _ = ∫⁻ A, Hfun A ∂μ := by
+          simpa [μ] using
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure_lintegral_oneLinkFiber
+              H N hN beta hbeta B source distinguishedSource source k g₂
+              Hfun hHfun
     _ = ∫⁻ y, Phi y
         ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceSecondBackgroundMeasure
           H N hN beta hbeta B distinguishedSource source k g₂ := by
