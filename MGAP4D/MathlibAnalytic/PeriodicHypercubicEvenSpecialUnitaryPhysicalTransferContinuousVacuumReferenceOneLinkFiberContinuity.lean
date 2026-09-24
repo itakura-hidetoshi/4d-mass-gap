@@ -46,6 +46,28 @@ local instance referenceOneLinkFiberContinuitySpecialUnitaryBorelSpace
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
+/-- A fixed-right section of the raw one-slab kernel is continuous in the
+left spatial-slice configuration.  This small theorem isolates the joint-kernel
+composition so downstream reference-weight proofs do not spend their heartbeat
+budget reducing the full product at the same time. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous_left_fixedRight
+    (H N : ℕ)
+    (beta : ℝ)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
+    Continuous
+      (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta A B) := by
+  have hPair :
+      Continuous
+        (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+          (A, B)) :=
+    continuous_id.prodMk continuous_const
+  exact
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      H N beta).comp hPair
+
 /-- The canonical continuous-vacuum reference weight is continuous in its left
 spatial-slice configuration. -/
 theorem
@@ -73,18 +95,13 @@ theorem
             H N beta A B target g₂) :=
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_continuous_left
       H N beta B target g₂
-  have hPair :
-      Continuous
-        (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
-          (A, Function.update B source k)) :=
-    continuous_id.prodMk continuous_const
   have hKernel :
       Continuous
         (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
             H N beta A (Function.update B source k)) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta).comp hPair
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous_left_fixedRight
+      H N beta (Function.update B source k)
   change Continuous
     (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
