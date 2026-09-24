@@ -1,0 +1,11 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointBoundedConcretePhysicalInfluenceBridge
+
+namespace MGAP4D.MathlibAnalytic
+
+noncomputable section
+
+#check periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkConcreteSection_physicalLeft_difference_le_envelopeKernel_of_bound_le_one
+
+end
+
+end MGAP4D.MathlibAnalytic
