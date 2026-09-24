@@ -1,0 +1,13 @@
+import MGAP4D.MathlibAnalytic.LikelihoodRatioQuadraticInfluenceIntegratedReal
+
+namespace MGAP4D.MathlibAnalytic
+
+noncomputable section
+
+#check HaarLikelihoodRatioInfluence.quadratic_defect_nonneg_of_density_nonneg
+#check HaarLikelihoodRatioInfluence.quadratic_defect_integrable
+#check HaarLikelihoodRatioInfluence.quadratic_defect_integral_le_fullL1_coefficient_sq
+
+end
+
+end MGAP4D.MathlibAnalytic
