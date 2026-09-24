@@ -1,0 +1,11 @@
+import MGAP4D.MathlibAnalytic.RealIntegralWeightedProbabilityCenteredExpectationCauchy
+
+namespace MGAP4D.MathlibAnalytic
+
+noncomputable section
+
+#check HaarLikelihoodRatioInfluence.realIntegralWeightedProbabilityMeasure_centered_integral_sub_abs_le_fullL1_coefficient_mul_sqrt_energy
+
+end
+
+end MGAP4D.MathlibAnalytic
