@@ -186,7 +186,7 @@ theorem
       (Kernel.id ×ₖ κ).map (Prod.map id Prod.swap) =
         Kernel.id ×ₖ κ
     rw [← Kernel.map_prod_map _ _ measurable_id measurable_swap]
-    rw [Kernel.id_map measurable_id]
+    rw [Kernel.map_id]
     rw [
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalIndependentPairKernel_map_swap
         H N hN beta hbeta B referenceTarget referenceSource fiber k g₂]
