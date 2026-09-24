@@ -231,7 +231,7 @@ theorem
   apply Lp.ext
   filter_upwards [hRep, hZero] with C hRepC hZeroC
   rw [hRepC, hZeroC]
-  rfl
+  simp
 
 end
 
