@@ -78,6 +78,9 @@ theorem
   let μA :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
       H N hN beta hbeta B referenceTarget referenceSource fiber k g₂ A
+  letI : IsProbabilityMeasure μA :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_isProbabilityMeasure
+      H N hN beta hbeta B referenceTarget referenceSource fiber k g₂ A
   simpa [μA] using (Measure.prod_swap (μ := μA) (ν := μA))
 
 /-- Generic reference background together with two iid values from one selected
@@ -162,6 +165,9 @@ theorem
   let μ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
       H N hN beta hbeta B referenceTarget referenceSource k g₂
+  letI : IsProbabilityMeasure μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure_isProbabilityMeasure
+      H N hN beta hbeta B referenceTarget referenceSource k g₂
   let κ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalIndependentPairKernel
       H N hN beta hbeta B referenceTarget referenceSource fiber k g₂
@@ -179,7 +185,7 @@ theorem
     change
       (Kernel.id ×ₖ κ).map (Prod.map id Prod.swap) =
         Kernel.id ×ₖ κ
-    rw [Kernel.map_prod_map _ _ measurable_id measurable_swap]
+    rw [← Kernel.map_prod_map _ _ measurable_id measurable_swap]
     rw [Kernel.id_map measurable_id]
     rw [
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalIndependentPairKernel_map_swap
