@@ -1,0 +1,13 @@
+import MGAP4D.MathlibAnalytic.LikelihoodRatioQuadraticInfluence
+
+namespace MGAP4D.MathlibAnalytic
+
+noncomputable section
+
+#check HaarLikelihoodRatioInfluence.quadratic_defect_le_coefficient_sq_mul_add
+#check HaarLikelihoodRatioInfluence.two_mul_quadratic_defect_le_fullL1_coefficient_sq_mul_add
+#check HaarLikelihoodRatioInfluence.two_mul_quadratic_defect_le_crossRatioInfluenceTransform_sq_mul_add
+
+end
+
+end MGAP4D.MathlibAnalytic
