@@ -49,6 +49,11 @@ local instance sourceUpdateMeanDecompositionSpecialUnitaryBorelSpace
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
+local instance sourceUpdateMeanDecompositionSpatialLinkFintype
+    (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
 /-- Retained off-target configuration after replacing one off-target source
 link. -/
 def periodicHypercubicEvenSpatialSliceOffTargetSourceUpdate
