@@ -45,6 +45,10 @@ local instance groundStateKernelSectionMarkovFubiniSpecialUnitaryBorelSpace
     (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
+local instance groundStateKernelSectionMarkovFubiniSpatialLinkFintype
+    (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
 /-- The canonical continuous fixed-right kernel-section weight is jointly
 continuous in the retained right boundary and the sampled left boundary. -/
 theorem
