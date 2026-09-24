@@ -143,7 +143,7 @@ theorem
           ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
             H N hN beta hbeta B source distinguishedSource source k g₂ C
   rw [integral_sub hConstInt hUpdatedInt]
-  simp only [integral_const, measureReal_univ_eq_one, smul_eq_mul, mul_one]
+  rw [integral_const, probReal_univ, one_smul]
   rw [hHeat]
 
 /-- Under the existing remote full-law identification, the diagonal local mean
