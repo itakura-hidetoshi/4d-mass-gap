@@ -2,19 +2,16 @@ import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransf
 import Mathlib.Tactic
 
 /-!
-# Continuity of the continuous-vacuum reference one-link fiber weight
+# Measurability of the continuous-vacuum reference one-link fiber weight
 
-This module isolates the topological/measurable transport needed by the RMS
+This module isolates the measurable transport needed by the RMS
 background-update theorem.
 
-The proof is deliberately split into three small layers:
-
-1. the full reference weight is continuous in the left configuration;
-2. one-link replacement is continuous in the inserted compact-group variable;
-3. their composition is the literal one-link fiber weight.
-
-Keeping these layers separate avoids forcing Lean to unfold the entire physical
-reference weight and the fiber replacement in a single WHNF/elaboration step.
+The proof deliberately drops from the already-canonical joint continuity
+theorems to measurability immediately.  Downstream integration requires
+Measurable, not a newly repackaged fixed-section Continuous theorem.  This
+avoids expensive WHNF reduction of the full product topology while preserving
+the exact same mathematical content.
 -/
 
 namespace MGAP4D.MathlibAnalytic
@@ -46,32 +43,30 @@ local instance referenceOneLinkFiberContinuitySpecialUnitaryBorelSpace
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-/-- A fixed-right section of the raw one-slab kernel is continuous in the
-left spatial-slice configuration.  This small theorem isolates the joint-kernel
-composition so downstream reference-weight proofs do not spend their heartbeat
-budget reducing the full product at the same time. -/
+/-- A fixed-right section of the raw one-slab kernel is measurable in the
+left spatial-slice configuration. -/
 theorem
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous_left_fixedRight
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_measurable_left_fixedRight
     (H N : ℕ)
     (beta : ℝ)
     (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
-    Continuous
+    Measurable
       (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
           H N beta A B) := by
   have hPair :
-      Continuous
+      Measurable
         (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
           (A, B)) :=
-    continuous_id.prodMk continuous_const
+    measurable_id.prodMk measurable_const
   exact
     (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta).comp hPair
+      H N beta).measurable.comp hPair
 
-/-- The canonical continuous-vacuum reference weight is continuous in its left
+/-- The canonical continuous-vacuum reference weight is measurable in its left
 spatial-slice configuration. -/
 theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight_continuous_left
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight_measurable_left
     (H N : ℕ)
     (hN : 0 < N)
     (beta : ℝ)
@@ -79,30 +74,30 @@ theorem
     (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
     (target source : PeriodicHypercubicEvenSpatialSliceLink H)
     (k g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ) :
-    Continuous
+    Measurable
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
         H N hN beta hbeta B target source k g₂) := by
   have hOmega :
-      Continuous
+      Measurable
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
           H N hN beta hbeta) :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
-      H N hN beta hbeta
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
+      H N hN beta hbeta).measurable
   have hLocal :
-      Continuous
+      Measurable
         (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
             H N beta A B target g₂) :=
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_continuous_left
-      H N beta B target g₂
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_continuous_left
+      H N beta B target g₂).measurable
   have hKernel :
-      Continuous
+      Measurable
         (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
             H N beta A (Function.update B source k)) :=
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous_left_fixedRight
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_measurable_left_fixedRight
       H N beta (Function.update B source k)
-  change Continuous
+  change Measurable
     (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
           H N hN beta hbeta A *
@@ -112,39 +107,8 @@ theorem
           H N beta A (Function.update B source k))
   exact (hOmega.mul hLocal).mul hKernel
 
-/-- Restricting the continuous full reference weight to an actual spatial
-one-link fiber remains continuous. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight_continuous
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
-    (target source fiber : PeriodicHypercubicEvenSpatialSliceLink H)
-    (k g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ)
-    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
-    Continuous
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight
-        H N hN beta hbeta B target source fiber k g₂ A) := by
-  let replace : Matrix.specialUnitaryGroup (Fin N) ℂ →
-      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N :=
-    fun g =>
-      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
-        H N A fiber g
-  have hReplace : Continuous replace := by
-    simpa only [replace] using
-      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_continuous
-        H N A fiber
-  change Continuous
-    (fun g =>
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
-        H N hN beta hbeta B target source k g₂ (replace g))
-  exact
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight_continuous_left
-      H N hN beta hbeta B target source k g₂).comp hReplace
-
-/-- Measurability receipt used by the normalized-weight RMS Cauchy bridge. -/
+/-- Restricting the measurable full reference weight to an actual continuous
+spatial one-link replacement gives a measurable fiber weight. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight_measurable
     (H N : ℕ)
@@ -157,9 +121,23 @@ theorem
     (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
     Measurable
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight
-        H N hN beta hbeta B target source fiber k g₂ A) :=
-  (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight_continuous
-    H N hN beta hbeta B target source fiber k g₂ A).measurable
+        H N hN beta hbeta B target source fiber k g₂ A) := by
+  let replace : Matrix.specialUnitaryGroup (Fin N) ℂ →
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N :=
+    fun g =>
+      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+        H N A fiber g
+  have hReplace : Measurable replace := by
+    exact
+      (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_continuous
+        H N A fiber).measurable
+  change Measurable
+    (fun g =>
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
+        H N hN beta hbeta B target source k g₂ (replace g))
+  exact
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight_measurable_left
+      H N hN beta hbeta B target source k g₂).comp hReplace
 
 end
 
