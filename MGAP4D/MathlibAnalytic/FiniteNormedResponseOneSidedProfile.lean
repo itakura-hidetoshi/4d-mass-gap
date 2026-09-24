@@ -33,12 +33,12 @@ theorem norm_profile_le_local_add_matrix
     [Fintype ι]
     [NormedAddCommGroup E]
     (matrix : ι → ι → ℝ)
-    (state local : ι → E)
+    (state localPart : ι → E)
     (response : ι → ι → E)
     (localProfile : ι → ℝ)
     (hDecomp : ∀ target,
-      state target = local target + ∑ source, response target source)
-    (hLocal : ∀ target, ‖local target‖ ≤ localProfile target)
+      state target = localPart target + ∑ source, response target source)
+    (hLocal : ∀ target, ‖localPart target‖ ≤ localProfile target)
     (hResponse : ∀ target source,
       ‖response target source‖ ≤ matrix target source * ‖state source‖)
     (target : ι) :
@@ -47,17 +47,17 @@ theorem norm_profile_le_local_add_matrix
         ∑ source, matrix target source * ‖state source‖ := by
   calc
     ‖state target‖ =
-        ‖local target + ∑ source, response target source‖ := by
+        ‖localPart target + ∑ source, response target source‖ := by
           rw [hDecomp target]
-    _ ≤ ‖local target‖ + ‖∑ source, response target source‖ :=
+    _ ≤ ‖localPart target‖ + ‖∑ source, response target source‖ :=
       norm_add_le _ _
-    _ ≤ ‖local target‖ + ∑ source, ‖response target source‖ := by
+    _ ≤ ‖localPart target‖ + ∑ source, ‖response target source‖ := by
       exact add_le_add_left
         (by
           simpa using
             norm_sum_le (Finset.univ : Finset ι)
               (fun source => response target source))
-        ‖local target‖
+        ‖localPart target‖
     _ ≤ localProfile target +
         ∑ source, matrix target source * ‖state source‖ := by
       exact add_le_add
@@ -71,12 +71,12 @@ theorem norm_profile_oneSided
     [Fintype ι]
     [NormedAddCommGroup E]
     (matrix : ι → ι → ℝ)
-    (state local : ι → E)
+    (state localPart : ι → E)
     (response : ι → ι → E)
     (localProfile : ι → ℝ)
     (hDecomp : ∀ target,
-      state target = local target + ∑ source, response target source)
-    (hLocal : ∀ target, ‖local target‖ ≤ localProfile target)
+      state target = localPart target + ∑ source, response target source)
+    (hLocal : ∀ target, ‖localPart target‖ ≤ localProfile target)
     (hResponse : ∀ target source,
       ‖response target source‖ ≤ matrix target source * ‖state source‖) :
     ∀ target,
@@ -86,7 +86,7 @@ theorem norm_profile_oneSided
   intro target
   exact
     norm_profile_le_local_add_matrix
-      matrix state local response localProfile
+      matrix state localPart response localProfile
       hDecomp hLocal hResponse target
 
 end FiniteNormedResponseOneSidedProfile
