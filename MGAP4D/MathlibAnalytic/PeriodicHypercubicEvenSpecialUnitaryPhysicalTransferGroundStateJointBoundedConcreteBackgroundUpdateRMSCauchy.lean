@@ -73,7 +73,10 @@ private theorem integrable_weight_mul_centered_of_bounded
     calc
       |X x - center| ≤ |X x| + |center| := abs_sub _ _
       _ ≤ |bound| + |center| := by
-        exact add_le_add_right ((hXBound x).trans (le_abs_self bound)) _
+        exact
+          add_le_add
+            ((hXBound x).trans (le_abs_self bound))
+            (le_refl |center|)
       _ = M := rfl
   have hMeas :
       AEStronglyMeasurable (fun x => w x * (X x - center)) μ := by
@@ -110,7 +113,10 @@ private theorem integrable_weight_mul_centered_sq_of_bounded
     calc
       |X x - center| ≤ |X x| + |center| := abs_sub _ _
       _ ≤ |bound| + |center| := by
-        exact add_le_add_right ((hXBound x).trans (le_abs_self bound)) _
+        exact
+          add_le_add
+            ((hXBound x).trans (le_abs_self bound))
+            (le_refl |center|)
       _ = M := rfl
   have hCenteredStrong : StronglyMeasurable (fun x => X x - center) :=
     hX.sub stronglyMeasurable_const
