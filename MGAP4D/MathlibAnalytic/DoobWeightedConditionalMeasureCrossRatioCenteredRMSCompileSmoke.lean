@@ -1,0 +1,16 @@
+import MGAP4D.MathlibAnalytic.DoobWeightedConditionalMeasureCrossRatioCenteredRMS
+
+namespace MGAP4D.MathlibAnalytic
+
+noncomputable section
+
+namespace HaarLikelihoodRatioInfluence
+
+#check withDensity_centered_integral_sub_abs_le_fullL1_coefficient_mul_sqrt_energy
+#check doobWeightedMeasure_centered_integral_sub_abs_le_crossRatioInfluenceMajorant_mul_sqrt_energy
+
+end HaarLikelihoodRatioInfluence
+
+end
+
+end MGAP4D.MathlibAnalytic
