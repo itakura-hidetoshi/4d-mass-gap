@@ -123,8 +123,10 @@ theorem quadratic_defect_lintegral_le_fullL1_coefficient_sq
           ∫⁻ x, ENNReal.ofReal (q x) ∂μ) := by
       rw [lintegral_add_left hpOfMeas]
     _ = ENNReal.ofReal a * 2 := by rw [hpLin, hqLin]; norm_num
+    _ = ENNReal.ofReal (a * 2) := by
+      rw [ENNReal.ofReal_mul ha0]
+      norm_num
     _ = ENNReal.ofReal ((2 * coefficient K) ^ 2) := by
-      rw [← ENNReal.ofReal_mul ha0]
       apply congrArg ENNReal.ofReal
       dsimp [a, c]
       ring
