@@ -202,7 +202,7 @@ theorem
           H N hN beta hbeta source F left B distinguishedSource k g₂ CD| := by
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourceUpdateBackwardDirectMean_eq_local_add_lawResponse]
-  exact abs_add _ _
+  exact abs_add_le _ _
 
 /-- On the diagonal old/new background pair the pure law-response term
 vanishes identically. -/
