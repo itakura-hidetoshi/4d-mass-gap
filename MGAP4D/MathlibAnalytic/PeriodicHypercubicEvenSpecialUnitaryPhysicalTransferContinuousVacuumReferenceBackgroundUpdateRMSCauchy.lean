@@ -99,9 +99,18 @@ theorem
     have hLocal :=
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_continuous_left
         H N beta B target g₂
-    have hKernel :=
+    have hPair :
+        Continuous
+          (fun A' : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+            (A', Function.update B source k)) :=
+      continuous_id.prodMk continuous_const
+    have hKernel :
+        Continuous
+          (fun A' : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+              H N beta A' (Function.update B source k)) :=
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-        H N beta).comp (continuous_id.prodMk continuous_const)
+        H N beta).comp hPair
     exact (hOmega.mul hLocal).mul hKernel
   change Measurable
     (fun g =>
