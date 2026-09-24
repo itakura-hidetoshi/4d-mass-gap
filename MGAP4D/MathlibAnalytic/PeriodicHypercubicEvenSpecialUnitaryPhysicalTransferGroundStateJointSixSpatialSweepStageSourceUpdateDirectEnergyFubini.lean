@@ -302,12 +302,18 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkConcreteSectionSourceUpdateCanonicalTripleDirectDifferenceSquare_integrable
         H N hN beta hbeta target source hne F hF bound hbound
         left B distinguishedSource k g₂
+  have hIntComp :
+      Integrable directSq (pair ⊗ₘ κ) := by
+    simpa [triple, pair, κ,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourcePairTargetFiberTripleMeasure]
+      using hInt
   have hFubini :
       (∫ zg, directSq zg ∂triple) =
         ∫ z, ∫ g, directSq (z, g) ∂κ z ∂pair := by
-    unfold
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourcePairTargetFiberTripleMeasure at hInt ⊢
-    exact Measure.integral_compProd hInt
+    have hComp := Measure.integral_compProd hIntComp
+    simpa [triple, pair, κ,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourcePairTargetFiberTripleMeasure]
+      using hComp
   calc
     (∫ zg,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkConcreteSectionSourceUpdateCanonicalTripleDirectDifferenceSquare
