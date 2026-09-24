@@ -74,7 +74,7 @@ theorem sqrt_integral_sq_le_mul_sqrt_integral_of_pointwise
   apply
     (sq_le_sq₀
       (Real.sqrt_nonneg _)
-      (mul_nonneg hCoefficientNonneg (Real.sqrt_nonneg _))).2
+      (mul_nonneg hCoefficientNonneg (Real.sqrt_nonneg _))).mp
   rw [
     Real.sq_sqrt hDeltaIntegralNonneg,
     mul_pow,
