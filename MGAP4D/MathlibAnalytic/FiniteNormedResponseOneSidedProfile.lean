@@ -52,12 +52,12 @@ theorem norm_profile_le_local_add_matrix
     _ ≤ ‖localPart target‖ + ‖∑ source, response target source‖ :=
       norm_add_le _ _
     _ ≤ ‖localPart target‖ + ∑ source, ‖response target source‖ := by
-      exact add_le_add_left
+      exact add_le_add
+        (le_refl ‖localPart target‖)
         (by
           simpa using
             norm_sum_le (Finset.univ : Finset ι)
               (fun source => response target source))
-        ‖localPart target‖
     _ ≤ localProfile target +
         ∑ source, matrix target source * ‖state source‖ := by
       exact add_le_add
