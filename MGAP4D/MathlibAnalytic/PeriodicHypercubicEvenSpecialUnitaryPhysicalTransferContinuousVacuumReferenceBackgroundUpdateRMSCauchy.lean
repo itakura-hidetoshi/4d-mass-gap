@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.RealIntegralWeightedProbabilityCenteredExpectationCauchy
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceOneLinkFiberContinuity
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceBackgroundUpdateHarnackInfluence
 import Mathlib.Tactic
 
@@ -55,68 +56,6 @@ local instance physicalFiberRMSCauchySpatialLinkFintype
     (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
-
-/-- The literal continuous-vacuum reference one-link fiber weight is measurable
-in the inserted compact-group coordinate. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight_measurable
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
-    (target source fiber : PeriodicHypercubicEvenSpatialSliceLink H)
-    (k g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ)
-    (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
-    Measurable
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight
-        H N hN beta hbeta B target source fiber k g₂ A) := by
-  let replace : Matrix.specialUnitaryGroup (Fin N) ℂ →
-      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N :=
-    fun g =>
-      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
-        H N A fiber g
-  have hReplace : Continuous replace := by
-    simpa only [replace] using
-      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_continuous
-        H N A fiber
-  have hReference :
-      Continuous
-        (fun A' : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
-            H N hN beta hbeta B target source k g₂ A') := by
-    change Continuous
-      (fun A' : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-            H N hN beta hbeta A' *
-          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
-            H N beta A' B target g₂) *
-          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-            H N beta A' (Function.update B source k))
-    have hOmega :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
-        H N hN beta hbeta
-    have hLocal :=
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_continuous_left
-        H N beta B target g₂
-    have hPair :
-        Continuous
-          (fun A' : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
-            (A', Function.update B source k)) :=
-      continuous_id.prodMk continuous_const
-    have hKernel :
-        Continuous
-          (fun A' : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
-            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-              H N beta A' (Function.update B source k)) :=
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-        H N beta).comp hPair
-    exact (hOmega.mul hLocal).mul hKernel
-  change Measurable
-    (fun g =>
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
-        H N hN beta hbeta B target source k g₂ (replace g))
-  exact (hReference.comp hReplace).measurable
 
 /-- RMS version of the physical background-update Harnack estimate.
 
