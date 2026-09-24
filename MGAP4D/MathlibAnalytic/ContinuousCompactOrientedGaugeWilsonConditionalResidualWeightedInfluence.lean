@@ -207,6 +207,70 @@ theorem
       C A B target K hK hRatio g)
     (weight g)
 
+
+/-- Log-density oscillation form of the weighted residual-energy domination.
+The coefficient is exactly the existing compact-Haar influence. -/
+theorem
+    continuous_compact_oriented_singleLinkConditionalResidualDensity_weighted_lintegral_le_compactHaarOscillationInfluence
+    (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    (A B : C.base.Configuration)
+    (target : C.base.geometry.Edge)
+    (R : ℝ)
+    (hR : 0 ≤ R)
+    (hRatio : ∀ g : C.base.Gauge,
+      C.singleLinkConditionalDensityReal A target g ≤
+          Real.exp R * C.singleLinkConditionalDensityReal B target g ∧
+        C.singleLinkConditionalDensityReal B target g ≤
+          Real.exp R * C.singleLinkConditionalDensityReal A target g)
+    (weight : C.base.Gauge → ℝ≥0∞) :
+    (∫⁻ g,
+      weight g *
+        (C.singleLinkConditionalLeftResidualDensity A B target g +
+          C.singleLinkConditionalRightResidualDensity A B target g)
+      ∂normalizedCompactHaar C.base.Gauge) ≤
+    ∫⁻ g,
+      weight g *
+        (ENNReal.ofReal (compactHaarOscillationInfluence R) *
+          (C.singleLinkConditionalDensity target A g +
+            C.singleLinkConditionalDensity target B g))
+      ∂normalizedCompactHaar C.base.Gauge := by
+  simpa [compactHaarOscillationInfluence] using
+    continuous_compact_oriented_singleLinkConditionalResidualDensity_weighted_lintegral_le_coefficient
+      C A B target (Real.exp R) (Real.one_le_exp hR) hRatio weight
+
+/-- Centered-square specialization of the weighted residual-energy theorem.
+This is the exact shape required for RMS propagation of a concrete one-link
+section. -/
+theorem
+    continuous_compact_oriented_singleLinkConditionalResidualDensity_centeredSquare_lintegral_le_compactHaarOscillationInfluence
+    (C : ContinuousCompactOrientedGaugeWilsonSystem)
+    (A B : C.base.Configuration)
+    (target : C.base.geometry.Edge)
+    (R : ℝ)
+    (hR : 0 ≤ R)
+    (hRatio : ∀ g : C.base.Gauge,
+      C.singleLinkConditionalDensityReal A target g ≤
+          Real.exp R * C.singleLinkConditionalDensityReal B target g ∧
+        C.singleLinkConditionalDensityReal B target g ≤
+          Real.exp R * C.singleLinkConditionalDensityReal A target g)
+    (X : C.base.Gauge → ℝ)
+    (center : ℝ) :
+    (∫⁻ g,
+      ENNReal.ofReal ((X g - center) ^ 2) *
+        (C.singleLinkConditionalLeftResidualDensity A B target g +
+          C.singleLinkConditionalRightResidualDensity A B target g)
+      ∂normalizedCompactHaar C.base.Gauge) ≤
+    ∫⁻ g,
+      ENNReal.ofReal ((X g - center) ^ 2) *
+        (ENNReal.ofReal (compactHaarOscillationInfluence R) *
+          (C.singleLinkConditionalDensity target A g +
+            C.singleLinkConditionalDensity target B g))
+      ∂normalizedCompactHaar C.base.Gauge := by
+  exact
+    continuous_compact_oriented_singleLinkConditionalResidualDensity_weighted_lintegral_le_compactHaarOscillationInfluence
+      C A B target R hR hRatio
+      (fun g => ENNReal.ofReal ((X g - center) ^ 2))
+
 end
 
 end MGAP4D.MathlibAnalytic
