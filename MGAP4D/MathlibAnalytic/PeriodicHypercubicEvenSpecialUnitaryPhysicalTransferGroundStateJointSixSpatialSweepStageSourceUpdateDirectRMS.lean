@@ -96,35 +96,26 @@ change is bounded by the square root of its exact direct difference energy. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkConcreteSection_sourceUpdatedCenteredMean_direct_difference_le_sqrt_directDifferenceEnergy_of_bounded
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
-    (target source : PeriodicHypercubicEvenSpatialSliceLink H)
-    (hne : target ≠ source)
-    (F :
-      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
-    (hF : StronglyMeasurable F)
-    (bound : ℝ) (hbound : ∀ z, ‖F z‖ ≤ bound)
-    (left B A :
-      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
-    (retained :
-      PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
-        Matrix.specialUnitaryGroup (Fin N) ℂ)
+    (target source : PeriodicHypercubicEvenSpatialSliceLink H) (hne : target ≠ source)
+    (F : (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
+    (hF : StronglyMeasurable F) (bound : ℝ) (hbound : ∀ z, ‖F z‖ ≤ bound)
+    (left B A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (retained : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
+      Matrix.specialUnitaryGroup (Fin N) ℂ)
     (distinguishedSource : PeriodicHypercubicEvenSpatialSliceLink H)
-    (k g₂ u v : Matrix.specialUnitaryGroup (Fin N) ℂ)
-    (center : ℝ) :
+    (k g₂ u v : Matrix.specialUnitaryGroup (Fin N) ℂ) (center : ℝ) :
     |periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkConcreteSectionSourceUpdatedCenteredMean
-          H N hN beta hbeta target source F left B A
-          (periodicHypercubicEvenSpatialSliceOffTargetSourceUpdate
-            target source hne retained u)
-          distinguishedSource k g₂ u center -
+        H N hN beta hbeta target source F left B A
+        (periodicHypercubicEvenSpatialSliceOffTargetSourceUpdate target source hne retained u)
+        distinguishedSource k g₂ u center -
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkConcreteSectionSourceUpdatedCenteredMean
-          H N hN beta hbeta target source F left B A
-          (periodicHypercubicEvenSpatialSliceOffTargetSourceUpdate
-            target source hne retained v)
-          distinguishedSource k g₂ u center| ≤
+        H N hN beta hbeta target source F left B A
+        (periodicHypercubicEvenSpatialSliceOffTargetSourceUpdate target source hne retained v)
+        distinguishedSource k g₂ u center| ≤
       Real.sqrt
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkConcreteSectionSourceUpdateDirectDifferenceEnergy
-          H N hN beta hbeta target source hne F left B A retained
-          distinguishedSource k g₂ u v) := by
+          H N hN beta hbeta target source hne F left B A retained distinguishedSource k g₂ u v) := by
   let retainedU :=
     periodicHypercubicEvenSpatialSliceOffTargetSourceUpdate
       target source hne retained u
@@ -235,46 +226,34 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkConcreteSection_sourceUpdatedCenteredMean_difference_le_sqrt_directDifferenceEnergy_add_envelope_mul_targetProfile_of_bounded
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (target : PeriodicHypercubicEvenSpatialSliceLink H)
-    (F :
-      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
-    (hF : StronglyMeasurable F)
-    (bound : ℝ) (hbound : ∀ z, ‖F z‖ ≤ bound)
-    (left B A :
-      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
-    (retained :
-      PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
-        Matrix.specialUnitaryGroup (Fin N) ℂ)
+    (F : (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
+    (hF : StronglyMeasurable F) (bound : ℝ) (hbound : ∀ z, ‖F z‖ ≤ bound)
+    (left B A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (retained : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
+      Matrix.specialUnitaryGroup (Fin N) ℂ)
     (distinguishedSource : PeriodicHypercubicEvenSpatialSliceLink H)
-    (k g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ)
-    (center : ℝ)
+    (k g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ) (center : ℝ)
     (profile : PeriodicHypercubicEvenSpatialSliceLink H → ℝ)
-    (hResponse :
-      ∀ retained' :
-          PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
-            Matrix.specialUnitaryGroup (Fin N) ℂ,
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkConcreteSectionTargetResponseBoundedBy
-          H N hN beta hbeta target F left B A retained'
-          distinguishedSource k g₂ center profile)
-    (source : PeriodicHypercubicEvenSpatialSliceLink H)
-    (hne : target ≠ source)
+    (hResponse : ∀ retained' : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
+      Matrix.specialUnitaryGroup (Fin N) ℂ,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkConcreteSectionTargetResponseBoundedBy
+        H N hN beta hbeta target F left B A retained' distinguishedSource k g₂ center profile)
+    (source : PeriodicHypercubicEvenSpatialSliceLink H) (hne : target ≠ source)
     (u v : Matrix.specialUnitaryGroup (Fin N) ℂ) :
     |periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkConcreteSectionSourceUpdatedCenteredMean
-          H N hN beta hbeta target source F left B A
-          (periodicHypercubicEvenSpatialSliceOffTargetSourceUpdate
-            target source hne retained u)
-          distinguishedSource k g₂ u center -
+        H N hN beta hbeta target source F left B A
+        (periodicHypercubicEvenSpatialSliceOffTargetSourceUpdate target source hne retained u)
+        distinguishedSource k g₂ u center -
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkConcreteSectionSourceUpdatedCenteredMean
-          H N hN beta hbeta target source F left B A
-          (periodicHypercubicEvenSpatialSliceOffTargetSourceUpdate
-            target source hne retained v)
-          distinguishedSource k g₂ v center| ≤
+        H N hN beta hbeta target source F left B A
+        (periodicHypercubicEvenSpatialSliceOffTargetSourceUpdate target source hne retained v)
+        distinguishedSource k g₂ v center| ≤
       Real.sqrt
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkConcreteSectionSourceUpdateDirectDifferenceEnergy
-          H N hN beta hbeta target source hne F left B A retained
-          distinguishedSource k g₂ u v) +
+          H N hN beta hbeta target source hne F left B A retained distinguishedSource k g₂ u v) +
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftInfluenceEnvelopeKernel
-            H N hN beta hbeta A).influence target source * profile target := by
+          H N hN beta hbeta A).influence target source * profile target := by
   have hSplit :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkConcreteSection_sourceUpdatedCenteredMean_difference_le_direct_add_envelope_mul_targetProfile
       H N hN beta hbeta target F left B A retained distinguishedSource
