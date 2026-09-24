@@ -229,9 +229,11 @@ theorem
         H N hN beta hbeta B link distinguishedSource hRefNe hNoShare
         k g₂ F hF bound hbound left
   apply Lp.ext
-  filter_upwards [hRep, hZero] with C hRepC hZeroC
-  rw [hRepC, hZeroC]
-  simp
+  exact hRep.trans (hZero.trans
+    (MeasureTheory.Lp.coeFn_zero ℝ 2
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousProbabilityMeasure
+        H N hN beta hbeta
+        (Function.update (Function.update B distinguishedSource k) link g₂))).symm)
 
 end
 
