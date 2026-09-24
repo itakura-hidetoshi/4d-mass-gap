@@ -77,34 +77,37 @@ theorem
       periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
         H N A fiber g
   have hReplace : Continuous replace := by
-    simpa [replace] using
+    simpa only [replace] using
       periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_continuous
         H N A fiber
-  have hOmega :
+  have hReference :
       Continuous
-        (fun g =>
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-            H N hN beta hbeta (replace g)) :=
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
-      H N hN beta hbeta).comp hReplace
-  have hLocal :
-      Continuous
-        (fun g =>
+        (fun A' : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
+            H N hN beta hbeta B target source k g₂ A') := by
+    change Continuous
+      (fun A' : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+            H N hN beta hbeta A' *
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
-            H N beta (replace g) B target g₂) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_continuous_left
-      H N beta B target g₂).comp hReplace
-  have hKernel :
-      Continuous
-        (fun g =>
+            H N beta A' B target g₂) *
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-            H N beta (replace g) (Function.update B source k)) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta).comp (hReplace.prodMk continuous_const)
-  unfold
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
-  simpa [replace] using ((hOmega.mul hLocal).mul hKernel).measurable
+            H N beta A' (Function.update B source k))
+    have hOmega :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
+        H N hN beta hbeta
+    have hLocal :=
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_continuous_left
+        H N beta B target g₂
+    have hKernel :=
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+        H N beta).comp (continuous_id.prodMk continuous_const)
+    exact (hOmega.mul hLocal).mul hKernel
+  change Measurable
+    (fun g =>
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceWeight
+        H N hN beta hbeta B target source k g₂ (replace g))
+  exact (hReference.comp hReplace).measurable
 
 /-- RMS version of the physical background-update Harnack estimate.
 
@@ -257,6 +260,8 @@ theorem
     dsimp [w, vWeight, Au, Av, R]
     unfold
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight
+    simp only [
+      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink]
     rw [hComm u x, hComm v x]
     exact hRaw
 
@@ -269,6 +274,8 @@ theorem
     dsimp [w, vWeight, Au, Av, R]
     unfold
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberWeight
+    simp only [
+      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink]
     rw [hComm v x, hComm u x]
     exact hRaw
 
@@ -281,7 +288,7 @@ theorem
       (by simpa [w, μHaar, Au] using hEnergyU)
       (by simpa [vWeight, μHaar, Av] using hEnergyV)
 
-  simpa [
+  simpa only [
     μHaar, w, vWeight, Au, Av, R,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceBackgroundUpdateHarnackInfluence,
