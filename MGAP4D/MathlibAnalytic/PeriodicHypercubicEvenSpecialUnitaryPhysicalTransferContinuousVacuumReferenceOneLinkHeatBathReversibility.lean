@@ -451,6 +451,12 @@ theorem
   have hPairMap : Measurable pairMap :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkOrderedBackgroundValueConfigurationPairMap_measurable
       H N fiber
+  let μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
+      H N hN beta hbeta B referenceTarget referenceSource k g₂
+  letI : IsProbabilityMeasure μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure_isProbabilityMeasure
+      H N hN beta hbeta B referenceTarget referenceSource k g₂
   apply Measure.ext
   intro s hs
   unfold
@@ -469,6 +475,9 @@ theorem
         Function.update C fiber v) :=
     measurable_update C
   rw [Measure.map_apply hFiberUpdate (measurable_prodMk_left hs)]
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalKernel_apply
+      H N hN beta hbeta B referenceTarget referenceSource fiber k g₂ C]
   rfl
 
 /-- The iid-pair configuration law from PR #4731 is exactly the actual
