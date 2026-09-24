@@ -101,8 +101,7 @@ theorem
       PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
     (hF : StronglyMeasurable F) (bound : ℝ) (hbound : ∀ z, ‖F z‖ ≤ bound)
     (left B A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
-    (retained : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
-      Matrix.specialUnitaryGroup (Fin N) ℂ)
+    (retained : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target → Matrix.specialUnitaryGroup (Fin N) ℂ)
     (distinguishedSource : PeriodicHypercubicEvenSpatialSliceLink H)
     (k g₂ u v : Matrix.specialUnitaryGroup (Fin N) ℂ) (center : ℝ) :
     |periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkConcreteSectionSourceUpdatedCenteredMean
@@ -230,8 +229,7 @@ theorem
       PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
     (hF : StronglyMeasurable F) (bound : ℝ) (hbound : ∀ z, ‖F z‖ ≤ bound)
     (left B A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
-    (retained : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
-      Matrix.specialUnitaryGroup (Fin N) ℂ)
+    (retained : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target → Matrix.specialUnitaryGroup (Fin N) ℂ)
     (distinguishedSource : PeriodicHypercubicEvenSpatialSliceLink H)
     (k g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ) (center : ℝ)
     (profile : PeriodicHypercubicEvenSpatialSliceLink H → ℝ)
