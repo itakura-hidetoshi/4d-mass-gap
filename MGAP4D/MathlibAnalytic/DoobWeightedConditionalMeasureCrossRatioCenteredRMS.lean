@@ -277,45 +277,26 @@ physical remote residual.  The inverse Mobius constant
 K = (2+M)/(2-M) is used only internally; the conclusion is expressed with M,
 so no new external coefficient is introduced. -/
 theorem doobWeightedMeasure_centered_integral_sub_abs_le_crossRatioInfluenceMajorant_mul_sqrt_energy
-    {α : Type*}
-    [MeasurableSpace α]
-    (μ : Measure α)
-    (w v : α → ℝ≥0∞)
-    (hwMeas : Measurable w)
-    (hvMeas : Measurable v)
-    (radius : α → α → ℝ)
-    (M : ℝ)
-    (hMNonneg : 0 ≤ M)
-    (hMltTwo : M < 2)
+    {α : Type*} [MeasurableSpace α]
+    (μ : Measure α) (w v : α → ℝ≥0∞)
+    (hwMeas : Measurable w) (hvMeas : Measurable v)
+    (radius : α → α → ℝ) (M : ℝ) (hMNonneg : 0 ≤ M) (hMltTwo : M < 2)
     (hRadiusNonneg : ∀ x y, 0 ≤ radius x y)
-    (hInfluence : ∀ x y,
-      finitePositiveWeightCrossRatioInfluenceTransform (radius x y) ≤ M)
-    (hwtop : ∀ x, w x ≠ ∞)
-    (hvtop : ∀ x, v x ≠ ∞)
-    (hMassW0 : doobWeightMass μ w ≠ 0)
-    (hMassWtop : doobWeightMass μ w ≠ ∞)
-    (hMassV0 : doobWeightMass μ v ≠ 0)
-    (hMassVtop : doobWeightMass μ v ≠ ∞)
-    (hcross : ∀ x y,
-      w x * v y ≤
-        ENNReal.ofReal (Real.exp (radius x y)) * v x * w y)
-    (X : α → ℝ)
-    (hX : StronglyMeasurable X)
-    (center : ℝ)
-    (hFirstW :
-      Integrable (fun x => X x - center) (doobWeightedMeasure μ w))
-    (hFirstV :
-      Integrable (fun x => X x - center) (doobWeightedMeasure μ v))
-    (hEnergyW :
-      Integrable (fun x => (X x - center) ^ 2) (doobWeightedMeasure μ w))
-    (hEnergyV :
-      Integrable (fun x => (X x - center) ^ 2) (doobWeightedMeasure μ v)) :
+    (hInfluence : ∀ x y, finitePositiveWeightCrossRatioInfluenceTransform (radius x y) ≤ M)
+    (hwtop : ∀ x, w x ≠ ∞) (hvtop : ∀ x, v x ≠ ∞)
+    (hMassW0 : doobWeightMass μ w ≠ 0) (hMassWtop : doobWeightMass μ w ≠ ∞)
+    (hMassV0 : doobWeightMass μ v ≠ 0) (hMassVtop : doobWeightMass μ v ≠ ∞)
+    (hcross : ∀ x y, w x * v y ≤ ENNReal.ofReal (Real.exp (radius x y)) * v x * w y)
+    (X : α → ℝ) (hX : StronglyMeasurable X) (center : ℝ)
+    (hFirstW : Integrable (fun x => X x - center) (doobWeightedMeasure μ w))
+    (hFirstV : Integrable (fun x => X x - center) (doobWeightedMeasure μ v))
+    (hEnergyW : Integrable (fun x => (X x - center) ^ 2) (doobWeightedMeasure μ w))
+    (hEnergyV : Integrable (fun x => (X x - center) ^ 2) (doobWeightedMeasure μ v)) :
     |(∫ x, X x - center ∂doobWeightedMeasure μ w) -
         (∫ x, X x - center ∂doobWeightedMeasure μ v)| ≤
-      M *
-        Real.sqrt
-          ((∫ x, (X x - center) ^ 2 ∂doobWeightedMeasure μ w) +
-            ∫ x, (X x - center) ^ 2 ∂doobWeightedMeasure μ v) := by
+      M * Real.sqrt
+        ((∫ x, (X x - center) ^ 2 ∂doobWeightedMeasure μ w) +
+          ∫ x, (X x - center) ^ 2 ∂doobWeightedMeasure μ v) := by
   let K : ℝ := (2 + M) / (2 - M)
   have hTwoSub : 0 < 2 - M := sub_pos.mpr hMltTwo
   have hK : 1 ≤ K := by
