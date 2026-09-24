@@ -77,10 +77,10 @@ theorem periodicHypercubicEvenSpatialSliceUpdate_comm_of_ne
   funext e
   by_cases hs : e = source
   · subst e
-    simp [Function.update, hne, Ne.symm hne]
+    simp [Function.update, Ne.symm hne]
   · by_cases ht : e = target
     · subst e
-      simp [Function.update, hne, Ne.symm hne, hs]
+      simp [Function.update, hne]
     · simp [Function.update, hs, ht]
 
 /-- The ordered direct square is exactly the full-configuration source-update
@@ -267,7 +267,6 @@ theorem
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceSecondTargetFiberKernel_apply,
           ← periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalKernel_apply
             H N hN beta hbeta B source distinguishedSource target k g₂ C]
-        rfl
       _ = ∫⁻ g, ∫⁻ v, square ((C, v), g) ∂κs C ∂κt C := by
         have hSection :
             Measurable
