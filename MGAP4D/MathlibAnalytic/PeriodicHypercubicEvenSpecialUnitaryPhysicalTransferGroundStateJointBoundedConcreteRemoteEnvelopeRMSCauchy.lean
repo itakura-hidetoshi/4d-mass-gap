@@ -119,9 +119,16 @@ theorem
       K.influence target source =
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioWorstCaseCrossRatioInfluenceMajorant
           H N hN beta hbeta A target source := by
-    dsimp [K]
-    rw [show target ∉ periodicHypercubicEvenSpatialSliceActiveNeighbors H source from hNotActive]
-    simpa using hResidualEq
+    change
+      (if target ∈ periodicHypercubicEvenSpatialSliceActiveNeighbors H source then
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceBackgroundUpdateHarnackInfluence beta
+      else 0) +
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceAlignedRemotePhysicalInfluenceResidual
+          H N hN beta hbeta A source target =
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioWorstCaseCrossRatioInfluenceMajorant
+          H N hN beta hbeta A target source
+    rw [if_neg hNotActive, hResidualEq]
+    norm_num
   have hEntryLeRow :
       K.influence target source ≤ finiteInfluenceKernelRowSum K target := by
     unfold finiteInfluenceKernelRowSum
