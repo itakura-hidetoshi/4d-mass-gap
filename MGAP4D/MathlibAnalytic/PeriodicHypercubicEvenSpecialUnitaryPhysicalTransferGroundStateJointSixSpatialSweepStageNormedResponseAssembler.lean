@@ -61,14 +61,14 @@ theorem
     (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
     (f : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
       H N hN beta hbeta)
-    (state local : PeriodicHypercubicEvenSpatialSliceLink H → E)
+    (state localPart : PeriodicHypercubicEvenSpatialSliceLink H → E)
     (response :
       PeriodicHypercubicEvenSpatialSliceLink H →
         PeriodicHypercubicEvenSpatialSliceLink H → E)
     (hDecomp : ∀ target,
-      state target = local target + ∑ source, response target source)
+      state target = localPart target + ∑ source, response target source)
     (hLocal : ∀ target,
-      ‖local target‖ ≤
+      ‖localPart target‖ ≤
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialOneLinkSweepStageLocalProfile
           H N hN beta hbeta f target)
     (hResponse : ∀ target source,
@@ -95,7 +95,7 @@ theorem
         (fun target source =>
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftInfluenceEnvelopeKernel
             H N hN beta hbeta A).influence target source)
-        state local response
+        state localPart response
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialOneLinkSweepStageLocalProfile
           H N hN beta hbeta f)
         hDecomp hLocal hResponse
