@@ -41,6 +41,10 @@ local instance groundStateKernelSectionMarkovFubiniSpecialUnitaryMeasurableSpace
     (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
 
+local instance groundStateKernelSectionMarkovFubiniSpecialUnitaryBorelSpace
+    (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
 /-- The canonical continuous fixed-right kernel-section weight is jointly
 continuous in the retained right boundary and the sampled left boundary. -/
 theorem
@@ -55,13 +59,25 @@ theorem
             PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousWeight
           H N hN beta hbeta p.1 p.2) := by
-  unfold
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousWeight
-  exact
-    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
-      H N hN beta hbeta).comp continuous_snd).mul
-      ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-        H N beta).comp (continuous_snd.prodMk continuous_fst))
+  let G := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N
+  let omega : G → ℝ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+      H N hN beta hbeta
+  let kernel : G × G → ℝ := fun q =>
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+      H N beta q.1 q.2
+  have hOmega : Continuous omega := by
+    simpa [omega] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
+        H N hN beta hbeta
+  have hKernel : Continuous kernel := by
+    simpa [kernel] using
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+        H N beta
+  have hSwap : Continuous (fun p : G × G => (p.2, p.1)) :=
+    continuous_snd.prodMk continuous_fst
+  change Continuous (fun p : G × G => omega p.2 * kernel (p.2, p.1))
+  exact (hOmega.comp continuous_snd).mul (hKernel.comp hSwap)
 
 /-- Every continuous fixed-right kernel-section weight is Haar-integrable. -/
 theorem
@@ -265,7 +281,7 @@ theorem
               H N hN beta hbeta C]
       refine ⟨ENNReal.ofReal_pos.mpr ?_, ENNReal.ofReal_lt_top⟩
       exact mul_pos
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos_from_uniform_kernel_floor
           H N hN beta hbeta)
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos
           H N hN beta hbeta C)
