@@ -22,20 +22,6 @@ noncomputable section
 
 namespace HaarLikelihoodRatioInfluence
 
-/-- The quadratic density defect is nonnegative. -/
-theorem quadratic_defect_nonneg
-    (p q : ℝ) :
-    0 ≤ ((p - q) ^ 2) / (p + q) := by
-  by_cases h : 0 ≤ p + q
-  · exact div_nonneg (sq_nonneg _) h
-  · have hsum : p + q < 0 := lt_of_not_ge h
-    have hnum : (p - q) ^ 2 = 0 := by
-      by_contra hne
-      have hpos : 0 < (p - q) ^ 2 := lt_of_le_of_ne (sq_nonneg _) (Ne.symm hne)
-      have hneg : ((p - q) ^ 2) / (p + q) < 0 := div_neg_of_pos_of_neg hpos hsum
-      linarith
-    simp [hnum]
-
 /-- Under nonnegative density hypotheses the defect is pointwise nonnegative. -/
 theorem quadratic_defect_nonneg_of_density_nonneg
     {α : Type*}
