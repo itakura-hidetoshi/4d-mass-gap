@@ -81,7 +81,8 @@ theorem
       distinguishedTarget distinguishedSource fiber backgroundFiber
       hFiberTarget hBackgroundFiberDistinct hNoShare
       k g₂ u v A
-  rw [hPair.1, hPair.2] at hFirstU hFirstV hEnergyU hEnergyV ⊢
+  rw [hPair.1] at hFirstU hEnergyU ⊢
+  rw [hPair.2] at hFirstV hEnergyV ⊢
 
   let C : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N :=
     Function.update B distinguishedSource k
