@@ -54,14 +54,14 @@ theorem
       (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
           H N beta A B) := by
-  have hPair :
-      Measurable
+  have hSection :
+      Continuous
         (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
-          (A, B)) :=
-    measurable_id.prodMk measurable_const
-  exact
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+            H N beta A B) :=
     (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta).measurable.comp hPair
+      H N beta).comp₂ continuous_id continuous_const
+  exact hSection.measurable
 
 /-- The canonical continuous-vacuum reference weight is measurable in its left
 spatial-slice configuration. -/
