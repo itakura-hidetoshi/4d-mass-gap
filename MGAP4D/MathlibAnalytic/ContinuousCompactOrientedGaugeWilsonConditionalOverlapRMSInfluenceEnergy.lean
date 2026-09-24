@@ -324,22 +324,30 @@ theorem
     apply lintegral_congr
     intro g
     simp [rD, mul_comm]
+  have hMeasureA :
+      C.singleLinkConditionalMeasure A target = μ.withDensity p := by
+    simpa [μ, p] using
+      continuous_compact_oriented_singleLinkConditionalMeasure_eq_withDensity
+        C A target
+  have hMeasureB :
+      C.singleLinkConditionalMeasure B target = μ.withDensity q := by
+    simpa [μ, q] using
+      continuous_compact_oriented_singleLinkConditionalMeasure_eq_withDensity
+        C B target
   have hA :
       (∫⁻ g, W g ∂C.singleLinkConditionalMeasure A target) =
       ∫⁻ g, W g * p g ∂μ := by
-    rw [continuous_compact_oriented_singleLinkConditionalMeasure_eq_withDensity]
-    rw [lintegral_withDensity_eq_lintegral_mul μ hp hW]
+    rw [hMeasureA, lintegral_withDensity_eq_lintegral_mul μ hp hW]
     apply lintegral_congr
     intro g
-    simp [p, mul_comm]
+    exact mul_comm (p g) (W g)
   have hB :
       (∫⁻ g, W g ∂C.singleLinkConditionalMeasure B target) =
       ∫⁻ g, W g * q g ∂μ := by
-    rw [continuous_compact_oriented_singleLinkConditionalMeasure_eq_withDensity]
-    rw [lintegral_withDensity_eq_lintegral_mul μ hq hW]
+    rw [hMeasureB, lintegral_withDensity_eq_lintegral_mul μ hq hW]
     apply lintegral_congr
     intro g
-    simp [q, mul_comm]
+    exact mul_comm (q g) (W g)
   have hRawLeft :
       (∫⁻ g, W g * (lD g + rD g) ∂μ) =
         (∫⁻ g, W g * lD g ∂μ) +
@@ -362,6 +370,7 @@ theorem
           ∫⁻ g, coeff * (W g * p g + W g * q g) ∂μ := by
         apply lintegral_congr
         intro g
+        simp only [mul_add]
         ac_rfl
       _ = coeff *
           ∫⁻ g, (W g * p g + W g * q g) ∂μ := by
@@ -414,8 +423,32 @@ theorem
   have hResidual :=
     continuous_compact_oriented_singleLinkConditionalResidualMeasure_centeredSquare_sum_lintegral_le_coefficient
       C A B target K hK hRatio X hX center
-  exact hOverlap.trans <|
-    mul_le_mul_of_nonneg_left hResidual (by positivity)
+  calc
+    (∫⁻ z,
+      ENNReal.ofReal ((X z.1 - X z.2) ^ 2)
+      ∂C.singleLinkConditionalOverlapCouplingMeasure A B target) ≤
+        (2 : ℝ≥0∞) *
+          ((∫⁻ g, ENNReal.ofReal ((X g - center) ^ 2)
+              ∂C.singleLinkConditionalLeftResidualMeasure A B target) +
+            ∫⁻ g, ENNReal.ofReal ((X g - center) ^ 2)
+              ∂C.singleLinkConditionalRightResidualMeasure A B target) :=
+      hOverlap
+    _ ≤
+        (2 : ℝ≥0∞) *
+          (ENNReal.ofReal (HaarLikelihoodRatioInfluence.coefficient K) *
+            ((∫⁻ g, ENNReal.ofReal ((X g - center) ^ 2)
+                ∂C.singleLinkConditionalMeasure A target) +
+              ∫⁻ g, ENNReal.ofReal ((X g - center) ^ 2)
+                ∂C.singleLinkConditionalMeasure B target)) := by
+      gcongr
+    _ =
+        (2 : ℝ≥0∞) *
+          ENNReal.ofReal (HaarLikelihoodRatioInfluence.coefficient K) *
+            ((∫⁻ g, ENNReal.ofReal ((X g - center) ^ 2)
+                ∂C.singleLinkConditionalMeasure A target) +
+              ∫⁻ g, ENNReal.ofReal ((X g - center) ^ 2)
+                ∂C.singleLinkConditionalMeasure B target) := by
+      rw [mul_assoc]
 
 /-- Log-density oscillation specialization of the RMS overlap-coupling energy
 bound. -/
