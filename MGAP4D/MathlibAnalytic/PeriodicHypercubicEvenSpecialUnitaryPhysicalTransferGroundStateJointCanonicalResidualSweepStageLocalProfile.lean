@@ -56,15 +56,15 @@ theorem
     [NormedSpace ℝ E]
     [DecidableEq C]
     (P : C → E →L[ℝ] E)
-    (prefix suffix : List C)
+    (pre suffix : List C)
     (x : E)
     (d : C)
-    (hprefix : d ∉ prefix) :
-    ‖realHilbertProjectionSweep P prefix x -
-        P d (realHilbertProjectionSweep P prefix x)‖ ≤
+    (hprefix : d ∉ pre) :
+    ‖realHilbertProjectionSweep P pre x -
+        P d (realHilbertProjectionSweep P pre x)‖ ≤
       realHilbertProjectionSweepStageResidualAmplitude
-        P (prefix ++ d :: suffix) x d := by
-  induction prefix generalizing x with
+        P (pre ++ d :: suffix) x d := by
+  induction pre generalizing x with
   | nil =>
       have hTail :
           0 ≤
@@ -85,12 +85,12 @@ theorem
           (Real.sqrt_nonneg _)).mp
       rw [Real.sq_sqrt (add_nonneg (sq_nonneg _) hTail)]
       exact le_add_of_nonneg_right hTail
-  | cons c prefix ih =>
+  | cons c pre ih =>
       have hdc : d ≠ c := by
         intro h
         apply hprefix
         simp [h]
-      have htail : d ∉ prefix := by
+      have htail : d ∉ pre := by
         intro h
         apply hprefix
         simp [h]
@@ -121,7 +121,7 @@ theorem
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointBoundedConcreteCore
           H N hN beta hbeta) :
     ∃
-      (prefix : List (PeriodicHypercubicEvenFixedSpatialColorLink H color))
+      (pre : List (PeriodicHypercubicEvenFixedSpatialColorLink H color))
       (F :
         (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
@@ -131,7 +131,7 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointBoundedConcreteL2
           H N hN beta hbeta F hF bound hbound =
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkSweepStageVector
-          H N hN beta hbeta color prefix f ∧
+          H N hN beta hbeta color pre f ∧
       ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkCanonicalFiberMeanResidualL2
           H N hN beta hbeta e.1 F hF bound hbound‖ ≤
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkSweepStageLocalProfile
@@ -142,17 +142,17 @@ theorem
   have heMem : e ∈ cs := by
     simp [cs]
   rcases List.eq_append_cons_of_mem heMem with
-    ⟨prefix, suffix, hcs, hprefix⟩
+    ⟨pre, suffix, hcs, hprefix⟩
   rcases
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkSweepStage_exists_boundedRepresentative_canonicalResidualL2_norm_le_residual
-        H N hN beta hbeta color prefix e f hf with
+        H N hN beta hbeta color pre e f hf with
     ⟨F, hF, bound, hbound, hRep, hLocal⟩
-  refine ⟨prefix, F, hF, bound, hbound, hRep, hLocal.trans ?_⟩
+  refine ⟨pre, F, hF, bound, hbound, hRep, hLocal.trans ?_⟩
   have hAmp :=
     realHilbertProjectionSweepStageResidual_norm_le_amplitude_append_cons
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
         H N hN beta hbeta color)
-      prefix suffix f e hprefix
+      pre suffix f e hprefix
   rw [← hcs] at hAmp
   simpa [
     cs,
@@ -177,7 +177,7 @@ theorem
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointBoundedConcreteCore
           H N hN beta hbeta) :
     ∃
-      (prefix :
+      (pre :
         List
           (PeriodicHypercubicEvenFixedSpatialColorLink H
             (periodicHypercubicEvenSpatialSliceLinkColor H e)))
@@ -191,7 +191,7 @@ theorem
           H N hN beta hbeta F hF bound hbound =
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkSweepStageVector
           H N hN beta hbeta
-          (periodicHypercubicEvenSpatialSliceLinkColor H e) prefix f ∧
+          (periodicHypercubicEvenSpatialSliceLinkColor H e) pre f ∧
       ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkCanonicalFiberMeanResidualL2
           H N hN beta hbeta e F hF bound hbound‖ ≤
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialOneLinkSweepStageLocalProfile
@@ -205,8 +205,8 @@ theorem
         H N hN beta hbeta
         (periodicHypercubicEvenSpatialSliceLinkColor H e)
         eColor f hf with
-    ⟨prefix, F, hF, bound, hbound, hRep, hLocal⟩
-  refine ⟨prefix, F, hF, bound, hbound, hRep, ?_⟩
+    ⟨pre, F, hF, bound, hbound, hRep, hLocal⟩
+  refine ⟨pre, F, hF, bound, hbound, hRep, ?_⟩
   simpa [
     eColor,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialOneLinkSweepStageLocalProfile]
