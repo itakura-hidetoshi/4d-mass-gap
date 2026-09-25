@@ -64,8 +64,9 @@ noncomputable def
     (hbeta : 0 ≤ beta)
     (target : PeriodicHypercubicEvenSpatialSliceLink H) :
     Kernel
-      (PeriodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkOuterContext
-        H N target)
+      ((PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        (PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
+          Matrix.specialUnitaryGroup (Fin N) ℂ)))
       (PeriodicHypercubicEvenSpatialSliceTargetLink H target →
         Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   Classical.choose
@@ -121,8 +122,9 @@ noncomputable def
       (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
     (ctx :
-      PeriodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkOuterContext
-        H N target) : ℝ :=
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        (PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
+          Matrix.specialUnitaryGroup (Fin N) ℂ))) : ℝ :=
   let coord :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitContextTargetMeasurableEquiv
       H N target
@@ -172,7 +174,7 @@ theorem
             H N target =>
           ∫ targetCfg, F (coord (ctx, targetCfg)) ∂κ ctx) :=
     hJoint.integral_kernel_prod_right'
-  simpa [
+  simpa only [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkCanonicalFiberMean,
     κ, coord] using hMean
 
