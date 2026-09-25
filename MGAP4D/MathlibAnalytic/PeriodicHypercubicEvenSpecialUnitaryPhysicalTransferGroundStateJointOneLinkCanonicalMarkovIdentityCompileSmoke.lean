@@ -1,0 +1,7 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointOneLinkCanonicalMarkovIdentity
+
+namespace MGAP4D.MathlibAnalytic
+
+#check periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetCanonicalMarkovKernel_lintegral_identity
+
+end MGAP4D.MathlibAnalytic
