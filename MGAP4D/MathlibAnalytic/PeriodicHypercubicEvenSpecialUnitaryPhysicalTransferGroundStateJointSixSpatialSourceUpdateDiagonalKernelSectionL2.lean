@@ -94,11 +94,11 @@ theorem
   have hRetained :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourceDiagonalRetainedBoundary_eq
       H N C link distinguishedSource
-  rw [← hRetained]
-  exact
+  have hBase :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourceUpdateKernelSectionFluctuation_memLp_two_of_remote
       H N hN beta hbeta C link distinguishedSource hRefNe hNoShare
       (C distinguishedSource) (C link) F hF bound hbound C
+  simpa only [hRetained] using hBase
 
 /-- Canonical diagonal local-mean L2 vector at one outer vacuum boundary.  It
 is built directly from the diagonal one-link fluctuation on the literal
@@ -159,11 +159,11 @@ theorem
   have hRetained :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourceDiagonalRetainedBoundary_eq
       H N C link distinguishedSource
-  rw [← hRetained]
-  exact
+  have hBase :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourceUpdateDiagonalLocalMean_ae_eq_kernelSectionFluctuation_of_remote
       H N hN beta hbeta C link distinguishedSource hRefNe hNoShare
       (C distinguishedSource) (C link) F hF bound hbound C
+  simpa only [hRetained] using hBase
 
 /-- The canonical diagonal section L2 vector has the physical diagonal local
 mean as an a.e. representative. -/
