@@ -1,0 +1,7 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointKernelSectionLIntegralDisintegration
+
+namespace MGAP4D.MathlibAnalytic
+
+#check periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJoint_lintegral_eq_vacuum_kernelSection
+
+end MGAP4D.MathlibAnalytic
