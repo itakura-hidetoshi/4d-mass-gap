@@ -155,6 +155,13 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJoint_kernelSection_density_product_eq_fixedLeft
         H N hN beta hbeta z.1 z.2
 
+  letI :
+      IsMarkovKernel (Kernel.withDensity (Kernel.const G μ) q) := by
+    simpa [G, μ, q,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousMarkovKernel] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousMarkovKernel_isMarkovKernel
+        H N hN beta hbeta
+
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_eq_fixedLeftContinuousMeasure,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure_eq_continuousVacuumSquareMeasure]
