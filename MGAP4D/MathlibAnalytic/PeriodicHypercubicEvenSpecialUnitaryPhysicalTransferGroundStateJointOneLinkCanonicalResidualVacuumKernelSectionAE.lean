@@ -130,7 +130,6 @@ theorem
               H N hN beta hbeta C target source target
               (C source) (C target)
               (fun D => F (C, D)) A := by
-    simpa [μ, μOff] at hFiber
     filter_upwards [hFiber] with C hC
     have hProdBase :
         ∀ᵐ z ∂(μTarget.prod μOff),
@@ -180,7 +179,7 @@ theorem
       simpa only [hoff] using hz z.1
     have hPull := hSplit.quasiMeasurePreserving.ae hProd
     filter_upwards [hPull] with A hA
-    simpa only [split.apply_symm_apply] using hA
+    simpa only [split.symm_apply_apply] using hA
   have hKernelSection :
       ∀ᵐ C ∂μ,
         ∀ᵐ A ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousProbabilityMeasure
