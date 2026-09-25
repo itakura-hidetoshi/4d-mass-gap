@@ -372,7 +372,7 @@ theorem
   · exact Real.sqrt_nonneg _
 
 /-- The first centered energy is bounded by the square of the uniform centered
-section bound. -/
+fiberSection bound. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFirstCenteredEnergy_le_sq_bound
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
@@ -401,7 +401,7 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
       H N hN beta hbeta B source distinguishedSource target k g₂
       (Function.update z.1 source z.2.1)
-  let section :
+  let fiberSection :
       Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ :=
     fun g =>
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection
@@ -412,24 +412,24 @@ theorem
       (Function.update z.1 source z.2.1)
   have hM0 : 0 ≤ M := add_nonneg (abs_nonneg _) (abs_nonneg _)
   have hSectionStrong :
-      StronglyMeasurable section := by
+      StronglyMeasurable fiberSection := by
     exact
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection_stronglyMeasurable
         H N target source F hF left center).comp_measurable
         (measurable_const.prodMk measurable_id)
-  have hSectionBound : ∀ g, ‖section g‖ ≤ M := by
+  have hSectionBound : ∀ g, ‖fiberSection g‖ ≤ M := by
     intro g
-    simpa [section, M] using
+    simpa [fiberSection, M] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection_norm_le
         H N target source F bound hbound left center (z, g)
-  have hLp : MemLp section 2 μ :=
+  have hLp : MemLp fiberSection 2 μ :=
     MemLp.of_bound hSectionStrong.aestronglyMeasurable M
       (Filter.Eventually.of_forall hSectionBound)
-  have hSqInt : Integrable (fun g => section g ^ 2) μ := by
+  have hSqInt : Integrable (fun g => fiberSection g ^ 2) μ := by
     simpa only [Pi.pow_apply] using hLp.integrable_sq
-  have hPoint : ∀ g, section g ^ 2 ≤ M ^ 2 := by
+  have hPoint : ∀ g, fiberSection g ^ 2 ≤ M ^ 2 := by
     intro g
-    have hAbs : |section g| ≤ M := by
+    have hAbs : |fiberSection g| ≤ M := by
       simpa [Real.norm_eq_abs] using hSectionBound g
     have hSq := (sq_le_sq₀ (abs_nonneg _) hM0).2 hAbs
     simpa [sq_abs] using hSq
@@ -437,9 +437,9 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFirstCenteredEnergy
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourcePairTargetFiberKernel_apply]
-  change (∫ g, section g ^ 2 ∂μ) ≤ M ^ 2
+  change (∫ g, fiberSection g ^ 2 ∂μ) ≤ M ^ 2
   calc
-    (∫ g, section g ^ 2 ∂μ) ≤ ∫ _g, M ^ 2 ∂μ := by
+    (∫ g, fiberSection g ^ 2 ∂μ) ≤ ∫ _g, M ^ 2 ∂μ := by
       exact integral_mono hSqInt (integrable_const (M ^ 2)) hPoint
     _ = M ^ 2 := by simp
 
@@ -472,7 +472,7 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
       H N hN beta hbeta B source distinguishedSource target k g₂
       (Function.update z.1 source z.2.2)
-  let section :
+  let fiberSection :
       Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ :=
     fun g =>
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection
@@ -483,24 +483,24 @@ theorem
       (Function.update z.1 source z.2.2)
   have hM0 : 0 ≤ M := add_nonneg (abs_nonneg _) (abs_nonneg _)
   have hSectionStrong :
-      StronglyMeasurable section := by
+      StronglyMeasurable fiberSection := by
     exact
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection_stronglyMeasurable
         H N target source F hF left center).comp_measurable
         (measurable_const.prodMk measurable_id)
-  have hSectionBound : ∀ g, ‖section g‖ ≤ M := by
+  have hSectionBound : ∀ g, ‖fiberSection g‖ ≤ M := by
     intro g
-    simpa [section, M] using
+    simpa [fiberSection, M] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection_norm_le
         H N target source F bound hbound left center (z, g)
-  have hLp : MemLp section 2 μ :=
+  have hLp : MemLp fiberSection 2 μ :=
     MemLp.of_bound hSectionStrong.aestronglyMeasurable M
       (Filter.Eventually.of_forall hSectionBound)
-  have hSqInt : Integrable (fun g => section g ^ 2) μ := by
+  have hSqInt : Integrable (fun g => fiberSection g ^ 2) μ := by
     simpa only [Pi.pow_apply] using hLp.integrable_sq
-  have hPoint : ∀ g, section g ^ 2 ≤ M ^ 2 := by
+  have hPoint : ∀ g, fiberSection g ^ 2 ≤ M ^ 2 := by
     intro g
-    have hAbs : |section g| ≤ M := by
+    have hAbs : |fiberSection g| ≤ M := by
       simpa [Real.norm_eq_abs] using hSectionBound g
     have hSq := (sq_le_sq₀ (abs_nonneg _) hM0).2 hAbs
     simpa [sq_abs] using hSq
@@ -508,9 +508,9 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawSecondCenteredEnergy
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourcePairSecondTargetFiberKernel_apply]
-  change (∫ g, section g ^ 2 ∂μ) ≤ M ^ 2
+  change (∫ g, fiberSection g ^ 2 ∂μ) ≤ M ^ 2
   calc
-    (∫ g, section g ^ 2 ∂μ) ≤ ∫ _g, M ^ 2 ∂μ := by
+    (∫ g, fiberSection g ^ 2 ∂μ) ≤ ∫ _g, M ^ 2 ∂μ := by
       exact integral_mono hSqInt (integrable_const (M ^ 2)) hPoint
     _ = M ^ 2 := by simp
 
@@ -761,7 +761,9 @@ theorem
           H N hN beta hbeta B distinguishedSource source k g₂,
         ‖response z‖ ≤ ‖(K.influence target source • amplitude) z‖ := by
     filter_upwards [hResponseRep', hAmplitudeRep', hSmul] with z hR hA hS
-    rw [hR, hS, hA]
+    rw [hR, hS]
+    simp only [Pi.smul_apply, smul_eq_mul]
+    rw [hA]
     have hRaw :=
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawResponseOnCarrier_abs_le_canonicalPinFree_mul_rmsAmplitude_of_bounded
         N hN s hs beta hbeta hcut H target source F hF bound hbound
