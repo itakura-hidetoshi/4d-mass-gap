@@ -457,6 +457,8 @@ theorem
   simp only [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawResponse,
     hne, if_false]
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkConcreteSectionSourceUpdatedCenteredMean
   ring
 
 end
