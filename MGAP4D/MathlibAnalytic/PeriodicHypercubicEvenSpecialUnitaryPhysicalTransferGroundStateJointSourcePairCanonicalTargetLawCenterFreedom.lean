@@ -128,7 +128,7 @@ theorem
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection_stronglyMeasurable
           H N target source F hF left 0).comp_measurable hEmbed
       simpa [
-        X,
+        X, Function.comp_def,
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection] using h
     have hXBound : ∀ g, ‖X g‖ ≤ |bound| := by
       intro g
