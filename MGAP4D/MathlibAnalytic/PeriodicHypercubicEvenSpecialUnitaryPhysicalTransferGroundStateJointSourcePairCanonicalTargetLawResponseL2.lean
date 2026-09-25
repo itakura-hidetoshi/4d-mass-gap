@@ -391,14 +391,23 @@ theorem
         k g₂ center) := by
   by_cases hEq : target = source
   · subst target
-    simpa [
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawResponseOnCarrier] using
-      (stronglyMeasurable_const :
-        StronglyMeasurable
+    have hZero :
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawResponseOnCarrier
+            H N hN beta hbeta source source F left B distinguishedSource
+            k g₂ center =
           (fun _ :
             PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
               (Matrix.specialUnitaryGroup (Fin N) ℂ ×
-                Matrix.specialUnitaryGroup (Fin N) ℂ) => (0 : ℝ)))
+                Matrix.specialUnitaryGroup (Fin N) ℂ) => (0 : ℝ)) := by
+      funext z
+      unfold
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawResponseOnCarrier
+      exact
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawResponse_diag
+          H N hN beta hbeta source F left B z.1 distinguishedSource
+          k g₂ z.2.1 z.2.2 center
+    rw [hZero]
+    exact stronglyMeasurable_const
   · have hFirst :=
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFirstMean_stronglyMeasurable
         H N hN beta hbeta B distinguishedSource source target k g₂
@@ -463,10 +472,12 @@ theorem
               H N source zg.1))
           zg.2| + |center| := abs_sub _ _
     _ ≤ |bound| + |center| := by
-      apply add_le_add_right
-      rw [← Real.norm_eq_abs]
       exact
-        (hbound _).trans (le_abs_self bound)
+        add_le_add
+          (by
+            rw [← Real.norm_eq_abs]
+            exact (hbound _).trans (le_abs_self bound))
+          (le_refl |center|)
 
 /-- Each concrete target-law response is uniformly bounded on the source-pair
 carrier. -/
@@ -498,7 +509,6 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawResponseOnCarrier]
     positivity
   · let M : ℝ := |bound| + |center|
-    have hM0 : 0 ≤ M := add_nonneg (abs_nonneg _) (abs_nonneg _)
     have hFirst :
         ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFirstMean
             H N hN beta hbeta B distinguishedSource source target k g₂
