@@ -772,9 +772,16 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawRMSAmplitudeOnCarrier_nonneg
         H N hN beta hbeta B distinguishedSource source target k g₂
         F left center z
-    simpa [
-      Pi.smul_apply, smul_eq_mul, Real.norm_eq_abs,
-      abs_of_nonneg (mul_nonneg hK0 hAmp0)] using hRaw
+    rw [Real.norm_eq_abs, Real.norm_eq_abs]
+    have hProd0 :
+        0 ≤
+          K.influence target source *
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawRMSAmplitudeOnCarrier
+              H N hN beta hbeta target source F left B distinguishedSource
+              k g₂ center z :=
+      mul_nonneg hK0 hAmp0
+    rw [abs_of_nonneg hProd0]
+    simpa [K] using hRaw
   calc
     ‖response‖ ≤ ‖K.influence target source • amplitude‖ :=
       Lp.norm_le_norm_of_ae_le hPoint
