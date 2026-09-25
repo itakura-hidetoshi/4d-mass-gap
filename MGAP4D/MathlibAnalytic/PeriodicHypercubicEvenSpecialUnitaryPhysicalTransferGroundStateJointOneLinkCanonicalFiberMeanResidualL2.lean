@@ -155,6 +155,11 @@ theorem
     simpa [residual] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkCanonicalFiberMeanResidual_stronglyMeasurable
         H N hN beta hbeta target F hF
+  letI : IsProbabilityMeasure
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+        H N hN beta hbeta) :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_isProbabilityMeasure
+      H N hN beta hbeta
   apply MemLp.of_bound hResidual.aestronglyMeasurable (bound + bound)
   exact Filter.Eventually.of_forall fun z => by
     have hMean :=
