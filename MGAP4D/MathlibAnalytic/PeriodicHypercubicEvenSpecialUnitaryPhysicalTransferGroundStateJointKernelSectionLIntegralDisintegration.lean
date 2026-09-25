@@ -54,6 +54,28 @@ theorem
             H N hN beta hbeta C)
         ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
           H N hN beta hbeta := by
+  letI :
+      IsProbabilityMeasure
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
+          H N hN beta hbeta) :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure_isProbabilityMeasure
+      H N hN beta hbeta
+  letI :
+      IsMarkovKernel
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousMarkovKernel
+          H N hN beta hbeta) :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousMarkovKernel_isMarkovKernel
+      H N hN beta hbeta
+  letI :
+      SFinite
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
+          H N hN beta hbeta) := by
+    infer_instance
+  letI :
+      IsSFiniteKernel
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousMarkovKernel
+          H N hN beta hbeta) := by
+    infer_instance
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_eq_vacuum_compProd_kernelSectionMarkovKernel
       H N hN beta hbeta]
