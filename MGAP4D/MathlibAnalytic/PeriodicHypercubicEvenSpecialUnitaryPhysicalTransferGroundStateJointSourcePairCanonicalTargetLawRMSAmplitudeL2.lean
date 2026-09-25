@@ -401,7 +401,8 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
       H N hN beta hbeta B source distinguishedSource target k g₂
       (Function.update z.1 source z.2.1)
-  let section :=
+  let section :
+      Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ :=
     fun g =>
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection
         H N target source F left center (z, g)
@@ -471,7 +472,8 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
       H N hN beta hbeta B source distinguishedSource target k g₂
       (Function.update z.1 source z.2.2)
-  let section :=
+  let section :
+      Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ :=
     fun g =>
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection
         H N target source F left center (z, g)
@@ -547,7 +549,7 @@ theorem
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawRMSAmplitudeOnCarrier_eq_sqrt_centeredEnergy]
   by_cases hEq : target = source
-  · simp [hEq, M]
+  · simp [hEq]
     positivity
   · simp only [hEq, if_false]
     have hFirst :=
@@ -735,6 +737,22 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawRMSAmplitudeL2_coeFn
       H N hN beta hbeta B distinguishedSource source target k g₂
       F hF bound hbound left center
+  have hResponseRep' :
+      (fun z => response z) =ᵐ[
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceIndependentPairBackgroundMeasure
+          H N hN beta hbeta B distinguishedSource source k g₂]
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawResponseOnCarrier
+          H N hN beta hbeta target source F left B distinguishedSource
+          k g₂ center := by
+    simpa [response] using hResponseRep
+  have hAmplitudeRep' :
+      (fun z => amplitude z) =ᵐ[
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceIndependentPairBackgroundMeasure
+          H N hN beta hbeta B distinguishedSource source k g₂]
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawRMSAmplitudeOnCarrier
+          H N hN beta hbeta target source F left B distinguishedSource
+          k g₂ center := by
+    simpa [amplitude] using hAmplitudeRep
   have hSmul :=
     Lp.coeFn_smul (K.influence target source) amplitude
   have hPoint :
@@ -742,7 +760,7 @@ theorem
         ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceIndependentPairBackgroundMeasure
           H N hN beta hbeta B distinguishedSource source k g₂,
         ‖response z‖ ≤ ‖(K.influence target source • amplitude) z‖ := by
-    filter_upwards [hResponseRep, hAmplitudeRep, hSmul] with z hR hA hS
+    filter_upwards [hResponseRep', hAmplitudeRep', hSmul] with z hR hA hS
     rw [hR, hS, hA]
     have hRaw :=
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawResponseOnCarrier_abs_le_canonicalPinFree_mul_rmsAmplitude_of_bounded
