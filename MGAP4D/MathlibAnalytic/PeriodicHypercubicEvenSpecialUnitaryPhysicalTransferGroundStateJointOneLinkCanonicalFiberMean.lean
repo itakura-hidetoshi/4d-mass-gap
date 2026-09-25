@@ -161,8 +161,9 @@ theorem
   have hJoint :
       StronglyMeasurable
         (fun z :
-          (PeriodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkOuterContext
-              H N target) ×
+          ((PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+              (PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
+                Matrix.specialUnitaryGroup (Fin N) ℂ))) ×
             (PeriodicHypercubicEvenSpatialSliceTargetLink H target →
               Matrix.specialUnitaryGroup (Fin N) ℂ) =>
           F (coord z)) :=
@@ -170,8 +171,9 @@ theorem
   have hMean :
       StronglyMeasurable
         (fun ctx :
-          PeriodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkOuterContext
-            H N target =>
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+            (PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
+              Matrix.specialUnitaryGroup (Fin N) ℂ)) =>
           ∫ targetCfg, F (coord (ctx, targetCfg)) ∂κ ctx) :=
     hJoint.integral_kernel_prod_right'
   simpa only [
