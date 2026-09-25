@@ -1,22 +1,22 @@
 # MGAP4D ROADMAP
 
-## Authority checkpoint — 2026-09-24 JST
+## Authority checkpoint — 2026-09-25 JST
 
 Repository:
 
-**itakura-hidetoshi/4d-mass-gap**
+**`itakura-hidetoshi/4d-mass-gap`**
 
 Unique authoritative theorem-carrier branch:
 
-**formal/real-hilbert-uniform-coercive-strong-limit**
+**`formal/real-hilbert-uniform-coercive-strong-limit`**
 
-Fresh theorem-bearing baseline at this documentation refresh:
+Fresh theorem-bearing baseline immediately before this documentation refresh:
 
-**f22fbd1db7325dfe2da08e90b278b3bd14976b89**
+**`6bd73357bd0aa4d358923806e648a04300253e4c`**
 
-This is the merge commit of PR #4704, **Apply physical RMS Harnack to bounded-concrete ground-state sections**.
+This is the merge commit of PR **#4761**, **Identify canonical fiber mean with diagonal remote projection**.
 
-The default branch **main** is not theorem authority.
+The default branch **`main` is not theorem authority**.
 
 Authority order:
 
@@ -26,7 +26,7 @@ Authority order:
 4. exact-head CI receipts;
 5. historical summaries or memory.
 
-A docs-only merge may advance the branch pointer without changing the theorem-bearing mathematical baseline.
+A docs-only merge may advance the theorem-carrier pointer without changing the theorem-bearing mathematical baseline above.
 
 ---
 
@@ -34,770 +34,619 @@ A docs-only merge may advance the branch pointer without changing the theorem-be
 
 The repository does **not** yet contain a completed proof of the Clay Millennium Yang--Mills existence and mass-gap problem.
 
-### Integrated
+What is currently integrated includes:
 
 - finite-volume periodic Wilson / OS / physical-transfer construction;
 - canonical nonnegative vacuum and ground-state transform;
-- high-temperature response, influence, covariance, and shell-decay machinery;
-- positive volume-independent strict physical sweep interval;
-- genuine six-spatial joint-L2 residual/Rayleigh receivers;
-- exact beta-zero ambient and physical rank-one transfer;
-- beta-zero vacuum measure = spatial Haar;
-- beta-zero ground-state joint measure = pair Haar;
-- exact beta-zero physical transfer gap = 1;
-- genuine beta-zero six-spatial constants kappa_0 = 1/6 and q_0 = 5/6;
-- six-spatial receiver consistency bound gap(0) >= 1/16;
-- positive-beta physical maximum-row and maximum-column closure;
-- volume/background-independent bidirectional Schur coefficient q_phys < 1;
-- ordered one-link sweep path loss controlled by six-spatial residual energy;
-- genuine link-indexed sweep-stage local profile ell_e;
-- direct Schur receiver using that local profile;
-- bounded-concrete core preservation under every one-link sweep prefix;
-- sharp Haar one-link local coercivity available at every sweep stage;
-- bounded-concrete section transport to the actual physical envelope for bounded strongly measurable tests;
-- weighted residual-density energy transport;
-- exact overlap-coupling RMS transport;
-- quadratic likelihood-ratio density-defect control;
-- integrated ENNReal and real-L1 quadratic defect;
-- centered expectation Cauchy transport with linear influence coefficient;
-- normalized real-weight centered RMS transport;
-- actual continuous-vacuum physical one-link RMS background-update Harnack;
-- automatic bounded-concrete ground-state section wrapper for that RMS theorem.
+- high-temperature physical response / influence / covariance machinery;
+- exact beta-zero physical endpoint;
+- genuine one-link and six-spatial conditional-expectation infrastructure;
+- positive-beta bidirectional physical Schur control;
+- link-indexed sweep-stage local-energy profile;
+- source-dependent normed response assembler;
+- exact genuine-joint / kernel-section disintegration;
+- canonical genuine one-link fiber variance and coefficient-one comparison with the global one-link CondExpL2 residual;
+- identification of the canonical fiber mean with the diagonal remote kernel-section projection;
+- identification of the corresponding canonical centered residual with the diagonal remote kernel-section fluctuation.
 
-### Not yet integrated
+The immediate obstruction is no longer the existence of a measurable canonical fiber center.  It is the final exact integration glue from the #4761 fluctuation identity to the #4749 diagonal section L2 norm identity, followed by packaging the resulting coefficient-one localPart carrier for #4723.
 
-- a canonical stagewise observable-specific physical profile u_e(F);
-- the actual full-envelope one-sided inequality
+The independent response-side obstruction remains the transpose-oriented estimate
 
 ~~~text
-u_t(F) <= ell_t(F) + sum_s K_ts u_s(F);
+||R_{s,t}|| <= K_{t,s} ||x_t||.
 ~~~
-
-- transport of the new RMS stagewise bounds through the complete remote/resolvent part of the physical envelope K;
-- a genuine volume-free global profile majorant on the ground-state joint carrier;
-- a positive-beta bounded-core six-spatial Poincare theorem;
-- the resulting full-joint-L2 volume-independent positive-beta Rayleigh coefficient;
-- the resulting scale-independent positive-beta physical transfer/Hamiltonian gap;
-- thermodynamic/infinite-volume physical construction;
-- continuum OS/Wightman Yang--Mills construction;
-- final continuum mass-gap theorem.
 
 ---
 
-## 1. Closed infrastructure: finite Wilson / OS / physical transfer
+## 1. Pinned formal environment
 
-The existing foundation remains authoritative infrastructure:
+Lean:
 
-~~~text
-periodic Wilson action / one-slab kernel
-  -> Haar L2 carriers
-  -> OS reflection-positive boundary construction
-  -> Gauss-law physical restriction
-  -> compact positive physical transfer
-  -> top eigenspace / canonical nonnegative vacuum
-  -> ground-state transform
-  -> vacuum and joint probability laws
-  -> genuine one-link and spatial-color conditional expectations
-~~~
+**v4.30.0-rc2**
 
-Do not restart this layer unless a later exact artifact reveals a real obstruction.
+mathlib:
 
-**Status: closed as infrastructure.**
+**`5450b53e5ddc75d46418fabb605edbf36bd0beb6`**
 
----
+Do not use current mathlib master as theorem authority.
 
-## 2. High-temperature physical response and influence — closed
+When CI is red, inspect:
 
-Integrated chain:
+- the exact error line;
+- the full changed Lean module;
+- CompileSmoke;
+- the complete import closure;
+- dependent theorem signatures;
+- the pinned mathlib API;
+- typeclass and elaboration structure.
 
-~~~text
-#4634 fixed-right target-ratio response continuity
-#4637 canonical half-barrier closure
-#4638 actual weighted physical influence / response decay
-#4639 finite influence-path / resolvent propagation
-#4640 random-scan variation contraction
-#4641 finite covariance resolvent
-#4642 spatial random-scan resolvent
-#4643 actual spatial covariance clustering
-#4644 two-step terminal covariance decay
-#4645 cubic-shell summability / uniform remote residual
-#4646 terminal covariance oscillation sharpening
-#4647 beta-zero-vanishing sharpened remote residual
-#4648 strict positive high-temperature physical sweep gate
-~~~
-
-This lane establishes a positive high-temperature interval with volume-independent physical influence/sweep contraction.
-
-It is bounded-test / physical-influence geometry, not by itself an L2 Poincare theorem.
-
-**Status: closed as influence-side infrastructure.**
+Merge judgment requires the PR's current exact head, terminal success of **Changed Lean fast check**, and a success exact-head completion receipt.
 
 ---
 
-## 3. Genuine ground-state L2 receiver — closed
+## 2. Stable downstream receiver spine
 
-### #4650 — bounded-core to full L2
+The following layers are already available and should not be rebuilt.
 
-Integrated:
+### 2.1 Genuine ground-state L2 / transfer receiver
 
-- six-spatial normalized residual energy on the genuine ground-state joint L2 carrier;
-- continuity of that energy;
-- dense bounded-concrete core;
-- coefficient-preserving closure from the core to full L2.
+PRs #4650--#4652 supply:
 
-### #4651 — frame / random-scan / transfer-gap receiver
+- bounded-concrete -> full genuine joint L2 closure;
+- six-spatial residual / Rayleigh receivers;
+- physical transfer-gap receiver;
+- finite Hilbert projection infrastructure.
 
-For the six genuine color projections P_c,
+### 2.2 Exact beta-zero endpoint
 
-~~~text
-P_rs = (1/6) * sum_c P_c.
-~~~
-
-The Hilbert identity relates
+PRs #4653--#4682 close the beta-zero endpoint:
 
 ~~~text
-kappa * ||x||^2
-  <= (1/6) * sum_c ||x-P_c x||^2
-~~~
-
-to
-
-~~~text
-inner(P_rs x,x)
-  <= (1-kappa) * ||x||^2.
-~~~
-
-Any genuine q < 1 gives the physical transfer-gap lower bound
-
-~~~text
-3*(1-q)/8.
-~~~
-
-### #4652 — finite commuting-projection tensorization
-
-Provides the abstract finite Hilbert tensorization receiver used by the beta-zero pair-Haar geometry.
-
-**Status: closed as receiver infrastructure.**
-
----
-
-## 4. Exact beta-zero endpoint — closed
-
-PRs #4653-#4682 establish:
-
-~~~text
-ambient transfer = rank one
-physical transfer = rank one
 vacuum measure = spatial Haar
 ground-state joint measure = pair Haar
-gap_beta=0 = 1
-
 kappa_0 = 1/6
 q_0 = 5/6
-gap(0) >= 1/16
-gap(0) = 1
+six-spatial consistency bound gap >= 1/16
+exact physical transfer gap = 1
 ~~~
 
-The 1/16 bound is non-optimal and retained only as a consistency receipt for the six-spatial route.
+The 1/16 bound is a consistency receipt, not the exact beta-zero gap.
 
-PR #4675 remains **closed / unmerged / superseded by #4676**.
+### 2.3 Positive-beta physical Schur side
+
+PRs #4683--#4687 close the actual physical envelope / matrix side.
+
+For the physical influence envelope `K` there is a volume-independent strict coefficient
+
+~~~text
+0 <= q_phys(s,beta) < 1
+~~~
+
+with both row and column control.
+
+The transpose recurrence receiver accepts
+
+~~~text
+u_s <= ell_s + sum_t K_{t,s} u_t
+~~~
+
+and yields the uniform L2 Schur estimate.
+
+### 2.4 Sweep local energy
+
+PRs #4688--#4690 provide the canonical sweep-stage local profile `ell_s` with
+
+~~~text
+(1/6) * sum_s ell_s^2
+  <= E_6sp.
+~~~
+
+### 2.5 Source-dependent assembler
+
+PR #4723 already accepts source-specific normed carriers `E_s`.
+
+Its intended inputs are
+
+~~~text
+x_s = localPart_s + sum_t R_{s,t}
+
+||localPart_s|| <= ell_s
+
+||R_{s,t}|| <= K_{t,s} ||x_t||.
+~~~
+
+This is the receiver to target.  Do not collapse source/target indices or replace it with a same-carrier approximation.
+
+---
+
+## 3. localPart bridge — section-space construction
+
+### #4738 — local-mean section L2 carrier
+
+The physical source-update local mean is realized as an actual vector in the fixed-right kernel-section L2 space.
+
+The exact norm-square identity is formalized at section level.
+
+### #4739 — fluctuation sector
+
+The local-mean carrier is placed in the source one-link fluctuation sector.
+
+The projection onto the corresponding off-fiber conditional subspace is exactly zero.
+
+### #4748 — diagonal section carrier
+
+For an outer boundary `C`, set the auxiliary background and current values diagonally:
+
+~~~text
+B = C
+left = C
+k = C distinguishedSource
+g2 = C link.
+~~~
+
+The dependent Lp cast is avoided by constructing the diagonal vector directly from the specialized `MemLp 2` theorem.
+
+This yields the canonical section vector
+
+~~~text
+r_C^KS in L2(kappa_C).
+~~~
+
+### #4749 — diagonal conditional-square energy
+
+The section fluctuation
+
+~~~text
+q_C(A)
+~~~
+
+satisfies the exact identity
+
+~~~text
+int_A [ int_D q_C(D)^2 K_link(A,dD) ] kappa_C(dA)
+  = ||r_C^KS||^2.
+~~~
+
+No comparison coefficient appears.
+
+**Status: closed sectionwise.**
+
+---
+
+## 4. genuine joint / kernel-section disintegration
+
+### #4740--#4745 — measurable section kernel
+
+The fixed-right section weight is exposed as a jointly measurable normalized kernel.
+
+The section mass is exactly the transfer eigenvalue times the continuous vacuum representative.
+
+An explicit Markov kernel
+
+~~~text
+kappa_section(C,dA)
+~~~
+
+is constructed, with each fiber equal to the literal normalized fixed-right kernel-section law.
+
+### #4746 — exact measure disintegration
+
+The genuine two-boundary ground-state law is exactly
+
+~~~text
+mu_joint = mu_vacuum tensor_m kappa_section.
+~~~
+
+This is integrand-independent.
+
+### #4747 — genuine split one-link fiber compatibility
+
+After target-coordinate evaluation, the historical genuine split target fiber agrees almost everywhere with the kernel-section one-link normalized law.
 
 **Status: closed.**
 
 ---
 
-## 5. Positive-beta bidirectional Schur L2 — closed
+## 5. canonical genuine split kernel and fiber mean
 
-PRs #4683-#4687 close the matrix side.
+### #4750 — fixed canonical split Markov kernel
 
-The actual physical envelope K has volume/background-independent row and column control by
+Choose once, independently of the observable, the Markov kernel supplied by the genuine split disintegration.
+
+Define the canonical fiber mean
 
 ~~~text
-q_phys(s,beta)
-  = 18 * eta(beta) + rho_osc(s,beta)
+m_F(left,retained)
+  = integral F(left,reconstruct(targetCfg,retained)) d kappa_canonical.
 ~~~
 
-on the canonical strict interval, with
+The center is strongly measurable in the retained outer context.
+
+### #4751 — canonical split Fubini
+
+The historical split Fubini identity is upgraded from an existential witness kernel to the fixed canonical kernel.
+
+### #4752 — fiberwise variance minimality
+
+The centered residual around the canonical mean is exactly Mathlib's `evariance` and is no larger than the residual around any other scalar center.
+
+### #4753 — integrate variance below centered residual
+
+The canonical fiber variance is integrated against the exact outer-context mass and bounded with coefficient one by the genuine one-link centered-residual functional.
+
+### #4754 — global CondExpL2 bound
+
+The centered-residual functional is identified with the squared norm of the genuine global one-link conditional-expectation residual, giving
 
 ~~~text
-0 <= q_phys < 1.
+CanonicalFiberVarianceFunctional
+  <= ENNReal.ofReal ||f - P_target f||^2.
+~~~
+
+### #4755 — exact canonical-centered presentation
+
+When the center is the canonical fiber mean,
+
+~~~text
+CanonicalFiberVarianceFunctional
+  = CenteredResidualFunctional(canonical mean).
+~~~
+
+### #4756 — joint/kernel-section lintegral interface
+
+For nonnegative measurable `Phi`,
+
+~~~text
+integral_{mu_joint} Phi
+  = integral_C integral_A Phi(C,A) d kappa_C(A) d mu_vacuum(C).
+~~~
+
+This packages #4746 into the exact Fubini interface needed by the localPart bridge.
+
+### #4757 — canonical residual in kernel-section coordinates
+
+The same canonical variance is expressed exactly as a physical-vacuum average of the canonical-mean squared residual under the literal fixed-right kernel-section laws.
+
+The coefficient-one `CondExpL2` residual bound is retained in this presentation.
+
+**Status: closed.**
+
+---
+
+## 6. identify the canonical center with the diagonal remote projection
+
+### #4758 — canonical fiber mean = kernel-section one-link integral
+
+Almost everywhere in retained outer coordinates, the canonical genuine fiber mean is the literal kernel-section one-link expectation of the concrete section.
+
+### #4759 — diagonal reference fiber = kernel-section law
+
+The diagonal reference one-link fiber appearing in the remote heat-bath construction is identified with the same fixed-right kernel-section one-link normalized law.
+
+### #4760 — diagonal remote projection = kernel-section integral
+
+The existing remote one-link projection is identified pointwise with that same kernel-section one-link integral.
+
+### #4761 — canonical fiber mean = diagonal remote projection
+
+Combining #4758 and #4760 gives, almost everywhere in retained outer coordinates,
+
+~~~text
+canonical genuine fiber mean
+  = diagonal remote kernel-section projection.
 ~~~
 
 Therefore
 
 ~~~text
-sum_t (sum_s K_ts v_s)^2
-  <= q_phys^2 * sum_s v_s^2.
+F(left,right_from_retained) - canonical mean
+  = diagonal remote kernel-section fluctuation.
 ~~~
 
-And for nonnegative u, ell satisfying
+This is precisely the fluctuation used by #4748--#4749.
 
-~~~text
-u_t <= ell_t + sum_s K_ts u_s,
-~~~
+Validated exact head:
 
-Lean proves
+**`15037f06f3efd4fae70cbc2d5fdd96d21db036ae`**
 
-~~~text
-(1-q_phys)^2 * sum_t u_t^2
-  <= sum_t ell_t^2.
-~~~
+CI:
 
-**Status: matrix / Schur / resolvent side closed.**
+**PR Lean Fast Check #15098 / run 36105350621 — success**
 
-Do not re-prove this layer.
+Exact-head completion receipt:
+
+**success**
+
+Merge commit:
+
+**`6bd73357bd0aa4d358923806e648a04300253e4c`**
+
+PR #4762 is closed / unmerged and is not authority.
 
 ---
 
-## 6. Sweep local-energy bridge — closed
+## 7. Immediate theorem frontier — finish coefficient-one localPart energy glue
 
-### #4688 — generic nested-block theorem
+This is the next mathematical unit.
 
-For a real Hilbert space, if a block projection B absorbs every projection P_c in an ordered sweep,
-
-~~~text
-B(P_c x) = Bx,
-~~~
-
-then no pairwise commutativity is required to prove
+The goal is **not** to prove a pointwise bound
 
 ~~~text
-PathLoss(P,cs,x) <= ||x-Bx||^2.
+||r_C^KS|| <= ell_s.
 ~~~
 
-### #4689 — genuine six-spatial specialization
+That stronger statement is unnecessary and is not the intended route.
+
+The correct route is integrated.
+
+### 7.1 Starting identities
+
+From #4757:
 
 ~~~text
-PathLoss_c(f) <= ||f-P_c f||^2
-
-(1/6) * sum_c PathLoss_c(f)
-  <= E_6sp(f).
+CanonicalFiberVarianceFunctional
+  = vacuum average of canonical centered residual energy.
 ~~~
 
-### #4690 — link-indexed local profile
-
-Defines the nonnegative sweep-stage amplitude ell_e(f) on genuine spatial links:
+From #4761:
 
 ~~~text
-(1/6) * sum_e ell_e(f)^2
-  = SixSpatialOneLinkSweepPathLoss(f)
-  <= E_6sp(f).
+canonical centered residual
+  = diagonal remote kernel-section fluctuation
 ~~~
 
-No volume-dependent color-class multiplicity appears.
+almost everywhere in the retained outer coordinates.
 
-**Status: closed.**
+From #4749:
+
+~~~text
+section conditional-square energy
+  = ||r_C^KS||^2.
+~~~
+
+### 7.2 Required glue
+
+Use the exact target/off-target coordinate splitting, the kernel-section one-link law identities, and the vacuum/kernel-section Fubini theorem to identify the same energy on both sides.
+
+The desired intermediate statement is schematically
+
+~~~text
+vacuum-average_C ||r_C^KS||^2
+  = CanonicalFiberVarianceFunctional
+~~~
+
+or an equivalent exact ENNReal / real-energy formulation.
+
+Then #4754 immediately gives
+
+~~~text
+vacuum-average_C ||r_C^KS||^2
+  <= ||f - P_s f||^2.
+~~~
+
+The right-hand side is the genuine one-link residual amplitude underlying the canonical sweep local profile `ell_s`.
+
+### 7.3 Package the source-specific localPart carrier
+
+After the energy identity, construct the source-specific normed carrier required by #4723.
+
+Acceptable implementations include:
+
+- a genuine outer-vacuum L2 field of section vectors, if measurability is cleanly available; or
+- an equivalent canonical normed/RMS carrier whose norm square is definitionally or theoremically the integrated section energy.
+
+The required final interface is
+
+~~~text
+||localPart_s|| <= ell_s.
+~~~
+
+No additional comparison factor is allowed.
+
+**Status: open; all law-identification ingredients are now present.**
 
 ---
 
-## 7. Concrete Schur receiver — closed
+## 8. Independent theorem frontier — lawResponse
 
-PR #4691 feeds the #4690 local profile into #4687.
+The response term is separate.
 
-For every nonnegative u satisfying
-
-~~~text
-u_t <= ell_t(f) + sum_s K_ts u_s,
-~~~
-
-Lean proves
+For source `s` and target `t`, prove in the same source-specific carrier:
 
 ~~~text
-(1/6) * (1-q_phys)^2 * sum_e u_e^2
-  <= E_6sp(f).
+||R_{s,t}||
+  <= K_{t,s} ||x_t||.
 ~~~
 
-A relative-Poincare wrapper exposes the only further premise:
+### Orientation rule
+
+The required matrix entry is
 
 ~~~text
-||f-center(f)||^2 <= sum_e u_e^2.
+K_{t,s},
 ~~~
 
-This theorem does **not** assert existence of u.
+not `K_{s,t}`.
 
-**Status: receiver closed; observable-specific premises remain open.**
+The transpose orientation established around #4715 / #4723 must be preserved.
 
----
+Do not infer orientation from theorem names; inspect exact signatures.
 
-## 8. Bounded-concrete sweep invariance — closed
+### Scope rule
 
-PR #4692 proves:
-
-~~~text
-f in boundedConcreteCore
-  -> one-link condExpL2(f) in boundedConcreteCore
-  -> every finite same-color sweep stays in boundedConcreteCore
-  -> every canonical sweep prefix stays in boundedConcreteCore.
-~~~
-
-The proof uses ordinary conditional expectation only to construct a measurable representative and identifies the resulting L2 class through MemLp.condExpL2_ae_eq_condExp.
-
-No arbitrary L2 quotient representative is evaluated pointwise.
-
-**Status: closed.**
-
----
-
-## 9. Stagewise sharp Haar local coercivity — closed
-
-PR #4693 combines #4692 with the existing sharp bounded-core one-link theorem.
-
-For bounded-concrete input, any sweep prefix cs, and next link e, the stage vector x_cs has an explicit bounded strongly measurable representative F_cs satisfying
-
-~~~text
-SharpHaarVarianceFunctional(F_cs,e)
-  <= ENNReal.ofReal (||x_cs - P_e x_cs||^2).
-~~~
-
-The exact exp(-16 beta) coefficient remains encoded in the existing sharp Haar functional.
-
-The canonical Finset.univ.toList.take k prefix form is packaged explicitly.
-
-**Status: closed.**
-
----
-
-## 10. #4695 — bounded-concrete sections reach the actual physical envelope
-
-PR #4695 connects the current concrete ground-state section type to the already-canonical physical one-link influence envelope.
-
-For bounded strongly measurable tests, actual source-value updates of the literal normalized one-link laws satisfy the existing physical envelope bound.
-
-The centered-radius wrapper proves schematically
-
-~~~text
-|E_u phi - E_v phi|
-  <= K_target,source * radius
-~~~
-
-when
-
-~~~text
-|phi-center| <= radius.
-~~~
-
-This is an actual-K theorem and requires no continuity hypothesis on phi.
-
-However, it is a sup-radius statement, not yet the desired RMS recurrence.
-
-**Status: closed as an actual-K bounded-test/type bridge.**
-
----
-
-## 11. #4696-#4697 — weighted residual and exact overlap RMS energy — closed
-
-### #4696
-
-Mutual likelihood-ratio domination controls the sum of the left/right residual densities:
-
-~~~text
-(p-min(p,q)) + (q-min(p,q)) = |p-q|.
-~~~
-
-This is upgraded to arbitrary nonnegative weighted lower integrals.
-
-The intended weight
-
-~~~text
-ofReal ((X-c)^2)
-~~~
-
-is packaged directly.
-
-### #4697
-
-The exact one-link overlap coupling is decomposed into:
-
-~~~text
-diagonal branch + residual-product branch.
-~~~
-
-The diagonal branch contributes zero centered difference energy.
-
-The residual-product branch is controlled by the centered-square residual marginals, and #4696 converts those into the same likelihood-ratio influence coefficient times the two full conditional centered energies.
-
-**Status: generic exact overlap RMS transport closed.**
-
----
-
-## 12. #4698-#4701 — quadratic likelihood-ratio / Cauchy spine — closed
-
-### #4698 — pointwise quadratic defect
-
-Under mutual K-domination,
-
-~~~text
-(p-q)^2 / (p+q)
-  <= c(K)^2 * (p+q).
-~~~
-
-A full-L1-normalized version is also packaged.
-
-### #4699 — ENNReal integration
-
-For normalized densities,
-
-~~~text
-integral ((p-q)^2/(p+q))
-  <= (2*c(K))^2
-~~~
-
-in ENNReal lower-integral form.
-
-### #4700 — real-L1 promotion
-
-The quadratic defect is promoted to an ordinary real Integrable function and real integral inequality.
-
-### #4701 — centered expectation Cauchy
-
-Pinned mathlib Hölder/Cauchy is used to prove
-
-~~~text
-| integral (X-c)*(p-q) |
-  <= (2*c(K)) *
-     sqrt(integral (X-c)^2*(p+q)).
-~~~
-
-After the L2 square root, the influence coefficient remains linear.
-
-This linearity is the key reason the theorem is compatible with a profile recurrence of the form K*u.
-
-**Status: closed.**
-
----
-
-## 13. #4702 — normalized real-weight RMS transport — closed
-
-For nonnegative real weights w,v with positive masses and mutual pointwise comparison
-
-~~~text
-w <= R*v
-v <= R*w
-R >= 1,
-~~~
-
-normalization costs one further factor R, giving an R^2 likelihood-ratio comparison.
-
-Lean proves
-
-~~~text
-|E_w[X-c] - E_v[X-c]|
-  <= 2*c(R^2) *
-     sqrt(E_w[(X-c)^2] + E_v[(X-c)^2]).
-~~~
-
-**Status: closed.**
-
----
-
-## 14. #4703 — actual physical one-link RMS background transport — closed
-
-PR #4703 specializes #4702 to the literal continuous-vacuum physical one-link fiber law under a distinct background-link update.
-
-The raw reference weights are mutually exp(32*beta)-comparable. After normalization the final coefficient is exactly the already-defined
-
-~~~text
-BackgroundUpdateHarnackInfluence(beta).
-~~~
-
-The theorem has the form
-
-~~~text
-|E_u[X-c] - E_v[X-c]|
-  <= BackgroundUpdateHarnackInfluence(beta)
-     * sqrt(E_u[(X-c)^2] + E_v[(X-c)^2]).
-~~~
-
-No new influence coefficient is introduced.
-
-**Status: closed for local physical background updates.**
-
-Important boundary: this coefficient is the background-update Harnack coefficient, not yet the complete full physical envelope K including remote/resolvent propagation.
-
----
-
-## 15. #4704 — bounded-concrete physical RMS wrapper — closed
-
-PR #4704 removes the explicit first- and second-moment hypotheses from #4703 for bounded strongly measurable concrete ground-state sections.
-
-Given
-
-~~~text
-||F(z)|| <= bound,
-~~~
-
-every one-link concrete section X is bounded and strongly measurable.
-
-The existing one-link fiber-weight integrability then automatically yields integrability of
-
-~~~text
-weight * (X-c)
-weight * (X-c)^2.
-~~~
-
-Therefore the #4703 physical RMS theorem applies directly to bounded-concrete ground-state sections.
-
-This is exactly the type of representative returned by #4693 at every canonical sweep stage.
-
-No arbitrary joint-L2 quotient representative is evaluated pointwise.
-
-**Status: closed.**
-
----
-
-## 16. Active theorem frontier — stagewise bounded-concrete physical RMS hybrid profile assembly
-
-This is now the immediate mathematical frontier.
-
-### Inputs already closed
-
-- #4687 — full actual physical envelope K and q_phys < 1;
-- #4690 — genuine link-indexed local profile ell_e;
-- #4691 — one-sided profile -> Schur/Poincare receiver;
-- #4692 — bounded-concrete sweep-prefix invariance;
-- #4693 — explicit bounded stage representative + sharp Haar residual;
-- #4695 — actual-K bounded/centered-radius section transport;
-- #4696-#4702 — generic RMS likelihood-ratio/Cauchy spine;
-- #4703 — local actual physical RMS background-update theorem;
-- #4704 — automatic bounded-concrete section wrapper;
-- #852-#906 — canonical hybrid, target trajectory, endpoint coupling, covariance/variance machinery.
-
-### Immediate goal
-
-For every bounded-concrete input and every canonical sweep stage, use the #4693 representative in #4704 and transport the resulting RMS amplitudes through the existing hybrid/trajectory machinery.
-
-Package a nonnegative spatial-link profile
-
-~~~text
-u_e(F)
-~~~
-
-and prove
-
-~~~text
-u_t(F)
-  <= ell_t(F)
-     + sum_s K_ts u_s(F).
-~~~
-
-### Main unresolved point
-
-#4704 gives local physical RMS control with the background-update Harnack coefficient.
-
-The final recurrence must use the **actual full physical envelope K from #4687**, whose remote part is generated by covariance decay / resolvent transport.
-
-Therefore the next proof must connect the stagewise RMS quantities to the existing local-plus-remote physical envelope architecture. It must not replace K by a new coarser ad hoc coefficient.
-
-### Acceptance criterion
-
-The theorem should use:
-
-- actual ground-state / physical conditional-law objects;
-- bounded-concrete stage representatives from #4693;
-- actual full physical envelope K;
-- no volume-dependent coefficient;
-- no hidden same-color independence or interacting commutativity;
-- no sup-norm substitute for the required RMS/L2 statement.
+Do not mix lawResponse into the remaining localPart integration proof.
 
 **Status: open.**
 
 ---
 
-## 17. Second active theorem — genuine global profile majorant
+## 9. Assemble the recurrence
 
-After u_e(F) and the one-sided recurrence exist, prove
+Once Sections 7 and 8 are closed, instantiate #4723 with
 
 ~~~text
-||F-center(F)||_L2^2
-  <= sum_e u_e(F)^2
+x_s
+localPart_s
+R_{s,t}.
 ~~~
 
-or an equivalent independent-pair energy inequality on the correct ground-state joint carrier.
+Obtain
 
-### Existing input
+~~~text
+||x_s||
+  <= ell_s + sum_t K_{t,s} ||x_t||.
+~~~
 
-The raw Wilson hybrid profile already has a finite global pair majorant.
+Then use #4713 and the #4687 / #4691 Schur receiver.
 
-### Main danger
+**Status: receiver closed; concrete instantiation open.**
 
-The naive finite hybrid telescoping estimate carries an edge-cardinality Cauchy factor. Reusing it directly would reintroduce volume dependence.
+---
 
-The positive-beta ground-state theorem must instead exploit the current stagewise/local RMS structure.
+## 10. Positive-beta bounded-core Poincare target
+
+After the source-dependent recurrence closes,
+
+~~~text
+(1/6) * (1-q_phys)^2 * sum_s ||x_s||^2
+  <= E_6sp.
+~~~
+
+Combine this with the appropriate global profile / centered-energy majorant to obtain a bounded-core Poincare inequality with volume-independent coefficient.
+
+Do not freeze the final numerical coefficient until the actual carrier normalization and global majorant are connected.
 
 **Status: open.**
 
 ---
 
-## 18. Positive-beta bounded-core Poincare target
+## 11. Full genuine joint L2 and finite-volume physical gap
 
-Once Sections 16 and 17 are closed, #4691 gives
-
-~~~text
-global centered energy
-  <= sum_e u_e^2
-  <= (1-q_phys)^(-2) * sum_e ell_e^2
-  <= 6 * (1-q_phys)^(-2) * E_6sp.
-~~~
-
-Equivalently,
-
-~~~text
-positive coefficient * ||F-center(F)||^2
-  <= E_6sp(F).
-~~~
-
-Do not freeze the final coefficient until the actual u-profile normalization, sharp Haar factor, and global majorant are connected.
-
-**Status: open, abstract receiver ready.**
-
----
-
-## 19. Full genuine joint L2 and physical transfer gap
-
-After a bounded-core positive-beta Poincare theorem:
+After bounded-core Poincare:
 
 1. apply #4650 to extend to full genuine joint L2;
-2. use #4651 to obtain six-spatial Rayleigh q(beta) < 1;
-3. feed the physical transfer-gap receiver;
-4. obtain a finite-volume gap lower bound independent of volume on the selected positive-beta interval;
+2. use #4651 to obtain six-spatial Rayleigh `q(beta) < 1`;
+3. apply the physical transfer-gap receiver;
+4. obtain a finite-volume gap lower bound independent of volume on the certified positive-beta interval;
 5. transport to the exact Hamiltonian normalization and vacuum-orthogonal sector.
-
-This remains a lattice theorem, not yet the continuum mass gap.
-
----
-
-## 20. Thermodynamic / infinite-volume physical construction
-
-After a uniform finite-volume physical gap:
-
-1. formalize compatible finite-volume embeddings/restrictions;
-2. prove consistency of vacuum states and observables;
-3. establish the chosen compactness/projective/direct-limit mechanism;
-4. construct the infinite-volume Euclidean physical state;
-5. preserve reflection positivity, gauge invariance, clustering, and nontrivial observable content.
 
 **Status: downstream.**
 
 ---
 
-## 21. Continuum OS / Wightman construction
+## 12. Thermodynamic / infinite-volume construction
 
-Required downstream units include:
+Required later:
+
+- compatible finite-volume embeddings / restrictions;
+- consistency of vacuum states and observables;
+- the chosen compactness / projective / direct-limit mechanism;
+- infinite-volume Euclidean physical state;
+- preservation of reflection positivity, gauge invariance, clustering, and nontrivial observable content.
+
+**Status: downstream.**
+
+---
+
+## 13. Continuum OS / Wightman construction
+
+Required later:
 
 - continuum Euclidean invariance;
 - reflection positivity;
 - regularity sufficient for OS reconstruction;
-- decay/clustering compatible with spectral interpretation;
+- clustering / decay compatible with the spectral interpretation;
 - nontrivial physical Hilbert space and observable algebra;
-- Wightman/OS reconstruction on the same-root theory.
+- same-root OS / Wightman reconstruction.
 
 **Status: downstream.**
 
 ---
 
-## 22. Continuum mass gap
+## 14. Continuum mass gap target
 
 The terminal theorem requires a continuum physical Hamiltonian with:
 
 - a unique vacuum line;
 - a strictly positive lower spectral edge on the vacuum-orthogonal sector.
 
-The finite-volume gap must survive every limiting and identification step actually used.
-
-A fixed-volume eigenvalue, an auxiliary transfer matrix, or an unrelated continuum limit is insufficient.
+A fixed-volume eigenvalue, an auxiliary transfer operator, or a limit not linked through the same formal root is insufficient.
 
 **Status: downstream / not yet proved.**
 
 ---
 
-## 23. Recent canonical theorem units
+## 15. Recent canonical theorem units
 
 | PR | Status | Role | Merge commit |
 | --- | --- | --- | --- |
-| #4690 | merged | link-indexed sweep-stage local profile | 199507d12c903539aad9265f2b6969fb2fca375c |
-| #4691 | merged | local profile -> uniform Schur receiver | c99af54a38a0338cee680817d806745a055031f6 |
-| #4692 | merged | bounded-concrete sweep invariance | 911c5246f134e1ac4819e496c3bea2f2b288094c |
-| #4693 | merged | stagewise sharp Haar local coercivity | 73d90bb97eb1a906d1d11eec10314e1ce1feb518 |
-| #4695 | merged | bounded-concrete section -> actual physical influence envelope | 4a573e91d4600e7288b0df6e0a9498223b74c04a |
-| #4696 | merged | weighted residual energy by sharp influence | fe7b2a445d2f5ea2b77ee37978c5e51f8f28fbf1 |
-| #4697 | merged | exact overlap coupling -> RMS influence energy | 0726c1a19b205374f82186d3ae751687dfc0aa57 |
-| #4698 | merged | quadratic likelihood-ratio influence bound | 6fc5ec72c2f91f25f966938151d1a93fcf995acf |
-| #4699 | merged | integrated quadratic likelihood-ratio defect | 3e8d4134a5b556f009c96952de91537787cdde1f |
-| #4700 | merged | promote quadratic defect to real L1 | 530312e734e2755650c9a97ad8237c47c94dc1ce |
-| #4701 | merged | centered expectation Cauchy from quadratic influence | 4ec500197478989987305c8773d729e3b0197888 |
-| #4702 | merged | normalized real-weight centered RMS transport | 3f92826baadbd9f7db2b28333ff2e0653c368fb5 |
-| #4703 | merged | actual physical one-link centered RMS Harnack | e9a0c73aec92865b0841bc912089cf001cb568ef |
-| #4704 | merged | bounded-concrete physical RMS Harnack wrapper | f22fbd1db7325dfe2da08e90b278b3bd14976b89 |
-| #4675 | closed / unmerged | superseded by #4676 | — |
-
-Recent exact-head validation:
-
-- #4698: 9b019ce1d0ae071b8ae7b4596daa8acde4a3181f — Fast Check #14922 / run 35952342805: success.
-- #4699: 1134d996a8e01b0035e576ebe489a374d76185c1 — Fast Check #14925 / run 35953532356: success.
-- #4700: c5108d8f6fc0f189f09d0b90055d64d23d62f585 — Fast Check #14928 / run 35954459754: success.
-- #4701: 7570aef3cc221c66d77c094ae1ee2bbd30c86af8 — Fast Check #14931 / run 35955246261: success.
-- #4702: e383e7252935af64dcdb4d21cbf624b541ceb6a6 — Fast Check #14934 / run 35958592059: success.
-- #4703: 690518df93d0654284f3e674f7222332e8372239 — Fast Check #14943 / run 35962807067: success.
-- #4704: aa6a32a597d0920bc1a4305f4c6c63357b6bee76 — Fast Check #14946 / run 35972259556: success.
-
-Current theorem-bearing baseline before this docs refresh:
-
-**f22fbd1db7325dfe2da08e90b278b3bd14976b89**
+| #4739 | merged | local-mean carrier in fluctuation sector | `8720285a644d3c4aea9634ce7a3a7af0a5816dbb` |
+| #4740 | merged | measurable fixed-right kernel-section Fubini | `cb6615d51807a3a09e229f50870dc1ad4a87139b` |
+| #4741 | merged | genuine joint density factorization | `b2d8b7d2cb79ea8c7c3ac5bac1295a96094f4bdb` |
+| #4742 | merged | fixed-left orientation | `73683c70fd7788ac39de0bdfe927ed9c9aefd0a8` |
+| #4743 | merged | weighted kernel-section Fubini | merged |
+| #4744 | merged | physical law presentation | merged |
+| #4745 | merged | explicit kernel-section Markov kernel | `9536aa310f849c6e4dbdc4fe9cd6db14f842e23c` |
+| #4746 | merged | exact joint-law disintegration | `f53b58bee9ef3678eecd90be33e1d6adbc951ffc` |
+| #4747 | merged | genuine one-link fiber = kernel-section law | `c9253c3546c35d717209403919ddbd26a189c6fa` |
+| #4748 | merged | diagonal section L2 carrier | `cfcb224b26aaf3dad280e2f655729bb7652554f2` |
+| #4749 | merged | diagonal section conditional energy = norm² | `ddb0ede53028d49c4f27e7a2c20c4c242fdf556b` |
+| #4750 | merged | canonical split Markov kernel + fiber mean | `4c67a6166d02f0f555968bbab2470c2f77981915` |
+| #4751 | merged | canonical split-kernel Fubini identity | `bf4fd8a43eaa64d398928a00dc1c71d3642459d7` |
+| #4752 | merged | canonical fiber-mean variance minimality | `b5a049b005ce65446ed67b06ac79232b36a3416a` |
+| #4753 | merged | canonical fiber variance <= centered residual | `f1283f7b5720e87133685e016721592257e1429c` |
+| #4754 | merged | canonical fiber variance <= CondExpL2 residual² | `37f89cb4b07fee26f2ee241e094ae14c0c62d251` |
+| #4755 | merged | canonical variance = canonical centered residual | `f874d7be6ac9d889f71738bf4b50e312aae9d336` |
+| #4756 | merged | genuine joint kernel-section lintegral disintegration | `47b17b27722d6a4cd103a04143cafbdae782df9a` |
+| #4757 | merged | canonical variance in kernel-section residual coordinates | `cd62b7087cee27e4bf55efa7330043e92a2c2860` |
+| #4758 | merged | canonical fiber mean = kernel-section one-link integral | `7e842185bda3d8230dd4437217f1f33109a76bc2` |
+| #4759 | merged | diagonal reference fiber = kernel-section law | `436a1b0ec53182ee7262605368a408b53dc5f240` |
+| #4760 | merged | diagonal remote projection = kernel-section integral | `0c977c5f346cd661072b5dc52a36b2a7037b6894` |
+| #4761 | merged | canonical mean = diagonal remote projection; residual = fluctuation | `6bd73357bd0aa4d358923806e648a04300253e4c` |
+| #4762 | closed / unmerged | duplicate/superseded draft; not authority | — |
 
 ---
 
-## 24. Lean 4 / mathlib engineering rules
+## 16. Lean 4 / mathlib engineering rules
 
-Pinned environment:
-
-- Lean v4.30.0-rc2
-- mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6
-
-Operational rules:
-
-1. inspect the whole changed module, CompileSmoke, import graph, and dependent API when CI fails;
-2. do not infer mathematical failure from a single elaboration message before checking exact types and imports;
-3. treat the pinned mathlib revision as authority rather than current master;
-4. keep dependent Lp measure transport narrow;
-5. distinguish retained and ambient measurable spaces explicitly in conditional-expectation proofs;
-6. remember that local MeasurableSpace definitions can participate in typeclass inference; restore the intended ambient instance explicitly when necessary;
-7. use ordinary condExp representatives only through measurable/a.e. identities; do not pointwise evaluate arbitrary L2 quotient representatives;
-8. use MemLp.condExpL2_ae_eq_condExp for the L2/ordinary conditional-expectation bridge;
-9. use typed simpa using for dependent reindexing when rw does not syntactically match;
-10. normalize finite color indices to Fin 6 early when required by receivers;
-11. prefer forward ENNReal/ofReal rewrites with explicit intermediate normal forms over coercion-sensitive reverse rw;
-12. when Integrable.add produces Pi-valued pointwise addition, expose Pi.add_apply before ring-style algebra;
-13. for a+c <= b+d, prefer explicit add_le_add if add_le_add_left/right inference is ambiguous;
-14. remember that rw or calc may finish a goal; do not append unconditional tactics after a closed goal;
-15. validate exact PR head, workflow completion, and exact-head commit-status receipt before merge;
-16. after docs-only merges, separate current branch pointer from the last theorem-bearing merge.
+1. **Fresh head first.** Re-observe theorem-carrier, recent PRs, and the current PR head before branch creation, write, CI classification, and merge judgment.
+2. **Exact head only.** Never classify a stale workflow SHA.
+3. **Step-level CI.** Inspect `Changed Lean fast check`, not only run-level state.
+4. **Completion receipt.** Require the exact-head commit-status receipt before merge.
+5. **Read the whole module.** On RED, inspect the full changed Lean file, CompileSmoke, imports, dependent signatures, and pinned APIs.
+6. **Pinned mathlib authority.** Current master may guide syntax but cannot override the pinned revision.
+7. **Dependent rewrite discipline.** Avoid broad reverse `rw` across dependent measures / Lp carriers.  Build a typed proof term, then prefer `simpa only [h] using hBase`.
+8. **Typeclass promotion is not automatic from theorem names.** If a theorem proves `IsProbabilityMeasure` or `IsMarkovKernel`, install it locally with `letI` before asking downstream APIs for `SFinite` / `IsSFiniteKernel`.
+9. **Instance presentation matters.** `Measure.pi` can retain hidden finite-type / measurable-space instance terms.  Reuse the exact local instance bundle when definitional alignment matters.
+10. **autoImplicit = false.** Unknown identifiers generally indicate a missing defining import or unavailable declaration, not an implicit-variable fallback.
+11. **Source/target orientation.** Verify exact theorem signatures before applying physical response bounds.
+12. **No arbitrary L2 pointwise evaluation.** Move through bounded concrete representatives and a.e. identities.
+13. **No accidental volume factor.** Do not reintroduce cardinality factors through naive finite Cauchy/telescoping.
+14. **No new comparison factor in localPart.** The current route is designed to close with coefficient one.
 
 ---
 
-## 25. Restart instruction
+## 17. Restart instruction
 
 At the start of the next theorem thread:
 
-1. fresh re-observe formal/real-hilbert-uniform-coercive-strong-limit;
-2. expected theorem-bearing baseline is f22fbd1db7325dfe2da08e90b278b3bd14976b89 unless a later theorem merge has occurred;
-3. if a docs-only merge follows this refresh, keep the theorem baseline distinct from the current pointer;
-4. retain #4687 as the uniform full physical K / Schur authority;
-5. retain #4690 as the link-indexed local-profile ell_e authority;
-6. retain #4691 as the concrete Schur/Poincare receiver;
-7. retain #4692 as bounded-concrete sweep-invariance authority;
-8. retain #4693 as stagewise bounded representative + sharp Haar authority;
-9. retain #4695 as the actual-K bounded/centered-radius concrete-section bridge;
-10. retain #4696-#4702 as the generic RMS likelihood-ratio/Cauchy spine;
-11. retain #4703 as local physical one-link RMS background-update authority;
-12. retain #4704 as the bounded-concrete automatic-moment RMS wrapper;
-13. reuse #852-#906 rather than rebuilding hybrid/trajectory probability geometry;
-14. feed the #4693 canonical stage representatives into #4704;
-15. package the resulting RMS amplitudes into the actual u_e(F);
-16. connect those amplitudes to the full physical envelope K, including its remote/resolvent contribution;
-17. prove u_t <= ell_t + sum_s K_ts u_s;
-18. then prove the global profile majorant without a volume factor;
-19. feed the result through #4691 -> #4650 -> #4651 toward a positive-beta volume-independent physical gap.
+1. fresh re-observe `formal/real-hilbert-uniform-coercive-strong-limit`;
+2. expected theorem-bearing baseline is `6bd73357bd0aa4d358923806e648a04300253e4c` unless a later theorem merge has occurred;
+3. if this docs refresh is merged, keep its docs-only pointer distinct from the theorem-bearing baseline;
+4. retain #4749 as the diagonal section conditional-energy = section-L2-norm² authority;
+5. retain #4754 as the coefficient-one canonical fiber variance <= global CondExpL2 residual² authority;
+6. retain #4756 as the genuine joint / vacuum-kernel-section Fubini authority;
+7. retain #4757 as the kernel-section residual-coordinate presentation;
+8. retain #4758--#4761 as the exact identification of the canonical genuine residual with the diagonal remote kernel-section fluctuation;
+9. prove the integrated equality between the #4761 residual energy and the vacuum average of #4749 section norm²;
+10. package the resulting source-specific localPart carrier and prove `||localPart_s|| <= ell_s`;
+11. separately prove `||R_{s,t}|| <= K_{t,s} ||x_t||`;
+12. instantiate #4723;
+13. apply #4713 -> #4687 / #4691;
+14. close bounded-core positive-beta Poincare;
+15. extend through #4650 -> #4651 to the volume-independent finite-volume physical gap.
 
 The immediate theorem unit is:
 
-**Stagewise bounded-concrete physical RMS hybrid profile assembly.**
+**Integrate the #4761 canonical-residual/diagonal-fluctuation identity through the exact kernel-section disintegration and identify it with the #4749 vacuum-averaged section L2 energy.**
