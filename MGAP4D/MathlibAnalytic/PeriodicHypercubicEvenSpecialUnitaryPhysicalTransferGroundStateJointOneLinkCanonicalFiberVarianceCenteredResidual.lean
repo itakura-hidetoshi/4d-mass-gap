@@ -112,7 +112,7 @@ theorem
               H N hN beta hbeta target (left, retained) =
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetNormalizedFiberMeasure
               H N hN beta hbeta left target retained := by
-    simpa only [μLeft, μOff] using hcanon.prod_right_ae
+    simpa [μLeft, μOff] using (Measure.ae_ae_of_ae_prod hcanon)
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkCanonicalFiberVarianceFunctional
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkBoundedCoreCenteredResidualFunctional
@@ -128,8 +128,16 @@ theorem
       (fun targetCfg =>
         F (coord ((left, retained), targetCfg))) = X := by
     funext targetCfg
-    simp [X, coord, eval,
-      periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection]
+    change
+      F
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitContextTargetMeasurableEquiv
+            H N target ((left, retained), targetCfg)) =
+        periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
+          H N target F left retained (eval targetCfg)
+    rw [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitContextTargetMeasurableEquiv_apply]
+    unfold periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
+    rw [eval.symm_apply_apply]
   have hMin :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkCanonicalFiberMean_centeredSquaredResidual_le
       H N hN beta hbeta target F hF bound hbound
@@ -186,7 +194,7 @@ theorem
             H N hN beta hbeta left target retained)
           X
           (C (left, retained)) :=
-      mul_le_mul_left' hVarHistorical
+      mul_le_mul_right hVarHistorical
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetFiberMass
           H N hN beta hbeta left target retained)
 
