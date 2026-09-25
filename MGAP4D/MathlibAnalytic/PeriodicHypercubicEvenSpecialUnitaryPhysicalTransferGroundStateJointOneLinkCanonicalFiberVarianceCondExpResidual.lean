@@ -27,6 +27,16 @@ open scoped ENNReal
 
 noncomputable section
 
+attribute [local instance]
+  groundStateJointOneLinkCenteredResidualSpecialUnitaryIsTopologicalGroup
+  groundStateJointOneLinkCenteredResidualSpecialUnitaryCompactSpace
+  groundStateJointOneLinkCenteredResidualSpecialUnitarySecondCountableTopology
+  groundStateJointOneLinkCenteredResidualSpecialUnitaryMeasurableSpace
+  groundStateJointOneLinkCenteredResidualSpecialUnitaryBorelSpace
+  groundStateJointOneLinkCenteredResidualSpatialLinkFintype
+  groundStateJointOneLinkCenteredResidualTargetLinkFintype
+  groundStateJointOneLinkCenteredResidualTargetLinkUnique
+
 /-- The exact canonical genuine one-link fiber variance is bounded with
 coefficient one by the squared genuine `CondExpL2` residual norm. -/
 theorem
