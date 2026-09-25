@@ -237,13 +237,18 @@ theorem
     simpa [z'] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourcePairSecondUpdatedBackground_orderedSection_reorderedMap
         H N source z
+  have hBackgroundUpdate :
+      Function.update z'.1 source z'.2.2 =
+        Function.update z.1 source z.2.2 := by
+    simpa [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourcePairSecondUpdatedBackground] using hBackground
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawOrderedSecondFiberMean
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawSecondFiberMeanOnCarrier
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawSecondMean
   simp only [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourcePairSecondTargetFiberKernel_apply]
-  rw [hBackground]
+  rw [hBackgroundUpdate]
   apply integral_congr_ae
   filter_upwards with g
   simp [
@@ -304,10 +309,25 @@ theorem
   have hZero :=
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection_stronglyMeasurable
       H N target source F hF left 0).comp_measurable hEmbed
-  have hCenter :=
+  have hFst :
+      Measurable
+        (fun Cvg :
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+              Matrix.specialUnitaryGroup (Fin N) ℂ) ×
+            Matrix.specialUnitaryGroup (Fin N) ℂ =>
+          Cvg.1) :=
+    measurable_fst
+  have hCenter :
+      StronglyMeasurable
+        (fun Cvg :
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+              Matrix.specialUnitaryGroup (Fin N) ℂ) ×
+            Matrix.specialUnitaryGroup (Fin N) ℂ =>
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawOrderedSecondFiberMean
+            H N hN beta hbeta B distinguishedSource source target k g₂ F left Cvg.1) :=
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawOrderedSecondFiberMean_stronglyMeasurable
       H N hN beta hbeta B distinguishedSource source target k g₂ F hF left).comp_measurable
-      measurable_fst
+      hFst
   simpa [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawOrderedFirstCrossResidual,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection,
@@ -448,6 +468,8 @@ theorem
       apply lintegral_congr
       intro zg
       unfold Phi
+      unfold
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawOrderedFirstCrossEnergy
       rw [
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFirstCrossResidual_eq_ordered
           H N hN beta hbeta B distinguishedSource source target k g₂ F left zg]
