@@ -137,13 +137,19 @@ theorem
       H N hN beta hbeta B distinguishedSource source target k g₂ z
   let X : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ :=
     fun g =>
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection
-        H N target source F left 0 (z, g)
+      periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
+        H N target F left
+        (periodicHypercubicEvenSpatialSliceOffTargetRestriction target
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourcePairSecondUpdatedBackground
+            H N source z))
+        g
   letI : IsProbabilityMeasure μ := by
     infer_instance
   have hXBound : ∀ g, ‖X g‖ ≤ |bound| := by
     intro g
-    simpa [X] using
+    simpa [
+      X,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection_norm_le
         H N target source F bound hbound left 0 (z, g)
   have h :=
@@ -189,8 +195,12 @@ theorem
       H N hN beta hbeta B distinguishedSource source target k g₂ z
   let X : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ :=
     fun g =>
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection
-        H N target source F left 0 (z, g)
+      periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
+        H N target F left
+        (periodicHypercubicEvenSpatialSliceOffTargetRestriction target
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourcePairSecondUpdatedBackground
+            H N source z))
+        g
   letI : IsProbabilityMeasure μ := by
     infer_instance
   have hEmbed :
@@ -202,10 +212,13 @@ theorem
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection_stronglyMeasurable
         H N target source F hF left 0).comp_measurable hEmbed
     simpa [
-      X, Function.comp_def] using h
+      X, Function.comp_def,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection] using h
   have hXBound : ∀ g, ‖X g‖ ≤ |bound| := by
     intro g
-    simpa [X] using
+    simpa [
+      X,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection_norm_le
         H N target source F bound hbound left 0 (z, g)
   have hXInt : Integrable X μ :=
@@ -214,6 +227,7 @@ theorem
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawSecondMean
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawSecondFiberMeanOnCarrier
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection
   change
     (∫ g, X g - center ∂μ) =
       (∫ g, X g ∂μ) - center
