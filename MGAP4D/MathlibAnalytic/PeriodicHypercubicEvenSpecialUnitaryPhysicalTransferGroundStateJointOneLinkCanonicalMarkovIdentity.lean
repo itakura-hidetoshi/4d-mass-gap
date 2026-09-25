@@ -25,29 +25,14 @@ open scoped ENNReal
 
 noncomputable section
 
-local instance groundStateJointCanonicalMarkovIdentitySpecialUnitaryTopologicalGroup
-    (N : ℕ) : IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
-  specialUnitaryGroupIsTopologicalGroup N
-
-local instance groundStateJointCanonicalMarkovIdentitySpecialUnitaryCompactSpace
-    (N : ℕ) : CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
-  specialUnitaryGroupCompactSpace N
-
-local instance groundStateJointCanonicalMarkovIdentitySpecialUnitarySecondCountable
-    (N : ℕ) : SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
-  specialUnitaryGroupSecondCountableTopology N
-
-local instance groundStateJointCanonicalMarkovIdentitySpecialUnitaryMeasurableSpace
-    (N : ℕ) : MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
-  specialUnitaryGroupMeasurableSpace N
-
-local instance groundStateJointCanonicalMarkovIdentitySpecialUnitaryBorelSpace
-    (N : ℕ) : BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
-  specialUnitaryGroupBorelSpace N
-
-local instance groundStateJointCanonicalMarkovIdentitySpatialLinkFintype
-    (H : ℕ) : Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
-  Fintype.ofFinite _
+attribute [local instance]
+  specialUnitaryGroupIsTopologicalGroupForSplitMarkovDisintegration
+  specialUnitaryGroupCompactSpaceForSplitMarkovDisintegration
+  specialUnitaryGroupSecondCountableTopologyForSplitMarkovDisintegration
+  specialUnitaryGroupMeasurableSpaceForSplitMarkovDisintegration
+  specialUnitaryGroupBorelSpaceForSplitMarkovDisintegration
+  periodicHypercubicEvenSpatialSliceLinkFintypeForSplitMarkovDisintegration
+  periodicHypercubicEvenSpatialSliceTargetLinkFintypeForSplitMarkovDisintegration
 
 /-- The fixed canonical split target-link Markov kernel satisfies the exact
 historical split Fubini identity for every nonnegative measurable integrand. -/
