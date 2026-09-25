@@ -15,8 +15,8 @@ ground-state target-fiber mass.  The result places the canonical weighted fiber
 variance below the already-established genuine one-link centered-residual
 functional.
 
-The source file's exact local instance bundle is reused because the hidden
-instance terms in `Measure.pi` are part of the elaborated measure expression.
+The source file's exact local typeclass bundle is reused because the hidden
+terms carried by `Measure.pi` are part of the elaborated measure expression.
 No equivalent-but-distinct wrapper instances are introduced.
 -/
 
