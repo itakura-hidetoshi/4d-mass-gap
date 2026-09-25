@@ -119,11 +119,14 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_isProbabilityMeasure
         H N hN beta hbeta B source distinguishedSource target k g₂
         (Function.update z.1 source z.2.2)
+    have hEmbed :
+        Measurable
+          (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ => (z, g)) := by
+      exact measurable_const.prodMk measurable_id
     have hXStrong : StronglyMeasurable X := by
       have h :=
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection_stronglyMeasurable
-          H N target source F hF left 0).comp_measurable
-          (measurable_const.prodMk measurable_id)
+          H N target source F hF left 0).comp_measurable hEmbed
       simpa [
         X,
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection] using h
@@ -162,7 +165,6 @@ theorem
       integral_sub hX₁ (integrable_const center₂),
       integral_sub hX₂ (integrable_const center₂)]
     simp
-    ring
 
 /-- Concrete-coordinate form of center independence. -/
 theorem
