@@ -406,6 +406,59 @@ theorem
       N hN s hs beta hbeta hcut H target source F hF bound hbound
       left B z.1 distinguishedSource k g₂ z.2.1 z.2.2 center
 
+
+/-- Exact canonical source-update decomposition into the direct observable
+change and the concrete target-law response.
+
+For `target ≠ source`, the first term changes the retained observable section
+while freezing the target law at `u`; the second term keeps the resulting
+section fixed and changes only the target law from `u` to `v`.  Thus this
+identity is the concrete algebraic bridge from the PR #4717 decomposition to
+the source-pair response defined above. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkConcreteSection_canonicalSourceUpdate_difference_eq_direct_add_targetLawResponse
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (target source : PeriodicHypercubicEvenSpatialSliceLink H)
+    (hne : target ≠ source)
+    (F :
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
+    (left B A :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (distinguishedSource : PeriodicHypercubicEvenSpatialSliceLink H)
+    (k g₂ u v : Matrix.specialUnitaryGroup (Fin N) ℂ)
+    (center : ℝ) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkConcreteSectionSourceUpdatedCenteredMean
+        H N hN beta hbeta target source F left B A
+        (periodicHypercubicEvenSpatialSliceOffTargetSourceUpdate
+          target source hne
+          (periodicHypercubicEvenSpatialSliceOffTargetRestriction target A) u)
+        distinguishedSource k g₂ u center -
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkConcreteSectionSourceUpdatedCenteredMean
+        H N hN beta hbeta target source F left B A
+        (periodicHypercubicEvenSpatialSliceOffTargetSourceUpdate
+          target source hne
+          (periodicHypercubicEvenSpatialSliceOffTargetRestriction target A) v)
+        distinguishedSource k g₂ v center =
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkConcreteSectionSourceUpdateDirectMeanDifference
+        H N hN beta hbeta target source hne F left B A
+        (periodicHypercubicEvenSpatialSliceOffTargetRestriction target A)
+        distinguishedSource k g₂ u v center +
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawResponse
+        H N hN beta hbeta target source F left B A distinguishedSource
+        k g₂ u v center := by
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkConcreteSectionSourceUpdateDirectMeanDifference
+  rw [
+    periodicHypercubicEvenSpatialSliceOffTargetSourceUpdate_offTargetRestriction
+      target source hne A u,
+    periodicHypercubicEvenSpatialSliceOffTargetSourceUpdate_offTargetRestriction
+      target source hne A v]
+  simp only [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawResponse,
+    hne, if_false]
+  ring
+
 end
 
 end MGAP4D.MathlibAnalytic
