@@ -107,6 +107,9 @@ theorem
   let κ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousMarkovKernel
       H N hN beta hbeta
+  letI : IsMarkovKernel κ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousMarkovKernel_isMarkovKernel
+      H N hN beta hbeta
   let center :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkCanonicalFiberMean
       H N hN beta hbeta target F
@@ -176,8 +179,16 @@ theorem
             H N hN beta hbeta C := by
         apply lintegral_congr_ae
         filter_upwards [hC] with A hA
-        simp only [Phi, center, outer]
-        rw [hA]
+        have hA' :
+            F (C, A) - center (outer (C, A)) =
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabRemoteKernelSectionOneLinkFluctuation
+                H N hN beta hbeta C target source target
+                (C source) (C target) (fun D => F (C, D)) A := by
+          simpa [
+            center, outer,
+            periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkOuterContextMap] using hA
+        exact
+          congrArg (fun x : ℝ => ENNReal.ofReal (x ^ 2)) hA'.symm
       _ = canonicalVariance C := by
         simp [
           canonicalVariance, κ,
@@ -300,7 +311,7 @@ theorem
     rw [lintegral_const_mul'' K hVarianceAE]
   have hScaledVarianceBound :
       K * (∫⁻ C, variance C ∂ν) ≤ K * targetResidualSq :=
-    mul_le_mul_left' hVarianceBound K
+    mul_le_mul_right hVarianceBound K
   calc
     (∫⁻ C,
       (∫⁻ Cvg,
