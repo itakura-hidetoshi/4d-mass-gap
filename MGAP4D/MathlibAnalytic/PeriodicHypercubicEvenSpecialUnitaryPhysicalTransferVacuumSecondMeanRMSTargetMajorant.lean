@@ -212,7 +212,6 @@ theorem
       rw [
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointTargetKernelSectionResidualEnergy_vacuum_lintegral_eq_canonicalFiberVarianceFunctional
           H N hN beta hbeta target F hF bound hbound]
-      rfl
 
 /-- Final global target-indexed RMS majorant in the genuine joint L2 carrier:
 the only target quantity on the right is the genuine target conditional-
@@ -264,7 +263,7 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkCanonicalFiberVarianceFunctional_le_condExpL2_residual_norm_sq
       H N hN beta hbeta target F hF bound hbound
   exact hRMS.trans
-    (mul_le_mul_left'
+    (mul_le_mul_right
       hVariance
       (ENNReal.ofReal ((Real.exp (32 * beta)) ^ 2) + 1))
 
