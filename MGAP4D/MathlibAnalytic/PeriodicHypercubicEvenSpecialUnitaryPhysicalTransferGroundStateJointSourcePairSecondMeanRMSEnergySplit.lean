@@ -310,8 +310,13 @@ theorem
     _ =
       (∫⁻ z, ENNReal.ofReal (firstEnergy z) ∂ν) +
         ∫⁻ z, ENNReal.ofReal (secondEnergy z) ∂ν := by
-        rw [lintegral_add_left'
-          (ENNReal.continuous_ofReal.measurable.comp hFirstStrong.measurable).aemeasurable]
+        exact
+          lintegral_add_left'
+            (μ := ν)
+            (f := fun z => ENNReal.ofReal (firstEnergy z))
+            (ENNReal.continuous_ofReal.measurable.comp
+              hFirstStrong.measurable).aemeasurable
+            (fun z => ENNReal.ofReal (secondEnergy z))
     _ = _ := by
       rfl
 
