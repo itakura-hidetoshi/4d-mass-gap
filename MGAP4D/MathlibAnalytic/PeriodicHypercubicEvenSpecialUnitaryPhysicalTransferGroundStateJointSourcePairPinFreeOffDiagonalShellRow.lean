@@ -233,20 +233,29 @@ theorem
   rw [hShellEq]
   have hRadius : radius = maxDist + 1 := rfl
   rw [hRadius, Finset.sum_range_succ']
-  apply add_le_add
-  · have hZeroNat :=
-      periodicHypercubicEvenSpatialSliceBaseL1Shell_card_le_polynomial
-        H target 0
-    have hZeroReal :
-        (((Finset.univ.filter fun source : PeriodicHypercubicEvenSpatialSliceLink H =>
-            distance source = 0).card : ℕ) : ℝ) ≤ 3 := by
-      have hZeroNat' :
-          ((Finset.univ.filter fun source : PeriodicHypercubicEvenSpatialSliceLink H =>
-              distance source = 0).card) ≤ 3 := by
-        simpa [distance] using hZeroNat
-      exact_mod_cast hZeroNat'
+  have hZeroNat :=
+    periodicHypercubicEvenSpatialSliceBaseL1Shell_card_le_polynomial
+      H target 0
+  have hZeroReal :
+      (((Finset.univ.filter fun source : PeriodicHypercubicEvenSpatialSliceLink H =>
+          distance source = 0).card : ℕ) : ℝ) ≤ 3 := by
+    have hZeroNat' :
+        ((Finset.univ.filter fun source : PeriodicHypercubicEvenSpatialSliceLink H =>
+            distance source = 0).card) ≤ 3 := by
+      simpa [distance] using hZeroNat
+    exact_mod_cast hZeroNat'
+  have hZero :
+      (((Finset.univ.filter fun source : PeriodicHypercubicEvenSpatialSliceLink H =>
+          distance source = 0).card : ℕ) : ℝ) * (s⁻¹) ^ 0 ≤ 3 := by
     simpa using hZeroReal
-  · calc
+  have hTail :
+      (∑ k ∈ Finset.range maxDist,
+        (((Finset.univ.filter fun source : PeriodicHypercubicEvenSpatialSliceLink H =>
+            distance source = k + 1).card : ℕ) : ℝ) *
+          (s⁻¹) ^ (k + 1)) ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeReciprocalExponentialWeightPositiveTailMajorant
+          s := by
+    calc
       (∑ k ∈ Finset.range maxDist,
         (((Finset.univ.filter fun source : PeriodicHypercubicEvenSpatialSliceLink H =>
             distance source = k + 1).card : ℕ) : ℝ) *
@@ -298,7 +307,19 @@ theorem
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeReciprocalExponentialWeightPositiveTailMajorant
           s := by
             rfl
-
+  calc
+    (∑ k ∈ Finset.range maxDist,
+      (((Finset.univ.filter fun source : PeriodicHypercubicEvenSpatialSliceLink H =>
+          distance source = k + 1).card : ℕ) : ℝ) *
+        (s⁻¹) ^ (k + 1)) +
+      (((Finset.univ.filter fun source : PeriodicHypercubicEvenSpatialSliceLink H =>
+          distance source = 0).card : ℕ) : ℝ) * (s⁻¹) ^ 0 ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeReciprocalExponentialWeightPositiveTailMajorant
+            s + 3 :=
+      add_le_add hTail hZero
+    _ = 3 +
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeReciprocalExponentialWeightPositiveTailMajorant
+          s := by ring
 
 /-- Removing the diagonal improves the leading shell constant from three to
 two. -/
