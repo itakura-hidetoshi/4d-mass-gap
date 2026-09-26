@@ -147,7 +147,7 @@ theorem
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawOrderedFirstCrossResidual] using
           hSection
       _ ≤ |bound| + |bound| :=
-        add_le_add_left hCenterAbs |bound|
+        add_le_add (le_refl |bound|) hCenterAbs
       _ = 2 * |bound| := by ring
   have hRLp : MemLp R 2 μ :=
     MemLp.of_bound hRStrong.aestronglyMeasurable (2 * |bound|)
@@ -171,7 +171,6 @@ theorem
           (Function.update Cv.1 source (Cv.1 source)) =
         μ
     rw [Function.update_eq_self source Cv.1]
-    rfl
   have hReal :
       (∫ g, R g ^ 2 ∂μ) =
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFirstCenteredEnergy
