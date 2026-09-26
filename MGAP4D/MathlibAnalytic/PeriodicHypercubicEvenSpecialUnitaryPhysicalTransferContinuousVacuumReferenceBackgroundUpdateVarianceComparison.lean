@@ -87,7 +87,9 @@ theorem evariance_le_mul_of_measure_le_smul
     _ ≤ ∫⁻ x, ENNReal.ofReal ((X x - c) ^ 2) ∂(K • ν) :=
       lintegral_mono' hμν le_rfl
     _ = K * ∫⁻ x, ENNReal.ofReal ((X x - c) ^ 2) ∂ν := by
-      rw [lintegral_smul_measure]
+      simpa [smul_eq_mul] using
+        (lintegral_smul_measure
+          (μ := ν) K (fun x => ENNReal.ofReal ((X x - c) ^ 2)))
     _ = K * evariance X ν := by
       unfold c
       rw [evariance_eq_lintegral_ofReal]
