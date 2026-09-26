@@ -194,8 +194,6 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawSecondMean
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourcePairSecondTargetFiberKernel_apply]
-  simp only [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourcePairSecondUpdatedBackground_orderedSection]
   apply integral_congr_ae
   filter_upwards with g
   unfold
@@ -334,7 +332,6 @@ theorem
   intro Cv
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceSecondTargetFiberKernel_apply]
-  rfl
 
 /-- Fully literal version of the one-step ordered cross-energy disintegration. -/
 theorem
