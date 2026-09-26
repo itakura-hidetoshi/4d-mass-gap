@@ -234,6 +234,18 @@ theorem
   have hRadius : radius = maxDist + 1 := rfl
   rw [hRadius, Finset.sum_range_succ']
   apply add_le_add
+  · have hZeroNat :=
+      periodicHypercubicEvenSpatialSliceBaseL1Shell_card_le_polynomial
+        H target 0
+    have hZeroReal :
+        (((Finset.univ.filter fun source : PeriodicHypercubicEvenSpatialSliceLink H =>
+            distance source = 0).card : ℕ) : ℝ) ≤ 3 := by
+      have hZeroNat' :
+          ((Finset.univ.filter fun source : PeriodicHypercubicEvenSpatialSliceLink H =>
+              distance source = 0).card) ≤ 3 := by
+        simpa [distance] using hZeroNat
+      exact_mod_cast hZeroNat'
+    simpa using hZeroReal
   · calc
       (∑ k ∈ Finset.range maxDist,
         (((Finset.univ.filter fun source : PeriodicHypercubicEvenSpatialSliceLink H =>
@@ -286,18 +298,7 @@ theorem
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeReciprocalExponentialWeightPositiveTailMajorant
           s := by
             rfl
-  · have hZeroNat :=
-      periodicHypercubicEvenSpatialSliceBaseL1Shell_card_le_polynomial
-        H target 0
-    have hZeroReal :
-        (((Finset.univ.filter fun source : PeriodicHypercubicEvenSpatialSliceLink H =>
-            distance source = 0).card : ℕ) : ℝ) ≤ 3 := by
-      have hZeroNat' :
-          ((Finset.univ.filter fun source : PeriodicHypercubicEvenSpatialSliceLink H =>
-              distance source = 0).card) ≤ 3 := by
-        simpa [distance] using hZeroNat
-      exact_mod_cast hZeroNat'
-    simpa using hZeroReal
+
 
 /-- Removing the diagonal improves the leading shell constant from three to
 two. -/
