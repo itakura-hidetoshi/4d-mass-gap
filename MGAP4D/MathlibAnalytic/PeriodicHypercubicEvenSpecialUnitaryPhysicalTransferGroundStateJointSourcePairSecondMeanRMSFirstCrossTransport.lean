@@ -135,7 +135,7 @@ theorem
         simpa [fiberSection] using
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawCenteredSection_norm_le
             H N target source F bound hbound left mean (z, g)
-      _ ≤ |bound| + |bound| := add_le_add_left hMeanAbs _
+      _ ≤ |bound| + |bound| := add_le_add (le_refl _) hMeanAbs
       _ = 2 * |bound| := by ring
   have hLp : MemLp fiberSection 2 μ :=
     MemLp.of_bound hSectionStrong.aestronglyMeasurable (2 * |bound|)
