@@ -105,7 +105,7 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawOrderedFirstCrossEnergy_lintegral_eq_firstVariance_lintegral_add_responseL2_norm_sq_ofReal
       H N hN beta hbeta B distinguishedSource source target hne k g₂
       F hF bound hbound left]
-  exact add_le_add_right hVariance _
+  exact add_le_add hVariance (le_refl _)
 
 end
 
