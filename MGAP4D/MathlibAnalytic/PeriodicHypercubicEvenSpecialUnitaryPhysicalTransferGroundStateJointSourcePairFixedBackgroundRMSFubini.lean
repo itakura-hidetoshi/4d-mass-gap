@@ -261,11 +261,27 @@ theorem
     simpa [μ] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure_diagonalCurrentValues_eq_kernelSection
         H N hN beta hbeta C source distinguishedSource
-  rw [hμ] at hComp
-  simpa [
-    μ, κ,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceIndependentPairBackgroundMeasure,
-    PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedBackgroundSourcePairMeasure] using hComp
+  calc
+    (∫⁻ z, Phi z
+      ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceIndependentPairBackgroundMeasure
+        H N hN beta hbeta C distinguishedSource source
+        (C distinguishedSource) (C source)) =
+      ∫⁻ A, ∫⁻ uv, Phi (A, uv)
+        ∂PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedBackgroundSourcePairMeasure
+          H N hN beta hbeta C A distinguishedSource source
+          (C distinguishedSource) (C source) ∂μ := by
+        simpa [
+          μ, κ,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceIndependentPairBackgroundMeasure,
+          PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedBackgroundSourcePairMeasure] using hComp
+    _ =
+      ∫⁻ A, ∫⁻ uv, Phi (A, uv)
+        ∂PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedBackgroundSourcePairMeasure
+          H N hN beta hbeta C A distinguishedSource source
+          (C distinguishedSource) (C source)
+        ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousProbabilityMeasure
+          H N hN beta hbeta C := by
+        rw [hμ]
 
 /-- Exact Fubini bridge between the current-value fixed-background RMS norms
 and the corresponding full source-pair RMS L2 norm. -/
