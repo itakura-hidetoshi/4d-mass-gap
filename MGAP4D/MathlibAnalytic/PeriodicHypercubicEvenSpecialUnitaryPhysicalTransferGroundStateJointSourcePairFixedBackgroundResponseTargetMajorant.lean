@@ -179,11 +179,12 @@ theorem
           H N hN beta hbeta C distinguishedSource source target
           F hF bound hbound := by
         rw [← hRMSFubini]
+        rfl
     _ ≤
       ENNReal.ofReal ((K.influence target source) ^ 2) *
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFixedBackgroundSecondMeanRMSTargetMajorant
           H N hN s beta hbeta C target F := by
-        exact mul_le_mul_left' hRMS _
+        gcongr
     _ = _ := by rfl
 
 /-- Fixed-C ordered response-energy matrix with zero diagonal definitionally. -/
