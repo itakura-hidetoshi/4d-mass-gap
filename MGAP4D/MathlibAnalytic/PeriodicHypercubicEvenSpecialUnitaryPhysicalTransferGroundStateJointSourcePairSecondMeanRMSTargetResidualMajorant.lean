@@ -135,7 +135,6 @@ theorem
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabRemoteKernelSectionOneLinkFluctuation_diagonal_eq_value_sub_kernelSectionSpatialLinkIntegral
       H N hN beta hbeta C A target source rightF hRightStrong]
-  rfl
 
 /-- Diagonal updated reference variance is exactly independent of the chosen
 source link. -/
