@@ -235,7 +235,7 @@ theorem
                   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
                     H N hN beta hbeta target
                     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointBoundedConcreteL2
-                      H N hN beta hbeta F hF bound hbound)‖ ^ 2)) := by
+                      H N hN beta hbeta F hF bound hbound)‖ ^ 2))) := by
   let coeff : ℝ≥0∞ :=
     ENNReal.ofReal
       (((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledPhysicalLeftKernel
