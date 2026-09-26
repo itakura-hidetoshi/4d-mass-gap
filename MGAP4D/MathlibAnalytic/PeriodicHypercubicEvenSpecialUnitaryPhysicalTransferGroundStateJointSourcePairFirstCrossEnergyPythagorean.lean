@@ -84,9 +84,11 @@ private theorem probability_integral_sq_sub_const_eq_centered_mean_add_gap_sq
         ((∫ y, X y ∂μ) - c) ^ 2 := by
   have hShift : MemLp (fun x => X x - c) 2 μ :=
     hX.sub (memLp_const c)
+  have hXIntegrable : Integrable X μ :=
+    hX.integrable one_le_two
   have hMeanShift :
       (∫ x, X x - c ∂μ) = (∫ x, X x ∂μ) - c := by
-    rw [integral_sub hX.integrable (integrable_const c)]
+    rw [integral_sub hXIntegrable (integrable_const c)]
     simp
   have hVarShift :
       variance (fun x => X x - c) μ =
