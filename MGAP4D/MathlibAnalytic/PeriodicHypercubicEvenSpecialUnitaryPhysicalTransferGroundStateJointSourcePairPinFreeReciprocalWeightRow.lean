@@ -49,6 +49,11 @@ open scoped BigOperators
 
 noncomputable section
 
+local instance pinFreeReciprocalWeightRowSpecialUnitaryMeasurableSpace
+    (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 local instance pinFreeReciprocalWeightRowSpatialLinkFintype
     (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
