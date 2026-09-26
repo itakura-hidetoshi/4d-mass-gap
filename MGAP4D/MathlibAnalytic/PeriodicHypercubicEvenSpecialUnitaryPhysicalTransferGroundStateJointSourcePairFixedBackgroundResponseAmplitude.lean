@@ -209,7 +209,10 @@ theorem
         (C target) (C target) A
     letI : IsProbabilityMeasure κref := by
       dsimp [κref]
-      infer_instance
+      exact
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_isProbabilityMeasure
+          H N hN beta hbeta C target target target
+          (C target) (C target) A
     have hκ :
         κref =
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
