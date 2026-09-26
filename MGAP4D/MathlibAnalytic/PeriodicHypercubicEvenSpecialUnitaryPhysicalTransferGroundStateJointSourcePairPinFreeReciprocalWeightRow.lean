@@ -44,6 +44,7 @@ finite-cardinality factor, or new influence coefficient is introduced.
 
 namespace MGAP4D.MathlibAnalytic
 
+open MeasureTheory
 open scoped BigOperators
 
 noncomputable section
@@ -229,8 +230,9 @@ theorem
           s beta *
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeReciprocalExponentialWeightMass
           H s target := by
+        unfold
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeReciprocalExponentialWeightMass
         rw [Finset.mul_sum]
-        rfl
 
 /-- The PR #4836 fixed-C response amplitude row is controlled by the same
 reciprocal-weight mass times the target amplitude. -/
