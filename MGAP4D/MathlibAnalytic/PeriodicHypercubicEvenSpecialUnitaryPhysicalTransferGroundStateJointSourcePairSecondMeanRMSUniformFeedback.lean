@@ -213,7 +213,7 @@ theorem
 /-- The common half-barrier feedback square remains strictly below one. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierPinFreeCoefficient_sq_ofReal_lt_one_of_strictPhysicalSweepCutoff
-    (s : ℝ) (hs : 1 < s)
+    (s : ℝ)
     (beta : ℝ) (hbeta : 0 ≤ beta)
     (hcut :
       beta ≤
@@ -301,7 +301,7 @@ theorem
         s beta) ^ 2)
   have hPair :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLaw_one_sub_canonicalPinFree_sq_ofReal_mul_secondMeanRMSAmplitudeL2_norm_sq_ofReal_le_harnackVariance_of_strictPhysicalSweepCutoff
-      H N hN s hs beta hbeta hcut B distinguishedSource source target hne
+      N hN s hs beta hbeta hcut H B distinguishedSource source target hne
       k g₂ F hF bound hbound left
   have hCoeff : cPair ≤ cUniform := by
     simpa [cPair, cUniform] using
@@ -311,8 +311,8 @@ theorem
       1 - cUniform ≤ 1 - cPair :=
     tsub_le_tsub_left hCoeff 1
   have hScaled :
-      (1 - cUniform) * X ≤ (1 - cPair) * X :=
-    mul_le_mul_right hGap X
+      (1 - cUniform) * X ≤ (1 - cPair) * X := by
+    simpa [mul_comm] using (mul_le_mul_right hGap X)
   exact hScaled.trans (by simpa [X, cPair, cUniform] using hPair)
 
 end
