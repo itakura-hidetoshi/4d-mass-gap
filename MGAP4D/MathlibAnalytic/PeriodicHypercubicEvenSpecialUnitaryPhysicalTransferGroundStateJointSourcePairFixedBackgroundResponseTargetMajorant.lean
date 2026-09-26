@@ -178,7 +178,8 @@ theorem
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFixedBackgroundSecondMeanRMSAmplitudeEnergy
           H N hN beta hbeta C distinguishedSource source target
           F hF bound hbound := by
-        rw [hRMSFubini]
+        rw [← hRMSFubini]
+        rfl
     _ ≤
       ENNReal.ofReal ((K.influence target source) ^ 2) *
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFixedBackgroundSecondMeanRMSTargetMajorant
