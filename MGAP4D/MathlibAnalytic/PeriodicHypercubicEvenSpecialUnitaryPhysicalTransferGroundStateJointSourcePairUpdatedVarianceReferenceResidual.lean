@@ -151,7 +151,6 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathProjection
         H N hN beta hbeta B referenceTarget referenceSource fiber k g₂ f A := by
   rw [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathProjection_eq_representative_comp_restriction,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathProjection_eq_representative_comp_restriction]
   simp only [Function.comp_apply]
   congr 1
@@ -284,7 +283,6 @@ theorem
         apply lintegral_congr
         intro g
         rw [← hProjection]
-        rfl
 
 /-- Exact outer-law identity: the stationarity-returned updated target variance
 is the squared target reference heat-bath residual under the same source
@@ -358,11 +356,15 @@ theorem
       apply lintegral_congr
       intro g
       unfold residualSq
+      change
+        ENNReal.ofReal ((rightF (Function.update A target g) - P A) ^ 2) =
+          ENNReal.ofReal
+            ((rightF (Function.update A target g) -
+                P (Function.update A target g)) ^ 2)
       rw [
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathProjection_update_fiber
           H N hN beta hbeta B source distinguishedSource target k g₂
           rightF A g]
-      rfl
     _ =
       ∫⁻ A, residualSq A
         ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
