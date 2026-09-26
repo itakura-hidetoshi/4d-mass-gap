@@ -361,10 +361,13 @@ theorem
           ENNReal.ofReal
             ((rightF (Function.update A target g) -
                 P (Function.update A target g)) ^ 2)
-      rw [
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathProjection_update_fiber
-          H N hN beta hbeta B source distinguishedSource target k g₂
-          rightF A g]
+      have hPUpdate :
+          P (Function.update A target g) = P A := by
+        simpa [P] using
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathProjection_update_fiber
+            H N hN beta hbeta B source distinguishedSource target k g₂
+            rightF A g
+      rw [hPUpdate]
     _ =
       ∫⁻ A, residualSq A
         ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
