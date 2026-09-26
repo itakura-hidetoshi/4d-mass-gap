@@ -310,10 +310,16 @@ theorem
             ∂ν := by
         apply lintegral_congr
         intro z
-        rw [
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawResponseOnCarrier_eq_orderedResponse
-            H N hN beta hbeta B distinguishedSource source target hne k g₂
-            F left z]
+        have hFactor :
+            R z =
+              RO
+                (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourcePairReorderedMap
+                  H N source z) := by
+          simpa [R, RO] using
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawResponseOnCarrier_eq_orderedResponse
+              H N hN beta hbeta B distinguishedSource source target hne k g₂
+              F left z
+        rw [hFactor]
         rfl
       _ = ∫⁻ Cv, Phi Cv ∂ρ := hReorder
   have hSqInt : Integrable (fun z => (R z) ^ 2) ν := by
