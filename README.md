@@ -1,38 +1,39 @@
 # MGAP4D
 
-MGAP4D is Hidetoshi Itakura's Lean 4 / mathlib program for a proof-carrying construction of four-dimensional Yang--Mills theory. The repository develops a finite-volume periodic Wilson / Osterwalder--Schrader / physical-transfer framework, together with exact beta-zero geometry, response and covariance control, conditional expectations, Hilbert-space tensorization, spectral-gap receivers, and downstream thermodynamic/continuum infrastructure.
+MGAP4D is Hidetoshi Itakura's Lean 4 / mathlib program for a proof-carrying construction of four-dimensional Yang--Mills theory. The repository develops a finite-volume periodic Wilson / Osterwalder--Schrader / physical-transfer framework, exact beta-zero geometry, positive-beta physical response and covariance control, genuine ground-state conditional expectations, Hilbert-space coercivity receivers, and downstream thermodynamic / continuum infrastructure.
 
-## Current status — 2026-09-23 JST
+## Current status — 2026-09-26 JST
 
 The unique authoritative theorem-carrier branch is:
 
 **formal/real-hilbert-uniform-coercive-strong-limit**
 
-Fresh GitHub state at this documentation refresh:
+The fresh theorem-bearing baseline immediately before this documentation refresh is:
 
-**bbd064ddff7814a804c2ba319e6c365dabd9ecb4**
+**d1a2e7bb9189643cf7c973568fab5dd39065bbf6**
 
-This is the merge commit of PR #4678, **Bridge beta-zero physical top-orthogonal sector to pair-Haar boundary geometry**. It also contains the immediately preceding merged PR #4677, **Prove beta-zero physical pair-Haar orthogonal bridge**.
+This is the merge commit of PR **#4787**, **Compare ordered old and updated target variances**.
 
-The default branch **main** is a public landing/documentation branch and is **not** theorem authority.
+The default branch **main is not theorem authority**.
 
 > **Claim boundary**
 >
 > This repository does **not** yet contain a completed proof of the Clay Millennium Yang--Mills existence and mass-gap problem.
-> What is now integrated is a substantial finite-volume Wilson/OS/physical-transfer theorem spine. In particular, the beta-zero six-spatial pair-Haar projection geometry is closed through exact frame/Rayleigh constants, and the genuine physical beta-zero top-orthogonal sector has now been bridged into that pair-Haar boundary geometry. The main quantitative frontier is the volume-uniform positive-beta ground-state L2 bridge, followed by thermodynamic and continuum construction.
+>
+> What is integrated is a substantial finite-volume Wilson / OS / physical-transfer theorem spine. The exact beta-zero endpoint is closed. The positive-beta physical Schur matrix side is closed. The six-spatial local-energy / localPart chain is closed with coefficient one. The observable-specific target-law response and exact two-law RMS amplitude now exist in source-pair L2. The remaining first-cross mismatch has been reduced, without a factor-two loss, to an updated target-fiber variance through an exact Pythagorean split and a sharp Harnack variance comparison.
+>
+> The immediate frontier is to integrate the #4787 pointwise old-to-updated variance inequality over the ordered outer law, use second-updated-background stationarity / pushforward to return that updated variance to the genuine target-residual carrier, and then close the actual target-indexed RMS majorant / transpose recurrence consumed by the already-proved Schur receiver.
 
 ## Repository authority
 
 | Item | Current value |
 | --- | --- |
 | Theorem-carrier branch | formal/real-hilbert-uniform-coercive-strong-limit |
-| Current theorem-bearing baseline | bbd064ddff7814a804c2ba319e6c365dabd9ecb4 |
-| Latest merged theorem PR | #4678 |
-| Immediately preceding merged theorem PR | #4677 |
-| #4677 validated exact head | d5da7f0c97f4c736f2e7a41015c003ab1a899a3b |
-| #4677 CI | PR Lean Fast Check #14856 / run 35850382949 — success |
-| #4678 validated exact head | 43f73b187073e47b678fd5d9f229646c28d97f27 |
-| #4678 CI | PR Lean Fast Check #14855 / run 35850140311 — success |
+| Theorem-bearing baseline before this docs refresh | d1a2e7bb9189643cf7c973568fab5dd39065bbf6 |
+| Latest merged theorem PR | #4787 |
+| #4787 validated exact head | 05d6555377d6774c823e5d5d4318a5a858c95bd6 |
+| #4787 CI | PR Lean Fast Check run 36213674095 — success |
+| #4787 completion receipt | chatgpt-ci-receipt/PR Lean Fast Check — success |
 | Lean | v4.30.0-rc2 |
 | mathlib | 5450b53e5ddc75d46418fabb605edbf36bd0beb6 |
 | Default branch | main — not theorem authority |
@@ -45,7 +46,7 @@ Authority order:
 4. exact-head CI receipts;
 5. historical summaries or memory.
 
-A later docs-only merge may advance a branch pointer without changing the theorem-bearing mathematical baseline.
+A later docs-only merge may advance the theorem-carrier pointer without changing the theorem-bearing mathematical baseline above.
 
 ## Proof spine at a glance
 
@@ -54,304 +55,319 @@ FINITE WILSON / OS / PHYSICAL TRANSFER ROOT
   -> periodic SU(N) Wilson one-slab kernel
   -> OS / Gauss-law physical carrier
   -> compact positive physical transfer
-  -> top eigenspace / canonical nonnegative vacuum
+  -> canonical nonnegative vacuum
   -> ground-state transformed boundary and joint laws
-  -> genuine conditional-expectation families
+  -> genuine one-link / six-color conditional expectations
 
-HIGH-TEMPERATURE RESPONSE / PHYSICAL SWEEP                  #4634-#4648
-  -> fixed-right response continuity
-  -> canonical half-barrier closure
-  -> actual physical influence / finite resolvent
-  -> random-scan contraction and covariance resolvent
-  -> spatial covariance clustering
-  -> terminal covariance decay / shell summability
-  -> beta-zero-vanishing sharpened residual
-  -> positive volume-independent strict physical full-sweep contraction
-
-GROUND-STATE L2 RECEIVER / ABSTRACT TENSORIZATION           #4650-#4652
-  -> six-spatial residual energy on genuine joint L2
-  -> bounded-core closure
-  -> six-spatial random-scan Rayleigh receiver
-  -> frame/Poincare <-> Rayleigh identity
-  -> physical transfer-gap receiver 3*(1-q)/8
-  -> finite tensorization for pairwise commuting Hilbert projections
-
-EXACT BETA-ZERO PHYSICAL ENDPOINT                           #4653-#4657
-  -> ambient transfer = |1><1|
-  -> physical transfer = |1><1|
-  -> canonical nonnegative vacuum = constant-one
-  -> vacuum law = spatial Haar
+EXACT BETA-ZERO ENDPOINT
+  -> vacuum = spatial Haar
   -> ground-state joint law = pair Haar
-  -> top-orthogonal normalized transfer = 0
-  -> exact finite-volume physical transfer gap = 1
+  -> kappa_0 = 1/6
+  -> q_0 = 5/6
+  -> exact physical transfer gap = 1
 
-BETA-ZERO SIX-SPATIAL PAIR-HAAR GEOMETRY                    #4662-#4676
-  -> literal pair-Haar L2 carrier and Fin 6 projections
-  -> color/off-color product decomposition
-  -> common-fixed intersection = boundary L2
-  -> idempotence / symmetry
-  -> product conditional-expectation fiber formula
-  -> range-invariance -> commutation Hilbert receiver
-  -> shared-base conditional-expectation collapse
-  -> Wilson-specific range invariance
-  -> actual pairwise commutation
-  -> actual full-sweep tensorization
-  -> full-sweep fixed sector = fst-boundary L2
-  -> sweep = orthogonal projection
-  -> exact frame coefficient kappa_0 = 1/6
-  -> exact random-scan Rayleigh factor q_0 = 5/6
+POSITIVE-BETA MATRIX / RECEIVER SIDE
+  -> canonical fixed-right response profile
+  -> physical influence / covariance decay
+  -> background-dependent envelope K_A
+  -> volume-independent row + column Schur coefficient q_phys(s,beta) < 1
+  -> ordinary + transpose one-sided Schur receivers
+  -> arbitrary-outer-law / physical-vacuum Schur integration
 
-PHYSICAL BETA-ZERO -> PAIR-HAAR BOUNDARY BRIDGE             #4677-#4678
-  -> literal right-boundary pair-Haar L2 isometry
-  -> physical top-orthogonal -> fst-boundary orthogonal
-  -> beta-zero Haar-to-vacuum isometry is onto
-  -> ambient rank-one annihilation -> Doob boundary image = 0
-  -> coarse left-boundary projection of transformed right lift = 0
+SWEEP LOCAL ENERGY / localPart
+  -> six-spatial stage profile ell_s
+  -> (1/6) sum_s ell_s^2 <= E_6sp
+  -> canonical fiber variance / genuine CondExp bridge
+  -> genuine-joint canonical residual L2
+  -> ||localPart_s|| <= ell_s with coefficient 1
 
-IMMEDIATE ENDPOINT PACKAGING
-  -> apply #4676 to the #4677 / #4678 physical bridge
-  -> package genuine physical beta-zero six-spatial kappa_0 = 1/6
-  -> package genuine physical beta-zero q_0 = 5/6
-  -> feed #4651 for the consistency lower bound 1/16
-  -> retain #4657 gap_beta=0 = 1 as the exact endpoint value
+OBSERVABLE-SPECIFIC RESPONSE / RMS                    #4775-#4779
+  -> exact target-law response on source-pair carrier
+  -> response L2(nu_source)
+  -> exact two-law RMS amplitude L2(nu_source)
+  -> ||Response|| <= K_pin(target,source) * ||RMS||
+  -> response independent of scalar center
+  -> pointwise center freedom for RMS
+  -> choose actual second target-law mean as canonical center
+  -> second centered mean = 0 exactly
 
-MAIN QUANTITATIVE FRONTIER
-  -> volume-uniform positive-beta ground-state L2 bridge
-  -> uniform finite-volume physical transfer / Hamiltonian gap
-  -> thermodynamic / infinite-volume physical construction
-  -> continuum OS / Wightman construction
-  -> continuum Yang--Mills positive spectral gap
+FIRST-CROSS LAW MISMATCH                              #4780-#4785
+  -> reorder source-pair law exactly to (C,v,g)
+  -> expose literal mismatch:
+       g ~ kappa_target(C)
+       center/frozen section based at C[source <- v]
+  -> exact Pythagorean split
+       firstCrossEnergy
+         = oldTargetVariance + response^2
+  -> lift to ordered outer law
+  -> ordered response^2 = ||ResponseL2||^2
+  -> global exact split
+       firstCrossEnergy
+         = integral oldTargetVariance
+           + ofReal(||ResponseL2||^2)
+
+VARIANCE COMPARISON                                  #4786-#4787
+  -> normalized physical one-link laws under one off-fiber
+     background update are mutually dominated by
+       K_H(beta) = (exp(32 beta))^2
+  -> generic evariance transport under measure domination
+  -> ordered old target variance <= K_H * updated target variance
+     pointwise, with no triangle inequality / factor two
+
+CURRENT FRONTIER
+  -> integrate #4787 over the ordered outer law
+  -> use exact second-updated-background stationarity / pushforward
+  -> identify the updated variance integral with the genuine
+     target-fiber residual/profile already linked to CondExpL2
+  -> combine with #4785 and the response L2 bound
+  -> close the actual target-indexed RMS majorant / transpose recurrence
+  -> feed #4773 transpose Schur receiver
+  -> positive-beta bounded-core six-spatial Poincare
+  -> #4650 full genuine joint L2
+  -> #4651 q(beta) < 1 and finite-volume physical transfer gap
+  -> thermodynamic / infinite-volume construction
+  -> continuum OS / Wightman reconstruction
+  -> continuum Yang--Mills mass gap
 ~~~
 
-## 1. High-temperature physical contraction is integrated
+## What changed after the #4774 documentation snapshot
 
-The response/covariance chain #4634-#4648 is no longer the active obstruction. It reaches a genuine volume-independent strict physical sweep contraction on a positive high-temperature interval.
+### #4775--#4777 — concrete response and exact RMS are now actual L2 objects
 
-This is a finite-volume physical contraction theorem. It is deliberately **not** identified with an L2 Poincare/Rayleigh theorem without an explicit bridge.
+PR #4775 realizes the actual observable-specific target-law response on the exact source-pair carrier.
 
-## 2. The genuine L2 receiver is integrated
-
-PR #4650 closes the bounded-core-to-full-L2 extension for the six-spatial residual energy.
-
-PR #4651 defines the genuine six-spatial random scan
+PR #4776 packages that response as an element of the source-specific carrier
 
 ~~~text
-P_rs = (1/6) * sum_c P_c
+E_source = L2(nu_source)
 ~~~
 
-and proves the Hilbert identity behind
+and preserves the physical response coefficient at the norm level.
+
+PR #4777 names the two centered target-fiber energies, forms the exact RMS amplitude
 
 ~~~text
-kappa * ||x||^2 <= (1/6) * sum_c ||x - P_c x||^2
+RMS(z) = sqrt(E_first(z) + E_second(z)),
 ~~~
 
-if and only if
+packages it in the same source-pair L2 carrier, and proves the coefficient-preserving estimate
 
 ~~~text
-inner(P_rs x, x) <= (1-kappa) * ||x||^2.
+||Response_{source,target}||
+  <= K_pin(target,source) * ||RMS_{source,target}||.
 ~~~
 
-The physical receiver converts any genuine q < 1 into
+No finite-cardinality Cauchy loss is introduced.
+
+### #4778--#4779 — remove the artificial fixed-center obstruction
+
+PR #4778 proves that the response itself is independent of the common scalar center. Therefore the response can be held at any reference center while the RMS energy uses a context-dependent pointwise center.
+
+PR #4779 chooses the actual second target-law fiber mean as that center. Consequently,
 
 ~~~text
-3*(1-q)/8 <= physical transfer gap.
+SecondMean(center = secondFiberMean) = 0
 ~~~
 
-PR #4652 provides the finite tensorization inequality for pairwise commuting self-adjoint idempotent projections.
+exactly.
 
-## 3. The exact beta-zero physical endpoint is closed
+This converts the remaining RMS difficulty into a single first-law cross energy.
 
-PRs #4653-#4657 prove, at beta = 0,
+### #4780--#4781 — put the first cross energy in literal ordered coordinates
+
+PR #4780 transports the complete first-law cross energy exactly to
 
 ~~~text
-ambient transfer = |1_Haar><1_Haar|
-physical transfer = |1_phys><1_phys|
-vacuum measure = spatial Haar
-ground-state joint measure = pair Haar
+mu_source(dC) kappa_source(C)(dv) kappa_target(C)(dg).
 ~~~
 
-and on the full physical top-orthogonal sector
+PR #4781 removes the remaining carrier aliases and exposes the literal mismatch:
 
 ~~~text
-normalized physical transfer = 0
-physical transfer gap = 1.
+sample law:       g ~ kappa_target(C)
+frozen section:   X_v(g) = F(left, C[source <- v][target <- g])
+centering mean:   mean under kappa_target(C[source <- v]).
 ~~~
 
-The exact gap value one is finite-volume and volume-independent. It is not by itself a positive-beta or continuum mass gap.
+No inequality has been used at this stage.
 
-## 4. Beta-zero six-spatial pair-Haar geometry is now closed
+### #4782--#4785 — exact Pythagorean reduction and response-L2 closure
 
-The structural lane that was still open at #4668 is now complete.
-
-| PR | Integrated role |
-| --- | --- |
-| #4662 | Literal pair-Haar joint L2 carrier and Fin 6 spatial projections |
-| #4663 | Exact color/off-color Haar product decomposition |
-| #4664 | Six-retained common-fixed intersection = complete boundary L2 |
-| #4665 | Projection idempotence and symmetry |
-| #4666 | Product-probability conditional-expectation fiber formula |
-| #4667 | Hilbert receiver: range invariance -> projection commutation |
-| #4668 | Shared-base three-factor conditional-expectation collapse |
-| #4671 | Wilson-specific pair-Haar range invariance |
-| #4672 | Actual pairwise commutation of the six projections |
-| #4673 | Actual full-sweep tensorization and fixed-sector criterion |
-| #4674 | Full-sweep fixed sector = fst-boundary L2 |
-| #4676 | Sweep orthogonal geometry, exact kappa_0=1/6 and q_0=5/6 |
-
-PR #4675 was **closed unmerged and superseded by #4676**. It must not be revived as theorem authority.
-
-The exact beta-zero literal pair-Haar conclusions are:
+PR #4782 inserts the old-law mean and proves the exact Pythagorean identity
 
 ~~~text
-(1/6) * ||x||^2
-  <= (1/6) * sum_c ||x - P_c x||^2
-
-inner(P_rs x, x)
-  <= (5/6) * ||x||^2
+E_old[(X_v - m_new)^2]
+  =
+Var_old(X_v)
+  + (m_old - m_new)^2.
 ~~~
 
-for vectors in the complete fst-boundary orthogonal complement.
+The mean gap is exactly the concrete target-law response. Therefore no factor two appears.
 
-## 5. The physical beta-zero boundary bridge is integrated
+PR #4783 lifts this identity to the full ordered outer law.
 
-PR #4677 proves the direct literal-carrier bridge:
+PR #4784 identifies the ordered response-square integral exactly with
 
 ~~~text
-physical beta-zero top-orthogonal
-  -> literal pair-Haar right-boundary lift
-  -> fst-boundary orthogonal complement.
+ofReal(||ResponseL2||^2).
 ~~~
 
-Its generic product-probability lemma says that a snd-measurable L2 vector with zero mean lies in the orthogonal complement of the complete fst-measurable L2 subspace.
-
-PR #4678 provides the complementary Doob/coarse-projection route:
+PR #4785 composes the results:
 
 ~~~text
-ambient beta-zero transfer kills f
-  -> D_0(U_0 f) = 0
-  -> Q_0(R_0(U_0 f)) = 0.
+firstCrossEnergy
+  =
+integral oldTargetVariance
+  + ofReal(||ResponseL2||^2).
 ~~~
 
-Together these close the obstruction that previously separated the genuine physical beta-zero excitation sector from the pair-Haar six-spatial geometry.
+At this point the response-square contribution is no longer a new analytic unknown.
 
-## 6. Immediate next theorem unit
+### #4786--#4787 — reduce old target variance to updated target variance
 
-The remaining beta-zero work is now packaging rather than new geometry.
-
-Use #4677 (or equivalently the #4678 coarse-projection route) to place the transformed physical top-orthogonal vector in the hypothesis of #4676, then use the existing linear isometries to transport norms.
-
-The expected packaged conclusions are:
+PR #4786 exposes the measure-level Harnack domination already implicit in the bounded-test theory and proves a generic variance transport theorem:
 
 ~~~text
-kappa_0 = 1/6
-q_0 = 5/6
+mu <= K • nu
+  =>
+evariance_mu(X) <= K * evariance_nu(X).
 ~~~
 
-on the genuine physical beta-zero six-spatial sector.
-
-Feeding q_0 = 5/6 into #4651 gives the consistency lower bound
+For one physical background-link update the coefficient is
 
 ~~~text
-3*(1 - 5/6)/8 = 1/16.
+K_H(beta) = (exp(32 beta))^2.
 ~~~
 
-This is not the optimal beta-zero transfer gap: #4657 already proves the exact value
+PR #4787 specializes this to the ordered first-cross carrier:
 
 ~~~text
-gap_beta=0 = 1.
+ofReal(oldVariance(C,v))
+  <=
+K_H(beta) * ofReal(updatedVariance(C,v)).
 ~~~
 
-The value 1/16 is a consistency receipt for the six-spatial Rayleigh route.
+This uses variance minimality and measure domination directly; it does not use a triangle inequality and therefore introduces no extra factor two.
 
-## 7. Main quantitative frontier: positive-beta volume-uniform L2 bridge
+## Current mathematical frontier
 
-The repository now has both sides that must be connected:
+The old localPart obstruction is closed. The Schur matrix / outer integration algebra is closed. The concrete response and RMS carriers are closed. The law mismatch has been reduced to a single updated target-fiber variance.
+
+The next theorem unit should perform the **outer integration and stationarity return**:
+
+1. integrate the #4787 pointwise inequality over the ordered second-background law;
+2. pull the constant Harnack factor outside the ENNReal integral without changing it;
+3. use the exact second-updated-background stationarity / pushforward theorem to rewrite the updated variance integral on the genuine source/reference carrier;
+4. identify that updated variance with the already-existing canonical target-fiber variance / genuine target residual profile;
+5. combine with the #4785 exact split.
+
+The intended schematic result is:
 
 ~~~text
-strict volume-independent physical influence/sweep contraction     #4648
-exact/genuine six-spatial L2 Rayleigh receiver                     #4651
-closed beta-zero pair-Haar tensorization and physical bridge       #4662-#4678
+firstCrossEnergy
+  <=
+K_H(beta) * genuineTargetVarianceEnergy
+  + ofReal(||ResponseL2||^2).
 ~~~
 
-The missing theorem is a volume-uniform implication of the form
+Then use the already-proved response estimate
 
 ~~~text
-physical interdependence coefficient < 1
-    =>
-genuine ground-state L2 Rayleigh coefficient < 1
+||Response_{source,target}||
+  <= K_pin(target,source) * ||RMS_{source,target}||
 ~~~
 
-for positive beta in a high-temperature interval.
+to close the target-indexed RMS majorant / transpose recurrence without reintroducing a finite-volume cardinality factor.
 
-Bounded-test / total-variation influence control and L2 Poincare/Rayleigh coercivity remain distinct until this theorem is proved.
+The required matrix orientation remains:
 
-## 8. Downstream obligations
+~~~text
+K(target,source),
+~~~
 
-After a scale-independent positive-beta L2 coefficient is proved:
+never K(source,target).
 
-1. obtain a uniform finite-volume physical transfer gap through the existing receiver;
-2. transport it to Hamiltonian vacuum-orthogonal coercivity;
-3. construct the thermodynamic/infinite-volume physical state;
-4. preserve reflection positivity, gauge invariance, nontrivial observables, and same-root authority;
-5. construct the continuum OS theory;
-6. perform Wightman/OS reconstruction;
-7. prove a unique continuum vacuum and a positive lower spectral edge on its orthogonal complement.
+After the observable-specific recurrence is closed, feed it into the #4773 transpose outer-Schur receiver.
 
-A fixed-volume gap is not automatically a continuum Yang--Mills mass gap.
+## Recent theorem units
 
-## Lean / mathlib verification discipline
+| PR | Role | Merge commit |
+| --- | --- | --- |
+| #4775 | realize concrete target-law response on source-pair carrier | 828605b8527f2a35c729bafccd75691560fcb595 |
+| #4776 | realize target-law response in source-pair L2 | 4b3409720569252ca7a258a59c138636837d1b68 |
+| #4777 | realize exact target-law RMS amplitude in source-pair L2 | fee8782246351c60b50262212fb0a83ba007bfef |
+| #4778 | prove response center freedom and pointwise-center RMS interface | 5d8425f94a9cb0f9ee3ab3b01ad91fa7a2988ef1 |
+| #4779 | choose actual second-law fiber mean as canonical center | 09cb36cf91d175e673f5f98c59005e651a2342c7 |
+| #4780 | reorder first cross energy exactly | 8b53b9e07efe22d117a62815e4e91c619d362ddc |
+| #4781 | expose ordered first cross residual in literal coordinates | 253383daa562428ab4768a9a49dc425998b9097f |
+| #4782 | exact Pythagorean split of first cross energy | e4953e7c0d3235051f85dd0263cfad2c34882fdd |
+| #4783 | lift Pythagorean split to ordered outer law | 0d1d34c6920c9a3c4a9a79411ceb44422c359de5 |
+| #4784 | identify ordered response square with response L2 norm-square | d5af7e9420fdfe7bf99d3e37e5e571fe0c9738f2 |
+| #4785 | global split: old variance + response L2 norm-square | 150b8611f8a7d63ba347b893e263d008e91622af |
+| #4786 | background-update Harnack evariance comparison | ab2dc7dcaa1b965e2b0aed94e0812c48ff1c06fc |
+| #4787 | ordered old variance <= Harnack factor * updated variance | d1a2e7bb9189643cf7c973568fab5dd39065bbf6 |
+
+PR #4774 was the previous docs-only refresh and is not a new theorem-bearing mathematical step.
+
+## Lean / mathlib engineering discipline
 
 Pinned environment:
 
 - Lean v4.30.0-rc2
 - mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6
 
-Current proof-engineering rules:
+Current rules:
 
-- inspect the whole changed module, imports, CompileSmoke, and dependent API when CI fails;
-- treat the pinned mathlib revision as authority rather than current master;
-- keep dependent Lp measure transport narrow; do not rewrite a proof-indexed Lp type wholesale;
-- make product measurable spaces explicit when conditional-expectation APIs introduce independent ambient measurable-space metavariables;
-- prefer literal `Prod.instMeasurableSpace` when the product sigma-algebra must be definitionally shared;
-- keep ContinuousLinearMap / LinearMap / LinearIsometry coercion boundaries explicit;
-- use `change` only for definitional equality;
-- remember that `rw` needs a syntactic occurrence after elaboration; unfold wrappers before representative-level rewrites;
-- use `simp only` when global simp lemmas would destroy the local representative shape needed by the proof;
-- separate structural simplification from arithmetic normalization; use `norm_num` for exact rational identities;
-- avoid expensive orthogonal-projection instance synthesis when a direct inner-product characterization proves membership in an orthogonal complement;
-- validate the exact PR head and confirm the exact-head completion receipt before merging.
+- fresh theorem-carrier and current PR head before branch creation, write, CI judgment, and merge judgment;
+- classify only the PR's current exact head SHA;
+- require terminal success of **Changed Lean fast check** and the exact-head completion receipt;
+- on RED, inspect the full changed Lean module, CompileSmoke, imports, dependent signatures, and pinned API — not only the reported line;
+- distinguish static dependency/preflight failures from actual Lean elaboration failures;
+- pinned mathlib is authority; current upstream docs may guide syntax only;
+- install theorem-proved probability / Markov structures locally with letI when typeclass APIs require them;
+- do not pointwise evaluate arbitrary L2 quotient representatives;
+- preserve source/target orientation K(target,source);
+- avoid finite-cardinality Cauchy / telescoping losses.
 
-### Recent exact-head validation
+Recent Lean 4 lessons that now matter operationally:
 
-- #4676 head `ca05fcd095e84d5f3f56b1ae3cb2c4bc56b3ae52` — Fast Check #14843 / run 35843054541: success.
-- #4677 head `d5da7f0c97f4c736f2e7a41015c003ab1a899a3b` — Fast Check #14856 / run 35850382949: success.
-- #4678 head `43f73b187073e47b678fd5d9f229646c28d97f27` — Fast Check #14855 / run 35850140311: success.
-
-Current theorem-bearing baseline before this docs refresh:
-
-**bbd064ddff7814a804c2ba319e6c365dabd9ecb4**
-
-## Navigation
-
-- `ROADMAP.md` — detailed completed and remaining theorem units.
-- `MGAP4D/MathlibAnalytic` — formal analytic development.
-- Theorem-carrier branch: `formal/real-hilbert-uniform-coercive-strong-limit`.
+- ordinary rw matches with reducible transparency; if a local alias or wrapper hides the intended subterm, first normalize it with a typed intermediate equality or narrow simpa;
+- unfold processes named definitions sequentially; open outer aliases before inner definitions if the outer alias reveals the inner one;
+- change accepts only definitional equality; theorem-level identities such as sub_zero must be simplified before change;
+- simpa using performs its final type match at reducible transparency;
+- keep simp sets tight; unused simp arguments are a signal that the goal has already normalized through a different route;
+- scalar action and multiplication are not always definitionally identical; normalize with smul_eq_mul when an ENNReal measure/integral theorem returns a smul form;
+- give lambdas explicit domain types when expected-type inference is insufficient.
 
 ## Status summary
 
-Integrated formal state now includes:
+~~~text
+finite Wilson / OS / physical-transfer root              CLOSED
+exact beta-zero endpoint                                 CLOSED
+positive-beta physical matrix / Schur side               CLOSED
+six-spatial sweep local energy                           CLOSED
+coefficient-one localPart chain                          CLOSED
+source-specific response L2                              CLOSED
+exact two-law RMS amplitude L2                           CLOSED
+response center freedom                                  CLOSED
+second-law canonical pointwise center                    CLOSED
+ordered first-cross law reordering                       CLOSED
+exact Pythagorean cross-energy split                     CLOSED
+response-square -> response L2 norm-square               CLOSED
+global cross-energy = old variance + response L2         CLOSED
+background-update Harnack evariance tool                 CLOSED
+ordered old variance -> updated variance                 CLOSED
 
-- volume-independent high-temperature physical response/influence contraction;
-- genuine six-spatial L2 Rayleigh receivers;
-- abstract finite tensorization for commuting Hilbert projections;
-- exact beta-zero rank-one ambient and physical transfer;
-- exact beta-zero vacuum and pair-Haar joint laws;
-- exact finite-volume beta-zero physical transfer gap = 1;
-- complete literal beta-zero six-spatial pair-Haar projection geometry;
-- actual pairwise commutation and full-sweep tensorization;
-- exact common-fixed boundary identification;
-- exact literal beta-zero frame coefficient `kappa_0 = 1/6`;
-- exact literal beta-zero random-scan factor `q_0 = 5/6`;
-- direct and Doob/coarse-projection bridges from the genuine physical beta-zero excitation sector into the pair-Haar boundary geometry.
+updated variance outer integration / stationarity return OPEN
+genuine target-residual/profile reconnection              OPEN
+observable-specific target RMS majorant / recurrence      OPEN
+positive-beta bounded-core Poincare                      OPEN
+full-L2 positive-beta finite-volume gap                  OPEN
+thermodynamic / continuum mass gap                       OPEN
+~~~
 
-The immediate small endpoint task is to package the genuine physical beta-zero six-spatial `kappa_0=1/6`, `q_0=5/6` theorem. The major finite-volume quantitative frontier is then the **volume-uniform positive-beta L2 bridge**.
+## Navigation
+
+- ROADMAP.md — detailed restart point and theorem sequence.
+- MGAP4D/MathlibAnalytic — formal analytic development.
+- theorem-carrier branch — formal/real-hilbert-uniform-coercive-strong-limit.
