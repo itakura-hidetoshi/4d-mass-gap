@@ -238,12 +238,34 @@ theorem
             (C distinguishedSource) (C source)
         ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousProbabilityMeasure
           H N hN beta hbeta C := by
-  unfold
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceIndependentPairBackgroundMeasure
-  rw [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure_diagonalCurrentValues_eq_kernelSection
-      H N hN beta hbeta C source distinguishedSource]
-  exact Measure.lintegral_compProd hPhi
+  let μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
+      H N hN beta hbeta C source distinguishedSource
+      (C distinguishedSource) (C source)
+  let κ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalIndependentPairKernel
+      H N hN beta hbeta C source distinguishedSource source
+      (C distinguishedSource) (C source)
+  letI : IsProbabilityMeasure μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure_isProbabilityMeasure
+      H N hN beta hbeta C source distinguishedSource
+      (C distinguishedSource) (C source)
+  have hComp :
+      (∫⁻ z, Phi z ∂μ ⊗ₘ κ) =
+        ∫⁻ A, ∫⁻ uv, Phi (A, uv) ∂κ A ∂μ :=
+    Measure.lintegral_compProd hPhi
+  have hμ :
+      μ =
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousProbabilityMeasure
+          H N hN beta hbeta C := by
+    simpa [μ] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure_diagonalCurrentValues_eq_kernelSection
+        H N hN beta hbeta C source distinguishedSource
+  rw [hμ] at hComp
+  simpa [
+    μ, κ,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceIndependentPairBackgroundMeasure,
+    PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedBackgroundSourcePairMeasure] using hComp
 
 /-- Exact Fubini bridge between the current-value fixed-background RMS norms
 and the corresponding full source-pair RMS L2 norm. -/
