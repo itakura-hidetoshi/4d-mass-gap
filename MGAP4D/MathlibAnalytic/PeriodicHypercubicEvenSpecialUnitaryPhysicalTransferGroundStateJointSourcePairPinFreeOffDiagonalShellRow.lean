@@ -142,7 +142,7 @@ noncomputable def
     (H : ℕ)
     (s : ℝ)
     (target : PeriodicHypercubicEvenSpatialSliceLink H) : ℝ :=
-  ∑ source in
+  ∑ source ∈
       (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)).erase target,
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight
       H s source target)⁻¹
@@ -234,18 +234,6 @@ theorem
   have hRadius : radius = maxDist + 1 := rfl
   rw [hRadius, Finset.sum_range_succ']
   apply add_le_add
-  · have hZeroNat :=
-      periodicHypercubicEvenSpatialSliceBaseL1Shell_card_le_polynomial
-        H target 0
-    have hZeroReal :
-        (((Finset.univ.filter fun source : PeriodicHypercubicEvenSpatialSliceLink H =>
-            distance source = 0).card : ℕ) : ℝ) ≤ 3 := by
-      have hZeroNat' :
-          ((Finset.univ.filter fun source : PeriodicHypercubicEvenSpatialSliceLink H =>
-              distance source = 0).card) ≤ 3 := by
-        simpa [distance] using hZeroNat
-      exact_mod_cast hZeroNat'
-    simpa using hZeroReal
   · calc
       (∑ k ∈ Finset.range maxDist,
         (((Finset.univ.filter fun source : PeriodicHypercubicEvenSpatialSliceLink H =>
@@ -298,6 +286,18 @@ theorem
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeReciprocalExponentialWeightPositiveTailMajorant
           s := by
             rfl
+  · have hZeroNat :=
+      periodicHypercubicEvenSpatialSliceBaseL1Shell_card_le_polynomial
+        H target 0
+    have hZeroReal :
+        (((Finset.univ.filter fun source : PeriodicHypercubicEvenSpatialSliceLink H =>
+            distance source = 0).card : ℕ) : ℝ) ≤ 3 := by
+      have hZeroNat' :
+          ((Finset.univ.filter fun source : PeriodicHypercubicEvenSpatialSliceLink H =>
+              distance source = 0).card) ≤ 3 := by
+        simpa [distance] using hZeroNat
+      exact_mod_cast hZeroNat'
+    simpa using hZeroReal
 
 /-- Removing the diagonal improves the leading shell constant from three to
 two. -/
@@ -364,16 +364,16 @@ theorem
   have hSumErase :
       (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
         K.influence target source) =
-      ∑ source in
+      ∑ source ∈
         (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)).erase target,
         K.influence target source := by
     simpa [hDiag] using hSplit.symm
   rw [hSumErase]
   calc
-    (∑ source in
+    (∑ source ∈
       (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)).erase target,
       K.influence target source) ≤
-      ∑ source in
+      ∑ source ∈
         (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)).erase target,
         q *
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight
