@@ -210,10 +210,12 @@ theorem
                   (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointBoundedConcreteL2
                     H N hN beta hbeta F hF bound hbound)‖ ^ 2)) ≠ ⊤
   apply ENNReal.mul_ne_top
-  · simpa [hGapZero]
+  · exact ENNReal.inv_ne_top.2 hGapZero
   · apply ENNReal.mul_ne_top
-    · exact ENNReal.add_ne_top.2 ⟨by simp, by simp⟩
-    · simp
+    · exact
+        ENNReal.add_ne_top.2
+          ⟨ENNReal.ofReal_ne_top, ENNReal.one_ne_top⟩
+    · exact ENNReal.ofReal_ne_top
 
 /-- Off-diagonal square-root form of the PR #4817 response-energy matrix
 bound. -/
