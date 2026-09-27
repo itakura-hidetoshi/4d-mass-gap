@@ -173,7 +173,6 @@ theorem
     calc
       rho * E ≤ 1 * E := by
         gcongr
-        exact hRho.le
       _ = E := one_mul E
   exact hResponse.trans (by simpa [rho, E] using hMul)
 
