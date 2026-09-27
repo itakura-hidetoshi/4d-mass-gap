@@ -129,7 +129,7 @@ theorem
           H N hN beta hbeta C distinguishedSource source target
           (C distinguishedSource) (C source)
           (F target) (hF target) (bound target) (hbound target) C 0) =
-        ∑ target ∈ S, direct target + response target := by
+        ∑ target ∈ S, (direct target + response target) := by
     apply Finset.sum_congr rfl
     intro target htarget
     have hne : target ≠ source :=
@@ -160,7 +160,7 @@ theorem
         H N hN beta hbeta C distinguishedSource source target
         (C distinguishedSource) (C source)
         (F target) (hF target) (bound target) (hbound target) C 0) =
-        ∑ target ∈ S, direct target + response target := hOff
+        ∑ target ∈ S, (direct target + response target) := hOff
     _ = (∑ target ∈ S, direct target) + ∑ target ∈ S, response target := by
       exact Finset.sum_add_distrib
     _ = (∑ target ∈ S, direct target) +
@@ -211,7 +211,7 @@ theorem
       (∫⁻ C,
         ENNReal.ofReal
           (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
-            ‖
+            (‖
               (∑ target ∈
                   (Finset.univ.erase source :
                     Finset (PeriodicHypercubicEvenSpatialSliceLink H)),
@@ -226,7 +226,7 @@ theorem
                   H N hN beta hbeta C distinguishedSource source target
                   (C distinguishedSource) (C source)
                   (F target) (hF target) (bound target) (hbound target) C 0)
-            ‖ ^ 2)
+            ‖ : ℝ) ^ 2)
         ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
           H N hN beta hbeta) ≤
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFixedBackgroundResponseResidualCoefficient
@@ -272,7 +272,7 @@ theorem
     (∫⁻ C,
       ENNReal.ofReal
         (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
-          ‖
+          (‖
             (∑ target ∈
                 (Finset.univ.erase source :
                   Finset (PeriodicHypercubicEvenSpatialSliceLink H)),
@@ -287,7 +287,7 @@ theorem
                 H N hN beta hbeta C distinguishedSource source target
                 (C distinguishedSource) (C source)
                 (F target) (hF target) (bound target) (hbound target) C 0)
-          ‖ ^ 2)
+          ‖ : ℝ) ^ 2)
       ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
         H N hN beta hbeta) =
       ∫⁻ C,
