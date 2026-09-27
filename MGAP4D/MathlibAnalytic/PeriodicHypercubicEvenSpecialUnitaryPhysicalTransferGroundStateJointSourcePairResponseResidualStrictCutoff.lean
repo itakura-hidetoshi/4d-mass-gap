@@ -84,16 +84,33 @@ theorem
           ENNReal.ofReal ((Real.exp (32 * beta)) ^ 2))
         0 :=
     ENNReal.continuous_ofReal.continuousAt.comp hExpSq
-  have hExpPlus :
+  let expPlus : ℝ → ℝ≥0∞ :=
+    fun beta => ENNReal.ofReal ((Real.exp (32 * beta)) ^ 2) + 1
+  have hExpPlus : ContinuousAt expPlus 0 := by
+    simpa [expPlus] using hExpOfReal.add continuousAt_const
+  have hExpPlusZeroNeTop : expPlus 0 ≠ ⊤ := by
+    dsimp [expPlus]
+    exact
+      ENNReal.add_ne_top.2
+        ⟨ENNReal.ofReal_ne_top, ENNReal.one_ne_top⟩
+  have hExpPlusZeroNeZero : expPlus 0 ≠ 0 := by
+    dsimp [expPlus]
+    positivity
+  have hProduct :
       ContinuousAt
         (fun beta : ℝ =>
-          ENNReal.ofReal ((Real.exp (32 * beta)) ^ 2) + 1)
+          ((1 : ℝ≥0∞) - ENNReal.ofReal ((c beta) ^ 2))⁻¹ *
+            expPlus beta)
         0 :=
-    hExpOfReal.add continuousAt_const
+    ENNReal.Tendsto.mul
+      hInv
+      (Or.inr hExpPlusZeroNeTop)
+      hExpPlus
+      (Or.inl hExpPlusZeroNeZero)
   simpa [
-    c,
+    c, expPlus,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFixedBackgroundSecondMeanRMSTargetMajorantCoefficient] using
-    hInv.mul hExpPlus
+    hProduct
 
 /-- The complete response-to-residual coefficient is continuous at zero
 coupling. -/
@@ -121,10 +138,56 @@ theorem
   have hTarget :=
     continuousAt_periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFixedBackgroundSecondMeanRMSTargetMajorantCoefficient
       s
+  have hcZero :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierPinFreeCoefficient
+          s 0 =
+        (1 / 2 : ℝ) := by
+    simpa [
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHighTemperatureBarrier] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierPinFreeCoefficient_zero
+        s
+  have hcSqLt :
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierPinFreeCoefficient
+          s 0) ^ 2 < 1 := by
+    rw [hcZero]
+    norm_num
+  have hOfRealSqLt :
+      ENNReal.ofReal
+          ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierPinFreeCoefficient
+            s 0) ^ 2) < 1 := by
+    simpa only [ENNReal.ofReal_lt_one] using hcSqLt
+  have hGapZero :
+      (1 -
+          ENNReal.ofReal
+            ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierPinFreeCoefficient
+              s 0) ^ 2) : ℝ≥0∞) ≠ 0 :=
+    ne_of_gt (tsub_pos_iff_lt.mpr hOfRealSqLt)
+  have hTargetZeroNeTop :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFixedBackgroundSecondMeanRMSTargetMajorantCoefficient
+          s 0 ≠ ⊤ := by
+    unfold
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFixedBackgroundSecondMeanRMSTargetMajorantCoefficient
+    apply ENNReal.mul_ne_top
+    · exact ENNReal.inv_ne_top.2 hGapZero
+    · exact
+        ENNReal.add_ne_top.2
+          ⟨ENNReal.ofReal_ne_top, ENNReal.one_ne_top⟩
+  have hProduct :
+      ContinuousAt
+        (fun beta : ℝ =>
+          ENNReal.ofReal ((q beta) ^ 2) *
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFixedBackgroundSecondMeanRMSTargetMajorantCoefficient
+              s beta)
+        0 :=
+    ENNReal.Tendsto.mul
+      hqOfReal
+      (Or.inr hTargetZeroNeTop)
+      hTarget
+      (Or.inr ENNReal.ofReal_ne_top)
   simpa [
     q,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFixedBackgroundResponseResidualCoefficient] using
-    hqOfReal.mul hTarget
+    hProduct
 
 /-- Zero-coupling continuity produces a strictly positive interval, contained
 in the existing shell cutoff, on which the response-residual coefficient is
