@@ -59,20 +59,20 @@ theorem
       ContinuousAt
         (fun beta : ℝ => ENNReal.ofReal ((c beta) ^ 2))
         0 :=
-    ENNReal.continuous_ofReal.continuousAt.comp 0 hcSq
+    ENNReal.continuous_ofReal.continuousAt.comp hcSq
   have hGap :
       ContinuousAt
         (fun beta : ℝ =>
           (1 : ℝ≥0∞) - ENNReal.ofReal ((c beta) ^ 2))
         0 :=
     (ENNReal.continuous_sub_left ENNReal.one_ne_top).continuousAt.comp
-      0 hcOfReal
+      hcOfReal
   have hInv :
       ContinuousAt
         (fun beta : ℝ =>
           ((1 : ℝ≥0∞) - ENNReal.ofReal ((c beta) ^ 2))⁻¹)
         0 :=
-    continuous_inv.continuousAt.comp 0 hGap
+    continuous_inv.continuousAt.comp hGap
   have hExpSq :
       ContinuousAt
         (fun beta : ℝ => (Real.exp (32 * beta)) ^ 2)
@@ -83,7 +83,7 @@ theorem
         (fun beta : ℝ =>
           ENNReal.ofReal ((Real.exp (32 * beta)) ^ 2))
         0 :=
-    ENNReal.continuous_ofReal.continuousAt.comp 0 hExpSq
+    ENNReal.continuous_ofReal.continuousAt.comp hExpSq
   have hExpPlus :
       ContinuousAt
         (fun beta : ℝ =>
@@ -117,7 +117,7 @@ theorem
       ContinuousAt
         (fun beta : ℝ => ENNReal.ofReal ((q beta) ^ 2))
         0 :=
-    ENNReal.continuous_ofReal.continuousAt.comp 0 hqSq
+    ENNReal.continuous_ofReal.continuousAt.comp hqSq
   have hTarget :=
     continuousAt_periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFixedBackgroundSecondMeanRMSTargetMajorantCoefficient
       s
