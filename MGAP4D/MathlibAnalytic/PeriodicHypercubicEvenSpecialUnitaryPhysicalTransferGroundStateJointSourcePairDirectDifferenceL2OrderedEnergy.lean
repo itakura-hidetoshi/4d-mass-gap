@@ -130,7 +130,8 @@ theorem
   have hDeltaSq : Integrable (fun z => delta z ^ 2) pair := by
     have hqSq : Integrable (fun z => q z ^ 2) pair :=
       (Lp.memLp q).integrable_sq
-    exact hqSq.congr (hRep.mono fun z hz => by rw [hz])
+    exact hqSq.congr (hRep.mono fun z hz => by
+      simpa only using congrArg (fun x : ℝ => x ^ 2) hz)
   have hJoint :
       Integrable directSq (pair ⊗ₘ κ) := by
     simpa [
