@@ -35,6 +35,11 @@ open scoped ENNReal ProbabilityTheory BigOperators
 
 noncomputable section
 
+local instance fixedBackgroundTargetAmplitudeResidualSumSpecialUnitaryMeasurableSpace
+    (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 local instance fixedBackgroundTargetAmplitudeResidualSumSpatialLinkFintype
     (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
