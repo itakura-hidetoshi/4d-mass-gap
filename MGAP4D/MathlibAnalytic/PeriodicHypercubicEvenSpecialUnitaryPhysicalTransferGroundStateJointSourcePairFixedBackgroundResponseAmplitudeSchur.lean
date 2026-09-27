@@ -35,6 +35,11 @@ open scoped ENNReal ProbabilityTheory BigOperators
 
 noncomputable section
 
+local instance fixedBackgroundResponseAmplitudeSchurSpecialUnitaryMeasurableSpace
+    (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 local instance fixedBackgroundResponseAmplitudeSchurSpatialLinkFintype
     (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
@@ -151,8 +156,9 @@ theorem
     (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
       (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFixedBackgroundResponseAmplitudeMatrix
-          H N hN beta hbeta C distinguishedSource source target
-          (F target) (hF target) (bound target) (hbound target)) ^ 2) ≤
+          H N hN beta hbeta C distinguishedSource
+          (F target) (hF target) (bound target) (hbound target)
+          source target) ^ 2) ≤
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightPinFreeBidirectionalShellCoefficient
         s beta) ^ 2 *
         ∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
@@ -175,8 +181,9 @@ theorem
   let A :=
     fun source target : PeriodicHypercubicEvenSpatialSliceLink H =>
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFixedBackgroundResponseAmplitudeMatrix
-        H N hN beta hbeta C distinguishedSource source target
+        H N hN beta hbeta C distinguishedSource
         (F target) (hF target) (bound target) (hbound target)
+        source target
   have hStrictCut :
       beta ≤
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHighTemperatureStrictPhysicalSweepCutoff
