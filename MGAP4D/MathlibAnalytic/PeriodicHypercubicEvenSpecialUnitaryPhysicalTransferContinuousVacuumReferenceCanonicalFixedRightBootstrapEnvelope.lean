@@ -60,7 +60,7 @@ theorem
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledExponentialWeightedColumnCoefficient
   exact
-    add_le_add_left
+    add_le_add_right
       (mul_le_mul_of_nonneg_left hLe (Real.exp_pos (16 * beta)).le)
       _
 
@@ -117,7 +117,7 @@ theorem
       20 * s ^ 2 * Real.exp (16 * beta) * etaR +
           etaR * Real.exp (16 * beta) * (1 - c₂)⁻¹
   exact
-    add_le_add_left
+    add_le_add_right
       (mul_le_mul_of_nonneg_left hInv hFactor)
       _
 
@@ -342,11 +342,15 @@ theorem
       simpa [
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierPinFreeCoefficient] using
         hSpec.1
-    exact
-      (by
-        simpa [
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightBootstrapEnvelopePinFreeCoefficient] using hMono).trans_lt
-        hHalf
+    have hEnvelopeLe :
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightBootstrapEnvelopePinFreeCoefficient
+            s beta ≤
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledExponentialWeightedColumnCoefficient
+            beta s
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHighTemperatureBarrier := by
+      simpa [
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightBootstrapEnvelopePinFreeCoefficient] using hMono
+    exact hEnvelopeLe.trans_lt hHalf
 
 end
 
