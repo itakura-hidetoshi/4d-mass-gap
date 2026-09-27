@@ -1,8 +1,8 @@
 # MGAP4D
 
-MGAP4D is Hidetoshi Itakura's Lean 4 / mathlib program for a proof-carrying construction of four-dimensional Yang--Mills theory. The repository develops a finite-volume periodic Wilson / Osterwalder--Schrader / physical-transfer framework, exact beta-zero geometry, positive-beta physical response and covariance control, genuine ground-state conditional expectations, Hilbert-space coercivity receivers, and downstream thermodynamic / continuum infrastructure.
+MGAP4D is Hidetoshi Itakura's Lean 4 / mathlib program for a proof-carrying construction of four-dimensional Yang--Mills theory. The repository develops a finite-volume periodic Wilson / Osterwalder--Schrader / physical-transfer framework, exact beta-zero geometry, positive-beta response control, genuine ground-state conditional expectations, Hilbert-space sweep/coercivity machinery, and downstream thermodynamic / continuum infrastructure.
 
-## Current status — 2026-09-26 JST
+## Current status — 2026-09-27 JST
 
 The unique authoritative theorem-carrier branch is:
 
@@ -10,9 +10,18 @@ The unique authoritative theorem-carrier branch is:
 
 The fresh theorem-bearing baseline immediately before this documentation refresh is:
 
-**d1a2e7bb9189643cf7c973568fab5dd39065bbf6**
+**693c2ef8673cdfe40ec6615fc7d9c3e600dc9745**
 
-This is the merge commit of PR **#4787**, **Compare ordered old and updated target variances**.
+This is the merge commit of PR **#4861**, **Charge full-direct update error to sweep path loss**.
+
+Validated exact head of #4861:
+
+**8f4b83ea6388b1f654fb4b67a3407c3fa6b13d68**
+
+Validation:
+
+- PR Lean Fast Check run **36313199617 — success**
+- exact-head completion receipt **chatgpt-ci-receipt/PR Lean Fast Check — success**
 
 The default branch **main is not theorem authority**.
 
@@ -20,20 +29,20 @@ The default branch **main is not theorem authority**.
 >
 > This repository does **not** yet contain a completed proof of the Clay Millennium Yang--Mills existence and mass-gap problem.
 >
-> What is integrated is a substantial finite-volume Wilson / OS / physical-transfer theorem spine. The exact beta-zero endpoint is closed. The positive-beta physical Schur matrix side is closed. The six-spatial local-energy / localPart chain is closed with coefficient one. The observable-specific target-law response and exact two-law RMS amplitude now exist in source-pair L2. The remaining first-cross mismatch has been reduced, without a factor-two loss, to an updated target-fiber variance through an exact Pythagorean split and a sharp Harnack variance comparison.
+> What is now integrated is substantially beyond the previous #4787 documentation snapshot. The updated-variance stationarity return is closed, the genuine target-residual reconnection is closed, the second-mean RMS feedback chain is closed, the fixed-background energy route is closed, a configuration-independent bidirectional pin-free Schur kernel is closed, the actual full source-pair response sums are controlled, canonical sweep-stage representatives are preserved with exact prefix witnesses, exact vector telescoping is formalized, stage-residual energy is identified with sweep path loss, and a strictly positive volume-independent response cutoff with rhoResp < 1 is proved.
 >
-> The immediate frontier is to integrate the #4787 pointwise old-to-updated variance inequality over the ordered outer law, use second-updated-background stationarity / pushforward to return that updated variance to the genuine target-residual carrier, and then close the actual target-indexed RMS majorant / transpose recurrence consumed by the already-proved Schur receiver.
+> The current finite-volume positive-beta frontier is no longer the old RMS / Harnack / stationarity obstruction. PR #4861 proves that the physical **full-minus-direct finite-update error** is charged to the exact sweep path-loss carrier. What remains is to identify or control the **direct finite-update part itself** by the ordered sweep/current-value Hilbert structure strongly enough to close the bounded-core six-spatial Poincare inequality. Only after that can the full genuine-joint L2 and finite-volume physical transfer-gap receiver be invoked.
 
 ## Repository authority
 
 | Item | Current value |
 | --- | --- |
 | Theorem-carrier branch | formal/real-hilbert-uniform-coercive-strong-limit |
-| Theorem-bearing baseline before this docs refresh | d1a2e7bb9189643cf7c973568fab5dd39065bbf6 |
-| Latest merged theorem PR | #4787 |
-| #4787 validated exact head | 05d6555377d6774c823e5d5d4318a5a858c95bd6 |
-| #4787 CI | PR Lean Fast Check run 36213674095 — success |
-| #4787 completion receipt | chatgpt-ci-receipt/PR Lean Fast Check — success |
+| Theorem-bearing baseline before this docs refresh | 693c2ef8673cdfe40ec6615fc7d9c3e600dc9745 |
+| Latest merged theorem PR | #4861 |
+| #4861 validated exact head | 8f4b83ea6388b1f654fb4b67a3407c3fa6b13d68 |
+| #4861 CI | PR Lean Fast Check run 36313199617 — success |
+| #4861 completion receipt | chatgpt-ci-receipt/PR Lean Fast Check — success |
 | Lean | v4.30.0-rc2 |
 | mathlib | 5450b53e5ddc75d46418fabb605edbf36bd0beb6 |
 | Default branch | main — not theorem authority |
@@ -46,7 +55,7 @@ Authority order:
 4. exact-head CI receipts;
 5. historical summaries or memory.
 
-A later docs-only merge may advance the theorem-carrier pointer without changing the theorem-bearing mathematical baseline above.
+A later docs-only merge may advance the branch pointer without changing the theorem-bearing mathematical baseline above.
 
 ## Proof spine at a glance
 
@@ -57,7 +66,7 @@ FINITE WILSON / OS / PHYSICAL TRANSFER ROOT
   -> compact positive physical transfer
   -> canonical nonnegative vacuum
   -> ground-state transformed boundary and joint laws
-  -> genuine one-link / six-color conditional expectations
+  -> genuine one-link / six-spatial conditional expectations
 
 EXACT BETA-ZERO ENDPOINT
   -> vacuum = spatial Haar
@@ -66,248 +75,287 @@ EXACT BETA-ZERO ENDPOINT
   -> q_0 = 5/6
   -> exact physical transfer gap = 1
 
-POSITIVE-BETA MATRIX / RECEIVER SIDE
-  -> canonical fixed-right response profile
-  -> physical influence / covariance decay
-  -> background-dependent envelope K_A
-  -> volume-independent row + column Schur coefficient q_phys(s,beta) < 1
-  -> ordinary + transpose one-sided Schur receivers
-  -> arbitrary-outer-law / physical-vacuum Schur integration
+POSITIVE-BETA RESPONSE / SCHUR SIDE
+  -> physical response and covariance kernels
+  -> configuration-dependent envelope K_A(target,source)
+  -> configuration-independent pin-free kernel K_pin(target,source)
+  -> reciprocal shell row/column bounds
+  -> bidirectional Schur contraction q_shell(s,beta) < 1
+  -> transpose L2 action bound
+  -> fixed-background response-amplitude matrix
 
-SWEEP LOCAL ENERGY / localPart
-  -> six-spatial stage profile ell_s
-  -> (1/6) sum_s ell_s^2 <= E_6sp
-  -> canonical fiber variance / genuine CondExp bridge
-  -> genuine-joint canonical residual L2
-  -> ||localPart_s|| <= ell_s with coefficient 1
+RMS / TARGET RESIDUAL CLOSURE
+  -> exact target-law response L2
+  -> exact two-law RMS amplitude
+  -> ordered first-cross Pythagorean split
+  -> Harnack old-to-updated variance comparison
+  -> exact stationarity return
+  -> genuine target residual / canonical fiber variance
+  -> strict RMS feedback absorption
+  -> target-indexed and vacuum-integrated majorants
 
-OBSERVABLE-SPECIFIC RESPONSE / RMS                    #4775-#4779
-  -> exact target-law response on source-pair carrier
-  -> response L2(nu_source)
-  -> exact two-law RMS amplitude L2(nu_source)
-  -> ||Response|| <= K_pin(target,source) * ||RMS||
-  -> response independent of scalar center
-  -> pointwise center freedom for RMS
-  -> choose actual second target-law mean as canonical center
-  -> second centered mean = 0 exactly
+FIXED-BACKGROUND ENERGY ROUTE
+  -> fixed-background RMS Fubini
+  -> fixed-background response Fubini
+  -> response amplitudes <= K_pin * target amplitudes
+  -> transpose Schur on response amplitudes
+  -> target amplitudes = genuine residual energy
+  -> vacuum integration
+  -> finite target sum = sum canonical fiber variances
+  -> genuine CondExpL2 residual control
 
-FIRST-CROSS LAW MISMATCH                              #4780-#4785
-  -> reorder source-pair law exactly to (C,v,g)
-  -> expose literal mismatch:
-       g ~ kappa_target(C)
-       center/frozen section based at C[source <- v]
-  -> exact Pythagorean split
-       firstCrossEnergy
-         = oldTargetVariance + response^2
-  -> lift to ordered outer law
-  -> ordered response^2 = ||ResponseL2||^2
-  -> global exact split
-       firstCrossEnergy
-         = integral oldTargetVariance
-           + ofReal(||ResponseL2||^2)
+CANONICAL SWEEP / PHYSICAL RESPONSE ROUTE
+  -> bounded sweep-stage representative for every spatial link
+  -> preserve canonical prefix/suffix position
+  -> exact vector telescoping of ordered projections
+  -> canonical local profile = exact stage-residual norm
+  -> sum stageResidual^2 = 6 * sweepPathLoss
+  -> full response-sum energy
+       <= rhoResp(s,beta) * ofReal(6 * sweepPathLoss)
+  -> positive volume-independent betaResp(s)
+  -> rhoResp(s,beta) < 1 on 0 <= beta <= betaResp(s)
+  -> response energy <= ofReal(6 * sweepPathLoss)
 
-VARIANCE COMPARISON                                  #4786-#4787
-  -> normalized physical one-link laws under one off-fiber
-     background update are mutually dominated by
-       K_H(beta) = (exp(32 beta))^2
-  -> generic evariance transport under measure domination
-  -> ordered old target variance <= K_H * updated target variance
-     pointwise, with no triangle inequality / factor two
+EXACT PHYSICAL UPDATE DECOMPOSITION
+  -> single-target fullDifferenceL2
+       = directDifferenceL2 + responseL2
+  -> semantic identification with actual source-updated centered means
+  -> finite off-diagonal assembly
+       fullOffDiagonalSum
+         = directOffDiagonalSum + sum_target ResponseL2
+  -> PR #4861:
+       integral ||fullOffDiagonalSum - directOffDiagonalSum||^2
+         <= rhoResp * ofReal(6 * sweepPathLoss)
+  -> on strict cutoff:
+       errorEnergy <= ofReal(6 * sweepPathLoss)
 
 CURRENT FRONTIER
-  -> integrate #4787 over the ordered outer law
-  -> use exact second-updated-background stationarity / pushforward
-  -> identify the updated variance integral with the genuine
-     target-fiber residual/profile already linked to CondExpL2
-  -> combine with #4785 and the response L2 bound
-  -> close the actual target-indexed RMS majorant / transpose recurrence
-  -> feed #4773 transpose Schur receiver
-  -> positive-beta bounded-core six-spatial Poincare
-  -> #4650 full genuine joint L2
-  -> #4651 q(beta) < 1 and finite-volume physical transfer gap
+  -> close the direct finite-update side against the canonical ordered sweep
+  -> identify the resulting physical current-value state / sweep residual
+  -> derive positive-beta bounded-core six-spatial Poincare
+  -> extend to full genuine joint L2
+  -> obtain volume-uniform finite-volume physical transfer gap
   -> thermodynamic / infinite-volume construction
   -> continuum OS / Wightman reconstruction
   -> continuum Yang--Mills mass gap
 ~~~
 
-## What changed after the #4774 documentation snapshot
+## What is closed since the previous #4787 documentation snapshot
 
-### #4775--#4777 — concrete response and exact RMS are now actual L2 objects
+### #4791--#4799 — stationarity return and genuine target residual reconnection
 
-PR #4775 realizes the actual observable-specific target-law response on the exact source-pair carrier.
+The former #4787 frontier is closed.
 
-PR #4776 packages that response as an element of the source-specific carrier
+The old-to-updated target variance comparison is integrated over the ordered law; the second-updated background is returned by exact stationarity / pushforward; the updated variance is identified with the reference target residual; and the first-cross energy is bounded by the genuine target-residual carrier.
+
+In particular, the old statement
 
 ~~~text
-E_source = L2(nu_source)
+updated variance outer integration / stationarity return OPEN
 ~~~
 
-and preserves the physical response coefficient at the norm level.
+is obsolete.
 
-PR #4777 names the two centered target-fiber energies, forms the exact RMS amplitude
+### #4800--#4818 — second-mean RMS feedback and vacuum response energy
+
+The second-law-mean RMS is packaged in source-pair L2, split exactly, transported across the ordered laws, and controlled by genuine target residual energy plus response feedback.
+
+The feedback coefficient is made strict and absorbed. This yields target-indexed RMS majorants, global/vacuum target-residual majorants, response-energy matrices, and square-root response amplitudes.
+
+### #4819--#4830 — current-value dependent route and the pointwise obstruction
+
+A concrete current-value assembled state was built in source-dependent fixed-background L2 carriers:
 
 ~~~text
-RMS(z) = sqrt(E_first(z) + E_second(z)),
+state_source
+  = localPart_source + sum_target response_source,target.
 ~~~
 
-packages it in the same source-pair L2 carrier, and proves the coefficient-preserving estimate
+The exact localPart energy was identified with target residual energy.
+
+This route exposed an important boundary: an outer-energy RMS estimate does **not** justify pointwise-in-background domination needed by the earlier dependent transpose recurrence. That pointwise majorization was therefore not asserted.
+
+### #4831--#4840 — fixed-background energy pivot and bidirectional pin-free Schur
+
+The proof was reorganized at the energy level rather than forcing an unjustified pointwise RMS bound.
+
+Closed steps include:
+
+- exact fixed-background RMS Fubini;
+- fixed-background RMS target majorant;
+- exact fixed-background response Fubini;
+- response energy <= target majorant;
+- response amplitudes from square roots;
+- reciprocal-weight row bound;
+- uniform reciprocal shell mass;
+- beta-zero-vanishing bootstrap envelope;
+- configuration-independent row and column bounds for K_pin;
+- bidirectional Schur contraction.
+
+The key orientation remains:
 
 ~~~text
-||Response_{source,target}||
-  <= K_pin(target,source) * ||RMS_{source,target}||.
+K_pin(target,source).
 ~~~
 
-No finite-cardinality Cauchy loss is introduced.
+### #4841--#4849 — response energy to genuine residual and actual full response sums
 
-### #4778--#4779 — remove the artificial fixed-center obstruction
+The fixed-background response-amplitude matrix is fed through transpose Schur.
 
-PR #4778 proves that the response itself is independent of the common scalar center. Therefore the response can be held at any reference center while the RMS energy uses a context-dependent pointwise center.
+Target amplitude energy is identified with genuine target residual energy. The coefficient rhoResp is shown finite and zero at beta = 0. The bound is integrated over the physical vacuum.
 
-PR #4779 chooses the actual second target-law fiber mean as that center. Consequently,
-
-~~~text
-SecondMean(center = secondFiberMean) = 0
-~~~
-
-exactly.
-
-This converts the remaining RMS difficulty into a single first-law cross energy.
-
-### #4780--#4781 — put the first cross energy in literal ordered coordinates
-
-PR #4780 transports the complete first-law cross energy exactly to
+A measurability bridge allows the finite target sum to commute exactly with the vacuum lower integral:
 
 ~~~text
-mu_source(dC) kappa_source(C)(dv) kappa_target(C)(dg).
-~~~
-
-PR #4781 removes the remaining carrier aliases and exposes the literal mismatch:
-
-~~~text
-sample law:       g ~ kappa_target(C)
-frozen section:   X_v(g) = F(left, C[source <- v][target <- g])
-centering mean:   mean under kappa_target(C[source <- v]).
-~~~
-
-No inequality has been used at this stage.
-
-### #4782--#4785 — exact Pythagorean reduction and response-L2 closure
-
-PR #4782 inserts the old-law mean and proves the exact Pythagorean identity
-
-~~~text
-E_old[(X_v - m_new)^2]
+integral_C sum_target E_target(C,target)
   =
-Var_old(X_v)
-  + (m_old - m_new)^2.
+sum_target CanonicalFiberVariance(target).
 ~~~
 
-The mean gap is exactly the concrete target-law response. Therefore no factor two appears.
+Canonical sweep-stage representatives are then selected simultaneously, and the actual full source-pair response sums satisfy a genuine Hilbert-space bound with no finite-cardinality Cauchy loss.
 
-PR #4783 lifts this identity to the full ordered outer law.
+### #4850--#4852 — exact target-law L2 decomposition and finite target assembly
 
-PR #4784 identifies the ordered response-square integral exactly with
+Three target means are realized in one source-specific Hilbert carrier.
 
-~~~text
-ofReal(||ResponseL2||^2).
-~~~
-
-PR #4785 composes the results:
+For every off-diagonal target/source pair:
 
 ~~~text
-firstCrossEnergy
+fullDifferenceL2
   =
-integral oldTargetVariance
-  + ofReal(||ResponseL2||^2).
+directDifferenceL2 + responseL2.
 ~~~
 
-At this point the response-square contribution is no longer a new analytic unknown.
+The auxiliary L2 objects are identified with the actual physical source-updated centered means.
 
-### #4786--#4787 — reduce old target variance to updated target variance
-
-PR #4786 exposes the measure-level Harnack domination already implicit in the bounded-test theory and proves a generic variance transport theorem:
+After finite assembly and diagonal response cancellation:
 
 ~~~text
-mu <= K • nu
+fullOffDiagonalSum(source)
+  =
+directOffDiagonalSum(source)
+  + sum_target ResponseL2(source,target).
+~~~
+
+This is an exact Hilbert-space equality.
+
+### #4853--#4858 — canonical prefix witnesses and exact sweep path loss
+
+The canonical position of every stage representative is retained explicitly:
+
+~~~text
+canonicalList = pre ++ e :: suffix.
+~~~
+
+Generic vector telescoping is formalized:
+
+~~~text
+residualVectorSum(P, cs, x)
+  =
+x - sweep(P, cs, x).
+~~~
+
+For the canonical duplicate-free one-link sweep, each local-profile entry is exactly the norm of its unique stage residual. Therefore
+
+~~~text
+(1/6) * sum_e ||stageResidual_e||^2
+  =
+sweepPathLoss(f),
+
+sum_e ||stageResidual_e||^2
+  =
+6 * sweepPathLoss(f).
+~~~
+
+The complete response energy is consequently charged directly to this exact path-loss carrier.
+
+### #4859--#4860 — strict positive-beta response cutoff
+
+Continuity at beta = 0 and the endpoint identity rhoResp(s,0)=0 yield a strictly positive, volume-independent cutoff
+
+~~~text
+betaResp(s) > 0
+~~~
+
+for every fixed s > 8 such that
+
+~~~text
+0 <= beta <= betaResp(s)
   =>
-evariance_mu(X) <= K * evariance_nu(X).
+rhoResp(s,beta) < 1.
 ~~~
 
-For one physical background-link update the coefficient is
+This cutoff lies inside the already validated bidirectional shell cutoff.
+
+Hence the complete response energy obeys
 
 ~~~text
-K_H(beta) = (exp(32 beta))^2.
-~~~
-
-PR #4787 specializes this to the ordered first-cross carrier:
-
-~~~text
-ofReal(oldVariance(C,v))
+responseEnergy
   <=
-K_H(beta) * ofReal(updatedVariance(C,v)).
+ofReal(6 * sweepPathLoss(f))
 ~~~
 
-This uses variance minimality and measure domination directly; it does not use a triangle inequality and therefore introduces no extra factor two.
+on the strict-response interval.
+
+### #4861 — physical full-minus-direct update error
+
+PR #4861 reconnects the response-energy result to the exact physical finite-update decomposition:
+
+~~~text
+fullOffDiagonalSum - directOffDiagonalSum
+  =
+sum_target ResponseL2.
+~~~
+
+Thus
+
+~~~text
+errorEnergy
+  <=
+rhoResp(s,beta) * ofReal(6 * sweepPathLoss(f)),
+~~~
+
+and on the strict cutoff,
+
+~~~text
+errorEnergy
+  <=
+ofReal(6 * sweepPathLoss(f)).
+~~~
+
+This is the current theorem-bearing endpoint.
 
 ## Current mathematical frontier
 
-The old localPart obstruction is closed. The Schur matrix / outer integration algebra is closed. The concrete response and RMS carriers are closed. The law mismatch has been reduced to a single updated target-fiber variance.
+The following are **closed and should not be rebuilt**:
 
-The next theorem unit should perform the **outer integration and stationarity return**:
+- old/upated variance Harnack comparison;
+- outer stationarity return;
+- target-residual reconnection;
+- second-mean RMS feedback;
+- fixed-background Fubini;
+- pin-free bidirectional Schur;
+- response-amplitude transpose contraction;
+- vacuum target-sum exchange;
+- canonical prefix witnesses;
+- exact vector sweep telescoping;
+- local-profile = stage-residual norm;
+- stage-residual energy = sweep path loss;
+- positive strict response cutoff;
+- full-minus-direct update-error control.
 
-1. integrate the #4787 pointwise inequality over the ordered second-background law;
-2. pull the constant Harnack factor outside the ENNReal integral without changing it;
-3. use the exact second-updated-background stationarity / pushforward theorem to rewrite the updated variance integral on the genuine source/reference carrier;
-4. identify that updated variance with the already-existing canonical target-fiber variance / genuine target residual profile;
-5. combine with the #4785 exact split.
+The remaining finite-volume step is narrower:
 
-The intended schematic result is:
+1. identify or sharply control the **direct off-diagonal finite-update sum** using the preserved ordered sweep-stage structure;
+2. combine that with #4861 to control the corresponding full physical update/current-value state;
+3. convert the result into a bounded-core six-spatial frame/Poincare inequality with a volume-independent positive constant on the strict-response beta interval;
+4. only then invoke the existing full-L2 and physical transfer-gap receivers.
 
-~~~text
-firstCrossEnergy
-  <=
-K_H(beta) * genuineTargetVarianceEnergy
-  + ofReal(||ResponseL2||^2).
-~~~
+A key boundary must be preserved:
 
-Then use the already-proved response estimate
+> #4861 controls the error between the full and direct finite-update sums. It does **not** yet prove the bounded-core Poincare inequality and does **not** identify that error energy with the centered global norm.
 
-~~~text
-||Response_{source,target}||
-  <= K_pin(target,source) * ||RMS_{source,target}||
-~~~
-
-to close the target-indexed RMS majorant / transpose recurrence without reintroducing a finite-volume cardinality factor.
-
-The required matrix orientation remains:
-
-~~~text
-K(target,source),
-~~~
-
-never K(source,target).
-
-After the observable-specific recurrence is closed, feed it into the #4773 transpose outer-Schur receiver.
-
-## Recent theorem units
-
-| PR | Role | Merge commit |
-| --- | --- | --- |
-| #4775 | realize concrete target-law response on source-pair carrier | 828605b8527f2a35c729bafccd75691560fcb595 |
-| #4776 | realize target-law response in source-pair L2 | 4b3409720569252ca7a258a59c138636837d1b68 |
-| #4777 | realize exact target-law RMS amplitude in source-pair L2 | fee8782246351c60b50262212fb0a83ba007bfef |
-| #4778 | prove response center freedom and pointwise-center RMS interface | 5d8425f94a9cb0f9ee3ab3b01ad91fa7a2988ef1 |
-| #4779 | choose actual second-law fiber mean as canonical center | 09cb36cf91d175e673f5f98c59005e651a2342c7 |
-| #4780 | reorder first cross energy exactly | 8b53b9e07efe22d117a62815e4e91c619d362ddc |
-| #4781 | expose ordered first cross residual in literal coordinates | 253383daa562428ab4768a9a49dc425998b9097f |
-| #4782 | exact Pythagorean split of first cross energy | e4953e7c0d3235051f85dd0263cfad2c34882fdd |
-| #4783 | lift Pythagorean split to ordered outer law | 0d1d34c6920c9a3c4a9a79411ceb44422c359de5 |
-| #4784 | identify ordered response square with response L2 norm-square | d5af7e9420fdfe7bf99d3e37e5e571fe0c9738f2 |
-| #4785 | global split: old variance + response L2 norm-square | 150b8611f8a7d63ba347b893e263d008e91622af |
-| #4786 | background-update Harnack evariance comparison | ab2dc7dcaa1b965e2b0aed94e0812c48ff1c06fc |
-| #4787 | ordered old variance <= Harnack factor * updated variance | d1a2e7bb9189643cf7c973568fab5dd39065bbf6 |
-
-PR #4774 was the previous docs-only refresh and is not a new theorem-bearing mathematical step.
+No numerical positive-beta Poincare constant should be frozen until the direct/full update-to-sweep normalization is formally closed.
 
 ## Lean / mathlib engineering discipline
 
@@ -316,58 +364,54 @@ Pinned environment:
 - Lean v4.30.0-rc2
 - mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6
 
-Current rules:
+Operational rules:
 
-- fresh theorem-carrier and current PR head before branch creation, write, CI judgment, and merge judgment;
-- classify only the PR's current exact head SHA;
-- require terminal success of **Changed Lean fast check** and the exact-head completion receipt;
-- on RED, inspect the full changed Lean module, CompileSmoke, imports, dependent signatures, and pinned API — not only the reported line;
-- distinguish static dependency/preflight failures from actual Lean elaboration failures;
-- pinned mathlib is authority; current upstream docs may guide syntax only;
-- install theorem-proved probability / Markov structures locally with letI when typeclass APIs require them;
+- fresh theorem-carrier and exact PR head before branch creation, CI judgment, and merge;
+- classify only the current exact head SHA;
+- require terminal success of Changed Lean fast check and the exact-head receipt for theorem-bearing PRs;
+- docs-only changes do not require rerunning Strict Lean when no Lean file changes;
+- on RED, inspect the full changed module, CompileSmoke, imports, dependent signatures, and pinned APIs;
+- distinguish static/import/cache failures from actual Lean elaboration failures;
+- pinned mathlib is authority; current upstream can guide syntax only;
+- preserve K(target,source) orientation;
 - do not pointwise evaluate arbitrary L2 quotient representatives;
-- preserve source/target orientation K(target,source);
-- avoid finite-cardinality Cauchy / telescoping losses.
-
-Recent Lean 4 lessons that now matter operationally:
-
-- ordinary rw matches with reducible transparency; if a local alias or wrapper hides the intended subterm, first normalize it with a typed intermediate equality or narrow simpa;
-- unfold processes named definitions sequentially; open outer aliases before inner definitions if the outer alias reveals the inner one;
-- change accepts only definitional equality; theorem-level identities such as sub_zero must be simplified before change;
-- simpa using performs its final type match at reducible transparency;
-- keep simp sets tight; unused simp arguments are a signal that the goal has already normalized through a different route;
-- scalar action and multiplication are not always definitionally identical; normalize with smul_eq_mul when an ENNReal measure/integral theorem returns a smul form;
-- give lambdas explicit domain types when expected-type inference is insufficient.
+- do not introduce finite-cardinality Cauchy/telescoping losses;
+- retain coefficient-one local residual results when already proved;
+- for complex finite sums inside norms, prefer named Hilbert objects or explicit Finset.sum over parser-fragile nested notation;
+- after Lp.coefFn additive identities, normalize pointwise function application explicitly before rewriting when needed.
 
 ## Status summary
 
 ~~~text
-finite Wilson / OS / physical-transfer root              CLOSED
-exact beta-zero endpoint                                 CLOSED
-positive-beta physical matrix / Schur side               CLOSED
-six-spatial sweep local energy                           CLOSED
-coefficient-one localPart chain                          CLOSED
-source-specific response L2                              CLOSED
-exact two-law RMS amplitude L2                           CLOSED
-response center freedom                                  CLOSED
-second-law canonical pointwise center                    CLOSED
-ordered first-cross law reordering                       CLOSED
-exact Pythagorean cross-energy split                     CLOSED
-response-square -> response L2 norm-square               CLOSED
-global cross-energy = old variance + response L2         CLOSED
-background-update Harnack evariance tool                 CLOSED
-ordered old variance -> updated variance                 CLOSED
+finite Wilson / OS / physical-transfer root                 CLOSED
+exact beta-zero endpoint                                    CLOSED
+positive-beta physical response / Schur side                CLOSED
+old-to-updated variance stationarity return                 CLOSED
+genuine target-residual reconnection                        CLOSED
+second-mean RMS feedback                                    CLOSED
+fixed-background RMS / response Fubini                      CLOSED
+configuration-independent bidirectional K_pin Schur         CLOSED
+vacuum finite target-sum exchange                           CLOSED
+actual full source-pair response-sum energy                 CLOSED
+single-target full = direct + response L2 decomposition     CLOSED
+finite off-diagonal full/direct/response assembly           CLOSED
+canonical sweep prefix witnesses                            CLOSED
+exact vector sweep telescoping                              CLOSED
+local profile = exact stage residual norm                   CLOSED
+stage residual energy = 6 * sweep path loss                CLOSED
+strict positive response cutoff rhoResp < 1                 CLOSED
+full-minus-direct update error <= sweep path loss           CLOSED
 
-updated variance outer integration / stationarity return OPEN
-genuine target-residual/profile reconnection              OPEN
-observable-specific target RMS majorant / recurrence      OPEN
-positive-beta bounded-core Poincare                      OPEN
-full-L2 positive-beta finite-volume gap                  OPEN
-thermodynamic / continuum mass gap                       OPEN
+direct finite-update -> ordered sweep/current-value closure OPEN
+positive-beta bounded-core six-spatial Poincare             OPEN
+full-L2 positive-beta finite-volume physical gap            OPEN
+thermodynamic / infinite-volume construction                OPEN
+continuum OS / Wightman construction                        OPEN
+continuum Yang--Mills mass gap                              OPEN
 ~~~
 
 ## Navigation
 
-- ROADMAP.md — detailed restart point and theorem sequence.
+- ROADMAP.md — exact restart point and next theorem sequence.
 - MGAP4D/MathlibAnalytic — formal analytic development.
 - theorem-carrier branch — formal/real-hilbert-uniform-coercive-strong-limit.
