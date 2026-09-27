@@ -85,19 +85,18 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourceUpdateFullConfigurationDifference
         H N source F left C v
   let μUpdated :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalKernel
       H N hN beta hbeta B source distinguishedSource source k g₂
       (Function.update C target g)
   let μDiagonal :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalKernel
       H N hN beta hbeta B source distinguishedSource source k g₂ C
-  letI : IsProbabilityMeasure μUpdated :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_isProbabilityMeasure
-      H N hN beta hbeta B source distinguishedSource source k g₂
-      (Function.update C target g)
-  letI : IsProbabilityMeasure μDiagonal :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_isProbabilityMeasure
-      H N hN beta hbeta B source distinguishedSource source k g₂ C
+  letI : IsProbabilityMeasure μUpdated := by
+    dsimp [μUpdated]
+    infer_instance
+  letI : IsProbabilityMeasure μDiagonal := by
+    dsimp [μDiagonal]
+    infer_instance
   have hUpdate :
       Measurable
         (fun v : Matrix.specialUnitaryGroup (Fin N) ℂ =>
@@ -202,12 +201,31 @@ theorem
         evariance X μDiagonal := by
     rw [hDiagonalVar]
     exact hXDiagonal.ofReal_variance_eq
+  have hUpdatedLaw :
+      μUpdated =
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
+          H N hN beta hbeta B source distinguishedSource source k g₂
+          (Function.update C target g) := by
+    dsimp [μUpdated]
+    exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalKernel_apply
+        H N hN beta hbeta B source distinguishedSource source k g₂
+        (Function.update C target g)
+  have hDiagonalLaw :
+      μDiagonal =
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
+          H N hN beta hbeta B source distinguishedSource source k g₂ C := by
+    dsimp [μDiagonal]
+    exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkConditionalKernel_apply
+        H N hN beta hbeta B source distinguishedSource source k g₂ C
   have hXRaw :
       MemLp X 2
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
           H N hN beta hbeta B source distinguishedSource source k g₂
           (Function.update C target g)) := by
-    simpa [μUpdated] using hXUpdated
+    rw [← hUpdatedLaw]
+    exact hXUpdated
   have hCompareRaw :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_backgroundUpdate_evariance_le_harnackLawFactor_mul
       H N hN beta hbeta B source distinguishedSource source target hne
@@ -216,8 +234,8 @@ theorem
       evariance X μUpdated ≤
         ENNReal.ofReal ((Real.exp (32 * beta)) ^ 2) *
           evariance X μDiagonal := by
-    simpa [μUpdated, μDiagonal, Function.update_eq_self target C] using
-      hCompareRaw
+    rw [hUpdatedLaw, hDiagonalLaw]
+    simpa [Function.update_eq_self target C] using hCompareRaw
   calc
     ENNReal.ofReal
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourceUpdateBackwardDirectVarianceEnergy
