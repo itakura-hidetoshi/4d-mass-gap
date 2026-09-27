@@ -32,6 +32,11 @@ open scoped ENNReal ProbabilityTheory BigOperators
 
 noncomputable section
 
+local instance stageResidualPathLossSpecialUnitaryMeasurableSpace
+    (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 local instance stageResidualPathLossSpatialLinkFintype
     (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
