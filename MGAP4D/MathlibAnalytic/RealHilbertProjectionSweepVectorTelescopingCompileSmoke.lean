@@ -1,0 +1,12 @@
+import MGAP4D.MathlibAnalytic.RealHilbertProjectionSweepVectorTelescoping
+
+namespace MGAP4D.MathlibAnalytic
+
+#check realHilbertProjectionSweep_append
+#check realHilbertProjectionSweepResidualVectorSum
+#check realHilbertProjectionSweepResidualVectorSum_append
+#check realHilbertProjectionSweepResidualVectorSum_eq_sub_sweep
+#check realHilbertProjectionSweep_sub_eq_residualVectorSum
+#check realHilbertProjectionSweepResidualVectorSum_append_cons
+
+end MGAP4D.MathlibAnalytic
