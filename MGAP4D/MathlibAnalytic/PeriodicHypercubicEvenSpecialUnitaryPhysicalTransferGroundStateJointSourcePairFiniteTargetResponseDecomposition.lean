@@ -266,12 +266,11 @@ theorem
       (∫⁻ C,
         ENNReal.ofReal
           (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
-            ‖
-              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairLinkIndexedCurrentValueOffDiagonalFullDifferenceL2Sum
+            norm
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairLinkIndexedCurrentValueOffDiagonalFullDifferenceL2Sum
                 H N hN beta hbeta C distinguishedSource source F hF bound hbound -
               periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairLinkIndexedCurrentValueOffDiagonalDirectDifferenceL2Sum
-                H N hN beta hbeta C distinguishedSource source F hF bound hbound
-            ‖ ^ 2)
+                H N hN beta hbeta C distinguishedSource source F hF bound hbound) ^ 2)
         ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
           H N hN beta hbeta) ≤
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFixedBackgroundResponseResidualCoefficient
@@ -318,11 +317,12 @@ theorem
       ∫⁻ C,
         ENNReal.ofReal
           (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
-            ‖∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
-              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawResponseL2
-                H N hN beta hbeta C distinguishedSource source target
-                (C distinguishedSource) (C source)
-                (F target) (hF target) (bound target) (hbound target) C 0‖ ^ 2)
+            norm
+              (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
+                periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawResponseL2
+                  H N hN beta hbeta C distinguishedSource source target
+                  (C distinguishedSource) (C source)
+                  (F target) (hF target) (bound target) (hbound target) C 0) ^ 2)
         ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
           H N hN beta hbeta := by
       apply lintegral_congr
