@@ -30,6 +30,11 @@ open scoped ENNReal ProbabilityTheory BigOperators
 
 noncomputable section
 
+local instance sweepStageResponseEnergySpecialUnitaryMeasurableSpace
+    (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 local instance sweepStageResponseEnergySpatialLinkFintype
     (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
@@ -260,7 +265,7 @@ theorem
       N hN s hs beta hbeta hcut H distinguishedSource
       F hF bound hbound
   exact hResponse.trans
-    (mul_le_mul_left'
+    (mul_le_mul_right
       hVariance
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFixedBackgroundResponseResidualCoefficient
         s beta))
