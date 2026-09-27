@@ -688,7 +688,18 @@ theorem
         H N hN beta hbeta B distinguishedSource source target k g₂
         F hF bound hbound left center)
   ] with z hR hFirst hSecond hSub
-  rw [hSub, hFirst, hSecond, hR]
+  rw [hSub]
+  change
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawResponseL2
+        H N hN beta hbeta B distinguishedSource source target k g₂
+        F hF bound hbound left center z =
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFirstMeanL2
+          H N hN beta hbeta B distinguishedSource source target k g₂
+          F hF bound hbound left center z -
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawSecondMeanL2
+          H N hN beta hbeta B distinguishedSource source target k g₂
+          F hF bound hbound left center z
+  rw [hFirst, hSecond, hR]
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawResponseOnCarrier_eq]
   simp [hne]
