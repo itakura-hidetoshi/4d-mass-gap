@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSixSpatialSweepStageSourceUpdateBackwardDirectMeanSplit
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairFirstCrossEnergyPythagorean
+import Mathlib.Probability.Moments.Variance
 import Mathlib.Tactic
 
 /-!
@@ -55,6 +55,41 @@ local instance backwardDirectFiberPythagoreanSpecialUnitaryBorelSpace
     (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
+
+/-- Probability-space Pythagoras used below. This is kept local so the
+backward-direct module does not depend on a private lemma from another theorem
+unit. -/
+private theorem
+    backwardDirectFiber_probability_integral_sq_sub_const_eq_centered_mean_add_gap_sq
+    {α : Type*} [MeasurableSpace α]
+    (μ : Measure α) [IsProbabilityMeasure μ]
+    (X : α → ℝ) (hX : MemLp X 2 μ) (c : ℝ) :
+    (∫ x, (X x - c) ^ 2 ∂μ) =
+      (∫ x, (X x - ∫ y, X y ∂μ) ^ 2 ∂μ) +
+        ((∫ y, X y ∂μ) - c) ^ 2 := by
+  have hShift : MemLp (fun x => X x - c) 2 μ :=
+    hX.sub (memLp_const c)
+  have hXIntegrable : Integrable X μ :=
+    hX.integrable one_le_two
+  have hMeanShift :
+      (∫ x, X x - c ∂μ) = (∫ x, X x ∂μ) - c := by
+    rw [integral_sub hXIntegrable (integrable_const c)]
+    simp
+  have hVarShift :
+      variance (fun x => X x - c) μ =
+        (∫ x, (X x - c) ^ 2 ∂μ) -
+          (∫ x, X x - c ∂μ) ^ 2 := by
+    simpa only [Pi.pow_apply] using
+      (variance_eq_sub hShift)
+  have hVarInvariant :
+      variance (fun x => X x - c) μ = variance X μ :=
+    variance_sub_const hX.aestronglyMeasurable c
+  have hVarBase :
+      variance X μ =
+        ∫ x, (X x - ∫ y, X y ∂μ) ^ 2 ∂μ := by
+    exact variance_eq_integral hX.aestronglyMeasurable.aemeasurable
+  rw [hVarInvariant, hVarBase, hMeanShift] at hVarShift
+  linarith
 
 /-- Centered source-update variance on the backward carrier. The observable is
 read from the first background and the source conditional law from the second. -/
@@ -184,7 +219,7 @@ theorem
       (∫ v, X v ∂μ) = m := by
     rfl
   have hPyth :=
-    probability_integral_sq_sub_const_eq_centered_mean_add_gap_sq
+    backwardDirectFiber_probability_integral_sq_sub_const_eq_centered_mean_add_gap_sq
       μ X hXLp 0
   have hReal :
       (∫ v, X v ^ 2 ∂μ) =
