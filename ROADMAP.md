@@ -12,17 +12,17 @@ Unique authoritative theorem-carrier branch:
 
 Fresh theorem-bearing baseline immediately before this documentation refresh:
 
-**693c2ef8673cdfe40ec6615fc7d9c3e600dc9745**
+**f8b2cea5a780ae88362b17b7e404c937168d85fa**
 
-This is the merge commit of PR **#4861**, **Charge full-direct update error to sweep path loss**.
+This is the merge commit of PR **#4869**, **Transport backward direct variance by Harnack**.
 
-Validated exact head of #4861:
+Validated exact head of #4869:
 
-**8f4b83ea6388b1f654fb4b67a3407c3fa6b13d68**
+**518ac2f99b341106e7b1f00f7726292d53c96fd6**
 
 Validation:
 
-- PR Lean Fast Check run **36313199617 — success**
+- PR Lean Fast Check run **36323111870 — success**
 - exact-head completion receipt **chatgpt-ci-receipt/PR Lean Fast Check — success**
 
 The default branch **main is not theorem authority**.
@@ -43,18 +43,16 @@ A docs-only merge may advance the branch pointer without changing the theorem-be
 
 The repository does **not** yet contain a completed proof of the Clay Millennium Yang--Mills existence and mass-gap problem.
 
-The current formal line has closed the former positive-beta response/RMS/stationarity obstruction and now reaches an exact physical finite-update error estimate.
-
-The strongest current endpoint is not yet a Poincare theorem. PR #4861 proves, for a canonical bounded sweep-stage representative family,
+The response-side finite-volume obstruction is closed through PR #4861:
 
 ~~~text
 fullOffDiagonalSum(source)
   =
 directOffDiagonalSum(source)
-  + sum_target ResponseL2(source,target)
+  + sum_target ResponseL2(source,target),
 ~~~
 
-and therefore
+with
 
 ~~~text
 integral_C
@@ -67,21 +65,52 @@ rhoResp(s,beta)
   * ofReal(6 * sweepPathLoss(f)).
 ~~~
 
-On the canonical strictly positive response interval,
+On the strict response cutoff this is bounded by ofReal(6 * sweepPathLoss(f)).
+
+The direct side has now advanced further through PRs #4864--#4869:
 
 ~~~text
-rhoResp(s,beta) < 1,
-~~~
-
-so
-
-~~~text
-errorEnergy
+||DirectDifferenceL2||^2
+  =
+source-pair directMeanDifference energy
   <=
-ofReal(6 * sweepPathLoss(f)).
+orderedDirectAverageEnergy,
 ~~~
 
-The unresolved finite-volume positive-beta task is now the **direct finite-update / ordered-sweep closure** needed to turn this update-error estimate into a bounded-core six-spatial Poincare inequality.
+then losslessly to the reversible backward carrier,
+
+~~~text
+ofReal ||DirectDifferenceL2||^2
+  <=
+integral BackwardDirectFiberEnergy,
+~~~
+
+followed by the exact pointwise split
+
+~~~text
+BackwardDirectFiberEnergy
+  =
+ofReal(BackwardDirectVarianceEnergy)
+  + ofReal(BackwardDirectMean^2).
+~~~
+
+For source != target and D = C[target <- g], PR #4869 proves
+
+~~~text
+ofReal BackwardDirectVarianceEnergy(C,D)
+  <=
+ofReal((exp(32 * beta))^2)
+  * ofReal BackwardDirectVarianceEnergy(C,C).
+~~~
+
+Thus the centered-variance part has been transported back to the diagonal source law with only the existing volume-independent Harnack law factor.
+
+The unresolved finite-volume positive-beta task is now narrower:
+
+1. identify the diagonal backward variance with the genuine source one-link residual / canonical fiber variance and then the exact stage-residual/path-loss carrier;
+2. close the backward mean using its exact localPart + source-law-response decomposition without an arbitrary factor-two loss;
+3. assemble finite targets/sources only after an orthogonal, Schur, or exact telescoping structure is available;
+4. combine the resulting direct bound with #4861 to obtain the bounded-core six-spatial Poincare inequality.
 
 ---
 
@@ -492,7 +521,7 @@ is also retained.
 
 ---
 
-## 11. Current theorem-bearing endpoint — PR #4861
+## 11. Response-side physical endpoint — PR #4861
 
 PR #4861 moves the response estimate onto the **physical full-versus-direct update error**.
 
@@ -530,72 +559,153 @@ integral_C
 ofReal(6 * sweepPathLoss(f)).
 ~~~
 
-This is the current authoritative endpoint.
-
-It is stronger semantically than an auxiliary response-energy theorem because its left-hand side is now a physical finite-update error.
+This remains the closed response-side physical update theorem and is the result to combine with the direct-side closure below.
 
 ---
 
-## 12. Current frontier — direct finite-update closure
+## 12. Direct finite-update advance — PRs #4864--#4869
 
-Do **not** return to the old RMS / variance / pointwise-majorant route.
+### 12.1 Exact DirectDifferenceL2 energy and ordered-law comparison
 
-The remaining finite-volume obstruction is:
-
-### 12.1 Direct off-diagonal finite-update term
-
-The object still needing identification/control is:
+PR #4864 identifies the direct-difference Hilbert energy exactly:
 
 ~~~text
-directOffDiagonalSum(source).
+||DirectDifferenceL2(target,source)||^2
+  =
+integral_(source-pair background)
+  actualDirectMeanDifference^2.
 ~~~
 
-For each target, the direct term is the target conditional mean of a concrete section change under one fixed target law.
+PR #4865 then proves, with coefficient one,
 
-It is **not automatically definitionally equal** to a canonical sweep-stage residual vector.
+~~~text
+||DirectDifferenceL2(target,source)||^2
+  <=
+orderedDirectAverageEnergy(target,source).
+~~~
 
-Therefore the next theorem must prove the correct bridge rather than assume it.
+The only inequality is the already established one-fiber probability-space estimate. No finite-cardinality factor is introduced.
 
-Two acceptable routes are:
+### 12.2 Backward reversible carrier
 
-- an exact ordered/telescoping identity at the Hilbert-vector level, if the formal stage structure supports it;
-- an exact or coefficient-one energy comparison through the already-proved direct-energy law-reordering chain (#4728--#4735), if vector identification is not canonical.
+PR #4867 transports the direct energy to the carrier already used by the #4736 local/law-response decomposition:
 
-The proof must avoid:
+~~~text
+ofReal ||DirectDifferenceL2(target,source)||^2
+  <=
+integral_(target heat-bath joint law)
+  BackwardDirectFiberEnergy(source).
+~~~
+
+This step is lossless apart from the coefficient-one direct energy inequality already present in #4865.
+
+### 12.3 Exact backward fiber Pythagoras
+
+PR #4868 proves pointwise:
+
+~~~text
+BackwardDirectFiberEnergy
+  =
+ofReal(BackwardDirectVarianceEnergy)
+  + ofReal(BackwardDirectMean^2).
+~~~
+
+The proof uses public mathlib variance identities. The local Pythagoras theorem in #4782 is private and is not treated as a cross-module API.
+
+No triangle inequality and no factor two are introduced.
+
+### 12.4 Harnack transport of the centered variance
+
+PR #4869 uses the normalized background-update Harnack variance theorem from #4786.
+
+For source != target and D = C[target <- g]:
+
+~~~text
+ofReal BackwardDirectVarianceEnergy(C,D)
+  <=
+ofReal((exp(32 * beta))^2)
+  * ofReal BackwardDirectVarianceEnergy(C,C).
+~~~
+
+The orientation is fixed and must not be reversed:
+
+~~~text
+fiber = source
+backgroundFiber = target.
+~~~
+
+This is the current theorem-bearing endpoint.
+
+---
+
+## 12A. Current frontier — diagonal variance, backward mean, finite assembly
+
+Do **not** return to the old RMS / stationarity / pointwise-majorant route.
+
+### 12A.1 Diagonal variance piece
+
+The next preferred theorem unit is to identify
+
+~~~text
+BackwardDirectVarianceEnergy(C,C)
+~~~
+
+with the genuine diagonal source one-link residual / canonical fiber variance of the selected bounded sweep-stage representative.
+
+The target shape is an exact identity or coefficient-one estimate, not a target-cardinality bound.
+
+After this identification, reuse #4856--#4858 to connect the diagonal variance to the actual canonical stage-residual norm and sweepPathLoss.
+
+### 12A.2 Backward mean piece
+
+PR #4736 already proves exactly:
+
+~~~text
+BackwardDirectMean(C,D)
+  =
+DiagonalLocalMean(C)
+  + BackwardLawResponse(C,D).
+~~~
+
+The local mean is already tied to the genuine kernel-section residual / canonical fiber-variance machinery.
+
+The remaining task is to control the pure source-law response without immediately applying
+
+~~~text
+|a+b|^2 <= 2|a|^2 + 2|b|^2.
+~~~
+
+Prefer exact centering, orthogonality, covariance, or the existing response/Schur machinery if the formal carrier supports it.
+
+### 12A.3 Finite target/source assembly
+
+Do not sum individual target bounds until the correct structural identity is available.
+
+Forbidden shortcuts remain:
 
 - finite-cardinality Cauchy loss;
-- an arbitrary source/target sum factor;
-- unjustified pointwise evaluation of L2 quotient representatives;
-- silently identifying different source-specific carriers.
+- a factor proportional to the number of spatial links;
+- silent identification of source-specific L2 carriers;
+- matrix-orientation reversal;
+- arbitrary factor two when an exact Pythagorean/orthogonal split is available.
 
-### 12.2 Recommended immediate theorem unit
+Only after the variance and mean pieces are closed should the finite target/source sums be assembled.
 
-The preferred next unit is:
-
-1. specialize the directDifferenceL2 semantics to the canonical stage representative F_target;
-2. rewrite its squared norm through the existing canonical direct-energy / ordered-law identities;
-3. use the preserved canonical prefix witness to connect that ordered direct energy to the actual stage-residual / path-loss structure;
-4. sum over targets/sources only after the coefficient-one or orthogonal/telescoping identity is established.
-
-The desired schematic output is something like:
+The desired schematic endpoint remains:
 
 ~~~text
 directUpdateEnergy
   <=
-C_direct * ofReal(6 * sweepPathLoss(f)),
+C_direct(s,beta) * ofReal(6 * sweepPathLoss(f)),
 ~~~
 
-with C_direct volume-independent and ideally C_direct = 1 if the exact geometry supports it.
+with C_direct volume-independent. Do not freeze C_direct before Lean proves its normalization.
 
-Do **not** freeze C_direct before Lean proves the correct normalization.
+### 12A.4 Combine with #4861
 
-### 12.3 Combine direct and response pieces
+Once directUpdateEnergy is closed, combine it with the exact full/direct/response identity and #4861.
 
-Once directUpdateEnergy is controlled, combine with #4861.
-
-The target is an actual physical current-value/update bound whose left side controls the centered bounded-core vector or the exact frame quantity required by the six-spatial Poincare receiver.
-
-The algebra should preserve the exact decomposition as long as possible and avoid a factor-two triangle inequality unless formally unavoidable.
+The result should control the actual physical current-value/update quantity needed by the six-spatial Poincare receiver while preserving the exact decomposition as long as possible.
 
 ---
 
@@ -731,6 +841,11 @@ Current status:
 | #4859 | merged | strict positive response cutoff rhoResp < 1 |
 | #4860 | merged | absorb response energy into sweep path loss |
 | #4861 | merged | full-minus-direct update error charged to sweep path loss |
+| #4864 | merged | exact DirectDifferenceL2 energy realization |
+| #4865 | merged | coefficient-one direct L2 -> ordered direct average |
+| #4867 | merged | direct L2 energy -> backward reversible carrier |
+| #4868 | merged | exact backward direct fiber Pythagorean split |
+| #4869 | merged | backward centered variance Harnack -> diagonal source law |
 
 ---
 
@@ -756,6 +871,7 @@ Current status:
 18. change requires definitional equality; theorem-level normalization must happen first.
 19. Keep simp sets narrow and remove unused simp arguments.
 20. Do not infer pointwise domination from an outer-energy inequality.
+21. A private theorem in one Lean module is not an API in another module; use public mathlib lemmas or explicitly expose the theorem.
 
 ---
 
@@ -764,20 +880,25 @@ Current status:
 At the start of the next theorem thread:
 
 1. fresh re-observe **formal/real-hilbert-uniform-coercive-strong-limit**;
-2. expected theorem-bearing baseline is **693c2ef8673cdfe40ec6615fc7d9c3e600dc9745** unless a later theorem merge has occurred;
+2. expected theorem-bearing baseline is **f8b2cea5a780ae88362b17b7e404c937168d85fa** unless a later theorem merge has occurred;
 3. retain #4791--#4799 as closed stationarity / target-residual return;
 4. retain #4800--#4818 as closed RMS feedback and vacuum response-energy chain;
 5. retain #4831--#4849 as the closed fixed-background energy / bidirectional Schur / actual response-sum route;
 6. retain #4850--#4852 as exact physical full/direct/response decomposition;
 7. retain #4853--#4858 as canonical prefix / vector telescoping / exact stage path-loss closure;
 8. retain #4859--#4861 as strict positive response cutoff and physical full-minus-direct error control;
-9. do not rebuild the old pointwise RMS majorant route;
-10. next inspect the canonical directDifferenceL2 of the stage representatives against #4728--#4735 direct-energy law reordering;
-11. prove a volume-free direct finite-update -> sweep path-loss bridge;
-12. combine with #4861 to close the bounded-core six-spatial Poincare inequality;
-13. only then apply the existing full-L2 / random-scan / transfer-gap receivers;
-14. continue to thermodynamic and continuum construction after the volume-uniform finite-volume gap is formally closed.
+9. retain #4864--#4865 as exact direct L2 energy and coefficient-one ordered-law comparison;
+10. retain #4867 as the lossless backward reversible-carrier transport;
+11. retain #4868 as the exact backward direct variance + mean-square Pythagorean split;
+12. retain #4869 as the Harnack transport of backward centered variance to the diagonal source law;
+13. do not rebuild the old pointwise RMS majorant route;
+14. next identify the diagonal backward variance with the genuine source residual / canonical fiber variance of the selected stage representative;
+15. then close the backward mean using the exact local + law-response decomposition without an arbitrary factor-two loss;
+16. assemble finite target/source sums only after a coefficient-one, Schur, orthogonal, or exact telescoping structure is established;
+17. combine the direct closure with #4861 to prove the bounded-core six-spatial Poincare inequality;
+18. only then apply the existing full-L2 / random-scan / transfer-gap receivers;
+19. continue to thermodynamic and continuum construction after the volume-uniform finite-volume gap is formally closed.
 
 The immediate mathematical frontier is:
 
-**Identify or control the canonical direct finite-update sum by the exact ordered sweep path-loss structure, without a finite-volume cardinality loss, and combine that result with PR #4861 to obtain the positive-beta bounded-core six-spatial Poincare inequality.**
+**Identify the #4869 diagonal backward variance with the genuine one-link residual / canonical stage-residual carrier, close the backward mean through its exact localPart + source-law-response split without factor-two or cardinality loss, assemble the direct finite-update energy volume-freely, and combine it with PR #4861 to obtain the positive-beta bounded-core six-spatial Poincare inequality.**
