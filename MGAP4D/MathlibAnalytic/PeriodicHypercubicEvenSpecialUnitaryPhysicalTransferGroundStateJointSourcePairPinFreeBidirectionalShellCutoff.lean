@@ -51,33 +51,12 @@ local instance pinFreeBidirectionalShellCutoffSpatialLinkFintype
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
-/-- The growing base-L1 exponential weight is at least one when s >= 1. -/
+/-- The positive-radius shell tail is nonnegative for s > 8. -/
 theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight_one_le
-    (H : ℕ)
-    (s : ℝ) (hs : 1 ≤ s)
-    (center target : PeriodicHypercubicEvenSpatialSliceLink H) :
-    1 ≤
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight
-        H s center target := by
-  unfold
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight
-  have h :=
-    pow_le_pow_left₀
-      (by norm_num : (0 : ℝ) ≤ 1)
-      hs
-      (periodicHypercubicEdgeBaseL1Distance
-        (PeriodicHypercubicEvenSideLength H)
-        (periodicHypercubicEvenSpatialSliceLinkEmbedding H center)
-        (periodicHypercubicEvenSpatialSliceLinkEmbedding H target))
-  simpa using h
-
-/-- The explicit off-diagonal shell majorant is nonnegative for s > 8. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeOffDiagonalReciprocalExponentialWeightMassMajorant_nonneg
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeReciprocalExponentialWeightPositiveTailMajorant_nonneg
     (s : ℝ) (hs : 8 < s) :
     0 ≤
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeOffDiagonalReciprocalExponentialWeightMassMajorant
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeReciprocalExponentialWeightPositiveTailMajorant
         s := by
   let q : ℝ := 8 * s⁻¹
   have hsPos : 0 < s := by linarith
@@ -90,11 +69,23 @@ theorem
   have hInv0 : 0 ≤ (1 - q)⁻¹ :=
     inv_nonneg.mpr (sub_nonneg.mpr hq1.le)
   unfold
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeOffDiagonalReciprocalExponentialWeightMassMajorant
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeReciprocalExponentialWeightPositiveTailMajorant
-  change 0 ≤ 2 + 81 * q * (1 / (1 - q))
+  change 0 ≤ 81 * q * (1 / (1 - q))
   rw [one_div]
-  positivity
+  exact mul_nonneg (mul_nonneg (by norm_num) hq0) hInv0
+
+/-- The explicit off-diagonal shell majorant is nonnegative for s > 8. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeOffDiagonalReciprocalExponentialWeightMassMajorant_nonneg
+    (s : ℝ) (hs : 8 < s) :
+    0 ≤
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeOffDiagonalReciprocalExponentialWeightMassMajorant
+        s := by
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeOffDiagonalReciprocalExponentialWeightMassMajorant
+  exact add_nonneg (by norm_num)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeReciprocalExponentialWeightPositiveTailMajorant_nonneg
+      s hs)
 
 /-- The off-diagonal shell majorant is at least one. -/
 theorem
@@ -103,11 +94,14 @@ theorem
     1 ≤
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeOffDiagonalReciprocalExponentialWeightMassMajorant
         s := by
-  have h0 :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeOffDiagonalReciprocalExponentialWeightMassMajorant_nonneg
+  have hTail :
+      0 ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeReciprocalExponentialWeightPositiveTailMajorant
+          s :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeReciprocalExponentialWeightPositiveTailMajorant_nonneg
       s hs
   unfold
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeOffDiagonalReciprocalExponentialWeightMassMajorant at h0 ⊢
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeOffDiagonalReciprocalExponentialWeightMassMajorant
   linarith
 
 /-- Common volume-independent shell coefficient for the canonical pin-free
@@ -429,16 +423,16 @@ theorem
   have hSumErase :
       (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
         K.influence target source) =
-      ∑ source in
+      ∑ source ∈
         (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)).erase target,
         K.influence target source := by
     simpa [hDiag] using hSplit.symm
   rw [hSumErase]
   calc
-    (∑ source in
+    (∑ source ∈
       (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)).erase target,
       K.influence target source) ≤
-      ∑ source in
+      ∑ source ∈
         (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)).erase target,
         cbar *
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight
@@ -608,13 +602,14 @@ theorem
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHighTemperatureStrictPhysicalSweepCutoff_le_halfBarrierCutoff
         s)
   have hq0 : 0 ≤ q := by
-    unfold
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightPinFreeBidirectionalShellCoefficient
-    exact mul_nonneg
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightBootstrapEnvelopePinFreeCoefficient_nonneg
-        s beta hbeta hHalfCut)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeOffDiagonalReciprocalExponentialWeightMassMajorant_nonneg
-        s hs)
+    simpa [
+      q,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightPinFreeBidirectionalShellCoefficient] using
+      mul_nonneg
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightBootstrapEnvelopePinFreeCoefficient_nonneg
+          s beta hbeta hHalfCut)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeOffDiagonalReciprocalExponentialWeightMassMajorant_nonneg
+          s hs)
   have hRow :
       ∀ target : PeriodicHypercubicEvenSpatialSliceLink H,
         ∑ source, K.influence target source ≤ q := by
