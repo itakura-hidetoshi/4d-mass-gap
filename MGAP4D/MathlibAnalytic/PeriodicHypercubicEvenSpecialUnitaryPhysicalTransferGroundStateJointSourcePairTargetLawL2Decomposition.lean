@@ -494,6 +494,108 @@ noncomputable def
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawSecondMean
       H N hN beta hbeta B distinguishedSource source target k g₂ F left center)
 
+/-- The old-first L2 class has the old-first mean as its a.e. representative. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawOldFirstMeanL2_coeFn
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (distinguishedSource source target :
+      PeriodicHypercubicEvenSpatialSliceLink H)
+    (k g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ)
+    (F :
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
+    (hF : StronglyMeasurable F)
+    (bound : ℝ) (hbound : ∀ z, ‖F z‖ ≤ bound)
+    (left : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (center : ℝ) :
+    (fun z =>
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawOldFirstMeanL2
+        H N hN beta hbeta B distinguishedSource source target k g₂
+        F hF bound hbound left center z) =ᵐ[
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceIndependentPairBackgroundMeasure
+        H N hN beta hbeta B distinguishedSource source k g₂]
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawOldFirstMean
+        H N hN beta hbeta B distinguishedSource source target k g₂ F left center := by
+  exact
+    (MemLp.of_bound
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawOldFirstMean_stronglyMeasurable
+        H N hN beta hbeta B distinguishedSource source target k g₂
+        F hF left center).aestronglyMeasurable
+      (|bound| + |center|)
+      (Filter.Eventually.of_forall fun z =>
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawOldFirstMean_norm_le
+          H N hN beta hbeta B distinguishedSource source target k g₂
+          F bound hbound left center z)).coeFn_toLp
+
+/-- The first-mean L2 class has the first mean as its a.e. representative. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFirstMeanL2_coeFn
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (distinguishedSource source target :
+      PeriodicHypercubicEvenSpatialSliceLink H)
+    (k g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ)
+    (F :
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
+    (hF : StronglyMeasurable F)
+    (bound : ℝ) (hbound : ∀ z, ‖F z‖ ≤ bound)
+    (left : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (center : ℝ) :
+    (fun z =>
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFirstMeanL2
+        H N hN beta hbeta B distinguishedSource source target k g₂
+        F hF bound hbound left center z) =ᵐ[
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceIndependentPairBackgroundMeasure
+        H N hN beta hbeta B distinguishedSource source k g₂]
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFirstMean
+        H N hN beta hbeta B distinguishedSource source target k g₂ F left center := by
+  exact
+    (MemLp.of_bound
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFirstMean_stronglyMeasurable
+        H N hN beta hbeta B distinguishedSource source target k g₂
+        F hF left center).aestronglyMeasurable
+      (|bound| + |center|)
+      (Filter.Eventually.of_forall fun z =>
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFirstMean_norm_le
+          H N hN beta hbeta B distinguishedSource source target k g₂
+          F bound hbound left center z)).coeFn_toLp
+
+/-- The second-mean L2 class has the second mean as its a.e. representative. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawSecondMeanL2_coeFn
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (distinguishedSource source target :
+      PeriodicHypercubicEvenSpatialSliceLink H)
+    (k g₂ : Matrix.specialUnitaryGroup (Fin N) ℂ)
+    (F :
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
+    (hF : StronglyMeasurable F)
+    (bound : ℝ) (hbound : ∀ z, ‖F z‖ ≤ bound)
+    (left : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (center : ℝ) :
+    (fun z =>
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawSecondMeanL2
+        H N hN beta hbeta B distinguishedSource source target k g₂
+        F hF bound hbound left center z) =ᵐ[
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourceIndependentPairBackgroundMeasure
+        H N hN beta hbeta B distinguishedSource source k g₂]
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawSecondMean
+        H N hN beta hbeta B distinguishedSource source target k g₂ F left center := by
+  exact
+    (MemLp.of_bound
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawSecondMean_stronglyMeasurable
+        H N hN beta hbeta B distinguishedSource source target k g₂
+        F hF left center).aestronglyMeasurable
+      (|bound| + |center|)
+      (Filter.Eventually.of_forall fun z =>
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawSecondMean_norm_le
+          H N hN beta hbeta B distinguishedSource source target k g₂
+          F bound hbound left center z)).coeFn_toLp
+
 /-- Direct and full source-update differences in the common source carrier. -/
 noncomputable def
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawDirectDifferenceL2
@@ -572,32 +674,24 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawResponseL2_coeFn
       H N hN beta hbeta B distinguishedSource source target k g₂
       F hF bound hbound left center,
-    (MemLp.of_bound
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFirstMean_stronglyMeasurable
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFirstMeanL2_coeFn
+      H N hN beta hbeta B distinguishedSource source target k g₂
+      F hF bound hbound left center,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawSecondMeanL2_coeFn
+      H N hN beta hbeta B distinguishedSource source target k g₂
+      F hF bound hbound left center,
+    Lp.coeFn_sub
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFirstMeanL2
         H N hN beta hbeta B distinguishedSource source target k g₂
-        F hF left center).aestronglyMeasurable
-      (|bound| + |center|)
-      (Filter.Eventually.of_forall fun z =>
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFirstMean_norm_le
-          H N hN beta hbeta B distinguishedSource source target k g₂
-          F bound hbound left center z)).coeFn_toLp,
-    (MemLp.of_bound
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawSecondMean_stronglyMeasurable
+        F hF bound hbound left center)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawSecondMeanL2
         H N hN beta hbeta B distinguishedSource source target k g₂
-        F hF left center).aestronglyMeasurable
-      (|bound| + |center|)
-      (Filter.Eventually.of_forall fun z =>
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawSecondMean_norm_le
-          H N hN beta hbeta B distinguishedSource source target k g₂
-          F bound hbound left center z)).coeFn_toLp
-  ] with z hR hFirst hSecond
-  rw [Lp.coeFn_sub, hFirst, hSecond]
-  rw [hR]
+        F hF bound hbound left center)
+  ] with z hR hFirst hSecond hSub
+  rw [hSub, hFirst, hSecond, hR]
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawResponseOnCarrier_eq]
-  simp [hne,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFirstMeanL2,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawSecondMeanL2]
+  simp [hne]
 
 /-- Exact vector-level source-update decomposition for one off-diagonal target. -/
 theorem
