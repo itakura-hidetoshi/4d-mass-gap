@@ -306,12 +306,11 @@ theorem
     (∫⁻ C,
       ENNReal.ofReal
         (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
-          ‖
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairLinkIndexedCurrentValueOffDiagonalFullDifferenceL2Sum
-              H N hN beta hbeta C distinguishedSource source F hF bound hbound -
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairLinkIndexedCurrentValueOffDiagonalDirectDifferenceL2Sum
-              H N hN beta hbeta C distinguishedSource source F hF bound hbound
-          ‖ ^ 2)
+          norm
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairLinkIndexedCurrentValueOffDiagonalFullDifferenceL2Sum
+                H N hN beta hbeta C distinguishedSource source F hF bound hbound -
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairLinkIndexedCurrentValueOffDiagonalDirectDifferenceL2Sum
+                H N hN beta hbeta C distinguishedSource source F hF bound hbound) ^ 2)
       ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
         H N hN beta hbeta) =
       ∫⁻ C,
