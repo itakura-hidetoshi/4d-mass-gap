@@ -11,17 +11,16 @@ source-pair Hilbert carrier,
   fullDifferenceL2 = directDifferenceL2 + responseL2.
 
 PR #4851 identifies the direct and full L2 differences with the actual
-physical source-updated centered-mean differences.  PR #4849 proves the
+physical source-updated centered-mean differences. PR #4849 proves the
 current-value response is zero on the diagonal and controls the complete
 finite response sum in L2.
 
-This file performs the finite target assembly at fixed outer boundary C and
-fixed source s:
+This file packages the two off-diagonal finite sums as named Hilbert-space
+objects and proves, at fixed outer boundary C and fixed source s,
 
-  sum_{t != s} fullDifference(s,t)
+  fullOffDiagonalSum(s)
     =
-  sum_{t != s} directDifference(s,t)
-    + sum_t response(s,t).
+  directOffDiagonalSum(s) + sum_target response(s,target).
 
 The diagonal response disappears exactly, so the final response sum can be
 taken over all targets and matches the PR #4849 Schur-controlled quantity.
@@ -71,6 +70,60 @@ local instance finiteTargetResponseDecompositionSpatialLinkFintype
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+/-- Sum of the physical full target-law differences over all targets distinct
+from the fixed source. The explicit Finset.sum form avoids parser ambiguity
+from nested big-operator binders inside later norm expressions. -/
+noncomputable def
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairLinkIndexedCurrentValueOffDiagonalFullDifferenceL2Sum
+    (H N : ℕ) (hN : 0 < N)
+    (beta : ℝ) (hbeta : 0 ≤ beta)
+    (C : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (distinguishedSource source :
+      PeriodicHypercubicEvenSpatialSliceLink H)
+    (F :
+      PeriodicHypercubicEvenSpatialSliceLink H →
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
+    (hF : ∀ e, StronglyMeasurable (F e))
+    (bound : PeriodicHypercubicEvenSpatialSliceLink H → ℝ)
+    (hbound : ∀ e z, ‖F e z‖ ≤ bound e) :
+    PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourcePairBackgroundL2
+      H N hN beta hbeta C distinguishedSource
+      (C distinguishedSource) (C source) source :=
+  Finset.sum
+    (Finset.univ.erase source)
+    (fun target =>
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFullDifferenceL2
+        H N hN beta hbeta C distinguishedSource source target
+        (C distinguishedSource) (C source)
+        (F target) (hF target) (bound target) (hbound target) C 0)
+
+/-- Sum of the direct parts over all targets distinct from the fixed source. -/
+noncomputable def
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairLinkIndexedCurrentValueOffDiagonalDirectDifferenceL2Sum
+    (H N : ℕ) (hN : 0 < N)
+    (beta : ℝ) (hbeta : 0 ≤ beta)
+    (C : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (distinguishedSource source :
+      PeriodicHypercubicEvenSpatialSliceLink H)
+    (F :
+      PeriodicHypercubicEvenSpatialSliceLink H →
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
+    (hF : ∀ e, StronglyMeasurable (F e))
+    (bound : PeriodicHypercubicEvenSpatialSliceLink H → ℝ)
+    (hbound : ∀ e z, ‖F e z‖ ≤ bound e) :
+    PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceSourcePairBackgroundL2
+      H N hN beta hbeta C distinguishedSource
+      (C distinguishedSource) (C source) source :=
+  Finset.sum
+    (Finset.univ.erase source)
+    (fun target =>
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawDirectDifferenceL2
+        H N hN beta hbeta C distinguishedSource source target
+        (C distinguishedSource) (C source)
+        (F target) (hF target) (bound target) (hbound target) C 0)
+
 /-- At fixed C and fixed source, the sum of all off-diagonal physical full
 source-update differences is the sum of the corresponding direct differences
 plus the complete target-law response sum. -/
@@ -88,20 +141,10 @@ theorem
     (hF : ∀ e, StronglyMeasurable (F e))
     (bound : PeriodicHypercubicEvenSpatialSliceLink H → ℝ)
     (hbound : ∀ e z, ‖F e z‖ ≤ bound e) :
-    (∑ target ∈
-        (Finset.univ.erase source :
-          Finset (PeriodicHypercubicEvenSpatialSliceLink H)),
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFullDifferenceL2
-        H N hN beta hbeta C distinguishedSource source target
-        (C distinguishedSource) (C source)
-        (F target) (hF target) (bound target) (hbound target) C 0) =
-      (∑ target ∈
-          (Finset.univ.erase source :
-            Finset (PeriodicHypercubicEvenSpatialSliceLink H)),
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawDirectDifferenceL2
-          H N hN beta hbeta C distinguishedSource source target
-          (C distinguishedSource) (C source)
-          (F target) (hF target) (bound target) (hbound target) C 0) +
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairLinkIndexedCurrentValueOffDiagonalFullDifferenceL2Sum
+        H N hN beta hbeta C distinguishedSource source F hF bound hbound =
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairLinkIndexedCurrentValueOffDiagonalDirectDifferenceL2Sum
+          H N hN beta hbeta C distinguishedSource source F hF bound hbound +
         ∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawResponseL2
             H N hN beta hbeta C distinguishedSource source target
@@ -124,12 +167,13 @@ theorem
         (C distinguishedSource) (C source)
         (F target) (hF target) (bound target) (hbound target) C 0
   have hOff :
-      (∑ target ∈ S,
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFullDifferenceL2
-          H N hN beta hbeta C distinguishedSource source target
-          (C distinguishedSource) (C source)
-          (F target) (hF target) (bound target) (hbound target) C 0) =
-        ∑ target ∈ S, (direct target + response target) := by
+      Finset.sum S
+          (fun target =>
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFullDifferenceL2
+              H N hN beta hbeta C distinguishedSource source target
+              (C distinguishedSource) (C source)
+              (F target) (hF target) (bound target) (hbound target) C 0) =
+        Finset.sum S (fun target => direct target + response target) := by
     apply Finset.sum_congr rfl
     intro target htarget
     have hne : target ≠ source :=
@@ -145,7 +189,7 @@ theorem
         H N hN beta hbeta C distinguishedSource source
         (F source) (hF source) (bound source) (hbound source)
   have hErase :
-      (∑ target ∈ S, response target) =
+      Finset.sum S response =
         ∑ target : PeriodicHypercubicEvenSpatialSliceLink H, response target := by
     have hSplit :=
       Finset.sum_erase_add
@@ -154,20 +198,31 @@ theorem
         response
         (Finset.mem_univ source)
     simpa [S, hDiag] using hSplit
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairLinkIndexedCurrentValueOffDiagonalFullDifferenceL2Sum
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairLinkIndexedCurrentValueOffDiagonalDirectDifferenceL2Sum
+  change
+    Finset.sum S
+        (fun target =>
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFullDifferenceL2
+            H N hN beta hbeta C distinguishedSource source target
+            (C distinguishedSource) (C source)
+            (F target) (hF target) (bound target) (hbound target) C 0) =
+      Finset.sum S direct +
+        ∑ target : PeriodicHypercubicEvenSpatialSliceLink H, response target
   calc
-    (∑ target ∈ S,
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFullDifferenceL2
-        H N hN beta hbeta C distinguishedSource source target
-        (C distinguishedSource) (C source)
-        (F target) (hF target) (bound target) (hbound target) C 0) =
-        ∑ target ∈ S, (direct target + response target) := hOff
-    _ = (∑ target ∈ S, direct target) + ∑ target ∈ S, response target := by
-      exact Finset.sum_add_distrib
-    _ = (∑ target ∈ S, direct target) +
+    Finset.sum S
+        (fun target =>
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFullDifferenceL2
+            H N hN beta hbeta C distinguishedSource source target
+            (C distinguishedSource) (C source)
+            (F target) (hF target) (bound target) (hbound target) C 0) =
+        Finset.sum S (fun target => direct target + response target) := hOff
+    _ = Finset.sum S direct + Finset.sum S response := by
+      rw [Finset.sum_add_distrib]
+    _ = Finset.sum S direct +
         ∑ target : PeriodicHypercubicEvenSpatialSliceLink H, response target := by
       rw [hErase]
-    _ = _ := by
-      rfl
 
 /-- The finite full-minus-direct update error is exactly the actual target-law
 response sum, so the PR #4849 response-energy estimate transfers to that
@@ -211,22 +266,12 @@ theorem
       (∫⁻ C,
         ENNReal.ofReal
           (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
-            (‖
-              (∑ target ∈
-                  (Finset.univ.erase source :
-                    Finset (PeriodicHypercubicEvenSpatialSliceLink H)),
-                periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFullDifferenceL2
-                  H N hN beta hbeta C distinguishedSource source target
-                  (C distinguishedSource) (C source)
-                  (F target) (hF target) (bound target) (hbound target) C 0) -
-              (∑ target ∈
-                  (Finset.univ.erase source :
-                    Finset (PeriodicHypercubicEvenSpatialSliceLink H)),
-                periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawDirectDifferenceL2
-                  H N hN beta hbeta C distinguishedSource source target
-                  (C distinguishedSource) (C source)
-                  (F target) (hF target) (bound target) (hbound target) C 0)
-            ‖ : ℝ) ^ 2)
+            ‖
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairLinkIndexedCurrentValueOffDiagonalFullDifferenceL2Sum
+                H N hN beta hbeta C distinguishedSource source F hF bound hbound -
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairLinkIndexedCurrentValueOffDiagonalDirectDifferenceL2Sum
+                H N hN beta hbeta C distinguishedSource source F hF bound hbound
+            ‖ ^ 2)
         ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
           H N hN beta hbeta) ≤
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFixedBackgroundResponseResidualCoefficient
@@ -242,20 +287,10 @@ theorem
   refine ⟨F, hF, bound, hbound, hRep, ?_⟩
   have hErr :
       ∀ C source,
-        (∑ target ∈
-            (Finset.univ.erase source :
-              Finset (PeriodicHypercubicEvenSpatialSliceLink H)),
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFullDifferenceL2
-            H N hN beta hbeta C distinguishedSource source target
-            (C distinguishedSource) (C source)
-            (F target) (hF target) (bound target) (hbound target) C 0) -
-          (∑ target ∈
-              (Finset.univ.erase source :
-                Finset (PeriodicHypercubicEvenSpatialSliceLink H)),
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawDirectDifferenceL2
-              H N hN beta hbeta C distinguishedSource source target
-              (C distinguishedSource) (C source)
-              (F target) (hF target) (bound target) (hbound target) C 0) =
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairLinkIndexedCurrentValueOffDiagonalFullDifferenceL2Sum
+            H N hN beta hbeta C distinguishedSource source F hF bound hbound -
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairLinkIndexedCurrentValueOffDiagonalDirectDifferenceL2Sum
+            H N hN beta hbeta C distinguishedSource source F hF bound hbound =
           ∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawResponseL2
               H N hN beta hbeta C distinguishedSource source target
@@ -272,22 +307,12 @@ theorem
     (∫⁻ C,
       ENNReal.ofReal
         (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
-          (‖
-            (∑ target ∈
-                (Finset.univ.erase source :
-                  Finset (PeriodicHypercubicEvenSpatialSliceLink H)),
-              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFullDifferenceL2
-                H N hN beta hbeta C distinguishedSource source target
-                (C distinguishedSource) (C source)
-                (F target) (hF target) (bound target) (hbound target) C 0) -
-            (∑ target ∈
-                (Finset.univ.erase source :
-                  Finset (PeriodicHypercubicEvenSpatialSliceLink H)),
-              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawDirectDifferenceL2
-                H N hN beta hbeta C distinguishedSource source target
-                (C distinguishedSource) (C source)
-                (F target) (hF target) (bound target) (hbound target) C 0)
-          ‖ : ℝ) ^ 2)
+          ‖
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairLinkIndexedCurrentValueOffDiagonalFullDifferenceL2Sum
+              H N hN beta hbeta C distinguishedSource source F hF bound hbound -
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairLinkIndexedCurrentValueOffDiagonalDirectDifferenceL2Sum
+              H N hN beta hbeta C distinguishedSource source F hF bound hbound
+          ‖ ^ 2)
       ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
         H N hN beta hbeta) =
       ∫⁻ C,
