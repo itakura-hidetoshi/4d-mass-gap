@@ -40,7 +40,10 @@ permissions:
 env:
   MATHLIB_NO_CACHE_ON_UPDATE: "1"
   CHECK_CHANGED_LEAN_BASE_REF: ${{ github.event_name == 'push' && github.event.before || github.event_name == 'workflow_dispatch' && inputs.base_ref || github.event.pull_request.base.sha }}
-  LAKE_CACHE_REF_SHA: ${{ github.event_name == 'pull_request' && format('pr-{0}-{1}', github.event.pull_request.number, github.event.pull_request.head.sha) || github.sha }}
+  # Lean PRs compile against the base theorem-carrier artifacts. Keying the
+  # primary Lake cache by base SHA gives exact hits across proof-fix commits,
+  # while the dependency hash above still invalidates toolchain/manifest changes.
+  LAKE_CACHE_REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.sha }}
 
 jobs:
   pr-lean-fast-check:
