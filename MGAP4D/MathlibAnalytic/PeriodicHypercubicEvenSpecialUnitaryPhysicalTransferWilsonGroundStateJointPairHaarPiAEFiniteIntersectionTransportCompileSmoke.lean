@@ -1,0 +1,11 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateJointPairHaarPiAEFiniteIntersectionTransport
+
+namespace MGAP4D.MathlibAnalytic
+
+#check
+  aestronglyMeasurable_piRestriction_iInter_list_aux_of_measurePreserving_equiv
+
+#check
+  aestronglyMeasurable_piRestriction_iInter_list_of_measurePreserving_equiv
+
+end MGAP4D.MathlibAnalytic
