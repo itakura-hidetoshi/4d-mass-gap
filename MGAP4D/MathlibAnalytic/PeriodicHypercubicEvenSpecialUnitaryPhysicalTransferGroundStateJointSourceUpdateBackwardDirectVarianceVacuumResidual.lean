@@ -102,7 +102,6 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathProjection_diagonalCurrentValues_eq_kernelSectionSpatialLinkIntegral
       H N hN beta hbeta C A source distinguishedSource source
       rightF hRightStrong]
-  rfl
 
 /-- Vacuum integration of the backward direct variance, after averaging over
 one off-source target heat-bath transition, is bounded by the normalized
@@ -236,7 +235,7 @@ theorem
       H N hN beta hbeta source F hF bound hbound
   exact
     hVariance.trans
-      (mul_le_mul_left'
+      (mul_le_mul_right
         hResidual
         (ENNReal.ofReal ((Real.exp (32 * beta)) ^ 2)))
 
