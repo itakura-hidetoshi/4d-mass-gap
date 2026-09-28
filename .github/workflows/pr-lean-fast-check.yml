@@ -43,7 +43,7 @@ env:
   MATHLIB_NO_CACHE_ON_UPDATE: "1"
   CHECK_CHANGED_LEAN_BASE_REF: ${{ github.event_name == 'push' && github.event.before || github.event_name == 'workflow_dispatch' && inputs.base_ref || github.event.pull_request.base.sha }}
   # Dependency artifacts are keyed only by the pinned Lean/Lake/manifest inputs.
-  # Project oleans are restored from the PR base and then advanced per PR head.
+  # Project oleans are restored from the PR base and advanced per PR head.
   LAKE_BASE_CACHE_REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.sha }}
   LAKE_PROJECT_CACHE_REF: ${{ github.event_name == 'pull_request' && format('pr-{0}-{1}', github.event.pull_request.number, github.event.pull_request.head.sha) || format('base-{0}', github.sha) }}
   # Lake remains the authoritative dependency-aware checker. Disable the
@@ -100,7 +100,15 @@ jobs:
                 ;;
             esac
           done < "${changed_file_list}"
-          if grep -Eq '^(lean-toolchain|lakefile\.lean|lake-manifest\.json)
+          if grep -Eq '^(lean-toolchain|lakefile\.lean|lake-manifest\.json)$' "${changed_file_list}"; then
+            required=true
+          fi
+          if grep -qx '.github/lean-cache-version' "${changed_file_list}"; then
+            required=true
+            echo "cache-warm=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "cache-warm=false" >> "${GITHUB_OUTPUT}"
+          fi
           if grep -qx 'scripts/audit_os_wightman_mass_gap_bridge.py' "${changed_file_list}"; then
             required=true
           fi
@@ -145,8 +153,7 @@ jobs:
             ${{ runner.os }}-lean-fast-project-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-base-${{ env.LAKE_BASE_CACHE_REF_SHA }}
             ${{ runner.os }}-lean-fast-project-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-base-
 
-      # One-time migration path. Once the stable dependency cache exists this
-      # large legacy archive is no longer downloaded.
+      # Read the old large archive only while migrating to split caches.
       - name: Restore legacy monolithic Lake cache for migration
         if: ${{ steps.lake-mode.outputs.required == 'true' && steps.lake-deps-cache.outputs.cache-hit != 'true' }}
         id: lake-legacy-cache
@@ -267,7 +274,7 @@ jobs:
           fi
 
       # Dependencies are immutable under the pinned manifest, so publish them
-      # once per dependency hash. Project oleans are much smaller and advance
+      # once per dependency hash. Project oleans are smaller and evolve
       # independently with PR heads / canonical branch SHAs.
       - name: Save pinned Lean dependency cache
         if: ${{ always() && !cancelled() && steps.lake-mode.outputs.required == 'true' && steps.lake-deps-cache.outputs.cache-hit != 'true' && steps.lake-cache-ready.outputs.ready == 'true' }}
@@ -289,234 +296,6 @@ jobs:
         with:
           path: .lake/build
           key: ${{ steps.lake-project-cache.outputs.cache-primary-key }}
-
-
-  chatgpt-ci-status-receipt:
-    name: Publish MCP CI completion receipt
-    needs: pr-lean-fast-check
-    if: ${{ always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository }}
-    permissions:
-      contents: read
-      statuses: write
-    runs-on: ubuntu-22.04
-    timeout-minutes: 2
-    steps:
-      - name: Publish exact-head commit status receipt
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPOSITORY: ${{ github.repository }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          SOURCE_RESULT: ${{ needs.pr-lean-fast-check.result }}
-          RUN_ID: ${{ github.run_id }}
-          RUN_ATTEMPT: ${{ github.run_attempt }}
-          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          case "${SOURCE_RESULT}" in
-            success)
-              state="success"
-              ;;
-            failure|cancelled)
-              state="failure"
-              ;;
-            *)
-              state="error"
-              ;;
-          esac
-          export STATUS_STATE="${state}"
-
-          payload="${RUNNER_TEMP}/chatgpt-ci-status-receipt.json"
-          python3 - "${payload}" <<'PY'
-          import json
-          import os
-          import pathlib
-          import sys
-
-          body = {
-              "state": os.environ["STATUS_STATE"],
-              "target_url": os.environ["RUN_URL"],
-              "description": (
-                  "wake-up receipt only; "
-                  f"run {os.environ['RUN_ID']} attempt {os.environ['RUN_ATTEMPT']}: "
-                  f"{os.environ['SOURCE_RESULT']}"
-              )[:140],
-              "context": "chatgpt-ci-receipt/PR Lean Fast Check",
-          }
-          pathlib.Path(sys.argv[1]).write_text(
-              json.dumps(body, separators=(",", ":")) + "\n",
-              encoding="utf-8",
-          )
-          PY
-
-          curl --fail-with-body --silent --show-error \
-            --request POST \
-            --header "Accept: application/vnd.github+json" \
-            --header "Authorization: Bearer ${GH_TOKEN}" \
-            --header "X-GitHub-Api-Version: 2022-11-28" \
-            --header "Content-Type: application/json" \
-            --data-binary "@${payload}" \
-            "${GITHUB_API_URL}/repos/${REPOSITORY}/statuses/${HEAD_SHA}"
- "${changed_file_list}"; then
-            required=true
-          fi
-          if grep -qx '.github/lean-cache-version' "${changed_file_list}"; then
-            required=true
-            echo "cache-warm=true" >> "${GITHUB_OUTPUT}"
-          else
-            echo "cache-warm=false" >> "${GITHUB_OUTPUT}"
-          fi
-          if grep -qx 'scripts/audit_os_wightman_mass_gap_bridge.py' "${changed_file_list}"; then
-            required=true
-          fi
-
-          echo "required=${required}" >> "${GITHUB_OUTPUT}"
-          echo "[fast] Lake required: ${required}"
-
-      - name: Run static-only changed check
-        if: ${{ steps.lake-mode.outputs.required != 'true' }}
-        shell: bash
-        run: |
-          set -euxo pipefail
-          echo "[fast] no changed Lean leaf or toolchain target; skipping Lake cache and toolchain"
-          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}"
-
-      - name: Cache elan toolchain
-        if: ${{ steps.lake-mode.outputs.required == 'true' }}
-        uses: actions/cache@v5
-        with:
-          path: ~/.elan
-          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
-          restore-keys: |
-            ${{ runner.os }}-elan-
-
-      - name: Restore Lake build cache
-        if: ${{ steps.lake-mode.outputs.required == 'true' }}
-        id: lake-cache
-        uses: actions/cache/restore@v5
-        with:
-          path: |
-            .lake
-            lake-manifest.json
-          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ env.LAKE_CACHE_REF_SHA }}
-          restore-keys: |
-            ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-pr-${{ github.event.pull_request.number }}-
-            ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
-            ${{ runner.os }}-lean-fast-lake-v4-
-            ${{ runner.os }}-lean-fast-v3-
-            ${{ runner.os }}-lean-fast-
-            ${{ runner.os }}-lean-
-
-      - name: Restore the exact checkout's pinned manifest
-        if: ${{ steps.lake-mode.outputs.required == 'true' }}
-        shell: bash
-        run: git restore --source=HEAD -- lake-manifest.json
-
-      - name: Install elan and Lean toolchain
-        if: ${{ steps.lake-mode.outputs.required == 'true' }}
-        shell: bash
-        run: |
-          set -euxo pipefail
-          export PATH="$HOME/.elan/bin:$PATH"
-          retry() {
-            local n=0
-            local max=5
-            local delay=10
-            until "$@"; do
-              n=$((n + 1))
-              if [ "$n" -ge "$max" ]; then
-                echo "[fast][retry] command failed after ${n} attempts: $*" >&2
-                return 1
-              fi
-              echo "[fast][retry] command failed; retry ${n}/${max} after ${delay}s: $*" >&2
-              sleep "$delay"
-              delay=$((delay * 2))
-            done
-          }
-          if ! command -v elan >/dev/null 2>&1; then
-            retry bash -c 'curl --retry 5 --retry-delay 10 --retry-all-errors -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none'
-          else
-            echo "[fast] using cached elan: $(command -v elan)"
-          fi
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-
-      - name: Show Lean and Lake versions
-        if: ${{ steps.lake-mode.outputs.required == 'true' }}
-        shell: bash
-        run: |
-          set -euxo pipefail
-          retry() {
-            local n=0
-            local max=5
-            local delay=10
-            until "$@"; do
-              n=$((n + 1))
-              if [ "$n" -ge "$max" ]; then
-                echo "[fast][retry] command failed after ${n} attempts: $*" >&2
-                return 1
-              fi
-              echo "[fast][retry] command failed; retry ${n}/${max} after ${delay}s: $*" >&2
-              sleep "$delay"
-              delay=$((delay * 2))
-            done
-          }
-          retry lean --version
-          retry lake --version
-          echo "[fast] lake-cache-hit=${{ steps.lake-cache.outputs.cache-hit }}"
-          echo "[fast] lake-cache-ref-sha=${LAKE_CACHE_REF_SHA}"
-
-      - name: Run changed Lean fast check
-        if: ${{ steps.lake-mode.outputs.required == 'true' }}
-        shell: bash
-        run: |
-          set -euxo pipefail
-          echo "[fast] CHECK_CHANGED_LEAN_BASE_REF=${CHECK_CHANGED_LEAN_BASE_REF}"
-          bash scripts/check_changed_lean.sh "${CHECK_CHANGED_LEAN_BASE_REF}" 2>&1 | tee "${RUNNER_TEMP}/lean-fast.log"
-
-      - name: Upload Lean fast-check diagnostics
-        if: ${{ always() && steps.lake-mode.outputs.required == 'true' }}
-        uses: actions/upload-artifact@v6
-        with:
-          name: lean-fast-check-log
-          path: ${{ runner.temp }}/lean-fast.log
-          if-no-files-found: warn
-
-      - name: Check Lake cache is saveable
-        if: ${{ always() && !cancelled() && steps.lake-mode.outputs.required == 'true' }}
-        id: lake-cache-ready
-        shell: bash
-        run: |
-          if [ -d ".lake/packages/mathlib/.lake/build/lib/lean/Mathlib" ]; then
-            echo "ready=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "ready=false" >> "$GITHUB_OUTPUT"
-          fi
-          if [ -d ".lake/build/lib/lean/MGAP4D" ]; then
-            echo "project-ready=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "project-ready=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      # PR caches are restricted by GitHub to this PR's merge ref. Preserve
-      # completed dependencies after a proof failure, without publishing them
-      # to a canonical branch or treating cache availability as proof success.
-      - name: Save Lake build cache for same-repository PR retries
-        if: ${{ always() && !cancelled() && steps.lake-mode.outputs.required == 'true' && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && steps.lake-cache.outputs.cache-hit != 'true' && steps.lake-cache-ready.outputs.ready == 'true' && steps.lake-cache-ready.outputs.project-ready == 'true' }}
-        uses: actions/cache/save@v5
-        with:
-          path: |
-            .lake
-            lake-manifest.json
-          key: ${{ steps.lake-cache.outputs.cache-primary-key }}
-
-      - name: Save Lake build cache from trusted branches
-        if: ${{ steps.lake-mode.outputs.required == 'true' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/formal/real-hilbert-uniform-coercive-strong-limit') && steps.lake-cache.outputs.cache-hit != 'true' && steps.lake-cache-ready.outputs.ready == 'true' }}
-        uses: actions/cache/save@v5
-        with:
-          path: |
-            .lake
-            lake-manifest.json
-          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.sha }}
 
 
   chatgpt-ci-status-receipt:
