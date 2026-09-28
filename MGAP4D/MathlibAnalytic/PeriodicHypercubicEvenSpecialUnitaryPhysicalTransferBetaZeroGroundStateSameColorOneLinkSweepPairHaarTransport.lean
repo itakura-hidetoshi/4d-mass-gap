@@ -63,16 +63,53 @@ theorem
         cs
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
           H N hN z) := by
+  let P :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
+      H N hN 0 (by norm_num) color
+  let Q :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkPairHaarProjection
+      H N color
+  change
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
+        H N hN (realHilbertProjectionSweep P cs z) =
+      realHilbertProjectionSweep Q cs
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
+          H N hN z)
   induction cs generalizing z with
   | nil =>
       rfl
   | cons e es ih =>
-      simp only [realHilbertProjectionSweep, ContinuousLinearMap.comp_apply]
-      rw [ih]
-      rw [
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2_spatialLinkCondExp
-          H N hN e.1 z]
-      rfl
+      have hstep :
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
+              H N hN (P e z) =
+            Q e
+              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
+                H N hN z) := by
+        simpa [
+          P, Q,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkPairHaarProjection] using
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2_spatialLinkCondExp
+            H N hN e.1 z)
+      calc
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
+            H N hN (realHilbertProjectionSweep P (e :: es) z) =
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
+            H N hN (realHilbertProjectionSweep P es (P e z)) := by
+              rfl
+        _ = realHilbertProjectionSweep Q es
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
+              H N hN (P e z)) :=
+          ih (P e z)
+        _ = realHilbertProjectionSweep Q es
+            (Q e
+              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
+                H N hN z)) := by
+          rw [hstep]
+        _ = realHilbertProjectionSweep Q (e :: es)
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
+              H N hN z) := by
+          rfl
 
 /-- Exact transport of the complete canonical same-color one-link sweep.
 The canonical list and its order are unchanged. -/
