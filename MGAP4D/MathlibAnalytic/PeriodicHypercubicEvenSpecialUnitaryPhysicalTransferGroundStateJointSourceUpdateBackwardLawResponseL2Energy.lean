@@ -258,7 +258,7 @@ theorem
   have hSwapIntegral :
       (∫⁻ z, ENNReal.ofReal ((response (swapIn z)) ^ 2) ∂ν) =
         ∫⁻ z, ENNReal.ofReal ((response z) ^ 2) ∂ν := by
-    have hMap := MeasureTheory.lintegral_map hPsi hSwapMeas
+    have hMap := MeasureTheory.lintegral_map (μ := ν) hPsi hSwapMeas
     rw [hSwapLaw] at hMap
     simpa [Psi] using hMap.symm
   have hMem :
