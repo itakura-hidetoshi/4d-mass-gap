@@ -71,12 +71,12 @@ theorem
     Function.Injective
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
         H N hN) := by
-  unfold
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
+  intro x y hxy
   exact
     realL2CastOfMeasureEq_injective
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_zero_eq_pairHaar
         H N hN)
+      hxy
 
 /-- At beta zero, the genuine complete same-color one-link sweep is exactly the
 genuine spatial-color conditional expectation. -/
@@ -271,7 +271,10 @@ theorem
       (by norm_num)
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroPhysicalSixSpatial_sweepBlockDefect_zero_majorant
         H N hN)
-  norm_num at hGap
+  have hCoeff :
+      3 * ((1 / 6 : ℝ) - 0) / 8 = (1 / 16 : ℝ) := by
+    norm_num
+  rw [hCoeff] at hGap
   exact hGap
 
 end Physical
