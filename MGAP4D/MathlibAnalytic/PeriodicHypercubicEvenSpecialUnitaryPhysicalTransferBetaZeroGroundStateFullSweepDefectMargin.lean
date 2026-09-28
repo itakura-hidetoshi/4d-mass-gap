@@ -92,9 +92,8 @@ theorem
           (R0 (U0 ((x : G) : HaarL2))) ≤
         (5 / 6 : ℝ) * ‖(x : G)‖ ^ 2 := by
     simpa [
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialMeanProjectedNormSq,
-      R0, U0] using hMean
-  exact add_le_add_right hMean' _
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialMeanProjectedNormSq] using hMean
+  exact add_le_add hMean' (le_refl _)
 
 /-- A beta-zero sweep--block defect majorant by `delta` gives full-sweep
 contraction with rate `5/6 + delta`. -/
@@ -126,7 +125,7 @@ theorem
     _ ≤
       (5 / 6 : ℝ) * ‖(x : G)‖ ^ 2 +
         delta * ‖(x : G)‖ ^ 2 := by
-      exact add_le_add_left (hDefect x) _
+      exact add_le_add (le_refl _) (hDefect x)
     _ = ((5 / 6 : ℝ) + delta) * ‖(x : G)‖ ^ 2 := by
       ring
 
