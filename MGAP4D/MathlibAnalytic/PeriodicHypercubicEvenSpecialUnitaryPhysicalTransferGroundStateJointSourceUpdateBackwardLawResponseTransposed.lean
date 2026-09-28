@@ -174,7 +174,6 @@ theorem
       integral_sub (integrable_const _) hYA,
       integral_const, integral_const]
     simp
-    ring
   have hResponse :
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawResponse
           H N hN beta hbeta source target F C C A distinguishedSource
