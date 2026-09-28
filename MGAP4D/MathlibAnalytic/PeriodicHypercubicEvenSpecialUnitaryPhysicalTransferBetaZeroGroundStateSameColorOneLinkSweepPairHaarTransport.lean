@@ -11,7 +11,7 @@ exactly to the corresponding literal pair-Haar projection.
 This file lifts that intertwining through an arbitrary finite ordered sweep and
 then specializes it to the canonical complete same-color sweep.
 
-No commutativity is needed for this transport step.  The list order is
+No commutativity is needed for this transport step. The list order is
 preserved literally.
 -/
 
@@ -22,10 +22,40 @@ open scoped InnerProductSpace InnerProduct
 
 noncomputable section
 
+set_option maxHeartbeats 2000000
+
 local instance betaZeroSameColorSweepPairHaarTransportSpatialLinkFintype
     (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
+
+/-- Intertwining a projection family step by step intertwines its complete
+ordered sweep. This is purely functorial and uses no projection algebra. -/
+theorem realHilbertProjectionSweep_map_of_intertwine
+    {E F C : Type*}
+    [NormedAddCommGroup E] [NormedSpace ℝ E]
+    [NormedAddCommGroup F] [NormedSpace ℝ F]
+    (T : E → F)
+    (P : C → E →L[ℝ] E)
+    (Q : C → F →L[ℝ] F)
+    (h : ∀ c x, T (P c x) = Q c (T x))
+    (cs : List C) (x : E) :
+    T (realHilbertProjectionSweep P cs x) =
+      realHilbertProjectionSweep Q cs (T x) := by
+  induction cs generalizing x with
+  | nil =>
+      rfl
+  | cons c cs ih =>
+      calc
+        T (realHilbertProjectionSweep P (c :: cs) x) =
+            T (realHilbertProjectionSweep P cs (P c x)) := by
+              rfl
+        _ = realHilbertProjectionSweep Q cs (T (P c x)) :=
+          ih (P c x)
+        _ = realHilbertProjectionSweep Q cs (Q c (T x)) := by
+          rw [h c x]
+        _ = realHilbertProjectionSweep Q (c :: cs) (T x) := by
+          rfl
 
 /-- Literal pair-Haar one-link projection family for a fixed six-spatial
 color. -/
@@ -69,47 +99,14 @@ theorem
   let Q :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkPairHaarProjection
       H N color
-  change
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
-        H N hN (realHilbertProjectionSweep P cs z) =
-      realHilbertProjectionSweep Q cs
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
-          H N hN z)
-  induction cs generalizing z with
-  | nil =>
-      rfl
-  | cons e es ih =>
-      have hstep :
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
-              H N hN (P e z) =
-            Q e
-              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
-                H N hN z) := by
-        simpa [
-          P, Q,
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2,
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkPairHaarProjection] using
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2_spatialLinkCondExp
-            H N hN e.1 z)
-      calc
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
-            H N hN (realHilbertProjectionSweep P (e :: es) z) =
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
-            H N hN (realHilbertProjectionSweep P es (P e z)) := by
-              rfl
-        _ = realHilbertProjectionSweep Q es
-            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
-              H N hN (P e z)) :=
-          ih (P e z)
-        _ = realHilbertProjectionSweep Q es
-            (Q e
-              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
-                H N hN z)) := by
-          rw [hstep]
-        _ = realHilbertProjectionSweep Q (e :: es)
-            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
-              H N hN z) := by
-          rfl
+  apply realHilbertProjectionSweep_map_of_intertwine
+  intro e x
+  simpa [
+    P, Q,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkPairHaarProjection] using
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2_spatialLinkCondExp
+      H N hN e.1 x)
 
 /-- Exact transport of the complete canonical same-color one-link sweep.
 The canonical list and its order are unchanged. -/
