@@ -1,904 +1,902 @@
 # MGAP4D ROADMAP
 
-## Authority checkpoint — 2026-09-27 JST
+## Authority checkpoint — 2026-09-29 JST
 
 Repository:
 
-**itakura-hidetoshi/4d-mass-gap**
+`itakura-hidetoshi/4d-mass-gap`
 
-Unique authoritative theorem-carrier branch:
+Authoritative theorem-carrier branch:
 
-**formal/real-hilbert-uniform-coercive-strong-limit**
+`formal/real-hilbert-uniform-coercive-strong-limit`
 
-Fresh theorem-bearing baseline immediately before this documentation refresh:
+Current theorem-bearing HEAD:
 
-**f8b2cea5a780ae88362b17b7e404c937168d85fa**
+`696fd06775636f31f0364e331103a009cc729fde`
 
-This is the merge commit of PR **#4869**, **Transport backward direct variance by Harnack**.
+This is the merge commit of PR #4899.
 
-Validated exact head of #4869:
+Pinned environment:
 
-**518ac2f99b341106e7b1f00f7726292d53c96fd6**
-
-Validation:
-
-- PR Lean Fast Check run **36323111870 — success**
-- exact-head completion receipt **chatgpt-ci-receipt/PR Lean Fast Check — success**
-
-The default branch **main is not theorem authority**.
+- Lean `v4.30.0-rc2`
+- mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`
 
 Authority order:
 
-1. fresh exact GitHub theorem-carrier SHA;
+1. fresh exact theorem-carrier SHA;
 2. formal Lean theorem artifacts at that SHA;
 3. README / ROADMAP;
 4. exact-head CI receipts;
-5. historical summaries or memory.
+5. history / memory.
 
-A docs-only merge may advance the branch pointer without changing the theorem-bearing baseline above.
+The GitHub default branch `main` is not theorem authority.
 
 ---
 
 ## 0. Claim boundary
 
-The repository does **not** yet contain a completed proof of the Clay Millennium Yang--Mills existence and mass-gap problem.
+The finite-volume Wilson / OS / physical-transfer construction is highly
+developed, the beta-zero endpoint has an exact physical transfer gap, and the
+positive-beta response / Schur machinery is largely formalized.
 
-The response-side finite-volume obstruction is closed through PR #4861:
+The continuum four-dimensional Yang--Mills existence and mass-gap problem is
+not yet formally closed.
 
-~~~text
-fullOffDiagonalSum(source)
-  =
-directOffDiagonalSum(source)
-  + sum_target ResponseL2(source,target),
-~~~
+The active bottleneck is the finite-volume positive-beta physical gap:
+the noncommutative same-color one-link sweep must be compared quantitatively
+with the genuine color-block projection without introducing a
+volume-dependent loss.
 
-with
-
-~~~text
-integral_C
-  sum_source
-    ||fullOffDiagonalSum(source)
-      - directOffDiagonalSum(source)||^2
-
-  <=
-rhoResp(s,beta)
-  * ofReal(6 * sweepPathLoss(f)).
-~~~
-
-On the strict response cutoff this is bounded by ofReal(6 * sweepPathLoss(f)).
-
-The direct side has now advanced further through PRs #4864--#4869:
-
-~~~text
-||DirectDifferenceL2||^2
-  =
-source-pair directMeanDifference energy
-  <=
-orderedDirectAverageEnergy,
-~~~
-
-then losslessly to the reversible backward carrier,
-
-~~~text
-ofReal ||DirectDifferenceL2||^2
-  <=
-integral BackwardDirectFiberEnergy,
-~~~
-
-followed by the exact pointwise split
-
-~~~text
-BackwardDirectFiberEnergy
-  =
-ofReal(BackwardDirectVarianceEnergy)
-  + ofReal(BackwardDirectMean^2).
-~~~
-
-For source != target and D = C[target <- g], PR #4869 proves
-
-~~~text
-ofReal BackwardDirectVarianceEnergy(C,D)
-  <=
-ofReal((exp(32 * beta))^2)
-  * ofReal BackwardDirectVarianceEnergy(C,C).
-~~~
-
-Thus the centered-variance part has been transported back to the diagonal source law with only the existing volume-independent Harnack law factor.
-
-The unresolved finite-volume positive-beta task is now narrower:
-
-1. identify the diagonal backward variance with the genuine source one-link residual / canonical fiber variance and then the exact stage-residual/path-loss carrier;
-2. close the backward mean using its exact localPart + source-law-response decomposition without an arbitrary factor-two loss;
-3. assemble finite targets/sources only after an orthogonal, Schur, or exact telescoping structure is available;
-4. combine the resulting direct bound with #4861 to obtain the bounded-core six-spatial Poincare inequality.
+PRs #4892--#4899 now provide the exact renewal geometry, cyclic second-visit
+carrier, bounded representatives, terminal profile, response energy receiver,
+Schur feedback receiver, and exact off-diagonal cyclic source set.  The
+remaining task is semantic / quantitative rather than combinatorial.
 
 ---
 
-## 1. Pinned formal environment
+## 1. Fixed notation for the current frontier
 
-Lean:
+For one spatial color `c`:
 
-**v4.30.0-rc2**
+```text
+B_c  = genuine spatial-color conditional expectation
+S_c  = one complete canonical same-color one-link sweep
+L_c(f) = exact sweep path loss
+D_c(f) = ||S_c f - B_c f||^2
+```
 
-mathlib:
+Six-color normalized quantities:
 
-**5450b53e5ddc75d46418fabb605edbf36bd0beb6**
+```text
+L(f)
+  = (1/6) * sum_c L_c(f)
 
-Do not use current mathlib master as theorem authority.
+Dmean(f)
+  = (1/6) * sum_c D_c(f)
 
-For theorem-bearing PRs, merge judgment requires:
+Lterm(f)
+  = (1/6) * sum_c L_c(S_c f)
 
-- current exact head SHA;
-- terminal success of **Changed Lean fast check**;
-- exact-head completion receipt.
+Dnext(f)
+  = (1/6) * sum_c D_c(S_c f)
+```
 
-When CI is red, inspect:
+The exact obstruction identity already closed before the renewal work is
 
-- the exact reported error;
-- the full changed Lean module;
-- CompileSmoke;
-- imports and dependent theorem signatures;
-- pinned mathlib APIs;
-- instance presentation;
-- parser / notation presentation;
-- whether the failure is preflight/cache/routing or actual Lean elaboration.
+```text
+E_6sp(f) = L(f) + Dmean(f).
+```
 
-For docs-only changes, do not rerun Strict Lean merely because README/ROADMAP changed.
+The full-sweep retained-norm identity is
 
----
+```text
+FullSweepMean(f)
+  = MeanProjectedNormSq(f) + Dmean(f).
+```
 
-## 2. Stable roots and receivers
+The transfer-gap defect-margin receiver is already available:
+if on the physical sector
 
-These layers are already available and should not be rebuilt.
+```text
+Dmean(f) <= delta * ||f||^2
+0 <= delta < 1/6,
+```
 
-### 2.1 Finite Wilson / OS / physical-transfer root
+then
 
-The finite-volume framework includes:
+```text
+(3/8) * (1/6 - delta)
+  <= physical transfer gap.
+```
 
-- periodic SU(N) Wilson measure infrastructure;
-- one-slab transfer kernel;
-- Osterwalder--Schrader / Gauss-law physical carrier;
-- compact positive physical transfer;
-- canonical nonnegative vacuum;
-- ground-state transformed boundary and joint laws;
-- genuine one-link and spatial-color conditional expectations.
-
-### 2.2 Exact beta-zero endpoint
-
-The beta-zero endpoint is closed:
-
-~~~text
-vacuum = spatial Haar
-ground-state joint law = pair Haar
-kappa_0 = 1/6
-q_0 = 5/6
-exact physical transfer gap = 1.
-~~~
-
-The older 1/16 consistency bound is not the exact beta-zero gap.
-
-### 2.3 Existing full-L2 / Rayleigh / transfer-gap receivers
-
-The downstream Hilbert receivers already exist.
-
-Once a bounded-core six-spatial Poincare/frame estimate is proved with a volume-independent positive constant, the intended route is:
-
-~~~text
-bounded-core Poincare
-  -> full genuine joint L2 closure
-  -> six-spatial random-scan Rayleigh contraction
-  -> physical transfer-gap receiver.
-~~~
-
-Do not rebuild these receivers before the bounded-core estimate is closed.
+Thus the current finite-volume task is to produce a certified
+`delta(beta) < 1/6` on a volume-independent positive-beta interval.
 
 ---
 
-## 3. Closed local residual / sweep energy spine
+## 2. Exact beta-zero anchor
 
-The canonical local residual chain is closed.
+The beta-zero endpoint is closed independently of the perturbative receiver.
 
-For every genuine spatial link, bounded concrete sweep-stage representatives exist and the canonical residual is controlled with coefficient one.
+### 2.1 Pair-Haar / same-color sweep
 
-The established sweep profile satisfies:
+PRs #4887--#4888 prove:
 
-~~~text
-(1/6) * sum_e localProfile(e)^2
-  <=
-E_6sp(f).
-~~~
+- pair-Haar one-link retained-space invariance;
+- pairwise commutation at beta zero;
+- complete same-color pair-Haar sweep = pair-Haar color block.
 
-PRs #4853--#4858 strengthen the earlier profile bookkeeping substantially:
+PR #4889 transports this to the genuine beta-zero carrier:
 
-- the canonical prefix/suffix position of each link is preserved;
-- exact vector telescoping of ordered projection sweeps is formalized;
-- each canonical local-profile value is exactly the norm of its unique stage residual;
-- the complete exact stage-residual energy is identified with sweep path loss.
+```text
+S_c,0 = B_c,0
+D_c,0(f) = 0
+Dmean_0(f) = 0.
+```
 
-The exact identity is:
+The exact physical transfer gap at beta zero remains
 
-~~~text
-(1/6) * sum_e ||stageResidual_e||^2
+```text
+gap_0 = 1.
+```
+
+The perturbative receiver can also be evaluated at `delta(0)=0`, but that
+weaker bound is not the beta-zero theorem and must not be confused with the
+exact result.
+
+---
+
+## 3. Positive-beta common fixed geometry
+
+PR #4890 identifies the common fixed space for every `beta >= 0`:
+
+```text
+(forall e in color c, Q_e x = x)
+  <-> B_c x = x
+```
+
+and
+
+```text
+S_c x = x
+  <-> B_c x = x.
+```
+
+This does **not** assert positive-beta commutativity and does not assert
+`S_c = B_c`.
+
+PR #4891 identifies the defect vector with the terminal color residual:
+
+```text
+S_c f - B_c f
+  = S_c f - B_c(S_c f).
+```
+
+Hence
+
+```text
+D_c(f) = 0
+  <-> B_c(S_c f) = S_c f
+  <-> S_c(S_c f) = S_c f.
+```
+
+The defect is therefore the exact obstruction to one-pass idempotence.
+
+---
+
+## 4. Exact defect renewal — PR #4892
+
+For each color:
+
+```text
+D_c(f) = L_c(S_c f) + D_c(S_c f).
+```
+
+Consequences already formalized:
+
+```text
+D_c(S_c f) <= D_c(f).
+```
+
+If a strict next-defect estimate is supplied,
+
+```text
+D_c(S_c f) <= rho * D_c(f),
+```
+
+then
+
+```text
+(1-rho) * D_c(f) <= L_c(S_c f).
+```
+
+If in addition
+
+```text
+L_c(S_c f) <= eta * L_c(f),
+```
+
+then
+
+```text
+(1-rho) * D_c(f) <= eta * L_c(f).
+```
+
+No division by `1-rho` is performed at this stage.
+
+---
+
+## 5. Vector renewal — PR #4893
+
+PR #4893 exposes the exact vector carrier behind the energy renewal:
+
+```text
+defectVector_c(f)
+  = residualVectorSum_c(S_c f)
+    + defectVector_c(S_c f).
+```
+
+Equivalently:
+
+```text
+residualVectorSum_c(S_c f)
+  = defectVector_c(f)
+    - defectVector_c(S_c f).
+```
+
+For a canonical split
+
+```text
+canonicalList = pre ++ e :: suffix,
+```
+
+the second-sweep residual-vector sum is exposed as
+
+```text
+prefix residual sum
++ e-stage residual
++ suffix residual sum
++ next defect vector.
+```
+
+This is the exact vector-level entry point for the response machinery.
+
+---
+
+## 6. Cyclic second visit — PR #4894
+
+For any ordered family of continuous linear maps, PR #4894 proves
+
+```text
+sweep pre (sweep (pre ++ e :: suffix) x)
   =
-sweepPathLoss(f),
-~~~
+sweep (suffix ++ pre) (P_e (sweep pre x)).
+```
 
-equivalently,
+Thus the second visit to target `e` is separated from the first visit by the
+exact cyclic order
 
-~~~text
-sum_e ||stageResidual_e||^2
+```text
+suffix ++ pre.
+```
+
+The corresponding second-visit residual identity is also formalized.
+
+After specialization to the genuine fixed-color one-link conditional
+expectations:
+
+```text
+secondSweepStageResidual_e
   =
-6 * sweepPathLoss(f).
-~~~
+targetResidual_e
+  after cyclic propagation through suffix ++ pre.
+```
 
-And the established nested-block theorem gives:
-
-~~~text
-sweepPathLoss(f)
-  <=
-E_6sp(f).
-~~~
-
-Thus
-
-~~~text
-sum_e ||stageResidual_e||^2
-  <=
-6 * E_6sp(f).
-~~~
-
-This path-loss carrier is the current preferred local-energy normalization.
+No reordering or commutativity is used.
 
 ---
 
-## 4. Closed response / RMS / variance chain
+## 7. Bounded cyclic representatives — PR #4895
 
-The older #4787 documentation frontier is obsolete.
+Every finite same-color one-link sweep preserves the bounded concrete core.
 
-### 4.1 Observable-specific response and RMS
+PR #4895 reapplies the canonical-prefix representative theorem to `S_c f`
+and combines it with the PR #4894 cyclic identity.
 
-The exact target-law response is realized in a source-specific L2 carrier.
+For each target `e` there is a bounded strongly measurable concrete
+representative satisfying exactly
 
-The exact two-law RMS amplitude is realized in the same carrier.
-
-The response is center-independent, and the actual second target-law fiber mean can be used as the canonical pointwise center.
-
-### 4.2 First-cross exact split
-
-The ordered first-cross energy satisfies an exact Pythagorean split:
-
-~~~text
-firstCrossEnergy
+```text
+boundedRepresentative_e
   =
-oldTargetVariance
-  + response^2.
-~~~
+sweep (suffix_e ++ pre_e)
+  (Q_e (sweep pre_e f)).
+```
 
-After outer integration:
+The coefficient-one canonical fiber residual bound is retained against the
+actual terminal second-sweep local profile.
 
-~~~text
-firstCrossEnergy
-  =
-integral oldTargetVariance
-  + ofReal(||ResponseL2||^2).
-~~~
+The representative data are also chosen simultaneously for the full finite
+spatial-link family.
 
-No factor two is introduced.
-
-### 4.3 Harnack variance transport and stationarity return
-
-The old target variance is compared to the updated target variance using normalized-law domination with
-
-~~~text
-K_H(beta) = (exp(32 beta))^2.
-~~~
-
-The pointwise comparison is integrated exactly.
-
-The second-updated background is returned by stationarity/pushforward.
-
-The updated variance is reconnected to the genuine target residual / canonical fiber variance.
-
-Therefore the former tasks
-
-~~~text
-integrate #4787
-return updated variance by stationarity
-reconnect to genuine target residual
-~~~
-
-are all **closed**.
-
-### 4.4 Second-mean RMS feedback closure
-
-PRs #4800--#4818 close:
-
-- second-law-mean RMS L2;
-- exact RMS energy split;
-- law transport;
-- Harnack + response bound;
-- feedback squaring;
-- strict feedback absorption;
-- source-independent target majorants;
-- target-indexed global majorants;
-- vacuum response-energy matrix;
-- response amplitudes.
-
-The earlier RMS feedback obstruction is closed.
+This closes the carrier compatibility needed by the physical
+direct/backward/law-response theorems.
 
 ---
 
-## 5. Fixed-background energy route
+## 8. Terminal profile / averaged renewal — PR #4896
 
-The earlier current-value dependent route exposed an invalid inference risk:
+Define the terminal fixed-color profile by evaluating the ordinary canonical
+sweep-stage profile on `S_c f`.
 
-> an outer-energy RMS bound does not imply pointwise-in-background domination.
+For each color:
 
-The formalization does not make that unjustified step.
+```text
+sum_{e in c} terminalProfile_c(e)^2
+  = L_c(S_c f).
+```
 
-Instead, PRs #4831--#4849 use a fixed-background **energy route**.
+After reindexing all color fibers back to genuine spatial links:
 
-Closed components include:
+```text
+(1/6) * sum_e terminalProfile(e)^2
+  = Lterm(f).
+```
 
-1. fixed-background RMS Fubini;
-2. fixed-background RMS target majorant;
-3. fixed-background response Fubini;
-4. fixed-background response energy bound;
-5. square-root response amplitudes;
-6. reciprocal-weight row bounds;
-7. uniform off-diagonal shell mass;
-8. beta-zero-vanishing bootstrap envelope;
-9. configuration-independent bidirectional Schur contraction for K_pin;
-10. transpose Schur bound for fixed-background response amplitudes;
-11. target amplitude energy = genuine target residual energy;
-12. vacuum integration;
-13. finite target sum exchange;
-14. canonical fiber variance / CondExpL2 residual control;
-15. actual full response-sum L2 energy bound.
+PR #4896 also defines `Dnext(f)` and averages PR #4892:
 
-The matrix orientation remains:
+```text
+Dmean(f) = Lterm(f) + Dnext(f).
+```
 
-~~~text
-K_pin(target,source).
-~~~
-
-Never silently reverse it.
+The terminal profile is now the canonical link-indexed energy carrier for the
+renewal step.
 
 ---
 
-## 6. Bidirectional pin-free Schur closure
+## 9. Terminal response energy — PR #4897
 
-For the canonical pin-free kernel, a volume-independent shell coefficient is available:
+A generic coefficient-one profile bridge is now public.
 
-~~~text
-q_shell(s,beta) < 1
-~~~
+If the selected bounded representatives satisfy
 
-on the certified shell cutoff.
+```text
+||r_e|| <= profile(e)
+```
 
-Both row and column sums are bounded by the same coefficient.
+for every target, then
 
-The resulting L2 Schur action satisfies schematically:
+```text
+sum_e CanonicalFiberVariance(e)
+  <= ofReal(sum_e profile(e)^2).
+```
 
-~~~text
-sum_source
-  (sum_target K_pin(target,source) v_target)^2
+The existing full-response theorem therefore gives
 
-  <=
-q_shell(s,beta)^2
-  * sum_target v_target^2.
-~~~
+```text
+fullResponseEnergy
+  <= rhoResp(s,beta)
+     * ofReal(sum_e profile(e)^2).
+```
 
-This is the transpose-capable response-energy engine used downstream.
+Inserting the PR #4895 cyclic second-sweep representative family and the
+terminal profile yields
 
----
+```text
+terminalResponseEnergy
+  <= rhoResp(s,beta)
+     * ofReal(6 * Lterm(f)).
+```
 
-## 7. Response residual coefficient and strict positive interval
+This keeps the same volume-independent response coefficient already proved in
+the earlier response spine.
 
-The fixed-background response-residual coefficient is:
+The strict response interval remains characterized by
 
-~~~text
-rhoResp(s,beta).
-~~~
-
-It is finite on the relevant cutoff and satisfies:
-
-~~~text
-rhoResp(s,0) = 0.
-~~~
-
-PR #4859 proves continuity at beta = 0 and constructs a canonical volume-independent cutoff:
-
-~~~text
-betaResp(s) > 0
-~~~
-
-for every fixed s > 8 such that
-
-~~~text
-0 <= beta <= betaResp(s)
-  =>
+```text
 rhoResp(s,beta) < 1.
-~~~
-
-The strict response cutoff lies inside the existing bidirectional shell cutoff.
-
-This is a genuine positive-beta interval, not only an endpoint statement.
+```
 
 ---
 
-## 8. Exact target-law L2 decomposition
+## 10. Terminal-profile Schur feedback — PR #4898
 
-PRs #4850--#4852 realize the physical source-update decomposition in one source-specific Hilbert carrier.
+The existing transpose Schur receiver is specialized to the terminal profile.
 
-For target != source:
+Premise:
 
-~~~text
+```text
+terminal(source)
+  <= originalLocal(source)
+     + sum_target K(target,source) * terminal(target).
+```
+
+Conclusion:
+
+```text
+(1 - q_phys(s,beta))^2 * Lterm(f)
+  <= L(f).
+```
+
+The same theorem unit packages the averaged renewal receiver.
+
+If
+
+```text
+Dnext(f) <= rho * Dmean(f),
+```
+
+then
+
+```text
+(1-rho) * Dmean(f)
+  <= Lterm(f).
+```
+
+Combining the two supplied premises:
+
+```text
+(1-q_phys)^2 * ((1-rho) * Dmean(f))
+  <= L(f).
+```
+
+This is deliberately coefficient-preserving.  It performs no division before
+strict positivity is formally available.
+
+Important limitation:
+
+The current one-sided receiver has coefficient one in front of the original
+local profile.  It is a structural receiver, not by itself a proof of the
+small margin `delta(beta) < 1/6`.  The next semantic estimate must retain the
+beta-small structure needed near the exact beta-zero endpoint.
+
+---
+
+## 11. Exact cyclic source set — PR #4899
+
+For
+
+```text
+canonicalList = pre ++ e :: suffix
+```
+
+with the preserved freshness witness:
+
+```text
+d ∈ suffix ++ pre
+  <-> d != e
+```
+
+inside the fixed-color fiber.
+
+Finset form:
+
+```text
+(suffix ++ pre).toFinset
+  = Finset.univ.erase e.
+```
+
+Therefore the between-visits list contains exactly every other link of the
+same color and never contains the target.
+
+After forgetting the fixed-color subtype, every cyclic source satisfies the
+required off-diagonal hypothesis
+
+```text
+source != target.
+```
+
+This closes the source-set geometry needed to invoke the direct / backward /
+transposed response API without reordering or cardinality estimates.
+
+---
+
+## 12. Closed machinery to reuse
+
+### 12.1 Canonical sweep / stage residual machinery
+
+Closed:
+
+- canonical prefix + suffix witness;
+- exact vector sweep telescoping;
+- exact stage residual exposure;
+- local profile = exact stage residual norm;
+- stage residual squared sum = sweep path loss;
+- bounded-core preservation under every finite same-color sweep.
+
+Do not rebuild these.
+
+### 12.2 Response / Schur machinery
+
+Closed:
+
+- canonical target-law response L2;
+- first-cross exact variance split;
+- Harnack old-to-updated variance transport;
+- stationarity return;
+- genuine target residual / canonical fiber variance;
+- fixed-background response Fubini;
+- configuration-independent pin-free row + column control;
+- transpose Schur action;
+- strict positive response cutoff;
+- full response-sum energy bounds.
+
+### 12.3 Exact physical full/direct/response decomposition
+
+Closed:
+
+```text
 fullDifferenceL2
-  =
-directDifferenceL2
-  + responseL2.
-~~~
+  = directDifferenceL2 + responseL2
+```
 
-The L2 classes are identified with the actual source-updated centered means.
+for every off-diagonal target/source pair, together with the semantic
+identification with actual source-updated centered means.
 
-After finite target assembly and exact diagonal-response cancellation:
+### 12.4 Direct / backward machinery
 
-~~~text
-fullOffDiagonalSum(source)
-  =
-directOffDiagonalSum(source)
-  + sum_target ResponseL2(source,target).
-~~~
+Closed:
 
-This equality is exact.
+- exact DirectDifferenceL2 energy realization;
+- coefficient-one direct L2 -> ordered direct-average comparison;
+- ordered direct energy -> backward reversible carrier;
+- exact backward direct fiber Pythagorean split;
+- backward centered variance -> genuine source residual;
+- current-value reference reanchoring;
+- backward law-response = negative transposed canonical response;
+- backward law-response heat-bath energy = transposed response L2 norm squared;
+- transposed law-response control by the original source residual.
 
-No response symmetry and no finite-cardinality inequality are used.
+The transposed coefficient orientation is fixed:
 
----
+```text
+K_pin(source,target)
+```
 
-## 9. Canonical prefix / vector telescoping / stage residual closure
+for the PR #4878 backward law-response theorem.
 
-PR #4853 retains the exact canonical link position:
-
-~~~text
-canonicalList
-  =
-pre ++ e :: suffix,
-~~~
-
-together with e not in pre and the exact bounded stage representative.
-
-PR #4854 proves generic vector telescoping:
-
-~~~text
-residualVectorSum(P, cs, x)
-  =
-x - sweep(P, cs, x).
-~~~
-
-PR #4855 specializes this to the genuine Yang--Mills fixed-color sweep.
-
-PR #4856 proves the canonical local profile is exactly the norm of the unique stage residual.
-
-PR #4857 charges the actual full response sums to these exact stage residuals.
-
-PR #4858 identifies the entire stage-residual energy exactly with sweep path loss.
-
-These statements should be reused, not reconstructed.
+Do not silently replace it by a symmetric coefficient.
 
 ---
 
-## 10. Strict response path-loss theorem
+## 13. Immediate frontier after PR #4899
 
-PR #4860 combines the exact path-loss carrier with the strict response cutoff.
+The list geometry, target revisit order, bounded representative carrier, and
+terminal energy normalization are closed.
 
-On
+The next task is to prove the actual semantic source-update estimate along the
+cyclic list `suffix ++ pre`.
 
-~~~text
-0 <= beta <= betaResp(s),
-~~~
+### 13.1 Target theorem shape
 
-the actual full response-sum energy satisfies:
+For each target/source orientation, use the exact cyclic source set and the
+existing source-update decomposition to derive a one-sided terminal-profile
+recurrence.
 
-~~~text
-integral_C
-  sum_source
-    ||sum_target ResponseL2(source,target)||^2
+The coarse receiver-ready shape is
 
-  <=
-ofReal(6 * sweepPathLoss(f)).
-~~~
+```text
+terminalProfile(source)
+  <= originalProfile(source)
+     + sum_target K(target,source) * terminalProfile(target).
+```
 
-The stronger coefficient-bearing version
+However, for the final defect margin the proof should preserve a sharper
+beta-small coefficient whenever the exact decomposition provides one:
 
-~~~text
-<= rhoResp(s,beta)
-   * ofReal(6 * sweepPathLoss(f))
-~~~
+```text
+terminalProfile(source)
+  <= a(beta) * originalProfile(source)
+     + sum_target K_beta(target,source) * terminalProfile(target),
+```
 
-is also retained.
+with the goal that the induced terminal path-loss coefficient tends to zero at
+beta zero.
 
----
+Do **not** prematurely normalize `a(beta)` to one if that destroys the
+beta-zero smallness needed for `delta(beta) < 1/6`.
 
-## 11. Response-side physical endpoint — PR #4861
+### 13.2 Required ingredients for each cyclic source update
 
-PR #4861 moves the response estimate onto the **physical full-versus-direct update error**.
+For every source in `suffix ++ pre`, PR #4899 provides `source != target`.
 
-Using the exact finite target decomposition:
+Use:
 
-~~~text
-fullOffDiagonalSum
-  - directOffDiagonalSum
-  =
-sum_target ResponseL2.
-~~~
+1. exact physical source-update semantic identity;
+2. `full = direct + response`;
+3. direct L2 exact energy realization;
+4. backward reversible-carrier transport;
+5. centered-variance / mean-square split;
+6. coefficient-one source residual control for the centered variance;
+7. exact local + law-response split for the backward mean;
+8. current-value reanchoring;
+9. negative transposed response identity;
+10. transposed response energy bound with the correct source/target
+    orientation.
 
-Therefore:
+The assembly must remain ordered and volume-uniform.
 
-~~~text
-integral_C
-  sum_source
-    ||fullOffDiagonalSum(source)
-      - directOffDiagonalSum(source)||^2
+### 13.3 Forbidden shortcuts
 
-  <=
-rhoResp(s,beta)
-  * ofReal(6 * sweepPathLoss(f)).
-~~~
+Do not use:
 
-On the strict cutoff:
-
-~~~text
-integral_C
-  sum_source
-    ||fullOffDiagonalSum(source)
-      - directOffDiagonalSum(source)||^2
-
-  <=
-ofReal(6 * sweepPathLoss(f)).
-~~~
-
-This remains the closed response-side physical update theorem and is the result to combine with the direct-side closure below.
+- finite-cardinality Cauchy over all cyclic sources;
+- a factor proportional to the number of same-color links;
+- an arbitrary factor two from squaring a direct + response sum;
+- response symmetry;
+- positive-beta commutativity;
+- carrier identification without an exact map;
+- pointwise evaluation of an arbitrary L2 quotient representative.
 
 ---
 
-## 12. Direct finite-update advance — PRs #4864--#4869
+## 14. Terminal path-loss feedback target
 
-### 12.1 Exact DirectDifferenceL2 energy and ordered-law comparison
+Once the semantic one-sided terminal recurrence is proved, feed it to the
+PR #4898 Schur receiver.
 
-PR #4864 identifies the direct-difference Hilbert energy exactly:
+The current coefficient-one receiver gives
 
-~~~text
-||DirectDifferenceL2(target,source)||^2
-  =
-integral_(source-pair background)
-  actualDirectMeanDifference^2.
-~~~
+```text
+(1-q_phys)^2 * Lterm <= L.
+```
 
-PR #4865 then proves, with coefficient one,
+If the semantic theorem carries an additional small coefficient `a(beta)`,
+add the corresponding sharpened receiver rather than discarding that
+coefficient.
 
-~~~text
-||DirectDifferenceL2(target,source)||^2
-  <=
-orderedDirectAverageEnergy(target,source).
-~~~
+Desired quantitative form:
 
-The only inequality is the already established one-fiber probability-space estimate. No finite-cardinality factor is introduced.
+```text
+Lterm(f) <= eta(beta) * L(f)
+```
 
-### 12.2 Backward reversible carrier
-
-PR #4867 transports the direct energy to the carrier already used by the #4736 local/law-response decomposition:
-
-~~~text
-ofReal ||DirectDifferenceL2(target,source)||^2
-  <=
-integral_(target heat-bath joint law)
-  BackwardDirectFiberEnergy(source).
-~~~
-
-This step is lossless apart from the coefficient-one direct energy inequality already present in #4865.
-
-### 12.3 Exact backward fiber Pythagoras
-
-PR #4868 proves pointwise:
-
-~~~text
-BackwardDirectFiberEnergy
-  =
-ofReal(BackwardDirectVarianceEnergy)
-  + ofReal(BackwardDirectMean^2).
-~~~
-
-The proof uses public mathlib variance identities. The local Pythagoras theorem in #4782 is private and is not treated as a cross-module API.
-
-No triangle inequality and no factor two are introduced.
-
-### 12.4 Harnack transport of the centered variance
-
-PR #4869 uses the normalized background-update Harnack variance theorem from #4786.
-
-For source != target and D = C[target <- g]:
-
-~~~text
-ofReal BackwardDirectVarianceEnergy(C,D)
-  <=
-ofReal((exp(32 * beta))^2)
-  * ofReal BackwardDirectVarianceEnergy(C,C).
-~~~
-
-The orientation is fixed and must not be reversed:
-
-~~~text
-fiber = source
-backgroundFiber = target.
-~~~
-
-This is the current theorem-bearing endpoint.
+with `eta(beta)` explicit, volume-independent, and small enough near
+`beta=0` for the later defect-margin estimate.
 
 ---
 
-## 12A. Current frontier — diagonal variance, backward mean, finite assembly
+## 15. Strict next-defect contraction
 
-Do **not** return to the old RMS / stationarity / pointwise-majorant route.
+A separate quantitative ingredient remains open:
 
-### 12A.1 Diagonal variance piece
+```text
+Dnext(f) <= rhoDefect(beta) * Dmean(f)
+rhoDefect(beta) < 1.
+```
 
-The next preferred theorem unit is to identify
+Equivalent usable forms are acceptable, for example a certified lower bound
 
-~~~text
-BackwardDirectVarianceEnergy(C,C)
-~~~
+```text
+kappa(beta) * Dmean(f) <= Lterm(f)
+```
 
-with the genuine diagonal source one-link residual / canonical fiber variance of the selected bounded sweep-stage representative.
+with `kappa(beta) > 0`.
 
-The target shape is an exact identity or coefficient-one estimate, not a target-cardinality bound.
+The exact renewal
 
-After this identification, reuse #4856--#4858 to connect the diagonal variance to the actual canonical stage-residual norm and sweepPathLoss.
+```text
+Dmean = Lterm + Dnext
+```
 
-### 12A.2 Backward mean piece
+must be used rather than an abstract convergence argument for cyclic
+projections.
 
-PR #4736 already proves exactly:
-
-~~~text
-BackwardDirectMean(C,D)
-  =
-DiagonalLocalMean(C)
-  + BackwardLawResponse(C,D).
-~~~
-
-The local mean is already tied to the genuine kernel-section residual / canonical fiber-variance machinery.
-
-The remaining task is to control the pure source-law response without immediately applying
-
-~~~text
-|a+b|^2 <= 2|a|^2 + 2|b|^2.
-~~~
-
-Prefer exact centering, orthogonality, covariance, or the existing response/Schur machinery if the formal carrier supports it.
-
-### 12A.3 Finite target/source assembly
-
-Do not sum individual target bounds until the correct structural identity is available.
-
-Forbidden shortcuts remain:
-
-- finite-cardinality Cauchy loss;
-- a factor proportional to the number of spatial links;
-- silent identification of source-specific L2 carriers;
-- matrix-orientation reversal;
-- arbitrary factor two when an exact Pythagorean/orthogonal split is available.
-
-Only after the variance and mean pieces are closed should the finite target/source sums be assembled.
-
-The desired schematic endpoint remains:
-
-~~~text
-directUpdateEnergy
-  <=
-C_direct(s,beta) * ofReal(6 * sweepPathLoss(f)),
-~~~
-
-with C_direct volume-independent. Do not freeze C_direct before Lean proves its normalization.
-
-### 12A.4 Combine with #4861
-
-Once directUpdateEnergy is closed, combine it with the exact full/direct/response identity and #4861.
-
-The result should control the actual physical current-value/update quantity needed by the six-spatial Poincare receiver while preserving the exact decomposition as long as possible.
+The proof should exploit the already-exposed cyclic source-update response
+structure and beta-zero vanishing, not introduce a volume-dependent
+finite-dimensional spectral constant.
 
 ---
 
-## 13. Positive-beta bounded-core six-spatial Poincare
+## 16. Defect margin closure
 
-This is the next major milestone.
+After obtaining
 
-Target shape:
+```text
+Lterm <= eta(beta) * L
+```
 
-~~~text
-kappa(s,beta) * ||centered f||^2
-  <=
-E_6sp(f)
-~~~
+and
 
-for bounded-core f, with:
+```text
+Dnext <= rhoDefect(beta) * Dmean,
+```
 
-~~~text
-kappa(s,beta) > 0
-~~~
+use the coefficient-preserving renewal receiver:
 
-uniformly in finite volume on a certified positive-beta interval.
+```text
+(1-rhoDefect(beta)) * Dmean
+  <= eta(beta) * L.
+```
 
-The exact kappa must be derived only after the direct/full update normalization is closed.
+Only after proving
 
-Current status:
+```text
+0 < 1-rhoDefect(beta)
+```
 
-**OPEN**
+should division be performed.
 
----
+Then derive an explicit
 
-## 14. Full genuine-joint L2 and finite-volume physical gap
+```text
+Dmean(f) <= delta(beta) * ||f||^2.
+```
 
-After bounded-core Poincare:
+The target is
 
-1. extend from the bounded-concrete core to full genuine joint L2 using the existing closure machinery;
-2. convert the frame/Poincare bound to six-spatial random-scan Rayleigh contraction;
-3. invoke the existing physical transfer-gap receiver;
-4. obtain a finite-volume gap lower bound uniform in volume on the certified positive-beta interval;
-5. transport to the exact Hamiltonian normalization and vacuum-orthogonal sector.
+```text
+delta(beta) < 1/6.
+```
 
-Current status:
-
-**DOWNSTREAM / OPEN**
-
----
-
-## 15. Thermodynamic / infinite-volume construction
-
-Required later:
-
-- compatible finite-volume embeddings/restrictions;
-- consistent vacuum states and observables;
-- compactness/projective/direct-limit mechanism;
-- infinite-volume Euclidean physical state;
-- preservation of reflection positivity;
-- gauge invariance;
-- clustering;
-- nontrivial observable content;
-- transfer of the uniform positive finite-volume estimate.
-
-Current status:
-
-**DOWNSTREAM**
+No numerical positive-beta constant should be frozen before all coefficients
+and positivity hypotheses are formally closed.
 
 ---
 
-## 16. Continuum OS / Wightman construction
+## 17. Positive-beta finite-volume physical transfer gap
 
-Required later:
+Once
 
-- continuum Euclidean invariance;
-- reflection positivity;
-- sufficient regularity for OS reconstruction;
-- clustering/decay compatible with a spectral gap;
-- nontrivial physical Hilbert space and observable algebra;
-- same-root OS/Wightman reconstruction.
+```text
+0 <= delta(beta) < 1/6
+```
 
-Current status:
+is established on the physical sector, invoke the existing defect-margin
+receiver:
 
-**DOWNSTREAM**
+```text
+(3/8) * (1/6 - delta(beta))
+  <= physical transfer gap.
+```
 
----
+Keep this perturbative positive-beta receiver distinct from the exact
+beta-zero theorem `gap_0 = 1`.
 
-## 17. Continuum mass-gap target
-
-The terminal theorem requires a continuum physical Hamiltonian with:
-
-- a unique vacuum line;
-- a strictly positive lower spectral edge on the vacuum-orthogonal sector.
-
-A fixed-volume eigenvalue, an auxiliary transfer operator, or a limit disconnected from the same formal root is insufficient.
-
-Current status:
-
-**NOT YET PROVED**
+The resulting lower bound must be volume-independent.
 
 ---
 
-## 18. Recent theorem units
+## 18. Full-L2 / bounded-core closure
 
-### Stationarity / RMS closure
+The bounded concrete core is already dense and stable under the relevant
+one-link sweeps.
 
-| PR | Status | Role |
-| --- | --- | --- |
-| #4791--#4799 | merged | integrate Harnack comparison, stationarity return, genuine target residual |
-| #4800--#4810 | merged | second-mean RMS split, transport, feedback, strict absorption |
-| #4812--#4818 | merged | uniform/target-indexed RMS majorants, vacuum response energy/amplitudes |
+Once the finite-volume physical coercive estimate is closed:
 
-### Fixed-background energy route
+1. extend from the bounded concrete core to the full genuine joint L2 carrier
+   using the existing closure / continuity theorems;
+2. pass through the already-built physical-sector / Rayleigh / transfer-gap
+   receivers;
+3. record the explicit volume-independent positive-beta interval and gap
+   coefficient.
 
-| PR | Status | Role |
-| --- | --- | --- |
-| #4831--#4833 | merged | fixed-background RMS Fubini and target majorant |
-| #4834--#4836 | merged | fixed-background response Fubini, energy, amplitudes |
-| #4837--#4840 | merged | reciprocal shell bounds and bidirectional K_pin Schur |
-| #4841--#4846 | merged | transpose response Schur, residual identity, vacuum target-sum exchange |
-| #4847--#4849 | merged | sweep representatives, residual-energy charge, actual full response sums |
-
-### Exact physical decomposition and path loss
-
-| PR | Status | Role |
-| --- | --- | --- |
-| #4850 | merged | single-target L2 full = direct + response |
-| #4851 | merged | semantic identification with actual source update |
-| #4852 | merged | finite off-diagonal full/direct/response assembly |
-| #4853 | merged | preserve canonical prefix/suffix witnesses |
-| #4854 | merged | exact vector projection-sweep telescoping |
-| #4855 | merged | fixed-color stage-vector exposure |
-| #4856 | merged | local profile = exact stage residual norm |
-| #4857 | merged | full response sums charged to exact stage residuals |
-| #4858 | merged | exact stage residual energy = 6 * sweep path loss |
-| #4859 | merged | strict positive response cutoff rhoResp < 1 |
-| #4860 | merged | absorb response energy into sweep path loss |
-| #4861 | merged | full-minus-direct update error charged to sweep path loss |
-| #4864 | merged | exact DirectDifferenceL2 energy realization |
-| #4865 | merged | coefficient-one direct L2 -> ordered direct average |
-| #4867 | merged | direct L2 energy -> backward reversible carrier |
-| #4868 | merged | exact backward direct fiber Pythagorean split |
-| #4869 | merged | backward centered variance Harnack -> diagonal source law |
+Do not reopen the older pointwise RMS route whose outer-energy / pointwise
+mismatch was already identified.
 
 ---
 
-## 19. Lean 4 / mathlib engineering rules
+## 19. Thermodynamic / infinite-volume stage
 
-1. Fresh theorem-carrier and exact PR head before any merge judgment.
-2. Classify only the current exact head SHA.
-3. Require Changed Lean fast check + exact-head receipt for theorem-bearing PRs.
-4. Do not rerun Strict Lean merely for docs-only changes.
-5. On RED, inspect the full changed module, CompileSmoke, imports, and pinned APIs.
-6. Separate dependency/cache/routing failures from Lean elaboration failures.
+Only after the volume-uniform finite-volume physical gap is formalized should
+this become the active frontier.
+
+Required work includes:
+
+- compatible finite-volume embeddings / restrictions;
+- uniform control of the vacuum sector;
+- thermodynamic limiting state;
+- transfer / semigroup compatibility;
+- persistence of the positive spectral gap in the appropriate limiting
+  carrier.
+
+No continuum claim should be inferred merely from a finite-volume gap theorem.
+
+---
+
+## 20. Continuum OS / Wightman stage
+
+Subsequent tasks include:
+
+- continuum Euclidean field limit;
+- Osterwalder--Schrader axioms at the continuum level;
+- reflection-positive reconstruction;
+- strongly continuous physical time translations;
+- self-adjoint Hamiltonian;
+- vacuum uniqueness / sector identification;
+- relation between the limiting transfer gap and Hamiltonian spectral gap;
+- Wightman reconstruction and the final continuum mass-gap statement.
+
+These remain downstream OPEN goals.
+
+---
+
+## 21. Recent theorem-bearing PR sequence
+
+| PR | Status | Merge commit | Role |
+| --- | --- | --- | --- |
+| #4887 | merged | `48d543ea1b14ce9098b951029de25f57b325fa0e` | beta-zero pair-Haar commutation |
+| #4888 | merged | `029370c4d2386597f0f048814ff1d2fa7b6887e0` | beta-zero same-color sweep = block |
+| #4889 | merged | `d6d0fe928b1a076ffe249b37a245b96ba631109a` | beta-zero sweep-block defect = 0 |
+| #4890 | merged | `5cd36ea2666600cc2baa49e038f9800ac72aafbf` | positive-beta common fixed geometry |
+| #4891 | merged | `6931db42b0fb722f39c84e537467e1ecffced78d` | terminal defect geometry |
+| #4892 | merged | `2727e50414cd2f6373a2fbde89ab3c71a47e3672` | exact defect renewal |
+| #4893 | merged | `847e21e62321f4061f1945455bb17977f687409b` | vector renewal |
+| #4894 | merged | `551fe25176f2d723dcc54c80f2fda723fece57fd` | cyclic second visit |
+| #4895 | merged | `1bacd3da86db26027ba5ade88a837b4ff7331bd6` | bounded cyclic representatives |
+| #4896 | merged | `866770a7215a9a1564d2416e41f177857f4e98ae` | terminal profile / averaged renewal |
+| #4897 | merged | `6091310e11647fd19b523abfc93f97578fa0a81d` | terminal response energy |
+| #4898 | merged | `f67a2afdc7083aef9218b6dc2ec8c31d72ec1dac` | terminal-profile Schur feedback receiver |
+| #4899 | merged | `696fd06775636f31f0364e331103a009cc729fde` | exact cyclic source set |
+
+---
+
+## 22. Lean 4 / mathlib engineering rules
+
+1. Fresh re-observe the theorem-carrier before any new theorem branch.
+2. Classify only the current exact PR head SHA.
+3. The theorem-bearing GREEN criterion is:
+   - completed `PR Lean Fast Check` = success;
+   - exact-head `chatgpt-ci-receipt/PR Lean Fast Check` = success;
+   - PR mergeable.
+4. Do not rerun Strict Lean merely because an already-passing theorem PR exists.
+5. Docs-only PRs do not require Strict Lean.
+6. On RED, inspect the full changed Lean file, CompileSmoke, imports, dependent
+   signatures, typeclass instances, and pinned mathlib API.
 7. Pinned mathlib is theorem authority.
-8. Preserve K(target,source) orientation.
-9. Do not pointwise evaluate arbitrary L2 quotient representatives.
-10. Keep source-specific Hilbert carriers distinct unless an exact identification exists.
-11. Avoid finite-cardinality Cauchy/telescoping losses.
-12. Prefer exact Pythagorean / orthogonal / telescoping identities over factor-two triangle bounds.
-13. Preserve already-proved coefficient-one local residual bounds.
-14. For complicated finite sums in norms, package them as named Hilbert objects or use explicit Finset.sum.
-15. Big-operator notation is convenient only while binder scope stays transparent.
-16. After Lp.coeFn additive identities, expose pointwise application before rewriting if needed.
-17. Use local letI for theorem-proved probability/Markov instances when APIs require typeclass search.
-18. change requires definitional equality; theorem-level normalization must happen first.
-19. Keep simp sets narrow and remove unused simp arguments.
-20. Do not infer pointwise domination from an outer-energy inequality.
-21. A private theorem in one Lean module is not an API in another module; use public mathlib lemmas or explicitly expose the theorem.
+8. Prefer local aliases + `calc` over giant dependent `rw` / `unfold`.
+9. Local instances do not cross import boundaries; reintroduce named local
+   instances where required.
+10. Keep `norm_num` local to the intended numeric coefficient; do not
+    simplify an entire hypothesis when that could erase its structure.
+11. Preserve source/target orientation exactly.
+12. Never infer response symmetry.
+13. Avoid finite-cardinality Cauchy and arbitrary factor-two losses.
+14. Do not pointwise evaluate arbitrary L2 quotient representatives.
+15. Do not identify measure-indexed carriers without explicit transport.
+16. Do not assume positive-beta one-link projections commute.
 
 ---
 
-## 20. Restart instruction
+## 23. Restart instruction
 
 At the start of the next theorem thread:
 
-1. fresh re-observe **formal/real-hilbert-uniform-coercive-strong-limit**;
-2. expected theorem-bearing baseline is **f8b2cea5a780ae88362b17b7e404c937168d85fa** unless a later theorem merge has occurred;
-3. retain #4791--#4799 as closed stationarity / target-residual return;
-4. retain #4800--#4818 as closed RMS feedback and vacuum response-energy chain;
-5. retain #4831--#4849 as the closed fixed-background energy / bidirectional Schur / actual response-sum route;
-6. retain #4850--#4852 as exact physical full/direct/response decomposition;
-7. retain #4853--#4858 as canonical prefix / vector telescoping / exact stage path-loss closure;
-8. retain #4859--#4861 as strict positive response cutoff and physical full-minus-direct error control;
-9. retain #4864--#4865 as exact direct L2 energy and coefficient-one ordered-law comparison;
-10. retain #4867 as the lossless backward reversible-carrier transport;
-11. retain #4868 as the exact backward direct variance + mean-square Pythagorean split;
-12. retain #4869 as the Harnack transport of backward centered variance to the diagonal source law;
-13. do not rebuild the old pointwise RMS majorant route;
-14. next identify the diagonal backward variance with the genuine source residual / canonical fiber variance of the selected stage representative;
-15. then close the backward mean using the exact local + law-response decomposition without an arbitrary factor-two loss;
-16. assemble finite target/source sums only after a coefficient-one, Schur, orthogonal, or exact telescoping structure is established;
-17. combine the direct closure with #4861 to prove the bounded-core six-spatial Poincare inequality;
-18. only then apply the existing full-L2 / random-scan / transfer-gap receivers;
-19. continue to thermodynamic and continuum construction after the volume-uniform finite-volume gap is formally closed.
+1. fresh re-observe
+   `formal/real-hilbert-uniform-coercive-strong-limit`;
+2. expected theorem-bearing baseline is
+   `696fd06775636f31f0364e331103a009cc729fde`
+   unless a later theorem merge exists;
+3. retain #4887--#4889 as the exact beta-zero sweep/block anchor;
+4. retain #4890--#4892 as common-fixed geometry + terminal geometry + renewal;
+5. retain #4893--#4895 as vector renewal + cyclic second visit + bounded cyclic
+   representatives;
+6. retain #4896--#4898 as terminal profile + response energy + Schur feedback
+   receiver;
+7. retain #4899 as the exact cyclic off-diagonal source-set theorem;
+8. do not rebuild canonical prefix, telescoping, stage-residual, RMS,
+   fixed-background response, Schur, or backward-response infrastructure;
+9. begin from the actual ordered cyclic source-update semantics on
+   `suffix ++ pre`;
+10. use #4899 to discharge every `source != target` premise;
+11. preserve direct + response decomposition and transposed coefficient
+    orientation;
+12. derive a volume-uniform terminal-profile one-sided estimate while
+    retaining beta-small coefficients;
+13. separately close strict next-defect contraction;
+14. combine them through #4898 and the exact averaged renewal;
+15. derive `Dmean <= delta(beta) * ||f||^2`;
+16. certify `delta(beta) < 1/6`;
+17. invoke the existing transfer-gap receiver;
+18. only then advance the thermodynamic / continuum construction.
 
 The immediate mathematical frontier is:
 
-**Identify the #4869 diagonal backward variance with the genuine one-link residual / canonical stage-residual carrier, close the backward mean through its exact localPart + source-law-response split without factor-two or cardinality loss, assemble the direct finite-update energy volume-freely, and combine it with PR #4861 to obtain the positive-beta bounded-core six-spatial Poincare inequality.**
+```text
+cyclic between-visits source-update semantics
+  -> beta-small terminal-profile recurrence
+  -> terminal Schur feedback
+  + strict renewal contraction
+  -> delta(beta) < 1/6
+  -> positive-beta finite-volume physical transfer gap.
+```
