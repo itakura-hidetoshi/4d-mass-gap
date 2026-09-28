@@ -216,7 +216,11 @@ ensure_mathlib_cache
 # A direct check is only an early diagnostic: it neither rebuilds imports nor
 # writes fresh project olean files. Always finish with dependency-aware Lake
 # validation, even when every direct check accepts the restored cache.
-direct_lean_allowed=true
+direct_lean_allowed="${LEAN_FAST_DIRECT_ELAB:-true}"
+if [ "${direct_lean_allowed}" != "true" ]; then
+  direct_lean_allowed=false
+  echo "[fast] direct Lean elaboration disabled; dependency-aware lake build remains authoritative"
+fi
 if [ -n "${changed_lake_inputs}" ]; then
   direct_lean_allowed=false
   echo "[fast] Lake inputs changed; use dependency-aware lake build"

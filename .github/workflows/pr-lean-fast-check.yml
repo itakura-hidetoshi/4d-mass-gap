@@ -11,6 +11,7 @@ on:
   pull_request:
     paths:
       - ".github/workflows/pr-lean-fast-check.yml"
+      - ".github/lean-cache-version"
       - "lean-toolchain"
       - "lakefile.lean"
       - "lake-manifest.json"
@@ -23,6 +24,7 @@ on:
       - formal/real-hilbert-uniform-coercive-strong-limit
     paths:
       - ".github/workflows/pr-lean-fast-check.yml"
+      - ".github/lean-cache-version"
       - "lean-toolchain"
       - "lakefile.lean"
       - "lake-manifest.json"
@@ -40,10 +42,13 @@ permissions:
 env:
   MATHLIB_NO_CACHE_ON_UPDATE: "1"
   CHECK_CHANGED_LEAN_BASE_REF: ${{ github.event_name == 'push' && github.event.before || github.event_name == 'workflow_dispatch' && inputs.base_ref || github.event.pull_request.base.sha }}
-  # Lean PRs compile against the base theorem-carrier artifacts. Keying the
-  # primary Lake cache by base SHA gives exact hits across proof-fix commits,
-  # while the dependency hash above still invalidates toolchain/manifest changes.
-  LAKE_CACHE_REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.sha }}
+  # Dependency artifacts are keyed only by the pinned Lean/Lake/manifest inputs.
+  # Project oleans are restored from the PR base and advanced per PR head.
+  LAKE_BASE_CACHE_REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.sha }}
+  LAKE_PROJECT_CACHE_REF: ${{ github.event_name == 'pull_request' && format('pr-{0}-{1}', github.event.pull_request.number, github.event.pull_request.head.sha) || format('base-{0}', github.sha) }}
+  # Lake remains the authoritative dependency-aware checker. Disable the
+  # duplicate direct `lean` pass in GitHub CI; local runs keep it by default.
+  LEAN_FAST_DIRECT_ELAB: "false"
 
 jobs:
   pr-lean-fast-check:
@@ -98,6 +103,12 @@ jobs:
           if grep -Eq '^(lean-toolchain|lakefile\.lean|lake-manifest\.json)$' "${changed_file_list}"; then
             required=true
           fi
+          if grep -qx '.github/lean-cache-version' "${changed_file_list}"; then
+            required=true
+            echo "cache-warm=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "cache-warm=false" >> "${GITHUB_OUTPUT}"
+          fi
           if grep -qx 'scripts/audit_os_wightman_mass_gap_bridge.py' "${changed_file_list}"; then
             required=true
           fi
@@ -122,17 +133,37 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-elan-
 
-      - name: Restore Lake build cache
+      - name: Restore pinned Lean dependency cache
         if: ${{ steps.lake-mode.outputs.required == 'true' }}
-        id: lake-cache
+        id: lake-deps-cache
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/packages
+          key: ${{ runner.os }}-lean-fast-deps-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}
+
+      - name: Restore MGAP4D project olean cache
+        if: ${{ steps.lake-mode.outputs.required == 'true' }}
+        id: lake-project-cache
+        uses: actions/cache/restore@v5
+        with:
+          path: .lake/build
+          key: ${{ runner.os }}-lean-fast-project-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ env.LAKE_PROJECT_CACHE_REF }}
+          restore-keys: |
+            ${{ runner.os }}-lean-fast-project-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-pr-${{ github.event.pull_request.number }}-
+            ${{ runner.os }}-lean-fast-project-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-base-${{ env.LAKE_BASE_CACHE_REF_SHA }}
+            ${{ runner.os }}-lean-fast-project-v1-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-base-
+
+      # Read the old large archive only while migrating to split caches.
+      - name: Restore legacy monolithic Lake cache for migration
+        if: ${{ steps.lake-mode.outputs.required == 'true' && steps.lake-deps-cache.outputs.cache-hit != 'true' }}
+        id: lake-legacy-cache
         uses: actions/cache/restore@v5
         with:
           path: |
             .lake
             lake-manifest.json
-          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ env.LAKE_CACHE_REF_SHA }}
+          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ env.LAKE_BASE_CACHE_REF_SHA }}
           restore-keys: |
-            ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-pr-${{ github.event.pull_request.number }}-
             ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-
             ${{ runner.os }}-lean-fast-lake-v4-
             ${{ runner.os }}-lean-fast-v3-
@@ -194,8 +225,21 @@ jobs:
           }
           retry lean --version
           retry lake --version
-          echo "[fast] lake-cache-hit=${{ steps.lake-cache.outputs.cache-hit }}"
-          echo "[fast] lake-cache-ref-sha=${LAKE_CACHE_REF_SHA}"
+          echo "[fast] lake-deps-cache-hit=${{ steps.lake-deps-cache.outputs.cache-hit }}"
+          echo "[fast] lake-project-cache-hit=${{ steps.lake-project-cache.outputs.cache-hit }}"
+          echo "[fast] lake-base-cache-ref-sha=${LAKE_BASE_CACHE_REF_SHA}"
+          echo "[fast] lake-project-cache-ref=${LAKE_PROJECT_CACHE_REF}"
+
+      - name: Warm pinned dependency cache
+        if: ${{ steps.lake-mode.outputs.required == 'true' && steps.lake-mode.outputs.cache-warm == 'true' && steps.lake-deps-cache.outputs.cache-hit != 'true' }}
+        shell: bash
+        run: |
+          set -euxo pipefail
+          if [ ! -d ".lake/packages/mathlib/.lake/build/lib/lean/Mathlib" ]; then
+            lake exe cache get
+          else
+            echo "[fast] restored Mathlib build cache is already present"
+          fi
 
       - name: Run changed Lean fast check
         if: ${{ steps.lake-mode.outputs.required == 'true' }}
@@ -229,26 +273,29 @@ jobs:
             echo "project-ready=false" >> "$GITHUB_OUTPUT"
           fi
 
-      # PR caches are restricted by GitHub to this PR's merge ref. Preserve
-      # completed dependencies after a proof failure, without publishing them
-      # to a canonical branch or treating cache availability as proof success.
-      - name: Save Lake build cache for same-repository PR retries
-        if: ${{ always() && !cancelled() && steps.lake-mode.outputs.required == 'true' && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && steps.lake-cache.outputs.cache-hit != 'true' && steps.lake-cache-ready.outputs.ready == 'true' && steps.lake-cache-ready.outputs.project-ready == 'true' }}
+      # Dependencies are immutable under the pinned manifest, so publish them
+      # once per dependency hash. Project oleans are smaller and evolve
+      # independently with PR heads / canonical branch SHAs.
+      - name: Save pinned Lean dependency cache
+        if: ${{ always() && !cancelled() && steps.lake-mode.outputs.required == 'true' && steps.lake-deps-cache.outputs.cache-hit != 'true' && steps.lake-cache-ready.outputs.ready == 'true' }}
         uses: actions/cache/save@v5
         with:
-          path: |
-            .lake
-            lake-manifest.json
-          key: ${{ steps.lake-cache.outputs.cache-primary-key }}
+          path: .lake/packages
+          key: ${{ steps.lake-deps-cache.outputs.cache-primary-key }}
 
-      - name: Save Lake build cache from trusted branches
-        if: ${{ steps.lake-mode.outputs.required == 'true' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/formal/real-hilbert-uniform-coercive-strong-limit') && steps.lake-cache.outputs.cache-hit != 'true' && steps.lake-cache-ready.outputs.ready == 'true' }}
+      - name: Save MGAP4D project olean cache for same-repository PR retries
+        if: ${{ always() && !cancelled() && steps.lake-mode.outputs.required == 'true' && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && steps.lake-project-cache.outputs.cache-hit != 'true' && steps.lake-cache-ready.outputs.project-ready == 'true' }}
         uses: actions/cache/save@v5
         with:
-          path: |
-            .lake
-            lake-manifest.json
-          key: ${{ runner.os }}-lean-fast-lake-v5-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-${{ github.sha }}
+          path: .lake/build
+          key: ${{ steps.lake-project-cache.outputs.cache-primary-key }}
+
+      - name: Save MGAP4D project olean cache from trusted branches
+        if: ${{ steps.lake-mode.outputs.required == 'true' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/formal/real-hilbert-uniform-coercive-strong-limit') && steps.lake-project-cache.outputs.cache-hit != 'true' && steps.lake-cache-ready.outputs.project-ready == 'true' }}
+        uses: actions/cache/save@v5
+        with:
+          path: .lake/build
+          key: ${{ steps.lake-project-cache.outputs.cache-primary-key }}
 
 
   chatgpt-ci-status-receipt:
