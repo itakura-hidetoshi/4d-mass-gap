@@ -89,7 +89,8 @@ theorem periodicHypercubicEvenFixedSpatialColorLink_nonempty
       calc
         color.2 = (color.2.val : ZMod 2) :=
           (ZMod.natCast_zmod_val color.2).symm
-        _ = 1 := by rw [hpval]
+        _ = 1 := by
+          simp [hpval]
     refine ⟨⟨(v1, color.1), ?_⟩⟩
     apply Prod.ext
     · rfl
