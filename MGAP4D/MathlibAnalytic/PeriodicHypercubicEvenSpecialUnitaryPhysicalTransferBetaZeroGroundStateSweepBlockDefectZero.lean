@@ -27,6 +27,26 @@ open scoped BigOperators InnerProductSpace InnerProduct
 
 noncomputable section
 
+local instance betaZeroSweepBlockDefectZeroTopologicalGroup (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance betaZeroSweepBlockDefectZeroCompactSpace (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance betaZeroSweepBlockDefectZeroSecondCountableTopology (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance betaZeroSweepBlockDefectZeroMeasurableSpace (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance betaZeroSweepBlockDefectZeroBorelSpace (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
 local instance betaZeroSweepBlockDefectZeroSpatialLinkFintype
     (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
@@ -251,7 +271,7 @@ theorem
       (by norm_num)
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroPhysicalSixSpatial_sweepBlockDefect_zero_majorant
         H N hN)
-  norm_num at hGap ⊢
+  norm_num at hGap
   exact hGap
 
 end Physical
