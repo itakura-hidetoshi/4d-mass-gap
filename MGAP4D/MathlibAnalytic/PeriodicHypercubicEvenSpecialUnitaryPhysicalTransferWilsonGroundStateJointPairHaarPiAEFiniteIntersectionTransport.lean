@@ -49,7 +49,13 @@ theorem
   classical
   induction cs generalizing p0 with
   | nil =>
-      simpa [PairHaarSupportAEStronglyMeasurable] using h0
+      have hpred :
+          (fun i => p0 i ∧ ∀ c ∈ ([] : List C), p c i) = p0 := by
+        funext i
+        apply propext
+        simp
+      rw [hpred]
+      exact h0
   | cons c cs ih =>
       have hc : PairHaarSupportAEStronglyMeasurable ω e (p c) f :=
         h c (by simp)
