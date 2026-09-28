@@ -44,6 +44,9 @@ env:
   # primary Lake cache by base SHA gives exact hits across proof-fix commits,
   # while the dependency hash above still invalidates toolchain/manifest changes.
   LAKE_CACHE_REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.sha }}
+  # Lake remains the authoritative dependency-aware checker. Disable the
+  # duplicate direct `lean` pass in GitHub CI; local runs keep it by default.
+  LEAN_FAST_DIRECT_ELAB: "false"
 
 jobs:
   pr-lean-fast-check:
