@@ -7,7 +7,7 @@ import Mathlib.Tactic
 
 The existing response theorem bounds the actual full response-sum energy by
 the sum of canonical target-fiber variances.  The stage-specific downstream
-theorem then specializes those variances to canonical first-sweep residuals.
+result then specializes those variances to canonical first-sweep residuals.
 
 For the renewal route we instead need to use the PR #4895 cyclic second-sweep
 representatives and the PR #4896 terminal profile.
