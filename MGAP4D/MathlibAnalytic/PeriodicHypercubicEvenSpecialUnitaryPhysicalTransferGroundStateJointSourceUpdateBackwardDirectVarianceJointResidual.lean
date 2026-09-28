@@ -266,6 +266,9 @@ theorem
   let μ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure
       H N hN beta hbeta B source distinguishedSource k g₂
+  letI : IsProbabilityMeasure μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure_isProbabilityMeasure
+      H N hN beta hbeta B source distinguishedSource k g₂
   let κt :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathKernel
       H N hN beta hbeta B source distinguishedSource target k g₂
@@ -295,6 +298,11 @@ theorem
         (∫⁻ D, ENNReal.ofReal (V (C, D)) ∂κt C) ≤
           K * diag C := by
     intro C
+    letI : IsProbabilityMeasure
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
+          H N hN beta hbeta B source distinguishedSource target k g₂ C) :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_isProbabilityMeasure
+        H N hN beta hbeta B source distinguishedSource target k g₂ C
     have hSection : Measurable (fun D => ENNReal.ofReal (V (C, D))) :=
       hV.comp (measurable_const.prodMk measurable_id)
     have hUpdate :
