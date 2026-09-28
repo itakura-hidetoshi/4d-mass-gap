@@ -1,0 +1,14 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSweepBlockDefectCyclicSourceSet
+
+namespace MGAP4D.MathlibAnalytic
+
+#check
+  periodicHypercubicEvenFixedSpatialColorLink_mem_cyclicBetweenVisits_iff_ne
+
+#check
+  periodicHypercubicEvenFixedSpatialColorLink_cyclicBetweenVisits_toFinset_eq_erase
+
+#check
+  periodicHypercubicEvenFixedSpatialColorLink_cyclicBetweenVisits_source_ne_target
+
+end MGAP4D.MathlibAnalytic
