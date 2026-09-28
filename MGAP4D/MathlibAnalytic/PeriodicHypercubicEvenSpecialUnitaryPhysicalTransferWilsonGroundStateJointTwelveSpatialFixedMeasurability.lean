@@ -11,27 +11,27 @@ noncomputable section
 
 set_option maxHeartbeats 1000000
 
-local instance (N : ℕ) :
+local instance groundStateJointTwelveSpatialFixedMeasurabilitySpecialUnitaryIsTopologicalGroup (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 
-local instance (N : ℕ) :
+local instance groundStateJointTwelveSpatialFixedMeasurabilitySpecialUnitaryCompactSpace (N : ℕ) :
     CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
-local instance (N : ℕ) :
+local instance groundStateJointTwelveSpatialFixedMeasurabilitySpecialUnitarySecondCountableTopology (N : ℕ) :
     SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupSecondCountableTopology N
 
-local instance (N : ℕ) :
+local instance groundStateJointTwelveSpatialFixedMeasurabilitySpecialUnitaryMeasurableSpace (N : ℕ) :
     MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
 
-local instance (N : ℕ) :
+local instance groundStateJointTwelveSpatialFixedMeasurabilitySpecialUnitaryBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-local instance (H : ℕ) :
+local instance groundStateJointTwelveSpatialFixedMeasurabilitySpatialLinkFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
