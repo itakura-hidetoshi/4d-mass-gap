@@ -8,7 +8,7 @@ The existing pair-Haar/Fubini API proves exact AE-measurability descent for
 two coordinate supports and, separately, for the special six-color family.
 
 This file packages the same two-support theorem into an arbitrary finite-list
-receiver.  It is useful when the finite family is indexed by a lattice color
+receiver. It is useful when the finite family is indexed by a lattice color
 class whose cardinality depends on the finite volume.
 
 No general exchange of completed sigma-algebra intersections is asserted:
@@ -22,62 +22,48 @@ open MeasureTheory
 
 noncomputable section
 
+/-- Short presentation of AE strong measurability through one coordinate
+support after an exact coordinate equivalence. -/
+def PairHaarSupportAEStronglyMeasurable
+    {Ω ι K : Type*} [MeasurableSpace Ω] [Fintype ι] [MeasurableSpace K]
+    (ω : Measure Ω) (e : Ω ≃ᵐ (ι → K)) (p : ι → Prop) (f : Ω → ℝ) : Prop :=
+  AEStronglyMeasurable[
+    MeasurableSpace.comap
+      ((pairHaarPiRestriction (K := K) p) ∘ e)
+      (inferInstance : MeasurableSpace ({i : ι // p i} → K))]
+    f ω
+
 /-- Starting from one retained support and a finite list of further supports,
 AE strong measurability descends to their literal finite intersection. -/
 theorem
     aestronglyMeasurable_piRestriction_iInter_list_aux_of_measurePreserving_equiv
-    {Ω ι K C : Type*}
-    [MeasurableSpace Ω]
-    [Fintype ι]
-    [MeasurableSpace K]
-    (ω : Measure Ω)
-    (η : Measure K)
-    [IsProbabilityMeasure η]
+    {Ω ι K C : Type*} [MeasurableSpace Ω] [Fintype ι] [MeasurableSpace K]
+    (ω : Measure Ω) (η : Measure K) [IsProbabilityMeasure η]
     (e : Ω ≃ᵐ (ι → K))
     (he : MeasurePreserving e ω (Measure.pi (fun _ : ι => η)))
-    (p0 : ι → Prop)
-    (p : C → ι → Prop)
-    (cs : List C)
-    (f : Ω → ℝ)
-    (h0 : AEStronglyMeasurable[
-      MeasurableSpace.comap
-        ((pairHaarPiRestriction (K := K) p0) ∘ e)
-        (inferInstance : MeasurableSpace ({i : ι // p0 i} → K))]
-      f ω)
-    (h : ∀ c ∈ cs,
-      AEStronglyMeasurable[
-        MeasurableSpace.comap
-          ((pairHaarPiRestriction (K := K) (p c)) ∘ e)
-          (inferInstance : MeasurableSpace ({i : ι // p c i} → K))]
-        f ω) :
-    AEStronglyMeasurable[
-      MeasurableSpace.comap
-        ((pairHaarPiRestriction (K := K)
-          (fun i => p0 i ∧ ∀ c ∈ cs, p c i)) ∘ e)
-        (inferInstance :
-          MeasurableSpace ({i : ι // p0 i ∧ ∀ c ∈ cs, p c i} → K))]
-      f ω := by
+    (p0 : ι → Prop) (p : C → ι → Prop) (cs : List C) (f : Ω → ℝ)
+    (h0 : PairHaarSupportAEStronglyMeasurable ω e p0 f)
+    (h : ∀ c ∈ cs, PairHaarSupportAEStronglyMeasurable ω e (p c) f) :
+    PairHaarSupportAEStronglyMeasurable
+      ω e (fun i => p0 i ∧ ∀ c ∈ cs, p c i) f := by
   classical
   induction cs generalizing p0 with
   | nil =>
-      simpa using h0
+      simpa [PairHaarSupportAEStronglyMeasurable] using h0
   | cons c cs ih =>
-      have hc :
-          AEStronglyMeasurable[
-            MeasurableSpace.comap
-              ((pairHaarPiRestriction (K := K) (p c)) ∘ e)
-              (inferInstance : MeasurableSpace ({i : ι // p c i} → K))]
-            f ω :=
+      have hc : PairHaarSupportAEStronglyMeasurable ω e (p c) f :=
         h c (by simp)
-      have h01 :=
+      have h01raw :=
         aestronglyMeasurable_piRestriction_and_of_measurePreserving_equiv
-          ω η e he p0 (p c) f h0 hc
+          ω η e he p0 (p c) f
+          (by simpa [PairHaarSupportAEStronglyMeasurable] using h0)
+          (by simpa [PairHaarSupportAEStronglyMeasurable] using hc)
+      have h01 :
+          PairHaarSupportAEStronglyMeasurable
+            ω e (fun i => p0 i ∧ p c i) f := by
+        simpa [PairHaarSupportAEStronglyMeasurable] using h01raw
       have htail : ∀ d ∈ cs,
-          AEStronglyMeasurable[
-            MeasurableSpace.comap
-              ((pairHaarPiRestriction (K := K) (p d)) ∘ e)
-              (inferInstance : MeasurableSpace ({i : ι // p d i} → K))]
-            f ω := by
+          PairHaarSupportAEStronglyMeasurable ω e (p d) f := by
         intro d hd
         exact h d (by simp [hd])
       have hrec :=
@@ -106,50 +92,23 @@ theorem
 literal intersection of all supports occurring in the list. -/
 theorem
     aestronglyMeasurable_piRestriction_iInter_list_of_measurePreserving_equiv
-    {Ω ι K C : Type*}
-    [MeasurableSpace Ω]
-    [Fintype ι]
-    [MeasurableSpace K]
-    (ω : Measure Ω)
-    (η : Measure K)
-    [IsProbabilityMeasure η]
+    {Ω ι K C : Type*} [MeasurableSpace Ω] [Fintype ι] [MeasurableSpace K]
+    (ω : Measure Ω) (η : Measure K) [IsProbabilityMeasure η]
     (e : Ω ≃ᵐ (ι → K))
     (he : MeasurePreserving e ω (Measure.pi (fun _ : ι => η)))
-    (p : C → ι → Prop)
-    (cs : List C)
-    (hcs : cs ≠ [])
-    (f : Ω → ℝ)
-    (h : ∀ c ∈ cs,
-      AEStronglyMeasurable[
-        MeasurableSpace.comap
-          ((pairHaarPiRestriction (K := K) (p c)) ∘ e)
-          (inferInstance : MeasurableSpace ({i : ι // p c i} → K))]
-        f ω) :
-    AEStronglyMeasurable[
-      MeasurableSpace.comap
-        ((pairHaarPiRestriction (K := K)
-          (fun i => ∀ c ∈ cs, p c i)) ∘ e)
-        (inferInstance :
-          MeasurableSpace ({i : ι // ∀ c ∈ cs, p c i} → K))]
-      f ω := by
+    (p : C → ι → Prop) (cs : List C) (hcs : cs ≠ []) (f : Ω → ℝ)
+    (h : ∀ c ∈ cs, PairHaarSupportAEStronglyMeasurable ω e (p c) f) :
+    PairHaarSupportAEStronglyMeasurable
+      ω e (fun i => ∀ c ∈ cs, p c i) f := by
   classical
   cases cs with
   | nil =>
       contradiction
   | cons c cs =>
-      have h0 :
-          AEStronglyMeasurable[
-            MeasurableSpace.comap
-              ((pairHaarPiRestriction (K := K) (p c)) ∘ e)
-              (inferInstance : MeasurableSpace ({i : ι // p c i} → K))]
-            f ω :=
+      have h0 : PairHaarSupportAEStronglyMeasurable ω e (p c) f :=
         h c (by simp)
       have htail : ∀ d ∈ cs,
-          AEStronglyMeasurable[
-            MeasurableSpace.comap
-              ((pairHaarPiRestriction (K := K) (p d)) ∘ e)
-              (inferInstance : MeasurableSpace ({i : ι // p d i} → K))]
-            f ω := by
+          PairHaarSupportAEStronglyMeasurable ω e (p d) f := by
         intro d hd
         exact h d (by simp [hd])
       have hinter :=
