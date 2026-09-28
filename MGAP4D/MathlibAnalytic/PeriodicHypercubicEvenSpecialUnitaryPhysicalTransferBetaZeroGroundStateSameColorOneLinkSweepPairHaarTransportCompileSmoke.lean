@@ -1,0 +1,18 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroGroundStateSameColorOneLinkSweepPairHaarTransport
+
+namespace MGAP4D.MathlibAnalytic
+
+noncomputable section
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkPairHaarProjection
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2_fixedSpatialColor_projectionSweep
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2_fixedSpatialColor_fullOneLinkSweep
+
+end
+
+end MGAP4D.MathlibAnalytic
