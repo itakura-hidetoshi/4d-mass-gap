@@ -129,9 +129,8 @@ theorem
       (C distinguishedSource) (C target) D
   have hYStrong : StronglyMeasurable Y := by
     exact
-      (hF.comp_measurable
-        (measurable_const.prodMk (measurable_update A))).sub
-        stronglyMeasurable_const |>.add stronglyMeasurable_const
+      hF.comp_measurable
+        (measurable_const.prodMk (measurable_update A))
   have hYBound : ∀ v, ‖Y v‖ ≤ |bound| := by
     intro v
     exact (hbound (C, Function.update A source v)).trans (le_abs_self bound)
