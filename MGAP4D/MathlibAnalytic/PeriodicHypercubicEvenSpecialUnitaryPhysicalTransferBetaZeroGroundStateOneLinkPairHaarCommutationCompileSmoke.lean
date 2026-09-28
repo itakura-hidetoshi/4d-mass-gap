@@ -1,0 +1,21 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroGroundStateOneLinkPairHaarCommutation
+
+namespace MGAP4D.MathlibAnalytic
+
+noncomputable section
+
+#check
+  periodicHypercubicEvenSpecialUnitaryGroundStatePairHaar_condExp_spatialLink_preserves_spatialLink
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkPairHaarProjection_range_invariant
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkPairHaarProjection_commute
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkPairHaarProjection_commute
+
+end
+
+end MGAP4D.MathlibAnalytic
