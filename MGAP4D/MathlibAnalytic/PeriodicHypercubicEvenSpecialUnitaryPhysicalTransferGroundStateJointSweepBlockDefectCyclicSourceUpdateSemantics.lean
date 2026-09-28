@@ -32,6 +32,8 @@ response symmetry, or new quantitative coefficient is introduced.
 
 namespace MGAP4D.MathlibAnalytic
 
+open MeasureTheory ProbabilityTheory
+
 noncomputable section
 
 local instance cyclicSourceUpdateSemanticsSpatialLinkFintype
