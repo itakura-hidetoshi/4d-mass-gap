@@ -8,9 +8,6 @@ namespace MGAP4D.MathlibAnalytic
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2_zero_commute
 
 #check
-  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2_zero_comp_commute
-
-#check
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkTargetSourceCommutator_zero
 
 #check
