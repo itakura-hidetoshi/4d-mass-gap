@@ -103,7 +103,7 @@ theorem realHilbertProjectionSweepTargetCrossResidualVectorSum_append
         realHilbertProjectionSweepTargetCrossResidualVectorSum,
         realHilbertProjectionSweep,
         ContinuousLinearMap.comp_apply]
-      rw [ih]
+      rw [ih (P source x)]
       abel
 
 /-- Exact signed telescope for the target residual after an arbitrary ordered
