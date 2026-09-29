@@ -22,8 +22,8 @@ example {α : Type*} [MeasurableSpace α] (μ : Measure α) (V : α → ℝ≥0�
   lintegral_const_mul' 2 V (by simp)
 
 -- Lp is a bundled subgroup coerced to a subtype; qualify the namespace.
-example {α : Type*} [MeasurableSpace α] (μ : Measure α) (L : Lp ℝ 2 μ) :
-    MemLp (fun a => L a) 2 μ :=
-  _root_.MeasureTheory.Lp.memLp L
+example {α : Type*} [MeasurableSpace α] (μ : Measure α) (L : Lp ℝ 2 μ)
+    (G : α → ℝ) (hRep : (fun a => L a) =ᵐ[μ] G) : MemLp G 2 μ :=
+  (memLp_congr_ae hRep).mp (_root_.MeasureTheory.Lp.memLp L)
 
 end MGAP4D.MathlibAnalytic
