@@ -59,37 +59,6 @@ theorem
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
         H N hN x)
 
-/-- Fixed-color continuous-linear-map form of the preceding commutation. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2_zero_comp_commute
-    (H N : ℕ)
-    (hN : 0 < N)
-    (color : PeriodicHypercubicEvenGroundStateSpatialColor)
-    (target source :
-      PeriodicHypercubicEvenFixedSpatialColorLink H color) :
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-        H N hN 0 (by norm_num) color target).comp
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-        H N hN 0 (by norm_num) color source) =
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-        H N hN 0 (by norm_num) color source).comp
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-        H N hN 0 (by norm_num) color target) := by
-  apply ContinuousLinearMap.ext
-  intro x
-  change
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
-        H N hN 0 (by norm_num) target.1
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
-          H N hN 0 (by norm_num) source.1 x) =
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
-        H N hN 0 (by norm_num) source.1
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
-          H N hN 0 (by norm_num) target.1 x)
-  exact
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2_zero_commute
-      H N hN target.1 source.1 x
-
 /-- The physical fixed-color target/source commutator operator is exactly zero
 at beta zero. -/
 theorem
@@ -103,13 +72,23 @@ theorem
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
           H N hN 0 (by norm_num) color)
         target source = 0 := by
-  exact
-    realHilbertProjectionSweepTargetSourceCommutatorLinearMap_eq_zero_of_commute
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-        H N hN 0 (by norm_num) color)
-      target source
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2_zero_comp_commute
-        H N hN color target source)
+  apply ContinuousLinearMap.ext
+  intro x
+  rw [realHilbertProjectionSweepTargetSourceCommutatorLinearMap_apply]
+  change
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
+          H N hN 0 (by norm_num) target.1
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
+            H N hN 0 (by norm_num) source.1 x) -
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
+          H N hN 0 (by norm_num) source.1
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
+            H N hN 0 (by norm_num) target.1 x) =
+      0
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2_zero_commute
+      H N hN target.1 source.1 x,
+    sub_self]
 
 /-- Hence the projected forcing term itself vanishes exactly at beta zero. -/
 theorem
@@ -137,13 +116,18 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2_idempotent
         H N hN 0 (by norm_num) target.1
-  have hComm : (P target).comp (P source) = (P source).comp (P target) := by
-    simpa [P] using
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2_zero_comp_commute
-        H N hN color target source
-  exact
-    realHilbertProjectionSweepTargetCrossResidual_projected_eq_zero_of_commute
-      P target source hIdem hComm x
+  calc
+    realHilbertProjectionSweepTargetCrossResidual
+        P target source (P target x) =
+      realHilbertProjectionSweepTargetSourceCommutatorLinearMap
+        P target source (P target x) :=
+          realHilbertProjectionSweepTargetCrossResidual_projected_eq_commutator_of_idempotent
+            P target source hIdem x
+    _ = 0 := by
+      rw [
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkTargetSourceCommutator_zero
+          H N hN color target source]
+      rfl
 
 end
 
