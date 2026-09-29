@@ -1,0 +1,15 @@
+import MGAP4D.MathlibAnalytic.RealHilbertProjectionSweepTargetCrossResidualLinearDecomposition
+
+namespace MGAP4D.MathlibAnalytic
+
+#check realHilbertProjectionSweepTargetCrossResidualLinearMap
+
+#check realHilbertProjectionSweepTargetCrossResidualLinearMap_apply
+
+#check
+  realHilbertProjectionSweepTargetCrossResidual_eq_projected_add_residual
+
+#check
+  realHilbertProjectionSweepTargetCrossResidual_projected_eq_zero_of_commute
+
+end MGAP4D.MathlibAnalytic
