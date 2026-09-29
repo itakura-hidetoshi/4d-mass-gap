@@ -49,8 +49,9 @@ theorem realHilbertProjectionSweep_displacement_le_length_mul_sqrt_pathLoss
         ((cs.length + 1 : ℕ) : ℝ) * Real.sqrt total
       calc
         ‖x - realHilbertProjectionSweep P cs (P c x)‖ ≤
-            ‖x - P c x‖ + ‖P c x - realHilbertProjectionSweep P cs (P c x)‖ :=
-          norm_sub_le _ _ _
+            ‖x - P c x‖ + ‖P c x - realHilbertProjectionSweep P cs (P c x)‖ := by
+          simpa only [dist_eq_norm] using
+            (dist_triangle x (P c x) (realHilbertProjectionSweep P cs (P c x)))
         _ ≤ Real.sqrt total + (cs.length : ℝ) * Real.sqrt total :=
           _root_.add_le_add hHead ((ih (P c x)).trans
             (mul_le_mul_of_nonneg_left hTailRoot (Nat.cast_nonneg _)))
