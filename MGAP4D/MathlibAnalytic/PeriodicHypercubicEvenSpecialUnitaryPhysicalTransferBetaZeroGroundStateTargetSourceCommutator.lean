@@ -75,20 +75,12 @@ theorem
   apply ContinuousLinearMap.ext
   intro x
   rw [realHilbertProjectionSweepTargetSourceCommutatorLinearMap_apply]
-  change
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
-          H N hN 0 (by norm_num) target.1
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
-            H N hN 0 (by norm_num) source.1 x) -
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
-          H N hN 0 (by norm_num) source.1
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
-            H N hN 0 (by norm_num) target.1 x) =
-      0
-  rw [
+  have hComm :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2_zero_commute
-      H N hN target.1 source.1 x,
-    sub_self]
+      H N hN target.1 source.1 x
+  simpa [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2] using
+    (sub_eq_zero.mpr hComm)
 
 /-- Hence the projected forcing term itself vanishes exactly at beta zero. -/
 theorem
