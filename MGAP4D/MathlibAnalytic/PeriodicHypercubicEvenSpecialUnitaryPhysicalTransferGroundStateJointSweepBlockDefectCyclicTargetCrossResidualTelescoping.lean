@@ -82,8 +82,7 @@ theorem
           Finset (PeriodicHypercubicEvenFixedSpatialColorLink H color)).toList) f =
       realHilbertProjectionSweep P suffix
         (P target (realHilbertProjectionSweep P pre f))
-  rw [hSplit, realHilbertProjectionSweep_append P pre (target :: suffix) f]
-  rfl
+  rw [hSplit, realHilbertProjectionSweep_append P pre (target :: suffix) f] <;> rfl
 
 /-- The cyclic target-cross-residual sum splits exactly into the first-sweep
 suffix contribution and the second-sweep prefix contribution. -/
