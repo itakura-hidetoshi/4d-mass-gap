@@ -5,6 +5,14 @@ namespace MGAP4D.MathlibAnalytic
 open MeasureTheory
 open GroundStateSourceFixedPairEnergy
 
+attribute [local instance]
+  sourceFixedPairEnergyIsTopologicalGroup
+  sourceFixedPairEnergyCompactSpace
+  sourceFixedPairEnergySecondCountableTopology
+  sourceFixedPairEnergyMeasurableSpace
+  sourceFixedPairEnergyBorelSpace
+  sourceFixedPairEnergySpatialLinkFintype
+
 #check oldFirstMean_diagonal_eq_targetMean
 #check secondMean_diagonal_eq_targetMean
 #check fullDifferenceL2_diagonal_coeFn
