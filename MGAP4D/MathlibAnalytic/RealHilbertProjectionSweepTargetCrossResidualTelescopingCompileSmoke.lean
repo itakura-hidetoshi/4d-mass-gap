@@ -1,0 +1,24 @@
+import MGAP4D.MathlibAnalytic.RealHilbertProjectionSweepTargetCrossResidualTelescoping
+
+namespace MGAP4D.MathlibAnalytic
+
+#check realHilbertProjectionSweepTargetCrossResidual
+
+#check realHilbertProjectionSweepTargetCrossResidualVectorSum
+
+#check
+  realHilbertProjectionSweep_targetResidual_apply_eq_sub_crossResidual
+
+#check
+  realHilbertProjectionSweepTargetCrossResidualVectorSum_append
+
+#check
+  realHilbertProjectionSweep_targetResidual_eq_initial_sub_crossResidualVectorSum
+
+#check
+  realHilbertProjectionSweep_targetResidual_eq_neg_crossResidualVectorSum_of_fixed
+
+#check
+  realHilbertProjectionSweep_targetResidual_eq_neg_crossResidualVectorSum_of_projected
+
+end MGAP4D.MathlibAnalytic
