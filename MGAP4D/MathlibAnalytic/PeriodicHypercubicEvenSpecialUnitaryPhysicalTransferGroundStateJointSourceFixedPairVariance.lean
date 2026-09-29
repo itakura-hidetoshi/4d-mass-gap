@@ -1,25 +1,24 @@
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourceFixedKernelSectionPairEnergy
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourceFixedIntegratedResponse
-import Mathlib.Probability.Moments.Variance
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairFullDifferenceConditionalVariance
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceOneLinkFubiniCompatibility
 import Mathlib.Tactic
 
 /-!
-# Exact conditional iid normalization of the source-fixed pair energy
+# Stationary realization of the actual source conditional variance
 
-The pair energy from #4928 uses two independent values of the SAME actual
-source conditional law. It is exactly twice the averaged source variance of
-the literal target mean. This factor is normalization, not an estimate.
+PR #4929 has already proved exact conditional iid normalization. We reuse its
+conditionalVarianceEnergy, not a second variance carrier or iid proof.
 
-We prove measurability and boundedness of that target mean and its source
-sections, apply Mathlib's product-variance identity, and keep the exact half
-through the outer vacuum lower integral. Combining #4927 and #4928 charges
-this normalized source variance to the genuine target residual with coefficient
-`ofReal(1/2) * OrderedResponseResidualCoefficient`.
+The actual target mean is strongly measurable. Its source heat-bath average
+is an actual source conditional integral and is unchanged by source updates.
+The existing exact one-link stationarity then identifies conditional variance
+with the squared source-projection residual on the original fixed-boundary
+background. The resulting vacuum estimate retains exactly half of #4927's
+ordered response coefficient.
 
-The remaining genuine joint-L2 numerator bridge is not assumed here: the
-averaged conditional source variance must still be identified with the actual
-`P_target g - P_source (P_target g)` norm square. No projection commutation,
-new cutoff, source/target reversal, or volume-cardinality factor is used.
+This closes the fixed-boundary residual presentation, not the remaining
+identification of these concrete means with genuine joint CondExpL2 on the
+outer vacuum carrier. No positive-beta projection commutation, new cutoff,
+source/target reversal or volume-cardinality factor is used.
 -/
 
 namespace MGAP4D.MathlibAnalytic
@@ -38,29 +37,6 @@ attribute [local instance]
   sourceFixedPairEnergySpatialLinkFintype
 
 namespace GroundStateSourceFixedPairEnergy
-
-/-- Exact iid normalization, requiring only actual L2 membership. -/
-theorem iid_sqDifference_integral_eq_two_mul_variance
-    {α : Type*} [MeasurableSpace α] (μ : Measure α) [IsProbabilityMeasure μ]
-    (X : α → ℝ) (hX : MemLp X 2 μ) :
-    (∫ z : α × α, (X z.1 - X z.2) ^ 2 ∂μ.prod μ) = 2 * variance X μ := by
-  let D : α × α → ℝ := fun z => X z.1 - X z.2
-  have hD : MemLp D 2 (μ.prod μ) := (hX.comp_fst μ).sub (hX.comp_snd μ)
-  have hInt : Integrable X μ := hX.integrable one_le_two
-  have hZero : ∫ z, D z ∂μ.prod μ = 0 := by
-    dsimp only [D]
-    rw [integral_sub (hInt.comp_fst μ) (hInt.comp_snd μ),
-      integral_fun_fst, integral_fun_snd]
-    simp
-  have hVar := variance_add_prod (μ := μ) (ν := μ) hX hX.neg
-  calc
-    (∫ z : α × α, (X z.1 - X z.2) ^ 2 ∂μ.prod μ) = variance D (μ.prod μ) :=
-      (variance_of_integral_eq_zero hD.aemeasurable hZero).symm
-    _ = variance X μ + variance (fun a => -X a) μ := by
-      simpa only [D, sub_eq_add_neg] using hVar
-    _ = 2 * variance X μ := by
-      rw [variance_fun_neg]
-      ring
 
 variable (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
 
@@ -126,95 +102,118 @@ theorem targetMean_sourceSection_memLp_two (source target : Link)
     (Filter.Eventually.of_forall fun u =>
       targetMean_norm_le H N hN beta hbeta target F bound hbound C (Function.update A source u))
 
-/-- Actual conditional source variance of the target mean, averaged over the
-actual fixed-boundary background. Unlike pairEnergy, this is normalized once. -/
-def sourceVariance (source target : Link) (F : (Cfg × Cfg) → ℝ) (C : Cfg) : ℝ :=
-  ∫ A, variance
-    (fun u => targetMean H N hN beta hbeta target F C (Function.update A source u))
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
-      H N hN beta hbeta C A source)
+/-- Source projection of the actual target mean, using the existing current-
+value reference heat-bath operator. The next theorem exposes its actual law. -/
+def sourceProjectedTargetMean (source target : Link) (F : (Cfg × Cfg) → ℝ)
+    (C A : Cfg) : ℝ :=
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathProjection
+    H N hN beta hbeta C source source source (C source) (C source)
+    (targetMean H N hN beta hbeta target F C) A
+
+/-- The reference presentation is exactly the actual source conditional
+integral of the target mean. No inequality or change of law is inserted. -/
+theorem sourceProjectedTargetMean_eq_fiberIntegral (source target : Link)
+    (F : (Cfg × Cfg) → ℝ) (hF : StronglyMeasurable F) (C A : Cfg) :
+    sourceProjectedTargetMean H N hN beta hbeta source target F C A =
+      ∫ u, targetMean H N hN beta hbeta target F C (Function.update A source u)
+        ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
+          H N hN beta hbeta C A source := by
+  exact
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathProjection_diagonalCurrentValues_eq_kernelSectionSpatialLinkIntegral
+      H N hN beta hbeta C A source source source
+      (targetMean H N hN beta hbeta target F C)
+      (targetMean_stronglyMeasurable H N hN beta hbeta target F hF C)
+
+/-- Source projection is measurable on the same fixed-boundary carrier. -/
+theorem sourceProjectedTargetMean_stronglyMeasurable (source target : Link)
+    (F : (Cfg × Cfg) → ℝ) (hF : StronglyMeasurable F) (C : Cfg) :
+    StronglyMeasurable (sourceProjectedTargetMean H N hN beta hbeta source target F C) := by
+  exact
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathProjection_stronglyMeasurable
+      H N hN beta hbeta C source source source (C source) (C source)
+      (targetMean H N hN beta hbeta target F C)
+      (targetMean_stronglyMeasurable H N hN beta hbeta target F hF C)
+
+/-- Same-source invariance of a source conditional mean is not commutation
+between different one-link projections. -/
+theorem sourceProjectedTargetMean_update_source (source target : Link)
+    (F : (Cfg × Cfg) → ℝ) (C A : Cfg) (u : Gauge) :
+    sourceProjectedTargetMean H N hN beta hbeta source target F C (Function.update A source u) =
+      sourceProjectedTargetMean H N hN beta hbeta source target F C A := by
+  exact
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathProjection_update_fiber
+      H N hN beta hbeta C source source source (C source) (C source)
+      (targetMean H N hN beta hbeta target F C) A u
+
+/-- Squared residual of the actual target mean after its source projection,
+measured on the original actual fixed-boundary background. -/
+def fixedBoundaryLeakageEnergy (source target : Link) (F : (Cfg × Cfg) → ℝ)
+    (C : Cfg) : ℝ≥0∞ :=
+  ∫⁻ A, ENNReal.ofReal
+    ((targetMean H N hN beta hbeta target F C A -
+      sourceProjectedTargetMean H N hN beta hbeta source target F C A) ^ 2)
     ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousProbabilityMeasure
       H N hN beta hbeta C
 
-theorem sourceVariance_nonneg (source target : Link) (F : (Cfg × Cfg) → ℝ) (C : Cfg) :
-    0 ≤ sourceVariance H N hN beta hbeta source target F C :=
-  integral_nonneg fun _ => variance_nonneg _ _
-
-/-- Expand the variance as the centered source-fiber energy with its literal
-source-conditional mean as center. No global CondExpL2 identification is made. -/
-theorem sourceVariance_eq_centeredSourceEnergy (source target : Link)
-    (F : (Cfg × Cfg) → ℝ) (hF : StronglyMeasurable F)
-    (bound : ℝ) (hbound : ∀ z, ‖F z‖ ≤ bound) (C : Cfg) :
-    sourceVariance H N hN beta hbeta source target F C =
-      ∫ A, ∫ u,
-        (targetMean H N hN beta hbeta target F C (Function.update A source u) -
-          ∫ v, targetMean H N hN beta hbeta target F C (Function.update A source v)
-            ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
-              H N hN beta hbeta C A source) ^ 2
-        ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
-          H N hN beta hbeta C A source
+/-- Exact stationary return of #4929's actual conditional source variance to
+the original background residual. Strong measurability suffices; no new
+boundedness, source invariance or off-diagonal assumption is needed. -/
+theorem conditionalVarianceEnergy_eq_fixedBoundaryLeakageEnergy (source target : Link)
+    (F : (Cfg × Cfg) → ℝ) (hF : StronglyMeasurable F) (C : Cfg) :
+    conditionalVarianceEnergy H N hN beta hbeta source target F C =
+      fixedBoundaryLeakageEnergy H N hN beta hbeta source target F C := by
+  let M := targetMean H N hN beta hbeta target F C
+  let Q := sourceProjectedTargetMean H N hN beta hbeta source target F C
+  let Phi : Cfg → ℝ≥0∞ := fun A => ENNReal.ofReal ((M A - Q A) ^ 2)
+  have hM : StronglyMeasurable M :=
+    targetMean_stronglyMeasurable H N hN beta hbeta target F hF C
+  have hQ : StronglyMeasurable Q :=
+    sourceProjectedTargetMean_stronglyMeasurable H N hN beta hbeta source target F hF C
+  have hPhi : Measurable Phi :=
+    ENNReal.measurable_ofReal.comp ((hM.sub hQ).measurable.pow_const 2)
+  have hStationary :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure_lintegral_oneLinkFiber
+      H N hN beta hbeta C source source source (C source) (C source) Phi hPhi
+  simp only [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceProbabilityMeasure_diagonalCurrentValues_eq_kernelSection,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_diagonalCurrentValues_eq_kernelSectionSpatialLinkNormalizedMeasure]
+    at hStationary
+  unfold conditionalVarianceEnergy fixedBoundaryLeakageEnergy
+  change (∫⁻ A, evariance (fun u => M (Function.update A source u))
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
+        H N hN beta hbeta C A source)
       ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousProbabilityMeasure
-        H N hN beta hbeta C := by
-  unfold sourceVariance
-  apply integral_congr_ae
-  filter_upwards with A
-  exact variance_eq_integral
-    (targetMean_sourceSection_memLp_two H N hN beta hbeta source target F hF bound hbound C A).aemeasurable
+        H N hN beta hbeta C) =
+    ∫⁻ A, Phi A
+      ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousProbabilityMeasure
+        H N hN beta hbeta C
+  rw [← hStationary]
+  apply lintegral_congr
+  intro A
+  rw [evariance_eq_lintegral_ofReal]
+  apply lintegral_congr
+  intro u
+  have hMean := sourceProjectedTargetMean_eq_fiberIntegral H N hN beta hbeta source target F hF C A
+  have hFixed := sourceProjectedTargetMean_update_source H N hN beta hbeta source target F C A u
+  change ENNReal.ofReal ((M (Function.update A source u) - _) ^ 2) =
+    ENNReal.ofReal ((M (Function.update A source u) - Q (Function.update A source u)) ^ 2)
+  change Q A = _ at hMean
+  change Q (Function.update A source u) = Q A at hFixed
+  rw [hFixed, hMean]
 
-/-- Exact iid factor two for the existing physical pair energy. This equality
-requires no source invariance and no off-diagonal assumption. -/
-theorem pairEnergy_eq_two_mul_sourceVariance (source target : Link)
+/-- Reuse, rather than reprove, #4929's exact two-sample normalization. -/
+theorem pairEnergy_ofReal_eq_two_mul_fixedBoundaryLeakageEnergy (source target : Link)
     (F : (Cfg × Cfg) → ℝ) (hF : StronglyMeasurable F)
     (bound : ℝ) (hbound : ∀ z, ‖F z‖ ≤ bound) (C : Cfg) :
-    pairEnergy H N hN beta hbeta source target F C =
-      2 * sourceVariance H N hN beta hbeta source target F C := by
-  unfold pairEnergy sourceVariance
-  rw [← integral_const_mul]
-  apply integral_congr_ae
-  filter_upwards with A
-  letI := sourceFiber_isProbabilityMeasure H N hN beta hbeta source C A
-  exact iid_sqDifference_integral_eq_two_mul_variance _ _
-    (targetMean_sourceSection_memLp_two H N hN beta hbeta source target F hF bound hbound C A)
+    ENNReal.ofReal (pairEnergy H N hN beta hbeta source target F C) =
+      2 * fixedBoundaryLeakageEnergy H N hN beta hbeta source target F C := by
+  rw [pairEnergy_ofReal_eq_two_mul_conditionalVarianceEnergy H N hN beta hbeta source target F hF bound hbound C,
+    conditionalVarianceEnergy_eq_fixedBoundaryLeakageEnergy H N hN beta hbeta source target F hF C]
 
-/-- Retain the exact half when passing from two-sample energy to variance. -/
-theorem sourceVariance_eq_half_pairEnergy (source target : Link)
-    (F : (Cfg × Cfg) → ℝ) (hF : StronglyMeasurable F)
-    (bound : ℝ) (hbound : ∀ z, ‖F z‖ ≤ bound) (C : Cfg) :
-    sourceVariance H N hN beta hbeta source target F C =
-      (1 / 2 : ℝ) * pairEnergy H N hN beta hbeta source target F C := by
-  rw [pairEnergy_eq_two_mul_sourceVariance H N hN beta hbeta source target F hF bound hbound C]
-  ring
-
-/-- Vacuum average of the actual normalized conditional source variance. -/
-def vacuumSourceVarianceEnergy (source target : Link) (F : (Cfg × Cfg) → ℝ) : ℝ≥0∞ :=
-  ∫⁻ C, ENNReal.ofReal (sourceVariance H N hN beta hbeta source target F C)
-    ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure H N hN beta hbeta
-
-/-- Exact half-factor survives vacuum integration without a new measurability
-hypothesis. Its finiteness is the constant-extraction hypothesis. -/
-theorem vacuumSourceVarianceEnergy_eq_half_pairEnergy (source target : Link)
-    (F : (Cfg × Cfg) → ℝ) (hF : StronglyMeasurable F)
-    (bound : ℝ) (hbound : ∀ z, ‖F z‖ ≤ bound) :
-    vacuumSourceVarianceEnergy H N hN beta hbeta source target F =
-      ENNReal.ofReal (1 / 2 : ℝ) *
-        ∫⁻ C, ENNReal.ofReal (pairEnergy H N hN beta hbeta source target F C)
-          ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure H N hN beta hbeta := by
-  unfold vacuumSourceVarianceEnergy
-  calc
-    (∫⁻ C, ENNReal.ofReal (sourceVariance H N hN beta hbeta source target F C)
-        ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure H N hN beta hbeta) =
-      ∫⁻ C, ENNReal.ofReal (1 / 2 : ℝ) *
-        ENNReal.ofReal (pairEnergy H N hN beta hbeta source target F C)
-        ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure H N hN beta hbeta := by
-      apply lintegral_congr
-      intro C
-      rw [sourceVariance_eq_half_pairEnergy H N hN beta hbeta source target F hF bound hbound C,
-        ENNReal.ofReal_mul (by norm_num : (0 : ℝ) ≤ 1 / 2)]
-    _ = _ := lintegral_const_mul' _ _ ENNReal.ofReal_ne_top
-
-/-- The normalized source variance inherits #4927 with precisely half its
-ordered coefficient. The right side is the genuine joint-L2 target residual. -/
-theorem vacuumSourceVarianceEnergy_le_half_orderedCoefficient_mul_condExpResidual_of_sourceInvariant
+/-- The fixed-boundary residual presentation retains half of the ordered
+response coefficient under vacuum integration. The joint-L2 numerator
+identification is not an assumption of this theorem. -/
+theorem fixedBoundaryLeakageEnergy_vacuum_le_half_orderedCoefficient_mul_condExpResidual_of_sourceInvariant
     (s : ℝ) (hs : 1 < s)
     (hcut : beta ≤
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHighTemperatureStrictPhysicalSweepCutoff s)
@@ -223,8 +222,9 @@ theorem vacuumSourceVarianceEnergy_le_half_orderedCoefficient_mul_condExpResidua
     (bound : ℝ) (hbound : ∀ z, ‖F z‖ ≤ bound)
     (hInvariant : ∀ (left right : Cfg) (value : Gauge),
       F (left, Function.update right source value) = F (left, right)) :
-    vacuumSourceVarianceEnergy H N hN beta hbeta source target F ≤
-      (ENNReal.ofReal (1 / 2 : ℝ) *
+    (∫⁻ C, fixedBoundaryLeakageEnergy H N hN beta hbeta source target F C
+      ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure H N hN beta hbeta) ≤
+      ((2 : ℝ≥0∞)⁻¹ *
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawOrderedResponseResidualCoefficient
           H N hN s beta hbeta source target) * ENNReal.ofReal
         (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointBoundedConcreteL2
@@ -233,27 +233,23 @@ theorem vacuumSourceVarianceEnergy_le_half_orderedCoefficient_mul_condExpResidua
             H N hN beta hbeta target
             (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointBoundedConcreteL2
               H N hN beta hbeta F hF bound hbound)‖ ^ 2) := by
-  have h :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFullDifferenceL2_vacuum_norm_sq_le_orderedCoefficient_mul_condExpResidual_of_sourceInvariant
-      N hN s hs beta hbeta hcut H source source target hne F hF bound hbound hInvariant
-  have hPair :
-      (∫⁻ C, ENNReal.ofReal
-        (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawFullDifferenceL2
-          H N hN beta hbeta C source source target
-          (C source) (C source) F hF bound hbound C 0‖ ^ 2)
+  have h := conditionalVarianceEnergy_vacuum_two_mul_le_orderedCoefficient_mul_condExpResidual_of_sourceInvariant
+    H N hN beta hbeta s hs hcut source target hne F hF bound hbound hInvariant
+  have hEnergy :
+      (∫⁻ C, conditionalVarianceEnergy H N hN beta hbeta source target F C
         ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure H N hN beta hbeta) =
-      ∫⁻ C, ENNReal.ofReal (pairEnergy H N hN beta hbeta source target F C)
-        ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure H N hN beta hbeta := by
-    apply lintegral_congr
-    intro C
-    rw [fullDifferenceL2_norm_sq_eq_pairEnergy H N hN beta hbeta C source source target F hF bound hbound]
-  rw [hPair] at h
-  rw [vacuumSourceVarianceEnergy_eq_half_pairEnergy H N hN beta hbeta source target F hF bound hbound]
-  simpa only [mul_assoc] using mul_le_mul_left' h (ENNReal.ofReal (1 / 2 : ℝ))
+      ∫⁻ C, fixedBoundaryLeakageEnergy H N hN beta hbeta source target F C
+        ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure H N hN beta hbeta :=
+    lintegral_congr fun C =>
+      conditionalVarianceEnergy_eq_fixedBoundaryLeakageEnergy H N hN beta hbeta source target F hF C
+  rw [hEnergy] at h
+  have hHalf := (ENNReal.mul_le_iff_le_inv (by norm_num : (2 : ℝ≥0∞) ≠ 0)
+    (by simp : (2 : ℝ≥0∞) ≠ ⊤)).mp h
+  simpa only [mul_assoc] using hHalf
 
-/-- A single source-invariant representative of the actual update satisfies
-the normalized estimate for every off-diagonal target. -/
-theorem exists_sourceUpdate_representative_vacuumSourceVarianceEnergy_bound
+/-- A single source-invariant representative of the actual source update
+satisfies the stationary residual bound for every off-diagonal target. -/
+theorem exists_sourceUpdate_representative_fixedBoundaryLeakageEnergy_bound
     (s : ℝ) (hs : 1 < s)
     (hcut : beta ≤
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHighTemperatureStrictPhysicalSweepCutoff s)
@@ -268,8 +264,9 @@ theorem exists_sourceUpdate_representative_vacuumSourceVarianceEnergy_bound
       (∀ (left right : Cfg) (value : Gauge),
         F (left, Function.update right source value) = F (left, right)) ∧
       ∀ target : Link, target ≠ source →
-        vacuumSourceVarianceEnergy H N hN beta hbeta source target F ≤
-          (ENNReal.ofReal (1 / 2 : ℝ) *
+        (∫⁻ C, fixedBoundaryLeakageEnergy H N hN beta hbeta source target F C
+          ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure H N hN beta hbeta) ≤
+          ((2 : ℝ≥0∞)⁻¹ *
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawOrderedResponseResidualCoefficient
               H N hN s beta hbeta source target) * ENNReal.ofReal
             (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2 H N hN beta hbeta source f -
@@ -280,7 +277,7 @@ theorem exists_sourceUpdate_representative_vacuumSourceVarianceEnergy_bound
       H N hN beta hbeta source f hf
   refine ⟨F, hF, bound, hbound, hRep, hInvariant, ?_⟩
   intro target hne
-  have h := vacuumSourceVarianceEnergy_le_half_orderedCoefficient_mul_condExpResidual_of_sourceInvariant
+  have h := fixedBoundaryLeakageEnergy_vacuum_le_half_orderedCoefficient_mul_condExpResidual_of_sourceInvariant
     H N hN beta hbeta s hs hcut source target hne F hF bound hbound hInvariant
   simpa only [hRep] using h
 
