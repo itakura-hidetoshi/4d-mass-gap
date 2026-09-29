@@ -101,7 +101,8 @@ theorem realHilbertProjectionSweepTargetCrossResidualVectorSum_append
       simp only [
         List.cons_append,
         realHilbertProjectionSweepTargetCrossResidualVectorSum,
-        realHilbertProjectionSweep]
+        realHilbertProjectionSweep,
+        ContinuousLinearMap.comp_apply]
       rw [ih]
       abel
 
@@ -128,8 +129,9 @@ theorem realHilbertProjectionSweep_targetResidual_eq_initial_sub_crossResidualVe
   | cons source sources ih =>
       simp only [
         realHilbertProjectionSweep,
+        ContinuousLinearMap.comp_apply,
         realHilbertProjectionSweepTargetCrossResidualVectorSum]
-      rw [ih]
+      rw [ih (P source x)]
       rw [
         realHilbertProjectionSweep_targetResidual_apply_eq_sub_crossResidual
           P target source x]
