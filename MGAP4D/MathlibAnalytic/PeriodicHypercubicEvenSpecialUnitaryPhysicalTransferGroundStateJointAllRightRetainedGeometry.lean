@@ -60,7 +60,7 @@ theorem allRightLeftRetained_fixed_iff_mem (f : JL2) :
       exact Submodule.orthogonalProjection_mem_subspace_eq_self q
     exact congrArg (fun z : lpMeas ℝ ℝ LeftSigma 2 muJ => (z : JL2)) hq
 
-theorem allRightLeftRetained_idempotent : Cleft.comp Cleft = Cleft := by
+theorem allRightLeftRetained_idempotent : (Cleft).comp Cleft = Cleft := by
   apply ContinuousLinearMap.ext
   intro f
   exact (allRightLeftRetained_fixed_iff_mem H N hN beta hbeta (Cleft f)).mpr

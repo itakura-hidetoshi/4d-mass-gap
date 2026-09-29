@@ -91,7 +91,7 @@ theorem allLinkSweep_pathLoss_ge_one_sub_lossRatio_mul_leftVariance
   have hIdem : Cleft (Cleft f) = Cleft f := congrArg
     (fun A : JL2 →L[ℝ] JL2 => A f) (allRightLeftRetained_idempotent H N hN beta hbeta)
   have hTail : Tendsto D atTop (𝓝 0) := by
-    have hDiff := hLimit.sub ((Cleft.continuous.tendsto (Cleft f)).comp hLimit)
+    have hDiff := hLimit.sub (((Cleft).continuous.tendsto (Cleft f)).comp hLimit)
     simpa only [D, hIdem, sub_self, norm_zero, zero_pow (by norm_num : (2 : ℕ) ≠ 0)] using hDiff.norm.pow 2
   have hRenew : ∀ n : ℕ, D n = losses n + D (n + 1) := by
     intro n
