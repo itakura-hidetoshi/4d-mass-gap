@@ -17,7 +17,9 @@ example {α : Type*} [MeasurableSpace α] (μ : Measure α)
         2 * evariance (fun _ : α => c) μ :=
       realProbabilityIndependentPair_lintegral_sq_sub_eq_two_mul_evariance
         μ (fun _ : α => c) (memLp_const c)
-    _ = 0 := by simp
+    _ = 0 := by
+      rw [evariance_eq_lintegral_ofReal]
+      simp
 
 -- Outer extraction of the exact normalization has no extra measurability premise.
 example {α : Type*} [MeasurableSpace α] (μ : Measure α) (V : α → ℝ≥0∞) :
