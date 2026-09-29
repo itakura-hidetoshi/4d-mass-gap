@@ -28,12 +28,12 @@ noncomputable section
 unless it is that same L2 vector. The reverse residual estimate plus
 Pythagoras gives uniqueness, with no finite-measure hypothesis. -/
 theorem realL2_condExp_eq_of_residual_norm_sq_le
-    {α : Type*} [m0 : MeasurableSpace α] {m : MeasurableSpace α}
+    {α : Type*} {m : MeasurableSpace α} [m0 : MeasurableSpace α]
     {μ : Measure α} (hm : m ≤ m0) (f g : Lp ℝ 2 μ)
     (hg : AEStronglyMeasurable[m] (fun a => g a) μ)
-    (hle : ‖f - g‖ ^ 2 ≤ ‖f - (condExpL2 ℝ ℝ hm f : Lp ℝ 2 μ)‖ ^ 2) :
-    (condExpL2 ℝ ℝ hm f : Lp ℝ 2 μ) = g := by
-  let p : Lp ℝ 2 μ := condExpL2 ℝ ℝ hm f
+    (hle : ‖f - g‖ ^ 2 ≤ ‖f - (condExpL2 (μ := μ) ℝ ℝ hm f).1‖ ^ 2) :
+    (condExpL2 (μ := μ) ℝ ℝ hm f).1 = g := by
+  let p : Lp ℝ 2 μ := (condExpL2 (μ := μ) ℝ ℝ hm f).1
   have hp : AEStronglyMeasurable[m] (fun a => p a) μ :=
     aestronglyMeasurable_condExpL2 hm f
   have hpg : AEStronglyMeasurable[m] (fun a => (p - g) a) μ := by
@@ -98,7 +98,8 @@ theorem canonicalMean_stronglyMeasurable_retained (target : Link)
       inferInstance
       (periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkOuterContextMap H N target) := by
     rw [periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace_eq_comap_outerContextMap]
-    exact measurable_comap
+    intro s hs
+    exact ⟨s, hs, rfl⟩
   exact
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkCanonicalFiberMean_stronglyMeasurable
       H N hN beta hbeta target F hF).comp_measurable hOuter
@@ -132,8 +133,7 @@ theorem canonicalMeanL2_eq_condExpL2 (target : Link)
     H N hN beta hbeta M hM bound hMb
   let r := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkCanonicalFiberMeanResidualL2
     H N hN beta hbeta target F hF bound hbound
-  let m := periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace H N target
-  have hm : m ≤ (inferInstance : MeasurableSpace Joint) :=
+  have hm :=
     periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace_le H N target
   have hf : (fun z => f z) =ᵐ[μJ] F :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointBoundedConcreteL2_coeFn
@@ -151,16 +151,18 @@ theorem canonicalMeanL2_eq_condExpL2 (target : Link)
     change f z - q z = r z
     rw [hfz, hqz, hrz]
     rfl
-  have hqm : AEStronglyMeasurable[m] (fun z => q z) μJ :=
+  have hqm : AEStronglyMeasurable[
+      periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace H N target]
+      (fun z => q z) μJ :=
     (canonicalMean_stronglyMeasurable_retained H N hN beta hbeta target F hF).aestronglyMeasurable.congr hq.symm
   have hEN :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkCanonicalFiberMeanResidualL2_norm_sq_ofReal_le_condExpL2_residual_norm_sq_ofReal
       H N hN beta hbeta target F hF bound hbound
   have hReal : ‖r‖ ^ 2 ≤
-      ‖f - (condExpL2 ℝ ℝ hm f : JL2)‖ ^ 2 := by
+      ‖f - (condExpL2 (μ := μJ) ℝ ℝ hm f).1‖ ^ 2 := by
     exact (ENNReal.ofReal_le_ofReal_iff (sq_nonneg _)).mp hEN
   have hle : ‖f - q‖ ^ 2 ≤
-      ‖f - (condExpL2 ℝ ℝ hm f : JL2)‖ ^ 2 := by
+      ‖f - (condExpL2 (μ := μJ) ℝ ℝ hm f).1‖ ^ 2 := by
     rw [hsub]
     exact hReal
   exact (realL2_condExp_eq_of_residual_norm_sq_le hm f q hqm hle).symm

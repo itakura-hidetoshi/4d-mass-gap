@@ -13,11 +13,11 @@ open scoped ENNReal
 
 -- The comparison is in the reverse direction to projection minimality.
 -- No finite-measure hypothesis is needed by the Hilbert-space argument.
-example {α : Type*} [m0 : MeasurableSpace α] {m : MeasurableSpace α}
+example {α : Type*} {m : MeasurableSpace α} [m0 : MeasurableSpace α]
     (μ : Measure α) (hm : m ≤ m0) (f g : Lp ℝ 2 μ)
     (hg : AEStronglyMeasurable[m] (fun a => g a) μ)
-    (hle : ‖f - g‖ ^ 2 ≤ ‖f - (condExpL2 ℝ ℝ hm f : Lp ℝ 2 μ)‖ ^ 2) :
-    (condExpL2 ℝ ℝ hm f : Lp ℝ 2 μ) = g :=
+    (hle : ‖f - g‖ ^ 2 ≤ ‖f - (condExpL2 (μ := μ) ℝ ℝ hm f).1‖ ^ 2) :
+    (condExpL2 (μ := μ) ℝ ℝ hm f).1 = g :=
   realL2_condExp_eq_of_residual_norm_sq_le hm f g hg hle
 
 attribute [local instance]
