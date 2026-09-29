@@ -130,14 +130,17 @@ theorem sixSpatial_ordered_relativeFrame_of_retainedContraction
             ‖u‖ = ‖(x : G)‖ := by
           dsimp [u]
           calc
-            ‖U (((x : G) : HaarL2))‖ = ‖(((x : G) : HaarL2))‖ := U.norm_map _
+            ‖U (((x : G) : HaarL2))‖ = ‖(((x : G) : HaarL2))‖ := by
+              exact
+                (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2LinearIsometry
+                  H N hN beta hbeta).norm_map _
             _ = ‖(x : G)‖ := rfl
         rw [hU]
   have hcenter :
       (1 - rho) * ‖(x : G)‖ ^ 2 ≤ ‖R u - Cleft (R u)‖ ^ 2 := by
     rw [hPyth, hRunorm]
-    have hc := hcontract x
-    simpa only [u] at hc
+    have hc : ‖Cleft (R u)‖ ^ 2 ≤ rho * ‖(x : G)‖ ^ 2 := by
+      simpa [u] using hcontract x
     nlinarith
   have hrelative :=
     sixSpatial_ordered_relativePoincare_rightBoundary
@@ -190,7 +193,10 @@ theorem sixSpatial_ordered_relativeFrame_implies_transferGap_of_retainedContract
     dsimp [kappa, gamma, q]
     have hqpos : 0 < 1 - 2 * jointLeakageSchurCoefficient s beta := by
       linarith [hq.2]
-    positivity
+    exact
+      mul_pos
+        (div_pos (pow_pos hqpos 2) (by norm_num))
+        (sub_pos.mpr hrho1)
   have hkappa1 : kappa ≤ 1 := by
     dsimp [kappa]
     calc
@@ -276,7 +282,10 @@ theorem periodicHypercubicEvenSpecialUnitary_uniformOrderedRetainedBoundaryContr
   have hkappa0 : 0 < kappa := by
     dsimp [kappa, gamma]
     have hqmargin : 0 < 1 - 2 * q := by linarith
-    positivity
+    exact
+      mul_pos
+        (div_pos (pow_pos hqmargin 2) (by norm_num))
+        (sub_pos.mpr hrho1)
   have hkappa1 : kappa ≤ 1 := by
     dsimp [kappa]
     calc
