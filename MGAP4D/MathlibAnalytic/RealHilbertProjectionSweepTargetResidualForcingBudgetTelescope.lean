@@ -42,12 +42,14 @@ def realHilbertProjectionSweepTargetResidualForcingBudget
     [NormedSpace ℝ E]
     (P : C → E →L[ℝ] E)
     (forcing : C → E → ℝ) :
-    List C → E → ℝ
-  | [], _ => 0
-  | source :: sources, x =>
-      forcing source x +
-        realHilbertProjectionSweepTargetResidualForcingBudget
-          P forcing sources (P source x)
+    List C → E → ℝ :=
+  fun sources =>
+    List.rec
+      (motive := fun _ => E → ℝ)
+      (fun _ => 0)
+      (fun source _sources tailBudget x =>
+        forcing source x + tailBudget (P source x))
+      sources
 
 /-- Generic list telescope from a one-step target-residual forcing estimate. -/
 theorem realHilbertProjectionSweep_targetResidual_norm_le_forcingBudget_add_initial
