@@ -77,7 +77,7 @@ theorem realL2_conditionalIndependentPair_norm_sq_eq_two_mul_lintegral_evariance
       (measurable_fst.prodMk (measurable_fst.comp measurable_snd))).sub
       (hM.comp_measurable
         (measurable_fst.prodMk (measurable_snd.comp measurable_snd)))
-  have hD : MemLp D 2 (μ ⊗ₘ (κ ×ₖ κ)) := L.memLp.congr hRep
+  have hD : MemLp D 2 (μ ⊗ₘ (κ ×ₖ κ)) := (_root_.MeasureTheory.Lp.memLp L).congr hRep
   have hNorm : ‖L‖ ^ 2 = ∫ z, (D z) ^ 2 ∂(μ ⊗ₘ (κ ×ₖ κ)) := by
     rw [realL2_norm_sq_eq_integral_norm_sq]
     apply integral_congr_ae

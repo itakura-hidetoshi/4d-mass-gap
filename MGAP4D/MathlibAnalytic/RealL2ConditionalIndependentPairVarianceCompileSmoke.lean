@@ -21,4 +21,9 @@ example {α : Type*} [MeasurableSpace α] (μ : Measure α) (V : α → ℝ≥0�
     (∫⁻ a, (2 : ℝ≥0∞) * V a ∂μ) = 2 * ∫⁻ a, V a ∂μ :=
   lintegral_const_mul' 2 V (by simp)
 
+-- Lp is a bundled subgroup coerced to a subtype; qualify the namespace.
+example {α : Type*} [MeasurableSpace α] (μ : Measure α) (L : Lp ℝ 2 μ) :
+    MemLp (fun a => L a) 2 μ :=
+  _root_.MeasureTheory.Lp.memLp L
+
 end MGAP4D.MathlibAnalytic
