@@ -1,5 +1,4 @@
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointAllRightRelativePoincare
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourceFixedOrderedDefectMargin
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSixSpatialOrderedRelativeFrame
 
 open MGAP4D.MathlibAnalytic
 open MGAP4D.MathlibAnalytic.GroundStateSourceFixedPairEnergy
@@ -40,5 +39,31 @@ example : (∀ x : ℝ, ‖x - (ContinuousLinearMap.id ℝ ℝ) x‖ ^ 2 = 0) �
   constructor
   · intro x; simp
   · intro h; have hOne := h 1; norm_num at hOne
+
+-- Grouping preserves any order, including repeated groups; no projections assumed.
+example {E I C : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    (P : I → E →L[ℝ] E) (groups : C → List I) (cs : List C) (x : E) :
+    realHilbertProjectionSweep P (cs.flatMap groups) x =
+      realHilbertProjectionSweep (fun c => realHilbertProjectionSweep P (groups c)) cs x :=
+  GroupedProjectionSweep.flatMap_apply P groups cs x
+
+-- One coefficient/cutoff precedes all volume/rank/observable choices.
+example (s : ℝ) (hs : 8 < s) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (hcut : beta ≤ jointLeakageLossContractionCutoff s hs) :
+    ∀ (H N : ℕ) (hN : 0 < N)
+      (f : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2 H N hN beta hbeta),
+      ((1 - 2 * jointLeakageSchurCoefficient s beta) ^ 2 / 36) *
+        ‖f - allRightLeftRetainedCondExpL2 H N hN beta hbeta f‖ ^ 2 ≤
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSixSpatialResidualEnergy
+            H N hN beta hbeta f := by
+  intro H N hN f
+  exact sixSpatial_ordered_relativePoincare H N hN beta hbeta s hs hcut f
+
+#print axioms GroupedProjectionSweep.flatMap_apply
+#print axioms GroupedProjectionSweep.displacement_le_sum_initial
+#print axioms sixSpatialGroupedLinkList_nodup
+#print axioms allLinkSweep_leftVariance_le_lossRatio_mul
+#print axioms fixedColor_sweep_displacement_le_one_add_sqrt_lossRatio_mul_colorResidual
+#print axioms sixSpatial_ordered_relativePoincare
 
 end
