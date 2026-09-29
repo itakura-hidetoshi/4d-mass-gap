@@ -1,400 +1,259 @@
 # MGAP4D
 
-Formal Lean/mathlib development for the four-dimensional Yang--Mills mass-gap program.
+Lean/mathlib development for the four-dimensional Yang--Mills existence and mass-gap program.
 
-The current formal theorem carrier is **not** the GitHub default branch.  All
-mathematical status statements in this README are relative to the authoritative
-branch and exact commit recorded below.
+**Current result:** the exact cyclic target-residual forcing telescope is now connected to the genuine terminal second-sweep profile. The next step is a volume-uniform, beta-small analytic estimate for that forcing, not another reconstruction of the cyclic list or its L2 carrier.
 
-## Current status — 2026-09-29 JST
+## Authority checkpoint — 2026-09-29 JST
 
-Repository:
+| Item | Authoritative value |
+| --- | --- |
+| Repository | `itakura-hidetoshi/4d-mass-gap` |
+| Theorem-carrier branch | `formal/real-hilbert-uniform-coercive-strong-limit` |
+| Latest theorem-bearing baseline | `4b11fd20cd2bbcba5a84bec2fedafc2aaaa4e47c` — merged PR #4921 |
+| Validated #4921 PR head | `827068e4ee47cd6ad35c2f208506ea82f817d493` |
+| Exact-head validation | [PR Lean Fast Check, run 36528060981](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/36528060981): completed / success; matching completion receipt: success |
+| Lean | `v4.30.0-rc2` |
+| mathlib | `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
 
-`itakura-hidetoshi/4d-mass-gap`
+[Open the authoritative branch](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit) · [Proof roadmap](ROADMAP.md) · [Formal analytic modules](MGAP4D/MathlibAnalytic)
 
-Authoritative theorem-carrier branch:
+The GitHub default branch `main` is **not** theorem authority. Documentation-only commits may follow the theorem-bearing baseline above; they do not advance the mathematical result or create a new Lean validation receipt.
 
-`formal/real-hilbert-uniform-coercive-strong-limit`
+Authority order: fresh exact theorem-carrier SHA; formal Lean artifacts at that SHA; README / ROADMAP; exact-head CI evidence; history or conversation memory. The run above validates the stated PR head, not an untested later commit.
 
-Current theorem-bearing HEAD:
+## What is proved, and what remains open
 
-`696fd06775636f31f0364e331103a009cc729fde`
+The repository contains a developed finite-volume Wilson / Osterwalder--Schrader / physical-transfer construction, an **exact beta-zero physical transfer gap of 1**, and the positive-beta response / RMS / bidirectional Schur machinery used below.
 
-This is the merge commit of PR #4899.
+It does **not** yet contain a complete continuum four-dimensional Yang--Mills existence and mass-gap proof. The active bottleneck remains the finite-volume positive-beta physical gap: quantitatively compare a noncommutative same-color one-link sweep with the genuine color-block projection, uniformly in volume.
 
-Pinned formal environment:
+| Layer at the current frontier | Status |
+| --- | --- |
+| Exact renewal, cyclic second visit, off-diagonal source set | Proved |
+| Bounded representatives for every cyclic prefix and source step | Proved |
+| Actual source residual = trajectory residual; suffix/pre profile classification | Proved |
+| Signed target-cross-residual telescope and commutator decomposition | Proved |
+| Commutator coefficient vanishes at beta zero | Proved |
+| Nonexpansive target-residual feedback | Proved |
+| Ordered forcing-budget telescope and cyclic terminal-profile receiver | Proved |
+| Beta-small terminal Schur receiver | Proved implication; its semantic premise is still required |
+| Forcing-to-influence/profile analytic comparison | Open |
+| Strict quantitative next-defect contraction | Open |
+| `delta(beta) < 1/6` and positive-beta physical transfer gap | Open |
+| Thermodynamic limit and continuum OS / Wightman mass-gap construction | Open downstream goals |
 
-- Lean `v4.30.0-rc2`
-- mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`
+## 1. Exact sweep/block geometry
 
-Authority order:
-
-1. fresh exact theorem-carrier SHA;
-2. formal Lean theorem artifacts at that SHA;
-3. README / ROADMAP;
-4. exact-head CI receipts;
-5. history / conversation memory.
-
-The GitHub default branch `main` is **not** theorem authority.
-
-## Claim boundary
-
-This repository contains a large formal construction spine for finite-volume
-Wilson / Osterwalder--Schrader / physical-transfer Yang--Mills structures,
-together with an exact beta-zero gap result and a growing positive-beta
-response/Schur analysis.
-
-It does **not** currently constitute a complete formal proof of the continuum
-four-dimensional Yang--Mills existence and mass-gap problem.
-
-The active missing step is still in the finite-volume positive-beta physical
-gap route.  In particular, the recent PRs #4892--#4899 isolate the exact
-noncommutative sweep obstruction and put its terminal second-sweep carrier into
-the existing response/Schur framework, but the final semantic source-update
-inequality and a strict quantitative next-defect contraction are not yet
-closed.
-
-## Core notation at the current frontier
-
-For one spatial color `c`, write:
-
-- `B_c` for the genuine color-block conditional-expectation projection;
-- `S_c` for one complete canonical same-color one-link sweep;
-- `L_c(f)` for the exact one-pass sweep path loss;
-- `D_c(f) = ||S_c f - B_c f||^2` for the sweep--block defect energy.
-
-At beta zero, same-color one-link projections commute and
+For spatial color `c`, write `B_c` for the genuine color-block conditional expectation, `S_c` for one complete canonical same-color one-link sweep, and `L_c(f)` for its path loss. Define
 
 ```text
-S_c = B_c
+D_c(f) = ||S_c f - B_c f||^2.
 ```
 
-exactly.  Hence the sweep--block defect vanishes at beta zero.
+At beta zero, `S_c = B_c` exactly. At positive beta, equal common fixed spaces do not imply commutativity or equality of these operators. The defect measures the failure of one pass to land in the block-fixed space.
 
-At positive beta, commutativity is **not** assumed.  The defect is the precise
-one-pass non-idempotence obstruction.
-
-## Exact renewal / cyclic carrier now closed
-
-PR #4892 proves the fixed-color energy renewal
+PRs #4892--#4896 give the exact renewals
 
 ```text
-D_c(f) = L_c(S_c f) + D_c(S_c f).
+D_c(f) = L_c(S_c f) + D_c(S_c f)
+Dmean(f) = Lterm(f) + Dnext(f),
 ```
 
-PR #4893 exposes the vector identity behind it:
+where the latter quantities are six-color averages. The link-indexed terminal profile is normalized by
 
 ```text
-defectVector_c(f)
-  = residualVectorSum_c(S_c f)
-    + defectVector_c(S_c f).
+(1/6) * sum_e terminalProfile(e)^2 = Lterm(f).
 ```
 
-For a canonical split
+For a canonical target split
 
 ```text
-canonicalList = pre ++ e :: suffix
+canonicalList = pre ++ target :: suffix,
 ```
 
-PR #4894 proves that the operators acting between the first and second visits
-to target `e` occur in the exact cyclic order
+the first post-target vector and the exact between-visits order are
 
 ```text
-suffix ++ pre.
+x0 = P_target (sweep pre f)
+sources = suffix ++ pre.
 ```
 
-Equivalently, the second-sweep `e)-stage residual is the target-`e`
-residual obtained after propagating the first post-`e` vector through this
-cyclic between-visits order.
+The source list contains exactly every other same-color link, without reordering: `(suffix ++ pre).toFinset = Finset.univ.erase target`.
 
-PR #4895 then proves that the same cyclic second-visit state admits the bounded
-strongly measurable concrete representative required by the physical
-source-update / response machinery.  No carrier identification is implicit:
-the representative equality is formalized in the genuine ground-state joint
-L2 space.
+## 2. Actual cyclic source updates are connected to the analytic carrier
 
-## Terminal profile and response energy
-
-PR #4896 introduces the link-indexed terminal second-sweep profile
+PR #4901 connects cyclic membership to the existing exact `fullDifferenceL2 = directDifferenceL2 + responseL2` and negative transposed law-response identities. PRs #4904--#4907 and #4909 supply the quantitative estimates and bounded representatives for each actual transition
 
 ```text
-terminalProfile(e)
+x_after = P_source x_before
+sourceResidual = x_before - x_after.
 ```
 
-and proves the exact normalization
+The centered backward direct-variance and law-response estimates retain their existing Harnack and transposed pin-free coefficients. These are separate estimates; their existence is not yet the required small bound for the total target forcing.
+
+PR #4911 proves the exact profile classification:
 
 ```text
-(1/6) * sum_e terminalProfile(e)^2
-  = terminalSweepPathLoss(f),
+source in suffix:  cyclicStageResidualEnergy = originalProfile(source)^2
+source in pre:     cyclicStageResidualEnergy = terminalProfile(source)^2.
 ```
 
-where
+This reuses the unique-stage API from #4856. PR #4910 was closed **without merge** as redundant; it is not a theorem-bearing milestone.
+
+Sources: [stage-residual quantitative bridge][stage-quantitative], [suffix/pre classification][profile-classification].
+
+## 3. Signed telescope, commutator forcing, nonexpansive feedback
+
+Write
 
 ```text
-terminalSweepPathLoss(f)
-  = (1/6) * sum_c L_c(S_c f).
+r_t(x) = x - P_t x
+cross(t,s,x) = (I - P_t) ((I - P_s) x)
+C(t,s) = P_t P_s - P_s P_t.
 ```
 
-It also proves the six-color averaged renewal
+PRs #4912--#4915 prove the exact identities
 
 ```text
-defectMean(f)
-  = terminalSweepPathLoss(f)
-    + nextDefectMean(f).
+r_t(P_s x) = r_t(x) - cross(t,s,x)
+cross(t,s,x) = C(t,s)(P_t x) + cross(t,s,r_t(x)),
 ```
 
-PR #4897 factors out a generic coefficient-one profile-to-variance bridge and
-feeds the PR #4895 cyclic representatives into the existing response-energy
-machinery.  On the existing response cutoff:
+with target idempotence for the commutator identity. Starting at target-fixed `x0`, the terminal target residual is the negative signed sum of the successive cross residuals along the actual trajectory. PR #4913 identifies the terminal profile with the norm of that signed sum.
+
+PRs #4916--#4918 define and bound the forcing coefficient
 
 ```text
-terminalResponseEnergy
-  <= rhoResp(s,beta) * ofReal(6 * terminalSweepPathLoss(f)).
+c_comm(t,s;beta) = ||C(t,s)||
+c_comm(t,s;0) = 0.
 ```
 
-The already-closed response coefficient satisfies a volume-independent strict
-cutoff with
+For the self-adjoint idempotent physical projections, PR #4919 gives
 
 ```text
-rhoResp(s,beta) < 1
+r_t(P_s x) = -C(t,s)(P_t x) + r_t(P_s(r_t(x)))
+||r_t(P_s(r_t(x)))|| <= ||r_t(x)||,
 ```
 
-on its certified positive-beta interval, and `rhoResp(s,0) = 0`.
-
-## Terminal-profile Schur receiver
-
-PR #4898 specializes the existing transpose Schur receiver to the terminal
-profile.
-
-If the remaining semantic one-sided relation
+and hence
 
 ```text
-terminal(source)
-  <= originalLocal(source)
-     + sum_target K(target,source) * terminal(target)
+||r_t(P_s x)|| <= c_comm(t,s;beta) * ||P_t x|| + ||r_t(x)||.
 ```
 
-is supplied, then
+The feedback is nonexpansive: it introduces no extra per-step multiplier. The projected-input factor `||P_t x||` is retained rather than weakened to `||x||` in the current terminal-budget theorem.
+
+Sources: [signed telescope][signed-telescope], [commutator coefficient][commutator-coefficient], [nonexpansive step][nonexpansive-step].
+
+## 4. Current theorem: terminal profile is bounded by the cyclic forcing budget
+
+PR #4920 defines the ordered accumulated forcing recursively:
 
 ```text
-(1 - q_phys(s,beta))^2 * terminalSweepPathLoss(f)
-  <= originalSweepPathLoss(f).
+Budget([], x) = 0
+Budget(source :: rest, x)
+  = forcing(source,x) + Budget(rest, P_source x).
 ```
 
-The same PR packages the averaged renewal receiver:
-
-if
+Given a one-step bound for every source and vector,
 
 ```text
-nextDefectMean(f) <= rho * defectMean(f),
+||r_t(P_source x)|| <= forcing(source,x) + ||r_t(x)||,
 ```
 
-then
+it proves
 
 ```text
-(1 - rho) * defectMean(f)
-  <= terminalSweepPathLoss(f).
+||r_t(sweep sources x)|| <= Budget(sources,x) + ||r_t(x)||.
 ```
 
-Combining the two premises gives the coefficient-preserving form
+PR #4921 specializes this to the genuine cyclic terminal carrier. Since `P_target x0 = x0`, the initial residual disappears:
 
 ```text
-(1 - q_phys)^2 * ((1 - rho) * defectMean(f))
-  <= originalSweepPathLoss(f).
+terminalProfile(target) <= Budget(suffix ++ pre, x0).
 ```
 
-No division by `1-q_phys` or `1-rho` is performed before strict positivity
-is certified.
-
-This is a receiver, not yet the final positive-beta defect margin.  In
-particular, a coefficient-one local term by itself is not enough to conclude
-the required small bound `delta(beta) < 1/6`; the semantic estimate must
-retain the beta-small structure needed near the exact beta-zero endpoint.
-
-## Exact cyclic source set
-
-PR #4899 closes the finite geometry of the between-visits order.
-
-For
+Its commutator specialization uses exactly
 
 ```text
-canonicalList = pre ++ e :: suffix
+forcing(source,x) = c_comm(target,source;beta) * ||P_target x||.
 ```
 
-with the preserved freshness witness,
+Every contribution is evaluated immediately before its actual source update. There is no source reordering, arbitrary factor two, or finite-cardinality Cauchy loss.
+
+The general receiver's `hStep` is universally quantified over the stated L2 carrier. An estimate established only for selected bounded trajectory states must be extended to that hypothesis, or used through a separately proved restricted-trajectory receiver; that distinction is not implicit.
+
+Sources: [generic forcing telescope][forcing-telescope], [cyclic terminal-profile receiver][cyclic-forcing].
+
+## 5. Beta-small Schur receiver already available
+
+PR #4902 preserves the small external forcing rather than replacing it by the original profile with coefficient one. With the existing physical transpose action
 
 ```text
-d ∈ suffix ++ pre  <->  d != e
+(K^T v)(i) = sum_j K(j,i) * v(j),
 ```
 
-inside the fixed-color fiber, and
+the premise
 
 ```text
-(suffix ++ pre).toFinset = Finset.univ.erase e.
+terminal <= K^T original + K^T terminal
 ```
 
-Thus the cyclic source list contains exactly every other link in the same
-spatial-color class.  Every source passed to the direct/backward/transposed
-response machinery is therefore formally off-diagonal from target `e`,
-without source reordering or a cardinality estimate.
-
-## Closed response / direct assets reused by the frontier
-
-The current route reuses, rather than rebuilds, the following closed pieces.
-
-### Response / RMS side
-
-- target-law response L2 realization;
-- first-cross exact Pythagorean split;
-- Harnack transport and stationarity return;
-- genuine target residual / canonical fiber variance;
-- fixed-background response Fubini;
-- configuration-independent bidirectional pin-free Schur bounds;
-- canonical sweep representatives;
-- exact stage residual energy = sweep path loss;
-- strict positive response cutoff `rhoResp < 1`;
-- physical full-minus-direct finite-update error control.
-
-### Direct / backward side
-
-- exact `DirectDifferenceL2` energy realization;
-- coefficient-one direct L2 to ordered direct-average comparison;
-- lossless ordered-to-backward reversible-carrier transport;
-- exact backward direct variance + mean-square Pythagorean split;
-- backward centered-variance transport to the genuine source residual;
-- current-value reference reanchoring;
-- exact backward law-response = negative transposed canonical response;
-- backward law-response energy = transposed response L2 energy;
-- transposed law-response bound with orientation
-  `K_pin(source,target)`.
-
-## Beta-zero endpoint
-
-The beta-zero endpoint remains stronger than the perturbative receiver.
-
-Closed exact result:
+implies, on the certified physical cutoff,
 
 ```text
-physical transfer gap at beta = 0 = 1.
+(1 - q_phys(s,beta))^2 * Lterm(f)
+  <= q_phys(s,beta)^2 * L(f).
 ```
 
-The later defect-margin receiver also yields a weaker beta-zero lower bound
-when `delta(0)=0`.  That perturbative lower bound must not be confused with
-the exact beta-zero gap.
+The endpoint identity `q_phys(s,0) = 0` is also proved. This is a proved conditional receiver, not a proof that the actual cyclic forcing satisfies its premise. Keep it distinct from the older coefficient-one receiver in #4898.
 
-## Current mathematical frontier
+Source: [beta-small terminal Schur feedback][beta-small-schur].
 
-After PR #4899, the immediate target is no longer list geometry or carrier
-identification.  Those are closed.
+## 6. Next mathematical work
 
-The next theorem unit should connect the actual cyclic source updates in
-`suffix ++ pre` to the terminal target residual while preserving the exact
-source/target orientation.
+**Immediate target:** derive a volume-uniform, beta-small forcing-to-influence/profile comparison on the actual cyclic carrier. Reuse the exact direct/backward/law-response decomposition, the stage-residual estimates, and the suffix/pre classification. Preserve both the projected-input factor and the established source/target orientations until the relevant comparison is proved.
 
-The desired semantic shape is a volume-uniform one-sided terminal-profile
-estimate, refined enough to retain beta-smallness near beta zero.  Schematically:
+`c_comm(t,s;0) = 0` alone does not prove a uniform positive-beta estimate. Likewise, a bound for the operator coefficient alone does not automatically turn `c_comm * ||P_t x||` into a local source-residual cost or a Schur summable profile.
+
+The intended remaining route is
 
 ```text
-terminalProfile(source)
-  <= smallLocal(beta) * originalProfile(source)
-     + sum_target K(target,source) * terminalProfile(target).
+beta-small analytic forcing comparison
+  -> actual terminal <= K^T original + K^T terminal
+  -> existing #4902 beta-small Schur receiver
+  + strict next-defect contraction (or equivalent positive renewal bound)
+  -> Dmean(f) <= delta(beta) * ||f||^2
+  -> certify 0 <= delta(beta) < 1/6
+  -> existing physical transfer-gap receiver.
 ```
 
-The exact coefficient and carrier must come from the already-formalized
-direct/backward/law-response decomposition; it should not be inserted by a
-finite-cardinality Cauchy estimate or an arbitrary factor two.
+The strict renewal input `Dnext <= rhoDefect * Dmean`, with `rhoDefect < 1`, remains a separate open quantitative requirement. Do not divide by `1-q_phys` or `1-rhoDefect` before proving positivity.
 
-A second required quantitative ingredient is a strict next-defect contraction
-(or an equivalent lower bound on terminal path loss):
+The existing defect-margin receiver yields
 
 ```text
-nextDefectMean(f) <= rhoDefect(beta) * defectMean(f),
-rhoDefect(beta) < 1.
+(3/8) * (1/6 - delta(beta)) <= physical transfer gap.
 ```
 
-Once these are closed, the route is:
+This perturbative lower bound is distinct from the exact beta-zero result `gap_0 = 1`. The thermodynamic and continuum constructions remain downstream of a volume-uniform finite-volume gap.
 
-```text
-cyclic semantic estimate
-  -> terminal-profile Schur feedback
-  -> strict renewal contraction
-  -> defectMean(f) <= delta(beta) * ||f||^2
-  -> certify delta(beta) < 1/6
-  -> existing full-sweep transfer-gap receiver
-  -> positive finite-volume physical transfer gap.
-```
+## Lean / CI workflow
 
-Only after the finite-volume volume-uniform gap is closed should the
-thermodynamic / continuum OS--Wightman part be advanced as the active
-frontier.
+Freshly observe the authoritative branch and exact PR head before changing or classifying a theorem. A theorem-bearing GREEN requires the completed exact-head `PR Lean Fast Check` and its matching success receipt; the receipt alone is not the mathematical validation.
 
-## Recent theorem-bearing sequence
+PRs #4903 and #4908 improved cache reuse. The current workflow separates pinned `.lake/packages` dependencies from the evolving `.lake/build` project artifacts and retains dependency-aware `lake build`. The duplicate direct Lean elaboration pass is disabled in GitHub PR CI, not the authoritative build.
 
-| PR | Merge commit | Role |
-| --- | --- | --- |
-| #4892 | `2727e50414cd2f6373a2fbde89ab3c71a47e3672` | exact defect renewal |
-| #4893 | `847e21e62321f4061f1945455bb17977f687409b` | vector renewal |
-| #4894 | `551fe25176f2d723dcc54c80f2fda723fece57fd` | cyclic second-visit identity |
-| #4895 | `1bacd3da86db26027ba5ade88a837b4ff7331bd6` | bounded cyclic representatives |
-| #4896 | `866770a7215a9a1564d2416e41f177857f4e98ae` | terminal profile + averaged renewal |
-| #4897 | `6091310e11647fd19b523abfc93f97578fa0a81d` | terminal response energy |
-| #4898 | `f67a2afdc7083aef9218b6dc2ec8c31d72ec1dac` | terminal-profile Schur feedback receiver |
-| #4899 | `696fd06775636f31f0364e331103a009cc729fde` | exact cyclic source set |
+README / ROADMAP-only changes are excluded by the Fast Check path filters. Do not dispatch Strict Lean, warm caches, or manufacture a theorem receipt for a docs-only update.
 
-## Status summary
+On a Lean failure, inspect the entire changed module, CompileSmoke, imports, dependent signatures, local instances, and pinned mathlib APIs. Prefer explicit `calc`, `congrArg`, and focused `simpa only`; preserve coefficient orientation, avoid arbitrary L2 pointwise representatives, and do not assume positive-beta commutativity. Detailed restart instructions and the milestone ledger are in [ROADMAP.md](ROADMAP.md).
 
-```text
-finite Wilson / OS / physical-transfer root                    CLOSED
-exact beta-zero physical transfer gap = 1                      CLOSED
-positive-beta response / RMS / bidirectional Schur side        CLOSED
-canonical prefix / vector telescoping / stage residual spine    CLOSED
-physical full = direct + response L2 decomposition              CLOSED
-direct L2 -> backward variance / law-response transport         CLOSED
-sweep-block terminal geometry and exact renewal                 CLOSED
-cyclic second-visit order                                       CLOSED
-bounded cyclic second-visit representatives                     CLOSED
-terminal profile / six-color renewal                            CLOSED
-terminal response energy -> terminal path loss                  CLOSED
-terminal-profile Schur feedback receiver                        CLOSED
-cyclic between-visits source set = all other same-color links   CLOSED
-
-cyclic source-update semantic one-sided estimate                OPEN
-beta-small quantitative coefficient closure                    OPEN
-strict next-defect contraction                                  OPEN
-delta(beta) < 1/6                                               OPEN
-positive-beta finite-volume physical transfer gap               OPEN
-thermodynamic / infinite-volume construction                    OPEN
-continuum OS / Wightman construction                            OPEN
-continuum Yang--Mills mass gap                                  OPEN
-```
-
-## Lean / mathlib engineering discipline
-
-- Always fresh re-observe the theorem-carrier branch before creating or
-  classifying a theorem PR.
-- Judge CI only at the exact current PR head SHA.
-- The theorem-bearing GREEN criterion is the completed
-  `PR Lean Fast Check` plus the exact-head
-  `chatgpt-ci-receipt/PR Lean Fast Check` success receipt.
-- Do not rerun Strict Lean merely because a theorem-bearing PR already passed
-  the required exact-head Fast Check.
-- Docs-only updates do not require Strict Lean.
-- On RED, inspect the full changed Lean module, CompileSmoke, imports,
-  dependent theorem signatures, typeclass instances, and pinned mathlib APIs.
-- Prefer compact local aliases and explicit `calc` blocks over giant
-  dependent `rw` / `unfold` chains.
-- Preserve `K_pin(source,target)` or `K(target,source)` exactly as specified
-  by the theorem being applied.  Never infer response symmetry.
-- Do not introduce finite-cardinality Cauchy losses, arbitrary factors two, or
-  volume-dependent multiplicities.
-- Do not pointwise-evaluate arbitrary L2 quotient representatives.
-- Do not identify measure-indexed carriers without an explicit equality,
-  isometry, cast, or proved transport theorem.
-- Do not assume positive-beta one-link projections commute.
-
-## Navigation
-
-- `ROADMAP.md` — exact current proof frontier and restart sequence.
-- `MGAP4D/MathlibAnalytic` — formal analytic theorem development.
-- authoritative theorem-carrier —
-  `formal/real-hilbert-uniform-coercive-strong-limit`.
+[stage-quantitative]: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSweepBlockDefectCyclicSourceStepQuantitative.lean
+[profile-classification]: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSweepBlockDefectCyclicSourceStepProfileClassification.lean
+[signed-telescope]: MGAP4D/MathlibAnalytic/RealHilbertProjectionSweepTargetCrossResidualTelescoping.lean
+[commutator-coefficient]: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateTargetSourceCommutatorCoefficient.lean
+[nonexpansive-step]: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateTargetResidualCommutatorNonexpansiveStep.lean
+[forcing-telescope]: MGAP4D/MathlibAnalytic/RealHilbertProjectionSweepTargetResidualForcingBudgetTelescope.lean
+[cyclic-forcing]: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSweepBlockDefectCyclicTerminalProfileForcingBudget.lean
+[beta-small-schur]: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointTerminalProfileBetaSmallSchurFeedback.lean
