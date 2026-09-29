@@ -108,11 +108,14 @@ theorem allLinkSweep_targetResidual_le_orderedBudget_add_initial
     (sources : List Link) (f : JL2) (target : Link) :
     ‖realHilbertProjectionSweep P sources f - P target (realHilbertProjectionSweep P sources f)‖ ≤
       allLinkSweepOrderedResidualBudget H N hN beta hbeta s sources f target + ‖f - P target f‖ := by
-  apply realHilbertProjectionSweep_targetResidual_norm_le_forcingBudget_add_initial
-    P target (fun source x => k s source target * ‖x - P source x‖)
-  intro source x
-  simpa only [add_comm] using sourceUpdate_targetResidual_norm_le_add_sourceResidual_allL2
-    H N hN beta hbeta s hs hcut source target x
+  have hStep : ∀ (source : Link) (x : JL2),
+      ‖P source x - P target (P source x)‖ ≤
+        k s source target * ‖x - P source x‖ + ‖x - P target x‖ := by
+    intro source x
+    exact (sourceUpdate_targetResidual_norm_le_add_sourceResidual_allL2
+      H N hN beta hbeta s hs hcut source target x).trans_eq (add_comm _ _)
+  exact realHilbertProjectionSweep_targetResidual_norm_le_forcingBudget_add_initial
+    P target (fun source x => k s source target * ‖x - P source x‖) hStep sources f
 
 /-- Once the target has been visited, its initial residual is zero. All
 forcing before that visit may then be added only because it is nonnegative. -/
