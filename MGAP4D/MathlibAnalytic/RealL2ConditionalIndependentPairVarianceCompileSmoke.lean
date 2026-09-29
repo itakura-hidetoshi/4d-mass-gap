@@ -11,10 +11,13 @@ open scoped ENNReal ProbabilityTheory
 -- The same-fiber probability law is used twice; a constant has zero pair energy.
 example {α : Type*} [MeasurableSpace α] (μ : Measure α)
     [IsProbabilityMeasure μ] (c : ℝ) :
-    (∫⁻ uv : α × α, ENNReal.ofReal ((c - c) ^ 2) ∂μ.prod μ) = 0 := by
-  have h := realProbabilityIndependentPair_lintegral_sq_sub_eq_two_mul_evariance
-    μ (fun _ : α => c) (memLp_const c)
-  simpa using h
+    (∫⁻ _uv : α × α, ENNReal.ofReal ((c - c) ^ 2) ∂μ.prod μ) = 0 := by
+  calc
+    (∫⁻ _uv : α × α, ENNReal.ofReal ((c - c) ^ 2) ∂μ.prod μ) =
+        2 * evariance (fun _ : α => c) μ :=
+      realProbabilityIndependentPair_lintegral_sq_sub_eq_two_mul_evariance
+        μ (fun _ : α => c) (memLp_const c)
+    _ = 0 := by simp
 
 -- Outer extraction of the exact normalization has no extra measurability premise.
 example {α : Type*} [MeasurableSpace α] (μ : Measure α) (V : α → ℝ≥0∞) :

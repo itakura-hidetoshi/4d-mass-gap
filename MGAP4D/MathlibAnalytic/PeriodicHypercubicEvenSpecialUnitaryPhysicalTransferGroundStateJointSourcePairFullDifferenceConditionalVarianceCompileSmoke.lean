@@ -38,4 +38,15 @@ example
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawSecondMean_eq_sourceValueMean]
   rfl
 
+-- Regression under the full physical import graph: normalize function subtraction
+-- after the Lp coercion receipt, before rewriting point evaluations.
+example {α : Type*} [MeasurableSpace α] (μ : Measure α)
+    (U V : Lp ℝ 2 μ) (u v : α → ℝ)
+    (hU : (fun a => U a) =ᵐ[μ] u) (hV : (fun a => V a) =ᵐ[μ] v) :
+    (fun a => (U - V) a) =ᵐ[μ] (fun a => u a - v a) := by
+  filter_upwards [Lp.coeFn_sub U V, hU, hV] with a hSub hu hv
+  rw [hSub]
+  change U a - V a = u a - v a
+  rw [hu, hv]
+
 end MGAP4D.MathlibAnalytic

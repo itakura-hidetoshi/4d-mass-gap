@@ -144,7 +144,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourc
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawSecondMeanL2_coeFn
         H N hN beta hbeta B distinguishedSource source target k g₂ F hF bound hbound left center] with z hSub hOld hSecond
     change (O - S) z = M (z.1, z.2.1) - M (z.1, z.2.2)
-    rw [hSub, hOld, hSecond,
+    rw [hSub]
+    change O z - S z = M (z.1, z.2.1) - M (z.1, z.2.2)
+    rw [hOld, hSecond,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSourcePairCanonicalTargetLawSecondMean_eq_sourceValueMean]
     rfl
   have h := realL2_conditionalIndependentPair_norm_sq_eq_two_mul_lintegral_evariance
