@@ -45,49 +45,31 @@ one-link family controls the terminal profile by the forcing accumulated along
 the exact cyclic between-visits trajectory. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkTerminalSweepStageLocalProfile_le_cyclicForcingBudget
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (color : PeriodicHypercubicEvenGroundStateSpatialColor)
-    (pre suffix :
-      List (PeriodicHypercubicEvenFixedSpatialColorLink H color))
-    (target :
-      PeriodicHypercubicEvenFixedSpatialColorLink H color)
-    (f :
-      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-        H N hN beta hbeta)
-    (hSplit :
-      (Finset.univ :
-        Finset (PeriodicHypercubicEvenFixedSpatialColorLink H color)).toList =
-          pre ++ target :: suffix)
-    (forcing :
-      PeriodicHypercubicEvenFixedSpatialColorLink H color →
-        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-          H N hN beta hbeta → ℝ)
-    (hStep :
-      ∀
-        (source : PeriodicHypercubicEvenFixedSpatialColorLink H color)
-        (x :
-          PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-            H N hN beta hbeta),
-        ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-              H N hN beta hbeta color source x -
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-              H N hN beta hbeta color target
-              (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-                H N hN beta hbeta color source x)‖ ≤
-          forcing source x +
-            ‖x -
-              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-                H N hN beta hbeta color target x‖) :
+    (pre suffix : List (PeriodicHypercubicEvenFixedSpatialColorLink H color))
+    (target : PeriodicHypercubicEvenFixedSpatialColorLink H color)
+    (f : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2 H N hN beta hbeta)
+    (hSplit : (Finset.univ : Finset (PeriodicHypercubicEvenFixedSpatialColorLink H color)).toList =
+      pre ++ target :: suffix)
+    (forcing : PeriodicHypercubicEvenFixedSpatialColorLink H color →
+      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2 H N hN beta hbeta → ℝ)
+    (hStep : ∀ (source : PeriodicHypercubicEvenFixedSpatialColorLink H color)
+      (x : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2 H N hN beta hbeta),
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
+          H N hN beta hbeta color source x -
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
+          H N hN beta hbeta color target
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
+            H N hN beta hbeta color source x)‖ ≤
+        forcing source x +
+          ‖x - periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
+            H N hN beta hbeta color target x‖) :
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkTerminalSweepStageLocalProfile
         H N hN beta hbeta color f target ≤
       realHilbertProjectionSweepTargetResidualForcingBudget
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-          H N hN beta hbeta color)
-        forcing
-        (suffix ++ pre)
+          H N hN beta hbeta color) forcing (suffix ++ pre)
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
           H N hN beta hbeta color target
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkSweepStageVector
