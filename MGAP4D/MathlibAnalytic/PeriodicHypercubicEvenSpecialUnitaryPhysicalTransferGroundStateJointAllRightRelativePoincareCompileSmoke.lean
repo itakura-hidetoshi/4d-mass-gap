@@ -4,6 +4,8 @@ open MGAP4D.MathlibAnalytic
 open MGAP4D.MathlibAnalytic.GroundStateSourceFixedPairEnergy
 open scoped BigOperators
 
+noncomputable section
+
 local instance allRightRelativePoincareSmokeSpatialLinkFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := Fintype.ofFinite _
 
@@ -62,3 +64,5 @@ example : (1 - (0 : ℝ)) * (1 : ℝ) ≤ 1 := by norm_num
 #print axioms allLinkSweep_pathLoss_controlled_by_initialResidual
 #print axioms allLinkSweep_iterates_tendsto_leftRetained
 #print axioms allLink_relativePoincare
+
+end
