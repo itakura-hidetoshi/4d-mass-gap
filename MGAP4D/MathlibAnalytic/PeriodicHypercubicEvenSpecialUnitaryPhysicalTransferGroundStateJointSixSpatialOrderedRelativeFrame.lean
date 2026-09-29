@@ -80,9 +80,13 @@ theorem fixedColor_sweep_displacement_le_one_add_sqrt_lossRatio_mul_colorResidua
     exact hDefect
   have hNorm := (sq_le_sq₀ (norm_nonneg _)
     (mul_nonneg (Real.sqrt_nonneg _) (norm_nonneg _))).mp hSquare
+  have hTriangle : ‖f - Scolor color f‖ ≤
+      ‖f - B color f‖ + ‖B color f - Scolor color f‖ := by
+    simpa only [dist_eq_norm] using dist_triangle f (B color f) (Scolor color f)
   calc
-    _ ≤ ‖f - B color f‖ + ‖Scolor color f - B color f‖ := by
-      simpa only [dist_eq_norm, norm_sub_rev] using dist_triangle f (B color f) (Scolor color f)
+    _ ≤ ‖f - B color f‖ + ‖Scolor color f - B color f‖ :=
+      hTriangle.trans_eq (congrArg (fun z : ℝ => ‖f - B color f‖ + z)
+        (norm_sub_rev (B color f) (Scolor color f)))
     _ ≤ ‖f - B color f‖ + Real.sqrt (jointLeakageLossRatio s beta) * ‖f - B color f‖ :=
       _root_.add_le_add (le_refl _) hNorm
     _ = _ := by ring
