@@ -60,7 +60,8 @@ theorem realHilbertProjectionSweepTargetCrossResidualLinearMap_apply
         P target source x := by
   simp [
     realHilbertProjectionSweepTargetCrossResidualLinearMap,
-    realHilbertProjectionSweepTargetCrossResidual]
+    realHilbertProjectionSweepTargetCrossResidual] <;>
+    abel
 
 /-- Exact forcing/feedback decomposition with respect to the distinguished
 target projection. -/
