@@ -22,17 +22,6 @@ namespace MGAP4D.MathlibAnalytic
 
 noncomputable section
 
-/-- The exact L2 cast induced by a literal measure equality is injective. -/
-theorem realL2CastOfMeasureEq_injective
-    {α : Type*}
-    [MeasurableSpace α]
-    {μ ν : MeasureTheory.Measure α}
-    (hμν : μ = ν) :
-    Function.Injective (realL2CastOfMeasureEq hμν) := by
-  cases hμν
-  intro f g h
-  simpa using h
-
 /-- Genuine beta-zero one-link conditional expectations commute pairwise on
 the ground-state joint L2 carrier. -/
 theorem
@@ -51,23 +40,9 @@ theorem
         H N hN 0 (by norm_num) source
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
           H N hN 0 (by norm_num) target x) := by
-  let hJoint :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_zero_eq_pairHaar
+  apply
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2_injective
       H N hN
-  apply realL2CastOfMeasureEq_injective hJoint
-  change
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
-        H N hN
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
-          H N hN 0 (by norm_num) target
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
-            H N hN 0 (by norm_num) source x)) =
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2
-        H N hN
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
-          H N hN 0 (by norm_num) source
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
-            H N hN 0 (by norm_num) target x))
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabBetaZeroJointToPairHaarL2_spatialLinkCondExp
       H N hN target,
