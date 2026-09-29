@@ -38,7 +38,7 @@ theorem realL2_condExp_eq_of_residual_norm_sq_le
     aestronglyMeasurable_condExpL2 hm f
   have hpg : AEStronglyMeasurable[m] (fun a => (p - g) a) μ := by
     exact (hp.sub hg).congr (Lp.coeFn_sub p g).symm
-  have hi := inner_condExpL2_eq_inner_fun hm f (p - g) hpg
+  have hi := inner_condExpL2_eq_inner_fun (𝕜 := ℝ) hm f (p - g) hpg
   have horth : inner ℝ (f - p) (p - g) = 0 := by
     rw [inner_sub_left]
     exact sub_eq_zero.mpr hi.symm
