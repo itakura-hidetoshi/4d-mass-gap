@@ -202,7 +202,7 @@ theorem fullDifferenceL2_norm_sq_eq_pairEnergy
     calc
       ‖v‖ ^ 2 = inner ℝ v v := (real_inner_self_eq_norm_sq v).symm
       _ = ∫ z, (v z) ^ 2 ∂μ := by
-        simp only [L2.inner_def, real_inner_self_eq_norm_sq, Real.norm_eq_abs, sq_abs]
+        simp only [L2.inner_def, real_inner_self_eq_norm_sq, Real.norm_eq_abs, sq_abs, μ]
       _ = ∫ z, D z ^ 2 ∂μ := integral_congr_ae hSquareRep
   change ‖v‖ ^ 2 = pairEnergy H N hN beta hbeta source target F C
   rw [hNorm]
