@@ -1,0 +1,21 @@
+import MGAP4D.MathlibAnalytic.RealHilbertProjectionSweepTargetSourceCommutatorForcing
+
+namespace MGAP4D.MathlibAnalytic
+
+#check realHilbertProjectionSweepTargetSourceCommutatorLinearMap
+
+#check realHilbertProjectionSweepTargetSourceCommutatorLinearMap_apply
+
+#check
+  realHilbertProjectionSweepTargetCrossResidual_projected_eq_commutator_of_idempotent
+
+#check
+  realHilbertProjectionSweepTargetCrossResidual_eq_commutator_add_feedback_of_idempotent
+
+#check
+  realHilbertProjectionSweepTargetCrossResidual_norm_le_commutator_add_feedback_of_idempotent
+
+#check
+  realHilbertProjectionSweepTargetSourceCommutatorLinearMap_eq_zero_of_commute
+
+end MGAP4D.MathlibAnalytic
