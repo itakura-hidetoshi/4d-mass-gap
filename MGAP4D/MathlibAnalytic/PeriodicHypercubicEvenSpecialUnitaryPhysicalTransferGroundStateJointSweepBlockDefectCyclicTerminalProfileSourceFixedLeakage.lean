@@ -95,6 +95,14 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkTerminalSweepStageLocalProfile_le_cyclicForcingBudget_of_boundedCore
       H N hN beta hbeta color pre suffix target f hf hSplit
       (fun source x => K source target * ‖x - P source x‖)
+  -- Normalize the receiver's leading `let P := ...` before naming its forall binders.
+  change ∀ (source : PeriodicHypercubicEvenFixedSpatialColorLink H color),
+    source.1 ≠ target.1 →
+    ∀ (x : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2 H N hN beta hbeta),
+      x ∈ periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointBoundedConcreteCore
+        H N hN beta hbeta →
+      ‖P source x - P target (P source x)‖ ≤
+        K source target * ‖x - P source x‖ + ‖x - P target x‖
   intro source hne x hx
   have hUpdatedCore : P source x ∈
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointBoundedConcreteCore

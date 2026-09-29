@@ -18,4 +18,16 @@ example {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
   realHilbertProjection_targetResidual_sq_eq_inner_residual_add_sourceLeakage
     P Q hPIdem hQIdem hPSymm hQSymm x
 
+-- Regression: a leading let is not the first source/side-condition binder.
+example {ι E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (P : ι → E →L[ℝ] E) (target : ι)
+    (hIdem : ∀ i, (P i).comp (P i) = P i) :
+    (let Q := P
+     ∀ source : ι, source ≠ target → ∀ x : E, Q source (Q source x) = Q source x) := by
+  change ∀ source : ι, source ≠ target → ∀ x : E,
+    P source (P source x) = P source x
+  intro source _ x
+  simpa only [ContinuousLinearMap.comp_apply] using
+    congrArg (fun T : E →L[ℝ] E => T x) (hIdem source)
+
 end MGAP4D.MathlibAnalytic
