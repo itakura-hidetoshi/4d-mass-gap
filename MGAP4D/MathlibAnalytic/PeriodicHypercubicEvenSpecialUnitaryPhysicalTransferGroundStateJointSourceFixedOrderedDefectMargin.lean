@@ -100,6 +100,7 @@ private theorem sixSpatial_residualEnergy_eq_colorAverage (f : JL2) :
     groundStateJointColorNormalizedResidualEnergy,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2,
     Fintype.card_fin, one_div]
+  norm_num
 
 /-- The exact normalized six-color relative estimate, now on all joint L2. -/
 theorem sixSpatial_defectMean_le_lossRatio_mul_residualEnergy
