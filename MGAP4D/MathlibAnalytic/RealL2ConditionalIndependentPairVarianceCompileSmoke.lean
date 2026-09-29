@@ -1,0 +1,24 @@
+import MGAP4D.MathlibAnalytic.RealL2ConditionalIndependentPairVariance
+
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory ProbabilityTheory
+open scoped ENNReal ProbabilityTheory
+
+#check realProbabilityIndependentPair_lintegral_sq_sub_eq_two_mul_evariance
+#check realL2_conditionalIndependentPair_norm_sq_eq_two_mul_lintegral_evariance
+
+-- The same-fiber probability law is used twice; a constant has zero pair energy.
+example {α : Type*} [MeasurableSpace α] (μ : Measure α)
+    [IsProbabilityMeasure μ] (c : ℝ) :
+    (∫⁻ uv : α × α, ENNReal.ofReal ((c - c) ^ 2) ∂μ.prod μ) = 0 := by
+  have h := realProbabilityIndependentPair_lintegral_sq_sub_eq_two_mul_evariance
+    μ (fun _ : α => c) (memLp_const c)
+  simpa using h
+
+-- Outer extraction of the exact normalization has no extra measurability premise.
+example {α : Type*} [MeasurableSpace α] (μ : Measure α) (V : α → ℝ≥0∞) :
+    (∫⁻ a, (2 : ℝ≥0∞) * V a ∂μ) = 2 * ∫⁻ a, V a ∂μ :=
+  lintegral_const_mul' 2 V (by simp)
+
+end MGAP4D.MathlibAnalytic
