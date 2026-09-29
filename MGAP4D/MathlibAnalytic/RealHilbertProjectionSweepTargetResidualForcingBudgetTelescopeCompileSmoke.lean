@@ -1,0 +1,23 @@
+import MGAP4D.MathlibAnalytic.RealHilbertProjectionSweepTargetResidualForcingBudgetTelescope
+
+namespace MGAP4D.MathlibAnalytic
+
+#check
+  realHilbertProjectionSweepTargetResidualForcingBudget
+
+#check
+  realHilbertProjectionSweep_targetResidual_norm_le_forcingBudget_add_initial
+
+#check
+  realHilbertProjectionSweep_targetResidual_norm_le_forcingBudget_of_fixed
+
+#check
+  realHilbertProjectionSweepTargetResidualCommutatorForcingBudget
+
+#check
+  realHilbertProjectionSweep_targetResidual_norm_le_commutatorForcingBudget_add_initial
+
+#check
+  realHilbertProjectionSweep_targetResidual_norm_le_commutatorForcingBudget_of_fixed
+
+end MGAP4D.MathlibAnalytic
