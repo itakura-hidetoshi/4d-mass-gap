@@ -4,25 +4,16 @@ import Mathlib.Tactic
 /-!
 # One-step target-cross-residual commutator/feedback receiver
 
-PRs #4914--#4917 isolate one source step into two pieces:
+The exact projected-forcing/residual-feedback split gives
 
-* projected forcing, carried by the target/source commutator;
-* feedback, carried by the pre-existing target residual.
+  ||cross(t,s,x)|| <= c_comm(t,s) * ||P_t x|| + ||cross(t,s,x-P_t x)||.
 
-This file exposes the coefficient-preserving one-step receiver
-
-  ||cross(t,s,x)||
-    <= c_comm(t,s;beta) * ||P_t x||
-       + ||cross(t,s,x - P_t x)||,
-
-and its genuine fixed-color physical form with the first term charged directly
-to ||x|| by conditional-expectation contraction.
-
-At beta zero the projected forcing vanishes exactly, so the one-step cross
-residual is literally equal to the feedback term.
-
-No square expansion, finite-cardinality Cauchy estimate, arbitrary factor two,
-response symmetry, or positive-beta commutativity is used.
+On the genuine physical carrier conditional-expectation contraction also
+bounds the forcing by c_comm(t,s) * ||x||. At beta zero it vanishes exactly.
+No square expansion, cardinality loss, response symmetry, or positive-beta
+commutativity is used. The feedback equalities are explicit rewrite lemmas,
+not simp rules: their right-hand sides contain the same function at a larger
+argument and must not be registered as unrestricted recursive rewrites.
 -/
 
 namespace MGAP4D.MathlibAnalytic
@@ -38,173 +29,96 @@ theorem realHilbertProjectionSweepTargetCrossResidual_norm_le_commutatorCoeffici
     [NormedSpace ℝ E]
     (P : C → E →L[ℝ] E)
     (target source : C)
-    (hIdem :
-      (P target).comp (P target) = P target)
+    (hIdem : (P target).comp (P target) = P target)
     (x : E) :
-    ‖realHilbertProjectionSweepTargetCrossResidual
-        P target source x‖ ≤
-      realHilbertProjectionSweepTargetSourceCommutatorCoefficient
-          P target source *
+    ‖realHilbertProjectionSweepTargetCrossResidual P target source x‖ ≤
+      realHilbertProjectionSweepTargetSourceCommutatorCoefficient P target source *
           ‖P target x‖ +
-        ‖realHilbertProjectionSweepTargetCrossResidual
-          P target source (x - P target x)‖ := by
-  rw [
-    realHilbertProjectionSweepTargetCrossResidual_eq_projected_add_residual
-      P target source x]
-  calc
-    ‖realHilbertProjectionSweepTargetCrossResidual
-          P target source (P target x) +
-        realHilbertProjectionSweepTargetCrossResidual
-          P target source (x - P target x)‖ ≤
-      ‖realHilbertProjectionSweepTargetCrossResidual
-          P target source (P target x)‖ +
-        ‖realHilbertProjectionSweepTargetCrossResidual
-          P target source (x - P target x)‖ :=
-        norm_add_le _ _
-    _ ≤
-      realHilbertProjectionSweepTargetSourceCommutatorCoefficient
-          P target source *
-          ‖P target x‖ +
-        ‖realHilbertProjectionSweepTargetCrossResidual
-          P target source (x - P target x)‖ := by
-      exact
-        add_le_add_right
-          (realHilbertProjectionSweepTargetCrossResidual_projected_norm_le_commutatorCoefficient_mul_norm
-            P target source hIdem x)
-          _
+        ‖realHilbertProjectionSweepTargetCrossResidual P target source (x - P target x)‖ := by
+  rw [realHilbertProjectionSweepTargetCrossResidual_eq_projected_add_residual
+    P target source x]
+  exact (norm_add_le _ _).trans
+    (_root_.add_le_add
+      (realHilbertProjectionSweepTargetCrossResidual_projected_norm_le_commutatorCoefficient_mul_norm
+        P target source hIdem x)
+      le_rfl)
 
-/-- Genuine fixed-color one-step receiver.  Conditional-expectation
-contraction charges the commutator forcing to the original Hilbert norm with
-the same beta-zero-vanishing coefficient. -/
+/-- Genuine fixed-color receiver with the same coefficient on the input norm. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkTargetCrossResidual_norm_le_commutatorCoefficient_mul_norm_add_feedback
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (color : PeriodicHypercubicEvenGroundStateSpatialColor)
-    (target source :
-      PeriodicHypercubicEvenFixedSpatialColorLink H color)
-    (x :
-      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-        H N hN beta hbeta) :
+    (target source : PeriodicHypercubicEvenFixedSpatialColorLink H color)
+    (x : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+      H N hN beta hbeta) :
     ‖realHilbertProjectionSweepTargetCrossResidual
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-          H N hN beta hbeta color)
-        target source x‖ ≤
+          H N hN beta hbeta color) target source x‖ ≤
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkTargetSourceCommutatorCoefficient
-          H N hN beta hbeta color target source *
-          ‖x‖ +
+          H N hN beta hbeta color target source * ‖x‖ +
         ‖realHilbertProjectionSweepTargetCrossResidual
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-            H N hN beta hbeta color)
-          target source
-          (x -
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-              H N hN beta hbeta color target x)‖ := by
+            H N hN beta hbeta color) target source
+          (x - periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
+            H N hN beta hbeta color target x)‖ := by
   let P :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
       H N hN beta hbeta color
-  rw [
-    realHilbertProjectionSweepTargetCrossResidual_eq_projected_add_residual
-      P target source x]
-  calc
-    ‖realHilbertProjectionSweepTargetCrossResidual
-          P target source (P target x) +
-        realHilbertProjectionSweepTargetCrossResidual
-          P target source (x - P target x)‖ ≤
-      ‖realHilbertProjectionSweepTargetCrossResidual
-          P target source (P target x)‖ +
-        ‖realHilbertProjectionSweepTargetCrossResidual
-          P target source (x - P target x)‖ :=
-        norm_add_le _ _
-    _ ≤
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkTargetSourceCommutatorCoefficient
-          H N hN beta hbeta color target source *
-          ‖x‖ +
-        ‖realHilbertProjectionSweepTargetCrossResidual
-          P target source (x - P target x)‖ := by
-      exact
-        add_le_add_right
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkTargetCrossResidual_projected_norm_le_commutatorCoefficient_mul_norm
-            H N hN beta hbeta color target source x)
-          _
-    _ =
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkTargetSourceCommutatorCoefficient
-          H N hN beta hbeta color target source *
-          ‖x‖ +
-        ‖realHilbertProjectionSweepTargetCrossResidual
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-            H N hN beta hbeta color)
-          target source
-          (x -
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-              H N hN beta hbeta color target x)‖ := by
-      rfl
+  rw [realHilbertProjectionSweepTargetCrossResidual_eq_projected_add_residual
+    P target source x]
+  exact (norm_add_le _ _).trans
+    (_root_.add_le_add
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkTargetCrossResidual_projected_norm_le_commutatorCoefficient_mul_norm
+        H N hN beta hbeta color target source x)
+      le_rfl)
 
-/-- Exact beta-zero specialization: the forcing term disappears and one source
-step acts only on the already-existing target residual. -/
-@[simp] theorem
+/-- At beta zero one source step acts only on the existing target residual.
+This expanding equality is intentionally not a simp rule. -/
+theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkTargetCrossResidual_zero_eq_feedback
-    (H N : ℕ)
-    (hN : 0 < N)
+    (H N : ℕ) (hN : 0 < N)
     (color : PeriodicHypercubicEvenGroundStateSpatialColor)
-    (target source :
-      PeriodicHypercubicEvenFixedSpatialColorLink H color)
-    (x :
-      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-        H N hN 0 (by norm_num)) :
+    (target source : PeriodicHypercubicEvenFixedSpatialColorLink H color)
+    (x : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+      H N hN 0 le_rfl) :
     realHilbertProjectionSweepTargetCrossResidual
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-          H N hN 0 (by norm_num) color)
-        target source x =
+          H N hN 0 le_rfl color) target source x =
       realHilbertProjectionSweepTargetCrossResidual
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-          H N hN 0 (by norm_num) color)
-        target source
-        (x -
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-            H N hN 0 (by norm_num) color target x) := by
+          H N hN 0 le_rfl color) target source
+        (x - periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
+          H N hN 0 le_rfl color target x) := by
   let P :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-      H N hN 0 (by norm_num) color
-  rw [
-    realHilbertProjectionSweepTargetCrossResidual_eq_projected_add_residual
-      P target source x]
+      H N hN 0 le_rfl color
   have hZero :
-      realHilbertProjectionSweepTargetCrossResidual
-          P target source (P target x) = 0 := by
-    simpa [P] using
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkTargetCrossResidual_projected_zero
-        H N hN color target source x
-  rw [hZero, zero_add]
-  rfl
+      realHilbertProjectionSweepTargetCrossResidual P target source (P target x) = 0 :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkTargetCrossResidual_projected_zero
+      H N hN color target source x
+  simpa only [hZero, zero_add] using
+    (realHilbertProjectionSweepTargetCrossResidual_eq_projected_add_residual
+      P target source x)
 
-/-- Norm form of the exact beta-zero feedback identity. -/
-@[simp] theorem
+/-- Norm form of the explicit beta-zero feedback identity. -/
+theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkTargetCrossResidual_zero_norm_eq_feedback_norm
-    (H N : ℕ)
-    (hN : 0 < N)
+    (H N : ℕ) (hN : 0 < N)
     (color : PeriodicHypercubicEvenGroundStateSpatialColor)
-    (target source :
-      PeriodicHypercubicEvenFixedSpatialColorLink H color)
-    (x :
-      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-        H N hN 0 (by norm_num)) :
+    (target source : PeriodicHypercubicEvenFixedSpatialColorLink H color)
+    (x : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+      H N hN 0 le_rfl) :
     ‖realHilbertProjectionSweepTargetCrossResidual
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-          H N hN 0 (by norm_num) color)
-        target source x‖ =
+          H N hN 0 le_rfl color) target source x‖ =
       ‖realHilbertProjectionSweepTargetCrossResidual
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-          H N hN 0 (by norm_num) color)
-        target source
-        (x -
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-            H N hN 0 (by norm_num) color target x)‖ := by
-  rw [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkTargetCrossResidual_zero_eq_feedback
-      H N hN color target source x]
+          H N hN 0 le_rfl color) target source
+        (x - periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
+          H N hN 0 le_rfl color target x)‖ := by
+  exact congrArg (fun y => ‖y‖)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkTargetCrossResidual_zero_eq_feedback
+      H N hN color target source x)
 
 end
 
