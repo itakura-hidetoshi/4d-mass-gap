@@ -31,14 +31,15 @@ example (H N : ℕ) (hN : 0 < N) (s : ℝ) (hs : 8 < s)
   exact sixSpatial_terminalPathLoss_le_ordered_schur_feedback
     H N hN s hs beta hbeta hcut f hf
 
+-- Use proof terms consistently in the dependent measure/core indices.
 example (H N : ℕ) (hN : 0 < N) (s : ℝ) (hs : 8 < s)
-    (f : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2 H N hN 0 (by norm_num))
+    (f : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2 H N hN 0 le_rfl)
     (hf : f ∈ periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointBoundedConcreteCore
-      H N hN 0 (by norm_num)) :
+      H N hN 0 le_rfl) :
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialOneLinkTerminalSweepPathLoss
-      H N hN 0 (by norm_num) f ≤ 0 := by
+      H N hN 0 le_rfl f ≤ 0 := by
   have h := sixSpatial_terminalPathLoss_le_ordered_schur_feedback
-    H N hN s hs 0 (by norm_num) (jointLeakageSchurCutoff_pos s hs).le f hf
+    H N hN s hs 0 le_rfl (jointLeakageSchurCutoff_pos s hs).le f hf
   simpa using h
 
 #print axioms realHilbertProjectionSweepTargetResidualForcingBudget_eq_sum_of_trajectory
