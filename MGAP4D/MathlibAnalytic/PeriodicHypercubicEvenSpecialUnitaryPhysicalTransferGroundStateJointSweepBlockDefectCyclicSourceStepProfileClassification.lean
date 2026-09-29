@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSweepBlockDefectCyclicSourceStepQuantitative
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSweepStageLocalProfileExactResidual
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSweepBlockDefectTerminalProfileRenewal
 import Mathlib.Tactic
 
 /-!
@@ -122,7 +123,6 @@ theorem
         ‖realHilbertProjectionSweep P before x0 -
           P source (realHilbertProjectionSweep P before x0)‖ := by
     rw [hProfile, hStage]
-    rfl
   calc
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkSecondVisitCyclicSourceStepResidualEnergy
         H N hN beta hbeta color pre before target source f =
