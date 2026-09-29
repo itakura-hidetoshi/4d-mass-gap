@@ -217,8 +217,7 @@ theorem
             Finset (PeriodicHypercubicEvenFixedSpatialColorLink H color)).toList) f =
         realHilbertProjectionSweep P suffix x0
     rw [hCanonicalSplit]
-    rw [realHilbertProjectionSweep_append P pre (target :: suffix) f]
-    rfl
+    rw [realHilbertProjectionSweep_append P pre (target :: suffix) f] <;> rfl
   have hStage :
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkSweepStageVector
           H N hN beta hbeta color before
@@ -246,8 +245,7 @@ theorem
               ‖realHilbertProjectionSweep P (suffix ++ before) x0 -
                 realHilbertProjectionSweep P ((suffix ++ before) ++ [source]) x0‖ ^ 2 =
                 _
-            rw [realHilbertProjectionSweep_append P (suffix ++ before) [source] x0]
-            rfl
+            rw [realHilbertProjectionSweep_append P (suffix ++ before) [source] x0] <;> rfl
     _ =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkTerminalSweepStageLocalProfile
         H N hN beta hbeta color f source ^ 2 := by
