@@ -2,10 +2,14 @@ import MGAP4D.MathlibAnalytic.RealHilbertProjectionSourceFixedLeakage
 
 namespace MGAP4D.MathlibAnalytic
 
-open scoped InnerProductSpace InnerProduct
+open scoped InnerProductSpace
 
 #check realHilbertProjection_targetResidual_sq_eq_inner_residual_add_sourceLeakage
 #check realHilbertProjection_targetResidual_norm_le_add_sourceResidual_of_leakage
+
+-- Regression: positive-factor cancellation is an implication, not `mul_le_mul_left.mp`.
+example (a b : ℝ) (ha : 0 < a) (h : a ^ 2 ≤ a * b) : a ≤ b := by
+  exact _root_.le_of_mul_le_mul_left (by simpa only [pow_two] using h) ha
 
 -- A genuinely commuting pair recovers coefficient-zero nonexpansiveness.
 -- No positive-beta commutativity is inferred by the general theorem.

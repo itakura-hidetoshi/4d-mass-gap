@@ -22,7 +22,7 @@ No factor two, cardinality constant, division, or commutativity is required.
 
 namespace MGAP4D.MathlibAnalytic
 
-open scoped InnerProductSpace InnerProduct
+open scoped InnerProductSpace
 
 noncomputable section
 
@@ -114,7 +114,8 @@ theorem realHilbertProjection_targetResidual_norm_le_add_sourceResidual_of_leaka
   · rw [hr]
     exact add_nonneg (norm_nonneg _) (mul_nonneg hk (norm_nonneg _))
   · have hrpos : 0 < ‖r‖ := lt_of_le_of_ne (norm_nonneg _) (Ne.symm hr)
-    exact (mul_le_mul_left hrpos).mp (by simpa only [pow_two] using hSquared)
+    exact _root_.le_of_mul_le_mul_left
+      (by simpa only [pow_two] using hSquared) hrpos
 
 end
 

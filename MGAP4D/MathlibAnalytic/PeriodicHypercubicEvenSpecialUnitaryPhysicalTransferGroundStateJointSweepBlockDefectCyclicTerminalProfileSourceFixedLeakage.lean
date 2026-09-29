@@ -24,7 +24,7 @@ source/target symmetry, or positive-beta commutativity is assumed.
 
 namespace MGAP4D.MathlibAnalytic
 
-open scoped InnerProductSpace InnerProduct
+open scoped InnerProductSpace
 
 noncomputable section
 
