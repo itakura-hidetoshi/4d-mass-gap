@@ -72,11 +72,17 @@ theorem
         H N hN beta hbeta z.swap =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight
         H N hN beta hbeta z := by
+  rcases z with ⟨A, B⟩
+  change
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight
+        H N hN beta hbeta (B, A) =
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight
+        H N hN beta hbeta (A, B)
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointWeight
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
-    H N hN beta hbeta z.2 z.1]
+    H N hN beta hbeta B A]
   ring
 
 /-- The genuine physical ground-state joint probability measure is invariant
