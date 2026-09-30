@@ -84,31 +84,38 @@ theorem
       (Function.uncurry
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetFiberENNRealWeight
           H N hN beta hbeta source target B A)) := by
-  let hRight :
-      Measurable
-        (fun p : Matrix.specialUnitaryGroup (Fin N) ℂ × Matrix.specialUnitaryGroup (Fin N) ℂ =>
-          Function.update B source p.1) :=
-    (measurable_update B).comp measurable_fst
-  let hLeft :
-      Measurable
-        (fun p : Matrix.specialUnitaryGroup (Fin N) ℂ × Matrix.specialUnitaryGroup (Fin N) ℂ =>
-          Function.update A target p.2) :=
-    (measurable_update A).comp measurable_snd
-  have hJoint :
-      Measurable
-        (fun p : Matrix.specialUnitaryGroup (Fin N) ℂ × Matrix.specialUnitaryGroup (Fin N) ℂ =>
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousWeight
-            H N hN beta hbeta
-            (Function.update B source p.1)
-            (Function.update A target p.2)) :=
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousWeight_joint_continuous
-      H N hN beta hbeta).measurable.comp
-      (hRight.prodMk hLeft)
-  unfold
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetFiberENNRealWeight
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkENNRealWeight
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkWeight
-  exact ENNReal.continuous_ofReal.measurable.comp hJoint
+  let G := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N
+  let U := Matrix.specialUnitaryGroup (Fin N) ℂ
+  let w : G × G → ℝ := fun p =>
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousWeight
+      H N hN beta hbeta p.1 p.2
+  let updateRight : U → G := fun k => Function.update B source k
+  let updateLeft : U → G := fun g => Function.update A target g
+  let pairMap : U × U → G × G := fun p => (updateRight p.1, updateLeft p.2)
+  have hw : Continuous w := by
+    simpa [w] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousWeight_joint_continuous
+        H N hN beta hbeta
+  have hUpdateRight : Continuous updateRight := by
+    simpa [
+      updateRight,
+      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink] using
+      (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_continuous
+        H N B source)
+  have hUpdateLeft : Continuous updateLeft := by
+    simpa [
+      updateLeft,
+      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink] using
+      (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_continuous
+        H N A target)
+  have hPairMap : Continuous pairMap := by
+    exact
+      (hUpdateRight.comp continuous_fst).prodMk
+        (hUpdateLeft.comp continuous_snd)
+  have hWeight : Continuous (fun p : U × U => w (pairMap p)) :=
+    hw.comp hPairMap
+  change Measurable (fun p : U × U => ENNReal.ofReal (w (pairMap p)))
+  exact (ENNReal.continuous_ofReal.comp hWeight).measurable
 
 /-- The exact normalizing mass of the target-fiber weight. -/
 noncomputable def
@@ -361,6 +368,12 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryFrozenTargetSection
       H N target F B A
   letI : IsProbabilityMeasure μ := by
+    change IsProbabilityMeasure
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
+        H N hN beta hbeta (Function.update B source k) A target)
+    rw [←
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetFiberMarkovKernel_apply
+        H N hN beta hbeta source target B A k]
     exact
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetFiberMarkovKernel_isMarkovKernel
         H N hN beta hbeta source target B A).isProbabilityMeasure k
@@ -514,6 +527,12 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryFrozenTargetSection
       H N target F B A
   letI : IsProbabilityMeasure μ := by
+    change IsProbabilityMeasure
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
+        H N hN beta hbeta (Function.update B source k) A target)
+    rw [←
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetFiberMarkovKernel_apply
+        H N hN beta hbeta source target B A k]
     exact
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetFiberMarkovKernel_isMarkovKernel
         H N hN beta hbeta source target B A).isProbabilityMeasure k
