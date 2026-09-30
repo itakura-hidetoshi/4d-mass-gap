@@ -162,9 +162,13 @@ theorem
   let M :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetMean
       H N hN beta hbeta source target F B A
-  letI : IsProbabilityMeasure μ :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundarySwappedSourceFiber_isProbabilityMeasure
-      H N hN beta hbeta source B A
+  letI : IsProbabilityMeasure μ := by
+    change IsProbabilityMeasure
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
+        H N hN beta hbeta A B source)
+    exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundarySwappedSourceFiber_isProbabilityMeasure
+        H N hN beta hbeta source B A
   have hPoint : ∀ k, M k = M (B source) := by
     intro k
     have hz :=
@@ -262,9 +266,9 @@ theorem
             H N hN beta hbeta A)
         ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
           H N hN beta hbeta) = 0 := by
-    apply lintegral_eq_zero
+    apply lintegral_eq_zero_of_ae_eq_zero
     filter_upwards with A
-    apply lintegral_eq_zero
+    apply lintegral_eq_zero_of_ae_eq_zero
     filter_upwards with B
     rw [
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryCurrentTargetMean_sourceSection_variance_eq_zero_of_ne
