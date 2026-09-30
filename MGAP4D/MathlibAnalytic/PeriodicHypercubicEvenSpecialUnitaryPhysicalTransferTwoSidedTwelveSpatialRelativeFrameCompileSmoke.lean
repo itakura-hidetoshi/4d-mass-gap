@@ -1,0 +1,13 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTwoSidedTwelveSpatialRelativeFrame
+
+namespace MGAP4D
+namespace MathlibAnalytic
+namespace GroundStateSourceFixedPairEnergy
+
+#check twoSidedTwelveSpatialFrameCutoff_pos
+#check twoSidedTwelveSpatialRelativeFrameCoefficient_pos
+#check twoSidedTwelveSpatial_ordered_relativePoincare
+
+end GroundStateSourceFixedPairEnergy
+end MathlibAnalytic
+end MGAP4D
