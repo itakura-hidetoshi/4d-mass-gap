@@ -216,8 +216,16 @@ theorem
         (fun z => f z) (Measure.map Prod.swap π) := by
     rw [hs.map_eq]
     exact hf
-  have hcomp :=
+  have hcomp :
+      AEStronglyMeasurable[
+        MeasurableSpace.comap Prod.swap
+          (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
+            H N target)]
+        ((fun z => f z) ∘ Prod.swap) π :=
     AEStronglyMeasurable.comp_ae_measurable'
+      (mα :=
+        periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
+          H N target)
       hfMap measurable_swap.aemeasurable
   rw [
     periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace_comap_swap_eq_left
@@ -273,8 +281,16 @@ theorem
         (fun z => f z) (Measure.map Prod.swap π) := by
     rw [hs.map_eq]
     exact hf
-  have hcomp :=
+  have hcomp :
+      AEStronglyMeasurable[
+        MeasurableSpace.comap Prod.swap
+          (periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace
+            H N target)]
+        ((fun z => f z) ∘ Prod.swap) π :=
     AEStronglyMeasurable.comp_ae_measurable'
+      (mα :=
+        periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace
+          H N target)
       hfMap measurable_swap.aemeasurable
   rw [
     periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace_comap_swap_eq_right
@@ -306,8 +322,12 @@ theorem
           H N target) 2
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
           H N hN beta hbeta)).map
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv
-        H N hN beta hbeta).toLinearEquiv =
+      ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv
+          H N hN beta hbeta).toLinearEquiv :
+        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+            H N hN beta hbeta →ₗ[ℝ]
+          PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+            H N hN beta hbeta) =
       lpMeas ℝ ℝ
         (periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace
           H N target) 2
@@ -353,6 +373,22 @@ theorem
             H N hN beta hbeta)).starProjection
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv
           H N hN beta hbeta f) := by
+  letI : Fact
+      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
+          H N target ≤
+        (inferInstance : MeasurableSpace
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))) :=
+    ⟨periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace_le
+      H N target⟩
+  letI : Fact
+      (periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace
+          H N target ≤
+        (inferInstance : MeasurableSpace
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))) :=
+    ⟨periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace_le
+      H N target⟩
   let E :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv
       H N hN beta hbeta
@@ -388,6 +424,22 @@ theorem
         H N hN beta hbeta target
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv
           H N hN beta hbeta f) := by
+  letI : Fact
+      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
+          H N target ≤
+        (inferInstance : MeasurableSpace
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))) :=
+    ⟨periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace_le
+      H N target⟩
+  letI : Fact
+      (periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace
+          H N target ≤
+        (inferInstance : MeasurableSpace
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))) :=
+    ⟨periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace_le
+      H N target⟩
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2_apply,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftSpatialLinkCondExpL2_apply]
