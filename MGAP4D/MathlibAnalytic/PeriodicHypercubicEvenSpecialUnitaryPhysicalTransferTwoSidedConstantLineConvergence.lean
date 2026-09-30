@@ -4,6 +4,7 @@ import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransf
 import MGAP4D.MathlibAnalytic.RealHilbertNestedBlockProjectionSweepPathLoss
 import Mathlib.Analysis.InnerProductSpace.Projection.Basic
 import Mathlib.Analysis.Normed.Module.FiniteDimension
+import Mathlib.MeasureTheory.Function.FactorsThrough
 import Mathlib.Tactic
 
 /-!
@@ -175,10 +176,12 @@ theorem
 /-- Pair-Haar measurable transport through endpoint swap at the boundary sigma
 level: fst-measurability of f after swapping is snd-measurability of f.
 
-The source and target sigma-algebras live on the same underlying type.  Using
-`StronglyMeasurable.comp_measurable` here asks Lean to synthesize two different
-`MeasurableSpace (X × X)` instances simultaneously, which is elaborationally
-unstable.  Instead transport the simple-function approximation explicitly. -/
+The stable Lean formulation uses the Doob-Dynkin factorization already present
+in mathlib: a strongly measurable representative for the `comap fst`
+sigma-algebra is literally `k ∘ fst` for a strongly measurable `k`.
+Composing the a.e. identity with the pair-Haar measure-preserving swap gives
+`f = k ∘ snd` a.e.  This avoids putting two different
+`MeasurableSpace (X × X)` instances into the same SimpleFunc coercion path. -/
 theorem
     periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaar_aestronglyMeasurable_snd_of_swap_fst
     (H N : ℕ)
@@ -204,65 +207,46 @@ theorem
   let X := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N
   let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
   let μPair := periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N
-  let LeftSigma : MeasurableSpace (X × X) :=
-    MeasurableSpace.comap Prod.fst (inferInstance : MeasurableSpace X)
-  let RightSigma : MeasurableSpace (X × X) :=
-    MeasurableSpace.comap Prod.snd (inferInstance : MeasurableSpace X)
-  have hSwapMeasurableSet :
-      ∀ {s : Set (X × X)},
-        @MeasurableSet (X × X) LeftSigma s →
-          @MeasurableSet (X × X) RightSigma
-            ((Prod.swap : X × X → X × X) ⁻¹' s) := by
-    intro s hs
-    change
-      ∃ t : Set X, MeasurableSet t ∧ Prod.fst ⁻¹' t = s
-      at hs
-    rcases hs with ⟨t, ht, rfl⟩
-    change
-      ∃ t' : Set X, MeasurableSet t' ∧
-        Prod.snd ⁻¹' t' =
-          (Prod.swap : X × X → X × X) ⁻¹' (Prod.fst ⁻¹' t)
-    refine ⟨t, ht, ?_⟩
-    ext p
-    rfl
-  let g : X × X → ℝ :=
-    h.mk (fun p : X × X => f (Prod.swap p))
-  have hg :
-      StronglyMeasurable[RightSigma]
-        (fun p : X × X => g (Prod.swap p)) := by
-    let approx : ℕ → @SimpleFunc (X × X) RightSigma ℝ := fun n =>
-      @SimpleFunc.mk (X × X) RightSigma ℝ
-        (fun p : X × X =>
-          h.stronglyMeasurable_mk.approx n (Prod.swap p))
-        (fun y => by
-          have hs :=
-            hSwapMeasurableSet
-              (SimpleFunc.measurableSet_fiber'
-                (h.stronglyMeasurable_mk.approx n) y)
-          change
-            @MeasurableSet (X × X) RightSigma
-              ((fun p : X × X =>
-                h.stronglyMeasurable_mk.approx n (Prod.swap p)) ⁻¹' {y})
-          exact hs)
-        ((SimpleFunc.finite_range (h.stronglyMeasurable_mk.approx n)).subset <| by
-          rintro y ⟨p, rfl⟩
-          exact ⟨Prod.swap p, by simp⟩)
-    refine ⟨approx, ?_⟩
-    intro p
-    simpa [approx, g] using
-      h.stronglyMeasurable_mk.tendsto_approx (Prod.swap p)
+  let F : X × X → ℝ := fun p => f (Prod.swap p)
+  have hStrong :
+      StronglyMeasurable[
+        MeasurableSpace.comap Prod.fst
+          (inferInstance : MeasurableSpace X)]
+        (h.mk F) := by
+    simpa [F] using h.stronglyMeasurable_mk
+  obtain ⟨k, hk, hkEq⟩ :=
+    hStrong.exists_eq_measurable_comp
+  have hFactor :
+      F =ᵐ[μPair] fun p : X × X => k p.1 := by
+    have hMk : F =ᵐ[μPair] h.mk F := by
+      simpa [F, μPair] using h.ae_eq_mk
+    rw [hkEq] at hMk
+    simpa [Function.comp_def] using hMk
   have hPairSwap :
       MeasurePreserving
         (Prod.swap : X × X → X × X) μPair μPair := by
     simpa [μPair, μ,
       periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure] using
       (Measure.measurePreserving_swap (μ := μ) (ν := μ))
-  have hcomp :=
-    hPairSwap.quasiMeasurePreserving.ae_eq_comp h.ae_eq_mk
-  have hAe :
-      f =ᵐ[μPair] fun p : X × X => g (Prod.swap p) := by
-    simpa [g, Function.comp_def] using hcomp
-  exact ⟨fun p : X × X => g (Prod.swap p), hg, hAe⟩
+  have hEq :
+      f =ᵐ[μPair] fun p : X × X => k p.2 := by
+    have hComp :=
+      hPairSwap.quasiMeasurePreserving.ae_eq_comp hFactor
+    simpa [F, Function.comp_def] using hComp
+  have hSndMeas :
+      @Measurable (X × X) X
+        (MeasurableSpace.comap Prod.snd
+          (inferInstance : MeasurableSpace X))
+        (inferInstance : MeasurableSpace X)
+        Prod.snd :=
+    MeasurableSpace.comap_measurable Prod.snd
+  have hkSnd :
+      StronglyMeasurable[
+        MeasurableSpace.comap Prod.snd
+          (inferInstance : MeasurableSpace X)]
+        (fun p : X × X => k p.2) := by
+    simpa [Function.comp_def] using hk.comp_measurable hSndMeas
+  exact ⟨fun p : X × X => k p.2, hkSnd, hEq⟩
 
 /-- Simultaneous fixedness under every genuine right and left one-link
 conditional expectation forces an actual constant vector in the genuine joint
