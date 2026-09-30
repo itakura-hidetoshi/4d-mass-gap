@@ -38,9 +38,69 @@ local instance twoSidedCyclicForcingSpatialLinkFintype
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
-/-- Domain-correct version of the fixed-start forcing telescope.  The
-one-step estimate is required only on a predicate preserved by every
+/-- Domain-correct forcing telescope with the initial target residual retained.
+The one-step estimate is required only on a predicate preserved by every
 projection along the trajectory. -/
+theorem
+    realHilbertProjectionSweep_targetResidual_norm_le_forcingBudget_add_initial_of_preserved
+    {E C : Type*}
+    [NormedAddCommGroup E]
+    [NormedSpace ℝ E]
+    (P : C → E →L[ℝ] E)
+    (target : C)
+    (forcing : C → E → ℝ)
+    (Core : E → Prop)
+    (hPreserve : ∀ source x, Core x → Core (P source x))
+    (hStep : ∀ source x, Core x →
+      ‖P source x - P target (P source x)‖ ≤
+        forcing source x + ‖x - P target x‖)
+    (sources : List C)
+    (x : E)
+    (hx : Core x) :
+    ‖realHilbertProjectionSweep P sources x -
+        P target (realHilbertProjectionSweep P sources x)‖ ≤
+      realHilbertProjectionSweepTargetResidualForcingBudget
+          P forcing sources x +
+        ‖x - P target x‖ := by
+  induction sources generalizing x with
+  | nil =>
+      simpa only [
+        realHilbertProjectionSweep,
+        realHilbertProjectionSweepTargetResidualForcingBudget,
+        ContinuousLinearMap.id_apply, zero_add] using
+        (le_rfl : ‖x - P target x‖ ≤ ‖x - P target x‖)
+  | cons source sources ih =>
+      have hxNext : Core (P source x) :=
+        hPreserve source x hx
+      have hTail := ih (P source x) hxNext
+      have hOne := hStep source x hx
+      simp only [realHilbertProjectionSweep, ContinuousLinearMap.comp_apply]
+      calc
+        ‖realHilbertProjectionSweep P sources (P source x) -
+            P target (realHilbertProjectionSweep P sources (P source x))‖ ≤
+          realHilbertProjectionSweepTargetResidualForcingBudget
+              P forcing sources (P source x) +
+            ‖P source x - P target (P source x)‖ := hTail
+        _ ≤
+          realHilbertProjectionSweepTargetResidualForcingBudget
+              P forcing sources (P source x) +
+            (forcing source x + ‖x - P target x‖) :=
+          _root_.add_le_add le_rfl hOne
+        _ =
+          realHilbertProjectionSweepTargetResidualForcingBudget
+              P forcing (source :: sources) x +
+            ‖x - P target x‖ := by
+          change
+            realHilbertProjectionSweepTargetResidualForcingBudget
+                P forcing sources (P source x) +
+              (forcing source x + ‖x - P target x‖) =
+            (forcing source x +
+              realHilbertProjectionSweepTargetResidualForcingBudget
+                P forcing sources (P source x)) +
+              ‖x - P target x‖
+          ring
+
+/-- Target-fixed specialization of the domain-correct forcing telescope. -/
 theorem
     realHilbertProjectionSweep_targetResidual_norm_le_forcingBudget_of_fixed_of_preserved
     {E C : Type*}
@@ -62,51 +122,10 @@ theorem
         P target (realHilbertProjectionSweep P sources x)‖ ≤
       realHilbertProjectionSweepTargetResidualForcingBudget
         P forcing sources x := by
-  induction sources generalizing x with
-  | nil =>
-      simpa only [
-        realHilbertProjectionSweep,
-        realHilbertProjectionSweepTargetResidualForcingBudget,
-        ContinuousLinearMap.id_apply,
-        hFixed, sub_self, norm_zero] using
-        (le_rfl : (0 : ℝ) ≤ 0)
-  | cons source sources ih =>
-      have hxNext : Core (P source x) :=
-        hPreserve source x hx
-      have hTail := ih (P source x) hxNext
-      have hOne := hStep source x hx
-      simp only [realHilbertProjectionSweep, ContinuousLinearMap.comp_apply]
-      calc
-        ‖realHilbertProjectionSweep P sources (P source x) -
-            P target (realHilbertProjectionSweep P sources (P source x))‖ ≤
-          realHilbertProjectionSweepTargetResidualForcingBudget
-              P forcing sources (P source x) +
-            ‖P source x - P target (P source x)‖ := by
-          exact
-            (hTail.trans
-              (le_add_of_nonneg_right (norm_nonneg _)))
-        _ ≤
-          realHilbertProjectionSweepTargetResidualForcingBudget
-              P forcing sources (P source x) +
-            (forcing source x + ‖x - P target x‖) :=
-          _root_.add_le_add le_rfl hOne
-        _ =
-          realHilbertProjectionSweepTargetResidualForcingBudget
-              P forcing (source :: sources) x +
-            ‖x - P target x‖ := by
-          change
-            realHilbertProjectionSweepTargetResidualForcingBudget
-                P forcing sources (P source x) +
-              (forcing source x + ‖x - P target x‖) =
-            (forcing source x +
-              realHilbertProjectionSweepTargetResidualForcingBudget
-                P forcing sources (P source x)) +
-              ‖x - P target x‖
-          ring
-        _ =
-          realHilbertProjectionSweepTargetResidualForcingBudget
-              P forcing (source :: sources) x := by
-          rw [hFixed, sub_self, norm_zero, add_zero]
+  have h :=
+    realHilbertProjectionSweep_targetResidual_norm_le_forcingBudget_add_initial_of_preserved
+      P target forcing Core hPreserve hStep sources x hx
+  simpa only [hFixed, sub_self, norm_zero, add_zero] using h
 
 /-- Every finite sweep by the genuine two-sided one-link family preserves the
 bounded concrete core. -/
