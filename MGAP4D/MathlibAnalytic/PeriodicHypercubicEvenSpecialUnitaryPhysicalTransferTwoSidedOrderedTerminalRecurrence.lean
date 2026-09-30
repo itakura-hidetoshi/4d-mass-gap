@@ -314,9 +314,19 @@ theorem
   obtain ⟨pre, suffix, hSplit⟩ :=
     List.mem_iff_append.mp hMem
   let x0 := P target (realHilbertProjectionSweep P pre f)
-  have hCyclic :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedSpatialLink_cyclicTargetResidual_norm_le_orderedForcingBudget
-      H N hN beta hbeta s hs hcut hBetaLt pre suffix target f hf
+  let forcing :
+      PeriodicHypercubicEvenGroundStateTwoSidedSpatialLink H →
+        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+          H N hN beta hbeta → ℝ :=
+    fun source y => K target source * ‖y - P source y‖
+  have hCyclic :
+      ‖realHilbertProjectionSweep P (suffix ++ pre) x0 -
+          P target (realHilbertProjectionSweep P (suffix ++ pre) x0)‖ ≤
+        realHilbertProjectionSweepTargetResidualForcingBudget
+          P forcing (suffix ++ pre) x0 := by
+    exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedSpatialLink_cyclicTargetResidual_norm_le_orderedForcingBudget
+        H N hN beta hbeta s hs hcut hBetaLt pre suffix target f hf
   have hFull :
       Full = realHilbertProjectionSweep P suffix x0 := by
     unfold Full
@@ -348,11 +358,6 @@ theorem
         ‖realHilbertProjectionSweep P (suffix ++ pre) x0 -
           P target (realHilbertProjectionSweep P (suffix ++ pre) x0)‖
     rw [hProfile, hTerminalStage]
-  let forcing :
-      PeriodicHypercubicEvenGroundStateTwoSidedSpatialLink H →
-        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-          H N hN beta hbeta → ℝ :=
-    fun source y => K target source * ‖y - P source y‖
   have hNodup : (pre ++ target :: suffix).Nodup := by
     rw [← hSplit]
     exact Finset.nodup_toList _
@@ -446,8 +451,7 @@ theorem
         hTerminalProfile
       _ ≤
           realHilbertProjectionSweepTargetResidualForcingBudget
-            P forcing (suffix ++ pre) x0 := by
-        simpa [P, K, forcing, x0] using hCyclic
+            P forcing (suffix ++ pre) x0 := hCyclic
       _ =
           (∑ source ∈ suffix.toFinset, K target source * O source) +
             ∑ source ∈ pre.toFinset, K target source * T source :=
