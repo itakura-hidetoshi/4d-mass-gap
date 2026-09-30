@@ -2,219 +2,225 @@
 
 Hidetoshi Itakura's Lean 4 / mathlib development for the four-dimensional Yang--Mills existence and mass-gap program.
 
-**Current result — through merged PR #4932:** the canonical fiber mean is exactly the genuine joint conditional expectation, and the vacuum-averaged fixed-boundary leakage energy is exactly the genuine joint double-projection norm squared. The existing ordered response estimate now bounds that norm with the exact coefficient `Gamma(source,target) / 2` on actual source-updated bounded-core vectors.
+**Current theorem status — through merged PR #4971:** the genuine two-sided one-link dynamics on the physical ground-state joint (L^2) carrier now has a strict high-temperature full-sweep loss contraction, converges to the intrinsic constant-line orthogonal projection, and satisfies an **all-(L^2) two-sided relative Poincaré inequality** with a strictly positive, volume/rank-independent coefficient on the same certified cutoff.
 
-**Next:** convert this ENNReal squared estimate to a real norm estimate, prove domination by the certified physical envelope with the correct index orientation, and feed the existing source-fixed leakage / cyclic-profile receivers. The actual terminal recurrence and strict renewal contraction remain to be proved.
+The new endpoint is not yet the positive-beta physical transfer-gap theorem. The #4971 right-hand side is the **unnormalized sum of all tagged two-sided one-link residuals**, so one further model-facing bridge is required: compress this estimate to a volume-free grouped two-sided spatial frame, identify the constant-line center correctly on the physical top-orthogonal right-boundary sector, and then use the already-existing twelve-spatial / physical-defect receiver.
 
-## Authority checkpoint — 2026-09-29 JST
+## Authority checkpoint — 2026-10-01 JST
 
 | Item | Authoritative value |
 | --- | --- |
 | Repository | `itakura-hidetoshi/4d-mass-gap` |
 | Unique theorem-carrier branch | `formal/real-hilbert-uniform-coercive-strong-limit` |
-| Latest theorem-bearing baseline | `9ca5660a27bf84458f6db30c935ce43d920149e0` — merged [PR #4932](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/4932) |
-| #4932 validated exact PR head | `4a8416abe169958d688f0b30315c02cfaade0115` |
-| #4932 exact-head validation | [PR Lean Fast Check 36562217356](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/36562217356): completed / success; matching receipt: success |
-| #4931 prerequisite head | `d7bc3f152a649b5d6c13f6800ed9c309493b25ee` |
-| #4931 exact-head validation | [PR Lean Fast Check 36561725585](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/36561725585): completed / success; matching receipt: success |
+| Latest theorem-bearing snapshot | `22bfe27324e374242aad7bc402a224769306a22b` — merged [PR #4971](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/4971) |
+| #4971 validated exact PR head | `cf43f174d76451400bb10301c6cb2549be0118b6` |
+| #4971 exact-head validation | [PR Lean Fast Check 36784485909](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/36784485909): completed / success; matching exact-head receipt: success |
+| #4971 build | `Build completed successfully (9420 jobs)` |
+| #4971 artifact | `11129237482`, `sha256:2601e587a80eeb3692f12db43fdcd90a3f1e88b465922f18a2efa4569bddde6c` |
 | Lean | `v4.30.0-rc2` |
 | mathlib | `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
 
-[Authoritative branch](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit) · [Detailed roadmap](ROADMAP.md) · [Lean modules at this theorem checkpoint](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/9ca5660a27bf84458f6db30c935ce43d920149e0/MGAP4D/MathlibAnalytic)
+[Authoritative theorem branch](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit) · [Detailed roadmap](ROADMAP.md) · [Lean modules at the #4971 theorem snapshot](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/22bfe27324e374242aad7bc402a224769306a22b/MGAP4D/MathlibAnalytic)
 
-The default branch `main` is **not** theorem authority. The README / ROADMAP there are documentation mirrors; they do not move the Lean development to `main`. The source links below deliberately resolve to the exact authoritative theorem snapshot even when these documents are read on `main`.
+The default branch `main` is **not theorem authority**. README / ROADMAP on `main` are documentation mirrors only. A docs-only merge may advance a branch pointer without advancing the theorem-bearing mathematical baseline. Authority order is:
 
-A later docs-only commit may advance a branch pointer without advancing the theorem-bearing baseline. The CI runs above validate their stated PR heads, not a later documentation commit. Authority order: fresh exact theorem-carrier SHA; formal Lean artifacts at that SHA; README / ROADMAP; exact-head CI evidence; history / memory.
+1. fresh exact theorem-carrier SHA;
+2. formal Lean artifacts at that SHA;
+3. README / ROADMAP;
+4. exact-head CI receipts;
+5. history / conversation memory.
 
 ## Scope and current boundary
 
-The repository develops the finite-volume periodic Wilson / Osterwalder--Schrader / physical-transfer framework, the **exact beta-zero physical transfer gap of 1**, and the response, RMS, genuine conditional-expectation and bidirectional Schur machinery used below.
+The repository contains a large finite-volume Wilson / Osterwalder--Schrader / transfer-operator development, including the exact beta-zero physical transfer gap
 
-A complete continuum four-dimensional Yang--Mills existence and mass-gap theorem is **not yet established here**. The active finite-volume objective is a volume-uniform positive-beta comparison between a noncommutative same-color one-link sweep and the genuine color-block projection. The recent joint-leakage theorem closes a concrete analytic identification in that route; it does not by itself supply the remaining contraction constants.
+```text
+gap(beta = 0) = 1.
+```
 
-| Layer | Status at #4932 |
+At positive beta, the active route is now much further downstream than the older source-fixed leakage frontier. The recent theorem chain has closed the real leakage conversion, ordered Schur recurrence, renewal contraction, genuine two-sided cross-boundary dynamics, strong convergence of the complete two-sided sweep, and the all-(L^2) relative Poincaré inequality.
+
+A complete continuum four-dimensional Yang--Mills existence and mass-gap theorem is **not yet established here**. In particular, #4971 is not itself the final finite-volume physical transfer-gap theorem.
+
+## What is now closed
+
+### A. Real leakage and ordered Schur machinery — #4935--#4937
+
+The ENNReal squared leakage estimate was converted to the exact real norm coefficient with its finite square-root normalization. The source/target orientation was kept explicit, then the actual bounded-core terminal recurrence was assembled through an ordered RMS Schur envelope with a volume-independent small-coupling cutoff.
+
+This removed the older “real square-root coefficient / physical-envelope orientation” frontier.
+
+### B. Renewal and full genuine joint (L^2) control — #4938--#4941
+
+The fixed-color sweep acquired geometric loss decay and an honest renewal-tail bridge. The actual fixed-color sweep limit and uniform renewal-defect contraction were identified. Ordered defect control was then extended to the full genuine joint (L^2) carrier, followed by control of arbitrary all-link mixed-color sweep residuals.
+
+The former requirement for a separate strict renewal hypothesis is therefore closed in this route.
+
+### C. Volume-free one-sided relative frame — #4942--#4945
+
+The all-right-link sweep gives a relative Poincaré estimate with the complete retained left boundary. Grouping the complete right-link family into the six canonical spatial colors yields the volume-free normalized six-color estimate
+
+```text
+((1 - 2 Q)^2 / 36) * ||f - C_left f||^2 <= E_6(f),
+```
+
+with no link-count factor. The retained projection was also identified with the coarse / Doob geometry.
+
+An existing receiver already turns such a six-color relative frame into a physical transfer gap **if** one separately supplies a strict retained-boundary contraction. That receiver is retained, but the current two-sided route below is designed to avoid leaving that contraction as an external premise.
+
+### D. Genuine cross-boundary two-sided kernel — #4946--#4966
+
+The development then passed from the one-sided retained-boundary problem to actual two-sided dynamics:
+
+- two-boundary ordered Schur envelope;
+- genuine left and two-sided one-link conditional expectations;
+- variance-sensitive (L^2) mean comparison from mutual Harnack bounds;
+- endpoint-swap symmetry and conjugation of one-link projections;
+- removal of the independent-pair factor two;
+- actual kernel-section fiber identification;
+- source-invariant cross-boundary target means and integrated source response;
+- exact return of target variance to genuine target residual;
+- source variance identified with genuine left leakage;
+- genuine cross-boundary one-step (L^2) influence;
+- actual left-update leakage with exact diagonal-support preservation;
+- final actual two-sided one-link leakage bound with the ordered block kernel.
+
+This is the analytic bridge that made a true two-sided recurrence possible.
+
+### E. Two-sided dynamics and intrinsic limit — #4967--#4970
+
+#4967 constructs the bounded-core two-sided cyclic forcing budget. #4968 closes the actual two-sided ordered terminal recurrence.
+
+#4969 then chooses a positive volume/rank-independent cutoff on which the two-boundary Schur coefficient satisfies
+
+```text
+0 <= Q < 1/2
+eta = (Q / (1 - Q))^2
+0 <= eta < 1,
+```
+
+and proves, first on the bounded core and then by density/closedness on **all genuine joint (L^2)**,
+
+```text
+loss(S f) <= eta * loss(f).
+```
+
+Consequently the complete two-sided one-link sweep has geometric path-loss decay.
+
+#4970 identifies the common fixed space of all genuine tagged two-sided one-link conditional expectations with the **intrinsic joint constant line**, defines its orthogonal projection `B`, proves `B` absorbs every tagged update and the full sweep, and establishes
+
+```text
+S^[n] f  ->  B f
+```
+
+strongly for every genuine joint (L^2) vector on the same #4969 cutoff.
+
+### F. All-(L^2) two-sided relative Poincaré — #4971
+
+Let
+
+```text
+P_e = genuine tagged two-sided one-link CondExpL2
+B   = intrinsic joint constant-line orthogonal projection
+Q   = twoBoundaryOrderedSchurCoefficient(s,beta).
+```
+
+Under
+
+```text
+s > 8,
+0 <= beta,
+beta <= twoBoundaryOrderedLossContractionCutoff(s),
+```
+
+#4971 proves for every genuine joint (L^2) vector `f`:
+
+```text
+(1 - 2 Q) * ||f - B f||^2
+  <= sum_e ||f - P_e f||^2.
+```
+
+The coefficient is strictly positive on the same cutoff:
+
+```text
+0 < 1 - 2 Q.
+```
+
+The proof uses the all-(L^2) cross one-step estimate, exact path-loss control by the original tagged residual energy, constant-projection Pythagoras, and #4970 strong convergence to discharge the renewal tail.
+
+Sources: [#4969 loss contraction][two-sided-loss], [#4970 constant-line convergence][constant-line], [#4971 relative Poincaré][two-sided-poincare].
+
+## What remains before the positive-beta physical transfer gap
+
+The current missing interface is narrower than the older retained-boundary problem.
+
+### 1. Volume-free grouped two-sided frame
+
+#4971 controls the **sum over all tagged links**. It must be compressed to a fixed-cardinality two-sided grouped spatial frame without introducing a factor proportional to lattice volume. The one-sided six-color argument from #4943 is the model: group by the canonical spatial colors and use only fixed finite-color Cauchy--Schwarz.
+
+The target should be a genuine two-sided 12-spatial frame (or the already-used physical (1/8)-normalized equivalent) with a coefficient depending only on the certified small-coupling data, not on the number of links.
+
+### 2. Constant-line center on the physical sector
+
+#4971 is centered at the intrinsic joint constant projection `B`. To feed the physical receiver, prove the corresponding center is zero, or otherwise obtain the required lower bound for
+
+```text
+||R(Ux) - B(R(Ux))||^2
+```
+
+when `x` lies in the physical top-eigenspace orthogonal sector. This must be an actual theorem about the joint constant line and the physical right-boundary lift, not an informal identification of different carriers.
+
+### 3. Existing physical receiver
+
+The repository already contains the required downstream receivers:
+
+- a conventional twelve-spatial Poincaré estimate on physical right-boundary lifts implies a six-spatial frame and the explicit transfer-gap lower bound `3 * kappa / 4`;
+- the physical (1/8)-normalized two-sided twelve-spatial frame reduces exactly to the existing eight-color residual on right-boundary lifts and feeds the raw physical squared defect.
+
+Therefore the next work should connect #4971 to these receivers rather than rebuilding transfer-operator theory.
+
+### 4. Uniform scaling family
+
+The #4969 cutoff and the #4971 coefficient are already volume/rank-independent for fixed `s > 8`. If the grouped-frame and physical-centering bridges introduce no volume loss, package one common positive coefficient over the scaling family and invoke the existing uniform transfer-gap receiver.
+
+Only after this finite-volume uniform positive-beta gap is closed should the development move the active frontier back to thermodynamic / continuum OS--Wightman construction.
+
+## What this repository does not currently claim
+
+- #4971 does **not** by itself prove the positive-beta physical transfer gap.
+- The tagged-link residual sum is **not** silently identified with a normalized 12-color frame.
+- The intrinsic constant-line projection is **not** silently replaced by zero on the physical top-orthogonal sector.
+- A finite-volume or uniform transfer gap is not the same as the full continuum Yang--Mills existence and mass-gap theorem.
+- The exact beta-zero gap `1` remains a separate stronger endpoint theorem; the perturbative positive-beta constants need not reproduce it sharply.
+
+## Lean / validation workflow
+
+The #4971 checkpoint is backed by the exact PR head `cf43f174...`, successful PR Lean Fast Check run `36784485909`, the actual `9420 jobs` successful build log, CompileSmoke declarations, and the matching exact-head completion receipt.
+
+The #4971 theorem axiom report contains the standard `propext`, `Classical.choice`, `Quot.sound` dependencies together with the repository's existing `native_decide` cardinality certificates; there is no `sorryAx`.
+
+When repairing theorem PRs, inspect the **whole changed Lean module**, its imports, local instances, dependent signatures, and the pinned mathlib API rather than patching only the line printed by CI. Once an unchanged exact PR head is GREEN, do not rerun Strict Lean merely for reassurance.
+
+README / ROADMAP-only changes are documentation work. Verify their two-file diff and source links; do not manufacture a theorem receipt for them.
+
+## Milestone map since the previous docs checkpoint
+
+| PR range | Closed layer |
 | --- | --- |
-| Exact renewal, cyclic second visit and off-diagonal source set | Proved |
-| Bounded representatives, exact stage residuals and suffix/pre profile classification | Proved |
-| Signed telescope, nonexpansive feedback and ordered forcing budget | Proved |
-| Bounded-core / actual-trajectory receiver, without an ambient-L2 analytic premise | Proved in #4923 |
-| Source-fixed leakage implies source-residual forcing | Proved implication in #4924 |
-| One source-invariant representative for the actual source update; exact direct cancellation | Proved in #4925--#4926 |
-| Ordered vacuum response coefficient and its finiteness on the existing strict cutoff | Proved in #4927 |
-| Actual kernel-section pair energy, exact iid factor two and stationary source variance | Proved in #4928--#4930 |
-| Canonical mean = genuine joint CondExpL2; exact canonical residual / variance | Proved in #4931 |
-| Fixed-boundary leakage = genuine joint double-projection norm squared | Proved in #4932 |
-| Genuine squared leakage estimate with exactly half the ordered coefficient | Proved in #4932 on the stated bounded-core / cutoff domain |
-| Real square-root coefficient and physical-envelope domination | Open next interface |
-| Actual terminal recurrence and strict next-defect contraction | Open, distinct requirements |
-| `delta(beta) < 1/6` and positive-beta finite-volume physical transfer gap | Open |
-| Thermodynamic limit and continuum OS / Wightman mass-gap construction | Downstream open goals |
+| #4935--#4937 | real leakage coefficient, ordered RMS Schur envelope, actual terminal recurrence |
+| #4938--#4941 | geometric renewal, fixed-color limit, full-(L^2) defect and all-link residual control |
+| #4942--#4945 | all-right relative Poincaré, volume-free six-color frame, physical receiver, retained/coarse identification |
+| #4946--#4954 | two-boundary Schur, two-sided projections, Harnack (L^2), swap symmetry, actual fiber laws |
+| #4955--#4966 | concrete cross-boundary means/variances, genuine one-step leakage, actual two-sided leakage |
+| #4967--#4968 | two-sided cyclic forcing and ordered terminal recurrence |
+| #4969 | strict all-(L^2) two-sided full-sweep loss contraction |
+| #4970 | intrinsic constant-line identification and strong sweep convergence |
+| #4971 | all-(L^2) two-sided relative Poincaré |
 
-## 1. Exact sweep geometry is retained
+For the detailed next-step sequence, see [ROADMAP.md](ROADMAP.md).
 
-Let `P_e` be the genuine joint one-link conditional expectation. For spatial color `c`, let `B_c` be the genuine color-block projection and `S_c` the complete canonical same-color one-link sweep. Write
-
-```text
-D_c(f)   = ||S_c f - B_c f||^2
-Dmean(f) = six-color average of D_c(f)
-L(f)     = six-color average of the original sweep path loss
-Lterm(f) = six-color average of the second-sweep path loss
-Dnext(f) = six-color average of D_c(S_c f).
-```
-
-The exact renewal and terminal-profile normalization are
-
-```text
-Dmean(f) = Lterm(f) + Dnext(f)
-(1/6) * sum_e terminalProfile(e)^2 = Lterm(f).
-```
-
-For `canonicalList = pre ++ target :: suffix`, the actual between-visits trajectory starts at
-
-```text
-x0 = P_target (sweep pre f)
-cyclicSources = suffix ++ pre.
-```
-
-It contains every other same-color link exactly once, in that order. A source in `suffix` contributes its original-profile residual; a source in `pre` contributes its terminal-profile residual. This geometry and its bounded representatives are already available; they are not the next missing construction.
-
-At beta zero, `S_c = B_c` exactly. At positive beta, equality of common fixed spaces does not imply commutativity or equality of these operators.
-
-## 2. The active route uses source-fixed leakage, not an unsupported commutator substitution
-
-PRs #4920--#4921 establish the ordered terminal forcing budget. PR #4923 restricts the analytic hypothesis to the actual bounded-core trajectory and off-diagonal sources, closing the previous quantifier mismatch.
-
-PR #4924 preserves cancellation before taking norms. Put
-
-```text
-z = P_d x
-r = z - P_t z
-y = x - P_d x
-ell = P_t z - P_d(P_t z).
-```
-
-For the self-adjoint idempotent projections, the exact Hilbert identity is
-
-```text
-||r||^2 = <r, x - P_t x> + <ell, y>.
-```
-
-Consequently, a supplied bound `||ell|| <= k(d,t) * ||r||`, with `k(d,t) >= 0`, gives
-
-```text
-||P_d x - P_t(P_d x)||
-  <= ||x - P_t x|| + k(d,t) * ||x - P_d x||.
-```
-
-This is the desired source-residual cost. It does not claim that an operator-norm commutator term `c_comm * ||P_t x||` can simply be replaced by a source residual. The earlier signed telescope, commutator decomposition and beta-zero vanishing remain valid structural results.
-
-Source: [exact signed pairing and source-residual forcing][source-fixed-hilbert].
-
-## 3. Canonical mean = genuine conditional expectation — #4931
-
-For bounded strongly measurable `F`, let `[F]` be its existing genuine joint L2 embedding, and let `M_t(F)` be the canonical fiber mean pulled back from the retained outer coordinates.
-
-The retained-sigma measurability of this mean is proved explicitly; ambient measurability alone would not suffice. The existing reverse residual estimate and orthogonal-projection Pythagoras then force equality:
-
-```text
-[M_t(F)] = P_t [F]
-canonicalResidualL2_t(F) = [F] - P_t [F]
-canonicalVariance_t(F) = ofReal(||[F] - P_t [F]||^2).
-```
-
-These physical identities hold for every `beta >= 0` on the bounded strongly measurable core, without a high-temperature cutoff or source-invariance assumption. The generic L2 uniqueness lemma does not require a finite-measure hypothesis.
-
-Source: [canonical mean / genuine CondExpL2 identification][canonical-mean].
-
-## 4. Actual fixed-boundary energy = genuine joint leakage — #4932
-
-Let `H_(d,t)(F;C)` denote the existing `fixedBoundaryLeakageEnergy` at boundary `C`, and `nuVac` the physical vacuum law. The exact numerator identity is
-
-```text
-lintegral_C H_(d,t)(F;C) dnuVac
-  = ofReal(||P_t [F] - P_d(P_t [F])||_joint^2).
-```
-
-The right-hand side is on the **existing genuine joint L2 carrier**, not an auxiliary source-pair Hilbert space. The identity holds for every bounded strongly measurable `F`, every `beta >= 0`, and any source/target pair, including `d = t`.
-
-The proof uses the existing canonical/literal mean equality under the physical vacuum and actual kernel-section laws. Exact source heat-bath stationarity and mathlib's `Measure.ae_ae_of_ae_comp` transport that equality through source resampling almost everywhere. There is no pointwise evaluation of an arbitrary L2 quotient representative and no exchange of `P_d P_t` with `P_t P_d`.
-
-The preceding steps are retained: #4928 realizes the actual kernel-section pair energy, #4929 proves the exact factor `pairEnergy = 2 * conditionalVarianceEnergy`, and #4930 identifies that variance with the stationary fixed-boundary residual. The half coefficient below comes from this equality, not from discarding a comparison loss.
-
-Sources: [stationary source variance][stationary-variance], [genuine joint leakage][joint-leakage].
-
-## 5. The genuine ordered squared leakage estimate is now proved
-
-Use the abbreviations
-
-```text
-Gamma(d,t) = ofReal(K_pin(t,d)^2) * C_RMS(s,beta)  : ENNReal
-A(d,t)     = (2 : ENNReal)^(-1) * Gamma(d,t).
-```
-
-Here `C_RMS` is the already-defined fixed-background second-mean RMS target-majorant coefficient. #4927 proves `Gamma(d,t) != infinity` on the existing strict physical-sweep cutoff, with `s > 1`, `beta >= 0` and the stated physical parameters. The literal pin-free entry is **target, source**. This notation does not identify it with the physical envelope used by #4902.
-
-For `t != d`, a source-invariant bounded strongly measurable representative gives
-
-```text
-ofReal(||P_t g - P_d(P_t g)||^2)
-  <= A(d,t) * ofReal(||g - P_t g||^2).
-```
-
-In particular, for every `f` in the bounded concrete core, #4932 applies this to the **actual** update `g = P_d f`:
-
-```text
-ofReal(||P_t(P_d f) - P_d(P_t(P_d f))||^2)
-  <= A(d,t) * ofReal(||P_d f - P_t(P_d f)||^2).
-```
-
-One source-invariant representative is selected before all off-diagonal targets. The source/target order, exact half coefficient and existing cutoff are preserved.
-
-**Not yet packaged:** the corresponding real norm coefficient, its domination by the certified physical envelope, and the resulting actual cyclic terminal recurrence. Finiteness is already proved; the conversion and comparison remain the next formal interface.
-
-Sources: [ordered coefficient and integrated response][ordered-response], [squared genuine leakage theorem][joint-leakage].
-
-## 6. Remaining route to the physical gap
-
-The next coefficient candidate is `sqrt(A(d,t).toReal)`. Its use must be justified from the proved finite ENNReal estimate, with the zero-residual case and nonnegativity preserved. Then prove the appropriate comparison with the physical envelope and apply the existing #4924 / #4923 receivers, rather than rebuilding the carriers.
-
-The remaining route is
-
-```text
-real norm coefficient + correctly oriented physical-envelope domination
-  -> source-residual cyclic forcing on the actual bounded-core trajectory
-  -> suffix/pre profile assembly
-  -> actual T <= K_phys^T O + K_phys^T T
-  -> existing #4902 beta-small Schur receiver
-  + strict renewal contraction or equivalent positive renewal bound
-  -> Dmean(f) <= delta(beta) * ||f||^2
-  -> certify 0 <= delta(beta) < 1/6
-  -> existing positive-beta physical transfer-gap receiver.
-```
-
-The certified physical transpose convention is `(K_phys^T v)(i) = sum_j K_phys(j,i) * v(j)`. Given its actual semantic premise, #4902 already proves
-
-```text
-(1 - q_phys(s,beta))^2 * Lterm(f) <= q_phys(s,beta)^2 * L(f)
-q_phys(s,0) = 0.
-```
-
-That is a proved implication, not a claim that its actual-profile premise is supplied by #4932. Strict renewal, for example `Dnext <= rhoDefect * Dmean` with `rhoDefect < 1`, is a separate remaining input. Prove positivity before any division.
-
-The existing defect-margin receiver yields `(3/8) * (1/6 - delta(beta)) <= physical transfer gap`. This perturbative lower bound is distinct from the exact beta-zero result `gap_0 = 1`. Thermodynamic and continuum constructions remain downstream.
-
-## Lean / documentation workflow
-
-The theorem validation checkpoint above is backed by completed exact-head Fast Check runs, matching receipts and actual successful build diagnostics for the new theorem and CompileSmoke modules. These are Lean validation records, not a claim of independent external review or a completed continuum theorem.
-
-The authoritative workflow retains pinned dependency and project caches and dependency-aware `lake build`; the duplicate direct elaboration pass is not repeated in PR CI. Inspect complete changed modules, imports, local instances and pinned APIs when repairing Lean, rather than only the reported error lines.
-
-README / ROADMAP-only updates do not require another theorem run. Verify the two-file diff, SHA references and links; do not dispatch Strict Lean, warm caches or synthesize a theorem receipt for a documentation change. The mirrors on `main` must preserve the theorem-carrier distinction and must not merge the theorem branch into `main`.
-
-The detailed hypothesis boundaries, milestone ledger and restart sequence are in [ROADMAP.md](ROADMAP.md).
-
-[source-fixed-hilbert]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/9ca5660a27bf84458f6db30c935ce43d920149e0/MGAP4D/MathlibAnalytic/RealHilbertProjectionSourceFixedLeakage.lean
-[canonical-mean]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/9ca5660a27bf84458f6db30c935ce43d920149e0/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointOneLinkCanonicalMeanCondExpIdentification.lean
-[stationary-variance]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/9ca5660a27bf84458f6db30c935ce43d920149e0/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourceFixedPairVariance.lean
-[ordered-response]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/9ca5660a27bf84458f6db30c935ce43d920149e0/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourceFixedIntegratedResponse.lean
-[joint-leakage]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/9ca5660a27bf84458f6db30c935ce43d920149e0/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourceFixedJointLeakage.lean
+[two-sided-loss]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/22bfe27324e374242aad7bc402a224769306a22b/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTwoSidedLossContraction.lean
+[constant-line]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/22bfe27324e374242aad7bc402a224769306a22b/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTwoSidedConstantLineConvergence.lean
+[two-sided-poincare]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/22bfe27324e374242aad7bc402a224769306a22b/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTwoSidedRelativePoincare.lean
+[twelve-gap-receiver]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/22bfe27324e374242aad7bc402a224769306a22b/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateTwelveSpatialPoincareSixSpatialGap.lean
+[twelve-frame-receiver]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/22bfe27324e374242aad7bc402a224769306a22b/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateJointTwoSidedTwelveSpatialFrame.lean
