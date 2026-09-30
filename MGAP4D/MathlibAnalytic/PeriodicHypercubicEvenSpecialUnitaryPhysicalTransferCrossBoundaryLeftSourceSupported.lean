@@ -188,7 +188,17 @@ theorem
         (X := fun _ : Matrix.specialUnitaryGroup (Fin N) ℂ => 0)
         stronglyMeasurable_const.aestronglyMeasurable
         (M (B source))
-    simpa using hZero
+    calc
+      variance
+          (fun _ : Matrix.specialUnitaryGroup (Fin N) ℂ => M (B source)) μ =
+        variance
+          (fun _ : Matrix.specialUnitaryGroup (Fin N) ℂ => 0) μ := by
+            simpa using hZero
+      _ = 0 := by
+        simpa using
+          (variance_zero (μ := μ) :
+            variance
+              (0 : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ) μ = 0)
   calc
     variance
         (fun k =>
