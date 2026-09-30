@@ -153,11 +153,22 @@ theorem
             (Function.update B source k) A)
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
           H N hN beta hbeta A B source) := by
-  congr 1
-  funext k
-  exact
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetMean_eq_currentTargetMean_sourceSection
-      H N hN beta hbeta source target F B A k
+  let μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
+      H N hN beta hbeta A B source
+  have hSection :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetMean
+          H N hN beta hbeta source target F B A =
+        (fun k =>
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryCurrentTargetMean
+            H N hN beta hbeta source target F
+            (Function.update B source k) A) := by
+    funext k
+    exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetMean_eq_currentTargetMean_sourceSection
+        H N hN beta hbeta source target F B A k
+  change variance _ μ = variance _ μ
+  exact congrArg (fun M : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ => variance M μ) hSection
 
 /-- #4956 rewritten in the section form needed for the outer stationarity
 step. The coefficient is unchanged. -/
@@ -196,12 +207,35 @@ theorem
             H N hN beta hbeta source target F B A k
           ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
             H N hN beta hbeta A B source := by
-  rw [←
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetMean_variance_eq_currentTargetMean_sourceSection_variance
-      H N hN beta hbeta source target F B A]
-  exact
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetMean_variance_le_crossCoefficient_sq_mul_integral_targetVarianceProfile
-      H N hN beta hbeta hBetaLt source target F hF bound hbound hInvariant B A
+  let μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
+      H N hN beta hbeta A B source
+  let M :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetMean
+      H N hN beta hbeta source target F B A
+  let Msection :=
+    fun k =>
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryCurrentTargetMean
+        H N hN beta hbeta source target F
+        (Function.update B source k) A
+  have hEq :
+      variance Msection μ = variance M μ := by
+    symm
+    simpa [μ, M, Msection] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetMean_variance_eq_currentTargetMean_sourceSection_variance
+        H N hN beta hbeta source target F B A
+  calc
+    variance Msection μ = variance M μ := hEq
+    _ ≤
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+          beta) ^ 2 *
+          ∫ k,
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetVarianceProfile
+              H N hN beta hbeta source target F B A k
+            ∂μ := by
+      simpa [μ, M] using
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetMean_variance_le_crossCoefficient_sq_mul_integral_targetVarianceProfile
+          H N hN beta hbeta hBetaLt source target F hF bound hbound hInvariant B A
 
 end
 
