@@ -140,6 +140,9 @@ theorem
     let X : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ :=
       fun g => rightF (Function.update A target g)
     letI : IsProbabilityMeasure μ := by
+      change IsProbabilityMeasure
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
+          H N hN beta hbeta B A target)
       rw [←
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryJointTargetFiberMarkovKernel_apply
           H N hN beta hbeta target (B, A)]
@@ -183,7 +186,6 @@ theorem
           intro g
           unfold Phi
           rw [hFixed g, hProjection]
-          rfl
       _ =
         ∫⁻ g,
           Phi (Function.update A target g)
@@ -219,11 +221,19 @@ theorem
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointTargetKernelSectionResidualEnergy
       apply lintegral_congr
       intro A
-      unfold Phi rightF
-      rw [
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathProjection_diagonalCurrentValues_eq_kernelSectionSpatialLinkIntegral
-          H N hN beta hbeta B A target target target
-          (fun D => F (B, D)) hRightStrong]
+      unfold Phi
+      have hProjectionA :
+          P A =
+            ∫ g,
+              F (B, Function.update A target g)
+              ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
+                H N hN beta hbeta B A target := by
+        simpa [P, rightF] using
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkHeatBathProjection_diagonalCurrentValues_eq_kernelSectionSpatialLinkIntegral
+            H N hN beta hbeta B A target target target
+            rightF hRightStrong
+      rw [hProjectionA]
+      rfl
 
 /-- The ordinary-orientation current target-variance average is exactly the
 canonical genuine target fiber variance. -/
