@@ -176,8 +176,10 @@ theorem
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedSpatialLink_sourceUpdate_targetResidual_norm_le_add_sourceResidual
           H N hN beta hbeta s (by linarith) hStrict hCross
           source target hEq g hg
-      simpa [good, A, Rt, Rs, P, K,
-        ContinuousLinearMap.sub_apply, ContinuousLinearMap.comp_apply] using h
+      change
+        ‖P source g - P target (P source g)‖ ≤
+          ‖g - P target g‖ + K target source * ‖g - P source g‖
+      exact h
     have hDense :
         Dense
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointBoundedConcreteCore
@@ -193,8 +195,10 @@ theorem
       apply hAll
       rw [hDense.closure_eq]
       exact Set.mem_univ f
-    simpa [good, A, Rt, Rs, P, K,
-      ContinuousLinearMap.sub_apply, ContinuousLinearMap.comp_apply] using hf
+    change
+      ‖P source f - P target (P source f)‖ ≤
+        ‖f - P target f‖ + K target source * ‖f - P source f‖ at hf
+    exact hf
 
 /-- Any duplicate-free tagged-link trajectory has exact path loss controlled by
 the ORIGINAL tagged one-link residual energy with the same two-boundary Schur
