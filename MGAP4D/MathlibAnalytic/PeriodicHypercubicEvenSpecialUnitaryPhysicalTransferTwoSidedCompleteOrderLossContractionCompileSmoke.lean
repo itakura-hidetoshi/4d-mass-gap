@@ -1,0 +1,10 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTwoSidedCompleteOrderLossContraction
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+#check
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedSpatialLink_pathLoss_le_lossRatio_mul_of_completeOrder_allL2
+
+end MathlibAnalytic
+end MGAP4D
