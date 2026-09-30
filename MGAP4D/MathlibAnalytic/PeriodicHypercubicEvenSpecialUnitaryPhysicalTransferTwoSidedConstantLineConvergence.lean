@@ -3,6 +3,7 @@ import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransf
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateJointTwelveSpatialResidualKernel
 import MGAP4D.MathlibAnalytic.RealHilbertNestedBlockProjectionSweepPathLoss
 import Mathlib.Analysis.InnerProductSpace.Projection.Basic
+import Mathlib.Analysis.Normed.Module.FiniteDimension
 import Mathlib.Tactic
 
 /-!
@@ -66,6 +67,28 @@ local instance twoSidedConstantLineConvergenceSpatialLinkFintype
     (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
+
+
+/-- The intrinsic constant line is a singleton span, hence finite-dimensional
+and complete.  Register its orthogonal-projection instance explicitly so
+typeclass search never has to unfold the full ground-state carrier. -/
+local instance twoSidedConstantLineConvergenceConstantLineHasOrthogonalProjection
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
+      H N hN beta hbeta).HasOrthogonalProjection := by
+  let C :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
+      H N hN beta hbeta
+  change C.HasOrthogonalProjection
+  letI : FiniteDimensional ℝ C := by
+    unfold C
+    unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
+    infer_instance
+  letI : CompleteSpace C := FiniteDimensional.complete ℝ C
+  exact Submodule.HasOrthogonalProjection.ofCompleteSpace C
 
 /-- Left one-link analogue of the existing right one-link fixed-space theorem:
 the genuine left conditional expectation fixes exactly its literal retained
@@ -150,7 +173,12 @@ theorem
       hq
 
 /-- Pair-Haar measurable transport through endpoint swap at the boundary sigma
-level: fst-measurability of f after swapping is snd-measurability of f. -/
+level: fst-measurability of f after swapping is snd-measurability of f.
+
+The source and target sigma-algebras live on the same underlying type.  Using
+`StronglyMeasurable.comp_measurable` here asks Lean to synthesize two different
+`MeasurableSpace (X × X)` instances simultaneously, which is elaborationally
+unstable.  Instead transport the simple-function approximation explicitly. -/
 theorem
     periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaar_aestronglyMeasurable_snd_of_swap_fst
     (H N : ℕ)
@@ -177,25 +205,61 @@ theorem
     MeasurableSpace.comap Prod.fst (inferInstance : MeasurableSpace X)
   let RightSigma : MeasurableSpace (X × X) :=
     MeasurableSpace.comap Prod.snd (inferInstance : MeasurableSpace X)
-  have hSwap :
-      @Measurable (X × X) (X × X) RightSigma LeftSigma Prod.swap := by
-    apply Measurable.of_comap_le
-    simp [LeftSigma, RightSigma, MeasurableSpace.comap_comp, Function.comp_def]
+  have hSwapMeasurableSet :
+      ∀ {s : Set (X × X)},
+        @MeasurableSet (X × X) LeftSigma s →
+          @MeasurableSet (X × X) RightSigma
+            ((Prod.swap : X × X → X × X) ⁻¹' s) := by
+    intro s hs
+    change
+      ∃ t : Set X, MeasurableSet t ∧ Prod.fst ⁻¹' t = s
+      at hs
+    rcases hs with ⟨t, ht, rfl⟩
+    change
+      ∃ t' : Set X, MeasurableSet t' ∧
+        Prod.snd ⁻¹' t' =
+          (Prod.swap : X × X → X × X) ⁻¹' (Prod.fst ⁻¹' t)
+    refine ⟨t, ht, ?_⟩
+    ext p
+    rfl
+  let g : X × X → ℝ :=
+    h.mk (fun p : X × X => f (Prod.swap p))
+  have hg :
+      StronglyMeasurable[RightSigma]
+        (fun p : X × X => g (Prod.swap p)) := by
+    let approx : ℕ → @SimpleFunc (X × X) RightSigma ℝ := fun n =>
+      @SimpleFunc.mk (X × X) RightSigma ℝ
+        (fun p : X × X =>
+          h.stronglyMeasurable_mk.approx n (Prod.swap p))
+        (fun y => by
+          have hs :=
+            hSwapMeasurableSet
+              (SimpleFunc.measurableSet_fiber'
+                (h.stronglyMeasurable_mk.approx n) y)
+          change
+            @MeasurableSet (X × X) RightSigma
+              ((fun p : X × X =>
+                h.stronglyMeasurable_mk.approx n (Prod.swap p)) ⁻¹' {y})
+          exact hs)
+        ((SimpleFunc.finite_range (h.stronglyMeasurable_mk.approx n)).subset <| by
+          rintro y ⟨p, rfl⟩
+          exact ⟨Prod.swap p, by simp⟩)
+    refine ⟨approx, ?_⟩
+    intro p
+    simpa [approx, g] using
+      h.stronglyMeasurable_mk.tendsto_approx (Prod.swap p)
   have hPairSwap :
-      MeasurePreserving Prod.swap μPair μPair := by
+      MeasurePreserving
+        (Prod.swap : X × X → X × X) μPair μPair := by
     simpa [μPair, μ,
       periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure] using
       (Measure.measurePreserving_swap (μ := μ) (ν := μ))
-  let g := h.mk (fun z => f z.swap)
-  have hg :
-      StronglyMeasurable[RightSigma] (fun z => g z.swap) := by
-    exact h.stronglyMeasurable_mk.comp_measurable hSwap
+  have hcomp :=
+    hPairSwap.quasiMeasurePreserving.ae_eq_comp h.ae_eq_mk
   have hAe :
-      (fun z => g z.swap) =ᵐ[μPair] f := by
-    have hcomp :=
-      hPairSwap.quasiMeasurePreserving.ae_eq_comp h.ae_eq_mk
-    simpa [g, Function.comp_def] using hcomp.symm
-  exact ⟨fun z => g z.swap, hg, hAe⟩
+      f =ᵐ[μPair] fun p : X × X => g (Prod.swap p) := by
+    simpa [g, Function.comp_def] using hcomp
+  exact ⟨fun p : X × X => g (Prod.swap p), hg, hAe⟩
 
 /-- Simultaneous fixedness under every genuine right and left one-link
 conditional expectation forces an actual constant vector in the genuine joint
@@ -222,10 +286,6 @@ theorem
       H N hN beta hbeta
   let μPair :=
     periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N
-  let LeftSigma : MeasurableSpace (X × X) :=
-    MeasurableSpace.comap Prod.fst (inferInstance : MeasurableSpace X)
-  let RightSigma : MeasurableSpace (X × X) :=
-    MeasurableSpace.comap Prod.snd (inferInstance : MeasurableSpace X)
   let E :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv
       H N hN beta hbeta
@@ -241,10 +301,12 @@ theorem
     (GroundStateSourceFixedPairEnergy.allRightLink_fixed_iff_leftRetained
       H N hN beta hbeta z).1 hRight
   have hzLeft :
-      z ∈ lpMeas ℝ ℝ LeftSigma 2 μJ := by
-    exact
-      (GroundStateSourceFixedPairEnergy.allRightLeftRetained_fixed_iff_mem
-        H N hN beta hbeta z).1 hzLeftFixed
+      z ∈ lpMeas ℝ ℝ
+        (MeasurableSpace.comap Prod.fst
+          (inferInstance : MeasurableSpace X))
+        2 μJ :=
+    (GroundStateSourceFixedPairEnergy.allRightLeftRetained_fixed_iff_mem
+      H N hN beta hbeta z).1 hzLeftFixed
   have hLeft :
       ∀ e : PeriodicHypercubicEvenSpatialSliceLink H,
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftSpatialLinkCondExpL2
@@ -273,56 +335,76 @@ theorem
     (GroundStateSourceFixedPairEnergy.allRightLink_fixed_iff_leftRetained
       H N hN beta hbeta (E z)).1 hERight
   have hELeft :
-      E z ∈ lpMeas ℝ ℝ LeftSigma 2 μJ := by
-    exact
-      (GroundStateSourceFixedPairEnergy.allRightLeftRetained_fixed_iff_mem
-        H N hN beta hbeta (E z)).1 hELeftFixed
+      E z ∈ lpMeas ℝ ℝ
+        (MeasurableSpace.comap Prod.fst
+          (inferInstance : MeasurableSpace X))
+        2 μJ :=
+    (GroundStateSourceFixedPairEnergy.allRightLeftRetained_fixed_iff_mem
+      H N hN beta hbeta (E z)).1 hELeftFixed
   have hfstJoint :
-      AEStronglyMeasurable[LeftSigma]
+      AEStronglyMeasurable[
+        MeasurableSpace.comap Prod.fst
+          (inferInstance : MeasurableSpace X)]
         (z : X × X → ℝ) μJ :=
     mem_lpMeas_iff_aestronglyMeasurable.mp hzLeft
   have hEfstJoint :
-      AEStronglyMeasurable[LeftSigma]
+      AEStronglyMeasurable[
+        MeasurableSpace.comap Prod.fst
+          (inferInstance : MeasurableSpace X)]
         (E z : X × X → ℝ) μJ :=
     mem_lpMeas_iff_aestronglyMeasurable.mp hELeft
   have hfstPair :
-      AEStronglyMeasurable[LeftSigma]
+      AEStronglyMeasurable[
+        MeasurableSpace.comap Prod.fst
+          (inferInstance : MeasurableSpace X)]
         (z : X × X → ℝ) μPair :=
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJoint_aestronglyMeasurable_iff_pairHaar
-      H N hN beta hbeta LeftSigma (z : X × X → ℝ)).1 hfstJoint
+      H N hN beta hbeta
+      (MeasurableSpace.comap Prod.fst
+        (inferInstance : MeasurableSpace X))
+      (z : X × X → ℝ)).1 hfstJoint
   have hEfstPair :
-      AEStronglyMeasurable[LeftSigma]
+      AEStronglyMeasurable[
+        MeasurableSpace.comap Prod.fst
+          (inferInstance : MeasurableSpace X)]
         (E z : X × X → ℝ) μPair :=
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJoint_aestronglyMeasurable_iff_pairHaar
-      H N hN beta hbeta LeftSigma (E z : X × X → ℝ)).1 hEfstJoint
+      H N hN beta hbeta
+      (MeasurableSpace.comap Prod.fst
+        (inferInstance : MeasurableSpace X))
+      (E z : X × X → ℝ)).1 hEfstJoint
   let hs :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_swap_measurePreserving
       H N hN beta hbeta
   have hEcoeJoint :
       (fun p : X × X => E z p) =ᵐ[μJ]
-        (fun p => z p.swap) := by
+        (fun p : X × X => z (Prod.swap p)) := by
     change
-      (MeasureTheory.Lp.compMeasurePreserving Prod.swap hs z) =ᵐ[μJ]
-        (fun p => z p.swap)
+      (MeasureTheory.Lp.compMeasurePreserving
+        (Prod.swap : X × X → X × X) hs z) =ᵐ[μJ]
+        (fun p : X × X => z (Prod.swap p))
     simpa [Function.comp_def] using
       (MeasureTheory.Lp.coeFn_compMeasurePreserving z hs)
   have hEcoePair :
       (fun p : X × X => E z p) =ᵐ[μPair]
-        (fun p => z p.swap) :=
+        (fun p : X × X => z (Prod.swap p)) :=
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJoint_ae_eq_iff_pairHaar
       H N hN beta hbeta
       (fun p : X × X => E z p)
-      (fun p => z p.swap)).1 hEcoeJoint
+      (fun p : X × X => z (Prod.swap p))).1 hEcoeJoint
   have hSwapFstPair :
-      AEStronglyMeasurable[LeftSigma]
-        (fun p : X × X => z p.swap) μPair :=
+      AEStronglyMeasurable[
+        MeasurableSpace.comap Prod.fst
+          (inferInstance : MeasurableSpace X)]
+        (fun p : X × X => z (Prod.swap p)) μPair :=
     hEfstPair.congr hEcoePair
   have hsndPair :
-      AEStronglyMeasurable[RightSigma]
-        (z : X × X → ℝ) μPair := by
-    simpa [LeftSigma, RightSigma, μPair] using
-      periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaar_aestronglyMeasurable_snd_of_swap_fst
-        H N (z : X × X → ℝ) hSwapFstPair
+      AEStronglyMeasurable[
+        MeasurableSpace.comap Prod.snd
+          (inferInstance : MeasurableSpace X)]
+        (z : X × X → ℝ) μPair :=
+    periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaar_aestronglyMeasurable_snd_of_swap_fst
+      H N (z : X × X → ℝ) hSwapFstPair
   obtain ⟨c, hcPair⟩ :=
     periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaar_ae_eq_const_of_fst_snd_aestronglyMeasurable
       H N
@@ -343,7 +425,11 @@ theorem
       H N hN beta hbeta z).1 hZero
 
 /-- Every vector in the intrinsic joint constant line is fixed by each genuine
-right or left one-link conditional expectation. -/
+right or left one-link conditional expectation.
+
+Use the already-proved twelve-color residual kernel instead of expanding a
+constant-line element into a scalar multiple of a pointwise constant L2
+representative.  This keeps elaboration at the projection/submodule level. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedSpatialLink_fixed_of_mem_constantLine
     (H N : ℕ)
@@ -360,46 +446,67 @@ theorem
           H N hN beta hbeta) :
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedSpatialLinkCondExpL2
         H N hN beta hbeta e z = z := by
-  change z ∈
-    (ℝ ∙
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2
-        H N hN beta hbeta 1) at hz
-  rcases Submodule.mem_span_singleton.mp hz with ⟨c, hc⟩
-  have hzConst :
-      z =
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2
-          H N hN beta hbeta c := by
-    calc
-      z = c •
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2
-            H N hN beta hbeta 1 := hc.symm
-      _ =
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2
-            H N hN beta hbeta c := by
-        symm
-        exact
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2_eq_smul_one
-            H N hN beta hbeta c
-  subst z
+  have hZero :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialResidualEnergy
+          H N hN beta hbeta z = 0 :=
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialResidualEnergy_eq_zero_iff_mem_constantLine
+      H N hN beta hbeta z).2 hz
+  have hColors :
+      ∀ c : PeriodicHypercubicEvenGroundStateTwoSidedSpatialColor,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialCondExpL2
+          H N hN beta hbeta c z = z := by
+    apply
+      (groundStateJointColorNormalizedResidualEnergy_eq_zero_iff_fixed
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialCondExpL2
+          H N hN beta hbeta) z).1
+    exact hZero
   cases e with
   | inl e =>
+      let color := periodicHypercubicEvenSpatialSliceLinkColor H e
+      have hColor :
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2
+              H N hN beta hbeta color z = z := by
+        have h :=
+          hColors
+            (Sum.inl
+              (periodicHypercubicEvenGroundStateSpatialColorEquivFin color))
+        simpa [
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialCondExpL2,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2,
+          color] using h
+      have hMemColor :=
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialColorCondExpL2_fixed_iff_mem_lpMeas
+          H N hN beta hbeta color z).1 hColor
       apply
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2_fixed_iff_mem_lpMeas
-          H N hN beta hbeta e _).2
-      apply mem_lpMeas_iff_aestronglyMeasurable.mpr
-      exact
-        aestronglyMeasurable_const.congr
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2_coeFn
-            H N hN beta hbeta c).symm
+          H N hN beta hbeta e z).2
+      rw [mem_lpMeas_iff_aestronglyMeasurable] at hMemColor ⊢
+      exact hMemColor.mono
+        (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le_spatialLink
+          H N e)
   | inr e =>
+      let color := periodicHypercubicEvenSpatialSliceLinkColor H e
+      have hColor :
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftSpatialColorCondExpL2
+              H N hN beta hbeta color z = z := by
+        have h :=
+          hColors
+            (Sum.inr
+              (periodicHypercubicEvenGroundStateSpatialColorEquivFin color))
+        simpa [
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialCondExpL2,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftSixSpatialCondExpL2,
+          color] using h
+      have hMemColor :=
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftSpatialColorCondExpL2_fixed_iff_mem_lpMeas
+          H N hN beta hbeta color z).1 hColor
       apply
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftSpatialLinkCondExpL2_fixed_iff_mem_lpMeas
-          H N hN beta hbeta e _).2
-      apply mem_lpMeas_iff_aestronglyMeasurable.mpr
-      exact
-        aestronglyMeasurable_const.congr
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2_coeFn
-            H N hN beta hbeta c).symm
+          H N hN beta hbeta e z).2
+      rw [mem_lpMeas_iff_aestronglyMeasurable] at hMemColor ⊢
+      exact hMemColor.mono
+        (periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialColorMeasurableSpace_le_leftSpatialLink
+          H N e)
 
 /-- Exact common-fixed geometry of all tagged one-link projections. -/
 theorem
@@ -618,13 +725,17 @@ theorem
         H N hN beta hbeta y
   have hFixed : ∀ y, S y = y → B y = y := by
     intro y hy
-    apply
-      (Submodule.starProjection_eq_self_iff).2
-    apply
+    let C :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
+        H N hN beta hbeta
+    change C.starProjection y = y
+    apply (Submodule.starProjection_eq_self_iff).2
+    exact
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedSpatialLinkFullSweep_fixed_iff_mem_constantLine
         H N hN beta hbeta y).1
-    simpa [P, sources, S,
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedSpatialLinkFullSweepVector] using hy
+        (by
+          simpa [P, sources, S,
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedSpatialLinkFullSweepVector] using hy)
   have hDecay : ∀ n : ℕ,
       realHilbertProjectionSweepPathLoss P sources (S^[n] z) ≤
         eta ^ n * realHilbertProjectionSweepPathLoss P sources z := by
