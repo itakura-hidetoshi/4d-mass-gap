@@ -213,10 +213,7 @@ theorem probabilityMeasure_integral_difference_abs_le_integral_abs_of_pairwise_l
           ((∫ x, fn x ∂μ) - (∫ x, fn x ∂ν))| ≤
         |(∫ x, fp x ∂μ) - (∫ x, fp x ∂ν)| +
           |(∫ x, fn x ∂μ) - (∫ x, fn x ∂ν)| := by
-    simpa [sub_eq_add_neg] using
-      (abs_add
-        ((∫ x, fp x ∂μ) - (∫ x, fp x ∂ν))
-        (-((∫ x, fn x ∂μ) - (∫ x, fn x ∂ν))))
+    exact abs_sub _ _
   calc
     |((∫ x, fp x ∂μ) - ∫ x, fn x ∂μ) -
         ((∫ x, fp x ∂ν) - ∫ x, fn x ∂ν)| =
