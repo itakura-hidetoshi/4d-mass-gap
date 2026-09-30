@@ -55,6 +55,26 @@ local instance twoSidedRelativePoincareSpatialLinkFintype
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+/-- Reuse the finite-dimensional singleton-span geometry from #4970 explicitly
+inside this module. -/
+local instance twoSidedRelativePoincareConstantLineHasOrthogonalProjection
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
+      H N hN beta hbeta).HasOrthogonalProjection := by
+  let C :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
+      H N hN beta hbeta
+  change C.HasOrthogonalProjection
+  letI : FiniteDimensional ℝ C := by
+    unfold C
+    unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
+    infer_instance
+  letI : CompleteSpace C := FiniteDimensional.complete ℝ C
+  exact Submodule.HasOrthogonalProjection.ofCompleteSpace C
+
 /-- The actual two-sided source-update forcing estimate extends from the dense
 bounded-concrete core to every genuine joint L2 vector. -/
 theorem
@@ -126,18 +146,27 @@ theorem
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointBoundedConcreteCore
             H N hN beta hbeta ⊆ good := by
       intro g hg
+      have hSchurCut :
+          beta ≤
+            GroundStateSourceFixedPairEnergy.twoBoundaryOrderedSchurCutoff
+              s hs :=
+        hcut.trans
+          (GroundStateSourceFixedPairEnergy.twoBoundaryOrderedLossContractionCutoff_le_schurCutoff
+            s hs)
+      have hJointCut :
+          beta ≤
+            GroundStateSourceFixedPairEnergy.jointLeakageSchurCutoff
+              s hs :=
+        hSchurCut.trans
+          (GroundStateSourceFixedPairEnergy.twoBoundaryOrderedSchurCutoff_le_jointLeakageSchurCutoff
+            s hs)
       have hStrict :
           beta ≤
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHighTemperatureStrictPhysicalSweepCutoff
-              s := by
-        exact
-          (((hcut.trans
-              (GroundStateSourceFixedPairEnergy.twoBoundaryOrderedLossContractionCutoff_le_schurCutoff
-                s hs)).trans
-              (GroundStateSourceFixedPairEnergy.twoBoundaryOrderedSchurCutoff_le_jointLeakageSchurCutoff
-                s hs))).trans
-            (GroundStateSourceFixedPairEnergy.jointLeakageSchurCutoff_le_strictPhysicalSweepCutoff
-              s hs))
+              s :=
+        hJointCut.trans
+          (GroundStateSourceFixedPairEnergy.jointLeakageSchurCutoff_le_strictPhysicalSweepCutoff
+            s hs)
       have hCross :
           beta <
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBetaThreshold :=
