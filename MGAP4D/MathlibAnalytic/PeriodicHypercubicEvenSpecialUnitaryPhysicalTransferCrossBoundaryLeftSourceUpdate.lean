@@ -439,7 +439,10 @@ theorem
       beta hbeta
   have hab : 0 ≤ c * b := mul_nonneg hc (norm_nonneg _)
   have hSq' : a ^ 2 ≤ (c * b) ^ 2 := by
-    simpa [a, b, c, pow_two] using hSq
+    calc
+      a ^ 2 ≤ c ^ 2 * b ^ 2 := by
+        simpa [a, b, c] using hSq
+      _ = (c * b) ^ 2 := by ring
   have hNorm : a ≤ c * b :=
     (sq_le_sq₀ (norm_nonneg _) hab).mp hSq'
   simpa [a, b, c] using hNorm
