@@ -246,10 +246,21 @@ theorem
             H N hN beta hbeta s target target)
           (norm_nonneg _))
         (norm_nonneg _)
-  · have hActual :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedSpatialLink_sourceUpdate_targetResidual_norm_le_add_sourceResidual
-        H N hN beta hbeta s hs hcut hBetaLt source target hst y hy
-    simpa [P, K, add_comm] using hActual
+  · have hActual :
+      ‖P source y - P target (P source y)‖ ≤
+        ‖y - P target y‖ +
+          K target source * ‖y - P source y‖ := by
+      exact
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedSpatialLink_sourceUpdate_targetResidual_norm_le_add_sourceResidual
+          H N hN beta hbeta s hs hcut hBetaLt source target
+          (Ne.symm hst) y hy
+    calc
+      ‖P source y - P target (P source y)‖ ≤
+          ‖y - P target y‖ +
+            K target source * ‖y - P source y‖ := hActual
+      _ =
+          K target source * ‖y - P source y‖ +
+            ‖y - P target y‖ := add_comm _ _
 
 /-- Cyclic specialization: start immediately after the distinguished target
 projection, then run any suffix followed by any prefix.  This is the exact
