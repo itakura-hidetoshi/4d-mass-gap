@@ -72,6 +72,14 @@ orientation-and-color label. -/
             twoSidedTwelveSpatialColorLinkList,
             twoSidedTwelveSpatialLinkColor,
             mem_sixSpatialColorLinkList]
+          constructor
+          · intro h
+            rw [h]
+            exact
+              periodicHypercubicEvenGroundStateSpatialColorEquivFin.apply_symm_apply c
+          · intro h
+            apply periodicHypercubicEvenGroundStateSpatialColorEquivFin.injective
+            simpa using h
       | inr e =>
           simp [
             twoSidedTwelveSpatialColorLinkList,
@@ -87,6 +95,14 @@ orientation-and-color label. -/
             twoSidedTwelveSpatialColorLinkList,
             twoSidedTwelveSpatialLinkColor,
             mem_sixSpatialColorLinkList]
+          constructor
+          · intro h
+            rw [h]
+            exact
+              periodicHypercubicEvenGroundStateSpatialColorEquivFin.apply_symm_apply c
+          · intro h
+            apply periodicHypercubicEvenGroundStateSpatialColorEquivFin.injective
+            simpa using h
 
 /-- The pre-existing same-color right-link list has no duplicates. -/
 theorem sixSpatialColorLinkList_nodup
