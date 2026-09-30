@@ -164,6 +164,9 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_currentTarget_eq_kernelSection_sourceUpdate
       H N hN beta hbeta B target source target k A
   letI : IsProbabilityMeasure μ := by
+    change IsProbabilityMeasure
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
+        H N hN beta hbeta (Function.update B source k) A target)
     rw [← hLaw]
     exact
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_isProbabilityMeasure
