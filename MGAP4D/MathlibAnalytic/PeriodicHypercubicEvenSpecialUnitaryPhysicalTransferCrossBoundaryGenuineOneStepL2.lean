@@ -300,7 +300,7 @@ theorem
               ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
                 H N hN beta hbeta A B source)
             ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousProbabilityMeasure
-              H N hN beta hbeta A
+              H N hN beta hbeta A)
         ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
           H N hN beta hbeta := by
       apply lintegral_mono
