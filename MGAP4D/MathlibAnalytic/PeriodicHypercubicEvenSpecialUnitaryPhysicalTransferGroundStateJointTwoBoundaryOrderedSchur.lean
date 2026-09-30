@@ -53,7 +53,7 @@ def twoBoundaryOrderedSchurCoefficient (s beta : ℝ) : ℝ :=
 
 @[simp] theorem twoBoundaryOrderedSchurCoefficient_zero (s : ℝ) :
     twoBoundaryOrderedSchurCoefficient s 0 = 0 := by
-  simp [twoBoundaryOrderedSchurCoefficient, crossCoefficient,
+  simp [twoBoundaryOrderedSchurCoefficient,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient]
 
 /-- Target-first two-boundary matrix.  The same-boundary ordered coefficient
@@ -77,12 +77,12 @@ private theorem crossMajorant_nonneg
     0 ≤ crossMajorant beta target source := by
   by_cases h : source = target
   · subst source
-    simpa [crossMajorant,
+    simpa [
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant,
-      crossCoefficient] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient_nonneg
         beta hbeta
-  · simp [crossMajorant,
+  · simp [
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant,
       h]
 
@@ -105,13 +105,12 @@ private theorem crossMajorant_columnSum_eq_coefficient
       crossMajorant beta target source) = crossCoefficient beta := by
   classical
   rw [Finset.sum_eq_single source]
-  · simp [crossMajorant,
+  · simp [
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant,
-      crossCoefficient,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient]
   · intro target _ hne
     have hne' : source ≠ target := Ne.symm hne
-    simp [crossMajorant,
+    simp [
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorant,
       hne']
   · simp
@@ -137,14 +136,24 @@ theorem twoBoundaryOrderedKernel_rowSum_le
           jointLeakageNormCoefficient H N hN beta hbeta s source target) +
         (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
           crossMajorant beta target source) ≤ _
-      rw [
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorantRowSum_eq_diagonal
-          H beta target]
-      exact add_le_add_right
+      have hCross :
+          (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
+            crossMajorant beta target source) = crossCoefficient beta := by
+        simpa [
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorantRowSum] using
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorantRowSum_eq_diagonal
+            H beta target
+      rw [hCross]
+      change
+        (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
+          jointLeakageNormCoefficient H N hN beta hbeta s source target) +
+            crossCoefficient beta ≤
+          jointLeakageSchurCoefficient s beta + crossCoefficient beta
+      exact _root_.add_le_add
         (jointLeakageNormCoefficient_columnSum_le_schurCoefficient
           H N hN s hs beta hbeta
           (hcut.trans (jointLeakageSchurCutoff_le_shellCutoff s hs)) target)
-        _
+        (le_refl _)
   | inr target =>
       rw [Fintype.sum_sum_type]
       change
@@ -152,14 +161,26 @@ theorem twoBoundaryOrderedKernel_rowSum_le
           crossMajorant beta target source) +
         (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
           jointLeakageNormCoefficient H N hN beta hbeta s source target) ≤ _
-      rw [
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorantRowSum_eq_diagonal
-          H beta target]
-      exact add_le_add_left
-        (jointLeakageNormCoefficient_columnSum_le_schurCoefficient
-          H N hN s hs beta hbeta
-          (hcut.trans (jointLeakageSchurCutoff_le_shellCutoff s hs)) target)
-        _
+      have hCross :
+          (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
+            crossMajorant beta target source) = crossCoefficient beta := by
+        simpa [
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorantRowSum] using
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBoundedTestMajorantRowSum_eq_diagonal
+            H beta target
+      rw [hCross]
+      change
+        crossCoefficient beta +
+            (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
+              jointLeakageNormCoefficient H N hN beta hbeta s source target) ≤
+          jointLeakageSchurCoefficient s beta + crossCoefficient beta
+      calc
+        _ ≤ crossCoefficient beta + jointLeakageSchurCoefficient s beta :=
+          _root_.add_le_add (le_refl _)
+            (jointLeakageNormCoefficient_columnSum_le_schurCoefficient
+              H N hN s hs beta hbeta
+              (hcut.trans (jointLeakageSchurCutoff_le_shellCutoff s hs)) target)
+        _ = _ := by ring
 
 /-- Every source column is bounded by Q + c_cross.  The same-boundary term uses
 the ROW sum theorem for k(source,target), because source is fixed. -/
@@ -183,11 +204,16 @@ theorem twoBoundaryOrderedKernel_columnSum_le
         (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
           crossMajorant beta target source) ≤ _
       rw [crossMajorant_columnSum_eq_coefficient H beta source]
-      exact add_le_add_right
+      change
+        (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
+          jointLeakageNormCoefficient H N hN beta hbeta s source target) +
+            crossCoefficient beta ≤
+          jointLeakageSchurCoefficient s beta + crossCoefficient beta
+      exact _root_.add_le_add
         (jointLeakageNormCoefficient_rowSum_le_schurCoefficient
           H N hN s hs beta hbeta
           (hcut.trans (jointLeakageSchurCutoff_le_shellCutoff s hs)) source)
-        _
+        (le_refl _)
   | inr source =>
       rw [Fintype.sum_sum_type]
       change
@@ -196,11 +222,18 @@ theorem twoBoundaryOrderedKernel_columnSum_le
         (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
           jointLeakageNormCoefficient H N hN beta hbeta s source target) ≤ _
       rw [crossMajorant_columnSum_eq_coefficient H beta source]
-      exact add_le_add_left
-        (jointLeakageNormCoefficient_rowSum_le_schurCoefficient
-          H N hN s hs beta hbeta
-          (hcut.trans (jointLeakageSchurCutoff_le_shellCutoff s hs)) source)
-        _
+      change
+        crossCoefficient beta +
+            (∑ target : PeriodicHypercubicEvenSpatialSliceLink H,
+              jointLeakageNormCoefficient H N hN beta hbeta s source target) ≤
+          jointLeakageSchurCoefficient s beta + crossCoefficient beta
+      calc
+        _ ≤ crossCoefficient beta + jointLeakageSchurCoefficient s beta :=
+          _root_.add_le_add (le_refl _)
+            (jointLeakageNormCoefficient_rowSum_le_schurCoefficient
+              H N hN s hs beta hbeta
+              (hcut.trans (jointLeakageSchurCutoff_le_shellCutoff s hs)) source)
+        _ = _ := by ring
 
 theorem twoBoundaryOrderedSchurCoefficient_nonneg
     (s : ℝ) (hs : 8 < s) (beta : ℝ) (hbeta : 0 ≤ beta)
@@ -284,7 +317,7 @@ theorem exists_twoBoundaryOrderedSchurCutoff (s : ℝ) (hs : 8 < s) :
   have hUpper : totalReal beta - totalReal 0 < 1 :=
     lt_of_le_of_lt (le_abs_self _) hAbs
   have hZero : totalReal 0 = 0 := by
-    simp [totalReal, qReal, crossCoefficient,
+    simp [totalReal, qReal,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient]
   rw [hZero, sub_zero] at hUpper
   have hStrict : beta ≤
