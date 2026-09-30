@@ -40,6 +40,8 @@ open scoped BigOperators InnerProductSpace InnerProduct
 
 noncomputable section
 
+set_option maxHeartbeats 2000000
+
 local instance twoSidedTwelveSpatialRelativeFrameSpecialUnitaryIsTopologicalGroup
     (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -220,25 +222,27 @@ theorem twoSidedTwelveSpatial_ordered_relativePoincare
   let r2 := Real.sqrt eta2
   let r1 := Real.sqrt eta1
   let V := ‖f - Bconst f‖
-  let colors : List (TwoSidedColor H) :=
-    (Finset.univ : Finset (TwoSidedColor H)).toList
-  let groups : TwoSidedColor H → List (TwoSidedLink H) :=
+  let colors : List (TwoSidedColor) :=
+    (Finset.univ : Finset (TwoSidedColor)).toList
+  let groups : TwoSidedColor → List (TwoSidedLink H) :=
     twoSidedTwelveSpatialColorLinkList H
-  let T : TwoSidedColor H → JL2 H N hN beta hbeta →L[ℝ] JL2 H N hN beta hbeta :=
+  let T : TwoSidedColor → JL2 H N hN beta hbeta →L[ℝ] JL2 H N hN beta hbeta :=
     fun c => realHilbertProjectionSweep PLink (groups c)
   let sources : List (TwoSidedLink H) :=
     twoSidedTwelveSpatialGroupedLinkList H
   let S : JL2 H N hN beta hbeta →L[ℝ] JL2 H N hN beta hbeta :=
     realHilbertProjectionSweep PLink sources
-  let a : TwoSidedColor H → ℝ :=
+  let a : TwoSidedColor → ℝ :=
     fun c => ‖f - P12 c f‖
-  let A := ∑ c : TwoSidedColor H, a c
-  have hEta2 :=
-    twoBoundaryOrderedLossRatio_nonneg_lt_one
-      s hs beta hbeta hcutTwo
-  have hEta1 :=
-    jointLeakageLossRatio_nonneg_lt_one
-      s hs beta hbeta hcutOne
+  let A := ∑ c : TwoSidedColor, a c
+  have hEta2 : 0 ≤ eta2 ∧ eta2 < 1 := by
+    simpa [eta2] using
+      twoBoundaryOrderedLossRatio_nonneg_lt_one
+        s hs beta hbeta hcutTwo
+  have hEta1 : 0 ≤ eta1 ∧ eta1 < 1 := by
+    simpa [eta1] using
+      jointLeakageLossRatio_nonneg_lt_one
+        s hs beta hbeta hcutOne
   have hr20 : 0 ≤ r2 := Real.sqrt_nonneg _
   have hr10 : 0 ≤ r1 := Real.sqrt_nonneg _
   have hr2Sq : r2 ^ 2 = eta2 := by
@@ -248,11 +252,9 @@ theorem twoSidedTwelveSpatial_ordered_relativePoincare
     dsimp [r1]
     exact Real.sq_sqrt (jointLeakageLossRatio_nonneg s beta)
   have hr2lt : r2 < 1 := by
-    dsimp [eta2] at hEta2
-    nlinarith
+    nlinarith [hEta2.2, hr2Sq]
   have hr1lt : r1 < 1 := by
-    dsimp [eta1] at hEta1
-    nlinarith
+    nlinarith [hEta1.2, hr1Sq]
   have hV0 : 0 ≤ V := norm_nonneg _
   have hA0 : 0 ≤ A :=
     Finset.sum_nonneg (fun c _ => norm_nonneg _)
@@ -300,13 +302,13 @@ theorem twoSidedTwelveSpatial_ordered_relativePoincare
         H N hN beta hbeta f
   have hTelescope :
       ‖f - S f‖ ≤
-        ∑ c : TwoSidedColor H, ‖f - T c f‖ := by
+        ∑ c : TwoSidedColor, ‖f - T c f‖ := by
     rw [hGroupIdentity]
     simpa only [colors, Finset.sum_map_toList] using
       GroupedProjectionSweep.displacement_le_sum_initial
         T hT colors f
   have hGroupBound :
-      ∀ c : TwoSidedColor H,
+      ∀ c : TwoSidedColor,
         ‖f - T c f‖ ≤ (1 + r1) * a c := by
     intro c
     cases c with
@@ -353,10 +355,10 @@ theorem twoSidedTwelveSpatial_ordered_relativePoincare
       ‖f - S f‖ ≤ (1 + r1) * A := by
     calc
       ‖f - S f‖ ≤
-          ∑ c : TwoSidedColor H, ‖f - T c f‖ :=
+          ∑ c : TwoSidedColor, ‖f - T c f‖ :=
         hTelescope
       _ ≤
-          ∑ c : TwoSidedColor H, (1 + r1) * a c :=
+          ∑ c : TwoSidedColor, (1 + r1) * a c :=
         Finset.sum_le_sum (fun c _ => hGroupBound c)
       _ = (1 + r1) * A := by
         rw [← Finset.mul_sum]
@@ -384,17 +386,17 @@ theorem twoSidedTwelveSpatial_ordered_relativePoincare
       (mul_nonneg (by norm_num) hA0)).mpr hLinear
   have hCauchy :
       A ^ 2 ≤
-        12 * ∑ c : TwoSidedColor H, a c ^ 2 := by
+        12 * ∑ c : TwoSidedColor, a c ^ 2 := by
     simpa [
       A,
       periodicHypercubicEvenGroundStateTwoSidedSpatialColor_card] using
       Finset.sum_mul_sq_le_sq_mul_sq
-        (Finset.univ : Finset (TwoSidedColor H))
+        (Finset.univ : Finset (TwoSidedColor))
         (fun _ => (1 : ℝ)) a
   have hEnergy :
       E12 f =
         (1 / 12 : ℝ) *
-          ∑ c : TwoSidedColor H, a c ^ 2 := by
+          ∑ c : TwoSidedColor, a c ^ 2 := by
     simp only [
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialResidualEnergy,
       groundStateJointColorNormalizedResidualEnergy,
@@ -407,11 +409,11 @@ theorem twoSidedTwelveSpatial_ordered_relativePoincare
   change
     ((1 - r2) ^ 2 / 576) * V ^ 2 ≤
       (1 / 12 : ℝ) *
-        ∑ c : TwoSidedColor H, a c ^ 2
+        ∑ c : TwoSidedColor, a c ^ 2
   rw [mul_pow] at hSquare
   have hCombined :
       (1 - r2) ^ 2 * V ^ 2 ≤
-        48 * ∑ c : TwoSidedColor H, a c ^ 2 := by
+        48 * ∑ c : TwoSidedColor, a c ^ 2 := by
     nlinarith [hSquare, hCauchy]
   nlinarith [hCombined]
 
