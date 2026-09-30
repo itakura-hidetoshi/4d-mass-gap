@@ -190,7 +190,10 @@ theorem
         MeasurableSpace.comap Prod.fst
           (inferInstance : MeasurableSpace
             (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))]
-        (fun z => f z.swap)
+        (fun z :
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+          f (Prod.swap z))
         (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N)) :
     AEStronglyMeasurable[
       MeasurableSpace.comap Prod.snd
