@@ -199,6 +199,7 @@ theorem
       else 0 := by
   by_cases hsf : source = fiber
   · subst source
+    rw [if_pos rfl]
     exact
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_L2MeanDifference_sq_le_varianceSum_diagonal
         H N hN beta hbeta hBetaLt B target fiber k₁ k₂ g₂ A phi hphi₁ hphi₂
