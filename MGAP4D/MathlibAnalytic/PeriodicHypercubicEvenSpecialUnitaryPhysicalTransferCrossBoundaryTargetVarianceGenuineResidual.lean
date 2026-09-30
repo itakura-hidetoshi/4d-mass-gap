@@ -233,7 +233,6 @@ theorem
             H N hN beta hbeta B A target target target
             rightF hRightStrong
       rw [hProjectionA]
-      rfl
 
 /-- The ordinary-orientation current target-variance average is exactly the
 canonical genuine target fiber variance. -/
