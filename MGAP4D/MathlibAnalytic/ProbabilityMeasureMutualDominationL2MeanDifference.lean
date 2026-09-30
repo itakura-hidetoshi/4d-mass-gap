@@ -402,24 +402,30 @@ theorem probabilityMeasure_integral_difference_sq_le_variance_sum_of_pairwise_le
       _ = 2 * t ^ 2 * (A + B) := by ring
   have hAeq :
       A = variance f μ + (d / 2) ^ 2 := by
-    have h :=
-      probabilityMeasure_integral_sq_sub_const_eq_variance_add_mean_sub_sq
-        μ f hfμ c
-    change A = variance f μ + (mμ - c) ^ 2
-    rw [show mμ - c = d / 2 by
-      dsimp [c, d]
-      ring]
-    exact h
+    calc
+      A = ∫ x, (f x - c) ^ 2 ∂μ := by
+        rfl
+      _ = variance f μ + ((∫ x, f x ∂μ) - c) ^ 2 :=
+        probabilityMeasure_integral_sq_sub_const_eq_variance_add_mean_sub_sq
+          μ f hfμ c
+      _ = variance f μ + (d / 2) ^ 2 := by
+        have hmid : (∫ x, f x ∂μ) - c = d / 2 := by
+          dsimp [c, d, mμ, mν]
+          ring
+        rw [hmid]
   have hBeq :
       B = variance f ν + (d / 2) ^ 2 := by
-    have h :=
-      probabilityMeasure_integral_sq_sub_const_eq_variance_add_mean_sub_sq
-        ν f hfν c
-    change B = variance f ν + (mν - c) ^ 2
-    rw [show mν - c = -(d / 2) by
-      dsimp [c, d]
-      ring]
-    simpa only [neg_sq] using h
+    calc
+      B = ∫ x, (f x - c) ^ 2 ∂ν := by
+        rfl
+      _ = variance f ν + ((∫ x, f x ∂ν) - c) ^ 2 :=
+        probabilityMeasure_integral_sq_sub_const_eq_variance_add_mean_sub_sq
+          ν f hfν c
+      _ = variance f ν + (d / 2) ^ 2 := by
+        have hmid : (∫ x, f x ∂ν) - c = -(d / 2) := by
+          dsimp [c, d, mμ, mν]
+          ring
+        rw [hmid, neg_sq]
   rw [hAeq, hBeq] at hcore
   have hV :
       0 ≤ variance f μ + variance f ν :=
