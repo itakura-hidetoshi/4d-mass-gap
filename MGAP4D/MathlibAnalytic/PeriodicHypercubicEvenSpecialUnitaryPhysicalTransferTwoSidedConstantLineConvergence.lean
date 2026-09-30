@@ -239,7 +239,7 @@ theorem
           (inferInstance : MeasurableSpace X))
         (inferInstance : MeasurableSpace X)
         Prod.snd :=
-    MeasurableSpace.comap_measurable Prod.snd
+    comap_measurable Prod.snd
   have hkSnd :
       StronglyMeasurable[
         MeasurableSpace.comap Prod.snd
