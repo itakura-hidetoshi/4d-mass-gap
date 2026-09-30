@@ -209,39 +209,37 @@ theorem
   let hs :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_swap_measurePreserving
       H N hN beta hbeta
-  have hfMap :
-      AEStronglyMeasurable[
-        periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
-          H N target]
-        (fun z => f z) (Measure.map Prod.swap π) := by
-    rw [hs.map_eq]
-    exact hf
-  have hcomp :
-      AEStronglyMeasurable[
-        MeasurableSpace.comap Prod.swap
-          (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
-            H N target)]
-        ((fun z => f z) ∘ Prod.swap) π :=
-    AEStronglyMeasurable.comp_ae_measurable'
-      (mα :=
-        periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
+  rcases hf with ⟨g, hg, hfg⟩
+  have hswap :
+      @Measurable
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+        (periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace
           H N target)
-      hfMap measurable_swap.aemeasurable
-  rw [
-    periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace_comap_swap_eq_left
-      H N target] at hcomp
+        (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
+          H N target)
+        Prod.swap := by
+    rw [measurable_iff_comap_le]
+    exact
+      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace_comap_swap_eq_left
+        H N target).le
+  refine ⟨g ∘ Prod.swap, hg.comp_measurable hswap, ?_⟩
+  have hfgSwap :
+      ((fun z => f z) ∘ Prod.swap) =ᵐ[π] (g ∘ Prod.swap) :=
+    hs.quasiMeasurePreserving.ae_eq_comp hfg
   have hcoe :
       (fun z =>
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv
           H N hN beta hbeta f z) =ᵐ[π]
-        (fun z => f z.swap) := by
+        ((fun z => f z) ∘ Prod.swap) := by
     change
       (MeasureTheory.Lp.compMeasurePreserving Prod.swap hs f) =ᵐ[π]
-        (fun z => f z.swap)
+        ((fun z => f z) ∘ Prod.swap)
     simpa [Function.comp_def] using
       (MeasureTheory.Lp.coeFn_compMeasurePreserving f hs)
-  exact (by
-    simpa [Function.comp_def] using hcomp).congr hcoe.symm
+  exact hcoe.trans hfgSwap
 
 /-- Swap sends left one-link measurable L2 vectors back to the corresponding
 right one-link measurable subspace. -/
@@ -274,136 +272,37 @@ theorem
   let hs :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_swap_measurePreserving
       H N hN beta hbeta
-  have hfMap :
-      AEStronglyMeasurable[
-        periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace
-          H N target]
-        (fun z => f z) (Measure.map Prod.swap π) := by
-    rw [hs.map_eq]
-    exact hf
-  have hcomp :
-      AEStronglyMeasurable[
-        MeasurableSpace.comap Prod.swap
-          (periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace
-            H N target)]
-        ((fun z => f z) ∘ Prod.swap) π :=
-    AEStronglyMeasurable.comp_ae_measurable'
-      (mα :=
-        periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace
+  rcases hf with ⟨g, hg, hfg⟩
+  have hswap :
+      @Measurable
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+        (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
           H N target)
-      hfMap measurable_swap.aemeasurable
-  rw [
-    periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace_comap_swap_eq_right
-      H N target] at hcomp
+        (periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace
+          H N target)
+        Prod.swap := by
+    rw [measurable_iff_comap_le]
+    exact
+      (periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace_comap_swap_eq_right
+        H N target).le
+  refine ⟨g ∘ Prod.swap, hg.comp_measurable hswap, ?_⟩
+  have hfgSwap :
+      ((fun z => f z) ∘ Prod.swap) =ᵐ[π] (g ∘ Prod.swap) :=
+    hs.quasiMeasurePreserving.ae_eq_comp hfg
   have hcoe :
       (fun z =>
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv
           H N hN beta hbeta f z) =ᵐ[π]
-        (fun z => f z.swap) := by
+        ((fun z => f z) ∘ Prod.swap) := by
     change
       (MeasureTheory.Lp.compMeasurePreserving Prod.swap hs f) =ᵐ[π]
-        (fun z => f z.swap)
+        ((fun z => f z) ∘ Prod.swap)
     simpa [Function.comp_def] using
       (MeasureTheory.Lp.coeFn_compMeasurePreserving f hs)
-  exact (by
-    simpa [Function.comp_def] using hcomp).congr hcoe.symm
-
-/-- The right one-link measurable Hilbert subspace is carried exactly onto the
-left one-link measurable Hilbert subspace by endpoint swap. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointRightSpatialLinkLpMeas_map_swap_eq_left
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (target : PeriodicHypercubicEvenSpatialSliceLink H) :
-    (lpMeas ℝ ℝ
-        (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
-          H N target) 2
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
-          H N hN beta hbeta)).map
-      ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv
-          H N hN beta hbeta).toLinearEquiv :
-        PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-            H N hN beta hbeta →ₗ[ℝ]
-          PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-            H N hN beta hbeta) =
-      lpMeas ℝ ℝ
-        (periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace
-          H N target) 2
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
-          H N hN beta hbeta) := by
-  apply le_antisymm
-  · intro y hy
-    rcases hy with ⟨x, hx, rfl⟩
-    exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv_mem_leftSpatialLink_lpMeas_of_mem_right
-        H N hN beta hbeta target x hx
-  · intro y hy
-    refine ⟨
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv
-        H N hN beta hbeta y,
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv_mem_rightSpatialLink_lpMeas_of_mem_left
-        H N hN beta hbeta target y hy, ?_⟩
-    exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv_apply_apply
-        H N hN beta hbeta y
-
-/-- Orthogonal projection covariance under endpoint swap. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv_rightSpatialLink_starProjection
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (target : PeriodicHypercubicEvenSpatialSliceLink H)
-    (f : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-      H N hN beta hbeta) :
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv
-        H N hN beta hbeta
-        ((lpMeas ℝ ℝ
-            (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
-              H N target) 2
-            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
-              H N hN beta hbeta)).starProjection f) =
-      (lpMeas ℝ ℝ
-          (periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace
-            H N target) 2
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
-            H N hN beta hbeta)).starProjection
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv
-          H N hN beta hbeta f) := by
-  letI : Fact
-      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
-          H N target ≤
-        (inferInstance : MeasurableSpace
-          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))) :=
-    ⟨periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace_le
-      H N target⟩
-  letI : Fact
-      (periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace
-          H N target ≤
-        (inferInstance : MeasurableSpace
-          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))) :=
-    ⟨periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace_le
-      H N target⟩
-  let E :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv
-      H N hN beta hbeta
-  let R :=
-    lpMeas ℝ ℝ
-      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
-        H N target) 2
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
-        H N hN beta hbeta)
-  have h :=
-    Submodule.starProjection_map_apply E R (E f)
-  rw [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointRightSpatialLinkLpMeas_map_swap_eq_left
-      H N hN beta hbeta target] at h
-  simpa [E, R] using h.symm
+  exact hcoe.trans hfgSwap
 
 /-- The genuine left one-link conditional expectation is exactly the
 swap-conjugate of the genuine right one-link conditional expectation. -/
@@ -424,43 +323,65 @@ theorem
         H N hN beta hbeta target
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv
           H N hN beta hbeta f) := by
+  let hR :=
+    periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace_le
+      H N target
+  let hL :=
+    periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace_le
+      H N target
   letI : Fact
       (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
           H N target ≤
         (inferInstance : MeasurableSpace
           (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
             PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))) :=
-    ⟨periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace_le
-      H N target⟩
+    ⟨hR⟩
   letI : Fact
       (periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace
           H N target ≤
         (inferInstance : MeasurableSpace
           (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
             PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))) :=
-    ⟨periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace_le
-      H N target⟩
+    ⟨hL⟩
+  let E :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv
+      H N hN beta hbeta
+  let R :=
+    lpMeas ℝ ℝ
+      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
+        H N target) 2
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+        H N hN beta hbeta)
+  let L :=
+    lpMeas ℝ ℝ
+      (periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace
+        H N target) 2
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+        H N hN beta hbeta)
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2_apply,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftSpatialLinkCondExpL2_apply]
-  change
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv
-        H N hN beta hbeta
-        ((lpMeas ℝ ℝ
-            (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
-              H N target) 2
-            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
-              H N hN beta hbeta)).starProjection f) =
-      (lpMeas ℝ ℝ
-          (periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialLinkMeasurableSpace
-            H N target) 2
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
-            H N hN beta hbeta)).starProjection
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv
-          H N hN beta hbeta f)
-  exact
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv_rightSpatialLink_starProjection
-      H N hN beta hbeta target f
+  change E (R.starProjection f) = L.starProjection (E f)
+  symm
+  refine L.eq_starProjection_of_mem_of_inner_eq_zero ?_ ?_
+  · exact
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv_mem_leftSpatialLink_lpMeas_of_mem_right
+        H N hN beta hbeta target (R.starProjection f)
+        (R.starProjection_apply_mem f)
+  · intro w hw
+    have hEw : E w ∈ R :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv_mem_rightSpatialLink_lpMeas_of_mem_left
+        H N hN beta hbeta target w hw
+    have horth := R.starProjection_inner_eq_zero f (E w) hEw
+    calc
+      inner ℝ (E f - E (R.starProjection f)) w =
+          inner ℝ (E (f - R.starProjection f)) (E (E w)) := by
+            rw [E.map_sub,
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSwapL2Equiv_apply_apply
+                H N hN beta hbeta w]
+      _ = inner ℝ (f - R.starProjection f) (E w) := by
+            rw [E.inner_map_map]
+      _ = 0 := horth
 
 /-- Equivalent conjugation formula with the left projection isolated. -/
 theorem
