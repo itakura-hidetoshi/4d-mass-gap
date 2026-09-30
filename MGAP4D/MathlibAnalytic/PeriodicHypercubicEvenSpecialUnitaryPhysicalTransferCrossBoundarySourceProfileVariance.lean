@@ -351,7 +351,6 @@ theorem
     (hbeta : 0 ≤ beta)
     (source target : PeriodicHypercubicEvenSpatialSliceLink H)
     (F : (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N × PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
-    (hF : StronglyMeasurable F)
     (bound : ℝ)
     (hbound : ∀ z, ‖F z‖ ≤ bound)
     (hInvariant :
@@ -422,7 +421,7 @@ theorem
     |bound|
   exact Filter.Eventually.of_forall fun k =>
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetMean_norm_le
-      H N hN beta hbeta source target F hF bound hbound hInvariant B A k
+      H N hN beta hbeta source target F bound hbound hInvariant B A k
 
 /-- Target conditional variance profile indexed by the opposite-boundary
 source value. -/
