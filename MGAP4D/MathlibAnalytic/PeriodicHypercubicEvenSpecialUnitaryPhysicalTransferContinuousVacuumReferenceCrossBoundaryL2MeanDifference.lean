@@ -37,6 +37,15 @@ open scoped ENNReal
 
 noncomputable section
 
+-- The measurable structure used by the cross-boundary fiber laws is declared
+-- locally in their defining modules. Local instances do not propagate through
+-- imports, so this consumer must install the same concrete structure before
+-- applying generic MemLp/variance theorems.
+local instance crossBoundaryL2MeanDifferenceSpecialUnitaryMeasurableSpace
+    (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 /-- The existing cross-boundary threshold implies that the normalized Harnack
 factor entering the L² theorem is at most three. -/
 theorem
@@ -190,7 +199,6 @@ theorem
       else 0 := by
   by_cases hsf : source = fiber
   · subst source
-    simp only [if_pos rfl]
     exact
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_L2MeanDifference_sq_le_varianceSum_diagonal
         H N hN beta hbeta hBetaLt B target fiber k₁ k₂ g₂ A phi hphi₁ hphi₂
