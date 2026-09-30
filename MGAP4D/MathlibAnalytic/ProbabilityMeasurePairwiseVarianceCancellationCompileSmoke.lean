@@ -1,0 +1,19 @@
+import MGAP4D.MathlibAnalytic.ProbabilityMeasurePairwiseVarianceCancellation
+
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory ProbabilityTheory
+
+noncomputable section
+
+#check realProbabilityIndependentPair_integral_sq_sub_le_two_mul_coeff_sq_mul_integral
+#check realProbabilityIndependentPair_integral_sq_sub_eq_two_mul_variance
+#check realProbability_variance_le_coeff_sq_mul_integral_of_pairwise_sq_le
+
+#print axioms realProbabilityIndependentPair_integral_sq_sub_le_two_mul_coeff_sq_mul_integral
+#print axioms realProbabilityIndependentPair_integral_sq_sub_eq_two_mul_variance
+#print axioms realProbability_variance_le_coeff_sq_mul_integral_of_pairwise_sq_le
+
+end
+
+end MGAP4D.MathlibAnalytic
