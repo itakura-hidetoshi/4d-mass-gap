@@ -213,11 +213,10 @@ theorem probabilityMeasure_integral_difference_abs_le_integral_abs_of_pairwise_l
           ((∫ x, fn x ∂μ) - (∫ x, fn x ∂ν))| ≤
         |(∫ x, fp x ∂μ) - (∫ x, fp x ∂ν)| +
           |(∫ x, fn x ∂μ) - (∫ x, fn x ∂ν)| := by
-    simpa using
-      (abs_sub_le
+    simpa [sub_eq_add_neg] using
+      (abs_add
         ((∫ x, fp x ∂μ) - (∫ x, fp x ∂ν))
-        ((∫ x, fn x ∂μ) - (∫ x, fn x ∂ν))
-        0)
+        (-((∫ x, fn x ∂μ) - (∫ x, fn x ∂ν))))
   calc
     |((∫ x, fp x ∂μ) - ∫ x, fn x ∂μ) -
         ((∫ x, fp x ∂ν) - ∫ x, fn x ∂ν)| =
@@ -255,12 +254,15 @@ theorem probabilityMeasure_integral_abs_sq_le_integral_sq
     simpa [Real.norm_eq_abs] using hg.abs
   have hvar := variance_nonneg (fun x => |g x|) μ
   rw [variance_eq_sub habs] at hvar
+  have hvar' :
+      0 ≤ (∫ x, |g x| ^ 2 ∂μ) - (∫ x, |g x| ∂μ) ^ 2 := by
+    simpa only [Pi.pow_apply] using hvar
   have hsq :
       (∫ x, |g x| ^ 2 ∂μ) = ∫ x, (g x) ^ 2 ∂μ := by
     apply integral_congr_ae
     filter_upwards with x
     exact sq_abs (g x)
-  rw [hsq] at hvar
+  rw [hsq] at hvar'
   nlinarith
 
 /-- Exact second-moment decomposition around an arbitrary constant center:
@@ -275,26 +277,26 @@ theorem probabilityMeasure_integral_sq_sub_const_eq_variance_add_mean_sub_sq
     (c : ℝ) :
     (∫ x, (f x - c) ^ 2 ∂μ) =
       variance f μ + ((∫ x, f x ∂μ) - c) ^ 2 := by
-  have hfInt : Integrable f μ := hf.integrable one_le_two
-  have hfSq : Integrable (fun x => (f x) ^ 2) μ := by
-    simpa only [Pi.pow_apply] using hf.integrable_sq
-  have hlin : Integrable (fun x => (2 * c) * f x) μ :=
-    hfInt.const_mul (2 * c)
-  calc
-    (∫ x, (f x - c) ^ 2 ∂μ) =
-        ∫ x, (f x) ^ 2 - (2 * c) * f x + c ^ 2 ∂μ := by
-      apply integral_congr_ae
-      filter_upwards with x
-      ring
-    _ =
-        (∫ x, (f x) ^ 2 ∂μ) -
-          (2 * c) * (∫ x, f x ∂μ) + c ^ 2 := by
-      rw [integral_add (hfSq.sub hlin) (integrable_const (c ^ 2)),
-        integral_sub hfSq hlin, integral_const_mul]
-      simp
-    _ = variance f μ + ((∫ x, f x ∂μ) - c) ^ 2 := by
-      rw [variance_eq_sub hf]
-      ring
+  let g : α → ℝ := fun x => f x - c
+  have hg : MemLp g 2 μ := by
+    exact hf.sub (memLp_const c)
+  have hmean :
+      (∫ x, g x ∂μ) = (∫ x, f x ∂μ) - c := by
+    dsimp [g]
+    rw [integral_sub (hf.integrable one_le_two) (integrable_const c)]
+    simp
+  have hshift : variance g μ = variance f μ := by
+    dsimp [g]
+    exact variance_sub_const hf.aestronglyMeasurable c
+  have hvar :
+      variance g μ =
+        (∫ x, (g x) ^ 2 ∂μ) - (∫ x, g x ∂μ) ^ 2 := by
+    simpa only [Pi.pow_apply] using (variance_eq_sub hg)
+  change
+    (∫ x, (g x) ^ 2 ∂μ) =
+      variance f μ + ((∫ x, f x ∂μ) - c) ^ 2
+  rw [← hshift, ← hmean]
+  linarith
 
 /-- Variance-sensitive mean-difference estimate under mutual Harnack
 domination.  The coefficient is the square of the sharp bounded-test
@@ -391,7 +393,9 @@ theorem probabilityMeasure_integral_difference_sq_le_variance_sum_of_pairwise_le
     mul_nonneg ht0 (add_nonneg ha0 hb0)
   have hsq :
       d ^ 2 ≤ t ^ 2 * (a + b) ^ 2 := by
-    nlinarith [sq_abs d]
+    have hsq' :=
+      (sq_le_sq₀ (abs_nonneg d) hright0).2 hL1'
+    simpa only [sq_abs, mul_pow] using hsq'
   have hscaled :
       t ^ 2 * (a + b) ^ 2 ≤ t ^ 2 * (2 * (A + B)) :=
     mul_le_mul_of_nonneg_left habSq (sq_nonneg t)
