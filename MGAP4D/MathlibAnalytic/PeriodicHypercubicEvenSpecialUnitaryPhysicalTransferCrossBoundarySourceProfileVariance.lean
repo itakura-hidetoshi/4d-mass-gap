@@ -57,11 +57,6 @@ local instance crossBoundarySourceProfileVarianceSpatialLinkFintype
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
-local notation "Gauge" => Matrix.specialUnitaryGroup (Fin N) ℂ
-local notation "Cfg" =>
-  PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N
-local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink H
-
 /-- The ENNReal target-fiber weight, viewed as a jointly measurable family in
 the opposite-boundary source value and the resampled target value. -/
 noncomputable def
@@ -91,17 +86,17 @@ theorem
           H N hN beta hbeta source target B A)) := by
   let hRight :
       Measurable
-        (fun p : Gauge × Gauge =>
+        (fun p : Matrix.specialUnitaryGroup (Fin N) ℂ × Matrix.specialUnitaryGroup (Fin N) ℂ =>
           Function.update B source p.1) :=
     (measurable_update B).comp measurable_fst
   let hLeft :
       Measurable
-        (fun p : Gauge × Gauge =>
+        (fun p : Matrix.specialUnitaryGroup (Fin N) ℂ × Matrix.specialUnitaryGroup (Fin N) ℂ =>
           Function.update A target p.2) :=
     (measurable_update A).comp measurable_snd
   have hJoint :
       Measurable
-        (fun p : Gauge × Gauge =>
+        (fun p : Matrix.specialUnitaryGroup (Fin N) ℂ × Matrix.specialUnitaryGroup (Fin N) ℂ =>
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousWeight
             H N hN beta hbeta
             (Function.update B source p.1)
@@ -274,12 +269,12 @@ theorem
     (beta : ℝ)
     (hbeta : 0 ≤ beta)
     (source target : PeriodicHypercubicEvenSpatialSliceLink H)
-    (F : (Cfg × Cfg) → ℝ)
+    (F : (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N × PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
     (hF : StronglyMeasurable F)
     (hInvariant :
-      ∀ (left right : Cfg) (value : Gauge),
+      ∀ (left right : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) (value : Matrix.specialUnitaryGroup (Fin N) ℂ),
         F (Function.update left source value, right) = F (left, right))
-    (B A : Cfg) :
+    (B A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
     StronglyMeasurable
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetMean
         H N hN beta hbeta source target F B A) := by
@@ -325,12 +320,19 @@ theorem
   have hLaw :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_currentTarget_eq_kernelSection_sourceUpdate
       H N hN beta hbeta A source source source (A source) B
-  simpa using
-    (show IsProbabilityMeasure
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
-        H N hN beta hbeta A source source source (A source) (A source) B) from
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_isProbabilityMeasure
-        H N hN beta hbeta A source source source (A source) (A source) B) |>.copy hLaw
+  change IsProbabilityMeasure
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
+      H N hN beta hbeta A B source)
+  have hLaw' :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure
+          H N hN beta hbeta A source source source (A source) (A source) B =
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
+          H N hN beta hbeta A B source := by
+    simpa using hLaw
+  rw [← hLaw']
+  exact
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceOneLinkFiberProbabilityMeasure_isProbabilityMeasure
+      H N hN beta hbeta A source source source (A source) (A source) B
 
 /-- Uniform boundedness of the target mean by the concrete bounded-core
 observable bound. -/
@@ -340,16 +342,16 @@ theorem
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta)
-    (source target : Link)
-    (F : (Cfg × Cfg) → ℝ)
+    (source target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (F : (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N × PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
     (hF : StronglyMeasurable F)
     (bound : ℝ)
     (hbound : ∀ z, ‖F z‖ ≤ bound)
     (hInvariant :
-      ∀ (left right : Cfg) (value : Gauge),
+      ∀ (left right : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) (value : Matrix.specialUnitaryGroup (Fin N) ℂ),
         F (Function.update left source value, right) = F (left, right))
-    (B A : Cfg)
-    (k : Gauge) :
+    (B A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (k : Matrix.specialUnitaryGroup (Fin N) ℂ) :
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetMean
         H N hN beta hbeta source target F B A k‖ ≤ |bound| := by
   let μ :=
@@ -380,15 +382,15 @@ theorem
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta)
-    (source target : Link)
-    (F : (Cfg × Cfg) → ℝ)
+    (source target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (F : (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N × PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
     (hF : StronglyMeasurable F)
     (bound : ℝ)
     (hbound : ∀ z, ‖F z‖ ≤ bound)
     (hInvariant :
-      ∀ (left right : Cfg) (value : Gauge),
+      ∀ (left right : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) (value : Matrix.specialUnitaryGroup (Fin N) ℂ),
         F (Function.update left source value, right) = F (left, right))
-    (B A : Cfg) :
+    (B A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
     MemLp
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetMean
         H N hN beta hbeta source target F B A)
@@ -417,10 +419,10 @@ noncomputable def
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta)
-    (source target : Link)
-    (F : (Cfg × Cfg) → ℝ)
-    (B A : Cfg)
-    (k : Gauge) : ℝ :=
+    (source target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (F : (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N × PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
+    (B A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (k : Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
   variance
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryFrozenTargetSection
       H N target F B A)
@@ -435,12 +437,12 @@ theorem
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta)
-    (source target : Link)
-    (F : (Cfg × Cfg) → ℝ)
+    (source target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (F : (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N × PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
     (hF : StronglyMeasurable F)
     (bound : ℝ)
     (hbound : ∀ z, ‖F z‖ ≤ bound)
-    (B A : Cfg) :
+    (B A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
     StronglyMeasurable
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetVarianceProfile
         H N hN beta hbeta source target F B A) := by
@@ -496,13 +498,13 @@ theorem
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta)
-    (source target : Link)
-    (F : (Cfg × Cfg) → ℝ)
+    (source target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (F : (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N × PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
     (hF : StronglyMeasurable F)
     (bound : ℝ)
     (hbound : ∀ z, ‖F z‖ ≤ bound)
-    (B A : Cfg)
-    (k : Gauge) :
+    (B A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (k : Matrix.specialUnitaryGroup (Fin N) ℂ) :
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetVarianceProfile
         H N hN beta hbeta source target F B A k ≤ |bound| ^ 2 := by
   let μ :=
@@ -523,7 +525,7 @@ theorem
       variance phi μ ≤ ∫ g, (phi g) ^ 2 ∂μ :=
     variance_le_expectation_sq hphiLp.aestronglyMeasurable
   have hSqInt : Integrable (fun g => (phi g) ^ 2) μ := hphiLp.integrable_sq
-  have hConstInt : Integrable (fun _ : Gauge => |bound| ^ 2) μ := integrable_const _
+  have hConstInt : Integrable (fun _ : Matrix.specialUnitaryGroup (Fin N) ℂ => |bound| ^ 2) μ := integrable_const _
   have hPoint : ∀ᵐ g ∂μ, (phi g) ^ 2 ≤ |bound| ^ 2 := by
     filter_upwards with g
     have hg :
@@ -539,7 +541,7 @@ theorem
       (∫ g, (phi g) ^ 2 ∂μ) ≤ |bound| ^ 2 := by
     calc
       (∫ g, (phi g) ^ 2 ∂μ) ≤
-          ∫ _ : Gauge, |bound| ^ 2 ∂μ :=
+          ∫ _ : Matrix.specialUnitaryGroup (Fin N) ℂ, |bound| ^ 2 ∂μ :=
         integral_mono_ae hSqInt hConstInt hPoint
       _ = |bound| ^ 2 := by simp
   exact hVar.trans hInt
@@ -552,12 +554,12 @@ theorem
     (hN : 0 < N)
     (beta : ℝ)
     (hbeta : 0 ≤ beta)
-    (source target : Link)
-    (F : (Cfg × Cfg) → ℝ)
+    (source target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (F : (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N × PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
     (hF : StronglyMeasurable F)
     (bound : ℝ)
     (hbound : ∀ z, ‖F z‖ ≤ bound)
-    (B A : Cfg) :
+    (B A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
     Integrable
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetVarianceProfile
         H N hN beta hbeta source target F B A)
@@ -598,15 +600,15 @@ theorem
     (hBetaLt :
       beta <
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryBetaThreshold)
-    (source target : Link)
-    (F : (Cfg × Cfg) → ℝ)
+    (source target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (F : (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N × PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
     (hF : StronglyMeasurable F)
     (bound : ℝ)
     (hbound : ∀ z, ‖F z‖ ≤ bound)
     (hInvariant :
-      ∀ (left right : Cfg) (value : Gauge),
+      ∀ (left right : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) (value : Matrix.specialUnitaryGroup (Fin N) ℂ),
         F (Function.update left source value, right) = F (left, right))
-    (B A : Cfg) :
+    (B A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
     variance
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetMean
           H N hN beta hbeta source target F B A)
