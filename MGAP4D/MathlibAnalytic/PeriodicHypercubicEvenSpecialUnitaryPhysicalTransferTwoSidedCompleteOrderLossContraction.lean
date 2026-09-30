@@ -141,6 +141,37 @@ theorem
         H N hN beta hbeta)
       sources f
 
+/-- Exact second-sweep path-loss identity for the supplied order. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedSpatialLinkTerminalSweepStageLocalProfileFor_sq_sum_eq_terminalPathLoss
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (sources : List (PeriodicHypercubicEvenGroundStateTwoSidedSpatialLink H))
+    (f :
+      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+        H N hN beta hbeta) :
+    (∑ source : PeriodicHypercubicEvenGroundStateTwoSidedSpatialLink H,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedSpatialLinkTerminalSweepStageLocalProfileFor
+        H N hN beta hbeta sources f source ^ 2) =
+      realHilbertProjectionSweepPathLoss
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedSpatialLinkCondExpL2
+          H N hN beta hbeta)
+        sources
+        (realHilbertProjectionSweep
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedSpatialLinkCondExpL2
+            H N hN beta hbeta)
+          sources f) := by
+  simpa [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedSpatialLinkTerminalSweepStageLocalProfileFor] using
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedSpatialLinkSweepStageLocalProfileFor_sq_sum_eq_pathLoss
+      H N hN beta hbeta sources
+      (realHilbertProjectionSweep
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedSpatialLinkCondExpL2
+          H N hN beta hbeta)
+        sources f)
+
 /-- Freshness of a displayed position in an arbitrary duplicate-free order. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedSpatialLink_completeOrderSplit_fresh
@@ -603,8 +634,8 @@ theorem
         s hs beta hcut)
       sources hNodup hComplete f hf
   rw [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedSpatialLinkSweepStageLocalProfileFor_sq_sum_eq_pathLoss
-      H N hN beta hbeta sources (S f),
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedSpatialLinkTerminalSweepStageLocalProfileFor_sq_sum_eq_terminalPathLoss
+      H N hN beta hbeta sources f,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwoSidedSpatialLinkSweepStageLocalProfileFor_sq_sum_eq_pathLoss
       H N hN beta hbeta sources f] at hEnergy
   calc
