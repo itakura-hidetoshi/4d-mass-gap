@@ -367,9 +367,11 @@ theorem twoSidedTwelveSpatial_ordered_relativePoincare
   have hRelative :
       (1 - r2) * V ≤ (1 + r1) * A := by
     nlinarith [hTriangle, hDisplacement, hTail]
+  have hOnePlus : 1 + r1 ≤ 2 := by
+    linarith
   have hGroupFactor :
-      (1 + r1) * A ≤ 2 * A := by
-    nlinarith
+      (1 + r1) * A ≤ 2 * A :=
+    mul_le_mul_of_nonneg_right hOnePlus hA0
   have hLinear :
       (1 - r2) * V ≤ 2 * A :=
     hRelative.trans hGroupFactor
