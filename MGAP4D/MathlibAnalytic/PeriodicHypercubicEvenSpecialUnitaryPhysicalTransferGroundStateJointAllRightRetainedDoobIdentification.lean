@@ -172,15 +172,15 @@ theorem allRightLeftRetainedCondExpL2_eq_coarseCondExp :
         inner ℝ (Q (Cleft f)) g := by
           rw [leftRetained_coarse_fixed H N hN beta hbeta f]
     _ = inner ℝ (Cleft f) (Q g) :=
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp_inner_symm
-        H N hN beta hbeta
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp_inner_symm
+        H N hN beta hbeta) (Cleft f) g
     _ = inner ℝ f (Cleft (Q g)) :=
       allRightLeftRetained_symmetric H N hN beta hbeta _ _
     _ = inner ℝ f (Q g) := by
       rw [coarse_leftRetained_fixed H N hN beta hbeta g]
     _ = inner ℝ (Q f) g :=
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp_inner_symm
-        H N hN beta hbeta).symm
+      ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp_inner_symm
+        H N hN beta hbeta) f g).symm
 
 /-- On a genuine right-boundary lift the literal retained projection is exactly
 left-boundary pullback of the Doob boundary operator. -/
@@ -198,7 +198,9 @@ theorem allRightLeftRetainedCondExpL2_rightBoundary_norm_eq_doob
     ‖Cleft (R u)‖ = ‖D u‖ := by
   rw [allRightLeftRetainedCondExpL2_rightBoundary_eq_leftBoundary_doob
     H N hN beta hbeta u]
-  exact J.norm_map _
+  exact
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftBoundaryL2Isometry
+      H N hN beta hbeta).norm_map _
 
 /-- The retained-boundary contraction isolated in #4944 is definitionally the
 same quantitative requirement as contraction of the existing Doob boundary
