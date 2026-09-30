@@ -107,13 +107,15 @@ theorem
     by_cases hi : i = target
     · subst i
       simpa using (measurable_snd : Measurable (fun p : J × U => p.2))
-    · simpa [Function.update_noteq hi] using
+    · simpa [Function.update, hi] using
         ((measurable_pi_apply i).comp
           ((measurable_snd : Measurable (fun z : J => z.2)).comp
             (measurable_fst : Measurable (fun p : J × U => p.1))))
   have hPairMap : Measurable pairMap := by
-    exact
-      ((measurable_fst : Measurable (fun p : J × U => p.1)).fst).prodMk hUpdateRight
+    have hLeft : Measurable (fun p : J × U => p.1.1) :=
+      (measurable_fst : Measurable (fun z : J => z.1)).comp
+        (measurable_fst : Measurable (fun p : J × U => p.1))
+    exact hLeft.prodMk hUpdateRight
   have hWeight : Measurable (fun p : J × U => w (pairMap p)) :=
     hw.comp hPairMap
   change Measurable (fun p : J × U => ENNReal.ofReal (w (pairMap p)))
@@ -272,7 +274,9 @@ theorem
     (bound : ℝ)
     (hbound : ∀ z, ‖F z‖ ≤ bound) :
     StronglyMeasurable
-      (fun z =>
+      (fun (z :
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryCurrentTargetVariance
           H N hN beta hbeta target F z.1 z.2) := by
   let G := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N
@@ -293,15 +297,17 @@ theorem
     by_cases hi : i = target
     · subst i
       simpa using (measurable_snd : Measurable (fun p : J × U => p.2))
-    · simpa [Function.update_noteq hi] using
+    · simpa [Function.update, hi] using
         ((measurable_pi_apply i).comp
           ((measurable_snd : Measurable (fun z : J => z.2)).comp
             (measurable_fst : Measurable (fun p : J × U => p.1))))
   have hPair :
       Measurable (fun p : J × U =>
         (p.1.1, Function.update p.1.2 target p.2)) := by
-    exact
-      ((measurable_fst : Measurable (fun p : J × U => p.1)).fst).prodMk hUpdateRight
+    have hLeft : Measurable (fun p : J × U => p.1.1) :=
+      (measurable_fst : Measurable (fun z : J => z.1)).comp
+        (measurable_fst : Measurable (fun p : J × U => p.1))
+    exact hLeft.prodMk hUpdateRight
   have hPhi :
       StronglyMeasurable (Function.uncurry phi) := by
     exact hF.comp_measurable hPair
@@ -324,10 +330,10 @@ theorem
         H N hN beta hbeta target target F hF bound hbound
         z.1 z.2 (z.1 target)
   have hEq :
-      (fun z =>
+      (fun (z : J) =>
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryCurrentTargetVariance
           H N hN beta hbeta target F z.1 z.2) =
-        fun z =>
+        fun (z : J) =>
           (∫ g, (phi z g) ^ 2 ∂κ z) -
             (∫ g, phi z g ∂κ z) ^ 2 := by
     funext z
@@ -354,7 +360,9 @@ theorem
     (bound : ℝ)
     (hbound : ∀ z, ‖F z‖ ≤ bound) :
     Measurable
-      (fun z =>
+      (fun (z :
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
         ENNReal.ofReal
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryCurrentTargetVariance
             H N hN beta hbeta target F z.1 z.2)) := by
