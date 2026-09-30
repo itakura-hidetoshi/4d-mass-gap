@@ -175,7 +175,7 @@ theorem
   filter_upwards with g
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryFrozenTargetSection
-  exact hbound (B, Function.update A target g)
+  exact (hbound (B, Function.update A target g)).trans (le_abs_self bound)
 
 /-- Concrete source-invariant cross-boundary target means satisfy the exact
 variance-sensitive pairwise estimate with the existing cross coefficient. -/
