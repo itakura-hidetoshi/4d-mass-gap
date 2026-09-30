@@ -195,10 +195,7 @@ theorem
           (fun _ : Matrix.specialUnitaryGroup (Fin N) ℂ => 0) μ := by
             simpa using hZero
       _ = 0 := by
-        simpa using
-          (variance_zero (μ := μ) :
-            variance
-              (0 : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ) μ = 0)
+        exact variance_zero μ
   calc
     variance
         (fun k =>
