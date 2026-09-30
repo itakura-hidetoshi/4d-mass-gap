@@ -229,15 +229,39 @@ theorem
   have hphi₂ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryFrozenTargetSection_memLp_two
       H N hN beta hbeta source target F hF bound hbound B A k₂
-  have h :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure_crossBoundary_L2MeanDifference_sq_le_varianceSum_diagonal
-      H N hN beta hbeta hBetaLt B target source k₁ k₂ A phi hphi₁ hphi₂
+  have hSupported :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure_crossBoundary_L2MeanDifference_sq_le_varianceSum_supported_on_diagonal
+      H N hN beta hbeta hBetaLt B target source target k₁ k₂ A phi hphi₁ hphi₂
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetMean_eq_frozen_of_sourceInvariant
       H N hN beta hbeta source target F hInvariant B A k₁,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCrossBoundaryTargetMean_eq_frozen_of_sourceInvariant
       H N hN beta hbeta source target F hInvariant B A k₂]
-  simpa [phi] using h
+  by_cases hst : source = target
+  · simpa [phi, hst] using hSupported
+  · have hZero :
+        ((∫ g, phi g
+            ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
+              H N hN beta hbeta (Function.update B source k₁) A target) -
+          (∫ g, phi g
+            ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
+              H N hN beta hbeta (Function.update B source k₂) A target)) ^ 2 ≤ 0 := by
+        simpa [hst] using hSupported
+    have hRhsNonneg :
+        0 ≤
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryContractionCoefficient
+            beta) ^ 2 *
+            (variance phi
+                (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
+                  H N hN beta hbeta (Function.update B source k₁) A target) +
+              variance phi
+                (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftKernelSectionContinuousSpatialLinkNormalizedMeasure
+                  H N hN beta hbeta (Function.update B source k₂) A target)) :=
+      mul_nonneg (sq_nonneg _)
+        (add_nonneg
+          (variance_nonneg _ _)
+          (variance_nonneg _ _))
+    simpa [phi] using hZero.trans hRhsNonneg
 
 end
 
