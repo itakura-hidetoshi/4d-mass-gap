@@ -400,7 +400,7 @@ theorem projectiveFiniteOSEmbed_finiteOSCenteredPhysicalState_tendsto
 
 /-- The continuum constant-one vacuum has unit norm. -/
 theorem projectiveContinuumVacuum_norm
-    (C : PhysicalYangMillsEvenPeriodicWilsonOSPrimaryPlaquetteHaarModeCylinderData
+    (_C : PhysicalYangMillsEvenPeriodicWilsonOSPrimaryPlaquetteHaarModeCylinderData
       S D halfExtent N hN beta hbeta Q F R L hInvariant)
     (U : PhysicalYangMillsEvenPeriodicWilsonOSPositiveHalfVacuumUnitCompatibility
       Q hInvariant) :
