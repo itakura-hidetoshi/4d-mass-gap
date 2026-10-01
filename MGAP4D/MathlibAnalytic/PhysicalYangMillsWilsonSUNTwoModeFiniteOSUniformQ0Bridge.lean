@@ -124,29 +124,71 @@ theorem completedBoundaryTransfer_two_oneSidedExcitationBoundary_of_pairWeakAtFo
   have h :=
     Q.completedBoundaryTransfer_two_oneSidedBoundary_of_oneSlabPairWeakAtFor
       hInvariant C n f omega hWeak
-  change
-    Q.completedBoundaryTransfer hInvariant C n 2
-        (periodicHypercubicEvenSpecialUnitaryOneSidedBoundaryL2
-          (halfExtent n) N
-          (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
-            (halfExtent n) N hN (beta n) (hbeta n) x)
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2
-            (halfExtent n) N hN (beta n) (hbeta n))) =
-      periodicHypercubicEvenSpecialUnitaryOneSidedBoundaryL2
-        (halfExtent n) N
-        (periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
+  have hStep :
+      periodicHypercubicEvenSpecialUnitaryPhysicalModeOneStepLp
+          (halfExtent n) N hN (beta n) (hbeta n) f =
+        periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry
           (halfExtent n) N hN (beta n) (hbeta n)
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-            (halfExtent n) N hN (beta n) (hbeta n) x))
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2
-          (halfExtent n) N hN (beta n) (hbeta n))
-  simpa [f, omega,
-    periodicHypercubicEvenSpecialUnitaryPhysicalModeOneStepLp,
-    periodicHypercubicEvenSpecialUnitaryPhysicalTopModeOneStepLp,
-    periodicHypercubicEvenSpecialUnitaryPhysicalTopModeLp,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2,
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator]
-    using h
+            (halfExtent n) N hN (beta n) (hbeta n) x) := by
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry_apply]
+    unfold periodicHypercubicEvenSpecialUnitaryPhysicalModeOneStepLp
+    unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2
+    apply congrArg
+      (fun z :
+        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
+          (halfExtent n) N =>
+        (z : Lp ℝ 2
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+            (halfExtent n) N)))
+    symm
+    simpa [f,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator]
+      using
+        (realHilbertTopEigenspaceOrthogonalRestriction_coe
+          (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+            (halfExtent n) N hN (beta n) (hbeta n))
+          (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+            (halfExtent n) N hN (beta n) (hbeta n))
+          x)
+  have hTopStep :
+      periodicHypercubicEvenSpecialUnitaryPhysicalModeOneStepLp
+          (halfExtent n) N hN (beta n) (hbeta n) omega =
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2
+          (halfExtent n) N hN (beta n) (hbeta n) := by
+    change
+      periodicHypercubicEvenSpecialUnitaryPhysicalTopModeOneStepLp
+          (halfExtent n) N hN (beta n) (hbeta n) =
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2
+          (halfExtent n) N hN (beta n) (hbeta n)
+    rw [periodicHypercubicEvenSpecialUnitaryPhysicalTopModeOneStepLp_eq]
+    rfl
+  calc
+    Q.completedBoundaryTransfer hInvariant C n 2
+        (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundaryLinearIsometry
+          (halfExtent n) N hN (beta n) (hbeta n) x) =
+      Q.completedBoundaryTransfer hInvariant C n 2
+        (periodicHypercubicEvenSpecialUnitaryOneSidedBoundaryL2
+          (halfExtent n) N
+          (periodicHypercubicEvenSpecialUnitaryPhysicalModeLp
+            (halfExtent n) N f)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalModeLp
+            (halfExtent n) N omega)) := by
+      rfl
+    _ =
+      periodicHypercubicEvenSpecialUnitaryOneSidedBoundaryOneStepL2
+        (halfExtent n) N
+        (periodicHypercubicEvenSpecialUnitaryPhysicalModeOneStepLp
+          (halfExtent n) N hN (beta n) (hbeta n) f)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalModeOneStepLp
+          (halfExtent n) N hN (beta n) (hbeta n) omega) := h
+    _ =
+      periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundaryLinearIsometry
+        (halfExtent n) N hN (beta n) (hbeta n)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          (halfExtent n) N hN (beta n) (hbeta n) x) := by
+      rw [hStep, hTopStep]
+      rfl
 
 /-- If a finite OS state has a one-sided top-orthogonal boundary moment, then
 the actual finite OS time-one operator inherits the explicit uniform q0 bound. -/
