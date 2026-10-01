@@ -134,6 +134,9 @@ theorem physicalYangMillsSUNTwoModeCenteredBoundaryOneSidedExcitationRange_iff_e
     PhysicalYangMillsSUNTwoModeCenteredBoundaryOneSidedExcitationRange
         (P := P) ↔
       PhysicalYangMillsSUNTwoModeExplicitCenteredBoundaryOneSidedExcitationRange
+        (S := S) (D := D) (halfExtent := halfExtent)
+        (N := N) (hN := hN) (hN2 := hN2)
+        (beta := beta) (hbeta := hbeta)
         (Q := Q) (hInvariant := hInvariant) := by
   constructor
   · intro h k n
