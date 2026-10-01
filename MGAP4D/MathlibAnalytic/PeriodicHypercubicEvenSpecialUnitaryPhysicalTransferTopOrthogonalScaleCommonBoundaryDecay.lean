@@ -177,10 +177,17 @@ theorem
       GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformTopOrthogonalContractionFactor ^ k *
         ‖periodicHypercubicEvenSpecialUnitaryTopOrthogonalToScaleCommonBoundaryLinearIsometry
           halfExtent N hN beta hbeta n x‖ := by
-  rw [
-    periodicHypercubicEvenSpecialUnitaryTopOrthogonalToScaleCommonBoundaryLinearIsometry_norm,
-    periodicHypercubicEvenSpecialUnitaryTopOrthogonalToScaleCommonBoundaryLinearIsometry_norm]
-  exact
+  let I :=
+    periodicHypercubicEvenSpecialUnitaryTopOrthogonalToScaleCommonBoundaryLinearIsometry
+      halfExtent N hN beta hbeta n
+  let R :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+      (halfExtent n) N hN (beta n) (hbeta n)
+  let q :=
+    GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformTopOrthogonalContractionFactor
+  change ‖I ((R ^ k) x)‖ ≤ q ^ k * ‖I x‖
+  rw [I.norm_map, I.norm_map]
+  simpa [R, q] using
     periodicHypercubicEvenSpecialUnitary_uniformTopOrthogonalTransferOperator_pow_apply_norm_le
       halfExtent N hN beta hbeta s hs hcut n k hk x
 
