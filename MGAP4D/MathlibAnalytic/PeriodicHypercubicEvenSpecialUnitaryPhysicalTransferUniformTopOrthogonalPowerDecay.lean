@@ -192,6 +192,11 @@ theorem
         (halfExtent n) N hN (beta n) (hbeta n)) ^ k) x‖ ≤
       GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformTopOrthogonalContractionFactor ^ k *
         ‖x‖ := by
+  letI : NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        (halfExtent n) N hN (beta n) (hbeta n)) :=
+    uniformTopOrthogonalPowerDecayPhysicalOrthogonalNormedSpace
+      (halfExtent n) N hN (beta n) (hbeta n)
   let R :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       (halfExtent n) N hN (beta n) (hbeta n)
