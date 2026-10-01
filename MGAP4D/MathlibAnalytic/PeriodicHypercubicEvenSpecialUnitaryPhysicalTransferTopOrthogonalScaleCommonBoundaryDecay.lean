@@ -46,6 +46,19 @@ variable
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℕ → ℝ) (hbeta : ∀ n, 0 ≤ beta n)
 
+/-- Keep the restricted real normed-space structure explicit on the dependent
+top-orthogonal subtype.  This mirrors the existing one-sided excitation
+transfer file and avoids forcing typeclass search to unfold the named
+orthogonal submodule inside generic isometric-conjugation lemmas. -/
+@[reducible] local instance topOrthogonalScaleCommonBoundaryNormedSpace
+    (n : ℕ) :
+    NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        (halfExtent n) N hN (beta n) (hbeta n)) :=
+  Submodule.normedSpace
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      (halfExtent n) N hN (beta n) (hbeta n))
+
 /-- The single interacting infinite-product boundary Hilbert space containing
 isometric copies of every finite top-orthogonal physical one-slice sector. -/
 abbrev PeriodicHypercubicEvenSpecialUnitaryTopOrthogonalScaleCommonBoundaryL2 :=
