@@ -2,28 +2,29 @@
 
 Hidetoshi Itakura's Lean 4 / mathlib development for the four-dimensional Yang--Mills existence and mass-gap program.
 
-**Current theorem status — through merged PR #4985:** the positive-beta finite-volume physical transfer-gap route is now closed on a nonempty, volume/rank-independent high-temperature interval. The development has also placed the resulting scale-uniform top-orthogonal dynamics into one common interacting boundary Hilbert carrier and proved that the explicit gap survives any compatible common-carrier strong limit.
+**Current theorem status — through merged PR #4989:** the positive-beta finite-volume transfer-gap route remains closed with the explicit uniform floor 1/3072 and the uniform top-orthogonal power contraction q0 = 3071/3072. The common-carrier work has now advanced from merely proving conditional strong-limit preservation to auditing whether the specific independent-product carrier used in #4984 can support a nonzero strong limit of moving centered scale excitations.
 
-The current theorem-bearing endpoint is therefore no longer the grouped-frame problem. The remaining H1 work is **construction of the actual model-facing strong-limit compatibility data** needed to instantiate the already-proved limit-preservation theorem. Continuum scaling, OS reconstruction, and the final Wightman/spectral mass-gap statement remain downstream and are not claimed complete.
+PR #4988 proves the model-free Hilbert obstruction: a strongly convergent pairwise-orthogonal sequence has zero limit. PR #4989 proves the matching infinite-product geometry: distinct coordinate L² pullbacks have inner product equal to the product of their means, so centered coordinate pullbacks are pairwise orthogonal, and any strongly convergent centered fresh-coordinate sequence has zero limit.
+
+This does **not yet prove** that every #4984 Wilson top-orthogonal image is centered relative to the interacting marginal constant-one vector. That Wilson-specific centering statement is tied to the still-open one-slab-top versus finite-OS-vacuum compatibility problem. The immediate H1 task is therefore to settle that centering/sector bridge and then construct the continuum limit in a genuinely scale-coherent carrier rather than silently treating independent scale coordinates as a continuum identification.
 
 ## Authority checkpoint — 2026-10-01 JST
 
 | Item | Authoritative value |
 | --- | --- |
-| Repository | `itakura-hidetoshi/4d-mass-gap` |
-| Unique theorem-carrier branch | `formal/real-hilbert-uniform-coercive-strong-limit` |
-| Latest theorem-bearing snapshot | `88870c84503e22797397f7082a1cfc9b4dc36322` — merged [PR #4985](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/4985) |
-| #4985 validated exact PR head | `a0db6d3d4c1184a5c81d41b4766efc12aca1e6ca` |
-| #4985 exact-head validation | [PR Lean Fast Check 36810743769](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/36810743769): completed / success; matching exact-head receipt: success |
-| #4985 build | `Build completed successfully (9678 jobs)` |
-| #4985 static audit | `axiom: 0`; forbidden tokens `sorry/admit/axiom/constant` audited |
-| #4985 artifact | `11139946207`; `sha256:ca6a88ee9772b1694a916a67651053164fab6960eb99b35da4f99b246601cf2d` |
-| Lean | `v4.30.0-rc2` |
-| mathlib | `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
+| Repository | itakura-hidetoshi/4d-mass-gap |
+| Unique theorem-carrier branch | formal/real-hilbert-uniform-coercive-strong-limit |
+| Latest theorem-bearing snapshot | c46e2fad7d5a5a749e63650b7772c4d4973dc12f — merged PR #4989 |
+| #4989 validated exact PR head | bee4f20f8007078ddbd6b061f64834513be674e9 |
+| #4989 validation | PR Lean Fast Check run 36817103467: completed / success; exact-head completion receipt: success |
+| #4989 artifact | 11141653528; sha256:9e9102467a6fe69ac43ccae7fba34b8203370966e9c3d4ff667027d1247c97a1 |
+| Previous full strong-limit checkpoint | #4985 / 88870c84503e22797397f7082a1cfc9b4dc36322 |
+| Lean | v4.30.0-rc2 |
+| mathlib | 5450b53e5ddc75d46418fabb605edbf36bd0beb6 |
 
-[Authoritative theorem branch](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit) · [Detailed roadmap](ROADMAP.md) · [Lean modules at the #4985 theorem snapshot](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/88870c84503e22797397f7082a1cfc9b4dc36322/MGAP4D/MathlibAnalytic)
+[Authoritative theorem branch](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit) · [Detailed roadmap](ROADMAP.md)
 
-The default branch `main` is **not theorem authority**. README / ROADMAP on `main` are documentation mirrors only. A docs-only merge may advance a branch pointer without changing the mathematical theorem snapshot.
+The default branch main is **not theorem authority**. README / ROADMAP on main are documentation mirrors only. A docs-only merge may advance a branch pointer without changing the mathematical theorem snapshot.
 
 Authority order is fixed:
 
@@ -33,336 +34,347 @@ Authority order is fixed:
 4. exact-head CI receipts;
 5. history / conversation memory.
 
-## Scope and current boundary
+## Scope and current claim boundary
 
-The repository already contains the exact beta-zero endpoint
+The repository contains the exact beta-zero endpoint
 
-```text
-physical transfer gap at beta = 0 = 1.
-```
+~~~text
+physical transfer gap at beta = 0 = 1
+~~~
 
-At positive beta, the active route now proves a uniform finite-volume physical transfer gap and transports its top-orthogonal contraction into a common interacting boundary carrier.
+and, on a nonempty positive-beta high-temperature interval, the finite-volume route now proves
 
-A complete continuum four-dimensional Yang--Mills existence and mass-gap theorem is **not yet established here**. In particular:
+~~~text
+kappa_12(s,beta) * ||f - B f||^2 <= E_12(f)
 
-- #4985 proves preservation of the discrete gap **conditional on compatible strong-limit data**;
-- it does not construct that strong-limit data;
-- it does not by itself identify the finite one-slab top sector with the periodic OS vacuum-orthogonal sector;
-- it does not construct the continuum (C_0) semigroup or Hamiltonian;
-- it does not establish the final Wightman / energy-momentum mass-gap statement.
+1/2304 <= kappa_12(s,beta)
 
-## What is now closed
+1/3072 <= physical top-eigenspace transfer gap
 
-### A. Two-sided tagged-link analysis — #4935--#4971
+q0 = 3071/3072
 
-The earlier real-leakage, Schur, renewal and two-sided recurrence chain is closed.
+||R_n^k x|| <= q0^k ||x||.
+~~~
 
-In particular, #4969 proves on all genuine joint (L^2) the strict full-sweep loss contraction
+Those results are uniform in lattice scale and contain no lattice-volume, link-count or gauge-rank loss.
 
-```text
-loss(S f) <= eta * loss(f),
-eta = (Q / (1 - Q))^2 < 1,
-```
+A complete continuum four-dimensional Yang--Mills existence and Wightman mass-gap theorem is **not yet claimed**. In particular:
 
-on a volume/rank-independent high-temperature cutoff.
+- #4985 preserves the discrete contraction only under explicitly compatible strong-limit data;
+- #4988/#4989 show that independent-product coordinate geometry can itself obstruct nonzero centered strong limits;
+- the Wilson-specific centering relation needed to apply #4989 directly to #4984 is not yet closed;
+- the one-slab normalized-transfer top sector is not silently identified with the finite periodic OS vacuum sector;
+- the fixed discrete q0 is not by itself a physical continuum-time mass rate;
+- the final continuum semigroup, Hamiltonian spectral gap and Wightman energy-momentum statement remain downstream.
 
-#4970 identifies the complete two-sided sweep fixed space with the intrinsic joint constant line and proves
+## Closed finite-volume route
 
-```text
-S^[n] f -> B f
-```
+### 1. Tagged-link leakage, renewal and intrinsic constant line — #4935--#4971
 
-strongly.
+The real-leakage, ordered Schur, renewal, two-boundary recurrence and all-L² tagged-link chain is closed. The endpoint is the intrinsic constant-line relative Poincaré inequality
 
-#4971 then proves the all-(L^2) tagged-link relative Poincaré inequality
-
-```text
+~~~text
 (1 - 2 Q) * ||f - B f||^2
   <= sum_e ||f - P_e f||^2,
 0 < 1 - 2 Q.
-```
+~~~
 
-These are retained dependencies and are not the active frontier.
+These modules are retained dependencies and are not the active frontier.
 
-### B. Order-robust complete two-sided sweep — #4976--#4978
+### 2. Complete-order robustness — #4976--#4978
 
-Because the one-link conditional expectations do not commute, the twelve-color grouping could not be justified by silently reordering the canonical tagged-link sweep.
+Because the one-link conditional expectations do not commute, the grouped twelve-color route required an explicit complete-order theorem rather than an informal reordering.
 
-#4976 generalizes the #4969 strict loss contraction to **any complete duplicate-free tagged-link order**.
+#4976 proves loss contraction for any complete duplicate-free tagged-link order. #4977 constructs the complete right-six plus left-six grouped order. #4978 proves the corresponding fixed-space, constant-projection absorption and strong convergence statements.
 
-#4977 constructs the complete right-six + left-six grouped two-sided link order.
+### 3. Genuine two-sided twelve-spatial frame — #4979--#4980
 
-#4978 extends the complete-order theorem to the full #4970 geometry:
+#4979 transports whole-color control across endpoint swap. #4980 proves
 
-- fixed space = intrinsic constant line;
-- constant projection absorbs the supplied complete order;
-- iterates converge strongly to the constant projection;
-- constant-centered squared norm contracts by the same two-boundary loss ratio.
-
-This removes the noncommuting-order obstruction from G1.
-
-### C. Left six-color transport and the genuine twelve-spatial frame — #4979--#4980
-
-#4979 transports the existing right six-color whole-block displacement estimate across endpoint swap to the left six-color family, at the **whole-color** level rather than link-by-link.
-
-#4980 then closes G1 with the fixed twelve-color energy
-
-```text
-kappa_12(s,beta) * ||f - B f||^2 <= E_12(f),
-```
-
-where
-
-```text
+~~~text
 kappa_12(s,beta)
-  = (1 - sqrt(twoBoundaryOrderedLossRatio(s,beta)))^2 / 576.
-```
+  = (1 - sqrt(twoBoundaryOrderedLossRatio(s,beta)))^2 / 576
 
-The frame cutoff is
+kappa_12(s,beta) * ||f - B f||^2 <= E_12(f),
 
-```text
-min(
-  twoBoundaryOrderedLossContractionCutoff,
-  jointLeakageLossContractionCutoff
-).
-```
+0 < kappa_12(s,beta).
+~~~
 
-The factor (576 = 4 cdot 12^2) comes only from a fixed factor-two comparison and Cauchy--Schwarz over the **fixed twelve colors**. There is no lattice-link, volume or rank factor.
+The factor 576 = 4 * 12² is fixed-cardinality only.
 
-### D. Intrinsic constant center -> physical top-orthogonal sector — #4981
+### 4. Physical centering and finite-volume gap — #4981
 
-#4981 closes G2 without identifying spaces by name.
+For a physical top-orthogonal vector x, after the Haar-to-vacuum transform U and genuine right-boundary lift R, #4981 proves
 
-For a physical vector (x) in the full normalized-transfer top-eigenspace orthogonal sector, after the existing Haar-to-vacuum transform (U) and genuine right-boundary lift (R),
-
-```text
+~~~text
 B (R (U x)) = 0
-```
 
-and therefore
-
-```text
 ||R(Ux) - B(R(Ux))||^2 = ||x||^2.
-```
-
-The proof uses the actual inner-product geometry:
-
-- the nonnegative normalized top eigenvector lies in the full top eigenspace;
-- (U) maps it to constant one;
-- (R) maps that to the intrinsic joint constant-one vector;
-- both maps preserve inner products.
-
-Thus #4980 becomes a conventional twelve-spatial Poincaré inequality on the actual physical top-orthogonal right lifts.
+~~~
 
 The existing receiver then gives
 
-```text
+~~~text
 3 * kappa_12(s,beta) / 4
-  <= physical top-eigenspace transfer gap,
-```
+  <= physical top-eigenspace transfer gap.
+~~~
 
-and strict positive-beta finite-volume gap positivity on the certified interval.
+No global identification of the one-slab top line with the finite OS vacuum line is used here.
 
-### E. Explicit scale-uniform physical transfer gap — #4982
+### 5. Explicit uniform gap and power decay — #4982--#4983
 
-#4982 closes G4.
+#4982 chooses a smaller common positive cutoff and proves
 
-It chooses a smaller positive common cutoff on which
+~~~text
+1/2304 <= kappa_12(s,beta)
 
-```text
-twoBoundaryOrderedSchurCoefficient(s,beta) < 1/3.
-```
-
-On that interval,
-
-```text
-1/2304 <= kappa_12(s,beta),
-```
-
-so every scale satisfies the explicit uniform physical transfer-gap bound
-
-```text
 1/3072 <= physical top-eigenspace transfer gap.
-```
+~~~
 
-This establishes the repository target
+#4983 sets
 
-```text
-PeriodicHypercubicEvenSpecialUnitaryHasUniformTopEigenspaceTransferGap
-```
+~~~text
+q0 = 3071/3072
+~~~
 
-without lattice-volume, link-count, gauge-rank or scale-dependent loss.
+and proves, uniformly in scale,
 
-### F. Scale-uniform top-orthogonal power decay — #4983
-
-Writing
-
-```text
-q0 = 3071/3072,
-```
-
-#4983 proves for every scale (n), every positive integer (k), and every physical top-orthogonal excitation (x),
-
-```text
-||R_n|| <= q0 < 1,
-||R_n^k|| <= q0^k,
+~~~text
+||R_n|| <= q0 < 1
+||R_n^k|| <= q0^k
 ||R_n^k x|| <= q0^k ||x||.
-```
+~~~
 
-It also records the associated positive logarithmic discrete rate
+The associated -log(q0) is a discrete one-step rate only.
 
-```text
--glog(q0) = -log(3071/3072) > 0.
-```
+## H1 common-carrier work
 
-### G. Common interacting boundary carrier — #4984
+### H1-A. Independent interacting product as a simultaneous finite-scale carrier — #4984 CLOSED
 
-#4984 begins H1.
+#4984 embeds every finite physical top-orthogonal sector isometrically into one interacting infinite-product boundary L² carrier by composing:
 
-Every finite physical top-orthogonal sector is embedded isometrically into the **same interacting infinite-product boundary (L^2) carrier** by composing:
+1. one-sided excitation boundary isometry;
+2. reciprocal-vacuum transport to the actual interacting finite boundary marginal;
+3. pullback along the corresponding product coordinate.
 
-1. the one-sided excitation boundary isometry;
-2. reciprocal-vacuum transport from boundary Haar (L^2) to the actual interacting finite boundary marginal;
-3. coordinate pullback into the infinite product of all finite interacting boundary marginals.
+On every exact finite-scale image range, the transported transfer powers retain the same q0^k bound.
 
-No exact coarse-graining identity between different periodic Wilson Gibbs measures is assumed.
+Important claim boundary: this carrier is a valid **kinematic simultaneous carrier**. #4984 did not prove that it is the correct continuum identification carrier.
 
-On each exact finite-scale image range, the transported transfer powers retain exactly the same estimate
+### H1-B. Compatible strong limits preserve the gap — #4985 CLOSED
 
-```text
-||T_{n,common}^k|| <= q0^k.
-```
+#4985 proves the sequence-level estimate
 
-### H. Strong-limit preservation of the uniform gap — #4985
+~~~text
+I_n x_n -> x_limit
+I_n R_n^k x_n -> y_limit
 
-#4985 closes the abstract H1 descent step.
+=> ||y_limit|| <= q0^k ||x_limit||.
+~~~
 
-If embedded finite initial vectors converge strongly in the common carrier, and the corresponding embedded evolved vectors also converge strongly, then the limit obeys
+It also defines PeriodicHypercubicEvenSpecialUnitaryTopOrthogonalScaleCommonBoundaryStrongLimitData and proves for any instance
 
-```text
-||y_limit|| <= q0^k ||x_limit||.
-```
+~~~text
+||T|| <= q0^k.
+~~~
 
-It then packages a compatible limiting normed space (E), an isometric embedding of (E) into the common carrier, finite approximants, and a bounded limit operator (T). Under those explicit compatibility hypotheses,
+For k = 1,
 
-```text
-||T|| <= q0^k
-```
-
-for the selected (k)-step limit operator.
-
-For the one-step specialization,
-
-```text
+~~~text
 ||T|| <= 3071/3072
 1/3072 <= 1 - ||T||
 ||T|| < 1.
-```
+~~~
 
-Thus the positive finite-volume gap is now formally proven to survive **any compatible common-carrier strong limit**.
+This theorem remains valid. What changed after #4988/#4989 is the audit of which concrete carrier can satisfy its nonzero strong-limit hypotheses.
 
-What #4985 deliberately does **not** do is construct the required approximation / strong-limit data.
+### H1-C0. Pairwise-orthogonal strong-limit obstruction — #4988 CLOSED
 
-## Current frontier — H1 model-facing compatibility construction
+#4988 proves the model-free theorem
 
-The immediate next theorem problem is no longer a gap estimate. It is to instantiate the #4985 strong-limit interface with the actual Wilson / OS continuum construction.
+~~~text
+v_n -> x strongly
+and inner(v_m, v_n) = 0 for m != n
 
-The required data are:
+=> x = 0.
+~~~
 
-1. a concrete limiting excitation carrier (E);
-2. an isometric embedding (E) into the #4984 interacting common boundary (L^2);
-3. finite top-orthogonal approximants (x_n) for every (x in E);
-4. strong convergence of the embedded (x_n);
-5. strong convergence of the embedded one-step evolved vectors to the chosen limit operator applied to (x).
+This is the abstract Hilbert obstruction needed before interpreting any product-coordinate common carrier as a continuum limit space.
 
-The repository already contains generic asymptotically-embedded strong-limit and common-carrier machinery. The remaining task is the **model-facing identification / approximation theorem**, not another finite-volume coercivity estimate.
+### H1-C1. Centered independent-coordinate geometry — #4989 CLOSED
 
-A separate compatibility question must also remain explicit: the finite periodic OS vacuum-orthogonal carrier is not automatically the same object as the one-slab transfer top-orthogonal carrier. Existing mode-wise boundary-closure/eigenlift theorems may be used, but no global equality should be assumed without proof.
+#4989 proves for an arbitrary family of probability spaces that distinct coordinate pullbacks satisfy
 
-## Continuum-scaling caution
+~~~text
+<I_i f, I_j g>
+  = (integral f d mu_i) * (integral g d mu_j)
+  for i != j.
+~~~
 
-The uniform discrete factor
+Therefore, if f_i is centered against the coordinate constant-one vector, then the distinct coordinate pullbacks are orthogonal. Combining this with #4988 gives
 
-```text
+~~~text
+I_n f_n -> x strongly
+and each f_n is centered
+
+=> x = 0.
+~~~
+
+This is a **generic independent-product theorem**. It does not yet assert that the concrete #4984 Wilson top-orthogonal image is centered in the interacting marginal coordinate.
+
+## Current frontier — H1-C / H1-D
+
+The immediate problem is now a carrier-and-sector compatibility problem, not another finite-volume gap estimate.
+
+### A. Close the Wilson-specific centering bridge
+
+Determine and prove the exact relation between the #4984 finite top-orthogonal image and the interacting marginal constant-one vector.
+
+The decisive statement has the form
+
+~~~text
+<1, marginalImage_n(x)> = 0
+~~~
+
+for the relevant physical excitation x.
+
+If this is proved, #4989 applies directly and shows that moving those centered excitations through fresh independent product coordinates cannot converge strongly to a nonzero vector.
+
+If it fails, the failure itself identifies the unresolved mismatch between the one-slab top sector and the finite OS vacuum sector and must be resolved before calling the limit physically vacuum-orthogonal.
+
+### B. Use a genuinely scale-coherent continuum carrier
+
+A nonzero continuum excitation limit needs embeddings that compare different scales coherently rather than putting each scale in an independent fresh coordinate.
+
+Existing repository interfaces relevant to this step include:
+
+- PhysicalYangMillsEvenPeriodicWilsonOSMassFreeAmbientCarrier, which stores gap-free isometric finite-to-continuum embeddings and vacuum preservation;
+- PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer, which already expresses approximation/evolved convergence into an OS physical Hilbert space, but must be used without circularly assuming the gap conclusion being constructed;
+- the same-root factorial OS direct-limit / regular vacuum-orthogonal carrier, which already has dense centered smoothed cylinder cores and finite-to-limit correlation convergence.
+
+A fixed isometric embedding of the independent product into another Hilbert space does not by itself remove the #4989 geometry; an isometry preserves orthogonality. The cross-scale identification must therefore be introduced before, or instead of, the independent-coordinate limit presentation.
+
+### C. Reconnect the uniform q0 estimate on that carrier
+
+After the scale-coherent approximants are constructed, prove:
+
+1. initial strong convergence of finite physical excitations;
+2. evolved strong convergence under the finite physical top-orthogonal dynamics;
+3. identification of the limiting operator on the correct vacuum-orthogonal OS sector;
+4. transport of the already-proved q0^k bound to that operator.
+
+No new finite-volume leakage/Schur/renewal estimate is required for this step.
+
+## H1-D authority boundary — one-slab top sector vs OS vacuum sector
+
+Do not identify by name:
+
+- one-slab normalized-transfer top eigenspace;
+- finite periodic OS vacuum line;
+- canonical boundary vacuum;
+- interacting marginal constant-one line;
+- continuum physical vacuum line.
+
+The mode-wise boundary closure, eigenlift and positive-half synthesis machinery can be used to prove the needed compatibility, but a global equality is not currently a theorem dependency.
+
+## H2 continuum-scaling obstruction
+
+The uniform fixed-step factor
+
+~~~text
 q0 = 3071/3072 < 1
-```
+~~~
 
-is ideal for fixed-step thermodynamic/common-carrier limits.
+is excellent for finite-volume and fixed-step comparison, but it cannot simply be used as the physical continuum-time factor when lattice spacing a_n -> 0.
 
-It must **not** be naively interpreted as a finite physical-time continuum rate when the lattice spacing (a_n 	o 0). If one used the same fixed (q_0) for (lfloor t/a_nfloor) steps at fixed (t>0), then formally
+For fixed t > 0,
 
-```text
+~~~text
 q0 ^ floor(t / a_n) -> 0.
-```
+~~~
 
-That would correspond to instantaneous annihilation of the excitation sector at every positive time, not a nontrivial strongly continuous continuum semigroup.
+That would give instantaneous collapse at every positive physical time rather than a nontrivial strongly continuous semigroup.
 
-Therefore H2 must control the spacing-scaled transfer rate / rescaled dynamics rather than simply reusing the fixed one-step (q_0) as a continuum-time decay factor.
+H2 therefore requires a spacing-scaled statement such as
 
-This is a downstream scaling boundary; it does not weaken the finite-volume or fixed-step H1 gap theorem.
+~~~text
+q_n = exp(-m_n a_n + o(a_n))
+~~~
 
-## What this repository does not currently claim
+or an equivalent rescaled-defect / Dirichlet / generator formulation. The repository already contains floor-time, derived-rate and intrinsic-rate-to-physical-mass infrastructure for this stage.
 
-- #4985 does not construct the actual continuum strong-limit operator.
-- The finite periodic OS vacuum line is not silently identified with the one-slab transfer top eigenspace.
-- Exact projective restriction between different finite periodic Wilson Gibbs measures is not assumed.
-- A scale-uniform finite-volume transfer gap is not by itself the full continuum Yang--Mills mass-gap theorem.
-- The fixed discrete contraction (3071/3072) is not by itself a finite physical continuum mass.
-- The beta-zero exact gap (1) remains a separate sharper theorem.
+## Downstream H3 / H4
 
-## Lean / validation workflow
+After H1/H2 provide actual model-facing data, the intended route is
 
-The current theorem checkpoint is backed by #4985 exact PR head
+~~~text
+finite-volume uniform coercivity
+  -> scale-coherent continuum dynamics
+  -> OS physical Hilbert + strongly continuous semigroup
+  -> closed/self-adjoint Hamiltonian on the correct vacuum-orthogonal sector
+  -> positive spectral gap
+  -> Wightman / energy-momentum mass gap.
+~~~
 
-```text
-a0db6d3d4c1184a5c81d41b4766efc12aca1e6ca
-```
+Substantial generic OS/Hamiltonian machinery already exists in the repository; the missing work is the model-facing compatibility and scaling data.
 
-with:
+## Lean / CI workflow
 
-```text
-PR Lean Fast Check run 36810743769
-completed / success
-matching exact-head receipt: success
-Build completed successfully (9678 jobs)
-axiom: 0
-artifact ID: 11139946207
-sha256:ca6a88ee9772b1694a916a67651053164fab6960eb99b35da4f99b246601cf2d
-```
+Latest theorem validation:
 
-The CI audit rejects `sorry`, `admit`, declaration-level `axiom`, and `constant` in the changed theorem files.
+~~~text
+PR #4989 exact head:
+  bee4f20f8007078ddbd6b061f64834513be674e9
 
-Recent Lean engineering lessons retained by the branch:
+PR Lean Fast Check:
+  run 36817103467
+  completed / success
 
-- inspect the entire changed module, not only the reported CI line;
-- preserve the pinned Lean/mathlib API;
-- give module-specific names to local instances when import composition can expose generated-name collisions;
-- for dependent submodule carriers, make restricted `NormedSpace` instances explicit when generic conjugation lemmas need them;
-- avoid broad dependent `change` / `rw` when a previously typed named theorem and a local `calc` step give a more stable proof;
-- do not rerun strict validation on an unchanged exact GREEN head merely for reassurance;
-- README / ROADMAP-only updates are docs work and must not be presented as new theorem validation.
+exact-head completion receipt:
+  success
+
+artifact:
+  11141653528
+  sha256:9e9102467a6fe69ac43ccae7fba34b8203370966e9c3d4ff667027d1247c97a1
+~~~
+
+The changed theorem file passed the static forbidden-token audit and pinned Lean/mathlib compilation.
+
+Recent Lean engineering lessons:
+
+- inspect the complete changed module, not only the first reported line;
+- preserve the pinned mathlib API rather than coding against current master;
+- for dependent submodule carriers, prefer typed named theorems and local calc chains over broad change/rw;
+- give reusable local instances explicit module-specific names when import composition can expose generated-name collisions;
+- real L² inner-product expansion may produce the scalar factors in the opposite multiplication order; when the target is intentionally commutative, make mul_comm explicit rather than forcing elaboration through a larger rewrite;
+- once an unchanged exact head is GREEN, do not rerun strict Lean validation merely for reassurance;
+- docs-only README / ROADMAP updates are not theorem-bearing changes.
 
 ## Milestone map
 
 | PR | Closed layer |
 | --- | --- |
-| #4935--#4971 | real leakage -> Schur -> renewal -> two-sided recurrence -> intrinsic constant-line relative Poincaré |
-| #4976 | strict two-sided loss contraction for arbitrary complete duplicate-free tagged-link order |
-| #4977 | complete two-sided twelve-color grouped link order |
-| #4978 | complete-order constant-line convergence and centered contraction |
-| #4979 | endpoint-swap transport of whole left six-color displacement |
+| #4976 | arbitrary complete duplicate-free tagged-link loss contraction |
+| #4977 | complete grouped right-six + left-six order |
+| #4978 | complete-order constant-line convergence |
+| #4979 | whole left six-color displacement by endpoint swap |
 | #4980 | volume-free genuine two-sided twelve-spatial relative frame |
-| #4981 | intrinsic constant center -> physical top-orthogonal centered norm; finite-volume positive-beta gap |
-| #4982 | explicit scale-uniform coefficient (1/2304) and transfer-gap floor (1/3072) |
-| #4983 | uniform (q_0^k), (q_0=3071/3072), top-orthogonal power decay |
-| #4984 | isometric embedding of all finite top-orthogonal sectors into one interacting common boundary carrier |
-| #4985 | strong-limit preservation of (q_0^k) and one-step gap floor (1/3072) |
+| #4981 | physical top-orthogonal centering and positive finite-volume gap |
+| #4982 | explicit uniform coefficient 1/2304 and transfer-gap floor 1/3072 |
+| #4983 | uniform q0^k power decay, q0 = 3071/3072 |
+| #4984 | simultaneous isometric realization in the interacting independent-product carrier |
+| #4985 | conditional strong-limit preservation of q0^k and the one-step gap floor |
+| #4988 | pairwise-orthogonal strongly convergent sequences have zero limit |
+| #4989 | centered independent-coordinate pullbacks are pairwise orthogonal; centered fresh-coordinate strong limits are zero |
 
-For the detailed continuation sequence, see [ROADMAP.md](ROADMAP.md).
+For the exact continuation sequence, see [ROADMAP.md](ROADMAP.md).
 
-[current-frame]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/88870c84503e22797397f7082a1cfc9b4dc36322/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTwoSidedTwelveSpatialRelativeFrame.lean
-[current-physical-gap]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/88870c84503e22797397f7082a1cfc9b4dc36322/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTwoSidedTwelveSpatialPhysicalTopOrthogonalGap.lean
-[current-uniform-gap]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/88870c84503e22797397f7082a1cfc9b4dc36322/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTwoSidedTwelveSpatialUniformGap.lean
-[current-power-decay]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/88870c84503e22797397f7082a1cfc9b4dc36322/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferUniformTopOrthogonalPowerDecay.lean
-[current-common-carrier]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/88870c84503e22797397f7082a1cfc9b4dc36322/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopOrthogonalScaleCommonBoundaryDecay.lean
-[current-strong-limit]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/88870c84503e22797397f7082a1cfc9b4dc36322/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopOrthogonalScaleCommonBoundaryStrongLimit.lean
+## Primary current modules
+
+- MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopOrthogonalScaleCommonBoundaryStrongLimit.lean
+- MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopOrthogonalScaleCommonBoundaryDecay.lean
+- MGAP4D/MathlibAnalytic/RealHilbertPairwiseOrthogonalStrongLimit.lean
+- MGAP4D/MathlibAnalytic/InfiniteProductProbabilityCoordinateL2Orthogonality.lean
+- MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonMassFreeAmbientTwoStepRecovery.lean
+- MGAP4D/MathlibAnalytic/PhysicalYangMillsGaugeInvariantOSApproximatingGapTransfer.lean
+- MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenPrimaryBoundaryPhysicalFloorRationalScalarFactorialOSHilbertDirectLimitRegularVacuumOrthogonal.lean
