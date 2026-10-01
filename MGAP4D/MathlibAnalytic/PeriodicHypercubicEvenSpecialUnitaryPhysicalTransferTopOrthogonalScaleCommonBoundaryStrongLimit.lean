@@ -155,7 +155,10 @@ structure
 namespace PeriodicHypercubicEvenSpecialUnitaryTopOrthogonalScaleCommonBoundaryStrongLimitData
 
 variable
-    {halfExtent N hN beta hbeta}
+    {halfExtent : ℕ → ℕ}
+    {N : ℕ} {hN : 0 < N}
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
 
 /-- The limiting operator inherits the exact q0^k pointwise norm bound. -/
 theorem limitOperator_apply_norm_le
