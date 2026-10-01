@@ -41,6 +41,18 @@ open scoped InnerProductSpace
 
 noncomputable section
 
+local instance sunProjectiveFiniteMarginalProbability
+    (F : EuclideanYangMillsProjectiveCylinderFamily)
+    (J : Finset EuclideanFourSpace) :
+    IsProbabilityMeasure (F.finiteMarginal J) :=
+  F.finiteMarginalProbability J
+
+local instance sunProjectiveContinuumProbability
+    (F : EuclideanYangMillsProjectiveCylinderFamily)
+    (L : EuclideanYangMillsProjectiveLimitMeasure F) :
+    IsProbabilityMeasure L.continuumMeasure :=
+  euclidean_yang_mills_projective_limit_probability L
+
 /-- Two orthogonal unit vectors cannot both lie on one unit vacuum line.
 Equivalently, at least one has a nonzero vacuum-centered component. -/
 theorem realHilbert_exists_nonzero_finiteVacuumCentered_of_two_orthogonal_unit
@@ -54,7 +66,7 @@ theorem realHilbert_exists_nonzero_finiteVacuumCentered_of_two_orthogonal_unit
     finiteVacuumCentered vac e0 ≠ 0 ∨
       finiteVacuumCentered vac e1 ≠ 0 := by
   by_contra h
-  push_neg at h
+  push Not at h
   rcases h with ⟨h0zero, h1zero⟩
   let a0 : ℝ := inner ℝ vac e0
   let a1 : ℝ := inner ℝ vac e1
@@ -137,7 +149,14 @@ theorem projectiveFiniteOSEmbed_finiteOSPhysicalState_eq_continuumHaarMode
         (C.finiteOSPhysicalState k n) =
       C.continuumHaarMode k := by
   rw [R.projectiveFiniteOSEmbed_apply]
-  rw [C.finiteImage_eq_transition k n hkn]
+  have himage :
+      R.finiteOSMarginalLinearIsometry hInvariant n
+          (C.finiteOSPhysicalState k n) =
+        EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Transition
+          (F := F) hkn (C.cylinderVector k) := by
+    simpa [finiteOSPhysicalState] using
+      C.finiteImage_eq_transition k n hkn
+  rw [himage]
   exact
     (L.finiteMarginalL2Pullback_compatible hkn (C.cylinderVector k)).symm
 
@@ -217,8 +236,14 @@ theorem continuumHaarMode_inner_eq_zero
     L.finiteMarginalL2Pullback_compatible hin (C.cylinderVector i)
   have hcontj :=
     L.finiteMarginalL2Pullback_compatible hjn (C.cylinderVector j)
+  change
+    inner ℝ
+      (L.finiteMarginalL2Pullback (C.cylinderIndex i) (C.cylinderVector i))
+      (L.finiteMarginalL2Pullback (C.cylinderIndex j) (C.cylinderVector j)) = 0
   calc
-    inner ℝ (C.continuumHaarMode i) (C.continuumHaarMode j) =
+    inner ℝ
+        (L.finiteMarginalL2Pullback (C.cylinderIndex i) (C.cylinderVector i))
+        (L.finiteMarginalL2Pullback (C.cylinderIndex j) (C.cylinderVector j)) =
       inner ℝ
         (L.finiteMarginalL2Pullback (R.marginalIndex n)
           (EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Transition
@@ -226,7 +251,7 @@ theorem continuumHaarMode_inner_eq_zero
         (L.finiteMarginalL2Pullback (R.marginalIndex n)
           (EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Transition
             (F := F) hjn (C.cylinderVector j))) := by
-      rw [← hconti, ← hcontj]
+      rw [hconti, hcontj]
     _ =
       inner ℝ
         (EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Transition
