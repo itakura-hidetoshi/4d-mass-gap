@@ -179,7 +179,7 @@ theorem
           (U ((Omega : G) : HaarL2))
           (U (((x : G) : HaarL2))) :=
         JR.inner_map_map _ _
-      _ = inner ℝ ((Omega : G) : HaarL2) (((x : G) : HaarL2) :=
+      _ = inner ℝ ((Omega : G) : HaarL2) (((x : G) : HaarL2)) :=
         U.inner_map_map _ _
       _ = inner ℝ (Omega : G) (x : G) := rfl
       _ = 0 := hOmegaX
