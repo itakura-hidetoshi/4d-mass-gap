@@ -12,27 +12,27 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-local instance oneSlabHaarL2TransferPositiveTopologicalGroup (N : ℕ) :
+local instance (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 
-local instance oneSlabHaarL2TransferPositiveCompactSpace (N : ℕ) :
+local instance (N : ℕ) :
     CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
-local instance oneSlabHaarL2TransferPositiveSecondCountable (N : ℕ) :
+local instance (N : ℕ) :
     SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupSecondCountableTopology N
 
-local instance oneSlabHaarL2TransferPositiveMeasurableSpace (N : ℕ) :
+local instance (N : ℕ) :
     MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
 
-local instance oneSlabHaarL2TransferPositiveBorelSpace (N : ℕ) :
+local instance (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-local instance oneSlabHaarL2TransferPositiveSpatialLinkFintype (H : ℕ) :
+local instance (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
