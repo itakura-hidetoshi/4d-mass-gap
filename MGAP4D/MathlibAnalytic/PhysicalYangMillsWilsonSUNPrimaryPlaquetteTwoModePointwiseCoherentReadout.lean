@@ -156,7 +156,7 @@ structure PhysicalYangMillsEvenPeriodicWilsonOSSUNPrimaryPlaquetteTwoModePointwi
         periodicHypercubicEvenPrimarySpatialPlaquetteWilsonTwoModeBoundaryObservable
           (halfExtent n) hN2 k
   primaryPlaquetteWilsonTwoMode_transition :
-    ∀ k : Fin 2, ∀ n : ℕ
+    ∀ (k : Fin 2) (n : ℕ)
       (h : R.marginalIndex k.val ⊆ R.marginalIndex n),
       R.primarySpatialPlaquetteHaarProjectiveL2Isometry n
           (specialUnitaryWilsonHaarTwoMode hN2 k) =
