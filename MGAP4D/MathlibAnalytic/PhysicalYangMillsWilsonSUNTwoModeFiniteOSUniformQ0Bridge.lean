@@ -62,7 +62,7 @@ variable
 /-- Pair-coordinate one-slab intertwining, restricted to a genuine physical
 top-orthogonal excitation and the normalized top companion, gives exact
 intertwining on the one-sided shared-boundary excitation image. -/
-theorem completedBoundaryTransfer_two_oneSidedExcitationBoundary_of_pairIntertwiningAt
+theorem completedBoundaryTransfer_two_oneSidedExcitationBoundary_of_pairWeakAtFor
     (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
       S D halfExtent N hN beta hbeta)
     (hInvariant : ∀ n,
@@ -71,11 +71,19 @@ theorem completedBoundaryTransfer_two_oneSidedExcitationBoundary_of_pairIntertwi
     (C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
       S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant)
     (n : ℕ)
-    (hPair : CompletedBoundaryTransferOneSlabPairIntertwiningAt
-      Q hInvariant C n)
     (x :
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        (halfExtent n) N hN (beta n) (hbeta n)) :
+        (halfExtent n) N hN (beta n) (hbeta n))
+    (hPairWeak :
+      Q.CompletedBoundaryTransferOneSlabPairWeakAtFor
+        hInvariant C n
+        ((x :
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+            (halfExtent n) N hN (beta n) (hbeta n)) :
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
+            (halfExtent n) N)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+          (halfExtent n) N hN (beta n) (hbeta n))) :
     Q.completedBoundaryTransfer hInvariant C n 2
         (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundaryLinearIsometry
           (halfExtent n) N hN (beta n) (hbeta n) x) =
@@ -94,9 +102,13 @@ theorem completedBoundaryTransfer_two_oneSidedExcitationBoundary_of_pairIntertwi
         (halfExtent n) N :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
       (halfExtent n) N hN (beta n) (hbeta n)
+  have hWeak :
+      Q.CompletedBoundaryTransferOneSlabPairWeakAtFor
+        hInvariant C n f omega := by
+    simpa [f, omega] using hPairWeak
   have h :=
-    Q.completedBoundaryTransfer_two_oneSidedBoundary_of_oneSlabPairIntertwiningAt
-      hInvariant C n hPair f omega
+    Q.completedBoundaryTransfer_two_oneSidedBoundary_of_oneSlabPairWeakAtFor
+      hInvariant C n f omega hWeak
   change
     Q.completedBoundaryTransfer hInvariant C n 2
         (periodicHypercubicEvenSpecialUnitaryOneSidedBoundaryL2
@@ -138,14 +150,22 @@ theorem finiteOperator_one_norm_le_uniform_q0_of_oneSidedExcitationBoundary
           GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformGapCutoff
             s hs)
     (n : ℕ)
-    (hPair : CompletedBoundaryTransferOneSlabPairIntertwiningAt
-      Q hInvariant C n)
     (psi :
       PhysicalYangMillsEvenPeriodicWilsonOSApproximatingHilbert
         S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant n)
     (x :
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
         (halfExtent n) N hN (beta n) (hbeta n))
+    (hPairWeak :
+      Q.CompletedBoundaryTransferOneSlabPairWeakAtFor
+        hInvariant C n
+        ((x :
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+            (halfExtent n) N hN (beta n) (hbeta n)) :
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
+            (halfExtent n) N)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+          (halfExtent n) N hN (beta n) (hbeta n)))
     (hBoundary :
       Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n psi =
         periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundaryLinearIsometry
@@ -174,8 +194,8 @@ theorem finiteOperator_one_norm_le_uniform_q0_of_oneSidedExcitationBoundary
         rw [hBoundary]
       _ = U (T x) := by
         exact
-          Q.completedBoundaryTransfer_two_oneSidedExcitationBoundary_of_pairIntertwiningAt
-            hInvariant C n hPair x
+          Q.completedBoundaryTransfer_two_oneSidedExcitationBoundary_of_pairWeakAtFor
+            hInvariant C n x hPairWeak
   have hDecay :
       ‖T x‖ ≤
         GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformTopOrthogonalContractionFactor *
@@ -242,9 +262,9 @@ noncomputable def
 
 /-- Exact remaining H1-D compatibility for the #5003 concrete SU(N) states:
 each centered boundary moment is represented by a physical top-orthogonal
-one-sided excitation, while the completed boundary transfer obeys the weak pair-Haar matrix-coefficient
-one-slab intertwining. Existing Hilbert separation theorem-generates the strong
-pair-coordinate identity. -/
+one-sided excitation, while only the selected excitation/top-companion pair
+obeys the weak pair-Haar matrix-coefficient one-slab identity. No all-input
+intertwining hypothesis is required. -/
 structure PhysicalYangMillsSUNTwoModeUniformQ0Compatibility
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (D : PhysicalYangMillsGaugeInvariantOSReflectionData S)
@@ -264,13 +284,21 @@ structure PhysicalYangMillsSUNTwoModeUniformQ0Compatibility
         S D halfExtent N hN hN2 beta hbeta Q F R hInvariant)
     (C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
       S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant) where
-  pairWeakIntertwining :
-    ∀ n,
-      Q.CompletedBoundaryTransferOneSlabPairWeakIntertwiningAt hInvariant C n
   excitation :
     (k : Fin 2) → (n : ℕ) →
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
         (halfExtent n) N hN (beta n) (hbeta n)
+  pairWeakAtFor :
+    ∀ (k : Fin 2) (n : ℕ),
+      Q.CompletedBoundaryTransferOneSlabPairWeakAtFor
+        hInvariant C n
+        (((excitation k n :
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+            (halfExtent n) N hN (beta n) (hbeta n)) :
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
+            (halfExtent n) N))
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+          (halfExtent n) N hN (beta n) (hbeta n))
   centeredBoundaryMoment :
     ∀ (k : Fin 2) (n : ℕ),
       Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n
@@ -323,10 +351,9 @@ theorem centeredFiniteOSState_one_norm_le_uniform_q0
   exact
     Q.finiteOperator_one_norm_le_uniform_q0_of_oneSidedExcitationBoundary
       hInvariant C s hs hcut n
-      (Q.completedBoundaryTransferOneSlabPairIntertwiningAt_of_weak
-        hInvariant C n (A.pairWeakIntertwining n))
       (physicalYangMillsSUNTwoModeCenteredFiniteOSState P k n)
       (A.excitation k n)
+      (A.pairWeakAtFor k n)
       (A.centeredBoundaryMoment k n)
 
 end PhysicalYangMillsSUNTwoModeUniformQ0Compatibility
