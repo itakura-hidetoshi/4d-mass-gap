@@ -91,13 +91,8 @@ theorem
     rw [periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_apply]
       at hfix
     change lambda⁻¹ • T f = f at hfix
-    calc
-      T f = 1 • T f := by simp
-      _ = (lambda * lambda⁻¹) • T f := by
-        rw [mul_inv_cancel₀ hlambda.ne']
-      _ = lambda • (lambda⁻¹ • T f) := by
-        rw [smul_smul]
-      _ = lambda • f := by rw [hfix]
+    have hscaled := congrArg (fun z : G => lambda • z) hfix
+    simpa [smul_smul, hlambda.ne'] using hscaled
   have hrawAmbient :
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
           H N hN beta hbeta (f : Lp ℝ 2 μ) =
@@ -133,16 +128,18 @@ theorem
     (hfNe : f ≠ 0) :
     ∀ᵐ A ∂μ, 0 < (f : Lp ℝ 2 μ) A := by
   have hfNormPos : 0 < ‖f‖ := norm_pos_iff.mpr hfNe
-  let a : ℝ := ‖f‖⁻¹
+  have hfNormPosAmbient : 0 < ‖(f : Lp ℝ 2 μ)‖ := by
+    simpa using hfNormPos
+  let a : ℝ := ‖(f : Lp ℝ 2 μ)‖⁻¹
   let u : G := a • f
   have ha : 0 < a := by
-    exact inv_pos.mpr hfNormPos
+    exact inv_pos.mpr hfNormPosAmbient
   have huTop : u ∈ F := by
-    exact F.smul_mem a hfTop
+    exact Submodule.smul_mem F a hfTop
   have huNorm : ‖u‖ = 1 := by
-    dsimp [u, a]
-    rw [norm_smul, Real.norm_eq_abs, abs_inv, abs_of_pos hfNormPos]
-    exact inv_mul_cancel₀ hfNormPos.ne'
+    change ‖a • (f : Lp ℝ 2 μ)‖ = 1
+    rw [norm_smul, Real.norm_eq_abs, abs_of_pos ha]
+    exact inv_mul_cancel₀ hfNormPosAmbient.ne'
   have huNonneg : ∀ᵐ A ∂μ, 0 ≤ (u : Lp ℝ 2 μ) A := by
     have huCoe :
         (fun A => (u : Lp ℝ 2 μ) A) =ᵐ[μ]
