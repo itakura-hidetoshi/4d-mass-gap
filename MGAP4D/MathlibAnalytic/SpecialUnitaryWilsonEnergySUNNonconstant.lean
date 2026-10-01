@@ -123,9 +123,23 @@ theorem specialUnitaryTwoNegativeDiagonal_trace
     Matrix.trace (specialUnitaryTwoNegativeDiagonalMatrix N hN) =
       (N : ℂ) - 4
   rw [specialUnitaryTwoNegativeDiagonalMatrix, Matrix.trace_diagonal]
+  let i0 := specialUnitaryTwoNegativeIndexZero N hN
+  let i1 := specialUnitaryTwoNegativeIndexOne N hN
+  have h01 : i0 ≠ i1 := by
+    simpa [i0, i1] using
+      specialUnitaryTwoNegativeIndexZero_ne_one N hN
+  have hcard :
+      (((Finset.univ : Finset (Fin N)) \ {i1}) \ {i0}).card =
+        N - 2 := by
+    rw [Finset.card_sdiff_of_subset]
+    · rw [Finset.card_sdiff_of_subset]
+      · simp
+      · simp
+    · simp [h01]
   simp [specialUnitaryTwoNegativeDiagonalEntry,
     Finset.sum_update_of_mem,
     specialUnitaryTwoNegativeIndexZero_ne_one N hN]
+  rw [hcard, Nat.cast_sub hN]
   norm_num
   ring
 
