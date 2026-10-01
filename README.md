@@ -2,9 +2,9 @@
 
 Hidetoshi Itakura's Lean 4 / mathlib development for the four-dimensional Yang--Mills existence and mass-gap program.
 
-**Current theorem status — through merged PR #4971:** the genuine two-sided one-link dynamics on the physical ground-state joint (L^2) carrier now has a strict high-temperature full-sweep loss contraction, converges to the intrinsic constant-line orthogonal projection, and satisfies an **all-(L^2) two-sided relative Poincaré inequality** with a strictly positive, volume/rank-independent coefficient on the same certified cutoff.
+**Current theorem status — through merged PR #4985:** the positive-beta finite-volume physical transfer-gap route is now closed on a nonempty, volume/rank-independent high-temperature interval. The development has also placed the resulting scale-uniform top-orthogonal dynamics into one common interacting boundary Hilbert carrier and proved that the explicit gap survives any compatible common-carrier strong limit.
 
-The new endpoint is not yet the positive-beta physical transfer-gap theorem. The #4971 right-hand side is the **unnormalized sum of all tagged two-sided one-link residuals**, so one further model-facing bridge is required: compress this estimate to a volume-free grouped two-sided spatial frame, identify the constant-line center correctly on the physical top-orthogonal right-boundary sector, and then use the already-existing twelve-spatial / physical-defect receiver.
+The current theorem-bearing endpoint is therefore no longer the grouped-frame problem. The remaining H1 work is **construction of the actual model-facing strong-limit compatibility data** needed to instantiate the already-proved limit-preservation theorem. Continuum scaling, OS reconstruction, and the final Wightman/spectral mass-gap statement remain downstream and are not claimed complete.
 
 ## Authority checkpoint — 2026-10-01 JST
 
@@ -12,17 +12,20 @@ The new endpoint is not yet the positive-beta physical transfer-gap theorem. The
 | --- | --- |
 | Repository | `itakura-hidetoshi/4d-mass-gap` |
 | Unique theorem-carrier branch | `formal/real-hilbert-uniform-coercive-strong-limit` |
-| Latest theorem-bearing snapshot | `22bfe27324e374242aad7bc402a224769306a22b` — merged [PR #4971](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/4971) |
-| #4971 validated exact PR head | `cf43f174d76451400bb10301c6cb2549be0118b6` |
-| #4971 exact-head validation | [PR Lean Fast Check 36784485909](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/36784485909): completed / success; matching exact-head receipt: success |
-| #4971 build | `Build completed successfully (9420 jobs)` |
-| #4971 artifact | `11129237482`, `sha256:2601e587a80eeb3692f12db43fdcd90a3f1e88b465922f18a2efa4569bddde6c` |
+| Latest theorem-bearing snapshot | `88870c84503e22797397f7082a1cfc9b4dc36322` — merged [PR #4985](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/4985) |
+| #4985 validated exact PR head | `a0db6d3d4c1184a5c81d41b4766efc12aca1e6ca` |
+| #4985 exact-head validation | [PR Lean Fast Check 36810743769](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/36810743769): completed / success; matching exact-head receipt: success |
+| #4985 build | `Build completed successfully (9678 jobs)` |
+| #4985 static audit | `axiom: 0`; forbidden tokens `sorry/admit/axiom/constant` audited |
+| #4985 artifact | `11139946207`; `sha256:ca6a88ee9772b1694a916a67651053164fab6960eb99b35da4f99b246601cf2d` |
 | Lean | `v4.30.0-rc2` |
 | mathlib | `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
 
-[Authoritative theorem branch](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit) · [Detailed roadmap](ROADMAP.md) · [Lean modules at the #4971 theorem snapshot](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/22bfe27324e374242aad7bc402a224769306a22b/MGAP4D/MathlibAnalytic)
+[Authoritative theorem branch](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit) · [Detailed roadmap](ROADMAP.md) · [Lean modules at the #4985 theorem snapshot](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/88870c84503e22797397f7082a1cfc9b4dc36322/MGAP4D/MathlibAnalytic)
 
-The default branch `main` is **not theorem authority**. README / ROADMAP on `main` are documentation mirrors only. A docs-only merge may advance a branch pointer without advancing the theorem-bearing mathematical baseline. Authority order is:
+The default branch `main` is **not theorem authority**. README / ROADMAP on `main` are documentation mirrors only. A docs-only merge may advance a branch pointer without changing the mathematical theorem snapshot.
+
+Authority order is fixed:
 
 1. fresh exact theorem-carrier SHA;
 2. formal Lean artifacts at that SHA;
@@ -32,195 +35,334 @@ The default branch `main` is **not theorem authority**. README / ROADMAP on `mai
 
 ## Scope and current boundary
 
-The repository contains a large finite-volume Wilson / Osterwalder--Schrader / transfer-operator development, including the exact beta-zero physical transfer gap
+The repository already contains the exact beta-zero endpoint
 
 ```text
-gap(beta = 0) = 1.
+physical transfer gap at beta = 0 = 1.
 ```
 
-At positive beta, the active route is now much further downstream than the older source-fixed leakage frontier. The recent theorem chain has closed the real leakage conversion, ordered Schur recurrence, renewal contraction, genuine two-sided cross-boundary dynamics, strong convergence of the complete two-sided sweep, and the all-(L^2) relative Poincaré inequality.
+At positive beta, the active route now proves a uniform finite-volume physical transfer gap and transports its top-orthogonal contraction into a common interacting boundary carrier.
 
-A complete continuum four-dimensional Yang--Mills existence and mass-gap theorem is **not yet established here**. In particular, #4971 is not itself the final finite-volume physical transfer-gap theorem.
+A complete continuum four-dimensional Yang--Mills existence and mass-gap theorem is **not yet established here**. In particular:
+
+- #4985 proves preservation of the discrete gap **conditional on compatible strong-limit data**;
+- it does not construct that strong-limit data;
+- it does not by itself identify the finite one-slab top sector with the periodic OS vacuum-orthogonal sector;
+- it does not construct the continuum (C_0) semigroup or Hamiltonian;
+- it does not establish the final Wightman / energy-momentum mass-gap statement.
 
 ## What is now closed
 
-### A. Real leakage and ordered Schur machinery — #4935--#4937
+### A. Two-sided tagged-link analysis — #4935--#4971
 
-The ENNReal squared leakage estimate was converted to the exact real norm coefficient with its finite square-root normalization. The source/target orientation was kept explicit, then the actual bounded-core terminal recurrence was assembled through an ordered RMS Schur envelope with a volume-independent small-coupling cutoff.
+The earlier real-leakage, Schur, renewal and two-sided recurrence chain is closed.
 
-This removed the older “real square-root coefficient / physical-envelope orientation” frontier.
-
-### B. Renewal and full genuine joint (L^2) control — #4938--#4941
-
-The fixed-color sweep acquired geometric loss decay and an honest renewal-tail bridge. The actual fixed-color sweep limit and uniform renewal-defect contraction were identified. Ordered defect control was then extended to the full genuine joint (L^2) carrier, followed by control of arbitrary all-link mixed-color sweep residuals.
-
-The former requirement for a separate strict renewal hypothesis is therefore closed in this route.
-
-### C. Volume-free one-sided relative frame — #4942--#4945
-
-The all-right-link sweep gives a relative Poincaré estimate with the complete retained left boundary. Grouping the complete right-link family into the six canonical spatial colors yields the volume-free normalized six-color estimate
+In particular, #4969 proves on all genuine joint (L^2) the strict full-sweep loss contraction
 
 ```text
-((1 - 2 Q)^2 / 36) * ||f - C_left f||^2 <= E_6(f),
+loss(S f) <= eta * loss(f),
+eta = (Q / (1 - Q))^2 < 1,
 ```
 
-with no link-count factor. The retained projection was also identified with the coarse / Doob geometry.
+on a volume/rank-independent high-temperature cutoff.
 
-An existing receiver already turns such a six-color relative frame into a physical transfer gap **if** one separately supplies a strict retained-boundary contraction. That receiver is retained, but the current two-sided route below is designed to avoid leaving that contraction as an external premise.
-
-### D. Genuine cross-boundary two-sided kernel — #4946--#4966
-
-The development then passed from the one-sided retained-boundary problem to actual two-sided dynamics:
-
-- two-boundary ordered Schur envelope;
-- genuine left and two-sided one-link conditional expectations;
-- variance-sensitive (L^2) mean comparison from mutual Harnack bounds;
-- endpoint-swap symmetry and conjugation of one-link projections;
-- removal of the independent-pair factor two;
-- actual kernel-section fiber identification;
-- source-invariant cross-boundary target means and integrated source response;
-- exact return of target variance to genuine target residual;
-- source variance identified with genuine left leakage;
-- genuine cross-boundary one-step (L^2) influence;
-- actual left-update leakage with exact diagonal-support preservation;
-- final actual two-sided one-link leakage bound with the ordered block kernel.
-
-This is the analytic bridge that made a true two-sided recurrence possible.
-
-### E. Two-sided dynamics and intrinsic limit — #4967--#4970
-
-#4967 constructs the bounded-core two-sided cyclic forcing budget. #4968 closes the actual two-sided ordered terminal recurrence.
-
-#4969 then chooses a positive volume/rank-independent cutoff on which the two-boundary Schur coefficient satisfies
+#4970 identifies the complete two-sided sweep fixed space with the intrinsic joint constant line and proves
 
 ```text
-0 <= Q < 1/2
-eta = (Q / (1 - Q))^2
-0 <= eta < 1,
+S^[n] f -> B f
 ```
 
-and proves, first on the bounded core and then by density/closedness on **all genuine joint (L^2)**,
+strongly.
 
-```text
-loss(S f) <= eta * loss(f).
-```
-
-Consequently the complete two-sided one-link sweep has geometric path-loss decay.
-
-#4970 identifies the common fixed space of all genuine tagged two-sided one-link conditional expectations with the **intrinsic joint constant line**, defines its orthogonal projection `B`, proves `B` absorbs every tagged update and the full sweep, and establishes
-
-```text
-S^[n] f  ->  B f
-```
-
-strongly for every genuine joint (L^2) vector on the same #4969 cutoff.
-
-### F. All-(L^2) two-sided relative Poincaré — #4971
-
-Let
-
-```text
-P_e = genuine tagged two-sided one-link CondExpL2
-B   = intrinsic joint constant-line orthogonal projection
-Q   = twoBoundaryOrderedSchurCoefficient(s,beta).
-```
-
-Under
-
-```text
-s > 8,
-0 <= beta,
-beta <= twoBoundaryOrderedLossContractionCutoff(s),
-```
-
-#4971 proves for every genuine joint (L^2) vector `f`:
+#4971 then proves the all-(L^2) tagged-link relative Poincaré inequality
 
 ```text
 (1 - 2 Q) * ||f - B f||^2
-  <= sum_e ||f - P_e f||^2.
-```
-
-The coefficient is strictly positive on the same cutoff:
-
-```text
+  <= sum_e ||f - P_e f||^2,
 0 < 1 - 2 Q.
 ```
 
-The proof uses the all-(L^2) cross one-step estimate, exact path-loss control by the original tagged residual energy, constant-projection Pythagoras, and #4970 strong convergence to discharge the renewal tail.
+These are retained dependencies and are not the active frontier.
 
-Sources: [#4969 loss contraction][two-sided-loss], [#4970 constant-line convergence][constant-line], [#4971 relative Poincaré][two-sided-poincare].
+### B. Order-robust complete two-sided sweep — #4976--#4978
 
-## What remains before the positive-beta physical transfer gap
+Because the one-link conditional expectations do not commute, the twelve-color grouping could not be justified by silently reordering the canonical tagged-link sweep.
 
-The current missing interface is narrower than the older retained-boundary problem.
+#4976 generalizes the #4969 strict loss contraction to **any complete duplicate-free tagged-link order**.
 
-### 1. Volume-free grouped two-sided frame
+#4977 constructs the complete right-six + left-six grouped two-sided link order.
 
-#4971 controls the **sum over all tagged links**. It must be compressed to a fixed-cardinality two-sided grouped spatial frame without introducing a factor proportional to lattice volume. The one-sided six-color argument from #4943 is the model: group by the canonical spatial colors and use only fixed finite-color Cauchy--Schwarz.
+#4978 extends the complete-order theorem to the full #4970 geometry:
 
-The target should be a genuine two-sided 12-spatial frame (or the already-used physical (1/8)-normalized equivalent) with a coefficient depending only on the certified small-coupling data, not on the number of links.
+- fixed space = intrinsic constant line;
+- constant projection absorbs the supplied complete order;
+- iterates converge strongly to the constant projection;
+- constant-centered squared norm contracts by the same two-boundary loss ratio.
 
-### 2. Constant-line center on the physical sector
+This removes the noncommuting-order obstruction from G1.
 
-#4971 is centered at the intrinsic joint constant projection `B`. To feed the physical receiver, prove the corresponding center is zero, or otherwise obtain the required lower bound for
+### C. Left six-color transport and the genuine twelve-spatial frame — #4979--#4980
+
+#4979 transports the existing right six-color whole-block displacement estimate across endpoint swap to the left six-color family, at the **whole-color** level rather than link-by-link.
+
+#4980 then closes G1 with the fixed twelve-color energy
 
 ```text
-||R(Ux) - B(R(Ux))||^2
+kappa_12(s,beta) * ||f - B f||^2 <= E_12(f),
 ```
 
-when `x` lies in the physical top-eigenspace orthogonal sector. This must be an actual theorem about the joint constant line and the physical right-boundary lift, not an informal identification of different carriers.
+where
 
-### 3. Existing physical receiver
+```text
+kappa_12(s,beta)
+  = (1 - sqrt(twoBoundaryOrderedLossRatio(s,beta)))^2 / 576.
+```
 
-The repository already contains the required downstream receivers:
+The frame cutoff is
 
-- a conventional twelve-spatial Poincaré estimate on physical right-boundary lifts implies a six-spatial frame and the explicit transfer-gap lower bound `3 * kappa / 4`;
-- the physical (1/8)-normalized two-sided twelve-spatial frame reduces exactly to the existing eight-color residual on right-boundary lifts and feeds the raw physical squared defect.
+```text
+min(
+  twoBoundaryOrderedLossContractionCutoff,
+  jointLeakageLossContractionCutoff
+).
+```
 
-Therefore the next work should connect #4971 to these receivers rather than rebuilding transfer-operator theory.
+The factor (576 = 4 cdot 12^2) comes only from a fixed factor-two comparison and Cauchy--Schwarz over the **fixed twelve colors**. There is no lattice-link, volume or rank factor.
 
-### 4. Uniform scaling family
+### D. Intrinsic constant center -> physical top-orthogonal sector — #4981
 
-The #4969 cutoff and the #4971 coefficient are already volume/rank-independent for fixed `s > 8`. If the grouped-frame and physical-centering bridges introduce no volume loss, package one common positive coefficient over the scaling family and invoke the existing uniform transfer-gap receiver.
+#4981 closes G2 without identifying spaces by name.
 
-Only after this finite-volume uniform positive-beta gap is closed should the development move the active frontier back to thermodynamic / continuum OS--Wightman construction.
+For a physical vector (x) in the full normalized-transfer top-eigenspace orthogonal sector, after the existing Haar-to-vacuum transform (U) and genuine right-boundary lift (R),
+
+```text
+B (R (U x)) = 0
+```
+
+and therefore
+
+```text
+||R(Ux) - B(R(Ux))||^2 = ||x||^2.
+```
+
+The proof uses the actual inner-product geometry:
+
+- the nonnegative normalized top eigenvector lies in the full top eigenspace;
+- (U) maps it to constant one;
+- (R) maps that to the intrinsic joint constant-one vector;
+- both maps preserve inner products.
+
+Thus #4980 becomes a conventional twelve-spatial Poincaré inequality on the actual physical top-orthogonal right lifts.
+
+The existing receiver then gives
+
+```text
+3 * kappa_12(s,beta) / 4
+  <= physical top-eigenspace transfer gap,
+```
+
+and strict positive-beta finite-volume gap positivity on the certified interval.
+
+### E. Explicit scale-uniform physical transfer gap — #4982
+
+#4982 closes G4.
+
+It chooses a smaller positive common cutoff on which
+
+```text
+twoBoundaryOrderedSchurCoefficient(s,beta) < 1/3.
+```
+
+On that interval,
+
+```text
+1/2304 <= kappa_12(s,beta),
+```
+
+so every scale satisfies the explicit uniform physical transfer-gap bound
+
+```text
+1/3072 <= physical top-eigenspace transfer gap.
+```
+
+This establishes the repository target
+
+```text
+PeriodicHypercubicEvenSpecialUnitaryHasUniformTopEigenspaceTransferGap
+```
+
+without lattice-volume, link-count, gauge-rank or scale-dependent loss.
+
+### F. Scale-uniform top-orthogonal power decay — #4983
+
+Writing
+
+```text
+q0 = 3071/3072,
+```
+
+#4983 proves for every scale (n), every positive integer (k), and every physical top-orthogonal excitation (x),
+
+```text
+||R_n|| <= q0 < 1,
+||R_n^k|| <= q0^k,
+||R_n^k x|| <= q0^k ||x||.
+```
+
+It also records the associated positive logarithmic discrete rate
+
+```text
+-glog(q0) = -log(3071/3072) > 0.
+```
+
+### G. Common interacting boundary carrier — #4984
+
+#4984 begins H1.
+
+Every finite physical top-orthogonal sector is embedded isometrically into the **same interacting infinite-product boundary (L^2) carrier** by composing:
+
+1. the one-sided excitation boundary isometry;
+2. reciprocal-vacuum transport from boundary Haar (L^2) to the actual interacting finite boundary marginal;
+3. coordinate pullback into the infinite product of all finite interacting boundary marginals.
+
+No exact coarse-graining identity between different periodic Wilson Gibbs measures is assumed.
+
+On each exact finite-scale image range, the transported transfer powers retain exactly the same estimate
+
+```text
+||T_{n,common}^k|| <= q0^k.
+```
+
+### H. Strong-limit preservation of the uniform gap — #4985
+
+#4985 closes the abstract H1 descent step.
+
+If embedded finite initial vectors converge strongly in the common carrier, and the corresponding embedded evolved vectors also converge strongly, then the limit obeys
+
+```text
+||y_limit|| <= q0^k ||x_limit||.
+```
+
+It then packages a compatible limiting normed space (E), an isometric embedding of (E) into the common carrier, finite approximants, and a bounded limit operator (T). Under those explicit compatibility hypotheses,
+
+```text
+||T|| <= q0^k
+```
+
+for the selected (k)-step limit operator.
+
+For the one-step specialization,
+
+```text
+||T|| <= 3071/3072
+1/3072 <= 1 - ||T||
+||T|| < 1.
+```
+
+Thus the positive finite-volume gap is now formally proven to survive **any compatible common-carrier strong limit**.
+
+What #4985 deliberately does **not** do is construct the required approximation / strong-limit data.
+
+## Current frontier — H1 model-facing compatibility construction
+
+The immediate next theorem problem is no longer a gap estimate. It is to instantiate the #4985 strong-limit interface with the actual Wilson / OS continuum construction.
+
+The required data are:
+
+1. a concrete limiting excitation carrier (E);
+2. an isometric embedding (E) into the #4984 interacting common boundary (L^2);
+3. finite top-orthogonal approximants (x_n) for every (x in E);
+4. strong convergence of the embedded (x_n);
+5. strong convergence of the embedded one-step evolved vectors to the chosen limit operator applied to (x).
+
+The repository already contains generic asymptotically-embedded strong-limit and common-carrier machinery. The remaining task is the **model-facing identification / approximation theorem**, not another finite-volume coercivity estimate.
+
+A separate compatibility question must also remain explicit: the finite periodic OS vacuum-orthogonal carrier is not automatically the same object as the one-slab transfer top-orthogonal carrier. Existing mode-wise boundary-closure/eigenlift theorems may be used, but no global equality should be assumed without proof.
+
+## Continuum-scaling caution
+
+The uniform discrete factor
+
+```text
+q0 = 3071/3072 < 1
+```
+
+is ideal for fixed-step thermodynamic/common-carrier limits.
+
+It must **not** be naively interpreted as a finite physical-time continuum rate when the lattice spacing (a_n 	o 0). If one used the same fixed (q_0) for (lfloor t/a_nfloor) steps at fixed (t>0), then formally
+
+```text
+q0 ^ floor(t / a_n) -> 0.
+```
+
+That would correspond to instantaneous annihilation of the excitation sector at every positive time, not a nontrivial strongly continuous continuum semigroup.
+
+Therefore H2 must control the spacing-scaled transfer rate / rescaled dynamics rather than simply reusing the fixed one-step (q_0) as a continuum-time decay factor.
+
+This is a downstream scaling boundary; it does not weaken the finite-volume or fixed-step H1 gap theorem.
 
 ## What this repository does not currently claim
 
-- #4971 does **not** by itself prove the positive-beta physical transfer gap.
-- The tagged-link residual sum is **not** silently identified with a normalized 12-color frame.
-- The intrinsic constant-line projection is **not** silently replaced by zero on the physical top-orthogonal sector.
-- A finite-volume or uniform transfer gap is not the same as the full continuum Yang--Mills existence and mass-gap theorem.
-- The exact beta-zero gap `1` remains a separate stronger endpoint theorem; the perturbative positive-beta constants need not reproduce it sharply.
+- #4985 does not construct the actual continuum strong-limit operator.
+- The finite periodic OS vacuum line is not silently identified with the one-slab transfer top eigenspace.
+- Exact projective restriction between different finite periodic Wilson Gibbs measures is not assumed.
+- A scale-uniform finite-volume transfer gap is not by itself the full continuum Yang--Mills mass-gap theorem.
+- The fixed discrete contraction (3071/3072) is not by itself a finite physical continuum mass.
+- The beta-zero exact gap (1) remains a separate sharper theorem.
 
 ## Lean / validation workflow
 
-The #4971 checkpoint is backed by the exact PR head `cf43f174...`, successful PR Lean Fast Check run `36784485909`, the actual `9420 jobs` successful build log, CompileSmoke declarations, and the matching exact-head completion receipt.
+The current theorem checkpoint is backed by #4985 exact PR head
 
-The #4971 theorem axiom report contains the standard `propext`, `Classical.choice`, `Quot.sound` dependencies together with the repository's existing `native_decide` cardinality certificates; there is no `sorryAx`.
+```text
+a0db6d3d4c1184a5c81d41b4766efc12aca1e6ca
+```
 
-When repairing theorem PRs, inspect the **whole changed Lean module**, its imports, local instances, dependent signatures, and the pinned mathlib API rather than patching only the line printed by CI. Once an unchanged exact PR head is GREEN, do not rerun Strict Lean merely for reassurance.
+with:
 
-README / ROADMAP-only changes are documentation work. Verify their two-file diff and source links; do not manufacture a theorem receipt for them.
+```text
+PR Lean Fast Check run 36810743769
+completed / success
+matching exact-head receipt: success
+Build completed successfully (9678 jobs)
+axiom: 0
+artifact ID: 11139946207
+sha256:ca6a88ee9772b1694a916a67651053164fab6960eb99b35da4f99b246601cf2d
+```
 
-## Milestone map since the previous docs checkpoint
+The CI audit rejects `sorry`, `admit`, declaration-level `axiom`, and `constant` in the changed theorem files.
 
-| PR range | Closed layer |
+Recent Lean engineering lessons retained by the branch:
+
+- inspect the entire changed module, not only the reported CI line;
+- preserve the pinned Lean/mathlib API;
+- give module-specific names to local instances when import composition can expose generated-name collisions;
+- for dependent submodule carriers, make restricted `NormedSpace` instances explicit when generic conjugation lemmas need them;
+- avoid broad dependent `change` / `rw` when a previously typed named theorem and a local `calc` step give a more stable proof;
+- do not rerun strict validation on an unchanged exact GREEN head merely for reassurance;
+- README / ROADMAP-only updates are docs work and must not be presented as new theorem validation.
+
+## Milestone map
+
+| PR | Closed layer |
 | --- | --- |
-| #4935--#4937 | real leakage coefficient, ordered RMS Schur envelope, actual terminal recurrence |
-| #4938--#4941 | geometric renewal, fixed-color limit, full-(L^2) defect and all-link residual control |
-| #4942--#4945 | all-right relative Poincaré, volume-free six-color frame, physical receiver, retained/coarse identification |
-| #4946--#4954 | two-boundary Schur, two-sided projections, Harnack (L^2), swap symmetry, actual fiber laws |
-| #4955--#4966 | concrete cross-boundary means/variances, genuine one-step leakage, actual two-sided leakage |
-| #4967--#4968 | two-sided cyclic forcing and ordered terminal recurrence |
-| #4969 | strict all-(L^2) two-sided full-sweep loss contraction |
-| #4970 | intrinsic constant-line identification and strong sweep convergence |
-| #4971 | all-(L^2) two-sided relative Poincaré |
+| #4935--#4971 | real leakage -> Schur -> renewal -> two-sided recurrence -> intrinsic constant-line relative Poincaré |
+| #4976 | strict two-sided loss contraction for arbitrary complete duplicate-free tagged-link order |
+| #4977 | complete two-sided twelve-color grouped link order |
+| #4978 | complete-order constant-line convergence and centered contraction |
+| #4979 | endpoint-swap transport of whole left six-color displacement |
+| #4980 | volume-free genuine two-sided twelve-spatial relative frame |
+| #4981 | intrinsic constant center -> physical top-orthogonal centered norm; finite-volume positive-beta gap |
+| #4982 | explicit scale-uniform coefficient (1/2304) and transfer-gap floor (1/3072) |
+| #4983 | uniform (q_0^k), (q_0=3071/3072), top-orthogonal power decay |
+| #4984 | isometric embedding of all finite top-orthogonal sectors into one interacting common boundary carrier |
+| #4985 | strong-limit preservation of (q_0^k) and one-step gap floor (1/3072) |
 
-For the detailed next-step sequence, see [ROADMAP.md](ROADMAP.md).
+For the detailed continuation sequence, see [ROADMAP.md](ROADMAP.md).
 
-[two-sided-loss]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/22bfe27324e374242aad7bc402a224769306a22b/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTwoSidedLossContraction.lean
-[constant-line]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/22bfe27324e374242aad7bc402a224769306a22b/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTwoSidedConstantLineConvergence.lean
-[two-sided-poincare]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/22bfe27324e374242aad7bc402a224769306a22b/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTwoSidedRelativePoincare.lean
-[twelve-gap-receiver]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/22bfe27324e374242aad7bc402a224769306a22b/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateTwelveSpatialPoincareSixSpatialGap.lean
-[twelve-frame-receiver]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/22bfe27324e374242aad7bc402a224769306a22b/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateJointTwoSidedTwelveSpatialFrame.lean
+[current-frame]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/88870c84503e22797397f7082a1cfc9b4dc36322/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTwoSidedTwelveSpatialRelativeFrame.lean
+[current-physical-gap]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/88870c84503e22797397f7082a1cfc9b4dc36322/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTwoSidedTwelveSpatialPhysicalTopOrthogonalGap.lean
+[current-uniform-gap]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/88870c84503e22797397f7082a1cfc9b4dc36322/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTwoSidedTwelveSpatialUniformGap.lean
+[current-power-decay]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/88870c84503e22797397f7082a1cfc9b4dc36322/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferUniformTopOrthogonalPowerDecay.lean
+[current-common-carrier]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/88870c84503e22797397f7082a1cfc9b4dc36322/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopOrthogonalScaleCommonBoundaryDecay.lean
+[current-strong-limit]: https://github.com/itakura-hidetoshi/4d-mass-gap/blob/88870c84503e22797397f7082a1cfc9b4dc36322/MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopOrthogonalScaleCommonBoundaryStrongLimit.lean
