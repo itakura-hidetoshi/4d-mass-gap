@@ -125,6 +125,8 @@ theorem
   have hOmegaNorm : ‖Omega‖ = 1 :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_norm
       H N hN beta hbeta
+  have hOmegaNormAmbient : ‖(Omega : Lp ℝ 2 μ)‖ = 1 := by
+    simpa using hOmegaNorm
   have hOmegaPos :
       ∀ᵐ A ∂μ, 0 < (Omega : Lp ℝ 2 μ) A :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_ae_pos
@@ -151,18 +153,23 @@ theorem
       rw [inner_sub_right, real_inner_smul_right,
         real_inner_self_eq_norm_sq, hOmegaNorm]
       ring
+    have hgOrthAmbient :
+        inner ℝ (Omega : Lp ℝ 2 μ) (g : Lp ℝ 2 μ) = 0 := by
+      simpa using hgOrth
     have hgZero : g = 0 := by
       by_contra hgNe
       have hgNormPos : 0 < ‖g‖ := norm_pos_iff.mpr hgNe
-      let a : ℝ := ‖g‖⁻¹
+      have hgNormPosAmbient : 0 < ‖(g : Lp ℝ 2 μ)‖ := by
+        simpa using hgNormPos
+      let a : ℝ := ‖(g : Lp ℝ 2 μ)‖⁻¹
       let u : G := a • g
-      have ha : 0 < a := inv_pos.mpr hgNormPos
+      have ha : 0 < a := inv_pos.mpr hgNormPosAmbient
       have huTop : u ∈ F := by
         exact Submodule.smul_mem F a hgTop
       have huNorm : ‖u‖ = 1 := by
-        dsimp [u, a]
-        rw [norm_smul, Real.norm_eq_abs, abs_inv, abs_of_pos hgNormPos]
-        exact inv_mul_cancel₀ hgNormPos.ne'
+        change ‖a • (g : Lp ℝ 2 μ)‖ = 1
+        rw [norm_smul, Real.norm_eq_abs, abs_of_pos ha]
+        exact inv_mul_cancel₀ hgNormPosAmbient.ne'
       have huNe : u ≠ 0 := by
         intro huZero
         rw [huZero, norm_zero] at huNorm
@@ -170,6 +177,9 @@ theorem
       have huOrth : inner ℝ Omega u = 0 := by
         dsimp [u]
         rw [real_inner_smul_right, hgOrth, mul_zero]
+      have huOrthAmbient :
+          inner ℝ (Omega : Lp ℝ 2 μ) (u : Lp ℝ 2 μ) = 0 := by
+        simpa using huOrth
       rcases
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace_unit_sign_rigidity
             H N hN beta hbeta u huTop huNorm with
@@ -184,8 +194,8 @@ theorem
             (Omega : Lp ℝ 2 μ) (u : Lp ℝ 2 μ)
             hOmegaPos huNonneg huAmbientNe
         have hZero :
-            inner ℝ (Omega : Lp ℝ 2 μ) (u : Lp ℝ 2 μ) = 0 := by
-          simpa using huOrth
+            inner ℝ (Omega : Lp ℝ 2 μ) (u : Lp ℝ 2 μ) = 0 :=
+          huOrthAmbient
         exact (ne_of_gt hPos) hZero
       · let v : G := -u
         have hvTop : v ∈ F := by
@@ -218,9 +228,12 @@ theorem
         have hvOrth : inner ℝ Omega v = 0 := by
           dsimp [v]
           rw [inner_neg_right, huOrth, neg_zero]
-        have hZero :
+        have hvOrthAmbient :
             inner ℝ (Omega : Lp ℝ 2 μ) (v : Lp ℝ 2 μ) = 0 := by
           simpa using hvOrth
+        have hZero :
+            inner ℝ (Omega : Lp ℝ 2 μ) (v : Lp ℝ 2 μ) = 0 :=
+          hvOrthAmbient
         exact (ne_of_gt hPos) hZero
     have hfEq : f = c • Omega := by
       dsimp [g] at hgZero
