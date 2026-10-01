@@ -46,6 +46,11 @@ local instance projectiveCenteredStrongLimitSU2Nontrivial :
       (U : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
   norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
 
+local instance projectiveCenteredStrongLimitSpecialUnitaryMeasurableSpace
+    (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
 local instance projectiveCenteredStrongLimitFiniteMarginalProbability
     (F : EuclideanYangMillsProjectiveCylinderFamily)
     (J : Finset EuclideanFourSpace) :
@@ -195,7 +200,7 @@ noncomputable def finiteOSCenteredPhysicalState
 /-- The continuum vector obtained by centering the named projective
 primary-plaquette cylinder mode against continuum constant one. -/
 noncomputable def primaryPlaquetteGramSchmidtCenteredContinuumL2Mode
-    (C : PhysicalYangMillsEvenPeriodicWilsonOSSU2PrimaryPlaquetteGramSchmidtContinuumCoherentReadoutData
+    (_C : PhysicalYangMillsEvenPeriodicWilsonOSSU2PrimaryPlaquetteGramSchmidtContinuumCoherentReadoutData
       S D halfExtent beta hbeta Q F R L hInvariant)
     (k : ℕ) :
     Lp ℝ 2 L.continuumMeasure :=
