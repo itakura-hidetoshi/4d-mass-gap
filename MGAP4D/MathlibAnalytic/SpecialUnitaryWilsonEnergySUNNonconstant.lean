@@ -72,9 +72,22 @@ theorem specialUnitaryTwoNegativeDiagonalMatrix_mem_unitaryGroup
   ext i j
   by_cases hij : i = j
   · subst j
-    simp [specialUnitaryTwoNegativeDiagonalMatrix,
-      specialUnitaryTwoNegativeDiagonalEntry,
-      Matrix.star_eq_conjTranspose]
+    by_cases hi1 :
+        i = specialUnitaryTwoNegativeIndexOne N hN
+    · subst i
+      simp [specialUnitaryTwoNegativeDiagonalMatrix,
+        specialUnitaryTwoNegativeDiagonalEntry,
+        Matrix.star_eq_conjTranspose]
+    · by_cases hi0 :
+          i = specialUnitaryTwoNegativeIndexZero N hN
+      · subst i
+        simp [specialUnitaryTwoNegativeDiagonalMatrix,
+          specialUnitaryTwoNegativeDiagonalEntry,
+          Matrix.star_eq_conjTranspose,
+          specialUnitaryTwoNegativeIndexZero_ne_one N hN]
+      · simp [specialUnitaryTwoNegativeDiagonalMatrix,
+          specialUnitaryTwoNegativeDiagonalEntry,
+          Matrix.star_eq_conjTranspose, hi0, hi1]
   · simp [specialUnitaryTwoNegativeDiagonalMatrix,
       specialUnitaryTwoNegativeDiagonalEntry,
       Matrix.star_eq_conjTranspose, hij]
@@ -106,8 +119,10 @@ theorem specialUnitaryTwoNegativeDiagonal_trace
           Matrix (Fin N) (Fin N) ℂ) =
       (N : ℂ) - 4 := by
   classical
-  rw [specialUnitaryTwoNegativeDiagonal, specialUnitaryTwoNegativeDiagonalMatrix,
-    Matrix.trace_diagonal]
+  change
+    Matrix.trace (specialUnitaryTwoNegativeDiagonalMatrix N hN) =
+      (N : ℂ) - 4
+  rw [specialUnitaryTwoNegativeDiagonalMatrix, Matrix.trace_diagonal]
   simp [specialUnitaryTwoNegativeDiagonalEntry,
     Finset.sum_update_of_mem,
     specialUnitaryTwoNegativeIndexZero_ne_one N hN]
@@ -126,7 +141,6 @@ theorem normalizedSpecialUnitaryRealTrace_twoNegativeDiagonal
     exact_mod_cast (Nat.ne_of_gt (lt_of_lt_of_le (by norm_num) hN))
   norm_num
   field_simp [hN0]
-  ring
 
 /-- The Wilson plaquette energy of the witness is exactly 4/N. -/
 theorem specialUnitaryWilsonPlaquetteEnergy_twoNegativeDiagonal
