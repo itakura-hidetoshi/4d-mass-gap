@@ -79,58 +79,51 @@ theorem
     (hfTop : f ∈ F)
     (hfNorm : ‖f‖ = 1) :
     periodicHypercubicEvenSpecialUnitaryPhysicalRealL2Abs H N f ∈ F := by
+  let T0 :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+      H N hN beta hbeta
   let a :=
     periodicHypercubicEvenSpecialUnitaryPhysicalRealL2Abs H N f
-  let lambda : ℝ := ‖T‖
-  have hlambda : 0 < lambda := by
-    simpa [lambda] using
+  have hTpos : 0 < ‖T0‖ := by
+    simpa [T0] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
         H N hN beta hbeta
-  have hfix : S f = f :=
+  have hfix :
+      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+          H N hN beta hbeta f = f :=
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace_mem
       H N hN beta hbeta f).1 hfTop
-  have hraw : T f = lambda • f := by
+  have hraw : T0 f = ‖T0‖ • f := by
     rw [periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_apply]
       at hfix
-    change lambda⁻¹ • T f = f at hfix
-    have hscaled := congrArg (fun z : G => lambda • z) hfix
-    simpa [smul_smul, hlambda.ne'] using hscaled
-  have hfSelf : inner ℝ f f = 1 := by
-    rw [real_inner_self_eq_norm_sq, hfNorm]
-    norm_num
-  have hfQuad : inner ℝ (T f) f = lambda := by
-    calc
-      inner ℝ (T f) f = inner ℝ (lambda • f) f := by rw [hraw]
-      _ = lambda * inner ℝ f f := real_inner_smul_left f f lambda
-      _ = lambda := by rw [hfSelf, mul_one]
+    change ‖T0‖⁻¹ • T0 f = f at hfix
+    have hscaled := congrArg (fun z : G => ‖T0‖ • z) hfix
+    simpa [smul_smul, hTpos.ne'] using hscaled
+  have hfQuad : inner ℝ (T0 f) f = ‖T0‖ :=
+    realHilbert_inner_eq_opNorm_of_unit_eigen T0 f hfNorm hraw
   have haNorm : ‖a‖ = 1 := by
-    have haNormEq : ‖a‖ = ‖f‖ := by
-      simpa [a] using
-        (periodicHypercubicEvenSpecialUnitaryPhysicalRealL2Abs_norm H N f)
-    exact haNormEq.trans hfNorm
-  have hdom : inner ℝ (T f) f ≤ inner ℝ (T a) a := by
-    dsimp [a]
-    exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_inner_le_abs
-        H N hN beta hbeta f
-  have hupper : inner ℝ (T a) a ≤ lambda := by
+    have h :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalRealL2Abs_norm H N f
+    exact h.trans hfNorm
+  have hdom : inner ℝ (T0 f) f ≤ inner ℝ (T0 a) a := by
+    simpa [T0, a] using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_inner_le_abs
+        H N hN beta hbeta f)
+  have hupper : inner ℝ (T0 a) a ≤ ‖T0‖ := by
     calc
-      inner ℝ (T a) a ≤ ‖T a‖ * ‖a‖ := real_inner_le_norm _ _
-      _ ≤ (‖T‖ * ‖a‖) * ‖a‖ :=
+      inner ℝ (T0 a) a ≤ ‖T0 a‖ * ‖a‖ := real_inner_le_norm _ _
+      _ ≤ (‖T0‖ * ‖a‖) * ‖a‖ :=
         mul_le_mul_of_nonneg_right
-          (ContinuousLinearMap.le_opNorm T a) (norm_nonneg a)
-      _ = lambda := by rw [haNorm]; simp [lambda]
-  have haQuad : inner ℝ (T a) a = lambda := by
-    apply le_antisymm hupper
-    rw [← hfQuad]
-    exact hdom
-  have haRaw : T a = lambda • a := by
-    simpa [lambda] using
-      realHilbert_eigen_of_unit_inner_eq_opNorm T a haNorm haQuad
+          (ContinuousLinearMap.le_opNorm T0 a) (norm_nonneg a)
+      _ = ‖T0‖ := by rw [haNorm]; ring
+  have haQuad : inner ℝ (T0 a) a = ‖T0‖ := by
+    exact le_antisymm hupper (hfQuad ▸ hdom)
+  have haRaw : T0 a = ‖T0‖ • a :=
+    realHilbert_eigen_of_unit_inner_eq_opNorm T0 a haNorm haQuad
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace_mem]
   rw [periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_apply]
-  change lambda⁻¹ • T a = a
-  rw [haRaw, smul_smul, inv_mul_cancel₀ hlambda.ne', one_smul]
+  change ‖T0‖⁻¹ • T0 a = a
+  rw [haRaw, smul_smul, inv_mul_cancel₀ hTpos.ne', one_smul]
 
 /-- Every unit vector in the full physical top eigenspace has one fixed sign
 almost everywhere. -/
