@@ -151,7 +151,7 @@ theorem
     have hgOrth : inner ℝ Omega g = 0 := by
       dsimp [g, c]
       rw [inner_sub_right, real_inner_smul_right,
-        real_inner_self_eq_norm_sq, hOmegaNorm]
+        real_inner_self_eq_norm_sq, hOmegaNormAmbient]
       ring
     have hgOrthAmbient :
         inner ℝ (Omega : Lp ℝ 2 μ) (g : Lp ℝ 2 μ) = 0 := by
@@ -176,7 +176,7 @@ theorem
         norm_num at huNorm
       have huOrth : inner ℝ Omega u = 0 := by
         dsimp [u]
-        rw [real_inner_smul_right, hgOrth, mul_zero]
+        rw [real_inner_smul_right, hgOrthAmbient, mul_zero]
       have huOrthAmbient :
           inner ℝ (Omega : Lp ℝ 2 μ) (u : Lp ℝ 2 μ) = 0 := by
         simpa using huOrth
@@ -227,7 +227,7 @@ theorem
             hOmegaPos hvNonneg hvAmbientNe
         have hvOrth : inner ℝ Omega v = 0 := by
           dsimp [v]
-          rw [inner_neg_right, huOrth, neg_zero]
+          rw [inner_neg_right, huOrthAmbient, neg_zero]
         have hvOrthAmbient :
             inner ℝ (Omega : Lp ℝ 2 μ) (v : Lp ℝ 2 μ) = 0 := by
           simpa using hvOrth
