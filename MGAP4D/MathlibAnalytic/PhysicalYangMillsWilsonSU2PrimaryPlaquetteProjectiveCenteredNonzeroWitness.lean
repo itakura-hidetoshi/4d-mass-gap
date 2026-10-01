@@ -169,47 +169,45 @@ theorem exists_primaryPlaquetteGramSchmidtCenteredContinuumL2Mode_ne_zero
     norm_num
   by_cases h0 :
       C.primaryPlaquetteGramSchmidtCenteredContinuumL2Mode 0 ≠ 0
-  · exact ⟨0, Or.inl rfl, h0⟩
+  · exact ⟨0, ⟨Or.inl rfl, h0⟩⟩
   · have h0zero :
         C.primaryPlaquetteGramSchmidtCenteredContinuumL2Mode 0 = 0 :=
       not_ne_iff.mp h0
     by_cases h1 :
         C.primaryPlaquetteGramSchmidtCenteredContinuumL2Mode 1 ≠ 0
-    · exact ⟨1, Or.inr ⟨rfl, h1⟩⟩
+    · exact ⟨1, ⟨Or.inr rfl, h1⟩⟩
     · have h1zero :
           C.primaryPlaquetteGramSchmidtCenteredContinuumL2Mode 1 = 0 :=
         not_ne_iff.mp h1
-      have he0 :
-          e0 = inner ℝ vac e0 • vac := by
+      let a0 : ℝ := inner ℝ vac e0
+      let a1 : ℝ := inner ℝ vac e1
+      have he0 : e0 = a0 • vac := by
         have hz := h0zero
         change finiteVacuumCentered vac e0 = 0 at hz
         unfold finiteVacuumCentered at hz
-        exact sub_eq_zero.mp hz
-      have he1 :
-          e1 = inner ℝ vac e1 • vac := by
+        simpa [a0] using (sub_eq_zero.mp hz)
+      have he1 : e1 = a1 • vac := by
         have hz := h1zero
         change finiteVacuumCentered vac e1 = 0 at hz
         unfold finiteVacuumCentered at hz
-        exact sub_eq_zero.mp hz
-      have ha0 : inner ℝ vac e0 ≠ 0 := by
+        simpa [a1] using (sub_eq_zero.mp hz)
+      have ha0 : a0 ≠ 0 := by
         intro ha0
-        rw [ha0, zero_smul] at he0
-        rw [he0, norm_zero] at he0norm
+        have he0zero : e0 = 0 := by
+          simpa [ha0] using he0
+        rw [he0zero, norm_zero] at he0norm
         norm_num at he0norm
-      have ha1 : inner ℝ vac e1 ≠ 0 := by
+      have ha1 : a1 ≠ 0 := by
         intro ha1
-        rw [ha1, zero_smul] at he1
-        rw [he1, norm_zero] at he1norm
+        have he1zero : e1 = 0 := by
+          simpa [ha1] using he1
+        rw [he1zero, norm_zero] at he1norm
         norm_num at he1norm
-      have hmul : inner ℝ vac e0 * inner ℝ vac e1 = 0 := by
-        calc
-          inner ℝ vac e0 * inner ℝ vac e1 =
-              inner ℝ e0 e1 := by
-            rw [he0, he1]
-            simp [real_inner_smul_left, real_inner_smul_right, hvacinner,
-              mul_assoc, mul_comm, mul_left_comm]
-          _ = 0 := he01
-      exact (mul_ne_zero ha0 ha1) hmul
+      have hmul : a0 * a1 = 0 := by
+        have h := he01
+        rw [he0, he1, real_inner_smul_left, real_inner_smul_right, hvacinner] at h
+        simpa [mul_assoc] using h
+      exact False.elim ((mul_ne_zero ha0 ha1) hmul)
 
 /-- There is an actual nonzero projective strong limit of finite Wilson OS
 vacuum-orthogonal representatives from the first two primary-plaquette modes. -/
