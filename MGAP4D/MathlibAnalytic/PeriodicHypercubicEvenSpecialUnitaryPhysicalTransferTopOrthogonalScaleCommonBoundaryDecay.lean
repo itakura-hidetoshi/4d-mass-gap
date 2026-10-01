@@ -254,20 +254,25 @@ theorem
   have hDecay :=
     periodicHypercubicEvenSpecialUnitary_uniformTopOrthogonalTransferOperator_pow_apply_norm_le
       halfExtent N hN beta hbeta s hs hcut n k hk (E.symm y)
-  have hy : y = E (E.symm y) := by
-    exact (E.apply_symm_apply y).symm
-  rw [hy]
-  rw [
-    periodicHypercubicEvenSpecialUnitaryTopOrthogonalScaleCommonBoundaryTransferPower_apply_image]
   calc
-    ‖E ((R ^ k) (E.symm y))‖ = ‖(R ^ k) (E.symm y)‖ :=
+    ‖periodicHypercubicEvenSpecialUnitaryTopOrthogonalScaleCommonBoundaryTransferPower
+        halfExtent N hN beta hbeta n k y‖ =
+      ‖periodicHypercubicEvenSpecialUnitaryTopOrthogonalScaleCommonBoundaryTransferPower
+        halfExtent N hN beta hbeta n k (E (E.symm y))‖ := by
+          rw [E.apply_symm_apply]
+    _ = ‖E ((R ^ k) (E.symm y))‖ := by
+      rw [
+        periodicHypercubicEvenSpecialUnitaryTopOrthogonalScaleCommonBoundaryTransferPower_apply_image]
+    _ = ‖(R ^ k) (E.symm y)‖ :=
       E.norm_map _
     _ ≤ q ^ k * ‖E.symm y‖ := by
       simpa [R, q] using hDecay
-    _ = q ^ k * ‖E (E.symm y)‖ := by
-      rw [E.norm_map]
     _ = q ^ k * ‖y‖ := by
-      rw [E.apply_symm_apply]
+      rw [E.symm.norm_map]
+    _ =
+      GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformTopOrthogonalContractionFactor ^ k *
+        ‖y‖ := by
+      rfl
 
 /-- Operator-norm form on every finite-scale common-carrier range.  The exact
 same q0^k controls all scales. -/
