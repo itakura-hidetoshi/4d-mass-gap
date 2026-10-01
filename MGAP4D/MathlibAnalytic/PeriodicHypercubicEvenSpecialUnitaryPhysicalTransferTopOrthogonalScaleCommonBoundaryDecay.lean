@@ -1,7 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferUniformTopOrthogonalPowerDecay
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOSBoundaryOneSidedExcitationTransfer
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonInteractingBoundaryScaleCommonVacuumCarrier
-import MGAP4D.MathlibAnalytic.RealLinearIsometryRangeIdentification
 import Mathlib.Tactic
 
 /-!
@@ -45,19 +44,6 @@ variable
     (N : ℕ) (hN : 0 < N)
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℕ → ℝ) (hbeta : ∀ n, 0 ≤ beta n)
-
-/-- Keep the restricted real normed-space structure explicit on the dependent
-top-orthogonal subtype.  This mirrors the existing one-sided excitation
-transfer file and avoids forcing typeclass search to unfold the named
-orthogonal submodule inside generic isometric-conjugation lemmas. -/
-@[reducible] local instance topOrthogonalScaleCommonBoundaryNormedSpace
-    (n : ℕ) :
-    NormedSpace ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        (halfExtent n) N hN (beta n) (hbeta n)) :=
-  Submodule.normedSpace
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-      (halfExtent n) N hN (beta n) (hbeta n))
 
 /-- The single interacting infinite-product boundary Hilbert space containing
 isometric copies of every finite top-orthogonal physical one-slice sector. -/
@@ -114,10 +100,16 @@ noncomputable def
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
         (halfExtent n) N hN (beta n) (hbeta n) ≃ₗᵢ[ℝ]
       PeriodicHypercubicEvenSpecialUnitaryTopOrthogonalScaleCommonBoundarySector
-        halfExtent N hN beta hbeta n :=
-  realLinearIsometryEquivRange
-    (periodicHypercubicEvenSpecialUnitaryTopOrthogonalToScaleCommonBoundaryLinearIsometry
-      halfExtent N hN beta hbeta n)
+        halfExtent N hN beta hbeta n := by
+  let I :=
+    periodicHypercubicEvenSpecialUnitaryTopOrthogonalToScaleCommonBoundaryLinearIsometry
+      halfExtent N hN beta hbeta n
+  exact
+    { toLinearEquiv :=
+        LinearEquiv.ofInjective I.toLinearMap I.injective
+      norm_map' := by
+        intro x
+        exact I.norm_map x }
 
 /-- The k-step finite physical top-orthogonal transfer, transported to the
 exact finite-scale range inside the common interacting product Hilbert space. -/
@@ -127,12 +119,26 @@ noncomputable def
     PeriodicHypercubicEvenSpecialUnitaryTopOrthogonalScaleCommonBoundarySector
         halfExtent N hN beta hbeta n →L[ℝ]
       PeriodicHypercubicEvenSpecialUnitaryTopOrthogonalScaleCommonBoundarySector
-        halfExtent N hN beta hbeta n :=
-  continuousLinearMapConjugateLinearIsometryEquiv
-    (periodicHypercubicEvenSpecialUnitaryTopOrthogonalScaleCommonBoundaryEquiv
-      halfExtent N hN beta hbeta n)
-    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-        (halfExtent n) N hN (beta n) (hbeta n)) ^ k)
+        halfExtent N hN beta hbeta n := by
+  letI : NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        (halfExtent n) N hN (beta n) (hbeta n)) :=
+    Submodule.normedSpace
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        (halfExtent n) N hN (beta n) (hbeta n))
+  exact
+    continuousLinearMapConjugateLinearIsometryEquiv
+      (𝕜 := ℝ)
+      (E :=
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          (halfExtent n) N hN (beta n) (hbeta n))
+      (F :=
+        PeriodicHypercubicEvenSpecialUnitaryTopOrthogonalScaleCommonBoundarySector
+          halfExtent N hN beta hbeta n)
+      (periodicHypercubicEvenSpecialUnitaryTopOrthogonalScaleCommonBoundaryEquiv
+        halfExtent N hN beta hbeta n)
+      ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          (halfExtent n) N hN (beta n) (hbeta n)) ^ k)
 
 @[simp] theorem
     periodicHypercubicEvenSpecialUnitaryTopOrthogonalScaleCommonBoundaryTransferPower_apply_image
@@ -148,13 +154,22 @@ noncomputable def
         halfExtent N hN beta hbeta n
         (((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
             (halfExtent n) N hN (beta n) (hbeta n)) ^ k) x) := by
+  letI : NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        (halfExtent n) N hN (beta n) (hbeta n)) :=
+    Submodule.normedSpace
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        (halfExtent n) N hN (beta n) (hbeta n))
   exact
     continuousLinearMapConjugateLinearIsometryEquiv_apply_image
-      (periodicHypercubicEvenSpecialUnitaryTopOrthogonalScaleCommonBoundaryEquiv
-        halfExtent N hN beta hbeta n)
-      ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-          (halfExtent n) N hN (beta n) (hbeta n)) ^ k)
-      x
+      (𝕜 := ℝ)
+      (E :=
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          (halfExtent n) N hN (beta n) (hbeta n))
+      (F :=
+        PeriodicHypercubicEvenSpecialUnitaryTopOrthogonalScaleCommonBoundarySector
+          halfExtent N hN beta hbeta n)
+      _ _ _
 
 /-- The actual k-step finite trajectory, viewed directly as a vector in the
 single ambient common product L2. -/
@@ -222,6 +237,12 @@ theorem
         halfExtent N hN beta hbeta n k y‖ ≤
       GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformTopOrthogonalContractionFactor ^ k *
         ‖y‖ := by
+  letI : NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        (halfExtent n) N hN (beta n) (hbeta n)) :=
+    Submodule.normedSpace
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        (halfExtent n) N hN (beta n) (hbeta n))
   let E :=
     periodicHypercubicEvenSpecialUnitaryTopOrthogonalScaleCommonBoundaryEquiv
       halfExtent N hN beta hbeta n
