@@ -157,7 +157,7 @@ theorem infiniteProductProbabilityCoordinateL2Pullback_inner_eq_mul_integrals
       filter_upwards [hPullF, hPullG] with ω hfi hgj
       rw [hfi, hgj]
       simp [real_inner_eq_re_inner (𝕜 := ℝ), RCLike.inner_apply,
-        RCLike.re_to_real]
+        RCLike.re_to_real, mul_comm]
     _ =
         (∫ ω, F (ω i) ∂Measure.infinitePi μ) *
           ∫ ω, G (ω j) ∂Measure.infinitePi μ := hfactor
