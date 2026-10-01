@@ -134,6 +134,24 @@ theorem completedBoundaryTransfer_two_oneSidedExcitationBoundary_of_pairWeakAtFo
     rw [periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2LinearIsometry_apply]
     unfold periodicHypercubicEvenSpecialUnitaryPhysicalModeOneStepLp
     unfold periodicHypercubicEvenSpecialUnitaryPhysicalExcitationL2
+    let S :=
+      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+        (halfExtent n) N hN (beta n) (hbeta n)
+    let hS :=
+      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+        (halfExtent n) N hN (beta n) (hbeta n)
+    have hRestr :
+        (((realHilbertTopEigenspaceOrthogonalRestriction S hS x :
+            (realHilbertTopEigenspace S)ᗮ) :
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
+            (halfExtent n) N)) =
+          S
+            ((x :
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+                (halfExtent n) N hN (beta n) (hbeta n)) :
+              periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
+                (halfExtent n) N) := by
+      exact realHilbertTopEigenspaceOrthogonalRestriction_coe S hS x
     apply congrArg
       (fun z :
         periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
@@ -141,16 +159,13 @@ theorem completedBoundaryTransfer_two_oneSidedExcitationBoundary_of_pairWeakAtFo
         (z : Lp ℝ 2
           (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
             (halfExtent n) N)))
-    symm
-    simpa [f,
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator]
-      using
-        (realHilbertTopEigenspaceOrthogonalRestriction_coe
-          (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-            (halfExtent n) N hN (beta n) (hbeta n))
-          (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
-            (halfExtent n) N hN (beta n) (hbeta n))
-          x)
+    change
+      S f =
+        ((realHilbertTopEigenspaceOrthogonalRestriction S hS x :
+            (realHilbertTopEigenspace S)ᗮ) :
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
+            (halfExtent n) N)
+    simpa only [f] using hRestr.symm
   have hTopStep :
       periodicHypercubicEvenSpecialUnitaryPhysicalModeOneStepLp
           (halfExtent n) N hN (beta n) (hbeta n) omega =
