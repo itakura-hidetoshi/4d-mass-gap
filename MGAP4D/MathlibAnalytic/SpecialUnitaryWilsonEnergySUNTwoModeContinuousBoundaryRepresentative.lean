@@ -206,7 +206,7 @@ theorem specialUnitaryWilsonContinuousTwoMode_conjInvariant
   specialUnitaryWilsonContinuousTwoMode_mem_classFunction hN2 k h g
 
 /-- Boundary-Haar L2 realization of the k-th arbitrary-rank Wilson two-mode
-class function on the canonical primary spatial plaquette. -/
+conjugation-invariant mode on the canonical primary spatial plaquette. -/
 noncomputable def periodicHypercubicEvenPrimarySpatialPlaquetteWilsonTwoModeBoundaryHaarL2
     (H : ℕ)
     {N : ℕ}
@@ -217,7 +217,7 @@ noncomputable def periodicHypercubicEvenPrimarySpatialPlaquetteWilsonTwoModeBoun
     (specialUnitaryWilsonHaarTwoMode hN2 k)
 
 /-- Pointwise boundary representative obtained by evaluating the continuous
-class function on the canonical cyclic primary-plaquette holonomy. -/
+conjugation-invariant mode on the canonical cyclic primary-plaquette holonomy. -/
 noncomputable def periodicHypercubicEvenPrimarySpatialPlaquetteWilsonTwoModeBoundaryObservable
     (H : ℕ)
     {N : ℕ}
