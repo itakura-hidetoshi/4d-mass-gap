@@ -103,7 +103,7 @@ theorem primaryPlaquetteGramSchmidtContinuumL2Mode_inner_eq_zero
           (R.primarySpatialPlaquetteWilsonEnergyGramSchmidtProjectiveL2Mode n i))
         (L.finiteMarginalL2Pullback (R.marginalIndex n)
           (R.primarySpatialPlaquetteWilsonEnergyGramSchmidtProjectiveL2Mode n j)) := by
-      rw [hi, hj]
+      rw [← hi, ← hj]
     _ =
       inner ℝ
         (R.primarySpatialPlaquetteWilsonEnergyGramSchmidtProjectiveL2Mode n i)
@@ -139,7 +139,7 @@ theorem exists_primaryPlaquetteGramSchmidtCenteredContinuumL2Mode_ne_zero
       S D halfExtent beta hbeta Q F R L hInvariant)
     (U : PhysicalYangMillsEvenPeriodicWilsonOSPositiveHalfVacuumUnitCompatibility
       Q hInvariant) :
-    ∃ k : ℕ, k = 0 ∨ k = 1 ∧
+    ∃ k : ℕ, (k = 0 ∨ k = 1) ∧
       C.primaryPlaquetteGramSchmidtCenteredContinuumL2Mode k ≠ 0 := by
   let vac : Lp ℝ 2 L.continuumMeasure :=
     Lp.const 2 L.continuumMeasure (1 : ℝ)
