@@ -13,26 +13,27 @@ open scoped InnerProductSpace ENNReal
 
 noncomputable section
 
-local instance (H : ℕ) : NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+local instance commonProductVacuumOrthogonalExcitationPhysicalCarrierSideLengthNeZero (H : ℕ) :
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
   simp [PeriodicHypercubicEvenSideLength]⟩
 
-local instance (N : ℕ) :
+local instance commonProductVacuumOrthogonalExcitationPhysicalCarrierTopologicalGroup (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 
-local instance (N : ℕ) :
+local instance commonProductVacuumOrthogonalExcitationPhysicalCarrierCompactSpace (N : ℕ) :
     CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
-local instance (N : ℕ) :
+local instance commonProductVacuumOrthogonalExcitationPhysicalCarrierSecondCountable (N : ℕ) :
     SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupSecondCountableTopology N
 
-local instance (N : ℕ) :
+local instance commonProductVacuumOrthogonalExcitationPhysicalCarrierMeasurableSpace (N : ℕ) :
     MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
 
-local instance (N : ℕ) :
+local instance commonProductVacuumOrthogonalExcitationPhysicalCarrierBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
