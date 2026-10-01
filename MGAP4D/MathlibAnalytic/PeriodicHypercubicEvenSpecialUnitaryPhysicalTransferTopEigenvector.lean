@@ -83,27 +83,27 @@ theorem realHilbertPositiveCompact_exists_unit_topEigenvector
     rw [map_smul, hv_apply]
     simp [smul_smul, mul_comm]
 
-local instance physicalTransferTopEigenvectorTopologicalGroup (N : ℕ) :
+local instance (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup N
 
-local instance physicalTransferTopEigenvectorCompactSpace (N : ℕ) :
+local instance (N : ℕ) :
     CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupCompactSpace N
 
-local instance physicalTransferTopEigenvectorSecondCountable (N : ℕ) :
+local instance (N : ℕ) :
     SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupSecondCountableTopology N
 
-local instance physicalTransferTopEigenvectorMeasurableSpace (N : ℕ) :
+local instance (N : ℕ) :
     MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupMeasurableSpace N
 
-local instance physicalTransferTopEigenvectorBorelSpace (N : ℕ) :
+local instance (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-local instance physicalTransferTopEigenvectorSpatialLinkFintype (H : ℕ) :
+local instance (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
