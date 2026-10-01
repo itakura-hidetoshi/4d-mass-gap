@@ -41,22 +41,6 @@ open scoped InnerProductSpace
 
 noncomputable section
 
-/-- Expose the inherited real normed-space structure on the named full
-top-eigenspace orthogonal submodule.  The structure is definitionally the
-standard submodule instance; naming it locally prevents dependent typeclass
-search from unfolding the full physical transfer construction. -/
-@[reducible] local instance uniformTopOrthogonalPowerDecayPhysicalOrthogonalNormedSpace
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    NormedSpace ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        H N hN beta hbeta) :=
-  Submodule.normedSpace
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-      H N hN beta hbeta)
-
 namespace GroundStateSourceFixedPairEnergy
 
 /-- Explicit common contraction factor furnished by the #4982 uniform gap. -/
@@ -192,14 +176,22 @@ theorem
         (halfExtent n) N hN (beta n) (hbeta n)) ^ k) x‖ ≤
       GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformTopOrthogonalContractionFactor ^ k *
         ‖x‖ := by
-  letI : NormedSpace ℝ
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-        (halfExtent n) N hN (beta n) (hbeta n)) :=
-    uniformTopOrthogonalPowerDecayPhysicalOrthogonalNormedSpace
+  let S :=
+    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
       (halfExtent n) N hN (beta n) (hbeta n)
+  let hS : (S :
+      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
+          (halfExtent n) N →ₗ[ℝ]
+        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
+          (halfExtent n) N).IsSymmetric := by
+    simpa [S] using
+      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+        (halfExtent n) N hN (beta n) (hbeta n)
   let R :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       (halfExtent n) N hN (beta n) (hbeta n)
+  have hApply :=
+    realHilbertTopEigenspaceOrthogonalRestriction_pow_apply_norm_le S hS k x
   have hOp :
       ‖R ^ k‖ ≤
         GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformTopOrthogonalContractionFactor ^ k := by
@@ -207,8 +199,11 @@ theorem
       periodicHypercubicEvenSpecialUnitary_uniformTopOrthogonalTransferOperator_pow_norm_le
         halfExtent N hN beta hbeta s hs hcut n k hk
   calc
-    ‖(R ^ k) x‖ ≤ ‖R ^ k‖ * ‖x‖ :=
-      ContinuousLinearMap.le_opNorm _ _
+    ‖(R ^ k) x‖ ≤ ‖R ^ k‖ * ‖x‖ := by
+      change
+        ‖((realHilbertTopEigenspaceOrthogonalRestriction S hS) ^ k) x‖ ≤
+          ‖(realHilbertTopEigenspaceOrthogonalRestriction S hS) ^ k‖ * ‖x‖
+      exact hApply
     _ ≤
         GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformTopOrthogonalContractionFactor ^ k *
           ‖x‖ :=
