@@ -41,6 +41,22 @@ open scoped InnerProductSpace
 
 noncomputable section
 
+/-- Expose the inherited real normed-space structure on the named full
+top-eigenspace orthogonal submodule.  The structure is definitionally the
+standard submodule instance; naming it locally prevents dependent typeclass
+search from unfolding the full physical transfer construction. -/
+@[reducible] local instance uniformTopOrthogonalPowerDecayPhysicalOrthogonalNormedSpace
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    NormedSpace ℝ
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta) :=
+  Submodule.normedSpace
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta)
+
 namespace GroundStateSourceFixedPairEnergy
 
 /-- Explicit common contraction factor furnished by the #4982 uniform gap. -/
