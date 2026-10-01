@@ -59,6 +59,30 @@ variable
     {beta : ℕ → ℝ}
     {hbeta : ∀ n, 0 ≤ beta n}
 
+/-- Weak pair-Haar matrix-coefficient compatibility for one selected physical
+top-orthogonal excitation and the normalized top companion. -/
+def OneSidedExcitationPairWeakAtFor
+    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
+      S D halfExtent N hN beta hbeta)
+    (hInvariant : ∀ n,
+      D.WeakStarReflectionInvariant
+        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
+    (C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
+      S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant)
+    (n : ℕ)
+    (x :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        (halfExtent n) N hN (beta n) (hbeta n)) : Prop :=
+  Q.CompletedBoundaryTransferOneSlabPairWeakAtFor
+    hInvariant C n
+    ((x :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        (halfExtent n) N hN (beta n) (hbeta n)) :
+      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
+        (halfExtent n) N)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
+      (halfExtent n) N hN (beta n) (hbeta n))
+
 /-- Pair-coordinate one-slab intertwining, restricted to a genuine physical
 top-orthogonal excitation and the normalized top companion, gives exact
 intertwining on the one-sided shared-boundary excitation image. -/
@@ -74,16 +98,7 @@ theorem completedBoundaryTransfer_two_oneSidedExcitationBoundary_of_pairWeakAtFo
     (x :
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
         (halfExtent n) N hN (beta n) (hbeta n))
-    (hPairWeak :
-      Q.CompletedBoundaryTransferOneSlabPairWeakAtFor
-        hInvariant C n
-        ((x :
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-            (halfExtent n) N hN (beta n) (hbeta n)) :
-          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
-            (halfExtent n) N)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
-          (halfExtent n) N hN (beta n) (hbeta n))) :
+    (hPairWeak : Q.OneSidedExcitationPairWeakAtFor hInvariant C n x) :
     Q.completedBoundaryTransfer hInvariant C n 2
         (periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundaryLinearIsometry
           (halfExtent n) N hN (beta n) (hbeta n) x) =
@@ -105,7 +120,7 @@ theorem completedBoundaryTransfer_two_oneSidedExcitationBoundary_of_pairWeakAtFo
   have hWeak :
       Q.CompletedBoundaryTransferOneSlabPairWeakAtFor
         hInvariant C n f omega := by
-    simpa [f, omega] using hPairWeak
+    simpa [OneSidedExcitationPairWeakAtFor, f, omega] using hPairWeak
   have h :=
     Q.completedBoundaryTransfer_two_oneSidedBoundary_of_oneSlabPairWeakAtFor
       hInvariant C n f omega hWeak
@@ -156,16 +171,7 @@ theorem finiteOperator_one_norm_le_uniform_q0_of_oneSidedExcitationBoundary
     (x :
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
         (halfExtent n) N hN (beta n) (hbeta n))
-    (hPairWeak :
-      Q.CompletedBoundaryTransferOneSlabPairWeakAtFor
-        hInvariant C n
-        ((x :
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-            (halfExtent n) N hN (beta n) (hbeta n)) :
-          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
-            (halfExtent n) N)
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
-          (halfExtent n) N hN (beta n) (hbeta n)))
+    (hPairWeak : Q.OneSidedExcitationPairWeakAtFor hInvariant C n x)
     (hBoundary :
       Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n psi =
         periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundaryLinearIsometry
@@ -290,15 +296,7 @@ structure PhysicalYangMillsSUNTwoModeUniformQ0Compatibility
         (halfExtent n) N hN (beta n) (hbeta n)
   pairWeakAtFor :
     ∀ (k : Fin 2) (n : ℕ),
-      Q.CompletedBoundaryTransferOneSlabPairWeakAtFor
-        hInvariant C n
-        (((excitation k n :
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-            (halfExtent n) N hN (beta n) (hbeta n)) :
-          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
-            (halfExtent n) N))
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
-          (halfExtent n) N hN (beta n) (hbeta n))
+      Q.OneSidedExcitationPairWeakAtFor hInvariant C n (excitation k n)
   centeredBoundaryMoment :
     ∀ (k : Fin 2) (n : ℕ),
       Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n
