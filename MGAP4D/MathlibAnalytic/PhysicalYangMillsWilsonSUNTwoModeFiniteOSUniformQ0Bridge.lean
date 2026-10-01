@@ -1,6 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSUNPrimaryPlaquetteTwoModePointwiseCoherentReadout
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundaryScaleUniformDecay
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2CompletedBoundaryTransferOneSlabIntertwining
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2CompletedBoundaryTransferOneSlabMatrixCoefficient
 import Mathlib.Tactic
 
 /-!
@@ -242,8 +242,9 @@ noncomputable def
 
 /-- Exact remaining H1-D compatibility for the #5003 concrete SU(N) states:
 each centered boundary moment is represented by a physical top-orthogonal
-one-sided excitation, while the completed boundary transfer obeys the already
-isolated pair-coordinate one-slab intertwining. -/
+one-sided excitation, while the completed boundary transfer obeys the weak pair-Haar matrix-coefficient
+one-slab intertwining. Existing Hilbert separation theorem-generates the strong
+pair-coordinate identity. -/
 structure PhysicalYangMillsSUNTwoModeUniformQ0Compatibility
     (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
     (D : PhysicalYangMillsGaugeInvariantOSReflectionData S)
@@ -263,9 +264,9 @@ structure PhysicalYangMillsSUNTwoModeUniformQ0Compatibility
         S D halfExtent N hN hN2 beta hbeta Q F R hInvariant)
     (C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
       S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant) where
-  pairIntertwining :
+  pairWeakIntertwining :
     ∀ n,
-      Q.CompletedBoundaryTransferOneSlabPairIntertwiningAt hInvariant C n
+      Q.CompletedBoundaryTransferOneSlabPairWeakIntertwiningAt hInvariant C n
   excitation :
     (k : Fin 2) → (n : ℕ) →
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
@@ -321,7 +322,9 @@ theorem centeredFiniteOSState_one_norm_le_uniform_q0
         ‖physicalYangMillsSUNTwoModeCenteredFiniteOSState P k n‖ := by
   exact
     Q.finiteOperator_one_norm_le_uniform_q0_of_oneSidedExcitationBoundary
-      hInvariant C s hs hcut n (A.pairIntertwining n)
+      hInvariant C s hs hcut n
+      (Q.completedBoundaryTransferOneSlabPairIntertwiningAt_of_weak
+        hInvariant C n (A.pairWeakIntertwining n))
       (physicalYangMillsSUNTwoModeCenteredFiniteOSState P k n)
       (A.excitation k n)
       (A.centeredBoundaryMoment k n)
