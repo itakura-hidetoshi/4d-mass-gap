@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTwoSidedTwelveSpatialRelativeFrame
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateTwelveSpatialPhysicalOrthogonalKernel
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopEigenspaceContraction
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateTwelveSpatialPoincareSixSpatialGap
 import Mathlib.Tactic
 
@@ -129,6 +129,105 @@ local notation "Omega" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
     H N hN beta hbeta
 
+local instance twoSidedTwelvePhysicalGapVacuumProbability :
+    IsProbabilityMeasure
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
+        H N hN beta hbeta) :=
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure_isProbabilityMeasure
+    H N hN beta hbeta
+
+local instance twoSidedTwelvePhysicalGapJointProbability :
+    IsProbabilityMeasure
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+        H N hN beta hbeta) :=
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_isProbabilityMeasure
+    H N hN beta hbeta
+
+/-- Local dependency-light form of the exact ground-state transform identity:
+the nonnegative physical top vector is sent to constant one in the
+vacuum-weighted boundary L2 carrier. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuum_nonnegativeTop_eq_const_one_for_twelveFrame :
+    U ((Omega : G) : HaarL2) =
+      Lp.const 2
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
+          H N hN beta hbeta) (1 : ℝ) := by
+  let mu := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
+  let nu :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
+      H N hN beta hbeta
+  let omega : HaarL2 := (Omega : G)
+  have hnu_mu : nu ≪ mu := by
+    simpa [nu, mu] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure_absolutelyContinuous_Haar
+        H N hN beta hbeta
+  have hpos :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector_ae_pos
+      H N hN beta hbeta
+  have hquot_mu :
+      (fun A => omega A / omega A) =ᵐ[mu] (fun _ => (1 : ℝ)) :=
+    hpos.mono fun A hA => div_self (ne_of_gt hA)
+  have hquot_nu :
+      (fun A => omega A / omega A) =ᵐ[nu] (fun _ => (1 : ℝ)) :=
+    hnu_mu.ae_eq hquot_mu
+  have hU :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2_coeFn
+      H N hN beta hbeta omega
+  have hUone :
+      U omega =ᵐ[nu] (fun _ => (1 : ℝ)) := by
+    exact hU.trans (by
+      simpa [omega,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumFunction,
+        mu, nu] using hquot_nu)
+  have hone :=
+    Lp.coeFn_const (μ := nu) (p := 2) (c := (1 : ℝ))
+  apply Lp.ext
+  exact hUone.trans hone.symm
+
+/-- After the genuine right-boundary pullback, the transformed nonnegative top
+vector is exactly intrinsic joint constant one.  This proof is repeated here
+rather than importing the qualitative-kernel module, avoiding its independent
+local-instance import surface. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundary_nonnegativeTop_eq_constantL2_one_for_twelveFrame :
+    R (U ((Omega : G) : HaarL2)) =
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2
+        H N hN beta hbeta 1 := by
+  let nu :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
+      H N hN beta hbeta
+  let pi :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+      H N hN beta hbeta
+  let oneV : V := Lp.const 2 nu (1 : ℝ)
+  have hUone :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuum_nonnegativeTop_eq_const_one_for_twelveFrame
+      H N hN beta hbeta
+  have hsnd :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_snd_measurePreserving
+      H N hN beta hbeta
+  have hR :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryL2Isometry
+          H N hN beta hbeta oneV =ᵐ[pi]
+        fun z => oneV z.2 := by
+    simpa [Function.comp_def] using
+      (MeasureTheory.Lp.coeFn_compMeasurePreserving oneV hsnd)
+  have honeV : (fun z => oneV z.2) =ᵐ[pi] (fun _ => (1 : ℝ)) := by
+    have hbase := Lp.coeFn_const (μ := nu) (p := 2) (c := (1 : ℝ))
+    simpa [Function.comp_def, oneV] using
+      hbase.comp_tendsto hsnd.quasiMeasurePreserving.tendsto_ae
+  have honeJ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2_coeFn
+      H N hN beta hbeta 1
+  rw [hUone]
+  change
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundaryL2Isometry
+        H N hN beta hbeta oneV =
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantL2
+        H N hN beta hbeta 1
+  apply Lp.ext
+  exact hR.trans (honeV.trans honeJ.symm)
+
 /-- The distinguished nonnegative physical top eigenvector belongs to the full
 normalized-transfer top eigenspace.  This does not assert simplicity. -/
 theorem
@@ -184,7 +283,7 @@ theorem
       _ = inner ℝ (Omega : G) (x : G) := rfl
       _ = 0 := hOmegaX
   have hTopConst :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundary_nonnegativeTop_eq_constantL2_one
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightBoundary_nonnegativeTop_eq_constantL2_one_for_twelveFrame
       H N hN beta hbeta
   have hLift' :
       inner ℝ
