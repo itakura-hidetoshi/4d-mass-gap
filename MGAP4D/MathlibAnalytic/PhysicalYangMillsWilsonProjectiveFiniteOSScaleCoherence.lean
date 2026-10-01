@@ -157,13 +157,13 @@ structure PhysicalYangMillsEvenPeriodicWilsonOSProjectiveCoherentFiniteSequence
     {hbeta : ∀ n, 0 ≤ beta n}
     {Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
       S D halfExtent N hN beta hbeta}
-    {hInvariant : ∀ n,
-      D.WeakStarReflectionInvariant
-        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)}
     {F : EuclideanYangMillsProjectiveCylinderFamily}
     (R : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMarginalProjectiveReadout
       Q F)
-    (L : EuclideanYangMillsProjectiveLimitMeasure F) where
+    (L : EuclideanYangMillsProjectiveLimitMeasure F)
+    (hInvariant : ∀ n,
+      D.WeakStarReflectionInvariant
+        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)) where
   state :
     (n : ℕ) →
       PhysicalYangMillsEvenPeriodicWilsonOSApproximatingHilbert
@@ -201,7 +201,7 @@ variable
 L2 carrier. -/
 noncomputable def continuumVector
     (C : PhysicalYangMillsEvenPeriodicWilsonOSProjectiveCoherentFiniteSequence
-      R L)
+      R L hInvariant)
     (n : ℕ) :
     Lp ℝ 2 L.continuumMeasure :=
   R.projectiveFiniteOSEmbed L hInvariant n (C.state n)
@@ -209,7 +209,7 @@ noncomputable def continuumVector
 /-- Exact finite transition coherence makes adjacent continuum images equal. -/
 theorem continuumVector_succ
     (C : PhysicalYangMillsEvenPeriodicWilsonOSProjectiveCoherentFiniteSequence
-      R L)
+      R L hInvariant)
     (n : ℕ) :
     C.continuumVector n = C.continuumVector (n + 1) := by
   exact
@@ -223,7 +223,7 @@ theorem continuumVector_succ
 as scale zero. -/
 theorem continuumVector_eq_zeroIndex
     (C : PhysicalYangMillsEvenPeriodicWilsonOSProjectiveCoherentFiniteSequence
-      R L)
+      R L hInvariant)
     (n : ℕ) :
     C.continuumVector n = C.continuumVector 0 := by
   induction n with
@@ -235,7 +235,7 @@ theorem continuumVector_eq_zeroIndex
 continuum image sequence is constant. -/
 theorem continuumVector_tendsto
     (C : PhysicalYangMillsEvenPeriodicWilsonOSProjectiveCoherentFiniteSequence
-      R L) :
+      R L hInvariant) :
     Tendsto C.continuumVector atTop (𝓝 (C.continuumVector 0)) := by
   have hfun :
       C.continuumVector = fun _ : ℕ => C.continuumVector 0 := by
@@ -248,7 +248,7 @@ theorem continuumVector_tendsto
 every scale. -/
 @[simp] theorem continuumVector_norm
     (C : PhysicalYangMillsEvenPeriodicWilsonOSProjectiveCoherentFiniteSequence
-      R L)
+      R L hInvariant)
     (n : ℕ) :
     ‖C.continuumVector n‖ = ‖C.state n‖ := by
   exact R.projectiveFiniteOSEmbed_norm L hInvariant n (C.state n)
@@ -257,7 +257,7 @@ every scale. -/
 continuum strong limit. -/
 theorem continuumVector_zero_ne_zero
     (C : PhysicalYangMillsEvenPeriodicWilsonOSProjectiveCoherentFiniteSequence
-      R L)
+      R L hInvariant)
     (h0 : C.state 0 ≠ 0) :
     C.continuumVector 0 ≠ 0 := by
   intro hzero
@@ -269,7 +269,7 @@ theorem continuumVector_zero_ne_zero
 nonzero strong limit whenever the initial finite OS state is nonzero. -/
 theorem exists_nonzero_projective_strongLimit
     (C : PhysicalYangMillsEvenPeriodicWilsonOSProjectiveCoherentFiniteSequence
-      R L)
+      R L hInvariant)
     (h0 : C.state 0 ≠ 0) :
     ∃ y : Lp ℝ 2 L.continuumMeasure,
       y ≠ 0 ∧ Tendsto C.continuumVector atTop (𝓝 y) :=
