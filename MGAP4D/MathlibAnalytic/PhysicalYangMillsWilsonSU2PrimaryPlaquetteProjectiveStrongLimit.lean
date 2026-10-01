@@ -107,7 +107,7 @@ theorem projectiveFiniteOSEmbed_finiteOSPhysicalState_eq_continuumMode
 
 /-- The named continuum Gram--Schmidt cylinder mode has unit norm. -/
 @[simp] theorem primaryPlaquetteGramSchmidtContinuumL2Mode_norm
-    (C : PhysicalYangMillsEvenPeriodicWilsonOSSU2PrimaryPlaquetteGramSchmidtContinuumCoherentReadoutData
+    (_C : PhysicalYangMillsEvenPeriodicWilsonOSSU2PrimaryPlaquetteGramSchmidtContinuumCoherentReadoutData
       S D halfExtent beta hbeta Q F R L hInvariant)
     (k : ℕ) :
     ‖R.primarySpatialPlaquetteWilsonEnergyGramSchmidtContinuumL2Mode L k‖ = 1 := by
