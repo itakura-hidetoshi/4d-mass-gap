@@ -18,7 +18,7 @@ This file removes the arbitrary excitation choice and the abstract
 
 A range proof canonically chooses the represented top-orthogonal excitation.
 The generic raw-kernel equivalence then generates the selected weak pair
-intertwining.  Consequently the full
+intertwining. Consequently the full
 `PhysicalYangMillsSUNTwoModeUniformQ0Compatibility` record is theorem-generated
 from exactly the two concrete H1-D residual statements above.
 
@@ -54,17 +54,29 @@ local instance sunTwoModeRangeRawKernelBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-namespace PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
+section SUNTwoModeRangeRawKernel
 
 variable
     {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
     {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
     {halfExtent : ℕ → ℕ}
-    {N : ℕ}
-    {hN : 0 < N}
+    {N : ℕ} {hN : 0 < N} {hN2 : 2 ≤ N}
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    {beta : ℕ → ℝ}
-    {hbeta : ∀ n, 0 ≤ beta n}
+    {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
+    {Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
+      S D halfExtent N hN beta hbeta}
+    {F : EuclideanYangMillsProjectiveCylinderFamily}
+    {R : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMarginalProjectiveReadout Q F}
+    {hInvariant : ∀ n,
+      D.WeakStarReflectionInvariant
+        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)}
+    {P :
+      PhysicalYangMillsEvenPeriodicWilsonOSSUNPrimaryPlaquetteTwoModePointwiseCoherentReadoutData
+        S D halfExtent N hN hN2 beta hbeta Q F R hInvariant}
+    {C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
+      S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant}
+
+namespace PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
 
 /-- For a selected physical top-orthogonal excitation, the weak pair
 compatibility used by #5005 is exactly the literal Wilson raw-kernel identity.
@@ -72,13 +84,6 @@ compatibility used by #5005 is exactly the literal Wilson raw-kernel identity.
 Thus `pairWeakAtFor` is not an independent model assumption once the raw
 one-slab coefficient identity has been proved. -/
 theorem oneSidedExcitationPairWeakAtFor_iff_rawKernel
-    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
-      S D halfExtent N hN beta hbeta)
-    (hInvariant : ∀ n,
-      D.WeakStarReflectionInvariant
-        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
-    (C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
-      S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant)
     (n : ℕ)
     (x :
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
@@ -101,26 +106,10 @@ end PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
 /-- Exact H1-D range statement for the concrete #5003 centered SU(N) states.
 
 This says only that each actual centered boundary moment is represented by the
-one-sided physical top-orthogonal boundary isometry.  It does not choose an
+one-sided physical top-orthogonal boundary isometry. It does not choose an
 excitation and does not identify the OS vacuum line with the full physical top
 eigenspace. -/
-def PhysicalYangMillsSUNTwoModeCenteredBoundaryOneSidedExcitationRange
-    (S : PhysicalFourDimensionalYangMillsSymmetryLimit)
-    (D : PhysicalYangMillsGaugeInvariantOSReflectionData S)
-    (halfExtent : ℕ → ℕ)
-    (N : ℕ) (hN : 0 < N) (hN2 : 2 ≤ N)
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (beta : ℕ → ℝ) (hbeta : ∀ n, 0 ≤ beta n)
-    (Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
-      S D halfExtent N hN beta hbeta)
-    (F : EuclideanYangMillsProjectiveCylinderFamily)
-    (R : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMarginalProjectiveReadout Q F)
-    (hInvariant : ∀ n,
-      D.WeakStarReflectionInvariant
-        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
-    (P :
-      PhysicalYangMillsEvenPeriodicWilsonOSSUNPrimaryPlaquetteTwoModePointwiseCoherentReadoutData
-        S D halfExtent N hN hN2 beta hbeta Q F R hInvariant) : Prop :=
+def PhysicalYangMillsSUNTwoModeCenteredBoundaryOneSidedExcitationRange : Prop :=
   ∀ (k : Fin 2) (n : ℕ),
     Q.physicalHilbertBoundaryMomentLinearIsometry hInvariant n
         (physicalYangMillsSUNTwoModeCenteredFiniteOSState P k n) ∈
@@ -132,25 +121,9 @@ def PhysicalYangMillsSUNTwoModeCenteredBoundaryOneSidedExcitationRange
 The choice is proof-generated from range membership; there is no extra
 excitation field on the input side. -/
 noncomputable def physicalYangMillsSUNTwoModeCenteredBoundaryExcitation
-    {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
-    {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
-    {halfExtent : ℕ → ℕ}
-    {N : ℕ} {hN : 0 < N} {hN2 : 2 ≤ N}
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
-    {Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
-      S D halfExtent N hN beta hbeta}
-    {F : EuclideanYangMillsProjectiveCylinderFamily}
-    {R : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMarginalProjectiveReadout Q F}
-    {hInvariant : ∀ n,
-      D.WeakStarReflectionInvariant
-        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)}
-    {P :
-      PhysicalYangMillsEvenPeriodicWilsonOSSUNPrimaryPlaquetteTwoModePointwiseCoherentReadoutData
-        S D halfExtent N hN hN2 beta hbeta Q F R hInvariant}
     (hRange :
       PhysicalYangMillsSUNTwoModeCenteredBoundaryOneSidedExcitationRange
-        S D halfExtent N hN hN2 beta hbeta Q F R hInvariant P)
+        (P := P))
     (k : Fin 2) (n : ℕ) :
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
       (halfExtent n) N hN (beta n) (hbeta n) :=
@@ -159,25 +132,9 @@ noncomputable def physicalYangMillsSUNTwoModeCenteredBoundaryExcitation
 /-- The canonical excitation recovers the concrete centered boundary moment
 exactly. -/
 theorem physicalYangMillsSUNTwoModeCenteredBoundaryExcitation_image
-    {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
-    {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
-    {halfExtent : ℕ → ℕ}
-    {N : ℕ} {hN : 0 < N} {hN2 : 2 ≤ N}
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
-    {Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
-      S D halfExtent N hN beta hbeta}
-    {F : EuclideanYangMillsProjectiveCylinderFamily}
-    {R : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMarginalProjectiveReadout Q F}
-    {hInvariant : ∀ n,
-      D.WeakStarReflectionInvariant
-        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)}
-    {P :
-      PhysicalYangMillsEvenPeriodicWilsonOSSUNPrimaryPlaquetteTwoModePointwiseCoherentReadoutData
-        S D halfExtent N hN hN2 beta hbeta Q F R hInvariant}
     (hRange :
       PhysicalYangMillsSUNTwoModeCenteredBoundaryOneSidedExcitationRange
-        S D halfExtent N hN hN2 beta hbeta Q F R hInvariant P)
+        (P := P))
     (k : Fin 2) (n : ℕ) :
     periodicHypercubicEvenSpecialUnitaryOneSidedExcitationBoundaryLinearIsometry
         (halfExtent n) N hN (beta n) (hbeta n)
@@ -191,27 +148,9 @@ H1-D residual statements: centered boundary range membership and the literal
 raw Wilson one-slab matrix-coefficient identity for the resulting canonical
 excitation. -/
 noncomputable def physicalYangMillsSUNTwoModeUniformQ0Compatibility_of_range_rawKernel
-    {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
-    {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
-    {halfExtent : ℕ → ℕ}
-    {N : ℕ} {hN : 0 < N} {hN2 : 2 ≤ N}
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
-    {Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
-      S D halfExtent N hN beta hbeta}
-    {F : EuclideanYangMillsProjectiveCylinderFamily}
-    {R : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMarginalProjectiveReadout Q F}
-    {hInvariant : ∀ n,
-      D.WeakStarReflectionInvariant
-        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)}
-    {P :
-      PhysicalYangMillsEvenPeriodicWilsonOSSUNPrimaryPlaquetteTwoModePointwiseCoherentReadoutData
-        S D halfExtent N hN hN2 beta hbeta Q F R hInvariant}
-    {C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
-      S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant}
     (hRange :
       PhysicalYangMillsSUNTwoModeCenteredBoundaryOneSidedExcitationRange
-        S D halfExtent N hN hN2 beta hbeta Q F R hInvariant P)
+        (P := P))
     (hRaw :
       ∀ (k : Fin 2) (n : ℕ),
         Q.CompletedBoundaryTransferOneSlabPhysicalTopRawKernelWeakAtFor
@@ -227,7 +166,7 @@ noncomputable def physicalYangMillsSUNTwoModeUniformQ0Compatibility_of_range_raw
     intro k n
     exact
       (Q.oneSidedExcitationPairWeakAtFor_iff_rawKernel
-        hInvariant C n
+        (C := C) n
         (physicalYangMillsSUNTwoModeCenteredBoundaryExcitation hRange k n)).2
         (hRaw k n)
   centeredBoundaryMoment := by
@@ -239,27 +178,9 @@ noncomputable def physicalYangMillsSUNTwoModeUniformQ0Compatibility_of_range_raw
 /-- Direct q0 consequence with the old compatibility structure completely
 eliminated from the theorem hypotheses. -/
 theorem physicalYangMillsSUNTwoModeCenteredFiniteOSState_one_norm_le_uniform_q0_of_range_rawKernel
-    {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
-    {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
-    {halfExtent : ℕ → ℕ}
-    {N : ℕ} {hN : 0 < N} {hN2 : 2 ≤ N}
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
-    {Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
-      S D halfExtent N hN beta hbeta}
-    {F : EuclideanYangMillsProjectiveCylinderFamily}
-    {R : PhysicalYangMillsEvenPeriodicWilsonOSBoundaryMarginalProjectiveReadout Q F}
-    {hInvariant : ∀ n,
-      D.WeakStarReflectionInvariant
-        (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n)}
-    {P :
-      PhysicalYangMillsEvenPeriodicWilsonOSSUNPrimaryPlaquetteTwoModePointwiseCoherentReadoutData
-        S D halfExtent N hN hN2 beta hbeta Q F R hInvariant}
-    {C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
-      S D halfExtent N hN beta hbeta Q.toWeakStarBridge hInvariant}
     (hRange :
       PhysicalYangMillsSUNTwoModeCenteredBoundaryOneSidedExcitationRange
-        S D halfExtent N hN hN2 beta hbeta Q F R hInvariant P)
+        (P := P))
     (hRaw :
       ∀ (k : Fin 2) (n : ℕ),
         Q.CompletedBoundaryTransferOneSlabPhysicalTopRawKernelWeakAtFor
@@ -284,6 +205,8 @@ theorem physicalYangMillsSUNTwoModeCenteredFiniteOSState_one_norm_le_uniform_q0_
   exact
     PhysicalYangMillsSUNTwoModeUniformQ0Compatibility.centeredFiniteOSState_one_norm_le_uniform_q0
       A s hs hcut k n
+
+end SUNTwoModeRangeRawKernel
 
 end
 
