@@ -95,12 +95,19 @@ theorem
     change lambda⁻¹ • T f = f at hfix
     have hscaled := congrArg (fun z : G => lambda • z) hfix
     simpa [smul_smul, hlambda.ne'] using hscaled
+  have hfSelf : inner ℝ f f = 1 := by
+    rw [real_inner_self_eq_norm_sq, hfNorm]
+    norm_num
   have hfQuad : inner ℝ (T f) f = lambda := by
-    rw [hraw, real_inner_smul_left, real_inner_self_eq_norm_sq, hfNorm]
-    ring
+    calc
+      inner ℝ (T f) f = inner ℝ (lambda • f) f := by rw [hraw]
+      _ = lambda * inner ℝ f f := real_inner_smul_left f f lambda
+      _ = lambda := by rw [hfSelf, mul_one]
   have haNorm : ‖a‖ = 1 := by
-    dsimp [a]
-    rw [periodicHypercubicEvenSpecialUnitaryPhysicalRealL2Abs_norm, hfNorm]
+    have haNormEq : ‖a‖ = ‖f‖ := by
+      simpa [a] using
+        (periodicHypercubicEvenSpecialUnitaryPhysicalRealL2Abs_norm H N f)
+    exact haNormEq.trans hfNorm
   have hdom : inner ℝ (T f) f ≤ inner ℝ (T a) a := by
     dsimp [a]
     exact
@@ -110,7 +117,8 @@ theorem
     calc
       inner ℝ (T a) a ≤ ‖T a‖ * ‖a‖ := real_inner_le_norm _ _
       _ ≤ (‖T‖ * ‖a‖) * ‖a‖ :=
-        mul_le_mul_of_nonneg_right (T.le_opNorm a) (norm_nonneg a)
+        mul_le_mul_of_nonneg_right
+          (ContinuousLinearMap.le_opNorm T a) (norm_nonneg a)
       _ = lambda := by rw [haNorm]; simp [lambda]
   have haQuad : inner ℝ (T a) a = lambda := by
     apply le_antisymm hupper
@@ -158,22 +166,26 @@ theorem
     have hAdd :=
       Lp.coeFn_add (a : Lp ℝ 2 μ) (f : Lp ℝ 2 μ)
     filter_upwards [hAdd, haCoe] with A hAddA hAbs
-    change (a + f : G).1 A =
-      |(f : Lp ℝ 2 μ) A| + (f : Lp ℝ 2 μ) A
-    rw [show (a + f : G).1 A =
-      ((a : Lp ℝ 2 μ) + (f : Lp ℝ 2 μ)) A by rfl]
-    rw [hAddA, hAbs]
+    calc
+      (p : Lp ℝ 2 μ) A =
+          ((a : Lp ℝ 2 μ) + (f : Lp ℝ 2 μ)) A := by rfl
+      _ = ((fun x => (a : Lp ℝ 2 μ) x) +
+          (fun x => (f : Lp ℝ 2 μ) x)) A := hAddA
+      _ = (a : Lp ℝ 2 μ) A + (f : Lp ℝ 2 μ) A := by rfl
+      _ = |(f : Lp ℝ 2 μ) A| + (f : Lp ℝ 2 μ) A := by rw [hAbs]
   have hnCoe :
       (fun A => (n : Lp ℝ 2 μ) A) =ᵐ[μ]
         fun A => |(f : Lp ℝ 2 μ) A| - (f : Lp ℝ 2 μ) A := by
     have hSub :=
       Lp.coeFn_sub (a : Lp ℝ 2 μ) (f : Lp ℝ 2 μ)
     filter_upwards [hSub, haCoe] with A hSubA hAbs
-    change (a - f : G).1 A =
-      |(f : Lp ℝ 2 μ) A| - (f : Lp ℝ 2 μ) A
-    rw [show (a - f : G).1 A =
-      ((a : Lp ℝ 2 μ) - (f : Lp ℝ 2 μ)) A by rfl]
-    rw [hSubA, hAbs]
+    calc
+      (n : Lp ℝ 2 μ) A =
+          ((a : Lp ℝ 2 μ) - (f : Lp ℝ 2 μ)) A := by rfl
+      _ = ((fun x => (a : Lp ℝ 2 μ) x) -
+          (fun x => (f : Lp ℝ 2 μ) x)) A := hSubA
+      _ = (a : Lp ℝ 2 μ) A - (f : Lp ℝ 2 μ) A := by rfl
+      _ = |(f : Lp ℝ 2 μ) A| - (f : Lp ℝ 2 μ) A := by rw [hAbs]
   have hpNonneg : ∀ᵐ A ∂μ, 0 ≤ (p : Lp ℝ 2 μ) A := by
     filter_upwards [hpCoe] with A hEq
     rw [hEq]
