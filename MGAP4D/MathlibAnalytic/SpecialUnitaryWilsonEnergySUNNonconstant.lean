@@ -134,6 +134,7 @@ theorem specialUnitaryTwoNegativeDiagonal_trace
     rw [Finset.card_sdiff_of_subset]
     · rw [Finset.card_sdiff_of_subset]
       · simp
+        omega
       · simp
     · simp [h01]
   simp [specialUnitaryTwoNegativeDiagonalEntry,
