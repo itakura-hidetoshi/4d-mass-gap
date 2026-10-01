@@ -249,9 +249,7 @@ theorem finiteOperator_one_norm_le_uniform_q0_of_oneSidedExcitationBoundary
       J (C.finiteOperator n 1 psi) =
           Q.completedBoundaryTransfer hInvariant C n 2 (J psi) := by
         symm
-        simpa [J] using
-          Q.completedBoundaryTransfer_apply_physicalHilbertBoundaryMoment
-            hInvariant C n (2 : NNReal) psi
+        simp [J, Q.completedBoundaryTransfer_apply_physicalHilbertBoundaryMoment]
       _ =
           Q.completedBoundaryTransfer hInvariant C n 2 (U x) := by
         rw [hBoundary]
