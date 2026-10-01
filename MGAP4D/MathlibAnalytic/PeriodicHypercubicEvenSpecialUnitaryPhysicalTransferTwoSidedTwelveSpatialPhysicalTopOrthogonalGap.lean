@@ -279,7 +279,8 @@ theorem
           (U (((x : G) : HaarL2))) :=
         JR.inner_map_map _ _
       _ = inner ℝ ((Omega : G) : HaarL2) (((x : G) : HaarL2)) :=
-        U.inner_map_map _ _
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2LinearIsometry
+          H N hN beta hbeta).inner_map_map _ _
       _ = inner ℝ (Omega : G) (x : G) := rfl
       _ = 0 := hOmegaX
   have hTopConst :=
@@ -368,7 +369,8 @@ theorem
   have hUnorm :
       ‖U (((x : G) : HaarL2))‖ =
         ‖((x : G) : HaarL2)‖ :=
-    U.norm_map _
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2LinearIsometry
+      H N hN beta hbeta).norm_map _
   rw [hB, sub_zero, hRnorm, hUnorm]
   rfl
 
