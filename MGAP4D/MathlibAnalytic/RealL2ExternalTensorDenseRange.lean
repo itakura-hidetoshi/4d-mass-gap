@@ -147,8 +147,19 @@ theorem realL2ExternalTensorLift_range_topologicalClosure_eq_top
         (indicatorConstLp 2 (hs.prod ht)
           (measure_ne_top (μ.prod ν) (s ×ˢ t)) (1 : ℝ))
         K = 0 at horth
-    rw [L2.inner_indicatorConstLp_one] at horth
-    exact horth
+    calc
+      (∫ z in s ×ˢ t, K z ∂(μ.prod ν)) =
+          inner ℝ
+            (indicatorConstLp 2 (hs.prod ht)
+              (measure_ne_top (μ.prod ν) (s ×ˢ t)) (1 : ℝ))
+            K := by
+        symm
+        exact
+          L2.inner_indicatorConstLp_one
+            (μ := μ.prod ν) (s := s ×ˢ t)
+            (hs.prod ht)
+            (measure_ne_top (μ.prod ν) (s ×ˢ t)) K
+      _ = 0 := horth
   have hAll :
       ∀ u : Set (α × β), MeasurableSet u →
         (∫ z in u, K z ∂(μ.prod ν)) = 0 := by
@@ -179,7 +190,7 @@ theorem realL2ExternalTensorLift_range_topologicalClosure_eq_top
     hKint.ae_eq_zero_of_forall_setIntegral_eq_zero
       (fun u hu _ => hAll u hu)
   apply Lp.ext
-  simpa using hAE
+  exact hAE.trans (Lp.coeFn_zero ℝ 2 (μ.prod ν)).symm
 
 /-- Equivalent dense-range formulation for the universal algebraic external
 tensor lift. -/
