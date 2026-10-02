@@ -368,7 +368,16 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteWilsonTwoModeBoundaryHaarL2
         H hN2 k :
         Lp ℝ 2 μ) z.1 *
         (Lp.const 2 μ (1 : ℝ)) z.2
-  rw [hmodez, honez]
+  have hmodez' :
+      (periodicHypercubicEvenPrimarySpatialSliceWilsonTwoModePhysicalL2
+        H hN2 k :
+        Lp ℝ 2 μ) z.1 =
+      periodicHypercubicEvenPrimarySpatialSliceWilsonTwoModeBoundedObservable
+        H hN2 k z.1 := by
+    simpa [Function.comp_def] using hmodez
+  have honez' : (Lp.const 2 μ (1 : ℝ)) z.2 = 1 := by
+    simpa [Function.comp_def] using honez
+  rw [hmodez', honez']
   rw [
     periodicHypercubicEvenPrimarySpatialPlaquetteWilsonTwoModeBoundaryObservable_pairCoordinates
       H hN2 k z.1 z.2]
