@@ -65,6 +65,18 @@ local instance h1d5PathCoeffPairHaarSFinite (H N : ℕ) :
   unfold periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure
   infer_instance
 
+local instance h1d5PathCoeffBoundaryHaarSFinite (H N : ℕ) :
+    SFinite (periodicHypercubicEvenBoundaryHaarMeasure H N) := by
+  dsimp [periodicHypercubicEvenBoundaryHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.boundaryPiMeasure]
+  infer_instance
+
+local instance h1d5PathCoeffOpenHalfHaarSFinite (H N : ℕ) :
+    SFinite (periodicHypercubicEvenOpenHalfHaarMeasure H N) := by
+  dsimp [periodicHypercubicEvenOpenHalfHaarMeasure,
+    FiniteInvolutiveEdgeOrbitPartition.openHalfPiMeasure]
+  infer_instance
+
 /-- The first component of the canonical boundary-to-pair coordinate map is
 literally the primary fixed spatial slice. -/
 @[simp] theorem
@@ -201,9 +213,53 @@ theorem
   have hRaw :
       Integrable raw
         (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureHaarMeasure H N) := by
-    simpa [raw, mu] using
+    simpa only [raw, mu, mul_assoc] using
       periodicHypercubicEvenBoundaryCompletedPositiveGramFeature_gaussEndpoints_integrable
         H N hN beta hbeta x y
+  have hEndpoint :
+      ∀ z :
+          PeriodicHypercubicEvenPositiveHalfClosureConfiguration H
+            (Matrix.specialUnitaryGroup (Fin N) ℂ),
+        test (e z.1) =
+          ((x : Lp ℝ 2 mu)
+              ((periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+                H N z).1 0) *
+            (y : Lp ℝ 2 mu)
+              ((periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+                H N z).1
+                (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)))) := by
+    intro z
+    have hPrimary :
+        (e z.1).1 =
+          (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+            H N z).1 0 := by
+      funext a
+      dsimp [e]
+      rw [
+        periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_fst_apply,
+        periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_primary_apply
+      ]
+    have hAntipodal :
+        (e z.1).2 =
+          (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+            H N z).1
+            (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)) := by
+      funext a
+      rw [periodicHypercubicEvenPositiveHalfCylinder_finLast_eq_finLast_succ H]
+      dsimp [e]
+      rw [
+        periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_snd_apply,
+        periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_antipodal_apply
+      ]
+    dsimp [test]
+    rw [hPrimary, hAntipodal]
+  have hRawProd :
+      Integrable raw (muB.prod muO) := by
+    simpa only [
+      muB, muO,
+      periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureHaarMeasure,
+      periodicHypercubicEvenPositiveHalfClosurePiMeasure
+    ] using hRaw
   have hProd :
       Integrable
         (fun z :
@@ -213,12 +269,15 @@ theorem
               H N hN beta hbeta z.1 z.2 *
             test (e z.1))
         (muB.prod muO) := by
-    simpa [
-      raw, test, e, mu, muB, muO,
-      periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureHaarMeasure,
-      periodicHypercubicEvenPositiveHalfClosurePiMeasure,
-      periodicHypercubicEvenPositiveHalfCylinder_finLast_eq_finLast_succ H
-    ] using hRaw
+    apply hRawProd.congr
+    filter_upwards with z
+    dsimp [raw]
+    exact
+      congrArg
+        (fun t : ℝ =>
+          periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+              H N hN beta hbeta z.1 z.2 * t)
+        (hEndpoint z).symm
   unfold periodicHypercubicEvenSpecialUnitaryH1D5PairHaarCoefficient
   calc
     (∫ q,
@@ -253,7 +312,6 @@ theorem
       filter_upwards with b
       unfold periodicHypercubicEvenBoundaryVacuumMoment
       rw [← integral_mul_const]
-      rfl
     _ =
         ∫ z :
           PeriodicHypercubicEvenSpecialUnitaryBoundaryConfiguration H N ×
@@ -272,9 +330,13 @@ theorem
           ∂(periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureHaarMeasure H N) := by
       apply integral_congr_ae
       filter_upwards with z
-      dsimp [raw, test, e, mu]
-      rw [periodicHypercubicEvenPositiveHalfCylinder_finLast_eq_finLast_succ H]
-      simp
+      dsimp [raw]
+      exact
+        congrArg
+          (fun t : ℝ =>
+            periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
+                H N hN beta hbeta z.1 z.2 * t)
+          (hEndpoint z)
     _ =
       (Real.sqrt
         (periodicHypercubicSpecialUnitaryWilsonSystem
