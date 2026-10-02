@@ -245,16 +245,23 @@ theorem
             H N z).1
             (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)) := by
       funext a
-      have hLast :
-          (Fin.last (H + 1) : Fin (H + 2)) = (Fin.last H).succ := by
-        apply Fin.ext
-        rfl
-      rw [hLast]
       dsimp [e]
-      rw [
-        periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_snd_apply,
-        periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_antipodal_apply
-      ]
+      rw [periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_snd_apply]
+      calc
+        z.1
+            (periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge H
+              (periodicHypercubicEvenPrimaryAntipodalSpatialSliceLinkEquiv H a)) =
+          (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+              H N z).1 (Fin.last H).succ a := by
+            symm
+            exact
+              periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransfer_antipodal_apply
+                H N z.1 z.2 a
+        _ =
+          (periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
+              H N z).1
+              (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)) a := by
+            rw [periodicHypercubicEvenPositiveHalfCylinder_finLast_eq_finLast_succ H]
     dsimp [test]
     rw [hPrimary, hAntipodal]
   have hRawProd :
