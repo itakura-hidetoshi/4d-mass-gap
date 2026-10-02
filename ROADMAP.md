@@ -1,16 +1,15 @@
 # MGAP4D ROADMAP
 
-## Authority checkpoint — 2026-10-01 JST
+## Authority checkpoint — 2026-10-02 JST
 
 | Item | Value |
 | --- | --- |
 | Repository | itakura-hidetoshi/4d-mass-gap |
 | Unique authoritative theorem-carrier | formal/real-hilbert-uniform-coercive-strong-limit |
-| Latest theorem-bearing snapshot | c46e2fad7d5a5a749e63650b7772c4d4973dc12f |
-| Latest theorem merge | PR #4989 — centered scale-coordinate orthogonality in the independent product carrier |
-| #4989 validated PR head | bee4f20f8007078ddbd6b061f64834513be674e9 |
-| #4989 validation | PR Lean Fast Check 36817103467: completed / success; exact-head receipt success |
-| Artifact | 11141653528; sha256:9e9102467a6fe69ac43ccae7fba34b8203370966e9c3d4ff667027d1247c97a1 |
+| Latest theorem-bearing snapshot | 382f73aa90ab24d7b02285012bf6e5513ad62a41 |
+| Latest theorem merge | PR #5018 — canonical-sign OS vacuum pair independently endpoint-gauge fixed |
+| #5018 validated PR head | 99d2e1c208654ee29f58ca1bc948b4baa9595cdd |
+| #5018 validation | PR Lean Fast Check 36991129671: completed / success; exact-head receipt success |
 | Lean | v4.30.0-rc2 |
 | mathlib | 5450b53e5ddc75d46418fabb605edbf36bd0beb6 |
 
@@ -26,76 +25,86 @@ Authority order:
 4. exact-head CI receipts;
 5. history / conversation memory.
 
-## 0. Current frontier
+README / ROADMAP-only merges are docs-only. They may move a branch pointer but do not replace the theorem-bearing snapshot above.
 
-The finite-volume G route is closed and the H1 carrier audit has now exposed the next genuine obstruction.
+## 0. Current frontier in one page
 
-The theorem-carrier proves, on one positive scale/volume/rank-independent interval:
+The finite-volume gap problem is not the active bottleneck anymore.
+
+The theorem carrier already proves
 
 ~~~text
-kappa_12(s,beta) * ||f - B f||^2 <= E_12(f)
-
-B (R (U x)) = 0
-
 1/2304 <= kappa_12(s,beta)
 
 1/3072 <= finite-volume physical transfer gap
 
 q0 = 3071/3072
 
-||R_n^k x|| <= q0^k ||x||.
+||R_n^m x|| <= q0^m ||x||.
 ~~~
 
-#4984 places all finite top-orthogonal sectors in one interacting independent-product boundary L² carrier. #4985 proves that any explicitly compatible strong limit in a common carrier preserves q0^k and the one-step gap floor.
+The uniform q0^m estimate is available on the full completed physical pair non-top sector.
 
-#4988/#4989 add a new exact warning:
+The current H1-D problem is now a two-seam compatibility problem for the canonical-sign finite OS vacuum pair.
 
-~~~text
-pairwise orthogonal + strong convergence => zero limit
-
-and, for independent product coordinates,
+### CLOSED through #5018
 
 ~~~text
-<I_i f, I_j g>
-  = mean(f) * mean(g),
-i != j.
+finite-volume q0^m
+  -> full physical pair non-top q0^m                         #5006
+
+explicit SU(N) two-mode centered boundary vector             #5008
+  -> pair carrier + top-top orthogonality residuals          #5009
+  -> top eigenspace is one-dimensional                       #5012
+  -> pair top-top sector is one selected line                #5013/#5016
+  -> uncentered plaquette pair is physical                   #5015
+  -> only finite OS vacuum alignment remains                 #5015
+  -> alignment reduced to carrier + one-vector transfer      #5016
+  -> canonical-sign OS vacuum = concrete boundary vacuum     #5017
+  -> vacuum pair is independently endpoint-gauge fixed       #5018
 ~~~
 
-Hence a centered sequence moved through fresh independent coordinates can only have strong limit zero.
-
-**Exact claim boundary:** #4989 is generic. It does not yet prove that the concrete #4984 Wilson top-orthogonal image is centered relative to the interacting marginal constant-one vector. Establishing that Wilson-specific centering relation is now inseparable from the one-slab-top versus OS-vacuum compatibility problem.
-
-The active continuation is therefore:
+### NEXT
 
 ~~~text
-H1-C1 / H1-D:
-  prove the Wilson-specific marginal centering / finite OS vacuum compatibility
+H1-D4:
+  independent endpoint gauge-fixed pair
+    -> completed physical pair carrier
 
-THEN:
-  if centered, use #4988/#4989 to rule out the independent-coordinate
-  carrier as a nonzero strong-limit presentation
+H1-D5:
+  normalized physical pair transfer
+    = completed OS boundary transfer
+  on the single canonical-sign OS vacuum pair
 
-H1-C2:
-  construct a genuinely scale-coherent finite-to-continuum excitation carrier
+H1-D6:
+  combine #5016 + H1-D4 + H1-D5
+    -> vacuum pair lies on selected pair-top line
+    -> explicit centered SU(N) two-mode q0^m decay
+       with no arbitrary compatibility package
+~~~
 
+### THEN
+
+~~~text
 H1-C3:
-  prove initial and evolved strong convergence there and transport q0^k
+  projective initial/evolved coherence
+  + q0 transport to the nonzero projective continuum excitation
 
 H2:
-  replace the fixed discrete q0 by spacing-scaled dynamics
+  spacing-scaled rate / generator / Dirichlet statement
 
 H3:
-  OS semigroup / Hamiltonian reconstruction on the correct excitation sector
+  OS semigroup + Hamiltonian on the correct vacuum-orthogonal sector
 
 H4:
-  spectral / Wightman mass gap.
+  spectral / Wightman mass gap
 ~~~
 
-Do not reopen the already closed leakage, Schur, renewal, twelve-color, physical-centering or uniform finite-volume gap layers unless a genuine inconsistency is found.
+Do not reopen the closed leakage, Schur, renewal, twelve-spatial, finite-gap, top-simplicity or uncentered-pair-physicality layers unless a concrete inconsistency is found.
 
 ## 1. Closed finite-volume foundation
 
-### 1.1 #4935--#4971 — leakage through intrinsic constant-line relative Poincaré
+### 1.1 #4935--#4971 — leakage through intrinsic constant-line Poincare
 
 Closed chain:
 
@@ -108,31 +117,28 @@ Closed chain:
 - strict full-sweep loss contraction;
 - intrinsic constant-line fixed space;
 - strong convergence to the constant projection;
-- all-L² tagged relative Poincaré.
+- all-L2 tagged relative Poincare.
 
 Endpoint:
 
 ~~~text
 (1 - 2 Q) * ||f - B f||^2
   <= sum_e ||f - P_e f||^2,
+
 0 < 1 - 2 Q.
 ~~~
 
 Status: CLOSED dependency.
 
-### 1.2 #4976--#4978 — complete-order robustness
+### 1.2 #4976--#4980 — complete-order and genuine twelve-spatial frame
 
-#4976 removes dependence on the canonical list by proving the strict loss contraction for any complete duplicate-free tagged-link order.
+#4976 removes dependence on one canonical link order.
 
-#4977 constructs the genuine grouped right-six plus left-six order.
+#4977 constructs the complete right-six plus left-six grouped order.
 
 #4978 proves fixed-space identification, constant-projection absorption and complete-order strong convergence.
 
-Status: CLOSED.
-
-### 1.3 #4979--#4980 — endpoint swap and twelve-spatial frame
-
-#4979 transports whole-color displacement control across endpoint swap.
+#4979 transports whole-color displacement across endpoint swap.
 
 #4980 proves
 
@@ -145,237 +151,444 @@ kappa_12(s,beta) * ||f - B f||^2 <= E_12(f),
 0 < kappa_12(s,beta).
 ~~~
 
-No lattice-link, volume or rank factor occurs.
+Status: CLOSED.
 
-Status: G1 CLOSED.
+### 1.3 #4981--#4983 — physical centering, explicit gap floor and q0
 
-### 1.4 #4981 — physical top-orthogonal centering and finite gap
-
-For z = R(Ux), #4981 proves
-
-~~~text
-B z = 0
-
-||z - Bz||^2 = ||x||^2
-~~~
-
-and the receiver yields
-
-~~~text
-3 * kappa_12(s,beta) / 4
-  <= physical top-eigenspace transfer gap.
-~~~
-
-Status: G2/G3 CLOSED.
-
-### 1.5 #4982--#4983 — uniform gap and power decay
+#4981 proves the physical top-orthogonal centering identity required by the finite receiver.
 
 #4982 proves
 
 ~~~text
 1/2304 <= kappa_12(s,beta)
-1/3072 <= physical transfer gap.
+
+1/3072 <= physical top-eigenspace transfer gap.
 ~~~
 
-#4983 sets q0 = 3071/3072 and proves
+#4983 sets
 
 ~~~text
-||R_n|| <= q0
-||R_n^k|| <= q0^k
-||R_n^k x|| <= q0^k ||x||.
+q0 = 3071/3072
 ~~~
 
-Status: G4 + uniform discrete dynamics CLOSED.
+and proves uniform discrete power decay.
 
-## 2. H1-A / H1-B — simultaneous carrier and conditional descent
+Status: CLOSED.
 
-### H1-A #4984 — simultaneous independent-product realization CLOSED
+## 2. H1-A/H1-B carrier audit
 
-For each scale n:
+### 2.1 #4984 — simultaneous independent-product carrier CLOSED
+
+Every finite top-orthogonal sector has an exact isometric realization in one interacting independent-product boundary L2 carrier.
+
+This is useful for simultaneous finite-scale comparison.
+
+It is not a scale-coherent continuum identification.
+
+### 2.2 #4985 — conditional strong-limit preservation CLOSED
+
+If initial and evolved finite vectors converge strongly through compatible embeddings, the q0^m estimate survives the limit.
+
+This remains a valid abstract descent theorem.
+
+### 2.3 #4988/#4989 — independent-coordinate obstruction CLOSED
+
+#4988 proves:
 
 ~~~text
-physical top-orthogonal sector
-  -> shared-boundary Haar L2
-  -> interacting boundary marginal L2
-  -> coordinate n of the infinite product L2.
+pairwise orthogonal + strong convergence => zero limit.
 ~~~
 
-Every arrow is an exact isometry. The finite q0^k estimate survives on each exact image range.
-
-Important: #4984 proves a common ambient presentation, not cross-scale coherence.
-
-### H1-B #4985 — strong-limit preservation CLOSED
-
-For any compatible data:
+#4989 proves for distinct product coordinates:
 
 ~~~text
-I_n x_n -> x
-I_n R_n^k x_n -> y
-
-=> ||y|| <= q0^k ||x||.
+<I_i f, I_j g> = mean(f) * mean(g).
 ~~~
 
-The packaged one-step conclusion is
+Hence centered fresh-coordinate images are pairwise orthogonal and cannot have a nonzero strong limit.
+
+### 2.4 #4992 — exact Wilson applicability obstruction CLOSED
+
+#4992 isolates the exact top-boundary-vacuum compatibility under which the #4984 Wilson images are centered in the interacting marginal carrier.
+
+The theorem does not assume the compatibility; it proves its exact consequence.
+
+Status: CLOSED obstruction theorem, compatibility itself moved into H1-D.
+
+## 3. H1-C scale-coherent projective carrier
+
+### 3.1 #4993 — projective finite OS scale coherence CLOSED
+
+The finite OS Hilbert spaces are embedded into one projective-limit L2 carrier through actual finite boundary marginals.
+
+Exact finite-marginal transition coherence implies exact equality of continuum images across scales.
+
+Therefore a coherent nonzero finite sequence has a nonzero strong limit automatically.
+
+### 3.2 #4994/#4995 — SU(2) primary-plaquette projective strong limits CLOSED
+
+The projective construction is specialized to primary-plaquette finite OS states.
+
+Vacuum-centering is shown to commute with projective embedding under the finite vacuum-unit compatibility.
+
+### 3.3 #4997 — nonzero centered witness CLOSED
+
+A concrete nonzero centered projective excitation witness is generated.
+
+### 3.4 #4998 — SU(N) centered nonzero projective strong-limit theorem CLOSED
+
+For the generic SU(N) primary-plaquette Haar-mode cylinder data, actual finite OS vacuum-orthogonal states admit a nonzero projective strong limit.
+
+Important claim boundary:
+
+- this is a true scale-coherent strong-limit theorem;
+- it depends on the projective cylinder/readout package and vacuum-unit compatibility;
+- it does not yet identify the finite q0 transfer with the projective continuum Euclidean-time evolution.
+
+### 3.5 #4999--#5003 — concrete SU(N) two-mode realization lane
+
+The abstract SU(N) projective mode family is reduced toward explicit Wilson data:
+
+- #4999: nonconstant Wilson-energy witness;
+- #5000: two explicit orthonormal Haar modes;
+- #5001: only the first two modes are needed;
+- #5002: continuous boundary representatives;
+- #5003: pointwise coherent readout reduction.
+
+Status: kinematic/model-facing mode construction substantially closed; dynamic q0 compatibility remains tied to H1-D.
+
+## 4. Full physical pair q0 route
+
+### 4.1 #5004/#5005 — first one-sided bridge
+
+#5004 transports q0 decay to the represented one-sided boundary sector.
+
+#5005 bridges the concrete SU(N) two-mode finite OS state to that lane through an explicit compatibility package.
+
+This route remains valid but is no longer the preferred endpoint.
+
+### 4.2 #5006 — full physical pair non-top q0 CLOSED
+
+The uniform decay theorem is lifted to the full completed physical pair non-top sector.
+
+Target estimate:
 
 ~~~text
-||T|| <= 3071/3072
-1/3072 <= 1 - ||T||
-||T|| < 1.
+||S_2^m x|| <= q0^m ||x||
 ~~~
 
-#4985 remains a valid abstract descent theorem.
+for every x in the completed physical pair non-top block.
 
-## 3. H1-C carrier audit — #4988/#4989
+This removes the need to force concrete data into one selected one-sided factorization.
 
-### H1-C0a #4988 — pairwise-orthogonal strong-limit obstruction CLOSED
+### 4.3 #5007 — compatibility from range + raw kernel CLOSED
 
-The new generic theorem realHilbert_tendsto_zero_of_pairwise_inner_eq_zero states:
+The earlier arbitrary compatibility package is theorem-generated from:
+
+1. centered boundary range membership;
+2. a literal raw one-slab matrix coefficient identity.
+
+### 4.4 #5008 — explicit centered finite OS boundary formula CLOSED
+
+The concrete centered boundary vector is exposed as
 
 ~~~text
-v_n -> x strongly
-and
-inner(v_m, v_n) = 0 for m != n
-
-=> x = 0.
+finiteVacuumCentered
+  (J Omega_OS)
+  (explicit primary-plaquette two-mode boundary Haar vector).
 ~~~
 
-No completeness or model-specific structure is required.
+This makes the top/vacuum issue explicit instead of hiding it.
 
-### H1-C0b #4989 — independent-coordinate L² geometry CLOSED
+### 4.5 #5009 — full-pair residual formulation CLOSED
 
-For probability measures mu_i, the coordinate pullbacks I_i satisfy
+To obtain q0^m for the explicit centered pair vector it is enough to prove:
 
 ~~~text
-<I_i f, I_j g>
-  = (integral f d mu_i) * (integral g d mu_j)
-  when i != j.
+x_centered ∈ PhysicalPairCarrier
+
+x_centered ∈ TopTop^perp.
 ~~~
 
-Therefore:
+Status: CLOSED bridge.
+
+## 5. H1-D top-sector rigidity
+
+### 5.1 #5010 — nonnegative top-mode strict positivity CLOSED
+
+Every nonzero nonnegative full-top vector is strictly positive almost everywhere.
+
+### 5.2 #5011 — sign rigidity CLOSED
+
+Every unit full-top vector has one fixed sign almost everywhere.
+
+The proof uses:
+
+- physical absolute-value domination;
+- equality at the operator norm;
+- strict positivity of nonzero nonnegative top modes.
+
+### 5.3 #5012 — finite-volume top eigenspace simplicity CLOSED
+
+Exact theorem:
 
 ~~~text
-f_i centered
-=> I_i f_i pairwise orthogonal
-
-I_n f_n -> x strongly
-=> x = 0.
+TopEigenspace
+  = span(canonical nonnegative top mode)
+  = span(chosen normalized top eigenvector).
 ~~~
 
-This is the exact kinematic obstruction for centered fresh-coordinate sequences in an independent product.
+Consequences:
 
-### H1-C0c — Wilson-specific applicability OPEN
+- top eigenspace is one-dimensional;
+- no external simplicity hypothesis remains;
+- full top-orthogonal sector equals the older chosen-top excitation sector.
 
-The remaining question is whether the concrete #4984 scale-n physical top-orthogonal image is centered in its interacting marginal coordinate.
+This closes the earlier Perron-Frobenius-style uniqueness gap.
 
-Target theorem shape:
+### 5.4 #5013 — pair top-top orthogonality scalarized CLOSED
+
+The one-slice simplicity theorem is lifted to the pair sector.
+
+Completed top-top orthogonality becomes
 
 ~~~text
-inner(1,
-  HaarToMarginal(
-    OneSidedExcitationBoundary(x))) = 0.
+x ∈ TopTop^perp
+  <=> <Omega_top tensor Omega_top, x> = 0.
 ~~~
 
-This is not merely a measure-theory lemma. It depends on how the physical one-slab top mode relates to the finite OS/boundary vacuum. Therefore it belongs at the H1-C/H1-D interface.
+Status: CLOSED.
 
-Two outcomes are possible:
+## 6. H1-D concrete SU(N) residual reduction
 
-1. **Centering holds.** Then #4988/#4989 rule out a nonzero strong limit obtained by simply moving the excitation through coordinates n = 0,1,2,... of the independent product.
-2. **Centering does not yet hold.** Then the top-sector / OS-vacuum mismatch must be resolved before the limit can be claimed to live in the physical vacuum-orthogonal sector.
+### 6.1 #5014 — residuals reduced to vacuum alignment CLOSED
 
-Either way, the independent product must not be treated as an already-established continuum identification.
+For the explicit centered two-mode vector, the remaining pair-side problem is reduced to:
 
-## 4. Revised H1-C construction route
+1. uncentered primary-plaquette pair physicality;
+2. finite OS vacuum-pair alignment with the selected top-pair line.
 
-### H1-C1. Prove the finite Wilson centering / sector bridge — immediate
+### 6.2 #5015 — uncentered pair physicality CLOSED
+
+The uncentered primary-plaquette boundary mode is proved in pair coordinates to be
+
+~~~text
+physical primary-slice plaquette mode
+  tensor
+physical constant-one mode.
+~~~
+
+Therefore it lies in the completed physical pair carrier.
+
+After this PR the only structural residual is finite OS vacuum alignment.
+
+### 6.3 #5016 — vacuum alignment reduced to two concrete seams CLOSED
+
+#5016 upgrades the pair top-top block to the exact line identity
+
+~~~text
+TopTopClosure = span(Omega_top tensor Omega_top).
+~~~
+
+It also proves the finite OS vacuum pair is fixed by the completed OS boundary transfer.
+
+Therefore old vacuum alignment follows from:
+
+~~~text
+A. OS vacuum pair ∈ PhysicalPairCarrier
+
+B. NormalizedPhysicalPairTransfer vacuumPair
+     =
+   PairCoordinateCompletedOSBoundaryTransfer vacuumPair.
+~~~
+
+Only one-vector transfer compatibility is required. No global operator equality is needed.
+
+The resulting theorem already reconnects these hypotheses to the q0^m estimate.
+
+## 7. Canonical-sign finite OS vacuum — #5017/#5018
+
+### 7.1 #5017 — concrete boundary-vacuum identification CLOSED
+
+The coherent positive-half square root has a scale-wise sign freedom on the unit observable.
+
+The existing vacuumNormalized construction removes this sign freedom while preserving the reflected quadratic observable.
+
+For Q.vacuumNormalized:
+
+~~~text
+J_n Omega_OS
+  = periodicHypercubicEvenBoundaryVacuumL2.
+~~~
+
+The concrete Wilson boundary vacuum is also fixed by every full finite-lattice boundary gauge pullback.
+
+Thus the finite OS vacuum is no longer an abstract boundary vector in the canonical-sign lane.
+
+### 7.2 #5018 — independent endpoint gauge fixedness CLOSED
+
+The reflection-fixed boundary is decomposed exactly into primary and antipodal spatial slices.
+
+For arbitrary one-slice gauge transformations gamma_L and gamma_R, #5018 constructs one full-lattice extension and proves exact coordinate intertwining:
+
+~~~text
+boundary gauge action
+  <-> independent pair action
+      (gamma_L on primary,
+       gamma_R on antipodal).
+~~~
+
+Consequently the canonical-sign explicit OS vacuum pair is fixed by arbitrary independent endpoint gauge transformations.
+
+Status: CLOSED.
+
+## 8. Immediate next work
+
+### H1-D4 — identify the independent gauge-fixed pair sector with the physical pair carrier
+
+Current exact input:
+
+~~~text
+vacuumPair is fixed by every
+(gamma_L, gamma_R).
+~~~
+
+Current physical pair carrier:
+
+~~~text
+PhysicalPairCarrier
+  =
+closure(span {
+  f tensor g |
+  f one-slice Gauss-law physical,
+  g one-slice Gauss-law physical
+}).
+~~~
+
+Required theorem:
+
+~~~text
+IndependentEndpointGaugeFixedPairSector
+  =
+PhysicalPairCarrier
+~~~
+
+or at minimum
+
+~~~text
+canonicalSignVacuumPair ∈ PhysicalPairCarrier.
+~~~
+
+This should be treated as a Hilbert/tensor/fixed-subspace theorem, not as new Wilson dynamics.
+
+Suggested proof route:
+
+1. use the one-slice Gauss-law star projection;
+2. tensor the two one-slice physical projections;
+3. identify the range with the closure of decomposable physical tensors;
+4. prove the common fixed space of independent endpoint gauge pullbacks is that range;
+5. apply #5018 to the canonical-sign vacuum pair.
+
+Completion criterion: theorem-generate
+PhysicalYangMillsSUNTwoModeExplicitOSVacuumPairPhysicalCarrier
+for Q.vacuumNormalized.
+
+### H1-D5 — close the one-vector transfer seam
+
+Required theorem at each scale n:
+
+~~~text
+NormalizedPhysicalPairTransfer
+  (canonicalSignVacuumPair)
+=
+PairCoordinateCompletedOSBoundaryTransfer
+  (canonicalSignVacuumPair).
+~~~
+
+#5016 already proves
+
+~~~text
+PairCoordinateCompletedOSBoundaryTransfer
+  (canonicalSignVacuumPair)
+=
+canonicalSignVacuumPair.
+~~~
+
+Therefore H1-D5 immediately yields normalized physical pair fixedness.
+
+Possible proof inputs already present in the repository:
+
+- exact completed boundary transfer on represented OS states;
+- realizable one-step Wilson synthesis / raw kernel formulas;
+- pair-coordinate completed-boundary-transfer wrappers;
+- full top-sector simplicity from #5012;
+- exact finite Wilson kernel positivity.
+
+Do not replace this one-vector target by an unnecessarily global all-input operator equality.
+
+### H1-D6 — close vacuum alignment and explicit centered q0^m
+
+After H1-D4 and H1-D5:
+
+~~~text
+vacuumPair ∈ PhysicalPairCarrier
+vacuumPair fixed by normalized pair transfer
+  -> vacuumPair ∈ TopTopClosure
+  -> vacuumPair ∈ span(pairTop)
+~~~
+
+using #5016.
+
+Then #5015 supplies the uncentered carrier statement and #5009 supplies the centered full-pair q0 theorem.
+
+Completion criterion:
+
+~~~text
+||S_{2,n}^m y_{k,n}||
+  <= q0^m ||y_{k,n}||
+~~~
+
+for the explicit centered SU(N) two-mode finite OS vectors, with only the already theorem-generated canonical-sign data.
+
+## 9. H1-C3 — projective dynamics after H1-D
+
+The projective carrier already supports nonzero centered strong limits.
+
+The next task is to transport the finite dynamics, not to build another carrier.
 
 Required:
 
-- identify the finite OS boundary vacuum image;
-- compare it with the one-slab top companion mode used by #4984;
-- prove the exact vacuum coefficient of the transported physical excitation;
-- keep the full top eigenspace distinct from any one-dimensional vacuum line unless a theorem proves equality.
+1. choose the explicit two-mode finite OS centered sequence;
+2. prove its projective transition coherence;
+3. prove the finite evolved sequence has compatible projective transitions or strong convergence;
+4. identify the limiting projective operator on the centered continuum mode;
+5. pass the q0^m estimate to that operator.
 
-Completion criterion: a theorem deciding whether the #4984 finite image is centered relative to the marginal constant-one vector.
+The #4984 independent product is not the target carrier for this step.
 
-### H1-C2. Choose a scale-coherent limit carrier
-
-The continuum carrier must compare different scales through actual model coherence rather than independent coordinate separation.
-
-Relevant existing interfaces:
-
-1. **PhysicalYangMillsEvenPeriodicWilsonOSMassFreeAmbientCarrier**
-   - gap-free;
-   - finite completed Wilson OS Hilbert -> continuum physical Hilbert isometries;
-   - finite vacuum -> continuum vacuum;
-   - does not itself provide approximation convergence.
-
-2. **PhysicalYangMillsEvenPeriodicWilsonOSCommonCarrierGapTransfer**
-   - stores finite approximation and evolved convergence into one OS physical Hilbert space;
-   - already feeds generic continuum Hamiltonian gap machinery;
-   - care is required to avoid circularly assuming the very gap certificate that the #4982 estimate is meant to supply.
-
-3. **Same-root factorial OS direct-limit / regular vacuum-orthogonal carrier**
-   - explicit scale-coherent/direct-limit construction;
-   - dense centered positive-time-smoothed cylinder cores;
-   - finite Wilson correlation convergence already available;
-   - promising for a non-circular model-facing bridge if the #4982 top-orthogonal estimate can be expressed on its finite representatives.
-
-Do not try to repair the independent product merely by applying a fixed linear isometry afterward: an isometry preserves the pairwise orthogonality established in #4989.
-
-### H1-C3. Reconnect the q0 estimate
-
-Once a scale-coherent carrier E and finite approximants x_n are available, prove:
+Completion criterion:
 
 ~~~text
-J_n x_n -> J x
+J_n y_n -> y != 0
 
-J_n R_n x_n -> J(Tx)
+J_n S_{2,n}^m y_n -> T^m y
+
+||T^m y|| <= q0^m ||y||.
 ~~~
 
-with the actual physical finite dynamics.
+This is still discrete-time continuum-carrier control, not yet a physical-time mass gap.
 
-Then reuse the #4983 bound and the generic limit-preservation argument to obtain
+## 10. H2 — spacing-scaled continuum dynamics
 
-~~~text
-||T|| <= 3071/3072
-~~~
+### H2-A — fixed q0 is not a continuum-time mass rate
 
-on the physically correct limiting excitation sector.
-
-Completion criterion: nonzero theorem-generated model-facing limit data, not an abstract structure populated by assumptions.
-
-## 5. H1-D — one-slab top sector versus OS vacuum sector
-
-Keep distinct:
-
-- one-slab normalized-transfer top eigenspace;
-- full top-eigenspace orthogonal sector;
-- finite periodic OS vacuum line;
-- canonical boundary vacuum;
-- interacting marginal constant-one vector;
-- continuum physical vacuum line.
-
-Existing mode-wise boundary closure, eigenlift, positive-half synthesis and completed-boundary-transfer machinery can be used as local bridges.
-
-Possible routes:
-
-- prove a global finite top/vacuum identification;
-- prove only the centering relation needed by H1-C;
-- bypass a global finite equality and identify the continuum vacuum-orthogonal sector directly through a scale-coherent OS construction.
-
-Status: OPEN, immediate parallel boundary.
-
-## 6. H2 — spacing-scaled continuum dynamics
-
-### H2-A. Fixed q0 is not a physical continuum-time rate
-
-With a_n -> 0 and fixed t > 0,
+If a_n -> 0 and t > 0 is fixed,
 
 ~~~text
 q0 ^ floor(t / a_n) -> 0.
 ~~~
 
-Thus fixed q0 would produce instantaneous positive-time collapse, incompatible with a nontrivial C0 semigroup.
+Therefore the fixed finite-step factor would collapse every positive physical time instantly.
 
 Required target form:
 
@@ -383,12 +596,7 @@ Required target form:
 q_n = exp(-m_n a_n + o(a_n))
 ~~~
 
-or an equivalent:
-
-- rescaled one-step defect;
-- Dirichlet lower bound;
-- centered generator rate;
-- floor-time exponential transfer statement.
+or an equivalent lower bound for a rescaled defect / Dirichlet form / generator.
 
 Relevant existing modules include:
 
@@ -396,129 +604,151 @@ Relevant existing modules include:
 - PhysicalYangMillsDerivedDiscreteTransferRate.lean
 - PhysicalYangMillsGaugeInvariantOSLiteralBoundaryPoincareDirectGap.lean
 - PhysicalYangMillsGaugeInvariantOSPhysicalExcitationDirichletScalingRate.lean
-- PhysicalYangMillsWilsonIntrinsicRateToPhysicalMass.lean.
+- PhysicalYangMillsWilsonIntrinsicRateToPhysicalMass.lean
 
-Status: OPEN after H1 carrier compatibility.
+Status: OPEN after H1-D and projective dynamic coherence.
 
-## 7. H3 — OS reconstruction
+## 11. H3 — OS reconstruction
 
-After H1/H2 produce actual model data, connect to:
+After H1/H2 provide actual model data:
 
 - continuum physical Hilbert space;
 - normalized vacuum;
 - strongly continuous contraction semigroup;
-- symmetry/self-adjointness;
+- symmetry / self-adjointness;
 - closed Hamiltonian;
 - correct vacuum-orthogonal excitation sector.
 
-Much of the generic functional-analytic infrastructure already exists.
+The generic functional-analytic infrastructure is largely present.
 
 Status: downstream.
 
-## 8. H4 — spectral / Wightman mass gap
+## 12. H4 — spectral / Wightman mass gap
 
 Final intended route:
 
 ~~~text
 finite-volume uniform coercivity
-  -> scale-coherent and spacing-scaled continuum dynamics
+  -> scale-coherent projective excitation dynamics
+  -> spacing-scaled continuum semigroup
   -> OS Hamiltonian lower bound on vacuum orthogonal sector
   -> positive spectral gap
   -> Wightman / energy-momentum mass gap.
 ~~~
 
-A scale-uniform finite-volume transfer gap is not itself the final theorem.
+A scale-uniform finite-volume transfer gap is not by itself the final theorem.
 
-Status: downstream.
+## 13. Exact distinctions to preserve
 
-## 9. Exact distinctions to preserve
+### Finite OS vacuum versus one-slab top mode
 
-### Beta zero versus positive beta
+#5012 proves the one-slab top eigenspace is one-dimensional.
+
+It does not by itself identify the finite periodic OS vacuum pair with the selected one-slab pair-top vector.
+
+That identification still passes through H1-D4/H1-D5.
+
+### Gauge fixedness versus physical pair carrier membership
+
+#5018 proves arbitrary independent endpoint gauge fixedness.
+
+The repository has not yet proved that this fixed space equals the closure of decomposable one-slice Gauss-law physical tensors.
+
+Do not silently identify them before H1-D4 is formalized.
+
+### Completed OS boundary transfer versus normalized physical pair transfer
+
+#5016 proves the completed OS boundary transfer fixes the finite OS vacuum pair.
+
+It does not yet prove the normalized physical pair transfer is the same operator on that vector.
+
+That is H1-D5.
+
+### Projective nonzero strong limit versus evolved q0 limit
+
+#4998 gives a nonzero centered projective strong limit under the projective cylinder/readout data.
+
+It does not yet prove that the finite q0 transfer powers converge to the same projective continuum dynamics.
+
+That is H1-C3.
+
+### Fixed q0 versus physical mass
 
 ~~~text
-gap(beta = 0) = 1
+-log(3071/3072)
 ~~~
 
-is a separate exact endpoint theorem. The positive-beta 1/3072 floor need not be sharp at beta = 0.
+is a discrete one-step rate.
 
-### Relative frame versus uniform coefficient
+It is not automatically the physical continuum mass.
 
-#4980 gives the pointwise kappa_12(s,beta). #4982 proves 1/2304 <= kappa_12 only on the smaller common uniform-gap cutoff.
+## 14. Validation / Lean engineering
 
-### Finite gap versus discrete contraction
-
-~~~text
-gap_n >= 1/3072
-<=> convenient top-orthogonal norm bound
-||R_n|| <= 3071/3072.
-~~~
-
--log(3071/3072) is a discrete step rate, not automatically a physical mass.
-
-### Simultaneous common carrier versus scale-coherent limit carrier
-
-#4984's infinite product contains all finite scales isometrically but separates them by independent coordinates.
-
-#4988/#4989 show why simultaneous containment is not the same as nontrivial cross-scale strong convergence.
-
-## 10. Validation / Lean engineering
-
-### Latest theorem evidence — #4989
+Latest theorem evidence:
 
 ~~~text
-exact PR head:
-  bee4f20f8007078ddbd6b061f64834513be674e9
+PR #5018 exact head:
+  99d2e1c208654ee29f58ca1bc948b4baa9595cdd
 
 PR Lean Fast Check:
-  36817103467
+  36991129671
   completed / success
 
 exact-head receipt:
   success
 
-artifact:
-  11141653528
-  sha256:9e9102467a6fe69ac43ccae7fba34b8203370966e9c3d4ff667027d1247c97a1
+merged theorem-bearing snapshot:
+  382f73aa90ab24d7b02285012bf6e5513ad62a41
 ~~~
 
-### Lean lesson from #4989
+Recent Lean lessons from #5005--#5018:
 
-The real L² inner product expands scalar factors in Mathlib's chosen orientation. At the failing line Lean had reduced the goal to
+- anonymous local instances can collide after import composition; use explicit module-specific names;
+- section variables absent from a declaration body may disappear from the declaration signature;
+- theorem-header metavariables must be resolved before proof-body information can help;
+- do not rely on dot notation through local notation for submodule methods;
+- make subtype-to-ambient Lp norm/coercion boundaries explicit;
+- congrArg on a typed scalar map is often more robust than simp-heavy scalar cancellation;
+- pointwise Lp addition/subtraction should be crossed through named coeFn theorems rather than forced by change;
+- preserve the pinned mathlib API;
+- inspect the full changed file, not only the first reported compiler line;
+- once the exact head is GREEN, do not rerun strict Lean without a new code change;
+- docs-only README / ROADMAP updates are not theorem-bearing changes.
 
-~~~text
-G (omega j) * F (omega i) = F (omega i) * G (omega j).
-~~~
-
-The correct repair was to make real multiplication commutativity explicit with mul_comm. No independence or integration argument had to be redesigned.
-
-Continuing workflow:
-
-- start from fresh theorem-carrier HEAD;
-- inspect the complete changed module and relevant imports;
-- use pinned Lean/mathlib APIs;
-- separate mathematical obstruction from elaboration/import hygiene;
-- preserve source/target orientation;
-- once an unchanged exact head is GREEN, do not repeat strict validation without a new reason;
-- do not run theorem validation for README/ROADMAP-only changes.
-
-## 11. Milestone ledger — #4976 through #4989
+## 15. Milestone ledger — #4992 through #5018
 
 | PR | Classification | Contribution |
 | --- | --- | --- |
-| #4976 | Theorem | arbitrary complete duplicate-free tagged-link loss contraction |
-| #4977 | Theorem | complete grouped right-six + left-six order |
-| #4978 | Theorem | complete-order constant-line convergence |
-| #4979 | Theorem | whole left six-color displacement by endpoint swap |
-| #4980 | Theorem | volume-free genuine two-sided twelve-spatial relative frame |
-| #4981 | Theorem | physical top-orthogonal centering and finite-volume gap |
-| #4982 | Theorem | uniform 1/2304 coefficient and 1/3072 gap floor |
-| #4983 | Theorem | uniform q0^k decay, q0 = 3071/3072 |
-| #4984 | Theorem | all finite top-orthogonal sectors embedded in one independent interacting product L² |
-| #4985 | Theorem | compatible strong limits preserve q0^k and the one-step gap floor |
-| #4988 | Theorem | pairwise-orthogonal strong-limit obstruction |
-| #4989 | Theorem | centered independent-coordinate L² pullbacks are orthogonal; centered fresh-coordinate strong limits vanish |
+| #4992 | Theorem | top-boundary-vacuum centering obstruction |
+| #4993 | Theorem | projective finite OS scale coherence |
+| #4994 | Theorem | SU(2) primary-plaquette projective strong limit |
+| #4995 | Theorem | projective finite vacuum-centering |
+| #4997 | Theorem | nonzero centered projective excitation witness |
+| #4998 | Theorem | generic SU(N) centered nonzero projective strong limit |
+| #4999 | Theorem | explicit nonconstant SU(N) Wilson-energy witness |
+| #5000 | Theorem | explicit SU(N) Wilson Haar two-mode orthonormal family |
+| #5001 | Theorem | reduce to two concrete Wilson modes |
+| #5002 | Theorem | continuous SU(N) two-mode boundary representatives |
+| #5003 | Theorem | pointwise coherent readout reduction |
+| #5004 | Theorem | one-sided boundary q0 decay |
+| #5005 | Theorem | concrete SU(N) two-mode finite OS q0 bridge |
+| #5006 | Theorem | full physical pair non-top q0^m |
+| #5007 | Theorem | compatibility generated from range + raw kernel |
+| #5008 | Theorem | explicit centered finite OS boundary formula |
+| #5009 | Theorem | full-pair centered q0 bridge |
+| #5010 | Theorem | nonnegative top modes strictly positive |
+| #5011 | Theorem | top-mode sign rigidity |
+| #5012 | Theorem | finite-volume top eigenspace simplicity |
+| #5013 | Theorem | pair top-top scalar criterion |
+| #5014 | Theorem | residuals reduced to vacuum alignment |
+| #5015 | Theorem | uncentered primary-plaquette pair physical |
+| #5016 | Theorem | vacuum alignment reduced to carrier + one-vector transfer seam |
+| #5017 | Theorem | canonical-sign OS vacuum = concrete gauge-fixed boundary vacuum |
+| #5018 | Theorem | canonical-sign OS vacuum pair independently endpoint-gauge fixed |
 
-## 12. Restart sequence
+PR #4996 was closed without merge and is not part of theorem authority.
+
+## 16. Restart sequence
 
 Freshly re-observe:
 
@@ -529,48 +759,58 @@ formal/real-hilbert-uniform-coercive-strong-limit
 The theorem-bearing checkpoint documented here is:
 
 ~~~text
-c46e2fad7d5a5a749e63650b7772c4d4973dc12f
+382f73aa90ab24d7b02285012bf6e5513ad62a41
 ~~~
 
-Read in this order:
+Read in this order for the current frontier:
 
-1. InfiniteProductProbabilityCoordinateL2Orthogonality.lean (#4989);
-2. RealHilbertPairwiseOrthogonalStrongLimit.lean (#4988);
-3. PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopOrthogonalScaleCommonBoundaryStrongLimit.lean (#4985);
-4. PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopOrthogonalScaleCommonBoundaryDecay.lean (#4984);
-5. PhysicalYangMillsWilsonInteractingBoundaryScaleCommonVacuumCarrier.lean;
-6. PeriodicHypercubicEvenOSBoundaryOneSidedExcitationTransfer.lean;
-7. PeriodicHypercubicEvenSpecialUnitaryOneSlabPairHaarL2PhysicalVacuumSector.lean;
-8. PhysicalYangMillsWilsonMassFreeAmbientTwoStepRecovery.lean;
-9. PhysicalYangMillsGaugeInvariantOSApproximatingGapTransfer.lean;
-10. same-root factorial OS direct-limit regular vacuum-orthogonal modules;
-11. only then return to #4983/#4982 if a finite estimate dependency must be inspected.
+1. PhysicalYangMillsWilsonVacuumNormalizedPairIndependentGaugeFixed.lean — #5018;
+2. PhysicalYangMillsWilsonVacuumNormalizedBoundaryGaugeFixed.lean — #5017;
+3. PhysicalYangMillsWilsonSUNTwoModeFiniteOSVacuumPairFixedSeam.lean — #5016;
+4. PhysicalYangMillsWilsonSUNTwoModeFiniteOSUncenteredPairPhysical.lean — #5015;
+5. PhysicalYangMillsWilsonSUNTwoModeFiniteOSVacuumPairAlignmentBridge.lean — #5014;
+6. PhysicalYangMillsWilsonSUNTwoModeFiniteOSPairTopTopScalarCriterion.lean — #5013;
+7. PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopEigenspaceSimplicity.lean — #5012;
+8. PhysicalYangMillsWilsonSUNTwoModeFiniteOSFullPairNonTopQ0Bridge.lean — #5009;
+9. PeriodicHypercubicEvenSpecialUnitaryPhysicalPairUniformNonTopDecay.lean — #5006;
+10. PhysicalYangMillsWilsonSUNPrimaryPlaquetteProjectiveCenteredNonzeroStrongLimit.lean — #4998;
+11. PhysicalYangMillsWilsonProjectiveFiniteOSScaleCoherence.lean — #4993.
 
 Current restart target:
 
 ~~~text
 CURRENT CLOSED:
-  G1--G4
-  uniform q0^k finite dynamics
-  #4984 simultaneous independent-product carrier
-  #4985 abstract compatible strong-limit preservation
-  #4988 pairwise-orthogonal strong-limit obstruction
-  #4989 centered independent-coordinate orthogonality
+  finite-volume uniform q0^m
+  full pair non-top q0^m
+  scale-coherent projective nonzero centered strong-limit theorem
+  top eigenspace simplicity
+  pair top-top one-dimensionality
+  uncentered two-mode pair physicality
+  completed OS vacuum transfer fixedness
+  canonical-sign OS vacuum boundary identification
+  independent endpoint gauge fixedness
 
-NEXT:
-  Wilson-specific centering / one-slab-top vs OS-vacuum bridge
+NEXT H1-D4:
+  independent-gauge-fixed pair sector
+    -> physical pair carrier
 
-THEN:
-  scale-coherent nonzero continuum excitation carrier
-  + initial/evolved convergence
-  + q0 transport
+NEXT H1-D5:
+  one-vector normalized-pair / completed-OS transfer compatibility
+
+THEN H1-D6:
+  vacuum alignment
+    -> explicit centered SU(N) two-mode q0^m
+
+THEN H1-C3:
+  evolved projective coherence
+    -> q0 transport to nonzero projective continuum excitation
 
 THEN H2:
-  spacing-scaled rate and nontrivial continuum-time dynamics
+  spacing-scaled continuum-time rate
 
 LATER:
   H3 OS Hamiltonian
   H4 spectral/Wightman mass gap.
 ~~~
 
-Do not reopen #4980--#4985, #4988 or #4989 unless a concrete inconsistency is found.
+Do not reopen #5006, #5010--#5018 unless a concrete inconsistency is found.
