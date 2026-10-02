@@ -90,6 +90,7 @@ literally the primary fixed spatial slice. -/
   have h :=
     MeasurableEquiv.piCongrLeft_apply_apply
       (β := X) E b (E.symm (Sum.inl a))
+  rw [E.apply_symm_apply] at h
   simpa [reindex, E,
     periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices,
     periodicHypercubicEvenSpatialSliceSumToFixedEdge] using h
@@ -122,6 +123,7 @@ the antipodal fixed slice, canonically reindexed by half-period translation. -/
   have h :=
     MeasurableEquiv.piCongrLeft_apply_apply
       (β := X) E b (E.symm (Sum.inr a))
+  rw [E.apply_symm_apply] at h
   simpa [reindex, E,
     periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices,
     periodicHypercubicEvenSpatialSliceSumToFixedEdge] using h
@@ -187,7 +189,7 @@ theorem
         (y : Lp ℝ 2 mu)
           ((periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
             H N z).1
-            (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)))
+            (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H))))
   have he : MeasurePreserving e muB muPair := by
     simpa [e, muB, muPair] using
       periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_measurePreserving_specialUnitaryHaar
