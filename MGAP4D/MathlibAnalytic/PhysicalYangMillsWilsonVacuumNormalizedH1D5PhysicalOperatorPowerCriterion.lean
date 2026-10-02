@@ -428,8 +428,9 @@ theorem
       _ = (‖T‖ ^ 2) * inner ℝ (P x) y := by
           simpa [T, P] using h n x y
       _ = inner ℝ (((‖T‖ ^ 2) • P) x) y := by
-          rw [ContinuousLinearMap.smul_apply]
-          rw [real_inner_smul_left]
+          rw [smul_apply]
+          exact
+            (real_inner_smul_left (P x) y (‖T‖ ^ 2)).symm
   · intro h n x y
     let T :=
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
@@ -448,8 +449,9 @@ theorem
       _ = inner ℝ (((‖T‖ ^ 2) • P) x) y := by
           rw [show T (P (T x)) = ((T.comp (P.comp T)) x) by rfl, hop]
       _ = (‖T‖ ^ 2) * inner ℝ (P x) y := by
-          rw [ContinuousLinearMap.smul_apply]
-          rw [real_inner_smul_left]
+          rw [smul_apply]
+          exact
+            real_inner_smul_left (P x) y (‖T‖ ^ 2)
 
 /-- Final finite-volume normal form of H1-D5: the physical one-slab transfer
 must satisfy a two-step polynomial identity relative to the positive-half
