@@ -447,7 +447,7 @@ theorem physicalYangMillsSUNTwoModeExplicitCenteredBoundaryPairL2_pow_norm_le_un
     (hVac :
       PhysicalYangMillsSUNTwoModeExplicitOSVacuumPairTopAlignment
         (S := S) (D := D) (halfExtent := halfExtent)
-        (N := N) (hN := hN) (hN2 := hN2)
+        (N := N) (hN := hN)
         (beta := beta) (hbeta := hbeta)
         (Q := Q) (hInvariant := hInvariant))
     (s : ℝ) (hs : 8 < s)
