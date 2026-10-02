@@ -96,14 +96,18 @@ noncomputable def periodicHypercubicEvenIndependentEndpointGaugeExtension
         (periodicHypercubicEvenPrimaryToAntipodalSpatialSliceVertex H v).1 =
       gammaAntipodal v := by
   classical
-  let va := periodicHypercubicEvenPrimaryToAntipodalSpatialSliceVertex H v
   have hnot :
-      ¬ periodicHypercubicEvenOnPrimaryReflectionPlane H va.1 := by
+      ¬ periodicHypercubicEvenOnPrimaryReflectionPlane H
+        (periodicHypercubicEvenPrimaryToAntipodalSpatialSliceVertex H v).1 := by
     intro hp
-    exact periodicHypercubicEven_primary_antipodal_disjoint H va.1 hp va.2
+    exact periodicHypercubicEven_primary_antipodal_disjoint H
+      (periodicHypercubicEvenPrimaryToAntipodalSpatialSliceVertex H v).1
+      hp
+      (periodicHypercubicEvenPrimaryToAntipodalSpatialSliceVertex H v).2
   rw [periodicHypercubicEvenIndependentEndpointGaugeExtension]
-  simp only [dif_neg hnot]
-  rw [dif_pos va.2]
+  rw [dif_neg hnot]
+  rw [dif_pos
+    (periodicHypercubicEvenPrimaryToAntipodalSpatialSliceVertex H v).2]
   exact congrArg gammaAntipodal
     ((periodicHypercubicEvenPrimaryAntipodalSpatialSliceVertexEquiv H).left_inv v)
 
@@ -326,6 +330,27 @@ noncomputable def periodicHypercubicEvenSpecialUnitarySpatialSlicePairIndependen
     (periodicHypercubicEvenSpecialUnitarySpatialSlicePairIndependentGaugeTransform_measurePreserving
       H N gammaPrimary gammaAntipodal)
 
+/-- The independent pair gauge pullback has the expected almost-everywhere
+representative.  Naming this coercion boundary avoids relying downstream on
+unfolding `Lp.compMeasurePreserving` through the linear-isometry wrapper. -/
+theorem periodicHypercubicEvenSpecialUnitarySpatialSlicePairIndependentGaugePullbackLinearIsometry_coeFn
+    (H N : ℕ)
+    (gammaPrimary gammaAntipodal :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransformation H N)
+    (f : PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2 H N) :
+    periodicHypercubicEvenSpecialUnitarySpatialSlicePairIndependentGaugePullbackLinearIsometry
+        H N gammaPrimary gammaAntipodal f =ᵐ[
+      periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N]
+      fun z =>
+        f (periodicHypercubicEvenSpecialUnitarySpatialSlicePairIndependentGaugeTransform
+          H N gammaPrimary gammaAntipodal z) := by
+  simpa [
+    periodicHypercubicEvenSpecialUnitarySpatialSlicePairIndependentGaugePullbackLinearIsometry,
+    Function.comp_def] using
+    (MeasureTheory.Lp.coeFn_compMeasurePreserving f
+      (periodicHypercubicEvenSpecialUnitarySpatialSlicePairIndependentGaugeTransform_measurePreserving
+        H N gammaPrimary gammaAntipodal))
+
 /-- Exact L2 conjugacy between the full boundary gauge pullback and the
 independent endpoint pair pullback. -/
 theorem periodicHypercubicEvenBoundaryGaugePullback_to_pair
@@ -345,22 +370,23 @@ theorem periodicHypercubicEvenBoundaryGaugePullback_to_pair
   let E :=
     periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv H
       (Matrix.specialUnitaryGroup (Fin N) ℂ)
+  let G :=
+    periodicHypercubicEvenSpecialUnitarySpatialSlicePairIndependentGaugeTransform
+      H N gammaPrimary gammaAntipodal
+  let gamma :=
+    periodicHypercubicEvenIndependentEndpointGaugeExtension
+      H N gammaPrimary gammaAntipodal
   have hleft :=
     periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry_coeFn
       H N
-      (periodicHypercubicEvenBoundaryGaugePullbackLinearIsometry H N
-        (periodicHypercubicEvenIndependentEndpointGaugeExtension
-          H N gammaPrimary gammaAntipodal) f)
+      (periodicHypercubicEvenBoundaryGaugePullbackLinearIsometry H N gamma f)
   have hboundary :=
     periodicHypercubicEvenBoundaryGaugePullbackLinearIsometry_coeFn
-      H N
-      (periodicHypercubicEvenIndependentEndpointGaugeExtension
-        H N gammaPrimary gammaAntipodal) f
+      H N gamma f
   have hpull :=
-    MeasureTheory.Lp.coeFn_compMeasurePreserving
+    periodicHypercubicEvenSpecialUnitarySpatialSlicePairIndependentGaugePullbackLinearIsometry_coeFn
+      H N gammaPrimary gammaAntipodal
       (periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry H N f)
-      (periodicHypercubicEvenSpecialUnitarySpatialSlicePairIndependentGaugeTransform_measurePreserving
-        H N gammaPrimary gammaAntipodal)
   have hforward :=
     periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry_coeFn
       H N f
@@ -378,22 +404,49 @@ theorem periodicHypercubicEvenBoundaryGaugePullback_to_pair
       H N gammaPrimary gammaAntipodal).quasiMeasurePreserving.ae_eq hforward
   filter_upwards [hleft, hboundaryPair, hpull, hforwardGauge]
       with z hL hB hP hF
-  rw [hL, hP]
-  change
-    periodicHypercubicEvenBoundaryGaugePullbackLinearIsometry H N
-        (periodicHypercubicEvenIndependentEndpointGaugeExtension
-          H N gammaPrimary gammaAntipodal) f (E.symm z) =
+  have hL' :
+      periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry H N
+          (periodicHypercubicEvenBoundaryGaugePullbackLinearIsometry H N gamma f) z =
+        periodicHypercubicEvenBoundaryGaugePullbackLinearIsometry H N gamma f
+          (E.symm z) := by
+    simpa [E, Function.comp_def] using hL
+  have hB' :
+      periodicHypercubicEvenBoundaryGaugePullbackLinearIsometry H N gamma f
+          (E.symm z) =
+        f (periodicHypercubicEvenBoundaryGaugeTransform H N gamma (E.symm z)) := by
+    simpa [E, Function.comp_def] using hB
+  have hP' :
+      periodicHypercubicEvenSpecialUnitarySpatialSlicePairIndependentGaugePullbackLinearIsometry
+          H N gammaPrimary gammaAntipodal
+          (periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry H N f) z =
+        periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry H N f
+          (G z) := by
+    simpa [G] using hP
+  have hF' :
       periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry H N f
-        (periodicHypercubicEvenSpecialUnitarySpatialSlicePairIndependentGaugeTransform
-          H N gammaPrimary gammaAntipodal z)
-  rw [hB]
-  rw [hF]
-  congr 1
-  apply E.injective
-  rw [E.apply_symm_apply]
-  exact
-    periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_gaugeTransform
-      H N gammaPrimary gammaAntipodal (E.symm z)
+          (G z) =
+        f (E.symm (G z)) := by
+    simpa [E, G, Function.comp_def] using hF
+  have hcoord :
+      periodicHypercubicEvenBoundaryGaugeTransform H N gamma (E.symm z) =
+        E.symm (G z) := by
+    apply E.injective
+    rw [E.apply_symm_apply]
+    simpa [E, G, gamma] using
+      (periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_gaugeTransform
+        H N gammaPrimary gammaAntipodal (E.symm z))
+  calc
+    periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry H N
+        (periodicHypercubicEvenBoundaryGaugePullbackLinearIsometry H N gamma f) z =
+      periodicHypercubicEvenBoundaryGaugePullbackLinearIsometry H N gamma f
+        (E.symm z) := hL'
+    _ = f (periodicHypercubicEvenBoundaryGaugeTransform H N gamma (E.symm z)) := hB'
+    _ = f (E.symm (G z)) := by rw [hcoord]
+    _ = periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry H N f
+        (G z) := hF'.symm
+    _ = periodicHypercubicEvenSpecialUnitarySpatialSlicePairIndependentGaugePullbackLinearIsometry
+        H N gammaPrimary gammaAntipodal
+        (periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry H N f) z := hP'.symm
 
 /-- The concrete boundary vacuum in pair coordinates is fixed by arbitrary
 independent endpoint gauge transformations. -/
