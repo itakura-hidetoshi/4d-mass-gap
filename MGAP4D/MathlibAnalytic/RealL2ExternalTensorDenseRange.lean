@@ -112,8 +112,7 @@ theorem realL2ExternalTensorLift_range_topologicalClosure_eq_top
     (LinearMap.range
       (realL2ExternalTensorLift (μ := μ) (ν := ν))).topologicalClosure =
       (⊤ : Submodule ℝ (Lp ℝ 2 (μ.prod ν))) := by
-  rw [Submodule.topologicalClosure_eq_top_iff]
-  apply Submodule.eq_bot_iff.mpr
+  rw [Submodule.topologicalClosure_eq_top_iff, Submodule.eq_bot_iff]
   intro K hK
   have hKint : Integrable (fun z => K z) (μ.prod ν) :=
     (Lp.memLp K).integrable one_le_two
