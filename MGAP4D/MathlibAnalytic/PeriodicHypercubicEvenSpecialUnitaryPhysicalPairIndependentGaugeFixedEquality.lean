@@ -301,7 +301,9 @@ theorem
       (μ := mu) (ν := mu)
   refine hDense.eq_of_inner_left ℝ ?_
   intro x
-  simp only [realL2ExternalTensorLiftLinearIsometry_apply]
+  change
+    inner ℝ (Q K) (realL2ExternalTensorLift x) =
+      inner ℝ K (realL2ExternalTensorLift x)
   calc
     inner ℝ (Q K) (realL2ExternalTensorLift x) =
       inner ℝ K
