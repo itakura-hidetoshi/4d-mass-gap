@@ -91,7 +91,7 @@ local notation "TT" =>
 vacuum once one-slice top-eigenspace simplicity is available. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopDecomposableL2_exists_smul_pairTopMode
     (u v : F) :
-    exists c : ℝ,
+    ∃ c : ℝ,
       periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopDecomposableL2
           H N hN beta hbeta u v =
         c • PairTop := by
@@ -232,7 +232,7 @@ variable
 /-- Scalar form of the second #5009 full-pair residual. -/
 def PhysicalYangMillsSUNTwoModeExplicitCenteredPairTopPairScalarOrthogonal : Prop :=
   ∀ (k : Fin 2) (n : ℕ),
-    inner R
+    inner ℝ
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopModeL2
           (halfExtent n) N hN (beta n) (hbeta n))
         (physicalYangMillsSUNTwoModeExplicitCenteredBoundaryPairL2
