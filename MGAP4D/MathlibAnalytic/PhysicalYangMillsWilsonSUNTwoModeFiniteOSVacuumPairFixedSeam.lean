@@ -96,7 +96,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockClosure_eq_sp
     exact Submodule.mem_span_singleton_self PairTop
   have hPairTopTT : PairTop ∈ TT := by
     rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockClosure]
-    exact TTspan.le_topologicalClosure hPairTopSpan
+    exact
+      (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan
+        H N hN beta hbeta).le_topologicalClosure hPairTopSpan
   apply le_antisymm
   · intro x hx
     let c : ℝ := inner ℝ PairTop x
@@ -379,13 +381,11 @@ theorem physicalYangMillsSUNTwoModeExplicitCenteredBoundaryPairL2_pow_norm_le_un
           (N := N) (hN := hN) (hN2 := hN2)
           (beta := beta) (hbeta := hbeta)
           (Q := Q) (hInvariant := hInvariant) k n‖ := by
-  apply
+  exact
     physicalYangMillsSUNTwoModeExplicitCenteredBoundaryPairL2_pow_norm_le_uniform_q0_of_vacuumAlignment
-  · exact
-      physicalYangMillsSUNTwoModeExplicitOSVacuumPairTopAlignment_of_carrier_completedCompatibility
-        C hCarrier hCompat
-  · exact hs
-  · exact hcut
+      (physicalYangMillsSUNTwoModeExplicitOSVacuumPairTopAlignment_of_carrier_completedCompatibility
+        C hCarrier hCompat)
+      s hs hcut k n m
 
 end SUNTwoModeVacuumFixedSeam
 
