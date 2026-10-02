@@ -151,7 +151,8 @@ theorem
   let R :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta
-  have hRpos : ((R : K →L[ℝ] K) : K →ₗ[ℝ] K).IsPositive := by
+  have hRpos :
+      LinearMap.IsPositive (𝕜 := ℝ) ((R : K →L[ℝ] K) : K →ₗ[ℝ] K) := by
     simpa [R, K, S,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal] using
