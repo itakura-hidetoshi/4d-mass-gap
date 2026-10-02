@@ -82,7 +82,8 @@ theorem realHilbertPositiveCompact_nonzero_exists_unit_topEigenvector
     [InnerProductSpace ℝ E]
     [CompleteSpace E]
     (R : E →L[ℝ] E)
-    (hPositive : R.IsPositive)
+    (hSymm : ∀ x y : E, inner ℝ (R x) y = inner ℝ x (R y))
+    (hNonneg : ∀ x : E, 0 ≤ inner ℝ (R x) x)
     (hCompact : IsCompactOperator R)
     (hRne : R ≠ 0) :
     ∃ v : E,
@@ -110,35 +111,15 @@ theorem realHilbertPositiveCompact_nonzero_exists_unit_topEigenvector
   have hnormPos : 0 < ‖R‖ :=
     norm_pos_iff.mpr hRne
   have hPositiveLin : (R : E →ₗ[ℝ] E).IsPositive := by
-    refine ⟨hPositive.isSymmetric, ?_⟩
-    intro x
-    exact hPositive.re_inner_nonneg_left x
+    refine ⟨?_, ?_⟩
+    · intro x y
+      exact hSymm x y
+    · intro x
+      simpa using hNonneg x
   obtain ⟨v, hvnorm, hveig⟩ :=
     realHilbertPositiveCompact_exists_unit_topEigenvector
       R unit hunit hPositiveLin hCompact
   exact ⟨v, hvnorm, hnormPos, hveig⟩
-
-/-- The concrete normalized physical top-orthogonal one-slab restriction is
-a positive operator on its native subtype Hilbert structure. -/
-theorem
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_isPositive
-    (H N : ℕ)
-    (hN : 0 < N)
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-      H N hN beta hbeta).IsPositive := by
-  rw [ContinuousLinearMap.isPositive_iff]
-  constructor
-  · intro x y
-    exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_symm
-        H N hN beta hbeta x y
-  · intro x
-    exact
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_nonneg
-        H N hN beta hbeta x
 
 /-- If the normalized physical top-orthogonal restriction is nonzero, it
 theorem-generates a strictly positive raw physical one-slab eigenmode strictly
@@ -176,8 +157,12 @@ theorem
     realHilbertPositiveCompact_nonzero_exists_unit_topEigenvector
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
         H N hN beta hbeta)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_isPositive
-        H N hN beta hbeta)
+      (fun x y =>
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_symm
+          H N hN beta hbeta x y)
+      (fun x =>
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_nonneg
+          H N hN beta hbeta x)
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_isCompact
         H N hN beta hbeta)
       hRne
