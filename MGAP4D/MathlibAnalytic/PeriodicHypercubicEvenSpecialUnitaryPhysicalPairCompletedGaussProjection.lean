@@ -220,19 +220,15 @@ theorem
   change Q (Q F) = Q F
   refine hDense.induction_on F (isClosed_eq (by fun_prop) (by fun_prop)) ?_
   intro x
-  calc
-    Q (Q (J x)) = Q (J (A x)) := by rw [hQ x]
-    _ = J (A (A x)) := hQ (A x)
-    _ = J (A x) := by
-      have hAx :=
-        congrArg
-          (fun T :
-            (Lp ℝ 2 mu ⊗[ℝ] Lp ℝ 2 mu) →L[ℝ]
-              (Lp ℝ 2 mu ⊗[ℝ] Lp ℝ 2 mu) =>
-            T x)
-          hA
-      simpa only [ContinuousLinearMap.comp_apply] using congrArg J hAx
-    _ = Q (J x) := (hQ x).symm
+  rw [hQ x, hQ (A x)]
+  have hAx :=
+    congrArg
+      (fun T :
+        (Lp ℝ 2 mu ⊗[ℝ] Lp ℝ 2 mu) →L[ℝ]
+          (Lp ℝ 2 mu ⊗[ℝ] Lp ℝ 2 mu) =>
+        T x)
+      hA
+  simpa only [ContinuousLinearMap.comp_apply] using congrArg J hAx
 
 /-- The completed pair Gauss-projector range is contained in the completed
 physical pair carrier.  Density of algebraic external tensors propagates the
