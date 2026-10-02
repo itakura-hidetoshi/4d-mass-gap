@@ -183,7 +183,6 @@ theorem
   refine hDense.induction_on₂
     (isClosed_eq (by fun_prop) (by fun_prop)) ?_ F G
   intro x y
-  simp only [realL2ExternalTensorLiftLinearIsometry_apply]
   rw [
     periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection_apply_externalTensorLift
       H N x,
@@ -247,7 +246,32 @@ theorem
         periodicHypercubicEvenSpecialUnitaryIndependentGaugeFixed_kernelPairing_GaussProjection
           H N K hK f g
   | add x y hx hy =>
-      simp only [map_add, inner_add_right, hx, hy]
+      rw [map_add, map_add]
+      calc
+        inner ℝ K
+            (realL2ExternalTensorLift
+                (periodicHypercubicEvenSpecialUnitarySpatialSlicePairAlgebraicGaussProjection
+                  H N x) +
+              realL2ExternalTensorLift
+                (periodicHypercubicEvenSpecialUnitarySpatialSlicePairAlgebraicGaussProjection
+                  H N y)) =
+          inner ℝ K
+              (realL2ExternalTensorLift
+                (periodicHypercubicEvenSpecialUnitarySpatialSlicePairAlgebraicGaussProjection
+                  H N x)) +
+            inner ℝ K
+              (realL2ExternalTensorLift
+                (periodicHypercubicEvenSpecialUnitarySpatialSlicePairAlgebraicGaussProjection
+                  H N y)) :=
+          inner_add_right K _ _
+        _ =
+          inner ℝ K (realL2ExternalTensorLift x) +
+            inner ℝ K (realL2ExternalTensorLift y) := by
+          rw [hx, hy]
+        _ =
+          inner ℝ K
+            (realL2ExternalTensorLift x + realL2ExternalTensorLift y) :=
+          (inner_add_right K _ _).symm
 
 /-- Independent endpoint gauge fixedness forces fixedness under the completed
 tensor-square Gauss projector. -/
@@ -275,7 +299,7 @@ theorem
   have hDense : DenseRange J :=
     realL2ExternalTensorLiftLinearIsometry_denseRange
       (μ := mu) (ν := mu)
-  refine hDense.eq_of_inner_left ?_
+  refine hDense.eq_of_inner_left ℝ ?_
   intro x
   simp only [realL2ExternalTensorLiftLinearIsometry_apply]
   calc
