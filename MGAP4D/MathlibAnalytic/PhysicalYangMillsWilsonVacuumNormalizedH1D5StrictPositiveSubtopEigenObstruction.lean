@@ -37,7 +37,7 @@ power identity must equal the operator norm. -/
 theorem realContinuousLinearMap_powerIdentity_positiveEigenvalue_eq_norm
     {E : Type*}
     [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
+    [InnerProductSpace ℝ E]
     (T : E →L[ℝ] E)
     (m : ℕ)
     (f : E)
@@ -151,15 +151,18 @@ theorem
   have hPower :=
     (physicalYangMillsVacuumNormalizedSUNTwoMode_completedCompatibility_iff_physicalOneSlabPowerIdentity_explicit
       Q hInvariant C).1 hCompat n
+  change
+    T ^ (H + 3) =
+      (‖T‖ ^ 2) • (T ^ (H + 1)) at hPower
   have hPower' :
       T ^ ((H + 1) + 2) =
         (‖T‖ ^ 2) • (T ^ (H + 1)) := by
-    simpa [T, H, Nat.add_assoc] using hPower
+    rw [show (H + 1) + 2 = H + 3 by omega]
+    exact hPower
+  change T f = rho • f at hEigen
   exact
     realContinuousLinearMap_powerIdentity_positiveEigenvalue_eq_norm
-      T (H + 1) f rho hf hrho
-      (by simpa [T, H] using hEigen)
-      hPower'
+      T (H + 1) f rho hf hrho hEigen hPower'
 
 /-- A concrete strictly positive subtop eigenmode at even one finite scale
 refutes H1-D5, and hence refutes the last compatibility seam remaining after
@@ -195,7 +198,7 @@ theorem
 /-- Audit-visible statement of the exact remaining spectral obstruction. -/
 structure PhysicalYangMillsVacuumNormalizedH1D5StrictPositiveSubtopObstructionPackage : Prop where
   positiveEigenvalueRigidity :
-    ∀ (hCompat :
+    ∀ (_hCompat :
       PhysicalYangMillsSUNTwoModeExplicitOSVacuumPairCompletedTransferCompatibility
         (S := S) (D := D) (halfExtent := halfExtent)
         (N := N) (hN := hN)
