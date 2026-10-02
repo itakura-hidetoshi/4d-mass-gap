@@ -165,11 +165,7 @@ theorem
         H N x
   rw [hUsymm, ContinuousLinearMap.completion_apply_coe]
   rw [realL2ExternalTensorHilbertCompletionEquiv_apply_coe]
-  change
-    realL2ExternalTensorLift
-        (TensorProduct.map P.toLinearMap P.toLinearMap x) =
-      periodicHypercubicEvenSpecialUnitarySpatialSlicePairAlgebraicGaussProjectionRealization
-        H N x
+  rw [hilbertTensorMap_apply]
   rfl
 
 /-- The completed pair Gauss projector is idempotent. -/
@@ -206,19 +202,29 @@ theorem
       periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection H N
   apply ContinuousLinearMap.ext
   intro F
+  let z := U.symm F
+  have hCancel :
+      U.symm (U (A.completion z)) = A.completion z :=
+    U.symm_apply_apply (A.completion z)
   change
     U
         (A.completion
           (U.symm
             (U
-              (A.completion
-                (U.symm F))))) =
-      U (A.completion (U.symm F))
-  rw [U.symm_apply_apply]
-  change
-    U ((A.completion ∘L A.completion) (U.symm F)) =
-      U (A.completion (U.symm F))
-  rw [hAc]
+              (A.completion z)))) =
+      U (A.completion z)
+  rw [hCancel]
+  apply U.injective
+  have hAcApply :=
+    congrArg
+      (fun T :
+        UniformSpace.Completion
+            (Lp ℝ 2 mu ⊗[ℝ] Lp ℝ 2 mu) →L[ℝ]
+          UniformSpace.Completion
+            (Lp ℝ 2 mu ⊗[ℝ] Lp ℝ 2 mu) =>
+        T z)
+      hAc
+  simpa only [ContinuousLinearMap.comp_apply] using hAcApply
 
 /-- The completed pair Gauss-projector range is contained in the completed
 physical pair carrier.  Density of algebraic external tensors propagates the
@@ -288,9 +294,13 @@ theorem
     exact
       periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection_apply_externalTensorLift
         H N x
-  · exact
-      (periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection_isIdempotentElem
-        H N).isClosed_range
+  · have hIdem :
+        IsIdempotentElem
+          (periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection
+            H N) :=
+      periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection_isIdempotentElem
+        H N
+    exact ContinuousLinearMap.IsIdempotentElem.isClosed_range hIdem
 
 /-- Exact completion-level H1-D4 range theorem: the range of the canonical
 completed tensor-square Gauss projector is exactly the physical pair carrier. -/
@@ -324,16 +334,17 @@ theorem
   · intro hF
     exact ⟨F, hF⟩
   · rintro ⟨G, rfl⟩
-    have hIdem :=
-      (periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection_isIdempotentElem
-        H N).eq
-    change
-      periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection H N
-          (periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection
-            H N G) =
-        periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection
-          H N G
-    simpa only [mul_apply] using congrFun hIdem G
+    let Q :=
+      periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection
+        H N
+    have hIdem :
+        IsIdempotentElem Q :=
+      periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection_isIdempotentElem
+        H N
+    have hComp : Q ∘L Q = Q := by
+      simpa only [ContinuousLinearMap.mul_def] using hIdem.eq
+    change Q (Q G) = Q G
+    exact congrArg (fun T => T G) hComp
 
 /-- Audit-visible completed pair-Gauss projection package. -/
 structure
