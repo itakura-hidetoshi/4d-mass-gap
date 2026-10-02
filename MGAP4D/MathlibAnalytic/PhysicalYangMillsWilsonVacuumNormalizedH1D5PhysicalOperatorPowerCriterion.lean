@@ -331,7 +331,8 @@ theorem
             (periodicHypercubicEvenSpecialUnitaryPhysicalPositiveHalfCylinderTransferOperator
               H N hN (beta n) (hbeta n) x)
             y := by
-              simpa [H, c] using h n x y
+              dsimp only [c, H]
+              exact h n x y
       _ = c * inner ℝ msg test := by
               rw [
                 physicalYangMillsVacuumNormalizedSUNTwoModeUnfixedPathKernelMomentPairL2_inner_decomposable_eq_physicalPositiveHalfTransfer
@@ -360,10 +361,12 @@ theorem physicalOneSlabTransfer_comp_pow_comp_self_eq_pow_add_two
         (T ^ Nat.succ m) (T x) := by
           rw [pow_succ', ContinuousLinearMap.mul_def, ContinuousLinearMap.comp_apply]
     _ = (T ^ Nat.succ (Nat.succ m)) x := by
-          rw [pow_succ, ContinuousLinearMap.mul_def, ContinuousLinearMap.comp_apply]
+          simpa only [ContinuousLinearMap.mul_def, ContinuousLinearMap.comp_apply] using
+            congrArg
+              (fun A : E →L[ℝ] E => A x)
+              (pow_succ T (Nat.succ m)).symm
     _ = (T ^ (m + 2)) x := by
-          congr 2
-          omega
+          rfl
 
 section H1D5OperatorPower
 
@@ -425,7 +428,8 @@ theorem
       _ = (‖T‖ ^ 2) * inner ℝ (P x) y := by
           simpa [T, P] using h n x y
       _ = inner ℝ (((‖T‖ ^ 2) • P) x) y := by
-          simp only [ContinuousLinearMap.smul_apply, real_inner_smul_left]
+          rw [ContinuousLinearMap.smul_apply]
+          rw [real_inner_smul_left]
   · intro h n x y
     let T :=
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
@@ -444,7 +448,8 @@ theorem
       _ = inner ℝ (((‖T‖ ^ 2) • P) x) y := by
           rw [show T (P (T x)) = ((T.comp (P.comp T)) x) by rfl, hop]
       _ = (‖T‖ ^ 2) * inner ℝ (P x) y := by
-          simp only [ContinuousLinearMap.smul_apply, real_inner_smul_left]
+          rw [ContinuousLinearMap.smul_apply]
+          rw [real_inner_smul_left]
 
 /-- Final finite-volume normal form of H1-D5: the physical one-slab transfer
 must satisfy a two-step polynomial identity relative to the positive-half
