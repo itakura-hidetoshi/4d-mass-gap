@@ -121,6 +121,21 @@ theorem realHilbertPositiveCompact_nonzero_exists_unit_topEigenvector
       R unit hunit hPositiveLin hCompact
   exact ⟨v, hvnorm, hnormPos, hveig⟩
 
+/-- Rescale an eigen-equation written with an inverse scalar.
+Keeping this algebra abstract avoids expensive unfolding of dependent Hilbert
+subtypes in concrete Wilson proofs. -/
+theorem real_inv_smul_eq_smul_rescale
+    {E : Type*}
+    [AddCommMonoid E]
+    [Module ℝ E]
+    (a q : ℝ)
+    (ha : a ≠ 0)
+    (x y : E)
+    (h : a⁻¹ • x = q • y) :
+    x = (a * q) • y := by
+  have hscaled := congrArg (fun z : E => a • z) h
+  simpa only [smul_smul, mul_inv_cancel₀ ha, one_smul] using hscaled
+
 /-- If the normalized physical top-orthogonal restriction is nonzero, it
 theorem-generates a strictly positive raw physical one-slab eigenmode strictly
 below the raw top norm. -/
@@ -170,9 +185,9 @@ theorem
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta‖
   have hvneK : v ≠ 0 := by
-    apply norm_ne_zero_iff.mp
-    rw [hvnorm]
-    norm_num
+    intro hv0
+    rw [hv0, norm_zero] at hvnorm
+    norm_num at hvnorm
   have hvneG : (v : G) ≠ 0 := by
     intro hv0
     apply hvneK
@@ -207,16 +222,10 @@ theorem
   have hRaw :
       T (v : G) =
         (‖T‖ * q) • (v : G) := by
-    calc
-      T (v : G) = (1 : ℝ) • T (v : G) := by rw [one_smul]
-      _ = (‖T‖ * ‖T‖⁻¹) • T (v : G) := by
-        rw [mul_inv_cancel₀ hTpos.ne']
-      _ = ‖T‖ • (‖T‖⁻¹ • T (v : G)) := by
-        rw [smul_smul]
-      _ = ‖T‖ • (q • (v : G)) := by
-        rw [hSEigRaw]
-      _ = (‖T‖ * q) • (v : G) := by
-        rw [smul_smul]
+    exact
+      real_inv_smul_eq_smul_rescale
+        ‖T‖ q hTpos.ne'
+        (T (v : G)) (v : G) hSEigRaw
   have hqlt : q < 1 := by
     simpa only [q] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
