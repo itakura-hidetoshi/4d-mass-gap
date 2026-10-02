@@ -168,63 +168,71 @@ theorem
   rw [hilbertTensorMap_apply]
   rfl
 
-/-- The completed pair Gauss projector is idempotent. -/
+/-- The completed pair Gauss projector is idempotent, stated directly as
+composition equality to keep the completion/conjugation implementation opaque
+to Lean's definitional equality checker. -/
 theorem
-    periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection_isIdempotentElem
+    periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection_comp_self
     (H N : ℕ) :
-    IsIdempotentElem
-      (periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection
-        H N) := by
+    (periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection H N).comp
+        (periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection H N) =
+      periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection H N := by
   let mu :=
     periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
-  let U :=
-    realL2ExternalTensorHilbertCompletionEquiv
+  let J :=
+    realL2ExternalTensorLiftLinearIsometry
       (μ := mu) (ν := mu)
   let P :=
     periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection H N
   let A :=
     hilbertTensorMap P P
+  let Q :=
+    periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection H N
+  have hDense : DenseRange J :=
+    realL2ExternalTensorLiftLinearIsometry_denseRange
+      (μ := mu) (ν := mu)
   have hP :
-      P ∘L P = P := by
-    exact
-      periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection_idempotent
-        H N
+      P ∘L P = P :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceGaussLawProjection_idempotent
+      H N
   have hA :
       A ∘L A = A := by
     dsimp [A]
     rw [← hilbertTensorMap_comp P P P P, hP]
-  have hAc :
-      A.completion ∘L A.completion = A.completion := by
-    rw [← continuousLinearMap_completion_comp A A, hA]
-  show
-    periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection H N *
-        periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection H N =
-      periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection H N
+  have hQ :
+      ∀ x : Lp ℝ 2 mu ⊗[ℝ] Lp ℝ 2 mu,
+        Q (J x) = J (A x) := by
+    intro x
+    change
+      periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection
+          H N (realL2ExternalTensorLift x) =
+        realL2ExternalTensorLift (A x)
+    rw [
+      periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection_apply_externalTensorLift]
+    change
+      periodicHypercubicEvenSpecialUnitarySpatialSlicePairAlgebraicGaussProjectionRealization
+          H N x =
+        realL2ExternalTensorLift (A x)
+    rw [hilbertTensorMap_apply]
+    rfl
   apply ContinuousLinearMap.ext
   intro F
-  let z := U.symm F
-  have hCancel :
-      U.symm (U (A.completion z)) = A.completion z :=
-    U.symm_apply_apply (A.completion z)
-  change
-    U
-        (A.completion
-          (U.symm
-            (U
-              (A.completion z)))) =
-      U (A.completion z)
-  rw [hCancel]
-  apply U.injective
-  have hAcApply :=
-    congrArg
-      (fun T :
-        UniformSpace.Completion
+  change Q (Q F) = Q F
+  refine hDense.induction_on F (isClosed_eq (by fun_prop) (by fun_prop)) ?_
+  intro x
+  calc
+    Q (Q (J x)) = Q (J (A x)) := by rw [hQ x]
+    _ = J (A (A x)) := hQ (A x)
+    _ = J (A x) := by
+      have hAx :=
+        congrArg
+          (fun T :
             (Lp ℝ 2 mu ⊗[ℝ] Lp ℝ 2 mu) →L[ℝ]
-          UniformSpace.Completion
-            (Lp ℝ 2 mu ⊗[ℝ] Lp ℝ 2 mu) =>
-        T z)
-      hAc
-  simpa only [ContinuousLinearMap.comp_apply] using hAcApply
+              (Lp ℝ 2 mu ⊗[ℝ] Lp ℝ 2 mu) =>
+            T x)
+          hA
+      simpa only [ContinuousLinearMap.comp_apply] using congrArg J hAx
+    _ = Q (J x) := (hQ x).symm
 
 /-- The completed pair Gauss-projector range is contained in the completed
 physical pair carrier.  Density of algebraic external tensors propagates the
@@ -294,12 +302,14 @@ theorem
     exact
       periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection_apply_externalTensorLift
         H N x
-  · have hIdem :
-        IsIdempotentElem
-          (periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection
-            H N) :=
-      periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection_isIdempotentElem
+  · let Q :=
+      periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection
         H N
+    have hComp : Q.comp Q = Q :=
+      periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection_comp_self
+        H N
+    have hIdem : IsIdempotentElem Q := by
+      simpa only [ContinuousLinearMap.mul_def] using hComp
     exact ContinuousLinearMap.IsIdempotentElem.isClosed_range hIdem
 
 /-- Exact completion-level H1-D4 range theorem: the range of the canonical
@@ -337,23 +347,27 @@ theorem
     let Q :=
       periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection
         H N
-    have hIdem :
-        IsIdempotentElem Q :=
-      periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection_isIdempotentElem
+    have hComp : Q.comp Q = Q :=
+      periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection_comp_self
         H N
-    have hComp : Q ∘L Q = Q := by
-      simpa only [ContinuousLinearMap.mul_def] using hIdem.eq
     change Q (Q G) = Q G
-    exact congrArg (fun T => T G) hComp
+    have hApply :=
+      congrArg
+        (fun T :
+          PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2 H N →L[ℝ]
+            PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2 H N =>
+          T G)
+        hComp
+    simpa only [ContinuousLinearMap.comp_apply] using hApply
 
 /-- Audit-visible completed pair-Gauss projection package. -/
 structure
     PeriodicHypercubicEvenSpecialUnitaryPhysicalPairCompletedGaussProjectionPackage
     (H N : ℕ) : Prop where
   idempotent :
-    IsIdempotentElem
-      (periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection
-        H N)
+    (periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection H N).comp
+        (periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection H N) =
+      periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection H N
   rangeEq :
     (periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection
       H N).range =
@@ -371,7 +385,7 @@ theorem
     PeriodicHypercubicEvenSpecialUnitaryPhysicalPairCompletedGaussProjectionPackage
       H N :=
   { idempotent :=
-      periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection_isIdempotentElem
+      periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection_comp_self
         H N
     rangeEq :=
       periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection_range
