@@ -183,6 +183,15 @@ theorem
   refine hDense.induction_on₂
     (isClosed_eq (by fun_prop) (by fun_prop)) ?_ F G
   intro x y
+  change
+    inner ℝ
+        (periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection
+          H N (realL2ExternalTensorLift x))
+        (realL2ExternalTensorLift y) =
+      inner ℝ
+        (realL2ExternalTensorLift x)
+        (periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection
+          H N (realL2ExternalTensorLift y))
   rw [
     periodicHypercubicEvenSpecialUnitarySpatialSlicePairCompletedGaussProjection_apply_externalTensorLift
       H N x,
@@ -246,15 +255,28 @@ theorem
         periodicHypercubicEvenSpecialUnitaryIndependentGaugeFixed_kernelPairing_GaussProjection
           H N K hK f g
   | add x y hx hy =>
-      rw [map_add, map_add]
       calc
         inner ℝ K
+            (realL2ExternalTensorLift
+              (periodicHypercubicEvenSpecialUnitarySpatialSlicePairAlgebraicGaussProjection
+                H N (x + y))) =
+          inner ℝ K
+            (realL2ExternalTensorLift
+              (periodicHypercubicEvenSpecialUnitarySpatialSlicePairAlgebraicGaussProjection
+                  H N x +
+                periodicHypercubicEvenSpecialUnitarySpatialSlicePairAlgebraicGaussProjection
+                  H N y)) := by
+            rw [map_add]
+        _ =
+          inner ℝ K
             (realL2ExternalTensorLift
                 (periodicHypercubicEvenSpecialUnitarySpatialSlicePairAlgebraicGaussProjection
                   H N x) +
               realL2ExternalTensorLift
                 (periodicHypercubicEvenSpecialUnitarySpatialSlicePairAlgebraicGaussProjection
-                  H N y)) =
+                  H N y)) := by
+            rw [map_add]
+        _ =
           inner ℝ K
               (realL2ExternalTensorLift
                 (periodicHypercubicEvenSpecialUnitarySpatialSlicePairAlgebraicGaussProjection
@@ -272,6 +294,9 @@ theorem
           inner ℝ K
             (realL2ExternalTensorLift x + realL2ExternalTensorLift y) :=
           (inner_add_right K _ _).symm
+        _ =
+          inner ℝ K (realL2ExternalTensorLift (x + y)) := by
+            rw [map_add]
 
 /-- Independent endpoint gauge fixedness forces fixedness under the completed
 tensor-square Gauss projector. -/
