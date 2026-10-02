@@ -428,7 +428,9 @@ theorem
       _ = (‖T‖ ^ 2) * inner ℝ (P x) y := by
           simpa [T, P] using h n x y
       _ = inner ℝ (((‖T‖ ^ 2) • P) x) y := by
-          rw [smul_apply]
+          change
+            (‖T‖ ^ 2) * inner ℝ (P x) y =
+              inner ℝ ((‖T‖ ^ 2) • P x) y
           exact
             (real_inner_smul_left (P x) y (‖T‖ ^ 2)).symm
   · intro h n x y
@@ -449,7 +451,9 @@ theorem
       _ = inner ℝ (((‖T‖ ^ 2) • P) x) y := by
           rw [show T (P (T x)) = ((T.comp (P.comp T)) x) by rfl, hop]
       _ = (‖T‖ ^ 2) * inner ℝ (P x) y := by
-          rw [smul_apply]
+          change
+            inner ℝ ((‖T‖ ^ 2) • P x) y =
+              (‖T‖ ^ 2) * inner ℝ (P x) y
           exact
             real_inner_smul_left (P x) y (‖T‖ ^ 2)
 
