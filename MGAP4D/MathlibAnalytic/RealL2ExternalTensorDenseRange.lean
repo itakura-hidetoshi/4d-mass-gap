@@ -69,12 +69,14 @@ theorem realL2ExternalTensor_indicatorConstLp_one
       f =ᵐ[μ] s.indicator (fun _ => (1 : ℝ)) := by
     simpa [f] using
       (indicatorConstLp_coeFn
-        (p := (2 : ENNReal)) (μ := μ) hs (measure_ne_top μ s) (1 : ℝ))
+        (p := (2 : ENNReal)) (μ := μ)
+        (s := s) (hs := hs) (hμs := measure_ne_top μ s) (c := (1 : ℝ)))
   have hg :
       g =ᵐ[ν] t.indicator (fun _ => (1 : ℝ)) := by
     simpa [g] using
       (indicatorConstLp_coeFn
-        (p := (2 : ENNReal)) (μ := ν) ht (measure_ne_top ν t) (1 : ℝ))
+        (p := (2 : ENNReal)) (μ := ν)
+        (s := t) (hs := ht) (hμs := measure_ne_top ν t) (c := (1 : ℝ)))
   have hfPair :
       (fun z : α × β => f z.1) =ᵐ[μ.prod ν]
         fun z => s.indicator (fun _ => (1 : ℝ)) z.1 := by
@@ -89,8 +91,9 @@ theorem realL2ExternalTensor_indicatorConstLp_one
       r =ᵐ[μ.prod ν] (s ×ˢ t).indicator (fun _ => (1 : ℝ)) := by
     simpa [r] using
       (indicatorConstLp_coeFn
-        (p := (2 : ENNReal)) (μ := μ.prod ν) (hs.prod ht)
-        (measure_ne_top (μ.prod ν) (s ×ˢ t)) (1 : ℝ))
+        (p := (2 : ENNReal)) (μ := μ.prod ν)
+        (s := s ×ˢ t) (hs := hs.prod ht)
+        (hμs := measure_ne_top (μ.prod ν) (s ×ˢ t)) (c := (1 : ℝ)))
   filter_upwards [hTensor, hfPair, hgPair, hr] with z hTensorZ hfZ hgZ hrZ
   rw [hTensorZ, hrZ]
   simp only [realL2ExternalTensorFunction]
