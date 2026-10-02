@@ -1,7 +1,7 @@
 import MGAP4D.MathlibAnalytic.HilbertTensorCompactCompletion
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalPairAlgebraicGaussProjectionRange
 import MGAP4D.MathlibAnalytic.RealL2ExternalTensorCompletionEquiv
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Idempotent
+import Mathlib.Topology.Algebra.Module.LinearMap
 import Mathlib.Tactic
 
 /-!
