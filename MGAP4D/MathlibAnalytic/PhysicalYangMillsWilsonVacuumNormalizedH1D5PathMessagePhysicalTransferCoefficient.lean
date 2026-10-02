@@ -76,12 +76,23 @@ literally the primary fixed spatial slice. -/
         (Matrix.specialUnitaryGroup (Fin N) ℂ) b).1 a =
       b (periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge H a) := by
   classical
-  simp [
-    periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv,
+  let X :
+      (PeriodicHypercubicEvenSpatialSliceLink H ⊕
+        PeriodicHypercubicEvenSpatialSliceLink H) → Type :=
+    fun _ => Matrix.specialUnitaryGroup (Fin N) ℂ
+  let E := periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices H
+  let reindex := MeasurableEquiv.piCongrLeft X E
+  let split := MeasurableEquiv.sumPiEquivProdPi X
+  change (split (reindex b)).1 a =
+    b (periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge H a)
+  change reindex b (Sum.inl a) =
+    b (periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge H a)
+  have h :=
+    MeasurableEquiv.piCongrLeft_apply_apply
+      (β := X) E b (E.symm (Sum.inl a))
+  simpa [reindex, E,
     periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices,
-    periodicHypercubicEvenSpatialSliceSumToFixedEdge,
-    periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge
-  ]
+    periodicHypercubicEvenSpatialSliceSumToFixedEdge] using h
 
 /-- The second component of the canonical boundary-to-pair coordinate map is
 the antipodal fixed slice, canonically reindexed by half-period translation. -/
@@ -95,11 +106,25 @@ the antipodal fixed slice, canonically reindexed by half-period translation. -/
       b (periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge H
         (periodicHypercubicEvenPrimaryAntipodalSpatialSliceLinkEquiv H a)) := by
   classical
-  simp [
-    periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv,
+  let X :
+      (PeriodicHypercubicEvenSpatialSliceLink H ⊕
+        PeriodicHypercubicEvenSpatialSliceLink H) → Type :=
+    fun _ => Matrix.specialUnitaryGroup (Fin N) ℂ
+  let E := periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices H
+  let reindex := MeasurableEquiv.piCongrLeft X E
+  let split := MeasurableEquiv.sumPiEquivProdPi X
+  change (split (reindex b)).2 a =
+    b (periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge H
+      (periodicHypercubicEvenPrimaryAntipodalSpatialSliceLinkEquiv H a))
+  change reindex b (Sum.inr a) =
+    b (periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge H
+      (periodicHypercubicEvenPrimaryAntipodalSpatialSliceLinkEquiv H a))
+  have h :=
+    MeasurableEquiv.piCongrLeft_apply_apply
+      (β := X) E b (E.symm (Sum.inr a))
+  simpa [reindex, E,
     periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices,
-    periodicHypercubicEvenSpatialSliceSumToFixedEdge
-  ]
+    periodicHypercubicEvenSpatialSliceSumToFixedEdge] using h
 
 /-- The last positive-half slab endpoint is the antipodal fixed spatial layer. -/
 theorem periodicHypercubicEvenPositiveHalfCylinder_finLast_eq_finLast_succ
@@ -156,13 +181,13 @@ theorem
         (Matrix.specialUnitaryGroup (Fin N) ℂ) =>
     periodicHypercubicEvenBoundaryCompletedPositiveGramFeature
         H N hN beta hbeta z.1 z.2 *
-      (((x : Lp ℝ 2 mu)
+      ((x : Lp ℝ 2 mu)
           ((periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
-            H N z).1 0)) *
-        ((y : Lp ℝ 2 mu)
+            H N z).1 0) *
+        (y : Lp ℝ 2 mu)
           ((periodicHypercubicEvenSpecialUnitaryPositiveHalfClosureTransferMeasurableEquiv
             H N z).1
-            (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H))))
+            (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)))
   have he : MeasurePreserving e muB muPair := by
     simpa [e, muB, muPair] using
       periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_measurePreserving_specialUnitaryHaar
