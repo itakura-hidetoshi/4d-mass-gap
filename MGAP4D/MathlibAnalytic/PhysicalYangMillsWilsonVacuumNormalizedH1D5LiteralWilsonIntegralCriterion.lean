@@ -169,12 +169,7 @@ theorem
         g = _
   rw [real_inner_smul_left]
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairTransferOperator_inner]
-  simpa [K, μ, μPair, g] using
-    congrArg
-      (fun z =>
-        (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-            H N hN beta hbeta‖ ^ 2)⁻¹ * z)
-      hPairing
+  rw [hPairing]
 
 /-- Literal pair-Haar integral formula for the matrix coefficient of an
 arbitrary source against a decomposable physical pair. -/
