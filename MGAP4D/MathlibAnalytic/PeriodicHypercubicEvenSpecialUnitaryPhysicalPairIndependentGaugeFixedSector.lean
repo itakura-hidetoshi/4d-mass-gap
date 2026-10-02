@@ -228,6 +228,10 @@ theorem
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairSpan]
   refine Submodule.span_le.2 ?_
   rintro z ⟨⟨x, y⟩, rfl⟩
+  change
+    periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2 H N x y ∈
+      periodicHypercubicEvenSpecialUnitarySpatialSlicePairIndependentGaugeInvariantL2ClosedSubmodule
+        H N
   rw [
     periodicHypercubicEvenSpecialUnitarySpatialSlicePairIndependentGaugeInvariantL2ClosedSubmodule_mem]
   intro gammaPrimary gammaAntipodal
