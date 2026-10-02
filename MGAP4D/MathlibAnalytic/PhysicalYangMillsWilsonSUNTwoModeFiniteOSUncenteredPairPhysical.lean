@@ -128,11 +128,24 @@ theorem periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_symm_apply
   rw [
     periodicHypercubicEvenPrimarySpatialPlaquetteFixedEdgeEmbedding_eq_primarySliceLink
       H k]
-  simp [periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv,
-    periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices,
-    periodicHypercubicEvenFixedEdgeToSpatialSliceSum,
-    periodicHypercubicEvenSpatialSliceSumToFixedEdge,
-    periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge]
+  let edge := periodicHypercubicEvenPrimarySpatialSlicePlaquetteEdge H k
+  have hidx :
+      periodicHypercubicEvenFixedEdgeToSpatialSliceSum H
+          (periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge H edge) =
+        Sum.inl edge := by
+    exact
+      (periodicHypercubicEvenFixedEdgeEquivTwoSpatialSlices H).right_inv
+        (Sum.inl edge)
+  change
+    ((MeasurableEquiv.sumPiEquivProdPi
+      (fun _ : PeriodicHypercubicEvenSpatialSliceLink H ⊕
+        PeriodicHypercubicEvenSpatialSliceLink H =>
+          Matrix.specialUnitaryGroup (Fin N) ℂ)).symm (A, B))
+        (periodicHypercubicEvenFixedEdgeToSpatialSliceSum H
+          (periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge H edge)) =
+      A edge
+  rw [hidx]
+  rfl
 
 noncomputable def periodicHypercubicEvenPrimarySpatialSliceWilsonTwoModeBoundedObservable
     (H : ℕ)
@@ -307,6 +320,13 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteWilsonTwoModeBoundaryHaarL2
         H N)
   have hboundaryPair :=
     he.quasiMeasurePreserving.ae_eq hboundary
+  have hboundaryPair' :
+      (fun z => f (e.symm z)) =ᵐ[
+        periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N]
+        fun z =>
+          periodicHypercubicEvenPrimarySpatialPlaquetteWilsonTwoModeBoundaryObservable
+            H hN2 k (e.symm z) := by
+    simpa [f, e, Function.comp_def] using hboundaryPair
   have hmode :=
     periodicHypercubicEvenPrimarySpatialSliceWilsonTwoModePhysicalL2_coeFn
       H hN2 k
@@ -326,7 +346,7 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteWilsonTwoModeBoundaryHaarL2
       ((periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H N :
         periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
         Lp ℝ 2 μ)
-  filter_upwards [hforward, hboundaryPair, hmodeFst, honeSnd, htensor]
+  filter_upwards [hforward, hboundaryPair', hmodeFst, honeSnd, htensor]
       with z hfor hbd hmodez honez hten
   change
     periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry H N f z =
@@ -394,10 +414,7 @@ variable
 
 theorem physicalYangMillsSUNTwoModeExplicitUncenteredPairPhysicalCarrier :
     PhysicalYangMillsSUNTwoModeExplicitUncenteredPairPhysicalCarrier
-      (S := S) (D := D) (halfExtent := halfExtent)
-      (N := N) (hN := hN) (hN2 := hN2)
-      (beta := beta) (hbeta := hbeta)
-      (Q := Q) (hInvariant := hInvariant) := by
+      (halfExtent := halfExtent) (N := N) (hN2 := hN2) := by
   intro k n
   exact
     periodicHypercubicEvenPrimarySpatialPlaquetteWilsonTwoModeBoundaryHaarL2_to_pair_mem_physicalPairCarrier
@@ -407,7 +424,7 @@ theorem physicalYangMillsSUNTwoModeFullPairResiduals_of_vacuumAlignment
     (hVac :
       PhysicalYangMillsSUNTwoModeExplicitOSVacuumPairTopAlignment
         (S := S) (D := D) (halfExtent := halfExtent)
-        (N := N) (hN := hN) (hN2 := hN2)
+        (N := N) (hN := hN)
         (beta := beta) (hbeta := hbeta)
         (Q := Q) (hInvariant := hInvariant)) :
     PhysicalYangMillsSUNTwoModeExplicitCenteredPairPhysicalCarrier
@@ -421,13 +438,10 @@ theorem physicalYangMillsSUNTwoModeFullPairResiduals_of_vacuumAlignment
         (beta := beta) (hbeta := hbeta)
         (Q := Q) (hInvariant := hInvariant) := by
   exact
-    physicalYangMillsSUNTwoModeFullPairResiduals_of_vacuumAlignment_of_uncenteredPhysicalCarrier
+    physicalYangMillsSUNTwoModeExplicitCenteredFullPairResiduals_of_vacuumPairTopAlignment_uncentered
       hVac
       (physicalYangMillsSUNTwoModeExplicitUncenteredPairPhysicalCarrier
-        (S := S) (D := D) (halfExtent := halfExtent)
-        (N := N) (hN := hN) (hN2 := hN2)
-        (beta := beta) (hbeta := hbeta)
-        (Q := Q) (hInvariant := hInvariant))
+        (halfExtent := halfExtent) (N := N) (hN2 := hN2))
 
 theorem physicalYangMillsSUNTwoModeExplicitCenteredBoundaryPairL2_pow_norm_le_uniform_q0_of_vacuumAlignment
     (hVac :
