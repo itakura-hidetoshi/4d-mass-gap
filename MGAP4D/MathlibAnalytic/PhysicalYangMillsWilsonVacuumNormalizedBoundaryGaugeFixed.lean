@@ -190,7 +190,6 @@ theorem physicalYangMillsVacuumNormalizedOSVacuumBoundaryL2_gaugeFixed
 
 /-- Pair-coordinate version of the preceding concrete-vacuum identification. -/
 theorem physicalYangMillsVacuumNormalizedSUNTwoModeExplicitOSVacuumBoundaryPairL2_eq_boundaryVacuumPair
-    (hN2 : 2 ≤ N)
     (n : ℕ) :
     physicalYangMillsSUNTwoModeExplicitOSVacuumBoundaryPairL2
         (S := S) (D := D) (halfExtent := halfExtent)
