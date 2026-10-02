@@ -170,10 +170,9 @@ theorem
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta‖
   have hvneK : v ≠ 0 := by
-    intro hv0
-    have hbad : (0 : ℝ) = 1 := by
-      simpa only [hv0, norm_zero] using hvnorm
-    exact zero_ne_one hbad
+    apply norm_ne_zero_iff.mp
+    rw [hvnorm]
+    norm_num
   have hvneG : (v : G) ≠ 0 := by
     intro hv0
     apply hvneK
@@ -202,14 +201,22 @@ theorem
     simpa only [T] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
         H N hN beta hbeta
+  have hSEigRaw :
+      ‖T‖⁻¹ • T (v : G) = q • (v : G) := by
+    exact hSEig
   have hRaw :
       T (v : G) =
         (‖T‖ * q) • (v : G) := by
-    change ‖T‖⁻¹ • T (v : G) = q • (v : G) at hSEig
-    have hscaled :=
-      congrArg (fun z : G => ‖T‖ • z) hSEig
-    rw [smul_smul, mul_inv_cancel₀ hTpos.ne', one_smul, smul_smul] at hscaled
-    exact hscaled
+    calc
+      T (v : G) = (1 : ℝ) • T (v : G) := by rw [one_smul]
+      _ = (‖T‖ * ‖T‖⁻¹) • T (v : G) := by
+        rw [mul_inv_cancel₀ hTpos.ne']
+      _ = ‖T‖ • (‖T‖⁻¹ • T (v : G)) := by
+        rw [smul_smul]
+      _ = ‖T‖ • (q • (v : G)) := by
+        rw [hSEigRaw]
+      _ = (‖T‖ * q) • (v : G) := by
+        rw [smul_smul]
   have hqlt : q < 1 := by
     simpa only [q] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
