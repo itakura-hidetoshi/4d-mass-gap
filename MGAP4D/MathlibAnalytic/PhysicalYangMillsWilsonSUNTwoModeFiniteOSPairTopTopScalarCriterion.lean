@@ -91,7 +91,7 @@ local notation "TT" =>
 vacuum once one-slice top-eigenspace simplicity is available. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopDecomposableL2_exists_smul_pairTopMode
     (u v : F) :
-    exists c : R,
+    exists c : ℝ,
       periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopDecomposableL2
           H N hN beta hbeta u v =
         c • PairTop := by
@@ -101,39 +101,39 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopDecomposableL2_exi
   have hF :
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
           H N hN beta hbeta =
-        R •span• omega := by
+        ℝ ∙ omega := by
     simpa [omega] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace_eq_span_topEigenvector
         H N hN beta hbeta
-  have huSpan : (u : G) ∈ R •span• omega := by
+  have huSpan : (u : G) ∈ ℝ ∙ omega := by
     rw [← hF]
     exact u.property
-  have hvSpan : (v : G) ∈ R •span• omega := by
+  have hvSpan : (v : G) ∈ ℝ ∙ omega := by
     rw [← hF]
     exact v.property
   obtain ⟨cu, hcu⟩ := Submodule.mem_span_singleton.mp huSpan
   obtain ⟨cv, hcv⟩ := Submodule.mem_span_singleton.mp hvSpan
   have huL2 :
-      (((u : G) : Lp R 2 mu)) =
+      (((u : G) : Lp ℝ 2 mu)) =
         cu • periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2
           H N hN beta hbeta := by
     have h :=
-      congrArg (fun z : G => (z : Lp R 2 mu)) hcu
+      congrArg (fun z : G => (z : Lp ℝ 2 mu)) hcu
     simpa [omega,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2] using h.symm
   have hvL2 :
-      (((v : G) : Lp R 2 mu)) =
+      (((v : G) : Lp ℝ 2 mu)) =
         cv • periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2
           H N hN beta hbeta := by
     have h :=
-      congrArg (fun z : G => (z : Lp R 2 mu)) hcv
+      congrArg (fun z : G => (z : Lp ℝ 2 mu)) hcv
     simpa [omega,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2] using h.symm
   refine ⟨cu * cv, ?_⟩
   change
     realL2ExternalTensor
-        (((u : G) : Lp R 2 mu))
-        (((v : G) : Lp R 2 mu)) =
+        (((u : G) : Lp ℝ 2 mu))
+        (((v : G) : Lp ℝ 2 mu)) =
       (cu * cv) •
         realL2ExternalTensor
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2
@@ -142,8 +142,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopDecomposableL2_exi
             H N hN beta hbeta)
   calc
     realL2ExternalTensor
-        (((u : G) : Lp R 2 mu))
-        (((v : G) : Lp R 2 mu)) =
+        (((u : G) : Lp ℝ 2 mu))
+        (((v : G) : Lp ℝ 2 mu)) =
       realL2ExternalTensor
         (cu • periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2
           H N hN beta hbeta)
@@ -171,7 +171,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopDecomposableL2_exi
 /-- The algebraic full top-top block is exactly the singleton span of the
 selected pair vacuum. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan_eq_span_pairTopMode :
-    TTspan = R •span• PairTop := by
+    TTspan = ℝ ∙ PairTop := by
   apply le_antisymm
   · rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan]
     refine Submodule.span_le.2 ?_
@@ -182,7 +182,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan_eq_span_
         H N hN beta hbeta u v
     rw [hc]
     exact
-      Submodule.smul_mem (R •span• PairTop) c
+      Submodule.smul_mem (ℝ ∙ PairTop) c
         (Submodule.mem_span_singleton_self PairTop)
   · rw [Submodule.span_singleton_le_iff_mem]
     rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan]
@@ -205,7 +205,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan_eq_span_
 coefficient against the selected pair vacuum. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockClosure_orthogonal_mem_iff_pairTopMode_inner_eq_zero
     (x : PairE) :
-    x ∈ TTᗮ ↔ inner R PairTop x = 0 := by
+    x ∈ TTᗮ ↔ inner ℝ PairTop x = 0 := by
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockClosure]
   rw [Submodule.orthogonal_closure]
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan_eq_span_pairTopMode
@@ -219,10 +219,10 @@ section SUNTwoModeScalarResidual
 variable
     {S : PhysicalFourDimensionalYangMillsSymmetryLimit}
     {D : PhysicalYangMillsGaugeInvariantOSReflectionData S}
-    {halfExtent : Nat → Nat}
-    {N : Nat} {hN : 0 < N} {hN2 : 2 ≤ N}
-    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) C)]
-    {beta : Nat → R} {hbeta : ∀ n, 0 ≤ beta n}
+    {halfExtent : ℕ → ℕ}
+    {N : ℕ} {hN : 0 < N} {hN2 : 2 ≤ N}
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
     {Q : PhysicalYangMillsEvenPeriodicWilsonOSCoherentPositiveTimePullback
       S D halfExtent N hN beta hbeta}
     {hInvariant : ∀ n,
@@ -231,7 +231,7 @@ variable
 
 /-- Scalar form of the second #5009 full-pair residual. -/
 def PhysicalYangMillsSUNTwoModeExplicitCenteredPairTopPairScalarOrthogonal : Prop :=
-  ∀ (k : Fin 2) (n : Nat),
+  ∀ (k : Fin 2) (n : ℕ),
     inner R
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopModeL2
           (halfExtent n) N hN (beta n) (hbeta n))
