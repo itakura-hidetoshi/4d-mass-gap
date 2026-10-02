@@ -152,10 +152,6 @@ theorem
   let R :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta
-  letI : InnerProductSpace ℝ K := Submodule.innerProductSpace K
-  letI : CompleteSpace K :=
-    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
-      H N hN beta hbeta).isClosed_orthogonal).completeSpace_coe
   have hRpos : ((R : K →L[ℝ] K) : K →ₗ[ℝ] K).IsPositive := by
     refine ⟨?_, ?_⟩
     · intro x y
