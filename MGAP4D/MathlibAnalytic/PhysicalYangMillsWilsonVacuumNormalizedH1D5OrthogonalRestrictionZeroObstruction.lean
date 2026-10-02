@@ -153,6 +153,7 @@ theorem
   let F : Submodule ℝ G := realHilbertTopEigenspace S
   let R : Fᗮ →L[ℝ] Fᗮ :=
     realHilbertTopEigenspaceOrthogonalRestriction S hSsymm
+  letI : InnerProductSpace ℝ Fᗮ := Submodule.innerProductSpace Fᗮ
   letI : CompleteSpace Fᗮ := F.isClosed_orthogonal.completeSpace_coe
   have hRpos : ((R : Fᗮ →L[ℝ] Fᗮ) : Fᗮ →ₗ[ℝ] Fᗮ).IsPositive := by
     simpa [R, F, hSsymm] using
@@ -171,7 +172,7 @@ theorem
     apply ContinuousLinearMap.ext
     intro x
     change R x = 0
-    rw [hzero, map_zero]
+    simpa only [hzero]
   obtain ⟨v, hvnorm, hqpos, hveig⟩ :=
     realHilbertPositiveCompact_nonzero_exists_unit_topEigenvector
       R hRpos hRcompact hRne'
