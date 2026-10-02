@@ -171,8 +171,9 @@ theorem
       H N hN beta hbeta‖
   have hvneK : v ≠ 0 := by
     intro hv0
-    rw [hv0, norm_zero] at hvnorm
-    norm_num at hvnorm
+    have hbad : (0 : ℝ) = 1 := by
+      simpa only [hv0, norm_zero] using hvnorm
+    exact zero_ne_one hbad
   have hvneG : (v : G) ≠ 0 := by
     intro hv0
     apply hvneK
@@ -191,9 +192,14 @@ theorem
           H N hN beta hbeta (v : G) =
         ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
           H N hN beta hbeta‖ • (v : G) at hcoe
-    simpa [S, q] using hcoe
+    change
+      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+          H N hN beta hbeta (v : G) =
+        ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta‖ • (v : G)
+    exact hcoe
   have hTpos : 0 < ‖T‖ := by
-    simpa [T] using
+    simpa only [T] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
         H N hN beta hbeta
   have hRaw :
@@ -205,18 +211,18 @@ theorem
     rw [smul_smul, mul_inv_cancel₀ hTpos.ne', one_smul, smul_smul] at hscaled
     exact hscaled
   have hqlt : q < 1 := by
-    simpa [q] using
+    simpa only [q] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
         H N hN beta hbeta
   have hrhoPos : 0 < ‖T‖ * q := by
-    exact mul_pos hTpos (by simpa [q] using hqpos)
+    exact mul_pos hTpos (by simpa only [q] using hqpos)
   have hrhoTop : ‖T‖ * q < ‖T‖ := by
     calc
       ‖T‖ * q < ‖T‖ * 1 := (mul_lt_mul_left hTpos).2 hqlt
       _ = ‖T‖ := mul_one _
   refine ⟨‖T‖ * q, (v : G), hvneG, hrhoPos, ?_, ?_⟩
-  · simpa [T] using hrhoTop
-  · simpa [T] using hRaw
+  · simpa only [T] using hrhoTop
+  · simpa only [T] using hRaw
 
 section PhysicalWilsonH1D5OrthogonalZero
 
