@@ -82,7 +82,7 @@ theorem realHilbertPositiveCompact_nonzero_exists_unit_topEigenvector
     [InnerProductSpace ℝ E]
     [CompleteSpace E]
     (R : E →L[ℝ] E)
-    (hPositive : (R : E →ₗ[ℝ] E).IsPositive)
+    (hPositive : R.IsPositive)
     (hCompact : IsCompactOperator R)
     (hRne : R ≠ 0) :
     ∃ v : E,
@@ -109,9 +109,13 @@ theorem realHilbertPositiveCompact_nonzero_exists_unit_topEigenvector
     exact inv_mul_cancel₀ hunorm.ne'
   have hnormPos : 0 < ‖R‖ :=
     norm_pos_iff.mpr hRne
+  have hPositiveLin : (R : E →ₗ[ℝ] E).IsPositive := by
+    refine ⟨hPositive.isSymmetric, ?_⟩
+    intro x
+    exact hPositive.re_inner_nonneg_left x
   obtain ⟨v, hvnorm, hveig⟩ :=
     realHilbertPositiveCompact_exists_unit_topEigenvector
-      R unit hunit hPositive hCompact
+      R unit hunit hPositiveLin hCompact
   exact ⟨v, hvnorm, hnormPos, hveig⟩
 
 /-- The concrete normalized physical top-orthogonal one-slab restriction is
@@ -123,36 +127,18 @@ theorem
     [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
     (beta : ℝ)
     (hbeta : 0 ≤ beta) :
-    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-        H N hN beta hbeta :
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta →L[ℝ]
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta) :
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta →ₗ[ℝ]
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-          H N hN beta hbeta).IsPositive := by
-  refine ⟨?_, ?_⟩
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+      H N hN beta hbeta).IsPositive := by
+  rw [ContinuousLinearMap.isPositive_iff]
+  constructor
   · intro x y
     exact
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_symm
         H N hN beta hbeta x y
   · intro x
-    change
-      0 ≤ RCLike.re
-        (inner ℝ
-          (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-            H N hN beta hbeta
-            (x :
-              periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
-                H N))
-          (x :
-            periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
-              H N))
     exact
-      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isPositive
-        H N hN beta hbeta).re_inner_nonneg_left _
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_nonneg
+        H N hN beta hbeta x
 
 /-- If the normalized physical top-orthogonal restriction is nonzero, it
 theorem-generates a strictly positive raw physical one-slab eigenmode strictly
