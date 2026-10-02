@@ -86,7 +86,7 @@ the H1-D5-type power identity. -/
 theorem realContinuousLinearMap_powerIdentity_ne_of_strictPositiveSubtopEigenmode
     {E : Type*}
     [NormedAddCommGroup E]
-    [NormedSpace ℝ E]
+    [InnerProductSpace ℝ E]
     (T : E →L[ℝ] E)
     (m : ℕ)
     (f : E)
