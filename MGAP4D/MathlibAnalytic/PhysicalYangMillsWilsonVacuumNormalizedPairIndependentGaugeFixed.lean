@@ -59,13 +59,14 @@ local instance vacuumPairIndependentGaugeSpatialSliceHaarSFinite (H N : ℕ) :
 
 /-- Extend two independently chosen endpoint gauge transformations to the full
 four-dimensional periodic vertex set. -/
-def periodicHypercubicEvenIndependentEndpointGaugeExtension
+noncomputable def periodicHypercubicEvenIndependentEndpointGaugeExtension
     (H N : ℕ)
     (gammaPrimary gammaAntipodal :
       PeriodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransformation H N) :
     PeriodicHypercubicEvenVertex H →
-      Matrix.specialUnitaryGroup (Fin N) ℂ :=
-  fun v =>
+      Matrix.specialUnitaryGroup (Fin N) ℂ := by
+  classical
+  exact fun v =>
     if hp : periodicHypercubicEvenOnPrimaryReflectionPlane H v then
       gammaPrimary ⟨v, hp⟩
     else if ha : periodicHypercubicEvenOnAntipodalReflectionPlane H v then
@@ -82,6 +83,7 @@ def periodicHypercubicEvenIndependentEndpointGaugeExtension
     periodicHypercubicEvenIndependentEndpointGaugeExtension
         H N gammaPrimary gammaAntipodal v.1 =
       gammaPrimary v := by
+  classical
   simp [periodicHypercubicEvenIndependentEndpointGaugeExtension, v.2]
 
 @[simp] theorem periodicHypercubicEvenIndependentEndpointGaugeExtension_antipodal
@@ -93,16 +95,17 @@ def periodicHypercubicEvenIndependentEndpointGaugeExtension
         H N gammaPrimary gammaAntipodal
         (periodicHypercubicEvenPrimaryToAntipodalSpatialSliceVertex H v).1 =
       gammaAntipodal v := by
+  classical
   let va := periodicHypercubicEvenPrimaryToAntipodalSpatialSliceVertex H v
   have hnot :
       ¬ periodicHypercubicEvenOnPrimaryReflectionPlane H va.1 := by
     intro hp
     exact periodicHypercubicEven_primary_antipodal_disjoint H va.1 hp va.2
-  simp [periodicHypercubicEvenIndependentEndpointGaugeExtension, va, hnot,
-    periodicHypercubicEvenPrimaryAntipodalSpatialSliceVertexEquiv,
-    periodicHypercubicEvenPrimaryToAntipodalSpatialSliceVertex,
-    periodicHypercubicEvenAntipodalToPrimarySpatialSliceVertex,
-    periodicHypercubicEvenHalfPeriodTimeShift_involutive H v.1]
+  rw [periodicHypercubicEvenIndependentEndpointGaugeExtension]
+  simp only [dif_neg hnot]
+  rw [dif_pos va.2]
+  exact congrArg gammaAntipodal
+    ((periodicHypercubicEvenPrimaryAntipodalSpatialSliceVertexEquiv H).left_inv v)
 
 /-- Exact inverse pair-coordinate evaluation on a primary-slice fixed edge. -/
 theorem periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_symm_apply_primary
@@ -158,6 +161,38 @@ theorem periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_symm_apply
   rw [hidx]
   rfl
 
+/-- Exact forward pair-coordinate evaluation on a primary fixed edge. -/
+theorem periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_apply_primary
+    (H : ℕ) {Value : Type*} [MeasurableSpace Value]
+    (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration Value)
+    (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+    (periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv H Value b).1 e =
+      b (periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge H e) := by
+  have h :=
+    periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_symm_apply_primary
+      H
+      (periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv H Value b).1
+      (periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv H Value b).2
+      e
+  simpa using h.symm
+
+/-- Exact forward pair-coordinate evaluation on an antipodal fixed edge. -/
+theorem periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_apply_antipodal
+    (H : ℕ) {Value : Type*} [MeasurableSpace Value]
+    (b : (periodicHypercubicEvenEdgeOrbitPartition H).BoundaryConfiguration Value)
+    (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+    (periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv H Value b).2 e =
+      b
+        (periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge H
+          (periodicHypercubicEvenPrimaryAntipodalSpatialSliceLinkEquiv H e)) := by
+  have h :=
+    periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_symm_apply_antipodal
+      H
+      (periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv H Value b).1
+      (periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv H Value b).2
+      e
+  simpa using h.symm
+
 /-- Independent product gauge action on the ordered primary/antipodal pair. -/
 def periodicHypercubicEvenSpecialUnitarySpatialSlicePairIndependentGaugeTransform
     (H N : ℕ)
@@ -190,19 +225,15 @@ theorem periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_gaugeTrans
         H N gammaPrimary gammaAntipodal
         (periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv H
           (Matrix.specialUnitaryGroup (Fin N) ℂ) b) := by
+  classical
   let E :=
     periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv H
       (Matrix.specialUnitaryGroup (Fin N) ℂ)
   let z := E b
   apply Prod.ext
   · funext e
-    have hb :
-        b (periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge H e) =
-          z.1 e := by
-      have h :=
-        periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_symm_apply_primary
-          H z.1 z.2 e
-      simpa [z, E] using h.symm
+    rw [
+      periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_apply_primary]
     change
       periodicHypercubicEvenIndependentEndpointGaugeExtension
           H N gammaPrimary gammaAntipodal e.1.1 *
@@ -215,53 +246,53 @@ theorem periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_gaugeTrans
           (periodicHypercubicEvenSpatialSliceShift H e.1 e.2))⁻¹
     rw [
       periodicHypercubicEvenIndependentEndpointGaugeExtension_primary,
-      periodicHypercubicEvenIndependentEndpointGaugeExtension_primary,
-      hb]
+      periodicHypercubicEvenIndependentEndpointGaugeExtension_primary]
+    have hb :
+        b (periodicHypercubicEvenPrimarySpatialSliceLinkToFixedEdge H e) =
+          z.1 e := by
+      simpa [z, E] using
+        (periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_apply_primary
+          H b e).symm
+    rw [hb]
   · funext e
+    rw [
+      periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_apply_antipodal]
     let ea :=
       periodicHypercubicEvenPrimaryAntipodalSpatialSliceLinkEquiv H e
     have hb :
         b (periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge H ea) =
           z.2 e := by
-      have h :=
-        periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_symm_apply_antipodal
-          H z.1 z.2 e
-      simpa [ea, z, E] using h.symm
-    have hshift :
-        periodicHypercubicEvenHalfPeriodTimeShift H
-            (periodicHypercubicEvenSpatialSliceShift H e.1 e.2).1 =
-          periodicHypercubicEvenSpatialSliceShift H
-            (periodicHypercubicEvenPrimaryToAntipodalSpatialSliceVertex H e.1)
-            e.2 |>.1 := by
+      simpa [ea, z, E] using
+        (periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_apply_antipodal
+          H b e).symm
+    have hsrc :
+        ea.1.1 =
+          (periodicHypercubicEvenPrimaryToAntipodalSpatialSliceVertex H e.1).1 := by
+      rfl
+    have htgt :
+        periodicHypercubicEdgeTarget
+            (PeriodicHypercubicEvenSideLength H)
+            (periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge H ea).1 =
+          (periodicHypercubicEvenPrimaryToAntipodalSpatialSliceVertex H
+            (periodicHypercubicEvenSpatialSliceShift H e.1 e.2)).1 := by
+      dsimp [ea, periodicHypercubicEvenPrimaryAntipodalSpatialSliceLinkEquiv,
+        periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge]
       exact
-        periodicHypercubicEvenHalfPeriodTimeShift_shift_spatial
-          H e.1.1 e.2.1 e.2.2
+        (periodicHypercubicEvenHalfPeriodTimeShift_shift_spatial
+          H e.1.1 e.2.1 e.2.2).symm
     change
       periodicHypercubicEvenIndependentEndpointGaugeExtension
           H N gammaPrimary gammaAntipodal ea.1.1 *
         b (periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge H ea) *
         (periodicHypercubicEvenIndependentEndpointGaugeExtension
           H N gammaPrimary gammaAntipodal
-          (periodicHypercubicEvenSpatialSliceShift H ea.1 ea.2).1)⁻¹ =
+          (periodicHypercubicEdgeTarget
+            (PeriodicHypercubicEvenSideLength H)
+            (periodicHypercubicEvenAntipodalSpatialSliceLinkToFixedEdge H ea).1))⁻¹ =
       gammaAntipodal e.1 * z.2 e *
         (gammaAntipodal
           (periodicHypercubicEvenSpatialSliceShift H e.1 e.2))⁻¹
-    rw [hb]
-    change
-      periodicHypercubicEvenIndependentEndpointGaugeExtension
-          H N gammaPrimary gammaAntipodal
-          (periodicHypercubicEvenPrimaryToAntipodalSpatialSliceVertex H e.1).1 *
-        z.2 e *
-        (periodicHypercubicEvenIndependentEndpointGaugeExtension
-          H N gammaPrimary gammaAntipodal
-          (periodicHypercubicEvenHalfPeriodTimeShift H
-            (periodicHypercubicEvenSpatialSliceShift H e.1 e.2).1))⁻¹ =
-      gammaAntipodal e.1 * z.2 e *
-        (gammaAntipodal
-          (periodicHypercubicEvenSpatialSliceShift H e.1 e.2))⁻¹ := by
-      simpa [ea, periodicHypercubicEvenPrimaryAntipodalSpatialSliceLinkEquiv,
-        periodicHypercubicEvenPrimaryToAntipodalSpatialSliceVertex,
-        periodicHypercubicEvenSpatialSliceShift] using hshift
+    rw [hsrc, htgt, hb]
     rw [
       periodicHypercubicEvenIndependentEndpointGaugeExtension_antipodal,
       periodicHypercubicEvenIndependentEndpointGaugeExtension_antipodal]
@@ -333,9 +364,15 @@ theorem periodicHypercubicEvenBoundaryGaugePullback_to_pair
   have hforward :=
     periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry_coeFn
       H N f
+  have hESymm :
+      MeasurePreserving E.symm
+        (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N)
+        (periodicHypercubicEvenBoundaryHaarMeasure H N) := by
+    exact MeasurePreserving.symm E
+      (periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_measurePreserving_haar
+        H N)
   have hboundaryPair :=
-    (periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_measurePreserving_haar
-      H N).quasiMeasurePreserving.ae_eq hboundary
+    hESymm.quasiMeasurePreserving.ae_eq hboundary
   have hforwardGauge :=
     (periodicHypercubicEvenSpecialUnitarySpatialSlicePairIndependentGaugeTransform_measurePreserving
       H N gammaPrimary gammaAntipodal).quasiMeasurePreserving.ae_eq hforward
