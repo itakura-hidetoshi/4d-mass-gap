@@ -410,7 +410,7 @@ theorem
                     (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
                       H N)) q.2))
             ∂(periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) at hscaled
-    simpa [H, phi, c] using hscaled
+    simpa only [H, phi, c] using hscaled
 
 end VacuumNormalizedH1D5PurePath
 
