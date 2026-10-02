@@ -95,7 +95,7 @@ theorem periodicHypercubicEvenSpecialUnitaryRealL2ExternalTensor_independentGaug
       H N gammaPrimary gammaAntipodal
   have hLeft :=
     realL2ExternalTensor_coeFn
-      (mu := mu) (nu := mu) (UPrimary f) (UAntipodal g)
+      (μ := mu) (ν := mu) (UPrimary f) (UAntipodal g)
   have hf :=
     periodicHypercubicEvenSpecialUnitarySpatialSliceGaugePullbackLinearIsometry_coeFn
       H N gammaPrimary f
@@ -109,7 +109,7 @@ theorem periodicHypercubicEvenSpecialUnitaryRealL2ExternalTensor_independentGaug
         UPrimary f p.1) =ᵐ[mu.prod mu]
         fun p => f (GPrimary p.1) := by
     simpa [mu, UPrimary, GPrimary, Function.comp_def] using
-      (Measure.quasiMeasurePreserving_fst (mu := mu) (nu := mu)).ae_eq hf
+      (Measure.quasiMeasurePreserving_fst (μ := mu) (ν := mu)).ae_eq hf
   have hgPair :
       (fun p :
         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
@@ -117,12 +117,12 @@ theorem periodicHypercubicEvenSpecialUnitaryRealL2ExternalTensor_independentGaug
         UAntipodal g p.2) =ᵐ[mu.prod mu]
         fun p => g (GAntipodal p.2) := by
     simpa [mu, UAntipodal, GAntipodal, Function.comp_def] using
-      (Measure.quasiMeasurePreserving_snd (mu := mu) (nu := mu)).ae_eq hg
+      (Measure.quasiMeasurePreserving_snd (μ := mu) (ν := mu)).ae_eq hg
   have hRight :=
     periodicHypercubicEvenSpecialUnitarySpatialSlicePairIndependentGaugePullbackLinearIsometry_coeFn
       H N gammaPrimary gammaAntipodal (realL2ExternalTensor f g)
   have hTensor :=
-    realL2ExternalTensor_coeFn (mu := mu) (nu := mu) f g
+    realL2ExternalTensor_coeFn (μ := mu) (ν := mu) f g
   have hTensorPull :=
     (periodicHypercubicEvenSpecialUnitarySpatialSlicePairIndependentGaugeTransform_measurePreserving
       H N gammaPrimary gammaAntipodal).quasiMeasurePreserving.ae_eq hTensor
