@@ -245,7 +245,11 @@ theorem
             H N z).1
             (Fin.last (periodicHypercubicEvenPositiveHalfCylinderSlabCount H)) := by
       funext a
-      rw [periodicHypercubicEvenPositiveHalfCylinder_finLast_eq_finLast_succ H]
+      have hLast :
+          (Fin.last (H + 1) : Fin (H + 2)) = (Fin.last H).succ := by
+        apply Fin.ext
+        rfl
+      rw [hLast]
       dsimp [e]
       rw [
         periodicHypercubicEvenBoundarySpatialSlicePairMeasurableEquiv_snd_apply,
