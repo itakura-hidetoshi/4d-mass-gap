@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonVacuumNormalizedH1D5StrictPositiveSubtopEigenObstruction
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenOSBoundaryExcitationCompletedPairCompactness
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPoincareDefect
 import Mathlib.Tactic
 
 /-!
@@ -145,77 +146,75 @@ theorem
   let S :=
     periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
       H N hN beta hbeta
-  have hSpos : ((S : G →L[ℝ] G) : G →ₗ[ℝ] G).IsPositive := by
-    simpa [S, G] using
-      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isPositive
-        H N hN beta hbeta
-  let hSsymm : (S : G →ₗ[ℝ] G).IsSymmetric := hSpos.isSymmetric
-  let F : Submodule ℝ G := realHilbertTopEigenspace S
-  let R : Fᗮ →L[ℝ] Fᗮ :=
-    realHilbertTopEigenspaceOrthogonalRestriction S hSsymm
-  letI : InnerProductSpace ℝ Fᗮ := Submodule.innerProductSpace Fᗮ
-  letI : CompleteSpace Fᗮ := F.isClosed_orthogonal.completeSpace_coe
-  have hRpos : ((R : Fᗮ →L[ℝ] Fᗮ) : Fᗮ →ₗ[ℝ] Fᗮ).IsPositive := by
-    simpa [R, F, hSsymm] using
-      realHilbertTopEigenspaceOrthogonalRestriction_isPositive S hSpos
-  have hScompact : IsCompactOperator S := by
-    simpa [S, G] using
-      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isCompact
-        H N hN beta hbeta
+  let K :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta
+  let R :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+      H N hN beta hbeta
+  letI : InnerProductSpace ℝ K := Submodule.innerProductSpace K
+  letI : CompleteSpace K :=
+    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
+      H N hN beta hbeta).isClosed_orthogonal).completeSpace_coe
+  have hRpos : ((R : K →L[ℝ] K) : K →ₗ[ℝ] K).IsPositive := by
+    refine ⟨?_, ?_⟩
+    · intro x y
+      simpa [R, K] using
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_symm
+          H N hN beta hbeta x y
+    · intro x
+      simpa [R, K] using
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_nonneg
+          H N hN beta hbeta x
   have hRcompact : IsCompactOperator R := by
-    exact
-      realHilbertTopEigenspaceOrthogonalRestriction_isCompact
-        S hSsymm hScompact
+    simpa [R] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_isCompact
+        H N hN beta hbeta
   have hRne' : R ≠ 0 := by
-    intro hzero
-    apply hRne
-    apply ContinuousLinearMap.ext
-    intro x
-    change R x = 0
-    simpa only [hzero]
+    simpa [R] using hRne
   obtain ⟨v, hvnorm, hqpos, hveig⟩ :=
     realHilbertPositiveCompact_nonzero_exists_unit_topEigenvector
       R hRpos hRcompact hRne'
   let q : ℝ := ‖R‖
-  have hvneF : v ≠ 0 := by
+  have hvneK : v ≠ 0 := by
     intro hv0
     rw [hv0, norm_zero] at hvnorm
     norm_num at hvnorm
-  have hvneG : (v : G) ≠ 0 := by
+  have hvneG : ((v : K) : G) ≠ 0 := by
     intro hv0
-    apply hvneF
+    apply hvneK
     exact Subtype.ext hv0
   have hSEig :
-      S (v : G) = q • (v : G) := by
-    have hcoe := congrArg (fun z : Fᗮ => (z : G)) hveig
-    simpa [R, q] using hcoe
+      S ((v : K) : G) = q • ((v : K) : G) := by
+    have hcoe := congrArg (fun z : K => (z : G)) hveig
+    change
+      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+          H N hN beta hbeta ((v : K) : G) =
+        ‖R‖ • ((v : K) : G) at hcoe
+    simpa [S, q] using hcoe
   have hTpos : 0 < ‖T‖ := by
     simpa [T] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
         H N hN beta hbeta
   have hRaw :
-      T (v : G) =
-        (‖T‖ * q) • (v : G) := by
-    change ‖T‖⁻¹ • T (v : G) = q • (v : G) at hSEig
+      T ((v : K) : G) =
+        (‖T‖ * q) • ((v : K) : G) := by
+    change ‖T‖⁻¹ • T ((v : K) : G) = q • ((v : K) : G) at hSEig
     have hscaled :=
       congrArg (fun z : G => ‖T‖ • z) hSEig
     rw [smul_smul, mul_inv_cancel₀ hTpos.ne', one_smul, smul_smul] at hscaled
     exact hscaled
-  have hSnorm : ‖S‖ = 1 := by
-    simpa [S, G] using
-      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_norm
-        H N hN beta hbeta
   have hqlt : q < 1 := by
-    simpa [q, R, hSsymm] using
-      realHilbertPositiveCompact_topEigenspaceOrthogonalRestriction_norm_lt_one
-        S hSpos hScompact hSnorm
+    simpa [q, R] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
+        H N hN beta hbeta
   have hrhoPos : 0 < ‖T‖ * q := by
     exact mul_pos hTpos (by simpa [q] using hqpos)
   have hrhoTop : ‖T‖ * q < ‖T‖ := by
     calc
       ‖T‖ * q < ‖T‖ * 1 := (mul_lt_mul_left hTpos).2 hqlt
       _ = ‖T‖ := mul_one _
-  refine ⟨‖T‖ * q, (v : G), hvneG, hrhoPos, ?_, ?_⟩
+  refine ⟨‖T‖ * q, ((v : K) : G), hvneG, hrhoPos, ?_, ?_⟩
   · simpa [T] using hrhoTop
   · simpa [T] using hRaw
 
