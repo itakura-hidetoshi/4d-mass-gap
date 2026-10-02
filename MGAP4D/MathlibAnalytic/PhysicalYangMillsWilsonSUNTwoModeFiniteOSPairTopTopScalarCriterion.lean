@@ -180,6 +180,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan_eq_span_
     obtain ⟨c, hc⟩ :=
       periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopDecomposableL2_exists_smul_pairTopMode
         H N hN beta hbeta u v
+    change
+      periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopDecomposableL2
+          H N hN beta hbeta u v ∈ ℝ ∙ PairTop
     rw [hc]
     exact
       Submodule.smul_mem (ℝ ∙ PairTop) c
