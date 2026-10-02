@@ -343,9 +343,7 @@ theorem periodicHypercubicEvenPrimarySpatialPlaquetteWilsonTwoModeBoundaryHaarL2
       (periodicHypercubicEvenPrimarySpatialSliceWilsonTwoModePhysicalL2
         H hN2 k :
         Lp ℝ 2 μ)
-      ((periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H N :
-        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
-        Lp ℝ 2 μ)
+      (Lp.const 2 μ (1 : ℝ))
   filter_upwards [hforward, hboundaryPair', hmodeFst, honeSnd, htensor]
       with z hfor hbd hmodez honez hten
   change
