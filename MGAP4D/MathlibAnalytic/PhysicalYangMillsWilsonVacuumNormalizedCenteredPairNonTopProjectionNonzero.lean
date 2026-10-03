@@ -128,7 +128,9 @@ theorem periodicHypercubicEvenBoundaryVacuumPairL2_ae_pos
             H N hN beta hbeta (e.symm z) := by
     simpa [Function.comp_def] using hs.quasiMeasurePreserving.ae_eq hVac
   filter_upwards [hE, hVacPull] with z hEz hVz
-  rw [hEz, hVz]
+  rw [hEz]
+  change 0 < vac (e.symm z)
+  rw [hVz]
   exact
     periodicHypercubicEvenBoundaryVacuumMoment_pos
       H N hN beta hbeta (e.symm z)
@@ -181,12 +183,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopModeL2_ae_nonn
         (by simpa [omega, periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2]
           using hnonneg)
     filter_upwards [hTensor, hfst, hsnd] with z hz h1 h2
-    change 0 ≤
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopModeL2
-        H N hN beta hbeta z
-    unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopModeL2
+    change 0 ≤ (realL2ExternalTensor omega omega : Lp ℝ 2 (μ.prod μ)) z
     rw [hz]
-    exact mul_nonneg h1 h2
+    simpa [realL2ExternalTensorFunction] using mul_nonneg h1 h2
   · have hfst :
         ∀ᵐ z ∂(μ.prod μ), omega z.1 ≤ 0 :=
       (Measure.quasiMeasurePreserving_fst (μ := μ) (ν := μ)).ae
@@ -198,12 +197,10 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopModeL2_ae_nonn
         (by simpa [omega, periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2]
           using hnonpos)
     filter_upwards [hTensor, hfst, hsnd] with z hz h1 h2
-    change 0 ≤
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopModeL2
-        H N hN beta hbeta z
-    unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopModeL2
+    change 0 ≤ (realL2ExternalTensor omega omega : Lp ℝ 2 (μ.prod μ)) z
     rw [hz]
-    exact mul_nonneg_of_nonpos_of_nonpos h1 h2
+    simpa [realL2ExternalTensorFunction] using
+      mul_nonneg_of_nonpos_of_nonpos h1 h2
 
 /-- The concrete Wilson boundary vacuum pair has strictly positive inner
 product with the selected physical pair-top mode. -/
@@ -302,7 +299,7 @@ theorem
       (hN2 := hN2) Q hInvariant n
   exact
     (physicalYangMillsVacuumNormalizedSUNTwoMode_OSVacuumPair_inner_pairTop_pos
-      (hN2 := hN2) Q hInvariant n).ne'
+      Q hInvariant n).ne'
 
 /-- Finite-volume endpoint: at every scale there is a concrete nonzero
 projected centered excitation in the full physical non-top receiver, and it
