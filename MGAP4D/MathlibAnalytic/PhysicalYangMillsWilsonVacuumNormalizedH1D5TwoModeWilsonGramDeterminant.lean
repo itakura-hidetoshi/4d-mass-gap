@@ -240,7 +240,7 @@ theorem
         (halfExtent n) N hN hN2 (beta n) (hbeta n) = 0 := by
   have hdet :=
     physicalYangMillsVacuumNormalizedSUNTwoMode_completedCompatibility_implies_twoModePhysicalTransferGramDet_eq_zero
-      Q hInvariant C hCompat n
+      (hN2 := hN2) Q hInvariant C hCompat n
   dsimp only at hdet
   unfold periodicHypercubicEvenPrimarySpatialSliceWilsonTwoModePhysicalLiteralOneSlabGramDet
   rw [
@@ -270,7 +270,7 @@ theorem
   intro hCompat
   exact hne
     (physicalYangMillsVacuumNormalizedSUNTwoMode_completedCompatibility_implies_literalTwoModeWilsonGramDet_eq_zero
-      Q hInvariant C hCompat n)
+      (hN2 := hN2) Q hInvariant C hCompat n)
 
 /-- Strict positivity is a convenient sufficient scalar witness for the same
 obstruction. -/
@@ -288,7 +288,7 @@ theorem
         (Q := Q.vacuumNormalized) (hInvariant := hInvariant) C := by
   exact
     physicalYangMillsVacuumNormalizedSUNTwoMode_not_completedCompatibility_of_literalTwoModeWilsonGramDet_ne_zero
-      Q hInvariant C n hpos.ne'
+      (hN2 := hN2) Q hInvariant C n hpos.ne'
 
 /-- Audit-visible package for the exact two-mode scalar obstruction. -/
 structure PhysicalYangMillsVacuumNormalizedH1D5TwoModeWilsonGramDeterminantPackage : Prop where
@@ -314,17 +314,17 @@ structure PhysicalYangMillsVacuumNormalizedH1D5TwoModeWilsonGramDeterminantPacka
 
 theorem physicalYangMillsVacuumNormalizedH1D5TwoModeWilsonGramDeterminantPackage :
     PhysicalYangMillsVacuumNormalizedH1D5TwoModeWilsonGramDeterminantPackage
-      (Q := Q) (hInvariant := hInvariant) (C := C) :=
+      (hN2 := hN2) (Q := Q) (hInvariant := hInvariant) (C := C) :=
   { compatibilityForcesZero := by
       intro hCompat n
       exact
         physicalYangMillsVacuumNormalizedSUNTwoMode_completedCompatibility_implies_literalTwoModeWilsonGramDet_eq_zero
-          Q hInvariant C hCompat n
+          (hN2 := hN2) Q hInvariant C hCompat n
     nonzeroDeterminantObstructs := by
       intro n hne
       exact
         physicalYangMillsVacuumNormalizedSUNTwoMode_not_completedCompatibility_of_literalTwoModeWilsonGramDet_ne_zero
-          Q hInvariant C n hne }
+          (hN2 := hN2) Q hInvariant C n hne }
 
 end H1D5TwoModeDeterminant
 
