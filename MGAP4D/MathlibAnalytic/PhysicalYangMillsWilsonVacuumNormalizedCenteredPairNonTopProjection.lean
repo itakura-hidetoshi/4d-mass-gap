@@ -64,6 +64,26 @@ local instance centeredPairProjectionSpatialHaarSFinite (H N : ℕ) :
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
 
+/-- The completed physical pair top-top closure is a complete Hilbert
+subspace.  The corresponding instance in the decomposition file is local, so
+we reproduce the closed-subspace receipt here before using starProjection. -/
+local instance centeredPairProjectionTopTopCompleteSpace
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
+    CompleteSpace
+      (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockClosure
+        H N hN beta hbeta) := by
+  let PairE :=
+    PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2 H N
+  let PairT :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockClosure
+      H N hN beta hbeta
+  have hclosed : IsClosed (PairT : Set PairE) := by
+    change IsClosed
+      ((((periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockSpan
+        H N hN beta hbeta).topologicalClosure : Submodule ℝ PairE) : Set PairE))
+    exact Submodule.isClosed_topologicalClosure _
+  exact hclosed.completeSpace_coe
+
 section VacuumNormalizedCenteredPairProjection
 
 variable
@@ -115,9 +135,9 @@ theorem
     physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredBoundaryPair_top_add_nonTopProjection
     (k : Fin 2) (n : ℕ) :
     physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredBoundaryPairTopProjection
-        Q hInvariant k n +
+        (hN2 := hN2) (Q := Q) (hInvariant := hInvariant) k n +
       physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredBoundaryPairNonTopProjection
-        Q hInvariant k n =
+        (hN2 := hN2) (Q := Q) (hInvariant := hInvariant) k n =
     physicalYangMillsSUNTwoModeExplicitCenteredBoundaryPairL2
       (S := S) (D := D) (halfExtent := halfExtent)
       (N := N) (hN := hN) (hN2 := hN2)
@@ -145,7 +165,7 @@ theorem
     physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredBoundaryPairNonTopProjection_mem_nonTop
     (k : Fin 2) (n : ℕ) :
     physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredBoundaryPairNonTopProjection
-        Q hInvariant k n ∈
+        (hN2 := hN2) (Q := Q) (hInvariant := hInvariant) k n ∈
       periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockClosure
         (halfExtent n) N hN (beta n) (hbeta n) := by
   let x :=
@@ -159,7 +179,7 @@ theorem
         (halfExtent n) N := by
     simpa [x] using
       (physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredPairPhysicalCarrier
-        Q hInvariant k n)
+        (hN2 := hN2) Q hInvariant k n)
   simpa [x,
     physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredBoundaryPairNonTopProjection] using
     periodicHypercubicEvenSpecialUnitaryPhysicalPairTopOrthogonalProjection_mem_nonTop
@@ -171,7 +191,7 @@ theorem
     physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredBoundaryPairNonTopProjection_mem_topTopOrthogonal
     (k : Fin 2) (n : ℕ) :
     physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredBoundaryPairNonTopProjection
-        Q hInvariant k n ∈
+        (hN2 := hN2) (Q := Q) (hInvariant := hInvariant) k n ∈
       (periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockClosure
         (halfExtent n) N hN (beta n) (hbeta n))ᗮ := by
   exact
@@ -201,17 +221,17 @@ theorem
     ‖(periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator
         (halfExtent n) N hN (beta n) (hbeta n) ^ m)
         (physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredBoundaryPairNonTopProjection
-          Q hInvariant k n)‖ ≤
+          (hN2 := hN2) (Q := Q) (hInvariant := hInvariant) k n)‖ ≤
       GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformTopOrthogonalContractionFactor ^ m *
         ‖physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredBoundaryPairNonTopProjection
-          Q hInvariant k n‖ := by
+          (hN2 := hN2) (Q := Q) (hInvariant := hInvariant) k n‖ := by
   exact
     periodicHypercubicEvenSpecialUnitary_uniformPhysicalPairNonTopBlockClosure_normalizedTransfer_pow_norm_le
       halfExtent N hN beta hbeta s hs hcut n m
       (physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredBoundaryPairNonTopProjection
-        Q hInvariant k n)
+        (hN2 := hN2) (Q := Q) (hInvariant := hInvariant) k n)
       (physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredBoundaryPairNonTopProjection_mem_nonTop
-        Q hInvariant k n)
+        (hN2 := hN2) (Q := Q) (hInvariant := hInvariant) k n)
 
 /-- Under the optional excitation-level scalar compatibility of #5063, the
 canonical non-top projection is the original centered vector itself. -/
@@ -225,7 +245,7 @@ theorem
         Q hInvariant)
     (k : Fin 2) (n : ℕ) :
     physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredBoundaryPairNonTopProjection
-        Q hInvariant k n =
+        (hN2 := hN2) (Q := Q) (hInvariant := hInvariant) k n =
       physicalYangMillsSUNTwoModeExplicitCenteredBoundaryPairL2
         (S := S) (D := D) (halfExtent := halfExtent)
         (N := N) (hN := hN) (hN2 := hN2)
@@ -246,7 +266,7 @@ theorem
           (beta := beta) (hbeta := hbeta)
           (Q := Q.vacuumNormalized) (hInvariant := hInvariant) :=
       (physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredPairTopTopOrthogonal_iff_excitationTopScalarCompatibility
-        Q hInvariant).2 hScalar
+        (hN2 := hN2) Q hInvariant).2 hScalar
     exact hAll k n
   unfold
     physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredBoundaryPairNonTopProjection
