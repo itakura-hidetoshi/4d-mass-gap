@@ -160,29 +160,14 @@ theorem
         (physicalYangMillsSUNTwoModeExplicitUncenteredBoundaryPairL2
           (halfExtent := halfExtent) (N := N) (hN2 := hN2) k n) =
       physicalYangMillsSUNTwoModePrimaryTopCoefficient
-          (hN := hN) (hN2 := hN2) (beta := beta) (hbeta := hbeta) k n *
+          (halfExtent := halfExtent) (hN := hN) (hN2 := hN2) (beta := beta) (hbeta := hbeta) k n *
         physicalYangMillsSUNPhysicalTopConstantCoefficient
-          (hN := hN) (beta := beta) (hbeta := hbeta) n := by
-  let H := halfExtent n
-  let mu :=
-    periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
-  let omega :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2
-      H N hN (beta n) (hbeta n)
-  let f :=
-    periodicHypercubicEvenPrimarySpatialSliceWilsonTwoModePhysicalL2
-      H hN2 k
-  let one :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H N
+          (halfExtent := halfExtent) (hN := hN) (beta := beta) (hbeta := hbeta) n := by
   rw [
     physicalYangMillsSUNTwoModeExplicitUncenteredBoundaryPairL2_eq_physicalDecomposable
       (halfExtent := halfExtent) (N := N) (hN2 := hN2) k n]
-  change
-    inner ℝ
-        (realL2ExternalTensor omega omega)
-        (realL2ExternalTensor
-          (f : Lp ℝ 2 mu) (one : Lp ℝ 2 mu)) =
-      _
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopModeL2
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2
   rw [realL2ExternalTensor_inner]
   rfl
 
@@ -203,7 +188,7 @@ theorem
           (hN := hN) (beta := beta) (hbeta := hbeta)
           Q hInvariant n *
         physicalYangMillsSUNTwoModeNormalizedPositiveHalfToConstantCoefficient
-          (hN := hN) (hN2 := hN2) (beta := beta) (hbeta := hbeta) k n := by
+          (halfExtent := halfExtent) (hN := hN) (hN2 := hN2) (beta := beta) (hbeta := hbeta) k n := by
   rw [
     physicalYangMillsSUNTwoModeExplicitUncenteredBoundaryPairL2_eq_physicalDecomposable
       (halfExtent := halfExtent) (N := N) (hN2 := hN2) k n]
@@ -226,14 +211,14 @@ theorem
     physicalYangMillsVacuumNormalizedSUNTwoModeProjectedTopCoefficient
         (hN2 := hN2) Q hInvariant k n =
       physicalYangMillsSUNTwoModePrimaryTopCoefficient
-          (hN := hN) (hN2 := hN2) (beta := beta) (hbeta := hbeta) k n *
+          (halfExtent := halfExtent) (hN := hN) (hN2 := hN2) (beta := beta) (hbeta := hbeta) k n *
         physicalYangMillsSUNPhysicalTopConstantCoefficient
-          (hN := hN) (beta := beta) (hbeta := hbeta) n -
+          (halfExtent := halfExtent) (hN := hN) (beta := beta) (hbeta := hbeta) n -
       (physicalYangMillsVacuumNormalizedSUNVacuumPairTopOverlap
           (hN := hN) (beta := beta) (hbeta := hbeta)
           Q hInvariant n) ^ 2 *
         physicalYangMillsSUNTwoModeNormalizedPositiveHalfToConstantCoefficient
-          (hN := hN) (hN2 := hN2) (beta := beta) (hbeta := hbeta) k n := by
+          (halfExtent := halfExtent) (hN := hN) (hN2 := hN2) (beta := beta) (hbeta := hbeta) k n := by
   unfold physicalYangMillsVacuumNormalizedSUNTwoModeProjectedTopCoefficient
   rw [
     physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredPairTopPair_inner_eq
@@ -267,7 +252,7 @@ theorem
           (S := S) (D := D) (halfExtent := halfExtent)
           (N := N) (hN := hN)
           (beta := beta) (hbeta := hbeta)
-          (Q := Q.vacuumNormalized) (hInvariant := hInvariant) n))
+          (Q := Q.vacuumNormalized) (hInvariant := hInvariant) n)).symm
   rw [hcomm]
   ring
 
