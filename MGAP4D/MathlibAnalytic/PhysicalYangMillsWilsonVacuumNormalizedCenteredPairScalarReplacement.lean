@@ -262,13 +262,19 @@ theorem
         (Q := Q.vacuumNormalized) (hInvariant := hInvariant) k n ∈
       periodicHypercubicEvenSpecialUnitaryPhysicalPairNonTopBlockClosure
         (halfExtent n) N hN (beta n) (hbeta n) := by
-  apply
+  have hOrth :
+      PhysicalYangMillsSUNTwoModeExplicitCenteredPairTopTopOrthogonal
+        (S := S) (D := D) (halfExtent := halfExtent)
+        (N := N) (hN := hN) (hN2 := hN2)
+        (beta := beta) (hbeta := hbeta)
+        (Q := Q.vacuumNormalized) (hInvariant := hInvariant) :=
+    (physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredPairTopTopOrthogonal_iff_excitationTopScalarCompatibility
+      Q hInvariant).2 hScalar
+  exact
     physicalYangMillsSUNTwoModeExplicitCenteredBoundaryPairL2_mem_nonTop
       (physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredPairPhysicalCarrier
         Q hInvariant)
-  exact
-    (physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredPairTopTopOrthogonal_iff_excitationTopScalarCompatibility
-      Q hInvariant).2 hScalar k n
+      hOrth k n
 
 /-- Direct q0^m estimate under the excitation-level scalar replacement seam.
 
