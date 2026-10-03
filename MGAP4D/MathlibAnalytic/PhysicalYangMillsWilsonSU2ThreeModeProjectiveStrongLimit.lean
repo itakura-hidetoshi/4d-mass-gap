@@ -138,6 +138,17 @@ theorem physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding_gramSchmidtPair
         (R.primarySpatialPlaquetteWilsonEnergyGramSchmidtProjectiveL2Mode n k) := by
   unfold physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding
   unfold periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairHaarL2
+  change
+    L.finiteMarginalL2Pullback (R.marginalIndex n)
+        (R.boundaryHaarProjectiveL2Isometry n
+          (periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundaryLinearIsometry
+            (halfExtent n) 2
+            (periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry
+              (halfExtent n) 2
+              (periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtBoundaryHaarL2
+                (halfExtent n) k)))) =
+      L.finiteMarginalL2Pullback (R.marginalIndex n)
+        (R.primarySpatialPlaquetteWilsonEnergyGramSchmidtProjectiveL2Mode n k)
   rw [periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundary_leftInverse]
   rfl
 
@@ -169,9 +180,12 @@ theorem physicalYangMillsSU2ThreeModeFiniteProjectiveContinuumSynthesis_basisFun
           (EuclideanSpace.basisFun (Fin 3) ℝ k)) =
       _
   rw [
-    periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeSynthesis_basisFun,
+    periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeSynthesis_basisFun]
+  unfold
+    periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeMode
+  exact
     physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding_gramSchmidtPairMode
-      Q R L]
+      Q R L n k.1
 
 /-- The fixed first three canonical continuum Gram--Schmidt modes. -/
 noncomputable def physicalYangMillsSU2ThreeModeContinuumMode
@@ -367,6 +381,7 @@ theorem physicalYangMillsSU2ThreeModeFiniteProjectiveContinuumSynthesis_eq_event
   rw [
     physicalYangMillsSU2ThreeModeFiniteProjectiveContinuumSynthesis_basisFun,
     physicalYangMillsSU2ThreeModeContinuumSynthesis_basisFun]
+  unfold physicalYangMillsSU2ThreeModeContinuumMode
   fin_cases k
   · rw [C.primaryPlaquetteGramSchmidtMode_continuum 0 n hn0]
   · rw [C.primaryPlaquetteGramSchmidtMode_continuum 1 n hn1]
@@ -437,7 +452,7 @@ theorem
       physicalYangMillsSU2ThreeModeFiniteProjectiveContinuumSynthesis,
       physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice,
       Function.comp_def
-    ] using hj
+    ] using hj.symm
   · exact
       (physicalYangMillsSU2ThreeModeContinuumSynthesis_norm
         Q R L hInvariant C cInf).trans hcInf
