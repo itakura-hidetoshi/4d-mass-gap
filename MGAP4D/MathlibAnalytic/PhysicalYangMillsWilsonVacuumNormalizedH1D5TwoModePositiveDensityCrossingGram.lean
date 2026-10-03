@@ -161,7 +161,17 @@ theorem
   have hpairTop :
       ∀ᵐ p ∂(μ.prod μ), w p.1 * w p.2 < (⊤ : ENNReal) := by
     filter_upwards with p
-    simp [w, periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightDensity]
+    dsimp [w]
+    calc
+      periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightDensity H N beta p.1 *
+          periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightDensity H N beta p.2 ≤
+          1 * 1 := by
+        exact mul_le_mul'
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightDensity_le_one
+            H N hN beta hbeta p.1)
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightDensity_le_one
+            H N hN beta hbeta p.2)
+      _ < (⊤ : ENNReal) := by simp
   have hprod :
       ν.prod ν =
         (μ.prod μ).withDensity
