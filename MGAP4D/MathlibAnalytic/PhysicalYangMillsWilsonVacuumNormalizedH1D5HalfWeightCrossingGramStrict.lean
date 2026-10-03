@@ -70,8 +70,6 @@ theorem periodicHypercubicEvenSpecialUnitaryTwoTemporalGaugeCrossingKernel_self
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_eq_linkSet_prod]
   apply Finset.prod_eq_one
   intro e _he
-  apply Finset.prod_eq_one
-  intro _hmem
   exact specialUnitaryWilsonRelativeKernel_self
     2 h1d5CrossingStrictTwoRankPositive beta (A e)
 
@@ -412,16 +410,11 @@ theorem
         p A₁ * p A₂ *
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
             H 2 beta A₁ A₂ ∂μ ∂μ := by
-    apply lt_of_eq_of_lt ?_ hGram
-    congr 1
-    funext A₁
-    congr 1
-    funext A₂
-    rw [real_inner_smul_left, real_inner_smul_right]
-    rw [
-      periodicHypercubicEvenSpecialUnitaryTwoTemporalGaugeCrossingFullDecompositionFeature_inner_eq_kernel
-        H beta hbeta.le n A₁ A₂]
-    ring
+    simpa only [
+      real_inner_smul_left,
+      real_inner_smul_right,
+      periodicHypercubicEvenSpecialUnitaryTwoTemporalGaugeCrossingFullDecompositionFeature_inner_eq_kernel,
+      mul_assoc] using hGram
   refine ⟨i, hi, ?_⟩
   simpa [μ, w,
     periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightMeasure] using
