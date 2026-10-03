@@ -148,7 +148,7 @@ theorem
     physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredBoundaryPairTopProjection
         (hN2 := hN2) (Q := Q) (hInvariant := hInvariant) k n =
       physicalYangMillsVacuumNormalizedSUNTwoModeProjectedTopCoefficient
-          (hN2 := hN2) Q hInvariant R L k n •
+          (hN2 := hN2) Q hInvariant k n •
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopModeL2
           (halfExtent n) N hN (beta n) (hbeta n) := by
   let TT :=
@@ -197,10 +197,10 @@ theorem
     physicalYangMillsVacuumNormalizedSUNTwoModeProjectedTopCoefficient_eq_common_inner
     (k : Fin 2) (n : ℕ) :
     physicalYangMillsVacuumNormalizedSUNTwoModeProjectedTopCoefficient
-        (hN2 := hN2) Q hInvariant R L k n =
+        (hN2 := hN2) Q hInvariant k n =
       inner ℝ
         (physicalYangMillsSUNPhysicalPairTopContinuumImage
-          (hN2 := hN2) Q hInvariant R L n)
+          Q hInvariant R L n)
         (physicalYangMillsVacuumNormalizedSUNTwoModeCenteredPairContinuumImage
           (hN2 := hN2) Q hInvariant R L k n) := by
   symm
@@ -225,11 +225,11 @@ theorem
           (hN2 := hN2) Q hInvariant R L k n -
         inner ℝ
           (physicalYangMillsSUNPhysicalPairTopContinuumImage
-            (hN2 := hN2) Q hInvariant R L n)
+            Q hInvariant R L n)
           (physicalYangMillsVacuumNormalizedSUNTwoModeCenteredPairContinuumImage
             (hN2 := hN2) Q hInvariant R L k n) •
           physicalYangMillsSUNPhysicalPairTopContinuumImage
-            (hN2 := hN2) Q hInvariant R L n := by
+            Q hInvariant R L n := by
   let TT :=
     periodicHypercubicEvenSpecialUnitaryPhysicalPairTopTopBlockClosure
       (halfExtent n) N hN (beta n) (hbeta n)
@@ -291,7 +291,7 @@ theorem
       Tendsto
         (fun j =>
           physicalYangMillsSUNPhysicalPairTopContinuumImage
-            (hN2 := hN2) Q hInvariant R L (scale j))
+            Q hInvariant R L (scale j))
         atTop (𝓝 topLimit)) :
     Tendsto
       (fun j =>
@@ -306,7 +306,7 @@ theorem
         (fun j =>
           inner ℝ
             (physicalYangMillsSUNPhysicalPairTopContinuumImage
-              (hN2 := hN2) Q hInvariant R L (scale j))
+              Q hInvariant R L (scale j))
             (physicalYangMillsVacuumNormalizedSUNTwoModeCenteredPairContinuumImage
               (hN2 := hN2) Q hInvariant R L k (scale j)))
         atTop
@@ -321,7 +321,7 @@ theorem
               (physicalYangMillsVacuumNormalizedSUNTwoModeCenteredPairContinuumImage
                 (hN2 := hN2) Q hInvariant R L k (scale j)) •
             physicalYangMillsSUNPhysicalPairTopContinuumImage
-              (hN2 := hN2) Q hInvariant R L (scale j))
+              Q hInvariant R L (scale j))
         atTop
         (𝓝 (inner ℝ topLimit centeredLimit • topLimit)) :=
     hCoeff.smul hTop
