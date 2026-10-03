@@ -87,7 +87,8 @@ theorem periodicHypercubicEvenSpatialSliceLinkList_nodup
     (H : ℕ) :
     (periodicHypercubicEvenSpatialSliceLinkList H).Nodup := by
   classical
-  simp [periodicHypercubicEvenSpatialSliceLinkList]
+  unfold periodicHypercubicEvenSpatialSliceLinkList
+  exact Finset.nodup_toList Finset.univ
 
 /-- All one-slice links outside the canonical primary plaquette. -/
 noncomputable def
