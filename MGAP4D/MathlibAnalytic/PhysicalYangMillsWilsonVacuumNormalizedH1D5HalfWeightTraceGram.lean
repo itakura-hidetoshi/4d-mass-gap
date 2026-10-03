@@ -46,6 +46,25 @@ local instance h1d5HalfWeightTraceGramSpatialLinkFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+/-- Canonical continuous-to-L2 map for the exact half-weight endpoint measure.
+The finite-measure certificate is carried explicitly by `hbeta`, so later theorem
+statements do not rely on typeclass synthesis unfolding the half-weight measure alias. -/
+noncomputable def
+    periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightContinuousToLp
+    (H : ℕ)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    C(PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2, ℝ) →L[ℝ]
+      Lp ℝ 2
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightMeasure H 2 beta) := by
+  letI : IsFiniteMeasure
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightMeasure H 2 beta) :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightMeasure_isFiniteMeasure
+      H 2 (by norm_num : 0 < (2 : ℕ)) beta hbeta
+  exact ContinuousMap.toLp
+    (E := ℝ) 2
+    (periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightMeasure H 2 beta) ℝ
+
 /-- Every finite initial primary normalized-trace power family is Gram
 nondegenerate in the exact half-weight endpoint measure used by #5048. -/
 theorem
@@ -56,18 +75,16 @@ theorem
     (k : ℕ) :
     (Matrix.gram ℝ
       (fun j : Fin (k + 1) =>
-        ContinuousMap.toLp
-          (E := ℝ) 2
-          (periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightMeasure
-            H 2 beta) ℝ
+        periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightContinuousToLp
+          H beta hbeta
           (periodicHypercubicEvenPrimarySpatialSliceNormalizedTraceTwoContinuous H ^
             (j : ℕ)))).det ≠ 0 := by
   let w :=
     periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightDensity H 2 beta
   letI : IsFiniteMeasure
       ((periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2).withDensity w) := by
-    simpa [w] using
-      periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight_isFiniteMeasure
+    simpa [w, periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightMeasure] using
+      periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightMeasure_isFiniteMeasure
         H 2 (by norm_num : 0 < (2 : ℕ)) beta hbeta
   have hdet :=
     periodicHypercubicEvenPrimarySpatialSliceNormalizedTraceTwo_withDensity_fin_gram_det_ne_zero
@@ -81,6 +98,7 @@ theorem
           H 2 beta))
       k
   simpa [w,
+    periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightContinuousToLp,
     periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightMeasure] using hdet
 
 end
