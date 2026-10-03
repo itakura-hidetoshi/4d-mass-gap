@@ -171,15 +171,14 @@ variable
     (hInvariant : ∀ n,
       D.WeakStarReflectionInvariant
         (physicalYangMillsApproximatingGaugeInvariantWeakStarState S n))
-    (C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
-      S D halfExtent 2 vacuumTopNoGoRankPositive beta hbeta
-        Q.vacuumNormalized.toWeakStarBridge hInvariant)
 
 /-- A strictly positive coupling at one finite scale excludes the old global
 vacuum/top alignment condition. -/
-include C in
 theorem
     physicalYangMillsVacuumNormalizedSU2TwoMode_not_vacuumPairTopAlignment_of_pos
+    (C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
+      S D halfExtent 2 vacuumTopNoGoRankPositive beta hbeta
+        Q.vacuumNormalized.toWeakStarBridge hInvariant)
     (n : ℕ)
     (hpos : 0 < beta n) :
     ¬ PhysicalYangMillsSUNTwoModeExplicitOSVacuumPairTopAlignment
@@ -197,9 +196,11 @@ theorem
 
 /-- Equivalently, if the coupling is positive at some finite scale, the old
 vacuum/top alignment route is globally impossible. -/
-include C in
 theorem
     physicalYangMillsVacuumNormalizedSU2TwoMode_not_vacuumPairTopAlignment_of_exists_pos
+    (C : PhysicalYangMillsEvenPeriodicWilsonOSApproximatingSemigroupFamily
+      S D halfExtent 2 vacuumTopNoGoRankPositive beta hbeta
+        Q.vacuumNormalized.toWeakStarBridge hInvariant)
     (hpos : ∃ n : ℕ, 0 < beta n) :
     ¬ PhysicalYangMillsSUNTwoModeExplicitOSVacuumPairTopAlignment
         (S := S) (D := D) (halfExtent := halfExtent)
