@@ -71,11 +71,23 @@ theorem specialUnitaryWilsonContinuousTwoMode_mem_seed_span
   apply
     (ContinuousMap.toLp_injective
       (𝕜 := ℝ) (p := (2 : ℝ≥0∞)) μ)
-  rw [map_sum]
-  simp_rw [map_smul]
-  rw [specialUnitaryWilsonContinuousTwoMode_toLp]
-  simp_rw [specialUnitaryWilsonContinuousTwoModeSeed_toLp hN2]
-  exact ha
+  calc
+    ContinuousMap.toLp
+        (E := ℝ) 2 μ ℝ
+        (∑ j : Fin 2, a j • specialUnitaryWilsonContinuousTwoModeSeed N j) =
+      ∑ j : Fin 2, a j •
+        specialUnitaryWilsonPlaquetteEnergyHaarTwoModeSeed
+          (lt_of_lt_of_le (by norm_num) hN2) j := by
+        rw [map_sum]
+        apply Finset.sum_congr rfl
+        intro j _hj
+        rw [map_smul, specialUnitaryWilsonContinuousTwoModeSeed_toLp hN2 j]
+    _ = specialUnitaryWilsonHaarTwoMode hN2 k := ha
+    _ = ContinuousMap.toLp
+        (E := ℝ) 2 μ ℝ
+        (specialUnitaryWilsonContinuousTwoMode hN2 k) := by
+          symm
+          exact specialUnitaryWilsonContinuousTwoMode_toLp hN2 k
 
 /-- Conversely every literal continuous seed belongs to the chosen continuous
 two-mode span. -/
@@ -96,11 +108,22 @@ theorem specialUnitaryWilsonContinuousTwoModeSeed_mem_twoMode_span
   apply
     (ContinuousMap.toLp_injective
       (𝕜 := ℝ) (p := (2 : ℝ≥0∞)) μ)
-  rw [map_sum]
-  simp_rw [map_smul]
-  simp_rw [specialUnitaryWilsonContinuousTwoMode_toLp hN2]
-  rw [specialUnitaryWilsonContinuousTwoModeSeed_toLp]
-  exact ha
+  calc
+    ContinuousMap.toLp
+        (E := ℝ) 2 μ ℝ
+        (∑ j : Fin 2, a j • specialUnitaryWilsonContinuousTwoMode hN2 j) =
+      ∑ j : Fin 2, a j • specialUnitaryWilsonHaarTwoMode hN2 j := by
+        rw [map_sum]
+        apply Finset.sum_congr rfl
+        intro j _hj
+        rw [map_smul, specialUnitaryWilsonContinuousTwoMode_toLp hN2 j]
+    _ = specialUnitaryWilsonPlaquetteEnergyHaarTwoModeSeed
+        (lt_of_lt_of_le (by norm_num) hN2) k := ha
+    _ = ContinuousMap.toLp
+        (E := ℝ) 2 μ ℝ
+        (specialUnitaryWilsonContinuousTwoModeSeed N k) := by
+          symm
+          exact specialUnitaryWilsonContinuousTwoModeSeed_toLp hN2 k
 
 /-- Continuous representatives of the theorem-generated orthonormal two modes
 span exactly the literal continuous seed pair `1,E_W`. -/
