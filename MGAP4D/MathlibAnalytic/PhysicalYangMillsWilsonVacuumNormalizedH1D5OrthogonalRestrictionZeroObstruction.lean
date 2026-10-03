@@ -136,6 +136,133 @@ theorem real_inv_smul_eq_smul_rescale
   have hscaled := congrArg (fun z : E => a • z) h
   simpa only [smul_smul, mul_inv_cancel₀ ha, one_smul] using hscaled
 
+/-- A unit vector is nonzero when its norm is one.  This tiny abstract
+lemma avoids rewriting subtype norms in concrete dependent carriers. -/
+theorem realNorm_eq_one_ne_zero
+    {E : Type*}
+    [NormedAddCommGroup E]
+    (v : E)
+    (hvnorm : ‖v‖ = 1) :
+    v ≠ 0 := by
+  intro hv0
+  have hnorm0 : ‖v‖ = 0 := norm_eq_zero.mpr hv0
+  linarith
+
+/-- Nonzeroness of the normalized top-orthogonal restriction theorem-generates
+a unit eigenvector at its strictly positive operator norm. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopOrthogonal_exists_unit_norm_eigenmode_of_ne_zero
+    (H N : ℕ)
+    (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (hRne :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta ≠ 0) :
+    ∃ v :
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta,
+      ‖v‖ = 1 ∧
+      0 <
+        ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta‖ ∧
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta v =
+        ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta‖ • v := by
+  exact
+    realHilbertPositiveCompact_nonzero_exists_unit_topEigenvector
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+        H N hN beta hbeta)
+      (fun x y =>
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_symm
+          H N hN beta hbeta x y)
+      (fun x =>
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_nonneg
+          H N hN beta hbeta x)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_isCompact
+        H N hN beta hbeta)
+      hRne
+
+/-- An eigen-equation for the restricted normalized transfer is the same
+eigen-equation after coercion to the ambient physical one-slice carrier. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_eigen_of_topOrthogonal_eigen
+    (H N : ℕ)
+    (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (v :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+        H N hN beta hbeta)
+    (q : ℝ)
+    (hEigen :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+          H N hN beta hbeta v =
+        q • v) :
+    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+        H N hN beta hbeta
+        (v :
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) =
+      q •
+        (v :
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) := by
+  have hcoe :=
+    congrArg
+      (fun z :
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+          H N hN beta hbeta =>
+        (z :
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N))
+      hEigen
+  change
+    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+        H N hN beta hbeta
+        (v :
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) =
+      q •
+        (v :
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) at hcoe
+  exact hcoe
+
+/-- Rescaling an eigenmode of the normalized physical transfer recovers the
+corresponding raw eigenvalue. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_eigen_of_normalized_eigen
+    (H N : ℕ)
+    (hN : 0 < N)
+    [Nontrivial (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (f :
+      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+    (q : ℝ)
+    (hEigen :
+      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+          H N hN beta hbeta f =
+        q • f) :
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+        H N hN beta hbeta f =
+      (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta‖ * q) • f := by
+  let T :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+      H N hN beta hbeta
+  have hTpos : 0 < ‖T‖ := by
+    simpa only [T] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+        H N hN beta hbeta
+  have hInv :
+      ‖T‖⁻¹ • T f = q • f := by
+    change
+      ‖T‖⁻¹ • T f = q • f at hEigen
+    exact hEigen
+  exact
+    real_inv_smul_eq_smul_rescale
+      ‖T‖ q hTpos.ne' (T f) f hInv
+
 /-- If the normalized physical top-orthogonal restriction is nonzero, it
 theorem-generates a strictly positive raw physical one-slab eigenmode strictly
 below the raw top norm. -/
@@ -160,83 +287,53 @@ theorem
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
             H N hN beta hbeta f =
           rho • f := by
-  let G :=
-    periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N
-  let T :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-      H N hN beta hbeta
-  let S :=
-    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-      H N hN beta hbeta
   obtain ⟨v, hvnorm, hqpos, hveig⟩ :=
-    realHilbertPositiveCompact_nonzero_exists_unit_topEigenvector
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-        H N hN beta hbeta)
-      (fun x y =>
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_symm
-          H N hN beta hbeta x y)
-      (fun x =>
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_nonneg
-          H N hN beta hbeta x)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_isCompact
-        H N hN beta hbeta)
-      hRne
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopOrthogonal_exists_unit_norm_eigenmode_of_ne_zero
+      H N hN beta hbeta hRne
   let q : ℝ :=
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
       H N hN beta hbeta‖
-  have hvneK : v ≠ 0 := by
-    intro hv0
-    have hnorm0 : ‖v‖ = 0 := norm_eq_zero.mpr hv0
-    linarith [hvnorm, hnorm0]
-  have hvneG : (v : G) ≠ 0 := by
+  let T :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+      H N hN beta hbeta
+  have hvneK : v ≠ 0 :=
+    realNorm_eq_one_ne_zero v hvnorm
+  have hvneG :
+      (v :
+        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) ≠ 0 := by
     intro hv0
     apply hvneK
     exact Subtype.ext hv0
-  have hSEig :
-      S (v : G) = q • (v : G) := by
-    have hcoe :=
-      congrArg
-        (fun z :
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
-            H N hN beta hbeta =>
-          (z : G))
-        hveig
-    change
-      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-          H N hN beta hbeta (v : G) =
-        ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-          H N hN beta hbeta‖ • (v : G) at hcoe
-    change
-      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
-          H N hN beta hbeta (v : G) =
-        ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-          H N hN beta hbeta‖ • (v : G)
-    exact hcoe
+  have hSEig :=
+    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_eigen_of_topOrthogonal_eigen
+      H N hN beta hbeta v q (by simpa only [q] using hveig)
+  have hRaw :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_eigen_of_normalized_eigen
+      H N hN beta hbeta
+      (v :
+        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+      q hSEig
   have hTpos : 0 < ‖T‖ := by
     simpa only [T] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
         H N hN beta hbeta
-  have hSEigRaw :
-      ‖T‖⁻¹ • T (v : G) = q • (v : G) := by
-    exact hSEig
-  have hRaw :
-      T (v : G) =
-        (‖T‖ * q) • (v : G) := by
-    exact
-      real_inv_smul_eq_smul_rescale
-        ‖T‖ q hTpos.ne'
-        (T (v : G)) (v : G) hSEigRaw
   have hqlt : q < 1 := by
     simpa only [q] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_norm_lt_one
         H N hN beta hbeta
-  have hrhoPos : 0 < ‖T‖ * q := by
-    exact mul_pos hTpos (by simpa only [q] using hqpos)
+  have hqpos' : 0 < q := by
+    simpa only [q] using hqpos
+  have hrhoPos : 0 < ‖T‖ * q :=
+    mul_pos hTpos hqpos'
   have hrhoTop : ‖T‖ * q < ‖T‖ := by
     calc
       ‖T‖ * q < ‖T‖ * 1 := mul_lt_mul_of_pos_left hqlt hTpos
       _ = ‖T‖ := mul_one _
-  refine ⟨‖T‖ * q, (v : G), hvneG, hrhoPos, ?_, ?_⟩
+  refine
+    ⟨‖T‖ * q,
+      (v :
+        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N),
+      hvneG, hrhoPos, ?_, ?_⟩
   · simpa only [T] using hrhoTop
   · simpa only [T] using hRaw
 
