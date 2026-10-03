@@ -224,14 +224,22 @@ theorem
       rfl
     rw [hTopDecomp]
     exact hVacCoeff omega omega
-  have hNormXY :
-      inner ℝ (normHalf x) y =
-        c * inner ℝ (physHalf x) y := by
+  have hNormCoeff :
+      ∀ a b :
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
+            H N,
+        inner ℝ (normHalf a) b =
+          c * inner ℝ (physHalf a) b := by
+    intro a b
     rw [
       periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPositiveHalfCylinderTransferOperator_apply_eq_invNormPow_smul_physical
     ]
     rw [real_inner_smul_left]
     rfl
+  have hNormXY :
+      inner ℝ (normHalf x) y =
+        c * inner ℝ (physHalf x) y :=
+    hNormCoeff x y
   have hNormTop :
       inner ℝ (normHalf omega) omega = 1 := by
     rw [
@@ -243,7 +251,7 @@ theorem
     norm_num
   have hTopScale :
       c * inner ℝ (physHalf omega) omega = 1 := by
-    rw [hNormXY (x := omega) (y := omega)] at hNormTop
+    rw [hNormCoeff omega omega] at hNormTop
     exact hNormTop
   change
     inner ℝ vac
