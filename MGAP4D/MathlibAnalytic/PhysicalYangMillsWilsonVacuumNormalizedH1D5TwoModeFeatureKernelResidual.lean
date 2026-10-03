@@ -131,7 +131,66 @@ theorem
         H hN2 j
   rw [hJi, hJj] at hJinner
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2 at hJinner
-  rw [realL2ExternalTensor_inner] at hJinner
+  have hJfactor :
+      inner ℝ
+          (f i :
+            Lp ℝ 2
+              (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+          (f j :
+            Lp ℝ 2
+              (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) *
+        inner ℝ
+          (one :
+            Lp ℝ 2
+              (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+          (one :
+            Lp ℝ 2
+              (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) =
+        inner ℝ (b i) (b j) := by
+    calc
+      inner ℝ
+          (f i :
+            Lp ℝ 2
+              (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+          (f j :
+            Lp ℝ 2
+              (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) *
+        inner ℝ
+          (one :
+            Lp ℝ 2
+              (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+          (one :
+            Lp ℝ 2
+              (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) =
+        inner ℝ
+          (realL2ExternalTensor
+            (f i :
+              Lp ℝ 2
+                (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+            (one :
+              Lp ℝ 2
+                (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)))
+          (realL2ExternalTensor
+            (f j :
+              Lp ℝ 2
+                (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+            (one :
+              Lp ℝ 2
+                (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))) :=
+          (realL2ExternalTensor_inner
+            (f i :
+              Lp ℝ 2
+                (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+            (f j :
+              Lp ℝ 2
+                (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+            (one :
+              Lp ℝ 2
+                (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
+            (one :
+              Lp ℝ 2
+                (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))).symm
+      _ = inner ℝ (b i) (b j) := hJinner
   have honeInner :
       inner ℝ
           (one :
@@ -144,7 +203,7 @@ theorem
     change ‖one‖ ^ 2 = 1
     rw [periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_norm]
     norm_num
-  rw [honeInner, mul_one] at hJinner
+  rw [honeInner, mul_one] at hJfactor
   change
     inner ℝ
         (f i :
@@ -152,7 +211,7 @@ theorem
         (f j :
           periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) =
       if i = j then 1 else 0
-  exact hJinner.trans hbInner
+  exact hJfactor.trans hbInner
 
 /-- In particular the physical one-slice two-mode family is linearly
 independent before applying the one-slab feature analysis. -/
@@ -217,7 +276,8 @@ theorem
     intro x hx y hy hxy
     have hsubMem : x - y ∈ M := M.sub_mem hx hy
     have hsubZero : A (x - y) = 0 := by
-      rw [map_sub, hxy, sub_self]
+      rw [map_sub]
+      exact sub_eq_zero.mpr hxy
     have hzero : x - y = 0 := by
       exact hKernel (x - y) (by simpa only [M] using hsubMem) (by
         simpa only [A] using hsubZero)
