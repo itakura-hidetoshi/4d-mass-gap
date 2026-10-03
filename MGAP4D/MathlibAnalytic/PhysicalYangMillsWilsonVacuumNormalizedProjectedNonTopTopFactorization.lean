@@ -255,6 +255,16 @@ theorem
   have htop :=
     physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredBoundaryPairTopProjection_eq_smul_pairTop
       (hN2 := hN2) Q hInvariant k n
+  have htop' :
+      TT.starProjection x =
+        physicalYangMillsVacuumNormalizedSUNTwoModeProjectedTopCoefficient
+            (hN2 := hN2) Q hInvariant k n •
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopModeL2
+            (halfExtent n) N hN (beta n) (hbeta n) := by
+    simpa [
+      TT, x,
+      physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredBoundaryPairTopProjection
+    ] using htop
   have hprojI :
       I (TT.starProjection x) =
         inner ℝ
@@ -265,7 +275,7 @@ theorem
         I
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopModeL2
             (halfExtent n) N hN (beta n) (hbeta n)) := by
-    rw [htop, map_smul]
+    rw [htop', map_smul]
     rw [
       ← physicalYangMillsVacuumNormalizedSUNTwoModeProjectedTopCoefficient_eq_common_inner
         (hN2 := hN2) Q hInvariant R L k n]
