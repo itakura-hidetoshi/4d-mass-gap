@@ -171,7 +171,7 @@ theorem physicalYangMillsSU2ThreeModeFiniteProjectiveContinuumSynthesis_basisFun
   rw [
     periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeSynthesis_basisFun,
     physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding_gramSchmidtPairMode
-      Q R L hInvariant]
+      Q R L]
 
 /-- The fixed first three canonical continuum Gram--Schmidt modes. -/
 noncomputable def physicalYangMillsSU2ThreeModeContinuumMode
@@ -289,7 +289,7 @@ private theorem physicalYangMillsSU2ThreeModeContinuumSynthesisLinearMap_comp_ba
     funext k
     exact
       physicalYangMillsSU2ThreeModeContinuumSynthesisLinearMap_basisFun
-        Q R L hInvariant k
+        Q R L k
   rw [hfun]
   exact
     physicalYangMillsSU2ThreeModeContinuumMode_orthonormal
@@ -329,7 +329,7 @@ theorem physicalYangMillsSU2ThreeModeContinuumSynthesis_basisFun
         Q R L k
   exact
     physicalYangMillsSU2ThreeModeContinuumSynthesisLinearMap_basisFun
-      Q R L hInvariant k
+      Q R L k
 
 @[simp]
 theorem physicalYangMillsSU2ThreeModeContinuumSynthesis_norm
