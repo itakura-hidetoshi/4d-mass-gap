@@ -29,10 +29,6 @@ open scoped BigOperators
 
 noncomputable section
 
-local instance h1d5CrossingSelectedSectorSpatialLinkFintype (H : ℕ) :
-    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
-  Fintype.ofFinite _
-
 /-- The four intrinsic primary-spatial plaquette links form an embedding into
 the complete one-slice link carrier. -/
 noncomputable def
