@@ -148,6 +148,7 @@ theorem
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel,
     periodicHypercubicEvenSpatialSliceLinkList
   ]
+  rfl
 
 /-- Exact cancellation-free selected-sector domination for the actual SU(2)
 temporal crossing kernel.
@@ -178,7 +179,6 @@ theorem
       (periodicHypercubicEvenPrimarySpatialSliceCrossingSelectedDegreeAssignment
         H selected)
   simpa only [
-    Finset.prod_univ,
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_eq_finset_prod
   ] using C
 
