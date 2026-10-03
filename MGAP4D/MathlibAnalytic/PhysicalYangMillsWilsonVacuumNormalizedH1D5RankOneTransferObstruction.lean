@@ -2,6 +2,7 @@ import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonVacuumNormalizedH1D5Orthogo
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopEigenspaceSimplicity
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalCenteredTransferConvergence
 import MGAP4D.MathlibAnalytic.WightmanOSVacuumRankOneProjection
+import MGAP4D.MathlibAnalytic.WightmanOSVacuumStarProjectionStructure
 import Mathlib.Tactic
 
 /-!
@@ -87,8 +88,9 @@ theorem realHilbertSymmetric_eq_topEigenspaceProjection_of_orthogonalRestriction
   have hnorm :=
     realHilbertCenteredOperator_norm_eq_orthogonalRestriction S hS
   have hRnorm :
-      ‖realHilbertTopEigenspaceOrthogonalRestriction S hS‖ = 0 :=
-    norm_eq_zero.mpr hRzero
+      ‖realHilbertTopEigenspaceOrthogonalRestriction S hS‖ = 0 := by
+    rw [ContinuousLinearMap.opNorm_zero_iff]
+    exact hRzero
   have hcenterNorm :
       ‖S - realHilbertTopEigenspaceProjection S‖ = 0 :=
     hnorm.trans hRnorm
@@ -155,31 +157,45 @@ theorem
           H N hN beta hbeta) := by
   let G :=
     periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N
-  let S : G →L[ℝ] G :=
-    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+  let P : G →L[ℝ] G :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopSpectralProjection
       H N hN beta hbeta
   let Omega : G :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
       H N hN beta hbeta
-  have hTop :
-      realHilbertTopEigenspace S = ℝ ∙ Omega := by
-    simpa only [G, S, Omega,
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace] using
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace_eq_span_topEigenvector
-        (H := H) (N := N) hN beta hbeta
+  let Q : G →L[ℝ] G :=
+    InnerProductSpace.rankOne ℝ Omega Omega
   have hOmega : ‖Omega‖ = 1 := by
     simpa only [G, Omega] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector_norm
         H N hN beta hbeta
-  change
-    (realHilbertTopEigenspace S).starProjection =
-      InnerProductSpace.rankOne ℝ Omega Omega
-  calc
-    (realHilbertTopEigenspace S).starProjection =
-        (ℝ ∙ Omega).starProjection :=
-      congrArg (fun K : Submodule ℝ G => K.starProjection) hTop
-    _ = InnerProductSpace.rankOne ℝ Omega Omega :=
-      real_unit_span_starProjection_eq_rankOne Omega hOmega
+  have hPStar : IsStarProjection P := by
+    exact
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopSpectralProjection_isSymmetricProjection
+        H N hN beta hbeta).isStarProjection
+  have hQStar : IsStarProjection Q := by
+    exact real_unit_rankOne_isStarProjection Omega hOmega
+  have hPRange :
+      P.range =
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
+          H N hN beta hbeta := by
+    simpa only [P, G] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopSpectralProjection_range
+        H N hN beta hbeta
+  have hTop :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace
+          H N hN beta hbeta =
+        ℝ ∙ Omega := by
+    simpa only [G, Omega] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace_eq_span_topEigenvector
+        (H := H) (N := N) hN beta hbeta
+  have hQRange : Q.range = ℝ ∙ Omega := by
+    simpa only [Q, G] using real_unit_rankOne_range Omega hOmega
+  have hPQ : P = Q := by
+    exact
+      (ContinuousLinearMap.IsStarProjection.ext_iff hPStar hQStar).2
+        (hPRange.trans (hTop.trans hQRange.symm))
+  simpa only [P, Q, G, Omega] using hPQ
 
 /-- Zero top-orthogonal dynamics is therefore equivalent to a rank-one
 normalized physical transfer. -/
