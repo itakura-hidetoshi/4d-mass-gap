@@ -90,10 +90,10 @@ primary-plaquette two-mode family. -/
 noncomputable def
     periodicHypercubicEvenPrimarySpatialSliceWilsonTwoModePhysicalLiteralOneSlabCoefficient
     (H N : ℕ)
-    (hN : 0 < N)
+    (_hN : 0 < N)
     (hN2 : 2 ≤ N)
     (beta : ℝ)
-    (hbeta : 0 ≤ beta)
+    (_hbeta : 0 ≤ beta)
     (i j : Fin 2) : ℝ :=
   ∫ p :
       PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
