@@ -178,7 +178,10 @@ theorem periodicHypercubicEvenPrimarySpatialSliceWilsonEnergyTwoContinuous_infin
         (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A
           (periodicHypercubicEvenPrimarySpatialSlicePlaquette H)) =
       specialUnitaryWilsonPlaquetteEnergy 2 U
-  rw [hA]
+  exact congrArg
+    (fun V : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      specialUnitaryWilsonPlaquetteEnergy 2 V)
+    hA
 
 /-- Normalized real trace of the primary spatial plaquette, represented as
 `1 - E_W`. -/
