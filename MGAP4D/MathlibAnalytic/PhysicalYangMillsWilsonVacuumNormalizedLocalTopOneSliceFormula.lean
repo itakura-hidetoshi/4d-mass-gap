@@ -168,8 +168,27 @@ theorem
       (halfExtent := halfExtent) (N := N) (hN2 := hN2) k n]
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopModeL2
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2
-  rw [realL2ExternalTensor_inner]
-  rfl
+  have hTensor :=
+    realL2ExternalTensor_inner
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2
+        (halfExtent n) N hN (beta n) (hbeta n))
+      (periodicHypercubicEvenPrimarySpatialSliceWilsonTwoModePhysicalL2
+        (halfExtent n) hN2 k :
+        Lp ℝ 2
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+            (halfExtent n) N))
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2
+        (halfExtent n) N hN (beta n) (hbeta n))
+      (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector
+        (halfExtent n) N :
+        Lp ℝ 2
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+            (halfExtent n) N))
+  simpa only [
+    physicalYangMillsSUNTwoModePrimaryTopCoefficient,
+    physicalYangMillsSUNPhysicalTopConstantCoefficient,
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopModeL2
+  ] using hTensor
 
 /-- The canonical OS-vacuum coefficient of the explicit uncentered pair is the
 vacuum/top overlap times the normalized one-slice positive-half coefficient. -/
