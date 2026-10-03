@@ -186,8 +186,8 @@ theorem
       H N hN beta hbeta‖
   have hvneK : v ≠ 0 := by
     intro hv0
-    rw [hv0, norm_zero] at hvnorm
-    norm_num at hvnorm
+    have hnorm0 : ‖v‖ = 0 := norm_eq_zero.mpr hv0
+    linarith [hvnorm, hnorm0]
   have hvneG : (v : G) ≠ 0 := by
     intro hv0
     apply hvneK
@@ -234,7 +234,7 @@ theorem
     exact mul_pos hTpos (by simpa only [q] using hqpos)
   have hrhoTop : ‖T‖ * q < ‖T‖ := by
     calc
-      ‖T‖ * q < ‖T‖ * 1 := (mul_lt_mul_left hTpos).2 hqlt
+      ‖T‖ * q < ‖T‖ * 1 := mul_lt_mul_of_pos_left hqlt hTpos
       _ = ‖T‖ := mul_one _
   refine ⟨‖T‖ * q, (v : G), hvneG, hrhoPos, ?_, ?_⟩
   · simpa only [T] using hrhoTop
