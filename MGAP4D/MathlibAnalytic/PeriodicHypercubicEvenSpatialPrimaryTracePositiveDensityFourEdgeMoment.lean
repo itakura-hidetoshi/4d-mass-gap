@@ -264,11 +264,11 @@ theorem
               rw [real_inner_smul_right]
     _ = inner ℝ r (∫ A, p A • S.feature A ∂μ) :=
       integral_inner hSourceIntegrable r
-    _ = 0 := by
+    _ = inner ℝ r 0 := by
       have hzero' : (∫ A, p A • S.feature A ∂μ) = 0 := by
         simpa [S, p, μ] using hzero
-      rw [hzero']
-      simp
+      exact congrArg (fun z => inner ℝ r z) hzero'
+    _ = 0 := inner_zero_right _
 
 /-- A nonzero cyclic degree moment therefore gives a strictly positive genuine
 four-edge weighted Gram double integral on the same one-slice measure. -/
