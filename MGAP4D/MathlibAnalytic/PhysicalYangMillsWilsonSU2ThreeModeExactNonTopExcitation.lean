@@ -149,19 +149,42 @@ theorem
       (periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeMode
         H) k
 
+private theorem euclideanFinThreeBasisToBasis_orthonormal :
+    Orthonormal ℝ
+      ((EuclideanSpace.basisFun (Fin 3) ℝ).toBasis :
+        Fin 3 → EuclideanSpace ℝ (Fin 3)) := by
+  simpa only [OrthonormalBasis.coe_toBasis] using
+    (EuclideanSpace.basisFun (Fin 3) ℝ).orthonormal
+
+private theorem
+    periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeSynthesisLinearMap_comp_basis_orthonormal
+    (H : ℕ) :
+    Orthonormal ℝ
+      (periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeSynthesisLinearMap
+          H ∘
+        ((EuclideanSpace.basisFun (Fin 3) ℝ).toBasis :
+          Fin 3 → EuclideanSpace ℝ (Fin 3))) := by
+  simpa only [
+    Function.comp_apply,
+    OrthonormalBasis.coe_toBasis,
+    periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeSynthesisLinearMap_basisFun
+  ] using
+    periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeMode_orthonormal
+      H
+
 /-- The first-three-mode synthesis is a linear isometry. -/
 noncomputable def
     periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeSynthesis
     (H : ℕ) :
     EuclideanSpace ℝ (Fin 3) →ₗᵢ[ℝ]
       PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2 H 2 :=
-  (periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeSynthesisLinearMap
-      H).isometryOfOrthonormal
-    (EuclideanSpace.basisFun (Fin 3) ℝ).orthonormal
-    (by
-      simpa [Function.comp_def] using
-        periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeMode_orthonormal
-          H)
+  LinearMap.isometryOfOrthonormal
+    (periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeSynthesisLinearMap
+      H)
+    (v := (EuclideanSpace.basisFun (Fin 3) ℝ).toBasis)
+    euclideanFinThreeBasisToBasis_orthonormal
+    (periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeSynthesisLinearMap_comp_basis_orthonormal
+      H)
 
 @[simp]
 theorem
