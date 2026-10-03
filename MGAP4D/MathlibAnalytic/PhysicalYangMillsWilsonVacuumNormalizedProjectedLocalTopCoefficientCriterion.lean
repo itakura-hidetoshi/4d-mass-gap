@@ -70,7 +70,7 @@ theorem realHilbert_tendsto_sub_inner_smul_unit_of_inner_tendsto_zero
     apply hInnerNorm.congr'
     filter_upwards with n
     dsimp [corr]
-    rw [norm_smul, htNorm n, mul_one]
+    rw [norm_smul, htNorm n, mul_one, Real.norm_eq_abs]
   have hCorr :
       Tendsto corr atTop (𝓝 (0 : E)) := by
     rw [tendsto_iff_norm_sub_tendsto_zero]
