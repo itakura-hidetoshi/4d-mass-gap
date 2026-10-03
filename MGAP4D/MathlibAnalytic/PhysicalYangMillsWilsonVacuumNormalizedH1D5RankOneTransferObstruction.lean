@@ -86,11 +86,15 @@ theorem realHilbertSymmetric_eq_topEigenspaceProjection_of_orthogonalRestriction
     S = realHilbertTopEigenspaceProjection S := by
   have hnorm :=
     realHilbertCenteredOperator_norm_eq_orthogonalRestriction S hS
-  rw [hRzero, norm_zero] at hnorm
+  have hRnorm :
+      ‖realHilbertTopEigenspaceOrthogonalRestriction S hS‖ = 0 :=
+    norm_eq_zero.mpr hRzero
+  have hcenterNorm :
+      ‖S - realHilbertTopEigenspaceProjection S‖ = 0 :=
+    hnorm.trans hRnorm
   have hzero :
-      S - realHilbertTopEigenspaceProjection S = 0 := by
-    rw [← ContinuousLinearMap.opNorm_zero_iff]
-    exact hnorm
+      S - realHilbertTopEigenspaceProjection S = 0 :=
+    norm_eq_zero.mp hcenterNorm
   exact sub_eq_zero.mp hzero
 
 /-- The concrete finite-volume normalized physical one-slab transfer is the
@@ -149,26 +153,33 @@ theorem
           H N hN beta hbeta)
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
           H N hN beta hbeta) := by
-  let S :=
+  let G :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N
+  let S : G →L[ℝ] G :=
     periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
       H N hN beta hbeta
-  let Omega :=
+  let Omega : G :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
       H N hN beta hbeta
   have hTop :
       realHilbertTopEigenspace S = ℝ ∙ Omega := by
-    simpa only [S, Omega,
+    simpa only [G, S, Omega,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace_eq_span_topEigenvector
         (H := H) (N := N) hN beta hbeta
   have hOmega : ‖Omega‖ = 1 := by
-    simpa only [Omega] using
+    simpa only [G, Omega] using
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector_norm
         H N hN beta hbeta
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopSpectralProjection
-  unfold realHilbertTopEigenspaceProjection
-  rw [hTop]
-  exact real_unit_span_starProjection_eq_rankOne Omega hOmega
+  change
+    (realHilbertTopEigenspace S).starProjection =
+      InnerProductSpace.rankOne ℝ Omega Omega
+  calc
+    (realHilbertTopEigenspace S).starProjection =
+        (ℝ ∙ Omega).starProjection :=
+      congrArg (fun K : Submodule ℝ G => K.starProjection) hTop
+    _ = InnerProductSpace.rankOne ℝ Omega Omega :=
+      real_unit_span_starProjection_eq_rankOne Omega hOmega
 
 /-- Zero top-orthogonal dynamics is therefore equivalent to a rank-one
 normalized physical transfer. -/
@@ -252,12 +263,22 @@ theorem
     exact
       periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_eq_rankOne_topEigenvector_of_topOrthogonalRestriction_eq_zero
         H N hN beta hbeta hRzero
-  change T = ‖T‖ • P
-  have hRaw :=
+  apply ContinuousLinearMap.ext
+  intro x
+  have hx :=
+    congrArg
+      (fun A :
+        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N →L[ℝ]
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N =>
+        A x)
+      hNormalized
+  change ‖T‖⁻¹ • T x = P x at hx
+  have hRawx :=
     real_inv_smul_eq_smul_rescale
-      ‖T‖ 1 hnorm.ne' T P
-      (by simpa only [one_smul] using hNormalized)
-  simpa only [mul_one] using hRaw
+      ‖T‖ 1 hnorm.ne' (T x) (P x)
+      (by simpa only [one_smul] using hx)
+  change T x = ‖T‖ • P x
+  simpa only [mul_one] using hRawx
 
 section PhysicalWilsonH1D5RankOne
 
