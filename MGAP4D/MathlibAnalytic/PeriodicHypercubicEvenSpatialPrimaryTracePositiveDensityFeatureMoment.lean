@@ -2,6 +2,7 @@ import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpatialPrimaryTracePositiveD
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenCyclicFourEdgeNormalizedTraceHilbertPowerPullback
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenBoundaryMarginalTraceFockFeatureMoment
 import MGAP4D.MathlibAnalytic.RealHilbertKernelFeatureKernelMomentNonzero
+import MGAP4D.MathlibAnalytic.SpecialUnitaryNormalizedRealTraceConjugation
 import Mathlib.Tactic
 
 /-!
@@ -92,11 +93,18 @@ noncomputable def periodicHypercubicEvenPrimarySpatialSliceCyclicHolonomyTwo
 theorem continuous_periodicHypercubicEvenPrimarySpatialSliceCyclicHolonomyTwo
     (H : ℕ) :
     Continuous (periodicHypercubicEvenPrimarySpatialSliceCyclicHolonomyTwo H) := by
-  unfold periodicHypercubicEvenPrimarySpatialSliceCyclicHolonomyTwo
-  unfold periodicHypercubicEvenPrimarySpatialSliceFourEdgeWord
-  unfold haarFinFourCyclicPlaquetteWord
-  unfold haarFinFourCyclicNestedCoordinates
-  unfold haarCyclicPlaquetteWord
+  have hEq :
+      periodicHypercubicEvenPrimarySpatialSliceCyclicHolonomyTwo H =
+        fun A =>
+          (A (periodicHypercubicEvenPrimarySpatialSlicePlaquetteEdge H 2))⁻¹ *
+            (A (periodicHypercubicEvenPrimarySpatialSlicePlaquetteEdge H 3))⁻¹ *
+            A (periodicHypercubicEvenPrimarySpatialSlicePlaquetteEdge H 0) *
+            A (periodicHypercubicEvenPrimarySpatialSlicePlaquetteEdge H 1) := by
+    funext A
+    unfold periodicHypercubicEvenPrimarySpatialSliceCyclicHolonomyTwo
+    rw [haarFinFourCyclicPlaquetteWord_eq]
+    rfl
+  rw [hEq]
   fun_prop
 
 /-- The normalized trace of the cyclic representative equals the normalized
@@ -206,14 +214,21 @@ theorem
       hBaseFeature.comp hhol
   have hWeighted : Continuous fun A => p A • C.feature A :=
     p.continuous.smul hFeature
+  have hSelf : ∀ g : Matrix.specialUnitaryGroup (Fin 2) ℂ,
+      specialUnitaryNormalizedTraceRelativeKernel 2 g g = 1 := by
+    intro g
+    unfold specialUnitaryNormalizedTraceRelativeKernel
+    rw [show g⁻¹ * g = (1 : Matrix.specialUnitaryGroup (Fin 2) ℂ) by group]
+    exact normalizedSpecialUnitaryRealTrace_one 2
+      spatialTraceFeatureMomentTwoRankPositive
   have hFeatureNorm : ∀ A, ‖C.feature A‖ = 1 := by
     intro A
-    apply RealHilbertKernelFeature.feature_norm_eq_one
+    apply RealHilbertKernelFeature.feature_norm_eq_one C
     intro x
-    simp [C,
-      periodicHypercubicEvenPrimarySpatialSliceNormalizedTraceRelativeDegreeFeature,
-      specialUnitaryNormalizedTraceRelativeKernel_self
-        2 spatialTraceFeatureMomentTwoRankPositive]
+    change
+      specialUnitaryNormalizedTraceRelativeKernel 2 (hol x) (hol x) ^ n = 1
+    rw [hSelf]
+    simp
   refine Integrable.of_bound hWeighted.aestronglyMeasurable ‖p‖ ?_
   filter_upwards [] with A
   rw [norm_smul, hFeatureNorm]
