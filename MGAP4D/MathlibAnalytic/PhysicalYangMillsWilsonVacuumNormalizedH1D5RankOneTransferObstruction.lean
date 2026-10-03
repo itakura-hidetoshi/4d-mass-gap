@@ -252,10 +252,12 @@ theorem
     exact
       periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_eq_rankOne_topEigenvector_of_topOrthogonalRestriction_eq_zero
         H N hN beta hbeta hRzero
-  exact
+  change T = ‖T‖ • P
+  have hRaw :=
     real_inv_smul_eq_smul_rescale
       ‖T‖ 1 hnorm.ne' T P
       (by simpa only [one_smul] using hNormalized)
+  simpa only [mul_one] using hRaw
 
 section PhysicalWilsonH1D5RankOne
 
