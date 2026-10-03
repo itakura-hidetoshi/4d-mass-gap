@@ -41,6 +41,15 @@ private theorem h1d5SU2NoGoRankPositive : 0 < (2 : ℕ) := by
 private theorem h1d5SU2NoGoRankTwo : 2 ≤ (2 : ℕ) := by
   norm_num
 
+local instance h1d5SU2NoGoNontrivial :
+    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun U : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (U : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
 local instance h1d5SU2NoGoTopologicalGroup :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup 2
@@ -155,6 +164,7 @@ theorem
     periodicHypercubicEvenPrimarySpatialSliceWilsonEnergyTwoContinuous,
     periodicHypercubicEvenPrimarySpatialSlicePlaquetteHolonomyTwoContinuous,
     specialUnitaryTwoNormalizedTraceContinuousTwoModeSeed,
+    specialUnitaryWilsonPlaquetteEnergyContinuous,
     Fin.sum_univ_two
   ]
 
@@ -405,7 +415,18 @@ theorem
             unfold periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure
             apply integral_congr_ae
             filter_upwards [hxFst, hxSnd] with z hzFst hzSnd
-            rw [hzFst, hzSnd]
+            have hzFst' : (x : Lp ℝ 2 μ) z.1 = p z.1 := by
+              simpa [Function.comp_def] using hzFst
+            have hzSnd' : (x : Lp ℝ 2 μ) z.2 = p z.2 := by
+              simpa [Function.comp_def] using hzSnd
+            change
+              periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                  H 2 beta z.1 z.2 *
+                (((x : Lp ℝ 2 μ) z.1) * ((x : Lp ℝ 2 μ) z.2)) =
+              periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                  H 2 beta z.1 z.2 *
+                (p z.1 * p z.2)
+            rw [hzFst', hzSnd']
   have hw : Measurable w := by
     simpa [w] using
       periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightDensity_measurable
@@ -488,9 +509,9 @@ theorem
           (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_continuous
             H 2 beta)
   let F :
-      C_b(
-        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 ×
-          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2, ℝ) :=
+      BoundedContinuousFunction
+        (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) ℝ :=
     BoundedContinuousFunction.mkOfCompact
       ⟨fun z =>
           p z.1 * p z.2 *
@@ -506,7 +527,8 @@ theorem
             periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
               H 2 beta z.1 z.2)
         (ν.prod ν) := by
-    simpa [F] using F.integrable (ν.prod ν)
+    simpa [F] using
+      BoundedContinuousFunction.integrable (ν.prod ν) F
   have hFubini :=
     MeasureTheory.integral_prod
       (μ := ν) (ν := ν)
