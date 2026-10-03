@@ -74,12 +74,28 @@ noncomputable def
   classical
   simp [periodicHypercubicEvenPrimarySpatialSlicePlaquetteEdgeSet]
 
+/-- The exact finite carrier already used by the literal crossing-kernel list. -/
+noncomputable def
+    periodicHypercubicEvenSpatialSliceLinkSet
+    (H : ℕ) :
+    Finset (PeriodicHypercubicEvenSpatialSliceLink H) := by
+  classical
+  exact (periodicHypercubicEvenSpatialSliceLinkList H).toFinset
+
+/-- The canonical crossing-kernel link list has no duplicate coordinates. -/
+theorem periodicHypercubicEvenSpatialSliceLinkList_nodup
+    (H : ℕ) :
+    (periodicHypercubicEvenSpatialSliceLinkList H).Nodup := by
+  classical
+  simp [periodicHypercubicEvenSpatialSliceLinkList]
+
 /-- All one-slice links outside the canonical primary plaquette. -/
 noncomputable def
     periodicHypercubicEvenPrimarySpatialSlicePlaquetteResidualEdgeSet
     (H : ℕ) :
     Finset (PeriodicHypercubicEvenSpatialSliceLink H) :=
-  Finset.univ \ periodicHypercubicEvenPrimarySpatialSlicePlaquetteEdgeSet H
+  periodicHypercubicEvenSpatialSliceLinkSet H \
+    periodicHypercubicEvenPrimarySpatialSlicePlaquetteEdgeSet H
 
 /-- The four canonical plaquette links carry the selected common degree;
 every residual spatial link carries the genuine degree-zero Wilson component. -/
@@ -129,22 +145,24 @@ theorem
   ]
 
 /-- The literal list-product definition of the temporal crossing kernel is the
-same full finite-universe product used by the selected-sector theorem. -/
+same product over the exact finite carrier obtained from that list. -/
 theorem
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_eq_finset_prod
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_eq_linkSet_prod
     (H N : ℕ)
     (beta : ℝ)
     (A B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
         H N beta A B =
-      ∏ e : PeriodicHypercubicEvenSpatialSliceLink H,
+      ∏ e ∈ periodicHypercubicEvenSpatialSliceLinkSet H,
         specialUnitaryWilsonRelativeKernel N beta (A e) (B e) := by
   classical
-  simp [
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel,
-    periodicHypercubicEvenSpatialSliceLinkList
-  ]
-  rfl
+  unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
+  unfold periodicHypercubicEvenSpatialSliceLinkSet
+  exact
+    (List.prod_toFinset
+      (fun e : PeriodicHypercubicEvenSpatialSliceLink H =>
+        specialUnitaryWilsonRelativeKernel N beta (A e) (B e))
+      (periodicHypercubicEvenSpatialSliceLinkList_nodup H)).symm
 
 /-- Exact cancellation-free selected-sector domination for the actual SU(2)
 temporal crossing kernel.
@@ -162,7 +180,7 @@ theorem
       (fun A B =>
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
             H 2 beta A B -
-          ∏ e : PeriodicHypercubicEvenSpatialSliceLink H,
+          ∏ e ∈ periodicHypercubicEvenSpatialSliceLinkSet H,
             specialUnitaryWilsonRelativeSelectedDegreeKernel
               2 beta
               (periodicHypercubicEvenPrimarySpatialSliceCrossingSelectedDegreeAssignment
@@ -171,11 +189,11 @@ theorem
   have C :=
     specialUnitaryWilsonRelativeKernel_finsetProd_sub_selectedDegreeProd_positiveSemidefiniteCertificate
       2 (by norm_num : 0 < (2 : ℕ)) beta hbeta
-      (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H))
+      (periodicHypercubicEvenSpatialSliceLinkSet H)
       (periodicHypercubicEvenPrimarySpatialSliceCrossingSelectedDegreeAssignment
         H selected)
   simpa only [
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_eq_finset_prod
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_eq_linkSet_prod
   ] using C
 
 /-- Pointwise exact decomposition corresponding to the preceding PSD
@@ -190,13 +208,13 @@ theorem
         H 2 beta A B =
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
           H 2 beta A B -
-        ∏ e : PeriodicHypercubicEvenSpatialSliceLink H,
+        ∏ e ∈ periodicHypercubicEvenSpatialSliceLinkSet H,
           specialUnitaryWilsonRelativeSelectedDegreeKernel
             2 beta
             (periodicHypercubicEvenPrimarySpatialSliceCrossingSelectedDegreeAssignment
               H selected e)
             (A e) (B e)) +
-      ∏ e : PeriodicHypercubicEvenSpatialSliceLink H,
+      ∏ e ∈ periodicHypercubicEvenSpatialSliceLinkSet H,
         specialUnitaryWilsonRelativeSelectedDegreeKernel
           2 beta
           (periodicHypercubicEvenPrimarySpatialSliceCrossingSelectedDegreeAssignment
