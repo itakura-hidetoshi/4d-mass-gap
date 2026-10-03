@@ -164,6 +164,7 @@ theorem
       periodicHypercubicEvenPrimarySpatialSliceWilsonEnergyGramSchmidtBoundedObservable
         H k A := by
   unfold periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtBoundaryObservable
+  unfold periodicHypercubicEvenPrimarySpatialPlaquetteBoundaryCyclicHolonomy
   unfold periodicHypercubicEvenPrimarySpatialSliceWilsonEnergyGramSchmidtBoundedObservable
   have hedges :
       (fun j =>
@@ -285,6 +286,13 @@ theorem
           Lp ℝ 2 μ)
         (Lp.const 2 μ (1 : ℝ)) z
   rw [hbd, hten]
+  change
+    periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtBoundaryObservable
+        H k (e.symm z) =
+      (periodicHypercubicEvenPrimarySpatialSliceWilsonEnergyGramSchmidtPhysicalL2
+          H k :
+        Lp ℝ 2 μ) z.1 *
+        (Lp.const 2 μ (1 : ℝ)) z.2
   have hmodez' :
       (periodicHypercubicEvenPrimarySpatialSliceWilsonEnergyGramSchmidtPhysicalL2
         H k :
@@ -298,7 +306,7 @@ theorem
   rw [
     periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtBoundaryObservable_pairCoordinates
       H k z.1 z.2]
-  simp [realL2ExternalTensorFunction]
+  simp
 
 /-- Every SU(2) Wilson Gram--Schmidt pair mode belongs to the completed physical
 pair carrier. -/
