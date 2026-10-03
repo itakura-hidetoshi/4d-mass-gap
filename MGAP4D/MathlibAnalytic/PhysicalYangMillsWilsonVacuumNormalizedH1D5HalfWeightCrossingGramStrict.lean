@@ -414,7 +414,7 @@ theorem
       real_inner_smul_left,
       real_inner_smul_right,
       periodicHypercubicEvenSpecialUnitaryTwoTemporalGaugeCrossingFullDecompositionFeature_inner_eq_kernel,
-      mul_assoc] using hGram
+      mul_assoc, mul_comm, mul_left_comm] using hGram
   refine ⟨i, hi, ?_⟩
   simpa [μ, w,
     periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightMeasure] using
