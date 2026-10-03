@@ -60,25 +60,25 @@ noncomputable def
     (beta : ℝ)
     (_hbeta : 0 ≤ beta)
     (i j : Fin 2) : ℝ :=
+  let μ :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
+  let ui : Lp ℝ 2 μ :=
+    (periodicHypercubicEvenPrimarySpatialSliceWilsonTwoModePhysicalL2
+      H hN2 i :
+      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+  let uj : Lp ℝ 2 μ :=
+    (periodicHypercubicEvenPrimarySpatialSliceWilsonTwoModePhysicalL2
+      H hN2 j :
+      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
   ∫ p :
       PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
         H N beta p.1 p.2 *
       (periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight
-          H N beta p.1 *
-        (((periodicHypercubicEvenPrimarySpatialSliceWilsonTwoModePhysicalL2
-            H hN2 i :
-            periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
-            Lp ℝ 2
-              (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) p.1) *
+        H N beta p.1 * ui p.1) *
       (periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight
-          H N beta p.2 *
-        (((periodicHypercubicEvenPrimarySpatialSliceWilsonTwoModePhysicalL2
-            H hN2 j :
-            periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
-            Lp ℝ 2
-              (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) p.2)
+        H N beta p.2 * uj p.2)
     ∂(periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N)
 
 /-- The literal one-slab coefficient from #5043 is exactly the half-weighted
