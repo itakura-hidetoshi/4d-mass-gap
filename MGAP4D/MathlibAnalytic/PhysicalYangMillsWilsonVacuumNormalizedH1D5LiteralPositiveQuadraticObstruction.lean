@@ -166,12 +166,15 @@ theorem
   change
     T (f : G) =
       (‖T‖ • P) (f : G) at hApply
+  have hPzero : P (f : G) = 0 := by
+    change inner ℝ Omega (f : G) • Omega = 0
+    rw [hfOmega, zero_smul]
   have hTf : T (f : G) = 0 := by
-    rw [ContinuousLinearMap.smul_apply, InnerProductSpace.rankOne_apply,
-      hfOmega, zero_smul, smul_zero] at hApply
+    rw [ContinuousLinearMap.smul_apply, hPzero, smul_zero] at hApply
     exact hApply
   change inner ℝ (T (f : G)) (f : G) = 0
-  rw [hTf, inner_zero_left]
+  rw [hTf]
+  exact inner_zero_left
 
 /-- Exact literal finite-Wilson form of the preceding forced vanishing. -/
 theorem
