@@ -234,8 +234,9 @@ theorem
     rw [
       periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPositiveHalfCylinderTransferOperator_apply_eq_invNormPow_smul_physical
     ]
+    change inner ℝ (c • physHalf a) b =
+      c * inner ℝ (physHalf a) b
     rw [real_inner_smul_left]
-    rfl
   have hNormXY :
       inner ℝ (normHalf x) y =
         c * inner ℝ (physHalf x) y :=
