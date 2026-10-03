@@ -164,11 +164,19 @@ private theorem
           H ∘
         ((EuclideanSpace.basisFun (Fin 3) ℝ).toBasis :
           Fin 3 → EuclideanSpace ℝ (Fin 3))) := by
-  simpa only [
-    Function.comp_apply,
-    OrthonormalBasis.coe_toBasis,
-    periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeSynthesisLinearMap_basisFun
-  ] using
+  have hfun :
+      (periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeSynthesisLinearMap
+          H ∘
+        ((EuclideanSpace.basisFun (Fin 3) ℝ).toBasis :
+          Fin 3 → EuclideanSpace ℝ (Fin 3))) =
+        periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeMode
+          H := by
+    funext k
+    exact
+      periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeSynthesisLinearMap_basisFun
+        H k
+  rw [hfun]
+  exact
     periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeMode_orthonormal
       H
 
