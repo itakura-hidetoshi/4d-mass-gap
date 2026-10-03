@@ -177,6 +177,7 @@ variable
 
 /-- A strictly positive coupling at one finite scale excludes the old global
 vacuum/top alignment condition. -/
+include C in
 theorem
     physicalYangMillsVacuumNormalizedSU2TwoMode_not_vacuumPairTopAlignment_of_pos
     (n : ℕ)
@@ -196,6 +197,7 @@ theorem
 
 /-- Equivalently, if the coupling is positive at some finite scale, the old
 vacuum/top alignment route is globally impossible. -/
+include C in
 theorem
     physicalYangMillsVacuumNormalizedSU2TwoMode_not_vacuumPairTopAlignment_of_exists_pos
     (hpos : ∃ n : ℕ, 0 < beta n) :
