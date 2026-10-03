@@ -328,7 +328,10 @@ theorem
     Orthonormal ℝ
       (periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairHaarL2
         H) := by
-  exact
+  simpa [
+    periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairHaarL2,
+    Function.comp_def
+  ] using
     (periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtBoundaryHaarL2_orthonormal
       H).comp_linearIsometry
         (periodicHypercubicEvenBoundaryHaarL2ToSpatialSlicePairLinearIsometry H 2)
