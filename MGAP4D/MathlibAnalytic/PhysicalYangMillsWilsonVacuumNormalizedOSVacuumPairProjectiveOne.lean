@@ -123,6 +123,12 @@ local instance vacuumPairProjectiveOneSpatialHaarSFinite (H N : ℕ) :
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
 
+local instance vacuumPairProjectiveOneContinuumProbability
+    (F : EuclideanYangMillsProjectiveCylinderFamily)
+    (L : EuclideanYangMillsProjectiveLimitMeasure F) :
+    IsProbabilityMeasure L.continuumMeasure :=
+  euclidean_yang_mills_projective_limit_probability L
+
 section VacuumPairProjectiveOne
 
 variable
