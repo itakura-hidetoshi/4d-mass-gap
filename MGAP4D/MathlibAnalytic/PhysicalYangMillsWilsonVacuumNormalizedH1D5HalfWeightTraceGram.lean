@@ -81,11 +81,13 @@ theorem
             (j : ℕ)))).det ≠ 0 := by
   let w :=
     periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightDensity H 2 beta
-  letI : IsFiniteMeasure
+  letI hfinHalf : IsFiniteMeasure
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightMeasure H 2 beta) :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightMeasure_isFiniteMeasure
+      H 2 (by norm_num : 0 < (2 : ℕ)) beta hbeta
+  letI hfinDensity : IsFiniteMeasure
       ((periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2).withDensity w) := by
-    simpa [w, periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightMeasure] using
-      periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightMeasure_isFiniteMeasure
-        H 2 (by norm_num : 0 < (2 : ℕ)) beta hbeta
+    simpa [w, periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightMeasure] using hfinHalf
   have hdet :=
     periodicHypercubicEvenPrimarySpatialSliceNormalizedTraceTwo_withDensity_fin_gram_det_ne_zero
       H w
@@ -97,9 +99,16 @@ theorem
         (periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightDensity_ne_zero
           H 2 beta))
       k
-  simpa [w,
-    periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightContinuousToLp,
-    periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightMeasure] using hdet
+  change
+    (Matrix.gram ℝ
+      (fun j : Fin (k + 1) =>
+        ContinuousMap.toLp
+          (E := ℝ) 2
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightMeasure H 2 beta) ℝ
+          (periodicHypercubicEvenPrimarySpatialSliceNormalizedTraceTwoContinuous H ^
+            (j : ℕ)))).det ≠ 0
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightMeasure
+  simpa [w] using hdet
 
 end
 
