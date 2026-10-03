@@ -27,6 +27,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory
+open Filter
 open scoped ENNReal InnerProductSpace InnerProduct Topology
 
 noncomputable section
