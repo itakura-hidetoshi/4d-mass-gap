@@ -174,7 +174,8 @@ theorem
     exact hApply
   change inner ℝ (T (f : G)) (f : G) = 0
   rw [hTf]
-  exact inner_zero_left
+  show inner ℝ (0 : G) (f : G) = 0
+  simp
 
 /-- Exact literal finite-Wilson form of the preceding forced vanishing. -/
 theorem
