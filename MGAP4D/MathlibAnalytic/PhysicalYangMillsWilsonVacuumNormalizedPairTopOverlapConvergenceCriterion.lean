@@ -58,10 +58,7 @@ theorem realHilbert_unitSequence_tendsto_iff_inner_tendsto_one
         Tendsto (fun n => inner ℝ v (u n)) atTop
           (𝓝 (inner ℝ v v)) :=
       tendsto_const_nhds.inner hStrong
-    have hvSelf : inner ℝ v v = 1 := by
-      rw [real_inner_self_eq_norm_sq, hv]
-      norm_num
-    simpa [hvSelf] using hInner
+    simpa [hv] using hInner
   · intro hInner
     have hRhs :
         Tendsto
@@ -178,16 +175,12 @@ variable
 canonical-sign vacuum-pair image rather than from an extra assumption. -/
 theorem physicalYangMillsProjectiveContinuumOne_norm :
     ‖Lp.const 2 L.continuumMeasure (1 : ℝ)‖ = 1 := by
-  rw [
-    ← physicalYangMillsVacuumNormalizedSUNOSVacuumPairContinuumImage_eq_one
-      Q hInvariant R L 0]
-  rw [R.spatialSlicePairHaarProjectiveContinuumL2Isometry_norm]
-  exact
-    physicalYangMillsSUNTwoModeExplicitOSVacuumBoundaryPairL2_norm
-      (S := S) (D := D) (halfExtent := halfExtent)
-      (N := N) (hN := hN)
-      (beta := beta) (hbeta := hbeta)
-      (Q := Q.vacuumNormalized) (hInvariant := hInvariant) 0
+  simpa [measureReal_def] using
+    (Lp.norm_const
+      (μ := L.continuumMeasure)
+      (p := 2)
+      (c := (1 : ℝ))
+      (by norm_num))
 
 /-- The common-carrier overlap with constant one is exactly the literal finite
 OS-vacuum-pair / physical-pair-top overlap. -/
@@ -258,8 +251,7 @@ theorem
             Q hInvariant R L (scale j))
       (by
         simpa [one] using
-          physicalYangMillsProjectiveContinuumOne_norm
-            Q hInvariant R L)
+          physicalYangMillsProjectiveContinuumOne_norm L)
   have hInnerFun :
       (fun j => inner ℝ one (u j)) =
         (fun j =>
@@ -302,8 +294,7 @@ theorem
       (C2.continuumMode 1)
       (by
         simpa [one] using
-          physicalYangMillsProjectiveContinuumOne_norm
-            Q hInvariant R L)
+          physicalYangMillsProjectiveContinuumOne_norm L)
       (C2.continuumMode_norm 0)
       (C2.continuumMode_norm 1)
       (C2.continuumMode_inner_eq_zero (by norm_num))
@@ -366,7 +357,7 @@ theorem
       Q hInvariant R L C k scale hScale one hTop
   have hOneNorm : ‖one‖ = 1 := by
     simpa [one] using
-      physicalYangMillsProjectiveContinuumOne_norm Q hInvariant R L
+      physicalYangMillsProjectiveContinuumOne_norm L
   have hOrth : inner ℝ one centeredLimit = 0 := by
     simpa [centeredLimit] using
       inner_finiteVacuumCentered_eq_zero_of_norm_one
