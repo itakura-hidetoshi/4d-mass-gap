@@ -2,7 +2,7 @@
 
 Hidetoshi Itakura's Lean 4 / mathlib development for the four-dimensional Yang--Mills existence and mass-gap program.
 
-## Current theorem status — through merged PR #5059
+## Current theorem status — through merged PR #5061
 
 The finite-volume positive-coupling transfer-gap route is closed with explicit uniform constants
 
@@ -40,13 +40,23 @@ H1-D5 candidate completed compatibility
   -> protected selected Fock sector                      #5049-#5051
   -> positive-density trace/four-edge strictness         #5052-#5058
   -> continuous SU(2) two-mode span = span{1,r}          #5059
+  -> arbitrary nonzero physical two-mode vector
+       = nonzero degree-one trace polynomial              #5061
+  -> feature-analysis kernel trivial on the two-mode span #5061
+  -> completed H1-D5 impossible at positive SU(2) coupling #5061
 ~~~
 
-At positive coupling, #5058 proves that every nonzero finite primary normalized-trace polynomial has strictly positive bare temporal-crossing quadratic form in the exact H1-D5 half-weight endpoint measure. #5059 proves that the chosen continuous SU(2) Wilson two-mode representatives span exactly the literal trace pair 1,r, with r = 1 - E_W.
+At positive coupling, #5058 proves that every nonzero finite primary normalized-trace polynomial has strictly positive bare temporal-crossing quadratic form in the exact H1-D5 half-weight endpoint measure. #5059 identifies the chosen continuous SU(2) Wilson two-mode span with the literal trace pair 1,r, where r = 1 - E_W. #5061 closes the remaining finite-dimensional bridge: every nonzero physical two-mode vector is represented by a nonzero degree-one trace polynomial, its physical one-slab quadratic form is exactly the half-weight crossing form, and the physical feature-analysis map therefore has trivial kernel on the two-mode span.
 
-The remaining H1-D5 step is therefore small and finite-dimensional: transport an arbitrary nonzero vector in the chosen SU(2) two-mode span to a nonzero trace-polynomial coefficient vector, apply #5058, and push the resulting strict crossing positivity back through #5046/#5045/#5044/#5043. The expected endpoint is a theorem-generated contradiction to the old completed H1-D5 compatibility at beta > 0.
+Feeding that theorem into the already formalized #5045/#5044/#5043 obstruction chain gives a theorem-level no-go statement:
 
-That means the old route
+~~~text
+one finite scale with beta > 0
+  ->
+not completed H1-D5 compatibility.
+~~~
+
+The old route
 
 ~~~text
 H1-D5 compatibility
@@ -54,7 +64,7 @@ H1-D5 compatibility
   -> explicit centered q0
 ~~~
 
-must not be treated as the final model-facing route unless the compatibility statement is weakened. The repository is now exposing why the naive completed identification is too strong.
+is therefore closed as a failed model-facing identification at positive SU(2) coupling. It must not be resurrected under a renamed equivalent statement. The active finite-volume problem is now to construct a strictly weaker excitation-level seam that transports the already-proved q0 estimate without forcing rank-one collapse of the physical one-slab transfer.
 
 A complete continuum four-dimensional Yang--Mills existence and Wightman mass-gap theorem is not yet claimed.
 
@@ -64,12 +74,12 @@ A complete continuum four-dimensional Yang--Mills existence and Wightman mass-ga
 | --- | --- |
 | Repository | itakura-hidetoshi/4d-mass-gap |
 | Unique theorem-carrier branch | formal/real-hilbert-uniform-coercive-strong-limit |
-| Fresh theorem-carrier HEAD | 4a318081c47a724c6ca92c9953f9a5067f91bf1b |
-| Latest theorem merge | PR #5059 — continuous SU(2) two-mode span = normalized-trace span |
-| #5059 exact PR head | 445a95c59706c277a878dc67fa35d2e69c297ed7 |
-| #5059 validation | PR Lean Fast Check run 37115303435: completed / success; exact-head receipt success |
+| Fresh theorem-carrier HEAD | a72ba16e1e6a1596db974ee0c20b6ffc8d79c73b |
+| Latest theorem merge | PR #5061 — positive-coupling SU(2) completed H1-D5 no-go |
+| #5061 exact PR head | d8e08f83dc422a3d4636a01559afdffa5d176a21 |
+| #5061 validation | PR Lean Fast Check run 37117871784: completed / success; exact-head receipt success |
+| #5059 trace-span theorem | merge 4a318081c47a724c6ca92c9953f9a5067f91bf1b |
 | #5058 strict crossing theorem | merge d9b9de525c213739e9cdb145890c1f14e97b4f3b |
-| #5058 validation | exact head 10c7cfe0ebbaa51f9aa9f3a2d437230fcb1c33a7; run 37115300163 success; receipt success |
 | Lean | v4.30.0-rc2 |
 | mathlib | 5450b53e5ddc75d46418fabb605edbf36bd0beb6 |
 
@@ -107,12 +117,14 @@ README / ROADMAP-only commits are docs-only and do not replace the latest theore
 - exact positive-density / selected-Fock decomposition of the H1-D5 crossing Gram;
 - one-slice positive-density trace Gram nondegeneracy and positive-degree feature moments;
 - positive-coupling strict four-edge and bare crossing Gram for every nonzero finite primary trace polynomial;
-- continuous SU(2) two-mode carrier equals the literal normalized-trace span.
+- continuous SU(2) two-mode carrier equals the literal normalized-trace span;
+- every nonzero physical SU(2) two-mode vector has a nonzero degree-one trace-polynomial representative;
+- the physical one-slab feature-analysis operator is injective on the SU(2) two-mode span at beta > 0;
+- the old completed H1-D5 compatibility is impossible whenever at least one finite scale has beta > 0.
 
 ### Not yet closed
 
-- final theorem that the old completed H1-D5 compatibility is impossible at beta > 0 on the actual SU(2) two-mode carrier;
-- replacement of that too-strong seam by the weaker model-facing compatibility actually needed for explicit centered q0 decay;
+- replacement of the refuted H1-D5 seam by the weaker excitation-level model-facing compatibility actually needed for explicit centered q0 decay;
 - transport of finite q0 dynamics to the nonzero projective continuum excitation;
 - spacing-scaled physical-time dynamics;
 - final OS Hamiltonian spectral lower bound;
@@ -311,63 +323,58 @@ Each chosen continuous two-mode representative therefore has literal normalized-
 
 No explicit Gram--Schmidt coefficients are required.
 
-## 8. Immediate frontier after #5059
+## 8. H1-D5 no-go closure and replacement frontier — #5061
 
-### F1. Close the SU(2) two-mode strictness wrapper
+#5061 closes the exact bridge that remained after #5058/#5059.
 
-For an arbitrary nonzero
+For an arbitrary physical SU(2) two-mode vector
 
 ~~~text
+x != 0,
 x in span{f0,f1},
 ~~~
 
-use #5059 to produce a nonzero trace polynomial P representing x.
-
-Then apply #5058:
+the theorem first produces coefficients c0,c1, not both zero, such that the ambient Haar-L2 class of x is represented by the literal degree-one normalized-trace polynomial
 
 ~~~text
-Q_cross(P) > 0.
+P(r) = c0 + c1 r.
 ~~~
 
-Transport this equality to the exact two-mode physical crossing form.
-
-Completion target:
+The physical one-slab quadratic form is then identified exactly with the #5058 half-weight temporal-crossing quadratic form. Therefore
 
 ~~~text
 x != 0
   ->
-half-weight crossing quadratic form(x) > 0.
+Q_cross(P) > 0
+  ->
+A_phys x != 0.
 ~~~
 
-Equivalently, the one-slab physical feature-analysis operator is injective on the explicit two-mode span.
-
-### F2. Push strictness back through the existing H1-D5 reduction
-
-Use #5045/#5044/#5043 to obtain
+Hence the physical one-slab feature-analysis operator has trivial kernel on the explicit two-mode span. The existing #5045/#5044/#5043 reduction then yields
 
 ~~~text
-feature map injective on two-mode span
-  -> two feature images linearly independent
-  -> two-mode Wilson Gram determinant != 0
-  -> not H1-D5 completed compatibility.
+beta(n) > 0
+  ->
+not H1-D5 completed compatibility at scale n.
 ~~~
 
-For beta > 0 this should become a theorem-generated no-go statement, not a heuristic.
+A repository-level wrapper also proves that existence of any finite scale with positive coupling suffices.
 
-### F3. Replace the too-strong H1-D5 seam
+### Current finite model-facing target
 
-Once the no-go theorem is registered, do not attempt to prove the same completed compatibility by another route.
+Do not attempt another proof of the old completed H1-D5 statement. The next theorem must be strictly weaker and excitation-level.
 
-The next model-facing bridge must be weaker and sufficient for q0 transport without forcing the physical one-slab transfer to rank one.
+The preferred geometry to inspect first is:
 
-Natural targets include:
+~~~text
+actual centered finite-OS excitation
+  -> PhysicalPairCarrier
+  -> TopTop^perp
+  -> existing full-pair non-top q0 receiver
+  -> q0^m decay.
+~~~
 
-- direct carrier/top-orthogonality of the actual centered finite-OS excitation;
-- a comparison only on the centered excitation sector rather than on the vacuum;
-- a direct q0 estimate for the actual finite-OS excitation;
-- a projective finite-dynamics comparison that does not identify the periodic OS vacuum with the one-slab Perron state.
-
-The exact replacement theorem should be chosen only after the H1-D5 no-go is formally closed.
+This combines the strongest parts of the earlier R1 and R3 candidates and avoids identifying the finite OS vacuum with the physical one-slab Perron state. If direct carrier/top-orthogonality cannot be generated from the existing gauge-fixed and centering theorems, the fallback is a centered-sector-only comparison or a direct projective-dynamics comparison.
 
 ## 9. Continuum continuation
 
@@ -390,17 +397,18 @@ The fixed discrete q0 must not be interpreted directly as a fixed physical-time 
 Latest theorem validation:
 
 ~~~text
-PR #5059 exact head:
-  445a95c59706c277a878dc67fa35d2e69c297ed7
+PR #5061 exact head:
+  d8e08f83dc422a3d4636a01559afdffa5d176a21
 
 PR Lean Fast Check:
-  run 37115303435
+  run 37117871784
   completed / success
 
 exact-head completion receipt:
   success
 
 theorem-bearing merge:
+  a72ba16e1e6a1596db974ee0c20b6ffc8d79c73b
   4a318081c47a724c6ca92c9953f9a5067f91bf1b
 ~~~
 
@@ -446,9 +454,11 @@ Recent Lean engineering lessons:
 | #5055--#5057 | lift scalar moments to cyclic/four-edge strictness at the H1-D5 endpoint measure |
 | #5058 | strict bare temporal-crossing Gram for every nonzero trace polynomial at beta > 0 |
 | #5059 | continuous SU(2) two-mode span = normalized-trace span |
+| #5061 | arbitrary physical two-mode vector -> nonzero trace polynomial -> feature-kernel injectivity -> positive-coupling completed H1-D5 no-go |
 
 ## Primary current modules
 
+- MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonVacuumNormalizedH1D5SU2NoGo.lean
 - MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonVacuumNormalizedH1D5TwoModeFeatureKernelResidual.lean
 - MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonVacuumNormalizedH1D5TwoModePositiveDensityCrossingGram.lean
 - MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonVacuumNormalizedH1D5TwoModeCrossingSelectedSectorPSD.lean
