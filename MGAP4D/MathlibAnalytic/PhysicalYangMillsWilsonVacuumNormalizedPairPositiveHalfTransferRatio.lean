@@ -236,7 +236,8 @@ theorem
     ]
     change inner ℝ (c • physHalf a) b =
       c * inner ℝ (physHalf a) b
-    rw [real_inner_smul_left]
+    simpa only using
+      (real_inner_smul_left (physHalf a) b c)
   have hNormXY :
       inner ℝ (normHalf x) y =
         c * inner ℝ (physHalf x) y :=
