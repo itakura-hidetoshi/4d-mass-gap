@@ -2,7 +2,7 @@
 
 Hidetoshi Itakura's Lean 4 / mathlib development for the four-dimensional Yang--Mills existence and mass-gap program.
 
-## Current theorem status — through merged PR #5077
+## Current theorem status — through merged PRs #5077 and #5078
 
 The finite-volume positive-coupling transfer-gap route remains closed with the explicit volume/rank/scale-uniform constants
 
@@ -23,7 +23,7 @@ The main change since the #5061 documentation checkpoint is that the old complet
 1. a canonical projected/local-coefficient route (#5063--#5076), and
 2. a stronger finite-dimensional SU(2) Gram--Schmidt route opened by #5077.
 
-The second route is now the preferred next target because it can avoid any vacuum/top fidelity assumption.
+The second route is now the preferred next target because it can avoid any vacuum/top fidelity assumption. PR #5078 has already closed its pure finite-dimensional core: two real scalar constraints on a unit vector in Euclidean R^3 have a common normalized solution by rank-nullity.
 
 A complete continuum four-dimensional Yang--Mills existence theorem and Wightman mass-gap theorem are not yet claimed.
 
@@ -34,9 +34,11 @@ A complete continuum four-dimensional Yang--Mills existence theorem and Wightman
 | Repository | itakura-hidetoshi/4d-mass-gap |
 | Unique theorem-carrier branch | formal/real-hilbert-uniform-coercive-strong-limit |
 | Latest theorem-bearing merge | 426ad4fe783d030a61687fbb123aca00b90a3d1d |
-| Latest theorem PR | #5077 — all SU(2) Wilson-energy Gram--Schmidt modes realized as physical endpoint pairs |
-| #5077 exact PR head | aaa6d50c2da21461a76a6a0e6e2f9ee72b518998 |
-| #5077 validation | PR Lean Fast Check run 37157037971: completed / success; exact-head receipt success |
+| Latest theorem-bearing branch tip | merge 426ad4fe783d030a61687fbb123aca00b90a3d1d; #5077 merged after #5078 and contains both theorem lines |
+| #5077 | all SU(2) Wilson-energy Gram--Schmidt modes realized as physical endpoint pairs |
+| #5077 validation | head aaa6d50c2da21461a76a6a0e6e2f9ee72b518998; run 37157037971 success; exact-head receipt success |
+| #5078 | abstract Fin 3 two-functional unit-kernel selector |
+| #5078 validation | head 61acb9b380ee3822e5574c1e9fd56e61cba5d64f; run 37156892868 success; exact-head receipt success |
 | Pinned Lean | v4.30.0-rc2 |
 | Pinned mathlib | 5450b53e5ddc75d46418fabb605edbf36bd0beb6 |
 
@@ -79,11 +81,13 @@ README / ROADMAP-only commits are docs-only and do not replace the latest theore
 - exact canonical OS-vacuum pair coefficient factorization through normalized positive-half transfer;
 - exact one-slice formula for the local projected-top coefficient;
 - all SU(2) Wilson-energy Gram--Schmidt modes realized as physical one-slice modes and physical endpoint pairs;
-- the entire SU(2) Gram--Schmidt endpoint-pair family is orthonormal in pair Haar L2.
+- the entire SU(2) Gram--Schmidt endpoint-pair family is orthonormal in pair Haar L2;
+- the pure finite-dimensional #5078 selector: any two real linear functionals on Euclidean R^3 admit a common unit vector in both kernels.
 
 ### Not yet closed
 
-- the three-mode, two-constraint selection theorem described below;
+- model-facing instantiation of the #5078 selector with the #5077 three-mode pair synthesis, OS-vacuum pairing and pair-top pairing;
+- proof that the synthesized selector has exact unit pair norm and belongs to the completed pair non-top sector;
 - projective strong convergence of that scale-dependent selected combination;
 - coherence / strong convergence of evolved finite q0-controlled states;
 - identification of a limiting discrete-time physical transfer on the nonzero continuum excitation;
@@ -321,7 +325,7 @@ u_{k,n}
 
 This is the kinematic input needed for the new three-mode route.
 
-## 8. Preferred next route: three modes, two exact scalar constraints
+## 8. Preferred next route: instantiate the #5078 selector on three #5077 pair modes
 
 Take the first three orthonormal physical pair modes at scale n:
 
@@ -349,13 +353,7 @@ Combine them into
 L_n : R^3 -> R^2.
 ~~~
 
-By rank-nullity,
-
-~~~text
-dim ker L_n >= 1.
-~~~
-
-Therefore one can choose a unit coefficient vector c_n with
+PR #5078 already proves the abstract rank-nullity statement needed here: two real scalar functionals on Euclidean R^3 have a common unit kernel vector. Therefore, after packaging L_vac,n and L_top,n as the two functionals required by #5078, one obtains c_n with
 
 ~~~text
 L_vac,n(c_n) = 0,
@@ -388,6 +386,8 @@ x_n in PairNonTop           by one-dimensional TopTop,
 ~~~
 
 Because the vacuum coefficient is already zero, vacuum centering does not change x_n.
+
+The remaining work in this section is model-facing: define the three-mode synthesis map from #5077, prove its exact norm formula from orthonormality, and instantiate #5078 with the two physical pairings.
 
 This avoids:
 
@@ -548,6 +548,7 @@ Current repository rules:
 | #5075 | merged | OS vacuum pair coefficient = overlap times normalized half-transfer coefficient |
 | #5076 | merged | exact one-slice local projected-top coefficient formula |
 | #5077 | merged | full SU(2) Gram--Schmidt Wilson family realized as physical orthonormal endpoint pairs |
+| #5078 | merged | abstract Euclidean R^3 two-functional common unit-kernel selector |
 
 ## 16. Restart checkpoint
 
@@ -576,18 +577,21 @@ Read these files first for the current frontier:
 1. PhysicalYangMillsWilsonVacuumNormalizedProjectedLocalTopCoefficientCriterion.lean — #5074
 2. PhysicalYangMillsWilsonVacuumNormalizedPairPositiveHalfTransferRatio.lean — #5075
 3. PhysicalYangMillsWilsonVacuumNormalizedLocalTopOneSliceFormula.lean — #5076
-4. the #5077 SU(2) Gram--Schmidt physical-pair realization file
-5. SpecialUnitaryTwoWilsonEnergyHaarL2GramSchmidt.lean
-6. PhysicalYangMillsWilsonSU2PrimaryPlaquetteGramSchmidtCylinder.lean
-7. PhysicalYangMillsWilsonSU2PrimaryPlaquetteGramSchmidtPointwiseCoherentReadout.lean
-8. the full physical pair non-top q0 receiver from #5006
+4. PhysicalYangMillsWilsonSU2GramSchmidtPairPhysical.lean — #5077
+5. RealEuclideanFinThreeTwoFunctionalKernel.lean — #5078
+6. SpecialUnitaryTwoWilsonEnergyHaarL2GramSchmidt.lean
+7. PhysicalYangMillsWilsonSU2PrimaryPlaquetteGramSchmidtCylinder.lean
+8. PhysicalYangMillsWilsonSU2PrimaryPlaquetteGramSchmidtPointwiseCoherentReadout.lean
+9. the full physical pair non-top q0 receiver from #5006
 
 Current restart target:
 
 ~~~text
-THREE COHERENT ORTHONORMAL PHYSICAL PAIR MODES
+THREE COHERENT ORTHONORMAL PHYSICAL PAIR MODES (#5077)
+  +
+ABSTRACT TWO-FUNCTIONAL UNIT-KERNEL SELECTOR (#5078)
   ->
-unit coefficient vector in kernel of
+instantiate with
   [vacuum pairing, pair-top pairing]
   ->
 exact finite unit non-top excitation
