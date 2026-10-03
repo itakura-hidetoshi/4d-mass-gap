@@ -405,16 +405,30 @@ theorem
         inner ℝ (p A₁ • C.feature A₁) (p A₂ • C.feature A₂) ∂μ ∂μ :=
     C.weighted_inner_doubleIntegral_pos_of_integral_ne_zero
       μ p hIntegrable hFullMoment
+  have hKernel :
+      ∀ A₁ A₂,
+        inner ℝ (C.feature A₁) (C.feature A₂) =
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
+            H 2 beta A₁ A₂ := by
+    intro A₁ A₂
+    simpa [C] using
+      periodicHypercubicEvenSpecialUnitaryTwoTemporalGaugeCrossingFullDecompositionFeature_inner_eq_kernel
+        H beta hbeta.le n A₁ A₂
+  have hWeightedKernel :
+      ∀ A₁ A₂,
+        inner ℝ (p A₁ • C.feature A₁) (p A₂ • C.feature A₂) =
+          p A₁ * p A₂ *
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
+              H 2 beta A₁ A₂ := by
+    intro A₁ A₂
+    rw [real_inner_smul_left, real_inner_smul_right, hKernel]
+    ring
   have hGramKernel :
       0 < ∫ A₁, ∫ A₂,
         p A₁ * p A₂ *
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
             H 2 beta A₁ A₂ ∂μ ∂μ := by
-    simpa only [
-      real_inner_smul_left,
-      real_inner_smul_right,
-      periodicHypercubicEvenSpecialUnitaryTwoTemporalGaugeCrossingFullDecompositionFeature_inner_eq_kernel,
-      mul_assoc, mul_comm, mul_left_comm] using hGram
+    simpa only [hWeightedKernel] using hGram
   refine ⟨i, hi, ?_⟩
   simpa [μ, w,
     periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeightMeasure] using
