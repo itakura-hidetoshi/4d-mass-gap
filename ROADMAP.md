@@ -14,24 +14,36 @@ Latest theorem-bearing baseline before this docs refresh:
 426ad4fe783d030a61687fbb123aca00b90a3d1d
 ~~~
 
-Latest theorem PR:
+Latest theorem-bearing branch tip contains both adjacent theorem lines:
 
 ~~~text
+#5078
+Add three-mode two-functional unit-kernel lemma
+
 #5077
 Realize all SU(2) Gram-Schmidt Wilson modes as physical pairs
+
+final branch tip after #5077 merge:
+426ad4fe783d030a61687fbb123aca00b90a3d1d
 ~~~
 
-Exact #5077 validation:
+Exact validation:
 
 ~~~text
-head:
+#5077 head:
   aaa6d50c2da21461a76a6a0e6e2f9ee72b518998
-
-PR Lean Fast Check:
+#5077 PR Lean Fast Check:
   37157037971
   completed / success
+#5077 exact-head receipt:
+  success
 
-exact-head receipt:
+#5078 head:
+  61acb9b380ee3822e5574c1e9fd56e61cba5d64f
+#5078 PR Lean Fast Check:
+  37156892868
+  completed / success
+#5078 exact-head receipt:
   success
 ~~~
 
@@ -81,9 +93,11 @@ The current task is no longer to prove a vacuum-identification seam.
 The active route is now:
 
 ~~~text
-three theorem-generated coherent orthonormal SU(2) pair modes
+three theorem-generated coherent orthonormal SU(2) pair modes (#5077)
+  +
+abstract Fin-3 two-functional unit-kernel selector (#5078)
   ->
-two exact finite scalar constraints
+instantiate two exact finite scalar constraints
   ->
 one normalized nonzero physical non-top pair at every scale
   ->
@@ -455,9 +469,47 @@ Status: CLOSED.
 
 ---
 
-## 12. Preferred next theorem: three-mode two-functional kernel
+## 12. #5078 — pure three-mode two-functional selector CLOSED
 
-Use the first three pair modes:
+PR #5078 proves the finite-dimensional theorem independently of the Yang--Mills model.
+
+File:
+
+~~~text
+MGAP4D/MathlibAnalytic/RealEuclideanFinThreeTwoFunctionalKernel.lean
+~~~
+
+Input:
+
+~~~text
+two real linear functionals
+  ell_0, ell_1
+on
+  EuclideanSpace R (Fin 3).
+~~~
+
+Output:
+
+~~~text
+exists c,
+||c|| = 1,
+ell_0(c) = 0,
+ell_1(c) = 0.
+~~~
+
+The proof uses pinned-mathlib rank-nullity through:
+
+~~~text
+LinearMap.ker_ne_bot_of_finrank_lt
+~~~
+
+and normalizes a nonzero common-kernel vector.
+
+Status: CLOSED.
+
+### 12.1 Immediate model-facing instantiation
+
+Use the first three #5077 physical pair modes:
 
 ~~~text
 u_0,n
@@ -465,27 +517,21 @@ u_1,n
 u_2,n.
 ~~~
 
-Let coefficient space be:
-
-~~~text
-C = Fin 3 -> R.
-~~~
-
-Define the synthesis map
+Define the synthesis
 
 ~~~text
 Syn_n(c)
   =
-sum k, c_k * u_k,n.
+sum k : Fin 3, c_k * u_k,n.
 ~~~
 
-Because the pair modes are orthonormal:
+Prove from #5077 orthonormality:
 
 ~~~text
-||Syn_n(c)|| = ||c||_2.
+||Syn_n(c)|| = ||c||.
 ~~~
 
-Define two scalar functionals:
+Define the two functionals required by #5078:
 
 ~~~text
 Vac_n(c)
@@ -497,169 +543,36 @@ Top_n(c)
 <Omega_pair,n, Syn_n(c)>.
 ~~~
 
-Bundle them:
+Apply #5078 to obtain c_n with
 
 ~~~text
-A_n : C -> R^2
-
-A_n(c) = (Vac_n(c), Top_n(c)).
+||c_n|| = 1
+Vac_n(c_n) = 0
+Top_n(c_n) = 0.
 ~~~
 
-Since
+Set
 
 ~~~text
-dim C = 3
-dim R^2 = 2,
+x_n = Syn_n(c_n).
 ~~~
 
-Mathlib rank-nullity should give:
-
-~~~text
-ker A_n != bot.
-~~~
-
-Choose
-
-~~~text
-c_n in ker A_n,
-c_n != 0.
-~~~
-
-Normalize:
-
-~~~text
-ĉ_n = ||c_n||^-1 c_n.
-~~~
-
-Then:
-
-~~~text
-||ĉ_n|| = 1
-
-Vac_n(ĉ_n) = 0
-
-Top_n(ĉ_n) = 0.
-~~~
-
-Set:
-
-~~~text
-x_n = Syn_n(ĉ_n).
-~~~
-
-Required conclusions:
+Target finite package:
 
 ~~~text
 ||x_n|| = 1
-
-<v_OS,n, x_n> = 0
-
-<Omega_pair,n, x_n> = 0
-
-x_n in PhysicalPairCarrier.
+<v_OS,n,x_n> = 0
+<Omega_pair,n,x_n> = 0
+x_n in PhysicalPairCarrier
+x_n in PairNonTop
+||S_pair,n^m x_n|| <= q0^m.
 ~~~
 
-Because the vacuum pairing is already zero:
+Because the vacuum pairing is zero, finite vacuum-centering leaves x_n unchanged.
 
-~~~text
-finiteVacuumCentered v_OS,n x_n = x_n.
-~~~
+Because pair TopTop is one-dimensional, pair-top scalar orthogonality gives exact non-top membership.
 
-Because TopTop is one-dimensional:
-
-~~~text
-<Omega_pair,n, x_n> = 0
-  ->
-x_n in PairNonTop.
-~~~
-
-Therefore:
-
-~~~text
-||S_pair,n^m x_n||
-  <= q0^m.
-~~~
-
-This construction avoids the vacuum/top fidelity problem entirely.
-
-### Lean implementation targets
-
-Create a small sequence of theorem files rather than one monolithic proof:
-
-#### 12.1 coefficient synthesis
-
-Prove:
-
-~~~text
-GramSchmidtPairSynthesis_n :
-  (Fin 3 -> R) ->L[R] PairHaarL2
-~~~
-
-or a plain linear map first if continuity is unnecessary.
-
-#### 12.2 synthesis norm
-
-From #5077 orthonormality prove:
-
-~~~text
-||Syn_n(c)||^2 = sum k, c_k^2.
-~~~
-
-Prefer Mathlib finite orthonormal-sum identities over coordinate expansion.
-
-#### 12.3 two-functional map
-
-Define:
-
-~~~text
-A_n(c) =
-  ![<v_OS,n, Syn_n(c)>,
-    <Omega_pair,n, Syn_n(c)>].
-~~~
-
-Target codomain may be Fin 2 -> R.
-
-#### 12.4 rank-nullity kernel nontriviality
-
-Use the pinned-mathlib theorem:
-
-~~~text
-LinearMap.ker_ne_bot_of_finrank_lt
-~~~
-
-with:
-
-~~~text
-finrank R (Fin 2 -> R) = 2
-finrank R (Fin 3 -> R) = 3.
-~~~
-
-Then extract a nonzero kernel vector via:
-
-~~~text
-Submodule.exists_mem_ne_zero_of_ne_bot.
-~~~
-
-#### 12.5 unit normalization
-
-Normalize the kernel vector and preserve both zero constraints.
-
-#### 12.6 finite physical/non-top package
-
-Prove a package theorem returning x_n with:
-
-~~~text
-norm = 1
-physical carrier membership
-vacuum orthogonality
-pair-top orthogonality
-non-top membership
-q0^m decay.
-~~~
-
-This should be the immediate theorem target after #5077.
-
----
+This is now the immediate theorem target.
 
 ## 13. Projective limit of the scale-dependent three-mode selector
 
@@ -1009,6 +922,7 @@ For docs-only PRs:
 | #5075 | merged | OS-vacuum coefficient factorization through normalized half transfer |
 | #5076 | merged | exact one-slice local top coefficient formula |
 | #5077 | merged | all SU(2) Gram--Schmidt modes realized as physical orthonormal endpoint pairs |
+| #5078 | merged | abstract Euclidean Fin 3 two-functional unit-kernel selector |
 
 ---
 
@@ -1016,27 +930,13 @@ For docs-only PRs:
 
 ### G1 — three-mode synthesis
 
-Create the finite linear synthesis of the first three #5077 pair modes.
+Create the finite linear synthesis of the first three #5077 pair modes and prove its norm formula from orthonormality.
 
-### G2 — two-functional coefficient map
+### G2 — instantiate #5078
 
-Build the map
+Define the vacuum-pairing and pair-top-pairing linear functionals on Euclidean Fin 3 and feed them directly to RealEuclideanFinThreeTwoFunctionalKernel.
 
-~~~text
-A_n : R^3 -> R^2
-~~~
-
-from vacuum and pair-top pairings.
-
-### G3 — nontrivial kernel
-
-Use rank-nullity to theorem-generate a nonzero coefficient vector.
-
-### G4 — normalize
-
-Produce a unit kernel vector.
-
-### G5 — exact finite non-top unit excitation
+### G3 — exact finite non-top unit excitation
 
 Synthesize x_n and prove:
 
@@ -1048,7 +948,7 @@ x_n in PhysicalPairCarrier
 x_n in PairNonTop.
 ~~~
 
-### G6 — q0 receipt
+### G4 — q0 receipt
 
 Apply the existing completed pair non-top power theorem:
 
@@ -1056,19 +956,19 @@ Apply the existing completed pair non-top power theorem:
 ||S_pair,n^m x_n|| <= q0^m.
 ~~~
 
-### G7 — coefficient compactness
+### G5 — coefficient compactness
 
 Extract a convergent unit coefficient subsequence in R^3.
 
-### G8 — projective synthesis convergence
+### G6 — projective synthesis convergence
 
 Transport the three fixed coherent Gram--Schmidt modes and show the selected combinations converge strongly.
 
-### G9 — nonzero continuum excitation
+### G7 — nonzero continuum excitation
 
 Prove the limit has norm one.
 
-### G10 — evolved projective coherence
+### G8 — evolved projective coherence
 
 Begin H1-C3 with the same selected subsequence.
 
@@ -1087,13 +987,14 @@ formal/real-hilbert-uniform-coercive-strong-limit
 Then inspect:
 
 1. MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2GramSchmidtPairPhysical.lean
-2. MGAP4D/MathlibAnalytic/SpecialUnitaryTwoWilsonEnergyHaarL2GramSchmidt.lean
-3. MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2PrimaryPlaquetteGramSchmidtCylinder.lean
-4. MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2PrimaryPlaquetteGramSchmidtPointwiseCoherentReadout.lean
-5. MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonVacuumNormalizedProjectedLocalTopCoefficientCriterion.lean
-6. MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonVacuumNormalizedPairPositiveHalfTransferRatio.lean
-7. MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonVacuumNormalizedLocalTopOneSliceFormula.lean
-8. the full completed physical pair non-top q0 power-decay theorem from #5006.
+2. MGAP4D/MathlibAnalytic/RealEuclideanFinThreeTwoFunctionalKernel.lean
+3. MGAP4D/MathlibAnalytic/SpecialUnitaryTwoWilsonEnergyHaarL2GramSchmidt.lean
+4. MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2PrimaryPlaquetteGramSchmidtCylinder.lean
+5. MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2PrimaryPlaquetteGramSchmidtPointwiseCoherentReadout.lean
+6. MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonVacuumNormalizedProjectedLocalTopCoefficientCriterion.lean
+7. MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonVacuumNormalizedPairPositiveHalfTransferRatio.lean
+8. MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonVacuumNormalizedLocalTopOneSliceFormula.lean
+9. the full completed physical pair non-top q0 power-decay theorem from #5006.
 
 Current handoff:
 
@@ -1112,7 +1013,7 @@ CLOSED:
   infinite SU(2) Gram--Schmidt physical orthonormal pair family
 
 NEXT:
-  R^3 -> R^2 two-functional kernel
+  instantiate #5078 on the three #5077 pair modes
   ->
   unit exact non-top pair at every scale
   ->
