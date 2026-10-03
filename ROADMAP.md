@@ -6,12 +6,12 @@
 | --- | --- |
 | Repository | itakura-hidetoshi/4d-mass-gap |
 | Unique authoritative theorem-carrier | formal/real-hilbert-uniform-coercive-strong-limit |
-| Fresh theorem-carrier HEAD | 4a318081c47a724c6ca92c9953f9a5067f91bf1b |
-| Latest theorem merge | PR #5059 — identify the continuous SU(2) two-mode trace span |
-| #5059 validated PR head | 445a95c59706c277a878dc67fa35d2e69c297ed7 |
-| #5059 validation | PR Lean Fast Check 37115303435: completed / success; exact-head receipt success |
+| Fresh theorem-carrier HEAD | a72ba16e1e6a1596db974ee0c20b6ffc8d79c73b |
+| Latest theorem merge | PR #5061 — positive-coupling SU(2) completed H1-D5 no-go |
+| #5061 validated PR head | d8e08f83dc422a3d4636a01559afdffa5d176a21 |
+| #5061 validation | PR Lean Fast Check 37117871784: completed / success; exact-head receipt success |
+| Previous trace-span merge | PR #5059 — merge 4a318081c47a724c6ca92c9953f9a5067f91bf1b |
 | Previous strict crossing merge | PR #5058 — merge d9b9de525c213739e9cdb145890c1f14e97b4f3b |
-| #5058 validation | exact head 10c7cfe0ebbaa51f9aa9f3a2d437230fcb1c33a7; run 37115300163 success; receipt success |
 | Lean | v4.30.0-rc2 |
 | mathlib | 5450b53e5ddc75d46418fabb605edbf36bd0beb6 |
 
@@ -31,9 +31,7 @@ README / ROADMAP-only merges are docs-only. They may move a branch pointer but d
 
 ## 0. Current frontier in one page
 
-The finite-volume gap problem is closed. H1-D4 is also closed.
-
-The active issue is now the fate of the old H1-D5 completed compatibility seam.
+The finite-volume gap problem and H1-D4 are closed. The old completed H1-D5 compatibility is now also closed, but as a no-go theorem rather than as a usable seam.
 
 ### Finite-volume input already closed
 
@@ -49,7 +47,7 @@ q0 = 3071/3072
 
 on the full completed physical pair non-top sector.
 
-### H1-D4 closed
+H1-D4 gives exactly
 
 ~~~text
 IndependentEndpointGaugeFixedPairSector
@@ -59,31 +57,35 @@ PhysicalPairCarrier
 
 by #5029.
 
-### H1-D5 is now a no-go target
+### #5061 closes the old H1-D5 seam
 
-The old candidate compatibility has been reduced to an explicit two-mode degeneracy statement.
+At beta > 0, #5058 proves strict temporal-crossing positivity for every nonzero finite primary normalized-trace polynomial in the exact half-weight endpoint measure. #5059 identifies the chosen continuous SU(2) two-mode carrier with span{1,r}. #5061 combines these facts for an arbitrary nonzero physical two-mode vector, proves feature-analysis kernel triviality on that span, and feeds it into #5045/#5044/#5043.
 
-At beta > 0 the repository now proves strict temporal-crossing positivity for every nonzero finite primary normalized-trace polynomial in the exact half-weight endpoint measure.
-
-At the same time, the chosen continuous SU(2) two-mode span has been identified with
+The resulting theorem is:
 
 ~~~text
-span{1,r},
+beta(n) > 0
+  ->
+not completed H1-D5 compatibility at scale n.
 ~~~
 
-where r is the normalized real trace.
+There is also a wrapper using merely the existence of one positive-coupling finite scale.
 
-The remaining step is to combine these two facts and push them through the already formalized reduction
+Therefore completed H1-D5 is no longer an open compatibility problem and must not be reintroduced under an equivalent formulation.
+
+### Immediate frontier
+
+The next model-facing seam must be weaker and excitation-level. The first geometry to test is
 
 ~~~text
-strict two-mode crossing positivity
-  -> feature map injective
-  -> feature images linearly independent
-  -> two-mode Wilson Gram determinant != 0
-  -> not H1-D5 completed compatibility.
+actual centered finite-OS excitation
+  -> PhysicalPairCarrier
+  -> TopTop^perp
+  -> existing full-pair non-top q0 receiver
+  -> q0^m decay.
 ~~~
 
-This is the immediate theorem target.
+This is the direct R1/R3 route. It avoids vacuum equality and therefore avoids the rank-one collapse exposed by #5041/#5061. If one of the two memberships cannot be theorem-generated directly, the next alternatives are a centered-sector-only comparison or a direct projective-dynamics comparison.
 
 ## 1. Closed finite-volume foundation
 
@@ -502,77 +504,65 @@ Each chosen continuous mode therefore admits literal normalized-trace coefficien
 
 Status: CLOSED.
 
-## 14. Immediate theorem sequence after #5059
+## 14. #5061 — completed H1-D5 no-go CLOSED
 
-### F1 — arbitrary nonzero two-mode vector -> nonzero trace polynomial
+#5061 formalizes the full final finite-dimensional chain.
 
-Input:
+### 14.1 Arbitrary two-mode vector -> nonzero trace polynomial
+
+For
 
 ~~~text
 x != 0,
-x in span{f0,f1}.
+x in span{f0,f1},
 ~~~
 
-Use #5059 to theorem-generate coefficients a0,a1 such that
+the theorem produces c : Fin 2 -> R with c != 0 and identifies the ambient Haar-L2 class of x with
 
 ~~~text
-x = a0 * 1 + a1 * r
+P(r) = c0 + c1 r.
 ~~~
 
-with the coefficient vector nonzero.
+This uses the #5059 continuous span equality rather than explicit Gram--Schmidt coefficients.
 
-Important: do not merely prove existence of coefficients for each basis vector. The theorem needed by the obstruction is for an arbitrary nonzero vector in the two-mode span.
+### 14.2 Exact physical quadratic form -> #5058 crossing form
 
-### F2 — apply #5058 to the represented vector
+For any continuous representative p of a physical SU(2) vector, #5061 proves that the physical one-slab quadratic form is exactly the bare temporal-crossing quadratic form under the positive half-weight endpoint measure.
 
-Prove that the exact half-weight crossing quadratic form of x is the trace-polynomial crossing quadratic form from #5058.
+Specializing p to the degree-one trace polynomial above lets #5058 give strict positivity for every nonzero two-mode vector.
 
-Then:
+### 14.3 Feature-kernel triviality
+
+Using
 
 ~~~text
-x != 0
+<Tx,x> = ||A_phys x||^2,
+~~~
+
+strict crossing positivity yields
+
+~~~text
+x in two-mode span,
+A_phys x = 0
   ->
-Q_cross(x) > 0.
+x = 0.
 ~~~
 
-This is strict positive-definiteness on the actual two-mode carrier.
+Thus the physical feature-analysis operator is injective on the complete SU(2) two-mode physical span at beta > 0.
 
-### F3 — close feature-kernel triviality
+### 14.4 Completed compatibility no-go
 
-From strict positivity:
-
-~~~text
-A x = 0
-  -> Q_cross(x) = 0
-  -> x = 0.
-~~~
-
-Therefore the one-slab physical feature-analysis operator is injective on the explicit two-mode span.
-
-Feed this directly into #5045.
-
-### F4 — theorem-generate the H1-D5 contradiction
-
-Reuse the existing equivalences:
+The #5045/#5044/#5043 obstruction chain then gives
 
 ~~~text
-kernel trivial on two-mode span
-  -> feature images linearly independent               #5045/#5044
-  -> literal two-mode Wilson Gram determinant != 0     #5043
-  -> not completed H1-D5 compatibility.
-~~~
-
-Target theorem should explicitly include:
-
-~~~text
-beta > 0
+beta(n) > 0
   ->
-not H1D5CompletedCompatibility
+not H1D5CompletedCompatibility.
 ~~~
 
-for the concrete SU(2) finite scale under the existing physical hypotheses.
+The repository also proves the corresponding exists-positive-scale wrapper.
 
-This is the immediate frontier.
+Status: CLOSED. H1-D5 is not an assumption to prove anymore; it is a formally refuted candidate seam at positive SU(2) coupling.
 
 ## 15. After the H1-D5 no-go: redesign the model-facing seam
 
@@ -587,7 +577,7 @@ completed H1-D5 compatibility
 
 But the current theorem chain shows that this compatibility forces rank-one collapse and conflicts with strict positive two-mode crossing structure.
 
-Once F4 is formalized, do not try to resurrect the same statement.
+#5061 has formalized the no-go. Do not try to resurrect the same statement.
 
 A replacement bridge must be weaker.
 
@@ -716,17 +706,13 @@ Do not continue to list independent gauge-fixed pair -> physical pair carrier as
 
 #5029 proves equality of the sectors.
 
-### H1-D5 compatibility is not established
+### H1-D5 completed compatibility is formally refuted at positive SU(2) coupling
 
-The repository does not prove the old completed compatibility.
+#5061 proves that the old completed compatibility cannot hold at any finite scale with beta > 0 under the concrete SU(2) hypotheses used by the H1-D5 chain. It should not be listed as an unresolved seam or reintroduced under an equivalent name.
 
-Instead it proves increasingly strong consequences of assuming it and now has essentially all ingredients needed to refute it at positive SU(2) coupling.
+### Strict crossing positivity remains local finite-volume information
 
-### Strict crossing positivity is local finite-volume information
-
-#5058 is a finite one-slice strictness theorem under the exact half-weight endpoint measure.
-
-It does not itself prove the final no-go until connected to the chosen two-mode carrier by the #5059 span theorem.
+#5058 by itself is a finite one-slice strictness theorem under the exact half-weight endpoint measure. #5059 supplies the continuous two-mode trace-span identification, and #5061 performs the exact physical-L2 / half-weight-crossing bridge needed to turn those local facts into the completed H1-D5 no-go. None of this by itself transports q0 dynamics to the projective continuum.
 
 ### Projective nonzero strong limit is not evolved q0 coherence
 
@@ -743,18 +729,18 @@ It does not yet identify finite transfer powers with continuum dynamics.
 Latest theorem evidence:
 
 ~~~text
-PR #5059 exact head:
-  445a95c59706c277a878dc67fa35d2e69c297ed7
+PR #5061 exact head:
+  d8e08f83dc422a3d4636a01559afdffa5d176a21
 
 PR Lean Fast Check:
-  37115303435
+  37117871784
   completed / success
 
 exact-head receipt:
   success
 
 merged theorem-bearing snapshot:
-  4a318081c47a724c6ca92c9953f9a5067f91bf1b
+  a72ba16e1e6a1596db974ee0c20b6ffc8d79c73b
 ~~~
 
 Previous strict-crossing evidence:
@@ -785,7 +771,7 @@ Current Lean lessons:
 - do not rerun strict Lean for an unchanged exact head that is already GREEN;
 - docs-only changes are not theorem-bearing.
 
-## 22. Milestone ledger — #5022 through #5059
+## 22. Milestone ledger — #5022 through #5061
 
 | PR | Status | Contribution |
 | --- | --- | --- |
@@ -814,6 +800,7 @@ Current Lean lessons:
 | #5057 | merged | four-edge strictness at H1-D5 endpoint measure |
 | #5058 | merged | strict bare crossing Gram at beta > 0 |
 | #5059 | merged | continuous SU(2) two-mode span = normalized-trace span |
+| #5061 | merged | arbitrary physical two-mode vector -> nonzero trace polynomial -> feature-kernel injectivity -> completed H1-D5 no-go |
 
 PR #5019 was not merged and is not theorem authority.
 
@@ -825,25 +812,22 @@ Freshly re-observe:
 formal/real-hilbert-uniform-coercive-strong-limit
 ~~~
 
-The theorem-bearing checkpoint documented here is:
+The latest theorem-bearing baseline at this checkpoint is:
 
 ~~~text
-4a318081c47a724c6ca92c9953f9a5067f91bf1b
+a72ba16e1e6a1596db974ee0c20b6ffc8d79c73b
 ~~~
 
 Read these modules first for the current frontier:
 
-1. SpecialUnitaryWilsonEnergySU2ContinuousTwoModeTraceSpan.lean — #5059
-2. PhysicalYangMillsWilsonVacuumNormalizedH1D5HalfWeightCrossingGramStrict.lean — #5058
-3. PhysicalYangMillsWilsonVacuumNormalizedH1D5HalfWeightFourEdgeGram.lean — #5057
-4. PeriodicHypercubicEvenSpatialPrimaryTracePositiveDensityFourEdgeMoment.lean — #5056
-5. PeriodicHypercubicEvenSpatialPrimaryTracePositiveDensityFeatureMoment.lean — #5055
-6. PeriodicHypercubicEvenSpatialPrimaryTracePositiveDensityMoment.lean — #5054
-7. PhysicalYangMillsWilsonVacuumNormalizedH1D5TwoModeCrossingSelectedFactorization.lean — #5051
-8. PhysicalYangMillsWilsonVacuumNormalizedH1D5TwoModeCrossingSelectedSectorPSD.lean — #5049
-9. PhysicalYangMillsWilsonVacuumNormalizedH1D5TwoModeFeatureKernelResidual.lean — #5045
-10. PhysicalYangMillsWilsonVacuumNormalizedH1D5TwoModeFeatureAnalysisIndependence.lean — #5044
-11. PhysicalYangMillsWilsonVacuumNormalizedH1D5TwoModeWilsonGramDeterminant.lean — #5043
+1. PhysicalYangMillsWilsonVacuumNormalizedH1D5SU2NoGo.lean — #5061
+2. PhysicalYangMillsWilsonSUNTwoModeFiniteOSUncenteredPairPhysical.lean — existing direct physical-pair bridge
+3. the current centered finite-OS two-mode pair modules from #4999--#5009
+4. the full physical pair non-top q0 receiver from #5006
+5. the top/top orthogonality and one-dimensional top-sector modules from #5010--#5016
+6. PhysicalYangMillsWilsonVacuumNormalizedH1D5TwoModeFeatureKernelResidual.lean — historical no-go bridge, now closed
+7. PhysicalYangMillsWilsonVacuumNormalizedH1D5HalfWeightCrossingGramStrict.lean — #5058
+8. SpecialUnitaryWilsonEnergySU2ContinuousTwoModeTraceSpan.lean — #5059
 
 Current restart target:
 
@@ -861,17 +845,20 @@ CLOSED:
   trace / cyclic / four-edge positive-density strictness
   bare crossing strictness at beta > 0
   continuous SU(2) two-mode span = span{1,r}
+  arbitrary physical two-mode vector -> nonzero trace polynomial
+  physical feature-map injectivity on the two-mode span
+  positive-coupling completed H1-D5 no-go
 
 NEXT:
-  arbitrary nonzero two-mode vector
-    -> nonzero trace polynomial
-    -> strict half-weight crossing quadratic form
-    -> two-mode feature injectivity
-    -> Gram determinant != 0
-    -> theorem-generated not-H1-D5
+  actual centered finite-OS excitation
+    -> PhysicalPairCarrier
+    -> TopTop^perp
+    -> existing full-pair non-top q0 receiver
+    -> q0^m decay
 
-THEN:
-  replace the failed H1-D5 seam by a weaker excitation-level bridge
+FALLBACK:
+  centered-sector-only comparison
+  or direct projective-dynamics comparison
 
 THEN:
   evolved projective coherence and q0 transport
@@ -883,5 +870,3 @@ LATER:
   OS Hamiltonian
   spectral/Wightman mass gap.
 ~~~
-
-Do not reopen H1-D4, the finite-gap chain, top-sector simplicity, or the positive-density strictness layers unless a concrete inconsistency is found.
