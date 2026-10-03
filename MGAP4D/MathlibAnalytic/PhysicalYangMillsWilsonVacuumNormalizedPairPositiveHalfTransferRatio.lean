@@ -182,28 +182,38 @@ theorem
     simpa [vac, phi, H] using
       physicalYangMillsVacuumNormalizedSUNTwoModeExplicitOSVacuumBoundaryPairL2_coeFn_eq_boundaryVacuumMomentPairCoordinate
         Q hInvariant n
+  have hVacCoeff :
+      ∀ a b :
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
+            H N,
+        inner ℝ vac
+            (periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2
+              H N a b) =
+          z * inner ℝ (physHalf a) b := by
+    intro a b
+    have hInner :=
+      periodicHypercubicEvenSpecialUnitary_inner_physicalPairDecomposable_eq_literalPairIntegral_of_representative
+        H N vac a b phi hvacRep
+    have hPath :=
+      periodicHypercubicEvenBoundaryVacuumMomentPairCoordinate_pairCoefficient_eq_invSqrtPartition_mul_physicalPositiveHalfTransfer
+        H N hN (beta n) (hbeta n) a b
+    calc
+      inner ℝ vac
+          (periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2
+            H N a b) =
+        periodicHypercubicEvenSpecialUnitaryH1D5PairHaarCoefficient
+          H N phi a b := by
+            simpa [
+              periodicHypercubicEvenSpecialUnitaryH1D5PairHaarCoefficient
+            ] using hInner
+      _ = z * inner ℝ (physHalf a) b := by
+            simpa [z, physHalf] using hPath
   have hVacXY :
       inner ℝ vac
           (periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2
             H N x y) =
-        z * inner ℝ (physHalf x) y := by
-    have hInner :=
-      periodicHypercubicEvenSpecialUnitary_inner_physicalPairDecomposable_eq_literalPairIntegral_of_representative
-        H N vac x y phi hvacRep
-    have hPath :=
-      periodicHypercubicEvenBoundaryVacuumMomentPairCoordinate_pairCoefficient_eq_invSqrtPartition_mul_physicalPositiveHalfTransfer
-        H N hN (beta n) (hbeta n) x y
-    calc
-      inner ℝ vac
-          (periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2
-            H N x y) =
-        periodicHypercubicEvenSpecialUnitaryH1D5PairHaarCoefficient
-          H N phi x y := by
-            simpa [
-              periodicHypercubicEvenSpecialUnitaryH1D5PairHaarCoefficient
-            ] using hInner
-      _ = z * inner ℝ (physHalf x) y := by
-            simpa [z, physHalf] using hPath
+        z * inner ℝ (physHalf x) y :=
+    hVacCoeff x y
   have hVacTop :
       inner ℝ vac topPair =
         z * inner ℝ (physHalf omega) omega := by
@@ -213,7 +223,7 @@ theorem
             H N omega omega := by
       rfl
     rw [hTopDecomp]
-    exact hVacXY (x := omega) (y := omega)
+    exact hVacCoeff omega omega
   have hNormXY :
       inner ℝ (normHalf x) y =
         c * inner ℝ (physHalf x) y := by
@@ -226,7 +236,7 @@ theorem
       inner ℝ (normHalf omega) omega = 1 := by
     rw [
       periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPositiveHalfCylinderTransferOperator_top_fixed
-        (Q := Q) (hInvariant := hInvariant) H (beta n) (hbeta n)
+        H (beta n) (hbeta n)
     ]
     rw [real_inner_self_eq_norm_sq,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector_norm]
