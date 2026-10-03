@@ -2,9 +2,9 @@
 
 Hidetoshi Itakura's Lean 4 / mathlib development for the four-dimensional Yang--Mills existence and mass-gap program.
 
-## Current theorem status — through merged PR #5061
+## Current theorem status — through merged PRs #5077 and #5078
 
-The finite-volume positive-coupling transfer-gap route is closed with explicit uniform constants
+The finite-volume positive-coupling transfer-gap route remains closed with the explicit volume/rank/scale-uniform constants
 
 ~~~text
 1/2304 <= kappa_12(s,beta)
@@ -18,72 +18,29 @@ q0 = 3071/3072
 
 The q0 estimate is available on the full completed physical pair non-top sector.
 
-The major change since the previous README is that H1-D4 is now closed, while H1-D5 has turned into an explicit no-go analysis rather than a compatibility theorem that should simply be assumed or forced.
+The main change since the #5061 documentation checkpoint is that the old completed H1-D5 seam has not been revived. Instead the repository now has two weaker post-no-go routes:
 
-The current exact picture is:
+1. a canonical projected/local-coefficient route (#5063--#5076), and
+2. a stronger finite-dimensional SU(2) Gram--Schmidt route opened by #5077.
 
-~~~text
-H1-D4
-  independent endpoint gauge-fixed pair sector
-    =
-  completed physical pair carrier                         CLOSED #5029
+The second route is now the preferred next target because it can avoid any vacuum/top fidelity assumption. PR #5078 has already closed its pure finite-dimensional core: two real scalar constraints on a unit vector in Euclidean R^3 have a common normalized solution by rank-nullity.
 
-H1-D5 candidate completed compatibility
-  -> literal Wilson path identity                        #5031-#5038
-  -> strict-positive subtop obstruction                  #5039-#5040
-  -> rank-one one-slab transfer consequence              #5041
-  -> literal Wilson quadratic obstruction                #5042
-  -> two-mode Wilson Gram determinant = 0                #5043
-  -> feature-image dependence                            #5044
-  -> two-mode feature-kernel nontriviality residual      #5045
-  -> half-weight crossing Gram                           #5046-#5048
-  -> protected selected Fock sector                      #5049-#5051
-  -> positive-density trace/four-edge strictness         #5052-#5058
-  -> continuous SU(2) two-mode span = span{1,r}          #5059
-  -> arbitrary nonzero physical two-mode vector
-       = nonzero degree-one trace polynomial              #5061
-  -> feature-analysis kernel trivial on the two-mode span #5061
-  -> completed H1-D5 impossible at positive SU(2) coupling #5061
-~~~
+A complete continuum four-dimensional Yang--Mills existence theorem and Wightman mass-gap theorem are not yet claimed.
 
-At positive coupling, #5058 proves that every nonzero finite primary normalized-trace polynomial has strictly positive bare temporal-crossing quadratic form in the exact H1-D5 half-weight endpoint measure. #5059 identifies the chosen continuous SU(2) Wilson two-mode span with the literal trace pair 1,r, where r = 1 - E_W. #5061 closes the remaining finite-dimensional bridge: every nonzero physical two-mode vector is represented by a nonzero degree-one trace polynomial, its physical one-slab quadratic form is exactly the half-weight crossing form, and the physical feature-analysis map therefore has trivial kernel on the two-mode span.
-
-Feeding that theorem into the already formalized #5045/#5044/#5043 obstruction chain gives a theorem-level no-go statement:
-
-~~~text
-one finite scale with beta > 0
-  ->
-not completed H1-D5 compatibility.
-~~~
-
-The old route
-
-~~~text
-H1-D5 compatibility
-  -> vacuum alignment
-  -> explicit centered q0
-~~~
-
-is therefore closed as a failed model-facing identification at positive SU(2) coupling. It must not be resurrected under a renamed equivalent statement. The active finite-volume problem is now to construct a strictly weaker excitation-level seam that transports the already-proved q0 estimate without forcing rank-one collapse of the physical one-slab transfer.
-
-A complete continuum four-dimensional Yang--Mills existence and Wightman mass-gap theorem is not yet claimed.
-
-## Authority checkpoint — 2026-10-03 JST
+## Authority checkpoint — 2026-10-04 JST
 
 | Item | Authoritative value |
 | --- | --- |
 | Repository | itakura-hidetoshi/4d-mass-gap |
 | Unique theorem-carrier branch | formal/real-hilbert-uniform-coercive-strong-limit |
-| Fresh theorem-carrier HEAD | a72ba16e1e6a1596db974ee0c20b6ffc8d79c73b |
-| Latest theorem merge | PR #5061 — positive-coupling SU(2) completed H1-D5 no-go |
-| #5061 exact PR head | d8e08f83dc422a3d4636a01559afdffa5d176a21 |
-| #5061 validation | PR Lean Fast Check run 37117871784: completed / success; exact-head receipt success |
-| #5059 trace-span theorem | merge 4a318081c47a724c6ca92c9953f9a5067f91bf1b |
-| #5058 strict crossing theorem | merge d9b9de525c213739e9cdb145890c1f14e97b4f3b |
-| Lean | v4.30.0-rc2 |
-| mathlib | 5450b53e5ddc75d46418fabb605edbf36bd0beb6 |
-
-[Authoritative theorem branch](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit) · [Detailed roadmap](ROADMAP.md)
+| Latest theorem-bearing merge | 426ad4fe783d030a61687fbb123aca00b90a3d1d |
+| Latest theorem-bearing branch tip | merge 426ad4fe783d030a61687fbb123aca00b90a3d1d; #5077 merged after #5078 and contains both theorem lines |
+| #5077 | all SU(2) Wilson-energy Gram--Schmidt modes realized as physical endpoint pairs |
+| #5077 validation | head aaa6d50c2da21461a76a6a0e6e2f9ee72b518998; run 37157037971 success; exact-head receipt success |
+| #5078 | abstract Fin 3 two-functional unit-kernel selector |
+| #5078 validation | head 61acb9b380ee3822e5574c1e9fd56e61cba5d64f; run 37156892868 success; exact-head receipt success |
+| Pinned Lean | v4.30.0-rc2 |
+| Pinned mathlib | 5450b53e5ddc75d46418fabb605edbf36bd0beb6 |
 
 The default branch main is not theorem authority. It is a documentation mirror.
 
@@ -103,38 +60,44 @@ README / ROADMAP-only commits are docs-only and do not replace the latest theore
 
 - beta = 0 physical transfer gap equals 1;
 - positive-beta finite-volume coercivity;
-- volume/rank/scale-uniform gap floor 1/3072;
+- volume/rank/scale-uniform transfer-gap floor 1/3072;
 - q0 = 3071/3072 and uniform q0^m decay;
-- full completed physical pair non-top q0^m decay;
+- q0^m decay on the full completed physical pair non-top sector;
 - one-dimensional finite physical top eigenspace;
 - one-dimensional completed pair top-top block;
-- scale-coherent projective L2 carrier with nonzero centered strong limits under the projective cylinder/readout data;
+- scale-coherent projective L2 carrier;
 - explicit SU(N) Wilson two-mode boundary representatives;
-- canonical-sign finite OS vacuum identified with the concrete Wilson boundary vacuum;
-- independent endpoint gauge fixedness of the canonical-sign vacuum pair;
-- H1-D4: independent endpoint gauge-fixed pair sector equals the completed physical pair carrier;
-- H1-D5 reduction from completed compatibility to a literal finite Wilson two-mode Gram degeneracy;
-- exact positive-density / selected-Fock decomposition of the H1-D5 crossing Gram;
-- one-slice positive-density trace Gram nondegeneracy and positive-degree feature moments;
-- positive-coupling strict four-edge and bare crossing Gram for every nonzero finite primary trace polynomial;
-- continuous SU(2) two-mode carrier equals the literal normalized-trace span;
-- every nonzero physical SU(2) two-mode vector has a nonzero degree-one trace-polynomial representative;
-- the physical one-slab feature-analysis operator is injective on the SU(2) two-mode span at beta > 0;
-- the old completed H1-D5 compatibility is impossible whenever at least one finite scale has beta > 0.
+- H1-D4:
+  independent endpoint gauge-fixed pair sector equals the completed physical pair carrier;
+- positive-coupling SU(2) completed H1-D5 no-go;
+- canonical projection of the actual centered pair to the physical non-top sector;
+- theorem-generated nonzero projected centered excitation at every finite scale;
+- common-projective embedding of projected non-top modes;
+- fixed-mode infinite-subsequence extraction;
+- exact rank-one top subtraction formula for projected common images;
+- canonical-sign OS vacuum pair common-projective image equals constant one at every scale;
+- pair-top convergence reduced to the scalar vacuum/top overlap criterion;
+- stronger projected convergence criterion using only the local top coefficient;
+- exact canonical OS-vacuum pair coefficient factorization through normalized positive-half transfer;
+- exact one-slice formula for the local projected-top coefficient;
+- all SU(2) Wilson-energy Gram--Schmidt modes realized as physical one-slice modes and physical endpoint pairs;
+- the entire SU(2) Gram--Schmidt endpoint-pair family is orthonormal in pair Haar L2;
+- the pure finite-dimensional #5078 selector: any two real linear functionals on Euclidean R^3 admit a common unit vector in both kernels.
 
 ### Not yet closed
 
-- replacement of the refuted H1-D5 seam by the weaker excitation-level model-facing compatibility actually needed for explicit centered q0 decay;
-- transport of finite q0 dynamics to the nonzero projective continuum excitation;
+- model-facing instantiation of the #5078 selector with the #5077 three-mode pair synthesis, OS-vacuum pairing and pair-top pairing;
+- proof that the synthesized selector has exact unit pair norm and belongs to the completed pair non-top sector;
+- projective strong convergence of that scale-dependent selected combination;
+- coherence / strong convergence of evolved finite q0-controlled states;
+- identification of a limiting discrete-time physical transfer on the nonzero continuum excitation;
 - spacing-scaled physical-time dynamics;
-- final OS Hamiltonian spectral lower bound;
+- final OS Hamiltonian lower bound;
 - Wightman / energy-momentum mass-gap theorem.
 
 ## 1. Finite-volume gap route
 
-The leakage, Schur, renewal, complete-order, twelve-spatial and physical-centering layers are closed.
-
-The endpoint is
+The finite-volume transfer analysis has already reached
 
 ~~~text
 kappa_12(s,beta) * ||f - B f||^2 <= E_12(f),
@@ -146,53 +109,15 @@ kappa_12(s,beta) * ||f - B f||^2 <= E_12(f),
 q0 = 3071/3072.
 ~~~
 
-No lattice-volume, link-count or gauge-rank loss appears in this finite-step contraction constant.
+The corresponding top-orthogonal natural-power estimate is volume/rank/scale uniform.
 
-## 2. Scale-coherent projective carrier
+The pair theory upgrades this to the full completed physical pair non-top sector.
 
-#4993--#4998 construct the projective finite-OS scale-coherence lane.
+This part is not the present bottleneck.
 
-The important distinction remains:
+## 2. H1-D4 is closed
 
-- the independent-product carrier is useful for simultaneous finite-scale comparison but centered fresh-coordinate strong limits vanish;
-- the projective carrier is the scale-coherent lane supporting nonzero centered strong limits.
-
-The projective construction is kinematically available. What is still missing is model-facing coherence of the evolved finite states and a physical-time scaling law.
-
-## 3. Explicit two-mode and full-pair q0 lane
-
-#4999--#5009 construct explicit SU(N) Wilson two modes and place the q0 estimate on the full completed physical pair non-top sector.
-
-#5010--#5016 then prove:
-
-~~~text
-finite physical top eigenspace is one-dimensional,
-
-completed pair top-top block is one-dimensional,
-
-uncentered primary-plaquette pair is physical,
-
-old vacuum-alignment problem reduces to:
-  physical-pair membership
-  + one proposed transfer compatibility seam.
-~~~
-
-#5017/#5018 identify the canonical-sign OS vacuum concretely and prove arbitrary independent endpoint gauge fixedness.
-
-## 4. H1-D4 is closed — #5022--#5029
-
-This layer should no longer be listed as an open problem.
-
-The chain is:
-
-- #5022: physical pair carrier is contained in the independently gauge-fixed pair sector;
-- #5023: identify the algebraic pair Gauss projection range;
-- #5024: prove dense range of the real L2 external tensor;
-- #5025: identify the real L2 tensor completion with product L2;
-- #5026: identify the completed pair Gauss projection range;
-- #5027: construct the left Riesz representative for product-L2 kernels;
-- #5028: descend independent gauge-fixed pairings through the Gauss projection;
-- #5029: prove exact equality
+PRs #5022--#5029 prove
 
 ~~~text
 IndependentEndpointGaugeFixedPairSector
@@ -200,275 +125,493 @@ IndependentEndpointGaugeFixedPairSector
 PhysicalPairCarrier.
 ~~~
 
-Thus canonical-sign vacuum-pair physicality follows from the already-proved endpoint gauge fixedness.
+Consequences:
 
-## 5. H1-D5 reduction and no-go chain — #5030--#5045
+- the canonical-sign finite OS vacuum pair is in the completed physical pair carrier;
+- independent endpoint gauge fixedness is no longer an assumption;
+- pair-carrier membership does not need the old H1-D5 compatibility.
 
-#5030 reduces the old H1-D6 vacuum-normalized route to H1-D5 alone.
+## 3. The old H1-D5 seam is formally refuted
 
-Then H1-D5 is progressively exposed:
+PRs #5031--#5061 expose the old completed compatibility as far too strong.
 
-### #5031--#5035: literalize the compatibility
-
-~~~text
-completed compatibility
-  -> physical matrix coefficient identity
-  -> literal finite Wilson integral
-  -> finite Wilson boundary-vacuum moment
-  -> unfixed positive-half path-kernel moment
-  -> partition normalization cancels.
-~~~
-
-### #5036--#5038: operator consequence
-
-The path message M_H is identified with positive-half transfer powers, giving
+The chain is
 
 ~~~text
-T^(H+3) = ||T||^2 T^(H+1).
+completed H1-D5
+  -> finite Wilson path identity
+  -> one-slab power identity
+  -> vanishing top-orthogonal restriction
+  -> rank-one normalized one-slab transfer
+  -> two-mode Wilson Gram degeneracy
+  -> nontrivial feature-analysis kernel.
 ~~~
 
-### #5039--#5041: spectral rigidity
+PRs #5058/#5059/#5061 prove that the concrete positive-coupling SU(2) two-mode sector has strictly positive crossing quadratic form and an injective physical feature-analysis map.
 
-A strict-positive subtop eigenmode contradicts H1-D5.
-
-Compact positivity then theorem-generates such a mode whenever the top-orthogonal restriction is nonzero. Hence H1-D5 forces that restriction to vanish.
-
-Together with top-eigenspace simplicity:
-
-~~~text
-H1-D5
-  -> normalized physical one-slab transfer is rank one.
-~~~
-
-### #5042--#5045: finite two-mode residual
-
-The rank-one consequence is rewritten as a literal finite Wilson quadratic statement.
-
-H1-D5 forces the explicit two-mode Wilson Gram determinant to vanish.
-
-Equivalently, the two feature-analysis images must be linearly dependent, or the one-slab feature-analysis operator must have nontrivial kernel on the explicit two-dimensional physical span.
-
-This is the exact finite-dimensional obstruction target.
-
-## 6. Positive-density crossing strictness — #5046--#5058
-
-### #5046--#5048: exact endpoint measure
-
-The two-mode Wilson determinant is rewritten as a half-weighted temporal-crossing Gram.
-
-The half-weight is exposed as an equivalent strictly positive density over one-slice Haar.
-
-Thus the H1-D5 residual is placed on the exact endpoint measure used by the physical one-slab kernel.
-
-### #5049--#5051: protected selected Fock sector
-
-The literal temporal crossing kernel is decomposed into:
-
-~~~text
-Schur-PSD remainder
-  +
-residual degree-zero scalar
-  * genuine primary four-edge selected Fock kernel.
-~~~
-
-No residual link is dropped.
-
-### #5052--#5057: one-slice strictness
-
-The repository proves:
-
-- infinite range of the primary SU(2) normalized trace on one spatial slice;
-- nondegenerate finite trace-power Gram matrices under arbitrary equivalent finite positive density;
-- theorem-generated strictly positive degree moments for every nonzero finite trace polynomial;
-- lift from scalar trace moment to cyclic Hilbert feature moment;
-- reflection to genuine four-edge feature moment;
-- strictly positive genuine four-edge Gram;
-- specialization to the exact H1-D5 half-weight endpoint measure.
-
-### #5058: strict bare crossing Gram
-
-At beta > 0, every nonzero finite primary normalized-trace polynomial P satisfies
-
-~~~text
-0 <
-  integral integral
-    P(A) P(B)
-    K_cross(A,B)
-    dmu_half(A) dmu_half(B).
-~~~
-
-This is the cancellation-free strictness theorem needed to contradict the old H1-D5 rank-one/degeneracy consequence.
-
-## 7. Continuous SU(2) two-mode trace span — #5059
-
-The normalized-Haar two-mode Gram--Schmidt family already spans the literal seed pair 1,E_W.
-
-#5059 lifts that equality back to continuous representatives using injectivity of ContinuousMap.toLp under normalized Haar and proves, for SU(2),
-
-~~~text
-span{chosen continuous two modes}
-  =
-span{1, E_W}
-  =
-span{1, r},
-~~~
-
-where
-
-~~~text
-r = normalized real trace = 1 - E_W.
-~~~
-
-Each chosen continuous two-mode representative therefore has literal normalized-trace coefficients.
-
-No explicit Gram--Schmidt coefficients are required.
-
-## 8. H1-D5 no-go closure and replacement frontier — #5061
-
-#5061 closes the exact bridge that remained after #5058/#5059.
-
-For an arbitrary physical SU(2) two-mode vector
-
-~~~text
-x != 0,
-x in span{f0,f1},
-~~~
-
-the theorem first produces coefficients c0,c1, not both zero, such that the ambient Haar-L2 class of x is represented by the literal degree-one normalized-trace polynomial
-
-~~~text
-P(r) = c0 + c1 r.
-~~~
-
-The physical one-slab quadratic form is then identified exactly with the #5058 half-weight temporal-crossing quadratic form. Therefore
-
-~~~text
-x != 0
-  ->
-Q_cross(P) > 0
-  ->
-A_phys x != 0.
-~~~
-
-Hence the physical one-slab feature-analysis operator has trivial kernel on the explicit two-mode span. The existing #5045/#5044/#5043 reduction then yields
+Therefore
 
 ~~~text
 beta(n) > 0
   ->
-not H1-D5 completed compatibility at scale n.
+not completed H1-D5 at scale n.
 ~~~
 
-A repository-level wrapper also proves that existence of any finite scale with positive coupling suffices.
+Do not reintroduce the old compatibility, or an equivalent vacuum/top alignment statement, under a new name.
 
-### Current finite model-facing target
+## 4. Post-no-go projected route — #5063--#5069
 
-Do not attempt another proof of the old completed H1-D5 statement. The next theorem must be strictly weaker and excitation-level.
+### #5063
 
-The preferred geometry to inspect first is:
+The actual vacuum-normalized centered pair receives an exact scalar top-pair expansion.
+
+This gives a strictly weaker excitation-level scalar seam than H1-D5.
+
+### #5064
+
+The old SU(2) global vacuum/top alignment route is explicitly excluded.
+
+### #5065
+
+Define the canonical completed TopTop and nonTop projections of the actual centered pair.
+
+The projected vector is unconditionally:
+
+- in the completed physical pair carrier;
+- top-top orthogonal;
+- therefore controlled by the existing q0^m estimate.
+
+### #5066/#5067
+
+Nonzero projected excitation is reduced to a finite OS-vacuum / physical-pair-top overlap.
+
+That overlap is theorem-generated strictly positive.
+
+Hence at every finite scale at least one selected projected centered Wilson mode is nonzero and already receives q0^m decay.
+
+### #5068/#5069
+
+The projected modes are embedded into one common projective continuum L2 carrier.
+
+An infinite increasing subsequence can be chosen on which one fixed mode label remains nonzero.
+
+This closes the finite nonzero-q0 excitation existence problem without H1-D5.
+
+## 5. Projective strong-convergence reduction — #5070--#5074
+
+### #5070
+
+The projected common image has the exact form
 
 ~~~text
-actual centered finite-OS excitation
-  -> PhysicalPairCarrier
-  -> TopTop^perp
-  -> existing full-pair non-top q0 receiver
-  -> q0^m decay.
+centered image
+  -
+<top image, centered image> * top image.
 ~~~
 
-This combines the strongest parts of the earlier R1 and R3 candidates and avoids identifying the finite OS vacuum with the physical one-slab Perron state. If direct carrier/top-orthogonality cannot be generated from the existing gauge-fixed and centering theorems, the fallback is a centered-sector-only comparison or a direct projective-dynamics comparison.
+Therefore no independent scalar-convergence proof is required if both moving vectors converge.
 
-## 9. Continuum continuation
+### #5071
 
-After the correct finite model-facing seam is identified:
+The uncentered Wilson pair common image is eventually exactly one fixed continuum mode.
+
+Centered convergence is reduced to the OS-vacuum pair image and pair-top image.
+
+### #5072
+
+The canonical-sign OS-vacuum pair common-projective image is exactly
 
 ~~~text
-finite q0 control
-  -> evolved projective coherence
-  -> nonzero projective continuum excitation
-  -> spacing-scaled semigroup / generator estimate
-  -> OS Hamiltonian
-  -> spectral gap
-  -> Wightman mass gap.
+1
 ~~~
 
-The fixed discrete q0 must not be interpreted directly as a fixed physical-time mass rate when lattice spacing tends to zero.
+at every scale.
 
-## 10. Lean / CI workflow
+Thus the vacuum part of centered convergence is completely closed.
 
-Latest theorem validation:
+### #5073
+
+For unit pair-top common images,
 
 ~~~text
-PR #5061 exact head:
-  d8e08f83dc422a3d4636a01559afdffa5d176a21
+pair-top image -> 1 strongly
+  iff
+finite vacuum/top overlap -> 1.
+~~~
+
+This yields one valid conditional route, but it is stronger than necessary.
+
+### #5074
+
+A weaker Hilbert-space lemma removes the need for convergence of the moving top direction:
+
+~~~text
+c_n -> c,
+||t_n|| = 1,
+<t_n,c_n> -> 0
+  ->
+c_n - <t_n,c_n> t_n -> c.
+~~~
+
+Therefore it is enough to prove the finite local projected-top coefficient tends to zero.
+
+This local criterion is the preferred interpretation of the #5070 projection formula.
+
+## 6. Local coefficient factorization — #5075/#5076
+
+### #5075
+
+For arbitrary physical one-slice endpoint vectors x,y,
+
+~~~text
+<v_OS, x tensor y>
+  =
+<v_OS, omega tensor omega>
+  *
+<S_half x, y>,
+~~~
+
+where S_half is the normalized positive-half physical transfer and omega is the normalized one-slice top mode.
+
+The finite partition normalization cancels exactly.
+
+No H1-D5 compatibility or vacuum/top alignment is used.
+
+### #5076
+
+For the explicit primary Wilson two-mode pair f_k tensor 1, the local projected-top coefficient has the exact one-slice form
+
+~~~text
+a_k
+  =
+alpha_k * delta
+  -
+gamma^2 * m_k,
+~~~
+
+with
+
+~~~text
+alpha_k = <omega, f_k>,
+delta   = <omega, 1>,
+gamma   = <v_OS, omega tensor omega>,
+m_k     = <S_half f_k, 1>.
+~~~
+
+This removes pair-Haar geometry from the local-coefficient problem.
+
+It is useful diagnostically, but the next preferred route no longer needs to prove gamma -> 1.
+
+## 7. #5077 — infinite SU(2) Gram--Schmidt family realized as physical pairs
+
+PR #5077 extends the kinematic input from two special modes to the full theorem-generated SU(2) Wilson-energy Gram--Schmidt family.
+
+For every mode index k and finite scale n, the repository now has:
+
+- an explicit primary-spatial-plaquette continuous Wilson Gram--Schmidt observable;
+- a gauge-invariant physical one-slice L2 vector;
+- an exact ordered endpoint-pair identification with a decomposable physical pair;
+- membership in the completed physical pair carrier;
+- orthonormality of the whole endpoint-pair family after transport to pair Haar L2.
+
+Schematically,
+
+~~~text
+u_{k,n}
+  in PhysicalPairCarrier,
+
+<u_{i,n},u_{j,n}> = delta_ij.
+~~~
+
+This is the kinematic input needed for the new three-mode route.
+
+## 8. Preferred next route: instantiate the #5078 selector on three #5077 pair modes
+
+Take the first three orthonormal physical pair modes at scale n:
+
+~~~text
+u_0,n, u_1,n, u_2,n.
+~~~
+
+For coefficients c in R^3 define
+
+~~~text
+X_n(c) = sum_{k<3} c_k u_k,n.
+~~~
+
+Define the two real linear functionals
+
+~~~text
+L_vac,n(c) = <v_OS,n, X_n(c)>,
+
+L_top,n(c) = <Omega_pair,n, X_n(c)>.
+~~~
+
+Combine them into
+
+~~~text
+L_n : R^3 -> R^2.
+~~~
+
+PR #5078 already proves the abstract rank-nullity statement needed here: two real scalar functionals on Euclidean R^3 have a common unit kernel vector. Therefore, after packaging L_vac,n and L_top,n as the two functionals required by #5078, one obtains c_n with
+
+~~~text
+L_vac,n(c_n) = 0,
+L_top,n(c_n) = 0,
+||c_n|| = 1.
+~~~
+
+Then
+
+~~~text
+x_n := X_n(c_n)
+~~~
+
+has all of the desired finite properties at once:
+
+~~~text
+||x_n|| = 1                 by orthonormality,
+
+<v_OS,n, x_n> = 0           by construction,
+
+<Omega_pair,n, x_n> = 0     by construction,
+
+x_n in PhysicalPairCarrier  by #5077,
+
+x_n in PairNonTop           by one-dimensional TopTop,
+
+||S_pair,n^m x_n||
+  <= q0^m ||x_n||
+  = q0^m.
+~~~
+
+Because the vacuum coefficient is already zero, vacuum centering does not change x_n.
+
+The remaining work in this section is model-facing: define the three-mode synthesis map from #5077, prove its exact norm formula from orthonormality, and instantiate #5078 with the two physical pairings.
+
+This avoids:
+
+- completed H1-D5;
+- vacuum/top alignment;
+- gamma_n -> 1;
+- decay of the #5076 fidelity defect.
+
+## 9. Expected projective compactness step after the three-mode selector
+
+The coefficient vectors c_n lie on the unit sphere in R^3.
+
+Finite-dimensional compactness should provide a subsequence
+
+~~~text
+c_{n_j} -> c_infinity,
+||c_infinity|| = 1.
+~~~
+
+The SU(2) Gram--Schmidt projective-cylinder machinery already gives coherent continuum realizations of every fixed mode.
+
+For the first three fixed continuum modes U_0,U_1,U_2, one should then obtain
+
+~~~text
+Embed(x_{n_j})
+  ->
+sum_{k<3} c_infinity,k U_k
+~~~
+
+strongly.
+
+Because the continuum modes remain orthonormal,
+
+~~~text
+||sum c_infinity,k U_k|| = 1.
+~~~
+
+So the limiting excitation is automatically nonzero.
+
+This is stronger than the older fixed-two-mode pigeonhole route because nonzero norm is built into the coefficient normalization.
+
+## 10. What the three-mode route does not yet solve
+
+Even after the initial nonzero strong limit is constructed, the dynamical identification remains open.
+
+The finite estimate
+
+~~~text
+||S_n^m x_n|| <= q0^m
+~~~
+
+does not by itself define a continuum operator T or prove
+
+~~~text
+||T^m x|| <= q0^m ||x||.
+~~~
+
+The evolved finite states must first be shown to live coherently in the same projective carrier, or otherwise converge strongly to an identified limiting discrete-time dynamics.
+
+This is the next H1-C3 layer after the three-mode selection and compactness steps.
+
+## 11. H1-C3 — projective dynamics
+
+Required sequence:
+
+1. theorem-generate the three-mode unit selector c_n;
+2. construct the exact finite non-top unit pair x_n;
+3. extract a coefficient-convergent subsequence;
+4. prove the projective image of x_n has a nonzero strong limit;
+5. prove coherence / strong convergence of the evolved sequence S_n^m x_n for fixed m;
+6. identify a limiting discrete-time operator T;
+7. transport
+
+~~~text
+||S_n^m x_n|| <= q0^m
+~~~
+
+to the continuum limit.
+
+Only after this step does finite q0 become a theorem about actual continuum discrete-time dynamics.
+
+## 12. H2 — physical-time scaling
+
+The fixed discrete factor q0 is not itself the continuum mass.
+
+If lattice spacing a_n tends to zero, then for fixed t > 0,
+
+~~~text
+q0^floor(t/a_n) -> 0.
+~~~
+
+That is an instantaneous-collapse scaling, not a nontrivial strongly continuous physical-time semigroup.
+
+The continuum-time layer needs a spacing-sensitive statement such as
+
+~~~text
+q_n = exp(-m_n a_n + o(a_n))
+~~~
+
+or an equivalent generator / Dirichlet lower bound.
+
+Existing rate and scaling modules remain downstream tools for this stage.
+
+## 13. H3/H4 — OS Hamiltonian and Wightman mass gap
+
+After projective dynamics and physical-time scaling provide actual continuum model data, the remaining route is
+
+~~~text
+continuum physical Hilbert space
+  ->
+strongly continuous contraction semigroup
+  ->
+self-adjoint Hamiltonian
+  ->
+vacuum-orthogonal spectral lower bound
+  ->
+positive mass gap
+  ->
+Wightman / energy-momentum mass-gap theorem.
+~~~
+
+Generic functional-analytic infrastructure is already substantial, but these model-facing identifications are not yet closed.
+
+## 14. Lean / CI engineering rules
+
+Current repository rules:
+
+- fresh exact theorem-carrier SHA has highest authority;
+- pinned Lean v4.30.0-rc2 and pinned mathlib API take precedence over current-master examples;
+- inspect every changed Lean file, not only the first compiler error;
+- distinguish theorem-bearing commits from docs-only commits;
+- use exact-head CI receipts before theorem PR merge;
+- do not rerun strict Lean for an unchanged exact head that is already GREEN;
+- docs-only changes do not require a redundant strict-Lean rebuild;
+- prefer explicit named parameters when section-variable inference is fragile;
+- prefer direct theorem terms / simpa using when rw cannot match through coercions;
+- avoid brittle change steps across definitional aliases;
+- preserve the direction of inner-product symmetry lemmas explicitly.
+
+## 15. Recent milestone ledger
+
+| PR | Status | Contribution |
+| --- | --- | --- |
+| #5061 | merged | positive-coupling SU(2) completed H1-D5 no-go |
+| #5062 | merged | docs refresh through #5061 |
+| #5063 | merged | centered-pair scalar replacement for the failed seam |
+| #5064 | merged | exclude old SU(2) vacuum/top alignment route |
+| #5065 | merged | canonical physical non-top projection of centered pairs |
+| #5066 | merged | reduce projected nonzero to finite vacuum/top overlap |
+| #5067 | merged | prove projected centered excitation nonzero at every scale |
+| #5068 | merged | common projective embedding of projected modes |
+| #5069 | merged | fixed nonzero mode on an infinite increasing subsequence |
+| #5070 | merged | projected strong-convergence factorization |
+| #5071 | merged | centered-image convergence reduced to OS vacuum pair |
+| #5072 | merged | canonical OS vacuum pair projective image is exactly one |
+| #5073 | merged | pair-top convergence iff vacuum/top overlap tends to one |
+| #5074 | merged | local top-coefficient convergence criterion |
+| #5075 | merged | OS vacuum pair coefficient = overlap times normalized half-transfer coefficient |
+| #5076 | merged | exact one-slice local projected-top coefficient formula |
+| #5077 | merged | full SU(2) Gram--Schmidt Wilson family realized as physical orthonormal endpoint pairs |
+| #5078 | merged | abstract Euclidean R^3 two-functional common unit-kernel selector |
+
+## 16. Restart checkpoint
+
+Latest theorem-bearing baseline before this docs refresh:
+
+~~~text
+426ad4fe783d030a61687fbb123aca00b90a3d1d
+~~~
+
+Latest theorem PR evidence:
+
+~~~text
+PR #5077 exact head:
+  aaa6d50c2da21461a76a6a0e6e2f9ee72b518998
 
 PR Lean Fast Check:
-  run 37117871784
+  run 37157037971
   completed / success
 
-exact-head completion receipt:
+exact-head receipt:
   success
-
-theorem-bearing merge:
-  a72ba16e1e6a1596db974ee0c20b6ffc8d79c73b
-  4a318081c47a724c6ca92c9953f9a5067f91bf1b
 ~~~
 
-Previous key strictness validation:
+Read these files first for the current frontier:
+
+1. PhysicalYangMillsWilsonVacuumNormalizedProjectedLocalTopCoefficientCriterion.lean — #5074
+2. PhysicalYangMillsWilsonVacuumNormalizedPairPositiveHalfTransferRatio.lean — #5075
+3. PhysicalYangMillsWilsonVacuumNormalizedLocalTopOneSliceFormula.lean — #5076
+4. PhysicalYangMillsWilsonSU2GramSchmidtPairPhysical.lean — #5077
+5. RealEuclideanFinThreeTwoFunctionalKernel.lean — #5078
+6. SpecialUnitaryTwoWilsonEnergyHaarL2GramSchmidt.lean
+7. PhysicalYangMillsWilsonSU2PrimaryPlaquetteGramSchmidtCylinder.lean
+8. PhysicalYangMillsWilsonSU2PrimaryPlaquetteGramSchmidtPointwiseCoherentReadout.lean
+9. the full physical pair non-top q0 receiver from #5006
+
+Current restart target:
 
 ~~~text
-PR #5058 exact head:
-  10c7cfe0ebbaa51f9aa9f3a2d437230fcb1c33a7
+THREE COHERENT ORTHONORMAL PHYSICAL PAIR MODES (#5077)
+  +
+ABSTRACT TWO-FUNCTIONAL UNIT-KERNEL SELECTOR (#5078)
+  ->
+instantiate with
+  [vacuum pairing, pair-top pairing]
+  ->
+exact finite unit non-top excitation
+  ->
+existing q0^m receiver
+  ->
+coefficient-sphere subsequence
+  ->
+nonzero projective strong limit
 
-PR Lean Fast Check:
-  run 37115300163
-  completed / success
+THEN:
+  evolved projective coherence
+  ->
+continuum discrete-time q0 dynamics
 
-exact-head completion receipt:
-  success
+THEN:
+  spacing-scaled physical-time rate
+
+LATER:
+  OS Hamiltonian
+  ->
+spectral / Wightman mass gap.
 ~~~
-
-Recent Lean engineering lessons:
-
-- inspect the complete changed module, not only the first reported line;
-- preserve the pinned mathlib API rather than coding against current master;
-- avoid duplicate local typeclass instances on dependent product/subtype carriers;
-- prefer literal List/Finset carriers already used by the defining kernel when Fintype definitional equality is fragile;
-- use explicit local equalities across let aliases before simp;
-- prefer calc + Finset.sum_congr + named rewrites to broad simp_rw when transporting ContinuousMap.toLp expressions;
-- use congrArg for dependent integral or inner-product rewrites when rw does not see through local aliases;
-- use ContinuousLinearMap / LinearMap extensionality pointwise rather than forcing global definitional equality;
-- once an unchanged exact head is GREEN, do not rerun strict Lean validation merely for reassurance;
-- docs-only README / ROADMAP updates are not theorem-bearing changes.
-
-## Recent theorem progression
-
-| PR | Contribution |
-| --- | --- |
-| #5022--#5029 | close H1-D4: independent gauge-fixed pair sector = physical pair carrier |
-| #5030 | reduce vacuum-normalized H1-D6 to H1-D5 |
-| #5031--#5038 | reduce H1-D5 to a physical one-slab power identity |
-| #5039--#5041 | prove H1-D5 forces rank-one physical one-slab transfer |
-| #5042--#5045 | reduce contradiction to two-mode Wilson Gram / feature-kernel nondegeneracy |
-| #5046--#5048 | rewrite residual as positive-density half-weight crossing Gram |
-| #5049--#5051 | protect and factor an exact four-edge selected Fock sector |
-| #5052--#5054 | positive-density one-slice trace Gram and positive-degree moments |
-| #5055--#5057 | lift scalar moments to cyclic/four-edge strictness at the H1-D5 endpoint measure |
-| #5058 | strict bare temporal-crossing Gram for every nonzero trace polynomial at beta > 0 |
-| #5059 | continuous SU(2) two-mode span = normalized-trace span |
-| #5061 | arbitrary physical two-mode vector -> nonzero trace polynomial -> feature-kernel injectivity -> positive-coupling completed H1-D5 no-go |
-
-## Primary current modules
-
-- MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonVacuumNormalizedH1D5SU2NoGo.lean
-- MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonVacuumNormalizedH1D5TwoModeFeatureKernelResidual.lean
-- MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonVacuumNormalizedH1D5TwoModePositiveDensityCrossingGram.lean
-- MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonVacuumNormalizedH1D5TwoModeCrossingSelectedSectorPSD.lean
-- MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonVacuumNormalizedH1D5TwoModeCrossingSelectedFactorization.lean
-- MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpatialPrimaryTracePositiveDensityGram.lean
-- MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpatialPrimaryTracePositiveDensityMoment.lean
-- MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpatialPrimaryTracePositiveDensityFeatureMoment.lean
-- MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpatialPrimaryTracePositiveDensityFourEdgeMoment.lean
-- MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonVacuumNormalizedH1D5HalfWeightFourEdgeGram.lean
-- MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonVacuumNormalizedH1D5HalfWeightCrossingGramStrict.lean
-- MGAP4D/MathlibAnalytic/SpecialUnitaryWilsonEnergySU2ContinuousTwoModeTraceSpan.lean
-
-For the exact continuation sequence, see [ROADMAP.md](ROADMAP.md).
