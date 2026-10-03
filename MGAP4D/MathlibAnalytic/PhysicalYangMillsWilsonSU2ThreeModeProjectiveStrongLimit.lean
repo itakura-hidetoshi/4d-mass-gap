@@ -120,9 +120,9 @@ theorem physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding_norm
       PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
         (halfExtent n) 2) :
     ‖physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding
-        Q R L hInvariant n x‖ = ‖x‖ :=
+        Q R L n x‖ = ‖x‖ :=
   (physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding
-    Q R L hInvariant n).norm_map x
+    Q R L n).norm_map x
 
 /-- On each theorem-generated Gram--Schmidt pair mode, the canonical pair
 embedding is exactly the continuum pullback of the corresponding finite
@@ -131,7 +131,7 @@ projective mode. -/
 theorem physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding_gramSchmidtPairMode
     (n k : ℕ) :
     physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding
-        Q R L hInvariant n
+        Q R L n
         (periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairHaarL2
           (halfExtent n) k) =
       L.finiteMarginalL2Pullback (R.marginalIndex n)
@@ -148,7 +148,7 @@ noncomputable def physicalYangMillsSU2ThreeModeFiniteProjectiveContinuumSynthesi
     EuclideanSpace ℝ (Fin 3) →ₗᵢ[ℝ]
       Lp ℝ 2 L.continuumMeasure :=
   (physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding
-    Q R L hInvariant n).comp
+    Q R L n).comp
     (periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeSynthesis
       (halfExtent n))
 
@@ -156,14 +156,14 @@ noncomputable def physicalYangMillsSU2ThreeModeFiniteProjectiveContinuumSynthesi
 theorem physicalYangMillsSU2ThreeModeFiniteProjectiveContinuumSynthesis_basisFun
     (n : ℕ) (k : Fin 3) :
     physicalYangMillsSU2ThreeModeFiniteProjectiveContinuumSynthesis
-        Q R L hInvariant n
+        Q R L n
         (EuclideanSpace.basisFun (Fin 3) ℝ k) =
       L.finiteMarginalL2Pullback (R.marginalIndex n)
         (R.primarySpatialPlaquetteWilsonEnergyGramSchmidtProjectiveL2Mode
           n k.1) := by
   change
     physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding
-        Q R L hInvariant n
+        Q R L n
         (periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeSynthesis
           (halfExtent n)
           (EuclideanSpace.basisFun (Fin 3) ℝ k)) =
@@ -187,7 +187,7 @@ theorem physicalYangMillsSU2ThreeModeContinuumMode_orthonormal
         S D halfExtent beta hbeta Q F R L hInvariant) :
     Orthonormal ℝ
       (physicalYangMillsSU2ThreeModeContinuumMode
-        Q R L hInvariant) := by
+        Q R L) := by
   have h0 := C.marginalSupportEventually 0
   have h1 := C.marginalSupportEventually 1
   have h2 := C.marginalSupportEventually 2
@@ -218,7 +218,7 @@ theorem physicalYangMillsSU2ThreeModeContinuumMode_orthonormal
   have hfamily :
       ((L.finiteMarginalL2Pullback (R.marginalIndex n)) ∘ v) =
         physicalYangMillsSU2ThreeModeContinuumMode
-          Q R L hInvariant := by
+          Q R L := by
     funext k
     change
       L.finiteMarginalL2Pullback (R.marginalIndex n)
@@ -241,27 +241,27 @@ noncomputable def physicalYangMillsSU2ThreeModeContinuumSynthesisLinearMap
       Lp ℝ 2 L.continuumMeasure :=
   (EuclideanSpace.basisFun (Fin 3) ℝ).toBasis.constr ℝ
     (physicalYangMillsSU2ThreeModeContinuumMode
-      Q R L hInvariant)
+      Q R L)
 
 @[simp]
 theorem physicalYangMillsSU2ThreeModeContinuumSynthesisLinearMap_basisFun
     (k : Fin 3) :
     physicalYangMillsSU2ThreeModeContinuumSynthesisLinearMap
-        Q R L hInvariant
+        Q R L
         (EuclideanSpace.basisFun (Fin 3) ℝ k) =
       physicalYangMillsSU2ThreeModeContinuumMode
-        Q R L hInvariant k := by
+        Q R L k := by
   change
     ((EuclideanSpace.basisFun (Fin 3) ℝ).toBasis.constr ℝ
       (physicalYangMillsSU2ThreeModeContinuumMode
-        Q R L hInvariant))
+        Q R L))
       ((EuclideanSpace.basisFun (Fin 3) ℝ).toBasis k) =
     physicalYangMillsSU2ThreeModeContinuumMode
-      Q R L hInvariant k
+      Q R L k
   exact
     (EuclideanSpace.basisFun (Fin 3) ℝ).toBasis.constr_basis ℝ
       (physicalYangMillsSU2ThreeModeContinuumMode
-        Q R L hInvariant) k
+        Q R L) k
 
 private theorem su2ThreeModeProjectiveLimitEuclideanBasis_orthonormal :
     Orthonormal ℝ
@@ -276,16 +276,16 @@ private theorem physicalYangMillsSU2ThreeModeContinuumSynthesisLinearMap_comp_ba
         S D halfExtent beta hbeta Q F R L hInvariant) :
     Orthonormal ℝ
       (physicalYangMillsSU2ThreeModeContinuumSynthesisLinearMap
-          Q R L hInvariant ∘
+          Q R L ∘
         ((EuclideanSpace.basisFun (Fin 3) ℝ).toBasis :
           Fin 3 → EuclideanSpace ℝ (Fin 3))) := by
   have hfun :
       (physicalYangMillsSU2ThreeModeContinuumSynthesisLinearMap
-          Q R L hInvariant ∘
+          Q R L ∘
         ((EuclideanSpace.basisFun (Fin 3) ℝ).toBasis :
           Fin 3 → EuclideanSpace ℝ (Fin 3))) =
         physicalYangMillsSU2ThreeModeContinuumMode
-          Q R L hInvariant := by
+          Q R L := by
     funext k
     exact
       physicalYangMillsSU2ThreeModeContinuumSynthesisLinearMap_basisFun
@@ -304,7 +304,7 @@ noncomputable def physicalYangMillsSU2ThreeModeContinuumSynthesis
       Lp ℝ 2 L.continuumMeasure :=
   LinearMap.isometryOfOrthonormal
     (physicalYangMillsSU2ThreeModeContinuumSynthesisLinearMap
-      Q R L hInvariant)
+      Q R L)
     (v := (EuclideanSpace.basisFun (Fin 3) ℝ).toBasis)
     su2ThreeModeProjectiveLimitEuclideanBasis_orthonormal
     (physicalYangMillsSU2ThreeModeContinuumSynthesisLinearMap_comp_basis_orthonormal
@@ -320,13 +320,13 @@ theorem physicalYangMillsSU2ThreeModeContinuumSynthesis_basisFun
         Q R L hInvariant C
         (EuclideanSpace.basisFun (Fin 3) ℝ k) =
       physicalYangMillsSU2ThreeModeContinuumMode
-        Q R L hInvariant k := by
+        Q R L k := by
   change
     physicalYangMillsSU2ThreeModeContinuumSynthesisLinearMap
-        Q R L hInvariant
+        Q R L
         (EuclideanSpace.basisFun (Fin 3) ℝ k) =
       physicalYangMillsSU2ThreeModeContinuumMode
-        Q R L hInvariant k
+        Q R L k
   exact
     physicalYangMillsSU2ThreeModeContinuumSynthesisLinearMap_basisFun
       Q R L hInvariant k
@@ -352,7 +352,7 @@ theorem physicalYangMillsSU2ThreeModeFiniteProjectiveContinuumSynthesis_eq_event
     ∀ᶠ n in atTop,
       ∀ c : EuclideanSpace ℝ (Fin 3),
         physicalYangMillsSU2ThreeModeFiniteProjectiveContinuumSynthesis
-            Q R L hInvariant n c =
+            Q R L n c =
           physicalYangMillsSU2ThreeModeContinuumSynthesis
             Q R L hInvariant C c := by
   filter_upwards
@@ -387,7 +387,7 @@ theorem
         Tendsto
           (fun j =>
             physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding
-              Q R L hInvariant (phi j)
+              Q R L (phi j)
               (physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice
                 Q hInvariant (phi j)))
           atTop
@@ -418,7 +418,7 @@ theorem
     have hAlong :
         ∀ᶠ j in atTop,
           physicalYangMillsSU2ThreeModeFiniteProjectiveContinuumSynthesis
-              Q R L hInvariant (phi j)
+              Q R L (phi j)
               (physicalYangMillsVacuumNormalizedSU2ThreeModeCoefficientChoice
                 Q hInvariant (phi j)) =
             physicalYangMillsSU2ThreeModeContinuumSynthesis
