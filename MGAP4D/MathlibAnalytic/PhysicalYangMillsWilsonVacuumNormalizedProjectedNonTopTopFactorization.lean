@@ -255,21 +255,22 @@ theorem
   have htop :=
     physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredBoundaryPairTopProjection_eq_smul_pairTop
       (hN2 := hN2) Q hInvariant k n
-  change
-    I (TT.starProjection x) =
-      inner ℝ
-        (I
+  have hprojI :
+      I (TT.starProjection x) =
+        inner ℝ
+          (I
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopModeL2
+              (halfExtent n) N hN (beta n) (hbeta n)))
+          (I x) •
+        I
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopModeL2
-            (halfExtent n) N hN (beta n) (hbeta n)))
-        (I x) •
-      I
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopModeL2
-          (halfExtent n) N hN (beta n) (hbeta n))
-  rw [htop, map_smul]
-  rw [
-    ← physicalYangMillsVacuumNormalizedSUNTwoModeProjectedTopCoefficient_eq_common_inner
-      (hN2 := hN2) Q hInvariant R L k n]
-  rfl
+            (halfExtent n) N hN (beta n) (hbeta n)) := by
+    rw [htop, map_smul]
+    rw [
+      ← physicalYangMillsVacuumNormalizedSUNTwoModeProjectedTopCoefficient_eq_common_inner
+        (hN2 := hN2) Q hInvariant R L k n]
+    rfl
+  rw [hprojI]
 
 /-- Strong convergence of the two moving common-carrier vectors automatically
 gives strong convergence of the canonical projected non-top excitation.
