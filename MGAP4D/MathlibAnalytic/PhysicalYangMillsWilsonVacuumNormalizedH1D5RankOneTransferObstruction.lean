@@ -170,9 +170,11 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector_norm
         H N hN beta hbeta
   have hPStar : IsStarProjection P := by
-    exact
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopSpectralProjection_isSymmetricProjection
-        H N hN beta hbeta).isStarProjection
+    apply
+      (ContinuousLinearMap.isStarProjection_iff_isSymmetricProjection).2
+    simpa only [P, G] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopSpectralProjection_isSymmetricProjection
+        H N hN beta hbeta
   have hQStar : IsStarProjection Q := by
     exact real_unit_rankOne_isStarProjection Omega hOmega
   have hPRange :
