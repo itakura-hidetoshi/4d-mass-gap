@@ -265,6 +265,21 @@ theorem
       TT, x,
       physicalYangMillsVacuumNormalizedSUNTwoModeExplicitCenteredBoundaryPairTopProjection
     ] using htop
+  have hcoeff :
+      physicalYangMillsVacuumNormalizedSUNTwoModeProjectedTopCoefficient
+          (hN2 := hN2) Q hInvariant k n =
+        inner ℝ
+          (I
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopModeL2
+              (halfExtent n) N hN (beta n) (hbeta n)))
+          (I x) := by
+    simpa [
+      I, x,
+      physicalYangMillsSUNPhysicalPairTopContinuumImage,
+      physicalYangMillsVacuumNormalizedSUNTwoModeCenteredPairContinuumImage
+    ] using
+      (physicalYangMillsVacuumNormalizedSUNTwoModeProjectedTopCoefficient_eq_common_inner
+        (hN2 := hN2) Q hInvariant R L k n)
   have hprojI :
       I (TT.starProjection x) =
         inner ℝ
@@ -275,11 +290,7 @@ theorem
         I
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabPairTopModeL2
             (halfExtent n) N hN (beta n) (hbeta n)) := by
-    rw [htop', map_smul]
-    rw [
-      ← physicalYangMillsVacuumNormalizedSUNTwoModeProjectedTopCoefficient_eq_common_inner
-        (hN2 := hN2) Q hInvariant R L k n]
-    rfl
+    rw [htop', map_smul, hcoeff]
   rw [hprojI]
 
 /-- Strong convergence of the two moving common-carrier vectors automatically
