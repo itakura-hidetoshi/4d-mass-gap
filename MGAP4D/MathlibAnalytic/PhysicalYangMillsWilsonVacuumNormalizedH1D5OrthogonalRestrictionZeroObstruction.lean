@@ -171,19 +171,34 @@ theorem
           H N hN beta hbeta v =
         ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
           H N hN beta hbeta‖ • v := by
-  exact
+  let K :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonal
+      H N hN beta hbeta
+  let R : K →L[ℝ] K :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
+      H N hN beta hbeta
+  letI : CompleteSpace K :=
+    h1d5OrthogonalZeroExcitationSliceComplete H N hN beta hbeta
+  have hRne' : R ≠ 0 := by
+    simpa only [R] using hRne
+  have hSymm : ∀ x y : K, inner ℝ (R x) y = inner ℝ x (R y) := by
+    intro x y
+    simpa only [R, K] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_symm
+        H N hN beta hbeta x y
+  have hNonneg : ∀ x : K, 0 ≤ inner ℝ (R x) x := by
+    intro x
+    simpa only [R, K] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_nonneg
+        H N hN beta hbeta x
+  have hCompact : IsCompactOperator R := by
+    simpa only [R] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_isCompact
+        H N hN beta hbeta
+  have h :=
     realHilbertPositiveCompact_nonzero_exists_unit_topEigenvector
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-        H N hN beta hbeta)
-      (fun x y =>
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_symm
-          H N hN beta hbeta x y)
-      (fun x =>
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_inner_nonneg
-          H N hN beta hbeta x)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_isCompact
-        H N hN beta hbeta)
-      hRne
+      R hSymm hNonneg hCompact hRne'
+  simpa only [K, R] using h
 
 /-- An eigen-equation for the restricted normalized transfer is the same
 eigen-equation after coercion to the ambient physical one-slice carrier. -/
