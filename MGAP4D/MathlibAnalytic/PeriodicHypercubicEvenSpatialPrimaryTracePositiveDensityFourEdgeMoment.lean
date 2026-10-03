@@ -251,12 +251,23 @@ theorem
                 specialUnitaryTwoCyclicFourEdgeNormalizedTracePowerDualPullback_inner_spatialSliceFourEdgeDegreeFeature
                   H n q A]
         _ = inner ℝ r (p A • S.feature A) := by
+              change
+                p A *
+                    inner ℝ r
+                      ((specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseFeature.pow n).feature
+                        (periodicHypercubicEvenPrimarySpatialSliceFourEdgeWord H A)) =
+                  inner ℝ r
+                    (p A •
+                      (specialUnitaryTwoCyclicFourEdgeNormalizedTraceEdgewiseFeature.pow n).feature
+                        (periodicHypercubicEvenPrimarySpatialSliceFourEdgeWord H A))
               symm
               rw [real_inner_smul_right]
     _ = inner ℝ r (∫ A, p A • S.feature A ∂μ) :=
       integral_inner hSourceIntegrable r
     _ = 0 := by
-      rw [hzero]
+      have hzero' : (∫ A, p A • S.feature A ∂μ) = 0 := by
+        simpa [S, p, μ] using hzero
+      rw [hzero']
       simp
 
 /-- A nonzero cyclic degree moment therefore gives a strictly positive genuine
