@@ -142,7 +142,7 @@ theorem adjacentDefect_summable
       physicalYangMillsSU2ThreeModeFiniteAdjacentKrylovDefect_nonneg
         Q R n m k)
     (fun n => G.defect_le_geometric n m k)
-    (G.majorant_summable m k)
+    (majorant_summable Q R G m k)
 
 /-- Geometric refinement data theorem-generate the #5098 adjacent-summability
 package. -/
