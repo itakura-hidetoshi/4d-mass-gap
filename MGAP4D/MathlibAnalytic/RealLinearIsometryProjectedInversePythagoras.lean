@@ -55,7 +55,9 @@ theorem realLinearIsometry_map_projectedInverse_eq_rangeProjection
   rw [J.equivRange.apply_symm_apply]
 
 /-- Pythagoras for the residual of orthogonal projection onto a complete real
-Hilbert subspace. -/
+Hilbert subspace.  Ambient completeness is not needed; completeness of the
+projected subspace is sufficient. -/
+omit [CompleteSpace H] in
 theorem realHilbertSubspaceProjection_sub_norm_sq_eq
     (M : Submodule ℝ H)
     [CompleteSpace M]
