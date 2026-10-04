@@ -588,7 +588,7 @@ theorem continuumTransfer_pow_intertwines_pairTransfer
       change (T ^ m) (T (J x)) = J ((Sn ^ m) (Sn x))
       have hstep : T (J x) = J (Sn x) := by
         simpa [T, Sn, J] using
-          continuumTransfer Q R L C_intertwines_pairTransfer n x
+          continuumTransfer_intertwines_pairTransfer Q R L C n x
       rw [hstep]
       exact ih (Sn x)
 
@@ -608,7 +608,7 @@ theorem
   unfold
     physicalYangMillsVacuumNormalizedSU2ThreeModeEvolvedProjectiveContinuumImage
   exact
-    (continuumTransfer Q R L C_pow_intertwines_pairTransfer
+    (continuumTransfer_pow_intertwines_pairTransfer Q R L C
       n m
       (physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice
         Q hInvariant n)).symm
