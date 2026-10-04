@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.GeometricTailIndexGrowth
-import Mathlib.Analysis.Real.Sqrt
 import Mathlib.Tactic
 
 /-!
