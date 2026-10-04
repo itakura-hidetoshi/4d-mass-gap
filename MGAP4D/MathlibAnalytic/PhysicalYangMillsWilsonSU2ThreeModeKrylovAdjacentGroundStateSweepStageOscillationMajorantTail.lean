@@ -89,12 +89,12 @@ variable
 /-- The normalized oscillation-energy majorant at one adjacent scale, evaluated
 on an arbitrary genuine joint-L2 vector. -/
 noncomputable def physicalYangMillsSU2AdjacentFineGroundStateSweepStageOscillationMajorant
+    (n : ℕ)
     (oscillationProfile :
       PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
           (halfExtent (n + 1)) 2 su2AdjacentOscillationMajorantTail_two_pos
           (beta n) (hbeta n) →
         PeriodicHypercubicEvenSpatialSliceLink (halfExtent (n + 1)) → ℝ)
-    (n : ℕ)
     (f :
       PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
         (halfExtent (n + 1)) 2 su2AdjacentOscillationMajorantTail_two_pos
@@ -151,7 +151,7 @@ structure PhysicalYangMillsSU2AdjacentGroundStateSweepStageOscillationMajorantPh
         (∀ n,
           physicalYangMillsSU2AdjacentFineGroundStateSweepStageOscillationMajorant
               (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-              (oscillationProfile n) n
+              n (oscillationProfile n)
               (physicalYangMillsSU2AdjacentFineFrozenStepGroundStateJointVector
                 (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
                 n r k) ≤
