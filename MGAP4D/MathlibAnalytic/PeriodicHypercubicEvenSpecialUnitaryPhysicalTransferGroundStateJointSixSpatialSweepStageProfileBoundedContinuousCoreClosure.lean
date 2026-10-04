@@ -71,6 +71,37 @@ local instance groundStateProfileBCFClosureSpatialLinkFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+local instance groundStateProfileBCFClosureAmbientMatrixPseudoMetrizableSpace
+    (N : ℕ) :
+    TopologicalSpace.PseudoMetrizableSpace (Matrix (Fin N) (Fin N) ℂ) := by
+  change TopologicalSpace.PseudoMetrizableSpace (Fin N → Fin N → ℂ)
+  infer_instance
+
+local instance groundStateProfileBCFClosureGaugePseudoMetrizableSpace
+    (N : ℕ) :
+    TopologicalSpace.PseudoMetrizableSpace
+      (Matrix.specialUnitaryGroup (Fin N) ℂ) := by
+  change TopologicalSpace.PseudoMetrizableSpace
+    {U : Matrix (Fin N) (Fin N) ℂ |
+      U ∈ Matrix.specialUnitaryGroup (Fin N) ℂ}
+  infer_instance
+
+local instance groundStateProfileBCFClosureSpatialConfigurationPseudoMetrizableSpace
+    (H N : ℕ) :
+    TopologicalSpace.PseudoMetrizableSpace
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) := by
+  change TopologicalSpace.PseudoMetrizableSpace
+    (PeriodicHypercubicEvenSpatialSliceLink H →
+      Matrix.specialUnitaryGroup (Fin N) ℂ)
+  infer_instance
+
+local instance groundStateProfileBCFClosureJointPseudoMetrizableSpace
+    (H N : ℕ) :
+    TopologicalSpace.PseudoMetrizableSpace
+      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) := by
+  infer_instance
+
 local instance groundStateProfileBCFClosureProbabilityMeasure
     (H N : ℕ)
     (hN : 0 < N)
@@ -81,6 +112,15 @@ local instance groundStateProfileBCFClosureProbabilityMeasure
         H N hN beta hbeta) :=
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_isProbabilityMeasure
     H N hN beta hbeta
+
+local instance groundStateProfileBCFClosureWeaklyRegular
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+      H N hN beta hbeta).WeaklyRegular := by
+  infer_instance
 
 /-- The bounded-continuous joint observable carrier at one finite
 ground-state scale. -/
