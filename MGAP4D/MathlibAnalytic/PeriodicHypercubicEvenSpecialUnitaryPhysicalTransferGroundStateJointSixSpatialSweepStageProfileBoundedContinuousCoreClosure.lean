@@ -62,6 +62,17 @@ local instance groundStateProfileBCFClosureSpatialLinkFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+local instance groundStateProfileBCFClosureProbabilityMeasure
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    IsProbabilityMeasure
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+        H N hN beta hbeta) :=
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_isProbabilityMeasure
+    H N hN beta hbeta
+
 /-- The bounded-continuous joint observable carrier at one finite
 ground-state scale. -/
 abbrev PeriodicHypercubicEvenSpecialUnitaryGroundStateJointBCF
@@ -106,6 +117,7 @@ theorem
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
         H N hN beta hbeta)
       ℝ
+      (p := (2 : ℝ≥0∞))
       (by norm_num))
 
 /-- Any continuous scalar majorant proved on every bounded-continuous
@@ -153,9 +165,6 @@ theorem
           H N hN beta hbeta)
         hMajorant
   · intro O
-    change p
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2RepresentativeBCF
-        H N hN beta hbeta O)
     simpa [p] using hBCF O
 
 /-- Bounded-continuous stagewise pointwise oscillation witnesses may remain
