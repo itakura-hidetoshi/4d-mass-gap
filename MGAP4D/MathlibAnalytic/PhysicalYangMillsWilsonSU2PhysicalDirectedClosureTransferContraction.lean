@@ -94,6 +94,24 @@ local instance su2PhysicalDirectedNontrivial :
 
 section FinitePhysicalContraction
 
+private theorem norm_add_le_norm_add_of_orthogonal_right_norm_le
+    {E : Type*}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (t n n' : E)
+    (htn : inner ℝ t n = 0)
+    (htn' : inner ℝ t n' = 0)
+    (hn : ‖n'‖ ≤ ‖n‖) :
+    ‖t + n'‖ ≤ ‖t + n‖ := by
+  apply (sq_le_sq₀ (norm_nonneg _) (norm_nonneg _)).mp
+  simp only [pow_two]
+  rw [
+    norm_add_sq_eq_norm_sq_add_norm_sq_real htn',
+    norm_add_sq_eq_norm_sq_add_norm_sq_real htn]
+  exact
+    add_le_add_left
+      (mul_self_le_mul_self (norm_nonneg n') hn)
+      (‖t‖ * ‖t‖)
+
 variable (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta)
 
 local notation "PairE" =>
@@ -149,16 +167,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier_normalizedTransf
         mul_le_mul_of_nonneg_right hq (norm_nonneg n)
       _ = ‖n‖ := one_mul _
   rw [← hsum, map_add, hfix]
-  apply (sq_le_sq₀ (norm_nonneg _) (norm_nonneg _)).mp
-  simp only [pow_two]
-  rw [
-    norm_add_sq_eq_norm_sq_add_norm_sq_real htSn,
-    norm_add_sq_eq_norm_sq_add_norm_sq_real htn]
-  have hsq :
-      ‖S₂ n‖ * ‖S₂ n‖ ≤ ‖n‖ * ‖n‖ :=
-    mul_self_le_mul_self (norm_nonneg (S₂ n)) hnBound
-  simpa [add_comm, add_left_comm, add_assoc] using
-    add_le_add_left hsq (‖t‖ * ‖t‖)
+  exact
+    norm_add_le_norm_add_of_orthogonal_right_norm_le
+      t n (S₂ n) htn htSn hnBound
 
 end FinitePhysicalContraction
 
@@ -180,21 +191,8 @@ local instance su2PhysicalSelectedPairCarrierCompleteSpace (n : ℕ) :
     CompleteSpace
       (periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier
         (halfExtent n) 2) := by
-  have hclosed :
-      IsClosed
-        ((periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier
-            (halfExtent n) 2 :
-          Submodule ℝ
-            (PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
-              (halfExtent n) 2)) : Set _) := by
-    change IsClosed
-      (((periodicHypercubicEvenSpecialUnitaryPhysicalPairSpan
-        (halfExtent n) 2).topologicalClosure :
-        Submodule ℝ
-          (PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
-            (halfExtent n) 2)) : Set _)
-    exact Submodule.isClosed_topologicalClosure _
-  exact hclosed.completeSpace_coe
+  unfold periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier
+  infer_instance
 
 /-- Canonical selected-marginal realization of normalized pair transfer after
 orthogonal projection to the completed physical pair carrier. -/
@@ -530,12 +528,12 @@ theorem
       unfold
         physicalYangMillsVacuumNormalizedSU2ThreeModeEvolvedProjectiveContinuumImage
       exact
-        continuumTransfer_pow_intertwines_physicalPairTransfer
+        (continuumTransfer_pow_intertwines_physicalPairTransfer
           Q R L C hInvariant G (phi j) m
           (physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice
             Q hInvariant (phi j))
           (physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice_mem_physicalPairCarrier
-            Q hInvariant (phi j))
+            Q hInvariant (phi j))).symm
   refine ⟨hStrong, ?_⟩
   exact
     physicalYangMillsVacuumNormalizedSU2ThreeModeEvolvedProjectiveStrongLimit_norm_le_uniform_q0
