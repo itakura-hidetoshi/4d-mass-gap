@@ -625,7 +625,7 @@ noncomputable def toDirectedOperatorSystem
         S D halfExtent beta hbeta Q F R L hInvariant) :
     EuclideanYangMillsProjectiveLimitL2DirectedOperatorSystem F L where
   marginalIndex := R.marginalIndex
-  directed := C.selectedMarginal_directed hInvariant G
+  directed := selectedMarginal_directed Q R L C hInvariant G
   localOperator :=
     physicalYangMillsSU2CanonicalSelectedMarginalPairTransferOperator Q R
   bound := C.bound
@@ -643,7 +643,7 @@ noncomputable def continuumTransfer
     Lp ℝ 2 L.continuumMeasure →L[ℝ]
       Lp ℝ 2 L.continuumMeasure :=
   EuclideanYangMillsProjectiveLimitL2DirectedOperatorSystem.ambientContinuumOperator
-    (C.toDirectedOperatorSystem hInvariant G)
+    (toDirectedOperatorSystem Q R L C hInvariant G)
 
 theorem continuumTransfer_intertwines_pairTransfer
     (hInvariant : ∀ n,
@@ -656,7 +656,7 @@ theorem continuumTransfer_intertwines_pairTransfer
     (x :
       PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
         (halfExtent n) 2) :
-    C.continuumTransfer hInvariant G
+    continuumTransfer Q R L C hInvariant G
         (physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding
           Q R L n x) =
       physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding
@@ -675,7 +675,7 @@ theorem continuumTransfer_intertwines_pairTransfer
   unfold continuumTransfer
   have hGeneric :=
     EuclideanYangMillsProjectiveLimitL2DirectedOperatorSystem.ambientContinuumOperator_intertwines_selected
-      (C.toDirectedOperatorSystem hInvariant G) n
+      (toDirectedOperatorSystem Q R L C hInvariant G) n
       (physicalYangMillsSU2PairHaarProjectiveFiniteEmbedding Q R n x)
   calc
     _ =
@@ -700,7 +700,7 @@ theorem continuumTransfer_pow_intertwines_pairTransfer
     (x :
       PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
         (halfExtent n) 2) :
-    (C.continuumTransfer hInvariant G ^ m)
+    (continuumTransfer Q R L C hInvariant G ^ m)
         (physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding
           Q R L n x) =
       physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding
@@ -708,7 +708,7 @@ theorem continuumTransfer_pow_intertwines_pairTransfer
         ((periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator
           (halfExtent n) 2 specialUnitaryTwoWilsonRankPositive
           (beta n) (hbeta n) ^ m) x) := by
-  let T := C.continuumTransfer hInvariant G
+  let T := continuumTransfer Q R L C hInvariant G
   let Sn :=
     periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator
       (halfExtent n) 2 specialUnitaryTwoWilsonRankPositive
@@ -723,7 +723,7 @@ theorem continuumTransfer_pow_intertwines_pairTransfer
       change (T ^ m) (T (J x)) = J ((Sn ^ m) (Sn x))
       have hstep : T (J x) = J (Sn x) := by
         simpa [T, Sn, J] using
-          C.continuumTransfer_intertwines_pairTransfer hInvariant G n x
+          continuumTransfer_intertwines_pairTransfer Q R L C hInvariant G n x
       rw [hstep]
       exact ih (Sn x)
 
@@ -738,7 +738,7 @@ theorem
     (n m : ℕ) :
     physicalYangMillsVacuumNormalizedSU2ThreeModeEvolvedProjectiveContinuumImage
         Q R L hInvariant n m =
-      (C.continuumTransfer hInvariant G ^ m)
+      (continuumTransfer Q R L C hInvariant G ^ m)
         (physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding
           Q R L n
           (physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice
@@ -746,7 +746,7 @@ theorem
   unfold
     physicalYangMillsVacuumNormalizedSU2ThreeModeEvolvedProjectiveContinuumImage
   exact
-    (C.continuumTransfer_pow_intertwines_pairTransfer
+    (continuumTransfer_pow_intertwines_pairTransfer Q R L C
       hInvariant G n m
       (physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice
         Q hInvariant n)).symm
@@ -768,7 +768,7 @@ theorem
               physicalYangMillsVacuumNormalizedSU2ThreeModeEvolvedProjectiveContinuumImage
                 Q R L hInvariant (phi j) m)
             atTop
-            (𝓝 ((C.continuumTransfer hInvariant G ^ m) y)) := by
+            (𝓝 ((continuumTransfer Q R L C hInvariant G ^ m) y)) := by
   obtain ⟨phi, hphi, cInf, hcInf, hInitial, hyNorm⟩ :=
     physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice_exists_projective_strong_limit
       Q R L hInvariant G
@@ -780,20 +780,20 @@ theorem
   have hPow :
       Tendsto
         (fun j =>
-          (C.continuumTransfer hInvariant G ^ m)
+          (continuumTransfer Q R L C hInvariant G ^ m)
             (physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding
               Q R L (phi j)
               (physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice
                 Q hInvariant (phi j))))
         atTop
-        (𝓝 ((C.continuumTransfer hInvariant G ^ m) y)) := by
+        (𝓝 ((continuumTransfer Q R L C hInvariant G ^ m) y)) := by
     have hMap :=
-      (((C.continuumTransfer hInvariant G ^ m).continuous.tendsto y).comp
+      (((continuumTransfer Q R L C hInvariant G ^ m).continuous.tendsto y).comp
         hInitial)
     simpa [y] using hMap
   apply hPow.congr'
   exact Filter.Eventually.of_forall fun j =>
-    (C.physicalYangMillsVacuumNormalizedSU2ThreeModeEvolvedProjectiveContinuumImage_eq_continuumTransfer_pow
+    (physicalYangMillsVacuumNormalizedSU2ThreeModeEvolvedProjectiveContinuumImage_eq_continuumTransfer_pow Q R L C
       hInvariant G (phi j) m).symm
 
 theorem
@@ -819,11 +819,11 @@ theorem
                 physicalYangMillsVacuumNormalizedSU2ThreeModeEvolvedProjectiveContinuumImage
                   Q R L hInvariant (phi j) m)
               atTop
-              (𝓝 ((C.continuumTransfer hInvariant G ^ m) y)) ∧
-            ‖(C.continuumTransfer hInvariant G ^ m) y‖ ≤
+              (𝓝 ((continuumTransfer Q R L C hInvariant G ^ m) y)) ∧
+            ‖(continuumTransfer Q R L C hInvariant G ^ m) y‖ ≤
               GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformTopOrthogonalContractionFactor ^ m := by
   obtain ⟨phi, hphi, y, hyNorm, hStrong⟩ :=
-    C.physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice_exists_sameSubsequence_evolved_strong_limits
+    physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice_exists_sameSubsequence_evolved_strong_limits Q R L C
       hInvariant G
   refine ⟨phi, hphi, y, hyNorm, ?_⟩
   intro m
@@ -831,7 +831,7 @@ theorem
   exact
     physicalYangMillsVacuumNormalizedSU2ThreeModeEvolvedProjectiveStrongLimit_norm_le_uniform_q0
       Q R L hInvariant s hs hcut phi m
-      ((C.continuumTransfer hInvariant G ^ m) y)
+      ((continuumTransfer Q R L C hInvariant G ^ m) y)
       (hStrong m)
 
 theorem continuumTransfer_pow_add_apply
@@ -843,9 +843,9 @@ theorem continuumTransfer_pow_add_apply
         S D halfExtent beta hbeta Q F R L hInvariant)
     (m k : ℕ)
     (y : Lp ℝ 2 L.continuumMeasure) :
-    (C.continuumTransfer hInvariant G ^ (m + k)) y =
-      (C.continuumTransfer hInvariant G ^ m)
-        ((C.continuumTransfer hInvariant G ^ k) y) := by
+    (continuumTransfer Q R L C hInvariant G ^ (m + k)) y =
+      (continuumTransfer Q R L C hInvariant G ^ m)
+        ((continuumTransfer Q R L C hInvariant G ^ k) y) := by
   rw [pow_add]
   rfl
 
