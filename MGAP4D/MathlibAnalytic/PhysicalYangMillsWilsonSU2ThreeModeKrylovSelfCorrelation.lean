@@ -58,8 +58,7 @@ theorem realContinuousLinearMap_pow_apply_norm_sq_eq_inner_two_mul
       rw [pow_add]
       rfl
     _ = inner ℝ u ((T ^ (2 * m)) u) := by
-      congr 2
-      omega
+      rw [two_mul]
     _ = inner ℝ ((T ^ (2 * m)) u) u := by
       rw [real_inner_comm]
 
@@ -151,7 +150,7 @@ theorem physicalYangMillsSU2ThreeModeEvolvedProjectiveKrylovMode_norm_sq_eq_self
     ‖physicalYangMillsSU2ThreeModeEvolvedProjectiveKrylovMode
         Q R L n m k‖ ^ 2 =
       physicalYangMillsSU2ThreeModeFiniteKrylovSelfCorrelation
-        Q R L n m k := by
+        n m k := by
   rw [
     physicalYangMillsSU2ThreeModeEvolvedProjectiveKrylovMode_norm_sq
       Q R L n m k]
@@ -162,7 +161,7 @@ theorem physicalYangMillsSU2ThreeModeEvolvedProjectiveKrylovMode_norm_sq_eq_self
         (halfExtent n) 2 specialUnitaryTwoWilsonRankPositive
         (beta n) (hbeta n))
       (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator_isSymmetric
-        Q R L (halfExtent n) (beta n) (hbeta n))
+        (halfExtent n) (beta n) (hbeta n))
       m
       (periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeMode
         (halfExtent n) k)
@@ -177,7 +176,7 @@ structure PhysicalYangMillsSU2ThreeModeKrylovSelfCorrelationStrongLimitInput whe
       Tendsto
         (fun n =>
           physicalYangMillsSU2ThreeModeFiniteKrylovSelfCorrelation
-            Q R L n m k)
+            n m k)
         atTop
         (𝓝 (‖continuumKrylovMode m k‖ ^ 2))
   overlap_tendsto :
