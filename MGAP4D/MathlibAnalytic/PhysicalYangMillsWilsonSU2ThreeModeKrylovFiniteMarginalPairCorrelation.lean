@@ -54,9 +54,11 @@ theorem finiteMarginalL2Pullback_cross_inner_eq_union_transition_inner
         (L.finiteMarginalL2Pullback K g) =
       inner ℝ
         (EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Transition
-          (F := F) (Finset.subset_union_left) f)
+          (F := F)
+          (show J ⊆ J ∪ K from Finset.subset_union_left) f)
         (EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Transition
-          (F := F) (Finset.subset_union_right) g) := by
+          (F := F)
+          (show K ⊆ J ∪ K from Finset.subset_union_right) g) := by
   rw [
     L.finiteMarginalL2Pullback_compatible
       (show J ⊆ J ∪ K from Finset.subset_union_left) f,
@@ -168,9 +170,19 @@ theorem physicalYangMillsSU2ThreeModeEvolvedProjectiveKrylovMode_inner_eq_finite
   unfold physicalYangMillsSU2ThreeModeEvolvedProjectiveKrylovMode
   rw [
     physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding_eq_finitePullback
-      Q R L,
+      Q R L n
+      ((periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator
+          (halfExtent n) 2 specialUnitaryTwoWilsonRankPositive
+          (beta n) (hbeta n) ^ m)
+        (periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeMode
+          (halfExtent n) k)),
     physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding_eq_finitePullback
-      Q R L]
+      Q R L j
+      ((periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator
+          (halfExtent j) 2 specialUnitaryTwoWilsonRankPositive
+          (beta j) (hbeta j) ^ m)
+        (periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeMode
+          (halfExtent j) k))]
   exact
     finiteMarginalL2Pullback_cross_inner_eq_union_transition_inner
       L
