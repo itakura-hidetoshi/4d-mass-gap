@@ -2,7 +2,7 @@
 
 Hidetoshi Itakura's Lean 4 / mathlib development for the four-dimensional Yang--Mills existence and mass-gap program.
 
-## Current theorem status — through merged PR #5112
+## Current theorem status — through merged PR #5124
 
 The finite-volume positive-coupling transfer-gap route remains closed with the explicit volume/rank/scale-uniform constants
 
@@ -20,26 +20,31 @@ The q0 estimate is available on the full completed physical pair non-top sector.
 
 The old completed H1-D5 cross-scale compatibility is formally refuted at positive SU(2) coupling and must not be reintroduced under another name.
 
-The active continuum-existence route is now much weaker.  The evolved three-mode problem has been reduced from whole selected-marginal operator compatibility to a finite adjacent-refinement problem, and then further to vector-wise mismatch only along the finite Krylov orbit.
+The active continuum-existence route has now been weakened much further than the old whole-operator formulation.  The evolved three-mode problem is reduced to adjacent finite-volume vector-wise data along fixed finite Krylov orbits.  The coupling part is explicit.  The remaining geometry has been rewritten through one canonical fine-to-coarse reconstruction and, for its projective part, one common-marginal orthogonal-projection variance defect.
 
-The current model-facing H1-C3 frontier is
+The present model-facing H1-C3 frontier is therefore
 
 ~~~text
-orbit-wise cross-volume refinement geometry
+finite physical transfer/reconstruction commutation
   +
-same-fine-volume Wilson coupling response.
+common-marginal coarse-physical projection variance tail
+  +
+explicit beta-increment majorant.
 ~~~
 
-The coupling side is now close to explicit actual-model control:
+The second term is now exactly
 
-- #5109: exact one-slab Wilson kernel is beta-Lipschitz;
-- #5110: the estimate is lifted to the ordered-pair kernel, product-L2 kernel, and raw pair-transfer operator;
-- #5111: the physical one-slab normalization denominator has an explicit Wilson minorization-floor lower bound, including inverse-square control;
-- #5112: the physical one-slab transfer and its norm are beta-Lipschitz.
+~~~text
+V_{n,r,k}
+  =
+||Y_{n,r,k} - P_n^phys Y_{n,r,k}||^2,
+~~~
 
-The immediate next theorem is to combine #5110/#5111/#5112 into an explicit bound for the **normalized physical pair-transfer coupling residual** that appears in #5108.
+where (Y_{n,r,k}) is the frozen-coupling fine output embedded into the adjacent common finite marginal and (P_n^{phys}) is the orthogonal projection onto the coarse embedded completed physical pair carrier.
 
-A complete four-dimensional continuum Yang--Mills existence theorem, physical-time Hamiltonian construction, and Wightman mass-gap theorem are **not yet claimed**.
+This is the direct interface to the repository's existing self-adjoint/idempotent conditional-expectation and finite-influence machinery.
+
+A complete four-dimensional continuum Yang--Mills existence theorem, a nontrivial physical-time Hamiltonian, and a Wightman / energy-momentum mass-gap theorem are **not yet claimed**.
 
 ---
 
@@ -49,15 +54,12 @@ A complete four-dimensional continuum Yang--Mills existence theorem, physical-ti
 | --- | --- |
 | Repository | `itakura-hidetoshi/4d-mass-gap` |
 | Unique theorem-carrier branch | `formal/real-hilbert-uniform-coercive-strong-limit` |
-| Latest theorem-bearing baseline before this docs refresh | `456825cf29e913d6a5fcd3879e59aec08f16ac9e` |
-| #5111 | explicit global-minorization lower bound for physical transfer normalization |
-| #5111 exact head | `3adc831bcc48cdf521f6b20291953109cf82b1de` |
-| #5111 Lean Fast Check | run `37187331576` — success |
-| #5111 exact-head receipt | success |
-| #5112 | beta-Lipschitz control of physical one-slab transfer and its norm |
-| #5112 exact head | `ae653b561c467a762fd05be118ff8d1ba20e5e33` |
-| #5112 Lean Fast Check | run `37187333520` — success |
-| #5112 exact-head receipt | success |
+| Current theorem-carrier SHA before this docs refresh | `28a58a37f2cb1da525a670e05bbece16867f3809` |
+| Latest theorem-bearing baseline before this docs refresh | `28a58a37f2cb1da525a670e05bbece16867f3809` |
+| Latest theorem-bearing PR | #5124 |
+| #5124 exact head | `7dd08ccad353fbf4dd13249584e287673849616a` |
+| #5124 Lean Fast Check | run `37201727923` — success |
+| #5124 exact-head receipt | success |
 | Pinned Lean | `v4.30.0-rc2` |
 | Pinned mathlib | `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
 
@@ -122,13 +124,13 @@ Do not reintroduce:
 - vacuum/top alignment;
 - rank-one forcing;
 - OS-boundary transfer = physical pair transfer by fiat;
-- a renamed equivalent cross-scale operator compatibility assumption.
+- a renamed equivalent cross-scale whole-operator compatibility assumption.
 
 ---
 
 ## 3. Three-mode SU(2) finite excitation route — closed kinematics
 
-The repository has theorem-generated SU(2) Wilson-energy Gram--Schmidt modes with:
+The repository theorem-generates SU(2) Wilson-energy Gram--Schmidt modes with:
 
 - explicit finite Wilson observables;
 - gauge-invariant physical one-slice representatives;
@@ -142,7 +144,7 @@ The first three modes define an exact finite synthesis
 A_{n,0} : R^3 -> finite physical pair Hilbert space.
 ~~~
 
-A two-functional rank-nullity selector produces a unit coefficient vector satisfying both:
+A two-functional rank-nullity selector produces a unit coefficient vector satisfying both
 
 ~~~text
 vacuum pairing = 0
@@ -155,29 +157,13 @@ This avoids the old vacuum/top-fidelity seam.
 
 ---
 
-## 4. #5090--#5097: evolved strong limits reduced to finite Cauchy data
+## 4. #5090--#5097: strong-limit existence reduced to finite Cauchy data
 
 The dynamical existence problem was successively weakened.
 
-### #5090
+### #5090--#5093
 
-Whole selected-marginal operator compatibility was replaced by pointwise strong coherence of the evolved three-mode synthesis
-
-~~~text
-A_{n,m} : R^3 -> L2_cont.
-~~~
-
-### #5091
-
-It is enough to control the three standard basis Krylov vectors.
-
-### #5092
-
-Each vector convergence is reduced to scalar norm/inner-product convergence.
-
-### #5093
-
-Finite norm-squared is rewritten as the concrete 2m-step self-correlation
+The evolved three-mode problem was reduced from whole selected-marginal compatibility to three fixed Krylov-basis limits and then to scalar norm / inner-product convergence.  Finite norm-squared is rewritten as the concrete (2m)-step self-correlation
 
 ~~~text
 ||S_n^m u_{n,k}||^2
@@ -185,133 +171,42 @@ Finite norm-squared is rewritten as the concrete 2m-step self-correlation
 <S_n^(2m) u_{n,k}, u_{n,k}>.
 ~~~
 
-### #5094
+### #5094--#5096
 
-The continuum candidate vector is eliminated.  Finite pair correlations give Cauchy control, and completeness theorem-generates the continuum vector.
-
-### #5095
-
-Cross-scale continuum inner products are eliminated by transporting both scales to one finite union marginal.
-
-### #5096
-
-The whole tail comparison is reduced to the finite common-marginal Cauchy defect
-
-~~~text
-d_{n,j}^{m,k}
-  =
-||x~_{n,m,k} - x~_{j,m,k}||.
-~~~
+A prechosen continuum vector is no longer required.  Finite Cauchy data theorem-generates the limit by completeness.  Cross-scale correlations are transported to one finite union marginal, leaving one common-marginal Cauchy defect.
 
 ### #5097
 
-At time zero the theorem-generated continuum three-mode synthesis is a genuine linear isometry:
+At time zero the theorem-generated continuum three-mode synthesis is an isometry:
 
 ~~~text
 ||A_{infty,0} c|| = ||c||.
 ~~~
 
-Hence a unit coefficient vector produces a norm-one, nonzero continuum initial excitation once the Cauchy route is available.
+Hence any unit coefficient vector gives a norm-one, nonzero continuum initial excitation once the Cauchy route closes.
 
 ---
 
-## 5. #5098--#5103: all-tail control reduced to adjacent transfer mismatch
+## 5. #5098--#5108: whole-operator compatibility removed
 
-### #5098
+### Adjacent summability
 
-Mathlib's `cauchySeq_of_summable_dist` reduces all-tail Cauchy control to summability of adjacent defects:
+Mathlib's `cauchySeq_of_summable_dist` reduces all-tail Cauchy control to summability of adjacent defects.  A geometric bound (Cq^n), (0 le q < 1), is sufficient.
 
-~~~text
-sum_n d_n^{m,k} < infinity.
-~~~
+### Common-marginal transfer representation
 
-### #5099
-
-A geometric adjacent bound
-
-~~~text
-d_n^{m,k} <= C_{m,k} q_{m,k}^n
-0 <= q_{m,k} < 1
-~~~
-
-is sufficient.
-
-### #5100
-
-For contractions:
-
-~~~text
-||A^m x - B^m y||
-  <=
-||x-y|| + m ||A-B||.
-~~~
-
-### #5101
-
-The time-zero adjacent defect is eventually exactly zero under the existing coherent readout, hence summable.
-
-### #5102
-
-Consecutive scales are placed on one finite union-marginal Hilbert space with common-marginal transfers
+Consecutive scales are placed on one finite union-marginal Hilbert space with contractions
 
 ~~~text
 A_n^L
 A_n^R
 ~~~
 
-satisfying
-
-~~~text
-||A_n^L|| <= 1
-||A_n^R|| <= 1
-~~~
-
 and exact Krylov-power intertwining.
 
-### #5103
+### Orbit-wise telescoping
 
-The evolved adjacent defect obeys
-
-~~~text
-d_n^{m,k}
-  <=
-d_n^{0,k}
-  +
-m ||A_n^L - A_n^R||.
-~~~
-
-Thus summable common-transfer mismatch is enough for every fixed natural time.
-
----
-
-## 6. #5104--#5108: full operator mismatch weakened to Krylov-orbit mismatch
-
-### #5104
-
-Geometric full operator mismatch
-
-~~~text
-||A_n^L - A_n^R|| <= C q^n
-q < 1
-~~~
-
-implies all fixed-time strong limits and preserves the existing q0^m decay.
-
-This is a valid sufficient route, but it is stronger than necessary.
-
-### #5105
-
-The whole-space mismatch is split into
-
-~~~text
-cross-volume geometry residual
-  +
-same-fine-volume coupling residual.
-~~~
-
-### #5106
-
-A sharper telescoping theorem removes the need for whole-space operator-norm convergence:
+The key sharpening is
 
 ~~~text
 ||A^m x - B^m y||
@@ -321,30 +216,19 @@ A sharper telescoping theorem removes the need for whole-space operator-norm con
 sum_{r < m} ||(A-B)(B^r y)||.
 ~~~
 
-For the actual adjacent SU(2) problem, it is enough to control
+Therefore it is enough to control, for each fixed finite depth (r) and mode (k),
 
 ~~~text
 e_{n,r,k}
   =
-||(A_n^L - A_n^R) (A_n^R)^r v_{n,k}^R||
+||(A_n^L - A_n^R) (A_n^R)^r v_{n,k}^R||.
 ~~~
 
-for each fixed finite orbit depth r and mode k.
+No whole-space operator-norm convergence is needed.
 
-### #5107
+### #5108 split
 
-If for every fixed r,k
-
-~~~text
-e_{n,r,k} <= C_{r,k} q_{r,k}^n
-0 <= q_{r,k} < 1,
-~~~
-
-then all fixed-natural-time strong limits follow.
-
-### #5108
-
-The orbit mismatch is split further:
+The actual orbit mismatch is bounded by
 
 ~~~text
 e_{n,r,k}
@@ -362,216 +246,355 @@ c_n
   = same-fine-volume normalized physical pair-transfer coupling residual.
 ~~~
 
-Therefore the present H1-C3 model-facing task no longer requires full cross-volume operator-norm convergence.
-
 ---
 
-## 7. #5109--#5112: actual finite Wilson control of the coupling side
+## 6. #5109--#5115: the coupling lane is explicit
 
-This is the newest theorem-bearing layer.
+### #5109 — one-slab Wilson kernel beta response
 
-### #5109 — exact one-slab Wilson kernel beta-Lipschitz
-
-The exact one-slab kernel is
+For
 
 ~~~text
-K_beta(A,B) = exp(- beta * S_slab(A,B)).
+K_beta(A,B) = exp(- beta * S_slab(A,B)),
 ~~~
 
-Using the nonnegative slab action and the explicit finite global action budget `B_H`:
+the exact finite kernel satisfies
 
 ~~~text
 ||K_gamma(A,B) - K_beta(A,B)||
   <=
-B_H ||gamma - beta||.
+B_H ||gamma-beta||,
 ~~~
 
-No gap or cross-scale compatibility assumption enters.
+where (B_H) is the explicit one-slab global action budget.
 
-### #5110 — lift beta response to pair transfer
+### #5110 — raw ordered-pair transfer response
 
-The ordered-pair kernel is a product of two one-slab kernels.
+The estimate lifts to:
 
-The repository proves
+- the ordered-pair kernel;
+- product-Haar (L^2);
+- the raw pair-transfer operator.
+
+In particular
 
 ~~~text
-||K2_gamma - K2_beta||
+||P_gamma - P_beta||
   <=
-2 B_H ||gamma - beta||
+2 B_H ||gamma-beta||.
 ~~~
 
-pointwise, then with the same coefficient in product-Haar L2, and finally for the raw ambient pair-transfer operator norm.
+### #5111 — explicit normalization floor
 
-It also adds the square Hilbert--Schmidt kernel-operator 1-Lipschitz API.
-
-### #5111 — explicit normalization denominator floor
-
-Let
+With
 
 ~~~text
-m_H(beta)
-  =
-exp(- beta * globalActionBudget(H)).
+m_H(beta) = exp(- beta * globalActionBudget(H)),
 ~~~
 
-Then
+the repository proves
 
 ~~~text
-m_H(beta)
-  <=
-<T_phys 1, 1>
-  <=
-||T_phys||.
+m_H(beta) <= ||T_phys(beta)||,
 ~~~
 
-Consequently:
+hence explicit inverse and inverse-square upper bounds.
 
-~~~text
-||T_phys||^(-1)
-  <=
-m_H(beta)^(-1),
-
-(||T_phys||^2)^(-1)
-  <=
-(m_H(beta)^2)^(-1).
-~~~
-
-So the normalization denominator is no longer controlled merely by positivity; it has an explicit finite Wilson lower certificate.
-
-### #5112 — physical transfer beta-Lipschitz
-
-The one-slab kernel estimate is lifted through product-Haar L2, Hilbert--Schmidt transfer, and the Gauss-law physical restriction.
-
-The repository now has
+### #5112 — physical transfer norm response
 
 ~~~text
 ||T_phys(gamma) - T_phys(beta)||
   <=
-B_H ||gamma - beta||
-~~~
+B_H ||gamma-beta||
 
-and therefore
-
-~~~text
 |||T_phys(gamma)|| - ||T_phys(beta)|||
   <=
-B_H ||gamma - beta||.
+B_H ||gamma-beta||.
 ~~~
 
-This is the missing numerator for explicit variation of the inverse-square normalization coefficient.
+### #5114 — normalized physical pair-transfer response
 
----
-
-## 8. Immediate current theorem target
-
-The next theorem should combine #5110, #5111 and #5112 for the normalized physical pair transfer.
-
-Schematically, if
+Writing
 
 ~~~text
-P_beta
-  = raw physical pair transfer,
-
-a_beta
-  = ||T_phys(beta)||^(-2),
-
-S_beta
-  = a_beta P_beta,
+S_beta = a_beta P_beta
+a_beta = ||T_phys(beta)||^(-2),
 ~~~
 
-then use
-
-~~~text
-S_gamma - S_beta
-  =
-a_gamma (P_gamma - P_beta)
-  +
-(a_gamma - a_beta) P_beta.
-~~~
-
-Already available:
-
-~~~text
-raw pair-transfer beta variation            #5110
-explicit lower bounds for a_beta denominator #5111
-physical transfer norm variation             #5112
-finite transfer norm/contraction bounds       existing
-~~~
-
-Target output:
+the inverse-square normalization variation and the raw pair-transfer variation are combined into an explicit finite-volume operator bound
 
 ~~~text
 ||S_gamma - S_beta||
   <=
-explicit finite-volume coefficient(H,beta,gamma)
-  * ||gamma - beta||.
+C_norm(H,beta,gamma) ||gamma-beta||.
 ~~~
 
-Specialize to
+### #5115 — adjacent coupling majorant
+
+Specializing to adjacent scales gives an explicit scalar majorant
 
 ~~~text
-H = halfExtent(n+1)
-beta = beta(n)
-gamma = beta(n+1)
+c_n
+  <=
+C_norm(halfExtent(n+1), beta(n), beta(n+1))
+  * ||beta(n+1)-beta(n)||.
 ~~~
 
-to obtain an explicit bound for the #5108 coupling residual `c_n`.
+Summability and geometric receivers are formalized.
 
-Then summability or geometric decay of that explicit coefficient-weighted beta increment closes the coupling half of #5108.
+**Conclusion:** the coupling side is no longer an abstract compatibility input.  What remains is a quantitative assumption / theorem about the chosen beta trajectory's explicit weighted increments.
 
 ---
 
-## 9. Remaining H1-C3 obstruction after the coupling side
+## 7. #5116--#5119: the geometry lane is reduced to finite reconstruction
 
-Even after the normalized coupling residual is bounded explicitly, the genuinely cross-volume term remains:
+### #5116 — remove the coupling residual from the H1-C3 input
+
+The external H1-C3 package is reduced to:
+
+~~~text
+summable orbit geometry
+  +
+summable explicit weighted beta increments.
+~~~
+
+The actual `c_n` is theorem-generated from #5115.
+
+### #5117 — coarse-range projection split
+
+The orbit-wise geometry residual is split by the canonical projection onto the coarse embedded pair-Haar range:
 
 ~~~text
 g_{n,r,k}
-  =
-orbit-wise geometry/refinement residual.
+  <=
+refinement/transfer commutation residual
+  +
+fine-range leakage residual.
 ~~~
 
-This is now the sharpest H1-C3 geometry frontier.
+This split remains vector-wise.
 
-It is substantially weaker than:
+### #5118 — finite-carrier representation
 
-- exact cross-scale transfer compatibility;
-- full selected-marginal operator convergence;
-- full common-transfer operator-norm convergence.
+The actual right Krylov orbit is identified exactly as the fine pair embedding of one finite pair-Haar vector.  The two #5117 geometry pieces are rewritten as:
 
-The target is only the action of the frozen-coupling coarse/fine transfer difference on finitely many actual Krylov-orbit vectors.
+1. a finite coarse-carrier transfer/reconstruction mismatch;
+2. the distance of one explicit fine finite vector from the coarse embedded range.
+
+### #5119 — canonical fine-to-coarse reconstruction
+
+A single canonical finite map is introduced:
+
+~~~text
+R_n : FinePair(n+1) -> CoarsePair(n).
+~~~
+
+Its physical version is the coarse physical-pair projection after reconstruction.
+
+The remaining geometry becomes three finite vector-wise quantities:
+
+1. **physical transfer/reconstruction commutation**
+   ~~~text
+   ||T_n R_n^phys x - R_n^phys y||
+   ~~~
+2. **coarse physical-carrier leakage**
+   ~~~text
+   ||R_n^phys y - R_n y||
+   ~~~
+3. **reconstruction-range defect**
+   ~~~text
+   ||J_n^L (R_n y) - J_n^R y||.
+   ~~~
+
+No whole-space cross-volume transfer compatibility is introduced.
 
 ---
 
-## 10. What is conditionally closed versus actual-model closed
+## 8. #5120--#5124: projective geometry becomes one variance defect
 
-### Actual-model closed
+### #5120 — geometric receiver for finite reconstruction
 
-- finite q0 receiver;
-- nonzero norm-one time-zero excitation mechanism;
-- adjacent common-marginal representation;
-- time-zero adjacent defect eventual zero;
-- exact one-slab Wilson beta response;
-- raw pair-transfer beta response;
-- explicit normalization floor;
-- physical one-slab transfer norm beta response.
+For each fixed (r,k), geometric (Cq^n) bounds for the three reconstruction residuals, plus a geometric beta-majorant bound, imply summability of every fixed orbit mismatch and hence feed the existing strong-limit closure chain.
 
-### Closed as functional-analytic implication
+No uniformity in Krylov depth is required.
 
-If either
+### #5121 — distance tail to scale decay
+
+A model-independent scalar bridge converts a locality / Dobrushin tail
 
 ~~~text
-sum_n e_{n,r,k} < infinity
+f_n <= C * rho^(D_n) / (1-rho)
 ~~~
 
-for all fixed r,k, or a geometric majorant holds, then all fixed-natural-time evolved strong limits exist and inherit the q0^m bound.
+with
 
-### Not yet actual-model closed
+~~~text
+n <= D_n
+0 <= rho < 1
+~~~
 
-- summability/geometric decay of orbit-wise geometry residual `g_{n,r,k}`;
-- explicit final bound and summability for normalized coupling residual `c_n`;
-- identification of one limiting discrete-time transfer operator on a continuum excitation subspace;
-- spacing-scaled physical-time dynamics.
+into an ordinary scale-geometric (C' ho^n) bound and summability.
+
+### #5122 — exact projection-variance identities
+
+The reconstruction-range and coarse-physical leakage residuals are exact orthogonal projection norm losses:
+
+~~~text
+rangeResidual^2
+  =
+||y||^2 - ||R_n y||^2
+
+physicalLeakage^2
+  =
+||R_n y||^2 - ||R_n^phys y||^2.
+~~~
+
+They telescope:
+
+~~~text
+rangeResidual^2 + physicalLeakage^2
+  =
+||y||^2 - ||R_n^phys y||^2.
+~~~
+
+Define the right-hand side as the **total reconstruction variance defect**.
+
+### #5123 — one variance tail controls both projective residuals
+
+A single tail
+
+~~~text
+V_n <= C * rho^(D_n) / (1-rho)
+~~~
+
+generates geometric bounds for both projection residuals, with rate (sqrt{ho}).  The independent geometric inputs are reduced to:
+
+~~~text
+physical transfer/reconstruction commutation
+  +
+total reconstruction variance tail
+  +
+beta majorant.
+~~~
+
+### #5124 — total variance is one common-marginal projection residual
+
+The identity-instance of subspace-projected isometric compression is proved model-independently to be the canonical orthogonal projection onto the embedded subspace.
+
+Specialized to adjacent SU(2) reconstruction:
+
+~~~text
+V_{n,r,k}
+  =
+||Y_{n,r,k} - P_n^phys Y_{n,r,k}||^2,
+~~~
+
+where (P_n^{phys}) is the orthogonal projection in the common finite marginal onto the coarse embedded completed physical pair carrier.
+
+This is the key current interface: the projective part of H1-C3 geometry is now a standard Hilbert projection / conditional-variance problem.
+
+---
+
+## 9. Current H1-C3 model-facing frontier
+
+The strong-limit implication chain is already formalized.  The remaining actual-model work is to prove quantitative decay for the following explicit quantities.
+
+### A. Common-marginal physical projection variance
+
+For each fixed (r,k), prove a locality / influence tail for
+
+~~~text
+V_{n,r,k}
+  =
+||Y_{n,r,k} - P_n^phys Y_{n,r,k}||^2.
+~~~
+
+Preferred route:
+
+~~~text
+coarse embedded physical range
+  <-> suitable finite-marginal conditional-expectation fixed space
+  ->
+self-adjoint/idempotent projection comparison
+  ->
+finite Wilson conditional variances / influence kernel
+  ->
+Dobrushin geometric tail in support distance
+  ->
+#5121 distance-to-scale conversion
+  ->
+#5123 projective residual bounds.
+~~~
+
+The repository already contains substantial `condExpL2`, projection comparison, Wilson conditional-variance, and finite influence infrastructure.  The missing theorem is the exact model-facing identification/comparison at the adjacent common marginal.
+
+### B. Physical transfer/reconstruction commutation
+
+For the actual finite orbit vector (x_{n,r,k}), control
+
+~~~text
+||T_n R_n^phys x_{n,r,k}
+  -
+R_n^phys T_{n+1,beta_n} x_{n,r,k}||.
+~~~
+
+Only vector-wise control at fixed (r,k) is needed.  Whole-space operator convergence is still unnecessary.
+
+This is the genuinely dynamical cross-volume geometry term.
+
+### C. Explicit beta-majorant trajectory
+
+Control
+
+~~~text
+C_norm(H_n,beta_n,beta_{n+1})
+  * ||beta_{n+1}-beta_n||
+~~~
+
+by a summable or geometric sequence.
+
+This is scalar and explicit; it is no longer an unidentified operator obstruction.
+
+---
+
+## 10. H1-C3 closure chain once A/B/C are supplied
+
+For every fixed (r,k):
+
+~~~text
+A: total reconstruction variance tail
+  -> #5123
+projective residual geometric bounds
+
+B: physical reconstruction commutation geometric bound
+
+C: explicit beta-majorant geometric/summable bound
+
+  -> #5120 / #5119
+finite reconstruction residual summability
+
+  -> #5118 / #5117
+orbit geometry summability
+
+  -> #5116 / #5115 / #5108
+orbit mismatch summability
+
+  -> #5106
+fixed-m adjacent evolved defect summability
+
+  -> #5098 / #5096
+Cauchy and strong limit
+
+  -> #5097
+norm-one nonzero time-zero continuum excitation
+
+  -> existing q0 receiver
+||z_{infty,m}|| <= q0^m.
+~~~
+
+This closes all **fixed natural times** once the model-facing estimates A/B/C are proved.
+
+A further theorem is then required to identify the fixed-(m) limits with iterates of one continuum discrete-time transfer operator.
 
 ---
 
@@ -585,13 +608,13 @@ q0 = 3071/3072
 
 is not itself a continuum physical mass.
 
-If lattice spacing `a_n -> 0`, then naively
+If lattice spacing (a_n 	o 0), then naively
 
 ~~~text
 q0^floor(t/a_n) -> 0
 ~~~
 
-for every fixed `t > 0`.
+for every fixed (t>0).
 
 That is instantaneous collapse, not a nontrivial strongly continuous physical-time semigroup.
 
@@ -625,122 +648,169 @@ positive physical mass
 Wightman / energy-momentum mass gap.
 ~~~
 
-Generic functional-analytic infrastructure is already extensive.
+Generic functional-analytic infrastructure is extensive.
 
-The missing work is model-facing identification and scaling.
+The missing work is model-facing identification, decay, and scaling.
 
 ---
 
-## 13. Lean / CI engineering rules
+## 13. What is actual-model closed versus conditionally closed
+
+### Actual-model closed
+
+- finite (q_0) receiver;
+- H1-D4;
+- completed H1-D5 no-go;
+- finite norm-one three-mode non-top excitation;
+- time-zero continuum nontriviality once Cauchy data are supplied;
+- adjacent common-marginal representation;
+- orbit-wise telescoping receiver;
+- one-slab and raw pair beta response;
+- explicit normalization floor;
+- normalized pair-transfer beta response;
+- explicit adjacent beta coupling majorant;
+- finite fine-to-coarse reconstruction map;
+- exact projection-variance identities;
+- total reconstruction variance = one common-marginal orthogonal projection residual squared.
+
+### Closed as functional-analytic / receiver implication
+
+- summable adjacent defects imply strong convergence;
+- geometric orbit mismatch implies all fixed-natural-time limits;
+- geometric finite reconstruction residuals imply orbit summability;
+- one growing-distance total-variance tail controls both projective geometry residuals;
+- growing support distance converts Dobrushin-style tails to refinement-scale decay.
+
+### Not yet actual-model closed
+
+- quantitative tail for the common-marginal physical projection variance;
+- quantitative vector-wise physical transfer/reconstruction commutation;
+- explicit chosen beta trajectory satisfying the required weighted summability/geometric criterion;
+- identification of one limiting continuum discrete-time transfer operator;
+- spacing-scaled physical-time dynamics;
+- continuum OS Hamiltonian / Wightman mass gap.
+
+---
+
+## 14. Lean / CI engineering rules
 
 Repository rules to preserve:
 
 - fresh exact theorem-carrier SHA has highest authority;
 - pinned Lean `v4.30.0-rc2` and pinned mathlib APIs are authoritative;
 - inspect the whole changed Lean file, not only the first compiler error;
-- separate mathematical failures from coercion/elaboration/typeclass failures;
+- separate mathematical failures from coercion / elaboration / typeclass failures;
 - theorem-bearing PRs require exact-head Lean Fast Check success;
 - theorem-bearing PRs require a matching exact-head receipt;
 - do not rerun strict Lean for an unchanged already-GREEN exact head;
 - docs-only changes do not require a redundant strict-Lean build.
 
-Lean 4 engineering lessons repeatedly confirmed in the #5100--#5112 series:
+Recent Lean 4 lessons from #5111--#5124:
 
-- section variables absent from the theorem statement are pruned from the generated signature;
-- pass dependent parameters explicitly when inference is fragile;
-- do not ask `simpa` to unfold huge dependent `ContinuousLinearMap` expressions;
-- prefer `change` to a scalar/order goal followed by an exact theorem;
-- fully apply `ContinuousLinearMap.opNorm_le_bound` rather than forcing Lean to infer the operator;
-- avoid `norm_nonneg _` when the underscore requires reconstructing a huge operator type; reuse an existing positivity theorem instead;
-- use the actual orientation of `add_le_add_left/right` in the pinned API;
-- avoid heartbeat increases when a smaller proof term removes the elaboration obstruction.
+- avoid `simpa` through huge dependent `ContinuousLinearMap` expressions;
+- use `change` to normalize bundled-map coercions before rewriting;
+- `J m`, `J.toLinearMap m`, and `J.toContinuousLinearMap m` may be definitionally equal but not syntactically identical for `rw`;
+- check theorem orientation before `exact`; projection uniqueness lemmas may return the reverse equality;
+- keep Pythagoras / scalar / projection hypotheses local and combine them with `calc`;
+- do not import current-mathlib module paths that do not exist in the pinned commit;
+- scope completeness assumptions to the declarations that actually need them;
+- prefer existing `starProjection_apply_mem` and `sub_starProjection_mem_orthogonal` APIs over indirect range arguments.
 
 ---
 
-## 14. Recent milestone ledger
+## 15. Recent milestone ledger
 
 | PR | Status | Main result |
 | --- | --- | --- |
-| #5090 | merged | evolved three-mode synthesis coherence suffices |
-| #5091 | merged | reduce to three Krylov basis limits |
-| #5092 | merged | reduce strong convergence to scalar convergence |
-| #5093 | merged | finite norm² = 2m-step self-correlation |
-| #5094 | merged | candidate-free Cauchy construction |
-| #5095 | merged | cross-scale pair correlations moved to finite union marginals |
-| #5096 | merged | finite common-marginal Cauchy defect frontier |
-| #5097 | merged | time-zero continuum synthesis isometry |
-| #5098 | merged | summable adjacent defects imply Cauchy |
-| #5099 | merged | geometric adjacent defect majorant |
-| #5100 | merged | contraction-power perturbation theorem |
-| #5101 | merged | time-zero adjacent defect eventually zero |
-| #5102 | merged | adjacent transfers on one common finite marginal |
-| #5103 | merged | `d_m <= d_0 + m ||A_L-A_R||` |
-| #5104 | merged | geometric common-transfer mismatch -> strong limits |
-| #5105 | merged | whole-space mismatch = geometry + coupling bound |
-| #5106 | merged | reduce to finite Krylov-orbit mismatch |
-| #5107 | merged | geometric orbit mismatch -> strong limits |
 | #5108 | merged | orbit mismatch <= orbit geometry + coupling |
 | #5109 | merged | exact one-slab kernel beta-Lipschitz |
 | #5110 | merged | pair kernel/L2/raw pair transfer beta-Lipschitz |
-| #5111 | merged | explicit physical normalization floor and inverse-square bound |
+| #5111 | merged | explicit normalization floor and inverse-square bound |
 | #5112 | merged | physical transfer and transfer-norm beta-Lipschitz |
+| #5114 | merged | normalized physical pair-transfer beta perturbation |
+| #5115 | merged | explicit adjacent coupling beta majorant |
+| #5116 | merged | eliminate abstract coupling residual from H1-C3 input |
+| #5117 | merged | split orbit geometry by coarse-range projection |
+| #5118 | merged | finite-carrier representation of orbit geometry |
+| #5119 | merged | canonical fine-to-coarse reconstruction map |
+| #5120 | merged | geometric receiver for three finite reconstruction residuals |
+| #5121 | merged | growing-distance geometric tail -> scale decay |
+| #5122 | merged | exact projection-variance identities and telescoping |
+| #5123 | merged | one total variance tail controls both projective residuals |
+| #5124 | merged | total variance = one common-marginal physical projection residual² |
 
 ---
 
-## 15. Restart checkpoint
+## 16. Restart checkpoint
 
 Latest theorem-bearing baseline before this docs refresh:
 
 ~~~text
-456825cf29e913d6a5fcd3879e59aec08f16ac9e
+28a58a37f2cb1da525a670e05bbece16867f3809
 ~~~
 
 Read these files first:
 
-1. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentOrbitMismatch.lean` — #5106
-2. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentOrbitGeometric.lean` — #5107
-3. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentOrbitMismatchSplit.lean` — #5108
-4. `PeriodicHypercubicEvenSpecialUnitaryOneSlabKernelBetaLipschitz.lean` — #5109
-5. `PeriodicHypercubicEvenSpecialUnitaryOneSlabPairBetaLipschitz.lean` — #5110
-6. `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferNormalizationFloor.lean` — #5111
-7. `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaLipschitz.lean` — #5112
-8. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentCommonTransfer.lean` — #5102
-9. `ContinuousLinearMapContractionPowerPerturbation.lean` — #5100
+1. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentFiniteReconstructionCommonProjection.lean` — #5124
+2. `RealLinearIsometrySubspaceProjectedCompressionProjection.lean` — #5124
+3. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentFiniteReconstructionVarianceGeometric.lean` — #5123
+4. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentFiniteReconstructionVariance.lean` — #5122
+5. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentFiniteReconstructionGeometric.lean` — #5120
+6. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentFiniteReconstruction.lean` — #5119
+7. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentOrbitGeometryFiniteRepresentation.lean` — #5118
+8. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentOrbitMismatchSplit.lean` — #5108
+9. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentCouplingBetaMajorant.lean` — #5115
+10. `PeriodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairBetaLipschitz.lean` — #5114
+11. `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonMarginalCondExpComparison.lean` — conditional-expectation comparison infrastructure
+12. `PeriodicHypercubicEvenCurrentInfluenceGeometricTail.lean` — finite influence geometric-tail infrastructure
 
-Current restart target:
+Current handoff:
 
 ~~~text
-#5110 raw pair-transfer beta response
-  +
-#5111 explicit normalization denominator floor
-  +
-#5112 physical transfer-norm beta response
-  ->
-explicit normalized physical pair-transfer beta perturbation bound
-  ->
-explicit #5108 coupling residual c_n
-  ->
-summability / geometric beta-increment criterion
+CLOSED:
+  finite uniform q0 receiver
+  H1-D4
+  completed H1-D5 no-go
+  finite three-mode non-top excitation
+  adjacent-Cauchy / fixed-time receiver chain
+  normalized same-volume coupling response
+  explicit adjacent beta majorant
+  orbit geometry -> finite reconstruction reduction
+  projective reconstruction residuals -> one total variance defect
+  total variance defect -> one common-marginal orthogonal projection residual^2
 
-IN PARALLEL / NEXT:
-  orbit-wise cross-volume geometry residual g_{n,r,k}
+NEXT — projective geometry:
+  identify / compare the common physical projection with
+  suitable finite-marginal conditional expectation(s)
   ->
-summability or geometric refinement estimate
+  finite conditional variance / influence bound
+  ->
+  Dobrushin support-distance tail
+  ->
+  #5121 / #5123
+
+NEXT — dynamical geometry:
+  vector-wise finite physical transfer/reconstruction commutation
+  ->
+  locality / refinement estimate
+
+NEXT — scalar trajectory:
+  explicit geometric/summable weighted beta increments
 
 THEN:
-  #5108
+  #5120 -> #5119 -> #5118 -> #5117 -> #5116/#5108
   ->
-#5106/#5107
+  #5106 -> #5098/#5096
   ->
-all fixed-natural-time evolved strong limits
+  all fixed-natural-time evolved strong limits
   ->
-continuum discrete-time q0 receiver
+  continuum discrete-time transfer identification
 
 THEN:
-  physical-time scaling (H2)
+  H2 spacing-sensitive physical-time scaling
 
 LATER:
   OS Hamiltonian
   ->
-spectral / Wightman mass gap.
+  spectral / Wightman mass gap.
 ~~~
