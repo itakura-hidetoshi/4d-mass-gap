@@ -422,6 +422,8 @@ theorem physicalYangMillsSU2ThreeModeFiniteAdjacentKrylovDefect_eq_commonTransfe
           (physicalYangMillsSU2AdjacentCommonLeftInitialKrylovMode Q R n k) -
         (physicalYangMillsSU2AdjacentCommonRightTransfer Q R n ^ m)
           (physicalYangMillsSU2AdjacentCommonRightInitialKrylovMode Q R n k)‖ := by
+  unfold physicalYangMillsSU2AdjacentCommonLeftInitialKrylovMode
+  unfold physicalYangMillsSU2AdjacentCommonRightInitialKrylovMode
   rw [
     physicalYangMillsSU2AdjacentCommonLeftTransfer_pow_apply_embedding
       Q R n m
