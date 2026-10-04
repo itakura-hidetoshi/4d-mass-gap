@@ -230,6 +230,138 @@ theorem
       rw [Jright.norm_map, hPnorm]
     _ = ‖Jright y - P (Jright y)‖ ^ 2 := hPythP.symm
 
+
+/-- If a comparison vector already lies in the coarse embedded completed
+physical pair carrier, the #5124 total reconstruction variance is no larger
+than its squared residual.
+
+This records the direction needed for a conditional-expectation upper bound:
+the conditional-expectation output must lie in the physical projection range.
+-/
+theorem
+    physicalYangMillsSU2AdjacentFiniteTotalReconstructionVarianceDefect_le_commonPhysicalRangeResidual_sq
+    (n r : ℕ) (k : Fin 3)
+    (z :
+      Lp ℝ 2
+        (F.finiteMarginal
+          (physicalYangMillsSU2ThreeModeAdjacentCommonMarginalIndex
+            (Q := Q) R n)))
+    (hz :
+      z ∈
+        (periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier
+            (halfExtent n) 2).map
+          (physicalYangMillsSU2AdjacentCommonLeftPairEmbedding
+            Q R n).toLinearMap) :
+    physicalYangMillsSU2AdjacentFiniteTotalReconstructionVarianceDefect
+        Q R n r k ≤
+      ‖physicalYangMillsSU2AdjacentCommonFineFrozenStepVector
+          Q R n r k - z‖ ^ 2 := by
+  rw [
+    physicalYangMillsSU2AdjacentFiniteTotalReconstructionVarianceDefect_eq_commonPhysicalProjectionResidual_sq
+      Q R n r k,
+    physicalYangMillsSU2AdjacentCommonLeftPhysicalRangeProjection_eq_starProjection
+      Q R n]
+  exact
+    realHilbert_starProjection_residual_sq_le_of_mem
+      ((periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier
+          (halfExtent n) 2).map
+        (physicalYangMillsSU2AdjacentCommonLeftPairEmbedding
+          Q R n).toLinearMap)
+      (physicalYangMillsSU2AdjacentCommonFineFrozenStepVector
+        Q R n r k)
+      z hz
+
+/-- Candidate conditional-expectation form of the preceding comparison.
+
+No idempotence or symmetry of `condExp` is needed for this inequality itself:
+the only model-facing obligation is that its output on the actual frozen
+Krylov vector belongs to the coarse embedded physical range.
+-/
+theorem
+    physicalYangMillsSU2AdjacentFiniteTotalReconstructionVarianceDefect_le_commonCondExpResidual_sq_of_mem
+    (n r : ℕ) (k : Fin 3)
+    (condExp :
+      Lp ℝ 2
+          (F.finiteMarginal
+            (physicalYangMillsSU2ThreeModeAdjacentCommonMarginalIndex
+              (Q := Q) R n)) →L[ℝ]
+        Lp ℝ 2
+          (F.finiteMarginal
+            (physicalYangMillsSU2ThreeModeAdjacentCommonMarginalIndex
+              (Q := Q) R n)))
+    (hcond :
+      condExp
+          (physicalYangMillsSU2AdjacentCommonFineFrozenStepVector
+            Q R n r k) ∈
+        (periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier
+            (halfExtent n) 2).map
+          (physicalYangMillsSU2AdjacentCommonLeftPairEmbedding
+            Q R n).toLinearMap) :
+    physicalYangMillsSU2AdjacentFiniteTotalReconstructionVarianceDefect
+        Q R n r k ≤
+      ‖physicalYangMillsSU2AdjacentCommonFineFrozenStepVector
+          Q R n r k -
+        condExp
+          (physicalYangMillsSU2AdjacentCommonFineFrozenStepVector
+            Q R n r k)‖ ^ 2 := by
+  exact
+    physicalYangMillsSU2AdjacentFiniteTotalReconstructionVarianceDefect_le_commonPhysicalRangeResidual_sq
+      Q R n r k
+      (condExp
+        (physicalYangMillsSU2AdjacentCommonFineFrozenStepVector
+          Q R n r k))
+      hcond
+
+/-- Fixed-space form of the conditional-expectation bridge.
+
+The order is intentional:
+`P_phys (Q Y) = Q Y`.
+Thus the conditional-expectation image is contained in the physical range,
+so projection onto the larger physical range has the smaller residual.
+The reverse fixedness `Q (P_phys Y) = P_phys Y` has the opposite residual
+direction and is not sufficient for the desired upper bound.
+-/
+theorem
+    physicalYangMillsSU2AdjacentFiniteTotalReconstructionVarianceDefect_le_commonCondExpResidual_sq_of_physicalFixed
+    (n r : ℕ) (k : Fin 3)
+    (condExp :
+      Lp ℝ 2
+          (F.finiteMarginal
+            (physicalYangMillsSU2ThreeModeAdjacentCommonMarginalIndex
+              (Q := Q) R n)) →L[ℝ]
+        Lp ℝ 2
+          (F.finiteMarginal
+            (physicalYangMillsSU2ThreeModeAdjacentCommonMarginalIndex
+              (Q := Q) R n)))
+    (hfixed :
+      physicalYangMillsSU2AdjacentCommonLeftPhysicalRangeProjection
+          Q R n
+          (condExp
+            (physicalYangMillsSU2AdjacentCommonFineFrozenStepVector
+              Q R n r k)) =
+        condExp
+          (physicalYangMillsSU2AdjacentCommonFineFrozenStepVector
+            Q R n r k)) :
+    physicalYangMillsSU2AdjacentFiniteTotalReconstructionVarianceDefect
+        Q R n r k ≤
+      ‖physicalYangMillsSU2AdjacentCommonFineFrozenStepVector
+          Q R n r k -
+        condExp
+          (physicalYangMillsSU2AdjacentCommonFineFrozenStepVector
+            Q R n r k)‖ ^ 2 := by
+  apply
+    physicalYangMillsSU2AdjacentFiniteTotalReconstructionVarianceDefect_le_commonCondExpResidual_sq_of_mem
+      Q R n r k condExp
+  rw [
+    physicalYangMillsSU2AdjacentCommonLeftPhysicalRangeProjection_eq_starProjection
+      Q R n] at hfixed
+  exact
+    ((periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier
+        (halfExtent n) 2).map
+      (physicalYangMillsSU2AdjacentCommonLeftPairEmbedding
+        Q R n).toLinearMap).starProjection_eq_self_iff.mp hfixed
+
+
 end CommonPhysicalProjection
 
 end

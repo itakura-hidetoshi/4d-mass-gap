@@ -128,6 +128,48 @@ theorem realLinearIsometrySubspaceProjectedCompression_one_residual_norm_sq_eq
   rw [norm_sub_rev]
   simpa [realHilbertSubspaceProjection] using h
 
+
+/-- The orthogonal-projection residual is no larger than the distance to any
+other vector in the target subspace.  This is the precise projection
+monotonicity direction needed when a conditional expectation has range inside
+a larger physical carrier. -/
+theorem realHilbert_starProjection_residual_norm_le_of_mem
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    (V : Submodule ℝ E)
+    [V.HasOrthogonalProjection]
+    (x z : E)
+    (hz : z ∈ V) :
+    ‖x - V.starProjection x‖ ≤ ‖x - z‖ := by
+  let zV : V := ⟨z, hz⟩
+  have hmin :
+      ‖x - V.starProjection x‖ =
+        ⨅ y : V, ‖x - (y : E)‖ :=
+    Submodule.starProjection_minimal x
+  have hiInf :
+      (⨅ y : V, ‖x - (y : E)‖) ≤ ‖x - (zV : E)‖ :=
+    ciInf_le
+      ⟨0, Set.forall_mem_range.mpr (fun _ => norm_nonneg _)⟩ zV
+  rw [hmin]
+  simpa [zV] using hiInf
+
+/-- Squared form of
+`realHilbert_starProjection_residual_norm_le_of_mem`. -/
+theorem realHilbert_starProjection_residual_sq_le_of_mem
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    (V : Submodule ℝ E)
+    [V.HasOrthogonalProjection]
+    (x z : E)
+    (hz : z ∈ V) :
+    ‖x - V.starProjection x‖ ^ 2 ≤ ‖x - z‖ ^ 2 := by
+  have h :=
+    realHilbert_starProjection_residual_norm_le_of_mem V x z hz
+  nlinarith [norm_nonneg (x - V.starProjection x), norm_nonneg (x - z)]
+
+
 end
 
 end MathlibAnalytic
