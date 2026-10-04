@@ -104,18 +104,19 @@ theorem physicalYangMillsSU2ThreeModeEvolvedProjectiveSynthesis_zero_norm
     (c : EuclideanSpace ℝ (Fin 3)) :
     ‖physicalYangMillsSU2ThreeModeEvolvedProjectiveSynthesis
         Q R L n 0 c‖ = ‖c‖ := by
-  unfold physicalYangMillsSU2ThreeModeEvolvedProjectiveSynthesis
-  change
-    ‖physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding Q R L n
-        ((periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator
-            (halfExtent n) 2 specialUnitaryTwoWilsonRankPositive
-            (beta n) (hbeta n) ^ 0)
+  have hzero :
+      physicalYangMillsSU2ThreeModeEvolvedProjectiveSynthesis
+          Q R L n 0 c =
+        physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding
+          Q R L n
           (periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeSynthesis
-            (halfExtent n) c))‖ = ‖c‖
+            (halfExtent n) c) := by
+    simp [physicalYangMillsSU2ThreeModeEvolvedProjectiveSynthesis]
   rw [
+    hzero,
     (physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding
       Q R L n).norm_map]
-  simpa using
+  exact
     periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeSynthesis_norm
       (halfExtent n) c
 
