@@ -175,7 +175,10 @@ theorem
     simp only [smul_eq_mul]
     dsimp [rho, u]
     rw [ENNReal.toReal_ofReal hz.le]
-    have hsqrt_sq : sqrtw z ^ 2 = w z := by
+    have hsqrt_sq :
+        sqrtw z ^ 2 =
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight
+            H N hN beta hbeta z := by
       dsimp [sqrtw,
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSqrtDensity]
       exact Real.sq_sqrt hz.le
@@ -382,7 +385,10 @@ theorem
         simp only [smul_eq_mul]
         dsimp [rho, u]
         rw [ENNReal.toReal_ofReal hz.le]
-        have hsqrt_sq : sqrtw z ^ 2 = w z := by
+        have hsqrt_sq :
+        sqrtw z ^ 2 =
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight
+            H N hN beta hbeta z := by
           dsimp [sqrtw,
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSqrtDensity]
           exact Real.sq_sqrt hz.le
