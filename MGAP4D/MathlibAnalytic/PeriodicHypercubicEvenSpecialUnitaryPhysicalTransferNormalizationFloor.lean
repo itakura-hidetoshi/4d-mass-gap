@@ -217,22 +217,23 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferNorm_sq_inv_l
         H N hN beta hbeta‖ ^ 2)⁻¹ ≤
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor
         H beta ^ 2)⁻¹ := by
-  let x : ℝ :=
-    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
-      H N hN beta hbeta‖⁻¹
-  let y : ℝ :=
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor
-      H beta)⁻¹
-  have hxy : x ≤ y := by
-    simpa [x, y] using
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferNorm_inv_le_globalMinorizationFloor_inv
-        H N hN beta hbeta
-  have hx : 0 ≤ x := by
-    dsimp [x]
-    exact inv_nonneg.mpr (norm_nonneg _)
-  have hsq : x ^ 2 ≤ y ^ 2 :=
-    real_sq_le_sq_of_nonneg_of_le x y hx hxy
-  simpa [x, y, inv_pow] using hsq
+  have hInv :
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta‖⁻¹ ≤
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor
+          H beta)⁻¹ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferNorm_inv_le_globalMinorizationFloor_inv
+      H N hN beta hbeta
+  have hInvNonneg :
+      0 ≤
+        ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta‖⁻¹ :=
+    (inv_pos.mpr
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+        H N hN beta hbeta)).le
+  have hsq :=
+    pow_le_pow_left₀ hInvNonneg hInv 2
+  simpa only [inv_pow] using hsq
 
 end
 
