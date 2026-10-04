@@ -63,12 +63,16 @@ theorem tendsto_varying_contraction_apply_of_tendsto_fixed
     (hc : Tendsto c atTop (𝓝 cInf))
     (hfixed : Tendsto (fun n => A n cInf) atTop (𝓝 z)) :
     Tendsto (fun n => A n (c n)) atTop (𝓝 z) := by
+  have hconst :
+      Tendsto (fun _ : ℕ => cInf) atTop (𝓝 cInf) :=
+    tendsto_const_nhds
   have hcsub :
       Tendsto (fun n => c n - cInf) atTop (𝓝 0) := by
-    simpa using hc.sub tendsto_const_nhds
+    simpa using hc.sub hconst
   have hnormsub :
-      Tendsto (fun n => ‖c n - cInf‖) atTop (𝓝 0) :=
-    (continuous_norm.tendsto 0).comp hcsub
+      Tendsto (fun n => ‖c n - cInf‖) atTop (𝓝 0) := by
+    simpa [Function.comp_def] using
+      ((continuous_norm.tendsto (0 : E)).comp hcsub)
   have hdiff :
       Tendsto (fun n => A n (c n - cInf)) atTop (𝓝 0) := by
     rw [tendsto_zero_iff_norm_tendsto_zero]
@@ -83,6 +87,7 @@ theorem tendsto_varying_contraction_apply_of_tendsto_fixed
     simpa using hdiff.add hfixed
   apply hadd.congr'
   exact Filter.Eventually.of_forall fun n => by
+    change A n (c n - cInf) + A n cInf = A n (c n)
     rw [← (A n).map_add, sub_add_cancel]
 
 local instance su2ThreeModeEvolvedSynthesisTopologicalGroup :
@@ -186,6 +191,13 @@ theorem physicalYangMillsSU2ThreeModeEvolvedProjectiveSynthesis_norm_le
     ‖physicalYangMillsSU2ThreeModeEvolvedProjectiveSynthesis
         Q R L n m c‖ ≤ ‖c‖ := by
   unfold physicalYangMillsSU2ThreeModeEvolvedProjectiveSynthesis
+  change
+    ‖physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding Q R L n
+        ((periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator
+            (halfExtent n) 2 specialUnitaryTwoWilsonRankPositive
+            (beta n) (hbeta n) ^ m)
+          (periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeSynthesis
+            (halfExtent n) c))‖ ≤ ‖c‖
   rw [
     (physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding
       Q R L n).norm_map]
@@ -356,8 +368,8 @@ theorem
             ‖C.continuumSynthesis m cInf‖ ≤
               GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformTopOrthogonalContractionFactor ^ m := by
   obtain ⟨phi, hphi, cInf, hcInf, hStrong⟩ :=
-    C.physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice_exists_evolved_strong_limits
-      hInvariant
+    physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice_exists_evolved_strong_limits
+      Q R L C hInvariant
   refine ⟨phi, hphi, cInf, hcInf, ?_⟩
   intro m
   refine ⟨hStrong m, ?_⟩
