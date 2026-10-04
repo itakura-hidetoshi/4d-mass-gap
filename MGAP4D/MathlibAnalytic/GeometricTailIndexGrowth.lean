@@ -41,6 +41,7 @@ theorem real_pow_antitone_nat_of_nonneg_of_le_one
     (hmn : m ≤ n) :
     rho ^ n ≤ rho ^ m := by
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hmn
+  clear hmn
   have hk : rho ^ k ≤ 1 := by
     induction k with
     | zero =>
