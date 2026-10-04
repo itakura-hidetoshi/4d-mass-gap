@@ -143,39 +143,23 @@ theorem reconstructionRange_geometric
       Real.sqrt_nonneg rho,
       real_sqrt_lt_one_of_nonneg_of_lt_one rho hrho0 hrho1,
       ?_⟩
-  intro n
-  have hsqToTotal :
-      physicalYangMillsSU2AdjacentFiniteReconstructionRangeResidual
-          Q R n r k ^ 2 ≤
-        physicalYangMillsSU2AdjacentFiniteTotalReconstructionVarianceDefect
-          Q R n r k := by
-    rw [←
-      physicalYangMillsSU2AdjacentFiniteReconstructionRangeResidual_sq_add_coarsePhysicalLeakageResidual_sq_eq_totalVarianceDefect
-        Q R n r k]
-    exact le_add_of_nonneg_right (sq_nonneg _)
-  have hsqTail :
-      physicalYangMillsSU2AdjacentFiniteReconstructionRangeResidual
-          Q R n r k ^ 2 ≤
-        C * (rho ^ distance n / (1 - rho)) :=
-    hsqToTotal.trans (hTail n)
   exact
     real_le_sqrt_scale_geometric_of_sq_le_geometric_tail_of_index_le_distance
-      (fun j =>
+      (fun n =>
         physicalYangMillsSU2AdjacentFiniteReconstructionRangeResidual
-          Q R j r k)
+          Q R n r k)
       distance C rho hC hrho0 hrho1 hDistance
-      (fun j => by
-        have hsqToTotal' :
+      (fun n => by
+        have hsqToTotal :
             physicalYangMillsSU2AdjacentFiniteReconstructionRangeResidual
-                Q R j r k ^ 2 ≤
+                Q R n r k ^ 2 ≤
               physicalYangMillsSU2AdjacentFiniteTotalReconstructionVarianceDefect
-                Q R j r k := by
+                Q R n r k := by
           rw [←
             physicalYangMillsSU2AdjacentFiniteReconstructionRangeResidual_sq_add_coarsePhysicalLeakageResidual_sq_eq_totalVarianceDefect
-              Q R j r k]
+              Q R n r k]
           exact le_add_of_nonneg_right (sq_nonneg _)
-        exact hsqToTotal'.trans (hTail j))
-      n
+        exact hsqToTotal.trans (hTail n))
 
 /-- The coarse physical-carrier leakage residual inherits the same
 scale-geometric envelope from the same total variance tail. -/
