@@ -201,6 +201,11 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferNorm_inv_le_g
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor_le_transferNorm
         H N hN beta hbeta)
 
+private theorem real_sq_le_sq_of_nonneg_of_le
+    (x y : ℝ) (hx : 0 ≤ x) (hxy : x ≤ y) :
+    x ^ 2 ≤ y ^ 2 := by
+  nlinarith
+
 /-- The inverse-square coefficient used in the normalized physical pair
 transfer is bounded by the inverse square of the explicit global floor. -/
 theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferNorm_sq_inv_le_globalMinorizationFloor_sq_inv
@@ -225,13 +230,8 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferNorm_sq_inv_l
   have hx : 0 ≤ x := by
     dsimp [x]
     exact inv_nonneg.mpr (norm_nonneg _)
-  have hy : 0 ≤ y := by
-    dsimp [y]
-    exact inv_nonneg.mpr
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor_pos
-        H beta).le
-  have hsq : x ^ 2 ≤ y ^ 2 := by
-    nlinarith
+  have hsq : x ^ 2 ≤ y ^ 2 :=
+    real_sq_le_sq_of_nonneg_of_le x y hx hxy
   simpa [x, y, inv_pow] using hsq
 
 end
