@@ -122,8 +122,8 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_norm_
   calc
     ‖(aγ - aβ) * bγ + aβ * (bγ - bβ)‖ ≤
         ‖aγ - aβ‖ * ‖bγ‖ + ‖aβ‖ * ‖bγ - bβ‖ := by
-      rw [norm_mul, norm_mul]
-      exact norm_add_le _ _
+      simpa only [norm_mul] using
+        norm_add_le ((aγ - aβ) * bγ) (aβ * (bγ - bβ))
     _ ≤ (C * d) * 1 + 1 * (C * d) := by
       apply add_le_add
       · exact mul_le_mul haDiff hbγ (norm_nonneg _) (mul_nonneg hC hd)
@@ -187,6 +187,12 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernelL2_nor
     simpa [μ₂, μ] using
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernelL2_coeFn
         H N hN beta hbeta
+  have hSub :=
+    Lp.coeFn_sub
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernelL2
+        H N hN gamma hgamma)
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernelL2
+        H N hN beta hbeta)
   have hle :
       ∀ᵐ p ∂μ₂,
         ‖(periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernelL2
@@ -200,13 +206,19 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernelL2_nor
                   (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
                     PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) =>
                 M) p‖ := by
-    filter_upwards [hGamma, hBeta, hConst.coeFn_toLp] with p hpGamma hpBeta hpConst
-    change
-      ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernelL2
-            H N hN gamma hgamma p -
+    filter_upwards [hSub, hGamma, hBeta, hConst.coeFn_toLp] with
+      p hpSub hpGamma hpBeta hpConst
+    have hpSub' :
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernelL2
+              H N hN gamma hgamma -
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernelL2
+              H N hN beta hbeta) p =
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernelL2
-            H N hN beta hbeta p‖ ≤ _
-    rw [hpGamma, hpBeta, hpConst]
+              H N hN gamma hgamma p -
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernelL2
+              H N hN beta hbeta p := by
+      simpa only [Pi.sub_apply] using hpSub
+    rw [hpSub', hpGamma, hpBeta, hpConst]
     simpa [M, Real.norm_eq_abs, abs_of_nonneg hM] using
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_norm_sub_le
         H N hN beta gamma hbeta hgamma p
