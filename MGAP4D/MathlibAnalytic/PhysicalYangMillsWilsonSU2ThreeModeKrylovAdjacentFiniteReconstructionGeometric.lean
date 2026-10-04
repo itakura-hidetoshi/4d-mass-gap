@@ -150,7 +150,6 @@ theorem physicalCommutation_summable
     ⟨C, q, hq0, hq1, hbound⟩
   exact
     summable_of_nonneg_le_geometric
-      (Q := Q) (R := R)
       (fun n =>
         physicalYangMillsSU2AdjacentFinitePhysicalReconstructionCommutationResidual
           Q R n r k)
@@ -169,7 +168,6 @@ theorem coarsePhysicalLeakage_summable
     ⟨C, q, hq0, hq1, hbound⟩
   exact
     summable_of_nonneg_le_geometric
-      (Q := Q) (R := R)
       (fun n =>
         physicalYangMillsSU2AdjacentFiniteCoarsePhysicalLeakageResidual
           Q R n r k)
@@ -188,7 +186,6 @@ theorem reconstructionRange_summable
     ⟨C, q, hq0, hq1, hbound⟩
   exact
     summable_of_nonneg_le_geometric
-      (Q := Q) (R := R)
       (fun n =>
         physicalYangMillsSU2AdjacentFiniteReconstructionRangeResidual
           Q R n r k)
@@ -206,7 +203,6 @@ theorem betaMajorant_summable :
     ⟨C, q, hq0, hq1, hbound⟩
   exact
     summable_of_nonneg_le_geometric
-      (Q := Q) (R := R)
       (fun n =>
         physicalYangMillsSU2AdjacentCouplingBetaMajorant
           halfExtent beta n)
