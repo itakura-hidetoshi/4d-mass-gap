@@ -144,14 +144,14 @@ noncomputable def physicalYangMillsSU2ThreeModeFiniteCommonMarginalPairCorrelati
     (EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Transition
       (F := F)
       (show R.marginalIndex n ⊆
-          physicalYangMillsSU2ThreeModeKrylovCommonMarginalIndex R n j by
+          physicalYangMillsSU2ThreeModeKrylovCommonMarginalIndex (Q := Q) (R := R) n j by
         exact Finset.subset_union_left)
       (physicalYangMillsSU2ThreeModeEvolvedFiniteMarginalKrylovMode
         Q R n m k))
     (EuclideanYangMillsProjectiveLimitMeasure.finiteMarginalL2Transition
       (F := F)
       (show R.marginalIndex j ⊆
-          physicalYangMillsSU2ThreeModeKrylovCommonMarginalIndex R n j by
+          physicalYangMillsSU2ThreeModeKrylovCommonMarginalIndex (Q := Q) (R := R) n j by
         exact Finset.subset_union_right)
       (physicalYangMillsSU2ThreeModeEvolvedFiniteMarginalKrylovMode
         Q R j m k))
@@ -166,7 +166,7 @@ theorem physicalYangMillsSU2ThreeModeEvolvedProjectiveKrylovMode_inner_eq_finite
         (physicalYangMillsSU2ThreeModeEvolvedProjectiveKrylovMode
           Q R L j m k) =
       physicalYangMillsSU2ThreeModeFiniteCommonMarginalPairCorrelation
-        Q R n j m k := by
+        (Q := Q) (R := R) n j m k := by
   unfold physicalYangMillsSU2ThreeModeEvolvedProjectiveKrylovMode
   rw [
     physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding_eq_finitePullback
@@ -212,7 +212,7 @@ structure PhysicalYangMillsSU2ThreeModeFiniteMarginalPairCorrelationCauchyInput 
     ∀ (m : ℕ) (k : Fin 3) (ε : ℝ), 0 < ε →
       ∃ N : ℕ, ∀ n : ℕ, N ≤ n → ∀ j : ℕ, N ≤ j →
         |physicalYangMillsSU2ThreeModeFiniteCommonMarginalPairCorrelation
-            Q R n j m k -
+            (Q := Q) (R := R) n j m k -
           scalarLimit m k| < ε
 
 namespace PhysicalYangMillsSU2ThreeModeFiniteMarginalPairCorrelationCauchyInput
@@ -220,7 +220,7 @@ namespace PhysicalYangMillsSU2ThreeModeFiniteMarginalPairCorrelationCauchyInput
 variable
     (C :
       PhysicalYangMillsSU2ThreeModeFiniteMarginalPairCorrelationCauchyInput
-        Q R)
+        (Q := Q) (R := R))
 
 include C
 
@@ -273,12 +273,12 @@ theorem
               (PhysicalYangMillsSU2ThreeModeEvolvedBasisCoherenceInput.continuumSynthesis
                 Q R L
                 (PhysicalYangMillsSU2ThreeModeKrylovPairCorrelationCauchyInput.toEvolvedBasisCoherenceInput
-                  Q R L (toKrylovPairCorrelationCauchyInput Q R L C))
+                  Q R L (toKrylovPairCorrelationCauchyInput (Q := Q) (R := R) (L := L) (C := C)))
                 m cInf)) := by
   exact
     PhysicalYangMillsSU2ThreeModeKrylovPairCorrelationCauchyInput.physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice_exists_evolved_strong_limits
       Q R L
-      (toKrylovPairCorrelationCauchyInput Q R L C)
+      (toKrylovPairCorrelationCauchyInput (Q := Q) (R := R) (L := L) (C := C))
       hInvariant
 
 /-- The same finite common-marginal scalar data retain the uniform q0^m decay
@@ -307,18 +307,18 @@ theorem
                 (PhysicalYangMillsSU2ThreeModeEvolvedBasisCoherenceInput.continuumSynthesis
                   Q R L
                   (PhysicalYangMillsSU2ThreeModeKrylovPairCorrelationCauchyInput.toEvolvedBasisCoherenceInput
-                    Q R L (toKrylovPairCorrelationCauchyInput Q R L C))
+                    Q R L (toKrylovPairCorrelationCauchyInput (Q := Q) (R := R) (L := L) (C := C)))
                   m cInf)) ∧
             ‖PhysicalYangMillsSU2ThreeModeEvolvedBasisCoherenceInput.continuumSynthesis
                 Q R L
                 (PhysicalYangMillsSU2ThreeModeKrylovPairCorrelationCauchyInput.toEvolvedBasisCoherenceInput
-                  Q R L (toKrylovPairCorrelationCauchyInput Q R L C))
+                  Q R L (toKrylovPairCorrelationCauchyInput (Q := Q) (R := R) (L := L) (C := C)))
                 m cInf‖ ≤
               GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformTopOrthogonalContractionFactor ^ m := by
   exact
     PhysicalYangMillsSU2ThreeModeKrylovPairCorrelationCauchyInput.physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice_exists_evolved_strong_limits_q0
       Q R L
-      (toKrylovPairCorrelationCauchyInput Q R L C)
+      (toKrylovPairCorrelationCauchyInput (Q := Q) (R := R) (L := L) (C := C))
       hInvariant s hs hcut
 
 end PhysicalYangMillsSU2ThreeModeFiniteMarginalPairCorrelationCauchyInput
