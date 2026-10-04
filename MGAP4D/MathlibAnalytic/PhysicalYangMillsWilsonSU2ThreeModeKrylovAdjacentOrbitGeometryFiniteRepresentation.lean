@@ -37,25 +37,25 @@ open scoped ENNReal InnerProductSpace InnerProduct Topology
 
 noncomputable section
 
-local instance su2AdjacentFiniteGeometryTopologicalGroup :
-    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
-  specialUnitaryGroupIsTopologicalGroup 2
+local instance su2AdjacentFiniteGeometryTopologicalGroup (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
 
-local instance su2AdjacentFiniteGeometryCompactSpace :
-    CompactSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
-  specialUnitaryGroupCompactSpace 2
+local instance su2AdjacentFiniteGeometryCompactSpace (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
 
-local instance su2AdjacentFiniteGeometrySecondCountable :
-    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
-  specialUnitaryGroupSecondCountableTopology 2
+local instance su2AdjacentFiniteGeometrySecondCountable (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
 
-local instance su2AdjacentFiniteGeometryMeasurableSpace :
-    MeasurableSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
-  specialUnitaryGroupMeasurableSpace 2
+local instance su2AdjacentFiniteGeometryMeasurableSpace (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
 
-local instance su2AdjacentFiniteGeometryBorelSpace :
-    BorelSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
-  specialUnitaryGroupBorelSpace 2
+local instance su2AdjacentFiniteGeometryBorelSpace (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
 
 local instance su2AdjacentFiniteGeometrySpatialLinkFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
