@@ -221,7 +221,7 @@ theorem krylov_cauchy
         physicalYangMillsSU2ThreeModeEvolvedProjectiveKrylovMode
           Q R L n m k)
       (C.scalarLimit m k)
-      (C.normSq_tendsto m k)
+      (normSq_tendsto Q R L C m k)
       (C.pairCorrelation_tail m k)
 
 /-- Canonical theorem-generated continuum Krylov mode as the limit of its
@@ -230,7 +230,7 @@ noncomputable def continuumKrylovMode
     (m : ℕ) (k : Fin 3) :
     Lp ℝ 2 L.continuumMeasure :=
   Classical.choose
-    (cauchySeq_tendsto_of_complete (C.krylov_cauchy m k))
+    (cauchySeq_tendsto_of_complete (krylov_cauchy Q R L C m k))
 
 /-- The theorem-generated continuum Krylov mode is the actual strong limit. -/
 theorem krylov_tendsto
@@ -240,9 +240,9 @@ theorem krylov_tendsto
         physicalYangMillsSU2ThreeModeEvolvedProjectiveKrylovMode
           Q R L n m k)
       atTop
-      (𝓝 (C.continuumKrylovMode m k)) :=
+      (𝓝 (continuumKrylovMode Q R L C m k)) :=
   Classical.choose_spec
-    (cauchySeq_tendsto_of_complete (C.krylov_cauchy m k))
+    (cauchySeq_tendsto_of_complete (krylov_cauchy Q R L C m k))
 
 /-- Candidate-free scalar Cauchy data theorem-generate the #5091
 basis-coherence package. -/
@@ -250,7 +250,7 @@ noncomputable def toEvolvedBasisCoherenceInput :
     PhysicalYangMillsSU2ThreeModeEvolvedBasisCoherenceInput
       Q R L where
   continuumKrylovMode := C.continuumKrylovMode
-  krylov_tendsto := C.krylov_tendsto
+  krylov_tendsto := krylov_tendsto Q R L C
 
 /-- Candidate-free finite scalar data suffice for all fixed-time strong limits
 of the theorem-generated exact excitation. -/
@@ -270,11 +270,11 @@ theorem
             atTop
             (𝓝
               (PhysicalYangMillsSU2ThreeModeEvolvedBasisCoherenceInput.continuumSynthesis
-                Q R L (C.toEvolvedBasisCoherenceInput) m cInf)) := by
+                Q R L (toEvolvedBasisCoherenceInput Q R L C) m cInf)) := by
   exact
     PhysicalYangMillsSU2ThreeModeEvolvedBasisCoherenceInput.physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice_exists_evolved_strong_limits
       Q R L
-      (C.toEvolvedBasisCoherenceInput)
+      (toEvolvedBasisCoherenceInput Q R L C)
       hInvariant
 
 /-- The same candidate-free scalar data inherit the scale-uniform q0^m
@@ -301,14 +301,14 @@ theorem
               atTop
               (𝓝
                 (PhysicalYangMillsSU2ThreeModeEvolvedBasisCoherenceInput.continuumSynthesis
-                  Q R L (C.toEvolvedBasisCoherenceInput) m cInf)) ∧
+                  Q R L (toEvolvedBasisCoherenceInput Q R L C) m cInf)) ∧
             ‖PhysicalYangMillsSU2ThreeModeEvolvedBasisCoherenceInput.continuumSynthesis
-                Q R L (C.toEvolvedBasisCoherenceInput) m cInf‖ ≤
+                Q R L (toEvolvedBasisCoherenceInput Q R L C) m cInf‖ ≤
               GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformTopOrthogonalContractionFactor ^ m := by
   exact
     PhysicalYangMillsSU2ThreeModeEvolvedBasisCoherenceInput.physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice_exists_evolved_strong_limits_q0
       Q R L
-      (C.toEvolvedBasisCoherenceInput)
+      (toEvolvedBasisCoherenceInput Q R L C)
       hInvariant s hs hcut
 
 end PhysicalYangMillsSU2ThreeModeKrylovPairCorrelationCauchyInput
