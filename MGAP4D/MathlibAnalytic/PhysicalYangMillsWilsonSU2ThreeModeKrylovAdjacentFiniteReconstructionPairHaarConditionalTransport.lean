@@ -106,8 +106,7 @@ noncomputable def physicalYangMillsSU2AdjacentFineBoundaryPairHaarCandidate
     (x :
       PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
         (halfExtent (n + 1)) 2) :
-    physicalYangMillsSU2AdjacentFineBoundaryPairHaarCandidate
-        Q n candidate
+    physicalYangMillsSU2AdjacentFineBoundaryPairHaarCandidate (halfExtent := halfExtent) n candidate
         (periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundaryLinearIsometry
           (halfExtent (n + 1)) 2 x) =
       periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundaryLinearIsometry
@@ -123,7 +122,7 @@ noncomputable def physicalYangMillsSU2AdjacentFineBoundaryPairHaarCandidate
 pair-Haar frozen Krylov vector. -/
 @[simp] theorem physicalYangMillsSU2AdjacentFineFrozenStepBoundaryHaarVector_eq_pairEmbedding
     (n r : ℕ) (k : Fin 3) :
-    physicalYangMillsSU2AdjacentFineFrozenStepBoundaryHaarVector Q n r k =
+    physicalYangMillsSU2AdjacentFineFrozenStepBoundaryHaarVector (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k =
       periodicHypercubicEvenSpatialSlicePairHaarL2ToBoundaryLinearIsometry
         (halfExtent (n + 1)) 2
         (physicalYangMillsSU2AdjacentFinePairFrozenCouplingStepVector
@@ -141,11 +140,9 @@ theorem
           (halfExtent (n + 1)) 2 →L[ℝ]
         PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
           (halfExtent (n + 1)) 2) :
-    ‖physicalYangMillsSU2AdjacentFineFrozenStepBoundaryHaarVector Q n r k -
-        physicalYangMillsSU2AdjacentFineBoundaryPairHaarCandidate
-          Q n candidate
-          (physicalYangMillsSU2AdjacentFineFrozenStepBoundaryHaarVector
-            Q n r k)‖ =
+    ‖physicalYangMillsSU2AdjacentFineFrozenStepBoundaryHaarVector (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k -
+        physicalYangMillsSU2AdjacentFineBoundaryPairHaarCandidate (halfExtent := halfExtent) n candidate
+          (physicalYangMillsSU2AdjacentFineFrozenStepBoundaryHaarVector (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k)‖ =
       ‖physicalYangMillsSU2AdjacentFinePairFrozenCouplingStepVector
             (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
             n r k -
@@ -161,10 +158,8 @@ theorem
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
       n r k
   rw [
-    physicalYangMillsSU2AdjacentFineFrozenStepBoundaryHaarVector_eq_pairEmbedding
-      Q n r k,
-    physicalYangMillsSU2AdjacentFineBoundaryPairHaarCandidate_apply_embedding
-      Q n candidate x]
+    physicalYangMillsSU2AdjacentFineFrozenStepBoundaryHaarVector_eq_pairEmbedding (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k,
+    physicalYangMillsSU2AdjacentFineBoundaryPairHaarCandidate_apply_embedding (halfExtent := halfExtent) n candidate x]
   change ‖J x - J (candidate x)‖ = ‖x - candidate x‖
   rw [← J.map_sub, J.norm_map]
 
@@ -177,11 +172,9 @@ theorem
           (halfExtent (n + 1)) 2 →L[ℝ]
         PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
           (halfExtent (n + 1)) 2) :
-    ‖physicalYangMillsSU2AdjacentFineFrozenStepBoundaryHaarVector Q n r k -
-        physicalYangMillsSU2AdjacentFineBoundaryPairHaarCandidate
-          Q n candidate
-          (physicalYangMillsSU2AdjacentFineFrozenStepBoundaryHaarVector
-            Q n r k)‖ ^ 2 =
+    ‖physicalYangMillsSU2AdjacentFineFrozenStepBoundaryHaarVector (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k -
+        physicalYangMillsSU2AdjacentFineBoundaryPairHaarCandidate (halfExtent := halfExtent) n candidate
+          (physicalYangMillsSU2AdjacentFineFrozenStepBoundaryHaarVector (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k)‖ ^ 2 =
       ‖physicalYangMillsSU2AdjacentFinePairFrozenCouplingStepVector
             (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
             n r k -
@@ -190,8 +183,7 @@ theorem
             (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
             n r k)‖ ^ 2 := by
   rw [
-    physicalYangMillsSU2AdjacentFineBoundaryPairHaarCandidateResidual_norm_eq
-      Q n r k candidate]
+    physicalYangMillsSU2AdjacentFineBoundaryPairHaarCandidateResidual_norm_eq (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k candidate]
 
 /-- Fully transport a pair-Haar candidate through boundary, selected-projective,
 and adjacent-common carriers. -/
@@ -212,8 +204,7 @@ noncomputable def physicalYangMillsSU2AdjacentCommonPairHaarCandidate
             (Q := Q) R n)) :=
   physicalYangMillsSU2AdjacentCommonBoundaryHaarCandidate
     Q R n
-    (physicalYangMillsSU2AdjacentFineBoundaryPairHaarCandidate
-      Q n candidate)
+    (physicalYangMillsSU2AdjacentFineBoundaryPairHaarCandidate (halfExtent := halfExtent) n candidate)
 
 /-- Final raw-tail receiver on ordered pair-Haar L². -/
 structure PhysicalYangMillsSU2AdjacentPairHaarConditionalPhysicalityTailInput where
@@ -267,8 +258,7 @@ noncomputable def toBoundaryHaarConditionalPhysicalityTailInput :
     PhysicalYangMillsSU2AdjacentBoundaryHaarConditionalPhysicalityTailInput
       (Q := Q) (R := R) where
   candidate := fun n =>
-    physicalYangMillsSU2AdjacentFineBoundaryPairHaarCandidate
-      Q n (G.candidate n)
+    physicalYangMillsSU2AdjacentFineBoundaryPairHaarCandidate (halfExtent := halfExtent) n (G.candidate n)
   splitResidual_tail := by
     intro r k
     rcases G.splitResidual_tail r k with
@@ -279,8 +269,7 @@ noncomputable def toBoundaryHaarConditionalPhysicalityTailInput :
         hCraw, hCphys, hrho0, hrho1, hDistance, ?_, ?_⟩
     · intro n
       rw [
-        physicalYangMillsSU2AdjacentFineBoundaryPairHaarCandidateResidual_sq_eq
-          Q n r k (G.candidate n)]
+        physicalYangMillsSU2AdjacentFineBoundaryPairHaarCandidateResidual_sq_eq (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k (G.candidate n)]
       exact hRaw n
     · intro n
       simpa only [
