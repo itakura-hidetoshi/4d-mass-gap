@@ -105,6 +105,11 @@ theorem continuous_realHilbertProjectionSweepStageResidualAmplitude
       (continuous_realHilbertProjectionSweepStageResidualSqProfile
         P cs d)
 
+local instance groundStateSweepStageProfileCoreClosureSpatialLinkFintype
+    (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
 /-- The normalized genuine spatial-link sweep-stage profile energy on the
 whole ground-state joint L2 carrier. -/
 noncomputable def
@@ -120,11 +125,6 @@ noncomputable def
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialOneLinkSweepStageLocalProfile
         H N hN beta hbeta f e ^ 2
 
-local instance groundStateSweepStageProfileCoreClosureSpatialLinkFintype
-    (H : ℕ) :
-    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
-  Fintype.ofFinite _
-
 /-- The normalized profile energy is exactly the existing six-spatial
 one-link sweep path loss. -/
 theorem
@@ -137,9 +137,11 @@ theorem
         H N hN beta hbeta f =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialOneLinkSweepPathLoss
         H N hN beta hbeta f := by
-  exact
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialOneLinkSweepStageLocalProfile_normalized_sq_sum_eq_sweepPathLoss
-      H N hN beta hbeta f
+  simpa [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialSweepStageProfileEnergy
+  ] using
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialOneLinkSweepStageLocalProfile_normalized_sq_sum_eq_sweepPathLoss
+      H N hN beta hbeta f)
 
 /-- The genuine six-spatial one-link sweep path loss is continuous. -/
 theorem
