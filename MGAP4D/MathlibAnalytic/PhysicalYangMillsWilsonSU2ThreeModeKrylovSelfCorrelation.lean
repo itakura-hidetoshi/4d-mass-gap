@@ -150,6 +150,7 @@ theorem physicalYangMillsSU2ThreeModeEvolvedProjectiveKrylovMode_norm_sq_eq_self
     ‖physicalYangMillsSU2ThreeModeEvolvedProjectiveKrylovMode
         Q R L n m k‖ ^ 2 =
       physicalYangMillsSU2ThreeModeFiniteKrylovSelfCorrelation
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
         n m k := by
   rw [
     physicalYangMillsSU2ThreeModeEvolvedProjectiveKrylovMode_norm_sq
@@ -176,6 +177,7 @@ structure PhysicalYangMillsSU2ThreeModeKrylovSelfCorrelationStrongLimitInput whe
       Tendsto
         (fun n =>
           physicalYangMillsSU2ThreeModeFiniteKrylovSelfCorrelation
+            (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
             n m k)
         atTop
         (𝓝 (‖continuumKrylovMode m k‖ ^ 2))
