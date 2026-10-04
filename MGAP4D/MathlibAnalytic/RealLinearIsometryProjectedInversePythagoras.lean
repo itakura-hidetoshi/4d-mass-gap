@@ -27,8 +27,12 @@ namespace MathlibAnalytic
 noncomputable section
 
 variable {H B : Type*}
-variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+variable [NormedAddCommGroup H] [InnerProductSpace ℝ H]
 variable [NormedAddCommGroup B] [InnerProductSpace ℝ B]
+
+section CompleteSource
+
+variable [CompleteSpace H]
 
 /-- The canonical projected inverse, re-embedded into the ambient Hilbert
 space, is exactly the orthogonal projection onto the isometry range. -/
@@ -54,10 +58,11 @@ theorem realLinearIsometry_map_projectedInverse_eq_rangeProjection
           realLinearIsometryRange J) : B)
   rw [J.equivRange.apply_symm_apply]
 
+end CompleteSource
+
 /-- Pythagoras for the residual of orthogonal projection onto a complete real
 Hilbert subspace.  Ambient completeness is not needed; completeness of the
 projected subspace is sufficient. -/
-omit [CompleteSpace H] in
 theorem realHilbertSubspaceProjection_sub_norm_sq_eq
     (M : Submodule ℝ H)
     [CompleteSpace M]
@@ -79,6 +84,10 @@ theorem realHilbertSubspaceProjection_sub_norm_sq_eq
   rw [hresidual, norm_neg]
   have hpyth := M.norm_sq_eq_add_norm_sq_starProjection x
   nlinarith
+
+section CompleteSource
+
+variable [CompleteSpace H]
 
 /-- The reconstruction residual of a real linear isometry is exactly the
 squared norm lost by its canonical projected inverse.
@@ -129,6 +138,8 @@ theorem realLinearIsometry_projectedInverse_norm_sq_le
   have h :=
     realLinearIsometry_projectedInverse_residual_norm_sq_eq J y
   nlinarith [sq_nonneg ‖J (realLinearIsometryProjectedInverse J y) - y‖]
+
+end CompleteSource
 
 end
 
