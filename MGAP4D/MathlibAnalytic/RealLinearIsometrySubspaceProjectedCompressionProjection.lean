@@ -57,8 +57,7 @@ theorem realLinearIsometrySubspaceProjectedCompression_one_eq_starProjection_map
   have hzM : z ∈ M := by
     dsimp [z]
     change M.starProjection x ∈ M
-    have hrange : M.starProjection x ∈ M.starProjection.range := ⟨x, rfl⟩
-    simpa using hrange
+    exact M.starProjection_apply_mem x
   have hJzK : J z ∈ K := by
     exact ⟨z, hzM, rfl⟩
   have hxRange :
@@ -68,12 +67,14 @@ theorem realLinearIsometrySubspaceProjectedCompression_one_eq_starProjection_map
   have hRangeResidual :
       y - J x ∈ (realLinearIsometryRange J)ᗮ := by
     rw [hxRange]
-    simpa [realHilbertSubspaceProjection] using
-      (realLinearIsometryRange J).sub_starProjection_mem_orthogonal y
+    change
+      y - (realLinearIsometryRange J).starProjection y ∈
+        (realLinearIsometryRange J)ᗮ
+    exact (realLinearIsometryRange J).sub_starProjection_mem_orthogonal y
   have hMResidual : x - z ∈ Mᗮ := by
     dsimp [z]
-    simpa [realHilbertSubspaceProjection] using
-      M.sub_starProjection_mem_orthogonal x
+    change x - M.starProjection x ∈ Mᗮ
+    exact M.sub_starProjection_mem_orthogonal x
   have hResidualK : y - J z ∈ Kᗮ := by
     rw [Submodule.mem_orthogonal]
     intro w hw
@@ -92,11 +93,15 @@ theorem realLinearIsometrySubspaceProjectedCompression_one_eq_starProjection_map
         y - J z = (y - J x) + J (x - z) := by
       rw [J.map_sub]
       abel
-    rw [hdecomp, inner_add_right, hfirst, hsecond, add_zero]
+    rw [hdecomp, inner_add_right]
+    change
+      inner ℝ (J m) (y - J x) +
+          inner ℝ (J m) (J (x - z)) = 0
+    rw [hfirst, hsecond, add_zero]
   change J z = K.starProjection y
   exact
-    Submodule.eq_starProjection_of_mem_orthogonal
-      (K := K) hJzK hResidualK
+    (Submodule.eq_starProjection_of_mem_orthogonal
+      (K := K) hJzK hResidualK).symm
 
 /-- Pythagoras for identity subspace-projected compression, expressed directly
 on the ambient Hilbert carrier. -/
