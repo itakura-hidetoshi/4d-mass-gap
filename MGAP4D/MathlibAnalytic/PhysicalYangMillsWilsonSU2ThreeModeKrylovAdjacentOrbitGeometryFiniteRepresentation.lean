@@ -138,7 +138,8 @@ noncomputable def physicalYangMillsSU2AdjacentFinePairOrbitVector
 
 theorem physicalYangMillsSU2AdjacentFinePairOrbitVector_mem_physicalPairCarrier
     (n r : ℕ) (k : Fin 3) :
-    physicalYangMillsSU2AdjacentFinePairOrbitVector Q n r k ∈
+    physicalYangMillsSU2AdjacentFinePairOrbitVector
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k ∈
       periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier
         (halfExtent (n + 1)) 2 := by
   unfold physicalYangMillsSU2AdjacentFinePairOrbitVector
@@ -157,7 +158,8 @@ theorem physicalYangMillsSU2AdjacentCommonRightOrbitVector_eq_finePairEmbedding
     (n r : ℕ) (k : Fin 3) :
     physicalYangMillsSU2AdjacentCommonRightOrbitVector Q R n r k =
       physicalYangMillsSU2AdjacentCommonRightPairEmbedding Q R n
-        (physicalYangMillsSU2AdjacentFinePairOrbitVector Q n r k) := by
+        (physicalYangMillsSU2AdjacentFinePairOrbitVector
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k) := by
   unfold physicalYangMillsSU2AdjacentCommonRightOrbitVector
   unfold physicalYangMillsSU2AdjacentCommonRightInitialKrylovMode
   unfold physicalYangMillsSU2AdjacentFinePairOrbitVector
@@ -178,12 +180,14 @@ noncomputable def physicalYangMillsSU2AdjacentFinePairFrozenCouplingStepVector
   periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator
       (halfExtent (n + 1)) 2 specialUnitaryTwoWilsonRankPositive
       (beta n) (hbeta n)
-    (physicalYangMillsSU2AdjacentFinePairOrbitVector Q n r k)
+    (physicalYangMillsSU2AdjacentFinePairOrbitVector
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k)
 
 theorem
     physicalYangMillsSU2AdjacentFinePairFrozenCouplingStepVector_mem_physicalPairCarrier
     (n r : ℕ) (k : Fin 3) :
-    physicalYangMillsSU2AdjacentFinePairFrozenCouplingStepVector Q n r k ∈
+    physicalYangMillsSU2AdjacentFinePairFrozenCouplingStepVector
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k ∈
       periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier
         (halfExtent (n + 1)) 2 := by
   unfold physicalYangMillsSU2AdjacentFinePairFrozenCouplingStepVector
@@ -192,7 +196,7 @@ theorem
       (halfExtent (n + 1)) 2 specialUnitaryTwoWilsonRankPositive
       (beta n) (hbeta n)
       (physicalYangMillsSU2AdjacentFinePairOrbitVector_mem_physicalPairCarrier
-        Q n r k)
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k)
 
 /-- Applying the frozen-coupling fine common transfer to the actual right orbit
 stays exactly in the fine embedded finite pair-Haar range. -/
@@ -203,7 +207,8 @@ theorem
         Q R n (beta n) (hbeta n)
         (physicalYangMillsSU2AdjacentCommonRightOrbitVector Q R n r k) =
       physicalYangMillsSU2AdjacentCommonRightPairEmbedding Q R n
-        (physicalYangMillsSU2AdjacentFinePairFrozenCouplingStepVector Q n r k) := by
+        (physicalYangMillsSU2AdjacentFinePairFrozenCouplingStepVector
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k) := by
   rw [physicalYangMillsSU2AdjacentCommonRightOrbitVector_eq_finePairEmbedding
     Q R n r k]
   unfold physicalYangMillsSU2AdjacentCommonRightTransferAtCoupling
@@ -215,9 +220,10 @@ theorem
       (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator
         (halfExtent (n + 1)) 2 specialUnitaryTwoWilsonRankPositive
         (beta n) (hbeta n))
-      (physicalYangMillsSU2AdjacentFinePairOrbitVector Q n r k)
+      (physicalYangMillsSU2AdjacentFinePairOrbitVector
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k)
       (physicalYangMillsSU2AdjacentFinePairOrbitVector_mem_physicalPairCarrier
-        Q n r k)
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k)
 
 /-- Explicit distance of the frozen-coupling fine finite vector from the coarse
 pair-embedding range in the adjacent common marginal. -/
@@ -226,7 +232,8 @@ noncomputable def
     (n r : ℕ) (k : Fin 3) : ℝ :=
   let y :=
     physicalYangMillsSU2AdjacentCommonRightPairEmbedding Q R n
-      (physicalYangMillsSU2AdjacentFinePairFrozenCouplingStepVector Q n r k)
+      (physicalYangMillsSU2AdjacentFinePairFrozenCouplingStepVector
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k)
   ‖physicalYangMillsSU2AdjacentCommonLeftPairRangeProjection Q R n y - y‖
 
 /-- The #5117 fine-range leakage residual is exactly the coarse-range distance
