@@ -61,7 +61,7 @@ theorem real_inv_sq_norm_sub_inv_sq_le_of_pos_lower_bounds
       _ = x⁻¹ + y⁻¹ := by
         simp only [Real.norm_eq_abs, abs_of_pos hxInvPos, abs_of_pos hyInvPos]
       _ ≤ mx⁻¹ + my⁻¹ := add_le_add hxInv_le hyInv_le
-  rw [inv_pow, inv_pow]
+  rw [← inv_pow, ← inv_pow]
   calc
     ‖x⁻¹ ^ 2 - y⁻¹ ^ 2‖ =
         ‖(x⁻¹ - y⁻¹) * (x⁻¹ + y⁻¹)‖ := by
