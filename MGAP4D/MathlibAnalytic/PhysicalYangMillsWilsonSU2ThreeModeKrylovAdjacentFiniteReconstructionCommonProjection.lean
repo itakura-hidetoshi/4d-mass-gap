@@ -150,6 +150,7 @@ theorem physicalYangMillsSU2AdjacentCommonLeftPhysicalRangeProjection_apply_righ
     physicalYangMillsSU2AdjacentFiniteCoarseReconstruction
     realLinearIsometrySubspaceProjectedCompression
   simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.one_apply]
+  rfl
 
 /-- The frozen-coupling fine output placed in the adjacent common marginal. -/
 noncomputable def physicalYangMillsSU2AdjacentCommonFineFrozenStepVector
@@ -213,11 +214,21 @@ theorem
     exact
       physicalYangMillsSU2AdjacentCommonLeftPhysicalRangeProjection_apply_rightPairEmbedding
         Q R n y
+  have hPythP :
+      ‖Jright y - P (Jright y)‖ ^ 2 =
+        ‖Jright y‖ ^ 2 - ‖P (Jright y)‖ ^ 2 := by
+    simpa [P, Jleft, M] using hPyth
+  have hPnorm :
+      ‖P (Jright y)‖ = ‖Rphys y‖ := by
+    rw [hPapply, Jleft.norm_map]
   change
     ‖y‖ ^ 2 - ‖Rphys y‖ ^ 2 =
       ‖Jright y - P (Jright y)‖ ^ 2
-  rw [hPapply, Jright.norm_map, Jleft.norm_map]
-  simpa [P, Jleft, M] using hPyth.symm
+  calc
+    ‖y‖ ^ 2 - ‖Rphys y‖ ^ 2 =
+        ‖Jright y‖ ^ 2 - ‖P (Jright y)‖ ^ 2 := by
+      rw [Jright.norm_map, hPnorm]
+    _ = ‖Jright y - P (Jright y)‖ ^ 2 := hPythP.symm
 
 end CommonPhysicalProjection
 
