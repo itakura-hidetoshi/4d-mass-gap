@@ -108,7 +108,7 @@ vector. -/
     physicalYangMillsSU2AdjacentFineFrozenStepSelectedVector Q R n r k =
       R.boundaryHaarProjectiveL2Isometry (n + 1)
         (physicalYangMillsSU2AdjacentFineFrozenStepBoundaryHaarVector
-          Q n r k) := by
+          (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k) := by
   rfl
 
 /-- Transport a bounded boundary-Haar operator to the fine selected projective
@@ -157,14 +157,14 @@ theorem
           (physicalYangMillsSU2AdjacentFineFrozenStepSelectedVector
             Q R n r k)‖ =
       ‖physicalYangMillsSU2AdjacentFineFrozenStepBoundaryHaarVector
-            Q n r k -
+            (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k -
         candidate
           (physicalYangMillsSU2AdjacentFineFrozenStepBoundaryHaarVector
-            Q n r k)‖ := by
+            (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k)‖ := by
   let J := R.boundaryHaarProjectiveL2Isometry (n + 1)
   let x :=
     physicalYangMillsSU2AdjacentFineFrozenStepBoundaryHaarVector
-      Q n r k
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k
   rw [
     physicalYangMillsSU2AdjacentFineFrozenStepSelectedVector_eq_boundaryHaarProjective
       Q R n r k,
@@ -186,10 +186,10 @@ theorem
           (physicalYangMillsSU2AdjacentFineFrozenStepSelectedVector
             Q R n r k)‖ ^ 2 =
       ‖physicalYangMillsSU2AdjacentFineFrozenStepBoundaryHaarVector
-            Q n r k -
+            (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k -
         candidate
           (physicalYangMillsSU2AdjacentFineFrozenStepBoundaryHaarVector
-            Q n r k)‖ ^ 2 := by
+            (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k)‖ ^ 2 := by
   rw [
     physicalYangMillsSU2AdjacentFineSelectedBoundaryHaarCandidateResidual_norm_eq
       Q R n r k candidate]
@@ -233,10 +233,10 @@ structure PhysicalYangMillsSU2AdjacentBoundaryHaarConditionalPhysicalityTailInpu
         (∀ n, n ≤ distance n) ∧
         (∀ n,
           ‖physicalYangMillsSU2AdjacentFineFrozenStepBoundaryHaarVector
-                Q n r k -
+                (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k -
               candidate n
                 (physicalYangMillsSU2AdjacentFineFrozenStepBoundaryHaarVector
-                  Q n r k)‖ ^ 2 ≤
+                  (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k)‖ ^ 2 ≤
             Craw * (rho ^ distance n / (1 - rho))) ∧
         ∀ n,
           let Cn :=
