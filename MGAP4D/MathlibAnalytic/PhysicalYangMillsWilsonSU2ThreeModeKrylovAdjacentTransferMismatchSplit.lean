@@ -211,11 +211,13 @@ theorem physicalYangMillsSU2AdjacentCommonTransferMismatch_le_geometry_add_coupl
           periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator
             (halfExtent (n + 1)) 2 specialUnitaryTwoWilsonRankPositive
             (beta (n + 1)) (hbeta (n + 1))‖ := by
-      have hcoupling :=
-        physicalYangMillsSU2AdjacentCommonRightTransferAtCoupling_norm_sub_le
-          Q R n (beta n) (beta (n + 1)) (hbeta n) (hbeta (n + 1))
-      simpa [physicalYangMillsSU2AdjacentCommonTransferGeometryResidual] using
-        add_le_add_left hcoupling
+      rw [physicalYangMillsSU2AdjacentCommonTransferGeometryResidual]
+      rw [← physicalYangMillsSU2AdjacentCommonRightTransferAtCoupling_beta_succ
+        Q R n]
+      exact
+        add_le_add_left
+          (physicalYangMillsSU2AdjacentCommonRightTransferAtCoupling_norm_sub_le
+            Q R n (beta n) (beta (n + 1)) (hbeta n) (hbeta (n + 1)))
           ‖physicalYangMillsSU2AdjacentCommonLeftTransfer Q R n -
             physicalYangMillsSU2AdjacentCommonRightTransferAtCoupling
               Q R n (beta n) (hbeta n)‖
