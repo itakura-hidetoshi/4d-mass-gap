@@ -146,78 +146,85 @@ theorem physicalYangMillsSU2AdjacentFineGroundStateSweepStageProfileEnergy_eq_pa
         (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
         n r k)
 
+/-- Fixed-color link type attached to an ordinary fine spatial link. -/
+abbrev PhysicalYangMillsSU2AdjacentFineGroundStateFixedSpatialColorLink
+    (n : ℕ)
+    (e : PeriodicHypercubicEvenSpatialSliceLink (halfExtent (n + 1))) : Type :=
+  PeriodicHypercubicEvenFixedSpatialColorLink
+    (halfExtent (n + 1))
+    (periodicHypercubicEvenSpatialSliceLinkColor (halfExtent (n + 1)) e)
+
+/-- The actual frozen Krylov vector after a canonical fixed-color sweep prefix. -/
+noncomputable def physicalYangMillsSU2AdjacentFineGroundStateSweepStageVector
+    (n r : ℕ) (k : Fin 3)
+    (e : PeriodicHypercubicEvenSpatialSliceLink (halfExtent (n + 1)))
+    (pre : List
+      (PhysicalYangMillsSU2AdjacentFineGroundStateFixedSpatialColorLink
+        (halfExtent := halfExtent) n e)) :
+    PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+      (halfExtent (n + 1)) 2 su2AdjacentSweepStageProfileTail_two_pos
+      (beta n) (hbeta n) :=
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkSweepStageVector
+    (halfExtent (n + 1)) 2 su2AdjacentSweepStageProfileTail_two_pos
+    (beta n) (hbeta n)
+    (periodicHypercubicEvenSpatialSliceLinkColor (halfExtent (n + 1)) e)
+    pre
+    (physicalYangMillsSU2AdjacentFineFrozenStepGroundStateJointVector
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k)
+
+/-- The genuine one-link conditional expectation applied at the selected
+canonical sweep stage. -/
+noncomputable def physicalYangMillsSU2AdjacentFineGroundStateSweepStageCondExp
+    (n : ℕ)
+    (e : PeriodicHypercubicEvenSpatialSliceLink (halfExtent (n + 1))) :
+    PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+        (halfExtent (n + 1)) 2 su2AdjacentSweepStageProfileTail_two_pos
+        (beta n) (hbeta n) →L[ℝ]
+      PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+        (halfExtent (n + 1)) 2 su2AdjacentSweepStageProfileTail_two_pos
+        (beta n) (hbeta n) :=
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
+    (halfExtent (n + 1)) 2 su2AdjacentSweepStageProfileTail_two_pos
+    (beta n) (hbeta n)
+    (periodicHypercubicEvenSpatialSliceLinkColor (halfExtent (n + 1)) e)
+    (⟨e, rfl⟩ :
+      PhysicalYangMillsSU2AdjacentFineGroundStateFixedSpatialColorLink
+        (halfExtent := halfExtent) n e)
+
 /-- On a canonical prefix decomposition, the actual adjacent local profile is
 literally the norm of the genuine one-link conditional-expectation residual at
 that stage. -/
 theorem physicalYangMillsSU2AdjacentFineGroundStateSweepStageLocalProfile_eq_stageResidual_norm_of_canonicalPrefix
-    (n r : ℕ)
-    (k : Fin 3)
+    (n r : ℕ) (k : Fin 3)
     (e : PeriodicHypercubicEvenSpatialSliceLink (halfExtent (n + 1)))
-    (pre suffix :
-      List
-        (PeriodicHypercubicEvenFixedSpatialColorLink
-          (halfExtent (n + 1))
-          (periodicHypercubicEvenSpatialSliceLinkColor
-            (halfExtent (n + 1)) e)))
+    (pre suffix : List
+      (PhysicalYangMillsSU2AdjacentFineGroundStateFixedSpatialColorLink
+        (halfExtent := halfExtent) n e))
     (hSplit :
-      (Finset.univ :
-        Finset
-          (PeriodicHypercubicEvenFixedSpatialColorLink
-            (halfExtent (n + 1))
-            (periodicHypercubicEvenSpatialSliceLinkColor
-              (halfExtent (n + 1)) e))).toList =
-        pre ++
-          (⟨e, rfl⟩ :
-            PeriodicHypercubicEvenFixedSpatialColorLink
-              (halfExtent (n + 1))
-              (periodicHypercubicEvenSpatialSliceLinkColor
-                (halfExtent (n + 1)) e)) ::
-            suffix)
+      (Finset.univ : Finset
+        (PhysicalYangMillsSU2AdjacentFineGroundStateFixedSpatialColorLink
+          (halfExtent := halfExtent) n e)).toList =
+        pre ++ (⟨e, rfl⟩ : PhysicalYangMillsSU2AdjacentFineGroundStateFixedSpatialColorLink
+          (halfExtent := halfExtent) n e) :: suffix)
     (hFresh :
-      (⟨e, rfl⟩ :
-        PeriodicHypercubicEvenFixedSpatialColorLink
-          (halfExtent (n + 1))
-          (periodicHypercubicEvenSpatialSliceLinkColor
-            (halfExtent (n + 1)) e)) ∉ pre) :
+      (⟨e, rfl⟩ : PhysicalYangMillsSU2AdjacentFineGroundStateFixedSpatialColorLink
+        (halfExtent := halfExtent) n e) ∉ pre) :
     physicalYangMillsSU2AdjacentFineGroundStateSweepStageLocalProfile
-        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-        n r k e =
-      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkSweepStageVector
-          (halfExtent (n + 1)) 2 su2AdjacentSweepStageProfileTail_two_pos
-          (beta n) (hbeta n)
-          (periodicHypercubicEvenSpatialSliceLinkColor
-            (halfExtent (n + 1)) e)
-          pre
-          (physicalYangMillsSU2AdjacentFineFrozenStepGroundStateJointVector
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k e =
+      ‖physicalYangMillsSU2AdjacentFineGroundStateSweepStageVector
+          (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+          n r k e pre -
+        physicalYangMillsSU2AdjacentFineGroundStateSweepStageCondExp
+          (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n e
+          (physicalYangMillsSU2AdjacentFineGroundStateSweepStageVector
             (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-            n r k) -
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2
-          (halfExtent (n + 1)) 2 su2AdjacentSweepStageProfileTail_two_pos
-          (beta n) (hbeta n)
-          (periodicHypercubicEvenSpatialSliceLinkColor
-            (halfExtent (n + 1)) e)
-          (⟨e, rfl⟩ :
-            PeriodicHypercubicEvenFixedSpatialColorLink
-              (halfExtent (n + 1))
-              (periodicHypercubicEvenSpatialSliceLinkColor
-                (halfExtent (n + 1)) e))
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkSweepStageVector
-            (halfExtent (n + 1)) 2 su2AdjacentSweepStageProfileTail_two_pos
-            (beta n) (hbeta n)
-            (periodicHypercubicEvenSpatialSliceLinkColor
-              (halfExtent (n + 1)) e)
-            pre
-            (physicalYangMillsSU2AdjacentFineFrozenStepGroundStateJointVector
-              (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-              n r k))‖ := by
-  unfold physicalYangMillsSU2AdjacentFineGroundStateSweepStageLocalProfile
+            n r k e pre)‖ := by
   exact
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialOneLinkSweepStageLocalProfile_eq_stageResidual_norm_of_canonicalPrefix
       (halfExtent (n + 1)) 2 su2AdjacentSweepStageProfileTail_two_pos
       (beta n) (hbeta n) e pre suffix
       (physicalYangMillsSU2AdjacentFineFrozenStepGroundStateJointVector
-        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-        n r k)
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k)
       hSplit hFresh
 
 /-- Model-facing adjacent input whose raw term is now the exact normalized
