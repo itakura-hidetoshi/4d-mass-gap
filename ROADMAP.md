@@ -11,40 +11,7 @@ formal/real-hilbert-uniform-coercive-strong-limit
 Latest theorem-bearing baseline before this docs refresh:
 
 ~~~text
-426ad4fe783d030a61687fbb123aca00b90a3d1d
-~~~
-
-Latest theorem-bearing branch tip contains both adjacent theorem lines:
-
-~~~text
-#5078
-Add three-mode two-functional unit-kernel lemma
-
-#5077
-Realize all SU(2) Gram-Schmidt Wilson modes as physical pairs
-
-final branch tip after #5077 merge:
-426ad4fe783d030a61687fbb123aca00b90a3d1d
-~~~
-
-Exact validation:
-
-~~~text
-#5077 head:
-  aaa6d50c2da21461a76a6a0e6e2f9ee72b518998
-#5077 PR Lean Fast Check:
-  37157037971
-  completed / success
-#5077 exact-head receipt:
-  success
-
-#5078 head:
-  61acb9b380ee3822e5574c1e9fd56e61cba5d64f
-#5078 PR Lean Fast Check:
-  37156892868
-  completed / success
-#5078 exact-head receipt:
-  success
+456825cf29e913d6a5fcd3879e59aec08f16ac9e
 ~~~
 
 Pinned environment:
@@ -54,135 +21,101 @@ Lean v4.30.0-rc2
 mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6
 ~~~
 
-The default branch main is not theorem authority.
+The default branch `main` is not theorem authority.
 
 Authority order:
 
 1. fresh exact theorem-carrier SHA;
-2. formal Lean theorem artifacts at that SHA;
+2. formal Lean artifacts at that SHA;
 3. README / ROADMAP;
 4. exact-head CI receipts;
 5. history / conversation memory.
 
-Docs-only commits are not theorem-bearing baselines.
-
 ---
 
-## 0. Executive state
+# Executive roadmap
 
-The finite-volume spectral/coercive side is substantially closed.
-
-The exact quantitative endpoint is:
+The finite natural-time gap receiver is closed:
 
 ~~~text
-1/2304 <= kappa_12(s,beta)
+1/3072 <= physical transfer gap
 
-1/3072 <= physical top-eigenspace transfer gap
+q0 = 3071/3072 < 1
 
-q0 = 3071/3072
-
-||R_n^m x|| <= q0^m ||x||
+||R_n^m x|| <= q0^m ||x||.
 ~~~
 
-with the q0 estimate extended to the full completed physical pair non-top sector.
+The old completed H1-D5 route is a formal no-go and is permanently retired.
 
-The old completed H1-D5 compatibility is formally refuted at positive SU(2) coupling.
-
-The current task is no longer to prove a vacuum-identification seam.
-
-The active route is now:
+The current H1-C3 route is:
 
 ~~~text
-three theorem-generated coherent orthonormal SU(2) pair modes (#5077)
+finite norm-one three-mode excitation
+  ->
+adjacent finite-union-marginal Krylov comparison
+  ->
+orbit-wise mismatch
+  ->
+orbit-wise geometry residual
   +
-abstract Fin-3 two-functional unit-kernel selector (#5078)
+same-volume normalized coupling residual
   ->
-instantiate two exact finite scalar constraints
+summable / geometric refinement control
   ->
-one normalized nonzero physical non-top pair at every scale
+all fixed-natural-time evolved strong limits
   ->
-existing q0^m estimate
-  ->
-projective strong limit
-  ->
-evolved projective dynamics
-  ->
-physical-time scaling
-  ->
-OS Hamiltonian / mass gap.
+continuum discrete-time q0 dynamics.
 ~~~
+
+The coupling lane has now been reduced to explicit finite Wilson data through #5112.
+
+The next implementation priority is to assemble the normalized coupling perturbation estimate from #5110/#5111/#5112.
+
+The other remaining H1-C3 input is the orbit-wise **cross-volume geometry/refinement residual**.
+
+After H1-C3, physical-time scaling H2 is a separate problem.
 
 ---
 
-## 1. Closed finite-volume quantitative route
+# A. Closed foundations
+
+## A1. Finite transfer gap — CLOSED
 
 Already formalized:
 
 - beta = 0 gap = 1;
 - positive-beta finite-volume coercivity;
-- explicit high-temperature uniform gap floor;
-- one-dimensional physical top eigenspace;
-- top-orthogonal natural-power decay;
+- explicit uniform gap floor;
+- one-dimensional finite physical top eigenspace;
 - completed pair top-top / non-top decomposition;
-- pair-top one-dimensionality;
 - full completed pair non-top q0 power decay.
 
-The explicit common factor remains
+Canonical receiver:
 
 ~~~text
-q0 = 3071/3072 < 1.
+q0 = 3071/3072.
 ~~~
 
-This part should be treated as a reusable receiver, not repeatedly reproved.
+No new H1-C3 theorem should reprove this layer.
 
 ---
 
-## 2. Projective finite-scale carrier — closed kinematics
+## A2. Projective/common finite carriers — CLOSED
 
-PRs #4993--#4998 establish the projective L2 carrier used for thermodynamic/common-scale comparison.
+The repository has:
 
-Important distinction:
+- finite projective L2 marginals;
+- common finite union marginals for adjacent scales;
+- norm-preserving finite-to-projective embeddings;
+- coherent fixed Gram--Schmidt modes.
 
-### Independent-product lane
-
-Useful for simultaneous finite-scale comparison.
-
-But fresh-coordinate centered sequences can vanish in the limit.
-
-### Projective lane
-
-Keeps compatible cylinder information across scales and supports nonzero strong limits.
-
-All current continuum-side work should stay on this projective lane.
+The active route uses these carriers only where needed and does not assume whole operator compatibility.
 
 ---
 
-## 3. Explicit finite Wilson pair route — closed
+## A3. H1-D4 — CLOSED
 
-PRs #4999--#5016 provide:
-
-- explicit SU(N) primary-plaquette Wilson modes;
-- finite physical one-slice representatives;
-- explicit ordered endpoint-pair representatives;
-- one-dimensional top eigenspace;
-- one-dimensional completed pair TopTop block;
-- q0 control on the completed non-top receiver.
-
-These modules are the finite kinematic base used by the later no-go and replacement routes.
-
----
-
-## 4. Canonical-sign OS vacuum and H1-D4 — closed
-
-### #5017/#5018
-
-The canonical-sign finite OS vacuum is identified with the concrete Wilson boundary vacuum.
-
-Its pair representative is fixed by arbitrary independent endpoint gauge transformations.
-
-### #5022--#5029
-
-The repository proves
+Formal theorem:
 
 ~~~text
 IndependentEndpointGaugeFixedPairSector
@@ -190,793 +123,853 @@ IndependentEndpointGaugeFixedPairSector
 PhysicalPairCarrier.
 ~~~
 
-Thus the canonical-sign OS vacuum pair is physical without any H1-D5 transfer compatibility.
-
-Status: CLOSED.
-
-Do not list H1-D4 as an open seam.
+Independent endpoint gauge-fixedness is not an open hypothesis.
 
 ---
 
-## 5. Old completed H1-D5 — formally refuted
+## A4. Completed H1-D5 — CLOSED NO-GO
 
-PRs #5031--#5061 show that the old completed compatibility is not a harmless technical assumption.
-
-The reduction is:
-
-~~~text
-completed H1-D5
-  ->
-literal finite Wilson identity
-  ->
-positive-half transfer power identity
-  ->
-top-orthogonal restriction = 0
-  ->
-rank-one normalized one-slab transfer
-  ->
-two-mode Gram degeneracy
-  ->
-feature-analysis kernel nontrivial.
-~~~
-
-The positive-coupling SU(2) strictness chain proves the opposite finite statement on the explicit two-mode sector.
-
-Therefore:
-
-~~~text
-beta(n) > 0
-  ->
-not H1-D5 completed compatibility at scale n.
-~~~
-
-Status: CLOSED NO-GO.
+The old compatibility implies a rank-one normalized transfer and contradicts the explicit positive-coupling SU(2) two-mode sector.
 
 Rule:
 
 ~~~text
-Do not resurrect completed H1-D5,
-vacuum/top alignment,
-or an equivalent rank-one-forcing statement.
+DO NOT reintroduce:
+  completed H1-D5
+  vacuum/top alignment
+  rank-one forcing
+  an equivalent renamed cross-scale operator identity.
 ~~~
 
 ---
 
-## 6. Post-no-go centered scalar replacement — #5063/#5064
+## A5. Three-mode finite excitation — CLOSED KINEMATICS
 
-### #5063
+The first three theorem-generated SU(2) Wilson Gram--Schmidt pair modes provide an orthonormal finite synthesis.
 
-The actual vacuum-normalized centered pair receives an exact top-pair scalar expansion.
+Two finite real functionals can be killed simultaneously by a unit vector in `R^3`.
 
-The associated excitation-level scalar compatibility is strictly weaker than H1-D5.
+Finite output:
 
-### #5064
+~~~text
+||x_n|| = 1
 
-The old SU(2) global vacuum/top alignment route is explicitly excluded.
+vacuumPairing(x_n) = 0
 
-This is an important design constraint for every later theorem.
+pairTopPairing(x_n) = 0
+
+x_n in PhysicalPairCarrier
+
+x_n in PairNonTop.
+~~~
+
+Thus finite nontriviality is built in before any continuum limit.
 
 ---
 
-## 7. Canonical projected non-top finite excitation — #5065--#5067
+# B. H1-C3 strong-limit reduction — CLOSED AS IMPLICATION
 
-### #5065
+## B1. #5090--#5097: from operator coherence to finite Cauchy defects
 
-For the actual centered finite pair, define:
-
-~~~text
-TopTop projection
-NonTop projection.
-~~~
-
-The projected vector is automatically:
+The chain is now:
 
 ~~~text
-in PhysicalPairCarrier,
-orthogonal to TopTop,
-therefore controlled by q0^m.
-~~~
-
-No transfer compatibility is assumed.
-
-### #5066
-
-Nonzero projected excitation is reduced to a nonzero finite OS-vacuum / pair-top overlap.
-
-### #5067
-
-That overlap is proved strictly positive.
-
-Hence at every finite scale:
-
-~~~text
-exists k : Fin 2,
-projected centered mode k != 0,
-and
-||S_pair^m x|| <= q0^m ||x||.
-~~~
-
-Status: CLOSED.
-
----
-
-## 8. Common projective carrier for projected modes — #5068/#5069
-
-### #5068
-
-Embed the projected non-top finite modes into one common projective continuum L2 carrier.
-
-The embedding is norm preserving.
-
-### #5069
-
-Among the two selected labels, choose one fixed label on an infinite increasing scale subsequence such that the projected mode stays nonzero.
-
-This establishes a robust finite-to-projective kinematic lane.
-
-Status: CLOSED.
-
----
-
-## 9. Strong-convergence factorization — #5070--#5074
-
-### #5070
-
-The projected common image is exactly
-
-~~~text
-centered common image
-  -
-<top common image, centered common image>
-  * top common image.
-~~~
-
-So the scalar coefficient is not an independent object.
-
-### #5071
-
-The uncentered pair common image is eventually exactly one fixed continuum mode.
-
-Thus centered convergence is reduced to:
-
-~~~text
-OS-vacuum pair common image
-+
-pair-top common image.
-~~~
-
-### #5072
-
-The canonical-sign OS-vacuum pair common image is exactly constant one at every scale.
-
-Therefore the centered common image already converges.
-
-### #5073
-
-For unit top images:
-
-~~~text
-top image -> 1 strongly
-  iff
-finite vacuum/top overlap -> 1.
-~~~
-
-This is valid but stronger than needed.
-
-### #5074
-
-Generic Hilbert lemma:
-
-~~~text
-c_n -> c,
-||t_n|| = 1,
-<t_n,c_n> -> 0
+evolved synthesis strong coherence
   ->
-c_n - <t_n,c_n> t_n -> c.
+three basis Krylov limits
+  ->
+scalar convergence
+  ->
+finite self/pair correlations
+  ->
+candidate-free Cauchy criterion
+  ->
+one finite union marginal
+  ->
+finite Cauchy defect.
 ~~~
 
-Therefore the only needed scalar input is:
+Important endpoint:
 
 ~~~text
-local projected-top coefficient -> 0.
+time-zero continuum synthesis is an isometry
+
+||A_infty,0 c|| = ||c||.
 ~~~
 
-No convergence of the moving top direction is required.
+So any unit selected coefficient produces a norm-one continuum initial vector once the Cauchy input is supplied.
 
-Status: CLOSED REDUCTION.
+Status: REDUCTION CLOSED.
 
 ---
 
-## 10. Positive-half factorization of the local coefficient — #5075/#5076
+## B2. #5098/#5099: all tails -> adjacent summability -> geometric majorant
 
-### #5075
-
-For arbitrary physical one-slice x,y:
+For every fixed natural time `m` and mode `k`:
 
 ~~~text
-<v_OS, x tensor y>
-  =
-<v_OS, omega tensor omega>
-  *
-<S_half x, y>.
+sum_n d_n^{m,k} < infinity
+  ->
+Cauchy
+  ->
+strong limit.
 ~~~
 
-This is exact and normalization free.
-
-No H1-D5 or vacuum alignment is used.
-
-### #5076
-
-For the explicit two-mode pair f_k tensor 1:
+A sufficient quantitative condition is
 
 ~~~text
-a_k
-  =
-alpha_k * delta
-  -
-gamma^2 * m_k,
+d_n^{m,k}
+  <=
+C_{m,k} q_{m,k}^n,
+
+0 <= q_{m,k} < 1.
 ~~~
 
-where
-
-~~~text
-alpha_k = <omega, f_k>,
-delta   = <omega, 1>,
-gamma   = <v_OS, omega tensor omega>,
-m_k     = <S_half f_k, 1>.
-~~~
-
-This converts the pair-Haar local coefficient into one-slice data.
-
-Status: CLOSED.
-
-Interpretation:
-
-The old conditional route could try to control the excitation part of m_k by q0 and separately control the fidelity defect involving gamma.
-
-That route remains available, but it is no longer preferred because #5077 opens a cleaner finite-dimensional construction.
+Status: FUNCTIONAL-ANALYTIC RECEIVER CLOSED.
 
 ---
 
-## 11. #5077 — all SU(2) Gram--Schmidt Wilson modes are physical pairs
+## B3. #5100--#5103: adjacent transfers on one common marginal
 
-File:
-
-~~~text
-MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2GramSchmidtPairPhysical.lean
-~~~
-
-PR #5077 proves, for every SU(2) Wilson-energy Gram--Schmidt mode k:
-
-1. the primary spatial plaquette continuous observable is defined explicitly;
-2. it is gauge invariant;
-3. it gives a physical one-slice L2 vector;
-4. the ordered endpoint-pair boundary realization is exactly decomposable;
-5. the pair belongs to the completed physical pair carrier;
-6. the whole endpoint-pair family is orthonormal in pair Haar L2.
-
-Schematically:
+Consecutive scales have common-marginal contractions
 
 ~~~text
-u_k,n in PhysicalPairCarrier
-
-<u_i,n, u_j,n> = delta_ij.
+A_n^L
+A_n^R
 ~~~
 
-This is the key new kinematic resource.
+with exact Krylov-power representation.
+
+Generic perturbation theorem:
+
+~~~text
+||A^m x - B^m y||
+  <=
+||x-y|| + m ||A-B||.
+~~~
+
+Specialized result:
+
+~~~text
+d_n^{m,k}
+  <=
+d_n^{0,k}
+  +
+m ||A_n^L - A_n^R||.
+~~~
+
+The time-zero defect is eventually exactly zero.
 
 Status: CLOSED.
 
 ---
 
-## 12. #5078 — pure three-mode two-functional selector CLOSED
+## B4. #5104: full-operator geometric route — CLOSED SUFFICIENT ROUTE
 
-PR #5078 proves the finite-dimensional theorem independently of the Yang--Mills model.
-
-File:
+If
 
 ~~~text
-MGAP4D/MathlibAnalytic/RealEuclideanFinThreeTwoFunctionalKernel.lean
+||A_n^L - A_n^R||
+  <=
+C q^n,
+
+q < 1,
 ~~~
 
-Input:
+then all fixed-natural-time strong limits exist and receive q0^m decay.
+
+This route is valid but stronger than necessary.
+
+---
+
+## B5. #5106/#5107: finite Krylov-orbit route — PREFERRED
+
+Generic one-sided telescoping:
 
 ~~~text
-two real linear functionals
-  ell_0, ell_1
-on
-  EuclideanSpace R (Fin 3).
+||A^m x - B^m y||
+  <=
+||x-y||
+  +
+sum_{r < m} ||(A-B)(B^r y)||.
 ~~~
 
-Output:
+Define
 
 ~~~text
-exists c,
-||c|| = 1,
-ell_0(c) = 0,
-ell_1(c) = 0.
+e_{n,r,k}
+  =
+||(A_n^L - A_n^R)
+  (A_n^R)^r v_{n,k}^R||.
 ~~~
 
-The proof uses pinned-mathlib rank-nullity through:
+For fixed r,k it is enough that
 
 ~~~text
-LinearMap.ker_ne_bot_of_finrank_lt
+sum_n e_{n,r,k} < infinity.
 ~~~
 
-and normalizes a nonzero common-kernel vector.
+Or quantitatively:
+
+~~~text
+e_{n,r,k}
+  <=
+C_{r,k} q_{r,k}^n,
+
+q_{r,k} < 1.
+~~~
+
+Then all fixed-natural-time evolved strong limits follow.
+
+This is the preferred H1-C3 receiver.
+
+---
+
+# C. Current model-facing split
+
+## C1. #5108: orbit mismatch -> geometry + coupling
+
+The exact preferred split is
+
+~~~text
+e_{n,r,k}
+  <=
+g_{n,r,k}
+  +
+c_n.
+~~~
+
+Here:
+
+~~~text
+g_{n,r,k}
+  =
+orbit-wise cross-volume geometry/refinement residual,
+
+c_n
+  =
+same-fine-volume normalized physical pair-transfer coupling residual.
+~~~
+
+This is the current core decomposition.
+
+The geometry term is vector-wise.
+
+The coupling term is same-volume.
+
+This is much weaker than any global cross-scale transfer compatibility.
+
+---
+
+# D. Coupling lane — actual Wilson data
+
+## D1. #5109 — one-slab kernel beta response CLOSED
+
+For
+
+~~~text
+K_beta(A,B)
+  =
+exp(-beta S_slab(A,B)),
+~~~
+
+the repository proves
+
+~~~text
+||K_gamma(A,B) - K_beta(A,B)||
+  <=
+B_H ||gamma-beta||,
+~~~
+
+where `B_H` is the explicit finite-volume global Wilson action budget.
+
+No new physical assumption enters.
 
 Status: CLOSED.
 
-### 12.1 Immediate model-facing instantiation
+---
 
-Use the first three #5077 physical pair modes:
+## D2. #5110 — pair kernel and raw pair transfer response CLOSED
+
+For the ordered-pair kernel:
 
 ~~~text
-u_0,n
-u_1,n
-u_2,n.
+K2_beta = K_beta * K_beta.
 ~~~
 
-Define the synthesis
+Formal result:
 
 ~~~text
-Syn_n(c)
+||K2_gamma - K2_beta||
+  <=
+2 B_H ||gamma-beta||.
+~~~
+
+The same coefficient is lifted to:
+
+- product-Haar L2 kernel norm;
+- raw ambient ordered-pair transfer operator norm.
+
+The square Hilbert--Schmidt kernel-to-operator map is formalized as 1-Lipschitz.
+
+Status: CLOSED.
+
+---
+
+## D3. #5111 — normalization denominator floor CLOSED
+
+Define the explicit global floor
+
+~~~text
+m_H(beta)
   =
-sum k : Fin 3, c_k * u_k,n.
+exp(-beta B_H).
 ~~~
 
-Prove from #5077 orthonormality:
+Formal results:
 
 ~~~text
-||Syn_n(c)|| = ||c||.
+m_H(beta)
+  <=
+<T_phys 1,1>
+  <=
+||T_phys(beta)||,
 ~~~
 
-Define the two functionals required by #5078:
+hence
 
 ~~~text
-Vac_n(c)
-  =
-<v_OS,n, Syn_n(c)>
-
-Top_n(c)
-  =
-<Omega_pair,n, Syn_n(c)>.
+||T_phys(beta)||^(-1)
+  <=
+m_H(beta)^(-1),
 ~~~
 
-Apply #5078 to obtain c_n with
+and
 
 ~~~text
-||c_n|| = 1
-Vac_n(c_n) = 0
-Top_n(c_n) = 0.
+(||T_phys(beta)||^2)^(-1)
+  <=
+(m_H(beta)^2)^(-1).
 ~~~
+
+This supplies a quantitative denominator certificate for normalized physical pair transfer.
+
+Status: CLOSED.
+
+---
+
+## D4. #5112 — physical transfer norm variation CLOSED
+
+Formal results:
+
+~~~text
+||T_phys(gamma) - T_phys(beta)||
+  <=
+B_H ||gamma-beta||,
+~~~
+
+and
+
+~~~text
+|||T_phys(gamma)|| - ||T_phys(beta)|||
+  <=
+B_H ||gamma-beta||.
+~~~
+
+This is the numerator needed to estimate variation of the inverse-square normalization scalar.
+
+Status: CLOSED.
+
+---
+
+# E. Immediate next theorem sequence
+
+## E1. Normalization scalar beta variation — NEXT
 
 Set
 
 ~~~text
-x_n = Syn_n(c_n).
+t_beta = ||T_phys(beta)||
+
+a_beta = t_beta^(-2).
 ~~~
 
-Target finite package:
+Use:
 
-~~~text
-||x_n|| = 1
-<v_OS,n,x_n> = 0
-<Omega_pair,n,x_n> = 0
-x_n in PhysicalPairCarrier
-x_n in PairNonTop
-||S_pair,n^m x_n|| <= q0^m.
-~~~
-
-Because the vacuum pairing is zero, finite vacuum-centering leaves x_n unchanged.
-
-Because pair TopTop is one-dimensional, pair-top scalar orthogonality gives exact non-top membership.
-
-This is now the immediate theorem target.
-
-## 13. Projective limit of the scale-dependent three-mode selector
-
-The coefficient vector now depends on scale.
-
-So fixed-label projective coherence alone is not sufficient.
-
-However:
-
-~~~text
-||ĉ_n|| = 1
-~~~
-
-places every coefficient vector on the compact unit sphere in R^3.
-
-### 13.1 coefficient subsequence
-
-Use finite-dimensional compactness / Bolzano--Weierstrass to obtain:
-
-~~~text
-exists phi : N -> N,
-StrictMono phi,
-ĉ_(phi j) -> c_infinity,
-||c_infinity|| = 1.
-~~~
-
-Pinned mathlib contains sequence compactness tools such as:
-
-~~~text
-IsSeqCompact
-tendsto_subseq_of_bounded
-~~~
-
-Either route is acceptable.
-
-### 13.2 coherent continuum modes
-
-The existing SU(2) Gram--Schmidt cylinder/readout machinery gives a fixed continuum projective mode U_k for every fixed k.
-
-Use only k = 0,1,2.
-
-### 13.3 synthesis convergence
-
-Show:
-
-~~~text
-Embed(x_(phi j))
-  =
-sum k<3, ĉ_(phi j,k) U_k
-~~~
-
-eventually / exactly at containing scales.
-
-Then continuity of finite sums gives:
-
-~~~text
-Embed(x_(phi j))
-  ->
-y =
-sum k<3, c_infinity,k U_k.
-~~~
-
-### 13.4 nonzero limit
-
-Because U_0,U_1,U_2 are orthonormal and ||c_infinity|| = 1:
-
-~~~text
-||y|| = 1.
-~~~
-
-Thus:
-
-~~~text
-y != 0.
-~~~
-
-This should give the cleanest current nonzero projective initial excitation.
-
----
-
-## 14. Why three modes are preferable to two
-
-With two modes one can always solve one scalar top-orthogonality equation.
-
-But after vacuum centering, the selected one-dimensional kernel can in principle coincide with a vacuum direction and collapse to zero.
-
-Three modes allow two exact scalar conditions simultaneously:
-
-~~~text
-vacuum pairing = 0
-pair-top pairing = 0.
-~~~
-
-The remaining kernel still has dimension at least one.
-
-Therefore nonzero norm can be guaranteed before centering.
-
-This is the dimensional reason for the #5077 extension from two modes to the full Gram--Schmidt family.
-
----
-
-## 15. Relation to #5074--#5076
-
-The local coefficient route remains mathematically correct.
-
-It is useful for:
-
-- diagnostics;
-- quantitative estimates;
-- comparing fixed-mode and moving-combination approaches;
-- possible later bounds on selected coefficient families.
-
-But the three-mode kernel route should not require:
-
-~~~text
-gamma_n -> 1
-~~~
-
-or any equivalent global vacuum/top fidelity statement.
-
-If the three-mode route closes cleanly, #5074--#5076 become supporting structure rather than the main seam.
-
----
-
-## 16. H1-C3: evolved projective dynamics remains open
-
-Even after a nonzero initial strong limit y is built, one still needs the evolved states.
-
-For fixed natural time m define finite evolved states:
-
-~~~text
-z_n,m = S_pair,n^m x_n.
-~~~
-
-Known:
-
-~~~text
-||z_n,m|| <= q0^m.
-~~~
-
-Unknown:
-
-- do the z_n,m have coherent projective images?
-- do they have strong limits along the same subsequence?
-- are the limits compatible in m?
-- do they define one bounded operator T on the continuum excitation space?
-- is T symmetric/self-adjoint in the required sense?
+- positivity of `t_beta`;
+- #5111 lower floor `m_H(beta) <= t_beta`;
+- #5112 bound on `|t_gamma - t_beta|`.
 
 Target:
 
 ~~~text
-Embed(z_n,m) -> T^m y
-
-and
-
-||T^m y|| <= q0^m ||y||.
+|a_gamma - a_beta|
+  <=
+explicit coefficient
+    (B_H, m_H(beta), m_H(gamma), ...)
+  *
+||gamma-beta||.
 ~~~
 
-This is the next genuinely dynamical bridge.
+Prefer an algebraic theorem that cleanly separates the scalar estimate from the Wilson specialization.
+
+Avoid asking Lean to expand huge continuous-linear-map terms inside inverse-square arithmetic.
 
 ---
 
-## 17. Do not overclaim from finite q0
+## E2. Normalized physical pair-transfer beta perturbation — NEXT
 
-The statement
+Write
 
 ~~~text
-||S_n^m x_n|| <= q0^m
+P_beta = raw physical pair transfer
+
+S_beta = a_beta P_beta.
 ~~~
 
-is a finite discrete-time estimate.
+Use
 
-It does not yet prove:
+~~~text
+S_gamma - S_beta
+  =
+a_gamma (P_gamma - P_beta)
+  +
+(a_gamma - a_beta) P_beta.
+~~~
 
-- existence of a continuum transfer operator;
-- strong continuity in physical time;
-- a continuum Hamiltonian;
-- a positive physical mass.
+Available ingredients:
 
-Every README / paper statement must preserve this distinction.
+~~~text
+||P_gamma - P_beta||
+  <=
+2 B_H ||gamma-beta||              #5110
+
+a_gamma
+  <=
+m_H(gamma)^(-2)                   #5111
+
+|a_gamma-a_beta|
+  <=
+target from E1                    E1
+
+||P_beta||
+  <=
+existing finite pair contraction
+~~~
+
+Target:
+
+~~~text
+||S_gamma - S_beta||
+  <=
+C_norm(H,beta,gamma)
+  *
+||gamma-beta||.
+~~~
+
+This theorem should be stated directly for the normalized physical pair transfer used by #5108.
 
 ---
 
-## 18. H2: spacing-scaled physical time
+## E3. Specialize to adjacent lattice scales — NEXT
 
-If lattice spacing a_n tends to zero, a fixed q0 gives
+Set
+
+~~~text
+H_n = halfExtent(n+1)
+
+beta_left  = beta(n)
+
+beta_right = beta(n+1).
+~~~
+
+Then derive
+
+~~~text
+c_n
+  <=
+C_norm(H_n,beta(n),beta(n+1))
+  *
+||beta(n+1)-beta(n)||.
+~~~
+
+This converts the #5108 coupling residual into an explicit scalar sequence.
+
+---
+
+## E4. Coupling summability criterion — NEXT
+
+Prove reusable receivers such as:
+
+~~~text
+sum_n
+  C_norm(H_n,beta_n,beta_{n+1})
+  *
+||beta_{n+1}-beta_n||
+< infinity
+
+  ->
+sum_n c_n < infinity.
+~~~
+
+And, where possible:
+
+~~~text
+C_norm(...) * ||Delta beta_n||
+  <=
+C q^n
+
+  ->
+geometric coupling summability.
+~~~
+
+This closes the coupling half of #5108 under explicit scale assumptions.
+
+---
+
+# F. Geometry lane — main remaining H1-C3 model obstruction
+
+## F1. Orbit-wise geometry residual
+
+The remaining cross-volume object is
+
+~~~text
+g_{n,r,k}.
+~~~
+
+It compares the coarse/fine common-marginal transfer at one frozen coupling only on
+
+~~~text
+(A_n^R)^r v_{n,k}^R.
+~~~
+
+Required target:
+
+~~~text
+sum_n g_{n,r,k} < infinity
+~~~
+
+for every fixed r,k,
+
+or the stronger convenient estimate
+
+~~~text
+g_{n,r,k}
+  <=
+C_{r,k} q_{r,k}^n.
+~~~
+
+This should be attacked from the actual refinement/projective Wilson structure.
+
+Do **not** replace it by a full common-transfer operator-norm convergence assumption unless it can be theorem-generated from the model.
+
+---
+
+## F2. Possible refinement strategy
+
+Preferred order:
+
+1. identify exactly which finite Wilson coordinates the fixed orbit vector uses;
+2. isolate the additional coordinates introduced from n to n+1;
+3. exploit projective/cylinder consistency only on those coordinates;
+4. quantify the residual created by projection/compression;
+5. prove fixed-r finite-depth locality;
+6. derive scale decay or eventual exactness if available.
+
+The fixed orbit depth r is crucial: H1-C3 does not currently require a bound uniform in all Krylov depths.
+
+---
+
+# G. Close actual H1-C3 once E + F are available
+
+Given:
+
+~~~text
+sum_n g_{n,r,k} < infinity
+
+sum_n c_n < infinity,
+~~~
+
+#5108 gives:
+
+~~~text
+sum_n e_{n,r,k} < infinity.
+~~~
+
+Then #5106 gives, for every fixed natural time m,k:
+
+~~~text
+sum_n d_n^{m,k} < infinity.
+~~~
+
+Then #5098/#5096 give Cauchy and strong limits.
+
+The continuum synthesis remains norm-one at time zero by #5097.
+
+The fixed-natural-time q0 receiver then yields
+
+~~~text
+||z_infty,m|| <= q0^m
+~~~
+
+for the theorem-generated limiting excitation.
+
+At this stage H1-C3 existence of all fixed natural-time evolved vectors is model-facing closed.
+
+A further theorem should then package compatibility in m into a single discrete-time continuum transfer where justified.
+
+---
+
+# H. Discrete-time operator identification
+
+After fixed-m limits exist, verify:
+
+1. same chosen subsequence works for all required fixed m, or use a diagonal construction;
+2. limits respect the finite semigroup recursion;
+3. define a continuum operator T on the generated excitation subspace;
+4. prove
+   ~~~text
+   z_infty,m = T^m z_infty,0;
+   ~~~
+5. prove contraction / q0 estimate on the generated non-top sector.
+
+Do not assert a continuum operator before this compatibility step is formalized.
+
+---
+
+# I. H2 — physical-time scaling
+
+H2 is not solved by fixed q0.
+
+For lattice spacing `a_n -> 0`:
 
 ~~~text
 q0^floor(t/a_n) -> 0
 ~~~
 
-for every fixed t > 0.
+for every fixed positive physical time.
 
-Therefore q0 by itself corresponds to instantaneous collapse under naive physical-time scaling.
-
-A nontrivial physical semigroup requires a scale-sensitive rate, for example:
+A nontrivial continuum semigroup requires a spacing-sensitive rate, for example
 
 ~~~text
-q_n =
+q_n
+  =
 exp(-m_n a_n + o(a_n)).
 ~~~
 
-Equivalent formulations may use:
+Possible formal interfaces:
 
-- transfer logarithms;
-- rescaled Dirichlet forms;
-- Poincare inequalities;
-- generator lower bounds.
+- transfer logarithm;
+- rescaled Dirichlet form;
+- Poincare lower bound;
+- generator lower bound;
+- direct semigroup convergence.
 
-Existing repository modules for physical-time rate extraction should be used only after H1-C3 produces actual continuum dynamics.
+H2 begins only after H1-C3 supplies actual continuum discrete-time dynamics.
 
 ---
 
-## 19. H3: OS reconstruction
+# J. H3 — OS Hamiltonian
 
-After H1/H2 produce model data, required output is:
+Required outputs:
 
 - continuum physical Hilbert space;
 - normalized vacuum;
 - strongly continuous contraction semigroup;
 - symmetry / self-adjointness;
-- closed Hamiltonian;
+- closed nonnegative Hamiltonian;
 - identified vacuum-orthogonal excitation sector.
 
-Much generic functional analysis is already formalized.
+Generic operator-theoretic infrastructure exists.
 
-The remaining issue is model-facing input.
+The missing work is the actual model bridge.
 
 ---
 
-## 20. H4: spectral / Wightman mass gap
+# K. H4 — spectral / Wightman mass gap
 
 Final intended route:
 
 ~~~text
-finite coercivity
+finite Wilson coercivity
   ->
-finite exact non-top excitation
+finite norm-one non-top excitation
   ->
-nonzero projective strong limit
+projective evolved strong limits
   ->
-projective evolved dynamics
+continuum discrete-time transfer
   ->
 physical-time scaling
   ->
 OS Hamiltonian
   ->
-spectral lower bound above vacuum
+vacuum-orthogonal spectral lower bound
+  ->
+positive physical mass
   ->
 Wightman / energy-momentum mass gap.
 ~~~
 
-No current theorem claims the final step is complete.
+No current theorem claims this final chain is complete.
 
 ---
 
-## 21. Lean implementation guidance
+# L. Lean implementation rules
 
-Repository-specific lessons to preserve:
+## L1. Exact environment
 
-### Exact environment
-
-Use:
+Always use the pinned environment:
 
 ~~~text
 Lean v4.30.0-rc2
 mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6
 ~~~
 
-Current-master theorem names are only hints.
+Current mathlib master is only a hint.
 
-Pinned mathlib is authoritative.
+---
 
-### Full-file audit
+## L2. Full-file CI repair
 
 When CI fails:
 
-- inspect every error in the changed file;
-- do not patch only the first line;
-- inspect neighboring theorem signatures;
-- identify whether failure is mathematical, coercional, or elaborational.
+- inspect the entire changed file;
+- inspect all diagnostics, not only the first red line;
+- distinguish parser, elaboration, coercion, typeclass, and mathematical failures;
+- re-read neighboring theorem signatures;
+- prefer smaller proof terms over heartbeat increases.
 
-### Section variables
+---
 
-Lean resolves theorem headers before processing the proof body.
+## L3. Typeclass synthesis lessons from #5105/#5106/#5111/#5112
 
-If a section parameter does not occur in a result type strongly enough to infer it, pass it explicitly:
+Repeated failure mode:
 
 ~~~text
-(halfExtent := halfExtent)
+failed to synthesize SeminormedAddGroup / Nontrivial
+for a huge ContinuousLinearMap type
+deterministic timeout.
 ~~~
 
-### Rewriting through coercions
+Preferred repairs:
 
-If rw cannot see the intended occurrence:
+- avoid `simpa [huge definitions]`;
+- use `change` to expose the real scalar/order target;
+- fully apply `ContinuousLinearMap.opNorm_le_bound`;
+- reuse an existing positivity theorem instead of `norm_nonneg _` when `_` forces reconstruction of a huge operator type;
+- use `simpa only` for final scalar rewrites;
+- keep operator-valued and scalar-valued proof phases separate.
 
-- prefer exact theorem terms;
-- prefer simpa only using;
-- expose the exact coercion boundary;
-- avoid relying on pretty-printed syntactic similarity.
+Do not solve this class of problem by simply increasing heartbeats.
 
-### Definitional aliases
+---
 
-Avoid brittle change when crossing several named aliases.
+## L4. Section-variable pruning
 
-Prefer:
+Lean only retains section variables that appear in the generated declaration signature.
 
-- unfold the exact wrapper definitions;
-- then apply the core theorem.
+Therefore:
 
-### CI
+- do not assume every section variable is an explicit theorem argument;
+- use named arguments such as
+  ~~~text
+  (halfExtent := halfExtent)
+  ~~~
+  where needed;
+- inspect the actual theorem signature after pruning.
 
-For theorem-bearing PRs:
+---
 
-- require exact-head PR Lean Fast Check success;
-- require matching exact-head receipt success.
+## L5. CI merge rules
+
+For theorem-bearing PRs require:
+
+~~~text
+exact head unchanged
++
+PR Lean Fast Check success
++
+matching exact-head receipt success.
+~~~
 
 For docs-only PRs:
 
-- do not rerun strict Lean merely because README / ROADMAP changed.
+- strict Lean rerun is unnecessary if no Lean file changed;
+- docs-only commits do not become the theorem-bearing authority.
 
 ---
 
-## 22. Recent milestone ledger
+# M. Recent milestone ledger
 
-| PR | Status | Main result |
+| PR | Status | Contribution |
 | --- | --- | --- |
-| #5029 | merged | independent gauge-fixed pair sector = physical pair carrier |
-| #5038 | merged | H1-D5 forces one-slab power identity |
-| #5041 | merged | H1-D5 forces rank-one normalized transfer |
-| #5045 | merged | two-mode feature-kernel obstruction |
-| #5058 | merged | positive-coupling strict bare crossing Gram |
-| #5059 | merged | continuous SU(2) two-mode span = span{1,r} |
-| #5061 | merged | completed H1-D5 no-go |
-| #5063 | merged | centered-pair scalar replacement |
-| #5064 | merged | old vacuum/top alignment route excluded |
-| #5065 | merged | canonical projected physical non-top excitation |
-| #5066 | merged | projected nonzero reduced to vacuum/top overlap |
-| #5067 | merged | finite projected excitation nonzero |
-| #5068 | merged | common projective embedding |
-| #5069 | merged | fixed nonzero mode on infinite subsequence |
-| #5070 | merged | projected strong-convergence factorization |
-| #5071 | merged | centered convergence reduced to vacuum/top common images |
-| #5072 | merged | OS vacuum pair common image = constant one |
-| #5073 | merged | pair-top convergence iff vacuum/top overlap -> 1 |
-| #5074 | merged | local top-coefficient criterion |
-| #5075 | merged | OS-vacuum coefficient factorization through normalized half transfer |
-| #5076 | merged | exact one-slice local top coefficient formula |
-| #5077 | merged | all SU(2) Gram--Schmidt modes realized as physical orthonormal endpoint pairs |
-| #5078 | merged | abstract Euclidean Fin 3 two-functional unit-kernel selector |
+| #5090 | merged | reduce evolved limits to three-mode synthesis coherence |
+| #5091 | merged | reduce to three Krylov basis limits |
+| #5092 | merged | scalar convergence criterion |
+| #5093 | merged | 2m-step self-correlation identity |
+| #5094 | merged | Cauchy construction without prechosen continuum vector |
+| #5095 | merged | pair correlations moved to finite union marginals |
+| #5096 | merged | common-marginal Cauchy defect |
+| #5097 | merged | time-zero continuum synthesis isometry |
+| #5098 | merged | summable adjacent defects |
+| #5099 | merged | geometric adjacent defect route |
+| #5100 | merged | contraction-power perturbation |
+| #5101 | merged | time-zero adjacent defect eventually zero |
+| #5102 | merged | adjacent common-marginal transfers |
+| #5103 | merged | adjacent defect <= time-zero + m operator mismatch |
+| #5104 | merged | geometric full operator mismatch receiver |
+| #5105 | merged | operator mismatch split into geometry + coupling |
+| #5106 | merged | finite Krylov-orbit telescoping route |
+| #5107 | merged | geometric orbit mismatch receiver |
+| #5108 | merged | orbit-wise geometry + coupling split |
+| #5109 | merged | exact one-slab kernel beta-Lipschitz |
+| #5110 | merged | pair kernel/L2/raw pair transfer beta-Lipschitz |
+| #5111 | merged | explicit normalization floor and inverse-square bound |
+| #5112 | merged | physical transfer/operator-norm beta response |
 
 ---
 
-## 23. Immediate implementation sequence
+# N. Immediate implementation order
 
-### G1 — three-mode synthesis
+## N1 — inverse-square normalization variation
 
-Create the finite linear synthesis of the first three #5077 pair modes and prove its norm formula from orthonormality.
+Prove a scalar lemma and specialize to the physical transfer norm.
 
-### G2 — instantiate #5078
+## N2 — normalized pair-transfer beta perturbation
 
-Define the vacuum-pairing and pair-top-pairing linear functionals on Euclidean Fin 3 and feed them directly to RealEuclideanFinThreeTwoFunctionalKernel.
+Combine #5110/#5111/#5112.
 
-### G3 — exact finite non-top unit excitation
+## N3 — adjacent-scale coupling residual
 
-Synthesize x_n and prove:
+Specialize N2 to `beta(n)` and `beta(n+1)`.
 
-~~~text
-||x_n|| = 1
-<v_OS,n,x_n> = 0
-<Omega_pair,n,x_n> = 0
-x_n in PhysicalPairCarrier
-x_n in PairNonTop.
-~~~
+## N4 — coupling summability/geometric criterion
 
-### G4 — q0 receipt
+Feed N3 into #5108.
 
-Apply the existing completed pair non-top power theorem:
+## N5 — orbit-wise geometry refinement estimate
 
-~~~text
-||S_pair,n^m x_n|| <= q0^m.
-~~~
+Attack `g_{n,r,k}` from actual finite Wilson/projective refinement data.
 
-### G5 — coefficient compactness
+## N6 — actual H1-C3 strong limits
 
-Extract a convergent unit coefficient subsequence in R^3.
+Use #5108 -> #5106 -> #5098/#5096.
 
-### G6 — projective synthesis convergence
+## N7 — continuum discrete-time transfer identification
 
-Transport the three fixed coherent Gram--Schmidt modes and show the selected combinations converge strongly.
+Package fixed-m limits into one operator where the semigroup identities permit it.
 
-### G7 — nonzero continuum excitation
+## N8 — H2 physical-time scaling
 
-Prove the limit has norm one.
+Introduce spacing-sensitive rates.
 
-### G8 — evolved projective coherence
+## N9 — OS Hamiltonian and spectral mass gap
 
-Begin H1-C3 with the same selected subsequence.
-
-This is the preferred next formalization order.
+Only after H1/H2 model data exist.
 
 ---
 
-## 24. Restart instructions
+# O. Restart instructions
 
 Freshly re-observe:
 
@@ -984,52 +977,64 @@ Freshly re-observe:
 formal/real-hilbert-uniform-coercive-strong-limit
 ~~~
 
-Then inspect:
+Expected theorem-bearing baseline at this docs checkpoint:
 
-1. MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2GramSchmidtPairPhysical.lean
-2. MGAP4D/MathlibAnalytic/RealEuclideanFinThreeTwoFunctionalKernel.lean
-3. MGAP4D/MathlibAnalytic/SpecialUnitaryTwoWilsonEnergyHaarL2GramSchmidt.lean
-4. MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2PrimaryPlaquetteGramSchmidtCylinder.lean
-5. MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2PrimaryPlaquetteGramSchmidtPointwiseCoherentReadout.lean
-6. MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonVacuumNormalizedProjectedLocalTopCoefficientCriterion.lean
-7. MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonVacuumNormalizedPairPositiveHalfTransferRatio.lean
-8. MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonVacuumNormalizedLocalTopOneSliceFormula.lean
-9. the full completed physical pair non-top q0 power-decay theorem from #5006.
+~~~text
+456825cf29e913d6a5fcd3879e59aec08f16ac9e
+~~~
+
+but fresh GitHub state always takes precedence.
+
+Read first:
+
+1. `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferNormalizationFloor.lean` — #5111
+2. `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaLipschitz.lean` — #5112
+3. `PeriodicHypercubicEvenSpecialUnitaryOneSlabPairBetaLipschitz.lean` — #5110
+4. `PeriodicHypercubicEvenSpecialUnitaryOneSlabKernelBetaLipschitz.lean` — #5109
+5. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentOrbitMismatchSplit.lean` — #5108
+6. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentOrbitGeometric.lean` — #5107
+7. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentOrbitMismatch.lean` — #5106
+8. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentCommonTransfer.lean` — #5102
+9. `ContinuousLinearMapContractionPowerPerturbation.lean` — #5100
 
 Current handoff:
 
 ~~~text
 CLOSED:
-  finite q0
-  full completed pair non-top q0
-  top and pair-top simplicity
+  finite q0 receiver
   H1-D4
   completed H1-D5 no-go
-  finite nonzero projected excitation
-  projective embedding
-  vacuum common image = one
-  local coefficient criterion
-  half-transfer/local coefficient factorization
-  infinite SU(2) Gram--Schmidt physical orthonormal pair family
+  finite norm-one three-mode non-top excitation
+  time-zero continuum nontriviality
+  adjacent-defect Cauchy receiver
+  common-marginal transfer representation
+  orbit-wise telescoping receiver
+  orbit geometry/coupling split
+  one-slab beta Lipschitz
+  raw pair-transfer beta Lipschitz
+  explicit normalization floor
+  physical transfer-norm beta Lipschitz
 
 NEXT:
-  instantiate #5078 on the three #5077 pair modes
+  normalized pair-transfer beta perturbation
   ->
-  unit exact non-top pair at every scale
+  explicit adjacent coupling residual
   ->
-  q0
-  ->
-  coefficient compactness
-  ->
-  nonzero projective strong limit
+  coupling summability
+
+PARALLEL / NEXT:
+  orbit-wise cross-volume geometry estimate
 
 THEN:
-  evolved projective dynamics
+  actual H1-C3 fixed-time strong limits
+  ->
+  continuum discrete-time transfer
 
 THEN:
-  physical-time scaling
+  H2 spacing-scaled physical time
 
 LATER:
   OS Hamiltonian
+  ->
   spectral / Wightman mass gap.
 ~~~
