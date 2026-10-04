@@ -191,10 +191,10 @@ theorem
                 Q R L hInvariant (phi j) m)
             atTop
             (𝓝
-              ((continuumTransfer Q R L
+              ((PhysicalYangMillsSU2ProjectivePairTransferOperatorBridgeInput.continuumTransfer Q R L
                   (toProjectivePairTransferOperatorBridgeInput Q R L C) ^ m) y)) := by
   exact
-    physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice_exists_sameSubsequence_evolved_strong_limits
+    PhysicalYangMillsSU2ProjectivePairTransferOperatorBridgeInput.physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice_exists_sameSubsequence_evolved_strong_limits
       Q R L
       (toProjectivePairTransferOperatorBridgeInput Q R L C)
       hInvariant G
@@ -225,13 +225,13 @@ theorem
                   Q R L hInvariant (phi j) m)
               atTop
               (𝓝
-                ((continuumTransfer Q R L
+                ((PhysicalYangMillsSU2ProjectivePairTransferOperatorBridgeInput.continuumTransfer Q R L
                     (toProjectivePairTransferOperatorBridgeInput Q R L C) ^ m) y)) ∧
-            ‖(continuumTransfer Q R L
+            ‖(PhysicalYangMillsSU2ProjectivePairTransferOperatorBridgeInput.continuumTransfer Q R L
                 (toProjectivePairTransferOperatorBridgeInput Q R L C) ^ m) y‖ ≤
               GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformTopOrthogonalContractionFactor ^ m := by
   exact
-    physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice_exists_continuumDiscreteTime_q0
+    PhysicalYangMillsSU2ProjectivePairTransferOperatorBridgeInput.physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice_exists_continuumDiscreteTime_q0
       Q R L
       (toProjectivePairTransferOperatorBridgeInput Q R L C)
       hInvariant G s hs hcut
