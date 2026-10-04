@@ -212,7 +212,6 @@ theorem physicalYangMillsSU2ThreeModeEvolvedProjectiveSynthesis_norm_le
           (halfExtent n) c‖ := by
           exact
             periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier_normalizedTransfer_pow_norm_le_one
-              Q R L
               (halfExtent n) m (beta n) (hbeta n)
               (periodicHypercubicEvenPrimarySpatialPlaquetteWilsonEnergyGramSchmidtPairFinThreeSynthesis
                 (halfExtent n) c)
