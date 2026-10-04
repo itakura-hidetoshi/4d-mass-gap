@@ -190,6 +190,8 @@ variable
       PhysicalYangMillsSU2ThreeModeKrylovPairCorrelationCauchyInput
         Q R L)
 
+include C
+
 /-- The projective Krylov norm-square converges to the same scalar through the
 #5093 exact self-correlation identity. -/
 theorem normSq_tendsto
