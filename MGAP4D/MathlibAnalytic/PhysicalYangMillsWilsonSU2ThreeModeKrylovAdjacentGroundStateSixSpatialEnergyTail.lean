@@ -92,6 +92,9 @@ theorem finSix_single_residual_sq_le_six_mul_normalizedResidualEnergy
         ∑ d : Fin 6, ‖x - P d x‖ ^ 2 := hterm
     _ = 6 * groundStateJointColorNormalizedResidualEnergy P x := by
       unfold groundStateJointColorNormalizedResidualEnergy
+      have hcard : (Fintype.card (Fin 6) : ℝ) = 6 := by
+        norm_num
+      rw [hcard]
       ring
 
 section GroundStateSixSpatialEnergyTail
