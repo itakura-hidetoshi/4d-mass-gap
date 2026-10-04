@@ -75,7 +75,7 @@ local instance groundStateProfileBCFClosureGaugePseudoMetrizableSpace
   change TopologicalSpace.PseudoMetrizableSpace
     {U : Matrix (Fin N) (Fin N) ℂ |
       U ∈ Matrix.specialUnitaryGroup (Fin N) ℂ}
-  infer_instance
+  exact TopologicalSpace.PseudoMetrizableSpace.subtype _
 
 local instance groundStateProfileBCFClosureSpatialConfigurationPseudoMetrizableSpace
     (H N : ℕ) :
