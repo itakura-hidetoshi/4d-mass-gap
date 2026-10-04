@@ -546,19 +546,20 @@ theorem continuumTransfer_intertwines_pairTransfer
         (halfExtent n) 2 specialUnitaryTwoWilsonRankPositive
         (beta n) (hbeta n) x)]
   unfold continuumTransfer
-  rw [
-    EuclideanYangMillsProjectiveLimitL2CofinalOperatorSystem.continuumOperator_intertwines_selected
-      (toCofinalOperatorSystem Q R L C) n
-      (physicalYangMillsSU2PairHaarProjectiveFiniteEmbedding Q R n x)]
-  change
-    L.finiteMarginalL2Pullback (R.marginalIndex n)
-        (physicalYangMillsSU2CanonicalSelectedMarginalPairTransferOperator
-          Q R n
-          (physicalYangMillsSU2PairHaarProjectiveFiniteEmbedding Q R n x)) =
-      _
-  rw [
-    physicalYangMillsSU2CanonicalSelectedMarginalPairTransferOperator_apply_embedding
-      Q R n x]
+  calc
+    _ =
+        L.finiteMarginalL2Pullback (R.marginalIndex n)
+          (physicalYangMillsSU2CanonicalSelectedMarginalPairTransferOperator
+            Q R n
+            (physicalYangMillsSU2PairHaarProjectiveFiniteEmbedding Q R n x)) := by
+      simpa only [toCofinalOperatorSystem] using
+        (EuclideanYangMillsProjectiveLimitL2CofinalOperatorSystem.continuumOperator_intertwines_selected
+          (toCofinalOperatorSystem Q R L C) n
+          (physicalYangMillsSU2PairHaarProjectiveFiniteEmbedding Q R n x))
+    _ = _ := by
+      rw [
+        physicalYangMillsSU2CanonicalSelectedMarginalPairTransferOperator_apply_embedding
+          Q R n x]
 
 theorem continuumTransfer_pow_intertwines_pairTransfer
     (n m : ℕ)
