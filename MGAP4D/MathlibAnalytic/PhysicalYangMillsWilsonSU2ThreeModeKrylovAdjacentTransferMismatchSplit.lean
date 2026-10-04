@@ -215,7 +215,7 @@ theorem physicalYangMillsSU2AdjacentCommonTransferMismatch_le_geometry_add_coupl
       rw [← physicalYangMillsSU2AdjacentCommonRightTransferAtCoupling_beta_succ
         Q R n]
       exact
-        add_le_add_left
+        add_le_add_right
           (physicalYangMillsSU2AdjacentCommonRightTransferAtCoupling_norm_sub_le
             Q R n (beta n) (beta (n + 1)) (hbeta n) (hbeta (n + 1)))
           ‖physicalYangMillsSU2AdjacentCommonLeftTransfer Q R n -
