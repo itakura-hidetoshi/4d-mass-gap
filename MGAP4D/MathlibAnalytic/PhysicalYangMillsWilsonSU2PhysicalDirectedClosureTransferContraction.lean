@@ -107,7 +107,7 @@ private theorem norm_add_le_norm_add_of_orthogonal_right_norm_le
   rw [
     norm_add_sq_eq_norm_sq_add_norm_sq_real htn',
     norm_add_sq_eq_norm_sq_add_norm_sq_real htn]
-  exact
+  simpa [add_comm] using
     add_le_add_left
       (mul_self_le_mul_self (norm_nonneg n') hn)
       (‖t‖ * ‖t‖)
@@ -528,12 +528,12 @@ theorem
       unfold
         physicalYangMillsVacuumNormalizedSU2ThreeModeEvolvedProjectiveContinuumImage
       exact
-        (continuumTransfer_pow_intertwines_physicalPairTransfer
+        continuumTransfer_pow_intertwines_physicalPairTransfer
           Q R L C hInvariant G (phi j) m
           (physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice
             Q hInvariant (phi j))
           (physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice_mem_physicalPairCarrier
-            Q hInvariant (phi j))).symm
+            Q hInvariant (phi j))
   refine ⟨hStrong, ?_⟩
   exact
     physicalYangMillsVacuumNormalizedSU2ThreeModeEvolvedProjectiveStrongLimit_norm_le_uniform_q0
