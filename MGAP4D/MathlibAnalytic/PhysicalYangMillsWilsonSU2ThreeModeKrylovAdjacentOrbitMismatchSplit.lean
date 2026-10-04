@@ -25,7 +25,8 @@ operator compatibility.
 
 If every fixed orbit-geometry residual is summable in n and the single coupling
 residual is summable in n, then the #5106 orbit-summability input follows and
-all fixed-natural-time strong limits are theorem-generated.
+all fixed-natural-time strong limits are theorem-generated.  This complements
+merged #5107, which packages geometric decay of the unsplit orbit mismatch.
 -/
 
 namespace MGAP4D
