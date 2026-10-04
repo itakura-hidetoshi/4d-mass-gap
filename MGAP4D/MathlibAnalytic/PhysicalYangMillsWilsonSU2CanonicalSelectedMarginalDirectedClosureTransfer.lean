@@ -499,7 +499,12 @@ theorem ambientContinuumOperator_intertwines_selected
         (L.finiteMarginalL2Pullback (C.marginalIndex n) f) =
       C.ambientContinuumOperator
         (C.selectedClosure.subtypeₗᵢ z) := by
-          rw [selectedEmbedClosure_coe]
+      apply congrArg C.ambientContinuumOperator
+      change
+        L.finiteMarginalL2Pullback (C.marginalIndex n) f =
+          ((z : C.selectedClosure) : Lp ℝ 2 L.continuumMeasure)
+      symm
+      simpa only [z] using C.selectedEmbedClosure_coe n f
     _ = C.selectedClosure.subtypeₗᵢ (C.closureOperator z) := by
       exact
         realLinearIsometryProjectedCompression_apply_map
@@ -509,7 +514,12 @@ theorem ambientContinuumOperator_intertwines_selected
       rw [hz]
     _ = L.finiteMarginalL2Pullback
         (C.marginalIndex n) (C.localOperator n f) := by
-      rw [selectedEmbedClosure_coe]
+      change
+        ((C.selectedEmbedClosure n (C.localOperator n f) : C.selectedClosure) :
+          Lp ℝ 2 L.continuumMeasure) =
+        L.finiteMarginalL2Pullback
+          (C.marginalIndex n) (C.localOperator n f)
+      exact C.selectedEmbedClosure_coe n (C.localOperator n f)
 
 end EuclideanYangMillsProjectiveLimitL2DirectedOperatorSystem
 
@@ -625,7 +635,7 @@ noncomputable def toDirectedOperatorSystem
         S D halfExtent beta hbeta Q F R L hInvariant) :
     EuclideanYangMillsProjectiveLimitL2DirectedOperatorSystem F L where
   marginalIndex := R.marginalIndex
-  directed := selectedMarginal_directed Q R L C hInvariant G
+  directed := selectedMarginal_directed Q R L hInvariant G
   localOperator :=
     physicalYangMillsSU2CanonicalSelectedMarginalPairTransferOperator Q R
   bound := C.bound
