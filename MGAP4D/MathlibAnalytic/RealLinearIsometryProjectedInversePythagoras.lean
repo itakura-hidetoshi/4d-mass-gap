@@ -114,7 +114,8 @@ theorem realLinearIsometry_projectedInverse_residual_norm_sq_eq
     rw [← hmap]
     exact J.norm_map _
   have hpyth := K.norm_sq_eq_add_norm_sq_starProjection y
-  rw [hresidual, norm_neg, hprojNorm]
+  rw [hprojNorm] at hpyth
+  rw [hresidual, norm_neg]
   nlinarith
 
 /-- The squared reconstruction defect is automatically nonnegative in its
