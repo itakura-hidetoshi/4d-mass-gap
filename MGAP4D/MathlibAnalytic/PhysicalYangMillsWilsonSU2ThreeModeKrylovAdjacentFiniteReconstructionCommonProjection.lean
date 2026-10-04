@@ -362,6 +362,67 @@ theorem
         Q R n).toLinearMap).starProjection_eq_self_iff.mp hfixed
 
 
+/-- Obstruction-aware conditional-expectation comparison.
+
+For an arbitrary bounded common-marginal candidate `condExp`, no range
+inclusion is assumed.  The total #5124 reconstruction variance is controlled
+by two explicitly separated quantities:
+
+1. the raw conditional residual `||Y - QY||²`;
+2. the physicality defect of the conditional output
+   `||QY - P_phys(QY)||²`.
+
+Thus a genuine local Wilson conditional expectation may be used directly,
+without claiming that its fixed space equals or is contained in the completed
+physical pair carrier. -/
+theorem
+    physicalYangMillsSU2AdjacentFiniteTotalReconstructionVarianceDefect_le_two_commonCondExpResidual_sq_add_two_physicalityResidual_sq
+    (n r : ℕ) (k : Fin 3)
+    (condExp :
+      Lp ℝ 2
+          (F.finiteMarginal
+            (physicalYangMillsSU2ThreeModeAdjacentCommonMarginalIndex
+              (Q := Q) R n)) →L[ℝ]
+        Lp ℝ 2
+          (F.finiteMarginal
+            (physicalYangMillsSU2ThreeModeAdjacentCommonMarginalIndex
+              (Q := Q) R n))) :
+    physicalYangMillsSU2AdjacentFiniteTotalReconstructionVarianceDefect
+        Q R n r k ≤
+      2 *
+          ‖physicalYangMillsSU2AdjacentCommonFineFrozenStepVector
+              Q R n r k -
+            condExp
+              (physicalYangMillsSU2AdjacentCommonFineFrozenStepVector
+                Q R n r k)‖ ^ 2 +
+        2 *
+          ‖condExp
+                (physicalYangMillsSU2AdjacentCommonFineFrozenStepVector
+                  Q R n r k) -
+              physicalYangMillsSU2AdjacentCommonLeftPhysicalRangeProjection
+                Q R n
+                (condExp
+                  (physicalYangMillsSU2AdjacentCommonFineFrozenStepVector
+                    Q R n r k))‖ ^ 2 := by
+  rw [
+    physicalYangMillsSU2AdjacentFiniteTotalReconstructionVarianceDefect_eq_commonPhysicalProjectionResidual_sq
+      Q R n r k,
+    physicalYangMillsSU2AdjacentCommonLeftPhysicalRangeProjection_eq_starProjection
+      Q R n]
+  exact
+    realHilbert_starProjection_residual_sq_le_two_candidate_terms
+      ((periodicHypercubicEvenSpecialUnitaryPhysicalPairCarrier
+          (halfExtent n) 2).map
+        (physicalYangMillsSU2AdjacentCommonLeftPairEmbedding
+          Q R n).toLinearMap)
+      (physicalYangMillsSU2AdjacentCommonFineFrozenStepVector
+        Q R n r k)
+      (condExp
+        (physicalYangMillsSU2AdjacentCommonFineFrozenStepVector
+          Q R n r k))
+
+
+
 end CommonPhysicalProjection
 
 end
