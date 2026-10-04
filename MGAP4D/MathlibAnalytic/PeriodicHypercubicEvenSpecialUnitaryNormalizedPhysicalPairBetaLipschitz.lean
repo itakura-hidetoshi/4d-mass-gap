@@ -1,6 +1,6 @@
 import MGAP4D.MathlibAnalytic.RealInverseSquarePerturbation
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferNormalizationFloor
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferOneSlabOperatorNormBetaLipschitz
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaLipschitz
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryOneSlabPairBetaLipschitz
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryOneSlabPairHaarL2TransferContraction
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalPairCompletedBlockTransferRestriction
@@ -174,7 +174,7 @@ theorem
   have hNormVariation :
       ‖tGamma - tBeta‖ ≤ B * D := by
     dsimp [tGamma, tBeta, B, D]
-    simpa only [Real.norm_eq_abs] using
+    exact
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_norm_sub_le_beta
         H N hN beta gamma hbeta hgamma
   have hCoeffNonneg :
