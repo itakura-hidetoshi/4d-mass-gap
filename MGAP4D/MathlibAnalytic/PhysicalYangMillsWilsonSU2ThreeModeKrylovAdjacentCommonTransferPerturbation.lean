@@ -98,40 +98,50 @@ theorem physicalYangMillsSU2ThreeModeFiniteAdjacentKrylovDefect_le_zero_add_nat_
         (m : ℝ) *
           ‖physicalYangMillsSU2AdjacentCommonLeftTransfer Q R n -
             physicalYangMillsSU2AdjacentCommonRightTransfer Q R n‖ := by
-  let A := physicalYangMillsSU2AdjacentCommonLeftTransfer Q R n
-  let B := physicalYangMillsSU2AdjacentCommonRightTransfer Q R n
-  let x := physicalYangMillsSU2AdjacentCommonLeftInitialKrylovMode Q R n k
-  let y := physicalYangMillsSU2AdjacentCommonRightInitialKrylovMode Q R n k
-  have hA : ‖A‖ ≤ 1 := by
-    simpa [A] using
-      physicalYangMillsSU2AdjacentCommonLeftTransfer_opNorm_le_one Q R n
-  have hB : ‖B‖ ≤ 1 := by
-    simpa [B] using
-      physicalYangMillsSU2AdjacentCommonRightTransfer_opNorm_le_one Q R n
-  have hy : ‖y‖ ≤ 1 := by
-    simpa [y] using
-      le_of_eq
-        (physicalYangMillsSU2AdjacentCommonRightInitialKrylovMode_norm
-          Q R n k)
+  have hy :
+      ‖physicalYangMillsSU2AdjacentCommonRightInitialKrylovMode Q R n k‖ ≤ 1 := by
+    rw [physicalYangMillsSU2AdjacentCommonRightInitialKrylovMode_norm Q R n k]
   have hpert :=
     continuousLinearMap_contraction_pow_apply_sub_pow_apply_norm_le
-      A B hA hB m x y hy
-  have hm :
-      physicalYangMillsSU2ThreeModeFiniteAdjacentKrylovDefect
-          (Q := Q) (R := R) n m k =
-        ‖(A ^ m) x - (B ^ m) y‖ := by
-    simpa [A, B, x, y] using
-      physicalYangMillsSU2ThreeModeFiniteAdjacentKrylovDefect_eq_commonTransferPowerDifference
-        Q R n m k
+      (physicalYangMillsSU2AdjacentCommonLeftTransfer Q R n)
+      (physicalYangMillsSU2AdjacentCommonRightTransfer Q R n)
+      (physicalYangMillsSU2AdjacentCommonLeftTransfer_opNorm_le_one Q R n)
+      (physicalYangMillsSU2AdjacentCommonRightTransfer_opNorm_le_one Q R n)
+      m
+      (physicalYangMillsSU2AdjacentCommonLeftInitialKrylovMode Q R n k)
+      (physicalYangMillsSU2AdjacentCommonRightInitialKrylovMode Q R n k)
+      hy
   have hzero :
       physicalYangMillsSU2ThreeModeFiniteAdjacentKrylovDefect
           (Q := Q) (R := R) n 0 k =
-        ‖x - y‖ := by
-    simpa [A, B, x, y] using
+        ‖physicalYangMillsSU2AdjacentCommonLeftInitialKrylovMode Q R n k -
+          physicalYangMillsSU2AdjacentCommonRightInitialKrylovMode Q R n k‖ := by
+    simpa using
       physicalYangMillsSU2ThreeModeFiniteAdjacentKrylovDefect_eq_commonTransferPowerDifference
         Q R n 0 k
-  rw [hm, hzero]
-  simpa [A, B] using hpert
+  calc
+    physicalYangMillsSU2ThreeModeFiniteAdjacentKrylovDefect
+        (Q := Q) (R := R) n m k =
+      ‖(physicalYangMillsSU2AdjacentCommonLeftTransfer Q R n ^ m)
+          (physicalYangMillsSU2AdjacentCommonLeftInitialKrylovMode Q R n k) -
+        (physicalYangMillsSU2AdjacentCommonRightTransfer Q R n ^ m)
+          (physicalYangMillsSU2AdjacentCommonRightInitialKrylovMode Q R n k)‖ :=
+      physicalYangMillsSU2ThreeModeFiniteAdjacentKrylovDefect_eq_commonTransferPowerDifference
+        Q R n m k
+    _ ≤
+      ‖physicalYangMillsSU2AdjacentCommonLeftInitialKrylovMode Q R n k -
+        physicalYangMillsSU2AdjacentCommonRightInitialKrylovMode Q R n k‖ +
+        (m : ℝ) *
+          ‖physicalYangMillsSU2AdjacentCommonLeftTransfer Q R n -
+            physicalYangMillsSU2AdjacentCommonRightTransfer Q R n‖ :=
+      hpert
+    _ =
+      physicalYangMillsSU2ThreeModeFiniteAdjacentKrylovDefect
+          (Q := Q) (R := R) n 0 k +
+        (m : ℝ) *
+          ‖physicalYangMillsSU2AdjacentCommonLeftTransfer Q R n -
+            physicalYangMillsSU2AdjacentCommonRightTransfer Q R n‖ := by
+      rw [← hzero]
 
 /-- A single scale-summability input for the adjacent common-transfer operator
 mismatch.  It is independent of natural time and of the three-mode index. -/
