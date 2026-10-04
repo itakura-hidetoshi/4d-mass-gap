@@ -178,7 +178,7 @@ noncomputable def continuumTransfer :
 bound from the compatible operator system. -/
 theorem continuumTransfer_norm_le
     (x : Lp ℝ 2 L.continuumMeasure) :
-    ‖I.continuumTransfer x‖ ≤ I.operatorSystem.bound * ‖x‖ := by
+    ‖continuumTransfer Q R L I x‖ ≤ I.operatorSystem.bound * ‖x‖ := by
   exact
     L.finiteMarginalL2ContinuumOperator_norm_le
       I.operatorSystem x
@@ -186,7 +186,7 @@ theorem continuumTransfer_norm_le
 /-- The continuum operator norm is bounded by the same projective-system
 constant. -/
 theorem continuumTransfer_opNorm_le :
-    ‖I.continuumTransfer‖ ≤ I.operatorSystem.bound := by
+    ‖continuumTransfer Q R L I‖ ≤ I.operatorSystem.bound := by
   exact
     L.finiteMarginalL2ContinuumOperator_opNorm_le
       I.operatorSystem
@@ -197,7 +197,7 @@ theorem continuumTransfer_intertwines_pairTransfer
     (x :
       PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
         (halfExtent n) 2) :
-    I.continuumTransfer
+    continuumTransfer Q R L I
         (physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding
           Q R L n x) =
       physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding
@@ -226,7 +226,7 @@ theorem continuumTransfer_pow_intertwines_pairTransfer
     (x :
       PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2
         (halfExtent n) 2) :
-    (I.continuumTransfer ^ m)
+    (continuumTransfer Q R L I ^ m)
         (physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding
           Q R L n x) =
       physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding
@@ -234,7 +234,7 @@ theorem continuumTransfer_pow_intertwines_pairTransfer
         ((periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator
           (halfExtent n) 2 specialUnitaryTwoWilsonRankPositive
           (beta n) (hbeta n) ^ m) x) := by
-  let T := I.continuumTransfer
+  let T := continuumTransfer Q R L I
   let Sn :=
     periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator
       (halfExtent n) 2 specialUnitaryTwoWilsonRankPositive
@@ -249,7 +249,7 @@ theorem continuumTransfer_pow_intertwines_pairTransfer
       change (T ^ m) (T (J x)) = J ((Sn ^ m) (Sn x))
       have hstep : T (J x) = J (Sn x) := by
         simpa [T, Sn, J] using
-          I.continuumTransfer_intertwines_pairTransfer n x
+          continuumTransfer_intertwines_pairTransfer Q R L I n x
       rw [hstep]
       exact ih (Sn x)
 
@@ -264,7 +264,7 @@ theorem
     (n m : ℕ) :
     physicalYangMillsVacuumNormalizedSU2ThreeModeEvolvedProjectiveContinuumImage
         Q R L hInvariant n m =
-      (I.continuumTransfer ^ m)
+      (continuumTransfer Q R L I ^ m)
         (physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding
           Q R L n
           (physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice
@@ -272,7 +272,7 @@ theorem
   unfold
     physicalYangMillsVacuumNormalizedSU2ThreeModeEvolvedProjectiveContinuumImage
   exact
-    (I.continuumTransfer_pow_intertwines_pairTransfer
+    (continuumTransfer_pow_intertwines_pairTransfer Q R L I
       n m
       (physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice
         Q hInvariant n)).symm
@@ -297,7 +297,7 @@ theorem
               physicalYangMillsVacuumNormalizedSU2ThreeModeEvolvedProjectiveContinuumImage
                 Q R L hInvariant (phi j) m)
             atTop
-            (𝓝 ((I.continuumTransfer ^ m) y)) := by
+            (𝓝 ((continuumTransfer Q R L I ^ m) y)) := by
   obtain ⟨phi, hphi, cInf, hcInf, hInitial, hyNorm⟩ :=
     physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice_exists_projective_strong_limit
       Q R L hInvariant C
@@ -309,19 +309,19 @@ theorem
   have hPow :
       Tendsto
         (fun j =>
-          (I.continuumTransfer ^ m)
+          (continuumTransfer Q R L I ^ m)
             (physicalYangMillsSU2PairHaarProjectiveContinuumEmbedding
               Q R L (phi j)
               (physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice
                 Q hInvariant (phi j))))
         atTop
-        (𝓝 ((I.continuumTransfer ^ m) y)) := by
+        (𝓝 ((continuumTransfer Q R L I ^ m) y)) := by
     have hMap :=
-      (((I.continuumTransfer ^ m).continuous.tendsto y).comp hInitial)
+      (((continuumTransfer Q R L I ^ m).continuous.tendsto y).comp hInitial)
     simpa [y] using hMap
   apply hPow.congr'
   exact Filter.Eventually.of_forall fun j =>
-    (I.physicalYangMillsVacuumNormalizedSU2ThreeModeEvolvedProjectiveContinuumImage_eq_continuumTransfer_pow
+    (physicalYangMillsVacuumNormalizedSU2ThreeModeEvolvedProjectiveContinuumImage_eq_continuumTransfer_pow Q R L I
       hInvariant (phi j) m).symm
 
 /-- H1-C3 quantitative package on the theorem-generated nonzero continuum
@@ -353,11 +353,11 @@ theorem
                 physicalYangMillsVacuumNormalizedSU2ThreeModeEvolvedProjectiveContinuumImage
                   Q R L hInvariant (phi j) m)
               atTop
-              (𝓝 ((I.continuumTransfer ^ m) y)) ∧
-            ‖(I.continuumTransfer ^ m) y‖ ≤
+              (𝓝 ((continuumTransfer Q R L I ^ m) y)) ∧
+            ‖(continuumTransfer Q R L I ^ m) y‖ ≤
               GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformTopOrthogonalContractionFactor ^ m := by
   obtain ⟨phi, hphi, y, hyNorm, hStrong⟩ :=
-    I.physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice_exists_sameSubsequence_evolved_strong_limits
+    physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice_exists_sameSubsequence_evolved_strong_limits Q R L I
       hInvariant C
   refine ⟨phi, hphi, y, hyNorm, ?_⟩
   intro m
@@ -365,7 +365,7 @@ theorem
   exact
     physicalYangMillsVacuumNormalizedSU2ThreeModeEvolvedProjectiveStrongLimit_norm_le_uniform_q0
       Q R L hInvariant s hs hcut phi m
-      ((I.continuumTransfer ^ m) y)
+      ((continuumTransfer Q R L I ^ m) y)
       (hStrong m)
 
 /-- The continuum natural-time limits are automatically semigroup-compatible:
@@ -373,8 +373,8 @@ the m+k limit is obtained by applying T^m to the k limit. -/
 theorem continuumTransfer_pow_add_apply
     (m k : ℕ)
     (y : Lp ℝ 2 L.continuumMeasure) :
-    (I.continuumTransfer ^ (m + k)) y =
-      (I.continuumTransfer ^ m) ((I.continuumTransfer ^ k) y) := by
+    (continuumTransfer Q R L I ^ (m + k)) y =
+      (continuumTransfer Q R L I ^ m) ((continuumTransfer Q R L I ^ k) y) := by
   rw [pow_add]
   rfl
 
