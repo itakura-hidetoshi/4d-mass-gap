@@ -230,11 +230,22 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget_nonneg H)
       (norm_nonneg (gamma - beta))
   have hAB : ‖A - B‖ ≤ M := by
-    simpa [A, B, M] using
+    change
+      ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
+          H N hN gamma hgamma -
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
+          H N hN beta hbeta‖ ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H *
+          ‖gamma - beta‖
+    exact
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator_norm_sub_le_beta
         H N hN beta gamma hbeta hgamma
-  apply ContinuousLinearMap.opNorm_le_bound
-  · exact hM
+  refine ContinuousLinearMap.opNorm_le_bound
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+        H N hN gamma hgamma -
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+        H N hN beta hbeta)
+    hM ?_
   intro f
   calc
     ‖(periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
