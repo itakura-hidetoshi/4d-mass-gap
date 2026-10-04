@@ -219,9 +219,21 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernelL2_nor
               H N hN beta hbeta p := by
       simpa only [Pi.sub_apply] using hpSub
     rw [hpSub', hpGamma, hpBeta, hpConst]
-    simpa [M, Real.norm_eq_abs, abs_of_nonneg hM] using
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_norm_sub_le
-        H N hN beta gamma hbeta hgamma p
+    have hpoint :
+        ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
+              H N gamma p -
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
+              H N beta p‖ ≤ M := by
+      simpa [M] using
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel_norm_sub_le
+          H N hN beta gamma hbeta hgamma p
+    calc
+      ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
+            H N gamma p -
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernel
+            H N beta p‖ ≤ M := hpoint
+      _ = ‖M‖ := by
+        rw [Real.norm_eq_abs, abs_of_nonneg hM]
   calc
     ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernelL2
           H N hN gamma hgamma -
