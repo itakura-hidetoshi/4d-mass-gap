@@ -229,6 +229,184 @@ theorem orbitMismatch_summable
 
 end PhysicalYangMillsSU2AdjacentCommonPhysicalConditionalTailInput
 
+
+/-- Obstruction-aware model-facing input after #5128.
+
+A raw bounded common-marginal candidate is allowed without any assertion that
+its range is physical.  For each fixed Krylov depth and mode, the raw
+conditional residual and the physicality defect are required to share one
+growing-distance geometric envelope.  Their constants may differ.
+
+The shared `rho` and `distance` are only an envelope convention; a later
+model theorem may always enlarge two compatible tails to a common envelope.
+-/
+structure PhysicalYangMillsSU2AdjacentCommonConditionalPhysicalityTailInput where
+  candidate :
+    (n : ℕ) →
+      Lp ℝ 2
+          (F.finiteMarginal
+            (physicalYangMillsSU2ThreeModeAdjacentCommonMarginalIndex
+              (Q := Q) R n)) →L[ℝ]
+        Lp ℝ 2
+          (F.finiteMarginal
+            (physicalYangMillsSU2ThreeModeAdjacentCommonMarginalIndex
+              (Q := Q) R n))
+  splitResidual_tail :
+    ∀ (r : ℕ) (k : Fin 3),
+      ∃ (Craw Cphys rho : ℝ) (distance : ℕ → ℕ),
+        0 ≤ Craw ∧
+        0 ≤ Cphys ∧
+        0 ≤ rho ∧
+        rho < 1 ∧
+        (∀ n, n ≤ distance n) ∧
+        (∀ n,
+          ‖physicalYangMillsSU2AdjacentCommonFineFrozenStepVector
+                Q R n r k -
+              candidate n
+                (physicalYangMillsSU2AdjacentCommonFineFrozenStepVector
+                  Q R n r k)‖ ^ 2 ≤
+            Craw * (rho ^ distance n / (1 - rho))) ∧
+        ∀ n,
+          ‖candidate n
+                (physicalYangMillsSU2AdjacentCommonFineFrozenStepVector
+                  Q R n r k) -
+              physicalYangMillsSU2AdjacentCommonLeftPhysicalRangeProjection
+                Q R n
+                (candidate n
+                  (physicalYangMillsSU2AdjacentCommonFineFrozenStepVector
+                    Q R n r k))‖ ^ 2 ≤
+            Cphys * (rho ^ distance n / (1 - rho))
+
+namespace PhysicalYangMillsSU2AdjacentCommonConditionalPhysicalityTailInput
+
+variable
+    (G :
+      PhysicalYangMillsSU2AdjacentCommonConditionalPhysicalityTailInput
+        (Q := Q) (R := R))
+
+include G
+
+/-- The two #5128 obstruction terms with one shared growing-distance envelope
+generate the single total reconstruction variance tail required by #5123.
+
+The resulting constant is exactly `2*Craw + 2*Cphys`. -/
+theorem totalVariance_tail
+    (r : ℕ) (k : Fin 3) :
+    ∃ (C rho : ℝ) (distance : ℕ → ℕ),
+      0 ≤ C ∧
+      0 ≤ rho ∧
+      rho < 1 ∧
+      (∀ n, n ≤ distance n) ∧
+      ∀ n,
+        physicalYangMillsSU2AdjacentFiniteTotalReconstructionVarianceDefect
+            Q R n r k ≤
+          C * (rho ^ distance n / (1 - rho)) := by
+  rcases G.splitResidual_tail r k with
+    ⟨Craw, Cphys, rho, distance,
+      hCraw, hCphys, hrho0, hrho1, hDistance, hRaw, hPhys⟩
+  refine
+    ⟨2 * Craw + 2 * Cphys, rho, distance,
+      add_nonneg (mul_nonneg (by norm_num) hCraw)
+        (mul_nonneg (by norm_num) hCphys),
+      hrho0, hrho1, hDistance, ?_⟩
+  intro n
+  let Y :=
+    physicalYangMillsSU2AdjacentCommonFineFrozenStepVector
+      Q R n r k
+  let Cn := G.candidate n
+  let P :=
+    physicalYangMillsSU2AdjacentCommonLeftPhysicalRangeProjection
+      Q R n
+  let tail := rho ^ distance n / (1 - rho)
+  have hSplit :
+      physicalYangMillsSU2AdjacentFiniteTotalReconstructionVarianceDefect
+          Q R n r k ≤
+        2 * ‖Y - Cn Y‖ ^ 2 +
+          2 * ‖Cn Y - P (Cn Y)‖ ^ 2 := by
+    simpa [Y, Cn, P] using
+      physicalYangMillsSU2AdjacentFiniteTotalReconstructionVarianceDefect_le_two_commonCondExpResidual_sq_add_two_physicalityResidual_sq
+        Q R n r k Cn
+  have hRawN : ‖Y - Cn Y‖ ^ 2 ≤ Craw * tail := by
+    simpa [Y, Cn, tail] using hRaw n
+  have hPhysN : ‖Cn Y - P (Cn Y)‖ ^ 2 ≤ Cphys * tail := by
+    simpa [Y, Cn, P, tail] using hPhys n
+  have hRaw2 :
+      2 * ‖Y - Cn Y‖ ^ 2 ≤ 2 * (Craw * tail) :=
+    mul_le_mul_of_nonneg_left hRawN (by norm_num)
+  have hPhys2 :
+      2 * ‖Cn Y - P (Cn Y)‖ ^ 2 ≤ 2 * (Cphys * tail) :=
+    mul_le_mul_of_nonneg_left hPhysN (by norm_num)
+  calc
+    physicalYangMillsSU2AdjacentFiniteTotalReconstructionVarianceDefect
+        Q R n r k ≤
+      2 * ‖Y - Cn Y‖ ^ 2 +
+        2 * ‖Cn Y - P (Cn Y)‖ ^ 2 := hSplit
+    _ ≤ 2 * (Craw * tail) + 2 * (Cphys * tail) :=
+      add_le_add hRaw2 hPhys2
+    _ = (2 * Craw + 2 * Cphys) *
+        (rho ^ distance n / (1 - rho)) := by
+      dsimp [tail]
+      ring
+
+/-- Package the obstruction-aware conditional split together with the two
+independent geometric lanes into the #5123 variance-geometric receiver. -/
+noncomputable def toFiniteReconstructionVarianceGeometricInput
+    (physicalCommutation_geometric :
+      ∀ (r : ℕ) (k : Fin 3),
+        ∃ C q : ℝ,
+          0 ≤ q ∧ q < 1 ∧
+            ∀ n : ℕ,
+              physicalYangMillsSU2AdjacentFinitePhysicalReconstructionCommutationResidual
+                  Q R n r k ≤
+                C * q ^ n)
+    (betaMajorant_geometric :
+      ∃ C q : ℝ,
+        0 ≤ q ∧ q < 1 ∧
+          ∀ n : ℕ,
+            physicalYangMillsSU2AdjacentCouplingBetaMajorant
+                halfExtent beta n ≤
+              C * q ^ n) :
+    PhysicalYangMillsSU2AdjacentFiniteReconstructionVarianceGeometricInput
+      (Q := Q) (R := R) where
+  physicalCommutation_geometric := physicalCommutation_geometric
+  totalVariance_tail := totalVariance_tail Q R G
+  betaMajorant_geometric := betaMajorant_geometric
+
+/-- Final obstruction-aware receiver: separate tails for the raw common
+conditional residual and its physicality defect, plus the finite
+transfer/reconstruction commutation and beta lanes, imply summability of every
+fixed Krylov-orbit mismatch. -/
+theorem orbitMismatch_summable
+    (physicalCommutation_geometric :
+      ∀ (r : ℕ) (k : Fin 3),
+        ∃ C q : ℝ,
+          0 ≤ q ∧ q < 1 ∧
+            ∀ n : ℕ,
+              physicalYangMillsSU2AdjacentFinitePhysicalReconstructionCommutationResidual
+                  Q R n r k ≤
+                C * q ^ n)
+    (betaMajorant_geometric :
+      ∃ C q : ℝ,
+        0 ≤ q ∧ q < 1 ∧
+          ∀ n : ℕ,
+            physicalYangMillsSU2AdjacentCouplingBetaMajorant
+                halfExtent beta n ≤
+              C * q ^ n)
+    (r : ℕ) (k : Fin 3) :
+    Summable
+      (fun n =>
+        physicalYangMillsSU2AdjacentCommonTransferRightOrbitMismatch
+          Q R n r k) := by
+  exact
+    PhysicalYangMillsSU2AdjacentFiniteReconstructionVarianceGeometricInput.orbitMismatch_summable
+      Q R
+      (toFiniteReconstructionVarianceGeometricInput
+        Q R G physicalCommutation_geometric betaMajorant_geometric)
+      r k
+
+end PhysicalYangMillsSU2AdjacentCommonConditionalPhysicalityTailInput
+
+
 end ConditionalTail
 
 end
