@@ -57,6 +57,15 @@ local instance su2AdjacentSixSpatialEnergyTailSpatialLinkFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+local instance su2AdjacentSixSpatialEnergyTailNontrivial :
+    Nontrivial (Matrix.specialUnitaryGroup (Fin 2) ℂ) := by
+  refine ⟨⟨1, specialUnitaryTwoRotation Real.pi, ?_⟩⟩
+  intro h
+  have h00 := congrArg
+    (fun U : Matrix.specialUnitaryGroup (Fin 2) ℂ =>
+      (U : Matrix (Fin 2) (Fin 2) ℂ) 0 0) h
+  norm_num [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] at h00
+
 private theorem su2AdjacentSixSpatialEnergyTail_two_pos : 0 < (2 : ℕ) := by
   norm_num
 
@@ -83,7 +92,7 @@ theorem finSix_single_residual_sq_le_six_mul_normalizedResidualEnergy
         ∑ d : Fin 6, ‖x - P d x‖ ^ 2 := hterm
     _ = 6 * groundStateJointColorNormalizedResidualEnergy P x := by
       unfold groundStateJointColorNormalizedResidualEnergy
-      norm_num
+      ring
 
 section GroundStateSixSpatialEnergyTail
 
