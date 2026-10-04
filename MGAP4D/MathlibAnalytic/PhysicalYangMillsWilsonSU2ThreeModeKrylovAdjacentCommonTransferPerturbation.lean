@@ -192,7 +192,7 @@ theorem adjacentDefect_summable
     (fun n => ?_)
     (fun n =>
       physicalYangMillsSU2ThreeModeFiniteAdjacentKrylovDefect_le_zero_add_nat_mul_commonTransferMismatch
-        Q R L n m k)
+        Q R n m k)
     hmajorant
   unfold physicalYangMillsSU2ThreeModeFiniteAdjacentKrylovDefect
   unfold physicalYangMillsSU2ThreeModeFiniteCommonMarginalKrylovDefect
