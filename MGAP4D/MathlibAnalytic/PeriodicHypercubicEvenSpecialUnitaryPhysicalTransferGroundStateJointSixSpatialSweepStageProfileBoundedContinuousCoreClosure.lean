@@ -58,15 +58,6 @@ local instance groundStateProfileBCFClosureBorelSpace (N : ℕ) :
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-local instance groundStateProfileBCFClosurePseudoMetrizableSpace (N : ℕ) :
-    TopologicalSpace.PseudoMetrizableSpace
-      (Matrix.specialUnitaryGroup (Fin N) ℂ) := by
-  change
-    TopologicalSpace.PseudoMetrizableSpace
-      {U : Matrix (Fin N) (Fin N) ℂ |
-        U ∈ Matrix.specialUnitaryGroup (Fin N) ℂ}
-  infer_instance
-
 local instance groundStateProfileBCFClosureSpatialLinkFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
