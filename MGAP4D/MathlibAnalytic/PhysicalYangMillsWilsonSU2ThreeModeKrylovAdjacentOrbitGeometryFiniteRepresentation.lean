@@ -248,6 +248,7 @@ theorem
   unfold
     physicalYangMillsSU2AdjacentCommonTransferOrbitFineRangeLeakageResidual
     physicalYangMillsSU2AdjacentFinePairFrozenStepCoarseRangeDistance
+  simp only
   rw [
     physicalYangMillsSU2AdjacentCommonRightTransferAtCoupling_apply_rightOrbitVector
       Q R n r k]
