@@ -67,35 +67,55 @@ theorem realHilbertSubspaceProjection_sub_norm_sq_eq
   have hsplit := M.starProjection_add_starProjection_orthogonal x
   have hresidual :
       M.starProjection x - x = -(Mᗮ.starProjection x) := by
-    rw [← hsplit]
-    abel
+    calc
+      M.starProjection x - x =
+          M.starProjection x -
+            (M.starProjection x + Mᗮ.starProjection x) := by
+              rw [hsplit]
+      _ = -(Mᗮ.starProjection x) := by
+        abel
   rw [hresidual, norm_neg]
   have hpyth := M.norm_sq_eq_add_norm_sq_starProjection x
   nlinarith
 
 /-- The reconstruction residual of a real linear isometry is exactly the
-squared norm lost by its canonical projected inverse. -/
+squared norm lost by its canonical projected inverse.
+
+The proof uses Pythagoras directly on `range J`.  It deliberately does not
+ask for `CompleteSpace B`: completeness of the isometric range follows from
+the complete source `H`, which is precisely the hypothesis needed by the
+canonical projected inverse. -/
 theorem realLinearIsometry_projectedInverse_residual_norm_sq_eq
     (J : H →ₗᵢ[ℝ] B)
     (y : B) :
     ‖J (realLinearIsometryProjectedInverse J y) - y‖ ^ 2 =
       ‖y‖ ^ 2 - ‖realLinearIsometryProjectedInverse J y‖ ^ 2 := by
-  have hmap :=
-    realLinearIsometry_map_projectedInverse_eq_rangeProjection J y
-  have hproj :=
-    realHilbertSubspaceProjection_sub_norm_sq_eq
-      (realLinearIsometryRange J) y
-  have hnorm :
-      ‖realHilbertSubspaceProjection (realLinearIsometryRange J) y‖ =
-        ‖realLinearIsometryProjectedInverse J y‖ := by
+  let K : Submodule ℝ B := realLinearIsometryRange J
+  have hmap :
+      J (realLinearIsometryProjectedInverse J y) = K.starProjection y := by
+    simpa [K, realHilbertSubspaceProjection] using
+      realLinearIsometry_map_projectedInverse_eq_rangeProjection J y
+  have hsplit : K.starProjection y + Kᗮ.starProjection y = y :=
+    K.starProjection_add_starProjection_orthogonal y
+  have hresidual :
+      J (realLinearIsometryProjectedInverse J y) - y =
+        -(Kᗮ.starProjection y) := by
+    rw [hmap]
     calc
-      ‖realHilbertSubspaceProjection (realLinearIsometryRange J) y‖ =
-          ‖J (realLinearIsometryProjectedInverse J y)‖ := by
-        rw [hmap]
-      _ = ‖realLinearIsometryProjectedInverse J y‖ := J.norm_map _
-  rw [hmap]
-  rw [hnorm] at hproj
-  exact hproj
+      K.starProjection y - y =
+          K.starProjection y -
+            (K.starProjection y + Kᗮ.starProjection y) := by
+              rw [hsplit]
+      _ = -(Kᗮ.starProjection y) := by
+        abel
+  have hprojNorm :
+      ‖K.starProjection y‖ =
+        ‖realLinearIsometryProjectedInverse J y‖ := by
+    rw [← hmap]
+    exact J.norm_map _
+  have hpyth := K.norm_sq_eq_add_norm_sq_starProjection y
+  rw [hresidual, norm_neg, hprojNorm]
+  nlinarith
 
 /-- The squared reconstruction defect is automatically nonnegative in its
 norm-loss form. -/
