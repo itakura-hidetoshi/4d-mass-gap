@@ -156,7 +156,11 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabPairKernelL2_nor
     infer_instance
   have hM : 0 ≤ M := by
     dsimp [M]
-    positivity
+    exact
+      mul_nonneg
+        (mul_nonneg (by norm_num)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget_nonneg H))
+        (norm_nonneg (gamma - beta))
   have hConst :
       MemLp
         (fun _ :
