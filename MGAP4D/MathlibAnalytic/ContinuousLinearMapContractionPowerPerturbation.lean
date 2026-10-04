@@ -38,6 +38,10 @@ theorem continuousLinearMap_pow_norm_le_one_of_norm_le_one
     ‖A ^ m‖ ≤ 1 := by
   cases m with
   | zero =>
+      change ‖(1 : E →L[ℝ] E)‖ ≤ 1
+      apply ContinuousLinearMap.opNorm_le_bound
+      · norm_num
+      intro x
       simp
   | succ n =>
       calc
