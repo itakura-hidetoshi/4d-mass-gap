@@ -170,6 +170,73 @@ theorem realHilbert_starProjection_residual_sq_le_of_mem
   nlinarith [norm_nonneg (x - V.starProjection x), norm_nonneg (x - z)]
 
 
+/-- For an arbitrary intermediate candidate, the distance to a closed Hilbert
+subspace is bounded by the candidate residual plus the candidate's own
+projection residual.
+
+This is the obstruction-aware form useful for conditional expectations whose
+range is not known a priori to lie in the target physical subspace. -/
+theorem realHilbert_starProjection_residual_norm_le_candidate_add_physicality
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    (V : Submodule ℝ E)
+    [V.HasOrthogonalProjection]
+    (x y : E) :
+    ‖x - V.starProjection x‖ ≤
+      ‖x - y‖ + ‖y - V.starProjection y‖ := by
+  have hbest :=
+    realHilbert_starProjection_residual_norm_le_of_mem
+      V x (V.starProjection y) (V.starProjection_apply_mem y)
+  calc
+    ‖x - V.starProjection x‖ ≤ ‖x - V.starProjection y‖ := hbest
+    _ = ‖(x - y) + (y - V.starProjection y)‖ := by
+      congr 1
+      abel
+    _ ≤ ‖x - y‖ + ‖y - V.starProjection y‖ :=
+      norm_add_le _ _
+
+/-- Squared two-term form of
+`realHilbert_starProjection_residual_norm_le_candidate_add_physicality`.
+
+The factor two is the elementary Hilbert-space cost of keeping the raw
+candidate residual and its target-subspace physicality defect separate. -/
+theorem realHilbert_starProjection_residual_sq_le_two_candidate_terms
+    {E : Type*}
+    [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E]
+    (V : Submodule ℝ E)
+    [V.HasOrthogonalProjection]
+    (x y : E) :
+    ‖x - V.starProjection x‖ ^ 2 ≤
+      2 * ‖x - y‖ ^ 2 +
+        2 * ‖y - V.starProjection y‖ ^ 2 := by
+  have h :=
+    realHilbert_starProjection_residual_norm_le_candidate_add_physicality
+      V x y
+  let a := ‖x - V.starProjection x‖
+  let b := ‖x - y‖
+  let c := ‖y - V.starProjection y‖
+  have ha : 0 ≤ a := by
+    dsimp [a]
+    exact norm_nonneg _
+  have hb : 0 ≤ b := by
+    dsimp [b]
+    exact norm_nonneg _
+  have hc : 0 ≤ c := by
+    dsimp [c]
+    exact norm_nonneg _
+  have hle : a ≤ b + c := by
+    simpa [a, b, c] using h
+  have hprod :
+      0 ≤ (b + c - a) * (b + c + a) :=
+    mul_nonneg (sub_nonneg.mpr hle) (add_nonneg (add_nonneg hb hc) ha)
+  have hdiff : 0 ≤ (b - c) ^ 2 := sq_nonneg (b - c)
+  change a ^ 2 ≤ 2 * b ^ 2 + 2 * c ^ 2
+  nlinarith
+
+
+
 end
 
 end MathlibAnalytic
