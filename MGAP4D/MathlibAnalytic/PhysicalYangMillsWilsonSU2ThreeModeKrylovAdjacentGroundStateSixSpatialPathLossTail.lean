@@ -70,6 +70,8 @@ theorem sixSpatial_residualEnergy_le_pathLoss_div_one_sub_lossRatio
 
 end GroundStateSourceFixedPairEnergy
 
+open GroundStateSourceFixedPairEnergy
+
 local instance su2AdjacentPathLossTailTopologicalGroup :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup 2
