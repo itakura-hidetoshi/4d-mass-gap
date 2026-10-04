@@ -156,7 +156,8 @@ noncomputable def physicalYangMillsSU2AdjacentCommonTransferCouplingResidual
 
 theorem physicalYangMillsSU2AdjacentCommonTransferCouplingResidual_nonneg
     (n : ℕ) :
-    0 ≤ physicalYangMillsSU2AdjacentCommonTransferCouplingResidual Q R n :=
+    0 ≤ physicalYangMillsSU2AdjacentCommonTransferCouplingResidual
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n :=
   norm_nonneg _
 
 /-- The coupling part of the adjacent compression mismatch, when applied to any
@@ -168,7 +169,8 @@ theorem physicalYangMillsSU2AdjacentCommonRightCouplingOrbitMismatch_le
           Q R n (beta n) (hbeta n) -
         physicalYangMillsSU2AdjacentCommonRightTransfer Q R n)
         (physicalYangMillsSU2AdjacentCommonRightOrbitVector Q R n r k)‖ ≤
-      physicalYangMillsSU2AdjacentCommonTransferCouplingResidual Q R n := by
+      physicalYangMillsSU2AdjacentCommonTransferCouplingResidual
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n := by
   have hz :
       ‖physicalYangMillsSU2AdjacentCommonRightOrbitVector Q R n r k‖ ≤ 1 :=
     physicalYangMillsSU2AdjacentCommonRightOrbitVector_norm_le_one
@@ -177,7 +179,8 @@ theorem physicalYangMillsSU2AdjacentCommonRightCouplingOrbitMismatch_le
       ‖physicalYangMillsSU2AdjacentCommonRightTransferAtCoupling
             Q R n (beta n) (hbeta n) -
           physicalYangMillsSU2AdjacentCommonRightTransfer Q R n‖ ≤
-        physicalYangMillsSU2AdjacentCommonTransferCouplingResidual Q R n := by
+        physicalYangMillsSU2AdjacentCommonTransferCouplingResidual
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n := by
     rw [← physicalYangMillsSU2AdjacentCommonRightTransferAtCoupling_beta_succ
       Q R n]
     exact
@@ -196,14 +199,16 @@ theorem physicalYangMillsSU2AdjacentCommonRightCouplingOrbitMismatch_le
           Q R n (beta n) (hbeta n) -
         physicalYangMillsSU2AdjacentCommonRightTransfer Q R n).le_opNorm _
     _ ≤
-      physicalYangMillsSU2AdjacentCommonTransferCouplingResidual Q R n * 1 := by
+      physicalYangMillsSU2AdjacentCommonTransferCouplingResidual
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n * 1 := by
       exact mul_le_mul hop hz
         (norm_nonneg
           (physicalYangMillsSU2AdjacentCommonRightOrbitVector Q R n r k))
         (physicalYangMillsSU2AdjacentCommonTransferCouplingResidual_nonneg
-          Q R n)
+          (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n)
     _ =
-      physicalYangMillsSU2AdjacentCommonTransferCouplingResidual Q R n := by
+      physicalYangMillsSU2AdjacentCommonTransferCouplingResidual
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n := by
       rw [mul_one]
 
 /-- Sharpened model-facing split on the finite Krylov orbit: full adjacent orbit
@@ -214,7 +219,8 @@ theorem physicalYangMillsSU2AdjacentCommonTransferRightOrbitMismatch_le_geometry
     physicalYangMillsSU2AdjacentCommonTransferRightOrbitMismatch Q R n r k ≤
       physicalYangMillsSU2AdjacentCommonTransferOrbitGeometryResidual
           Q R n r k +
-        physicalYangMillsSU2AdjacentCommonTransferCouplingResidual Q R n := by
+        physicalYangMillsSU2AdjacentCommonTransferCouplingResidual
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n := by
   let z := physicalYangMillsSU2AdjacentCommonRightOrbitVector Q R n r k
   have hsplit :
       (physicalYangMillsSU2AdjacentCommonLeftTransfer Q R n -
@@ -249,7 +255,8 @@ theorem physicalYangMillsSU2AdjacentCommonTransferRightOrbitMismatch_le_geometry
     _ ≤
       physicalYangMillsSU2AdjacentCommonTransferOrbitGeometryResidual
           Q R n r k +
-        physicalYangMillsSU2AdjacentCommonTransferCouplingResidual Q R n := by
+        physicalYangMillsSU2AdjacentCommonTransferCouplingResidual
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n := by
       change
         ‖(physicalYangMillsSU2AdjacentCommonLeftTransfer Q R n -
             physicalYangMillsSU2AdjacentCommonRightTransferAtCoupling
@@ -268,7 +275,8 @@ theorem physicalYangMillsSU2AdjacentCommonTransferRightOrbitMismatch_le_geometry
         ‖(physicalYangMillsSU2AdjacentCommonLeftTransfer Q R n -
             physicalYangMillsSU2AdjacentCommonRightTransferAtCoupling
               Q R n (beta n) (hbeta n)) z‖ +
-          physicalYangMillsSU2AdjacentCommonTransferCouplingResidual Q R n
+          physicalYangMillsSU2AdjacentCommonTransferCouplingResidual
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n
       exact
         add_le_add_right
           (physicalYangMillsSU2AdjacentCommonRightCouplingOrbitMismatch_le
@@ -290,7 +298,8 @@ structure PhysicalYangMillsSU2AdjacentOrbitGeometryCouplingSummableInput where
   coupling_summable :
     Summable
       (fun n =>
-        physicalYangMillsSU2AdjacentCommonTransferCouplingResidual Q R n)
+        physicalYangMillsSU2AdjacentCommonTransferCouplingResidual
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n)
 
 namespace PhysicalYangMillsSU2AdjacentOrbitGeometryCouplingSummableInput
 
@@ -314,7 +323,8 @@ theorem orbitMismatch_summable
         (fun n =>
           physicalYangMillsSU2AdjacentCommonTransferOrbitGeometryResidual
               Q R n r k +
-            physicalYangMillsSU2AdjacentCommonTransferCouplingResidual Q R n) :=
+            physicalYangMillsSU2AdjacentCommonTransferCouplingResidual
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n) :=
     (G.orbitGeometry_summable r k).add G.coupling_summable
   refine Summable.of_nonneg_of_le
     (fun n => ?_)
