@@ -166,16 +166,16 @@ noncomputable def continuumSynthesis
     EuclideanSpace ℝ (Fin 3) →L[ℝ]
       Lp ℝ 2 L.continuumMeasure :=
   LinearMap.toContinuousLinearMap
-    (C.continuumSynthesisLinearMap m)
+    (continuumSynthesisLinearMap Q R L C m)
 
 @[simp]
 theorem continuumSynthesis_basisFun
     (m : ℕ) (k : Fin 3) :
-    C.continuumSynthesis m
+    continuumSynthesis Q R L C m
         (EuclideanSpace.basisFun (Fin 3) ℝ k) =
       C.continuumKrylovMode m k := by
   change
-    C.continuumSynthesisLinearMap m
+    continuumSynthesisLinearMap Q R L C m
         (EuclideanSpace.basisFun (Fin 3) ℝ k) =
       C.continuumKrylovMode m k
   unfold continuumSynthesisLinearMap
@@ -197,7 +197,7 @@ theorem finiteSynthesis_tendsto
         physicalYangMillsSU2ThreeModeEvolvedProjectiveSynthesis
           Q R L n m c)
       atTop
-      (𝓝 (C.continuumSynthesis m c)) := by
+      (𝓝 (continuumSynthesis Q R L C m c)) := by
   let b := (EuclideanSpace.basisFun (Fin 3) ℝ).toBasis
   have hsum :
       Tendsto
@@ -209,7 +209,7 @@ theorem finiteSynthesis_tendsto
         atTop
         (𝓝
           (∑ k : Fin 3,
-            (b.repr c k) • C.continuumSynthesis m (b k))) := by
+            (b.repr c k) • continuumSynthesis Q R L C m (b k))) := by
     apply tendsto_finset_sum (Finset.univ : Finset (Fin 3))
     intro k hk
     exact
@@ -228,8 +228,8 @@ coherence input of #5090. -/
 noncomputable def toEvolvedSynthesisCoherenceInput :
     PhysicalYangMillsSU2ThreeModeEvolvedSynthesisCoherenceInput
       Q R L where
-  continuumSynthesis := C.continuumSynthesis
-  finiteSynthesis_tendsto := C.finiteSynthesis_tendsto
+  continuumSynthesis := continuumSynthesis Q R L C
+  finiteSynthesis_tendsto := finiteSynthesis_tendsto Q R L C
 
 /-- Three Krylov-mode limits at every natural time are enough for same-subsequence
 strong limits of the theorem-generated exact finite excitation. -/
@@ -247,11 +247,11 @@ theorem
               physicalYangMillsVacuumNormalizedSU2ThreeModeEvolvedProjectiveContinuumImage
                 Q R L hInvariant (phi j) m)
             atTop
-            (𝓝 (C.continuumSynthesis m cInf)) := by
+            (𝓝 (continuumSynthesis Q R L C m cInf)) := by
   exact
     PhysicalYangMillsSU2ThreeModeEvolvedSynthesisCoherenceInput.physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice_exists_evolved_strong_limits
       Q R L
-      (C.toEvolvedSynthesisCoherenceInput)
+      (toEvolvedSynthesisCoherenceInput Q R L C)
       hInvariant
 
 /-- The same three Krylov-mode limits also inherit the existing uniform q0^m
@@ -276,13 +276,13 @@ theorem
                 physicalYangMillsVacuumNormalizedSU2ThreeModeEvolvedProjectiveContinuumImage
                   Q R L hInvariant (phi j) m)
               atTop
-              (𝓝 (C.continuumSynthesis m cInf)) ∧
-            ‖C.continuumSynthesis m cInf‖ ≤
+              (𝓝 (continuumSynthesis Q R L C m cInf)) ∧
+            ‖continuumSynthesis Q R L C m cInf‖ ≤
               GroundStateSourceFixedPairEnergy.twoSidedTwelveSpatialUniformTopOrthogonalContractionFactor ^ m := by
   exact
     PhysicalYangMillsSU2ThreeModeEvolvedSynthesisCoherenceInput.physicalYangMillsVacuumNormalizedSU2ThreeModeExcitationChoice_exists_evolved_strong_limits_q0
       Q R L
-      (C.toEvolvedSynthesisCoherenceInput)
+      (toEvolvedSynthesisCoherenceInput Q R L C)
       hInvariant s hs hcut
 
 end PhysicalYangMillsSU2ThreeModeEvolvedBasisCoherenceInput
