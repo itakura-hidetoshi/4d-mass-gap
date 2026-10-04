@@ -199,29 +199,33 @@ theorem finiteSynthesis_tendsto
       atTop
       (𝓝 (continuumSynthesis Q R L C m c)) := by
   let b := (EuclideanSpace.basisFun (Fin 3) ℝ).toBasis
-  have hsum :
+  rw [← b.sum_repr c]
+  simp only [map_sum, map_smul]
+  apply tendsto_finset_sum (Finset.univ : Finset (Fin 3))
+  intro k hk
+  have hkrylov :
       Tendsto
         (fun n =>
-          ∑ k : Fin 3,
-            (b.repr c k) •
-              physicalYangMillsSU2ThreeModeEvolvedProjectiveSynthesis
-                Q R L n m (b k))
+          physicalYangMillsSU2ThreeModeEvolvedProjectiveSynthesis
+            Q R L n m
+            (EuclideanSpace.basisFun (Fin 3) ℝ k))
         atTop
-        (𝓝
-          (∑ k : Fin 3,
-            (b.repr c k) • continuumSynthesis Q R L C m (b k))) := by
-    apply tendsto_finset_sum (Finset.univ : Finset (Fin 3))
-    intro k hk
-    exact
-      ((C.krylov_tendsto m k).congr'
-        (Filter.Eventually.of_forall fun n => by
-          symm
-          exact
-            physicalYangMillsSU2ThreeModeEvolvedProjectiveSynthesis_basisFun
-              Q R L n m k)).const_smul (b.repr c k)
-  have hc : (∑ k : Fin 3, b.repr c k • b k) = c :=
-    b.sum_repr c
-  simpa [b, hc] using hsum
+        (𝓝 (C.continuumKrylovMode m k)) := by
+    apply (C.krylov_tendsto m k).congr'
+    exact Filter.Eventually.of_forall fun n => by
+      exact
+        (physicalYangMillsSU2ThreeModeEvolvedProjectiveSynthesis_basisFun
+          Q R L n m k).symm
+  have hcont :
+      continuumSynthesis Q R L C m
+          (EuclideanSpace.basisFun (Fin 3) ℝ k) =
+        C.continuumKrylovMode m k :=
+    continuumSynthesis_basisFun Q R L C m k
+  have hb :
+      b k = EuclideanSpace.basisFun (Fin 3) ℝ k := by
+    rfl
+  rw [hb, hcont]
+  exact hkrylov.const_smul (b.repr c k)
 
 /-- The three concrete Krylov-mode limits theorem-generate the synthesis
 coherence input of #5090. -/
