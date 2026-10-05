@@ -1,6 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousGroundStateFiberCrossRatio
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateJointOneLinkSplitDirectNormalizedFiberBridge
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateJointOneLinkWeightFactorization
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumRepresentative
 import Mathlib.MeasureTheory.Integral.Prod
 import Mathlib.Tactic
@@ -331,11 +330,25 @@ theorem
   filter_upwards [by simpa [μOff] using hright] with retained hretained
   intro right hoff
   filter_upwards [hretained right hoff] with g hrightEq
-  rw [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkFiberWeight_eq_transferNorm_vacuum_kernel_vacuum
-      H N hN beta hbeta left right target g]
-  unfold
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompatibleFiberWeight
+  change
+    ENNReal.ofReal
+        (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+              H N hN beta hbeta‖⁻¹ *
+          ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+              H N hN beta hbeta).1 left *
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+              H N beta left (Function.update right target g) *
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+              H N hN beta hbeta).1 (Function.update right target g))) =
+      ENNReal.ofReal
+        (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+              H N hN beta hbeta‖⁻¹ *
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+              H N hN beta hbeta left *
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+              H N beta left (Function.update right target g) *
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+              H N hN beta hbeta (Function.update right target g)))
   rw [← hleftEq, ← hrightEq]
 
 /-- Therefore the historical normalized genuine target-fiber measure equals
