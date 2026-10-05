@@ -109,7 +109,12 @@ theorem
     _ = ((Finset.range M).sum (fun m => q ^ m)) * V := by
       rw [Finset.sum_mul]
     _ = ((1 - q ^ M) / (1 - q)) * V := by
-      rw [geom_sum_of_lt_one hqLt]
+      have hqNe : q ≠ 1 := ne_of_lt hqLt
+      rw [geom_sum_eq hqNe]
+      have hqSubOneNe : q - 1 ≠ 0 := sub_ne_zero.mpr hqNe
+      have hOneSubQNe : 1 - q ≠ 0 := sub_ne_zero.mpr hqNe.symm
+      field_simp [hqSubOneNe, hOneSubQNe]
+      ring
     _ =
       ((1 -
           (periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorFirstBootstrapStrictPersistentFixedVolumeRandomScanRate
