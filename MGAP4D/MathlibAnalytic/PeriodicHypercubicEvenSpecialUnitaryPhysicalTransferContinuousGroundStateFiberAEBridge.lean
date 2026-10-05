@@ -169,6 +169,71 @@ theorem
   simpa [μTarget, μOff, split, Prod.swap] using
     (Measure.ae_ae_of_ae_prod hswap)
 
+private theorem ae_eq_update_of_split_target_ae
+    {H N : ℕ}
+    (target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (retained :
+      PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
+        Matrix.specialUnitaryGroup (Fin N) ℂ)
+    (right : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (hoff :
+      periodicHypercubicEvenSpatialSliceOffTargetRestriction target right = retained)
+    (f g :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ℝ)
+    (h :
+      (fun targetCfg :
+          PeriodicHypercubicEvenSpatialSliceTargetLink H target →
+            Matrix.specialUnitaryGroup (Fin N) ℂ =>
+        f ((periodicHypercubicEvenSpatialSliceTargetOffTargetMeasurableEquiv
+          (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target).symm
+          (targetCfg, retained))) =ᵐ[
+            Measure.pi
+              (fun _ : PeriodicHypercubicEvenSpatialSliceTargetLink H target =>
+                normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ))]
+      fun targetCfg =>
+        g ((periodicHypercubicEvenSpatialSliceTargetOffTargetMeasurableEquiv
+          (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target).symm
+          (targetCfg, retained))) :
+    (fun u : Matrix.specialUnitaryGroup (Fin N) ℂ =>
+      f (Function.update right target u)) =ᵐ[
+        normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)]
+    fun u =>
+      g (Function.update right target u) := by
+  classical
+  let μGroup := normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)
+  let μTarget := Measure.pi
+    (fun _ : PeriodicHypercubicEvenSpatialSliceTargetLink H target => μGroup)
+  let split := periodicHypercubicEvenSpatialSliceTargetOffTargetMeasurableEquiv
+    (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target
+  let eval := periodicHypercubicEvenSpatialSliceTargetEvaluationMeasurableEquiv
+    (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target
+  have heval : MeasurePreserving eval μTarget μGroup := by
+    simpa [μTarget, μGroup, eval] using
+      (periodicHypercubicEvenSpatialSliceTargetEvaluation_measurePreserving
+        (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target μGroup)
+  have hcomp :
+      (fun u : Matrix.specialUnitaryGroup (Fin N) ℂ =>
+        f (split.symm (eval.symm u, retained))) =ᵐ[μGroup]
+      fun u =>
+        g (split.symm (eval.symm u, retained)) := by
+    have h' :
+        (fun targetCfg =>
+          f (split.symm (targetCfg, retained))) =ᵐ[μTarget]
+        fun targetCfg =>
+          g (split.symm (targetCfg, retained)) := by
+      simpa [μTarget, split] using h
+    simpa [Function.comp_def] using
+      heval.symm.quasiMeasurePreserving.ae_eq_comp h'
+  filter_upwards [hcomp] with u hu
+  have hcoord :
+      split.symm (eval.symm u, retained) = Function.update right target u := by
+    have hupdate :=
+      periodicHypercubicEvenSpatialSliceTargetOffTarget_symm_offTargetRestriction_eq_update
+        target right (eval.symm u)
+    rw [hoff] at hupdate
+    simpa [split, eval] using hupdate
+  simpa [hcoord] using hu
+
 /-- For off-target-Haar-a.e. retained context, every complete right boundary
 with that retained context has target-Haar-a.e. equality between the continuous
 vacuum and the historical representative after target replacement. -/
@@ -184,78 +249,27 @@ theorem
           normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ))),
       ∀ right : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
         periodicHypercubicEvenSpatialSliceOffTargetRestriction target right = retained →
-          (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
+          (fun u : Matrix.specialUnitaryGroup (Fin N) ℂ =>
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-              H N hN beta hbeta (Function.update right target g)) =ᵐ[
+              H N hN beta hbeta (Function.update right target u)) =ᵐ[
                 normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)]
-          fun g =>
+          fun u =>
             (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
-              H N hN beta hbeta).1 (Function.update right target g) := by
-  classical
-  let μTarget := Measure.pi
-    (fun _ : PeriodicHypercubicEvenSpatialSliceTargetLink H target =>
-      normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ))
-  let μOff := Measure.pi
-    (fun _ : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target =>
-      normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ))
-  let μGroup := normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)
-  let split := periodicHypercubicEvenSpatialSliceTargetOffTargetMeasurableEquiv
-    (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target
-  let eval := periodicHypercubicEvenSpatialSliceTargetEvaluationMeasurableEquiv
-    (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target
-  have hevalEval :
-      MeasurePreserving
-        (Function.eval
-          (⟨target, rfl⟩ : PeriodicHypercubicEvenSpatialSliceTargetLink H target))
-        μTarget μGroup := by
-    simpa [μTarget, μGroup] using
-      (MeasureTheory.measurePreserving_eval
-        (μ := fun _ : PeriodicHypercubicEvenSpatialSliceTargetLink H target => μGroup)
-        (⟨target, rfl⟩ : PeriodicHypercubicEvenSpatialSliceTargetLink H target))
-  have heval : MeasurePreserving eval μTarget μGroup := by
-    have hfun :
-        (eval :
-          (PeriodicHypercubicEvenSpatialSliceTargetLink H target →
-            Matrix.specialUnitaryGroup (Fin N) ℂ) →
-          Matrix.specialUnitaryGroup (Fin N) ℂ) =
-        Function.eval
-          (⟨target, rfl⟩ : PeriodicHypercubicEvenSpatialSliceTargetLink H target) := by
-      funext targetCfg
-      simp [eval]
-    rw [hfun]
-    exact hevalEval
+              H N hN beta hbeta).1 (Function.update right target u) := by
   have hfiber :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_ae_eq_existing_splitTargetFiber
       H N hN beta hbeta target
-  change ∀ᵐ retained ∂μOff, _
-  filter_upwards [by simpa [μTarget, μOff, split] using hfiber] with retained hretained
+  filter_upwards [hfiber] with retained hretained
   intro right hoff
-  have htarget :
-      ∀ᵐ g ∂μGroup,
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-            H N hN beta hbeta (split.symm (eval.symm g, retained)) =
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
-            H N hN beta hbeta).1 (split.symm (eval.symm g, retained)) :=
-    heval.symm.quasiMeasurePreserving.ae hretained
-  filter_upwards [htarget] with g hg
-  have hcoord :
-      split.symm (eval.symm g, retained) = Function.update right target g := by
-    have h :=
-      periodicHypercubicEvenSpatialSliceTargetOffTarget_symm_offTargetRestriction_eq_update
-        target right (eval.symm g)
-    rw [hoff] at h
-    simpa [split, eval] using h
-  calc
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-        H N hN beta hbeta (Function.update right target g) =
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-        H N hN beta hbeta (split.symm (eval.symm g, retained)) := by
-          rw [hcoord]
-    _ = (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
-          H N hN beta hbeta).1 (split.symm (eval.symm g, retained)) := hg
-    _ = (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
-          H N hN beta hbeta).1 (Function.update right target g) := by
-          rw [hcoord]
+  exact
+    ae_eq_update_of_split_target_ae
+      target retained right hoff
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+        H N hN beta hbeta)
+      (fun B =>
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
+          H N hN beta hbeta).1 B)
+      hretained
 
 /-- Continuous-compatible ENNReal fiber weight retaining the exact historical
 left-vacuum and transfer-norm scalar factors, but using the canonical
