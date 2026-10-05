@@ -158,7 +158,9 @@ noncomputable instance
   have hCardPos :
       0 < Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) :=
     Fintype.card_pos_iff.mpr
-      (inferInstance : Nonempty (PeriodicHypercubicEvenSpatialSliceLink H))
+      ⟨(⟨(0 : PeriodicHypercubicEvenVertex H), by
+          simp [periodicHypercubicEvenOnPrimaryReflectionPlane]⟩,
+        ⟨(1 : PeriodicHypercubicAxis), by norm_num⟩)⟩
   have hCardNe :
       (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ≥0∞) ≠ 0 := by
     exact_mod_cast Nat.ne_of_gt hCardPos
