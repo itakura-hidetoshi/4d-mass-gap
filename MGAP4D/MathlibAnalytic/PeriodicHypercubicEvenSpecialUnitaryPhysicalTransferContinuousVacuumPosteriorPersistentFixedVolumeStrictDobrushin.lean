@@ -127,7 +127,7 @@ theorem
   let E : ℝ → ℝ := fun beta => Real.exp (R beta)
   have hE : ContinuousAt E 0 := by
     dsimp [E]
-    exact Real.continuous_exp.continuousAt.comp hR
+    exact Real.continuous_exp.continuousAt.comp' hR
   have hDenNe : E 0 + 1 ≠ 0 := by
     dsimp [E]
     positivity
