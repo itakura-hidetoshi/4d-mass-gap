@@ -67,7 +67,6 @@ private theorem log_sub_log_abs_le_of_mutual_exp_mul
     {x y R : ℝ}
     (hx : 0 < x)
     (hy : 0 < y)
-    (hR : 0 ≤ R)
     (hxy : x ≤ Real.exp R * y)
     (hyx : y ≤ Real.exp R * x) :
     |Real.log x - Real.log y| ≤ R := by
@@ -168,8 +167,31 @@ theorem
             H N beta left (Function.update Bg source sourceValue) *
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
             H N hN beta hbeta (Function.update Bg source sourceValue)) := by
-      rw [← Real.exp_add]
-      ring_nf
+      have hExp :
+          Real.exp (8 * beta) * Real.exp (8 * beta) =
+            Real.exp (16 * beta) := by
+        rw [← Real.exp_add]
+        congr 1
+        ring
+      calc
+        (Real.exp (8 * beta) *
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+              H N beta left (Function.update Bg source sourceValue)) *
+          (Real.exp (8 * beta) *
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+              H N hN beta hbeta (Function.update Bg source sourceValue)) =
+            (Real.exp (8 * beta) * Real.exp (8 * beta)) *
+              (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                  H N beta left (Function.update Bg source sourceValue) *
+                periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+                  H N hN beta hbeta (Function.update Bg source sourceValue)) := by
+              ring
+        _ = Real.exp (16 * beta) *
+              (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                  H N beta left (Function.update Bg source sourceValue) *
+                periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+                  H N hN beta hbeta (Function.update Bg source sourceValue)) := by
+              rw [hExp]
 
 /-- Reverse complete-weight comparison with the same source-change factor. -/
 theorem
@@ -255,8 +277,28 @@ theorem
         (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta left Bg *
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
             H N hN beta hbeta Bg) := by
-      rw [← Real.exp_add]
-      ring_nf
+      have hExp :
+          Real.exp (8 * beta) * Real.exp (8 * beta) =
+            Real.exp (16 * beta) := by
+        rw [← Real.exp_add]
+        congr 1
+        ring
+      calc
+        (Real.exp (8 * beta) *
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta left Bg) *
+          (Real.exp (8 * beta) *
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+              H N hN beta hbeta Bg) =
+            (Real.exp (8 * beta) * Real.exp (8 * beta)) *
+              (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta left Bg *
+                periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+                  H N hN beta hbeta Bg) := by
+              ring
+        _ = Real.exp (16 * beta) *
+              (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta left Bg *
+                periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+                  H N hN beta hbeta Bg) := by
+              rw [hExp]
 
 /-- The complete target-fiber log weight changes by at most `16 beta` at each
 inserted target value under one distinct source replacement. -/
@@ -305,7 +347,7 @@ theorem
         H N hN beta hbeta left right target source sourceValue g hNe
   have hlog :=
     log_sub_log_abs_le_of_mutual_exp_mul
-      hx hy (by nlinarith [hbeta]) hxy hyx
+      hx hy hxy hyx
   simpa [
     x, y,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteLogWeight
@@ -572,10 +614,22 @@ noncomputable def
     · have hOld :=
         Dold.conditionalIntegral_difference_abs_le
           target source A C hAgree phi hphi hphiBound
+      have hDoldInfluence :
+          Dold.influence target source =
+            periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRemoteInfluence
+              beta (R.epsilon target source) := by
+        dsimp [Dold]
+        change
+          periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorNonstrictInfluence
+              H beta R.epsilon target source =
+            periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRemoteInfluence
+              beta (R.epsilon target source)
+        simp [
+          periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorNonstrictInfluence,
+          hdiag, hlocal]
+      rw [hDoldInfluence] at hOld
       simpa [
-        Dold,
         periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRefinedInfluence,
-        periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorNonstrictInfluence,
         hdiag, hlocal] using hOld
 
 /-- First-bootstrap refined influence data: direct local source control plus the
