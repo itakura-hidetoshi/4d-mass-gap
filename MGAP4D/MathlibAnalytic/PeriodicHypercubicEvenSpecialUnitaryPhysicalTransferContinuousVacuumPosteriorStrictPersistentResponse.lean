@@ -301,7 +301,7 @@ theorem
   intro k
   have hExact :=
     periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorTargetExpectationResponseBound_of_blockDoeblinTerminalDecay
-      (periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorFirstBootstrapFixedVolumeDobrushkinData
+      (periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorFirstBootstrapFixedVolumeDobrushinData
         H N hN beta hbeta hbetaPos hbetaCutoff B).toPeriodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorNonstrictInfluenceData
       target source sourceValue k
   have hRadius :=
