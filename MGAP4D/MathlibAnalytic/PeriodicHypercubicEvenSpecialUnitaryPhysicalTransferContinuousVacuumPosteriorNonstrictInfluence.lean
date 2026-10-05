@@ -464,20 +464,20 @@ noncomputable def
               periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRemoteInfluence,
               p, q] using hHalf
           calc
-            ∫ g,
-                |p g - q g|
-                ∂normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ) =
-              2 *
+            2 * 1 *
                 ((2 : ℝ)⁻¹ *
                   ∫ g,
                     |p g - q g|
-                    ∂normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)) := by
-                ring
-            _ ≤
+                    ∂normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)) ≤
+              2 * 1 *
+                periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRemoteInfluence
+                  beta (R.epsilon target source) := by
+              exact mul_le_mul_of_nonneg_left hHalf' (by norm_num)
+            _ =
               2 *
                 periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRemoteInfluence
-                  beta (R.epsilon target source) :=
-              mul_le_mul_of_nonneg_left hHalf' (by norm_num)
+                  beta (R.epsilon target source) := by
+              ring
         _ =
             2 *
               periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorNonstrictInfluence
