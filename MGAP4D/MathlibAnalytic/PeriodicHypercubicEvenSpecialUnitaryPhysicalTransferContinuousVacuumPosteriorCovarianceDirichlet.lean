@@ -253,7 +253,7 @@ theorem
         ∫ A,
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalExpectationBCF
             H N hN beta hbeta B (PF * O) A target ∂mu := by
-      rw [hLeftStationary]
+      simpa [mu] using hLeftStationary.symm
     _ = ∫ A, PF A * PO A ∂mu := by
       apply integral_congr_ae
       filter_upwards with A
@@ -268,7 +268,8 @@ theorem
       apply integral_congr_ae
       filter_upwards with A
       exact (hRightPoint A).symm
-    _ = ∫ A, PO A * F A ∂mu := hRightStationary
+    _ = ∫ A, PO A * F A ∂mu := by
+      simpa [mu] using hRightStationary
     _ = ∫ A, F A * PO A ∂mu := by
       apply integral_congr_ae
       filter_upwards with A
@@ -455,6 +456,9 @@ theorem
   let mu :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorMeasure
       H N hN beta hbeta B
+  letI : IsProbabilityMeasure mu :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorMeasure_isProbabilityMeasure
+      H N hN beta hbeta B
   let PF :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalExpectationContinuousBCF
       H N hN beta hbeta B target F
@@ -505,6 +509,9 @@ theorem
       PF.variation target * PG.variation target := by
   let mu :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorMeasure
+      H N hN beta hbeta B
+  letI : IsProbabilityMeasure mu :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorMeasure_isProbabilityMeasure
       H N hN beta hbeta B
   let QF :=
     periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorSingleLinkFluctuationContinuousBCF
@@ -612,6 +619,9 @@ theorem
           H N hN beta hbeta B target G) := by
   let mu :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorMeasure
+      H N hN beta hbeta B
+  letI : IsProbabilityMeasure mu :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorMeasure_isProbabilityMeasure
       H N hN beta hbeta B
   let PF :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalExpectationContinuousBCF
