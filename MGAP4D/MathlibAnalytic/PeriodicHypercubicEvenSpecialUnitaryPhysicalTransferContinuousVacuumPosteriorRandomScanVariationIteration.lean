@@ -494,10 +494,19 @@ noncomputable def
         H N
         (fun A =>
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorRandomScanConditionalExpectationContinuousBCF
-            H N hN beta hbeta B O A) := by
-    simpa only [
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorRandomScanConditionalExpectationContinuousBCF_apply] using
-      P.randomScanVariationBound D
+            H N hN beta hbeta B O A) :=
+    { variation :=
+        periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRandomScanUpdatedVariation
+          D P.variation
+      variation_nonneg :=
+        periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRandomScanUpdatedVariation_nonneg
+          D P.variation P.variation_nonneg
+      variation_bound := by
+        intro source A C hAgree
+        simpa only [
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorRandomScanConditionalExpectationContinuousBCF_apply] using
+          periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosterior_randomScanConditionalExpectationBCF_difference_abs_le
+            P D source A C hAgree }
   exact Q.toCenteredVariationProfile
 
 @[simp] theorem
