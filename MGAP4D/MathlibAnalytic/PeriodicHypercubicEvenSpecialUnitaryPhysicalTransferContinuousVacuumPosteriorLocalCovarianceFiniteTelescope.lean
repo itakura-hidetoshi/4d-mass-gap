@@ -1139,6 +1139,20 @@ theorem
         periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRandomScanFiniteResolventProfile
       rw [
         periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRandomScanVariationPartialSum_eq_sum]
+      have hScaleSum :
+          (Finset.range M).sum
+              (fun m =>
+                n⁻¹ *
+                  (radius *
+                    periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRandomScanVariationIterate
+                      D P.variation m source)) =
+            n⁻¹ *
+              (Finset.range M).sum
+                (fun m =>
+                  radius *
+                    periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRandomScanVariationIterate
+                      D P.variation m source) := by
+        rw [Finset.mul_sum]
       have hRadiusSum :
           (Finset.range M).sum
               (fun m =>
@@ -1151,7 +1165,7 @@ theorem
                   periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRandomScanVariationIterate
                     D P.variation m source) := by
         rw [Finset.mul_sum]
-      rw [hRadiusSum]
+      rw [hScaleSum, hRadiusSum]
       ring
 
 end
