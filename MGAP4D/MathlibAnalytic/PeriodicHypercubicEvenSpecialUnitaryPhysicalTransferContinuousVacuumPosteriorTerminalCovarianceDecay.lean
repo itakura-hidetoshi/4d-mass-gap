@@ -153,25 +153,21 @@ theorem
         ∫ A, F A * (G A - mG) ∂mu := by
     unfold
       periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorCovariance
-      periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorMean
     change
       (∫ A, F A * G A ∂mu) -
-          (∫ A, F A ∂mu) * (∫ A, G A ∂mu) =
+          (∫ A, F A ∂mu) * mG =
         ∫ A, F A * (G A - mG) ∂mu
-    rw [show mG = ∫ A, G A ∂mu by rfl]
     calc
       (∫ A, F A * G A ∂mu) -
-          (∫ A, F A ∂mu) * (∫ A, G A ∂mu) =
+          (∫ A, F A ∂mu) * mG =
         (∫ A, F A * G A ∂mu) -
-          ∫ A, F A * (∫ X, G X ∂mu) ∂mu := by
+          ∫ A, F A * mG ∂mu := by
             rw [integral_mul_const]
       _ =
-        ∫ A,
-          (F A * G A -
-            F A * (∫ X, G X ∂mu)) ∂mu := by
-              rw [integral_sub hFGInt hFmGInt]
+        ∫ A, (F A * G A - F A * mG) ∂mu := by
+          rw [integral_sub hFGInt hFmGInt]
       _ =
-        ∫ A, F A * (G A - ∫ X, G X ∂mu) ∂mu := by
+        ∫ A, F A * (G A - mG) ∂mu := by
           apply integral_congr_ae
           filter_upwards with A
           ring
@@ -198,6 +194,7 @@ theorem
           ‖F‖ * R ∂mu := by
       apply integral_mono hAbsCenteredProductInt hBoundInt
       intro A
+      change |F A * (G A - mG)| ≤ ‖F‖ * R
       rw [abs_mul]
       exact
         mul_le_mul
