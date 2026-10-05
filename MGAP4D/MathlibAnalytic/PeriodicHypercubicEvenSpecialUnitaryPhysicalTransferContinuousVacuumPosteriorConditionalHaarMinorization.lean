@@ -1,4 +1,4 @@
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumPosteriorSingleLinkConditional
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumPosteriorNonstrictInfluence
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumPointwiseHarnack
 import Mathlib.Tactic
 
@@ -146,9 +146,30 @@ theorem
             H N beta left righth *
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
             H N hN beta hbeta righth) := by
-      dsimp [R]
-      rw [← Real.exp_add]
-      ring_nf
+      have hRR : R * R = Real.exp (16 * beta) := by
+        dsimp [R]
+        rw [← Real.exp_add]
+        congr 1
+        ring
+      calc
+        (R *
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+              H N beta left righth) *
+          (R *
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+              H N hN beta hbeta righth) =
+            (R * R) *
+              (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                  H N beta left righth *
+                periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+                  H N hN beta hbeta righth) := by ring
+        _ =
+            Real.exp (16 * beta) *
+              (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                  H N beta left righth *
+                periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+                  H N hN beta hbeta righth) := by
+          rw [hRR]
 
 /-- The posterior one-link conditional density has the uniform pointwise floor
 exp(-16 beta), independently of the lattice volume and environment. -/
@@ -179,12 +200,21 @@ theorem
     hWContinuous.integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
   have hZPos : 0 < ∫ h, W h ∂μ := by
-    have hPartition :=
-      continuousExpPartition_pos μ logW
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteLogWeight_continuous
-          H N hN beta hbeta B A target)
-    unfold continuousExpPartition at hPartition
-    simpa [W, logW] using hPartition
+    have hPartition :
+        0 < ∫ x, Real.exp (logW x) ∂μ := by
+      simpa [continuousExpPartition] using
+        continuousExpPartition_pos μ logW
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteLogWeight_continuous
+            H N hN beta hbeta B A target)
+    have hIntegralEq :
+        (∫ x, Real.exp (logW x) ∂μ) = ∫ x, W x ∂μ := by
+      apply integral_congr_ae
+      filter_upwards with x
+      simpa [W, logW] using
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteLogWeight_exp
+          H N hN beta hbeta B A target x
+    rw [hIntegralEq] at hPartition
+    exact hPartition
   have hZUpper :
       (∫ h, W h ∂μ) <= Real.exp (16 * beta) * W g := by
     have hConstInt : Integrable (fun _h :
