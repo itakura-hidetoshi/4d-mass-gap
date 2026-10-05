@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.ContinuousNormalizedExponentialCrossRatioTV
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumFiberDistortion
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryFinitePhysicalTransferProjectedTail
 import Mathlib.Tactic
 
 /-!
@@ -130,20 +131,29 @@ theorem
           H N right target) :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight_continuous
       H N right target
-  have hPair : Continuous
+  have hKernelSwap : Continuous
       (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
-        (left,
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
-            H N right target g)) :=
-    continuous_const.prodMk hUpdate
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
+            H N right target g)
+          left) :=
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_right_continuous
+      H N beta left).comp hUpdate
   have hKernel : Continuous
       (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
           H N beta left
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
-            H N right target g)) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta).comp hPair
+            H N right target g)) := by
+    convert hKernelSwap using 1
+    funext g
+    exact
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
+        H N hN beta hbeta
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
+          H N right target g)
+        left
   have hVacuum : Continuous
       (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
