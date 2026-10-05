@@ -98,7 +98,7 @@ theorem
     periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRemoteInfluence
   dsimp [radius]
   rw [hRewrite]
-  exact hFrac.trans hTail
+  simpa [radius] using hFrac.trans hTail
 
 structure
     PeriodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorSpatialRemoteResponseDecayData
@@ -173,7 +173,7 @@ noncomputable def remoteInfluenceProfile
     {R :
       PeriodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRemoteExpectationResponseMatrixData
         H N hN beta hbeta}
-    (D :
+    (_D :
       PeriodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorSpatialRemoteResponseDecayData
         R)
     (target source : PeriodicHypercubicEvenSpatialSliceLink H) : ℝ := by
@@ -202,13 +202,17 @@ theorem remoteInfluenceProfile_le
   classical
   unfold remoteInfluenceProfile
   by_cases hdiag : source = target
-  · simp [hdiag, D.influencePrefactor_nonneg,
-      pow_nonneg D.ratio_nonneg]
+  · simp only [hdiag, if_true]
+    exact
+      mul_nonneg D.influencePrefactor_nonneg
+        (pow_nonneg D.ratio_nonneg _)
   · simp only [hdiag, if_false]
     by_cases hlocal :
         periodicHypercubicEvenSpatialSlicePlaquetteLocal H target source
-    · simp [hlocal, D.influencePrefactor_nonneg,
-        pow_nonneg D.ratio_nonneg]
+    · simp only [hlocal, if_true]
+      exact
+        mul_nonneg D.influencePrefactor_nonneg
+          (pow_nonneg D.ratio_nonneg _)
     · simp only [hlocal, if_false]
       have hLinear :=
         periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRemoteInfluence_le_two_mul_div_exp_neg_eight
@@ -319,8 +323,19 @@ theorem localInfluenceProfile_sum_le
       (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
         localInfluenceProfile beta target source) =
         (neighbors.card : ℝ) * q := by
-    dsimp [neighbors, q]
-    simp [localInfluenceProfile, nsmul_eq_mul]
+    change
+      (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
+        if source ∈ neighbors then q else 0) =
+        (neighbors.card : ℝ) * q
+    rw [← Finset.sum_filter]
+    have hFilter :
+        (Finset.univ.filter fun source :
+          PeriodicHypercubicEvenSpatialSliceLink H => source ∈ neighbors) =
+          neighbors := by
+      ext source
+      simp
+    rw [hFilter]
+    simp [nsmul_eq_mul]
   rw [hEq]
   exact mul_le_mul_of_nonneg_right hCard hq
 
@@ -436,6 +451,7 @@ theorem refinedRowSum_le_coefficient
       (∑ source : PeriodicHypercubicEvenSpatialSliceLink H,
         localInfluenceProfile beta target source) +
       D.remoteRowMass target := by
+        unfold remoteRowMass
         rw [← Finset.sum_add_distrib]
         apply Finset.sum_congr rfl
         intro source _hSource
