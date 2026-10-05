@@ -188,8 +188,8 @@ expectation-response radius. -/
 noncomputable def
     periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRemoteInfluence
     (beta epsilon : ℝ) : ℝ :=
-  compactHaarOscillationInfluence
-    (2 * (epsilon / Real.exp (-8 * beta)))
+  let R := 2 * (epsilon / Real.exp (-8 * beta))
+  (Real.exp R - 1) / (Real.exp R + 1)
 
 /-- The remote influence is nonnegative for a nonnegative response radius. -/
 theorem
@@ -199,11 +199,17 @@ theorem
     0 ≤
       periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRemoteInfluence
         beta epsilon := by
-  unfold
-    periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRemoteInfluence
-  apply compactHaarOscillationInfluence_nonneg
-  exact mul_nonneg (by norm_num)
-    (div_nonneg hepsilon (Real.exp_pos _).le)
+  let R : ℝ := 2 * (epsilon / Real.exp (-8 * beta))
+  have hR : 0 ≤ R := by
+    dsimp [R]
+    exact mul_nonneg (by norm_num)
+      (div_nonneg hepsilon (Real.exp_pos _).le)
+  have hnum : 0 ≤ Real.exp R - 1 :=
+    sub_nonneg.mpr (Real.one_le_exp hR)
+  have hden : 0 ≤ Real.exp R + 1 := by positivity
+  simpa [
+    periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRemoteInfluence,
+    R] using div_nonneg hnum hden
 
 /-- Nonstrict influence profile: zero diagonal, unit local fallback, and the
 sharp remote response-derived coefficient. -/
@@ -395,7 +401,7 @@ noncomputable def
         _ = 2 *
             periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorNonstrictInfluence
               H beta R.epsilon target source := by
-          simp [
+          norm_num [
             periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorNonstrictInfluence,
             hdiag, hlocal]
     · let p :=
