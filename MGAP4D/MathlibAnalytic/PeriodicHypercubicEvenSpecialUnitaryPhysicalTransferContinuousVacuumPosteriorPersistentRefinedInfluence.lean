@@ -17,8 +17,10 @@ refined posterior influence data, with
 * the direct 32 beta local coefficient on plaquette-local pairs,
 * the response-generated coefficient on remote pairs.
 
-This file composes those two constructions.  It defines the persistent refined
-influence profile and its finite row, column, and total coefficients, proves the
+This file composes those two constructions.  The resulting scalar influence
+profile depends only on H and beta, not on N or the boundary configuration.
+It defines the persistent refined influence profile and its finite row, column,
+and total coefficients, proves the
 basic nonnegativity bounds needed for a second Dobrushin bootstrap, and records
 that the entire persistent refined matrix vanishes at beta = 0.
 
