@@ -131,27 +131,14 @@ theorem
           H N right target) :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight_continuous
       H N right target
-  have hKernelSwap : Continuous
-      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
-            H N right target g)
-          left) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_right_continuous
-      H N beta left).comp hUpdate
   have hKernel : Continuous
       (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
           H N beta left
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
-            H N right target g)) := by
-    exact hKernelSwap.congr fun g =>
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
-        H N hN beta hbeta
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
-          H N right target g)
-        left).symm
+            H N right target g)) :=
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      H N beta).comp₂ continuous_const hUpdate
   have hVacuum : Continuous
       (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
@@ -160,9 +147,9 @@ theorem
             H N right target g)) :=
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
       H N hN beta hbeta).comp hUpdate
-  unfold
+  simpa only [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteWeight
-  exact hKernel.mul hVacuum
+  ] using hKernel.mul hVacuum
 
 /-- The complete target-fiber weight is strictly positive. -/
 theorem
