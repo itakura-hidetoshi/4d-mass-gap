@@ -25,6 +25,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory Filter
+open scoped ENNReal
 
 noncomputable section
 
@@ -152,9 +153,8 @@ theorem
     calc
       (∫⁻ z, ENNReal.ofReal (F z) ∂(μ.prod ν)) =
           ∫⁻ A, ∫⁻ g, ENNReal.ofReal (f (Function.update A target g)) ∂ν ∂μ := by
-            rw [MeasureTheory.lintegral_prod]
-            · rfl
-            · exact hFcont.measurable.ennreal_ofReal.aemeasurable
+            rw [MeasureTheory.lintegral_prod _
+              hFcont.measurable.ennreal_ofReal.aemeasurable]
       _ = ∫⁻ A, ENNReal.ofReal (f A) ∂μ := by
         simpa [μ, ν] using
           periodicHypercubicEvenSpecialUnitarySpatialSliceHaar_lintegral_singleLink_average
@@ -166,9 +166,8 @@ theorem
     calc
       (∫⁻ z, ENNReal.ofReal (-F z) ∂(μ.prod ν)) =
           ∫⁻ A, ∫⁻ g, ENNReal.ofReal (-f (Function.update A target g)) ∂ν ∂μ := by
-            rw [MeasureTheory.lintegral_prod]
-            · rfl
-            · exact hFcont.neg.measurable.ennreal_ofReal.aemeasurable
+            rw [MeasureTheory.lintegral_prod _
+              hFcont.neg.measurable.ennreal_ofReal.aemeasurable]
       _ = ∫⁻ A, ENNReal.ofReal (-f A) ∂μ := by
         simpa [μ, ν] using
           periodicHypercubicEvenSpecialUnitarySpatialSliceHaar_lintegral_singleLink_average
@@ -370,16 +369,10 @@ theorem
   rw [MeasureTheory.integral_tilted, MeasureTheory.integral_tilted]
   simp_rw [smul_eq_mul, div_mul_eq_mul_div]
   rw [integral_div, integral_div]
-  have hExp :
-      ∀ A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
-        Real.exp
-            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorLogWeight
-              H N hN beta hbeta B A) =
-          w A := fun A =>
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorLogWeight_exp
-      H N hN beta hbeta B A
   congr 1
-  simpa [μ, w] using hRaw
+  simpa only [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorLogWeight_exp
+  ] using hRaw
 
 end
 
