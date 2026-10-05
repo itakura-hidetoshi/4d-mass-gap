@@ -124,6 +124,13 @@ theorem
     exact
       periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorFirstBootstrapFixedVolumeRandomScanRate_lt_one
         H beta hbetaPos hbetaCutoff
+  have hOneSubQNe : 1 - q ≠ 0 :=
+    ne_of_gt (sub_pos.mpr hqLt)
+  have hGeom :
+      (Finset.range M).sum (fun m => q ^ m) =
+        (1 - q ^ M) / (1 - q) := by
+    apply (eq_div_iff hOneSubQNe).2
+    exact geom_sum_mul_neg q M
   rw [
     periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRandomScanVariationPartialSum_eq_sum]
   calc
@@ -143,7 +150,7 @@ theorem
       ((Finset.range M).sum (fun m => q ^ m)) * V := by
         rw [Finset.sum_mul]
     _ = ((1 - q ^ M) / (1 - q)) * V := by
-      rw [geom_sum_of_lt_one hqLt]
+      rw [hGeom]
     _ =
       ((1 -
           (periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorFirstBootstrapFixedVolumeRandomScanRate
@@ -295,7 +302,6 @@ theorem
       n⁻¹ * ((1 - q)⁻¹ * V) =
           V / (n * (1 - q)) := by
             field_simp [hnNe, hOneSubQNe]
-            ring
       _ = V / (1 - alpha) := by
         rw [hIdentity]
   unfold
