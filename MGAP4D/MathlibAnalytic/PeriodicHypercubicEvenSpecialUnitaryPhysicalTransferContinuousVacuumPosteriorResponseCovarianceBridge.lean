@@ -116,17 +116,27 @@ theorem
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
   apply Real.continuous_exp.comp
   apply continuous_const.mul
-  have hRelative :
+  have hRelativeG :
       Continuous
         (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
           (A target)⁻¹ * g) := by
     fun_prop
-  have hEnergy :
+  have hRelativeB :
+      Continuous
+        (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+          (A target)⁻¹ * B target) := by
+    fun_prop
+  have hEnergyG :
       Continuous
         (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
           specialUnitaryWilsonPlaquetteEnergy N ((A target)⁻¹ * g)) :=
-    (continuous_specialUnitaryWilsonPlaquetteEnergy N).comp hRelative
-  exact (hEnergy.sub continuous_const).add continuous_const
+    (continuous_specialUnitaryWilsonPlaquetteEnergy N).comp hRelativeG
+  have hEnergyB :
+      Continuous
+        (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+          specialUnitaryWilsonPlaquetteEnergy N ((A target)⁻¹ * B target)) :=
+    (continuous_specialUnitaryWilsonPlaquetteEnergy N).comp hRelativeB
+  exact (hEnergyG.sub hEnergyB).add continuous_const
 
 /-- Bounded-continuous carrier of the exact posterior local factor. -/
 noncomputable def
@@ -251,9 +261,13 @@ noncomputable def
         H N hN beta hbeta C B target g
     simp only [
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactorBCF_apply]
-    unfold
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactorVariation
-    simp only [if_pos rfl]
+    change
+      |periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+          H N beta A B target g -
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+          H N beta C B target g| ≤
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactorVariationWidth
+          beta
     unfold
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactorVariationWidth
     rw [abs_le]
@@ -405,7 +419,6 @@ theorem
       ((∫ A, F A * L A ∂mu) -
         (∫ A, F A ∂mu) * Z) / Z
   field_simp [hZNe]
-  ring
 
 /-- Any uniform posterior covariance bound K gives the ordinary remote
 expectation-response radius K / exp(-8 beta). -/
@@ -458,7 +471,7 @@ theorem
   have hCovG : |cov| ≤ K := by
     simpa [cov] using hCov g
   rw [abs_sub_comm]
-  rw [← hIdentity]
+  rw [hIdentity]
   change |cov / sourceMean| ≤ K / Real.exp (-8 * beta)
   rw [abs_div, abs_of_pos hMeanPos]
   apply (div_le_div_iff₀ hMeanPos hm).2
