@@ -676,18 +676,6 @@ theorem
         H N hN beta hbeta B G at hMeanG
   rw [hMeanG, hQFZero, hQGZero]
   simp only [zero_mul, sub_zero]
-  have hFInt : Integrable (fun A => F A) mu :=
-    F.continuous.integrable_of_hasCompactSupport
-      (HasCompactSupport.of_compactSpace _)
-  have hGInt : Integrable (fun A => G A) mu :=
-    G.continuous.integrable_of_hasCompactSupport
-      (HasCompactSupport.of_compactSpace _)
-  have hPFInt : Integrable (fun A => PF A) mu :=
-    PF.continuous.integrable_of_hasCompactSupport
-      (HasCompactSupport.of_compactSpace _)
-  have hPGInt : Integrable (fun A => PG A) mu :=
-    PG.continuous.integrable_of_hasCompactSupport
-      (HasCompactSupport.of_compactSpace _)
   have hExpand :
       (∫ A, QF A * QG A ∂mu) =
         (∫ A, F A * G A ∂mu) -
@@ -700,10 +688,18 @@ theorem
           (∫ A, F A * PG A ∂mu) -
           (∫ A, PF A * G A ∂mu) +
           (∫ A, PF A * PG A ∂mu)
-    have hFG : Integrable (fun A => F A * G A) mu := hFInt.mul hGInt
-    have hFPG : Integrable (fun A => F A * PG A) mu := hFInt.mul hPGInt
-    have hPFG : Integrable (fun A => PF A * G A) mu := hPFInt.mul hGInt
-    have hPFPG : Integrable (fun A => PF A * PG A) mu := hPFInt.mul hPGInt
+    have hFG : Integrable (fun A => F A * G A) mu :=
+      (F.continuous.mul G.continuous).integrable_of_hasCompactSupport
+        (HasCompactSupport.of_compactSpace _)
+    have hFPG : Integrable (fun A => F A * PG A) mu :=
+      (F.continuous.mul PG.continuous).integrable_of_hasCompactSupport
+        (HasCompactSupport.of_compactSpace _)
+    have hPFG : Integrable (fun A => PF A * G A) mu :=
+      (PF.continuous.mul G.continuous).integrable_of_hasCompactSupport
+        (HasCompactSupport.of_compactSpace _)
+    have hPFPG : Integrable (fun A => PF A * PG A) mu :=
+      (PF.continuous.mul PG.continuous).integrable_of_hasCompactSupport
+        (HasCompactSupport.of_compactSpace _)
     calc
       (∫ A, (F A - PF A) * (G A - PG A) ∂mu) =
           ∫ A,
