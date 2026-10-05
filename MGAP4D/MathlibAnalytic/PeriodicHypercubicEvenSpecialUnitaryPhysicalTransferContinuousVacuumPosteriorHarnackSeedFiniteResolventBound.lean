@@ -366,6 +366,7 @@ theorem
       D variation M source
   have hnPos : 0 < n := Nat.cast_pos.mpr hEdge
   have hnOne : 1 ≤ n := by
+    dsimp [n]
     exact_mod_cast (Nat.one_le_iff_ne_zero.mpr (Nat.ne_of_gt hEdge))
   have hInvLe : n⁻¹ ≤ 1 :=
     (inv_le_one₀ hnPos).2 hnOne
@@ -435,8 +436,13 @@ theorem
     unfold
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactorVariation
     by_cases he : e = target
-    · simp [he]
-    · simp [he, hWidth]
+    · subst e
+      simp [
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactorVariation,
+        width]
+    · simp [
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactorVariation,
+        he, width, hWidth]
   have hEdge :
       0 < Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) :=
     Fintype.card_pos_iff.mpr
