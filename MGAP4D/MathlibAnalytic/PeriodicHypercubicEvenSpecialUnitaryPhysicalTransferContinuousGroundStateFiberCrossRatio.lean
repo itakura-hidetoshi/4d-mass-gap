@@ -12,18 +12,20 @@ that depend on the inserted target value:
 * the canonical continuous physical vacuum on the updated right boundary.
 
 The left vacuum and the transfer-norm normalization are constant along the
-target fiber and disappear after normalization.  This file therefore packages
-the complete variable log weight
+target fiber and disappear after normalization.  We first package the complete
+positive variable weight
 
-  log K(left, right[target := g]) + log Omega(right[target := g]).
+  W(g) = K(left, right[target := g]) * Omega(right[target := g]),
 
-Both factors are strictly positive and continuous, so this is a genuine
-continuous real log weight on compact SU(N).  Its normalized exponential
-density is exactly the normalized product K * Omega.  Consequently the generic
-cross-ratio theorem of PR #5149 gives the sharp half-L1 / total-variation
-bound without any separate estimate of a normalization denominator.
+and only then define the complete log weight as log W(g).  This presentation
+keeps Lean elaboration small: continuity is proved once for the positive
+product, and continuity of the logarithm follows from strict positivity.
 
-This is still a pointwise continuous-vacuum fiber statement.  Identification
+The normalized exponential density of log W is exactly W / integral W.  Hence
+the generic cross-ratio theorem of PR #5149 supplies the sharp half-L1 /
+total-variation bound without any separate normalization-denominator estimate.
+
+This remains a pointwise continuous-vacuum fiber statement.  Identification
 with the historical genuine joint measure, whose definition uses the original
 L2 representative, is intentionally left to the next bridge.  No Euclidean
 time identification, H1-D5 exact descent, or complete Yang--Mills mass-gap
@@ -62,9 +64,125 @@ local instance continuousGroundStateFiberLogWeightBorelSpace
     BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
   specialUnitaryGroupBorelSpace N
 
-/-- The complete variable log weight of the continuous-vacuum ground-state
-right target-link fiber.  Constants independent of the target value are
-deliberately omitted because normalization cancels them exactly. -/
+/-- Right spatial boundary with the selected target link replaced by g. -/
+noncomputable def
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
+    (H N : ℕ)
+    (right : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (g : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N :=
+  periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
+    H N right target g
+
+/-- The target-link replacement map is continuous. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight_continuous
+    (H N : ℕ)
+    (right : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H) :
+    Continuous
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
+        H N right target) := by
+  simpa only [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
+  ] using
+    periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_continuous
+      H N right target
+
+/-- Complete positive variable weight of the continuous-vacuum ground-state
+right target-link fiber.  Factors constant along the target fiber are omitted. -/
+noncomputable def
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteWeight
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (left right :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (g : Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
+  periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+      H N beta left
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
+        H N right target g) *
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+      H N hN beta hbeta
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
+        H N right target g)
+
+/-- The complete target-fiber weight is continuous. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteWeight_continuous
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (left right :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H) :
+    Continuous
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteWeight
+        H N hN beta hbeta left right target) := by
+  have hUpdate :
+      Continuous
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
+          H N right target) :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight_continuous
+      H N right target
+  have hPair : Continuous
+      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
+        (left,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
+            H N right target g)) :=
+    continuous_const.prodMk hUpdate
+  have hKernel : Continuous
+      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta left
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
+            H N right target g)) :=
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      H N beta).comp hPair
+  have hVacuum : Continuous
+      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+          H N hN beta hbeta
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
+            H N right target g)) :=
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
+      H N hN beta hbeta).comp hUpdate
+  simpa only [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteWeight
+  ] using hKernel.mul hVacuum
+
+/-- The complete target-fiber weight is strictly positive. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteWeight_pos
+    (H N : ℕ)
+    (hN : 0 < N)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (left right :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (g : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    0 <
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteWeight
+        H N hN beta hbeta left right target g := by
+  unfold
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteWeight
+  exact mul_pos
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
+      H N beta left
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
+        H N right target g))
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos
+      H N hN beta hbeta
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
+        H N right target g))
+
+/-- Complete log weight of the continuous-vacuum target fiber. -/
 noncomputable def
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteLogWeight
     (H N : ℕ)
@@ -75,18 +193,11 @@ noncomputable def
       PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
     (target : PeriodicHypercubicEvenSpatialSliceLink H)
     (g : Matrix.specialUnitaryGroup (Fin N) ℂ) : ℝ :=
-  let updated :=
-    periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
-      H N right target g
   Real.log
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-        H N beta left updated) +
-    Real.log
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-        H N hN beta hbeta updated)
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteWeight
+      H N hN beta hbeta left right target g)
 
-/-- The complete continuous-vacuum target-fiber log weight is continuous in
-the inserted group value. -/
+/-- The complete continuous-vacuum target-fiber log weight is continuous. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteLogWeight_continuous
     (H N : ℕ)
@@ -99,54 +210,22 @@ theorem
     Continuous
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteLogWeight
         H N hN beta hbeta left right target) := by
-  let update :=
-    fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
-      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
-        H N right target g
-  have hUpdate : Continuous update := by
-    simpa [update] using
-      periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink_continuous
-        H N right target
-  have hPair : Continuous
-      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ => (left, update g)) :=
-    continuous_const.prodMk hUpdate
-  have hKernel : Continuous
-      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta left (update g)) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta).comp hPair
-  have hKernelLog : Continuous
-      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
-        Real.log
-          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-            H N beta left (update g))) := by
-    exact hKernel.log (fun g =>
-      ne_of_gt
-        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
-          H N beta left (update g)))
-  have hVacuum : Continuous
-      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-          H N hN beta hbeta (update g)) :=
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
-      H N hN beta hbeta).comp hUpdate
-  have hVacuumLog : Continuous
-      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
-        Real.log
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-            H N hN beta hbeta (update g))) := by
-    exact hVacuum.log (fun g =>
-      ne_of_gt
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos
-          H N hN beta hbeta (update g)))
-  simpa [
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteLogWeight,
-    update
-  ] using hKernelLog.add hVacuumLog
+  have hWeight :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteWeight_continuous
+      H N hN beta hbeta left right target
+  have hNonzero :
+      ∀ g : Matrix.specialUnitaryGroup (Fin N) ℂ,
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteWeight
+          H N hN beta hbeta left right target g ≠ 0 := fun g =>
+    ne_of_gt
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteWeight_pos
+        H N hN beta hbeta left right target g)
+  simpa only [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteLogWeight
+  ] using hWeight.log hNonzero
 
-/-- Exponentiating the complete log weight recovers exactly the variable
-one-slab-kernel times continuous-vacuum factor. -/
+/-- Exponentiating the complete log weight recovers the complete positive
+target-fiber weight exactly. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteLogWeight_exp
     (H N : ℕ)
@@ -160,27 +239,13 @@ theorem
     Real.exp
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteLogWeight
           H N hN beta hbeta left right target g) =
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta left
-          (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
-            H N right target g) *
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-          H N hN beta hbeta
-          (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
-            H N right target g) := by
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteWeight
+        H N hN beta hbeta left right target g := by
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteLogWeight
-  rw [Real.exp_add]
-  rw [Real.exp_log
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
-      H N beta left
-      (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
-        H N right target g))]
-  rw [Real.exp_log
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos
-      H N hN beta hbeta
-      (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
-        H N right target g))]
+  exact Real.exp_log
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteWeight_pos
+      H N hN beta hbeta left right target g)
 
 /-- Normalized Haar density of the continuous-vacuum ground-state right
 target-link fiber. -/
@@ -200,8 +265,7 @@ noncomputable def
       H N hN beta hbeta left right target)
     g
 
-/-- The normalized density is literally the normalized product of the raw
-one-slab kernel and the continuous physical vacuum. -/
+/-- The normalized density is literally W divided by its Haar integral. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkNormalizedDensity_eq
     (H N : ℕ)
@@ -214,23 +278,11 @@ theorem
     (g : Matrix.specialUnitaryGroup (Fin N) ℂ) :
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkNormalizedDensity
         H N hN beta hbeta left right target g =
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta left
-          (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
-            H N right target g) *
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-          H N hN beta hbeta
-          (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
-            H N right target g)) /
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteWeight
+          H N hN beta hbeta left right target g /
         ∫ h : Matrix.specialUnitaryGroup (Fin N) ℂ,
-          (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-              H N beta left
-              (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
-                H N right target h) *
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-              H N hN beta hbeta
-              (periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink
-                H N right target h))
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteWeight
+            H N hN beta hbeta left right target h
           ∂normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ) := by
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkNormalizedDensity
