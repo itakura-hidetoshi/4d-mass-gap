@@ -35,6 +35,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open Filter
+open scoped Topology
 
 noncomputable section
 
@@ -188,12 +189,8 @@ theorem
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactorVariation
     by_cases he : e = target
     · subst e
-      simp [
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactorVariation,
-        width]
-    · simp [
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactorVariation,
-        he, width, hWidth]
+      simp [width]
+    · simp [he, width, hWidth]
   have hResolvent :
       periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRandomScanFiniteResolventProfile
           D.toPeriodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorNonstrictInfluenceData
