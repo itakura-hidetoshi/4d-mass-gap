@@ -283,7 +283,9 @@ theorem
   induction k with
   | zero =>
       intro A
-      rfl
+      simp [
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorRandomScanFullBlockExpectationIterate
+      ]
   | succ k ih =>
       intro A
       let L :=
