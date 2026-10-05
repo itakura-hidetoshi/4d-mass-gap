@@ -140,20 +140,32 @@ theorem
           left) :=
     (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_right_continuous
       H N beta left).comp hUpdate
+  have hKernelEq :
+      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta left
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
+            H N right target g)) =
+      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H N beta
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
+            H N right target g)
+          left) := by
+    funext g
+    exact
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
+        H N hN beta hbeta left
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
+          H N right target g)
   have hKernel : Continuous
       (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
           H N beta left
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
             H N right target g)) := by
-    convert hKernelSwap using 1
-    funext g
-    exact
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
-        H N hN beta hbeta
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkUpdatedRight
-          H N right target g)
-        left
+    rw [hKernelEq]
+    exact hKernelSwap
   have hVacuum : Continuous
       (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
@@ -162,9 +174,9 @@ theorem
             H N right target g)) :=
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
       H N hN beta hbeta).comp hUpdate
-  simpa only [
+  unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteWeight
-  ] using hKernel.mul hVacuum
+  exact hKernel.mul hVacuum
 
 /-- The complete target-fiber weight is strictly positive. -/
 theorem
