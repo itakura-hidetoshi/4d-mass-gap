@@ -305,12 +305,18 @@ theorem
                 (sub_nonneg.mpr hnOne)
           · exact hWeighted
       _ = (n - 1 + alpha) * V := by ring
+  have hCardBound' :
+      periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRandomScanUpdatedVariation
+          D.toPeriodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorNonstrictInfluenceData
+          variation source * n ≤
+        (n - 1 + alpha) * V := by
+    simpa [mul_comm] using hCardBound
   have hDiv :
       periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRandomScanUpdatedVariation
           D.toPeriodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorNonstrictInfluenceData
           variation source ≤
         ((n - 1 + alpha) * V) / n :=
-    (le_div_iff₀ hnPos).2 hCardBound
+    (le_div_iff₀ hnPos).2 hCardBound'
   simpa [
     D,
     alpha,
