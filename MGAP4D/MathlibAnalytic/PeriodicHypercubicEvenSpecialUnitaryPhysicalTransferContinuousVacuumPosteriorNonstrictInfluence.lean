@@ -452,11 +452,32 @@ noncomputable def
             2 *
               periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRemoteInfluence
                 beta (R.epsilon target source) := by
-          unfold
-            periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRemoteInfluence
-          have hMul :=
-            mul_le_mul_of_nonneg_left hHalf (show (0 : ℝ) ≤ 2 by norm_num)
-          simpa [p, q] using hMul
+          have hHalf' :
+              (2 : ℝ)⁻¹ *
+                  ∫ g,
+                    |p g - q g|
+                    ∂normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ) ≤
+                periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRemoteInfluence
+                  beta (R.epsilon target source) := by
+            simpa [
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalHalfL1,
+              periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRemoteInfluence,
+              p, q] using hHalf
+          calc
+            ∫ g,
+                |p g - q g|
+                ∂normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ) =
+              2 *
+                ((2 : ℝ)⁻¹ *
+                  ∫ g,
+                    |p g - q g|
+                    ∂normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)) := by
+                ring
+            _ ≤
+              2 *
+                periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRemoteInfluence
+                  beta (R.epsilon target source) :=
+              mul_le_mul_of_nonneg_left hHalf' (by norm_num)
         _ =
             2 *
               periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorNonstrictInfluence
