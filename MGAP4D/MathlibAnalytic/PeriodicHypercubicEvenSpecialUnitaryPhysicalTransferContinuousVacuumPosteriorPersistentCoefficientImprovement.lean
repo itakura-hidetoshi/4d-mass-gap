@@ -76,9 +76,9 @@ theorem
     mul_le_mul_of_nonneg_left hRatio (by norm_num)
   have hTransform :=
     finitePositiveWeightCrossRatioInfluenceTransform_mono hRadius
+  unfold finitePositiveWeightCrossRatioInfluenceTransform at hTransform
   unfold
     periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRemoteInfluence
-    finitePositiveWeightCrossRatioInfluenceTransform at hTransform ⊢
   dsimp [floor] at hTransform ⊢
   nlinarith
 
@@ -86,8 +86,7 @@ theorem
 at nonnegative coupling. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactorVariationWidth_le_exp_eight
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
+    (beta : ℝ) :
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactorVariationWidth
         beta ≤
       Real.exp (8 * beta) := by
@@ -127,9 +126,10 @@ theorem
     dsimp [width]
     exact
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactorVariationWidth_le_exp_eight
-        beta hbeta
+        beta
+  have hAlphaHalf' : alpha ≤ (1 / 2 : ℝ) := by
+    simpa [alpha] using hAlphaHalf
   have hHalfDen : (1 / 2 : ℝ) ≤ 1 - alpha := by
-    dsimp [alpha] at hAlphaHalf
     linarith
   have hDenPos : 0 < 1 - alpha :=
     lt_of_lt_of_le (by norm_num) hHalfDen
