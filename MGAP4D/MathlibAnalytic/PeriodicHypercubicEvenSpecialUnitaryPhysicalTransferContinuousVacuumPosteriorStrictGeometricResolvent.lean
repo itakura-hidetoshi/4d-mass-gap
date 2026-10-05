@@ -275,13 +275,6 @@ theorem
         H beta hbetaPos hbetaCutoff
   have hOneSubQPos : 0 < 1 - q := sub_pos.mpr hqLt
   have hOneSubQNe : 1 - q ≠ 0 := ne_of_gt hOneSubQPos
-  have hAlphaLt : alpha < 1 := by
-    dsimp [alpha]
-    exact
-      periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorFirstBootstrapFixedVolumeDobrushinCutoff_totalCoefficient_lt_one
-        H beta hbetaPos hbetaCutoff
-  have hOneSubAlphaPos : 0 < 1 - alpha := sub_pos.mpr hAlphaLt
-  have hOneSubAlphaNe : 1 - alpha ≠ 0 := ne_of_gt hOneSubAlphaPos
   have hPartial :
       periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRandomScanVariationPartialSum
           D.toPeriodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorNonstrictInfluenceData
@@ -298,8 +291,13 @@ theorem
         H beta
   have hNormalize :
       n⁻¹ * ((1 - q)⁻¹ * V) = V / (1 - alpha) := by
-    field_simp [hnNe, hOneSubQNe, hOneSubAlphaNe]
-    nlinarith [hIdentity]
+    calc
+      n⁻¹ * ((1 - q)⁻¹ * V) =
+          V / (n * (1 - q)) := by
+            field_simp [hnNe, hOneSubQNe]
+            ring
+      _ = V / (1 - alpha) := by
+        rw [hIdentity]
   unfold
     periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRandomScanFiniteResolventProfile
   change
