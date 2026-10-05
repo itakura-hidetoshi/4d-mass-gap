@@ -98,7 +98,11 @@ theorem
     periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRemoteInfluence
   dsimp [radius]
   rw [hRewrite]
-  simpa [radius] using hFrac.trans hTail
+  calc
+    (1 - y) / (1 + y) ≤ radius := hFrac.trans hTail
+    _ = 2 * epsilon / Real.exp (-8 * beta) := by
+      dsimp [radius]
+      ring
 
 structure
     PeriodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorSpatialRemoteResponseDecayData
