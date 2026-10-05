@@ -35,6 +35,31 @@ open MeasureTheory
 
 noncomputable section
 
+local instance posteriorCommonFixedTopologicalGroup
+    (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance posteriorCommonFixedCompactSpace
+    (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance posteriorCommonFixedSecondCountable
+    (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance posteriorCommonFixedMeasurableSpace
+    (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance posteriorCommonFixedBorelSpace
+    (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
 local instance posteriorCommonFixedSpatialLinkFintype
     (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
@@ -149,18 +174,23 @@ theorem
         (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
         (O (fun _ => 1)) := by
   ext A
+  have hUpdate :
+      ∀
+        (C : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+        (e : PeriodicHypercubicEvenSpatialSliceLink H)
+        (g : Matrix.specialUnitaryGroup (Fin N) ℂ),
+        O (Function.update C e g) = O C := by
+    intro C e g
+    exact
+      periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosterior_commonFixed_update_invariant
+        H N hN beta hbeta B O hFixed C e g
   have hConst :
-      O A = O (fun _ => 1) := by
-    apply function_eq_of_update_invariant
+      O A = O (fun _ => 1) :=
+    function_eq_of_update_invariant
       (fun C :
         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
         O C)
-    · intro C e g
-      exact
-        periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosterior_commonFixed_update_invariant
-          H N hN beta hbeta B O hFixed C e g
-    · exact A
-    · exact fun _ => 1
+      hUpdate A (fun _ => 1)
   simpa using hConst
 
 /-- Posterior mean of a constant bounded-continuous observable is that
@@ -230,9 +260,9 @@ theorem
           H N hN beta hbeta B F * c =
       0
   rw [integral_mul_const]
-  unfold
-    periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorMean
-  rfl
+  change
+    (∫ A, F A ∂mu) * c - (∫ A, F A ∂mu) * c = 0
+  ring
 
 /-- Hence every common posterior one-link fixed observable has zero covariance
 with every bounded-continuous observable. -/
