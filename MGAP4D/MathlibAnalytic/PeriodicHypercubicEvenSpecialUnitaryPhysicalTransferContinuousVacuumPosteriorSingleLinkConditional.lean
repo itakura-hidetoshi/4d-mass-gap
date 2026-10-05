@@ -172,9 +172,14 @@ theorem
   unfold
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalMeasure
   apply MeasureTheory.isProbabilityMeasure_tilted
+  have hLog :
+      Continuous
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkFiberLogWeight
+          H N hN beta hbeta B A target) :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkFiberLogWeight_continuous
+      H N hN beta hbeta B A target
   exact
-    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkFiberLogWeight_continuous
-      H N hN beta hbeta B A target).exp).integrable_of_hasCompactSupport
+    (Real.continuous_exp.comp hLog).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
 
 noncomputable def
