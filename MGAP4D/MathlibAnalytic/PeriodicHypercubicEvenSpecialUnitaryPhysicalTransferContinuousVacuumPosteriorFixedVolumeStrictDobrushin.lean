@@ -135,7 +135,7 @@ theorem
   exact
     (he.sub continuous_const).div
       (he.add continuous_const)
-      (fun beta => ne_of_gt (by dsimp [e]; positivity))
+      (fun beta => ne_of_gt (by positivity))
 
 /-- The remote response-generated coefficient at zero block depth is
 continuous in beta. -/
@@ -177,7 +177,7 @@ theorem
   exact
     (hE.sub continuous_const).div
       (hE.add continuous_const)
-      (fun beta => ne_of_gt (by dsimp [E]; positivity))
+      (fun beta => ne_of_gt (by positivity))
 
 /-- Every fixed zero-depth refined influence entry is continuous in beta. -/
 theorem
@@ -193,7 +193,8 @@ theorem
     periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorFirstBootstrapZeroDepthRefinedInfluence
     periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRefinedInfluence
   by_cases hdiag : source = target
-  · simp [hdiag]
+  · simpa [hdiag] using
+      (continuous_const : Continuous (fun _beta : ℝ => (0 : ℝ)))
   · simp only [hdiag, if_false]
     by_cases hlocal :
         periodicHypercubicEvenSpatialSlicePlaquetteLocal H target source
@@ -224,7 +225,10 @@ theorem
     · simp [
         hlocal,
         periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorDirectOneSourceInfluence]
-    · simp [
+    · rw [
+        periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorFirstBootstrapResponseRadius_zero
+          H 0]
+      norm_num [
         hlocal,
         periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRemoteInfluence]
 
@@ -258,11 +262,13 @@ theorem
   classical
   unfold
     periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorFirstBootstrapZeroDepthRefinedTotalCoefficient
+  apply continuous_finset_sum
+  intro target _hTarget
+  apply continuous_finset_sum
+  intro source _hSource
   exact
-    continuous_finsetSum Finset.univ fun target _ =>
-      continuous_finsetSum Finset.univ fun source _ =>
-        continuous_periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorFirstBootstrapZeroDepthRefinedInfluence
-          H target source
+    continuous_periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorFirstBootstrapZeroDepthRefinedInfluence
+      H target source
 
 @[simp] theorem
     periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorFirstBootstrapZeroDepthRefinedTotalCoefficient_zero
