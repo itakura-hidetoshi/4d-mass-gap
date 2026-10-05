@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousGroundStateFiberCrossRatio
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateJointOneLinkSplitDirectNormalizedFiberBridge
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateJointOneLinkWeightFactorization
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumRepresentative
 import Mathlib.MeasureTheory.Integral.Prod
 import Mathlib.Tactic
@@ -330,11 +331,10 @@ theorem
   filter_upwards [by simpa [μOff] using hright] with retained hretained
   intro right hoff
   filter_upwards [hretained right hoff] with g hrightEq
+  rw [
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkFiberWeight_eq_transferNorm_vacuum_kernel_vacuum
+      H N hN beta hbeta left right target g]
   unfold
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkFiberWeight
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointDensity
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointWeight
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompatibleFiberWeight
   rw [← hleftEq, ← hrightEq]
 
