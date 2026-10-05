@@ -207,10 +207,27 @@ private theorem ae_eq_update_of_split_target_ae
     (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target
   let eval := periodicHypercubicEvenSpatialSliceTargetEvaluationMeasurableEquiv
     (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target
+  have hevalEval :
+      MeasurePreserving
+        (Function.eval
+          (⟨target, rfl⟩ : PeriodicHypercubicEvenSpatialSliceTargetLink H target))
+        μTarget μGroup := by
+    simpa [μTarget, μGroup] using
+      (MeasureTheory.measurePreserving_eval
+        (μ := fun _ : PeriodicHypercubicEvenSpatialSliceTargetLink H target => μGroup)
+        (⟨target, rfl⟩ : PeriodicHypercubicEvenSpatialSliceTargetLink H target))
   have heval : MeasurePreserving eval μTarget μGroup := by
-    simpa [μTarget, μGroup, eval] using
-      (periodicHypercubicEvenSpatialSliceTargetEvaluation_measurePreserving
-        (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target μGroup)
+    have hfun :
+        (eval :
+          (PeriodicHypercubicEvenSpatialSliceTargetLink H target →
+            Matrix.specialUnitaryGroup (Fin N) ℂ) →
+          Matrix.specialUnitaryGroup (Fin N) ℂ) =
+        Function.eval
+          (⟨target, rfl⟩ : PeriodicHypercubicEvenSpatialSliceTargetLink H target) := by
+      funext targetCfg
+      simp [eval]
+    rw [hfun]
+    exact hevalEval
   have hcomp :
       (fun u : Matrix.specialUnitaryGroup (Fin N) ℂ =>
         f (split.symm (eval.symm u, retained))) =ᵐ[μGroup]
