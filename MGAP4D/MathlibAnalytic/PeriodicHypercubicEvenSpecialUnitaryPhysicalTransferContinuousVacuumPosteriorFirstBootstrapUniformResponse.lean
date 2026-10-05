@@ -59,6 +59,10 @@ theorem
       Real.exp (8 * beta) := by
   rw [BoundedContinuousFunction.norm_le (Real.exp_pos _).le]
   intro A
+  change
+    ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+        H N beta A B source sourceValue‖ ≤
+      Real.exp (8 * beta)
   rw [Real.norm_eq_abs,
     abs_of_pos
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_pos
