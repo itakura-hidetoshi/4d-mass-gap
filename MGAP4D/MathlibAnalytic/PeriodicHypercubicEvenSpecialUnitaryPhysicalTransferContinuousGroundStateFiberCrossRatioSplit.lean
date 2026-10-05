@@ -122,7 +122,6 @@ theorem
   rw [
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_update_right_eq_localFactor_mul
       H N beta left right target g]
-  ring
 
 /-- Pointwise log decomposition of the complete fiber weight. -/
 theorem
@@ -171,7 +170,6 @@ theorem
       H N hN beta hbeta left right target g,
     Real.log_mul (mul_ne_zero hLocal hKernel) hVacuum,
     Real.log_mul hLocal hKernel]
-  ring
 
 /-- In the four-point cross-difference the baseline one-slab kernel terms
 cancel exactly.  What remains is the target-local Wilson contribution plus the
