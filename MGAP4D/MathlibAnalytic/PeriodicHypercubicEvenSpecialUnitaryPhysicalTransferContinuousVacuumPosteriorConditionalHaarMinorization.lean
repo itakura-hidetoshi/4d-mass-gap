@@ -297,10 +297,11 @@ theorem
   rw [← integral_const_mul]
   apply integral_mono hLeftInt hRightInt
   intro g
-  exact mul_le_mul_of_nonneg_left
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalDensity_exp_neg_sixteen_mul_le
-      H N hN beta hbeta B A target g)
-    (hphiNonneg g)
+  simpa [p, mul_comm] using
+    (mul_le_mul_of_nonneg_left
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalDensity_exp_neg_sixteen_mul_le
+        H N hN beta hbeta B A target g)
+      (hphiNonneg g))
 
 end
 
