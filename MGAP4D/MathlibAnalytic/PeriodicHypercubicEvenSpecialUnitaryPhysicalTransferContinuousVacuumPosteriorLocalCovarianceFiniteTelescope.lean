@@ -87,6 +87,13 @@ private theorem posterior_local_covariance_bcf_integrable
       (fun A => O A)
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorMeasure
         H N hN beta hbeta B) := by
+  let mu :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorMeasure
+      H N hN beta hbeta B
+  letI : IsProbabilityMeasure mu :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorMeasure_isProbabilityMeasure
+      H N hN beta hbeta B
+  change Integrable (fun A => O A) mu
   exact
     O.continuous.integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
@@ -163,6 +170,9 @@ theorem
           H N hN beta hbeta B F K := by
   let mu :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorMeasure
+      H N hN beta hbeta B
+  letI : IsProbabilityMeasure mu :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorMeasure_isProbabilityMeasure
       H N hN beta hbeta B
   have hFG :
       Integrable (fun A => F A * G A) mu :=
@@ -688,6 +698,9 @@ theorem
   let mu :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorMeasure
       H N hN beta hbeta B
+  letI : IsProbabilityMeasure mu :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorMeasure_isProbabilityMeasure
+      H N hN beta hbeta B
   let L :=
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactorBCF
       H N beta B source sourceValue
@@ -809,13 +822,25 @@ theorem
       filter_upwards [] with A
       simp [Q]
       ring
-    rw [hPairDiff]
     have hQIntegral : (∫ A, Q A ∂mu) = 0 := by
       simpa [
         periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorMean] using
         hQMean
     calc
-      (∫ A, L A * Q A ∂mu) =
+      ((∫ A, L A * O A ∂mu) -
+          periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorMean
+              H N hN beta hbeta B L *
+            periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorMean
+              H N hN beta hbeta B PO) -
+        ((∫ A, L A * PO A ∂mu) -
+          periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorMean
+              H N hN beta hbeta B L *
+            periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorMean
+              H N hN beta hbeta B PO) =
+          (∫ A, L A * O A ∂mu) - (∫ A, L A * PO A ∂mu) := by
+        ring
+      _ = ∫ A, L A * Q A ∂mu := hPairDiff
+      _ =
           ∫ A, ((L A - center) * Q A + center * Q A) ∂mu := by
         apply integral_congr_ae
         filter_upwards [] with A
@@ -1114,7 +1139,19 @@ theorem
         periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRandomScanFiniteResolventProfile
       rw [
         periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRandomScanVariationPartialSum_eq_sum]
-      rw [← Finset.mul_sum]
+      have hRadiusSum :
+          (Finset.range M).sum
+              (fun m =>
+                radius *
+                  periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRandomScanVariationIterate
+                    D P.variation m source) =
+            radius *
+              (Finset.range M).sum
+                (fun m =>
+                  periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRandomScanVariationIterate
+                    D P.variation m source) := by
+        rw [Finset.mul_sum]
+      rw [hRadiusSum]
       ring
 
 end
