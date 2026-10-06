@@ -1,6 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumPosteriorSpatialDecayDobrushinBridge
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightBootstrapEnvelope
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceDistinctFiberRemoteSlabCancellation
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousGroundStateFiberRemoteLocalZero
 import Mathlib.Tactic
 
 /-!
@@ -45,6 +45,14 @@ local instance posteriorCanonicalFixedRightResponseBridgeSpatialLinkFintype
     (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
+
+local instance posteriorCanonicalFixedRightResponseBridgeSpatialLinkNonempty
+    (H : ℕ) :
+    Nonempty (PeriodicHypercubicEvenSpatialSliceLink H) := by
+  refine ⟨
+    (⟨(0 : PeriodicHypercubicEvenVertex H), by
+        simp [periodicHypercubicEvenOnPrimaryReflectionPlane]⟩,
+      ⟨(1 : PeriodicHypercubicAxis), by decide⟩)⟩
 
 local instance posteriorCanonicalFixedRightResponseBridgeTopologicalGroup
     (N : ℕ) :
@@ -100,9 +108,7 @@ theorem
     (sourceValue g : Matrix.specialUnitaryGroup (Fin N) ℂ)
     (hNe : source ≠ target)
     (hRemote :
-      ¬ periodicHypercubicEvenSpatialSlicePlaquetteLocal H target source)
-    (hNoShare :
-      ¬ periodicHypercubicEvenSpatialSliceLinksSharePlaquette H target source) :
+      ¬ periodicHypercubicEvenSpatialSlicePlaquetteLocal H target source) :
     |periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorTargetExpectation
           H N hN beta hbeta B target g -
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSourceTiltedTargetExpectation
@@ -129,8 +135,8 @@ theorem
       simp [hNe]
     · by_cases heTarget : e = target
       · subst e
-        simp [Ne.symm hNe]
-      · simp [heSource, heTarget]
+        simp
+      · simp [heTarget]
   have hRemoteFactor :
       ∀ A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
@@ -140,8 +146,8 @@ theorem
     intro A
     symm
     simpa [Bs] using
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_update_rightBase_remote
-        H N beta A B target source sourceValue g hNe hNoShare
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_update_source_eq_of_not_plaquetteLocal
+        H N beta A B target source sourceValue hNe hRemote g
   have hFirst :
       (∫ A,
           periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
@@ -245,9 +251,7 @@ theorem
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioResponseProfile_exponentialWeightedColumnBound_exactCoefficient
         H N hN beta hbeta s hs source source)
   have hSelf : W source = 1 := by
-    simpa [W] using
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight_self
-        H s source
+    simp [W]
   have hPointMul : R target source * W target ≤ M := by
     calc
       R target source * W target ≤
@@ -284,9 +288,7 @@ theorem
     (sourceValue : Matrix.specialUnitaryGroup (Fin N) ℂ)
     (hNe : source ≠ target)
     (hRemote :
-      ¬ periodicHypercubicEvenSpatialSlicePlaquetteLocal H target source)
-    (hNoShare :
-      ¬ periodicHypercubicEvenSpatialSliceLinksSharePlaquette H target source) :
+      ¬ periodicHypercubicEvenSpatialSlicePlaquetteLocal H target source) :
     PeriodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorTargetExpectationResponseBound
       H N hN beta hbeta B target source sourceValue
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierBootstrapMap
@@ -296,12 +298,93 @@ theorem
   intro g
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosterior_expectationResponseAbs_eq_fixedRightTargetRatioResponseAbs
-      H N hN beta hbeta B target source sourceValue g hNe hRemote hNoShare]
+      H N hN beta hbeta B target source sourceValue g hNe hRemote]
   exact
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioResponseAbs_le_canonicalProfile
       H N hN beta hbeta B target source g (B target) sourceValue (B source)).trans
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioResponseProfile_le_halfBarrierBootstrapMap_div_exponentialWeight
         H N hN s hs beta hbeta hcut target source)
+
+
+/-- On the canonical half-barrier interval, the volume-independent bootstrap
+response envelope is nonnegative.  This is inherited from the nonnegative
+actual weighted response coefficient together with its bootstrap-envelope
+upper bound. -/
+theorem
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierBootstrapMap_nonneg
+    (H N : ℕ)
+    (hN : 0 < N)
+    (s : ℝ)
+    (hs : 1 ≤ s)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (hcut :
+      beta ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierCutoff
+          s) :
+    0 ≤
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierBootstrapMap
+        s beta := by
+  let center : PeriodicHypercubicEvenSpatialSliceLink H :=
+    Classical.choice
+      (inferInstance : Nonempty (PeriodicHypercubicEvenSpatialSliceLink H))
+  have hActual :
+      0 ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioExponentialWeightedColumnCoefficient
+          H N hN beta hbeta s center :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioExponentialWeightedColumnCoefficient_nonneg
+      H N hN beta hbeta s hs center
+  have hUpper :
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioExponentialWeightedColumnCoefficient
+          H N hN beta hbeta s center ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierBootstrapMap
+          s beta :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioExponentialWeightedColumnCoefficient_le_halfBarrierBootstrapMap
+      H N hN s hs center beta hbeta hcut
+  exact hActual.trans hUpper
+
+/-- The canonical fixed-right bootstrap envelope supplies an actual ordinary
+posterior remote-response matrix.  The response radius is source-centered
+base-L1 exponential decay and is independent of the boundary configuration. -/
+noncomputable def
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorCanonicalFixedRightBootstrapRemoteExpectationResponseMatrixData
+    (H N : ℕ)
+    (hN : 0 < N)
+    (s : ℝ)
+    (hs : 1 ≤ s)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta)
+    (hcut :
+      beta ≤
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierCutoff
+          s) :
+    PeriodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRemoteExpectationResponseMatrixData
+      H N hN beta hbeta := by
+  let Mbar :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierBootstrapMap
+      s beta
+  let W :=
+    fun source target : PeriodicHypercubicEvenSpatialSliceLink H =>
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight
+        H s source target
+  refine
+    { epsilon := fun target source => Mbar / W source target
+      epsilon_nonneg := ?_
+      remote_response := ?_ }
+  · intro target source
+    have hMbar : 0 ≤ Mbar := by
+      simpa [Mbar] using
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightHalfBarrierBootstrapMap_nonneg
+          H N hN s hs beta hbeta hcut
+    have hWPos : 0 < W source target := by
+      simpa [W] using
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight_pos
+          H s (zero_lt_one.trans_le hs) source target
+    exact div_nonneg hMbar hWPos.le
+  · intro A C target source hNe hRemote _hAgree
+    simpa [Mbar, W] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorTargetExpectationResponseBound_of_canonicalFixedRightBootstrapEnvelope
+        H N hN s hs beta hbeta hcut A target source (C source) hNe hRemote
 
 end
 
