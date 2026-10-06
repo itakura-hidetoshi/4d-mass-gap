@@ -88,12 +88,13 @@ theorem sourceCenteredCoordinate_norm_le (x : PairL2) (e : Link) (z : Joint) :
 /-- Centering really gives zero source mean, not a formal subtraction only. -/
 theorem sourceCenteredCoordinate_integral_zero (x : PairL2) (e : Link) (z : Joint) :
     (∫ y, sourceCenteredCoordinate H N hN beta hbeta x e z y ∂μP) = 0 := by
+  letI : IsProbabilityMeasure μP := sourceCenteredPairProbability H N
   let w := sourceWeightedRowL2 H N hN beta hbeta x z
   let a := sourceConstantL2 H N (Obs x z)
   have hStationary : (∫ y, sourceCoordinateProjection H N e (w - a) y ∂μP) =
       ∫ y, (w - a) y ∂μP := by
     simpa only [Measure.restrict_univ] using
-      (integral_condExpL2_eq_of_fin_meas_real (𝕜 := ℝ) (hm := sourceCoordinateSigma_le H N e)
+      (integral_condExpL2_eq_of_fin_meas_real (𝕜 := ℝ) (μ := μP) (hm := sourceCoordinateSigma_le H N e)
         (w - a) (s := Set.univ) MeasurableSet.univ (measure_ne_top _ _))
   change (∫ y, sourceCoordinateProjection H N e (w - a) y ∂μP) = 0
   rw [hStationary]
