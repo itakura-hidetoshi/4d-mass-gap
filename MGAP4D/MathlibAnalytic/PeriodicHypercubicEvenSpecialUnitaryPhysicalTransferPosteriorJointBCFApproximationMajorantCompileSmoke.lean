@@ -1,0 +1,14 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointSixColorPrefixMajorant
+import Mathlib.Analysis.InnerProductSpace.PiL2
+
+/-! Regression contracts for the P3 quantitative L2 approximation bridge. -/
+
+namespace MGAP4D.MathlibAnalytic
+
+#check GroundStatePosteriorJoint.sixColorResidualOperator_norm_sq
+#check GroundStatePosteriorJoint.sixColorProfileAmplitude_lipschitz
+#check GroundStatePosteriorJoint.sixColorProfileEnergy_le_bcfApproximationMajorant
+#check GroundStatePosteriorJoint.bcfApproximationMajorant_continuous
+#check GroundStatePosteriorJoint.sixColorProfileEnergy_le_of_bcfApproximation
+
+end MGAP4D.MathlibAnalytic
