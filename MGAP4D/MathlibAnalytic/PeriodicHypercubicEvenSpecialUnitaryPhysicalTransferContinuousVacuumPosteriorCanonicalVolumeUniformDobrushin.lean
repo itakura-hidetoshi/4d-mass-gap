@@ -206,7 +206,6 @@ theorem
               field_simp [Real.exp_ne_zero,
                 periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight_pos
                   H s (zero_lt_one.trans_le hs) source target |>.ne']
-              <;> ring
         _ =
           periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorCanonicalFixedRightBootstrapInfluencePrefactor
               s beta *
