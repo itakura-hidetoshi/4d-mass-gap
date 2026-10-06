@@ -173,7 +173,11 @@ theorem
   dsimp only
   by_cases hdiag : source = target
   · simp only [hdiag, if_true]
-    exact mul_nonneg hPrefactor (inv_nonneg.mpr hWPos.le)
+    exact
+      mul_nonneg hPrefactor
+        (inv_nonneg.mpr
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight_nonneg
+            H s (zero_lt_one.trans_le hs).le target target))
   · simp only [hdiag, if_false]
     by_cases hlocal :
         periodicHypercubicEvenSpatialSlicePlaquetteLocal H target source
@@ -310,10 +314,10 @@ theorem
       C *
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeOffDiagonalReciprocalExponentialWeightMass
           H s target := by
-            simp [
-              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeOffDiagonalReciprocalExponentialWeightMass,
-              weight,
-              Finset.mul_sum]
+            unfold
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeOffDiagonalReciprocalExponentialWeightMass
+            dsimp [weight]
+            rw [Finset.mul_sum]
     _ ≤
       C *
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeOffDiagonalReciprocalExponentialWeightMassMajorant
@@ -483,10 +487,17 @@ theorem
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeOffDiagonalReciprocalExponentialWeightMassMajorant
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeReciprocalExponentialWeightPositiveTailMajorant
     have hsPos : 0 < s := by linarith
-    have hq : 0 ≤ (8 : ℝ) * s⁻¹ := by positivity
+    have hq : 0 ≤ (8 : ℝ) * s⁻¹ := by
+      exact mul_nonneg (by norm_num) (inv_nonneg.mpr hsPos.le)
     have hqLt : (8 : ℝ) * s⁻¹ < 1 := by
       simpa [div_eq_mul_inv] using (div_lt_one hsPos).2 hs
-    positivity
+    have hDen : 0 ≤ 1 - (8 : ℝ) * s⁻¹ :=
+      sub_nonneg.mpr hqLt.le
+    exact
+      add_nonneg (by norm_num)
+        (mul_nonneg
+          (mul_nonneg (by norm_num) hq)
+          (div_nonneg (by norm_num) hDen))
   unfold
     periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorCanonicalFixedRightBootstrapUniformCoefficient
   exact add_nonneg
@@ -542,6 +553,8 @@ theorem
           H beta target source) +
       periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorCanonicalFixedRightBootstrapRemoteRowMass
         H N hN s hsOne beta hbeta hcut target := by
+          unfold
+            periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorCanonicalFixedRightBootstrapRemoteRowMass
           rw [← Finset.sum_add_distrib]
           apply Finset.sum_congr rfl
           intro source _hsource
