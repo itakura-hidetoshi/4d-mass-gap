@@ -196,7 +196,8 @@ theorem leftCenteredError_norm_sq (f g : JL2) :
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp_idempotent H N hN beta hbeta)
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateCoarseCondExp_inner_symm H N hN beta hbeta)]
   change ‖f - g‖ ^ 2 - ‖JLeft (ALeft (f - g))‖ ^ 2 = _
-  rw [JLeft.norm_map]
+  rw [(periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftBoundaryL2Isometry
+    H N hN beta hbeta).norm_map]
 
 /-- Sharp stability needs only the centered, rather than full, discrepancy. -/
 theorem sixColorProfileAmplitude_le_leftCenteredError (f g : JL2) :
