@@ -1,6 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointStageResidualEnergy
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumPosteriorRandomScanVariationIteration
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumPosteriorCanonicalFixedRightResponseBridge
+import MGAP4D.MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumPosteriorCanonicalFixedRightResponseBridge
 import Mathlib.Tactic
 
 /-!
@@ -235,7 +235,7 @@ theorem posteriorStageResidual_abs_le_variationSchedule (R : ResponseData)
     intro e
     by_cases he : e = target
     · subst e
-      simpa only [Function.update_same] using
+      simpa only [Function.update_self] using
         (continuous_id : Continuous (fun g : GaugeT => g))
     · simpa only [Function.update_of_ne he] using
         (continuous_const : Continuous (fun _ : GaugeT => z.2 e))
