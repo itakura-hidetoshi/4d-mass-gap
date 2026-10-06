@@ -119,7 +119,7 @@ private theorem fixedColorPathLoss_le_norm_sq
   rw [← hLoss]
   exact sub_le_self _ (sq_nonneg _)
 
-/-- Six normalized independent-start color sweeps lose at most the initial energy. -/
+/-- All six color sweeps start at the same vector and lose at most its energy. -/
 theorem sixColorProfileEnergy_le_norm_sq (f : JL2) : Profile f ≤ ‖f‖ ^ 2 := by
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialSweepStageProfileEnergy_eq_pathLoss]
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialOneLinkSweepPathLoss
@@ -130,7 +130,7 @@ theorem sixColorProfileEnergy_le_norm_sq (f : JL2) : Profile f ≤ ‖f‖ ^ 2 :
           fixedColorPathLoss_le_norm_sq H N hN beta hbeta
             (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c) f)
         (by norm_num)
-    _ = ‖f‖ ^ 2 := by norm_num [Finset.sum_const] <;> ring
+    _ = ‖f‖ ^ 2 := by norm_num [Finset.sum_const]; ring
 
 /-- A volume-independent norm bound, not a positive spectral-gap claim. -/
 theorem sixColorResidualLinearMap_norm_le (f : JL2) :
@@ -180,7 +180,9 @@ theorem sixColorProfileAmplitude_le_add (f g : JL2) :
     ‖T f‖ = ‖T (f - g) + T g‖ := by rw [← map_add, sub_add_cancel]
     _ ≤ ‖T (f - g)‖ + ‖T g‖ := norm_add_le _ _
     _ ≤ ‖f - g‖ + ‖T g‖ :=
-      add_le_add_right (sixColorResidualOperator_norm_le H N hN beta hbeta (f - g)) _
+      _root_.add_le_add
+        (sixColorResidualOperator_norm_le H N hN beta hbeta (f - g))
+        (le_refl ‖T g‖)
 
 /-- The square root of the genuine profile is 1-Lipschitz uniformly in volume. -/
 theorem sixColorProfileAmplitude_lipschitz :
@@ -228,8 +230,11 @@ theorem sixColorProfileEnergy_le_bcfApproximationMajorant (R : ResponseData)
     Profile f ≤ bcfApproximationMajorant H N hN beta hbeta R O v f := by
   have hCore := sixColorProfileEnergy_le_variationOscillationEnergy
     H N hN beta hbeta R O v hv hV
+  have hCoreAmp : sixColorProfileAmplitude H N hN beta hbeta (BCFRep O) ≤
+      Real.sqrt (OscEnergy (posteriorSixColorVariationProfile H N hN beta hbeta R v)) :=
+    Real.sqrt_le_sqrt hCore
   have hAmp := (sixColorProfileAmplitude_le_add H N hN beta hbeta f (BCFRep O)).trans
-    (add_le_add_left (Real.sqrt_le_sqrt hCore) ‖f - BCFRep O‖)
+    (_root_.add_le_add (le_refl ‖f - BCFRep O‖) hCoreAmp)
   have hSq := (sq_le_sq₀ (Real.sqrt_nonneg (Profile f))
     (add_nonneg (norm_nonneg _) (Real.sqrt_nonneg _))).mpr hAmp
   rw [Real.sq_sqrt (sixColorProfileEnergy_nonneg H N hN beta hbeta f)] at hSq
