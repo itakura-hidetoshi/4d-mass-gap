@@ -8,8 +8,11 @@ noncomputable section
 
 #check physicalYangMillsSU2PrimaryPlaquetteSeedLink
 #check physicalYangMillsSU2PrimaryPlaquetteSeedLink_embedding
+#check physicalYangMillsSU2SpatialSlicePlaquetteLocal_to_fullPlaquetteLocal
 #check physicalYangMillsSU2PrimaryPlaquetteSeedDistance
 #check physicalYangMillsSU2PrimaryPlaquetteSeedDistance_le_seed
+#check physicalYangMillsSU2PrimaryPlaquetteSeedLinkBaseDistance_symm
+#check physicalYangMillsSU2PrimaryPlaquetteSeedDistance_le_covarianceDistance
 #check physicalYangMillsSU2PrimaryPlaquetteSeedDistance_seed
 #check physicalYangMillsSU2PrimaryPlaquetteNearLinks
 #check physicalYangMillsSU2PrimaryPlaquetteFarLinks
@@ -49,10 +52,8 @@ example
     (hFar : source ∈ physicalYangMillsSU2PrimaryPlaquetteFarLinks H 2)
     (k : Fin 4) :
     physicalYangMillsSU2PrimaryPlaquetteSeedLink H k ≠ source ∧
-      ¬ periodicHypercubicEvenPlaquetteLocal H
-        (periodicHypercubicEvenSpatialSliceLinkEmbedding H
-          (physicalYangMillsSU2PrimaryPlaquetteSeedLink H k))
-        (periodicHypercubicEvenSpatialSliceLinkEmbedding H source) :=
+      ¬ periodicHypercubicEvenSpatialSlicePlaquetteLocal H
+        (physicalYangMillsSU2PrimaryPlaquetteSeedLink H k) source :=
   physicalYangMillsSU2PrimaryPlaquetteFarLinks_two_remote H source hFar k
 
 end Geometry
@@ -85,7 +86,10 @@ example :
 
 end Frozen
 
+#print axioms physicalYangMillsSU2SpatialSlicePlaquetteLocal_to_fullPlaquetteLocal
 #print axioms physicalYangMillsSU2PrimaryPlaquetteSeedDistance_le_seed
+#print axioms physicalYangMillsSU2PrimaryPlaquetteSeedLinkBaseDistance_symm
+#print axioms physicalYangMillsSU2PrimaryPlaquetteSeedDistance_le_covarianceDistance
 #print axioms physicalYangMillsSU2PrimaryPlaquetteSeedDistance_seed
 #print axioms physicalYangMillsSU2PrimaryPlaquette_near_union_far
 #print axioms physicalYangMillsSU2PrimaryPlaquette_near_disjoint_far
