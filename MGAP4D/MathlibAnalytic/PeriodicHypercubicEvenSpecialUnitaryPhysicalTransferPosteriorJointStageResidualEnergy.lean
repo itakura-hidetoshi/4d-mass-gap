@@ -175,7 +175,7 @@ theorem posteriorStageResidualEnergy_eq_norm_loss (pre : List Link) (target : Li
 theorem posteriorStageResidualEnergy_nonneg (pre : List Link) (target : Link)
     (F : Joint → ℝ) :
     0 ≤ posteriorStageResidualEnergy H N hN beta hbeta pre target F :=
-  integral_nonneg fun z => sq_nonneg _
+  integral_nonneg fun _ => sq_nonneg _
 
 /-- Any a.e. L2 majorant of the literal residual controls the exact stage
 energy with coefficient one. Producing that majorant remains a separate task. -/
