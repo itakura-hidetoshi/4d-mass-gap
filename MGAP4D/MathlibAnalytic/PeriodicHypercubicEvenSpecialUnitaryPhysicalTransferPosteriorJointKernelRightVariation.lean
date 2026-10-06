@@ -109,7 +109,8 @@ theorem continuousJointSqrtDensity_right_harnack (B A : Cfg) (e : Link) (g h : G
     (mul_nonneg hc
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos H N beta B (Function.update A e h)).le)
   have hscale := mul_le_mul_of_nonneg_left hprod
-    (mul_nonneg (inv_nonneg.mpr (norm_nonneg _))
+    (mul_nonneg (inv_nonneg.mpr (norm_nonneg
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator H N hN beta hbeta)))
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos H N hN beta hbeta B).le)
   have hw : continuousJointWeight H N hN beta hbeta (B, Function.update A e g) ≤
       c ^ 2 * continuousJointWeight H N hN beta hbeta (B, Function.update A e h) := by
@@ -147,12 +148,12 @@ theorem jointTransferKernel_right_harnack (x : Joint) (B A : Cfg)
   let zh : Joint := (B, Function.update A e h)
   have hc : 0 ≤ c := (Real.exp_pos _).le
   have hNum : KP (x, zg) ≤ c * KP (x, zh) := by
-    have h := mul_le_mul_of_nonneg_left
+    have hMul := mul_le_mul_of_nonneg_left
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_update_right_le_exp_eight_mul_update_right
         H N hN beta hbeta x.2 A e g h)
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos H N beta x.1 B).le
     change K x.1 B * K x.2 (Function.update A e g) ≤ c * (K x.1 B * K x.2 (Function.update A e h))
-    convert h using 1 <;> ring
+    convert hMul using 1 <;> ring
   have hDen : SqrtD zh ≤ c * SqrtD zg :=
     continuousJointSqrtDensity_right_harnack H N hN beta hbeta B A e h g
   have hgpos := continuousJointSqrtDensity_pos H N hN beta hbeta zg
@@ -243,6 +244,8 @@ private theorem jointTransferKernel_normInput_integrable (f : PairL2) (z : Joint
     Integrable (fun x => jointTransferKernel H N hN beta hbeta x z * ‖f x‖) μP := by
   apply (jointTransferKernel_integrable H N hN beta hbeta f z).norm.congr
   exact Eventually.of_forall fun x => by
+    change ‖jointTransferKernel H N hN beta hbeta x z * f x‖ =
+      jointTransferKernel H N hN beta hbeta x z * ‖f x‖
     rw [norm_mul, Real.norm_eq_abs,
       abs_of_nonneg (jointTransferKernel_nonneg H N hN beta hbeta x z)]
 
@@ -367,6 +370,7 @@ theorem jointTransferPosteriorResidualEnergy_le (f : PairL2) (e : Link) :
     rw [realL2_norm_sq_eq_integral_norm_sq (BCFRep W)]
     apply integral_congr_ae
     filter_upwards [BoundedContinuousFunction.coeFn_toLp 2 μJ ℝ W] with z hz
+    change W z ^ 2 = ‖(BoundedContinuousFunction.toLp 2 μJ ℝ W) z‖ ^ 2
     rw [hz]
     simp only [Real.norm_eq_abs, sq_abs]
   have hScale : (∫ z, (Rate * W z) ^ 2 ∂μJ) =
