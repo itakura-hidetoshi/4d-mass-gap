@@ -1,0 +1,12 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentRightVariation
+
+/-! Regression contracts for noncommuting sweeps with genuine L2 envelopes. -/
+namespace MGAP4D.MathlibAnalytic
+
+#check realHilbertProjectionSweep_pathLoss_le_four_initial
+#check realHilbertProjectionSweep_displacement_sq_le_initial
+#check GroundStatePosteriorJoint.sixColorProfileEnergy_le_four_initialResidualEnergy
+#check GroundStatePosteriorJoint.jointTransferProfileEnergy_le_l2Envelope
+#check GroundStatePosteriorJoint.fineFrozenProfileEnergy_le_l2Envelope
+
+end MGAP4D.MathlibAnalytic
