@@ -46,6 +46,14 @@ local instance posteriorCanonicalFixedRightResponseBridgeSpatialLinkFintype
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+local instance posteriorCanonicalFixedRightResponseBridgeSpatialLinkNonempty
+    (H : ℕ) :
+    Nonempty (PeriodicHypercubicEvenSpatialSliceLink H) := by
+  refine ⟨
+    (⟨(0 : PeriodicHypercubicEvenVertex H), by
+        simp [periodicHypercubicEvenOnPrimaryReflectionPlane]⟩,
+      ⟨(1 : PeriodicHypercubicAxis), by decide⟩)⟩
+
 local instance posteriorCanonicalFixedRightResponseBridgeTopologicalGroup
     (N : ℕ) :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
@@ -243,9 +251,7 @@ theorem
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCanonicalFixedRightTargetRatioResponseProfile_exponentialWeightedColumnBound_exactCoefficient
         H N hN beta hbeta s hs source source)
   have hSelf : W source = 1 := by
-    simpa [W] using
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePhysicalLeftLocalHarnackBaseL1ExponentialWeight_self
-        H s source
+    simp [W]
   have hPointMul : R target source * W target ≤ M := by
     calc
       R target source * W target ≤
