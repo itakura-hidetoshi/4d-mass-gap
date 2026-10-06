@@ -1,4 +1,5 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumPosteriorCanonicalVolumeUniformDobrushinCutoff
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightHighTemperatureTerminalCovarianceDecay
 import Mathlib.Tactic
 
 /-!
@@ -42,29 +43,6 @@ local instance posteriorCanonicalUniformColumnSpatialLinkFintype
     (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
-
-/-- The closed-form periodic vertex base-L1 distance is symmetric. -/
-theorem periodicHypercubicVertexL1Distance_comm
-    (n : ℕ)
-    (x y : PeriodicHypercubicVertex n) :
-    periodicHypercubicVertexL1Distance n x y =
-      periodicHypercubicVertexL1Distance n y x := by
-  classical
-  unfold periodicHypercubicVertexL1Distance
-  apply Finset.sum_congr rfl
-  intro i _hi
-  have hSub : x i - y i = -(y i - x i) := by
-    abel
-  rw [hSub, ZMod.natAbs_valMinAbs_neg]
-
-/-- The induced link-base periodic L1 distance is symmetric. -/
-theorem periodicHypercubicEdgeBaseL1Distance_comm
-    (n : ℕ)
-    (target source : PeriodicHypercubicEdge n) :
-    periodicHypercubicEdgeBaseL1Distance n target source =
-      periodicHypercubicEdgeBaseL1Distance n source target := by
-  unfold periodicHypercubicEdgeBaseL1Distance
-  exact periodicHypercubicVertexL1Distance_comm n target.1 source.1
 
 /-- The source-centered base-L1 exponential weight is symmetric in its two link
 arguments. -/
