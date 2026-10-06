@@ -195,8 +195,14 @@ theorem sourceLinkResponse_eq_row_inner (x : PairL2) (e : Link) (z : Joint) (g :
     sourceTiltL2_ae H N hN beta hbeta e z g] with y hw ht
   rw [hw, ht]
   simp only [sourceTiltValue]
-  change J y z * sourceRightLinkTilt N beta (y.2 e) (z.2 e) g * x y - J y z * x y =
-    (J y z * x y) * (-1 + sourceRightLinkTilt N beta (y.2 e) (z.2 e) g)
+  have hinner (a b : ℝ) : inner ℝ a b = a * b := by
+    calc
+      inner ℝ a b = inner ℝ (a • (1 : ℝ)) (b • (1 : ℝ)) := by simp
+      _ = a * b * inner ℝ (1 : ℝ) (1 : ℝ) := by
+        rw [real_inner_smul_left, real_inner_smul_right]
+        ring
+      _ = a * b := by norm_num [real_inner_self_eq_norm_sq]
+  rw [hinner]
   ring
 
 /-- Only the one-source-coordinate projection contributes; x remains signed. -/
