@@ -135,8 +135,8 @@ theorem
       simp [hNe]
     · by_cases heTarget : e = target
       · subst e
-        simp [Ne.symm hNe]
-      · simp [heSource, heTarget]
+        simp
+      · simp [heTarget]
   have hRemoteFactor :
       ∀ A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
         periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
