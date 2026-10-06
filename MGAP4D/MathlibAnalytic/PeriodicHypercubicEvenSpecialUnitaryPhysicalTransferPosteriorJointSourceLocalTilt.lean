@@ -178,7 +178,7 @@ theorem jointTransferKernel_right_update_eq_sourceTilt (y z : Joint) (e : Link) 
   unfold outputRightLinkTilt
   field_simp [(continuousJointSqrtDensity_pos H N hN beta hbeta z).ne',
     (continuousJointSqrtDensity_pos H N hN beta hbeta (z.1, Function.update z.2 e g)).ne',
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos H N hN beta hbeta).ne'] <;> ring
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos H N hN beta hbeta).ne']
 
 /-- Changing any other source coordinates does not change the kernel update ratio.
 Cross multiplication avoids all division by the kernel or an observable. -/
@@ -200,7 +200,7 @@ private theorem sourceLinkResponse_integrand_eq
       (outputRightLinkTilt H N hN beta hbeta z e g)⁻¹ *
         (J y (z.1, Function.update z.2 e g) * x y) - J y z * x y := by
   rw [jointTransferKernel_right_update_eq_sourceTilt H N hN beta hbeta y z e g]
-  field_simp [(outputRightLinkTilt_pos H N hN beta hbeta z e g).ne'] <;> ring
+  field_simp [(outputRightLinkTilt_pos H N hN beta hbeta z e g).ne']
 
 /-- Integrability follows from the two existing actual kernel sections. -/
 theorem sourceLinkResponse_integrable (x : PairL2) (e : Link) (z : Joint) (g : GaugeT) :
@@ -234,6 +234,7 @@ theorem sourceLinkResponse_abs_le_envelope (x : PairL2) (e : Link) (z : Joint) (
   have hW : Integrable (fun y => J y z * ‖x y‖) μP := by
     apply (jointTransferKernel_integrable H N hN beta hbeta x z).norm.congr
     exact Eventually.of_forall fun y => by
+      change ‖J y z * x y‖ = J y z * ‖x y‖
       rw [norm_mul, Real.norm_eq_abs,
         abs_of_nonneg (jointTransferKernel_nonneg H N hN beta hbeta y z)]
   rw [← Real.norm_eq_abs]
@@ -262,7 +263,8 @@ theorem jointTransferLinkDifference_eq_sourceTilt (x : PairL2) (e : Link) (z : J
         outputRightLinkTilt H N hN beta hbeta z e g *
           sourceLinkResponse H N hN beta hbeta x e z g := by
   rw [jointTransferLinkDifference_eq, sourceLinkResponse_eq]
-  field_simp [(outputRightLinkTilt_pos H N hN beta hbeta z e g).ne'] <;> ring
+  field_simp [(outputRightLinkTilt_pos H N hN beta hbeta z e g).ne']
+  ring
 
 /-- A two-input contrast cancels common additive output drift exactly.
 This does NOT remove that drift from either original observable separately. -/
