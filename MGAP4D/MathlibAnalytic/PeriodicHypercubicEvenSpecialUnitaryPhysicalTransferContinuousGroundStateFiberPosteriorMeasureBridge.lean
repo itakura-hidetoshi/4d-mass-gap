@@ -52,7 +52,7 @@ theorem doobWeightedMeasure_ofReal_mul_exp_eq_tilted
         (∫⁻ y, ENNReal.ofReal (c * Real.exp (f y)) ∂μ) =
       ENNReal.ofReal (Real.exp (f x) / ∫ y, Real.exp (f y) ∂μ)
   rw [← ofReal_integral_eq_lintegral_ofReal hInt
-    (fun y => (mul_pos hc (Real.exp_pos (f y))).le)]
+    (Filter.Eventually.of_forall fun y => (mul_pos hc (Real.exp_pos (f y))).le)]
   rw [integral_const_mul]
   rw [← ENNReal.ofReal_div_of_pos
     (x := c * Real.exp (f x)) (y := c * ∫ y, Real.exp (f y) ∂μ) hMassPos]
