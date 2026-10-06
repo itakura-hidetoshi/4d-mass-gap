@@ -152,6 +152,10 @@ theorem posteriorResamplingSquare_formula (e : Link)
       (F z - Mean e F z) ^ 2 + Mean e (fun w => F w ^ 2) z - (Mean e F z) ^ 2 := by
   have hf := resamplingFiber_integrable H N hN beta hbeta e F z
   have hf2 := resamplingFiber_square_integrable H N hN beta hbeta e F z
+  have hsub : Integrable (fun g : GaugeT =>
+      F z ^ 2 - (2 * F z) * F (z.1, Function.update z.2 e g)) (Nu z.1 z.2 e) :=
+    ((integrable_const (F z ^ 2)).sub (hf.const_mul (2 * F z))).congr
+      (Eventually.of_forall fun _ => rfl)
   have hc : (∫ _g : GaugeT, F z ^ 2 ∂Nu z.1 z.2 e) = F z ^ 2 := by simp
   calc
     _ = ∫ g, (F z ^ 2 - (2 * F z) * F (z.1, Function.update z.2 e g)) +
@@ -161,7 +165,7 @@ theorem posteriorResamplingSquare_formula (e : Link)
       change _ = F z ^ 2 - (2 * F z) *
         (∫ g, F (z.1, Function.update z.2 e g) ∂Nu z.1 z.2 e) +
         ∫ g, F (z.1, Function.update z.2 e g) ^ 2 ∂Nu z.1 z.2 e
-      rw [integral_add ((integrable_const (F z ^ 2)).sub (hf.const_mul (2 * F z))) hf2,
+      rw [integral_add hsub hf2,
         integral_sub (integrable_const (F z ^ 2)) (hf.const_mul (2 * F z)),
         integral_const_mul, hc]
     _ = _ := by ring
@@ -222,6 +226,9 @@ theorem posteriorResamplingEnergy_eq_twice_stageEnergy (e : Link)
   have hq := (posteriorMean_memLp_two H N hN beta hbeta e (fun w => F w ^ 2)
     (F.continuous.pow 2).stronglyMeasurable (‖F‖ ^ 2)
     (resamplingSquare_norm_le H N F)).integrable (by norm_num)
+  have hsum : Integrable (fun z => (F z - Mean e F z) ^ 2 +
+      Mean e (fun w => F w ^ 2) z) μJ :=
+    (hr.add hq).congr (Eventually.of_forall fun _ => rfl)
   have hStationary := posteriorMean_integral_eq H N hN beta hbeta e (fun w => F w ^ 2)
     (F.continuous.pow 2).stronglyMeasurable (‖F‖ ^ 2) (resamplingSquare_norm_le H N F)
   calc
@@ -232,7 +239,7 @@ theorem posteriorResamplingEnergy_eq_twice_stageEnergy (e : Link)
         (∫ z, F z ^ 2 ∂μJ) - ∫ z, (Mean e F z) ^ 2 ∂μJ := by
       change _ = (∫ z, (F z - Mean e F z) ^ 2 ∂μJ) +
         (∫ z, F z ^ 2 ∂μJ) - ∫ z, (Mean e F z) ^ 2 ∂μJ
-      rw [integral_sub (hr.add hq) hm, integral_add hr hq, hStationary]
+      rw [integral_sub hsum hm, integral_add hr hq, hStationary]
     _ = _ := by linarith
 
 /-- Exact half-resampling formula for the existing genuine joint projection. -/
