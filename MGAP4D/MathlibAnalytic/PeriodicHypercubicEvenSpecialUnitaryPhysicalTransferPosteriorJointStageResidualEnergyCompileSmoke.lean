@@ -1,0 +1,15 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointFiniteSchedule
+
+/-! Missing-export regression for literal posterior stage-residual energy. -/
+
+namespace MGAP4D.MathlibAnalytic
+
+#check GroundStatePosteriorJoint.posteriorSchedule_append_singleton
+#check GroundStatePosteriorJoint.projectionStageResidual_coeFn_eq_posteriorStageResidual
+#check GroundStatePosteriorJoint.posteriorStageResidual_memLp_two
+#check GroundStatePosteriorJoint.posteriorStageResidualEnergy_eq_projectionResidualNormSq
+#check GroundStatePosteriorJoint.posteriorStageResidualEnergy_eq_norm_loss
+#check GroundStatePosteriorJoint.posteriorStageResidualEnergy_le_of_ae_majorant
+#check GroundStatePosteriorJoint.posteriorStageResidualEnergy_le_of_ae_bound
+
+end MGAP4D.MathlibAnalytic
