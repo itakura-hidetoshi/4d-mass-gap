@@ -47,6 +47,7 @@ local notation "Diff" => jointTransferLinkDifference H N hN beta hbeta
       sourceRightLinkTilt N beta u a h :=
   sourceRightLinkTilt_cocycle N beta u a g h
 
+include hN hbeta in
  theorem sourceMultiplierWidth (u a g : GaugeT) :
     |sourceRightLinkTilt N beta u a g - 1| ≤ Real.exp (2 * beta) - 1 :=
   sourceRightLinkTilt_sub_one_abs_le N hN beta hbeta u a g
