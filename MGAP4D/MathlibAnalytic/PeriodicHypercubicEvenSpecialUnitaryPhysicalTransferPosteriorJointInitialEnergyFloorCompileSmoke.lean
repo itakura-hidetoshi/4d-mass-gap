@@ -1,0 +1,12 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointBCFApproximationMajorant
+
+/-! Regression contracts for the initial-energy floor of the actual prefix majorant. -/
+namespace MGAP4D.MathlibAnalytic
+
+#check GroundStatePosteriorJoint.posteriorVariationSchedule_ge_of_not_mem
+#check GroundStatePosteriorJoint.initialVariation_le_sixColorVariationProfile
+#check GroundStatePosteriorJoint.initialOscillationEnergy_le_prefixEnergy
+#check GroundStatePosteriorJoint.uniformPrefixEnergy_ge_card_mul_norm_sq
+#check GroundStatePosteriorJoint.norm_sq_le_uniformBCFApproximationMajorant
+
+end MGAP4D.MathlibAnalytic
