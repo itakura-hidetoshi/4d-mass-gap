@@ -1,6 +1,7 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentOrbitGeometryFiniteRepresentation
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPrimarySpatialEdgeTemporalCompanion
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenPlaquetteLocalBaseL1Separation
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousGroundStateFiberRemoteLocalZero
 import Mathlib.Tactic
 
 /-!
@@ -55,6 +56,34 @@ recovers exactly the original primary-plaquette edge. -/
         (physicalYangMillsSU2PrimaryPlaquetteSeedLink H k) =
       periodicHypercubicEvenPrimarySpatialPlaquetteEdge H k := by
   rfl
+
+/-- Intrinsic spatial-plaquette locality implies locality of the corresponding
+embedded four-dimensional physical links.  This bridge keeps the exact
+`periodicHypercubicEvenSpatialSlicePlaquetteLocal` hypothesis used by the
+posterior covariance theorem visible. -/
+theorem physicalYangMillsSU2SpatialSlicePlaquetteLocal_to_fullPlaquetteLocal
+    (H : ℕ)
+    (target source : PeriodicHypercubicEvenSpatialSliceLink H)
+    (hLocal :
+      periodicHypercubicEvenSpatialSlicePlaquetteLocal H target source) :
+    periodicHypercubicEvenPlaquetteLocal H
+      (periodicHypercubicEvenSpatialSliceLinkEmbedding H target)
+      (periodicHypercubicEvenSpatialSliceLinkEmbedding H source) := by
+  rcases hLocal with ⟨p, hTarget, hSource⟩
+  refine
+    ⟨periodicHypercubicEvenSpatialSlicePlaquetteEmbedding H p, ?_, ?_⟩
+  · simpa [
+      periodicHypercubicEvenPlaquetteEdgeSupport,
+      periodicHypercubicEvenSpatialSlicePlaquetteTouchesLink,
+      periodicHypercubicPlaquetteTouchesEdge,
+      periodicHypercubicPhysicalBoundaryEdge
+    ] using hTarget
+  · simpa [
+      periodicHypercubicEvenPlaquetteEdgeSupport,
+      periodicHypercubicEvenSpatialSlicePlaquetteTouchesLink,
+      periodicHypercubicPlaquetteTouchesEdge,
+      periodicHypercubicPhysicalBoundaryEdge
+    ] using hSource
 
 /-- Periodic link-base L1 distance from an arbitrary spatial source link to the
 nearest of the four canonical primary-plaquette seed links.  The explicit
@@ -112,6 +141,52 @@ theorem physicalYangMillsSU2PrimaryPlaquetteSeedDistance_le_seed
       ((min_le_right _ _).trans (min_le_left _ _))
   · exact (min_le_right _ _).trans
       ((min_le_right _ _).trans (min_le_right _ _))
+
+/-- The base-L1 distance has the same orientation as the existing #5199
+covariance denominator after reversing source and target. -/
+theorem physicalYangMillsSU2PrimaryPlaquetteSeedLinkBaseDistance_symm
+    (H : ℕ)
+    (source : PeriodicHypercubicEvenSpatialSliceLink H)
+    (k : Fin 4) :
+    periodicHypercubicEdgeBaseL1Distance
+        (PeriodicHypercubicEvenSideLength H)
+        (periodicHypercubicEvenSpatialSliceLinkEmbedding H source)
+        (periodicHypercubicEvenSpatialSliceLinkEmbedding H
+          (physicalYangMillsSU2PrimaryPlaquetteSeedLink H k)) =
+      periodicHypercubicEdgeBaseL1Distance
+        (PeriodicHypercubicEvenSideLength H)
+        (periodicHypercubicEvenSpatialSliceLinkEmbedding H
+          (physicalYangMillsSU2PrimaryPlaquetteSeedLink H k))
+        (periodicHypercubicEvenSpatialSliceLinkEmbedding H source) := by
+  classical
+  unfold periodicHypercubicEdgeBaseL1Distance
+  unfold periodicHypercubicVertexL1Distance
+  apply Finset.sum_congr rfl
+  intro i _hi
+  have hsub :
+      (periodicHypercubicEvenSpatialSliceLinkEmbedding H source).1 i -
+          (periodicHypercubicEvenSpatialSliceLinkEmbedding H
+            (physicalYangMillsSU2PrimaryPlaquetteSeedLink H k)).1 i =
+        - ((periodicHypercubicEvenSpatialSliceLinkEmbedding H
+              (physicalYangMillsSU2PrimaryPlaquetteSeedLink H k)).1 i -
+            (periodicHypercubicEvenSpatialSliceLinkEmbedding H source).1 i) := by
+    abel
+  rw [hsub, ZMod.natAbs_valMinAbs_neg]
+
+/-- The seed distance is therefore also below the exact source-to-target
+distance appearing in the #5199 covariance power. -/
+theorem physicalYangMillsSU2PrimaryPlaquetteSeedDistance_le_covarianceDistance
+    (H : ℕ)
+    (source : PeriodicHypercubicEvenSpatialSliceLink H)
+    (k : Fin 4) :
+    physicalYangMillsSU2PrimaryPlaquetteSeedDistance H source ≤
+      periodicHypercubicEdgeBaseL1Distance
+        (PeriodicHypercubicEvenSideLength H)
+        (periodicHypercubicEvenSpatialSliceLinkEmbedding H source)
+        (periodicHypercubicEvenSpatialSliceLinkEmbedding H
+          (physicalYangMillsSU2PrimaryPlaquetteSeedLink H k)) := by
+  rw [physicalYangMillsSU2PrimaryPlaquetteSeedLinkBaseDistance_symm H source k]
+  exact physicalYangMillsSU2PrimaryPlaquetteSeedDistance_le_seed H source k
 
 /-- Every literal seed link has seed distance zero. -/
 @[simp] theorem physicalYangMillsSU2PrimaryPlaquetteSeedDistance_seed
@@ -190,10 +265,8 @@ theorem physicalYangMillsSU2PrimaryPlaquetteSeedDistance_gt_two_remote
     (hFar : 2 < physicalYangMillsSU2PrimaryPlaquetteSeedDistance H source)
     (k : Fin 4) :
     physicalYangMillsSU2PrimaryPlaquetteSeedLink H k ≠ source ∧
-      ¬ periodicHypercubicEvenPlaquetteLocal H
-        (periodicHypercubicEvenSpatialSliceLinkEmbedding H
-          (physicalYangMillsSU2PrimaryPlaquetteSeedLink H k))
-        (periodicHypercubicEvenSpatialSliceLinkEmbedding H source) := by
+      ¬ periodicHypercubicEvenSpatialSlicePlaquetteLocal H
+        (physicalYangMillsSU2PrimaryPlaquetteSeedLink H k) source := by
   have hSeedLe :=
     physicalYangMillsSU2PrimaryPlaquetteSeedDistance_le_seed H source k
   constructor
@@ -203,13 +276,16 @@ theorem physicalYangMillsSU2PrimaryPlaquetteSeedDistance_gt_two_remote
       physicalYangMillsSU2PrimaryPlaquetteSeedDistance_seed H k
     omega
   · intro hLocal
+    have hFull :=
+      physicalYangMillsSU2SpatialSlicePlaquetteLocal_to_fullPlaquetteLocal
+        H (physicalYangMillsSU2PrimaryPlaquetteSeedLink H k) source hLocal
     have hTwo :=
       periodicHypercubicEvenPlaquetteLocal_edgeBaseL1Distance_le_two
         H
         (periodicHypercubicEvenSpatialSliceLinkEmbedding H
           (physicalYangMillsSU2PrimaryPlaquetteSeedLink H k))
         (periodicHypercubicEvenSpatialSliceLinkEmbedding H source)
-        hLocal
+        hFull
     omega
 
 /-- Membership in the radius-two exterior is the finite-set form of the same
@@ -220,10 +296,8 @@ theorem physicalYangMillsSU2PrimaryPlaquetteFarLinks_two_remote
     (hFar : source ∈ physicalYangMillsSU2PrimaryPlaquetteFarLinks H 2)
     (k : Fin 4) :
     physicalYangMillsSU2PrimaryPlaquetteSeedLink H k ≠ source ∧
-      ¬ periodicHypercubicEvenPlaquetteLocal H
-        (periodicHypercubicEvenSpatialSliceLinkEmbedding H
-          (physicalYangMillsSU2PrimaryPlaquetteSeedLink H k))
-        (periodicHypercubicEvenSpatialSliceLinkEmbedding H source) := by
+      ¬ periodicHypercubicEvenSpatialSlicePlaquetteLocal H
+        (physicalYangMillsSU2PrimaryPlaquetteSeedLink H k) source := by
   exact physicalYangMillsSU2PrimaryPlaquetteSeedDistance_gt_two_remote
     H source
     ((physicalYangMillsSU2PrimaryPlaquette_mem_farLinks H 2 source).mp hFar)
