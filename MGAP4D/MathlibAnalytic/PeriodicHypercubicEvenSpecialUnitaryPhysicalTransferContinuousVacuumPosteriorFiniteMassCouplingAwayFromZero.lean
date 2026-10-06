@@ -58,8 +58,8 @@ theorem not_beta_tendsto_zero
         atTop (nhds 0) := by
     have h :=
       (continuousAt_periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorCanonicalFixedRightBootstrapUniformCoefficient
-        s).comp hBetaZero
-    simpa using h
+        s).tendsto.comp hBetaZero
+    simpa [Function.comp_def] using h
   have hAlphaOne := A.coefficient_tendsto_one
   have hFalse : (0 : ℝ) = 1 :=
     tendsto_nhds_unique hAlphaZero hAlphaOne
