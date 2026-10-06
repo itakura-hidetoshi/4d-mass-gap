@@ -42,7 +42,7 @@ Thus fixed-depth, fixed-mode adjacent control is enough; whole-space operator-no
 
 | Milestone | Established result | Remaining boundary |
 | --- | --- | --- |
-| Through #5124 | Canonical finite reconstruction; two projective residuals combine into `V = ||Y - P_coarse_phys Y||^2`; growing-distance and adjacent-summability receivers | Quantitative model estimates and the physical identification still required |
+| Through #5124 | Canonical finite reconstruction; two projective residuals combine into the squared coarse-physical projection defect V; growing-distance and adjacent-summability receivers | Quantitative model estimates and the physical identification still required |
 | #5134 | Pair-Haar to genuine joint L2 half-density isometry using the actual positive density | Not an identification of physical transfer with conditional expectation |
 | #5143--#5148 | Concrete link oscillation controls projection residuals; exact stage-profile and bounded-continuous dense-core majorant receivers | Construct the actual prefix-dependent witnesses and scalar tails; retain physicality separately |
 | #5159--#5163 | Actual posterior one-link law, fixed-left Feller closure, and one-link variation propagation | Respect the observable, context, influence-data and regularity hypotheses |
