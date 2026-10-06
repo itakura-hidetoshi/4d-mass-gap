@@ -52,7 +52,7 @@ theorem doobWeightedMeasure_ofReal_mul_exp_eq_tilted
   unfold doobWeightedMeasure Measure.tilted
   apply congrArg (fun density : α → ℝ≥0∞ => μ.withDensity density)
   funext x
-  unfold doobWeightedDensity doobWeightMass
+  unfold doobWeightMass
   rw [← ofReal_integral_eq_lintegral_ofReal hInt
     (Filter.Eventually.of_forall fun y => (mul_pos hc (Real.exp_pos (f y))).le)]
   rw [integral_const_mul]
