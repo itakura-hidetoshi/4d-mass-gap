@@ -117,7 +117,7 @@ canonical half-barrier interval required by the actual-response construction. -/
 theorem
     exists_periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorCanonicalFixedRightBootstrapUniformDobrushinCutoff
     (s : ℝ)
-    (hs : 8 < s) :
+    (_hs : 8 < s) :
     ∃ cutoff : ℝ,
       0 < cutoff ∧
       cutoff ≤
@@ -155,7 +155,7 @@ theorem
   · intro beta hbeta hbetaCutoff
     by_cases hZero : beta = 0
     · subst beta
-      simp [alpha]
+      simp
     · have hBetaPos : 0 < beta := lt_of_le_of_ne hbeta (Ne.symm hZero)
       have hBetaHalfDelta :
           beta ≤ delta / 2 := by
