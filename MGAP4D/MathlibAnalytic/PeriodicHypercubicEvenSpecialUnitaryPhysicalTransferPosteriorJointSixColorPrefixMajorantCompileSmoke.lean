@@ -1,0 +1,12 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointPrefixVariationMajorant
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSixSpatialSweepStageProfileOscillationMajorant
+
+/-! Compile contracts for the P2 bridge, before its implementation. -/
+
+namespace MGAP4D.MathlibAnalytic
+
+#check GroundStatePosteriorJoint.posteriorScheduleL2_eq_fixedColorStage
+#check GroundStatePosteriorJoint.sixColorLocalProfile_sq_eq_posteriorStageEnergy
+#check GroundStatePosteriorJoint.sixColorProfileEnergy_le_canonicalPrefixOscillationEnergy
+
+end MGAP4D.MathlibAnalytic
