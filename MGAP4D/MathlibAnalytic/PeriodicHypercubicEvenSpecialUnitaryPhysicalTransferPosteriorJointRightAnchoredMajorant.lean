@@ -108,8 +108,12 @@ theorem rightAnchoredMajorant_at_anchor (R : ResponseData)
     Majorant R (posteriorRightAnchorBCF H N O)
       (rightAnchoredInitialVariation H N (posteriorRightAnchorBCF H N O))
       (BCFRep (posteriorRightAnchorBCF H N O)) = 0 := by
-  simp [bcfApproximationMajorant, rightAnchoredInitialVariation,
-    posteriorRightAnchorBCF_idempotent, posteriorSixColorVariationProfile,
+  have hZero : rightAnchoredInitialVariation H N (posteriorRightAnchorBCF H N O) =
+      (fun _ : Link => 0) := by
+    funext e
+    simp [rightAnchoredInitialVariation, posteriorRightAnchorBCF_idempotent]
+  rw [hZero]
+  simp [bcfApproximationMajorant, posteriorSixColorVariationProfile,
     posteriorVariationSchedule_zero,
     periodicHypercubicEvenSpecialUnitaryGroundStateSixSpatialSweepStageOscillationEnergy]
 
