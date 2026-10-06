@@ -80,6 +80,8 @@ theorem posteriorVariationSchedule_nonneg (c : Link → Link → ℝ)
   induction pre generalizing v with
   | nil => exact hv
   | cons target pre ih =>
+      change ∀ source, 0 ≤ posteriorVariationSchedule H c pre
+        (posteriorVariationStep H c v target) source
       apply ih
       intro source
       unfold posteriorVariationStep
@@ -134,7 +136,11 @@ theorem posteriorSliceSchedule_variation_abs_le
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalExpectationContinuousBCF_apply] using
           (P.toCenteredVariationProfile.conditionalExpectationVariationBound D target).variation_bound
             source A C hAgree
-      exact ih O' v' hv' hV'
+      change ∀ (source : Link) (A C : Cfg), Agree A C source →
+        |posteriorSliceSchedule H N hN beta hbeta B pre O' A -
+          posteriorSliceSchedule H N hN beta hbeta B pre O' C| ≤
+        posteriorVariationSchedule H D.influence pre v' source
+      exact ih (O := O') (v := v') hv' hV'
 
 /-- Literal equality on one fixed-left slice is preserved at each integral.
 The joint function here need not be continuous; regularity is carried by O. -/
@@ -145,6 +151,11 @@ theorem posteriorSliceSchedule_eq_posteriorSchedule (B : Cfg) (pre : List Link)
   induction pre generalizing F O with
   | nil => exact hO
   | cons target pre ih =>
+      change ∀ A,
+        posteriorSliceSchedule H N hN beta hbeta B pre
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalExpectationContinuousBCF
+            H N hN beta hbeta B target O) A =
+        Raw pre (posteriorMean H N hN beta hbeta target F) (B, A)
       apply ih (F := posteriorMean H N hN beta hbeta target F)
         (O := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalExpectationContinuousBCF
           H N hN beta hbeta B target O)
@@ -213,27 +224,41 @@ theorem posteriorStageResidual_abs_le_variationSchedule (R : ResponseData)
   let delta := posteriorVariationSchedule H
     (periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorNonstrictInfluence
       H beta R.epsilon) pre v target
-  letI : IsProbabilityMeasure
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalMeasure
-        H N hN beta hbeta z.1 z.2 target) :=
+  let mu :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalMeasure
+      H N hN beta hbeta z.1 z.2 target
+  letI : IsProbabilityMeasure mu :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalMeasure_isProbabilityMeasure
       H N hN beta hbeta z.1 z.2 target
+  have hUpdate : Continuous (fun g : GaugeT => Function.update z.2 target g) := by
+    apply continuous_pi
+    intro e
+    by_cases he : e = target
+    · subst e
+      simpa only [Function.update_same] using
+        (continuous_id : Continuous (fun g : GaugeT => g))
+    · simpa only [Function.update_of_ne he] using
+        (continuous_const : Continuous (fun _ : GaugeT => z.2 e))
   have hFiber : Continuous (fun g : GaugeT => G (Function.update z.2 target g)) :=
-    (posteriorSchedule_left_continuous H N hN beta hbeta pre F z.1).comp
-      ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosterior_update_prod_continuous
-        H N target).comp (continuous_const.prodMk continuous_id))
+    (posteriorSchedule_left_continuous H N hN beta hbeta pre F z.1).comp hUpdate
   have hOsc : ∀ g : GaugeT, |G z.2 - G (Function.update z.2 target g)| ≤ delta := by
     intro g
     apply posteriorSchedule_variation_abs_le H N hN beta hbeta R pre F v hv hV
     intro e he
-    simp [Function.update, he]
+    rw [Function.update_of_ne he]
   have hIntegral :=
     periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorConditionalIntegral_direct_difference_abs_le
       H N hN beta hbeta z.1 z.2 target
       (fun _ : GaugeT => G z.2) (fun g : GaugeT => G (Function.update z.2 target g))
       continuous_const hFiber delta hOsc
-  simpa [posteriorStageResidual, posteriorSchedule_append_singleton, posteriorMean, G, delta]
-    using hIntegral
+  change |(∫ _ : GaugeT, G z.2 ∂mu) -
+    (∫ g : GaugeT, G (Function.update z.2 target g) ∂mu)| ≤ delta at hIntegral
+  have hConst : (∫ _ : GaugeT, G z.2 ∂mu) = G z.2 := by simp
+  rw [hConst] at hIntegral
+  change |Raw pre F z - Raw (pre ++ [target]) F z| ≤ delta
+  rw [posteriorSchedule_append_singleton]
+  change |G z.2 - (∫ g : GaugeT, G (Function.update z.2 target g) ∂mu)| ≤ delta
+  exact hIntegral
 
 /-- Coefficient-one stage energy from the constructed prefix variation. -/
 theorem posteriorStageResidualEnergy_le_variationSchedule_sq (R : ResponseData)
