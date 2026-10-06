@@ -287,6 +287,7 @@ theorem fineFrozenInitialEnergy_eq_linkLocal :
     sixColorInitialResidualEnergy Hn 2 Pos (beta n) (hbeta n) FrozenVec = Local Orbit Finset.univ := by
   rw [jointTransferLocalEnergyOn_univ_eq_initial,
     ← fineFrozenBCF_rep_eq (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k]
+  simp only [fineFrozenBCF]
 
 /-- Original frozen family with an exact, not estimated, exterior contribution. -/
 theorem fineFrozenProfileEnergy_le_localEnvelope_add_exterior (s : Finset Link) :
