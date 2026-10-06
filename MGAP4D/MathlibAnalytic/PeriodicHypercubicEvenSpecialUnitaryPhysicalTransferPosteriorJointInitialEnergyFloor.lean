@@ -162,7 +162,7 @@ theorem jointBCFRepresentative_norm_le_sup (O : BoundedContinuousFunction Joint 
     BoundedContinuousFunction.toLp 2 μJ ℝ
   have hI : ‖I‖ ≤ 1 := by
     simpa [I, measureUnivNNReal] using
-      (BoundedContinuousFunction.toLp_norm_le (p := (2 : ℝ≥0∞)) (𝕜 := ℝ) (E := ℝ) μJ)
+      (BoundedContinuousFunction.toLp_norm_le (p := 2) (𝕜 := ℝ) (E := ℝ) μJ)
   calc
     ‖BCFRep O‖ ≤ ‖I‖ * ‖O‖ := I.le_opNorm O
     _ ≤ 1 * ‖O‖ := mul_le_mul_of_nonneg_right hI (norm_nonneg O)
@@ -175,9 +175,9 @@ theorem uniformPrefixEnergy_ge_sup_norm_sq (R : ResponseData)
   have hCard : (2 : ℝ) ≤ (Fintype.card Link : ℝ) := by
     exact_mod_cast posteriorSpatialLink_card_ge_two H
   have hFactor : (1 : ℝ) ≤ (2 / 3 : ℝ) * (Fintype.card Link : ℝ) := by linarith
-  exact (by simpa only [one_mul] using
-    mul_le_mul_of_nonneg_right hFactor (sq_nonneg ‖O‖)).trans
-      (uniformPrefixEnergy_ge_card_mul_norm_sq H N hN beta hbeta R O)
+  have hBase : ‖O‖ ^ 2 ≤ (2 / 3 : ℝ) * (Fintype.card Link : ℝ) * ‖O‖ ^ 2 := by
+    simpa only [one_mul] using mul_le_mul_of_nonneg_right hFactor (sq_nonneg ‖O‖)
+  exact hBase.trans (uniformPrefixEnergy_ge_card_mul_norm_sq H N hN beta hbeta R O)
 
 /-- No choice of approximating BCF can improve the norm bound using THIS
 uniform-sup initial profile. This is not a lower bound for the genuine profile. -/
