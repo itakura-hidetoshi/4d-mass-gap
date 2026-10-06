@@ -54,7 +54,7 @@ theorem doobWeightedMeasure_ofReal_mul_exp_eq_tilted
   funext x
   unfold doobWeightMass
   rw [← ofReal_integral_eq_lintegral_ofReal hInt
-    (Filter.Eventually.of_forall fun y => (mul_pos hc (Real.exp_pos (f y))).le)]
+    (fun y => (mul_pos hc (Real.exp_pos (f y))).le)]
   rw [integral_const_mul]
   rw [← ENNReal.ofReal_div_of_pos hMassPos]
   rw [mul_div_mul_left _ _ (ne_of_gt hc)]
