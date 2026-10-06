@@ -1,6 +1,11 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointResamplingDirichlet
 
-/-! Regression contracts for exact resampling factors and unchanged carriers. -/
+/-! Regression contracts for exact resampling factors and unchanged carriers.
+
+Carrier-valued binders are declared on each named regression theorem rather
+than reused through anonymous private examples. Every regression proof itself
+is axiom-printed, in addition to all nineteen mathematical interface theorems.
+-/
 
 namespace MGAP4D.MathlibAnalytic
 
@@ -18,6 +23,8 @@ attribute [local instance]
   groundStateJointOneLinkBoundedCoreSpatialLinkFintype
   groundStateJointOneLinkBoundedCoreTargetLinkFintype
   groundStateJointOneLinkBoundedCoreTargetLinkUnique
+
+namespace PosteriorResamplingDirichletSmoke
 
 section General
 
@@ -37,58 +44,64 @@ local notation "B" => jointTransferLinkLocalEnergy H N hN beta hbeta
 local notation "Q" => jointTransferLinkResamplingEnergy H N hN beta hbeta
 local notation "T" => periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalPairTransferOperator H N hN beta hbeta
 
-variable (e : Link) (F : BoundedContinuousFunction Joint ℝ) (x : PairL2)
-
-example (G : Joint → ℝ) (hG : StronglyMeasurable G) (c : ℝ) (hc : ∀ z, ‖G z‖ ≤ c) :
+theorem stationarity (e : Link) (G : Joint → ℝ) (hG : StronglyMeasurable G)
+    (c : ℝ) (hc : ∀ z, ‖G z‖ ≤ c) :
     (∫ z, posteriorMean H N hN beta hbeta e G z ∂μJ) = ∫ z, G z ∂μJ :=
   posteriorMean_integral_eq H N hN beta hbeta e G hG c hc
 
-example : Integrable (posteriorResamplingSquare H N hN beta hbeta e F) μJ :=
+theorem outerIntegrable (e : Link) (F : BoundedContinuousFunction Joint ℝ) :
+    Integrable (posteriorResamplingSquare H N hN beta hbeta e F) μJ :=
   posteriorResamplingSquare_integrable H N hN beta hbeta e F
 
-example : ‖BCFRep F - PJoint e (BCFRep F)‖ ^ 2 =
-    (1 / 2 : ℝ) * posteriorResamplingEnergy H N hN beta hbeta e F :=
+theorem projectionHalf (e : Link) (F : BoundedContinuousFunction Joint ℝ) :
+    ‖BCFRep F - PJoint e (BCFRep F)‖ ^ 2 =
+      (1 / 2 : ℝ) * posteriorResamplingEnergy H N hN beta hbeta e F :=
   posteriorInitialResidual_sq_eq_half_resampling H N hN beta hbeta e F
 
-example (z : Joint) :
+theorem signedInnerIntegrable (x : PairL2) (e : Link) (z : Joint) :
     Integrable (fun g => jointTransferLinkDifference H N hN beta hbeta x e z g ^ 2)
       (Nu z.1 z.2 e) :=
   jointTransferLinkDifference_sq_posterior_integrable H N hN beta hbeta x e z
 
-example : Integrable (fun z => ∫ g,
-    jointTransferLinkDifference H N hN beta hbeta x e z g ^ 2 ∂Nu z.1 z.2 e) μJ :=
+theorem signedOuterIntegrable (x : PairL2) (e : Link) :
+    Integrable (fun z => ∫ g,
+      jointTransferLinkDifference H N hN beta hbeta x e z g ^ 2 ∂Nu z.1 z.2 e) μJ :=
   jointTransferLinkResamplingSquare_integrable H N hN beta hbeta x e
 
-example : Q x e = 2 * B x e :=
+theorem signedTwice (x : PairL2) (e : Link) : Q x e = 2 * B x e :=
   jointTransferLinkResamplingEnergy_eq_twice_localEnergy H N hN beta hbeta x e
 
-example : B x e = (1 / 2 : ℝ) * Q x e := by
+theorem signedHalf (x : PairL2) (e : Link) : B x e = (1 / 2 : ℝ) * Q x e := by
   have h := jointTransferLinkResamplingEnergy_eq_twice_localEnergy H N hN beta hbeta x e
   linarith
 
-example (s : Finset Link) : Local x s = (1 / 12 : ℝ) * ∑ t ∈ s, Q x t :=
+theorem finiteSet (x : PairL2) (s : Finset Link) :
+    Local x s = (1 / 12 : ℝ) * ∑ t ∈ s, Q x t :=
   jointTransferLocalEnergyOn_eq_resampling H N hN beta hbeta x s
 
-example : (1 / 12 : ℝ) * ∑ t ∈ (∅ : Finset Link), Q x t = 0 := by simp
+theorem emptySet (x : PairL2) : (1 / 12 : ℝ) * ∑ t ∈ (∅ : Finset Link), Q x t = 0 := by
+  simp
 
-example : Local x {e} = (1 / 12 : ℝ) * Q x e := by
+theorem singleton (x : PairL2) (e : Link) : Local x {e} = (1 / 12 : ℝ) * Q x e := by
   simpa using jointTransferLocalEnergyOn_eq_resampling H N hN beta hbeta x {e}
 
-example : sixColorInitialResidualEnergy H N hN beta hbeta (BCFRep (Obs x)) =
-    (1 / 12 : ℝ) * ∑ t : Link, Q x t := by
+theorem fullSet (x : PairL2) :
+    sixColorInitialResidualEnergy H N hN beta hbeta (BCFRep (Obs x)) =
+      (1 / 12 : ℝ) * ∑ t : Link, Q x t := by
   rw [← jointTransferLocalEnergyOn_univ_eq_initial, jointTransferLocalEnergyOn_eq_resampling]
 
-example : B x e ≤ (1 / 2 : ℝ) *
+theorem halfEnvelope (x : PairL2) (e : Link) : B x e ≤ (1 / 2 : ℝ) *
     ((kernelRightVariationRate beta) ^ 2 * ‖T (pairAbsoluteInput H N x)‖ ^ 2) :=
   jointTransferLinkLocalEnergy_le_half_l2Envelope H N hN beta hbeta x e
 
-example (s : Finset Link) :
+theorem nearExterior (x : PairL2) (s : Finset Link) :
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialSweepStageProfileEnergy
       H N hN beta hbeta (BCFRep (Obs x)) ≤ (1 / 3 : ℝ) * (s.card : ℝ) *
         ((kernelRightVariationRate beta) ^ 2 * ‖T (pairAbsoluteInput H N x)‖ ^ 2) + 4 * Local x sᶜ :=
   jointTransferProfileEnergy_le_half_localEnvelope_add_exterior H N hN beta hbeta x s
 
-example : jointTransferLinkResamplingEnergy H N hN 0 (by norm_num) x e = 0 := by
+theorem zeroCoupling (x : PairL2) (e : Link) :
+    jointTransferLinkResamplingEnergy H N hN 0 (by norm_num) x e = 0 := by
   have h := jointTransferLinkLocalEnergy_le_half_l2Envelope H N hN 0 (by norm_num) x e
   have hn := jointTransferLinkLocalEnergy_nonneg H N hN 0 (by norm_num) x e
   have h0 : jointTransferLinkLocalEnergy H N hN 0 (by norm_num) x e ≤ 0 := by
@@ -103,7 +116,7 @@ section Frozen
 variable {halfExtent : ℕ → ℕ} {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
 variable (n r : ℕ) (k : Fin 3)
 
-example :
+theorem frozenFamily :
     sixColorInitialResidualEnergy (halfExtent (n + 1)) 2 specialUnitaryTwoWilsonRankPositive
       (beta n) (hbeta n)
       (physicalYangMillsSU2AdjacentFineFrozenStepGroundStateJointVector
@@ -115,7 +128,7 @@ example :
             (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k) e :=
   fineFrozenInitialEnergy_eq_resampling n r k
 
-example :
+theorem frozenZeroIterate :
     sixColorInitialResidualEnergy (halfExtent (n + 1)) 2 specialUnitaryTwoWilsonRankPositive
       (beta n) (hbeta n)
       (physicalYangMillsSU2AdjacentFineFrozenStepGroundStateJointVector
@@ -159,6 +172,25 @@ end Frozen
 #print axioms GroundStatePosteriorJoint.fineFrozenInitialEnergy_eq_resampling
 #print axioms GroundStatePosteriorJoint.fineFrozenProfileEnergy_le_half_localEnvelope_add_exterior
 #print axioms GroundStatePosteriorJoint.fineFrozenProfileEnergy_le_half_l2Envelope
+
+#print axioms stationarity
+#print axioms outerIntegrable
+#print axioms projectionHalf
+#print axioms signedInnerIntegrable
+#print axioms signedOuterIntegrable
+#print axioms signedTwice
+#print axioms signedHalf
+#print axioms finiteSet
+#print axioms emptySet
+#print axioms singleton
+#print axioms fullSet
+#print axioms halfEnvelope
+#print axioms nearExterior
+#print axioms zeroCoupling
+#print axioms frozenFamily
+#print axioms frozenZeroIterate
+
+end PosteriorResamplingDirichletSmoke
 
 end
 
