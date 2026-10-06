@@ -125,7 +125,7 @@ local notation "Avg" => sourceTiltMean Hn 2 (beta n)
 local notation "Center" => sourceCenteredCoordinate Hn 2 Pos (beta n) (hbeta n)
 local notation "Tilt" => sourceTiltL2 Hn 2 Pos (beta n) (hbeta n)
 
-theorem actualFrozenZeroStep :
+theorem sourceCoordinateActualFrozenZeroStep :
     sixColorInitialResidualEnergy Hn 2 Pos (beta n) (hbeta n) Frozen0 =
       (1 / 12 : ℝ) * ∑ e : Link, ∫ z, ∫ g,
         ((1 - Out z e g * (1 + Avg e z g)) * Obs Orbit0 z -
@@ -180,7 +180,7 @@ end SourceCoordinateL2Smoke
 #print axioms SourceCoordinateL2Smoke.vanishingCoordinateRetainsDrift
 #print axioms SourceCoordinateL2Smoke.zeroCouplingResponse
 #print axioms SourceCoordinateL2Smoke.originalEnergyHalf
-#print axioms SourceCoordinateL2Smoke.actualFrozenZeroStep
+#print axioms SourceCoordinateL2Smoke.sourceCoordinateActualFrozenZeroStep
 
 end
 end MGAP4D.MathlibAnalytic
