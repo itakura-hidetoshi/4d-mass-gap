@@ -1,0 +1,16 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointCondExpIdentification
+
+/-! Missing-export regression contract for actual posterior finite schedules. -/
+
+namespace MGAP4D.MathlibAnalytic
+
+#check GroundStatePosteriorJoint.canonicalMean_congr_ae
+#check GroundStatePosteriorJoint.posteriorMean_congr_ae
+#check GroundStatePosteriorJoint.posteriorSchedule_congr_ae
+#check GroundStatePosteriorJoint.posteriorSchedule_ae_eq_canonicalSchedule
+#check GroundStatePosteriorJoint.canonicalScheduleL2_eq_projectionSchedule
+#check GroundStatePosteriorJoint.projectionSchedule_coeFn_eq_posteriorSchedule
+#check GroundStatePosteriorJoint.posteriorSchedule_memLp_two
+#check GroundStatePosteriorJoint.posteriorScheduleL2_eq_projectionSchedule
+
+end MGAP4D.MathlibAnalytic
