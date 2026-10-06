@@ -130,7 +130,8 @@ theorem
   change
     (n - 1 + D.coefficient) / n =
       1 - (1 - D.coefficient) / n
-  field_simp [hnNe] <;> ring
+  field_simp [hnNe]
+  ring
 
 /-- Raising the one-link random-scan rate to one complete sweep removes the
 finite-volume cardinality from the contraction bound. -/
