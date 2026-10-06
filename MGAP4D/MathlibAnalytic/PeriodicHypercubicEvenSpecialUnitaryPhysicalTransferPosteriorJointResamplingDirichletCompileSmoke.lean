@@ -91,8 +91,9 @@ example (s : Finset Link) :
 example : jointTransferLinkResamplingEnergy H N hN 0 (by norm_num) x e = 0 := by
   have h := jointTransferLinkLocalEnergy_le_half_l2Envelope H N hN 0 (by norm_num) x e
   have hn := jointTransferLinkLocalEnergy_nonneg H N hN 0 (by norm_num) x e
-  have hz : jointTransferLinkLocalEnergy H N hN 0 (by norm_num) x e = 0 := by
-    simpa [kernelRightVariationRate] using le_antisymm h hn
+  have h0 : jointTransferLinkLocalEnergy H N hN 0 (by norm_num) x e ≤ 0 := by
+    simpa [kernelRightVariationRate] using h
+  have hz := le_antisymm h0 hn
   rw [jointTransferLinkResamplingEnergy_eq_twice_localEnergy, hz, mul_zero]
 
 end General
