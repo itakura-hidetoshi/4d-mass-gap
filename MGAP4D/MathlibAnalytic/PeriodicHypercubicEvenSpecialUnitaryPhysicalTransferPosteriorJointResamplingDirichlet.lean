@@ -110,15 +110,26 @@ private theorem resamplingFiber_integrable (e : Link)
     (resamplingFiber_continuous H N e F z).aestronglyMeasurable
   exact Eventually.of_forall fun g => F.norm_coe_le_norm _
 
+private theorem resamplingFiber_square_integrable (e : Link)
+    (F : BoundedContinuousFunction Joint ℝ) (z : Joint) :
+    Integrable (fun g : GaugeT => F (z.1, Function.update z.2 e g) ^ 2) (Nu z.1 z.2 e) := by
+  have hf : MemLp (fun g : GaugeT => F (z.1, Function.update z.2 e g)) 2 (Nu z.1 z.2 e) :=
+    MemLp.of_bound (resamplingFiber_continuous H N e F z).aestronglyMeasurable
+      ‖F‖ (Eventually.of_forall fun g => F.norm_coe_le_norm _)
+  exact hf.integrable_sq
+
+private theorem resamplingSquare_norm_le (F : BoundedContinuousFunction Joint ℝ) (z : Joint) :
+    ‖F z ^ 2‖ ≤ ‖F‖ ^ 2 := by
+  rw [norm_pow]
+  exact pow_le_pow_left₀ (norm_nonneg _) (F.norm_coe_le_norm z) 2
+
 /-- The inner squared difference is integrable in the actual posterior fiber. -/
 theorem posteriorResamplingDifferenceSquare_integrable (e : Link)
     (F : BoundedContinuousFunction Joint ℝ) (z : Joint) :
     Integrable (fun g : GaugeT => (F z - F (z.1, Function.update z.2 e g)) ^ 2)
       (Nu z.1 z.2 e) := by
   have hf := resamplingFiber_integrable H N hN beta hbeta e F z
-  have hf2 := resamplingFiber_integrable H N hN beta hbeta e (F ^ 2) z
-  change Integrable (fun g : GaugeT => F (z.1, Function.update z.2 e g) ^ 2)
-    (Nu z.1 z.2 e) at hf2
+  have hf2 := resamplingFiber_square_integrable H N hN beta hbeta e F z
   apply (((integrable_const (F z ^ 2)).sub (hf.const_mul (2 * F z))).add hf2).congr
   exact Eventually.of_forall fun g => by
     change F z ^ 2 - (2 * F z) * F (z.1, Function.update z.2 e g) +
@@ -140,9 +151,7 @@ theorem posteriorResamplingSquare_formula (e : Link)
     posteriorResamplingSquare H N hN beta hbeta e F z =
       (F z - Mean e F z) ^ 2 + Mean e (fun w => F w ^ 2) z - (Mean e F z) ^ 2 := by
   have hf := resamplingFiber_integrable H N hN beta hbeta e F z
-  have hf2 := resamplingFiber_integrable H N hN beta hbeta e (F ^ 2) z
-  change Integrable (fun g : GaugeT => F (z.1, Function.update z.2 e g) ^ 2)
-    (Nu z.1 z.2 e) at hf2
+  have hf2 := resamplingFiber_square_integrable H N hN beta hbeta e F z
   have hc : (∫ _g : GaugeT, F z ^ 2 ∂Nu z.1 z.2 e) = F z ^ 2 := by simp
   calc
     _ = ∫ g, (F z ^ 2 - (2 * F z) * F (z.1, Function.update z.2 e g)) +
@@ -166,9 +175,9 @@ theorem posteriorResamplingSquare_integrable (e : Link)
   change Integrable (fun z => (F z - Mean e F z) ^ 2) μJ at hr
   have hm := (posteriorMean_memLp_two H N hN beta hbeta e F
     F.continuous.stronglyMeasurable ‖F‖ F.norm_coe_le_norm).integrable_sq
-  have hq := (posteriorMean_memLp_two H N hN beta hbeta e (F ^ 2)
-    (F ^ 2).continuous.stronglyMeasurable ‖F ^ 2‖ (F ^ 2).norm_coe_le_norm).integrable (by norm_num)
-  change Integrable (Mean e (fun w => F w ^ 2)) μJ at hq
+  have hq := (posteriorMean_memLp_two H N hN beta hbeta e (fun w => F w ^ 2)
+    (F.continuous.pow 2).stronglyMeasurable (‖F‖ ^ 2)
+    (resamplingSquare_norm_le H N F)).integrable (by norm_num)
   exact ((hr.add hq).sub hm).congr (Eventually.of_forall fun z =>
     (posteriorResamplingSquare_formula H N hN beta hbeta e F z).symm)
 
@@ -210,12 +219,11 @@ theorem posteriorResamplingEnergy_eq_twice_stageEnergy (e : Link)
   change Integrable (fun z => (F z - Mean e F z) ^ 2) μJ at hr
   have hm := (posteriorMean_memLp_two H N hN beta hbeta e F
     F.continuous.stronglyMeasurable ‖F‖ F.norm_coe_le_norm).integrable_sq
-  have hq := (posteriorMean_memLp_two H N hN beta hbeta e (F ^ 2)
-    (F ^ 2).continuous.stronglyMeasurable ‖F ^ 2‖ (F ^ 2).norm_coe_le_norm).integrable (by norm_num)
-  change Integrable (Mean e (fun w => F w ^ 2)) μJ at hq
-  have hStationary := posteriorMean_integral_eq H N hN beta hbeta e (F ^ 2)
-    (F ^ 2).continuous.stronglyMeasurable ‖F ^ 2‖ (F ^ 2).norm_coe_le_norm
-  change (∫ z, Mean e (fun w => F w ^ 2) z ∂μJ) = ∫ z, F z ^ 2 ∂μJ at hStationary
+  have hq := (posteriorMean_memLp_two H N hN beta hbeta e (fun w => F w ^ 2)
+    (F.continuous.pow 2).stronglyMeasurable (‖F‖ ^ 2)
+    (resamplingSquare_norm_le H N F)).integrable (by norm_num)
+  have hStationary := posteriorMean_integral_eq H N hN beta hbeta e (fun w => F w ^ 2)
+    (F.continuous.pow 2).stronglyMeasurable (‖F‖ ^ 2) (resamplingSquare_norm_le H N F)
   calc
     _ = ∫ z, ((F z - Mean e F z) ^ 2 + Mean e (fun w => F w ^ 2) z) -
         (Mean e F z) ^ 2 ∂μJ :=
