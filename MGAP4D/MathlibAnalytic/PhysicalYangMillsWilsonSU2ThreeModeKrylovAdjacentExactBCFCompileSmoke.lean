@@ -1,0 +1,12 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPosteriorLeftQuotientMajorant
+
+/-! Regression contracts for actual transfer smoothing and exact joint BCF representatives. -/
+namespace MGAP4D.MathlibAnalytic
+
+#check GroundStatePosteriorJoint.pairTransferIntegral_continuous
+#check GroundStatePosteriorJoint.pairTransferBCF_rep_eq
+#check GroundStatePosteriorJoint.continuousJointSqrtDensity_ae_eq
+#check GroundStatePosteriorJoint.jointTransferBCF_rep_eq
+#check GroundStatePosteriorJoint.fineFrozenBCF_rep_eq
+
+end MGAP4D.MathlibAnalytic
