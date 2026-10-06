@@ -145,6 +145,15 @@ theorem jointTransferLinkDifference_abs_le_centeredCoordinate (x : PairL2) (e : 
         (outputRightLinkTilt_pos H N hN beta hbeta z e g).le
       nlinarith
 
+/-- The combined square is integrable at every original posterior fiber. -/
+theorem centeredCoordinateDefect_sq_posterior_integrable (x : PairL2) (e : Link) (z : Joint) :
+    Integrable (fun g =>
+      ((1 - Out z e g * (1 + sourceTiltMean H N beta e z g)) * Obs x z -
+        Out z e g * inner ℝ (sourceCenteredCoordinate H N hN beta hbeta x e z)
+          (sourceTiltL2 H N hN beta hbeta e z g)) ^ 2) (Nu z.1 z.2 e) := by
+  simpa only [jointTransferLinkDifference_eq_centeredCoordinate] using
+    jointTransferLinkDifference_sq_posterior_integrable H N hN beta hbeta x e z
+
 /-- Exact substitution into the original signed resampling energy. -/
 theorem jointTransferLinkResamplingEnergy_eq_centeredCoordinate (x : PairL2) (e : Link) :
     jointTransferLinkResamplingEnergy H N hN beta hbeta x e =
