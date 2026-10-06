@@ -114,7 +114,6 @@ theorem physicalTemporalFloorNatStep_tendsto_atTop_of_pos
         (M : ℝ) * epsilon = (t : ℝ) / 2 := by
       dsimp [epsilon]
       field_simp [ne_of_gt hMReal]
-      ring
     linarith
 
 /-- Any fixed scalar contraction factor in [0,1) vanishes when raised to the
