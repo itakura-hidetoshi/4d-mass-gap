@@ -94,8 +94,9 @@ private theorem linkLocalFiber_integrable (x : PairL2) (e : Link) (z : Joint) :
   letI : IsProbabilityMeasure (Nu z.1 z.2 e) :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalMeasure_isProbabilityMeasure
       H N hN beta hbeta z.1 z.2 e
-  exact (linkLocalFiber_continuous H N hN beta hbeta x e z).integrable_of_hasCompactSupport
-    (HasCompactSupport.of_compactSpace _)
+  apply (integrable_const ‖Obs x‖).mono'
+    (linkLocalFiber_continuous H N hN beta hbeta x e z).aestronglyMeasurable
+  exact Eventually.of_forall fun g => (Obs x).norm_coe_le_norm (z.1, Function.update z.2 e g)
 
 /-- The second integral is also genuine, for the existing posterior fiber law. -/
 theorem jointTransferLinkDifference_posterior_integrable (x : PairL2) (e : Link) (z : Joint) :
@@ -123,7 +124,7 @@ theorem jointTransferSignedLinkResidual_eq (x : PairL2) (e : Link) (z : Joint) :
   simp only [jointTransferLinkDifference_eq]
   rw [integral_sub (integrable_const (Obs x z)) (linkLocalFiber_integrable H N hN beta hbeta x e z)]
   have hConst : (∫ _g : GaugeT, Obs x z ∂Nu z.1 z.2 e) = Obs x z := by simp
-  simpa only [hConst, posteriorMean]
+  simp only [hConst, posteriorMean]
 
 /-- Reuse the already identified empty-prefix residual, not a new L2 carrier. -/
 theorem jointTransferSignedLinkResidual_eq_stage (x : PairL2) (e : Link) (z : Joint) :
