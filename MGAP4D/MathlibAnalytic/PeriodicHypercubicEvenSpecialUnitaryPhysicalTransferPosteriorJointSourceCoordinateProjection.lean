@@ -120,7 +120,7 @@ private theorem sourceTiltScalar_continuous (a g : GaugeT) :
 
 /-- Measurability uses only the source-right coordinate at e. -/
 theorem sourceTiltValue_source_measurable (e : Link) (z : Joint) (g : GaugeT) :
-    @StronglyMeasurable Joint ℝ (sourceCoordinateSigma H N e) _
+    StronglyMeasurable[sourceCoordinateSigma H N e]
       (sourceTiltValue H N beta e z g) := by
   exact (sourceTiltScalar_continuous N beta (z.2 e) g).stronglyMeasurable.comp_measurable
     (measurable_iff_comap_le.mpr le_rfl)
@@ -130,6 +130,7 @@ private theorem sourceTiltValue_continuous (e : Link) (z : Joint) (g : GaugeT) :
   (sourceTiltScalar_continuous N beta (z.2 e) g).comp
     ((continuous_apply e).comp continuous_snd)
 
+include hN hbeta in
 theorem sourceTiltValue_memLp_two (e : Link) (z : Joint) (g : GaugeT) :
     MemLp (sourceTiltValue H N beta e z g) 2 μP := by
   apply MemLp.of_bound (sourceTiltValue_continuous H N beta e z g).aestronglyMeasurable Rate
@@ -206,7 +207,7 @@ theorem sourceTilt_inner_abs_le (f : PairL2) (e : Link) (z : Joint) (g : GaugeT)
     |inner ℝ f (sourceTiltL2 H N hN beta hbeta e z g)| ≤ Rate * ‖f‖ := by
   calc
     _ ≤ ‖f‖ * ‖sourceTiltL2 H N hN beta hbeta e z g‖ := by
-      simpa only [Real.norm_eq_abs] using norm_inner_le_norm f (sourceTiltL2 H N hN beta hbeta e z g)
+      exact abs_real_inner_le_norm f (sourceTiltL2 H N hN beta hbeta e z g)
     _ ≤ ‖f‖ * Rate :=
       mul_le_mul_of_nonneg_left (sourceTiltL2_norm_le H N hN beta hbeta e z g) (norm_nonneg _)
     _ = _ := mul_comm _ _
