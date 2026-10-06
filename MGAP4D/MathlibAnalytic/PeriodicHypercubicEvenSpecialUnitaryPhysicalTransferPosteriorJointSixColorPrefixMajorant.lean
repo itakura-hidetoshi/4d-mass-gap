@@ -50,7 +50,7 @@ local notation "BoundedRep" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSl
 local notation "BCFRep" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2RepresentativeBCF H N hN beta hbeta
 local notation "LocalProfile" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialOneLinkSweepStageLocalProfile H N hN beta hbeta
 local notation "Profile" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialSweepStageProfileEnergy H N hN beta hbeta
-local notation "OscEnergy" => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialSweepStageOscillationEnergy H
+local notation "OscEnergy" => periodicHypercubicEvenSpecialUnitaryGroundStateSixSpatialSweepStageOscillationEnergy H
 local notation "Agree" => PeriodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorAgreeOff
 local notation "ResponseData" => PeriodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRemoteExpectationResponseMatrixData H N hN beta hbeta
 
@@ -150,7 +150,8 @@ theorem sixColorLocalProfile_sq_eq_posteriorStageEnergy
       (BoundedRep F hF bound hbound)
       (posteriorFixedColorPrefix_split H _ _)
       (posteriorFixedColorPrefix_fresh H _ _)
-  rw [hLocal, posteriorStageResidualEnergy_eq_projectionResidualNormSq]
+  rw [hLocal, posteriorStageResidualEnergy_eq_projectionResidualNormSq
+    H N hN beta hbeta (posteriorSixColorPrefixLinks H e) e F hF bound hbound]
   simp only [posteriorSixColorPrefixLinks, posteriorScheduleL2_eq_fixedColorStage,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateFixedSpatialColorOneLinkCondExpL2]
 
@@ -207,7 +208,7 @@ theorem sixColorProfileEnergy_le_variationOscillationEnergy
     Profile (BCFRep F) ≤ OscEnergy (posteriorSixColorVariationProfile H N hN beta hbeta R v) := by
   rw [← jointBCF_boundedConcreteL2_eq_standardRepresentative H N hN beta hbeta F,
     sixColorProfileEnergy_eq_posteriorStageEnergy_sum]
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialSweepStageOscillationEnergy
+  unfold periodicHypercubicEvenSpecialUnitaryGroundStateSixSpatialSweepStageOscillationEnergy
   apply mul_le_mul_of_nonneg_left _ (by norm_num)
   exact Finset.sum_le_sum fun e _ =>
     posteriorStageResidualEnergy_le_variationSchedule_sq
