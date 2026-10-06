@@ -52,7 +52,7 @@ example (x : PairL2) (e : Link) (z : Joint) (g : GaugeT) :
 
 example (x : PairL2) (e : Link) (z : Joint) :
     jointTransferSignedLinkResidual H N hN beta hbeta x e z =
-      Obs x z - posteriorMean H N hN beta hbeta e (Obs x) z :=
+      Obs x z - posteriorMean H N hN beta hbeta e (fun w => Obs x w) z :=
   jointTransferSignedLinkResidual_eq H N hN beta hbeta x e z
 
 example (x : PairL2) (e : Link) :
