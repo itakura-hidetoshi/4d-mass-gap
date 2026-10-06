@@ -1,0 +1,12 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointRightAnchoredMajorant
+
+/-! Regression contracts for intrinsic left-boundary quotient approximation. -/
+namespace MGAP4D.MathlibAnalytic
+
+#check GroundStatePosteriorJoint.sixColorResidualOperator_coarse_eq_zero
+#check GroundStatePosteriorJoint.sixColorProfileEnergy_sub_coarse
+#check GroundStatePosteriorJoint.leftCenteredError_isLeast
+#check GroundStatePosteriorJoint.sixColorProfileEnergy_le_leftQuotientMajorant
+#check GroundStatePosteriorJoint.leftQuotientMajorant_le_bcfApproximationMajorant
+
+end MGAP4D.MathlibAnalytic
