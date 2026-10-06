@@ -73,7 +73,6 @@ private theorem sourceConstantL2_inner_tilt (a : ℝ) (e : Link) (z : Joint) (g 
   filter_upwards [sourceConstantL2_ae H N a, sourceTiltL2_ae H N hN beta hbeta e z g] with y hc ht
   rw [hc, ht]
   rw [sourceRealScalar_inner_eq_mul]
-  ring
 
 /-- Center the actual signed weighted row by its actual integral before keeping e. -/
 def sourceCenteredCoordinate (x : PairL2) (e : Link) (z : Joint) : PairL2 :=
