@@ -17,8 +17,8 @@ the posterior conditional measure.  The measurable-equivalence integral
 formula identifies the canonical mean with the explicit posterior integral.
 
 Consequently the literal posterior integral is an a.e. representative of the
-EXISTING joint CondExpL2 on the bounded strongly measurable core.  Its MemLp
-class is constructed from the formula and proved equal to that projection.
+EXISTING joint CondExpL2 on the bounded strongly measurable core.  The resulting
+MemLp class is constructed from the formula and proved equal to that projection.
 The observable may depend on both boundaries, not only on the right one.
 A final corollary specializes to the existing right-boundary posterior BCF API.
 
