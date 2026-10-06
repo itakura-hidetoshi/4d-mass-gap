@@ -63,7 +63,7 @@ local instance sourceCoordinatePairProbability : IsProbabilityMeasure μP := by
   infer_instance
 
 /-- The sigma-algebra keeping ONE source-right link, not all coordinates off a target. -/
-def sourceCoordinateSigma (e : Link) : MeasurableSpace Joint :=
+@[reducible] def sourceCoordinateSigma (e : Link) : MeasurableSpace Joint :=
   MeasurableSpace.comap (fun y : Joint => y.2 e) inferInstance
 
 theorem sourceCoordinateSigma_le (e : Link) :
@@ -114,9 +114,11 @@ def sourceTiltValue (e : Link) (z : Joint) (g : GaugeT) (y : Joint) : ℝ :=
 private theorem sourceTiltScalar_continuous (a g : GaugeT) :
     Continuous (fun u : GaugeT => sourceRightLinkTilt N beta u a g - 1) := by
   unfold sourceRightLinkTilt
-  exact (continuous_const.mul
-    (((continuous_specialUnitaryWilsonPlaquetteEnergy N).comp (continuous_inv.mul continuous_const)).sub
-      ((continuous_specialUnitaryWilsonPlaquetteEnergy N).comp (continuous_inv.mul continuous_const)))).exp.sub continuous_const
+  exact (Real.continuous_exp.comp
+    (continuous_const.mul
+      (((continuous_specialUnitaryWilsonPlaquetteEnergy N).comp (continuous_inv.mul continuous_const)).sub
+        ((continuous_specialUnitaryWilsonPlaquetteEnergy N).comp
+          (continuous_inv.mul continuous_const))))).sub continuous_const
 
 /-- Measurability uses only the source-right coordinate at e. -/
 theorem sourceTiltValue_source_measurable (e : Link) (z : Joint) (g : GaugeT) :
@@ -192,7 +194,9 @@ theorem sourceLinkResponse_eq_row_inner (x : PairL2) (e : Link) (z : Joint) (g :
   filter_upwards [sourceWeightedRowL2_ae H N hN beta hbeta x z,
     sourceTiltL2_ae H N hN beta hbeta e z g] with y hw ht
   rw [hw, ht]
-  simp only [sourceTiltValue, RCLike.inner_apply, conj_trivial]
+  simp only [sourceTiltValue]
+  change J y z * sourceRightLinkTilt N beta (y.2 e) (z.2 e) g * x y - J y z * x y =
+    (J y z * x y) * (-1 + sourceRightLinkTilt N beta (y.2 e) (z.2 e) g)
   ring
 
 /-- Only the one-source-coordinate projection contributes; x remains signed. -/
