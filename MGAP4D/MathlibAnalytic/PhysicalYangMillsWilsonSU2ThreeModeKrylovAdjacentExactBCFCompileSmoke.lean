@@ -67,7 +67,7 @@ example (f : PairL2) : ‖BCFRep (jointTransferBCF H N hN beta hbeta f)‖ = ‖
   jointTransferBCF_rep_norm H N hN beta hbeta f
 end General
 
-section Frozen
+section FrozenExamples
 variable {halfExtent : ℕ → ℕ} {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
 variable (n r : ℕ) (k : Fin 3)
 local notation "Hn" => halfExtent (n + 1)
@@ -101,7 +101,7 @@ example (R : ResponseData) :
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k ≤
       OscEnergy (posteriorSixColorVariationProfile Hn 2 Pos (beta n) (hbeta n) R V) :=
   fineFrozenProfileEnergy_le_constructedAnchorEnergy n r k R
-end Frozen
+end FrozenExamples
 
 #print axioms GroundStatePosteriorJoint.pairTransferIntegrand_integrable
 #print axioms GroundStatePosteriorJoint.pairTransferIntegral_continuous
