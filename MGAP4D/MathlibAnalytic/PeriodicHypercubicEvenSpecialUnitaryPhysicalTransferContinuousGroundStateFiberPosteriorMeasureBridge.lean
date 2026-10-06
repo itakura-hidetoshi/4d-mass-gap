@@ -9,24 +9,20 @@ import Mathlib.Tactic
 The historical genuine joint fiber measure uses an L2 vacuum representative.
 The posterior conditional law uses the positive continuous representative.
 PR #5151 already identifies their unnormalized fiber weights for Haar-a.e.
-left and off-target contexts, but retains the extra positive left-dependent
-factor in the continuous-compatible weight.
+left and off-target contexts, but retains a positive left-dependent scalar.
 
-This file removes precisely that normalization seam.  A positive scalar c
-cancels from the normalized weight c * exp(f).  In the actual model,
+A positive scalar c cancels from the normalized weight c * exp(f).  Here
 
   c(left) = ||T_phys||^(-1) * Omega_cont(left) > 0.
 
-The continuous-compatible fiber measure is therefore exactly the posterior
-one-link conditional law.  Combining this pointwise normalization identity
-with the historical a.e. bridge identifies genuine fiber integration with the
-posterior bounded-continuous conditional expectation.
+We identify the continuous-compatible fiber measure with the posterior
+conditional law pointwise, then use the historical a.e. bridge to identify
+genuine fiber integration with the posterior BCF conditional expectation.
+The full-measure contexts are independent of the BCF test.
 
-The full-measure contexts are independent of the bounded-continuous test.
 No equality on exceptional fixed fibers, joint-L2 operator identification,
 stagewise oscillation tail, physicality/commutation bound, or Euclidean-time
-identification is asserted here.  In particular the strict-interval scaling
-no-go from PR #5207 is not bypassed.
+identification is asserted.  The strict-interval scaling no-go is unchanged.
 -/
 
 namespace MGAP4D.MathlibAnalytic
@@ -36,8 +32,7 @@ open scoped ENNReal
 
 noncomputable section
 
-/-- A strictly positive scalar cancels exactly when an exponential weight is
-normalized.  The result is mathlib's tilted measure, with no comparison loss. -/
+/-- A positive scalar cancels in a normalized exponential weight. -/
 theorem doobWeightedMeasure_ofReal_mul_exp_eq_tilted
     {α : Type*} [MeasurableSpace α]
     (μ : Measure α) [NeZero μ]
@@ -52,11 +47,15 @@ theorem doobWeightedMeasure_ofReal_mul_exp_eq_tilted
   unfold doobWeightedMeasure Measure.tilted
   apply congrArg (fun density : α → ℝ≥0∞ => μ.withDensity density)
   funext x
-  unfold doobWeightMass
+  change
+    ENNReal.ofReal (c * Real.exp (f x)) /
+        (∫⁻ y, ENNReal.ofReal (c * Real.exp (f y)) ∂μ) =
+      ENNReal.ofReal (Real.exp (f x) / ∫ y, Real.exp (f y) ∂μ)
   rw [← ofReal_integral_eq_lintegral_ofReal hInt
     (fun y => (mul_pos hc (Real.exp_pos (f y))).le)]
   rw [integral_const_mul]
-  rw [← ENNReal.ofReal_div_of_pos hMassPos]
+  rw [← ENNReal.ofReal_div_of_pos
+    (x := c * Real.exp (f x)) (y := c * ∫ y, Real.exp (f y) ∂μ) hMassPos]
   rw [mul_div_mul_left _ _ (ne_of_gt hc)]
 
 local instance posteriorFiberBridgeSpatialLinkFintype (H : ℕ) :
@@ -85,30 +84,28 @@ local instance posteriorFiberBridgeBorel (N : ℕ) :
 
 namespace GroundStatePosteriorFiberBridge
 
-/-- For every fixed context, the continuous-compatible genuine fiber measure
-is exactly the posterior conditional measure.  Only the positive common
-left-dependent scalar is canceled. -/
+/-- Cancel the positive left-dependent scalar in every continuous context. -/
 theorem continuousCompatible_eq_posterior
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (left right : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
     (target : PeriodicHypercubicEvenSpatialSliceLink H) :
     doobWeightedMeasure
         (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ))
-        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkContinuousCompatibleFiberWeight
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompatibleFiberWeight
           H N hN beta hbeta left right target) =
-      periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorConditionalMeasure
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalMeasure
         H N hN beta hbeta left right target := by
   let logw :=
-    periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorFiberLogWeight
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkFiberLogWeight
       H N hN beta hbeta left right target
   let c : ℝ :=
-    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator H N beta‖⁻¹ *
+    ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator H N hN beta hbeta‖⁻¹ *
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
         H N hN beta hbeta left
   have hNormPos :
-      0 < ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator H N beta‖ :=
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_ge_lower
-      H N hN beta hbeta).1
+      0 < ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator H N hN beta hbeta‖ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos_from_uniform_kernel_floor
+      H N hN beta hbeta
   have hc : 0 < c := by
     dsimp [c]
     exact mul_pos (inv_pos.mpr hNormPos)
@@ -116,57 +113,63 @@ theorem continuousCompatible_eq_posterior
         H N hN beta hbeta left)
   have hExp (g : Matrix.specialUnitaryGroup (Fin N) ℂ) :
       Real.exp (logw g) =
-        periodicHypercubicEvenSpecialUnitaryPhysicalGroundStateRightFiberCompleteWeight
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteWeight
           H N hN beta hbeta left right target g := by
     dsimp [logw]
     rw [
-      periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorFiberLogWeight_eq_groundStateCompleteLogWeight,
-      periodicHypercubicEvenSpecialUnitaryPhysicalGroundStateRightFiberCompleteLogWeight_exp_eq]
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkFiberLogWeight_eq_groundStateCompleteLogWeight,
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteLogWeight_exp]
   have hWeight :
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkContinuousCompatibleFiberWeight
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompatibleFiberWeight
           H N hN beta hbeta left right target =
         (fun g => ENNReal.ofReal (c * Real.exp (logw g))) := by
     funext g
     rw [hExp g]
     change
       ENNReal.ofReal
-          (c *
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabKernel
-              H N beta left (Function.update right target g) *
-            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
-              H N hN beta hbeta (Function.update right target g)) =
+          (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator H N hN beta hbeta‖⁻¹ *
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+                H N hN beta hbeta left *
+              periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                H N beta left (Function.update right target g) *
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+                H N hN beta hbeta (Function.update right target g))) =
         ENNReal.ofReal
           (c *
-            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabKernel
+            (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
                 H N beta left (Function.update right target g) *
               periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
                 H N hN beta hbeta (Function.update right target g)))
+    dsimp [c]
     congr 1
     ring
+  have hLog : Continuous logw :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkFiberLogWeight_continuous
+      H N hN beta hbeta left right target
   have hInt :
       Integrable (fun g => Real.exp (logw g))
         (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)) :=
-    periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorFiberLogWeight_integrable_exp
-      H N hN beta hbeta left right target
+    (Real.continuous_exp.comp hLog).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
   rw [hWeight]
   exact doobWeightedMeasure_ofReal_mul_exp_eq_tilted
     (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ))
     logw hInt c hc
 
-/-- The historical normalized genuine fiber law equals the continuous
-posterior conditional law for Haar-a.e. left and retained off-target contexts.
-The exceptional contexts are not silently removed from this statement. -/
+/-- Historical genuine fibers equal posterior conditionals on a common
+Haar-a.e. left/off-target context set, independently of the test observable. -/
 theorem normalizedFiberMeasure_ae_eq_posterior
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (target : PeriodicHypercubicEvenSpatialSliceLink H) :
-    ∀ᵐ left ∂periodicHypercubicEvenSpecialUnitarySpatialSliceHaar H N,
-      ∀ᵐ retained ∂periodicHypercubicEvenSpecialUnitarySpatialSliceOffTargetHaar H N target,
+    ∀ᵐ left ∂periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N,
+      ∀ᵐ retained ∂(Measure.pi
+          (fun _ : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target =>
+            normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ))),
         ∀ right : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
-          periodicHypercubicEvenSpecialUnitarySpatialSliceOffTargetRestriction
-              target right = retained →
+          periodicHypercubicEvenSpatialSliceOffTargetRestriction target right = retained →
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkNormalizedFiberMeasure
               H N hN beta hbeta left right target =
-            periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorConditionalMeasure
+            periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalMeasure
               H N hN beta hbeta left right target := by
   filter_upwards [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkNormalizedFiberMeasure_ae_eq_continuousCompatible
@@ -176,32 +179,32 @@ theorem normalizedFiberMeasure_ae_eq_posterior
   exact (hRetained right hOff).trans
     (continuousCompatible_eq_posterior H N hN beta hbeta left right target)
 
-/-- On the same full-measure contexts, integration against the historical
-normalized fiber is the posterior BCF conditional expectation.  The context
-exceptional set is independent of the test observable. -/
+/-- Genuine fiber integration is the posterior BCF conditional expectation on
+the same full-measure contexts, for every bounded-continuous test. -/
 theorem fiberIntegral_ae_eq_posteriorConditionalExpectation
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
     (target : PeriodicHypercubicEvenSpatialSliceLink H) :
-    ∀ᵐ left ∂periodicHypercubicEvenSpecialUnitarySpatialSliceHaar H N,
-      ∀ᵐ retained ∂periodicHypercubicEvenSpecialUnitarySpatialSliceOffTargetHaar H N target,
+    ∀ᵐ left ∂periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N,
+      ∀ᵐ retained ∂(Measure.pi
+          (fun _ : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target =>
+            normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ))),
         ∀ right : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N,
-          periodicHypercubicEvenSpecialUnitarySpatialSliceOffTargetRestriction
-              target right = retained →
+          periodicHypercubicEvenSpatialSliceOffTargetRestriction target right = retained →
           ∀ O : BoundedContinuousFunction
               (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) ℝ,
             (∫ g, O (Function.update right target g)
               ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkNormalizedFiberMeasure
                 H N hN beta hbeta left right target) =
-              periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorConditionalExpectation
-                H N hN beta hbeta left target O right := by
+              periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalExpectationBCF
+                H N hN beta hbeta left O right target := by
   filter_upwards [normalizedFiberMeasure_ae_eq_posterior
     H N hN beta hbeta target] with left hLeft
   filter_upwards [hLeft] with retained hRetained
   intro right hOff O
   rw [hRetained right hOff]
   exact
-    (periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorConditionalExpectation_eq_integral_conditionalMeasure
-      H N hN beta hbeta left O target right).symm
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalExpectationBCF_eq_integral
+      H N hN beta hbeta left O right target).symm
 
 end GroundStatePosteriorFiberBridge
 
