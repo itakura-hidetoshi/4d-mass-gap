@@ -152,8 +152,8 @@ theorem posteriorSchedule_ae_eq_canonicalSchedule (order : List Link) (F : Joint
   | cons target order ih =>
       have hStep : posteriorMean H N hN beta hbeta target F =ᵐ[μJ]
           GroundStateCanonicalMean.canonicalMean H N hN beta hbeta target F :=
-        ((canonicalMean_joint_ae_eq_posteriorMean H N hN beta hbeta target).mono
-          fun z hz => hz F).symm
+        (canonicalMean_joint_ae_eq_posteriorMean H N hN beta hbeta target).mono
+          fun z hz => (hz F).symm
       exact (posteriorSchedule_congr_ae H N hN beta hbeta order hStep).trans (ih _)
 
 /-- The canonical schedule preserves strong measurability. -/
