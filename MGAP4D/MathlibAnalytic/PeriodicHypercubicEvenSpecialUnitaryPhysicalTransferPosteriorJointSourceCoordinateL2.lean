@@ -72,7 +72,7 @@ private theorem sourceConstantL2_inner_tilt (a : ℝ) (e : Link) (z : Joint) (g 
   apply integral_congr_ae
   filter_upwards [sourceConstantL2_ae H N a, sourceTiltL2_ae H N hN beta hbeta e z g] with y hc ht
   rw [hc, ht]
-  simp only [RCLike.inner_apply, conj_trivial]
+  rw [sourceRealScalar_inner_eq_mul]
   ring
 
 /-- Center the actual signed weighted row by its actual integral before keeping e. -/
@@ -136,7 +136,7 @@ theorem jointTransferLinkDifference_abs_le_centeredCoordinate (x : PairL2) (e : 
   calc
     _ ≤ |(1 - Out z e g * (1 + sourceTiltMean H N beta e z g)) * Obs x z| +
         |Out z e g * inner ℝ (sourceCenteredCoordinate H N hN beta hbeta x e z)
-          (sourceTiltL2 H N hN beta hbeta e z g)| := abs_sub_le _ _
+          (sourceTiltL2 H N hN beta hbeta e z g)| := abs_sub _ _
     _ ≤ _ := by
       rw [abs_mul, abs_mul, abs_of_pos (outputRightLinkTilt_pos H N hN beta hbeta z e g)]
       have h := mul_le_mul_of_nonneg_left
