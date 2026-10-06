@@ -281,7 +281,7 @@ theorem jointTransferLinkLocalEnergy_le_half_l2Envelope (x : PairL2) (e : Link) 
     intro z
     calc
       _ ≤ ∫ _g : GaugeT, (Rate * W z) ^ 2 ∂Nu z.1 z.2 e := by
-        apply integral_mono (posteriorResamplingDifferenceSquare_integrable H N hN hN beta hbeta e F z)
+        apply integral_mono (posteriorResamplingDifferenceSquare_integrable H N hN beta hbeta e F z)
           (integrable_const _)
         intro g
         have hAbs : |F z - F (z.1, Function.update z.2 e g)| ≤ Rate * W z := by
@@ -309,6 +309,8 @@ theorem jointTransferLinkLocalEnergy_le_half_l2Envelope (x : PairL2) (e : Link) 
     rw [jointTransferEnvelope_rep_norm]
   have hExact := jointTransferLinkResamplingEnergy_eq_twice_localEnergy H N hN beta hbeta x e
   rw [jointTransferLinkResamplingEnergy_eq] at hExact
+  change posteriorResamplingEnergy H N hN beta hbeta e F =
+    2 * jointTransferLinkLocalEnergy H N hN beta hbeta x e at hExact
   change posteriorResamplingEnergy H N hN beta hbeta e F ≤ _ at hI
   rw [hScale] at hI
   linarith
@@ -377,7 +379,8 @@ theorem fineFrozenProfileEnergy_le_half_localEnvelope_add_exterior (s : Finset L
       4 * jointTransferLocalEnergyOn Hn 2 Pos (beta n) (hbeta n) Orbit sᶜ := by
   rw [physicalYangMillsSU2AdjacentFineGroundStateSweepStageProfileEnergy_eq_generalProfileEnergy]
   rw [← fineFrozenBCF_rep_eq (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k]
-  exact jointTransferProfileEnergy_le_half_localEnvelope_add_exterior Hn 2 Pos (beta n) (hbeta n) Orbit s
+  simpa only [fineFrozenBCF] using
+    jointTransferProfileEnergy_le_half_localEnvelope_add_exterior Hn 2 Pos (beta n) (hbeta n) Orbit s
 
 /-- No excited-sector contraction is applied to the absolute orbit input. -/
 theorem fineFrozenProfileEnergy_le_half_l2Envelope :
@@ -385,7 +388,8 @@ theorem fineFrozenProfileEnergy_le_half_l2Envelope :
       ((kernelRightVariationRate (beta n)) ^ 2 * ‖NormTransfer (pairAbsoluteInput Hn 2 Orbit)‖ ^ 2) := by
   rw [physicalYangMillsSU2AdjacentFineGroundStateSweepStageProfileEnergy_eq_generalProfileEnergy]
   rw [← fineFrozenBCF_rep_eq (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r k]
-  exact jointTransferProfileEnergy_le_half_l2Envelope Hn 2 Pos (beta n) (hbeta n) Orbit
+  simpa only [fineFrozenBCF] using
+    jointTransferProfileEnergy_le_half_l2Envelope Hn 2 Pos (beta n) (hbeta n) Orbit
 
 end FrozenFamily
 
