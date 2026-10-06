@@ -1,0 +1,12 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointLinkLocalEnergy
+
+/-! Regression contract for the signed resampling Dirichlet identity. -/
+
+open MGAP4D.MathlibAnalytic
+
+#check GroundStatePosteriorJoint.posteriorMean_integral_eq
+#check GroundStatePosteriorJoint.posteriorResamplingSquare_integrable
+#check GroundStatePosteriorJoint.posteriorResamplingEnergy_eq_twice_stageEnergy
+#check GroundStatePosteriorJoint.jointTransferLinkResamplingEnergy_eq_twice_localEnergy
+#check GroundStatePosteriorJoint.jointTransferLocalEnergyOn_eq_resampling
+#check GroundStatePosteriorJoint.fineFrozenInitialEnergy_eq_resampling
