@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumPosteriorCanonicalVolumeUniformDobrushinColumn
-import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumPosteriorStrictInfiniteResolvent
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumPosteriorNonstrictInfluenceFiniteResolvent
+import Mathlib.Analysis.SpecificLimits.Basic
 import Mathlib.Tactic
 
 /-!
@@ -560,6 +561,27 @@ theorem
         mul_le_mul_of_nonneg_left hPartial (inv_nonneg.mpr hnPos.le)
     _ = V / (1 - D.coefficient) := hNormalize
 
+/-- Infinite normalized random-scan resolvent attached directly to arbitrary
+strict posterior Dobrushin data.  Keeping this definition in the generic layer
+avoids importing the older fixed-volume specialization. -/
+noncomputable def
+    periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorDobrushinRandomScanInfiniteResolventProfile
+    {H N : ℕ}
+    {hN : 0 < N}
+    {beta : ℝ}
+    {hbeta : 0 ≤ beta}
+    {B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N}
+    (D :
+      PeriodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorDobrushinMatrixData
+        H N hN beta hbeta B)
+    (variation : PeriodicHypercubicEvenSpatialSliceLink H → ℝ)
+    (source : PeriodicHypercubicEvenSpatialSliceLink H) : ℝ :=
+  (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ)⁻¹ *
+    ∑' m : ℕ,
+      periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRandomScanVariationIterate
+        D.toPeriodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorNonstrictInfluenceData
+        variation m source
+
 /-- Every generic strict posterior random-scan variation orbit is summable. -/
 theorem
     periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorDobrushinRandomScanVariationIterate_summable
@@ -707,9 +729,8 @@ theorem
     (hVariationLe :
       ∀ e : PeriodicHypercubicEvenSpatialSliceLink H, variation e ≤ V)
     (source : PeriodicHypercubicEvenSpatialSliceLink H) :
-    periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRandomScanInfiniteResolventProfile
-        D.toPeriodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorNonstrictInfluenceData
-        variation source ≤
+    periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorDobrushinRandomScanInfiniteResolventProfile
+        D variation source ≤
       V / (1 - D.coefficient) := by
   let n : ℝ :=
     Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H)
@@ -750,7 +771,7 @@ theorem
       _ = V / (1 - D.coefficient) := by
         rw [hIdentity]
   unfold
-    periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRandomScanInfiniteResolventProfile
+    periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorDobrushinRandomScanInfiniteResolventProfile
   change
     n⁻¹ *
         (∑' m : ℕ,
@@ -858,9 +879,9 @@ theorem
     (hVariationLe :
       ∀ e : PeriodicHypercubicEvenSpatialSliceLink H, variation e ≤ V)
     (source : PeriodicHypercubicEvenSpatialSliceLink H) :
-    periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorRandomScanInfiniteResolventProfile
+    periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorDobrushinRandomScanInfiniteResolventProfile
         (periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorCanonicalFixedRightBootstrapUniformDobrushinData
-          H N hN s hs beta hbeta hbetaCutoff B).toPeriodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorNonstrictInfluenceData
+          H N hN s hs beta hbeta hbetaCutoff B)
         variation source ≤
       V /
         (1 -
