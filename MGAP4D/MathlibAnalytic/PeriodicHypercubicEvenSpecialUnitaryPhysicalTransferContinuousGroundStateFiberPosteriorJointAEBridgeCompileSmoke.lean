@@ -1,0 +1,20 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousGroundStateFiberPosteriorMeasureBridge
+
+/-! Contracts for transporting the fiber laws to the genuine joint measure. -/
+
+namespace MGAP4D.MathlibAnalytic
+
+open MeasureTheory
+open scoped ENNReal
+
+#check Measure.quasiMeasurePreserving_fst
+#check Measure.quasiMeasurePreserving_snd
+#check withDensity_absolutelyContinuous
+#check Measure.AbsolutelyContinuous.ae
+
+#check GroundStatePosteriorFiberBridge.offTargetRestriction_quasiMeasurePreserving
+#check GroundStatePosteriorFiberBridge.normalizedFiberMeasure_pairHaar_ae_eq_posterior
+#check GroundStatePosteriorFiberBridge.normalizedFiberMeasure_joint_ae_eq_posterior
+#check GroundStatePosteriorFiberBridge.fiberIntegral_joint_ae_eq_posteriorConditionalExpectation
+
+end MGAP4D.MathlibAnalytic
