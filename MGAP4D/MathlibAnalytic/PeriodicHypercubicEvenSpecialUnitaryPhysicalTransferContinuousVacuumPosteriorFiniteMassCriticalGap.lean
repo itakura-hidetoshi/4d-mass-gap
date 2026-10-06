@@ -87,8 +87,11 @@ theorem coefficient_tendsto_one
         periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorCanonicalFixedRightBootstrapUniformCoefficient
           s (beta n))
       atTop (nhds 1) := by
+  have hOne :
+      Tendsto (fun _ : ℕ => (1 : ℝ)) atTop (nhds 1) :=
+    tendsto_const_nhds
   have h :=
-    tendsto_const_nhds.sub A.gap_tendsto_zero
+    hOne.sub A.gap_tendsto_zero
   simpa using h
 
 /-- The actual H-independent one-sweep contraction factor must tend to one in
