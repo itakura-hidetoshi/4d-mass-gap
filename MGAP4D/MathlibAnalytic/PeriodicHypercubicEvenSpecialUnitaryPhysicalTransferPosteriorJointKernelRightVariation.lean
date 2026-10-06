@@ -153,7 +153,7 @@ theorem jointTransferKernel_right_harnack (x : Joint) (B A : Cfg)
         H N hN beta hbeta x.2 A e g h)
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos H N beta x.1 B).le
     change K x.1 B * K x.2 (Function.update A e g) ≤ c * (K x.1 B * K x.2 (Function.update A e h))
-    convert hMul using 1 <;> ring
+    convert hMul using 1; ring
   have hDen : SqrtD zh ≤ c * SqrtD zg :=
     continuousJointSqrtDensity_right_harnack H N hN beta hbeta B A e h g
   have hgpos := continuousJointSqrtDensity_pos H N hN beta hbeta zg
@@ -172,7 +172,7 @@ theorem jointTransferKernel_right_harnack (x : Joint) (B A : Cfg)
   have hc2 : Real.exp (16 * beta) = c ^ 2 := by
     dsimp [c]
     rw [pow_two, ← Real.exp_add]
-    congr 1 <;> ring
+    congr 1; ring
   rw [hc2]
   change (lambda ^ 2)⁻¹ * KP (x, zg) / SqrtD zg ≤
     c ^ 2 * ((lambda ^ 2)⁻¹ * KP (x, zh) / SqrtD zh)
