@@ -1,6 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointCondExpIdentification
 
-/-! Independent bounded-core contract for the literal posterior integral. -/
+/-! Regression contracts for the literal integral and its genuine joint L2 class. -/
 
 namespace MGAP4D.MathlibAnalytic
 
@@ -30,6 +30,19 @@ example (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
         ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalMeasure
           H N hN beta hbeta z.1 z.2 target := by
   exact GroundStatePosteriorJoint.condExpL2_coeFn_eq_posteriorMean
+    H N hN beta hbeta target F hF bound hbound
+
+example (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (F : (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
+    (hF : StronglyMeasurable F) (bound : ℝ) (hbound : ∀ z, ‖F z‖ ≤ bound) :
+    GroundStatePosteriorJoint.posteriorMeanL2 H N hN beta hbeta target F hF bound hbound =
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
+        H N hN beta hbeta target
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointBoundedConcreteL2
+          H N hN beta hbeta F hF bound hbound) := by
+  exact GroundStatePosteriorJoint.posteriorMeanL2_eq_condExpL2
     H N hN beta hbeta target F hF bound hbound
 
 #check GroundStatePosteriorJoint.canonicalKernel_map_joint_ae_eq_posterior
