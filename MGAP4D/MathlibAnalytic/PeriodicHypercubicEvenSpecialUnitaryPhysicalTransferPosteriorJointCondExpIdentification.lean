@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousGroundStateFiberPosteriorJointAEBridge
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointOneLinkCanonicalMeanCondExpIdentification
+import Mathlib.MeasureTheory.Function.LpSeminorm.Basic
 import Mathlib.MeasureTheory.Integral.Bochner.Basic
 import Mathlib.Tactic
 
@@ -54,7 +55,7 @@ namespace GroundStatePosteriorJoint
 
 variable (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
 
-local notation "Gauge" => Matrix.specialUnitaryGroup (Fin N) ℂ
+local notation "GaugeT" => Matrix.specialUnitaryGroup (Fin N) ℂ
 local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N
 local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink H
 local notation "Joint" => Cfg × Cfg
@@ -71,28 +72,28 @@ def posteriorMean (target : Link) (F : Joint → ℝ) (z : Joint) : ℝ :=
 private theorem outerContext_pairHaar_quasiMeasurePreserving (target : Link) :
     Measure.QuasiMeasurePreserving
       (periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkOuterContextMap H N target)
-      (μH.prod μH)
-      (μH.prod (Measure.pi
+      (Measure.prod μH μH)
+      (Measure.prod μH (Measure.pi
         (fun _ : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target =>
-          normalizedCompactHaar Gauge))) := by
+          normalizedCompactHaar GaugeT))) := by
   classical
   let μOff := Measure.pi
     (fun _ : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target =>
-      normalizedCompactHaar Gauge)
+      normalizedCompactHaar GaugeT)
   let μTarget := Measure.pi
     (fun _ : PeriodicHypercubicEvenSpatialSliceTargetLink H target =>
-      normalizedCompactHaar Gauge)
+      normalizedCompactHaar GaugeT)
   let coord :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitContextTargetMeasurableEquiv
       H N target
   have hcoord :
-      MeasurePreserving coord ((μH.prod μOff).prod μTarget) (μH.prod μH) := by
+      MeasurePreserving coord ((Measure.prod μH μOff).prod μTarget) (Measure.prod μH μH) := by
     simpa [coord, μOff, μTarget] using
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitContextTargetHaar_measurePreserving
         H N target)
   change Measure.QuasiMeasurePreserving (Prod.fst ∘ coord.symm)
-    (μH.prod μH) (μH.prod μOff)
-  exact (Measure.quasiMeasurePreserving_fst (μ := μH.prod μOff) (ν := μTarget)).comp
+    (Measure.prod μH μH) (Measure.prod μH μOff)
+  exact (Measure.quasiMeasurePreserving_fst (μ := Measure.prod μH μOff) (ν := μTarget)).comp
     hcoord.symm.quasiMeasurePreserving
 
 /-- Evaluation pushes the actual canonical split kernel to the posterior law
@@ -101,7 +102,7 @@ theorem canonicalKernel_map_joint_ae_eq_posterior (target : Link) :
     ∀ᵐ z ∂μJ,
       Measure.map
           (periodicHypercubicEvenSpatialSliceTargetEvaluationMeasurableEquiv
-            (Gauge := Gauge) target)
+            (Gauge := GaugeT) target)
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetCanonicalMarkovKernel
             H N hN beta hbeta target
             (periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkOuterContextMap H N target z)) =
@@ -111,7 +112,7 @@ theorem canonicalKernel_map_joint_ae_eq_posterior (target : Link) :
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetCanonicalMarkovKernel_ae_eq_normalizedFiber
       H N hN beta hbeta target
   have hHaar := (outerContext_pairHaar_quasiMeasurePreserving H N target).ae hContext
-  have hAC : μJ ≪ μH.prod μH := withDensity_absolutelyContinuous _ _
+  have hAC : μJ ≪ Measure.prod μH μH := withDensity_absolutelyContinuous _ _
   have hJoint := hHaar.filter_mono hAC.ae_le
   filter_upwards [hJoint,
     GroundStatePosteriorFiberBridge.normalizedFiberMeasure_joint_ae_eq_posterior
@@ -132,7 +133,7 @@ theorem canonicalMean_joint_ae_eq_posteriorMean (target : Link) :
     H N hN beta hbeta target] with z hz
   intro F
   let eval := periodicHypercubicEvenSpatialSliceTargetEvaluationMeasurableEquiv
-    (Gauge := Gauge) target
+    (Gauge := GaugeT) target
   let κ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetCanonicalMarkovKernel
       H N hN beta hbeta target
@@ -140,7 +141,7 @@ theorem canonicalMean_joint_ae_eq_posteriorMean (target : Link) :
   let coord :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitContextTargetMeasurableEquiv
       H N target
-  let f : Gauge → ℝ := fun g => F (z.1, Function.update z.2 target g)
+  let f : GaugeT → ℝ := fun g => F (z.1, Function.update z.2 target g)
   change (∫ targetCfg, F (coord (outer z, targetCfg)) ∂κ (outer z)) =
     ∫ g, f g
       ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalMeasure
@@ -152,7 +153,7 @@ theorem canonicalMean_joint_ae_eq_posteriorMean (target : Link) :
       filter_upwards with targetCfg
       change F (z.1,
           (periodicHypercubicEvenSpatialSliceTargetOffTargetMeasurableEquiv
-            (Gauge := Gauge) target).symm
+            (Gauge := GaugeT) target).symm
             (targetCfg, periodicHypercubicEvenSpatialSliceOffTargetRestriction target z.2)) =
         F (z.1, Function.update z.2 target (eval targetCfg))
       exact congrArg (fun right : Cfg => F (z.1, right))
@@ -186,12 +187,13 @@ theorem posteriorMean_memLp_two (target : Link)
     (F : Joint → ℝ) (hF : StronglyMeasurable F)
     (bound : ℝ) (hbound : ∀ z, ‖F z‖ ≤ bound) :
     MemLp (posteriorMean H N hN beta hbeta target F) 2 μJ := by
-  exact (Lp.memLp
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
-      H N hN beta hbeta target
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointBoundedConcreteL2
-        H N hN beta hbeta F hF bound hbound))).congr
+  exact MemLp.ae_eq
     (condExpL2_coeFn_eq_posteriorMean H N hN beta hbeta target F hF bound hbound)
+    (Lp.memLp
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
+        H N hN beta hbeta target
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointBoundedConcreteL2
+          H N hN beta hbeta F hF bound hbound)))
 
 /-- The existing joint L2 class of the literal posterior formula. -/
 def posteriorMeanL2 (target : Link)
