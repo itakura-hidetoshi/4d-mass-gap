@@ -126,9 +126,11 @@ theorem
   have hnNe : n ≠ 0 := ne_of_gt hnPos
   unfold
     periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorDobrushinRandomScanRate
-  dsimp [n]
-  field_simp [hnNe]
-  ring
+  dsimp only
+  change
+    (n - 1 + D.coefficient) / n =
+      1 - (1 - D.coefficient) / n
+  field_simp [hnNe] <;> ring
 
 /-- Raising the one-link random-scan rate to one complete sweep removes the
 finite-volume cardinality from the contraction bound. -/
@@ -191,7 +193,6 @@ theorem
       change (nNat : ℝ) * (-(gap / n)) = -gap
       dsimp [n]
       field_simp [hnNe]
-      ring
     _ =
       periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorDobrushinFullSweepRate
         D := by
