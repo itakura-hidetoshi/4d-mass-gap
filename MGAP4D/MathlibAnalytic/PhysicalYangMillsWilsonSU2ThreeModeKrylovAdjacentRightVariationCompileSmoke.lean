@@ -1,0 +1,12 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentExactBCF
+
+/-! Regression contracts for actual right-link variation, including half-density. -/
+namespace MGAP4D.MathlibAnalytic
+
+#check GroundStatePosteriorJoint.continuousJointSqrtDensity_right_harnack
+#check GroundStatePosteriorJoint.jointTransferKernel_right_harnack
+#check GroundStatePosteriorJoint.jointTransferBCF_right_variation
+#check GroundStatePosteriorJoint.jointTransferEnvelope_rep_norm
+#check GroundStatePosteriorJoint.fineFrozenProfileEnergy_le_kernelVariationEnergy
+
+end MGAP4D.MathlibAnalytic
