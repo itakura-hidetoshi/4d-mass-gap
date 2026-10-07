@@ -218,7 +218,8 @@ theorem
           Lp ℝ 2 mu))
     rw [
       periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_apply
-        H N hN beta hbeta
+        H N hN beta hbeta,
+      Submodule.coe_smul
     ]
   have hSmul := Lp.coeFn_smul lambda⁻¹ Tf
   have hRaw :
