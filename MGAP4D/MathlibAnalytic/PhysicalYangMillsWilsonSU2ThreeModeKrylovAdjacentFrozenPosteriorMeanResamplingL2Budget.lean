@@ -99,6 +99,7 @@ theorem posteriorResamplingEnergy_eq_two_jointL2_projectionLoss
     posteriorScheduleL2_eq_projectionSchedule,
     jointBCF_boundedConcreteL2_eq_standardRepresentative,
     realHilbertProjectionSweep,
+    ContinuousLinearMap.comp_apply,
     ContinuousLinearMap.id_apply
   ]
 
