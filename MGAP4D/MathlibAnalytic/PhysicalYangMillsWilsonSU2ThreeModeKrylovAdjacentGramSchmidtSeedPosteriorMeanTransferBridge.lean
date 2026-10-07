@@ -205,12 +205,14 @@ theorem
         periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
         Lp ℝ 2 mu) =
       lambda⁻¹ • Tf := by
-    simpa [lambda, Tf] using
+    have h :=
       congrArg
         (fun x :
           periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N =>
           (x : Lp ℝ 2 mu))
         hNormalized
+    simp [lambda, Tf] at h
+    exact h
   have hSmul := Lp.coeFn_smul lambda⁻¹ Tf
   have hRaw :
       Tf =ᵐ[mu]
@@ -234,7 +236,6 @@ theorem
               (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
           B
   rw [hRawB]
-  rfl
 
 /-- Continuous posterior-mean receiver for the vacuum-divided canonical
 Gram--Schmidt seed.  It is written directly in transfer coordinates so its
@@ -399,6 +400,10 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_ae_eq_existing
       H 2 specialUnitaryTwoWilsonRankPositive beta hbeta
   have hOmegaNu := hnuMu.ae_eq hOmegaMu
+  change
+    BoundedContinuousFunction.toLp 2 nu ℝ M =
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2
+        H 2 specialUnitaryTwoWilsonRankPositive beta hbeta g
   apply Lp.ext
   filter_upwards [hMrep, hUrep, hGnu, hOmegaNu]
       with B hM hU hG hOmega
