@@ -152,7 +152,6 @@ theorem
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos
       H N hN beta hbeta A).ne'
   ]
-  <;> ring
 
 namespace GroundStatePosteriorJoint
 
@@ -229,6 +228,16 @@ theorem
           (periodicHypercubicEvenSpecialUnitaryContinuousVacuumDividedBoundedObservable
             H 2 specialUnitaryTwoWilsonRankPositive beta hbeta O)
   rw [hposterior]
+  change
+    (∫ A,
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+            H 2 beta A B * O A
+        ∂mu) =
+      lambda * omega *
+        ((∫ A,
+            periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+                H 2 beta A B * O A
+            ∂mu) / (lambda * omega))
   field_simp [hlambda.ne', homega.ne']
 
 /-- The depth-zero Gram--Schmidt right-output factor therefore receives the
