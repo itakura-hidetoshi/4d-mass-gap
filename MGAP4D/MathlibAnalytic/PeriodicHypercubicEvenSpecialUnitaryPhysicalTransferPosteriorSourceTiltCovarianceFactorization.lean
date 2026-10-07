@@ -115,7 +115,12 @@ noncomputable def
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_eq_boundaryTilt_mul_sourceRightLinkTilt
       H N beta A B target g
   ]
-  field_simp [c, hc]
+  change c⁻¹ *
+      (c * GroundStatePosteriorJoint.sourceRightLinkTilt
+        N beta (A target) (B target) g) =
+    GroundStatePosteriorJoint.sourceRightLinkTilt
+      N beta (A target) (B target) g
+  field_simp [hc]
 
 theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactorBCF_eq_boundaryTilt_smul_sourceRightLinkTiltBCF
     (H N : ℕ)
@@ -134,7 +139,6 @@ theorem periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocal
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactorBCF_apply,
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabSourceRightLinkTiltBCF_apply,
     BoundedContinuousFunction.coe_smul,
-    Pi.smul_apply,
     smul_eq_mul
   ]
   exact
