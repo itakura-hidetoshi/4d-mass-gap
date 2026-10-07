@@ -117,7 +117,7 @@ theorem pairTransferIntegral_physicalPairDecomposableL2
           (g : SliceL2) z.2 := by
   have hTensor :=
     realL2ExternalTensor_coeFn
-      (mu := mu) (nu := mu)
+      (μ := mu) (ν := mu)
       (f : SliceL2) (g : SliceL2)
   unfold
     pairTransferIntegral
