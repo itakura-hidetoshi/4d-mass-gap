@@ -137,7 +137,7 @@ theorem
         H N hN beta hbeta
   let out :=
     realL2BoundedKernelIntegralOutputL2
-      (mu := mu) k hkMeas hkBound fA
+      (μ := mu) k hkMeas hkBound fA
   have hApply :
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
           H N hN beta hbeta fA = out := by
@@ -147,13 +147,13 @@ theorem
             H N hN beta hbeta) fA = out
     simpa [out] using
       (realL2HilbertSchmidtKernelOperator_apply_eq_integralOutputL2
-        (mu := mu) k
+        (μ := mu) k
         (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
           H N hN beta hbeta)
         hK hkMeas hkBound fA)
   have hOut :=
     realL2BoundedKernelIntegralOutputL2_coeFn
-      (mu := mu) k hkMeas hkBound fA
+      (μ := mu) k hkMeas hkBound fA
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_coe]
   rw [show
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabTransferOperator
