@@ -144,7 +144,7 @@ theorem
       H 2 C
   ]
   unfold orientedFourEdgePlaquetteWord
-  rw [hEdge 0, hEdge 1, hEdge 2, hEdge 3]
+  simpa only [hEdge]
 
 /-- Posterior link-variation bound carried by exactly the four primary seed
 links.  The on-support constant is the universal oscillation bound
@@ -169,7 +169,6 @@ noncomputable def
   · intro e
     by_cases he : e ∈ S
     · simp [he]
-      positivity
     · simp [he]
   · intro e A C hAgree
     by_cases he : e ∈ S
@@ -180,7 +179,11 @@ noncomputable def
         _ ≤ ‖O‖ + ‖O‖ :=
           add_le_add (O.norm_coe_le_norm A) (O.norm_coe_le_norm C)
         _ = 2 * ‖O‖ := by ring
-    · have hEq : O A = O C := by
+    · have hEq :
+          periodicHypercubicEvenPrimarySpatialSliceWilsonEnergyGramSchmidtBoundedObservable
+              H mode A =
+            periodicHypercubicEvenPrimarySpatialSliceWilsonEnergyGramSchmidtBoundedObservable
+              H mode C := by
         apply
           periodicHypercubicEvenPrimarySpatialSliceWilsonEnergyGramSchmidtBoundedObservable_eq_of_eqOn_seedLinkSet
             H mode
@@ -226,17 +229,20 @@ theorem
     (hDist : 0 < physicalYangMillsSU2PrimaryPlaquetteSeedDistance H source) :
     (physicalYangMillsSU2PrimaryPlaquetteGramSchmidtPosteriorLinkVariationBound
       H mode).variation source = 0 := by
-  rw [
-    physicalYangMillsSU2PrimaryPlaquetteGramSchmidtPosteriorLinkVariationBound_variation
-  ]
-  simp only [ite_eq_right_iff]
-  intro hSource
   classical
-  rcases Finset.mem_map.mp hSource with ⟨k, _hk, hk⟩
-  have hZero :=
-    physicalYangMillsSU2PrimaryPlaquetteSeedDistance_seed H k
-  rw [← hk] at hZero
-  omega
+  have hNot :
+      source ∉ physicalYangMillsSU2PrimaryPlaquetteSeedLinkSet H := by
+    intro hSource
+    rcases Finset.mem_map.mp hSource with ⟨k, _hk, hk⟩
+    have hk' :
+        physicalYangMillsSU2PrimaryPlaquetteSeedLink H k = source := by
+      simpa [physicalYangMillsSU2PrimaryPlaquetteSeedLinkEmbedding] using hk
+    subst source
+    simpa using hDist
+  simp [
+    physicalYangMillsSU2PrimaryPlaquetteGramSchmidtPosteriorLinkVariationBound_variation,
+    hNot
+  ]
 
 /-- In particular every radius-two exterior source has zero initial
 Gram--Schmidt seed variation. -/
@@ -289,7 +295,7 @@ theorem physicalYangMillsSU2AdjacentFineSeedRightBCF_zero
     {hbeta : ∀ n, 0 ≤ beta n}
     (n : ℕ)
     (k : Fin 3) :
-    physicalYangMillsSU2AdjacentFineSeedRightBCF
+    GroundStatePosteriorJoint.physicalYangMillsSU2AdjacentFineSeedRightBCF
         (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
         n 0 k =
       GroundStatePosteriorJoint.decomposableRightOutputBCF
@@ -298,7 +304,7 @@ theorem physicalYangMillsSU2AdjacentFineSeedRightBCF_zero
         (periodicHypercubicEvenPrimarySpatialSliceWilsonEnergyGramSchmidtPhysicalL2
           (halfExtent (n + 1)) k.1) := by
   simp [
-    physicalYangMillsSU2AdjacentFineSeedRightBCF,
+    GroundStatePosteriorJoint.physicalYangMillsSU2AdjacentFineSeedRightBCF,
     physicalYangMillsSU2AdjacentFinePairOrbitLeftFactor
   ]
 
