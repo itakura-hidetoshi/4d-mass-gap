@@ -216,8 +216,15 @@ theorem normalizedPhysicalOneSlabPairHaarReceiver_projectionResidual_coeFn
       pairHaarTransportedGroundStateSpatialLinkProjection_physicalReceiver_coeFn
         H N hN beta hbeta f e
   filter_upwards [Lp.coeFn_sub v q, hQ] with z hSub hMean
-  change (v - q) z = v z - _
-  rw [hSub, hMean]
+  rw [hSub]
+  change
+    v z - q z =
+      v z -
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSqrtDensity
+          H N hN beta hbeta z *
+        posteriorMean H N hN beta hbeta e
+          (normalizedPhysicalOneSlabJointReceiverProductBCF H N hN beta hbeta f) z
+  rw [hMean]
 
 /-- Literal integral formula for the original frozen joint resampling
 energy on the TRUE pair-Haar measure, with the weighted posterior mean
@@ -271,7 +278,6 @@ theorem normalizedPhysicalOneSlabJointReceiverProductBCF_resamplingEnergy_eq_pai
         (normalizedPhysicalOneSlabJointReceiverProductBCF H N hN beta hbeta f) =
       2 * ‖r‖ ^ 2 at hExact
   rw [hExact, hSq]
-  rfl
 
 end GroundStatePosteriorJoint
 
