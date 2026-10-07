@@ -268,8 +268,8 @@ theorem
     |c0| = |(c0 - cM) + cM| := by
       congr 1
       ring
-    _ ≤ |c0 - cM| + |cM| := abs_add _ _
-    _ ≤ R + |cM| := add_le_add_right hDiff _
+    _ ≤ |c0 - cM| + |cM| := abs_add_le _ _
+    _ ≤ R + |cM| := add_le_add_left hDiff _
     _ = _ := by rfl
 
 /-- Specialization of the generic covariance/resolvent bridge to the actual
