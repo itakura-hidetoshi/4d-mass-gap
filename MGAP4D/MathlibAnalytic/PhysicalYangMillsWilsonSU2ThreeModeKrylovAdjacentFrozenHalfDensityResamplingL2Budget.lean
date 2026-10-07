@@ -278,7 +278,7 @@ theorem fineFrozenInitialEnergy_le_invNorm_sq_link_card
         (Frozen n r k) ≤
       (1 / 12 : ℝ) * (Fintype.card Link : ℝ) *
         (2 * ‖T‖⁻¹ ^ 2) := by
-      simpa only [Finset.sum_const, nsmul_eq_mul, Finset.card_univ] using h
+      simpa only [Finset.sum_const, nsmul_eq_mul, Finset.card_univ, mul_assoc] using h
     _ = (1 / 6 : ℝ) * (Fintype.card Link : ℝ) * ‖T‖⁻¹ ^ 2 := by ring
 
 /-- Each ORIGINAL frozen left one-link residual is controlled by a single
