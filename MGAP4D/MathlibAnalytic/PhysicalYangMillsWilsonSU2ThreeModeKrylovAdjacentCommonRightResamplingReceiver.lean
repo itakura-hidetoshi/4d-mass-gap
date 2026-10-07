@@ -280,7 +280,7 @@ theorem fineOrbitLeftFactor_norm_le_one
   | zero =>
       simpa [hf]
   | succ m ih =>
-      rw [pow_succ, ContinuousLinearMap.mul_apply]
+      rw [pow_succ', ContinuousLinearMap.mul_apply]
       calc
         ‖S ((S ^ m) f)‖ ≤ ‖S‖ * ‖(S ^ m) f‖ :=
           ContinuousLinearMap.le_opNorm S ((S ^ m) f)
