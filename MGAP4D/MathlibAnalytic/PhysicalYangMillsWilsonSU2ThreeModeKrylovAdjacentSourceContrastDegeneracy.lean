@@ -164,7 +164,7 @@ theorem jointTransferBCF_physicalPairDecomposableL2_apply
         (periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2
           H N f g) z) / SqrtD z = _
   rw [pairTransferIntegral_physicalPairDecomposableL2
-    H N hN beta hbeta f g z]
+    H N beta f g z]
   ring
 
 /-- Right-slice scalar multiplying the first-slice transfer integral in the
