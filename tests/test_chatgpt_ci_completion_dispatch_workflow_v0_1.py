@@ -11,20 +11,65 @@ class WorkflowWiringTests(unittest.TestCase):
         text = SOURCE.read_text(encoding="utf-8")
         self.assertIn("chatgpt-ci-status-receipt:", text)
         self.assertIn("needs: pr-lean-fast-check", text)
-        self.assertIn("always() && github.event_name == 'pull_request'", text)
+        self.assertIn(
+            "always() && ((github.event_name == 'pull_request'",
+            text,
+        )
+        self.assertIn(
+            "github.event.pull_request.head.repo.full_name == github.repository",
+            text,
+        )
+        self.assertIn(
+            "github.event_name == 'push' && (github.ref == 'refs/heads/main' || "
+            "github.ref == 'refs/heads/formal/real-hilbert-uniform-coercive-strong-limit')",
+            text,
+        )
         self.assertIn(
             "github.event.pull_request.head.repo.full_name == github.repository",
             text,
         )
         self.assertIn("statuses: write", text)
         self.assertIn("contents: read", text)
-        self.assertIn("${{ github.event.pull_request.head.sha }}", text)
+        self.assertIn(
+            "HEAD_SHA: ${{ github.event_name == 'pull_request' && "
+            "github.event.pull_request.head.sha || github.sha }}",
+            text,
+        )
+        self.assertIn("SOURCE_EVENT: ${{ github.event_name }}", text)
         self.assertIn("${{ github.run_id }}", text)
         self.assertIn("${{ github.run_attempt }}", text)
         self.assertIn("chatgpt-ci-receipt/PR Lean Fast Check", text)
         self.assertIn("/statuses/${HEAD_SHA}", text)
         self.assertIn("wake-up receipt only", text)
         self.assertIn("curl --fail-with-body", text)
+
+    def test_merge_push_receipt_is_limited_to_trusted_branches(self):
+        text = SOURCE.read_text(encoding="utf-8")
+        self.assertIn("if: ${{ always() && ((", text)
+        self.assertIn("github.event_name == 'push'", text)
+        self.assertIn("github.ref == 'refs/heads/main'", text)
+        self.assertIn(
+            "github.ref == 'refs/heads/formal/real-hilbert-uniform-coercive-strong-limit'",
+            text,
+        )
+        self.assertIn("HEAD_SHA: ${{ github.event_name == 'pull_request'", text)
+        self.assertIn("|| github.sha }}", text)
+        self.assertIn("github.event.pull_request.head.sha || github.sha", text)
+        self.assertIn("github.event.pull_request.head.repo.full_name == github.repository", text)
+
+    def test_status_receipt_is_retryable_and_readable_by_mcp(self):
+        text = SOURCE.read_text(encoding="utf-8")
+        self.assertIn("get_commit_combined_status", text)
+        self.assertIn("statuses: write", text)
+        self.assertIn("contents: read", text)
+        self.assertIn("if [[ ! \"${HEAD_SHA}\" =~ ^[[:xdigit:]]{40}$ ]]", text)
+        self.assertIn("--retry 4 --retry-all-errors --retry-delay 2", text)
+        self.assertIn("--connect-timeout 10 --max-time 30", text)
+        self.assertIn("case \"${SOURCE_RESULT}\" in", text)
+        self.assertIn("failure|cancelled)", text)
+        self.assertIn('state="error"', text)
+        self.assertIn('state="success"', text)
+        self.assertIn('"context": "chatgpt-ci-receipt/PR Lean Fast Check"', text)
 
     def test_source_no_longer_emits_comment_or_repository_dispatch(self):
         text = SOURCE.read_text(encoding="utf-8")
