@@ -144,7 +144,7 @@ theorem
       H 2 C
   ]
   unfold orientedFourEdgePlaquetteWord
-  simpa only [hEdge]
+  simp only [hEdge]
 
 /-- Posterior link-variation bound carried by exactly the four primary seed
 links.  The on-support constant is the universal oscillation bound
@@ -238,7 +238,7 @@ theorem
         physicalYangMillsSU2PrimaryPlaquetteSeedLink H k = source := by
       simpa [physicalYangMillsSU2PrimaryPlaquetteSeedLinkEmbedding] using hk
     subst source
-    simpa using hDist
+    simpa [physicalYangMillsSU2PrimaryPlaquetteSeedLinkEmbedding] using hDist
   simp [
     physicalYangMillsSU2PrimaryPlaquetteGramSchmidtPosteriorLinkVariationBound_variation,
     hNot
