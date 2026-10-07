@@ -629,7 +629,7 @@ theorem
   have hTail :=
     periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosterior_localFactor_randomScan_terminal_covariance_abs_le_rate_pow_mul_totalVariation
       source sourceValue P D hEdge rowCoefficient hRowNonneg hRowSum M
-  exact hFinite.trans (add_le_add_left hTail _)
+  exact hFinite.trans (add_le_add_right hTail _)
 
 /-- Under an explicit strict posterior row coefficient, the terminal covariance
 remainder tends to zero. -/
