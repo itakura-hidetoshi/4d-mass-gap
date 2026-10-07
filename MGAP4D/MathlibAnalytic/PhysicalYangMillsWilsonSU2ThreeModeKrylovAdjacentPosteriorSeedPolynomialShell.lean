@@ -112,10 +112,14 @@ theorem physicalYangMillsSU2PrimaryPlaquetteSeedDistanceShell_subset_fourBaseL1S
     ← physicalYangMillsSU2PrimaryPlaquetteSeedLinkBaseDistance_symm H source 3
   ] at hSeed
   rcases nat_min_four_eq_level _ _ _ _ _ hSeed with h0 | h1 | h2 | h3
-  · exact Finset.mem_biUnion.mpr ⟨0, by simp, by simp [h0]⟩
-  · exact Finset.mem_biUnion.mpr ⟨1, by simp, by simp [h1]⟩
-  · exact Finset.mem_biUnion.mpr ⟨2, by simp, by simp [h2]⟩
-  · exact Finset.mem_biUnion.mpr ⟨3, by simp, by simp [h3]⟩
+  · refine Finset.mem_biUnion.mpr ⟨0, Finset.mem_univ _, ?_⟩
+    exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, h0⟩
+  · refine Finset.mem_biUnion.mpr ⟨1, Finset.mem_univ _, ?_⟩
+    exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, h1⟩
+  · refine Finset.mem_biUnion.mpr ⟨2, Finset.mem_univ _, ?_⟩
+    exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, h2⟩
+  · refine Finset.mem_biUnion.mpr ⟨3, Finset.mem_univ _, ?_⟩
+    exact Finset.mem_filter.mpr ⟨Finset.mem_univ _, h3⟩
 
 /-- Volume-independent shell cardinality:
 four seed links times the existing three-dimensional link shell bound. -/
@@ -174,7 +178,7 @@ theorem physicalYangMillsSU2PrimaryPlaquetteSeedDistanceShellMajorant_nonneg
     (r : ℕ) :
     0 ≤ physicalYangMillsSU2PrimaryPlaquetteSeedDistanceShellMajorant r := by
   unfold physicalYangMillsSU2PrimaryPlaquetteSeedDistanceShellMajorant
-  positivity
+  exact mul_nonneg (by norm_num) (cubicSpatialShellMajorant_nonneg r)
 
 /-- Casted shell-cardinality bound in the form consumed by real-valued
 geometric summability. -/
