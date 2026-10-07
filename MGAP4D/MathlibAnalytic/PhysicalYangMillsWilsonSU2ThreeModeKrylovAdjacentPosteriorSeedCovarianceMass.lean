@@ -175,7 +175,7 @@ theorem physicalYangMillsSU2PrimaryPlaquetteFarLinks_two_localFactorCovarianceMa
   have hsWeak : 1 ≤ s := hs.le
   have hsPos : 0 < s := lt_trans zero_lt_one hs
   have hInvNonneg : 0 ≤ s⁻¹ := inv_nonneg.mpr hsPos.le
-  have hInvLtOne : s⁻¹ < 1 := inv_lt_one_of_one_lt hs
+  have hInvLtOne : s⁻¹ < 1 := inv_lt_one_of_one_lt₀ hs
   have hPrefactor :
       0 ≤
         periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorCanonicalFixedRightBootstrapCovariancePrefactor
