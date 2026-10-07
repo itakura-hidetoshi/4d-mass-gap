@@ -8,6 +8,10 @@ open scoped BigOperators
 
 noncomputable section
 
+local instance p3PrimarySeedCovarianceMassCompileSmokeSpatialLinkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
 #check physicalYangMillsSU2PrimaryPlaquetteSeedDistanceGeometricMass
 #check summable_physicalYangMillsSU2PrimaryPlaquetteSeedDistanceGeometricMass
 #check physicalYangMillsSU2PrimaryPlaquetteSeedDistance_sum_geometric_le_mass
