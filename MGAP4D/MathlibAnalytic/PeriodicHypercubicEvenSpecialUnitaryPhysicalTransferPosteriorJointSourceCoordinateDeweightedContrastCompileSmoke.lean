@@ -1,0 +1,21 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointSourceCoordinateDeweightedContrast
+
+/-! Compile contracts for the output-deweighted centered source contrast. -/
+
+namespace MGAP4D.MathlibAnalytic
+namespace GroundStatePosteriorJoint
+
+noncomputable section
+
+#check jointTransferSourceDeweightedContrast
+#check jointTransferSourceDeweightedContrast_eq_centeredCoordinate
+#check jointTransferSourceDeweightedContrast_abs_le_centeredCoordinate
+#check fineFrozenSourceDeweightedContrast_abs_le_centeredCoordinate
+
+#print axioms jointTransferSourceDeweightedContrast_eq_centeredCoordinate
+#print axioms jointTransferSourceDeweightedContrast_abs_le_centeredCoordinate
+#print axioms fineFrozenSourceDeweightedContrast_abs_le_centeredCoordinate
+
+end
+end GroundStatePosteriorJoint
+end MGAP4D.MathlibAnalytic
