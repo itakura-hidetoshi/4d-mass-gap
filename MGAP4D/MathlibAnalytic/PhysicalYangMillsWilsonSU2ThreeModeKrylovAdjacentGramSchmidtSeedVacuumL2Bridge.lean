@@ -60,6 +60,19 @@ local instance p3SeedVacuumL2BridgeSpatialLinkFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
+/-- The canonical vacuum law is a probability measure.  Registering this
+locally lets Mathlib synthesize the finite-measure instance required by
+BoundedContinuousFunction.toLp. -/
+local instance p3SeedVacuumL2BridgeVacuumProbability
+    (H : ℕ)
+    (beta : ℝ)
+    (hbeta : 0 ≤ beta) :
+    IsProbabilityMeasure
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure
+        H 2 specialUnitaryTwoWilsonRankPositive beta hbeta) :=
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabVacuumMeasure_isProbabilityMeasure
+    H 2 specialUnitaryTwoWilsonRankPositive beta hbeta
+
 /-- The continuous vacuum-divided Gram--Schmidt BCF represents exactly the
 existing Haar-to-vacuum ground-state transform in vacuum-weighted L2. -/
 theorem
