@@ -35,6 +35,35 @@ open scoped ENNReal InnerProductSpace InnerProduct
 
 noncomputable section
 
+local instance p3PairTensorOrbitTopologicalGroup (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+
+local instance p3PairTensorOrbitCompactSpace (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+
+local instance p3PairTensorOrbitSecondCountableTopology (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+
+local instance p3PairTensorOrbitMeasurableSpace (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+
+local instance p3PairTensorOrbitBorelSpace (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
+local instance p3PairTensorOrbitSpatialLinkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
+local instance p3PairTensorOrbitSpatialSliceHaarSFinite (H N : ℕ) :
+    SFinite (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+
 /-- The normalized physical pair transfer acts factorwise on every
 decomposable physical pair. -/
 theorem
