@@ -118,7 +118,7 @@ theorem decomposableRightOutputFactor_eq_jointHalfDensityReceiver
   have hScalar :
       (lambda ^ 2)⁻¹ * integralValue =
         lambda⁻¹ * omega * (lambda⁻¹ * integralValue / omega) := by
-    field_simp [hlambda, homega] <;> ring
+    field_simp [hlambda, homega]
   change
     ((lambda ^ 2)⁻¹ * integralValue) /
         continuousJointSqrtDensity H N hN beta hbeta z =
