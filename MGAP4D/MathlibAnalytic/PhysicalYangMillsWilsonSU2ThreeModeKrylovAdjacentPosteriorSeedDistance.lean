@@ -32,8 +32,9 @@ local instance p3PrimarySeedSpatialLinkFintype (H : ℕ) :
   Fintype.ofFinite _
 
 local instance p3PrimarySeedSideLengthNeZero (H : ℕ) :
-    NeZero (PeriodicHypercubicEvenSideLength H) :=
-  ⟨by simp [PeriodicHypercubicEvenSideLength]⟩
+    NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
+  simp [PeriodicHypercubicEvenSideLength,
+    periodicHypercubicEvenPositiveHalfCylinderSlabCount]⟩
 
 /-- The k-th physical edge of the canonical primary spatial plaquette, viewed
 on the canonical time-zero spatial-slice link carrier. -/
