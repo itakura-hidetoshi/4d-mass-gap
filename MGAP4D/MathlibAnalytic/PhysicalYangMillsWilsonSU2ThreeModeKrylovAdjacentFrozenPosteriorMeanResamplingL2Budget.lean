@@ -95,6 +95,7 @@ theorem posteriorResamplingEnergy_eq_two_jointL2_projectionLoss
       F.continuous.stronglyMeasurable ‖F‖ F.norm_coe_le_norm
   ]
   simp only [
+    List.nil_append,
     posteriorScheduleL2_eq_projectionSchedule,
     jointBCF_boundedConcreteL2_eq_standardRepresentative,
     realHilbertProjectionSweep,
@@ -118,12 +119,14 @@ theorem posteriorResamplingEnergy_le_two_jointL2_norm_sq
           ℝ F‖ ^ 2 := by
   rw [posteriorResamplingEnergy_eq_two_jointL2_projectionLoss
     H N hN beta hbeta e F]
-  have hp : 0 ≤
-      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
-          H N hN beta hbeta e
-          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2RepresentativeBCF
-            H N hN beta hbeta F)‖ ^ 2 := sq_nonneg _
-  change 2 * (_ - _) ≤ 2 * _ ^ 2
+  let fJ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2RepresentativeBCF
+      H N hN beta hbeta F
+  let P :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
+      H N hN beta hbeta e
+  have hp : 0 ≤ ‖P fJ‖ ^ 2 := sq_nonneg _
+  change 2 * (‖fJ‖ ^ 2 - ‖P fJ‖ ^ 2) ≤ 2 * ‖fJ‖ ^ 2
   nlinarith
 
 /-- For a physical Haar-L2 input, the literal frozen posterior receiver
