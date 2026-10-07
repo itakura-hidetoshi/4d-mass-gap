@@ -105,9 +105,15 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSlicePairSwapLinearIsometry_a
   have hfgSwap :=
     (Measure.measurePreserving_swap.quasiMeasurePreserving.ae hfg)
   filter_upwards [hSwap, hfgSwap, hgf] with z hs hfgs hgfs
-  rw [hs, hfgs, hgfs]
-  simp only [realL2ExternalTensorFunction, Prod.swap_prod_mk]
-  ring
+  calc
+    ((periodicHypercubicEvenSpecialUnitarySpatialSlicePairSwapLinearIsometry H N)
+        (realL2ExternalTensor f g)) z =
+        (realL2ExternalTensor f g) z.swap := hs
+    _ = realL2ExternalTensorFunction f g z.swap := hfgs
+    _ = realL2ExternalTensorFunction g f z := by
+      simp only [realL2ExternalTensorFunction, Prod.swap_prod_mk]
+      ring
+    _ = (realL2ExternalTensor g f) z := hgfs.symm
 
 /-- Swap exchanges the factors of every decomposable physical pair. -/
 theorem periodicHypercubicEvenSpecialUnitarySpatialSlicePairSwapLinearIsometry_apply_physicalPairDecomposableL2
