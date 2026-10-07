@@ -1,0 +1,20 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointSourceCoordinateContrast
+
+/-! Compile contracts for the drift-free centered source-coordinate contrast. -/
+
+namespace MGAP4D.MathlibAnalytic
+namespace GroundStatePosteriorJoint
+
+noncomputable section
+
+#check jointTransferSourceContrast_eq_centeredCoordinate
+#check jointTransferSourceContrast_abs_le_centeredCoordinate
+#check fineFrozenSourceContrast_abs_le_centeredCoordinate
+
+#print axioms jointTransferSourceContrast_eq_centeredCoordinate
+#print axioms jointTransferSourceContrast_abs_le_centeredCoordinate
+#print axioms fineFrozenSourceContrast_abs_le_centeredCoordinate
+
+end
+end GroundStatePosteriorJoint
+end MGAP4D.MathlibAnalytic
