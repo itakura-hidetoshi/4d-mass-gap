@@ -111,7 +111,7 @@ theorem periodicHypercubicEvenSpecialUnitarySpatialSlicePairSwapLinearIsometry_a
         (realL2ExternalTensor f g) z.swap := hs
     _ = realL2ExternalTensorFunction f g z.swap := hfgs
     _ = realL2ExternalTensorFunction g f z := by
-      simp only [realL2ExternalTensorFunction, Prod.swap_prod_mk]
+      simp only [realL2ExternalTensorFunction, Prod.fst_swap, Prod.snd_swap]
       ring
     _ = (realL2ExternalTensor g f) z := hgfs.symm
 
