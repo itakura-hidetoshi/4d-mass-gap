@@ -1,0 +1,24 @@
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointSourceCoordinateDefectSplit
+
+/-! Compile contracts for the pointwise P3 source/output defect split. -/
+
+namespace MGAP4D.MathlibAnalytic
+namespace GroundStatePosteriorJoint
+
+noncomputable section
+
+#check sourceOutputDriftSq
+#check sourceCenteredCoordinateSqEnvelope
+#check sourceOutputDriftSq_nonneg
+#check sourceCenteredCoordinateSqEnvelope_nonneg
+#check sourceCenteredCoordinateResponse_sq_le_envelope
+#check jointTransferLinkDifference_sq_le_outputDrift_add_centeredEnvelope
+#check fineFrozenLinkDifference_sq_le_outputDrift_add_centeredEnvelope
+
+#print axioms sourceCenteredCoordinateResponse_sq_le_envelope
+#print axioms jointTransferLinkDifference_sq_le_outputDrift_add_centeredEnvelope
+#print axioms fineFrozenLinkDifference_sq_le_outputDrift_add_centeredEnvelope
+
+end
+end GroundStatePosteriorJoint
+end MGAP4D.MathlibAnalytic
