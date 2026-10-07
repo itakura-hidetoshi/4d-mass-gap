@@ -129,11 +129,13 @@ theorem pairTransferIntegral_physicalPairDecomposableL2
     (∫ y : Cfg × Cfg,
         (K y.1 z.1 * K y.2 z.2) *
           realL2ExternalTensor (f : SliceL2) (g : SliceL2) y
-        ∂(mu.prod mu)) =
+        ∂((periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N).prod
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))) =
       ∫ y : Cfg × Cfg,
         (K y.1 z.1 * (f : SliceL2) y.1) *
           (K y.2 z.2 * (g : SliceL2) y.2)
-        ∂(mu.prod mu) := by
+        ∂((periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N).prod
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) := by
       apply integral_congr_ae
       filter_upwards [hTensor] with y hy
       rw [hy]
