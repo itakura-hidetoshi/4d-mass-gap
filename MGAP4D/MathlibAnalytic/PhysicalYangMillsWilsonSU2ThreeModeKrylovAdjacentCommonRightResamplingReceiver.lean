@@ -116,9 +116,9 @@ local notation "lam" =>
   ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
     H N hN beta hbeta‖
 
+include hN hbeta in
 /-- A one-slice Wilson-kernel fiber integral is pointwise bounded by the L2
 norm of its input, with no volume factor. -/
-include hN hbeta in
 theorem decomposableOneSliceTransferIntegral_abs_le_norm
     (f : SliceL2) (B : Cfg) :
     |decomposableOneSliceTransferIntegral H N beta f B| ≤ ‖f‖ := by
@@ -142,9 +142,9 @@ theorem decomposableOneSliceTransferIntegral_abs_le_norm
   simpa [decomposableOneSliceTransferIntegral, Real.norm_eq_abs] using
     hInt.trans hL1
 
+include hN hbeta in
 /-- Continuity of the one-slice fiber integral for an arbitrary L2 input.
 Compactness is not used for the domination step. -/
-include hN hbeta in
 theorem decomposableOneSliceTransferIntegral_continuous
     (f : SliceL2) :
     Continuous (decomposableOneSliceTransferIntegral H N beta f) := by
@@ -161,14 +161,17 @@ theorem decomposableOneSliceTransferIntegral_continuous
   · intro B
     exact Eventually.of_forall fun A => by
       rw [norm_mul, Real.norm_eq_abs]
-      exact
+      simpa only [one_mul] using
         mul_le_mul_of_nonneg_right
           (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
             H N hN beta hbeta A B)
           (norm_nonneg (f A))
   · exact hf.norm
   · exact Eventually.of_forall fun A =>
-      (hK.comp (continuous_const.prodMk continuous_id)).mul continuous_const
+      (hK.comp
+        ((continuous_const : Continuous (fun _B : Cfg => A)).prodMk
+          (continuous_id : Continuous (fun B : Cfg => B)))).mul
+        (continuous_const : Continuous (fun _B : Cfg => f A))
 
 /-- The common right output factor from #5240 is a bounded-continuous joint
 observable. -/
@@ -253,29 +256,36 @@ theorem primarySpatialSliceGramSchmidtPhysicalL2_norm
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2 at hPair
   let mu :=
     periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure Hn 2
-  have hTensorNorm :
-      ‖realL2ExternalTensor
+  change
+    ‖realL2ExternalTensor
+        (periodicHypercubicEvenPrimarySpatialSliceWilsonEnergyGramSchmidtPhysicalL2
+          Hn k.1 : Lp ℝ 2 mu)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector
+          Hn 2 : Lp ℝ 2 mu)‖ = 1 at hPair
+  have hPairNorm :
+      ‖(periodicHypercubicEvenPrimarySpatialSliceWilsonEnergyGramSchmidtPhysicalL2
+          Hn k.1 : Lp ℝ 2 mu)‖ *
+        ‖(periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector
+          Hn 2 : Lp ℝ 2 mu)‖ = 1 := by
+    calc
+      _ = ‖realL2ExternalTensor
           (periodicHypercubicEvenPrimarySpatialSliceWilsonEnergyGramSchmidtPhysicalL2
             Hn k.1 : Lp ℝ 2 mu)
           (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector
-            Hn 2 : Lp ℝ 2 mu)‖ =
-        ‖(periodicHypercubicEvenPrimarySpatialSliceWilsonEnergyGramSchmidtPhysicalL2
-            Hn k.1 : Lp ℝ 2 mu)‖ *
-          ‖(periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector
             Hn 2 : Lp ℝ 2 mu)‖ :=
-    realL2ExternalTensor_norm
-      (periodicHypercubicEvenPrimarySpatialSliceWilsonEnergyGramSchmidtPhysicalL2
-        Hn k.1 : Lp ℝ 2 mu)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector
-        Hn 2 : Lp ℝ 2 mu)
-  rw [hTensorNorm] at hPair
+        (realL2ExternalTensor_norm
+          (periodicHypercubicEvenPrimarySpatialSliceWilsonEnergyGramSchmidtPhysicalL2
+            Hn k.1 : Lp ℝ 2 mu)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector
+            Hn 2 : Lp ℝ 2 mu)).symm
+      _ = 1 := hPair
   have hOneAmbient :
       ‖(periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector
           Hn 2 : Lp ℝ 2 mu)‖ = 1 := by
     simpa only [Submodule.norm_coe] using
       periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_norm Hn 2
-  rw [hOneAmbient, mul_one] at hPair
-  simpa only [Submodule.norm_coe] using hPair
+  rw [hOneAmbient, mul_one] at hPairNorm
+  simpa only [Submodule.norm_coe] using hPairNorm
 
 /-- The mode-dependent first-slice orbit factor stays in the unit L2 ball. -/
 theorem fineOrbitLeftFactor_norm_le_one
