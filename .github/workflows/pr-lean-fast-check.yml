@@ -301,7 +301,9 @@ jobs:
   chatgpt-ci-status-receipt:
     name: Publish MCP CI completion receipt
     needs: pr-lean-fast-check
-    if: ${{ always() && github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository }}
+    # PR-head and trusted push merge-commit receipts both need exact-SHA statuses.
+    # MCP's workflow-run lookup only returns pull_request-triggered executions.
+    if: ${{ always() && ((github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/formal/real-hilbert-uniform-coercive-strong-limit'))) }}
     permissions:
       contents: read
       statuses: write
@@ -312,14 +314,20 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           REPOSITORY: ${{ github.repository }}
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          HEAD_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
           SOURCE_RESULT: ${{ needs.pr-lean-fast-check.result }}
+          SOURCE_EVENT: ${{ github.event_name }}
           RUN_ID: ${{ github.run_id }}
           RUN_ATTEMPT: ${{ github.run_attempt }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         shell: bash
         run: |
           set -euo pipefail
+          echo "[mcp-receipt] event=${SOURCE_EVENT} exact_sha=${HEAD_SHA} source_result=${SOURCE_RESULT} run=${RUN_ID} attempt=${RUN_ATTEMPT}"
+          if [[ ! "${HEAD_SHA}" =~ ^[[:xdigit:]]{40}$ ]]; then
+            echo "[mcp-receipt] invalid exact commit SHA" >&2
+            exit 1
+          fi
           case "${SOURCE_RESULT}" in
             success)
               state="success"
@@ -356,7 +364,11 @@ jobs:
           )
           PY
 
+          # Expose the same status on PR heads and trusted branch push SHAs.
+          # MCP get_commit_combined_status can read it on both kinds of commits.
           curl --fail-with-body --silent --show-error \
+            --retry 4 --retry-all-errors --retry-delay 2 \
+            --connect-timeout 10 --max-time 30 \
             --request POST \
             --header "Accept: application/vnd.github+json" \
             --header "Authorization: Bearer ${GH_TOKEN}" \
