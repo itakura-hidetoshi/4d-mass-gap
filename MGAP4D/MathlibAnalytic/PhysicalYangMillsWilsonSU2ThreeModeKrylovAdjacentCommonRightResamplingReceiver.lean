@@ -77,7 +77,7 @@ theorem realL2_integral_norm_le_norm_probability
   have hmono :
       eLpNorm (fun x => f x) 1 μ ≤ eLpNorm (fun x => f x) 2 μ :=
     eLpNorm_le_eLpNorm_of_exponent_le (f := fun x => f x) (μ := μ)
-      (by norm_num)
+      (by norm_num : (1 : ℝ≥0∞) ≤ 2) (Lp.aestronglyMeasurable f)
   have hreal :
       (eLpNorm (fun x => f x) 1 μ).toReal ≤
         (eLpNorm (fun x => f x) 2 μ).toReal :=
@@ -118,6 +118,7 @@ local notation "lam" =>
 
 /-- A one-slice Wilson-kernel fiber integral is pointwise bounded by the L2
 norm of its input, with no volume factor. -/
+include hN hbeta in
 theorem decomposableOneSliceTransferIntegral_abs_le_norm
     (f : SliceL2) (B : Cfg) :
     |decomposableOneSliceTransferIntegral H N beta f B| ≤ ‖f‖ := by
@@ -143,6 +144,7 @@ theorem decomposableOneSliceTransferIntegral_abs_le_norm
 
 /-- Continuity of the one-slice fiber integral for an arbitrary L2 input.
 Compactness is not used for the domination step. -/
+include hN hbeta in
 theorem decomposableOneSliceTransferIntegral_continuous
     (f : SliceL2) :
     Continuous (decomposableOneSliceTransferIntegral H N beta f) := by
@@ -249,10 +251,31 @@ theorem primarySpatialSliceGramSchmidtPhysicalL2_norm
       Hn k.1
   ] at hPair
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalPairDecomposableL2 at hPair
-  rw [realL2ExternalTensor_norm] at hPair
-  have hOne :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_norm Hn 2
-  simpa only [Submodule.norm_coe, hOne, mul_one] using hPair
+  let mu :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure Hn 2
+  have hTensorNorm :
+      ‖realL2ExternalTensor
+          (periodicHypercubicEvenPrimarySpatialSliceWilsonEnergyGramSchmidtPhysicalL2
+            Hn k.1 : Lp ℝ 2 mu)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector
+            Hn 2 : Lp ℝ 2 mu)‖ =
+        ‖(periodicHypercubicEvenPrimarySpatialSliceWilsonEnergyGramSchmidtPhysicalL2
+            Hn k.1 : Lp ℝ 2 mu)‖ *
+          ‖(periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector
+            Hn 2 : Lp ℝ 2 mu)‖ :=
+    realL2ExternalTensor_norm
+      (periodicHypercubicEvenPrimarySpatialSliceWilsonEnergyGramSchmidtPhysicalL2
+        Hn k.1 : Lp ℝ 2 mu)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector
+        Hn 2 : Lp ℝ 2 mu)
+  rw [hTensorNorm] at hPair
+  have hOneAmbient :
+      ‖(periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector
+          Hn 2 : Lp ℝ 2 mu)‖ = 1 := by
+    simpa only [Submodule.norm_coe] using
+      periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_norm Hn 2
+  rw [hOneAmbient, mul_one] at hPair
+  simpa only [Submodule.norm_coe] using hPair
 
 /-- The mode-dependent first-slice orbit factor stays in the unit L2 ball. -/
 theorem fineOrbitLeftFactor_norm_le_one
@@ -273,8 +296,7 @@ theorem fineOrbitLeftFactor_norm_le_one
   have hf : ‖f‖ = 1 := by
     simpa [f] using
       primarySpatialSliceGramSchmidtPhysicalL2_norm
-        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-        n r k
+        (halfExtent := halfExtent) n k
   change ‖(S ^ r) f‖ ≤ 1
   induction r with
   | zero =>
