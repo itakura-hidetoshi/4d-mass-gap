@@ -98,7 +98,8 @@ theorem
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_coe
   ]
   rw [realL2ExternalTensor_smul_left, realL2ExternalTensor_smul_right]
-  simpa only [pow_two, smul_smul, mul_inv_rev]
+  simp only [pow_two, smul_smul, mul_inv_rev]
+  rfl
 
 /-- Every natural power of the normalized physical pair transfer continues to
 act factorwise on decomposable physical pairs. -/
