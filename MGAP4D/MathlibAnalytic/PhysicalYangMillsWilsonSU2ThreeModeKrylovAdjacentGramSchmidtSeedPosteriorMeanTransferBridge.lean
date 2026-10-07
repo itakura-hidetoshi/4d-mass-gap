@@ -205,14 +205,21 @@ theorem
         periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
         Lp ℝ 2 mu) =
       lambda⁻¹ • Tf := by
-    have h :=
-      congrArg
-        (fun x :
-          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N =>
-          (x : Lp ℝ 2 mu))
-        hNormalized
-    simp [lambda, Tf] at h
-    exact h
+    change
+      ((periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+          H N hN beta hbeta f :
+        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+        Lp ℝ 2 mu) =
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+          H N hN beta hbeta‖⁻¹ •
+        (((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+            H N hN beta hbeta f :
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+          Lp ℝ 2 mu))
+    rw [
+      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_apply
+        H N hN beta hbeta
+    ]
   have hSmul := Lp.coeFn_smul lambda⁻¹ Tf
   have hRaw :
       Tf =ᵐ[mu]
@@ -422,7 +429,6 @@ theorem
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabNonnegativeTopEigenvector
           H 2 specialUnitaryTwoWilsonRankPositive beta hbeta).1 B
   rw [hG, hOmega]
-  rfl
 
 /-- The vacuum-L2 norm of the posterior mean receiver is exactly the Haar-L2
 norm of the normalized physical transfer image. -/
