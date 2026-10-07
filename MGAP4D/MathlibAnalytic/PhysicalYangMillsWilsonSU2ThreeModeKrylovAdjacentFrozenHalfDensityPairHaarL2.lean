@@ -161,8 +161,8 @@ theorem normalizedPhysicalOneSlabJointReceiverProductBCF_toLp_eq_halfDensityHaar
       v =ᵐ[muP] fun z => lambda⁻¹ * g z.2 := by
     filter_upwards [hSmulP, hPullP] with z hs hp
     change v z = lambda⁻¹ * g z.2
-    rw [hs, hp]
-    simp only [smul_eq_mul]
+    rw [hs]
+    simp only [Pi.smul_apply, smul_eq_mul, hp]
   have hVmuJ := hJtoP.ae_eq hVmuP
   have hDensity :=
     hJtoP.ae_eq (continuousJointSqrtDensity_ae_eq H N hN beta hbeta)
@@ -231,8 +231,11 @@ theorem normalizedPhysicalOneSlabJointReceiverProductBCF_toLp_norm_eq_inv_transf
   have hpull : ‖pull‖ = ‖g‖ := by
     exact
       (Lp.compMeasurePreservingₗᵢ ℝ Prod.snd hSnd).norm_map g
-  have hlam : 0 ≤ lambda⁻¹ :=
-    inv_nonneg.mpr (norm_nonneg _)
+  have hlam : 0 ≤ lambda⁻¹ := by
+    exact
+      (inv_pos.mpr
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+          H N hN beta hbeta)).le
   change ‖U (lambda⁻¹ • pull)‖ = lambda⁻¹ * ‖S f‖
   calc
     ‖U (lambda⁻¹ • pull)‖ = ‖lambda⁻¹ • pull‖ := U.norm_map _
