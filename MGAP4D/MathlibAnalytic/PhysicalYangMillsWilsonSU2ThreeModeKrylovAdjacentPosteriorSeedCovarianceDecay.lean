@@ -73,7 +73,7 @@ theorem physicalYangMillsSU2PrimaryPlaquetteSeed_localFactorCovariance_abs_le_se
             (periodicHypercubicEvenSpatialSliceLinkEmbedding H source)
             (periodicHypercubicEvenSpatialSliceLinkEmbedding H
               (physicalYangMillsSU2PrimaryPlaquetteSeedLink H k)) :=
-    pow_le_pow_right' hs hDistance
+    pow_le_pow_right₀ hs hDistance
   have hPrefactor :
       0 ≤
         periodicHypercubicEvenSpecialUnitaryContinuousVacuumPosteriorCanonicalFixedRightBootstrapCovariancePrefactor
