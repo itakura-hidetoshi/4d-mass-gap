@@ -69,68 +69,20 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointWeigh
         H N hN beta hbeta z := by
   rcases z with ⟨A, B⟩
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointWeight
-  simp only [Prod.swap_prod_mk, Prod.fst, Prod.snd]
+  simp only [Prod.swap_prod_mk]
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_symmetric
     H N hN beta hbeta B A]
   ring
 
-/-- The normalized Doob/ground-state density inherits the same exact endpoint
-swap symmetry. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight_swap
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta)
-    (z : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight
-        H N hN beta hbeta z.swap =
-      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight
-        H N hN beta hbeta z := by
-  unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointWeight_swap]
+/-
+The normalized-weight swap theorem and the resulting measure-preserving swap
+are already available in the imported ground-state joint-measure development:
 
-/-- Endpoint swap preserves the genuine ground-state joint probability law.
-This is the exact measure-level bridge needed before conjugating right-boundary
-conditional-expectation constructions to the left boundary. -/
-theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_swap_measurePreserving
-    (H N : ℕ)
-    (hN : 0 < N)
-    (beta : ℝ)
-    (hbeta : 0 ≤ beta) :
-    MeasurePreserving Prod.swap
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
-        H N hN beta hbeta)
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
-        H N hN beta hbeta) := by
-  let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
-  let w :
-      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ≥0∞ :=
-    fun z => ENNReal.ofReal
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight
-        H N hN beta hbeta z)
-  refine ⟨measurable_swap, ?_⟩
-  change Measure.map Prod.swap ((μ.prod μ).withDensity w) = (μ.prod μ).withDensity w
-  apply Measure.ext
-  intro s hs
-  rw [Measure.map_apply measurable_swap hs,
-    withDensity_apply _ (measurable_swap hs),
-    withDensity_apply _ hs]
-  calc
-    (∫⁻ z in Prod.swap ⁻¹' s, w z ∂μ.prod μ) =
-        ∫⁻ z in Prod.swap ⁻¹' s, w z.swap ∂μ.prod μ := by
-      apply setLIntegral_congr_fun (measurable_swap hs)
-      intro z hz
-      dsimp [w]
-      rw [
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight_swap
-      ]
-    _ = ∫⁻ z in s, w z ∂μ.prod μ := by
-      exact
-        (Measure.measurePreserving_swap :
-          MeasurePreserving Prod.swap (μ.prod μ) (μ.prod μ)).setLIntegral_comp_preimage_emb
-            MeasurableEquiv.prodComm.measurableEmbedding w s
+* `periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight_swap`
+* `periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_swap_measurePreserving`
+
+We reuse those authoritative facts rather than redeclaring them here.
+-/
 
 /-- Lossless real-L2 pullback by endpoint swap on the ground-state joint law. -/
 noncomputable def
