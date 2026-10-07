@@ -173,9 +173,9 @@ theorem fineOrbit_jointTransferLinkDifference_eq_left_mul_commonRight
     jointTransferLinkDifference Hn 2 Pos (beta n) (hbeta n)
         (Orbit n r k) e z u =
       decomposableOneSliceTransferIntegral Hn 2 (beta n)
-          ((physicalYangMillsSU2AdjacentFinePairOrbitLeftFactor
+          (physicalYangMillsSU2AdjacentFinePairOrbitLeftFactor
             (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-            n r k : _) : SliceL2) z.1 *
+            n r k : SliceL2) z.1 *
         fineOrbitRightLinkDifferenceFactor
           (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
           n r e z u := by
@@ -202,9 +202,9 @@ theorem fineOrbit_jointTransferLinkDifference_sq_eq_left_sq_mul_commonRight_sq
     (jointTransferLinkDifference Hn 2 Pos (beta n) (hbeta n)
         (Orbit n r k) e z u) ^ 2 =
       (decomposableOneSliceTransferIntegral Hn 2 (beta n)
-          ((physicalYangMillsSU2AdjacentFinePairOrbitLeftFactor
+          (physicalYangMillsSU2AdjacentFinePairOrbitLeftFactor
             (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-            n r k : _) : SliceL2) z.1) ^ 2 *
+            n r k : SliceL2) z.1) ^ 2 *
         (fineOrbitRightLinkDifferenceFactor
           (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
           n r e z u) ^ 2 := by
@@ -223,9 +223,9 @@ theorem fineOrbit_jointTransferLinkResamplingEnergy_eq_decomposable
         (Orbit n r k) e =
       ∫ z, ∫ u,
         (decomposableOneSliceTransferIntegral Hn 2 (beta n)
-            ((physicalYangMillsSU2AdjacentFinePairOrbitLeftFactor
+            (physicalYangMillsSU2AdjacentFinePairOrbitLeftFactor
               (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-              n r k : _) : SliceL2) z.1) ^ 2 *
+              n r k : SliceL2) z.1) ^ 2 *
           (fineOrbitRightLinkDifferenceFactor
             (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
             n r e z u) ^ 2
@@ -249,9 +249,9 @@ theorem fineFrozenInitialEnergy_eq_decomposableSingleDefect
       (1 / 12 : ℝ) * ∑ e : Link,
         ∫ z, ∫ u,
           (decomposableOneSliceTransferIntegral Hn 2 (beta n)
-              ((physicalYangMillsSU2AdjacentFinePairOrbitLeftFactor
+              (physicalYangMillsSU2AdjacentFinePairOrbitLeftFactor
                 (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-                n r k : _) : SliceL2) z.1) ^ 2 *
+                n r k : SliceL2) z.1) ^ 2 *
             (fineOrbitRightLinkDifferenceFactor
               (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
               n r e z u) ^ 2
