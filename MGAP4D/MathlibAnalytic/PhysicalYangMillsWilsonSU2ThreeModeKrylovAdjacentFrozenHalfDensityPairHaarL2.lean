@@ -160,7 +160,6 @@ theorem normalizedPhysicalOneSlabJointReceiverProductBCF_toLp_eq_halfDensityHaar
   have hVmuP :
       v =ᵐ[muP] fun z => lambda⁻¹ * g z.2 := by
     filter_upwards [hSmulP, hPullP] with z hs hp
-    change v z = lambda⁻¹ * g z.2
     rw [hs]
     simp only [Pi.smul_apply, smul_eq_mul, hp]
   have hVmuJ := hJtoP.ae_eq hVmuP
@@ -193,7 +192,7 @@ theorem normalizedPhysicalOneSlabJointReceiverProductBCF_toLp_eq_halfDensityHaar
   have hSqrt :
       continuousJointSqrtDensity H N hN beta hbeta z ≠ 0 :=
     (continuousJointSqrtDensity_pos H N hN beta hbeta z).ne'
-  field_simp [hOmega, hSqrt] <;> ring
+  field_simp [hOmega, hSqrt]
 
 /-- The joint half-density receiver norm reduces exactly to one scalar
 normalization times the original physical normalized-transfer image norm,
