@@ -180,9 +180,13 @@ def decomposableRightOutputBCF
   BoundedContinuousFunction.mkOfCompact
     ⟨decomposableRightOutputFactor H N hN beta hbeta g, by
       unfold decomposableRightOutputFactor
-      have hInt :=
+      have hInt :
+          Continuous (fun z : Joint =>
+            decomposableOneSliceTransferIntegral H N beta
+              (g : SliceL2) z.2) :=
         (decomposableOneSliceTransferIntegral_continuous
-          H N hN beta hbeta (g : SliceL2)).comp continuous_snd
+          H N hN beta hbeta (g : SliceL2)).comp
+          (continuous_snd : Continuous (fun z : Joint => z.2))
       exact
         (continuous_const.mul hInt).div
           (continuousJointSqrtDensity_continuous H N hN beta hbeta)
