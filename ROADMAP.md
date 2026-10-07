@@ -1,199 +1,313 @@
 # MGAP4D Roadmap
 
-**Status date: 2026-10-07 JST. Theorem snapshot: through merged PR #5225, merge `98daa981bbf9d175ea60618cce77c1ccdb6c075d`.**
+**Status date: 2026-10-07 JST. Theorem snapshot: through merged PR #5235, merge ceb98d0a24fbb132e4519a582d87ac5cf2e86673.**
 
-This roadmap separates proved finite-model statements, closed structural bridges, refuted routes, and genuinely open model/continuum obligations. Lean declarations are the mathematical source of truth.
+This roadmap separates proved finite-model statements, closed structural bridges, partially closed P3 locality layers, refuted routes, and genuinely open model/continuum obligations. Lean declarations on the theorem-carrier are the mathematical source of truth.
 
 ## 0. Authority checkpoint
 
 | Item | Checkpoint |
 | --- | --- |
-| Unique theorem-carrier | `formal/real-hilbert-uniform-coercive-strong-limit` |
-| Latest theorem-bearing merge | `98daa981bbf9d175ea60618cce77c1ccdb6c075d` |
-| Latest theorem-bearing PR | #5225, merged |
-| Validated #5225 head | `d078f458b141ded5b8bc4de7aa8f4ddd51b823f8` |
-| Lean / mathlib | `v4.30.0-rc2` / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
+| Unique theorem-carrier | formal/real-hilbert-uniform-coercive-strong-limit |
+| Latest theorem-bearing merge | ceb98d0a24fbb132e4519a582d87ac5cf2e86673 |
+| Latest theorem-bearing PR | #5235, merged |
+| Validated #5235 head | 032511aed28fe689b0ebba5b1008639980df9cfe |
+| Lean / mathlib | v4.30.0-rc2 / 5450b53e5ddc75d46418fabb605edbf36bd0beb6 |
 
-Authority: fresh theorem-carrier SHA -> formal Lean artifacts -> README/ROADMAP -> exact-head CI evidence -> history. The default `main` branch is not theorem authority.
+Authority order:
 
-## 1. Closed chain — do not reconstruct
+1. fresh exact theorem-carrier SHA;
+2. formal Lean artifacts at that SHA;
+3. README / ROADMAP;
+4. matching exact-head CI evidence;
+5. history or conversation memory.
 
-The structural posterior-to-energy bridge is now closed:
+The default main branch is not theorem authority.
+
+## 1. Closed structural chain — do not reconstruct
 
 | Range | Established result |
 | --- | --- |
 | #5208--#5212 | Literal posterior fiber law -> genuine joint CondExpL2 -> arbitrary chronological schedules -> exact stage-residual energy |
-| #5214--#5218 | Actual prefix variation propagation, fixed-color enumeration, six-color (1/6) profile, (L^2) stability, continuous scalar majorants, left-centered comparison |
-| #5219 | `fineFrozenBCF` exactly equals the actual frozen vector; approximation error zero |
-| #5220 | One-link (L^2) envelope including half-density variation |
-| #5221 | Noncommuting projection union bound; (mathcal E(f)le4I(f)) |
+| #5214--#5218 | Actual prefix variation propagation, fixed-color enumeration, six-color profile, L2 stability, continuous scalar majorants, left-centered comparison |
+| #5219 | fineFrozenBCF exactly represents the unchanged frozen vector; approximation error zero |
+| #5220 | One-link L2 envelope including half-density variation |
+| #5221 | Noncommuting projection union bound; path-loss energy <= 4 I(f) |
 | #5222 | Signed link-local residual energy and exact set/complement splitting |
-| #5223 | Exact posterior Dirichlet identity (B_e=rac12Q_e) |
-| #5224 | Exact one-source-link Wilson tilt factorization |
-| #5225 | One-source-coordinate pair-Haar (L^2) projection and centered signed-response decomposition, retaining output drift |
+| #5223 | Exact posterior resampling identity B_e = (1/2) Q_e and I = (1/12) sum Q_e |
+| #5224 | Exact source-only Wilson tilt factorization of a right-link update, with output drift retained |
+| #5225 | One-source-coordinate pair-Haar CondExpL2 projection and exact centered signed-response decomposition |
 
 The actual frozen convention remains fixed:
-[
-x_{n,r,k}=widehat T_{n+1,eta_{n+1}}^rphi_{n+1,k},
-]
-while the final frozen transfer and joint half-density use (eta_n). Keep (r=0).
 
-## 2. P3 — quantitative locality of the actual initial residual sum: OPEN
+x_(n,r,k) = T_hat_(n+1,beta_(n+1))^r phi_(n+1,k),
 
-The main object is
-[
-I_n(f^{frozen}_{n,r,k})
-=rac16sum_e|(I-P_{n,e})f^{frozen}_{n,r,k}|_2^2
-=rac1{12}sum_eQ_{n,e}(x_{n,r,k}).
-]
+while the final frozen transfer and joint half-density use beta_n. Keep r = 0.
 
-#5222 preserves signed cancellation link by link. #5224 shows that the source-dependent update factor sees only (y_R(e)). #5225 projects the actual signed kernel-weighted row onto precisely that one source coordinate.
+## 2. P3 — quantitative locality of the actual initial residual sum
 
-What is **not** yet proved is that the projected signed row becomes small with spatial separation. The kernel-weighted row itself may remain nonlocal. Therefore the next theorem must use the actual model geometry/dynamics, not density or compactness alone.
+Main object:
 
-### P3-A. Identify the geometric support/distance interface
+I_n(f_frozen(n,r,k))
+  = (1/6) sum_e ||(I - P_(n,e)) f_frozen||_2^2
+  = (1/12) sum_e Q_(n,e)(x_(n,r,k)).
 
-For fixed (r,k), define the relevant near-link set (S_{n,r,k}(D)) from the actual three-mode seed/orbit geometry. Prove the exact link-distance statements needed to invoke existing local-factor/covariance machinery.
+The objective is a volume-uniform or summable spatial bound on this exact quantity, strong enough for the existing adjacent-scale receivers.
 
-**Acceptance:** no invented support for an (L^2) representative; every distance statement is about concrete Wilson/link data already constructed.
+### P3-A. Geometric seed-distance interface — CLOSED
 
-### P3-B. Exterior signed-coordinate estimate
+PR #5227 defines the four canonical primary-plaquette seed links, intrinsic seed distance, and near/far finite link sets.
 
-For (e
-otin S_{n,r,k}(D)), bound the actual centered coordinate term
-[
-|Pi_e^{src}(J(cdot,z)x_{n,r,k}-O_{n,r,k}(z))|_2
-]
-or its integrated squared contribution by a decaying function of distance.
+It proves:
 
-The #5199 covariance theorem may be used only where its distinctness, plaquette-remoteness, cutoff and observable hypotheses match. Its (sge1) theorem gives genuine decay for (s>1). Do not silently replace it by the strict uniform-Dobrushin (s>8) hypotheses.
+- seed distance is zero on the seed;
+- near and far sets partition the finite spatial links;
+- seed distance > 2 implies the distinctness and plaquette-remoteness hypotheses needed by the existing #5199 posterior covariance theorem;
+- r = 0 remains the actual primary-plaquette Gram-Schmidt seed before the frozen coarse-coupling transfer.
 
-**Acceptance:** a theorem-generated exterior contribution with all constants/cutoffs explicit and no volume-cardinality loss hidden in notation.
+No hard support claim is made for positive transfer depth.
 
-### P3-C. Retained scalar output drift
+### P3-B1. Full-local-factor seed covariance — CLOSED
 
-#5225 proves that even if the centered source-coordinate term vanishes, the defect still contains
-[
-[1-operatorname{Out}_e(1+operatorname{AvgTilt}_e)]O_x.
-]
+PR #5228 transfers #5199 to the primary seed:
 
-Control this term from the actual half-density/output structure. Do not delete it by a source-independence assumption.
+|Cov(seedLocalFactor, remoteFullLocalFactor)|
+  <= covariancePrefactor(s,beta) / s^(seedDistance),
 
-**Acceptance:** an integrated bound on the drift term under the original posterior/joint laws, compatible with the same distance decomposition.
+under the original cutoff and remoteness hypotheses.
 
-### P3-D. Sum near and exterior contributions
+This is genuine seed-distance decay when s > 1.
 
-Combine the exact (1/12)-normalized Dirichlet representation with P3-B/P3-C and prove, for each fixed (r,k), a bound of the form
-[
-4I_n(f^{frozen}_{n,r,k})
-le C_{r,k}rac{ho^{D_{n,r,k}}}{1-ho},
-qquad 0leho<1,
-]
-or another summable bound sufficient for the existing adjacent-tail receiver.
+### P3-B2. Volume-independent shell geometry — CLOSED
 
-**Acceptance:** volume-uniform or explicitly summable control of the **whole** initial residual sum. Exterior decay alone is insufficient if near terms remain uncontrolled.
+PR #5229 proves a uniform cubic shell majorant for the number of links at exact seed distance r.
 
-## 3. Independent adjacent-scale obligations
+PR #5230 combines that shell majorant with the full-local-factor covariance decay and obtains a volume-independent completed covariance mass on the radius-two exterior.
+
+Therefore the geometry/summability mechanism itself is closed for the full local factor.
+
+### P3-B3. Literal source-only tilt covariance — CLOSED POINTWISE
+
+PR #5234 proves the exact factorization
+
+fullLocalFactor = boundaryTilt * sourceRightLinkTilt,
+
+where boundaryTilt is independent of the posterior integration variable. It also proves exact covariance scaling through that scalar.
+
+PR #5235 proves:
+
+- absolute half-action boundary increment <= 6;
+- exp(-6 beta) <= boundaryTilt <= exp(6 beta);
+- boundaryTilt^(-1) <= exp(6 beta);
+- seed-distance covariance decay for the literal sourceRightLinkTilt used in the signed joint response:
+
+|Cov(seedLocalFactor, sourceRightLinkTilt)|
+  <= exp(6 beta) * covariancePrefactor(s,beta)
+     / s^(seedDistance).
+
+Both distance > 2 and radius-two-exterior forms are available.
+
+**Status:** pointwise source-only covariance decay is closed. A summed source-only covariance-mass theorem analogous to #5230 has not yet been recorded and is a natural next composition.
+
+### P3-B4. Centered source-coordinate bridge — OPEN / CENTRAL
+
+The missing theorem is now sharply isolated.
+
+The actual signed source response uses
+
+C_e^src(x,z)
+  = source-coordinate CondExpL2 of
+    [J(.,z) x - O_x(z)].
+
+The proved posterior covariance theorems live on a one-slice posterior law. No theorem yet identifies
+
+||C_e^src||_2,
+
+its integrated square, or the actual frozen signed response with the seed/source-only posterior covariance from #5235.
+
+Acceptable next routes include:
+
+1. an exact posterior-to-pair lift showing a concrete frozen or finite-mode signed response is a posterior covariance with sourceRightLinkTilt;
+2. a direct duality theorem controlling the source-coordinate projection by a family of local posterior covariances;
+3. a direct distance-sensitive bound on the integrated centered source-coordinate contribution, without passing through a norm identity.
+
+Do not assert a covariance-to-source-coordinate-norm identity without proving it.
+
+### P3-C. Output/half-density drift — PARTIALLY CLOSED
+
+PR #5231 gives the exact pointwise square split of the original defect into:
+
+- retained output/half-density drift;
+- centered source-coordinate envelope.
+
+Thus the original single-input defect still contains a genuine scalar drift term.
+
+PR #5232 proves that for two signed inputs the cross-multiplied contrast cancels both the common scalar output drift and the common source-tilt mean exactly:
+
+O_v D_x - O_x D_v
+  = Out * (O_x <C_v,Tilt> - O_v <C_x,Tilt>).
+
+PR #5233 removes the strictly positive Out factor exactly:
+
+Out^(-1) (O_v D_x - O_x D_v)
+  = O_x <C_v,Tilt> - O_v <C_x,Tilt>.
+
+No observable is divided by.
+
+**Status:** drift cancellation is closed for the proved cross contrast, but the original Q_e energy is not yet replaced by that contrast. If the final P3 receiver continues through the original one-input Dirichlet form, the scalar drift still needs an integrated bound. If a theorem-generated contrast representation replaces it, that replacement must be proved explicitly.
+
+### P3-D. Return to the full Dirichlet sum — OPEN
+
+Required final P3 closure:
+
+- combine the centered-source or contrast estimate with the exact 1/12 Dirichlet normalization;
+- sum the exterior using the proved seed shell geometry;
+- control the finite near-link part;
+- preserve the actual frozen family and both beta scales;
+- produce a volume-uniform or explicitly summable bound on the whole I_n.
+
+A target of the form
+
+4 I_n <= C_(r,k) * rho^D / (1 - rho),   0 <= rho < 1,
+
+is still a goal, not a theorem.
+
+## 3. Immediate P3 deliverables
+
+Priority order:
+
+### D1. Sum the #5235 source-only covariance decay
+
+Reuse the #5229/#5230 shell machinery and record a volume-independent radius-two-exterior mass bound with the explicit exp(6 beta) prefactor.
+
+This is mainly a composition theorem and should not introduce new model assumptions.
+
+### D2. Posterior covariance -> actual signed source response
+
+Construct the exact bridge between a concrete seed/frozen observable and the deweighted centered source contrast or sourceLinkResponse.
+
+Preferred properties:
+
+- no division by O_x or O_v;
+- no top/vacuum alignment hypothesis;
+- no hard support claim after positive transfer depth;
+- preserve signed cancellation;
+- work on the existing pair-Haar and posterior carriers.
+
+### D3. Return to Q_e
+
+Convert D2 into an integrated square bound for the original resampling contribution, or prove a new exact receiver showing the relevant contrast controls the same energy.
+
+Only after this step should P3 be regarded as closed.
+
+## 4. Independent adjacent-scale obligations
 
 ### C1. Common-marginal physicality — OPEN
 
-The posterior/source-coordinate projections are not the adjacent-scale coarse physical projection. Prove the required leakage bound for the reconstructed candidate:
-[
-|Y_n-P_n^{phys}Y_n|^2
-]
-or the exact equivalent field required by the existing receiver.
+Control the actual leakage of reconstructed candidates from the coarse physical range.
 
-Do not infer physicality from posterior averaging or membership in the same Hilbert space.
+Do not infer physicality from posterior averaging or source-coordinate localization.
 
 ### C2. Physical transfer / reconstruction commutation — OPEN
 
-For each fixed finite (r,k), control the actual mismatch between fine transfer followed by reconstruction and coarse physical transfer on the reconstructed orbit. A summable vector-wise bound is sufficient; whole-space operator-norm convergence is not required.
+For each fixed finite r,k, control the actual vector-wise mismatch between fine transfer followed by reconstruction and coarse physical transfer.
 
-Do not revive the refuted H1-D5 whole-operator compatibility.
+A summable vector-wise bound is sufficient. Whole-space operator-norm convergence is not required and must not be substituted for the refuted H1-D5 route.
 
 ### C3. Weighted beta trajectory — OPEN INPUT
 
-Use the existing same-volume normalized physical-transfer beta-response coefficient and prove summability for an explicit trajectory:
-[
-C_{norm}(n,eta_n,eta_{n+1})|eta_{n+1}-eta_n|.
-]
+Prove summability for an explicit trajectory of the already-defined same-volume normalized physical-transfer beta-response coefficient multiplied by |beta_(n+1) - beta_n|.
 
 Small unweighted increments alone are insufficient.
 
-## 4. H1-C3 closure and later physical layers
+## 5. Fixed-natural-time closure and later physical layers
 
-Once P3, C1, C2 and C3 are supplied, existing receivers can convert the finite reconstruction/orbit mismatch into fixed-natural-time Cauchy/strong limits and a nonzero time-zero excitation under their hypotheses.
+Once P3, C1, C2 and C3 are supplied, existing receivers can produce fixed-natural-time Cauchy/strong limits and the already-proved q0^m decay for the theorem-generated excitation under their hypotheses.
 
 Still separate:
 
-1. **Limiting discrete-time operator:** fixed-(m) limits do not automatically define compatible iterates of one operator.
-2. **H2 physical time:** if (a_n	o0) while a fixed (q_0<1) controls the sector, then (q_0^{lfloor t/a_nfloor}	o0) for (t>0). A nontrivial strongly continuous semigroup needs scale-sensitive operator/generator data and physical time identification.
-3. **H3 OS Hamiltonian:** construct/identify the physical Hilbert space and generator with the required positivity/self-adjointness/vacuum properties.
-4. **H4 Wightman/energy-momentum mass gap:** verify the continuum reconstruction and spectral statement for the intended Yang--Mills theory.
+1. **One limiting discrete-time operator:** fixed-m limits do not automatically define compatible iterates of one operator.
+2. **H2 physical time:** if a_n -> 0 while a fixed q0 < 1 controls the sector, then q0^(floor(t/a_n)) -> 0 for t > 0. A nontrivial strongly continuous semigroup needs spacing-sensitive operator or generator scaling.
+3. **H3 OS Hamiltonian:** construct and identify the physical Hilbert space and generator with the required positivity, self-adjointness and vacuum properties.
+4. **H4 Wightman / spectral mass gap:** verify continuum reconstruction and the intended Yang--Mills energy-momentum spectral statement.
 
-## 5. Closed no-go routes
+## 6. Closed no-go routes
 
 ### N1. Old completed H1-D5
 
-At positive SU(2) coupling the old completed compatibility forces rank-one behavior contradicted by the constructed two-mode sector. Do not restore it as vacuum/top alignment, exact completed cross-scale transfer compatibility, or an equivalent OS-boundary/physical-pair transfer identity.
+At positive SU(2) coupling, the old whole-operator compatibility forces rank-one behavior incompatible with the constructed finite sector. Do not restore it as exact vacuum/top alignment, exact completed cross-scale transfer compatibility, or an equivalent whole-space identity.
 
-### N2. #5207 strict-Dobrushin finite-positive-mass certificate
+### N2. #5207 fixed-s strict-Dobrushin finite-positive-mass certificate
 
-For fixed (s>8), the existing certificate confined to the canonical closed strict-Dobrushin interval cannot simultaneously have (a_n	o0) and
-[
-(1-aralpha(s,eta_n))/a_n	o m,qquad 0<m<infty.
-]
+For fixed s > 8, the existing strict-Dobrushin scaling certificate cannot simultaneously realize a_n -> 0 and a finite positive spacing-scaled mass rate.
 
-This is a no-go for that certificate, not for all continuum routes and not a proof of a critical point outside the interval.
+This does not rule out every continuum route.
 
-### N3. #5217 old sup-norm-width majorant family
+### N3. #5217 old sup-width initial majorants
 
-The limitation of the old uncorrected uniform initial-width (2|O|_infty) majorant remains valid. The newer signed (L^2) route does not repeal that theorem.
+The limitation of the old uncorrected uniform sup-width majorants remains valid. The signed L2 route is a different route, not a repeal.
 
-## 6. Forbidden shortcuts
+## 7. Forbidden shortcuts
 
-- Do not apply the non-top contraction (q_0) to (|x|); non-top preservation after absolute value is unproved.
+- Do not apply q0 to |x|; non-top preservation after absolute value is unproved.
 - Do not identify posterior projection, source-coordinate projection, physical transfer and coarse physical projection.
-- Do not replace a joint-a.e. identity by a pointwise identity on exceptional fibers.
-- Do not infer locality from BCF density, finite-dimensionality, compactness or positivity of the half-density.
-- Do not concatenate the six colors into one sweep when the theorem treats six sweeps starting from the same (f).
-- Do not replace path loss by the squared total vector displacement for noncommuting projections.
-- Preserve the (1/6) six-color normalization and the exact (1/12) resampling normalization.
+- Do not replace joint-a.e. identities by pointwise identities on exceptional fibers.
+- Do not infer locality from compactness, BCF density, finite-dimensionality or positivity.
+- Do not infer hard support for the positive-depth frozen orbit.
+- Do not concatenate the six colors into one sweep when the theorem treats six sweeps from the same initial vector.
+- Do not replace noncommuting path loss by squared total displacement.
+- Preserve the exact 1/6 six-color normalization and 1/12 resampling normalization.
+- Do not delete the scalar output drift from an individual defect merely because the cross contrast cancels it.
+- Do not identify posterior covariance with ||C_e^src||_2 without an explicit theorem.
+- Preserve the distinction between beta_(n+1) in the orbit and beta_n in the final frozen transfer / joint law.
 
-## 7. Source-level handoff
+## 8. Source-level handoff
 
-Read in this order, all under `MGAP4D/MathlibAnalytic/`:
+For the current P3 frontier, read in this order:
 
-1. `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointSourceCoordinateProjection.lean`
-2. `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointSourceCoordinateL2.lean`
-3. `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointSourceLocalTilt.lean`
-4. `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointResamplingDirichlet.lean`
-5. `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointLinkLocalEnergy.lean`
-6. `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointSweepL2Envelope.lean`
-7. `RealHilbertProjectionSweepUnionBound.lean`
+1. MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPosteriorSeedDistance.lean
+2. MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPosteriorSeedCovarianceDecay.lean
+3. MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPosteriorSeedPolynomialShell.lean
+4. MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPosteriorSeedCovarianceMass.lean
+5. MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointSourceCoordinateProjection.lean
+6. MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointSourceCoordinateL2.lean
+7. MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointSourceCoordinateDefectSplit.lean
+8. MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointSourceCoordinateContrast.lean
+9. MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointSourceCoordinateDeweightedContrast.lean
+10. MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorSourceTiltCovarianceFactorization.lean
+11. MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPosteriorSourceTiltSeedCovarianceDecay.lean
 
-Then trace backward through #5212 stage energy, #5211 finite schedule, #5210 CondExpL2 and #5208--#5209 fiber bridges. For model locality also inspect #5199 and the existing adjacent frozen-Krylov tail receiver.
+Underlying inputs:
 
-## 8. Verification and Lean lessons
+- #5199 posterior canonical spatial covariance decay;
+- #5223 exact resampling Dirichlet identity;
+- #5221 noncommuting projection union bound;
+- #5219 exact frozen BCF representation.
+
+## 9. Verification evidence
 
 Latest theorem evidence:
 
 | Evidence | Value |
 | --- | --- |
-| Validated #5225 head | `d078f458b141ded5b8bc4de7aa8f4ddd51b823f8` |
-| PR Lean Fast Check | run `37546090512`, success |
-| Actual Changed Lean job | `112550339294`, success |
-| Matching receipt publisher | `112551903523`, success |
-| Merge | `98daa981bbf9d175ea60618cce77c1ccdb6c075d` |
+| Validated #5235 head | 032511aed28fe689b0ebba5b1008639980df9cfe |
+| PR Lean Fast Check | run 37581017313, success |
+| Actual Changed Lean job | 112660444213, success |
+| Matching receipt publisher | 112661593228, success |
+| Merge | ceb98d0a24fbb132e4519a582d87ac5cf2e86673 |
 
-#5225 debugging reinforced several pinned-Lean rules: declaration names are fully namespace-qualified; use pinned `Real.continuous_exp.comp` rather than guessed field notation; normalize real scalar inner products explicitly before ring reasoning; use the correct arity of absolute-value triangle lemmas; and remove tactics after a preceding tactic has already closed the goal. The source-coordinate measurable-space definition is reducible to support elaboration.
+For theorem-bearing PRs:
 
-For theorem-bearing PRs, inspect all changed source files and require the actual Lean job plus a matching exact-head receipt. A successful receipt publisher never overrides a failed Lean job. Do not weaken assumptions, linting or tests to obtain GREEN.
+- inspect all changed Lean files, not only the reported error line;
+- require the actual Changed Lean job to succeed;
+- require a matching exact-head receipt;
+- do not weaken theorem assumptions, linting or tests to obtain GREEN;
+- do not treat a successful receipt publisher as overriding a failed Lean job.
 
-For README/ROADMAP-only updates, verify the two-file diff; no redundant theorem CI claim is needed.
+For docs-only changes, verify the diff is documentation-only and do not manufacture theorem CI evidence.
 
-## 9. Immediate next deliverable
+## 10. Immediate next milestone
 
-**Construct P3-B/P3-C on the actual frozen family:** a distance-sensitive bound for the centered one-source-coordinate response together with the retained scalar output drift, then sum it through the exact (1/12) Dirichlet representation.
+**Close the posterior-covariance-to-actual-frozen-response bridge.**
 
-Everything through the structural P1/P2 bridge is already available. Do not restart posterior normalization, finite schedules, noncommuting sweep comparison, exact BCF construction, signed link energy, or source-coordinate localization.
+The seed geometry, polynomial shell control, full-local-factor covariance decay, source-only tilt factorization and pointwise source-only tilt covariance decay are already available. The next milestone is to turn those results into a theorem on the actual centered frozen source response or original Q_e contribution, then sum the exact 1/12 Dirichlet energy without losing the near-link part or reintroducing a forbidden top/vacuum compatibility assumption.
