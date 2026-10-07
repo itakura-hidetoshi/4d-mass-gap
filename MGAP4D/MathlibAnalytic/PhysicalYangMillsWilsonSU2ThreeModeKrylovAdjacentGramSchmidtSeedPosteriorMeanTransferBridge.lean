@@ -205,15 +205,22 @@ theorem
         periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
         Lp ℝ 2 mu) =
       lambda⁻¹ • Tf := by
-    exact congrArg
-      (fun x :
-        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N =>
-        (x : Lp ℝ 2 mu))
-      hNormalized
+    simpa [lambda, Tf] using
+      congrArg
+        (fun x :
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N =>
+          (x : Lp ℝ 2 mu))
+        hNormalized
   have hSmul := Lp.coeFn_smul lambda⁻¹ Tf
-  have hRaw :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_ae_eq_decomposableOneSliceTransferIntegral
-      H N hN beta hbeta f
+  have hRaw :
+      Tf =ᵐ[mu]
+        decomposableOneSliceTransferIntegral H N beta
+          (f :
+            Lp ℝ 2
+              (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N)) := by
+    simpa [Tf, mu] using
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_ae_eq_decomposableOneSliceTransferIntegral
+        H N hN beta hbeta f)
   rw [hVec]
   filter_upwards [hSmul, hRaw] with B hSmulB hRawB
   rw [hSmulB]
@@ -375,9 +382,18 @@ theorem
   have hUrep :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabHaarToVacuumL2_coeFn
       H 2 specialUnitaryTwoWilsonRankPositive beta hbeta g
-  have hGmu :=
-    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_ae_eq_inv_mul_decomposableOneSliceTransferIntegral
-      H 2 specialUnitaryTwoWilsonRankPositive beta hbeta fp
+  have hGmu :
+      g =ᵐ[mu] fun B =>
+        ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+            H 2 specialUnitaryTwoWilsonRankPositive beta hbeta‖⁻¹ *
+          decomposableOneSliceTransferIntegral H 2 beta
+            (fp :
+              Lp ℝ 2
+                (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2))
+            B := by
+    simpa [g, S, fp, mu] using
+      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_ae_eq_inv_mul_decomposableOneSliceTransferIntegral
+        H 2 specialUnitaryTwoWilsonRankPositive beta hbeta fp)
   have hGnu := hnuMu.ae_eq hGmu
   have hOmegaMu :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_ae_eq_existing
@@ -489,7 +505,9 @@ theorem
     simpa [f] using
       periodicHypercubicEvenPrimarySpatialSliceWilsonEnergyGramSchmidtPhysicalL2_norm
         H mode
-  simpa [S, f, hS, hf] using hOp
+  have hOp' : ‖S f‖ ≤ 1 := by
+    simpa [hS, hf] using hOp
+  simpa [S, f] using hOp'
 
 end GroundStatePosteriorJoint
 
