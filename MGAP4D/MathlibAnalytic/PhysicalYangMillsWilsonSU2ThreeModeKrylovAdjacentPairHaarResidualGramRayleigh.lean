@@ -65,10 +65,10 @@ Keeping the finite sums explicit avoids a hidden cardinality multiplier. -/
 private theorem pairHaar_matrixSum_rayleigh
     {ι ε : Type*} [Fintype ι] [Fintype ε]
     (M : ε → Matrix ι ι ℝ) (a : ι → ℝ) :
-    star a ⬝ᵥ ((∑ e : ε, M e) *ᵥ a) =
-      ∑ e : ε, star a ⬝ᵥ (M e *ᵥ a) := by
+    star a ⬝ᵥ (Matrix.mulVec (∑ e : ε, M e) a) =
+      ∑ e : ε, star a ⬝ᵥ (Matrix.mulVec (M e) a) := by
   classical
-  simp only [Matrix.dotProduct, Matrix.mulVec, Matrix.sum_apply]
+  simp only [dotProduct, Matrix.mulVec, Matrix.sum_apply]
   calc
     (∑ i : ι, (star a) i * (∑ j : ι, (∑ e : ε, M e i j) * a j)) =
         ∑ i : ι, ∑ j : ι, ∑ e : ε,
@@ -95,8 +95,8 @@ theorem pairHaarSpatialLinkResidualGram_rayleigh
     {ι : Type*} [Fintype ι]
     (v : ι → PeriodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarL2 H N)
     (a : ι → ℝ) :
-    star a ⬝ᵥ ((pairHaarSpatialLinkResidualGram
-        H N hN beta hbeta v) *ᵥ a) =
+    star a ⬝ᵥ (Matrix.mulVec (pairHaarSpatialLinkResidualGram
+        H N hN beta hbeta v) a) =
       ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
         ‖∑ i : ι, a i •
           (v i - pairHaarTransportedGroundStateSpatialLinkProjection
@@ -106,8 +106,8 @@ theorem pairHaarSpatialLinkResidualGram_rayleigh
     v i - pairHaarTransportedGroundStateSpatialLinkProjection
       H N hN beta hbeta e (v i)
   change star a ⬝ᵥ
-      ((∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
-        Matrix.gram ℝ (R e)) *ᵥ a) =
+      (Matrix.mulVec (∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+        Matrix.gram ℝ (R e)) a) =
     ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
       ‖∑ i : ι, a i • R e i‖ ^ 2
   rw [pairHaar_matrixSum_rayleigh]
@@ -147,9 +147,9 @@ representation through the original frozen posterior projections. -/
 theorem fineRightKrylovPairHaarResidualGram_rayleigh
     (a : Fin (r + 1) → ℝ) :
     star a ⬝ᵥ
-      ((fineRightKrylovPairHaarResidualGram
+      (Matrix.mulVec (fineRightKrylovPairHaarResidualGram
           (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-          n r) *ᵥ a) =
+          n r) a) =
       ∑ e : Link,
         ‖∑ j : Fin (r + 1), a j •
           (VR (j : ℕ) - Q e (VR (j : ℕ)))‖ ^ 2 := by
@@ -162,9 +162,9 @@ exact frozen posterior Rayleigh representation. -/
 theorem fineLeftThreeModePairHaarResidualGram_rayleigh
     (a : Fin 3 → ℝ) :
     star a ⬝ᵥ
-      ((fineLeftThreeModePairHaarResidualGram
+      (Matrix.mulVec (fineLeftThreeModePairHaarResidualGram
           (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-          n r) *ᵥ a) =
+          n r) a) =
       ∑ e : Link,
         ‖∑ k : Fin 3, a k •
           (VL k - Q e (VL k))‖ ^ 2 := by
