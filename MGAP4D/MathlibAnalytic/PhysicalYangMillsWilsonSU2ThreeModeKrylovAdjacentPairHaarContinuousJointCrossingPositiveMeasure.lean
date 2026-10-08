@@ -204,9 +204,22 @@ theorem originalWilsonContinuousPhysicalJointStrictMinorSet_positiveHaarMeasure
           (originalWilsonContinuousPhysicalJointStrictMinorSet
             H beta (le_of_lt hbeta)) := by
   let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
-  haveI hQuad : Measure.IsOpenPosMeasure ((μ.prod μ).prod (μ.prod μ)) := by
-    dsimp [μ]
-    infer_instance
+  -- The pinned mathlib binary-product full-support instance requires
+  -- SFinite on the second factor.  Expose both intermediate probability
+  -- measures explicitly rather than trying to synthesize a fourfold
+  -- nested product after unfolding the original spatial Haar definition.
+  haveI hμProbability : IsProbabilityMeasure μ :=
+    p4CrossPosMeasureSpatialHaarProbability H
+  haveI hμOpenPos : Measure.IsOpenPosMeasure μ :=
+    p4CrossPosMeasureSpatialHaarOpenPos H
+  haveI hμSigmaFinite : SFinite μ := inferInstance
+  haveI hPairProbability : IsProbabilityMeasure (μ.prod μ) :=
+    Measure.prod.instIsProbabilityMeasure μ μ
+  haveI hPairSigmaFinite : SFinite (μ.prod μ) := inferInstance
+  haveI hPairOpenPos : Measure.IsOpenPosMeasure (μ.prod μ) :=
+    Measure.prod.instIsOpenPosMeasure
+  haveI hQuad : Measure.IsOpenPosMeasure ((μ.prod μ).prod (μ.prod μ)) :=
+    Measure.prod.instIsOpenPosMeasure
   exact
     (originalWilsonContinuousPhysicalJointStrictMinorSet_isOpen
       H beta (le_of_lt hbeta)).measure_pos
