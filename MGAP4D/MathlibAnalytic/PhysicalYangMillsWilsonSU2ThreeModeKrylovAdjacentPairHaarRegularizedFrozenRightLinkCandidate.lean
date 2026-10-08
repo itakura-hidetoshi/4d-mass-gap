@@ -104,7 +104,8 @@ theorem originalWilsonRegularizedFrozenRightLinkVacuumFunction_measurable_retain
           (fun z : X × X => (Function.update z.2 e (1 : G)) k) =
             (fun _ : X × X => (1 : G)) := by
         funext z
-        simp [hk]
+        subst k
+        simp
       rw [hfreeze]
       exact measurable_const
     · let i : PeriodicHypercubicEvenSpatialSliceOffTargetLink H e := ⟨k, hk⟩
@@ -118,13 +119,15 @@ theorem originalWilsonRegularizedFrozenRightLinkVacuumFunction_measurable_retain
         simp [hk]
       rw [hfreeze]
       exact hkmeas
+  have hWambient : Measurable
+      (originalWilsonContinuousPhysicalJointWeight H beta hbeta) :=
+    (originalWilsonContinuousPhysicalJointWeight_continuous
+      H beta hbeta).measurable
   have hW : Measurable[m]
       (fun z : X × X =>
         originalWilsonContinuousPhysicalJointWeight H beta hbeta
           (z.1, Function.update z.2 e (1 : G))) := by
-    exact
-      (originalWilsonContinuousPhysicalJointWeight_continuous
-        H beta hbeta).measurable.comp (hleft.prodMk hright)
+    exact hWambient.comp (hleft.prodMk hright)
   have hsqrt : Measurable[m]
       (fun z : X × X =>
         Real.sqrt (delta +
@@ -162,8 +165,14 @@ theorem originalWilsonRegularizedFrozenRightLinkVacuumFunction_norm_le
     lt_of_lt_of_le hroot hrootle
   have hbound : (1 : ℝ) / Real.sqrt (delta + |W|) ≤ 1 / Real.sqrt delta :=
     one_div_le_one_div_of_le hroot hrootle
-  simpa [originalWilsonRegularizedFrozenRightLinkVacuumFunction,
-    W, Real.norm_eq_abs, abs_of_pos (one_div_pos.mpr hden)] using hbound
+  calc
+    ‖originalWilsonRegularizedFrozenRightLinkVacuumFunction
+        H beta hbeta delta e z‖ =
+        (1 : ℝ) / Real.sqrt (delta + |W|) := by
+      change ‖(1 : ℝ) / Real.sqrt (delta + |W|)‖ =
+        (1 : ℝ) / Real.sqrt (delta + |W|)
+      simp only [Real.norm_eq_abs, abs_div, abs_one, abs_of_pos hden]
+    _ ≤ 1 / Real.sqrt delta := hbound
 
 /-- An ACTUAL original-joint L² vector made from a bounded, retained-
 measurable physical Wilson density. No conditional-expectation output
