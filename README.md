@@ -2,24 +2,22 @@
 
 Hidetoshi Itakura's Lean 4 / mathlib development for the four-dimensional Yang--Mills existence and mass-gap program.
 
-**Theorem snapshot: 2026-10-07 JST, through merged PR #5235.**
+**Theorem snapshot: 2026-10-08 JST, through merged PR #5282, merge 06a5053caa83654565e8f35e9e0988215ae5aa95.**
 
-The current theorem-bearing line has moved beyond the structural posterior-to-joint bridge and into quantitative P3 locality. The formal development now contains:
+The theorem-bearing development has advanced beyond the historical #5235 P3 locality checkpoint. The active route is P4: **actual physical posterior Gram and genuine posterior-fiber energy, without Dobrushin reconstruction**.
 
-- the exact posterior fiber -> genuine joint CondExpL2 -> chronological sweep -> stage-residual chain;
-- exact representation of the actual frozen Krylov family by bounded-continuous representatives;
-- signed one-link Dirichlet identities for the original frozen initial residual energy;
-- a primary-plaquette seed-distance geometry and volume-independent polynomial shell count;
-- seed-distance posterior covariance decay for the four seed links;
-- a volume-independent summed covariance mass for the full local factors;
-- an exact source-coordinate decomposition of the signed kernel response, with the scalar output/half-density drift retained;
-- an exact cross-multiplied contrast in which the scalar output drift and source-tilt mean cancel;
-- exact removal of the positive output factor from that contrast without dividing by either observable;
-- exact factorization of the full posterior local factor into a source-independent boundary tilt times the source-only tilt used by the signed joint response;
-- volume-independent bounds exp(-6 beta) <= boundaryTilt <= exp(6 beta), hence boundaryTilt^(-1) <= exp(6 beta);
-- seed-distance covariance decay transferred to that literal source-only tilt, with only the explicit extra factor exp(6 beta).
+## 0. Current P4 results
 
-The main unresolved P3 step is now narrower: connect the proved source-only posterior covariance decay to the actual frozen centered source-coordinate term, or otherwise obtain a direct distance-sensitive bound on the original resampling Dirichlet contribution Q_e. No complete continuum Yang--Mills measure, physical-time Hamiltonian, or Wightman mass-gap theorem is claimed by this checkpoint.
+- **#5267--#5273:** original right-Krylov and left-three-mode posterior residual Gram matrices, exact Rayleigh identities, off-diagonal control, and conditional diagonal-to-Rayleigh bounds. A positive-beta volume-uniform diagonal constant is NOT proved.
+- **#5274--#5277:** frozen beta=0 physical receiver is rank one; fine-beta=0 right orbit collapse is a DIFFERENT condition; beta-zero Gram reduction is one-dimensional.
+- **#5278--#5279:** the original frozen beta-zero posterior fixes every physical receiver, making the actual full-link residual sum and all physical-family Gram entries EXACTLY zero, without a fine-beta=0 assumption.
+- **#5280:** genuine positive-beta posterior residuals split into true receiver drift A_beta(f) and true posterior projection drift B_beta(f), with D_beta(f) <= 2(A_beta(f)+B_beta(f)) and no explicit spatial-link cardinality multiplier.
+- **#5281:** B_beta(f) = inner(unit,f)^2 * sum_e ||1-Q_beta,e 1||^2; orthogonal physical inputs have B_beta(f)=0.
+- **#5282:** B_beta(f) = inner(unit,f)^2 * sum_e ||(I-P_beta,e) U_beta 1||^2 on the ORIGINAL ground-state joint law, using the existing half-density isometric equivalence.
+
+These are exact finite-volume statements. **OPEN**: positive-beta volume-uniform control of A_beta(f) and the canonical vacuum joint posterior-fiber variance, spacing-scaled physical-time generator gap, and continuum Yang--Mills mass gap. Beta=0 exact vanishing does NOT establish any positive-beta/continuum gap. Dobrushin remains deferred.
+
+Sections 3--6 below preserve the older P3 locality/covariance route as historical and supporting work, not the current frontier.
 
 ## 1. Authority and reproducibility
 
@@ -27,12 +25,12 @@ The main unresolved P3 step is now narrower: connect the proved source-only post
 | --- | --- |
 | Repository | itakura-hidetoshi/4d-mass-gap |
 | Unique theorem-carrier branch | formal/real-hilbert-uniform-coercive-strong-limit |
-| Latest theorem-bearing merge | ceb98d0a24fbb132e4519a582d87ac5cf2e86673 |
-| Latest theorem-bearing PR | #5235, merged |
-| Validated #5235 PR head | 032511aed28fe689b0ebba5b1008639980df9cfe |
-| PR Lean Fast Check | run 37581017313, success |
-| Actual Changed Lean job | 112660444213, success |
-| Matching receipt publisher | 112661593228, success |
+| Latest theorem-bearing merge | 06a5053caa83654565e8f35e9e0988215ae5aa95 |
+| Latest theorem-bearing PR | #5282, merged |
+| Validated #5282 PR head | 56404463fe83c0ac83a0c11e2fb7325dc99b4b79 |
+| PR Lean Fast Check | run 37737951433, success |
+| Actual Changed Lean job | 113181714245, success |
+| Matching receipt publisher | 113182825821, success |
 | Pinned Lean | v4.30.0-rc2 |
 | Pinned mathlib | 5450b53e5ddc75d46418fabb605edbf36bd0beb6 |
 
@@ -146,30 +144,24 @@ using the six-touching-plaquette incidence bound and the Wilson-energy width. It
 
 for the proved cutoff and remoteness hypotheses. Both the distance > 2 and radius-two-exterior forms are formalized.
 
-## 7. Current frontier
+## 7. Current frontier: positive-beta actual posterior-fiber energy
 
-The immediate unresolved bridge is **not** the seed geometry and **not** the source-only covariance decay. It is the passage from those proved posterior covariance estimates to the actual frozen source-coordinate / Dirichlet quantity.
+For the original physical receiver V_beta(f) and original transported joint posterior Q_beta,e:
 
-The target remains
+    D_beta(f) = sum_e ||(I-Q_beta,e) V_beta(f)||^2
+    A_beta(f) = sum_e ||(I-Q_beta,e)(V_beta(f)-V_0(f))||^2
+    B_beta(f) = sum_e ||(Q_0,e-Q_beta,e) V_0(f)||^2
 
-I_n(f_frozen(n,r,k))
-  = (1/12) sum_e Q_(n,e)(x_(n,r,k)),
+#5280 proves D_beta <= 2(A_beta+B_beta). #5281--#5282 prove exactly
 
-with a volume-uniform or summable spatial bound sufficient for the existing adjacent-scale tail receivers.
+    B_beta(f) = inner(unit,f)^2
+                * sum_e ||(I-P_beta,e) U_beta(1)||^2.
 
-The next model-facing steps are:
+Thus all positive-beta posterior projection drift factors through one physical constant Fourier coefficient and one TRUE joint posterior-fiber energy. For constant-orthogonal f, B_beta(f)=0, but A_beta(f) is still open.
 
-- sum the #5235 source-only tilt covariance decay over the already-proved polynomial seed shells;
-- construct an exact bridge from the actual frozen signed source response or deweighted cross contrast to a posterior covariance controlled by the seed estimates;
-- alternatively derive a direct distance-sensitive estimate for the centered source-coordinate norm or its integrated square;
-- return that estimate to the original Q_e sum while keeping the individual-defect output drift unless a proved contrast identity legitimately cancels it;
-- control the finite near-link contribution as well as the exterior tail.
+**Next P4 proof obligation:** derive volume-uniform control (or a rigorous obstruction) for the full-link vacuum energy of U_beta(1), and separately for actual physical receiver drift A_beta(f). Use the physical transfer and original conditional expectation, NOT a surrogate law, gross link count, or repeated Dobrushin construction. Then apply #5273 to obtain finite-mode Rayleigh estimates. No spacing-scaled generator or continuum gap follows automatically.
 
-A target form such as
-
-4 I_n <= C_(r,k) * rho^D / (1 - rho),   0 <= rho < 1,
-
-remains a goal, not a theorem.
+The older P3 seed-distance/source-only-tilt route is preserved in the preceding historical sections under its original hypotheses.
 
 ## 8. Independent adjacent-scale and continuum obligations
 
@@ -198,7 +190,15 @@ Do not revive the refuted whole-operator H1-D5 route to solve C1 or C2.
 
 ## 10. Restart order
 
-For the current P3 frontier, read under MGAP4D/MathlibAnalytic in this order:
+For the CURRENT P4 frontier, read under MGAP4D/MathlibAnalytic in this order:
+
+1. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarGramDiagonalRayleighCriterion.lean
+2. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarFrozenZeroAllLinkVanishing.lean
+3. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarBetaZeroAnchoredDrift.lean
+4. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarBetaZeroAnchoredProjectionRankOne.lean
+5. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarBetaZeroAnchoredVacuumJointVariance.lean
+
+For the HISTORICAL P3 locality route, read in this order:
 
 1. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPosteriorSeedDistance.lean
 2. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPosteriorSeedCovarianceDecay.lean
@@ -219,11 +219,11 @@ Latest theorem evidence:
 
 | Evidence | Value |
 | --- | --- |
-| Validated #5235 head | 032511aed28fe689b0ebba5b1008639980df9cfe |
-| PR Lean Fast Check | run 37581017313, success |
-| Actual Changed Lean job | 112660444213, success |
-| Matching receipt publisher | 112661593228, success |
-| Merge | ceb98d0a24fbb132e4519a582d87ac5cf2e86673 |
+| Validated #5282 head | 56404463fe83c0ac83a0c11e2fb7325dc99b4b79 |
+| PR Lean Fast Check | run 37737951433, success |
+| Actual Changed Lean job | 113181714245, success |
+| Matching receipt publisher | 113182825821, success |
+| Merge | 06a5053caa83654565e8f35e9e0988215ae5aa95 |
 
 For theorem-bearing PRs, inspect all changed Lean files, require success of the actual Lean job, and require a matching exact-head receipt. A successful receipt publisher never overrides a failed Lean job.
 
