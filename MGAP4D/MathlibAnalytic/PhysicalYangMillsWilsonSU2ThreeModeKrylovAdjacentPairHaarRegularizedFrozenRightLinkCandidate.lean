@@ -119,7 +119,15 @@ theorem originalWilsonRegularizedFrozenRightLinkVacuumFunction_measurable_retain
         simp [hk]
       rw [hfreeze]
       exact hkmeas
-  have hWambient : Measurable
+  haveI hXSecondCountable : SecondCountableTopology X := by
+    dsimp [X]
+    infer_instance
+  haveI hXBorel : BorelSpace X := by
+    dsimp [X]
+    infer_instance
+  haveI hXXBorel : BorelSpace (X × X) := inferInstance
+  have hWambient : @Measurable (X × X) ℝ
+      (Prod.instMeasurableSpace) inferInstance
       (originalWilsonContinuousPhysicalJointWeight H beta hbeta) :=
     (originalWilsonContinuousPhysicalJointWeight_continuous
       H beta hbeta).measurable
