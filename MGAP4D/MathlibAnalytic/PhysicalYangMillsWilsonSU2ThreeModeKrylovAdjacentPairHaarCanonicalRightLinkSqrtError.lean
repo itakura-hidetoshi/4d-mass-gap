@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarCanonicalRightLinkHarnack
-import Mathlib.Analysis.Real.Sqrt
 import Mathlib.Tactic
 
 /-!
