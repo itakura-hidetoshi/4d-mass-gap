@@ -52,7 +52,6 @@ theorem real_weighted_invSqrt_sub_sq_eq_sqrtRatio_sq
     (1 - x / y) ^ 2
   rw [← hxsq]
   field_simp [hxne, hyne]
-  <;> ring
 
 /-- Symmetric positive Harnack comparison gives a weighted
 inverse-square-root error bounded by the SAME coefficient (R-1)². -/
