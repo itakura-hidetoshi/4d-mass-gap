@@ -167,9 +167,9 @@ theorem fineRightKrylovPairHaarResidualGram_zero_of_frozen_beta_zero
       (fun j : Fin (r + 1) =>
         normalizedPhysicalOneSlabPairHaarReceiver
           Hn 2 Pos (beta n) (hbeta n) (RightFactor n (j : ℕ))) = 0
-  rw [hzero]
-  exact pairHaarSpatialLinkResidualGram_zero_eq_zero_of_physicalFamily
-    Hn 2 Pos (fun j : Fin (r + 1) => RightFactor n (j : ℕ))
+  simpa only [hzero] using
+    (pairHaarSpatialLinkResidualGram_zero_eq_zero_of_physicalFamily
+    Hn 2 Pos (fun j : Fin (r + 1) => RightFactor n (j : ℕ)))
 
 /-- The three actual fine left Gram--Schmidt residual modes also have
 zero frozen Gram matrix whenever frozen beta(n)=0. -/
@@ -182,9 +182,9 @@ theorem fineLeftThreeModePairHaarResidualGram_zero_of_frozen_beta_zero
       (fun j : Fin 3 =>
         normalizedPhysicalOneSlabPairHaarReceiver
           Hn 2 Pos (beta n) (hbeta n) (LeftFactor n r j)) = 0
-  rw [hzero]
-  exact pairHaarSpatialLinkResidualGram_zero_eq_zero_of_physicalFamily
-    Hn 2 Pos (fun j : Fin 3 => LeftFactor n r j)
+  simpa only [hzero] using
+    (pairHaarSpatialLinkResidualGram_zero_eq_zero_of_physicalFamily
+    Hn 2 Pos (fun j : Fin 3 => LeftFactor n r j))
 
 end ActualAdjacentOrbit
 end GroundStatePosteriorJoint
