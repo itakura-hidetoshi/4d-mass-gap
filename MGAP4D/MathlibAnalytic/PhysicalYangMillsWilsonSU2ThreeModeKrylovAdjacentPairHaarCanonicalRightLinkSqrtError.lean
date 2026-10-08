@@ -82,9 +82,11 @@ theorem real_one_sub_sqrt_ratio_sq_le_harnack
       _ = |r - 1| := by rw [← abs_mul, hrootfactor]
   have hroot_bound : |Real.sqrt r - 1| ≤ R - 1 :=
     le_trans hroot_abs hratio_abs
+  have hRminus : 0 ≤ R - 1 := sub_nonneg.mpr hR
   have hfact : 0 ≤
       (R - 1 - |Real.sqrt r - 1|) * (R - 1 + |Real.sqrt r - 1|) :=
-    mul_nonneg (sub_nonneg.mpr hroot_bound) (by positivity)
+    mul_nonneg (sub_nonneg.mpr hroot_bound)
+      (add_nonneg hRminus (abs_nonneg _))
   change (1 - Real.sqrt r) ^ 2 ≤ (R - 1) ^ 2
   nlinarith [hfact, sq_abs (Real.sqrt r - 1)]
 
