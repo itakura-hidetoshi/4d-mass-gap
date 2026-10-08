@@ -61,7 +61,7 @@ theorem realL2_condExp_candidate_pythagoras
     (f - p) (p - g) horth
   have hsum : (f - p) + (p - g) = f - g := by abel
   rw [hsum] at hpyth
-  exact hpyth
+  simpa only [pow_two] using hpyth
 
 /-- Sharp best-approximation inequality, not the weaker triangle
 bound with an extra factor 2 or 4. -/
