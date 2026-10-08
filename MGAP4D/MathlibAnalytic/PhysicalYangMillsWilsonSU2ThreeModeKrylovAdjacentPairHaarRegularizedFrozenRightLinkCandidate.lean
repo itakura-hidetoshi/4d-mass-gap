@@ -125,12 +125,12 @@ theorem originalWilsonRegularizedFrozenRightLinkVacuumFunction_measurable_retain
   haveI hXBorel : BorelSpace X := by
     dsimp [X]
     infer_instance
-  letI : MeasurableSpace (X × X) := Prod.instMeasurableSpace
-  haveI hXXBorel : BorelSpace (X × X) := inferInstance
   have hWambient : @Measurable (X × X) ℝ
       (Prod.instMeasurableSpace) inferInstance
-      (originalWilsonContinuousPhysicalJointWeight H beta hbeta) :=
-    (originalWilsonContinuousPhysicalJointWeight_continuous
+      (originalWilsonContinuousPhysicalJointWeight H beta hbeta) := by
+    letI : MeasurableSpace (X × X) := Prod.instMeasurableSpace
+    haveI hXXBorel : BorelSpace (X × X) := inferInstance
+    exact (originalWilsonContinuousPhysicalJointWeight_continuous
       H beta hbeta).measurable
   have hW : Measurable[m]
       (fun z : X × X =>
