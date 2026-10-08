@@ -38,7 +38,7 @@ Authority order is fixed: (1) **fresh exact authoritative branch HEAD**, (2) Lea
 
 **NOT CLOSED:** (1) transfer of fourfold equality to original L²-based density via explicit a.e. lifting/Fubini; (2) reduction from positive fourfold crossing minors to **nonmeasurability with respect to at least one original retained-right-link sigma algebra**; (3) a positive-volume-independent bound for the genuine all-link vacuum energy or the true receiver drift; (4) spacing-scaled physical generator and continuum mass gap. Finite-volume positivity is not a uniform gap estimate.
 
-## 0A.1 ACTIVE next-step priorities
+### 0A.1 ACTIVE next-step priorities
 
 | Priority | Goal and exact proof obligation | Status |
 | --- | --- | --- |
