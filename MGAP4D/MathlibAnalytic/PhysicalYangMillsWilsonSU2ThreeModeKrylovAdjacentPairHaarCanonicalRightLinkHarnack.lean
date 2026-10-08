@@ -64,7 +64,7 @@ theorem originalWilsonContinuousPhysicalJointWeight_pos
     (z : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 ×
       PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
     0 < originalWilsonContinuousPhysicalJointWeight H beta hbeta z := by
-  have hλ :
+  have hlambda :
       0 < ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
         H 2 (by norm_num) beta hbeta‖ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos_from_uniform_kernel_floor
@@ -85,7 +85,7 @@ theorem originalWilsonContinuousPhysicalJointWeight_pos
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
       H 2 beta z.1 z.2
   unfold originalWilsonContinuousPhysicalJointWeight
-  exact mul_pos (mul_pos (mul_pos (inv_pos.mpr hλ) hA) hK) hB
+  exact mul_pos (mul_pos (mul_pos (inv_pos.mpr hlambda) hA) hK) hB
 
 /-- Exact original canonical continuous physical Wilson joint:
 ONE right-link replacement has the volume-independent real Harnack
