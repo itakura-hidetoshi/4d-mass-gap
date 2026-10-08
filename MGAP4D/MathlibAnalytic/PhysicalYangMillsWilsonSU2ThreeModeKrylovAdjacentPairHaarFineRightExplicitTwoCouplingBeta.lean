@@ -151,7 +151,12 @@ theorem physicalOriginalNormalizedTransferConstantStepBetaBudget_nonneg
 
 /-- Quantitative ACTUAL normalized physical SU(N) Wilson one-slab
 constant-vacuum step difference, using only original beta-Lipschitz,
-the beta-zero rank-one theorem and genuine finite-H denominator. -/
+the beta-zero rank-one theorem and genuine finite-H denominator.
+
+This exact named theorem needs a larger typeclass-synthesis budget only
+while elaborating the heavily nested continuous-linear-map norm.
+The mathematical hypotheses and operator remain unchanged. -/
+set_option synthInstance.maxHeartbeats 750000 in
 theorem normalizedPhysicalOneSlabTransfer_constantUnit_stepDefect_le_beta
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     ‖periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
@@ -199,11 +204,12 @@ theorem normalizedPhysicalOneSlabTransfer_constantUnit_stepDefect_le_beta
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor_pos H beta
   have hScale : 2 * a ≤ 2 * m⁻¹ :=
     mul_le_mul_of_nonneg_left hInv (by norm_num)
+  have hDiffNonneg : 0 ≤ ‖T - T₀‖ := norm_nonneg (T - T₀)
   change ‖S u - u‖ ≤ physicalOriginalNormalizedTransferConstantStepBetaBudget H beta
   calc
     ‖S u - u‖ ≤ (2 * a) * ‖T - T₀‖ := hstep
     _ ≤ (2 * m⁻¹) * ‖T - T₀‖ :=
-      mul_le_mul_of_nonneg_right hScale (norm_nonneg _)
+      mul_le_mul_of_nonneg_right hScale hDiffNonneg
     _ ≤ (2 * m⁻¹) * (B * beta) :=
       mul_le_mul_of_nonneg_left hLip (by positivity)
     _ = physicalOriginalNormalizedTransferConstantStepBetaBudget H beta := by
