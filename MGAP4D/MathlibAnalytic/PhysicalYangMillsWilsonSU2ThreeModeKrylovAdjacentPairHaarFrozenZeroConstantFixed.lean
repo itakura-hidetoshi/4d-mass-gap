@@ -122,9 +122,7 @@ theorem normalizedPhysicalOneSlabPairHaarReceiver_zero_joint_ae_one
       periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N]
       (fun _ => (1 : ℝ))
     rw [normalizedPhysicalOneSlabPairHaarReceiver_zero_constantUnit_eq_one H N hN]
-    simpa using (Lp.coeFn_const
-      (μ := periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N)
-      (p := 2) (c := (1 : ℝ)))
+    simp
   have hvν : (fun z => v z) =ᵐ[ν] (fun _ => (1 : ℝ)) := by
     rw [hνμ]
     exact hv
