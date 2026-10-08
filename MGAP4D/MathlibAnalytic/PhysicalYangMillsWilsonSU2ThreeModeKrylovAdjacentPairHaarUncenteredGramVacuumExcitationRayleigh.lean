@@ -175,11 +175,17 @@ theorem pairHaarPhysicalFamily_rayleigh_le_unitReceiver_and_orthogonal
         2 * (c ^ 2 * ‖V u - Q e (V u)‖ ^ 2 +
           ‖V g - Q e (V g)‖ ^ 2) := by
     have hQ : Q e (V F) = c • Q e (V u) + Q e (V g) := by
-      rw [hV]
-      rw [pairHaarTransportedGroundStateSpatialLinkProjection_add
-        H N hN beta hbeta e]
-      rw [pairHaarTransportedGroundStateSpatialLinkProjection_smul
-        H N hN beta hbeta e]
+      have hAdd :
+          Q e (c • V u + V g) = Q e (c • V u) + Q e (V g) :=
+        pairHaarTransportedGroundStateSpatialLinkProjection_add
+          H N hN beta hbeta e (c • V u) (V g)
+      have hSmul : Q e (c • V u) = c • Q e (V u) :=
+        pairHaarTransportedGroundStateSpatialLinkProjection_smul
+          H N hN beta hbeta e c (V u)
+      calc
+        Q e (V F) = Q e (c • V u + V g) := by rw [hV]
+        _ = Q e (c • V u) + Q e (V g) := hAdd
+        _ = c • Q e (V u) + Q e (V g) := by rw [hSmul]
     have hResidual : V F - Q e (V F) =
         c • (V u - Q e (V u)) + (V g - Q e (V g)) := by
       rw [hQ, hV, smul_sub]
@@ -217,9 +223,22 @@ theorem pairHaarPhysicalFamily_rayleigh_le_unitReceiver_and_orthogonal
         (∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
           ‖V g - Q e (V g)‖ ^ 2)) := by
     simp only [mul_add, Finset.sum_add_distrib, Finset.mul_sum]
-    ring
   have hRay := pairHaarSpatialLinkResidualGram_rayleigh_physicalInput
     H N hN beta hbeta f a
+  have hBound :
+      (∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+        ‖V F - Q e (V F)‖ ^ 2) ≤
+      2 * (c ^ 2 *
+        (∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+          ‖V u - Q e (V u)‖ ^ 2) +
+        (∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+          ‖V g - Q e (V g)‖ ^ 2)) :=
+    hSum.trans_eq hReorder
+  have hUnit :
+      (∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+        ‖V u - Q e (V u)‖ ^ 2) =
+      physicalOriginalUnitReceiverFullLinkEnergy H N hN beta hbeta := rfl
+  rw [hUnit, hEnergy] at hBound
   rw [hRay]
   change (∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
     ‖V F - Q e (V F)‖ ^ 2) ≤
@@ -227,8 +246,7 @@ theorem pairHaarPhysicalFamily_rayleigh_le_unitReceiver_and_orthogonal
         H N hN beta hbeta +
       physicalPairHaarReceiverBetaZeroDriftFullLinkEnergy
         H N hN beta hbeta g)
-  rw [physicalOriginalUnitReceiverFullLinkEnergy, ← hEnergy]
-  exact hSum.trans hReorder
+  exact hBound
 
 /-- FINALLY the ORIGINAL UN-CENTERED fine-right Krylov residual Gram,
 not the centered Gram of #5314, is bounded by its true unit-receiver
@@ -334,7 +352,7 @@ theorem fineRightKrylovPairHaarResidualGram_rayleigh_le_unitReceiver_weightedTwo
         (C * W) ^ 2)
   exact hGeneric.trans
     (mul_le_mul_of_nonneg_left
-      (add_le_add_left hCentered _) (by norm_num))
+      (add_le_add_right hCentered _) (by norm_num))
 
 end GroundStatePosteriorJoint
 end
