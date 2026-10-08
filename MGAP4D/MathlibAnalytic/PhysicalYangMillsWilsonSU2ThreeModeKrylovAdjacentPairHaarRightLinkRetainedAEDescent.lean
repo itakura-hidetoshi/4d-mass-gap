@@ -168,6 +168,7 @@ theorem originalWilsonContinuousPhysicalJoint_not_retained_pairHaar
         (fun z => g z.1) := by
     have hae := hEm.quasiMeasurePreserving.ae hWae
     filter_upwards [hae] with z hz
+    change W (E z) = g (context (E z)) at hz
     simpa only [hContextE z] using hz
   have hWsplitRetained :
       AEStronglyMeasurable[
