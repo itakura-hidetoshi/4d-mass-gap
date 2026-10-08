@@ -80,9 +80,9 @@ theorem fineRightFactor_eq_constantUnit_of_fine_beta_zero
       S (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2) =
       periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2 := by
     subst_vars
-    simpa only [S, hzero] using
-      periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_zero_constantUnit
-        H 2 specialUnitaryTwoWilsonRankPositive
+    simpa [S, hzero] using
+      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_zero_constantUnit
+        H 2 specialUnitaryTwoWilsonRankPositive)
   change (S ^ r) (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2) =
     periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2
   exact p4_betaZero_pow_apply_fixed S _ hFixed r
