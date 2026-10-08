@@ -137,11 +137,12 @@ theorem originalWilsonNormalizedFrozenRightLinkSqrtRatio_norm_le
         H beta hbeta z.1 z.2 e)
   have hrootR : Real.sqrt R ≤ R := by
     have hrootNonneg := Real.sqrt_nonneg R
-    have hrootSquare := Real.sq_sqrt hR.le
+    have hrootSquare := Real.sq_sqrt (le_trans (by norm_num : (0 : ℝ) ≤ 1) hR)
     nlinarith [sq_nonneg (R - 1)]
   have hbound : Real.sqrt (a / b) ≤ R :=
     (Real.sqrt_le_sqrt hdiv).trans hrootR
-  simpa only [originalWilsonNormalizedFrozenRightLinkSqrtRatio, Real.norm_eq_abs,
+  change ‖Real.sqrt (a / b)‖ ≤ R
+  simpa only [Real.norm_eq_abs,
     abs_of_nonneg (Real.sqrt_nonneg (a / b))] using hbound
 
 /-- The concrete normalized one-right-link ratio belongs to
@@ -212,7 +213,8 @@ theorem originalWilsonNormalizedFrozenRightLinkSqrtRatioL2_error_sq_le
   have hsub :
       (fun z => (one - q) z) =ᵐ[μ] (fun z => (1 : ℝ) - f z) := by
     filter_upwards [Lp.coeFn_sub one q, hone, hq] with z hs ho hqz
-    rw [hs, ho, hqz]
+    rw [hs]
+    simp only [Pi.sub_apply, ho, hqz]
   have hint : Integrable (fun z => ‖(one - q) z‖ ^ 2) μ :=
     (memLp_two_iff_integrable_sq_norm (Lp.aestronglyMeasurable (one - q))).1
       (Lp.memLp (one - q))
@@ -227,7 +229,7 @@ theorem originalWilsonNormalizedFrozenRightLinkSqrtRatioL2_error_sq_le
     ‖one - q‖ ^ 2 = ∫ z, ‖(one - q) z‖ ^ 2 ∂μ :=
       realL2_norm_sq_eq_integral_norm_sq _
     _ ≤ ∫ _z, (Real.exp (16 * beta) - 1) ^ 2 ∂μ :=
-      integral_mono_ae hint integrable_const hle
+      integral_mono_ae hint (integrable_const _) hle
     _ = (Real.exp (16 * beta) - 1) ^ 2 := by simp
 
 end GroundStatePosteriorJoint
