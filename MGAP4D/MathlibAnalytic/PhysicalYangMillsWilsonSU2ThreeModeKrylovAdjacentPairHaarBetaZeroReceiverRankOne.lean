@@ -123,7 +123,7 @@ theorem normalizedPhysicalOneSlabPairHaarReceiver_zero_linkResidual_sq_rankOne
     exact pairHaarTransportedGroundStateSpatialLinkProjection_smul
       H N hN 0 (by norm_num) e c (V u)
   have hr : V f - Q (V f) = c • (V u - Q (V u)) := by
-    rw [hv, hq, smul_sub]
+    rw [hq, hv, smul_sub]
   change ‖V f - Q (V f)‖ ^ 2 = c ^ 2 * ‖V u - Q (V u)‖ ^ 2
   rw [hr, norm_smul, Real.norm_eq_abs, mul_pow, sq_abs]
 
