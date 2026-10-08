@@ -75,7 +75,7 @@ private theorem p4_norm_pow_sub_reference_le_depth
         _ ≤ ‖(S ^ r) u - u‖ + ‖S u - u‖ :=
           add_le_add_right hcontraction _
         _ ≤ (r : ℝ) * ‖S u - u‖ + ‖S u - u‖ :=
-          add_le_add_right ih _
+          add_le_add_left ih _
         _ = ((r + 1 : ℕ) : ℝ) * ‖S u - u‖ := by
           push_cast
           ring
@@ -124,8 +124,10 @@ theorem physicalConstantOrthogonalComponent_norm_le_sub_constant
         rw [sub_smul, one_smul]
         abel
   have hcross : inner ℝ ((c - 1) • u) g = 0 := by
-    rw [real_inner_smul_left, horth]
-    ring
+    calc
+      inner ℝ ((c - 1) • u) g = (c - 1) * inner ℝ u g :=
+        real_inner_smul_left u g (c - 1)
+      _ = 0 := by rw [horth]; ring
   have hpyth :=
     norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero
       ((c - 1) • u) g hcross
