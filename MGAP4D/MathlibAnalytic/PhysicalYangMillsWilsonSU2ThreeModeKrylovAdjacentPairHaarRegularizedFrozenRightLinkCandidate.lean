@@ -125,6 +125,7 @@ theorem originalWilsonRegularizedFrozenRightLinkVacuumFunction_measurable_retain
   haveI hXBorel : BorelSpace X := by
     dsimp [X]
     infer_instance
+  letI : MeasurableSpace (X × X) := Prod.instMeasurableSpace
   haveI hXXBorel : BorelSpace (X × X) := inferInstance
   have hWambient : @Measurable (X × X) ℝ
       (Prod.instMeasurableSpace) inferInstance
