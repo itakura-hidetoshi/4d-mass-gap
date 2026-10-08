@@ -2,7 +2,7 @@
 
 Hidetoshi Itakura's Lean 4 / mathlib development for the four-dimensional Yang--Mills existence and mass-gap program.
 
-**Theorem snapshot: 2026-10-08 JST, through merged PR #5282, merge 06a5053caa83654565e8f35e9e0988215ae5aa95.**
+**Theorem snapshot: 2026-10-08 JST, through merged PR #5287, merge a5a7c8b58d4b55843393a1ec7e3086d8143b63a2.**
 
 The theorem-bearing development has advanced beyond the historical #5235 P3 locality checkpoint. The active route is P4: **actual physical posterior Gram and genuine posterior-fiber energy, without Dobrushin reconstruction**.
 
@@ -14,6 +14,10 @@ The theorem-bearing development has advanced beyond the historical #5235 P3 loca
 - **#5280:** genuine positive-beta posterior residuals split into true receiver drift A_beta(f) and true posterior projection drift B_beta(f), with D_beta(f) <= 2(A_beta(f)+B_beta(f)) and no explicit spatial-link cardinality multiplier.
 - **#5281:** B_beta(f) = inner(unit,f)^2 * sum_e ||1-Q_beta,e 1||^2; orthogonal physical inputs have B_beta(f)=0.
 - **#5282:** B_beta(f) = inner(unit,f)^2 * sum_e ||(I-P_beta,e) U_beta 1||^2 on the ORIGINAL ground-state joint law, using the existing half-density isometric equivalence.
+- **#5284:** sharp L2 retained-sigma-algebra witness Pythagoras for the genuine vacuum, with sum_e ||(I-P_beta,e)U_beta 1||^2 <= sum_e ||U_beta 1 - g_e||^2 and exact orthogonal remainder. Existence of volume-uniform local witnesses is OPEN.
+- **#5285:** U_beta 1 = 1 / sqrt(W_beta) joint-a.e. for the actual normalized Wilson density W_beta; witness approximation errors transport isometrically back to pair Haar, without two-sided weight constants.
+- **#5286:** the full-link vacuum posterior energy vanishes iff the literal inverse-sqrt Wilson density is retained-a.e.-measurable for every original right link. Failure at one link gives positive energy conditionally; positive-beta failure of measurability itself is NOT established.
+- **#5287:** the genuine positive-beta projection-drift Gram on ANY finite physical family has EVERY entry B_beta(i,j) = inner(unit,f_i) * inner(unit,f_j) * E_beta_vac. It is positive semidefinite, rank at most one, and zero on families orthogonal to the constant mode.
 
 These are exact finite-volume statements. **OPEN**: positive-beta volume-uniform control of A_beta(f) and the canonical vacuum joint posterior-fiber variance, spacing-scaled physical-time generator gap, and continuum Yang--Mills mass gap. Beta=0 exact vanishing does NOT establish any positive-beta/continuum gap. Dobrushin remains deferred.
 
@@ -25,12 +29,12 @@ Sections 3--6 below preserve the older P3 locality/covariance route as historica
 | --- | --- |
 | Repository | itakura-hidetoshi/4d-mass-gap |
 | Unique theorem-carrier branch | formal/real-hilbert-uniform-coercive-strong-limit |
-| Latest theorem-bearing merge | 06a5053caa83654565e8f35e9e0988215ae5aa95 |
-| Latest theorem-bearing PR | #5282, merged |
-| Validated #5282 PR head | 56404463fe83c0ac83a0c11e2fb7325dc99b4b79 |
-| PR Lean Fast Check | run 37737951433, success |
-| Actual Changed Lean job | 113181714245, success |
-| Matching receipt publisher | 113182825821, success |
+| Latest theorem-bearing merge | a5a7c8b58d4b55843393a1ec7e3086d8143b63a2 |
+| Latest theorem-bearing PR | #5287, merged |
+| Validated #5287 PR head | 3d99456a10a8b0d6d5e9a2128eba2f5aa9517a81 |
+| PR Lean Fast Check | run 37744875925, success |
+| Actual Changed Lean job | 113203872566, success |
+| Matching receipt publisher | 113205336944, success |
 | Pinned Lean | v4.30.0-rc2 |
 | Pinned mathlib | 5450b53e5ddc75d46418fabb605edbf36bd0beb6 |
 
@@ -157,9 +161,9 @@ For the original physical receiver V_beta(f) and original transported joint post
     B_beta(f) = inner(unit,f)^2
                 * sum_e ||(I-P_beta,e) U_beta(1)||^2.
 
-Thus all positive-beta posterior projection drift factors through one physical constant Fourier coefficient and one TRUE joint posterior-fiber energy. For constant-orthogonal f, B_beta(f)=0, but A_beta(f) is still open.
+#5284 makes E_beta_vac a sharp retained-link local-witness approximation problem. #5285 supplies the literal Wilson-density inverse-sqrt representative of that vacuum; #5286 characterizes its exact zero-energy measurability obstruction. #5287 upgrades B_beta from a DIAGONAL reduction to the full positive-semidefinite rank-one outer-product Gram on arbitrary finite physical families. For constant-orthogonal f, B_beta(f)=0 and the ENTIRE projection-drift Gram vanishes, but the separate receiver drift A_beta(f) is still open.
 
-**Next P4 proof obligation:** derive volume-uniform control (or a rigorous obstruction) for the full-link vacuum energy of U_beta(1), and separately for actual physical receiver drift A_beta(f). Use the physical transfer and original conditional expectation, NOT a surrogate law, gross link count, or repeated Dobrushin construction. Then apply #5273 to obtain finite-mode Rayleigh estimates. No spacing-scaled generator or continuum gap follows automatically.
+**Next P4 proof obligation:** construct original-joint retained-measurable local witnesses g_e with SUMMABLE approximation errors for U_beta(1) = 1/sqrt(W_beta), or exhibit a rigorous obstruction to such control at positive beta. Independently bound the actual physical receiver drift A_beta(f). Use genuine Wilson kernel/top-vacuum dependence and original CondExpL2, NOT surrogate laws, crude link counting, or repeated Dobrushin. The #5287 rank-one Gram gives a mode-count-free structure for the projection drift; a Rayleigh-level composition with the true receiver drift is the next formal interface. No volume-uniform bound, spacing-scaled generator gap, or continuum Yang--Mills mass gap is thereby proved.
 
 The older P3 seed-distance/source-only-tilt route is preserved in the preceding historical sections under its original hypotheses.
 
@@ -197,6 +201,10 @@ For the CURRENT P4 frontier, read under MGAP4D/MathlibAnalytic in this order:
 3. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarBetaZeroAnchoredDrift.lean
 4. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarBetaZeroAnchoredProjectionRankOne.lean
 5. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarBetaZeroAnchoredVacuumJointVariance.lean
+6. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarVacuumRetainedWitnessPythagoras.lean
+7. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarVacuumWilsonDensityHaarWitness.lean
+8. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarVacuumZeroIffRetainedWilson.lean
+9. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarPositiveBetaProjectionDriftRankOneGram.lean
 
 For the HISTORICAL P3 locality route, read in this order:
 
@@ -219,11 +227,11 @@ Latest theorem evidence:
 
 | Evidence | Value |
 | --- | --- |
-| Validated #5282 head | 56404463fe83c0ac83a0c11e2fb7325dc99b4b79 |
-| PR Lean Fast Check | run 37737951433, success |
-| Actual Changed Lean job | 113181714245, success |
-| Matching receipt publisher | 113182825821, success |
-| Merge | 06a5053caa83654565e8f35e9e0988215ae5aa95 |
+| Validated #5287 head | 3d99456a10a8b0d6d5e9a2128eba2f5aa9517a81 |
+| PR Lean Fast Check | run 37744875925, success |
+| Actual Changed Lean job | 113203872566, success |
+| Matching receipt publisher | 113205336944, success |
+| Merge | a5a7c8b58d4b55843393a1ec7e3086d8143b63a2 |
 
 For theorem-bearing PRs, inspect all changed Lean files, require success of the actual Lean job, and require a matching exact-head receipt. A successful receipt publisher never overrides a failed Lean job.
 
