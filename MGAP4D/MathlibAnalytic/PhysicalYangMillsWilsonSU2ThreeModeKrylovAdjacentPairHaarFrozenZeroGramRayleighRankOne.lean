@@ -113,7 +113,7 @@ theorem pairHaarSpatialLinkResidualGram_zero_rayleigh_eq_zero_of_orthogonal
             normalizedPhysicalOneSlabPairHaarReceiver H N hN 0 (by norm_num) (f i)))
         a) = 0 := by
   rw [pairHaarSpatialLinkResidualGram_zero_rayleigh_rankOne]
-  simp only [hOrth, zero_pow, zero_mul]
+  simp [hOrth]
 
 /-- If a particular physical mode is constant-orthogonal, its true
 frozen-beta-zero full spatial-link Gram diagonal is zero. -/
@@ -140,7 +140,7 @@ theorem pairHaarSpatialLinkResidualGram_zero_diag_eq_zero_of_orthogonal
       H N hN (f i)
   rw [hDiag]
   rw [hExact]
-  simp only [hOrth, zero_pow, zero_mul]
+  simp [hOrth]
 
 end GroundStatePosteriorJoint
 
