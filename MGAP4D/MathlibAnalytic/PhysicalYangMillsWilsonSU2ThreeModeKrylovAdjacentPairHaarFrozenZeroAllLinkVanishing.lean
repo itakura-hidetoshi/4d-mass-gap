@@ -141,6 +141,23 @@ theorem pairHaarSpatialLinkResidualGram_zero_eq_zero_of_physicalFamily
   rw [hi, hj]
   simp
 
+/-- Reuse the ORIGINAL frozen-beta-zero theorem at any explicitly vanishing
+frozen coupling. Eliminate the independent coupling variable *together
+with its dependent nonnegativity proof* before any Lean rewriting.
+This avoids an ill-typed motive for beta-dependent proof arguments. -/
+private theorem pairHaarSpatialLinkResidualGram_eq_zero_of_frozen_beta_eq_zero
+    (H N : ℕ) (hN : 0 < N)
+    (b : ℝ) (hb : 0 ≤ b) (hb0 : b = 0)
+    {ι : Type*} [Fintype ι]
+    (f : ι →
+      periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
+    pairHaarSpatialLinkResidualGram H N hN b hb
+        (fun i : ι =>
+          normalizedPhysicalOneSlabPairHaarReceiver H N hN b hb (f i)) =
+      0 := by
+  subst b
+  exact pairHaarSpatialLinkResidualGram_zero_eq_zero_of_physicalFamily H N hN f
+
 section ActualAdjacentOrbit
 
 variable {halfExtent : ℕ → ℕ} {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
@@ -167,9 +184,9 @@ theorem fineRightKrylovPairHaarResidualGram_zero_of_frozen_beta_zero
       (fun j : Fin (r + 1) =>
         normalizedPhysicalOneSlabPairHaarReceiver
           Hn 2 Pos (beta n) (hbeta n) (RightFactor n (j : ℕ))) = 0
-  simpa only [hzero] using
-    (pairHaarSpatialLinkResidualGram_zero_eq_zero_of_physicalFamily
-    Hn 2 Pos (fun j : Fin (r + 1) => RightFactor n (j : ℕ)))
+  exact pairHaarSpatialLinkResidualGram_eq_zero_of_frozen_beta_eq_zero
+    Hn 2 Pos (beta n) (hbeta n) hzero
+    (fun j : Fin (r + 1) => RightFactor n (j : ℕ))
 
 /-- The three actual fine left Gram--Schmidt residual modes also have
 zero frozen Gram matrix whenever frozen beta(n)=0. -/
@@ -182,9 +199,9 @@ theorem fineLeftThreeModePairHaarResidualGram_zero_of_frozen_beta_zero
       (fun j : Fin 3 =>
         normalizedPhysicalOneSlabPairHaarReceiver
           Hn 2 Pos (beta n) (hbeta n) (LeftFactor n r j)) = 0
-  simpa only [hzero] using
-    (pairHaarSpatialLinkResidualGram_zero_eq_zero_of_physicalFamily
-    Hn 2 Pos (fun j : Fin 3 => LeftFactor n r j))
+  exact pairHaarSpatialLinkResidualGram_eq_zero_of_frozen_beta_eq_zero
+    Hn 2 Pos (beta n) (hbeta n) hzero
+    (fun j : Fin 3 => LeftFactor n r j)
 
 end ActualAdjacentOrbit
 end GroundStatePosteriorJoint
