@@ -106,7 +106,7 @@ theorem pairHaarSpatialLinkResidualGram_diag
       ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
         ‖v i - pairHaarTransportedGroundStateSpatialLinkProjection
           H N hN beta hbeta e (v i)‖ ^ 2 := by
-  simp only [pairHaarSpatialLinkResidualGram, Finset.sum_apply,
+  simp only [pairHaarSpatialLinkResidualGram, Matrix.sum_apply,
     Matrix.gram_apply, real_inner_self_eq_norm_sq]
 
 section ActualAdjacentOrbit
