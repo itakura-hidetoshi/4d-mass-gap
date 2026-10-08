@@ -58,12 +58,12 @@ theorem p4F2_comap_fst_stronglyMeasurable_fiber_const
   obtain ⟨s, _hs, heq⟩ := hs
   have hx : x ∈ s := by
     have hmem : (x, y₁) ∈ {z : X × Y | g z = g (x, y₁)} := rfl
-    rw [heq] at hmem
+    rw [← heq] at hmem
     exact hmem
   have hmem : (x, y₂) ∈ {z : X × Y | g z = g (x, y₁)} := by
-    rw [heq]
+    rw [← heq]
     exact hx
-  exact hmem
+  exact hmem.symm
 
 /-- Fubini/product-measure descent: for a full-support context law
 and full-support target law, a CONTINUOUS function which is a.e.
@@ -102,7 +102,7 @@ theorem p4F2_continuous_ae_retained_fiber_const
         (Prod.fst : X × Y → X) (μ.prod ν) μ :=
       Measure.quasiMeasurePreserving_fst
     have hid : Measure.QuasiMeasurePreserving (id : Y → Y) ν ν :=
-      QuasiMeasurePreserving.id ν
+      Measure.QuasiMeasurePreserving.id ν
     simpa only [Function.comp_def, Prod.map, id_eq] using
       (QuasiMeasurePreserving.prodMap hfst hid).ae_eq hfg
   have hae :
@@ -119,7 +119,7 @@ theorem p4F2_continuous_ae_retained_fiber_const
   have hpointwise :
       (fun z : (X × Y) × Y => f z.1) =
         (fun z => f (z.1.1, z.2)) :=
-    eq_of_ae_eq hae (hf.comp continuous_fst) (hf.comp hmap)
+    Measure.eq_of_ae_eq hae (hf.comp continuous_fst) (hf.comp hmap)
   intro x y₁ y₂
   exact congrFun hpointwise ((x, y₁), y₂)
 
@@ -178,8 +178,9 @@ theorem originalWilsonContinuousPhysicalJoint_not_targetFiberConstant
   have hoff : (split B).2 = (split A).2 := by
     funext i
     change B i.1 = A i.1
-    simp [B, originalWilsonExplicitRotatedBoundary,
-      Function.update, i.property]
+    have hi : (i : PeriodicHypercubicEvenSpatialSliceLink H) ≠
+        originalWilsonExplicitSpatialTargetLink H := i.property
+    simp [B, originalWilsonExplicitRotatedBoundary, hi]
   have hA : split.symm ((split A).1, (split A).2) = A :=
     split.symm_apply_apply A
   have hB : split.symm ((split B).1, (split A).2) = B := by
