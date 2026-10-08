@@ -35,7 +35,7 @@ most
 This gives explicit O_H,r(beta_frozen^2 beta_fine^2) for each fixed
 finite H and depth r, not a volume-uniform Yang--Mills gap.
 Neither the true physical receiver normalization nor the ground-state
-posterior law is changed. No Dobrushin or extra axiom.
+posterior law is changed. No Dobrushin or additional assumptions.
 -/
 
 namespace MGAP4D
