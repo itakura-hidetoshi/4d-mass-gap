@@ -84,8 +84,14 @@ theorem physicalConstantOrthogonalComponent_inner_zero
   let u := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H N
   have hu : ‖u‖ = 1 :=
     periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_norm H N
-  change inner ℝ u (f - (inner ℝ u f) • u) = 0
-  rw [inner_sub_right, real_inner_smul_right, real_inner_self_eq_norm_sq, hu]
+  have hlin :
+      (innerₛₗ ℝ u) (f - (inner ℝ u f) • u) =
+        (innerₛₗ ℝ u) f - (inner ℝ u f) • ((innerₛₗ ℝ u) u) := by
+    rw [map_sub, map_smul]
+  change (innerₛₗ ℝ u) (f - (inner ℝ u f) • u) = 0
+  rw [hlin]
+  change inner ℝ u f - (inner ℝ u f) * inner ℝ u u = 0
+  rw [real_inner_self_eq_norm_sq, hu]
   ring
 
 /-- The original physical input splits exactly into its constant
@@ -196,12 +202,20 @@ theorem normalizedPhysicalOneSlabPairHaarReceiver_beta_linkDrift_eq_constantDrif
   have hQsmul : Q (c • X) = c • Q X :=
     pairHaarTransportedGroundStateSpatialLinkProjection_smul
       H N hN beta hbeta e c X
+  have hresid_add :
+      (c • X + Y) - Q (c • X + Y) =
+        (c • X - Q (c • X)) + (Y - Q Y) := by
+    rw [hQadd]
+    abel
+  have hresid_smul :
+      c • X - Q (c • X) = c • (X - Q X) := by
+    rw [hQsmul, smul_sub]
   change δ - Q δ = c • (X - Q X) + (Y - Q Y)
   calc
-    δ - Q δ = (c • X + Y) - Q (c • X + Y) := by rw [hδ]
-    _ = c • (X - Q X) + (Y - Q Y) := by
-      rw [hQadd, hQsmul, smul_sub]
-      abel
+    δ - Q δ = (c • X + Y) - Q (c • X + Y) :=
+      congrArg (fun z => z - Q z) hδ
+    _ = (c • X - Q (c • X)) + (Y - Q Y) := hresid_add
+    _ = c • (X - Q X) + (Y - Q Y) := by rw [hresid_smul]
 
 /-- Crucial strengthening in the constant-ORTHOGONAL sector: the
 actual positive-beta full-link physical residual energy is EXACTLY
