@@ -64,7 +64,7 @@ private theorem realMatrix_rayleigh_le_l1_sq_of_abs_entries_le
     calc
       a i * (G i j * a j) ≤ |a i * (G i j * a j)| :=
         le_abs_self _
-      _ = |a i| * |G i j| * |a j| := by rw [abs_mul, abs_mul]
+      _ = |a i| * |G i j| * |a j| := by simp only [abs_mul, mul_assoc]
       _ ≤ |a i| * C * |a j| := by
         exact mul_le_mul_of_nonneg_right
           (mul_le_mul_of_nonneg_left (hEntry i j) (abs_nonneg _))
