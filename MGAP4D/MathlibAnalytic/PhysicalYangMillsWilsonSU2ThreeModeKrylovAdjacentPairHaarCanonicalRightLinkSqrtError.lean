@@ -53,13 +53,17 @@ theorem real_one_sub_sqrt_ratio_sq_le_harnack
   have hrup : r ≤ R := by
     exact (div_le_iff₀ hb).2 hab
   have hrr : 1 ≤ R * r := by
-    have hr' : (1 : ℝ) ≤ (R * a) / b :=
-      (le_div_iff₀ hb).2 hba
+    have hr' : (1 : ℝ) ≤ (R * a) / b := by
+      apply (le_div_iff₀ hb).2
+      simpa only [one_mul] using hba
     simpa only [r, mul_div_assoc] using hr'
   have hquad : R * (2 - R) ≤ 1 := by
     nlinarith [sq_nonneg (R - 1)]
-  have hrlow : 2 - R ≤ r :=
-    (mul_le_mul_left hRpos).mp (le_trans hquad hrr)
+  have hrlow : 2 - R ≤ r := by
+    by_contra hn
+    have hlt : r < 2 - R := lt_of_not_ge hn
+    have hm : R * r < R * (2 - R) := mul_lt_mul_of_pos_left hlt hRpos
+    linarith
   have hratio_abs : |r - 1| ≤ R - 1 := by
     apply abs_le.mpr
     constructor <;> linarith
