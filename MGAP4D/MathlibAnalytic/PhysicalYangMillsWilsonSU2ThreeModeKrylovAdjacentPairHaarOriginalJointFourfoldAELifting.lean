@@ -12,7 +12,7 @@ measure (PR #5297).
 
 We transport the SAME pair-Haar a.e. equality simultaneously through
 the four maps (A₁,A₂,B₁,B₂) ↦ (Aᵢ,Bⱼ).  The generic measure-theoretic
-lemma uses the actual binary product measure twice, the pinned mathlib
+argument uses the actual binary product measure twice, the pinned mathlib
 QuasiMeasurePreserving fst/snd projections and their prodMap theorem.
 There is no illicit pointwise substitution of an L² representative.
 
