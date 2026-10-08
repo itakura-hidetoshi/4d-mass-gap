@@ -209,7 +209,9 @@ theorem normalizedPhysicalOneSlabPairHaarReceiver_beta_linkDrift_eq_constantDrif
     abel
   have hresid_smul :
       c • X - Q (c • X) = c • (X - Q X) := by
-    rw [hQsmul, smul_sub]
+    calc
+      c • X - Q (c • X) = c • X - c • Q X := by rw [hQsmul]
+      _ = c • (X - Q X) := (smul_sub c X (Q X)).symm
   change δ - Q δ = c • (X - Q X) + (Y - Q Y)
   calc
     δ - Q δ = (c • X + Y) - Q (c • X + Y) :=
