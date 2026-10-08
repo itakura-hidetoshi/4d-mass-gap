@@ -73,7 +73,7 @@ private theorem p4_norm_pow_sub_reference_le_depth
         _ ≤ ‖S ((S ^ r) u - u)‖ + ‖S u - u‖ :=
           norm_add_le _ _
         _ ≤ ‖(S ^ r) u - u‖ + ‖S u - u‖ :=
-          add_le_add_right hcontraction _
+          add_le_add_left hcontraction _
         _ ≤ (r : ℝ) * ‖S u - u‖ + ‖S u - u‖ :=
           add_le_add_left ih _
         _ = ((r + 1 : ℕ) : ℝ) * ‖S u - u‖ := by
