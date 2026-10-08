@@ -180,7 +180,7 @@ theorem originalWilsonContinuousPhysicalJoint_not_targetFiberConstant
     change B i.1 = A i.1
     have hi : (i : PeriodicHypercubicEvenSpatialSliceLink H) ≠
         originalWilsonExplicitSpatialTargetLink H := i.property
-    simp [B, originalWilsonExplicitRotatedBoundary, hi]
+    simp [B, A, originalWilsonExplicitRotatedBoundary, hi]
   have hA : split.symm ((split A).1, (split A).2) = A :=
     split.symm_apply_apply A
   have hB : split.symm ((split B).1, (split A).2) = B := by
