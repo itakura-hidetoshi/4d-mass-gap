@@ -83,8 +83,9 @@ theorem normalizedPhysicalOneSlabPairHaarReceiver_zero_constantUnit_eq_one
   have hPull :
       Lp.compMeasurePreserving Prod.snd hSnd (Lp.const 2 μ (1 : ℝ)) =
         Lp.const 2 π (1 : ℝ) := by
-    simpa only [Lp.compMeasurePreservingₗᵢ_apply] using
-      (realL2_compMeasurePreserving_const_one Prod.snd hSnd)
+    change (Lp.compMeasurePreservingₗᵢ ℝ Prod.snd hSnd)
+      (Lp.const 2 μ (1 : ℝ)) = Lp.const 2 π (1 : ℝ)
+    exact realL2_compMeasurePreserving_const_one Prod.snd hSnd
   change ‖T‖⁻¹ • Lp.compMeasurePreserving Prod.snd hSnd
       ((S u : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) :
         Lp ℝ 2 μ) = Lp.const 2 π (1 : ℝ)
@@ -116,6 +117,10 @@ theorem normalizedPhysicalOneSlabPairHaarReceiver_zero_joint_ae_one
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_zero_eq_pairHaar
       H N hN
   have hv : (fun z => v z) =ᵐ[μ] (fun _ => (1 : ℝ)) := by
+    change (fun z => (normalizedPhysicalOneSlabPairHaarReceiver H N hN 0 (by norm_num)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H N)) z) =ᵐ[
+      periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N]
+      (fun _ => (1 : ℝ))
     rw [normalizedPhysicalOneSlabPairHaarReceiver_zero_constantUnit_eq_one H N hN]
     exact Lp.coeFn_const
   have hvν : (fun z => v z) =ᵐ[ν] (fun _ => (1 : ℝ)) := by
@@ -156,20 +161,27 @@ theorem groundStateSpatialLinkCondExpL2_fixed_of_ae_const
       H N hN beta hbeta e z = z := by
   let ν := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
     H N hN beta hbeta
-  let m := periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
-    H N e
   let hm := periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace_le
     H N e
-  have hz : z ∈ lpMeas ℝ ℝ m 2 ν := by
+  have hz : z ∈ lpMeas ℝ ℝ
+      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
+        H N e) 2 ν := by
     apply mem_lpMeas_iff_aestronglyMeasurable.mpr
     exact aestronglyMeasurable_const.congr hc.symm
-  letI : Fact (m ≤ (inferInstance : MeasurableSpace
-      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
-       PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))) := ⟨hm⟩
-  let q : lpMeas ℝ ℝ m 2 ν := ⟨z, hz⟩
+  letI : Fact
+      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
+        H N e ≤
+        (Prod.instMeasurableSpace : MeasurableSpace
+          (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+            PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N))) := ⟨hm⟩
+  let q : lpMeas ℝ ℝ
+      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
+        H N e) 2 ν := ⟨z, hz⟩
   have hq : (condExpL2 ℝ ℝ hm (q :
       PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-        H N hN beta hbeta) : lpMeas ℝ ℝ m 2 ν) = q := by
+        H N hN beta hbeta) : lpMeas ℝ ℝ
+          (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
+            H N e) 2 ν) = q := by
     unfold condExpL2
     exact Submodule.orthogonalProjection_mem_subspace_eq_self q
   rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2_apply]
