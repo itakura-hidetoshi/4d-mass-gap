@@ -106,8 +106,8 @@ theorem pairHaarSpatialLinkResidualGram_diag
       ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
         ‖v i - pairHaarTransportedGroundStateSpatialLinkProjection
           H N hN beta hbeta e (v i)‖ ^ 2 := by
-  simp [pairHaarSpatialLinkResidualGram, Matrix.gram_apply,
-    real_inner_self_eq_norm_sq]
+  simp only [pairHaarSpatialLinkResidualGram, Finset.sum_apply,
+    Matrix.gram_apply, real_inner_self_eq_norm_sq]
 
 section ActualAdjacentOrbit
 
@@ -132,12 +132,14 @@ local notation "Q" =>
 local notation "PLeft" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftSpatialLinkCondExpL2
     Hn 2 Pos (beta n) (hbeta n)
-local notation "VR" j =>
-  normalizedPhysicalOneSlabPairHaarReceiver
-    Hn 2 Pos (beta n) (hbeta n) (RightFactor n j)
-local notation "VL" k =>
-  normalizedPhysicalOneSlabPairHaarReceiver
-    Hn 2 Pos (beta n) (hbeta n) (LeftFactor n r k)
+local notation "VR" =>
+  (fun j : ℕ =>
+    normalizedPhysicalOneSlabPairHaarReceiver
+      Hn 2 Pos (beta n) (hbeta n) (RightFactor n j))
+local notation "VL" =>
+  (fun k : Fin 3 =>
+    normalizedPhysicalOneSlabPairHaarReceiver
+      Hn 2 Pos (beta n) (hbeta n) (LeftFactor n r k))
 
 /-- Exact (r+1)-mode Krylov compression for the actual common-right
 physical orbit, with S_fine^j applied to the ORIGINAL constant vector.
