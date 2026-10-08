@@ -122,7 +122,7 @@ theorem originalWilsonInverseSqrt_not_retained_originalJoint_SU2
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight_ae_pos
         H 2 (by norm_num) beta (le_of_lt hbeta))
   have hwRet : AEStronglyMeasurable[m] w μ :=
-    real_aestronglyMeasurable_of_inv_sqrt_retained hwPos hinvHaar
+    real_aestronglyMeasurable_of_inv_sqrt_retained (m := m) hwPos hinvHaar
   have hContinuousAE :
       originalWilsonContinuousPhysicalJointWeight H beta (le_of_lt hbeta) =ᵐ[μ]
         w := by
@@ -146,14 +146,14 @@ theorem originalGroundStateJointTransportedPairHaarOne_fullResidual_pos_SU2
     0 <
       (∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
         ‖originalGroundStateJointTransportedPairHaarOne H 2
-            (by norm_num) beta (le_of_lt hbeta) -
+            (by decide) beta (le_of_lt hbeta) -
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
-            H 2 (by norm_num) beta (le_of_lt hbeta) e
+            H 2 (by decide) beta (le_of_lt hbeta) e
             (originalGroundStateJointTransportedPairHaarOne H 2
-              (by norm_num) beta (le_of_lt hbeta))‖ ^ 2) := by
+              (by decide) beta (le_of_lt hbeta))‖ ^ 2) := by
   exact
     originalGroundStateJointTransportedPairHaarOne_fullResidual_pos_of_WilsonNotRetained
-      H 2 (by norm_num) beta (le_of_lt hbeta)
+      H 2 (by decide) beta (le_of_lt hbeta)
       (originalWilsonExplicitSpatialTargetLink H)
       (originalWilsonInverseSqrt_not_retained_originalJoint_SU2 H beta hbeta)
 
