@@ -121,8 +121,17 @@ theorem originalWilsonInverseSqrt_not_retained_originalJoint_SU2
     simpa [μ, w, periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure] using
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight_ae_pos
         H 2 (by norm_num) beta (le_of_lt hbeta))
-  have hwRet : AEStronglyMeasurable[m] w μ :=
-    real_aestronglyMeasurable_of_inv_sqrt_retained (m := m) hwPos hinvHaar
+  have hwRet : AEStronglyMeasurable[m] w μ := by
+    have hinvInv : AEStronglyMeasurable[m]
+        (fun z => (1 : ℝ) / ((1 : ℝ) / Real.sqrt (w z))) μ :=
+      (aestronglyMeasurable_const :
+        AEStronglyMeasurable[m] (fun _ => (1 : ℝ)) μ).div₀ hinvHaar
+    have hsquare : AEStronglyMeasurable[m]
+        (fun z => ((1 : ℝ) / ((1 : ℝ) / Real.sqrt (w z))) ^ 2) μ :=
+      hinvInv.pow 2
+    apply hsquare.congr
+    filter_upwards [hwPos] with z hz
+    simpa only [one_div, inv_inv] using (Real.sq_sqrt hz.le)
   have hContinuousAE :
       originalWilsonContinuousPhysicalJointWeight H beta (le_of_lt hbeta) =ᵐ[μ]
         w := by
@@ -146,14 +155,14 @@ theorem originalGroundStateJointTransportedPairHaarOne_fullResidual_pos_SU2
     0 <
       (∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
         ‖originalGroundStateJointTransportedPairHaarOne H 2
-            (by decide) beta (le_of_lt hbeta) -
+            (Nat.zero_lt_succ 1) beta (le_of_lt hbeta) -
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
-            H 2 (by decide) beta (le_of_lt hbeta) e
+            H 2 (Nat.zero_lt_succ 1) beta (le_of_lt hbeta) e
             (originalGroundStateJointTransportedPairHaarOne H 2
-              (by decide) beta (le_of_lt hbeta))‖ ^ 2) := by
+              (Nat.zero_lt_succ 1) beta (le_of_lt hbeta))‖ ^ 2) := by
   exact
     originalGroundStateJointTransportedPairHaarOne_fullResidual_pos_of_WilsonNotRetained
-      H 2 (by decide) beta (le_of_lt hbeta)
+      H 2 (Nat.zero_lt_succ 1) beta (le_of_lt hbeta)
       (originalWilsonExplicitSpatialTargetLink H)
       (originalWilsonInverseSqrt_not_retained_originalJoint_SU2 H beta hbeta)
 
