@@ -1,6 +1,6 @@
 # MGAP4D Roadmap
 
-**Status date: 2026-10-07 JST. Theorem snapshot: through merged PR #5235, merge ceb98d0a24fbb132e4519a582d87ac5cf2e86673.**
+**Status date: 2026-10-08 JST. Theorem snapshot: through merged PR #5282, merge 06a5053caa83654565e8f35e9e0988215ae5aa95.**
 
 This roadmap separates proved finite-model statements, closed structural bridges, partially closed P3 locality layers, refuted routes, and genuinely open model/continuum obligations. Lean declarations on the theorem-carrier are the mathematical source of truth.
 
@@ -9,9 +9,9 @@ This roadmap separates proved finite-model statements, closed structural bridges
 | Item | Checkpoint |
 | --- | --- |
 | Unique theorem-carrier | formal/real-hilbert-uniform-coercive-strong-limit |
-| Latest theorem-bearing merge | ceb98d0a24fbb132e4519a582d87ac5cf2e86673 |
-| Latest theorem-bearing PR | #5235, merged |
-| Validated #5235 head | 032511aed28fe689b0ebba5b1008639980df9cfe |
+| Latest theorem-bearing merge | 06a5053caa83654565e8f35e9e0988215ae5aa95 |
+| Latest theorem-bearing PR | #5282, merged |
+| Validated #5282 head | 56404463fe83c0ac83a0c11e2fb7325dc99b4b79 |
 | Lean / mathlib | v4.30.0-rc2 / 5450b53e5ddc75d46418fabb605edbf36bd0beb6 |
 
 Authority order:
@@ -23,6 +23,27 @@ Authority order:
 5. history or conversation memory.
 
 The default main branch is not theorem authority.
+
+## 0A. ACTIVE P4: genuine posterior Gram and joint-vacuum energy (non-Dobrushin)
+
+The later theorem-bearing progression has moved beyond the historical P3 checkpoint:
+
+| PRs | Formalized finite-volume result |
+| --- | --- |
+| #5267--#5273 | Original right-Krylov / left-three-mode residual Gram, exact Rayleigh identities and conditional finite-mode diagonal criterion |
+| #5274--#5277 | Frozen beta=0 physical receiver rank one; fine-beta=0 orbit collapse remains a separate assumption |
+| #5278--#5279 | Original frozen beta-zero posterior fixes every physical receiver; all genuine link losses and physical residual Gram entries are zero |
+| #5280 | Exact positive-beta D_beta(f) <= 2(A_beta(f)+B_beta(f)) using physical receiver drift and original posterior projection drift |
+| #5281 | B_beta(f)=inner(unit,f)^2 * sum_e ||1-Q_beta,e 1||^2; no link-cardinality factor |
+| #5282 | B_beta(f)=inner(unit,f)^2 * sum_e ||(I-P_beta,e) U_beta(1)||^2 under the original ground-state joint law |
+
+**OPEN active targets:** a positive-beta volume-uniform bound (or precise obstruction) for the true receiver drift A_beta(f) and the one-vacuum joint posterior-fiber variance. Then reuse #5273 to bound the original right Krylov and left-three-mode Gram Rayleigh forms. Spacing-scaled generator convergence and the continuum Yang--Mills mass gap are separate unproved steps.
+
+Do not restart Dobrushin by default. The exact frozen beta-zero vanishing is not a positive-beta or continuum mass-gap statement.
+
+## 0B. Historical P3 record
+
+Sections 1--3 below preserve proved posterior/seed/source-tilt structures through #5235 and the older P3 objectives, but they are historical/supporting material, not the current immediate proof route.
 
 ## 1. Closed structural chain — do not reconstruct
 
@@ -172,7 +193,7 @@ A target of the form
 
 is still a goal, not a theorem.
 
-## 3. Immediate P3 deliverables
+## 3. Historical P3 deliverables (deferred behind current P4)
 
 Priority order:
 
@@ -284,17 +305,27 @@ Underlying inputs:
 - #5221 noncommuting projection union bound;
 - #5219 exact frozen BCF representation.
 
+Current P4 source handoff (all under MGAP4D/MathlibAnalytic):
+
+1. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarGramDiagonalRayleighCriterion.lean
+2. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarFrozenZeroAllLinkVanishing.lean
+3. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarBetaZeroAnchoredDrift.lean
+4. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarBetaZeroAnchoredProjectionRankOne.lean
+5. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarBetaZeroAnchoredVacuumJointVariance.lean
+
+The preceding seed/source-only-tilt list belongs to the historical P3 route.
+
 ## 9. Verification evidence
 
 Latest theorem evidence:
 
 | Evidence | Value |
 | --- | --- |
-| Validated #5235 head | 032511aed28fe689b0ebba5b1008639980df9cfe |
-| PR Lean Fast Check | run 37581017313, success |
-| Actual Changed Lean job | 112660444213, success |
-| Matching receipt publisher | 112661593228, success |
-| Merge | ceb98d0a24fbb132e4519a582d87ac5cf2e86673 |
+| Validated #5282 head | 56404463fe83c0ac83a0c11e2fb7325dc99b4b79 |
+| PR Lean Fast Check | run 37737951433, success |
+| Actual Changed Lean job | 113181714245, success |
+| Matching receipt publisher | 113182825821, success |
+| Merge | 06a5053caa83654565e8f35e9e0988215ae5aa95 |
 
 For theorem-bearing PRs:
 
@@ -308,6 +339,15 @@ For docs-only changes, verify the diff is documentation-only and do not manufact
 
 ## 10. Immediate next milestone
 
-**Close the posterior-covariance-to-actual-frozen-response bridge.**
+**Bound the genuine positive-beta posterior-fiber vacuum energy and physical receiver drift without Dobrushin.**
 
-The seed geometry, polynomial shell control, full-local-factor covariance decay, source-only tilt factorization and pointwise source-only tilt covariance decay are already available. The next milestone is to turn those results into a theorem on the actual centered frozen source response or original Q_e contribution, then sum the exact 1/12 Dirichlet energy without losing the near-link part or reintroducing a forbidden top/vacuum compatibility assumption.
+The #5281--#5282 identity isolates the real analytic difficulty:
+
+    B_beta(f) = inner(unit,f)^2
+                * sum_e ||(I-P_beta,e) U_beta(1)||^2,
+
+with the ORIGINAL joint conditional expectation P_beta,e and true half-density U_beta. This is an exact equality, not a volume-uniform estimate.
+
+Next formally connect the true positive-beta Wilson/ground-state perturbation to a summable linkwise or geometric bound for this exact vacuum term; determine whether volume-uniform control is even valid under the retained normalization. Independently control A_beta(f), the genuine physical receiver drift from beta=0. Do not replace either full-link sum by a crude link count times a single-site bound.
+
+Only after both terms are controlled may one combine #5280 with the existing #5273 Gram diagonal-to-Rayleigh criterion. The spacing-scaled generator gap, OS continuum reconstruction, and Yang--Mills mass gap stay OPEN.
