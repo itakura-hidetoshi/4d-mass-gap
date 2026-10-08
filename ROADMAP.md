@@ -1,6 +1,6 @@
 # MGAP4D Roadmap
 
-**Status date: 2026-10-08 JST. Theorem snapshot: through merged PR #5287, merge a5a7c8b58d4b55843393a1ec7e3086d8143b63a2.**
+**Status date: 2026-10-08 JST. Theorem snapshot: through merged PR #5290, merge 1f9cc6013aaf4538e4e51838f5a1fd2da76827b1.**
 
 This roadmap separates proved finite-model statements, closed structural bridges, partially closed P3 locality layers, refuted routes, and genuinely open model/continuum obligations. Lean declarations on the theorem-carrier are the mathematical source of truth.
 
@@ -9,9 +9,9 @@ This roadmap separates proved finite-model statements, closed structural bridges
 | Item | Checkpoint |
 | --- | --- |
 | Unique theorem-carrier | formal/real-hilbert-uniform-coercive-strong-limit |
-| Latest theorem-bearing merge | a5a7c8b58d4b55843393a1ec7e3086d8143b63a2 |
-| Latest theorem-bearing PR | #5287, merged |
-| Validated #5287 head | 3d99456a10a8b0d6d5e9a2128eba2f5aa9517a81 |
+| Latest theorem-bearing merge | 1f9cc6013aaf4538e4e51838f5a1fd2da76827b1 |
+| Latest theorem-bearing PR | #5290, merged |
+| Validated #5290 head | f8d8f457545be492ecd36f7cbc071081ccebb4ae |
 | Lean / mathlib | v4.30.0-rc2 / 5450b53e5ddc75d46418fabb605edbf36bd0beb6 |
 
 Authority order:
@@ -40,8 +40,10 @@ The later theorem-bearing progression has moved beyond the historical P3 checkpo
 | #5285 | U_beta(1)=1/sqrt(W_beta) joint-a.e., with W_beta the original normalized Wilson joint density, and isometric pair-Haar witness-error equality |
 | #5286 | Full-link vacuum energy zero iff inverse sqrt Wilson density is retained-measurable for ALL original right links; conditional strict positivity from one nonretained link |
 | #5287 | Exact positive-beta projection-drift Gram B_beta(i,j)=inner(unit,f_i)*inner(unit,f_j)*E_beta_vac; positive semidefinite, rank at most one, zero on orthogonal physical families |
+| #5289 | Exact a*B_beta a=inner(unit,F)^2*E_beta_vac and a*G_beta a<=2(A_beta(F)+inner(unit,F)^2*E_beta_vac) for combined physical F=sum_i a_i f_i |
+| #5290 | Hilbert sharp a*B_beta a<=||F||^2*E_beta_vac, zero for constant-orthogonal combinations; CONDITIONAL mode-count-free bound a*G_beta a<=2(Cdrift+Cvac)||F||^2 if genuine A_beta and E_beta_vac bounds are separately supplied |
 
-**OPEN active targets:** a positive-beta volume-uniform bound (or precise obstruction) for the actual physical receiver drift A_beta(f) and the one-vacuum joint posterior-fiber variance E_beta_vac. PR #5284 supplies a sharp local-witness interface; #5285 supplies the actual Wilson density; #5286 is a CONDITIONAL vanishing obstruction and does NOT prove nonmeasurability for all beta>0; #5287 closes only the outer-product structure of the projection-drift Gram. Next develop an exact Rayleigh-level receiver-drift composition, then use quantitative volume-uniform bounds ONLY after they are proved. Spacing-scaled generator convergence and continuum Yang--Mills mass gap remain OPEN.
+**OPEN active targets:** a positive-beta volume-uniform bound (or precise obstruction) for the actual physical receiver drift A_beta(f) and the one-vacuum joint posterior-fiber variance E_beta_vac. PR #5284 supplies a sharp local-witness interface; #5285 supplies the actual Wilson density; #5286 is a CONDITIONAL vanishing obstruction and does NOT prove nonmeasurability for all beta>0; #5287--#5290 close the outer-product, exact Rayleigh, true receiver-drift composition, sharp physical-norm, and conditional no-mode-count criterion. The major unresolved inputs are UNCONDITIONAL quantitative positive-beta estimates with constants uniform in volume, or rigorous obstructions to such estimates. Spacing-scaled generator convergence and continuum Yang--Mills mass gap remain OPEN.
 
 Do not restart Dobrushin by default. The exact frozen beta-zero vanishing is not a positive-beta or continuum mass-gap statement.
 
@@ -320,6 +322,8 @@ Current P4 source handoff (all under MGAP4D/MathlibAnalytic):
 7. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarVacuumWilsonDensityHaarWitness.lean
 8. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarVacuumZeroIffRetainedWilson.lean
 9. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarPositiveBetaProjectionDriftRankOneGram.lean
+10. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarPositiveBetaDriftRayleigh.lean
+11. PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarPositiveBetaDriftRayleighHilbertCriterion.lean
 
 The preceding seed/source-only-tilt list belongs to the historical P3 route.
 
@@ -330,10 +334,10 @@ Latest theorem evidence:
 | Evidence | Value |
 | --- | --- |
 | Validated #5287 head | 3d99456a10a8b0d6d5e9a2128eba2f5aa9517a81 |
-| PR Lean Fast Check | run 37744875925, success |
-| Actual Changed Lean job | 113203872566, success |
-| Matching receipt publisher | 113205336944, success |
-| Merge | a5a7c8b58d4b55843393a1ec7e3086d8143b63a2 |
+| PR Lean Fast Check | run 37748285133, success |
+| Actual Changed Lean job | 113214958065, success |
+| Matching receipt publisher | 113217020762, success |
+| Merge | 1f9cc6013aaf4538e4e51838f5a1fd2da76827b1 |
 
 For theorem-bearing PRs:
 
@@ -347,7 +351,7 @@ For docs-only changes, verify the diff is documentation-only and do not manufact
 
 ## 10. Immediate next milestone
 
-**Build summable original-Wilson retained-link witnesses and a receiver-drift estimate, then connect the exact rank-one projection-drift Gram to physical Rayleigh forms without Dobrushin.**
+**Prove genuinely volume-uniform positive-beta Wilson vacuum and receiver-drift estimates (or their obstruction), using the already-completed exact Hilbert/Rayleigh interfaces without Dobrushin.**
 
 The #5281--#5282 identity isolates the real analytic difficulty:
 
@@ -360,4 +364,4 @@ PR #5284 shows the vacuum loss is no greater than the sum of squared errors of r
 
 Next construct actual g_e and show SUMMABLE approximation error in spatial volume (or a rigorous obstruction), using the true Wilson density rather than surrogate Haar laws. Independently control A_beta(f), the genuine physical receiver drift from beta=0. Preserve a distinct fine beta(n+1) orbit and frozen beta(n) posterior; do not replace full-link sums by a crude link count.
 
-The #5287 outer-product structure already treats the projection-drift Gram without a dimension/mode-count factor. Formalize its exact Rayleigh form and connect it to the remaining physical receiver drift; apply #5273 only where its conditional diagonal-to-Rayleigh bound is genuinely needed. No positive-beta volume-uniform bound is currently proved. The spacing-scaled generator gap, OS continuum reconstruction, and Yang--Mills mass gap stay OPEN.
+PR #5289 now proves the original positive-beta projection-drift Rayleigh equality a*B_beta a = inner(unit,F)^2*E_beta_vac AND the actual physical residual inequality a*G_beta a <= 2(A_beta(F)+inner(unit,F)^2*E_beta_vac). PR #5290 uses the true physical constant unit norm-one and Cauchy--Schwarz to show a*B_beta a <= ||F||^2*E_beta_vac and the conditional criterion a*G_beta a <= 2(Cdrift+Cvac)||F||^2, independent of mode count, PROVIDED A_beta(g)<=Cdrift||g||^2 and E_beta_vac<=Cvac are independently proved. These are honest HYPOTHESES, not existing uniform estimates. Resolve them for physical positive beta using locality or rigorous obstruction. Apply #5273 only where its different finite-mode diagonal reduction is genuinely needed. Spacing-scaled generator gap, OS continuum reconstruction, and Yang--Mills mass gap remain OPEN.
