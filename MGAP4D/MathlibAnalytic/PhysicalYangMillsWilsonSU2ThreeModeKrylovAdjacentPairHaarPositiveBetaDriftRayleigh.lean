@@ -122,7 +122,14 @@ theorem physicalPairHaarZeroAnchoredProjectionDriftGram_rayleigh_rankOne
   have hCoeff :
       inner ℝ u (∑ i : ι, a i • f i) =
         ∑ i : ι, a i * c i := by
-    simp only [inner_sum, real_inner_smul_right, c]
+    calc
+      inner ℝ u (∑ i : ι, a i • f i) =
+          ∑ i : ι, inner ℝ u (a i • f i) := by
+        exact map_sum (innerₛₗ ℝ u) _ _
+      _ = ∑ i : ι, a i * c i := by
+        apply Finset.sum_congr rfl
+        intro i _hi
+        exact real_inner_smul_right u (f i) (a i)
   have hOuter :
       physicalPairHaarZeroAnchoredProjectionDriftGram H N hN beta hbeta f =
         Matrix.of (fun i j : ι => c i * c j * E) :=
@@ -227,7 +234,8 @@ theorem pairHaarSpatialLinkResidualGram_physicalFamily_rayleigh_le_betaDrift_joi
     simpa only [physicalPairHaarReceiverBetaZeroDriftFullLinkEnergy,
       physicalPairHaarOriginalJointVacuumFullLinkEnergy,
       originalGroundStateJointTransportedPairHaarOne] using hBound
-  exact hRay.le_trans hBound'
+  rw [hRay]
+  exact hBound'
 
 end GroundStatePosteriorJoint
 
