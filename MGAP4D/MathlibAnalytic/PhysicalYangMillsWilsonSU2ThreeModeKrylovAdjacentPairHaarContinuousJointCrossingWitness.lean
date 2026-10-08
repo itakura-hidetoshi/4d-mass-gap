@@ -134,10 +134,11 @@ theorem originalWilsonContinuousPhysicalJointWeight_ae_eq_original
       ω z.2 =
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
         H 2 (by norm_num) beta hbeta‖⁻¹ *
-      ω₀ z.1 *
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta z.1 z.2 *
-      ω₀ z.2
+      (ω₀ z.1 *
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta z.1 z.2 *
+        ω₀ z.2)
   rw [hz₁, hz₂]
+  ring
 
 /-- Exact full two-by-two determinant of the new CANONICAL CONTINUOUS
 representative of the SAME original physical Wilson joint law. -/
