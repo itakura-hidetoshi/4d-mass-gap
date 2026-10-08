@@ -131,6 +131,7 @@ theorem originalWilsonCanonicalRightLinkJointVacuumApproximant_ae_eq_invSqrtFroz
         (1 : Matrix.specialUnitaryGroup (Fin 2) ℂ))
   change Real.sqrt (a / b) / Real.sqrt (w z) = (1 : ℝ) / Real.sqrt b
   rw [← hzC, Real.sqrt_div ha.le]
+  change (Real.sqrt a / Real.sqrt b) / Real.sqrt a = (1 : ℝ) / Real.sqrt b
   have hane : Real.sqrt a ≠ 0 := ne_of_gt (Real.sqrt_pos.2 ha)
   have hbne : Real.sqrt b ≠ 0 := ne_of_gt (Real.sqrt_pos.2 hb)
   field_simp [hane, hbne]
