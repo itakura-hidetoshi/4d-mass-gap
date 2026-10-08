@@ -200,11 +200,23 @@ theorem normalizedPhysicalOneSlabPairHaarReceiver_beta_zeroAnchored_fullProjecti
       ‖Q₀ e (V₀ f) - Q e (V₀ f)‖ ^ 2) =
     (inner ℝ u f) ^ 2 * (∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
       ‖w - Q e w‖ ^ 2)
-  rw [hfull]
-  congr 1
-  apply Finset.sum_congr rfl
-  intro e _he
-  rw [hfix e, hone]
+  have hsum :
+      (∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+        ‖Q₀ e (V₀ u) - Q e (V₀ u)‖ ^ 2) =
+      (∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+        ‖w - Q e w‖ ^ 2) := by
+    apply Finset.sum_congr rfl
+    intro e _he
+    rw [hfix e, hone]
+  calc
+    (∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+      ‖Q₀ e (V₀ f) - Q e (V₀ f)‖ ^ 2) =
+        (inner ℝ u f) ^ 2 *
+          (∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+            ‖Q₀ e (V₀ u) - Q e (V₀ u)‖ ^ 2) := hfull
+    _ = (inner ℝ u f) ^ 2 *
+          (∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+            ‖w - Q e w‖ ^ 2) := by rw [hsum]
 
 /-- Orthogonality to the physical constant mode kills the ENTIRE
 positive-beta projection-drift term, for every finite volume and beta.
