@@ -149,6 +149,9 @@ theorem physicalOriginalNormalizedTransferConstantStepBetaBudget_nonneg
     physicalOriginalNormalizedTransferConstantStepBetaBudget H 0 = 0 := by
   simp [physicalOriginalNormalizedTransferConstantStepBetaBudget]
 
+section PhysicalStepBudget
+set_option synthInstance.maxHeartbeats 750000
+
 /-- Quantitative ACTUAL normalized physical SU(N) Wilson one-slab
 constant-vacuum step difference, using only original beta-Lipschitz,
 the beta-zero rank-one theorem and genuine finite-H denominator.
@@ -156,7 +159,6 @@ the beta-zero rank-one theorem and genuine finite-H denominator.
 This exact named theorem needs a larger typeclass-synthesis budget only
 while elaborating the heavily nested continuous-linear-map norm.
 The mathematical hypotheses and operator remain unchanged. -/
-set_option synthInstance.maxHeartbeats 750000 in
 theorem normalizedPhysicalOneSlabTransfer_constantUnit_stepDefect_le_beta
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     ‖periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
@@ -215,6 +217,8 @@ theorem normalizedPhysicalOneSlabTransfer_constantUnit_stepDefect_le_beta
     _ = physicalOriginalNormalizedTransferConstantStepBetaBudget H beta := by
       dsimp [physicalOriginalNormalizedTransferConstantStepBetaBudget, m, B]
       ring
+
+end PhysicalStepBudget
 
 /-- Original fine-right Krylov: explicit O_H(r beta_fine) orthogonal
 leakage from the actual nonzero-beta normalized physical transfer. -/
