@@ -56,25 +56,25 @@ theorem pairHaar_ae_eq_fourfold_crossings
         (μ.prod μ).prod (μ.prod μ)]
       (fun z => g (z.1.1, z.2.1)) := by
     simpa only [Function.comp_def, Prod.map] using
-      (hfst.prodMap hfst).ae_eq hfg
+      (QuasiMeasurePreserving.prodMap hfst hfst).ae_eq hfg
   have h22 :
       (fun z : (α × α) × (α × α) => f (z.1.2, z.2.2)) =ᵐ[
         (μ.prod μ).prod (μ.prod μ)]
       (fun z => g (z.1.2, z.2.2)) := by
     simpa only [Function.comp_def, Prod.map] using
-      (hsnd.prodMap hsnd).ae_eq hfg
+      (QuasiMeasurePreserving.prodMap hsnd hsnd).ae_eq hfg
   have h12 :
       (fun z : (α × α) × (α × α) => f (z.1.1, z.2.2)) =ᵐ[
         (μ.prod μ).prod (μ.prod μ)]
       (fun z => g (z.1.1, z.2.2)) := by
     simpa only [Function.comp_def, Prod.map] using
-      (hfst.prodMap hsnd).ae_eq hfg
+      (QuasiMeasurePreserving.prodMap hfst hsnd).ae_eq hfg
   have h21 :
       (fun z : (α × α) × (α × α) => f (z.1.2, z.2.1)) =ᵐ[
         (μ.prod μ).prod (μ.prod μ)]
       (fun z => g (z.1.2, z.2.1)) := by
     simpa only [Function.comp_def, Prod.map] using
-      (hsnd.prodMap hfst).ae_eq hfg
+      (QuasiMeasurePreserving.prodMap hsnd hfst).ae_eq hfg
   filter_upwards [h11, h22, h12, h21] with z hz11 hz22 hz12 hz21
   exact ⟨hz11, hz22, hz12, hz21⟩
 
@@ -200,7 +200,7 @@ theorem originalWilsonOriginalPhysicalJointStrictMinorSet_positiveHaarMeasure
             H beta (le_of_lt hbeta) z.1.1 z.1.2 z.2.1 z.2.2} := by
     filter_upwards [hminor] with z hz
     change (0 < originalWilsonContinuousPhysicalJointTwoByTwoMinor
-      H beta (le_of_lt hbeta) z.1.1 z.1.2 z.2.1 z.2.2) ↔
+      H beta (le_of_lt hbeta) z.1.1 z.1.2 z.2.1 z.2.2) =
       (0 < originalWilsonOriginalPhysicalJointTwoByTwoMinor
         H beta (le_of_lt hbeta) z.1.1 z.1.2 z.2.1 z.2.2)
     rw [hz]
