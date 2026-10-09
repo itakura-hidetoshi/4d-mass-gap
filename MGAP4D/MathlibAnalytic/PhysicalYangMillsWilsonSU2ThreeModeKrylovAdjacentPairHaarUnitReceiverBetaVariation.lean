@@ -91,8 +91,10 @@ theorem normalizedPhysicalOneSlabPairHaarReceiver_sub_norm_eq_scaledTransferDiff
           periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
             H N hN beta hbeta f‖ := by
   let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N
+  let μP := periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N
   let hSnd := spatialSlicePairHaar_snd_measurePreserving H N
-  let J := Lp.compMeasurePreservingₗᵢ ℝ Prod.snd hSnd
+  let J : Lp ℝ 2 μ →ₗᵢ[ℝ] Lp ℝ 2 μP :=
+    Lp.compMeasurePreservingₗᵢ ℝ Prod.snd hSnd
   let Sγ := periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
     H N hN gamma hgamma
   let Sβ := periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
@@ -195,37 +197,37 @@ theorem normalizedPhysicalOneSlabPairHaarReceiver_unit_sub_zero_norm_le_explicit
     H N hN beta hbeta
   let S := periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
     H N hN beta hbeta
-  let λ : ℝ := ‖T‖
-  let a : ℝ := λ⁻¹
+  let lam : ℝ := ‖T‖
+  let a : ℝ := lam⁻¹
   let m : ℝ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor H beta
   let B : ℝ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H
   let M : ℝ := physicalOriginalNormalizedTransferConstantStepBetaBudget H beta
-  have hλ : 0 < λ :=
+  have hlam : 0 < lam :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
       H N hN beta hbeta
-  have ha : 0 ≤ a := (inv_pos.mpr hλ).le
-  have haλ : a * λ = 1 := inv_mul_cancel₀ hλ.ne'
+  have ha : 0 ≤ a := (inv_pos.mpr hlam).le
+  have halam : a * lam = 1 := inv_mul_cancel₀ hlam.ne'
   have hNorm :
       ‖normalizedPhysicalOneSlabPairHaarReceiver H N hN beta hbeta u -
         normalizedPhysicalOneSlabPairHaarReceiver H N hN 0 (by norm_num) u‖ =
       ‖a • S u - u‖ := by
-    simpa only [u, T, S, λ, a] using
+    simpa only [u, T, S, lam, a] using
       (normalizedPhysicalOneSlabPairHaarReceiver_unit_sub_zero_norm_eq_scaledTransfer
         H N hN beta hbeta)
   have hStep : ‖S u - u‖ ≤ M :=
     normalizedPhysicalOneSlabTransfer_constantUnit_stepDefect_le_beta
       H N hN beta hbeta
-  have hNormVariation : ‖λ - 1‖ ≤ B * beta := by
+  have hNormVariation : ‖lam - 1‖ ≤ B * beta := by
     have h :=
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_norm_sub_le_beta
         H N hN 0 beta (by norm_num) hbeta
-    simpa [λ, T, B,
+    simpa [lam, T, B,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_zero_norm,
       Real.norm_eq_abs, abs_of_nonneg hbeta] using h
   have hInv : a ≤ m⁻¹ := by
-    simpa only [a, λ, T, m] using
+    simpa only [a, lam, T, m] using
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferNorm_inv_le_globalMinorizationFloor_inv
         H N hN beta hbeta)
   have hm : 0 < m :=
@@ -236,20 +238,20 @@ theorem normalizedPhysicalOneSlabPairHaarReceiver_unit_sub_zero_norm_le_explicit
   have hsumNonneg : 0 ≤ M + B * beta :=
     add_nonneg hM (mul_nonneg hB hbeta)
   have hu : ‖u‖ = 1 := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_norm H N
-  have hSplit : S u - λ • u = (S u - u) + ((1 : ℝ) - λ) • u := by
+  have hSplit : S u - lam • u = (S u - u) + ((1 : ℝ) - lam) • u := by
     module
   have hSplitNorm :
-      ‖S u - λ • u‖ ≤ M + B * beta := by
+      ‖S u - lam • u‖ ≤ M + B * beta := by
     calc
-      ‖S u - λ • u‖ =
-          ‖(S u - u) + ((1 : ℝ) - λ) • u‖ := by rw [hSplit]
-      _ ≤ ‖S u - u‖ + ‖((1 : ℝ) - λ) • u‖ :=
+      ‖S u - lam • u‖ =
+          ‖(S u - u) + ((1 : ℝ) - lam) • u‖ := by rw [hSplit]
+      _ ≤ ‖S u - u‖ + ‖((1 : ℝ) - lam) • u‖ :=
         norm_add_le _ _
-      _ = ‖S u - u‖ + ‖λ - 1‖ := by
+      _ = ‖S u - u‖ + ‖lam - 1‖ := by
         rw [norm_smul, hu, mul_one, norm_sub_rev]
       _ ≤ M + B * beta := add_le_add hStep hNormVariation
-  have hScaled : a • S u - u = a • (S u - λ • u) := by
-    rw [smul_sub, smul_smul, haλ, one_smul]
+  have hScaled : a • S u - u = a • (S u - lam • u) := by
+    rw [smul_sub, smul_smul, halam, one_smul]
   change ‖normalizedPhysicalOneSlabPairHaarReceiver H N hN beta hbeta u -
     normalizedPhysicalOneSlabPairHaarReceiver H N hN 0 (by norm_num) u‖ ≤
     m⁻¹ * (M + B * beta)
@@ -257,8 +259,8 @@ theorem normalizedPhysicalOneSlabPairHaarReceiver_unit_sub_zero_norm_le_explicit
     ‖normalizedPhysicalOneSlabPairHaarReceiver H N hN beta hbeta u -
       normalizedPhysicalOneSlabPairHaarReceiver H N hN 0 (by norm_num) u‖ =
         ‖a • S u - u‖ := hNorm
-    _ = ‖a • (S u - λ • u)‖ := by rw [hScaled]
-    _ = a * ‖S u - λ • u‖ := by
+    _ = ‖a • (S u - lam • u)‖ := by rw [hScaled]
+    _ = a * ‖S u - lam • u‖ := by
       rw [norm_smul, Real.norm_eq_abs, abs_of_nonneg ha]
     _ ≤ a * (M + B * beta) :=
       mul_le_mul_of_nonneg_left hSplitNorm ha
