@@ -109,12 +109,17 @@ theorem physicalOriginalUnitReceiver_linkResidual_sq_zero_iff_retained
   have hP :
       P (U v) = U v ↔
         AEStronglyMeasurable[m] (fun z => (U v) z) μ := by
-    change periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
-      H N hN beta hbeta e (U v) = U v ↔ _
+    let hm :=
+      periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace_le
+        H N e
+    change
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
+        H N hN beta hbeta e (U v) = U v) ↔
+      AEStronglyMeasurable[
+        periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace H N e]
+        (fun z => (U v) z) μ
     rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2_apply]
-    exact realL2_condExp_fixed_iff_retained_aestronglyMeasurable
-      (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace_le
-        H N e) (U v)
+    exact realL2_condExp_fixed_iff_retained_aestronglyMeasurable hm (U v)
   have hQ : Q v = v ↔ P (U v) = U v := by
     change U.symm (P (U v)) = v ↔ P (U v) = U v
     constructor
