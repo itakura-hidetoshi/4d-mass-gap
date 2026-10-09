@@ -75,7 +75,9 @@ theorem originalPhysicalWilsonKernel_fixedRight_integrable
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous H 2 beta
   have hSection : Continuous (fun A : X => (A, B)) :=
     continuous_id.prodMk continuous_const
-  have hKContinuous : Continuous K := hKernel.comp hSection
+  have hKContinuous : Continuous K := by
+    simpa only [K, Function.comp_def, Prod.fst, Prod.snd] using
+      (hKernel.comp hSection)
   apply Integrable.of_bound hKContinuous.aestronglyMeasurable 1
   filter_upwards with A
   change ‖K A‖ ≤ 1
