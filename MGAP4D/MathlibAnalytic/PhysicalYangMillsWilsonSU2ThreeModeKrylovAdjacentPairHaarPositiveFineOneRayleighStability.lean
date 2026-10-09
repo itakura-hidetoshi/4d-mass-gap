@@ -58,14 +58,14 @@ theorem p4Q2_finite_sum_ne_zero_of_uniform_norm_sub_lt
       (∑ j : Fin (r + 1), (v j - u)) =
         -(((r + 1 : ℕ) : ℝ) • u) := by
     rw [Finset.sum_sub_distrib, hzero]
-    simpa only [Finset.sum_const, Finset.card_fin, zero_sub,
+    simp only [Finset.sum_const, Finset.card_fin, zero_sub,
       Nat.cast_smul_eq_nsmul]
   have hCard : (0 : ℝ) < ((r + 1 : ℕ) : ℝ) := by positivity
   have hLe : ((r + 1 : ℕ) : ℝ) * ‖u‖ ≤ ((r + 1 : ℕ) : ℝ) * b := by
     calc
       ((r + 1 : ℕ) : ℝ) * ‖u‖ =
           ‖-(((r + 1 : ℕ) : ℝ) • u)‖ := by
-            simpa only [norm_neg, norm_smul, Real.norm_eq_abs,
+            simp only [norm_neg, norm_smul, Real.norm_eq_abs,
               abs_of_pos hCard]
       _ = ‖∑ j : Fin (r + 1), (v j - u)‖ :=
         congrArg norm hRef.symm
