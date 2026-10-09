@@ -258,6 +258,9 @@ theorem normalizedPhysicalOneSlabJointReceiverProductBCF_posteriorEnergy_le_join
   let ν :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
       H N hN beta hbeta
+  letI : IsProbabilityMeasure ν :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_isProbabilityMeasure
+      H N hN beta hbeta
   let W := normalizedPhysicalOneSlabJointHalfDensityWeightBCF H N hN beta hbeta
   let F := normalizedPhysicalOneSlabJointReceiverProductBCF H N hN beta hbeta f
   let V := normalizedPhysicalOneSlabContinuousVacuumInverseBCF H N hN beta hbeta
@@ -289,6 +292,110 @@ theorem normalizedPhysicalOneSlabJointReceiverProductBCF_posteriorEnergy_le_join
   change posteriorResamplingEnergy H N hN beta hbeta e F ≤
     ∫ z, (B z) ^ 2 ∂ν
   exact hEnergy
+
+
+/-- Physical joint-L² local-moment envelope of the authentic uncentered
+fine-right Krylov input. No global factor supremum is taken. -/
+noncomputable def fineRightKrylovOriginalPhysicalJointLocalHilbertMomentEnvelope
+    {halfExtent : ℕ → ℕ} {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
+    (n r : ℕ) (a : Fin (r + 1) → ℝ) : ℝ :=
+  let H := halfExtent (n + 1)
+  let W := normalizedPhysicalOneSlabJointHalfDensityWeightBCF
+    H 2 specialUnitaryTwoWilsonRankPositive (beta n) (hbeta n)
+  let J := fineRightKrylovOriginalPhysicalJointObservable
+    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r a
+  let V := normalizedPhysicalOneSlabContinuousVacuumInverseBCF
+    H 2 specialUnitaryTwoWilsonRankPositive (beta n) (hbeta n)
+  let F := fineRightKrylovOriginalSignedPhysicalSource
+    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r a
+  let C := ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+    H 2 specialUnitaryTwoWilsonRankPositive (beta n) (hbeta n)‖⁻¹ *
+      ((Real.exp (8 * beta n)) ^ 2 - 1) * ‖F‖
+  ∫ z, ((Real.exp (8 * beta n) * W z) * (C * V z.2) +
+    (Real.exp (8 * beta n) - 1) * |J z|) ^ 2
+  ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+    H 2 specialUnitaryTwoWilsonRankPositive (beta n) (hbeta n)
+
+theorem fineRightKrylovOriginalPhysicalJointObservable_posteriorEnergy_le_jointLocalHilbertMoment
+    {halfExtent : ℕ → ℕ} {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
+    (n r : ℕ) (a : Fin (r + 1) → ℝ)
+    (e : PeriodicHypercubicEvenSpatialSliceLink (halfExtent (n + 1))) :
+    posteriorResamplingEnergy (halfExtent (n + 1)) 2
+      specialUnitaryTwoWilsonRankPositive (beta n) (hbeta n) e
+      (fineRightKrylovOriginalPhysicalJointObservable
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r a) ≤
+      fineRightKrylovOriginalPhysicalJointLocalHilbertMomentEnvelope
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r a := by
+  simpa only [fineRightKrylovOriginalPhysicalJointLocalHilbertMomentEnvelope,
+    fineRightKrylovOriginalPhysicalJointObservable,
+    fineRightKrylovOriginalSignedPhysicalSource] using
+    (normalizedPhysicalOneSlabJointReceiverProductBCF_posteriorEnergy_le_jointLocalHilbertMoment
+      (halfExtent (n + 1)) 2 specialUnitaryTwoWilsonRankPositive
+      (beta n) (hbeta n)
+      (∑ j : Fin (r + 1), a j •
+        physicalYangMillsSU2AdjacentFinePairOrbitRightFactor
+          (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+          n (j : ℕ)) e)
+
+/-- Direct original physical right-Krylov Rayleigh inequality through the
+actual joint-local Hilbert moments, rather than global W/M suprema.
+The remaining joint moments and full link sum are NOT H-uniformly bounded. -/
+theorem fineRightKrylovPairHaarResidualGram_rayleigh_le_jointLocalHilbertMoment
+    {halfExtent : ℕ → ℕ} {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
+    (n r : ℕ) (a : Fin (r + 1) → ℝ) :
+    star a ⬝ᵥ (Matrix.mulVec
+      (fineRightKrylovPairHaarResidualGram
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+        n r) a) ≤
+      (1 / 2 : ℝ) *
+        ∑ _e : PeriodicHypercubicEvenSpatialSliceLink (halfExtent (n + 1)),
+          fineRightKrylovOriginalPhysicalJointLocalHilbertMomentEnvelope
+            (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+            n r a := by
+  let H := halfExtent (n + 1)
+  let J := fineRightKrylovOriginalPhysicalJointObservable
+    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+    n r a
+  have hRay :
+      star a ⬝ᵥ (Matrix.mulVec
+        (fineRightKrylovPairHaarResidualGram
+          (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+          n r) a) =
+      (1 / 2 : ℝ) *
+        ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+          posteriorResamplingEnergy H 2 specialUnitaryTwoWilsonRankPositive
+            (beta n) (hbeta n) e J := by
+    simpa only [H, J, fineRightKrylovOriginalPhysicalJointObservable] using
+      (fineRightKrylovPairHaarResidualGram_rayleigh_eq_half_originalResamplingEnergy
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+        n r a)
+  have hOne (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+      posteriorResamplingEnergy H 2 specialUnitaryTwoWilsonRankPositive
+        (beta n) (hbeta n) e J ≤
+      fineRightKrylovOriginalPhysicalJointLocalHilbertMomentEnvelope
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r a :=
+    fineRightKrylovOriginalPhysicalJointObservable_posteriorEnergy_le_jointLocalHilbertMoment
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+      n r a e
+  calc
+    star a ⬝ᵥ (Matrix.mulVec
+      (fineRightKrylovPairHaarResidualGram
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+        n r) a) =
+      (1 / 2 : ℝ) *
+        ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+          posteriorResamplingEnergy H 2 specialUnitaryTwoWilsonRankPositive
+            (beta n) (hbeta n) e J := hRay
+    _ ≤ (1 / 2 : ℝ) *
+        ∑ _e : PeriodicHypercubicEvenSpatialSliceLink H,
+          fineRightKrylovOriginalPhysicalJointLocalHilbertMomentEnvelope
+            (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+            n r a := by
+      apply mul_le_mul_of_nonneg_left
+      · apply Finset.sum_le_sum
+        intro e _he
+        exact hOne e
+      · norm_num
 
 end GroundStatePosteriorJoint
 end
