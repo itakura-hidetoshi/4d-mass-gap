@@ -107,7 +107,7 @@ private theorem positive_halfDensity_mul_sqrt_le
         mul_le_mul_of_nonneg_left hProduct hR.le
       _ = (R * w) ^ 2 * (x * k') := by ring
   have hSq : w' ^ 2 ≤ (R * w) ^ 2 :=
-    (mul_le_mul_right (mul_pos hx hk')).mp hSquared
+    (mul_le_mul_iff_of_pos_right (mul_pos hx hk')).mp hSquared
   have hw : 0 ≤ w := by
     change 0 ≤ (l * y) / Real.sqrt q
     exact div_nonneg (mul_nonneg hl.le hy.le) (Real.sqrt_nonneg q)
@@ -211,7 +211,10 @@ theorem normalizedPhysicalOneSlabJointHalfDensityWeightBCF_rightLinkDifference_a
     have h :=
       normalizedPhysicalOneSlabJointHalfDensityWeightBCF_rightUpdate_le_exp_eight_mul
         H N hN beta hbeta e z' (z.2 e)
-    simpa only [hRest] using h
+    change W (z.1, Function.update (Function.update z.2 e g) e (z.2 e)) ≤
+      R * W z' at h
+    rw [hRest] at h
+    exact h
   have hOld : W z ≤ ‖W‖ := by
     calc
       W z ≤ |W z| := le_abs_self _
@@ -230,6 +233,32 @@ theorem normalizedPhysicalOneSlabJointHalfDensityWeightBCF_rightLinkDifference_a
       W z - W z' ≤ (R - 1) * W z' := by nlinarith [hBackward]
       _ ≤ (R - 1) * ‖W‖ := mul_le_mul_of_nonneg_left hNew hRminus
   exact abs_le.mpr ⟨by linarith, hBackwardDiff⟩
+
+/-- The ACTUAL BCF one-link variation coefficient in #5326 is
+controlled by the physical Wilson/vacuum local Harnack comparison,
+without multiplying by the link cardinality. The norm of W remains
+explicit and is not claimed uniform in H. -/
+theorem normalizedPhysicalOneSlabJointHalfDensityWeightBCF_rightLinkOscillation_norm_le
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+    ‖physicalJointBCFRightLinkDifference H N
+      (normalizedPhysicalOneSlabJointHalfDensityWeightBCF H N hN beta hbeta) e‖ ≤
+      (Real.exp (8 * beta) - 1) *
+        ‖normalizedPhysicalOneSlabJointHalfDensityWeightBCF H N hN beta hbeta‖ := by
+  have hExp : (1 : ℝ) ≤ Real.exp (8 * beta) := by
+    have hmul : (0 : ℝ) ≤ 8 * beta := by nlinarith [hbeta]
+    simpa using
+      (Real.exp_le_exp.mpr hmul : Real.exp (0 : ℝ) ≤ Real.exp (8 * beta))
+  have hC : 0 ≤
+      (Real.exp (8 * beta) - 1) *
+        ‖normalizedPhysicalOneSlabJointHalfDensityWeightBCF H N hN beta hbeta‖ :=
+    mul_nonneg (sub_nonneg.mpr hExp) (norm_nonneg _)
+  apply (BoundedContinuousFunction.norm_le hC).2
+  intro p
+  rcases p with ⟨z, g⟩
+  simpa only [Real.norm_eq_abs, physicalJointBCFRightLinkDifference_apply] using
+    (normalizedPhysicalOneSlabJointHalfDensityWeightBCF_rightLinkDifference_abs_le
+      H N hN beta hbeta e z g)
 
 end GroundStatePosteriorJoint
 
