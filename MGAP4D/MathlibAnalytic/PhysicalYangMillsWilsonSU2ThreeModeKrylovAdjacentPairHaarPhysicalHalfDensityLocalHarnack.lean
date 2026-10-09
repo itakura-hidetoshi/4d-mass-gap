@@ -198,8 +198,9 @@ theorem normalizedPhysicalOneSlabJointHalfDensityWeightBCF_rightLinkDifference_a
   let R := Real.exp (8 * beta)
   let z' := (z.1, Function.update z.2 e g)
   have hR : 1 ≤ R := by
-    change Real.exp 0 ≤ Real.exp (8 * beta)
-    exact Real.exp_le_exp.mpr (by nlinarith [hbeta])
+    have hmul : (0 : ℝ) ≤ 8 * beta := by nlinarith [hbeta]
+    simpa [R] using
+      (Real.exp_le_exp.mpr hmul : Real.exp (0 : ℝ) ≤ Real.exp (8 * beta))
   have hForward : W z' ≤ R * W z :=
     normalizedPhysicalOneSlabJointHalfDensityWeightBCF_rightUpdate_le_exp_eight_mul
       H N hN beta hbeta e z g
