@@ -20,7 +20,7 @@ We prove the physical finite-volume Loewner/Rayleigh comparison
 
 There is NO extra factor (r+1) from the mode count. The physical
 source frame constant, the true link count and inverse transfer
-normalization remain H-/r-dependent until independently estimated.
+normalization remain dependent on volume H and depth r until independently estimated.
 A conditional source-frame bridge is provided without claiming it.
 
 The original fine beta(n+1), frozen Wilson beta(n), signed source,
