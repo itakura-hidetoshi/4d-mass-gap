@@ -196,7 +196,7 @@ theorem fineRightKrylovPairHaarResidualGram_rayleigh_le_coefficientL1_explicitTw
     mul_le_mul_of_nonneg_right hCoeff hM
   have hTotal : 2 * (c ^ 2 * M + W) ≤ 2 * (L ^ 2 * M + W) :=
     mul_le_mul_of_nonneg_left
-      (add_le_add_right hTerm W) (by norm_num)
+      (add_le_add_left hTerm W) (by norm_num)
   change
     star a ⬝ᵥ
       (Matrix.mulVec
