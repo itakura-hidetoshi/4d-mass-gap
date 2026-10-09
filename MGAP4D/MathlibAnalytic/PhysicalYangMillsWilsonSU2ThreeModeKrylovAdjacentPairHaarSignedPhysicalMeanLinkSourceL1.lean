@@ -210,7 +210,7 @@ private theorem normalizedKernelSection_signedSource_integrable
         simpa only [one_mul] using
           (mul_le_mul_of_nonneg_right hK hOmega.le))
     simpa only [one_div] using h
-   have hDom : Integrable (fun A => omega⁻¹ * ‖f A‖) μ :=
+  have hDom : Integrable (fun A => omega⁻¹ * ‖f A‖) μ :=
     hf.norm.const_mul _
   have hProd : Integrable
       (fun A => (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
