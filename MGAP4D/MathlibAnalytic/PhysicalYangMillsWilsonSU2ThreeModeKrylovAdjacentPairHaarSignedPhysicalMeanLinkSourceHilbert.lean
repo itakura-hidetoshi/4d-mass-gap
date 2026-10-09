@@ -53,7 +53,8 @@ theorem physicalHaarSignedSource_integral_norm_le_L2
       eLpNorm (fun A => f A) (1 : ENNReal) μ ≤
         eLpNorm (fun A => f A) (2 : ENNReal) μ :=
     eLpNorm_le_eLpNorm_of_exponent_le (μ := μ)
-      (f := fun A => f A) (by norm_num)
+      (f := fun A => f A) (show (1 : ENNReal) ≤ 2 by norm_num)
+        (Lp.aestronglyMeasurable f)
   have hTop :
       eLpNorm (fun A => f A) (2 : ENNReal) μ ≠ ⊤ := by
     simpa [μ] using (Lp.eLpNorm_ne_top f)
@@ -63,7 +64,7 @@ theorem physicalHaarSignedSource_integral_norm_le_L2
         lpNorm (fun A => f A) 1 μ :=
       (lpNorm_one_eq_integral_norm (Lp.aestronglyMeasurable f)).symm
     _ = (eLpNorm (fun A => f A) (1 : ENNReal) μ).toReal :=
-      (toReal_eLpNorm).symm
+      (toReal_eLpNorm (Lp.aestronglyMeasurable f)).symm
     _ ≤ (eLpNorm (fun A => f A) (2 : ENNReal) μ).toReal := hReal
     _ = ‖f‖ := (Lp.norm_def f).symm
 
