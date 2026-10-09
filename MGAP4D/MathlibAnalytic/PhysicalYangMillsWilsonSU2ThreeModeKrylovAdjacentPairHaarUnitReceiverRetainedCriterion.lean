@@ -91,10 +91,12 @@ theorem physicalOriginalUnitReceiver_linkResidual_sq_zero_iff_retained
     H N hN beta hbeta
   let m := periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
     H N e
+  letI : IsProbabilityMeasure μ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_isProbabilityMeasure
+      H N hN beta hbeta
   have hTransport : BoundedContinuousFunction.toLp 2 μ ℝ J = U v := by
-    simpa only [J, μ, u, v, U] using
-      (normalizedPhysicalOneSlabJointReceiverProductBCF_toLp_eq_pairHaarReceiver
-        H N hN beta hbeta u)
+    exact normalizedPhysicalOneSlabJointReceiverProductBCF_toLp_eq_pairHaarReceiver
+      H N hN beta hbeta u
   have hRep : (fun z => (U v) z) =ᵐ[μ] fun z => J z := by
     rw [← hTransport]
     exact BoundedContinuousFunction.coeFn_toLp 2 μ ℝ J
