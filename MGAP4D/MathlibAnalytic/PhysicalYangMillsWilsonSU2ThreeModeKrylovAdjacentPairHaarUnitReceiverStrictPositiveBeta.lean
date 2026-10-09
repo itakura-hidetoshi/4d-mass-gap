@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarUnitReceiverCrossingMinor
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroRankOne
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumKernelHarnack
 import Mathlib.Tactic
 
 /-!
@@ -54,9 +55,10 @@ local instance p4Q2JLinkFintype (H : ℕ) :
 
 namespace GroundStatePosteriorJoint
 
-/-- A fixed-right section of the ORIGINAL Wilson kernel is integrable
-under Haar probability. Use an explicitly typed section map to avoid
-expensive implicit elaboration of the finite-group product topology. -/
+/-- The original fixed-right Wilson kernel is Haar-integrable.
+Specialize the ALREADY-VERIFIED original kernel-times-L² integrability
+lemma to the genuine Haar constant-one vector. This avoids repeated
+elaboration of the enormous finite configuration-space topology. -/
 theorem originalPhysicalWilsonKernel_fixedRight_integrable
     (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta)
     (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
@@ -68,24 +70,17 @@ theorem originalPhysicalWilsonKernel_fixedRight_integrable
   let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
   let K : X → ℝ := fun A =>
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta A B
-  have hKernel :
-      Continuous (fun z : X × X =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H 2 beta z.1 z.2) :=
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous H 2 beta
-  have hSection : Continuous (fun A : X => (A, B)) :=
-    continuous_id.prodMk continuous_const
-  have hKContinuous : Continuous K := by
-    simpa only [K, Function.comp_def, Prod.fst, Prod.snd] using
-      (hKernel.comp hSection)
-  apply Integrable.of_bound hKContinuous.aestronglyMeasurable 1
-  filter_upwards with A
-  change ‖K A‖ ≤ 1
-  rw [Real.norm_eq_abs, abs_of_pos
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
-      H 2 beta A B)]
-  exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_le_one
-    H 2 (Nat.zero_lt_succ 1) beta hbeta A B
+  let one : Lp ℝ 2 μ := Lp.const 2 μ (1 : ℝ)
+  have hMul : Integrable (fun A : X => one A * K A) μ := by
+    exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_mul_integrable
+      H 2 (Nat.zero_lt_succ 1) beta hbeta one B
+  have hOneAE : (fun A : X => one A) =ᵐ[μ] (fun _ => (1 : ℝ)) := by
+    simpa [one] using (Lp.coeFn_const (μ := μ) (p := 2) (c := (1 : ℝ)))
+  have hEq : (fun A : X => one A * K A) =ᵐ[μ] K := by
+    filter_upwards [hOneAE] with A hA
+    rw [hA]
+    ring
+  exact hMul.congr hEq
 
 /-- The strictly positive original Wilson kernel has a positive
 fixed-right Haar integral for EVERY finite-volume right boundary. -/
