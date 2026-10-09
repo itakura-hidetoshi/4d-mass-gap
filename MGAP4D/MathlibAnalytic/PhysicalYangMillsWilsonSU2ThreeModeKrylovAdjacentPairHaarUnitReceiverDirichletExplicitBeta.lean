@@ -197,7 +197,7 @@ theorem physicalOriginalUnitReceiverFullLinkEnergy_le_explicitBeta_SU2
       2 * (A + C * X ^ 2) := hAnchor
     _ ≤ 2 * (C * D ^ 2 + C * X ^ 2) := by
       exact mul_le_mul_of_nonneg_left
-        (add_le_add_right hDrift _) (by norm_num)
+        (add_le_add_left hDrift _) (by norm_num)
     _ = C * (2 * (D ^ 2 + X ^ 2)) := by ring
 
 /-- Name for the fully explicit actual finite-volume constant-input
@@ -269,7 +269,7 @@ theorem fineRightKrylovPairHaarResidualGram_rayleigh_le_explicitOriginalTwoBeta
     mul_le_mul_of_nonneg_left hUnit (sq_nonneg c)
   have hTotal : 2 * (c ^ 2 * E + W) ≤ 2 * (c ^ 2 * M + W) :=
     mul_le_mul_of_nonneg_left
-      (add_le_add_right hTerm W) (by norm_num)
+      (add_le_add_left hTerm W) (by norm_num)
   change
     star a ⬝ᵥ (Matrix.mulVec
       (fineRightKrylovPairHaarResidualGram
