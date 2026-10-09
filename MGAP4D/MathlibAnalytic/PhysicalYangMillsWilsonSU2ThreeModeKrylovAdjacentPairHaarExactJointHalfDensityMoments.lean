@@ -151,6 +151,9 @@ theorem normalizedPhysicalOneSlabJointReceiverProductBCF_sq_integral_joint_eq
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
       H N hN beta hbeta
   let J := normalizedPhysicalOneSlabJointReceiverProductBCF H N hN beta hbeta f
+  letI : IsProbabilityMeasure ν :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_isProbabilityMeasure
+      H N hN beta hbeta
   let U := BoundedContinuousFunction.toLp 2 ν ℝ J
   let l : ℝ :=
     ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
@@ -158,11 +161,8 @@ theorem normalizedPhysicalOneSlabJointReceiverProductBCF_sq_integral_joint_eq
   let S :=
     periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
       H N hN beta hbeta
-  letI : IsProbabilityMeasure ν :=
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_isProbabilityMeasure
-      H N hN beta hbeta
-  have hrep : U =ᵐ[ν] fun z => J z :=
-    BoundedContinuousFunction.coeFn_toLp 2 ν ℝ J
+  have hrep : U =ᵐ[ν] fun z => J z := by
+    simpa only [U] using (BoundedContinuousFunction.coeFn_toLp 2 ν ℝ J)
   have hn : ‖U‖ = l * ‖S f‖ := by
     simpa only [U, J, l, S] using
       normalizedPhysicalOneSlabJointReceiverProductBCF_toLp_norm_eq_inv_transferNorm
@@ -210,8 +210,16 @@ theorem normalizedPhysicalOneSlabJointReceiverProductBCF_sq_integral_joint_le_in
     mul_le_mul_of_nonneg_left hNorm hl
   have hp : (l * ‖S f‖) ^ 2 ≤ (l * ‖f‖) ^ 2 :=
     pow_le_pow_left₀ (mul_nonneg hl (norm_nonneg _)) hm 2
-  exact (normalizedPhysicalOneSlabJointReceiverProductBCF_sq_integral_joint_eq
-    H N hN beta hbeta f).trans hp
+  calc
+    (∫ z,
+      (normalizedPhysicalOneSlabJointReceiverProductBCF H N hN beta hbeta f z) ^ 2
+      ∂periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+        H N hN beta hbeta) =
+        (l * ‖S f‖) ^ 2 := by
+          simpa only [l, S] using
+            (normalizedPhysicalOneSlabJointReceiverProductBCF_sq_integral_joint_eq
+              H N hN beta hbeta f)
+    _ ≤ (l * ‖f‖) ^ 2 := hp
 
 end GroundStatePosteriorJoint
 end
