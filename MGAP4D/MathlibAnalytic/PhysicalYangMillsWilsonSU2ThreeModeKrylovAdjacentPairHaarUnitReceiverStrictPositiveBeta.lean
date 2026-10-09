@@ -75,7 +75,9 @@ theorem originalPhysicalWilsonKernel_fixedRight_integrable
     exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_mul_integrable
       H 2 (Nat.zero_lt_succ 1) beta hbeta one B
   have hOneAE : (fun A : X => one A) =ᵐ[μ] (fun _ => (1 : ℝ)) := by
-    simpa [one] using (Lp.coeFn_const (μ := μ) (p := 2) (c := (1 : ℝ)))
+    change (fun A : X => (Lp.const 2 μ (1 : ℝ)) A) =ᵐ[μ]
+      (fun _ => (1 : ℝ))
+    exact Lp.coeFn_const (μ := μ) (p := 2) (c := (1 : ℝ))
   have hEq : (fun A : X => one A * K A) =ᵐ[μ] K := by
     filter_upwards [hOneAE] with A hA
     rw [hA]
