@@ -128,7 +128,7 @@ theorem physicalOriginalReceiverPosteriorInnovation_sub
       _ = Q (v f) + Q (-(v g)) :=
         pairHaarTransportedGroundStateSpatialLinkProjection_add
           H N hN beta hbeta e (v f) (-(v g))
-      _ = Q (v f) - Q (v g) := by rw [hQneg]; rfl
+      _ = Q (v f) - Q (v g) := by rw [hQneg, sub_eq_add_neg]
   change v (f - g) - Q (v (f - g)) =
     (v f - Q (v f)) - (v g - Q (v g))
   rw [hv, hQ]
