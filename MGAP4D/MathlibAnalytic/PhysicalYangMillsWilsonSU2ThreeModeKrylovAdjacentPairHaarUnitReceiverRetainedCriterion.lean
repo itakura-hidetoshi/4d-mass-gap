@@ -89,8 +89,6 @@ theorem physicalOriginalUnitReceiver_linkResidual_sq_zero_iff_retained
   let J := normalizedPhysicalOneSlabJointReceiverProductBCF H N hN beta hbeta u
   let μ := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
     H N hN beta hbeta
-  let m := periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace
-    H N e
   letI : IsProbabilityMeasure μ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_isProbabilityMeasure
       H N hN beta hbeta
@@ -101,14 +99,17 @@ theorem physicalOriginalUnitReceiver_linkResidual_sq_zero_iff_retained
     rw [← hTransport]
     exact BoundedContinuousFunction.coeFn_toLp 2 μ ℝ J
   have hRetained :
-      AEStronglyMeasurable[m] (fun z => (U v) z) μ ↔
-        AEStronglyMeasurable[m] (fun z => J z) μ := by
+      AEStronglyMeasurable[
+        periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace H N e] (fun z => (U v) z) μ ↔
+        AEStronglyMeasurable[
+        periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace H N e] (fun z => J z) μ := by
     constructor
     · intro h; exact h.congr hRep
     · intro h; exact h.congr hRep.symm
   have hP :
       P (U v) = U v ↔
-        AEStronglyMeasurable[m] (fun z => (U v) z) μ := by
+        AEStronglyMeasurable[
+        periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace H N e] (fun z => (U v) z) μ := by
     let hm :=
       periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace_le
         H N e
@@ -139,7 +140,8 @@ theorem physicalOriginalUnitReceiver_linkResidual_sq_zero_iff_retained
       rw [h]
       simp
   change (‖v - Q v‖ ^ 2 = 0) ↔
-    AEStronglyMeasurable[m] (fun z => J z) μ
+    AEStronglyMeasurable[
+        periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialLinkMeasurableSpace H N e] (fun z => J z) μ
   exact hNorm.trans (hQ.trans (hP.trans hRetained))
 
 /-- The ORIGINAL physical constant-unit full spatial-link Wilson
