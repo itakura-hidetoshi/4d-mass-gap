@@ -36,7 +36,7 @@ Gram grows linearly with Krylov depth in the genuine positive-frozen,
 zero-fine coupling sector. -/
 theorem fineRightKrylovPairHaarResidualGram_ones_normalizedRayleigh_eq
     {halfExtent : ℕ → ℕ} {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
-    (n r : ℕ) (hFine : beta (n + 1) = 0) (hFrozen : 0 < beta n) :
+    (n r : ℕ) (hFine : beta (n + 1) = 0) :
     (star (fun _ : Fin (r + 1) => (1 : ℝ)) ⬝ᵥ
       (Matrix.mulVec
         (fineRightKrylovPairHaarResidualGram
@@ -69,7 +69,7 @@ theorem fineRightKrylovPairHaarResidualGram_ones_normalizedRayleigh_pos
         (∑ j : Fin (r + 1), ((fun _ : Fin (r + 1) => (1 : ℝ)) j) ^ 2) := by
   rw [fineRightKrylovPairHaarResidualGram_ones_normalizedRayleigh_eq
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-    n r hFine hFrozen]
+    n r hFine]
   exact mul_pos
     (physicalOriginalUnitReceiverFullLinkEnergy_pos_of_beta_pos_SU2
       (halfExtent (n + 1)) (beta n) hFrozen)
