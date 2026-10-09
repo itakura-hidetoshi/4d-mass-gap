@@ -1,373 +1,251 @@
-# MGAP4D Roadmap
+# MGAP4D — Formalization Roadmap
 
-**Status date: 2026-10-08 JST — authoritative theorem-bearing snapshot: merged PR #5297, SHA `076244eb8b9899c513a9b6fff3e50b6bb1277b37`.**
+**Status: 2026-10-09 JST. Last verified theorem-bearing merge: [PR #5326](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5326), `ae59199bb6b4a1a6d3afb31f3e9b5fb2a411727c`.**
 
-This roadmap keeps proven finite-volume physical Wilson identities, conditional interfaces, no-go routes and open continuum obligations separate. **No theorem here claims a completed four-dimensional continuum Yang--Mills mass gap.** The active proof strategy is the *non-Dobrushin P4 physical posterior/Wilson crossing route*; the P3 source-tilt locality program below is historical supporting work.
+**Current program:** close physical **P4-Q2 volume dependence for the actual original SU(2) Wilson uncentered right-Krylov Gram**, then carry the proved controls into the independent adjacent-scale and continuum obligations. **P4-F1/F2/F3 are CLOSED, P4-Q1 is CLOSED quantitatively at fixed finite volume, and P4-Q2 is proved through a constructed physical linkwise Rayleigh bound.** Neither an H-uniform estimate nor a continuum four-dimensional Yang–Mills mass gap has been established.
 
-## 0. Authority checkpoint
+Read [README.md](README.md) for theorem definitions, precise finite-volume inequalities and a minimal active source chain.
 
-| Item | Verified theorem-bearing checkpoint |
+## 0. Authority, environment and evidence
+
+| Item | Value |
 | --- | --- |
-| Repository | `itakura-hidetoshi/4d-mass-gap` |
-| Unique authoritative branch | `formal/real-hilbert-uniform-coercive-strong-limit` |
-| Latest theorem-bearing PR | **#5297, merged** |
-| Latest theorem merge SHA | `076244eb8b9899c513a9b6fff3e50b6bb1277b37` |
-| Validated PR head | `e133452d5f29ea9eab74a23be32b2435b8d1ac5d` |
-| Pinned Lean / mathlib | `v4.30.0-rc2` / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
+| Unique theorem-bearing repository/branch | `itakura-hidetoshi/4d-mass-gap` / `formal/real-hilbert-uniform-coercive-strong-limit` |
+| Latest validated theorem-bearing merge | **#5326** · `ae59199bb6b4a1a6d3afb31f3e9b5fb2a411727c` |
+| PR #5326 head | `6677af987415248a619039b32138a663aaf31210` |
+| Pinned Lean | `leanprover/lean4:v4.30.0-rc2` |
+| Pinned mathlib | `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
+| Exact PR-head Lean Fast Check | [37910157743](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/37910157743) — **SUCCESS** |
+| Changed Lean job / MCP completion receipt | `113753105635` / `113754562387` — **SUCCESS / SUCCESS** |
+| Exact build / changed-file warnings and errors | **10,426 / 10,426**; **0 / 0**; no new `sorry` / `admit` / `axiom` |
 
-Authority order is fixed: (1) **fresh exact authoritative branch HEAD**, (2) Lean definitions/theorems at that SHA, (3) README/ROADMAP, (4) exact-head CI receipt, (5) conversation history. The GitHub default `main` is **not** the theorem carrier. A docs-only merge changes the branch HEAD but not the latest theorem-bearing SHA.
+Before a new PR, reobserve the **fresh exact authoritative branch HEAD**; treat that SHA and its Lean artifacts as first authority. Then use docs, matching exact-head CI and historical handoffs, in that order. The default GitHub `main` is **not** theorem authority. Docs-only updates move the authoritative branch HEAD but do not supersede the latest theorem-bearing merge.
 
-## 0A. ACTIVE P4 — proven finite-volume route
+## 1. Proof-status matrix (never conflate these gates)
 
-| PR range | Actual Lean status |
-| --- | --- |
-| #5267--#5273 | Genuine right Krylov/left-three-mode residual Gram and Rayleigh identities; quantitative volume-uniform diagonal control remains conditional |
-| #5274--#5279 | Beta=0 physical rank-one and **zero true posterior residual/Gram**; fine-beta-zero assumptions are kept distinct |
-| #5280--#5282 | Exact beta-zero-anchored two-drift decomposition; original posterior projection drift factors through one constant physical vacuum |
-| #5284--#5286 | Sharp retained-context `L²` witness Pythagoras; inverse-sqrt Wilson vacuum under true joint law; exact zero-energy iff retained measurability (nonmeasurability itself is not yet proved) |
-| #5287, #5289--#5290 | Rank-one positive-beta projection-drift Gram, exact Rayleigh and *conditional* no-mode-count physical upper bound |
-| #5292 | Exact constant/orthogonal receiver decomposition; for constant-orthogonal combined input, **physical Gram Rayleigh = receiver drift**, not merely an upper bound with factor two |
-| #5293--#5294 | Exact physical normalized Wilson joint minor factorization; symmetric SU(2) kernel minor governed by `1-crossing(A,B)^2` and positive half-weights |
-| #5295 | Explicit single-link `SU(2)` rotation `R(pi)` gives `crossing_beta(A,B)=exp(-2 beta)<1` and an actual strictly positive one-slab kernel minor for every finite H and beta>0 |
-| #5296 | **Canonical continuous positive physical vacuum** produces `W_{beta,c}` equal to the original normalized Wilson joint density **pair-Haar a.e.**; explicit strictly positive pointwise joint minor |
-| **#5297 — latest** | Strict-minor locus of continuous `W_{beta,c}` is a **nonempty open set of strictly positive fourfold spatial Haar measure**, for each beta>0 and each finite H |
-
-### What #5297 closes — and what it does not
-
-**CLOSED:** the positive-beta physical crossing witness is not merely an exceptional isolated point of the continuous joint representative. Its signed 2×2 minor remains positive on a positive-measure four-boundary event. This is an actual finite-volume mathlib theorem.
-
-**NOT CLOSED:** (1) transfer of fourfold equality to original L²-based density via explicit a.e. lifting/Fubini; (2) reduction from positive fourfold crossing minors to **nonmeasurability with respect to at least one original retained-right-link sigma algebra**; (3) a positive-volume-independent bound for the genuine all-link vacuum energy or the true receiver drift; (4) spacing-scaled physical generator and continuum mass gap. Finite-volume positivity is not a uniform gap estimate.
-
-### 0A.1 ACTIVE next-step priorities
-
-| Priority | Goal and exact proof obligation | Status |
+| Lane | Formal closure now in the authoritative branch | Remaining mathematical work |
 | --- | --- | --- |
-| **P4-F1** | Lift `W_{beta,c}=W_beta` (pair-Haar a.e.) to the four entries of each original fourfold minor, respecting independent boundary configurations and null sets | OPEN |
-| **P4-F2** | Connect the positive fourfold Wilson minor event to an original **right-link retained-σ nonmeasurability** theorem; prove any needed single-right-link descent, conditional section, and Fubini statements, without assuming pointwise equality of `L²` representatives | OPEN |
-| **P4-F3** | Feed a real nonretained-right-link witness into #5286 to deduce **strict positive-beta genuine posterior-fiber vacuum energy** for fixed finite H (only after F2) | OPEN |
-| **P4-Q1** | Build retained-measurable local witnesses `g_e` under the original joint posterior and prove a **summable, volume-uniform** `L²` error (or an obstruction), using #5284 and true Wilson variation | OPEN |
-| **P4-Q2** | Independently establish original positive-beta physical **receiver drift** `A_beta(f)` bounds independent of volume (or expose their obstruction); combine with #5289--#5290 only when hypotheses are discharged | OPEN |
-| **Continuum** | Establish spacing-scaled generator estimates, compatible physical-time limits, OS/Wightman reconstruction, and the desired continuum mass gap | OPEN |
+| **P4-F1** | **CLOSED** (#5299): original pair-Haar a.e. equality lifted to all four crossed Wilson density entries; strictly positive original fourfold minor event | No further F1 gate before fixed-volume strictness |
+| **P4-F2** | **CLOSED** (#5300–#5301): actual right-link fiber obstruction descends to the original retained sigma algebra | Do not re-open without finding a genuine error in formal assumptions |
+| **P4-F3** | **CLOSED** (#5302): true original positive-`beta` posterior vacuum `E_vac(beta,H) > 0` for every fixed finite H | A bound **uniform in H/beta** is a different problem |
+| **P4-Q1** | **Finite-H quantitative closure** (#5303–#5309): original retained `L²` witnesses; `E_vac <= |E_H|(exp(16 beta)-1)^2` | Remove or genuinely control `|E_H|` without inventing a product measure/support hypothesis; still OPEN |
+| **P4-Q2 (orthogonal)** | #5310–#5314: authentic physical orthogonal receiver `O_H(beta)` / `O_H(beta²)`, explicit distinct fine/frozen beta bounds, centered Gram | Global action budget `B_H` and vacuum-floor `m_H(beta)^(-1)` remain H-dependent |
+| **P4-Q2 (uncentered)** | #5315–#5319: genuine vacuum/excitation decomposition; explicit finite-H unit receiver and two-beta coefficient-ℓ¹ Rayleigh bound | Do not mistake coefficient-ℓ¹ for uniform ℓ² |
+| **P4-Q2 (signed posterior)** | #5320–#5324: exact link residuals, signed mode covariance, original `CondExpL2` covariance/fiber cross-integral, two-copy polarization and exact Gram = half actual resampling energy | Bound **signed covariance rows** using physically proved locality, not an asserted Schur hypothesis |
+| **P4-Q2 (constructed link budgets)** | **#5325–#5326**: authentic posterior resampling controlled by physical BCF right-link oscillation; explicit `W × M_F` half-density/mean sup-norm link coefficient | Prove useful, preferably H-uniform, summability and operator-norm control. **ACTIVE** |
+| C1/C2/C3 | Earlier adjacent-scale interfaces and conditional results | Common-marginal physicality, vector-wise reconstruction/transfer compatibility, weighted beta-trajectory summability — **OPEN** |
+| H2/H3/H4 | Finite-volume transfer, reconstruction and conditional spectral infrastructure | Spacing-scaled dynamics/generator; continuum OS Hamiltonian; Wightman Yang–Mills spectrum and positive mass gap — **OPEN** |
 
-For the current algebraic state, let `F = sum_i a_i f_i`. PRs #5287 and #5289 prove `a^T B_beta a = inner(unit,F)^2 E_beta^vac`; #5290 proves `a^T G_beta a <= 2(Cdrift+Cvac)||F||²` **only if** `A_beta(g) <= Cdrift ||g||²` for all physical `g` and `E_beta^vac <= Cvac`. On the combined constant-orthogonal sector #5292 gives the stronger exact identity `a^T G_beta a = A_beta(F)`.
+### What is now genuinely closed
 
-**Do not restart Dobrushin by default.** Keep actual frozen beta in `Q_{beta,e}` distinct from the fine beta in the right Krylov orbit; use the original Wilson measure and half-density throughout.
+The old README's assertion that a fourfold a.e. lift, single-right-link retained-sigma descent, and positive fixed-H vacuum energy remained open was **outdated after #5299–#5302**. The proved chain now is:
 
-## 0B. Historical P3 record
+```text
+original Wilson positive fourfold minor (#5296–#5297)
+  -> four crossed original-law a.e. lift (#5299)
+  -> original right-link fiber and retained-sigma descent (#5300–#5301)
+  -> E_vac(beta,H) > 0, fixed finite H and beta>0 (#5302)
+  -> original retained local Wilson L2 witnesses
+     with E_vac(beta,H) <= |E_H|(exp(16 beta)-1)^2 (#5303–#5309).
+```
 
-Sections 1--3 below preserve proved posterior/seed/source-tilt structures through #5235 and the older P3 objectives, but they are historical/supporting material, not the current immediate proof route.
+A strictly positive number for each H can still converge to zero as H grows. The upper bound above grows with `|E_H|`. **Neither side supplies a positive continuum spectral mass gap.**
 
-## 1. Closed structural chain — do not reconstruct
+## 2. Current exact mathematical object: true uncentered right-Krylov Gram
 
-| Range | Established result |
+At the actual finite spatial volume `H = halfExtent(n+1)`, distinguish:
+
+- **Fine physical orbit:** `R_(n,j) = S_(beta_(n+1),H)^j u_H`, retaining the existing exact Krylov indexing and input definitions.
+- **Frozen physical receiver and posterior:** `V_(beta_n)` and `Q_(beta_n,e) = U_(beta_n)^(-1) P_(beta_n,e) U_(beta_n)`, defined under the **original** Wilson joint law.
+- **Original signed residual:** `r_(e,j) = (I-Q_(beta_n,e)) V_(beta_n)(R_(n,j))`.
+- **True uncentered Gram:** `G_(i,j) = sum_e inner(r_(e,i),r_(e,j))`.
+
+For a real coefficient family `a` and `F_a = sum_j a_j R_(n,j)`, **#5324** identifies without loss:
+
+```text
+a* G_right a
+  = (1/2) * sum_e E_originalResampling(beta_n,e; F_a).
+```
+
+PRs #5321–#5323 identify `G_ij` with the **signed** link covariance of the actual original Wilson conditional expectation and its literal physical posterior-fiber integral. The finite Schur theorem is **conditional**: if a proved physical covariance row majorant satisfies `sum_j |G_ij| <= C` for all i, then `a*G_right a <= C sum_i a_i^2`. No H-independent C has been derived.
+
+### Newest constructed original physical bound (#5326)
+
+Write the exact existing full joint receiver
+
+```text
+V_joint(beta_n,F_a) = W_(beta_n) * M_(beta_n,F_a),
+W_(beta_n)(A,B) = ||T_(beta_n)||^(-1) * Omega_(beta_n)(B)
+                  / sqrt(rho_joint(beta_n;A,B)).
+```
+
+Define `delta_e X(z,g) = X(z) - X(z.1, update(z.2,e,g))` and its **actual** compact-carrier BCF supremum `osc_e(X)=||delta_e X||`. #5326 proves an unconditional, physically instantiated bound
+
+```text
+b_e(F_a)
+  = ||W|| * osc_e(M_(F_a))
+    + ||M_(F_a)|| * osc_e(W),
+
+a*G_right a <= (1/2) * sum_e b_e(F_a)^2.
+```
+
+This is neither a global `|E_H|` worst-case replacement **nor an H-uniform conclusion**: `||W||`, `||M_F||` and their linkwise oscillations may all depend on volume. It makes the **exact remaining estimates** explicit.
+
+## 3. ACTIVE P4-Q2 next steps — execute in order
+
+### Q2-A. Ground the physical half-density `W` in original SU(2) one-link Wilson locality
+
+**Already proved and available:**
+
+- Right-link replacement changes the complete one-slab Wilson action by a **single target crossing term plus the touching spatial plaquettes**. There is no contribution from untouched plaquettes.
+- The one-link action oscillation is at most `8`; the raw one-slab Boltzmann kernel has one-link comparison factor `exp(8*beta)`, independent of spatial volume.
+- The strictly positive **continuous physical-vacuum representative** obeys the corresponding pointwise one-link Harnack comparison with factor `exp(8*beta)`.
+
+**To prove next:** use the *exact original* joint half-density and positivity to obtain an explicit, justified one-link comparison or oscillation estimate for
+
+```text
+W_(beta)(A,B) = ||T_beta||^(-1) Omega_beta(B)
+                / sqrt(rho_joint(beta;A,B)).
+```
+
+Keep normalization, the positive continuous joint density, the original pair-Haar/joint a.e. representatives and all endpoint positions explicit. A kernel comparison **alone** is not a bound on `W`: the vacuum and square-root density must be handled jointly. Seek a coefficient vanishing as `beta -> 0` when logically justified, and identify residual volume-dependent prefactors honestly. Do not infer finite spatial support of `W`.
+
+**Candidate source chain** (all under `MGAP4D/MathlibAnalytic/`):
+
+1. `PeriodicHypercubicEvenSpecialUnitaryOneSlabRightTargetLocalActionVariation.lean`
+2. `PeriodicHypercubicEvenSpecialUnitaryOneSlabRightTargetLocalFactorBounds.lean`
+3. `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumLocalHarnack.lean`
+4. `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumPointwiseHarnack.lean`
+5. `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateJointMeasure.lean`
+6. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentVacuumReceiverDirichletLeibniz.lean`
+
+**Acceptance:** Lean theorem about the actual `normalizedPhysicalOneSlabJointHalfDensityWeightBCF` update difference (or ratio), retaining the original `W` and a correct finite-H/`beta` constant. No proxy weight.
+
+### Q2-B. Estimate the normalized physical mean `M_(beta_n,F_a)` without losing signed input
+
+The existing `normalizedPhysicalOneSlabVacuumMeanJointBCF` is the **actual** signed frozen normalized-transfer receiver. The physical input `F_a` is a linear combination of actual fine-right Krylov factors. No pointwise positivity of `F_a` is assumed.
+
+**To prove:** compare its right-link updates via the raw Wilson kernel's true target-local action increment, the physical normalization and the continuous vacuum denominator. A positive-kernel comparison for `K` does **not** directly compare two signed kernel integrals. Use a justified absolute/source-integral or Hilbert estimate before bounding the difference, and keep the genuine transfer `S`, beta scales, and source/output signs.
+
+**Acceptance:** explicit physical `osc_e(M_(F_a))` estimate in terms of rigorously defined link/source local quantities, with no arbitrary proxy posterior and no unsupported vacuum-sector projection.
+
+Possible existing inputs:
+
+- `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentFrozenOrbitVacuumReceiverL2.lean`
+- `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentVacuumReceiverDirichletLeibniz.lean`
+- `PeriodicHypercubicEvenSpecialUnitaryOneSlabRightTargetLocalKernelFactorization.lean`
+- `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarFineRightExplicitTwoCouplingBeta.lean`
+
+### Q2-C. Close the link sum or signed covariance row, not just each one-link bound
+
+Combine Q2-A and Q2-B with **#5326**. The target is a theorem whose hypotheses are discharged for the *actual* physical family, such as a bounded sum
+
+```text
+sup_(finite H) sum_(e in E_H) b_e(F_a)^2
+    <= C(beta,physical family) * sum_j a_j^2
+```
+
+with a constant demonstrably independent of spatial volume. An alternative is the signed Schur criterion from **#5321**:
+
+```text
+sup_(finite H) sup_i sum_j |sum_e inner(r_(e,i),r_(e,j))|
+    <= C.
+```
+
+The constant may need an explicit depth/scale/`beta` dependence and appropriate physical-family restrictions. Do **not** call a result uniform until every global `|E_H|`, operator floor `m_H(beta)^(-1)`, global action budget `B_H`, and coefficient-count factor is actually controlled.
+
+**Important:** one-link Wilson locality does not imply finite support after `j>0` physical transfer iterations. To reach H-uniformity, prove locality/tail estimates or cancellation, rather than assuming compact support.
+
+### Q2-D. Physically meaningful ℓ² / operator-norm closure
+
+If Q2-C yields genuine signed covariance row bounds or a stronger spectral estimate, use #5321's **real symmetric Schur** theorem to conclude
+
+```text
+a*G_right a <= C * sum_j (a_j)^2.
+```
+
+Compare the resulting C to the finite-H coefficient-ℓ¹ estimate (#5319) and the direct linkwise-residual estimate (#5320). A mere Cauchy–Schwarz restatement introducing `r+1` or `|E_H|` is **not** the desired physical operator-norm improvement.
+
+**Q2-C/D remain OPEN.** PR #5326 constructed the needed *objects*, not their volume-uniform summability.
+
+## 4. Next after P4-Q2: independently required adjacent-scale work
+
+| Gate | Required theorem | Current status |
+| --- | --- | --- |
+| **C1: physicality / leakage** | Control reconstructed candidates in the actual coarse **physical** space/common marginal; do not infer from posterior averaging. | OPEN |
+| **C2: vector-wise transfer/reconstruction** | For each relevant finite `r,k`, control the actual difference between fine physical evolution/reconstruction and coarse physical transfer with a summable bound. | OPEN |
+| **C3: explicit weighted beta trajectory** | Exhibit a trajectory for which actual original normalized-transfer response coefficients times `|beta_(n+1)-beta_n)|` are summable. | OPEN |
+| **Fixed natural-time compatibility** | Derive consistent iterates of **one** limiting discrete-time physical operator, not merely unrelated limits at each m. | OPEN |
+| **H2 physical time** | Establish the spacing-scaled generator/semigroup regime. Fixed `q0<1` at `a_n->0` alone gives `q0^(floor(t/a_n))->0` for `t>0`, not a nontrivial strongly continuous semigroup. | OPEN |
+| **H3 OS Hamiltonian** | Construct and identify physical reconstructed generator, positivity, vacuum and self-adjointness. | OPEN |
+| **H4 continuum mass gap** | Prove the required continuum Wightman/Yang–Mills spectral statement with a strictly positive mass gap. | OPEN |
+
+Finite-volume transfer constants (`kappa_12 >= 1/2304`, `gap >= 1/3072`, `q0 = 3071/3072` in their proved contexts) do **not** bypass these stages.
+
+## 5. Historical P3: keep as supporting formal results, not the active reconstruction loop
+
+The P3 posterior seed/locality machinery is retained but **deferred** behind the genuine physical P4 route. Do not repeatedly rebuild its unsuccessful Dobrushin variants.
+
+| P3 lane | Status | Source-level content |
+| --- | --- | --- |
+| Structural posterior-to-energy, #5208–#5225 | CLOSED | Original joint posterior `CondExpL2`, signed source link residual, true resampling, exact `1/6` six-color and `1/12` resampling normalizations, noncommuting projection path-loss union bound. |
+| **P3-A**, #5227 | CLOSED | Four primary plaquette seed links, intrinsic seed distance, near/far split, `distance>2` remoteness criteria. |
+| **P3-B1/B2**, #5228–#5230 | CLOSED | Full-local-factor posterior seed covariance decay, cubic shell majorant, uniform **full-local-factor** exterior covariance mass under its hypotheses. |
+| **P3-B3**, #5234–#5235 | CLOSED pointwise | Exact `fullLocalFactor=boundaryTilt*sourceRightLinkTilt`; `exp(-6 beta)<=boundaryTilt<=exp(6 beta)`; literal source-only tilt covariance decay. |
+| **P3-B4**, bridge from posterior covariance to the actual centered signed source-coordinate response | OPEN | Do **not** identify posterior covariance directly with its pair-Haar `L²` norm without a theorem. |
+| **P3-C**, signed output drift / deweighted contrast #5231–#5233 | PARTIALLY CLOSED | Cross-input contrast cancels common drift, but single-input original loss retains its output/half-density term. |
+| **P3-D**, full frozen initial link sum | OPEN | Any final P3 return must preserve actual source signs, shell sum, near links and distinct fine/frozen couplings. |
+
+This historical material should not be labeled the latest mathematical frontier. The current live frontier is the genuine #5326 `W × M` linkwise physical control.
+
+## 6. Closed no-go routes and forbidden shortcuts
+
+**Proved limitations:**
+
+- **Old H1-D5:** positive-SU(2)-coupling whole-operator compatibility is refuted; do not revive as exact top-vacuum alignment or a renamed global identity.
+- **#5207 fixed-`s>8` strict-Dobrushin scaling:** the specific finite-positive-mass spacing-scaled certificate is incompatible with its stated conditions; **not** a no-go for all continuum approaches.
+- **#5217 uncorrected sup-width majorants:** old uncorrected pointwise width estimates cannot deliver the desired route; the genuine signed-`L²` approach is different.
+
+**Proof-integrity constraints:**
+
+- Do not apply the fixed `q0` contraction to `|x|` without proving the absolute-value vector stays in the requisite sector.
+- Never identify the original posterior `P_e`, pair-Haar conjugate `Q_e`, source-coordinate projection, or physical transfer/reconstruction.
+- Preserve fourfold-a.e. and original retained-sigma conditions; do not swap a.e. with pointwise equality.
+- Do not infer H-uniformity from **fixed-H** strict positivity, local Harnack bounds or a sum of locally bounded errors.
+- Do not assume positive-depth Krylov inputs have strict finite spatial support; do not assume the nonlocal vacuum is finite-range merely because the raw plaquette action is local.
+- Do not erase the true output drift from an individual defect on the strength of a distinct two-input cancellation.
+- Do not replace noncommuting stagewise path loss by squared total displacement or concatenate the six same-initial-vector colors into one sweep.
+- Keep the exact `beta_n` frozen versus `beta_(n+1)` fine scales, the `1/6` and `1/12` energy normalizations, and the genuine Wilson joint/posterior laws.
+- No `sorry`, `admit` or new axioms in theorem-bearing additions.
+
+## 7. Active source handoff (fresh exact HEAD only)
+
+Paths have prefix `MGAP4D/MathlibAnalytic/`. Read in this order:
+
+| Proof step | Exact source |
 | --- | --- |
-| #5208--#5212 | Literal posterior fiber law -> genuine joint CondExpL2 -> arbitrary chronological schedules -> exact stage-residual energy |
-| #5214--#5218 | Actual prefix variation propagation, fixed-color enumeration, six-color profile, L2 stability, continuous scalar majorants, left-centered comparison |
-| #5219 | fineFrozenBCF exactly represents the unchanged frozen vector; approximation error zero |
-| #5220 | One-link L2 envelope including half-density variation |
-| #5221 | Noncommuting projection union bound; path-loss energy <= 4 I(f) |
-| #5222 | Signed link-local residual energy and exact set/complement splitting |
-| #5223 | Exact posterior resampling identity B_e = (1/2) Q_e and I = (1/12) sum Q_e |
-| #5224 | Exact source-only Wilson tilt factorization of a right-link update, with output drift retained |
-| #5225 | One-source-coordinate pair-Haar CondExpL2 projection and exact centered signed-response decomposition |
-
-The actual frozen convention remains fixed:
-
-x_(n,r,k) = T_hat_(n+1,beta_(n+1))^r phi_(n+1,k),
-
-while the final frozen transfer and joint half-density use beta_n. Keep r = 0.
-
-## 2. Historical P3 — quantitative locality of the actual initial residual sum (deferred)
-
-Main object:
-
-I_n(f_frozen(n,r,k))
-  = (1/6) sum_e ||(I - P_(n,e)) f_frozen||_2^2
-  = (1/12) sum_e Q_(n,e)(x_(n,r,k)).
-
-The objective is a volume-uniform or summable spatial bound on this exact quantity, strong enough for the existing adjacent-scale receivers.
-
-### P3-A. Geometric seed-distance interface — CLOSED
-
-PR #5227 defines the four canonical primary-plaquette seed links, intrinsic seed distance, and near/far finite link sets.
-
-It proves:
-
-- seed distance is zero on the seed;
-- near and far sets partition the finite spatial links;
-- seed distance > 2 implies the distinctness and plaquette-remoteness hypotheses needed by the existing #5199 posterior covariance theorem;
-- r = 0 remains the actual primary-plaquette Gram-Schmidt seed before the frozen coarse-coupling transfer.
-
-No hard support claim is made for positive transfer depth.
-
-### P3-B1. Full-local-factor seed covariance — CLOSED
-
-PR #5228 transfers #5199 to the primary seed:
-
-|Cov(seedLocalFactor, remoteFullLocalFactor)|
-  <= covariancePrefactor(s,beta) / s^(seedDistance),
-
-under the original cutoff and remoteness hypotheses.
-
-This is genuine seed-distance decay when s > 1.
-
-### P3-B2. Volume-independent shell geometry — CLOSED
-
-PR #5229 proves a uniform cubic shell majorant for the number of links at exact seed distance r.
-
-PR #5230 combines that shell majorant with the full-local-factor covariance decay and obtains a volume-independent completed covariance mass on the radius-two exterior.
-
-Therefore the geometry/summability mechanism itself is closed for the full local factor.
-
-### P3-B3. Literal source-only tilt covariance — CLOSED POINTWISE
-
-PR #5234 proves the exact factorization
-
-fullLocalFactor = boundaryTilt * sourceRightLinkTilt,
-
-where boundaryTilt is independent of the posterior integration variable. It also proves exact covariance scaling through that scalar.
-
-PR #5235 proves:
-
-- absolute half-action boundary increment <= 6;
-- exp(-6 beta) <= boundaryTilt <= exp(6 beta);
-- boundaryTilt^(-1) <= exp(6 beta);
-- seed-distance covariance decay for the literal sourceRightLinkTilt used in the signed joint response:
-
-|Cov(seedLocalFactor, sourceRightLinkTilt)|
-  <= exp(6 beta) * covariancePrefactor(s,beta)
-     / s^(seedDistance).
-
-Both distance > 2 and radius-two-exterior forms are available.
-
-**Status:** pointwise source-only covariance decay is closed. A summed source-only covariance-mass theorem analogous to #5230 has not yet been recorded and is a natural next composition.
-
-### P3-B4. Centered source-coordinate bridge — OPEN / CENTRAL
-
-The missing theorem is now sharply isolated.
-
-The actual signed source response uses
-
-C_e^src(x,z)
-  = source-coordinate CondExpL2 of
-    [J(.,z) x - O_x(z)].
-
-The proved posterior covariance theorems live on a one-slice posterior law. No theorem yet identifies
-
-||C_e^src||_2,
-
-its integrated square, or the actual frozen signed response with the seed/source-only posterior covariance from #5235.
-
-Acceptable next routes include:
-
-1. an exact posterior-to-pair lift showing a concrete frozen or finite-mode signed response is a posterior covariance with sourceRightLinkTilt;
-2. a direct duality theorem controlling the source-coordinate projection by a family of local posterior covariances;
-3. a direct distance-sensitive bound on the integrated centered source-coordinate contribution, without passing through a norm identity.
-
-Do not assert a covariance-to-source-coordinate-norm identity without proving it.
-
-### P3-C. Output/half-density drift — PARTIALLY CLOSED
-
-PR #5231 gives the exact pointwise square split of the original defect into:
-
-- retained output/half-density drift;
-- centered source-coordinate envelope.
-
-Thus the original single-input defect still contains a genuine scalar drift term.
-
-PR #5232 proves that for two signed inputs the cross-multiplied contrast cancels both the common scalar output drift and the common source-tilt mean exactly:
-
-O_v D_x - O_x D_v
-  = Out * (O_x <C_v,Tilt> - O_v <C_x,Tilt>).
-
-PR #5233 removes the strictly positive Out factor exactly:
-
-Out^(-1) (O_v D_x - O_x D_v)
-  = O_x <C_v,Tilt> - O_v <C_x,Tilt>.
-
-No observable is divided by.
-
-**Status:** drift cancellation is closed for the proved cross contrast, but the original Q_e energy is not yet replaced by that contrast. If the final P3 receiver continues through the original one-input Dirichlet form, the scalar drift still needs an integrated bound. If a theorem-generated contrast representation replaces it, that replacement must be proved explicitly.
-
-### P3-D. Return to the full Dirichlet sum — OPEN
-
-Required final P3 closure:
-
-- combine the centered-source or contrast estimate with the exact 1/12 Dirichlet normalization;
-- sum the exterior using the proved seed shell geometry;
-- control the finite near-link part;
-- preserve the actual frozen family and both beta scales;
-- produce a volume-uniform or explicitly summable bound on the whole I_n.
-
-A target of the form
-
-4 I_n <= C_(r,k) * rho^D / (1 - rho),   0 <= rho < 1,
-
-is still a goal, not a theorem.
-
-## 3. Historical P3 deliverables (deferred behind current P4)
-
-Priority order:
-
-### D1. Sum the #5235 source-only covariance decay
-
-Reuse the #5229/#5230 shell machinery and record a volume-independent radius-two-exterior mass bound with the explicit exp(6 beta) prefactor.
-
-This is mainly a composition theorem and should not introduce new model assumptions.
-
-### D2. Posterior covariance -> actual signed source response
-
-Construct the exact bridge between a concrete seed/frozen observable and the deweighted centered source contrast or sourceLinkResponse.
-
-Preferred properties:
-
-- no division by O_x or O_v;
-- no top/vacuum alignment hypothesis;
-- no hard support claim after positive transfer depth;
-- preserve signed cancellation;
-- work on the existing pair-Haar and posterior carriers.
-
-### D3. Return to Q_e
-
-Convert D2 into an integrated square bound for the original resampling contribution, or prove a new exact receiver showing the relevant contrast controls the same energy.
-
-Only after this step should P3 be regarded as closed.
-
-## 4. Independent adjacent-scale obligations
-
-### C1. Common-marginal physicality — OPEN
-
-Control the actual leakage of reconstructed candidates from the coarse physical range.
-
-Do not infer physicality from posterior averaging or source-coordinate localization.
-
-### C2. Physical transfer / reconstruction commutation — OPEN
-
-For each fixed finite r,k, control the actual vector-wise mismatch between fine transfer followed by reconstruction and coarse physical transfer.
-
-A summable vector-wise bound is sufficient. Whole-space operator-norm convergence is not required and must not be substituted for the refuted H1-D5 route.
-
-### C3. Weighted beta trajectory — OPEN INPUT
-
-Prove summability for an explicit trajectory of the already-defined same-volume normalized physical-transfer beta-response coefficient multiplied by |beta_(n+1) - beta_n|.
-
-Small unweighted increments alone are insufficient.
-
-## 5. Fixed-natural-time closure and later physical layers
-
-Once P3, C1, C2 and C3 are supplied, existing receivers can produce fixed-natural-time Cauchy/strong limits and the already-proved q0^m decay for the theorem-generated excitation under their hypotheses.
-
-Still separate:
-
-1. **One limiting discrete-time operator:** fixed-m limits do not automatically define compatible iterates of one operator.
-2. **H2 physical time:** if a_n -> 0 while a fixed q0 < 1 controls the sector, then q0^(floor(t/a_n)) -> 0 for t > 0. A nontrivial strongly continuous semigroup needs spacing-sensitive operator or generator scaling.
-3. **H3 OS Hamiltonian:** construct and identify the physical Hilbert space and generator with the required positivity, self-adjointness and vacuum properties.
-4. **H4 Wightman / spectral mass gap:** verify continuum reconstruction and the intended Yang--Mills energy-momentum spectral statement.
-
-## 6. Closed no-go routes
-
-### N1. Old completed H1-D5
-
-At positive SU(2) coupling, the old whole-operator compatibility forces rank-one behavior incompatible with the constructed finite sector. Do not restore it as exact vacuum/top alignment, exact completed cross-scale transfer compatibility, or an equivalent whole-space identity.
-
-### N2. #5207 fixed-s strict-Dobrushin finite-positive-mass certificate
-
-For fixed s > 8, the existing strict-Dobrushin scaling certificate cannot simultaneously realize a_n -> 0 and a finite positive spacing-scaled mass rate.
-
-This does not rule out every continuum route.
-
-### N3. #5217 old sup-width initial majorants
-
-The limitation of the old uncorrected uniform sup-width majorants remains valid. The signed L2 route is a different route, not a repeal.
-
-## 7. Forbidden shortcuts
-
-- Do not apply q0 to |x|; non-top preservation after absolute value is unproved.
-- Do not identify posterior projection, source-coordinate projection, physical transfer and coarse physical projection.
-- Do not replace joint-a.e. identities by pointwise identities on exceptional fibers.
-- Do not infer original right-link retained-sigma nonmeasurability from a pointwise or positive-fourfold-Haar crossing event without the required fourfold a.e./Fubini and right-link descent theorems.
-- Do not infer a positive-beta volume-uniform gap from a strictly positive fixed-volume Wilson crossing minor or posterior energy.
-- Do not infer locality from compactness, BCF density, finite-dimensionality or positivity.
-- Do not infer hard support for the positive-depth frozen orbit.
-- Do not concatenate the six colors into one sweep when the theorem treats six sweeps from the same initial vector.
-- Do not replace noncommuting path loss by squared total displacement.
-- Preserve the exact 1/6 six-color normalization and 1/12 resampling normalization.
-- Do not delete the scalar output drift from an individual defect merely because the cross contrast cancels it.
-- Do not identify posterior covariance with ||C_e^src||_2 without an explicit theorem.
-- Preserve the distinction between beta_(n+1) in the orbit and beta_n in the final frozen transfer / joint law.
-
-## 8. Source-level handoff
-
-### Current P4 source order — read first
-
-All paths below are relative to `MGAP4D/MathlibAnalytic/` and must be fetched at the **fresh exact authoritative HEAD**. Do not use GitHub's default `main` for these proofs.
-
-1. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarGramDiagonalRayleighCriterion.lean`
-2. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarFrozenZeroAllLinkVanishing.lean`
-3. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarBetaZeroAnchoredDrift.lean`
-4. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarBetaZeroAnchoredProjectionRankOne.lean`
-5. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarBetaZeroAnchoredVacuumJointVariance.lean`
-6. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarVacuumRetainedWitnessPythagoras.lean`
-7. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarVacuumWilsonDensityHaarWitness.lean`
-8. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarVacuumZeroIffRetainedWilson.lean`
-9. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarPositiveBetaProjectionDriftRankOneGram.lean`
-10. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarPositiveBetaDriftRayleigh.lean`
-11. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarPositiveBetaDriftRayleighHilbertCriterion.lean`
-12. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarPositiveBetaOrthogonalReceiverExact.lean`
-13. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarWilsonJointCrossingMinor.lean`
-14. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarWilsonJointDiagonalMinor.lean`
-15. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarConcretePositiveBetaCrossingWitness.lean`
-16. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarContinuousJointCrossingWitness.lean`
-17. **`PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarContinuousJointCrossingPositiveMeasure.lean`** — latest positive-fourfold-Haar theorem
-
-For future F1/F2 work also inspect the existing original ground-state measure, original `CondExpL2` projection, spatial Haar full-support/finite product instances, and `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumRepresentative.lean`.
-
-### Historical P3 source-only-tilt/covariance handoff — do not mistake for the active frontier
-
-1. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPosteriorSeedDistance.lean`
-2. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPosteriorSeedCovarianceDecay.lean`
-3. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPosteriorSeedPolynomialShell.lean`
-4. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPosteriorSeedCovarianceMass.lean`
-5. `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointSourceCoordinateProjection.lean`
-6. `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointSourceCoordinateL2.lean`
-7. `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointSourceCoordinateDefectSplit.lean`
-8. `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointSourceCoordinateContrast.lean`
-9. `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorJointSourceCoordinateDeweightedContrast.lean`
-10. `PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferPosteriorSourceTiltCovarianceFactorization.lean`
-11. `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPosteriorSourceTiltSeedCovarianceDecay.lean`
-
-Retain #5199 posterior covariance, #5221 noncommuting union bound, #5223 literal resampling Dirichlet, #5219 frozen BCF as historical supporting inputs.
-
-## 9. Verification evidence
-
-| Evidence | Latest theorem-bearing receipt |
-| --- | --- |
-| #5297 PR head | `e133452d5f29ea9eab74a23be32b2435b8d1ac5d` |
-| PR Lean Fast Check | [run 37761412979](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/37761412979) — SUCCESS |
-| Changed Lean job | 113258448809 — SUCCESS |
-| Matching MCP completion receipt job | 113259999219 — SUCCESS |
-| Build and new-file diagnostics | **10,398 jobs built**, zero new warning/error, sorry/admit 0 |
-| Theorem-bearing merge | `076244eb8b9899c513a9b6fff3e50b6bb1277b37` |
-| Post-merge exact-SHA CI | [run 37761946518](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/37761946518) — SUCCESS |
-
-For theorem PRs: re-observe the authoritative SHA, check all changed Lean source plus dependencies/typeclass synthesis, ensure **actual changed-Lean job success** and a **matching exact-head MCP receipt**; no failing Lean job may be masked by a successful receipt publisher, and no new sorry/admit/axiom is acceptable.
-
-For docs-only PRs: compare against fresh authoritative HEAD; require **README.md and ROADMAP.md only** and do not describe the resulting merge as a theorem advancement. Always separate the latest theorem-bearing merge SHA from subsequent docs-only branch HEAD.
-
-## 10. Immediate next milestone
-
-**P4-F1/F2 first: establish a real fourfold a.e. bridge and retained-right-link descent from the strictly positive crossing-minor event proved in #5297.**
-
-For every finite H and beta>0, #5296--#5297 now provide an authentic continuous Wilson joint representative `W_{beta,c}` equal to the original density **pair-Haar almost everywhere**, and a nonempty open **fourfold Haar-positive** strict-minor event. These are definitive finite-volume statements, not merely a possible or hypothetical witness.
-
-**Next mathematical deliverables:**
-
-1. Prove that all four pair entries `W_beta(A1,B1)`, `W_beta(A2,B2)`, `W_beta(A1,B2)`, `W_beta(A2,B1)` agree with the corresponding continuous-version entries on a **common fourfold full-measure set**, using explicit quasi-measure-preserving coordinate maps/Fubini and checking every marginal/null-set hypothesis.
-2. Derive a right-link retained-sigma-algebra **descent obstruction**: show that the original vacuum being retained-measurable at all right links would force the fourfold Wilson minor to vanish almost everywhere (or find the exact missing compatibility condition). Do not identify full left/right factorization with one-link measurability without an explicit theorem.
-3. Only when this original-law nonmeasurability is established, use the existing #5286 iff/positivity theorem to conclude `E_beta^vac > 0` for a fixed finite volume and positive beta. **Finite-volume strict positivity does not provide a volume-independent bound.**
-4. Separately, use #5284's **sharp** retained-context witness errors to attempt `E_beta^vac <= Cvac` independent of H, and bound true `A_beta(f) <= Cdrift ||f||²` with `Cdrift` independent of H (or rigorously prove obstruction). Only then instantiate #5290's conditional Gram/Rayleigh estimate.
-5. Preserve the independent spacing-scaled generator, compatible adjacent-scale physicality and continuum OS/Wightman mass-gap obligations.
-
-The independent H1-D5 no-go remains in force; the strict-Dobrushin scaling certificate and old sup-width majorants remain refuted as already recorded. **Do not restart the unsuccessful Dobrushin lane.**
-
-This is the exact handoff after merged #5297, not a claim that the positive-beta volume-uniform Yang--Mills mass gap has been proved.
+| F1/F2/F3 closure | `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalJointFourfoldAELifting.lean` → `...PairHaarRightLinkFiberDescent.lean` → `...PairHaarRightLinkRetainedAEDescent.lean` → `...PairHaarPositiveBetaVacuumFiberEnergy.lean` |
+| Q1 fixed-H retained witnesses | `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarCanonicalUnregularizedRetainedL2.lean` (#5309) |
+| Q2 genuine unit and two-beta control | `...PairHaarUnitReceiverDirichletExplicitBeta.lean` (#5318), `...PairHaarUncenteredCoefficientL1Rayleigh.lean` (#5319) |
+| Q2 exact link residual | `...PairHaarUncenteredLocalLinkwiseRayleigh.lean` (#5320) |
+| Q2 signed Schur covariance | `...PairHaarUncenteredPosteriorCovarianceSchur.lean` (#5321) |
+| Q2 original joint and fiber identities | `...PairHaarUncenteredOriginalJointConditionalCovariance.lean` (#5322), `...PairHaarUncenteredOriginalFiberCrossCovariance.lean` (#5323) |
+| Q2 exact original two-copy energy | `...PairHaarUncenteredResamplingPolarization.lean` (#5324) |
+| Q2 genuine per-link oscillation | `...PairHaarPhysicalPosteriorOscillation.lean` (#5325) |
+| **Immediate theorem carrier** | **`PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarPhysicalHalfDensityMeanLinkBudget.lean`** (#5326) |
+| Local Wilson / vacuum inputs | `PeriodicHypercubicEvenSpecialUnitaryOneSlabRightTargetLocalActionVariation.lean`, `...OneSlabRightTargetLocalFactorBounds.lean`, `...PhysicalTransferContinuousVacuumPointwiseHarnack.lean` |
+| Original physical product splitting | `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentVacuumReceiverDirichletLeibniz.lean` |
+
+Ellipses in the table abbreviate the shared filename prefix `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacent` or `PeriodicHypercubicEvenSpecialUnitary`, **not** independent proof artifacts. Fetch the exact full path in GitHub at the authoritative SHA; never guess an import or use default `main`.
+
+## 8. PR completion protocol and next deliverable
+
+1. Freshly reobserve the authoritative branch exact SHA; examine the actual Lean definitions, existing proof dependency APIs and the current physical coefficient definitions.
+2. Implement **one substantive Q2-A theorem**: an actual original-Wilson half-density factor `W` right-link ratio/oscillation consequence of proved local action + physical vacuum Harnack (or a rigorously diagnosed obstruction). No new surrogate law or assumed volume-independent global norm.
+3. Inspect **the entire new Lean file and all affected dependencies**, not only CI error line numbers. Fix pinned Lean/mathlib elaboration issues, including equality orientation, norm conversions, measurability and local instances.
+4. Require an exact PR head with **Lean job SUCCESS**, **matching MCP completion receipt SUCCESS**, **zero changed-file warnings/errors** and **no new sorry/admit/axiom**. Only then merge.
+5. Reobserve the theorem carrier HEAD and update the proof-status table separately if the math actually advances.
+
+For this docs revision, the last independently verified theorem evidence is [PR #5326](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5326), source SHA `6677af987415248a619039b32138a663aaf31210`, [exact-head CI run 37910157743](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/37910157743), changed Lean job `113753105635`, matching receipt `113754562387`, build **10,426 / 10,426**, new-file diagnostics **0 / 0**, merge SHA `ae59199bb6b4a1a6d3afb31f3e9b5fb2a411727c`. This **documentation-only** PR is not a new theorem; its diff should contain **only `README.md` and `ROADMAP.md`**.
+
+**Immediate next milestone:** a fully original, physical SU(2) frozen-`beta` one-link estimate for the #5326 half-density `W`, followed by signed physical mean `M_(F_a)` link variation, leading to a truly summable/H-independent Gram coefficient **if the mathematics supports it**. Keep continuum claims out until H2–H4 are actually completed.
