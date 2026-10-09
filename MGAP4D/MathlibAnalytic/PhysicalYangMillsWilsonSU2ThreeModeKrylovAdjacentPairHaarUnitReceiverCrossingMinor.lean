@@ -45,7 +45,7 @@ theorem p4Q2_crossing_forces_one_row_receiver_difference
     c1 / Real.sqrt w11 ≠ c2 / Real.sqrt w12 ∨
       c1 / Real.sqrt w21 ≠ c2 / Real.sqrt w22 := by
   by_contra hn
-  push_neg at hn
+  push Not at hn
   obtain ⟨hrow1, hrow2⟩ := hn
   have h11 : Real.sqrt w11 ≠ 0 := (Real.sqrt_pos.2 hw11).ne'
   have h12 : Real.sqrt w12 ≠ 0 := (Real.sqrt_pos.2 hw12).ne'
@@ -220,16 +220,20 @@ theorem physicalOriginalUnitReceiverFullLinkEnergy_pos_of_explicitConstantTransf
   rcases hrows with hrow | hrow
   · have hdifference : J (A,A) ≠ J (A,B) := by
       simpa only [hJ] using hrow
-    have hp := physicalOriginalUnitReceiverFullLinkEnergy_pos_of_targetFiber_difference
+    apply physicalOriginalUnitReceiverFullLinkEnergy_pos_of_targetFiber_difference
       H beta hbeta A (split A).2 (split A).1 (split B).1
-    apply hp
-    simpa only [hA, hB] using hdifference
+    change J (A, split.symm ((split A).1, (split A).2)) ≠
+      J (A, split.symm ((split B).1, (split A).2))
+    rw [hA, hB]
+    exact hdifference
   · have hdifference : J (B,A) ≠ J (B,B) := by
       simpa only [hJ] using hrow
-    have hp := physicalOriginalUnitReceiverFullLinkEnergy_pos_of_targetFiber_difference
+    apply physicalOriginalUnitReceiverFullLinkEnergy_pos_of_targetFiber_difference
       H beta hbeta B (split A).2 (split A).1 (split B).1
-    apply hp
-    simpa only [hA, hB] using hdifference
+    change J (B, split.symm ((split A).1, (split A).2)) ≠
+      J (B, split.symm ((split B).1, (split A).2))
+    rw [hA, hB]
+    exact hdifference
 
 end GroundStatePosteriorJoint
 end
