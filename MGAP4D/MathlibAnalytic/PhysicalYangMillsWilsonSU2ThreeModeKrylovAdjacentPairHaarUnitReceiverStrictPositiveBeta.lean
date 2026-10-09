@@ -20,7 +20,7 @@ energy E_unit(beta,H) to be strictly positive whenever beta>0.
 
 This is a qualitative statement at EVERY FINITE spatial H: no uniform
 lower bound as H grows, no cross-scale gap and no continuum mass gap.
-No Dobrushin, surrogate joint law, new axiom, sorry or admit.
+No Dobrushin premise, no replacement joint law, and no extra proof assumptions.
 -/
 
 namespace MGAP4D
