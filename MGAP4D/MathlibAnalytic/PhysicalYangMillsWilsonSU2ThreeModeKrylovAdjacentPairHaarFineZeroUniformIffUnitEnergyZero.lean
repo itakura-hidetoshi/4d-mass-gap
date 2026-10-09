@@ -81,8 +81,7 @@ theorem fineRightKrylovPairHaarResidualGram_allDepth_zero_iff_unitEnergy_zero
         n 0 hFine (0 : Fin (0 + 1)) (0 : Fin (0 + 1))
     rw [hZero 0] at hEntry
     simpa using hEntry.symm
-  · intro hE
-    intro r
+  · intro hE r
     ext i j
     rw [fineRightKrylovPairHaarResidualGram_entry_eq_unitEnergy_of_fine_beta_zero
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
