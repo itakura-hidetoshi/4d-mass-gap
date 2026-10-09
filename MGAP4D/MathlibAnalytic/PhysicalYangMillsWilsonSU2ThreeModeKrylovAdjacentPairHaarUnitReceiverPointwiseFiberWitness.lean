@@ -47,6 +47,12 @@ local instance p4Q2FiberMeasurableSpace :
 local instance p4Q2FiberBorelSpace :
     BorelSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupBorelSpace 2
+local instance p4Q2FiberGroupHaarOpenPos :
+    Measure.IsOpenPosMeasure
+      (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ)) := by
+  dsimp [normalizedCompactHaar]
+  infer_instance
+
 local instance p4Q2FiberSpatialLinkFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
