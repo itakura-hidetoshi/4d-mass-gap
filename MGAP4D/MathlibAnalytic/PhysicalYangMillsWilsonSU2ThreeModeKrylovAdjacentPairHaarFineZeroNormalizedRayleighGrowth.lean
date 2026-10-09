@@ -53,7 +53,6 @@ theorem fineRightKrylovPairHaarResidualGram_ones_normalizedRayleigh_eq
     fineRightKrylov_ones_coeff_sq_norm_eq]
   have hcard : (((r + 1 : ℕ) : ℝ)) ≠ 0 := by positivity
   field_simp
-  ring
 
 /-- The normalized Rayleigh quotient is strictly positive at every depth,
 with no assumed positivity of a surrogate vacuum receiver. -/
