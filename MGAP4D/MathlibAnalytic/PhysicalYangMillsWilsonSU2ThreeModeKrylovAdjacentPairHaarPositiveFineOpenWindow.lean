@@ -29,7 +29,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory Filter
-open scoped ENNReal InnerProductSpace InnerProduct BigOperators
+open scoped ENNReal InnerProductSpace InnerProduct BigOperators Topology
 
 noncomputable section
 set_option maxHeartbeats 2000000
@@ -41,9 +41,15 @@ theorem physicalOriginalNormalizedTransferConstantStepBetaBudget_continuous
     (H : ℕ) :
     Continuous (fun t : ℝ =>
       GroundStatePosteriorJoint.physicalOriginalNormalizedTransferConstantStepBetaBudget H t) := by
-  unfold GroundStatePosteriorJoint.physicalOriginalNormalizedTransferConstantStepBetaBudget
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor
-  fun_prop
+  let A : ℝ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H
+  have hExp : Continuous (fun t : ℝ => Real.exp (-(t * A))) := by
+    fun_prop
+  have hInv : Continuous (fun t : ℝ => (Real.exp (-(t * A)))⁻¹) :=
+    hExp.fun_inv₀ (fun t => (Real.exp_pos _).ne')
+  change Continuous (fun t : ℝ =>
+    2 * (Real.exp (-(t * A)))⁻¹ * A * t)
+  exact ((continuous_const.mul hInv).mul continuous_const).mul continuous_id
 
 /-- Genuine physical fine-step budget is continuous at zero and has
 zero value there. -/
