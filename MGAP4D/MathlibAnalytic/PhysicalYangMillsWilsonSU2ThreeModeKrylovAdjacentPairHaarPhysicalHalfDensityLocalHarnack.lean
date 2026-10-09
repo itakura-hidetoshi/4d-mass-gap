@@ -83,13 +83,11 @@ private theorem positive_halfDensity_mul_sqrt_le
     rw [div_pow, Real.sq_sqrt hq.le]
     dsimp [q]
     field_simp [ne_of_gt hl, ne_of_gt hx, ne_of_gt hk, ne_of_gt hy]
-    <;> ring
   have hwsq' : w' ^ 2 * (x * k') = l * y' := by
     dsimp [w']
     rw [div_pow, Real.sq_sqrt hq'.le]
     dsimp [q']
     field_simp [ne_of_gt hl, ne_of_gt hx, ne_of_gt hk', ne_of_gt hy']
-    <;> ring
   have hYscale : l * y' ≤ R * (l * y) := by
     calc
       l * y' ≤ l * (R * y) := mul_le_mul_of_nonneg_left hY hl.le
