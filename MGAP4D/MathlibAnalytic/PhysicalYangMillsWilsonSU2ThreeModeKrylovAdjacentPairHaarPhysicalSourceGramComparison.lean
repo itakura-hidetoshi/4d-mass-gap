@@ -209,7 +209,6 @@ theorem fineRightKrylovPairHaarResidualGram_rayleigh_le_physicalSourceGram
           (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
           n r) a)) := by
       rw [hSrc]
-      ring
 
 /-- A certified (not assumed as true) physical source-frame coefficient
 passes to the original uncentered right-Krylov Gram without an
