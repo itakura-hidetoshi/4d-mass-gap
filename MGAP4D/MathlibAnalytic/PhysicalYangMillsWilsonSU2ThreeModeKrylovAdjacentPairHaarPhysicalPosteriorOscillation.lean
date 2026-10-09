@@ -135,7 +135,7 @@ theorem originalWilsonPosteriorResamplingEnergy_le_constantLinkOscillation
   have h := originalWilsonPosteriorResamplingEnergy_le_pointwiseLinkOscillation
     H N hN beta hbeta e F (fun _ => c)
     (integrable_const _) (by intro z g; exact hc z g)
-  simpa only [integral_const] using h
+  simpa using h
 
 /-- Actual target-link invariance forces exact vanishing of the ORIGINAL
 posterior two-copy energy, independently of any remote Wilson density. -/
