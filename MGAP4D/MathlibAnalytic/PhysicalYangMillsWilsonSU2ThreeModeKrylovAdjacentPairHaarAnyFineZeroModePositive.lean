@@ -151,7 +151,7 @@ theorem physicalOriginalUnitReceiver_exists_positive_link_norm_SU2
   push Not at hn
   have hzero (e : PeriodicHypercubicEvenSpatialSliceLink H) :
       ‖I e u‖ = 0 :=
-    le_antisymm (le_of_not_gt (hn e)) (norm_nonneg _)
+    le_antisymm (hn e) (norm_nonneg _)
   have hsum :
       physicalOriginalUnitReceiverFullLinkEnergy
         H 2 specialUnitaryTwoWilsonRankPositive beta (le_of_lt hbeta) = 0 := by
