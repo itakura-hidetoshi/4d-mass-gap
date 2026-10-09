@@ -54,9 +54,65 @@ local instance p4Q2JLinkFintype (H : ℕ) :
 
 namespace GroundStatePosteriorJoint
 
-/-- Literal positive fixed-right Wilson kernel integral for the original
-normalized spatial Haar measure. This is the raw finite-volume transfer
-of the actual constant-one Haar vector, BEFORE normalization. -/
+/-- A fixed-right section of the ORIGINAL Wilson kernel is integrable
+under Haar probability. Use an explicitly typed section map to avoid
+expensive implicit elaboration of the finite-group product topology. -/
+theorem originalPhysicalWilsonKernel_fixedRight_integrable
+    (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    Integrable
+      (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta A B)
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) := by
+  let X := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
+  let K : X → ℝ := fun A =>
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta A B
+  have hKernel :
+      Continuous (fun z : X × X =>
+        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H 2 beta z.1 z.2) :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous H 2 beta
+  have hSection : Continuous (fun A : X => (A, B)) :=
+    continuous_id.prodMk continuous_const
+  have hKContinuous : Continuous K := hKernel.comp hSection
+  apply Integrable.of_bound hKContinuous.aestronglyMeasurable 1
+  filter_upwards with A
+  change ‖K A‖ ≤ 1
+  rw [Real.norm_eq_abs, abs_of_pos
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
+      H 2 beta A B)]
+  exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_le_one
+    H 2 (Nat.zero_lt_succ 1) beta hbeta A B
+
+/-- The strictly positive original Wilson kernel has a positive
+fixed-right Haar integral for EVERY finite-volume right boundary. -/
+theorem originalPhysicalWilsonKernel_fixedRight_integral_pos
+    (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    0 < ∫ A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta A B
+      ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) := by
+  let X := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
+  let K : X → ℝ := fun A =>
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta A B
+  have hKIntegrable : Integrable K μ :=
+    originalPhysicalWilsonKernel_fixedRight_integrable H beta hbeta B
+  have hKPos : ∀ A : X, 0 < K A := fun A =>
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos H 2 beta A B
+  change 0 < ∫ A, K A ∂μ
+  rw [integral_pos_iff_support_of_nonneg (fun A => (hKPos A).le) hKIntegrable]
+  have hsupp : Function.support K = Set.univ := by
+    ext A
+    simp only [Function.mem_support, Set.mem_univ, iff_true]
+    exact (hKPos A).ne'
+  rw [hsupp]
+  simp [μ]
+
+/-- Raw true physical transfer of canonical constant Haar unit equals
+the positive fixed-right Wilson integral, with no pointwise L² quotient
+substitution (the Haar constant equality is used only a.e.). -/
 theorem originalPhysicalConstantUnitRawTransferAtIdentity_pos
     (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta) :
     0 <
@@ -72,33 +128,18 @@ theorem originalPhysicalConstantUnitRawTransferAtIdentity_pos
   let K : X → ℝ := fun A =>
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta A B
   have hu : (u : Lp ℝ 2 μ) = Lp.const 2 μ (1 : ℝ) := by
-    simpa [u, μ, periodicHypercubicEvenSpecialUnitarySpatialSliceHaarOneL2] using
-      (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_coe_eq_HaarOneL2 H 2)
+    change
+      ((periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2 :
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2) :
+        Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)) =
+      periodicHypercubicEvenSpecialUnitarySpatialSliceHaarOneL2 H 2
+    exact periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_coe_eq_HaarOneL2
+      H 2
   have huAE : (fun A : X => (u : Lp ℝ 2 μ) A) =ᵐ[μ] (fun _ => (1 : ℝ)) := by
     rw [hu]
     exact Lp.coeFn_const (μ := μ) (p := 2) (c := (1 : ℝ))
-  have hKPos : ∀ A : X, 0 < K A := by
-    intro A
-    exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
-      H 2 beta A B
-  have hKContinuous : Continuous K := by
-    exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H 2 beta).comp (continuous_id.prodMk continuous_const)
-  have hKIntegrable : Integrable K μ := by
-    apply Integrable.of_bound hKContinuous.aestronglyMeasurable 1
-    filter_upwards with A
-    change ‖K A‖ ≤ 1
-    rw [Real.norm_eq_abs, abs_of_pos (hKPos A)]
-    exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_le_one
-      H 2 (Nat.zero_lt_succ 1) beta hbeta A B
-  have hKIntegralPos : 0 < ∫ A, K A ∂μ := by
-    rw [integral_pos_iff_support_of_nonneg (fun A => (hKPos A).le) hKIntegrable]
-    have hsupp : Function.support K = Set.univ := by
-      ext A
-      simp only [Function.mem_support, Set.mem_univ, iff_true]
-      exact (hKPos A).ne'
-    rw [hsupp]
-    simp [μ]
+  have hIntPos : 0 < ∫ A, K A ∂μ :=
+    originalPhysicalWilsonKernel_fixedRight_integral_pos H beta hbeta B
   have hRaw :
       decomposableOneSliceTransferIntegral H 2 beta (u : Lp ℝ 2 μ) B =
         ∫ A, K A ∂μ := by
@@ -110,7 +151,7 @@ theorem originalPhysicalConstantUnitRawTransferAtIdentity_pos
     ring
   change 0 < decomposableOneSliceTransferIntegral H 2 beta (u : Lp ℝ 2 μ) B
   rw [hRaw]
-  exact hKIntegralPos
+  exact hIntPos
 
 /-- Strict positivity of the GENUINE normalized constant-input vacuum
 receiver at the explicit Wilson identity boundary, based on the original
