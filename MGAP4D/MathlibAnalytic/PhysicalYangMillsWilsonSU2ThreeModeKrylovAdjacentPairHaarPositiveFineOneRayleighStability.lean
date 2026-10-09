@@ -58,13 +58,15 @@ theorem p4Q2_finite_sum_ne_zero_of_uniform_norm_sub_lt
       (∑ j : Fin (r + 1), (v j - u)) =
         -(((r + 1 : ℕ) : ℝ) • u) := by
     rw [Finset.sum_sub_distrib, hzero]
-    simp [nsmul_eq_smul_cast]
+    simpa only [Finset.sum_const, Finset.card_fin, zero_sub,
+      Nat.cast_smul_eq_nsmul]
   have hCard : (0 : ℝ) < ((r + 1 : ℕ) : ℝ) := by positivity
   have hLe : ((r + 1 : ℕ) : ℝ) * ‖u‖ ≤ ((r + 1 : ℕ) : ℝ) * b := by
     calc
       ((r + 1 : ℕ) : ℝ) * ‖u‖ =
           ‖-(((r + 1 : ℕ) : ℝ) • u)‖ := by
-            simp [norm_smul, Real.norm_eq_abs, abs_of_pos hCard]
+            simpa only [norm_neg, norm_smul, Real.norm_eq_abs,
+              abs_of_pos hCard]
       _ = ‖∑ j : Fin (r + 1), (v j - u)‖ :=
         congrArg norm hRef.symm
       _ ≤ ((r + 1 : ℕ) : ℝ) * b := hBound
@@ -137,7 +139,10 @@ theorem fineRightKrylov_linkInnovation_sub_unit_norm_le_fineBudget
   change ‖I e R - I e u‖ ≤ Real.sqrt gamma * ((j : ℝ) * B)
   calc
     ‖I e R - I e u‖ = ‖I e (R - u)‖ := by
-      rw [physicalOriginalReceiverPosteriorInnovation_sub]
+      exact (congrArg norm
+        (physicalOriginalReceiverPosteriorInnovation_sub
+          H 2 specialUnitaryTwoWilsonRankPositive
+          (beta n) (hbeta n) e R u)).symm
     _ ≤ Real.sqrt gamma * ‖R - u‖ := hHilbert
     _ ≤ Real.sqrt gamma * ((j : ℝ) * B) :=
       mul_le_mul_of_nonneg_left hInput hSq
@@ -245,6 +250,11 @@ theorem fineRightKrylovPairHaarResidualGram_ones_rayleigh_exists_fineBudget_thre
     (n r : ℕ) (hFrozen : 0 < beta n) :
     ∃ (e : PeriodicHypercubicEvenSpatialSliceLink (halfExtent (n + 1)))
       (delta : ℝ), 0 < delta ∧
+        delta = ‖physicalOriginalReceiverPosteriorInnovation
+          (halfExtent (n + 1)) 2 specialUnitaryTwoWilsonRankPositive
+          (beta n) (hbeta n) e
+          (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector
+            (halfExtent (n + 1)) 2)‖ ∧
         (Real.sqrt (originalWilsonPhysicalSignedInnovationHilbertCoefficient
           (halfExtent (n + 1)) 2 specialUnitaryTwoWilsonRankPositive
           (beta n) (hbeta n)) *
@@ -264,7 +274,7 @@ theorem fineRightKrylovPairHaarResidualGram_ones_rayleigh_exists_fineBudget_thre
     (halfExtent (n + 1)) 2 specialUnitaryTwoWilsonRankPositive
     (beta n) (hbeta n) e
     (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector
-      (halfExtent (n + 1)) 2)‖, he, ?_⟩
+      (halfExtent (n + 1)) 2)‖, he, rfl, ?_⟩
   intro hsmall
   exact fineRightKrylovPairHaarResidualGram_ones_rayleigh_pos_of_fineBudget_small
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
