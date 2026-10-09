@@ -57,14 +57,14 @@ theorem realL2_condExp_residual_inner_eq_covarianceLoss
   have hq : AEStronglyMeasurable[m] (fun z => q z) μ :=
     aestronglyMeasurable_condExpL2 hm g
   have hfq : inner ℝ f q = inner ℝ p q :=
-    inner_condExpL2_eq_inner_fun (𝕜 := ℝ) hm f q hq
+    (inner_condExpL2_eq_inner_fun (𝕜 := ℝ) hm f q hq).symm
   have hgp : inner ℝ g p = inner ℝ q p :=
-    inner_condExpL2_eq_inner_fun (𝕜 := ℝ) hm g p hp
+    (inner_condExpL2_eq_inner_fun (𝕜 := ℝ) hm g p hp).symm
   have hpg : inner ℝ p g = inner ℝ p q := by
     calc
       inner ℝ p g = inner ℝ g p := real_inner_comm g p
       _ = inner ℝ q p := hgp
-      _ = inner ℝ p q := real_inner_comm q p
+      _ = inner ℝ p q := (real_inner_comm q p).symm
   change inner ℝ (f - p) (g - q) =
     inner ℝ f g - inner ℝ p q
   calc
