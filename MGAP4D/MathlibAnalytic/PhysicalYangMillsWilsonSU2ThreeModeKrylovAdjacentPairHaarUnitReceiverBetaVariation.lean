@@ -248,7 +248,7 @@ theorem normalizedPhysicalOneSlabPairHaarReceiver_unit_sub_zero_norm_le_explicit
       _ ≤ ‖S u - u‖ + ‖((1 : ℝ) - lam) • u‖ :=
         norm_add_le _ _
       _ = ‖S u - u‖ + ‖lam - 1‖ := by
-        rw [norm_smul, hu, mul_one, norm_sub_rev]
+        rw [norm_smul, hu, mul_one, norm_sub_rev (1 : ℝ) lam]
       _ ≤ M + B * beta := add_le_add hStep hNormVariation
   have hScaled : a • S u - u = a • (S u - lam • u) := by
     rw [smul_sub, smul_smul, halam, one_smul]
