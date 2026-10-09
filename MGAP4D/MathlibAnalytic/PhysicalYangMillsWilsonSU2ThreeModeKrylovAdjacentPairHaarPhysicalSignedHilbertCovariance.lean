@@ -142,8 +142,9 @@ theorem physicalOriginalReceiverPosteriorInnovation_norm_sq_le_signedHilbert
         dsimp [A, B]
         ring
       _ ≤ 2 * A ^ 2 * ‖f‖ ^ 2 + 2 * B ^ 2 * ‖f‖ ^ 2 := by
-        apply add_le_add_left
-        exact mul_le_mul_of_nonneg_left hSsq (by positivity)
+        exact add_le_add_right
+          (mul_le_mul_of_nonneg_left hSsq (by positivity))
+          (2 * A ^ 2 * ‖f‖ ^ 2)
       _ = 2 * gamma * ‖f‖ ^ 2 := by
         rw [hGamma]
         ring
