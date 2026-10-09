@@ -132,7 +132,6 @@ private theorem signedSource_integral_weight_difference_abs_le
     (hf : Integrable f μ)
     (hw : Integrable (fun x => w x * f x) μ)
     (hw' : Integrable (fun x => w' x * f x) μ)
-    (hc : 0 ≤ c)
     (hOsc : ∀ x, |w' x - w x| ≤ c) :
     |(∫ x, w' x * f x ∂μ) - (∫ x, w x * f x ∂μ)| ≤
       c * ∫ x, ‖f x‖ ∂μ := by
@@ -205,20 +204,22 @@ private theorem normalizedKernelSection_signedSource_integrable
     have hK : periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
         H N beta A B ≤ 1 := by simpa [abs_of_pos hp] using hOne
     rw [abs_of_pos (div_pos hp hOmega)]
-    have h := (div_le_div_iff₀ hOmega hOmega).2 (by
-      have hm := mul_le_mul_of_nonneg_right hK hOmega.le
-      nlinarith)
+    have h : periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+        H N beta A B / omega ≤ (1 : ℝ) / omega :=
+      (div_le_div_iff₀ hOmega hOmega).2 (by
+        simpa only [one_mul] using
+          (mul_le_mul_of_nonneg_right hK hOmega.le))
     simpa only [one_div] using h
-  have hWNonneg : 0 ≤ omega⁻¹ := (inv_pos.mpr hOmega).le
-  have hDom : Integrable (fun A => omega⁻¹ * ‖f A‖) μ :=
+   have hDom : Integrable (fun A => omega⁻¹ * ‖f A‖) μ :=
     hf.norm.const_mul _
   have hProd : Integrable
       (fun A => (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
         H N beta A B / omega) * f A) μ := by
     apply hDom.mono' (hw.mul hf.aestronglyMeasurable)
     filter_upwards with A
-    rw [norm_mul, Real.norm_eq_abs, norm_mul, Real.norm_eq_abs]
-    rw [abs_of_nonneg hWNonneg, abs_of_nonneg (norm_nonneg _)]
+    change ‖(periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+        H N beta A B / omega) * f A‖ ≤ omega⁻¹ * ‖f A‖
+    rw [norm_mul, Real.norm_eq_abs]
     exact mul_le_mul_of_nonneg_right (hb A) (norm_nonneg _)
   simpa [omega, μ] using hProd
 
@@ -323,7 +324,7 @@ theorem normalizedPhysicalOneSlabVacuumReceiverBCF_rightLinkDifference_abs_le_si
       c * ∫ A, ‖F A‖ ∂μ :=
     signedSource_integral_weight_difference_abs_le μ
       (fun A => K A B / Omega B) (fun A => K A B' / Omega B') F c
-      hf hInt hInt' hc hKernelVariation
+      hf hInt hInt' hKernelVariation
   have hConvert (X :
       PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
       l * decomposableOneSliceTransferIntegral H N beta F X / Omega X =
@@ -350,7 +351,19 @@ theorem normalizedPhysicalOneSlabVacuumReceiverBCF_rightLinkDifference_abs_le_si
     l * decomposableOneSliceTransferIntegral H N beta F B / Omega B| ≤
     l * c * (∫ A, ‖F A‖ ∂μ)
   rw [hConvert B', hConvert B, ← mul_sub, abs_mul, abs_of_nonneg hl]
-  exact mul_le_mul_of_nonneg_left hSigned hl
+  simpa only [mul_assoc] using (mul_le_mul_of_nonneg_left hSigned hl)
+
+/-- Actual finite-depth fine-right signed Krylov source.
+The orbit is formed at beta(n+1), independently of frozen beta(n). -/
+noncomputable def fineRightKrylovOriginalSignedPhysicalSource
+    {halfExtent : ℕ → ℕ} {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
+    (n r : ℕ) (a : Fin (r + 1) → ℝ) :
+    periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
+      (halfExtent (n + 1)) 2 :=
+  ∑ j : Fin (r + 1), a j •
+    physicalYangMillsSU2AdjacentFinePairOrbitRightFactor
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+      n (j : ℕ)
 
 /-- The signed beta(n+1)-evolved right Krylov combination is the
 source of the FROZEN-beta(n) actual physical transfer, not a surrogate
@@ -377,17 +390,15 @@ theorem fineRightKrylovOriginalVacuumMeanJointBCF_rightLinkDifference_abs_le_sig
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
             (halfExtent (n + 1)) 2 specialUnitaryTwoWilsonRankPositive
             (beta n) (hbeta n) z.2) *
-        (∫ A, ‖((∑ j : Fin (r + 1), a j •
-          physicalYangMillsSU2AdjacentFinePairOrbitRightFactor
+        (∫ A, ‖((fineRightKrylovOriginalSignedPhysicalSource
             (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-            n (j : ℕ)) :
-          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
-            (halfExtent (n + 1)) 2) :
+            n r a :
           Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
-            (halfExtent (n + 1)) 2)) A‖
+            (halfExtent (n + 1)) 2)) A)‖
           ∂(periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
             (halfExtent (n + 1)) 2)) := by
   simpa only [fineRightKrylovOriginalVacuumMeanJointBCF,
+    fineRightKrylovOriginalSignedPhysicalSource,
     normalizedPhysicalOneSlabVacuumMeanJointBCF] using
     (normalizedPhysicalOneSlabVacuumReceiverBCF_rightLinkDifference_abs_le_signedSourceL1
       (halfExtent (n + 1)) 2 specialUnitaryTwoWilsonRankPositive
