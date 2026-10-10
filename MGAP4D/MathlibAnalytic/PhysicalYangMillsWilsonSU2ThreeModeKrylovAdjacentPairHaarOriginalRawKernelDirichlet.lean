@@ -209,7 +209,8 @@ theorem p4Q2AM_originalWilson_betaZero_centeredOperator_eq_zero
     hNorm.trans
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator_zero_norm
         H 2 specialUnitaryTwoWilsonRankPositive)
-  exact (norm_eq_zero).mp hZero
+  change S - P = 0
+  exact (ContinuousLinearMap.opNorm_zero_iff (S - P)).mp hZero
 
 end
 end MathlibAnalytic
