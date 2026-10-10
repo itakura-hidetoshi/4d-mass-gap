@@ -198,7 +198,7 @@ receiver error for every nonnegative beta schedule. -/
 theorem fineRightKrylovPairHaarResidualGram_ones_normalizedRayleigh_gt_globalQuarterEnergy_of_explicitRadius
     {halfExtent : ℕ → ℕ} {beta : ℕ → ℝ}
     {hbeta : ∀ k, 0 ≤ beta k}
-    (n r : ℕ) (hFrozen : 0 < beta n)
+    (n r : ℕ)
     (hFine :
       beta (n + 1) <
         physicalOriginalGlobalQuarterEnergyExplicitFineRadius
@@ -224,9 +224,6 @@ theorem fineRightKrylovPairHaarResidualGram_ones_normalizedRayleigh_gt_globalQua
     H 2 specialUnitaryTwoWilsonRankPositive (beta n) (hbeta n)
   have hK : 0 ≤ K :=
     mul_nonneg (Real.sqrt_nonneg _) (Real.sqrt_nonneg _)
-  have hEnergy : 0 < Eunit :=
-    physicalOriginalUnitReceiverFullLinkEnergy_pos_of_beta_pos_SU2
-      H (beta n) hFrozen
   have hBudget :
       K * ((r : ℝ) *
         physicalOriginalNormalizedTransferConstantStepBetaBudget H (beta (n + 1))) <
@@ -328,7 +325,7 @@ theorem fineRightKrylovPairHaarResidualGram_exists_positiveFine_explicitRadius_s
             ((fun _ : Fin (r + 1) => (1 : ℝ)) j) ^ 2) :=
     fineRightKrylovPairHaarResidualGram_ones_normalizedRayleigh_gt_globalQuarterEnergy_of_explicitRadius
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-      n r (by simpa only [hFrozenAt] using hFrozen) hFineBound
+      n r hFineBound
   refine ⟨beta, hbeta, hFrozenAt, ?_, ?_, hAway, hFloor, hRayleigh⟩
   · rw [hFineAt]
     rfl
