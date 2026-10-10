@@ -116,7 +116,7 @@ theorem p4Q2Y_realHilbert_symmetric_pow_succ_sub_topProjection_norm_le
           _ ≤ ‖Z‖ ^ (m + 1) * ‖Z‖ :=
             mul_le_mul_of_nonneg_right ih (norm_nonneg Z)
           _ = ‖Z‖ ^ (Nat.succ m + 1) := by
-            simpa only [hm, pow_succ, mul_assoc]
+            simp only [hm, pow_succ, mul_assoc]
   have hApply :
       (S ^ (n + 1)) u - P u = (Z ^ (n + 1)) u := by
     rw [hPower]
