@@ -60,7 +60,7 @@ theorem p4Q2_min_linear_radius_antitone_depth
 radius at arbitrarily large depth when the frozen-data error factor
 Q is positive. This says nothing about the exact Gram for that step. -/
 theorem p4Q2_min_linear_radius_eventually_below
-    (Q R : ℝ) (hQ : 0 < Q) (hR : 0 < R)
+    (Q R : ℝ) (hQ : 0 < Q)
     (epsilon : ℝ) (hEpsilon : 0 < epsilon) :
     ∃ N : ℕ, ∀ r : ℕ, N ≤ r →
       min 1 (R / (1 + (r : ℝ) * Q)) < epsilon := by
@@ -155,8 +155,6 @@ theorem physicalOriginalGlobalQuarterEnergyExplicitFineRadius_antitone_depth
       H 2 specialUnitaryTwoWilsonRankPositive frozen (le_of_lt hFrozen))
   have hK : 0 ≤ K :=
     mul_nonneg (Real.sqrt_nonneg _) (Real.sqrt_nonneg _)
-  have hEnergy :=
-    physicalOriginalUnitReceiverFullLinkEnergy_pos_of_beta_pos_SU2 H frozen hFrozen
   have hR : 0 ≤ R := Real.sqrt_nonneg _
   change physicalOriginalNormalizedTransferExplicitFineRadius H s K R ≤
     physicalOriginalNormalizedTransferExplicitFineRadius H r K R
@@ -186,10 +184,8 @@ theorem physicalOriginalGlobalQuarterEnergyExplicitFineRadius_eventually_below
   let R : ℝ := Real.sqrt
     (physicalOriginalUnitReceiverFullLinkEnergy
       H 2 specialUnitaryTwoWilsonRankPositive frozen (le_of_lt hFrozen))
-  have hR : 0 < R := Real.sqrt_pos.mpr
-    (physicalOriginalUnitReceiverFullLinkEnergy_pos_of_beta_pos_SU2 H frozen hFrozen)
   obtain ⟨N, hN⟩ :=
-    p4Q2_min_linear_radius_eventually_below Q R hQ hR epsilon hEpsilon
+    p4Q2_min_linear_radius_eventually_below Q R hQ epsilon hEpsilon
   refine ⟨N, ?_⟩
   intro r hr
   have hBound := hN r hr
