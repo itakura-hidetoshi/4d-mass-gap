@@ -227,6 +227,8 @@ theorem physicalOriginalNormalizedFineTransfer_sub_fineZero_norm_le_betaBudget
   have hScale : 2 * ‖T‖⁻¹ ≤ 2 * m⁻¹ :=
     mul_le_mul_of_nonneg_left hInv (by norm_num)
   have hRawNonneg : 0 ≤ ‖T - Tzero‖ := norm_nonneg (T - Tzero)
+  rw [periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_zero_eq
+    H 2 specialUnitaryTwoWilsonRankPositive]
   change ‖‖T‖⁻¹ • T - Tzero‖ ≤
     physicalOriginalNormalizedTransferConstantStepBetaBudget H fine
   calc
