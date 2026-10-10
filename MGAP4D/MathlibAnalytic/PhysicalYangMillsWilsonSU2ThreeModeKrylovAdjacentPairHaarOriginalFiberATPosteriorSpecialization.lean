@@ -220,7 +220,6 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundState
             H N hN beta hbeta left right target g) =
           ENNReal.ofReal (C * (W * V)) := by
             rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateRightLinkJointWeight_eq]
-            rfl
       _ = ENNReal.ofReal C * (ENNReal.ofReal W * ENNReal.ofReal V) := by
         rw [ENNReal.ofReal_mul hCpos.le, ENNReal.ofReal_mul hWpos]
       _ = (w g * v g) * ENNReal.ofReal C := by
