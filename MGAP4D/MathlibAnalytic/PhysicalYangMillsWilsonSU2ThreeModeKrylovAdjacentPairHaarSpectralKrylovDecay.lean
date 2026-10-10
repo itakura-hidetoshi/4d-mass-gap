@@ -84,7 +84,9 @@ theorem p4Q2Y_realHilbert_symmetric_pow_succ_sub_topProjection_norm_le
     intro x
     change P (P x) = P x
     have hx := congrArg (fun T : E →L[ℝ] E => T x) hSP
-    have hFix : S (P x) = P x := by simpa only [mul_apply] using hx
+    have hFix : S (P x) = P x := by
+      change S (P x) = P x at hx
+      exact hx
     exact (realHilbertTopEigenspaceProjection_apply_eq_self_iff S (P x)).mpr hFix
   have hPZ : P * Z = 0 := by
     dsimp [Z]
@@ -101,6 +103,19 @@ theorem p4Q2Y_realHilbert_symmetric_pow_succ_sub_topProjection_norm_le
         congrArg (fun T : E →L[ℝ] E => T ^ (n + 1)) hDecomp
       _ = P + Z ^ (n + 1) :=
         p4Q2Y_idempotent_add_orthogonal_pow_succ P Z hPP hPZ hZP n
+  have hNormPow (m : ℕ) :
+      ‖Z ^ (m + 1)‖ ≤ ‖Z‖ ^ (m + 1) := by
+    induction m with
+    | zero => simp
+    | succ m ih =>
+        have hm : Nat.succ m + 1 = (m + 1) + 1 := by omega
+        calc
+          ‖Z ^ (Nat.succ m + 1)‖ =
+              ‖Z ^ (m + 1) * Z‖ := by rw [hm, pow_succ]
+          _ ≤ ‖Z ^ (m + 1)‖ * ‖Z‖ := norm_mul_le _ _
+          _ ≤ ‖Z‖ ^ (m + 1) * ‖Z‖ :=
+            mul_le_mul_of_nonneg_right ih (norm_nonneg Z)
+          _ = ‖Z‖ ^ (Nat.succ m + 1) := by rw [hm, pow_succ]
   have hApply :
       (S ^ (n + 1)) u - P u = (Z ^ (n + 1)) u := by
     rw [hPower]
@@ -112,7 +127,7 @@ theorem p4Q2Y_realHilbert_symmetric_pow_succ_sub_topProjection_norm_le
     _ ≤ ‖Z ^ (n + 1)‖ * ‖u‖ :=
       ContinuousLinearMap.le_opNorm (Z ^ (n + 1)) u
     _ ≤ ‖Z‖ ^ (n + 1) * ‖u‖ :=
-      mul_le_mul_of_nonneg_right (norm_pow_le Z (n + 1)) (norm_nonneg u)
+      mul_le_mul_of_nonneg_right (hNormPow n) (norm_nonneg u)
 
 local instance p4YSpectralGroup :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
@@ -151,8 +166,7 @@ theorem physicalOriginalNormalizedFineTransfer_sub_topSpectralProjection_norm_lt
         H 2 specialUnitaryTwoWilsonRankPositive fine hFine‖ < 1 := by
   let S := periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
     H 2 specialUnitaryTwoWilsonRankPositive fine hFine
-  have hSym :
-      (S : _ →ₗ[ℝ] _).IsSymmetric :=
+  have hSym :=
     periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
       H 2 specialUnitaryTwoWilsonRankPositive fine hFine
   have hEq :
@@ -192,8 +206,7 @@ theorem fineRightKrylov_originalPhysicalOrbit_sub_topProjection_norm_le_geometri
   let P := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopSpectralProjection
     H 2 specialUnitaryTwoWilsonRankPositive (beta (n + 1)) (hbeta (n + 1))
   let u := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2
-  have hSym :
-      (S : _ →ₗ[ℝ] _).IsSymmetric :=
+  have hSym :=
     periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
       H 2 specialUnitaryTwoWilsonRankPositive
       (beta (n + 1)) (hbeta (n + 1))
