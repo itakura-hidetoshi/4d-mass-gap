@@ -62,7 +62,7 @@ theorem p4Q2Z_unit_span_residual_symmetry
         norm_sub_sq_real _ _
       _ = 1 - c ^ 2 := by
         rw [hv, real_inner_smul_right, norm_smul, hu]
-        rw [real_inner_comm v u]
+        rw [← real_inner_comm v u]
         simp only [mul_one, Real.norm_eq_abs, sq_abs]
         dsimp [c]
         ring
@@ -101,7 +101,7 @@ theorem p4Q2Z_realHilbert_topProjection_unit_le_rankOneDifference
   have hRank :
       (InnerProductSpace.rankOne ℝ u u) omega =
         (inner ℝ u omega) • u := by
-    exact InnerProductSpace.rankOne_apply ℝ u u omega
+    simp only [InnerProductSpace.rankOne_apply]
   have hNormOmega :
       ‖omega - (InnerProductSpace.rankOne ℝ u u) omega‖ ≤
         ‖S - InnerProductSpace.rankOne ℝ u u‖ := by
@@ -156,7 +156,7 @@ theorem p4Q2Z_normalized_clm_sub_normOneReference_le
       _ = ‖T - Tzero‖ + ‖(1 : ℝ) - ‖T‖‖ := by
         rw [norm_smul, hZero, mul_one]
       _ ≤ ‖T - Tzero‖ + ‖T - Tzero‖ :=
-        add_le_add_left hvariation _
+        add_le_add_right hvariation _
       _ = 2 * ‖T - Tzero‖ := by ring
   change ‖a • T - Tzero‖ ≤ 2 * a * ‖T - Tzero‖
   calc
@@ -226,7 +226,7 @@ theorem physicalOriginalNormalizedFineTransfer_sub_fineZero_norm_le_betaBudget
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalMinorizationFloor_pos H fine
   have hScale : 2 * ‖T‖⁻¹ ≤ 2 * m⁻¹ :=
     mul_le_mul_of_nonneg_left hInv (by norm_num)
-  have hRawNonneg : 0 ≤ ‖T - Tzero‖ := norm_nonneg _
+  have hRawNonneg : 0 ≤ ‖T - Tzero‖ := norm_nonneg (T - Tzero)
   change ‖‖T‖⁻¹ • T - Tzero‖ ≤
     physicalOriginalNormalizedTransferConstantStepBetaBudget H fine
   calc
@@ -281,6 +281,109 @@ theorem physicalOriginalFineTopProjection_constantUnit_norm_sub_le_betaBudget
     physicalOriginalNormalizedTransferConstantStepBetaBudget H fine
   rw [norm_sub_rev]
   exact hProj.trans hPerturb
+
+
+/-- At every finite physical volume, the ORIGINAL frozen Wilson signed
+posterior innovation survives the true fine top projection whenever
+its proven beta-budget error is smaller than the already-positive
+frozen link innovation norm. The previous Z1 (1-q) factor is gone. -/
+theorem physicalOriginalFineTopProjection_link_ne_zero_of_betaBudget_small
+    (H : ℕ) (frozen fine : ℝ)
+    (hFrozen : 0 < frozen) (hFine : 0 ≤ fine)
+    (e : PeriodicHypercubicEvenSpatialSliceLink H)
+    (hSmall :
+      Real.sqrt (originalWilsonPhysicalSignedInnovationHilbertCoefficient
+        H 2 specialUnitaryTwoWilsonRankPositive frozen (le_of_lt hFrozen)) *
+        physicalOriginalNormalizedTransferConstantStepBetaBudget H fine <
+      ‖physicalOriginalReceiverPosteriorInnovation H 2
+        specialUnitaryTwoWilsonRankPositive frozen (le_of_lt hFrozen) e
+        (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2)‖) :
+    physicalOriginalReceiverPosteriorInnovation H 2
+        specialUnitaryTwoWilsonRankPositive frozen (le_of_lt hFrozen) e
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopSpectralProjection
+          H 2 specialUnitaryTwoWilsonRankPositive fine hFine
+          (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2)) ≠ 0 := by
+  let u := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2
+  let P := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopSpectralProjection
+    H 2 specialUnitaryTwoWilsonRankPositive fine hFine
+  let I := physicalOriginalReceiverPosteriorInnovation H 2
+    specialUnitaryTwoWilsonRankPositive frozen (le_of_lt hFrozen)
+  let gamma := originalWilsonPhysicalSignedInnovationHilbertCoefficient
+    H 2 specialUnitaryTwoWilsonRankPositive frozen (le_of_lt hFrozen)
+  let B := physicalOriginalNormalizedTransferConstantStepBetaBudget H fine
+  have hSmall' : Real.sqrt gamma * B < ‖I e u‖ := hSmall
+  have hProj : ‖P u - u‖ ≤ B :=
+    physicalOriginalFineTopProjection_constantUnit_norm_sub_le_betaBudget H fine hFine
+  have hLip :
+      ‖I e (P u - u)‖ ≤ Real.sqrt gamma * ‖P u - u‖ :=
+    physicalOriginalReceiverPosteriorInnovation_norm_le_sqrt_signedHilbert
+      H 2 specialUnitaryTwoWilsonRankPositive frozen (le_of_lt hFrozen)
+      e (P u - u)
+  have hSub : I e (P u - u) = I e (P u) - I e u := by
+    exact physicalOriginalReceiverPosteriorInnovation_sub
+      H 2 specialUnitaryTwoWilsonRankPositive frozen (le_of_lt hFrozen)
+      e (P u) u
+  have hError :
+      ‖I e (P u) - I e u‖ ≤ Real.sqrt gamma * B := by
+    calc
+      ‖I e (P u) - I e u‖ = ‖I e (P u - u)‖ :=
+        (congrArg norm hSub).symm
+      _ ≤ Real.sqrt gamma * ‖P u - u‖ := hLip
+      _ ≤ Real.sqrt gamma * B :=
+        mul_le_mul_of_nonneg_left hProj (Real.sqrt_nonneg _)
+  change I e (P u) ≠ 0
+  intro hZero
+  have hUnit : ‖I e u‖ = ‖I e (P u) - I e u‖ := by
+    rw [hZero]
+    simp
+  exact (not_lt_of_ge (hUnit.trans_le hError)) hSmall'
+
+/-- Unconditional strict open one-sided fine-coupling window of ORIGINAL
+positive-frozen posterior innovation nonvanishing at a genuine Wilson
+spatial link and on the GENUINE fine top spectral projection.
+
+Every finite H and every strictly positive independent frozen beta
+admit a common link e and a positive delta such that ALL 0<=fine<delta
+survive; no uniformity of delta over H or frozen beta is asserted. -/
+theorem physicalOriginalFineTopProjection_exists_positiveFineWindow
+    (H : ℕ) (frozen : ℝ) (hFrozen : 0 < frozen) :
+    ∃ (e : PeriodicHypercubicEvenSpatialSliceLink H) (delta : ℝ),
+      0 < delta ∧
+      ∀ fine : ℝ, 0 ≤ fine → fine < delta →
+        physicalOriginalReceiverPosteriorInnovation H 2
+          specialUnitaryTwoWilsonRankPositive frozen (le_of_lt hFrozen) e
+          (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopSpectralProjection
+            H 2 specialUnitaryTwoWilsonRankPositive fine ‹0 ≤ fine›
+            (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2)) ≠ 0 := by
+  obtain ⟨e, delta, hdelta, hwindow⟩ :=
+    physicalOriginalUnitReceiver_exists_positiveFineWindow H 1 frozen hFrozen
+  refine ⟨e, delta, hdelta, ?_⟩
+  intro fine hFine hLt
+  apply physicalOriginalFineTopProjection_link_ne_zero_of_betaBudget_small
+    H frozen fine hFrozen hFine e
+  have h := hwindow fine hFine hLt
+  simpa only [Nat.cast_one, one_mul] using h
+
+/-- In particular a strictly positive ACTUAL fine Wilson coupling
+exists with a nonzero ORIGINAL positive-frozen top component innovation. -/
+theorem physicalOriginalFineTopProjection_exists_strictPositiveFine_nonzero
+    (H : ℕ) (frozen : ℝ) (hFrozen : 0 < frozen) :
+    ∃ (e : PeriodicHypercubicEvenSpatialSliceLink H)
+        (fine : ℝ) (hFine : 0 ≤ fine),
+      0 < fine ∧
+      physicalOriginalReceiverPosteriorInnovation H 2
+        specialUnitaryTwoWilsonRankPositive frozen (le_of_lt hFrozen) e
+        (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopSpectralProjection
+          H 2 specialUnitaryTwoWilsonRankPositive fine hFine
+          (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2)) ≠ 0 := by
+  obtain ⟨e, delta, hdelta, hwindow⟩ :=
+    physicalOriginalFineTopProjection_exists_positiveFineWindow H frozen hFrozen
+  let fine : ℝ := delta / 2
+  have hFine : 0 ≤ fine := by dsimp [fine]; linarith
+  have hFinePos : 0 < fine := by dsimp [fine]; linarith
+  have hFineLt : fine < delta := by dsimp [fine]; linarith
+  refine ⟨e, fine, hFine, hFinePos, ?_⟩
+  exact hwindow fine hFine hFineLt
 
 end GroundStatePosteriorJoint
 end
