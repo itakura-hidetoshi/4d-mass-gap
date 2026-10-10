@@ -321,13 +321,16 @@ theorem fineRightKrylov_originalPosteriorFullLink_sum_norm_lower_geometric
   have hq : ‖S-P‖ < 1 :=
     physicalOriginalNormalizedFineTransfer_sub_topSpectralProjection_norm_lt_one
       H (beta (n+1)) (hbeta (n+1))
-  have hC : 0 ≤ C := by dsimp[C]; positivity
+  have hB : 0 ≤ B :=
+    physicalOriginalNormalizedTransferConstantStepBetaBudget_nonneg
+      H (beta (n+1)) (hbeta (n+1))
+  have hC : 0 ≤ C := by dsimp [C]; positivity
   have hNear : ∀ j : Fin (r+1), ‖V (j:ℕ)-U‖ ≤ C*‖S-P‖^(j:ℕ) := by
     intro j
     exact fineRightKrylov_originalPosteriorFullLink_sub_topProjection_norm_le_geometric_allDepth
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n (j:ℕ)
   exact p4Q2AA_finite_geometric_sum_norm_lower r U
-    (fun j : Fin (r+1) => V (j:ℕ)) ‖S-P‖ C (norm_nonneg _) hq hC hNear
+    (fun j : Fin (r+1) => V (j:ℕ)) ‖S-P‖ C (norm_nonneg (S-P)) hq hC hNear
 
 end GroundStatePosteriorJoint
 end
