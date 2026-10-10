@@ -93,7 +93,9 @@ theorem p4Q2AK_realHilbert_adjointTwoStep_unitEnergy_lower_iff
       rw [hNorm]
       linarith
     obtain ⟨x, hx, hxRay⟩ :=
-      (ContinuousLinearMap.isPositive_adjoint_comp_self T).exists_unit_inner_gt_of_lt_norm
+      ContinuousLinearMap.IsPositive.exists_unit_inner_gt_of_lt_norm
+        (T := T.adjoint ∘L T)
+        (ContinuousLinearMap.isPositive_adjoint_comp_self T)
         (le_max_left 0 (1-delta)) hThreshold
     have hxEnergy := hEnergy x hx
     have hBelow : 1 - delta ≤ max 0 (1-delta) :=
