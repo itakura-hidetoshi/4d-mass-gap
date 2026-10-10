@@ -192,7 +192,13 @@ theorem fineRightKrylovPairHaarResidualGram_ones_ge_quarter_topDepth
   let N : ℝ := ((r+1:ℕ):ℝ)
   let E : ℝ := C / (1-‖S-P‖)
   change 2*E ≤ N*‖U‖ at hDepth
-  have hMargin : 0 ≤ N*‖U‖ - E := by linarith
+  have hNnonneg : 0 ≤ N := by
+    dsimp [N]
+    positivity
+  have hSignalNonneg : 0 ≤ N * ‖U‖ :=
+    mul_nonneg hNnonneg (norm_nonneg U)
+  have hMargin : 0 ≤ N*‖U‖ - E := by
+    linarith
   have hGram :=
     fineRightKrylovPairHaarResidualGram_ones_rayleigh_ge_topGeometricMargin
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
