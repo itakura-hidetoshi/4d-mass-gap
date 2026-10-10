@@ -76,7 +76,7 @@ theorem p4Q2AX_massWeightedLIntegral_mono_of_ae
       ∫⁻ ctx, mass ctx * physical ctx ∂mu := by
   apply lintegral_mono_ae
   filter_upwards [h] with ctx hctx
-  exact mul_le_mul_left' hctx (mass ctx)
+  exact mul_le_mul_right hctx (mass ctx)
 
 /-- Bounded continuous SU(N) link probes are in L² under ANY genuinely
 finite one-link probability law, not merely under reference Haar. -/
@@ -199,7 +199,10 @@ theorem periodicHypercubicEvenSpecialUnitaryOriginalGroundStateOneLinkIntegrated
     (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target
   let mass := periodicHypercubicEvenSpecialUnitaryOriginalGroundStateOneLinkOuterMass
     H N hN beta hbeta target
-  let phys := fun ctx =>
+  let phys := fun ctx :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        (PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
+          Matrix.specialUnitaryGroup (Fin N) ℂ) =>
     evariance (fun g => X g)
       (Measure.map eval
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetNormalizedFiberMeasure
