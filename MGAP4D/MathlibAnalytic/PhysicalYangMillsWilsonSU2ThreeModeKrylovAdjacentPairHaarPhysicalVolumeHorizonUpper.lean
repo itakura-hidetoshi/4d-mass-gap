@@ -209,9 +209,11 @@ theorem physicalOriginalGlobalQuarterEnergyDepthHorizonRatio_le_inv_four_volume
     physicalOriginalNormalizedTransferExpActionLinearConstant_ge_four_volume
       H frozen hFrozen
   have hDiv : C⁻¹ ≤ 1 / (4 * (V : ℝ)) := by
-    change (1 : ℝ) / C ≤ (1 : ℝ) / (4 * (V : ℝ))
-    apply (div_le_div_iff₀ hC hFourV).mpr
-    simpa using hCge
+    have hRecip :
+        (1 : ℝ) / C ≤ (1 : ℝ) / (4 * (V : ℝ)) := by
+      apply (div_le_div_iff₀ hC hFourV).mpr
+      simpa using hCge
+    simpa only [one_div] using hRecip
   calc
     physicalOriginalGlobalQuarterEnergyDepthHorizonRatio
         H frozen (le_of_lt hFrozen) ≤ C⁻¹ :=
