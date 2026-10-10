@@ -349,11 +349,11 @@ theorem physicalOriginalFineTopProjection_exists_positiveFineWindow
     (H : ℕ) (frozen : ℝ) (hFrozen : 0 < frozen) :
     ∃ (e : PeriodicHypercubicEvenSpatialSliceLink H) (delta : ℝ),
       0 < delta ∧
-      ∀ fine : ℝ, 0 ≤ fine → fine < delta →
+      ∀ (fine : ℝ) (hFine : 0 ≤ fine), fine < delta →
         physicalOriginalReceiverPosteriorInnovation H 2
           specialUnitaryTwoWilsonRankPositive frozen (le_of_lt hFrozen) e
           (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopSpectralProjection
-            H 2 specialUnitaryTwoWilsonRankPositive fine ‹0 ≤ fine›
+            H 2 specialUnitaryTwoWilsonRankPositive fine hFine
             (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2)) ≠ 0 := by
   obtain ⟨e, delta, hdelta, hwindow⟩ :=
     physicalOriginalUnitReceiver_exists_positiveFineWindow H 1 frozen hFrozen
