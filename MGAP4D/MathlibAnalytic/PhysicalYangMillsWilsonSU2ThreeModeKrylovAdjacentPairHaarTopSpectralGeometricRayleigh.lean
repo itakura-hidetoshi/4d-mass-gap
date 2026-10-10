@@ -53,8 +53,9 @@ theorem p4Q2AA_geom_sum_le_inv_gap
       (∑ j ∈ Finset.range n, q ^ j) * (1 - q) ≤ 1 := by
     rw [p4Q2AA_geom_sum_mul_one_sub]
     exact sub_le_self _ (pow_nonneg hq0 _)
-  apply (le_div_iff₀ hGap).2
-  simpa only [one_div] using hMul
+  have hInv : (∑ j ∈ Finset.range n, q ^ j) ≤ 1 / (1 - q) :=
+    (le_div_iff₀ hGap).2 hMul
+  simpa only [one_div] using hInv
 
 /-- Generic finite real-normed vector error: geometric per-mode errors
 give a depth-INDEPENDENT bound for the deviation of the whole sum from
@@ -234,7 +235,7 @@ theorem fineRightKrylov_originalPosteriorFullLink_sub_topProjection_norm_le_geom
   have hC1 : 0 ≤ C1 := by dsimp [C1]; positivity
   have hu : ‖u‖ = 1 :=
     periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_norm H 2
-  have hq0 : 0 ≤ ‖S-P‖ := norm_nonneg _
+  have hq0 : 0 ≤ ‖S-P‖ := norm_nonneg (S-P)
   change ‖V j-U‖ ≤ (C0+C1) * ‖S-P‖ ^ j
   cases j with
   | zero =>
@@ -319,7 +320,7 @@ theorem fineRightKrylov_originalPosteriorFullLink_sum_norm_lower_geometric
         (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n j))
   have hq : ‖S-P‖ < 1 :=
     physicalOriginalNormalizedFineTransfer_sub_topSpectralProjection_norm_lt_one
-      H (beta(n+1)) (hbeta(n+1))
+      H (beta (n+1)) (hbeta (n+1))
   have hC : 0 ≤ C := by dsimp[C]; positivity
   have hNear : ∀ j : Fin (r+1), ‖V (j:ℕ)-U‖ ≤ C*‖S-P‖^(j:ℕ) := by
     intro j
