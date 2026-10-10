@@ -201,10 +201,18 @@ theorem fineRightKrylovPairHaarResidualGram_ones_normalizedRayleigh_gt_globalQua
         ‖∑ j : Fin (r + 1), V j‖ ^ 2 :=
     p4Q2_finite_sum_norm_sq_ge_halfDepth
       r U V D hNear hMargin
+  have hCoordSumFinset (s : Finset (Fin (r + 1))) (e : Link) :
+      (∑ j ∈ s, V j) e = ∑ j ∈ s, I e (R j) := by
+    induction s using Finset.induction_on with
+    | empty => simp
+    | @insert j s hj ih =>
+        simp only [Finset.sum_insert hj, PiLp.add_apply]
+        rw [ih]
+        rfl
   have hCoordSum (e : Link) :
       (∑ j : Fin (r + 1), V j) e =
         ∑ j : Fin (r + 1), I e (R j) := by
-    rfl
+    exact hCoordSumFinset Finset.univ e
   have hDirectSumIdentity :
       ‖∑ j : Fin (r + 1), V j‖ ^ 2 =
         ∑ e : Link, ‖∑ j : Fin (r + 1), I e (R j)‖ ^ 2 := by
