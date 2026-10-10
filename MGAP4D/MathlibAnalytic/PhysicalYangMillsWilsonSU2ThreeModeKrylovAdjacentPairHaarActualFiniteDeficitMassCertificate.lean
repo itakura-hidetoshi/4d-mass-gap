@@ -38,10 +38,10 @@ noncomputable section
 set_option maxHeartbeats 2500000
 set_option synthInstance.maxHeartbeats 850000
 
-/-- Any nonnegative strict one-step contraction q<1 yields the explicit
-positive finite-spacing mass rate (1-q)/a. This also covers q=0. -/
+/-- Any real strict one-step contraction q<1 yields the explicit
+positive finite-spacing mass rate (1-q)/a. In the actual physical\ncase q is an operator norm ≥0; this proof also covers q=0. -/
 theorem p4Q2AJ_strictFactor_finiteDeficitMassCertificate
-    (q spacing : ℝ) (hq : 0 ≤ q) (hq1 : q < 1)
+    (q spacing : ℝ) (hq1 : q < 1)
     (hspacing : 0 < spacing) :
     0 < (1-q)/spacing ∧
       q ≤ Real.exp (-((1-q)/spacing)*spacing) := by
@@ -115,7 +115,7 @@ theorem physicalOriginalNormalizedFineTransfer_exists_finiteDeficitMass
       H fine hFine
   obtain ⟨hpos, hexp⟩ :=
     p4Q2AJ_strictFactor_finiteDeficitMassCertificate
-      ‖S-P‖ spacing (norm_nonneg (S-P)) hq hspacing
+      ‖S-P‖ spacing hq hspacing
   exact ⟨(1-‖S-P‖)/spacing, hpos, hexp⟩
 
 /-- Genuine centered Wilson source: every individual finite volume and
