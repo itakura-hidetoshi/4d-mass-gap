@@ -152,6 +152,7 @@ theorem p4Q2BC_originalTwelveColorENNRealResidual_eq_ofReal
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialResidualEnergy,
       groundStateJointColorNormalizedResidualEnergy,
       periodicHypercubicEvenGroundStateTwoSidedSpatialColor_card]
+    norm_num
   calc
     (12 : ENNReal)⁻¹ *
         (∑ c : PeriodicHypercubicEvenGroundStateTwoSidedSpatialColor,
