@@ -53,7 +53,7 @@ theorem p4Q2AJ2_exp_neg_spacing_sq_rate_eq
       spacing n := by
   rw [Real.log_exp]
   have hs : spacing n ≠ 0 := (hpos n).ne'
-  field_simp [hs] <;> ring
+  field_simp [hs]
 
 theorem p4Q2AJ2_exp_neg_spacing_sq_massRate_tendsto_zero
     (spacing : ℕ → ℝ) (hpos : ∀ n, 0 < spacing n)
