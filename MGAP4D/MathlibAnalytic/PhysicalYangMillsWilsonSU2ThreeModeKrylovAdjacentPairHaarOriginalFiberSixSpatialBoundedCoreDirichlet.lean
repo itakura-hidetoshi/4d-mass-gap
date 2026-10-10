@@ -130,7 +130,7 @@ theorem p4Q2AZ_originalJointIntegratedConditionalEnergy_ge_Haar
     (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target
   let mass := periodicHypercubicEvenSpecialUnitaryOriginalGroundStateOneLinkOuterMass
     H N hN beta hbeta target
-  let section := fun ctx :
+  let linkSection := fun ctx :
       PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
         (PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
           Matrix.specialUnitaryGroup (Fin N) ℂ) =>
@@ -140,7 +140,7 @@ theorem p4Q2AZ_originalJointIntegratedConditionalEnergy_ge_Haar
       PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
         (PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
           Matrix.specialUnitaryGroup (Fin N) ℂ) =>
-    evariance (section ctx)
+    evariance (linkSection ctx)
       (Measure.map eval
         (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetNormalizedFiberMeasure
           H N hN beta hbeta ctx.1 target ctx.2))
@@ -148,7 +148,7 @@ theorem p4Q2AZ_originalJointIntegratedConditionalEnergy_ge_Haar
       PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
         (PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
           Matrix.specialUnitaryGroup (Fin N) ℂ) =>
-    evariance (section ctx) muLink
+    evariance (linkSection ctx) muLink
   let coefficient := ENNReal.ofReal (Real.exp (-32 * beta))
   have hAW :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabOriginalGroundStateSplitTargetFiber_ae_evariance_ge_Haar
@@ -162,20 +162,20 @@ theorem p4Q2AZ_originalJointIntegratedConditionalEnergy_ge_Haar
         periodicHypercubicEvenSpatialSliceOffTargetRestriction target right = ctx.2 :=
       periodicHypercubicEvenSpecialUnitaryRightOffTargetIdentityCompletion_offTarget
         H N target ctx.2
-    let Xctx := section ctx
+    let Xctx := linkSection ctx
     have hMeas : StronglyMeasurable Xctx := by
       exact periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection_stronglyMeasurable
         H N target F hF ctx.1 ctx.2
     have hBound : ∀ g, ‖Xctx g‖ ≤ bound := by
       intro g
-      simpa [Xctx, section,
-        periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection] using
-        (hbound (ctx.1,
-          (periodicHypercubicEvenSpatialSliceTargetOffTargetMeasurableEquiv
-            (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target).symm
-            ((periodicHypercubicEvenSpatialSliceTargetEvaluationMeasurableEquiv
-              (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target).symm g,
-              ctx.2)))
+      change ‖F
+          (ctx.1,
+            (periodicHypercubicEvenSpatialSliceTargetOffTargetMeasurableEquiv
+              (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target).symm
+              ((periodicHypercubicEvenSpatialSliceTargetEvaluationMeasurableEquiv
+                (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target).symm g,
+                ctx.2))‖ ≤ bound
+      exact hbound _
     have hHaar : MemLp Xctx 2 muLink := by
       letI : IsProbabilityMeasure muLink := by dsimp [muLink]; infer_instance
       exact MemLp.of_bound hMeas.aestronglyMeasurable bound
@@ -225,7 +225,7 @@ theorem p4Q2AZ_originalJointIntegratedConditionalEnergy_le_canonicalVariance
       H N hN beta hbeta ctx.1 target ctx.2
   let mass := periodicHypercubicEvenSpecialUnitaryOriginalGroundStateOneLinkOuterMass
     H N hN beta hbeta target
-  let section := fun (left : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+  let linkSection := fun (left : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
       (retained : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
         Matrix.specialUnitaryGroup (Fin N) ℂ) =>
     periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
@@ -240,17 +240,17 @@ theorem p4Q2AZ_originalJointIntegratedConditionalEnergy_le_canonicalVariance
   have hIterated :
       (∫⁻ left, ∫⁻ retained,
         mass (left, retained) *
-          evariance (section left retained) (Measure.map eval (nu (left, retained)))
+          evariance (linkSection left retained) (Measure.map eval (nu (left, retained)))
         ∂muOff ∂muLeft) =
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointOneLinkCanonicalFiberVarianceFunctional
         H N hN beta hbeta target F := by
     change (∫⁻ left, ∫⁻ retained,
       mass (left, retained) *
-        evariance (section left retained) (Measure.map eval (nu (left, retained)))
+        evariance (linkSection left retained) (Measure.map eval (nu (left, retained)))
       ∂muOff ∂muLeft) =
       (∫⁻ left, ∫⁻ retained,
         mass (left, retained) *
-          evariance (fun targetCfg => section left retained (eval targetCfg))
+          evariance (fun targetCfg => linkSection left retained (eval targetCfg))
             (kappa (left, retained))
       ∂muOff ∂muLeft)
     apply lintegral_congr_ae
@@ -260,26 +260,26 @@ theorem p4Q2AZ_originalJointIntegratedConditionalEnergy_le_canonicalVariance
     rw [hκ]
     exact congrArg (fun v : ENNReal => mass (left, retained) * v)
       (p4Q2AY_evariance_map_measurableEquiv
-        (nu (left, retained)) eval (section left retained)
+        (nu (left, retained)) eval (linkSection left retained)
         (periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection_stronglyMeasurable
           H N target F hF left retained).measurable)
   have hTonelli :
       p4Q2AZ_originalJointIntegratedConditionalEnergy H N hN beta hbeta target F ≤
         (∫⁻ left, ∫⁻ retained,
           mass (left, retained) *
-            evariance (section left retained) (Measure.map eval (nu (left, retained)))
+            evariance (linkSection left retained) (Measure.map eval (nu (left, retained)))
           ∂muOff ∂muLeft) := by
     change (∫⁻ ctx,
-      mass ctx * evariance (section ctx.1 ctx.2) (Measure.map eval (nu ctx))
+      mass ctx * evariance (linkSection ctx.1 ctx.2) (Measure.map eval (nu ctx))
       ∂muLeft.prod muOff) ≤
       (∫⁻ left, ∫⁻ retained,
         mass (left, retained) *
-          evariance (section left retained) (Measure.map eval (nu (left, retained)))
+          evariance (linkSection left retained) (Measure.map eval (nu (left, retained)))
         ∂muOff ∂muLeft)
     exact lintegral_prod_le
       (μ := muLeft) (ν := muOff)
       (fun ctx => mass ctx *
-        evariance (section ctx.1 ctx.2) (Measure.map eval (nu ctx)))
+        evariance (linkSection ctx.1 ctx.2) (Measure.map eval (nu ctx)))
   exact hTonelli.trans_eq hIterated
 
 /-- Actual Wilson joint-L2 projection-defect estimate for EVERY bounded
