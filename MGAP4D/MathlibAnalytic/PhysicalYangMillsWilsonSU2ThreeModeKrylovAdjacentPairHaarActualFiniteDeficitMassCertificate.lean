@@ -49,7 +49,6 @@ theorem p4Q2AJ_strictFactor_finiteDeficitMassCertificate
     div_pos (sub_pos.mpr hq1) hspacing
   have hquot : -((1-q)/spacing)*spacing = -(1-q) := by
     field_simp [ne_of_gt hspacing]
-    ring
   have hExp : 1-(1-q) ≤ Real.exp (-(1-q)) := by
     have h := Real.add_one_le_exp (-(1-q))
     linarith
