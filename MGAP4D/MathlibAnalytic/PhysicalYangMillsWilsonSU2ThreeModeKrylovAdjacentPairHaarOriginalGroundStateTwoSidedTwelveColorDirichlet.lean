@@ -376,5 +376,6 @@ theorem p4Q2BB_originalTwelveColorHaarReferenceSum_eq_rightSix_add_leftSix
     p4Q2BB_twelveColorOriginalHaarReferenceAverage, Fintype.sum_sum_type]
 
 end
+end
 end MathlibAnalytic
 end MGAP4D
