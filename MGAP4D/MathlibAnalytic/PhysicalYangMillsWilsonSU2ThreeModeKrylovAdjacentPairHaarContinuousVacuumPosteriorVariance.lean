@@ -311,7 +311,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumOrigi
         c * (c * evariance X mu) := by
           rw [← hCoeff]
           exact mul_assoc c c (evariance X mu)
-    _ ≤ c * evariance X nu := mul_le_mul_left' hRawBound c
+    _ ≤ c * evariance X nu := mul_le_mul_right hRawBound c
     _ ≤ evariance X post := hPostBound
 
 end
