@@ -58,7 +58,7 @@ noncomputable def p4Q2AD_realFiniteSynthesis
     simp only [Pi.add_apply, add_smul, Finset.sum_add_distrib]
   map_smul' t a := by
     classical
-    simp only [Pi.smul_apply, smul_sum, smul_smul]
+    simp only [Pi.smul_apply, RingHom.id_apply, smul_smul, Finset.smul_sum]
 
 /-- The algebraic kernel is precisely the set of finite relations. -/
 theorem p4Q2AD_realFiniteSynthesis_mem_ker_iff
@@ -110,9 +110,11 @@ theorem p4Q2AD_realFiniteSynthesis_quotient_apply
     ((p4Q2AD_realFiniteSynthesis_quotientEquivRange v)
       (Submodule.Quotient.mk a) : E) =
       ∑ i : ι, a i • v i := by
-  simpa only [p4Q2AD_realFiniteSynthesis_quotientEquivRange,
-    LinearMap.quotKerEquivRange_apply_mk] using
-    (LinearMap.quotKerEquivRange_apply_mk (p4Q2AD_realFiniteSynthesis v) a)
+  change (((p4Q2AD_realFiniteSynthesis v).quotKerEquivRange
+    (Submodule.Quotient.mk a) : (p4Q2AD_realFiniteSynthesis v).range) : E) =
+      ∑ i : ι, a i • v i
+  rw [LinearMap.quotKerEquivRange_apply_mk]
+  rfl
 
 /-- The finite physical span has a canonical orthogonal projection.
 Finite-dimensionality, NOT a made-up independence hypothesis, gives
@@ -142,8 +144,13 @@ theorem p4Q2AD_finitePhysicalSpanProjection_fixes_synthesis
   classical
   let F : Submodule ℝ E := Submodule.span ℝ (Set.range v)
   have hMem : (p4Q2AD_realFiniteSynthesis v) a ∈ F := by
+    change (p4Q2AD_realFiniteSynthesis v) a ∈
+      Submodule.span ℝ (Set.range v)
     rw [← p4Q2AD_realFiniteSynthesis_range_eq_span v]
-    exact LinearMap.mem_range_self (p4Q2AD_realFiniteSynthesis v) a
+    exact ⟨a, rfl⟩
+  letI : FiniteDimensional ℝ F :=
+    FiniteDimensional.span_of_finite ℝ (Set.finite_range v)
+  letI : CompleteSpace F := FiniteDimensional.complete ℝ F
   change F.starProjection ((p4Q2AD_realFiniteSynthesis v) a) =
     (p4Q2AD_realFiniteSynthesis v) a
   exact F.starProjection_eq_self_iff.mpr hMem
@@ -238,7 +245,7 @@ theorem fineRightKrylov_originalGram_zero_iff_physicalSynthesis_kernel
       nlinarith [norm_nonneg (T a)]
     exact norm_eq_zero.mp hz
   · intro h
-    simp [h]
+    exact h
 
 /-- Canonical independent physical realization: quotient of REAL
 Krylov coefficients by the genuine posterior synthesis kernel is
