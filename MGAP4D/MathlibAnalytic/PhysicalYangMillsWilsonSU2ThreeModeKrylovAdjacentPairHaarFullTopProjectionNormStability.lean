@@ -213,7 +213,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopSpectralProjection
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopSpectralProjection_norm_sub_HaarZero_le
         H N hN 0 (by norm_num) (by simp))
   have hZeroNorm : ‖P - Q‖ = 0 :=
-    le_antisymm hBound (norm_nonneg _)
+    le_antisymm hBound (ContinuousLinearMap.opNorm_nonneg (P - Q))
   have hZero : P - Q = 0 :=
     (ContinuousLinearMap.opNorm_zero_iff (P - Q)).mp hZeroNorm
   exact sub_eq_zero.mp hZero
