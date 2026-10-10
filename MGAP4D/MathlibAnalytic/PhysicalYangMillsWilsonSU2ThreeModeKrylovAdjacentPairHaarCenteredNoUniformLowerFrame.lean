@@ -86,6 +86,7 @@ theorem p4Q2AC_adjacentCoeff_sum_sq_two (r : ℕ) :
     _ = 2 := by
       rw [Finset.sum_add_distrib]
       simp
+      norm_num
 
 /-- The TRUE signed linear combination with these coefficients is just
 the difference of the two adjacent physical innovations. -/
@@ -240,6 +241,9 @@ theorem fineRightKrylovPairHaarResidualGram_centered_no_uniform_lower
   have hq : ‖S-P‖ < 1 :=
     physicalOriginalNormalizedFineTransfer_sub_topSpectralProjection_norm_lt_one
       H (beta (n+1)) (hbeta (n+1))
+  have hB : 0 ≤ B :=
+    physicalOriginalNormalizedTransferConstantStepBetaBudget_nonneg
+      H (beta (n+1)) (hbeta (n+1))
   have hC : 0 ≤ C := by dsimp [C]; positivity
   have hNear (j : ℕ) : ‖V j-U‖ ≤ C*‖S-P‖^j :=
     fineRightKrylov_originalPosteriorFullLink_sub_topProjection_norm_le_geometric_allDepth
@@ -247,8 +251,9 @@ theorem fineRightKrylovPairHaarResidualGram_centered_no_uniform_lower
   have hGeneric :=
     p4Q2AC_generic_centered_no_depth_uniform_lower
       V U ‖S-P‖ C (norm_nonneg (S-P)) hq hC hNear
+  intro hFrame
   apply hGeneric
-  rintro ⟨κ, hκ, hLower⟩
+  obtain ⟨κ, hκ, hLower⟩ := hFrame
   refine ⟨κ, hκ, ?_⟩
   intro r a hCenter
   have hL := hLower r a hCenter
