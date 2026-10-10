@@ -137,7 +137,7 @@ theorem p4Q2BC_realPhysicalResidualSum_eq_twelve_mul_normalized
             periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialCondExpL2
               H N hN beta hbeta c f‖ ^ 2)
   rw [periodicHypercubicEvenGroundStateTwoSidedSpatialColor_card]
-  norm_num
+  ring
 
 /-- BC main: explicit real twelve-color Dirichlet expression for the actual
 original Wilson reference. The inequality points from original Haar
