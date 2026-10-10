@@ -208,7 +208,6 @@ theorem fineRightKrylovPairHaarResidualGram_ones_normalizedRayleigh_gt_globalQua
     | @insert j s hj ih =>
         simp only [Finset.sum_insert hj, PiLp.add_apply]
         rw [ih]
-        rfl
   have hCoordSum (e : Link) :
       (∑ j : Fin (r + 1), V j) e =
         ∑ j : Fin (r + 1), I e (R j) := by
