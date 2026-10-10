@@ -70,9 +70,9 @@ theorem p4Q2AB_centered_geometric_sum_norm_le
     have hAbs : |a j| ≤ A :=
       p4Q2AB_abs_coefficient_le_sqrt_sum_sq r a j
     calc
-      ‖a j • (v j-u)‖ = |a j|*‖v j-u‖ := by
+      ‖a j • (v j-u)‖ = |a j| * ‖v j-u‖ := by
         rw [norm_smul, Real.norm_eq_abs]
-      _ ≤ |a j|*(C*q ^ (j : ℕ)) :=
+      _ ≤ |a j| * (C*q ^ (j : ℕ)) :=
         mul_le_mul_of_nonneg_left (hNear j) (abs_nonneg _)
       _ ≤ A*(C*q ^ (j : ℕ)) :=
         mul_le_mul_of_nonneg_right hAbs
@@ -148,7 +148,6 @@ theorem p4Q2AB_centered_geometric_sum_norm_sq_le
     _ = M^2 * A^2 := by ring
     _ = (C/(1-q))^2 * (∑ j : Fin (r+1), (a j)^2) := by
       rw [hRoot]
-      rfl
 
 local instance p4ABGroup :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
