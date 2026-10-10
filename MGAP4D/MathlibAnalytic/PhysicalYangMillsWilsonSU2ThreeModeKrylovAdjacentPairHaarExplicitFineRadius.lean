@@ -126,8 +126,10 @@ theorem physicalOriginalNormalizedTransferExplicitFineRadius_bound
   have htRatio : t < radius / (1 + Q) :=
     lt_of_lt_of_le hlt (min_le_right _ _)
   have hDen : 0 < 1 + Q := by linarith
-  have hAbove : (1 + Q) * t < radius :=
-    (lt_div_iff₀ hDen).mp htRatio
+  have hAbove : (1 + Q) * t < radius := by
+    calc
+      (1 + Q) * t = t * (1 + Q) := mul_comm _ _
+      _ < radius := (lt_div_iff₀ hDen).mp htRatio
   have hQBound : Q * t ≤ (1 + Q) * t :=
     mul_le_mul_of_nonneg_right (by linarith : Q ≤ 1 + Q) ht
   have hB :=
@@ -328,9 +330,8 @@ theorem fineRightKrylovPairHaarResidualGram_exists_positiveFine_explicitRadius_s
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
       n r (by simpa only [hFrozenAt] using hFrozen) hFineBound
   refine ⟨beta, hbeta, hFrozenAt, ?_, ?_, hAway, hFloor, hRayleigh⟩
-  · simpa only [hFineAt] using (rfl :
-      fine = physicalOriginalGlobalQuarterEnergyExplicitFineRadius
-        H r frozen (le_of_lt hFrozen) / 2)
+  · change fine = delta / 2
+    rfl
   · simpa only [hFineAt] using hFinePos
 
 end GroundStatePosteriorJoint
