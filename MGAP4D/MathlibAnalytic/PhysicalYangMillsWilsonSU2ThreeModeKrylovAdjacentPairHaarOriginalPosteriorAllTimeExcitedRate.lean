@@ -248,7 +248,6 @@ theorem fineRightKrylov_originalWilson_excitedTransferPow_posteriorFullLink_norm
         (fun e : PeriodicHypercubicEvenSpatialSliceLink H => I e ((S ^ k) F))‖ ^ 2 =
       ∑ e : PeriodicHypercubicEvenSpatialSliceLink H, ‖I e ((S ^ k) F)‖ ^ 2 := by
         rw [PiLp.norm_sq_eq_of_L2]
-        rfl
     _ ≤ ∑ _e : PeriodicHypercubicEvenSpatialSliceLink H,
         gamma * ‖(S ^ k) F‖ ^ 2 := by
         apply Finset.sum_le_sum
