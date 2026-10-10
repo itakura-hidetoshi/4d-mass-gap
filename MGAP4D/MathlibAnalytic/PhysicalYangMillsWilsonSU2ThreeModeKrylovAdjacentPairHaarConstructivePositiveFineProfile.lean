@@ -68,7 +68,9 @@ theorem fineRightKrylovPairHaarResidualGram_exists_positiveFine_schedule
     by_cases hk : k = n
     · simp [beta, hk, le_of_lt hFrozen]
     · by_cases hk' : k = n + 1
-      · simp [beta, hk, le_of_lt hFinePos]
+      · change 0 ≤ if k = n then frozen else if k = n + 1 then fine else 0
+        rw [if_neg hk, if_pos hk']
+        exact le_of_lt hFinePos
       · simp [beta, hk, hk']
   have hFrozenAt : beta n = frozen := by
     simp [beta]
