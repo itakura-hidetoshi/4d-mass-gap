@@ -19,7 +19,7 @@ The genuine ORIGINAL Wilson right posterior Gram of this physical
 schedule has strictly positive all-one Rayleigh and strictly positive
 normalized all-one Rayleigh at the selected finite depth. These are
 existence results for a finite-dimensional physical schedule, not
-a volume-/depth-uniform estimate or a continuum mass-gap claim.
+a volume-uniform or depth-uniform estimate or a continuum mass-gap claim.
 -/
 
 namespace MGAP4D
