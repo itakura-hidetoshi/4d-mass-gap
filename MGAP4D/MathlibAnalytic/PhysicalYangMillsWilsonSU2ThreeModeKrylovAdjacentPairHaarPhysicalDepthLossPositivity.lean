@@ -75,13 +75,13 @@ theorem physicalOriginalOneSlabGlobalActionBudget_pos_SU2
   classical
   obtain ⟨e, _he⟩ :=
     physicalOriginalUnitReceiver_exists_positive_link_norm_SU2 H frozen hFrozen
-  have hCard :
-      0 < Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) := by
-    apply Finset.card_pos.mpr
-    exact ⟨e, Finset.mem_univ e⟩
+  have hMem : e ∈ periodicHypercubicEvenSpatialSliceLinkList H :=
+    periodicHypercubicEvenSpatialSliceLink_mem_list H e
   have hLinkList :
       0 < (periodicHypercubicEvenSpatialSliceLinkList H).length := by
-    simpa [periodicHypercubicEvenSpatialSliceLinkList] using hCard
+    cases hList : periodicHypercubicEvenSpatialSliceLinkList H with
+    | nil => simp [hList] at hMem
+    | cons a as => simp [hList]
   have hVolume :
       0 < periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabCombinatorialVolume H := by
     unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabCombinatorialVolume
