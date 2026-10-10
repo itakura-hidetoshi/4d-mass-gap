@@ -98,6 +98,34 @@ theorem p4Q2AP_realHilbert_topEigenspace_eq_span
     obtain ⟨c, hc⟩ := Submodule.mem_span_singleton.mp hx
     rw [← hc, map_smul, huFix]
 
+/-- Orthogonal projection onto an abstract closed one-dimensional line.
+Using the universal characterization rather than rewriting the submodule
+avoids transporting a dependent HasOrthogonalProjection instance. -/
+theorem p4Q2AP_realHilbert_starProjection_eq_rankOne_of_eq_span
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (F : Submodule ℝ E) [F.HasOrthogonalProjection]
+    (u : E) (hu : ‖u‖ = 1) (hLine : F = ℝ ∙ u) :
+    F.starProjection = InnerProductSpace.rankOne ℝ u u := by
+  apply ContinuousLinearMap.ext
+  intro x
+  rw [InnerProductSpace.rankOne_apply]
+  apply Submodule.eq_starProjection_of_mem_orthogonal
+  · have huF : u ∈ F := by
+      rw [hLine]
+      exact Submodule.mem_span_singleton_self u
+    exact F.smul_mem (inner ℝ u x) huF
+  · rw [hLine, Submodule.mem_orthogonal]
+    intro z hz
+    obtain ⟨c, hc⟩ := Submodule.mem_span_singleton.mp hz
+    have hBase : inner ℝ u (x - inner ℝ u x • u) = 0 := by
+      rw [inner_sub_right, real_inner_smul_right, real_inner_self_eq_norm_sq, hu]
+      norm_num
+    calc
+      inner ℝ z (x - inner ℝ u x • u) =
+          inner ℝ (c • u) (x - inner ℝ u x • u) := by rw [hc]
+      _ = c * inner ℝ u (x - inner ℝ u x • u) := by rw [real_inner_smul_left]
+      _ = 0 := by rw [hBase, mul_zero]
+
 /-- Consequently the canonical full-top projection is EXACTLY the rank-one
 orthogonal projection onto the true beta-top unit eigenvector. -/
 theorem p4Q2AP_realHilbert_topEigenspaceProjection_eq_rankOne
@@ -112,11 +140,8 @@ theorem p4Q2AP_realHilbert_topEigenspaceProjection_eq_rankOne
     S u hu huFix q hq hOrth
   change (realHilbertTopEigenspace S).starProjection =
     InnerProductSpace.rankOne ℝ u u
-  rw [hLine]
-  apply ContinuousLinearMap.ext
-  intro x
-  rw [Submodule.starProjection_unit_singleton ℝ hu x,
-    InnerProductSpace.rankOne_apply]
+  exact p4Q2AP_realHilbert_starProjection_eq_rankOne_of_eq_span
+    (realHilbertTopEigenspace S) u hu hLine
 
 /-- A genuine eigenstate at the raw top norm is O(delta)-close to the
 beta-zero Haar rank-one projection, directly from the raw operator itself. -/
@@ -300,16 +325,15 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopSpectralProjection
     H N hN beta hbeta
   let u := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector
     H N hN beta hbeta
+  have hLine : realHilbertTopEigenspace S = ℝ ∙ u :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace_eq_span_weakBeta
+      H N hN beta hbeta hStrict
   change (realHilbertTopEigenspace S).starProjection =
     InnerProductSpace.rankOne ℝ u u
-  rw [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace_eq_span_weakBeta
-    H N hN beta hbeta hStrict]
-  apply ContinuousLinearMap.ext
-  intro x
-  rw [Submodule.starProjection_unit_singleton ℝ
+  exact p4Q2AP_realHilbert_starProjection_eq_rankOne_of_eq_span
+    (realHilbertTopEigenspace S) u
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenvector_norm
-      H N hN beta hbeta) x,
-    InnerProductSpace.rankOne_apply]
+      H N hN beta hbeta) hLine
 
 /-- The actual canonical top-sector projection differs from beta=0 Haar
 rank-one by at most 2*C_H*beta ON EVERY beta-top physical state. -/
