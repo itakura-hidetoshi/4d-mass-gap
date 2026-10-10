@@ -40,6 +40,14 @@ noncomputable section
 set_option maxHeartbeats 2600000
 set_option synthInstance.maxHeartbeats 850000
 
+/-- As in the canonical spectral projection definition, the closed top
+eigenspace carries the required complete normed-submodule instance. -/
+local instance p4APTopEigenspaceComplete
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] (S : E →L[ℝ] E) :
+    CompleteSpace (realHilbertTopEigenspace S) :=
+  (realHilbertTopEigenspace_isClosed S).completeSpace_coe
+
 /-- An actual fixed vector has no component orthogonal to a unit fixed
 state if the operator is strictly contractive on that orthogonal hyperplane. -/
 theorem p4Q2AP_realHilbert_fixed_eq_scalar_of_orthogonal_contraction
@@ -85,10 +93,10 @@ theorem p4Q2AP_realHilbert_topEigenspace_eq_span
     obtain ⟨c, hc⟩ :=
       p4Q2AP_realHilbert_fixed_eq_scalar_of_orthogonal_contraction
         S u hu huFix q hq hOrth x hx
-    exact Submodule.mem_span_singleton.mpr ⟨c, hc⟩
+    exact Submodule.mem_span_singleton.mpr ⟨c, hc.symm⟩
   · intro hx
     obtain ⟨c, hc⟩ := Submodule.mem_span_singleton.mp hx
-    rw [hc, map_smul, huFix]
+    rw [← hc, map_smul, huFix]
 
 /-- Consequently the canonical full-top projection is EXACTLY the rank-one
 orthogonal projection onto the true beta-top unit eigenvector. -/
@@ -266,12 +274,12 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace_eq_span
     obtain ⟨c, hc⟩ :=
       periodicHypercubicEvenSpecialUnitaryPhysicalNormalizedWilson_topFixed_eq_scalar
         H N hN beta hbeta hStrict x hxFix
-    exact Submodule.mem_span_singleton.mpr ⟨c, hc⟩
+    exact Submodule.mem_span_singleton.mpr ⟨c, hc.symm⟩
   · intro x hx
     obtain ⟨c, hc⟩ := Submodule.mem_span_singleton.mp hx
     apply (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspace_mem
       H N hN beta hbeta x).mpr
-    rw [hc, map_smul,
+    rw [← hc, map_smul,
       periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_vacuum_fixed
         H N hN beta hbeta]
 
