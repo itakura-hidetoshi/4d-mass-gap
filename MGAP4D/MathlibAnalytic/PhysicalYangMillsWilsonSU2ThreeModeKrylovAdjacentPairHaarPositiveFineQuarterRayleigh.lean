@@ -129,7 +129,7 @@ theorem fineRightKrylovPairHaarResidualGram_ones_normalizedRayleigh_gt_quarterEn
     nlinarith [hPositiveFactor]
   have hN : 0 < (((r + 1 : ℕ) : ℝ)) := by positivity
   change (((r + 1 : ℕ) : ℝ)) * (x ^ 2 / 4) < _
-  exact (mul_lt_mul_of_pos_left hSquare hN).trans hLower
+  exact lt_of_lt_of_le (mul_lt_mul_of_pos_left hSquare hN) hLower
 
 /-- The quarter-energy bound holds throughout a truly open,
 nonempty fine-coupling interval for ANY actual nonnegative Wilson
