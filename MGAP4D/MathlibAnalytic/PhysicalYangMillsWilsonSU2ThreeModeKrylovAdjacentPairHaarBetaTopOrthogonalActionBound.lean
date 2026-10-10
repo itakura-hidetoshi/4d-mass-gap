@@ -306,7 +306,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopOrthogonal_norm_le
     simpa only [delta, mul_assoc] using hFour
   let S := periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
     H N hN beta hbeta
-  have hSym : (S : _ →ₗ[ℝ] _).IsSymmetric :=
+  have hSym :=
     periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
       H N hN beta hbeta
   change ‖realHilbertTopEigenspaceOrthogonalRestriction S hSym‖ ≤
