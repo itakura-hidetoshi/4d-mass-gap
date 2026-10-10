@@ -58,7 +58,7 @@ noncomputable def p4Q2AD_realFiniteSynthesis
     simp only [Pi.add_apply, add_smul, Finset.sum_add_distrib]
   map_smul' t a := by
     classical
-    simp only [Pi.smul_apply, RingHom.id_apply, smul_smul, Finset.smul_sum]
+    simp only [Pi.smul_apply, RingHom.id_apply, smul_smul, Finset.smul_sum, smul_eq_mul]
 
 /-- The algebraic kernel is precisely the set of finite relations. -/
 theorem p4Q2AD_realFiniteSynthesis_mem_ker_iff
@@ -245,7 +245,9 @@ theorem fineRightKrylov_originalGram_zero_iff_physicalSynthesis_kernel
       nlinarith [norm_nonneg (T a)]
     exact norm_eq_zero.mp hz
   · intro h
-    exact h
+    change T a = 0 at h
+    rw [h]
+    simp
 
 /-- Canonical independent physical realization: quotient of REAL
 Krylov coefficients by the genuine posterior synthesis kernel is
