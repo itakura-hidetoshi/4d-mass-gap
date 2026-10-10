@@ -78,8 +78,7 @@ theorem p4Q2AE_realFiniteSynthesisPhysicalCoordinates_norm_eq
     (x : (p4Q2AD_realFiniteSynthesis v).range) :
     ‖p4Q2AE_realFiniteSynthesisPhysicalOrthonormalCoordinates v x‖ =
       ‖(x : E)‖ := by
-  simpa using
-    ((p4Q2AE_realFiniteSynthesisPhysicalOrthonormalCoordinates v).norm_map x)
+  simp
 
 /-- The finite synthesis quotient does not alter true physical
 energy when passed to independent orthonormal realized coordinates. -/
