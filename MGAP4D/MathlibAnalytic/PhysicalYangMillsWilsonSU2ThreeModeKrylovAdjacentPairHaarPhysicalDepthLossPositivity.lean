@@ -81,7 +81,7 @@ theorem physicalOriginalOneSlabGlobalActionBudget_pos_SU2
       0 < (periodicHypercubicEvenSpatialSliceLinkList H).length := by
     cases hList : periodicHypercubicEvenSpatialSliceLinkList H with
     | nil => simp [hList] at hMem
-    | cons a as => simp [hList]
+    | cons a as => simp
   have hVolume :
       0 < periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabCombinatorialVolume H := by
     unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabCombinatorialVolume
