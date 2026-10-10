@@ -78,9 +78,26 @@ theorem periodicHypercubicEvenSpecialUnitaryRightLinkUpdate_continuous
       (continuous_const :
         Continuous (fun _g : Matrix.specialUnitaryGroup (Fin N) ℂ => B e))
 
-/-- The genuine relative Wilson right-link factor is a continuous function
-of the new SU(N) link value. This follows by dividing its LITERAL Wilson
-updated kernel by the strictly positive unmodified raw kernel. -/
+/-- A generic cancellation lemma: an exact factor of a continuously
+varying kernel by a NONZERO fixed reference weight is continuous. Keeping
+this theorem abstract avoids unfolding the large concrete Wilson kernel
+during Lean's reducibility and instance-synthesis normalization. -/
+theorem p4Q2AS_continuous_factor_of_kernel_mul
+    {G X : Type*} [TopologicalSpace G] [TopologicalSpace X]
+    (K : X → ℝ) (F : G → X) (w : G → ℝ) (k0 : ℝ)
+    (hK : Continuous K) (hF : Continuous F)
+    (hk0 : k0 ≠ 0)
+    (hFactor : ∀ g, K (F g) = w g * k0) :
+    Continuous w := by
+  have hIdentity : w = (fun g => K (F g) / k0) := by
+    funext g
+    exact (eq_div_iff hk0).2 (hFactor g).symm
+  rw [hIdentity]
+  exact (hK.comp hF).div_const _
+
+/-- The genuine relative Wilson right-link factor is continuous in the
+new SU(N) link. The literal kernel factorization is passed only to the
+already-checked generic cancellation lemma. -/
 theorem periodicHypercubicEvenSpecialUnitaryRightTargetLocalFactor_continuous
     (H N : ℕ) (beta : ℝ)
     (A B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
@@ -88,38 +105,33 @@ theorem periodicHypercubicEvenSpecialUnitaryRightTargetLocalFactor_continuous
     Continuous (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
         H N beta A B target g) := by
+  let K := fun p : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+       PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N =>
+     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H N beta p.1 p.2
+  let F := fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
+    (A, Function.update B target g)
+  let w := fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
+      H N beta A B target g
   let k0 := periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
     H N beta A B
+  have hK : Continuous K :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      H N beta
+  have hF : Continuous F :=
+    continuous_const.prodMk
+      (periodicHypercubicEvenSpecialUnitaryRightLinkUpdate_continuous
+        H N B target)
   have hk0 : k0 ≠ 0 :=
     (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
       H N beta A B).ne'
-  have hUpdate :=
-    periodicHypercubicEvenSpecialUnitaryRightLinkUpdate_continuous
-      H N B target
-  have hPair : Continuous
-      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
-        (A, Function.update B target g)) :=
-    continuous_const.prodMk hUpdate
-  have hKernel : Continuous
-      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta A (Function.update B target g)) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H N beta).comp hPair
-  have hIdentity :
-      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor
-          H N beta A B target g) =
-      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ =>
-        periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-          H N beta A (Function.update B target g) / k0) := by
-    funext g
-    apply (eq_div_iff hk0).2
-    exact
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_update_right_eq_localFactor_mul
-        H N beta A B target g).symm
-  rw [hIdentity]
-  exact hKernel.div_const _
+  have hFactor : ∀ g, K (F g) = w g * k0 := by
+    intro g
+    exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_update_right_eq_localFactor_mul
+      H N beta A B target g
+  change Continuous w
+  exact p4Q2AS_continuous_factor_of_kernel_mul
+    K F w k0 hK hF hk0 hFactor
 
 /-- Actual Wilson local multiplier is Haar integrable on the compact SU(N)
 link group. There is no auxiliary finite or proxy state space. -/
