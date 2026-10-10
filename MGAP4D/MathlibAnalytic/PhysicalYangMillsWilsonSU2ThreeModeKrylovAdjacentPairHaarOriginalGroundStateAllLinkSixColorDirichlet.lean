@@ -22,7 +22,7 @@ by that finite nonzero cardinality gives a normalized average bound free of
 a volume coefficient on the right. Averaging over six colors preserves this.
 
 These are local-to-color UPPER comparisons. They do NOT give a reverse frame
-inequality or a volume-/spacing-uniform physical Yang-Mills mass gap.
+inequality or a volume- and spacing-uniform physical Yang-Mills mass gap.
 
 BA also discharges AZ's six-color representative existence directly from the
 already formalized geometric nonemptiness of every color.
