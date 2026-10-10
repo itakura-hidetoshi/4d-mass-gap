@@ -188,7 +188,7 @@ theorem physicalOriginalFineTopProjection_link_ne_zero_of_stepMargin
     physicalOriginalReceiverPosteriorInnovation_sub
       H 2 specialUnitaryTwoWilsonRankPositive frozen (le_of_lt hFrozen)
       e (P u) u
-  change I e (P u) - I e u = I e (P u - u) at hSub
+  change I e (P u - u) = I e (P u) - I e u at hSub
   have hLip :=
     physicalOriginalReceiverPosteriorInnovation_norm_le_sqrt_signedHilbert
       H 2 specialUnitaryTwoWilsonRankPositive frozen (le_of_lt hFrozen)
@@ -197,7 +197,7 @@ theorem physicalOriginalFineTopProjection_link_ne_zero_of_stepMargin
   have hBound :
       ‖I e (P u) - I e u‖ ≤ Real.sqrt gamma * ‖P u - u‖ := by
     calc
-      ‖I e (P u) - I e u‖ = ‖I e (P u - u)‖ := congrArg norm hSub
+      ‖I e (P u) - I e u‖ = ‖I e (P u - u)‖ := (congrArg norm hSub).symm
       _ ≤ Real.sqrt gamma * ‖P u - u‖ := hLip
   intro hZero
   have hUnit :
@@ -208,6 +208,50 @@ theorem physicalOriginalFineTopProjection_link_ne_zero_of_stepMargin
       ‖I e u‖ ≤ Real.sqrt gamma * ‖P u - u‖ :=
     hUnit.trans_le hBound
   exact (not_lt_of_ge hFalse) hStrict
+
+
+/-- The P4-Q2-Z sufficient nonvanishing margin expressed entirely via
+the PRE-EXISTING actual finite-volume Wilson beta-budget B_H(fine).
+This is an explicit physical input for later small-positive-fine analysis;
+it does not assume or assert uniformity of 1-q in fine beta or in H. -/
+theorem physicalOriginalFineTopProjection_link_ne_zero_of_explicitBetaBudget
+    (H : ℕ) (frozen fine : ℝ)
+    (hFrozen : 0 < frozen) (hFine : 0 ≤ fine)
+    (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+    let S := periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+      H 2 specialUnitaryTwoWilsonRankPositive fine hFine
+    let P := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopSpectralProjection
+      H 2 specialUnitaryTwoWilsonRankPositive fine hFine
+    let u := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2
+    let I := physicalOriginalReceiverPosteriorInnovation
+      H 2 specialUnitaryTwoWilsonRankPositive frozen (le_of_lt hFrozen)
+    let gamma := originalWilsonPhysicalSignedInnovationHilbertCoefficient
+      H 2 specialUnitaryTwoWilsonRankPositive frozen (le_of_lt hFrozen)
+    let B := physicalOriginalNormalizedTransferConstantStepBetaBudget H fine
+    Real.sqrt gamma * B <
+        (1 - ‖S - P‖) * ‖I e u‖ →
+      I e (P u) ≠ 0 := by
+  let S := periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+    H 2 specialUnitaryTwoWilsonRankPositive fine hFine
+  let P := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopSpectralProjection
+    H 2 specialUnitaryTwoWilsonRankPositive fine hFine
+  let u := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2
+  let I := physicalOriginalReceiverPosteriorInnovation
+    H 2 specialUnitaryTwoWilsonRankPositive frozen (le_of_lt hFrozen)
+  let gamma := originalWilsonPhysicalSignedInnovationHilbertCoefficient
+    H 2 specialUnitaryTwoWilsonRankPositive frozen (le_of_lt hFrozen)
+  let B := physicalOriginalNormalizedTransferConstantStepBetaBudget H fine
+  intro hMargin
+  have hStep : ‖S u - u‖ ≤ B := by
+    exact normalizedPhysicalOneSlabTransfer_constantUnit_stepDefect_le_beta
+      H 2 specialUnitaryTwoWilsonRankPositive fine hFine
+  have hSmall :
+      Real.sqrt gamma * ‖S u - u‖ <
+        (1 - ‖S - P‖) * ‖I e u‖ :=
+    lt_of_le_of_lt
+      (mul_le_mul_of_nonneg_left hStep (Real.sqrt_nonneg _)) hMargin
+  exact physicalOriginalFineTopProjection_link_ne_zero_of_stepMargin
+    H frozen fine hFrozen hFine e hSmall
 
 end GroundStatePosteriorJoint
 end
