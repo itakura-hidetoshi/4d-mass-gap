@@ -104,7 +104,7 @@ theorem physicalOriginalNormalizedTransferExplicitFineRadius_pos
 on t≤1; in particular no epsilon-delta existence oracle is used. -/
 theorem physicalOriginalNormalizedTransferExplicitFineRadius_bound
     (H r : ℕ) (K radius : ℝ)
-    (hK : 0 ≤ K) (hRadius : 0 < radius)
+    (hK : 0 ≤ K)
     (t : ℝ) (ht : 0 ≤ t)
     (hlt : t < physicalOriginalNormalizedTransferExplicitFineRadius H r K radius) :
     K * ((r : ℝ) *
@@ -232,7 +232,7 @@ theorem fineRightKrylovPairHaarResidualGram_ones_normalizedRayleigh_gt_globalQua
         physicalOriginalNormalizedTransferConstantStepBetaBudget H (beta (n + 1))) <
         Real.sqrt Eunit :=
     physicalOriginalNormalizedTransferExplicitFineRadius_bound
-      H r K (Real.sqrt Eunit) hK (Real.sqrt_pos.mpr hEnergy)
+      H r K (Real.sqrt Eunit) hK
       (beta (n + 1)) (hbeta (n + 1)) hFine
   apply fineRightKrylovPairHaarResidualGram_ones_normalizedRayleigh_gt_globalQuarterEnergy
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
@@ -330,7 +330,7 @@ theorem fineRightKrylovPairHaarResidualGram_exists_positiveFine_explicitRadius_s
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
       n r (by simpa only [hFrozenAt] using hFrozen) hFineBound
   refine ⟨beta, hbeta, hFrozenAt, ?_, ?_, hAway, hFloor, hRayleigh⟩
-  · change fine = delta / 2
+  · rw [hFineAt]
     rfl
   · simpa only [hFineAt] using hFinePos
 
