@@ -198,8 +198,9 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalRawWilson_HaarCentered_diric
   have hSmall : 2 * delta ≤ 1 := by
     dsimp [delta]
     nlinarith [hWindow]
-  exact p4Q2AN_realHilbert_endpointPerturbation_rawDirichlet_lower
-    R R0 f hR0norm hR0f delta hDelta hPert hSmall
+  simpa only [delta, mul_assoc] using
+    (p4Q2AN_realHilbert_endpointPerturbation_rawDirichlet_lower
+      R R0 f hR0norm hR0f delta hDelta hPert hSmall)
 
 /-- Strict raw Wilson Dirichlet positivity for every nonzero Haar-centered
 physical vector throughout the explicit finite-H weak-coupling window. -/
