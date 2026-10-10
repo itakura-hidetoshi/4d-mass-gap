@@ -159,11 +159,12 @@ theorem p4Q2AT_evariance_lower_of_measure_domination
   calc
     c * (⨅ b : ℝ, doobCenteredSquaredResidual mu X b) ≤
         c * doobCenteredSquaredResidual mu X a :=
-      mul_le_mul_left' (iInf_le _ a) c
+      mul_le_mul_right (iInf_le _ a) c
     _ = ∫⁻ x, ENNReal.ofReal ((X x - a) ^ 2) ∂(c • mu) := by
-      simpa [doobCenteredSquaredResidual, smul_eq_mul] using
-        (lintegral_smul_measure
-          (μ := mu) c (fun x => ENNReal.ofReal ((X x - a) ^ 2))).symm
+      change c * (∫⁻ x, ENNReal.ofReal ((X x - a) ^ 2) ∂mu) =
+        ∫⁻ x, ENNReal.ofReal ((X x - a) ^ 2) ∂(c • mu)
+      exact (lintegral_smul_measure
+        (μ := mu) c (fun x => ENNReal.ofReal ((X x - a) ^ 2))).symm
     _ ≤ doobCenteredSquaredResidual nu X a := by
       exact lintegral_mono' hc le_rfl
 
@@ -309,7 +310,7 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumOrigi
     ENNReal.ofReal (Real.exp (-32 * beta)) * evariance X mu =
         c * (c * evariance X mu) := by
           rw [← hCoeff]
-          mul_assoc
+          exact mul_assoc c c (evariance X mu)
     _ ≤ c * evariance X nu := mul_le_mul_left' hRawBound c
     _ ≤ evariance X post := hPostBound
 
