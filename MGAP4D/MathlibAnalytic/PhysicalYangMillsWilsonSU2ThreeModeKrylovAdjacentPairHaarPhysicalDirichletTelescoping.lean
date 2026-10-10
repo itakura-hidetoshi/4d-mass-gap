@@ -142,7 +142,7 @@ theorem p4Q2AL_realHilbert_excited_physicalEnergy_lower
   have hPowerSq : ‖(S ^ k) x‖ ^ 2 ≤ (q ^ k * ‖x‖) ^ 2 :=
     (sq_le_sq₀ hLeft hRight).mpr hPower
   calc
-    (1 - q ^ k ^ 2) * ‖x‖ ^ 2 =
+    (1 - (q ^ k) ^ 2) * ‖x‖ ^ 2 =
         ‖x‖ ^ 2 - (q ^ k * ‖x‖) ^ 2 := by ring
     _ ≤ ‖x‖ ^ 2 - ‖(S ^ k) x‖ ^ 2 :=
       sub_le_sub_left hPowerSq _
