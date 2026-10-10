@@ -228,10 +228,13 @@ theorem fineRightKrylov_originalWilson_excitedTransferPow_posteriorFullLink_norm
     (fineRightKrylov_originalWilson_centeredSource_transferPow_norm_le
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
       n r a hCenter k).1
+  have hLeftNonneg : 0 ≤ ‖(S ^ k) F‖ :=
+    norm_nonneg ((S ^ k) F)
+  have hRightNonneg : 0 ≤ ‖S - P‖ ^ k * ‖F‖ :=
+    mul_nonneg (pow_nonneg (norm_nonneg (S - P)) k) (norm_nonneg F)
   have hPowerSq :
       ‖(S ^ k) F‖ ^ 2 ≤ (‖S - P‖ ^ k * ‖F‖) ^ 2 :=
-    (sq_le_sq₀ (norm_nonneg _) (mul_nonneg
-      (pow_nonneg (norm_nonneg _) _) (norm_nonneg _))).mpr hPower
+    (sq_le_sq₀ hLeftNonneg hRightNonneg).mpr hPower
   have hOne (e : PeriodicHypercubicEvenSpatialSliceLink H) :
       ‖I e ((S ^ k) F)‖ ^ 2 ≤ gamma * ‖(S ^ k) F‖ ^ 2 := by
     exact physicalOriginalReceiverPosteriorInnovation_norm_sq_le_signedHilbert
