@@ -65,8 +65,8 @@ theorem p4Q2AO_realHilbert_rankOne_topEigenvector_overlap_lower
     rw [huEig, norm_smul, Real.norm_eq_abs, abs_of_nonneg (norm_nonneg R), hu,
       mul_one]
   have hQu : ‖Q u‖ = |inner ℝ e u| := by
-    dsimp [Q]
-    rw [InnerProductSpace.rankOne_apply, norm_smul, Real.norm_eq_abs, he, mul_one]
+    change ‖(inner ℝ e u) • e‖ = |inner ℝ e u|
+    rw [norm_smul, Real.norm_eq_abs, he, mul_one]
   have hD : ‖(R - Q) u‖ ≤ delta := by
     calc
       ‖(R - Q) u‖ ≤ ‖R - Q‖ * ‖u‖ := (R - Q).le_opNorm u
@@ -115,7 +115,7 @@ theorem p4Q2AO_realHilbert_rankOne_topOrthogonal_raw_apply_norm_le
       |inner ℝ e u| * |inner ℝ e x| ≤ delta * ‖x‖ := by
     calc
       |inner ℝ e u| * |inner ℝ e x| =
-        |inner ℝ ((R - Q) u) x| := by rw [hInner, abs_neg, abs_mul]
+        |inner ℝ ((R - Q) u) x| := by rw [hInner, abs_mul, abs_neg]
       _ ≤ ‖(R - Q) u‖ * ‖x‖ := abs_real_inner_le_norm _ _
       _ ≤ delta * ‖x‖ :=
         mul_le_mul_of_nonneg_right hDu (norm_nonneg x)
@@ -126,8 +126,8 @@ theorem p4Q2AO_realHilbert_rankOne_topOrthogonal_raw_apply_norm_le
       mul_le_mul_of_nonneg_right hHalf (abs_nonneg _)
     nlinarith [hMul, hProduct]
   have hQx : ‖Q x‖ = |inner ℝ e x| := by
-    dsimp [Q]
-    rw [InnerProductSpace.rankOne_apply, norm_smul, Real.norm_eq_abs, he, mul_one]
+    change ‖(inner ℝ e x) • e‖ = |inner ℝ e x|
+    rw [norm_smul, Real.norm_eq_abs, he, mul_one]
   have hDx : ‖(R - Q) x‖ ≤ delta * ‖x‖ := by
     calc
       ‖(R - Q) x‖ ≤ ‖R - Q‖ * ‖x‖ := (R - Q).le_opNorm x
@@ -291,9 +291,14 @@ theorem periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopOrthogonal_norm_le
     exact mul_nonneg (mul_nonneg (by norm_num)
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget_nonneg H))
       hbeta
-  refine ContinuousLinearMap.opNorm_le_bound
-    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopEigenspaceOrthogonalTransferOperator
-      H N hN beta hbeta) hBound ?_
+  let S := periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+    H N hN beta hbeta
+  let T := realHilbertTopEigenspaceOrthogonalRestriction S
+    (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_isSymmetric
+      H N hN beta hbeta)
+  change ‖T‖ ≤ 4 *
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H * beta
+  refine ContinuousLinearMap.opNorm_le_bound T hBound ?_
   intro x
   have hxOrth : (x :
       periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N) ∈
