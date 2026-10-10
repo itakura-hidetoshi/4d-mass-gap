@@ -58,7 +58,7 @@ theorem p4Q2Z_realHilbert_topProjection_overlap_gap_control
     rw [map_sub, hPP, sub_self]
   have hZSub : Z (u - P u) = S u - P u := by
     dsimp [Z]
-    rw [ContinuousLinearMap.sub_apply, map_sub, hFix, hPSub, sub_zero]
+    rw [map_sub, hFix, hPSub, sub_zero]
   have hDecomp : u - P u = (u - S u) + Z (u - P u) := by
     rw [hZSub]
     abel
@@ -72,7 +72,7 @@ theorem p4Q2Z_realHilbert_topProjection_overlap_gap_control
     ContinuousLinearMap.le_opNorm Z (u - P u)
   have hBound :
       ‖u - P u‖ ≤ ‖u - S u‖ + ‖Z‖ * ‖u - P u‖ :=
-    le_trans hTri (add_le_add_left hOperator _)
+    le_trans hTri (add_le_add_right hOperator _)
   have hGap : (1 - ‖Z‖) * ‖u - P u‖ ≤ ‖u - S u‖ := by
     nlinarith
   simpa only [P, Z] using hGap
@@ -113,10 +113,9 @@ theorem physicalOriginalFineZeroTopSpectralProjection_constantUnit (H : ℕ) :
   let S := periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
     H 2 specialUnitaryTwoWilsonRankPositive 0 (by norm_num)
   let u := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2
-  have hFix : S u = u := by
-    simpa [S, u] using
-      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_zero_constantUnit
-        H 2 specialUnitaryTwoWilsonRankPositive)
+  have hFix : S u = u :=
+    periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_zero_constantUnit
+      H 2 specialUnitaryTwoWilsonRankPositive
   change realHilbertTopEigenspaceProjection S u = u
   exact (realHilbertTopEigenspaceProjection_apply_eq_self_iff S u).mpr hFix
 
@@ -165,6 +164,8 @@ theorem physicalOriginalFineTopProjection_link_ne_zero_of_stepMargin
     H 2 specialUnitaryTwoWilsonRankPositive frozen (le_of_lt hFrozen)
   let gamma := originalWilsonPhysicalSignedInnovationHilbertCoefficient
     H 2 specialUnitaryTwoWilsonRankPositive frozen (le_of_lt hFrozen)
+  change (Real.sqrt gamma * ‖S u - u‖ <
+      (1 - ‖S - P‖) * ‖I e u‖ → I e (P u) ≠ 0)
   intro hMargin
   have hq : ‖S - P‖ < 1 := by
     exact physicalOriginalNormalizedFineTransfer_sub_topSpectralProjection_norm_lt_one
@@ -175,15 +176,22 @@ theorem physicalOriginalFineTopProjection_link_ne_zero_of_stepMargin
     simpa only [S, P, norm_sub_rev] using
       (p4Q2Z_realHilbert_topProjection_overlap_gap_control S u)
   have hCoefficient : 0 ≤ Real.sqrt gamma := Real.sqrt_nonneg _
-  have hStrict :
-      Real.sqrt gamma * ‖P u - u‖ < ‖I e u‖ := by
-    apply (mul_lt_mul_left hdelta).mp
+  have hDeltaMul :
+      (1 - ‖S - P‖) * (Real.sqrt gamma * ‖P u - u‖) <
+        (1 - ‖S - P‖) * ‖I e u‖ := by
     calc
       (1 - ‖S - P‖) * (Real.sqrt gamma * ‖P u - u‖) =
           Real.sqrt gamma * ((1 - ‖S - P‖) * ‖P u - u‖) := by ring
       _ ≤ Real.sqrt gamma * ‖S u - u‖ :=
         mul_le_mul_of_nonneg_left hOverlap hCoefficient
       _ < (1 - ‖S - P‖) * ‖I e u‖ := hMargin
+  have hStrict :
+      Real.sqrt gamma * ‖P u - u‖ < ‖I e u‖ := by
+    by_contra hn
+    have hLe : ‖I e u‖ ≤ Real.sqrt gamma * ‖P u - u‖ :=
+      le_of_not_gt hn
+    have hContra := mul_le_mul_of_nonneg_left hLe (le_of_lt hdelta)
+    exact (not_lt_of_ge hContra) hDeltaMul
   have hSub :=
     physicalOriginalReceiverPosteriorInnovation_sub
       H 2 specialUnitaryTwoWilsonRankPositive frozen (le_of_lt hFrozen)
@@ -241,6 +249,8 @@ theorem physicalOriginalFineTopProjection_link_ne_zero_of_explicitBetaBudget
   let gamma := originalWilsonPhysicalSignedInnovationHilbertCoefficient
     H 2 specialUnitaryTwoWilsonRankPositive frozen (le_of_lt hFrozen)
   let B := physicalOriginalNormalizedTransferConstantStepBetaBudget H fine
+  change (Real.sqrt gamma * B <
+      (1 - ‖S - P‖) * ‖I e u‖ → I e (P u) ≠ 0)
   intro hMargin
   have hStep : ‖S u - u‖ ≤ B := by
     exact normalizedPhysicalOneSlabTransfer_constantUnit_stepDefect_le_beta
