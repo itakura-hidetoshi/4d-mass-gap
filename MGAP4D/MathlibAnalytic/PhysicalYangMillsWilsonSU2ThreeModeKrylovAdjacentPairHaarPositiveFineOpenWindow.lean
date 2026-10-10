@@ -46,7 +46,7 @@ theorem physicalOriginalNormalizedTransferConstantStepBetaBudget_continuous
   have hExp : Continuous (fun t : ℝ => Real.exp (-(t * A))) := by
     fun_prop
   have hInv : Continuous (fun t : ℝ => (Real.exp (-(t * A)))⁻¹) :=
-    hExp.fun_inv₀ (fun t => (Real.exp_pos _).ne')
+    hExp.inv₀ (fun t => (Real.exp_pos _).ne')
   change Continuous (fun t : ℝ =>
     2 * (Real.exp (-(t * A)))⁻¹ * A * t)
   exact ((continuous_const.mul hInv).mul continuous_const).mul continuous_id
@@ -58,7 +58,10 @@ theorem physicalOriginalNormalizedTransferConstantStepBetaBudget_tendsto_zero
     Tendsto (fun t : ℝ =>
       GroundStatePosteriorJoint.physicalOriginalNormalizedTransferConstantStepBetaBudget H t)
       (𝓝 (0 : ℝ)) (𝓝 (0 : ℝ)) := by
-  have h := (physicalOriginalNormalizedTransferConstantStepBetaBudget_continuous H).continuousAt
+  have h : ContinuousAt (fun t : ℝ =>
+      GroundStatePosteriorJoint.physicalOriginalNormalizedTransferConstantStepBetaBudget H t)
+      (0 : ℝ) :=
+    (physicalOriginalNormalizedTransferConstantStepBetaBudget_continuous H).continuousAt
   simpa only [GroundStatePosteriorJoint.physicalOriginalNormalizedTransferConstantStepBetaBudget_zero] using
     h.tendsto
 
