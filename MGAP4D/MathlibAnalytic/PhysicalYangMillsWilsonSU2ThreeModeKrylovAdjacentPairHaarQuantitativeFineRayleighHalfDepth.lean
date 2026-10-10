@@ -42,7 +42,8 @@ theorem p4Q2_fin_linear_error_sum_eq_halfDepth
   have hReal :
       (∑ k ∈ Finset.range (r + 1), (k : ℝ)) * 2 =
         (((r + 1 : ℕ) : ℝ) * (r : ℝ)) := by
-    exact_mod_cast hNat
+    have hCast := congrArg (fun z : ℕ => (z : ℝ)) hNat
+    simpa only [Nat.cast_mul, Nat.cast_sum, Nat.cast_ofNat] using hCast
   have hFin :
       (∑ j : Fin (r + 1), ((j : ℕ) : ℝ)) =
         (((r + 1 : ℕ) : ℝ) * (r : ℝ)) / 2 := by
@@ -209,7 +210,8 @@ theorem fineRightKrylovPairHaarResidualGram_ones_rayleigh_ge_halfDepth
   have hWhole :
       ‖∑ j : Fin (r + 1), I e (R j)‖ ^ 2 ≤
         ∑ t : PeriodicHypercubicEvenSpatialSliceLink H, q t := by
-    exact Finset.single_le_sum
+    change q e ≤ ∑ t : PeriodicHypercubicEvenSpatialSliceLink H, q t
+    exact Finset.single_le_sum (f := q)
       (fun t _ht => sq_nonneg _) (Finset.mem_univ e)
   have hRayleigh :
       star (fun _ : Fin (r + 1) => (1 : ℝ)) ⬝ᵥ
