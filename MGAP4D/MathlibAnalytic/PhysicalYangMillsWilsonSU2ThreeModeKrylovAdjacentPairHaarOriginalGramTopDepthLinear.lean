@@ -203,6 +203,66 @@ theorem fineRightKrylovPairHaarResidualGram_ones_ge_quarter_topDepth
   change (N^2*‖U‖^2)/4 ≤ _
   exact le_trans hScalar hGram
 
+
+/-- At every fixed physical finite Wilson volume and genuine coupling
+profile whose ORIGINAL frozen all-link top innovation is nonzero,
+a finite depth threshold exists beyond which the true all-one original
+posterior Gram has quadratic depth growth with positive coefficient. -/
+theorem fineRightKrylovPairHaarResidualGram_ones_eventually_ge_quarter_topDepth
+    {halfExtent : ℕ → ℕ} {beta : ℕ → ℝ}
+    {hbeta : ∀ k, 0 ≤ beta k}
+    (n : ℕ)
+    (hTop :
+      let H := halfExtent (n+1)
+      let P := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopSpectralProjection
+        H 2 specialUnitaryTwoWilsonRankPositive (beta (n+1)) (hbeta (n+1))
+      let u := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2
+      let I := physicalOriginalReceiverPosteriorInnovation
+        H 2 specialUnitaryTwoWilsonRankPositive (beta n) (hbeta n)
+      0 < ‖WithLp.toLp 2
+        (fun e : PeriodicHypercubicEvenSpatialSliceLink H => I e (P u))‖) :
+    ∃ N : ℕ, ∀ r : ℕ, N ≤ r →
+      let H := halfExtent (n+1)
+      let P := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopSpectralProjection
+        H 2 specialUnitaryTwoWilsonRankPositive (beta (n+1)) (hbeta (n+1))
+      let u := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2
+      let I := physicalOriginalReceiverPosteriorInnovation
+        H 2 specialUnitaryTwoWilsonRankPositive (beta n) (hbeta n)
+      let U := WithLp.toLp 2
+        (fun e : PeriodicHypercubicEvenSpatialSliceLink H => I e (P u))
+      ((((r+1:ℕ):ℝ)^2) * ‖U‖^2) / 4 ≤
+        star (fun _ : Fin (r+1) => (1:ℝ)) ⬝ᵥ
+          (Matrix.mulVec
+            (fineRightKrylovPairHaarResidualGram
+              (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r)
+            (fun _ : Fin (r+1) => (1:ℝ))) := by
+  let H := halfExtent (n+1)
+  let P := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTopSpectralProjection
+    H 2 specialUnitaryTwoWilsonRankPositive (beta (n+1)) (hbeta (n+1))
+  let S := periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator
+    H 2 specialUnitaryTwoWilsonRankPositive (beta (n+1)) (hbeta (n+1))
+  let u := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2
+  let I := physicalOriginalReceiverPosteriorInnovation
+    H 2 specialUnitaryTwoWilsonRankPositive (beta n) (hbeta n)
+  let gamma := originalWilsonPhysicalSignedInnovationHilbertCoefficient
+    H 2 specialUnitaryTwoWilsonRankPositive (beta n) (hbeta n)
+  let B := physicalOriginalNormalizedTransferConstantStepBetaBudget H (beta (n+1))
+  let L : ℝ := (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ)
+  let C := (Real.sqrt gamma * B) * Real.sqrt L + Real.sqrt gamma * Real.sqrt L
+  let U := WithLp.toLp 2
+    (fun e : PeriodicHypercubicEvenSpatialSliceLink H => I e (P u))
+  change 0 < ‖U‖ at hTop
+  obtain ⟨N, hN⟩ :=
+    p4Q2AA_exists_depth_linear_signal_dominates_error
+      ‖U‖ (C/(1-‖S-P‖)) hTop
+  refine ⟨N, ?_⟩
+  intro r hr
+  have hDepth : 2 * (C/(1-‖S-P‖)) ≤ (((r+1:ℕ):ℝ) * ‖U‖) :=
+    hN r hr
+  exact fineRightKrylovPairHaarResidualGram_ones_ge_quarter_topDepth
+    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+    n r hDepth
+
 end GroundStatePosteriorJoint
 end
 end MathlibAnalytic
