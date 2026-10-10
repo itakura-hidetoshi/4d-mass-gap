@@ -328,7 +328,6 @@ theorem fineRightKrylovPairHaarResidualGram_exists_positiveFine_explicitRadius_s
       n r hFineBound
   refine ⟨beta, hbeta, hFrozenAt, ?_, ?_, hAway, hFloor, hRayleigh⟩
   · rw [hFineAt]
-    rfl
   · simpa only [hFineAt] using hFinePos
 
 end GroundStatePosteriorJoint
