@@ -381,7 +381,7 @@ theorem p4Q2AZ_normalizedSixSelectedOriginalWilsonHaarEnergies_le_colorResiduals
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2
             H N hN beta hbeta c
             (p4Q2AZ_originalJointL2 H N hN beta hbeta F hF bound hbound)‖ ^ 2)) := by
-  exact mul_le_mul_left
+  exact mul_le_mul_right
     (p4Q2AZ_sixSelectedOriginalWilsonHaarEnergies_le_sixSpatialColorResiduals
       H N hN beta hbeta targets hColors F hF bound hbound)
     (6 : ENNReal)⁻¹
