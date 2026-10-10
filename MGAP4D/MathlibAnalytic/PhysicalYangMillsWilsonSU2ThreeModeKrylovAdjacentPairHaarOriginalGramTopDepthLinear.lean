@@ -41,7 +41,7 @@ theorem p4Q2AA_quarter_square_le_margin_sq
 /-- Any strictly positive top signal eventually dominates twice a
 fixed nonnegative geometric error budget. No uniformity over volume. -/
 theorem p4Q2AA_exists_depth_linear_signal_dominates_error
-    (a E : ℝ) (ha : 0 < a) (hE : 0 ≤ E) :
+    (a E : ℝ) (ha : 0 < a) :
     ∃ N : ℕ, ∀ r : ℕ, N ≤ r →
       2 * E ≤ (((r+1:ℕ):ℝ) * a) := by
   obtain ⟨N, hN⟩ := exists_nat_gt (2 * E / a)
