@@ -21,7 +21,7 @@ positive singular-value lower bound or continuum mass gap is claimed.
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open MeasureTheory Filter
+open MeasureTheory Filter Matrix
 open scoped ENNReal InnerProductSpace InnerProduct BigOperators
 
 noncomputable section
