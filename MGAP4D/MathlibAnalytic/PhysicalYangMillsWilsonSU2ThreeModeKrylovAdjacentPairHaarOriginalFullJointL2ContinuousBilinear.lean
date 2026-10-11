@@ -139,65 +139,45 @@ theorem p4Q2BW_originalFullJointContinuousBilin_apply_range
     p4Q2BW_originalFullJointContinuousBilin H N hN beta hbeta
         (x : J) (y : J) =
         (b₁.flip.extend i) (i y) (i x) := rfl
-    _ = b₁.flip y (i x) :=
-      ContinuousLinearMap.extend_eq b₁.flip hd hi y
+    _ = b₁.flip y (i x) := by
+      rw [ContinuousLinearMap.extend_eq b₁.flip hd hi y]
     _ = b₁ (i x) y := rfl
     _ = b x y := by
       change (b.extend i) (i x) y = b x y
       rw [ContinuousLinearMap.extend_eq b hd hi x]
 
-/-- The norm-12 coefficient in BV is the operator-norm estimate, not merely
-a pointwise bound for a chosen pair of representatives. -/
-theorem p4Q2BW_originalRangeBilin_opNorm_le :
-    ‖B‖ ≤ (12 : ℝ) := by
-  refine ContinuousLinearMap.opNorm_le_bound₂ B (by norm_num) ?_
-  intro x y
-  simpa only [p4Q2BV_originalRangeContinuousBilin_apply, mul_assoc] using
-    (p4Q2BV_originalRangePolarization_norm_le H N hN beta hbeta x y)
+/-- The original Wilson twelve-color mixed estimate holds on ALL actual
+physical ground-state joint L² vectors. First extend the bound in the
+second variable, then in the first, using density and continuity.
 
-/-- Extending in both slots along the dense isometric inclusion does not
-increase the operator norm: the literal Wilson constant 12 is preserved. -/
-theorem p4Q2BW_originalFullJointContinuousBilin_opNorm_le :
-    ‖p4Q2BW_originalFullJointContinuousBilin H N hN beta hbeta‖ ≤
-      (12 : ℝ) := by
-  let i : Img →L[ℝ] J := (LinearMap.range T).subtypeL
-  let b := B
-  let b₁ := p4Q2BW_originalFirstExtended H N hN beta hbeta
-  have hd : DenseRange i :=
-    p4Q2BW_originalRange_subtype_dense H N hN beta hbeta
-  have hiNorm : ∀ x : Img, ‖x‖ ≤ (1 : ℝ≥0) * ‖i x‖ := by
-    intro x
-    simp
-  have hfirst : ‖b₁‖ ≤ ‖b‖ := by
-    simpa [b₁, b] using
-      (b.opNorm_extend_le (e := i) (N := (1 : ℝ≥0)) hd hiNorm)
-  have hsecond : ‖b₁.flip.extend i‖ ≤ ‖b₁.flip‖ := by
-    simpa using
-      (b₁.flip.opNorm_extend_le (e := i) (N := (1 : ℝ≥0)) hd hiNorm)
-  calc
-    ‖p4Q2BW_originalFullJointContinuousBilin H N hN beta hbeta‖ =
-        ‖b₁.flip.extend i‖ := by
-      change ‖(b₁.flip.extend i).flip‖ = ‖b₁.flip.extend i‖
-      simp
-    _ ≤ ‖b₁.flip‖ := hsecond
-    _ = ‖b₁‖ := by simp
-    _ ≤ ‖b‖ := hfirst
-    _ ≤ (12 : ℝ) := p4Q2BW_originalRangeBilin_opNorm_le H N hN beta hbeta
-
-/-- Uniform mixed estimate on ALL original physical Wilson joint L² classes,
-not just strongly measurable bounded concrete representatives. -/
+This route avoids any additional normed-space assumptions on operator-valued
+codomains: only the already-constructed continuous bilinear map is required. -/
 theorem p4Q2BW_originalFullJointContinuousBilin_norm_le (x y : J) :
     ‖p4Q2BW_originalFullJointContinuousBilin H N hN beta hbeta x y‖ ≤
       (12 : ℝ) * ‖x‖ * ‖y‖ := by
-  calc
-    ‖p4Q2BW_originalFullJointContinuousBilin H N hN beta hbeta x y‖ ≤
-      ‖p4Q2BW_originalFullJointContinuousBilin H N hN beta hbeta‖ *
-        ‖x‖ * ‖y‖ :=
-      (p4Q2BW_originalFullJointContinuousBilin H N hN beta hbeta).le_opNorm₂ x y
-    _ ≤ (12 : ℝ) * ‖x‖ * ‖y‖ := by
-      gcongr
-      exact p4Q2BW_originalFullJointContinuousBilin_opNorm_le
-        H N hN beta hbeta
+  let i : Img →L[ℝ] J := (LinearMap.range T).subtypeL
+  let full := p4Q2BW_originalFullJointContinuousBilin H N hN beta hbeta
+  have hd : DenseRange i :=
+    p4Q2BW_originalRange_subtype_dense H N hN beta hbeta
+  have hCore (u v : Img) :
+      ‖full (i u) (i v)‖ ≤ (12 : ℝ) * ‖i u‖ * ‖i v‖ := by
+    have h := p4Q2BV_originalRangePolarization_norm_le
+      H N hN beta hbeta u v
+    have heq : full (i u) (i v) = B u v :=
+      p4Q2BW_originalFullJointContinuousBilin_apply_range H N hN beta hbeta u v
+    rw [heq]
+    simpa [i, p4Q2BV_originalRangeContinuousBilin_apply, mul_assoc] using h
+  have hRight (u : Img) (v : J) :
+      ‖full (i u) v‖ ≤ (12 : ℝ) * ‖i u‖ * ‖v‖ := by
+    refine hd.induction ?_ (isClosed_le (by fun_prop) (by fun_prop)) v
+    rintro _ ⟨w, rfl⟩
+    exact hCore u w
+  have hLeft (v : J) (u : J) :
+      ‖full u v‖ ≤ (12 : ℝ) * ‖u‖ * ‖v‖ := by
+    refine hd.induction ?_ (isClosed_le (by fun_prop) (by fun_prop)) u
+    rintro _ ⟨w, rfl⟩
+    exact hRight w v
+  exact hLeft y x
 
 /-- The full-space diagonal agrees EXACTLY with the original
 mass-weighted Wilson twelve-color Haar reference for a bounded representative. -/
