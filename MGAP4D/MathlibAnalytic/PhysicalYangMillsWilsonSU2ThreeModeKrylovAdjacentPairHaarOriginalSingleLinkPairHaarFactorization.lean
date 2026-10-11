@@ -150,10 +150,13 @@ theorem p4Q2CJ_directLinkJoint_measPreserving
       funext x
       simp [ev]
     rw [hFun]
-    simpa [μTarget, muLink] using
+    simpa [μTarget] using
       (MeasureTheory.measurePreserving_eval
         (μ := fun _ : PeriodicHypercubicEvenSpatialSliceTargetLink H target => muLink)
         (⟨target, rfl⟩ : PeriodicHypercubicEvenSpatialSliceTargetLink H target))
+  letI : SFinite (muOuter target) := by
+    dsimp [p4Q2CJ_outerHaar]
+    infer_instance
   have hLeft : MeasurePreserving
       ((MeasurableEquiv.refl (Ctx target)).prodCongr ev.symm)
       ((muOuter target).prod muLink) ((muOuter target).prod μTarget) := by
@@ -162,7 +165,7 @@ theorem p4Q2CJ_directLinkJoint_measPreserving
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitContextTargetMeasurableEquiv
         H N target)
       ((muOuter target).prod μTarget) muPair := by
-    simpa [muOuter, μTarget, muPair] using
+    simpa [p4Q2CJ_outerHaar, μTarget] using
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitContextTargetHaar_measurePreserving
         H N target)
   exact hLeft.trans hRight
@@ -226,10 +229,32 @@ theorem p4Q2CJ_originalRightLinkZero_pairHaarRetained
       (fun z : Ctx target × G => F (e z)) =ᵐ[(muOuter target).prod muLink]
         (fun z : Ctx target × G =>
           p4Q2CJ_rightRetainedHaarMean H N target F (e z)) := by
-    convert hsource using 1 <;> ext z <;>
-      simp only [e, p4Q2CJ_directLinkJointMeasurableEquiv,
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitContextTargetMeasurableEquiv_apply]
-    all_goals rfl
+    have hleft (z : Ctx target × G) :
+        F (e z) = Section target F z.1.1 z.1.2 z.2 := by
+      rfl
+    have hright (z : Ctx target × G) :
+        p4Q2CJ_rightRetainedHaarMean H N target F (e z) =
+          ∫ t : G, Section target F z.1.1 z.1.2 t ∂muLink := by
+      let split := periodicHypercubicEvenSpatialSliceTargetOffTargetMeasurableEquiv
+        (Gauge := G) target
+      let eval := periodicHypercubicEvenSpatialSliceTargetEvaluationMeasurableEquiv
+        (Gauge := G) target
+      have hOff :
+          periodicHypercubicEvenSpatialSliceOffTargetRestriction target
+            (split.symm (eval.symm z.2, z.1.2)) = z.1.2 := by
+        rw [← periodicHypercubicEvenSpatialSliceTargetOffTargetMeasurableEquiv_snd]
+        exact congrArg Prod.snd (split.apply_symm_apply _)
+      change (∫ t : G,
+        Section target F z.1.1
+          (periodicHypercubicEvenSpatialSliceOffTargetRestriction target
+            (split.symm (eval.symm z.2, z.1.2))) t ∂muLink) =
+            ∫ t : G, Section target F z.1.1 z.1.2 t ∂muLink
+      rw [hOff]
+    filter_upwards [hsource] with z hz
+    calc
+      F (e z) = Section target F z.1.1 z.1.2 z.2 := hleft z
+      _ = ∫ t : G, Section target F z.1.1 z.1.2 t ∂muLink := hz
+      _ = p4Q2CJ_rightRetainedHaarMean H N target F (e z) := (hright z).symm
   exact p4Q2CJ_ae_eq_of_measurePreserving_equiv
     ((muOuter target).prod muLink) muPair e he
     F (p4Q2CJ_rightRetainedHaarMean H N target F)
