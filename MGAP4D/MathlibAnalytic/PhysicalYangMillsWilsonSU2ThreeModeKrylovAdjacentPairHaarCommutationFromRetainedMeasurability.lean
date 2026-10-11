@@ -48,7 +48,6 @@ theorem p4Q2CT_symmetricProjections_commute_of_fixedInvariant
     (P Q : E →L[ℝ] E)
     (hPsym : ∀ x y, inner ℝ (P x) y = inner ℝ x (P y))
     (hQsym : ∀ x y, inner ℝ (Q x) y = inner ℝ x (Q y))
-    (hQid : ∀ x, Q (Q x) = Q x)
     (hStable : ∀ x, Q (P (Q x)) = P (Q x))
     (x : E) :
     P (Q x) = Q (P x) := by
@@ -59,7 +58,7 @@ theorem p4Q2CT_symmetricProjections_commute_of_fixedInvariant
         inner ℝ (Q (P (Q x))) y := by rw [hStable x]
     _ = inner ℝ (P (Q x)) (Q y) := hQsym (P (Q x)) y
     _ = inner ℝ (Q x) (P (Q y)) := hPsym (Q x) (Q y)
-    _ = inner ℝ x (Q (P (Q y))) := by rw [hQsym x (P (Q y)), hStable y]
+    _ = inner ℝ x (Q (P (Q y))) := hQsym x (P (Q y))
     _ = inner ℝ x (P (Q y)) := by rw [hStable y]
     _ = inner ℝ (P x) (Q y) := (hPsym x (Q y)).symm
     _ = inner ℝ (Q (P x)) y := (hQsym (P x) y).symm
@@ -103,7 +102,6 @@ theorem p4Q2CT_actualPairHaarProjection_commute_of_retainedMeasurability
     (P i) (P j)
     (p4Q2CR_actualPairHaarCoordinateProjection_symmetric H N i)
     (p4Q2CR_actualPairHaarCoordinateProjection_symmetric H N j)
-    (p4Q2CR_actualPairHaarCoordinateProjection_idempotent H N j)
   · intro y
     exact (p4Q2CR_actualPairHaarCoordinateProjection_fixed_iff
       H N j (P i (P j y))).2 (hStable y)
