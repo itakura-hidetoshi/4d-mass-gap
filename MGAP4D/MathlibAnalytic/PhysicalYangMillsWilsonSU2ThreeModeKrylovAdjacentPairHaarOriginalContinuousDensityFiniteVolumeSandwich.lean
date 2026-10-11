@@ -62,7 +62,7 @@ private theorem p4Q2CD_compactPositiveContinuous_exists_twoBounds
   obtain ⟨z, _hz, hmax⟩ :=
     isCompact_univ.exists_isMaxOn Set.univ_nonempty hw.continuousOn
   exact ⟨m, w z, hm, fun x =>
-    ⟨hmin x (Set.mem_univ x), hmax x (Set.mem_univ x)⟩⟩
+    ⟨hmin x (Set.mem_univ x), hmax (Set.mem_univ x)⟩⟩
 
 section OriginalWilson
 
@@ -97,7 +97,7 @@ theorem p4Q2CD_originalWilsonContinuousJointDensity_exists_pos_uniform_bounds :
 strictly positive continuous physical Wilson--Perron density, not by an
 auxiliary Gibbs law. -/
 theorem p4Q2CD_originalWilsonJointMeasure_eq_continuousPairHaar :
-    μW = μH.withDensity (fun z : Joint => ENNReal.ofReal (w z)) := by
+    μW = (μH).withDensity (fun z : Joint => ENNReal.ofReal (w z)) := by
   exact periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_eq_continuous
     H N hN beta hbeta
 
@@ -130,14 +130,22 @@ theorem p4Q2CD_originalWilsonJoint_lintegral_twoSided_bound
       _ ≤ ∫⁻ z, ENNReal.ofReal (w z) * F z ∂μH := by
         apply lintegral_mono
         intro z
-        exact mul_le_mul_right (ENNReal.ofReal_le_ofReal (hbounds z).1) _
+        calc
+          ENNReal.ofReal m * F z = F z * ENNReal.ofReal m := mul_comm _ _
+          _ ≤ F z * ENNReal.ofReal (w z) :=
+            mul_le_mul_right (ENNReal.ofReal_le_ofReal (hbounds z).1) _
+          _ = ENNReal.ofReal (w z) * F z := mul_comm _ _
   · rw [hrewrite]
     calc
       (∫⁻ z, ENNReal.ofReal (w z) * F z ∂μH) ≤
           ∫⁻ z, ENNReal.ofReal M * F z ∂μH := by
         apply lintegral_mono
         intro z
-        exact mul_le_mul_right (ENNReal.ofReal_le_ofReal (hbounds z).2) _
+        calc
+          ENNReal.ofReal (w z) * F z = F z * ENNReal.ofReal (w z) := mul_comm _ _
+          _ ≤ F z * ENNReal.ofReal M :=
+            mul_le_mul_right (ENNReal.ofReal_le_ofReal (hbounds z).2) _
+          _ = ENNReal.ofReal M * F z := mul_comm _ _
       _ = ENNReal.ofReal M * (∫⁻ z, F z ∂μH) :=
         lintegral_const_mul _ hF
 
