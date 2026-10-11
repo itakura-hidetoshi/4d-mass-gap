@@ -144,9 +144,9 @@ local notation "Ctx" => p4Q2CG_ctx H N
 local notation "μOuter" => p4Q2CG_muOuter H N
 local notation "μLink" => normalizedCompactHaar G
 local notation "Section" => p4Q2CG_section H N
-local notation "Mass" (target) =>
+local notation "Mass" =>
   periodicHypercubicEvenSpecialUnitaryOriginalGroundStateOneLinkOuterMass
-    H N hN beta hbeta target
+    H N hN beta hbeta
 
 /-- The ACTUAL physical joint bounded observable induces a jointly strongly
 measurable Haar one-link section over outer left/off-target context and the
@@ -182,12 +182,11 @@ theorem p4Q2CG_originalHaarSection_evariance_measurable
     (F : Joint → ℝ) (hF : StronglyMeasurable F) :
     Measurable (fun ctx : Ctx target => evariance (Section target F ctx) μLink) := by
   letI : IsProbabilityMeasure μLink := by
-    dsimp [μLink]
     infer_instance
   exact p4Q2CG_evariance_section_measurable μLink
     (fun z : Ctx target × G => Section target F z.1 z.2)
     (p4Q2CG_originalHaarSection_jointStronglyMeasurable
-      H N hN beta hbeta target F hF)
+      H N target F hF)
 
 /-- The ORIGINAL Wilson positive finite physical outer fiber mass is
 a.e.-measurable with respect to exactly the original outer pair-Haar law.
@@ -233,7 +232,7 @@ theorem p4Q2CG_originalRightLinkHaarReferenceZero_implies_aeVarianceZero
     p4Q2CG_originalOuterMass_aemeasurable H N hN beta hbeta target
   have href : Measurable reference :=
     p4Q2CG_originalHaarSection_evariance_measurable
-      H N hN beta hbeta target F hF
+      H N target F hF
   have hmasspos : ∀ᵐ ctx ∂(μOuter target), mass ctx ≠ 0 := by
     filter_upwards [
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetFiberMass_ae_pos_lt_top_prod
@@ -242,7 +241,9 @@ theorem p4Q2CG_originalRightLinkHaarReferenceZero_implies_aeVarianceZero
   have hcoef : coef ≠ 0 := by
     exact ne_of_gt (ENNReal.ofReal_pos.mpr (Real.exp_pos _))
   have hzero' :
-      (∫⁻ ctx, mass ctx * (coef * reference ctx) ∂(μOuter target)) = 0 := hzero
+      (∫⁻ ctx, mass ctx * (coef * reference ctx) ∂(μOuter target)) = 0 := by
+    simpa [mass, reference, coef, p4Q2AZ_originalJointHaarReferenceEnergy,
+      p4Q2CG_muOuter, p4Q2CG_section] using hzero
   have h := p4Q2CG_weighted_zero_lintegral_implies_ae_zero
     (μOuter target) mass reference coef
     hmassmeas href hmasspos hcoef hzero'
