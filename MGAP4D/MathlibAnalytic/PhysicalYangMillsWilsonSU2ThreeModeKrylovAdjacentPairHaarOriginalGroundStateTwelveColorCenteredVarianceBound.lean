@@ -68,9 +68,19 @@ local notation "P12" =>
 local notation "E12" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialResidualEnergy
     H N hN beta hbeta
-local notation "C" =>
-  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
-    H N hN beta hbeta
+local instance p4Q2BF_jointConstantLineHasOrthogonalProjection :
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
+      H N hN beta hbeta).HasOrthogonalProjection := by
+  let V :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
+      H N hN beta hbeta
+  change V.HasOrthogonalProjection
+  letI : FiniteDimensional ℝ V := by
+    unfold V
+    unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
+    infer_instance
+  letI : CompleteSpace V := FiniteDimensional.complete ℝ V
+  exact Submodule.HasOrthogonalProjection.ofCompleteSpace V
 local notation "B" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantProjection
     H N hN beta hbeta
@@ -81,9 +91,12 @@ This uses the established exact kernel, not independence of color operators. -/
 theorem p4Q2BF_twelveSpatialCondExp_fixes_jointConstantProjection
     (f : J) (c : C12) :
     P12 c (B f) = B f := by
-  have hmem : B f ∈ C := by
-    change C.starProjection f ∈ C
-    exact C.starProjection_apply_mem f
+  let V :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
+      H N hN beta hbeta
+  have hmem : B f ∈ V := by
+    change V.starProjection f ∈ V
+    exact V.starProjection_apply_mem f
   have hzero : E12 (B f) = 0 :=
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialResidualEnergy_eq_zero_iff_mem_constantLine
       H N hN beta hbeta (B f)).2 hmem
@@ -167,7 +180,11 @@ theorem p4Q2BF_originalWilsonReferenceReal_eq_zero_of_jointConstantProjection
   have hupper :=
     p4Q2BF_originalWilsonReferenceReal_le_twelve_centeredVariance
       H N hN beta hbeta F hF bound hbound
-  rw [hconst, sub_self, norm_zero] at hupper
+  have hdiff :
+      p4Q2AZ_originalJointL2 H N hN beta hbeta F hF bound hbound -
+        B (p4Q2AZ_originalJointL2 H N hN beta hbeta F hF bound hbound) = 0 :=
+    sub_eq_zero.mpr hconst
+  rw [hdiff, norm_zero] at hupper
   have hle :
       p4Q2BD_originalWilsonTwelveColorHaarReferenceReal
         H N hN beta hbeta F ≤ 0 := by
