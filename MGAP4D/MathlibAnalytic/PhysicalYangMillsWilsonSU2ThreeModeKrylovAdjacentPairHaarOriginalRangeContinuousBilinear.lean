@@ -209,7 +209,7 @@ noncomputable def p4Q2BV_originalRangeContinuousBilin :
           (12 : ℝ) * ‖x‖ * ‖y‖
       convert
         p4Q2BV_originalRangePolarization_norm_le H N hN beta hbeta x y
-        using 1 <;> ring)
+        using 1; ring)
 
 /-- Exact original polarization value of the continuous descended form. -/
 theorem p4Q2BV_originalRangeContinuousBilin_apply
