@@ -137,7 +137,9 @@ theorem p4Q2BH_originalJointOneLinkHaarReference_mul
   have hrepr (G : Joint → ℝ) :
       p4Q2AZ_originalJointHaarReferenceEnergy H N hN beta hbeta target G =
         p4Q2BH_weightedHaarFiberVariance μOuter μLink weight
-          (fun ctx u =>
+          (fun (ctx : Cfg ×
+              (PeriodicHypercubicEvenSpatialSliceOffTargetLink H target → Gauge))
+            (u : Gauge) =>
             periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
               H N target G ctx.1 ctx.2 u) := by
     simp only [
@@ -145,10 +147,14 @@ theorem p4Q2BH_originalJointOneLinkHaarReference_mul
       p4Q2BH_weightedHaarFiberVariance, μOuter, μLink, weight, mul_assoc]
   rw [hrepr (fun z => a * F z), hrepr F]
   have hsection :
-      (fun ctx u =>
+      (fun (ctx : Cfg ×
+          (PeriodicHypercubicEvenSpatialSliceOffTargetLink H target → Gauge))
+        (u : Gauge) =>
         periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
           H N target (fun z => a * F z) ctx.1 ctx.2 u) =
-      (fun ctx u =>
+      (fun (ctx : Cfg ×
+          (PeriodicHypercubicEvenSpatialSliceOffTargetLink H target → Gauge))
+        (u : Gauge) =>
         a * periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
           H N target F ctx.1 ctx.2 u) := by
     funext ctx u
@@ -158,7 +164,9 @@ theorem p4Q2BH_originalJointOneLinkHaarReference_mul
   rw [hsection]
   exact p4Q2BH_weightedHaarFiberVariance_mul
     μOuter μLink weight
-    (fun ctx u =>
+    (fun (ctx : Cfg ×
+        (PeriodicHypercubicEvenSpatialSliceOffTargetLink H target → Gauge))
+      (u : Gauge) =>
       periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
         H N target F ctx.1 ctx.2 u) a
 
