@@ -236,12 +236,23 @@ physical joint L² vector. No positive uniform lower estimate is claimed. -/
 theorem p4Q2CO_originalFullQuadratic_zero_iff_mem_constantLine
     (x : J) :
     Q x = 0 ↔ x ∈ V := by
-  rw [p4Q2BZ_originalQuadratic_eq_zero_iff_Riesz_eq_zero]
-  change W x = 0 ↔ x ∈ V
-  rw [← LinearMap.mem_ker]
-  exact SetLike.ext'_iff.mp (by
-    exact congrArg id (p4Q2CO_originalRieszKernel_eq_constantLine
-      H N hN beta hbeta)) x
+  constructor
+  · intro hQ
+    have hW : W x = 0 :=
+      (p4Q2BZ_originalQuadratic_eq_zero_iff_Riesz_eq_zero
+        H N hN beta hbeta x).1 hQ
+    have hker : x ∈ (W : J →ₗ[ℝ] J).ker :=
+      LinearMap.mem_ker.mpr hW
+    rw [p4Q2CO_originalRieszKernel_eq_constantLine
+      H N hN beta hbeta] at hker
+    exact hker
+  · intro hv
+    have hW : W x = 0 :=
+      p4Q2CC_originalWilsonRiesz_zero_of_mem_constantLine
+        H N hN beta hbeta x hv
+    exact
+      (p4Q2BZ_originalQuadratic_eq_zero_iff_Riesz_eq_zero
+        H N hN beta hbeta x).2 hW
 
 /-- Original Wilson reference is STRICTLY POSITIVE for EVERY genuinely
 nonconstant physical joint L² equivalence class, not just bounded ones.
