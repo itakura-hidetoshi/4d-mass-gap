@@ -67,13 +67,22 @@ theorem p4Q2BJ_evariance_parallelogram
       evariance (fun u => X u - Y u) μ =
       (2 : ENNReal) * (evariance X μ + evariance Y μ) := by
   have hreal := p4Q2BJ_variance_parallelogram μ X Y hX hY
+  have hPlus :
+      ENNReal.ofReal (variance (fun u => X u + Y u) μ) =
+        evariance (fun u => X u + Y u) μ := by
+    simpa only [Pi.add_apply] using
+      (ProbabilityTheory.ofReal_variance (hX.add hY))
+  have hMinus :
+      ENNReal.ofReal (variance (fun u => X u - Y u) μ) =
+        evariance (fun u => X u - Y u) μ := by
+    simpa only [Pi.sub_apply] using
+      (ProbabilityTheory.ofReal_variance (hX.sub hY))
   calc
     evariance (fun u => X u + Y u) μ +
         evariance (fun u => X u - Y u) μ =
       ENNReal.ofReal (variance (fun u => X u + Y u) μ) +
         ENNReal.ofReal (variance (fun u => X u - Y u) μ) := by
-          rw [ProbabilityTheory.ofReal_variance (hX.add hY),
-            ProbabilityTheory.ofReal_variance (hX.sub hY)]
+          rw [← hPlus, ← hMinus]
     _ = ENNReal.ofReal
         (variance (fun u => X u + Y u) μ +
           variance (fun u => X u - Y u) μ) := by
@@ -98,7 +107,7 @@ variable (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
 local notation "Cfg" =>
   PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N
 local notation "Joint" => Cfg × Cfg
-local notation "Gauge" => Matrix.specialUnitaryGroup (Fin N) ℂ
+local notation "SU" => Matrix.specialUnitaryGroup (Fin N) ℂ
 
 /-- Additivity of the actual concrete one-link section, at the same
 left boundary, retained off-target coordinates, and target SU(N) link. -/
@@ -106,10 +115,10 @@ theorem p4Q2BJ_originalJointOneLinkSection_add
     (target : PeriodicHypercubicEvenSpatialSliceLink H)
     (F G : Joint → ℝ)
     (left : Cfg)
-    (retained : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target → Gauge) :
+    (retained : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target → SU) :
     periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
         H N target (fun z => F z + G z) left retained =
-      (fun u : Gauge =>
+      (fun u : SU =>
         periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
           H N target F left retained u +
         periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
@@ -122,10 +131,10 @@ theorem p4Q2BJ_originalJointOneLinkSection_sub
     (target : PeriodicHypercubicEvenSpatialSliceLink H)
     (F G : Joint → ℝ)
     (left : Cfg)
-    (retained : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target → Gauge) :
+    (retained : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target → SU) :
     periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
         H N target (fun z => F z - G z) left retained =
-      (fun u : Gauge =>
+      (fun u : SU =>
         periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
           H N target F left retained u -
         periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
@@ -141,12 +150,12 @@ theorem p4Q2BJ_originalJointOneLinkSection_memLp
     (F : Joint → ℝ) (hF : StronglyMeasurable F)
     (bound : ℝ) (hbound : ∀ z, ‖F z‖ ≤ bound)
     (left : Cfg)
-    (retained : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target → Gauge) :
+    (retained : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target → SU) :
     MemLp
       (periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
         H N target F left retained)
-      2 (normalizedCompactHaar Gauge) := by
-  let μHaar : Measure Gauge := normalizedCompactHaar Gauge
+      2 (normalizedCompactHaar SU) := by
+  let μHaar : Measure SU := normalizedCompactHaar SU
   letI : IsProbabilityMeasure μHaar := by
     dsimp [μHaar]
     infer_instance
@@ -157,16 +166,16 @@ theorem p4Q2BJ_originalJointOneLinkSection_memLp
     periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection_stronglyMeasurable
       H N target F hF left retained
   have hsectionBound :
-      ∀ u : Gauge,
+      ∀ u : SU,
         ‖periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
           H N target F left retained u‖ ≤ bound := by
     intro u
     change ‖F
         (left,
           (periodicHypercubicEvenSpatialSliceTargetOffTargetMeasurableEquiv
-            (Gauge := Gauge) target).symm
+            (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target).symm
             ((periodicHypercubicEvenSpatialSliceTargetEvaluationMeasurableEquiv
-              (Gauge := Gauge) target).symm u, retained))‖ ≤ bound
+              (Gauge := Matrix.specialUnitaryGroup (Fin N) ℂ) target).symm u, retained))‖ ≤ bound
     exact hbound _
   exact MemLp.of_bound hmeas.aestronglyMeasurable bound
     (Filter.Eventually.of_forall hsectionBound)
@@ -181,28 +190,28 @@ theorem p4Q2BJ_originalJointOneLinkHaarFiber_parallelogram
     (boundF : ℝ) (hboundF : ∀ z, ‖F z‖ ≤ boundF)
     (boundG : ℝ) (hboundG : ∀ z, ‖G z‖ ≤ boundG)
     (left : Cfg)
-    (retained : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target → Gauge) :
+    (retained : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target → SU) :
     evariance
         (periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
           H N target (fun z => F z + G z) left retained)
-        (normalizedCompactHaar Gauge) +
+        (normalizedCompactHaar SU) +
       evariance
         (periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
           H N target (fun z => F z - G z) left retained)
-        (normalizedCompactHaar Gauge) =
+        (normalizedCompactHaar SU) =
       (2 : ENNReal) *
         (evariance
           (periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
             H N target F left retained)
-          (normalizedCompactHaar Gauge) +
+          (normalizedCompactHaar SU) +
          evariance
           (periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
             H N target G left retained)
-          (normalizedCompactHaar Gauge)) := by
+          (normalizedCompactHaar SU)) := by
   rw [p4Q2BJ_originalJointOneLinkSection_add H N target F G left retained,
     p4Q2BJ_originalJointOneLinkSection_sub H N target F G left retained]
   exact p4Q2BJ_evariance_parallelogram
-    (normalizedCompactHaar Gauge)
+    (normalizedCompactHaar SU)
     (periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
       H N target F left retained)
     (periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
@@ -222,27 +231,27 @@ theorem p4Q2BJ_originalJointOneLinkHaarFiber_weighted_parallelogram
     (boundF : ℝ) (hboundF : ∀ z, ‖F z‖ ≤ boundF)
     (boundG : ℝ) (hboundG : ∀ z, ‖G z‖ ≤ boundG)
     (left : Cfg)
-    (retained : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target → Gauge)
+    (retained : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target → SU)
     (weight : ENNReal) :
     weight *
       evariance
         (periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
           H N target (fun z => F z + G z) left retained)
-        (normalizedCompactHaar Gauge) +
+        (normalizedCompactHaar SU) +
     weight *
       evariance
         (periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
           H N target (fun z => F z - G z) left retained)
-        (normalizedCompactHaar Gauge) =
+        (normalizedCompactHaar SU) =
     (2 : ENNReal) * (
       weight * evariance
         (periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
           H N target F left retained)
-        (normalizedCompactHaar Gauge) +
+        (normalizedCompactHaar SU) +
       weight * evariance
         (periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
           H N target G left retained)
-        (normalizedCompactHaar Gauge)) := by
+        (normalizedCompactHaar SU)) := by
   rw [← mul_add,
     p4Q2BJ_originalJointOneLinkHaarFiber_parallelogram
       H N target F G hF hG boundF hboundF boundG hboundG left retained]
