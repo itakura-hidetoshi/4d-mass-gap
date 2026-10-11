@@ -62,7 +62,7 @@ local notation "JH" => Lp ℝ 2 muPair
 
 /-- Deleting literally one left-or-right spatial link from the exact
 original pair-Haar joint coordinate product. -/
-def p4Q2CR_actualPairHaarOffCoordinateSigma
+@[reducible] def p4Q2CR_actualPairHaarOffCoordinateSigma
     (i : I) : MeasurableSpace Joint :=
   MeasurableSpace.comap
     ((pairHaarPiRestriction (K := G) (fun j : I => j ≠ i)) ∘
@@ -175,7 +175,7 @@ theorem p4Q2CR_actualRightLinkSigma_eq_CK
     cases j with
     | inl e => simp [p4Q2CK_rightSupport]
     | inr e => simp [p4Q2CK_rightSupport]
-  simp only [p4Q2CR_actualPairHaarOffCoordinateSigma, hp]
+  rw [p4Q2CR_actualPairHaarOffCoordinateSigma, hp]
 
 /-- CJ's literal original right-link Haar mean lies in the sigma-algebra
 of exactly the same one-coordinate deletion on real pair-Haar L². -/
