@@ -82,19 +82,44 @@ private theorem p4Q2CG_evariance_section_measurable
     {Ctx G : Type*}
     [MeasurableSpace Ctx] [MeasurableSpace G]
     (muLink : Measure G) [SFinite muLink]
-    (section : Ctx × G → ℝ) (hsection : StronglyMeasurable section) :
-    Measurable (fun ctx : Ctx => evariance (fun g => section (ctx, g)) muLink) := by
+    (X : Ctx × G → ℝ) (hX : StronglyMeasurable X) :
+    Measurable (fun ctx : Ctx => evariance (fun g => X (ctx, g)) muLink) := by
   have hmean :
-      StronglyMeasurable (fun ctx : Ctx => ∫ g, section (ctx, g) ∂muLink) :=
-    hsection.integral_prod_right'
+      StronglyMeasurable (fun ctx : Ctx => ∫ g, X (ctx, g) ∂muLink) :=
+    hX.integral_prod_right'
   have hcenter :
       Measurable (fun z : Ctx × G =>
-        section z - ∫ g, section (z.1, g) ∂muLink) :=
-    hsection.measurable.sub (hmean.measurable.comp measurable_fst)
+        X z - ∫ g, X (z.1, g) ∂muLink) :=
+    hX.measurable.sub (hmean.measurable.comp measurable_fst)
   have hsq : Measurable (fun z : Ctx × G =>
-      ‖section z - ∫ g, section (z.1, g) ∂muLink‖ₑ ^ 2) :=
+      ‖X z - ∫ g, X (z.1, g) ∂muLink‖ₑ ^ 2) :=
     hcenter.enorm.pow_const 2
   simpa only [evariance] using hsq.lintegral_prod_right'
+
+/-- Actual outer left/off-target product carrier for one genuine Wilson spatial link. -/
+private abbrev p4Q2CG_ctx (H N : ℕ)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H) : Type :=
+  PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+    (PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
+      Matrix.specialUnitaryGroup (Fin N) ℂ)
+
+/-- Actual Haar product measure on the physical link's outer context. -/
+private noncomputable def p4Q2CG_muOuter (H N : ℕ)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H) :
+    Measure (p4Q2CG_ctx H N target) :=
+  (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N).prod
+    (Measure.pi (fun _ : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target =>
+      normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)))
+
+/-- The literal original direct target SU(N) concrete fiber section. -/
+private noncomputable def p4Q2CG_section (H N : ℕ)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (F : (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ)
+    (ctx : p4Q2CG_ctx H N target) :
+    Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ :=
+  periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
+    H N target F ctx.1 ctx.2
 
 section OriginalWilson
 
@@ -114,15 +139,11 @@ local notation "Img" => LinearMap.range T
 local notation "W" =>
   p4Q2BY_originalFullJointRieszOperator H N hN beta hbeta
 local notation "G" => Matrix.specialUnitaryGroup (Fin N) ℂ
-local notation "Off" (target) => PeriodicHypercubicEvenSpatialSliceOffTargetLink H target
-local notation "Ctx" (target) => Cfg × (Off target → G)
-local notation "μOuter" (target) =>
-  (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N).prod
-    (Measure.pi (fun _ : Off target => normalizedCompactHaar G))
+local notation "Off" => PeriodicHypercubicEvenSpatialSliceOffTargetLink H
+local notation "Ctx" => p4Q2CG_ctx H N
+local notation "μOuter" => p4Q2CG_muOuter H N
 local notation "μLink" => normalizedCompactHaar G
-local notation "Section" (target) (F) (ctx) =>
-  periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
-    H N target F ctx.1 ctx.2
+local notation "Section" => p4Q2CG_section H N
 local notation "Mass" (target) =>
   periodicHypercubicEvenSpecialUnitaryOriginalGroundStateOneLinkOuterMass
     H N hN beta hbeta target
@@ -189,7 +210,7 @@ private theorem p4Q2CG_originalOuterMass_aemeasurable
     simpa [muTarget] using
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitDensity_aemeasurable_contextTarget
         H N hN beta hbeta target)
-  simpa [p4Q2AX, periodicHypercubicEvenSpecialUnitaryOriginalGroundStateOneLinkOuterMass,
+  simpa [periodicHypercubicEvenSpecialUnitaryOriginalGroundStateOneLinkOuterMass,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetFiberMass,
     muTarget] using hw.lintegral_prod_right'
 
