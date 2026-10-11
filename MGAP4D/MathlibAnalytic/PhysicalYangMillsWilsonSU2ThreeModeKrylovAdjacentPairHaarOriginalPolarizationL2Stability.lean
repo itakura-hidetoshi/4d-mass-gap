@@ -121,13 +121,13 @@ theorem p4Q2BU_originalCoreReference_L2_difference_le
   have h :=
     p4Q2BU_originalPolarization_two_slot_L2_difference_le
       H N hN beta hbeta F F G G
-  rw [
+  have hDiagF : B F F = Q F :=
     p4Q2BO_originalWilsonRealPolarization_self
-      H N hN beta hbeta F.1,
+      H N hN beta hbeta F.1
+  have hDiagG : B G G = Q G :=
     p4Q2BO_originalWilsonRealPolarization_self
-      H N hN beta hbeta G.1] at h
-  have hnorm :
-      ‖T F - T G‖ = ‖T F - T G‖ := rfl
+      H N hN beta hbeta G.1
+  rw [hDiagF, hDiagG] at h
   calc
     |Q F - Q G| ≤ (12 : ℝ) *
       (‖T F - T G‖ * ‖T F‖ +
