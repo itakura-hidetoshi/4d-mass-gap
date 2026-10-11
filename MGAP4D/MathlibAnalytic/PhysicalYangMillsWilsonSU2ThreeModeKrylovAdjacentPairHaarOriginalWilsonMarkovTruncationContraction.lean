@@ -146,8 +146,8 @@ noncomputable def p4Q2CM_truncateCore (H N : ℕ)
     (M : ℝ) (hM : 0 ≤ M)
     (F : p4Q2BP_originalBoundedStronglyMeasurableCore H N) :
     p4Q2BP_originalBoundedStronglyMeasurableCore H N := by
-  obtain ⟨hF, _⟩ := F.property
   refine ⟨(fun z => p4Q2CM_truncate M (F.1 z)), ?_⟩
+  obtain ⟨hF, _⟩ := F.property
   refine ⟨((p4Q2CM_truncate_continuous M).measurable.comp
     hF.measurable).stronglyMeasurable, ⟨M, ?_⟩⟩
   intro z
