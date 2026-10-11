@@ -10,14 +10,14 @@ import Mathlib.Tactic
 BD's ORIGINAL physical Wilson mass-weighted right/left twelve-color Haar
 reference is bounded above by twelve times the genuine twelve-color conditional
 expectation energy. This file proves the distinct Hilbert-space upper bound
-\`E₁₂(f) ≤ ‖f‖²\`, using the exact Pythagorean identity for the already
+`E₁₂(f) ≤ ‖f‖²`, using the exact Pythagorean identity for the already
 established family of genuine self-adjoint idempotent color projections.
 
 Consequences:
-* the real original reference is bounded by \`12 * ‖f‖²\` with NO beta cutoff;
+* the real original reference is bounded by `12 * ‖f‖²` with NO beta cutoff;
 * it vanishes whenever the bounded original observable is zero in physical L²;
 * the existing G1/G2 physical gap can be packaged with the original reference;
-* the certified G4 interval has the explicit volume-free \`1/3072\` transfer gap.
+* the certified G4 interval has the explicit volume-free `1/3072` transfer gap.
 
 The reference bound is ONE-SIDED: it does not prove that reference energy
 controls physical variance, or construct an L² extension automatically.
@@ -210,6 +210,7 @@ theorem p4Q2BE_originalWilsonReference_and_explicitHighTemperatureTransferGap
         H N hN beta hbeta F hF bound hbound
   · nlinarith
 
+end
 end
 
 end MathlibAnalytic
