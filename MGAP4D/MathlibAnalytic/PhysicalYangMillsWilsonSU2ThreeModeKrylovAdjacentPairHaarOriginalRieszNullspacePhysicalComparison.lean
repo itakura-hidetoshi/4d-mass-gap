@@ -108,8 +108,10 @@ local notation "V" =>
     H N hN beta hbeta
 
 /-- Pinned-mathlib operator positivity, not merely a numerical diagonal bound. -/
-theorem p4Q2BZ_originalRiesz_isPositive : A.IsPositive := by
-  apply (ContinuousLinearMap.isPositive_iff' A).2
+theorem p4Q2BZ_originalRiesz_isPositive :
+    (p4Q2BY_originalFullJointRieszOperator H N hN beta hbeta).IsPositive := by
+  apply (ContinuousLinearMap.isPositive_iff'
+    (p4Q2BY_originalFullJointRieszOperator H N hN beta hbeta)).2
   exact ⟨p4Q2BY_originalFullJointRieszOperator_isSelfAdjoint H N hN beta hbeta,
     p4Q2BY_originalFullJointRieszOperator_inner_nonneg H N hN beta hbeta⟩
 
