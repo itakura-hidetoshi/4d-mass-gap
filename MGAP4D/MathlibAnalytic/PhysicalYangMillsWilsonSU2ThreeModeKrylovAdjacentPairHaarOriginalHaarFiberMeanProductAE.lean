@@ -104,14 +104,31 @@ local notation "muLink" => normalizedCompactHaar G
 local notation "Section" =>
   periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection H N
 
+/-- A named representation of the ORIGINAL full physical right-link
+concrete Haar section on its true left/off-target × target group carrier.
+Using an explicit name keeps elaboration independent of the huge dependent
+configuration type; this is definitional, not a change in the physical law. -/
+private noncomputable def p4Q2CI_actualSplitSection
+    (target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (F : Joint → ℝ) : Ctx target × G → ℝ :=
+  fun z => Section target F z.1.1 z.1.2 z.2
+
+/-- The actual Haar fiber mean, now a nameable function of the entire
+outer × direct-link Haar configuration. -/
+private noncomputable def p4Q2CI_actualSplitMean
+    (target : PeriodicHypercubicEvenSpatialSliceLink H)
+    (F : Joint → ℝ) : Ctx target × G → ℝ :=
+  fun z => ∫ t : G, Section target F z.1.1 z.1.2 t ∂muLink
+
 /-- Actual bounded ORIGINAL Wilson joint observables have jointly strongly
 measurable genuine direct SU(N) Haar one-link sections. The coordinate map
-is the proved source spatial-slice measurable equivalence, not a surrogate. -/
+is the proved spatial-slice measurable equivalence, not a surrogate. -/
 theorem p4Q2CI_originalRightLinkSection_jointStronglyMeasurable
     (target : PeriodicHypercubicEvenSpatialSliceLink H)
     (F : Joint → ℝ) (hF : StronglyMeasurable F) :
-    StronglyMeasurable
-      (fun z : Ctx target × G => Section target F z.1.1 z.1.2 z.2) := by
+    StronglyMeasurable (p4Q2CI_actualSplitSection H N target F) := by
+  change StronglyMeasurable
+    (fun z : Ctx target × G => Section target F z.1.1 z.1.2 z.2)
   let split := periodicHypercubicEvenSpatialSliceTargetOffTargetMeasurableEquiv
     (Gauge := G) target
   let eval := periodicHypercubicEvenSpatialSliceTargetEvaluationMeasurableEquiv
@@ -132,60 +149,54 @@ theorem p4Q2CI_originalRightLinkSection_jointStronglyMeasurable
   simpa [periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection,
     split, eval] using hF.comp_measurable hcoord
 
-/-- Zero actual ORIGINAL physical right-link Haar reference implies equality
-to the MEASURABLE Haar fiber mean on the whole outer × direct link product,
-for pair-Haar-almost every combined configuration. -/
+/-- Original Wilson zero Haar reference: a single a.e. equality with its
+MEASURABLE actual Haar mean on the full genuine outer × target Haar product.
+This upgrades CH's nested a.e. statement with no new physical assumption. -/
 theorem p4Q2CI_originalRightLinkZero_implies_productAEFiberMean
     (target : PeriodicHypercubicEvenSpatialSliceLink H)
     (F : Joint → ℝ) (hF : StronglyMeasurable F)
     (hzero : p4Q2AZ_originalJointHaarReferenceEnergy
       H N hN beta hbeta target F = 0) :
-    (fun z : Ctx target × G => Section target F z.1.1 z.1.2 z.2) =ᵐ[
-      (muOuter target).prod muLink]
-      (fun z => ∫ t : G, Section target F z.1.1 z.1.2 t ∂muLink) := by
-  have hsec :=
-    p4Q2CH_originalRightLinkHaarReferenceZero_implies_aeConstant
+    p4Q2CI_actualSplitSection H N target F =ᵐ[(muOuter target).prod muLink]
+      p4Q2CI_actualSplitMean H N target F := by
+  have hsec :
+      ∀ᵐ ctx ∂(muOuter target), ∀ᵐ g ∂muLink,
+        Section target F ctx.1 ctx.2 g =
+          ∫ t : G, Section target F ctx.1 ctx.2 t ∂muLink := by
+    exact p4Q2CH_originalRightLinkHaarReferenceZero_implies_aeConstant
       H N hN beta hbeta target F hF hzero
-  change ∀ᵐ ctx ∂(muOuter target), ∀ᵐ g ∂muLink,
-    Section target F ctx.1 ctx.2 g =
-      ∫ t : G, Section target F ctx.1 ctx.2 t ∂muLink at hsec
   exact p4Q2CI_section_mean_glue (muOuter target) muLink
-    (fun z : Ctx target × G => Section target F z.1.1 z.1.2 z.2)
+    (p4Q2CI_actualSplitSection H N target F)
     (p4Q2CI_originalRightLinkSection_jointStronglyMeasurable H N target F hF)
     hsec
 
-/-- The SAME original physical left endpoint (via certified Wilson endpoint
-swap), with unchanged actual Wilson measure and the exact Haar fiber mean. -/
+/-- The same exact original Wilson left endpoint, via its already verified
+physical joint-swap symmetry (without choosing a second Wilson law). -/
 theorem p4Q2CI_originalLeftLinkZero_implies_productAEFiberMean
     (target : PeriodicHypercubicEvenSpatialSliceLink H)
     (F : Joint → ℝ) (hF : StronglyMeasurable F)
     (hzero : p4Q2BB_originalLeftLinkHaarReferenceEnergy
       H N hN beta hbeta target F = 0) :
-    (fun z : Ctx target × G =>
-      Section target (p4Q2BB_swapConcrete H N F) z.1.1 z.1.2 z.2) =ᵐ[
+    p4Q2CI_actualSplitSection H N target (p4Q2BB_swapConcrete H N F) =ᵐ[
       (muOuter target).prod muLink]
-      (fun z => ∫ t : G,
-        Section target (p4Q2BB_swapConcrete H N F) z.1.1 z.1.2 t ∂muLink) := by
+      p4Q2CI_actualSplitMean H N target (p4Q2BB_swapConcrete H N F) := by
   exact p4Q2CI_originalRightLinkZero_implies_productAEFiberMean
     H N hN beta hbeta target (p4Q2BB_swapConcrete H N F)
     (p4Q2BB_swapConcrete_stronglyMeasurable H N F hF) hzero
 
-/-- Original physical bounded core: every real right/left link section
-is identified with its outer-measurable Haar mean in the ACTUAL Haar product,
-provided the literal original Wilson twelve-color Haar reference is zero. -/
+/-- Zero TOTAL literal original Wilson Haar reference: simultaneous
+right/left link product-a.e. Haar mean reconstruction on the TRUE physical
+bounded observable core, with no exceptional-fiber pointwise assertion. -/
 theorem p4Q2CI_originalCoreZero_implies_allLink_productAEFiberMean
     (F : Core)
     (hzero : p4Q2BP_originalCoreReference H N hN beta hbeta F = 0) :
     (∀ (color : Fin 6) (e : p4Q2BA_ColorLinks H color),
-      (fun z : Ctx e.1 × G => Section e.1 F.1 z.1.1 z.1.2 z.2) =ᵐ[
-        (muOuter e.1).prod muLink]
-        (fun z => ∫ t : G, Section e.1 F.1 z.1.1 z.1.2 t ∂muLink)) ∧
+      p4Q2CI_actualSplitSection H N e.1 F.1 =ᵐ[(muOuter e.1).prod muLink]
+        p4Q2CI_actualSplitMean H N e.1 F.1) ∧
     (∀ (color : Fin 6) (e : p4Q2BA_ColorLinks H color),
-      (fun z : Ctx e.1 × G =>
-        Section e.1 (p4Q2BB_swapConcrete H N F.1) z.1.1 z.1.2 z.2) =ᵐ[
+      p4Q2CI_actualSplitSection H N e.1 (p4Q2BB_swapConcrete H N F.1) =ᵐ[
         (muOuter e.1).prod muLink]
-        (fun z => ∫ t : G,
-          Section e.1 (p4Q2BB_swapConcrete H N F.1) z.1.1 z.1.2 t ∂muLink)) := by
+        p4Q2CI_actualSplitMean H N e.1 (p4Q2BB_swapConcrete H N F.1)) := by
   obtain ⟨hF, ⟨bound, hbound⟩⟩ := F.property
   have hlinks := (p4Q2CF_originalCoreZero_iff_all_links
     H N hN beta hbeta F).mp hzero
@@ -197,26 +208,25 @@ theorem p4Q2CI_originalCoreZero_implies_allLink_productAEFiberMean
     exact p4Q2CI_originalLeftLinkZero_implies_productAEFiberMean
       H N hN beta hbeta e.1 F.1 hF (hlinks.2 color e)
 
-/-- The CI product-a.e. Haar mean factorization applies to the original
-physical Wilson Riesz kernel intersected with the bounded observable core. -/
+/-- The same original physical Riesz-kernel-to-product-a.e. link factorization
+for the bounded physical L² core image. No arbitrary quotient representative
+is evaluated pointwise. -/
 theorem p4Q2CI_originalRieszCoreKernel_implies_allLink_productAEFiberMean
     (x : Img) (hx : W (x : J) = 0) :
     (∀ (color : Fin 6) (e : p4Q2BA_ColorLinks H color),
-      (fun z : Ctx e.1 × G => Section e.1
-        (p4Q2BV_originalCoreRepresentative H N hN beta hbeta x).1
-        z.1.1 z.1.2 z.2) =ᵐ[(muOuter e.1).prod muLink]
-        (fun z => ∫ t : G, Section e.1
-          (p4Q2BV_originalCoreRepresentative H N hN beta hbeta x).1
-          z.1.1 z.1.2 t ∂muLink)) ∧
+      p4Q2CI_actualSplitSection H N e.1
+        (p4Q2BV_originalCoreRepresentative H N hN beta hbeta x).1 =ᵐ[
+          (muOuter e.1).prod muLink]
+        p4Q2CI_actualSplitMean H N e.1
+          (p4Q2BV_originalCoreRepresentative H N hN beta hbeta x).1) ∧
     (∀ (color : Fin 6) (e : p4Q2BA_ColorLinks H color),
-      (fun z : Ctx e.1 × G => Section e.1
+      p4Q2CI_actualSplitSection H N e.1
         (p4Q2BB_swapConcrete H N
-          (p4Q2BV_originalCoreRepresentative H N hN beta hbeta x).1)
-        z.1.1 z.1.2 z.2) =ᵐ[(muOuter e.1).prod muLink]
-        (fun z => ∫ t : G, Section e.1
+          (p4Q2BV_originalCoreRepresentative H N hN beta hbeta x).1) =ᵐ[
+          (muOuter e.1).prod muLink]
+        p4Q2CI_actualSplitMean H N e.1
           (p4Q2BB_swapConcrete H N
-            (p4Q2BV_originalCoreRepresentative H N hN beta hbeta x).1)
-          z.1.1 z.1.2 t ∂muLink)) := by
+            (p4Q2BV_originalCoreRepresentative H N hN beta hbeta x).1)) := by
   let F : Core := p4Q2BV_originalCoreRepresentative H N hN beta hbeta x
   have hQ : p4Q2BP_originalCoreReference H N hN beta hbeta F = 0 := by
     have h := (p4Q2BZ_originalQuadratic_eq_zero_iff_Riesz_eq_zero
