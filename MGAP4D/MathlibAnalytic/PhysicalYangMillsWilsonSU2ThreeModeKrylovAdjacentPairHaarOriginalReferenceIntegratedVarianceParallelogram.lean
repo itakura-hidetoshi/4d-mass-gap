@@ -87,8 +87,24 @@ theorem p4Q2BK_weightedHaarFiberVariance_parallelogram
       _ = (2 : ENNReal) *
             (weight ctx * evariance (F ctx) μHaar +
               weight ctx * evariance (G ctx) μHaar) := by
-          rw [mul_add]
-          ac_rfl
+          have hDist :
+              weight ctx *
+                (evariance (F ctx) μHaar + evariance (G ctx) μHaar) =
+                weight ctx * evariance (F ctx) μHaar +
+                  weight ctx * evariance (G ctx) μHaar :=
+            mul_add _ _ _
+          calc
+            weight ctx *
+                ((2 : ENNReal) *
+                  (evariance (F ctx) μHaar + evariance (G ctx) μHaar)) =
+              (2 : ENNReal) *
+                (weight ctx *
+                  (evariance (F ctx) μHaar + evariance (G ctx) μHaar)) := by
+                ac_rfl
+            _ = (2 : ENNReal) *
+                  (weight ctx * evariance (F ctx) μHaar +
+                    weight ctx * evariance (G ctx) μHaar) :=
+              congrArg (fun z : ENNReal => (2 : ENNReal) * z) hDist
   change (∫⁻ ctx, plus ctx ∂μOuter) +
       (∫⁻ ctx, minus ctx ∂μOuter) =
     (2 : ENNReal) *
