@@ -169,13 +169,13 @@ theorem p4Q2BW_originalFullJointContinuousBilin_norm_le (x y : J) :
     simpa [i, p4Q2BV_originalRangeContinuousBilin_apply, mul_assoc] using h
   have hRight (u : Img) (v : J) :
       ‖full (i u) v‖ ≤ (12 : ℝ) * ‖i u‖ * ‖v‖ := by
-    refine hd.induction ?_ (isClosed_le (by fun_prop) (by fun_prop)) v
-    rintro _ ⟨w, rfl⟩
+    refine hd.induction_on v (isClosed_le (by fun_prop) (by fun_prop)) ?_
+    intro w
     exact hCore u w
   have hLeft (v : J) (u : J) :
       ‖full u v‖ ≤ (12 : ℝ) * ‖u‖ * ‖v‖ := by
-    refine hd.induction ?_ (isClosed_le (by fun_prop) (by fun_prop)) u
-    rintro _ ⟨w, rfl⟩
+    refine hd.induction_on u (isClosed_le (by fun_prop) (by fun_prop)) ?_
+    intro w
     exact hRight w v
   exact hLeft y x
 
