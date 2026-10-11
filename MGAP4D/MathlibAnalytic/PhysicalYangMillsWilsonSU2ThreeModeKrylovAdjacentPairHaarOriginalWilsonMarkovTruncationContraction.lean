@@ -1,5 +1,4 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalBoundedCoreKernelExactFrontier
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalWilsonOneLinkSectionMeasurability
 import Mathlib.Probability.Moments.Variance
 import Mathlib.MeasureTheory.Function.LpSpace.Basic
 import Mathlib.Algebra.Order.Group.MinMax
