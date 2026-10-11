@@ -93,7 +93,7 @@ theorem p4Q2BW_originalRange_dense : Dense (Img : Set J) :=
 
 /-- Dense range of the genuine norm-preserving submodule inclusion. -/
 theorem p4Q2BW_originalRange_subtype_dense :
-    DenseRange (Img.subtypeL : Img →L[ℝ] J) := by
+    DenseRange ((LinearMap.range T).subtypeL : Img →L[ℝ] J) := by
   have hd := p4Q2BW_originalRange_dense H N hN beta hbeta
   change Dense (Set.range (fun x : Img => (x : J)))
   have heq : (Set.range (fun x : Img => (x : J))) = (Img : Set J) := by
@@ -110,7 +110,7 @@ theorem p4Q2BW_originalRange_subtype_dense :
 variable, with complete codomain given by bounded functionals on the core. -/
 noncomputable def p4Q2BW_originalFirstExtended :
     J →L[ℝ] Img →L[ℝ] ℝ :=
-  B.extend (Img.subtypeL : Img →L[ℝ] J)
+  B.extend ((LinearMap.range T).subtypeL : Img →L[ℝ] J)
 
 /-- Extend also in the second variable, then flip back to the standard order.
 This is an ACTUAL bounded real bilinear map on the entire original physical
@@ -118,7 +118,7 @@ Wilson joint L², not merely an algebraic map on a dense core. -/
 noncomputable def p4Q2BW_originalFullJointContinuousBilin :
     J →L[ℝ] J →L[ℝ] ℝ :=
   ((p4Q2BW_originalFirstExtended H N hN beta hbeta).flip.extend
-    (Img.subtypeL : Img →L[ℝ] J)).flip
+    ((LinearMap.range T).subtypeL : Img →L[ℝ] J)).flip
 
 /-- Exact recovery of the BV form on every bounded physical core image pair. -/
 theorem p4Q2BW_originalFullJointContinuousBilin_apply_range
@@ -126,13 +126,14 @@ theorem p4Q2BW_originalFullJointContinuousBilin_apply_range
     p4Q2BW_originalFullJointContinuousBilin H N hN beta hbeta
         (x : J) (y : J) =
       B x y := by
-  let i : Img →L[ℝ] J := Img.subtypeL
+  let i : Img →L[ℝ] J := (LinearMap.range T).subtypeL
   let b := B
   let b₁ := p4Q2BW_originalFirstExtended H N hN beta hbeta
   have hd : DenseRange i :=
     p4Q2BW_originalRange_subtype_dense H N hN beta hbeta
-  have hi : IsUniformInducing (i : Img → J) :=
-    isUniformEmbedding_subtype_val.isUniformInducing
+  have hi : IsUniformInducing (i : Img → J) := by
+    change IsUniformInducing (Subtype.val : Img → J)
+    exact isUniformEmbedding_subtype_val.isUniformInducing
   calc
     p4Q2BW_originalFullJointContinuousBilin H N hN beta hbeta
         (x : J) (y : J) =
@@ -158,14 +159,14 @@ increase the operator norm: the literal Wilson constant 12 is preserved. -/
 theorem p4Q2BW_originalFullJointContinuousBilin_opNorm_le :
     ‖p4Q2BW_originalFullJointContinuousBilin H N hN beta hbeta‖ ≤
       (12 : ℝ) := by
-  let i : Img →L[ℝ] J := Img.subtypeL
+  let i : Img →L[ℝ] J := (LinearMap.range T).subtypeL
   let b := B
   let b₁ := p4Q2BW_originalFirstExtended H N hN beta hbeta
   have hd : DenseRange i :=
     p4Q2BW_originalRange_subtype_dense H N hN beta hbeta
   have hiNorm : ∀ x : Img, ‖x‖ ≤ (1 : ℝ≥0) * ‖i x‖ := by
     intro x
-    simp [i]
+    simp
   have hfirst : ‖b₁‖ ≤ ‖b‖ := by
     simpa [b₁, b] using
       (b.opNorm_extend_le (e := i) (N := (1 : ℝ≥0)) hd hiNorm)
@@ -213,7 +214,7 @@ theorem p4Q2BW_originalFullJointContinuousBilin_unique
     (other : J →L[ℝ] J →L[ℝ] ℝ)
     (hcore : ∀ x y : Img, other (x : J) (y : J) = B x y) :
     other = p4Q2BW_originalFullJointContinuousBilin H N hN beta hbeta := by
-  let i : Img →L[ℝ] J := Img.subtypeL
+  let i : Img →L[ℝ] J := (LinearMap.range T).subtypeL
   have hd : DenseRange i :=
     p4Q2BW_originalRange_subtype_dense H N hN beta hbeta
   let full := p4Q2BW_originalFullJointContinuousBilin H N hN beta hbeta
@@ -222,10 +223,12 @@ theorem p4Q2BW_originalFullJointContinuousBilin_unique
     funext x
     apply ContinuousLinearMap.ext
     intro z
+    change other (x : J) z = full (x : J) z
     have hsecond : (fun w : J => other (x : J) w) =
         (fun w : J => full (x : J) w) := by
       apply hd.equalizer (other (x : J)).continuous (full (x : J)).continuous
       funext y
+      change other (x : J) (y : J) = full (x : J) (y : J)
       calc
         other (x : J) (y : J) = B x y := hcore x y
         _ = full (x : J) (y : J) :=
