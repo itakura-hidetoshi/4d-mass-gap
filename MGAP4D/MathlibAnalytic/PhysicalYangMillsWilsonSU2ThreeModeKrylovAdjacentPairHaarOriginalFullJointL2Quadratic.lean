@@ -61,7 +61,8 @@ local notation "Bcore" =>
 /-- The full-space extension is symmetric, since its flipped bilinear form
 agrees with the original symmetric Wilson form on the dense core. -/
 theorem p4Q2BX_originalFullJointBilin_flip_eq :
-    B.flip = B := by
+    (p4Q2BW_originalFullJointContinuousBilin H N hN beta hbeta).flip =
+      B := by
   apply p4Q2BW_originalFullJointContinuousBilin_unique
     H N hN beta hbeta
   intro x y
@@ -78,7 +79,7 @@ theorem p4Q2BX_originalFullJointBilin_symm (x y : J) :
   have h := congrArg
     (fun C : J →L[ℝ] J →L[ℝ] ℝ => C y x)
     (p4Q2BX_originalFullJointBilin_flip_eq H N hN beta hbeta)
-  simpa only [ContinuousLinearMap.flip_apply] using h
+  exact h
 
 /-- The reference energy of ANY physical L² vector, without choosing
 pointwise representatives of its equivalence class. -/
@@ -99,7 +100,8 @@ the actual physical joint Hilbert norm. -/
 theorem p4Q2BX_originalFullJointQuadratic_continuous :
     Continuous (p4Q2BX_originalFullJointQuadratic H N hN beta hbeta : J → ℝ) := by
   change Continuous (fun x : J => B x x)
-  exact B.continuous₂.comp (continuous_id.prodMk continuous_id)
+  exact (p4Q2BW_originalFullJointContinuousBilin H N hN beta hbeta).continuous₂.comp
+    (continuous_id.prodMk continuous_id)
 
 /-- The extended ORIGINAL reference energy is nonnegative on the WHOLE
 physical joint L². This relies on literal Wilson core positivity and
@@ -112,6 +114,7 @@ theorem p4Q2BX_originalFullJointQuadratic_nonneg (x : J) :
     (isClosed_le continuous_const
       (p4Q2BX_originalFullJointQuadratic_continuous H N hN beta hbeta)) ?_
   intro y
+  change 0 ≤ p4Q2BX_originalFullJointQuadratic H N hN beta hbeta (y : J)
   rw [p4Q2BX_originalFullJointQuadratic_on_range]
   exact p4Q2BQ_originalCoreReference_nonneg H N hN beta hbeta
     (p4Q2BV_originalCoreRepresentative H N hN beta hbeta y)
@@ -135,7 +138,7 @@ theorem p4Q2BX_originalFullJointQuadratic_smul (a : ℝ) (x : J) :
     p4Q2BX_originalFullJointQuadratic H N hN beta hbeta (a • x) =
       a ^ 2 * p4Q2BX_originalFullJointQuadratic H N hN beta hbeta x := by
   change B (a • x) (a • x) = a ^ 2 * B x x
-  simp only [map_smul, smul_apply, smul_eq_mul]
+  simp only [map_smul, ContinuousLinearMap.smul_apply, smul_eq_mul]
   ring
 
 /-- Exact parallelogram identity on the full physical joint L². -/
@@ -146,7 +149,8 @@ theorem p4Q2BX_originalFullJointQuadratic_parallelogram (x y : J) :
         p4Q2BX_originalFullJointQuadratic H N hN beta hbeta y) := by
   change B (x + y) (x + y) + B (x - y) (x - y) =
     2 * (B x x + B y y)
-  simp only [map_add, map_sub, add_apply, sub_apply]
+  simp only [map_add, map_sub, ContinuousLinearMap.add_apply,
+    ContinuousLinearMap.sub_apply]
   ring
 
 /-- Two-slot telescoping identity for the global Wilson reference
@@ -156,7 +160,7 @@ theorem p4Q2BX_originalFullJointQuadratic_difference (x y : J) :
       p4Q2BX_originalFullJointQuadratic H N hN beta hbeta y =
       B (x - y) x + B y (x - y) := by
   change B x x - B y y = B (x - y) x + B y (x - y)
-  simp only [map_sub, sub_apply]
+  simp only [map_sub, ContinuousLinearMap.sub_apply]
   ring
 
 /-- The global quadratic reference is locally Lipschitz in the actual
