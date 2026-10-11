@@ -66,7 +66,7 @@ variable {E ι : Type*}
 include hId hSymm hComm hNorm
 
 /-- A coordinate projection commutes with an entire ordered sweep. -/
-theorem p4Q2CQ_projection_commute_sweep
+omit hId hSymm hNorm in theorem p4Q2CQ_projection_commute_sweep
     (i : ι) (rest : List ι) (x : E) :
     P i (p4Q2CQ_projectionSweep P rest x) =
       p4Q2CQ_projectionSweep P rest (P i x) := by
@@ -87,7 +87,7 @@ theorem p4Q2CQ_sweep_tail_defect_fixed
     P i (P i x - p4Q2CQ_projectionSweep P rest (P i x)) =
       P i x - p4Q2CQ_projectionSweep P rest (P i x) := by
   rw [map_sub, hId i x,
-    p4Q2CQ_projection_commute_sweep P hId hSymm hComm hNorm
+    p4Q2CQ_projection_commute_sweep P hComm
       i rest (P i x), hId i x]
 
 /-- Exact Pythagoras for the first projection and the rest of the sweep. -/
@@ -119,7 +119,7 @@ theorem p4Q2CQ_sweep_cons_defect_norm_sq
   ring
 
 /-- Projected coordinate defects contract, solely by commutation. -/
-theorem p4Q2CQ_projected_coordinate_defect_norm_le
+omit hId hSymm in theorem p4Q2CQ_projected_coordinate_defect_norm_le
     (i j : ι) (x : E) :
     ‖P i x - P j (P i x)‖ ≤ ‖x - P j x‖ := by
   calc
@@ -133,7 +133,7 @@ theorem p4Q2CQ_projected_coordinate_defect_sq_le
     ‖P i x - P j (P i x)‖ ^ 2 ≤ ‖x - P j x‖ ^ 2 := by
   have h :=
     p4Q2CQ_projected_coordinate_defect_norm_le
-      P hId hSymm hComm hNorm i j x
+      P hComm hNorm i j x
   nlinarith [norm_nonneg (P i x - P j (P i x)),
     norm_nonneg (x - P j x)]
 
@@ -174,7 +174,14 @@ theorem p4Q2CQ_finiteProjectionTensorization
   have h :=
     p4Q2CQ_projectionSweep_tensorization
       P hId hSymm hComm hNorm (Finset.univ.toList : List ι) x
-  simpa only [Finset.sum_toList] using h
+  calc
+    ‖x - p4Q2CQ_projectionSweep P (Finset.univ.toList : List ι) x‖ ^ 2 ≤
+        ((Finset.univ.toList : List ι).map fun i => ‖x - P i x‖ ^ 2).sum := h
+    _ = ∑ i : ι, ‖x - P i x‖ ^ 2 := by
+      simpa using
+        (Finset.sum_toList
+          (s := (Finset.univ : Finset ι))
+          (f := fun i : ι => ‖x - P i x‖ ^ 2)).symm
 
 end GeneralRealHilbert
 
