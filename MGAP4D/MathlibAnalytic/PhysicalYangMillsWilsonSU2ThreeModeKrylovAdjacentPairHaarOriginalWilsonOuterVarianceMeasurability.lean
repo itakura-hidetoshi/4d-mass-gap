@@ -77,9 +77,12 @@ local notation "Cfg" =>
   PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N
 local notation "Joint" => Cfg × Cfg
 local notation "SU" => Matrix.specialUnitaryGroup (Fin N) ℂ
-local notation "Off" (target) =>
-  PeriodicHypercubicEvenSpatialSliceOffTargetLink H target → SU
-local notation "Ctx" (target) => Cfg × Off target
+/-- The literal left-boundary × off-target right-Haar outer carrier. -/
+abbrev p4Q2BL_originalOuterType
+    (H N : ℕ) (target : PeriodicHypercubicEvenSpatialSliceLink H) : Type :=
+  PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+    (PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
+      Matrix.specialUnitaryGroup (Fin N) ℂ)
 
 /-- The real joint observable induces a genuinely jointly measurable
 Haar section over the actual original left/off-target context × SU(N).
@@ -88,7 +91,7 @@ theorem p4Q2BL_originalJointOneLink_section_joint_stronglyMeasurable
     (target : PeriodicHypercubicEvenSpatialSliceLink H)
     (F : Joint → ℝ) (hF : StronglyMeasurable F) :
     StronglyMeasurable
-      (fun z : Ctx target × SU =>
+      (fun z : p4Q2BL_originalOuterType H N target × SU =>
         periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
           H N target F z.1.1 z.1.2 z.2) := by
   let eSplit :=
@@ -97,23 +100,23 @@ theorem p4Q2BL_originalJointOneLink_section_joint_stronglyMeasurable
   let eEval :=
     periodicHypercubicEvenSpatialSliceTargetEvaluationMeasurableEquiv
       (Gauge := SU) target
-  have hLeft : Measurable (fun z : Ctx target × SU => z.1.1) :=
+  have hLeft : Measurable (fun z : p4Q2BL_originalOuterType H N target × SU => z.1.1) :=
     measurable_fst.comp measurable_fst
   have hRight :
-      Measurable (fun z : Ctx target × SU =>
+      Measurable (fun z : p4Q2BL_originalOuterType H N target × SU =>
         eSplit.symm (eEval.symm z.2, z.1.2)) :=
     eSplit.symm.measurable.comp
       ((eEval.symm.measurable.comp measurable_snd).prodMk
         (measurable_snd.comp measurable_fst))
   have hAssemble :
-      Measurable (fun z : Ctx target × SU =>
+      Measurable (fun z : p4Q2BL_originalOuterType H N target × SU =>
         (z.1.1, eSplit.symm (eEval.symm z.2, z.1.2))) :=
     hLeft.prodMk hRight
   have hStrong :
-      StronglyMeasurable (fun z : Ctx target × SU =>
+      StronglyMeasurable (fun z : p4Q2BL_originalOuterType H N target × SU =>
         F (z.1.1, eSplit.symm (eEval.symm z.2, z.1.2))) :=
     hF.comp_measurable hAssemble
-  change StronglyMeasurable (fun z : Ctx target × SU =>
+  change StronglyMeasurable (fun z : p4Q2BL_originalOuterType H N target × SU =>
     F (z.1.1, eSplit.symm (eEval.symm z.2, z.1.2)))
   exact hStrong
 
@@ -122,7 +125,7 @@ observable is measurable in the original left/off-target configuration. -/
 theorem p4Q2BL_originalJointOneLinkHaarVariance_measurable
     (target : PeriodicHypercubicEvenSpatialSliceLink H)
     (F : Joint → ℝ) (hF : StronglyMeasurable F) :
-    Measurable (fun ctx : Ctx target =>
+    Measurable (fun ctx : p4Q2BL_originalOuterType H N target =>
       evariance
         (periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
           H N target F ctx.1 ctx.2)
@@ -136,7 +139,7 @@ theorem p4Q2BL_originalJointOneLinkHaarVariance_measurable
       H N target F hF
   simpa only [μLink] using
     (p4Q2BL_evariance_outer_measurable μLink
-      (fun z : Ctx target × SU =>
+      (fun z : p4Q2BL_originalOuterType H N target × SU =>
         periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection
           H N target F z.1.1 z.1.2 z.2) hjoint)
 
@@ -146,7 +149,7 @@ split density integrated over the selected target Haar coordinate. -/
 theorem p4Q2BL_originalGroundStateOuterMass_aemeasurable
     (target : PeriodicHypercubicEvenSpatialSliceLink H) :
     AEMeasurable
-      (fun ctx : Ctx target =>
+      (fun ctx : p4Q2BL_originalOuterType H N target =>
         periodicHypercubicEvenSpecialUnitaryOriginalGroundStateOneLinkOuterMass
           H N hN beta hbeta target ctx)
       ((periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N).prod
@@ -164,7 +167,7 @@ theorem p4Q2BL_originalGroundStateOuterMass_aemeasurable
   have hw :
       AEMeasurable
         (fun z :
-            (Ctx target) ×
+            (p4Q2BL_originalOuterType H N target) ×
               (PeriodicHypercubicEvenSpatialSliceTargetLink H target → SU) =>
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitDensity
             H N hN beta hbeta z.1.1 target (z.2, z.1.2))
@@ -174,7 +177,7 @@ theorem p4Q2BL_originalGroundStateOuterMass_aemeasurable
         H N hN beta hbeta target)
   have hZ :
       AEMeasurable
-        (fun ctx : Ctx target =>
+        (fun ctx : p4Q2BL_originalOuterType H N target =>
           periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetFiberMass
             H N hN beta hbeta ctx.1 target ctx.2)
         (μ.prod μOff) := by
@@ -191,7 +194,7 @@ theorem p4Q2BL_originalJointHaarReferenceIntegrand_aemeasurable
     (target : PeriodicHypercubicEvenSpatialSliceLink H)
     (F : Joint → ℝ) (hF : StronglyMeasurable F) :
     AEMeasurable
-      (fun ctx : Ctx target =>
+      (fun ctx : p4Q2BL_originalOuterType H N target =>
         (periodicHypercubicEvenSpecialUnitaryOriginalGroundStateOneLinkOuterMass
           H N hN beta hbeta target ctx *
           ENNReal.ofReal (Real.exp (-32 * beta))) *
@@ -203,7 +206,7 @@ theorem p4Q2BL_originalJointHaarReferenceIntegrand_aemeasurable
         (Measure.pi (fun _ :
           PeriodicHypercubicEvenSpatialSliceOffTargetLink H target =>
           normalizedCompactHaar SU))) := by
-  let μOuter : Measure (Ctx target) :=
+  let μOuter : Measure (p4Q2BL_originalOuterType H N target) :=
     (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N).prod
       (Measure.pi (fun _ :
         PeriodicHypercubicEvenSpatialSliceOffTargetLink H target =>
@@ -215,7 +218,7 @@ theorem p4Q2BL_originalJointHaarReferenceIntegrand_aemeasurable
     p4Q2BL_originalJointOneLinkHaarVariance_measurable
       H N target F hF
   change AEMeasurable
-    (fun ctx : Ctx target =>
+    (fun ctx : p4Q2BL_originalOuterType H N target =>
       (periodicHypercubicEvenSpecialUnitaryOriginalGroundStateOneLinkOuterMass
         H N hN beta hbeta target ctx *
         ENNReal.ofReal (Real.exp (-32 * beta))) *
