@@ -24,7 +24,7 @@ No nonphysical measure or positivity floor enters the construction.
 
 This is a continuous form on the physical joint L² CORE IMAGE, not yet
 an extension to every joint L² class (which will use the earlier density
-theorem and completeness). No reverse Haar-reference coercivity or
+density argument and completeness). No reverse Haar-reference coercivity or
 continuum mass gap is asserted.
 -/
 
