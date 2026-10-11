@@ -98,14 +98,13 @@ theorem p4Q2CT_actualPairHaarProjection_commute_of_retainedMeasurability
         muPair)
     (x : JH) :
     P i (P j x) = P j (P i x) := by
-  apply p4Q2CT_symmetricProjections_commute_of_fixedInvariant
+  exact p4Q2CT_symmetricProjections_commute_of_fixedInvariant
     (P i) (P j)
     (p4Q2CR_actualPairHaarCoordinateProjection_symmetric H N i)
     (p4Q2CR_actualPairHaarCoordinateProjection_symmetric H N j)
-  · intro y
-    exact (p4Q2CR_actualPairHaarCoordinateProjection_fixed_iff
-      H N j (P i (P j y))).2 (hStable y)
-  · exact x
+    (fun y =>
+      (p4Q2CR_actualPairHaarCoordinateProjection_fixed_iff
+        H N j (P i (P j y))).2 (hStable y)) x
 
 /-- Pairwise directed retention alone is enough for actual CQ
 finite-coordinate Haar tensorization, with no independent commutation
@@ -119,12 +118,12 @@ theorem p4Q2CT_actualPairHaar_tensorization_of_retainedMeasurability
     ‖x - p4Q2CQ_projectionSweep P
       (p4Q2CQ_finiteCoordinates I) x‖ ^ 2 ≤
       ∑ i : I, ‖x - P i x‖ ^ 2 := by
-  apply p4Q2CR_actualPairHaarProjectionSweep_tensorization_of_commuting
-    H N
-  · intro i j y
-    exact p4Q2CT_actualPairHaarProjection_commute_of_retainedMeasurability
-      H N i j (hStable i j) y
-  · exact x
+  have hc : ∀ i j : I, ∀ y : JH, P i (P j y) = P j (P i y) :=
+    fun i j y =>
+      p4Q2CT_actualPairHaarProjection_commute_of_retainedMeasurability
+        H N i j (hStable i j) y
+  exact p4Q2CR_actualPairHaarProjectionSweep_tensorization_of_commuting
+    H N hc x
 
 /-- The actual finite Haar sweep is a.e. constant when the independent
 Haar sigma-algebra retention condition has been established. -/
@@ -137,11 +136,11 @@ theorem p4Q2CT_actualPairHaar_sweep_aeConst_of_retainedMeasurability
     ∃ c : ℝ,
       (p4Q2CQ_projectionSweep P (p4Q2CQ_finiteCoordinates I) x :
         Joint → ℝ) =ᵐ[muPair] fun _ => c := by
-  apply p4Q2CS_actualPairHaarSweep_aeConst_of_commuting H N
-  · intro i j y
-    exact p4Q2CT_actualPairHaarProjection_commute_of_retainedMeasurability
-      H N i j (hStable i j) y
-  · exact x
+  have hc : ∀ i j : I, ∀ y : JH, P i (P j y) = P j (P i y) :=
+    fun i j y =>
+      p4Q2CT_actualPairHaarProjection_commute_of_retainedMeasurability
+        H N i j (hStable i j) y
+  exact p4Q2CS_actualPairHaarSweep_aeConst_of_commuting H N hc x
 
 end ActualPairHaar
 end
