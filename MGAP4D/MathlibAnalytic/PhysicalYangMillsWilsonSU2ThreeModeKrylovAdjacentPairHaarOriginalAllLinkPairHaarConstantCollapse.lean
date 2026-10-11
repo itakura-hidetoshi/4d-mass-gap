@@ -83,7 +83,8 @@ private theorem p4Q2CK_allSupports
               p anchor := by
           funext i
           simp
-        simpa only [hp] using h anchor
+        rw [hp]
+        exact h anchor
     | @insert k s hk hs =>
         have hAnd :=
           aestronglyMeasurable_piRestriction_and_of_measurePreserving_equiv
@@ -106,7 +107,8 @@ private theorem p4Q2CK_allSupports
             rcases Finset.mem_insert.mp ht with rfl | ht'
             · exact hk'
             · exact hall t ht'
-        simpa only [hp] using hAnd
+        rw [hp]
+        exact hAnd
   have hall := hfin Finset.univ
   have hp :
       (fun i : ι => p anchor i ∧ ∀ k ∈ (Finset.univ : Finset κ), p k i) =
@@ -118,7 +120,8 @@ private theorem p4Q2CK_allSupports
       exact hh.2 k (Finset.mem_univ k)
     · intro hh
       exact ⟨hh anchor, fun k _ => hh k⟩
-  simpa only [hp] using hall
+  rw [hp]
+  exact hall
 
 /-- Endpoint swap transfers a first-boundary a.e. measurable representation
 into a second-boundary a.e. measurable representation on the SAME independent
@@ -148,11 +151,11 @@ private theorem p4Q2CK_swap_fst_to_snd
     have hh := hswap.quasiMeasurePreserving.ae_eq hsource
     simpa [Prod.swap, Function.comp_def] using hh
   have hsmall :
-      Measurable[
+      StronglyMeasurable[
         MeasurableSpace.comap Prod.snd (inferInstance : MeasurableSpace X)]
         (fun z : X × X => L z.2) :=
-    hL.comp (comap_measurable Prod.snd)
-  exact hsmall.stronglyMeasurable.aestronglyMeasurable.congr hdest.symm
+    hL.comp_measurable (comap_measurable Prod.snd)
+  exact hsmall.aestronglyMeasurable.congr hdest.symm
 
 /-- A single right link's deletion retains every left coordinate and all
 right coordinates other than that genuine target. -/
@@ -298,7 +301,7 @@ theorem p4Q2CK_originalRightLinkZero_smallSigma
       F muPair := by
   have hmean :=
     p4Q2CK_rightRetainedHaarMean_smallMeasurable
-      H N hN beta hbeta target F hF
+      H N target F hF
   have hae :=
     p4Q2CJ_originalRightLinkZero_pairHaarRetained
       H N hN beta hbeta target F hF hzero
