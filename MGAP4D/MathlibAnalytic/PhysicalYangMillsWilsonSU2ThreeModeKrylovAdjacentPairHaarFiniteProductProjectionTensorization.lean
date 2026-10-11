@@ -63,6 +63,8 @@ variable {E ι : Type*}
   (hComm : ∀ i j x, P i (P j x) = P j (P i x))
   (hNorm : ∀ i x, ‖P i x‖ ≤ ‖x‖)
 
+include hId hSymm hComm hNorm
+
 /-- A coordinate projection commutes with an entire ordered sweep. -/
 theorem p4Q2CQ_projection_commute_sweep
     (i : ι) (rest : List ι) (x : E) :
@@ -177,6 +179,10 @@ theorem p4Q2CQ_finiteProjectionTensorization
 end GeneralRealHilbert
 
 section PhysicalPairHaar
+
+local instance p4Q2CQ_actualJointIndexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenGroundStateJointSpatialCoordinate H) :=
+  Fintype.ofFinite _
 
 variable (H N : ℕ)
 
