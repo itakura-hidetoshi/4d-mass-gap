@@ -124,7 +124,8 @@ theorem p4Q2BQ_originalPolarization_scalarAddHom_bounded_unitBall
     H N hN beta hbeta F G
   have hF : 0 ≤ Q F :=
     p4Q2BQ_originalCoreReference_nonneg H N hN beta hbeta F
-  refine isBounded_iff_forall_norm_le'.2 ⟨Q F + Q G, ?_⟩
+  refine (isBounded_iff_forall_norm_le' (s := ell '' Metric.ball (0 : ℝ) 1)).2
+    ⟨Q F + Q G, ?_⟩
   rintro t ⟨a, ha, rfl⟩
   have habs : |a| < 1 := by
     simpa only [Metric.mem_ball, Real.dist_eq, sub_zero] using ha
@@ -155,7 +156,7 @@ theorem p4Q2BQ_originalPolarization_scalarAddHom_continuous
   let ell := p4Q2BQ_originalPolarization_scalarAddHom
     H N hN beta hbeta F G
   exact ell.continuous_of_isBounded_nhds_zero
-    (Metric.ball_mem_nhds (by norm_num : (0 : ℝ) < 1))
+    (Metric.ball_mem_nhds (0 : ℝ) (by norm_num : (0 : ℝ) < 1))
     (p4Q2BQ_originalPolarization_scalarAddHom_bounded_unitBall
       H N hN beta hbeta F G)
 
@@ -170,8 +171,9 @@ theorem p4Q2BQ_originalCorePolarization_smul_left
     p4Q2BQ_originalPolarization_scalarAddHom_continuous
       H N hN beta hbeta F G
   have hs := map_real_smul ell hc a (1 : ℝ)
-  simpa only [ell, p4Q2BQ_originalPolarization_scalarAddHom,
-    smul_eq_mul, mul_one, one_smul] using hs
+  change B ((a • (1 : ℝ)) • F) G =
+    a • B ((1 : ℝ) • F) G at hs
+  simpa only [smul_eq_mul, mul_one, one_smul] using hs
 
 /-- Real homogeneity in the second variable follows from the
 already-formalized original reference polarization symmetry. -/
