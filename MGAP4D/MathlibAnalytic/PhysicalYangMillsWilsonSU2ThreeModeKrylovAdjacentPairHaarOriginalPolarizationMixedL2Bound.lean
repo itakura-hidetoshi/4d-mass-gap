@@ -147,7 +147,7 @@ theorem p4Q2BT_originalCorePolarization_abs_le_physicalL2_norm_mul
       (u * v) * |B F G| ≤ (12 : ℝ) * (u * v) ^ 2 := hProduct
       _ = (u * v) * ((12 : ℝ) * (u * v)) := by ring
   have hFinal : |B F G| ≤ (12 : ℝ) * (u * v) :=
-    (mul_le_mul_left hPos).mp hMul
+    le_of_mul_le_mul_left hMul hPos
   exact hFinal
 
 /-- Norm version for the ACTUAL original Wilson real bilinear map, not
