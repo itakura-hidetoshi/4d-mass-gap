@@ -110,7 +110,8 @@ theorem p4Q2BW_originalRange_subtype_dense :
 variable, with complete codomain given by bounded functionals on the core. -/
 noncomputable def p4Q2BW_originalFirstExtended :
     J →L[ℝ] Img →L[ℝ] ℝ :=
-  B.extend ((LinearMap.range T).subtypeL : Img →L[ℝ] J)
+  (p4Q2BV_originalRangeContinuousBilin H N hN beta hbeta).extend
+    ((LinearMap.range T).subtypeL : Img →L[ℝ] J)
 
 /-- Extend also in the second variable, then flip back to the standard order.
 This is an ACTUAL bounded real bilinear map on the entire original physical
