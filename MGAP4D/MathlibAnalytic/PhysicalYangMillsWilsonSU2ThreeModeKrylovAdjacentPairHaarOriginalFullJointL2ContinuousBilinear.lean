@@ -216,18 +216,25 @@ theorem p4Q2BW_originalFullJointContinuousBilin_unique
   let i : Img →L[ℝ] J := Img.subtypeL
   have hd : DenseRange i :=
     p4Q2BW_originalRange_subtype_dense H N hN beta hbeta
-  apply hd.equalizer other.continuous
-    (p4Q2BW_originalFullJointContinuousBilin H N hN beta hbeta).continuous
-  funext x
-  apply hd.equalizer (other (x : J)).continuous
-    (p4Q2BW_originalFullJointContinuousBilin H N hN beta hbeta (x : J)).continuous
-  funext y
-  calc
-    other (x : J) (y : J) = B x y := hcore x y
-    _ = p4Q2BW_originalFullJointContinuousBilin H N hN beta hbeta
-          (x : J) (y : J) :=
-      (p4Q2BW_originalFullJointContinuousBilin_apply_range
-        H N hN beta hbeta x y).symm
+  let full := p4Q2BW_originalFullJointContinuousBilin H N hN beta hbeta
+  have hpointwise : (fun z : J => other z) = (fun z : J => full z) := by
+    apply hd.equalizer other.continuous full.continuous
+    funext x
+    apply ContinuousLinearMap.ext
+    intro z
+    have hsecond : (fun w : J => other (x : J) w) =
+        (fun w : J => full (x : J) w) := by
+      apply hd.equalizer (other (x : J)).continuous (full (x : J)).continuous
+      funext y
+      calc
+        other (x : J) (y : J) = B x y := hcore x y
+        _ = full (x : J) (y : J) :=
+          (p4Q2BW_originalFullJointContinuousBilin_apply_range
+            H N hN beta hbeta x y).symm
+    exact congrFun hsecond z
+  apply ContinuousLinearMap.ext
+  intro x
+  exact congrFun hpointwise x
 
 end OriginalWilson
 end
