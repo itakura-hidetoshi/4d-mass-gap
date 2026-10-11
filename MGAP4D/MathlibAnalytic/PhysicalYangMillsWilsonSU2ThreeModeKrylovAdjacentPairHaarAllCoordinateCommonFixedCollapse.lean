@@ -132,10 +132,6 @@ private theorem p4Q2CS_finite_allSupports
   rw [hp] at hall
   exact hall
 
-local instance p4Q2CS_jointIndexFintype (H : ℕ) :
-    Fintype (PeriodicHypercubicEvenGroundStateJointSpatialCoordinate H) :=
-  Fintype.ofFinite _
-
 section ActualPairHaar
 variable (H N : ℕ)
 
@@ -195,6 +191,9 @@ theorem p4Q2CS_actualPairHaar_allCoordinateFixed_iff_aeConst
     have hbot :
         Measurable[⊥]
           ((pairHaarPiRestriction (K := G) (fun _ : I => False)) ∘ e) := by
+      letI : MeasurableSpace Joint := ⊥
+      change Measurable
+        ((pairHaarPiRestriction (K := G) (fun _ : I => False)) ∘ e)
       rw [measurable_pi_iff]
       intro i
       exact False.elim i.property
@@ -234,8 +233,8 @@ theorem p4Q2CS_actualPairHaarCoordinateDefectEnergy_zero_iff_aeConst
         (∀ i : I, P i x = x) := by
     constructor
     · intro hz i
-      have hnorm : ‖x - P i x‖ = 0 :=
-        (pow_eq_zero (hz i))
+      have hnorm : ‖x - P i x‖ = 0 := by
+        nlinarith [hz i, norm_nonneg (x - P i x)]
       have hsub : x - P i x = 0 := norm_eq_zero.mp hnorm
       exact (sub_eq_zero.mp hsub).symm
     · intro hz i
@@ -250,7 +249,7 @@ commutation, CQ's full finite sweep has an a.e.-constant output.
 The next task is proving commutation by literal independent Haar Fubini,
 not imposing it as a new permanent assumption. -/
 private theorem p4Q2CS_sweep_fixed_of_mem
-    {E ι : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    {E ι : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     (R : ι → E →L[ℝ] E)
     (hId : ∀ i x, R i (R i x) = R i x)
     (hComm : ∀ i j x, R i (R j x) = R j (R i x))
