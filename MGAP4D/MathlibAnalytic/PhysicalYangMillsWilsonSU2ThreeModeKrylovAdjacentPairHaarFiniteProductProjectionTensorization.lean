@@ -187,7 +187,7 @@ theorem p4Q2CQ_finiteProjectionTensorization
       exact
         (Finset.sum_toList
           (s := (Finset.univ : Finset ι))
-          (f := fun i : ι => ‖x - P i x‖ ^ 2)).symm
+          (fun i : ι => ‖x - P i x‖ ^ 2)).symm
 
 end GeneralRealHilbert
 
