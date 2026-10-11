@@ -94,7 +94,8 @@ theorem p4Q2CF_originalCoreZero_implies_each_color
     change (∑ d : C12,
       p4Q2BB_twelveColorOriginalHaarReferenceAverage
         H N hN beta hbeta d F.1).toReal = 0 at hzero
-    exact (ENNReal.toReal_eq_zero_iff.mp hzero).resolve_right htop
+    rw [ENNReal.toReal_eq_zero_iff] at hzero
+    exact hzero.resolve_right htop
   exact p4Q2CF_fintype_sum_zero_each
     (fun d : C12 =>
       p4Q2BB_twelveColorOriginalHaarReferenceAverage
