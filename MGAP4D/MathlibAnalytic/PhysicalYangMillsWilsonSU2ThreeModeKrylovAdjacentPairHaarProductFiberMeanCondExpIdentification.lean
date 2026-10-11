@@ -35,6 +35,16 @@ noncomputable section
 set_option maxHeartbeats 1800000
 set_option synthInstance.maxHeartbeats 850000
 
+/-- The first-factor sigma algebra is a NAMED declaration rather than a
+local let-binding of a typeclass. This prevents Lean from selecting the
+coarser sigma algebra as the ambient MeasurableSpace instance in later
+StronglyMeasurable and product-Fubini assertions. -/
+private abbrev p4Q2CV_firstFactorSigma
+    {α β : Type*} [MeasurableSpace α] [MeasurableSpace β] :
+    MeasurableSpace (α × β) :=
+  MeasurableSpace.comap (Prod.fst : α × β → α)
+    (inferInstance : MeasurableSpace α)
+
 theorem p4Q2CV_productProbability_condExpL2_ae_eq_fiberHaarMean
     {α β : Type*} [MeasurableSpace α] [MeasurableSpace β]
     (μ : Measure α) (ν : Measure β)
@@ -45,9 +55,8 @@ theorem p4Q2CV_productProbability_condExpL2_ae_eq_fiberHaarMean
       Lp ℝ 2 (μ.prod ν)) =ᵐ[μ.prod ν]
       (fun z : α × β => ∫ b : β, f (z.1, b) ∂ν) := by
   classical
-  let m : MeasurableSpace (α × β) :=
-    MeasurableSpace.comap Prod.fst (inferInstance : MeasurableSpace α)
-  have hm : m ≤ (inferInstance : MeasurableSpace (α × β)) := by
+  have hm : p4Q2CV_firstFactorSigma (α := α) (β := β) ≤
+      (inferInstance : MeasurableSpace (α × β)) := by
     change MeasurableSpace.comap (Prod.fst : α × β → α)
       (inferInstance : MeasurableSpace α) ≤
         (inferInstance : MeasurableSpace (α × β))
@@ -85,15 +94,15 @@ theorem p4Q2CV_productProbability_condExpL2_ae_eq_fiberHaarMean
       (Filter.Eventually.of_forall fun z => hBound z.1)
   let g : Lp ℝ 2 (μ.prod ν) :=
     hMeanLp.toLp (fun z : α × β => h z.1)
-  have hsmall : AEStronglyMeasurable[m]
+  have hsmall : AEStronglyMeasurable[p4Q2CV_firstFactorSigma (α := α) (β := β)]
       (g : α × β → ℝ) (μ.prod ν) := by
-    have hm0 : StronglyMeasurable[m] (fun z : α × β => h z.1) :=
+    have hm0 : StronglyMeasurable[p4Q2CV_firstFactorSigma (α := α) (β := β)] (fun z : α × β => h z.1) :=
       hhsm.comp_measurable (comap_measurable Prod.fst)
     exact hm0.aestronglyMeasurable.congr hMeanLp.coeFn_toLp.symm
-  have hCondSm : AEStronglyMeasurable[m]
+  have hCondSm : AEStronglyMeasurable[p4Q2CV_firstFactorSigma (α := α) (β := β)]
       (condExpL2 ℝ ℝ hm f : Lp ℝ 2 (μ.prod ν)) (μ.prod ν) :=
     lpMeas.aestronglyMeasurable _
-  have hSet : ∀ s : Set (α × β), MeasurableSet[m] s →
+  have hSet : ∀ s : Set (α × β), MeasurableSet[p4Q2CV_firstFactorSigma (α := α) (β := β)] s →
       ∫ z in s, (g : Lp ℝ 2 (μ.prod ν)) z ∂(μ.prod ν) =
         ∫ z in s, (condExpL2 ℝ ℝ hm f : Lp ℝ 2 (μ.prod ν)) z ∂(μ.prod ν) := by
     intro s hs
@@ -105,7 +114,7 @@ theorem p4Q2CV_productProbability_condExpL2_ae_eq_fiberHaarMean
       simp
     have hsmall' : MeasurableSet (t ×ˢ Set.univ : Set (α × β)) :=
       ht.prod MeasurableSet.univ
-    have hretained : MeasurableSet[m] (t ×ˢ Set.univ : Set (α × β)) := by
+    have hretained : MeasurableSet[p4Q2CV_firstFactorSigma (α := α) (β := β)] (t ×ˢ Set.univ : Set (α × β)) := by
       simpa [← hset'] using hs
     rw [hset']
     calc
