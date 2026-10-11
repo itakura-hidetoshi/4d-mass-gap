@@ -72,12 +72,13 @@ theorem p4Q2CE_originalWilsonJoint_lintegral_eq_zero_iff_pairHaar
       H N hN beta hbeta F hF
   constructor
   · intro hzero
-    have hmul : ENNReal.ofReal m * (∫⁻ z, F z ∂μH) = 0 := by
+    have hmul_le : ENNReal.ofReal m * (∫⁻ z, F z ∂μH) ≤ 0 := by
       calc
         ENNReal.ofReal m * (∫⁻ z, F z ∂μH) ≤
             ∫⁻ z, F z ∂μW := hLower
         _ = 0 := hzero
-      -- goal is equality, not inequality; use bottom antisymmetry below.
+    have hmul : ENNReal.ofReal m * (∫⁻ z, F z ∂μH) = 0 :=
+      le_antisymm hmul_le bot_le
     exact (mul_eq_zero.mp hmul).resolve_left
       (ne_of_gt (ENNReal.ofReal_pos.mpr hm))
   · intro hzero
