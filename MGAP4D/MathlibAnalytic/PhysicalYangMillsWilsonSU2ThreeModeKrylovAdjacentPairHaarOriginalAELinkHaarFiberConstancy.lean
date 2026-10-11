@@ -125,9 +125,9 @@ theorem p4Q2CH_originalRightLinkHaarReferenceZero_implies_aeConstant
     p4Q2CG_originalRightLinkHaarReferenceZero_implies_aeVarianceZero
       H N hN beta hbeta target F hF hzero
   filter_upwards [hvar] with ctx hv
-  have hX :=
+  have hX : AEStronglyMeasurable (Section target F ctx) μLink :=
     (periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection_stronglyMeasurable
-      H N target F hF ctx.1 ctx.2).aestronglyMeasurable
+      H N target F hF ctx.1 ctx.2).aestronglyMeasurable (μ := μLink)
   exact p4Q2CH_zero_evariance_ae_constant μLink (Section target F ctx) hX hv
 
 /-- Original right-link reference zero yields pairwise link-coordinate
@@ -144,9 +144,9 @@ theorem p4Q2CH_originalRightLinkHaarReferenceZero_implies_pairwiseAE
     p4Q2CG_originalRightLinkHaarReferenceZero_implies_aeVarianceZero
       H N hN beta hbeta target F hF hzero
   filter_upwards [hvar] with ctx hv
-  have hX :=
+  have hX : AEStronglyMeasurable (Section target F ctx) μLink :=
     (periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection_stronglyMeasurable
-      H N target F hF ctx.1 ctx.2).aestronglyMeasurable
+      H N target F hF ctx.1 ctx.2).aestronglyMeasurable (μ := μLink)
   exact p4Q2CH_zero_evariance_ae_pairwise μLink (Section target F ctx) hX hv
 
 /-- Endpoint swap gives the identical a.e.-constancy theorem for the
