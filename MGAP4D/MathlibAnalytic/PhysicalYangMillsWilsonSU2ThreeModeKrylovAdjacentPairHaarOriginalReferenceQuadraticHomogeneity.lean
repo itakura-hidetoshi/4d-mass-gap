@@ -53,8 +53,8 @@ noncomputable def p4Q2BH_weightedHaarFiberVariance
     [MeasurableSpace Outer] [MeasurableSpace Gauge]
     (μOuter : Measure Outer) (μHaar : Measure Gauge)
     (weight : Outer → ENNReal)
-    (section : Outer → Gauge → ℝ) : ENNReal :=
-  ∫⁻ ctx, weight ctx * evariance (section ctx) μHaar ∂μOuter
+    (fiberFn : Outer → Gauge → ℝ) : ENNReal :=
+  ∫⁻ ctx, weight ctx * evariance (fiberFn ctx) μHaar ∂μOuter
 
 /-- Homogeneity in the ORIGINAL fiber observable does not require dividing by
 fiber mass or interchanging noncommuting physical projections. -/
@@ -63,26 +63,26 @@ theorem p4Q2BH_weightedHaarFiberVariance_mul
     [MeasurableSpace Outer] [MeasurableSpace Gauge]
     (μOuter : Measure Outer) (μHaar : Measure Gauge)
     (weight : Outer → ENNReal)
-    (section : Outer → Gauge → ℝ) (a : ℝ) :
+    (fiberFn : Outer → Gauge → ℝ) (a : ℝ) :
     p4Q2BH_weightedHaarFiberVariance μOuter μHaar weight
-      (fun ctx u => a * section ctx u) =
+      (fun ctx u => a * fiberFn ctx u) =
       ENNReal.ofReal (a ^ 2) *
-        p4Q2BH_weightedHaarFiberVariance μOuter μHaar weight section := by
+        p4Q2BH_weightedHaarFiberVariance μOuter μHaar weight fiberFn := by
   unfold p4Q2BH_weightedHaarFiberVariance
   simp_rw [ProbabilityTheory.evariance_mul]
   calc
     (∫⁻ ctx, weight ctx *
-        (ENNReal.ofReal (a ^ 2) * evariance (section ctx) μHaar) ∂μOuter) =
+        (ENNReal.ofReal (a ^ 2) * evariance (fiberFn ctx) μHaar) ∂μOuter) =
         ∫⁻ ctx, ENNReal.ofReal (a ^ 2) *
-          (weight ctx * evariance (section ctx) μHaar) ∂μOuter := by
+          (weight ctx * evariance (fiberFn ctx) μHaar) ∂μOuter := by
           apply lintegral_congr
           intro ctx
           ac_rfl
     _ = ENNReal.ofReal (a ^ 2) *
-        (∫⁻ ctx, weight ctx * evariance (section ctx) μHaar ∂μOuter) := by
+        (∫⁻ ctx, weight ctx * evariance (fiberFn ctx) μHaar ∂μOuter) := by
           exact lintegral_const_mul'
             (ENNReal.ofReal (a ^ 2))
-            (fun ctx => weight ctx * evariance (section ctx) μHaar)
+            (fun ctx => weight ctx * evariance (fiberFn ctx) μHaar)
             ENNReal.ofReal_lt_top.ne
 
 section OriginalWilson
