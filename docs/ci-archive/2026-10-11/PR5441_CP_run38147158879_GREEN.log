@@ -1,0 +1,1721 @@
+[fast] base: 1e90986fb12eec2c52900da56bb171ec3b1f2748
+[fast] changed Lean files:
+MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalFiniteVolumeLinkMassLowerBound.lean
+[fast] changed aggregate root Lean files:
+<none>
+[fast] changed non-root Lean files:
+MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalFiniteVolumeLinkMassLowerBound.lean
+[fast] changed scripts:
+<none>
+[fast] changed Lake inputs:
+<none>
+[fast] preflight changed Lean static audit
+[preflight] changed Lean files audited: 1
+[preflight] passed
+[fast] audit Lean forbidden tokens
+Lean files scanned: 7419
+sorry: 0
+admit: 0
+axiom: 0
+constant: 0
+Lean forbidden-token audit passed
+[fast] audit hard physical residual ledger
+Hard physical residual ledger audit
+ledger anchors audited: 8
+internal-discharge anchors audited: 10
+ledger-bridge anchors audited: 10
+final-bundle anchors audited: 14
+r1-r3-bridges anchors audited: 12
+terminal-discharge anchors audited: 13
+public-audit anchors audited: 19
+external-handoff anchors audited: 11
+external-receipt-chain anchors audited: 11
+residual-ids anchors audited: 7
+closure-language anchors audited: 16
+terminal-status anchors audited: 7
+Forbidden premature-closure phrases audited: 14
+Hard physical residual ledger audit passed
+[fast] audit analytic bridge coherence
+Bridge files audited: 8
+Ordered import edges audited: 5
+Forbidden Lean tokens audited: sorry/admit/axiom/constant
+Bridge anchors audited: Hilbert, H_phys, Yang-Mills, spectral/PVM, continuum, normalization, infinite-dimensional target
+Value anchors audited: exact value route / exactGapValueReal carrier
+Boundary anchors audited: publicBoundaryHeld, finalReleaseHeld, and open-boundary markers
+Bridge coherence audit passed
+[fast] audit final physical carrier routing
+Final physical carrier routing audit
+Final physical carrier core Lean anchors audited: 13
+Observable interface Lean anchors audited: 7
+Observable theorem Lean anchors audited: 8
+Compact plaquette Lean anchors audited: 12
+Operator-measure Lean anchors audited: 4
+Concrete Hilbert Lean anchors audited: 11
+Concrete HPhys Lean anchors audited: 11
+Physical Lean anchors audited: 10
+Concrete Yang-Mills Lean anchors audited: 15
+Forbidden singleton/PUnit/prototype snippets audited in final routed skeleton files
+Documentation audited: docs/mathlib_physical_unbounded_operator_skeleton.md, docs/mathlib_concrete_yang_mills_hamiltonian_skeleton.md
+Checklist audited: EXTERNAL_REVIEW_CHECKLIST.md
+Forbidden Lean tokens audited: sorry/admit/axiom/constant
+Final physical carrier routing audit passed
+[fast] audit OS/Wightman mass-gap bridge
+OS/Wightman mass-gap proof-route audit passed
+Theorem declarations, import order, and structural placeholders audited
+No unresolved physical obligation is frozen by this audit
+[fast] lake manifest present and JSON-compatible; skip lake update
+[fast] mathlib cache present; skip lake exe cache get
+[fast] direct Lean elaboration disabled; dependency-aware lake build remains authoritative
+[fast] dependency-aware lake build maximal changed non-aggregate targets: MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalFiniteVolumeLinkMassLowerBound
+⚠ [3296/3303] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicSignedGeometry
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicSignedGeometry.lean:245:40: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [3299/3303] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenCrossingPlaquette
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenCrossingPlaquette.lean:122:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [3300/3303] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenCrossingReflection
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenCrossingReflection.lean:54:6: This simp argument is unused:
+  periodicHypercubicUnshift_shift
+
+Hint: Omit it from the simp argument list.
+  simp [periodicHypercubicEvenPlaquetteVertices,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenPlaquetteCorner00,
+        periodicHypercubicEvenPlaquetteCorner10,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenPlaquetteCorner11,
+        periodicHypercubicEvenPlaquetteCorner01,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicPlaquetteFirstAxis,
+        periodicHypercubicPlaquetteSecondAxis,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenReflectVertexSupport,
+        periodicHypercubicEvenPlaquetteReflection,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenReflectedPlaquetteBase,
+        periodicHypercubicEvenPlaquetteHasTimeDirection,
+  ̵  ̵ ̵ ̵ ̵ ̵hnu,
+        periodicHypercubicEvenTimeReflection_shift_spatial,
+        periodicHypercubicEvenTimeReflection_shift_time,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicShift_unshift,
+        periodicHypercubicU̵n̵s̵h̵i̵f̵t̵_̵s̵h̵i̵f̵t̵,̵
+  ̵ ̵ ̵ ̵ ̵ ̵ ̵p̵e̵r̵i̵o̵d̵i̵c̵H̵y̵p̵e̵r̵c̵u̵b̵i̵c̵Even_shift_unshift_time_comm,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicShift_comm,
+  ̵  ̵ ̵ ̵ ̵ ̵or_assoc,
+  ̲  ̲ ̲ ̲ ̲ ̲or_left_comm, or_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenCrossingReflection.lean:57:6: This simp argument is unused:
+  or_assoc
+
+Hint: Omit it from the simp argument list.
+  simp [periodicHypercubicEvenPlaquetteVertices,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenPlaquetteCorner00,
+        periodicHypercubicEvenPlaquetteCorner10,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenPlaquetteCorner11,
+        periodicHypercubicEvenPlaquetteCorner01,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicPlaquetteFirstAxis,
+        periodicHypercubicPlaquetteSecondAxis,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenReflectVertexSupport,
+        periodicHypercubicEvenPlaquetteReflection,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenReflectedPlaquetteBase,
+        periodicHypercubicEvenPlaquetteHasTimeDirection,
+  ̵  ̵ ̵ ̵ ̵ ̵hnu,
+        periodicHypercubicEvenTimeReflection_shift_spatial,
+        periodicHypercubicEvenTimeReflection_shift_time,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicShift_unshift,
+        periodicHypercubicUnshift_shift,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicEven_shift_unshift_time_comm,
+        periodicHypercubicShift_comm,
+  ̵  ̵ ̵ ̵ ̵ ̵or_a̵s̵s̵o̵c̵,̵ ̵o̵r̵_̵left_comm, or_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenCrossingReflection.lean:75:6: This simp argument is unused:
+  periodicHypercubicShift_comm
+
+Hint: Omit it from the simp argument list.
+  simp [periodicHypercubicEvenPlaquetteVertices,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenPlaquetteCorner00,
+        periodicHypercubicEvenPlaquetteCorner10,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenPlaquetteCorner11,
+        periodicHypercubicEvenPlaquetteCorner01,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicPlaquetteFirstAxis,
+        periodicHypercubicPlaquetteSecondAxis,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenReflectVertexSupport,
+        periodicHypercubicEvenPlaquetteReflection,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenReflectedPlaquetteBase,
+        periodicHypercubicEvenPlaquetteHasTimeDirection,
+  ̵  ̵ ̵ ̵ ̵ ̵hmu, hnu,
+        periodicHypercubicEvenTimeReflection_shift_spatial,
+  ̵  ̵ ̵ ̵ ̵ ̵p̵e̵r̵i̵od̵i̵c̵H̵y̵p̵e̵rc̵u̵b̵i̵c̵S̵h̵i̵f̵t̵_c̵o̵m̵m̵,̵
+  ̵ ̵ ̵ ̵ ̵ ̵ ̵o̵r̵_̵assoc, or_left_comm, or_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenCrossingReflection.lean:76:6: This simp argument is unused:
+  or_assoc
+
+Hint: Omit it from the simp argument list.
+  simp [periodicHypercubicEvenPlaquetteVertices,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenPlaquetteCorner00,
+        periodicHypercubicEvenPlaquetteCorner10,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenPlaquetteCorner11,
+        periodicHypercubicEvenPlaquetteCorner01,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicPlaquetteFirstAxis,
+        periodicHypercubicPlaquetteSecondAxis,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenReflectVertexSupport,
+        periodicHypercubicEvenPlaquetteReflection,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenReflectedPlaquetteBase,
+        periodicHypercubicEvenPlaquetteHasTimeDirection,
+  ̵  ̵ ̵ ̵ ̵ ̵hmu, hnu,
+        periodicHypercubicEvenTimeReflection_shift_spatial,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicShift_comm,
+        or_a̵s̵s̵o̵c̵,̵ ̵o̵r̵_̵left_comm, or_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenCrossingReflection.lean:76:16: This simp argument is unused:
+  or_left_comm
+
+Hint: Omit it from the simp argument list.
+  simp [periodicHypercubicEvenPlaquetteVertices,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenPlaquetteCorner00,
+        periodicHypercubicEvenPlaquetteCorner10,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenPlaquetteCorner11,
+        periodicHypercubicEvenPlaquetteCorner01,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicPlaquetteFirstAxis,
+        periodicHypercubicPlaquetteSecondAxis,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenReflectVertexSupport,
+        periodicHypercubicEvenPlaquetteReflection,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenReflectedPlaquetteBase,
+        periodicHypercubicEvenPlaquetteHasTimeDirection,
+  ̵  ̵ ̵ ̵ ̵ ̵hmu, hnu,
+        periodicHypercubicEvenTimeReflection_shift_spatial,
+  ̵  ̵ ̵ ̵ ̵ ̵periodicHypercubicShift_comm,
+  ̵  ̵ ̵ ̵ ̵ ̵or_assoc,
+  ̲ o̵r̵_̵l̵e̵f̵t̵_̵c̵o̵m̵m̵,̵  ̲ ̲ ̲ ̲or_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [8321/8534] Replayed MGAP4D.MathlibAnalytic.RealL2ExternalTensor
+warning: MGAP4D/MathlibAnalytic/RealL2ExternalTensor.lean:26:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8323/8534] Replayed MGAP4D.MathlibAnalytic.RealL2HilbertSchmidtKernelOperator
+warning: MGAP4D/MathlibAnalytic/RealL2HilbertSchmidtKernelOperator.lean:35:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/RealL2HilbertSchmidtKernelOperator.lean:48:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8326/8534] Replayed MGAP4D.MathlibAnalytic.RealL2HilbertSchmidtGramPositiveKernel
+warning: MGAP4D/MathlibAnalytic/RealL2HilbertSchmidtGramPositiveKernel.lean:104:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8332/8534] Replayed MGAP4D.MathlibAnalytic.DoobWeightedConditionalMeasureComparison
+warning: MGAP4D/MathlibAnalytic/DoobWeightedConditionalMeasureComparison.lean:205:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/DoobWeightedConditionalMeasureComparison.lean:223:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/DoobWeightedConditionalMeasureComparison.lean:241:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/DoobWeightedConditionalMeasureComparison.lean:260:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8333/8534] Replayed MGAP4D.MathlibAnalytic.DoobWeightedConditionalMeasureCenteredVariance
+warning: MGAP4D/MathlibAnalytic/DoobWeightedConditionalMeasureCenteredVariance.lean:61:6: `mul_le_mul_left'` has been deprecated: Use `mul_le_mul_right` instead
+warning: MGAP4D/MathlibAnalytic/DoobWeightedConditionalMeasureCenteredVariance.lean:97:6: `mul_le_mul_left'` has been deprecated: Use `mul_le_mul_right` instead
+⚠ [8337/8795] Replayed MGAP4D.MathlibAnalytic.RealIntegralCrossRatioCovarianceLocalization
+warning: MGAP4D/MathlibAnalytic/RealIntegralCrossRatioCovarianceLocalization.lean:74:8: 'ring' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: MGAP4D/MathlibAnalytic/RealIntegralCrossRatioCovarianceLocalization.lean:81:8: 'ring' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: MGAP4D/MathlibAnalytic/RealIntegralCrossRatioCovarianceLocalization.lean:88:8: 'ring' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: MGAP4D/MathlibAnalytic/RealIntegralCrossRatioCovarianceLocalization.lean:74:8: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: MGAP4D/MathlibAnalytic/RealIntegralCrossRatioCovarianceLocalization.lean:81:8: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: MGAP4D/MathlibAnalytic/RealIntegralCrossRatioCovarianceLocalization.lean:88:8: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+⚠ [8340/8795] Replayed MGAP4D.MathlibAnalytic.FiniteTensorProductKernelPosDef
+warning: MGAP4D/MathlibAnalytic/FiniteTensorProductKernelPosDef.lean:61:8: This simp argument is unused:
+  Matrix.kronecker
+
+Hint: Omit it from the simp argument list.
+  simp [finiteTensorKernelMatrix, finSuccFunctionEquiv, M̵a̵t̵r̵i̵x̵.̵k̵r̵o̵n̵e̵c̵k̵e̵r̵,̵ ̵ih]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [8342/8795] Replayed MGAP4D.MathlibAnalytic.FiniteDimensionalSymmetricPositiveContractionSpectrum
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalSymmetricPositiveContractionSpectrum.lean:35:5: unused variable `D`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8345/8795] Replayed MGAP4D.MathlibAnalytic.FiniteDimensionalGroundExcitationSupportDecomposition
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalGroundExcitationSupportDecomposition.lean:124:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalGroundExcitationSupportDecomposition.lean:138:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalGroundExcitationSupportDecomposition.lean:152:65: This simp argument is unused:
+  hne
+
+Hint: Omit it from the simp argument list.
+  simp [groundPositiveExtension, excitedPositiveExtension, hg,̵ ̵h̵n̵e̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [8346/8795] Replayed MGAP4D.MathlibAnalytic.FiniteDimensionalNormOneGroundSpectrum
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalNormOneGroundSpectrum.lean:114:2: Try `simp at hi` instead of `simpa using hi`
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8348/8795] Replayed MGAP4D.MathlibAnalytic.FiniteDimensionalGroundNullOperatorCharacterization
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalGroundNullOperatorCharacterization.lean:72:2: Try `simp at hi` instead of `simpa using hi`
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8350/8795] Replayed MGAP4D.MathlibAnalytic.FiniteDimensionalPositiveSpectralSupportNontriviality
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalPositiveSpectralSupportNontriviality.lean:60:2: Try `simp at hcoord` instead of `simpa using hcoord`
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8351/8795] Replayed MGAP4D.MathlibAnalytic.FiniteDimensionalFullGroundExcitationNullDecomposition
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalFullGroundExcitationNullDecomposition.lean:143:55: This simp argument is unused:
+  hng
+
+Hint: Omit it from the simp argument list.
+  simp [groundSpectralExtension, excitedSpectralExtension,
+  ̵  ̵ ̵ ̵ ̵ ̵nullSpectralExtension,
+  ̲  ̲ ̲ ̲ ̲ ̲fullGroundCoordinates,
+  ̵  ̵ ̵ ̵ ̵ ̵fullExcitedCoordinates, fullNullCoordinates, hz, hng̵,̵ ̵h̵n̵e]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalFullGroundExcitationNullDecomposition.lean:143:60: This simp argument is unused:
+  hne
+
+Hint: Omit it from the simp argument list.
+  simp [groundSpectralExtension, excitedSpectralExtension,
+  ̵  ̵ ̵ ̵ ̵ ̵nullSpectralExtension,
+  ̲  ̲ ̲ ̲ ̲ ̲fullGroundCoordinates,
+  ̵  ̵ ̵ ̵ ̵ ̵fullExcitedCoordinates, fullNullCoordinates, hz, hng,̵ ̵h̵n̵e̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalFullGroundExcitationNullDecomposition.lean:154:55: This simp argument is unused:
+  hnz
+
+Hint: Omit it from the simp argument list.
+  simp [groundSpectralExtension, excitedSpectralExtension,
+  ̵  ̵ ̵ ̵ ̵ ̵nullSpectralExtension,
+  ̲  ̲ ̲ ̲ ̲ ̲fullGroundCoordinates,
+  ̵  ̵ ̵ ̵ ̵ ̵fullExcitedCoordinates, fullNullCoordinates, hg, hnz̵,̵ ̵h̵n̵e]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalFullGroundExcitationNullDecomposition.lean:154:60: This simp argument is unused:
+  hne
+
+Hint: Omit it from the simp argument list.
+  simp [groundSpectralExtension, excitedSpectralExtension,
+  ̵  ̵ ̵ ̵ ̵ ̵nullSpectralExtension,
+  ̲  ̲ ̲ ̲ ̲ ̲fullGroundCoordinates,
+  ̵  ̵ ̵ ̵ ̵ ̵fullExcitedCoordinates, fullNullCoordinates, hg, hnz,̵ ̵h̵n̵e̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalFullGroundExcitationNullDecomposition.lean:168:65: This simp argument is unused:
+  hne
+
+Hint: Omit it from the simp argument list.
+  simp [groundSpectralExtension, excitedSpectralExtension, hg,̵ ̵h̵n̵e̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalFullGroundExcitationNullDecomposition.lean:183:62: This simp argument is unused:
+  hnz
+
+Hint: Omit it from the simp argument list.
+  simp [groundSpectralExtension, nullSpectralExtension, hg,̵ ̵h̵n̵z̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalFullGroundExcitationNullDecomposition.lean:216:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalFullGroundExcitationNullDecomposition.lean:222:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalFullGroundExcitationNullDecomposition.lean:228:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalFullGroundExcitationNullDecomposition.lean:234:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalFullGroundExcitationNullDecomposition.lean:240:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalFullGroundExcitationNullDecomposition.lean:246:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalFullGroundExcitationNullDecomposition.lean:252:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalFullGroundExcitationNullDecomposition.lean:258:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalFullGroundExcitationNullDecomposition.lean:264:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8352/8795] Replayed MGAP4D.MathlibAnalytic.FiniteDimensionalFullSpectralNaturalTime
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalFullSpectralNaturalTime.lean:148:41: This simp argument is unused:
+  hmn
+
+Hint: Omit it from the simp argument list.
+  simp [fullSpectralNaturalTime, hm, hn, h̵m̵n̵,̵
+  ̵ ̵ ̵ ̵ ̵D.groundCoordinates_fullSpectralNaturalTime,
+      D.excitedCoordinates_fullSpectralNaturalTime,
+  ̵  ̵ ̵ ̵D.excitedSpectralSemigroup_add]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalFullSpectralNaturalTime.lean:149:4: This simp argument is unused:
+  D.groundCoordinates_fullSpectralNaturalTime
+
+Hint: Omit it from the simp argument list.
+  simp [fullSpectralNaturalTime, hm, hn, hmn, D̵.̵g̵r̵o̵u̵n̵d̵C̵o̵o̵r̵d̵i̵n̵a̵t̵e̵s̵_̵f̵u̵l̵l̵S̵p̵e̵c̵t̵r̵a̵l̵N̵a̵t̵u̵r̵a̵l̵T̵i̵m̵e̵,̵D.excitedCoordinates_fullSpectralNaturalTime,
+      D.excitedSpectralSemigroup_add]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/FiniteDimensionalFullSpectralNaturalTime.lean:150:4: This simp argument is unused:
+  D.excitedCoordinates_fullSpectralNaturalTime
+
+Hint: Omit it from the simp argument list.
+  simp [fullSpectralNaturalTime, hm, hn, hmn, D.groundCoordinates_fullSpectralNaturalTime,
+      D̵.̵e̵x̵c̵i̵t̵e̵d̵C̵o̵o̵r̵d̵i̵n̵a̵t̵e̵s̵_̵f̵u̵l̵l̵S̵p̵e̵c̵t̵r̵a̵l̵N̵a̵t̵u̵r̵a̵l̵T̵i̵m̵e̵,̵D.excitedSpectralSemigroup_add]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [8370/9084] Replayed MGAP4D.MathlibAnalytic.FinalPhysicalHilbertCarrierCore
+warning: MGAP4D/MathlibAnalytic/FinalPhysicalHilbertCarrierCore.lean:48:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8380/9084] Replayed MGAP4D.MathlibAnalytic.ExactGapValueDerivationBoundary
+warning: MGAP4D/MathlibAnalytic/ExactGapValueDerivationBoundary.lean:39:5: unused variable `B`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8386/9084] Replayed MGAP4D.MathlibAnalytic.DoobWeightedConditionalMeasureCrossRatioComparison
+warning: MGAP4D/MathlibAnalytic/DoobWeightedConditionalMeasureCrossRatioComparison.lean:71:4: `mul_le_mul_right'` has been deprecated: Use `mul_le_mul_left` instead
+⚠ [8397/9249] Replayed MGAP4D.MathlibAnalytic.ConcreteHPhysRealizationTheorem
+warning: MGAP4D/MathlibAnalytic/ConcreteHPhysRealizationTheorem.lean:104:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8445/9249] Replayed MGAP4D.MathlibAnalytic.EuclideanYangMillsMeasureConstructionSpine
+warning: MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureConstructionSpine.lean:251:26: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/EuclideanYangMillsMeasureConstructionSpine.lean:292:4: Try `simp at hInGap` instead of `simpa using hInGap`
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8447/9249] Replayed MGAP4D.MathlibAnalytic.FiniteOrientedLatticeWilsonSystem
+warning: MGAP4D/MathlibAnalytic/FiniteOrientedLatticeWilsonSystem.lean:141:47: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [8453/9249] Replayed MGAP4D.MathlibAnalytic.CompactOrientedGaugeWilsonAlgebra
+warning: MGAP4D/MathlibAnalytic/CompactOrientedGaugeWilsonAlgebra.lean:43:47: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [8481/9249] Replayed MGAP4D.MathlibAnalytic.FiniteWilsonOSReflectionPositivity
+warning: MGAP4D/MathlibAnalytic/FiniteWilsonOSReflectionPositivity.lean:98:22: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8485/9249] Replayed MGAP4D.MathlibAnalytic.Z2FiniteLatticeWilsonSystem
+warning: MGAP4D/MathlibAnalytic/Z2FiniteLatticeWilsonSystem.lean:99:53: This simp argument is unused:
+  hsymm
+
+Hint: Omit it from the simp argument list.
+  simp [z2GaugeWilsonPlaquetteGramKernel,
+  ̵  ̵ ̵ ̵ ̵ ̵FiniteOSGramKernelOn.transport,
+  ̲  ̲ ̲ ̲ ̲ ̲z2WilsonPlaquetteGramKernel,
+  ̵  ̵ ̵ ̵ ̵ ̵z2PlaquetteGramKernel, z2PlaquetteKernel, hxy,̵ ̵h̵s̵y̵m̵m̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [8495/9249] Replayed MGAP4D.MathlibAnalytic.Z2FiniteInvolutiveEdgeOrbitAssembly
+warning: MGAP4D/MathlibAnalytic/Z2FiniteInvolutiveEdgeOrbitAssembly.lean:69:57: This simp argument is unused:
+  hlt
+
+Hint: Omit it from the simp argument list.
+  simp [finiteInvolutiveEdgeRankSide, hreflection e, hl̵t̵,̵ ̵h̵gt, heq]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/Z2FiniteInvolutiveEdgeOrbitAssembly.lean:69:62: This simp argument is unused:
+  hgt
+
+Hint: Omit it from the simp argument list.
+  simp [finiteInvolutiveEdgeRankSide, hreflection e, hlt, hg̵t̵,̵ ̵h̵eq]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [8515/9249] Replayed MGAP4D.MathlibAnalytic.FiniteWilsonOSShiftedKernelHilbertOperator
+warning: MGAP4D/MathlibAnalytic/FiniteWilsonOSShiftedKernelHilbertOperator.lean:273:2: 'change
+  0 ≤
+    inner ℝ (C.hilbertShiftContinuousLinearMap (u : UniformSpace.Completion P.OneLayerSeparated))
+      (u : UniformSpace.Completion P.OneLayerSeparated)' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+⚠ [8516/9249] Replayed MGAP4D.MathlibAnalytic.FiniteWilsonOSOneLayerIdentityTransfer
+warning: MGAP4D/MathlibAnalytic/FiniteWilsonOSOneLayerIdentityTransfer.lean:135:2: `push_neg` has been deprecated. Prefer using `push Not` instead.
+If you'd rather continue using `push_neg` in your project, you can implement it as follows:
+```
+open Lean.Parser.Tactic in
+macro "push_neg" cfg:optConfig loc:(location)? : tactic =>
+  `(tactic| push $cfg:optConfig Not $[$loc]?)
+```
+⚠ [8517/9249] Replayed MGAP4D.MathlibAnalytic.FiniteWilsonOSShiftedKernelSemigroupComparison
+warning: MGAP4D/MathlibAnalytic/FiniteWilsonOSShiftedKernelSemigroupComparison.lean:181:2: `push_neg` has been deprecated. Prefer using `push Not` instead.
+If you'd rather continue using `push_neg` in your project, you can implement it as follows:
+```
+open Lean.Parser.Tactic in
+macro "push_neg" cfg:optConfig loc:(location)? : tactic =>
+  `(tactic| push $cfg:optConfig Not $[$loc]?)
+```
+⚠ [8520/9249] Replayed MGAP4D.MathlibAnalytic.Z2FiniteLatticeWilsonPlaquetteOrbitSideClassification
+warning: MGAP4D/MathlibAnalytic/Z2FiniteLatticeWilsonPlaquetteOrbitSideClassification.lean:55:35: This simp argument is unused:
+  hlt
+
+Hint: Omit it from the simp argument list.
+  simp [FiniteInvolutivePlaquetteOrbitPartition.side,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵P.reflection_involutive p, hl̵t̵,̵ ̵h̵gt, heq]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/Z2FiniteLatticeWilsonPlaquetteOrbitSideClassification.lean:55:40: This simp argument is unused:
+  hgt
+
+Hint: Omit it from the simp argument list.
+  simp [FiniteInvolutivePlaquetteOrbitPartition.side,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵P.reflection_involutive p, hlt, hg̵t̵,̵ ̵h̵eq]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [8522/9249] Replayed MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusPlaquetteSupportReflection
+warning: MGAP4D/MathlibAnalytic/Z2FiniteEvenFourTorusPlaquetteSupportReflection.lean:115:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/Z2FiniteEvenFourTorusPlaquetteSupportReflection.lean:164:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/Z2FiniteEvenFourTorusPlaquetteSupportReflection.lean:176:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/Z2FiniteEvenFourTorusPlaquetteSupportReflection.lean:188:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8538/9249] Replayed MGAP4D.MathlibAnalytic.FiniteInvolutiveEdgeBoundaryFiberedCoordinates
+warning: MGAP4D/MathlibAnalytic/FiniteInvolutiveEdgeBoundaryFiberedCoordinates.lean:39:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/FiniteInvolutiveEdgeBoundaryFiberedCoordinates.lean:46:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/FiniteInvolutiveEdgeBoundaryFiberedCoordinates.lean:82:8: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/FiniteInvolutiveEdgeBoundaryFiberedCoordinates.lean:167:39: This simp argument is unused:
+  boundaryRestriction
+
+Hint: Omit it from the simp argument list.
+  simp [boundaryFiberedAssemble, b̵o̵u̵n̵d̵a̵r̵y̵R̵e̵s̵t̵r̵i̵c̵t̵i̵o̵n̵,̵
+  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵positiveRestriction, negativeRestriction, hside]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/FiniteInvolutiveEdgeBoundaryFiberedCoordinates.lean:168:31: This simp argument is unused:
+  negativeRestriction
+
+Hint: Omit it from the simp argument list.
+  simp [boundaryFiberedAssemble, boundaryRestriction, positiveRestriction, n̵e̵g̵a̵t̵i̵v̵e̵R̵e̵s̵t̵r̵i̵c̵t̵i̵o̵n̵,̵ ̵hside]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/FiniteInvolutiveEdgeBoundaryFiberedCoordinates.lean:170:39: This simp argument is unused:
+  boundaryRestriction
+
+Hint: Omit it from the simp argument list.
+  simp [boundaryFiberedAssemble, b̵o̵u̵n̵d̵a̵r̵y̵R̵e̵s̵t̵r̵i̵c̵t̵i̵o̵n̵,̵
+  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵positiveRestriction, negativeRestriction, hside,
+            P.reflection_involutive e]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/FiniteInvolutiveEdgeBoundaryFiberedCoordinates.lean:171:10: This simp argument is unused:
+  positiveRestriction
+
+Hint: Omit it from the simp argument list.
+  simp [boundaryFiberedAssemble, boundaryRestriction, p̵o̵s̵i̵t̵i̵v̵e̵R̵e̵s̵t̵r̵i̵c̵t̵i̵o̵n̵,̵ ̵negativeRestriction, hside,
+            P.reflection_involutive e]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/FiniteInvolutiveEdgeBoundaryFiberedCoordinates.lean:175:10: This simp argument is unused:
+  positiveRestriction
+
+Hint: Omit it from the simp argument list.
+  simp [boundaryFiberedAssemble, boundaryRestriction, p̵o̵s̵i̵t̵i̵v̵e̵R̵e̵s̵t̵r̵i̵c̵t̵i̵o̵n̵,̵ ̵negativeRestriction, hside]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/FiniteInvolutiveEdgeBoundaryFiberedCoordinates.lean:175:31: This simp argument is unused:
+  negativeRestriction
+
+Hint: Omit it from the simp argument list.
+  simp [boundaryFiberedAssemble, boundaryRestriction, positiveRestriction, n̵e̵g̵a̵t̵i̵v̵e̵R̵e̵s̵t̵r̵i̵c̵t̵i̵o̵n̵,̵ ̵hside]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [8539/9249] Replayed MGAP4D.MathlibAnalytic.FiniteInvolutiveEdgeBoundaryFiberedIndexEquiv
+warning: MGAP4D/MathlibAnalytic/FiniteInvolutiveEdgeBoundaryFiberedIndexEquiv.lean:30:8: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/FiniteInvolutiveEdgeBoundaryFiberedIndexEquiv.lean:43:14: This simp argument is unused:
+  hpos
+
+Hint: Omit it from the simp argument list.
+  simp [hp̵o̵s̵,̵ ̵h̵neg, P.reflection_involutive e]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/FiniteInvolutiveEdgeBoundaryFiberedIndexEquiv.lean:46:14: This simp argument is unused:
+  hpos
+
+Hint: Omit it from the simp argument list.
+  simp [hp̵o̵s̵,̵ ̵h̵neg, hfixed]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/FiniteInvolutiveEdgeBoundaryFiberedIndexEquiv.lean:46:20: This simp argument is unused:
+  hneg
+
+Hint: Omit it from the simp argument list.
+  simp [hpos, hn̵e̵g̵,̵ ̵h̵fixed]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [8567/9249] Replayed MGAP4D.MathlibAnalytic.FiniteOrientedLatticeWilsonConditionalNormalizedExp
+warning: MGAP4D/MathlibAnalytic/FiniteOrientedLatticeWilsonConditionalNormalizedExp.lean:48:76: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [8577/9249] Replayed MGAP4D.MathlibAnalytic.FiniteOrientedWilsonLinkExchange
+warning: MGAP4D/MathlibAnalytic/FiniteOrientedWilsonLinkExchange.lean:37:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8580/9249] Replayed MGAP4D.MathlibAnalytic.RealL2HilbertSchmidtRectangularKernelOperator
+warning: MGAP4D/MathlibAnalytic/RealL2HilbertSchmidtRectangularKernelOperator.lean:36:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/RealL2HilbertSchmidtRectangularKernelOperator.lean:49:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8581/9249] Replayed MGAP4D.MathlibAnalytic.RealL2HilbertSchmidtSeparableKernelOperator
+warning: MGAP4D/MathlibAnalytic/RealL2HilbertSchmidtSeparableKernelOperator.lean:21:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8591/9319] Replayed MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonNormalizedActionBound
+warning: MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonNormalizedActionBound.lean:34:17: This simp argument is unused:
+  Pi.zero_apply
+
+Hint: Omit it from the simp argument list.
+  simp only [̵P̵i̵.̵z̵e̵r̵o̵_̵a̵p̵p̵l̵y̵,̵ ̵a̵d̵d̵_̵z̵e̵r̵o̵]̵[̲a̲d̲d̲_̲z̲e̲r̲o̲]̲
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [8598/9319] Replayed MGAP4D.MathlibAnalytic.SpecialUnitaryTopologicalCompactReceipts
+warning: MGAP4D/MathlibAnalytic/SpecialUnitaryTopologicalCompactReceipts.lean:14:0: Definition `MGAP4D.MathlibAnalytic.specialUnitaryGroupIsTopologicalGroup` of class type must be marked with `@[reducible]` or `@[implicit_reducible]`
+warning: MGAP4D/MathlibAnalytic/SpecialUnitaryTopologicalCompactReceipts.lean:66:0: Definition `MGAP4D.MathlibAnalytic.specialUnitaryGroupCompactSpace` of class type must be marked with `@[reducible]` or `@[implicit_reducible]`
+⚠ [8619/9319] Replayed MGAP4D.MathlibAnalytic.SpecialUnitaryWilsonKernelPositiveSemidefinite
+warning: MGAP4D/MathlibAnalytic/SpecialUnitaryWilsonKernelPositiveSemidefinite.lean:34:8: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8629/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryOneSlabHaarL2TransferPositive
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryOneSlabHaarL2TransferPositive.lean:278:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8630/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryOneSlabHaarL2TransferFactorization
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryOneSlabHaarL2TransferFactorization.lean:138:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8638/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferStrictlyPositiveTopEigenvector
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferStrictlyPositiveTopEigenvector.lean:314:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8659/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateDoobEightColorDefect
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateDoobEightColorDefect.lean:259:5: unused variable `heta0`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8661/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonVacuumL2Transport
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonVacuumL2Transport.lean:196:14: This simp argument is unused:
+  Real.norm_eq_abs
+
+Hint: Omit it from the simp argument list.
+  simp [̵R̵e̵a̵l̵.̵n̵o̵r̵m̵_̵e̵q̵_̵a̵b̵s̵,̵ ̵s̵q̵_̵a̵b̵s̵]̵[̲s̲q̲_̲a̲b̲s̲]̲
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [8663/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateDoobPhysicalDefect
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateDoobPhysicalDefect.lean:188:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateDoobPhysicalDefect.lean:182:32: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateDoobPhysicalDefect.lean:182:32: 'ring' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+⚠ [8674/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryOneSlabSameColorRemoteLocalFactorCancellation
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryOneSlabSameColorRemoteLocalFactorCancellation.lean:40:17: This simp argument is unused:
+  Ne.symm hne
+
+Hint: Omit it from the simp argument list.
+  simp [hne,̵ ̵N̵e̵.̵s̵y̵m̵m̵ ̵h̵n̵e̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryOneSlabSameColorRemoteLocalFactorCancellation.lean:43:14: This simp argument is unused:
+  hne
+
+Hint: Omit it from the simp argument list.
+  simp [h̵n̵e̵,̵ ̵Ne.symm hne]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryOneSlabSameColorRemoteLocalFactorCancellation.lean:51:17: This simp argument is unused:
+  Ne.symm hne
+
+Hint: Omit it from the simp argument list.
+  simp [hne,̵ ̵N̵e̵.̵s̵y̵m̵m̵ ̵h̵n̵e̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryOneSlabSameColorRemoteLocalFactorCancellation.lean:54:14: This simp argument is unused:
+  hne
+
+Hint: Omit it from the simp argument list.
+  simp [h̵n̵e̵,̵ ̵Ne.symm hne]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [8678/9319] Replayed MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusPlaquetteSupportCompatibility
+warning: MGAP4D/MathlibAnalytic/Z2FiniteEvenFourTorusPlaquetteSupportCompatibility.lean:51:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/Z2FiniteEvenFourTorusPlaquetteSupportCompatibility.lean:61:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/Z2FiniteEvenFourTorusPlaquetteSupportCompatibility.lean:96:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/Z2FiniteEvenFourTorusPlaquetteSupportCompatibility.lean:113:6: This simp argument is unused:
+  finiteFourTorusStep_sub_timeStep_cancel
+
+Hint: Omit it from the simp argument list.
+  simp [finiteFourTorusPlaquetteVertices,
+  ̵  ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteCorner00,
+        finiteFourTorusPlaquetteCorner10,
+  ̵  ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteCorner11,
+        finiteFourTorusPlaquetteCorner01,
+  ̵  ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteBase,
+        finiteFourTorusPlaquetteFirstDirection,
+  ̵  ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteSecondDirection,
+        finiteEvenFourTorusPlaquetteReflectedVertices,
+  ̵  ̵ ̵ ̵ ̵ ̵finiteEvenFourTorusReflectVertexSupport,
+        finiteEvenFourTorusPlaquetteReflection,
+  ̵  ̵ ̵ ̵ ̵ ̵finiteEvenFourTorusReflectedPlaquetteBase,
+        finiteEvenFourTorusPlaquetteHasTimeDirection,
+  ̵  ̵ ̵ ̵ ̵ ̵hν,
+        finiteEvenFourTorusTimeReflection_step_spatial,
+  ̵  ̵ ̵ ̵ ̵ ̵finiteEvenFourTorusTimeReflection_step_time,
+        finiteFourTorusStep_s̵u̵b̵_̵timeS̵t̵e̵p̵_c̵a̵n̵c̵e̵l̵,̵
+  ̵ ̵ ̵ ̵ ̵ ̵ ̵f̵i̵n̵i̵t̵e̵F̵o̵u̵r̵T̵o̵r̵u̵sS̵t̵e̵p̵_̵t̵i̵m̵e̵_̵s̵ub_timeStep_cancel,
+  ̵  ̵ ̵ ̵ ̵ ̵finiteFourTorusStep_sub_timeStep,
+        finiteFourTorusStep_comm,
+  ̵  ̵ ̵ ̵ ̵ ̵or_assoc, or_left_comm, or_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/Z2FiniteEvenFourTorusPlaquetteSupportCompatibility.lean:117:6: This simp argument is unused:
+  or_assoc
+
+Hint: Omit it from the simp argument list.
+  simp [finiteFourTorusPlaquetteVertices,
+  ̵  ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteCorner00,
+        finiteFourTorusPlaquetteCorner10,
+  ̵  ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteCorner11,
+        finiteFourTorusPlaquetteCorner01,
+  ̵  ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteBase,
+        finiteFourTorusPlaquetteFirstDirection,
+  ̵  ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteSecondDirection,
+        finiteEvenFourTorusPlaquetteReflectedVertices,
+  ̵  ̵ ̵ ̵ ̵ ̵finiteEvenFourTorusReflectVertexSupport,
+        finiteEvenFourTorusPlaquetteReflection,
+  ̵  ̵ ̵ ̵ ̵ ̵finiteEvenFourTorusReflectedPlaquetteBase,
+        finiteEvenFourTorusPlaquetteHasTimeDirection,
+  ̵  ̵ ̵ ̵ ̵ ̵hν,
+        finiteEvenFourTorusTimeReflection_step_spatial,
+  ̵  ̵ ̵ ̵ ̵ ̵finiteEvenFourTorusTimeReflection_step_time,
+        finiteFourTorusStep_sub_timeStep_cancel,
+  ̵  ̵ ̵ ̵ ̵ ̵finiteFourTorusStep_time_sub_timeStep_cancel,
+        finiteFourTorusStep_sub_timeStep,
+  ̵  ̵ ̵ ̵ ̵ ̵finiteFourTorusStep_comm,
+  ̵  ̵ ̵ ̵ ̵ ̵or_a̵s̵s̵o̵c̵,̵ ̵o̵r̵_̵left_comm, or_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/Z2FiniteEvenFourTorusPlaquetteSupportCompatibility.lean:136:8: This simp argument is unused:
+  finiteFourTorusStep_sub_timeStep_cancel
+
+Hint: Omit it from the simp argument list.
+  simp [finiteFourTorusPlaquetteVertices,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteCorner00,
+          finiteFourTorusPlaquetteCorner10,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteCorner11,
+          finiteFourTorusPlaquetteCorner01,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteBase,
+          finiteFourTorusPlaquetteFirstDirection,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteSecondDirection,
+          finiteEvenFourTorusPlaquetteReflectedVertices,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteEvenFourTorusReflectVertexSupport,
+          finiteEvenFourTorusPlaquetteReflection,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteEvenFourTorusReflectedPlaquetteBase,
+          finiteEvenFourTorusPlaquetteHasTimeDirection,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵hμ,
+          finiteEvenFourTorusTimeReflection_step_spatial,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteEvenFourTorusTimeReflection_step_time,
+          finiteFourTorusStep_s̵u̵b̵_̵timeS̵t̵e̵p̵_c̵a̵n̵c̵e̵l̵,̵
+  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵f̵i̵n̵i̵t̵e̵F̵o̵u̵r̵T̵o̵r̵u̵sS̵t̵e̵p̵_̵t̵i̵m̵e̵_̵s̵ub_timeStep_cancel,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusStep_sub_timeStep,
+          finiteFourTorusStep_comm,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵or_assoc, or_left_comm, or_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/Z2FiniteEvenFourTorusPlaquetteSupportCompatibility.lean:139:8: This simp argument is unused:
+  finiteFourTorusStep_comm
+
+Hint: Omit it from the simp argument list.
+  simp [finiteFourTorusPlaquetteVertices,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteCorner00,
+          finiteFourTorusPlaquetteCorner10,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteCorner11,
+          finiteFourTorusPlaquetteCorner01,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteBase,
+          finiteFourTorusPlaquetteFirstDirection,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteSecondDirection,
+          finiteEvenFourTorusPlaquetteReflectedVertices,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteEvenFourTorusReflectVertexSupport,
+          finiteEvenFourTorusPlaquetteReflection,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteEvenFourTorusReflectedPlaquetteBase,
+          finiteEvenFourTorusPlaquetteHasTimeDirection,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵hμ,
+          finiteEvenFourTorusTimeReflection_step_spatial,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteEvenFourTorusTimeReflection_step_time,
+          finiteFourTorusStep_sub_timeStep_cancel,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusStep_time_sub_timeStep_cancel,
+          finiteFourTorusStep_sub_timeStep,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵f̵i̵n̵i̵t̵e̵F̵ou̵rT̵o̵r̵u̵s̵S̵t̵e̵p̵_c̵o̵m̵m̵,̵
+  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵o̵r̵_̵assoc, or_left_comm, or_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/Z2FiniteEvenFourTorusPlaquetteSupportCompatibility.lean:156:8: This simp argument is unused:
+  finiteFourTorusStep_comm
+
+Hint: Omit it from the simp argument list.
+  simp [finiteFourTorusPlaquetteVertices,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteCorner00,
+         ̵ ̵finiteFourTorusPlaquetteCorner10,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteCorner11,
+         ̵ ̵finiteFourTorusPlaquetteCorner01,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteBase,
+         ̵ ̵finiteFourTorusPlaquetteFirstDirection,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteSecondDirection,
+         ̵ ̵finiteEvenFourTorusPlaquetteReflectedVertices,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteEvenFourTorusReflectVertexSupport,
+         ̵ ̵finiteEvenFourTorusPlaquetteReflection,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteEvenFourTorusReflectedPlaquetteBase,
+         ̵ ̵finiteEvenFourTorusPlaquetteHasTimeDirection,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵hμ, hν,
+         ̵ ̵finiteEvenFourTorusTimeReflection_step_spatial,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵f̵i̵n̵i̵t̵e̵F̵ou̵rT̵o̵r̵u̵s̵S̵t̵e̵p̵_c̵o̵m̵m̵,̵
+  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵o̵r̵_̵assoc, or_left_comm, or_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/Z2FiniteEvenFourTorusPlaquetteSupportCompatibility.lean:157:8: This simp argument is unused:
+  or_assoc
+
+Hint: Omit it from the simp argument list.
+  simp [finiteFourTorusPlaquetteVertices,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteCorner00,
+         ̵ ̵finiteFourTorusPlaquetteCorner10,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteCorner11,
+         ̵ ̵finiteFourTorusPlaquetteCorner01,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteBase,
+         ̵ ̵finiteFourTorusPlaquetteFirstDirection,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteSecondDirection,
+         ̵ ̵finiteEvenFourTorusPlaquetteReflectedVertices,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteEvenFourTorusReflectVertexSupport,
+         ̵ ̵finiteEvenFourTorusPlaquetteReflection,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteEvenFourTorusReflectedPlaquetteBase,
+         ̵ ̵finiteEvenFourTorusPlaquetteHasTimeDirection,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵hμ, hν,
+         ̵ ̵finiteEvenFourTorusTimeReflection_step_spatial,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusStep_comm,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵or_a̵s̵s̵o̵c̵,̵ ̵o̵r̵_̵left_comm,
+  ̲  ̲ ̲ ̲ ̲ ̲or_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/Z2FiniteEvenFourTorusPlaquetteSupportCompatibility.lean:157:18: This simp argument is unused:
+  or_left_comm
+
+Hint: Omit it from the simp argument list.
+  simp [finiteFourTorusPlaquetteVertices,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteCorner00,
+         ̵ ̵finiteFourTorusPlaquetteCorner10,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteCorner11,
+         ̵ ̵finiteFourTorusPlaquetteCorner01,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteBase,
+         ̵ ̵finiteFourTorusPlaquetteFirstDirection,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusPlaquetteSecondDirection,
+         ̵ ̵finiteEvenFourTorusPlaquetteReflectedVertices,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteEvenFourTorusReflectVertexSupport,
+         ̵ ̵finiteEvenFourTorusPlaquetteReflection,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteEvenFourTorusReflectedPlaquetteBase,
+         ̵ ̵finiteEvenFourTorusPlaquetteHasTimeDirection,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵hμ, hν,
+         ̵ ̵finiteEvenFourTorusTimeReflection_step_spatial,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵finiteFourTorusStep_comm,
+  ̵  ̵ ̵ ̵ ̵ ̵ ̵ ̵or_assoc, or_l̵e̵f̵t̵_̵comm,̵ ̵o̵r̵_̵c̵o̵m̵m̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [8686/9319] Replayed MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusResidualGaugeOneSlabKernelInvariance
+warning: MGAP4D/MathlibAnalytic/Z2FiniteEvenFourTorusResidualGaugeOneSlabKernelInvariance.lean:18:8: This simp argument is unused:
+  finiteEvenFourTorusZ2ResidualSliceGaugeTransform
+
+Hint: Omit it from the simp argument list.
+  simp [̵f̵i̵n̵i̵t̵e̵E̵v̵e̵n̵F̵o̵u̵r̵T̵o̵r̵u̵s̵Z̵2̵R̵e̵s̵i̵d̵u̵a̵l̵S̵l̵i̵c̵e̵G̵a̵u̵g̵e̵T̵r̵a̵n̵s̵f̵o̵r̵m̵,̵
+  ̵ ̵ ̵ ̵ ̵m̵u̵l̵_̵a̵s̵s̵o̵c̵,̵[̲m̲u̲l̲_̲a̲s̲s̲o̲c̲,̲ mul_comm, mul_left_comm]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/Z2FiniteEvenFourTorusResidualGaugeOneSlabKernelInvariance.lean:83:10: unused variable `B`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8690/9319] Replayed MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusGaussProjectedOneSlabNontriviality
+warning: MGAP4D/MathlibAnalytic/Z2FiniteEvenFourTorusGaussProjectedOneSlabNontriviality.lean:98:40: This simp argument is unused:
+  mul_assoc
+
+Hint: Omit it from the simp argument list.
+  simp [mul_smul,̵ ̵m̵u̵l̵_̵a̵s̵s̵o̵c̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [8692/9319] Replayed MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusUnfixedGaugeOneSlabKernel
+warning: MGAP4D/MathlibAnalytic/Z2FiniteEvenFourTorusUnfixedGaugeOneSlabKernel.lean:16:5: unused variable `hβ`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: MGAP4D/MathlibAnalytic/Z2FiniteEvenFourTorusUnfixedGaugeOneSlabKernel.lean:17:5: unused variable `hEnergy`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8695/9319] Replayed MGAP4D.MathlibAnalytic.Z2FiniteEvenFourTorusUnfixedGaugeSpectralResolution
+warning: MGAP4D/MathlibAnalytic/Z2FiniteEvenFourTorusUnfixedGaugeSpectralResolution.lean:111:2: Try `simp at hpos` instead of `simpa using hpos`
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8705/9319] Replayed MGAP4D.MathlibAnalytic.Z2WilsonTemporalCrossingUniformConstants
+warning: MGAP4D/MathlibAnalytic/Z2WilsonTemporalCrossingUniformConstants.lean:58:5: unused variable `hβ`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: MGAP4D/MathlibAnalytic/Z2WilsonTemporalCrossingUniformConstants.lean:59:5: unused variable `hEnergy`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8708/9319] Replayed MGAP4D.MathlibAnalytic.FiniteZ2GaugeProductKernelLikelihoodRatio
+warning: MGAP4D/MathlibAnalytic/FiniteZ2GaugeProductKernelLikelihoodRatio.lean:133:21: This simp argument is unused:
+  if_pos rfl
+
+Hint: Omit it from the simp argument list.
+  simp only [̵i̵f̵_̵p̵o̵s̵ ̵r̵f̵l̵,̵ ̵f̵i̵n̵i̵t̵e̵Z̵2̵G̵a̵u̵g̵e̵R̵e̵p̵l̵a̵c̵e̵C̵o̵o̵r̵d̵i̵n̵a̵t̵e̵_̵s̵a̵m̵e̵]̵[̲f̲i̲n̲i̲t̲e̲Z̲2̲G̲a̲u̲g̲e̲R̲e̲p̲l̲a̲c̲e̲C̲o̲o̲r̲d̲i̲n̲a̲t̲e̲_̲s̲a̲m̲e̲]̲
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [8738/9319] Replayed MGAP4D.MathlibAnalytic.FiniteWilsonOSAutomaticExactGapVacuumOrthogonalCoerciveTransferOrbitContraction
+warning: MGAP4D/MathlibAnalytic/FiniteWilsonOSAutomaticExactGapVacuumOrthogonalCoerciveTransferOrbitContraction.lean:74:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/FiniteWilsonOSAutomaticExactGapVacuumOrthogonalCoerciveTransferOrbitContraction.lean:79:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8739/9319] Replayed MGAP4D.MathlibAnalytic.FiniteWilsonVacuumOrthogonalInvariance
+warning: MGAP4D/MathlibAnalytic/FiniteWilsonVacuumOrthogonalInvariance.lean:27:5: unused variable `hx`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8740/9319] Replayed MGAP4D.MathlibAnalytic.FinitePositiveWeightHilbertRealization
+warning: MGAP4D/MathlibAnalytic/FinitePositiveWeightHilbertRealization.lean:183:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8742/9319] Replayed MGAP4D.MathlibAnalytic.FinitePositiveWeightStationaryRandomScanComparisonIteration
+warning: MGAP4D/MathlibAnalytic/FinitePositiveWeightStationaryRandomScanComparisonIteration.lean:72:5: unused variable `C`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+ℹ [8745/9319] Replayed MGAP4D.MathlibAnalytic.FinitePositiveWeightStationaryRandomScanComparisonGeometricResidual
+info: MGAP4D/MathlibAnalytic/FinitePositiveWeightStationaryRandomScanComparisonGeometricResidual.lean:142:10: Try this:
+  [apply] ring_nf
+  
+  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.
+    
+  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.
+⚠ [8746/9319] Replayed MGAP4D.MathlibAnalytic.FinitePositiveWeightNonstrictStationaryResponse
+warning: MGAP4D/MathlibAnalytic/FinitePositiveWeightNonstrictStationaryResponse.lean:352:5: unused variable `C`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8747/9319] Replayed MGAP4D.MathlibAnalytic.FinitePositiveWeightReciprocalInfluenceKernelResponse
+warning: MGAP4D/MathlibAnalytic/FinitePositiveWeightReciprocalInfluenceKernelResponse.lean:236:5: unused variable `hColumnNonneg`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: MGAP4D/MathlibAnalytic/FinitePositiveWeightReciprocalInfluenceKernelResponse.lean:241:5: unused variable `hVariationNonneg`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8751/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumGroundStateOneLinkNormalizedVariance
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumGroundStateOneLinkNormalizedVariance.lean:98:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumGroundStateOneLinkNormalizedVariance.lean:130:6: `mul_le_mul_left'` has been deprecated: Use `mul_le_mul_right` instead
+⚠ [8752/9319] Replayed MGAP4D.MathlibAnalytic.SpecialUnitaryCompactOrientedSharedPlaquetteOscillation
+warning: MGAP4D/MathlibAnalytic/SpecialUnitaryCompactOrientedSharedPlaquetteOscillation.lean:241:5: unused variable `hEnergyBound_nonneg`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8761/9319] Replayed MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHeatBathCommutation
+warning: MGAP4D/MathlibAnalytic/ContinuousCompactOrientedGaugeWilsonHeatBathCommutation.lean:56:5: unused variable `hNe`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8787/9319] Replayed MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonDobrushinPoincareL2
+warning: MGAP4D/MathlibAnalytic/ContinuousCompactOrientedGaugeWilsonDobrushinPoincareL2.lean:148:2: 'change
+  continuousCompactOrientedDobrushinHeatBathGap D.coefficient * ‖q‖ ^ 2 ≤
+    (Fintype.card C.base.geometry.Edge : ℝ) * ‖q‖ ^ 2 - inner ℝ (C.heatBathProjectionSumL2 q) q' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+⚠ [8798/9319] Replayed MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHeatBathPairing
+warning: MGAP4D/MathlibAnalytic/ContinuousCompactOrientedGaugeWilsonHeatBathPairing.lean:41:5: unused variable `hMg0`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8799/9319] Replayed MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHeatBathSetIntegral
+warning: MGAP4D/MathlibAnalytic/ContinuousCompactOrientedGaugeWilsonHeatBathSetIntegral.lean:92:15: This simp argument is unused:
+  Set.indicator
+
+Hint: Omit it from the simp argument list.
+  simp [g, S̵e̵t̵.̵i̵n̵d̵i̵c̵a̵t̵o̵r̵,̵ ̵hA]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/ContinuousCompactOrientedGaugeWilsonHeatBathSetIntegral.lean:93:15: This simp argument is unused:
+  Set.indicator
+
+Hint: Omit it from the simp argument list.
+  simp [g, S̵e̵t̵.̵i̵n̵d̵i̵c̵a̵t̵o̵r̵,̵ ̵hA]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [8801/9319] Replayed MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHeatBathCondExpL2
+warning: MGAP4D/MathlibAnalytic/ContinuousCompactOrientedGaugeWilsonHeatBathCondExpL2.lean:36:5: unused variable `hM0`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8807/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopEigenspaceContraction
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopEigenspaceContraction.lean:180:4: `push_neg` has been deprecated. Prefer using `push Not` instead.
+If you'd rather continue using `push_neg` in your project, you can implement it as follows:
+```
+open Lean.Parser.Tactic in
+macro "push_neg" cfg:optConfig loc:(location)? : tactic =>
+  `(tactic| push $cfg:optConfig Not $[$loc]?)
+```
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopEigenspaceContraction.lean:219:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8811/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenEightColorHeatBathProjectionSweepL2
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenEightColorHeatBathProjectionSweepL2.lean:40:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8818/9319] Replayed MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonConditionalOverlapCoupling
+warning: MGAP4D/MathlibAnalytic/ContinuousCompactOrientedGaugeWilsonConditionalOverlapCoupling.lean:354:8: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/ContinuousCompactOrientedGaugeWilsonConditionalOverlapCoupling.lean:411:8: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8820/9319] Replayed MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonConditionalResidualWeightedInfluence
+warning: MGAP4D/MathlibAnalytic/ContinuousCompactOrientedGaugeWilsonConditionalResidualWeightedInfluence.lean:205:8: `mul_le_mul_left'` has been deprecated: Use `mul_le_mul_right` instead
+⚠ [8841/9319] Replayed MGAP4D.MathlibAnalytic.DoobWeightedConditionalMeasureCrossRatioInfluenceMajorant
+warning: MGAP4D/MathlibAnalytic/DoobWeightedConditionalMeasureCrossRatioInfluenceMajorant.lean:140:16: `mul_le_mul_right'` has been deprecated: Use `mul_le_mul_left` instead
+warning: MGAP4D/MathlibAnalytic/DoobWeightedConditionalMeasureCrossRatioInfluenceMajorant.lean:141:13: `mul_le_mul_right'` has been deprecated: Use `mul_le_mul_left` instead
+warning: MGAP4D/MathlibAnalytic/DoobWeightedConditionalMeasureCrossRatioInfluenceMajorant.lean:160:6: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [8842/9319] Replayed MGAP4D.MathlibAnalytic.DoobWeightedConditionalMeasureCrossRatioCenteredRMS
+warning: MGAP4D/MathlibAnalytic/DoobWeightedConditionalMeasureCrossRatioCenteredRMS.lean:334:10: `mul_le_mul_right'` has been deprecated: Use `mul_le_mul_left` instead
+warning: MGAP4D/MathlibAnalytic/DoobWeightedConditionalMeasureCrossRatioCenteredRMS.lean:335:13: `mul_le_mul_right'` has been deprecated: Use `mul_le_mul_left` instead
+warning: MGAP4D/MathlibAnalytic/DoobWeightedConditionalMeasureCrossRatioCenteredRMS.lean:402:4: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [8880/9319] Replayed MGAP4D.MathlibAnalytic.FiniteOrientedLatticeWilsonRandomScanGreenResolvent
+warning: MGAP4D/MathlibAnalytic/FiniteOrientedLatticeWilsonRandomScanGreenResolvent.lean:237:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8889/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumTopRayUniqueness
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumTopRayUniqueness.lean:87:4: 'change 0 ≤ u x' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumTopRayUniqueness.lean:423:4: 'change c * p.1 B - g.1 B = h.1 B' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+⚠ [8894/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopSpectralProjection
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopSpectralProjection.lean:57:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopSpectralProjection.lean:69:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopSpectralProjection.lean:138:51: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopSpectralProjection.lean:217:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTopSpectralProjection.lean:244:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8895/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferRealSpectrumIsolation
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferRealSpectrumIsolation.lean:108:21: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8897/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransfer
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransfer.lean:367:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransfer.lean:423:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8899/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferSpectrumIsolation
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferSpectrumIsolation.lean:143:9: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferSpectrumIsolation.lean:156:21: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8900/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTopSpectralProjection
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTopSpectralProjection.lean:370:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTopSpectralProjection.lean:447:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTopSpectralProjection.lean:454:8: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTopSpectralProjection.lean:485:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8901/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTopCFCProjection
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTopCFCProjection.lean:279:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTopCFCProjection.lean:282:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTopCFCProjection.lean:328:21: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8902/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalCenteredTransferConvergence
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalCenteredTransferConvergence.lean:48:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalCenteredTransferConvergence.lean:62:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalCenteredTransferConvergence.lean:67:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalCenteredTransferConvergence.lean:75:8: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8904/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferTopRayUniqueness
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferTopRayUniqueness.lean:160:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferTopRayUniqueness.lean:188:15: This simp argument is unused:
+  OmegaC
+
+Hint: Omit it from the simp argument list.
+  simp [c, O̵m̵e̵g̵a̵C̵,̵ ̵Omega, ha]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferTopRayUniqueness.lean:190:15: This simp argument is unused:
+  OmegaC
+
+Hint: Omit it from the simp argument list.
+  simp [c, O̵m̵e̵g̵a̵C̵,̵ ̵Omega, hb]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [8905/9319] Replayed MGAP4D.MathlibAnalytic.FiniteInfluenceKernelRestrictedTargetRandomScanGeometricResidual
+warning: MGAP4D/MathlibAnalytic/FiniteInfluenceKernelRestrictedTargetRandomScanGeometricResidual.lean:55:6: This simp argument is unused:
+  finiteInfluenceKernelSumLeftRestriction
+
+Hint: Omit it from the simp argument list.
+  simp [finiteInfluenceKernelUpdatedVariation,̵
+  ̵ ̵ ̵ ̵ ̵ ̵ ̵f̵i̵n̵i̵t̵e̵I̵n̵f̵l̵u̵e̵n̵c̵e̵K̵e̵r̵n̵e̵l̵S̵u̵m̵L̵e̵f̵t̵R̵e̵s̵t̵r̵i̵c̵t̵i̵o̵n̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [8906/9319] Replayed MGAP4D.MathlibAnalytic.FinitePositiveWeightBidirectionalInfluenceKernelResponse
+warning: MGAP4D/MathlibAnalytic/FinitePositiveWeightBidirectionalInfluenceKernelResponse.lean:57:5: unused variable `hCard`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: MGAP4D/MathlibAnalytic/FinitePositiveWeightBidirectionalInfluenceKernelResponse.lean:59:5: unused variable `hRowNonneg`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [8909/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryOneSlabBetaZeroRankOne
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryOneSlabBetaZeroRankOne.lean:82:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8912/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroCanonicalVacuum
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroCanonicalVacuum.lean:167:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8913/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroGroundStateProductHaar
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroGroundStateProductHaar.lean:91:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8915/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroGroundStatePhysicalPairHaarOrthogonalBridge
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroGroundStatePhysicalPairHaarOrthogonalBridge.lean:290:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8925/9319] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateSixSpatialMeanProjectionGap
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateSixSpatialMeanProjectionGap.lean:160:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8941/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateJointOneLinkSplitMarkovDisintegration
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateJointOneLinkSplitMarkovDisintegration.lean:113:4: Try `simp at huniv` instead of `simpa using huniv`
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateJointOneLinkSplitMarkovDisintegration.lean:225:4: Try `simp at huniv` instead of `simpa using huniv`
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8953/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumSameColorSourceRatioLocalization
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumSameColorSourceRatioLocalization.lean:57:29: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [8955/9497] Replayed MGAP4D.MathlibAnalytic.RealIntegralWeightedProbabilityNormalization
+warning: MGAP4D/MathlibAnalytic/RealIntegralWeightedProbabilityNormalization.lean:119:10: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: MGAP4D/MathlibAnalytic/RealIntegralWeightedProbabilityNormalization.lean:119:10: 'ring' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+warning: MGAP4D/MathlibAnalytic/RealIntegralWeightedProbabilityNormalization.lean:150:6: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: MGAP4D/MathlibAnalytic/RealIntegralWeightedProbabilityNormalization.lean:150:6: 'ring' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+⚠ [8957/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceSourceChangeCovariance
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceSourceChangeCovariance.lean:46:6: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceSourceChangeCovariance.lean:46:6: 'ring' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+⚠ [8960/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceTwoSourceChangeCrossRatio
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceTwoSourceChangeCrossRatio.lean:85:6: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceTwoSourceChangeCrossRatio.lean:85:6: 'ring' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+⚠ [8983/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceDistinctFiberOffTargetHarnack
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceDistinctFiberOffTargetHarnack.lean:34:4: This simp argument is unused:
+  hBackgroundTarget
+
+Hint: Omit it from the simp argument list.
+  simp [̵
+  ̵ ̵ ̵ ̵ ̵p̵e̵r̵i̵o̵d̵i̵c̵H̵y̵p̵e̵r̵c̵u̵b̵i̵c̵E̵v̵e̵n̵S̵p̵e̵c̵i̵a̵l̵U̵n̵i̵t̵a̵r̵y̵T̵e̵m̵p̵o̵r̵a̵l̵G̵a̵u̵g̵e̵O̵n̵e̵S̵l̵a̵b̵R̵i̵g̵h̵t̵T̵a̵r̵g̵e̵t̵L̵o̵c̵a̵l̵F̵a̵c̵t̵o̵r̵,̵
+  ̵ ̵ ̵ ̵ ̵h̵B̵a̵c̵k̵g̵r̵o̵u̵n̵d̵T̵a̵r̵g̵e̵t̵,̵[̲p̲e̲r̲i̲o̲d̲i̲c̲H̲y̲p̲e̲r̲c̲u̲b̲i̲c̲E̲v̲e̲n̲S̲p̲e̲c̲i̲a̲l̲U̲n̲i̲t̲a̲r̲y̲T̲e̲m̲p̲o̲r̲a̲l̲G̲a̲u̲g̲e̲O̲n̲e̲S̲l̲a̲b̲R̲i̲g̲h̲t̲T̲a̲r̲g̲e̲t̲L̲o̲c̲a̲l̲F̲a̲c̲t̲o̲r̲,̲
+  ̲  ̲ ̲ ̲Ne.symm hBackgroundTarget]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [8985/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumRemoteNoShareCovarianceLocalization
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumRemoteNoShareCovarianceLocalization.lean:260:31: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [8989/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateKernelSectionMarkovFubini
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateKernelSectionMarkovFubini.lean:283:4: Try `simp at huniv` instead of `simpa using huniv`
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [8995/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointKernelSectionMeasureDisintegration
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointKernelSectionMeasureDisintegration.lean:107:6: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointKernelSectionMeasureDisintegration.lean:107:6: 'ring' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+⚠ [8996/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumGroundStateOneLinkAEFiberCompatibility
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumGroundStateOneLinkAEFiberCompatibility.lean:201:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumGroundStateOneLinkAEFiberCompatibility.lean:230:15: This simp argument is unused:
+  Prod.fst
+
+Hint: Omit it from the simp argument list.
+  simp only [̵P̵r̵o̵d̵.̵f̵s̵t̵,̵ ̵P̵r̵o̵d̵.̵s̵n̵d̵]̵[̲P̲r̲o̲d̲.̲s̲n̲d̲]̲
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumGroundStateOneLinkAEFiberCompatibility.lean:230:25: This simp argument is unused:
+  Prod.snd
+
+Hint: Omit it from the simp argument list.
+  simp only [Prod.fst,̵ ̵P̵r̵o̵d̵.̵s̵n̵d̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [9004/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointOneLinkIntegratedVariance
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointOneLinkIntegratedVariance.lean:117:8: `mul_le_mul_left'` has been deprecated: Use `mul_le_mul_right` instead
+⚠ [9005/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointOneLinkCenteredResidual
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointOneLinkCenteredResidual.lean:253:8: `mul_le_mul_left'` has been deprecated: Use `mul_le_mul_right` instead
+⚠ [9081/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceFixedRightTargetRatioResponse
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceFixedRightTargetRatioResponse.lean:201:21: This simp argument is unused:
+  Ne.symm hne
+
+Hint: Omit it from the simp argument list.
+  simp [B₂, hne,̵ ̵N̵e̵.̵s̵y̵m̵m̵ ̵h̵n̵e̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceFixedRightTargetRatioResponse.lean:204:18: This simp argument is unused:
+  hne
+
+Hint: Omit it from the simp argument list.
+  simp [B₂, h̵n̵e̵,̵ ̵Ne.symm hne]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceFixedRightTargetRatioResponse.lean:212:21: This simp argument is unused:
+  Ne.symm hne
+
+Hint: Omit it from the simp argument list.
+  simp [B₂, hne,̵ ̵N̵e̵.̵s̵y̵m̵m̵ ̵h̵n̵e̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceFixedRightTargetRatioResponse.lean:215:18: This simp argument is unused:
+  hne
+
+Hint: Omit it from the simp argument list.
+  simp [B₂, h̵n̵e̵,̵ ̵Ne.symm hne]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [9084/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceFixedRightTargetRatioOneStepRemoteLeftTransport
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceFixedRightTargetRatioOneStepRemoteLeftTransport.lean:59:29: This simp argument is unused:
+  hFiberSource
+
+Hint: Omit it from the simp argument list.
+  simp [
+  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceCrossBoundaryOneWayTaggedLeftVariation,
+          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferenceFixedRightTargetRatioVariation,
+          Ne.symm hne, hFiber,̵ ̵h̵F̵i̵b̵e̵r̵S̵o̵u̵r̵c̵e̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [9086/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceFixedRightTargetRatioTwoStepRemoteColumn
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceFixedRightTargetRatioTwoStepRemoteColumn.lean:94:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [9099/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpatialSliceActiveNeighborResidualColumnBound
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpatialSliceActiveNeighborResidualColumnBound.lean:31:5: unused variable `hResidualNonneg`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [9109/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferRieszProjectorBetaContinuity
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferRieszProjectorBetaContinuity.lean:339:10: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferRieszProjectorBetaContinuity.lean:339:10: 'ring' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+⚠ [9110/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferFixedContourRieszIdempotence
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferFixedContourRieszIdempotence.lean:172:10: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferFixedContourRieszIdempotence.lean:287:2: Try `simp at hinter` instead of `simpa using hinter`
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [9112/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferFixedContourTopAbsorption
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryComplexPhysicalTransferFixedContourTopAbsorption.lean:275:12: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [9123/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceHaarRefreshScheduleMinorization
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceHaarRefreshScheduleMinorization.lean:157:16: `mul_le_mul_left'` has been deprecated: Use `mul_le_mul_right` instead
+⚠ [9125/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceRestrictedRandomScanKernel
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceRestrictedRandomScanKernel.lean:163:33: This simp argument is unused:
+  MeasurableSet.univ
+
+Hint: Omit it from the simp argument list.
+  simp only [Measure.smul_apply, M̵e̵a̵s̵u̵r̵a̵b̵l̵e̵S̵e̵t̵.̵u̵n̵i̵v̵,̵
+  ̵ ̵ ̵ ̵ ̵Finset.sum_apply, Measure.finset_sum_apply, measure_univ]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceRestrictedRandomScanKernel.lean:164:4: This simp argument is unused:
+  Finset.sum_apply
+
+Hint: Omit it from the simp argument list.
+  simp only [Measure.smul_apply, MeasurableSet.univ, F̵i̵n̵s̵e̵t̵.̵s̵u̵m̵_̵a̵p̵p̵l̵y̵,̵ ̵Measure.finset_sum_apply, measure_univ]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceRestrictedRandomScanKernel.lean:193:8: `mul_le_mul_left'` has been deprecated: Use `mul_le_mul_right` instead
+⚠ [9126/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceRestrictedRandomScanBlockMinorization
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceRestrictedRandomScanBlockMinorization.lean:300:6: `mul_le_mul_left'` has been deprecated: Use `mul_le_mul_right` instead
+⚠ [9128/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceRestrictedRandomScanDoeblinCoupling
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceRestrictedRandomScanDoeblinCoupling.lean:201:8: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceRestrictedRandomScanDoeblinCoupling.lean:295:8: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [9135/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpatialSliceRestrictedRandomScanLocalResidualSweep
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpatialSliceRestrictedRandomScanLocalResidualSweep.lean:80:10: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpatialSliceRestrictedRandomScanLocalResidualSweep.lean:80:10: 'ring' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+⚠ [9164/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroPhysicalSixSpatialExactFrameRayleigh
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroPhysicalSixSpatialExactFrameRayleigh.lean:98:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [9169/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointOneLinkRetainedCoordinateBridge
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointOneLinkRetainedCoordinateBridge.lean:297:10: Try `simp at hr` instead of `simpa using hr`
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [9172/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroGroundStateSameColorOneLinkSweepEqualsColorBlock
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroGroundStateSameColorOneLinkSweepEqualsColorBlock.lean:113:2: Try `simp at he` instead of `simpa using he`
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferBetaZeroGroundStateSameColorOneLinkSweepEqualsColorBlock.lean:222:4: Try this: intro hcolor e
+⚠ [9174/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateTwelveSpatialPoincareSixSpatialGap
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateTwelveSpatialPoincareSixSpatialGap.lean:121:5: unused variable `hκ0`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferWilsonGroundStateTwelveSpatialPoincareSixSpatialGap.lean:122:5: unused variable `hκhalf`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [9176/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceBackgroundUpdateVarianceComparison
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceBackgroundUpdateVarianceComparison.lean:90:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [9180/9497] Replayed MGAP4D.MathlibAnalytic.RealHilbertProjectionSweepTargetCrossResidualLinearDecomposition
+warning: MGAP4D/MathlibAnalytic/RealHilbertProjectionSweepTargetCrossResidualLinearDecomposition.lean:63:51: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [9236/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceWeightedRemoteResidualResponseLinearization
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceWeightedRemoteResidualResponseLinearization.lean:55:5: unused variable `hRNonneg`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [9245/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceFixedTargetPhysicalLeftExponentialWeightedEnvelopeDecomposition
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceFixedTargetPhysicalLeftExponentialWeightedEnvelopeDecomposition.lean:135:8: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [9247/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceResponseControlledWeightedRandomScanOrbit
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceResponseControlledWeightedRandomScanOrbit.lean:328:5: unused variable `hResponseCoefficient`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceResponseControlledWeightedRandomScanOrbit.lean:333:5: unused variable `hVariationNonneg`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [9248/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceResponseControlledSourceForcingResolvent
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceResponseControlledSourceForcingResolvent.lean:72:13: This simp argument is unused:
+  if_pos rfl
+
+Hint: Omit it from the simp argument list.
+  simp only ̵[̵i̵f̵_̵p̵o̵s̵ ̵r̵f̵l̵]̵
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [9253/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightLocalHarnackResponse
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightLocalHarnackResponse.lean:442:17: This simp argument is unused:
+  hEq
+
+Hint: Omit it from the simp argument list.
+  simp [C, hE̵q̵,̵ ̵h̵SourceTarget]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightLocalHarnackResponse.lean:445:29: This simp argument is unused:
+  hEq
+
+Hint: Omit it from the simp argument list.
+  simp [C, heSource, hE̵q̵,̵ ̵h̵SourceTarget]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightLocalHarnackResponse.lean:445:34: This simp argument is unused:
+  hSourceTarget
+
+Hint: Omit it from the simp argument list.
+  simp [C, heSource, hEq,̵ ̵h̵S̵o̵u̵r̵c̵e̵T̵a̵r̵g̵e̵t̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightLocalHarnackResponse.lean:453:17: This simp argument is unused:
+  hEq
+
+Hint: Omit it from the simp argument list.
+  simp [C, hE̵q̵,̵ ̵h̵SourceTarget]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightLocalHarnackResponse.lean:456:29: This simp argument is unused:
+  hEq
+
+Hint: Omit it from the simp argument list.
+  simp [C, heSource, hE̵q̵,̵ ̵h̵SourceTarget]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightLocalHarnackResponse.lean:456:34: This simp argument is unused:
+  hSourceTarget
+
+Hint: Omit it from the simp argument list.
+  simp [C, heSource, hEq,̵ ̵h̵S̵o̵u̵r̵c̵e̵T̵a̵r̵g̵e̵t̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightLocalHarnackResponse.lean:433:20: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightLocalHarnackResponse.lean:433:20: 'ring' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+⚠ [9255/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceDistinguishedTargetRemoteCrossRatio
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceDistinguishedTargetRemoteCrossRatio.lean:247:27: This simp argument is unused:
+  Ne.symm hne
+
+Hint: Omit it from the simp argument list.
+  simp [Ux, Ax, hne,̵ ̵N̵e̵.̵s̵y̵m̵m̵ ̵h̵n̵e̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceDistinguishedTargetRemoteCrossRatio.lean:250:24: This simp argument is unused:
+  hne
+
+Hint: Omit it from the simp argument list.
+  simp [Ux, Ax, h̵n̵e̵,̵ ̵Ne.symm hne]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceDistinguishedTargetRemoteCrossRatio.lean:256:27: This simp argument is unused:
+  Ne.symm hne
+
+Hint: Omit it from the simp argument list.
+  simp [Vx, Ax, hne,̵ ̵N̵e̵.̵s̵y̵m̵m̵ ̵h̵n̵e̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceDistinguishedTargetRemoteCrossRatio.lean:259:24: This simp argument is unused:
+  hne
+
+Hint: Omit it from the simp argument list.
+  simp [Vx, Ax, h̵n̵e̵,̵ ̵Ne.symm hne]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceDistinguishedTargetRemoteCrossRatio.lean:265:27: This simp argument is unused:
+  Ne.symm hne
+
+Hint: Omit it from the simp argument list.
+  simp [Uy, Ay, hne,̵ ̵N̵e̵.̵s̵y̵m̵m̵ ̵h̵n̵e̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceDistinguishedTargetRemoteCrossRatio.lean:268:24: This simp argument is unused:
+  hne
+
+Hint: Omit it from the simp argument list.
+  simp [Uy, Ay, h̵n̵e̵,̵ ̵Ne.symm hne]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceDistinguishedTargetRemoteCrossRatio.lean:274:27: This simp argument is unused:
+  Ne.symm hne
+
+Hint: Omit it from the simp argument list.
+  simp [Vy, Ay, hne,̵ ̵N̵e̵.̵s̵y̵m̵m̵ ̵h̵n̵e̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceDistinguishedTargetRemoteCrossRatio.lean:277:24: This simp argument is unused:
+  hne
+
+Hint: Omit it from the simp argument list.
+  simp [Vy, Ay, h̵n̵e̵,̵ ̵Ne.symm hne]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [9258/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferencePinFreeResponseControlledPhysicalLeftKernel
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferencePinFreeResponseControlledPhysicalLeftKernel.lean:214:17: This simp argument is unused:
+  hActive
+
+Hint: Omit it from the simp argument list.
+  simp [
+  ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledPhysicalLeftKernel,
+              hne, hA̵c̵t̵i̵v̵e̵,̵ ̵h̵NoShareRev]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferencePinFreeResponseControlledPhysicalLeftKernel.lean:240:6: This simp argument is unused:
+  if_pos rfl
+
+Hint: Omit it from the simp argument list.
+  simp only [
+  ̵ ̵ ̵ ̵ ̵ ̵ ̵periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumReferencePinFreeResponseControlledPhysicalLeftKernel,̵
+  ̵ ̵ ̵ ̵ ̵ ̵ ̵i̵f̵_̵p̵o̵s̵ ̵r̵f̵l̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [9259/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferencePinFreeResponseControlledWeightedRandomScanOrbit
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferencePinFreeResponseControlledWeightedRandomScanOrbit.lean:310:5: unused variable `hVariationNonneg`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [9268/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferencePinFreeCanonicalRemoteWeightedColumn
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferencePinFreeCanonicalRemoteWeightedColumn.lean:217:8: this tactic is never executed
+
+Note: This linter can be disabled with `set_option linter.unreachableTactic false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferencePinFreeCanonicalRemoteWeightedColumn.lean:217:8: 'ring' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+⚠ [9269/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightFullWeightedBootstrap
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightFullWeightedBootstrap.lean:159:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [9273/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightCoefficientContinuityLift
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightCoefficientContinuityLift.lean:215:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightCoefficientContinuityLift.lean:256:21: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceCanonicalFixedRightCoefficientContinuityLift.lean:270:19: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [9285/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceTwoStepTerminalCovarianceNormalForm
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceTwoStepTerminalCovarianceNormalForm.lean:84:21: This simp argument is unused:
+  Ne.symm hne
+
+Hint: Omit it from the simp argument list.
+  simp [B₂, hne,̵ ̵N̵e̵.̵s̵y̵m̵m̵ ̵h̵n̵e̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceTwoStepTerminalCovarianceNormalForm.lean:87:18: This simp argument is unused:
+  hne
+
+Hint: Omit it from the simp argument list.
+  simp [B₂, h̵n̵e̵,̵ ̵Ne.symm hne]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceTwoStepTerminalCovarianceNormalForm.lean:95:21: This simp argument is unused:
+  Ne.symm hne
+
+Hint: Omit it from the simp argument list.
+  simp [B₂, hne,̵ ̵N̵e̵.̵s̵y̵m̵m̵ ̵h̵n̵e̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceTwoStepTerminalCovarianceNormalForm.lean:98:18: This simp argument is unused:
+  hne
+
+Hint: Omit it from the simp argument list.
+  simp [B₂, h̵n̵e̵,̵ ̵Ne.symm hne]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceTwoStepTerminalCovarianceNormalForm.lean:137:21: This simp argument is unused:
+  Ne.symm hne
+
+Hint: Omit it from the simp argument list.
+  simp [B₂, hne,̵ ̵N̵e̵.̵s̵y̵m̵m̵ ̵h̵n̵e̵]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceTwoStepTerminalCovarianceNormalForm.lean:140:18: This simp argument is unused:
+  hne
+
+Hint: Omit it from the simp argument list.
+  simp [B₂, h̵n̵e̵,̵ ̵Ne.symm hne]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [9292/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceTwoStepTerminalSpatialBaseL1PolynomialShellBound
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceTwoStepTerminalSpatialBaseL1PolynomialShellBound.lean:149:8: This simp argument is unused:
+  periodicHypercubicEvenSpatialDirection_card
+
+Hint: Omit it from the simp argument list.
+  simp ̵[̵p̵e̵r̵i̵o̵d̵i̵c̵H̵y̵p̵e̵r̵c̵u̵b̵i̵c̵E̵v̵e̵n̵S̵p̵a̵t̵i̵a̵l̵D̵i̵r̵e̵c̵t̵i̵o̵n̵_̵c̵a̵r̵d̵]̵
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferContinuousVacuumReferenceTwoStepTerminalSpatialBaseL1PolynomialShellBound.lean:159:4: This simp argument is unused:
+  periodicHypercubicEvenSpatialDirection_card
+
+Hint: Omit it from the simp argument list.
+  simp [periodicHypercubicEvenSpatialSliceLinkBaseDisplacementBox,
+      p̵e̵r̵i̵o̵d̵i̵c̵H̵y̵p̵e̵r̵c̵u̵b̵i̵c̵E̵v̵e̵n̵S̵p̵a̵t̵i̵a̵l̵D̵i̵r̵e̵c̵t̵i̵o̵n̵_̵c̵a̵r̵d̵,̵periodicHypercubicEvenSpatialSliceBaseDisplacementBox_card]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [9311/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointOneLinkCanonicalFiberMeanDiagonalRemoteProjectionFiberwise
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointOneLinkCanonicalFiberMeanDiagonalRemoteProjectionFiberwise.lean:224:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [9330/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointCanonicalPinFreeFullEnvelopeRMS
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointCanonicalPinFreeFullEnvelopeRMS.lean:114:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [9341/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairCanonicalTargetLawSecondCenter
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairCanonicalTargetLawSecondCenter.lean:124:5: unused variable `hF`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+ℹ [9355/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferDiagonalReferenceFullKernelSectionLaw
+info: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferDiagonalReferenceFullKernelSectionLaw.lean:173:2: Try this:
+  [apply] ring_nf
+  
+  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.
+    
+  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.
+⚠ [9369/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairSecondMeanRMSFeedbackDischarge
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairSecondMeanRMSFeedbackDischarge.lean:110:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [9370/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairSecondMeanRMSUniformFeedback
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairSecondMeanRMSUniformFeedback.lean:120:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [9378/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferVacuumResponseTargetMajorant
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferVacuumResponseTargetMajorant.lean:258:29: `mul_le_mul_left'` has been deprecated: Use `mul_le_mul_right` instead
+⚠ [9380/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferVacuumResponseAmplitudeMatrix
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferVacuumResponseAmplitudeMatrix.lean:172:13: unused variable `hs`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [9381/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairFixedBackgroundResponseAmplitude
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairFixedBackgroundResponseAmplitude.lean:179:5: unused variable `hF`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairFixedBackgroundResponseAmplitude.lean:303:13: unused variable `hs`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairFixedBackgroundResponseAmplitude.lean:363:5: unused variable `hne`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [9382/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairPinFreeReciprocalWeightRow
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairPinFreeReciprocalWeightRow.lean:157:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [9383/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairPinFreeOffDiagonalShellRow
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairPinFreeOffDiagonalShellRow.lean:178:2: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairPinFreeOffDiagonalShellRow.lean:392:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [9384/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairPinFreeBidirectionalShellCutoff
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairPinFreeBidirectionalShellCutoff.lean:142:13: unused variable `hs`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairPinFreeBidirectionalShellCutoff.lean:341:6: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairPinFreeBidirectionalShellCutoff.lean:429:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairPinFreeBidirectionalShellCutoff.lean:532:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+⚠ [9388/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairFixedBackgroundResponseResidualCoefficient
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairFixedBackgroundResponseResidualCoefficient.lean:34:13: unused variable `hs`
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+⚠ [9412/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairTargetResidualVacuumSum
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSourcePairTargetResidualVacuumSum.lean:340:5: `mul_le_mul_left'` has been deprecated: Use `mul_le_mul_right` instead
+⚠ [9420/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSweepBlockDefectCyclicSourceStepProfileClassification
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSweepBlockDefectCyclicSourceStepProfileClassification.lean:220:70: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSweepBlockDefectCyclicSourceStepProfileClassification.lean:248:84: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [9425/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferCrossBoundaryGenuineOneStepL2
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferCrossBoundaryGenuineOneStepL2.lean:394:7: `mul_le_mul_left'` has been deprecated: Use `mul_le_mul_right` instead
+⚠ [9426/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSweepBlockDefectCyclicTargetCrossResidualTelescoping
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSweepBlockDefectCyclicTargetCrossResidualTelescoping.lean:85:76: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [9428/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSweepBlockDefectCyclicTerminalProfileForcingBudgetBoundedCore
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointSweepBlockDefectCyclicTerminalProfileForcingBudgetBoundedCore.lean:165:47: This simp argument is unused:
+  eq_self_iff_true
+
+Hint: Omit it from the simp argument list.
+  simp only [List.mem_append, List.mem_cons, e̵q̵_̵s̵e̵l̵f̵_̵i̵f̵f̵_̵t̵r̵u̵e̵,̵ ̵true_or, or_true]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+⚠ [9444/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointOrderedAllLinkSweepResidual
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferGroundStateJointOrderedAllLinkSweepResidual.lean:139:78: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+⚠ [9457/9497] Replayed MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTwoSidedTwelveSpatialPhysicalTopOrthogonalGap
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTwoSidedTwelveSpatialPhysicalTopOrthogonalGap.lean:217:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTwoSidedTwelveSpatialPhysicalTopOrthogonalGap.lean:260:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+warning: MGAP4D/MathlibAnalytic/PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferTwoSidedTwelveSpatialPhysicalTopOrthogonalGap.lean:365:4: try 'simp' instead of 'simpa'
+
+Note: This linter can be disabled with `set_option linter.unnecessarySimpa false`
+✔ [9497/9497] Built MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalFiniteVolumeLinkMassLowerBound (30s)
+Build completed successfully (9497 jobs).
