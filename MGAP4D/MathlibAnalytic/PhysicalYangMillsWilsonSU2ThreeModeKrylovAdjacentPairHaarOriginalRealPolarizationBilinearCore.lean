@@ -124,7 +124,7 @@ theorem p4Q2BQ_originalPolarization_scalarAddHom_bounded_unitBall
     H N hN beta hbeta F G
   have hF : 0 ≤ Q F :=
     p4Q2BQ_originalCoreReference_nonneg H N hN beta hbeta F
-  refine (isBounded_iff_forall_norm_le' (s := ell '' Metric.ball (0 : ℝ) 1)).2
+  refine (isBounded_iff_forall_norm_le (s := ell '' Metric.ball (0 : ℝ) 1)).2
     ⟨Q F + Q G, ?_⟩
   rintro t ⟨a, ha, rfl⟩
   have habs : |a| < 1 := by
