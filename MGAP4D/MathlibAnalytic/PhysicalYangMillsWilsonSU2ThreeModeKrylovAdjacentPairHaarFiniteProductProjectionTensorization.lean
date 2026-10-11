@@ -53,6 +53,10 @@ noncomputable def p4Q2CQ_projectionSweep
     p4Q2CQ_projectionSweep P (i :: rest) x =
       p4Q2CQ_projectionSweep P rest (P i x) := rfl
 
+/-- Enumerate every index exactly once via Mathlib's Fintype equivalence. -/
+noncomputable def p4Q2CQ_finiteCoordinates (ι : Type*) [Fintype ι] : List ι :=
+  List.ofFn fun j : Fin (Fintype.card ι) => (Fintype.equivFin ι).symm j
+
 section GeneralRealHilbert
 
 variable {E ι : Type*}
@@ -171,23 +175,26 @@ theorem p4Q2CQ_projectionSweep_tensorization
           (p4Q2CQ_projected_coordinate_defect_list_sum_le
             P hComm hNorm i tail x)) _
 
-/-- Canonical Fintype coordinate sweep, with no duplicated coordinates. -/
+/-- Canonical Fintype coordinate sweep, enumerating each coordinate exactly once. -/
 theorem p4Q2CQ_finiteProjectionTensorization
     [Fintype ι] (x : E) :
-    ‖x -
-        p4Q2CQ_projectionSweep P (Finset.univ.toList : List ι) x‖ ^ 2 ≤
+    ‖x - p4Q2CQ_projectionSweep P (p4Q2CQ_finiteCoordinates ι) x‖ ^ 2 ≤
       ∑ i : ι, ‖x - P i x‖ ^ 2 := by
   have h :=
     p4Q2CQ_projectionSweep_tensorization
-      P hId hSymm hComm hNorm (Finset.univ.toList : List ι) x
-  calc
-    ‖x - p4Q2CQ_projectionSweep P (Finset.univ.toList : List ι) x‖ ^ 2 ≤
-        ((Finset.univ.toList : List ι).map fun i => ‖x - P i x‖ ^ 2).sum := h
-    _ = ∑ i : ι, ‖x - P i x‖ ^ 2 := by
-      exact
-        (Finset.sum_toList
-          (s := (Finset.univ : Finset ι))
-          (fun i : ι => ‖x - P i x‖ ^ 2)).symm
+      P hId hSymm hComm hNorm (p4Q2CQ_finiteCoordinates ι) x
+  have hsum :
+      ((p4Q2CQ_finiteCoordinates ι).map fun i => ‖x - P i x‖ ^ 2).sum =
+        ∑ i : ι, ‖x - P i x‖ ^ 2 := by
+    unfold p4Q2CQ_finiteCoordinates
+    rw [List.map_ofFn, List.sum_ofFn]
+    exact Fintype.sum_equiv
+      (Fintype.equivFin ι).symm
+      (fun j : Fin (Fintype.card ι) =>
+        ‖x - P ((Fintype.equivFin ι).symm j) x‖ ^ 2)
+      (fun i : ι => ‖x - P i x‖ ^ 2)
+      (fun _ => rfl)
+  exact h.trans_eq hsum
 
 end GeneralRealHilbert
 
@@ -215,7 +222,7 @@ theorem p4Q2CQ_actualPairHaar_finiteProjectionTensorization
     (hComm : ∀ i j x, P i (P j x) = P j (P i x))
     (hNorm : ∀ i x, ‖P i x‖ ≤ ‖x‖)
     (x : JH) :
-    ‖x - p4Q2CQ_projectionSweep P (Finset.univ.toList : List I) x‖ ^ 2 ≤
+    ‖x - p4Q2CQ_projectionSweep P (p4Q2CQ_finiteCoordinates I) x‖ ^ 2 ≤
       ∑ i : I, ‖x - P i x‖ ^ 2 := by
   classical
   letI : Fintype I := Fintype.ofFinite _
