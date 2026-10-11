@@ -2,7 +2,7 @@
 
 This archive preserves **plain-text** fast-check diagnostics that were previously downloaded as GitHub Actions ZIP artifacts. No ZIP files are checked into this repository.
 
-The contents have been recovered from the corresponding authoritative GitHub Actions **Changed Lean fast check** job logs. The runner's timestamp prefix was removed from each line, preserving the Lean build and diagnostic output. These are text reconstructions, not claims of byte-for-byte identity to the original artifact ZIP.
+The contents were recovered from the corresponding authoritative GitHub Actions **Changed Lean fast check** job logs. Runner timestamp prefixes were removed to reconstruct the original `lean-fast.log` text. **All 10 reconstructed `.log` files were verified to be byte-for-byte identical to the original uncompressed `lean-fast.log` entries in the corresponding ZIP archives**, by comparing their Git blob SHA-1 digests. No ZIP archive was committed.
 
 All PRs refer to the sole theorem-bearing branch `formal/real-hilbert-uniform-coercive-strong-limit`. The logs include both failed attempts (useful for Lean4 syntax and tactic debugging) and successfully compiled revisions. Warnings from pre-existing, unrelated Lean modules can occur within otherwise successful logs; distinguish these from warnings on changed files.
 
@@ -25,3 +25,4 @@ All PRs refer to the sole theorem-bearing branch `formal/real-hilbert-uniform-co
 - Original build artifacts remain in GitHub Actions for as long as artifact retention allows; this Git archive preserves the diagnostic text.
 - These logs are not new formal Lean proofs, axioms, or evidence of a continuum 4D Yang–Mills mass gap.
 - For subsequent CI debugging, prefer GitHub run links or checked-in `.log` files over sharing ZIP downloads.
+- Scope: this folder archives the **10 previously shared diagnostic ZIPs available in the active conversation**. It does not silently import unrelated historical release bundles or KuuOS archives from the user's Library.
