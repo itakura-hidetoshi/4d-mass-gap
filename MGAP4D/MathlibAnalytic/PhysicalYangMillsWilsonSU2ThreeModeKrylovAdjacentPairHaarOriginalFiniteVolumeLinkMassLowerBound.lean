@@ -167,7 +167,7 @@ theorem p4Q2CP_originalEveryRightLinkMass_ae_pos_floor :
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitDensity
           H N hN beta hbeta ctx.1 target (t, ctx.2))
       (ENNReal.ofReal m) hnested
-  simpa [μOuter, Mass,
+  simpa [μOuter,
     periodicHypercubicEvenSpecialUnitaryOriginalGroundStateOneLinkOuterMass,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateRightJointSplitTargetFiberMass,
     μTarget] using hmass
@@ -224,7 +224,7 @@ theorem p4Q2CP_originalAllRightLinkHaarReference_ge_unweightedHaar :
               normalizedCompactHaar G))))
   apply lintegral_mono_ae
   filter_upwards [hmass target] with ctx hctx
-  exact mul_le_mul_right (by exact hctx) _
+  exact mul_le_mul_left hctx _
 
 end OriginalWilson
 end
