@@ -96,8 +96,7 @@ theorem p4Q2CB_physicalTwelveDirichletOperator_ker_eq_jointConstantLine :
       rw [p4Q2BG_physicalTwelveResidualOperator_apply, hfixed c]
       exact sub_self x
     unfold p4Q2CA_physicalTwelveDirichletOperator
-    simp [ContinuousLinearMap.smul_apply,
-      ContinuousLinearMap.sum_apply, ContinuousLinearMap.comp_apply, hR]
+    simp [hR]
 
 /-- Physical twelve-color Gram kernel is included in the original Wilson
 Haar-reference Riesz kernel. Equality of these kernels is NOT claimed. -/
