@@ -159,7 +159,7 @@ theorem p4Q2CC_originalWilsonKernel_eq_constantLine_iff_strict_energy :
       (p4Q2BZ_originalQuadratic_eq_zero_iff_Riesz_eq_zero
         H N hN beta hbeta f).mpr hWzero
     by_contra hfnot
-    exact (ne_of_gt (hstrict f hfnot)) hQzero.symm
+    exact (ne_of_gt (hstrict f hfnot)) hQzero
 
 /-- If equality of the two genuine physical kernels fails, there MUST be
 a nonconstant physical L² class with EXACTLY ZERO original Wilson Haar
