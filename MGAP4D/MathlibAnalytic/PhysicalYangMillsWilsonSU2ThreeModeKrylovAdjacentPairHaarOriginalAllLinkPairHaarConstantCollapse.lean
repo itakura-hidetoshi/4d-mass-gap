@@ -120,7 +120,7 @@ private theorem p4Q2CK_allSupports
       exact hh.2 k (Finset.mem_univ k)
     · intro hh
       exact ⟨hh anchor, fun k _ => hh k⟩
-  rw [hp]
+  rw [hp] at hall
   exact hall
 
 /-- Endpoint swap transfers a first-boundary a.e. measurable representation
