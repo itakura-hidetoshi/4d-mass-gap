@@ -80,7 +80,7 @@ This is genuine *two-way* a.e. equivalence, not a Dirichlet comparison. -/
 theorem p4Q2CE_originalWilson_ae_iff_pairHaar (p : Joint → Prop) :
     (∀ᵐ z ∂μW, p z) ↔ (∀ᵐ z ∂μH, p z) := by
   rw [p4Q2CD_originalWilsonJointMeasure_eq_continuousPairHaar]
-  change (∀ᵐ z ∂μH.withDensity (p4Q2CE_density H N hN beta hbeta), p z) ↔
+  change (∀ᵐ z ∂(μH).withDensity (p4Q2CE_density H N hN beta hbeta), p z) ↔
     (∀ᵐ z ∂μH, p z)
   rw [ae_withDensity_iff (p4Q2CE_density_measurable H N hN beta hbeta)]
   constructor
@@ -103,9 +103,9 @@ theorem p4Q2CE_originalWilson_aeEq_iff_pairHaar
 conversely. No integrability or uniform in-volume constant is required. -/
 theorem p4Q2CE_originalWilson_null_iff_pairHaar (s : Set Joint) :
     μW s = 0 ↔ μH s = 0 := by
-  rw [← ae_iff, ← ae_iff]
-  exact p4Q2CE_originalWilson_ae_iff_pairHaar H N hN beta hbeta
-    (fun z => z ∉ s)
+  simpa only [ae_iff, not_not] using
+    (p4Q2CE_originalWilson_ae_iff_pairHaar H N hN beta hbeta
+      (fun z => z ∉ s))
 
 end OriginalWilson
 end
