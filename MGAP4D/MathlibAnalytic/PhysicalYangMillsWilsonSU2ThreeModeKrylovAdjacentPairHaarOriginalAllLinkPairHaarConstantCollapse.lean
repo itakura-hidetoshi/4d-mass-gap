@@ -248,7 +248,7 @@ theorem p4Q2CK_rightRetainedHaarMean_smallMeasurable
       MeasurableSpace.comap
         ((pairHaarPiRestriction (K := G) (p4Q2CK_rightSupport H target)) ∘
           periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv
-            H)
+            H N)
         (inferInstance : MeasurableSpace
           ({i : I // p4Q2CK_rightSupport H target i} → G))]
       (p4Q2CJ_rightRetainedHaarMean H N target F) := by
