@@ -66,7 +66,7 @@ theorem p4Q2CM_truncate_lipschitz (M : ℝ) :
     LipschitzWith 1 (p4Q2CM_truncate M) := by
   apply LipschitzWith.of_dist_le_mul
   intro x y
-  simpa only [Real.dist_eq, one_mul] using
+  simpa [Real.dist_eq] using
     (p4Q2CM_truncate_abs_sub_le M x y)
 
 theorem p4Q2CM_truncate_continuous (M : ℝ) :
@@ -212,7 +212,8 @@ theorem p4Q2CM_originalRightLinkHaar_truncate_le
         evariance X μLink :=
     p4Q2CM_evariance_lipschitz_le μLink X (p4Q2CM_truncate M)
       hX hY (p4Q2CM_truncate_abs_sub_le M)
-  exact mul_le_mul_left (mul_le_mul_left hvar k) (mass ctx)
+  have hw := mul_le_mul_left (mul_le_mul_left hvar k) (mass ctx)
+  simpa only [X, mul_comm, mul_left_comm, mul_assoc] using hw
 
 /-- Every ACTUAL left Wilson Haar reference, obtained by the previously
 proved physical endpoint-swap, has the same Markov contraction. -/
@@ -255,11 +256,19 @@ theorem p4Q2CM_originalTwelveColorHaar_truncate_le
         (Fintype.card (p4Q2BA_ColorLinks H c) : ENNReal)⁻¹ *
           (∑ e : p4Q2BA_ColorLinks H c,
             p4Q2AZ_originalJointHaarReferenceEnergy H N hN beta hbeta e.1 F)
-      apply mul_le_mul_left
-      apply Finset.sum_le_sum
-      intro e _he
-      exact p4Q2CM_originalRightLinkHaar_truncate_le
-        H N hN beta hbeta M hM e.1 F hF bound hbound
+      have hsum :
+          (∑ e : p4Q2BA_ColorLinks H c,
+            p4Q2AZ_originalJointHaarReferenceEnergy H N hN beta hbeta e.1
+              (fun z => p4Q2CM_truncate M (F z))) ≤
+          (∑ e : p4Q2BA_ColorLinks H c,
+            p4Q2AZ_originalJointHaarReferenceEnergy H N hN beta hbeta e.1 F) := by
+        apply Finset.sum_le_sum
+        intro e _he
+        exact p4Q2CM_originalRightLinkHaar_truncate_le
+          H N hN beta hbeta M hM e.1 F hF bound hbound
+      simpa only [mul_comm] using
+        (mul_le_mul_left hsum
+          ((Fintype.card (p4Q2BA_ColorLinks H c) : ENNReal)⁻¹))
   | inr c =>
       change (Fintype.card (p4Q2BA_ColorLinks H c) : ENNReal)⁻¹ *
           (∑ e : p4Q2BA_ColorLinks H c,
@@ -268,11 +277,19 @@ theorem p4Q2CM_originalTwelveColorHaar_truncate_le
         (Fintype.card (p4Q2BA_ColorLinks H c) : ENNReal)⁻¹ *
           (∑ e : p4Q2BA_ColorLinks H c,
             p4Q2BB_originalLeftLinkHaarReferenceEnergy H N hN beta hbeta e.1 F)
-      apply mul_le_mul_left
-      apply Finset.sum_le_sum
-      intro e _he
-      exact p4Q2CM_originalLeftLinkHaar_truncate_le
-        H N hN beta hbeta M hM e.1 F hF bound hbound
+      have hsum :
+          (∑ e : p4Q2BA_ColorLinks H c,
+            p4Q2BB_originalLeftLinkHaarReferenceEnergy H N hN beta hbeta e.1
+              (fun z => p4Q2CM_truncate M (F z))) ≤
+          (∑ e : p4Q2BA_ColorLinks H c,
+            p4Q2BB_originalLeftLinkHaarReferenceEnergy H N hN beta hbeta e.1 F) := by
+        apply Finset.sum_le_sum
+        intro e _he
+        exact p4Q2CM_originalLeftLinkHaar_truncate_le
+          H N hN beta hbeta M hM e.1 F hF bound hbound
+      simpa only [mul_comm] using
+        (mul_le_mul_left hsum
+          ((Fintype.card (p4Q2BA_ColorLinks H c) : ENNReal)⁻¹))
 
 /-- MAIN CM theorem: the literal ORIGINAL 12-color mass-weighted Wilson Haar
 reference is Markovian on its bounded strongly measurable physical core.
@@ -300,12 +317,11 @@ theorem p4Q2CM_originalBoundedCoreMarkov_truncate_le
           H N hN beta hbeta c F.1) ≠ ∞ :=
     p4Q2BD_originalWilsonTwelveColorHaarReference_ne_top
       H N hN beta hbeta F.1 hF bound hbound
-  change
-    (∑ c : C12,
-      p4Q2BB_twelveColorOriginalHaarReferenceAverage H N hN beta hbeta c
-        (fun z => p4Q2CM_truncate M (F.1 z))).toReal ≤
-      (∑ c : C12,
-        p4Q2BB_twelveColorOriginalHaarReferenceAverage H N hN beta hbeta c F.1).toReal
+  have hconcrete :
+      (p4Q2CM_truncateCore H N M hM F).1 =
+        (fun z => p4Q2CM_truncate M (F.1 z)) := rfl
+  simp only [p4Q2BP_originalCoreReference,
+    p4Q2BD_originalWilsonTwelveColorHaarReferenceReal, hconcrete]
   exact ENNReal.toReal_mono htop hsum
 
 end OriginalWilson
