@@ -64,7 +64,7 @@ private theorem p4Q2CI_section_mean_glue
   have heq :
       MeasurableSet
         {z : Ctx × G | X z = ∫ t, X (z.1, t) ∂muLink} :=
-    measurableSet_eq hX.measurable (hmean.comp measurable_fst)
+    measurableSet_eq_fun hX.measurable (hmean.comp measurable_fst)
   exact (Measure.ae_prod_iff_ae_ae heq).2 hsections
 
 private abbrev p4Q2CI_ctx (H N : ℕ)
