@@ -47,8 +47,11 @@ theorem p4Q2CV_productProbability_condExpL2_ae_eq_fiberHaarMean
   classical
   let m : MeasurableSpace (α × β) :=
     MeasurableSpace.comap Prod.fst (inferInstance : MeasurableSpace α)
-  have hm : m ≤ (inferInstance : MeasurableSpace (α × β)) :=
-    measurable_fst.comap_le
+  have hm : m ≤ (inferInstance : MeasurableSpace (α × β)) := by
+    change MeasurableSpace.comap (Prod.fst : α × β → α)
+      (inferInstance : MeasurableSpace α) ≤
+        (inferInstance : MeasurableSpace (α × β))
+    exact measurable_fst.comap_le
   let h : α → ℝ := fun a => ∫ b : β, f (a, b) ∂ν
   have hfsm : StronglyMeasurable (f : α × β → ℝ) :=
     Lp.stronglyMeasurable f
