@@ -65,8 +65,9 @@ variable {E ι : Type*}
 
 include hId hSymm hComm hNorm
 
+omit hId hSymm hNorm in
 /-- A coordinate projection commutes with an entire ordered sweep. -/
-omit hId hSymm hNorm in theorem p4Q2CQ_projection_commute_sweep
+theorem p4Q2CQ_projection_commute_sweep
     (i : ι) (rest : List ι) (x : E) :
     P i (p4Q2CQ_projectionSweep P rest x) =
       p4Q2CQ_projectionSweep P rest (P i x) := by
@@ -81,6 +82,7 @@ omit hId hSymm hNorm in theorem p4Q2CQ_projection_commute_sweep
           rw [hComm i j x]
         _ = p4Q2CQ_projectionSweep P (j :: tail) (P i x) := rfl
 
+omit hSymm hNorm in
 /-- The defect after the first coordinate is fixed by that projection. -/
 theorem p4Q2CQ_sweep_tail_defect_fixed
     (i : ι) (rest : List ι) (x : E) :
@@ -90,6 +92,7 @@ theorem p4Q2CQ_sweep_tail_defect_fixed
     p4Q2CQ_projection_commute_sweep P hComm
       i rest (P i x), hId i x]
 
+omit hNorm in
 /-- Exact Pythagoras for the first projection and the rest of the sweep. -/
 theorem p4Q2CQ_sweep_cons_defect_norm_sq
     (i : ι) (rest : List ι) (x : E) :
@@ -103,7 +106,7 @@ theorem p4Q2CQ_sweep_cons_defect_norm_sq
           (P i x - p4Q2CQ_projectionSweep P rest (P i x)) := by
     abel
   have hfixed :=
-    p4Q2CQ_sweep_tail_defect_fixed P hId hSymm hComm hNorm i rest x
+    p4Q2CQ_sweep_tail_defect_fixed P hId hComm i rest x
   have horth :
       inner ℝ (x - P i x)
         (P i x - p4Q2CQ_projectionSweep P rest (P i x)) = 0 := by
@@ -118,8 +121,9 @@ theorem p4Q2CQ_sweep_cons_defect_norm_sq
   rw [hsplit, norm_add_sq_real, horth]
   ring
 
+omit hId hSymm in
 /-- Projected coordinate defects contract, solely by commutation. -/
-omit hId hSymm in theorem p4Q2CQ_projected_coordinate_defect_norm_le
+theorem p4Q2CQ_projected_coordinate_defect_norm_le
     (i j : ι) (x : E) :
     ‖P i x - P j (P i x)‖ ≤ ‖x - P j x‖ := by
   calc
@@ -128,6 +132,7 @@ omit hId hSymm in theorem p4Q2CQ_projected_coordinate_defect_norm_le
       rw [map_sub, hComm i j x]
     _ ≤ ‖x - P j x‖ := hNorm i (x - P j x)
 
+omit hId hSymm in
 theorem p4Q2CQ_projected_coordinate_defect_sq_le
     (i j : ι) (x : E) :
     ‖P i x - P j (P i x)‖ ^ 2 ≤ ‖x - P j x‖ ^ 2 := by
@@ -137,6 +142,7 @@ theorem p4Q2CQ_projected_coordinate_defect_sq_le
   nlinarith [norm_nonneg (P i x - P j (P i x)),
     norm_nonneg (x - P j x)]
 
+omit hId hSymm in
 theorem p4Q2CQ_projected_coordinate_defect_list_sum_le
     (i : ι) (rest : List ι) (x : E) :
     (rest.map fun j => ‖P i x - P j (P i x)‖ ^ 2).sum ≤
@@ -147,7 +153,7 @@ theorem p4Q2CQ_projected_coordinate_defect_list_sum_le
       simp only [List.map_cons, List.sum_cons]
       exact add_le_add
         (p4Q2CQ_projected_coordinate_defect_sq_le
-          P hId hSymm hComm hNorm i j x) ih
+          P hComm hNorm i j x) ih
 
 /-- General finite tensorization (algebraic Efron--Stein Hilbert lemma). -/
 theorem p4Q2CQ_projectionSweep_tensorization
@@ -158,12 +164,12 @@ theorem p4Q2CQ_projectionSweep_tensorization
   | nil => simp
   | cons i tail ih =>
       rw [p4Q2CQ_sweep_cons_defect_norm_sq
-        P hId hSymm hComm hNorm i tail x]
+        P hId hSymm hComm i tail x]
       simp only [List.map_cons, List.sum_cons]
       exact add_le_add_right
         ((ih (P i x)).trans
           (p4Q2CQ_projected_coordinate_defect_list_sum_le
-            P hId hSymm hComm hNorm i tail x)) _
+            P hComm hNorm i tail x)) _
 
 /-- Canonical Fintype coordinate sweep, with no duplicated coordinates. -/
 theorem p4Q2CQ_finiteProjectionTensorization
@@ -178,7 +184,7 @@ theorem p4Q2CQ_finiteProjectionTensorization
     ‖x - p4Q2CQ_projectionSweep P (Finset.univ.toList : List ι) x‖ ^ 2 ≤
         ((Finset.univ.toList : List ι).map fun i => ‖x - P i x‖ ^ 2).sum := h
     _ = ∑ i : ι, ‖x - P i x‖ ^ 2 := by
-      simpa using
+      exact
         (Finset.sum_toList
           (s := (Finset.univ : Finset ι))
           (f := fun i : ι => ‖x - P i x‖ ^ 2)).symm
