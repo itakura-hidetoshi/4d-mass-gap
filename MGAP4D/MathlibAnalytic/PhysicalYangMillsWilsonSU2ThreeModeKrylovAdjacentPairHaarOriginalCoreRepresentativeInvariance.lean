@@ -75,7 +75,7 @@ theorem p4Q2BS_originalPolarization_zero_left_of_physicalL2_zero
   have hBpos : 0 < |B F G| := abs_pos.mpr hne
   let a : ℝ := (Q G + 1) / |B F G|
   have ha : 0 ≤ a :=
-    div_nonneg (by dsimp [a]; linarith) hBpos.le
+    div_nonneg (by linarith) hBpos.le
   have hBound :=
     p4Q2BQ_originalCorePolarization_abs_le
       H N hN beta hbeta (a • F) G
@@ -117,7 +117,8 @@ theorem p4Q2BS_originalPolarization_congr_left
       H N hN beta hbeta (F - G) K hker
   have hdecomp : F = (F - G) + G := by abel
   calc
-    B F K = B ((F - G) + G) K := by rw [hdecomp]
+    B F K = B ((F - G) + G) K :=
+      congrArg (fun x : Core => B x K) hdecomp
     _ = B (F - G) K + B G K :=
       p4Q2BP_originalCorePolarization_add_left
         H N hN beta hbeta (F - G) G K
