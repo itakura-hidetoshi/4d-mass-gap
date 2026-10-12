@@ -57,6 +57,13 @@ local instance p4Q2EH_leftInvariant :
 
 /-- Actual finite product independent SU(2) Haar measure gives positive mass
 on every nonempty open set of the true two-boundary configuration space. -/
+/-- Actual normalized compact SU(2) Haar has the open-positive support
+required by Mathlib's finite Pi and binary product measure instances. -/
+local instance p4Q2EH_singleHaarOpenPos :
+    Measure.IsOpenPosMeasure muH := by
+  dsimp [normalizedCompactHaar]
+  infer_instance
+
 local instance p4Q2EH_pairHaarOpenPos :
     Measure.IsOpenPosMeasure muPair := by
   unfold periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure
@@ -230,7 +237,8 @@ theorem p4Q2EH_bothSelectedPairHaarDefects_pos (e : Link) :
               ((f e : Lp ℝ 2 muPair) : Joint → ℝ) :=
             (p4Q2EE_SU2_pairHaarJointL2_ae_eq H e).symm
           _ =ᵐ[muPair] ((P (Sum.inl e) (f e) : Lp ℝ 2 muPair) : Joint → ℝ) := by
-            rw [hEq]
+            exact Filter.Eventually.of_forall fun z =>
+              congrArg (fun x : Lp ℝ 2 muPair => (x : Joint → ℝ) z) hEq
           _ =ᵐ[muPair] (fun _ => p4Q2EH_groupWilsonHaarMean) :=
             p4Q2EH_leftSelectedProjection_ae_groupMean H e
       exact p4Q2EH_relativeWilsonEnergy_not_pairHaar_ae_constant H e _ hAE
@@ -249,7 +257,8 @@ theorem p4Q2EH_bothSelectedPairHaarDefects_pos (e : Link) :
               ((f e : Lp ℝ 2 muPair) : Joint → ℝ) :=
             (p4Q2EE_SU2_pairHaarJointL2_ae_eq H e).symm
           _ =ᵐ[muPair] ((P (Sum.inr e) (f e) : Lp ℝ 2 muPair) : Joint → ℝ) := by
-            rw [hEq]
+            exact Filter.Eventually.of_forall fun z =>
+              congrArg (fun x : Lp ℝ 2 muPair => (x : Joint → ℝ) z) hEq
           _ =ᵐ[muPair] (fun _ => p4Q2EH_groupWilsonHaarMean) :=
             p4Q2EH_rightSelectedProjection_ae_groupMean H e
       exact p4Q2EH_relativeWilsonEnergy_not_pairHaar_ae_constant H e _ hAE
