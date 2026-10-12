@@ -60,11 +60,11 @@ noncomputable def p4Q2EH_groupWilsonHaarMean : ℝ :=
 
 /-- Actual RIGHT-coordinate update retains the genuine left-link value. -/
 theorem p4Q2EH_rightUpdate (e : Link) (z : Joint) (u : G) :
-    F e (E.symm (Function.update (E z) (Sum.inr e) u)) =
+    F e ((periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv H 2).symm (Function.update (E z) (Sum.inr e) u)) =
       specialUnitaryWilsonPlaquetteEnergy 2 ((z.1 e)⁻¹ * u) := by
   classical
-  let z' : Joint := E.symm (Function.update (E z) (Sum.inr e) u)
-  have hE : E z' = Function.update (E z) (Sum.inr e) u := E.apply_symm_apply _
+  let z' : Joint := (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv H 2).symm (Function.update (E z) (Sum.inr e) u)
+  have hE : E z' = Function.update (E z) (Sum.inr e) u := (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv H 2).apply_symm_apply _
   have hLeft : z'.1 e = z.1 e := by
     have hc : (E z') (Sum.inl e) = (E z) (Sum.inl e) := by
       rw [hE]
@@ -84,11 +84,11 @@ theorem p4Q2EH_rightUpdate (e : Link) (z : Joint) (u : G) :
 
 /-- Actual LEFT-coordinate update retains the genuine right-link value. -/
 theorem p4Q2EH_leftUpdate (e : Link) (z : Joint) (u : G) :
-    F e (E.symm (Function.update (E z) (Sum.inl e) u)) =
+    F e ((periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv H 2).symm (Function.update (E z) (Sum.inl e) u)) =
       specialUnitaryWilsonPlaquetteEnergy 2 (u⁻¹ * z.2 e) := by
   classical
-  let z' : Joint := E.symm (Function.update (E z) (Sum.inl e) u)
-  have hE : E z' = Function.update (E z) (Sum.inl e) u := E.apply_symm_apply _
+  let z' : Joint := (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv H 2).symm (Function.update (E z) (Sum.inl e) u)
+  have hE : E z' = Function.update (E z) (Sum.inl e) u := (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv H 2).apply_symm_apply _
   have hLeft : z'.1 e = u := by
     have hc : (E z') (Sum.inl e) = u := by
       rw [hE]
@@ -112,11 +112,11 @@ coordinate mean independent of every original pair-Haar background. -/
 theorem p4Q2EH_rightSelectedMean_eq_groupMean (e : Link) (z : Joint) :
     p4Q2CU_actualPairHaarCoordinateMean H 2 (Sum.inr e)
         (fun w : Joint => F e w) z =
-      p4Q2EH_groupWilsonHaarMean H := by
-  change (∫ u : G, F e (E.symm (Function.update (E z) (Sum.inr e) u))
+      p4Q2EH_groupWilsonHaarMean := by
+  change (∫ u : G, F e ((periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv H 2).symm (Function.update (E z) (Sum.inr e) u))
       ∂muH) = _
   have hEq :
-      (fun u : G => F e (E.symm (Function.update (E z) (Sum.inr e) u))) =
+      (fun u : G => F e ((periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv H 2).symm (Function.update (E z) (Sum.inr e) u))) =
         (fun u : G => specialUnitaryWilsonPlaquetteEnergy 2 ((z.1 e)⁻¹ * u)) := by
     funext u
     exact p4Q2EH_rightUpdate H e z u
@@ -129,11 +129,11 @@ coordinate mean is the same fixed normalized SU(2) group mean. -/
 theorem p4Q2EH_leftSelectedMean_eq_groupMean (e : Link) (z : Joint) :
     p4Q2CU_actualPairHaarCoordinateMean H 2 (Sum.inl e)
         (fun w : Joint => F e w) z =
-      p4Q2EH_groupWilsonHaarMean H := by
-  change (∫ u : G, F e (E.symm (Function.update (E z) (Sum.inl e) u))
+      p4Q2EH_groupWilsonHaarMean := by
+  change (∫ u : G, F e ((periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv H 2).symm (Function.update (E z) (Sum.inl e) u))
       ∂muH) = _
   have hEq :
-      (fun u : G => F e (E.symm (Function.update (E z) (Sum.inl e) u))) =
+      (fun u : G => F e ((periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv H 2).symm (Function.update (E z) (Sum.inl e) u))) =
         (fun u : G => specialUnitaryWilsonPlaquetteEnergy 2 ((z.2 e)⁻¹ * u)) := by
     funext u
     rw [p4Q2EH_leftUpdate H e z u]
@@ -147,7 +147,7 @@ theorem p4Q2EH_leftSelectedMean_eq_groupMean (e : Link) (z : Joint) :
 has the exact constant representative equal to the true Haar mean. -/
 theorem p4Q2EH_rightSelectedProjection_ae_groupMean (e : Link) :
     (((P (Sum.inr e) (f e) : Lp ℝ 2 muPair) : Joint → ℝ)) =ᵐ[muPair]
-      fun _ => p4Q2EH_groupWilsonHaarMean H := by
+      fun _ => p4Q2EH_groupWilsonHaarMean := by
   have hStrong : StronglyMeasurable (fun z : Joint => F e z) :=
     (F e).continuous.stronglyMeasurable
   have hBound : ∀ z : Joint, ‖F e z‖ ≤ (2 : ℝ) := by
@@ -170,7 +170,7 @@ theorem p4Q2EH_rightSelectedProjection_ae_groupMean (e : Link) :
 has the SAME constant representative, with NO Wilson-law equality. -/
 theorem p4Q2EH_leftSelectedProjection_ae_groupMean (e : Link) :
     (((P (Sum.inl e) (f e) : Lp ℝ 2 muPair) : Joint → ℝ)) =ᵐ[muPair]
-      fun _ => p4Q2EH_groupWilsonHaarMean H := by
+      fun _ => p4Q2EH_groupWilsonHaarMean := by
   have hStrong : StronglyMeasurable (fun z : Joint => F e z) :=
     (F e).continuous.stronglyMeasurable
   have hBound : ∀ z : Joint, ‖F e z‖ ≤ (2 : ℝ) := by
