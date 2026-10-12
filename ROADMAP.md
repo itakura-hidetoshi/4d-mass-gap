@@ -1,6 +1,6 @@
 # MGAP4D — formalization roadmap
 
-**Status: 2026-10-13 JST. Latest theorem-bearing [PR #5494 (P4-Q2-EI)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5494) MERGED at `643d846b5a8bd51033d6418dd646cc97e2c0dcc8`; exact-source-head [CI #38292473027](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38292473027) SUCCESS (9678/9678). EH [PR #5493](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5493) MERGED at `9cf5d72b780b90ee60057b0143553a84e37aa81a`, CI #38260189379 SUCCESS (9677/9677). EC #5485 remains the last separate GENERAL all-L² Riesz coefficient optimization; EI gives an explicit strictly-positive-energy physical SU(2) observable.**
+**Status: 2026-10-13 JST. Latest theorem-bearing [PR #5496 (P4-Q2-EJ)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5496) MERGED at `8955a1a3f00d36139da019fe245d270b2292e892`, exact-source-head [CI #38307008531](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38307008531) SUCCESS (9679/9679). Previous EH #5493 and EI #5494 remain merged; EJ advances exact original Wilson mass-weighted off-target Haar-fiber support, NOT a physical Wilson conditional expectation or a new uniform gap.**
 
 **Current theorem achievement:** DV full original Wilson Riesz quadratic coercivity, DW true Loewner and separate D12 bilateral comparison, DX boundedly invertible original orthogonal restriction with real spectrum in `[κ_R,12]`, and **DY typed original DQ/DF finite-volume mass/variance coefficient; DZ restores the literal factor 12 from normalized Haar reference to the unnormalized ORIGINAL Wilson Riesz sum with improved same-witness whole-L², Loewner and anti-Lipschitz estimates**. DU separately proves the normalized physical D12 restricted gap.
 
@@ -13,12 +13,12 @@ Read [README.md](README.md) for definitions, exact Wilson-versus-Haar normalizat
 | Field | Verified checkpoint |
 | --- | --- |
 | Only theorem-authoritative repository / branch | `itakura-hidetoshi/4d-mass-gap` / `formal/real-hilbert-uniform-coercive-strong-limit` |
-| Latest theorem-bearing merged PR | [#5494](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5494), merge SHA `643d846b5a8bd51033d6418dd646cc97e2c0dcc8` |
-| Exact-tested PR #5494 source HEAD | `7969e9041bd3e7e07672fbe980278c2aa4cea1f3` |
+| Latest theorem-bearing merged PR | [#5496](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5496), merge SHA `8955a1a3f00d36139da019fe245d270b2292e892` |
+| Exact-tested PR #5496 source HEAD | `fd1aaf8706cb8129b46d7d96dc6237006a945e94` |
 | Lean / mathlib | `v4.30.0-rc2` / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
-| Exact-source-head CI | [#38292473027](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38292473027), SUCCESS |
-| Changed Lean / MCP receipt jobs | `114955584256` / `114957195891`, both SUCCESS |
-| Build and diagnostics | **9678/9678**, EI changed-file Lean errors/warnings **0**, static audit passed; `#print axioms`: standard Lean axioms plus inherited actual hypercubic native_decide spatial-color, incident-plaquette and other-axis cardinality dependencies. No new axiom declarations, sorry/admit or sorryAx. |
+| Exact-source-head CI | [#38307008531](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38307008531), SUCCESS |
+| Changed Lean / MCP receipt jobs | `115003379841` / `115004893123`, both SUCCESS |
+| Build and diagnostics | **9679/9679**, EJ changed-file errors/warnings 0, preflight audit passed. `#print axioms` standard/inherited Lean axioms only, no new `axiom`, sorry/admit or `sorryAx` in EJ. |
 
 A later **docs-only merge will move the current canonical branch HEAD** beyond the SHA shown above, but it does not alter the #5494 theorem-bearing result. Observe the branch's fresh exact HEAD for each new PR. GitHub's default `main` is not the theorem authority.
 
@@ -181,7 +181,7 @@ The TRUE two-boundary relative link `R_e=(A_e)⁻¹ B_e` transforms under the sa
 
 **P4-Q2-EI [PR #5494] — CLOSED.** EG's genuine ORIGINAL Wilson normalized twelve-color Haar reference lower comparison has unchanged positive finite-volume physical Wilson fiber-mass witness `m(H,2,beta)>0`; multiply by the now EH-proved positive left+right independent pair-Haar CR residual energy of the SAME original SU(2) gauge-invariant relative observable. This yields a STRICTLY POSITIVE normalized original Wilson Haar-reference energy in `ENNReal` (typed `p4Q2EI_SU2_originalWilsonNormalizedHaarReference_pos`). BD's bounded strongly measurable original Wilson reference is finite, so the literal UNNORMALIZED twelve-color sum has strictly positive REAL `toReal` value (typed `p4Q2EI_SU2_originalWilsonUnnormalizedHaarReferenceReal_pos`). BP/EE's exact original Wilson core / full joint-L² Riesz quadratic identity transfers this strict positivity to the actual physical Wilson SU(2) ground-state joint real L² class (typed `p4Q2EI_SU2_originalWilsonFullJointRieszQuadratic_pos`). The proof does not replace AW with D12 or identify Wilson and pair-Haar probability laws.
 
-**Next OPEN P4-Q2-EJ:** establish the exact ORIGINAL Wilson mass-weighted individual Haar-reference fiber support for this gauge-invariant two-boundary SU(2) relative-link witness, showing off-target link Haar integrals vanish and giving correct selected left/right contributions. Compare to actual Wilson conditional color-block update operators only through newly proved bridges. Separately seek physically justified original-Wilson covariance and color-block improvements beyond EH/EI's one-witness strict energy and EC's H-dependent `m(H,N,beta)`, `M(H,N,beta)`, `L_max(H)` certificate. Genuine H-/spacing-uniform signed fine/frozen Krylov Gram, C1/C2/C3/H2/H3/H4 and 4D continuum Yang–Mills mass gap remain OPEN.
+**P4-Q2-EJ [PR #5496] — CLOSED in ACTUAL original Wilson mass-weighted off-target Haar-fiber scope.** For genuine original pair-boundary gauge-invariant SU(2) relative-link Wilson energy, EF gives pointwise off-target invariance at every independent spatial joint coordinate except the two genuine selected left/right links. EJ combines this with the original strictly positive continuous Wilson–Perron joint weight to prove the literal physically weighted squared Haar-resampling difference is 0 pointwise on all off-target coordinates; the true compact SU(2) Haar inner fiber integral of that weighted difference also equals 0. These are `p4Q2EJ_offTarget_originalWilsonMassWeightedDifference_zero` and `p4Q2EJ_offTarget_originalWilsonMassWeightedHaarFiber_zero`. Unlike EF's independent pair-Haar CR results, EJ explicitly includes the ACTUAL original Wilson density. The resulting zero is not an identification with any interacting Wilson conditional projection. **Next OPEN P4-Q2-EK:** connect this exact support to the full actual original Wilson BB/BC/BD per-color energy via correct Fubini, density placement and the exact twelve-color left/right normalizations. Compare selected contributions to true physical color block operators only through new theorems; signed fine/frozen Krylov, volume/spacing uniformity, C1/C2/C3/H2/H3/H4 and the continuum mass gap remain OPEN.
 
 **Still OPEN:** physical signed fine/frozen Krylov Gram uniformity; C1 common-marginal physicality, C2 vector-wise reconstruction, C3 summable genuine beta trajectory; H2 spacing-scaled nontrivial evolution, H3 OS Hamiltonian, H4 4D Yang–Mills continuum existence and positive mass gap.
 
@@ -290,7 +290,7 @@ All sources below are under `MGAP4D/MathlibAnalytic/` and share the `PhysicalYan
 Minimal latest Lean target after checking out the newly observed authoritative branch:
 
 ```bash
-lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalRelativeWilsonSU2PhysicalReferenceStrictPositive
+lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalRelativeWilsonSU2OffTargetPhysicalHaarFiberZero
 ```
 
 **Proof-integrity process:** exact authoritative branch SHA first; exact Lean file, dependencies and physical definitions second; docs and exact-source-head CI after that. Inspect the full error context and pinned mathlib syntax, not just the highlighted line. No new `sorry`, `admit`, `axiom` or hidden synthetic physical laws. Preserve true original sum/average normalization, and explicitly report nonfatal warnings (DV had four). Use targeted changed-Lean CI and reusable pinned caches where possible; do not rebuild the entire project needlessly. For a documentation-only update, modify **only README.md and ROADMAP.md** and do not present its resulting merge SHA as a new theorem-bearing checkpoint.
