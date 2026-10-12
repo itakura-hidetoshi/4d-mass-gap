@@ -74,19 +74,19 @@ theorem p4Q2EF_SU2_relativeWilsonEnergy_otherCoordinate_update_eq
     (e : Link) (i : I)
     (hL : i ≠ Sum.inl e) (hR : i ≠ Sum.inr e)
     (z : Joint) (u : G) :
-    F e (E.symm (Function.update (E z) i u)) = F e z := by
+    F e ((periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv H 2).symm (Function.update (E z) i u)) = F e z := by
   classical
-  let z' : Joint := E.symm (Function.update (E z) i u)
+  let z' : Joint := (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv H 2).symm (Function.update (E z) i u)
   have hApply : E z' = Function.update (E z) i u := by
-    exact E.apply_symm_apply _
+    exact (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv H 2).apply_symm_apply _
   have hCL :
       (Function.update (E z) i u) (Sum.inl e) =
         (E z) (Sum.inl e) := by
-    simp [Function.update, hL, Ne.symm hL]
+    simp [Function.update, Ne.symm hL]
   have hCR :
       (Function.update (E z) i u) (Sum.inr e) =
         (E z) (Sum.inr e) := by
-    simp [Function.update, hR, Ne.symm hR]
+    simp [Function.update, Ne.symm hR]
   have hLeft : z'.1 e = z.1 e := by
     have hc : (E z') (Sum.inl e) = (E z) (Sum.inl e) := by
       rw [hApply]
@@ -114,10 +114,10 @@ theorem p4Q2EF_SU2_relativeWilsonEnergy_otherCoordinate_HaarMean_eq
     p4Q2CU_actualPairHaarCoordinateMean H 2 i
       (fun w : Joint => F e w) z = F e z := by
   classical
-  change (∫ u : G, F e (E.symm (Function.update (E z) i u))
+  change (∫ u : G, F e ((periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv H 2).symm (Function.update (E z) i u))
       ∂normalizedCompactHaar G) = F e z
   have hInt :
-      (fun u : G => F e (E.symm (Function.update (E z) i u))) =
+      (fun u : G => F e ((periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv H 2).symm (Function.update (E z) i u))) =
       (fun _ : G => F e z) := by
     funext u
     exact p4Q2EF_SU2_relativeWilsonEnergy_otherCoordinate_update_eq
@@ -148,11 +148,14 @@ theorem p4Q2EF_SU2_relativeWilsonEnergy_otherCoordinate_projection_fixed
   have hProject :=
     p4Q2DA_actualPairHaarProjection_ae_eq_CUmean
       H 2 i (f e) F' hStrong 2 hBound hAE
-  apply Lp.ext
-  exact hProject.trans
-    ((Filter.Eventually.of_forall
+  have hMeanAE :
+      (fun z : Joint =>
+          p4Q2CU_actualPairHaarCoordinateMean H 2 i F' z) =ᵐ[muPair] F' := by
+    exact Filter.Eventually.of_forall
       (p4Q2EF_SU2_relativeWilsonEnergy_otherCoordinate_HaarMean_eq
-        H e i hL hR)).trans hAE)
+        H e i hL hR)
+  apply Lp.ext
+  exact hProject.trans (hMeanAE.trans hAE)
 
 /-- The exact squared L² coordinate residual is ZERO on every
 genuine pair-Haar coordinate other than Sum.inl e / Sum.inr e.
