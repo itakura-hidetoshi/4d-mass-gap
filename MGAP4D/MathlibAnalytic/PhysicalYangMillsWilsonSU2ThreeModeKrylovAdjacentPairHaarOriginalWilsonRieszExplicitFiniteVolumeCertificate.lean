@@ -272,14 +272,15 @@ theorem p4Q2DY_originalReferenceReal_explicitVarianceWitness :
     (lt_of_le_of_lt (min_le_right k (1 : ENNReal)) (by norm_num))
   have hγReal : 0 < γ.toReal :=
     ENNReal.toReal_pos hγPos.ne' hγTop
-  refine ⟨m, M, hm, hM, ?_, ?_⟩
-  · exact p4Q2DY_originalRieszFiniteVolumeCoefficient_pos H beta m M hm hM
-  ·
+  have hκPos : 0 < p4Q2DY_originalRieszFiniteVolumeCoefficient H beta m M := by
+    change 0 < γ.toReal
+    exact hγReal
+  refine ⟨m, M, hm, hM, hκPos, ?_⟩
   letI : IsProbabilityMeasure muPair := by infer_instance
   letI : IsProbabilityMeasure muWilson :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_isProbabilityMeasure
       H N hN beta hbeta
-    intro F hF bound hbound
+  intro F hF bound hbound
   have hPairMem : MemLp F 2 muPair :=
     MemLp.of_bound hF.aestronglyMeasurable bound
       (Filter.Eventually.of_forall hbound)
