@@ -43,6 +43,23 @@ attribute [local instance]
   groundStateJointOneLinkCenteredResidualTargetLinkUnique
   p4Q2BAColorLinksFintype
 
+/-- Literal original right-link split context in the same canonical
+physical carrier as DJ. Avoid referring to a declaration scoped privately
+inside a distinct Lean module. -/
+private abbrev p4Q2DK_rightContext (H N : ℕ)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H) : Type :=
+  PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+    (PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
+      Matrix.specialUnitaryGroup (Fin N) ℂ)
+
+private noncomputable def p4Q2DK_rightOuterHaar (H N : ℕ)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H) :
+    Measure (p4Q2DK_rightContext H N target) :=
+  (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N).prod
+    (Measure.pi
+      (fun _ : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target =>
+        normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)))
+
 section ActualRightLink
 variable (H N : ℕ)
 
@@ -140,7 +157,7 @@ the Haar integral of the same original direct-link reconstructed
 sections. -/
 theorem p4Q2DK_retainedMean_reconstruct
     (target : Link) (F : Joint → ℝ)
-    (ctx : p4Q2DJ_rightContext H N target) (g : G) :
+    (ctx : p4Q2DK_rightContext H N target) (g : G) :
     p4Q2CJ_rightRetainedHaarMean H N target F
         (p4Q2CJ_directLinkJointMeasurableEquiv H N target (ctx, g)) =
       ∫ u : G, F
@@ -187,11 +204,11 @@ theorem p4Q2DK_originalRightHaarFiberVariance_eq_CR_defect
     (F : Joint → ℝ) (hF : StronglyMeasurable F)
     (M : ℝ) (hM : ∀ z, ‖F z‖ ≤ M)
     (hEq : F =ᵐ[muPair] (f : Joint → ℝ)) :
-    (∫⁻ ctx : p4Q2DJ_rightContext H N target,
+    (∫⁻ ctx : p4Q2DK_rightContext H N target,
       evariance
         (Section target F ctx.1 ctx.2)
         muH
-      ∂(p4Q2DJ_rightOuterHaar H N target)) =
+      ∂(p4Q2DK_rightOuterHaar H N target)) =
         ENNReal.ofReal
           (‖f - P (Sum.inr target) f‖ ^ 2) := by
   have hOriginal :=
@@ -204,9 +221,9 @@ theorem p4Q2DK_originalRightHaarFiberVariance_eq_CR_defect
     p4Q2DH_actualPairHaarIntegratedFiberVariance_eq_CUmeanSquare
       H N (Sum.inr target) F hF
   calc
-    (∫⁻ ctx : p4Q2DJ_rightContext H N target,
+    (∫⁻ ctx : p4Q2DK_rightContext H N target,
       evariance (Section target F ctx.1 ctx.2) muH
-      ∂(p4Q2DJ_rightOuterHaar H N target)) =
+      ∂(p4Q2DK_rightOuterHaar H N target)) =
       ∫⁻ z : Joint, ENNReal.ofReal
         ((F z -
           ∫ u : G, F
