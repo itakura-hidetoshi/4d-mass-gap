@@ -106,6 +106,89 @@ theorem p4Q2EH_leftUpdate (e : Link) (z : Joint) (u : G) :
   change F e z' = _
   rw [p4Q2EE_SU2_relativeWilsonEnergyBCF_apply, hLeft, hRight]
 
+
+/-- Genuine SU(2) normalized Haar invariance makes the selected RIGHT
+coordinate mean independent of every original pair-Haar background. -/
+theorem p4Q2EH_rightSelectedMean_eq_groupMean (e : Link) (z : Joint) :
+    p4Q2CU_actualPairHaarCoordinateMean H 2 (Sum.inr e)
+        (fun w : Joint => F e w) z =
+      p4Q2EH_groupWilsonHaarMean H := by
+  change (∫ u : G, F e (E.symm (Function.update (E z) (Sum.inr e) u))
+      ∂muH) = _
+  have hEq :
+      (fun u : G => F e (E.symm (Function.update (E z) (Sum.inr e) u))) =
+        (fun u : G => specialUnitaryWilsonPlaquetteEnergy 2 ((z.1 e)⁻¹ * u)) := by
+    funext u
+    exact p4Q2EH_rightUpdate H e z u
+  rw [hEq]
+  exact integral_mul_left_eq_self
+    (fun g : G => specialUnitaryWilsonPlaquetteEnergy 2 g) ((z.1 e)⁻¹)
+
+/-- Genuine SU(2) Wilson energy is inversion invariant. The LEFT Haar
+coordinate mean is the same fixed normalized SU(2) group mean. -/
+theorem p4Q2EH_leftSelectedMean_eq_groupMean (e : Link) (z : Joint) :
+    p4Q2CU_actualPairHaarCoordinateMean H 2 (Sum.inl e)
+        (fun w : Joint => F e w) z =
+      p4Q2EH_groupWilsonHaarMean H := by
+  change (∫ u : G, F e (E.symm (Function.update (E z) (Sum.inl e) u))
+      ∂muH) = _
+  have hEq :
+      (fun u : G => F e (E.symm (Function.update (E z) (Sum.inl e) u))) =
+        (fun u : G => specialUnitaryWilsonPlaquetteEnergy 2 ((z.2 e)⁻¹ * u)) := by
+    funext u
+    rw [p4Q2EH_leftUpdate H e z u]
+    have hInv := specialUnitaryWilsonPlaquetteEnergy_inv (u⁻¹ * z.2 e)
+    simpa only [mul_inv_rev, inv_inv] using hInv.symm
+  rw [hEq]
+  exact integral_mul_left_eq_self
+    (fun g : G => specialUnitaryWilsonPlaquetteEnergy 2 g) ((z.2 e)⁻¹)
+
+/-- Actual independent pair-Haar selected RIGHT CR orthogonal projection
+has the exact constant representative equal to the true Haar mean. -/
+theorem p4Q2EH_rightSelectedProjection_ae_groupMean (e : Link) :
+    (((P (Sum.inr e) (f e) : Lp ℝ 2 muPair) : Joint → ℝ)) =ᵐ[muPair]
+      fun _ => p4Q2EH_groupWilsonHaarMean H := by
+  have hStrong : StronglyMeasurable (fun z : Joint => F e z) :=
+    (F e).continuous.stronglyMeasurable
+  have hBound : ∀ z : Joint, ‖F e z‖ ≤ (2 : ℝ) := by
+    intro z
+    have hz := p4Q2EE_SU2_relativeWilsonEnergyBCF_mem_Icc H e z
+    have habs : |F e z| ≤ (2 : ℝ) :=
+      abs_le.mpr ⟨by linarith [hz.1], hz.2⟩
+    simpa [Real.norm_eq_abs] using habs
+  have hRep :
+      (fun z : Joint => F e z) =ᵐ[muPair]
+        ((f e : Lp ℝ 2 muPair) : Joint → ℝ) :=
+    (p4Q2EE_SU2_pairHaarJointL2_ae_eq H e).symm
+  have hP := p4Q2DA_actualPairHaarProjection_ae_eq_CUmean
+    H 2 (Sum.inr e) (f e)
+    (fun z : Joint => F e z) hStrong 2 hBound hRep
+  exact hP.trans (Filter.Eventually.of_forall
+    (p4Q2EH_rightSelectedMean_eq_groupMean H e))
+
+/-- Actual independent pair-Haar selected LEFT CR orthogonal projection
+has the SAME constant representative, with NO Wilson-law equality. -/
+theorem p4Q2EH_leftSelectedProjection_ae_groupMean (e : Link) :
+    (((P (Sum.inl e) (f e) : Lp ℝ 2 muPair) : Joint → ℝ)) =ᵐ[muPair]
+      fun _ => p4Q2EH_groupWilsonHaarMean H := by
+  have hStrong : StronglyMeasurable (fun z : Joint => F e z) :=
+    (F e).continuous.stronglyMeasurable
+  have hBound : ∀ z : Joint, ‖F e z‖ ≤ (2 : ℝ) := by
+    intro z
+    have hz := p4Q2EE_SU2_relativeWilsonEnergyBCF_mem_Icc H e z
+    have habs : |F e z| ≤ (2 : ℝ) :=
+      abs_le.mpr ⟨by linarith [hz.1], hz.2⟩
+    simpa [Real.norm_eq_abs] using habs
+  have hRep :
+      (fun z : Joint => F e z) =ᵐ[muPair]
+        ((f e : Lp ℝ 2 muPair) : Joint → ℝ) :=
+    (p4Q2EE_SU2_pairHaarJointL2_ae_eq H e).symm
+  have hP := p4Q2DA_actualPairHaarProjection_ae_eq_CUmean
+    H 2 (Sum.inl e) (f e)
+    (fun z : Joint => F e z) hStrong 2 hBound hRep
+  exact hP.trans (Filter.Eventually.of_forall
+    (p4Q2EH_leftSelectedMean_eq_groupMean H e))
+
 end ActualHaar
 end
 end MathlibAnalytic
@@ -113,3 +196,8 @@ end MGAP4D
 
 #print axioms MGAP4D.MathlibAnalytic.p4Q2EH_rightUpdate
 #print axioms MGAP4D.MathlibAnalytic.p4Q2EH_leftUpdate
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2EH_rightSelectedMean_eq_groupMean
+#print axioms MGAP4D.MathlibAnalytic.p4Q2EH_leftSelectedMean_eq_groupMean
+#print axioms MGAP4D.MathlibAnalytic.p4Q2EH_rightSelectedProjection_ae_groupMean
+#print axioms MGAP4D.MathlibAnalytic.p4Q2EH_leftSelectedProjection_ae_groupMean
