@@ -43,7 +43,9 @@ noncomputable section
 
 set_option maxHeartbeats 1600000
 
-attribute [local instance] p4Q2BAColorLinksFintype
+attribute [local instance]
+  groundStateJointOneLinkCenteredResidualSpatialLinkFintype
+  p4Q2BAColorLinksFintype
 
 /-- Canonical honest equivalence between actual six-color link sigma-index
 and all genuine periodic-even spatial links. This matches DQ's finite
