@@ -30,7 +30,7 @@ and are not arbitrary nonnegative link weights. New Wilson covariance/
 block/locality input would be required to break the universal-weight bound.
 
 No alternate probability law, Wilson/pair-Haar expectation identification,
-H-/spacing-uniform positive coefficient, continuum Hamiltonian, or mass-gap
+spatial-volume or spacing-uniform positive coefficient, continuum Hamiltonian, or mass-gap
 statement is introduced. No sorry, admit, or new axiom.
 -/
 
