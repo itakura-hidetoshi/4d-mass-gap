@@ -94,6 +94,10 @@ noncomputable def p4Q2DP_originalTwelveColorPairHaarHilbertFloor
 12-color Haar Hilbert projection defect average. Unlike a new abstract
 finite energy, this is an identity of the actual original reference
 normalization on bounded physical representatives. -/
+-- Lean4 theorem proofs do not automatically capture section hypotheses
+-- used only in the proof body. Their original Wilson assumptions must
+-- remain explicit theorem parameters, in section declaration order.
+include hN hbeta in
 theorem p4Q2DP_originalTwelveColorHaarMassFloor_eq_L2_defects
     (m : ℝ) (f : JH)
     (F : Joint → ℝ) (hF : StronglyMeasurable F)
