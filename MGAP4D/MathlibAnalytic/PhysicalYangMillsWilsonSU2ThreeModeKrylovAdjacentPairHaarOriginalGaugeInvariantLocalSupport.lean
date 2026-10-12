@@ -244,8 +244,8 @@ theorem p4Q2ED_SU2_relativeWilsonEnergy_zero_two (e : Link) :
   refine ⟨(fun _ => (1 : G)), (fun _ => (1 : G)),
     (fun _ => (1 : G)), (fun _ => specialUnitaryTwoNegativeIdentity),
     ?_, ?_⟩
-  · simpa using specialUnitaryWilsonPlaquetteEnergy_two_one
-  · simpa using specialUnitaryWilsonPlaquetteEnergy_two_negativeIdentity
+  · simp
+  · simp
 
 /-- A concrete nonconstant local TWO-boundary gauge-invariant Wilson
 observable survives even though every one-boundary gauge-invariant
