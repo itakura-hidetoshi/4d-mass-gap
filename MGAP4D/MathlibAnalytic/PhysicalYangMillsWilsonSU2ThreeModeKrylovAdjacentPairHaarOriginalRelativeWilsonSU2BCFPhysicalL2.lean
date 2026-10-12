@@ -73,7 +73,9 @@ energy on the original spatial-slice compact pair carrier. -/
 noncomputable def p4Q2EE_SU2_relativeWilsonEnergyBCF (e : Link) : Obs :=
   BoundedContinuousFunction.mkOfCompact
     ⟨(fun z : Joint =>
-      specialUnitaryWilsonPlaquetteEnergy 2 ((z.1 e)⁻¹ * z.2 e)), by fun_prop⟩
+      specialUnitaryWilsonPlaquetteEnergy 2 ((z.1 e)⁻¹ * z.2 e)), by
+      apply (continuous_specialUnitaryWilsonPlaquetteEnergy 2).comp
+      fun_prop⟩
 
 theorem p4Q2EE_SU2_relativeWilsonEnergyBCF_apply
     (e : Link) (z : Joint) :
