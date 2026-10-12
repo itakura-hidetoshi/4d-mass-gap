@@ -1,10 +1,10 @@
 # MGAP4D — formalization roadmap
 
-**Status: 2026-10-12 JST. Latest theorem-bearing [PR #5480 (P4-Q2-DZ)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5480) is MERGED at `d4674e05b4ce1a21ffcdffce42b7de4f5a55df7c`. DY #5478 and DW/DX remain merged prerequisites.**
+**Status: 2026-10-12 JST. Latest theorem-bearing [PR #5482 (P4-Q2-EA)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5482) is MERGED at `5c9e8baaa5eaca9db1e64f0b62e8fe7aa6694575`. DZ #5480 and all earlier original physical Riesz results remain merged.**
 
 **Current theorem achievement:** DV full original Wilson Riesz quadratic coercivity, DW true Loewner and separate D12 bilateral comparison, DX boundedly invertible original orthogonal restriction with real spectrum in `[κ_R,12]`, and **DY typed original DQ/DF finite-volume mass/variance coefficient; DZ restores the literal factor 12 from normalized Haar reference to the unnormalized ORIGINAL Wilson Riesz sum with improved same-witness whole-L², Loewner and anti-Lipschitz estimates**. DU separately proves the normalized physical D12 restricted gap.
 
-**Main unresolved scientific target:** control the dependence of the physically relevant quantities on spatial volume `H`, coupling/scales and the actual original-Wilson fine/frozen Krylov family, then establish actual cross-scale reconstruction, nontrivial continuum physical time and a **positive continuum Yang–Mills mass gap**. No such continuum result is claimed.
+**EA theorem scope:** the exact best bound for the six-color average of **arbitrary nonnegative ACTUAL spatial-link weights** is `kappa <= 1/max_c card(E_c)`. This is a sharp barrier for DQ's universal-weight comparison method, NOT proof of a no-go for the original physical Wilson Haar Riesz spectrum. **Main unresolved scientific target:** control the dependence of the physically relevant quantities on spatial volume `H`, coupling/scales and the actual original-Wilson fine/frozen Krylov family, then establish actual cross-scale reconstruction, nontrivial continuum physical time and a **positive continuum Yang–Mills mass gap**. No such continuum result is claimed.
 
 Read [README.md](README.md) for definitions, exact Wilson-versus-Haar normalization, core theorem, and reproduction command.
 
@@ -13,14 +13,14 @@ Read [README.md](README.md) for definitions, exact Wilson-versus-Haar normalizat
 | Field | Verified checkpoint |
 | --- | --- |
 | Only theorem-authoritative repository / branch | `itakura-hidetoshi/4d-mass-gap` / `formal/real-hilbert-uniform-coercive-strong-limit` |
-| Latest theorem-bearing merged PR | [#5480](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5480), merge SHA `d4674e05b4ce1a21ffcdffce42b7de4f5a55df7c` |
-| Exact-tested PR #5480 source HEAD | `b057e2e618de7597478b909a85807839ed824ff8` |
+| Latest theorem-bearing merged PR | [#5482](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5482), merge SHA `5c9e8baaa5eaca9db1e64f0b62e8fe7aa6694575` |
+| Exact-tested PR #5482 source HEAD | `961a8410fe9ef1247759e2c676bb756784f6f3df` |
 | Lean / mathlib | `v4.30.0-rc2` / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
-| Exact-source-head CI | [#38230569714](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38230569714), SUCCESS |
-| Changed Lean / MCP receipt jobs | `114748729543` / `114750270625`, both SUCCESS |
-| Build and diagnostics | **9533/9533**, **DZ changed-file errors/warnings 0**, static audit passed. `#print axioms`: standard Lean axioms plus inherited original color-cardinality, incident-plaquettes-cardinality and other-axis-cardinality `native_decide` dependencies; no NEW axiom declarations and no `sorryAx` in final build. Historical DV has four warnings. |
+| Exact-source-head CI | [#38234991332](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38234991332), SUCCESS |
+| Changed Lean / MCP receipt jobs | `114763352357` / `114764731387`, both SUCCESS |
+| Build and diagnostics | **9534/9534**, **EA changed-file errors/warnings 0**, static audit passed. `#print axioms`: standard Lean axioms and inherited original spatial-color/other-axis `native_decide` dependencies, no NEW axioms or `sorryAx` in successful build. Historical DV had four warnings. |
 
-A later **docs-only merge will move the current canonical branch HEAD** beyond the SHA shown above, but it does not alter the #5480 theorem-bearing result. Observe the branch's fresh exact HEAD for each new PR. GitHub's default `main` is not the theorem authority.
+A later **docs-only merge will move the current canonical branch HEAD** beyond the SHA shown above, but it does not alter the #5482 theorem-bearing result. Observe the branch's fresh exact HEAD for each new PR. GitHub's default `main` is not the theorem authority.
 
 ## 1. Proof status matrix
 
@@ -35,6 +35,7 @@ A later **docs-only merge will move the current canonical branch HEAD** beyond t
 | **P4-Q2 Wilson / Haar physical comparison** | #5456–#5467: real original Wilson / pair-Haar finite-volume variance sandwich, positive original twelve-color Haar mass floor, actual right/left fiber-to-CR defect identities and DP reference lower bound. | Constants are finite-H and may depend on beta/rank. |
 | **P4-Q2 normalized→physical gap** | **#5468–#5472 CLOSED**: DQ true all-coordinate Haar floor; DR physical variance; DS full-`L²` E12 coercivity; DT D12 Loewner; DU positive real spectrum of genuine D12 restriction. | D12 is NOT AW; no H-/spacing-uniform spectrum gap. |
 | **P4-Q2 original Wilson Riesz quantitative gap** | **DV #5473, DW #5475, DX #5476, DY #5478, DZ #5480 CLOSED**: original AW whole L², Loewner/D12 comparison, inverse/spectral band, explicit DQ/DF m,M witness, and **exact 12-fold normalization recovery with improved same-witness L², Loewner and anti-Lipschitz**. | Genuine H-/spacing-uniform gap and Yang–Mills continuum mass gap remain OPEN. |
+| **P4-Q2-EA: six-color average sharpness** | **#5482 CLOSED**: exactly optimal universal `ENNReal` coefficient for arbitrary nonnegative weights on the genuine six-color spatial-link carrier, iff `κ ≤ (card E_c)⁻¹` for every color. | Whether physically realizable original Wilson Haar residuals furnish such single-link spikes or admit stronger block/covariance estimates is OPEN. |
 | **C1 / C2 / C3** | Previous conditional adjacent-scale interfaces and finite-H components. | Actual common-marginal physicality; vector-wise fine→coarse compatibility; explicit summable beta trajectory — **OPEN**. |
 | **H2 / H3 / H4** | Finite-H transfer and spectral infrastructure under precise hypotheses. | Spacing-scaled strongly continuous physical evolution, OS Hamiltonian, continuum Wightman/Yang–Mills mass gap — **OPEN**. |
 
@@ -110,7 +111,7 @@ In DU, the spectrum result follows from **resolvent invertibility** via pinned m
 
 **Keep the order of logic:** original normalized Haar reference ≤ E12 was established earlier; it alone does **not** imply the original Haar reference has a positive lower bound. DQ + DF + DV supply the independent missing direction.
 
-## 3. Closed DW–DZ: original Riesz operator, explicit physical coefficient, exact 12-fold unnormalization; H-uniformity OPEN
+## 3. Closed DW–DZ operator coefficients and EA sharpness of the universal color-averaging step; physical H-uniformity OPEN
 
 **P4-Q2-DW [PR #5475] — CLOSED.** On the genuine original Wilson joint physical Hilbert `HW`, DW proves
 
@@ -144,7 +145,19 @@ kappa_DY = min(1, m*exp(-32*beta) / (12*spatialLinkCard(H)*(M+1))).
 
 The explicit normalized-to-original-sum inequality, full physical joint L² quadratic, original Riesz Loewner bound, and restricted anti-Lipschitz estimate all use this same improved coefficient. It is a real proof-certificate gain, NOT the removal of the inherent finite-size averaging factor or a new physical Hamiltonian.
 
-**Next OPEN P4-Q2-EA / uniformity research:** test and prove genuine original physical block/colored refresh or covariance cancellation controlling the remaining `1/spatialLinkCard(H)` and the H-dependent Wilson mass floor `m`, variance comparison `M`. A bare rescaling by spatial link count is not a Wilson time-transfer spectral gap or continuum OS Hamiltonian. A positive H-independent bound remains unproved; signed physical fine/frozen Krylov and C1/C2/C3/H2/H3/H4 remain OPEN.
+**P4-Q2-EA [PR #5482] — CLOSED, in its exact universal-weight scope.** For the ACTUAL original periodic-even spatial links `E_H` and their genuine six-color partition `E_c`, the Lean theorem `p4Q2EA_actualColorAverages_lower_coefficient_iff` proves
+
+```text
+(forall g : E_H -> ENNReal,
+  kappa * sum_{e in E_H} g(e)
+    <= sum_{c:Fin6} (card E_c)^(-1) * sum_{e in E_c} g(e))
+iff
+(forall c : Fin6, kappa <= (card E_c)^(-1)).
+```
+
+Necessity is given by the **actual one-link spike** in each original nonempty spatial color; sufficiency uses the genuine DQ six-color partition and ENNReal monotonicity. `p4Q2EA_actualColorAverage_bound_of_color_card` makes the finite `K`-color-cardinality upper bound explicit. The **best possible coefficient for arbitrary nonnegative link weights** is `(max_c card E_c)^(-1)`; DQ's cruder `1/card E_H` is a universally valid, possibly weaker bound. Nothing here asserts the single-link spike is the squared defect of an original Wilson physical observable. Therefore it does NOT rule out a better *actual* Wilson `AW` gap or identify the normalized physical `D12` with `AW`.
+
+**Next OPEN P4-Q2-EB:** study the ACTUAL admissible constrained Wilson Haar fiber residuals. In particular, examine whether genuine SU(N) localized observables (especially beta=0 where appropriate) can realize or approximate the single-color spike, and prove a genuine original-law color-block/covariance comparison if they cannot. Any asserted H-independent lower bound must control original mass floor `m(H,N,beta)`, variance comparison `M(H,N,beta)`, and physical signed/fine-frozen scale compatibility. C1/C2/C3/H2/H3/H4 and 4D continuum positive mass gap remain OPEN.
 
 **Still OPEN:** physical signed fine/frozen Krylov Gram uniformity; C1 common-marginal physicality, C2 vector-wise reconstruction, C3 summable genuine beta trajectory; H2 spacing-scaled nontrivial evolution, H3 OS Hamiltonian, H4 4D Yang–Mills continuum existence and positive mass gap.
 
@@ -240,11 +253,12 @@ All sources below are under `MGAP4D/MathlibAnalytic/` and share the `PhysicalYan
 | **Original AW restricted IsUnit and spectral band** | **`OriginalWilsonRieszSpectralBandAndIsUnit`** | **#5476** |
 | **Explicit genuine original Wilson DQ/DF coefficient to full L² and anti-Lipschitz** | **`OriginalWilsonRieszExplicitFiniteVolumeCertificate`** | **#5478** |
 | **Exact original unnormalized 12-color coefficient and improved same-witness full-L²** | **`OriginalWilsonRieszExactUnnormalizedTwelveFactor`** | **#5480** |
+| **Sharp actual six-color universal link-weight coefficient** | **`OriginalColorAverageSharpnessBarrier`** | **#5482** |
 
 Minimal latest Lean target after checking out the newly observed authoritative branch:
 
 ```bash
-lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalWilsonRieszExactUnnormalizedTwelveFactor
+lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalColorAverageSharpnessBarrier
 ```
 
 **Proof-integrity process:** exact authoritative branch SHA first; exact Lean file, dependencies and physical definitions second; docs and exact-source-head CI after that. Inspect the full error context and pinned mathlib syntax, not just the highlighted line. No new `sorry`, `admit`, `axiom` or hidden synthetic physical laws. Preserve true original sum/average normalization, and explicitly report nonfatal warnings (DV had four). Use targeted changed-Lean CI and reusable pinned caches where possible; do not rebuild the entire project needlessly. For a documentation-only update, modify **only README.md and ROADMAP.md** and do not present its resulting merge SHA as a new theorem-bearing checkpoint.
