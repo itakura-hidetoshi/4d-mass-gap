@@ -94,10 +94,6 @@ noncomputable def p4Q2DP_originalTwelveColorPairHaarHilbertFloor
 12-color Haar Hilbert projection defect average. Unlike a new abstract
 finite energy, this is an identity of the actual original reference
 normalization on bounded physical representatives. -/
--- Lean4 theorem proofs do not automatically capture section hypotheses
--- used only in the proof body. Their original Wilson assumptions must
--- remain explicit theorem parameters, in section declaration order.
-include hN hbeta in
 theorem p4Q2DP_originalTwelveColorHaarMassFloor_eq_L2_defects
     (m : ℝ) (f : JH)
     (F : Joint → ℝ) (hF : StronglyMeasurable F)
@@ -125,7 +121,7 @@ theorem p4Q2DP_originalTwelveColorHaarMassFloor_eq_L2_defects
       congr 1
       exact Finset.sum_congr rfl (fun e _he =>
         p4Q2DO_originalRightHaarMassFloor_eq_CR_defect
-          H N hN beta hbeta m e.1 f F hF M hM hEq)
+          H N beta m e.1 f F hF M hM hEq)
   | inr k =>
       change
         (Fintype.card (p4Q2BA_ColorLinks H k) : ENNReal)⁻¹ *
@@ -139,7 +135,7 @@ theorem p4Q2DP_originalTwelveColorHaarMassFloor_eq_L2_defects
       congr 1
       exact Finset.sum_congr rfl (fun e _he =>
         p4Q2DO_originalLeftHaarMassFloor_eq_CR_defect
-          H N hN beta hbeta m e.1 f F hF M hM hEq)
+          H N beta m e.1 f F hF M hM hEq)
 
 /-- Original mass-weighted physical Wilson twelve-color Haar reference
 dominates a POSITIVE finite-volume normalized sum of ACTUAL CR pair-Haar
@@ -161,7 +157,7 @@ theorem p4Q2DP_originalWilsonTwelveReference_ge_pairHaarHilbertFloor
     p4Q2DP_originalTwelveColorPairHaarHilbertFloor H N beta m f =
         p4Q2DG_originalTwelveColorHaarMassFloor H N beta m F :=
       (p4Q2DP_originalTwelveColorHaarMassFloor_eq_L2_defects
-        H N hN beta hbeta m f F hF M hM hEq).symm
+        H N beta m f F hF M hM hEq).symm
     _ ≤ p4Q2BC_originalPhysicalTwelveColorHaarReference
           H N hN beta hbeta F := hOriginal F hF
 
