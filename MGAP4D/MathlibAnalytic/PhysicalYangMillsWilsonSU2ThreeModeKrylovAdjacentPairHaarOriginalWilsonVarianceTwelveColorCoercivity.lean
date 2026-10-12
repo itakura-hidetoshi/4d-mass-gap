@@ -161,7 +161,7 @@ theorem p4Q2DR_originalWilsonPhysicalTwelveColor_coercive_bounded :
     ∃ κ : ENNReal, 0 < κ ∧
       ∀ (F : Joint → ℝ) (hF : StronglyMeasurable F),
         ∀ (B : ℝ) (hB : ∀ z, ‖F z‖ ≤ B)
-          (f : JH) (hEq : F =ᵐ[muPair] (f : Joint → ℝ)),
+          (f : JH), F =ᵐ[muPair] (f : Joint → ℝ) →
             κ * ENNReal.ofReal (variance F muWilson) ≤
               ENNReal.ofReal
                 (p4Q2BC_originalPhysicalTwelveColorResidual
