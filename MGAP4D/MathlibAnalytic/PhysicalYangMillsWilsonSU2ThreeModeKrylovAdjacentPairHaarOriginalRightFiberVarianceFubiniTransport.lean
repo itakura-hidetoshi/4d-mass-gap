@@ -23,8 +23,7 @@ genuine Wilson reference fiber coordinates and show the global
 squared-deviation identity about its actual retained Haar mean. The
 next step is to identify that literal right Haar mean with CU's genuine
 coordinate mean and therefore DI's CR projection defect; neither a
-surrogate measure nor a point evaluation of an arbitrary L² equivalence
-class is introduced.
+surrogate measure nor arbitrary evaluation at a fixed fiber is introduced.
 
 No positive-beta Wilson projection commutation, uniform spectral gap,
 or continuum Yang--Mills mass-gap claim is made.
