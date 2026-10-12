@@ -167,11 +167,15 @@ theorem p4Q2EN_SU2_offSelectedPhysicalRightColor_fixed
     periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
       H 2 cc
   let f := W beta hbeta e
-  have hMem : f ∈ lpMeas ℝ ℝ sigma 2 (Mu beta hbeta) := by
+  let V : Submodule ℝ
+      (PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+        H 2 (Nat.zero_lt_succ 1) beta hbeta) :=
+    lpMeas ℝ ℝ sigma 2 (Mu beta hbeta)
+  have hMem : f ∈ V := by
     rw [mem_lpMeas_iff_aestronglyMeasurable]
     exact (p4Q2EN_rightOffColor_stronglyMeasurable H e c hc).aestronglyMeasurable.congr
       (p4Q2EE_SU2_physicalWilsonJointL2_ae_eq H beta hbeta e).symm
-  let q : lpMeas ℝ ℝ sigma 2 (Mu beta hbeta) := ⟨f, hMem⟩
+  let q : V := ⟨f, hMem⟩
   let hm := periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace_le
     H 2 cc
   letI : Fact (sigma ≤
@@ -180,19 +184,19 @@ theorem p4Q2EN_SU2_offSelectedPhysicalRightColor_fixed
       (condExpL2 ℝ ℝ hm (q :
         PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
           H 2 (Nat.zero_lt_succ 1) beta hbeta) :
-        lpMeas ℝ ℝ sigma 2 (Mu beta hbeta)) = q := by
+        V) = q := by
     unfold condExpL2
     exact Submodule.orthogonalProjection_mem_subspace_eq_self q
   change ((condExpL2 ℝ ℝ hm (q :
       PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
         H 2 (Nat.zero_lt_succ 1) beta hbeta) :
-      lpMeas ℝ ℝ sigma 2 (Mu beta hbeta)) :
+      V) :
       PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
         H 2 (Nat.zero_lt_succ 1) beta hbeta) = (q :
       PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
         H 2 (Nat.zero_lt_succ 1) beta hbeta)
   exact congrArg
-    (fun y : lpMeas ℝ ℝ sigma 2 (Mu beta hbeta) =>
+    (fun y : V =>
       (y : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
         H 2 (Nat.zero_lt_succ 1) beta hbeta)) hq
 
@@ -208,11 +212,15 @@ theorem p4Q2EN_SU2_offSelectedPhysicalLeftColor_fixed
     periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialColorMeasurableSpace
       H 2 cc
   let f := W beta hbeta e
-  have hMem : f ∈ lpMeas ℝ ℝ sigma 2 (Mu beta hbeta) := by
+  let V : Submodule ℝ
+      (PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
+        H 2 (Nat.zero_lt_succ 1) beta hbeta) :=
+    lpMeas ℝ ℝ sigma 2 (Mu beta hbeta)
+  have hMem : f ∈ V := by
     rw [mem_lpMeas_iff_aestronglyMeasurable]
     exact (p4Q2EN_leftOffColor_stronglyMeasurable H e c hc).aestronglyMeasurable.congr
       (p4Q2EE_SU2_physicalWilsonJointL2_ae_eq H beta hbeta e).symm
-  let q : lpMeas ℝ ℝ sigma 2 (Mu beta hbeta) := ⟨f, hMem⟩
+  let q : V := ⟨f, hMem⟩
   let hm := periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialColorMeasurableSpace_le
     H 2 cc
   letI : Fact (sigma ≤
@@ -221,19 +229,19 @@ theorem p4Q2EN_SU2_offSelectedPhysicalLeftColor_fixed
       (condExpL2 ℝ ℝ hm (q :
         PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
           H 2 (Nat.zero_lt_succ 1) beta hbeta) :
-        lpMeas ℝ ℝ sigma 2 (Mu beta hbeta)) = q := by
+        V) = q := by
     unfold condExpL2
     exact Submodule.orthogonalProjection_mem_subspace_eq_self q
   change ((condExpL2 ℝ ℝ hm (q :
       PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
         H 2 (Nat.zero_lt_succ 1) beta hbeta) :
-      lpMeas ℝ ℝ sigma 2 (Mu beta hbeta)) :
+      V) :
       PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
         H 2 (Nat.zero_lt_succ 1) beta hbeta) = (q :
       PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
         H 2 (Nat.zero_lt_succ 1) beta hbeta)
   exact congrArg
-    (fun y : lpMeas ℝ ℝ sigma 2 (Mu beta hbeta) =>
+    (fun y : V =>
       (y : PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
         H 2 (Nat.zero_lt_succ 1) beta hbeta)) hq
 
