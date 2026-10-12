@@ -192,6 +192,10 @@ theorem p4Q2DZ_originalWilsonUnnormalizedReference_exactTwelveWitness :
       H N hN beta hbeta F
   exact hReal
 
+local notation "B" =>
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantProjection
+    H N hN beta hbeta
+
 /-- The exact improved unnormalized coefficient extends by genuine BW density
 and BX continuity to the ACTUAL full original Wilson joint L². -/
 theorem p4Q2DZ_originalFullJointRieszQuadratic_exactTwelveCoefficient :
