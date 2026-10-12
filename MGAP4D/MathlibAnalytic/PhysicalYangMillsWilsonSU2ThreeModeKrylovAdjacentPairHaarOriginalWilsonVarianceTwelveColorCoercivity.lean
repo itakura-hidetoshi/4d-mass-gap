@@ -125,11 +125,16 @@ theorem p4Q2DR_actualPairHaarVariance_le_allCoordinateENNRealDefects
     ENNReal.ofReal (variance (f : Joint → ℝ) muPair) ≤
       ∑ i : I, ENNReal.ofReal (‖f - P i f‖ ^ 2) := by
   classical
+  have hIndex :
+      (@Finset.univ I (p4Q2CR_actualJointIndexFintype H)) =
+        (Finset.univ : Finset I) := by
+    ext i
+    simp
   have hDC :
       ‖f - Lp.const 2 muPair
         (∫ z : Joint, (f : Joint → ℝ) z ∂muPair)‖ ^ 2 ≤
           ∑ i : I, ‖f - P i f‖ ^ 2 := by
-    simpa only [Finset.sum_univ] using
+    simpa only [hIndex] using
       (p4Q2DC_actualPairHaar_globalMeanPoincare H N f)
   have hSum :
       ENNReal.ofReal (∑ i : I, ‖f - P i f‖ ^ 2) =
@@ -218,8 +223,14 @@ theorem p4Q2DR_originalWilsonPhysicalTwelveColor_coercive_bounded :
           H N hN beta hbeta F := by
     calc
       a * ENNReal.ofReal (variance F muPair) ≤
-        a * (∑ i : I, ENNReal.ofReal (‖f - P i f‖ ^ 2)) :=
-          mul_le_mul_left hPairDefects a
+        a * (∑ i : I, ENNReal.ofReal (‖f - P i f‖ ^ 2)) := by
+          calc
+            a * ENNReal.ofReal (variance F muPair) =
+              ENNReal.ofReal (variance F muPair) * a := mul_comm _ _
+            _ ≤ (∑ i : I, ENNReal.ofReal (‖f - P i f‖ ^ 2)) * a :=
+              mul_le_mul_left hPairDefects a
+            _ = a * (∑ i : I, ENNReal.ofReal (‖f - P i f‖ ^ 2)) :=
+              mul_comm _ _
       _ ≤ p4Q2BC_originalPhysicalTwelveColorHaarReference
             H N hN beta hbeta F :=
         hReference f F hF B hB hEq
@@ -239,8 +250,14 @@ theorem p4Q2DR_originalWilsonPhysicalTwelveColor_coercive_bounded :
           H N hN beta hbeta F := by
     calc
       κ * ENNReal.ofReal (variance F muWilson) ≤
-        κ * (b * ENNReal.ofReal (variance F muPair)) :=
-          mul_le_mul_left hVarianceENN κ
+        κ * (b * ENNReal.ofReal (variance F muPair)) := by
+          calc
+            κ * ENNReal.ofReal (variance F muWilson) =
+              ENNReal.ofReal (variance F muWilson) * κ := mul_comm _ _
+            _ ≤ (b * ENNReal.ofReal (variance F muPair)) * κ :=
+              mul_le_mul_left hVarianceENN κ
+            _ = κ * (b * ENNReal.ofReal (variance F muPair)) :=
+              mul_comm _ _
       _ = a * ENNReal.ofReal (variance F muPair) := hCancel
       _ ≤ p4Q2BC_originalPhysicalTwelveColorHaarReference
             H N hN beta hbeta F := hPairReference
