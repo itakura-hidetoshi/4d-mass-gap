@@ -61,7 +61,8 @@ private theorem p4Q2DF_variance_le_anyCenteredSquare
     (μ : Measure Ω) [IsProbabilityMeasure μ]
     (F : Ω → ℝ) (hF : AEStronglyMeasurable F μ) (c : ℝ) :
     variance F μ ≤ ∫ z, (F z - c) ^ 2 ∂μ := by
-  have h := variance_le_expectation_sq (hF.sub_const c)
+  have h := variance_le_expectation_sq
+    (hF.sub (aestronglyMeasurable_const (μ := μ) (c := c)))
   rw [variance_sub_const hF c] at h
   simpa only [Pi.pow_apply] using h
 
@@ -112,7 +113,7 @@ theorem p4Q2DF_originalWilsonJoint_allBoundedVariance_uniform_sandwich :
       ‖F z - c‖ ≤ B + ‖c‖ := by
     calc
       ‖F z - c‖ ≤ ‖F z‖ + ‖c‖ := norm_sub_le _ _
-      _ ≤ B + ‖c‖ := add_le_add_right (hB z) _
+      _ ≤ B + ‖c‖ := add_le_add (hB z) le_rfl
   have hSqMeas (c : ℝ) :
       Measurable (fun z : Joint => (F z - c) ^ 2) :=
     ((hF.measurable.sub measurable_const).pow_const 2)
