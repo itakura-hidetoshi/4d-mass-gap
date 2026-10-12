@@ -52,6 +52,24 @@ attribute [local instance]
   groundStateJointOneLinkCenteredResidualTargetLinkUnique
   p4Q2BAColorLinksFintype
 
+/-- Reuse the literal original physical right-link outer carrier.
+The CJ-private abbreviation is intentionally not referenced across modules. -/
+private abbrev p4Q2DJ_rightContext (H N : ℕ)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H) : Type :=
+  PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+    (PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
+      Matrix.specialUnitaryGroup (Fin N) ℂ)
+
+/-- The actual original split Haar outer law, definitionally equal to
+CJ's certified outer law. -/
+private noncomputable def p4Q2DJ_rightOuterHaar (H N : ℕ)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H) :
+    Measure (p4Q2DJ_rightContext H N target) :=
+  (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N).prod
+    (Measure.pi
+      (fun _ : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target =>
+        normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)))
+
 section ActualOriginalRightLink
 variable (H N : ℕ)
 
@@ -63,8 +81,8 @@ local notation "G" => Matrix.specialUnitaryGroup (Fin N) ℂ
 local notation "muPair" =>
   periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N
 local notation "muH" => normalizedCompactHaar G
-local notation "Ctx" => p4Q2CJ_ctx H N
-local notation "muOuter" => p4Q2CJ_outerHaar H N
+local notation "Ctx" => p4Q2DJ_rightContext H N
+local notation "muOuter" => p4Q2DJ_rightOuterHaar H N
 local notation "Section" =>
   periodicHypercubicEvenSpecialUnitaryGroundStateJointOneLinkConcreteSection H N
 
