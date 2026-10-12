@@ -82,6 +82,7 @@ Both selected coordinates remain represented in that sigma-algebra. -/
 private theorem p4Q2EN_rightOffColor_stronglyMeasurable
     (e : Link) (c : Fin 6) (hc : c ≠ kappa (col e)) :
     @StronglyMeasurable Joint ℝ
+      inferInstance
       (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
         H 2 (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c)) inferInstance
       (fun z : Joint => F e z) := by
@@ -92,6 +93,7 @@ private theorem p4Q2EN_rightOffColor_stronglyMeasurable
       (Cfg × (PeriodicHypercubicEvenSpatialSliceOffColorLink H cc → G)) → ℝ :=
     fun t => specialUnitaryWilsonPlaquetteEnergy 2 ((t.1 e)⁻¹ * t.2 eOff)
   have hFactor : Measurable factor := by
+    apply (continuous_specialUnitaryWilsonPlaquetteEnergy 2).measurable.comp
     dsimp [factor]
     fun_prop
   letI : MeasurableSpace Joint :=
@@ -119,6 +121,7 @@ boundary and the physical selected left link in its off-color coordinates. -/
 private theorem p4Q2EN_leftOffColor_stronglyMeasurable
     (e : Link) (c : Fin 6) (hc : c ≠ kappa (col e)) :
     @StronglyMeasurable Joint ℝ
+      inferInstance
       (periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialColorMeasurableSpace
         H 2 (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c)) inferInstance
       (fun z : Joint => F e z) := by
@@ -129,6 +132,7 @@ private theorem p4Q2EN_leftOffColor_stronglyMeasurable
       (Cfg × (PeriodicHypercubicEvenSpatialSliceOffColorLink H cc → G)) → ℝ :=
     fun t => specialUnitaryWilsonPlaquetteEnergy 2 ((t.2 eOff)⁻¹ * t.1 e)
   have hFactor : Measurable factor := by
+    apply (continuous_specialUnitaryWilsonPlaquetteEnergy 2).measurable.comp
     dsimp [factor]
     fun_prop
   letI : MeasurableSpace Joint :=
