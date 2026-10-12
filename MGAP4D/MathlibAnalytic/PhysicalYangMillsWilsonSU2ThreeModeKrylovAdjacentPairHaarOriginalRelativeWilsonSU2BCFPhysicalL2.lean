@@ -133,7 +133,7 @@ theorem p4Q2EE_SU2_originalWilsonPhysicalCore_apply
 /-- The actual bounded observable belongs to the original Wilson
 physical joint L² through precisely BR's certified canonical core map. -/
 noncomputable def p4Q2EE_SU2_physicalWilsonJointL2
-    (hbeta : 0 ≤ beta) (beta : ℝ) (e : Link) :
+    (beta : ℝ) (hbeta : 0 ≤ beta) (e : Link) :
     PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
       H 2 (by norm_num) beta hbeta :=
   p4Q2BR_originalCorePhysicalL2 H 2 (by norm_num) beta hbeta
@@ -143,7 +143,7 @@ noncomputable def p4Q2EE_SU2_physicalWilsonJointL2
 relative Wilson energy representative, Wilson-a.e., not pointwise. -/
 theorem p4Q2EE_SU2_physicalWilsonJointL2_ae_eq
     (beta : ℝ) (hbeta : 0 ≤ beta) (e : Link) :
-    ((p4Q2EE_SU2_physicalWilsonJointL2 H hbeta beta e :
+    ((p4Q2EE_SU2_physicalWilsonJointL2 H beta hbeta e :
       PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
         H 2 (by norm_num) beta hbeta) : Joint → ℝ) =ᵐ[
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
@@ -181,7 +181,7 @@ quadratic of the SAME bounded concrete Wilson observable. -/
 theorem p4Q2EE_SU2_originalWilsonRieszQuadratic_eq_literal
     (beta : ℝ) (hbeta : 0 ≤ beta) (e : Link) :
     p4Q2BX_originalFullJointQuadratic H 2 (by norm_num) beta hbeta
-      (p4Q2EE_SU2_physicalWilsonJointL2 H hbeta beta e) =
+      (p4Q2EE_SU2_physicalWilsonJointL2 H beta hbeta e) =
         p4Q2BP_originalCoreReference H 2 (by norm_num) beta hbeta
           (p4Q2EE_SU2_originalWilsonPhysicalCore H e) :=
   p4Q2CL_originalFullQuadratic_eq_literalCore H 2
