@@ -79,7 +79,7 @@ theorem p4Q2DM_originalPairHaar_swap_measurePreserving :
       (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
     ((periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N).prod
       (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N))
-  exact MeasureTheory.measurePreserving_swap
+  exact MeasureTheory.Measure.measurePreserving_swap
 
 /-- The authentic boundary swap on the original pair-Haar Hilbert space,
 not a Wilson-interacting conditional projection or a proxy operator. -/
