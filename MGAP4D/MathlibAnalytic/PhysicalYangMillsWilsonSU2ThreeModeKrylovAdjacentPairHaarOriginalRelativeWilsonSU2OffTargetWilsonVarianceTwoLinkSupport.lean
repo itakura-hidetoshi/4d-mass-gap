@@ -220,7 +220,6 @@ private theorem p4Q2EL_colorSum_eq_single
     if k = k0 then g e else 0
   by_cases hk : k = k0
   · rw [hk]
-    simp only [if_pos rfl]
     have hcol :
         periodicHypercubicEvenSpatialSliceLinkColor H e =
           periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm k0 := by
