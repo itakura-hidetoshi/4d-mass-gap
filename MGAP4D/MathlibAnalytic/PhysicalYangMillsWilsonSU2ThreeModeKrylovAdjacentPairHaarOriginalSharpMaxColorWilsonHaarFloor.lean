@@ -58,7 +58,9 @@ noncomputable def p4Q2EB_maxColorCard (H : ℕ) : ℕ :=
 theorem p4Q2EB_colorCard_le_max (H : ℕ) (c : Fin 6) :
     Fintype.card (p4Q2BA_ColorLinks H c) ≤ p4Q2EB_maxColorCard H := by
   unfold p4Q2EB_maxColorCard
-  exact Finset.le_sup (Finset.mem_univ c)
+  exact Finset.le_sup
+    (f := fun d : Fin 6 => Fintype.card (p4Q2BA_ColorLinks H d))
+    (Finset.mem_univ c)
 
 theorem p4Q2EB_maxColorCard_pos (H : ℕ) :
     0 < p4Q2EB_maxColorCard H := by
@@ -146,7 +148,25 @@ theorem p4Q2EB_oldFloor_le_maxColorFloor (m : ℝ) :
         (Fintype.card Link : ENNReal)⁻¹) * (12 : ENNReal)⁻¹ := by ac_rfl
     _ ≤ ((ENNReal.ofReal m * ENNReal.ofReal (Real.exp (-32 * beta))) *
           (p4Q2EB_maxColorCard H : ENNReal)⁻¹) * (12 : ENNReal)⁻¹ := by
-      exact mul_le_mul_right (mul_le_mul_right hInv _) _
+      have hOne :
+          (ENNReal.ofReal m * ENNReal.ofReal (Real.exp (-32 * beta))) *
+            (Fintype.card Link : ENNReal)⁻¹ ≤
+          (ENNReal.ofReal m * ENNReal.ofReal (Real.exp (-32 * beta))) *
+            (p4Q2EB_maxColorCard H : ENNReal)⁻¹ :=
+        mul_le_mul_right hInv
+          (ENNReal.ofReal m * ENNReal.ofReal (Real.exp (-32 * beta)))
+      calc
+        ((ENNReal.ofReal m * ENNReal.ofReal (Real.exp (-32 * beta))) *
+            (Fintype.card Link : ENNReal)⁻¹) * (12 : ENNReal)⁻¹ =
+          (12 : ENNReal)⁻¹ *
+            ((ENNReal.ofReal m * ENNReal.ofReal (Real.exp (-32 * beta))) *
+              (Fintype.card Link : ENNReal)⁻¹) := by ac_rfl
+        _ ≤ (12 : ENNReal)⁻¹ *
+              ((ENNReal.ofReal m * ENNReal.ofReal (Real.exp (-32 * beta))) *
+                (p4Q2EB_maxColorCard H : ENNReal)⁻¹) :=
+          mul_le_mul_right hOne (12 : ENNReal)⁻¹
+        _ = ((ENNReal.ofReal m * ENNReal.ofReal (Real.exp (-32 * beta))) *
+              (p4Q2EB_maxColorCard H : ENNReal)⁻¹) * (12 : ENNReal)⁻¹ := by ac_rfl
     _ = (12 : ENNReal)⁻¹ * (p4Q2EB_maxColorCard H : ENNReal)⁻¹ *
         (ENNReal.ofReal m * ENNReal.ofReal (Real.exp (-32 * beta))) := by ac_rfl
 
