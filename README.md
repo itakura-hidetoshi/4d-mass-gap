@@ -2,9 +2,9 @@
 
 Lean 4 / mathlib research by **Hidetoshi Itakura** on the original finite-volume Wilson lattice theory and the outstanding four-dimensional Yang–Mills existence and mass-gap problem.
 
-**Checkpoint — 2026-10-12 JST:** theorem-bearing [PR #5473](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5473) (P4-Q2-DV) is **merged**, at commit `5c19cab77627673818c10926be876c009245feb8`. Its exact-source-head Lean CI is [#38218052792](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38218052792), **SUCCESS**.
+**Checkpoint — 2026-10-12 JST:** theorem-bearing [PR #5476](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5476) (**P4-Q2-DX**) is **MERGED**, at `cb1f65e0d9de279a27afc0b94411834006e6124a`. Its exact-source-head Lean CI [#38224338089](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38224338089) completed **SUCCESS** (9531/9531). Prior theorem-bearing [#5475 (DW)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5475) is also MERGED.
 
-> **Scope.** The original Wilson Haar-reference Riesz quadratic now has a strictly positive **finite-volume** coercivity coefficient on the **entire actual physical joint real (L^2)**, modulo genuine Wilson constants. The separate physical 12-color Dirichlet operator also has a verified positive finite-volume orthogonal-sector spectral floor. **Neither result establishes an estimate uniform in spatial volume or lattice spacing, a continuum quantum Yang–Mills theory, or a positive continuum mass gap.**
+> **Scope.** The literal original Wilson Haar-reference Riesz operator `AW` now has **finite-volume** full-physical-joint-`L²` coercivity (DV), Loewner order and self-adjoint orthogonal restriction (DW), and a **boundedly invertible** constant-orthogonal restriction with **real spectrum in `[κ_R,12]`** for some `κ_R(H,N,beta)>0` (DX). The separate normalized physical 12-color `D12` and independent pair-Haar projection defects retain their distinct meanings. **No H-/spacing-uniform estimate, actual continuum Yang–Mills theory, or positive continuum mass gap is claimed.**
 
 See the updated [ROADMAP.md](ROADMAP.md) for the theorem-status matrix, independent Krylov/adjacent-scale obligations, and the next proof order.
 
@@ -14,15 +14,15 @@ See the updated [ROADMAP.md](ROADMAP.md) for the theorem-status matrix, independ
 | --- | --- |
 | Repository | [itakura-hidetoshi/4d-mass-gap](https://github.com/itakura-hidetoshi/4d-mass-gap) |
 | **Only theorem-authoritative branch** | `formal/real-hilbert-uniform-coercive-strong-limit` |
-| **Latest theorem-bearing merge** | [#5473](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5473), `5c19cab77627673818c10926be876c009245feb8` |
-| PR #5473 exact tested source HEAD | `d9b1306c69d22e98d69f1830d9e803db0b518d3a` |
+| **Latest theorem-bearing merge** | [#5476 (DX)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5476), `cb1f65e0d9de279a27afc0b94411834006e6124a` |
+| PR #5476 exact tested source HEAD | `d20b4e03c5d91c6a0234e9573aae92270f322da0` |
 | Lean pin | `leanprover/lean4:v4.30.0-rc2` |
 | mathlib pin | `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
-| Exact source-head CI | [#38218052792](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38218052792) — **SUCCESS** |
-| Changed Lean / MCP completion jobs | `114707347025` / `114708636678`, both **SUCCESS** |
-| Build and diagnostics | **9528/9528** jobs, **0 errors; 4 non-fatal unused-variable warnings** in new DV Lean file; forbidden-token audit passed |
+| Exact source-head CI | [#38224338089](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38224338089) — **SUCCESS** |
+| Changed Lean / MCP completion jobs | `114728034210` / `114729597777`, both **SUCCESS** |
+| Build and diagnostics | **9531/9531**, **0 DX changed-file errors/warnings**; preflight audit passed. DX `#print axioms` includes standard axioms and inherited `periodicHypercubicOtherAxis_card._native.native_decide.ax_1_1` through `_1_4` dependencies (no new axiom declarations). Historical DV file has four nonfatal warnings. |
 
-**The GitHub default `main` is not the theorem authority.** Reobserve the fresh exact HEAD of the branch above and inspect the actual Lean theorem declarations before trusting this document, a PR title, or a historical conversation. A subsequent documentation-only merge will advance the branch HEAD **without changing the #5473 theorem-bearing checkpoint**.
+**The GitHub default `main` is not the theorem authority.** Reobserve the fresh exact HEAD of the branch above and inspect the actual Lean theorem declarations before trusting this document, a PR title, or a historical conversation. A subsequent documentation-only merge advances the branch HEAD **without changing the #5476 theorem-bearing checkpoint**.
 
 Authority order: fresh authoritative SHA → actual Lean statements/proofs → README/ROADMAP → CI for that exact SHA → historical reports.
 
@@ -42,7 +42,7 @@ Fix a genuine finite Wilson configuration satisfying the Lean hypotheses (in par
 
 The normalizations matter: the DQ/DR **normalized reference** is `(1/12) * (original 12-color sum)`, whereas `QW` extends the **sum**. Keep source/frozen `beta_n` distinct from fine `beta_(n+1)` when discussing adjacent-scale Krylov inputs.
 
-## 3. Latest result — quantitative full-physical-L² original Wilson Riesz coercivity (DV)
+## 3. Original Wilson Riesz: full-L² quadratic DV and operator DW–DX
 
 [PR #5473](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5473) adds `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalFullJointHaarRieszCoercivity.lean`. Its final Lean theorem is:
 
@@ -63,7 +63,15 @@ The verified proof sequence is:
 
 This is quantitatively stronger than the **already established** full-`L²` qualitative kernel identity `ker(AW) = V` from **P4-Q2-CO, PR #5440**. DV did **not** first prove qualitative kernel closure; it supplies a positive quadratic coefficient. Do not revive CL's historical kernel obstruction as if CO had not closed it.
 
-**Not yet separately packaged as Lean operator/spectrum corollaries for AW:** `κ • (I - Pconst) ≤ AW`, its orthogonal-restriction positive real spectrum floor, and the ensuing quantitative comparison with D12. These are next proof tasks, not statements already present in DV.
+**Operator/spectrum corollaries are now Lean-proved.** [#5475 (DW)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5475) proves actual original-`AW` Loewner coercivity `κ_R • (id-Pconst) ≤ AW`, its zero action on physical constants, self-adjoint bounded restriction to `Vᗮ`, its positive real spectral half-line, and the genuine finite-volume bilateral comparison `κ_R • D12 ≤ AW ≤ 12 • D12` (BF supplies the independent upper `E12 ≤ ‖x-Pconst x‖²` input). These comparisons do **not** identify `AW` with `D12`.
+
+**[#5476 (DX)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5476) upgrades the ACTUAL original Wilson Riesz orthogonal restriction `AW|Vᗮ`:**
+
+- `p4Q2DX_restrictedOriginalWilsonRiesz_isUnit`: `AW|Vᗮ` is a unit in the actual bounded-real-linear-operator Banach algebra, hence has a bounded inverse at each fixed volume.
+- `p4Q2DX_restrictedOriginalWilsonRiesz_spectrum_subset_Icc`: `∃ κ_R>0, spectrum ℝ (AW|Vᗮ) ⊆ Set.Icc κ_R 12`. The upper edge `12` comes from BY's original **unnormalized** Haar-reference quadratic, not the normalized physical `D12`.
+- `p4Q2DX_restrictedOriginalWilsonRiesz_zero_notMem_spectrum`: zero is excluded from the REAL restricted spectrum; resolvent invertibility uses pinned mathlib, with no eigenbasis or compactness assumption.
+
+**Finite-volume certificate:** DQ / DF / DV permit the conservative explanatory choice `a = m(H,N,beta) * exp(-32 beta) / (12 * spatialLinkCard(H))`, `b=M(H,N,beta)+1`, `κ_R=min(1,a/b)>0`. This visibly retains the link-cardinality inverse factor. The mass floor `m` and Wilson/pair-Haar variance comparison `M` are finite-volume witnesses. **Do not infer an H-independent positive lower bound from this certificate.**
 
 ## 4. Separately established physical D12 gap (DS–DU)
 
@@ -76,9 +84,9 @@ The independent physical Dirichlet route is already formalized:
 | [#5471 (DT)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5471) | Genuine `ContinuousLinearMap` Loewner bound `κ • (I-Pconst) ≤ D12`; positive Rayleigh bound on `Vᗮ`. |
 | [#5472 (DU)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5472) | `D12` kills `V`, preserves `Vᗮ`, and its **actual restricted self-adjoint operator** has `spectrum ℝ (D12|Vᗮ) ⊆ Set.Ici κ` for some `κ>0`. |
 
-CA/BZ also prove the **one-sided** original reference/physical comparison `0 ≤ AW ≤ 12 • D12`, in the actual physical Hilbert operator order. **No reverse comparison of AW and D12 should be marked Lean-complete until a theorem proves it in the appropriate operator type** (DV may supply the mathematical input, but is a quadratic theorem).
+CA/BZ prove `0 ≤ AW ≤ 12 • D12`; **DW #5475 additionally proves the reverse finite-volume operator inequality** `κ_R • D12 ≤ AW`. This is a genuine operator comparison of **distinct** `ContinuousLinearMap` endomorphisms, not an identification or an H-uniform bound.
 
-The DU spectral statement is for the **physical D12 restricted to actual Wilson constants' orthogonal complement**, *not* for AW. Neither DU nor DV establishes a uniform gap as lattice spacing tends to zero.
+The DU spectrum theorem applies to the **physical normalized D12**; DW and DX independently prove the restricted spectral statements for the **original unnormalized Wilson Haar AW**. Neither proves uniformity as H grows or the lattice spacing tends to zero.
 
 ## 5. Earlier finite-volume gates and original physical chain
 
@@ -87,15 +95,15 @@ The DU spectral statement is for the **physical D12 restricted to actual Wilson 
 | **P4-F1/F2/F3** | **CLOSED** (#5299–#5302): original fourfold a.e. lift, genuine retained-sigma descent, strict positive-`beta` original Wilson vacuum-fiber energy at each finite H. | No implication of an H-uniform lower rate. |
 | **P4-Q1** | Quantitative at fixed H (#5303–#5309): `0 < E_vac(beta,H) ≤ |SpatialLinks(H)| (exp(16 beta)-1)^2` in its stated range. | Remove/control the spatial-cardinality factor. |
 | **P4-Q2, signed physical Krylov Gram** | #5310–#5326: uncentered physical receiver, original signed covariance, exact two-copy resampling, constructed `W × M` BCF per-link oscillation budget. | Spatially summable **H-uniform** signed/operator-`ℓ²` control is OPEN. |
-| **P4-Q2, original reference construction** | #5389–#5427: real Wilson joint Dirichlet, bounded-core polarization, uniquely extended bilinear/positive quadratic, original positive self-adjoint Riesz AW, one-sided Loewner comparison. | See next AW operator corollaries and uniformity. |
+| **P4-Q2, original reference construction** | #5389–#5427: original bounded-core polarization, full joint L² Riesz AW, positivity and earlier one-sided comparison. | Extended in DW/DX; volume-uniform physicality OPEN. |
 | **P4-Q2, zero/kernel and pair-Haar bridges** | #5431–#5440 **CO** qualitative full-`L²` kernel, #5441 mass floor, #5442–#5455 actual pair-Haar coordinate tensorization/Poincaré, #5456–#5467 Wilson variance/fiber bridges. | Preserve actual conditional laws; no synthetic independence. |
-| **P4-Q2, quantitative full-`L²`** | **#5468–#5473 CLOSED**: DQ reference lower bound → DR variance → DS D12 Hilbert coercivity → DT/DU D12 operator/spectrum → **DV original AW quadratic coercivity**. | AW operator/spectrum corollaries; then truly **uniform** finite-volume/scale bounds. |
+| **P4-Q2, quantitative full-`L²`** | **#5468–#5476 CLOSED**: DQ/DR → DS–DU physical D12 → DV original AW quadratic → DW original AW Loewner and bilateral D12 comparison → **DX original AW restricted IsUnit and real spectral band [κ_R,12]**. | H-/spacing-uniform physical bounds, signed Gram and cross-scale reconstruction OPEN. |
 
 The #5326 `W × M` signed-Krylov link-budget and the newer AW/D12 finite-volume spectral gap are **different mathematical problems**. A finite-volume positive coefficient for AW or D12 does not close the volume-uniform fine/frozen Krylov Gram, original signed Schur row estimates, or cross-scale reconstruction.
 
 ## 6. Live frontier and limitations
 
-The next tasks are: (i) formal AW operator Loewner/coercivity and restricted-spectrum corollaries from DV (with CO), (ii) quantitative **uniform-in-H and spacing-scaled** bounds for the actual physical family, including the signed uncentered Krylov/adjacent-scale Gram, (iii) C1 actual common-marginal physicality, C2 vector-wise coarse/fine reconstruction compatibility, C3 a summable explicit beta trajectory, and (iv) H2 physical time generator/strongly continuous semigroup, H3 OS Hamiltonian, H4 positive **continuum** Yang–Mills mass gap. All continuum gates remain **OPEN**.
+With AW operator/spectrum consequences CLOSED through DX, the active mathematical tasks are (i) replace or control DQ's explicit inverse spatial-link-cardinality loss and true Wilson fiber-mass/variance comparison dependence **without postulating an H-independent floor**, (ii) physically justified **uniform-in-H and spacing-scaled** signed Krylov/adjacent-scale Gram estimates, (iii) C1 actual common-marginal physicality, C2 fine/coarse vector reconstruction, C3 an explicit summable genuine beta trajectory, and (iv) H2 physical time generator/strongly continuous semigroup, H3 OS Hamiltonian, H4 positive **continuum** Yang–Mills mass gap. All continuum gates remain **OPEN**.
 
 Do not treat positive constants separately available at each H as a common constant. The DV proof uses a finite-volume coefficient from an actual Wilson Haar fiber-mass floor and link cardinality; no bound uniform in H is proved. Existing small-beta estimates `κ12 ≥ 1/2304`, transfer gap `≥ 1/3072`, `q0=3071/3072` apply only within their verified contexts; they are **not** a nontrivial continuum time evolution.
 
@@ -103,19 +111,19 @@ Prior no-go/limits remain relevant: positive-coupling H1-D5 whole-operator compa
 
 ## 7. Reading and reproducing the current theorem
 
-The latest Lean target lives at:
+The latest theorem-bearing Lean target lives at:
 
 ```text
-MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalFullJointHaarRieszCoercivity.lean
+MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalWilsonRieszSpectralBandAndIsUnit.lean
 ```
 
 On the **fresh authoritative branch** with the pinned toolchain/manifest:
 
 ```bash
-lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalFullJointHaarRieszCoercivity
+lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalWilsonRieszSpectralBandAndIsUnit
 ```
 
-Read in dependency order: DQ `OriginalTwelveColorGlobalHilbertFloor` → DC `GlobalMeanPoincare` → DF `OriginalPhysicalVarianceSandwich` → DR `OriginalWilsonVarianceTwelveColorCoercivity` → CL `OriginalBoundedCoreKernelExactFrontier` → BW/BX `OriginalFullJointL2ContinuousBilinear` / `OriginalFullJointL2Quadratic` → **DV** `OriginalFullJointHaarRieszCoercivity`. All these shorthand names share the full `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaar` prefix and `MGAP4D/MathlibAnalytic/` directory.
+Read in dependency order: DQ `OriginalTwelveColorGlobalHilbertFloor` → DC `GlobalMeanPoincare` → DF `OriginalPhysicalVarianceSandwich` → DR `OriginalWilsonVarianceTwelveColorCoercivity` → CL `OriginalBoundedCoreKernelExactFrontier` → BW/BX `OriginalFullJointL2ContinuousBilinear` / `OriginalFullJointL2Quadratic` → **DV** `OriginalFullJointHaarRieszCoercivity` → **DW** `OriginalWilsonRieszOrthogonalSpectrum` → **DX** `OriginalWilsonRieszSpectralBandAndIsUnit`. All these shorthand names share the full `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaar` prefix and `MGAP4D/MathlibAnalytic/` directory.
 
 For the physical D12 spectrum, follow CA `OriginalPhysicalTwelveDirichletLoewner` → DS `OriginalWilsonFullJointL2PhysicalFrameCoercivity` → DT `OriginalPhysicalTwelveDirichletOperatorGap` → DU `OriginalPhysicalTwelveDirichletOrthogonalSpectrum`.
 
