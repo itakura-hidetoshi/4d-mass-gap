@@ -77,14 +77,14 @@ theorem p4Q2DA_actualPairHaarSplit_update_eq
   rw [E.apply_symm_apply]
   apply Prod.ext
   · funext j
-    simp [E, e, p4Q2CY_actualPairHaarOffLinkSingleHaarEquiv,
+    simp [E, p4Q2CY_actualPairHaarOffLinkSingleHaarEquiv,
       p4Q2CX_actualPairHaarOffCoordinateSplit,
-      MeasurableEquiv.piEquivPiSubtypeProd, Equiv.piEquivPiSubtypeProd,
-      Function.update, j.property]
-  · simp [E, e, p4Q2CY_actualPairHaarOffLinkSingleHaarEquiv,
+      MeasurableEquiv.prodCongr, MeasurableEquiv.piUnique,
+      Equiv.piEquivPiSubtypeProd, Function.update, j.property]
+  · simp [E, p4Q2CY_actualPairHaarOffLinkSingleHaarEquiv,
       p4Q2CX_actualPairHaarOffCoordinateSplit,
-      MeasurableEquiv.piEquivPiSubtypeProd, Equiv.piEquivPiSubtypeProd,
-      Function.update]
+      MeasurableEquiv.prodCongr, MeasurableEquiv.piUnique,
+      Equiv.piEquivPiSubtypeProd, Function.update]
 
 /-- Exact equality of the two ORIGINAL physical Haar mean constructions:
 CY's measurable off-link/single-coordinate fiber integral and CU's
