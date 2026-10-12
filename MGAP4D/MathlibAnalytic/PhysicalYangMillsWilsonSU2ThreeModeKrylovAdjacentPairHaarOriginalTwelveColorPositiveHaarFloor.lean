@@ -162,7 +162,7 @@ theorem p4Q2DG_twelveColorMassFloor_le_originalReferenceAverage
             p4Q2DG_rightHaarMassFloor H N beta m e.1 F) ≤
         (Fintype.card (p4Q2BA_ColorLinks H k) : ENNReal)⁻¹ *
           p4Q2BA_colorAllLinkHaarReferenceSum H N hN beta hbeta k F
-      exact mul_le_mul_left'
+      exact mul_le_mul_right
         (Finset.sum_le_sum (fun e _he => (hlinks e.1 F hF).1))
         _
   | inr k =>
@@ -172,7 +172,7 @@ theorem p4Q2DG_twelveColorMassFloor_le_originalReferenceAverage
             p4Q2DG_leftHaarMassFloor H N beta m e.1 F) ≤
         (Fintype.card (p4Q2BA_ColorLinks H k) : ENNReal)⁻¹ *
           p4Q2BB_leftColorAllLinkHaarReferenceSum H N hN beta hbeta k F
-      exact mul_le_mul_left'
+      exact mul_le_mul_right
         (Finset.sum_le_sum (fun e _he => (hlinks e.1 F hF).2))
         _
 
@@ -192,13 +192,14 @@ theorem p4Q2DG_originalTwelveColorHaarReference_ge_allLinkMassFloor :
   intro F hF
   unfold p4Q2DG_originalTwelveColorHaarMassFloor
     p4Q2BC_originalPhysicalTwelveColorHaarReference
-  exact mul_le_mul_left'
+  exact mul_le_mul_right
     (Finset.sum_le_sum (fun c _hc =>
       p4Q2DG_twelveColorMassFloor_le_originalReferenceAverage
         H N hN beta hbeta m hlink c F hF))
     _
 
 end OriginalWilson
+end
 
 end MathlibAnalytic
 end MGAP4D
