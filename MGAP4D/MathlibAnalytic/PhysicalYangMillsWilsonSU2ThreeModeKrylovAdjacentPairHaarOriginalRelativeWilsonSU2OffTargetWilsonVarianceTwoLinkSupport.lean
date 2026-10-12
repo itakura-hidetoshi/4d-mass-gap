@@ -216,6 +216,8 @@ private theorem p4Q2EL_colorSum_eq_single
   let k0 : Fin 6 :=
     periodicHypercubicEvenGroundStateSpatialColorEquivFin
       (periodicHypercubicEvenSpatialSliceLinkColor H e)
+  change (∑ target : p4Q2BA_ColorLinks H k, g target.1) =
+    if k = k0 then g e else 0
   by_cases hk : k = k0
   · rw [hk]
     simp only [if_pos rfl]
@@ -282,12 +284,12 @@ physical gauge-invariant SU(2) relative link is the exact TWO selected
 Wilson left and right references. The coefficient keeps the genuine
 color cardinality and the literal normalization 1/12. No independent
 pair-Haar reference or interacting Wilson conditional mean is substituted. -/
-theorem p4Q2EL_SU2_originalWilsonNormalizedReference_eq_twoSelected
+theorem p4Q2EL_SU2_originalWilsonTwelveColorSum_eq_twoSelected
     (beta : ℝ) (hbeta : 0 ≤ beta) (e : Link) :
-    p4Q2BC_originalPhysicalTwelveColorHaarReference
-      H 2 (by norm_num) beta hbeta (fun z : Joint => F e z) =
-    (12 : ENNReal)⁻¹ *
-      ((Fintype.card (p4Q2BA_ColorLinks H
+    (∑ c : PeriodicHypercubicEvenGroundStateTwoSidedSpatialColor,
+      p4Q2BB_twelveColorOriginalHaarReferenceAverage
+        H 2 (by norm_num) beta hbeta c (fun z : Joint => F e z)) =
+    (Fintype.card (p4Q2BA_ColorLinks H
           (periodicHypercubicEvenGroundStateSpatialColorEquivFin
             (periodicHypercubicEvenSpatialSliceLinkColor H e))) : ENNReal)⁻¹ *
           p4Q2AZ_originalJointHaarReferenceEnergy
@@ -296,7 +298,7 @@ theorem p4Q2EL_SU2_originalWilsonNormalizedReference_eq_twoSelected
           (periodicHypercubicEvenGroundStateSpatialColorEquivFin
             (periodicHypercubicEvenSpatialSliceLinkColor H e))) : ENNReal)⁻¹ *
           p4Q2BB_originalLeftLinkHaarReferenceEnergy
-            H 2 (by norm_num) beta hbeta e (fun z : Joint => F e z)) := by
+            H 2 (by norm_num) beta hbeta e (fun z : Joint => F e z) := by
   have hRight :
       (∑ k : Fin 6,
         (Fintype.card (p4Q2BA_ColorLinks H k) : ENNReal)⁻¹ *
@@ -341,9 +343,79 @@ theorem p4Q2EL_SU2_originalWilsonNormalizedReference_eq_twoSelected
       (fun target hOther =>
         p4Q2EL_SU2_offTarget_originalWilsonLeftLinkReference_zero
           H beta hbeta e target hOther)
-  unfold p4Q2BC_originalPhysicalTwelveColorHaarReference
   rw [p4Q2BB_originalTwelveColorHaarReferenceSum_eq_rightSix_add_leftSix]
   rw [hRight, hLeft]
+
+/-- The truly normalized ORIGINAL Wilson twelve-color Haar reference,
+including the exact 1/12 and selected link's physical color cardinality. -/
+theorem p4Q2EL_SU2_originalWilsonNormalizedReference_eq_twoSelected
+    (beta : ℝ) (hbeta : 0 ≤ beta) (e : Link) :
+    p4Q2BC_originalPhysicalTwelveColorHaarReference
+      H 2 (by norm_num) beta hbeta (fun z : Joint => F e z) =
+    (12 : ENNReal)⁻¹ * ((Fintype.card (p4Q2BA_ColorLinks H
+          (periodicHypercubicEvenGroundStateSpatialColorEquivFin
+            (periodicHypercubicEvenSpatialSliceLinkColor H e))) : ENNReal)⁻¹ *
+          p4Q2AZ_originalJointHaarReferenceEnergy
+            H 2 (by norm_num) beta hbeta e (fun z : Joint => F e z) +
+       (Fintype.card (p4Q2BA_ColorLinks H
+          (periodicHypercubicEvenGroundStateSpatialColorEquivFin
+            (periodicHypercubicEvenSpatialSliceLinkColor H e))) : ENNReal)⁻¹ *
+          p4Q2BB_originalLeftLinkHaarReferenceEnergy
+            H 2 (by norm_num) beta hbeta e (fun z : Joint => F e z)) := by
+  unfold p4Q2BC_originalPhysicalTwelveColorHaarReference
+  rw [p4Q2EL_SU2_originalWilsonTwelveColorSum_eq_twoSelected]
+
+/-- Exact original unnormalized twelve-color REAL Haar reference, not a
+rescaled pair-Haar or interacting conditional operator. -/
+theorem p4Q2EL_SU2_originalWilsonUnnormalizedReferenceReal_eq_twoSelected
+    (beta : ℝ) (hbeta : 0 ≤ beta) (e : Link) :
+    p4Q2BD_originalWilsonTwelveColorHaarReferenceReal
+      H 2 (by norm_num) beta hbeta (fun z : Joint => F e z) =
+      ((Fintype.card (p4Q2BA_ColorLinks H
+          (periodicHypercubicEvenGroundStateSpatialColorEquivFin
+            (periodicHypercubicEvenSpatialSliceLinkColor H e))) : ENNReal)⁻¹ *
+          p4Q2AZ_originalJointHaarReferenceEnergy
+            H 2 (by norm_num) beta hbeta e (fun z : Joint => F e z) +
+       (Fintype.card (p4Q2BA_ColorLinks H
+          (periodicHypercubicEvenGroundStateSpatialColorEquivFin
+            (periodicHypercubicEvenSpatialSliceLinkColor H e))) : ENNReal)⁻¹ *
+          p4Q2BB_originalLeftLinkHaarReferenceEnergy
+            H 2 (by norm_num) beta hbeta e (fun z : Joint => F e z)).toReal := by
+  change (∑ c : PeriodicHypercubicEvenGroundStateTwoSidedSpatialColor,
+    p4Q2BB_twelveColorOriginalHaarReferenceAverage
+      H 2 (by norm_num) beta hbeta c (fun z : Joint => F e z)).toReal = _
+  rw [p4Q2EL_SU2_originalWilsonTwelveColorSum_eq_twoSelected]
+
+/-- The ACTUAL ORIGINAL full physical joint-L² Riesz quadratic on the
+genuine SU(2) gauge-invariant relative-link class equals precisely
+its two selected physical Wilson left/right Haar references with
+the true cardinality coefficient (no D12 substitution). -/
+theorem p4Q2EL_SU2_originalWilsonPhysicalRieszQuadratic_eq_twoSelected
+    (beta : ℝ) (hbeta : 0 ≤ beta) (e : Link) :
+    p4Q2BX_originalFullJointQuadratic H 2 (by norm_num) beta hbeta
+      (p4Q2EE_SU2_physicalWilsonJointL2 H beta hbeta e) =
+      ((Fintype.card (p4Q2BA_ColorLinks H
+          (periodicHypercubicEvenGroundStateSpatialColorEquivFin
+            (periodicHypercubicEvenSpatialSliceLinkColor H e))) : ENNReal)⁻¹ *
+          p4Q2AZ_originalJointHaarReferenceEnergy
+            H 2 (by norm_num) beta hbeta e (fun z : Joint => F e z) +
+       (Fintype.card (p4Q2BA_ColorLinks H
+          (periodicHypercubicEvenGroundStateSpatialColorEquivFin
+            (periodicHypercubicEvenSpatialSliceLinkColor H e))) : ENNReal)⁻¹ *
+          p4Q2BB_originalLeftLinkHaarReferenceEnergy
+            H 2 (by norm_num) beta hbeta e (fun z : Joint => F e z)).toReal := by
+  rw [p4Q2EE_SU2_originalWilsonRieszQuadratic_eq_literal H beta hbeta e]
+  change p4Q2BD_originalWilsonTwelveColorHaarReferenceReal
+    H 2 (by norm_num) beta hbeta
+    ((p4Q2EE_SU2_originalWilsonPhysicalCore H e).1) = _
+  have hFunction :
+      ((p4Q2EE_SU2_originalWilsonPhysicalCore H e).1 : Joint → ℝ) =
+        (fun z : Joint => F e z) := by
+    funext z
+    exact p4Q2EE_SU2_originalWilsonPhysicalCore_apply H e z
+  rw [hFunction]
+  exact p4Q2EL_SU2_originalWilsonUnnormalizedReferenceReal_eq_twoSelected
+    H beta hbeta e
 
 end ActualOriginalWilsonOffTargetVariance
 end
@@ -357,4 +429,7 @@ end MGAP4D
 #print axioms MGAP4D.MathlibAnalytic.p4Q2EL_SU2_offTarget_originalWilsonLeftLinkReference_zero
 #print axioms MGAP4D.MathlibAnalytic.p4Q2EL_SU2_originalWilsonAllRightLinks_eq_selected
 #print axioms MGAP4D.MathlibAnalytic.p4Q2EL_SU2_originalWilsonAllLeftLinks_eq_selected
+#print axioms MGAP4D.MathlibAnalytic.p4Q2EL_SU2_originalWilsonTwelveColorSum_eq_twoSelected
 #print axioms MGAP4D.MathlibAnalytic.p4Q2EL_SU2_originalWilsonNormalizedReference_eq_twoSelected
+#print axioms MGAP4D.MathlibAnalytic.p4Q2EL_SU2_originalWilsonUnnormalizedReferenceReal_eq_twoSelected
+#print axioms MGAP4D.MathlibAnalytic.p4Q2EL_SU2_originalWilsonPhysicalRieszQuadratic_eq_twoSelected
