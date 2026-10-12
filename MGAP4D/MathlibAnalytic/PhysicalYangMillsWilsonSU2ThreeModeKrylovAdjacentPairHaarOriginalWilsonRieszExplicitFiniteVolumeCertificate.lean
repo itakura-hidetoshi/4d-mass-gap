@@ -118,6 +118,7 @@ theorem p4Q2DY_originalRieszFiniteVolumeCoefficient_pos
   let a : ENNReal := p4Q2DQ_allLinkHilbertFloorCoefficient H beta m
   let b : ENNReal := ENNReal.ofReal (M + 1)
   let k : ENNReal := a * b⁻¹
+  have _hPhysicalUpperPos : 0 < M + 1 := by linarith
   have ha : 0 < a :=
     p4Q2DQ_allLinkHilbertFloorCoefficient_pos H beta m hm
   have hbTop : b ≠ ∞ := ENNReal.ofReal_ne_top
@@ -146,7 +147,7 @@ theorem p4Q2DY_originalNormalizedReference_explicitVarianceWitness :
   obtain ⟨m, hm, hReference⟩ :=
     p4Q2DQ_originalWilsonTwelveReference_ge_allCoordinateHilbertDefects
       H N hN beta hbeta
-  obtain ⟨mW, M, hmW, hM, hVariance⟩ :=
+  obtain ⟨_mW, M, _hmW, hM, hVariance⟩ :=
     p4Q2DF_originalWilsonJoint_allBoundedVariance_uniform_sandwich
       H N hN beta hbeta
   let a : ENNReal := p4Q2DQ_allLinkHilbertFloorCoefficient H beta m
