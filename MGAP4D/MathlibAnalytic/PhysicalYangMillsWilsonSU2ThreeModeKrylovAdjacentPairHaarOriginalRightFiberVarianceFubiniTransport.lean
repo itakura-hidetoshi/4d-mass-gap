@@ -124,6 +124,9 @@ theorem p4Q2DJ_originalRightLinkHaarFiberVariance_eq_pairHaarSplitMeanSquare
               (((p4Q2CJ_directLinkJointMeasurableEquiv H N target).symm z).1, u))
             ∂muH) ^ 2)
         ∂muPair := by
+  letI : SFinite (muOuter target) := by
+    dsimp [p4Q2DJ_rightOuterHaar]
+    infer_instance
   let e := (p4Q2CJ_directLinkJointMeasurableEquiv H N target).symm
   have he : MeasurePreserving e muPair ((muOuter target).prod muH) :=
     p4Q2DJ_actualWilsonRightLinkSplit_symm_measurePreserving H N target
