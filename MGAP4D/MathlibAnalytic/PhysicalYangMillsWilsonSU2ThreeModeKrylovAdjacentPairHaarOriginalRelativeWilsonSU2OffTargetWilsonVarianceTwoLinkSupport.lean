@@ -235,6 +235,7 @@ private theorem p4Q2EL_colorSum_eq_single
           exact hNeq (Subtype.ext hVal)
         · simp
       _ = g e := rfl
+      _ = (if k0 = k0 then g e else 0) := by simp
   · simp only [if_neg hk]
     apply Finset.sum_eq_zero
     intro target _
