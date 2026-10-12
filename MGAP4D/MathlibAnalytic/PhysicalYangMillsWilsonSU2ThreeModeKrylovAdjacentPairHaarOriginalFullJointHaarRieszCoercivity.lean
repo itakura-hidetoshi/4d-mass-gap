@@ -82,9 +82,6 @@ local notation "Img" => LinearMap.range T
 local notation "V" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
     H N hN beta hbeta
-local notation "B" =>
-  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantProjection
-    H N hN beta hbeta
 local notation "Q" =>
   p4Q2BX_originalFullJointQuadratic H N hN beta hbeta
 
@@ -210,6 +207,9 @@ theorem p4Q2DV_originalWilsonNormalizedHaarReference_ge_wilsonVariance_bounded :
             H N hN beta hbeta F := hPairReference
   exact hRefVariance
 
+local notation "B" =>
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantProjection
+    H N hN beta hbeta
 
 /-- Pass the normalized ORIGINAL Wilson Haar reference to its distinct
 unnormalized real quadratic, using the EXACT 1/12 convention. The smaller
