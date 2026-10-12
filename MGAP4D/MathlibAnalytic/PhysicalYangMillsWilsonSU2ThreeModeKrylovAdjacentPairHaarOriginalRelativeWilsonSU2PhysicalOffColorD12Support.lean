@@ -84,7 +84,7 @@ private theorem p4Q2EN_rightOffColor_stronglyMeasurable
     @StronglyMeasurable Joint ℝ
       inferInstance
       (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
-        H 2 (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c)) inferInstance
+        H 2 (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c))
       (fun z : Joint => F e z) := by
   let cc := periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c
   let eOff : PeriodicHypercubicEvenSpatialSliceOffColorLink H cc :=
@@ -123,7 +123,7 @@ private theorem p4Q2EN_leftOffColor_stronglyMeasurable
     @StronglyMeasurable Joint ℝ
       inferInstance
       (periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialColorMeasurableSpace
-        H 2 (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c)) inferInstance
+        H 2 (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c))
       (fun z : Joint => F e z) := by
   let cc := periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c
   let eOff : PeriodicHypercubicEvenSpatialSliceOffColorLink H cc :=
