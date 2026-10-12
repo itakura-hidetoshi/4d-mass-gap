@@ -104,7 +104,9 @@ theorem p4Q2DU_physicalD12_mem_orthogonal
     (ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric).1
       (p4Q2CA_physicalTwelveDirichletOperator_isSelfAdjoint
         H N hN beta hbeta)
-  apply (V.mem_orthogonal (D12 x)).2
+  apply (Submodule.mem_orthogonal
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
+      H N hN beta hbeta) (D12 x)).2
   intro y hy
   calc
     inner ℝ y (D12 x) = inner ℝ (D12 y) x := (hsym y x).symm
@@ -116,8 +118,9 @@ theorem p4Q2DU_physicalD12_mem_orthogonal
 orthogonal complement of the physical Wilson constant line. -/
 noncomputable def p4Q2DU_restrictedPhysicalD12 :
     (Vᗮ) →L[ℝ] (Vᗮ) :=
-  D12.restrict (fun x _hx =>
-    p4Q2DU_physicalD12_mem_orthogonal H N hN beta hbeta x)
+  (p4Q2CA_physicalTwelveDirichletOperator H N hN beta hbeta).restrict
+    (fun x _hx =>
+      p4Q2DU_physicalD12_mem_orthogonal H N hN beta hbeta x)
 
 @[simp] theorem p4Q2DU_restrictedPhysicalD12_apply
     (x : Vᗮ) :
@@ -175,39 +178,39 @@ theorem p4Q2DU_restrictedPhysicalD12_spectrum_subset_Ici :
   obtain ⟨κ, hκ, hRay⟩ :=
     p4Q2DU_restrictedPhysicalD12_positiveRayleigh H N hN beta hbeta
   refine ⟨κ, hκ, ?_⟩
-  intro λ hλ
-  change κ ≤ λ
+  intro t ht
+  change κ ≤ t
   by_contra hnot
-  have hlt : λ < κ := lt_of_not_ge hnot
-  let c : ℝ≥0 := ⟨κ - λ, le_of_lt (sub_pos.mpr hlt)⟩
+  have hlt : t < κ := lt_of_not_ge hnot
+  let c : ℝ≥0 := ⟨κ - t, le_of_lt (sub_pos.mpr hlt)⟩
   have hc : 0 < c := by
-    change (0 : ℝ) < κ - λ
+    change (0 : ℝ) < κ - t
     exact sub_pos.mpr hlt
-  have hunit : IsUnit ((algebraMap ℝ (W →L[ℝ] W)) λ - D) := by
+  have hunit : IsUnit ((algebraMap ℝ (W →L[ℝ] W)) t - D) := by
     apply ContinuousLinearMap.isUnit_of_forall_le_norm_inner_map
-      ((algebraMap ℝ (W →L[ℝ] W)) λ - D) hc
+      ((algebraMap ℝ (W →L[ℝ] W)) t - D) hc
     intro x
     have hbound : κ * ‖x‖ ^ 2 ≤ inner ℝ (D x) x := hRay x
     have hshift :
-        inner ℝ (((algebraMap ℝ (W →L[ℝ] W)) λ - D) x) x =
-          λ * ‖x‖ ^ 2 - inner ℝ (D x) x := by
+        inner ℝ (((algebraMap ℝ (W →L[ℝ] W)) t - D) x) x =
+          t * ‖x‖ ^ 2 - inner ℝ (D x) x := by
       simp [Algebra.algebraMap_eq_smul_one, ContinuousLinearMap.sub_apply,
         ContinuousLinearMap.smul_apply, inner_sub_left,
         real_inner_smul_left, real_inner_self_eq_norm_sq]
     have hnegative :
         ‖x‖ ^ 2 * (c : ℝ) ≤
-          -(inner ℝ (((algebraMap ℝ (W →L[ℝ] W)) λ - D) x) x) := by
+          -(inner ℝ (((algebraMap ℝ (W →L[ℝ] W)) t - D) x) x) := by
       rw [hshift]
-      change ‖x‖ ^ 2 * (κ - λ) ≤
-        -(λ * ‖x‖ ^ 2 - inner ℝ (D x) x)
+      change ‖x‖ ^ 2 * (κ - t) ≤
+        -(t * ‖x‖ ^ 2 - inner ℝ (D x) x)
       nlinarith [hbound]
     exact hnegative.trans (by
       rw [Real.norm_eq_abs]
       exact neg_le_abs _)
   have hnotmem :
-      λ ∉ spectrum ℝ (p4Q2DU_restrictedPhysicalD12 H N hN beta hbeta) := by
+      t ∉ spectrum ℝ (p4Q2DU_restrictedPhysicalD12 H N hN beta hbeta) := by
     exact (spectrum.notMem_iff).2 hunit
-  exact (hnotmem hλ).elim
+  exact (hnotmem ht).elim
 
 end OriginalWilson
 end
