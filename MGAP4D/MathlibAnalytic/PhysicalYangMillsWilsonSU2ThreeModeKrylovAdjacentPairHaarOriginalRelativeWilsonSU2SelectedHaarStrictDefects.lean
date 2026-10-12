@@ -55,6 +55,14 @@ local instance p4Q2EH_leftInvariant :
   dsimp [normalizedCompactHaar]
   infer_instance
 
+/-- Actual finite product independent SU(2) Haar measure gives positive mass
+on every nonempty open set of the true two-boundary configuration space. -/
+local instance p4Q2EH_pairHaarOpenPos :
+    Measure.IsOpenPosMeasure muPair := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure
+    periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+
 noncomputable def p4Q2EH_groupWilsonHaarMean : ℝ :=
   ∫ u : G, specialUnitaryWilsonPlaquetteEnergy 2 u ∂muH
 
@@ -189,6 +197,68 @@ theorem p4Q2EH_leftSelectedProjection_ae_groupMean (e : Link) :
   exact hP.trans (Filter.Eventually.of_forall
     (p4Q2EH_leftSelectedMean_eq_groupMean H e))
 
+
+/-- The ACTUAL SU(2) relative-link Wilson-energy BCF is NOT Haar-a.e.
+equal to any constant: it is continuous, takes literal values 0 and 2,
+and true finite-product Haar has positive measure on every nonempty open. -/
+theorem p4Q2EH_relativeWilsonEnergy_not_pairHaar_ae_constant
+    (e : Link) (c : ℝ) :
+    ¬ ((fun z : Joint => F e z) =ᵐ[muPair] (fun _ => c)) := by
+  intro hAE
+  have hAll : (fun z : Joint => F e z) = (fun _ : Joint => c) :=
+    Measure.eq_of_ae_eq hAE (F e).continuous continuous_const
+  obtain ⟨z, w, hz, hw⟩ :=
+    p4Q2EE_SU2_relativeWilsonEnergyBCF_nonconstant H e
+  have hz' : F e z = c := congrFun hAll z
+  have hw' : F e w = c := congrFun hAll w
+  linarith
+
+/-- BOTH genuine selected left/right independent pair-Haar CR coordinate
+residuals of the actual gauge-invariant SU(2) relative Wilson energy are
+STRICTLY POSITIVE in the corresponding original real-L² norm. -/
+theorem p4Q2EH_bothSelectedPairHaarDefects_pos (e : Link) :
+    0 < ‖f e - P (Sum.inl e) (f e)‖ ^ 2 ∧
+      0 < ‖f e - P (Sum.inr e) (f e)‖ ^ 2 := by
+  constructor
+  · have hNeq : f e ≠ P (Sum.inl e) (f e) := by
+      intro hEq
+      have hAE :
+          (fun z : Joint => F e z) =ᵐ[muPair]
+            (fun _ => p4Q2EH_groupWilsonHaarMean) := by
+        calc
+          (fun z : Joint => F e z) =ᵐ[muPair]
+              ((f e : Lp ℝ 2 muPair) : Joint → ℝ) :=
+            (p4Q2EE_SU2_pairHaarJointL2_ae_eq H e).symm
+          _ =ᵐ[muPair] ((P (Sum.inl e) (f e) : Lp ℝ 2 muPair) : Joint → ℝ) := by
+            rw [hEq]
+          _ =ᵐ[muPair] (fun _ => p4Q2EH_groupWilsonHaarMean) :=
+            p4Q2EH_leftSelectedProjection_ae_groupMean H e
+      exact p4Q2EH_relativeWilsonEnergy_not_pairHaar_ae_constant H e _ hAE
+    have hNonzero : f e - P (Sum.inl e) (f e) ≠ 0 :=
+      sub_ne_zero.mpr hNeq
+    have hNorm : 0 < ‖f e - P (Sum.inl e) (f e)‖ :=
+      norm_pos_iff.mpr hNonzero
+    nlinarith
+  · have hNeq : f e ≠ P (Sum.inr e) (f e) := by
+      intro hEq
+      have hAE :
+          (fun z : Joint => F e z) =ᵐ[muPair]
+            (fun _ => p4Q2EH_groupWilsonHaarMean) := by
+        calc
+          (fun z : Joint => F e z) =ᵐ[muPair]
+              ((f e : Lp ℝ 2 muPair) : Joint → ℝ) :=
+            (p4Q2EE_SU2_pairHaarJointL2_ae_eq H e).symm
+          _ =ᵐ[muPair] ((P (Sum.inr e) (f e) : Lp ℝ 2 muPair) : Joint → ℝ) := by
+            rw [hEq]
+          _ =ᵐ[muPair] (fun _ => p4Q2EH_groupWilsonHaarMean) :=
+            p4Q2EH_rightSelectedProjection_ae_groupMean H e
+      exact p4Q2EH_relativeWilsonEnergy_not_pairHaar_ae_constant H e _ hAE
+    have hNonzero : f e - P (Sum.inr e) (f e) ≠ 0 :=
+      sub_ne_zero.mpr hNeq
+    have hNorm : 0 < ‖f e - P (Sum.inr e) (f e)‖ :=
+      norm_pos_iff.mpr hNonzero
+    nlinarith
+
 end ActualHaar
 end
 end MathlibAnalytic
@@ -201,3 +271,6 @@ end MGAP4D
 #print axioms MGAP4D.MathlibAnalytic.p4Q2EH_leftSelectedMean_eq_groupMean
 #print axioms MGAP4D.MathlibAnalytic.p4Q2EH_rightSelectedProjection_ae_groupMean
 #print axioms MGAP4D.MathlibAnalytic.p4Q2EH_leftSelectedProjection_ae_groupMean
+
+#print axioms MGAP4D.MathlibAnalytic.p4Q2EH_relativeWilsonEnergy_not_pairHaar_ae_constant
+#print axioms MGAP4D.MathlibAnalytic.p4Q2EH_bothSelectedPairHaarDefects_pos
