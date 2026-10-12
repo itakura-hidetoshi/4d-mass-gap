@@ -42,6 +42,22 @@ attribute [local instance]
   groundStateJointOneLinkCenteredResidualTargetLinkUnique
   p4Q2BAColorLinksFintype
 
+/-- DK's context abbreviation is private to its Lean module. Reconstruct
+the SAME physical left-Haar × off-right-Haar product transparently here. -/
+private abbrev p4Q2DL_rightContext (H N : ℕ)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H) : Type :=
+  PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+    (PeriodicHypercubicEvenSpatialSliceOffTargetLink H target →
+      Matrix.specialUnitaryGroup (Fin N) ℂ)
+
+private noncomputable def p4Q2DL_rightOuterHaar (H N : ℕ)
+    (target : PeriodicHypercubicEvenSpatialSliceLink H) :
+    Measure (p4Q2DL_rightContext H N target) :=
+  (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N).prod
+    (Measure.pi
+      (fun _ : PeriodicHypercubicEvenSpatialSliceOffTargetLink H target =>
+        normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)))
+
 section ActualLeftLink
 variable (H N : ℕ)
 
@@ -67,11 +83,11 @@ theorem p4Q2DL_originalLeftHaarFiberVariance_eq_swappedCR_defect
     (M : ℝ) (hM : ∀ z, ‖F z‖ ≤ M)
     (hSwap : p4Q2BB_swapConcrete H N F =ᵐ[muPair]
       (fSwap : Joint → ℝ)) :
-    (∫⁻ ctx : p4Q2DK_rightContext H N target,
+    (∫⁻ ctx : p4Q2DL_rightContext H N target,
       evariance
         (Section target (p4Q2BB_swapConcrete H N F) ctx.1 ctx.2)
         muH
-      ∂(p4Q2DK_rightOuterHaar H N target)) =
+      ∂(p4Q2DL_rightOuterHaar H N target)) =
         ENNReal.ofReal
           (‖fSwap - P (Sum.inr target) fSwap‖ ^ 2) := by
   exact p4Q2DK_originalRightHaarFiberVariance_eq_CR_defect
@@ -121,11 +137,11 @@ theorem p4Q2DL_originalLeftHaarFiberVariance_eq_canonicalSwappedDefect
     (target : Link)
     (F : Joint → ℝ) (hF : StronglyMeasurable F)
     (M : ℝ) (hM : ∀ z, ‖F z‖ ≤ M) :
-    (∫⁻ ctx : p4Q2DK_rightContext H N target,
+    (∫⁻ ctx : p4Q2DL_rightContext H N target,
       evariance
         (Section target (p4Q2BB_swapConcrete H N F) ctx.1 ctx.2)
         muH
-      ∂(p4Q2DK_rightOuterHaar H N target)) =
+      ∂(p4Q2DL_rightOuterHaar H N target)) =
         ENNReal.ofReal
           (‖p4Q2DL_swappedPairHaarL2 H N F hF M hM -
              P (Sum.inr target)
