@@ -90,19 +90,22 @@ theorem p4Q2DK_rightUpdate_eq_jointCoordinateUpdate
           (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv
             H N z) (Sum.inr target) u) := by
   classical
-  let e :=
-    periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv H N
   apply Prod.ext
   · funext j
-    simp [e, periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv,
-      Function.update]
+    change z.1 j =
+      (Function.update
+        (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv
+          H N z) (Sum.inr target) u) (Sum.inl j)
+    simp
   · funext j
+    change (Function.update z.2 target u) j =
+      (Function.update
+        (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv
+          H N z) (Sum.inr target) u) (Sum.inr j)
     by_cases hj : j = target
     · subst j
-      simp [e, periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv,
-        Function.update]
-    · simp [e, periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialCoordinateMeasurableEquiv,
-        Function.update, hj]
+      simp
+    · simp [hj]
 
 /-- A direct SU(N) fiber section in CJ's ORIGINAL Wilson coordinates is
 literally the same observable as updating the selected right boundary
