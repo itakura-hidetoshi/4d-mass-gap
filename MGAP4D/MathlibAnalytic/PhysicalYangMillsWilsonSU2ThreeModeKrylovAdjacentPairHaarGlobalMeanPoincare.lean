@@ -54,6 +54,13 @@ attribute [local instance]
 section ActualPairHaar
 variable (H N : ℕ)
 
+/-- Use the exact same finite physical joint-coordinate enumeration as
+the original CR/CQ operator tensorization, rather than the alternative
+inferred sum Fintype, which can have a different list ordering. -/
+local instance p4Q2DC_actualJointIndexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenGroundStateJointSpatialCoordinate H) :=
+  p4Q2CR_actualJointIndexFintype H
+
 local notation "Cfg" =>
   PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N
 local notation "Joint" => Cfg × Cfg
