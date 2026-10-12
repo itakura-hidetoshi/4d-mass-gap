@@ -70,7 +70,7 @@ in its off-color configuration type. The canonical six-color equivalence
 is used in its exact direction without inventing a finite carrier. -/
 private theorem p4Q2EN_selectedLink_offColor
     (e : Link) (c : Fin 6) (hc : c ≠ kappa (col e)) :
-    col e ≠ kappa.symm c := by
+    col e ≠ periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c := by
   intro hh
   apply hc
   have h := congrArg kappa hh
@@ -83,9 +83,9 @@ private theorem p4Q2EN_rightOffColor_stronglyMeasurable
     (e : Link) (c : Fin 6) (hc : c ≠ kappa (col e)) :
     @StronglyMeasurable Joint ℝ
       (periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
-        H 2 (kappa.symm c)) inferInstance
+        H 2 (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c)) inferInstance
       (fun z : Joint => F e z) := by
-  let cc := kappa.symm c
+  let cc := periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c
   let eOff : PeriodicHypercubicEvenSpatialSliceOffColorLink H cc :=
     ⟨e, p4Q2EN_selectedLink_offColor H e c hc⟩
   let factor :
@@ -120,9 +120,9 @@ private theorem p4Q2EN_leftOffColor_stronglyMeasurable
     (e : Link) (c : Fin 6) (hc : c ≠ kappa (col e)) :
     @StronglyMeasurable Joint ℝ
       (periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialColorMeasurableSpace
-        H 2 (kappa.symm c)) inferInstance
+        H 2 (periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c)) inferInstance
       (fun z : Joint => F e z) := by
-  let cc := kappa.symm c
+  let cc := periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c
   let eOff : PeriodicHypercubicEvenSpatialSliceOffColorLink H cc :=
     ⟨e, p4Q2EN_selectedLink_offColor H e c hc⟩
   let factor :
@@ -158,7 +158,7 @@ theorem p4Q2EN_SU2_offSelectedPhysicalRightColor_fixed
     (e : Link) (c : Fin 6) (hc : c ≠ kappa (col e)) :
     P12 beta hbeta (Sum.inl c) (W beta hbeta e) =
       W beta hbeta e := by
-  let cc := kappa.symm c
+  let cc := periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c
   let sigma : MeasurableSpace Joint :=
     periodicHypercubicEvenSpecialUnitaryGroundStateJointSpatialColorMeasurableSpace
       H 2 cc
@@ -199,7 +199,7 @@ theorem p4Q2EN_SU2_offSelectedPhysicalLeftColor_fixed
     (e : Link) (c : Fin 6) (hc : c ≠ kappa (col e)) :
     P12 beta hbeta (Sum.inr c) (W beta hbeta e) =
       W beta hbeta e := by
-  let cc := kappa.symm c
+  let cc := periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm c
   let sigma : MeasurableSpace Joint :=
     periodicHypercubicEvenSpecialUnitaryGroundStateJointLeftSpatialColorMeasurableSpace
       H 2 cc
@@ -252,7 +252,7 @@ theorem p4Q2EN_SU2_originalPhysicalTwelveColorSum_eq_selectedTwo
     apply Finset.sum_eq_single k
     · intro c _ hOther
       rw [p4Q2EN_SU2_offSelectedPhysicalRightColor_fixed H beta hbeta e c hOther]
-      simp
+      simp [f]
     · simp
   have hL :
       (∑ c : Fin 6, ‖f - P12 beta hbeta (Sum.inr c) f‖ ^ 2) =
@@ -260,12 +260,11 @@ theorem p4Q2EN_SU2_originalPhysicalTwelveColorSum_eq_selectedTwo
     apply Finset.sum_eq_single k
     · intro c _ hOther
       rw [p4Q2EN_SU2_offSelectedPhysicalLeftColor_fixed H beta hbeta e c hOther]
-      simp
+      simp [f]
     · simp
   unfold p4Q2BC_twelvePhysicalResidualSum
   rw [Fintype.sum_sum_type]
   rw [hR, hL]
-  rfl
 
 /-- The physically normalized original Wilson D12 Dirichlet energy,
 which is NOT the original Haar-reference Riesz quadratic, has the exact
