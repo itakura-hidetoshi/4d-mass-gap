@@ -113,6 +113,9 @@ theorem p4Q2EL_SU2_offTarget_originalRightHaarVariance_zero
   obtain ⟨c, hConst⟩ :=
     p4Q2EL_SU2_offTarget_originalRightHaarSection_constant
       H e target hOther ctx
+  change evariance
+    (fun u : G => Section target (fun z : Joint => F e z) ctx.1 ctx.2 u)
+    (normalizedCompactHaar G) = 0
   rw [hConst]
   simp [evariance]
 
@@ -197,6 +200,151 @@ theorem p4Q2EL_SU2_originalWilsonAllLeftLinks_eq_selected
         H beta hbeta e target ht)
     (by simp)
 
+
+/-- A finite color sum of nonnegative true link energies supported at e
+has exactly its chosen-link contribution in the genuine physical color,
+and is zero at every other color. -/
+private theorem p4Q2EL_colorSum_eq_single
+    (e : Link) (g : Link → ENNReal)
+    (hZero : ∀ target : Link, target ≠ e → g target = 0)
+    (k : Fin 6) :
+    (∑ target : p4Q2BA_ColorLinks H k, g target.1) =
+      if k = periodicHypercubicEvenGroundStateSpatialColorEquivFin
+        (periodicHypercubicEvenSpatialSliceLinkColor H e)
+      then g e else 0 := by
+  classical
+  let k0 : Fin 6 :=
+    periodicHypercubicEvenGroundStateSpatialColorEquivFin
+      (periodicHypercubicEvenSpatialSliceLinkColor H e)
+  by_cases hk : k = k0
+  · rw [hk]
+    simp only [if_pos rfl]
+    have hcol :
+        periodicHypercubicEvenSpatialSliceLinkColor H e =
+          periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm k0 := by
+      simp [k0]
+    let selected : p4Q2BA_ColorLinks H k0 := ⟨e, hcol⟩
+    calc
+      (∑ target : p4Q2BA_ColorLinks H k0, g target.1) =
+          g selected.1 := by
+        apply Finset.sum_eq_single selected
+        · intro target _ hNeq
+          apply hZero target.1
+          intro hVal
+          exact hNeq (Subtype.ext hVal)
+        · simp
+      _ = g e := rfl
+  · simp only [if_neg hk]
+    apply Finset.sum_eq_zero
+    intro target _
+    apply hZero target.1
+    intro hEq
+    have hcol :
+        periodicHypercubicEvenSpatialSliceLinkColor H e =
+          periodicHypercubicEvenGroundStateSpatialColorEquivFin.symm k := by
+      simpa only [hEq] using target.property
+    apply hk
+    have hx :=
+      congrArg periodicHypercubicEvenGroundStateSpatialColorEquivFin hcol
+    simpa [k0] using hx.symm
+
+/-- The exactly cardinal-normalized genuine six-color reference sum
+collapses to one physical link, retaining its true color cardinality. -/
+private theorem p4Q2EL_weightedColorSum_eq_single
+    (e : Link) (g : Link → ENNReal)
+    (hZero : ∀ target : Link, target ≠ e → g target = 0) :
+    (∑ k : Fin 6,
+      (Fintype.card (p4Q2BA_ColorLinks H k) : ENNReal)⁻¹ *
+        (∑ target : p4Q2BA_ColorLinks H k, g target.1)) =
+      (Fintype.card (p4Q2BA_ColorLinks H
+        (periodicHypercubicEvenGroundStateSpatialColorEquivFin
+          (periodicHypercubicEvenSpatialSliceLinkColor H e))) : ENNReal)⁻¹ *
+        g e := by
+  classical
+  calc
+    (∑ k : Fin 6,
+        (Fintype.card (p4Q2BA_ColorLinks H k) : ENNReal)⁻¹ *
+          (∑ target : p4Q2BA_ColorLinks H k, g target.1)) =
+      ∑ k : Fin 6,
+        (Fintype.card (p4Q2BA_ColorLinks H k) : ENNReal)⁻¹ *
+          (if k = periodicHypercubicEvenGroundStateSpatialColorEquivFin
+            (periodicHypercubicEvenSpatialSliceLinkColor H e)
+          then g e else 0) := by
+        apply Finset.sum_congr rfl
+        intro k _
+        rw [p4Q2EL_colorSum_eq_single H e g hZero k]
+    _ = _ := by
+      simp only [mul_ite, mul_zero]
+      simp
+
+/-- The ORIGINAL normalized Wilson twelve-color Haar reference of the
+physical gauge-invariant SU(2) relative link is the exact TWO selected
+Wilson left and right references. The coefficient keeps the genuine
+color cardinality and the literal normalization 1/12. No independent
+pair-Haar reference or interacting Wilson conditional mean is substituted. -/
+theorem p4Q2EL_SU2_originalWilsonNormalizedReference_eq_twoSelected
+    (beta : ℝ) (hbeta : 0 ≤ beta) (e : Link) :
+    p4Q2BC_originalPhysicalTwelveColorHaarReference
+      H 2 (by norm_num) beta hbeta (fun z : Joint => F e z) =
+    (12 : ENNReal)⁻¹ *
+      ((Fintype.card (p4Q2BA_ColorLinks H
+          (periodicHypercubicEvenGroundStateSpatialColorEquivFin
+            (periodicHypercubicEvenSpatialSliceLinkColor H e))) : ENNReal)⁻¹ *
+          p4Q2AZ_originalJointHaarReferenceEnergy
+            H 2 (by norm_num) beta hbeta e (fun z : Joint => F e z) +
+       (Fintype.card (p4Q2BA_ColorLinks H
+          (periodicHypercubicEvenGroundStateSpatialColorEquivFin
+            (periodicHypercubicEvenSpatialSliceLinkColor H e))) : ENNReal)⁻¹ *
+          p4Q2BB_originalLeftLinkHaarReferenceEnergy
+            H 2 (by norm_num) beta hbeta e (fun z : Joint => F e z)) := by
+  have hRight :
+      (∑ k : Fin 6,
+        (Fintype.card (p4Q2BA_ColorLinks H k) : ENNReal)⁻¹ *
+          p4Q2BA_colorAllLinkHaarReferenceSum
+            H 2 (by norm_num) beta hbeta k (fun z : Joint => F e z)) =
+        (Fintype.card (p4Q2BA_ColorLinks H
+          (periodicHypercubicEvenGroundStateSpatialColorEquivFin
+            (periodicHypercubicEvenSpatialSliceLinkColor H e))) : ENNReal)⁻¹ *
+          p4Q2AZ_originalJointHaarReferenceEnergy
+            H 2 (by norm_num) beta hbeta e (fun z : Joint => F e z) := by
+    change (∑ k : Fin 6,
+      (Fintype.card (p4Q2BA_ColorLinks H k) : ENNReal)⁻¹ *
+        (∑ target : p4Q2BA_ColorLinks H k,
+          p4Q2AZ_originalJointHaarReferenceEnergy
+            H 2 (by norm_num) beta hbeta target
+              (fun z : Joint => F e z))) = _
+    exact p4Q2EL_weightedColorSum_eq_single H e
+      (fun target => p4Q2AZ_originalJointHaarReferenceEnergy
+        H 2 (by norm_num) beta hbeta target (fun z : Joint => F e z))
+      (fun target hOther =>
+        p4Q2EL_SU2_offTarget_originalWilsonRightLinkReference_zero
+          H beta hbeta e target hOther)
+  have hLeft :
+      (∑ k : Fin 6,
+        (Fintype.card (p4Q2BA_ColorLinks H k) : ENNReal)⁻¹ *
+          p4Q2BB_leftColorAllLinkHaarReferenceSum
+            H 2 (by norm_num) beta hbeta k (fun z : Joint => F e z)) =
+        (Fintype.card (p4Q2BA_ColorLinks H
+          (periodicHypercubicEvenGroundStateSpatialColorEquivFin
+            (periodicHypercubicEvenSpatialSliceLinkColor H e))) : ENNReal)⁻¹ *
+          p4Q2BB_originalLeftLinkHaarReferenceEnergy
+            H 2 (by norm_num) beta hbeta e (fun z : Joint => F e z) := by
+    change (∑ k : Fin 6,
+      (Fintype.card (p4Q2BA_ColorLinks H k) : ENNReal)⁻¹ *
+        (∑ target : p4Q2BA_ColorLinks H k,
+          p4Q2BB_originalLeftLinkHaarReferenceEnergy
+            H 2 (by norm_num) beta hbeta target
+              (fun z : Joint => F e z))) = _
+    exact p4Q2EL_weightedColorSum_eq_single H e
+      (fun target => p4Q2BB_originalLeftLinkHaarReferenceEnergy
+        H 2 (by norm_num) beta hbeta target (fun z : Joint => F e z))
+      (fun target hOther =>
+        p4Q2EL_SU2_offTarget_originalWilsonLeftLinkReference_zero
+          H beta hbeta e target hOther)
+  unfold p4Q2BC_originalPhysicalTwelveColorHaarReference
+  rw [p4Q2BB_originalTwelveColorHaarReferenceSum_eq_rightSix_add_leftSix]
+  rw [hRight, hLeft]
+
 end ActualOriginalWilsonOffTargetVariance
 end
 end MathlibAnalytic
@@ -209,3 +357,4 @@ end MGAP4D
 #print axioms MGAP4D.MathlibAnalytic.p4Q2EL_SU2_offTarget_originalWilsonLeftLinkReference_zero
 #print axioms MGAP4D.MathlibAnalytic.p4Q2EL_SU2_originalWilsonAllRightLinks_eq_selected
 #print axioms MGAP4D.MathlibAnalytic.p4Q2EL_SU2_originalWilsonAllLeftLinks_eq_selected
+#print axioms MGAP4D.MathlibAnalytic.p4Q2EL_SU2_originalWilsonNormalizedReference_eq_twoSelected
