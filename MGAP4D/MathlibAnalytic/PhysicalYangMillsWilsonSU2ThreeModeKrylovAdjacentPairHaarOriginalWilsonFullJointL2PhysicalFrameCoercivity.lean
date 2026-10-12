@@ -163,7 +163,12 @@ theorem p4Q2DS_centeredL2NormSq_le_wilsonVariance
         H N hN beta hbeta
     change ‖x - W.starProjection x‖ ≤ ‖x - C c‖
     rw [Submodule.starProjection_minimal (U := W) x]
-    exact iInf_le (fun y : W => ‖x - (y : J)‖) ⟨C c, hC⟩
+    have hbdd :
+        BddBelow (Set.range (fun y : W => ‖x - (y : J)‖)) := by
+      refine ⟨0, ?_⟩
+      rintro z ⟨y, rfl⟩
+      exact norm_nonneg _
+    exact ciInf_le hbdd ⟨C c, hC⟩
   have hsquared : ‖x - B x‖ ^ 2 ≤ ‖x - C c‖ ^ 2 := by
     nlinarith [norm_nonneg (x - B x), norm_nonneg (x - C c)]
   calc
