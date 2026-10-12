@@ -85,10 +85,10 @@ for every bounded strongly measurable original joint observable.
 Both measures, all constants and both genuine means are physical. -/
 theorem p4Q2DF_originalWilsonJoint_allBoundedVariance_uniform_sandwich :
     ∃ m M : ℝ, 0 < m ∧ 0 ≤ M ∧
-      ∀ (F : Joint → ℝ) (hF : StronglyMeasurable F)
-        (B : ℝ) (hB : ∀ z, ‖F z‖ ≤ B),
-        m * variance F muPair ≤ variance F muWilson ∧
-        variance F muWilson ≤ M * variance F muPair := by
+      ∀ (F : Joint → ℝ), StronglyMeasurable F →
+        ∀ (B : ℝ), (∀ z, ‖F z‖ ≤ B) →
+          m * variance F muPair ≤ variance F muWilson ∧
+          variance F muWilson ≤ M * variance F muPair := by
   letI : IsProbabilityMeasure muPair := by infer_instance
   letI : IsProbabilityMeasure muWilson :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_isProbabilityMeasure
