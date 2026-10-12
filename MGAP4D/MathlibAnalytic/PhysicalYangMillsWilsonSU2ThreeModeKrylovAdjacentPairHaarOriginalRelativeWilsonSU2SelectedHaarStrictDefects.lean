@@ -55,8 +55,6 @@ local instance p4Q2EH_leftInvariant :
   dsimp [normalizedCompactHaar]
   infer_instance
 
-/-- Actual finite product independent SU(2) Haar measure gives positive mass
-on every nonempty open set of the true two-boundary configuration space. -/
 /-- Actual normalized compact SU(2) Haar has the open-positive support
 required by Mathlib's finite Pi and binary product measure instances. -/
 local instance p4Q2EH_singleHaarOpenPos :
@@ -64,6 +62,8 @@ local instance p4Q2EH_singleHaarOpenPos :
   dsimp [normalizedCompactHaar]
   infer_instance
 
+/-- Actual finite product independent SU(2) Haar measure gives positive mass
+on every nonempty open set of the true two-boundary configuration space. -/
 local instance p4Q2EH_pairHaarOpenPos :
     Measure.IsOpenPosMeasure muPair := by
   unfold periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure
