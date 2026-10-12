@@ -21,7 +21,7 @@ EJ proves original Wilson weighted off-target literal squared differences
 vanish. EK proves both selected physical link reference energies positive.
 Neither result identifies original reference with interacting Wilson
 conditional expectations, asserts their commutation, or provides any
-H-/spacing-uniform or continuum Yang--Mills gap.
+volume/spacing-uniform or continuum Yang--Mills gap.
 -/
 
 namespace MGAP4D
