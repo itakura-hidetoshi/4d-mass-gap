@@ -2,9 +2,9 @@
 
 Lean 4 / mathlib research by **Hidetoshi Itakura** on the original finite-volume Wilson lattice theory and the outstanding four-dimensional Yang–Mills existence and mass-gap problem.
 
-**Checkpoint — 2026-10-12 JST:** latest theorem-bearing [PR #5487 (P4-Q2-ED)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5487) is **MERGED** at `dbaaa7127a10603ef4460c19a5ad9139b056e599`. Exact-source-head [CI #38242086823](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38242086823) completed **SUCCESS, 9603/9603**; earlier true-physical-EC [PR #5485](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5485) remains merged at `f1c07123f70cb50ef911ae857c149d596df5393b`.
+**Checkpoint — 2026-10-12 JST:** latest theorem-bearing [PR #5491 (P4-Q2-EG)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5491) is **MERGED** at `0dcb2e38a99294b838e921c8183c57fba48b1206`; exact-source-head [CI #38249838356](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38249838356) **SUCCESS (9676/9676)**. Prerequisites [EE #5489](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5489) (merged `a138e37565a9cd97ea57302499e240768dfa6f5b`, CI #38245063139 SUCCESS 9674/9674) and [EF #5490](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5490) (merged `fd78cebc3f724d1807364e6aeefe22c30bc4d200`, CI #38248789502 SUCCESS 9675/9675) are also confirmed.
 
-> **Scope.** Original Wilson Haar Riesz `AW`: actual full-physical-joint-`L²` finite-volume quadratic coercivity (DV), genuine Loewner/restriction (DW), bounded inverse and real spectral band `[κ_R,12]` (DX). **DY #5478 Lean-proves the original physical DQ/DF finite-volume witness coefficient; DZ #5480 restores the EXACT factor 12 lost when going from the original normalized Haar average to its truly UNNORMALIZED twelve-color sum, improving the SAME physical coefficient across full-L², Loewner and anti-Lipschitz bounds**. **EA #5482 proves the sharp universal nonnegative six-color-link averaging coefficient. EB #5484 applies the actual maximum six-color cardinality to the original Wilson Haar fiber reference; EC #5485 proves the new SAME physical Wilson m,M coefficient throughout the original unnormalized Wilson Riesz whole joint L² and restricted Loewner/anti-Lipschitz estimates.** This diagnoses why pure nonnegative link-count comparisons cannot remove inverse color multiplicity; the constrained real Wilson Haar residuals could admit stronger correlations, which remain unproved. Separate normalized physical `D12` and independent pair-Haar coordinate projections are never identified. **ED #5487 proves on the GENUINE spatial SU(N) gauge-configuration carrier that a one-boundary one-link real observable is invariant under all local vertex gauges iff constant; but the TWO-boundary relative link transforms by conjugation and an explicit SU(2) relative Wilson-energy class observable is gauge-invariant and pointwise nonconstant (values 0 and 2). These new ED results are pointwise, not a new original Wilson/pair-Haar L² color-block or spectral-gap estimate.** **No spatial-volume/spacing-uniform physical coefficient, Yang–Mills continuum theory or positive continuum mass gap is claimed.**
+> **Scope.** Original Wilson Haar Riesz `AW`: actual full-physical-joint-`L²` finite-volume quadratic coercivity (DV), genuine Loewner/restriction (DW), bounded inverse and real spectral band `[κ_R,12]` (DX). **DY #5478 Lean-proves the original physical DQ/DF finite-volume witness coefficient; DZ #5480 restores the EXACT factor 12 lost when going from the original normalized Haar average to its truly UNNORMALIZED twelve-color sum, improving the SAME physical coefficient across full-L², Loewner and anti-Lipschitz bounds**. **EA #5482 proves the sharp universal nonnegative six-color-link averaging coefficient. EB #5484 applies the actual maximum six-color cardinality to the original Wilson Haar fiber reference; EC #5485 proves the new SAME physical Wilson m,M coefficient throughout the original unnormalized Wilson Riesz whole joint L² and restricted Loewner/anti-Lipschitz estimates.** This diagnoses why pure nonnegative link-count comparisons cannot remove inverse color multiplicity; the constrained real Wilson Haar residuals could admit stronger correlations, which remain unproved. Separate normalized physical `D12` and independent pair-Haar coordinate projections are never identified. **ED #5487 proves on the GENUINE spatial SU(N) gauge-configuration carrier that a one-boundary one-link real observable is invariant under all local vertex gauges iff constant; but the TWO-boundary relative link transforms by conjugation and an explicit SU(2) relative Wilson-energy class observable is gauge-invariant and pointwise nonconstant (values 0 and 2). These new ED results are pointwise, not a new original Wilson/pair-Haar L² color-block or spectral-gap estimate.** **EE–EG now add the actual bounded-continuous, simultaneously gauge-invariant SU(2) relative-link Wilson energy in DISTINCT original physical Wilson and independent pair-Haar joint L² spaces (EE), its exact two-coordinate independent-Haar support (EF), and the strictly positive finite-volume original Wilson normalized Haar reference floor controlling the two selected independent-Haar coordinate defects (EG). This does not equate the two measures or their conditional expectations.** **No spatial-volume/spacing-uniform physical coefficient, Yang–Mills continuum theory or positive continuum mass gap is claimed.**
 
 See the updated [ROADMAP.md](ROADMAP.md) for the theorem-status matrix, independent Krylov/adjacent-scale obligations, and the next proof order.
 
@@ -14,15 +14,15 @@ See the updated [ROADMAP.md](ROADMAP.md) for the theorem-status matrix, independ
 | --- | --- |
 | Repository | [itakura-hidetoshi/4d-mass-gap](https://github.com/itakura-hidetoshi/4d-mass-gap) |
 | **Only theorem-authoritative branch** | `formal/real-hilbert-uniform-coercive-strong-limit` |
-| **Latest theorem-bearing merge** | [#5487 (ED)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5487), `dbaaa7127a10603ef4460c19a5ad9139b056e599` |
-| PR #5487 exact tested source HEAD | `319f1939248c56b3afdf5cb33e4f665de49dc4b8` |
+| **Latest theorem-bearing merge** | [#5491 (EG)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5491), `0dcb2e38a99294b838e921c8183c57fba48b1206` |
+| PR #5491 exact tested source HEAD | `b4d22219d28a1dd0b6782b8998390ec1a8e747f9` |
 | Lean pin | `leanprover/lean4:v4.30.0-rc2` |
 | mathlib pin | `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
-| Exact source-head CI | [#38242086823](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38242086823) — **SUCCESS** |
-| Changed Lean / MCP completion jobs | `114786936379` / `114788302280`, both **SUCCESS** |
-| Build and diagnostics | **9603/9603**, **ED changed-file errors/warnings 0**; preflight passed. ED `#print axioms` depends on standard Lean axioms (e.g., `propext`, `Classical.choice`, `Quot.sound`); NO new axiom declaration or `sorryAx`. Older unrelated imported geometry has inherited `native_decide` certificates. Historical DV had four unused-variable warnings. |
+| Exact source-head CI | [#38249838356](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38249838356) — **SUCCESS** |
+| Changed Lean / MCP completion jobs | `114812971770` / `114814501348`, both **SUCCESS** |
+| Build and diagnostics | **9676/9676**, EG changed-file Lean errors/warnings **0**, static audit passed. EG `#print axioms` includes standard Lean axioms and inherited earlier spatial-cardinality `native_decide` certificates; no new `axiom`, `sorry`, `admit`, or `sorryAx` in EG. Earlier DV had four nonfatal warnings. |
 
-**The GitHub default `main` is not the theorem authority.** Reobserve the fresh exact HEAD of the branch above and inspect the actual Lean theorem declarations before trusting this document, a PR title, or a historical conversation. A subsequent documentation-only merge advances the branch HEAD **without changing the #5487 theorem-bearing checkpoint**.
+**The GitHub default `main` is not the theorem authority.** Reobserve the fresh exact HEAD of the branch above and inspect the actual Lean theorem declarations before trusting this document, a PR title, or a historical conversation. A subsequent documentation-only merge advances the branch HEAD **without changing the #5491 theorem-bearing checkpoint**.
 
 Authority order: fresh authoritative SHA → actual Lean statements/proofs → README/ROADMAP → CI for that exact SHA → historical reports.
 
@@ -42,7 +42,7 @@ Fix a genuine finite Wilson configuration satisfying the Lean hypotheses (in par
 
 The normalizations matter: the DQ/DR **normalized reference** is `(1/12) * (original 12-color sum)`, whereas `QW` extends the **sum**. Keep source/frozen `beta_n` distinct from fine `beta_(n+1)` when discussing adjacent-scale Krylov inputs.
 
-## 3. Original Wilson Riesz through EC; ED actual local gauge admissibility and relative SU(2) witness
+## 3. Original Wilson Riesz through EC; ED–EG genuine local SU(2) relative observables and Haar support
 
 [PR #5473](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5473) adds `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalFullJointHaarRieszCoercivity.lean`. Its final Lean theorem is:
 
@@ -129,6 +129,34 @@ For two original adjacent spatial boundaries `(A,B)`, however, the TRUE relative
 
 **Proof boundary:** ED does **not** claim that these two-boundary observables realize EA's ONE-coordinate spike in the original Wilson or independent pair-Haar `L²` defects, nor that actual physical Wilson color conditional projections commute. No physical H-/spacing-uniform gap, fine/frozen signed Krylov Gram, cross-scale transport, or continuum Hamiltonian follows. Next: prove the exact bounded-continuous/local relative-observable realization in the genuine original Wilson joint `L²`, then quantify actual pair-Haar/physical Wilson coordinate-energy support and gauge-invariant color-block estimates, keeping the different measures and operators separate.
 
+### EE–EG: genuinely gauge-invariant SU(2) relative link, two-coordinate support and original reference
+
+**EE [PR #5489] — CLOSED:** The actual original spatial pair carrier supports a BOUNDED CONTINUOUS and simultaneously gauge-invariant two-boundary Wilson-energy observable, (F_e(A,B)=E_W((A_e)^{-1}B_e)), with explicit configurations giving pointwise values 0 and 2. EE defines the actual original Wilson–Perron physical joint-`L²` class via the certified bounded core AND, separately, the true independent pair-Haar joint-`L²` class of the same representative. The separate almost-everywhere representative identities are proved under their correct measures. The true original Wilson Riesz quadratic equals the LITERAL original unnormalized twelve-color Haar-reference core energy for that concrete physical observable. Pointwise nonconstancy is not asserted to imply nonzero Hilbert-`L²` class without an additional support theorem.
+
+**EF [PR #5490] — CLOSED:** In the real independent pair-Haar joint `Lp ℝ 2`, the original CR orthogonal projection `P_i` fixes EE's `f_e` for EVERY joint coordinate other than the genuine `Sum.inl e` and `Sum.inr e`. EF proves invariance under explicit updates of the actual joint coordinate measurable equivalence, then equality of the literal Haar one-coordinate integral, and invokes DA's *actual pair-Haar* conditional-expectation identification. In Lean:
+```text
+i != Sum.inl(e), i != Sum.inr(e) ==> P_i(f_e) = f_e
+                                     ||f_e - P_i(f_e)||^2 = 0.
+```
+There is no assertion that interacting physical Wilson conditional projections commute or fix this observable.
+
+**EG [PR #5491] — CLOSED:** The independent pair-Haar energy on ALL actual left/right spatial coordinates reduces to its TWO selected CR defect terms **exactly**, not as an inequality:
+```text
+sum_{i : Sum Link Link} ofReal(||f_e-P_i f_e||^2)
+ = ofReal(||f_e-P_(inl e) f_e||^2)
+   + ofReal(||f_e-P_(inr e) f_e||^2).
+```
+Instantiating **EB's genuine original Wilson physical Haar fiber-mass witness `m>0`** at this SAME gauge-invariant bounded continuous SU(2) pair observable proves, with the actual `ENNReal` normalization,
+```text
+a_EB(H,beta,m) *
+   (ofReal(||f_e-P_(inl e) f_e||^2)
+     + ofReal(||f_e-P_(inr e) f_e||^2))
+ <= E_Haar,12^original Wilson(F_e).
+```
+Here `a_EB = m * exp(-32 beta)/(12 * L_max(H))` is the explanatory finite-volume coefficient and the RIGHT-HAND side is the *normalized original physical Wilson Haar reference*, **not the separate physical D12 operator or its conditional residual sum**. The pair-Haar `P_i` on the LEFT is explicitly a different operator from Wilson conditional projection.
+
+**Still OPEN:** proving the two selected coordinate defects are strictly positive in `L²` under an explicit positive-Haar support/variance theorem, determining the exact support and coefficient of the actual ORIGINAL Wilson mass-weighted Haar-reference single-link integrals, and a genuine original-Wilson color-block estimate. No common lower bound independent of spatial volume, signed fine/frozen Krylov closure, adjacent-scale reconstruction, or continuum Yang–Mills mass gap follows.
+
 ## 4. Separately established physical D12 gap (DS–DU)
 
 The independent physical Dirichlet route is already formalized:
@@ -154,13 +182,13 @@ The DU spectrum theorem applies to the **physical normalized D12**; DW and DX in
 | **P4-Q2, original reference construction** | #5389–#5427: original bounded-core polarization, full joint L² Riesz AW, positivity and earlier one-sided comparison. | Extended in DW/DX; volume-uniform physicality OPEN. |
 | **P4-Q2, zero/kernel and pair-Haar bridges** | #5431–#5440 **CO** qualitative full-`L²` kernel, #5441 mass floor, #5442–#5455 actual pair-Haar coordinate tensorization/Poincaré, #5456–#5467 Wilson variance/fiber bridges. | Preserve actual conditional laws; no synthetic independence. |
 | **P4-Q2, quantitative full-`L²` / color averaging** | **#5468–#5485 CLOSED in distinct scopes**: genuine normalized physical D12 (DS–DU), original AW (DV–DZ), EA sharp arbitrary-link-weight iff, EB actual max-color original Wilson reference floor, and **EC same-witness original AW full joint L², Loewner/anti-Lipschitz with kappa_EC ≥ kappa_DZ**. | Original physical H-/spacing-uniformity, signed fine/frozen Gram and continuum reconstruction OPEN. |
-| **P4-Q2-ED: actual local spatial gauge observable admissibility** | **[#5487 CLOSED](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5487)**: single-boundary one-link invariance iff constant; actual two-boundary relative conjugation; **explicit SU(2) Wilson-energy pair observation pointwise gauge-invariant and nonconstant (0 vs 2)**. | True original Wilson joint-L² representative, gauge-invariant physical residual support, original color-block spectral comparison and volume uniformity remain OPEN. |
+| **P4-Q2-ED–EG: actual gauge-invariant local SU(2) Wilson/Haar link support** | **ED #5487** original gauge orbit and SU(2) nonconstant class function; **EE #5489** genuine bounded-continuous physical Wilson and pair-Haar joint L² classes and original Riesz core formula; **EF #5490** exact zero CR defects off two selected coordinates; **EG #5491** exact all-coordinate two-term energy and genuine original Wilson normalized Haar-reference floor for the SAME observable. | Strict positivity of selected pair-Haar defects, original Wilson Haar weighted single-link exact-support/physical block correlation, spatial-volume uniformity and continuum remain OPEN. |
 
 The #5326 `W × M` signed-Krylov link-budget and the newer AW/D12 finite-volume spectral gap are **different mathematical problems**. A finite-volume positive coefficient for AW or D12 does not close the volume-uniform fine/frozen Krylov Gram, original signed Schur row estimates, or cross-scale reconstruction.
 
 ## 6. Live frontier and limitations
 
-With finite-volume original AW certificates CLOSED through EC, EA's universal-weight sharpness CLOSED, and ED's POINTWISE genuine one-boundary gauge obstruction and nonconstant two-boundary SU(2) witness CLOSED, the active mathematical tasks are (i) the actual gauge-invariant local two-boundary observable's physical Wilson joint-L² realization and original pair-Haar coordinate defect support, (ii) replace or control DQ's explicit inverse spatial-link-cardinality loss and true Wilson fiber-mass/variance comparison dependence **without postulating an H-independent floor**, (ii) physically justified **uniform-in-H and spacing-scaled** signed Krylov/adjacent-scale Gram estimates, (iii) C1 actual common-marginal physicality, C2 fine/coarse vector reconstruction, C3 an explicit summable genuine beta trajectory, and (iv) H2 physical time generator/strongly continuous semigroup, H3 OS Hamiltonian, H4 positive **continuum** Yang–Mills mass gap. All continuum gates remain **OPEN**.
+With finite-volume original AW certificates CLOSED through EC, EA's universal-weight sharpness CLOSED, and ED–EG's actual pointwise/physical Wilson L²/pair-Haar two-coordinate support and original reference certificate CLOSED in their separate scopes, the active mathematical tasks are (i) prove nonvanishing of the two selected pair-Haar defects under genuine Haar full support, and determine actual original Wilson mass-weighted Haar-reference per-link support on this observable, (ii) replace or control DQ's explicit inverse spatial-link-cardinality loss and true Wilson fiber-mass/variance comparison dependence **without postulating an H-independent floor**, (iii) physically justified **uniform-in-H and spacing-scaled** signed Krylov/adjacent-scale Gram estimates, (iv) C1 actual common-marginal physicality, C2 fine/coarse vector reconstruction, C3 an explicit summable genuine beta trajectory, and (v) H2 physical time generator/strongly continuous semigroup, H3 OS Hamiltonian, H4 positive **continuum** Yang–Mills mass gap. All continuum gates remain **OPEN**.
 
 Do not treat positive constants separately available at each H as a common constant. The DV proof uses a finite-volume coefficient from an actual Wilson Haar fiber-mass floor and link cardinality; no bound uniform in H is proved. Existing small-beta estimates `κ12 ≥ 1/2304`, transfer gap `≥ 1/3072`, `q0=3071/3072` apply only within their verified contexts; they are **not** a nontrivial continuum time evolution.
 
@@ -171,16 +199,16 @@ Prior no-go/limits remain relevant: positive-coupling H1-D5 whole-operator compa
 The latest theorem-bearing Lean target lives at:
 
 ```text
-MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalGaugeInvariantLocalSupport.lean
+MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalRelativeWilsonSU2TwoCoordinateHaarReference.lean
 ```
 
 On the **fresh authoritative branch** with the pinned toolchain/manifest:
 
 ```bash
-lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalGaugeInvariantLocalSupport
+lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalRelativeWilsonSU2TwoCoordinateHaarReference
 ```
 
-Read in dependency order: DQ `OriginalTwelveColorGlobalHilbertFloor` → DC `GlobalMeanPoincare` → DF `OriginalPhysicalVarianceSandwich` → DR `OriginalWilsonVarianceTwelveColorCoercivity` → CL `OriginalBoundedCoreKernelExactFrontier` → BW/BX `OriginalFullJointL2ContinuousBilinear` / `OriginalFullJointL2Quadratic` → **DV** `OriginalFullJointHaarRieszCoercivity` → **DW** `OriginalWilsonRieszOrthogonalSpectrum` → **DX** `OriginalWilsonRieszSpectralBandAndIsUnit` → **DY** `OriginalWilsonRieszExplicitFiniteVolumeCertificate` → **DZ** `OriginalWilsonRieszExactUnnormalizedTwelveFactor` → **EA** `OriginalColorAverageSharpnessBarrier` → **EB** `OriginalSharpMaxColorWilsonHaarFloor` → **EC** `OriginalWilsonRieszSharpMaxColorFullL2` → **ED** `OriginalGaugeInvariantLocalSupport`. All these shorthand names share the full `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaar` prefix and `MGAP4D/MathlibAnalytic/` directory.
+Read in dependency order: DQ `OriginalTwelveColorGlobalHilbertFloor` → DC `GlobalMeanPoincare` → DF `OriginalPhysicalVarianceSandwich` → DR `OriginalWilsonVarianceTwelveColorCoercivity` → CL `OriginalBoundedCoreKernelExactFrontier` → BW/BX `OriginalFullJointL2ContinuousBilinear` / `OriginalFullJointL2Quadratic` → **DV** `OriginalFullJointHaarRieszCoercivity` → **DW** `OriginalWilsonRieszOrthogonalSpectrum` → **DX** `OriginalWilsonRieszSpectralBandAndIsUnit` → **DY** `OriginalWilsonRieszExplicitFiniteVolumeCertificate` → **DZ** `OriginalWilsonRieszExactUnnormalizedTwelveFactor` → **EA** `OriginalColorAverageSharpnessBarrier` → **EB** `OriginalSharpMaxColorWilsonHaarFloor` → **EC** `OriginalWilsonRieszSharpMaxColorFullL2` → **ED** `OriginalGaugeInvariantLocalSupport` → **EE** `OriginalRelativeWilsonSU2BCFPhysicalL2` → **EF** `OriginalRelativeWilsonSU2PairHaarCoordinateSupport` → **EG** `OriginalRelativeWilsonSU2TwoCoordinateHaarReference`. All these shorthand names share the full `PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaar` prefix and `MGAP4D/MathlibAnalytic/` directory.
 
 For the physical D12 spectrum, follow CA `OriginalPhysicalTwelveDirichletLoewner` → DS `OriginalWilsonFullJointL2PhysicalFrameCoercivity` → DT `OriginalPhysicalTwelveDirichletOperatorGap` → DU `OriginalPhysicalTwelveDirichletOrthogonalSpectrum`.
 
