@@ -51,11 +51,11 @@ local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink H
 local notation "F" => p4Q2EE_SU2_relativeWilsonEnergyBCF H
 local notation "J" =>
   PeriodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointL2
-    H 2 (by norm_num)
+    H 2 (Nat.zero_lt_succ 1)
 local notation "W" => p4Q2EE_SU2_physicalWilsonJointL2 H
 local notation "C" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialCondExpL2
-    H 2 (by norm_num)
+    H 2 (Nat.zero_lt_succ 1)
 
 /-- Strong measurability and boundedness are certified for the actual
 SU(2) two-boundary Wilson-energy BCF, not postulated for an abstract
@@ -74,14 +74,14 @@ The representative statement is used only up to Wilson-a.e. equality. -/
 theorem p4Q2EM_SU2_originalAZJointL2_eq_EE
     (beta : ℝ) (hbeta : 0 ≤ beta) (e : Link) :
     p4Q2AZ_originalJointL2
-      H 2 (by norm_num) beta hbeta
+      H 2 (Nat.zero_lt_succ 1) beta hbeta
       (fun z : Joint => F e z) (F e).continuous.stronglyMeasurable 2
       (p4Q2EM_SU2_physicalWitness_bound H e) =
       W beta hbeta e := by
   apply Lp.ext
   have hAz :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointBoundedConcreteL2_coeFn
-      H 2 (by norm_num) beta hbeta
+      H 2 (Nat.zero_lt_succ 1) beta hbeta
       (fun z : Joint => F e z) (F e).continuous.stronglyMeasurable 2
       (p4Q2EM_SU2_physicalWitness_bound H e)
   exact hAz.trans (p4Q2EE_SU2_physicalWilsonJointL2_ae_eq
@@ -108,7 +108,7 @@ theorem p4Q2EM_SU2_bothSelectedPhysicalWilsonColorDefects_pos
   have hBound : ∀ z : Joint, ‖F0 z‖ ≤ (2 : ℝ) :=
     p4Q2EM_SU2_physicalWitness_bound H e
   let x := p4Q2AZ_originalJointL2
-    H 2 (by norm_num) beta hbeta F0 hStrong 2 hBound
+    H 2 (Nat.zero_lt_succ 1) beta hbeta F0 hStrong 2 hBound
   have hx : x = W beta hbeta e :=
     p4Q2EM_SU2_originalAZJointL2_eq_EE H beta hbeta e
   let k : Fin 6 :=
@@ -116,61 +116,61 @@ theorem p4Q2EM_SU2_bothSelectedPhysicalWilsonColorDefects_pos
       (periodicHypercubicEvenSpatialSliceLinkColor H e)
   have hRightRef :
       0 < p4Q2AZ_originalJointHaarReferenceEnergy
-        H 2 (by norm_num) beta hbeta e F0 :=
+        H 2 (Nat.zero_lt_succ 1) beta hbeta e F0 :=
     (p4Q2EK_SU2_bothSelectedOriginalWilsonLinkReferences_pos
       H beta hbeta e).2
   have hLeftRef :
       0 < p4Q2BB_originalLeftLinkHaarReferenceEnergy
-        H 2 (by norm_num) beta hbeta e F0 :=
+        H 2 (Nat.zero_lt_succ 1) beta hbeta e F0 :=
     (p4Q2EK_SU2_bothSelectedOriginalWilsonLinkReferences_pos
       H beta hbeta e).1
   have hRightLink :=
     p4Q2AZ_originalJointHaarReferenceEnergy_le_physicalCondExpResidual
-      H 2 (by norm_num) beta hbeta e F0 hStrong 2 hBound
+      H 2 (Nat.zero_lt_succ 1) beta hbeta e F0 hStrong 2 hBound
   have hLeftLink :=
     p4Q2BB_originalLeftLinkHaarReferenceEnergy_le_leftResidual
-      H 2 (by norm_num) beta hbeta e F0 hStrong 2 hBound
+      H 2 (Nat.zero_lt_succ 1) beta hbeta e F0 hStrong 2 hBound
   have hRightColor :
       ‖x -
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
-          H 2 (by norm_num) beta hbeta e x‖ ^ 2 ≤
+          H 2 (Nat.zero_lt_succ 1) beta hbeta e x‖ ^ 2 ≤
       ‖x -
         C beta hbeta (Sum.inl k) x‖ ^ 2 := by
-    simpa only [C,
+    simpa only [
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialCondExpL2,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSixSpatialCondExpL2,
       k, Equiv.symm_apply_apply] using
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2_residual_sq_le_color
-        H 2 (by norm_num) beta hbeta e x)
+        H 2 (Nat.zero_lt_succ 1) beta hbeta e x)
   have hLeftColor :
       ‖x -
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftSpatialLinkCondExpL2
-          H 2 (by norm_num) beta hbeta e x‖ ^ 2 ≤
+          H 2 (Nat.zero_lt_succ 1) beta hbeta e x‖ ^ 2 ≤
       ‖x -
         C beta hbeta (Sum.inr k) x‖ ^ 2 := by
-    simpa only [C,
+    simpa only [
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateTwelveSpatialCondExpL2,
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftSixSpatialCondExpL2,
       k, Equiv.symm_apply_apply] using
       (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftSpatialLinkCondExpL2_residual_sq_le_color
-        H 2 (by norm_num) beta hbeta e x)
+        H 2 (Nat.zero_lt_succ 1) beta hbeta e x)
   have hRight :
       0 < ENNReal.ofReal (‖x - C beta hbeta (Sum.inl k) x‖ ^ 2) := by
     have ht :
       p4Q2AZ_originalJointHaarReferenceEnergy
-          H 2 (by norm_num) beta hbeta e F0 ≤
+          H 2 (Nat.zero_lt_succ 1) beta hbeta e F0 ≤
         ENNReal.ofReal
           (‖x - periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateSpatialLinkCondExpL2
-            H 2 (by norm_num) beta hbeta e x‖ ^ 2) := hRightLink
+            H 2 (Nat.zero_lt_succ 1) beta hbeta e x‖ ^ 2) := hRightLink
     exact hRightRef.trans_le (ht.trans (ENNReal.ofReal_le_ofReal hRightColor))
   have hLeft :
       0 < ENNReal.ofReal (‖x - C beta hbeta (Sum.inr k) x‖ ^ 2) := by
     have ht :
       p4Q2BB_originalLeftLinkHaarReferenceEnergy
-          H 2 (by norm_num) beta hbeta e F0 ≤
+          H 2 (Nat.zero_lt_succ 1) beta hbeta e F0 ≤
         ENNReal.ofReal
           (‖x - periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateLeftSpatialLinkCondExpL2
-            H 2 (by norm_num) beta hbeta e x‖ ^ 2) := hLeftLink
+            H 2 (Nat.zero_lt_succ 1) beta hbeta e x‖ ^ 2) := hLeftLink
     exact hLeftRef.trans_le (ht.trans (ENNReal.ofReal_le_ofReal hLeftColor))
   have hRealR : 0 < ‖x - C beta hbeta (Sum.inl k) x‖ ^ 2 :=
     ENNReal.ofReal_pos.mp hRight
