@@ -1,6 +1,7 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalWilsonRieszSharpMaxColorFullL2
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitarySpatialSliceGaugeAction
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicNondegenerateShifts
+import MGAP4D.MathlibAnalytic.ContinuousCompactOrientedGaugeWilsonHybridTargetTrajectorySpecialUnitaryTwoStapleOscillationSeparationBCF
 import Mathlib.Tactic
 
 /-!
@@ -120,7 +121,7 @@ gauge invariance still forces its link function to be constant. This
 does NOT apply to genuinely two-boundary relative-link observables. -/
 theorem p4Q2ED_pair_oneBoundarySingleLink_gaugeInvariant_iff_constant
     (e : Link) (phi : G → ℝ) :
-    (∀ (γ : Gauge) (A B : Cfg),
+    (∀ (γ : Gauge) (_A B : Cfg),
       phi ((Act γ B) e) = phi (B e)) ↔
     (∀ u v : G, phi u = phi v) := by
   constructor
@@ -195,6 +196,76 @@ theorem p4Q2ED_nonconstantRelativeClassFunction_survivesGauge
   simpa using huv
 
 end ActualSpatialGauge
+
+/-!
+## Genuine SU(2) physical relative-link Wilson-energy witness
+
+The existing theorem-proved SU(2) central negative identity has literal
+Wilson energies 0 at identity and 2 at negative identity. This turns the
+general class-function interface above into an ACTUAL nonconstant
+simultaneously gauge-invariant real two-boundary Wilson local observable.
+The old one-boundary gauge-invariant one-link obstruction still applies.
+These are pointwise original physical configuration results, not a claimed
+single-coordinate projection spike in the Wilson or pair-Haar L² spaces.
+-/
+section ActualSU2RelativeWilsonEnergy
+
+variable (H : ℕ)
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink H
+local notation "Cfg" =>
+  PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+local notation "Gauge" =>
+  PeriodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransformation H 2
+local notation "Act" =>
+  periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform H 2
+
+/-- The ACTUAL SU(2) Wilson energy of one right/left relative spatial link
+is simultaneously invariant under all original local spatial gauge
+transformations on the pair of genuine slice configurations. -/
+theorem p4Q2ED_SU2_relativeWilsonEnergy_gaugeInvariant (e : Link) :
+    ∀ (γ : Gauge) (A B : Cfg),
+      specialUnitaryWilsonPlaquetteEnergy 2
+          (((Act γ A) e)⁻¹ * ((Act γ B) e)) =
+        specialUnitaryWilsonPlaquetteEnergy 2 ((A e)⁻¹ * B e) := by
+  exact p4Q2ED_relativePairClassFunction_actualGaugeInvariant
+    H 2 e (specialUnitaryWilsonPlaquetteEnergy 2)
+    (by
+      intro g x
+      exact specialUnitaryWilsonPlaquetteEnergy_conjInvariant g x)
+
+/-- EXPLICIT genuine physical two-boundary configurations at which the
+relative SU(2) Wilson energy equals respectively 0 and 2. This is
+real nonconstancy, not merely a conditional hypothetical class function. -/
+theorem p4Q2ED_SU2_relativeWilsonEnergy_zero_two (e : Link) :
+    ∃ A B C D : Cfg,
+      specialUnitaryWilsonPlaquetteEnergy 2 ((A e)⁻¹ * B e) = 0 ∧
+      specialUnitaryWilsonPlaquetteEnergy 2 ((C e)⁻¹ * D e) = 2 := by
+  refine ⟨(fun _ => (1 : G)), (fun _ => (1 : G)),
+    (fun _ => (1 : G)), (fun _ => specialUnitaryTwoNegativeIdentity),
+    ?_, ?_⟩
+  · simpa using specialUnitaryWilsonPlaquetteEnergy_two_one
+  · simpa using specialUnitaryWilsonPlaquetteEnergy_two_negativeIdentity
+
+/-- A concrete nonconstant local TWO-boundary gauge-invariant Wilson
+observable survives even though every one-boundary gauge-invariant
+single-link observable is constant. No L² projection equality assumed. -/
+theorem p4Q2ED_SU2_relativeWilsonEnergy_gaugeInvariant_nonconstant (e : Link) :
+    (∀ (γ : Gauge) (A B : Cfg),
+      specialUnitaryWilsonPlaquetteEnergy 2
+          (((Act γ A) e)⁻¹ * ((Act γ B) e)) =
+        specialUnitaryWilsonPlaquetteEnergy 2 ((A e)⁻¹ * B e)) ∧
+    (∃ A B C D : Cfg,
+      specialUnitaryWilsonPlaquetteEnergy 2 ((A e)⁻¹ * B e) ≠
+        specialUnitaryWilsonPlaquetteEnergy 2 ((C e)⁻¹ * D e)) := by
+  refine ⟨p4Q2ED_SU2_relativeWilsonEnergy_gaugeInvariant H e, ?_⟩
+  obtain ⟨A, B, C, D, hzero, htwo⟩ :=
+    p4Q2ED_SU2_relativeWilsonEnergy_zero_two H e
+  refine ⟨A, B, C, D, ?_⟩
+  rw [hzero, htwo]
+  norm_num
+
+end ActualSU2RelativeWilsonEnergy
 end
 end MathlibAnalytic
 end MGAP4D
@@ -204,3 +275,5 @@ end MGAP4D
 #print axioms MGAP4D.MathlibAnalytic.p4Q2ED_pair_oneBoundarySingleLink_gaugeInvariant_iff_constant
 #print axioms MGAP4D.MathlibAnalytic.p4Q2ED_relativePairClassFunction_actualGaugeInvariant
 #print axioms MGAP4D.MathlibAnalytic.p4Q2ED_nonconstantRelativeClassFunction_survivesGauge
+#print axioms MGAP4D.MathlibAnalytic.p4Q2ED_SU2_relativeWilsonEnergy_gaugeInvariant
+#print axioms MGAP4D.MathlibAnalytic.p4Q2ED_SU2_relativeWilsonEnergy_gaugeInvariant_nonconstant
