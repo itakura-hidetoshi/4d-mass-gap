@@ -117,10 +117,14 @@ theorem p4Q2DU_physicalD12_mem_orthogonal
 /-- ACTUAL original physical D12 restriction to the closed Hilbert
 orthogonal complement of the physical Wilson constant line. -/
 noncomputable def p4Q2DU_restrictedPhysicalD12 :
-    (Vᗮ) →L[ℝ] (Vᗮ) :=
-  (p4Q2CA_physicalTwelveDirichletOperator H N hN beta hbeta).restrict
-    (fun x _hx =>
-      p4Q2DU_physicalD12_mem_orthogonal H N hN beta hbeta x)
+    (Vᗮ) →L[ℝ] (Vᗮ) := by
+  let W : Submodule ℝ J :=
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
+      H N hN beta hbeta)ᗮ
+  let D : J →L[ℝ] J :=
+    p4Q2CA_physicalTwelveDirichletOperator H N hN beta hbeta
+  exact (D.comp W.subtypeL).codRestrict W
+    (fun x => p4Q2DU_physicalD12_mem_orthogonal H N hN beta hbeta (x : J))
 
 @[simp] theorem p4Q2DU_restrictedPhysicalD12_apply
     (x : Vᗮ) :
@@ -196,7 +200,7 @@ theorem p4Q2DU_restrictedPhysicalD12_spectrum_subset_Ici :
           t * ‖x‖ ^ 2 - inner ℝ (D x) x := by
       simp [Algebra.algebraMap_eq_smul_one, ContinuousLinearMap.sub_apply,
         ContinuousLinearMap.smul_apply, inner_sub_left,
-        real_inner_smul_left, real_inner_self_eq_norm_sq]
+        real_inner_smul_left]
     have hnegative :
         ‖x‖ ^ 2 * (c : ℝ) ≤
           -(inner ℝ (((algebraMap ℝ (W →L[ℝ] W)) t - D) x) x) := by
