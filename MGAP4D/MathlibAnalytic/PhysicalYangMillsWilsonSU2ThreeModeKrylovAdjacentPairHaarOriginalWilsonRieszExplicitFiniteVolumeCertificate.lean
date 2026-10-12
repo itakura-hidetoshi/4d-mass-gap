@@ -35,7 +35,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory ProbabilityTheory
-open scoped ENNReal BigOperators InnerProductSpace
+open scoped ENNReal BigOperators InnerProductSpace NNReal
 
 noncomputable section
 
@@ -136,8 +136,8 @@ The witnesses are exposed in the theorem type rather than hidden behind
 an existential coefficient. -/
 theorem p4Q2DY_originalNormalizedReference_explicitVarianceWitness :
     ∃ m M : ℝ, 0 < m ∧ 0 ≤ M ∧
-      ∀ (F : Joint → ℝ) (hF : StronglyMeasurable F),
-        ∀ (bound : ℝ) (hbound : ∀ z, ‖F z‖ ≤ bound)
+      ∀ (F : Joint → ℝ) (_hF : StronglyMeasurable F),
+        ∀ (bound : ℝ) (_hbound : ∀ z, ‖F z‖ ≤ bound)
           (f : JH), F =ᵐ[muPair] (f : Joint → ℝ) →
             (p4Q2DQ_allLinkHilbertFloorCoefficient H beta m *
                 (ENNReal.ofReal (M + 1))⁻¹) *
@@ -250,8 +250,8 @@ original twelve-color Haar reference, with no physical D12 substitution. -/
 theorem p4Q2DY_originalReferenceReal_explicitVarianceWitness :
     ∃ m M : ℝ, 0 < m ∧ 0 ≤ M ∧
       0 < p4Q2DY_originalRieszFiniteVolumeCoefficient H beta m M ∧
-      ∀ (F : Joint → ℝ) (hF : StronglyMeasurable F)
-        (bound : ℝ) (hbound : ∀ z, ‖F z‖ ≤ bound),
+      ∀ (F : Joint → ℝ) (_hF : StronglyMeasurable F)
+        (bound : ℝ) (_hbound : ∀ z, ‖F z‖ ≤ bound),
           p4Q2DY_originalRieszFiniteVolumeCoefficient H beta m M *
               variance F muWilson ≤
             p4Q2BD_originalWilsonTwelveColorHaarReferenceReal
