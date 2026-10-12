@@ -169,7 +169,8 @@ theorem p4Q2CW_actualPairHaar_tensorization_of_simpleCore
     (x : JH) :
     ‖x - p4Q2CQ_projectionSweep P
       (@p4Q2CQ_finiteCoordinates I (p4Q2CR_actualJointIndexFintype H)) x‖ ^ 2 ≤
-      ∑ i : I, ‖x - P i x‖ ^ 2 := by
+      ∑ i ∈ (@Finset.univ I (p4Q2CR_actualJointIndexFintype H)),
+        ‖x - P i x‖ ^ 2 := by
   have hc : ∀ i j : I, ∀ y : JH, P i (P j y) = P j (P i y) :=
     fun i j y =>
       p4Q2CW_actualPairHaarProjections_commute_of_simpleCore H N
