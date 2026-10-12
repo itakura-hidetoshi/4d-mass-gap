@@ -170,7 +170,15 @@ theorem p4Q2DZ_originalWilsonUnnormalizedReference_exactTwelveWitness :
           (12 : ENNReal) *
             p4Q2BC_originalPhysicalTwelveColorHaarReference
               H N hN beta hbeta F :=
-        mul_le_mul_left hGammaRef (12 : ENNReal)
+        calc
+          (12 : ENNReal) * (γ * ENNReal.ofReal (variance F muWilson)) =
+              (γ * ENNReal.ofReal (variance F muWilson)) * 12 := mul_comm _ _
+          _ ≤ p4Q2BC_originalPhysicalTwelveColorHaarReference
+                H N hN beta hbeta F * 12 :=
+            mul_le_mul_left hGammaRef (12 : ENNReal)
+          _ = (12 : ENNReal) *
+                p4Q2BC_originalPhysicalTwelveColorHaarReference
+                  H N hN beta hbeta F := mul_comm _ _
       _ = (12 : ENNReal) * ((12 : ENNReal)⁻¹ * sumRef) := rfl
       _ = sumRef := by
         calc
@@ -183,14 +191,14 @@ theorem p4Q2DZ_originalWilsonUnnormalizedReference_exactTwelveWitness :
     ENNReal.toReal_ofReal hVarNonneg] at hReal
   have hTwelveReal : (12 : ENNReal).toReal = (12 : ℝ) := by norm_num
   rw [hTwelveReal] at hReal
-  change (12 : ℝ) * γ.toReal * variance F muWilson ≤
-    p4Q2BD_originalWilsonTwelveColorHaarReferenceReal
-      H N hN beta hbeta F at hReal
-  change p4Q2DZ_originalUnnormalizedRieszCoefficient H beta m M *
-      variance F muWilson ≤
-    p4Q2BD_originalWilsonTwelveColorHaarReferenceReal
-      H N hN beta hbeta F
-  exact hReal
+  have hRealAssoc :
+      ((12 : ℝ) * γ.toReal) * variance F muWilson ≤ sumRef.toReal := by
+    calc
+      ((12 : ℝ) * γ.toReal) * variance F muWilson =
+          (12 : ℝ) * (γ.toReal * variance F muWilson) := mul_assoc _ _ _
+      _ ≤ sumRef.toReal := hReal
+  change ((12 : ℝ) * γ.toReal) * variance F muWilson ≤ sumRef.toReal
+  exact hRealAssoc
 
 local notation "B" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantProjection
@@ -309,24 +317,24 @@ theorem p4Q2DZ_originalWilsonRiesz_exactTwelveLoewner :
   refine ⟨m, M, hm, hM, hκ, ?_⟩
   let W : J →L[ℝ] J :=
     p4Q2BY_originalFullJointRieszOperator H N hN beta hbeta
-  let R : J →L[ℝ] J :=
+  let C : J →L[ℝ] J :=
     p4Q2DT_physicalCenteredResidualOperator H N hN beta hbeta
-  change (W - κ • R).IsPositive
-  refine (ContinuousLinearMap.isPositive_iff (W - κ • R)).2 ⟨?_, ?_⟩
+  change (W - κ • C).IsPositive
+  refine (ContinuousLinearMap.isPositive_iff (W - κ • C)).2 ⟨?_, ?_⟩
   · have hw : (W : J →ₗ[ℝ] J).IsSymmetric :=
       (ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric).1
         (p4Q2BY_originalFullJointRieszOperator_isSelfAdjoint H N hN beta hbeta)
-    have hr : (R : J →ₗ[ℝ] J).IsSymmetric :=
+    have hr : (C : J →ₗ[ℝ] J).IsSymmetric :=
       p4Q2DT_physicalCenteredResidualOperator_symmetric H N hN beta hbeta
-    change ((W : J →ₗ[ℝ] J) - κ • (R : J →ₗ[ℝ] J)).IsSymmetric
+    change ((W : J →ₗ[ℝ] J) - κ • (C : J →ₗ[ℝ] J)).IsSymmetric
     exact hw.sub (hr.smul (by simp))
   · intro x
-    change 0 ≤ inner ℝ ((W - κ • R) x) x
+    change 0 ≤ inner ℝ ((W - κ • C) x) x
     rw [ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply,
       inner_sub_left, real_inner_smul_left]
     have hW : inner ℝ (W x) x = Q x :=
       p4Q2BY_originalFullJointRieszOperator_quadratic H N hN beta hbeta x
-    have hR : inner ℝ (R x) x = ‖x - B x‖ ^ 2 :=
+    have hR : inner ℝ (C x) x = ‖x - B x‖ ^ 2 :=
       p4Q2DT_physicalCenteredResidualOperator_inner_self H N hN beta hbeta x
     rw [hW, hR]
     exact sub_nonneg.mpr (hDV x)
