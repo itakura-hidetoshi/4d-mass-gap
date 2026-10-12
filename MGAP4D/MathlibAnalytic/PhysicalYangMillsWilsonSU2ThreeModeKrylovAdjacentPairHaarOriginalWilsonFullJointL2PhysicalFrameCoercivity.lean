@@ -87,12 +87,18 @@ local notation "E12" =>
     H N hN beta hbeta
 
 local instance p4Q2DS_constantLineHasOrthogonalProjection :
-    V.HasOrthogonalProjection := by
-  letI : FiniteDimensional ℝ V := by
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
+      H N hN beta hbeta).HasOrthogonalProjection := by
+  let W :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
+      H N hN beta hbeta
+  change W.HasOrthogonalProjection
+  letI : FiniteDimensional ℝ W := by
+    unfold W
     unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
     infer_instance
-  letI : CompleteSpace V := FiniteDimensional.complete ℝ V
-  exact Submodule.HasOrthogonalProjection.ofCompleteSpace V
+  letI : CompleteSpace W := FiniteDimensional.complete ℝ W
+  exact Submodule.HasOrthogonalProjection.ofCompleteSpace W
 
 /-- The actual Wilson probability variance equals the squared physical joint
 L² norm after subtraction of the ORIGINAL WILSON mean. The constant here
@@ -152,9 +158,12 @@ theorem p4Q2DS_centeredL2NormSq_le_wilsonVariance
       H N hN beta hbeta c]
     exact Submodule.smul_mem V c (Submodule.mem_span_singleton_self _)
   have hNorm : ‖x - B x‖ ≤ ‖x - C c‖ := by
-    change ‖x - V.starProjection x‖ ≤ ‖x - C c‖
-    rw [Submodule.starProjection_minimal (U := V) x]
-    exact iInf_le (fun y : V => ‖x - (y : J)‖) ⟨C c, hC⟩
+    let W :=
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointConstantLine
+        H N hN beta hbeta
+    change ‖x - W.starProjection x‖ ≤ ‖x - C c‖
+    rw [Submodule.starProjection_minimal (U := W) x]
+    exact iInf_le (fun y : W => ‖x - (y : J)‖) ⟨C c, hC⟩
   have hsquared : ‖x - B x‖ ^ 2 ≤ ‖x - C c‖ ^ 2 := by
     nlinarith [norm_nonneg (x - B x), norm_nonneg (x - C c)]
   calc
@@ -168,7 +177,7 @@ representative, using the same coefficient for ALL inputs. The positive
 ENNReal coefficient is bounded by 1 before conversion to real, retaining
 a finite strictly positive coefficient even without an infinity assumption. -/
 private theorem p4Q2DS_corePhysicalTwelve_ge_realCenteredSq
-    (k : ENNReal) (hk : 0 < k)
+    (k : ENNReal)
     (hDR :
       ∀ (F : Joint → ℝ) (hF : StronglyMeasurable F),
         ∀ (bound : ℝ) (hbound : ∀ z, ‖F z‖ ≤ bound)
@@ -201,8 +210,6 @@ private theorem p4Q2DS_corePhysicalTwelve_ge_realCenteredSq
   rw [← hCoreRep] at hDR'
   let γ : ENNReal := min k 1
   have hγ_le : γ ≤ k := min_le_left _ _
-  have hγ_lt_top : γ < ∞ :=
-    lt_of_le_of_lt (min_le_right k (1 : ENNReal)) (by norm_num)
   have hVar₀ : 0 ≤ variance F.1 muW := variance_nonneg F.1 muW
   have hPhysical₀ : 0 ≤ E12 (T F) := by
     change 0 ≤ groundStateJointColorNormalizedResidualEnergy
@@ -216,7 +223,7 @@ private theorem p4Q2DS_corePhysicalTwelve_ge_realCenteredSq
       γ * ENNReal.ofReal (variance F.1 muW) =
         ENNReal.ofReal (variance F.1 muW) * γ := mul_comm _ _
       _ ≤ ENNReal.ofReal (variance F.1 muW) * k :=
-        mul_le_mul_left hγ_le _
+        mul_le_mul_right hγ_le _
       _ = k * ENNReal.ofReal (variance F.1 muW) := mul_comm _ _
       _ ≤ ENNReal.ofReal (E12 (T F)) := hDR'
   have hReal :
@@ -274,7 +281,7 @@ theorem p4Q2DS_originalWilsonFullJointL2_physicalTwelveColor_coercive :
       T F = (y : J) :=
     p4Q2BV_originalCoreRepresentative_spec H N hN beta hbeta y
   have hCore := p4Q2DS_corePhysicalTwelve_ge_realCenteredSq
-    H N hN beta hbeta k hk hDR F
+    H N hN beta hbeta k hDR F
   change γ.toReal * ‖(y : J) - B (y : J)‖ ^ 2 ≤ E12 (y : J)
   rw [← hRep]
   exact hCore
