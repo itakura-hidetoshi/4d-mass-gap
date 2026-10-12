@@ -144,8 +144,9 @@ theorem p4Q2CW_actualPairHaarProjections_commute_of_iteratedMeanIdentification
             (Lp.simpleFunc.toSimpleFunc f)))
     (i j : I) (x : JH) :
     P i (P j x) = P j (P i x) := by
-  apply p4Q2CW_actualPairHaarProjections_commute_of_simpleCore H N i j
-  · intro f
+  have hCore : ∀ f : Lp.simpleFunc ℝ 2 muPair,
+      P i (P j (f : JH)) = P j (P i (f : JH)) := by
+    intro f
     have hleft := hIdentify i j f
     have hright := hIdentify j i f
     have hmeans :
@@ -158,7 +159,7 @@ theorem p4Q2CW_actualPairHaarProjections_commute_of_iteratedMeanIdentification
       Filter.Eventually.of_forall
         (p4Q2CW_actualPairHaarSimpleCore_literalMeans_commute H N i j f)
     exact Lp.ext (hleft.trans (hmeans.trans hright.symm))
-  · exact x
+  exact p4Q2CW_actualPairHaarProjections_commute_of_simpleCore H N i j hCore x
 
 /-- The finite genuine pair-Haar Efron--Stein sweep bound now requires
 only the bounded simple-core identity, not all-L² Fubini hypotheses. -/
