@@ -103,7 +103,18 @@ theorem p4Q2DQ_colorAverage_ge_allLinkSum
       (Fintype.card (p4Q2BA_ColorLinks H c) : ENNReal) ≤
         (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ENNReal) := by
     exact_mod_cast hCard
-  exact mul_le_mul_right (ENNReal.inv_le_inv.mpr hCardENN) _
+  calc
+    (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ENNReal)⁻¹ *
+        (∑ e : p4Q2BA_ColorLinks H c, g e.1) =
+      (∑ e : p4Q2BA_ColorLinks H c, g e.1) *
+        (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ENNReal)⁻¹ :=
+      mul_comm _ _
+    _ ≤ (∑ e : p4Q2BA_ColorLinks H c, g e.1) *
+          (Fintype.card (p4Q2BA_ColorLinks H c) : ENNReal)⁻¹ :=
+      mul_le_mul_right (ENNReal.inv_le_inv.mpr hCardENN) _
+    _ = (Fintype.card (p4Q2BA_ColorLinks H c) : ENNReal)⁻¹ *
+          (∑ e : p4Q2BA_ColorLinks H c, g e.1) :=
+      mul_comm _ _
 
 section OriginalWilson
 
