@@ -99,8 +99,11 @@ theorem p4Q2DQ_colorAverage_ge_allLinkSum
     Fintype.card_le_of_injective
       (fun e : p4Q2BA_ColorLinks H c => e.1)
       (by intro a b hab; exact Subtype.ext hab)
-  exact mul_le_mul_right
-    (ENNReal.inv_le_inv.mpr (by exact_mod_cast hCard)) _
+  have hCardENN :
+      (Fintype.card (p4Q2BA_ColorLinks H c) : ENNReal) ≤
+        (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ENNReal) := by
+    exact_mod_cast hCard
+  exact mul_le_mul_right (ENNReal.inv_le_inv.mpr hCardENN) _
 
 section OriginalWilson
 
@@ -151,7 +154,6 @@ theorem p4Q2DQ_twelveColorHilbertFloor_ge_fullCoordinateResidualSum
               ENNReal.ofReal (‖f - P i f‖ ^ 2))) ≤
       p4Q2DP_originalTwelveColorPairHaarHilbertFloor H N beta m f := by
   classical
-  letI : Fintype I := p4Q2CR_actualJointIndexFintype H
   let q : I → ENNReal := fun i =>
     ENNReal.ofReal m *
       (ENNReal.ofReal (Real.exp (-32 * beta)) *
@@ -207,12 +209,11 @@ theorem p4Q2DQ_twelveColorHilbertFloor_ge_factoredAllCoordinateResidualSum
     p4Q2DQ_allLinkHilbertFloorCoefficient H beta m *
         (∑ i : I, ENNReal.ofReal (‖f - P i f‖ ^ 2)) ≤
       p4Q2DP_originalTwelveColorPairHaarHilbertFloor H N beta m f := by
-  letI : Fintype I := p4Q2CR_actualJointIndexFintype H
   have h := p4Q2DQ_twelveColorHilbertFloor_ge_fullCoordinateResidualSum
     H N beta m f
   convert h using 1
-  · simp [p4Q2DQ_allLinkHilbertFloorCoefficient, Finset.mul_sum, mul_assoc]
-  · rfl
+  simp [p4Q2DQ_allLinkHilbertFloorCoefficient, Fintype.sum_sum_type,
+    Finset.mul_sum, mul_add, mul_assoc]
 
 /-- ONE physical original Wilson mass floor, independent of F and f,
 controls the genuinely unnormalized pair-Haar all-coordinate residuals
@@ -226,7 +227,6 @@ theorem p4Q2DQ_originalWilsonTwelveReference_ge_allCoordinateHilbertDefects :
             (∑ i : I, ENNReal.ofReal (‖f - P i f‖ ^ 2)) ≤
               p4Q2BC_originalPhysicalTwelveColorHaarReference
                 H N hN beta hbeta F := by
-  letI : Fintype I := p4Q2CR_actualJointIndexFintype H
   obtain ⟨m, hm, hReference⟩ :=
     p4Q2DG_originalTwelveColorHaarReference_ge_allLinkMassFloor
       H N hN beta hbeta
