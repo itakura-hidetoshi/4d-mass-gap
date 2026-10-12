@@ -107,6 +107,62 @@ theorem p4Q2DC_actualPairHaar_projectionSweep_integral_eq
             ∫ z : Joint, x z ∂muPair
       rw [ih (P i x), p4Q2DC_actualPairHaarCoordinateProjection_integral_eq H N i x]
 
+/-- The CR-indexed finite sweep is fixed by every actual Haar
+coordinate projection, irrespective of the different alternative
+Fintype used by older CS/DB presentation theorems. -/
+private theorem p4Q2DC_actualPairHaar_crSweep_fixed
+    (x : JH) (i : I) :
+    P i (p4Q2CQ_projectionSweep P
+        (@p4Q2CQ_finiteCoordinates I (p4Q2CR_actualJointIndexFintype H)) x) =
+      p4Q2CQ_projectionSweep P
+        (@p4Q2CQ_finiteCoordinates I (p4Q2CR_actualJointIndexFintype H)) x := by
+  classical
+  let l : List I :=
+    @p4Q2CQ_finiteCoordinates I (p4Q2CR_actualJointIndexFintype H)
+  have hi : i ∈ l := by
+    dsimp [l, p4Q2CQ_finiteCoordinates]
+    apply List.mem_ofFn.mpr
+    refine ⟨(Fintype.equivFin I) i, ?_⟩
+    simp
+  have hId : ∀ j : I, ∀ y : JH, P j (P j y) = P j y :=
+    p4Q2CR_actualPairHaarCoordinateProjection_idempotent H N
+  have hComm : ∀ j k : I, ∀ y : JH, P j (P k y) = P k (P j y) :=
+    p4Q2DB_actualPairHaarProjections_commute H N
+  have hFixed : ∀ (rest : List I), i ∈ rest →
+      ∀ y : JH, P i (p4Q2CQ_projectionSweep P rest y) =
+        p4Q2CQ_projectionSweep P rest y := by
+    intro rest
+    induction rest with
+    | nil =>
+        intro hnil
+        simp at hnil
+    | cons j tail ih =>
+        intro hmem y
+        simp only [List.mem_cons] at hmem
+        rcases hmem with hij | hit
+        · subst j
+          change P i (p4Q2CQ_projectionSweep P tail (P i y)) =
+            p4Q2CQ_projectionSweep P tail (P i y)
+          rw [p4Q2CQ_projection_commute_sweep P hComm i tail (P i y),
+            hId i y]
+        · change P i (p4Q2CQ_projectionSweep P tail (P j y)) =
+            p4Q2CQ_projectionSweep P tail (P j y)
+          exact ih hit (P j y)
+  exact hFixed l hi x
+
+/-- The CR-indexed finite sweep has a.e.-constant output. This uses
+actual DB commutation and the CS characterization of the common fixed
+sector, without identifying two differently enumerated Fintype lists. -/
+private theorem p4Q2DC_actualPairHaar_crSweep_aeConst
+    (x : JH) :
+    ∃ c : ℝ,
+      (p4Q2CQ_projectionSweep P
+        (@p4Q2CQ_finiteCoordinates I (p4Q2CR_actualJointIndexFintype H)) x :
+          Joint → ℝ) =ᵐ[muPair] fun _ => c := by
+  apply (p4Q2CS_actualPairHaar_allCoordinateFixed_iff_aeConst H N _).mp
+  intro i
+  exact p4Q2DC_actualPairHaar_crSweep_fixed H N x i
+
 /-- The actual full finite independent pair-Haar sweep is not merely
 a.e.-constant: it is exactly the ORIGINAL physical pair-Haar global
 expectation. No synthetic expectation functional enters. -/
@@ -116,7 +172,7 @@ theorem p4Q2DC_actualPairHaar_sweep_ae_eq_globalMean
       Joint → ℝ) =ᵐ[muPair]
         (fun _ : Joint => ∫ z : Joint, x z ∂muPair) := by
   obtain ⟨c, hc⟩ :=
-    p4Q2DB_actualPairHaar_unconditional_sweep_aeConst H N x
+    p4Q2DC_actualPairHaar_crSweep_aeConst H N x
   have hInt :=
     p4Q2DC_actualPairHaar_projectionSweep_integral_eq H N
       (p4Q2CQ_finiteCoordinates I) x
