@@ -154,14 +154,13 @@ finite-volume coefficient, with no positive-beta commutation assumption.
 The coefficient depends on the physical lattice and coupling. -/
 theorem p4Q2DR_originalWilsonPhysicalTwelveColor_coercive_bounded :
     ∃ κ : ENNReal, 0 < κ ∧
-      ∀ (F : Joint → ℝ), StronglyMeasurable F →
-        ∀ (B : ℝ), (∀ z, ‖F z‖ ≤ B) →
-          ∀ (f : JH), F =ᵐ[muPair] (f : Joint → ℝ) →
+      ∀ (F : Joint → ℝ) (hF : StronglyMeasurable F),
+        ∀ (B : ℝ) (hB : ∀ z, ‖F z‖ ≤ B)
+          (f : JH) (hEq : F =ᵐ[muPair] (f : Joint → ℝ)),
             κ * ENNReal.ofReal (variance F muWilson) ≤
               ENNReal.ofReal
                 (p4Q2BC_originalPhysicalTwelveColorResidual
-                  H N hN beta hbeta F ‹StronglyMeasurable F›
-                  B ‹∀ z, ‖F z‖ ≤ B›) := by
+                  H N hN beta hbeta F hF B hB) := by
   obtain ⟨m, hm, hReference⟩ :=
     p4Q2DQ_originalWilsonTwelveReference_ge_allCoordinateHilbertDefects
       H N hN beta hbeta
