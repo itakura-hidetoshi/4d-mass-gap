@@ -61,8 +61,9 @@ private theorem p4Q2DF_variance_le_anyCenteredSquare
     (μ : Measure Ω) [IsProbabilityMeasure μ]
     (F : Ω → ℝ) (hF : AEStronglyMeasurable F μ) (c : ℝ) :
     variance F μ ≤ ∫ z, (F z - c) ^ 2 ∂μ := by
-  have h := variance_le_expectation_sq
-    (hF.sub (aestronglyMeasurable_const (μ := μ) (c := c)))
+  have hShift : AEStronglyMeasurable (fun z : Ω => F z - c) μ :=
+    hF.sub aestronglyMeasurable_const
+  have h := variance_le_expectation_sq hShift
   rw [variance_sub_const hF c] at h
   simpa only [Pi.pow_apply] using h
 
