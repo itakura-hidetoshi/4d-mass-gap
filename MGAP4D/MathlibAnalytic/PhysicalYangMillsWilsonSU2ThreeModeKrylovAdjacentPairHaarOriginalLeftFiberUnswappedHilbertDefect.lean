@@ -71,7 +71,7 @@ theorem p4Q2DN_originalLeftDefect_eq_swapRightDefect
       ‖f - P (Sum.inl target) f‖ ^ 2 := by
   rw [p4Q2DM_actualPairHaarProjection_swap_intertwining H N target f]
   rw [← map_sub]
-  exact congrArg (fun x : ℝ => x ^ 2) (U.norm_map _)
+  exact congrArg (fun x : ℝ => x ^ 2) ((p4Q2DM_originalPairHaarSwapL2 H N).norm_map _)
 
 /-- A concrete bounded original physical joint observable and its
 canonical DL-swapped pair-Haar L² class are exactly related by applying
