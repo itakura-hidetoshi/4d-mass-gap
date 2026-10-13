@@ -99,7 +99,7 @@ theorem p4Q2FJ_exists_originalWilsonUnitConditionalRMSLinkMean_pos
         (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)) :=
     p4Q2FJ_originalWilsonUnitConditionalRMSFullMass_pos H beta hbeta
   by_contra hNo
-  push_neg at hNo
+  push Not at hNo
   have hSumNonpos :
       p4Q2FH_originalWilsonSpatialRMSMass
         H 2 (Nat.zero_lt_succ 1) beta (le_of_lt hbeta) f
