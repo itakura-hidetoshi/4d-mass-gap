@@ -74,13 +74,17 @@ private theorem p4Q2ER_evenTranslateSpatialVertex_parity
   intro i _
   by_cases hi : i = mu.1
   · subst i
-    simp only [p4Q2ER_evenTranslateSpatialVertex, if_pos rfl]
+    simp only [p4Q2ER_evenTranslateSpatialVertex]
     rw [map_add]
+    have hTwo :
+        periodicHypercubicEvenParityHom H
+          (2 : ZMod (PeriodicHypercubicEvenSideLength H)) = 0 := by
+      norm_num
     have heven :
         periodicHypercubicEvenParityHom H
           ((2 * k : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H)) = 0 := by
-      simp [Nat.cast_mul]
-    rw [heven, add_zero]
+      rw [Nat.cast_mul, map_mul, hTwo, zero_mul]
+    simpa only [ite_true, heven, add_zero]
   · change periodicHypercubicEvenParityHom H
         (v.1 i + (if i = mu.1 then
           ((2 * k : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H)) else 0)) =
@@ -123,7 +127,6 @@ theorem p4Q2ER_evenColorEmbedding_injective (H : ℕ) (c : Fin 6) :
       ((2 * l.1 : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H)) := by
     dsimp [p4Q2ER_evenColorEmbedding, p4Q2ER_evenTranslateSpatialVertex] at hCoord
     dsimp only [base] at hCoord
-    simp only [if_pos rfl] at hCoord
     exact add_left_cancel hCoord
   letI : NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
     change 2 * (H + 1) ≠ 0
