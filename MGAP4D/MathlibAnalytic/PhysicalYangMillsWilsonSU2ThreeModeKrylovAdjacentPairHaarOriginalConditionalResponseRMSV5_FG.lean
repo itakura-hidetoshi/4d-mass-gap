@@ -120,9 +120,10 @@ theorem p4Q2FG_originalWilsonRelativeResponseConditionalSquare_le_relativeSupSq
       ∫ _g : Matrix.specialUnitaryGroup (Fin N) ℂ, ‖B‖ ^ 2 ∂ν := by
         apply integral_mono hi (integrable_const _)
         intro g
-        have hb := B.norm_coe_le_norm (z,g)
-        exact pow_le_pow_left₀ (norm_nonneg _) (by
-          simpa only [Real.norm_eq_abs] using hb) 2 |>.trans_eq (by simp [sq_abs])
+        have hb : |B (z,g)| ≤ ‖B‖ := by
+          simpa only [Real.norm_eq_abs] using B.norm_coe_le_norm (z,g)
+        have hs := pow_le_pow_left₀ (abs_nonneg _) hb 2
+        simpa only [sq_abs] using hs
     _ = ‖B‖ ^ 2 := by simp
 
 /-- The LITERAL physical signed original Wilson posterior two-copy
