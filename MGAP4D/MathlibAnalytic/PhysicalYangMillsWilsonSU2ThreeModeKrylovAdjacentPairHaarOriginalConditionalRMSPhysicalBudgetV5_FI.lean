@@ -158,10 +158,10 @@ theorem p4Q2FI_certifiedWilsonLinkFloor_forces_complement_tail
         p4Q2FH_originalWilsonConditionalRMSLinkMean
           H N hN beta hbeta f e)
     (S : Finset (PeriodicHypercubicEvenSpatialSliceLink H)) :
-    (((Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)) \\ S).card : ℝ) *
+    (((Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)) \ S).card : ℝ) *
         (kappa * ‖f‖ ^ 2) ≤
       p4Q2FH_originalWilsonSpatialRMSMass H N hN beta hbeta f
-        ((Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)) \\ S) := by
+        ((Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)) \ S) := by
   exact p4Q2FI_certifiedWilsonLinkFloor_forces_patch_mass
     H N hN beta hbeta f kappa hFloor _
 
