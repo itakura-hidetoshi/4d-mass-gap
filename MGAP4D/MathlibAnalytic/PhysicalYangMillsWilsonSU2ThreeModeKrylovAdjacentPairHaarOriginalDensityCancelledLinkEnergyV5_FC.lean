@@ -191,9 +191,175 @@ theorem p4Q2FC_originalJointReceiver_linkDifference_abs_le_weightedSource
       dsimp [t]
       ring
 
+
+/-- The point-dependent signed update bound is integrated against the
+SAME original Wilson joint measure. The exact previously-proved density
+moment cancels both the half-density and inverse-vacuum sup norm.
+No small-beta assumption is required and beta=0 gives zero energy. -/
+theorem p4Q2FC_originalPosteriorResampling_le_densityCancelledSource
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+    (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+    posteriorResamplingEnergy H N hN beta hbeta e
+      (normalizedPhysicalOneSlabJointReceiverProductBCF H N hN beta hbeta f) ≤
+    (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+      H N hN beta hbeta‖⁻¹) ^ 4 *
+      (Real.exp (8 * beta) ^ 3 - 1) ^ 2 * ‖f‖ ^ 2 := by
+  classical
+  let μJ := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+    H N hN beta hbeta
+  let W := normalizedPhysicalOneSlabJointHalfDensityWeightBCF H N hN beta hbeta
+  let V := normalizedPhysicalOneSlabContinuousVacuumInverseBCF H N hN beta hbeta
+  let O := normalizedPhysicalOneSlabJointReceiverProductBCF H N hN beta hbeta f
+  let L : ℝ := ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+    H N hN beta hbeta‖⁻¹
+  let R : ℝ := Real.exp (8 * beta)
+  let C : ℝ := L * (R ^ 3 - 1) * ‖f‖
+  let b (z : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) : ℝ :=
+    C * (W z * V z.2)
+  letI : IsProbabilityMeasure μJ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_isProbabilityMeasure
+      H N hN beta hbeta
+  have hbContinuity :
+      Continuous (fun z : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N => b z ^ 2) := by
+    dsimp [b]
+    exact (continuous_const.mul
+      (W.continuous.mul (V.continuous.comp continuous_snd))).pow 2
+  have hbIntegrable : Integrable (fun z => b z ^ 2) μJ :=
+    hbContinuity.integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have hbPoint : ∀ z (g : Matrix.specialUnitaryGroup (Fin N) ℂ),
+      |O z - O (z.1, Function.update z.2 e g)| ≤ b z := by
+    intro z g
+    exact p4Q2FC_originalJointReceiver_linkDifference_abs_le_weightedSource
+      H N hN beta hbeta f e z g
+  have hPosterior :
+      posteriorResamplingEnergy H N hN beta hbeta e O ≤
+        ∫ z, b z ^ 2 ∂μJ :=
+    originalWilsonPosteriorResamplingEnergy_le_pointwiseLinkOscillation
+      H N hN beta hbeta e O b hbIntegrable hbPoint
+  have hMoment :
+      (∫ z, (W z * V z.2) ^ 2 ∂μJ) = L ^ 2 := by
+    exact normalizedPhysicalOneSlabJointHalfDensityWeightBCF_mul_vacuumInverse_sq_integral_joint_eq
+      H N hN beta hbeta
+  calc
+    posteriorResamplingEnergy H N hN beta hbeta e O ≤
+        ∫ z, b z ^ 2 ∂μJ := hPosterior
+    _ = C ^ 2 * (∫ z, (W z * V z.2) ^ 2 ∂μJ) := by
+      calc
+        (∫ z, b z ^ 2 ∂μJ) =
+            ∫ z, C ^ 2 * (W z * V z.2) ^ 2 ∂μJ := by
+              apply integral_congr_ae
+              filter_upwards with z
+              dsimp [b]
+              ring
+        _ = C ^ 2 * (∫ z, (W z * V z.2) ^ 2 ∂μJ) :=
+          integral_const_mul _ _
+    _ = C ^ 2 * L ^ 2 := by rw [hMoment]
+    _ = L ^ 4 * (R ^ 3 - 1) ^ 2 * ‖f‖ ^ 2 := by
+      dsimp [C]
+      ring
+
+/-- Original physical fine/frozen signed Gram Rayleigh with density
+cancellation BEFORE taking any supremum. True frozen Wilson posterior
+and full signed fine-beta right Krylov source remain unchanged. The
+literal physical link count remains 24*(H+1)^3, and there is no
+mode-count factor or unknown L2-to-sup bound. This bound is valid
+for every frozen beta >= 0, retaining its exact exponential factor. -/
+theorem p4Q2FC_originalSignedGram_rayleigh_le_densityCancelledPhysicalSource
+    {halfExtent : ℕ → ℕ} {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
+    (n r : ℕ) (a : Fin (r + 1) → ℝ) :
+    star a ⬝ᵥ (Matrix.mulVec
+      (fineRightKrylovPairHaarResidualGram
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+        n r) a) ≤
+      12 * (halfExtent (n + 1) + 1 : ℝ) ^ 3 *
+      (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+        (halfExtent (n + 1)) 2 specialUnitaryTwoWilsonRankPositive
+        (beta n) (hbeta n)‖⁻¹) ^ 4 *
+      (Real.exp (8 * beta n) ^ 3 - 1) ^ 2 *
+      ‖fineRightKrylovOriginalSignedPhysicalSource
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+        n r a‖ ^ 2 := by
+  classical
+  let H := halfExtent (n + 1)
+  let f := fineRightKrylovOriginalSignedPhysicalSource
+    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r a
+  let L : ℝ := ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+    H 2 specialUnitaryTwoWilsonRankPositive (beta n) (hbeta n)‖⁻¹
+  let R : ℝ := Real.exp (8 * beta n)
+  let C : ℝ := L ^ 4 * (R ^ 3 - 1) ^ 2 * ‖f‖ ^ 2
+  have hRay :=
+    fineRightKrylovPairHaarResidualGram_rayleigh_eq_half_originalResamplingEnergy
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r a
+  change star a ⬝ᵥ (Matrix.mulVec
+      (fineRightKrylovPairHaarResidualGram
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+        n r) a) =
+      (1 / 2 : ℝ) *
+        ∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+          posteriorResamplingEnergy H 2 specialUnitaryTwoWilsonRankPositive
+            (beta n) (hbeta n) e
+            (normalizedPhysicalOneSlabJointReceiverProductBCF
+              H 2 specialUnitaryTwoWilsonRankPositive
+              (beta n) (hbeta n) f) at hRay
+  have hEach (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+      posteriorResamplingEnergy H 2 specialUnitaryTwoWilsonRankPositive
+          (beta n) (hbeta n) e
+          (normalizedPhysicalOneSlabJointReceiverProductBCF
+            H 2 specialUnitaryTwoWilsonRankPositive
+            (beta n) (hbeta n) f) ≤ C :=
+    p4Q2FC_originalPosteriorResampling_le_densityCancelledSource
+      H 2 specialUnitaryTwoWilsonRankPositive (beta n) (hbeta n) f e
+  have hSum :
+      (∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+        posteriorResamplingEnergy H 2 specialUnitaryTwoWilsonRankPositive
+          (beta n) (hbeta n) e
+          (normalizedPhysicalOneSlabJointReceiverProductBCF
+            H 2 specialUnitaryTwoWilsonRankPositive
+            (beta n) (hbeta n) f)) ≤
+      ∑ _e : PeriodicHypercubicEvenSpatialSliceLink H, C :=
+    Finset.sum_le_sum (fun e _ => hEach e)
+  have hHalf :
+      (1 / 2 : ℝ) *
+        (∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+          posteriorResamplingEnergy H 2 specialUnitaryTwoWilsonRankPositive
+            (beta n) (hbeta n) e
+            (normalizedPhysicalOneSlabJointReceiverProductBCF
+              H 2 specialUnitaryTwoWilsonRankPositive
+              (beta n) (hbeta n) f)) ≤
+      (1 / 2 : ℝ) * (∑ _e : PeriodicHypercubicEvenSpatialSliceLink H, C) :=
+    mul_le_mul_of_nonneg_left hSum (by norm_num)
+  calc
+    star a ⬝ᵥ (Matrix.mulVec
+        (fineRightKrylovPairHaarResidualGram
+          (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+          n r) a) =
+        (1 / 2 : ℝ) *
+          (∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
+            posteriorResamplingEnergy H 2 specialUnitaryTwoWilsonRankPositive
+              (beta n) (hbeta n) e
+              (normalizedPhysicalOneSlabJointReceiverProductBCF
+                H 2 specialUnitaryTwoWilsonRankPositive
+                (beta n) (hbeta n) f)) := hRay
+    _ ≤ (1 / 2 : ℝ) * (∑ _e : PeriodicHypercubicEvenSpatialSliceLink H, C) :=
+      hHalf
+    _ = 12 * (H + 1 : ℝ) ^ 3 * L ^ 4 *
+          (R ^ 3 - 1) ^ 2 * ‖f‖ ^ 2 := by
+      simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
+      rw [p4Q2EU_originalPhysicalSpatialLinks_card_exact H]
+      push_cast
+      dsimp [C]
+      ring
+
 end GroundStatePosteriorJoint
 end
 end MathlibAnalytic
 end MGAP4D
 
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FC_originalJointReceiver_linkDifference_abs_le_weightedSource
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FC_originalPosteriorResampling_le_densityCancelledSource
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FC_originalSignedGram_rayleigh_le_densityCancelledPhysicalSource
