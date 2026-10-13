@@ -52,7 +52,7 @@ theorem p4Q2EU_originalPhysicalSpatialLinks_card_exact (H : ℕ) :
   calc
     Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) =
         Nat.card (PeriodicHypercubicEvenSpatialSliceLink H) :=
-      (Nat.card_eq_fintype_card _).symm
+      (Nat.card_eq_fintype_card).symm
     _ = Nat.card (PeriodicHypercubicEvenSpatialSliceVertex H) *
           Nat.card PeriodicHypercubicEvenSpatialDirection := by
       change Nat.card
