@@ -109,7 +109,10 @@ theorem p4Q2FB_originalVacuumMean_weighted_abs_le_sourceL2
     H N hN beta hbeta B
   let F : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H N) := f
   let t := decomposableOneSliceTransferIntegral H N beta F B
-  have hL : 0 ≤ L := inv_nonneg.mpr (norm_nonneg _)
+  have hL : 0 ≤ L :=
+    (inv_pos.mpr
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+        H N hN beta hbeta)).le
   have hp : 0 < omega :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos
       H N hN beta hbeta B
@@ -141,7 +144,10 @@ theorem p4Q2FB_originalVacuumMean_abs_le_sourceL2
   have hp : 0 < omega :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos
       H N hN beta hbeta B
-  have hL : 0 ≤ L := inv_nonneg.mpr (norm_nonneg _)
+  have hL : 0 ≤ L :=
+    (inv_pos.mpr
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+        H N hN beta hbeta)).le
   have hw : omega * |m| ≤ L * ‖f‖ :=
     p4Q2FB_originalVacuumMean_weighted_abs_le_sourceL2 H N hN beta hbeta f B
   have hInv : omega⁻¹ ≤ ‖V‖ :=
@@ -215,7 +221,7 @@ theorem p4Q2FB_originalSignedFactor_le_physicalSourceNorm
   calc
     ‖W‖ * (L * (Real.exp (8 * beta n) + 1) * V * ‖F‖ + ‖M‖) ≤
       ‖W‖ * (L * (Real.exp (8 * beta n) + 1) * V * ‖F‖ + L * V * ‖F‖) :=
-        mul_le_mul_of_nonneg_left (add_le_add_left hMean _) (norm_nonneg W)
+        mul_le_mul_of_nonneg_left (add_le_add (le_refl _) hMean) (norm_nonneg W)
     _ = p4Q2FB_originalPhysicalHilbertCoefficient H (beta n) (hbeta n) * ‖F‖ := by
       change ‖W‖ * (L * (Real.exp (8 * beta n) + 1) * V * ‖F‖ + L * V * ‖F‖) =
         (‖W‖ * L * V * (Real.exp (8 * beta n) + 2)) * ‖F‖
