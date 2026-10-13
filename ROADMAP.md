@@ -1,6 +1,6 @@
 # MGAP4D — formalization roadmap
 
-**Status: 2026-10-13 JST. Latest theorem-bearing [PR #5519 (EW)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5519) MERGED at `1ebd718b4a4dfe735e563b8fd3923797e90a9be6`, exact source `9b2c3d33b62dc93e8c93c28a35af204da5d4a9eb`, [CI #38359534529](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38359534529) SUCCESS 10614/10614, Changed Lean `115170184807` and MCP `115171459067` SUCCESS, 2/2 axioms with no sorryAx and zero changed-file warnings/errors. EV #5518 independently proves true original Wilson signed fine/frozen small-beta `aᵀGa≤3072*(H+1)^3*beta_n²*F²` and only a CONDITIONAL K,M uniform gate (CI #38357988380 SUCCESS 10613/10613, 5/5 axioms no sorryAx). EW closes each actual original Wilson frozen-beta-zero posterior energy and true transported projector fixedness, keeping fine beta_(n+1) distinct. Original physical norm certificates, C1/C2/C3 and H2/H3/H4 continuum mass gap OPEN.**
+**Status: 2026-10-13 JST. Latest theorem-bearing [PR #5521 (EX)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5521) MERGED at `89eabcf38455ed55ddd8de32f0e61bea46afc707`, exact source `d445a9fcc20f12cb121b22711e3ce08fe1d8f56d`, [CI #38365264750](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38365264750) SUCCESS **10615/10615**, Changed Lean `115188758993`, MCP receipt `115190203550` SUCCESS, 4/4 #print axioms no sorryAx, warnings/errors zero. EX proves TRUE original Wilson each-link frozen small-beta resampling ≤256 β_n² F_a², transported residual² ≤128 β_n² F_a², and absolute signed cross-covariance ≤64 β_n²(F_a²+F_b²), with genuine W/positive vacuum/transfer/signed fine source F retained. No H/r/n uniform F or signed spatial Schur bound, C1/C2/C3/H2/H3/H4 remain CLOSED? NO — all OPEN.
 
 **Current theorem achievement:** DV full original Wilson Riesz quadratic coercivity, DW true Loewner and separate D12 bilateral comparison, DX boundedly invertible original orthogonal restriction with real spectrum in `[κ_R,12]`, and **DY typed original DQ/DF finite-volume mass/variance coefficient; DZ restores the literal factor 12 from normalized Haar reference to the unnormalized ORIGINAL Wilson Riesz sum with improved same-witness whole-L², Loewner and anti-Lipschitz estimates**. DU separately proves the normalized physical D12 restricted gap.
 
@@ -17,14 +17,14 @@ Read [README.md](README.md) for definitions, exact Wilson-versus-Haar normalizat
 | Field | Verified checkpoint |
 | --- | --- |
 | Only theorem-authoritative repository / branch | `itakura-hidetoshi/4d-mass-gap` / `formal/real-hilbert-uniform-coercive-strong-limit` |
-| Latest theorem-bearing merged PR | [#5519](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5519), merge SHA `1ebd718b4a4dfe735e563b8fd3923797e90a9be6` |
-| Exact-tested PR #5519 source HEAD | `9b2c3d33b62dc93e8c93c28a35af204da5d4a9eb` |
+| Latest theorem-bearing merged PR | [#5521](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5521), merge SHA `89eabcf38455ed55ddd8de32f0e61bea46afc707` |
+| Exact-tested PR #5521 source HEAD | `d445a9fcc20f12cb121b22711e3ce08fe1d8f56d` |
 | Lean / mathlib | `v4.30.0-rc2` / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
-| Exact-source-head CI | [#38359534529](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38359534529) — SUCCESS |
-| Changed Lean / MCP receipt jobs | `115170184807` / `115171459067`, both SUCCESS |
-| Build and diagnostics | **10614/10614**, EW 2/2 #print axioms without sorryAx/new axiom, changed warning/errors zero. |
+| Exact-source-head CI | [#38365264750](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38365264750) — SUCCESS |
+| Changed Lean / MCP receipt jobs | `115188758993` / `115190203550`, both SUCCESS |
+| Build and diagnostics | **10615/10615**, EX 4/4 #print axioms no sorryAx/new axiom, changed warnings/errors 0. |
 
-A later **docs-only merge will move the current canonical branch HEAD** beyond the SHA shown above, but it does not alter the #5519 theorem-bearing result. Observe the branch's fresh exact HEAD for each new PR. GitHub's default `main` is not the theorem authority.
+A later **docs-only merge will move the current canonical branch HEAD** beyond the SHA shown above, but it does not alter the #5521 theorem-bearing result. Observe the branch's fresh exact HEAD for each new PR. GitHub's default `main` is not the theorem authority.
 
 ## 1. Proof status matrix
 
@@ -32,7 +32,7 @@ A later **docs-only merge will move the current canonical branch HEAD** beyond t
 | --- | --- | --- |
 | **P4-F1/F2/F3** | **CLOSED**, #5299–#5302: original four-crossing a.e. lift and retained-sigma fiber descent; `E_vac(beta,H)>0` for genuine finite H, `beta>0`. | Strict pointwise-in-H positivity is not an H-uniform lower bound. |
 | **P4-Q1** | Fixed-H quantitative Wilson vacuum witnesses #5303–#5309; `E_vac(beta,H) ≤ |E_H| (exp(16 beta)-1)^2` in the verified regime. | Remove/prove control of `|E_H|`; no continuum control. |
-| **P4-Q2 signed uncentered Krylov / EU–EW** | Original true signed Wilson posterior two-copy energy, W*M physical receiver and source norm; EU #5516 real β-square/cubic volume; EV #5518 true small-beta `3072*(H+1)^3*beta_n²*F²` and only CONDITIONAL K,M uniform certificate gate; EW #5519 EACH-LINK true posterior resampling zero and projector fixed at frozen beta_n=0 with fine beta_(n+1) independent. | Physical norm F H/r/n-uniform, signed spatial covariance Schur/tails, C1/C2/C3/H2/H3/H4 OPEN. |
+| **P4-Q2 signed uncentered Krylov / EU–EX** | True signed original Wilson W*M posterior, EU cubic/Harnack beta square, EV conditional K,M small-beta gate, EW frozen beta=0 original link projector fixedness, **EX #5521 genuine linkwise positive beta resampling ≤256 beta_n² F_a²; residual² ≤128 beta_n² F_a²; signed cross-link covariance ≤64 beta_n²(F_a²+F_b²)**. | H/r/n-uniform true source/vacuum norm F and signed spatial covariance row summability/cancellation, C1/C2/C3/H2/H3/H4 OPEN. |
 | **P4-Q2 original full-`L²` Wilson forms** | #5395–#5427: original physical bounded core, dense extension and self-adjoint `AW`; #5473–#5476 add quadratic, Loewner, bilateral D12 comparison and restricted spectral band. | Uniformity and continuum OPEN. |
 | **P4-Q2 qualitative full-`L²` kernel** | **CLOSED** at **#5440 / CO**: `ker(AW)=V_constants`, by real clipping/Markov contraction and a.e. constant gluing; #5441 physical mass floor. | **Not** the quantitative spectral lower estimate (supplied later by DV). Do not call CO's former CL obstruction currently open. |
 | **P4-Q2 genuine pair-Haar L²** | #5442–#5455: actual CR coordinate projections, exact independent Haar factorization, commutation for these projections, Efron–Stein and global-mean Poincaré. | Never transpose pair-Haar commutation to noncommuting interacting Wilson conditional projections. |
@@ -213,13 +213,16 @@ The TRUE two-boundary relative link `R_e=(A_e)⁻¹ B_e` transforms under the sa
 
 **EW [PR #5519] — CLOSED, TRUE original Wilson posterior each-link zero and projection fixedness at FROZEN beta_n=0.** From EU's exact signed fine/right Krylov Rayleigh zero and the #5324 exact ORIGINAL Wilson two-copy posterior identity `aᵀGa=(1/2)∑_e E_e(O_a)`, with `E_e=2*‖V(F_a)−Q_eV(F_a)‖²≥0` on the SAME true Wilson law, Lean proves EACH actual spatial link separately has `E_e(O_a)=0`; correspondingly every true transported frozen-Wilson right-link projector `Q_e` fixes the full signed receiver. Fine beta_(n+1) remains genuinely distinct and need NOT be zero. No pair-Haar substitute, unproved positive-beta locality or unconditional H-uniform Gram result. Two Lean theorems, merge SHA `1ebd718b4a4dfe735e563b8fd3923797e90a9be6`, tested source `9b2c3d33b62dc93e8c93c28a35af204da5d4a9eb`, [CI #38359534529](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38359534529) SUCCESS 10614/10614, Changed Lean `115170184807`, MCP receipt `115171459067` SUCCESS, changed warning/error zero, 2/2 #print axioms no sorryAx/new axioms. Next EX positive-beta original Wilson per-link signed covariance energy with physical norm factors explicit; C1/C2/C3/H2/H3/H4 all OPEN.
 
+**EX [PR #5521] — CLOSED, positive-frozen-beta genuine original Wilson EACH-LINK signed fine/frozen covariance.** For the actual original Wilson posterior at EACH physical spatial right link e and signed fine beta_(n+1) Krylov combination a with frozen `0≤beta_n≤1/8`, four checked Lean theorems prove the TRUE posterior two-copy resampling energy `E_e(O_a) ≤ (exp(8*beta_n)-1)^2*F_(n,r)(a)^2 ≤ 256*beta_n²*F_(n,r)(a)^2`, with EU's original Wilson half-density, positive continuous vacuum inverse, normalized mean, transfer norm and signed fine source all kept inside genuine F. The exact original two-copy identity yields `‖I_e(a)‖²≤128*beta_n²*F_(n,r)(a)^2`; for ANY two SIGNED coefficient vectors a,b, Cauchy–Schwarz applied only to their true original frozen Wilson transported residuals yields `|⟪I_e(a),I_e(b)⟫|≤64*beta_n²*(F_(n,r)(a)^2+F_(n,r)(b)^2)`. No positivity of signed covariance, invented posterior or premature sum over `24*(H+1)^3` links. **These are linkwise finite-H bounds, NOT H/r/n-uniform true Wilson F norm or signed Schur row summability.** Four public Lean theorems in `OriginalSignedFineFrozenPositiveBetaLinkwiseCovariance.lean`, theorem-bearing squash merge `89eabcf38455ed55ddd8de32f0e61bea46afc707`, exact tested source `d445a9fcc20f12cb121b22711e3ce08fe1d8f56d`, [CI #38365264750](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38365264750) SUCCESS 10615/10615, Changed Lean `115188758993`, MCP receipt `115190203550` SUCCESS, 4/4 #print axioms with no sorryAx/new axiom and changed errors/warnings zero. Next EY genuine per-mode basis and signed Schur-row handoff; C1/C2/C3, H2/H3/H4 remain OPEN.
 
 
 
 
 
 
-**Historical EL–ET genuine Wilson AW vs interacting D12 relative comparison and exact geometry, EU original Wilson finite-H signed fine/frozen Gram, EV small-beta bound and strictly CONDITIONAL common K,M uniform gate, and EW original Wilson each-link frozen-beta-zero posterior/projection are CLOSED at their recorded PRs (#5500–#5519).** TRUE H-/spacing-uniform source/vacuum norm, signed covariance tails and physical C1/C2/C3/H2/H3/H4 remain OPEN. Next EX true original Wilson positive-frozen-beta link/mode covariance.
+
+
+**Historical EL–ET genuine Wilson AW vs physical D12, EU physical signed fine/frozen Gram β², EV conditional K,M gate, EW genuine frozen beta_n=0 linkwise posterior and EX positive beta original linkwise signed covariance are CLOSED in their finite-H scopes (#5500–#5521).** Physical norm F H/r/n uniformity and signed spatial Schur row/cancellation remain OPEN, as do C1/C2/C3/H2/H3/H4. Next EY: basis-mode actual Wilson signed covariance and Schur handoff.
 
 
 **Still OPEN:** physical signed fine/frozen Krylov Gram uniformity; C1 common-marginal physicality, C2 vector-wise reconstruction, C3 summable genuine beta trajectory; H2 spacing-scaled nontrivial evolution, H3 OS Hamiltonian, H4 4D Yang–Mills continuum existence and positive mass gap.
@@ -342,11 +345,12 @@ All sources below are under `MGAP4D/MathlibAnalytic/` and share the `PhysicalYan
 | **EU independent original Wilson signed fine/frozen Krylov physical norm beta-square Gram envelope, exact actual total spatial links, and frozen β_n=0 Rayleigh zero** | **`OriginalSignedFineFrozenCubicBetaEnvelope`** | **#5516** |
 | **EV TRUE signed fine/frozen small beta squared upper and CONDITIONAL common physical K,M uniform Rayleigh gate** | **`OriginalSignedFineFrozenSmallBetaUniformGate`** | **#5518** |
 | **EW TRUE original Wilson EACH spatial-link posterior energy zero and transported frozen-beta-zero projection fixedness** | **`OriginalSignedFrozenWilsonLinkwiseZero`** | **#5519** |
+| **EX true ORIGINAL Wilson positive beta linkwise resampling/residual²/signed arbitrary-combination cross covariance with source F visible** | **`OriginalSignedFineFrozenPositiveBetaLinkwiseCovariance`** | **#5521** |
 
 Minimal latest Lean target after checking out the newly observed authoritative branch:
 
 ```bash
-lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalSignedFrozenWilsonLinkwiseZero
+lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalSignedFineFrozenPositiveBetaLinkwiseCovariance
 ```
 
 **Proof-integrity process:** exact authoritative branch SHA first; exact Lean file, dependencies and physical definitions second; docs and exact-source-head CI after that. Inspect the full error context and pinned mathlib syntax, not just the highlighted line. No new `sorry`, `admit`, `axiom` or hidden synthetic physical laws. Preserve true original sum/average normalization, and explicitly report nonfatal warnings (DV had four). Use targeted changed-Lean CI and reusable pinned caches where possible; do not rebuild the entire project needlessly. For a documentation-only update, modify **only README.md and ROADMAP.md** and do not present its resulting merge SHA as a new theorem-bearing checkpoint.
