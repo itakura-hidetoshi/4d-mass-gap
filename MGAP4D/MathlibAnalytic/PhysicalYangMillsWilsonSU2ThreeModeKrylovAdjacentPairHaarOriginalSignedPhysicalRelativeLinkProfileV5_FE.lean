@@ -279,7 +279,8 @@ theorem p4Q2FE_originalJointReceiver_linkDifference_abs_le_actualSourceResponse
   rw [abs_div, abs_of_pos hWeight] at hNorm
   calc
     |O z - O zp| = (|O z - O zp| / (W z * V z.2)) *
-          (W z * V z.2) := by field_simp [ne_of_gt hWeight] <;> ring
+          (W z * V z.2) := by
+            exact (div_mul_cancel₀ _ (ne_of_gt hWeight)).symm
     _ ≤ ‖B‖ * (W z * V z.2) :=
       mul_le_mul_of_nonneg_right hNorm hWeight.le
 
