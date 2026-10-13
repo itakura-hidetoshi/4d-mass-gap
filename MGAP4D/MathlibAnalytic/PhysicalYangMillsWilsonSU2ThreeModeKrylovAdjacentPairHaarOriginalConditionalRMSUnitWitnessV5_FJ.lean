@@ -110,7 +110,7 @@ theorem p4Q2FJ_exists_originalWilsonUnitConditionalRMSLinkMean_pos
           ∑ _e : PeriodicHypercubicEvenSpatialSliceLink H, (0 : ℝ) := by
             apply Finset.sum_le_sum
             intro e _he
-            exact le_of_not_gt (hNo e)
+            exact hNo e
       _ = 0 := by simp
   exact (not_le_of_gt hMass) hSumNonpos
 
