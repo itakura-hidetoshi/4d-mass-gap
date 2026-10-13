@@ -132,9 +132,7 @@ theorem p4Q2FL_originalWilsonPosteriorConditionalSquaredLIntegral_haar_lower
   calc
     a * (∫⁻ g, ENNReal.ofReal ((X g) ^ 2) ∂μ) =
         ∫⁻ g, ENNReal.ofReal ((X g) ^ 2) ∂(a • μ) := by
-          simpa [smul_eq_mul] using
-            (lintegral_smul_measure (μ := μ) a
-              (fun g => ENNReal.ofReal ((X g) ^ 2))).symm
+          simp only [lintegral_smul_measure, smul_eq_mul]
     _ ≤ ∫⁻ g, ENNReal.ofReal ((X g) ^ 2) ∂ν :=
       lintegral_mono' hLo le_rfl
 
@@ -167,9 +165,7 @@ theorem p4Q2FL_originalWilsonPosteriorConditionalSquaredLIntegral_haar_upper
         ∫⁻ g, ENNReal.ofReal ((X g) ^ 2) ∂(A • μ) :=
       lintegral_mono' hHi le_rfl
     _ = A * (∫⁻ g, ENNReal.ofReal ((X g) ^ 2) ∂μ) := by
-      simpa [smul_eq_mul] using
-        (lintegral_smul_measure (μ := μ) A
-          (fun g => ENNReal.ofReal ((X g) ^ 2)))
+      simp only [lintegral_smul_measure, smul_eq_mul]
 
 end GroundStatePosteriorJoint
 end
