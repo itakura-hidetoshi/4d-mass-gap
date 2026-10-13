@@ -112,10 +112,9 @@ theorem p4Q2FD_originalPhysicalTwoRegimeCoefficient_nonneg
     (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
     0 ≤ p4Q2FD_originalPhysicalTwoRegimeCoefficient H N hN beta hbeta := by
   unfold p4Q2FD_originalPhysicalTwoRegimeCoefficient
-  exact le_min (sq_nonneg _)
-    (mul_nonneg
-      (mul_nonneg (by norm_num : (0 : ℝ) ≤ 1 / 2) (Even.pow_nonneg (by positivity) 4))
-      (sq_nonneg _))
+  apply le_min
+  · exact sq_nonneg _
+  · positivity
 
 /-- An unconditional one-link minimum of the two established TRUE
 original-Wilson posterior bounds, for ANY physical input and ANY beta.
