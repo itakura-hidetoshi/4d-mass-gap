@@ -35,6 +35,24 @@ noncomputable section
 set_option maxHeartbeats 2400000
 set_option synthInstance.maxHeartbeats 900000
 
+-- Reuse the ACTUAL compact SU(N) configuration-space instances, rather
+-- than letting Lean infer measurable and compact product structures.
+local instance p4Q2FC_topologicalGroup (N : ℕ) :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup N
+local instance p4Q2FC_compactSpace (N : ℕ) :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupCompactSpace N
+local instance p4Q2FC_secondCountable (N : ℕ) :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology N
+local instance p4Q2FC_measurableSpace (N : ℕ) :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupMeasurableSpace N
+local instance p4Q2FC_borelSpace (N : ℕ) :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+  specialUnitaryGroupBorelSpace N
+
 private theorem p4Q2FC_signed_product_local_ratio
     (R w w' m m' t : ℝ)
     (hR : 1 ≤ R) (hw : 0 ≤ w) (hw' : 0 ≤ w')
