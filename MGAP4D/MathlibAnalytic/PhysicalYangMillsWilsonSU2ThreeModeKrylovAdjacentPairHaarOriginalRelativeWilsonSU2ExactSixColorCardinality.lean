@@ -168,7 +168,9 @@ private noncomputable def p4Q2ES_parityFiberShiftEquiv (H : ℕ) (p : ZMod 2) :
 private theorem p4Q2ES_parity_zero_or_one (p : ZMod 2) :
     p = 0 ∨ p = 1 := by
   classical
-  fin_cases p <;> norm_num
+  fin_cases p
+  · exact Or.inl rfl
+  · exact Or.inr rfl
 
 private theorem p4Q2ES_parity_eq_one_of_ne_zero (p : ZMod 2) (hp : p ≠ 0) :
     p = 1 := by
