@@ -119,12 +119,15 @@ theorem p4Q2FK_actualWilsonCompleteLinkLogWeight_oscillation
   have hWh : 0 < W h :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteWeight_pos
       H N hN beta hbeta left right e h
+  have hWg : 0 < W g :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkCompleteWeight_pos
+      H N hN beta hbeta left right e g
   have hW : W g ≤ Real.exp (16 * beta) * W h :=
     p4Q2FK_actualWilsonCompleteLinkWeight_le_exp_sixteen
       H N hN beta hbeta left right e g h
   have hLog : Real.log (W g) ≤
       Real.log (Real.exp (16 * beta) * W h) :=
-    Real.log_le_log hWh hW
+    Real.log_le_log hWg hW
   rw [Real.log_mul (Real.exp_pos _).ne' hWh.ne', Real.log_exp] at hLog
   change Real.log (W g) - Real.log (W h) ≤ 16 * beta
   linarith
@@ -159,7 +162,11 @@ theorem p4Q2FK_originalWilsonPosteriorConditionalDensity_twoSided
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkFiberLogWeight_eq_groundStateCompleteLogWeight
         H N hN beta hbeta left right e y
     simp only [sub_zero]
-    change L x - L y ≤ 16 * beta
+    change
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkFiberLogWeight
+        H N hN beta hbeta left right e x -
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkFiberLogWeight
+        H N hN beta hbeta left right e y ≤ 16 * beta
     rw [hx, hy]
     exact p4Q2FK_actualWilsonCompleteLinkLogWeight_oscillation
       H N hN beta hbeta left right e x y
