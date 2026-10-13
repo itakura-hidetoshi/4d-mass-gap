@@ -74,7 +74,12 @@ theorem p4Q2FI_originalWilsonConditionalRMSLinkMean_le_twice_input_sq
     le_trans hReg (mul_le_mul_of_nonneg_right hCoeff (sq_nonneg ‖f‖))
   have hScaled : L ^ 2 * M ≤ L ^ 2 * (2 * ‖f‖ ^ 2) := by
     nlinarith [hEq, hUp]
-  exact (mul_le_mul_left (pow_pos hL 2)).mp hScaled
+  by_contra hNot
+  have hGt : 2 * ‖f‖ ^ 2 < M := lt_of_not_ge hNot
+  have hMulGt :
+      L ^ 2 * (2 * ‖f‖ ^ 2) < L ^ 2 * M :=
+    mul_lt_mul_of_pos_left hGt (pow_pos hL 2)
+  exact (not_le_of_gt hMulGt) hScaled
 
 /-- Genuine Wilson conditional RMS on a finite physical spatial patch
 is controlled by its OWN cardinality and input norm, not by an
