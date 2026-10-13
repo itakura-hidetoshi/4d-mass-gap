@@ -130,7 +130,7 @@ Neither certificate is manufactured or claimed to hold generally. -/
 theorem fineRightKrylovPairHaarResidualGram_rayleigh_le_certifiedScaleNorm
     {halfExtent : ℕ → ℕ} {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
     (n r : ℕ) (a : Fin (r + 1) → ℝ)
-    (K M : ℝ) (hK : 0 ≤ K) (hM : 0 ≤ M)
+    (K M : ℝ) (hK : 0 ≤ K) (_hM : 0 ≤ M)
     (hSmall : beta n ≤ (1 : ℝ) / 8)
     (hScale :
       (halfExtent (n + 1) + 1 : ℝ) ^ 3 * (beta n) ^ 2 ≤ K)
