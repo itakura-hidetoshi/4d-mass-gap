@@ -74,11 +74,7 @@ private theorem p4Q2ER_evenTranslateSpatialVertex_parity
   intro i _
   by_cases hi : i = mu.1
   · subst i
-    change
-      periodicHypercubicEvenParityHom H
-        (v.1 mu.1 +
-          ((2 * k : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H))) =
-        periodicHypercubicEvenParityHom H (v.1 mu.1)
+    simp only [p4Q2ER_evenTranslateSpatialVertex, if_pos rfl]
     rw [map_add]
     have heven :
         periodicHypercubicEvenParityHom H
@@ -126,9 +122,12 @@ theorem p4Q2ER_evenColorEmbedding_injective (H : ℕ) (c : Fin 6) :
       ((2 * k.1 : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H)) =
       ((2 * l.1 : ℕ) : ZMod (PeriodicHypercubicEvenSideLength H)) := by
     dsimp [p4Q2ER_evenColorEmbedding, p4Q2ER_evenTranslateSpatialVertex] at hCoord
+    dsimp only [base] at hCoord
+    simp only [if_pos rfl] at hCoord
     exact add_left_cancel hCoord
   letI : NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
-    simp [PeriodicHypercubicEvenSideLength]⟩
+    change 2 * (H + 1) ≠ 0
+    omega⟩
   have hk : 2 * k.1 < PeriodicHypercubicEvenSideLength H := by
     simp only [PeriodicHypercubicEvenSideLength]
     omega
@@ -212,8 +211,8 @@ theorem p4Q2ER_SU2_no_positive_uniformRelativeAWD12Coefficient :
   have hκBound :=
     p4Q2ER_SU2_relativeCoefficient_mul_halfSide_le_twelve
       H 0 (le_refl 0) e κ hκ.le (hUniform H e)
-  have hStrict : 12 < κ * (H : ℝ) :=
-    (div_lt_iff₀ hκ).mp hH
+  have hStrict : 12 < κ * (H : ℝ) := by
+    nlinarith [(div_lt_iff₀ hκ).mp hH]
   nlinarith
 
 end
