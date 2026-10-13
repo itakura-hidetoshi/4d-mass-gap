@@ -38,6 +38,14 @@ attribute [local instance]
   groundStateJointOneLinkCenteredResidualTargetLinkUnique
   p4Q2BAColorLinksFintype
 
+/-- Finite original primary-reflection-plane vertex carrier, installed
+explicitly so the subtype's noncomputable decidability is available. -/
+private noncomputable instance p4Q2ES_spatialSliceFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) := by
+  classical
+  unfold PeriodicHypercubicEvenSpatialSliceVertex
+  infer_instance
+
 /-- An exact equivalence between ACTUAL original primary-reflection-plane
 vertices and the three non-time periodic spatial coordinates. -/
 private noncomputable def p4Q2ES_spatialVertexEquiv (H : ℕ) :
@@ -125,6 +133,13 @@ private abbrev p4Q2ES_parityFiber (H : ℕ) (p : ZMod 2) : Type :=
   {v : PeriodicHypercubicEvenSpatialSliceVertex H //
     periodicHypercubicEvenCheckerboardParity H v.1 = p}
 
+/-- Fintype of the genuine original Wilson spatial checkerboard fiber. -/
+private noncomputable instance p4Q2ES_parityFiberFintype (H : ℕ) (p : ZMod 2) :
+    Fintype (p4Q2ES_parityFiber H p) := by
+  classical
+  unfold p4Q2ES_parityFiber
+  infer_instance
+
 /-- The spatial unit shift bijects ORIGINAL parity p vertices
 with original parity p+1 vertices; no probability law is involved. -/
 private noncomputable def p4Q2ES_parityFiberShiftEquiv (H : ℕ) (p : ZMod 2) :
@@ -152,7 +167,8 @@ private noncomputable def p4Q2ES_parityFiberShiftEquiv (H : ℕ) (p : ZMod 2) :
 /-- All ZMod-two checkerboard values are either zero or one. -/
 private theorem p4Q2ES_parity_zero_or_one (p : ZMod 2) :
     p = 0 ∨ p = 1 := by
-  fin_cases p <;> decide
+  classical
+  fin_cases p <;> norm_num
 
 private theorem p4Q2ES_parity_eq_one_of_ne_zero (p : ZMod 2) (hp : p ≠ 0) :
     p = 1 := by
