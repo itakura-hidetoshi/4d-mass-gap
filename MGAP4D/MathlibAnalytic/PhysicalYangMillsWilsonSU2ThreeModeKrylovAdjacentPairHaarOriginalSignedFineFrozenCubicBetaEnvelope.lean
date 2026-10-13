@@ -38,11 +38,10 @@ private noncomputable instance p4Q2EU_spatialLinkFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 private noncomputable instance p4Q2EU_spatialVertexFintype (H : ℕ) :
-    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
-  Fintype.ofFinite _
-private noncomputable instance p4Q2EU_spatialDirectionFintype :
-    Fintype PeriodicHypercubicEvenSpatialDirection :=
-  Fintype.ofFinite _
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) := by
+  classical
+  unfold PeriodicHypercubicEvenSpatialSliceVertex
+  infer_instance
 
 /-- Exact ORIGINAL canonical time-zero spatial link count, obtained
 from ES's true reflection-plane vertex cardinality and the genuine
@@ -57,12 +56,15 @@ theorem p4Q2EU_originalPhysicalSpatialLinks_card_exact (H : ℕ) :
         Fintype.card (PeriodicHypercubicEvenSpatialSliceVertex H) *
           Fintype.card PeriodicHypercubicEvenSpatialDirection := by
       exact Fintype.card_prod
+        (PeriodicHypercubicEvenSpatialSliceVertex H)
+        PeriodicHypercubicEvenSpatialDirection
     _ = (2 * (H + 1)) ^ 3 * 3 := by
-      rw [p4Q2ES_originalSpatialVertex_card]
-      have hDir :
-          Fintype.card PeriodicHypercubicEvenSpatialDirection = 3 :=
+      have hVert := p4Q2ES_originalSpatialVertex_card H
+      have hDir :=
         periodicHypercubicOtherAxis_card (0 : PeriodicHypercubicAxis)
-      rw [hDir]
+      change Fintype.card (PeriodicHypercubicEvenSpatialSliceVertex H) *
+          Fintype.card (PeriodicHypercubicEvenSpatialDirection) = _
+      rw [hVert, hDir]
     _ = 24 * (H + 1) ^ 3 := by ring
 
 namespace GroundStatePosteriorJoint
