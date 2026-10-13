@@ -283,7 +283,7 @@ theorem p4Q2FD_originalWilsonSU2PhysicalGram_rayleigh_le_twoRegime
     H 2 specialUnitaryTwoWilsonRankPositive beta hbeta f a
   rw [p4Q2EU_originalPhysicalSpatialLinks_card_exact H] at h
   push_cast at h
-  convert h using 1 <;> ring
+  convert h using 1
 
 /-- The ORIGINAL frozen Wilson beta=0 posterior has exact fixedness
 on the full normalized physical receiver RANGE for every input, not
