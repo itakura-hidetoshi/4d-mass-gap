@@ -8,7 +8,7 @@ import Mathlib.Tactic
 FG gives the EXACT original physical link energy as the genuine Wilson
 posterior conditional square integrated OUTSIDE against original pair-Haar.
 
-This first FH step keeps the actual source-/link-dependent conditional
+This first FH step keeps the actual source-and-link-dependent conditional
 RMS means as a nonnegative measure on the finite physical spatial-link
 carrier. We prove exact finite-region/complement decomposition, monotonicity,
 zero-region characterization, and an intrinsic threshold-counting inequality:
@@ -20,7 +20,7 @@ The same certificate holds for the actual physical posterior defect after
 multiplying by the unchanged inverse-transfer normalization squared / 2.
 
 These are finite-volume identities, not a claim of geometric spatial decay
-or an H-/scale-uniform bound. The inner conditional law is ALWAYS genuine
+or an H-or-scale-uniform bound. The inner conditional law is ALWAYS genuine
 interacting Wilson; the outer integral alone is against pair-Haar.
 -/
 
