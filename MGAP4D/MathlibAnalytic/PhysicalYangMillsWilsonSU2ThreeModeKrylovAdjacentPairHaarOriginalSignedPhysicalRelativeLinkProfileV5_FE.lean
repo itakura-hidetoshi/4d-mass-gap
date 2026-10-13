@@ -231,11 +231,11 @@ theorem p4Q2FE_originalWilsonSignedSourceLinkProfile_le_FC
   let R : ℝ := Real.exp (8 * beta)
   let B := p4Q2FE_originalWilsonRelativeSignedLinkResponseBCF
     H N hN beta hbeta f e
-  have hN := p4Q2FE_originalWilsonRelativeSignedLinkResponse_norm_le_FC
+  have hBound := p4Q2FE_originalWilsonRelativeSignedLinkResponse_norm_le_FC
     H N hN beta hbeta f e
-  change ‖B‖ ≤ L * (R ^ 3 - 1) * ‖f‖ at hN
+  change ‖B‖ ≤ L * (R ^ 3 - 1) * ‖f‖ at hBound
   have hSq : ‖B‖ ^ 2 ≤ (L * (R ^ 3 - 1) * ‖f‖) ^ 2 :=
-    pow_le_pow_left₀ (norm_nonneg _) hN 2
+    pow_le_pow_left₀ (norm_nonneg _) hBound 2
   have hMul := mul_le_mul_of_nonneg_left hSq
     (mul_nonneg (by norm_num : (0 : ℝ) ≤ 1/2) (sq_nonneg L))
   calc
@@ -244,6 +244,220 @@ theorem p4Q2FE_originalWilsonSignedSourceLinkProfile_le_FC
     _ ≤ ((1 / 2 : ℝ) * L ^ 2) * (L * (R ^ 3 - 1) * ‖f‖) ^ 2 :=
       hMul
     _ = (1 / 2 : ℝ) * L ^ 4 * (R ^ 3 - 1) ^ 2 * ‖f‖ ^ 2 := by ring
+
+
+/-- Certified pointwise ACTUAL signed Wilson link update in terms of
+its CONSTRUCTED, truly link/source-dependent normalized BCF norm.
+The original positive Wilson joint weight remains inside the
+bound and hence inside the upcoming original joint integral. -/
+theorem p4Q2FE_originalJointReceiver_linkDifference_abs_le_actualSourceResponse
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+    (e : PeriodicHypercubicEvenSpatialSliceLink H)
+    (z : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N)
+    (g : Matrix.specialUnitaryGroup (Fin N) ℂ) :
+    let O := normalizedPhysicalOneSlabJointReceiverProductBCF H N hN beta hbeta f
+    let W := normalizedPhysicalOneSlabJointHalfDensityWeightBCF H N hN beta hbeta
+    let V := normalizedPhysicalOneSlabContinuousVacuumInverseBCF H N hN beta hbeta
+    let B := p4Q2FE_originalWilsonRelativeSignedLinkResponseBCF
+      H N hN beta hbeta f e
+    |O z - O (z.1, Function.update z.2 e g)| ≤
+      ‖B‖ * (W z * V z.2) := by
+  let O := normalizedPhysicalOneSlabJointReceiverProductBCF H N hN beta hbeta f
+  let W := normalizedPhysicalOneSlabJointHalfDensityWeightBCF H N hN beta hbeta
+  let V := normalizedPhysicalOneSlabContinuousVacuumInverseBCF H N hN beta hbeta
+  let B := p4Q2FE_originalWilsonRelativeSignedLinkResponseBCF
+    H N hN beta hbeta f e
+  let zp := (z.1, Function.update z.2 e g)
+  have hWeight : 0 < W z * V z.2 :=
+    p4Q2FE_originalWilsonDensityCancellationWeight_pos H N hN beta hbeta z
+  have hNorm : |(O z - O zp) / (W z * V z.2)| ≤ ‖B‖ := by
+    simpa only [B, O, W, V,
+      p4Q2FE_originalWilsonRelativeSignedLinkResponseBCF_apply,
+      Real.norm_eq_abs] using B.norm_coe_le_norm (z,g)
+  rw [abs_div, abs_of_pos hWeight] at hNorm
+  calc
+    |O z - O zp| = (|O z - O zp| / (W z * V z.2)) *
+          (W z * V z.2) := by field_simp [ne_of_gt hWeight]
+    _ ≤ ‖B‖ * (W z * V z.2) :=
+      mul_le_mul_of_nonneg_right hNorm hWeight.le
+
+/-- GENUINE ORIGINAL WILSON signed two-copy posterior resampling
+is controlled by the constructed relative physical-source response
+of this exact spatial link, not a fictional independent Haar law.
+The old physical exact joint moment cancels W and Omega^-1 in L². -/
+theorem p4Q2FE_originalPosteriorResampling_le_actualSourceResponse
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+    (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+    posteriorResamplingEnergy H N hN beta hbeta e
+      (normalizedPhysicalOneSlabJointReceiverProductBCF H N hN beta hbeta f) ≤
+      (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+        H N hN beta hbeta‖⁻¹) ^ 2 *
+      ‖p4Q2FE_originalWilsonRelativeSignedLinkResponseBCF
+        H N hN beta hbeta f e‖ ^ 2 := by
+  classical
+  let μJ := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+    H N hN beta hbeta
+  let W := normalizedPhysicalOneSlabJointHalfDensityWeightBCF H N hN beta hbeta
+  let V := normalizedPhysicalOneSlabContinuousVacuumInverseBCF H N hN beta hbeta
+  let O := normalizedPhysicalOneSlabJointReceiverProductBCF H N hN beta hbeta f
+  let B := p4Q2FE_originalWilsonRelativeSignedLinkResponseBCF
+    H N hN beta hbeta f e
+  let L : ℝ := ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+    H N hN beta hbeta‖⁻¹
+  let C : ℝ := ‖B‖
+  let b (z : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) : ℝ :=
+    C * (W z * V z.2)
+  have hbContinuity :
+      Continuous (fun z : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N => b z ^ 2) := by
+    dsimp [b]
+    exact (continuous_const.mul
+      (W.continuous.mul (V.continuous.comp continuous_snd))).pow 2
+  have hbIntegrable : Integrable (fun z => b z ^ 2) μJ :=
+    hbContinuity.integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have hbPoint : ∀ z (g : Matrix.specialUnitaryGroup (Fin N) ℂ),
+      |O z - O (z.1, Function.update z.2 e g)| ≤ b z := by
+    intro z g
+    exact p4Q2FE_originalJointReceiver_linkDifference_abs_le_actualSourceResponse
+      H N hN beta hbeta f e z g
+  have hPosterior :
+      posteriorResamplingEnergy H N hN beta hbeta e O ≤
+        ∫ z, b z ^ 2 ∂μJ :=
+    originalWilsonPosteriorResamplingEnergy_le_pointwiseLinkOscillation
+      H N hN beta hbeta e O b hbIntegrable hbPoint
+  have hMoment :
+      (∫ z, (W z * V z.2) ^ 2 ∂μJ) = L ^ 2 := by
+    exact normalizedPhysicalOneSlabJointHalfDensityWeightBCF_mul_vacuumInverse_sq_integral_joint_eq
+      H N hN beta hbeta
+  calc
+    posteriorResamplingEnergy H N hN beta hbeta e O ≤
+        ∫ z, b z ^ 2 ∂μJ := hPosterior
+    _ = C ^ 2 * (∫ z, (W z * V z.2) ^ 2 ∂μJ) := by
+      calc
+        (∫ z, b z ^ 2 ∂μJ) =
+            ∫ z, C ^ 2 * (W z * V z.2) ^ 2 ∂μJ := by
+              apply integral_congr_ae
+              filter_upwards with z
+              dsimp [b]
+              ring
+        _ = C ^ 2 * (∫ z, (W z * V z.2) ^ 2 ∂μJ) :=
+          integral_const_mul _ _
+    _ = C ^ 2 * L ^ 2 := by rw [hMoment]
+    _ = L ^ 2 * C ^ 2 := mul_comm _ _
+
+/-- NONUNIFORM PHYSICAL LINK CERTIFICATE built from the signed source
+and the exact original Wilson right-link kernel: its actual
+transported physical CondExpL2 squared defect is bounded by
+the explicitly constructed profile. This closes FD's missing
+pointwise source-specific coefficient without assuming decay. -/
+theorem p4Q2FE_originalPhysicalLinkDefect_le_constructedSourceLinkProfile
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+    (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+    p4Q2FD_originalPhysicalLinkDefect H N hN beta hbeta f e ≤
+      p4Q2FE_originalWilsonSignedSourceLinkProfile H N hN beta hbeta f e := by
+  let L : ℝ := ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+    H N hN beta hbeta‖⁻¹
+  let B := p4Q2FE_originalWilsonRelativeSignedLinkResponseBCF
+    H N hN beta hbeta f e
+  have hExact := p4Q2FD_originalPhysicalLinkDefect_eq_half_posterior
+    H N hN beta hbeta f e
+  have hEnergy := p4Q2FE_originalPosteriorResampling_le_actualSourceResponse
+    H N hN beta hbeta f e
+  calc
+    p4Q2FD_originalPhysicalLinkDefect H N hN beta hbeta f e =
+        (1 / 2 : ℝ) * posteriorResamplingEnergy H N hN beta hbeta e
+          (normalizedPhysicalOneSlabJointReceiverProductBCF H N hN beta hbeta f) :=
+      hExact
+    _ ≤ (1 / 2 : ℝ) * (L ^ 2 * ‖B‖ ^ 2) :=
+      mul_le_mul_of_nonneg_left hEnergy (by norm_num)
+    _ = p4Q2FE_originalWilsonSignedSourceLinkProfile H N hN beta hbeta f e := by
+      rfl
+
+/-- FINITE PATCH source-adapted profile: the full physical signed
+Wilson right-link energies can be bounded without first replacing
+every link response by FC's universal worst-case coefficient. -/
+noncomputable def p4Q2FE_originalWilsonSignedSourcePatchProfile
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+    (S : Finset (PeriodicHypercubicEvenSpatialSliceLink H)) : ℝ :=
+  S.sum (fun e => p4Q2FE_originalWilsonSignedSourceLinkProfile H N hN beta hbeta f e)
+
+theorem p4Q2FE_originalPhysicalRestrictedLinkEnergy_le_constructedSourcePatchProfile
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+    (S : Finset (PeriodicHypercubicEvenSpatialSliceLink H)) :
+    p4Q2FD_originalPhysicalRestrictedLinkEnergy H N hN beta hbeta f S ≤
+      p4Q2FE_originalWilsonSignedSourcePatchProfile H N hN beta hbeta f S := by
+  unfold p4Q2FD_originalPhysicalRestrictedLinkEnergy
+    p4Q2FE_originalWilsonSignedSourcePatchProfile
+  exact Finset.sum_le_sum (fun e _he =>
+    p4Q2FE_originalPhysicalLinkDefect_le_constructedSourceLinkProfile
+      H N hN beta hbeta f e)
+
+/-- An authentic physical source's link-dependent profile is no
+larger than FC's worst-case |S| bound; no fictitious decay rate. -/
+theorem p4Q2FE_originalSignedSourcePatchProfile_le_FC_count
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+    (S : Finset (PeriodicHypercubicEvenSpatialSliceLink H)) :
+    p4Q2FE_originalWilsonSignedSourcePatchProfile H N hN beta hbeta f S ≤
+      (S.card : ℝ) * (1 / 2 : ℝ) *
+      (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+        H N hN beta hbeta‖⁻¹) ^ 4 *
+      (Real.exp (8 * beta) ^ 3 - 1) ^ 2 * ‖f‖ ^ 2 := by
+  let L : ℝ := ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+    H N hN beta hbeta‖⁻¹
+  let R : ℝ := Real.exp (8 * beta)
+  let C : ℝ := (1 / 2 : ℝ) * L ^ 4 * (R ^ 3 - 1) ^ 2 * ‖f‖ ^ 2
+  have hEach (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+      p4Q2FE_originalWilsonSignedSourceLinkProfile H N hN beta hbeta f e ≤ C :=
+    p4Q2FE_originalWilsonSignedSourceLinkProfile_le_FC H N hN beta hbeta f e
+  calc
+    p4Q2FE_originalWilsonSignedSourcePatchProfile H N hN beta hbeta f S =
+        S.sum (fun e => p4Q2FE_originalWilsonSignedSourceLinkProfile H N hN beta hbeta f e) :=
+      rfl
+    _ ≤ S.sum (fun _e => C) :=
+      Finset.sum_le_sum (fun e _he => hEach e)
+    _ = (S.card : ℝ) * C := by
+      simp only [Finset.sum_const, nsmul_eq_mul]
+    _ = (S.card : ℝ) * (1 / 2 : ℝ) * L ^ 4 *
+          (R ^ 3 - 1) ^ 2 * ‖f‖ ^ 2 := by ring
+
+/-- The whole arbitrary physical input-family signed Gram now has
+a CONSTRUCTED source-dependent profile, with no input orthogonality
+or fake spatial independence. -/
+theorem p4Q2FE_originalWilsonPhysicalGram_rayleigh_le_sourceProfile
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    {ι : Type*} [Fintype ι]
+    (f : ι → periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+    (a : ι → ℝ) :
+    star a ⬝ᵥ (Matrix.mulVec
+      (pairHaarSpatialLinkResidualGram H N hN beta hbeta
+        (fun i => normalizedPhysicalOneSlabPairHaarReceiver H N hN beta hbeta (f i))) a) ≤
+      p4Q2FE_originalWilsonSignedSourcePatchProfile H N hN beta hbeta
+        (∑ i : ι, a i • f i)
+        (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)) := by
+  classical
+  let F := ∑ i : ι, a i • f i
+  let L := (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H))
+  have hEq := pairHaarSpatialLinkResidualGram_rayleigh_physicalInput
+    H N hN beta hbeta f a
+  have hPatch := p4Q2FE_originalPhysicalRestrictedLinkEnergy_le_constructedSourcePatchProfile
+    H N hN beta hbeta F L
+  calc
+    star a ⬝ᵥ (Matrix.mulVec
+      (pairHaarSpatialLinkResidualGram H N hN beta hbeta
+        (fun i => normalizedPhysicalOneSlabPairHaarReceiver H N hN beta hbeta (f i))) a) =
+      p4Q2FD_originalPhysicalRestrictedLinkEnergy H N hN beta hbeta F L := by
+        simpa only [p4Q2FD_originalPhysicalRestrictedLinkEnergy, F, L] using hEq
+    _ ≤ p4Q2FE_originalWilsonSignedSourcePatchProfile H N hN beta hbeta F L :=
+      hPatch
 
 end GroundStatePosteriorJoint
 end
@@ -255,3 +469,10 @@ end MGAP4D
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FE_originalWilsonRelativeSignedLinkResponse_norm_le_FC
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FE_originalWilsonSignedSourceLinkProfile_nonneg
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FE_originalWilsonSignedSourceLinkProfile_le_FC
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FE_originalJointReceiver_linkDifference_abs_le_actualSourceResponse
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FE_originalPosteriorResampling_le_actualSourceResponse
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FE_originalPhysicalLinkDefect_le_constructedSourceLinkProfile
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FE_originalPhysicalRestrictedLinkEnergy_le_constructedSourcePatchProfile
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FE_originalSignedSourcePatchProfile_le_FC_count
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FE_originalWilsonPhysicalGram_rayleigh_le_sourceProfile
