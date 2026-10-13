@@ -279,7 +279,7 @@ theorem p4Q2FE_originalJointReceiver_linkDifference_abs_le_actualSourceResponse
   rw [abs_div, abs_of_pos hWeight] at hNorm
   calc
     |O z - O zp| = (|O z - O zp| / (W z * V z.2)) *
-          (W z * V z.2) := by field_simp [ne_of_gt hWeight]
+          (W z * V z.2) := by field_simp [ne_of_gt hWeight] <;> ring
     _ ≤ ‖B‖ * (W z * V z.2) :=
       mul_le_mul_of_nonneg_right hNorm hWeight.le
 
@@ -311,6 +311,9 @@ theorem p4Q2FE_originalPosteriorResampling_le_actualSourceResponse
   let b (z : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
       PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) : ℝ :=
     C * (W z * V z.2)
+  letI : IsProbabilityMeasure μJ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure_isProbabilityMeasure
+      H N hN beta hbeta
   have hbContinuity :
       Continuous (fun z : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N => b z ^ 2) := by
@@ -377,7 +380,8 @@ theorem p4Q2FE_originalPhysicalLinkDefect_le_constructedSourceLinkProfile
     _ ≤ (1 / 2 : ℝ) * (L ^ 2 * ‖B‖ ^ 2) :=
       mul_le_mul_of_nonneg_left hEnergy (by norm_num)
     _ = p4Q2FE_originalWilsonSignedSourceLinkProfile H N hN beta hbeta f e := by
-      rfl
+      dsimp [p4Q2FE_originalWilsonSignedSourceLinkProfile]
+      ring
 
 /-- FINITE PATCH source-adapted profile: the full physical signed
 Wilson right-link energies can be bounded without first replacing
