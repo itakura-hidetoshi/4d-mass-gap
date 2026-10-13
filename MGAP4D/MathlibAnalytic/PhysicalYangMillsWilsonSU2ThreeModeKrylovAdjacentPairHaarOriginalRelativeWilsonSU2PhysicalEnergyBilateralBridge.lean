@@ -77,8 +77,8 @@ theorem p4Q2EO_SU2_originalRiesz_le_twoSelectedPhysicalDefects
     Q beta hbeta (W beta hbeta e) ≤
         (12 : ℝ) * E beta hbeta (W beta hbeta e) := hBound
     _ = _ := by
-      rw [p4Q2EN_SU2_originalPhysicalD12_eq_selectedTwo]
-      norm_num [mul_assoc]
+      rw [p4Q2EN_SU2_originalPhysicalD12_eq_selectedTwo, ← mul_assoc]
+      norm_num
 
 /-- The independent DV/BF finite-volume Wilson coercivity input gives a
 positive reverse coefficient on exactly this physical SU(2) witness.
