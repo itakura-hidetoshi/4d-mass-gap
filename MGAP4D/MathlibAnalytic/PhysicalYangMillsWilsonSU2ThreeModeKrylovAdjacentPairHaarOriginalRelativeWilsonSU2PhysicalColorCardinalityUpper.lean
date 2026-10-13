@@ -192,7 +192,13 @@ theorem p4Q2EQ_SU2_anyRelativeCoefficient_le_twelve_div_selectedColorCard
       H beta hbeta e
   have hPos :=
     p4Q2EN_SU2_originalPhysicalD12_pos H beta hbeta e
-  exact (mul_le_mul_right hPos).mp (hLower.trans hUpper)
+  by_contra hNot
+  have hGt :
+      (12 : ℝ) /
+          (p4Q2EQ_SU2_selectedPhysicalColorLinkCard H e : ℝ) < κ :=
+    lt_of_not_ge hNot
+  exact (not_lt_of_ge (hLower.trans hUpper))
+    (mul_lt_mul_of_pos_right hGt hPos)
 
 /-- In particular, the GENUINE original Wilson mass/variance certificate
 κ_EC(H,beta,m,M) from EC is necessarily bounded above by the explicit
@@ -235,14 +241,7 @@ theorem p4Q2EQ_SU2_selectedHaar_physicalTwoColor_sharperRatio
       H beta hbeta e
   refine ⟨m, M, hm, hM, hκ, hPos, hLower, ?_⟩
   apply (div_le_iff₀ hPos).2
-  calc
-    p4Q2EP_SU2_selectedOriginalWilsonHaarReal H beta hbeta e ≤
-      (p4Q2EQ_SU2_selectedPhysicalColorLinkCard H e : ℝ)⁻¹ *
-        p4Q2EP_SU2_selectedPhysicalWilsonTwoColorDefects H beta hbeta e :=
-      hUpper
-    _ = p4Q2EP_SU2_selectedPhysicalWilsonTwoColorDefects H beta hbeta e *
-      (p4Q2EQ_SU2_selectedPhysicalColorLinkCard H e : ℝ)⁻¹ := by
-      ring
+  exact hUpper
 
 end ActualSelectedColorCardinality
 end
