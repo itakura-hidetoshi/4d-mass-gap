@@ -66,13 +66,13 @@ theorem p4Q2FL_originalWilsonPosteriorConditionalMeasure_haar_sandwich
         H N hN beta hbeta left right e ≤
       ENNReal.ofReal (Real.exp (16 * beta)) •
         normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ) := by
-  let G := Matrix.specialUnitaryGroup (Fin N) ℂ
-  let μ : Measure G := normalizedCompactHaar G
-  let L : G → ℝ :=
+  let μ : Measure (Matrix.specialUnitaryGroup (Fin N) ℂ) :=
+    normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin N) ℂ)
+  let L : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkFiberLogWeight
       H N hN beta hbeta left right e
-  let p : G → ℝ := continuousNormalizedExp μ L
-  have hp : ∀ g : G,
+  let p : Matrix.specialUnitaryGroup (Fin N) ℂ → ℝ := continuousNormalizedExp μ L
+  have hp : ∀ g : Matrix.specialUnitaryGroup (Fin N) ℂ,
       Real.exp (-16 * beta) ≤ p g ∧ p g ≤ Real.exp (16 * beta) := by
     intro g
     simpa [p, μ, L,
@@ -81,12 +81,12 @@ theorem p4Q2FL_originalWilsonPosteriorConditionalMeasure_haar_sandwich
         p4Q2FK_originalWilsonPosteriorConditionalDensity_twoSided
           H N hN beta hbeta left right e g
   have hDLower :
-      (fun _ : G => ENNReal.ofReal (Real.exp (-16 * beta))) ≤ᵐ[μ]
+      (fun _ : Matrix.specialUnitaryGroup (Fin N) ℂ => ENNReal.ofReal (Real.exp (-16 * beta))) ≤ᵐ[μ]
         (fun g => ENNReal.ofReal (p g)) := by
     filter_upwards with g
     exact ENNReal.ofReal_le_ofReal (hp g).1
   have hDUpper :
-      (fun g : G => ENNReal.ofReal (p g)) ≤ᵐ[μ]
+      (fun g : Matrix.specialUnitaryGroup (Fin N) ℂ => ENNReal.ofReal (p g)) ≤ᵐ[μ]
         (fun _ => ENNReal.ofReal (Real.exp (16 * beta))) := by
     filter_upwards with g
     exact ENNReal.ofReal_le_ofReal (hp g).2
@@ -126,7 +126,7 @@ theorem p4Q2FL_originalWilsonPosteriorConditionalSquaredLIntegral_haar_lower
       H N hN beta hbeta left right e
   let a : ℝ≥0∞ := ENNReal.ofReal (Real.exp (-16 * beta))
   have hLo : a • μ ≤ ν := by
-    simpa [a, μ, ν] using
+    exact
       (p4Q2FL_originalWilsonPosteriorConditionalMeasure_haar_sandwich
         H N hN beta hbeta left right e).1
   calc
@@ -159,7 +159,7 @@ theorem p4Q2FL_originalWilsonPosteriorConditionalSquaredLIntegral_haar_upper
       H N hN beta hbeta left right e
   let A : ℝ≥0∞ := ENNReal.ofReal (Real.exp (16 * beta))
   have hHi : ν ≤ A • μ := by
-    simpa [A, μ, ν] using
+    exact
       (p4Q2FL_originalWilsonPosteriorConditionalMeasure_haar_sandwich
         H N hN beta hbeta left right e).2
   calc
