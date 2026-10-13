@@ -6,7 +6,7 @@ import Mathlib.Tactic
 
 The original spatial slice has period 2*(H+1). Given ANY actual spatial
 six-color class c, start from a certified original physical link of that
-class and move its base by 2*k units in its SAME original spatial direction,
+color group and move its base by 2*k units in its SAME original spatial direction,
 where k ranges over Fin (H+1). These original periodic base vertices have
 unchanged checkerboard parity, and distinct k give distinct ZMod coordinates.
 
