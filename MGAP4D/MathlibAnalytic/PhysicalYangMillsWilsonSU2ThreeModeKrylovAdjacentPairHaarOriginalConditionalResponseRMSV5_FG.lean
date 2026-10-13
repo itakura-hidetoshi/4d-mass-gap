@@ -416,6 +416,156 @@ theorem p4Q2FG_originalPhysicalLinkDefect_eq_half_pairHaarConditionalRMS
         ∂periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N)) := hDefect
     _ = _ := by ring
 
+
+/-- The actually integrable pair-Haar OUTER mean of the ORIGINAL
+physical Wilson fiber-conditional RMS never exceeds its own source
+and link BCF sup profile. No independence between the right-link
+posterior and the retained context is assumed. -/
+theorem p4Q2FG_originalWilsonPairHaarConditionalRMS_mean_le_relativeSupSq
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+    (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+    (∫ z, p4Q2FG_originalWilsonRelativeResponseConditionalSquare
+      H N hN beta hbeta f e z
+      ∂periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) ≤
+    ‖p4Q2FF_originalWilsonRelativeSignedLinkResponseBCF
+      H N hN beta hbeta f e‖ ^ 2 := by
+  let μ := periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N
+  let B := p4Q2FF_originalWilsonRelativeSignedLinkResponseBCF
+    H N hN beta hbeta f e
+  letI : IsProbabilityMeasure μ := by
+    dsimp [μ, periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure,
+      periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure]
+    infer_instance
+  have hIntegrable :=
+    p4Q2FG_originalWilsonRelativeResponseConditionalSquare_pairHaar_integrable
+      H N hN beta hbeta f e
+  change (∫ z, p4Q2FG_originalWilsonRelativeResponseConditionalSquare
+    H N hN beta hbeta f e z ∂μ) ≤ ‖B‖ ^ 2
+  calc
+    (∫ z, p4Q2FG_originalWilsonRelativeResponseConditionalSquare
+      H N hN beta hbeta f e z ∂μ) ≤
+        ∫ _z, ‖B‖ ^ 2 ∂μ := by
+          apply integral_mono hIntegrable (integrable_const _)
+          intro z
+          exact p4Q2FG_originalWilsonRelativeResponseConditionalSquare_le_relativeSupSq
+            H N hN beta hbeta f e z
+    _ = ‖B‖ ^ 2 := by simp
+
+/-- Exact integrated original physical Wilson spatial-link RMS over
+an ARBITRARY finite physical link patch. The right-endpoint posterior
+remains the genuine ν_{e,z}; only the outer measure has been
+transported through the genuine joint half-density. -/
+noncomputable def p4Q2FG_originalWilsonPairHaarConditionalRMSPatchEnergy
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+    (S : Finset (PeriodicHypercubicEvenSpatialSliceLink H)) : ℝ :=
+  (1 / 2 : ℝ) *
+    (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+      H N hN beta hbeta‖⁻¹) ^ 2 *
+    S.sum (fun e =>
+      ∫ z, p4Q2FG_originalWilsonRelativeResponseConditionalSquare
+        H N hN beta hbeta f e z
+        ∂periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N)
+
+/-- The TRUE finite-patch physical posterior projection energy is
+EXACTLY the pair-Haar outer integral of the actual Wilson fiber RMS.
+This equality has no global sup and no extra H/r/n coefficient. -/
+theorem p4Q2FG_originalPhysicalRestrictedEnergy_eq_pairHaarConditionalRMSPatch
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+    (S : Finset (PeriodicHypercubicEvenSpatialSliceLink H)) :
+    p4Q2FD_originalPhysicalRestrictedLinkEnergy H N hN beta hbeta f S =
+      p4Q2FG_originalWilsonPairHaarConditionalRMSPatchEnergy
+        H N hN beta hbeta f S := by
+  let A : ℝ := (1 / 2 : ℝ) *
+    (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+      H N hN beta hbeta‖⁻¹) ^ 2
+  have hEach (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+      p4Q2FD_originalPhysicalLinkDefect H N hN beta hbeta f e =
+        A * (∫ z, p4Q2FG_originalWilsonRelativeResponseConditionalSquare
+          H N hN beta hbeta f e z
+          ∂periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) := by
+    simpa only [A, mul_assoc] using
+      p4Q2FG_originalPhysicalLinkDefect_eq_half_pairHaarConditionalRMS
+        H N hN beta hbeta f e
+  change
+    S.sum (fun e => p4Q2FD_originalPhysicalLinkDefect H N hN beta hbeta f e) =
+      A * S.sum (fun e =>
+        ∫ z, p4Q2FG_originalWilsonRelativeResponseConditionalSquare
+          H N hN beta hbeta f e z
+          ∂periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N)
+  calc
+    S.sum (fun e => p4Q2FD_originalPhysicalLinkDefect H N hN beta hbeta f e) =
+        S.sum (fun e => A * (∫ z, p4Q2FG_originalWilsonRelativeResponseConditionalSquare
+          H N hN beta hbeta f e z
+          ∂periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N)) := by
+            apply Finset.sum_congr rfl
+            intro e _he
+            exact hEach e
+    _ = A * S.sum (fun e => ∫ z, p4Q2FG_originalWilsonRelativeResponseConditionalSquare
+          H N hN beta hbeta f e z
+          ∂periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) := by
+            rw [Finset.mul_sum]
+
+/-- The exact pair-Haar conditional RMS profile never exceeds the
+previously certified authentic FF three-way physical Wilson link
+profile, with no invented spatial decay or source support. -/
+theorem p4Q2FG_originalWilsonPairHaarConditionalRMSPatch_le_FF_threeWay
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+    (S : Finset (PeriodicHypercubicEvenSpatialSliceLink H)) :
+    p4Q2FG_originalWilsonPairHaarConditionalRMSPatchEnergy
+      H N hN beta hbeta f S ≤
+      p4Q2FF_originalWilsonCombinedSignedSourcePatchProfile
+        H N hN beta hbeta f S := by
+  calc
+    p4Q2FG_originalWilsonPairHaarConditionalRMSPatchEnergy
+        H N hN beta hbeta f S =
+      p4Q2FD_originalPhysicalRestrictedLinkEnergy
+        H N hN beta hbeta f S :=
+      (p4Q2FG_originalPhysicalRestrictedEnergy_eq_pairHaarConditionalRMSPatch
+        H N hN beta hbeta f S).symm
+    _ ≤ p4Q2FF_originalWilsonCombinedSignedSourcePatchProfile
+        H N hN beta hbeta f S :=
+      p4Q2FF_originalPhysicalRestrictedLinkEnergy_le_combinedSignedSourcePatch
+        H N hN beta hbeta f S
+
+/-- For an arbitrary physical input family, the FULL original Wilson
+signed Gram Rayleigh is the actual integrated conditional RMS over
+the TRUE physical input combination and ALL genuine spatial links.
+No assumed orthogonal Krylov basis, artificial Haar posterior or
+uniform physical volume cancellation. -/
+theorem p4Q2FG_originalWilsonPhysicalGram_rayleigh_eq_pairHaarConditionalRMS
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    {ι : Type*} [Fintype ι]
+    (f : ι → periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+    (a : ι → ℝ) :
+    star a ⬝ᵥ (Matrix.mulVec
+      (pairHaarSpatialLinkResidualGram H N hN beta hbeta
+        (fun i => normalizedPhysicalOneSlabPairHaarReceiver
+          H N hN beta hbeta (f i))) a) =
+      p4Q2FG_originalWilsonPairHaarConditionalRMSPatchEnergy
+        H N hN beta hbeta (∑ i : ι, a i • f i)
+        (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)) := by
+  classical
+  let F := ∑ i : ι, a i • f i
+  let S := (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H))
+  have hRay := pairHaarSpatialLinkResidualGram_rayleigh_physicalInput
+    H N hN beta hbeta f a
+  have hPatch :=
+    p4Q2FG_originalPhysicalRestrictedEnergy_eq_pairHaarConditionalRMSPatch
+      H N hN beta hbeta F S
+  calc
+    star a ⬝ᵥ (Matrix.mulVec
+      (pairHaarSpatialLinkResidualGram H N hN beta hbeta
+        (fun i => normalizedPhysicalOneSlabPairHaarReceiver
+          H N hN beta hbeta (f i))) a) =
+      p4Q2FD_originalPhysicalRestrictedLinkEnergy H N hN beta hbeta F S := by
+        simpa only [p4Q2FD_originalPhysicalRestrictedLinkEnergy, F, S] using hRay
+    _ = p4Q2FG_originalWilsonPairHaarConditionalRMSPatchEnergy
+          H N hN beta hbeta F S := hPatch
+
 end GroundStatePosteriorJoint
 end
 end MathlibAnalytic
@@ -430,3 +580,8 @@ end MGAP4D
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FG_originalWilsonRelativeResponseConditionalSquare_pairHaar_integrable
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FG_originalWilsonPosteriorEnergy_eq_pairHaarConditionalRMS
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FG_originalPhysicalLinkDefect_eq_half_pairHaarConditionalRMS
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FG_originalWilsonPairHaarConditionalRMS_mean_le_relativeSupSq
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FG_originalPhysicalRestrictedEnergy_eq_pairHaarConditionalRMSPatch
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FG_originalWilsonPairHaarConditionalRMSPatch_le_FF_threeWay
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FG_originalWilsonPhysicalGram_rayleigh_eq_pairHaarConditionalRMS
