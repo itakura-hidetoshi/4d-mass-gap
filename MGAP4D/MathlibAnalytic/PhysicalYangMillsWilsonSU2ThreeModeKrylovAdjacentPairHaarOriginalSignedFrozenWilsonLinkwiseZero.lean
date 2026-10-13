@@ -105,7 +105,9 @@ theorem fineRightKrylovOriginalWilsonPosteriorResampling_each_eq_zero_of_frozenB
         (beta n) (hbeta n) k O = 2 * ‖V F - Q k (V F)‖ ^ 2 at hEnergy
     rw [hEnergy]
     positivity
-  exact (Fintype.sum_eq_zero_iff_of_nonneg hNonneg).mp hSum e
+  have hFunction := (Fintype.sum_eq_zero_iff_of_nonneg hNonneg).mp hSum
+  have hAtLink := congrFun hFunction e
+  simpa using hAtLink
 
 /-- The genuine frozen-original-Wilson one-link projection fixes
 the signed physical fine-right receiver at EVERY ACTUAL right link,
