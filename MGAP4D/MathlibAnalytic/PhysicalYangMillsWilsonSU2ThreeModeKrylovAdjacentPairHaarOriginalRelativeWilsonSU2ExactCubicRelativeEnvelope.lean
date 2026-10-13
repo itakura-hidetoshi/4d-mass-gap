@@ -84,7 +84,7 @@ private theorem p4Q2ET_twelve_div_actualColorCard
   rw [p4Q2ET_selectedColorCard_real]
   have hden : (H + 1 : ℝ) ^ 3 ≠ 0 := by positivity
   field_simp
-  <;> ring
+  ring
 
 /-- ANY real relative AW >= κ D12 comparison coefficient holding on
 this actual SU(2) gauge-invariant physical Wilson witness satisfies
