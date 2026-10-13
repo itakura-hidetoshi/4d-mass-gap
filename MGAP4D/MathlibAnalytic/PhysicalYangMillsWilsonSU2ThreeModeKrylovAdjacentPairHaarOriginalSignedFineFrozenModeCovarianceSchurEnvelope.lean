@@ -235,7 +235,6 @@ theorem p4Q2EY_originalSignedModeCovariance_absRow_le_cubicSmallBeta
           ∑ j : Fin (r + 1), T j ^ 2) := by
     simp only [mul_add, Finset.sum_add_distrib, ← Finset.mul_sum]
     simp [nsmul_eq_mul]
-    ring
   exact hRow.trans_eq hSum
 
 end GroundStatePosteriorJoint
