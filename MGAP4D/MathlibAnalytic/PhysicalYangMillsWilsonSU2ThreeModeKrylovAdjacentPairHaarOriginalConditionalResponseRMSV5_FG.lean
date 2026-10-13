@@ -193,6 +193,229 @@ theorem p4Q2FG_originalWilsonRelativeResponse_eq_zero_beta_zero
   have hzero : ‖B‖ = 0 := le_antisymm hbound (norm_nonneg _)
   exact norm_eq_zero.mp hzero
 
+
+/-- The exact pointwise (PAIR-HAAR ALMOST EVERYWHERE) cancellation of
+the original normalized Wilson joint density and the original
+continuous positive half-density/vacuum ratio. The exceptional set
+of the historical L² vacuum representative is not erased. -/
+theorem p4Q2FG_originalWilsonJointDensity_times_relativeWeight_sq_ae_eq
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta) :
+    let μ := periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N
+    let w := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight
+      H N hN beta hbeta
+    let W := normalizedPhysicalOneSlabJointHalfDensityWeightBCF H N hN beta hbeta
+    let V := normalizedPhysicalOneSlabContinuousVacuumInverseBCF H N hN beta hbeta
+    let L : ℝ := ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+      H N hN beta hbeta‖⁻¹
+    (fun z => w z * (W z * V z.2) ^ 2) =ᵐ[μ] (fun _ => L ^ 2) := by
+  let μ := periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N
+  let w := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight
+    H N hN beta hbeta
+  let Ω := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+    H N hN beta hbeta
+  let W := normalizedPhysicalOneSlabJointHalfDensityWeightBCF H N hN beta hbeta
+  let V := normalizedPhysicalOneSlabContinuousVacuumInverseBCF H N hN beta hbeta
+  let L : ℝ := ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+    H N hN beta hbeta‖⁻¹
+  have hwPos : ∀ᵐ z ∂μ, 0 < w z :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight_ae_pos
+      H N hN beta hbeta
+  have hDensity :
+      (fun z => continuousJointSqrtDensity H N hN beta hbeta z) =ᵐ[μ]
+      (fun z => periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointSqrtDensity
+        H N hN beta hbeta z) :=
+    continuousJointSqrtDensity_ae_eq H N hN beta hbeta
+  change (fun z => w z * (W z * V z.2) ^ 2) =ᵐ[μ] (fun _ => L ^ 2)
+  filter_upwards [hwPos, hDensity] with z hw hD
+  have hΩ : Ω z.2 ≠ 0 :=
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_pos
+      H N hN beta hbeta z.2).ne'
+  have hSqrt : Real.sqrt (w z) ≠ 0 :=
+    (Real.sqrt_pos.2 hw).ne'
+  have hDen :
+      continuousJointSqrtDensity H N hN beta hbeta z =
+        Real.sqrt (w z) := by
+    rw [hD]
+    rfl
+  change w z * (((L * Ω z.2) /
+    continuousJointSqrtDensity H N hN beta hbeta z) *
+      (Ω z.2)⁻¹) ^ 2 = L ^ 2
+  rw [hDen]
+  calc
+    w z * (((L * Ω z.2) / Real.sqrt (w z)) * (Ω z.2)⁻¹) ^ 2 =
+        (Real.sqrt (w z)) ^ 2 *
+          (((L * Ω z.2) / Real.sqrt (w z)) * (Ω z.2)⁻¹) ^ 2 := by
+            rw [Real.sq_sqrt hw.le]
+    _ = L ^ 2 := by field_simp [hΩ, hSqrt]
+
+/-- The conditional response square is an ACTUALLY INTEGRABLE function
+on the original pair-Haar outer carrier, not a merely totalized
+nonmeasurable integral. The proof transports the existing genuine
+Wilson resampling-square integrability and uses the strictly
+positive continuous density-cancellation weight. -/
+theorem p4Q2FG_originalWilsonRelativeResponseConditionalSquare_pairHaar_integrable
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+    (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+    Integrable
+      (p4Q2FG_originalWilsonRelativeResponseConditionalSquare H N hN beta hbeta f e)
+      (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) := by
+  let μ := periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N
+  let ν := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointMeasure
+    H N hN beta hbeta
+  let W := normalizedPhysicalOneSlabJointHalfDensityWeightBCF H N hN beta hbeta
+  let V := normalizedPhysicalOneSlabContinuousVacuumInverseBCF H N hN beta hbeta
+  let B := p4Q2FF_originalWilsonRelativeSignedLinkResponseBCF H N hN beta hbeta f e
+  let O := normalizedPhysicalOneSlabJointReceiverProductBCF H N hN beta hbeta f
+  let q : (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) → ℝ :=
+    fun z => W z * V z.2
+  let D := posteriorResamplingSquare H N hN beta hbeta e O
+  let M2 := p4Q2FG_originalWilsonRelativeResponseConditionalSquare H N hN beta hbeta f e
+  letI : IsProbabilityMeasure μ := by
+    dsimp [μ, periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure,
+      periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure]
+    infer_instance
+  have hAC : μ ≪ ν :=
+    periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure_absolutelyContinuous_groundStateJointMeasure
+      H N hN beta hbeta
+  have hDStrong : AEStronglyMeasurable D μ :=
+    (posteriorResamplingSquare_integrable H N hN beta hbeta e O).aestronglyMeasurable.mono_ac hAC
+  have hQStrong : AEStronglyMeasurable (fun z => q z ^ 2) μ := by
+    have hc :
+        Continuous (fun z : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+          PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N => q z ^ 2) := by
+      dsimp [q]
+      exact (W.continuous.mul (V.continuous.comp continuous_snd)).pow 2
+    exact hc.aestronglyMeasurable
+  have hRatio (z : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
+      D z / (q z) ^ 2 = M2 z := by
+    have hq : 0 < q z :=
+      p4Q2FF_originalWilsonDensityCancellationWeight_pos H N hN beta hbeta z
+    have hExact :=
+      p4Q2FG_originalWilsonPosteriorSquare_eq_weight_sq_conditionalRMS
+        H N hN beta hbeta f e z
+    change D z = (q z) ^ 2 * M2 z at hExact
+    apply (div_eq_iff (pow_ne_zero 2 hq.ne')).2
+    rw [hExact]
+    ring
+  have hM2Strong : AEStronglyMeasurable M2 μ := by
+    apply (hDStrong.div₀ hQStrong).congr
+    exact Filter.Eventually.of_forall hRatio
+  have hBound (z : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N) :
+      ‖M2 z‖ ≤ ‖B‖ ^ 2 := by
+    have hNonneg :=
+      p4Q2FG_originalWilsonRelativeResponseConditionalSquare_nonneg
+        H N hN beta hbeta f e z
+    have hLe :=
+      p4Q2FG_originalWilsonRelativeResponseConditionalSquare_le_relativeSupSq
+        H N hN beta hbeta f e z
+    rw [Real.norm_eq_abs, abs_of_nonneg hNonneg]
+    exact hLe
+  exact (integrable_const (‖B‖ ^ 2)).mono'
+    hM2Strong (Filter.Eventually.of_forall hBound)
+
+/-- EXACT original Wilson two-copy right-link posterior energy =
+inverse transfer-norm squared times the PAIR-HAAR OUTER average of the
+genuine original Wilson CONDITIONAL response RMS. The conditional
+probability nu_original(e,z) is NEVER replaced by independent Haar;
+only the outer density cancels through the already-verified authentic
+original Wilson half-density identity. -/
+theorem p4Q2FG_originalWilsonPosteriorEnergy_eq_pairHaarConditionalRMS
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+    (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+    posteriorResamplingEnergy H N hN beta hbeta e
+      (normalizedPhysicalOneSlabJointReceiverProductBCF H N hN beta hbeta f) =
+    (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+      H N hN beta hbeta‖⁻¹) ^ 2 *
+      (∫ z, p4Q2FG_originalWilsonRelativeResponseConditionalSquare
+        H N hN beta hbeta f e z
+        ∂periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) := by
+  let μ := periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N
+  let w := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight
+    H N hN beta hbeta
+  let rho : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N ×
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H N → ENNReal :=
+    fun z => ENNReal.ofReal (w z)
+  let W := normalizedPhysicalOneSlabJointHalfDensityWeightBCF H N hN beta hbeta
+  let V := normalizedPhysicalOneSlabContinuousVacuumInverseBCF H N hN beta hbeta
+  let O := normalizedPhysicalOneSlabJointReceiverProductBCF H N hN beta hbeta f
+  let M2 := p4Q2FG_originalWilsonRelativeResponseConditionalSquare H N hN beta hbeta f e
+  let L : ℝ := ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+    H N hN beta hbeta‖⁻¹
+  have hwStrong : AEStronglyMeasurable w μ :=
+    (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight_integrable
+      H N hN beta hbeta).aestronglyMeasurable
+  have hrhoMeas : AEMeasurable rho μ :=
+    hwStrong.aemeasurable.ennreal_ofReal
+  have hrhoTop : ∀ᵐ z ∂μ, rho z < (⊤ : ENNReal) := by
+    filter_upwards with z
+    simp [rho]
+  have hwPos : ∀ᵐ z ∂μ, 0 < w z :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGroundStateJointNormalizedWeight_ae_pos
+      H N hN beta hbeta
+  have hCancel :
+      (fun z => w z * (W z * V z.2) ^ 2) =ᵐ[μ] (fun _ => L ^ 2) :=
+    p4Q2FG_originalWilsonJointDensity_times_relativeWeight_sq_ae_eq
+      H N hN beta hbeta
+  change
+    (∫ z, posteriorResamplingSquare H N hN beta hbeta e O z ∂(μ.withDensity rho)) =
+      L ^ 2 * (∫ z, M2 z ∂μ)
+  calc
+    (∫ z, posteriorResamplingSquare H N hN beta hbeta e O z ∂(μ.withDensity rho)) =
+        ∫ z, (rho z).toReal •
+          posteriorResamplingSquare H N hN beta hbeta e O z ∂μ :=
+      integral_withDensity_eq_integral_toReal_smul₀ hrhoMeas hrhoTop _
+    _ = ∫ z, L ^ 2 * M2 z ∂μ := by
+      apply integral_congr_ae
+      filter_upwards [hwPos, hCancel] with z hw hC
+      simp only [smul_eq_mul]
+      dsimp [rho]
+      rw [ENNReal.toReal_ofReal hw.le]
+      have hPoint :=
+        p4Q2FG_originalWilsonPosteriorSquare_eq_weight_sq_conditionalRMS
+          H N hN beta hbeta f e z
+      change posteriorResamplingSquare H N hN beta hbeta e O z =
+        (W z * V z.2) ^ 2 * M2 z at hPoint
+      rw [hPoint]
+      calc
+        w z * ((W z * V z.2) ^ 2 * M2 z) =
+            (w z * (W z * V z.2) ^ 2) * M2 z := by ring
+        _ = L ^ 2 * M2 z := by rw [hC]
+    _ = L ^ 2 * (∫ z, M2 z ∂μ) := integral_const_mul _ _
+
+/-- NO supremum or new spatial certificate: the original physical
+link defect is EXACTLY half the original inverse-transfer squared
+pair-Haar OUTER integral of genuine Wilson conditional RMS. -/
+theorem p4Q2FG_originalPhysicalLinkDefect_eq_half_pairHaarConditionalRMS
+    (H N : ℕ) (hN : 0 < N) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H N)
+    (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+    p4Q2FD_originalPhysicalLinkDefect H N hN beta hbeta f e =
+      (1 / 2 : ℝ) *
+      (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+        H N hN beta hbeta‖⁻¹) ^ 2 *
+      (∫ z, p4Q2FG_originalWilsonRelativeResponseConditionalSquare
+        H N hN beta hbeta f e z
+        ∂periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N) := by
+  have hDefect := p4Q2FD_originalPhysicalLinkDefect_eq_half_posterior
+    H N hN beta hbeta f e
+  have hIntegral := p4Q2FG_originalWilsonPosteriorEnergy_eq_pairHaarConditionalRMS
+    H N hN beta hbeta f e
+  rw [hIntegral] at hDefect
+  calc
+    p4Q2FD_originalPhysicalLinkDefect H N hN beta hbeta f e =
+      (1 / 2 : ℝ) *
+      ((‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+        H N hN beta hbeta‖⁻¹) ^ 2 *
+      (∫ z, p4Q2FG_originalWilsonRelativeResponseConditionalSquare
+        H N hN beta hbeta f e z
+        ∂periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H N)) := hDefect
+    _ = _ := by ring
+
 end GroundStatePosteriorJoint
 end
 end MathlibAnalytic
@@ -202,3 +425,8 @@ end MGAP4D
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FG_originalWilsonRelativeResponseConditionalSquare_le_relativeSupSq
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FG_originalWilsonPosteriorSquare_eq_weight_sq_conditionalRMS
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FG_originalWilsonRelativeResponse_eq_zero_beta_zero
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FG_originalWilsonJointDensity_times_relativeWeight_sq_ae_eq
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FG_originalWilsonRelativeResponseConditionalSquare_pairHaar_integrable
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FG_originalWilsonPosteriorEnergy_eq_pairHaarConditionalRMS
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2FG_originalPhysicalLinkDefect_eq_half_pairHaarConditionalRMS
