@@ -1,6 +1,6 @@
 # MGAP4D — formalization roadmap
 
-**Status: 2026-10-13 JST. Latest theorem-bearing [PR #5504 (EN)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5504) MERGED, authoritative branch theorem-bearing SHA `91b4ed91e225a9d20cc1bc7892941290e1633cbc`, exact source HEAD `1f07489bdec7e40e2b78d63a3618e39c9c3dfd94`, [CI #38323859362](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38323859362) SUCCESS (9683/9683), Changed Lean job `115057918189`, MCP receipt `115058961727`, changed diagnostics zero, five #print axioms without sorryAx. All off-selected genuine interacting Wilson conditional physical colors FIX the SU(2) gauge-invariant relative-link witness; its normalized D12 is exactly its two strictly positive selected conditional residual squares divided by 12. This does NOT identify AW and D12 or prove an H-/spacing-uniform continuum result.**
+**Status: 2026-10-13 JST. Latest theorem-bearing [PR #5506 (P4-Q2-EO)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5506) MERGED at `67e0f6874d8dfc1a02067ca3353f89bbca23a8bf`; exact tested source HEAD `dc5507931e27b8b296b7b90d9e3ae5ebf9f738e8`, [CI #38338446499](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38338446499) SUCCESS 9684/9684; Changed Lean job `115103769852`, MCP receipt `115104852566` SUCCESS, warning/error 0 and six `#print axioms` without `sorryAx`. On the SAME original Wilson physical joint-L² SU(2) gauge-invariant witness: `κ_EC(H,beta,m,M)*E12_phys ≤ QW ≤ 12*E12_phys`, and both exact selected supports are retained separately. No H-/spacing-uniform or continuum mass gap is claimed.**
 
 **Current theorem achievement:** DV full original Wilson Riesz quadratic coercivity, DW true Loewner and separate D12 bilateral comparison, DX boundedly invertible original orthogonal restriction with real spectrum in `[κ_R,12]`, and **DY typed original DQ/DF finite-volume mass/variance coefficient; DZ restores the literal factor 12 from normalized Haar reference to the unnormalized ORIGINAL Wilson Riesz sum with improved same-witness whole-L², Loewner and anti-Lipschitz estimates**. DU separately proves the normalized physical D12 restricted gap.
 
@@ -8,7 +8,7 @@
 
 **EL #5500 closed the genuine SU(2) original Wilson two-link reference support:** true AZ/BB mass-weighted Haar variance zero on all off-target links, true selected right and left support, original 12-color sum and normalized reference with actual 1/12 and 6-color cardinality factors, unnormalized real reference and full Wilson joint-L² Riesz quadratic. These do not identify AW with interacting D12 or supply an H-uniform continuum gap.
 
-**EM #5502 proves strict selected true physical Wilson conditional residual positivity; EN #5504 subsequently closes true off-selected physical conditional fixedness and exact strictly positive normalized two-color D12. EL's AW Haar-reference energy is distinct, and EO quantitative comparison is OPEN.**
+**EL–EO #5500–#5506 are CLOSED in their distinct scopes:** EL original Wilson two selected-link Haar-reference exact support, EM positive both selected genuinely interacting conditional defects, EN all off-selected physical color conditional fixedness and exactly two selected physical D12 residual terms, EO genuine same-witness physical joint-L² bilateral AW-vs-D12 with the finite-H original Wilson EC coefficient. EP explicit selected-term comparison is next; H-/spacing-uniform signed Krylov and continuum remain OPEN.
 
 Read [README.md](README.md) for definitions, exact Wilson-versus-Haar normalization, core theorem, and reproduction command.
 
@@ -17,14 +17,14 @@ Read [README.md](README.md) for definitions, exact Wilson-versus-Haar normalizat
 | Field | Verified checkpoint |
 | --- | --- |
 | Only theorem-authoritative repository / branch | `itakura-hidetoshi/4d-mass-gap` / `formal/real-hilbert-uniform-coercive-strong-limit` |
-| Latest theorem-bearing merged PR | [#5504](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5504), merge SHA `91b4ed91e225a9d20cc1bc7892941290e1633cbc` |
-| Exact-tested PR #5504 source HEAD | `1f07489bdec7e40e2b78d63a3618e39c9c3dfd94` |
+| Latest theorem-bearing merged PR | [#5506](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5506), merge SHA `67e0f6874d8dfc1a02067ca3353f89bbca23a8bf` |
+| Exact-tested PR #5506 source HEAD | `dc5507931e27b8b296b7b90d9e3ae5ebf9f738e8` |
 | Lean / mathlib | `v4.30.0-rc2` / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
-| Exact-source-head CI | [#38323859362](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38323859362) SUCCESS |
-| Changed Lean / MCP receipt jobs | `115057918189` / `115058961727`, both SUCCESS |
-| Build and diagnostics | **9683/9683**, EN changed Lean errors/warnings 0, five public #print axioms standard Lean plus inherited hypercubic native_decide only; no sorryAx or new axioms. |
+| Exact-source-head CI | [#38338446499](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38338446499), SUCCESS |
+| Changed Lean / MCP receipt jobs | `115103769852` / `115104852566`, both SUCCESS |
+| Build and diagnostics | **9684/9684**, EO six Lean theorem axioms checked, changed Lean warnings/errors 0, standard Lean plus inherited lattice `native_decide`, `sorryAx` and new axioms absent. |
 
-A later **docs-only merge will move the current canonical branch HEAD** beyond the SHA shown above, but it does not alter the #5504 theorem-bearing result. Observe the branch's fresh exact HEAD for each new PR. GitHub's default `main` is not the theorem authority.
+A later **docs-only merge will move the current canonical branch HEAD** beyond the SHA shown above, but it does not alter the #5506 theorem-bearing result. Observe the branch's fresh exact HEAD for each new PR. GitHub's default `main` is not the theorem authority.
 
 ## 1. Proof status matrix
 
@@ -40,7 +40,7 @@ A later **docs-only merge will move the current canonical branch HEAD** beyond t
 | **P4-Q2 normalized→physical gap** | **#5468–#5472 CLOSED**: DQ true all-coordinate Haar floor; DR physical variance; DS full-`L²` E12 coercivity; DT D12 Loewner; DU positive real spectrum of genuine D12 restriction. | D12 is NOT AW; no H-/spacing-uniform spectrum gap. |
 | **P4-Q2 original Wilson Riesz quantitative gap** | **DV #5473, DW #5475, DX #5476, DY #5478, DZ #5480 CLOSED**: original AW whole L², Loewner/D12 comparison, inverse/spectral band, explicit DQ/DF m,M witness, and **exact 12-fold normalization recovery with improved same-witness L², Loewner and anti-Lipschitz**. | Genuine H-/spacing-uniform gap and Yang–Mills continuum mass gap remain OPEN. |
 | **P4-Q2-EA–EC: sharp universal link comparison → original physical Wilson Riesz** | **EA #5482, EB #5484, EC #5485 CLOSED**: EA exact universal nonnegative six-color sharpness; EB true max-color-card original Wilson normalized Haar reference; EC same original Wilson m,M coefficient improves DZ and controls whole original physical joint L², Loewner and inverse anti-Lipschitz. | Original physical H-/spacing-uniform bounds, admissible gauge-invariant localized Wilson/Haar witnesses and actual color-block comparison remain OPEN. |
-| **P4-Q2-ED–EN: original SU(2) Wilson Haar reference and genuinely interacting physical conditional colors** | **ED–EI:** actual gauge-invariant strict AW; **EJ–EL:** exact original reference two-link support; **EM #5502:** strict selected physical conditional residuals; **EN #5504:** off-selected genuinely interacting physical conditional fixedness and exact positive normalized D12 two-color support. | **EO** AW-vs-D12 same-witness energy comparison, uniform signed Krylov and continuum OPEN. |
+| **P4-Q2-ED–EO: genuine SU(2) Wilson physical and reference witness** | **ED–EI:** gauge witness and original AW positive energy; **EJ–EL:** exact original Wilson two-selected Haar support; **EM–EN:** strict selected interacting physical conditional defects and exact two-color D12; **EO #5506:** original AW/D12 finite-H witness bilateral comparison with explicit true EC Wilson m,M witness. | EP selected-term comparison, H-/spacing-uniform Krylov and continuum OPEN. |
 | **C1 / C2 / C3** | Previous conditional adjacent-scale interfaces and finite-H components. | Actual common-marginal physicality; vector-wise fine→coarse compatibility; explicit summable beta trajectory — **OPEN**. |
 | **H2 / H3 / H4** | Finite-H transfer and spectral infrastructure under precise hypotheses. | Spacing-scaled strongly continuous physical evolution, OS Hamiltonian, continuum Wightman/Yang–Mills mass gap — **OPEN**. |
 
@@ -116,7 +116,7 @@ In DU, the spectrum result follows from **resolvent invertibility** via pinned m
 
 **Keep the order of logic:** original normalized Haar reference ≤ E12 was established earlier; it alone does **not** imply the original Haar reference has a positive lower bound. DQ + DF + DV supply the independent missing direction.
 
-## 3. DW–EC original Riesz; ED–EN exact physical SU(2) color support
+## 3. DW–EC original Riesz; ED–EO genuine SU(2) physical energy comparisons
 
 **P4-Q2-DW [PR #5475] — CLOSED.** On the genuine original Wilson joint physical Hilbert `HW`, DW proves
 
@@ -195,7 +195,10 @@ The TRUE two-boundary relative link `R_e=(A_e)⁻¹ B_e` transforms under the sa
 
 **EN [PR #5504] — CLOSED:** On the SAME genuine gauge-invariant SU(2) relative-link original Wilson physical joint-`L²` observable `f_e`, the five public Lean theorems `p4Q2EN_SU2_offSelectedPhysicalRightColor_fixed`, `p4Q2EN_SU2_offSelectedPhysicalLeftColor_fixed`, `p4Q2EN_SU2_originalPhysicalTwelveColorSum_eq_selectedTwo`, `p4Q2EN_SU2_originalPhysicalD12_eq_selectedTwo`, and `p4Q2EN_SU2_originalPhysicalD12_pos` show that every off-selected right/left six-color original interacting conditional expectation fixes `f_e`; the entire physical twelve-color residual sum has exactly two selected terms, and `E12_phys(f_e)=(1/12)*(||f_e-P^W_(R,c(e))f_e||²+||f_e-P^W_(L,c(e))f_e||²)>0`. Actual retained-sigma strong measurability, Wilson `lpMeas` subspace membership and physical `condExpL2` orthogonal fixedness are used, not independent pair-Haar CR. EN differs from EL's original Haar-reference AW two-link formula. Exact tested source HEAD `1f07489bdec7e40e2b78d63a3618e39c9c3dfd94` and CI #38323859362 SUCCESS 9683/9683, changed Lean warnings/errors zero; source `OriginalRelativeWilsonSU2PhysicalOffColorD12Support.lean` (full common prefix).
 
-**Next OPEN EO:** prove an exact quantitative same-SU(2)-observable AW/D12 comparison using AZ/BB/BC one-direction inequalities and the separate EL/EN two-selected-support identities. Preserve selected-color link cardinality and actual Wilson mass lower witnesses, operator distinctions and the native 1/12 normalization. H-/spacing-uniform signed Krylov Gram, C1/C2/C3, H2/H3/H4 continuum claims all remain OPEN.
+**EO [PR #5506] — CLOSED, same-genuine-Wilson SU(2) witness bilateral AW/D12 comparison.** For the **same** original Wilson physical joint-`L²` gauge-invariant SU(2) relative-link witness `f_e`, six checked Lean theorems show `κ_EC(H,beta,m,M) * E12_phys(f_e) ≤ QW(f_e) ≤ 12 * E12_phys(f_e)` with the actual typed EC coefficient for some true Wilson `m>0`, `M≥0`, and `κ_EC>0`. EN identifies the upper expression `12*E12_phys(f_e)` exactly with the TWO strictly positive selected interacting right/left color conditional residual squares, while EL independently identifies `QW(f_e)` with the actual two selected original Wilson Haar references divided by the TRUE selected-color link cardinality `L_{c(e)}(H)` (ENNReal normalization and `toReal`). The same law is retained: original Haar-reference Riesz `AW`, interacting physical normalized conditional `D12`, and independent pair-Haar are NOT identified. The six new declarations are `p4Q2EO_SU2_originalRiesz_le_twoSelectedPhysicalDefects`, `p4Q2EO_SU2_physicalD12_le_originalRiesz_positiveCoefficient`, `p4Q2EO_SU2_originalRiesz_physicalD12_selectedBilateral`, `p4Q2EO_SU2_physicalD12_le_originalRiesz_explicitWilsonMass`, `p4Q2EO_SU2_explicitWilsonMass_selectedPhysicalBilateral`, `p4Q2EO_SU2_exactOriginalHaarAndInteractingD12_twoSupport`. Exact tested source `dc5507931e27b8b296b7b90d9e3ae5ebf9f738e8`; [CI #38338446499](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38338446499) SUCCESS 9684/9684, Changed Lean job `115103769852` and MCP receipt `115104852566` SUCCESS, changed-file errors/warnings 0, six `#print axioms` without `sorryAx` (standard Lean axioms/inherited lattice `native_decide` only); theorem-bearing squash SHA `67e0f6874d8dfc1a02067ca3353f89bbca23a8bf`. **Next EP:** derive explicit genuinely interacting two-color physical defect versus selected-link mass-weighted Haar-reference inequalities with all factors preserved, then tackle original physical H-/spacing-uniform signed Krylov Gram. This is NOT a proof of uniform-in-H gap, continuum YM, or C1/C2/C3/H2/H3/H4.
+
+
+**Historical EO objective CLOSED at PR #5506. Next EP:** instantiate the exact original Wilson selected right/left mass-weighted Haar references and genuine interacting physical two-color residuals in one new inequality retaining `L_{c(e)}(H)`, the native twelve normalization and EC's typed finite-volume original Wilson mass witnesses; do NOT substitute pair-Haar CR or assume H-/spacing-uniformity. Remaining C1/C2/C3 and H2/H3/H4 are OPEN.
 
 
 **Still OPEN:** physical signed fine/frozen Krylov Gram uniformity; C1 common-marginal physicality, C2 vector-wise reconstruction, C3 summable genuine beta trajectory; H2 spacing-scaled nontrivial evolution, H3 OS Hamiltonian, H4 4D Yang–Mills continuum existence and positive mass gap.
@@ -306,11 +309,12 @@ All sources below are under `MGAP4D/MathlibAnalytic/` and share the `PhysicalYan
 | **Genuine original Wilson off-target AZ/BB Haar variance zero and exactly two selected physical link support: normalized 12-color, unnormalized REAL and Riesz** | **`OriginalRelativeWilsonSU2OffTargetWilsonVarianceTwoLinkSupport`** | **#5500** |
 | **True interacting Wilson selected left/right physical twelve-color conditional residual strict positivity** | **`OriginalRelativeWilsonSU2InteractingPhysicalColorStrictEnergy`** | **#5502** |
 | **Actual off-selected interacting Wilson physical conditional fixedness; exact positive normalized D12 two-color sum** | **`OriginalRelativeWilsonSU2PhysicalOffColorD12Support`** | **#5504** |
+| **Genuine finite-H SU(2) original Haar AW versus interacting physical D12 bilateral, exact two supports and actual EC mass coefficient** | **`OriginalRelativeWilsonSU2PhysicalEnergyBilateralBridge`** | **#5506** |
 
 Minimal latest Lean target after checking out the newly observed authoritative branch:
 
 ```bash
-lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalRelativeWilsonSU2PhysicalOffColorD12Support
+lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalRelativeWilsonSU2PhysicalEnergyBilateralBridge
 ```
 
 **Proof-integrity process:** exact authoritative branch SHA first; exact Lean file, dependencies and physical definitions second; docs and exact-source-head CI after that. Inspect the full error context and pinned mathlib syntax, not just the highlighted line. No new `sorry`, `admit`, `axiom` or hidden synthetic physical laws. Preserve true original sum/average normalization, and explicitly report nonfatal warnings (DV had four). Use targeted changed-Lean CI and reusable pinned caches where possible; do not rebuild the entire project needlessly. For a documentation-only update, modify **only README.md and ROADMAP.md** and do not present its resulting merge SHA as a new theorem-bearing checkpoint.
