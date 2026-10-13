@@ -224,6 +224,106 @@ theorem p4Q2EZ_originalModeCovariance_trace_le_smallBeta
     _ = C * (∑ i : Fin (r + 1), F i ^ 2) := by
       rw [Finset.mul_sum]
 
+
+/-- Sharpen EY's sum-of-squares covariance entry envelope to a
+multiplicative *physical* mode-norm envelope by the authentic signed
+Gram Cauchy--Schwarz inequality. The finite cubic volume remains. -/
+theorem p4Q2EZ_originalModeCovariance_abs_le_geometricSmallBeta
+    {halfExtent : ℕ → ℕ} {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
+    (n r : ℕ) (i j : Fin (r + 1))
+    (hSmall : beta n ≤ (1 : ℝ) / 8) :
+    |fineRightKrylovOriginalPosteriorModeCovariance
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+      n r i j| ≤
+    3072 * (halfExtent (n + 1) + 1 : ℝ) ^ 3 * (beta n) ^ 2 *
+      (p4Q2EY_originalWilsonRightModeNormFactor
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+        n r i) *
+      (p4Q2EY_originalWilsonRightModeNormFactor
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+        n r j) := by
+  let G (a b : Fin (r + 1)) : ℝ :=
+    fineRightKrylovOriginalPosteriorModeCovariance
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r a b
+  let F (a : Fin (r + 1)) : ℝ :=
+    p4Q2EY_originalWilsonRightModeNormFactor
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r a
+  let C : ℝ :=
+    3072 * (halfExtent (n + 1) + 1 : ℝ) ^ 3 * (beta n) ^ 2
+  have hFi : 0 ≤ F i :=
+    fineRightKrylovOriginalSignedSourceVacuumFactor_nonneg
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+      n r (p4Q2EY_originalRightModeBasis r i)
+  have hFj : 0 ≤ F j :=
+    fineRightKrylovOriginalSignedSourceVacuumFactor_nonneg
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+      n r (p4Q2EY_originalRightModeBasis r j)
+  have hDiagI : G i i ≤ C * F i ^ 2 :=
+    p4Q2EZ_originalModeCovariance_diag_le_smallBeta
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+      n r i hSmall
+  have hDiagJ : G j j ≤ C * F j ^ 2 :=
+    p4Q2EZ_originalModeCovariance_diag_le_smallBeta
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+      n r j hSmall
+  have hDiagJNonneg : 0 ≤ G j j :=
+    p4Q2EZ_originalModeCovariance_diag_nonneg
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+      n r j
+  have hProduct :
+      G i i * G j j ≤ (C * F i ^ 2) * (C * F j ^ 2) :=
+    mul_le_mul hDiagI hDiagJ hDiagJNonneg (by positivity)
+  have hGram : (G i j) ^ 2 ≤ G i i * G j j :=
+    p4Q2EZ_originalModeCovariance_sq_le_diag_mul
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+      n r i j
+  have hSquare : |G i j| ^ 2 ≤ (C * F i * F j) ^ 2 := by
+    calc
+      |G i j| ^ 2 = (G i j) ^ 2 := sq_abs _
+      _ ≤ G i i * G j j := hGram
+      _ ≤ (C * F i ^ 2) * (C * F j ^ 2) := hProduct
+      _ = (C * F i * F j) ^ 2 := by ring
+  exact (sq_le_sq₀ (abs_nonneg _) (by positivity)).mp hSquare
+
+/-- Genuine signed Schur row with the GEOMETRIC physical mode factors:
+the explicit extra (r+1)*F_i^2 from EY's arithmetic-mean row estimate
+is replaced by the actual l1 sum of the positive mode norm factors.
+This still does not certify the sum or spatial volume uniformly. -/
+theorem p4Q2EZ_originalSignedModeCovariance_absRow_le_geometricSmallBeta
+    {halfExtent : ℕ → ℕ} {beta : ℕ → ℝ} {hbeta : ∀ n, 0 ≤ beta n}
+    (n r : ℕ) (i : Fin (r + 1))
+    (hSmall : beta n ≤ (1 : ℝ) / 8) :
+    (∑ j : Fin (r + 1),
+      |fineRightKrylovOriginalPosteriorModeCovariance
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+        n r i j|) ≤
+    3072 * (halfExtent (n + 1) + 1 : ℝ) ^ 3 * (beta n) ^ 2 *
+      (p4Q2EY_originalWilsonRightModeNormFactor
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+        n r i) *
+      (∑ j : Fin (r + 1),
+        p4Q2EY_originalWilsonRightModeNormFactor
+          (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+          n r j) := by
+  classical
+  let C : ℝ := 3072 * (halfExtent (n + 1) + 1 : ℝ) ^ 3 * (beta n) ^ 2
+  let F (j : Fin (r + 1)) : ℝ :=
+    p4Q2EY_originalWilsonRightModeNormFactor
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r j
+  calc
+    (∑ j : Fin (r + 1),
+      |fineRightKrylovOriginalPosteriorModeCovariance
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+        n r i j|) ≤
+      ∑ j : Fin (r + 1), (C * F i) * F j := by
+        apply Finset.sum_le_sum
+        intro j _hj
+        exact p4Q2EZ_originalModeCovariance_abs_le_geometricSmallBeta
+          (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+          n r i j hSmall
+    _ = (C * F i) * (∑ j : Fin (r + 1), F j) := by
+      rw [Finset.mul_sum]
+
 end GroundStatePosteriorJoint
 end
 end MathlibAnalytic
@@ -235,3 +335,6 @@ end MGAP4D
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2EZ_originalModeCovariance_zero_row_of_zero_diag
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2EZ_originalModeCovariance_diag_le_smallBeta
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2EZ_originalModeCovariance_trace_le_smallBeta
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2EZ_originalModeCovariance_abs_le_geometricSmallBeta
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2EZ_originalSignedModeCovariance_absRow_le_geometricSmallBeta
