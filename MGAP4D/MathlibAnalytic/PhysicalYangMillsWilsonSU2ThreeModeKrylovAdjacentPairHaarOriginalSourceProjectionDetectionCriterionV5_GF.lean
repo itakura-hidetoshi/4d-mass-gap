@@ -58,7 +58,7 @@ theorem p4Q2GF_originalWilsonSourceProjectionGramScale_pos
         H 2 (by norm_num) beta (le_of_lt hbeta)‖⁻¹) ^ 2 *
       (Real.exp (-16 * beta) *
         (Real.exp (-32 * beta) *
-          (beta ^ 2 * p4Q2FZ_originalSU2TemporalWilsonContrastHaarVariance)) := by
+          (beta ^ 2 * p4Q2FZ_originalSU2TemporalWilsonContrastHaarVariance))) := by
   have hT : 0 < ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
         H 2 (by norm_num) beta (le_of_lt hbeta)‖ :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos_from_uniform_kernel_floor
