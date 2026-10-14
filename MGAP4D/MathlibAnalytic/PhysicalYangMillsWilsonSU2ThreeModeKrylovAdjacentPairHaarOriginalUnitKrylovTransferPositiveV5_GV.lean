@@ -66,47 +66,41 @@ local instance p4Q2GVUnit_haarProbability (H : ℕ) :
 
 namespace GroundStatePosteriorJoint
 
-/-- The ORIGINAL finite-volume Wilson kernel is uniformly strictly
-positive on the compact pair of physical SU(2) spatial configurations.
-The integral against actual normalized Haar therefore inherits an
-explicit finite-volume output-uniform floor, before any L² representative
-or physical-source coercion is unfolded. -/
-theorem p4Q2GVUnit_originalKernelIntegral_exists_uniformFloor
-    (H : ℕ) (beta : ℝ) :
-    ∃ m : ℝ, 0 < m ∧
-      ∀ B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
-        m ≤ ∫ A,
-          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-            H 2 beta A B
-          ∂periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2 := by
+/-- For the ACTUAL compact SU(2) spatial Haar reference measure,
+the ORIGINAL strictly positive continuous Wilson one-slab kernel
+has strictly positive integral at every RIGHT boundary configuration.
+This does NOT replace the interacting Wilson posterior by Haar:
+Haar is only the transfer kernel's literal integration reference. -/
+theorem p4Q2GVUnit_originalKernelIntegral_pos
+    (H : ℕ) (beta : ℝ)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    0 < ∫ A,
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+        H 2 beta A B
+      ∂periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2 := by
   let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
-  let K := periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta
-  obtain ⟨m, hmpos, hKernel⟩ :=
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_exists_uniform_pos_lower_bound
-      H 2 beta
-  refine ⟨m, hmpos, ?_⟩
-  intro B
-  have hContinuous :
-      Continuous (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 =>
-        K A B) :=
+  let K : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 → ℝ :=
+    fun A => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta A B
+  have hContinuous : Continuous K :=
     (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
       H 2 beta).comp (continuous_id.prodMk continuous_const)
-  have hIntegrable :
-      Integrable (fun A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 =>
-        K A B) μ :=
+  have hIntegrable : Integrable K μ :=
     hContinuous.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
-  have hConstantInt :
-      (∫ _A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
-        m ∂μ) = m := by
+  have hKPos (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+      0 < K A :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
+      H 2 beta A B
+  change 0 < ∫ A, K A ∂μ
+  rw [integral_pos_iff_support_of_nonneg]
+  · have hSupport : Function.support K = Set.univ := by
+      ext A
+      simp only [Function.mem_support, Set.mem_univ, iff_true]
+      exact (hKPos A).ne'
+    rw [hSupport]
     simp
-  have hCompare :
-      (∫ _A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
-        m ∂μ) ≤ ∫ A, K A B ∂μ := by
-    apply integral_mono (integrable_const _) hIntegrable
-    intro A
-    exact hKernel A B
-  rw [hConstantInt] at hCompare
-  exact hCompare
+  · intro A
+    exact (hKPos A).le
+  · exact hIntegrable
 
 /-- The actual physical gauge-invariant constant unit is Haar-a.e.
 one. Consequently its ORIGINAL smoothed Wilson transfer integral is
@@ -134,29 +128,6 @@ theorem p4Q2GVUnit_originalPhysicalUnit_transfer_eq_kernelIntegral
   filter_upwards [hUnitAE] with A hA
   simp only [hA, mul_one]
 
-/-- Unconditional FINITE-VOLUME physical unit transfer floor.
-This follows from TWO independently certified statements: the positive
-original kernel integral and the actual physical L² constant-unit
-representative. No source-frame assumption is introduced. -/
-theorem p4Q2GV_originalPhysicalUnit_transferIntegral_exists_uniformFloor
-    (H : ℕ) (beta : ℝ) :
-    ∃ m : ℝ, 0 < m ∧
-      ∀ B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
-        m ≤ decomposableOneSliceTransferIntegral H 2 beta
-          (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2) B := by
-  obtain ⟨m, hmpos, hmLower⟩ :=
-    p4Q2GVUnit_originalKernelIntegral_exists_uniformFloor H beta
-  refine ⟨m, hmpos, ?_⟩
-  intro B
-  calc
-    m ≤ ∫ A,
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta A B
-      ∂periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2 :=
-        hmLower B
-    _ = decomposableOneSliceTransferIntegral H 2 beta
-          (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2) B :=
-      (p4Q2GVUnit_originalPhysicalUnit_transfer_eq_kernelIntegral H beta B).symm
-
 /-- The actual Wilson transfer of the gauge-invariant constant unit is
 strictly positive at EVERY real right boundary configuration and every
 finite volume, independent of the frozen beta sign. -/
@@ -165,9 +136,8 @@ theorem p4Q2GV_originalPhysicalUnit_transferIntegral_pos
     (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
     0 < decomposableOneSliceTransferIntegral H 2 beta
       (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2) B := by
-  obtain ⟨m, hmpos, hmLower⟩ :=
-    p4Q2GV_originalPhysicalUnit_transferIntegral_exists_uniformFloor H beta
-  exact lt_of_lt_of_le hmpos (hmLower B)
+  rw [p4Q2GVUnit_originalPhysicalUnit_transfer_eq_kernelIntegral]
+  exact p4Q2GVUnit_originalKernelIntegral_pos H beta B
 
 /-- No ad hoc positive source input is required for the ORIGINAL
 Wilson constant-unit response: it is strict negative at the genuine
@@ -247,9 +217,8 @@ end
 end MathlibAnalytic
 end MGAP4D
 
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GVUnit_originalKernelIntegral_exists_uniformFloor
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GVUnit_originalKernelIntegral_pos
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GVUnit_originalPhysicalUnit_transfer_eq_kernelIntegral
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GV_originalPhysicalUnit_transferIntegral_exists_uniformFloor
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GV_originalPhysicalUnit_transferIntegral_pos
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GV_originalPhysicalUnit_twoBoundaryResponse_strict_neg
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GV_originalPhysicalUnit_twoBoundaryHaarMass_pos
