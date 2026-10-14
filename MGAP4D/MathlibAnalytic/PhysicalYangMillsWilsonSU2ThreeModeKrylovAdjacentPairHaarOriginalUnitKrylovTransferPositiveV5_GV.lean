@@ -39,8 +39,8 @@ open MeasureTheory
 open scoped ENNReal InnerProductSpace BigOperators
 
 noncomputable section
-set_option maxHeartbeats 1900000
-set_option synthInstance.maxHeartbeats 760000
+set_option maxHeartbeats 9000000
+set_option synthInstance.maxHeartbeats 2000000
 
 local instance p4Q2GVUnit_topologicalGroup :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
