@@ -78,7 +78,6 @@ private theorem p4Q2GA_abs_log_sub_log_le_abs_sub_div_lower
         Real.log_le_sub_one_of_pos (div_pos hx hy)
       _ = (x - y) / y := by
         field_simp [hy.ne']
-        ring
       _ ≤ |x - y| / m := by
         apply (div_le_div_iff₀ hy hm).2
         calc
@@ -94,7 +93,6 @@ private theorem p4Q2GA_abs_log_sub_log_le_abs_sub_div_lower
         Real.log_le_sub_one_of_pos (div_pos hy hx)
       _ = (y - x) / x := by
         field_simp [hx.ne']
-        ring
       _ ≤ |y - x| / m := by
         apply (div_le_div_iff₀ hx hm).2
         calc
@@ -135,6 +133,17 @@ theorem p4Q2GA_continuousProbability_centeredSecondMoment_le_uncentered
   have hMeanZero : (∫ x, F x - m ∂μ) = 0 := by
     rw [integral_sub hFInt (integrable_const _)]
     simp [m]
+  have hAdd1 :
+      (∫ x, (F x - m) ^ 2 + 2 * m * (F x - m) ∂μ) =
+        (∫ x, (F x - m) ^ 2 ∂μ) +
+          (∫ x, 2 * m * (F x - m) ∂μ) := by
+    simpa only [Pi.add_apply] using
+      (integral_add hSquareInt hCrossInt)
+  have hAdd2 :
+      (∫ x, ((F x - m) ^ 2 + 2 * m * (F x - m)) + m ^ 2 ∂μ) =
+        (∫ x, (F x - m) ^ 2 + 2 * m * (F x - m) ∂μ) + m ^ 2 := by
+    simpa only [Pi.add_apply, integral_const] using
+      (integral_add (hSquareInt.add hCrossInt) (integrable_const (m ^ 2)))
   have hExpand :
       (∫ x, (F x) ^ 2 ∂μ) =
         (∫ x, (F x - m) ^ 2 ∂μ) +
@@ -145,12 +154,13 @@ theorem p4Q2GA_continuousProbability_centeredSecondMoment_le_uncentered
         apply integral_congr_ae
         filter_upwards with x
         ring
+      _ = (∫ x, (F x - m) ^ 2 + 2 * m * (F x - m) ∂μ) + m ^ 2 := hAdd2
       _ = (∫ x, (F x - m) ^ 2 ∂μ) +
-          2 * m * (∫ x, F x - m ∂μ) + m ^ 2 := by
-        rw [integral_add (hSquareInt.add hCrossInt) (integrable_const _)]
-        rw [integral_add hSquareInt hCrossInt]
+            (∫ x, 2 * m * (F x - m) ∂μ) + m ^ 2 := by
+        rw [hAdd1]
+      _ = (∫ x, (F x - m) ^ 2 ∂μ) +
+            2 * m * (∫ x, F x - m ∂μ) + m ^ 2 := by
         rw [integral_const_mul]
-        simp
   have hIdentity : (∫ x, (F x) ^ 2 ∂μ) =
       (∫ x, (F x - m) ^ 2 ∂μ) + m ^ 2 := by
     rw [hMeanZero] at hExpand
