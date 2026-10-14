@@ -58,7 +58,7 @@ local instance p4Q2GV_borelSpace :
     BorelSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupBorelSpace 2
 
-private local instance p4Q2GV_haarProbability (H : ℕ) :
+local instance p4Q2GV_haarProbability (H : ℕ) :
     IsProbabilityMeasure
       (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) := by
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
