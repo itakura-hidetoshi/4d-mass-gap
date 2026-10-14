@@ -223,8 +223,13 @@ theorem p4Q2GS_actualFineRightKrylov_twoBoundaryResponse_strict_neg
         (∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)) e
         ((p4Q2FQ_originalSU2LeftPiRotationAtLink Hn e,
           Function.update right e (1 : Gauge)), specialUnitaryTwoRotation Real.pi) < 0 := by
+  have hTransfer' : 0 <
+      decomposableOneSliceTransferIntegral Hn 2 (beta n)
+        (↑(∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)))
+        (Function.update right e (specialUnitaryTwoRotation Real.pi)) := by
+    simpa only [Submodule.coe_sum, Submodule.coe_smul] using hTransfer
   exact p4Q2GS_originalPhysicalSource_twoBoundaryResponse_strict_neg
-    Hn (beta n) (hbeta n) hFrozen _ right e hTransfer
+    Hn (beta n) (hbeta n) hFrozen _ right e hTransfer'
 
 /-- The true fine left-three-mode physical source family inherits the
 same original Wilson source-dependent strict response witness at
