@@ -60,11 +60,11 @@ private theorem p4Q2GD_originalWilsonUpdateRight_joint_continuous
   intro i
   by_cases hi : i = e
   · subst i
-    simpa only [Function.update_same] using
+    simpa using
       (continuous_snd : Continuous (fun t :
         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 ×
           Matrix.specialUnitaryGroup (Fin 2) ℂ => t.2))
-  · simpa only [Function.update_noteq hi] using
+  · simpa [hi] using
       ((continuous_apply i).comp
         (continuous_fst : Continuous (fun t :
           PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 ×
@@ -140,7 +140,6 @@ theorem p4Q2GD_originalWilsonConditionalDensity_joint_measurable
   rw [
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalDensity_eq_groundStateNormalizedDensity,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousGroundStateSpatialLinkNormalizedDensity_eq]
-  rfl
 
 /-- Joint measurability of the exact density difference of GA, with
 physical left identity versus pi rotation at the selected left link. -/
@@ -152,18 +151,11 @@ theorem p4Q2GD_originalWilsonPosteriorContrast_joint_measurable
         Matrix.specialUnitaryGroup (Fin 2) ℂ =>
       p4Q2GB_originalWilsonPosteriorLeftDensityContrast
         H beta hbeta t.1 e t.2) := by
-  change Measurable (fun t =>
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalDensity
-      H 2 (by norm_num) beta hbeta
-      (originalWilsonExplicitIdentityBoundary H) t.1 e t.2 -
-    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalDensity
-      H 2 (by norm_num) beta hbeta
-      (p4Q2FQ_originalSU2LeftPiRotationAtLink H e) t.1 e t.2)
-  exact
-    (p4Q2GD_originalWilsonConditionalDensity_joint_measurable H beta hbeta
+  simpa only [p4Q2GB_originalWilsonPosteriorLeftDensityContrast] using
+    ((p4Q2GD_originalWilsonConditionalDensity_joint_measurable H beta hbeta
       (originalWilsonExplicitIdentityBoundary H) e).sub
     (p4Q2GD_originalWilsonConditionalDensity_joint_measurable H beta hbeta
-      (p4Q2FQ_originalSU2LeftPiRotationAtLink H e) e)
+      (p4Q2FQ_originalSU2LeftPiRotationAtLink H e) e))
 
 /-- The GA squared posterior density-row distance is measurable as
 a function of the actual right physical boundary context. -/
@@ -184,7 +176,9 @@ theorem p4Q2GD_originalWilsonPosteriorContrastHaarSq_measurable
       PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 =>
     ∫ g, (D (right,g)) ^ 2
       ∂normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ)) :=
-    (hD.pow 2).stronglyMeasurable.integral_prod_right.measurable
+    by
+      simpa only [pow_two] using
+        ((hD.mul hD).stronglyMeasurable.integral_prod_right.measurable)
   simpa only [D, p4Q2FX_originalSU2WilsonPosteriorLeftSensitivityHaarSq,
     p4Q2GB_originalWilsonPosteriorLeftDensityContrast] using hIntegral
 
@@ -258,8 +252,12 @@ theorem p4Q2GD_originalPhysicalSourceProjection_sq_integrable
       (mul_pos (pow_pos hbeta 2)
         p4Q2FZ_originalSU2TemporalWilsonContrastHaarVariance_pos))
   have hAMeas : AEStronglyMeasurable A μ :=
-    ((p4Q2GD_originalPhysicalSourceContrastProjection_measurable
-      H beta (le_of_lt hbeta) f e).pow 2).aestronglyMeasurable
+    by
+      simpa only [pow_two] using
+        (((p4Q2GD_originalPhysicalSourceContrastProjection_measurable
+          H beta (le_of_lt hbeta) f e).mul
+          (p4Q2GD_originalPhysicalSourceContrastProjection_measurable
+            H beta (le_of_lt hbeta) f e)).aestronglyMeasurable)
   have hMInt : Integrable M μ :=
     p4Q2FG_originalWilsonRelativeResponseConditionalSquare_pairHaar_integrable
       H 2 (by norm_num) beta (le_of_lt hbeta) f e
@@ -281,9 +279,8 @@ theorem p4Q2GD_originalPhysicalSourceProjection_sq_integrable
     p4Q2FG_originalWilsonRelativeResponseConditionalSquare_nonneg
       H 2 (by norm_num) beta (le_of_lt hbeta) f e z
   have hNonneg : 0 ≤ M z / c := div_nonneg hMnonneg hc.le
-  change ‖A z‖ ≤ ‖M z / c‖
-  rw [Real.norm_eq_abs, Real.norm_eq_abs,
-    abs_of_nonneg (sq_nonneg _), abs_of_nonneg hNonneg]
+  change ‖A z‖ ≤ M z / c
+  rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _)]
   exact hBound
 
 /-- GC's ORIGINAL Wilson finite-patch physical energy lower bound now
