@@ -49,19 +49,19 @@ noncomputable section
 set_option maxHeartbeats 1800000
 set_option synthInstance.maxHeartbeats 730000
 
-local instance p4Q2GU_topologicalGroup :
+local instance p4Q2GUPosterior_topologicalGroup :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup 2
-local instance p4Q2GU_compactSpace :
+local instance p4Q2GUPosterior_compactSpace :
     CompactSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupCompactSpace 2
-local instance p4Q2GU_secondCountable :
+local instance p4Q2GUPosterior_secondCountable :
     SecondCountableTopology (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupSecondCountableTopology 2
-local instance p4Q2GU_measurableSpace :
+local instance p4Q2GUPosterior_measurableSpace :
     MeasurableSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupMeasurableSpace 2
-local instance p4Q2GU_borelSpace :
+local instance p4Q2GUPosterior_borelSpace :
     BorelSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupBorelSpace 2
 
