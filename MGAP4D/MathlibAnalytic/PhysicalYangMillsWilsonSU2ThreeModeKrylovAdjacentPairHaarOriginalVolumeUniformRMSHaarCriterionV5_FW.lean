@@ -105,7 +105,11 @@ theorem p4Q2FW_originalWilsonVolumeUniformRMSMass_iff_signedHaarMass
         _ ≤ W H := (hSandwich H).1
         _ ≤ C := hC H
     have hScaled := mul_le_mul_of_nonneg_left hLo (Real.exp_pos (16 * B)).le
-    simpa [mul_assoc, hCancel] using hScaled
+    have hExpCancel :
+        Real.exp (16 * B) * (Real.exp (-16 * B) * A H) = A H := by
+      rw [← mul_assoc, hCancel, one_mul]
+    rw [hExpCancel] at hScaled
+    exact hScaled
   · rintro ⟨D, hD⟩
     refine ⟨Real.exp (16 * B) * D, ?_⟩
     intro H
