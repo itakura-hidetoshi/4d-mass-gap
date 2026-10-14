@@ -32,7 +32,7 @@ integrate to an exact physical original Wilson link-mass lower bound.
 
 This is a genuine quantitative finite-volume improvement, but no
 physical-source detection existence, source-frame positive constant,
-H-/scale-uniform spatial sum, H1-C3 closure or continuum gap is claimed.
+uniform-in-H-and-scale spatial sum, H1-C3 closure or continuum gap is claimed.
 -/
 
 namespace MGAP4D
