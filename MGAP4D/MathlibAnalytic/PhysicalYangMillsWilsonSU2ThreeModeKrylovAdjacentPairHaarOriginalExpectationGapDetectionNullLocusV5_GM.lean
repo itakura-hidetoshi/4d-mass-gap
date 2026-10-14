@@ -176,7 +176,7 @@ theorem p4Q2GM_originalWilsonGapSquarePatch_pos_iff_exists_gapWitness
   constructor
   · intro hPos
     by_contra hNo
-    push_neg at hNo
+    push Not at hNo
     have hZero :=
       (p4Q2GM_originalWilsonGapSquarePatch_zero_iff_allLinks_gapAE
         H beta hbeta f S).mpr hNo
