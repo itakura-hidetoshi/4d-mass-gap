@@ -96,7 +96,6 @@ theorem p4Q2GL_originalWilsonSignedGap_projection_eq_square_div_contrast
   change D * A = D ^ 2 / Q
   rw [hD]
   field_simp [hQ.ne']
-  ring
 
 /-- The TRUE two-Wilson-posterior physical expectation-gap square over
 the actual positive density-contrast variance is automatically
