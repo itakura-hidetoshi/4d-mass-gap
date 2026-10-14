@@ -120,8 +120,11 @@ theorem p4Q2GK_originalWilsonSignedGapProjectionLinkMean_ge_uniform
       c * A z ≤ Q z * A z :=
         mul_le_mul_of_nonneg_right hQ (sq_nonneg (alpha z))
       _ = Delta z * alpha z := by
-        rw [p4Q2GI_originalWilsonSignedExpectationGap_eq_projection_mul_variance
-          H beta hbeta f e z]
+        have hGap : Delta z = alpha z * Q z :=
+          p4Q2GI_originalWilsonSignedExpectationGap_eq_projection_mul_variance
+            H beta hbeta f e z
+        rw [hGap]
+        dsimp [A]
         ring
   change c * (∫ z, A z ∂μ) ≤ ∫ z, G z ∂μ
   calc
