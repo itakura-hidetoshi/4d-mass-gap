@@ -28,7 +28,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory
-open scoped ENNReal InnerProductSpace BigOperators
+open scoped ENNReal InnerProductSpace BigOperators ComplexConjugate
 
 noncomputable section
 set_option maxHeartbeats 1800000
@@ -69,14 +69,29 @@ theorem p4Q2GB_continuousProbability_projection_sq_le
   let u : Lp ℝ 2 μ := ContinuousMap.toLp 2 μ ℝ F
   let v : Lp ℝ 2 μ := ContinuousMap.toLp 2 μ ℝ G
   have hUV : inner ℝ u v = ∫ x, R x * D x ∂μ := by
-    simpa [u, v, F, G] using
-      (MeasureTheory.ContinuousMap.inner_toLp (μ := μ) F G)
+    calc
+      inner ℝ u v = ∫ x, G x * conj (F x) ∂μ :=
+        MeasureTheory.ContinuousMap.inner_toLp (μ := μ) F G
+      _ = ∫ x, R x * D x ∂μ := by
+        apply integral_congr_ae
+        filter_upwards with x
+        simp [F, G, mul_comm]
   have hUU : inner ℝ u u = ∫ x, (R x) ^ 2 ∂μ := by
-    simpa [u, F, pow_two] using
-      (MeasureTheory.ContinuousMap.inner_toLp (μ := μ) F F)
+    calc
+      inner ℝ u u = ∫ x, F x * conj (F x) ∂μ :=
+        MeasureTheory.ContinuousMap.inner_toLp (μ := μ) F F
+      _ = ∫ x, (R x) ^ 2 ∂μ := by
+        apply integral_congr_ae
+        filter_upwards with x
+        simp [F, pow_two]
   have hVV : inner ℝ v v = ∫ x, (D x) ^ 2 ∂μ := by
-    simpa [v, G, pow_two] using
-      (MeasureTheory.ContinuousMap.inner_toLp (μ := μ) G G)
+    calc
+      inner ℝ v v = ∫ x, G x * conj (G x) ∂μ :=
+        MeasureTheory.ContinuousMap.inner_toLp (μ := μ) G G
+      _ = ∫ x, (D x) ^ 2 ∂μ := by
+        apply integral_congr_ae
+        filter_upwards with x
+        simp [G, pow_two]
   have hCS :
       (∫ x, R x * D x ∂μ) ^ 2 ≤
         (∫ x, (R x) ^ 2 ∂μ) * (∫ x, (D x) ^ 2 ∂μ) := by
@@ -95,7 +110,7 @@ theorem p4Q2GB_continuousProbability_projection_sq_le
       _ = K ^ 2 := by rw [hK]
       _ ≤ P * Q := hCS
   change Q * (K / Q) ^ 2 ≤ P
-  exact (mul_le_mul_right hQpos).mp hProd
+  exact (mul_le_mul_right₀ hQpos.ne').mp hProd
 
 /-- Difference of two ORIGINAL normalized Wilson posterior densities
 with left physical endpoints identity and the genuine pi-rotation at e.
@@ -204,7 +219,7 @@ theorem p4Q2GB_originalWilsonConditionalSourceRMS_projection_floor
   have hQPos : 0 < Q := lt_of_lt_of_le hcPos hFloor
   have hProjection : Q * a ^ 2 ≤ ∫ g, (R g) ^ 2 ∂μ := by
     convert p4Q2GB_continuousProbability_projection_sq_le
-      μ R D hR hD (by change 0 < Q; exact hQPos) using 1 <;> rfl
+      μ R D hR hD (by change 0 < Q; exact hQPos) using 1
   have hHaarLower :
       Real.exp (-16 * beta) *
         (p4Q2FM_originalWilsonRelativeSignedHaarSquaredMoment
