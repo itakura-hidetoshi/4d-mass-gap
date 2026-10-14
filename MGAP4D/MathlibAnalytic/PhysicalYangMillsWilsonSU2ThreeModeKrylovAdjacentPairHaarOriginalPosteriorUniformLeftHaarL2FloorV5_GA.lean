@@ -142,7 +142,7 @@ theorem p4Q2GA_continuousProbability_centeredSecondMoment_le_uncentered
   have hAdd2 :
       (∫ x, ((F x - m) ^ 2 + 2 * m * (F x - m)) + m ^ 2 ∂μ) =
         (∫ x, (F x - m) ^ 2 + 2 * m * (F x - m) ∂μ) + m ^ 2 := by
-    simpa only [Pi.add_apply, integral_const] using
+    simpa only [Pi.add_apply, integral_const, probReal_univ, one_smul] using
       (integral_add (hSquareInt.add hCrossInt) (integrable_const (m ^ 2)))
   have hExpand :
       (∫ x, (F x) ^ 2 ∂μ) =
