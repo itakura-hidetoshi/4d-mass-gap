@@ -146,7 +146,7 @@ theorem p4Q2FS_originalSU2EveryLinkTruePosteriorDensity_leftSensitive
     rw [p4Q2FS_originalSU2WilsonEveryLinkPosteriorCrossLog_eq_four_beta]
     linarith
   by_contra hNo
-  push_neg at hNo
+  push Not at hNo
   obtain ⟨hOne, hRot⟩ := hNo
   have hZero :
       p4Q2FS_originalSU2WilsonEveryLinkPosteriorCrossLog
