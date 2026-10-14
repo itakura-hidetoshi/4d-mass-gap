@@ -225,8 +225,8 @@ theorem p4Q2GJ_originalWilsonSignedGapProjection_pairHaar_integrable
   have hDeltaMeas : Measurable Delta := by
     convert (hAlphaMeas.mul hQMeas) using 1
     funext z
-    exact (p4Q2GI_originalWilsonSignedExpectationGap_eq_projection_mul_variance
-      H beta hbeta f e z).symm
+    exact p4Q2GI_originalWilsonSignedExpectationGap_eq_projection_mul_variance
+      H beta hbeta f e z
   have hGMeas : AEStronglyMeasurable G μ :=
     (hDeltaMeas.mul hAlphaMeas).aestronglyMeasurable
   have hMInt : Integrable M μ :=
