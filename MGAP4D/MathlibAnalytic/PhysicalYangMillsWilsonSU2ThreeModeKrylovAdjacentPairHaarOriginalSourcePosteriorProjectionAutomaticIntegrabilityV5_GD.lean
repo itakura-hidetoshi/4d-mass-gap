@@ -251,13 +251,13 @@ theorem p4Q2GD_originalPhysicalSourceProjection_sq_integrable
     mul_pos (Real.exp_pos _) (mul_pos (Real.exp_pos _)
       (mul_pos (pow_pos hbeta 2)
         p4Q2FZ_originalSU2TemporalWilsonContrastHaarVariance_pos))
-  have hAMeas : AEStronglyMeasurable A μ :=
-    by
-      simpa only [pow_two] using
-        (((p4Q2GD_originalPhysicalSourceContrastProjection_measurable
-          H beta (le_of_lt hbeta) f e).mul
-          (p4Q2GD_originalPhysicalSourceContrastProjection_measurable
-            H beta (le_of_lt hbeta) f e)).aestronglyMeasurable)
+  have hAMeas : AEStronglyMeasurable A μ := by
+    have hAlpha :
+        Measurable (p4Q2GB_originalPhysicalSourcePosteriorContrastProjection
+          H beta (le_of_lt hbeta) f e) :=
+      p4Q2GD_originalPhysicalSourceContrastProjection_measurable
+        H beta (le_of_lt hbeta) f e
+    simpa only [A, pow_two] using (hAlpha.mul hAlpha).aestronglyMeasurable
   have hMInt : Integrable M μ :=
     p4Q2FG_originalWilsonRelativeResponseConditionalSquare_pairHaar_integrable
       H 2 (by norm_num) beta (le_of_lt hbeta) f e
