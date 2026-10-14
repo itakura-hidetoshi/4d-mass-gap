@@ -81,8 +81,9 @@ theorem p4Q2GR_originalJointPosteriorFiber_relative_sqrt
     p4Q2GQ_originalPosteriorDensity_pos H beta hbeta left right e h
   apply (div_eq_div_iff (Real.sqrt_pos.mpr hRh).ne'
     (Real.sqrt_pos.mpr hPh).ne').2
-  exact p4Q2GQ_originalJointPosteriorFiber_sqrt_cross
-    H beta hbeta left right e g h
+  simpa only [mul_comm] using
+    (p4Q2GQ_originalJointPosteriorFiber_sqrt_cross
+      H beta hbeta left right e g h)
 
 /-- Explicit relative Wilson physical-source response for any pair of
 actual right insertion values; the response keeps the ORIGINAL fine
