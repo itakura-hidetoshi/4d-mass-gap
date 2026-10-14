@@ -81,7 +81,8 @@ theorem p4Q2GV_originalConstantPhysicalTransferIntegral_pos
     infer_instance
   have hOne : (fun A : Cfg => f A) =ᵐ[μ] (fun _ => (1 : ℝ)) := by
     simpa [f, periodicHypercubicEvenSpecialUnitarySpatialSliceHaarOneL2] using
-      (Lp.coeFn_const (μ := μ) (p := 2) (c := (1 : ℝ)))
+      (Filter.EventuallyEq.rfl :
+        (fun _ : Cfg => (1 : ℝ)) =ᵐ[μ] (fun _ => (1 : ℝ)))
   have hKCont : Continuous K := by
     dsimp [K]
     exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
@@ -173,6 +174,7 @@ theorem p4Q2GV_actualFineRightZeroDepth_HaarMass_pos
 
 end ActualAdjacent
 end GroundStatePosteriorJoint
+end
 end MathlibAnalytic
 end MGAP4D
 
