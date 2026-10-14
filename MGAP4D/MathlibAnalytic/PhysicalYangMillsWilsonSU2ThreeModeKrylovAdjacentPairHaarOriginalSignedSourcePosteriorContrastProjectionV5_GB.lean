@@ -110,7 +110,10 @@ theorem p4Q2GB_continuousProbability_projection_sq_le
       _ = K ^ 2 := by rw [hK]
       _ ≤ P * Q := hCS
   change Q * (K / Q) ^ 2 ≤ P
-  exact (mul_le_mul_right₀ hQpos.ne').mp hProd
+  by_contra hNotLe
+  have hStrict : P < Q * (K / Q) ^ 2 := lt_of_not_ge hNotLe
+  have hStrictMul := mul_lt_mul_of_pos_right hStrict hQpos
+  exact (not_lt_of_ge hProd) hStrictMul
 
 /-- Difference of two ORIGINAL normalized Wilson posterior densities
 with left physical endpoints identity and the genuine pi-rotation at e.
