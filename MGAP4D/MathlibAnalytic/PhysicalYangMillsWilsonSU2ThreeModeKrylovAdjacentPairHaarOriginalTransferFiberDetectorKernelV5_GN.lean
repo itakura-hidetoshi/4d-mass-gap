@@ -99,10 +99,18 @@ theorem p4Q2GN_originalDensityContrast_integral_zero (B : Cfg) (e : Link) :
   have hc1 : Continuous L1 :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkFiberLogWeight_continuous
       H 2 (by norm_num) beta hbeta (p4Q2FQ_originalSU2LeftPiRotationAtLink H e) B e
-  haveI : IsProbabilityMeasure (μ.tilted L0) := isProbabilityMeasure_tilted
-    (hc0.exp.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _))
-  haveI : IsProbabilityMeasure (μ.tilted L1) := isProbabilityMeasure_tilted
-    (hc1.exp.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _))
+  -- Local notation μ does not support field projection: name the Haar measure.
+  let ν : Measure Gauge := normalizedCompactHaar Gauge
+  have hIntExp0 : Integrable (fun g : Gauge => Real.exp (L0 g)) ν :=
+    (Real.continuous_exp.comp hc0).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have hIntExp1 : Integrable (fun g : Gauge => Real.exp (L1 g)) ν :=
+    (Real.continuous_exp.comp hc1).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  haveI : IsProbabilityMeasure (ν.tilted L0) :=
+    isProbabilityMeasure_tilted hIntExp0
+  haveI : IsProbabilityMeasure (ν.tilted L1) :=
+    isProbabilityMeasure_tilted hIntExp1
   have hi0 : Integrable (continuousNormalizedExp μ L0) μ :=
     (continuous_continuousNormalizedExp μ L0 hc0).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
@@ -110,15 +118,13 @@ theorem p4Q2GN_originalDensityContrast_integral_zero (B : Cfg) (e : Link) :
     (continuous_continuousNormalizedExp μ L1 hc1).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
   have hn0 : (∫ g, continuousNormalizedExp μ L0 g ∂μ) = 1 := by
-    have h : (∫ _g : Gauge, (1 : ℝ) ∂μ.tilted L0) = 1 := by simp
+    have h : (∫ _g : Gauge, (1 : ℝ) ∂(ν.tilted L0)) = 1 := by simp
     rw [integral_tilted] at h
-    · simpa only [smul_eq_mul, mul_one] using h
-    · exact hc0.aestronglyMeasurable
+    simpa only [smul_eq_mul, mul_one] using h
   have hn1 : (∫ g, continuousNormalizedExp μ L1 g ∂μ) = 1 := by
-    have h : (∫ _g : Gauge, (1 : ℝ) ∂μ.tilted L1) = 1 := by simp
+    have h : (∫ _g : Gauge, (1 : ℝ) ∂(ν.tilted L1)) = 1 := by simp
     rw [integral_tilted] at h
-    · simpa only [smul_eq_mul, mul_one] using h
-    · exact hc1.aestronglyMeasurable
+    simpa only [smul_eq_mul, mul_one] using h
   change (∫ g, continuousNormalizedExp μ L0 g - continuousNormalizedExp μ L1 g ∂μ) = 0
   rw [integral_sub hi0 hi1, hn0, hn1, sub_self]
 
@@ -134,7 +140,6 @@ theorem p4Q2GN_originalDensityCancellationWeight_eq (z : Cfg × Cfg) :
   have hs : s z ≠ 0 := (continuousJointSqrtDensity_pos H 2 (by norm_num) beta hbeta z).ne'
   change ((L * omega) / s z) * omega⁻¹ = L / s z
   field_simp [ho, hs]
-  all_goals ring
 
 /-- Original receiver expressed directly through the genuine Wilson
 kernel integral of the physical source, not an arbitrary finite vector. -/
@@ -149,7 +154,6 @@ theorem p4Q2GN_originalReceiver_eq_transferIntegral (f : Phys) (z : Cfg × Cfg) 
   change ((L * omega) / s z) *
     (L * decomposableOneSliceTransferIntegral H 2 beta f z.2 / omega) = _
   field_simp [ho, hs]
-  all_goals ring
 
 /-- Source dependence of the full signed response, including update drift. -/
 theorem p4Q2GN_originalSignedResponse_eq_transferDifference
@@ -171,7 +175,6 @@ theorem p4Q2GN_originalSignedResponse_eq_transferDifference
     p4Q2GN_originalReceiver_eq_transferIntegral,
     p4Q2GN_originalDensityCancellationWeight_eq]
   field_simp [hL, hs, hs']
-  all_goals ring
 
 /-- The remaining original transfer-fiber moment. All density factors
 are the true frozen Wilson factors; the source retains its physical type. -/
@@ -203,8 +206,8 @@ theorem p4Q2GN_originalTransferFiberContrast_integrable
   rw [p4Q2GN_originalReceiver_eq_transferIntegral]
   have hs := (continuousJointSqrtDensity_pos H 2 (by norm_num) beta hbeta
     (z.1, Function.update z.2 e g)).ne'
-  field_simp [hL, hs]
-  all_goals ring
+  apply (div_eq_iff (pow_ne_zero 2 hL)).2
+  ring
 
 /-- The unupdated receiver cancels because both original posterior laws
 have mass one. The updated receiver and its actual weight remain. -/
@@ -269,7 +272,6 @@ theorem p4Q2GN_originalExpectationGap_eq_transferFiberMoment
   rw [p4Q2GN_originalExpectationGap_eq_updatedReceiverContrast, hi,
     p4Q2GN_originalDensityCancellationWeight_eq]
   field_simp [hL, hs]
-  all_goals ring
 
 /-- Pointwise kernel criterion without any assumption of detectability. -/
 theorem p4Q2GN_originalExpectationGap_zero_iff_transferFiber_zero
