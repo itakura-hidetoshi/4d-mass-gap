@@ -69,7 +69,7 @@ theorem p4Q2GF_originalWilsonSourceProjectionGramScale_pos
     (mul_pos (Real.exp_pos _)
       (mul_pos (Real.exp_pos _)
         (mul_pos (pow_pos hbeta 2)
-          p4Q2FZ_originalSU2TemporalWilsonContrastHaarVariance_pos))
+          p4Q2FZ_originalSU2TemporalWilsonContrastHaarVariance_pos)))
 
 /-- Physical projected source mass is nonnegative at each genuine
 spatial link because it is the outer pair-Haar integral of a real square. -/
