@@ -147,7 +147,7 @@ theorem p4Q2GO_originalWilsonContrastQ_le_fourExp_mul_Hellinger
   have hS : Continuous S := p4Q2GO_trueWilsonPosteriorDensity_continuous
     H beta hbeta (p4Q2FQ_originalSU2LeftPiRotationAtLink H e) right e
   have hFInt : Integrable F μ :=
-    (hR.sub hS).pow 2 |>.integrable_of_hasCompactSupport
+    ((hR.sub hS).pow 2).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
   have hGInt : Integrable G μ :=
     (((Real.continuous_sqrt.comp hR).sub
@@ -167,8 +167,8 @@ theorem p4Q2GO_originalWilsonContrastQ_le_fourExp_mul_Hellinger
     let y : ℝ := Real.sqrt (S g)
     have hx : x ^ 2 = R g := Real.sq_sqrt hRNonneg
     have hy : y ^ 2 = S g := Real.sq_sqrt hSNonneg
-    have hxle : x ^ 2 ≤ Real.exp (16 * beta) := hx ▸ hRBounds.2
-    have hyle : y ^ 2 ≤ Real.exp (16 * beta) := hy ▸ hSBounds.2
+    have hxle : x ^ 2 ≤ Real.exp (16 * beta) := by simpa only [hx] using hRBounds.2
+    have hyle : y ^ 2 ≤ Real.exp (16 * beta) := by simpa only [hy] using hSBounds.2
     have hSum : (x + y) ^ 2 ≤ C := by
       dsimp [C]
       nlinarith [sq_nonneg (x - y)]
@@ -186,7 +186,7 @@ theorem p4Q2GO_originalWilsonContrastQ_le_fourExp_mul_Hellinger
       apply integral_mono hFInt (hGInt.const_mul _)
       intro g
       exact hPoint g
-    _ = C * (∫ g, G g ∂μ) := integral_const_mul C G
+    _ = C * (∫ g, G g ∂μ) := by rw [integral_const_mul]
 
 /-- The genuine Wilson square-root separation has an explicit bound below
 by the original source-independent Q certificate, without a frame input. -/
@@ -243,6 +243,123 @@ theorem p4Q2GO_originalWilsonHellinger_beta_zero
     ring
   simp only [hPoint, integral_zero]
 
+
+/-- The genuine physical signed Wilson receiver, not an arbitrary
+coefficient family, weights the squared Hellinger contrast for the
+two actual interacting left-boundary conditional distributions. -/
+noncomputable def p4Q2GO_originalPhysicalReceiverWeightedHellingerMass
+    (f : Phys) (left right : Cfg) (e : Link) : ℝ :=
+  ∫ g : Gauge,
+    normalizedPhysicalOneSlabJointReceiverProductBCF
+      H 2 (by norm_num) beta hbeta f (left, Function.update right e g) *
+      (Real.sqrt (P0 right e g) -
+        Real.sqrt (P1 (p4Q2FQ_originalSU2LeftPiRotationAtLink H e) right e g)) ^ 2 ∂μ
+
+/-- For a physical source whose ORIGINAL signed Wilson receiver is
+strictly positive on a true right-link insertion fiber, the square-root
+separation carries positive SOURCE-WEIGHTED Haar mass. This is a
+positive-cone result, not yet a GI expectation-gap injectivity theorem. -/
+theorem p4Q2GO_originalPhysicalReceiverWeightedHellinger_pos
+    (hpos : 0 < beta) (f : Phys) (left right : Cfg) (e : Link)
+    (hReceiver :
+      ∀ g : Gauge, 0 <
+        normalizedPhysicalOneSlabJointReceiverProductBCF
+          H 2 (by norm_num) beta hbeta f (left, Function.update right e g)) :
+    0 < p4Q2GO_originalPhysicalReceiverWeightedHellingerMass
+      H beta hbeta f left right e := by
+  let R : Gauge → ℝ := P0 right e
+  let S : Gauge → ℝ := P1 (p4Q2FQ_originalSU2LeftPiRotationAtLink H e) right e
+  let O := normalizedPhysicalOneSlabJointReceiverProductBCF
+    H 2 (by norm_num) beta hbeta f
+  let F : Gauge → ℝ := fun g =>
+    O (left, Function.update right e g) *
+      (Real.sqrt (R g) - Real.sqrt (S g)) ^ 2
+  have hUp : Continuous (fun g : Gauge => (left, Function.update right e g)) := by
+    fun_prop
+  have hR : Continuous R := p4Q2GO_trueWilsonPosteriorDensity_continuous
+    H beta hbeta (originalWilsonExplicitIdentityBoundary H) right e
+  have hS : Continuous S := p4Q2GO_trueWilsonPosteriorDensity_continuous
+    H beta hbeta (p4Q2FQ_originalSU2LeftPiRotationAtLink H e) right e
+  have hFCont : Continuous F :=
+    (O.continuous.comp hUp).mul
+      (((Real.continuous_sqrt.comp hR).sub
+        (Real.continuous_sqrt.comp hS)).pow 2)
+  have hFInt : Integrable F μ :=
+    hFCont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  have hFNonneg (g : Gauge) : 0 ≤ F g :=
+    mul_nonneg (hReceiver g).le (sq_nonneg _)
+  have hDifferent :
+      R (1 : Gauge) ≠ S 1 ∨
+      R (specialUnitaryTwoRotation Real.pi) ≠
+        S (specialUnitaryTwoRotation Real.pi) := by
+    exact p4Q2FS_originalSU2EveryLinkTruePosteriorDensity_leftSensitive
+      H beta hpos right e
+  obtain ⟨g, hDifferentAtG⟩ : ∃ g : Gauge, R g ≠ S g := by
+    rcases hDifferent with hOne | hRot
+    · exact ⟨1, hOne⟩
+    · exact ⟨specialUnitaryTwoRotation Real.pi, hRot⟩
+  have hRNonneg : 0 ≤ R g := by
+    have h := p4Q2FK_originalWilsonPosteriorConditionalDensity_twoSided
+      H 2 (by norm_num) beta hbeta
+        (originalWilsonExplicitIdentityBoundary H) right e g
+    exact (Real.exp_pos _).le.trans h.1
+  have hSNonneg : 0 ≤ S g := by
+    have h := p4Q2FK_originalWilsonPosteriorConditionalDensity_twoSided
+      H 2 (by norm_num) beta hbeta
+        (p4Q2FQ_originalSU2LeftPiRotationAtLink H e) right e g
+    exact (Real.exp_pos _).le.trans h.1
+  have hSqrtDifferent : Real.sqrt (R g) ≠ Real.sqrt (S g) := by
+    intro hEq
+    apply hDifferentAtG
+    calc
+      R g = (Real.sqrt (R g)) ^ 2 := (Real.sq_sqrt hRNonneg).symm
+      _ = (Real.sqrt (S g)) ^ 2 := by rw [hEq]
+      _ = S g := Real.sq_sqrt hSNonneg
+  have hFNe : F g ≠ 0 := by
+    exact mul_ne_zero (hReceiver g).ne'
+      (pow_ne_zero 2 (sub_ne_zero.mpr hSqrtDifferent))
+  have hSupportOpen : IsOpen (Function.support F) := by
+    change IsOpen (F ⁻¹' ({0} : Set ℝ)ᶜ)
+    exact isClosed_singleton.isOpen_compl.preimage hFCont
+  have hSupportPos : 0 < μ (Function.support F) :=
+    hSupportOpen.measure_pos μ ⟨g, hFNe⟩
+  change 0 < ∫ g, F g ∂μ
+  rw [integral_pos_iff_support_of_nonneg]
+  · exact hSupportPos
+  · exact hFNonneg
+  · exact hFInt
+
+/-- Replace a hypothetical source-detection/frame assumption by a
+checkable ORIGINAL Wilson physical transfer positivity condition.
+For such a physical input, the genuine receiver-weighted two-posterior
+Hellinger certificate is strictly positive. This remains distinct from
+the signed GI detector and is not misreported as its injectivity. -/
+theorem p4Q2GO_originalPhysicalTransferPositive_implies_weightedHellinger_pos
+    (hpos : 0 < beta) (f : Phys) (left right : Cfg) (e : Link)
+    (hTransfer :
+      ∀ g : Gauge, 0 <
+        decomposableOneSliceTransferIntegral H 2 beta f
+          (Function.update right e g)) :
+    0 < p4Q2GO_originalPhysicalReceiverWeightedHellingerMass
+      H beta hbeta f left right e := by
+  have hL : 0 <
+      ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+        H 2 (by norm_num) beta hbeta‖⁻¹ :=
+    inv_pos.mpr
+      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+        H 2 (by norm_num) beta hbeta)
+  have hReceiver (g : Gauge) : 0 <
+      normalizedPhysicalOneSlabJointReceiverProductBCF
+        H 2 (by norm_num) beta hbeta f
+        (left, Function.update right e g) := by
+    rw [p4Q2GN_originalReceiver_eq_transferIntegral]
+    exact div_pos
+      (mul_pos (pow_pos hL 2) (hTransfer g))
+      (continuousJointSqrtDensity_pos H 2 (by norm_num) beta hbeta
+        (left, Function.update right e g))
+  exact p4Q2GO_originalPhysicalReceiverWeightedHellinger_pos
+    H beta hbeta hpos f left right e hReceiver
+
 end Frozen
 
 end GroundStatePosteriorJoint
@@ -256,3 +373,5 @@ end MGAP4D
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GO_originalWilsonHellinger_ge_Q_div_fourExp
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GO_originalWilsonHellinger_pos
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GO_originalWilsonHellinger_beta_zero
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GO_originalPhysicalReceiverWeightedHellinger_pos
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GO_originalPhysicalTransferPositive_implies_weightedHellinger_pos
