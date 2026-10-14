@@ -1,6 +1,6 @@
 # MGAP4D — formalization roadmap
 
-**Status: 2026-10-14 JST. Latest theorem-bearing [PR #5539 (FG)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5539) MERGED at `a711e7b5a5f6723fb044673ba3667ba5ac23f3d4`, exact tested source `24080fc0b4af88e052aacf3d6df5dfa3d0b69950`, [CI #38430912256](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38430912256) SUCCESS 10629/10629, Changed Lean `115412547979`, MCP receipt `115414924526` SUCCESS, 12/12 axiom checks without sorryAx, no new axiom, changed warning/error 0. Existing `native_decide` dependency is separate from new axiom declarations. FG proves exact true original Wilson conditional-response mean-square identities for EACH physical link, arbitrary finite patch, and full arbitrary signed physical Gram Rayleigh. Outer pair-Haar integration retains inner genuine Wilson posterior; no fake independent-Haar kernel, assumed spatial locality, H-uniform sum or transfer normalization is introduced. C1/C2/C3, H2/H3/H4 and continuum positive mass gap remain OPEN.**
+**Status: 2026-10-14 JST. Latest theorem-bearing [PR #5568 (P4-Q2-GG)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5568) squash MERGED at `95a04c25ef2e95dc9c911584ad184160ea3a564b`; exact tested source HEAD `6d6b2d1d390092d373875d2da57d3975fe663a42`, [CI #38559111499](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38559111499) completed SUCCESS 10647/10647, changed Lean job `115835487973` and MCP completion receipt `115837274242` SUCCESS, changed-file warning/error zero, 4/4 axiom checks without sorryAx. Inherited finite lattice `native_decide` axioms persist. FH–GG close actual signed-source projected true Wilson conditional RMS-to-physical-Gram link/patch and adjacent-scale right Krylov/left-three-mode Rayleigh certificates at finite volume. No projection source-frame positive lower bound, H-/scale-uniform summability, beta-trajectory control, C1/C2/C3 or continuum H2/H3/H4 mass gap is claimed.**
 
 **Current theorem achievement:** DV full original Wilson Riesz quadratic coercivity, DW true Loewner and separate D12 bilateral comparison, DX boundedly invertible original orthogonal restriction with real spectrum in `[κ_R,12]`, and **DY typed original DQ/DF finite-volume mass/variance coefficient; DZ restores the literal factor 12 from normalized Haar reference to the unnormalized ORIGINAL Wilson Riesz sum with improved same-witness whole-L², Loewner and anti-Lipschitz estimates**. DU separately proves the normalized physical D12 restricted gap.
 
@@ -17,14 +17,14 @@ Read [README.md](README.md) for definitions, exact Wilson-versus-Haar normalizat
 | Field | Verified checkpoint |
 | --- | --- |
 | Only theorem-authoritative repository / branch | `itakura-hidetoshi/4d-mass-gap` / `formal/real-hilbert-uniform-coercive-strong-limit` |
-| Latest theorem-bearing merged PR | [#5539 (FG)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5539), merge SHA `a711e7b5a5f6723fb044673ba3667ba5ac23f3d4` |
-| Exact-tested PR #5539 source HEAD | `24080fc0b4af88e052aacf3d6df5dfa3d0b69950` |
+| Latest theorem-bearing merged PR | [#5568 (GG)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5568), merge SHA `95a04c25ef2e95dc9c911584ad184160ea3a564b` |
+| Exact-tested PR #5568 source HEAD | `6d6b2d1d390092d373875d2da57d3975fe663a42` |
 | Lean / mathlib | `v4.30.0-rc2` / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
-| Exact-source-head CI | [CI #38430912256](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38430912256) — SUCCESS |
-| Changed Lean / MCP receipt jobs | `115412547979` / `115414924526`, both SUCCESS |
-| Build and diagnostics | **10629/10629**, FG 12/12 axioms without sorryAx/new axiom, changed warnings/errors zero; inherited `native_decide` dependence noted. |
+| Exact-source-head CI | [CI #38559111499](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38559111499) — SUCCESS |
+| Changed Lean / MCP receipt jobs | `115835487973` / `115837274242`, both SUCCESS |
+| Build and diagnostics | **10647/10647**, GG 4/4 axioms without sorryAx/new axiom, changed warnings/errors zero; inherited finite-lattice `native_decide` dependence noted. |
 
-A later **docs-only merge will move the current canonical branch HEAD** beyond the SHA shown above, but it does not alter the #5539 theorem-bearing result. Observe the branch's fresh exact HEAD for each new PR. GitHub's default `main` is not the theorem authority.
+A later **docs-only merge will move the current canonical branch HEAD** beyond the SHA shown above, but it does not alter the #5568 theorem-bearing result. Observe the branch's fresh exact HEAD for each new PR. GitHub's default `main` is not the theorem authority.
 
 ## 1. Proof status matrix
 
@@ -42,6 +42,10 @@ A later **docs-only merge will move the current canonical branch HEAD** beyond t
 | **P4-Q2-EA–EC: sharp universal link comparison → original physical Wilson Riesz** | **EA #5482, EB #5484, EC #5485 CLOSED**: EA exact universal nonnegative six-color sharpness; EB true max-color-card original Wilson normalized Haar reference; EC same original Wilson m,M coefficient improves DZ and controls whole original physical joint L², Loewner and inverse anti-Lipschitz. | Original physical H-/spacing-uniform bounds, admissible gauge-invariant localized Wilson/Haar witnesses and actual color-block comparison remain OPEN. |
 | **P4-Q2-ED–ET: genuine original Wilson SU(2) witness and exact physical six-color geometry** | ED–EL real gauge-invariant relative observable and original Haar selected support; EM–EN true interacting physical D12 selected residuals; EO–EP finite-H original AW/D12 bilateral; EQ coefficient ≤12/L_c(H); ER actual growth and no positive H-uniform RELATIVE AW≥κ D12; **ES #5513 exact actual physical L_c(H)=4*(H+1)^3; ET #5514 `κ≤3/(H+1)^3` and precise max-color/selected-ratio bounds.** | Absolute operator gaps, H-/spacing-uniform signed Gram, C1/C2/C3 and H2/H3/H4 continuum remain OPEN; no absolute mass-gap no-go. |
 | **P4-Q2-FC–FG: true signed Wilson link response / conditional RMS** | **FC #5530** density cancellation, **FD #5532** actual physical patch defect, **FE #5535** linkwise oscillation, **FF #5537** signed normalized response and three-way profile; **FG #5539** exact original interacting Wilson conditional M2, pair-Haar outer integrability, precise pointwise posterior-square factorization, link defect/patch/physical signed Gram Rayleigh equalities, and `beta=0` response zero. | Spatial summability of authentic `integral M2` across `24*(H+1)^3` links and H-/scale-uniform `lambda_beta^-2` are **OPEN**; no synthetic posterior or assumed localization. |
+| **P4-Q2-FH–FW: genuine normalized Wilson posterior and source RMS comparison** | FH original true-RMS spatial support; FK/FL `exp(±16 beta)` true one-link posterior density/measure Haar sandwich; FM/FT original FF signed source conditional RMS squared-moment real Haar comparison; FW **equivalence** of volume-uniform spatial RMS summability and Haar comparison summability under bounded beta, **not unconditional summability**. | Actual H-/spacing-uniform `sum_e` Haar comparison response mass and transfer norm control remain OPEN. |
+| **P4-Q2-FX–GA: true SU(2) normalized posterior left-sensitivity** | FZ #5561 strict original SU(2) Haar contrast variance `V_SU2>0`; GA #5562 strict quantitative all-link/right-context true posterior row difference `||p0-p1||²_Haar >= beta² exp(-32 beta) V_SU2`. | Posterior density sensitivity alone does NOT imply coercivity for every physical source. |
+| **P4-Q2-GB–GD: actual physical signed-source projection** | GB #5563 exact true posterior two-row overlap `alpha_{e,f}(z)` and pointwise `M2_Wilson >= beta² exp(-48 beta) V_SU2 alpha²`; GC #5564 authentic physical link/patch energy lower bounds with explicit source projection integrability premise; GD #5565 proves its actual joint measurability and square-integrability and removes the extra premise for beta>0. | Prove source-projection nonvanishing and source-frame uniformity on the actual physical orbit; no synthetic Haar conditional laws. |
+| **P4-Q2-GE–GG: physical Gram and real adjacent-scale orbit** | GE #5566 original signed physical Hilbert Gram Rayleigh lower bound for arbitrary finite source families; GF #5567 strict Gram positivity **when the true projection mass is positive**, plus necessary kernel-vanishing direction; GG #5568 extends lower certificates and explicit frame-hypothesis implications to the actual fine right-Krylov `r+1` and fine left Gram-Schmidt `3` source families with separate fine `beta(n+1)` and frozen `beta(n)`. | Establish actual signed physical source projection frame/injectivity and quantitatively uniform constants across `H,n,r`, physical transfer norm, source summability, C1/C2/C3, and continuum H2/H3/H4; all OPEN. |
 | **C1 / C2 / C3** | Previous conditional adjacent-scale interfaces and finite-H components. | Actual common-marginal physicality; vector-wise fine→coarse compatibility; explicit summable beta trajectory — **OPEN**. |
 | **H2 / H3 / H4** | Finite-H transfer and spectral infrastructure under precise hypotheses. | Spacing-scaled strongly continuous physical evolution, OS Hamiltonian, continuum Wightman/Yang–Mills mass gap — **OPEN**. |
 
@@ -269,7 +273,32 @@ a* G_right a <= (1/2) * sum_e b_e(F_a)^2 .
 
 ## 5. Spatial-volume / lattice-spacing frontier: distinguish three kinds of gaps
 
-### P4-Q2-FG #5539: genuine conditional-response RMS and FH frontier
+### Current live frontier after GG #5568 — genuine physical source projection and real adjacent scale
+
+Let `d_{beta,e,z}(g)=p_{0,e,z}(g)-p_{1,e,z}(g)` be the difference of the two **truly normalized interacting Wilson conditional posterior densities** at fixed physical right background, with left identity versus genuine SU(2) π rotation. FZ/GA prove for fixed beta>0 the volume-,link-,background-independent positive real floor
+
+```text
+V_SU2 > 0
+||d_{beta,e,z}||²_{L²(Haar SU2)} >= beta² exp(-32 beta) V_SU2 > 0.
+```
+
+The source-dependent GG certificate uses the ORIGINAL signed physical FF relative response `R_{beta,e,f}(z,g)` and its actual Haar projection `alpha_{beta,e,f}(z)=integral_g R_{beta,e,f}(z,g)*d(g) dHaar / integral_g d(g)^2 dHaar`. GB proves `M2_Wilson(e,f,z)>= beta² exp(-48 beta) V_SU2 * alpha(z)^2`; GC identifies the true physical Dirichlet patch with the pair-Haar outer integral; GD proves automatic measurability/integrability of `alpha²` from the genuine FG conditional RMS, removing the earlier GC assumption.
+
+GE/GF then prove on an ACTUAL finite-dimensional **physical** input family `F_a=sum_i a_i f_i`:
+
+```text
+P(F_a) := sum_{e in physical links} integral_{pair Haar} alpha_{beta,e,F_a}(z)^2 dz >= 0
+a^T G_{beta,H} a >= C_{beta,H} * P(F_a)
+C_{beta,H} := beta² exp(-48 beta) V_SU2 / (2 ||T_{beta,H}||²) > 0 (fixed beta>0).
+P(F_a)>0 => a^T G a>0.
+a^T G a=0 => P(F_a)=0 (NOT a biconditional).
+```
+
+GG proves the same concrete inequality for the ORIGINAL adjacent orbit `RightFactor(n,j)` at every depth `r+1` and the ORIGINAL left three Gram–Schmidt `LeftFactor(n,r,k)`. The micro/fine orbit uses **beta(n+1)** internally; the original Wilson posterior, transfer, Gram and projection all use **frozen beta(n)** at `Hn=halfExtent(n+1)`, requiring `beta(n)>0`. The sufficient source-frame hypothesis `P(F_a)>=gamma_{H,n,r}*sum_i a_i²` is explicit and **NOT yet proved** for these genuine sources.
+
+**Priority next proof:** establish from original Wilson geometry and genuine signed Krylov sources whether `P(F_a)>0` for nonzero real physical coefficient combinations (or characterize its actual kernel); then obtain/estimate a legitimate `gamma_{H,n,r}`, its dependence on `H,n,r` and `beta(n)`, and the original transfer-normalized spatial sum. The factor `beta(n)^2 exp(-48 beta(n))` tends to zero as `beta(n)->0` unless compensated by other proved factors; the current theorems supply **no H-/scale-uniform positive Rayleigh constant**. Validate C1 physicality, C2 vector-wise fine/coarse transport, C3 summable beta trajectory, and H2/H3/H4 continuum separately. Do not return to Dobrushin as the primary proof route or infer a continuum mass gap from finite-volume Wilson Riesz/AW or physical D12 positivity.
+
+### Historical checkpoint P4-Q2-FG #5539: genuine conditional-response RMS and then FH frontier
 
 For the **original** Wilson conditional posterior `nu^{Wilson}_{beta,e,z}` define `M2_{beta,e,f}(z) := integral_g R_{beta,e,f}(z,g)^2 d nu^{Wilson}_{beta,e,z}(g)`, where `R` is FF's true signed half-density/vacuum-normalized physical response. FG proves `0 <= M2`, `M2 <= ||R||_sup²`, genuine outer pair-Haar integrability, and the exact resampling square identity. The **a.e.**, not pointwise, identity `w_beta(z)*(W_beta(z)*Omega_beta(z.2)^-1)^2 = lambda_beta^-2` gives:
 
@@ -279,7 +308,7 @@ E_S(f) = (lambda_beta^-2 / 2) * sum_{e in S} integral_z M2_{beta,e,f}(z) d muPai
 a^T G a = E_ALL(sum_i a_i f_i)
 ```
 
-The two inner/outer laws remain different: **Wilson conditional** inside, pair-Haar outside. No replacement by independent Haar conditional law, no finite support or spatial falloff for generic Krylov/vacuum source, no orthonormality of physical source family, and no `H`-uniform norm of the transfer operator are assumed. The authentic link number is `24*(H+1)^3`. **FH:** inspect true original fine/frozen signed physical source (fine `beta(n+1)`, frozen `beta(n)`) and Wilson kernel for link-specific structure, seek directly integrable conditional-RMS tails/summability, and transmit only established scale-dependent coefficients to open C1–C3. Non-Dobrushin route; H2–H4 still OPEN.
+The two inner/outer laws remain different: **Wilson conditional** inside, pair-Haar outside. No replacement by independent Haar conditional law, no finite support or spatial falloff for generic Krylov/vacuum source, no orthonormality of physical source family, and no `H`-uniform norm of the transfer operator are assumed. The authentic link number is `24*(H+1)^3`. **Historical next step after FG:** FH was to inspect the true original fine/frozen signed physical source (fine `beta(n+1)`, frozen `beta(n)`) and Wilson kernel for link-specific structure, seek directly integrable conditional-RMS tails/summability, and transmit only established scale-dependent coefficients to open C1–C3. Non-Dobrushin route; H2–H4 still OPEN.
 
 | Statement | Formal status | What extra proof is needed |
 | --- | --- | --- |
@@ -372,10 +401,20 @@ All sources below are under `MGAP4D/MathlibAnalytic/` and share the `PhysicalYan
 | **FF constructed original Wilson half-density-normalized relative signed link responses, EXACT joint-moment energy and FE/FF three-way min patch/Gram** | **`OriginalSignedPhysicalRelativeLinkProfileV5_FF`** | **#5537** |
 | **FG exact original Wilson conditional response mean-square, pair-Haar integrability, link/patch and signed physical Gram Rayleigh identities** | **`OriginalConditionalResponseRMSV5_FG`** | **#5539** |
 
+| **FZ universal SU(2) temporal Wilson Haar contrast variance positive** | **`OriginalSU2TemporalWilsonContrastHaarVarianceV5_FZ`** | **#5561** |
+| **GA uniformly positive true normalized Wilson two-row posterior Haar L² separation** | **`OriginalPosteriorUniformLeftHaarL2FloorV5_GA`** | **#5562** |
+| **GB true signed physical source–posterior density contrast projection and conditional RMS bound** | **`OriginalSignedSourcePosteriorContrastProjectionV5_GB`** | **#5563** |
+| **GC source projected mass pair-Haar link/patch energy with integrability exposed** | **`OriginalIntegratedSourcePosteriorContrastProjectionV5_GC`** | **#5564** |
+| **GD automatic source projection square-integrability; unconditional physical patch lower bound** | **`OriginalSourcePosteriorProjectionAutomaticIntegrabilityV5_GD`** | **#5565** |
+| **GE actual physical arbitrary signed input Gram Rayleigh and explicit frame obligation** | **`OriginalSourceProjectionGramRayleighV5_GE`** | **#5566** |
+| **GF strictly positive scale and detected-source Gram criterion; zero Gram implies zero projection** | **`OriginalSourceProjectionDetectionCriterionV5_GF`** | **#5567** |
+| **GG actual adjacent fine right-Krylov / left-three-mode genuine Wilson projection Rayleigh bounds** | **`OriginalActualAdjacentKrylovSourceProjectionV5_GG`** | **#5568** |
+
+
 Minimal latest Lean target after checking out the newly observed authoritative branch:
 
 ```bash
-lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalConditionalResponseRMSV5_FG
+lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalActualAdjacentKrylovSourceProjectionV5_GG
 ```
 
 **Proof-integrity process:** exact authoritative branch SHA first; exact Lean file, dependencies and physical definitions second; docs and exact-source-head CI after that. Inspect the full error context and pinned mathlib syntax, not just the highlighted line. No new `sorry`, `admit`, `axiom` or hidden synthetic physical laws. Preserve true original sum/average normalization, and explicitly report nonfatal warnings (DV had four). Use targeted changed-Lean CI and reusable pinned caches where possible; do not rebuild the entire project needlessly. For a documentation-only update, modify **only README.md and ROADMAP.md** and do not present its resulting merge SHA as a new theorem-bearing checkpoint.
