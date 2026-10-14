@@ -42,23 +42,23 @@ noncomputable section
 set_option maxHeartbeats 1900000
 set_option synthInstance.maxHeartbeats 760000
 
-local instance p4Q2GV_topologicalGroup :
+local instance p4Q2GVUnit_topologicalGroup :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupIsTopologicalGroup 2
-local instance p4Q2GV_compactSpace :
+local instance p4Q2GVUnit_compactSpace :
     CompactSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupCompactSpace 2
-local instance p4Q2GV_secondCountable :
+local instance p4Q2GVUnit_secondCountable :
     SecondCountableTopology (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupSecondCountableTopology 2
-local instance p4Q2GV_measurableSpace :
+local instance p4Q2GVUnit_measurableSpace :
     MeasurableSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupMeasurableSpace 2
-local instance p4Q2GV_borelSpace :
+local instance p4Q2GVUnit_borelSpace :
     BorelSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupBorelSpace 2
 
-local instance p4Q2GV_haarProbability (H : ℕ) :
+local instance p4Q2GVUnit_haarProbability (H : ℕ) :
     IsProbabilityMeasure
       (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) := by
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
