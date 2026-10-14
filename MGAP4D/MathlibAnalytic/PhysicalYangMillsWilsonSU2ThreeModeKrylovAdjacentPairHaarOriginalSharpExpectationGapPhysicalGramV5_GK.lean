@@ -22,7 +22,7 @@ GE/GG's genuine finite-H physical coercive information is discarded.
 
 The inner resampling law is always the interacting Wilson posterior;
 Haar is only the outer pair-reference and the exact density comparison
-law. No unproved source-frame floor, H-/scale-uniform spatial summability,
+law. No unproved source-frame floor, uniform-in-H-and-scale spatial summability,
 C1/C2/C3, H2/H3/H4, or continuum Yang–Mills mass gap is asserted.
 -/
 
