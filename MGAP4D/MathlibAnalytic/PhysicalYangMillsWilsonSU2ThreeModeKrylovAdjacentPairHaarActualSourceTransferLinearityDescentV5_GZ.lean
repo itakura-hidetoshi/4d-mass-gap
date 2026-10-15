@@ -136,6 +136,19 @@ private theorem p4Q2GZ_weightedLpFinite_sum
 
 end AbstractHaarL2
 
+/-- The defining original one-slab Wilson kernel formula for an arbitrary
+ambient spatial Haar-L² input, isolated from finite coefficient sums. -/
+theorem p4Q2GZ_originalTransferIntegral_eq_kernelIntegral
+    (H : ℕ) (beta : ℝ)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2)
+    (f : Lp ℝ 2
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)) :
+    decomposableOneSliceTransferIntegral H 2 beta f B =
+      ∫ A, periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H 2 beta A B * f A
+        ∂periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2 := by
+  rfl
+
 section ActualRightKrylov
 
 variable {halfExtent : ℕ → ℕ} {beta : ℕ → ℝ}
