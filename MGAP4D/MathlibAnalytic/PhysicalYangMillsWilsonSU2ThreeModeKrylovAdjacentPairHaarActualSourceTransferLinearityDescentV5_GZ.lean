@@ -202,13 +202,33 @@ theorem p4Q2GZ_actualSignedRightTransfer_eq_originalModalLinear
         ∑ j : Fin (r + 1), a j * (∫ A, K A * v j A ∂ν) :=
     p4Q2GZ_weightedLpFinite_sum
       (μ := ν) K hmeas hbound Finset.univ a v
-  change (∫ A, K A *
-      (↑(∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)) :
-        Lp ℝ 2 ν) A ∂ν) =
-    ∑ j : Fin (r + 1),
-      a j * (∫ A, K A * v j A ∂ν)
-  rw [hSource]
-  exact hLinear
+  have hOriginal :
+      decomposableOneSliceTransferIntegral Hn 2 (beta n)
+          (∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)) B =
+        ∫ A, K A *
+          (↑(∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)) :
+            Lp ℝ 2 ν) A ∂ν :=
+    p4Q2GZ_originalTransferIntegral_eq_kernelIntegral Hn (beta n) B _
+  calc
+    decomposableOneSliceTransferIntegral Hn 2 (beta n)
+        (∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)) B =
+        ∫ A, K A *
+          (↑(∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)) :
+            Lp ℝ 2 ν) A ∂ν := hOriginal
+    _ = ∫ A, K A * (∑ j : Fin (r + 1), a j • v j) A ∂ν := by
+      rw [hSource]
+    _ = ∑ j : Fin (r + 1), a j * (∫ A, K A * v j A ∂ν) := hLinear
+    _ = ∑ j : Fin (r + 1),
+          a j * decomposableOneSliceTransferIntegral Hn 2 (beta n) (v j) B := by
+      apply Finset.sum_congr rfl
+      intro j _
+      congr 1
+      exact (p4Q2GZ_originalTransferIntegral_eq_kernelIntegral
+        Hn (beta n) B (v j)).symm
+    _ = p4Q2GY_actualRightWilsonModalTransfer
+          (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+          n r B a := by
+      rfl
 
 /-- The ZERO-LOCUS of the ACTUAL signed physical Wilson transfer is
 exactly the real codimension-one GY modal-kernel hyperplane. -/
@@ -281,6 +301,7 @@ end
 end MathlibAnalytic
 end MGAP4D
 
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_originalTransferIntegral_eq_kernelIntegral
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_actualSignedRightTransfer_eq_originalModalLinear
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_actualSignedRightTransfer_zero_iff_modalKernel
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_actualSignedPhysicalTransferKernel_mem_iff
