@@ -130,15 +130,18 @@ theorem p4Q2HI_originalWilsonPosteriorDensityContrast_joint_continuous
     continuousNormalizedExp μ (ℓ₁ q.1) q.2)
   exact h₀.sub h₁
 
-/-- Every genuine original physical Haar-L² source has a continuous
-two-interacting-Wilson-posterior GI expectation gap on the FULL pair of
-spatial boundary configurations, at every frozen beta >= 0. The original
-FF signed receiver and both true Wilson density rows remain intact. -/
-theorem p4Q2HI_originalWilsonTwoPosteriorExpectationGap_continuous
+/-- The exact original Wilson Haar pairing is continuous in the complete
+physical boundary pair. This is proved separately from the GI-definitional
+conversion to keep Lean WHNF normalization small on genuine physical types. -/
+theorem p4Q2HI_originalWilsonGI_HaarPairing_continuous
     (f : Phys) (e : Link) :
     Continuous (fun z : Cfg × Cfg =>
-      p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap
-        H beta hbeta f e z) := by
+      ∫ g : Gauge,
+        p4Q2FF_originalWilsonRelativeSignedLinkResponseBCF
+          H 2 (by norm_num) beta hbeta f e (z,g) *
+        p4Q2GB_originalWilsonPosteriorLeftDensityContrast
+          H beta hbeta z.2 e g
+        ∂normalizedCompactHaar Gauge) := by
   let μ : Measure Gauge := normalizedCompactHaar Gauge
   let R := p4Q2FF_originalWilsonRelativeSignedLinkResponseBCF
     H 2 (by norm_num) beta hbeta f e
@@ -157,10 +160,34 @@ theorem p4Q2HI_originalWilsonTwoPosteriorExpectationGap_continuous
       ∫ g : Gauge, R (z,g) * D z.2 g ∂μ) :=
     continuous_integral_compact_domain μ
       (fun z g => R (z,g) * D z.2 g) hIntg
-  apply hIntegral.congr
-  intro z
-  exact (p4Q2GI_originalWilsonSignedTwoPosteriorExpectationGap_eq_HaarPairing
-    H beta hbeta f e z).symm
+  exact hIntegral
+
+/-- Every genuine original physical Haar-L² source has a continuous
+two-interacting-Wilson-posterior GI expectation gap on the FULL pair of
+spatial boundary configurations, for all frozen beta >= 0. The original
+FF signed receiver and both actual Wilson density rows remain intact. -/
+theorem p4Q2HI_originalWilsonTwoPosteriorExpectationGap_continuous
+    (f : Phys) (e : Link) :
+    Continuous (fun z : Cfg × Cfg =>
+      p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap
+        H beta hbeta f e z) := by
+  have hPairing :=
+    p4Q2HI_originalWilsonGI_HaarPairing_continuous H beta hbeta f e
+  have hEq :
+      (fun z : Cfg × Cfg =>
+        ∫ g : Gauge,
+          p4Q2FF_originalWilsonRelativeSignedLinkResponseBCF
+            H 2 (by norm_num) beta hbeta f e (z,g) *
+          p4Q2GB_originalWilsonPosteriorLeftDensityContrast
+            H beta hbeta z.2 e g
+          ∂normalizedCompactHaar Gauge) =
+      (fun z : Cfg × Cfg =>
+        p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap
+          H beta hbeta f e z) := by
+    funext z
+    exact (p4Q2GI_originalWilsonSignedTwoPosteriorExpectationGap_eq_HaarPairing
+      H beta hbeta f e z).symm
+  exact hEq ▸ hPairing
 
 end Frozen
 
@@ -251,6 +278,7 @@ end MGAP4D
 
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2HI_normalizedExp_joint_continuous
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2HI_originalWilsonPosteriorDensityContrast_joint_continuous
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2HI_originalWilsonGI_HaarPairing_continuous
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2HI_originalWilsonTwoPosteriorExpectationGap_continuous
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2HI_actualRightGI_finiteModes_continuous
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2HI_actualRightGLMass_zero_iff_GI_jointKernel
