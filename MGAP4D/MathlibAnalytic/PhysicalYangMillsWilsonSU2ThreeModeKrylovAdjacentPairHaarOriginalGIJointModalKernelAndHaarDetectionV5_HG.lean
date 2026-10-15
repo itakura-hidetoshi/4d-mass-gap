@@ -60,14 +60,26 @@ private noncomputable instance p4Q2HG_linksFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
 
-/-- The TRUE original Wilson spatial pair-Haar probability is positive
-on every nonempty open boundary-context set. This holds because every
-compact SU(2) coordinate has full-support normalized Haar, and finite
-configuration products preserve positive-open support. -/
+/-- Explicit normalized Haar receipt: the SU(2) Haar measure has
+full topological support. In pinned mathlib the IsHaarMeasure instance
+requires unfolding normalizedCompactHaar before typeclass search. -/
+local instance p4Q2HG_su2Haar :
+    (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ)).IsHaarMeasure := by
+  dsimp [normalizedCompactHaar]
+  infer_instance
+
+/-- Each actual finite spatial SU(2) configuration measure is a
+finite product of open-positive normalized Haar coordinates. -/
+local instance p4Q2HG_spatialHaarOpenPos (H : ℕ) :
+    (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2).IsOpenPosMeasure := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+
+/-- Two original finite spatial SU(2) boundaries carry a product
+pair-Haar with strictly positive mass on every nonempty open set. -/
 local instance p4Q2HG_pairHaarOpenPos (H : ℕ) :
     (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H 2).IsOpenPosMeasure := by
   unfold periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure
-    periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
 
 namespace GroundStatePosteriorJoint
