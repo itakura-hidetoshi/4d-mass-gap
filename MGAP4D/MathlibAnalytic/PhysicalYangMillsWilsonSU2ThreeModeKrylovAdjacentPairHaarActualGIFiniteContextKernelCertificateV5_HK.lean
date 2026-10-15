@@ -239,7 +239,9 @@ theorem p4Q2HK_actualRightFiniteGIContext_sourceSeparation_or_obstruction :
       (p4Q2HK_actualRightFiniteGIContextDetector
         (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
         n r s).ker = JointKernel ∧
-      ((PhysicalSynthesis.ker =
+      (((p4Q2HJ_actualRightPhysicalSourceSynthesis
+           (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+           n r).ker =
         (p4Q2HK_actualRightFiniteGIContextDetector
           (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
           n r s).ker) ∨
