@@ -1,0 +1,338 @@
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarActualRightModalTransferHyperplaneV5_GY
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalSignedSourcePosteriorMassTransferKernelV5_GW
+import Mathlib.Tactic
+
+/-!
+# P4-Q2-GZ: descent from genuine physical Wilson transfer to modal coefficient hyperplanes
+
+GY builds a codimension-one linear modal-transfer evaluation by taking the
+ACTUAL original Wilson one-slab transfer at each actual fine right-Krylov
+physical source. Here prove that the resulting finite sum is EXACTLY the
+original Wilson one-slab transfer INTEGRAL of the signed combined physical
+source, for every coefficient vector.
+
+The proof first constructs the genuine bounded-kernel Haar integral as a
+linear map on the entire ambient real L² space, then uses this generic
+lemma directly in the concrete physical sum proof. Its integrability follows
+from the original Wilson kernel bound |K_beta(A,B)| <= 1 at beta>=0 and the
+Lp two-to-one embedding on the spatial Haar probability. The physical
+closed gauge-invariant submodule and each fine right-Krylov factor are
+transported to this same ambient L² before applying the linear map.
+
+Consequently the authentic signed physical transfer-zero locus is exactly
+GY's true modal-transfer hyperplane of codimension one. Its complement is
+open and nonempty. The nonzero original transfer at the SU(2) pi insertion
+also implies strictly positive true interacting original Wilson conditional
+posterior two-LEFT-boundary signed response-square mass by GW.
+
+No independent-Haar conditional posterior, surrogate physical source,
+full coefficient-frame lower bound, GI expectation-gap Delta, H1-C3
+closure or continuum mass gap is asserted.
+-/
+
+namespace MGAP4D
+namespace MathlibAnalytic
+
+open MeasureTheory
+open scoped ENNReal InnerProductSpace BigOperators
+
+noncomputable section
+set_option maxHeartbeats 9000000
+set_option synthInstance.maxHeartbeats 1400000
+
+local instance p4Q2GZ_topologicalGroup :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2GZ_compactSpace :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2GZ_secondCountable :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2GZ_measurableSpace :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2GZ_borelSpace :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  specialUnitaryGroupBorelSpace 2
+
+local instance p4Q2GZ_spatialHaarProbability (H : ℕ) :
+    IsProbabilityMeasure
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
+
+namespace GroundStatePosteriorJoint
+
+section AbstractHaarL2
+
+variable {α : Type*} [MeasurableSpace α]
+variable {μ : Measure α} [IsProbabilityMeasure μ]
+
+/-- The bounded measurable kernel times an actual L² function is
+integrable on the probability reference. -/
+private theorem p4Q2GZ_weightedLp_integrable
+    (K : α → ℝ) (hK : AEStronglyMeasurable K μ)
+    (hBound : ∀ x, ‖K x‖ ≤ 1) (f : Lp ℝ 2 μ) :
+    Integrable (fun x => K x * f x) μ := by
+  have hf : Integrable (fun x => f x) μ := by
+    rw [← memLp_one_iff_integrable]
+    exact (Lp.memLp f).mono_exponent (by norm_num)
+  have hmeas : AEStronglyMeasurable (fun x => K x * f x) μ :=
+    hK.mul (Lp.aestronglyMeasurable f)
+  refine hf.norm.mono' hmeas ?_
+  filter_upwards with x
+  calc
+    ‖K x * f x‖ = ‖K x‖ * ‖f x‖ := norm_mul _ _
+    _ ≤ 1 * ‖f x‖ := mul_le_mul_of_nonneg_right (hBound x) (norm_nonneg _)
+    _ = ‖f x‖ := one_mul _
+
+/-- The literal Haar integral against a bounded measurable real kernel,
+as a linear map on the entire ambient REAL L² Hilbert space. -/
+private noncomputable def p4Q2GZ_weightedLpLinear
+    (K : α → ℝ) (hK : AEStronglyMeasurable K μ)
+    (hBound : ∀ x, ‖K x‖ ≤ 1) : Lp ℝ 2 μ →ₗ[ℝ] ℝ :=
+  { toFun := fun f => ∫ x, K x * f x ∂μ
+    map_add' := by
+      intro f g
+      change (∫ x, K x * (f + g) x ∂μ) =
+        (∫ x, K x * f x ∂μ) + (∫ x, K x * g x ∂μ)
+      calc
+        (∫ x, K x * (f + g) x ∂μ) =
+            ∫ x, (K x * f x + K x * g x) ∂μ := by
+          apply integral_congr_ae
+          filter_upwards [Lp.coeFn_add f g] with x hx
+          rw [hx, Pi.add_apply, mul_add]
+        _ = (∫ x, K x * f x ∂μ) + (∫ x, K x * g x ∂μ) :=
+          integral_add
+            (p4Q2GZ_weightedLp_integrable K hK hBound f)
+            (p4Q2GZ_weightedLp_integrable K hK hBound g)
+    map_smul' := by
+      intro c f
+      change (∫ x, K x * (c • f) x ∂μ) =
+        c * (∫ x, K x * f x ∂μ)
+      calc
+        (∫ x, K x * (c • f) x ∂μ) =
+            ∫ x, c * (K x * f x) ∂μ := by
+          apply integral_congr_ae
+          filter_upwards [Lp.coeFn_smul c f] with x hx
+          rw [hx, Pi.smul_apply, smul_eq_mul]
+          ring
+        _ = c * (∫ x, K x * f x ∂μ) := integral_const_mul c _ }
+
+
+/-- Exact finite linearity of genuine bounded-kernel L² Haar integrals;
+integrability of every term is built into the source linear map. -/
+private theorem p4Q2GZ_weightedLpFinite_sum
+    {ι : Type*} (K : α → ℝ)
+    (hK : AEStronglyMeasurable K μ)
+    (hBound : ∀ x, ‖K x‖ ≤ 1)
+    (s : Finset ι) (a : ι → ℝ) (v : ι → Lp ℝ 2 μ) :
+    (∫ x, K x * (∑ j ∈ s, a j • v j) x ∂μ) =
+      ∑ j ∈ s, a j * (∫ x, K x * v j x ∂μ) := by
+  let F := p4Q2GZ_weightedLpLinear K hK hBound
+  change F (∑ j ∈ s, a j • v j) = ∑ j ∈ s, a j * F (v j)
+  simp [map_sum, map_smul, smul_eq_mul]
+
+end AbstractHaarL2
+
+/-- The defining original one-slab Wilson kernel formula for an arbitrary
+ambient spatial Haar-L² input, isolated from finite coefficient sums. -/
+theorem p4Q2GZ_originalTransferIntegral_eq_kernelIntegral
+    (H : ℕ) (beta : ℝ)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2)
+    (f : Lp ℝ 2
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)) :
+    decomposableOneSliceTransferIntegral H 2 beta f B =
+      ∫ A, periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+          H 2 beta A B * f A
+        ∂periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2 := by
+  rfl
+
+/-! ## Generic physical submodule transport with no concrete Wilson LinearMap -/
+
+section AbstractPhysicalFiniteSum
+
+variable {α : Type*} [MeasurableSpace α]
+variable {μ : Measure α} [IsProbabilityMeasure μ]
+
+/-- Finite-sum linearity of the bounded-kernel Haar integral on any
+physical real submodule of the ambient L². All heavy physical geometry
+is deliberately absent from the theorem and its proof. -/
+private theorem p4Q2GZ_weightedSubmoduleFinite_sum
+    {ι : Type*} [Fintype ι]
+    (K : α → ℝ) (hK : AEStronglyMeasurable K μ)
+    (hBound : ∀ x, ‖K x‖ ≤ 1)
+    (S : Submodule ℝ (Lp ℝ 2 μ))
+    (a : ι → ℝ) (v : ι → S) :
+    (∫ x, K x * (↑(∑ j, a j • v j) : Lp ℝ 2 μ) x ∂μ) =
+      ∑ j, a j * (∫ x, K x * (v j : Lp ℝ 2 μ) x ∂μ) := by
+  have hSource :
+      (↑(∑ j, a j • v j) : Lp ℝ 2 μ) =
+        ∑ j, a j • (v j : Lp ℝ 2 μ) := by
+    simp only [Submodule.coe_sum, Submodule.coe_smul]
+  rw [hSource]
+  exact p4Q2GZ_weightedLpFinite_sum
+    (μ := μ) K hK hBound Finset.univ a
+    (fun j => (v j : Lp ℝ 2 μ))
+
+end AbstractPhysicalFiniteSum
+
+/-! ## Measurable bounded original Wilson kernel sections -/
+
+/-- Measurability of each actual Wilson one-slab left-boundary section. -/
+private theorem p4Q2GZ_fixedOriginalKernel_aestronglyMeasurable
+    (H : ℕ) (beta : ℝ)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    AEStronglyMeasurable
+      (fun A => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+        H 2 beta A B)
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) := by
+  exact ((periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+    H 2 beta).comp (continuous_id.prodMk continuous_const)).aestronglyMeasurable
+
+/-- Unit upper bound on the original (non-surrogate) Wilson section. -/
+private theorem p4Q2GZ_fixedOriginalKernel_norm_le_one
+    (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (B A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+      H 2 beta A B‖ ≤ 1 := by
+  rw [Real.norm_eq_abs]
+  exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
+    H 2 (by norm_num) beta hbeta A B
+
+section ActualRightKrylov
+
+variable {halfExtent : ℕ → ℕ} {beta : ℕ → ℝ}
+variable {hbeta : ∀ n, 0 ≤ beta n}
+variable (n r : ℕ)
+local notation "Hn" => halfExtent (n + 1)
+local notation "Cfg" =>
+  PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration Hn 2
+local notation "Phys" =>
+  periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule Hn 2
+local notation "RightFactor" =>
+  physicalYangMillsSU2AdjacentFinePairOrbitRightFactor
+    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+
+/-- Finite linearity of the LITERAL original signed Krylov source
+one-slab transfer. The modal evaluation does not occur in this proof,
+keeping the huge physical source elaboration separate from GY algebra. -/
+private theorem p4Q2GZ_actualRightTransferFinite_sum
+    (a : Fin (r + 1) → ℝ) (B : Cfg) :
+    decomposableOneSliceTransferIntegral Hn 2 (beta n)
+      (∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)) B =
+      ∑ j : Fin (r + 1), a j *
+        decomposableOneSliceTransferIntegral Hn 2 (beta n)
+          (RightFactor n (j : ℕ)) B := by
+  let ν : Measure Cfg :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure Hn 2
+  let K : Cfg → ℝ := fun A =>
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+      Hn 2 (beta n) A B
+  haveI : IsProbabilityMeasure ν := p4Q2GZ_spatialHaarProbability Hn
+  have hmeas : AEStronglyMeasurable K ν :=
+    p4Q2GZ_fixedOriginalKernel_aestronglyMeasurable Hn (beta n) B
+  have hbound : ∀ A : Cfg, ‖K A‖ ≤ 1 := by
+    intro A
+    exact p4Q2GZ_fixedOriginalKernel_norm_le_one
+      Hn (beta n) (hbeta n) B A
+  have hFinite :=
+    p4Q2GZ_weightedSubmoduleFinite_sum
+      (μ := ν) K hmeas hbound Phys a
+      (fun j : Fin (r + 1) => RightFactor n (j : ℕ))
+  simpa only [p4Q2GZ_originalTransferIntegral_eq_kernelIntegral,
+    Submodule.coe_sum, Submodule.coe_smul, K, ν] using hFinite
+
+/-- The actual Wilson integral of EVERY signed finite-depth Krylov
+source equals the GY genuine modal coefficient map. -/
+theorem p4Q2GZ_actualSignedRightTransfer_eq_originalModalLinear
+    (a : Fin (r + 1) → ℝ) (B : Cfg) :
+    decomposableOneSliceTransferIntegral Hn 2 (beta n)
+      (∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)) B =
+      p4Q2GY_actualRightWilsonModalTransfer
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+        n r B a := by
+  simpa only [p4Q2GY_actualRightWilsonModalTransfer,
+      p4Q2GY_modalTransferLinear_apply] using
+    (p4Q2GZ_actualRightTransferFinite_sum
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+      n r a B)
+
+/-- The ZERO-LOCUS of the ACTUAL signed physical Wilson transfer is
+exactly the real codimension-one GY modal-kernel hyperplane. -/
+theorem p4Q2GZ_actualSignedRightTransfer_zero_iff_modalKernel
+    (a : Fin (r + 1) → ℝ) (B : Cfg) :
+    decomposableOneSliceTransferIntegral Hn 2 (beta n)
+      (∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)) B = 0 ↔
+      a ∈ (p4Q2GY_actualRightWilsonModalTransfer
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+        n r B).ker := by
+  rw [p4Q2GZ_actualSignedRightTransfer_eq_originalModalLinear
+    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r a B]
+  exact (LinearMap.mem_ker).symm
+
+/-- The original signed physical Wilson-transfer null locus inherits
+GY's exact real codimension-one (finrank r) structure, now with a
+PROVED equality of the original source integral and modal extension. -/
+noncomputable def p4Q2GZ_actualSignedPhysicalTransferKernel (B : Cfg) :
+    Submodule ℝ (Fin (r + 1) → ℝ) :=
+  (p4Q2GY_actualRightWilsonModalTransfer
+    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+    n r B).ker
+
+theorem p4Q2GZ_actualSignedPhysicalTransferKernel_mem_iff
+    (a : Fin (r + 1) → ℝ) (B : Cfg) :
+    a ∈ p4Q2GZ_actualSignedPhysicalTransferKernel
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+      n r B ↔
+      decomposableOneSliceTransferIntegral Hn 2 (beta n)
+        (∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)) B = 0 := by
+  exact (p4Q2GZ_actualSignedRightTransfer_zero_iff_modalKernel
+    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+    n r a B).symm
+
+theorem p4Q2GZ_actualSignedPhysicalTransferKernel_finrank
+    (B : Cfg) :
+    Module.finrank ℝ
+      ↥(p4Q2GZ_actualSignedPhysicalTransferKernel
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+        n r B) = r := by
+  exact p4Q2GY_actualRightWilsonModalTransfer_kernel_finrank
+    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+    n r B
+
+/-- A nonzero TRUE original transfer at the real pi insertion implies
+positive squared physical response difference under the ORIGINAL
+interacting Wilson conditional posterior, not under fake Haar. -/
+theorem p4Q2GZ_actualRightPosteriorMass_pos_of_originalModal_ne
+    (hFrozen : 0 < beta n)
+    (a : Fin (r + 1) → ℝ) (right : Cfg)
+    (e : PeriodicHypercubicEvenSpatialSliceLink Hn)
+    (hModal :
+      p4Q2GY_actualRightWilsonModalTransfer
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+        n r (Function.update right e (specialUnitaryTwoRotation Real.pi)) a ≠ 0) :
+    0 < p4Q2GU_originalPhysicalTwoBoundaryContrastPosteriorMass
+      Hn (beta n) (hbeta n)
+      (∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ))
+      right e := by
+  apply p4Q2GW_actualRightKrylov_PosteriorMass_pos_of_transfer_ne
+    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+    n r hFrozen a right e
+  rw [p4Q2GZ_actualSignedRightTransfer_eq_originalModalLinear
+    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)]
+  exact hModal
+
+end ActualRightKrylov
+end GroundStatePosteriorJoint
+end
+end MathlibAnalytic
+end MGAP4D
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_originalTransferIntegral_eq_kernelIntegral
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_actualSignedRightTransfer_eq_originalModalLinear
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_actualSignedRightTransfer_zero_iff_modalKernel
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_actualSignedPhysicalTransferKernel_mem_iff
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_actualSignedPhysicalTransferKernel_finrank
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_actualRightPosteriorMass_pos_of_originalModal_ne
