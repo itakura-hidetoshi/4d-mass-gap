@@ -7,8 +7,8 @@ import Mathlib.Tactic
 HG built the original two-Wilson-posterior GI whole-context linear
 detector submodule and connected its a.e.-null locus to the original
 GL genuine gap-square detection mass. Its single-point Gram positivity
-theorem retained the explicit analytic continuity hypothesis for every
-signed source.
+the prior proof retained the explicit analytic continuity hypothesis
+for every signed source.
 
 HF proves that the ACTUAL two-Wilson-posterior expectation gap of a
 signed fine-right Krylov source is a finite linear combination of its
