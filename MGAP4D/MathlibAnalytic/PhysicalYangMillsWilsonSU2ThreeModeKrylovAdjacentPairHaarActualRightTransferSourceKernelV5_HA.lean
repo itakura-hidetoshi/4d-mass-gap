@@ -126,9 +126,14 @@ theorem p4Q2HA_actualPhysicalSource_zero_implies_modal_zero
         Lp ℝ 2
           (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure Hn 2)) = 0 := by
     simpa only [Submodule.coe_zero] using congrArg Subtype.val hSource
+  have hAmbientSum :
+      (∑ j : Fin (r + 1), a j •
+        (RightFactor n (j : ℕ) : Lp ℝ 2
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure Hn 2))) = 0 := by
+    simpa only [Submodule.coe_sum, Submodule.coe_smul] using hAmbient
   rw [← p4Q2GZ_actualSignedRightTransfer_eq_originalModalLinear
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r a B]
-  rw [hAmbient]
+  rw [hAmbientSum]
   exact p4Q2HA_originalWilsonTransfer_zero Hn (beta n) B
 
 /-- Exact criterion for whole-boundary separation of the signed physical
@@ -147,9 +152,11 @@ theorem p4Q2HA_jointModal_zero_iff_physicalSource_zero_of_separating
   · intro hAll
     apply hSeparate
     intro B
-    exact (p4Q2GZ_actualSignedRightTransfer_eq_originalModalLinear
-      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-      n r a B).trans (hAll B)
+    have hTransfer :=
+      (p4Q2GZ_actualSignedRightTransfer_eq_originalModalLinear
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+        n r a B).trans (hAll B)
+    simpa only [Submodule.coe_sum, Submodule.coe_smul] using hTransfer
   · intro hSource B
     exact p4Q2HA_actualPhysicalSource_zero_implies_modal_zero
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
@@ -193,7 +200,7 @@ theorem p4Q2HA_fineZero_actualSource_zero_iff_sum_zero
     (fun j : Fin (r + 1) => RightFactor n (j : ℕ))
     (RightFactor n 0)
     (p4Q2HA_actualZeroDepthSource_ne_zero
-      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r)
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n)
     (fun j => fineRightFactor_eq_zeroDepth_of_fine_beta_zero
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
       n (j : ℕ) hFineZero)
@@ -232,7 +239,8 @@ theorem p4Q2HA_fineZero_originalModal_eq_sum_mul
             n (j : ℕ) hFineZero))
     _ = (∑ j : Fin (r + 1), a j) *
         decomposableOneSliceTransferIntegral Hn 2 (beta n)
-          (RightFactor n 0) B := (Finset.sum_mul).symm
+          (RightFactor n 0) B := by
+      rw [Finset.sum_mul]
 
 /-- Fine-beta-zero original Wilson transfer vanishes at a fixed
 physical right boundary IFF the signed coefficient sum vanishes.
