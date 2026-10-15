@@ -268,7 +268,7 @@ theorem p4Q2HH_actualRightGram_pos_of_not_mem_jointKernel
       ∃ e : Link, ∃ z : Cfg × Cfg,
         GI (∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)) e z ≠ 0 := by
     by_contra hNone
-    push_neg at hNone
+    push Not at hNone
     exact hNot ((p4Q2HG_actualRightGIJointModalKernel_mem_iff
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
       n r a).mpr hNone)
