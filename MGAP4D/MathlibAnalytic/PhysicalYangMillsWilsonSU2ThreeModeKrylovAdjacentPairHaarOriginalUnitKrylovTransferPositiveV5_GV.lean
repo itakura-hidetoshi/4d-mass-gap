@@ -243,9 +243,17 @@ theorem p4Q2GV_actualFineRightZeroMode_twoBoundaryWilsonPosteriorMass_pos
   have hHaar :
       0 < p4Q2GT_originalTwoBoundaryPhysicalSignedResponseHaarMass
         Hn (beta n) (hbeta n) (RightFactor n 0) right e :=
-    p4Q2GV_actualFineRightZeroMode_twoBoundaryHaarMass_pos n hFrozen right e
-  have hBound :=
+    p4Q2GV_actualFineRightZeroMode_twoBoundaryHaarMass_pos
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+      n hFrozen right e
+  have hBound :
+      Real.exp (-16 * beta n) *
+          p4Q2GT_originalTwoBoundaryPhysicalSignedResponseHaarMass
+            Hn (beta n) (hbeta n) (RightFactor n 0) right e ≤
+        p4Q2GU_originalPhysicalTwoBoundaryContrastPosteriorMass
+          Hn (beta n) (hbeta n) (RightFactor n 0) right e :=
     p4Q2GV_actualFineRightZeroMode_twoBoundaryWilsonPosteriorMass_ge_Haar
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
       n right e
   exact lt_of_lt_of_le (mul_pos (Real.exp_pos _) hHaar) hBound
 
