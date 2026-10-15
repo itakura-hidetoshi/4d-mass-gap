@@ -67,6 +67,26 @@ local instance p4Q2GVUnit_haarProbability (H : ℕ) :
 
 namespace GroundStatePosteriorJoint
 
+/-- Perform the probability integral comparison in a GENERIC measurable
+space.  Elaborating this after substituting the gigantic concrete
+SU(2) lattice configuration causes nonterminating weak-head reduction
+at the kernel check. -/
+private theorem p4Q2GV_integral_pos_of_uniform_floor
+    {α : Type*} [MeasurableSpace α]
+    {μ : Measure α} [IsProbabilityMeasure μ]
+    {f : α → ℝ} (hf : Integrable f μ)
+    {m : ℝ} (hm : 0 < m) (hFloor : ∀ a, m ≤ f a) :
+    0 < ∫ a, f a ∂μ := by
+  have hConst : (∫ _ : α, m ∂μ) = m := by
+    simp
+  have hBound : (∫ _ : α, m ∂μ) ≤ ∫ a, f a ∂μ := by
+    apply integral_mono (integrable_const m) hf
+    intro a
+    exact hFloor a
+  rw [hConst] at hBound
+  exact lt_of_lt_of_le hm hBound
+
+
 /-- The original continuous Wilson one-slab kernel has strictly positive
 spatial-Haar integral.  Use the EXISTING concrete compact-kernel lower-bound
 theorem and a direct integral monotonicity step; do not unfold the enormous
@@ -89,19 +109,13 @@ theorem p4Q2GVUnit_originalKernelIntegral_pos
   obtain ⟨m, hmPos, hmLower⟩ :=
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_exists_uniform_pos_lower_bound
       H 2 beta
-  have hConst : (∫ _ : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
-        m ∂μ) = m := by
-    simp
-  have hLower : m ≤ ∫ A, K A ∂μ := by
-    calc
-      m = ∫ _ : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
-          m ∂μ := hConst.symm
-      _ ≤ ∫ A, K A ∂μ := by
-        apply integral_mono (integrable_const m) hIntegrable
-        intro A
-        exact hmLower A B
+  haveI : IsProbabilityMeasure μ := by
+    change IsProbabilityMeasure
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)
+    exact p4Q2GVUnit_haarProbability H
   change 0 < ∫ A, K A ∂μ
-  exact lt_of_lt_of_le hmPos hLower
+  exact p4Q2GV_integral_pos_of_uniform_floor
+    (μ := μ) (f := K) hIntegrable hmPos (fun A => hmLower A B)
 
 /-- The actual physical gauge-invariant constant unit is Haar-a.e.
 one. Consequently its ORIGINAL smoothed Wilson transfer integral is
