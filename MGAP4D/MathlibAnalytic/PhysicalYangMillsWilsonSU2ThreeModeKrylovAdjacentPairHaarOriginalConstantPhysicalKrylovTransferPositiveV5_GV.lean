@@ -83,9 +83,9 @@ theorem p4Q2GV_originalConstantPhysicalTransferIntegral_pos
     periodicHypercubicEvenSpecialUnitarySpatialSliceHaarOneL2 H 2
   have hOneL2 : (fun A : Cfg => oneL2 A) =ᵐ[μ]
       (fun _ => (1 : ℝ)) := by
-    simpa [oneL2,
-      periodicHypercubicEvenSpecialUnitarySpatialSliceHaarOneL2] using
-      (Lp.coeFn_const (μ := μ) (p := 2) (c := (1 : ℝ)))
+    change (fun A : Cfg => (Lp.const 2 μ (1 : ℝ)) A) =ᵐ[μ]
+      (fun _ => (1 : ℝ))
+    exact Lp.coeFn_const (μ := μ) (p := 2) (c := (1 : ℝ))
   have hF : f = oneL2 :=
     periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_coe_eq_HaarOneL2
       H 2
