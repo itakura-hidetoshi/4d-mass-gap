@@ -112,8 +112,22 @@ theorem p4Q2GX_actualRightZeroCoefficient_originalTransfer_pos (B : Cfg) :
     0 < decomposableOneSliceTransferIntegral Hn 2 (beta n)
       (∑ j : Fin (r + 1),
         p4Q2GX_rightZeroCoefficient r j • RightFactor n (j : ℕ)) B := by
-  rw [p4Q2GX_actualRightCoefficientSource_eq_zeroMode
-    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r]
+  have hPhysical :
+      (∑ j : Fin (r + 1),
+        p4Q2GX_rightZeroCoefficient r j • RightFactor n (j : ℕ)) =
+        RightFactor n 0 :=
+    p4Q2GX_actualRightCoefficientSource_eq_zeroMode
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r
+  have hLp :
+      (∑ j : Fin (r + 1),
+        p4Q2GX_rightZeroCoefficient r j •
+          (RightFactor n (j : ℕ) : Lp ℝ 2
+            (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure Hn 2))) =
+        (RightFactor n 0 : Lp ℝ 2
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure Hn 2)) := by
+    have h := congrArg Subtype.val hPhysical
+    simpa only [Submodule.coe_sum, Submodule.coe_smul] using h
+  rw [hLp]
   exact p4Q2GV_actualFineRightZeroMode_transferIntegral_pos
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n B
 
