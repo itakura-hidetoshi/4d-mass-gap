@@ -136,53 +136,6 @@ private theorem p4Q2GZ_weightedLpFinite_sum
 
 end AbstractHaarL2
 
-section OriginalTransferFiniteSum
-
-/-- Genuine one-slab Wilson source-integral linearity on the ambient REAL
-Haar L² Hilbert space, before any gauge-invariant submodule coercion
-or high-complexity Krylov source is introduced. -/
-theorem p4Q2GZ_originalAmbientTransfer_sum
-    (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta)
-    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2)
-    {ι : Type*} [Fintype ι]
-    (a : ι → ℝ)
-    (v : ι → Lp ℝ 2
-      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)) :
-    decomposableOneSliceTransferIntegral H 2 beta
-      (∑ j : ι, a j • v j) B =
-      ∑ j : ι, a j * decomposableOneSliceTransferIntegral H 2 beta (v j) B := by
-  classical
-  let ν : Measure
-      (PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :=
-    periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
-  let K :
-      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 → ℝ :=
-    fun A => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-      H 2 beta A B
-  haveI : IsProbabilityMeasure ν := p4Q2GZ_spatialHaarProbability H
-  have hcont : Continuous K :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H 2 beta).comp (continuous_id.prodMk continuous_const)
-  have hmeas : AEStronglyMeasurable K ν := hcont.aestronglyMeasurable
-  have hbound :
-      ∀ A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
-        ‖K A‖ ≤ 1 := by
-    intro A
-    change ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-      H 2 beta A B‖ ≤ 1
-    rw [Real.norm_eq_abs]
-    exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
-      H 2 (by norm_num) beta hbeta A B
-  have hLinear :=
-    p4Q2GZ_weightedLpFinite_sum
-      (μ := ν) K hmeas hbound Finset.univ a v
-  change (∫ A, K A *
-      (∑ j : ι, a j • v j) A ∂ν) =
-    ∑ j : ι, a j * (∫ A, K A * v j A ∂ν)
-  simpa only using hLinear
-
-end OriginalTransferFiniteSum
-
 section ActualRightKrylov
 
 variable {halfExtent : ℕ → ℕ} {beta : ℕ → ℝ}
@@ -209,28 +162,40 @@ theorem p4Q2GZ_actualSignedRightTransfer_eq_originalModalLinear
         n r B a := by
   let ν : Measure Cfg :=
     periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure Hn 2
+  let K : Cfg → ℝ := fun A =>
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+      Hn 2 (beta n) A B
+  haveI : IsProbabilityMeasure ν :=
+    p4Q2GZ_spatialHaarProbability Hn
+  have hcont : Continuous K :=
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      Hn 2 (beta n)).comp (continuous_id.prodMk continuous_const)
+  have hmeas : AEStronglyMeasurable K ν := hcont.aestronglyMeasurable
+  have hbound : ∀ A : Cfg, ‖K A‖ ≤ 1 := by
+    intro A
+    change ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+      Hn 2 (beta n) A B‖ ≤ 1
+    rw [Real.norm_eq_abs]
+    exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
+      Hn 2 (by norm_num) (beta n) (hbeta n) A B
   let v : Fin (r + 1) → Lp ℝ 2 ν :=
     fun j => (RightFactor n (j : ℕ) : Lp ℝ 2 ν)
   have hSource :
       (↑(∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)) : Lp ℝ 2 ν) =
         ∑ j : Fin (r + 1), a j • v j := by
     simp only [v, Submodule.coe_sum, Submodule.coe_smul]
-  calc
-    decomposableOneSliceTransferIntegral Hn 2 (beta n)
-        (∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)) B =
-        decomposableOneSliceTransferIntegral Hn 2 (beta n)
-          (∑ j : Fin (r + 1), a j • v j) B := by
-      rw [hSource]
-    _ = ∑ j : Fin (r + 1), a j *
-          decomposableOneSliceTransferIntegral Hn 2 (beta n) (v j) B :=
-      p4Q2GZ_originalAmbientTransfer_sum Hn (beta n) (hbeta n) B a v
-    _ = p4Q2GY_actualRightWilsonModalTransfer
-          (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-          n r B a := by
-      exact (p4Q2GY_modalTransferLinear_apply r
-        (fun j : Fin (r + 1) =>
-          decomposableOneSliceTransferIntegral Hn 2 (beta n)
-            (RightFactor n (j : ℕ)) B) a).symm
+  have hLinear :
+      (∫ A, K A * (∑ j : Fin (r + 1), a j • v j) A ∂ν) =
+        ∑ j : Fin (r + 1), a j * (∫ A, K A * v j A ∂ν) :=
+    p4Q2GZ_weightedLpFinite_sum
+      (μ := ν) K hmeas hbound Finset.univ a v
+  change (∫ A, K A *
+      (↑(∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)) :
+        Lp ℝ 2 ν) A ∂ν) =
+    ∑ j : Fin (r + 1),
+      a j * (∫ A, K A * v j A ∂ν)
+  rw [hSource]
+  exact hLinear
 
 /-- The ZERO-LOCUS of the ACTUAL signed physical Wilson transfer is
 exactly the real codimension-one GY modal-kernel hyperplane. -/
@@ -303,7 +268,6 @@ end
 end MathlibAnalytic
 end MGAP4D
 
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_originalAmbientTransfer_sum
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_actualSignedRightTransfer_eq_originalModalLinear
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_actualSignedRightTransfer_zero_iff_modalKernel
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_actualSignedPhysicalTransferKernel_mem_iff
