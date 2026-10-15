@@ -37,8 +37,8 @@ open MeasureTheory
 open scoped ENNReal InnerProductSpace BigOperators
 
 noncomputable section
-set_option maxHeartbeats 2600000
-set_option synthInstance.maxHeartbeats 880000
+set_option maxHeartbeats 9000000
+set_option synthInstance.maxHeartbeats 1400000
 
 local instance p4Q2GZ_topologicalGroup :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
@@ -150,6 +150,7 @@ local notation "RightFactor" =>
   physicalYangMillsSU2AdjacentFinePairOrbitRightFactor
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
 
+set_option maxRecDepth 4096 in
 /-- The MISSING DESCENT: for every actual signed finite-depth right-Krylov
 physical source, its ORIGINAL one-slab Wilson integral is exactly GY's
 finite linear functional of the ACTUAL modal original Wilson transfers. -/
