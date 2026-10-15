@@ -12,7 +12,8 @@ original Wilson one-slab transfer INTEGRAL of the signed combined physical
 source, for every coefficient vector.
 
 The proof first constructs the genuine bounded-kernel Haar integral as a
-linear map on the entire ambient real L² space. Its integrability follows
+linear map on the entire ambient real L² space, then uses this generic
+lemma directly in the concrete physical sum proof. Its integrability follows
 from the original Wilson kernel bound |K_beta(A,B)| <= 1 at beta>=0 and the
 Lp two-to-one embedding on the spatial Haar probability. The physical
 closed gauge-invariant submodule and each fine right-Krylov factor are
@@ -79,7 +80,7 @@ private theorem p4Q2GZ_weightedLp_integrable
     exact (Lp.memLp f).mono_exponent (by norm_num)
   have hmeas : AEStronglyMeasurable (fun x => K x * f x) μ :=
     hK.mul (Lp.aestronglyMeasurable f)
-  refine hf.mono' hmeas ?_
+  refine hf.norm.mono' hmeas ?_
   filter_upwards with x
   calc
     ‖K x * f x‖ = ‖K x‖ * ‖f x‖ := norm_mul _ _
@@ -101,7 +102,7 @@ private noncomputable def p4Q2GZ_weightedLpLinear
             ∫ x, (K x * f x + K x * g x) ∂μ := by
           apply integral_congr_ae
           filter_upwards [Lp.coeFn_add f g] with x hx
-          rw [hx, mul_add]
+          rw [hx, Pi.add_apply, mul_add]
         _ = (∫ x, K x * f x ∂μ) + (∫ x, K x * g x ∂μ) :=
           integral_add
             (p4Q2GZ_weightedLp_integrable K hK hBound f)
@@ -115,53 +116,25 @@ private noncomputable def p4Q2GZ_weightedLpLinear
             ∫ x, c * (K x * f x) ∂μ := by
           apply integral_congr_ae
           filter_upwards [Lp.coeFn_smul c f] with x hx
-          rw [hx]
-          simp only [smul_eq_mul]
+          rw [hx, Pi.smul_apply, smul_eq_mul]
           ring
         _ = c * (∫ x, K x * f x ∂μ) := integral_const_mul c _ }
 
+
+/-- Exact finite linearity of genuine bounded-kernel L² Haar integrals;
+integrability of every term is built into the source linear map. -/
+private theorem p4Q2GZ_weightedLpFinite_sum
+    {ι : Type*} (K : α → ℝ)
+    (hK : AEStronglyMeasurable K μ)
+    (hBound : ∀ x, ‖K x‖ ≤ 1)
+    (s : Finset ι) (a : ι → ℝ) (v : ι → Lp ℝ 2 μ) :
+    (∫ x, K x * (∑ j ∈ s, a j • v j) x ∂μ) =
+      ∑ j ∈ s, a j * (∫ x, K x * v j x ∂μ) := by
+  let F := p4Q2GZ_weightedLpLinear K hK hBound
+  change F (∑ j ∈ s, a j • v j) = ∑ j ∈ s, a j * F (v j)
+  simp [map_sum, map_smul, smul_eq_mul]
+
 end AbstractHaarL2
-
-section OriginalPhysicalWilson
-
-variable (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta)
-local notation "Cfg" =>
-  PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
-local notation "Phys" =>
-  periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2
-local notation "μ" =>
-  periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
-
-/-- Genuine original Wilson one-slab kernel-smoothed source transfer is
-a LINEAR MAP of its ambient Haar-L² input, not a replacement source. -/
-noncomputable def p4Q2GZ_originalWilsonPhysicalTransferLinear (B : Cfg) :
-    Lp ℝ 2 μ →ₗ[ℝ] ℝ := by
-  let K : Cfg → ℝ := fun A =>
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta A B
-  have hcont : Continuous K :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H 2 beta).comp (continuous_id.prodMk continuous_const)
-  have hmeas : AEStronglyMeasurable K μ := hcont.aestronglyMeasurable
-  have hbound : ∀ A : Cfg, ‖K A‖ ≤ 1 := by
-    intro A
-    change ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-      H 2 beta A B‖ ≤ 1
-    rw [Real.norm_eq_abs]
-    exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
-      H 2 (by norm_num) beta hbeta A B
-  exact p4Q2GZ_weightedLpLinear K hmeas hbound
-
-/-- Exact identity, on the REAL gauge-invariant physical submodule, of
-the original decomposable one-slab transfer and the genuine bounded
-Haar-L² linear integral. -/
-theorem p4Q2GZ_originalTransferIntegral_eq_linear_eval
-    (B : Cfg) (f : Phys) :
-    decomposableOneSliceTransferIntegral H 2 beta f B =
-      p4Q2GZ_originalWilsonPhysicalTransferLinear H beta hbeta B
-        (f : Lp ℝ 2 μ) := by
-  rfl
-
-end OriginalPhysicalWilson
 
 section ActualRightKrylov
 
@@ -189,36 +162,42 @@ theorem p4Q2GZ_actualSignedRightTransfer_eq_originalModalLinear
       p4Q2GY_actualRightWilsonModalTransfer
         (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
         n r B a := by
-  let F := p4Q2GZ_originalWilsonPhysicalTransferLinear
-    Hn (beta n) (hbeta n) B
-  have hEval (f : Phys) :
-      decomposableOneSliceTransferIntegral Hn 2 (beta n) f B =
-        F (f : Lp ℝ 2 μ) :=
-    p4Q2GZ_originalTransferIntegral_eq_linear_eval
-      Hn (beta n) (hbeta n) B f
-  calc
-    decomposableOneSliceTransferIntegral Hn 2 (beta n)
-        (∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)) B =
-        F (↑(∑ j : Fin (r + 1),
-          a j • RightFactor n (j : ℕ)) : Lp ℝ 2 μ) := hEval _
-    _ = F (∑ j : Fin (r + 1),
-          a j • (RightFactor n (j : ℕ) : Lp ℝ 2 μ)) := by
-      simp only [Submodule.coe_sum, Submodule.coe_smul]
-    _ = ∑ j : Fin (r + 1),
-          a j * F (RightFactor n (j : ℕ) : Lp ℝ 2 μ) := by
-      simp only [map_sum, map_smul, smul_eq_mul]
-    _ = p4Q2GY_actualRightWilsonModalTransfer
-          (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-          n r B a := by
-      change (∑ j : Fin (r + 1),
-          a j * F (RightFactor n (j : ℕ) : Lp ℝ 2 μ)) =
-        ∑ j : Fin (r + 1),
-          a j * decomposableOneSliceTransferIntegral Hn 2 (beta n)
-            (RightFactor n (j : ℕ)) B
-      apply Finset.sum_congr rfl
-      intro j _
-      congr 1
-      exact (hEval (RightFactor n (j : ℕ))).symm
+  let ν : Measure Cfg :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure Hn 2
+  let K : Cfg → ℝ := fun A =>
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+      Hn 2 (beta n) A B
+  haveI : IsProbabilityMeasure ν :=
+    p4Q2GZ_spatialHaarProbability Hn
+  have hcont : Continuous K :=
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      Hn 2 (beta n)).comp (continuous_id.prodMk continuous_const)
+  have hmeas : AEStronglyMeasurable K ν :=
+    hcont.aestronglyMeasurable
+  have hbound : ∀ A : Cfg, ‖K A‖ ≤ 1 := by
+    intro A
+    change ‖periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+      Hn 2 (beta n) A B‖ ≤ 1
+    rw [Real.norm_eq_abs]
+    exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
+      Hn 2 (by norm_num) (beta n) (hbeta n) A B
+  let f : Fin (r + 1) → Lp ℝ 2 ν := fun j =>
+    (RightFactor n (j : ℕ) : Lp ℝ 2 ν)
+  have hSum :
+      (↑(∑ j : Fin (r + 1),
+          a j • RightFactor n (j : ℕ)) : Lp ℝ 2 ν) =
+        ∑ j : Fin (r + 1), a j • f j := by
+    simp only [f, Submodule.coe_sum, Submodule.coe_smul]
+  have hLinear :=
+    p4Q2GZ_weightedLpFinite_sum
+      (μ := ν) K hmeas hbound (Finset.univ) a f
+  change (∫ A, K A *
+      (↑(∑ j : Fin (r + 1),
+        a j • RightFactor n (j : ℕ)) : Lp ℝ 2 ν) A ∂ν) =
+    ∑ j : Fin (r + 1),
+      a j * (∫ A, K A * f j A ∂ν)
+  rw [hSum]
+  simpa only using hLinear
 
 /-- The ZERO-LOCUS of the ACTUAL signed physical Wilson transfer is
 exactly the real codimension-one GY modal-kernel hyperplane. -/
@@ -291,7 +270,6 @@ end
 end MathlibAnalytic
 end MGAP4D
 
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_originalTransferIntegral_eq_linear_eval
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_actualSignedRightTransfer_eq_originalModalLinear
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_actualSignedRightTransfer_zero_iff_modalKernel
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_actualSignedPhysicalTransferKernel_mem_iff
