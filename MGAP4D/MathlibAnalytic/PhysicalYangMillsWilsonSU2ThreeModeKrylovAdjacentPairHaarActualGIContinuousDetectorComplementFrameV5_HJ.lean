@@ -323,8 +323,10 @@ theorem p4Q2HJ_actualRightGIContinuousDetector_finrank_identity :
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r
   have hRank := LinearMap.finrank_range_add_finrank_ker Phi
   rw [p4Q2HJ_actualRightGIContinuousDetector_ker_eq_jointKernel] at hRank
-  simpa only [Phi, Module.finrank_pi_fintype, Module.finrank_fin_fun, Finset.card_fin]
-    using hRank
+  have hCoeffDim : Module.finrank ℝ (Fin (r + 1) → ℝ) = r + 1 := by
+    simp
+  rw [hCoeffDim] at hRank
+  simpa only [Phi] using hRank
 
 /-- FINITE-DETECTOR FRAME: without assuming a nonzero original GI anchor,
 there exists a (possibly zero-dimensional) real complement W to the
