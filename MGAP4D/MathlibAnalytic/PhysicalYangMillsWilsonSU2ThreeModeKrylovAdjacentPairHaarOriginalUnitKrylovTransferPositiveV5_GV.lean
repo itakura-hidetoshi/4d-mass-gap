@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalTwoBoundarySignedResponseHaarPositiveV5_GT
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarAnyFineZeroModePositive
+import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferStrictlyPositiveTopEigenvector
 import Mathlib.Tactic
 
 /-!
@@ -66,11 +67,10 @@ local instance p4Q2GVUnit_haarProbability (H : ℕ) :
 
 namespace GroundStatePosteriorJoint
 
-/-- For the ACTUAL compact SU(2) spatial Haar reference measure,
-the ORIGINAL strictly positive continuous Wilson one-slab kernel
-has strictly positive integral at every RIGHT boundary configuration.
-This does NOT replace the interacting Wilson posterior by Haar:
-Haar is only the transfer kernel's literal integration reference. -/
+/-- The original continuous Wilson one-slab kernel has strictly positive
+spatial-Haar integral.  Use the EXISTING concrete compact-kernel lower-bound
+theorem and a direct integral monotonicity step; do not unfold the enormous
+finite-volume gauge configuration to prove full-support positivity again. -/
 theorem p4Q2GVUnit_originalKernelIntegral_pos
     (H : ℕ) (beta : ℝ)
     (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
@@ -86,21 +86,22 @@ theorem p4Q2GVUnit_originalKernelIntegral_pos
       H 2 beta).comp (continuous_id.prodMk continuous_const)
   have hIntegrable : Integrable K μ :=
     hContinuous.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
-  have hKPos (A : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
-      0 < K A :=
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
-      H 2 beta A B
-  change 0 < ∫ A, K A ∂μ
-  rw [integral_pos_iff_support_of_nonneg]
-  · have hSupport : Function.support K = Set.univ := by
-      ext A
-      simp only [Function.mem_support, Set.mem_univ, iff_true]
-      exact (hKPos A).ne'
-    rw [hSupport]
+  obtain ⟨m, hmPos, hmLower⟩ :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_exists_uniform_pos_lower_bound
+      H 2 beta
+  have hConst : (∫ _ : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
+        m ∂μ) = m := by
     simp
-  · intro A
-    exact (hKPos A).le
-  · exact hIntegrable
+  have hLower : m ≤ ∫ A, K A ∂μ := by
+    calc
+      m = ∫ _ : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
+          m ∂μ := hConst.symm
+      _ ≤ ∫ A, K A ∂μ := by
+        apply integral_mono (integrable_const m) hIntegrable
+        intro A
+        exact hmLower A B
+  change 0 < ∫ A, K A ∂μ
+  exact lt_of_lt_of_le hmPos hLower
 
 /-- The actual physical gauge-invariant constant unit is Haar-a.e.
 one. Consequently its ORIGINAL smoothed Wilson transfer integral is
