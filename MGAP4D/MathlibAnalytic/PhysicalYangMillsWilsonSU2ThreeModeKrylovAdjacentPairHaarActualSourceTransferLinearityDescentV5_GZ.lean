@@ -242,7 +242,7 @@ private theorem p4Q2GZ_actualRightTransferFinite_sum
       (μ := ν) K hmeas hbound Phys a
       (fun j : Fin (r + 1) => RightFactor n (j : ℕ))
   simpa only [p4Q2GZ_originalTransferIntegral_eq_kernelIntegral,
-    K, ν] using hFinite
+    Submodule.coe_sum, Submodule.coe_smul, K, ν] using hFinite
 
 /-- The actual Wilson integral of EVERY signed finite-depth Krylov
 source equals the GY genuine modal coefficient map. -/
