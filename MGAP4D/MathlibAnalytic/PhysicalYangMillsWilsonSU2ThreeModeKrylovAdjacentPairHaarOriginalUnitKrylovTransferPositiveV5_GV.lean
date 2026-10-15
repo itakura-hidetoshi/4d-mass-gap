@@ -1,5 +1,7 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalTwoBoundarySignedResponseHaarPositiveV5_GT
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarAnyFineZeroModePositive
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalConstantPhysicalKrylovTransferPositiveV5_GV
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalTwoBoundaryPhysicalContrastWilsonPosteriorMassV5_GU
 import MGAP4D.MathlibAnalytic.PeriodicHypercubicEvenSpecialUnitaryPhysicalTransferStrictlyPositiveTopEigenvector
 import Mathlib.Tactic
 
@@ -27,9 +29,10 @@ strictly positive Haar reference squared mass, without any assumed
 source transfer witness, for every positive frozen beta, physical link,
 finite spatial volume and arbitrary fine beta(n+1).
 
-This is a genuine SINGLE right-Krylov ZERO-MODE detector on a reference
-Haar carrier, not yet the GI two-posterior signed expectation-gap
-injectivity, or a coefficient-source frame, nor an H-uniform lower
+This is a genuine SINGLE right-Krylov ZERO-MODE detector on the reference
+Haar carrier AND the original interacting Wilson conditional posterior.
+It does not establish GI two-posterior signed expectation-gap injectivity,
+a coefficient-source frame, or an H-uniform lower
 c(H,beta), C1/C2/C3 or a continuum Yang--Mills mass gap.
 -/
 
@@ -67,56 +70,6 @@ local instance p4Q2GVUnit_haarProbability (H : ℕ) :
 
 namespace GroundStatePosteriorJoint
 
-/-- Perform the probability integral comparison in a GENERIC measurable
-space.  Elaborating this after substituting the gigantic concrete
-SU(2) lattice configuration causes nonterminating weak-head reduction
-at the kernel check. -/
-private theorem p4Q2GV_integral_pos_of_uniform_floor
-    {α : Type*} [MeasurableSpace α]
-    {μ : Measure α} [IsProbabilityMeasure μ]
-    {f : α → ℝ} (hf : Integrable f μ)
-    {m : ℝ} (hm : 0 < m) (hFloor : ∀ a, m ≤ f a) :
-    0 < ∫ a, f a ∂μ := by
-  have hConst : (∫ _ : α, m ∂μ) = m := by
-    simp
-  have hBound : (∫ _ : α, m ∂μ) ≤ ∫ a, f a ∂μ := by
-    apply integral_mono (integrable_const m) hf
-    intro a
-    exact hFloor a
-  rw [hConst] at hBound
-  exact lt_of_lt_of_le hm hBound
-
-
-/-- The original continuous Wilson one-slab kernel has strictly positive
-spatial-Haar integral.  Use the EXISTING concrete compact-kernel lower-bound
-theorem and a direct integral monotonicity step; do not unfold the enormous
-finite-volume gauge configuration to prove full-support positivity again. -/
-theorem p4Q2GVUnit_originalKernelIntegral_pos
-    (H : ℕ) (beta : ℝ)
-    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
-    0 < ∫ A,
-      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
-        H 2 beta A B
-      ∂periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2 := by
-  let μ := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
-  let K : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 → ℝ :=
-    fun A => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta A B
-  have hContinuous : Continuous K :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H 2 beta).comp (continuous_id.prodMk continuous_const)
-  have hIntegrable : Integrable K μ :=
-    hContinuous.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
-  obtain ⟨m, hmPos, hmLower⟩ :=
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_exists_uniform_pos_lower_bound
-      H 2 beta
-  haveI : IsProbabilityMeasure μ := by
-    change IsProbabilityMeasure
-      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)
-    exact p4Q2GVUnit_haarProbability H
-  change 0 < ∫ A, K A ∂μ
-  exact p4Q2GV_integral_pos_of_uniform_floor
-    (μ := μ) (f := K) hIntegrable hmPos (fun A => hmLower A B)
-
 /-- The actual physical gauge-invariant constant unit is Haar-a.e.
 one. Consequently its ORIGINAL smoothed Wilson transfer integral is
 EXACTLY the integral of the true one-slab Wilson kernel. -/
@@ -143,6 +96,28 @@ theorem p4Q2GVUnit_originalPhysicalUnit_transfer_eq_kernelIntegral
   filter_upwards [hUnitAE] with A hA
   simp only [hA, mul_one]
 
+/-- The original Wilson kernel has positive Haar integral for every physical
+right boundary.  Reuse the independently checked physical constant-unit
+transfer theorem, preserving the exact kernel-integral identity.  In this
+large concrete lattice type, re-expanding the compactness minimum here
+causes repeated weak-head reduction timeouts. -/
+theorem p4Q2GVUnit_originalKernelIntegral_pos
+    (H : ℕ) (beta : ℝ)
+    (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    0 < ∫ A,
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+        H 2 beta A B
+      ∂periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2 := by
+  calc
+    0 < decomposableOneSliceTransferIntegral H 2 beta
+        (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2) B :=
+      p4Q2GV_originalConstantPhysicalTransferIntegral_pos H beta B
+    _ = ∫ A,
+          periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+            H 2 beta A B
+          ∂periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2 :=
+      p4Q2GVUnit_originalPhysicalUnit_transfer_eq_kernelIntegral H beta B
+
 /-- The actual Wilson transfer of the gauge-invariant constant unit is
 strictly positive at EVERY real right boundary configuration and every
 finite volume, independent of the frozen beta sign. -/
@@ -151,8 +126,7 @@ theorem p4Q2GV_originalPhysicalUnit_transferIntegral_pos
     (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
     0 < decomposableOneSliceTransferIntegral H 2 beta
       (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2) B := by
-  rw [p4Q2GVUnit_originalPhysicalUnit_transfer_eq_kernelIntegral]
-  exact p4Q2GVUnit_originalKernelIntegral_pos H beta B
+  exact p4Q2GV_originalConstantPhysicalTransferIntegral_pos H beta B
 
 /-- No ad hoc positive source input is required for the ORIGINAL
 Wilson constant-unit response: it is strict negative at the genuine
@@ -188,6 +162,25 @@ theorem p4Q2GV_originalPhysicalUnit_twoBoundaryHaarMass_pos
     (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2) right e
     (p4Q2GV_originalPhysicalUnit_transferIntegral_pos
       H beta (Function.update right e (specialUnitaryTwoRotation Real.pi)))
+
+/-- For the genuine physical constant unit, the original interacting
+identity-left Wilson conditional posterior—not independent Haar—assigns
+strictly positive squared mass to the original two-left-boundary
+signed response difference at every positive frozen beta. -/
+theorem p4Q2GV_originalPhysicalUnit_twoBoundaryWilsonPosteriorMass_pos
+    (H : ℕ) (beta : ℝ) (hpos : 0 < beta)
+    (right : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2)
+    (e : PeriodicHypercubicEvenSpatialSliceLink H) :
+    0 < p4Q2GU_originalPhysicalTwoBoundaryContrastPosteriorMass
+      H beta (le_of_lt hpos)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2)
+      right e := by
+  exact p4Q2GU_originalPhysicalContrastPosteriorMass_pos_of_transfer
+    H beta (le_of_lt hpos) hpos
+    (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2)
+    right e
+    (p4Q2GV_originalConstantPhysicalTransferIntegral_pos H beta
+      (Function.update right e (specialUnitaryTwoRotation Real.pi)))
 
 section ActualAdjacent
 variable {halfExtent : ℕ → ℕ} {beta : ℕ → ℝ}
@@ -226,6 +219,36 @@ theorem p4Q2GV_actualFineRightZeroMode_twoBoundaryHaarMass_pos
   exact p4Q2GV_originalPhysicalUnit_twoBoundaryHaarMass_pos
     Hn (beta n) hFrozen right e
 
+/-- The exact interacting original Wilson posterior mass dominates
+the compact SU(2) Haar reference squared difference for the SAME actual
+fine right Krylov zero-depth physical source, at the frozen beta(n). -/
+theorem p4Q2GV_actualFineRightZeroMode_twoBoundaryWilsonPosteriorMass_ge_Haar
+    (right : Cfg) (e : Link) :
+    Real.exp (-16 * beta n) *
+        p4Q2GT_originalTwoBoundaryPhysicalSignedResponseHaarMass
+          Hn (beta n) (hbeta n) (RightFactor n 0) right e ≤
+      p4Q2GU_originalPhysicalTwoBoundaryContrastPosteriorMass
+        Hn (beta n) (hbeta n) (RightFactor n 0) right e := by
+  exact p4Q2GU_originalPhysicalContrastPosteriorMass_ge_Haar
+    Hn (beta n) (hbeta n) (RightFactor n 0) right e
+
+/-- At strictly positive frozen beta(n), the real fine right Krylov
+zero mode has unconditionally positive original interacting Wilson
+posterior squared two-boundary response mass.  No assumed signed source
+frame, fake Haar conditional law or positive transfer witness remains. -/
+theorem p4Q2GV_actualFineRightZeroMode_twoBoundaryWilsonPosteriorMass_pos
+    (hFrozen : 0 < beta n) (right : Cfg) (e : Link) :
+    0 < p4Q2GU_originalPhysicalTwoBoundaryContrastPosteriorMass
+      Hn (beta n) (hbeta n) (RightFactor n 0) right e := by
+  have hHaar :
+      0 < p4Q2GT_originalTwoBoundaryPhysicalSignedResponseHaarMass
+        Hn (beta n) (hbeta n) (RightFactor n 0) right e :=
+    p4Q2GV_actualFineRightZeroMode_twoBoundaryHaarMass_pos n hFrozen right e
+  have hBound :=
+    p4Q2GV_actualFineRightZeroMode_twoBoundaryWilsonPosteriorMass_ge_Haar
+      n right e
+  exact lt_of_lt_of_le (mul_pos (Real.exp_pos _) hHaar) hBound
+
 end ActualAdjacent
 end GroundStatePosteriorJoint
 end
@@ -239,3 +262,6 @@ end MGAP4D
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GV_originalPhysicalUnit_twoBoundaryHaarMass_pos
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GV_actualFineRightZeroMode_transferIntegral_pos
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GV_actualFineRightZeroMode_twoBoundaryHaarMass_pos
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GV_originalPhysicalUnit_twoBoundaryWilsonPosteriorMass_pos
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GV_actualFineRightZeroMode_twoBoundaryWilsonPosteriorMass_ge_Haar
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GV_actualFineRightZeroMode_twoBoundaryWilsonPosteriorMass_pos
