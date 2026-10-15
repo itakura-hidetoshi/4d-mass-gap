@@ -138,16 +138,16 @@ end AbstractHaarL2
 
 section OriginalTransferFiniteSum
 
-/-- The original Wilson one-slab Haar integral of a FINITE signed physical
-source sum equals the corresponding sum of genuine original transfer
-integrals.  This generic physical-submodule theorem is proved before
-instantiating any large fine right-Krylov source construction. -/
-theorem p4Q2GZ_originalPhysicalTransfer_sum
+/-- Genuine one-slab Wilson source-integral linearity on the ambient REAL
+Haar L² Hilbert space, before any gauge-invariant submodule coercion
+or high-complexity Krylov source is introduced. -/
+theorem p4Q2GZ_originalAmbientTransfer_sum
     (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta)
     (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2)
     {ι : Type*} [Fintype ι]
     (a : ι → ℝ)
-    (v : ι → periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2) :
+    (v : ι → Lp ℝ 2
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)) :
     decomposableOneSliceTransferIntegral H 2 beta
       (∑ j : ι, a j • v j) B =
       ∑ j : ι, a j * decomposableOneSliceTransferIntegral H 2 beta (v j) B := by
@@ -173,19 +173,13 @@ theorem p4Q2GZ_originalPhysicalTransfer_sum
     rw [Real.norm_eq_abs]
     exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
       H 2 (by norm_num) beta hbeta A B
-  let f : ι → Lp ℝ 2 ν := fun j => (v j : Lp ℝ 2 ν)
-  have hSum :
-      (↑(∑ j : ι, a j • v j) : Lp ℝ 2 ν) =
-        ∑ j : ι, a j • f j := by
-    simp only [f, Submodule.coe_sum, Submodule.coe_smul]
   have hLinear :=
     p4Q2GZ_weightedLpFinite_sum
-      (μ := ν) K hmeas hbound Finset.univ a f
+      (μ := ν) K hmeas hbound Finset.univ a v
   change (∫ A, K A *
-      (↑(∑ j : ι, a j • v j) : Lp ℝ 2 ν) A ∂ν) =
-    ∑ j : ι, a j * (∫ A, K A * (v j : Lp ℝ 2 ν) A ∂ν)
-  rw [hSum]
-  simpa only [f] using hLinear
+      (∑ j : ι, a j • v j) A ∂ν) =
+    ∑ j : ι, a j * (∫ A, K A * v j A ∂ν)
+  simpa only using hLinear
 
 end OriginalTransferFiniteSum
 
@@ -203,10 +197,9 @@ local notation "RightFactor" =>
   physicalYangMillsSU2AdjacentFinePairOrbitRightFactor
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
 
-/-- The actual signed right-Krylov physical Wilson transfer equals the
-exact modal coefficient functional of the SAME original source family.
-The large Krylov constructions are inserted only after generic
-original-Wilson finite-sum linearity has already been proved. -/
+/-- The physical coefficient source is transported into the ambient
+Haar L² before evaluating the original one-slab Wilson transfer.
+The mode family and coupling values remain the genuine physical ones. -/
 theorem p4Q2GZ_actualSignedRightTransfer_eq_originalModalLinear
     (a : Fin (r + 1) → ℝ) (B : Cfg) :
     decomposableOneSliceTransferIntegral Hn 2 (beta n)
@@ -214,15 +207,23 @@ theorem p4Q2GZ_actualSignedRightTransfer_eq_originalModalLinear
       p4Q2GY_actualRightWilsonModalTransfer
         (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
         n r B a := by
+  let ν : Measure Cfg :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure Hn 2
+  let v : Fin (r + 1) → Lp ℝ 2 ν :=
+    fun j => (RightFactor n (j : ℕ) : Lp ℝ 2 ν)
+  have hSource :
+      (↑(∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)) : Lp ℝ 2 ν) =
+        ∑ j : Fin (r + 1), a j • v j := by
+    simp only [v, Submodule.coe_sum, Submodule.coe_smul]
   calc
     decomposableOneSliceTransferIntegral Hn 2 (beta n)
         (∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)) B =
-        ∑ j : Fin (r + 1), a j *
-          decomposableOneSliceTransferIntegral Hn 2 (beta n)
-            (RightFactor n (j : ℕ)) B := by
-      exact p4Q2GZ_originalPhysicalTransfer_sum
-        Hn (beta n) (hbeta n) B a
-        (fun j : Fin (r + 1) => RightFactor n (j : ℕ))
+        decomposableOneSliceTransferIntegral Hn 2 (beta n)
+          (∑ j : Fin (r + 1), a j • v j) B := by
+      rw [hSource]
+    _ = ∑ j : Fin (r + 1), a j *
+          decomposableOneSliceTransferIntegral Hn 2 (beta n) (v j) B :=
+      p4Q2GZ_originalAmbientTransfer_sum Hn (beta n) (hbeta n) B a v
     _ = p4Q2GY_actualRightWilsonModalTransfer
           (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
           n r B a := by
@@ -302,7 +303,7 @@ end
 end MathlibAnalytic
 end MGAP4D
 
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_originalPhysicalTransfer_sum
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_originalAmbientTransfer_sum
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_actualSignedRightTransfer_eq_originalModalLinear
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_actualSignedRightTransfer_zero_iff_modalKernel
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2GZ_actualSignedPhysicalTransferKernel_mem_iff
