@@ -2,7 +2,7 @@
 
 Lean 4 / mathlib research by **Hidetoshi Itakura** on the original finite-volume Wilson lattice theory and the outstanding four-dimensional Yang–Mills existence and mass-gap problem.
 
-**Verified theorem checkpoint — 2026-10-16 JST:** Latest theorem-bearing [PR #5604 (P4-Q2-HK)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5604) is **squash MERGED** as `7982b36f5d737e755dcc650e683c5f7a8b9d8e43`. Its exact tested source HEAD `dd1c59ff3787fe239e521a64f2a390b1387ad9ff` passed [CI #38819944136](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38819944136) **SUCCESS (10697/10697)** with Changed Lean job `116713807754` and MCP completion receipt `116715312979` SUCCESS, changed-file warnings/errors **zero**, and **8/8** `#print axioms` free of `sorryAx` or new axioms. Existing finite-lattice `native_decide` dependencies remain inherited. The only theorem-authoritative branch is `formal/real-hilbert-uniform-coercive-strong-limit`, NOT default `main`.
+**Verified theorem checkpoint — 2026-10-16 JST:** Latest theorem-bearing [PR #5605 (P4-Q2-HL)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5605) is **squash MERGED** as `970487f82534cab948e106a57ce8481b7cf10336`. Its exact tested source HEAD `fec82e9aab54f3909d09cc3977f516ba68f390a5` passed [CI #38820888830](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38820888830) **SUCCESS (10698/10698)** with Changed Lean job `116716918842` and MCP completion receipt `116718718626` SUCCESS, changed Lean warnings/errors **zero** and **7/7** `#print axioms` free of `sorryAx` and new axioms. Inherited finite lattice `native_decide` dependencies remain visible; default `main` is not theorem-authoritative. The only theorem-carrier is `formal/real-hilbert-uniform-coercive-strong-limit`.
 
 **What the current physical posterior result proves.** At any finite spatial volume `H`, positive frozen coupling `beta>0`, and for an arbitrary finite real family of *actual gauge-invariant physical inputs* with combined signed source `F = sum_i a_i f_i`, the ORIGINAL Wilson physical residual Gram satisfies
 
@@ -24,6 +24,8 @@ GL [#5574](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5574) identifie
 
 **HK #5604: finite ORIGINAL physical Wilson GI detection certificate.** Since the actual fine-right Krylov coefficient space `R^(r+1)` is an Artinian real module, pinned mathlib's `Finset.exists_inf_eq_iInf` yields a **finite set of genuine physical (link, full SU(2) pair-boundary) contexts** `F_(n,r)` satisfying `K_(n,r) = intersection_(e,z in F_(n,r)) ker L_(e,z)`. Define the corresponding finite real-vector GI map `D_F : R^(r+1) -> (F_(n,r)->R)`, whose kernel equals the full HJ continuous GI detector kernel **exactly**, for arbitrary nonnegative fine coupling. At frozen beta>0, original GL two-posterior gap-square mass `M_GL(Sa)=0` iff `D_F(a)=0`. The finite detector has a positive anti-Lipschitz coefficient on a complement of `K_(n,r)`, possibly zero-dimensional. Physical source separation remains the independent dichotomy `ker S=ker D_F` versus a **true nonzero signed physical source invisible at ALL these original Wilson contexts**. This is a nonconstructive finite selection: no explicit coordinates, cardinal bound, original GL-integral quantitative coercivity, physical source quotient frame, cross-scale uniformity or continuum mass gap is claimed.
 
+**HL #5605: physical source separation exactly equivalent to finite authentic GI rank equality.** HK supplies a finite family `F` of actual physical Wilson link/pair contexts and a real-linear detector `D_F : R^(r+1)->(F->R)` with `ker D_F=ker Phi=K`. HJ proves `ker S<=K` for the separate genuine fine-right physical-source synthesis `S`. HL uses pinned mathlib rank-nullity and finite-dimensional submodule equality to prove the **necessary and sufficient** criterion `ker S=ker D_F iff finrank(range S)=finrank(range D_F)`. Further, `rank D_F <= rank S` and **strict rank loss iff there exists an actual nonzero physical Haar-L² source S(a) annihilated by every selected original two-Wilson-posterior GI context**. No physical rank values or exact context coordinates are evaluated, so source separation, positive GL-integral uniform bounds, coarse/fine reconstruction and continuum Yang–Mills mass gap remain OPEN.
+
 **Do not overclaim.** Posterior density-row separation `Q>0` does **not** imply `Delta != 0` for arbitrary physical sources. Neither positive detection for every nonzero *actual* Krylov combination, a source-frame lower constant uniform in `H,n,r`, spatial summability, cross-scale physical transport, a continuum Hamiltonian, nor a four-dimensional Yang–Mills mass gap has been proved. Older original Wilson Haar Riesz `AW` (DV–EC) and physical twelve-color `D12` (DS–DU) are separate finite-volume operators; the earlier **relative** `AW/D12` color-cardinality obstruction is not an absolute spectral-gap no-go.
 
 See [ROADMAP.md](ROADMAP.md) for the exact theorem-status matrix, verified source-file order, the distinct fine `beta(n+1)` / frozen `beta(n)` contexts, and explicit acceptance criteria for the remaining proof obligations.
@@ -34,15 +36,15 @@ See [ROADMAP.md](ROADMAP.md) for the exact theorem-status matrix, verified sourc
 | --- | --- |
 | Repository | [itakura-hidetoshi/4d-mass-gap](https://github.com/itakura-hidetoshi/4d-mass-gap) |
 | **Only theorem-authoritative branch** | `formal/real-hilbert-uniform-coercive-strong-limit` |
-| **Latest theorem-bearing merge** | [#5604 (HK)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5604), `7982b36f5d737e755dcc650e683c5f7a8b9d8e43` |
-| PR #5604 exact tested source HEAD | `dd1c59ff3787fe239e521a64f2a390b1387ad9ff` |
+| **Latest theorem-bearing merge** | [#5605 (HL)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5605), `970487f82534cab948e106a57ce8481b7cf10336` |
+| PR #5605 exact tested source HEAD | `fec82e9aab54f3909d09cc3977f516ba68f390a5` |
 | Lean pin | `leanprover/lean4:v4.30.0-rc2` |
 | mathlib pin | `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
-| Exact source-head CI | [CI #38819944136](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38819944136) — SUCCESS |
-| Changed Lean / MCP completion jobs | `116713807754` / `116715312979`, both SUCCESS |
-| Build and diagnostics | **10697/10697**, HK 8/8 `#print axioms` without `sorryAx` or new axioms; changed warnings/errors zero; inherited finite-lattice `native_decide` dependencies remain visible. |
+| Exact source-head CI | [CI #38820888830](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38820888830) — SUCCESS |
+| Changed Lean / MCP completion jobs | `116716918842` / `116718718626`, both SUCCESS |
+| Build and diagnostics | **10698/10698**, HL 7/7 `#print axioms` without `sorryAx` or new axioms; changed warnings/errors zero; inherited finite-lattice `native_decide` dependence visible. |
 
-**The GitHub default `main` is not the theorem authority.** Reobserve the fresh exact HEAD of the branch above and inspect the actual Lean theorem declarations before trusting this document, a PR title, or a historical conversation. A subsequent documentation-only merge advances the branch HEAD **without changing the #5604 theorem-bearing checkpoint**.
+**The GitHub default `main` is not the theorem authority.** Reobserve the fresh exact HEAD of the branch above and inspect the actual Lean theorem declarations before trusting this document, a PR title, or a historical conversation. A subsequent documentation-only merge advances the branch HEAD **without changing the #5605 theorem-bearing checkpoint**.
 
 Authority order: fresh authoritative SHA → actual Lean statements/proofs → README/ROADMAP → CI for that exact SHA → historical reports.
 
