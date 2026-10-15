@@ -146,8 +146,6 @@ local notation "Cfg" =>
   PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration Hn 2
 local notation "Phys" =>
   periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule Hn 2
-local notation "μ" =>
-  periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure Hn 2
 local notation "RightFactor" =>
   physicalYangMillsSU2AdjacentFinePairOrbitRightFactor
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
