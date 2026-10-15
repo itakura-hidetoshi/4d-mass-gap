@@ -54,7 +54,7 @@ def p4Q2GY_modalTransferLinear
       simp only [Pi.add_apply, add_mul, Finset.sum_add_distrib]
     map_smul' := by
       intro c a
-      simp only [Pi.smul_apply, smul_eq_mul, mul_assoc, Finset.mul_sum] }
+      simp [Pi.smul_apply, smul_eq_mul, mul_assoc, Finset.mul_sum] }
 
 theorem p4Q2GY_modalTransferLinear_apply
     (r : ℕ) (w a : Fin (r + 1) → ℝ) :
@@ -148,6 +148,7 @@ theorem p4Q2GY_modalTransferLinear_kernel_finrank
       Module.finrank ℝ ↥L.range + Module.finrank ℝ ↥L.ker =
         Module.finrank ℝ (Fin (r + 1) → ℝ) :=
     LinearMap.finrank_range_add_finrank_ker L
+  change Module.finrank ℝ ↥L.ker = r
   omega
 
 /-- The nonzero modal transfer locus is open in the actual
@@ -161,7 +162,7 @@ theorem p4Q2GY_modalTransferLinear_detected_isOpen
     L.continuous_of_finiteDimensional
   have ho : IsOpen (({0} : Set ℝ)ᶜ) :=
     (isClosed_singleton : IsClosed ({0} : Set ℝ)).isOpen_compl
-  convert ho.preimage hc using 1 <;> ext a <;> simp
+  simpa using ho.preimage hc
 
 end FiniteModalAlgebra
 
