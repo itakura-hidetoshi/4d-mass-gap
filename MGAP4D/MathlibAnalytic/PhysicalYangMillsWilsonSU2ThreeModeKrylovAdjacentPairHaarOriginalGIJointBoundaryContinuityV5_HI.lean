@@ -85,6 +85,25 @@ theorem p4Q2HI_normalizedExp_joint_continuous
   exact hNum.div hDenom (fun q =>
     (continuousExpPartition_pos μ (ℓ q.1) (hSlice q.1)).ne')
 
+/-- Continuous compact-Haar pairing for a continuously moving context and
+continuous receiver. Keeping SU(2) physics outside the parametric-integral
+elaboration avoids unfolding the full continuous Wilson L² receiver in WHNF. -/
+theorem p4Q2HI_compact_pairing_integral_continuous
+    {P Q X : Type*} [TopologicalSpace P] [TopologicalSpace Q]
+    [TopologicalSpace X] [MeasurableSpace X] [OpensMeasurableSpace X]
+    [CompactSpace X] (μ : Measure X) [IsFiniteMeasure μ]
+    (r : P → X → ℝ) (d : Q → X → ℝ) (pr : P → Q)
+    (hr : Continuous (Function.uncurry r))
+    (hd : Continuous (Function.uncurry d))
+    (hpr : Continuous pr) :
+    Continuous (fun p : P => ∫ x, r p x * d (pr p) x ∂μ) := by
+  have hp : Continuous (fun q : P × X => (pr q.1, q.2)) :=
+    (hpr.comp continuous_fst).prodMk continuous_snd
+  have hf : Continuous (Function.uncurry (fun p x => r p x * d (pr p) x)) :=
+    hr.mul (hd.comp hp)
+  exact continuous_integral_compact_domain μ
+    (fun p x => r p x * d (pr p) x) hf
+
 section Frozen
 
 variable (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta)
@@ -151,16 +170,15 @@ theorem p4Q2HI_originalWilsonGI_HaarPairing_continuous
     simpa only [D, Function.uncurry] using
       (p4Q2HI_originalWilsonPosteriorDensityContrast_joint_continuous
         H beta hbeta e)
-  have hEnv : Continuous (fun q : (Cfg × Cfg) × Gauge => (q.1.2, q.2)) :=
-    (continuous_snd.comp continuous_fst).prodMk continuous_snd
-  have hIntg : Continuous (fun q : (Cfg × Cfg) × Gauge =>
-      R q * D q.1.2 q.2) :=
-    R.continuous.mul (hD.comp hEnv)
-  have hIntegral : Continuous (fun z : Cfg × Cfg =>
+  have hR : Continuous (Function.uncurry (fun z : Cfg × Cfg => fun g : Gauge =>
+      R (z,g))) := R.continuous
+  have hPr : Continuous (fun z : Cfg × Cfg => z.2) :=
+    continuous_snd
+  have hPairing : Continuous (fun z : Cfg × Cfg =>
       ∫ g : Gauge, R (z,g) * D z.2 g ∂μ) :=
-    continuous_integral_compact_domain μ
-      (fun z g => R (z,g) * D z.2 g) hIntg
-  exact hIntegral
+    p4Q2HI_compact_pairing_integral_continuous μ
+      (fun z g => R (z,g)) D (fun z : Cfg × Cfg => z.2) hR hD hPr
+  exact hPairing
 
 /-- Every genuine original physical Haar-L² source has a continuous
 two-interacting-Wilson-posterior GI expectation gap on the FULL pair of
@@ -276,6 +294,7 @@ end
 end MathlibAnalytic
 end MGAP4D
 
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2HI_compact_pairing_integral_continuous
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2HI_normalizedExp_joint_continuous
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2HI_originalWilsonPosteriorDensityContrast_joint_continuous
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2HI_originalWilsonGI_HaarPairing_continuous
