@@ -330,7 +330,7 @@ theorem p4Q2HJ_actualRightGIContinuousDetector_finrank_identity :
 there exists a (possibly zero-dimensional) real complement W to the
 original GI joint kernel, and a strictly positive constant c for which
 the actual continuous-function-valued Wilson detector is anti-Lipschitz
-on W. No physical-source separation or H-/spacing-uniformity follows. -/
+on W. No physical-source separation or volume- or spacing-uniformity follows. -/
 theorem p4Q2HJ_actualRightGIContinuousDetector_complement_frame :
     ∃ W : Submodule ℝ Coeff,
       IsCompl
