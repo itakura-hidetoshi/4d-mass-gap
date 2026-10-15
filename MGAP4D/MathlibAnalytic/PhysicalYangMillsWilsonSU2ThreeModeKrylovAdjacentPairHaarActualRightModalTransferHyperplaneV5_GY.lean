@@ -162,7 +162,7 @@ theorem p4Q2GY_modalTransferLinear_detected_isOpen
     L.continuous_of_finiteDimensional
   have ho : IsOpen (({0} : Set ℝ)ᶜ) :=
     (isClosed_singleton : IsClosed ({0} : Set ℝ)).isOpen_compl
-  simpa using ho.preimage hc
+  convert ho.preimage hc using 1
 
 end FiniteModalAlgebra
 
