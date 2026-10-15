@@ -60,12 +60,12 @@ local instance p4Q2GV_borelSpace :
 namespace GroundStatePosteriorJoint
 
 /-- For the ACTUAL constant unit physical source the ORIGINAL,
-nonnegative-coupling Wilson one-slab transfer integral is everywhere
+all-real-coupling Wilson one-slab transfer integral is everywhere
 STRICTLY POSITIVE. No point-evaluation of an arbitrary L² source is
 made: the unit source is first identified Haar-a.e. with the canonical
 constant-one representative and only then integrated. -/
 theorem p4Q2GV_originalConstantPhysicalTransferIntegral_pos
-    (H : ℕ) (beta : ℝ) (hbeta : 0 ≤ beta)
+    (H : ℕ) (beta : ℝ)
     (B : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
     0 < decomposableOneSliceTransferIntegral H 2 beta
       (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2) B := by
@@ -142,7 +142,7 @@ theorem p4Q2GV_actualFineRightZeroDepthTransferIntegral_pos
   rw [fineRightFactor_zeroDepth_eq_constantUnit_anyFineBeta
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n]
   exact p4Q2GV_originalConstantPhysicalTransferIntegral_pos
-    Hn (beta n) (hbeta n) B
+    Hn (beta n) B
 
 /-- A concrete physically existing Krylov mode, unlike a postulated
 signed source-frame, forces the ACTUAL two Wilson LEFT boundary
