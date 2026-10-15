@@ -221,33 +221,40 @@ theorem p4Q2GZ_actualSignedRightTransfer_eq_originalModalLinear
     rw [Real.norm_eq_abs]
     exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
       Hn 2 (by norm_num) (beta n) (hbeta n) A B
-  let v : Fin (r + 1) → Phys := fun j => RightFactor n (j : ℕ)
   have hFinite :
-      (∫ A, K A * (↑(∑ j : Fin (r + 1), a j • v j) : Lp ℝ 2 ν) A ∂ν) =
+      (∫ A, K A *
+        (↑(∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)) :
+          Lp ℝ 2 ν) A ∂ν) =
         ∑ j : Fin (r + 1), a j *
-          (∫ A, K A * (v j : Lp ℝ 2 ν) A ∂ν) :=
+          (∫ A, K A *
+            (RightFactor n (j : ℕ) : Lp ℝ 2 ν) A ∂ν) :=
     p4Q2GZ_weightedSubmoduleFinite_sum
-      (μ := ν) K hmeas hbound Phys a v
+      (μ := ν) K hmeas hbound Phys a
+      (fun j : Fin (r + 1) => RightFactor n (j : ℕ))
   calc
     decomposableOneSliceTransferIntegral Hn 2 (beta n)
         (∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)) B =
-        ∫ A, K A * (↑(∑ j : Fin (r + 1), a j • v j) :
-          Lp ℝ 2 ν) A ∂ν := by
+        ∫ A, K A *
+          (↑(∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)) :
+            Lp ℝ 2 ν) A ∂ν := by
       exact p4Q2GZ_originalTransferIntegral_eq_kernelIntegral
         Hn (beta n) B _
     _ = ∑ j : Fin (r + 1), a j *
-          (∫ A, K A * (v j : Lp ℝ 2 ν) A ∂ν) := hFinite
+          (∫ A, K A *
+            (RightFactor n (j : ℕ) : Lp ℝ 2 ν) A ∂ν) := hFinite
     _ = ∑ j : Fin (r + 1), a j *
-          decomposableOneSliceTransferIntegral Hn 2 (beta n) (v j) B := by
+          decomposableOneSliceTransferIntegral Hn 2 (beta n)
+            (RightFactor n (j : ℕ)) B := by
       apply Finset.sum_congr rfl
       intro j _
       exact congrArg (fun t : ℝ => a j * t)
         (p4Q2GZ_originalTransferIntegral_eq_kernelIntegral
-          Hn (beta n) B (v j : Lp ℝ 2 ν)).symm
+          Hn (beta n) B (RightFactor n (j : ℕ) : Lp ℝ 2 ν)).symm
     _ = p4Q2GY_actualRightWilsonModalTransfer
           (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
           n r B a := by
-      rfl
+      simp only [p4Q2GY_actualRightWilsonModalTransfer,
+        p4Q2GY_modalTransferLinear_apply]
 
 /-- The ZERO-LOCUS of the ACTUAL signed physical Wilson transfer is
 exactly the real codimension-one GY modal-kernel hyperplane. -/
