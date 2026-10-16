@@ -121,7 +121,7 @@ theorem p4Q2IL_originalGI_jointKernel_iff_actualPhysicalInvisible
         (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
         n r (a - b) hZeroActual
     have hA : (a - b) + b ∈ JointKernel :=
-      JointKernel.add_mem hDiff hb
+      (JointKernel).add_mem hDiff hb
     simpa only [sub_add_cancel] using hA
 
 /-- The true physical invisible sector is literally contained in
