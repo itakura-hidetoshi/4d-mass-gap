@@ -74,6 +74,11 @@ local notation "Phys" =>
 local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink H
 local notation "Gauge" => Matrix.specialUnitaryGroup (Fin 2) ℂ
 
+-- The nonnegativity proof is required by the GR receiver construction,
+-- even though the ORIGINAL transfer continuity statement itself only
+-- mentions beta and f.
+include hbeta
+
 /-- GR's exact relative original Wilson physical-source receiver
 determines the frozen one-slab transfer continuously at every SU(2)
 right-link fiber, for ANY actual gauge-invariant physical source.
@@ -190,8 +195,10 @@ theorem p4Q2IC_actualRight_positiveTransfer_trueGI_detected
       Hn (beta n) (hbeta n)
       (∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)) e
       (p4Q2FQ_originalSU2LeftPiRotationAtLink Hn e, right) ≠ 0 := by
-  exact p4Q2IC_originalGI_detects_positive_originalWilsonTransfer
-    Hn (beta n) (hbeta n) hFrozen _ right e hPositive
+  apply p4Q2IC_originalGI_detects_positive_originalWilsonTransfer
+    Hn (beta n) (hbeta n) hFrozen _ right e
+  intro g
+  simpa only [Submodule.coe_sum, Submodule.coe_smul] using hPositive g
 
 /-- Strict positive true Wilson transfer makes the signed coefficient
 detectable by the original all-physical-context GI kernel. -/
