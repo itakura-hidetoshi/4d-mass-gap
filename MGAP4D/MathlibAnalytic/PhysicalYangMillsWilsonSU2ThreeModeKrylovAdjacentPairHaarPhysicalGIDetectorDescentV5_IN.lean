@@ -243,6 +243,7 @@ theorem p4Q2IN_actualRightOriginalGLMass_zero_iff_physicalDetector_zero
   have hKer :
       f ∈ (PhysGI).ker ↔ (f : Phys) ∈ Invisible := by
     rw [p4Q2IN_actualRightPhysicalInducedGIDetector_ker_eq_invisible]
+    exact Submodule.mem_comap
   exact hIL.trans (hKer.symm.trans (LinearMap.mem_ker))
 
 /-- The actual physical Wilson source quotient, by precisely the
