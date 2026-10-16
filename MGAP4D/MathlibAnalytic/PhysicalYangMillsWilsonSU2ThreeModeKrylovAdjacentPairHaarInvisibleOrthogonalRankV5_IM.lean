@@ -156,9 +156,6 @@ local notation "JointKernel" =>
 local notation "Invisible" =>
   p4Q2IL_actualRightPhysicallyInvisibleSourceSubmodule
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r
-local notation "SourceSpan" =>
-  (p4Q2HJ_actualRightPhysicalSourceSynthesis
-    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r).range
 local notation "OriginalMass" =>
   p4Q2GL_originalWilsonSignedGapSquareDivVarianceSpatialMass
     Hn (beta n) (hbeta n)
@@ -170,7 +167,7 @@ complement in the entire infinite-dimensional physical Hilbert space
 would be much too large. -/
 noncomputable def p4Q2IM_actualRightVisiblePhysicalSourceSubmodule :
     Submodule ℝ Phys :=
-  (Invisible)ᗮ ⊓ SourceSpan
+  (Invisible)ᗮ ⊓ (PhysicalSource).range
 
 local notation "Visible" =>
   p4Q2IM_actualRightVisiblePhysicalSourceSubmodule
@@ -180,17 +177,17 @@ local notation "Visible" =>
 sum of a true GI-invisible physical source and a detector-visible
 physical source. No positivity is assumed on the invisible component. -/
 theorem p4Q2IM_actualPhysicalSourceSpan_orthogonal_split :
-    Invisible ⊔ Visible = SourceSpan ∧ Disjoint Invisible Visible := by
-  have hLe : Invisible ≤ SourceSpan :=
+    Invisible ⊔ Visible = (PhysicalSource).range ∧ Disjoint Invisible Visible := by
+  have hLe : Invisible ≤ (PhysicalSource).range :=
     p4Q2IL_actualPhysicalInvisible_le_actualSourceRange
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r
-  letI : FiniteDimensional ℝ ↥SourceSpan := inferInstance
+  letI : FiniteDimensional ℝ ↥((PhysicalSource).range) := inferInstance
   letI : FiniteDimensional ℝ ↥Invisible :=
     Submodule.finiteDimensional_of_le hLe
   letI : CompleteSpace ↥Invisible := FiniteDimensional.complete ℝ ↥Invisible
   letI : (Invisible).HasOrthogonalProjection := inferInstance
   constructor
-  · change Invisible ⊔ (Invisibleᗮ ⊓ SourceSpan) = SourceSpan
+  · change Invisible ⊔ (Invisibleᗮ ⊓ (PhysicalSource).range) = (PhysicalSource).range
     exact Submodule.sup_orthogonal_inf_of_hasOrthogonalProjection hLe
   · have hOrth : Disjoint Invisible Invisibleᗮ :=
       (Submodule.isOrtho_orthogonal_right Invisible).disjoint
@@ -218,7 +215,7 @@ nonnegative fine beta. This is a formula, not a claim that it is zero. -/
 theorem p4Q2IM_actualPhysicalInvisible_finrank_defect :
     Module.finrank ℝ ↥Invisible +
       Module.finrank ℝ ↥(Detector).range =
-      Module.finrank ℝ ↥SourceSpan := by
+      Module.finrank ℝ ↥((PhysicalSource).range) := by
   have hLe :
       (PhysicalSource).ker ≤ (Detector).ker :=
     p4Q2HJ_actualRightSourceKernel_le_GIContinuousDetectorKernel
@@ -235,7 +232,7 @@ the rank of the ORIGINAL two-interacting-posterior GI detector. This
 does not assert that the rank equality actually holds. -/
 theorem p4Q2IM_actualPhysicalInvisible_eq_bot_iff_originalGIRankEq :
     Invisible = ⊥ ↔
-      Module.finrank ℝ ↥SourceSpan =
+      Module.finrank ℝ ↥((PhysicalSource).range) =
       Module.finrank ℝ ↥(Detector).range := by
   have hLe :
       (PhysicalSource).ker ≤ (Detector).ker :=
