@@ -67,7 +67,8 @@ theorem p4Q2IM_abstract_invisibleMap_bot_iff_kernel_eq
     have hMapped : S a ∈ Phi.ker.map S :=
       (Submodule.mem_map).mpr ⟨a, ha, rfl⟩
     rw [hBot] at hMapped
-    exact (LinearMap.mem_ker).mpr ((Submodule.mem_bot).mp hMapped)
+    apply (LinearMap.mem_ker).mpr
+    simpa only [Submodule.mem_bot] using hMapped
   · intro hEq
     apply le_antisymm
     · intro f hf
@@ -155,7 +156,9 @@ local notation "JointKernel" =>
 local notation "Invisible" =>
   p4Q2IL_actualRightPhysicallyInvisibleSourceSubmodule
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r
-local notation "SourceSpan" => (PhysicalSource).range
+local notation "SourceSpan" =>
+  (p4Q2HJ_actualRightPhysicalSourceSynthesis
+    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r).range
 local notation "OriginalMass" =>
   p4Q2GL_originalWilsonSignedGapSquareDivVarianceSpatialMass
     Hn (beta n) (hbeta n)
@@ -260,7 +263,8 @@ theorem p4Q2IM_actualVisibleSource_originalWilsonGLMass_pos
     have hMemBot : f ∈ (⊥ : Submodule ℝ Phys) := by
       rw [← hBot]
       exact ⟨hInv, hf.1⟩
-    exact hf0 ((Submodule.mem_bot).mp hMemBot)
+    apply hf0
+    simpa only [Submodule.mem_bot] using hMemBot
   exact p4Q2IL_actualPhysicalSource_GLMass_pos_of_not_invisible
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
     n r hFrozen f hf.2 hNotInvisible
