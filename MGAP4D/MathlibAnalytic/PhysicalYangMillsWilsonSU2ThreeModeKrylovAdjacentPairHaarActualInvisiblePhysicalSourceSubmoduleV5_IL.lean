@@ -89,7 +89,7 @@ actual real submodule of the ACTUAL gauge-invariant physical Hilbert
 space. It need not be zero at positive fine coupling and higher depth. -/
 noncomputable def p4Q2IL_actualRightPhysicallyInvisibleSourceSubmodule :
     Submodule ℝ Phys :=
-  JointKernel.map PhysicalSource
+  (JointKernel).map PhysicalSource
 
 local notation "Invisible" =>
   p4Q2IL_actualRightPhysicallyInvisibleSourceSubmodule
@@ -102,7 +102,7 @@ theorem p4Q2IL_originalGI_jointKernel_iff_actualPhysicalInvisible
     (a : Coeff) :
     a ∈ JointKernel ↔ PhysicalSource a ∈ Invisible := by
   change a ∈ JointKernel ↔
-    PhysicalSource a ∈ JointKernel.map PhysicalSource
+    PhysicalSource a ∈ (JointKernel).map PhysicalSource
   constructor
   · intro ha
     exact (Submodule.mem_map).mpr ⟨a, ha, rfl⟩
@@ -129,7 +129,7 @@ the finite span of actual right-Krylov physical sources. -/
 theorem p4Q2IL_actualPhysicalInvisible_le_actualSourceRange :
     Invisible ≤ (PhysicalSource).range := by
   intro f hf
-  change f ∈ JointKernel.map PhysicalSource at hf
+  change f ∈ (JointKernel).map PhysicalSource at hf
   obtain ⟨a, _ha, heq⟩ := (Submodule.mem_map).mp hf
   exact (LinearMap.mem_range).mpr ⟨a, heq⟩
 
