@@ -50,7 +50,7 @@ See [ROADMAP.md](ROADMAP.md) for the exact theorem-status matrix, verified sourc
 | Changed Lean / MCP completion jobs | `116974430840` / `116976928647`, both SUCCESS |
 | Build and diagnostics | **10706/10706**, HU 3/3 axiom inspections without `sorryAx`; changed Lean warnings/errors 0; inherited finite-lattice `native_decide` axioms. |
 
-**The GitHub default `main` is not the theorem authority.** Reobserve the fresh exact HEAD of the branch above and inspect the actual Lean theorem declarations before trusting this document, a PR title, or a historical conversation. A subsequent documentation-only merge advances the branch HEAD **without changing the #5606 theorem-bearing checkpoint**.
+**The GitHub default `main` is not the theorem authority.** Reobserve the fresh exact HEAD of the branch above and inspect the actual Lean theorem declarations before trusting this document, a PR title, or a historical conversation. A subsequent documentation-only merge advances the branch HEAD **without changing the #5614 theorem-bearing checkpoint**.
 
 Authority order: fresh authoritative SHA → actual Lean statements/proofs → README/ROADMAP → CI for that exact SHA → historical reports.
 
