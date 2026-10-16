@@ -78,6 +78,60 @@ theorem p4Q2IM_abstract_invisibleMap_bot_iff_kernel_eq
       exact Submodule.zero_mem _
     · exact bot_le
 
+/-- Exact FINITE-DIMENSIONAL rank defect for any real-linear physical
+source S and detector Phi with ker S <= ker Phi:
+    finrank(S(ker Phi)) + rank(Phi) = rank(S).
+The proof applies rank-nullity to the genuine restricted source map
+S|_(ker Phi) and uses the explicit subtype identification of its kernel.
+It does NOT postulate injectivity or any frame constant. -/
+theorem p4Q2IM_abstract_physicalInvisible_finrank_defect
+    {E F G : Type*}
+    [AddCommGroup E] [Module ℝ E] [FiniteDimensional ℝ E]
+    [AddCommGroup F] [Module ℝ F]
+    [AddCommGroup G] [Module ℝ G]
+    (S : E →ₗ[ℝ] F) (Phi : E →ₗ[ℝ] G)
+    (hLe : S.ker ≤ Phi.ker) :
+    Module.finrank ℝ ↥(Phi.ker.map S) +
+      Module.finrank ℝ ↥Phi.range =
+      Module.finrank ℝ ↥S.range := by
+  let K : Submodule ℝ E := Phi.ker
+  let SK : K →ₗ[ℝ] F := S.domRestrict K
+  have hRange : SK.range = K.map S := by
+    ext f
+    constructor
+    · intro hf
+      obtain ⟨k, hk⟩ := (LinearMap.mem_range).mp hf
+      exact (Submodule.mem_map).mpr ⟨(k : E), k.property, hk⟩
+    · intro hf
+      obtain ⟨a, ha, heq⟩ := (Submodule.mem_map).mp hf
+      exact (LinearMap.mem_range).mpr ⟨⟨a, ha⟩, heq⟩
+  have hKerImage : SK.ker.map K.subtype = S.ker := by
+    ext a
+    constructor
+    · intro ha
+      obtain ⟨k, hk, heq⟩ := (Submodule.mem_map).mp ha
+      have hZero : SK k = 0 := (LinearMap.mem_ker).mp hk
+      apply (LinearMap.mem_ker).mpr
+      change S a = 0
+      rw [← heq]
+      exact hZero
+    · intro ha
+      refine (Submodule.mem_map).mpr ⟨⟨a, hLe ha⟩, ?_, rfl⟩
+      exact (LinearMap.mem_ker).mpr ((LinearMap.mem_ker).mp ha)
+  have hKerRank :
+      Module.finrank ℝ ↥SK.ker = Module.finrank ℝ ↥S.ker := by
+    have h := Submodule.finrank_map_subtype_eq K SK.ker
+    rw [hKerImage] at h
+    exact h.symm
+  have hRestriction := LinearMap.finrank_range_add_finrank_ker SK
+  rw [hRange, hKerRank] at hRestriction
+  change Module.finrank ℝ ↥(Phi.ker.map S) +
+      Module.finrank ℝ ↥S.ker =
+      Module.finrank ℝ ↥Phi.ker at hRestriction
+  have hSource := LinearMap.finrank_range_add_finrank_ker S
+  have hDetector := LinearMap.finrank_range_add_finrank_ker Phi
+  omega
+
 section ActualRight
 
 variable {halfExtent : ℕ → ℕ} {beta : ℕ → ℝ}
@@ -153,6 +207,25 @@ theorem p4Q2IM_actualPhysicalInvisible_eq_bot_iff_sourceSeparation :
   simpa only [p4Q2HJ_actualRightGIContinuousDetector_ker_eq_jointKernel,
     p4Q2IL_actualRightPhysicallyInvisibleSourceSubmodule] using h
 
+/-- IM's exact dimension-counting identity for the ORIGINAL interacting
+SU(2) Wilson model. The real dimension of physically invisible signed
+fine-right sources is exactly the rank EXCESS of physical synthesis over
+the full two-Wilson-posterior GI detector, for all finite r and all
+nonnegative fine beta. This is a formula, not a claim that it is zero. -/
+theorem p4Q2IM_actualPhysicalInvisible_finrank_defect :
+    Module.finrank ℝ ↥Invisible +
+      Module.finrank ℝ ↥(Detector).range =
+      Module.finrank ℝ ↥SourceSpan := by
+  have hLe :
+      (PhysicalSource).ker ≤ (Detector).ker :=
+    p4Q2HJ_actualRightSourceKernel_le_GIContinuousDetectorKernel
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r
+  have hRank :=
+    p4Q2IM_abstract_physicalInvisible_finrank_defect
+      PhysicalSource Detector hLe
+  simpa only [p4Q2HJ_actualRightGIContinuousDetector_ker_eq_jointKernel,
+    p4Q2IL_actualRightPhysicallyInvisibleSourceSubmodule] using hRank
+
 /-- Exact genuine physical criterion: the invisible physical Hilbert
 submodule is zero iff the rank of the original physical synthesis equals
 the rank of the ORIGINAL two-interacting-posterior GI detector. This
@@ -199,7 +272,9 @@ end MathlibAnalytic
 end MGAP4D
 
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2IM_abstract_invisibleMap_bot_iff_kernel_eq
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2IM_abstract_physicalInvisible_finrank_defect
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2IM_actualPhysicalSourceSpan_orthogonal_split
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2IM_actualPhysicalInvisible_finrank_defect
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2IM_actualPhysicalInvisible_eq_bot_iff_sourceSeparation
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2IM_actualPhysicalInvisible_eq_bot_iff_originalGIRankEq
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2IM_actualVisibleSource_originalWilsonGLMass_pos
