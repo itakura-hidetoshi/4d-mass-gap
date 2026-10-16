@@ -169,7 +169,10 @@ theorem p4Q2HQ_actualRight_exists_common_positive_detector_complement
     p4Q2HK_actualRightFiniteGIContextDetector_ker_eq_jointKernel
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
       n r
-  obtain ⟨W, hCompl⟩ := JointKernel.exists_isCompl
+  obtain ⟨W, hCompl⟩ :=
+    Submodule.exists_isCompl
+      (p4Q2HG_actualRightGIJointModalKernel
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r)
   refine ⟨s, W, hs, hCompl, ?_⟩
   intro w hw
   exact ⟨
