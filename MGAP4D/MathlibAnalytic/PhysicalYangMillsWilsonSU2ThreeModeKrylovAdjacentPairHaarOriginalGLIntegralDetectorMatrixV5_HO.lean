@@ -83,8 +83,15 @@ theorem p4Q2HO_weightedIntegralPair_smul_left
     p4Q2HO_weightedIntegralPair μ L q (t • a) b =
       t * p4Q2HO_weightedIntegralPair μ L q a b := by
   unfold p4Q2HO_weightedIntegralPair
-  simp only [map_smul, smul_eq_mul, mul_assoc, mul_div_assoc]
-  exact integral_const_mul t (fun x => L x a * L x b / q x)
+  calc
+    (∫ x, L x (t • a) * L x b / q x ∂μ) =
+        ∫ x, t * (L x a * L x b / q x) ∂μ := by
+          apply integral_congr_ae
+          filter_upwards with x
+          simp only [map_smul, smul_eq_mul, div_eq_mul_inv]
+          ring
+    _ = t * ∫ x, L x a * L x b / q x ∂μ :=
+          integral_const_mul t (fun x => L x a * L x b / q x)
 
 /-- The weighted integral is a genuine real bilinear form; the only
 analytic premise is the verified integrability of signed squares. -/
