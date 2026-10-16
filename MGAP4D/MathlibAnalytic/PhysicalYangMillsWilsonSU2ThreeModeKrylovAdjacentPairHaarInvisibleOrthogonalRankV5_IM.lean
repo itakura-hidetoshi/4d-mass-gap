@@ -223,8 +223,9 @@ theorem p4Q2IM_actualPhysicalInvisible_finrank_defect :
   have hRank :=
     p4Q2IM_abstract_physicalInvisible_finrank_defect
       PhysicalSource Detector hLe
-  simpa only [p4Q2HJ_actualRightGIContinuousDetector_ker_eq_jointKernel,
-    p4Q2IL_actualRightPhysicallyInvisibleSourceSubmodule] using hRank
+  rw [p4Q2HJ_actualRightGIContinuousDetector_ker_eq_jointKernel
+    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r] at hRank
+  simpa only [p4Q2IL_actualRightPhysicallyInvisibleSourceSubmodule] using hRank
 
 /-- Exact genuine physical criterion: the invisible physical Hilbert
 submodule is zero iff the rank of the original physical synthesis equals
