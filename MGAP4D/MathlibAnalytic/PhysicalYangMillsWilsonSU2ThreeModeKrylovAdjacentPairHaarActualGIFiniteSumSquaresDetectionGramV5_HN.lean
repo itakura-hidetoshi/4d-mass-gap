@@ -244,6 +244,7 @@ theorem p4Q2HN_actualRightOriginalGIFiniteSumSquaresGram_ker_eq_jointKernel
     (p4Q2HN_actualRightOriginalGIFiniteSumSquaresGram
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
       n r s).mulVecLin.ker = JointKernel := by
+  change ((GI s)ᵀ * GI s).mulVecLin.ker = JointKernel
   rw [p4Q2HN_realDetectorGram_ker_eq_detector]
   rw [p4Q2HM_actualRightOriginalGIContextMatrix_mulVecLin_eq_detector]
   exact hExact
@@ -285,6 +286,8 @@ theorem p4Q2HN_actualRight_GIGram_quad_zero_iff_finiteDetector_zero
         (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
         n r s) *ᵥ a) = 0 ↔
       FiniteDetector s a = 0 := by
+  change star a ⬝ᵥ (((GI s)ᵀ * GI s) *ᵥ a) = 0 ↔
+    FiniteDetector s a = 0
   rw [p4Q2HN_realDetectorGram_quad_zero_iff_detector_zero]
   exact (p4Q2HM_actualRightOriginalGIContextMatrix_mulVec_eq_detector
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
@@ -324,6 +327,7 @@ theorem p4Q2HN_actualRight_GIGram_quad_pos_of_not_mem_jointKernel
       ((p4Q2HN_actualRightOriginalGIFiniteSumSquaresGram
         (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
         n r s) *ᵥ a) := by
+  change 0 < star a ⬝ᵥ (((GI s)ᵀ * GI s) *ᵥ a)
   rw [p4Q2HN_realDetectorGram_quad_pos_iff_detector_ne_zero]
   intro hZero
   have hKer : a ∈ (FiniteDetector s).ker := by
