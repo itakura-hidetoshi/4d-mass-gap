@@ -263,7 +263,8 @@ theorem p4Q2HM_actualRightOriginalGIContextMatrix_mulVecLin_eq_detector
     (p4Q2HM_actualRightOriginalGIContextMatrix
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
       n r s).mulVecLin = FiniteDetector s := by
-  ext a
+  apply LinearMap.ext
+  intro a
   exact p4Q2HM_actualRightOriginalGIContextMatrix_mulVec_eq_detector
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r s a
 
