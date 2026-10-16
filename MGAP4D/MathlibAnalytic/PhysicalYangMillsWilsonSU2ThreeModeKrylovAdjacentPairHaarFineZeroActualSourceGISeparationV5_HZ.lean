@@ -77,7 +77,7 @@ local notation "RightFactor" =>
 local notation "JointKernel" =>
   p4Q2HG_actualRightGIJointModalKernel
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r
-local notation "Source" =>
+local notation "PhysicalSource" =>
   p4Q2HJ_actualRightPhysicalSourceSynthesis
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r
 local notation "FiniteDetector" =>
@@ -96,7 +96,7 @@ Wilson coupling. No independent source modes are assumed. -/
 theorem p4Q2HZ_fineZero_actualRightGI_jointKernel_eq_physicalSourceKernel
     (hFrozen : 0 < beta n) (hFineZero : beta (n + 1) = 0)
     (right : Cfg) (e : Link) :
-    JointKernel = Source.ker := by
+    JointKernel = (PhysicalSource).ker := by
   have hOr :=
     p4Q2HY_actualRightZeroDepth_originalWilsonGI_anchor_nonzero
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
@@ -123,9 +123,9 @@ theorem p4Q2HZ_fineZero_actualRight_originalGIGram_rank_eq_physicalSourceGram
     (right : Cfg) (e : Link)
     (s : Finset Context)
     (hExact : (FiniteDetector s).ker = JointKernel) :
-    (R s).rank = Qsrc.rank := by
+    (R s).rank = (Qsrc).rank := by
   have hSep :
-      Source.ker = JointKernel :=
+      (PhysicalSource).ker = JointKernel :=
     (p4Q2HZ_fineZero_actualRightGI_jointKernel_eq_physicalSourceKernel
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
       n r hFrozen hFineZero right e).symm
@@ -141,7 +141,7 @@ theorem p4Q2HZ_fineZero_exists_originalWilsonGIGram_sourceRank_certificate
     (right : Cfg) (e : Link) :
     ∃ s : Finset Context,
       (FiniteDetector s).ker = JointKernel ∧
-      (R s).rank = Qsrc.rank := by
+      (R s).rank = (Qsrc).rank := by
   obtain ⟨s, hs⟩ :=
     p4Q2HK_actualRightFiniteGIContextDetector_ker_eq_jointKernel
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r
