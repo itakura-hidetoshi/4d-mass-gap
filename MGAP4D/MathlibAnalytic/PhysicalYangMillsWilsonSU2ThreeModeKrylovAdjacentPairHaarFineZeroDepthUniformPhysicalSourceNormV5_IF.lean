@@ -102,7 +102,7 @@ theorem p4Q2IF_fineZero_actualRight_source_eq_oneMode_sum
           t • RightFactor n 0 := by
     change (∑ j : Fin 1,
       t • RightFactor n (j : ℕ)) = t • RightFactor n 0
-    rw [Fin.sum_univ_one]
+    simpa only [Fin.sum_univ_one, Fin.val_zero]
   calc
     (∑ j : Fin (r + 1), a j • RightFactor n (j : ℕ)) =
         t • RightFactor n 0 := hCollapse
