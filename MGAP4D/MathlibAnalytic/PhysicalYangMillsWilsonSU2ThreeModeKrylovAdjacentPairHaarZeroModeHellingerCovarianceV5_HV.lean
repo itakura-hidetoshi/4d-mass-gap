@@ -212,7 +212,7 @@ theorem p4Q2HV_two_sqrt_density_weighted_projections_cannot_both_vanish
       (∫ x, T x * (P0 x - P1 x) / Real.sqrt (P1 x) ∂μ) := by
     linarith [hPositive, hDiff]
   by_contra hZero
-  push_neg at hZero
+  push Not at hZero
   rcases hZero with ⟨h0, h1⟩
   rw [h0, h1] at hStrict
   exact (lt_irrefl (0 : ℝ)) hStrict
