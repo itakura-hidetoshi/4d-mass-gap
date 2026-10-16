@@ -38,7 +38,7 @@ namespace MGAP4D
 namespace MathlibAnalytic
 
 open MeasureTheory
-open scoped InnerProductSpace ENNReal BigOperators
+open scoped InnerProductSpace ENNReal BigOperators Matrix
 
 noncomputable section
 set_option maxHeartbeats 3400000
@@ -101,9 +101,9 @@ theorem p4Q2HN_realDetectorGram_quad_eq_sumSquares
         (star a ᵥ* Mᵀ) ⬝ᵥ (M *ᵥ a) := by
           rw [← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec]
     _ = (M *ᵥ a) ⬝ᵥ (M *ᵥ a) := by
-          simp only [Matrix.vecMul_transpose, Pi.star_apply, star_trivial]
+          simp only [star_trivial, Matrix.vecMul_transpose]
     _ = ∑ x : κ, ((M *ᵥ a) x)^2 := by
-          simp only [Matrix.dotProduct, pow_two]
+          simp only [dotProduct, pow_two]
 
 /-- The zero locus of the real finite detector sum-of-squares is EXACTLY
 the zero locus of the full rectangular detector, not merely a.e. nullity. -/
@@ -112,8 +112,8 @@ theorem p4Q2HN_realDetectorGram_quad_zero_iff_detector_zero
     (M : Matrix κ ι ℝ) (a : ι → ℝ) :
     star a ⬝ᵥ ((Mᵀ * M) *ᵥ a) = 0 ↔ M *ᵥ a = 0 := by
   rw [p4Q2HN_realDetectorGram_quad_eq_sumSquares]
-  simpa only [Matrix.dotProduct, pow_two] using
-    (Matrix.dotProduct_self_eq_zero (v := M *ᵥ a))
+  simpa only [dotProduct, pow_two] using
+    (dotProduct_self_eq_zero (v := M *ᵥ a))
 
 /-- The finite detector SOS is STRICTLY positive iff at least one genuine
 detector coordinate is nonzero. No physical-source separation is inferred. -/
@@ -255,7 +255,7 @@ theorem p4Q2HN_actualRightOriginalGIFiniteSumSquaresGram_rank_le_physicalGram
     (hExact : (FiniteDetector s).ker = JointKernel) :
     (p4Q2HN_actualRightOriginalGIFiniteSumSquaresGram
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-      n r s).rank ≤ Qsrc.rank := by
+      n r s).rank ≤ (Qsrc).rank := by
   rw [p4Q2HN_actualRightOriginalGIFiniteSumSquaresGram_rank_eq_GI]
   exact p4Q2HM_actualRight_originalGIMatrix_rank_le_physicalSourceGram
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
@@ -270,11 +270,11 @@ theorem p4Q2HN_actualRight_sourceSeparation_iff_GIGram_rank_eq_sourceGram
     (PhysicalSource).ker = JointKernel ↔
       (p4Q2HN_actualRightOriginalGIFiniteSumSquaresGram
         (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-        n r s).rank = Qsrc.rank := by
+        n r s).rank = (Qsrc).rank := by
   rw [p4Q2HN_actualRightOriginalGIFiniteSumSquaresGram_rank_eq_GI]
   exact (p4Q2HM_actualRight_sourceSeparation_iff_originalGI_matrixRanksEq
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-    n r s hExact).trans (eq_comm : Qsrc.rank = (GI s).rank ↔ _)
+    n r s hExact).trans (eq_comm : (Qsrc).rank = (GI s).rank ↔ _)
 
 /-- A source is invisible to the actual finite GI detector exactly
 when its genuine finite squared original Wilson GI energy vanishes. -/
@@ -342,7 +342,7 @@ theorem p4Q2HN_actualRight_exists_finiteOriginalGI_SOS_certificate
         n r s).mulVecLin.ker = JointKernel ∧
       (p4Q2HN_actualRightOriginalGIFiniteSumSquaresGram
         (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-        n r s).rank ≤ Qsrc.rank ∧
+        n r s).rank ≤ (Qsrc).rank ∧
       ∀ a : Coeff,
         (star a ⬝ᵥ
           ((p4Q2HN_actualRightOriginalGIFiniteSumSquaresGram
