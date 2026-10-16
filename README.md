@@ -2,7 +2,7 @@
 
 Lean 4 / mathlib research by **Hidetoshi Itakura** on the original finite-volume Wilson lattice theory and the outstanding four-dimensional Yang–Mills existence and mass-gap problem.
 
-**Verified theorem checkpoint — 2026-10-17 JST:** Latest theorem-bearing [PR #5630 (P4-Q2-IK)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5630) is **squash MERGED** as `89e3877a0203f8c0e25e402d29a7abb658b678fa`. Its exact tested source HEAD `874a2214b8ff3cd1ef6b35be029fa3a037cb6d0e` passed [CI #38972068057](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38972068057) **completed SUCCESS (10718/10718)**. Changed Lean job `117212570666` and MCP CI completion receipt `117214145452` both SUCCESS; 2/2 IK `#print axioms` free of `sorryAx`, changed Lean warnings/errors zero; inherited finite lattice `native_decide` axioms disclosed. The sole authoritative theorem carrier is branch `formal/real-hilbert-uniform-coercive-strong-limit`; GitHub default `main` is not authoritative.
+**Verified theorem checkpoint — 2026-10-17 JST:** Latest theorem-bearing [PR #5633 (P4-Q2-IM)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5633) is **squash MERGED** as `29fc2b323839633dcbdee9453112a0c5013698df`. Its exact tested source HEAD `815fbed257791a30317209de77372d5c02cd7b60` passed [CI #38979416625](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38979416625) **completed SUCCESS (10720/10720)**. Changed Lean job `117236499250` and MCP CI completion receipt `117237738761` both SUCCESS; 7/7 IM `#print axioms` without `sorryAx`, changed Lean warnings/errors zero. The physical GL positivity declaration inherits disclosed finite-lattice `native_decide` axioms. The sole authoritative theorem carrier remains `formal/real-hilbert-uniform-coercive-strong-limit`; GitHub default `main` is not authoritative.
 
 **What the current physical posterior result proves.** At any finite spatial volume `H`, positive frozen coupling `beta>0`, and for an arbitrary finite real family of *actual gauge-invariant physical inputs* with combined signed source `F = sum_i a_i f_i`, the ORIGINAL Wilson physical residual Gram satisfies
 
@@ -50,6 +50,10 @@ GL [#5574](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5574) identifie
 
 **IK #5630: unconditional global original Wilson physical-source-norm UPPER bound.** WITHOUT assuming `ker S=K`, original finite SU(2) Wilson pair-Haar spatial GL mass satisfies `∃C>0,∀a,0≤M_GL(S(a))≤C‖S(a)‖²` at ANY finite r, frozen `beta(n)>0` and fine `beta(n+1)≥0`. The proof compares the genuine GL integral and physical source Grams on a complement to `ker S` and transports the result across that source kernel; even GI-invisible nonzero sources are allowed. By IJ, the remaining strictly positive LOWER bound for all signed sources is exactly the unresolved `ker S=K` gate at r>0 and positive fine beta. [PR #5630](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5630), exact CI #38972068057 SUCCESS (10718/10718), 2/2 axiom checks free of sorryAx, zero changed diagnostics.
 
+**IL #5632: exact invisible physical-source submodule.** The original finite right-Krylov coefficient GI joint kernel (K=\ker\Phi) maps by the **ACTUAL** Haar-L² physical synthesis (S) to the finite-dimensional physical obstruction `I_phys=S(K) <= range S`. For **every actual signed physical source** `f ∈ range S` with positive frozen `beta(n)` and nonnegative fine `beta(n+1)`, the original interacting-Wilson GL mass satisfies `M_GL(f)=0 ↔ f∈I_phys`; hence `f∉I_phys → M_GL(f)>0`. IK's unconditional `M_GL(f)≤C‖f‖²` bound is independent of the coefficient representation. [IL theorem PR #5632](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5632) was squash MERGED at `bf543a1dd4dc089d60dc5fb93d145fdded1ec07b`, exact-source-head CI [#38974854569](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38974854569) SUCCESS (10719/10719; six IL axioms no `sorryAx`).
+
+**IM #5633: genuine physical orthogonal visible sector and exact rank defect.** In the ACTUAL gauge-invariant Haar-L² Hilbert space, define `V=range S` and `V_vis=I_physᗮ ⊓ V`, with orthogonality taken in the physical inner product. Pinned mathlib proves `V=I_phys ⊔ V_vis` with disjoint orthogonal summands, and verifies `finrank(I_phys)+finrank(range Phi)=finrank(range S)`. Furthermore `I_phys=0 ↔ ker S=ker Phi=K ↔ rank S=rank Phi`; on every nonzero `f∈V_vis`, the ORIGINAL interacting-Wilson GL mass is strictly positive. These are **exact obstruction identities**, not an unconditional proof that `I_phys=0` at fine `beta(n+1)>0` and `r>0`, nor any lattice/spacing/volume/depth-uniform lower comparison. [IM theorem PR #5633](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5633) is verified as described above.
+
 **Do not overclaim.** Posterior density-row separation `Q>0` does **not** imply `Delta != 0` for arbitrary physical sources. Neither positive detection for every nonzero *actual* Krylov combination at arbitrary depth and positive fine beta, a source-frame lower constant uniform in `H,n,r`, spatial summability, cross-scale physical transport, a continuum Hamiltonian, nor a four-dimensional Yang–Mills mass gap has been proved. Older original Wilson Haar Riesz `AW` (DV–EC) and physical twelve-color `D12` (DS–DU) are separate finite-volume operators; the earlier **relative** `AW/D12` color-cardinality obstruction is not an absolute spectral-gap no-go.
 
 See [ROADMAP.md](ROADMAP.md) for the exact theorem-status matrix, verified source-file order, the distinct fine `beta(n+1)` / frozen `beta(n)` contexts, and explicit acceptance criteria for the remaining proof obligations.
@@ -60,15 +64,15 @@ See [ROADMAP.md](ROADMAP.md) for the exact theorem-status matrix, verified sourc
 | --- | --- |
 | Repository | [itakura-hidetoshi/4d-mass-gap](https://github.com/itakura-hidetoshi/4d-mass-gap) |
 | **Only theorem-authoritative branch** | `formal/real-hilbert-uniform-coercive-strong-limit` |
-| **Latest theorem-bearing merge** | [#5630 (IK)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5630), `89e3877a0203f8c0e25e402d29a7abb658b678fa` |
-| PR #5630 exact tested source HEAD | `874a2214b8ff3cd1ef6b35be029fa3a037cb6d0e` |
+| **Latest theorem-bearing merge** | [#5633 (IM)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5633), `29fc2b323839633dcbdee9453112a0c5013698df` |
+| PR #5633 exact tested source HEAD | `815fbed257791a30317209de77372d5c02cd7b60` |
 | Lean pin | `leanprover/lean4:v4.30.0-rc2` |
 | mathlib pin | `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
-| Exact source-head CI | [CI #38972068057](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38972068057) — SUCCESS |
-| Changed Lean / MCP completion jobs | `117212570666` / `117214145452`, both SUCCESS |
-| Build and diagnostics | **10718/10718**, IK 2/2 axiom checks without `sorryAx`, changed Lean warning/error 0; inherited finite lattice `native_decide` axioms. |
+| Exact source-head CI | [CI #38979416625](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/38979416625) — SUCCESS |
+| Changed Lean / MCP completion jobs | `117236499250` / `117237738761`, both SUCCESS |
+| Build and diagnostics | **10720/10720**, IM 7/7 axiom checks without `sorryAx`, changed Lean warning/error 0; pre-existing finite lattice `native_decide` axioms disclosed. |
 
-**The GitHub default `main` is not the theorem authority.** Reobserve the fresh exact HEAD of the branch above and inspect the actual Lean theorem declarations before trusting this document, a PR title, or a historical conversation. A subsequent documentation-only merge advances the branch HEAD **without changing the #5630 theorem-bearing checkpoint**.
+**The GitHub default `main` is not the theorem authority.** Reobserve the fresh exact HEAD of the branch above and inspect the actual Lean theorem declarations before trusting this document, a PR title, or a historical conversation. A subsequent documentation-only merge advances the branch HEAD **without changing the #5633 theorem-bearing checkpoint**.
 
 Authority order: fresh authoritative SHA → actual Lean statements/proofs → README/ROADMAP → CI for that exact SHA → historical reports.
 
