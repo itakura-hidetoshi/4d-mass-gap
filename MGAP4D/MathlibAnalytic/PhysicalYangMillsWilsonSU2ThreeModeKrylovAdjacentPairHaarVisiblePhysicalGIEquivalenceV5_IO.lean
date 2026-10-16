@@ -108,7 +108,7 @@ noncomputable def p4Q2IO_abstract_complementDetectorEquivRange
     have hvDecomp :
         v = (⟨(i : F), hI i.property⟩ : V) + W.inclusion hW w := by
       apply Subtype.ext
-      simpa using hsum
+      simpa using hsum.symm
     have hPsiEq : psi v = psi (W.inclusion hW w) := by
       rw [hvDecomp, map_add, hiZero, zero_add]
     refine ⟨w, ?_⟩
