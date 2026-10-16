@@ -203,14 +203,14 @@ This is true even for collapsed fine-beta-zero source modes. -/
 theorem p4Q2HM_actualRightPhysicalHaarL2SourceGram_rank_eq_source :
     (p4Q2HM_actualRightPhysicalHaarL2SourceGram
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
-      n r).rank = Module.finrank ℝ ↥PhysicalSource.range := by
+      n r).rank = Module.finrank ℝ ↥(PhysicalSource).range := by
   let v : Fin (r + 1) → Phys := fun j => RightFactor n (j : ℕ)
   have hPhysical :
       p4Q2HM_finiteInnerSourceSynthesis v = PhysicalSource := by
     ext a
     rfl
   change (Matrix.gram ℝ v).rank =
-    Module.finrank ℝ ↥PhysicalSource.range
+    Module.finrank ℝ ↥(PhysicalSource).range
   rw [← hPhysical]
   exact p4Q2HM_gram_rank_eq_synthesis_finrank v
 
@@ -286,7 +286,7 @@ matrix rank is asserted to equal the other unconditionally. -/
 theorem p4Q2HM_actualRight_sourceSeparation_iff_originalGI_matrixRanksEq
     (s : Finset Context)
     (hExact : (FiniteDetector s).ker = JointKernel) :
-    PhysicalSource.ker = JointKernel ↔
+    (PhysicalSource).ker = JointKernel ↔
       (p4Q2HM_actualRightPhysicalHaarL2SourceGram
         (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r).rank =
       (p4Q2HM_actualRightOriginalGIContextMatrix
