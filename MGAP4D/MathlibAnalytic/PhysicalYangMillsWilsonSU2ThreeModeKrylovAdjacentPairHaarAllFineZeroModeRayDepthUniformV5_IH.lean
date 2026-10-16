@@ -108,7 +108,7 @@ theorem p4Q2IH_allFine_actualRight_scaledZeroSelector_source_eq_oneMode
         t • RightFactor n 0 := by
     change (∑ j : Fin 1, t • RightFactor n (j : ℕ)) =
       t • RightFactor n 0
-    simpa only [Fin.sum_univ_one, Fin.val_zero]
+    simp only [Fin.sum_univ_one, Fin.val_zero]
   exact hRay.trans hOne.symm
 
 /-- The original, actual physical source norm on the explicit
