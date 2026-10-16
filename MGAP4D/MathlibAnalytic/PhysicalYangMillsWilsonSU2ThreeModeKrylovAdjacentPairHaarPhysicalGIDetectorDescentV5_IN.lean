@@ -204,7 +204,7 @@ theorem p4Q2IN_actualRightPhysicalInducedGIDetector_range_eq :
 precisely the kernel of the genuine descended physical GI detector,
 as a submodule of range S. -/
 theorem p4Q2IN_actualRightPhysicalInducedGIDetector_ker_eq_invisible :
-    (PhysGI).ker = Invisible.comap (PhysicalSource).range.subtype := by
+    (PhysGI).ker = (Invisible).comap ((PhysicalSource).range.subtype) := by
   ext f
   obtain ⟨a, ha⟩ := (LinearMap.mem_range).mp f.property
   have hf : f = ⟨PhysicalSource a,
@@ -243,7 +243,6 @@ theorem p4Q2IN_actualRightOriginalGLMass_zero_iff_physicalDetector_zero
   have hKer :
       f ∈ (PhysGI).ker ↔ (f : Phys) ∈ Invisible := by
     rw [p4Q2IN_actualRightPhysicalInducedGIDetector_ker_eq_invisible]
-    rfl
   exact hIL.trans (hKer.symm.trans (LinearMap.mem_ker))
 
 /-- The actual physical Wilson source quotient, by precisely the
