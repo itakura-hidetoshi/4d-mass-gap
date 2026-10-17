@@ -111,15 +111,23 @@ theorem p4Q2IX_originalCrossingAction_HaarMean_eq_identity
     (B : Cfg) :
     (∫ A : Cfg, C A B ∂haar) =
       (∫ A : Cfg, C A (fun _ => 1) ∂haar) := by
-  have hPres := p4Q2IX_actualSpatialHaar_leftTranslate_measurePreserving H B
-  calc
-    (∫ A : Cfg, C A B ∂haar) =
-        (∫ A : Cfg, C (fun e => B e * A e) B ∂haar) := by
-          exact (hPres.integral_comp' (fun A : Cfg => C A B)).symm
-    _ = (∫ A : Cfg, C A (fun _ => 1) ∂haar) := by
-      apply integral_congr_ae
-      filter_upwards with A
-      exact p4Q2IX_originalCrossingAction_leftTranslate H B A
+  let T : Cfg → Cfg := fun A e => B e * A e
+  let f : Cfg → ℝ := fun A => C A B
+  have hPres : MeasurePreserving T haar haar :=
+    p4Q2IX_actualSpatialHaar_leftTranslate_measurePreserving H B
+  have hTransport :
+      (∫ A : Cfg, f A ∂haar) =
+        (∫ A : Cfg, f (T A) ∂haar) := by
+    exact (hPres.integral_comp' f).symm
+  have hPoint :
+      (fun A : Cfg => f (T A)) =
+        (fun A : Cfg => C A (fun _ => 1)) := by
+    funext A
+    exact p4Q2IX_originalCrossingAction_leftTranslate H B A
+  change (∫ A : Cfg, f A ∂haar) =
+    (∫ A : Cfg, C A (fun _ => 1) ∂haar)
+  rw [hTransport]
+  exact congrArg (fun g : Cfg → ℝ => ∫ A : Cfg, g A ∂haar) hPoint
 
 /-- Two genuine physical right boundaries have exactly the same temporal
 crossing Haar mean; this removes crossing dependence from the beta-zero
