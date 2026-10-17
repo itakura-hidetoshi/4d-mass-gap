@@ -159,11 +159,19 @@ theorem p4Q2IW_originalWilsonHaarRow_hasDerivAt_beta
     have hexp : Real.exp (-t * S A B) ≤ Real.exp M :=
       Real.exp_le_exp.mpr hupper
     have hnorm : ‖DF t A‖ = S A B * Real.exp (-t * S A B) := by
-      dsimp [DF]
-      rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_eq_boltzmann]
-      simp only [norm_mul, Real.norm_eq_abs, abs_neg,
-        abs_of_nonneg (hSrange A).1,
-        abs_of_pos (Real.exp_pos _)]
+      have hSabs : ‖-(S A B)‖ = S A B := by
+        rw [Real.norm_eq_abs, abs_neg, abs_of_nonneg (hSrange A).1]
+      have hKabs : ‖K t A B‖ = K t A B := by
+        rw [Real.norm_eq_abs,
+          abs_of_pos (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
+            H 2 t A B)]
+      calc
+        ‖DF t A‖ = ‖-(S A B)‖ * ‖K t A B‖ := by
+          change ‖-(S A B) * K t A B‖ = _
+          exact norm_mul _ _
+        _ = S A B * K t A B := by rw [hSabs, hKabs]
+        _ = S A B * Real.exp (-t * S A B) := by
+          rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_eq_boltzmann]
     rw [hnorm]
     exact mul_le_mul (hSrange A).2 hexp
       (Real.exp_pos _).le hMnonneg
