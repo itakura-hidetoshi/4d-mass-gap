@@ -207,18 +207,16 @@ theorem p4Q2JN2_densityContrast_error_le_of_minor_error
   have hMCont : Continuous M :=
     (continuous_const.mul P1.continuous).sub
       (P0.continuous.mul continuous_const)
-  have hECont : Continuous E := by
-    exact hMCont.add (continuous_const.mul
-      (continuous_const.sub
-        p4Q2FZ_originalSU2TemporalWilsonContrast_continuous))
+  have hTCont : Continuous (fun h : Gauge => b * (D g - D h)) :=
+    continuous_const.mul (continuous_const.sub
+      p4Q2FZ_originalSU2TemporalWilsonContrast_continuous)
+  have hECont : Continuous E := hMCont.add hTCont
   have hMInt : Integrable M nu :=
     hMCont.integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
   have hTInt : Integrable (fun h : Gauge => b * (D g - D h)) nu :=
-    (continuous_const.mul
-      (continuous_const.sub
-        p4Q2FZ_originalSU2TemporalWilsonContrast_continuous))
-      .integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    hTCont.integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
   have hRecon := p4Q2JN2_originalDensityContrast_eq_minorHaarIntegral
     H b hb right e g
   have hT :=
@@ -266,10 +264,11 @@ theorem p4Q2JN2_actualDensityContrast_centeredTaylor_explicit
         mul_le_mul_of_nonneg_left hD hb
       _ = 4 * b := by ring
   have hPow : (b * (D g - D h)) ^ 2 ≤ 16 * b ^ 2 := by
-    have h := pow_le_pow_left₀ (abs_nonneg _) hAbs 2
-    have h' : (b * (D g - D h)) ^ 2 ≤ (4 * b) ^ 2 := by
-      simpa only [sq_abs] using h
-    nlinarith
+    have hSq := pow_le_pow_left₀ (abs_nonneg _) hAbs 2
+    calc
+      (b * (D g - D h)) ^ 2 ≤ (4 * b) ^ 2 := by
+        simpa only [sq_abs] using hSq
+      _ = 16 * b ^ 2 := by ring
   have hGap : 0 ≤ Real.exp (32 * b) - Real.exp (-32 * b) := by
     exact sub_nonneg.mpr (Real.exp_le_exp.mpr (by linarith))
   have hA :
@@ -294,7 +293,7 @@ theorem p4Q2JN2_actualDensityContrast_centeredTaylor_explicit
 posterior density-crossing envelope into a quadratic weak-coupling
 bound, without any lattice-volume or physical-vacuum hypothesis. -/
 theorem p4Q2JN2_trueWilsonExpGap_le
-    (b : ℝ) (hb : 0 ≤ b) :
+    (b : ℝ) :
     Real.exp (32 * b) - Real.exp (-32 * b) ≤
       (64 * b) * Real.exp (32 * b) := by
   have hExp := Real.add_one_le_exp (-64 * b)
@@ -327,7 +326,7 @@ theorem p4Q2JN2_actualDensityContrast_centeredTaylor_quadratic
       (272 * Real.exp 8) * b ^ 2 := by
   have hTaylor := p4Q2JN2_actualDensityContrast_centeredTaylor_explicit
     H b hb hsmall right e g
-  have hGap := p4Q2JN2_trueWilsonExpGap_le b hb
+  have hGap := p4Q2JN2_trueWilsonExpGap_le b
   have hExp : Real.exp (32 * b) ≤ Real.exp 8 :=
     Real.exp_le_exp.mpr (by linarith)
   have hTerm1 :
@@ -340,12 +339,18 @@ theorem p4Q2JN2_actualDensityContrast_centeredTaylor_quadratic
       (4 * b) * ((64 * b) * Real.exp (32 * b)) :=
     mul_le_mul_of_nonneg_left hGap
       (mul_nonneg (by norm_num) hb)
+  have hCoeff : 0 ≤ (4 * b) * (64 * b) :=
+    mul_nonneg (mul_nonneg (by norm_num) hb)
+      (mul_nonneg (by norm_num) hb)
   have hTerm3 :
       (4 * b) * ((64 * b) * Real.exp (32 * b)) ≤
-      (4 * b) * ((64 * b) * Real.exp 8) :=
-    mul_le_mul_of_nonneg_left hExp
-      (mul_nonneg (mul_nonneg (by norm_num) hb)
-        (mul_nonneg (by norm_num) hb))
+      (4 * b) * ((64 * b) * Real.exp 8) := by
+    calc
+      (4 * b) * ((64 * b) * Real.exp (32 * b)) =
+        ((4 * b) * (64 * b)) * Real.exp (32 * b) := by ring
+      _ ≤ ((4 * b) * (64 * b)) * Real.exp 8 :=
+        mul_le_mul_of_nonneg_left hExp hCoeff
+      _ = (4 * b) * ((64 * b) * Real.exp 8) := by ring
   calc
     ‖p4Q2GB_originalWilsonPosteriorLeftDensityContrast H b hb right e g +
         b * (D g - ∫ h : Gauge, D h ∂nu)‖ ≤
@@ -379,13 +384,16 @@ theorem p4Q2JN2_originalPosteriorDensityContrast_strongSupQuotient_le
   let F := p4Q2JN2_originalPosteriorDensityContrastContinuous
     H b hb.le right e
   let T := p4Q2JM_temporalWilsonCentered
+  have hF (g : Gauge) :
+      F g = p4Q2GB_originalWilsonPosteriorLeftDensityContrast
+          H b hb.le right e g := rfl
+  have hT (g : Gauge) :
+      T g = D g - (∫ h : Gauge, D h ∂nu) := by
+    simp [T, p4Q2JM_temporalWilsonCentered,
+      p4Q2JM_temporalWilsonContinuous]
   have hPoint (g : Gauge) :
       ‖F g + b * T g‖ ≤ (272 * Real.exp 8) * b ^ 2 := by
-    change
-      ‖p4Q2GB_originalWilsonPosteriorLeftDensityContrast
-          H b hb.le right e g +
-        b * (D g - ∫ h : Gauge, D h ∂nu)‖ ≤
-        (272 * Real.exp 8) * b ^ 2
+    rw [hF g, hT g]
     exact p4Q2JN2_actualDensityContrast_centeredTaylor_quadratic
       H b hb.le hsmall right e g
   have hSup : ‖F + b • T‖ ≤ (272 * Real.exp 8) * b ^ 2 := by
@@ -404,7 +412,6 @@ theorem p4Q2JN2_originalPosteriorDensityContrast_strongSupQuotient_le
       mul_le_mul_of_nonneg_left hSup (inv_nonneg.mpr hb.le)
     _ = (272 * Real.exp 8) * b := by
       field_simp [hb.ne']
-      ring
 
 /-- The SAME actual genuine unlogged original interacting posterior
 first-order contrast converges strongly through mathlib's bounded
