@@ -293,6 +293,74 @@ theorem p4Q2JN_originalPosteriorMinor_one_pi_pos
       (specialUnitaryTwoRotation Real.pi)).1
     (p4Q2JN_originalPosteriorDensity_pos H b hb.le right e 1).2) using 1 <;> ring
 
+
+/-- The original interacting posterior cross factor tends uniformly to
+one at weak coupling, with a volume-independent explicit envelope.
+This removes the remaining beta-dependent prefactor from the genuine
+original two-context density minor's FIRST ORDER coefficient. -/
+theorem p4Q2JN_originalPosteriorCrossProduct_deviation_abs_le
+    (b : ℝ) (hb : 0 ≤ b) (right : Cfg) (e : Link) (g h : Gauge) :
+    |p4Q2JN_originalPosteriorIdentityDensity H b hb right e h *
+        p4Q2JN_originalPosteriorPiDensity H b hb right e g - 1| ≤
+      Real.exp (32 * b) - Real.exp (-32 * b) := by
+  obtain ⟨hlo, hhi⟩ :=
+    p4Q2JN_originalPosteriorCrossProduct_bounds H b hb right e g h
+  have hl : Real.exp (-32 * b) ≤ (1 : ℝ) := by
+    calc
+      Real.exp (-32 * b) ≤ Real.exp 0 :=
+        Real.exp_le_exp.mpr (by linarith)
+      _ = 1 := by norm_num
+  have hu : (1 : ℝ) ≤ Real.exp (32 * b) := by
+    calc
+      (1 : ℝ) = Real.exp 0 := by norm_num
+      _ ≤ Real.exp (32 * b) :=
+        Real.exp_le_exp.mpr (by linarith)
+  apply abs_le.mpr
+  constructor <;> linarith
+
+/-- Genuine original Wilson UNLOGGED posterior density minor has the
+universal temporal SU(2) first-order coefficient
+   -b*(D(g)-D(h))
+with a completely explicit quadratic Taylor remainder. No derivative
+of either interacting posterior, joint Perron vacuum, or partition
+function is presumed. The second error term is O(b²), since its
+rightmost exponential difference is O(b). -/
+theorem p4Q2JN_originalPosteriorMinor_unweightedTaylor_uniform
+    (b : ℝ) (hb : 0 ≤ b) (hsmall : b ≤ 1 / 4)
+    (right : Cfg) (e : Link) (g h : Gauge) :
+    ‖p4Q2JN_originalPosteriorTwoPointMinor H b hb right e g h -
+        (-b * (D g - D h))‖ ≤
+      (b * (D g - D h)) ^ 2 * Real.exp (32 * b) +
+        |b * (D g - D h)| *
+          (Real.exp (32 * b) - Real.exp (-32 * b)) := by
+  let x : ℝ := -b * (D g - D h)
+  let v : ℝ :=
+    p4Q2JN_originalPosteriorIdentityDensity H b hb right e h *
+      p4Q2JN_originalPosteriorPiDensity H b hb right e g
+  have hWeighted :
+      ‖p4Q2JN_originalPosteriorTwoPointMinor H b hb right e g h -
+          x * v‖ ≤ (b * (D g - D h)) ^ 2 * Real.exp (32 * b) :=
+    p4Q2JN_originalPosteriorMinor_weightedTaylor_uniform
+      H b hb hsmall right e g h
+  have hDev : |v - 1| ≤
+      Real.exp (32 * b) - Real.exp (-32 * b) :=
+    p4Q2JN_originalPosteriorCrossProduct_deviation_abs_le
+      H b hb right e g h
+  have hNormX : ‖x‖ = |b * (D g - D h)| := by
+    simp [x, Real.norm_eq_abs]
+  have hSecond :
+      ‖x * (v - 1)‖ ≤ |b * (D g - D h)| *
+        (Real.exp (32 * b) - Real.exp (-32 * b)) := by
+    rw [norm_mul, hNormX, Real.norm_eq_abs]
+    exact mul_le_mul_of_nonneg_left hDev (abs_nonneg _)
+  have hSplit :
+      p4Q2JN_originalPosteriorTwoPointMinor H b hb right e g h - x =
+        (p4Q2JN_originalPosteriorTwoPointMinor H b hb right e g h -
+          x * v) + x * (v - 1) := by ring
+  change ‖p4Q2JN_originalPosteriorTwoPointMinor H b hb right e g h - x‖ ≤ _
+  rw [hSplit]
+  exact (norm_add_le _ _).trans (add_le_add hWeighted hSecond)
+
 end Frozen
 end GroundStatePosteriorJoint
 end
@@ -308,3 +376,5 @@ end MGAP4D
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JN_originalPosteriorMinor_weightedTaylor_uniform
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JN_originalPosteriorMinor_ne_of_temporalDifference_ne
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JN_originalPosteriorMinor_one_pi_pos
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JN_originalPosteriorCrossProduct_deviation_abs_le
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JN_originalPosteriorMinor_unweightedTaylor_uniform
