@@ -156,7 +156,7 @@ theorem p4Q2JN_temporalWilsonDifference_abs_le_four (g h : Gauge) :
   have hRh2 : specialUnitaryWilsonPlaquetteEnergy 2 (R⁻¹ * h) ≤ 2 :=
     specialUnitaryWilsonPlaquetteEnergy_le_two (by norm_num) (R⁻¹ * h)
   apply abs_le.mpr
-  dsimp [D, p4Q2FZ_originalSU2TemporalWilsonContrast]
+  dsimp only [p4Q2FZ_originalSU2TemporalWilsonContrast]
   constructor <;> dsimp [R] at *
   · linarith
   · linarith
@@ -239,7 +239,7 @@ theorem p4Q2JN_originalSU2_smallCoupling_TaylorRadius
   have hd := p4Q2JN_temporalWilsonDifference_abs_le_four g h
   calc
     ‖-b * (D g - D h)‖ = b * |D g - D h| := by
-      simp [Real.norm_eq_abs, abs_mul, abs_of_nonneg hb]
+      simp [Real.norm_eq_abs, abs_of_nonneg hb]
     _ ≤ b * 4 := mul_le_mul_of_nonneg_left hd hb
     _ ≤ 1 := by linarith
 
@@ -271,9 +271,12 @@ theorem p4Q2JN_originalPosteriorMinor_ne_of_temporalDifference_ne
   have hx : -b * (D g - D h) ≠ 0 :=
     mul_ne_zero (neg_ne_zero.mpr hb.ne') (sub_ne_zero.mpr hd)
   have he : Real.exp (-b * (D g - D h)) - 1 ≠ 0 := by
-    intro h
-    have hEq : Real.exp (-b * (D g - D h)) = 1 := sub_eq_zero.mp h
-    exact hx (Real.exp_eq_one_iff.mp hEq)
+    intro hzero
+    have hEq : Real.exp (-b * (D g - D h)) = 1 :=
+      sub_eq_zero.mp hzero
+    have hExpZero : Real.exp (-b * (D g - D h)) = Real.exp 0 := by
+      simpa using hEq
+    exact hx (Real.exp_injective hExpZero)
   exact mul_ne_zero he (mul_ne_zero
     (p4Q2JN_originalPosteriorDensity_pos H b hb.le right e h).1.ne'
     (p4Q2JN_originalPosteriorDensity_pos H b hb.le right e g).2.ne')
