@@ -69,7 +69,12 @@ theorem p4Q2IY_onePrimaryLinkCentralTwist_other
       periodicHypercubicEvenPrimarySpatialPlaquetteEdge H k ≠
         periodicHypercubicEvenPrimarySpatialPlaquetteEdge H 0 :=
     (periodicHypercubicEvenPrimarySpatialPlaquetteEdge_injective H).ne hk
-  simp [p4Q2IY_onePrimaryLinkCentralTwist, hne]
+  change Function.update
+    (fun _ : PeriodicHypercubicEvenEdge H => (1 : SpecialUnitaryMatrixGroup 2))
+    (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H 0)
+    specialUnitaryTwoNegativeIdentity
+    (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H k) = 1
+  exact Function.update_of_ne hne _ _
 
 /-- The complete physical plaquette word is exactly -I after changing only
 its first oriented edge, since all remaining three edges are identity. -/
