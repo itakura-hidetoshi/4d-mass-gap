@@ -75,10 +75,20 @@ theorem p4Q2JO_temporalWilsonContrast_HaarMean_zero :
   have hmp :
       MeasurePreserving (fun g : Gauge => R⁻¹ * g * 1) nu nu :=
     normalizedCompactHaar_measurePreserving_mul_left_right Gauge R⁻¹ 1
+  have hTranslateMeasurable :
+      Measurable (fun g : Gauge => R⁻¹ * g * 1) :=
+    ((continuous_const.mul continuous_id).mul continuous_const).measurable
   have hHaar :
       (∫ g : Gauge, E (R⁻¹ * g) ∂nu) =
         ∫ g : Gauge, E g ∂nu := by
-    simpa only [mul_one] using hmp.integral_comp' E
+    have hMap :
+        (∫ g : Gauge, E g
+          ∂(nu.map (fun h : Gauge => R⁻¹ * h * 1))) =
+          ∫ g : Gauge, E (R⁻¹ * g * 1) ∂nu :=
+      MeasureTheory.integral_map
+        hTranslateMeasurable.aemeasurable hE.stronglyMeasurable
+    rw [hmp.map_eq] at hMap
+    simpa only [mul_one] using hMap.symm
   change (∫ g : Gauge, E g - E (R⁻¹ * g) ∂nu) = 0
   rw [integral_sub hEI hShiftI, hHaar, sub_self]
 
