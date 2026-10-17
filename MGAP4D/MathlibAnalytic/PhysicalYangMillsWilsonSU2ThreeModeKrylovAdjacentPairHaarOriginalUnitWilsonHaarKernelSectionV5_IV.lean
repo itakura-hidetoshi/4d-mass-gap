@@ -57,6 +57,13 @@ local instance p4Q2IV_measurableSpace :
 local instance p4Q2IV_borelSpace :
     BorelSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupBorelSpace 2
+/- The normalized genuine compact-group Haar has full support. The finite
+product measure inherits open-set positivity from this factor instance. -/
+local instance p4Q2IV_SU2_normalizedHaarOpenPos :
+    (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ)).IsOpenPosMeasure := by
+  unfold normalizedCompactHaar
+  infer_instance
+
 local instance p4Q2IV_haarOpenPos (H : ℕ) :
     (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2).IsOpenPosMeasure := by
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
@@ -70,9 +77,9 @@ namespace GroundStatePosteriorJoint
 
 theorem p4Q2IV_abstract_continuous_ae_constant_iff_pointwise_constant
     {X : Type*} [TopologicalSpace X] [MeasurableSpace X]
-    (μ : Measure X) [μ.IsOpenPosMeasure]
+    (haar : Measure X) [haar.IsOpenPosMeasure]
     (f : X → ℝ) (hf : Continuous f) (c : ℝ) :
-    (f =ᵐ[μ] fun _ => c) ↔ ∀ x, f x = c := by
+    (f =ᵐ[haar] fun _ => c) ↔ ∀ x, f x = c := by
   constructor
   · intro hae x
     have heq : f = (fun _ : X => c) :=
@@ -87,7 +94,7 @@ section RawWilson
 variable (H : ℕ) (beta : ℝ)
 local notation "Cfg" =>
   PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
-local notation "μ" =>
+local notation "haar" =>
   periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
 local notation "K" =>
   periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2 beta
@@ -99,17 +106,17 @@ local notation "Cross" =>
 /-- The original SU(2) Wilson Haar-integrated one-slab kernel on a
 literal physical right boundary B, not a conditional-Haar surrogate. -/
 noncomputable def p4Q2IV_originalWilsonUnitHaarKernelSection (B : Cfg) : ℝ :=
-  ∫ A : Cfg, K A B ∂μ
+  ∫ A : Cfg, K A B ∂haar
 
 /-- Exact original one-slab kernel factorization after integration in
 the LEFT physical spatial configuration. The right half Boltzmann
 weight stays OUTSIDE the Haar integral; the left weight stays INSIDE. -/
 theorem p4Q2IV_originalWilsonUnitHaarKernelSection_factorization (B : Cfg) :
     p4Q2IV_originalWilsonUnitHaarKernelSection H beta B =
-      Half B * ∫ A : Cfg, Half A * Cross A B ∂μ := by
+      Half B * ∫ A : Cfg, Half A * Cross A B ∂haar := by
   unfold p4Q2IV_originalWilsonUnitHaarKernelSection
-  change (∫ A : Cfg, (Half A * Cross A B) * Half B ∂μ) =
-    Half B * ∫ A : Cfg, Half A * Cross A B ∂μ
+  change (∫ A : Cfg, (Half A * Cross A B) * Half B ∂haar) =
+    Half B * ∫ A : Cfg, Half A * Cross A B ∂haar
   rw [integral_mul_const]
   ring
 
@@ -130,21 +137,21 @@ theorem p4Q2IV_originalWilsonUnitHaarKernelSection_continuous :
       periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
         H 2 beta⟩
   let f : C(Cfg, C(Cfg, ℝ)) := g.curry
-  have hfInt : Integrable (fun A : Cfg => f A) μ :=
+  have hfInt : Integrable (fun A : Cfg => f A) haar :=
     f.continuous.integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
   have hEval (B : Cfg) :
-      (∫ A : Cfg, f A ∂μ) B =
+      (∫ A : Cfg, f A ∂haar) B =
         p4Q2IV_originalWilsonUnitHaarKernelSection H beta B := by
     rw [ContinuousMap.integral_apply hfInt B]
     rfl
   have hEq :
       p4Q2IV_originalWilsonUnitHaarKernelSection H beta =
-        (fun B : Cfg => (∫ A : Cfg, f A ∂μ) B) := by
+        (fun B : Cfg => (∫ A : Cfg, f A ∂haar) B) := by
     funext B
     exact (hEval B).symm
   rw [hEq]
-  exact (∫ A : Cfg, f A ∂μ).continuous
+  exact (∫ A : Cfg, f A ∂haar).continuous
 
 end RawWilson
 
@@ -159,7 +166,7 @@ local notation "Cfg" =>
   PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration Hn 2
 local notation "Phys" =>
   periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule Hn 2
-local notation "μ" =>
+local notation "haar" =>
   periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure Hn 2
 local notation "Unit" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector Hn 2
@@ -178,24 +185,24 @@ one-slab Wilson kernel integral Fβ(B). This is the missing physical
 bridge between the fine Hilbert-space source and the pointwise kernel. -/
 theorem p4Q2IV_originalFineWilsonPhysicalUnit_rawFiber_ae :
     (fun B : Cfg => ((T Unit : Phys) :
-      Lp ℝ 2 μ) B) =ᵐ[μ] RawFiber := by
+      Lp ℝ 2 haar) B) =ᵐ[haar] RawFiber := by
   let k : Cfg → Cfg → ℝ :=
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel Hn 2 (beta (n + 1))
-  let K2 : Lp ℝ 2 (μ.prod μ) :=
+  let K2 : Lp ℝ 2 (Measure.prod haar haar) :=
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2
       Hn 2 specialUnitaryTwoWilsonRankPositive
       (beta (n + 1)) (hbeta (n + 1))
-  let u : Lp ℝ 2 μ := (Unit : Phys)
+  let u : Lp ℝ 2 haar := (Unit : Phys)
   have hKernel :
-      (fun p : Cfg × Cfg => K2 p) =ᵐ[μ.prod μ]
+      (fun p : Cfg × Cfg => K2 p) =ᵐ[Measure.prod haar haar]
         (fun p : Cfg × Cfg => k p.1 p.2) := by
-    simpa only [k, K2, μ,
+    simpa only [k, K2,
       periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure] using
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernelPairL2_coeFn
         Hn 2 specialUnitaryTwoWilsonRankPositive
         (beta (n + 1)) (hbeta (n + 1)))
   have hMeas :
-      AEStronglyMeasurable (fun p : Cfg × Cfg => k p.1 p.2) (μ.prod μ) :=
+      AEStronglyMeasurable (fun p : Cfg × Cfg => k p.1 p.2) (Measure.prod haar haar) :=
     (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
       Hn 2 (beta (n + 1))).measurable.aestronglyMeasurable
   have hBound (A B : Cfg) : |k A B| ≤ 1 :=
@@ -203,28 +210,28 @@ theorem p4Q2IV_originalFineWilsonPhysicalUnit_rawFiber_ae :
       Hn 2 specialUnitaryTwoWilsonRankPositive
       (beta (n + 1)) (hbeta (n + 1)) A B
   have hPhysical :
-      ((T Unit : Phys) : Lp ℝ 2 μ) =
+      ((T Unit : Phys) : Lp ℝ 2 haar) =
         realL2BoundedKernelIntegralOutputL2
-          (μ := μ) k hMeas hBound u := by
+          (μ := haar) k hMeas hBound u := by
     change realL2HilbertSchmidtKernelOperator K2 u = _
     exact realL2HilbertSchmidtKernelOperator_apply_eq_integralOutputL2
-      (μ := μ) k K2 hKernel hMeas hBound u
+      (μ := haar) k K2 hKernel hMeas hBound u
   have hUnitAE :
-      (fun A : Cfg => u A) =ᵐ[μ] (fun _ => (1 : ℝ)) := by
-    change (fun A : Cfg => (Lp.const 2 μ (1 : ℝ)) A) =ᵐ[μ]
+      (fun A : Cfg => u A) =ᵐ[haar] (fun _ => (1 : ℝ)) := by
+    change (fun A : Cfg => (Lp.const 2 haar (1 : ℝ)) A) =ᵐ[haar]
       (fun _ => (1 : ℝ))
-    exact Lp.coeFn_const (μ := μ) (p := 2) (c := (1 : ℝ))
+    exact Lp.coeFn_const (μ := haar) (p := 2) (c := (1 : ℝ))
   have hFiber (B : Cfg) :
-      (∫ A : Cfg, k A B * u A ∂μ) = RawFiber B := by
-    change (∫ A : Cfg, k A B * u A ∂μ) =
-      (∫ A : Cfg, k A B ∂μ)
+      (∫ A : Cfg, k A B * u A ∂haar) = RawFiber B := by
+    change (∫ A : Cfg, k A B * u A ∂haar) =
+      (∫ A : Cfg, k A B ∂haar)
     apply integral_congr_ae
     filter_upwards [hUnitAE] with A hA
     simp only [hA, mul_one]
   have hOut :=
     realL2BoundedKernelIntegralOutputL2_coeFn
-      (μ := μ) k hMeas hBound u
-  change (fun B : Cfg => ((T Unit : Phys) : Lp ℝ 2 μ) B) =ᵐ[μ] RawFiber
+      (μ := haar) k hMeas hBound u
+  change (fun B : Cfg => ((T Unit : Phys) : Lp ℝ 2 haar) B) =ᵐ[haar] RawFiber
   rw [hPhysical]
   filter_upwards [hOut] with B hB
   exact hB.trans (hFiber B)
@@ -235,20 +242,20 @@ interacting Wilson Haar row integral is a.e. constant. There is no
 pointwise evaluation of an arbitrary L² class. -/
 theorem p4Q2IV_actualFineUnit_eigenline_iff_rawFiber_ae_constant :
     (∃ t : ℝ, FineTransfer Unit = t • Unit) ↔
-      ∃ c : ℝ, RawFiber =ᵐ[μ] fun _ => c := by
+      ∃ c : ℝ, RawFiber =ᵐ[haar] fun _ => c := by
   have hRaw :=
     p4Q2IV_originalFineWilsonPhysicalUnit_rawFiber_ae
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n
   have hUnitAE :
-      (fun B : Cfg => ((Unit : Phys) : Lp ℝ 2 μ) B) =ᵐ[μ]
+      (fun B : Cfg => ((Unit : Phys) : Lp ℝ 2 haar) B) =ᵐ[haar]
         (fun _ => (1 : ℝ)) := by
-    change (fun B : Cfg => (Lp.const 2 μ (1 : ℝ)) B) =ᵐ[μ] _
-    exact Lp.coeFn_const (μ := μ) (p := 2) (c := (1 : ℝ))
+    change (fun B : Cfg => (Lp.const 2 haar (1 : ℝ)) B) =ᵐ[haar] _
+    exact Lp.coeFn_const (μ := haar) (p := 2) (c := (1 : ℝ))
   have hScalarAE (c : ℝ) :
-      (fun B : Cfg => (((c • Unit : Phys) : Phys) : Lp ℝ 2 μ) B) =ᵐ[μ]
+      (fun B : Cfg => (((c • Unit : Phys) : Phys) : Lp ℝ 2 haar) B) =ᵐ[haar]
         (fun _ => c) := by
-    change (fun B : Cfg => (c • ((Unit : Phys) : Lp ℝ 2 μ)) B) =ᵐ[μ] _
-    filter_upwards [Lp.coeFn_smul c ((Unit : Phys) : Lp ℝ 2 μ), hUnitAE] with B hs hu
+    change (fun B : Cfg => (c • ((Unit : Phys) : Lp ℝ 2 haar)) B) =ᵐ[haar] _
+    filter_upwards [Lp.coeFn_smul c ((Unit : Phys) : Lp ℝ 2 haar), hUnitAE] with B hs hu
     rw [hs, hu]
     simp
   have hNorm : ‖T‖ ≠ 0 :=
@@ -266,14 +273,14 @@ theorem p4Q2IV_actualFineUnit_eigenline_iff_rawFiber_ae_constant :
         _ = (t * ‖T‖) • Unit := by rw [smul_smul, mul_comm ‖T‖ t]
     refine ⟨t * ‖T‖, ?_⟩
     have hTae :
-        (fun B : Cfg => ((T Unit : Phys) : Lp ℝ 2 μ) B) =ᵐ[μ]
+        (fun B : Cfg => ((T Unit : Phys) : Lp ℝ 2 haar) B) =ᵐ[haar]
           (fun _ => t * ‖T‖) := by
       rw [hT]
       exact hScalarAE _
     exact hRaw.symm.trans hTae
   · rintro ⟨c, hc⟩
     have hCoe :
-        (fun B : Cfg => ((T Unit : Phys) : Lp ℝ 2 μ) B) =ᵐ[μ]
+        (fun B : Cfg => ((T Unit : Phys) : Lp ℝ 2 haar) B) =ᵐ[haar]
           (fun _ => c) := hRaw.trans hc
     have hT : T Unit = c • Unit := by
       apply Subtype.ext
@@ -293,7 +300,7 @@ theorem p4Q2IV_actualFineUnit_eigenline_iff_rawFiber_pointwise_constant :
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n]
   exact exists_congr (fun c =>
     p4Q2IV_abstract_continuous_ae_constant_iff_pointwise_constant
-      μ RawFiber
+      haar RawFiber
       (p4Q2IV_originalWilsonUnitHaarKernelSection_continuous Hn (beta (n + 1)))
       c)
 
@@ -311,7 +318,7 @@ theorem p4Q2IV_actualFineUnit_notEigenline_iff_two_rawWilson_boundaries :
   · intro h
     by_contra hn
     apply h
-    push_neg at hn
+    push Not at hn
     let B₀ : Cfg := fun _ => 1
     exact ⟨RawFiber B₀, fun B => hn B B₀⟩
   · rintro ⟨B₀, B₁, hne⟩ ⟨c, hc⟩
