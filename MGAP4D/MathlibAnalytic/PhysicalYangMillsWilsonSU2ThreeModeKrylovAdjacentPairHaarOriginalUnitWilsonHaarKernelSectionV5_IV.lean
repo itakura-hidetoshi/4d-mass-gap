@@ -256,7 +256,7 @@ theorem p4Q2IV_actualFineUnit_eigenline_iff_rawFiber_ae_constant :
         (fun _ => c) := by
     change (fun B : Cfg => (c • ((Unit : Phys) : Lp ℝ 2 haar)) B) =ᵐ[haar] _
     filter_upwards [Lp.coeFn_smul c ((Unit : Phys) : Lp ℝ 2 haar), hUnitAE] with B hs hu
-    rw [hs, hu]
+    rw [hs, Pi.smul_apply, hu]
     simp
   have hNorm : ‖T‖ ≠ 0 :=
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
