@@ -220,14 +220,16 @@ theorem p4Q2JN_originalPosteriorMinor_weightedTaylor
   have ht : ‖Real.exp x - 1 - x‖ ≤ ‖x‖ ^ 2 :=
     Real.norm_exp_sub_one_sub_id_le hSmall
   rw [p4Q2JN_originalPosteriorMinor_exact_temporalFactor]
-  change ‖(Real.exp x - 1) * v - x * v‖ ≤ (-x) ^ 2 * v
+  change ‖(Real.exp x - 1) * v - x * v‖ ≤ (b * (D g - D h)) ^ 2 * v
   calc
     ‖(Real.exp x - 1) * v - x * v‖ =
         ‖Real.exp x - 1 - x‖ * ‖v‖ := by
       rw [← sub_mul, norm_mul]
     _ ≤ ‖x‖ ^ 2 * ‖v‖ := mul_le_mul_of_nonneg_right ht (norm_nonneg _)
-    _ = (-x) ^ 2 * v := by
-      simp [Real.norm_eq_abs, abs_of_nonneg hv, sq_abs]
+    _ = (b * (D g - D h)) ^ 2 * v := by
+      simp only [Real.norm_eq_abs, sq_abs, abs_of_nonneg hv]
+      dsimp [x]
+      ring
 
 /-- Coupling-only condition 0<=b<=1/4 gives the actual Taylor radius
 simultaneously for EVERY real SU(2) insertion pair. -/
@@ -288,10 +290,12 @@ theorem p4Q2JN_originalPosteriorMinor_one_pi_pos
   have hExp : 0 < Real.exp (4 * b) - 1 := by
     apply sub_pos.mpr
     exact Real.one_lt_exp_iff.mpr (by linarith)
-  convert mul_pos hExp
+  have hx : -b * ((-2 : ℝ) - 2) = 4 * b := by ring
+  rw [hx]
+  exact mul_pos hExp
     (mul_pos (p4Q2JN_originalPosteriorDensity_pos H b hb.le right e
       (specialUnitaryTwoRotation Real.pi)).1
-    (p4Q2JN_originalPosteriorDensity_pos H b hb.le right e 1).2) using 1 <;> ring
+    (p4Q2JN_originalPosteriorDensity_pos H b hb.le right e 1).2)
 
 
 /-- The original interacting posterior cross factor tends uniformly to
