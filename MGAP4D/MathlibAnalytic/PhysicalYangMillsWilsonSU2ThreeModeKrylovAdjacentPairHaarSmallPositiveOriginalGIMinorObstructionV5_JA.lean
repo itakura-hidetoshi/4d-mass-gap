@@ -125,7 +125,11 @@ theorem p4Q2JA_smallFine_actualPivotGram_pos_and_invisible_iff_allWilsonMinors_z
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
       n e z hAnchor).mpr hNE
   refine ⟨z, hAnchor, hGram, ?_⟩
-  simpa only [hNE, true_and] using hObstruction
+  constructor
+  · intro hInvisible
+    exact (hObstruction.mp hInvisible).2
+  · intro hAll
+    exact hObstruction.mpr ⟨hNE, hAll⟩
 
 /-- The true all-source r=1 original interacting-Wilson GL/source-norm
 lower-floor condition in the small-positive-fine-beta regime is EXACTLY
