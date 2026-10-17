@@ -150,7 +150,7 @@ theorem p4Q2JG_originalWilsonHaarRow_strongHaarL2Derivative_nonzero :
       (p4Q2JE_originalWilsonHaarZeroDerivativeLp H) 0 ∧
     p4Q2JE_originalWilsonHaarZeroDerivativeLp H ≠ 0 := by
   exact ⟨p4Q2JG_originalWilsonHaarRow_hasDerivAt_zero_strongHaarL2 H,
-    ne_of_gt (p4Q2JE_originalWilsonHaarZeroDerivativeLp_norm_pos H)⟩
+    norm_pos_iff.mp (p4Q2JE_originalWilsonHaarZeroDerivativeLp_norm_pos H)⟩
 
 end OriginalStrongWilsonDerivative
 end GroundStatePosteriorJoint
