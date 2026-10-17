@@ -326,6 +326,7 @@ theorem p4Q2IV_actualFineUnit_notEigenline_iff_two_rawWilson_boundaries :
 
 end ActualFine
 end GroundStatePosteriorJoint
+end
 end MathlibAnalytic
 end MGAP4D
 
