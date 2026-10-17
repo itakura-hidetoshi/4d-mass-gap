@@ -124,7 +124,7 @@ noncomputable def p4Q2IP_actualRightVisiblePhysicalGIDetector :
   have hW : Visible ≤ (PhysicalSource).range := by
     change Invisibleᗮ ⊓ (PhysicalSource).range ≤ (PhysicalSource).range
     exact inf_le_right
-  exact (PhysGI).comp (Visible.inclusion hW)
+  exact (PhysGI).comp ((Visible).inclusion hW)
 
 local notation "VisibleGI" =>
   p4Q2IP_actualRightVisiblePhysicalGIDetector
@@ -144,7 +144,7 @@ theorem p4Q2IP_actualRightVisiblePhysicalGIDetector_injective :
   have hDisj :=
     (p4Q2IM_actualPhysicalSourceSpan_orthogonal_split
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r).2
-  change Function.Injective ((PhysGI).comp (Visible.inclusion hW))
+  change Function.Injective ((PhysGI).comp ((Visible).inclusion hW))
   exact p4Q2IP_abstract_detector_injective_on_visible
     Invisible (PhysicalSource).range Visible PhysGI hW hKer hDisj
 
@@ -168,10 +168,13 @@ theorem p4Q2IP_actualRightVisiblePhysicalGI_antilipschitz :
   letI : FiniteDimensional ℝ ↥((PhysicalSource).range) := inferInstance
   letI : FiniteDimensional ℝ ↥Visible :=
     Submodule.finiteDimensional_of_le hW
-  have hInjective :=
+  let T : ↥Visible →ₗ[ℝ] (Link → C(Pair, ℝ)) := VisibleGI
+  have hInjective : Function.Injective T :=
     p4Q2IP_actualRightVisiblePhysicalGIDetector_injective
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r
-  exact (LinearMap.injective_iff_antilipschitz VisibleGI).mp hInjective
+  obtain ⟨c, hc, hFrame⟩ :=
+    (LinearMap.injective_iff_antilipschitz T).mp hInjective
+  exact ⟨c, hc, by simpa only [T] using hFrame⟩
 
 /-- Positivity of BOTH the norm of the authentic GI response and
 the original Wilson GL spatial mass on each nonzero actual visible
