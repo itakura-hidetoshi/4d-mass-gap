@@ -157,6 +157,58 @@ theorem p4Q2IS_abstract_twoMode_pivot_separation
         exact (smul_ne_zero htNotZero hVisible) hT
       rw [ht', htZero, zero_smul, map_zero]
 
+/-- At ANY finite depth, every coefficient annihilated by one authentic
+nonzero Wilson scalar GI context is an anchored pivot. This is exact
+kernel parametrization: no source-frame or all-context injectivity is
+assumed. -/
+theorem p4Q2IS_abstract_anchor_pivot_parametrizes_scalar_kernel
+    {E : Type*} [AddCommGroup E] [Module ℝ E]
+    (D : E →ₗ[ℝ] ℝ) (u : E) (hAnchor : D u ≠ 0) (a : E) :
+    D a = 0 ↔ ∃ b : E, a = D u • b - D b • u := by
+  constructor
+  · intro ha
+    refine ⟨(D u)⁻¹ • a, ?_⟩
+    have hDb : D ((D u)⁻¹ • a) = 0 := by
+      simp [ha]
+    rw [hDb, zero_smul, sub_zero, smul_smul]
+    simp [hAnchor]
+  · rintro ⟨b, rfl⟩
+    exact p4Q2IS_abstract_twoMode_pivot_null D u b
+
+/-- All-depth two-posterior GI/source separation can be checked using
+only the anchored residual directions of one true Wilson GI context.
+The reduced implication itself remains an OPEN physical obligation:
+the theorem supplies no unconditional positivity at positive fine beta. -/
+theorem p4Q2IS_abstract_anchor_reduced_source_separation
+    {E F G : Type*}
+    [AddCommGroup E] [Module ℝ E]
+    [AddCommGroup F] [Module ℝ F]
+    [AddCommGroup G] [Module ℝ G]
+    (S : E →ₗ[ℝ] F) (Phi : E →ₗ[ℝ] G)
+    (D : E →ₗ[ℝ] ℝ) (u : E)
+    (hLe : S.ker ≤ Phi.ker)
+    (hEvaluate : ∀ a : E, Phi a = 0 → D a = 0)
+    (hAnchor : D u ≠ 0) :
+    S.ker = Phi.ker ↔
+      (∀ b : E, Phi (D u • b - D b • u) = 0 →
+        S (D u • b - D b • u) = 0) := by
+  constructor
+  · intro hEq b hb
+    apply (LinearMap.mem_ker).mp
+    rw [hEq]
+    exact (LinearMap.mem_ker).mpr hb
+  · intro hReduced
+    apply le_antisymm hLe
+    intro a ha
+    have hPhi : Phi a = 0 := (LinearMap.mem_ker).mp ha
+    have hD : D a = 0 := hEvaluate a hPhi
+    obtain ⟨b, hb⟩ :=
+      (p4Q2IS_abstract_anchor_pivot_parametrizes_scalar_kernel
+        D u hAnchor a).mp hD
+    apply (LinearMap.mem_ker).mpr
+    rw [hb] at hPhi ⊢
+    exact hReduced b hPhi
+
 /-- Selects the literal first nontrivial (depth-one) coefficient. -/
 def p4Q2IS_depthOneCoefficient : Fin (1 + 1) → ℝ :=
   fun j => if j = 1 then 1 else 0
@@ -203,6 +255,17 @@ theorem p4Q2IS_depthOnePivot_ne_zero
   have hAnchorZero : D (p4Q2GX_rightZeroCoefficient 1) = 0 := by
     simpa only [hAtOne, Pi.zero_apply] using hOne
   exact hAnchor hAnchorZero
+
+/-- The one-context depth-one pivot response at ANOTHER genuine
+Wilson scalar context is exactly the 2-by-2 response determinant.
+A nonzero determinant is a concrete independent-context witness. -/
+theorem p4Q2IS_depthOnePivot_secondDetector_determinant
+    (D D' : (Fin (1 + 1) → ℝ) →ₗ[ℝ] ℝ) :
+    D' (p4Q2IS_depthOnePivot D) =
+      D (p4Q2GX_rightZeroCoefficient 1) * D' p4Q2IS_depthOneCoefficient -
+      D p4Q2IS_depthOneCoefficient *
+        D' (p4Q2GX_rightZeroCoefficient 1) := by
+  simp only [p4Q2IS_depthOnePivot, map_sub, map_smul, smul_eq_mul]
 
 section ActualRightDepthOne
 
@@ -282,7 +345,119 @@ theorem p4Q2IS_actualRightDepthOne_originalWilsonAnchorPivot_criterion
     p4Q2IS_depthOnePivot_anchor_null (Modal e z), ?_⟩
   exact hCriterion
 
+/-- A nonzero 2-by-2 minor of TRUE interacting-Wilson
+expectation gaps at two physical contexts strictly excludes the
+depth-one invisible source: the anchored pivot is GI-visible elsewhere,
+and hence the genuine physical source and GI kernels coincide.
+Nonzero minor is a concrete unproved analytic condition, not an
+artificial source frame or a theorem that it always exists. -/
+theorem p4Q2IS_actualRightDepthOne_twoWilsonContexts_nonzeroMinor_implies_separation
+    (hFrozen : 0 < beta n) (right : Cfg) (e : Link) :
+    ∃ z : Pair,
+      Modal e z (p4Q2GX_rightZeroCoefficient 1) ≠ 0 ∧
+      ((∃ e' : Link, ∃ z' : Pair,
+          Modal e z (p4Q2GX_rightZeroCoefficient 1) *
+              Modal e' z' p4Q2IS_depthOneCoefficient -
+            Modal e z p4Q2IS_depthOneCoefficient *
+              Modal e' z' (p4Q2GX_rightZeroCoefficient 1) ≠ 0) →
+        (PhysicalSource).ker = (FullDetector).ker) := by
+  obtain ⟨z, hAnchor, _hPivotNonzero, _hPivotNull, hCriterion⟩ :=
+    p4Q2IS_actualRightDepthOne_originalWilsonAnchorPivot_criterion
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+      n hFrozen right e
+  refine ⟨z, hAnchor, ?_⟩
+  rintro ⟨e', z', hDet⟩
+  apply hCriterion.mpr
+  right
+  intro hPhi
+  have hAt : (FullDetector (p4Q2IS_depthOnePivot (Modal e z)) e') z' = 0 := by
+    rw [hPhi]
+    rfl
+  have hD : Modal e' z' (p4Q2IS_depthOnePivot (Modal e z)) = 0 := hAt
+  have hFormula :=
+    p4Q2IS_depthOnePivot_secondDetector_determinant
+      (Modal e z) (Modal e' z')
+  exact hDet (hFormula.symm.trans hD)
+
 end ActualRightDepthOne
+
+section ActualRightAllDepth
+
+variable {halfExtent : ℕ → ℕ} {beta : ℕ → ℝ}
+variable {hbeta : ∀ n, 0 ≤ beta n}
+variable (n r : ℕ)
+
+local notation "Hn" => halfExtent (n + 1)
+local notation "Cfg" =>
+  PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration Hn 2
+local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink Hn
+local notation "Pair" => Cfg × Cfg
+local notation "Coeff" => Fin (r + 1) → ℝ
+local notation "RightFactor" =>
+  physicalYangMillsSU2AdjacentFinePairOrbitRightFactor
+    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+local notation "PhysicalSource" =>
+  p4Q2HJ_actualRightPhysicalSourceSynthesis
+    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r
+local notation "FullDetector" =>
+  p4Q2HJ_actualRightGIContinuousDetector
+    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r
+local notation "Modal" =>
+  p4Q2HF_actualRightGIModalLinear
+    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r
+
+/-- At arbitrary genuine finite Krylov depth, with frozen beta(n)>0
+and fine beta(n+1)>=0, HY supplies a nonzero ORIGINAL interacting
+Wilson two-posterior zero-mode detector. Its scalar-kernel pivot is
+the exact residual source-separation obligation for ALL coefficients.
+
+This is an explicit all-depth Wilson-transfer-based reduction; the
+remaining reduced physical implication is NOT proved by this theorem.
+It does not treat a surrogate independent-Haar posterior. -/
+theorem p4Q2IS_actualRightAllDepth_originalWilsonAnchorReducedSeparation
+    (hFrozen : 0 < beta n) (right : Cfg) (e : Link) :
+    ∃ z : Pair,
+      Modal e z (p4Q2GX_rightZeroCoefficient r) ≠ 0 ∧
+      ((PhysicalSource).ker = (FullDetector).ker ↔
+        ∀ a : Coeff,
+          FullDetector
+            (Modal e z (p4Q2GX_rightZeroCoefficient r) • a -
+              Modal e z a • p4Q2GX_rightZeroCoefficient r) = 0 →
+          PhysicalSource
+            (Modal e z (p4Q2GX_rightZeroCoefficient r) • a -
+              Modal e z a • p4Q2GX_rightZeroCoefficient r) = 0) := by
+  obtain ⟨z, hAnchor⟩ : ∃ z : Pair,
+      p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap
+        Hn (beta n) (hbeta n) (RightFactor n 0) e z ≠ 0 := by
+    rcases (p4Q2HY_actualRightZeroDepth_originalWilsonGI_anchor_nonzero
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+      n hFrozen right e) with hLeft | hPi
+    · exact ⟨(originalWilsonExplicitIdentityBoundary Hn, right), hLeft⟩
+    · exact ⟨(p4Q2FQ_originalSU2LeftPiRotationAtLink Hn e, right), hPi⟩
+  have h0 : Modal e z (p4Q2GX_rightZeroCoefficient r) ≠ 0 := by
+    change p4Q2GY_modalTransferLinear r
+      (fun j : Fin (r + 1) =>
+        p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap
+          Hn (beta n) (hbeta n) (RightFactor n (j : ℕ)) e z)
+      (p4Q2GX_rightZeroCoefficient r) ≠ 0
+    rw [p4Q2GY_modalTransferLinear_anchor]
+    exact hAnchor
+  have hLe : (PhysicalSource).ker ≤ (FullDetector).ker :=
+    p4Q2HJ_actualRightSourceKernel_le_GIContinuousDetectorKernel
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r
+  have hEvaluate (a : Coeff) (ha : FullDetector a = 0) :
+      Modal e z a = 0 := by
+    have hAt : (FullDetector a e) z = 0 := by
+      rw [ha]
+      rfl
+    exact hAt
+  refine ⟨z, h0, ?_⟩
+  exact p4Q2IS_abstract_anchor_reduced_source_separation
+    PhysicalSource FullDetector (Modal e z)
+    (p4Q2GX_rightZeroCoefficient r) hLe hEvaluate h0
+
+end ActualRightAllDepth
+
 end GroundStatePosteriorJoint
 end
 end MathlibAnalytic
@@ -294,3 +469,9 @@ end MGAP4D
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2IS_depthOnePivot_anchor_null
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2IS_depthOnePivot_ne_zero
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2IS_actualRightDepthOne_originalWilsonAnchorPivot_criterion
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2IS_abstract_anchor_pivot_parametrizes_scalar_kernel
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2IS_abstract_anchor_reduced_source_separation
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2IS_depthOnePivot_secondDetector_determinant
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2IS_actualRightDepthOne_twoWilsonContexts_nonzeroMinor_implies_separation
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2IS_actualRightAllDepth_originalWilsonAnchorReducedSeparation
