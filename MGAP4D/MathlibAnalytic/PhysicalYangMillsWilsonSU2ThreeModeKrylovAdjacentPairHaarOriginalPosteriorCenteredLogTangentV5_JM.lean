@@ -53,6 +53,10 @@ local instance p4Q2JM_measurableSpace :
 local instance p4Q2JM_borelSpace :
     BorelSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupBorelSpace 2
+local instance p4Q2JM_haarOpenPos :
+    (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ)).IsOpenPosMeasure := by
+  unfold normalizedCompactHaar
+  infer_instance
 
 namespace GroundStatePosteriorJoint
 section Frozen
@@ -165,8 +169,10 @@ theorem p4Q2JM_originalPosteriorLogCentered_eq_negBeta_WilsonCentered
         rw [integral_const_mul]
         simp
   ext g
-  change F g - (∫ x : Gauge, F x ∂nu) =
-    (-b) * (T g - (∫ x : Gauge, T x ∂nu))
+  change (F - (∫ x : Gauge, F x ∂nu) • (1 : C(Gauge, ℝ))) g =
+    ((-b) • (T - (∫ x : Gauge, T x ∂nu) • (1 : C(Gauge, ℝ)))) g
+  simp only [ContinuousMap.sub_apply, ContinuousMap.smul_apply,
+    one_apply, smul_eq_mul, mul_one]
   rw [hF g, hIntegral]
   ring
 
@@ -190,7 +196,10 @@ theorem p4Q2JM_originalPosteriorLogCentered_HaarSq_exact
       ring
     _ = b ^ 2 * (∫ g : Gauge, (D g) ^ 2 ∂nu) := by
       rw [integral_const_mul]
-    _ = b ^ 2 * p4Q2FZ_originalSU2TemporalWilsonContrastHaarVariance := rfl
+    _ = b ^ 2 * p4Q2FZ_originalSU2TemporalWilsonContrastHaarVariance := by
+      simp [D, p4Q2JM_temporalWilsonCentered,
+        p4Q2JM_temporalWilsonContinuous,
+        p4Q2FZ_originalSU2TemporalWilsonContrastHaarVariance]
 
 /-- The actual Haar-centered temporal Wilson action is nonzero as a
 continuous observable: its values at the two literal SU(2) insertions
@@ -198,14 +207,18 @@ remain separated by FOUR, regardless of subtracting the Haar mean. -/
 theorem p4Q2JM_temporalWilsonCentered_ne_zero :
     p4Q2JM_temporalWilsonCentered ≠ 0 := by
   intro hz
-  have h0 := congrArg (fun f : C(Gauge, ℝ) => f (1 : Gauge)) hz
-  have hR := congrArg
-    (fun f : C(Gauge, ℝ) => f (specialUnitaryTwoRotation Real.pi)) hz
-  change p4Q2FZ_originalSU2TemporalWilsonContrast 1 -
-    (∫ g : Gauge, p4Q2FZ_originalSU2TemporalWilsonContrast g ∂nu) = 0 at h0
-  change p4Q2FZ_originalSU2TemporalWilsonContrast
-    (specialUnitaryTwoRotation Real.pi) -
-    (∫ g : Gauge, p4Q2FZ_originalSU2TemporalWilsonContrast g ∂nu) = 0 at hR
+  have h0 : p4Q2FZ_originalSU2TemporalWilsonContrast 1 -
+      (∫ g : Gauge, p4Q2FZ_originalSU2TemporalWilsonContrast g ∂nu) = 0 := by
+    simpa [p4Q2JM_temporalWilsonCentered,
+      p4Q2JM_temporalWilsonContinuous] using
+      (congrArg (fun f : C(Gauge, ℝ) => f (1 : Gauge)) hz)
+  have hR : p4Q2FZ_originalSU2TemporalWilsonContrast
+      (specialUnitaryTwoRotation Real.pi) -
+      (∫ g : Gauge, p4Q2FZ_originalSU2TemporalWilsonContrast g ∂nu) = 0 := by
+    simpa [p4Q2JM_temporalWilsonCentered,
+      p4Q2JM_temporalWilsonContinuous] using
+      (congrArg
+        (fun f : C(Gauge, ℝ) => f (specialUnitaryTwoRotation Real.pi)) hz)
   rw [p4Q2FZ_originalSU2TemporalWilsonContrast_one] at h0
   rw [p4Q2FZ_originalSU2TemporalWilsonContrast_rotation] at hR
   linarith
@@ -251,7 +264,6 @@ theorem p4Q2JM_originalPosteriorLogCentered_HaarLp_quotient_exact
   rw [p4Q2JM_originalPosteriorLogCentered_HaarLp_eq, smul_smul]
   have hs : b⁻¹ * (-b) = -1 := by
     field_simp [hb.ne']
-    ring
   rw [hs]
   exact neg_one_smul ℝ _
 
