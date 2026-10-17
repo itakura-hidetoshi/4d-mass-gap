@@ -236,7 +236,15 @@ theorem p4Q2IQ_actualVisible_originalGL_physicalSourceNorm_comparison
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
       n r (w : Coeff)
   have hSource : PhysicalSource (w : Coeff) = (f : Phys) := hA f
-  simpa only [qB, qS, hB, hS, hSource] using hComp w
+  have hOnCoeff :
+      c * ‖PhysicalSource (w : Coeff)‖ ^ 2 ≤
+        OriginalMass (PhysicalSource (w : Coeff))
+          (Finset.univ : Finset Link) ∧
+      OriginalMass (PhysicalSource (w : Coeff))
+          (Finset.univ : Finset Link) ≤
+        C * ‖PhysicalSource (w : Coeff)‖ ^ 2 := by
+    simpa only [qB, qS, hB, hS] using hComp w
+  simpa only [hSource] using hOnCoeff
 
 end ActualRight
 end GroundStatePosteriorJoint
