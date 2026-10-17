@@ -106,8 +106,8 @@ noncomputable def p4Q2JH_originalFiberKernel
       (s (z.1, Function.update z.2 e p.1))⁻¹) :=
     (p4Q2JH_originalInverseJointSqrt_continuous H b hb).comp
       (continuous_const.prodMk hUp)
-  have hd := (p4Q2GN_originalDensityContrast_continuous H b hb z.2 e).comp
-    continuous_fst
+  have hd : Continuous (fun p : Gauge × Cfg => delta z.2 e p.1) :=
+    (p4Q2GN_originalDensityContrast_continuous H b hb z.2 e).comp continuous_fst
   exact (hK.mul hs).mul hd
 
 /-- A genuine continuous spatial-source representer obtained by Bochner
