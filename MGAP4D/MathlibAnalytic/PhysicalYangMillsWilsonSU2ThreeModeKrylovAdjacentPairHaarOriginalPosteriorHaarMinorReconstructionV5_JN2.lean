@@ -356,6 +356,84 @@ theorem p4Q2JN2_actualDensityContrast_centeredTaylor_quadratic
       add_le_add hTerm1 (hTerm2.trans hTerm3)
     _ = (272 * Real.exp 8) * b ^ 2 := by ring
 
+
+/-- The true ORIGINAL interacting posterior density contrast as a
+continuous function of the actual SU(2) right-link value. -/
+noncomputable def p4Q2JN2_originalPosteriorDensityContrastContinuous
+    (b : ℝ) (hb : 0 ≤ b) (right : Cfg) (e : Link) : C(Gauge, ℝ) :=
+  p4Q2JN2_originalPosteriorIdentityContinuous H b hb right e -
+    p4Q2JN2_originalPosteriorPiContinuous H b hb right e
+
+/-- STRONG SUP-NORM first-order asymptotic of the genuine original
+UNLOGGED Wilson posterior density contrast, at every finite lattice
+volume and every physical link/context, uniformly with a universal
+rate. This is the analytic weak-coupling right derivative on the
+actual SU(2) Haar reference carrier, NOT a derivative of either
+individual interacting Wilson posterior or physical Perron vacuum. -/
+theorem p4Q2JN2_originalPosteriorDensityContrast_strongSupQuotient_le
+    (b : ℝ) (hb : 0 < b) (hsmall : b ≤ 1 / 4)
+    (right : Cfg) (e : Link) :
+    ‖b⁻¹ • p4Q2JN2_originalPosteriorDensityContrastContinuous H b hb.le right e +
+      p4Q2JM_temporalWilsonCentered‖ ≤
+      (272 * Real.exp 8) * b := by
+  let F := p4Q2JN2_originalPosteriorDensityContrastContinuous
+    H b hb.le right e
+  let T := p4Q2JM_temporalWilsonCentered
+  have hPoint (g : Gauge) :
+      ‖F g + b * T g‖ ≤ (272 * Real.exp 8) * b ^ 2 := by
+    change
+      ‖p4Q2GB_originalWilsonPosteriorLeftDensityContrast
+          H b hb.le right e g +
+        b * (D g - ∫ h : Gauge, D h ∂nu)‖ ≤
+        (272 * Real.exp 8) * b ^ 2
+    exact p4Q2JN2_actualDensityContrast_centeredTaylor_quadratic
+      H b hb.le hsmall right e g
+  have hSup : ‖F + b • T‖ ≤ (272 * Real.exp 8) * b ^ 2 := by
+    apply (ContinuousMap.norm_le _ (by positivity)).2
+    intro g
+    simpa only [ContinuousMap.add_apply, ContinuousMap.smul_apply,
+      smul_eq_mul] using hPoint g
+  have hRewrite : b⁻¹ • F + T = b⁻¹ • (F + b • T) := by
+    rw [smul_add, smul_smul, inv_mul_cancel₀ hb.ne', one_smul]
+  change ‖b⁻¹ • F + T‖ ≤ (272 * Real.exp 8) * b
+  rw [hRewrite, norm_smul, Real.norm_eq_abs,
+    abs_of_pos (inv_pos.mpr hb)]
+  calc
+    b⁻¹ * ‖F + b • T‖ ≤
+        b⁻¹ * ((272 * Real.exp 8) * b ^ 2) :=
+      mul_le_mul_of_nonneg_left hSup (inv_nonneg.mpr hb.le)
+    _ = (272 * Real.exp 8) * b := by
+      field_simp [hb.ne']
+      ring
+
+/-- The SAME actual genuine unlogged original interacting posterior
+first-order contrast converges strongly through mathlib's bounded
+continuous-function-to-Haar-L² map. The right-hand coefficient is
+nonzero by JM, and the explicit norm bound makes this statement
+quantitatively stronger than pointwise differentiation. -/
+theorem p4Q2JN2_originalPosteriorDensityContrast_strongHaarL2Quotient_le
+    (b : ℝ) (hb : 0 < b) (hsmall : b ≤ 1 / 4)
+    (right : Cfg) (e : Link) :
+    ‖b⁻¹ •
+        ContinuousMap.toLp 2 nu ℝ
+          (p4Q2JN2_originalPosteriorDensityContrastContinuous H b hb.le right e) +
+      ContinuousMap.toLp 2 nu ℝ p4Q2JM_temporalWilsonCentered‖ ≤
+      ‖(ContinuousMap.toLp 2 nu ℝ :
+          C(Gauge, ℝ) →L[ℝ] Lp ℝ 2 nu)‖ *
+        ((272 * Real.exp 8) * b) := by
+  let L : C(Gauge, ℝ) →L[ℝ] Lp ℝ 2 nu :=
+    ContinuousMap.toLp 2 nu ℝ
+  let F := p4Q2JN2_originalPosteriorDensityContrastContinuous
+    H b hb.le right e
+  let T := p4Q2JM_temporalWilsonCentered
+  have hSup :=
+    p4Q2JN2_originalPosteriorDensityContrast_strongSupQuotient_le
+      H b hb hsmall right e
+  change ‖b⁻¹ • L F + L T‖ ≤ ‖L‖ * ((272 * Real.exp 8) * b)
+  rw [← map_smul, ← map_add]
+  exact (L.le_opNorm (b⁻¹ • F + T)).trans
+    (mul_le_mul_of_nonneg_left hSup (norm_nonneg L))
+
 end Frozen
 end GroundStatePosteriorJoint
 end
@@ -370,3 +448,5 @@ end MGAP4D
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JN2_actualDensityContrast_centeredTaylor_explicit
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JN2_trueWilsonExpGap_le
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JN2_actualDensityContrast_centeredTaylor_quadratic
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JN2_originalPosteriorDensityContrast_strongSupQuotient_le
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JN2_originalPosteriorDensityContrast_strongHaarL2Quotient_le
