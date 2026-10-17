@@ -117,6 +117,18 @@ local notation "OriginalMass" =>
   p4Q2GL_originalWilsonSignedGapSquareDivVarianceSpatialMass
     Hn (beta n) (hbeta n)
 
+-- Canonical inherited physical Haar-L² normed real structures are
+-- installed BEFORE theorem statements, avoiding a normedSpace
+-- instance mismatch between goal elaboration and theorem application.
+local instance p4Q2IP_physicalNormedSpace :
+    NormedSpace ℝ Phys :=
+  Submodule.normedSpace
+    (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule Hn 2)
+
+local instance p4Q2IP_visibleNormedSpace :
+    NormedSpace ℝ ↥Visible :=
+  Submodule.normedSpace Visible
+
 /-- Literal original interacting-Wilson GI detection restricted to
 the true Haar-L² orthogonal visible PHYSICAL source space. -/
 noncomputable def p4Q2IP_actualRightVisiblePhysicalGIDetector :
@@ -161,10 +173,6 @@ theorem p4Q2IP_actualRightVisiblePhysicalGI_antilipschitz :
   have hW : Visible ≤ (PhysicalSource).range := by
     change Invisibleᗮ ⊓ (PhysicalSource).range ≤ (PhysicalSource).range
     exact inf_le_right
-  letI : NormedSpace ℝ Phys :=
-    Submodule.normedSpace
-      (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule Hn 2)
-  letI : NormedSpace ℝ ↥Visible := Submodule.normedSpace Visible
   letI : FiniteDimensional ℝ ↥((PhysicalSource).range) := inferInstance
   letI : FiniteDimensional ℝ ↥Visible :=
     Submodule.finiteDimensional_of_le hW
