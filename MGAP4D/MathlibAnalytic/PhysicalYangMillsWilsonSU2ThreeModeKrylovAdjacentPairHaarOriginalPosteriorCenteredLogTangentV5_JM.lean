@@ -171,8 +171,9 @@ theorem p4Q2JM_originalPosteriorLogCentered_eq_negBeta_WilsonCentered
   ext g
   change (F - (∫ x : Gauge, F x ∂nu) • (1 : C(Gauge, ℝ))) g =
     ((-b) • (T - (∫ x : Gauge, T x ∂nu) • (1 : C(Gauge, ℝ)))) g
+  have hOne : (1 : C(Gauge, ℝ)) g = (1 : ℝ) := rfl
   simp only [ContinuousMap.sub_apply, ContinuousMap.smul_apply,
-    one_apply, smul_eq_mul, mul_one]
+    hOne, smul_eq_mul, mul_one]
   rw [hF g, hIntegral]
   ring
 
