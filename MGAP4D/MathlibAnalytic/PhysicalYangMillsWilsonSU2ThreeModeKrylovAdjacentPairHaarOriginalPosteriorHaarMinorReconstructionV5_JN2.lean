@@ -240,6 +240,55 @@ theorem p4Q2JN2_densityContrast_error_le_of_minor_error
   rw [hEIntegral] at hIntegralBound
   exact hIntegralBound
 
+
+/-- The exact unlogged physical Wilson two-context minor estimate
+from JN gives a UNIFORM source-free first-order bound on the ORIGINAL
+interacting posterior density contrast itself. At finite b no
+conditional Wilson law is replaced, and no vacuum derivative is used. -/
+theorem p4Q2JN2_actualDensityContrast_centeredTaylor_explicit
+    (b : ℝ) (hb : 0 ≤ b) (hsmall : b ≤ 1 / 4)
+    (right : Cfg) (e : Link) (g : Gauge) :
+    ‖p4Q2GB_originalWilsonPosteriorLeftDensityContrast H b hb right e g +
+      b * (D g - ∫ h : Gauge, D h ∂nu)‖ ≤
+      (16 * b ^ 2) * Real.exp (32 * b) +
+        (4 * b) * (Real.exp (32 * b) - Real.exp (-32 * b)) := by
+  apply p4Q2JN2_densityContrast_error_le_of_minor_error H b hb right e
+    ((16 * b ^ 2) * Real.exp (32 * b) +
+      (4 * b) * (Real.exp (32 * b) - Real.exp (-32 * b))) ?_ g
+  intro g h
+  have hTaylor := p4Q2JN_originalPosteriorMinor_unweightedTaylor_uniform
+    H b hb hsmall right e g h
+  have hD := p4Q2JN_temporalWilsonDifference_abs_le_four g h
+  have hAbs : |b * (D g - D h)| ≤ 4 * b := by
+    rw [abs_mul, abs_of_nonneg hb]
+    calc
+      b * |D g - D h| ≤ b * 4 :=
+        mul_le_mul_of_nonneg_left hD hb
+      _ = 4 * b := by ring
+  have hPow : (b * (D g - D h)) ^ 2 ≤ 16 * b ^ 2 := by
+    have h := pow_le_pow_left₀ (abs_nonneg _) hAbs 2
+    have h' : (b * (D g - D h)) ^ 2 ≤ (4 * b) ^ 2 := by
+      simpa only [sq_abs] using h
+    nlinarith
+  have hGap : 0 ≤ Real.exp (32 * b) - Real.exp (-32 * b) := by
+    exact sub_nonneg.mpr (Real.exp_le_exp.mpr (by linarith))
+  have hA :
+      (b * (D g - D h)) ^ 2 * Real.exp (32 * b) ≤
+      (16 * b ^ 2) * Real.exp (32 * b) :=
+    mul_le_mul_of_nonneg_right hPow (Real.exp_pos _).le
+  have hB :
+      |b * (D g - D h)| *
+        (Real.exp (32 * b) - Real.exp (-32 * b)) ≤
+      (4 * b) * (Real.exp (32 * b) - Real.exp (-32 * b)) :=
+    mul_le_mul_of_nonneg_right hAbs hGap
+  have hEq :
+      p4Q2JN_originalPosteriorTwoPointMinor H b hb right e g h +
+        b * (D g - D h) =
+      p4Q2JN_originalPosteriorTwoPointMinor H b hb right e g h -
+        (-b * (D g - D h)) := by ring
+  rw [hEq]
+  exact hTaylor.trans (add_le_add hA hB)
+
 end Frozen
 end GroundStatePosteriorJoint
 end
@@ -251,3 +300,4 @@ end MGAP4D
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JN2_originalDensityContrast_eq_minorHaarIntegral
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JN2_originalTemporalDifferenceHaarIntegral
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JN2_densityContrast_error_le_of_minor_error
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JN2_actualDensityContrast_centeredTaylor_explicit
