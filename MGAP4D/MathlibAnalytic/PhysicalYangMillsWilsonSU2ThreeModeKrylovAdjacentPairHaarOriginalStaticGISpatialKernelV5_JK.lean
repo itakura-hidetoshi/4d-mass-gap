@@ -103,8 +103,7 @@ theorem p4Q2JK_originalGI_anchor_annihilates_centeredWilson
   rw [p4Q2JK_centeredWilson_toLp, map_sub, map_smul]
   simp only [smul_eq_mul]
   unfold p4Q2JK_originalWilsonAnchorSlope
-  field_simp [hAnchor]
-  ring
+  field_simp [hAnchor] <;> ring
 
 /-- The ORIGINAL two-context static GI minor is exactly one original
 nonzero anchor times ONE actual centered Wilson response at y. -/
@@ -118,8 +117,7 @@ theorem p4Q2JK_originalSpatialMinor_eq_anchor_mul_centeredGI
   simp only [smul_eq_mul]
   unfold p4Q2JI_originalGISpatialActionMinor
     p4Q2JK_originalWilsonAnchorSlope
-  field_simp [hAnchor]
-  ring
+  field_simp [hAnchor] <;> ring
 
 theorem p4Q2JK_originalSpatialMinor_ne_iff_centeredGI_ne
     (e e' : Link) (z z' : Cfg × Cfg)
@@ -147,9 +145,9 @@ theorem p4Q2JK_anchorCenteredSpatialWilson_HaarLp_ne_zero
     simpa only [map_zero] using h0
   obtain ⟨B₀, B₁, hW⟩ := p4Q2IY_originalSpatialWilsonAction_not_constant H
   have hc (B : Cfg) : W B = c := by
-    have h := congrArg (fun f : C(Cfg, ℝ) => f B) hCont
-    change W B - c = 0 at h
-    exact sub_eq_zero.mp h
+    have hc' : W = c • (1 : C(Cfg, ℝ)) := sub_eq_zero.mp hCont
+    have h := congrArg (fun f : C(Cfg, ℝ) => f B) hc'
+    simpa using h
   exact hW ((hc B₀).trans (hc B₁).symm)
 
 /-- The actual intersection of all ORIGINAL interacting-Wilson GI
@@ -200,7 +198,7 @@ theorem p4Q2JK_exists_nonzeroOriginalSpatialMinor_iff_centered_not_mem
     exact hne (hall e' z')
   · intro hnot
     by_contra h
-    push_neg at h
+    push Not at h
     exact hnot
       ((p4Q2JK_allOriginalSpatialMinors_zero_iff_centered_mem_commonKernel
         H b hb e z hAnchor).1 h)
