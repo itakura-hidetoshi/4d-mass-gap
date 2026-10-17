@@ -88,9 +88,11 @@ theorem p4Q2IS_abstract_twoMode_kernel_spanned_by_pivot
             rw [smul_add, smul_smul, smul_smul]
       _ = (-(y * D v)) • u + (y * D u) • v := by
             rw [hScalar, mul_comm (D u) y]
-      _ = y • (D u • v - D v • u) := by
-            simp only [smul_sub, smul_smul, neg_smul, sub_eq_add_neg]
+      _ = (y * D u) • v - (y * D v) • u := by
+            rw [neg_smul]
             abel
+      _ = y • (D u • v - D v • u) := by
+            simp only [smul_sub, smul_smul]
   refine ⟨y / D u, ?_⟩
   calc
     a = x • u + y • v := hxy
