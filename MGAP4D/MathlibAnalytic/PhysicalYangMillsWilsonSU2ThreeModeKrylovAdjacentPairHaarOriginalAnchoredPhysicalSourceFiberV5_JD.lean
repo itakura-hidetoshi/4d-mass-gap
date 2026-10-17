@@ -61,6 +61,7 @@ private theorem p4Q2JD_abstract_anchored_twoModeMoment
       w 1 - t * w 0 := by
   simp [Fin.sum_univ_two, p4Q2IS_depthOneCoefficient,
     p4Q2GX_rightZeroCoefficient, Pi.sub_apply, Pi.smul_apply]
+  ring
 
 section ActualRightDepthOne
 
