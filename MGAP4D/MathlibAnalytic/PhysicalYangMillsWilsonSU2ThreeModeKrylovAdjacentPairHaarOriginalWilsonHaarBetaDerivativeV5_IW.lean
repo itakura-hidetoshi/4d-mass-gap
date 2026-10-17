@@ -116,13 +116,15 @@ theorem p4Q2IW_originalWilsonHaarRow_hasDerivAt_beta
   have hPair : Continuous (fun A : Cfg => (A, B)) :=
     continuous_id.prodMk continuous_const
   have hFcont (t : ℝ) : Continuous (F t) := by
-    exact
+    have h :=
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
         H 2 t).comp hPair
-  have hScont : Continuous (fun A : Cfg => S A B) :=
-    (p4Q2IW_originalWilsonOneSlabAction_continuous H).comp hPair
-  have hDFcont (t : ℝ) : Continuous (DF t) :=
-    hScont.neg.mul (hFcont t)
+    simpa only [F, Function.comp_def] using h
+  have hScont : Continuous (fun A : Cfg => S A B) := by
+    have h := (p4Q2IW_originalWilsonOneSlabAction_continuous H).comp hPair
+    simpa only [Function.comp_def] using h
+  have hDFcont (t : ℝ) : Continuous (DF t) := by
+    simpa only [DF] using hScont.neg.mul (hFcont t)
   have hFmeas :
       ∀ᶠ t in 𝓝 beta, AEStronglyMeasurable (F t) haar := by
     filter_upwards with t
