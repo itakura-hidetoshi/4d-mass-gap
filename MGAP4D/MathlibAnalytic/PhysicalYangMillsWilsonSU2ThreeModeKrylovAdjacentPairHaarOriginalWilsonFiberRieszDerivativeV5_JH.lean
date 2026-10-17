@@ -102,8 +102,10 @@ noncomputable def p4Q2JH_originalFiberKernel
     fun_prop
   have hK := (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
     H 2 b).comp (continuous_snd.prodMk hUp)
-  have hs := (p4Q2JH_originalInverseJointSqrt_continuous H b hb).comp
-    (continuous_const.prodMk hUp)
+  have hs : Continuous (fun p : Gauge × Cfg =>
+      (s (z.1, Function.update z.2 e p.1))⁻¹) :=
+    (p4Q2JH_originalInverseJointSqrt_continuous H b hb).comp
+      (continuous_const.prodMk hUp)
   have hd := (p4Q2GN_originalDensityContrast_continuous H b hb z.2 e).comp
     continuous_fst
   exact (hK.mul hs).mul hd
