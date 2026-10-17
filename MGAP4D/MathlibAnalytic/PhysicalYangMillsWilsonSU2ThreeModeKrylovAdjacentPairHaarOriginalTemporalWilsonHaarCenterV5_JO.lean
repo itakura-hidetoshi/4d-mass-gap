@@ -83,10 +83,11 @@ theorem p4Q2JO_temporalWilsonContrast_HaarMean_zero :
         ∫ g : Gauge, E g ∂nu := by
     have hMap :
         (∫ g : Gauge, E g
-          ∂(nu.map (fun h : Gauge => R⁻¹ * h * 1))) =
-          ∫ g : Gauge, E (R⁻¹ * g * 1) ∂nu :=
-      MeasureTheory.integral_map
-        hTranslateMeasurable.aemeasurable hE.stronglyMeasurable
+          ∂Measure.map (fun h : Gauge => R⁻¹ * h * 1)
+            (normalizedCompactHaar Gauge)) =
+          ∫ g : Gauge, E (R⁻¹ * g * 1) ∂nu := by
+      exact MeasureTheory.integral_map_of_stronglyMeasurable
+        hTranslateMeasurable hE.stronglyMeasurable
     rw [hmp.map_eq] at hMap
     simpa only [mul_one] using hMap.symm
   change (∫ g : Gauge, E g - E (R⁻¹ * g) ∂nu) = 0
