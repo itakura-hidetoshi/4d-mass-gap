@@ -161,11 +161,17 @@ theorem p4Q2IU_firstSelector_synthesizes_actualFineRightSource :
   change (∑ j : Fin (1 + 1),
     p4Q2IS_depthOneCoefficient j • RightFactor n (j : ℕ)) =
       RightFactor n 1
-  apply Finset.sum_eq_single (1 : Fin (1 + 1))
-  · intro j _hj hj
-    simp [p4Q2IS_depthOneCoefficient, hj]
-  · intro hnot
-    exact False.elim (hnot (Finset.mem_univ _))
+  calc
+    (∑ j : Fin (1 + 1),
+      p4Q2IS_depthOneCoefficient j • RightFactor n (j : ℕ)) =
+        p4Q2IS_depthOneCoefficient (1 : Fin (1 + 1)) • RightFactor n 1 := by
+          apply Finset.sum_eq_single (1 : Fin (1 + 1))
+          · intro j _hj hj
+            simp [p4Q2IS_depthOneCoefficient, hj]
+          · intro hnot
+            exact False.elim (hnot (Finset.mem_univ _))
+    _ = RightFactor n 1 := by
+      simp [p4Q2IS_depthOneCoefficient]
 
 /-- The original interacting fine Wilson positive kernel gives an
 UNCONDITIONAL strictly positive constant-unit overlap of the first
@@ -175,16 +181,26 @@ theorem p4Q2IU_actualFirstFineWilsonSource_unitOverlap_pos :
   have h0 : RightFactor n 0 = PhysicalUnit :=
     fineRightFactor_zeroDepth_eq_constantUnit_anyFineBeta
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n
-  rw [h0, p4Q2IU_actualFirstRightSource_eq_normalizedFineWilsonUnit
-    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n]
-  rw [periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_apply]
-  rw [real_inner_smul_left]
-  exact mul_pos
-    (inv_pos.mpr
-      (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
-        Hn 2 specialUnitaryTwoWilsonRankPositive (beta (n + 1)) (hbeta (n + 1))))
-    (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_transfer_expectation_pos
-      Hn 2 specialUnitaryTwoWilsonRankPositive (beta (n + 1)) (hbeta (n + 1)))
+  let T : Phys →L[ℝ] Phys :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+      Hn 2 specialUnitaryTwoWilsonRankPositive (beta (n + 1)) (hbeta (n + 1))
+  have hTpos : 0 < ‖T‖ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+      Hn 2 specialUnitaryTwoWilsonRankPositive (beta (n + 1)) (hbeta (n + 1))
+  have hExpectation : 0 < ⟪T PhysicalUnit, PhysicalUnit⟫_ℝ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_transfer_expectation_pos
+      Hn 2 specialUnitaryTwoWilsonRankPositive (beta (n + 1)) (hbeta (n + 1))
+  have hScaled :
+      ⟪‖T‖⁻¹ • T PhysicalUnit, PhysicalUnit⟫_ℝ =
+        ‖T‖⁻¹ * ⟪T PhysicalUnit, PhysicalUnit⟫_ℝ :=
+    real_inner_smul_left (T PhysicalUnit) PhysicalUnit ‖T‖⁻¹
+  have hFirst :
+      RightFactor n 1 = ‖T‖⁻¹ • T PhysicalUnit := by
+    rw [p4Q2IU_actualFirstRightSource_eq_normalizedFineWilsonUnit
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n]
+    rfl
+  rw [h0, hFirst]
+  exact hScaled.symm ▸ mul_pos (inv_pos.mpr hTpos) hExpectation
 
 /-- The first ACTUAL fine Wilson source cannot itself vanish, for
 ANY fine coupling including the strictly interacting positive sector.
@@ -194,8 +210,12 @@ theorem p4Q2IU_actualFirstFineWilsonSource_ne_zero :
   intro hZero
   have hPos := p4Q2IU_actualFirstFineWilsonSource_unitOverlap_pos
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n
-  rw [hZero, inner_zero_left] at hPos
-  exact (not_lt_of_ge le_rfl) hPos
+  rw [hZero] at hPos
+  have hZeroInner :
+      ⟪(0 : Phys), RightFactor n 0⟫_ℝ = 0 :=
+    inner_zero_left _
+  have hFalse : (0 : ℝ) < 0 := hZeroInner ▸ hPos
+  exact (lt_irrefl (0 : ℝ)) hFalse
 
 /-- On a TRUE nonzero HY original Wilson zero-depth anchor, the
 physical pivot vanishes IFF the first true fine Wilson source
