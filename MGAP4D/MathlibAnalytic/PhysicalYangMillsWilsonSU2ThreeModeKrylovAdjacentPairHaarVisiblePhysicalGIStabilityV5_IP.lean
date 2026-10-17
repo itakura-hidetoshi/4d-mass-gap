@@ -124,7 +124,7 @@ noncomputable def p4Q2IP_actualRightVisiblePhysicalGIDetector :
   have hW : Visible ≤ (PhysicalSource).range := by
     change Invisibleᗮ ⊓ (PhysicalSource).range ≤ (PhysicalSource).range
     exact inf_le_right
-  exact PhysGI.comp (Visible.inclusion hW)
+  exact (PhysGI).comp (Visible.inclusion hW)
 
 local notation "VisibleGI" =>
   p4Q2IP_actualRightVisiblePhysicalGIDetector
@@ -144,6 +144,7 @@ theorem p4Q2IP_actualRightVisiblePhysicalGIDetector_injective :
   have hDisj :=
     (p4Q2IM_actualPhysicalSourceSpan_orthogonal_split
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r).2
+  change Function.Injective ((PhysGI).comp (Visible.inclusion hW))
   exact p4Q2IP_abstract_detector_injective_on_visible
     Invisible (PhysicalSource).range Visible PhysGI hW hKer hDisj
 
@@ -160,6 +161,10 @@ theorem p4Q2IP_actualRightVisiblePhysicalGI_antilipschitz :
   have hW : Visible ≤ (PhysicalSource).range := by
     change Invisibleᗮ ⊓ (PhysicalSource).range ≤ (PhysicalSource).range
     exact inf_le_right
+  letI : NormedSpace ℝ Phys :=
+    Submodule.normedSpace
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule Hn 2)
+  letI : NormedSpace ℝ ↥Visible := Submodule.normedSpace Visible
   letI : FiniteDimensional ℝ ↥((PhysicalSource).range) := inferInstance
   letI : FiniteDimensional ℝ ↥Visible :=
     Submodule.finiteDimensional_of_le hW
