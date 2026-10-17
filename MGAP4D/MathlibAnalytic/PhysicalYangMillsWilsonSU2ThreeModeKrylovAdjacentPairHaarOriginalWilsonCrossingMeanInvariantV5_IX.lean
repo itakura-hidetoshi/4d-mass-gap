@@ -54,11 +54,18 @@ of the Bochner integral transport itself. -/
 private theorem p4Q2IX_abstract_integral_transport
     {X : Type*} [MeasurableSpace X] (μ : Measure X)
     (T : X → X) (hT : MeasurePreserving T μ μ)
-    (f g : X → ℝ) (hfg : ∀ x, f (T x) = g x) :
+    (f g : X → ℝ) (hf : AEStronglyMeasurable f μ)
+    (hfg : ∀ x, f (T x) = g x) :
     (∫ x, f x ∂μ) = (∫ x, g x ∂μ) := by
+  have hmap : Measure.map T μ = μ := hT.map_eq
+  have hfm : AEStronglyMeasurable f (Measure.map T μ) := by
+    rw [hmap]
+    exact hf
   calc
-    (∫ x, f x ∂μ) = (∫ x, f (T x) ∂μ) :=
-      (hT.integral_comp' f).symm
+    (∫ x, f x ∂μ) = (∫ x, f x ∂Measure.map T μ) := by
+      rw [hmap]
+    _ = (∫ x, f (T x) ∂μ) :=
+      MeasureTheory.integral_map hT.measurable.aemeasurable hfm
     _ = (∫ x, g x ∂μ) := by
       apply integral_congr_ae
       filter_upwards with x
@@ -132,9 +139,16 @@ theorem p4Q2IX_originalCrossingAction_HaarMean_eq_identity
   let g : Cfg → ℝ := fun A => C A (fun _ => 1)
   have hPres : MeasurePreserving T haar haar :=
     p4Q2IX_actualSpatialHaar_leftTranslate_measurePreserving H B
+  have hPair : Continuous (fun A : Cfg => (A, B)) :=
+    continuous_id.prodMk continuous_const
+  have hfcont : Continuous f := by
+    have h := (p4Q2IW_originalWilsonCrossingAction_continuous H).comp hPair
+    simpa only [f, Function.comp_def] using h
+  have hfm : AEStronglyMeasurable f haar :=
+    hfcont.measurable.aestronglyMeasurable
   have hPoint (A : Cfg) : f (T A) = g A :=
     p4Q2IX_originalCrossingAction_leftTranslate H B A
-  exact p4Q2IX_abstract_integral_transport haar T hPres f g hPoint
+  exact p4Q2IX_abstract_integral_transport haar T hPres f g hfm hPoint
 
 /-- Two genuine physical right boundaries have exactly the same temporal
 crossing Haar mean; this removes crossing dependence from the beta-zero
