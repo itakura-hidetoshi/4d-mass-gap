@@ -76,11 +76,21 @@ theorem p4Q2IW_originalWilsonOneSlabHaarAction_mean_split
     hCcont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hHalfInt : Integrable (fun A : Cfg => (1 / 2 : ℝ) * W A) haar :=
     hWInt.const_mul _
-  change (∫ A : Cfg, (1 / 2 : ℝ) * W A + C A B +
+  have hInner :
+      (∫ A : Cfg, (1 / 2 : ℝ) * W A + C A B ∂haar) =
+        (∫ A : Cfg, (1 / 2 : ℝ) * W A ∂haar) +
+          (∫ A : Cfg, C A B ∂haar) := by
+    simpa only [Pi.add_apply] using (integral_add hHalfInt hCInt)
+  have hOuter :
+      (∫ A : Cfg, ((1 / 2 : ℝ) * W A + C A B) +
+          (1 / 2 : ℝ) * W B ∂haar) =
+        (∫ A : Cfg, (1 / 2 : ℝ) * W A + C A B ∂haar) +
+          (∫ A : Cfg, (1 / 2 : ℝ) * W B ∂haar) := by
+    simpa only [Pi.add_apply] using
+      (integral_add (hHalfInt.add hCInt) (integrable_const _))
+  change (∫ A : Cfg, ((1 / 2 : ℝ) * W A + C A B) +
       (1 / 2 : ℝ) * W B ∂haar) = _
-  rw [integral_add (hHalfInt.add hCInt) (integrable_const _)]
-  rw [integral_add hHalfInt hCInt]
-  rw [integral_const_mul]
+  rw [hOuter, hInner, integral_const_mul]
   simp
 
 /-- The sought explicit beta=0 first-order formula for the literal original
