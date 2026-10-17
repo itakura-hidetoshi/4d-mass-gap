@@ -209,7 +209,7 @@ theorem p4Q2JI_originalPhysicalNormalizedMinor_eq_raw_scaled
       ‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
         H 2 specialUnitaryTwoWilsonRankPositive t ht‖⁻¹ *
       p4Q2JI_originalGIRawFineRowMinor H b hb e e' z z' t := by
-  unfold p4Q2JI_originalPhysicalNormalizedMinor
+  dsimp only [p4Q2JI_originalPhysicalNormalizedMinor]
   rw [p4Q2JI_originalGI_physicalUnit_eq H b hb e z,
     p4Q2JI_originalGI_physicalUnit_eq H b hb e' z',
     p4Q2JI_originalGI_normalizedFineUnit_eq H b hb t ht e z,
