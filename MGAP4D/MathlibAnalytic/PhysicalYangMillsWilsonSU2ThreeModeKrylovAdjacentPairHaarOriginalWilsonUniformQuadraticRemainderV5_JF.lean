@@ -95,11 +95,11 @@ theorem p4Q2JF_originalWilsonOneSlabKernel_quadraticRemainder_le
       ‖-beta * S A B‖ ≤ ‖beta * M‖ := by
     calc
       ‖-beta * S A B‖ = ‖beta‖ * S A B := by
-        rw [norm_mul, norm_neg, Real.norm_eq_abs, abs_of_nonneg hSnonneg]
+        simp only [norm_mul, norm_neg, Real.norm_eq_abs, abs_of_nonneg hSnonneg]
       _ ≤ ‖beta‖ * M :=
         mul_le_mul_of_nonneg_left hSle (norm_nonneg _)
       _ = ‖beta * M‖ := by
-        rw [norm_mul, Real.norm_eq_abs, abs_of_nonneg hM]
+        simp only [norm_mul, Real.norm_eq_abs, abs_of_nonneg hM]
   have hExp :=
     Real.norm_exp_sub_one_sub_id_le (le_trans hNorm hsmall)
   have hKernel :
@@ -165,9 +165,19 @@ theorem p4Q2JF_originalWilsonHaarRow_quadraticRemainder_le
     change (∫ A : Cfg, (K beta A B - 1) + beta * S A B ∂haar) =
       (∫ A : Cfg, K beta A B ∂haar) -
         1 + beta * (∫ A : Cfg, S A B ∂haar)
-    rw [integral_add (hKint.sub (integrable_const _)) (hSint.const_mul beta),
-      integral_sub hKint (integrable_const _),
-      integral_const, integral_const_mul]
+    have hSub :
+        (∫ A : Cfg, K beta A B - (1 : ℝ) ∂haar) =
+          (∫ A : Cfg, K beta A B ∂haar) -
+            (∫ _A : Cfg, (1 : ℝ) ∂haar) := by
+      simpa only [Pi.sub_apply] using
+        (integral_sub hKint (integrable_const (1 : ℝ)))
+    have hAdd :
+        (∫ A : Cfg, (K beta A B - 1) + beta * S A B ∂haar) =
+          (∫ A : Cfg, K beta A B - 1 ∂haar) +
+            (∫ A : Cfg, beta * S A B ∂haar) := by
+      simpa only [Pi.add_apply] using
+        (integral_add (hKint.sub (integrable_const _)) (hSint.const_mul beta))
+    rw [hAdd, hSub, integral_const_mul]
     simp
   have hQpoint (A : Cfg) : ‖Q A‖ ≤ (beta * M) ^ 2 :=
     p4Q2JF_originalWilsonOneSlabKernel_quadraticRemainder_le
@@ -175,7 +185,7 @@ theorem p4Q2JF_originalWilsonHaarRow_quadraticRemainder_le
   have hQint :
       ‖∫ A : Cfg, Q A ∂haar‖ ≤ (beta * M) ^ 2 := by
     have hb := norm_integral_le_of_norm_le_const
-      (μ := haar) (Eventually.of_forall hQpoint)
+      (μ := haar) (Filter.Eventually.of_forall hQpoint)
     simpa using hb
   have hProfile :=
     p4Q2JF_originalWilsonZeroDerivativeProfile_eq_neg_actionHaarMean H B
@@ -183,7 +193,7 @@ theorem p4Q2JF_originalWilsonHaarRow_quadraticRemainder_le
     ‖F beta B - 1 - beta * D B‖ =
         ‖F beta B - 1 + beta * (∫ A : Cfg, S A B ∂haar)‖ := by
           rw [hProfile]
-          ring
+          simp only [mul_neg, sub_neg_eq_add]
     _ = ‖∫ A : Cfg, Q A ∂haar‖ := by rw [hQIntegral]
     _ ≤ (beta * M) ^ 2 := hQint
 
