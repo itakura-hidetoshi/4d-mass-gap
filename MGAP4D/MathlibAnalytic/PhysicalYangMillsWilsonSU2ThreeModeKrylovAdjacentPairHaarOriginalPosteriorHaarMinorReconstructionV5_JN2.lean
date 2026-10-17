@@ -289,6 +289,73 @@ theorem p4Q2JN2_actualDensityContrast_centeredTaylor_explicit
   rw [hEq]
   exact hTaylor.trans (add_le_add hA hB)
 
+
+/-- A pure real-exponential inequality turning the genuine Wilson
+posterior density-crossing envelope into a quadratic weak-coupling
+bound, without any lattice-volume or physical-vacuum hypothesis. -/
+theorem p4Q2JN2_trueWilsonExpGap_le
+    (b : ℝ) (hb : 0 ≤ b) :
+    Real.exp (32 * b) - Real.exp (-32 * b) ≤
+      (64 * b) * Real.exp (32 * b) := by
+  have hExp := Real.add_one_le_exp (-64 * b)
+  have hOne : (1 : ℝ) - Real.exp (-64 * b) ≤ 64 * b := by
+    linarith
+  have hFactor :
+      Real.exp (32 * b) - Real.exp (-32 * b) =
+      Real.exp (32 * b) * (1 - Real.exp (-64 * b)) := by
+    rw [mul_sub, mul_one, ← Real.exp_add]
+    congr 1
+    ring
+  rw [hFactor]
+  calc
+    Real.exp (32 * b) * (1 - Real.exp (-64 * b)) ≤
+      Real.exp (32 * b) * (64 * b) :=
+      mul_le_mul_of_nonneg_left hOne (Real.exp_pos _).le
+    _ = (64 * b) * Real.exp (32 * b) := by ring
+
+/-- TRUE UNLOGGED ORIGINAL interacting posterior density difference,
+at every physical finite SU(2) right background and link, has a
+uniformly quadratic first-order remainder with explicit constant
+272 exp(8). Crucially the first-order vector is the centered
+temporal SU(2) Wilson action, and no differentiability of either
+original normalized posterior or Perron vacuum is assumed. -/
+theorem p4Q2JN2_actualDensityContrast_centeredTaylor_quadratic
+    (b : ℝ) (hb : 0 ≤ b) (hsmall : b ≤ 1 / 4)
+    (right : Cfg) (e : Link) (g : Gauge) :
+    ‖p4Q2GB_originalWilsonPosteriorLeftDensityContrast H b hb right e g +
+      b * (D g - ∫ h : Gauge, D h ∂nu)‖ ≤
+      (272 * Real.exp 8) * b ^ 2 := by
+  have hTaylor := p4Q2JN2_actualDensityContrast_centeredTaylor_explicit
+    H b hb hsmall right e g
+  have hGap := p4Q2JN2_trueWilsonExpGap_le b hb
+  have hExp : Real.exp (32 * b) ≤ Real.exp 8 :=
+    Real.exp_le_exp.mpr (by linarith)
+  have hTerm1 :
+      (16 * b ^ 2) * Real.exp (32 * b) ≤
+      (16 * b ^ 2) * Real.exp 8 :=
+    mul_le_mul_of_nonneg_left hExp
+      (mul_nonneg (by norm_num) (sq_nonneg b))
+  have hTerm2 :
+      (4 * b) * (Real.exp (32 * b) - Real.exp (-32 * b)) ≤
+      (4 * b) * ((64 * b) * Real.exp (32 * b)) :=
+    mul_le_mul_of_nonneg_left hGap
+      (mul_nonneg (by norm_num) hb)
+  have hTerm3 :
+      (4 * b) * ((64 * b) * Real.exp (32 * b)) ≤
+      (4 * b) * ((64 * b) * Real.exp 8) :=
+    mul_le_mul_of_nonneg_left hExp
+      (mul_nonneg (mul_nonneg (by norm_num) hb)
+        (mul_nonneg (by norm_num) hb))
+  calc
+    ‖p4Q2GB_originalWilsonPosteriorLeftDensityContrast H b hb right e g +
+        b * (D g - ∫ h : Gauge, D h ∂nu)‖ ≤
+      (16 * b ^ 2) * Real.exp (32 * b) +
+        (4 * b) * (Real.exp (32 * b) - Real.exp (-32 * b)) := hTaylor
+    _ ≤ (16 * b ^ 2) * Real.exp 8 +
+        (4 * b) * ((64 * b) * Real.exp 8) :=
+      add_le_add hTerm1 (hTerm2.trans hTerm3)
+    _ = (272 * Real.exp 8) * b ^ 2 := by ring
+
 end Frozen
 end GroundStatePosteriorJoint
 end
@@ -301,3 +368,5 @@ end MGAP4D
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JN2_originalTemporalDifferenceHaarIntegral
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JN2_densityContrast_error_le_of_minor_error
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JN2_actualDensityContrast_centeredTaylor_explicit
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JN2_trueWilsonExpGap_le
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JN2_actualDensityContrast_centeredTaylor_quadratic
