@@ -201,6 +201,7 @@ theorem p4Q2JB_actualOriginalWilsonGIMinor_eq_trueFiberMomentMinor
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n e' z' 0
   have h1' := p4Q2JB_actualWilsonModalResponse_eq_prefactor_mul_trueFiberMoment
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n e' z' 1
+  simp only [Fin.val_zero, Fin.val_one] at h0 h1 h0' h1'
   change
     p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap
         Hn (beta n) (hbeta n) (RightFactor n 0) e z *
