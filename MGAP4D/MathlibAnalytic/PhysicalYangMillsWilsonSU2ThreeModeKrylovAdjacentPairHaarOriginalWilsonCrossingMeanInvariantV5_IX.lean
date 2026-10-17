@@ -48,6 +48,22 @@ local instance p4Q2IX_spatialLinksFintype (H : ℕ) :
 
 namespace GroundStatePosteriorJoint
 
+/-- A deliberately small, universe-polymorphic Haar transport lemma.  The
+kernel reduction of the full lattice Wilson action is kept outside the proof
+of the Bochner integral transport itself. -/
+private theorem p4Q2IX_abstract_integral_transport
+    {X : Type*} [MeasurableSpace X] (μ : Measure X)
+    (T : X → X) (hT : MeasurePreserving T μ μ)
+    (f g : X → ℝ) (hfg : ∀ x, f (T x) = g x) :
+    (∫ x, f x ∂μ) = (∫ x, g x ∂μ) := by
+  calc
+    (∫ x, f x ∂μ) = (∫ x, f (T x) ∂μ) :=
+      (hT.integral_comp' f).symm
+    _ = (∫ x, g x ∂μ) := by
+      apply integral_congr_ae
+      filter_upwards with x
+      exact hfg x
+
 section GenuineWilsonCrossing
 
 variable (H : ℕ)
@@ -113,21 +129,12 @@ theorem p4Q2IX_originalCrossingAction_HaarMean_eq_identity
       (∫ A : Cfg, C A (fun _ => 1) ∂haar) := by
   let T : Cfg → Cfg := fun A e => B e * A e
   let f : Cfg → ℝ := fun A => C A B
+  let g : Cfg → ℝ := fun A => C A (fun _ => 1)
   have hPres : MeasurePreserving T haar haar :=
     p4Q2IX_actualSpatialHaar_leftTranslate_measurePreserving H B
-  have hTransport :
-      (∫ A : Cfg, f A ∂haar) =
-        (∫ A : Cfg, f (T A) ∂haar) := by
-    exact (hPres.integral_comp' f).symm
-  have hPoint :
-      (fun A : Cfg => f (T A)) =
-        (fun A : Cfg => C A (fun _ => 1)) := by
-    funext A
-    exact p4Q2IX_originalCrossingAction_leftTranslate H B A
-  change (∫ A : Cfg, f A ∂haar) =
-    (∫ A : Cfg, C A (fun _ => 1) ∂haar)
-  rw [hTransport]
-  exact congrArg (fun g : Cfg → ℝ => ∫ A : Cfg, g A ∂haar) hPoint
+  have hPoint (A : Cfg) : f (T A) = g A :=
+    p4Q2IX_originalCrossingAction_leftTranslate H B A
+  exact p4Q2IX_abstract_integral_transport haar T hPres f g hPoint
 
 /-- Two genuine physical right boundaries have exactly the same temporal
 crossing Haar mean; this removes crossing dependence from the beta-zero
