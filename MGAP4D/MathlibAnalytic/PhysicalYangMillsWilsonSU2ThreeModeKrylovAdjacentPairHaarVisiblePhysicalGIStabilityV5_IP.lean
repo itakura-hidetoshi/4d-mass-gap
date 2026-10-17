@@ -9,16 +9,15 @@ IO establishes an ACTUAL real-linear equivalence
 where S is the genuine Haar-L² signed fine-right physical synthesis
 and Phi is the ORIGINAL two-interacting-Wilson-posterior GI detector.
 
-The present step proves a quantitatively stable representation on
-THIS LITERAL PHYSICAL HILBERT SUBMODULE, not on arbitrary coefficient
-coordinates. The restriction of IN's physically descended detector
-  Psi : range S → original GI observations
-to Visible is injective, and is anti-Lipschitz with a strictly positive
-finite-model constant by pinned mathlib finite-dimensional theory.
+The present step proves exact, source-coordinate-independent GI
+separation on THIS LITERAL PHYSICAL HILBERT SUBMODULE. The restriction
+of IN's physically descended detector Psi to Visible is injective,
+and the zero-set of the ORIGINAL spatial Wilson GL mass on the actual
+physical visible sector is exactly the zero physical source.
 
-The constant is not asserted uniform in volume, spacing, scale, n,
-frozen beta, fine beta or Krylov depth. The original Wilson GL mass is
-strictly positive for every nonzero visible physical source as in IM,
+A quantitative visible-sector anti-Lipschitz/frame comparison is NOT
+claimed in IP. The original Wilson GL mass is strictly positive for
+every nonzero visible physical source as in IM,
 but no full-source positivity at positive fine beta and r>0 follows:
 the true invisible sector S(K) may remain nonzero.
 
@@ -117,18 +116,6 @@ local notation "OriginalMass" =>
   p4Q2GL_originalWilsonSignedGapSquareDivVarianceSpatialMass
     Hn (beta n) (hbeta n)
 
--- Canonical inherited physical Haar-L² normed real structures are
--- installed BEFORE theorem statements, avoiding a normedSpace
--- instance mismatch between goal elaboration and theorem application.
-local instance p4Q2IP_physicalNormedSpace :
-    NormedSpace ℝ Phys :=
-  Submodule.normedSpace
-    (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule Hn 2)
-
-local instance p4Q2IP_visibleNormedSpace :
-    NormedSpace ℝ ↥Visible :=
-  Submodule.normedSpace Visible
-
 /-- Literal original interacting-Wilson GI detection restricted to
 the true Haar-L² orthogonal visible PHYSICAL source space. -/
 noncomputable def p4Q2IP_actualRightVisiblePhysicalGIDetector :
@@ -160,29 +147,49 @@ theorem p4Q2IP_actualRightVisiblePhysicalGIDetector_injective :
   exact p4Q2IP_abstract_detector_injective_on_visible
     Invisible (PhysicalSource).range Visible PhysGI hW hKer hDisj
 
-/-- Genuine fixed-finite-model physical-source GI frame:
-on the ACTUAL visible physical Haar-L² sector, the original
-interacting-Wilson full-boundary detector has an anti-Lipschitz
-inverse with a strictly positive REAL physical constant.
-
-This is a theorem of finite-dimensionality and injectivity,
-not a H/n/r/spacing-uniform frame hypothesis. -/
-theorem p4Q2IP_actualRightVisiblePhysicalGI_antilipschitz :
-    ∃ c : NNReal, 0 < c ∧
-      AntilipschitzWith c (fun f : ↥Visible => VisibleGI f) := by
+/-- The actual two-interacting-Wilson-posterior GI detector on
+the PHYSICAL visible subspace has the SAME zero locus as the ORIGINAL
+spatial Wilson GL mass. This is a statement on real Haar-L² sources,
+not on arbitrary coefficients. -/
+theorem p4Q2IP_actualRightVisible_originalGLMass_zero_iff_GI_zero
+    (hFrozen : 0 < beta n)
+    (f : ↥Visible) :
+    OriginalMass (f : Phys) (Finset.univ : Finset Link) = 0 ↔
+      VisibleGI f = 0 := by
   have hW : Visible ≤ (PhysicalSource).range := by
     change Invisibleᗮ ⊓ (PhysicalSource).range ≤ (PhysicalSource).range
     exact inf_le_right
-  letI : FiniteDimensional ℝ ↥((PhysicalSource).range) := inferInstance
-  letI : FiniteDimensional ℝ ↥Visible :=
-    Submodule.finiteDimensional_of_le hW
-  let T : ↥Visible →ₗ[ℝ] (Link → C(Pair, ℝ)) := VisibleGI
-  have hInjective : Function.Injective T :=
+  have hMass :=
+    p4Q2IN_actualRightOriginalGLMass_zero_iff_physicalDetector_zero
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+      n r hFrozen ⟨(f : Phys), hW f.property⟩
+  change OriginalMass (f : Phys) (Finset.univ : Finset Link) = 0 ↔
+    VisibleGI f = 0 at hMass
+  exact hMass
+
+/-- Genuine fixed-finite-model zero-locus classification on the
+ACTUAL physical orthogonal GI-visible sector:
+  original Wilson GL mass = 0  iff  actual physical source = 0.
+Does not imply all signed physical sources belong to this sector. -/
+theorem p4Q2IP_actualRightVisible_originalGLMass_zero_iff_source_zero
+    (hFrozen : 0 < beta n)
+    (f : ↥Visible) :
+    OriginalMass (f : Phys) (Finset.univ : Finset Link) = 0 ↔ f = 0 := by
+  have hMass :=
+    p4Q2IP_actualRightVisible_originalGLMass_zero_iff_GI_zero
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+      n r hFrozen f
+  have hInjective :=
     p4Q2IP_actualRightVisiblePhysicalGIDetector_injective
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r
-  obtain ⟨c, hc, hFrame⟩ :=
-    (LinearMap.injective_iff_antilipschitz T).mp hInjective
-  exact ⟨c, hc, by simpa only [T] using hFrame⟩
+  constructor
+  · intro hm
+    apply hInjective
+    simpa using hMass.mp hm
+  · intro hf
+    subst f
+    apply hMass.mpr
+    exact map_zero VisibleGI
 
 /-- Positivity of BOTH the norm of the authentic GI response and
 the original Wilson GL spatial mass on each nonzero actual visible
@@ -218,5 +225,6 @@ end MGAP4D
 
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2IP_abstract_detector_injective_on_visible
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2IP_actualRightVisiblePhysicalGIDetector_injective
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2IP_actualRightVisiblePhysicalGI_antilipschitz
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2IP_actualRightVisible_originalGLMass_zero_iff_GI_zero
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2IP_actualRightVisible_originalGLMass_zero_iff_source_zero
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2IP_actualRightVisible_originalGI_and_GLMass_pos
