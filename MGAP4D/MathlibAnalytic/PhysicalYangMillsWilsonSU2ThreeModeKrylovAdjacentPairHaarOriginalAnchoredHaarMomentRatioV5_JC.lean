@@ -58,7 +58,7 @@ pivot: no division by a possibly vanishing second-context value. -/
 private theorem p4Q2JC_abstract_anchor_minor_eq_scaled_residual
     (a b c d : ℝ) (ha : a ≠ 0) :
     a * d - b * c = a * (d - (b / a) * c) := by
-  field_simp [ha] <;> ring
+  field_simp [ha]
 
 section ActualOriginalWilson
 
