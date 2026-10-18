@@ -55,6 +55,11 @@ local instance p4Q2KC_measurableSpace :
 local instance p4Q2KC_borelSpace :
     BorelSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupBorelSpace 2
+local instance p4Q2KC_su2HaarOpenPos :
+    (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ)).IsOpenPosMeasure := by
+  unfold normalizedCompactHaar
+  infer_instance
+
 local instance p4Q2KC_spatialHaarOpenPos (H : ℕ) :
     (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2).IsOpenPosMeasure := by
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
