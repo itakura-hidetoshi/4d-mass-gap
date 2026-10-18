@@ -50,6 +50,7 @@ theorem p4Q2KI_originalSU2_identity_pi_crossingEnergy_eq_neg_four :
   simp only [inv_one, one_mul, mul_one, inv_mul_cancel]
   rw [specialUnitaryWilsonPlaquetteEnergy_one 2 (by norm_num)]
   rw [specialUnitaryWilsonPlaquetteEnergy_inv]
+  dsimp only [p4Q2KI_pi]
   rw [originalWilsonExplicitPiRotation_energy_eq_two]
   norm_num
 
