@@ -100,9 +100,10 @@ theorem p4Q2JR_originalPhysicalReceiverCentered_HaarMean_zero
   simp only [ContinuousMap.sub_apply, ContinuousMap.smul_apply,
     ContinuousMap.one_apply, smul_eq_mul, mul_one]
   rw [integral_sub hFI (integrable_const m)]
-  simp only [integral_const]
-  change (∫ g : Gauge, F g ∂nu) - m = 0
-  dsimp [m, p4Q2JR_originalPhysicalReceiverHaarMean]
+  have hConst : (∫ _g : Gauge, m ∂nu) = m := by simp
+  rw [hConst]
+  change (∫ g : Gauge, F g ∂nu) -
+    (∫ g : Gauge, F g ∂nu) = 0
   exact sub_self _
 
 /-- The true interacting two-posterior test gap is EXACTLY unchanged
