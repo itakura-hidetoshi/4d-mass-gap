@@ -47,7 +47,7 @@ theorem p4Q2KI_originalSU2_identity_pi_crossingEnergy_eq_neg_four :
           ((p4Q2KI_pi)⁻¹ * (1 : Gauge)) -
         specialUnitaryWilsonPlaquetteEnergy 2
           ((p4Q2KI_pi)⁻¹ * p4Q2KI_pi))) = -4 := by
-  simp only [inv_one, one_mul, inv_mul_cancel]
+  simp only [inv_one, one_mul, mul_one, inv_mul_cancel]
   rw [specialUnitaryWilsonPlaquetteEnergy_one 2 (by norm_num)]
   rw [specialUnitaryWilsonPlaquetteEnergy_inv]
   rw [originalWilsonExplicitPiRotation_energy_eq_two]
