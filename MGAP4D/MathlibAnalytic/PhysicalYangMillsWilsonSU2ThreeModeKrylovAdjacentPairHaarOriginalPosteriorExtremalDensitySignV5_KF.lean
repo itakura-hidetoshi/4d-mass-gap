@@ -178,7 +178,8 @@ theorem p4Q2KF_originalPosteriorDensityContrast_rotation_neg
     change 0 < -(M b hb.le right e
       (specialUnitaryTwoRotation Real.pi) 1)
     rw [p4Q2JY_originalPosteriorMinor_swap]
-    exact p4Q2JN_originalPosteriorMinor_one_pi_pos H b hb right e
+    simpa only [neg_neg] using
+      (p4Q2JN_originalPosteriorMinor_one_pi_pos H b hb right e)
   have hOpen : IsOpen (Function.support Q) := by
     change IsOpen (Q ⁻¹' ({0} : Set ℝ)ᶜ)
     exact (isClosed_singleton.isOpen_compl).preimage hQCont
@@ -190,9 +191,9 @@ theorem p4Q2KF_originalPosteriorDensityContrast_rotation_neg
   have hDensity :=
     p4Q2JN2_originalDensityContrast_eq_minorHaarIntegral H b hb.le right e
       (specialUnitaryTwoRotation Real.pi)
-  rw [← hDensity] at hIntegral
-  change 0 < -(p4Q2GB_originalWilsonPosteriorLeftDensityContrast H b hb.le
-    right e (specialUnitaryTwoRotation Real.pi)) at hIntegral
+  change 0 < ∫ g : Gauge,
+    -(M b hb.le right e (specialUnitaryTwoRotation Real.pi) g) ∂nu at hIntegral
+  rw [integral_neg, ← hDensity] at hIntegral
   linarith
 
 end Frozen
