@@ -87,34 +87,6 @@ noncomputable def p4Q2KB_originalSpatialWilsonKernelMass
     (b : ℝ) (B : Cfg) : ℝ :=
   ∫ A : Cfg, K b A B ∂haar
 
-/-- The frozen original one-slab Wilson kernel has strictly positive
-total mass in EVERY real spatial right-boundary configuration, with
-no frozen-coupling smallness restriction. -/
-theorem p4Q2KB_originalSpatialWilsonKernelMass_pos
-    (b : ℝ) (B : Cfg) :
-    0 < p4Q2KB_originalSpatialWilsonKernelMass H b B := by
-  have hC : Continuous (fun A : Cfg => K b A B) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H 2 b).comp (continuous_id.prodMk continuous_const)
-  have hI : Integrable (fun A : Cfg => K b A B) haar :=
-    hC.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
-  unfold p4Q2KB_originalSpatialWilsonKernelMass
-  rw [integral_pos_iff_support_of_nonneg]
-  · have hSupport :
-        Function.support (fun A : Cfg => K b A B) = Set.univ := by
-      ext A
-      simp only [Function.mem_support, Set.mem_univ, iff_true]
-      exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
-        H 2 b A B).ne'
-    rw [hSupport]
-    have hne : haar Set.univ ≠ 0 :=
-      Measure.measure_univ_ne_zero.mpr (NeZero.ne haar)
-    exact lt_of_le_of_ne (zero_le _) hne.symm
-  · intro A
-    exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
-      H 2 b A B).le
-  · exact hI
-
 /-- The TRUE original Haar pairing of the unchanged spatial Wilson
 action with the original one-slab Wilson kernel. -/
 noncomputable def p4Q2KB_originalSpatialWilsonActionKernelMoment
@@ -128,38 +100,6 @@ noncomputable def p4Q2KB_originalCenteredSpatialWilsonKernelMoment
     (B : Cfg) : ℝ :=
   ∫ A : Cfg,
     K b A B * p4Q2JK_anchorCenteredSpatialWilson H b hb e z A ∂haar
-
-/-- Exact, nonperturbative source decomposition. All normalization
-of the original physical receiver is kept OUTSIDE this kernel moment. -/
-theorem p4Q2KB_originalCenteredSpatialWilsonKernelMoment_sub
-    (b : ℝ) (hb : 0 ≤ b) (e : Link) (z : Cfg × Cfg)
-    (B : Cfg) :
-    p4Q2KB_originalCenteredSpatialWilsonKernelMoment H b hb e z B =
-      p4Q2KB_originalSpatialWilsonActionKernelMoment H b B -
-        p4Q2JK_originalWilsonAnchorSlope H b hb e z *
-          p4Q2KB_originalSpatialWilsonKernelMass H b B := by
-  let k : Cfg → ℝ := fun A => K b A B
-  let w : C(Cfg, ℝ) := W
-  let c := p4Q2JK_originalWilsonAnchorSlope H b hb e z
-  have hk : Continuous k :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H 2 b).comp (continuous_id.prodMk continuous_const)
-  have hK : Integrable k haar :=
-    hk.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
-  have hKW : Integrable (fun A : Cfg => k A * w A) haar :=
-    (hk.mul w.continuous).integrable_of_hasCompactSupport
-      (HasCompactSupport.of_compactSpace _)
-  change (∫ A : Cfg, k A * (w A - c) ∂haar) =
-    (∫ A : Cfg, k A * w A ∂haar) - c * (∫ A : Cfg, k A ∂haar)
-  calc
-    (∫ A : Cfg, k A * (w A - c) ∂haar) =
-        ∫ A : Cfg, k A * w A - c * k A ∂haar := by
-          apply integral_congr_ae
-          filter_upwards with A
-          ring
-    _ = (∫ A : Cfg, k A * w A ∂haar) -
-        c * (∫ A : Cfg, k A ∂haar) := by
-          rw [integral_sub hKW (hK.const_mul _), integral_const_mul]
 
 /-- The EXACT physically normalized SU(2) receiver of the actual
 anchored spatial Wilson Gauss-law Hilbert vector, expanded all the
@@ -251,8 +191,6 @@ end
 end MathlibAnalytic
 end MGAP4D
 
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2KB_originalSpatialWilsonKernelMass_pos
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2KB_originalCenteredSpatialWilsonKernelMoment_sub
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2KB_originalPhysicalSpatialReceiver_eq_WilsonKernel
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2KB_originalPhysicalReceiverKernelPrefactor_pos
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2KB_originalSpatialWilsonDoubleHaar_as_actualKernelDifference
