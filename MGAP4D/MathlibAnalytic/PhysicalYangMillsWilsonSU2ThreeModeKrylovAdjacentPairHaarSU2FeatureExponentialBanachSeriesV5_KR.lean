@@ -61,7 +61,6 @@ namespace GroundStatePosteriorJoint
 section SU2
 local notation "Gauge" => Matrix.specialUnitaryGroup (Fin 2) ℂ
 local notation "Phi" => specialUnitaryMatrixRealFeature 2
-local notation "E" => p4Q2KR_originalSU2RealFeatureInnerContinuous
 
 /-- The exact original SU(2) matrix-realification feature inner-product
 kernel is a genuine continuous function on the compact PRODUCT group.
@@ -96,6 +95,8 @@ product used in KG/KH/KJ/KN/KP, without renormalization. -/
     p4Q2KR_originalSU2RealFeatureInnerContinuous (g,h) =
       inner ℝ (Phi g) (Phi h) := by
   rfl
+
+local notation "E" => p4Q2KR_originalSU2RealFeatureInnerContinuous
 
 /-- The Wilson real-feature exponential, constructed directly by the
 Banach algebra exponential of a continuous real physical kernel. -/
