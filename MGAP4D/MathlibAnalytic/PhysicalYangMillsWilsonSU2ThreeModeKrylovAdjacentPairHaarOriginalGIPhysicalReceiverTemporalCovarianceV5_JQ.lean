@@ -163,7 +163,7 @@ theorem p4Q2JQ_originalPhysicalGI_temporalCovariance_quadratic
         -(m + b * t) := by
     rw [hGN]
     change q * ((-m) / q) - b * t = -(m + b * t)
-    field_simp [hq] <;> ring
+    field_simp [hq]; ring
   have hJP :=
     p4Q2JP_originalWilsonTemporalTestGap_quadraticError
       H b hb hsmall z.2 e F
