@@ -77,7 +77,7 @@ theorem p4Q2KQ_originalSU2RealFeatureExponential_twoSided
       Real.exp (t * inner ℝ (Phi g) (Phi h)) ∧
     Real.exp (t * inner ℝ (Phi g) (Phi h)) ≤
       Real.exp (2 * |t|) := by
-  have h := p4Q2KQ_originalSU2RealFeatureExponent_abs_le t g h
+  have hAbsBound := p4Q2KQ_originalSU2RealFeatureExponent_abs_le t g h
   constructor
   · apply Real.exp_le_exp.mpr
     nlinarith [neg_abs_le (t * inner ℝ (Phi g) (Phi h))]
