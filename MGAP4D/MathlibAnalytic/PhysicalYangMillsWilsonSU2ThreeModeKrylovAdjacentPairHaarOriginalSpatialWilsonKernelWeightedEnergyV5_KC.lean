@@ -74,6 +74,43 @@ local notation "haar" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMea
 local notation "K" => periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel H 2
 local notation "W" => p4Q2JI_actualSpatialWilsonContinuous H
 
+/-- Compact, genuine-Haar principle: any everywhere-positive
+CONTINUOUS weight has strictly positive squared energy against
+a continuous function which is nonzero at some genuine point. -/
+private theorem p4Q2KC_positiveContinuousWeight_squaredEnergy_pos
+    {X : Type*} [TopologicalSpace X] [CompactSpace X]
+    [MeasurableSpace X] [BorelSpace X]
+    (μ : Measure X) [IsFiniteMeasure μ] [μ.IsOpenPosMeasure]
+    (k f : C(X, ℝ))
+    (hk : ∀ x : X, 0 < k x)
+    (hf : ∃ x : X, f x ≠ 0) :
+    0 < ∫ x : X, k x * (f x) ^ 2 ∂μ := by
+  have hQ : Continuous (fun x : X => k x * (f x) ^ 2) :=
+    k.continuous.mul (f.continuous.pow 2)
+  have hI : Integrable (fun x : X => k x * (f x) ^ 2) μ :=
+    hQ.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  obtain ⟨x, hx⟩ := hf
+  have hQAt : k x * (f x) ^ 2 ≠ 0 :=
+    mul_ne_zero (hk x).ne' (pow_ne_zero 2 hx)
+  have hOpen :
+      IsOpen (Function.support (fun y : X => k y * (f y) ^ 2)) := by
+    change IsOpen
+      ((fun y : X => k y * (f y) ^ 2) ⁻¹' ({0} : Set ℝ)ᶜ)
+    exact (isClosed_singleton.isOpen_compl).preimage hQ
+  rw [integral_pos_iff_support_of_nonneg]
+  · exact hOpen.measure_pos _ ⟨x, hQAt⟩
+  · intro y
+    exact mul_nonneg (hk y).le (sq_nonneg _)
+  · exact hI
+
+/-- Original Wilson one-slab K_b(A,B), continuous in the ACTUAL
+spatial SU(2) source configuration A for each fixed physical B. -/
+noncomputable def p4Q2KC_originalWilsonKernelColumn
+    (b : ℝ) (B : Cfg) : C(Cfg, ℝ) :=
+  ⟨fun A => K b A B,
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      H 2 b).comp (continuous_id.prodMk continuous_const)⟩
+
 /-- NO assumption of monotonicity or nonzero GI signed detector:
 strict positive ORIGINAL frozen-Wilson-weighted spatial squared source
 energy about ANY scalar center, every coupling and right context.
@@ -81,42 +118,31 @@ The strict witness is the genuine Wilson primary-link central twist. -/
 theorem p4Q2KC_originalSpatialWilsonKernelCenteredEnergy_pos
     (b : ℝ) (B : Cfg) (c : ℝ) :
     0 < ∫ A : Cfg, K b A B * (W A - c) ^ 2 ∂haar := by
-  let k : Cfg → ℝ := fun A => K b A B
-  let w : C(Cfg, ℝ) := W
-  have hk : Continuous k :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H 2 b).comp (continuous_id.prodMk continuous_const)
-  have hQ : Continuous (fun A : Cfg => k A * (w A - c) ^ 2) :=
-    hk.mul ((w.continuous.sub continuous_const).pow 2)
-  have hI : Integrable (fun A : Cfg => k A * (w A - c) ^ 2) haar :=
-    hQ.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  let k : C(Cfg, ℝ) := p4Q2KC_originalWilsonKernelColumn H b B
+  let f : C(Cfg, ℝ) := W - c • (1 : C(Cfg, ℝ))
+  have hK (A : Cfg) : 0 < k A :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
+      H 2 b A B
   obtain ⟨A₀, A₁, hW⟩ := p4Q2IY_originalSpatialWilsonAction_not_constant H
-  have hA : ∃ A : Cfg, w A ≠ c := by
-    by_cases h0 : w A₀ = c
+  have hA : ∃ A : Cfg, W A ≠ c := by
+    by_cases h0 : W A₀ = c
     · refine ⟨A₁, ?_⟩
       intro h1
       exact hW (h0.trans h1.symm)
     · exact ⟨A₀, h0⟩
   obtain ⟨A, hAw⟩ := hA
-  have hK : k A ≠ 0 :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
-      H 2 b A B).ne'
-  have hQAt : k A * (w A - c) ^ 2 ≠ 0 :=
-    mul_ne_zero hK (pow_ne_zero 2 (sub_ne_zero.mpr hAw))
-  have hOpen :
-      IsOpen (Function.support (fun X : Cfg => k X * (w X - c) ^ 2)) := by
-    change IsOpen
-      ((fun X : Cfg => k X * (w X - c) ^ 2) ⁻¹' ({0} : Set ℝ)ᶜ)
-    exact (isClosed_singleton.isOpen_compl).preimage hQ
-  change 0 < ∫ X : Cfg, k X * (w X - c) ^ 2 ∂haar
-  rw [integral_pos_iff_support_of_nonneg]
-  · exact hOpen.measure_pos _ ⟨A, hQAt⟩
-  · intro X
-    exact mul_nonneg
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
-        H 2 b X B).le
-      (sq_nonneg _)
-  · exact hI
+  have hF : ∃ X : Cfg, f X ≠ 0 := by
+    refine ⟨A, ?_⟩
+    have hEval : f A = W A - c := by
+      simp only [f, ContinuousMap.sub_apply, ContinuousMap.smul_apply,
+        ContinuousMap.one_apply, smul_eq_mul, mul_one]
+    rw [hEval]
+    exact sub_ne_zero.mpr hAw
+  have hResult :=
+    p4Q2KC_positiveContinuousWeight_squaredEnergy_pos haar k f hK hF
+  simpa only [k, f, p4Q2KC_originalWilsonKernelColumn,
+    ContinuousMap.sub_apply, ContinuousMap.smul_apply,
+    ContinuousMap.one_apply, smul_eq_mul, mul_one] using hResult
 
 /-- The ACTUAL original spatial Wilson GI-anchored Gauss-law source
 from JK/JU has strictly positive one-slab Wilson-kernel-weighted
@@ -126,10 +152,10 @@ theorem p4Q2KC_originalAnchoredSpatialWilsonKernelEnergy_pos
     (b : ℝ) (hb : 0 ≤ b) (e : Link) (z : Cfg × Cfg) (B : Cfg) :
     0 < ∫ A : Cfg,
       K b A B * (p4Q2JK_anchorCenteredSpatialWilson H b hb e z A) ^ 2 ∂haar := by
-  change 0 < ∫ A : Cfg,
-    K b A B * (W A - p4Q2JK_originalWilsonAnchorSlope H b hb e z) ^ 2 ∂haar
-  exact p4Q2KC_originalSpatialWilsonKernelCenteredEnergy_pos
-    H b B (p4Q2JK_originalWilsonAnchorSlope H b hb e z)
+  simpa only [p4Q2JK_anchorCenteredSpatialWilson, ContinuousMap.sub_apply,
+      ContinuousMap.smul_apply, ContinuousMap.one_apply, smul_eq_mul, mul_one]
+    using (p4Q2KC_originalSpatialWilsonKernelCenteredEnergy_pos
+      H b B (p4Q2JK_originalWilsonAnchorSlope H b hb e z))
 
 end Finite
 end GroundStatePosteriorJoint
