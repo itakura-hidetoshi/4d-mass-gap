@@ -110,7 +110,7 @@ theorem p4Q2KJ_originalJoint_anyDistinctSU2_pair_strictDet
       H b hb.le Lg Lh right e g h
   have hExponent : 1 < Real.exp ((b / 2) *
         inner ℝ (Phi g - Phi h) (Phi g - Phi h)) :=
-    p4Q2KJ_exp_realFeatureSquaredDifference_gt_one H b hb g h hne
+    p4Q2KJ_exp_realFeatureSquaredDifference_gt_one b hb g h hne
   have hStrict :
       x < Real.exp ((b / 2) *
         inner ℝ (Phi g - Phi h) (Phi g - Phi h)) * x :=
