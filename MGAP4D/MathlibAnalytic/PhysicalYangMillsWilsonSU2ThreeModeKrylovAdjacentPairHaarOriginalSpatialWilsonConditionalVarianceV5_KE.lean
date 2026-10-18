@@ -70,7 +70,6 @@ theorem p4Q2KE_originalWilsonConditionalVariance_eq_gram
   unfold p4Q2KE_originalWilsonConditionalVariance
     p4Q2KE_originalWilsonConditionalMean
   field_simp
-  ring
 
 /-- Strictly positive genuine Wilson conditional spatial variance for
 all real b and every physical right boundary, derived without a rank
