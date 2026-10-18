@@ -128,7 +128,11 @@ theorem p4Q2KA_originalWilsonPosteriorCLM_opNorm_pos
     intro hz
     rw [hz] at hneg
     simp at hneg
-  exact (norm_pos_iff).2 hne
+  have hnorm :
+      ‖p4Q2KA_originalWilsonPosteriorCLM H b hb.le right e‖ ≠ 0 := by
+    intro hz
+    exact hne (norm_eq_zero.mp hz)
+  exact lt_of_le_of_ne (norm_nonneg _) hnorm.symm
 
 /-- TRUE nonperturbative strictly positive context-sensitive Banach
 distance threshold. There is no fictitious volume-uniform norm floor. -/
