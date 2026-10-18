@@ -64,11 +64,22 @@ noncomputable def p4Q2KK_originalSU2MatrixRealCoordinate (q : Coord) :
       ((U : Matrix (Fin 2) (Fin 2) ℂ) q.1.2 q.1.1).re
     else
       ((U : Matrix (Fin 2) (Fin 2) ℂ) q.1.2 q.1.1).im)
-  by_cases hq : q.2
-  · simp only [hq, ite_true]
-    fun_prop
-  · simp only [hq, ite_false]
-    fun_prop
+  have hMatrix : Continuous (fun U : Gauge =>
+      (U : Matrix (Fin 2) (Fin 2) ℂ)) :=
+    continuous_subtype_val
+  have hEntry : Continuous (fun U : Gauge =>
+      (U : Matrix (Fin 2) (Fin 2) ℂ) q.1.2 q.1.1) :=
+    (continuous_apply q.1.1).comp
+      ((continuous_apply q.1.2).comp hMatrix)
+  have hRe : Continuous (fun U : Gauge =>
+      ((U : Matrix (Fin 2) (Fin 2) ℂ) q.1.2 q.1.1).re) :=
+    Complex.continuous_re.comp hEntry
+  have hIm : Continuous (fun U : Gauge =>
+      ((U : Matrix (Fin 2) (Fin 2) ℂ) q.1.2 q.1.1).im) :=
+    Complex.continuous_im.comp hEntry
+  cases hq : q.2 with
+  | false => simpa [hq] using hIm
+  | true => simpa [hq] using hRe
 
 /-- The continuous physical SU(2) real/imaginary coordinate is precisely
 evaluation of the same KJ theorem-generated injective Hilbert feature. -/
