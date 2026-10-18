@@ -9,8 +9,9 @@ KK/KL give the actual SU(2) coordinate polynomial Stone–Weierstrass density
 and continuous Haar moment Riesz separation. KN defines the genuine
 finite-degree real/imaginary matrix monomials. We show every product of
 actual coordinate generators is some KN monomial, including degree zero,
-and use the pinned Algebra.adjoin_eq_span / Submodule.span_induction
-to transfer annihilation of all monomials to the entire dense algebra.
+and use the pinned Algebra.adjoin_eq_span / Submodule.span_le
+and the canonical kernel of the bounded linear functional to transfer
+annihilation of all monomials to the entire dense algebra.
 
 Thus any nonzero continuous signed SU(2) source has a nonzero ACTUAL
 normalized Haar moment against some finite-degree SU(2) coordinate
@@ -69,7 +70,7 @@ theorem p4Q2KS_originalSU2CoordinateSubmonoid_generated_by_monomials
       obtain ⟨q, rfl⟩ := hf
       refine ⟨1, (fun _ : Fin 1 => q), ?_⟩
       ext g
-      simp [p4Q2KN_originalSU2MatrixCoordinateMonomial, Fin.prod_univ_one]
+      simp [p4Q2KN_originalSU2MatrixCoordinateMonomial]
   | one =>
       refine ⟨0, Fin.elim0, ?_⟩
       simp [p4Q2KN_originalSU2MatrixCoordinateMonomial]
@@ -91,14 +92,27 @@ theorem p4Q2KS_zero_on_algebra_of_zero_on_all_coordinateMonomials
     change f ∈ Subalgebra.toSubmodule
       (Algebra.adjoin ℝ (Set.range p4Q2KK_originalSU2MatrixRealCoordinate)) at hf
     rwa [Algebra.adjoin_eq_span] at hf
-  induction hSpan using Submodule.span_induction with
-  | mem x hx =>
-      obtain ⟨n, a, rfl⟩ :=
-        p4Q2KS_originalSU2CoordinateSubmonoid_generated_by_monomials x hx
-      exact hMon n a
-  | zero => simp
-  | add x y _ _ hx hy => simpa [map_add, hx, hy]
-  | smul r x _ hx => simpa [map_smul, hx]
+  -- The kernel is a genuine ℝ-submodule. It contains every original
+  -- matrix-coordinate monomial, hence also the entire generated span.
+  -- This avoids a dependent span-induction motive that accidentally
+  -- reintroduces the already-proved algebra-membership hypothesis.
+  have hGenerators :
+      (Submonoid.closure
+        (Set.range p4Q2KK_originalSU2MatrixRealCoordinate) :
+          Set C(Gauge, ℝ)) ⊆
+      (L.toLinearMap.ker : Set C(Gauge, ℝ)) := by
+    intro x hx
+    obtain ⟨n, a, rfl⟩ :=
+      p4Q2KS_originalSU2CoordinateSubmonoid_generated_by_monomials x hx
+    exact LinearMap.mem_ker.mpr (hMon n a)
+  have hSpanKer :
+      Submodule.span ℝ
+        (Submonoid.closure
+          (Set.range p4Q2KK_originalSU2MatrixRealCoordinate) :
+            Set C(Gauge, ℝ)) ≤
+      L.toLinearMap.ker :=
+    Submodule.span_le.mpr hGenerators
+  exact LinearMap.mem_ker.mp (hSpanKer hSpan)
 
 theorem p4Q2KS_originalSU2Haar_all_monomialMoments_zero_imp_source_zero
     (ψ : C(Gauge, ℝ))
@@ -117,7 +131,7 @@ theorem p4Q2KS_originalSU2Haar_exists_nonzero_monomialMoment
     ∃ (n : ℕ) (a : Fin n → Coord),
       (∫ g : Gauge, ψ g * Mono n a g ∂nu) ≠ 0 := by
   by_contra hn
-  push_neg at hn
+  push Not at hn
   exact hψ
     (p4Q2KS_originalSU2Haar_all_monomialMoments_zero_imp_source_zero ψ hn)
 
