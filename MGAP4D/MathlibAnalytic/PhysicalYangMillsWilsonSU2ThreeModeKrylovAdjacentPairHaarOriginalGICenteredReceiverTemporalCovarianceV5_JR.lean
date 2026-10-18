@@ -132,12 +132,10 @@ theorem p4Q2JR_originalPhysicalReceiverCentered_temporalCovariance_eq
   let F := p4Q2JQ_originalPhysicalSourceLinkReceiver H b hb f e z
   let m : ℝ := p4Q2JR_originalPhysicalReceiverHaarMean H b hb f e z
   have hF : Integrable (fun g : Gauge => F g * D g) nu :=
-    (F.continuous.mul p4Q2FZ_originalSU2TemporalWilsonContrast_continuous)
-      .integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    (F.continuous.mul p4Q2FZ_originalSU2TemporalWilsonContrast_continuous).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hD : Integrable (fun g : Gauge => m * D g) nu :=
     (continuous_const.mul
-      p4Q2FZ_originalSU2TemporalWilsonContrast_continuous)
-      .integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+      p4Q2FZ_originalSU2TemporalWilsonContrast_continuous).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   change (∫ g : Gauge, (F - m • (1 : C(Gauge, ℝ))) g * D g ∂nu) =
     ∫ g : Gauge, F g * D g ∂nu
   simp only [ContinuousMap.sub_apply, ContinuousMap.smul_apply,
