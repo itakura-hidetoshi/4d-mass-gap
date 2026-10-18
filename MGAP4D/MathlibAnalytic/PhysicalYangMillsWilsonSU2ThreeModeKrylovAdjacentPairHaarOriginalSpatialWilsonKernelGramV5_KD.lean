@@ -83,10 +83,10 @@ theorem p4Q2KD_originalWilsonSpatialKernelMass_pos
     exact (isClosed_singleton.isOpen_compl).preimage hCont
   unfold p4Q2KB_originalSpatialWilsonKernelMass
   rw [integral_pos_iff_support_of_nonneg]
-  · apply hOpen.measure_pos
-    exact ⟨(fun _ : Link => (1 : Matrix.specialUnitaryGroup (Fin 2) ℂ)),
-      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
-        H 2 b (fun _ => 1) B).ne'⟩
+  · exact hOpen.measure_pos haar
+      ⟨(fun _ : Link => (1 : Matrix.specialUnitaryGroup (Fin 2) ℂ)),
+        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
+          H 2 b (fun _ => 1) B).ne'⟩
   · intro A
     exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
       H 2 b A B).le
@@ -111,9 +111,9 @@ theorem p4Q2KD_originalWilsonCenteredEnergy_momentExpansion
     simpa only [p4Q2KC_originalWilsonKernelColumn_apply] using
       (p4Q2KC_originalWilsonKernelColumn H b B).continuous
   have hKWCont : Continuous (fun A : Cfg => K b A B * W A) :=
-    hKCont.mul W.continuous
+    hKCont.mul (p4Q2JI_actualSpatialWilsonContinuous H).continuous
   have hKW2Cont : Continuous (fun A : Cfg => K b A B * (W A) ^ 2) :=
-    hKCont.mul (W.continuous.pow 2)
+    hKCont.mul ((p4Q2JI_actualSpatialWilsonContinuous H).continuous.pow 2)
   have hK : Integrable (fun A : Cfg => K b A B) haar :=
     hKCont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hKW : Integrable (fun A : Cfg => K b A B * W A) haar :=
@@ -129,11 +129,23 @@ theorem p4Q2KD_originalWilsonCenteredEnergy_momentExpansion
       filter_upwards with A
       ring
     _ = _ := by
-      rw [integral_add (hKW2.sub (hKW.const_mul (2 * c)))
-        (hK.const_mul (c ^ 2))]
-      rw [integral_sub hKW2 (hKW.const_mul (2 * c))]
-      simp only [integral_const_mul]
-      rfl
+      calc
+        (∫ A : Cfg,
+          (K b A B * (W A) ^ 2 - (2 * c) * (K b A B * W A)) +
+            c ^ 2 * K b A B ∂haar) =
+            (∫ A : Cfg,
+              K b A B * (W A) ^ 2 - (2 * c) * (K b A B * W A) ∂haar) +
+            (∫ A : Cfg, c ^ 2 * K b A B ∂haar) := by
+              exact integral_add
+                (hKW2.sub (hKW.const_mul (2 * c)))
+                (hK.const_mul (c ^ 2))
+        _ = (∫ A : Cfg, K b A B * (W A) ^ 2 ∂haar) -
+              (∫ A : Cfg, (2 * c) * (K b A B * W A) ∂haar) +
+              (∫ A : Cfg, c ^ 2 * K b A B ∂haar) := by
+                rw [integral_sub hKW2 (hKW.const_mul (2 * c))]
+        _ = _ := by
+          simp only [integral_const_mul]
+          rfl
 
 /-- Strict determinant of the TRUE Wilson-weighted Gram matrix
 for the physical spatial functions 1 and W_H, at EVERY B and b.
@@ -161,7 +173,7 @@ theorem p4Q2KD_originalWilsonSpatialKernelGramDet_pos
       m0 * (m2 - (2 * (m1 / m0)) * m1 + (m1 / m0) ^ 2 * m0) =
         m0 * m2 - m1 ^ 2 := by
     field_simp [ne_of_gt hm0]
-    <;> ring
+    ring
   rw [hAlg] at hProd
   change 0 < m0 * m2 - m1 ^ 2
   exact hProd
