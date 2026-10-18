@@ -111,7 +111,10 @@ theorem p4Q2KO_originalSU2HaarFiniteDoubleGram_zero_forces_all_moments_zero
   have hle :
       (∫ g : Gauge, F i g ∂nu) ^ 2 ≤
         ∑ j : ι, (∫ g : Gauge, F j g ∂nu) ^ 2 :=
-    Finset.single_le_sum (fun j hj => sq_nonneg _) (Finset.mem_univ i)
+    Finset.single_le_sum
+      (f := fun j : ι => (∫ g : Gauge, F j g ∂nu) ^ 2)
+      (s := Finset.univ)
+      (fun j hj => sq_nonneg _) (Finset.mem_univ i)
   rw [hzero] at hle
   nlinarith [sq_nonneg (∫ g : Gauge, F i g ∂nu)]
 
