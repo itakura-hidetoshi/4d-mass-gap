@@ -113,8 +113,9 @@ theorem p4Q2JT_originalPosteriorTestLinearMap_norm_le_envelope
       _ ≤ ‖F‖ * E :=
         mul_le_mul_of_nonneg_left (hP g) (norm_nonneg F)
   change ‖∫ g : Gauge, F g * P g ∂nu‖ ≤ ‖F‖ * E
-  exact norm_integral_le_of_norm_le_const
+  have hIntegral := norm_integral_le_of_norm_le_const
     (μ := nu) (Filter.Eventually.of_forall hBound)
+  simpa using hIntegral
 
 /-- The strict ORIGINAL temporal SU(2) Wilson test gap has an
 explicit positive absolute-value lower bound, not just nonzero-ness. -/
@@ -157,7 +158,7 @@ theorem p4Q2JT_originalPosteriorTemporalDetection_stability
     _ = ‖L F + L (D - F)‖ := by rw [hSplit]
     _ ≤ ‖L F‖ + ‖L (D - F)‖ := norm_add_le _ _
     _ ≤ ‖L F‖ + ‖D - F‖ * p4Q2JT_originalPosteriorEnvelope b :=
-      add_le_add_left hErr _
+      add_le_add (le_refl _) hErr
 
 /-- The original physical Wilson Gauss-law receiver span cannot even
 APPROXIMATE the literal temporal Wilson contrast too well if all actual
