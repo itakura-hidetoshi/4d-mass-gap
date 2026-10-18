@@ -121,18 +121,19 @@ functional has strictly positive operator norm for EVERY b>0. -/
 theorem p4Q2KA_originalWilsonPosteriorCLM_opNorm_pos
     (b : ℝ) (hb : 0 < b) (right : Cfg) (e : Link) :
     0 < ‖p4Q2KA_originalWilsonPosteriorCLM H b hb.le right e‖ := by
-  have hneg := p4Q2KA_originalWilsonPosteriorCLM_temporal_strictNegative
-    H b hb right e
-  have hne :
-      p4Q2KA_originalWilsonPosteriorCLM H b hb.le right e ≠ 0 := by
-    intro hz
-    rw [hz] at hneg
-    simp at hneg
-  have hnorm :
-      ‖p4Q2KA_originalWilsonPosteriorCLM H b hb.le right e‖ ≠ 0 := by
-    intro hz
-    exact hne (norm_eq_zero.mp hz)
-  exact lt_of_le_of_ne (norm_nonneg _) hnorm.symm
+  let T := p4Q2KA_originalWilsonPosteriorCLM H b hb.le right e
+  have hNeg : T D < 0 :=
+    p4Q2KA_originalWilsonPosteriorCLM_temporal_strictNegative
+      H b hb right e
+  have hImagePos : 0 < ‖T D‖ := by
+    rw [Real.norm_eq_abs]
+    exact abs_pos.mpr (ne_of_lt hNeg)
+  have hNotZero : (0 : ℝ) ≠ ‖T‖ := by
+    intro hZero
+    have hBound := T.le_opNorm D
+    rw [← hZero, zero_mul] at hBound
+    linarith
+  exact lt_of_le_of_ne (ContinuousLinearMap.opNorm_nonneg T) hNotZero
 
 /-- TRUE nonperturbative strictly positive context-sensitive Banach
 distance threshold. There is no fictitious volume-uniform norm floor. -/
