@@ -242,6 +242,84 @@ theorem p4Q2JT_exists_nonzeroOriginalPhysicalGI_of_close_actualSpan
       H b hb hwindow right e hn F hF
   exact (not_lt_of_ge hDistance) hClose
 
+
+/-- The UNCONDITIONAL quantitative separation from the kernel of the
+TRUE original two-posterior test map, even when other physical sources
+do have a nonzero GI response. Thus the result is nonvacuous without
+an assumption that ALL physical sources are GI-invisible. -/
+theorem p4Q2JT_originalPosteriorTestKernel_distance_ge
+    (b : ℝ) (hb : 0 < b)
+    (hwindow : b < p4Q2JP_originalWilsonTemporalDetectionRadius)
+    (right : Cfg) (e : Link)
+    (F : C(Gauge, ℝ))
+    (hF : p4Q2JS_originalPosteriorTestLinearMap H b hb.le right e F = 0) :
+    p4Q2JT_physicalReceiverApproximationRadius b ≤ ‖D - F‖ := by
+  have hStability :=
+    p4Q2JT_originalPosteriorTemporalDetection_stability
+      H b hb hwindow right e F
+  rw [hF, norm_zero, zero_add] at hStability
+  have hE := p4Q2JT_originalPosteriorEnvelope_pos b hb
+  unfold p4Q2JT_physicalReceiverApproximationRadius
+  apply (div_le_iff₀ (mul_pos (by norm_num) hE)).2
+  nlinarith [hStability]
+
+/-- Source-specific original physical obstruction, with no universal
+GI-vanishing assumption: if ONE actual Gauss-law Hilbert source has
+zero original two-interacting-Wilson-posterior GI response, its ACTUAL
+physical Wilson receiver is at least epsilon(b) away from temporal D. -/
+theorem p4Q2JT_actualPhysicalReceiver_distance_ge_of_GI_zero
+    (b : ℝ) (hb : 0 < b)
+    (hwindow : b < p4Q2JP_originalWilsonTemporalDetectionRadius)
+    (right left : Cfg) (e : Link) (f : Phys)
+    (hGI : p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap
+      H b hb.le f e (left, right) = 0) :
+    p4Q2JT_physicalReceiverApproximationRadius b ≤
+      ‖D - p4Q2JQ_originalPhysicalSourceLinkReceiver
+        H b hb.le f e (left, right)‖ := by
+  have hq :
+      p4Q2JQ_originalPhysicalGIDensityWeight H b hb.le
+        (left, right) ≠ 0 :=
+    (p4Q2JQ_originalPhysicalGIDensityWeight_pos
+      H b hb.le (left, right)).ne'
+  have hGN := p4Q2JQ_originalGI_eq_originalPosteriorTemporalTestGap_div
+    H b hb.le f e (left, right)
+  rw [hGI] at hGN
+  have hMoment :
+      p4Q2JP_originalWilsonTwoPosteriorTemporalTestGap
+        H b hb.le right e
+        (p4Q2JQ_originalPhysicalSourceLinkReceiver
+          H b hb.le f e (left, right)) = 0 := by
+    field_simp [hq] at hGN
+    linarith
+  have hKernel :
+      p4Q2JS_originalPosteriorTestLinearMap H b hb.le right e
+        (p4Q2JQ_originalPhysicalSourceLinkReceiver
+          H b hb.le f e (left, right)) = 0 := by
+    rw [p4Q2JS_originalPosteriorTestLinearMap_eq_JP]
+    exact hMoment
+  exact p4Q2JT_originalPosteriorTestKernel_distance_ge
+    H b hb hwindow right e _ hKernel
+
+/-- A single genuinely physical source whose unchanged actual Wilson
+receiver approximates D within epsilon(b) is itself a nonzero ORIGINAL
+GI source. No artificial linear combination or source-frame hypothesis. -/
+theorem p4Q2JT_actualPhysicalGI_nonzero_of_receiver_close
+    (b : ℝ) (hb : 0 < b)
+    (hwindow : b < p4Q2JP_originalWilsonTemporalDetectionRadius)
+    (right left : Cfg) (e : Link) (f : Phys)
+    (hClose :
+      ‖D - p4Q2JQ_originalPhysicalSourceLinkReceiver
+        H b hb.le f e (left, right)‖ <
+        p4Q2JT_physicalReceiverApproximationRadius b) :
+    p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap
+      H b hb.le f e (left, right) ≠ 0 := by
+  intro hZero
+  have hFar :=
+    p4Q2JT_actualPhysicalReceiver_distance_ge_of_GI_zero
+      H b hb hwindow right left e f hZero
+  exact (not_lt_of_ge hFar) hClose
+
+
 end Frozen
 end GroundStatePosteriorJoint
 end
@@ -256,3 +334,7 @@ end MGAP4D
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JT_physicalReceiverApproximationRadius_pos
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JT_originalPhysicalReceiverSpan_distance_ge
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JT_exists_nonzeroOriginalPhysicalGI_of_close_actualSpan
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JT_originalPosteriorTestKernel_distance_ge
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JT_actualPhysicalReceiver_distance_ge_of_GI_zero
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2JT_actualPhysicalGI_nonzero_of_receiver_close
