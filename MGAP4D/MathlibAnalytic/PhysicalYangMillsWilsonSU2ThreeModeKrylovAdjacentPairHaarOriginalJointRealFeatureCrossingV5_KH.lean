@@ -60,7 +60,7 @@ theorem p4Q2KH_originalSU2WilsonEnergy_eq_realFeatureInner
 left-boundary SU(2) link values and right insertions is literally
 a real Euclidean feature-difference inner product. -/
 theorem p4Q2KH_originalTemporalCrossingFourCorner_eq_realFeatureInner
-    (b : ℝ) (left₁ left₂ right : Cfg) (e : Link)
+    (b : ℝ) (left₁ left₂ : Cfg) (e : Link)
     (g h : Gauge) :
     -b *
       ((specialUnitaryWilsonPlaquetteEnergy 2 ((left₁ e)⁻¹ * g) -
@@ -91,7 +91,7 @@ theorem p4Q2KH_originalJointFourCorner_eq_realFeatureExponential
   rw [p4Q2KG_originalJointDensityFourCorner_eq_temporalExp H b hb
     left₁ left₂ right e g h]
   rw [p4Q2KH_originalTemporalCrossingFourCorner_eq_realFeatureInner
-    H b left₁ left₂ right e g h]
+    H b left₁ left₂ e g h]
 
 end Frozen
 end GroundStatePosteriorJoint
