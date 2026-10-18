@@ -106,10 +106,23 @@ private theorem p4Q2KC_positiveContinuousWeight_squaredEnergy_pos
 /-- Original Wilson one-slab K_b(A,B), continuous in the ACTUAL
 spatial SU(2) source configuration A for each fixed physical B. -/
 noncomputable def p4Q2KC_originalWilsonKernelColumn
-    (b : ℝ) (B : Cfg) : C(Cfg, ℝ) :=
-  ⟨fun A => K b A B,
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H 2 b).comp (continuous_id.prodMk continuous_const)⟩
+    (b : ℝ) (B : Cfg) : C(Cfg, ℝ) := by
+  let pair : Cfg → Cfg × Cfg := fun A => (A, B)
+  have hpair : Continuous pair :=
+    continuous_id.prodMk continuous_const
+  let kernel : Cfg × Cfg → ℝ :=
+    fun p => K b p.1 p.2
+  have hkernel : Continuous kernel :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+      H 2 b
+  exact ⟨kernel ∘ pair, hkernel.comp hpair⟩
+
+/-- Evaluation of the continuous ORIGINAL Wilson transfer column
+without unfolding the enormous dependent full lattice kernel. -/
+@[simp] theorem p4Q2KC_originalWilsonKernelColumn_apply
+    (b : ℝ) (B A : Cfg) :
+    p4Q2KC_originalWilsonKernelColumn H b B A = K b A B := by
+  rfl
 
 /-- NO assumption of monotonicity or nonzero GI signed detector:
 strict positive ORIGINAL frozen-Wilson-weighted spatial squared source
@@ -120,8 +133,10 @@ theorem p4Q2KC_originalSpatialWilsonKernelCenteredEnergy_pos
     0 < ∫ A : Cfg, K b A B * (W A - c) ^ 2 ∂haar := by
   let k : C(Cfg, ℝ) := p4Q2KC_originalWilsonKernelColumn H b B
   let f : C(Cfg, ℝ) := W - c • (1 : C(Cfg, ℝ))
-  have hK (A : Cfg) : 0 < k A :=
-    periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
+  have hK (A : Cfg) : 0 < k A := by
+    rw [show k A = K b A B from
+      p4Q2KC_originalWilsonKernelColumn_apply H b B A]
+    exact periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
       H 2 b A B
   obtain ⟨A₀, A₁, hW⟩ := p4Q2IY_originalSpatialWilsonAction_not_constant H
   have hA : ∃ A : Cfg, W A ≠ c := by
@@ -140,7 +155,7 @@ theorem p4Q2KC_originalSpatialWilsonKernelCenteredEnergy_pos
     exact sub_ne_zero.mpr hAw
   have hResult :=
     p4Q2KC_positiveContinuousWeight_squaredEnergy_pos haar k f hK hF
-  simpa only [k, f, p4Q2KC_originalWilsonKernelColumn,
+  simpa only [k, f, p4Q2KC_originalWilsonKernelColumn_apply,
     ContinuousMap.sub_apply, ContinuousMap.smul_apply,
     ContinuousMap.one_apply, smul_eq_mul, mul_one] using hResult
 
