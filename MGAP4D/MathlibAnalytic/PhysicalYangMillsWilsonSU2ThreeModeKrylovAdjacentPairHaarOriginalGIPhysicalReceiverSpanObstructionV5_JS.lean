@@ -223,7 +223,7 @@ theorem p4Q2JS_exists_nonzeroOriginalPhysicalGI_of_temporalWilson_mem_span
       p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap
         H b hb.le f e (left, right) ≠ 0 := by
   by_contra hn
-  push_neg at hn
+  push Not at hn
   exact
     (p4Q2JS_temporalWilson_not_mem_physicalReceiverSpan_of_allGI_zero
       H b hb hwindow right e hn) hRepresentable
