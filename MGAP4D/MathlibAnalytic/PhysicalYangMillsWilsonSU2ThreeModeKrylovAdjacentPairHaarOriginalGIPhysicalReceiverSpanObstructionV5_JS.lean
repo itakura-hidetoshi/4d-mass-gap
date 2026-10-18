@@ -129,9 +129,9 @@ theorem p4Q2JS_originalPosteriorTestLinearMap_one_eq_zero
     p4Q2JS_originalPosteriorTestLinearMap H b hb right e
         (1 : C(Gauge, ℝ)) = 0 := by
   rw [p4Q2JS_originalPosteriorTestLinearMap_eq_JP]
-  change (∫ g : Gauge,
-    p4Q2GB_originalWilsonPosteriorLeftDensityContrast H b hb right e g ∂nu) = 0
-  exact p4Q2JP_originalPosteriorContrast_HaarMean_zero H b hb right e
+  simpa only [p4Q2JP_originalWilsonTwoPosteriorTemporalTestGap,
+    ContinuousMap.one_apply, one_mul] using
+    (p4Q2JP_originalPosteriorContrast_HaarMean_zero H b hb right e)
 
 /-- The REAL physical receiver module at a fixed physical link and
 right spatial SU(2) configuration. Sources are ACTUAL Gauss-law Hilbert
