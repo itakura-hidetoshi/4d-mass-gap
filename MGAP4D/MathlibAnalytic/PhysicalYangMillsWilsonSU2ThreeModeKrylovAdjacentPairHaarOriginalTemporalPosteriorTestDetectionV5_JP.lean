@@ -101,10 +101,10 @@ theorem p4Q2JP_originalPosteriorContrast_HaarMean_zero
       (HasCompactSupport.of_compactSpace _)
   have hOnes := p4Q2JN2_bothOriginalPosteriorHaarIntegrals_one
     H b hb right e
+  have h0 : (∫ g : Gauge, P0 g ∂nu) = 1 := hOnes.1
+  have h1 : (∫ g : Gauge, P1 g ∂nu) = 1 := hOnes.2
   change (∫ g : Gauge, P0 g - P1 g ∂nu) = 0
-  rw [integral_sub hI0 hI1]
-  rw [hOnes.1, hOnes.2]
-  ring
+  rw [integral_sub hI0 hI1, h0, h1, sub_self]
 
 /-- Any continuous source can be shifted by a constant without changing
 its TRUE original Wilson two-posterior test gap; only genuine
@@ -123,6 +123,12 @@ theorem p4Q2JP_originalPosteriorTemporalTestGap_constant_invisible
     (F.continuous.mul P.continuous).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
   have hZero := p4Q2JP_originalPosteriorContrast_HaarMean_zero H b hb right e
+  unfold p4Q2JP_originalWilsonTwoPosteriorTemporalTestGap
+  have hEval (g : Gauge) :
+      (F - c • (1 : C(Gauge, ℝ))) g = F g - c := by
+    simp only [ContinuousMap.sub_apply, ContinuousMap.smul_apply,
+      ContinuousMap.one_apply, smul_eq_mul, mul_one]
+  simp_rw [hEval]
   change (∫ g : Gauge, (F g - c) * P g ∂nu) =
     ∫ g : Gauge, F g * P g ∂nu
   calc
