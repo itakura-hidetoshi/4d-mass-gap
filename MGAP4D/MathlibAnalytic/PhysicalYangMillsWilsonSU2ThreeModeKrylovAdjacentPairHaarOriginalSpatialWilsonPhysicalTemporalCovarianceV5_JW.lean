@@ -95,7 +95,7 @@ theorem p4Q2JW_originalPhysicalGI_zero_implies_centeredCovariance_le
   have hMult : b * |t| ≤ b * (‖Fc‖ * (C * b)) := by
     nlinarith [hScaled]
   have hCov : |t| ≤ ‖Fc‖ * (C * b) :=
-    (mul_le_mul_left hb).mp hMult
+    le_of_mul_le_mul_left hMult hb
   exact hCov
 
 /-- At an actual NONZERO original GI constant-unit anchor, the
