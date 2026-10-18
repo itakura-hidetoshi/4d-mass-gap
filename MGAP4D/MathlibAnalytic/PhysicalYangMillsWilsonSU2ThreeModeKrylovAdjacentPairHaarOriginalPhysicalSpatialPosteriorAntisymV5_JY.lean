@@ -102,9 +102,9 @@ theorem p4Q2JY_originalPosteriorTestGap_antisymmetric
     (F.continuous.comp continuous_fst).mul hMCont
   have hBCont : Continuous B :=
     (F.continuous.comp continuous_snd).mul hMCont
-  have hAI : Integrable A (nu.prod nu) :=
+  have hAI : Integrable A ((normalizedCompactHaar Gauge).prod (normalizedCompactHaar Gauge)) :=
     hACont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
-  have hBI : Integrable B (nu.prod nu) :=
+  have hBI : Integrable B ((normalizedCompactHaar Gauge).prod (normalizedCompactHaar Gauge)) :=
     hBCont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hSwap :
       (∫ g : Gauge, ∫ h : Gauge, B (g,h) ∂nu ∂nu) =
@@ -142,7 +142,6 @@ theorem p4Q2JY_originalPosteriorTestGap_antisymmetric
       (2 : ℝ) * (∫ g : Gauge, ∫ h : Gauge,
         A (g,h) ∂nu ∂nu) := by
           rw [p4Q2JX_originalPosteriorTestGap_eq_iteratedMinor]
-          rfl
     _ = (∫ g : Gauge, ∫ h : Gauge, A (g,h) ∂nu ∂nu) -
         (∫ g : Gauge, ∫ h : Gauge, B (g,h) ∂nu ∂nu) := by
           rw [hBIntegral]
