@@ -123,6 +123,7 @@ theorem p4Q2JP_originalPosteriorTemporalTestGap_constant_invisible
     (F.continuous.mul P.continuous).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
   have hZero := p4Q2JP_originalPosteriorContrast_HaarMean_zero H b hb right e
+  have hZeroP : (∫ g : Gauge, P g ∂nu) = 0 := hZero
   unfold p4Q2JP_originalWilsonTwoPosteriorTemporalTestGap
   have hEval (g : Gauge) :
       (F - c • (1 : C(Gauge, ℝ))) g = F g - c := by
@@ -144,7 +145,7 @@ theorem p4Q2JP_originalPosteriorTemporalTestGap_constant_invisible
       rw [integral_const_mul]
       change (∫ g : Gauge, F g * P g ∂nu) -
         c * (∫ g : Gauge, P g ∂nu) = _
-      rw [hZero, mul_zero, sub_zero]
+      rw [hZeroP, mul_zero, sub_zero]
 
 /-- The original SU(2) Wilson temporal crossing action D(g) is within
 [-2,2] pointwise because each genuine Wilson plaquette energy is in
