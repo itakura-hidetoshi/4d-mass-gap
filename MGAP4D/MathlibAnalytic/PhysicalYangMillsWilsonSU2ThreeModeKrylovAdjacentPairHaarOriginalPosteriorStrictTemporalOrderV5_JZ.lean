@@ -149,7 +149,7 @@ theorem p4Q2JZ_originalPosteriorTestGap_strictNegative_of_monotoneWitness
     exact mul_neg_of_neg_of_pos (sub_neg.mpr hF) hMinor
   have hDouble :=
     p4Q2JZ_integral_integral_strictNegative_of_pointwise
-      H Q hQCont hNonpos (g,h) hStrict
+      Q hQCont hNonpos (g,h) hStrict
   have hAntisym :=
     p4Q2JY_originalPosteriorTestGap_antisymmetric
       H b hb.le right e F
