@@ -88,9 +88,8 @@ theorem p4Q2LF_originalSpatialCrossingExponent_eq_fullFeatureInner
     classical
     simpa [periodicHypercubicEvenSpatialSliceLinkList] using
       (Finset.sum_toList
-        (s := (Finset.univ : Finset Link))
-        (f := fun e : Link =>
-          inner ℝ (Phi (A e)) (Phi (B e)))).symm
+        (Finset.univ : Finset Link)
+        (fun e : Link => inner ℝ (Phi (A e)) (Phi (B e)))).symm
   unfold p4Q2LE_originalSpatialCrossingFeatureExponent
   rw [hList, hSum,
     ← p4Q2LF_originalSpatialFeatureInner_eq_linkSum H A B]
@@ -128,8 +127,7 @@ noncomputable def p4Q2LF_originalSpatialMatrixCoordinateMonomial
       apply Finset.prod_congr rfl
       intro i hi
       rcases h : a i with ⟨e, q⟩
-      simpa [h] using
-        (p4Q2LD_originalSpatialMatrixRealFeature_apply H A e q).symm
+      simp [h]
 
 /-- Every full spatial matrix-coordinate monomial belongs to
 the proved DENSE actual spatial coordinate algebra from LD. -/
