@@ -84,12 +84,13 @@ TWO ACTUAL interacting Wilson conditional posterior density rows. -/
 noncomputable def p4Q2LS_originalPosteriorContrastEnvelope : ℝ :=
   Real.exp (16 * b) - Real.exp (-16 * b)
 
-theorem p4Q2LS_originalPosteriorContrastEnvelope_nonneg :
+theorem p4Q2LS_originalPosteriorContrastEnvelope_nonneg
+    (hpos : 0 ≤ b) :
     0 ≤ p4Q2LS_originalPosteriorContrastEnvelope b := by
   unfold p4Q2LS_originalPosteriorContrastEnvelope
   apply sub_nonneg.mpr
   apply Real.exp_le_exp.mpr
-  nlinarith [hb]
+  nlinarith [hpos]
 
 /-- Original finite-H kernel control: the complete original one-slab
 Wilson factor is at most ONE in absolute value, the actual inverse
@@ -106,7 +107,7 @@ theorem p4Q2LS_originalFiberKernel_norm_le_inverseDensity_mul_contrast
   let k : C(Gauge × Cfg, ℝ) := p4Q2JH_originalFiberKernel H b hb e z
   have hE : 0 ≤ E := p4Q2LS_originalPosteriorContrastEnvelope_nonneg b hb
   change ‖k‖ ≤ ‖w‖ * E
-  apply (ContinuousMap.norm_le (mul_nonneg (norm_nonneg w) hE)).2
+  apply (ContinuousMap.norm_le k (mul_nonneg (norm_nonneg w) hE)).2
   rintro ⟨g, A⟩
   have hK : |K A (Function.update z.2 e g)| ≤ 1 :=
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
@@ -139,7 +140,7 @@ theorem p4Q2LS_originalFiberRepresenter_norm_le_kernel
   let k : C(Gauge × Cfg, ℝ) := p4Q2JH_originalFiberKernel H b hb e z
   let r : C(Cfg, ℝ) := p4Q2JH_originalFiberRepresenter H b hb e z
   change ‖r‖ ≤ ‖k‖
-  apply (ContinuousMap.norm_le (norm_nonneg k)).2
+  apply (ContinuousMap.norm_le r (norm_nonneg k)).2
   intro A
   have hInt :
       ‖∫ g : Gauge, k (g,A) ∂nu‖ ≤
@@ -161,8 +162,9 @@ theorem p4Q2LS_originalFiberRepresenter_toLp_norm_le
       ‖p4Q2JH_originalFiberRepresenter H b hb e z‖ := by
   let r : C(Cfg, ℝ) := p4Q2JH_originalFiberRepresenter H b hb e z
   have hL : ‖L‖ ≤ 1 := by
-    simpa [measureUnivNNReal] using
-      (ContinuousMap.toLp_norm_le (p := (2 : ENNReal)) (𝕜 := ℝ) haar)
+    have h := ContinuousMap.toLp_norm_le
+      (α := Cfg) (E := ℝ) (p := (2 : ENNReal)) (𝕜 := ℝ) haar
+    simpa [measureUnivNNReal] using h
   calc
     ‖L r‖ ≤ ‖L‖ * ‖r‖ := L.le_opNorm _
     _ ≤ 1 * ‖r‖ := mul_le_mul_of_nonneg_right hL (norm_nonneg r)
@@ -183,6 +185,7 @@ theorem p4Q2LS_originalGIResponseCLM_norm_eq_Riesz
   change ‖(-‖T‖⁻¹ * s z) • (innerSL ℝ (L r))‖ = _
   rw [norm_smul, innerSL_apply_norm, Real.norm_eq_abs]
   simp only [abs_mul, abs_neg, abs_inv, abs_of_nonneg (norm_nonneg T)]
+  rfl
 
 /-- Authentic original Wilson two-posterior JH detector norm is bounded
 by transfer normalization, its true context joint half-density,
