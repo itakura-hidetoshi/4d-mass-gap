@@ -83,10 +83,16 @@ theorem p4Q2LF_originalSpatialCrossingExponent_eq_fullFeatureInner
         inner ℝ (Phi (A e)) (Phi (B e))).sum =
       ∑ e : Link, inner ℝ (Phi (A e)) (Phi (B e)) := by
     classical
-    simpa only [periodicHypercubicEvenSpatialSliceLinkList] using
-      (Finset.sum_map_toList
-        (s := (Finset.univ : Finset Link))
-        (f := fun e : Link => inner ℝ (Phi (A e)) (Phi (B e))))
+    -- The library link-list definition and the local ambient namespace can
+    -- select distinct Fintype enumerations. They define extensionally equal
+    -- universal Finsets but need not be definitionally identical.
+    simp only [periodicHypercubicEvenSpatialSliceLinkList,
+      Finset.sum_map_toList]
+    apply Finset.sum_congr
+    · ext e
+      simp
+    · intro e he
+      rfl
   unfold p4Q2LE_originalSpatialCrossingFeatureExponent
   rw [hList, hSum,
     ← p4Q2LF_originalSpatialFeatureInner_eq_linkSum H A B]
