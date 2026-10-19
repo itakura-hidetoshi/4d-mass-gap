@@ -71,8 +71,7 @@ theorem p4Q2LE_originalWilsonRelativeKernel_listProduct_eq_featureExp
       rw [p4Q2KV_originalWilsonRelativeKernel_eq_realFeatureExponential,
         p4Q2KR_originalSU2FeatureExponentialContinuous_apply, ih]
       rw [← Real.exp_add, ← Real.exp_add]
-      congr 1
-      ring
+      try ring
 
 /-- The ORIGINAL entire spatial-link Wilson crossing kernel is
 one concrete finite real-feature exponential, without changing
