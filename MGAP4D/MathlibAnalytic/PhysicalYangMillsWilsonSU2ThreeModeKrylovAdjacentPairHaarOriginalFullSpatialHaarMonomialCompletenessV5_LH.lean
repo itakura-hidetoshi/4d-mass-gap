@@ -65,6 +65,10 @@ local instance p4Q2LH_measurableSpace :
 local instance p4Q2LH_borelSpace :
     BorelSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupBorelSpace 2
+local instance p4Q2LH_SU2_normalizedHaarOpenPos :
+    (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ)).IsOpenPosMeasure := by
+  unfold normalizedCompactHaar
+  infer_instance
 local instance p4Q2LH_spatialHaarOpenPos (H : ℕ) :
     (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2).IsOpenPosMeasure := by
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
@@ -79,8 +83,14 @@ local notation "Coord" => ((Fin 2 × Fin 2) × Bool)
 local notation "ProductCoord" => (Link × Coord)
 local notation "haar" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
 local notation "Alg" => p4Q2LD_originalSpatialMatrixCoordinateAlgebra H
-local notation "Generator" => (fun p : ProductCoord =>
-  p4Q2LD_originalSpatialLinkRealCoordinate H p.1 p.2)
+/-- A typed actual full-spatial matrix-entry generator.
+Use a named definition rather than an ill-scoped syntax quotation
+with an unbound pair projection. -/
+noncomputable def p4Q2LH_originalSpatialCoordinateGenerator
+    (p : ProductCoord) : C(Cfg, ℝ) :=
+  p4Q2LD_originalSpatialLinkRealCoordinate H p.1 p.2
+
+local notation "Generator" => p4Q2LH_originalSpatialCoordinateGenerator H
 local notation "Mon" => p4Q2LF_originalSpatialMatrixCoordinateMonomial H
 local notation "Energy" => p4Q2LG_originalFullSpatialHomogeneousWilsonHaarEnergy H
 
