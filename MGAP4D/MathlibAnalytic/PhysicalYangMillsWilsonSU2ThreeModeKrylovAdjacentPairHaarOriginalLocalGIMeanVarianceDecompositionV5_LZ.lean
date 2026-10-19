@@ -159,10 +159,15 @@ theorem p4Q2LZ_originalCompensatedLocalGIVariance_pos_of_heterogeneous
     sq_pos_of_ne_zero (sub_ne_zero.mpr hdiff)
   have hsum : (d e e' z z' p - mean e e' z z')^2 ≤
       ∑ q : Plaq, (d e e' z z' q - mean e e' z z')^2 := by
-    apply Finset.single_le_sum
-    · intro q hq
-      exact sq_nonneg (d e e' z z' q - mean e e' z z')
-    · exact Finset.mem_univ p
+    have h : (d e e' z z' p - mean e e' z z')^2 ≤
+        ∑ q ∈ (Finset.univ : Finset Plaq),
+          (d e e' z z' q - mean e e' z z')^2 :=
+      Finset.single_le_sum
+        (s := (Finset.univ : Finset Plaq))
+        (f := fun q : Plaq => (d e e' z z' q - mean e e' z z')^2)
+        (fun q hq => sq_nonneg _)
+        (Finset.mem_univ p)
+    simpa only [Finset.sum_univ] using h
   change 0 < (∑ q : Plaq,
     (d e e' z z' q - mean e e' z z')^2) / n
   exact div_pos (lt_of_lt_of_le hp hsum) hcount
