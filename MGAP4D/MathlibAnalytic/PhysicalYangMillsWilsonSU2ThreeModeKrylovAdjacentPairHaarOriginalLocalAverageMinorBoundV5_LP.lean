@@ -82,7 +82,9 @@ private theorem p4Q2LP_exists_averaged_list_witness
       have hTriangle :=
         p4Q2LP_abs_list_sum_le_len_mul_of_bound f |f p|
           (a :: rest) hBound
-      have hn : 0 < ((a :: rest).length : ℝ) := by simp
+      have hn : 0 < ((a :: rest).length : ℝ) := by
+        simp only [List.length_cons, Nat.cast_add, Nat.cast_one]
+        positivity
       have hsumpos : 0 < |((a :: rest).map f).sum| :=
         abs_pos.mpr hsum
       have hpPos : 0 < |f p| := by
