@@ -83,7 +83,8 @@ noncomputable def p4Q2LB_originalPhysicalUnitSignedCompensatedRightSource
   have hExp :
       Continuous (fun g : Gauge =>
         Real.exp ((b / 4) * inner ℝ (Phi u₀) (Phi g))) := by
-    have hE :=
+    have hE : Continuous (fun g : Gauge =>
+        p4Q2KR_originalSU2FeatureExponentialContinuous (b / 4) (u₀, g)) :=
       (p4Q2KR_originalSU2FeatureExponentialContinuous (b / 4)).continuous.comp
         (continuous_const.prodMk continuous_id)
     simpa only [p4Q2KR_originalSU2FeatureExponentialContinuous_apply] using hE
@@ -212,7 +213,7 @@ theorem p4Q2LB_originalPhysicalUnitPosteriorTestGap_factorization
       _ = (C u / C u₀) *
           (E u g * ((N * M g * (C u₀ * A g)) * D g)) := by
         field_simp [hC₀]
-        ring
+        try ring
       _ = (C u / C u₀) *
           (E u g * ((F u₀ g *
             Real.exp ((b / 4) * inner ℝ (Phi u₀) (Phi g))) * D g)) := by
