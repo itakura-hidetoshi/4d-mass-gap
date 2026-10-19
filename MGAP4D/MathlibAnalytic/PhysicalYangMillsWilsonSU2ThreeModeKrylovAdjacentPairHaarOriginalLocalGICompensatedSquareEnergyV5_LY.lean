@@ -213,10 +213,10 @@ theorem p4Q2LY_originalSignedGlobalFloor_le_squareEnergyFloor
       _ = (Q e e' z z') * n^2 := by ring
   calc
     (D e e' z z')^2 / (n^2 * c) =
-        ((D e e' z z')^2 / n^2) / c := by rw [div_div_eq_div_mul]
+        ((D e e' z z')^2 / n^2) / c := by field_simp [ne_of_gt hcount, ne_of_gt hc]
     _ ≤ (Q e e' z z' / n) / c :=
       (div_le_div_iff_of_pos_right hc).2 hBase
-    _ = Q e e' z z' / (n * c) := by rw [div_div_eq_div_mul]
+    _ = Q e e' z z' / (n * c) := by field_simp [ne_of_gt hcount, ne_of_gt hc]
 
 /-- Finite-volume true Wilson local square-energy witness:
 at the LM/LP-established REAL interacting-posterior contexts, select
@@ -264,7 +264,7 @@ theorem p4Q2LY_originalPhysicalLocalGI_exists_squareEnergy_floor
     simpa [p4Q2LY_originalCompensatedLocalGISquareEnergy, hNCount]
       using hMaxBound
   have hMean : Q e e' z z' / n ≤ (d e e' z z' p)^2 :=
-    (div_le_iff₀ hn).2 hMaxBound'
+    (div_le_iff₀ hn).2 (by simpa only [mul_comm] using hMaxBound')
   have hSingle : (d e e' z z' p)^2 ≤ Q e e' z z' := by
     unfold p4Q2LY_originalCompensatedLocalGISquareEnergy
     exact Finset.single_le_sum (fun q hq => sq_nonneg _)
@@ -296,7 +296,7 @@ theorem p4Q2LY_originalPhysicalLocalGI_exists_squareEnergy_floor
       calc
         Q e e' z z' / (n * (10 * E^2)) =
             (Q e e' z z' / n) / (10 * E^2) := by
-              rw [div_div_eq_div_mul]
+              field_simp [ne_of_gt hn, ne_of_gt hc]
         _ ≤ (d e e' z z' p)^2 / (10 * E^2) :=
           (div_le_div_iff_of_pos_right hc).2 hMean
     exact hDiv.trans hFloorLocal
