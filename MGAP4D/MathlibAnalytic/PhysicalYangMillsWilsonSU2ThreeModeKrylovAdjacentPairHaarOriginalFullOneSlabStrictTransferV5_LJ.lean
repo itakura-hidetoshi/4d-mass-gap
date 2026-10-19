@@ -296,7 +296,7 @@ theorem p4Q2LJ_originalCenteredSpatialWilsonPhysicalTransfer_exists_nonzero
     intro hz
     apply hψLp
     rw [hz]
-    map_zero
+    simp
   have hLp :
       ((p4Q2JU_originalAnchorCenteredWilsonPhysicalSource
           H b hb.le e z : Phys) : Lp ℝ 2 haar) =
