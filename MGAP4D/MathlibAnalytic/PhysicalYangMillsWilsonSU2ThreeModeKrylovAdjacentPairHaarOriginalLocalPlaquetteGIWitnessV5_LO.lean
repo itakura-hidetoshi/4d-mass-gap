@@ -205,7 +205,7 @@ theorem p4Q2LO_originalLocalPlaquetteBounded_gaugeInvariant
     specialUnitaryWilsonPlaquetteEnergy 2
       (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A p)
   rw [periodicHypercubicEvenSpatialSlicePlaquetteHolonomy_gaugeTransform]
-  exact specialUnitaryWilsonPlaquetteEnergy_conjInvariant 2
+  exact specialUnitaryWilsonPlaquetteEnergy_conjInvariant
     (γ p.1) (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A p)
 
 /-- Multiply the true physical Gauss-law constant unit by the real
