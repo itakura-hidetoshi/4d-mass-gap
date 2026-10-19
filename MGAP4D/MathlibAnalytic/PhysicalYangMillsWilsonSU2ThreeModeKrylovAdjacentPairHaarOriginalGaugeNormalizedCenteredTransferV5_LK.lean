@@ -112,7 +112,7 @@ theorem p4Q2LK_originalSpatialRightLinkGaugeNormalizer_apply
   have hTarget : gamma
       (periodicHypercubicEvenSpatialSliceShift H e.1 e.2) = 1 := by
     simp [gamma, p4Q2LK_originalSpatialRightLinkGaugeNormalizer,
-      (p4Q2LK_originalSpatialLink_target_ne_source H e).symm]
+      p4Q2LK_originalSpatialLink_target_ne_source H e]
   change gamma e.1 * B e *
     (gamma (periodicHypercubicEvenSpatialSliceShift H e.1 e.2))⁻¹ = 1
   rw [hSource, hTarget]
