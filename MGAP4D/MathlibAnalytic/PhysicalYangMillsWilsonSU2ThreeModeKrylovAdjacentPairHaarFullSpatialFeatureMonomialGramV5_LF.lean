@@ -43,7 +43,6 @@ local notation "Coord" => ((Fin 2 × Fin 2) × Bool)
 local notation "ProductCoord" => (Link × Coord)
 local notation "FullPhi" => p4Q2LD_originalSpatialMatrixRealFeature H
 local notation "Phi" => specialUnitaryMatrixRealFeature 2
-local notation "Mon" => p4Q2LF_originalSpatialMatrixCoordinateMonomial
 
 local instance p4Q2LF_linkFintype : Fintype Link :=
   Fintype.ofFinite _
@@ -61,13 +60,13 @@ theorem p4Q2LF_originalSpatialFeatureInner_eq_linkSum
   intro e he
   rw [PiLp.inner_apply]
 
-/-- The LE link-list exponent now equals a SINGLE Euclidean feature
-pairing, up to the exact original -beta times the number of actual
-spatial links. No artificial rescaling is used. -/
+/-- The LE link-list exponent equals a SINGLE Euclidean feature
+pairing, retaining the exact length of the ORIGINAL canonical
+spatial-link list. This is the actual finite number of links. -/
 theorem p4Q2LF_originalSpatialCrossingExponent_eq_fullFeatureInner
     (b : ℝ) (A B : Cfg) :
     p4Q2LE_originalSpatialCrossingFeatureExponent H b A B =
-      -(b * (Fintype.card Link : ℝ)) +
+      -b * ((periodicHypercubicEvenSpatialSliceLinkList H).length : ℝ) +
         (b / 2) * inner ℝ (FullPhi A) (FullPhi B) := by
   have hList (es : List Link) :
       (es.map fun e =>
@@ -82,21 +81,19 @@ theorem p4Q2LF_originalSpatialCrossingExponent_eq_fullFeatureInner
         rw [ih]
         push_cast
         ring
-  have hLength :
-      ((periodicHypercubicEvenSpatialSliceLinkList H).length : ℝ) =
-        (Fintype.card Link : ℝ) := by
-    classical
-    simp [periodicHypercubicEvenSpatialSliceLinkList]
   have hSum :
       ((periodicHypercubicEvenSpatialSliceLinkList H).map fun e =>
         inner ℝ (Phi (A e)) (Phi (B e))).sum =
       ∑ e : Link, inner ℝ (Phi (A e)) (Phi (B e)) := by
     classical
-    simp [periodicHypercubicEvenSpatialSliceLinkList]
+    simpa [periodicHypercubicEvenSpatialSliceLinkList] using
+      (Finset.sum_toList
+        (s := (Finset.univ : Finset Link))
+        (f := fun e : Link =>
+          inner ℝ (Phi (A e)) (Phi (B e)))).symm
   unfold p4Q2LE_originalSpatialCrossingFeatureExponent
-  rw [hList, hLength, hSum,
+  rw [hList, hSum,
     ← p4Q2LF_originalSpatialFeatureInner_eq_linkSum H A B]
-  try ring
 
 /-- Literal original full temporal crossing Wilson kernel is the
 one exponential of the complete spatial Hilbert-Schmidt pairing. -/
@@ -104,7 +101,8 @@ theorem p4Q2LF_originalSpatialWilsonCrossing_eq_fullFeatureExponential
     (b : ℝ) (A B : Cfg) :
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
       H 2 b A B =
-      Real.exp (-(b * (Fintype.card Link : ℝ)) +
+      Real.exp (-b *
+        ((periodicHypercubicEvenSpatialSliceLinkList H).length : ℝ) +
         (b / 2) * inner ℝ (FullPhi A) (FullPhi B)) := by
   rw [p4Q2LE_originalSpatialWilsonCrossing_eq_featureExponential,
     p4Q2LF_originalSpatialCrossingExponent_eq_fullFeatureInner]
@@ -121,8 +119,17 @@ noncomputable def p4Q2LF_originalSpatialMatrixCoordinateMonomial
     (n : ℕ) (a : Fin n → ProductCoord) (A : Cfg) :
     p4Q2LF_originalSpatialMatrixCoordinateMonomial H n a A =
       ∏ i : Fin n, FullPhi A (a i) := by
-  simp [p4Q2LF_originalSpatialMatrixCoordinateMonomial,
-    p4Q2LD_originalSpatialMatrixRealFeature_apply]
+  classical
+  calc
+    p4Q2LF_originalSpatialMatrixCoordinateMonomial H n a A =
+        ∏ i : Fin n, Phi (A (a i).1) (a i).2 := by
+      simp [p4Q2LF_originalSpatialMatrixCoordinateMonomial]
+    _ = ∏ i : Fin n, FullPhi A (a i) := by
+      apply Finset.prod_congr rfl
+      intro i hi
+      rcases h : a i with ⟨e, q⟩
+      simpa [h] using
+        (p4Q2LD_originalSpatialMatrixRealFeature_apply H A e q).symm
 
 /-- Every full spatial matrix-coordinate monomial belongs to
 the proved DENSE actual spatial coordinate algebra from LD. -/
