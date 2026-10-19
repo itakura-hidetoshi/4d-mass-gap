@@ -159,8 +159,10 @@ theorem p4Q2LZ_originalCompensatedLocalGIVariance_pos_of_heterogeneous
     sq_pos_of_ne_zero (sub_ne_zero.mpr hdiff)
   have hsum : (d e e' z z' p - mean e e' z z')^2 ≤
       ∑ q : Plaq, (d e e' z z' q - mean e e' z z')^2 := by
-    exact Finset.single_le_sum (fun q hq => sq_nonneg _)
-      (Finset.mem_univ p)
+    apply Finset.single_le_sum
+    · intro q hq
+      exact sq_nonneg (d e e' z z' q - mean e e' z z')
+    · exact Finset.mem_univ p
   change 0 < (∑ q : Plaq,
     (d e e' z z' q - mean e e' z z')^2) / n
   exact div_pos (lt_of_lt_of_le hp hsum) hcount
@@ -181,10 +183,11 @@ theorem p4Q2LZ_originalCompensatedLocalSquareEnergy_eq_meanSq_add_variance
   have hFinite :=
     p4Q2LZ_finite_mean_variance_identity
       (fun p : Plaq => d e e' z z' p) hnCard
-  rw [p4Q2LY_originalCompensatedGlobalMinor_eq_sum_local] at *
   simpa [p4Q2LY_originalCompensatedLocalGISquareEnergy,
     p4Q2LZ_originalCompensatedLocalGIMean,
-    p4Q2LZ_originalCompensatedLocalGIVariance, hCard] using hFinite
+    p4Q2LZ_originalCompensatedLocalGIVariance,
+    p4Q2LY_originalCompensatedGlobalMinor_eq_sum_local,
+    hCard] using hFinite
 
 /-- The LY cancellation-free square-energy bound is *strictly*
 larger than the signed-global minor-mean square whenever genuine
