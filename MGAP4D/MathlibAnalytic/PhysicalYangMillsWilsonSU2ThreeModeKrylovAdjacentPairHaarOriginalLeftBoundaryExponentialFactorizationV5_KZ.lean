@@ -67,7 +67,7 @@ theorem p4Q2KZ_originalLeftInverseHalfDensityCross
   let d : ℝ := (b / 4) * inner ℝ (Phi u - Phi (left₀ e)) (Phi g - Phi h)
   have hCross : x * c = Real.exp d * (a * y) := by
     dsimp [x, c, a, y, d, leftU]
-    simpa only [Function.update_same] using
+    simpa using
       (p4Q2KY_originalJointHalfDensityFourCorner_eq_realFeatureExponential
         H b hb (Function.update left₀ e u) left₀ right e g h)
   have hx : x ≠ 0 :=
@@ -79,6 +79,11 @@ theorem p4Q2KZ_originalLeftInverseHalfDensityCross
   have ha : a ≠ 0 :=
     (continuousJointSqrtDensity_pos H 2 (by norm_num) b hb
       (leftU, Function.update right e h)).ne'
+  have hNeg : -(b / 4) *
+        inner ℝ (Phi u - Phi (left₀ e)) (Phi g - Phi h) = -d := by
+    dsimp [d]
+    ring
+  rw [hNeg]
   change x⁻¹ = (c / a) * Real.exp (-d) * y⁻¹
   rw [Real.exp_neg]
   field_simp [hx, hy, ha, (Real.exp_pos d).ne']
@@ -175,7 +180,7 @@ theorem p4Q2KZ_originalPhysicalUnitReceiver_leftBoundary_factorization
   rw [div_eq_mul_inv,
     p4Q2KZ_originalLeftBoundaryInverseHalfDensity_factorization
       H b hb left₀ right e h u g]
-  ring
+  try ring
 
 end Frozen
 end GroundStatePosteriorJoint
