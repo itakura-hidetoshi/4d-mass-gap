@@ -251,7 +251,7 @@ theorem p4Q2LN_originalPhysicalTwoSourceGI_explicit_coercive
     change ((a * d - q * c)^2 / (a^2 + q^2 + c^2 + d^2)) *
       (x^2 + y^2) ≤
         (x * a + y * q)^2 + (x * c + y * d)^2
-    convert h.2 x y using 1 <;> ring
+    convert h.2 x y using 1; ring
 
 /-- LM makes quantitative finite-volume GI detector nondegeneracy
 unconditional at every positive original Wilson coupling and all actual
