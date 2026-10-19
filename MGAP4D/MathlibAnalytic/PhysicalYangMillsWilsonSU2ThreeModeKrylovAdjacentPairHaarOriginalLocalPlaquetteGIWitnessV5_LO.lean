@@ -81,12 +81,12 @@ noncomputable def p4Q2LO_originalLocalPlaquetteContinuous (p : Plaq) : C(Cfg, �
 of THESE genuine local plaquette continuous functions. -/
 theorem p4Q2LO_originalSpatialWilsonContinuous_eq_localSum :
     p4Q2JI_actualSpatialWilsonContinuous H =
-      ((ps.map fun p => p4Q2LO_originalLocalPlaquetteContinuous H p).sum) := by
+      (((periodicHypercubicEvenSpatialSlicePlaquetteList H).map fun p => p4Q2LO_originalLocalPlaquetteContinuous H p).sum) := by
   ext A
   change
-    ((ps.map fun p => specialUnitaryWilsonPlaquetteEnergy 2
+    (((periodicHypercubicEvenSpatialSlicePlaquetteList H).map fun p => specialUnitaryWilsonPlaquetteEnergy 2
       (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A p)).sum) =
-    ((ps.map fun p => p4Q2LO_originalLocalPlaquetteContinuous H p).sum) A
+    (((periodicHypercubicEvenSpatialSlicePlaquetteList H).map fun p => p4Q2LO_originalLocalPlaquetteContinuous H p).sum) A
   generalize hps : ps = xs
   induction xs with
   | nil => simp
@@ -138,12 +138,12 @@ sum over EVERY actual single-plaquette GI minor. -/
 theorem p4Q2LO_originalSpatialGIMinor_eq_sum_local
     (b : ℝ) (hb : 0 ≤ b) (e e' : Link) (z z' : Cfg × Cfg) :
     p4Q2JI_originalGISpatialActionMinor H b hb e e' z z' =
-      (ps.map fun p =>
+      ((periodicHypercubicEvenSpatialSlicePlaquetteList H).map fun p =>
         p4Q2LO_originalLocalPlaquetteGIMinor H b hb e e' z z' p).sum := by
   unfold p4Q2JI_originalGISpatialActionMinor
   rw [p4Q2LO_originalSpatialWilsonContinuous_eq_localSum H]
   rw [p4Q2LO_minor_map_list_sum H b hb e e' z z'
-    (ps.map fun p => p4Q2LO_originalLocalPlaquetteContinuous H p)]
+    ((periodicHypercubicEvenSpatialSlicePlaquetteList H).map fun p => p4Q2LO_originalLocalPlaquetteContinuous H p)]
   simp only [List.map_map]
   rfl
 
@@ -174,7 +174,7 @@ theorem p4Q2LO_originalLocalPlaquetteGIMinor_exists_nonzero
   obtain ⟨z, z', hminor⟩ :=
     p4Q2LM_originalSpatialWilsonGIMinor_exists_nonzero_contexts
       H b hb e e' left₀ right₀
-  have hsum : (ps.map fun p =>
+  have hsum : ((periodicHypercubicEvenSpatialSlicePlaquetteList H).map fun p =>
         p4Q2LO_originalLocalPlaquetteGIMinor H b hb.le e e' z z' p).sum ≠ 0 := by
     rw [← p4Q2LO_originalSpatialGIMinor_eq_sum_local H b hb.le e e' z z']
     exact hminor
@@ -247,8 +247,6 @@ theorem p4Q2LO_originalLocalPlaquettePhysicalSource_coe_eq_toLp
       p4Q2LO_originalLocalPlaquetteContinuous H p := by
     filter_upwards [hMul, hU] with A hm hu
     rw [hm, hu]
-    change p4Q2LO_originalLocalPlaquetteBounded H p A * 1 =
-      p4Q2LO_originalLocalPlaquetteContinuous H p A
     rw [mul_one, p4Q2LO_originalLocalPlaquetteBounded_apply]
   exact hRep.trans
     ((p4Q2LO_originalLocalPlaquetteContinuous H p).coeFn_toLp
