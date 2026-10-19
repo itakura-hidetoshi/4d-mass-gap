@@ -320,7 +320,7 @@ theorem p4Q2LW_originalCompensatedLocalGI_ge_compensatedGlobal_floor
   let κ : ℝ := p4Q2LO_originalLocalGIQuantitativeCoefficient
     H b hb e e' z z' p
   have ht := p4Q2LW_originalPhysicalTransferNorm_pos H b hb
-  have hE := p4Q2LW_originalHarnackContrastScale_pos H b hb hpos
+  have hE := p4Q2LW_originalHarnackContrastScale_pos b hpos
   have hLV := p4Q2LV_originalLocalGI_coercivity_ge_global_uniformContext_floor
     H b hb e e' z z' p hminor hcount hAvg
   change total^2 / (count^2 * (10 * (tN⁻¹ * E)^2)) ≤ κ at hLV
