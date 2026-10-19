@@ -353,6 +353,12 @@ theorem p4Q2LI_originalSpatialWilsonCrossingHaarDoubleIntegral_pos
     p4Q2LI_originalSpatialWilsonCrossingHaarQuadratic_pos H ψ hψ b hb
   rw [p4Q2LI_originalFullSpatialPairHaarMomentCLM_apply] at hPos
   rw [integral_prod _ hInt] at hPos
+  -- Unfold the local alias explicitly: simp only does not delta-reduce
+  -- the named F while rewriting the original Wilson kernel integrand.
+  change
+    0 < (∫ A : Cfg, ∫ B : Cfg,
+      p4Q2LI_originalSpatialWilsonCrossingContinuous H b (A,B) *
+        (ψ A * ψ B) ∂haar ∂haar) at hPos
   simpa only [p4Q2LI_originalSpatialWilsonCrossingContinuous_apply] using hPos
 
 end Spatial
