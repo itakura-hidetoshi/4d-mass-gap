@@ -91,15 +91,16 @@ noncomputable def p4Q2LW_originalHarnackContrastScale (b : ℝ) : ℝ :=
 
 local notation "E" => p4Q2LW_originalHarnackContrastScale b
 
-theorem p4Q2LW_originalHarnackContrastScale_nonneg :
+theorem p4Q2LW_originalHarnackContrastScale_nonneg
+    (hpos : 0 ≤ b) :
     0 ≤ E := by
   exact mul_nonneg (Real.exp_pos _).le
-    (p4Q2LS_originalPosteriorContrastEnvelope_nonneg b hb)
+    (p4Q2LS_originalPosteriorContrastEnvelope_nonneg b hpos)
 
 theorem p4Q2LW_originalHarnackContrastScale_pos
     (hpos : 0 < b) :
     0 < E := by
-  have hlt : -(16 * b) < 16 * b := by nlinarith
+  have hlt : -16 * b < 16 * b := by nlinarith
   have he : Real.exp (-16 * b) < Real.exp (16 * b) :=
     Real.exp_lt_exp.mpr hlt
   unfold p4Q2LW_originalHarnackContrastScale
@@ -127,7 +128,6 @@ theorem p4Q2LW_originalCompensatedGI_eq_originalRiesz
   ext f
   change tN * ((-tN⁻¹ * s z) * M f) = (-(s z)) * M f
   field_simp [ht]
-  <;> ring
 
 /-- The exact compensated REAL JH bounded-functional operator norm
 has no remaining transfer or true-half-density factor. -/
@@ -226,7 +226,7 @@ theorem p4Q2LW_originalCompensatedLocalGIFrobeniusSq_le_ten_contrastSq
     tN^2 * p4Q2LO_originalLocalGIFrobeniusSq H b hb e e' z z' p ≤
       tN^2 * (10 * (tN⁻¹ * E)^2) :=
         mul_le_mul_of_nonneg_left hF (sq_nonneg tN)
-    _ = 10 * E^2 := by field_simp [ne_of_gt ht]; ring
+    _ = 10 * E^2 := by field_simp [ne_of_gt ht]
 
 /-- Ratio of the EXACT same genuine compensated minor and Frobenius
 sum, which only changes the output units of the original GI response. -/
@@ -256,7 +256,6 @@ theorem p4Q2LW_originalCompensatedLocalGICoefficient_eq_sq_mul_original
   let fr := p4Q2LO_originalLocalGIFrobeniusSq H b hb e e' z z' p
   change (tN^2 * det)^2 / (tN^2 * fr) = tN^2 * (det^2 / fr)
   field_simp [ne_of_gt ht, ne_of_gt hF]
-  <;> ring
 
 /-- The ORIGINAL two interacting Wilson expectation-gap responses on
 the SAME Gauss-law physical plane remain exactly coercive under the
@@ -328,7 +327,6 @@ theorem p4Q2LW_originalCompensatedLocalGI_ge_compensatedGlobal_floor
       (tN^2 * total)^2 / (count^2 * (10 * E^2)) =
         tN^2 * (total^2 / (count^2 * (10 * (tN⁻¹ * E)^2))) := by
     field_simp [ne_of_gt ht, ne_of_gt hcount, ne_of_gt hE]
-    <;> ring
   rw [p4Q2LW_originalCompensatedSpatialGIMinor_eq_sq_mul_original,
       p4Q2LW_originalCompensatedLocalGICoefficient_eq_sq_mul_original
         H b hb e e' z z' p hminor]
