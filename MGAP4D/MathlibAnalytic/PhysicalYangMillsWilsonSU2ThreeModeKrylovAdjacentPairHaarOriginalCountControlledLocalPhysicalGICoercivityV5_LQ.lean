@@ -42,17 +42,17 @@ namespace GroundStatePosteriorJoint
 /-- The geometric average minor lower bound squares and passes through
 the TRUE positive Frobenius denominator, without any rank assumption. -/
 private theorem p4Q2LQ_squared_average_over_frobenius
-    (total local count frob : ℝ)
+    (total minor count frob : ℝ)
     (hcount : 0 < count) (hfrob : 0 < frob)
-    (hAvg : |total| / count ≤ |local|) :
-    total^2 / (count^2 * frob) ≤ local^2 / frob := by
+    (hAvg : |total| / count ≤ |minor|) :
+    total^2 / (count^2 * frob) ≤ minor^2 / frob := by
   have hnonneg : 0 ≤ |total| / count :=
     div_nonneg (abs_nonneg _) hcount.le
-  have hsq : (|total| / count)^2 ≤ |local|^2 := by
+  have hsq : (|total| / count)^2 ≤ |minor|^2 := by
     nlinarith [mul_nonneg
       (sub_nonneg.mpr hAvg)
-      (add_nonneg (abs_nonneg local) hnonneg)]
-  have hsq' : (|total| / count)^2 ≤ local^2 := by
+      (add_nonneg (abs_nonneg minor) hnonneg)]
+  have hsq' : (|total| / count)^2 ≤ minor^2 := by
     simpa only [sq_abs] using hsq
   have hEq : (|total| / count)^2 / frob =
       total^2 / (count^2 * frob) := by
@@ -60,7 +60,7 @@ private theorem p4Q2LQ_squared_average_over_frobenius
   calc
     total^2 / (count^2 * frob) =
         (|total| / count)^2 / frob := hEq.symm
-    _ ≤ local^2 / frob :=
+    _ ≤ minor^2 / frob :=
         (div_le_div_iff_of_pos_right hfrob).2 hsq'
 
 end GroundStatePosteriorJoint
@@ -93,8 +93,8 @@ cardinality of the same genuine modern spatial plaquette carrier. -/
 theorem p4Q2LQ_originalSpatialPlaquetteCount_eq_card :
     p4Q2LP_originalSpatialPlaquetteCount H = Fintype.card Plaq := by
   classical
-  simp [p4Q2LP_originalSpatialPlaquetteCount,
-    periodicHypercubicEvenSpatialSlicePlaquetteList]
+  change (Finset.univ.toList : List Plaq).length = Fintype.card Plaq
+  simp only [Finset.length_toList, Finset.card_univ]
 
 /-- Explicit physical local GI Frobenius denominator positivity:
 the authentic nonzero GI minor and LO coercivity force its four
