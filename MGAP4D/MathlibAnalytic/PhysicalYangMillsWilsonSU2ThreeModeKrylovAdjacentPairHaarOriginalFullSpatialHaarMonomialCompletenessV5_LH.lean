@@ -185,7 +185,9 @@ theorem p4Q2LH_originalSpatialCoordinateSubmonoid_generated_by_monomials
       obtain ⟨p, rfl⟩ := hf
       refine ⟨1, (fun _ : Fin 1 => p), ?_⟩
       ext A
-      simp [p4Q2LF_originalSpatialMatrixCoordinateMonomial]
+      simp [p4Q2LH_originalSpatialCoordinateGenerator,
+        p4Q2LF_originalSpatialMatrixCoordinateMonomial,
+        p4Q2LD_originalSpatialLinkRealCoordinate_apply]
   | one =>
       refine ⟨0, Fin.elim0, ?_⟩
       simp [p4Q2LF_originalSpatialMatrixCoordinateMonomial]
