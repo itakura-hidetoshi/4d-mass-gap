@@ -66,6 +66,7 @@ section SU2
 local notation "Gauge" => Matrix.specialUnitaryGroup (Fin 2) ℂ
 local notation "Phi" => specialUnitaryMatrixRealFeature 2
 local notation "nu" => normalizedCompactHaar Gauge
+local notation "nuPair" => (normalizedCompactHaar Gauge).prod (normalizedCompactHaar Gauge)
 local notation "E" => p4Q2KR_originalSU2RealFeatureInnerContinuous
 local notation "Energy" => p4Q2KP_originalSU2HomogeneousWilsonHaarEnergy
 local notation "Exp" => p4Q2KR_originalSU2FeatureExponentialContinuous
@@ -84,9 +85,9 @@ product of the SAME normalized SU(2) Haar measures that occur
 in the original interacting Wilson conditional posterior densities. -/
 noncomputable def p4Q2KU_originalSU2PairHaarMomentCLM
     (ψ : C(Gauge, ℝ)) : C(Gauge × Gauge, ℝ) →L[ℝ] ℝ :=
-  (innerSL ℝ (ContinuousMap.toLp 2 (nu.prod nu) ℝ
+  (innerSL ℝ (ContinuousMap.toLp 2 nuPair ℝ
     (p4Q2KU_originalSU2PairSourceContinuous ψ))).comp
-      (ContinuousMap.toLp 2 (nu.prod nu) ℝ)
+      (ContinuousMap.toLp 2 nuPair ℝ)
 
 /-- Exact product-Haar integral formula for the bounded functional.
 No conditional posterior measure is replaced: this is only the
@@ -94,14 +95,14 @@ underlying SU(2) Haar reference for the original Wilson fiber. -/
 theorem p4Q2KU_originalSU2PairHaarMomentCLM_apply
     (ψ : C(Gauge, ℝ)) (F : C(Gauge × Gauge, ℝ)) :
     p4Q2KU_originalSU2PairHaarMomentCLM ψ F =
-      ∫ p : Gauge × Gauge, F p * (ψ p.1 * ψ p.2) ∂(nu.prod nu) := by
+      ∫ p : Gauge × Gauge, F p * (ψ p.1 * ψ p.2) ∂nuPair := by
   change
     inner ℝ
-      (ContinuousMap.toLp 2 (nu.prod nu) ℝ
+      (ContinuousMap.toLp 2 nuPair ℝ
         (p4Q2KU_originalSU2PairSourceContinuous ψ))
-      (ContinuousMap.toLp 2 (nu.prod nu) ℝ F) = _
+      (ContinuousMap.toLp 2 nuPair ℝ F) = _
   simpa only [p4Q2KU_originalSU2PairSourceContinuous] using
-    (ContinuousMap.inner_toLp (nu.prod nu)
+    (ContinuousMap.inner_toLp nuPair
       (p4Q2KU_originalSU2PairSourceContinuous ψ) F)
 
 /-- For every homogeneous degree, the pair-Haar bounded functional
@@ -120,15 +121,15 @@ theorem p4Q2KU_originalSU2PairHaarMomentCLM_homogeneous
         (ψ.continuous.comp continuous_snd))
   have hInt :
       Integrable (fun p : Gauge × Gauge =>
-        F p * (ψ p.1 * ψ p.2)) (nu.prod nu) :=
+        F p * (ψ p.1 * ψ p.2)) nuPair :=
     hCont.integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
   rw [p4Q2KU_originalSU2PairHaarMomentCLM_apply]
   change (∫ p : Gauge × Gauge,
-    F p * (ψ p.1 * ψ p.2) ∂(nu.prod nu)) = Energy ψ n
+    F p * (ψ p.1 * ψ p.2) ∂nuPair) = Energy ψ n
   calc
     (∫ p : Gauge × Gauge,
-        F p * (ψ p.1 * ψ p.2) ∂(nu.prod nu)) =
+        F p * (ψ p.1 * ψ p.2) ∂nuPair) =
       ∫ g : Gauge, ∫ h : Gauge,
         F (g,h) * (ψ g * ψ h) ∂nu ∂nu :=
       integral_prod _ hInt
