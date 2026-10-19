@@ -96,7 +96,7 @@ theorem p4Q2LC_originalPhysicalSourceReceiver_leftBoundary_factorization
   rw [div_eq_mul_inv,
     p4Q2KZ_originalLeftBoundaryInverseHalfDensity_factorization
       H b hb left₀ right e h u g]
-  ring
+  try ring
 
 /-- Real continuous source derived from the ACTUAL JQ physical receiver
 for f at a fixed genuine reference left link u0 and the true
