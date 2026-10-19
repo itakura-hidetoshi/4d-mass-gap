@@ -165,7 +165,7 @@ theorem p4Q2LS_originalFiberRepresenter_toLp_norm_le
   have hL : ‖LL‖ ≤ 1 := by
     have h := ContinuousMap.toLp_norm_le
       (α := Cfg) (E := ℝ) (p := (2 : ENNReal)) (𝕜 := ℝ) haar
-    simpa only [LL, measureUnivNNReal, measure_univ, one_rpow] using h
+    simpa [LL, measureUnivNNReal] using h
   change ‖LL r‖ ≤ ‖r‖
   calc
     ‖LL r‖ ≤ ‖LL‖ * ‖r‖ := LL.le_opNorm _
