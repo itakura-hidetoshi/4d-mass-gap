@@ -66,7 +66,7 @@ section SU2
 local notation "Gauge" => Matrix.specialUnitaryGroup (Fin 2) ℂ
 local notation "Phi" => specialUnitaryMatrixRealFeature 2
 local notation "nu" => normalizedCompactHaar Gauge
-local notation "nuPair" => (normalizedCompactHaar Gauge).prod (normalizedCompactHaar Gauge)
+local notation "nuPair" => Measure.prod (normalizedCompactHaar Gauge) (normalizedCompactHaar Gauge)
 local notation "E" => p4Q2KR_originalSU2RealFeatureInnerContinuous
 local notation "Energy" => p4Q2KP_originalSU2HomogeneousWilsonHaarEnergy
 local notation "Exp" => p4Q2KR_originalSU2FeatureExponentialContinuous
