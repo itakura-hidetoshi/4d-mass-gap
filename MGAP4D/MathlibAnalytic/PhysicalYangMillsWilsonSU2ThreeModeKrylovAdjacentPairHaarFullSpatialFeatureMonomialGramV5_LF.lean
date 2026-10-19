@@ -44,9 +44,6 @@ local notation "ProductCoord" => (Link × Coord)
 local notation "FullPhi" => p4Q2LD_originalSpatialMatrixRealFeature H
 local notation "Phi" => specialUnitaryMatrixRealFeature 2
 
-local instance p4Q2LF_linkFintype : Fintype Link :=
-  Fintype.ofFinite _
-
 /-- The full ORIGINAL finite-volume real Hilbert-Schmidt spatial
 feature inner product is exactly the sum of original single-link
 SU(2) real feature inner products. -/
