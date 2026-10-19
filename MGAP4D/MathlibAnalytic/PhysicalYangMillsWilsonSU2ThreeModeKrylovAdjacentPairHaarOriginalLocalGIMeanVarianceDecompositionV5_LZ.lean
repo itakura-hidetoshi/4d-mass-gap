@@ -167,7 +167,9 @@ theorem p4Q2LZ_originalCompensatedLocalGIVariance_pos_of_heterogeneous
         (f := fun q : Plaq => (d e e' z z' q - mean e e' z z')^2)
         (fun q hq => sq_nonneg _)
         (Finset.mem_univ p)
-    simpa only [Finset.sum_univ] using h
+    -- Both sum binders elaborate to Finset.sum Finset.univ;
+    -- there is no separate Finset.sum_univ rewrite lemma.
+    exact h
   change 0 < (∑ q : Plaq,
     (d e e' z z' q - mean e e' z z')^2) / n
   exact div_pos (lt_of_lt_of_le hp hsum) hcount
