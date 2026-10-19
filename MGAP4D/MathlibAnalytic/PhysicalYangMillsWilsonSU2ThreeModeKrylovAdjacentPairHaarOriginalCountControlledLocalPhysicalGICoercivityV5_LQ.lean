@@ -58,7 +58,6 @@ private theorem p4Q2LQ_squared_average_over_frobenius
       total^2 / (count^2 * frob) := by
     rw [div_pow, sq_abs]
     field_simp [ne_of_gt hcount, ne_of_gt hfrob]
-    <;> ring
   calc
     total^2 / (count^2 * frob) =
         (|total| / count)^2 / frob := hEq.symm
