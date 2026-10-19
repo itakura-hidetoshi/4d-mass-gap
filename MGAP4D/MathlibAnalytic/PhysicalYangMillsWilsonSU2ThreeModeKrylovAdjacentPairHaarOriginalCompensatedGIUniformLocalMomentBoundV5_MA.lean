@@ -100,8 +100,8 @@ theorem p4Q2MA_originalCompensatedGI_local_abs_le_two_contrast
     (e : Link) (z : Cfg × Cfg) (p : Plaq) :
     |Gbar e z (L (p4Q2LO_originalLocalPlaquetteContinuous H p))| ≤
       E * 2 := by
-  let local : C(Cfg, ℝ) := p4Q2LO_originalLocalPlaquetteContinuous H p
-  let x := L local
+  let sourceFn : C(Cfg, ℝ) := p4Q2LO_originalLocalPlaquetteContinuous H p
+  let x := L sourceFn
   let G := Gbar e z
   have hOp : ‖G x‖ ≤ ‖G‖ * ‖x‖ := G.le_opNorm x
   have hLocal : ‖x‖ ≤ 2 :=
