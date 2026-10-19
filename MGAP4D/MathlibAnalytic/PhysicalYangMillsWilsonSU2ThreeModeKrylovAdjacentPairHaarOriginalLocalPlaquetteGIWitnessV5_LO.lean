@@ -87,12 +87,20 @@ theorem p4Q2LO_originalSpatialWilsonContinuous_eq_localSum :
     (((periodicHypercubicEvenSpatialSlicePlaquetteList H).map fun p => specialUnitaryWilsonPlaquetteEnergy 2
       (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A p)).sum) =
     (((periodicHypercubicEvenSpatialSlicePlaquetteList H).map fun p => p4Q2LO_originalLocalPlaquetteContinuous H p).sum) A
-  generalize hps : ps = xs
-  induction xs with
-  | nil => simp
-  | cons p xs ih =>
-      simp only [List.map_cons, List.sum_cons, ContinuousMap.add_apply,
-        p4Q2LO_originalLocalPlaquetteContinuous_apply, ih]
+  have hlist : ∀ xs : List Plaq,
+      ((xs.map fun p => specialUnitaryWilsonPlaquetteEnergy 2
+        (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A p)).sum) =
+        ((xs.map fun p => p4Q2LO_originalLocalPlaquetteContinuous H p).sum) A := by
+    intro xs
+    induction xs with
+    | nil => simp
+    | cons p xs ih =>
+        simpa only [List.map_cons, List.sum_cons, ContinuousMap.add_apply,
+          p4Q2LO_originalLocalPlaquetteContinuous_apply] using
+          congrArg (fun t : ℝ =>
+            specialUnitaryWilsonPlaquetteEnergy 2
+              (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A p) + t) ih
+  exact hlist (periodicHypercubicEvenSpatialSlicePlaquetteList H)
 
 /-- Linearity of true JH Haar-L² detector over any finite list of
 actual continuous spatial sources. -/
