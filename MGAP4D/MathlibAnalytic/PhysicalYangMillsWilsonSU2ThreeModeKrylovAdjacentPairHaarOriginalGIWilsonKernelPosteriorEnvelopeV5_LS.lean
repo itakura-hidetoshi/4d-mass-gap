@@ -144,11 +144,11 @@ theorem p4Q2LS_originalFiberRepresenter_norm_le_kernel
   intro A
   have hInt :
       ‖∫ g : Gauge, k (g,A) ∂nu‖ ≤
-        ‖k‖ * (nu.real Set.univ) := by
+        ‖k‖ * ((normalizedCompactHaar Gauge).real Set.univ) := by
     apply norm_integral_le_of_norm_le_const
     filter_upwards with g
     exact k.norm_coe_le_norm (g,A)
-  have hmu : nu.real Set.univ = 1 := by
+  have hmu : (normalizedCompactHaar Gauge).real Set.univ = 1 := by
     simp [measureReal_def]
   rw [p4Q2JH_originalFiberRepresenter_apply H b hb e z A]
   simpa only [hmu, mul_one] using hInt
@@ -161,12 +161,14 @@ theorem p4Q2LS_originalFiberRepresenter_toLp_norm_le
     ‖L (p4Q2JH_originalFiberRepresenter H b hb e z)‖ ≤
       ‖p4Q2JH_originalFiberRepresenter H b hb e z‖ := by
   let r : C(Cfg, ℝ) := p4Q2JH_originalFiberRepresenter H b hb e z
-  have hL : ‖L‖ ≤ 1 := by
+  let LL : C(Cfg, ℝ) →L[ℝ] Lp ℝ 2 haar := ContinuousMap.toLp 2 haar ℝ
+  have hL : ‖LL‖ ≤ 1 := by
     have h := ContinuousMap.toLp_norm_le
       (α := Cfg) (E := ℝ) (p := (2 : ENNReal)) (𝕜 := ℝ) haar
-    simpa [measureUnivNNReal] using h
+    simpa only [LL, measureUnivNNReal, measure_univ, one_rpow] using h
+  change ‖LL r‖ ≤ ‖r‖
   calc
-    ‖L r‖ ≤ ‖L‖ * ‖r‖ := L.le_opNorm _
+    ‖LL r‖ ≤ ‖LL‖ * ‖r‖ := LL.le_opNorm _
     _ ≤ 1 * ‖r‖ := mul_le_mul_of_nonneg_right hL (norm_nonneg r)
     _ = ‖r‖ := one_mul _
 
