@@ -86,7 +86,7 @@ theorem p4Q2LF_originalSpatialCrossingExponent_eq_fullFeatureInner
         inner ℝ (Phi (A e)) (Phi (B e))).sum =
       ∑ e : Link, inner ℝ (Phi (A e)) (Phi (B e)) := by
     classical
-    simpa [periodicHypercubicEvenSpatialSliceLinkList] using
+    simpa only [periodicHypercubicEvenSpatialSliceLinkList] using
       (Finset.sum_map_toList
         (s := (Finset.univ : Finset Link))
         (f := fun e : Link => inner ℝ (Phi (A e)) (Phi (B e))))
