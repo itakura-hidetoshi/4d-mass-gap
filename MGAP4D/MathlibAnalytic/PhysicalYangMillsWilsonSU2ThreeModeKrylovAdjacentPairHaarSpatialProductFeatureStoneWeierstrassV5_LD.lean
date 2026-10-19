@@ -69,7 +69,7 @@ local notation "Phi" => specialUnitaryMatrixRealFeature 2
 local notation "ProductCoord" => (Link × Coord)
 local notation "ProductFeature" => EuclideanSpace ℝ ProductCoord
 
-local noncomputable instance p4Q2LD_linkFintype : Fintype Link :=
+local instance p4Q2LD_linkFintype : Fintype Link :=
   Fintype.ofFinite _
 
 /-- Continuous evaluation of one REAL matrix coordinate on one
