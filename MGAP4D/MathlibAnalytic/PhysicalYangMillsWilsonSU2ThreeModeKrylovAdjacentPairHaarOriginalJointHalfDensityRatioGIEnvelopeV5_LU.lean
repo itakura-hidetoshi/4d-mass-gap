@@ -91,7 +91,9 @@ theorem p4Q2LU_originalJointHalfDensityUpdateRatio_apply
     (e : Link) (z : Cfg × Cfg) (g : Gauge) :
     p4Q2LU_originalJointHalfDensityUpdateRatio H b hb e z g =
       s z / s (z.1, Function.update z.2 e g) := by
-  simp only [p4Q2LU_originalJointHalfDensityUpdateRatio, div_eq_mul_inv]
+  change s z * (s (z.1, Function.update z.2 e g))⁻¹ =
+    s z / s (z.1, Function.update z.2 e g)
+  rw [div_eq_mul_inv]
 
 /-- The genuine one-link density-ratio envelope is *never larger*
 than LS's global pointwise inverse-half-density envelope. -/
