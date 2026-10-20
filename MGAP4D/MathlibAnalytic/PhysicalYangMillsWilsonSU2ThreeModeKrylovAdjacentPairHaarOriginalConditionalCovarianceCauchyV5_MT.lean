@@ -190,7 +190,16 @@ theorem p4Q2MT_originalWilsonKernel_weightedCauchySchwarz
     rw [mul_pow, Real.sq_sqrt
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
         H 2 b A z.2).le]
-  simpa only [k] using (hCross.symm ▸ (hF2.symm ▸ (hG2.symm ▸ hSq)))
+  change (∫ A : Cfg, f A * g A * k A ∂haar)^2 ≤
+    (∫ A : Cfg, (f A)^2 * k A ∂haar) *
+      (∫ A : Cfg, (g A)^2 * k A ∂haar)
+  calc
+    (∫ A : Cfg, f A * g A * k A ∂haar)^2 =
+        (∫ A : Cfg, F A * G A ∂haar)^2 := by rw [hCross]
+    _ ≤ (∫ A : Cfg, (F A)^2 ∂haar) *
+          (∫ A : Cfg, (G A)^2 ∂haar) := hSq
+    _ = (∫ A : Cfg, (f A)^2 * k A ∂haar) *
+          (∫ A : Cfg, (g A)^2 * k A ∂haar) := by rw [hF2, hG2]
 
 end Frozen
 end GroundStatePosteriorJoint
