@@ -119,7 +119,8 @@ theorem p4Q2MS_originalWilsonKernelMass_pos (z : Cfg × Cfg) :
 /-- The unnormalized TRUE original kernel-section mass is <= 1,
 because 0 < K_b(A,B) <= 1 pointwise and spatial reference Haar has
 mass one. Thus 0 < M_H,b(B) <= 1 at every finite H. -/
-theorem p4Q2MS_originalWilsonKernelMass_le_one (z : Cfg × Cfg) :
+theorem p4Q2MS_originalWilsonKernelMass_le_one
+    (hpos : 0 ≤ b) (z : Cfg × Cfg) :
     Mass z ≤ 1 := by
   let k : Cfg → ℝ := fun A => K A z.2
   have hk_int : Integrable k haar := by
@@ -131,7 +132,7 @@ theorem p4Q2MS_originalWilsonKernelMass_le_one (z : Cfg × Cfg) :
     intro A
     exact (abs_le.mp
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_abs_le_one
-        H 2 (by norm_num) b hb A z.2)).2
+        H 2 (by norm_num) b hpos A z.2)).2
   have hInt : (∫ A : Cfg, k A ∂haar) ≤
       ∫ _A : Cfg, (1 : ℝ) ∂haar :=
     integral_mono hk_int (integrable_const _) hupper
@@ -194,7 +195,7 @@ theorem p4Q2MS_originalWilsonKernelCovariance_mul_mass_sq_eq_connected
           (SignedMoment e z (1 : C(Cfg, ℝ)) / Mass z)) =
     Mass z * SignedMoment e z f -
       Moment z f * SignedMoment e z (1 : C(Cfg, ℝ))
-  field_simp [hM] <;> ring
+  field_simp [hM]
 
 /-- The original normalized Wilson-kernel variance of any continuous
 spatial source; a TRUE positive-kernel centered square integral. -/
@@ -252,7 +253,7 @@ theorem p4Q2MS_originalPhysicalCenteredWilsonGI_eq_mass_sq_covariance
   have hM : Mass z ≠ 0 := (p4Q2MS_originalWilsonKernelMass_pos H b z).ne'
   have hMean : Mass z * Mean z (w p) = Moment z (w p) := by
     change Mass z * (Moment z (w p) / Mass z) = Moment z (w p)
-    field_simp [hM] <;> ring
+    field_simp [hM]
   have hPhys :=
     p4Q2MS_originalPhysicalCenteredWilsonGI_eq_sourceDifference H b hb e z p
   have hMR :=
@@ -290,11 +291,11 @@ theorem p4Q2MS_originalNormalizedPhysicalCenteredGI_eq_covariance
   calc
     (tN / Mass z) * GI (CenteredSrc z p) e z =
         (Mass z * (tN * GI (CenteredSrc z p) e z)) / (Mass z)^2 := by
-          field_simp [hM] <;> ring
+          field_simp [hM]
     _ = (-(s z) * ((Mass z)^2 * Cov e z (w p))) / (Mass z)^2 := by
       rw [h]
     _ = -(s z) * Cov e z (w p) := by
-      field_simp [hM] <;> ring
+      field_simp [hM]
 
 end Frozen
 end GroundStatePosteriorJoint
