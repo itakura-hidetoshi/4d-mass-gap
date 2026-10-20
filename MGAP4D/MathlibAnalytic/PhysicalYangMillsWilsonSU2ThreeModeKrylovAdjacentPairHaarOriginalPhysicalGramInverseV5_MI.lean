@@ -48,6 +48,28 @@ set_option synthInstance.maxHeartbeats 1050000
 
 namespace GroundStatePosteriorJoint
 
+/-- The elementary adjugate inverse, proved by explicitly collecting
+the TWO fractions over the SAME verified nonzero determinant before
+using ring. A direct field_simp/ ring on the original expressions can
+leave an unnormalized reciprocal that ring cannot cancel. -/
+private theorem p4Q2MI_realGram_adjugate_inverse
+    (a u c s t : ℝ) (hdet : a*c - u^2 ≠ 0) :
+    a*((c*s-u*t)/(a*c-u^2)) +
+        u*((a*t-u*s)/(a*c-u^2)) = s ∧
+      u*((c*s-u*t)/(a*c-u^2)) +
+        c*((a*t-u*s)/(a*c-u^2)) = t := by
+  constructor
+  · calc
+      a*((c*s-u*t)/(a*c-u^2)) +
+          u*((a*t-u*s)/(a*c-u^2)) =
+        (a*(c*s-u*t)+u*(a*t-u*s))/(a*c-u^2) := by ring
+      _ = s := (div_eq_iff hdet).2 (by ring)
+  · calc
+      u*((c*s-u*t)/(a*c-u^2)) +
+          c*((a*t-u*s)/(a*c-u^2)) =
+        (u*(c*s-u*t)+c*(a*t-u*s))/(a*c-u^2) := by ring
+      _ = t := (div_eq_iff hdet).2 (by ring)
+
 /-- Pure real two-by-two inversion; the actual Gram entries are
 supplied by previously verified original physical Wilson theorems. -/
 private theorem p4Q2MI_realGram_existsUniqueCoefficients
@@ -56,11 +78,7 @@ private theorem p4Q2MI_realGram_existsUniqueCoefficients
       a*q.1 + u*q.2 = s ∧
       u*q.1 + c*q.2 = t := by
   refine ⟨⟨(c*s-u*t)/(a*c-u^2), (a*t-u*s)/(a*c-u^2)⟩, ?_, ?_⟩
-  · constructor
-    · dsimp
-      field_simp [hdet] <;> ring
-    · dsimp
-      field_simp [hdet] <;> ring
+  · exact p4Q2MI_realGram_adjugate_inverse a u c s t hdet
   · rintro ⟨x,y⟩ ⟨hs,ht⟩
     apply Prod.ext
     · apply (eq_div_iff hdet).2
@@ -155,9 +173,8 @@ theorem p4Q2MI_originalPhysicalGram_adjugate_inverse
   have hdet : A e e' z z' * C e e' z z' - (B e e' z z')^2 ≠ 0 :=
     ne_of_gt (p4Q2MG_originalPhysicalGram_det_pos
       H b hb hpos hcount e e' z z' hQ)
-  constructor
-  · field_simp [hdet] <;> ring
-  · field_simp [hdet] <;> ring
+  exact p4Q2MI_realGram_adjugate_inverse
+    (A e e' z z') (B e e' z z') (C e e' z z') s t hdet
 
 /-- Every prescribed REAL dual-coordinate pair (s,t) uniquely
 reconstructs its original physical Wilson spatial Gram source-plane
