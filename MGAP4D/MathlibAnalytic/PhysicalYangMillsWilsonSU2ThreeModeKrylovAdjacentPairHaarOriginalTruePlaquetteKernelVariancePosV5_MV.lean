@@ -179,7 +179,9 @@ theorem p4Q2MV_originalSpatialPlaquette_firstLink_otherThree_ne
     have hv := congrArg Subtype.val heq
     exact (periodicHypercubicShift_ne_self
       (PeriodicHypercubicEvenSideLength H)
-      (by simp [PeriodicHypercubicEvenSideLength]; omega)
+      (by
+        change 2 ≤ 2 * (H + 1)
+        omega)
       p.1.1 p.2.1.2.1) hv
   constructor
   · intro heq
