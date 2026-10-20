@@ -127,7 +127,7 @@ theorem p4Q2MO_originalOutsideWilsonObservable_update_eq
   apply Finset.sum_congr rfl
   intro p hp
   exact p4Q2MO_originalLocalWilsonObservable_update_eq_of_not_touches
-    H b hb A target g p (Finset.mem_sdiff.mp hp).2
+    H A target g p (Finset.mem_sdiff.mp hp).2
 
 /-- The link variation of the ACTUAL continuous global spatial Wilson
 observable is exactly the finite sum over geometrically touching
@@ -162,7 +162,7 @@ theorem p4Q2MO_originalWilsonObservable_normalizedTwoUpdates_abs_le
       W (Function.update A target h)) / n| ≤ 12 / n := by
   have hOsc :=
     p4Q2MO_originalWilsonObservable_twoUpdates_abs_le_twelve
-      H b hb A target g h
+      H A target g h
   rw [abs_div, abs_of_pos hcount]
   exact (div_le_div_iff_of_pos_right hcount).2 hOsc
 
