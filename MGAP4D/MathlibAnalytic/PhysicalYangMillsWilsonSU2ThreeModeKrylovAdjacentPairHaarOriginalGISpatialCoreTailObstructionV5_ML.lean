@@ -134,7 +134,8 @@ theorem p4Q2ML_originalLocalGI_squareEnergy_core_tail_upper
       p4Q2ML_originalLocalGI_squareEnergy_eq_core_add_outside
         H b hb e e' z z' S
     _ ≤ (S.card : ℝ) * (4 * E^2)^2 +
-          Tail e e' z z' S := add_le_add_right hcore _
+          Tail e e' z z' S :=
+      add_le_add hcore (le_refl (Tail e e' z z' S))
 
 /-- Exact finite-H localized-core/physical-tail obstruction:
   Q/N <= (|S|/N) 16 E_b^4 + outsideEnergy(S)/N.
