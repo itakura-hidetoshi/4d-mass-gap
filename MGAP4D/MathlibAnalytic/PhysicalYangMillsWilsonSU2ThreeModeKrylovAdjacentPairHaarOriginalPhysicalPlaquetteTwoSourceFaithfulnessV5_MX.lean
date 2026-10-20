@@ -124,7 +124,7 @@ theorem p4Q2MX_originalPhysicalTwoSource_coefficients_zero
   have hLpZero :
       L (x • (1 : C(Cfg, ℝ)) + y • w p) = 0 := by
     rw [← p4Q2MX_originalPhysicalTwoSource_coe_eq_toLp H p x y]
-    simpa [hz]
+    simp [hz]
   have hFn :
       x • (1 : C(Cfg, ℝ)) + y • w p = 0 := by
     apply (ContinuousMap.toLp_injective (𝕜 := ℝ)
@@ -188,7 +188,7 @@ theorem p4Q2MX_originalPhysicalUnitPlaquette_linearIndependent
 
 end Sources
 
-section Centered
+section SourceCentering
 variable (H : ℕ) (b : ℝ)
 
 local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
@@ -219,7 +219,7 @@ theorem p4Q2MX_originalPhysicalCenteredPlaquetteSource_norm_pos
   exact norm_pos_iff.mpr
     (p4Q2MX_originalPhysicalCenteredPlaquetteSource_ne_zero H b z p)
 
-end Centered
+end SourceCentering
 
 /-- Intrinsic, fully genuine beta=0 NO-GO:
 EVERY SU(2) spatial plaquette has strictly POSITIVE Wilson
