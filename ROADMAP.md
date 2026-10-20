@@ -1,181 +1,208 @@
-# MGAP4D — proof roadmap after P4-Q2-JS
+# MGAP4D — 証明ロードマップ（P4-Q2-MK統合後）
 
-**Updated 2026-10-18 JST · Sole theorem source: `formal/real-hilbert-uniform-coercive-strong-limit` · Snapshot SHA `d5316fe0a0cf96a8ab8a198bda280ac035585ab4`**
+**2026-10-20 JST · 唯一のLean定理正本：`formal/real-hilbert-uniform-coercive-strong-limit` · 最終検証済み定理統合点：[`92fe1141e68d545d1fb33e6bb30f6e35db5f5ba7`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/92fe1141e68d545d1fb33e6bb30f6e35db5f5ba7)（[#5740 MK](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5740)）**
 
-**日本語要約：** 原Wilson作用の有限体積形式化と真正相互作用posteriorの時間方向非零検出は成功している。次の中心課題は **空間Wilson作用を真正GI物理受信関数が非零に検出すること**。その後に正のfine結合・任意Krylov深さでの全物理源分離、体積一様な可和性、H1-C3強極限、物理時間／OS再構成、連続体質量ギャップを証明する。各段階は別々の公理・定理要件を持ち、前段を飛び越して「完全なYang–Mills証明」と主張しない。
+**到達状況：** 真正SU(2) Wilson相互作用posteriorを変えずに、元の空間Wilson作用に対する二文脈GI minorの非零性が**LMで証明済み**となった。その後、局所二乗GIエネルギー、有限体積の物理応答の空間平均、GIエネルギー密度に一次比例する下界、実際のGram行列の正定値性・逆写像・Lipschitz安定性、単一の真正プラケットの最大・平均下界を**MKまで形式化・検証済み**。一方、**任意高次Krylov全物理源、体積一様性、真のendpoint源との同一性、H1-C3の強極限、連続体4D Yang–Mills構成と質量ギャップは未証明**である。
 
-See [README.md](README.md) for physical notation, the full original-posterior inequality, pinned Lean environment and the explicit distinction between finite-volume and continuum results.
+**[プロジェクトの数学的定義・数式・再現手順 → README.md](README.md)**
 
-## 0. Authority and reproducibility
+## 0. Authority / CI — status claims must be reproducible
 
-| Field | Exact historical checkpoint |
+| 項目 | 正確な検証結果 |
 | --- | --- |
 | Repository | [itakura-hidetoshi/4d-mass-gap](https://github.com/itakura-hidetoshi/4d-mass-gap) |
-| **Only authoritative theorem branch** | `formal/real-hilbert-uniform-coercive-strong-limit` — not the repository default `main` |
-| Latest canonical theorem HEAD at this review | [`d5316fe0a0cf96a8ab8a198bda280ac035585ab4`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/d5316fe0a0cf96a8ab8a198bda280ac035585ab4) |
-| Latest merged theorem PR | [#5665 (JS)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5665) |
-| Exact tested **source** HEAD for JS | `299eb09258efaa6d1e1c7683c1afa3f4945964a0` (not the squash SHA) |
-| JS [CI #39098811665](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39098811665) | **SUCCESS**; 10754/10754 Lean jobs; Changed Lean and MCP completion receipt SUCCESS |
-| JS `#print axioms` | 5/5 printed; no `sorryAx` or new postulated axiom, new-file warning/error 0/0; certain results inherit previously identified finite-grid `native_decide` axioms |
-| Lean / mathlib | `leanprover/lean4:v4.30.0-rc2` / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
+| 定理の唯一正本 | `formal/real-hilbert-uniform-coercive-strong-limit`（default `main`ではない） |
+| 最終検証済み**定理-bearing**マージ点 | `92fe1141e68d545d1fb33e6bb30f6e35db5f5ba7` — P4-Q2-MK #5740 |
+| MKの検証**source HEAD** | `bc1d8c3008b140bf13ffc44fff989c5d4b8ad68f`（squashマージSHAとは異なる） |
+| [exact-head CI #39411635424](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39411635424) | SUCCESS、Lean **10820/10820**、変更したMKファイル warning/error 0/0 |
+| MK公開定理の`#print axioms` | **4/4**、`sorryAx`なし、MCP completion receipt SUCCESS |
+| Lean / mathlib pin | `v4.30.0-rc2` / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
+| 現在のbranch HEAD | [毎回GitHubで再観測](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit) |
 
-Authority ordering for each mathematical assertion: **fresh exact canonical branch SHA → actual Lean theorem statements/proofs and imported premises → exact-source-head CI with axiom output → README/ROADMAP explanations → older conversations and comments**. Recheck SHA on every new session. A docs-only merge does not introduce mathematical evidence.
+ここに固定したSHAは**2026-10-20時点の検証済み定理統合点**であり、README/ROADMAPのdocs-onlyマージによってbranch HEADが進んでも、定理の新規検証を意味しない。判断の優先順位は **fresh exact authoritative SHA → Lean定理と前提・import全文 → そのsource SHAのCI・公理監査 → 文書 → 以前の記録**。
 
-## 1. Proof-state matrix: CLOSED means only the stated scope
+### 重要な区別
 
-| Track / gates | Proven in the actual Lean development | Remaining obstruction |
+- `Q_post = ∫(p_{0,b}-p_{π,b})²dν`：過去のGI/source比較に現れる真正posterior**密度差**。
+- `Q_GI = Σ_{p∈P_H}d_p²`：LY以降の真正Wilson**局所GI minor二乗エネルギー**。`d_p=||T_{H,b}||²Δ_p`、`N_H=|P_H|`。
+- `E_b=e^{8b}(e^{16b}-e^{-16b})`：元のone-link joint-density Harnack等からLWで得る正のコントラスト尺度（`b>0`）。
+- `k_{H,b,e,e',z,z'}=(Q_GI/N_H)/(10E_b²)`。**`Q_GI>0`が体積ごとに成立しても`inf_H k_H>0`は従わない。**
+
+`A_W`（非正規化の原Wilson Haar-reference）、`D₁₂`（正規化物理条件射影のDirichlet）、元のGI検出器、`p`ごとに変わる物理源のGram、fine-evolution/endpoint、連続体Hamiltonianは**異なる作用素・検証対象**。
+
+## 1. 証明ゲート一覧：CLOSEDの量化範囲を明示
+
+| Gate | 正本Leanで証明された範囲 | 未解決の部分 |
 | --- | --- | --- |
-| **Physical posterior and transfer model** | Actual normalized interacting Wilson one-slab conditional laws and Perron/transfer factors; genuine gauge-invariant physical sources and right-link insertion [GI–GN #5571–#5577](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5577) | Do not replace either interacting conditional posterior by independent Haar or drop density/vacuum weights |
-| **Finite original Wilson Haar-`L²` `A_W`** | Original Riesz full-`L²` bounded quadratic, self-adjoint operator, Loewner comparison and fixed-model positive spectrum [CO, DV–EC #5440, #5473–#5485](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5485) | H-/spacing-independent lower bound and continuum transfer |
-| **Physical `D₁₂`** | Normalized original physical Wilson Dirichlet operator, positive `V^\perp` spectrum [DS–DU #5470–#5472](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5472) | Not the same as `A_W` or the signed adjacent-scale source Gram; no continuum gap |
-| **Relative color geometry** | Real SU(2) color count `L_c(H)=4(H+1)^3` and **relative** coefficient bound `κ≤3/(H+1)^3` [ES–ET #5513–#5514](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5514) | Do not claim an absolute spectral-gap no-go from a relative comparison |
-| **Original GL/source `Δ²/Q` bound** | Real two-original-posterior GI expectation differences, integrable pair-Haar physical Gram Rayleigh bound [GI–GL #5571–#5574](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5574) | `Q>0` does not prove `Δ(f)≠0` for every physical source |
-| **All-context GI detector and source quotient** | Finite authentic-context kernel certificates; actual source Gram/rank; invisible subspace `I_phys=S(ker Φ)` and visible orthogonal quotient [HI–IR #5601–#5639](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5639) | For positive fine coupling and higher `r`, prove `I_phys=0`; finite quotient positivity alone is weaker |
-| **Endpoints / specific positive-fine witness** | `ker S=ker Φ` for **fine `t=0` at all finite `r`** and **`r=0` at all fine `t≥0`** [HZ–IB #5619–#5621](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5621); particular original positive-fine rank-one innovation interval [#5365 Z2](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5365) | These do not establish arbitrary-depth, positive-fine, all-source detection or H/n/r-uniformity |
-| **Spatial Wilson physical source** | Genuine `W_H` nonconstant; its anchored centered Haar-`L²` class is nonzero; exact spatial GI static minor and Haar integral obstruction [JI–JK #5656–#5657](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5657) | **OPEN**: an actual second physical context where `Δ_W(x,y)≠0` |
-| **Original temporal Wilson posterior** | Haar mean of literal SU(2) temporal `D` is zero; genuine original posterior contrast has a volume/link/right-context-independent strict negative test-gap at sufficiently small `b>0` [JO–JP #5661–#5662](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5662) | Temporal sensitivity **does not itself** make the spatial GI source detectable |
-| **Real source-to-temporal bridge** | Actual original physical receiver and normalizing weight; Haar-centered quadratic error and sufficient correlation criterion [JQ–JR #5663–#5664](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5664) | **OPEN**: prove its required covariance for the actual spatial Wilson source, respecting `b`-dependence |
-| **Actual physical receiver-span obstruction** | If all actual physical GI responses vanish, literal temporal `D` is outside span of actual physical link receivers + constants; `D` membership implies a nonzero GI witness [JS #5665](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5665) | **OPEN**: establish physical receiver representation or otherwise prove a nonzero original GI response |
-| **Cross-scale/continuum** | Several finite-volume and limited source-subspace certificates exist | **OPEN**: uniform signed source estimates, C1/C2/C3, H2/H3/H4 and the 4D continuum gap |
+| **P：真正Wilson模型** | 元のSU(2) Wilson相互作用kernel/Perron/ground-state posterior、Gauss-law物理Hilbertと物理receiver、original GI signed response | これらを独立Haar conditionalや架空のrank/sourceへ置換しない |
+| **S：真正空間GI非零性 — CLOSED（有限H）** | **LM**：任意の有限H、`b>0`、実際のリンク対に対して、`Δ_W(z,z')≠0`となる**真正二文脈**の存在 | 選択文脈のH依存、fine全深さ、体積一様性は別 |
+| **L：局所真の物理源強制性 — CLOSED（有限H）** | LN/LO/LP/LQ、LS–LX、LY：原Wilson物理源`xU+yW_{H,p}U`とGI minorから`κ_p>0`、補償尺度・Harnack/Frobeniusの明示評価 | 全てのpの一様下界ではない。固定pの全スケール互換も未証明 |
+| **V：局所GIエネルギー／変動 — CLOSED（有限H）** | LY/LZ/MA/MB/MC：`Q_GI`の正の文脈、平均・分散・上界、真正活性集合と有限密度評価 | `Q_GI/N_H`の正のH一様下界なし |
+| **G：空間平均物理応答Gram — CLOSED（有限H）** | MD–MJ：真の`R_p`の空間和、MFの`Q_GI/N_H`**一次**強制性、MG/MHのGram・det、MI/MJの逆写像・データ差Lipschitz | `p`依存sourceの空間frameは**単一endpoint源**や全Krylov source spanではない |
+| **K：単一真正plaquetteの平均達成 — CLOSED（有限H）** | LYの既存max witnessをMKで再利用可能な4公開定理へ展開：`d_p²≥Q_GI/N_H`、`κ_p≥k`、全`x,y`で物理`R_p≥k(x²+y²)` | `p=p(H,z,z')`の選択は一般にスケール間で固定・互換とは限らない |
+| **F：positive fine / arbitrary r** | fine `t=0` の全有限r、または`r=0`の全非負fineで`ker S=ker Φ`、特定の正fine innovation witness | `t>0`かつ任意`r>0`で`I_phys=S(ker Φ)=0`は OPEN |
+| **U：真の一様解析** | 固定bで元のreceiverコントラスト`E_b`の体積一様な**上界**など | GIエネルギー/分離の下界、signed spatial covariance・tailsの可和性、深さとスケールの制御は OPEN |
+| **C/H：連続体** | 一部の有限格子・限定されたsource subspaceの証明 | H1-C1/C2/C3、物理時間、OS/Wightman、非自明な4D連続体質量ギャップは OPEN |
 
-## 2. Exact current mathematical frontier: genuine spatial Wilson GI detection
+**SはLMによって既にCLOSED。** 2026-10-18版で記した「第二の空間Wilson物理文脈の非零GI応答がOPEN」という記述を、ここで修正した。JP–JRの時間posterior共分散ルートやJSのreceiver-span条件は別の有意義な補助定理だが、Sを証明するために今からreceiver-span membershipを仮定する必要はない。
 
-Use fixed finite spatial `H`, positive *frozen* Wilson coupling `b`, true physical link `e` and two genuine boundary contexts `x,y`. Let `W_H` be the **original spatial Wilson action** and `G_x`, `G_y` the **actual** GI Riesz/expectation response functionals for the original interacting posteriors.
+## 2. このスレッドの検証済み数学的推移（空間物理GI：LM → MK）
 
-The decisive original static determinant is
+### 2.1 真正空間Wilson static minor非零：LM、LN、LO–LP
 
-$$
-\Delta_W(x,y)
- =G_x(1)\,G_y(W_H)-G_x(W_H)\,G_y(1).
-$$
+- **LM** `p4Q2LM_originalSpatialWilsonGIMinor_exists_nonzero_contexts`：literal original Wilson空間作用と単位物理源の**真の2×2 GI行列式非零**。証明は原Wilson転送核、full Haar正値性、gauge-normalized centered transfer、LCの厳密検出へ依存。
+- **LN**：global original source plane `xU+yW_HU`に有限体積の実際の2行GI応答強制性。**LO/LP**：真の各局所plaquette `W_{H,p}U`を表現・局所 minorへ分解し、少なくとも1つの真正局所nonzero witnessを選択。
+- **LQ–LX**：original physical source denominatorと補償されたGI表現。LV/LWでfull original Wilson transfer、joint半密度と`E_b`の明示的上界を用い、`d_p=||T||²Δ_p`などを証明。これはoriginal physical Hilbertを変えないスカラー再表示。
 
-From JK, when `G_x(1)≠0` one can set `c_x=G_x(W_H)/G_x(1)` and rewrite
+### 2.2 消去されない局所GI二乗エネルギー：LY–MC
 
-$$
-\Delta_W(x,y)=G_x(1)\,G_y(W_H-c_x1).
-$$
+\[
+Q_{\rm GI}(H,b,e,e',z,z')=\sum_{p\in\mathcal P_H}\bar\Delta_p^2.
+\]
 
-Crucially, `W_H-c_x1\ne0` in the true spatial Haar-`L²`. Its image under `G_y` may nevertheless vanish for all `y`. JK reduces precisely this obstruction to one integral of the **unchanged** original Wilson transfer, joint square-root density and two authentic interacting posterior laws.
+- **LY** `p4Q2LY_originalPhysicalLocalGI_exists_squareEnergy_floor`：LM/LPの実文脈で`Q_GI>0`、真のmax-plaquette `d_p²≥Q_GI/N_H`、真の未補償Gauss-law源で`κ_p≥Q_GI/(10N_HE_b²)`。この**最大選択はLYで既に証明**されている。
+- **LZ**：局所GI square energyの厳密なmean/variance恒等式。
+- **MA**：全ての実plaquetteで`d_p²≤(4E_b²)²=16E_b^4`という、体積を含まない局所上界（**下界ではない**）。
+- **MB #5729、MC #5731**：`d_p²≥Q_GI/(2N_H)`という真の活性集合`A`の有限Hでの割合、および各活性pでの元の物理源強制性。[#5730](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5730)は同一source SHAのCI回復のための重複マージ、[#5732](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5732)は未マージでクローズした検証専用PRであり、数学的マイルストーンに重複計上しない。
 
-**Acceptance gate S — still OPEN:** supply at least one actual `H,b,e,e',x,y` with `b>0`, `G_x(1)≠0` and `G_y(W_H-c_x1)≠0`, or prove a stronger fully quantified theorem. No free two-context rank, generic physical detector or substituted independent-Haar posterior may be assumed.
+### 2.3 空間frame・逆写像：MD–MJ
 
-**Once gate S is proved:** JI already provides the real raw fine-coupling derivative `M'_0=-\Delta_W/2` and normalized-minor continuation to a sufficiently small positive fine-`t` interval **for that genuine physical pair of contexts**. This will not automatically prove source separation at every Krylov depth, or any H-uniform bound.
+真の2つのoriginal signed Wilson事後物理応答`G_{e,z},G_{e',z'}`について
 
-## 3. Two complementary original-Wilson routes to gate S
+\[
+R_p(x,y)=G_{e,z}(xU+yW_{H,p}U)^2+
+ G_{e',z'}(xU+yW_{H,p}U)^2,\quad
+k=\frac{Q_{\rm GI}/N_H}{10E_b^2}.
+\]
 
-### S1 — directly evaluate the actual centered spatial-Wilson moment
+- **MD #5733 / ME #5734**：活性集合から全真正plaquetteへの有限和の比較。MEの`(Q_GI/N_H)^2`依存は、次のMFによって改善。
+- **MF #5735**：活性集合作成を経由しない各original pの物理強制性から
+  \[
+  k(x^2+y^2)\le\frac1{N_H}\sum_{p\in\mathcal P_H}R_p(x,y)
+  \]
+  を正確に証明（`Q_GI/N_H`へ**一次**依存）。
+- **MG #5736**：同じ真正応答の偏極で`G_{\rm spatial}=\begin{pmatrix}A&B\\B&C\end{pmatrix}`を定義し、`G_{\rm spatial}\succeq kI`、`AC-B²>0`を証明。
+- **MH #5737**：`A,C≥k`、`AC-B²≥kA≥k²>0`という具体的な**有限H行列式下界**。
+- **MI #5738**：`G_{\rm spatial}^{-1}`の明示的adjugate式、係数一意性、`k²\|G^{-1}v\|_2²≤\|v\|_2²`。
+- **MJ #5739**：同じ逆写像の加法性、実数倍、差分と任意2観測`v,w`のLipschitz安定性
+  \[
+  k^2\|G^{-1}v-G^{-1}w\|_2^2\le\|v-w\|_2^2.
+  \]
+  これらは有限Hの**局所源familyの空間平均Gram**であり、独立Haar検出器でも単一endpoint transfer作用素でもない。
 
-Use JK's literal original two-layer Haar formula. Show the anchored nonzero `L²` source has a nonzero pairing with at least one **actual** second-context Wilson Riesz representer. Key obligations:
+### 2.4 一枚の実プラケット：MK #5740
 
-1. Retain the original source `W_H-c_x1`, frozen coupling, Wilson kernel `K_b`, physical link update, joint half-density, and the difference `p₀,b-pπ,b`.
-2. Prove the sign/nonvanishing of one explicit original double integral, via symmetry, an exact SU(2) calculation, or a controlled coupling expansion with justified continuity/remainder.
-3. Prove all prefactors/normalizations strictly nonzero in the same physical context; transport the nonzero moment to `\Delta_W(x,y)≠0` using JK's established equivalence.
+`p4Q2MK_originalGI_exists_meanEnergyPlaquette`、`...exists_meanCoercivePlaquette`、`...exists_singlePlaquetteLinearFloor`、`...exists_authenticMeanPlaquette`の4定理によって、元のfinite `Finset.univ`のmaxから
 
-**Obstruction:** nonconstancy of `W_H` or nonzero posterior contrast is **not** sufficient without a nonzero cross-pairing.
+\[
+\exists p\in\mathcal P_H,\quad d_p^2\ge Q_{\rm GI}/N_H,\qquad
+\forall x,y\in\mathbb R:\ R_p(x,y)\ge k(x^2+y^2)
+\]
 
-### S2 — compute the covariance of an actual physical receiver with temporal `D`
+を真のoriginal interacting-Wilson文脈で扱いやすい形に整理した。`p`の存在は真正Wilson物理源に基づくが、**p選択のH/scale連続性やendpoint source同一性はまだ証明されない**。
 
-JO–JP prove `\int D\,d\nu=0`, `V_{\mathrm{SU(2)}}=\int D^2d\nu>0` and a uniform weak-frozen-coupling window. JQ–JR show that with the **actual centered Gauss-law receiver** `F_c=F_{b,f,e,z}-\int F_{b,f,e,z}d\nu` and physical normalization `q_b(z)>0`,
+## 3. 次の核心：本当に不足する数学的入力
 
-$$
-\left|
-q_b(z)\,G_b(f,e,z)-b\int F_c(g)D(g)\,d\nu(g)
-\right|
-\le Cb^2\|F_c\|_\infty,\qquad C=272e^8.
-$$
+### Gate U0 — 真正Wilson GI密度または同等のframe coercivityを一様化
 
-A sufficient nonzero condition for `b>0` is
+**求める条件の一例：** 自然な有限格子・coupling schedule・相容れる物理文脈族に対して、`Q_{\rm GI}(H,b_H,\ldots)/N_H`の十分な正下界と`E_{b_H}`の同時制御を**真のWilson積分から導く**。より直接的には`k_H=(Q_{\rm GI}/N_H)/(10E_{b_H}²)`そのものの有効な正下界、または必要な物理source作用素の相当する非退化性を証明してもよい。
 
-$$
-\left|\int F_cD\,d\nu\right|
-> Cb\,\|F_c\|_\infty .
-$$
+**既存証明からは出ないこと：** `∀H\,∃(z_H,z'_H),Q_H>0`は`∃c>0\,∀H,Q_H/N_H≥c`を含意しない。さらに文脈や選択plaquette`p_H`が各Hで独立に選べるだけでは、projective/物理時間の**同一source family**は得られない。`E_b`の一様上界だけでも`Q_{\rm GI}/N_H`の下界は得られない。
 
-This criterion is **not yet verified** for a spatial Wilson source and a genuine choice of `e,z`. The receiver **depends on `b`**, so proving only that an arbitrary, artificial fixed continuous test is correlated with `D` is invalid. If the authentic centered receiver vanishes at `b=0`, identify its first nonzero coefficient and control the error at the **same order**; simple first-order posterior sensitivity need not dominate the remainder by itself.
+**優先して調べる真の対象：** signed posterior receiverの空間Wilson局所minorの二点相関、局所感度の位置依存、真正Wilson fiber-Haar posterior energy、volume依存の重なりや相関の減衰。Dobrushinをデフォルトの代替模型として再構成しない。**証明可能な新しい定理と、未証明の推測を必ず分ける**。
 
-JS supplies another rigorous path. Define `\mathcal R_{b,e,B}` as the *algebraic* real span of genuine physical receivers over all physical Gauss-law Hilbert sources `f` and left boundary contexts `A` at fixed right context `B`/link `e`, plus constants. For `0<b<\rho=\min(1/4,V_{\mathrm{SU(2)}}/(4C))`,
+### Gate E — 空間`p`依存Gramを同一のendpoint物理源へ接続
 
-$$
-\Big[\forall f,A,\ G_b(f,e,(A,B))=0\Big]
-\;\Longrightarrow\; D\notin\mathcal R_{b,e,B}.
-$$
+MF–MKの量化は`\sum_p R_p(x,y)`や`∃p\,R_p(x,y)`で、`R_p`の物理源は`xU+yW_{H,p}U`。高次Krylov/endpointで必要な`S_{n,r}a`、真のfine transfer/receiver、実際のoriginal二posterior GI detector`Φ_{n,r}`と**自動的には等しいものではない**。
 
-Hence `D\in\mathcal R_{b,e,B}` would force some genuine physical GI response to be nonzero. **Membership is still unproved**. It is a sufficient route, not a hidden assumption and not automatically the stronger two-context spatial-Wilson `\Delta_W` result.
+必要な証明は、実際のendpoint source写像で選択源・平均frameをtransportした際に、同じsigned GI応答・ノルム・誤差がどう変化するかという**具体的なintertwining / interpolation / controlled remainder**。架空の等長同型やrow rankで代用しない。LM/LNにglobal original source planeの非零性があることと、任意Krylov源へのinjectivityを混同しない。
 
-**Acceptance gate R — still OPEN:** either prove a true centered-receiver covariance satisfying the explicit JR threshold, or prove actual receiver-span membership as required by JS. Then ensure the nonzero detected physical source is **the source needed for spatial gate S**, not just an unrelated GI witness.
+### Gate F — positive fine coupling・高次Krylovの全源分離
 
-## 4. Positive fine coupling, all-depth source geometry
+真の`S_{n,r}`と`Φ_{n,r}`の組に対し、物理的不可視部分`I_{\rm phys}=S_{n,r}(\ker\Phi_{n,r})`を考える。
 
-At frozen `b_n>0`, denote by `S_{n,r}` the **actual** finite signed physical Krylov source synthesis and by `\Phi_{n,r}` the **original two-interacting-Wilson-posterior** joint GI detector. The exact physical invisible sector is `I_{\mathrm{phys}}=S_{n,r}(\ker\Phi_{n,r})`.
+- **CLOSED boundary:** `t_{n+1}=0`で全有限`r`、または`r=0`で全`t_{n+1}≥0`の`ker S=ker Φ`。
+- **OPEN interior:** `t_{n+1}>0`かつ`r>0`の任意深さで`I_{\rm phys}=0`、あるいは真正な不可視セクターの扱い。初期のrank-one・zero-selector・個別innovation成功を全源陽性へ読み替えない。
+- Gate Eのtransportが成立しても、**同じ全source spanへの分離・Coercivity**を別途示す必要がある。
 
-**Already CLOSED under their exact hypotheses:**
+### Gate U1–U4 — 空間可和性・深さ・scale
 
-- `t_{n+1}=0`: all finite `r` have `\ker S_{n,r}=\ker\Phi_{n,r}`.
-- `r=0`: all `t_{n+1}\ge0` have that equality.
-- For any fixed finite model, the *visible* orthogonal subspace has positive original GL/source comparison; a global positive original GL/source-norm lower bound on all actual synthesized sources is **equivalent** to `I_{\mathrm{phys}}=0`.
-- Historical Z2 [#5365](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5365) establishes a legitimate **specific** one-sided positive-fine innovation witness.
-
-**Acceptance gate F — still OPEN:** for genuinely positive fine `t_{n+1}` and arbitrary finite `r>0`, prove `\ker S_{n,r}=\ker\Phi_{n,r}` (or identify explicit unavoidable invisible sources and a replacement physical subspace) using literal physical Wilson sources. Thereafter extract model-dependent positive `c_{H,b,t,r}`, distinguishing mere existence from an explicit or uniform coefficient.
-
-Do **not** elevate zero-selector rays, individual rank-one perturbations, generic finite-dimensional anti-Lipschitz quotients, or `\ker\Phi\supseteq\ker S` into an all-source positive-fine theorem.
-
-## 5. Spatial and scale-uniform quantitative gates
-
-Fixed-volume spectral gaps for `A_W` and `D_{12}`, positive posterior-density separation and fixed-source nonzero moments are **not** scale-uniform signed-source coercivity.
-
-| Gate | Necessary next evidence | Status |
+| Gate | 受理できる次の証明 | 現状 |
 | --- | --- | --- |
-| **U1: genuine signed Wilson source bounds** | Estimate actual linkwise `\Delta_{b,e,F}` and covariance/Gram for arbitrary signed physical inputs, not only absolute oscillation envelopes | OPEN in uniform form |
-| **U2: spatial summability** | Sum physical receiver tails/correlations over original `24(H+1)^3` spatial links with controlled H-independent or explicitly summable constants; prove localization rather than assuming it | OPEN |
-| **U3: depth-uniform transfer** | Control all Krylov mode norms and relevant error sections uniformly in `r` while keeping frozen `b_n` distinct from fine `t_{n+1}` | OPEN |
-| **U4: lattice spacing / scale** | Construct a legitimate scale schedule `b_n,t_{n+1}` and estimates independent of H/spacing or summable with the required weights | OPEN |
-| **Compatibility guard** | ES–ET's decay of **relative** `A_W/D_{12}` comparison must not be misread as an absolute continuum-gap impossibility | PROVED limitation; alternative route needed |
+| U1 真正 signed response | 任意の実物理signed sourceに対するoriginal受信器の応答・posterior covarianceの定量比較。参照Haarを元のposteriorへすり替えない | OPEN（一部固定源の結果あり） |
+| U2 空間可和性 | 実際の全リンク/plaquette相関tailの局所化と`H`独立または要求された重み付き可和評価 | OPEN |
+| U3 Krylov深さ | 全`r`で共通source familyのnorm・fine innovation・誤差が制御される定理 | OPEN |
+| U4 coupling/spacing | frozen`b_n`とfine`t_{n+1}`を区別した真正schedule、格子間隔・volumeに耐える定数とsummability | OPEN |
+| Relative比較の注意 | 以前の`A_W/D₁₂`相対係数がHとともに小さくなることは、絶対連続体mass gapの不可能性を示さない | 既存証明の適用範囲 |
 
-Avoid restarting a Dobrushin reconstruction as the default plan; earlier restricted no-go results target that method, **not** every approach to continuum Yang–Mills. Do not assume original interacting conditional projections commute merely because pair-Haar reference coordinate projections do.
+## 4. H1-C3および連続体問題は別々のOPEN gates
 
-## 6. H1-C3 and continuum construction — separate OPEN proof gates
-
-| Gate | Required theorem before calling it closed |
+| Gate | CLOSEと呼ぶための実際のLean定理 |
 | --- | --- |
-| **C1 — physicality / marginal descent** | Explicit coarse/fine common physical marginal; physical Gauss-law compatibility and no leakage from the genuine physical Hilbert space |
-| **C2 — actual transfer/reconstruction** | Vector-wise control for original fine evolution/reconstruction against coarse physical transfer; strong convergence to a common physical operator on the needed source family |
-| **C3 — trajectory summability** | A concrete `b_n` trajectory and summably controlled errors (including weights such as `|b_{n+1}-b_n|`), sufficient to close H1-C3 without a surrogate conditional posterior |
-| **One natural-time structure** | Multi-time operators are powers/semigroup elements of **one** limiting physical operator, not unrelated pointwise limits |
-| **H2 — physical time** | Actual spacing-scaled strongly continuous semigroup, positive self-adjoint generator and nontrivial excitations |
-| **H3 — OS/Wightman reconstruction** | Continuum reflection positivity, localization, gauge-invariant observables, vacuum and field axioms, with correct reconstruction and spectral support |
-| **H4 — 4D mass gap** | Full continuum nontrivial four-dimensional Yang–Mills existence plus strictly positive physical energy–momentum spectral gap, with scale/renormalization dependence controlled |
+| **C1：coarse/fine物理的一致** | 元のWilson lawでの真正共通物理marginal、Gauss則、正確なdescent/source対応 |
+| **C2：強収束する物理transfer** | 同一物理source family上でoriginal細格子の時間発展・再構成を比較し、実際の物理Hilbert strong limitが得られる |
+| **C3：軌道に沿う可和誤差** | 実際の`b_n,t_{n+1}`スケジュール、必要な`|b_{n+1}-b_n|`等を含むsummable error、同一のlimitを与える |
+| **一つの自然時間構造** | 多時刻の極限が**同じ一つの物理作用素**の冪・semigroupであり、独立した各時刻の点ごとの極限でない |
+| **H2：物理時間Hamiltonian** | 格子間隔を正しくスケールした強連続semigroup、非自明な正自己共役generator |
+| **H3：OS/Wightman再構成** | 連続体の反射陽性、局所化、物理gauge-invariant observable・真空・スペクトル支持 |
+| **H4：4D Yang–Mills質量ギャップ** | 完全な非自明4次元連続体Yang–Mills構成と、エネルギー運動量スペクトルの厳密に正のmass gap |
 
-Every row in this section remains **OPEN**. Positive `A_W`/`D_{12}` finite-volume spectral bands and even a new finite-volume spatial GI witness would not close these by themselves.
+**すべてOPEN。** 有限格子の`D₁₂`や`A_W`の正スペクトル、真の非零GI witness、Gram inverseのLipschitz性のいずれも、単独でこの表をCLOSEDにしない。
 
-## 7. Verifiable Lean theorem pointers and immediate work order
+## 5. 実装するときの優先順位：数学的阻害条件に近い順
 
-All paths begin with `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaar` and end in `.lean`:
+1. **Source-family compatibility の正確な定義・分解。** MF/MG/MJ/MKのどの作用素が本当に元のendpoint `S_{n,r}`へ移送できるかを、構造写像と偽になる場合のobstructionに分ける。定義を置いただけで移送可能と主張しない。
+2. **Authentic local-GI energy のcross-volume比較。** 実際のWilsonian sourceのlink/plaquetteごとの感度・posterior-fiber二乗モーメントを読み取り、`Q_{\rm GI}/N_H`の増減・下界候補を具体的に分解する。新しい独立分布を作らない。
+3. **Signed spatial covariance の可和性**と**スケール互換な局所選択**。MKの`p_H`に許された選択依存を明記し、固定sourceへの局所化が必要なら別の証明を構築する。
+4. 上の材料を使い、**positive fine × arbitrary Krylov r**で真の`I_{\rm phys}`消去または定量的代替を進める。Dobrushin依存経路へ自動的に戻さない。
+5. U0/E/F/U1–U4が十分になってから、実際のC1/C2/C3を一つの物理時間極限として閉じる。H2/H3/H4はさらに独立に証明する。
 
-| Priority | Exact file suffix | Key formally checked fact |
+**「次のPRに書くべきもの」は、単にGram定理の代数的帰結を増やすことではなく、上記のいずれかの**実際の物理的・解析的obstructionを減らす定理**である。逆に、未証明のuniformな仮定を`theorem`の引数として追加しただけではGateをCLOSEしない。
+
+## 6. 検証できるLean定理・ファイルへの導線
+
+すべてのファイルは`MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaar`で始まり`.lean`で終わる。GitHubの[authoritative branch](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit/MGAP4D/MathlibAnalytic)で**実ファイル・実定理**を読む。
+
+| Track | Exact suffix | Checkable result |
 | --- | --- | --- |
-| **1 — prerequisite** | `OriginalStaticGISpatialKernelV5_JK` | `p4Q2JK_originalSpatialMinor_ne_iff_actualHaarMoment_ne`; exact authentic second-context obstruction |
-| **2 — positive-fine consequence** | `OriginalGISpatialActionMinorTangentV5_JI` | Literal spatial minor `\Delta_W` and conditional fine-coupling derivative bridge |
-| **3 — temporal witness** | `OriginalTemporalPosteriorTestDetectionV5_JP` | `p4Q2JP_originalWilsonTemporalTestGap_strictNegative_uniform` |
-| **4 — true physical receiver** | `OriginalGIPhysicalReceiverTemporalCovarianceV5_JQ` | `p4Q2JQ_originalPhysicalGI_temporalCovariance_quadratic` |
-| **5 — improved covariance** | `OriginalGICenteredReceiverTemporalCovarianceV5_JR` | `p4Q2JR_originalPhysicalGI_centeredTemporalCovariance_quadratic` |
-| **6 — current end point** | `OriginalGIPhysicalReceiverSpanObstructionV5_JS` | `p4Q2JS_temporalWilson_not_mem_physicalReceiverSpan_of_allGI_zero` and existential conditional GI witness |
+| 最初の原空間minor | `OriginalGISpatialActionMinorTangentV5_JI` | 元の空間`Δ_W`とfine couplingの導関数 |
+| spatial nonzero（重要） | `OriginalTwoContextSpatialGIMinorNonzeroV5_LM` | `p4Q2LM_originalSpatialWilsonGIMinor_exists_nonzero_contexts` |
+| 真の局所物理源 | `OriginalLocalPlaquetteGIWitnessV5_LO` | `p4Q2LO_originalPhysicalLocalTwoSourceGI_explicit_coercive` |
+| 本当のplaquette count | `OriginalCountControlledLocalPhysicalGICoercivityV5_LQ` | `p4Q2LQ_originalSpatialPlaquetteCount_eq_card` |
+| Harnack/補償 | `OriginalTransferNormalizationCompensatedCoercivityV5_LW` | `p4Q2LW_originalCompensatedLocalGIMinor_eq_sq_mul_original` |
+| cancellation-free `Q_GI` | `OriginalLocalGICompensatedSquareEnergyV5_LY` | `p4Q2LY_originalPhysicalLocalGI_exists_squareEnergy_floor` |
+| ローカル上界 | `OriginalCompensatedGIUniformLocalMomentBoundV5_MA` | `p4Q2MA_originalCompensatedLocalGIMinor_sq_le_four_contrastSq_sq` |
+| 活性集合と真正性 | `OriginalGIActivePlaquetteDensityV5_MB` / `OriginalActiveGIPhysicalCoerciveDensityV5_MC` | `p4Q2MB_originalActiveGI_density_ge_energy_fraction` / MC物理強制性 |
+| 真の空間線形床 | `OriginalLinearGIPhysicalGapV5_MF` | `p4Q2MF_originalFullPhysicalGapAverage_ge_linearGI` |
+| Gram/逆写像 | `OriginalPhysicalGramDeterminantV5_MG` / `OriginalPhysicalGramQuantitativeDeterminantV5_MH` / `OriginalPhysicalGramInverseV5_MI` / `OriginalPhysicalGramInverseLipschitzV5_MJ` | exact polarisation / `det≥k²` / adjugate / two-input Lipschitz |
+| **最新定理MK** | `OriginalMeanEnergySinglePlaquetteV5_MK` | `p4Q2MK_originalGI_exists_meanEnergyPlaquette`、`p4Q2MK_originalPhysicalGI_exists_authenticMeanPlaquette` |
 
-Minimal exact JS compilation (after checking out the **current observed authoritative commit**, not default `main`):
+## 7. CIを効率的に保ちながら厳密性を保つ
+
+定理を新しく書いた場合は次を省略しない。
+
+- 定理正本branchのfresh SHA、**変更Lean全文**、import先と真正物理定義、実際に必要な前提条件を再観測する。
+- pinned Lean/mathlibの既存補題を優先し、数学的に別物のindependent-Haar検出器・架空のrank/source・未検証uniform条件で不足を埋めない。
+- **変更した依存の最大leaf**に対する`lake build`、CI exact source SHA、変更ファイルのwarning/error 0件、全公開`#print axioms`で`sorryAx`なし、独立MCP completion receipt SUCCESSを確認する。既存有限格子の`native_decide`由来の依存は「新規公理」と混同しない。
+- 変更が`README.md`/`ROADMAP.md`だけなら**docs-only軽量検証**を使い、1万以上のLeanモジュール全再ビルドは不要。CIキャッシュキーはpinned toolchain/manifest、authoritative baseと安全なPRリトライscopeで扱う。失敗のたびに不要なフルビルドを積み重ねない。
+- PRソースCI成功後に定理正本へ統合し、**squash SHAとsource SHAを別々に記録**。docs-onlyマージを新しい数学的達成と数えない。
+
+再現例（**検証済みMK source**を含むtheorem-bearing mergeを利用）：
 
 ```bash
 git fetch origin formal/real-hilbert-uniform-coercive-strong-limit
-git switch --detach d5316fe0a0cf96a8ab8a198bda280ac035585ab4
-lake exe cache get              # optional pinned mathlib cache, when available
-lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalGIPhysicalReceiverSpanObstructionV5_JS
+git switch --detach 92fe1141e68d545d1fb33e6bb30f6e35db5f5ba7
+cat lean-toolchain
+# optional when available: lake exe cache get
+lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalMeanEnergySinglePlaquetteV5_MK
 ```
 
-For a changed Lean theorem, the proof-integrity checklist is: pin exact canonical SHA; inspect **full file, relevant definitions, imported prior statements and intended mathematical scope**; reuse pinned mathlib; build the exact source HEAD; resolve all changed-file warnings and errors; inspect every new `#print axioms` result for `sorryAx` and separately identify *inherited* `native_decide` finite-grid axioms; confirm MCP CI receipt for the **same** source SHA; then merge to the sole theorem carrier and reobserve its new SHA. No `sorry`/`admit`/fresh postulated `axiom`, independent-Haar conditional substitute, or artificial frame assumption.
+## 8. 検証済みの履歴とリンク（旧版の「最新」を繰り返さない）
 
-## 8. Historical milestones without repeating outdated checkpoints
+- 真正Wilson物理transfer・有限格子operator：[#5440](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5440)、[#5472](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5472)、[#5485](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5485)、[#5514](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5514)。
+- 真のsigned sourceと物理的不可視sector：[#5574](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5574)、[#5621](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5621)、[#5639](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5639)。
+- 空間GI検出（既に閉じたGate S）：[#5656 JI](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5656)、[#5657 JK](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5657)、LM `OriginalTwoContextSpatialGIMinorNonzeroV5_LM`。
+- 独立の時間posterior/receiver経路：[#5662 JP](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5662)、[#5664 JR](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5664)、[#5665 JS](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5665)。JS receiver-span membershipの未証明性は**空間LM定理の欠如とは別問題**。
+- 真のGI二乗エネルギー・空間frame・逆写像：[#5729 MB](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5729)、[#5731 MC](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5731)、[#5733 MD](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5733)、[#5734 ME](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5734)、[#5735 MF](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5735)、[#5736 MG](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5736)、[#5737 MH](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5737)、[#5738 MI](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5738)、[#5739 MJ](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5739)、[#5740 MK](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5740)。
 
-- **Physical Wilson joint/operator groundwork:** original nonperturbative construction, `A_W`, `D_{12}`, true six-color geometry and distinct pair-Haar reference — [#5440](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5440), [#5472](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5472), [#5485](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5485), [#5514](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5514).
-- **Authentic signed physical-source posterior certificate:** [#5574 (GL)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5574), [#5606 (HM)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5606), [#5619–#5639 (HZ–IR)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5639).
-- **Historical restricted positive-fine innovation:** [#5365 (Z2)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5365).
-- **Current spatial/temporal frontier:** [#5656 (JI)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5656), [#5657 (JK)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5657), [#5662 (JP)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5662), [#5663 (JQ)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5663), [#5664 (JR)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5664), [#5665 (JS)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5665).
-
-Full older chronological detail, including prior theorem-source SHA/CI results and historical no-go qualifications, remains available in the Git history of README.md and ROADMAP.md. **Always prefer current Lean source over historical prose.**
+これらは**有限モデルでどこまで実際に証明したか**を表すリンクであり、Yang–Mills Millennium Prize問題の解決宣言ではない。より古いステップごとのPRと定理の履歴はGit historyに残してある。
