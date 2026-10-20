@@ -109,10 +109,6 @@ theorem p4Q2MY_originalPlaquetteFourEdges_injective
   let v := p.1
   let firstAxis := p.2.1.1
   let secondAxis := p.2.1.2
-  let e0 : Link := (v,firstAxis)
-  let e1 : Link := (periodicHypercubicEvenSpatialSliceShift H v firstAxis,secondAxis)
-  let e2 : Link := (periodicHypercubicEvenSpatialSliceShift H v secondAxis,firstAxis)
-  let e3 : Link := (v,secondAxis)
   have hAxis : firstAxis ≠ secondAxis := by
     intro h
     exact (ne_of_lt p.2.2) (congrArg Subtype.val h)
@@ -122,27 +118,15 @@ theorem p4Q2MY_originalPlaquetteFourEdges_injective
       (PeriodicHypercubicEvenSideLength H)
       (by change 2 ≤ 2 * (H + 1); omega)
       v.1 firstAxis.1) (congrArg Subtype.val h)
-  have hMV := p4Q2MV_originalSpatialPlaquette_firstLink_otherThree_ne H p
-  dsimp only at hMV
-  rcases hMV with ⟨h10,h20,h30⟩
-  have h01 : e0 ≠ e1 := by exact Ne.symm h10
-  have h02 : e0 ≠ e2 := by exact Ne.symm h20
-  have h03 : e0 ≠ e3 := by exact Ne.symm h30
-  have h12 : e1 ≠ e2 := by
+  have hShiftNu : periodicHypercubicEvenSpatialSliceShift H v secondAxis ≠ v := by
     intro h
-    exact hAxis (congrArg Prod.snd h).symm
-  have h13 : e1 ≠ e3 := by
-    intro h
-    exact hShiftMu (congrArg Prod.fst h)
-  have h23 : e2 ≠ e3 := by
-    intro h
-    exact hAxis (congrArg Prod.snd h)
+    exact (periodicHypercubicShift_ne_self
+      (PeriodicHypercubicEvenSideLength H)
+      (by change 2 ≤ 2 * (H + 1); omega)
+      v.1 secondAxis.1) (congrArg Subtype.val h)
   intro i j hij
   fin_cases i <;> fin_cases j <;>
-    simp [p4Q2MY_originalPlaquetteFourEdges, e0, e1, e2, e3,
-      h01, h02, h03, h12, h13, h23,
-      Ne.symm h01, Ne.symm h02, Ne.symm h03,
-      Ne.symm h12, Ne.symm h13, Ne.symm h23] at hij ⊢
+    simp_all [p4Q2MY_originalPlaquetteFourEdges]
 
 /-- The selected four real original physical spatial plaquette links
 as an index embedding into the COMPLETE spatial SU(2) link carrier. -/
