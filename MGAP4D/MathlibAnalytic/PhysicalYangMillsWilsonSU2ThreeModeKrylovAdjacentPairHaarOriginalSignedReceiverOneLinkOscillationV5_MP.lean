@@ -94,6 +94,8 @@ local notation "F" => p4Q2JH_originalFiberKernel H b hb
 local notation "Q" => p4Q2LW_originalTransferCompensatedGIResponse H b hb
 local notation "L" => ContinuousMap.toLp 2 haar ℝ
 
+include hb
+
 /-- Genuine SU(2) complete one-slab Wilson kernel Harnack comparison on
 the LEFT boundary, via exact kernel symmetry and the already proved
 right-link Harnack. This is not a new transfer or a changed measure. -/
@@ -223,7 +225,8 @@ theorem p4Q2MP_originalScaledSignedFiberKernel_leftLink_abs_sub_le
           rw [hfactor, abs_mul, abs_mul]
     _ ≤ ((M-1)*M)*D := hAll
     _ = (M-1)*E := by
-      dsimp [E, M, D, p4Q2LW_originalHarnackContrastScale]
+      dsimp [M, D, p4Q2LW_originalHarnackContrastScale,
+        p4Q2LS_originalPosteriorContrastEnvelope]
       ring
 
 /-- SU(2) Haar integration of the very same original Wilson signed
@@ -260,13 +263,13 @@ theorem p4Q2MP_originalScaledSignedFiberRepresenter_leftLink_abs_sub_le
   have hBound :
       ‖∫ xi : Gauge,
           (s z * k (xi, Ag) - s z * k (xi, Ah)) ∂nu‖ ≤
-        C * nu.real Set.univ := by
+        C * (normalizedCompactHaar Gauge).real Set.univ := by
     apply norm_integral_le_of_norm_le_const
     filter_upwards with xi
     rw [Real.norm_eq_abs]
     exact p4Q2MP_originalScaledSignedFiberKernel_leftLink_abs_sub_le
       H b hb e target z A g h xi
-  have hUniv : nu.real Set.univ = 1 := by simp [measureReal_def]
+  have hUniv : (normalizedCompactHaar Gauge).real Set.univ = 1 := by simp [measureReal_def]
   rw [hIntegral, ← Real.norm_eq_abs]
   simpa only [hUniv, mul_one] using hBound
 
@@ -291,7 +294,6 @@ theorem p4Q2MP_originalCompensatedSignedReceiver_eq_RieszDensity
   change (-(s z))*inner ℝ (L (R e z)) u =
     inner ℝ (L ((-(s z)) • R e z)) u
   rw [map_smul, real_inner_smul_left]
-  rfl
 
 /-- The ORIGINAL compensated interacting-posterior signed GI Riesz
 density has H-independent one-link source-side oscillation
@@ -306,7 +308,7 @@ theorem p4Q2MP_originalCompensatedSignedReceiver_oneLinkOscillation
       p4Q2MP_originalCompensatedSignedReceiverRieszDensity H b hb e z
         (Function.update A target h)| ≤
       (Real.exp (8*b)-1)*E := by
-  have h :=
+  have hBound :=
     p4Q2MP_originalScaledSignedFiberRepresenter_leftLink_abs_sub_le
       H b hb e target z A g h
   change |(-(s z))*R e z (Function.update A target g) -
@@ -317,7 +319,7 @@ theorem p4Q2MP_originalCompensatedSignedReceiver_oneLinkOscillation
       -(s z*R e z (Function.update A target g) -
         s z*R e z (Function.update A target h)) := by ring
   rw [heq, abs_neg]
-  exact h
+  exact hBound
 
 end Frozen
 end GroundStatePosteriorJoint
