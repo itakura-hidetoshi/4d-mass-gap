@@ -39,6 +39,23 @@ noncomputable section
 set_option maxHeartbeats 3900000
 set_option synthInstance.maxHeartbeats 1050000
 
+local instance p4Q2MZ_topologicalGroup :
+    IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2MZ_compactSpace :
+    CompactSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2MZ_secondCountable :
+    SecondCountableTopology (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2MZ_measurableSpace :
+    MeasurableSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2MZ_borelSpace :
+    BorelSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
+  specialUnitaryGroupBorelSpace 2
+
+
 namespace GroundStatePosteriorJoint
 section PhysicalSource
 variable (H : ℕ)
