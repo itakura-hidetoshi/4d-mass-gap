@@ -180,20 +180,23 @@ theorem p4Q2MU_originalWilsonMean_cauchySchwarz
   have hMassSq : 0 < (Mass z)^2 := sq_pos_of_pos hMass
   have hCS :=
     p4Q2MT_originalWilsonKernel_weightedCauchySchwarz H b z f g
-  change
-    ((∫ A : Cfg, f A * g A * K A z.2 ∂haar) / Mass z)^2 ≤
-      ((∫ A : Cfg, (f A)^2 * K A z.2 ∂haar) / Mass z) *
-      ((∫ A : Cfg, (g A)^2 * K A z.2 ∂haar) / Mass z)
-  calc
-    ((∫ A : Cfg, f A * g A * K A z.2 ∂haar) / Mass z)^2 =
-        (∫ A : Cfg, f A * g A * K A z.2 ∂haar)^2 /
-        (Mass z)^2 := by ring
-    _ ≤ ((∫ A : Cfg, (f A)^2 * K A z.2 ∂haar) *
-           (∫ A : Cfg, (g A)^2 * K A z.2 ∂haar)) /
-             (Mass z)^2 :=
-      (div_le_div_iff_of_pos_right hMassSq).2 hCS
-    _ = ((∫ A : Cfg, (f A)^2 * K A z.2 ∂haar) / Mass z) *
-        ((∫ A : Cfg, (g A)^2 * K A z.2 ∂haar) / Mass z) := by ring
+  have hCore :
+      ((∫ A : Cfg, f A * g A * K A z.2 ∂haar) / Mass z)^2 ≤
+        ((∫ A : Cfg, (f A)^2 * K A z.2 ∂haar) / Mass z) *
+          ((∫ A : Cfg, (g A)^2 * K A z.2 ∂haar) / Mass z) := by
+    calc
+      ((∫ A : Cfg, f A * g A * K A z.2 ∂haar) / Mass z)^2 =
+          (∫ A : Cfg, f A * g A * K A z.2 ∂haar)^2 /
+            (Mass z)^2 := by ring
+      _ ≤ ((∫ A : Cfg, (f A)^2 * K A z.2 ∂haar) *
+             (∫ A : Cfg, (g A)^2 * K A z.2 ∂haar)) /
+               (Mass z)^2 :=
+        (div_le_div_iff_of_pos_right hMassSq).2 hCS
+      _ = ((∫ A : Cfg, (f A)^2 * K A z.2 ∂haar) / Mass z) *
+          ((∫ A : Cfg, (g A)^2 * K A z.2 ∂haar) / Mass z) := by ring
+  simpa only [p4Q2MS_originalWilsonKernelConditionalMean,
+    p4Q2MR_originalWilsonKernelMoment,
+    ContinuousMap.mul_apply, pow_two] using hCore
 
 /-- The MS true Wilson signed covariance is EXACTLY the original
 positive-kernel average of TWO CENTERED ACTUAL CONTINUOUS OBSERVABLES:
@@ -222,8 +225,10 @@ theorem p4Q2MU_originalWilsonCovariance_eq_centeredMean
       fc * gc =
         f * q - mg • f - mf • q + (mf * mg) • (1 : C(Cfg, ℝ)) := by
     ext A
-    change (f A - mf) * (q A - mg) =
-      f A * q A - mg * f A - mf * q A + mf * mg
+    simp only [fc, gc, ContinuousMap.mul_apply,
+      ContinuousMap.add_apply, ContinuousMap.sub_apply,
+      ContinuousMap.smul_apply, ContinuousMap.one_apply,
+      smul_eq_mul, mul_one]
     ring
   have hMeanExpand :
       Mean z (fc * gc) =
@@ -242,7 +247,6 @@ theorem p4Q2MU_originalWilsonCovariance_eq_centeredMean
         Mean z f * SignedMean e z (1 : C(Cfg, ℝ)) =
           Mean z (f * q) - mf * mg
       rw [hSignedF, hSignedOne]
-      rfl
     _ = Mean z (fc * gc) := by
       rw [hMeanExpand]
       dsimp [mf, mg]
@@ -255,10 +259,12 @@ theorem p4Q2MU_originalWilsonVariance_eq_centeredMeanSq
     Var z f =
       Mean z ((f - (Mean z f) • (1 : C(Cfg, ℝ))) *
         (f - (Mean z f) • (1 : C(Cfg, ℝ)))) := by
-  change
-    (∫ A : Cfg, (f A - Mean z f)^2 * K A z.2 ∂haar) / Mass z =
-      (∫ A : Cfg, (f A - Mean z f) *
-        (f A - Mean z f) * K A z.2 ∂haar) / Mass z
+  unfold p4Q2MS_originalWilsonKernelConditionalVariance
+    p4Q2MS_originalWilsonKernelConditionalMean
+    p4Q2MR_originalWilsonKernelMoment
+  simp only [ContinuousMap.mul_apply, ContinuousMap.sub_apply,
+    ContinuousMap.smul_apply, ContinuousMap.one_apply,
+    smul_eq_mul, mul_one]
   congr 1
   apply integral_congr_ae
   filter_upwards with A
