@@ -196,7 +196,6 @@ theorem p4Q2MQ_originalCompensatedSignedRiesz_normalized_eq_localProfile
       H 2 b A z.2).ne'
   rw [p4Q2MQ_originalSignedRiesz_eq_globalKernel_mul_localProfile]
   field_simp [hK]
-  ring
 
 /-- Exact SINGLE SOURCE LINK locality of the genuinely
 transfer-compensated original signed interacting posterior Riesz
@@ -228,7 +227,8 @@ theorem p4Q2MQ_originalCompensatedSignedRiesz_quotient_update_outside
       (Function.update A q g) e =
         (Function.update A q h) e := by
     classical
-    simp [Function.update, hqe]
+    have he : e ≠ q := Ne.symm hqe
+    simp [Function.update, he]
   exact p4Q2MQ_originalCompensatedSignedRiesz_quotient_local
     H b hb e z (Function.update A q g) (Function.update A q h) hAe
 
