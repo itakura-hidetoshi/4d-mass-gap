@@ -176,7 +176,6 @@ theorem p4Q2MB_originalGISquareEnergy_le_twice_active_count_amplitude
   have hHalf : n * threshold = Q e e' z z' / 2 := by
     dsimp [threshold]
     field_simp [ne_of_gt hcount]
-    ring
   change Q e e' z z' ≤
     2 * ceiling *
       ((p4Q2MB_originalActiveGISpatialPlaquettes
@@ -210,7 +209,7 @@ theorem p4Q2MB_originalActiveGI_density_ge_energy_fraction
   have hRaw : Q e e' z z' / (2 * ceiling) ≤ cardReal :=
     (div_le_iff₀ hDen).2 (by
       change Q e e' z z' ≤ cardReal * (2 * ceiling)
-      convert hBound using 1 <;> ring)
+      convert hBound using 1; ring)
   have hAvg : (Q e e' z z' / (2 * ceiling)) / n ≤
       cardReal / n :=
     (div_le_div_iff_of_pos_right hcount).2 hRaw
