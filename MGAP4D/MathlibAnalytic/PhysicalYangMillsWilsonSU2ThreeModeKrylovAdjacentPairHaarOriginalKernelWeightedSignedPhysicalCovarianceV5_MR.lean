@@ -18,7 +18,7 @@ The local Psi is NOT a replacement posterior or artificial detector.
 
 MR converts this identity, with no changes to the original physical
 source, into an EXACT ORIGINAL Wilson-kernel weighted covariance
-numerator. For a real continuous spatial test f define
+numerator; it reuses the existing MQ local profile directly. For a real continuous spatial test f define
 
   M_0 = ∫_H K_b(A,z.right) dHaar_H(A),
   M_f = ∫_H f(A) K_b(A,z.right) dHaar_H(A),
@@ -101,48 +101,16 @@ local notation "PhysicalGI" => p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpe
 local notation "U" => periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2
 local notation "Wp" => p4Q2LO_originalLocalPlaquettePhysicalSource H
 
-/-- Exact genuine positive Wilson one-slab kernel at fixed right boundary,
-as a continuous function of the complete original spatial source A. -/
-noncomputable def p4Q2MR_originalWilsonKernelSection (z : Cfg × Cfg) : C(Cfg, ℝ) :=
-  ⟨fun A => K A z.2,
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H 2 b).comp (continuous_id.prodMk continuous_const)⟩
-
-/-- Continuous authentic signed receiver score = ORIGINAL JH Riesz density
-divided by the true strictly positive Wilson kernel. It is EXACTLY the
-previous MQ local profile, not a new source, detector or posterior. -/
-noncomputable def p4Q2MR_originalSignedReceiverScore
-    (e : Link) (z : Cfg × Cfg) : C(Cfg, ℝ) := by
-  let k := p4Q2MR_originalWilsonKernelSection H b z
-  let rs := r e z
-  have hk : ∀ A : Cfg, k A ≠ 0 := by
-    intro A
-    exact (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_pos
-      H 2 b A z.2).ne'
-  exact ⟨fun A => rs A / k A, rs.continuous.div k.continuous hk⟩
-
-local notation "Score" => p4Q2MR_originalSignedReceiverScore H b hb
-
-/-- The true normalized-by-K Riesz score equals the original signed
-interacting Wilson one-link local profile EXACTLY, pointwise. -/
-theorem p4Q2MR_originalSignedReceiverScore_apply
+/-- The ACTUAL original transfer-compensated signed Wilson GI Riesz
+density is exactly the original positive Wilson kernel multiplied
+by the existing MQ genuine two-interacting-posterior local profile.
+No continuous-map duplicate or new detector is introduced. -/
+theorem p4Q2MR_originalCompensatedSignedRiesz_eq_kernel_mul_profile
     (e : Link) (z : Cfg × Cfg) (A : Cfg) :
-    Score e z A = Psi e z A := by
-  change r e z A / K A z.2 = Psi e z A
-  exact p4Q2MQ_originalSignedRiesz_div_originalKernel_eq_localProfile
-    H b hb e z A
-
-/-- Physical SOURCE-side locality of the authentic score, with all
-original interacting Wilson posterior and Perron factors retained:
-only the receiver link A(e) may affect this score. -/
-theorem p4Q2MR_originalSignedReceiverScore_eq_of_link_eq
-    (e : Link) (z : Cfg × Cfg) (A A' : Cfg)
-    (hAe : A e = A' e) :
-    Score e z A = Score e z A' := by
-  rw [p4Q2MR_originalSignedReceiverScore_apply,
-    p4Q2MR_originalSignedReceiverScore_apply]
-  exact p4Q2MQ_originalSignedLocalProfile_eq_of_sourceReceiverLink_eq
-    H b hb e z A A' hAe
+    p4Q2MP_originalCompensatedSignedReceiverRieszDensity H b hb e z A =
+      -(s z) * (K A z.2 * Psi e z A) := by
+  change -(s z) * r e z A = -(s z) * (K A z.2 * Psi e z A)
+  rw [p4Q2MQ_originalSignedRiesz_eq_globalKernel_mul_localProfile H b hb e z A]
 
 /-- Total mass of the ORIGINAL strictly positive spatial Wilson kernel
 section; NOT the mass of an invented independent-Haar posterior. -/
@@ -160,7 +128,7 @@ noncomputable def p4Q2MR_originalWilsonKernelMoment
 of interacting posterior densities, NOT any independent resampling. -/
 noncomputable def p4Q2MR_originalSignedWilsonProfileMoment
     (e : Link) (z : Cfg × Cfg) (f : C(Cfg, ℝ)) : ℝ :=
-  ∫ A : Cfg, f A * (K A z.2 * Score e z A) ∂haar
+  ∫ A : Cfg, f A * (K A z.2 * Psi e z A) ∂haar
 
 local notation "Mass" => p4Q2MR_originalWilsonKernelMass H b
 local notation "Moment" => p4Q2MR_originalWilsonKernelMoment H b
@@ -192,24 +160,23 @@ theorem p4Q2MR_originalCompensatedGI_eq_originalKernelWeightedProfile
   have hEq :
       (∫ A : Cfg, f A * R A ∂haar) =
         ∫ A : Cfg, (-(s z)) *
-          (f A * (K A z.2 * Score e z A)) ∂haar := by
+          (f A * (K A z.2 * Psi e z A)) ∂haar := by
     apply integral_congr_ae
     filter_upwards with A
     change f A * (-(s z) * r e z A) =
-      (-(s z)) * (f A * (K A z.2 * Score e z A))
+      (-(s z)) * (f A * (K A z.2 * Psi e z A))
     rw [p4Q2MQ_originalSignedRiesz_eq_globalKernel_mul_localProfile
-        H b hb e z A,
-      p4Q2MR_originalSignedReceiverScore_apply H b hb e z A]
+      H b hb e z A]
     ring
   calc
     Q e z (L f) = ∫ A : Cfg, f A * R A ∂haar := hInner
     _ = ∫ A : Cfg, (-(s z)) *
-        (f A * (K A z.2 * Score e z A)) ∂haar := hEq
+        (f A * (K A z.2 * Psi e z A)) ∂haar := hEq
     _ = -(s z) * SignedMoment e z f := by
       change (∫ A : Cfg, (-(s z)) *
-        (f A * (K A z.2 * Score e z A)) ∂haar) =
+        (f A * (K A z.2 * Psi e z A)) ∂haar) =
         -(s z) * ∫ A : Cfg,
-          f A * (K A z.2 * Score e z A) ∂haar
+          f A * (K A z.2 * Psi e z A) ∂haar
       rw [integral_const_mul]
 
 /-- The genuine Gauss-law constant physical unit has an original
@@ -295,8 +262,7 @@ end
 end MathlibAnalytic
 end MGAP4D
 
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2MR_originalSignedReceiverScore_apply
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2MR_originalSignedReceiverScore_eq_of_link_eq
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2MR_originalCompensatedSignedRiesz_eq_kernel_mul_profile
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2MR_originalWilsonKernelMass_nonneg
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2MR_originalCompensatedGI_eq_originalKernelWeightedProfile
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2MR_originalPhysicalUnitGI_eq_originalKernelWeightedProfile
