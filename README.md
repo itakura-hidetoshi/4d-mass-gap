@@ -42,17 +42,17 @@ The compensation is purely scalar, not a change of physical law:
 ## 3. What is proved: authentic Wilson source detection
 
 The original **spatial** static two-context Wilson determinant is
-$
+$$
 \Delta_W(z,z')=G_{e,z}(1)\,G_{e',z'}(W_H)-G_{e,z}(W_H)\,G_{e',z'}(1).
-$
+$$
 
 - [JI–JK, #5656–#5657](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5657): actual spatial minor definition, anchored centering, exact Haar-moment obstruction, and original fine-coupling derivative `M'_0=-Δ_W/2`.
 - **[LM, original nonzero two-context minor](MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalTwoContextSpatialGIMinorNonzeroV5_LM.lean)**: for every fixed finite H, **b>0**, pair of actual physical links and prescribed initial boundaries, **some two genuine original interacting-Wilson contexts** yield `Δ_W≠0`. The former README/ROADMAP statement “original spatial nonzero GI minor OPEN” is **obsolete**. See `p4Q2LM_originalSpatialWilsonGIMinor_exists_nonzero_contexts`.
 - **[LN–LP, true physical and local witness](MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalLocalPlaquetteGIWitnessV5_LO.lean)**: original constant-unit and Wilson spatial physical source planes, genuine local-plaquette GI minors, quantitative original physical two-source Frobenius coercivity and a real plaquette witness.
 - [LS–LX, genuine transfer/Harnack estimates](MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalTransferNormalizationCompensatedCoercivityV5_LW.lean): original posterior/receiver norm, physical one-link joint-density Harnack and contrast envelope. The positive original contrast scale is
-  $
+  $$
   E_b=e^{8b}(e^{16b}-e^{-16b})>0 \quad(b>0).
-  $
+  $$
   Bounds on the compensated receiver are volume-independent *at fixed b*, but the resulting positive **coercivity floor** is not thereby uniform in H.
 
 LM **closes the finite-volume spatial nonzero witness**, *not* all higher-Krylov source injectivity or continuum dynamics. A conditional small-positive-fine derivative consequence has to preserve its specific context, fine-coupling window and source; it does not extend automatically to all depths.
@@ -61,18 +61,18 @@ LM **closes the finite-volume spatial nonzero witness**, *not* all higher-Krylov
 
 Fix a genuine finite H, `b>0`, physical links `e,e'`, and actual interacting-Wilson contexts `z,z'`. Define
 
-$
+$$
 N_H=|\mathcal P_H|,\qquad
 Q_{\rm GI}=\sum_{p\in\mathcal P_H}d_p^2,\qquad
 k_{H,b}=\frac{Q_{\rm GI}/N_H}{10E_b^2}.
-$
+$$
 
 These are computed from the **original finite plaquette carrier** and the **original two posterior GI determinants**. Let
 
-$
+$$
 R_p(x,y)=G_{e,z}(xU+yW_{H,p}U)^2+
            G_{e',z'}(xU+yW_{H,p}U)^2.
-$
+$$
 
 The true source is **p-dependent**: an average of these responses is not a single p-independent endpoint source.
 
@@ -89,33 +89,33 @@ The true source is **p-dependent**: an average of these responses is not a singl
 | **[MK #5740](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5740)** | Separate reusable theorems selecting **one actual p** with `d_p²≥Q_GI/N_H`, genuine `κ_p≥k` and `k(x²+y²)≤R_p(x,y)` for all real x,y at the same genuine contexts; refines/organizes LY's existing maximum-witness result, without a new physical assumption. |
 
 Two particularly useful **already checked** finite-H inequalities are
-$
+$$
 \boxed{\quad
 k_{H,b}(x^2+y^2)\leq
 \frac{1}{N_H}\sum_{p\in\mathcal P_H}R_p(x,y),\qquad
 \exists p\in\mathcal P_H:\ k_{H,b}(x^2+y^2)\leq R_p(x,y).
 \quad}
-$
+$$
 When genuine `Q_GI>0`, `k_{H,b}>0`. The existential plaquette/witness may depend on H, b and the original contexts.
 
 For the **same actual spatial response**, set
-$
+$$
 A=\tfrac1{N_H}\sum_pR_p(1,0),\quad
 C=\tfrac1{N_H}\sum_pR_p(0,1),\quad
 B=\tfrac1{2N_H}\sum_p[R_p(1,1)-R_p(1,0)-R_p(0,1)].
-$
+$$
 Then the exactly polarized original spatial Gram `G=[[A,B],[B,C]]` satisfies
-$
+$$
 \frac1{N_H}\sum_pR_p(x,y)=Ax^2+2Bxy+Cy^2,\qquad
 G\succeq k_{H,b}I,\qquad
 AC-B^2\geq k_{H,b}A\geq k_{H,b}^2>0.
-$
+$$
 MI/MJ give a **fixed-context inverse** with
-$
+$$
 G^{-1}(s,t)=
 \left(\frac{Cs-Bt}{AC-B^2},\,\frac{At-Bs}{AC-B^2}\right),\qquad
 k_{H,b}^{\,2}\|G^{-1}v-G^{-1}w\|_2^2\leq\|v-w\|_2^2.
-$
+$$
 
 **Critical interpretation:** this is an original Wilson **spatial two-coordinate response frame**, with original `p`-dependent physical sources. It does **not** prove invertibility of the full physical transfer operator or positivity for all original physical Krylov sources; it is not a one-source endpoint theorem.
 
@@ -154,4 +154,4 @@ lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjac
 
 The file already contains four `#print axioms` commands. Check them and the exact-source [MK CI receipt](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39411635424). **No `sorryAx` was reported on these MK public theorems.** Some imported results inherit *previously known* finite-lattice `native_decide` axioms in addition to `propext`, `Classical.choice` and `Quot.sound`. Do not assert that all formal dependencies are axiom-free.
 
-For a future theorem: inspect current canonical SHA, the **complete Lean file and its physical prerequisites**, the exact changed-source-head CI and public axioms; fix errors/warnings in changed files, verify the independent MCP CI completion receipt, then merge and re-observe the new canonical SHA. For README/ROADMAP-only updates the workflow should use its fast non-Lean path rather than rebuilding thousands of unchanged theorem modules.
+For a future theorem: inspect current canonical SHA, the **complete Lean file and its physical prerequisites**, the exact changed-source-head CI and public axioms; fix errors/warnings in changed files, verify the independent MCP CI completion receipt, then merge and re-observe the new canonical SHA. The PR Lean Fast Check workflow is path-filtered to Lean sources, configuration, and scripts; a README/ROADMAP-only PR does **not** trigger the Lean workflow. Review Markdown and source links directly instead of rebuilding thousands of unchanged theorem modules.
