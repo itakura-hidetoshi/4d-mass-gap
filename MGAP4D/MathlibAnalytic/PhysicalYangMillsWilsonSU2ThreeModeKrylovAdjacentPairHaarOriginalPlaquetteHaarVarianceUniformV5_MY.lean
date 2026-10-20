@@ -106,24 +106,29 @@ are distinct even for the shortest even periodic lattice. This
 extends MV's first-edge/non-first-edge proof to all six pairs. -/
 theorem p4Q2MY_originalPlaquetteFourEdges_injective
     (p : Plaq) : Function.Injective (p4Q2MY_originalPlaquetteFourEdges H p) := by
-  let v := p.1
-  let firstAxis := p.2.1.1
-  let secondAxis := p.2.1.2
-  have hAxis : firstAxis ≠ secondAxis := by
+  have hAxis : p.2.1.1 ≠ p.2.1.2 := by
     intro h
     exact (ne_of_lt p.2.2) (congrArg Subtype.val h)
-  have hShiftMu : periodicHypercubicEvenSpatialSliceShift H v firstAxis ≠ v := by
+  have hShiftMu :
+      periodicHypercubicEvenSpatialSliceShift H p.1 p.2.1.1 ≠ p.1 := by
     intro h
     exact (periodicHypercubicShift_ne_self
       (PeriodicHypercubicEvenSideLength H)
       (by change 2 ≤ 2 * (H + 1); omega)
-      v.1 firstAxis.1) (congrArg Subtype.val h)
-  have hShiftNu : periodicHypercubicEvenSpatialSliceShift H v secondAxis ≠ v := by
+      p.1.1 p.2.1.1.1) (congrArg Subtype.val h)
+  have hShiftNu :
+      periodicHypercubicEvenSpatialSliceShift H p.1 p.2.1.2 ≠ p.1 := by
     intro h
     exact (periodicHypercubicShift_ne_self
       (PeriodicHypercubicEvenSideLength H)
       (by change 2 ≤ 2 * (H + 1); omega)
-      v.1 secondAxis.1) (congrArg Subtype.val h)
+      p.1.1 p.2.1.2.1) (congrArg Subtype.val h)
+  have hShiftMu' :
+      p.1 ≠ periodicHypercubicEvenSpatialSliceShift H p.1 p.2.1.1 :=
+    Ne.symm hShiftMu
+  have hShiftNu' :
+      p.1 ≠ periodicHypercubicEvenSpatialSliceShift H p.1 p.2.1.2 :=
+    Ne.symm hShiftNu
   intro i j hij
   fin_cases i <;> fin_cases j <;>
     simp_all [p4Q2MY_originalPlaquetteFourEdges]
