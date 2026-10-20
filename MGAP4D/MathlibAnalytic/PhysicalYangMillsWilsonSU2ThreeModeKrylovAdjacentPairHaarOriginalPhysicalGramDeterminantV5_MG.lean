@@ -136,7 +136,10 @@ theorem p4Q2MG_originalFullPhysicalGapAverage_eq_Gram
     exact p4Q2MG_originalPhysicalGapSquare_polarization
       H b hb e e' z z' p x y
   rw [hSum]
-  simp only [Finset.sum_add_distrib, Finset.sum_mul]
+  -- First distribute the finite sum, then factor out the common scalars.
+  -- The forward direction of Finset.sum_mul expands a product back
+  -- into the sum, so the reverse direction is essential here.
+  simp only [Finset.sum_add_distrib, ← Finset.sum_mul]
   unfold p4Q2MG_originalPhysicalGramUU
     p4Q2MG_originalPhysicalGramUW
     p4Q2MG_originalPhysicalGramWW
