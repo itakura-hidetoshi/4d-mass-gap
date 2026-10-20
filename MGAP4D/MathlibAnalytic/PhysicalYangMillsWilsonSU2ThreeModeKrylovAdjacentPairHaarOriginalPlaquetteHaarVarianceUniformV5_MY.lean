@@ -107,21 +107,21 @@ extends MV's first-edge/non-first-edge proof to all six pairs. -/
 theorem p4Q2MY_originalPlaquetteFourEdges_injective
     (p : Plaq) : Function.Injective (p4Q2MY_originalPlaquetteFourEdges H p) := by
   let v := p.1
-  let mu := p.2.1.1
-  let nu := p.2.1.2
-  let e0 : Link := (v,mu)
-  let e1 : Link := (periodicHypercubicEvenSpatialSliceShift H v mu,nu)
-  let e2 : Link := (periodicHypercubicEvenSpatialSliceShift H v nu,mu)
-  let e3 : Link := (v,nu)
-  have hAxis : mu ≠ nu := by
+  let firstAxis := p.2.1.1
+  let secondAxis := p.2.1.2
+  let e0 : Link := (v,firstAxis)
+  let e1 : Link := (periodicHypercubicEvenSpatialSliceShift H v firstAxis,secondAxis)
+  let e2 : Link := (periodicHypercubicEvenSpatialSliceShift H v secondAxis,firstAxis)
+  let e3 : Link := (v,secondAxis)
+  have hAxis : firstAxis ≠ secondAxis := by
     intro h
     exact (ne_of_lt p.2.2) (congrArg Subtype.val h)
-  have hShiftMu : periodicHypercubicEvenSpatialSliceShift H v mu ≠ v := by
+  have hShiftMu : periodicHypercubicEvenSpatialSliceShift H v firstAxis ≠ v := by
     intro h
     exact (periodicHypercubicShift_ne_self
       (PeriodicHypercubicEvenSideLength H)
       (by change 2 ≤ 2 * (H + 1); omega)
-      v.1 mu.1) (congrArg Subtype.val h)
+      v.1 firstAxis.1) (congrArg Subtype.val h)
   have hMV := p4Q2MV_originalSpatialPlaquette_firstLink_otherThree_ne H p
   dsimp only at hMV
   rcases hMV with ⟨h10,h20,h30⟩
