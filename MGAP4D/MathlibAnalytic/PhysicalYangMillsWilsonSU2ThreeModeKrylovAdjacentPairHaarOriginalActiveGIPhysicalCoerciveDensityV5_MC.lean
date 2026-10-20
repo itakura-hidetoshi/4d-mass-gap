@@ -152,8 +152,7 @@ theorem p4Q2MC_originalPositiveGI_hasPhysicalActivePlaquette
     by_contra hNot
     have hZero : (active e e' z z').card = 0 :=
       Nat.eq_zero_of_not_pos hNot
-    rw [hZero] at hCardRatio
-    norm_num at hCardRatio
+    simp [hZero] at hCardRatio
   obtain ⟨p, hp⟩ := Finset.card_pos.mp hCardPos
   have hpOriginal : p ∈ periodicHypercubicEvenSpatialSlicePlaquetteList H := by
     change p ∈ (Finset.univ : Finset Plaq).toList
@@ -186,7 +185,7 @@ theorem p4Q2MC_originalPhysicalGI_exists_activeCoerciveDensity
               H b hb (p4Q2LO_originalPhysicalLocalTwoSource H p x y) e z)^2 +
             (p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap
               H b hb (p4Q2LO_originalPhysicalLocalTwoSource H p x y) e' z')^2) := by
-  obtain ⟨z, z', p₀, hp₀, hn, hQ, hMean, hKappa, hFloor, hOld, hPhysical⟩ :=
+  obtain ⟨z, z', _, _, hn, hQ, _, _, _, _, _⟩ :=
     p4Q2LY_originalPhysicalLocalGI_exists_squareEnergy_floor
       H b hb hpos e e' left₀ right₀
   have hActivity :=
