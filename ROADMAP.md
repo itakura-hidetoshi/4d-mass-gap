@@ -56,9 +56,9 @@
 
 ### 2.2 消去されない局所GI二乗エネルギー：LY–MC
 
-\[
+$
 Q_{\rm GI}(H,b,e,e',z,z')=\sum_{p\in\mathcal P_H}\bar\Delta_p^2.
-\]
+$
 
 - **LY** `p4Q2LY_originalPhysicalLocalGI_exists_squareEnergy_floor`：LM/LPの実文脈で`Q_GI>0`、真のmax-plaquette `d_p²≥Q_GI/N_H`、真の未補償Gauss-law源で`κ_p≥Q_GI/(10N_HE_b²)`。この**最大選択はLYで既に証明**されている。
 - **LZ**：局所GI square energyの厳密なmean/variance恒等式。
@@ -69,35 +69,35 @@ Q_{\rm GI}(H,b,e,e',z,z')=\sum_{p\in\mathcal P_H}\bar\Delta_p^2.
 
 真の2つのoriginal signed Wilson事後物理応答`G_{e,z},G_{e',z'}`について
 
-\[
+$
 R_p(x,y)=G_{e,z}(xU+yW_{H,p}U)^2+
  G_{e',z'}(xU+yW_{H,p}U)^2,\quad
 k=\frac{Q_{\rm GI}/N_H}{10E_b^2}.
-\]
+$
 
 - **MD #5733 / ME #5734**：活性集合から全真正plaquetteへの有限和の比較。MEの`(Q_GI/N_H)^2`依存は、次のMFによって改善。
 - **MF #5735**：活性集合作成を経由しない各original pの物理強制性から
-  \[
+  $
   k(x^2+y^2)\le\frac1{N_H}\sum_{p\in\mathcal P_H}R_p(x,y)
-  \]
+  $
   を正確に証明（`Q_GI/N_H`へ**一次**依存）。
 - **MG #5736**：同じ真正応答の偏極で`G_{\rm spatial}=\begin{pmatrix}A&B\\B&C\end{pmatrix}`を定義し、`G_{\rm spatial}\succeq kI`、`AC-B²>0`を証明。
 - **MH #5737**：`A,C≥k`、`AC-B²≥kA≥k²>0`という具体的な**有限H行列式下界**。
 - **MI #5738**：`G_{\rm spatial}^{-1}`の明示的adjugate式、係数一意性、`k²\|G^{-1}v\|_2²≤\|v\|_2²`。
 - **MJ #5739**：同じ逆写像の加法性、実数倍、差分と任意2観測`v,w`のLipschitz安定性
-  \[
+  $
   k^2\|G^{-1}v-G^{-1}w\|_2^2\le\|v-w\|_2^2.
-  \]
+  $
   これらは有限Hの**局所源familyの空間平均Gram**であり、独立Haar検出器でも単一endpoint transfer作用素でもない。
 
 ### 2.4 一枚の実プラケット：MK #5740
 
 `p4Q2MK_originalGI_exists_meanEnergyPlaquette`、`...exists_meanCoercivePlaquette`、`...exists_singlePlaquetteLinearFloor`、`...exists_authenticMeanPlaquette`の4定理によって、元のfinite `Finset.univ`のmaxから
 
-\[
+$
 \exists p\in\mathcal P_H,\quad d_p^2\ge Q_{\rm GI}/N_H,\qquad
 \forall x,y\in\mathbb R:\ R_p(x,y)\ge k(x^2+y^2)
-\]
+$
 
 を真のoriginal interacting-Wilson文脈で扱いやすい形に整理した。`p`の存在は真正Wilson物理源に基づくが、**p選択のH/scale連続性やendpoint source同一性はまだ証明されない**。
 
