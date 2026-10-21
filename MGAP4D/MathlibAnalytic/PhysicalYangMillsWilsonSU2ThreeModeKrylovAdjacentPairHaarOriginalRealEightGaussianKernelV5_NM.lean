@@ -80,7 +80,7 @@ theorem p4Q2NM_originalSU2RealEightFeature_norm_sq
   have hScale :=
     specialUnitaryNormalizedTraceRelativeKernel_eq_scaled 2 g g
   rw [hIdentity, specialUnitaryRealTraceRelativeKernel_eq_inner] at hScale
-  rw [← real_inner_self_eq_norm_sq] at hScale
+  rw [real_inner_self_eq_norm_sq] at hScale
   norm_num at hScale
   linarith
 
@@ -132,10 +132,9 @@ theorem p4Q2NM_originalSU2WilsonRelativeKernel_eq_realEightGaussian
   rw [specialUnitaryWilsonRelativeKernel_eq_trace]
   have hChi :
       specialUnitaryNormalizedTraceRelativeKernel 2 x g = chi x g := by
-    unfold specialUnitaryNormalizedTraceRelativeKernel
-      p4Q2NG_originalSU2TemporalCharacter
-      specialUnitaryWilsonPlaquetteEnergy
-      normalizedSpecialUnitaryRealTrace
+    rw [specialUnitaryNormalizedTraceRelativeKernel_eq_scaled,
+      specialUnitaryRealTraceRelativeKernel_eq_inner,
+      p4Q2NM_originalSU2TemporalCharacter_eq_half_realEight_inner]
     ring
   rw [hChi, p4Q2NM_originalSU2TemporalCharacter_eq_one_sub_realEight_chord_sq]
   rw [← Real.exp_add]
@@ -184,7 +183,8 @@ theorem p4Q2NM_originalSU2TemporalWilsonSection_strict_off_diagonal
   have hExp : Real.exp (-(b/4) * ‖J x - J g‖ ^ 2) < 1 := by
     rw [← Real.exp_zero]
     exact Real.exp_lt_exp.mpr hneg
-  nlinarith [Real.exp_pos b]
+  simpa only [mul_one] using
+    (mul_lt_mul_of_pos_left hExp (Real.exp_pos b))
 
 end GroundStatePosteriorJoint
 end
