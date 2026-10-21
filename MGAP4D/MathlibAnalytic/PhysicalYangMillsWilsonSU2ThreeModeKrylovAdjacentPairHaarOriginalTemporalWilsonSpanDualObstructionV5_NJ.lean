@@ -1,5 +1,5 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalSignedDensityDiracSeparationV5_NI
-import Mathlib.Topology.Algebra.Module.ContinuousLinearMap.Basic
+import Mathlib.Analysis.Normed.Operator.ContinuousLinearMap
 import Mathlib.Tactic
 
 /-!
