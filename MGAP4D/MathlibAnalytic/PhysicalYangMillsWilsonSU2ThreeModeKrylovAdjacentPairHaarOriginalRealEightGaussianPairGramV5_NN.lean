@@ -11,8 +11,8 @@ chord between distinct real SU2 group elements.
 
 NN proves continuity of this exact J as a map from the ACTUAL compact
 SU(2) into its previous finite-dimensional Euclidean matrix feature.
-The existing real-linear matrix coordinate feature is continuous
-by its canonical finite-dimensional continuous-linear-map extension.
+Continuity is proved coefficientwise from the original matrix subtype topology,
+Complex.continuous_re/im, and the PiLp real-coordinate homeomorphism.
 
 NN then upgrades NK's one special (1, Rpi) two-point Gram determinant:
 for ANY TWO DISTINCT x,g in the true full SU(2) group and any b>0
@@ -64,8 +64,8 @@ local notation "k" => p4Q2NJ_originalSU2WilsonTemporalSection
 
 /-- The ORIGINAL real-eight fundamental SU2 matrix feature is
 continuous, not merely injective.  This uses the actual preexisting
-real-linear coordinate recovery map on the finite-dimensional
-matrix carrier, with the genuine SU2 subtype inclusion. -/
+matrix-subtype coefficient topology and continuous complex real/imaginary
+projections, with the PiLp transport of the actual eight coordinates. -/
 theorem p4Q2NN_originalSU2RealEightFeature_continuous :
     Continuous (specialUnitaryMatrixRealFeature 2 :
       Gauge → SpecialUnitaryMatrixRealFeatureSpace 2) := by
@@ -73,6 +73,11 @@ theorem p4Q2NN_originalSU2RealEightFeature_continuous :
     WithLp.toLp 2 (fun q : (Fin 2 × Fin 2) × Bool =>
       if q.2 then ((g : Matrix (Fin 2) (Fin 2) ℂ) q.1.2 q.1.1).re
       else ((g : Matrix (Fin 2) (Fin 2) ℂ) q.1.2 q.1.1).im))
+  have hEntry (i j : Fin 2) :
+      Continuous (fun g : Gauge =>
+        ((g : Matrix (Fin 2) (Fin 2) ℂ) i j)) :=
+    (continuous_subtype_val : Continuous
+      (fun g : Gauge => (g : Matrix (Fin 2) (Fin 2) ℂ))).matrix_elem i j
   have hCoordinates : Continuous (fun g : Gauge =>
       (fun q : (Fin 2 × Fin 2) × Bool =>
         if q.2 then ((g : Matrix (Fin 2) (Fin 2) ℂ) q.1.2 q.1.1).re
@@ -80,10 +85,10 @@ theorem p4Q2NN_originalSU2RealEightFeature_continuous :
     rw [continuous_pi_iff]
     intro q
     by_cases h : q.2
-    · simp only [h, if_true]
-      fun_prop
-    · simp only [h, if_false]
-      fun_prop
+    · simpa [h] using
+        Complex.continuous_re.comp (hEntry q.1.2 q.1.1)
+    · simpa [h] using
+        Complex.continuous_im.comp (hEntry q.1.2 q.1.1)
   exact (PiLp.continuous_toLp 2
     (fun _ : (Fin 2 × Fin 2) × Bool => ℝ)).comp hCoordinates
 
