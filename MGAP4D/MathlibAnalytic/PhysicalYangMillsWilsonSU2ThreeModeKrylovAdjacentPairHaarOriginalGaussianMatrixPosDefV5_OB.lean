@@ -146,7 +146,7 @@ theorem p4Q2OB_originalTemporalGaussianGram_inv_posDef
     (b : ℝ) (hb : 0 < b)
     {ι : Type} [Fintype ι]
     (points : ι → Gauge) (hpoints : Function.Injective points) :
-    (p4Q2OB_originalTemporalGaussianGramMatrix b points)⁻¹ |>.PosDef := by
+    ((p4Q2OB_originalTemporalGaussianGramMatrix b points)⁻¹).PosDef := by
   classical
   exact (p4Q2OB_originalTemporalGaussianGram_posDef b hb points hpoints).inv
 
