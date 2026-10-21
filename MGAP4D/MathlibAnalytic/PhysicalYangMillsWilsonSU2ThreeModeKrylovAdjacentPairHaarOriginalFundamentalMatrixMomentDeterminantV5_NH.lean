@@ -169,9 +169,9 @@ theorem p4Q2NH_originalFundamentalMomentDeterminant_eq_scoreDifference
       E 1 (z.2 e) * E x (z.2 e) * (q e z x - q e z 1) := by
   rw [p4Q2NH_originalFundamentalMomentDeterminant_eq_signedScoreDefect
     H b hb e z x]
-  rw [← p4Q2NH_originalBoundaryDiagonalFactor_eq_character b 1 (z.2 e),
-      ← p4Q2NH_originalBoundaryDiagonalFactor_eq_character b x (z.2 e),
-      p4Q2NG_originalCharacterMoment_eq_exp_mul_signedScore H b hb e z x]
+  rw [p4Q2NG_originalCharacterMoment_eq_exp_mul_signedScore H b hb e z x,
+      ← p4Q2NH_originalBoundaryDiagonalFactor_eq_character b 1 (z.2 e),
+      ← p4Q2NH_originalBoundaryDiagonalFactor_eq_character b x (z.2 e)]
   ring
 
 /-- The determinant obstruction vanishes at the normalization
