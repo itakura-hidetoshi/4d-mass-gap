@@ -387,7 +387,7 @@ theorem p4Q2NC_originalSignedScore_trueKernelVariance_pos_of_linkWitness
 /-- At the genuine SU(2) frozen b=0 endpoint the original two
 interacting posteriors coincide, so the exact signed one-link
 receiver score and its Haar fluctuation also vanish. -/
-theorem p4Q2NC_originalSignedLinkScoreHaarVariance_zero_at_beta_zero
+omit hb in theorem p4Q2NC_originalSignedLinkScoreHaarVariance_zero_at_beta_zero
     (H : ℕ)
     (e : PeriodicHypercubicEvenSpatialSliceLink H)
     (z : PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 ×
