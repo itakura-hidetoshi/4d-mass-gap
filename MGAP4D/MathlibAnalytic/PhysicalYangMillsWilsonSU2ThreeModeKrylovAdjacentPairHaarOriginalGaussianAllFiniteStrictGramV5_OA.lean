@@ -72,6 +72,7 @@ namespace GroundStatePosteriorJoint
 
 local notation "Gauge" => Matrix.specialUnitaryGroup (Fin 2) ℂ
 local notation "k" => p4Q2NJ_originalSU2WilsonTemporalSection
+local notation "J" => specialUnitaryMatrixRealFeature 2
 local notation "Double" => p4Q2NX_originalSignedDoubleCLM
 local notation "PairChi" => p4Q2NX_originalTemporalPairCharacter
 
@@ -80,49 +81,53 @@ continuous product of distances to all *other* original holonomies.
 Unlike a synthetic source, this is solely a test of linear independence
 of actual point evaluation functionals. -/
 noncomputable def p4Q2OA_originalFinitePointSelector
-    {ι : Type*} [Fintype ι] (points : ι → Gauge) (i : ι) :
+    {ι : Type} [Fintype ι] (points : ι → Gauge) (i : ι) :
     C(Gauge, ℝ) := by
   classical
-  refine ⟨fun g => ∏ j ∈ Finset.univ.erase i, dist g (points j), ?_⟩
+  refine ⟨fun g => ∏ j ∈ Finset.univ.erase i, ‖J g - J (points j)‖ ^ 2, ?_⟩
   apply continuous_finset_prod
   intro j hj
-  exact continuous_id.dist continuous_const
+  have hJ : Continuous (J : Gauge → SpecialUnitaryMatrixRealFeatureSpace 2) :=
+    p4Q2NN_originalSU2RealEightFeature_continuous
+  exact ((hJ.sub continuous_const).norm).pow 2
 
 /-- A selector does not vanish at its own SU(2) point when all
 the genuine holonomies are distinct. -/
 theorem p4Q2OA_originalFinitePointSelector_self_pos
-    {ι : Type*} [Fintype ι]
+    {ι : Type} [Fintype ι]
     (points : ι → Gauge) (hpoints : Function.Injective points) (i : ι) :
     0 < p4Q2OA_originalFinitePointSelector points i (points i) := by
   classical
-  change 0 < ∏ j ∈ Finset.univ.erase i, dist (points i) (points j)
+  change 0 < ∏ j ∈ Finset.univ.erase i,
+    ‖J (points i) - J (points j)‖ ^ 2
   apply Finset.prod_pos
   intro j hj
   have hji : j ≠ i := (Finset.mem_erase.mp hj).1
-  exact dist_pos.mpr (fun heq => hji (hpoints heq).symm)
+  exact p4Q2NM_originalSU2RealEightFeature_chord_sq_pos
+    (points i) (points j) (fun heq => hji (hpoints heq).symm)
 
 /-- Every other original point is a root of the corresponding
 continuous distance-Lagrange selector. -/
 theorem p4Q2OA_originalFinitePointSelector_other_zero
-    {ι : Type*} [Fintype ι]
+    {ι : Type} [Fintype ι]
     (points : ι → Gauge) (i j : ι) (hij : j ≠ i) :
     p4Q2OA_originalFinitePointSelector points i (points j) = 0 := by
   classical
-  change (∏ t ∈ Finset.univ.erase i, dist (points j) (points t)) = 0
+  change (∏ t ∈ Finset.univ.erase i, ‖J (points j) - J (points t)‖ ^ 2) = 0
   apply Finset.prod_eq_zero (Finset.mem_erase.mpr ⟨hij, Finset.mem_univ j⟩)
   simp
 
 /-- A finite real signed point evaluation functional on the original
 full compact SU(2). No posterior law or physical detector is replaced. -/
 noncomputable def p4Q2OA_originalFiniteSignedEvaluation
-    {ι : Type*} [Fintype ι] (points : ι → Gauge) (a : ι → ℝ) :
+    {ι : Type} [Fintype ι] (points : ι → Gauge) (a : ι → ℝ) :
     C(Gauge, ℝ) →L[ℝ] ℝ :=
   ∑ i : ι, (a i) • ContinuousMap.evalCLM ℝ (points i)
 
 /-- Original finite signed point functional acts by exactly the
 specified finite signed sum of true SU(2) point evaluations. -/
 theorem p4Q2OA_originalFiniteSignedEvaluation_apply
-    {ι : Type*} [Fintype ι]
+    {ι : Type} [Fintype ι]
     (points : ι → Gauge) (a : ι → ℝ) (f : C(Gauge, ℝ)) :
     p4Q2OA_originalFiniteSignedEvaluation points a f =
       ∑ i : ι, a i * f (points i) := by
@@ -136,7 +141,7 @@ linearly independent. This is proved by explicit continuous point
 selectors, with no rank or injectivity premise on a hypothetical
 Gaussian feature; only the real points themselves are distinct. -/
 theorem p4Q2OA_originalFiniteSignedEvaluation_ne_zero
-    {ι : Type*} [Fintype ι]
+    {ι : Type} [Fintype ι]
     (points : ι → Gauge) (hpoints : Function.Injective points)
     (a : ι → ℝ) (ha : ∃ i, a i ≠ 0) :
     p4Q2OA_originalFiniteSignedEvaluation points a ≠ 0 := by
@@ -170,7 +175,7 @@ theorem p4Q2OA_originalFiniteSignedEvaluation_ne_zero
 continuous pair observable gives the exact finite signed point Gram
 double sum. No exchange of two infinite integrals occurs. -/
 theorem p4Q2OA_originalFiniteSignedDouble_apply
-    {ι : Type*} [Fintype ι]
+    {ι : Type} [Fintype ι]
     (points : ι → Gauge) (a : ι → ℝ)
     (F : C(Gauge × Gauge, ℝ)) :
     Double (p4Q2OA_originalFiniteSignedEvaluation points a) F =
@@ -192,7 +197,7 @@ theorem p4Q2OA_originalFiniteSignedDouble_apply
 /-- The true original temporal Wilson exponential finite Gram is
 EXACTLY the double signed evaluation of the EXISTING Banach kernel. -/
 theorem p4Q2OA_originalTemporalExactGram_eq_signedDouble
-    (b : ℝ) {ι : Type*} [Fintype ι]
+    (b : ℝ) {ι : Type} [Fintype ι]
     (points : ι → Gauge) (a : ι → ℝ) :
     p4Q2NR_originalTemporalExactGram b points a =
       Double (p4Q2OA_originalFiniteSignedEvaluation points a)
@@ -211,7 +216,7 @@ SU(2) points, EVERY nonzero signed coefficient vector has strictly
 positive original Gaussian temporal Wilson Gram energy. -/
 theorem p4Q2OA_originalTemporalExactGram_strict_pos
     (b : ℝ) (hb : 0 < b)
-    {ι : Type*} [Fintype ι]
+    {ι : Type} [Fintype ι]
     (points : ι → Gauge) (hpoints : Function.Injective points)
     (a : ι → ℝ) (ha : ∃ i, a i ≠ 0) :
     0 < p4Q2NR_originalTemporalExactGram b points a := by
@@ -226,7 +231,7 @@ vector in the real finite-index coefficient space is detected by
 the ORIGINAL SU(2) temporal Wilson Gaussian Gram quadratic form. -/
 theorem p4Q2OA_originalTemporalExactGram_pos_of_coefficients_ne_zero
     (b : ℝ) (hb : 0 < b)
-    {ι : Type*} [Fintype ι]
+    {ι : Type} [Fintype ι]
     (points : ι → Gauge) (hpoints : Function.Injective points)
     (a : ι → ℝ) (ha : a ≠ 0) :
     0 < p4Q2NR_originalTemporalExactGram b points a := by
