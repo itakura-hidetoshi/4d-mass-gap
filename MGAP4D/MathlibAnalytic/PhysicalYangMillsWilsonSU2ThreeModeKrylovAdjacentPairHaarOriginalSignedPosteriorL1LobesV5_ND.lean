@@ -313,13 +313,13 @@ theorem p4Q2ND_originalSignedPhysicalFiber_has_both_signs
         ((continuousJointSqrtDensity H 2 (by norm_num) b hb
           (z.1, Function.update z.2 e h))⁻¹ * D z.2 e h) < 0
     exact mul_neg_of_pos_of_neg
-      (mul_pos
-        (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_pos
-          H 2 b A z.2 e h)
+      (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabRightTargetLocalFactor_pos
+        H 2 b A z.2 e h)
+      (mul_neg_of_pos_of_neg
         (inv_pos.mpr
           (continuousJointSqrtDensity_pos H 2 (by norm_num) b hb
-            (z.1, Function.update z.2 e h))))
-      hh
+            (z.1, Function.update z.2 e h)))
+        hh)
 
 end TrueSignedFiber
 end GroundStatePosteriorJoint
