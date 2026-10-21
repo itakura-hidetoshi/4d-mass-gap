@@ -55,7 +55,7 @@ theorem p4Q2NQ_originalSU2TemporalCharacter_eq_normalizedTrace
   rw [p4Q2NG_originalSU2TemporalCharacter_eq_trace,
     specialUnitaryNormalizedTraceRelativeKernel_eq_scaled]
   unfold specialUnitaryRealTraceRelativeKernel
-  norm_num
+  ring
 
 /-- Canonical, preexisting normalized SU(2) trace Hilbert feature transported
 along the just-proved equality with the ORIGINAL temporal character. -/
