@@ -37,7 +37,7 @@ No Dobrushin, sorry, admit or new axiom.
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open MeasureTheory
+open MeasureTheory Matrix
 open scoped ENNReal Topology InnerProductSpace BigOperators
 noncomputable section
 set_option maxHeartbeats 3900000
@@ -123,7 +123,7 @@ theorem p4Q2OB_originalTemporalGaussianGram_posDef
 in mathlib's matrix unit sense. No uniform norm bound is asserted. -/
 theorem p4Q2OB_originalTemporalGaussianGram_isUnit
     (b : ℝ) (hb : 0 < b)
-    {ι : Type} [Fintype ι]
+    {ι : Type} [Fintype ι] [DecidableEq ι]
     (points : ι → Gauge) (hpoints : Function.Injective points) :
     IsUnit (p4Q2OB_originalTemporalGaussianGramMatrix b points) := by
   classical
@@ -133,18 +133,19 @@ theorem p4Q2OB_originalTemporalGaussianGram_isUnit
 finite Gram matrix, without asserting a uniform determinant floor. -/
 theorem p4Q2OB_originalTemporalGaussianGram_det_ne_zero
     (b : ℝ) (hb : 0 < b)
-    {ι : Type} [Fintype ι]
+    {ι : Type} [Fintype ι] [DecidableEq ι]
     (points : ι → Gauge) (hpoints : Function.Injective points) :
     (p4Q2OB_originalTemporalGaussianGramMatrix b points).det ≠ 0 := by
   classical
-  exact (Matrix.isUnit_iff_isUnit_det.mp
-    (p4Q2OB_originalTemporalGaussianGram_isUnit b hb points hpoints)).ne_zero
+  exact ((Matrix.isUnit_iff_isUnit_det
+    (p4Q2OB_originalTemporalGaussianGramMatrix b points)).mp
+      (p4Q2OB_originalTemporalGaussianGram_isUnit b hb points hpoints)).ne_zero
 
 /-- Inverse of the genuine finite original Wilson Gaussian Gram matrix
 is again positive definite; no volume-independent conditioning follows. -/
 theorem p4Q2OB_originalTemporalGaussianGram_inv_posDef
     (b : ℝ) (hb : 0 < b)
-    {ι : Type} [Fintype ι]
+    {ι : Type} [Fintype ι] [DecidableEq ι]
     (points : ι → Gauge) (hpoints : Function.Injective points) :
     ((p4Q2OB_originalTemporalGaussianGramMatrix b points)⁻¹).PosDef := by
   classical
