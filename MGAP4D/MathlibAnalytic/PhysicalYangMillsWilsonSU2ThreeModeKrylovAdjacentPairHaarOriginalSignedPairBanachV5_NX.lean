@@ -116,7 +116,7 @@ than the source pair observable norm. -/
 theorem p4Q2NX_originalPairRow_norm_le
     (F : C(Gauge × Gauge, ℝ)) (x : Gauge) :
     ‖F.curry x‖ ≤ ‖F‖ := by
-  apply (ContinuousMap.norm_le_of_nonempty).2
+  apply (ContinuousMap.norm_le_of_nonempty (F.curry x)).2
   intro g
   simpa only [ContinuousMap.curry_apply] using F.norm_coe_le_norm (x, g)
 
@@ -126,7 +126,8 @@ theorem p4Q2NX_originalSignedPairSection_norm_le
     (L : C(Gauge, ℝ) →L[ℝ] ℝ)
     (F : C(Gauge × Gauge, ℝ)) :
     ‖p4Q2NX_originalSignedPairSection L F‖ ≤ ‖L‖ * ‖F‖ := by
-  apply (ContinuousMap.norm_le_of_nonempty).2
+  apply (ContinuousMap.norm_le_of_nonempty
+    (p4Q2NX_originalSignedPairSection L F)).2
   intro x
   change ‖L (F.curry x)‖ ≤ ‖L‖ * ‖F‖
   exact (L.le_opNorm (F.curry x)).trans
