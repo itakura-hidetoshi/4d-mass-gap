@@ -75,6 +75,16 @@ local instance p4Q2NF_openPosHaar :
   infer_instance
 
 namespace GroundStatePosteriorJoint
+
+private theorem p4Q2NF_real_signed_parts (x : ℝ) :
+    max x 0 - max (-x) 0 = x ∧
+      max x 0 + max (-x) 0 = |x| := by
+  rcases le_total x 0 with h | h
+  · rw [max_eq_right h, max_eq_left (neg_nonneg.mpr h), abs_of_nonpos h]
+    constructor <;> ring
+  · rw [max_eq_left h, max_eq_right (neg_nonpos.mpr h), abs_of_nonneg h]
+    constructor <;> ring
+
 section OriginalWeightedSignedFiber
 variable (H : ℕ) (b : ℝ) (hb : 0 ≤ b)
 local notation "Gauge" => Matrix.specialUnitaryGroup (Fin 2) ℂ
@@ -197,15 +207,6 @@ theorem p4Q2NF_originalPhysicalWeightedBothLobes_pos
     H b hb bpos e z A,
     p4Q2NF_originalPhysicalWeightedNegativeLobeMass_pos
       H b hb bpos e z A⟩
-
-private theorem p4Q2NF_real_signed_parts (x : ℝ) :
-    max x 0 - max (-x) 0 = x ∧
-      max x 0 + max (-x) 0 = |x| := by
-  rcases le_total x 0 with h | h
-  · rw [max_eq_right h, max_eq_left (neg_nonneg.mpr h), abs_of_nonpos h]
-    constructor <;> ring
-  · rw [max_eq_left h, max_eq_right (neg_nonpos.mpr h), abs_of_nonneg h]
-    constructor <;> ring
 
 /-- Exact signed physical JH representer as the DIFFERENCE of
 the TWO strictly positive original Wilson–Perron weighted lobe masses. -/
