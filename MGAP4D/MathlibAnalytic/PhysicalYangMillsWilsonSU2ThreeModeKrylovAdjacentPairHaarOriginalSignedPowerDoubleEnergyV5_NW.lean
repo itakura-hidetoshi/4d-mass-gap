@@ -91,7 +91,7 @@ theorem p4Q2NW_originalSignedPowerMomentSection_apply
     change (chi x g)^n =
       ((1 / 2 : ℝ)^n • (∑ q : Fin n → Index, (m q x) • m q)) g
     rw [p4Q2NV_originalTemporalCharacter_power_eq_coordinateGram n x g]
-    simp only [ContinuousMap.smul_apply, Finset.sum_apply, smul_eq_mul]
+    simp only [ContinuousMap.smul_apply, ContinuousMap.sum_apply, smul_eq_mul]
     congr 1
     apply Finset.sum_congr rfl
     intro q hq
@@ -100,7 +100,7 @@ theorem p4Q2NW_originalSignedPowerMomentSection_apply
       (∑ q : Fin n → Index, (L (m q)) • m q)) x =
       L ((p4Q2NL_originalTemporalCharacterContinuous x)^n)
   rw [hSection]
-  simp only [ContinuousMap.smul_apply, Finset.sum_apply,
+  simp only [ContinuousMap.smul_apply, ContinuousMap.sum_apply,
     map_smul, map_sum, smul_eq_mul]
   congr 1
   apply Finset.sum_congr rfl
@@ -259,7 +259,7 @@ theorem p4Q2NW_originalWilsonPerronSignedTaylorDoubleEnergy_eq_coordinateSum
   apply Finset.sum_congr rfl
   intro n hn
   rw [p4Q2NW_originalWilsonPerronSignedPowerDoubleEnergy_eq]
-  rw [div_pow]
+  simp only [div_pow, one_div, inv_pow, div_eq_mul_inv]
   ring
 
 /-- All finite truncated original signed temporal Wilson double
