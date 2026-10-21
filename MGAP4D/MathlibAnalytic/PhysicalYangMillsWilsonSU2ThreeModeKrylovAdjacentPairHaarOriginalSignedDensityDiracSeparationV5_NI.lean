@@ -145,6 +145,7 @@ theorem p4Q2NI_originalSpatialPerronSignedContrast_continuous
       rho e z g * (K A z.2 * temp (A e) (z.2 e) g) =
           (K A z.2 * temp (A e) (z.2 e) g) * rho e z g := by ring
       _ = k e z (g,A) := (hkRatio g).symm
+  change Continuous (fun g : Gauge => rho e z g)
   rw [hEq]
   exact hContQuot
 
@@ -213,7 +214,7 @@ theorem p4Q2NI_originalSpatialPerronSignedContrast_separates_Dirac
                   max (-(rho e z g)) 0 * rho e z g =
                     -(max (-(rho e z g)) 0 * (-(rho e z g)))
                 ring
-          _ = -(∫ g : Gauge, F g ∂mu) := integral_neg
+          _ = -(∫ g : Gauge, F g ∂mu) := integral_neg F
       rw [hEq]
       exact (neg_ne_zero.mpr hIntegral.ne')
   · have hyNeg : rho e z y < 0 := lt_of_not_ge hy
