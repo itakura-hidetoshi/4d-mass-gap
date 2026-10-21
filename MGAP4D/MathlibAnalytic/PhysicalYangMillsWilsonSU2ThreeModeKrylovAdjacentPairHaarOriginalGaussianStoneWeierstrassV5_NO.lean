@@ -111,7 +111,7 @@ theorem p4Q2NO_originalSU2RealEightPolynomialAlgebra_separatesPoints :
         p4Q2NO_originalSU2RealEightCoordinate q x ≠
           p4Q2NO_originalSU2RealEightCoordinate q y := by
     by_contra h
-    push_neg at h
+    push Not at h
     apply hxy
     apply p4Q2NM_originalSU2RealEightFeature_injective
     apply PiLp.ext
