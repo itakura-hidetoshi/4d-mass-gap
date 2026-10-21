@@ -92,8 +92,8 @@ theorem p4Q2NL_originalWilsonTemporalSection_eq_BanachExp
   rw [NormedSpace.exp_continuousMap_eq]
   ext g
   change Real.exp (b * p4Q2NG_originalSU2TemporalCharacter x g) =
-    Real.exp (b * p4Q2NG_originalSU2TemporalCharacter x g)
-  rfl
+    NormedSpace.exp (b * p4Q2NG_originalSU2TemporalCharacter x g)
+  rw [Real.exp_eq_exp_ℝ]
 
 /-- TRUE sup-norm convergent power-series representation of the
 original temporal Wilson kernel as an element of C(SU2,R).
@@ -102,7 +102,7 @@ theorem p4Q2NL_originalWilsonTemporalSection_Banach_hasSum
     (b : ℝ) (x : Gauge) :
     HasSum
       (fun n : ℕ =>
-        (n !⁻¹ : ℝ) •
+        ((n.factorial : ℝ)⁻¹) •
           (b • p4Q2NL_originalTemporalCharacterContinuous x) ^ n)
       (p4Q2NJ_originalSU2WilsonTemporalSection b x) := by
   rw [p4Q2NL_originalWilsonTemporalSection_eq_BanachExp]
@@ -115,7 +115,7 @@ theorem p4Q2NL_originalWilsonTemporalSection_Banach_summable
     (b : ℝ) (x : Gauge) :
     Summable
       (fun n : ℕ =>
-        (n !⁻¹ : ℝ) •
+        ((n.factorial : ℝ)⁻¹) •
           (b • p4Q2NL_originalTemporalCharacterContinuous x) ^ n) :=
   (p4Q2NL_originalWilsonTemporalSection_Banach_hasSum b x).summable
 
@@ -163,7 +163,7 @@ theorem p4Q2NL_originalSignedTemporalMoment_BanachPower_hasSum
     HasSum
       (fun n : ℕ =>
         L e z
-          ((n !⁻¹ : ℝ) •
+          (((n.factorial : ℝ)⁻¹) •
             (b • p4Q2NL_originalTemporalCharacterContinuous x) ^ n))
       (T e z x) := by
   have hSeries :=
@@ -180,7 +180,7 @@ theorem p4Q2NL_originalSignedTemporalMoment_BanachPower_tsum
     T e z x =
       ∑' n : ℕ,
         L e z
-          ((n !⁻¹ : ℝ) •
+          (((n.factorial : ℝ)⁻¹) •
             (b • p4Q2NL_originalTemporalCharacterContinuous x) ^ n) := by
   exact (p4Q2NL_originalSignedTemporalMoment_BanachPower_hasSum
     H b hb e z x).tsum_eq.symm
