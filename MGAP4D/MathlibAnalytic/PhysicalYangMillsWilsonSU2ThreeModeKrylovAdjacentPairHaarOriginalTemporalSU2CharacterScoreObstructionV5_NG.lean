@@ -334,7 +334,7 @@ theorem p4Q2NG_originalSignedScoreHaarVariance_pos_iff_characterMoment_witness
   constructor
   · intro hPos
     by_contra hNo
-    push_neg at hNo
+    push Not at hNo
     have hZero :=
       (p4Q2NG_originalSignedScoreHaarVariance_zero_iff_characterMoment_proportional
         H b hb e z).2 hNo
