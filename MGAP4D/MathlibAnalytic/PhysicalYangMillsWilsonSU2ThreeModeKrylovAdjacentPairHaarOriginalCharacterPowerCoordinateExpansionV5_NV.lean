@@ -87,6 +87,7 @@ theorem p4Q2NV_originalRealEightCoordinateProduct_apply
       p4Q2NV_coordinateListProduct_eval (List.ofFn indices) g
     _ = ∏ i : Fin n, coord (indices i) g := by
       rw [List.map_ofFn, Fin.prod_ofFn]
+      simp only [Function.comp_apply]
 
 /-- The original normalized Wilson temporal character is the HALF
 of the scalar Gram sum of the genuine eight matrix coordinates. -/
