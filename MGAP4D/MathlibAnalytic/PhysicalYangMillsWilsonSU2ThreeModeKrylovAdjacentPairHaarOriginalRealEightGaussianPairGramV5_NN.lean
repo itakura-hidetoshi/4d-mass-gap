@@ -70,9 +70,22 @@ theorem p4Q2NN_originalSU2RealEightFeature_continuous :
     Continuous (specialUnitaryMatrixRealFeature 2 :
       Gauge → SpecialUnitaryMatrixRealFeatureSpace 2) := by
   change Continuous (fun g : Gauge =>
-    complexMatrixRealFeatureLinearMap 2 (g : Matrix (Fin 2) (Fin 2) ℂ))
-  exact (complexMatrixRealFeatureLinearMap 2).toContinuousLinearMap.continuous.comp
-    continuous_subtype_val
+    WithLp.toLp 2 (fun q : (Fin 2 × Fin 2) × Bool =>
+      if q.2 then ((g : Matrix (Fin 2) (Fin 2) ℂ) q.1.2 q.1.1).re
+      else ((g : Matrix (Fin 2) (Fin 2) ℂ) q.1.2 q.1.1).im))
+  have hCoordinates : Continuous (fun g : Gauge =>
+      (fun q : (Fin 2 × Fin 2) × Bool =>
+        if q.2 then ((g : Matrix (Fin 2) (Fin 2) ℂ) q.1.2 q.1.1).re
+        else ((g : Matrix (Fin 2) (Fin 2) ℂ) q.1.2 q.1.1).im)) := by
+    rw [continuous_pi_iff]
+    intro q
+    by_cases h : q.2
+    · simp only [h, if_true]
+      fun_prop
+    · simp only [h, if_false]
+      fun_prop
+  exact (PiLp.continuous_toLp 2
+    (fun _ : (Fin 2 × Fin 2) × Bool => ℝ)).comp hCoordinates
 
 /-- Every actual temporal Wilson kernel section has the exact
 diagonal exp(b), independent of the SU2 boundary configuration. -/
