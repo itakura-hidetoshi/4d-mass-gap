@@ -219,7 +219,7 @@ theorem p4Q2NB_originalSpatialHaar_integral_oneLinkRefresh
   have hJointInt : Integrable
       (fun z : Cfg × Gauge =>
         F (Function.update z.1 target z.2))
-      (haar.prod mu) :=
+      (Measure.prod haar mu) :=
     hJointCont.integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
   have hOuterInt : Integrable
@@ -279,6 +279,7 @@ end ProductHaarRefresh
 
 section OriginalPositiveWilsonKernelFloor
 variable (H : ℕ) (b : ℝ) (hb : 0 ≤ b)
+include hb
 local notation "Cfg" =>
   PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
 local notation "Gauge" => Matrix.specialUnitaryGroup (Fin 2) ℂ
@@ -427,7 +428,7 @@ theorem p4Q2NB_originalPlaquette_trueWilsonKernelVariance_uniform_lower
             (continuous_fst : Continuous (fun q : Cfg × Gauge => q.1)))
     have hJoint :
         Integrable (fun q : Cfg × Gauge =>
-          F (Function.update q.1 target q.2)) (haar.prod mu) :=
+          F (Function.update q.1 target q.2)) (Measure.prod haar mu) :=
       (F.continuous.comp hUpdateCont).integrable_of_hasCompactSupport
         (HasCompactSupport.of_compactSpace _)
     exact hJoint.integral_prod_left
