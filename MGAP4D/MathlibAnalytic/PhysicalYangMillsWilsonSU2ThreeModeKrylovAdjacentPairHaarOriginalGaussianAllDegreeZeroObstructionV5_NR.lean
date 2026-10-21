@@ -48,13 +48,13 @@ local notation "chi" => p4Q2NG_originalSU2TemporalCharacter
 local notation "k" => p4Q2NJ_originalSU2WilsonTemporalSection
 
 noncomputable def p4Q2NR_originalTemporalPowerGram
-    {ι : Type*} [Fintype ι]
+    {ι : Type} [Fintype ι]
     (n : ℕ) (points : ι → Gauge) (a : ι → ℝ) : ℝ :=
   ∑ i : ι, ∑ j : ι,
     a i * a j * (chi (points i) (points j)) ^ n
 
 noncomputable def p4Q2NR_originalTemporalTaylorGram
-    {ι : Type*} [Fintype ι]
+    {ι : Type} [Fintype ι]
     (b : ℝ) (degree : ℕ) (points : ι → Gauge) (a : ι → ℝ) : ℝ :=
   ∑ i : ι, ∑ j : ι,
     a i * a j *
@@ -62,7 +62,7 @@ noncomputable def p4Q2NR_originalTemporalTaylorGram
         (points i) (points j)
 
 noncomputable def p4Q2NR_originalTemporalExactGram
-    {ι : Type*} [Fintype ι]
+    {ι : Type} [Fintype ι]
     (b : ℝ) (points : ι → Gauge) (a : ι → ℝ) : ℝ :=
   ∑ i : ι, ∑ j : ι,
     a i * a j * k b (points i) (points j)
@@ -71,7 +71,7 @@ noncomputable def p4Q2NR_originalTemporalExactGram
 Taylor degree sums. All sums are finite; no integration interchange
 or additional convergence assumption enters. -/
 private theorem p4Q2NR_finiteGram_degree_sum_comm
-    {ι : Type*} [Fintype ι]
+    {ι : Type} [Fintype ι]
     (a : ι → ℝ) (w : ℕ → ℝ) (κ : ℕ → ι → ι → ℝ)
     (s : Finset ℕ) :
     (∑ i : ι, ∑ j : ι,
@@ -111,7 +111,7 @@ signed Gram Taylor approximation is the finite positive-weight sum of
 its degree-n true Hilbert tensor Gram energies. -/
 theorem p4Q2NR_originalTemporalTaylorGram_eq_powerSum
     (b : ℝ) (degree : ℕ)
-    {ι : Type*} [Fintype ι]
+    {ι : Type} [Fintype ι]
     (points : ι → Gauge) (a : ι → ℝ) :
     p4Q2NR_originalTemporalTaylorGram b degree points a =
       ∑ n ∈ Finset.range (degree + 1),
@@ -159,7 +159,7 @@ SU2 points, EVERY nonnegative Hilbert tensor power Gram vanishes.
 No all-mode density or measure injectivity is assumed. -/
 theorem p4Q2NR_originalTemporalExactGram_zero_forces_allPowerGrams_zero
     (b : ℝ) (hb : 0 < b)
-    {ι : Type*} [Fintype ι]
+    {ι : Type} [Fintype ι]
     (points : ι → Gauge) (a : ι → ℝ)
     (hZero : p4Q2NR_originalTemporalExactGram b points a = 0) :
     ∀ n : ℕ, p4Q2NR_originalTemporalPowerGram n points a = 0 := by
@@ -194,7 +194,7 @@ the existing completed Hilbert tensor powers, for all natural degrees.
 Finite signed families of genuine SU2 points, with no rank premise. -/
 theorem p4Q2NR_originalTemporalExactGram_zero_forces_allTensorMoments_zero
     (b : ℝ) (hb : 0 < b)
-    {ι : Type*} [Fintype ι]
+    {ι : Type} [Fintype ι]
     (points : ι → Gauge) (a : ι → ℝ)
     (hZero : p4Q2NR_originalTemporalExactGram b points a = 0) :
     ∀ n : ℕ,
@@ -214,7 +214,7 @@ conditional finite-family statement, NOT a claimed nonzero moment
 hypothesis for every physical signed configuration. -/
 theorem p4Q2NR_originalTemporalExactGram_pos_of_tensorMoment_witness
     (b : ℝ) (hb : 0 < b)
-    {ι : Type*} [Fintype ι]
+    {ι : Type} [Fintype ι]
     (points : ι → Gauge) (a : ι → ℝ)
     (hWitness : ∃ n : ℕ,
       (∑ i : ι, a i •
