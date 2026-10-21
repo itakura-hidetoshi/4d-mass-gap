@@ -83,9 +83,6 @@ theorem p4Q2NY_originalSignedDouble_characterPower_eq_coordinateEnergy
     rw [p4Q2NX_originalSignedPairSection_apply,
       p4Q2NW_originalSignedPowerMomentSection_apply]
     congr 1
-    ext g
-    change (chi x g)^n = (chi x g)^n
-    rfl
   rw [hSection]
   exact p4Q2NW_originalSignedPowerMomentSection_pairEnergy L n
 
@@ -214,7 +211,7 @@ theorem p4Q2NY_originalPositiveWilsonSection_detects_nonzeroSigned
     rw [hRow, hVan]
     simp
   rw [p4Q2NX_originalSignedDoubleCLM_apply, hSectionZero] at hEnergy
-  simpa using hEnergy
+  simp at hEnergy
 
 /-- The ORIGINAL Wilson–Perron signed Haar minus Dirac functional
 has STRICTLY positive actual temporal Gaussian double energy,
