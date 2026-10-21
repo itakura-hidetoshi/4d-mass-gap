@@ -67,8 +67,8 @@ local notation "Gauge" => Matrix.specialUnitaryGroup (Fin 2) ℂ
 SU(2) fundamental two-dimensional unitary matrix x⁻¹g. -/
 noncomputable def p4Q2NH_originalSU2FundamentalDiagonalCoefficient
     (x g : Gauge) : ℝ :=
-  (((((x⁻¹ * g : Gauge) : Matrix (Fin 2) (Fin 2) ℂ) 0 0) +
-    (((x⁻¹ * g : Gauge) : Matrix (Fin 2) (Fin 2) ℂ) 1 1)).re / 2
+  let mat : Matrix (Fin 2) (Fin 2) ℂ := (x⁻¹ * g : Gauge)
+  (mat 0 0 + mat 1 1).re / 2
 
 /-- The exact Wilson SU(2) temporal character is the sum of the TWO
 fundamental matrix diagonal coefficients, not a formal character symbol. -/
