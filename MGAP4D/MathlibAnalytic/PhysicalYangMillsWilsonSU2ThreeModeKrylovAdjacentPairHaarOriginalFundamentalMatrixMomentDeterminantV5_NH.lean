@@ -68,7 +68,7 @@ SU(2) fundamental two-dimensional unitary matrix x⁻¹g. -/
 noncomputable def p4Q2NH_originalSU2FundamentalDiagonalCoefficient
     (x g : Gauge) : ℝ :=
   (((((x⁻¹ * g : Gauge) : Matrix (Fin 2) (Fin 2) ℂ) 0 0) +
-    ((((x⁻¹ * g : Gauge) : Matrix (Fin 2) (Fin 2) ℂ) 1 1))).re / 2
+    (((x⁻¹ * g : Gauge) : Matrix (Fin 2) (Fin 2) ℂ) 1 1)).re / 2
 
 /-- The exact Wilson SU(2) temporal character is the sum of the TWO
 fundamental matrix diagonal coefficients, not a formal character symbol. -/
@@ -121,12 +121,14 @@ noncomputable def p4Q2NH_originalBoundaryDiagonalFactor
 
 local notation "E" => p4Q2NH_originalBoundaryDiagonalFactor b
 
+omit hb in
 theorem p4Q2NH_originalBoundaryDiagonalFactor_eq_character
     (x y : Gauge) :
     E x y = Real.exp (b * p4Q2NG_originalSU2TemporalCharacter x y) := by
   simp only [p4Q2NH_originalBoundaryDiagonalFactor,
     p4Q2NH_originalSU2Character_eq_fundamentalDiagonalCoefficient]
 
+omit hb in
 theorem p4Q2NH_originalBoundaryDiagonalFactor_pos
     (x y : Gauge) : 0 < E x y :=
   Real.exp_pos _
