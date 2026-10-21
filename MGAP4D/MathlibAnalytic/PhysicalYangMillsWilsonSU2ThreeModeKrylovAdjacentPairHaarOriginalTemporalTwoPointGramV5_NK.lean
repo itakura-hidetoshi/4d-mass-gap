@@ -65,7 +65,7 @@ the ORIGINAL normalized fundamental Wilson temporal character is 1. -/
 theorem p4Q2NK_originalTemporalCharacter_one_one :
     p4Q2NG_originalSU2TemporalCharacter (1 : Gauge) 1 = 1 := by
   unfold p4Q2NG_originalSU2TemporalCharacter
-  simp only [one_inv, one_mul]
+  simp only [inv_one, one_mul]
   rw [specialUnitaryWilsonPlaquetteEnergy_one 2 (by norm_num)]
   ring
 
@@ -75,7 +75,7 @@ theorem p4Q2NK_originalTemporalCharacter_one_rotation :
     p4Q2NG_originalSU2TemporalCharacter (1 : Gauge)
       (specialUnitaryTwoRotation Real.pi) = -1 := by
   unfold p4Q2NG_originalSU2TemporalCharacter
-  simp only [one_inv, one_mul]
+  simp only [inv_one, one_mul]
   rw [originalWilsonExplicitPiRotation_energy_eq_two]
   ring
 
