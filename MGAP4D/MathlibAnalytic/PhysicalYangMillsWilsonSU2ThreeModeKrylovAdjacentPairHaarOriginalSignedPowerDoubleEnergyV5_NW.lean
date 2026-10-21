@@ -92,6 +92,7 @@ theorem p4Q2NW_originalSignedPowerMomentSection_apply
       ((1 / 2 : ℝ)^n • (∑ q : Fin n → Index, (m q x) • m q)) g
     rw [p4Q2NV_originalTemporalCharacter_power_eq_coordinateGram n x g]
     simp only [ContinuousMap.smul_apply, ContinuousMap.sum_apply, smul_eq_mul]
+    rfl
   change ((1 / 2 : ℝ)^n •
       (∑ q : Fin n → Index, (L (m q)) • m q)) x =
       L ((p4Q2NL_originalTemporalCharacterContinuous x)^n)
