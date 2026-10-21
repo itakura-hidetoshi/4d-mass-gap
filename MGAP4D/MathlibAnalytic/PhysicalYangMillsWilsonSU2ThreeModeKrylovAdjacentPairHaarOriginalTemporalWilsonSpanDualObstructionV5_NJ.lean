@@ -97,10 +97,12 @@ include hb
 
 private theorem p4Q2NJ_originalSignedPairing_integrable
     (e : Link) (z : Cfg × Cfg) (f : C(Gauge,ℝ)) :
-    Integrable (fun g : Gauge => f g * rho e z g) mu :=
-  (f.continuous.mul
-    (p4Q2NI_originalSpatialPerronSignedContrast_continuous H b hb e z)).
-    integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    Integrable (fun g : Gauge => f g * rho e z g) mu := by
+  have hCont : Continuous (fun g : Gauge => f g * rho e z g) :=
+    f.continuous.mul
+      (p4Q2NI_originalSpatialPerronSignedContrast_continuous H b hb e z)
+  exact hCont.integrable_of_hasCompactSupport
+    (HasCompactSupport.of_compactSpace _)
 
 /-- The actual original Wilson–Perron signed integral, as a real
 LINEAR map on the real Banach algebra C(SU2,R). -/
@@ -148,10 +150,11 @@ noncomputable def p4Q2NJ_originalSignedHaarIntegralCLM
         mul_le_mul (f.norm_coe_le_norm g) (rhoC.norm_coe_le_norm g)
           (norm_nonneg _) (norm_nonneg _)
       _ = ‖rhoC‖ * ‖f‖ := mul_comm _ _
-  exact norm_integral_le_of_norm_le_const
+  have hBd := norm_integral_le_of_norm_le_const
     (μ := mu) (C := ‖rhoC‖ * ‖f‖)
     (f := fun g : Gauge => f g * rho e z g)
     (ae_of_all _ hPoint)
+  simpa using hBd
 
 /-- The EXACT original signed Haar functional minus point evaluation
 at an ACTUAL boundary link y, with arbitrary real coefficient c. -/
@@ -166,7 +169,9 @@ theorem p4Q2NJ_originalSignedDiracDefectCLM_apply
     (c : ℝ) (f : C(Gauge,ℝ)) :
     p4Q2NJ_originalSignedDiracDefectCLM H b hb e z y c f =
       (∫ g : Gauge, f g * rho e z g ∂mu) - c * f y := by
-  rfl
+  simp [p4Q2NJ_originalSignedDiracDefectCLM,
+    p4Q2NJ_originalSignedHaarIntegralCLM,
+    p4Q2NJ_originalSignedHaarIntegralLinear]
 
 /-- NI's explicit genuine Wilson–Perron signed lobe witness makes
 the actual Dirac-defect continuous linear functional NONZERO
@@ -222,7 +227,7 @@ theorem p4Q2NJ_originalSignedReceiverHaarVariance_pos_iff_sectionWitness
   intro x
   rw [p4Q2NJ_originalSignedDiracDefect_kernelSection_eq_momentDefect
     H b hb e z x]
-  exact sub_ne_zero
+  simp only [sub_ne_zero]
 
 /-- MAIN NJ UNCONDITIONAL OBSTRUCTION.
 
