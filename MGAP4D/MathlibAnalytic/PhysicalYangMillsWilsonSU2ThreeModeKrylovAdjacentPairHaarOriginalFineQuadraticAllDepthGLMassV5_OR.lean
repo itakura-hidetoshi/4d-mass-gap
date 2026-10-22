@@ -26,7 +26,7 @@ original two-posterior GL mass whenever physically nonzero,
 or the SAME OO depth-two genuine Schur physical Hilbert source is nonzero.
 
 The alternative physical source is not asserted to be detected by a
-third genuine GI receiver. No volume-/spacing-uniform GL floor, arbitrary
+third genuine GI receiver. No volume- or spacing-uniform GL floor, arbitrary
 positive fine, endpoint, H1-C3 or continuum Yang--Mills mass gap is
 claimed. Frozen/fine Wilson couplings remain distinct. No
 Dobrushin, independent-Haar surrogate, arbitrary rank axiom, sorry,
@@ -204,7 +204,7 @@ original two-posterior GL mass at every finite depth, or the
 genuinely synthesized OO depth-two Schur PHYSICAL source is nonzero.
 
 The second branch does NOT establish a third true GI response.
-No volume-/scale-uniform lower bound, H1-C3 or continuum result. -/
+No volume- or scale-uniform lower bound, H1-C3 or continuum result. -/
 theorem p4Q2OR_actualSmallFine_allDepth_massPos_or_depthTwoPhysicalObstruction
     (hFrozen : 0 < beta n) (e e' : Link)
     (left₀ right₀ : Cfg) :
