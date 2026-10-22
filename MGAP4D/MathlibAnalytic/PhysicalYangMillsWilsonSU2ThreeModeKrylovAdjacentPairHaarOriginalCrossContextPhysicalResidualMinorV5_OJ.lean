@@ -140,6 +140,14 @@ theorem p4Q2OJ_originalCrossContextMinor_eq_signedPhysicalResidual
     _ = M r e z (Zero r) *
         p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap
           Hn (beta n) (hbeta n) (S r (R r e z a)) e' z' := by
+      change M r e z (Zero r) * M r e' z' (R r e z a) =
+        M r e z (Zero r) *
+          p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap
+            Hn (beta n) (hbeta n)
+            (∑ j : Fin (r + 1), R r e z a j •
+              physicalYangMillsSU2AdjacentFinePairOrbitRightFactor
+                (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+                n (j : ℕ)) e' z'
       rw [p4Q2HF_actualRightGIExpectationGap_eq_modalLinear
         (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
         n r (R r e z a) e' z']
