@@ -19,7 +19,7 @@
 | Lean / mathlib pin | `v4.30.0-rc2` / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
 | 現在のbranch HEAD | [毎回GitHubで再観測](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit) |
 
-ここに固定したSHAは**2026-10-22時点の検証済み定理統合点**であり、README/ROADMAPのdocs-onlyマージによってbranch HEADが進んでも、定理の新規検証を意味しない。判断の優先順位は **fresh exact authoritative SHA → Lean定理と前提・import全文 → そのsource SHAのCI・公理監査 → 文書 → 以前の記録**。
+ここに固定したSHAは**2026-10-23時点の検証済み定理統合点**であり、README/ROADMAPのdocs-onlyマージによってbranch HEADが進んでも、定理の新規検証を意味しない。判断の優先順位は **fresh exact authoritative SHA → Lean定理と前提・import全文 → そのsource SHAのCI・公理監査 → 文書 → 以前の記録**。
 
 ### 重要な区別
 
