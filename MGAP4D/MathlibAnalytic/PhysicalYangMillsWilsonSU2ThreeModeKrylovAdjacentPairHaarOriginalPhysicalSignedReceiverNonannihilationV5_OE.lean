@@ -211,7 +211,7 @@ theorem p4Q2OE_originalPhysicalUnitReceiver_exists_nonannihilation
       L z'.2 e' (Fiber U e' z') ≠ 0 := by
   obtain ⟨z, z', p, _hp, hFaithful⟩ :=
     p4Q2OE_originalPhysicalReceiver_exists_commonKernel_trivial
-      H b hpos e e' left₀ right₀
+      H b hb hpos e e' left₀ right₀
   have hSourceUnit : Source p 1 0 = U := by
     simp [p4Q2LO_originalPhysicalLocalTwoSource]
   have hNotBoth :
@@ -222,6 +222,39 @@ theorem p4Q2OE_originalPhysicalUnitReceiver_exists_nonannihilation
     norm_num at hOneZero
   rw [hSourceUnit] at hNotBoth
   exact ⟨z, z', not_and_or.mp hNotBoth⟩
+
+/-- For EVERY original physical link e, not just an unspecified
+selected link, the actual constant Gauss-law source U is detected
+by the SAME original two-posterior signed receiver at some authentic
+interacting-Wilson context. The context may depend on H, b, and e. -/
+theorem p4Q2OE_originalPhysicalUnitReceiver_eachLink_exists_nonzero
+    (hpos : 0 < b) (e : Link) (left₀ right₀ : Cfg) :
+    ∃ z : Cfg × Cfg,
+      L z.2 e (Fiber U e z) ≠ 0 := by
+  obtain ⟨z, z', h⟩ :=
+    p4Q2OE_originalPhysicalUnitReceiver_exists_nonannihilation
+      H b hb hpos e e left₀ right₀
+  rcases h with hFirst | hSecond
+  · exact ⟨z, hFirst⟩
+  · exact ⟨z', hSecond⟩
+
+/-- Consequently, the unmodified original GI two-POSTERIOR
+expectation gap of the SAME physically defined constant Gauss-law
+Hilbert vector U is nonzero somewhere for EVERY genuine link,
+at every finite H and positive frozen Wilson coupling. This is
+an existence-in-context statement, not a global endpoint source
+injection or integrated covariance lower bound. -/
+theorem p4Q2OE_originalPhysicalUnitGI_eachLink_exists_nonzero
+    (hpos : 0 < b) (e : Link) (left₀ right₀ : Cfg) :
+    ∃ z : Cfg × Cfg,
+      p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap
+        H b hb U e z ≠ 0 := by
+  obtain ⟨z, hz⟩ :=
+    p4Q2OE_originalPhysicalUnitReceiver_eachLink_exists_nonzero
+      H b hb hpos e left₀ right₀
+  refine ⟨z, ?_⟩
+  rw [p4Q2OD_originalPhysicalGI_eq_truePosteriorSignedFunctional]
+  exact hz
 
 /-- The original MF physical spatial average is IDENTICALLY the
 average of two TRUE OD signed-posterior functional evaluations
@@ -278,3 +311,5 @@ end MGAP4D
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2OE_originalPhysicalUnitReceiver_exists_nonannihilation
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2OE_originalPhysicalReceiver_spatialAverage_linearFloor
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2OE_originalPhysicalReceiver_exists_meanPlaquette_floor
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2OE_originalPhysicalUnitReceiver_eachLink_exists_nonzero
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2OE_originalPhysicalUnitGI_eachLink_exists_nonzero
