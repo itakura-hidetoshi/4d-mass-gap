@@ -177,7 +177,7 @@ theorem p4Q2OL_originalWilsonHaarRows_notConstant_smallPositive :
     p4Q2OL_originalWilsonHaarRows_strict_smallPositive H
   exact ⟨delta, hdelta, fun t ht hlt =>
     ⟨p4Q2OL_identityBoundary H, p4Q2OL_twistedBoundary H,
-      ne_of_gt (hsep t ht hlt) |>.symm⟩⟩
+      ne_of_gt (hsep t ht hlt)⟩⟩
 
 end GenuineOriginalSmallBeta
 
