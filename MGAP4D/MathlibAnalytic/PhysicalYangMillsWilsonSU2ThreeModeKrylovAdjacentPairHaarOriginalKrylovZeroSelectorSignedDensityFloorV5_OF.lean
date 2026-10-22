@@ -61,6 +61,7 @@ namespace GroundStatePosteriorJoint
 section ActualRightZeroSelector
 variable {halfExtent : ℕ → ℕ} {beta : ℕ → ℝ}
 variable {hbeta : ∀ n, 0 ≤ beta n}
+variable (n r : ℕ)
 
 local notation "Hn" => halfExtent (n + 1)
 local notation "Cfg" =>
@@ -81,7 +82,7 @@ local notation "Fiber" => p4Q2OD_originalPhysicalSignedReceiverFiber
 /-- This is a literal alias of the ACTUAL fine-right physical Krylov
 coefficient sum; no artificial source is constructed. The fine beta
 remains the given beta(n+1) inside the existing RightFactor definition. -/
-noncomputable def p4Q2OF_actualRightZeroSelectorSource (n r : ℕ) :
+noncomputable def p4Q2OF_actualRightZeroSelectorSource :
     periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule
       (halfExtent (n + 1)) 2 :=
   ∑ j : Fin (r + 1),
@@ -93,7 +94,7 @@ noncomputable def p4Q2OF_actualRightZeroSelectorSource (n r : ℕ) :
 /-- GX's existing exact zero-selector identity, now explicitly tied
 to OE's unmodified physical constant Gauss-law source U. Valid for
 ALL finite r and all nonnegative genuine fine coupling. -/
-theorem p4Q2OF_actualRightZeroSelectorSource_eq_unit (n r : ℕ) :
+theorem p4Q2OF_actualRightZeroSelectorSource_eq_unit :
     p4Q2OF_actualRightZeroSelectorSource
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r =
     periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector
@@ -113,7 +114,7 @@ signed response of the existing arbitrary-depth zero-selector
 physical source is EXACTLY the same FF source-weighted receiver
 functional as for U. No new kernel-section-to-source surjection. -/
 theorem p4Q2OF_actualRightZeroSelector_signedReceiver_eq_unit
-    (n r : ℕ) (e : Link) (z : Cfg × Cfg) :
+    (e : Link) (z : Cfg × Cfg) :
     L z.2 e
       (Fiber
         (p4Q2OF_actualRightZeroSelectorSource
@@ -129,7 +130,7 @@ finite-volume positive GI mean-energy density floor that OE proved
 for the true physical unit. Frozen beta(n)>0 is essential; no
 uniformity over n,H,r or chosen contexts is asserted. -/
 theorem p4Q2OF_actualRightZeroSelector_exists_signedEnergyDensityFloor
-    (n r : ℕ) (hfrozen : 0 < beta n)
+    (hfrozen : 0 < beta n)
     (e e' : Link) (left₀ right₀ : Cfg) :
     ∃ z z' : Cfg × Cfg,
       0 < N ∧
@@ -161,7 +162,7 @@ already established a related zero-mode witness; this theorem records
 the exact OE/GX signed-functional transport route and makes no
 first-discovery claim for finite-volume source nonzero detection. -/
 theorem p4Q2OF_actualRightZeroSelector_eachLink_originalGI_nonzero
-    (n r : ℕ) (hfrozen : 0 < beta n)
+    (hfrozen : 0 < beta n)
     (e : Link) (left₀ right₀ : Cfg) :
     ∃ z : Cfg × Cfg,
       p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap
