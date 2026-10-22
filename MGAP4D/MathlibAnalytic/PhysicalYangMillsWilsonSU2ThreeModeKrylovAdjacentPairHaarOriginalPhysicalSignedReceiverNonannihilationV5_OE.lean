@@ -297,6 +297,32 @@ theorem p4Q2OE_originalPhysicalReceiver_exists_meanPlaquette_floor
   rw [p4Q2OE_originalPhysicalReceiverSignedDoubleSq_eq_original]
   exact hFloor x y
 
+
+/-- A quantified original spatial mean-energy density lower bound on
+the SAME truly physical p-INDEPENDENT Gauss-law constant unit source U
+in BOTH unchanged interacting-Wilson signed posterior receivers.
+This is extracted at x=1,y=0 from MK's true mean plaquette witness:
+Source(p,1,0)=U for every p, so the selected plaquette disappears
+completely from the CONCLUSION. The genuine context pair is still
+existential and H-dependent. In particular U is not thereby proved
+to be any required common fine/endpoint S_(n,r) source, and the
+Q_GI/n coefficient may decay with H. -/
+theorem p4Q2OE_originalPhysicalUnitReceiver_exists_meanEnergyDensityFloor
+    (hpos : 0 < b) (e e' : Link) (left₀ right₀ : Cfg) :
+    ∃ z z' : Cfg × Cfg,
+      0 < n ∧ 0 < Q e e' z z' / n ∧
+      (Q e e' z z' / n) / (10 * E^2) ≤
+        (L z.2 e (Fiber U e z))^2 +
+        (L z'.2 e' (Fiber U e' z'))^2 := by
+  obtain ⟨z, z', hn, hQ, p, _hp, hFloor⟩ :=
+    p4Q2OE_originalPhysicalReceiver_exists_meanPlaquette_floor
+      H b hb hpos e e' left₀ right₀
+  refine ⟨z, z', hn, hQ, ?_⟩
+  have hUnit : Source p (1 : ℝ) (0 : ℝ) = U := by
+    simp [p4Q2LO_originalPhysicalLocalTwoSource]
+  have h := hFloor 1 0
+  simpa [p4Q2OE_originalPhysicalReceiverSignedDoubleSq, hUnit] using h
+
 end OriginalPhysicalReceiver
 end GroundStatePosteriorJoint
 end
@@ -313,3 +339,4 @@ end MGAP4D
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2OE_originalPhysicalReceiver_exists_meanPlaquette_floor
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2OE_originalPhysicalUnitReceiver_eachLink_exists_nonzero
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2OE_originalPhysicalUnitGI_eachLink_exists_nonzero
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2OE_originalPhysicalUnitReceiver_exists_meanEnergyDensityFloor
