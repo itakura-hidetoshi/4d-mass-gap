@@ -176,7 +176,7 @@ theorem p4Q2OG_actualZeroSelector_exists_allDepth_sameContext_detected
   have hE : 0 < E :=
     p4Q2LW_originalHarnackContrastScale_pos (beta n) hFrozen
   have hk : 0 < (Q e e' z z' / N) / (10 * E^2) :=
-    div_pos (div_pos hQ hN)
+    div_pos hQ
       (mul_pos (by norm_num) (sq_pos_of_pos hE))
   refine ⟨z, z', hQ, ?_⟩
   intro r
