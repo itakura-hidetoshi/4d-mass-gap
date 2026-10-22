@@ -42,7 +42,7 @@ or replacement posterior.
 namespace MGAP4D
 namespace MathlibAnalytic
 
-open MeasureTheory
+open MeasureTheory Matrix
 open scoped ENNReal Topology InnerProductSpace BigOperators
 noncomputable section
 set_option maxHeartbeats 3900000
@@ -190,7 +190,7 @@ theorem p4Q2PA_actualSmallFine_allShifts_twoModeGram_posDef_det_pos
           p4Q2PA_actualShiftedDepthOneSource_eq_sum
             (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n k a
         _ = 0 := hSum
-    have ha : a = 0 := (hInj ht hsmall k) a 0 (by
+    have ha : a = 0 := (hInj ht hsmall k) (by
       simpa only [map_zero] using hEq)
     simpa using congrArg (fun f : Fin (1 + 1) → ℝ => f j) ha
   have hGram : (Matrix.gram ℝ v).PosDef :=
