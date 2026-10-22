@@ -1,8 +1,8 @@
-# MGAP4D — 証明ロードマップ（P4-Q2-ON統合後／次段階OO）
+# MGAP4D — 証明ロードマップ（P4-Q2-OP統合済み／次の物理障害OQ）
 
-**2026-10-22 JST · 唯一のLean定理正本：`formal/real-hilbert-uniform-coercive-strong-limit` · 最終確認済み定理統合点：[`b5d56f40f6682ec87d0b064428d80eb07da755a4`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/b5d56f40f6682ec87d0b064428d80eb07da755a4)（[#5804 ON](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5804)）。docs-only統合SHAとは区別する。**
+**2026-10-22 JST · 唯一のLean定理正本：`formal/real-hilbert-uniform-coercive-strong-limit` · 最終確認済み定理統合点：[`a53295e837d60778959349cbf880fa6064f882de`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/a53295e837d60778959349cbf880fa6064f882de)（[#5807 OP](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5807)）。OOは[`375cd6826b997b6de923f032e33c25e37584b4ca`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/375cd6826b997b6de923f032e33c25e37584b4ca)、docs-only統合SHAとは区別。**
 
-**到達状況：** 元の二相互作用Wilson posterior・Gauss-law源・Perron半密度・fine/frozenの区別を維持。OL #5801は有限H・小正fineで `T_tU∉ℝU`、OM #5803はLM/JI/OJを接続して**実際の小正fine二文脈GI minor非零実在**を証明、ON #5804は同じminorで**任意の実深さ1係数に対する全文脈GI検出器と真正物理源合成の単射性**を証明。深さ2の `(U,T_tU,T_t²U)` に対する第三受信器と高次Taylor／物理モード独立性はOO以降のOPEN課題。任意正fine・一様U0・endpoint・強極限・連続体質量ギャップもOPEN。
+**到達状況：** 元の二相互作用Wilson posterior・Gauss-law物理源・Perron半密度とfine/frozen couplingの区別を維持。OM #5803とON #5804で真正小正fineの二文脈minor非零と深さ1全実係数単射性。**OO #5806**で元の真正深さ2 `(U,T_tU,T_t²U)` と2行GIで消える非零**係数**Schur残差R₂を構成し、**OP #5807**で選択二行の共通核 `ℝR₂`、`ker S₂ ⊆ ker Φ_all,2 ⊆ ℝR₂` を厳密証明。さらに `S₂`単射⇔`S₂(R₂)≠0`、全文脈GI単射⇔第三の真正Wilson受信器によりR₂が検出されるという各必要十分条件を得た。**両者の非零性の実証は未解決**。OQでは真正Wilson伝達作用素・高次fine導関数・本当の二posterior signed応答から障害を減らす。任意正fine・任意深さ・体積一様U0・endpoint・強極限・4次元連続体mass gapはOPEN。
 
 **[プロジェクトの数学的定義・数式・再現手順 → README.md](README.md)**
 
@@ -12,10 +12,10 @@
 | --- | --- |
 | Repository | [itakura-hidetoshi/4d-mass-gap](https://github.com/itakura-hidetoshi/4d-mass-gap) |
 | 定理の唯一正本 | `formal/real-hilbert-uniform-coercive-strong-limit`（default `main`ではない） |
-| 最終検証済み**定理-bearing**マージ点 | `b5d56f40f6682ec87d0b064428d80eb07da755a4` — ON #5804（OM #5803：`4d63b07ad467091855c04af5f8f43be1e143296f`） |
-| ONの検証**source HEAD** | `18bd4e1de81cc21f624c3cd06b75e5a7bc2c10c6`（OM：`843498afe0f4603316d6c4567a1ac0bbcfc6a514`；各squash SHAと別） |
-| [ON exact-head CI #39754031020](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39754031020) / [OM #39752764954](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39752764954) | いずれもSUCCESS。ON Lean **10875/10875**、OM **10874/10874**、変更warning/error **0/0**、MCP receipt SUCCESS |
-| 公開`#print axioms` | ON **5/5**（標準3公理のみ4件、既存finite-lattice `native_decide`継承1件）、OM **8/8**（標準3のみ6件、既存継承2件）。`sorryAx`なし、新規未証明公理なし |
+| 最終検証済み**定理-bearing**マージ点 | `a53295e837d60778959349cbf880fa6064f882de` — OP #5807（OO #5806：`375cd6826b997b6de923f032e33c25e37584b4ca`） |
+| 検証**source HEAD**（squashと区別） | OP `13a0f59989e1366cecc6407f6848de390037613e` ／ OO `e98d877a3c75245211e02f75e67e61ebdeb76cc3` |
+| [OP exact-head #39763001799](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39763001799) ／ [OO #39757133108](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39757133108) | 両方SUCCESS。OP **10877/10877**、OO **10876/10876**、変更warning/error **0/0**、MCP receipt SUCCESS |
+| 公開`#print axioms` | OP **9/9**（標準3公理のみ8件、既存finite-lattice native_decide継承1件）、OO **13/13**（標準3のみ12件、既存継承1件）。`sorryAx`なし、新規未証明公理なし |
 | Lean / mathlib pin | `v4.30.0-rc2` / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
 | 現在のbranch HEAD | [毎回GitHubで再観測](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit) |
 
@@ -50,7 +50,9 @@
 | **R5：真正small-positive fine物理非固有直線・一行kernel内の非零物理源 — CLOSED（OL）** | IY・IX・IVから有限H小正fineで `T_t U∉ℝU` と、HY/IS/IU選択一行GIで零の非零物理pivot | **OMで同じpivotの第二文脈による検出が後にCLOSED**。δ_HはH依存、任意正fine・一様性・endpointはOPEN |
 | **R6：真正small-positive-fine GI二文脈minor — CLOSED（OM）** | LMの元空間minorとJIの実fine微分によって `(U,T_tU)` の真正二文脈minorが有限H小正fineで非零。OJの実HF modal minorとの同一性・選択第一文脈で消えるpivotの第二文脈検出までLeanで証明 | 深さ2の第三minor、任意正fine、H一様下界はOPEN |
 | **R7：深さ1の全係数全文脈GI・物理源単射 — CLOSED（ON）** | OMの非零2×2行列式によって、全実係数 `(a₀,a₁)` で `Φ_all,1(a)=0 ⇔ a=0` かつ `S₁(a)=0 ⇔ a=0` | `r≥2`では、第三モード `T_t²U` と真正第三GI受信器の非退化性が別途必要 |
-| **F：positive fine / arbitrary r** | 端点：fine=0の全r、r=0の全fineで核一致。**ON：有限H・小正fineの深さ1全実係数に `ker S₁=ker Φ_all,1={0}`** | 深さ2以上、任意正fine、全rでの `I_phys` 消去、U0・endpointはOPEN |
+| **R8：真正深さ2Schur残差の構成・第一二行GI消去 — CLOSED（OO）** | 深さ2の実物理源 `(U,T_tU,T_t²U)` と真正signed HF応答を同定。OMの先頭minorを実深さ2へ輸送し、選択二行GIで同時に消える非零**係数**残差R₂を構成。元のHilbert像と第三文脈でのsigned応答を正確に計算 | **残差の物理像または第三GI応答が非零とは未証明**。係数非零と源非零を混同しない |
+| **R9：深さ2の真正GI／物理源核の一次元還元 — CLOSED（OP）** | 真正二行GI共通係数核=`ℝR₂`、`ker S₂ ⊆ ker Φ_all,2 ⊆ ℝR₂`。`S₂`単射⇔`S₂(R₂)≠0`、`Φ_all,2`単射⇔ある実Wilson第三文脈で `Φ(R₂)≠0` | **必要十分条件の右辺はOPEN**。二つの非零性を架空のrankやreceiver-span仮定から導出しない |
+| **F：positive fine / arbitrary r** | fine=0の全有限r、r=0の全非負fineは既証明。ON：有限H小正fine深さ1で `ker S₁=ker Φ_all,1={0}`。OO/OP：有限H小正fine深さ2の両核は同じ一つの実Schur直線に含まれる | 深さ2の実物理像と第三GI応答の非零性、深さ3以上、任意正fine、U0、endpointは依然OPEN |
 | **U：真の一様解析** | 固定bで元のreceiverコントラスト`E_b`の体積一様な**上界**など | GIエネルギー/分離の下界、signed spatial covariance・tailsの可和性、深さとスケールの制御は OPEN |
 | **C/H：連続体** | 一部の有限格子・限定されたsource subspaceの証明 | H1-C1/C2/C3、物理時間、OS/Wightman、非自明な4D連続体質量ギャップは OPEN |
 
@@ -142,14 +144,18 @@ $$
 - **OL [#5801](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5801)**：IYで証明済みの空間SU(2)Wilson作用 (W(B_0)=0, W(B_1)≥2) とIXの真正temporal crossing Haar平均不変性から、元のone-slab Wilson Haar-row差のβ=0微分が ≥1 であることを証明。両rowがβ=0で1に一致するため、数学的に正の体積依存区間で真のHaar-row値が厳密に異なる。IVの真正physical Hilbert等価定理により同じ区間で **元の正規化fine Wilson作用素 `T_t U∉ℝU`** をLean証明。独立に正凍結couplingがあるとHY/IS/IUの実GI anchorから、真正depth-one係数pivotは非零Gauss-law物理源を合成し、その選択一行の真の二posterior GI応答は0。**全リンク・全文脈で不可視とは証明しておらず、非零2-context minor存在もOPEN**。source `596be095da2afa654d8054d5ffbfb5ca26b8bc1f`、squash `d8da75fcb269fe85ec0ea6a9f7ccd5564a697977`、[CI #39750196718](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39750196718) Lean 10873/10873 SUCCESS、公開5/5公理監査・sorryAxなし・変更警告/エラー0・MCP receipt SUCCESS、4件標準公理のみ、1件は既存native_decide継承。
 - **OM [#5803](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5803)**：LMが示す元の正凍結Wilson空間二文脈minorの非零性を、JIの `d/dt|₀` 真正normalized fine源minor公式で小正fineへ移し、OJの元のsigned HF二行・零次／一次Krylovモードminorとの厳密同一性を証明。任意有限H・凍結 `β(n)>0` で二つの実Wilson文脈をfineより前に選べ、体積依存 `δ_H>0` の `0<β(n+1)<δ_H` に非零minorが存在。第一受信器で零の同じ非零物理pivotを第二受信器が検出。source `843498afe0f4603316d6c4567a1ac0bbcfc6a514`、squash `4d63b07ad467091855c04af5f8f43be1e143296f`、[CI #39752764954](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39752764954) **10874/10874 SUCCESS**、8/8公理監査、sorryAxなし、warning/error 0/0、MCP receipt SUCCESS。
 - **ON [#5804](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5804)**：OMの真正非零2×2 minorからすべての実深さ1係数を二つの真正GI文脈が分離。元のHJ全文脈検出器 `Φ_all,1` と真正物理Hilbert合成写像 `S₁` に `ker Φ_all,1=ker S₁={0}`、`U,T_tU`の実線形独立性を証明。source `18bd4e1de81cc21f624c3cd06b75e5a7bc2c10c6`、squash `b5d56f40f6682ec87d0b064428d80eb07da755a4`、[CI #39754031020](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39754031020) **10875/10875 SUCCESS**、5/5公理監査、sorryAxなし、warning/error 0/0、MCP receipt SUCCESS。
+- **OO [#5806](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5806)**：真正Gauss-law物理Hilbert右Krylov深さ2の3モードを厳密同定し、元の二posterior HF受信器との厳密一致とOMの先頭2×2 minor非零を輸送。選択二行受信器で消える実Schur係数残差R₂は**係数ベクトルとして非零**。Hilbert合成像・第三GI文脈応答は厳密に表示したが、非零性は証明していない。source `e98d877a3c75245211e02f75e67e61ebdeb76cc3`／squash `375cd6826b997b6de923f032e33c25e37584b4ca`／[CI #39757133108](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39757133108) **10876/10876 SUCCESS**、13/13公理監査、sorryAxなし、warning/error 0/0、MCP receipt SUCCESS。
+- **OP [#5807](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5807)**：OOの真正二行受信器の全同時零係数を**ちょうどR₂の一次元直線**と証明。全文脈核・物理源核の包含、真の物理合成単射性⇔R₂の真のHilbert像非零、全文脈GI単射性⇔第三の**真正Wilson二posterior文脈**による同じR₂の検出を必要十分条件としてLean4証明。後者非零は仮定・証明していない。source `13a0f59989e1366cecc6407f6848de390037613e`／squash `a53295e837d60778959349cbf880fa6064f882de`／[CI #39763001799](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39763001799) **10877/10877 SUCCESS**、9/9公理監査、sorryAxなし、warning/error 0/0、MCP receipt SUCCESS。
 
 **量化の境界：** OGで閉じたのは**固定nにおける零次selector**の同一源・同一文脈・深さ互換であり、任意係数列や異なる格子スケールでの同一endpointではない。Q_GI/N_Hの正下界は有限体積の選択文脈に依存する。
-### 2.7 次段階OO：真正深さ2の第三Krylovモード非退化性（OPEN）
+### 2.7 OQ：実Wilson第三Krylovモードの解析的非退化性（OPEN）
 
-1. **元の深さ2右Krylov源を忠実に定義・展開する。** `S₂(a₀,a₁,a₂)=a₀U+a₁T_tU+a₂T_t²U` と真のHF/OD二posterior signed受信器を同じWilson物理Hilbert源に接続。ONの深さ1基底の実在を利用し、第三モードに関する正確な係数kernel・受信器残差条件を証明する。
-2. **実際の第三モード残差（Schur complement）を判定する。** OMの非零真正二行minorを用い、`T_t²U`の第一・第二GI受信器応答を `U,T_tU` で厳密に打ち消す係数を構築。その残差が第三の**真正Wilson受信器**で非零なら深さ2全文脈係数分離と真正物理源非退化を示せるが、第三行の非零は**まだ証明されていない**。人工rankや独立Haar検出器を使わない。
-3. **高次微分・真正物理的値の分析。** small fineの低次Taylorで `U,T_tU,T_t²U` が近接する可能性を考慮し、実Wilson作用素の二階以上の導関数、複数GI文脈minorを直接調べる。OMの2×2非零だけから3×3非零を宣言しない。
-4. **独立ゲートを維持する。** 任意正fineへの拡張、全r、`inf_H Q_GI/N_H>0`、同一endpoint、強極限、H1–C3と連続体質量ギャップは別々にOPEN。
+OO/OPで**代数・元の物理作用の正確なkernel還元**は完了。残るものは実Wilson積分の値に関する命題である：
+
+1. **物理源の非零性**：元のnormalized fine Wilson operator `T_t` に対し、OOの同じSchur残差 `R₂` の真正Gauss-law Hilbert像 `S₂(R₂)` のノルムが正であることを示す。等価に `T_t²U∉span{U,T_tU}`。自己共役性・Hankel moment等は、元の作用素について実際に証明できた場合にのみ利用する。
+2. **元の第三GI文脈での検出**：本当の二相互作用posterior差とFF signed receiverで `∃e'',z'', Φ_{e'',z''}(S₂(R₂))≠0` を証明する。これは物理源非零から一般には自動でなく、OPが同値性を示すのは全文脈GI**単射性**と第三応答非零性の間に限る。
+3. **高次fine Taylor の障害**：OMの一次fine変動は2列minorに十分だが、3モード行列式の最初の非零Taylor係数は別の高次変動・genuine Wilson空間作用 `W` の高次非退化性を要し得る。形式的な三次rank公理で代用しない。
+4. **独立OPENゲートの維持**：小正fineから全正fine、深さ2から任意r、体積一様U0 `inf_H Q_GI/N_H>0`、source endpoint、H1-C3、連続体質量ギャップへは推論を飛躍させない。
 
 ## 3. 次の核心：本当に不足する数学的入力
 
@@ -227,7 +233,7 @@ MF–MKの量化は`\sum_p R_p(x,y)`や`∃p\,R_p(x,y)`で、`R_p`の物理源�
 | Gram/逆写像 | `OriginalPhysicalGramDeterminantV5_MG` / `OriginalPhysicalGramQuantitativeDeterminantV5_MH` / `OriginalPhysicalGramInverseV5_MI` / `OriginalPhysicalGramInverseLipschitzV5_MJ` | exact polarisation / `det≥k²` / adjugate / two-input Lipschitz |
 | **空間物理GI：最新MK（このトラック）** | `OriginalMeanEnergySinglePlaquetteV5_MK` | `p4Q2MK_originalGI_exists_meanEnergyPlaquette`、`p4Q2MK_originalPhysicalGI_exists_authenticMeanPlaquette` |
 | **時間Gaussian〜真正物理GI：OD** | `OriginalSignedGaussianStrictV5_NY` / `OriginalGaussianKernelSpanDenseV5_NZ` / `OriginalGaussianAllFiniteStrictGramV5_OA` / `OriginalGaussianMatrixPosDefV5_OB` / `OriginalGaussianFiniteInterpolationV5_OC` / `OriginalTwoPosteriorGaussianSeparationV5_OD` | NY Gaussian `T_L>0`; NZ稠密; OA/OB全有限Gram PosDef; OC補間; **OD `p4Q2OD_originalPhysicalGI_eq_truePosteriorSignedFunctional`** とposterior kernel section検出 |
-| **真正物理GI signed〜right-Krylov・小正fine深さ1単射：OE–ON** | `OriginalPhysicalSignedReceiverNonannihilationV5_OE` / `OriginalPhysicalKrylovModalKernelSplitV5_OI` / `OriginalCrossContextPhysicalResidualMinorV5_OJ` / `OriginalWilsonSmallPositiveFineUnitNonEigenlineV5_OL` / `OriginalSmallFineKrylovTwoContextMinorV5_OM` / `OriginalSmallFineDepthOneGIPhysicalSourceInjectiveV5_ON` | **OM**は真正GI二文脈minor非零、**ON**は真正全係数深さ1 GI・物理Hilbert源単射。`T_t²U`は未証明 |
+| **真正物理GI・右Krylov深さ2Schur核：OE–OP** | `OriginalSmallFineKrylovTwoContextMinorV5_OM` / `OriginalSmallFineDepthOneGIPhysicalSourceInjectiveV5_ON` / `OriginalDepthTwoKrylovSchurResidualV5_OO` / `OriginalDepthTwoExactGIKernelV5_OP` | OMの真正2×2 minor、ON深さ1単射。**OO**は実第三モードと第一二行GI零の非零係数残差。**OP**は二行核=`ℝR₂`、真正Hilbert/GI核の包含と各単射性の必要十分条件。第三モードの物理的非零と第三文脈検出はOPEN |
 
 ## 7. CIを効率的に保ちながら厳密性を保つ
 
@@ -239,14 +245,14 @@ MF–MKの量化は`\sum_p R_p(x,y)`や`∃p\,R_p(x,y)`で、`R_p`の物理源�
 - 変更が`README.md`/`ROADMAP.md`だけの場合、現在の`PR Lean Fast Check`はパスフィルタで**Lean CIを起動しない**。Markdown表示・相互リンク・正本SHAを直接点検し、1万以上のLeanモジュールを再ビルドしない。Lean変更時のキャッシュキーはpinned toolchain/manifest、authoritative baseと安全なPRリトライscopeで扱い、不要なフルビルドを繰り返さない。
 - PRソースCI成功後に定理正本へ統合し、**squash SHAとsource SHAを別々に記録**。docs-onlyマージを新しい数学的達成と数えない。
 
-再現例（**検証済みOL source**を含むtheorem-bearing mergeを利用）：
+再現例（**検証済みOP theorem-bearing merge**で実施）:
 
 ```bash
 git fetch origin formal/real-hilbert-uniform-coercive-strong-limit
-git switch --detach d8da75fcb269fe85ec0ea6a9f7ccd5564a697977
+git switch --detach a53295e837d60778959349cbf880fa6064f882de
 cat lean-toolchain
 # optional when available: lake exe cache get
-lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalWilsonSmallPositiveFineUnitNonEigenlineV5_OL
+lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalDepthTwoExactGIKernelV5_OP
 ```
 
 ## 8. 検証済みの履歴とリンク（旧版の「最新」を繰り返さない）
