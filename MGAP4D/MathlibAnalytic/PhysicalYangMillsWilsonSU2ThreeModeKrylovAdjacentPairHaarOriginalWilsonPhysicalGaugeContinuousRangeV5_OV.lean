@@ -133,14 +133,14 @@ theorem p4Q2OV_originalPhysicalContinuousRepresentative_gaugeInvariant
       (periodicHypercubicEvenSpecialUnitarySpatialSliceHaar_measurePreserving
         H 2 gamma).quasiMeasurePreserving
     simpa only [Function.comp_def] using
-      (hMP.ae_eq (psi.coeFn_toLp (p := 2) (𝕜 := ℝ) haar).symm)
+      (hMP.ae_eq (psi.coeFn_toLp (p := 2) (𝕜 := ℝ) haar))
   have hGaugeToLp : gaugePull (L psi) = L phi := by
     apply Lp.ext
     have hPull :=
       periodicHypercubicEvenSpecialUnitarySpatialSliceGaugePullbackLinearIsometry_coeFn
         H 2 gamma (L psi)
     have hPhi := phi.coeFn_toLp (p := 2) (𝕜 := ℝ) haar
-    exact (hPull.trans hCompAE).trans hPhi
+    exact (hPull.trans hCompAE).trans hPhi.symm
   have hEqualToLp : L phi = L psi := by
     calc
       L phi = gaugePull (L psi) := hGaugeToLp.symm
