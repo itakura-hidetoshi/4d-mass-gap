@@ -103,23 +103,28 @@ theorem p4Q2OP_twoRows_null_scaledSchur
     (eq_neg_iff_add_eq_zero).2 hB
   funext j
   fin_cases j
-  · simpa [p4Q2OO_depthTwoSchurResidual,
-        p4Q2OO_depthTwoFirstCoefficient,
-        p4Q2OO_depthTwoSecondCoefficient,
-        p4Q2GX_rightZeroCoefficient,
-        Pi.smul_apply, Pi.sub_apply, smul_eq_mul,
-        delta, A, mul_comm] using ha0
-  · simpa [p4Q2OO_depthTwoSchurResidual,
-        p4Q2OO_depthTwoFirstCoefficient,
-        p4Q2OO_depthTwoSecondCoefficient,
-        p4Q2GX_rightZeroCoefficient,
-        Pi.smul_apply, Pi.sub_apply, smul_eq_mul,
-        delta, B, mul_comm] using ha1
+  · dsimp [delta, A, u, v, w] at ha0
+    simp [p4Q2OO_depthTwoSchurResidual,
+      p4Q2OO_depthTwoFirstCoefficient,
+      p4Q2OO_depthTwoSecondCoefficient,
+      p4Q2GX_rightZeroCoefficient,
+      p4Q2OO_depthTwoLeadingMinor,
+      Pi.smul_apply, Pi.sub_apply, smul_eq_mul] <;>
+      nlinarith [ha0]
+  · dsimp [delta, B, u, v, w] at ha1
+    simp [p4Q2OO_depthTwoSchurResidual,
+      p4Q2OO_depthTwoFirstCoefficient,
+      p4Q2OO_depthTwoSecondCoefficient,
+      p4Q2GX_rightZeroCoefficient,
+      p4Q2OO_depthTwoLeadingMinor,
+      Pi.smul_apply, Pi.sub_apply, smul_eq_mul] <;>
+      nlinarith [ha1]
   · simp [p4Q2OO_depthTwoSchurResidual,
       p4Q2OO_depthTwoFirstCoefficient,
       p4Q2OO_depthTwoSecondCoefficient,
       p4Q2GX_rightZeroCoefficient,
-      Pi.smul_apply, Pi.sub_apply, smul_eq_mul]
+      Pi.smul_apply, Pi.sub_apply, smul_eq_mul] <;>
+      ring
 
 /-- Once the genuine first-two minor is nonzero, the exact COMMON
 kernel of those TWO selected GI rows is the SINGLE explicit Schur
@@ -242,8 +247,7 @@ theorem p4Q2OP_actualDepthTwo_physicalSource_injective_iff_schurNonzero
     apply hr
     apply hInj
     simpa only [map_zero] using hZero
-  · intro hNonzero
-    intro a b hab
+  · intro hNonzero a b hab
     have hSource : S 2 (a - b) = 0 := by
       rw [map_sub, hab, sub_self]
     obtain ⟨c, hc⟩ :=
@@ -260,7 +264,7 @@ theorem p4Q2OP_actualDepthTwo_physicalSource_injective_iff_schurNonzero
           smul_zero] using hInv
       exact hNonzero hRZero
     have hDiff : a - b = 0 := by
-      simpa only [hc, hcZero, zero_smul]
+      simp only [hc, hcZero, zero_smul]
     exact sub_eq_zero.mp hDiff
 
 /-- The entire original two-posterior GI detector is injective at
@@ -286,7 +290,7 @@ theorem p4Q2OP_actualDepthTwo_fullGI_injective_iff_exists_actualThirdRow
       apply hInj
       simpa only [map_zero] using hZero
     by_contra hNo
-    push_neg at hNo
+    push Not at hNo
     have hFullZero : Full 2 r = 0 := by
       funext link
       apply ContinuousMap.ext
@@ -313,7 +317,7 @@ theorem p4Q2OP_actualDepthTwo_fullGI_injective_iff_exists_actualThirdRow
     have hcZero : c = 0 :=
       (mul_eq_zero.mp hProductZero).resolve_right hThird
     have hDiff : a - b = 0 := by
-      simpa only [hCoeff, hcZero, zero_smul]
+      simp only [hCoeff, hcZero, zero_smul]
     exact sub_eq_zero.mp hDiff
 
 /-- A genuinely nonzero THIRD original Wilson GI response would
@@ -342,7 +346,7 @@ theorem p4Q2OP_actualDepthTwo_actualThirdGI_nonzero_implies_bothInjective
         (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
         n 2) ((LinearMap.mem_ker).mpr hDiffSource))
   exact sub_eq_zero.mp (by
-    simpa only [map_sub] using hDiffFull) ▸ rfl
+    simpa only [map_sub] using hDiffFull)
 
 /-- UNCONDITIONAL original-Wilson finite-H small-positive-fine theorem:
 the actual depth-two physical coefficient kernel AND the full
