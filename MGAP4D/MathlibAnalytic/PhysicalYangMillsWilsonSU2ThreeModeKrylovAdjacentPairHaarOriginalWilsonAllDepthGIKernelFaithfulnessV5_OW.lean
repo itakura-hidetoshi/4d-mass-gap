@@ -157,6 +157,7 @@ theorem p4Q2OW_actualAllDepth_source_hasContinuousRepresentative
           a j • ((Right n (j : ℕ) : Phys) : Lp ℝ 2 haar) := by
             rw [map_sum]
             simp only [map_smul]
+            rfl
     _ = ∑ j : Fin (r + 1), a j • L (psi j) := by
           apply Finset.sum_congr rfl
           intro j _hj
