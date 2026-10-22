@@ -255,7 +255,7 @@ MF–MKの量化は`\sum_p R_p(x,y)`や`∃p\,R_p(x,y)`で、`R_p`の物理源�
 
 ```bash
 git fetch origin formal/real-hilbert-uniform-coercive-strong-limit
-git switch --detach 34b26d9bad92babf4f484adae418bc767129ddf4
+git switch --detach daf1c714f08ed57d42d9e5c3b92e12601bc61478
 cat lean-toolchain
 # optional when available: lake exe cache get
 lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalSmallFinePhysicalNormCoercivityV5_OS
