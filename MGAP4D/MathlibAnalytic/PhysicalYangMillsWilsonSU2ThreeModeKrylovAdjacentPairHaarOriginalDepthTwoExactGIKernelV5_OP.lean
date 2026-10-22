@@ -108,7 +108,6 @@ theorem p4Q2OP_twoRows_null_scaledSchur
       p4Q2OO_depthTwoFirstCoefficient,
       p4Q2OO_depthTwoSecondCoefficient,
       p4Q2GX_rightZeroCoefficient,
-      p4Q2OO_depthTwoLeadingMinor,
       Pi.smul_apply, Pi.sub_apply, smul_eq_mul] <;>
       nlinarith [ha0]
   · dsimp [delta, B, u, v, w] at ha1
@@ -116,7 +115,6 @@ theorem p4Q2OP_twoRows_null_scaledSchur
       p4Q2OO_depthTwoFirstCoefficient,
       p4Q2OO_depthTwoSecondCoefficient,
       p4Q2GX_rightZeroCoefficient,
-      p4Q2OO_depthTwoLeadingMinor,
       Pi.smul_apply, Pi.sub_apply, smul_eq_mul] <;>
       nlinarith [ha1]
   · simp [p4Q2OO_depthTwoSchurResidual,
