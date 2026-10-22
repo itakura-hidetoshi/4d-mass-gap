@@ -177,6 +177,15 @@ theorem p4Q2OI_originalPhysicalKrylovRemainder_GI_zero
       (S r (p4Q2OI_originalKrylovModalReceiverRemainder
         (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
         n r e z a)) e z = 0 := by
+  change p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap
+      Hn (beta n) (hbeta n)
+      (∑ j : Fin (r + 1),
+        p4Q2OI_originalKrylovModalReceiverRemainder
+          (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+          n r e z a j •
+          physicalYangMillsSU2AdjacentFinePairOrbitRightFactor
+            (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+            n (j : ℕ)) e z = 0
   rw [p4Q2HF_actualRightGIExpectationGap_eq_modalLinear
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
     n r (p4Q2OI_originalKrylovModalReceiverRemainder
