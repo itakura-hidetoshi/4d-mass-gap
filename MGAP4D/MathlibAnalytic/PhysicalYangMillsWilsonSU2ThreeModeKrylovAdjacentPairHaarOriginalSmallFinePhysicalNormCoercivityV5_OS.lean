@@ -156,7 +156,7 @@ still-open physical third-mode nonzero witness. -/
 theorem p4Q2OS_actualSmallFine_allDepthGLMass_or_depthTwoNormControl
     (hFrozen : 0 < beta n) (e e' : Link)
     (left₀ right₀ : Cfg) :
-    ∃ z z' : Pair, ∃ delta : ℝ, 0 < delta ∧
+    ∃ delta : ℝ, 0 < delta ∧
       (0 < beta (n + 1) → beta (n + 1) < delta →
         (∀ r : ℕ, ∀ a : Fin (r + 1) → ℝ,
           S r a ≠ 0 →
@@ -167,7 +167,7 @@ theorem p4Q2OS_actualSmallFine_allDepthGLMass_or_depthTwoNormControl
     p4Q2OO_actualDepthTwo_exists_nonzeroLeadingMinor_smallFine
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
       n hFrozen e e' left₀ right₀
-  refine ⟨z, z', delta, hdelta, ?_⟩
+  refine ⟨delta, hdelta, ?_⟩
   intro ht hsmall
   have hDet := hMinor ht hsmall
   by_cases hSchur :
