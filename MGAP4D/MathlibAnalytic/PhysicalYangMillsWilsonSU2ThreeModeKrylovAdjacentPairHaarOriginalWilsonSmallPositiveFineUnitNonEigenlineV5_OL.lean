@@ -98,7 +98,10 @@ private theorem p4Q2OL_abstract_derivative_positive_right
     simpa only [zero_add, hzero, sub_zero, smul_eq_mul] using
       (hBound hDist ht)
   have hProduct : 0 < t * (t⁻¹ * f t) := mul_pos ht hSlope
-  simpa only [mul_assoc, mul_inv_cancel₀ (ne_of_gt ht), one_mul] using hProduct
+  calc
+    0 < t * (t⁻¹ * f t) := hProduct
+    _ = (t * t⁻¹) * f t := by ring
+    _ = f t := by rw [mul_inv_cancel₀ (ne_of_gt ht), one_mul]
 
 section GenuineOriginalSmallBeta
 variable (H : ℕ)
