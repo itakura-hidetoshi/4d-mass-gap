@@ -122,6 +122,13 @@ theorem p4Q2OR_originalAllDepth_mass_zero_iff_physicalZero_of_kernelEquality
     (hEq : (S r).ker = (Full r).ker) :
     Mass (S r a) (Finset.univ : Finset Link) = 0 ↔
       S r a = 0 := by
+  change p4Q2GL_originalWilsonSignedGapSquareDivVarianceSpatialMass
+    Hn (beta n) (hbeta n)
+    (∑ j : Fin (r + 1),
+      a j • physicalYangMillsSU2AdjacentFinePairOrbitRightFactor
+        (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
+        n (j : ℕ))
+    (Finset.univ : Finset Link) = 0 ↔ S r a = 0
   rw [p4Q2HJ_actualRightGLMass_zero_iff_continuousDetector_zero
     (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
     n r hFrozen a]
