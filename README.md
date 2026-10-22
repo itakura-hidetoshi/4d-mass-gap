@@ -176,7 +176,7 @@ No single fixed-volume rank/Gram witness, positive finite-lattice spectral band,
 
 ## 8. Reproducing source and auditing proof integrity
 
-Work from the **verified theorem-bearing OR checkpoint**, not default `main` or a docs-only SHA:
+Work from the **verified theorem-bearing OS checkpoint**, not default `main` or a docs-only SHA:
 
 ```bash
 git fetch origin formal/real-hilbert-uniform-coercive-strong-limit
