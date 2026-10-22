@@ -123,9 +123,9 @@ theorem p4Q2PC_actualSmallFine_allShifts_originalHankel_posDef_det_pos
       n hFrozen e e' left₀ right₀
   refine ⟨delta, hdelta, ?_⟩
   intro ht hsmall k
-  rw [p4Q2PC_actualShiftedGram_eq_originalWilsonEvenShiftedHankel
-    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n k] at *
-  exact hGram ht hsmall k
+  simpa only [p4Q2PC_actualShiftedGram_eq_originalWilsonEvenShiftedHankel
+    (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n k]
+    using (hGram ht hsmall k)
 
 /-- Strict shifted Cauchy--Schwarz *in scalar Wilson physical
 moments*, not a generic moment-model assumption:
