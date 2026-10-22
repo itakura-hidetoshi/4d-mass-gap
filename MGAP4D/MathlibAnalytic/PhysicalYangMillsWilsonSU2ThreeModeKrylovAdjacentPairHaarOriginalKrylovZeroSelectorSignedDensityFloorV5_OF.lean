@@ -152,8 +152,7 @@ theorem p4Q2OF_actualRightZeroSelector_exists_signedEnergyDensityFloor
     p4Q2OE_originalPhysicalUnitReceiver_exists_meanEnergyDensityFloor
       Hn (beta n) (hbeta n) hfrozen e e' left₀ right₀
   refine ⟨z, z', hCount, hQ, ?_⟩
-  rw [p4Q2OF_actualRightZeroSelectorSource_eq_unit]
-  exact hFloor
+  simpa only [p4Q2OF_actualRightZeroSelectorSource_eq_unit] using hFloor
 
 /-- At each genuine physical link, the same actual all-depth right
 Krylov zero-selector source has a NONZERO original two-interacting-
