@@ -1,6 +1,7 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalGaussianFiniteInterpolationV5_OC
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalSignedSourcePosteriorContrastProjectionV5_GB
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalPosteriorUniformLeftHaarL2FloorV5_GA
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalTwoWilsonPosteriorSourceExpectationGapV5_GI
 import Mathlib.Analysis.Normed.Operator.ContinuousLinearMap
 import Mathlib.Tactic
 
@@ -64,6 +65,8 @@ local notation "Gauge" => Matrix.specialUnitaryGroup (Fin 2) ℂ
 local notation "Cfg" =>
   PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
 local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink H
+local notation "Phys" =>
+  periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2
 local notation "mu" => normalizedCompactHaar Gauge
 local notation "D" => p4Q2GB_originalWilsonPosteriorLeftDensityContrast H b hb
 local notation "k" => p4Q2NJ_originalSU2WilsonTemporalSection
@@ -310,6 +313,33 @@ theorem p4Q2OD_originalTwoPosteriorWilsonSection_separates_density_means
   rw [← hIntegral]
   exact hx
 
+
+/-- Restrict the ACTUAL original FF/physical Gauss-law signed receiver
+to its genuine right-link SU2 fiber while retaining the original full
+joint Wilson half-density, transfer normalization and spatial factors. -/
+noncomputable def p4Q2OD_originalPhysicalSignedReceiverFiber
+    (f : Phys) (e : Link) (z : Cfg × Cfg) : C(Gauge, ℝ) := by
+  let R := p4Q2FF_originalWilsonRelativeSignedLinkResponseBCF
+    H 2 (by norm_num) b hb f e
+  exact ⟨fun g : Gauge => R (z,g),
+    R.continuous.comp (continuous_const.prodMk continuous_id)⟩
+
+/-- EXACT missing-type compatibility at the one-link level:
+the genuine source-dependent GI two-POSTERIOR expectation gap is the
+same TRUE density-contrast functional L_D tested on the ACTUAL
+physical source-weighted FF receiver fiber. No surrogates, no claimed
+nonzero GI response and no assumption that this receiver is a Gaussian
+kernel section. The latter source-range/nondegeneracy remains OPEN. -/
+theorem p4Q2OD_originalPhysicalGI_eq_truePosteriorSignedFunctional
+    (f : Phys) (e : Link) (z : Cfg × Cfg) :
+    p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap
+      H b hb f e z =
+    p4Q2OD_originalTwoPosteriorContrastCLM H b hb z.2 e
+      (p4Q2OD_originalPhysicalSignedReceiverFiber H b hb f e z) := by
+  rw [p4Q2GI_originalWilsonSignedTwoPosteriorExpectationGap_eq_HaarPairing,
+    p4Q2OD_originalTwoPosteriorContrastCLM_apply]
+  rfl
+
 end OriginalTwoPosteriorGaussian
 end GroundStatePosteriorJoint
 end
@@ -323,3 +353,5 @@ end MGAP4D
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2OD_originalTwoPosteriorGaussianDoubleEnergy_pos
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2OD_originalTwoPosteriorWilsonSection_detects_contrast
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2OD_originalTwoPosteriorWilsonSection_separates_density_means
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2OD_originalPhysicalGI_eq_truePosteriorSignedFunctional
