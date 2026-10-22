@@ -1,8 +1,8 @@
-# MGAP4D — 証明ロードマップ（P4-Q2-OZ統合済み／次はP4-Q2-PA）
+# MGAP4D — 証明ロードマップ（P4-Q2-PC #5825統合済み／次はPD：真正Wilson第三モード解析）
 
-**2026-10-23 JST · 唯一のLean定理正本：`formal/real-hilbert-uniform-coercive-strong-limit` · 最新検証済み定理統合点：[`feac7e92d3e56f5301d1f8ecbc66dceb4d74c011`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/feac7e92d3e56f5301d1f8ecbc66dceb4d74c011)（[#5821 OZ](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5821)）。OW #5817 squash `48c83c2deeb86bf6a544206dd6a0a28caa32aaa5`、docs-only SHAとは区別。**
+**2026-10-23 JST · 唯一のLean定理正本：`formal/real-hilbert-uniform-coercive-strong-limit` · 最新検証済み定理統合点：[`104e0008d5d7372bf45f226c51fe1a61dfc67805`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/104e0008d5d7372bf45f226c51fe1a61dfc67805)（[#5825 PC](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5825)）。PA #5823 squash `afd42dd8fea1f4e57a98f08d18c2bb7eec431448`、PB #5824 squash `c9e896755908e4504da8281a304ae6f82a544289`。文書のみのsquash SHAと定理正本SHAを混同しない。**
 
-**到達状況：** 元の二相互作用Wilson posterior・Gauss-law物理Hilbert・Perron半密度・独立したfine/frozen couplingを保持。OM/ONで小正fine深さ1独立性、OO/OPで深さ2実Schur係数核を一次元還元、OQ/ORで条件付き全深さ核一致と真正GL質量正値性、OSで固定有限Hの係数ノルム制御を形式化。OT #5814は元の完全Wilson核と二posterior受信器を接続し、OU #5815は真正normalized物理転送の連続代表、OV #5816は点ごとのGauss-law不変性をLean証明。**OW #5817 は全非負fine×全有限Krylov深さの `ker S_r = ker Φ_all,r` を、Schur非零や二次閉包を仮定せず証明。OX #5818 はこれをORの元の真正GL質量に適用し、全有限r、fine `t≥0` の物理源非零⇒真正GL質量厳密正値を無条件化。** **OY #5819 は元の完全Wilson一スラブ核の真のHaar二次形式を実Gauss-law物理Hilbert内積に輸送し、正fineにおける任意の有限Krylov非零物理源の厳密正エネルギーと、1段Krylovシフトによる物理源核不変性を証明。** **OZ #5821 はその厳密正値性から実物理Krylov源の任意回正fine転送後の非消滅と、ONの小正fine二モード独立性が任意シフトでも維持されることをLean証明。** 真の深さ2 Schur物理像非零、第三物理モードrank3、任意rの `S_r` 単射、一様U0、endpoint、H1-C3・強極限・4D連続体mass gapはOPEN。
+**到達状況：** 元の二相互作用Wilson posterior・Gauss-law物理Hilbert・Perron半密度・frozen/fine couplingを保持。ONで小正fineの真正深さ1物理二モード独立性、OO/OPで深さ2真Schur残差・核の形を構成。**OW #5817は全有限r・全非負fineで真正物理源核と全文脈GI受信器核が一致することを無条件証明**し、OX #5818で非零有限Krylov物理源の真正GL質量厳密正値性を得た。OY/OZで正fine転送の任意回反復で非零物理源が消滅しないことを確認。**PA #5823：** ONの共通小正fine区間で全シフトの真正2×2物理Gram正定値、det>0。**PB #5824：** 任意有限深さで真正Gauss-law物理Gram＝元のWilson正規化転送Hankelモーメント行列、PSD。**PC #5825：** 全kで同一区間の厳密不等式 `m_(2k)m_(2k+2)-m_(2k+1)^2>0`。**真の深さ2 Schur物理像非零・3×3 Hankel行列式正値・U,TU,T²U rank3・任意rのS_r単射・U0・endpoint・H1-C3・強極限・連続体質量ギャップはOPEN。**
 
 **[プロジェクトの数学的定義・数式・再現手順 → README.md](README.md)**
 
@@ -12,10 +12,10 @@
 | --- | --- |
 | Repository | [itakura-hidetoshi/4d-mass-gap](https://github.com/itakura-hidetoshi/4d-mass-gap) |
 | 定理の唯一正本 | `formal/real-hilbert-uniform-coercive-strong-limit`（default `main`ではない） |
-| 最終検証済み**定理-bearing**マージ点 | `feac7e92d3e56f5301d1f8ecbc66dceb4d74c011` — OZ #5821（OY #5819：`7569fcf984e8040c314bbe723f56393d1faf524b`） |
-| 検証**source HEAD**（squashと区別） | OZ `2d1c4ff6f45a0d51ef90c6a2353d61dc70f576d6`（squash `feac7e9...`）、OY `da71dff1676d1728c81adb0dc88f25a093aa6d2a` |
-| [OZ exact-head scoped #39857992320](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39857992320) | SUCCESS・**10886/10886**（依存範囲）・変更warning/error **0/0**・MCP completion receipt SUCCESS（OY #39856189021：10886/10886 SUCCESS） |
-| 公開`#print axioms` | OZ **4/4**（標準3公理のみ3件、既存native_decide継承1件）、OY **6/6**。`sorryAx`なし、新規未証明公理なし。 |
+| 最終検証済み**定理-bearing**マージ点 | `104e0008d5d7372bf45f226c51fe1a61dfc67805` — PC #5825（PB #5824：`c9e896755908e4504da8281a304ae6f82a544289`、PA #5823：`afd42dd8fea1f4e57a98f08d18c2bb7eec431448`） |
+| 検証**source HEAD**（squashと区別） | PC `dbbda38ceb987ebbd2c48f7cf79ce27b3e086a5e`（squash `104e0008...`）。PA・PBは前行のsquash統合SHA。 |
+| [PC exact-head #39869958440](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39869958440) | **SUCCESS・10889/10889**・PC変更ファイルwarning/error **0/0**。GitHub MCPから同一HEADのrun/jobログを再確認。独立した外部MCP completion receiptの追加成立は主張しない。 |
+| 公開`#print axioms` | PC **3/3**。橋渡し定理は標準3公理のみ。2つの正定値性・不等式定理にはPA系列由来の既存finite-lattice `native_decide` 公理5件を継承。`sorryAx`なし、新規公理なし。 |
 | Lean / mathlib pin | `v4.30.0-rc2` / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
 | 現在のbranch HEAD | [毎回GitHubで再観測](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit) |
 
@@ -59,6 +59,9 @@
 | **R14：元の二posterior真正GL質量の全fine・全深さ定性正値性 — CLOSED（OX）** | OWの無条件真正核一致とORの元のposterior GL二乗／正分散積分を接続：有限H、凍結 `b>0`、fine `t≥0`、任意有限r、実係数aで `M_GL(S_r a)=0 ⇔ S_r a=0` および `S_r a≠0 ⇒ M_GL(S_r a)>0` をLean4証明。小正fine・Schur閉包仮定を除去 | `inf_H Q_GI/N_H>0` を含む一様下界、全物理空間への拡張、任意深さの`S_r`単射、4D連続体gapはOPEN |
 | **R15：元のWilson正fine物理エネルギー・一段Krylovシフト核保存 — CLOSED（OY）** | 完全元Wilson one-slabのLJ厳密正Haar二次形式を、真正物理転送の積Haar inner raw integralとa.e. transportで一致させる。全有限H、fine `t>0`、任意有限r、実非零物理源 `f=S_r a` で `⟨T_raw(t)f,f⟩>0`、従って `T_t f≠0`。全係数の1段shiftで `Σa_jT_t^(j+1)U=0 ⇔ Σa_jT_t^jU=0` をLean証明 | `U,TU,T²U`のrank3未証明。finiteH fine t>0のみ、fine=0は除く。U0・endpoint・連続体はOPEN |
 | **R16：元Wilson正fine反復Krylov源の非消滅 — CLOSED（OZ）** | 実normalized Wilson出力OU/OVは連続・真ゲージ不変代表を持つため、OYの元の完全Wilson核の厳密正二次形式を反復使用できる。全有限H・fine `t>0`・任意有限r・任意kで、真物理源 `S_r a≠0 ⇒ T_t^k(S_r a)≠0`。ONで証明済みの実深さ1単射性と接続し、小正fineで全kのshifted隣接二モードの非退化性 | 三モード `U,T_tU,T_t²U` の独立性・実Schur非零、H/k/tに一様な定量下界、U0・endpoint・連続体はOPEN |
+| **R17：真正物理全シフト二モードGram — CLOSED（PA #5823）** | OZ・ONから小正fineの一つの区間で全kにわたる真正二モードsource単射、`T_t^kU,T_t^(k+1)U` のGauss-law物理Gram PosDef、det>0、k依存の正の逆Lipschitzノルム定数をLean証明 | 三モードrank3、k/Hに一様な下界、U0はOPEN |
+| **R18：真正Wilson Hankelモーメント — CLOSED（PB #5824）** | self-adjoint真Wilson物理転送から全i,jで `⟪T^iU,T^jU⟫=m_(i+j)`。すべての有限Krylov物理Gram＝真のHankelモーメント行列、PSD、偶数モーメントは正確なノルム二乗 | 3×3 det>0、真Schur物理源非零を含まない |
+| **R19：真正Wilson全シフトHankel厳密二次minor — CLOSED（PC #5825）** | ONの同一小正fine区間で全kの2×2実Hankel PosDef・det>0、`m_(2k)m_(2k+2)-m_(2k+1)^2>0`。Lean 10889/10889、公開公理3/3、2定理に既存native_decide依存継承 | **元の物理3×3 Hankel det>0は未証明**。二点スペクトル反例に留意 |
 | **F：positive fine / arbitrary r** | OM/ONは小正fineの深さ1 `S₁` 単射。OWは全非負fine・全有限rで **`ker S_r = ker Φ_all,r`**、OXはそれらの真の物理源が非零なら元のGL質量厳密正（全非負fine・全有限r）。OQ/ORの旧条件分枝はより広いOW/OXによりその範囲で強化。 | 全rのsource係数単射、Schur物理像非零、真正第三物理モードrank3、U0・endpointはOPEN |
 | **U：真の一様解析** | 固定bで元のreceiverコントラスト`E_b`の体積一様な**上界**など | GIエネルギー/分離の下界、signed spatial covariance・tailsの可和性、深さとスケールの制御は OPEN |
 | **C/H：連続体** | 一部の有限格子・限定されたsource subspaceの証明 | H1-C1/C2/C3、物理時間、OS/Wightman、非自明な4D連続体質量ギャップは OPEN |
@@ -194,9 +197,19 @@ MF–MKの量化は`\sum_p R_p(x,y)`や`∃p\,R_p(x,y)`で、`R_p`の物理源�
 
 真の`S_{n,r}`と`Φ_{n,r}`の組に対し、物理的不可視部分`I_{\rm phys}=S_{n,r}(\ker\Phi_{n,r})`を考える。
 
-- **CLOSED boundary:** `t_{n+1}=0`で全有限`r`、または`r=0`で全`t_{n+1}≥0`の`ker S=ker Φ`。
-- **OPEN interior:** ONの有限H・小正fine・深さ1では `ker S₁=ker Φ_all,1={0}` が証明済み。**深さ2以上**または小正fine区間外の `t>0,r>0` で `I_phys=S(ker Φ)=0`、第三モードの独立性・検出はOPEN。
+- **CLOSED（OW #5817）：** 正frozen coupling、任意有限体積、**全有限深さr・全非負fine** で `ker S_r=ker Φ_all,r`。したがって、同じ全original GI受信器を用いた `I_phys=S_r(ker Φ_all,r)={0}` はこの量化範囲で証明済み。これを新たなOPEN gateに戻さない。
+- **OPEN（物理係数の独立性）：** ONの小正fine深さ1で `ker S₁={0}` が証明済み。PA/PCで全シフト2モード独立・厳密2×2 Hankel positivityまで証明したが、**深さ2の `ker S₂={0}`、真Schur物理像非零、3×3 Hankel det>0、任意rの `S_r` 単射、体積・深さ・fine一様強制性はなおOPEN**。`ker S_r=ker Φ_all,r`とは異なる命題。
 - Gate Eのtransportが成立しても、**同じ全source spanへの分離・Coercivity**を別途示す必要がある。
+
+### 次の解析ゲート PD — 元のWilsonモーメントで第三モードを判定
+
+PB/PCの真正Wilsonモーメント `m_j=⟪U,T_t^jU⟫_physical` と小正fine区間での `D₂=m₀m₂-m₁²>0` から、`U,T_tU,T_t²U` の独立性は元のWilson模型の **`D₃=det[[m₀,m₁,m₂],[m₁,m₂,m₃],[m₂,m₃,m₄]]>0`** と同値。追加で必要な厳密不等式は
+
+```text
+m₄ (m₀m₂-m₁²) > m₂³ - 2 m₁ m₂ m₃ + m₀ m₃².
+```
+
+元の正規化一スラブ核の反復Haar積分（真の4-slabモーメント）または真正第三二posterior受信値の非零性から証明する。**PCの全シフト2×2正定値性だけではrank3は導けない**（二点スペクトルの正作用素が反例）。スペクトル支持点数3以上を仮定せず、真正Wilson核から導出する。仮に有限Hのrank3が成立しても、U0・endpoint・連続体質量ギャップは別ゲート。
 
 ### Gate U1–U4 — 空間可和性・深さ・scale
 
@@ -227,7 +240,7 @@ MF–MKの量化は`\sum_p R_p(x,y)`や`∃p\,R_p(x,y)`で、`R_p`の物理源�
 1. **Source-family compatibility の正確な定義・分解。** MF/MG/MJ/MKのどの作用素が本当に元のendpoint `S_{n,r}`へ移送できるかを、構造写像と偽になる場合のobstructionに分ける。定義を置いただけで移送可能と主張しない。
 2. **Authentic local-GI energy のcross-volume比較。** 実際のWilsonian sourceのlink/plaquetteごとの感度・posterior-fiber二乗モーメントを読み取り、`Q_{\rm GI}/N_H`の増減・下界候補を具体的に分解する。新しい独立分布を作らない。
 3. **Signed spatial covariance の可和性**と**スケール互換な局所選択**。MKの`p_H`に許された選択依存を明記し、固定sourceへの局所化が必要なら別の証明を構築する。
-4. 上の材料を使い、**positive fine × arbitrary Krylov r**で真の`I_{\rm phys}`消去または定量的代替を進める。Dobrushin依存経路へ自動的に戻さない。
+4. **OWで済んだ物理不可視源の消去は再証明しない。** 元の完全Wilson核・二posteriorの構造から真のSchur物理源 `S₂(R₂)` の非零性、実三モードHankel `D₃>0`、または元の第三GI文脈の非零受信値を証明し、その後に全深さの係数独立性・定量的強制性を検討する。Dobrushinや架空のspectral measureへ戻らない。
 5. U0/E/F/U1–U4が十分になってから、実際のC1/C2/C3を一つの物理時間極限として閉じる。H2/H3/H4はさらに独立に証明する。
 
 **「次のPRに書くべきもの」は、単にGram定理の代数的帰結を増やすことではなく、上記のいずれかの**実際の物理的・解析的obstructionを減らす定理**である。逆に、未証明のuniformな仮定を`theorem`の引数として追加しただけではGateをCLOSEしない。
@@ -252,6 +265,8 @@ MF–MKの量化は`\sum_p R_p(x,y)`や`∃p\,R_p(x,y)`で、`R_p`の物理源�
 | **時間Gaussian〜真正物理GI：OD** | `OriginalSignedGaussianStrictV5_NY` / `OriginalGaussianKernelSpanDenseV5_NZ` / `OriginalGaussianAllFiniteStrictGramV5_OA` / `OriginalGaussianMatrixPosDefV5_OB` / `OriginalGaussianFiniteInterpolationV5_OC` / `OriginalTwoPosteriorGaussianSeparationV5_OD` | NY Gaussian `T_L>0`; NZ稠密; OA/OB全有限Gram PosDef; OC補間; **OD `p4Q2OD_originalPhysicalGI_eq_truePosteriorSignedFunctional`** とposterior kernel section検出 |
 | **真正物理GI・右Krylov二次閉包／真正GL質量：OE–OR** | `OriginalSmallFineKrylovTwoContextMinorV5_OM` / `OriginalDepthTwoKrylovSchurResidualV5_OO` / `OriginalDepthTwoExactGIKernelV5_OP` / `OriginalFineQuadraticCollapseAllDepthV5_OQ` / `OriginalFineQuadraticAllDepthGLMassV5_OR` | OO/OP：実Schur残差と一次元核、OQ：実Schur物理ゼロ分枝の全r核一致と無条件二分、OR：同分枝の全r実GI/GL質量厳密正値性と無条件二分。第三受信器非零・実Schur物理像の分枝決定はOPEN |
 
+| **真正Wilson全深さ検出・全反復・モーメント：OW–PC** | `OriginalWilsonAllDepthGIKernelFaithfulnessV5_OW` / `OriginalWilsonAllIteratedFineKrylovNonzeroV5_OZ` / `OriginalWilsonAllShiftTwoModePhysicalGramV5_PA` / `OriginalWilsonPhysicalKrylovHankelMomentsV5_PB` / `OriginalWilsonStrictShiftedHankelMomentsV5_PC` | OW全有限r・fine非負のsource/GI核一致、OZ任意回非消滅、PA全shift実物理二モードGram PosDef、PB真正物理Gram＝Hankel、PC厳密二次Hankel minor。rank3 OPEN。 |
+
 ## 7. CIを効率的に保ちながら厳密性を保つ
 
 定理を新しく書いた場合は次を省略しない。
@@ -262,14 +277,14 @@ MF–MKの量化は`\sum_p R_p(x,y)`や`∃p\,R_p(x,y)`で、`R_p`の物理源�
 - 変更が`README.md`/`ROADMAP.md`だけの場合、現在の`PR Lean Fast Check`はパスフィルタで**Lean CIを起動しない**。Markdown表示・相互リンク・正本SHAを直接点検し、1万以上のLeanモジュールを再ビルドしない。Lean変更時のキャッシュキーはpinned toolchain/manifest、authoritative baseと安全なPRリトライscopeで扱い、不要なフルビルドを繰り返さない。
 - PRソースCI成功後に定理正本へ統合し、**squash SHAとsource SHAを別々に記録**。docs-onlyマージを新しい数学的達成と数えない。
 
-再現例（**検証済みOR theorem-bearing merge**で実施）:
+再現例（**検証済みPC theorem-bearing merge**；新規証明leaf）:
 
 ```bash
 git fetch origin formal/real-hilbert-uniform-coercive-strong-limit
-git switch --detach feac7e92d3e56f5301d1f8ecbc66dceb4d74c011
+git switch --detach 104e0008d5d7372bf45f226c51fe1a61dfc67805
 cat lean-toolchain
 # optional when available: lake exe cache get
-lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalWilsonAllIteratedFineKrylovNonzeroV5_OZ
+lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalWilsonStrictShiftedHankelMomentsV5_PC
 ```
 
 ## 8. 検証済みの履歴とリンク（旧版の「最新」を繰り返さない）
