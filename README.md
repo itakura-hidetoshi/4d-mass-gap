@@ -2,9 +2,9 @@
 
 **Original interacting Wilson theory · Gauss-law physical Hilbert space · Lean 4 + mathlib · Hidetoshi Itakura**
 
-> **Research status, 2026-10-20 JST:** Verified finite-volume original-Wilson source detection, quantitative local and spatial GI response, and a constructive inverse of a genuine two-coordinate physical-response Gram. **The four-dimensional continuum Yang–Mills existence and positive mass-gap problem is not proved.** The finite-volume estimates below must not be reinterpreted as a volume-uniform continuum theorem.
+> **Research status, 2026-10-22 JST:** Authentic finite-volume original-Wilson spatial GI response is quantified through MK. Temporal SU(2) Wilson Gaussian signed energies, fixed-positive-coupling section linear-span density, arbitrary finite strictly positive Gram, matrix inverse and exact finite interpolation are now proved through OC. **Neither physical GI covariance nor a volume-uniform lower bound, continuum existence, or the Yang–Mills mass gap follows from temporal kernel positivity.**
 
-**日本語要約：** 実際のSU(2) Wilson相互作用posteriorとGauss則に従う物理源を保持したまま、元の空間Wilson作用に対する**真正な二文脈GI行列式の非零性**をLMで証明した。その後、局所プラケットのGI二乗エネルギー、物理応答の空間平均・一次下界、真の応答Gram行列の正定値性・定量的行列式下界・逆写像の安定性、単一実プラケットの平均エネルギー以上の選択をMKまでLean 4で形式化した。**しかし体積一様の正のGIエネルギー密度、正のfine結合で任意Krylov深さの全物理源分離、真正endpoint源への推論移送、H1-C3強極限、連続体構成と質量ギャップは未解決**である。
+**日本語要約：** 元の二つのSU(2)相互作用Wilson posterior・真正Gauss-law源・Perron半密度を保ち、空間GI minor非零（LM）、真の物理的二座標空間応答と逆写像（MF–MK）を形式化した。さらにNT–OCでは、時間Wilson核の完全Gaussian signedエネルギー正値性（NY）、固定正結合における核section実線形包の稠密性（NZ）、任意有限Gram厳密正定値性（OA）、mathlib行列PosDef・逆行列（OB）、真正kernel sectionの厳密有限補間（OC）まで証明済み。ただし、解析的核のGramと元の物理GI共分散は別物であり、その間のintertwining、同一endpoint源、一様U0、任意fine・深さ、H1-C3、連続体質量ギャップは未解決。
 
 **[Acceptance gates and next proofs → ROADMAP.md](ROADMAP.md)**
 
@@ -14,10 +14,10 @@
 | --- | --- |
 | Repository | [itakura-hidetoshi/4d-mass-gap](https://github.com/itakura-hidetoshi/4d-mass-gap) |
 | **Only theorem-authoritative branch** | `formal/real-hilbert-uniform-coercive-strong-limit` |
-| **Last verified theorem-bearing merge checkpoint (MK)** | [`92fe1141e68d545d1fb33e6bb30f6e35db5f5ba7`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/92fe1141e68d545d1fb33e6bb30f6e35db5f5ba7) |
-| Latest verified theorem PR at this checkpoint | [#5740 — P4-Q2-MK](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5740), squash MERGED |
-| Exact **tested source** SHA (distinct from squash SHA) | `bc1d8c3008b140bf13ffc44fff989c5d4b8ad68f` |
-| [MK exact-head CI #39411635424](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39411635424) | SUCCESS; Lean **10820/10820**, MK changed-file warnings/errors **0/0**, four `#print axioms` reports, no `sorryAx`, MCP completion receipt SUCCESS |
+| **Last verified theorem-bearing merge checkpoint (OC)** | [`967ae655c6f51fd97b2d722be473e300cbd143a6`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/967ae655c6f51fd97b2d722be473e300cbd143a6) |
+| Latest verified theorem PR at this checkpoint | [#5785 — P4-Q2-OC](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5785), squash MERGED; [#5784 — OB](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5784) also MERGED |
+| Exact **tested source** SHA (distinct from squash SHA) | `c4a38cff2ac4bc67c6b0675dc8fcc8f8ddd2c4ed` (OC PR source) |
+| [OC exact-head CI #39706258203](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39706258203) | SUCCESS; Lean **10864/10864**, OC changed-file warnings/errors **0/0**, five `#print axioms` reports, no `sorryAx`, MCP completion receipt SUCCESS |
 | Pinned Lean | `leanprover/lean4:v4.30.0-rc2` (see `lean-toolchain`) |
 | Pinned mathlib | `5450b53e5ddc75d46418fabb605edbf36bd0beb6` (see `lake-manifest.json`) |
 | Live branch | [re-observe the current theorem branch](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit) |
@@ -119,7 +119,29 @@ $$
 
 **Critical interpretation:** this is an original Wilson **spatial two-coordinate response frame**, with original `p`-dependent physical sources. It does **not** prove invertibility of the full physical transfer operator or positivity for all original physical Krylov sources; it is not a one-source endpoint theorem.
 
-## 5. Distinct earlier finite-volume results
+## 5. Original SU(2) temporal Wilson Gaussian: proved NT–OC, with a separate physical transport gate
+
+For the **unchanged original SU(2) temporal Wilson section** on true holonomies `x,g ∈ SU(2)`, with the already-proved real-eight feature `J`,
+
+$
+K_b(x,g)=\exp(b\chi(x^{-1}g))
+=e^b\exp\bigl(-\tfrac b4\|J(x)-J(g)\|^2\bigr),\qquad b>0.
+$
+
+| Verified stage | Exact theorem-bearing content |
+| --- | --- |
+| [NT–NX, #5776–#5780](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5780) | Genuine signed Wilson–Perron coordinate moments, all-degree character Gram expansion, finite double-action energy identities, bounded Banach double signed functional and convergent exponential. |
+| **[NY #5781](MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalSignedGaussianStrictV5_NY.lean)** | For **every** nonzero continuous real linear functional `L` on `C(SU(2),ℝ)`, the **complete** Gaussian double signed energy `T_L(K_b)>0` for all `b>0`. This specializes to strict positivity of the **original Wilson–Perron signed receiver's local Haar variance**; **not** to an arbitrary physical GI covariance. |
+| **[NZ #5782](MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalGaussianKernelSpanDenseV5_NZ.lean)** | By Hahn–Banach, `closure(span_ℝ {K_b(x,·) : x∈SU(2)}) = C(SU(2),ℝ)` for each fixed `b>0`; linear **span**, not merely a generated algebra. |
+| **[OA #5783](MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalGaussianAllFiniteStrictGramV5_OA.lean)** | For every finite *injective* family of genuine SU(2) holonomies and every nonzero real coefficient vector, `Σᵢⱼ aᵢ aⱼ K_b(xᵢ,xⱼ)>0`; finite point selectors establish nonzero signed evaluation, without rank assumptions. |
+| **[OB #5784](MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalGaussianMatrixPosDefV5_OB.lean)** | Literal original Gram is `Matrix.PosDef`, `IsUnit`, has nonzero determinant, and has `PosDef` inverse in the pinned mathlib. |
+| **[OC #5785](MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalGaussianFiniteInterpolationV5_OC.lean)** | At any finite set of distinct original SU(2) points and for any target vector `v`, coefficients `c=v ᵥ* M⁻¹` give `f(g)=Σⱼ cⱼK_b(xⱼ,g)` with **exactly** `f(xᵢ)=vᵢ`. Finite sections are linearly independent. |
+
+**No automatic descent to original physical GI covariance.** The OA–OC Gram acts on *finite signed point evaluations of the temporal SU(2) section*. MF–MK instead controls the actual two-posterior response of the **spatial, plaquette-dependent** physical Gauss-law family `xU+yW_{H,p}U`. To transfer Gaussian positivity to the actual physical GI covariance one must construct and prove compatibility for the **existing** physical source, original two interacting posteriors, actual signed receiver, its Hilbert-space transfer and the fixed endpoint source, then establish nondegeneracy of the resulting map rather than assume it.
+
+Moreover, `M\succ0` for each finite point set does **not** provide a uniform lower bound on `λ_min(M)`, nor `inf_H Q_GI(H)/N_H>0`. OC's interpolation inverse may deteriorate with point geometry and H. These are separate, open quantitative gates.
+
+## 6. Distinct earlier finite-volume results
 
 - The original Wilson Haar-reference `A_W` and normalized physical Dirichlet `D₁₂` have distinct finite-volume Riesz/Loewner/restricted-spectrum results: [#5440](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5440), [#5472](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5472), [#5485](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5485).
 - [#5514, ES–ET](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5514): the actual color count `L_c(H)=4(H+1)^3` and an H-dependent **relative** operator coefficient obstruction, not an absolute continuum-gap no-go.
@@ -127,7 +149,7 @@ $$
 - [#5601–#5639, HI–IR](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5639): actual physical signed-source detectors, physical invisible subspace `I_phys=S(ker Φ)` and restricted visible quotient. Full signed-source positivity is conditional on eliminating this invisible sector. The zero-fine/all-depth and zero-depth/all-nonnegative-fine boundary cases are proved [#5621](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5621).
 - [#5661–#5665, JO–JS](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5665): genuine temporal-Wilson posterior contrast detection, original physical receiver covariance remainder and a conditional receiver-span obstruction. They remain useful **separate** theorems; the once-open *spatial* nonzero-witness gate was subsequently closed by LM rather than by silently assuming receiver-span membership.
 
-## 6. Explicitly OPEN — the actual continuum proof obligations
+## 7. Explicitly OPEN — the actual continuum proof obligations
 
 1. **Uniform authentic signed-source information.** Even though a witness with `Q_GI>0` exists at each finite H, **no** positive uniform lower bound for `Q_GI/N_H` across H/spacing/scales and physically compatible contexts is proved. `E_b` and the coupling schedule also require control.
 2. **Full physical source coverage and endpoint transport.** Neither a p-dependent two-source Gram nor its stable inverse proves the required source separation for **arbitrary positive fine coupling and every Krylov depth**. The zero-invisible-sector condition and the transfer of actual local source estimates to the **same genuine endpoint physical source family** are open.
@@ -136,22 +158,22 @@ $$
 
 No single fixed-volume rank/Gram witness, positive finite-lattice spectral band, or `sorry`-free theorem resolves those continuum obligations. See the precise **[ROADMAP](ROADMAP.md)**.
 
-## 7. Reproducing source and auditing proof integrity
+## 8. Reproducing source and auditing proof integrity
 
-Work from the **verified theorem-bearing MK checkpoint**, not default `main` or an unrelated docs-only SHA:
+Work from the **verified theorem-bearing OC checkpoint**, not default `main` or an unrelated docs-only SHA:
 
 ```bash
 git fetch origin formal/real-hilbert-uniform-coercive-strong-limit
-git switch --detach 92fe1141e68d545d1fb33e6bb30f6e35db5f5ba7
+git switch --detach 967ae655c6f51fd97b2d722be473e300cbd143a6
 cat lean-toolchain
 # Optional when a compatible pinned cache is available:
 lake exe cache get
 # Dependency-aware build of the exact latest theorem-bearing leaf:
-lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalMeanEnergySinglePlaquetteV5_MK
+lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalGaussianFiniteInterpolationV5_OC
 # Full repository build is a separate, more expensive check:
 # lake build
 ```
 
-The file already contains four `#print axioms` commands. Check them and the exact-source [MK CI receipt](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39411635424). **No `sorryAx` was reported on these MK public theorems.** Some imported results inherit *previously known* finite-lattice `native_decide` axioms in addition to `propext`, `Classical.choice` and `Quot.sound`. Do not assert that all formal dependencies are axiom-free.
+The OC file contains five `#print axioms` commands, whose [exact-head CI #39706258203](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39706258203) reported only `propext`, `Classical.choice`, and `Quot.sound`; all five exclude `sorryAx`. The older MK file has four independent public axiom reports. Some earlier imported physical finite-lattice declarations inherit known `native_decide` dependencies; do not conflate these with the OC theorem's axiom set or claim universal axiom-freedom.
 
 For a future theorem: inspect current canonical SHA, the **complete Lean file and its physical prerequisites**, the exact changed-source-head CI and public axioms; fix errors/warnings in changed files, verify the independent MCP CI completion receipt, then merge and re-observe the new canonical SHA. The PR Lean Fast Check workflow is path-filtered to Lean sources, configuration, and scripts; a README/ROADMAP-only PR does **not** trigger the Lean workflow. Review Markdown and source links directly instead of rebuilding thousands of unchanged theorem modules.

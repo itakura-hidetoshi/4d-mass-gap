@@ -1,8 +1,8 @@
-# MGAP4D — 証明ロードマップ（P4-Q2-MK統合後）
+# MGAP4D — 証明ロードマップ（P4-Q2-OC統合後）
 
-**2026-10-20 JST · 唯一のLean定理正本：`formal/real-hilbert-uniform-coercive-strong-limit` · 最終検証済み定理統合点：[`92fe1141e68d545d1fb33e6bb30f6e35db5f5ba7`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/92fe1141e68d545d1fb33e6bb30f6e35db5f5ba7)（[#5740 MK](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5740)）**
+**2026-10-22 JST · 唯一のLean定理正本：`formal/real-hilbert-uniform-coercive-strong-limit` · 最新検証済み定理統合点：[`967ae655c6f51fd97b2d722be473e300cbd143a6`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/967ae655c6f51fd97b2d722be473e300cbd143a6)（[#5785 OC](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5785)）**
 
-**到達状況：** 真正SU(2) Wilson相互作用posteriorを変えずに、元の空間Wilson作用に対する二文脈GI minorの非零性が**LMで証明済み**となった。その後、局所二乗GIエネルギー、有限体積の物理応答の空間平均、GIエネルギー密度に一次比例する下界、実際のGram行列の正定値性・逆写像・Lipschitz安定性、単一の真正プラケットの最大・平均下界を**MKまで形式化・検証済み**。一方、**任意高次Krylov全物理源、体積一様性、真のendpoint源との同一性、H1-C3の強極限、連続体4D Yang–Mills構成と質量ギャップは未証明**である。
+**到達状況：** 元のSU(2) Wilson二posteriorを改変せず、LMの真正空間GI minor非零からMF–MKの二座標Gauss-law物理応答・Gram・逆写像・平均プラケット下界を証明済み。**NT–OCの独立した時間核経路**では完全Wilson Gaussian signedエネルギー厳密正値性（NY）、固定正結合section実線形包稠密性（NZ）、任意有限Gram厳密正定値性（OA）、mathlib PosDef・逆行列（OB）、真正Wilson核による有限点厳密補間（OC）まで完成。ただし、Gaussian sectionの解析的正値性と**真正物理GI共分散**の同一性・輸送は未証明であり、体積一様U0、共通endpoint源、正fine×任意深さ、H1-C3と連続体質量ギャップもOPENのままである。
 
 **[プロジェクトの数学的定義・数式・再現手順 → README.md](README.md)**
 
@@ -12,14 +12,14 @@
 | --- | --- |
 | Repository | [itakura-hidetoshi/4d-mass-gap](https://github.com/itakura-hidetoshi/4d-mass-gap) |
 | 定理の唯一正本 | `formal/real-hilbert-uniform-coercive-strong-limit`（default `main`ではない） |
-| 最終検証済み**定理-bearing**マージ点 | `92fe1141e68d545d1fb33e6bb30f6e35db5f5ba7` — P4-Q2-MK #5740 |
-| MKの検証**source HEAD** | `bc1d8c3008b140bf13ffc44fff989c5d4b8ad68f`（squashマージSHAとは異なる） |
-| [exact-head CI #39411635424](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39411635424) | SUCCESS、Lean **10820/10820**、変更したMKファイル warning/error 0/0 |
-| MK公開定理の`#print axioms` | **4/4**、`sorryAx`なし、MCP completion receipt SUCCESS |
+| 最終検証済み**定理-bearing**マージ点 | `967ae655c6f51fd97b2d722be473e300cbd143a6` — P4-Q2-OC #5785 |
+| OCの検証**source HEAD** | `c4a38cff2ac4bc67c6b0675dc8fcc8f8ddd2c4ed`（squash SHAとは異なる） |
+| [OC exact-head CI #39706258203](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39706258203) | SUCCESS、Lean **10864/10864**、変更したOCファイルwarning/error **0/0** |
+| OC公開定理の`#print axioms` | **5/5**、`propext`・`Classical.choice`・`Quot.sound`のみ、`sorryAx`なし、MCP completion receipt SUCCESS |
 | Lean / mathlib pin | `v4.30.0-rc2` / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
 | 現在のbranch HEAD | [毎回GitHubで再観測](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit) |
 
-ここに固定したSHAは**2026-10-20時点の検証済み定理統合点**であり、README/ROADMAPのdocs-onlyマージによってbranch HEADが進んでも、定理の新規検証を意味しない。判断の優先順位は **fresh exact authoritative SHA → Lean定理と前提・import全文 → そのsource SHAのCI・公理監査 → 文書 → 以前の記録**。
+ここに固定したSHAは**2026-10-22時点の検証済み定理統合点**であり、README/ROADMAPのdocs-onlyマージによってbranch HEADが進んでも、定理の新規検証を意味しない。判断の優先順位は **fresh exact authoritative SHA → Lean定理と前提・import全文 → そのsource SHAのCI・公理監査 → 文書 → 以前の記録**。
 
 ### 重要な区別
 
@@ -40,6 +40,7 @@
 | **V：局所GIエネルギー／変動 — CLOSED（有限H）** | LY/LZ/MA/MB/MC：`Q_GI`の正の文脈、平均・分散・上界、真正活性集合と有限密度評価 | `Q_GI/N_H`の正のH一様下界なし |
 | **G：空間平均物理応答Gram — CLOSED（有限H）** | MD–MJ：真の`R_p`の空間和、MFの`Q_GI/N_H`**一次**強制性、MG/MHのGram・det、MI/MJの逆写像・データ差Lipschitz | `p`依存sourceの空間frameは**単一endpoint源**や全Krylov source spanではない |
 | **K：単一真正plaquetteの平均達成 — CLOSED（有限H）** | LYの既存max witnessをMKで再利用可能な4公開定理へ展開：`d_p²≥Q_GI/N_H`、`κ_p≥k`、全`x,y`で物理`R_p≥k(x²+y²)` | `p=p(H,z,z')`の選択は一般にスケール間で固定・互換とは限らない |
+| **G：真の時間Wilson Gaussian解析 — CLOSED（有限点・固定b）** | NY: 非零signed functionalの完全Gaussianエネルギー正値、NZ: section実線形包稠密、OA: 任意有限Gram厳密正定値、OB: Matrix.PosDef/逆、OC: 真正section有限補間 | **空間二posterior Gauss-law GI共分散と同一視はできない**。intertwining、物理源の非退化性と一様固有値下界は別Gate |
 | **F：positive fine / arbitrary r** | fine `t=0` の全有限r、または`r=0`の全非負fineで`ker S=ker Φ`、特定の正fine innovation witness | `t>0`かつ任意`r>0`で`I_phys=S(ker Φ)=0`は OPEN |
 | **U：真の一様解析** | 固定bで元のreceiverコントラスト`E_b`の体積一様な**上界**など | GIエネルギー/分離の下界、signed spatial covariance・tailsの可和性、深さとスケールの制御は OPEN |
 | **C/H：連続体** | 一部の有限格子・限定されたsource subspaceの証明 | H1-C1/C2/C3、物理時間、OS/Wightman、非自明な4D連続体質量ギャップは OPEN |
@@ -100,6 +101,26 @@ $$
 $$
 
 を真のoriginal interacting-Wilson文脈で扱いやすい形に整理した。`p`の存在は真正Wilson物理源に基づくが、**p選択のH/scale連続性やendpoint source同一性はまだ証明されない**。
+
+### 2.5 真正時間Wilson Gaussian：NT–OC（#5776–#5785）
+
+この経路は空間GI源のMF–MKと **混同してはいけない別の正本定理群**。同じ元のSU(2) Wilson時間核であり、Wilson相互作用posteriorやPerron半密度の置換ではない。
+
+- **NT–NX**：真正signed座標モーメント、任意Taylor次数のGram展開、signed double energy、Banach収束。
+- **NY [#5781](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5781)**：任意非零 `L : C(SU(2),ℝ) →L[ℝ] ℝ` と `b>0` について、完全Wilson核 `K_b(x,g)=exp(bχ(x⁻¹g))` の二重signedエネルギー `T_L(K_b)>0`。元のWilson–Perron signed receiverについて局所Haar分散の正値性を証明。ただし物理GI共分散の一般下界ではない。
+- **NZ [#5782](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5782)**：Hahn–Banachを用いて固定 `b>0` の本当の時間kernel section実線形包が `C(SU(2),ℝ)` に稠密。
+- **OA [#5783](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5783)**：任意有限の相異なる元のSU(2)点の `Σᵢⱼ aᵢaⱼK_b(xᵢ,xⱼ)>0` を非零係数列について証明。
+- **OB [#5784](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5784)**：元の核の有限行列についてmathlib `Matrix.PosDef`、`IsUnit`、`det ≠ 0`、逆行列PosDef。
+- **OC [#5785](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5785)**：相異なる有限点において真正kernel sectionのみで任意実数目標値を厳密補間する係数 `v ᵥ* M⁻¹` と、section線形独立性。
+
+**到達していないもの：** original時間核におけるsigned有限評価汎関数の正値性から、真正二posterior・Gauss-law物理Hilbert源のGI共分散正値性を取り出すには、具体的な物理源→本当のsigned functional→時間kernel受信→同一endpoint源の作用素の**可換性・同一性・非退化性**が必要。OA–OCの `Function.Injective points` は「有限holonomyが異なる」という幾何条件であり、物理源写像やGauss-law検出器の単射性を証明したものではない。`b>0`各有限体積のPosDefから `inf_H (Q_GI/N_H)>0` も導出しない。
+
+### OD：次の優先課題（証明すべき条件であり仮定ではない）
+
+1. **真正データを使った源・汎関数の特定。** LO/MF/MKの空間 `xU+yW_{H,p}U` とJH二posterior GI responseから、時間Wilson sectionの `C(SU(2),ℝ) →L[ℝ] ℝ` が **実際に誘導されるか** を型・作用域・固定文脈ごとに調べる。NYのHaar-minus-Dirac `L` を、証明なしに真正物理GI共分散の `L` とみなさない。
+2. **Intertwining を証明対象にする。** 固定frozen `b` と正fine `t` を分け、元のWilson transferと半密度、二つの相互作用posteriorの下で `Φ_{n,r}` とsigned kernel sectionの作用の可換図式を具体的に確立する。真のendpoint `S_{n,r}` と一致しなければ不一致をobstructionとして記録する。
+3. **非退化性を既存GI witnessから導出可能か判定。** LM・LOの真正physical minorとNYのsigned Gaussian厳密正値を接続する際、必要なのが同一の物理線形汎関数であること、どの局所source familyが実際に検出されるかを証明する。存在を仮定したrank・zero-invisible-sectorに置換しない。
+4. **定量性は別途。** 有限点行列 `M^{-1}` の存在・有限補間は一様 `λ_min` や `Q_GI/N_H` の下界ではない。cross-volume comparison、尺度・sourceの一致、空間tailと可和性を維持する。
 
 ## 3. 次の核心：本当に不足する数学的入力
 
@@ -175,7 +196,8 @@ MF–MKの量化は`\sum_p R_p(x,y)`や`∃p\,R_p(x,y)`で、`R_p`の物理源�
 | 活性集合と真正性 | `OriginalGIActivePlaquetteDensityV5_MB` / `OriginalActiveGIPhysicalCoerciveDensityV5_MC` | `p4Q2MB_originalActiveGI_density_ge_energy_fraction` / MC物理強制性 |
 | 真の空間線形床 | `OriginalLinearGIPhysicalGapV5_MF` | `p4Q2MF_originalFullPhysicalGapAverage_ge_linearGI` |
 | Gram/逆写像 | `OriginalPhysicalGramDeterminantV5_MG` / `OriginalPhysicalGramQuantitativeDeterminantV5_MH` / `OriginalPhysicalGramInverseV5_MI` / `OriginalPhysicalGramInverseLipschitzV5_MJ` | exact polarisation / `det≥k²` / adjugate / two-input Lipschitz |
-| **最新定理MK** | `OriginalMeanEnergySinglePlaquetteV5_MK` | `p4Q2MK_originalGI_exists_meanEnergyPlaquette`、`p4Q2MK_originalPhysicalGI_exists_authenticMeanPlaquette` |
+| **空間物理GI：最新MK（このトラック）** | `OriginalMeanEnergySinglePlaquetteV5_MK` | `p4Q2MK_originalGI_exists_meanEnergyPlaquette`、`p4Q2MK_originalPhysicalGI_exists_authenticMeanPlaquette` |
+| **時間Gaussian：最新OC** | `OriginalSignedGaussianStrictV5_NY` / `OriginalGaussianKernelSpanDenseV5_NZ` / `OriginalGaussianAllFiniteStrictGramV5_OA` / `OriginalGaussianMatrixPosDefV5_OB` / `OriginalGaussianFiniteInterpolationV5_OC` | `p4Q2NY_originalSignedGaussianDoubleEnergy_pos` / `p4Q2NZ_originalWilsonTemporalSectionSpan_dense` / `p4Q2OA_originalTemporalExactGram_strict_pos` / `p4Q2OB_originalTemporalGaussianGram_posDef` / `p4Q2OC_originalWilsonFiniteInterpolant_apply` |
 
 ## 7. CIを効率的に保ちながら厳密性を保つ
 
@@ -187,14 +209,14 @@ MF–MKの量化は`\sum_p R_p(x,y)`や`∃p\,R_p(x,y)`で、`R_p`の物理源�
 - 変更が`README.md`/`ROADMAP.md`だけの場合、現在の`PR Lean Fast Check`はパスフィルタで**Lean CIを起動しない**。Markdown表示・相互リンク・正本SHAを直接点検し、1万以上のLeanモジュールを再ビルドしない。Lean変更時のキャッシュキーはpinned toolchain/manifest、authoritative baseと安全なPRリトライscopeで扱い、不要なフルビルドを繰り返さない。
 - PRソースCI成功後に定理正本へ統合し、**squash SHAとsource SHAを別々に記録**。docs-onlyマージを新しい数学的達成と数えない。
 
-再現例（**検証済みMK source**を含むtheorem-bearing mergeを利用）：
+再現例（**検証済みOC source**を含むtheorem-bearing mergeを利用）：
 
 ```bash
 git fetch origin formal/real-hilbert-uniform-coercive-strong-limit
-git switch --detach 92fe1141e68d545d1fb33e6bb30f6e35db5f5ba7
+git switch --detach 967ae655c6f51fd97b2d722be473e300cbd143a6
 cat lean-toolchain
 # optional when available: lake exe cache get
-lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalMeanEnergySinglePlaquetteV5_MK
+lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalGaussianFiniteInterpolationV5_OC
 ```
 
 ## 8. 検証済みの履歴とリンク（旧版の「最新」を繰り返さない）
@@ -204,5 +226,7 @@ lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjac
 - 空間GI検出（既に閉じたGate S）：[#5656 JI](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5656)、[#5657 JK](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5657)、LM `OriginalTwoContextSpatialGIMinorNonzeroV5_LM`。
 - 独立の時間posterior/receiver経路：[#5662 JP](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5662)、[#5664 JR](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5664)、[#5665 JS](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5665)。JS receiver-span membershipの未証明性は**空間LM定理の欠如とは別問題**。
 - 真のGI二乗エネルギー・空間frame・逆写像：[#5729 MB](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5729)、[#5731 MC](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5731)、[#5733 MD](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5733)、[#5734 ME](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5734)、[#5735 MF](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5735)、[#5736 MG](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5736)、[#5737 MH](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5737)、[#5738 MI](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5738)、[#5739 MJ](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5739)、[#5740 MK](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5740)。
+
+時間Gaussian経路：[#5776 NT](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5776) → [#5781 NY](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5781) → [#5782 NZ](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5782) → [#5783 OA](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5783) → [#5784 OB](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5784) → [#5785 OC](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5785)（[exact-head CI #39706258203](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39706258203)、MCP receipt SUCCESS）。
 
 これらは**有限モデルでどこまで実際に証明したか**を表すリンクであり、Yang–Mills Millennium Prize問題の解決宣言ではない。より古いステップごとのPRと定理の履歴はGit historyに残してある。
