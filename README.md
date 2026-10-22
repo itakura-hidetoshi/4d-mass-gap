@@ -2,9 +2,9 @@
 
 **Original interacting Wilson theory · Gauss-law physical Hilbert space · Lean 4 + mathlib · Hidetoshi Itakura**
 
-> **Research status, 2026-10-22 JST:** Authentic finite-volume original-Wilson spatial GI response is quantified through MK. Temporal SU(2) Wilson Gaussian signed energy, fixed-positive-b linear-span density, arbitrary strict finite Gram, its inverse, and exact finite interpolation are proved through OC. **OD further proves an exact bridge from the original two Wilson posterior density-contrast signed functional to the ORIGINAL Gauss-law physical FF receiver fiber / true GI gap**, and proves genuine Gaussian sections distinguish the two unchanged conditional posterior laws. **Nonzero physical GI covariance, U0, common endpoint source, H1-C3 and continuum Yang–Mills mass gap remain open.**
+> **Research status, 2026-10-22 JST:** The original interacting Wilson two-posterior, Gauss-law physical source and Perron half-density remain unchanged. Finite-volume spatial GI physical response (LO–MK), temporal Gaussian signed kernel theory (NT–OC), exact true receiver/p0−pπ pairing (OD), physical U two-row GI energy coercivity (OE) and arbitrary-depth right-Krylov zero-selector transfer (OF) are proved. **OG proves the stronger SAME-context, ALL-finite-depth original HF GI modal coefficient lower bound** at any fixed scale n, frozen beta(n)>0 and arbitrary nonnegative fine beta(n+1). No arbitrary-coefficient detector injectivity, cross-scale endpoint-source compatibility, volume-uniform U0, H1-C3 or continuum Yang–Mills mass gap is proved.
 
-**日本語要約：** 元の二つのSU(2)相互作用Wilson posterior・真正Gauss-law源・Perron半密度を保ち、空間GI minor非零（LM）、真の物理的二座標空間応答と逆写像（MF–MK）を形式化した。時間Wilson核NT–OCでは完全Gaussian signedエネルギー正値性（NY）、核section実線形包稠密性（NZ）、任意有限Gram厳密正定値性（OA）、mathlib行列PosDef・逆行列（OB）、kernel厳密有限補間（OC）まで証明した。続く**OD**で本当の相互作用Wilson二posterior密度差を連続signed汎関数とし、そのHaar二乗距離正値性・Gaussian sectionによる二posterior分離、および元のGauss-law物理GI gap＝同じsigned汎関数が元のFF物理受信器に作用した値、という厳密な接続をLeanで証明した。ただし、元の物理受信器像がその汎関数の核から外れるという一般命題、一様U0、共通endpoint源、任意fine・深さ、H1-C3および連続体質量ギャップは未解決。
+**日本語要約：** 真正Wilson二posterior・Gauss-law物理源・Perron半密度を変更せず、空間GIのLM〜MK、時間Gaussian解析のNT〜OC、真正posterior密度差汎関数とFF物理受信器の厳密一致（OD）を形式化。OEで真正受信器の二文脈強制性と同一物理源Uの有限体積Q_GI/N_H下界を証明。OFで実際のright-Krylov零次選択源＝Uを任意有限深さ・非負fine couplingで証明。**OGでHFの真正modal GI検出器を同じsigned汎関数に厳密接続し、固定スケールnで一組の元のWilson文脈と同じ下界をすべての有限Krylov深さに同時適用できることをLean4で証明。** 任意係数列、異なるスケール間のendpoint源、体積一様U0、H1-C1/C2/C3、連続体質量ギャップは未解決。
 
 **[Acceptance gates and next proofs → ROADMAP.md](ROADMAP.md)**
 
@@ -14,10 +14,10 @@
 | --- | --- |
 | Repository | [itakura-hidetoshi/4d-mass-gap](https://github.com/itakura-hidetoshi/4d-mass-gap) |
 | **Only theorem-authoritative branch** | `formal/real-hilbert-uniform-coercive-strong-limit` |
-| **Last verified theorem-bearing merge checkpoint (OD)** | [`44a5304ddd9c218513b6b47e27ca3604393d0b02`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/44a5304ddd9c218513b6b47e27ca3604393d0b02) |
-| Latest verified theorem PR at this checkpoint | [#5787 — P4-Q2-OD](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5787), squash MERGED; OC #5785 and OB #5784 also MERGED |
-| Exact **tested source** SHA (distinct from squash SHA) | `597ff187c405ac5beead27e44d2f72c0a160a63f` (OD PR source) |
-| [OD exact-head CI #39716611363](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39716611363) | SUCCESS; Lean **10865/10865**, OD changed-file warnings/errors **0/0**, eight `#print axioms` reports, no `sorryAx`, MCP completion receipt SUCCESS. **7/8** depend only on `propext`, `Classical.choice`, `Quot.sound`; OD's GA quantitative-floor theorem additionally inherits the existing finite-lattice `native_decide` dependencies, not new axioms |
+| **Last verified theorem-bearing merge checkpoint (OG)** | [`9d21ca607b7c887d69677059987444699cf3f9eb`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/9d21ca607b7c887d69677059987444699cf3f9eb) |
+| Latest verified theorem PR at this checkpoint | [#5791 — P4-Q2-OG](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5791), squash MERGED; [#5790 — OF](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5790) and [#5789 — OE](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5789) also MERGED |
+| Exact **tested source** SHA (distinct from squash SHA) | `9808441a47bd944f189d1760e36cb4f87941645d` (OG PR source) |
+| [OG exact-head CI #39725595181](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39725595181) | SUCCESS; Lean **10868/10868**, changed OG warnings/errors **0/0**, five `#print axioms` reports without `sorryAx`, independent MCP completion receipt SUCCESS. **3/5** use only `propext`, `Classical.choice`, `Quot.sound`; two carry previously known finite-lattice `native_decide` dependencies. |
 | Pinned Lean | `leanprover/lean4:v4.30.0-rc2` (see `lean-toolchain`) |
 | Pinned mathlib | `5450b53e5ddc75d46418fabb605edbf36bd0beb6` (see `lake-manifest.json`) |
 | Live branch | [re-observe the current theorem branch](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit) |
@@ -119,7 +119,7 @@ $$
 
 **Critical interpretation:** this is an original Wilson **spatial two-coordinate response frame**, with original `p`-dependent physical sources. It does **not** prove invertibility of the full physical transfer operator or positivity for all original physical Krylov sources; it is not a one-source endpoint theorem.
 
-## 5. Original SU(2) temporal Wilson Gaussian and genuine GI receiver bridge: NT–OD
+## 5. Original SU(2) Wilson Gaussian, physical GI receiver and all-depth zero-selector: NT–OG
 
 For the **unchanged original SU(2) temporal Wilson section** on true holonomies `x,g ∈ SU(2)`, with the already-proved real-eight feature `J`,
 
@@ -138,7 +138,11 @@ $
 | **[OC #5785](MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalGaussianFiniteInterpolationV5_OC.lean)** | At any finite set of distinct original SU(2) points and for any target vector `v`, coefficients `c=v ᵥ* M⁻¹` give `f(g)=Σⱼ cⱼK_b(xⱼ,g)` with **exactly** `f(xᵢ)=vᵢ`. Finite sections are linearly independent. |
 | **[OD #5787](MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalTwoPosteriorGaussianSeparationV5_OD.lean)** | The original two interacting Wilson posterior conditional density contrast `D=p₀−pπ` defines a **nonzero** real bounded signed functional `L_D(v)=∫v(g)D(g) dμ_Haar`. Its self-pairing is the **exact original** posterior squared Haar distance (GA/FX lower bound); NY gives positive complete signed Gaussian energy and an original Wilson temporal kernel section distinguishing the two posterior laws. **Exact original physical GI compatibility:** `Δ_GI(f;e,z) = L_{D(H,b,z.right,e)}(R_f(z,·))` for every actual Gauss-law physical Hilbert source `f`, with `R_f` the **unchanged FF signed receiver fiber**. Its general nonzero evaluation for physical `f` is NOT proved. |
 
-**Remaining obstruction after the exact OD source-fiber equality.** OA–OC Gaussian Gram controls finite signed point evaluations of the temporal SU(2) kernel. OD identifies the **genuine** two-posterior density difference functional `L_D` and proves that **the original Gauss-law GI gap is its value on the actual source-weighted FF receiver fiber**. NY detects `L_D` on some Gaussian section, but it is NOT known that any *required endpoint physical source* has a receiver fiber outside `ker L_D`, nor that the physically accessible family contains or approximates such kernel sections. MF–MK separately controls the p-dependent spatial physical source plane `xU+yW_{H,p}U` at selected contexts. The missing range/nonannihilation theorem, common endpoint intertwining, fine transfer and scale bounds must be PROVED, not inserted as hypotheses.
+| **[OE #5789](MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalPhysicalSignedReceiverNonannihilationV5_OE.lean)** | Exact original FF receiver two-row signed functional square equals the genuine MD physical GI square on the same Gauss-law source xU+yW_pU. The previously proved LO two-context minor gives a positive two-row coefficient frame; MF/MK original Q_GI/N_H floor transports without changing any posterior. At selected true contexts the constant physical unit U itself satisfies (Q_GI/N_H)/(10 E_b²) ≤ L_D(R_U)²+L_Dprime(R_U)²; U is p-independent. No context- or H-uniform positivity asserted. |
+| **[OF #5790](MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalKrylovZeroSelectorSignedDensityFloorV5_OF.lean)** | Actual all-finite-depth right-Krylov zero-selector at scale n has true physical source exactly U for every nonnegative fine coupling beta(n+1), by GX. Therefore the same selected-context physical U floor is transferred exactly into the true signed receiver representation of that genuine right-Krylov coefficient source. Fixed frozen beta(n)>0; selected contexts and Q_GI/N_H coefficient may vary in scale/volume. |
+| **[OG #5791](MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalZeroSelectorAllDepthSameContextGIFrameV5_OG.lean)** | The genuine HF modal GI detector on each actual zero-selector coefficient is EXACTLY the same OD signed p0−pπ receiver functional on the unmodified physical U at fixed n; its output is identical across any pair of depths r,s. More strongly, for each fixed n with frozen beta(n)>0 and given actual links and initial boundary data, ONE pair of genuine interacting-Wilson contexts z,zprime can be chosen **before and independently of ALL r**, carrying the same positive original Q_GI/N_H coefficient in a two-row modal-square floor for every finite r. Arbitrary coefficient-source injectivity and cross-scale endpoint compatibility remain OPEN. |
+
+**Remaining obstruction after verified OD–OG receiver and depth compatibility.** OD identifies the true posterior difference linear functional L_D. OE establishes selected-context physical source-plane nonannihilation and Q_GI/N_H coercivity including the same actual U; OF identifies that U with every actual right-Krylov zero-selector source, and OG identifies all such HF modal values and proves a fixed-n context pair and finite-volume floor work for ALL finite r simultaneously. **This closes only the zero-selector and same-scale depth-compatibility gate.** General positive-fine arbitrary-coefficient injection, physically compatible cross-scale endpoint/continuum limit and the volume-uniform lower bound inf_H Q_GI/N_H>0 remain unproved. Gaussian section interpolation is not a physical-receiver range-surjectivity theorem.
 
 Moreover, `M\succ0` for each finite point set does **not** provide a uniform lower bound on `λ_min(M)`, nor `inf_H Q_GI(H)/N_H>0`. OC's interpolation inverse may deteriorate with point geometry and H. These are separate, open quantitative gates.
 
@@ -161,20 +165,20 @@ No single fixed-volume rank/Gram witness, positive finite-lattice spectral band,
 
 ## 8. Reproducing source and auditing proof integrity
 
-Work from the **verified theorem-bearing OD checkpoint**, not default `main` or an unrelated docs-only SHA:
+Work from the **verified theorem-bearing OG checkpoint**, not default `main` or an unrelated docs-only SHA:
 
 ```bash
 git fetch origin formal/real-hilbert-uniform-coercive-strong-limit
-git switch --detach 44a5304ddd9c218513b6b47e27ca3604393d0b02
+git switch --detach 9d21ca607b7c887d69677059987444699cf3f9eb
 cat lean-toolchain
 # Optional when a compatible pinned cache is available:
 lake exe cache get
 # Dependency-aware build of the exact latest theorem-bearing leaf:
-lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalTwoPosteriorGaussianSeparationV5_OD
+lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalZeroSelectorAllDepthSameContextGIFrameV5_OG
 # Full repository build is a separate, more expensive check:
 # lake build
 ```
 
-The OD file contains eight `#print axioms` commands. [Exact-head CI #39716611363](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39716611363) reported **no `sorryAx`**. Seven OD theorems depend on only `propext`, `Classical.choice`, and `Quot.sound`. The OD theorem using GA's quantitative posterior floor also inherits five pre-existing finite-lattice `native_decide` axioms from `periodicHypercubicIncidentPlaquettes_card_le_six` and `periodicHypercubicOtherAxis_card`; they are neither hidden nor OD-added axioms. The older OC five axiom reports remain standard only. Do not claim universal axiom-freedom.
+The OG file has five `#print axioms` reports in exact-head CI #39725595181, all without `sorryAx`: three depend on the standard `propext`, `Classical.choice`, `Quot.sound` only, and two quantitative OE-derived theorems inherit five pre-existing finite-lattice `native_decide` dependencies. No new axiom was added. A docs-only commit is not a new theorem proof.
 
 For a future theorem: inspect current canonical SHA, the **complete Lean file and its physical prerequisites**, the exact changed-source-head CI and public axioms; fix errors/warnings in changed files, verify the independent MCP CI completion receipt, then merge and re-observe the new canonical SHA. The PR Lean Fast Check workflow is path-filtered to Lean sources, configuration, and scripts; a README/ROADMAP-only PR does **not** trigger the Lean workflow. Review Markdown and source links directly instead of rebuilding thousands of unchanged theorem modules.
