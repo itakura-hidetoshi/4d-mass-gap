@@ -89,18 +89,18 @@ theorem p4Q2OY_originalPhysicalWilson_inner_eq_originalContinuousHaarDouble
     (hRep : (fun A : Cfg => ((f : Phys) : Lp ℝ 2 haar) A) =ᵐ[haar] psi) :
     inner ℝ (Raw t ht f) f =
       ∫ p : Cfg × Cfg,
-        K t p.1 p.2 * (psi p.1 * psi p.2) ∂(haar.prod haar) := by
+        K t p.1 p.2 * (psi p.1 * psi p.2) ∂(Measure.prod haar haar) := by
   have hRaw :=
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_inner_eq_rawIntegral
       H 2 specialUnitaryTwoWilsonRankPositive t ht f f
   have hFirst :
       (fun p : Cfg × Cfg => ((f : Phys) : Lp ℝ 2 haar) p.1)
-        =ᵐ[haar.prod haar] (fun p => psi p.1) := by
+        =ᵐ[Measure.prod haar haar] (fun p => psi p.1) := by
     simpa only [Function.comp_def] using
       ((measurePreserving_fst (μ := haar) (ν := haar)).quasiMeasurePreserving.ae_eq hRep)
   have hSecond :
       (fun p : Cfg × Cfg => ((f : Phys) : Lp ℝ 2 haar) p.2)
-        =ᵐ[haar.prod haar] (fun p => psi p.2) := by
+        =ᵐ[Measure.prod haar haar] (fun p => psi p.2) := by
     simpa only [Function.comp_def] using
       ((measurePreserving_snd (μ := haar) (ν := haar)).quasiMeasurePreserving.ae_eq hRep)
   calc
@@ -108,10 +108,10 @@ theorem p4Q2OY_originalPhysicalWilson_inner_eq_originalContinuousHaarDouble
         ∫ p : Cfg × Cfg,
           K t p.1 p.2 *
             (((f : Phys) : Lp ℝ 2 haar) p.1 *
-              ((f : Phys) : Lp ℝ 2 haar) p.2) ∂(haar.prod haar) := by
+              ((f : Phys) : Lp ℝ 2 haar) p.2) ∂(Measure.prod haar haar) := by
                 exact hRaw
     _ = ∫ p : Cfg × Cfg,
-          K t p.1 p.2 * (psi p.1 * psi p.2) ∂(haar.prod haar) := by
+          K t p.1 p.2 * (psi p.1 * psi p.2) ∂(Measure.prod haar haar) := by
             apply integral_congr_ae
             filter_upwards [hFirst, hSecond] with p h1 h2
             rw [h1, h2]
@@ -130,7 +130,7 @@ theorem p4Q2OY_originalPhysicalWilson_quadratic_pos
   rw [p4Q2LI_originalFullSpatialPairHaarMomentCLM_apply] at hPos
   change
     0 < (∫ p : Cfg × Cfg,
-      K t p.1 p.2 * (psi p.1 * psi p.2) ∂(haar.prod haar)) at hPos
+      K t p.1 p.2 * (psi p.1 * psi p.2) ∂(Measure.prod haar haar)) at hPos
   rw [p4Q2OY_originalPhysicalWilson_inner_eq_originalContinuousHaarDouble
     H t ht.le f psi hRep]
   exact hPos
