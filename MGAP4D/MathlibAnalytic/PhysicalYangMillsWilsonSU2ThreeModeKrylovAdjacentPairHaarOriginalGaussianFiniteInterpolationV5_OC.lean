@@ -80,8 +80,8 @@ theorem p4Q2OC_originalWilsonFiniteSectionCombination_apply
     (points : ι → Gauge) (coeff : ι → ℝ) (i : ι) :
     p4Q2OC_originalWilsonFiniteSectionCombination b points coeff (points i) =
       (coeff ᵥ* M b points) i := by
-  change (∑ j : ι, coeff j * k b (points j) (points i)) =
-    ∑ j : ι, coeff j * (M b points) j i
+  simp only [p4Q2OC_originalWilsonFiniteSectionCombination,
+    ContinuousMap.sum_apply, ContinuousMap.smul_apply, smul_eq_mul]
   rfl
 
 /-- Explicit coefficients solving ANY finite original Wilson kernel
@@ -174,9 +174,12 @@ theorem p4Q2OC_originalWilsonFiniteSectionCombination_eq_zero_iff
     have hVec : coeff ᵥ* A = 0 := by
       funext i
       have hi := congrArg (fun f : C(Gauge, ℝ) => f (points i)) hZero
+      change p4Q2OC_originalWilsonFiniteSectionCombination b points coeff
+        (points i) = (0 : C(Gauge, ℝ)) (points i) at hi
       rw [p4Q2OC_originalWilsonFiniteSectionCombination_apply] at hi
       simpa using hi
     have hInverse := congrArg (fun v : ι → ℝ => v ᵥ* A⁻¹) hVec
+    change (coeff ᵥ* A) ᵥ* A⁻¹ = (0 : ι → ℝ) ᵥ* A⁻¹ at hInverse
     rw [Matrix.vecMul_vecMul, Matrix.mul_nonsing_inv A hDet,
       Matrix.vecMul_one, Matrix.zero_vecMul] at hInverse
     exact hInverse
