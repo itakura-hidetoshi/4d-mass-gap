@@ -211,7 +211,6 @@ MF–MKの量化は`\sum_p R_p(x,y)`や`∃p\,R_p(x,y)`で、`R_p`の物理源�
 | Gram/逆写像 | `OriginalPhysicalGramDeterminantV5_MG` / `OriginalPhysicalGramQuantitativeDeterminantV5_MH` / `OriginalPhysicalGramInverseV5_MI` / `OriginalPhysicalGramInverseLipschitzV5_MJ` | exact polarisation / `det≥k²` / adjugate / two-input Lipschitz |
 | **空間物理GI：最新MK（このトラック）** | `OriginalMeanEnergySinglePlaquetteV5_MK` | `p4Q2MK_originalGI_exists_meanEnergyPlaquette`、`p4Q2MK_originalPhysicalGI_exists_authenticMeanPlaquette` |
 | **時間Gaussian〜真正物理GI：OD** | `OriginalSignedGaussianStrictV5_NY` / `OriginalGaussianKernelSpanDenseV5_NZ` / `OriginalGaussianAllFiniteStrictGramV5_OA` / `OriginalGaussianMatrixPosDefV5_OB` / `OriginalGaussianFiniteInterpolationV5_OC` / `OriginalTwoPosteriorGaussianSeparationV5_OD` | NY Gaussian `T_L>0`; NZ稠密; OA/OB全有限Gram PosDef; OC補間; **OD `p4Q2OD_originalPhysicalGI_eq_truePosteriorSignedFunctional`** とposterior kernel section検出 |
-
 | **真正物理GI signed〜right-Krylov零次源：OE–OG** | `OriginalPhysicalSignedReceiverNonannihilationV5_OE` / `OriginalKrylovZeroSelectorSignedDensityFloorV5_OF` / `OriginalZeroSelectorAllDepthSameContextGIFrameV5_OG` | 元の二posterior signed物理受信器・プラケット非依存U下界、真正零次係数源、HF modal検出器の全r等式、選択文脈の `∃z,z'∀r` 同一下界 |
 
 ## 7. CIを効率的に保ちながら厳密性を保つ
