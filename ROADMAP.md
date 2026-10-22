@@ -19,7 +19,7 @@
 | Lean / mathlib pin | `v4.30.0-rc2` / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
 | 現在のbranch HEAD | [毎回GitHubで再観測](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit) |
 
-ここに固定したSHAは**2026-10-20時点の検証済み定理統合点**であり、README/ROADMAPのdocs-onlyマージによってbranch HEADが進んでも、定理の新規検証を意味しない。判断の優先順位は **fresh exact authoritative SHA → Lean定理と前提・import全文 → そのsource SHAのCI・公理監査 → 文書 → 以前の記録**。
+ここに固定したSHAは**2026-10-22時点の検証済み定理統合点**であり、README/ROADMAPのdocs-onlyマージによってbranch HEADが進んでも、定理の新規検証を意味しない。判断の優先順位は **fresh exact authoritative SHA → Lean定理と前提・import全文 → そのsource SHAのCI・公理監査 → 文書 → 以前の記録**。
 
 ### 重要な区別
 
@@ -197,7 +197,6 @@ MF–MKの量化は`\sum_p R_p(x,y)`や`∃p\,R_p(x,y)`で、`R_p`の物理源�
 | 真の空間線形床 | `OriginalLinearGIPhysicalGapV5_MF` | `p4Q2MF_originalFullPhysicalGapAverage_ge_linearGI` |
 | Gram/逆写像 | `OriginalPhysicalGramDeterminantV5_MG` / `OriginalPhysicalGramQuantitativeDeterminantV5_MH` / `OriginalPhysicalGramInverseV5_MI` / `OriginalPhysicalGramInverseLipschitzV5_MJ` | exact polarisation / `det≥k²` / adjugate / two-input Lipschitz |
 | **空間物理GI：最新MK（このトラック）** | `OriginalMeanEnergySinglePlaquetteV5_MK` | `p4Q2MK_originalGI_exists_meanEnergyPlaquette`、`p4Q2MK_originalPhysicalGI_exists_authenticMeanPlaquette` |
-
 | **時間Gaussian：最新OC** | `OriginalSignedGaussianStrictV5_NY` / `OriginalGaussianKernelSpanDenseV5_NZ` / `OriginalGaussianAllFiniteStrictGramV5_OA` / `OriginalGaussianMatrixPosDefV5_OB` / `OriginalGaussianFiniteInterpolationV5_OC` | `p4Q2NY_originalSignedGaussianDoubleEnergy_pos` / `p4Q2NZ_originalWilsonTemporalSectionSpan_dense` / `p4Q2OA_originalTemporalExactGram_strict_pos` / `p4Q2OB_originalTemporalGaussianGram_posDef` / `p4Q2OC_originalWilsonFiniteInterpolant_apply` |
 
 ## 7. CIを効率的に保ちながら厳密性を保つ
