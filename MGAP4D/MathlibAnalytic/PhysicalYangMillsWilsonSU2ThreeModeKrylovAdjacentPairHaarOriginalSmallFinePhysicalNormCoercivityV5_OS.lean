@@ -72,7 +72,7 @@ theorem p4Q2OS_finiteDimensional_injective_normControl
     [NormedAddCommGroup F] [NormedSpace ℝ F]
     [FiniteDimensional ℝ E]
     (L : E →ₗ[ℝ] F) (hL : Function.Injective L) :
-    ∃ K : ℝ≥0, 0 < K ∧ ∀ a : E,
+    ∃ K : NNReal, 0 < K ∧ ∀ a : E,
       ‖a‖ ≤ (K : ℝ) * ‖L a‖ := by
   obtain ⟨K, hK, hAnti⟩ :=
     (LinearMap.injective_iff_antilipschitz L).mp hL
@@ -111,9 +111,9 @@ theorem p4Q2OS_actualSmallFine_depthOne_physicalAndGI_normControl
     (left₀ right₀ : Cfg) :
     ∃ delta : ℝ, 0 < delta ∧
       (0 < beta (n + 1) → beta (n + 1) < delta →
-        (∃ K : ℝ≥0, 0 < K ∧ ∀ a : Fin (1 + 1) → ℝ,
+        (∃ K : NNReal, 0 < K ∧ ∀ a : Fin (1 + 1) → ℝ,
           ‖a‖ ≤ (K : ℝ) * ‖S 1 a‖) ∧
-        (∃ K : ℝ≥0, 0 < K ∧ ∀ a : Fin (1 + 1) → ℝ,
+        (∃ K : NNReal, 0 < K ∧ ∀ a : Fin (1 + 1) → ℝ,
           ‖a‖ ≤ (K : ℝ) * ‖Full 1 a‖)) := by
   obtain ⟨delta, hdelta, hInject⟩ :=
     p4Q2ON_actualDepthOne_smallFine_fullGI_and_physicalSource_injective
@@ -136,7 +136,7 @@ theorem p4Q2OS_actualDepthTwo_trueSchurNonzero_physical_normControl
     (hMinor : p4Q2OO_depthTwoLeadingMinor (M 2 e z) (M 2 e' z') ≠ 0)
     (hSchur :
       S 2 (p4Q2OO_depthTwoSchurResidual (M 2 e z) (M 2 e' z')) ≠ 0) :
-    ∃ K : ℝ≥0, 0 < K ∧ ∀ a : Fin (2 + 1) → ℝ,
+    ∃ K : NNReal, 0 < K ∧ ∀ a : Fin (2 + 1) → ℝ,
       ‖a‖ ≤ (K : ℝ) * ‖S 2 a‖ := by
   have hInject : Function.Injective (S 2) :=
     (p4Q2OP_actualDepthTwo_physicalSource_injective_iff_schurNonzero
@@ -161,7 +161,7 @@ theorem p4Q2OS_actualSmallFine_allDepthGLMass_or_depthTwoNormControl
         (∀ r : ℕ, ∀ a : Fin (r + 1) → ℝ,
           S r a ≠ 0 →
             0 < Mass (S r a) (Finset.univ : Finset Link)) ∨
-        (∃ K : ℝ≥0, 0 < K ∧ ∀ a : Fin (2 + 1) → ℝ,
+        (∃ K : NNReal, 0 < K ∧ ∀ a : Fin (2 + 1) → ℝ,
           ‖a‖ ≤ (K : ℝ) * ‖S 2 a‖)) := by
   obtain ⟨z, z', delta, hdelta, hMinor⟩ :=
     p4Q2OO_actualDepthTwo_exists_nonzeroLeadingMinor_smallFine
