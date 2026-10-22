@@ -108,21 +108,21 @@ theorem p4Q2OP_twoRows_null_scaledSchur
       p4Q2OO_depthTwoFirstCoefficient,
       p4Q2OO_depthTwoSecondCoefficient,
       p4Q2GX_rightZeroCoefficient,
-      Pi.smul_apply, Pi.sub_apply, smul_eq_mul] <;>
-      nlinarith [ha0]
+      Pi.smul_apply, Pi.sub_apply, smul_eq_mul]
+    nlinarith [ha0]
   · dsimp [delta, B, u, v, w] at ha1
     simp [p4Q2OO_depthTwoSchurResidual,
       p4Q2OO_depthTwoFirstCoefficient,
       p4Q2OO_depthTwoSecondCoefficient,
       p4Q2GX_rightZeroCoefficient,
-      Pi.smul_apply, Pi.sub_apply, smul_eq_mul] <;>
-      nlinarith [ha1]
+      Pi.smul_apply, Pi.sub_apply, smul_eq_mul]
+    nlinarith [ha1]
   · simp [p4Q2OO_depthTwoSchurResidual,
       p4Q2OO_depthTwoFirstCoefficient,
       p4Q2OO_depthTwoSecondCoefficient,
       p4Q2GX_rightZeroCoefficient,
-      Pi.smul_apply, Pi.sub_apply, smul_eq_mul] <;>
-      ring
+      Pi.smul_apply, Pi.sub_apply, smul_eq_mul]
+    ring
 
 /-- Once the genuine first-two minor is nonzero, the exact COMMON
 kernel of those TWO selected GI rows is the SINGLE explicit Schur
