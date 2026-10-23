@@ -211,7 +211,7 @@ private theorem p4Q2PO2_originalJetOne_integral (beta : ℝ) :
   change (∫ A : Cfg,
     ((1 : ℝ) + beta * a A) + (beta ^ 2 / 2) * b A ∂haar) = _
   rw [hBoth, hFirst, integral_const_mul, integral_const_mul]
-  simp <;> ring
+  simp
 
 /-- Full identification of the double-integrated original two-slab
 quadratic polynomial with PK's physically derived mixed-moment jet. -/
