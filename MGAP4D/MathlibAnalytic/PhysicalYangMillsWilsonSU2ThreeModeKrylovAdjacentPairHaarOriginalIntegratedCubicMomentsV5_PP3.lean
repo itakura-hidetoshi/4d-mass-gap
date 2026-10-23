@@ -154,9 +154,10 @@ theorem p4Q2PP3_originalOneSlabHaarRow_cubicJet_quarticRemainder_le
     continuous_id.prodMk continuous_const
   have hS : Continuous (fun X : Cfg => S X B) :=
     p4Q2PP3_oneSlabAction_row_continuous H B
-  have hK : Continuous (fun X : Cfg => K beta X B) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+  have hK : Continuous (fun X : Cfg => K beta X B) := by
+    have h := (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
       H 2 beta).comp hPair
+    simpa only [Function.comp_def] using h
   have ht : Continuous (fun X : Cfg => beta * S X B) :=
     continuous_const.mul hS
   have hC : Continuous (fun X : Cfg => C1 beta X B) := by
