@@ -203,7 +203,6 @@ theorem p4Q2PM_originalMixedMoment_integral_split (B : Cfg) :
     simpa only [Pi.add_apply] using (integral_add hA hB)
   change -(∫ X : Cfg, S X B * a X ∂haar) = _
   rw [hEq, hOuter, hInner, integral_const_mul]
-  ring
 
 /-- A genuine two-slab Wilson moment identity: PL removes ALL
 right-boundary dependence of the first-order crossing contribution.
