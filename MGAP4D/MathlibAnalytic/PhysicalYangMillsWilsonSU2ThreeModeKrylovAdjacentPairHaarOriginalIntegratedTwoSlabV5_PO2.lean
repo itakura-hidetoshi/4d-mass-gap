@@ -154,7 +154,7 @@ theorem p4Q2PO2_originalTwoSlab_innerQuadratic
       (∫ X : Cfg, P beta X A + (P beta A B - 1) ∂haar) =
         (∫ X : Cfg, P beta X A ∂haar) + (P beta A B - 1) := by
     have h := integral_add hPInt (integrable_const (P beta A B - 1))
-    simpa only [Pi.add_apply, integral_const] using h
+    simpa [integral_const] using h
   have hBoth :
       (∫ X : Cfg,
         (P beta X A + (P beta A B - 1)) +
@@ -211,8 +211,7 @@ private theorem p4Q2PO2_originalJetOne_integral (beta : ℝ) :
   change (∫ A : Cfg,
     ((1 : ℝ) + beta * a A) + (beta ^ 2 / 2) * b A ∂haar) = _
   rw [hBoth, hFirst, integral_const_mul, integral_const_mul]
-  simp
-  ring
+  simp <;> ring
 
 /-- Full identification of the double-integrated original two-slab
 quadratic polynomial with PK's physically derived mixed-moment jet. -/
@@ -246,14 +245,21 @@ theorem p4Q2PO2_originalTwoSlab_integratedQuadratic_eq_formal
       (∫ A : Cfg, P beta A B - (1 : ℝ) ∂haar) =
         (∫ A : Cfg, P beta A B ∂haar) - 1 := by
     have h := integral_sub hPInt (integrable_const (1 : ℝ))
-    simpa only [Pi.sub_apply, integral_const] using h
+    simpa [integral_const] using h
   have hAdd :
       (∫ A : Cfg, J1 beta A + (P beta A B - 1) ∂haar) =
         (∫ A : Cfg, J1 beta A ∂haar) +
           (∫ A : Cfg, P beta A B ∂haar) - 1 := by
-    have h := integral_add hJetInt (hPInt.sub (integrable_const (1 : ℝ)))
-    simpa only [Pi.add_apply] using
-      (h.trans (by rw [hSubP]; ring))
+    calc
+      (∫ A : Cfg, J1 beta A + (P beta A B - 1) ∂haar) =
+          (∫ A : Cfg, J1 beta A ∂haar) +
+            (∫ A : Cfg, P beta A B - 1 ∂haar) := by
+        simpa only [Pi.add_apply] using
+          (integral_add hJetInt (hPInt.sub (integrable_const (1 : ℝ))))
+      _ = (∫ A : Cfg, J1 beta A ∂haar) +
+            (∫ A : Cfg, P beta A B ∂haar) - 1 := by
+        rw [hSubP]
+        ring
   have hSub :
       (∫ A : Cfg, (J1 beta A + (P beta A B - 1)) -
         beta ^ 2 * (S A B * a A) ∂haar) =
@@ -350,11 +356,18 @@ theorem p4Q2PO2_originalTwoSlabHaarRow_eqFormal_cubicRemainder
         funext A
         exact p4Q2PO2_originalTwoSlab_innerQuadratic H beta A B
       rw [hEq]
-      have h := ((p4Q2PO2_jetOne_continuous H beta).add
-          ((p4Q2PO2_oneSlabPolynomial_continuous H beta B).sub continuous_const)).sub
-          ((continuous_const.mul (p4Q2PO2_actionRow_continuous H B)).mul
-            (p4Q2PO2_firstActionMoment_continuous H))
-      exact h.integrable_of_hasCompactSupport
+      have hLeft : Continuous (fun A : Cfg =>
+          J1 beta A + (P beta A B - 1)) :=
+        (p4Q2PO2_jetOne_continuous H beta).add
+          ((p4Q2PO2_oneSlabPolynomial_continuous H beta B).sub continuous_const)
+      have hRight : Continuous (fun A : Cfg =>
+          beta ^ 2 * S A B * a A) :=
+        (continuous_const.mul (p4Q2PO2_actionRow_continuous H B)).mul
+          (p4Q2PO2_firstActionMoment_continuous H)
+      have hCont : Continuous (fun A : Cfg =>
+          (J1 beta A + (P beta A B - 1)) - beta ^ 2 * S A B * a A) :=
+        hLeft.sub hRight
+      exact hCont.integrable_of_hasCompactSupport
         (HasCompactSupport.of_compactSpace _)
     have h := integral_sub hOuterK hOuterQ
     have hRight :
