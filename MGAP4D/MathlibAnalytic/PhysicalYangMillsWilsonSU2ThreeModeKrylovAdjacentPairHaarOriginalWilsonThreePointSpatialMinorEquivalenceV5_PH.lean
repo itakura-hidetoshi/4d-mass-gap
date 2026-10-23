@@ -91,7 +91,7 @@ theorem p4Q2PH_originalTwoMoment_pos_implies_distinct_oneSlab_points
   let c : ℝ := F1 A0
   have hConstant : F1 = c • (1 : C(Cfg, ℝ)) := by
     ext A
-    have hAt : F1 A = F1 A0 := (hNo A0 A).symm
+    have hAt : F1 A = F1 A0 := hNo A0 A
     simpa [c] using hAt
   have hL2 :
       ((Fine U : Phys) : Lp ℝ 2 haar) =
@@ -183,7 +183,7 @@ theorem p4Q2PH_allThreePointMinors_zero_implies_twoSlab_affine
   let b : ℝ := dy / dx
   have hb : dx * b = dy := by
     dsimp [b]
-    field_simp
+    field_simp [hdx]
   refine ⟨F2 A - b * F1 A, b, ?_⟩
   intro C
   have hZero := hAll C
