@@ -68,11 +68,7 @@ theorem p4Q2PN_realExp_quadraticRemainder_le (x : ℝ) (hx : ‖x‖ ≤ 1) :
     norm_num [Finset.sum_range_succ, Finset.sum_range_zero]
     <;> ring
   rw [hSeries] at h
-  have hCoef :
-      (↑(Nat.succ 3) : ℝ) /
-        ((↑(Nat.factorial 3) : ℝ) * (3 : ℝ)) = (2 / 9 : ℝ) := by
-    norm_num
-  rw [hCoef] at h
+  norm_num at h
   have hpow : 0 ≤ |x| ^ 3 := pow_nonneg (abs_nonneg x) _
   have hsmall : |Real.exp x - (1 + x + x ^ 2 / 2)| ≤ |x| ^ 3 := by
     nlinarith
@@ -133,18 +129,19 @@ theorem p4Q2PN_originalOneSlabKernel_cubicRemainder_le
   have hNorm : ‖-(beta * S X B)‖ ≤ ‖beta * M‖ := by
     calc
       ‖-(beta * S X B)‖ = ‖beta‖ * S X B := by
-        rw [norm_neg, norm_mul, Real.norm_eq_abs,
+        simp only [norm_neg, norm_mul, Real.norm_eq_abs,
           abs_of_nonneg hSnonneg]
       _ ≤ ‖beta‖ * M :=
         mul_le_mul_of_nonneg_left hSle (norm_nonneg _)
       _ = ‖beta * M‖ := by
-        rw [norm_mul, Real.norm_eq_abs, abs_of_nonneg hM]
+        simp only [norm_mul, Real.norm_eq_abs, abs_of_nonneg hM]
   have hExp :=
     p4Q2PN_realExp_quadraticRemainder_le
-      (-(beta * S X B)) (le_trans hNorm hsmall)
+      (-beta * S X B)
+      (le_trans (by simpa only [neg_mul] using hNorm) hsmall)
   have hPolynomial :
       1 - beta * S X B + (beta * S X B) ^ 2 / 2 =
-        1 + (-(beta * S X B)) + (-(beta * S X B)) ^ 2 / 2 := by
+        1 + (-beta * S X B) + (-beta * S X B) ^ 2 / 2 := by
     ring
   change ‖K beta X B -
     (1 - beta * S X B + (beta * S X B) ^ 2 / 2)‖ ≤ _
@@ -169,12 +166,12 @@ theorem p4Q2PN_originalTwoSlabKernel_cubicRemainder_le
   have hNorm : ‖-(beta * Q X A B)‖ ≤ ‖beta * (2 * M)‖ := by
     calc
       ‖-(beta * Q X A B)‖ = ‖beta‖ * Q X A B := by
-        rw [norm_neg, norm_mul, Real.norm_eq_abs,
+        simp only [norm_neg, norm_mul, Real.norm_eq_abs,
           abs_of_nonneg hQnonneg]
       _ ≤ ‖beta‖ * (2 * M) :=
         mul_le_mul_of_nonneg_left hQle (norm_nonneg _)
       _ = ‖beta * (2 * M)‖ := by
-        rw [norm_mul, Real.norm_eq_abs,
+        simp only [norm_mul, Real.norm_eq_abs,
           abs_of_nonneg (by positivity : 0 ≤ 2 * M)]
   have hExp :=
     p4Q2PN_realExp_quadraticRemainder_le
@@ -209,14 +206,17 @@ theorem p4Q2PN_originalLiteralTwoSlabDoubleHaarRemainder_le
       ‖∫ X : Cfg, K beta A B * K beta X A -
         p4Q2PN_originalTwoSlabQuadraticTaylor H beta X A B ∂haar‖ ≤
           ‖beta * (2 * M)‖ ^ 3 := by
-    apply norm_integral_le_of_norm_le_const
-    filter_upwards with X
-    exact p4Q2PN_originalTwoSlabKernel_cubicRemainder_le
-      H beta hsmall X A B
+    have hb :=
+      norm_integral_le_of_norm_le_const (μ := haar)
+        (Filter.Eventually.of_forall
+          (fun X => p4Q2PN_originalTwoSlabKernel_cubicRemainder_le
+            H beta hsmall X A B))
+    simpa using hb
   unfold p4Q2PN_originalLiteralTwoSlabDoubleHaarRemainder
-  apply norm_integral_le_of_norm_le_const
-  filter_upwards with A
-  exact hInner A
+  have hb :=
+    norm_integral_le_of_norm_le_const (μ := haar)
+      (Filter.Eventually.of_forall hInner)
+  simpa using hb
 
 /-- The same cubic bound for the actual original ONE-FOLD Haar row.
 It is a genuine analytic strengthening of JF's first-order quadratic
@@ -226,10 +226,12 @@ theorem p4Q2PN_originalLiteralOneSlabHaarRemainder_le
     ‖∫ X : Cfg, K beta X B -
         p4Q2PN_originalOneSlabQuadraticTaylor H beta X B ∂haar‖ ≤
       ‖beta * M‖ ^ 3 := by
-  apply norm_integral_le_of_norm_le_const
-  filter_upwards with X
-  exact p4Q2PN_originalOneSlabKernel_cubicRemainder_le
-    H beta hsmall X B
+  have hb :=
+    norm_integral_le_of_norm_le_const (μ := haar)
+      (Filter.Eventually.of_forall
+        (fun X => p4Q2PN_originalOneSlabKernel_cubicRemainder_le
+          H beta hsmall X B))
+  simpa using hb
 
 end OriginalFiniteVolumeWilson
 end GroundStatePosteriorJoint
