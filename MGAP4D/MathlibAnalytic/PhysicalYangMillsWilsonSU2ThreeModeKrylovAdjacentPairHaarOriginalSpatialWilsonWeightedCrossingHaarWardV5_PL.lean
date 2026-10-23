@@ -79,7 +79,9 @@ theorem p4Q2PL_originalSpatialLink_target_ne_source
     exact congrArg Subtype.val h
   exact (periodicHypercubicShift_ne_self
     (PeriodicHypercubicEvenSideLength H)
-    (by simp [PeriodicHypercubicEvenSideLength]; omega)
+    (by
+      change 2 ≤ 2 * (H + 1)
+      omega)
     e.1.1 e.2.1) heq
 
 /-- The actual full spatial Wilson energy weighted by any one temporal
@@ -174,17 +176,29 @@ theorem p4Q2PL_originalSpatialWilson_weightedFiniteLinkHaar_invariant
   | nil => simp
   | cons e es ih =>
       simp only [List.map_cons, List.sum_cons, mul_add]
-      rw [
-        integral_add
-          ((hW.mul (hEc e B)).integrable_of_hasCompactSupport
-            (HasCompactSupport.of_compactSpace _)) (hInt es B),
-        integral_add
-          ((hW.mul (by
-            simpa only [Pi.one_apply, mul_one] using
-              (hEc e (fun _ => (1 : G))))).integrable_of_hasCompactSupport
-            (HasCompactSupport.of_compactSpace _)) (hIntZero es),
-        p4Q2PL_originalSpatialWilson_weightedSingleLinkHaar_invariant H e B,
-        ih]
+      have hSingleB :
+          Integrable (fun A : Cfg => W A * E ((A e)⁻¹ * B e)) haar :=
+        (hW.mul (hEc e B)).integrable_of_hasCompactSupport
+          (HasCompactSupport.of_compactSpace _)
+      have hSingleZero :
+          Integrable (fun A : Cfg => W A * E ((A e)⁻¹)) haar := by
+        simpa only [Pi.one_apply, mul_one] using
+          ((hW.mul (hEc e (fun _ => (1 : G)))).integrable_of_hasCompactSupport
+            (HasCompactSupport.of_compactSpace _))
+      have hSplitB :
+          (∫ A : Cfg, W A * E ((A e)⁻¹ * B e) +
+            W A * ((es.map fun e => E ((A e)⁻¹ * B e)).sum) ∂haar) =
+          (∫ A : Cfg, W A * E ((A e)⁻¹ * B e) ∂haar) +
+          (∫ A : Cfg, W A * ((es.map fun e => E ((A e)⁻¹ * B e)).sum) ∂haar) := by
+        simpa only [Pi.add_apply] using (integral_add hSingleB (hInt es B))
+      have hSplitZero :
+          (∫ A : Cfg, W A * E ((A e)⁻¹) +
+            W A * ((es.map fun e => E ((A e)⁻¹)).sum) ∂haar) =
+          (∫ A : Cfg, W A * E ((A e)⁻¹) ∂haar) +
+          (∫ A : Cfg, W A * ((es.map fun e => E ((A e)⁻¹)).sum) ∂haar) := by
+        simpa only [Pi.add_apply] using (integral_add hSingleZero (hIntZero es))
+      rw [hSplitB, hSplitZero,
+        p4Q2PL_originalSpatialWilson_weightedSingleLinkHaar_invariant H e B, ih]
 
 /-- The ORIGINAL complete temporal crossing Wilson action's
 spatial-Wilson-weighted *reference* Haar mean is exactly independent
