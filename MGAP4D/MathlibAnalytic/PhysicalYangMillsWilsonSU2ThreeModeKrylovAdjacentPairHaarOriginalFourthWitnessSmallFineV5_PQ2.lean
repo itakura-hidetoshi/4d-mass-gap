@@ -94,7 +94,7 @@ local notation "C4" => p4Q2PP2_originalFourthCoefficient H
 local notation "Minor" => p4Q2PJ_originalWilsonLiteralThreeSpatialMinor H
 
 /-- Any ACTUAL nonzero original Wilson fourth Haar coefficient gives
-a nonzero original literal one-/double-Haar three-boundary minor on
+a nonzero original literal one- and double-Haar three-boundary minor on
 a common positive fine-coupling interval at each fixed finite H. -/
 theorem p4Q2PQ2_originalNonzeroFourth_gives_literalMinor_smallFine
     (A B C : Cfg) (hCoeff : C4 A B C ≠ 0) :
