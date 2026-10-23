@@ -115,13 +115,16 @@ theorem p4Q2PH_originalTwoMoment_pos_implies_distinct_oneSlab_points
   have hm1 : m 1 = c * m 0 := by
     calc
       m 1 = inner ℝ U (Fine U) := h01.symm
-      _ = c * inner ℝ U U := by rw [hFine, real_inner_smul_right]
+      _ = c * inner ℝ U U := by
+        rw [hFine]
+        simp only [real_inner_smul_right]
       _ = c * m 0 := by rw [h00]
   have hm2 : m 2 = c * m 1 := by
     calc
       m 2 = inner ℝ (Fine U) (Fine U) := h11.symm
       _ = inner ℝ (c • U) (Fine U) := by rw [hFine]
-      _ = c * inner ℝ U (Fine U) := by rw [real_inner_smul_left]
+      _ = c * inner ℝ U (Fine U) := by
+        simp only [real_inner_smul_left]
       _ = c * m 1 := by rw [h01]
   have hZero : D2 = 0 := by
     dsimp [p4Q2PD_originalWilsonTwoMomentDet]
@@ -162,7 +165,12 @@ theorem p4Q2PH_originalTwoSlab_affine_implies_thirdMoment_zero
       (p4Q2PD_originalWilsonThirdSchur_inner_second_eq_gap H t ht).symm
     _ = inner ℝ R (a • U + b • (Fine U)) := by rw [hPhys]
     _ = a * inner ℝ R U + b * inner ℝ R (Fine U) := by
-      rw [inner_add_right, real_inner_smul_right, real_inner_smul_right]
+      calc
+        inner ℝ R (a • U + b • (Fine U)) =
+            inner ℝ R (a • U) + inner ℝ R (b • (Fine U)) :=
+          inner_add_right _ _ _
+        _ = a * inner ℝ R U + b * inner ℝ R (Fine U) := by
+          simp only [real_inner_smul_right]
     _ = 0 := by
       rw [p4Q2PD_originalWilsonThirdSchur_ortho_unit,
           p4Q2PD_originalWilsonThirdSchur_ortho_first]
