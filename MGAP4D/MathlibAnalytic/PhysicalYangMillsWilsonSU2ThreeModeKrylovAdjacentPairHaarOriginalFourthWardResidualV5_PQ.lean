@@ -179,7 +179,7 @@ theorem p4Q2PQ_exists_nonzeroFourthCoefficient_iff_not_affine :
     (∃ A B C : Cfg, C4 A B C ≠ 0) ↔
       ¬ ∃ s t : ℝ, ∀ X : Cfg, R X = s * a X + t := by
   rw [← p4Q2PQ_allFourthCoefficients_zero_iff_residual_affine H]
-  push_neg
+  push Not
   rfl
 
 end OriginalWilsonQuarticWardResidual
