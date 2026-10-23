@@ -119,8 +119,15 @@ theorem p4Q2PM_originalCrossing_weightedFirstMoment_Haar_invariant
       _ = -(1 / 2 : ℝ) *
             (∫ X : Cfg, W X * Cross X D ∂haar) -
           cH * (∫ X : Cfg, Cross X D ∂haar) := by
-        rw [integral_sub ((hWC D).const_mul _) ((hC D).const_mul _),
-          integral_const_mul, integral_const_mul]
+        have hSub :
+            (∫ X : Cfg,
+              (-(1 / 2 : ℝ)) * (W X * Cross X D) -
+                cH * Cross X D ∂haar) =
+              (∫ X : Cfg, (-(1 / 2 : ℝ)) * (W X * Cross X D) ∂haar) -
+              (∫ X : Cfg, cH * Cross X D ∂haar) := by
+          simpa only [Pi.sub_apply] using
+            (integral_sub ((hWC D).const_mul _) ((hC D).const_mul _))
+        rw [hSub, integral_const_mul, integral_const_mul]
   calc
     (∫ X : Cfg, Cross X B * a X ∂haar) =
         -(1 / 2 : ℝ) * (∫ X : Cfg, W X * Cross X B ∂haar) -
@@ -182,9 +189,20 @@ theorem p4Q2PM_originalMixedMoment_integral_split (B : Cfg) :
     apply integral_congr_ae
     filter_upwards with X
     exact hPoint X
+  have hOuter :
+      (∫ X : Cfg,
+        ((1 / 2 : ℝ) * W X * a X + Cross X B * a X) +
+          (1 / 2 : ℝ) * W B * a X ∂haar) =
+        (∫ X : Cfg, (1 / 2 : ℝ) * W X * a X + Cross X B * a X ∂haar) +
+        (∫ X : Cfg, (1 / 2 : ℝ) * W B * a X ∂haar) := by
+    simpa only [Pi.add_apply] using (integral_add (hA.add hB) hC')
+  have hInner :
+      (∫ X : Cfg, (1 / 2 : ℝ) * W X * a X + Cross X B * a X ∂haar) =
+        (∫ X : Cfg, (1 / 2 : ℝ) * W X * a X ∂haar) +
+        (∫ X : Cfg, Cross X B * a X ∂haar) := by
+    simpa only [Pi.add_apply] using (integral_add hA hB)
   change -(∫ X : Cfg, S X B * a X ∂haar) = _
-  rw [hEq, integral_add (hA.add hB) hC',
-    integral_add hA hB, integral_const_mul]
+  rw [hEq, hOuter, hInner, integral_const_mul]
   ring
 
 /-- A genuine two-slab Wilson moment identity: PL removes ALL
