@@ -63,7 +63,7 @@ local notation "haar" =>
   periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
 local notation "W" =>
   periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H 2
-local notation "C" =>
+local notation "Cross" =>
   periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction H 2
 local notation "S" =>
   periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction H 2
@@ -81,7 +81,7 @@ genuine intermediate SU(2) configuration add up to one FULL W(A). -/
 theorem p4Q2PK_originalTwoSlabAction_split (X A B : Cfg) :
     p4Q2PK_originalTwoSlabAction H X A B =
       (1 / 2 : ℝ) * W X + W A + (1 / 2 : ℝ) * W B +
-        C X A + C A B := by
+        Cross X A + Cross A B := by
   unfold p4Q2PK_originalTwoSlabAction
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction
   ring
@@ -118,11 +118,11 @@ theorem p4Q2PK_originalTwoSlabKernel_hasDerivAt_zero
     HasDerivAt (fun beta : ℝ => K beta A B * K beta X A)
       (-p4Q2PK_originalTwoSlabAction H X A B) 0 := by
   let q : ℝ := p4Q2PK_originalTwoSlabAction H X A B
-  have hlin : HasDerivAt (fun beta : ℝ => beta * (-q)) (-q) 0 :=
-    (hasDerivAt_id (0 : ℝ)).mul_const (-q)
+  have hlin : HasDerivAt (fun beta : ℝ => beta * (-q)) (-q) 0 := by
+    simpa using (hasDerivAt_id (0 : ℝ)).mul_const (-q)
   have hexp : HasDerivAt
       (fun beta : ℝ => Real.exp (-(beta * q))) (-q) 0 := by
-    simpa only [mul_neg, zero_mul, Real.exp_zero, one_mul] using hlin.exp
+    simpa only [mul_neg, zero_mul, neg_zero, Real.exp_zero, one_mul] using hlin.exp
   have hfun :
       (fun beta : ℝ => K beta A B * K beta X A) =
       (fun beta : ℝ => Real.exp (-(beta * q))) := by
