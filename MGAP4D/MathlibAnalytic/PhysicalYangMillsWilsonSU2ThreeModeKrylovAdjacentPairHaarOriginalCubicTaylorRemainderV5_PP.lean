@@ -125,7 +125,8 @@ theorem p4Q2PP_originalOneSlabKernel_quarticRemainder_le
       (beta * S X B) ^ 3 / 6)‖ ≤ _
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_eq_boltzmann,
     hPolynomial]
-  exact hExp.trans (pow_le_pow_left₀ (norm_nonneg _) hNorm 4)
+  simpa only [neg_mul] using
+    (hExp.trans (pow_le_pow_left₀ (norm_nonneg _) hNorm 4))
 
 /-- Quartic error for two genuinely adjacent interacting Wilson slabs. -/
 theorem p4Q2PP_originalTwoSlabKernel_quarticRemainder_le
