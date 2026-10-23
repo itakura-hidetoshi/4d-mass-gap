@@ -147,7 +147,10 @@ theorem p4Q2PN_originalOneSlabKernel_cubicRemainder_le
     (1 - beta * S X B + (beta * S X B) ^ 2 / 2)‖ ≤ _
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_eq_boltzmann,
     hPolynomial]
-  exact hExp.trans (pow_le_pow_left₀ (norm_nonneg _) hNorm 3)
+  have hPow : ‖-beta * S X B‖ ^ 3 ≤ ‖beta * M‖ ^ 3 := by
+    have h := pow_le_pow_left₀ (norm_nonneg _) hNorm 3
+    simpa only [neg_mul] using h
+  exact hExp.trans hPow
 
 /-- Cubic norm remainder for TWO literal full interacting Wilson slabs.
 There is NO modified transfer, independent posterior or action truncation. -/
@@ -171,8 +174,7 @@ theorem p4Q2PN_originalTwoSlabKernel_cubicRemainder_le
       _ ≤ ‖beta‖ * (2 * M) :=
         mul_le_mul_of_nonneg_left hQle (norm_nonneg _)
       _ = ‖beta * (2 * M)‖ := by
-        simp only [norm_mul, Real.norm_eq_abs,
-          abs_of_nonneg (by positivity : 0 ≤ 2 * M)]
+        simp [Real.norm_eq_abs, abs_mul, abs_of_nonneg hM]
   have hExp :=
     p4Q2PN_realExp_quadraticRemainder_le
       (-(beta * Q X A B)) (le_trans hNorm hsmall)
