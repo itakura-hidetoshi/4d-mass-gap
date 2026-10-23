@@ -230,7 +230,7 @@ theorem p4Q2PI_normalizedThreeSpatialMinor_eq_rawScaled
   have hTwo (X : Cfg) :
       F2 X = v ^ 2 * p4Q2PI_originalRawTwoSlabContinuous H t ht X := by
     rw [p4Q2PI_originalNormalizedTwoSlab_eq_rawSquare H t ht]
-    simp only [ContinuousMap.smul_apply, smul_eq_mul]
+    simp only [v, ContinuousMap.smul_apply, smul_eq_mul]
   unfold p4Q2PG_originalWilsonThreeSpatialPointMinor
     p4Q2PI_originalRawThreeSpatialPointMinor
   rw [hOne A, hOne B, hOne C, hTwo A, hTwo B, hTwo C]
@@ -251,8 +251,7 @@ theorem p4Q2PI_normalizedThreeSpatialMinor_ne_iff_raw
     pow_ne_zero _ (inv_ne_zero hnorm.ne')
   rw [p4Q2PI_normalizedThreeSpatialMinor_eq_rawScaled]
   constructor
-  · intro h
-    intro hraw
+  · intro h hraw
     apply h
     rw [hraw, mul_zero]
   · intro hraw
