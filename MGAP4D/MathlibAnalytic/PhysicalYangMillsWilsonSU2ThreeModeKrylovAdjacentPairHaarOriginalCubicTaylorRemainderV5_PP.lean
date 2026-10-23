@@ -7,7 +7,7 @@ import Mathlib.Tactic
 
 PO proves the original Haar-integrated two-slab third-mode spatial
 minor is O(beta^4), not that its coefficient is nonzero.
-This file strengthens PN's one-/two-slab exponential remainder
+This file strengthens PN's one- and two-slab exponential remainder
 through the cubic action term. Its two Haar integrations are the
 ACTUAL unchanged SU(2) Wilson kernel, with the entire spatial Wilson
 action on the intermediate boundary. The estimates are uniform for
