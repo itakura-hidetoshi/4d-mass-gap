@@ -105,7 +105,6 @@ theorem p4Q2PP5_originalLiteralWilsonMinor_fourthCoefficient
   let Q : ℝ := ‖C5 A B C‖ + ‖C6 A B C‖
   let C₀ : ℝ :=
     Q + 2 * E₁ * L + 2 * E₂ * L + 2 * E₁ * E₂
-  have hL : 0 ≤ L := by dsimp [L]; positivity
   have hE₁ : 0 ≤ E₁ := by dsimp [E₁]; positivity
   have hE₂ : 0 ≤ E₂ := by dsimp [E₂]; positivity
   have hC₀ : 0 ≤ C₀ := by dsimp [C₀]; positivity
@@ -348,7 +347,7 @@ theorem p4Q2PP5_originalLiteralWilsonMinor_fourthCoefficient
   let ev := (G beta B - J2 beta B) - (G beta A - J2 beta A)
   have hQuant :=
     p4Q2PP4_realMinor_fifthOrder_stability
-      r L E₁ E₂ Q hr0 hBeta hL hE₁ hE₂
+      r L E₁ E₂ Q hr0 hBeta hE₁ hE₂
       x y u v ex ey eu ev (beta ^ 4 * C4 A B C)
       hJ1B hJ1C hJ2C hJ2B
       (hErr1 B) (hErr1 C) (hErr2 C) (hErr2 B) hJet
