@@ -100,7 +100,7 @@ theorem p4Q2PD_originalWilsonThreeHankel_det_eq_gap :
     p4Q2PD_originalWilsonThirdMomentGap,
     p4Q2PD_originalWilsonTwoMomentDet,
     Matrix.det_fin_three]
-  <;> ring
+  all_goals ring
 
 /-- The true physical Schur source is orthogonal to the constant U. -/
 theorem p4Q2PD_originalWilsonThirdSchur_ortho_unit :
@@ -114,10 +114,10 @@ theorem p4Q2PD_originalWilsonThirdSchur_ortho_unit :
   have h10 : inner ℝ (Fine U) U = m 1 := by
     simpa using
       (p4Q2PB_originalWilsonPhysicalKrylov_inner_eq_moment H t ht 1 0)
-  simp only [p4Q2PD_originalWilsonThirdSchurPhysical,
-    p4Q2PD_originalWilsonTwoMomentDet,
-    inner_sub_left, real_inner_smul_left]
-  rw [h20, h00, h10]
+  unfold p4Q2PD_originalWilsonThirdSchurPhysical
+  rw [inner_sub_left, inner_sub_left]
+  simp only [real_inner_smul_left, h20, h00, h10,
+    p4Q2PD_originalWilsonTwoMomentDet]
   ring
 
 /-- The true physical Schur source is orthogonal to T U as well. -/
@@ -132,10 +132,10 @@ theorem p4Q2PD_originalWilsonThirdSchur_ortho_first :
   have h11 : inner ℝ (Fine U) (Fine U) = m 2 := by
     simpa using
       (p4Q2PB_originalWilsonPhysicalKrylov_inner_eq_moment H t ht 1 1)
-  simp only [p4Q2PD_originalWilsonThirdSchurPhysical,
-    p4Q2PD_originalWilsonTwoMomentDet,
-    inner_sub_left, real_inner_smul_left]
-  rw [h21, h01, h11]
+  unfold p4Q2PD_originalWilsonThirdSchurPhysical
+  rw [inner_sub_left, inner_sub_left]
+  simp only [real_inner_smul_left, h21, h01, h11,
+    p4Q2PD_originalWilsonTwoMomentDet]
   ring
 
 /-- The remaining true physical Hilbert cross inner is EXACTLY the
@@ -153,11 +153,10 @@ theorem p4Q2PD_originalWilsonThirdSchur_inner_second_eq_gap :
   have h12 : inner ℝ (Fine U) ((Fine ^ 2) U) = m 3 := by
     simpa using
       (p4Q2PB_originalWilsonPhysicalKrylov_inner_eq_moment H t ht 1 2)
-  simp only [p4Q2PD_originalWilsonThirdSchurPhysical,
-    p4Q2PD_originalWilsonTwoMomentDet,
-    p4Q2PD_originalWilsonThirdMomentGap,
-    inner_sub_left, real_inner_smul_left]
-  rw [h22, h02, h12]
+  unfold p4Q2PD_originalWilsonThirdSchurPhysical
+  rw [inner_sub_left, inner_sub_left]
+  simp only [real_inner_smul_left, h22, h02, h12,
+    p4Q2PD_originalWilsonTwoMomentDet, p4Q2PD_originalWilsonThirdMomentGap]
   ring
 
 /-- Exact authentic Gauss-law Hilbert identity: the NORM-SQUARED
@@ -185,8 +184,8 @@ theorem p4Q2PD_originalWilsonThirdSchur_normSq_eq_twoDet_mul_threeGap :
     _ = inner ℝ r (delta • ((Fine ^ 2) U) - a • U - b • (Fine U)) := by
       rw [← hr]
     _ = delta * inner ℝ r ((Fine ^ 2) U) := by
-      simp only [inner_sub_right, real_inner_smul_right, h0, h1,
-        mul_zero, sub_zero]
+      rw [inner_sub_right, inner_sub_right]
+      simp only [real_inner_smul_right, h0, h1, mul_zero, sub_zero]
     _ = delta * p4Q2PD_originalWilsonThirdMomentGap H t ht := by
       rw [h2]
 
