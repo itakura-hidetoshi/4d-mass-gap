@@ -340,9 +340,14 @@ theorem p4Q2PS_originalQuarticWardResidual_rightStrip (B : Cfg) :
         rw [p4Q2PS_originalCenteredFirst_HaarMean_zero H,
           p4Q2PS_originalCenteredMixedHaar_invariant H B]
         ring
-  have hPR :=
-    p4Q2PR_originalQuarticWardResidual_centeredCrossMoments H B
-  rw [← hSIntegral] at hPR
+  have hPR :
+      p4Q2PQ_originalQuarticWardResidual H B =
+        (∫ A : Cfg, c A ∂haar) +
+          3 * (∫ A : Cfg,
+            (S A B) ^ 2 * h A - S A B * b A ∂haar) := by
+    rw [p4Q2PR_originalQuarticWardResidual_centeredCrossMoments H B]
+    rw [hSIntegral]
+    ring
   rw [hRightIntegral] at hPR
   convert hPR using 1 <;> dsimp [u] <;> ring
 
