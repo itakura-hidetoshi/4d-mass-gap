@@ -84,7 +84,7 @@ local notation "D3" => p4Q2PD_originalWilsonThirdMomentGap H t ht
 local notation "m" => p4Q2PB_originalWilsonPhysicalMoment H t ht
 local notation "R" => p4Q2PD_originalWilsonThirdSchurPhysical H t ht
 
-/-- Scalar determinant of the ACTUAL Wilson continuous one-/two-slab
+/-- Scalar determinant of the ACTUAL Wilson continuous one- and two-slab
 outputs at three concrete spatial boundaries. Unlike the Schur
 profile, this test itself needs no moments or Gram inverses. -/
 noncomputable def p4Q2PG_originalWilsonThreeSpatialPointMinor
