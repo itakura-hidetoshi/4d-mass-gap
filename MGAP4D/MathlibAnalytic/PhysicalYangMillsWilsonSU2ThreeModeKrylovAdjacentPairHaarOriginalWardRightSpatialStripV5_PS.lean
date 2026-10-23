@@ -363,7 +363,9 @@ theorem p4Q2PS_originalQuarticWardResidual_rightStrip (B : Cfg) :
     rw [hSIntegral]
     ring
   rw [hRightIntegral] at hPR
-  convert hPR using 1 <;> dsimp [u] <;> ring
+  convert hPR using 1
+  dsimp [u]
+  ring
 
 /-- A concrete exact reduced fourth coefficient: only F's
 failure to be affine in the original first Wilson action a matters.
