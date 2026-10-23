@@ -48,7 +48,7 @@ perturbations. This is a real-norm calculation, without new axioms. -/
 theorem p4Q2PP4_realMinor_fifthOrder_stability
     (r L E₁ E₂ Q : ℝ)
     (hr0 : 0 ≤ r) (hr1 : r ≤ 1)
-    (hL : 0 ≤ L) (hE₁ : 0 ≤ E₁) (hE₂ : 0 ≤ E₂)
+    (hE₁ : 0 ≤ E₁) (hE₂ : 0 ≤ E₂)
     (x y u v ex ey eu ev target : ℝ)
     (hx : ‖x‖ ≤ r * L) (hy : ‖y‖ ≤ r * L)
     (hu : ‖u‖ ≤ r * L) (hv : ‖v‖ ≤ r * L)
