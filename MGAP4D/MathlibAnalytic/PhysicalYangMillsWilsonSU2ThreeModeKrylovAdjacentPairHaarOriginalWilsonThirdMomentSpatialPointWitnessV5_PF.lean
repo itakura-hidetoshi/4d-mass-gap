@@ -12,8 +12,8 @@ configuration-side criterion for checking that outstanding nonzero.
 
 The unmodified normalized fine one-slab Wilson physical transfer
 has by OU an ACTUAL continuous spatial-Haar representative. Define
-  phi1(A) = ||T_raw||^-1 * OU_continuous(T_raw U)(A)
-  phi2(A) = ||T_raw||^-1 * OU_continuous(T_raw T_fine U)(A).
+  phi1(A) = ||T_raw||^-1 * OU_continuous(U)(A)
+  phi2(A) = ||T_raw||^-1 * OU_continuous(T_fine U)(A).
 In the SAME SU(2) Gauss-law physical Haar-L² carrier these are
 exactly T_fine U and T_fine² U, not spectral-model surrogates.
 
@@ -139,7 +139,10 @@ theorem p4Q2PF_originalTwoSlabContinuous_toLp :
     (((Fine ^ 2) U : Phys) : Lp ℝ 2 haar) =
       L (p4Q2PF_originalWilsonTwoSlabContinuous H t ht) := by
   have hPow : (Fine ^ 2) U = Fine (Fine U) := by
-    rw [show (2 : ℕ) = 1 + 1 by omega, pow_succ']
+    -- Restrict rewriting to the exponent: replacing the numeral 2
+    -- globally would also rewrite the SU(2) group index and hN : 0 < 2.
+    change (Fine ^ (1 + 1)) U = Fine (Fine U)
+    rw [pow_succ']
     simp
   rw [hPow]
   simpa only [p4Q2PF_originalWilsonTwoSlabContinuous] using
@@ -232,14 +235,16 @@ theorem p4Q2PF_originalThirdSchur_physicalNonzero_implies_exists_point
   have hPsi : psi ≠ 0 := by
     intro hZero
     have hLp : ((R : Phys) : Lp ℝ 2 haar) = 0 := by
-      rw [p4Q2PF_originalThirdSchurContinuous_toLp H t ht, hZero]
+      rw [p4Q2PF_originalThirdSchurContinuous_toLp H t ht]
+      change L psi = 0
+      rw [hZero]
       simp
     have hRZero : R = 0 := by
       apply Subtype.ext
       simpa using hLp
     exact hR hRZero
   by_contra hNo
-  push_neg at hNo
+  push Not at hNo
   apply hPsi
   ext A
   exact hNo A
