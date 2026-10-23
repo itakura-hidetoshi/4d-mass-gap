@@ -56,7 +56,7 @@ a fifth-order error cannot be cancelled at sufficiently small
 positive beta. No assumption on any physical rank is made. -/
 theorem p4Q2PQ2_real_nonzero_of_fifthOrderError
     (value coeff K beta : ℝ)
-    (hCoeff : coeff ≠ 0) (hK : 0 ≤ K) (hBeta : 0 < beta)
+    (hK : 0 ≤ K) (hBeta : 0 < beta)
     (hThreshold : beta < ‖coeff‖ / (K + 1))
     (hError : ‖value - beta ^ 4 * coeff‖ ≤ K * beta ^ 5) :
     value ≠ 0 := by
@@ -139,12 +139,15 @@ theorem p4Q2PQ2_originalNonzeroFourth_gives_literalMinor_smallFine
       simp [Real.norm_eq_abs, abs_of_nonneg (le_of_lt hBeta)]
     rw [hNormBudget]
     nlinarith [hFineProd, hBeta]
-  have hError := hRem beta hBetaOne hBudget
+  have hError :
+      ‖Minor beta A B C - beta ^ 4 * C4 A B C‖ ≤ K * beta ^ 5 := by
+    simpa only [Real.norm_eq_abs, abs_of_nonneg (le_of_lt hBeta)] using
+      (hRem beta hBetaOne hBudget)
   have hThreshold : beta < ‖C4 A B C‖ / (K + 1) :=
     lt_of_lt_of_le hSmall hLeading
   exact p4Q2PQ2_real_nonzero_of_fifthOrderError
     (Minor beta A B C) (C4 A B C) K beta
-    hCoeff hK hBeta hThreshold hError
+    hK hBeta hThreshold hError
 
 /-- With the already PROVED genuine physical D2>0 gate (PC/PE),
 any eventual nonzero original fourth Wilson action coefficient is
