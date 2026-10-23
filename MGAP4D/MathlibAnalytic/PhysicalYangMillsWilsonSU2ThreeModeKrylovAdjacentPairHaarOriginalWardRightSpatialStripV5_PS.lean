@@ -308,9 +308,16 @@ theorem p4Q2PS_originalQuarticWardResidual_rightStrip (B : Cfg) :
   have hMIntegral :
       (∫ A : Cfg, 2 * S A B * h A - b A ∂haar) =
         2 * J B - (∫ A : Cfg, b A ∂haar) := by
-    simpa only [Pi.sub_apply, integral_const_mul,
-      p4Q2PS_originalCenteredMixedHaar] using
-      (integral_sub (hiSh.const_mul 2) hiB)
+    calc
+      (∫ A : Cfg, 2 * S A B * h A - b A ∂haar) =
+          ∫ A : Cfg, 2 * (S A B * h A) - b A ∂haar := by
+        apply integral_congr_ae
+        filter_upwards with A
+        ring
+      _ = 2 * J B - (∫ A : Cfg, b A ∂haar) := by
+        simpa only [Pi.sub_apply, integral_const_mul,
+          p4Q2PS_originalCenteredMixedHaar] using
+          (integral_sub (hiSh.const_mul 2) hiB)
   have hSIntegral :
       (∫ A : Cfg,
         (S A B) ^ 2 * h A - S A B * b A ∂haar) =
@@ -345,8 +352,18 @@ theorem p4Q2PS_originalQuarticWardResidual_rightStrip (B : Cfg) :
         (∫ A : Cfg, c A ∂haar) +
           3 * (∫ A : Cfg,
             (S A B) ^ 2 * h A - S A B * b A ∂haar) := by
+    have hCenterIntegral :
+        (∫ A : Cfg,
+          (S A B) ^ 2 * a A -
+            (S A B) ^ 2 * p4Q2PQ_originalFirstActionMean H ∂haar) =
+        (∫ A : Cfg, (S A B) ^ 2 * h A ∂haar) := by
+      apply integral_congr_ae
+      filter_upwards with A
+      unfold p4Q2PS_originalCenteredFirstMoment
+      ring
     rw [p4Q2PR_originalQuarticWardResidual_centeredCrossMoments H B]
     rw [hSIntegral]
+    rw [hCenterIntegral]
     ring
   rw [hRightIntegral] at hPR
   convert hPR using 1 <;> dsimp [u] <;> ring
