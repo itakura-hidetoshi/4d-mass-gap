@@ -2,9 +2,9 @@
 
 **Original interacting Wilson theory · Gauss-law physical Hilbert space · Lean 4 + mathlib · Hidetoshi Itakura**
 
-> **Research status, 2026-10-23 JST (through PC #5825 verified):** The unchanged original interacting SU(2) Wilson/Gauss-law model now has **OW** all finite-depth physical-source/original GI-kernel equality at every fine t>=0 (frozen b>0), **OX** unconditional qualitative GL mass positivity for nonzero physical finite Krylov sources, and **OY/OZ** strict positive-fine nonannihilation under all transfer iterates. **PA #5823** proves genuine all-shift rank-two physical Gram positivity on ON's common small-positive-fine interval. **PB #5824** identifies all original finite Krylov Gram entries with scalar Wilson Hankel moments. **PC #5825** derives m_(2k)m_(2k+2)>m_(2k+1)^2 for all k in the same interval. The genuine third physical mode U,TU,T²U, 3×3 Hankel determinant, Schur physical nonzero, uniform U0, endpoint, strong limit and continuum mass gap remain OPEN.
+> **Latest verified theorem stage, 2026-10-23 JST — PN #5839 MERGED:** The unchanged full SU(2) Wilson/Gauss-law transfer retains two genuine interacting posteriors and distinct frozen/fine couplings. OW/OX establish the finite-depth source/GI-kernel equality and GL mass positivity for nonzero physical finite-Krylov sources; PA–PC prove the small-positive-fine rank-two physical Hankel gate. PD–PJ identify third Schur nonzero with a *literal* genuine-Wilson three-spatial-configuration minor (under the already proved D2>0), without producing a nonzero triple. PK–PM prove the full two-slab action representation, weighted-Haar gauge Ward identity, and **vanishing of the cubic coefficient of the degree-two formal three-point Taylor jets**. PN proves **genuine original one- and two-slab kernel cubic Taylor remainders** and their literal double-spatial-Haar integral bound. **The genuine integrated three-point determinant O(t^4), a nonzero triple, D3>0, rank three, U0, endpoint, H1–C3 and the 4D continuum mass gap remain OPEN.**
 
-**日本語要約：** 元の二相互作用Wilson posterior・Gauss-law物理Hilbert源・Perron半密度・独立したfrozen/fine couplingを保持。OWで全有限深さ・非負fineの物理源核と全真正GI受信器核が一致、OXで非零有限Krylov源の真正GL質量正値性を無条件化、OY/OZで正fine転送の任意回反復による非消滅を証明。PAはONの小正fine共通区間で全シフトの真の二モード物理Gram正定値、PBは全深さの真のGram＝元のWilson Hankelモーメント、PCは全kで厳密二次Hankel不等式 `m_(2k)m_(2k+2)>m_(2k+1)^2` を証明。**U,TU,T²Uのrank3、3×3 Hankel行列式正値、真正Schur物理像非零、U0、endpoint、強極限・連続体質量ギャップはOPEN。**
+**日本語要約：** 元の完全SU(2) Wilson作用、Gauss-law物理Hilbert源、Perron半密度、真正二posteriorおよび独立したfrozen/fine couplingを維持。PD–PJで第三Schur残差のノルム恒等式、真正3配置minorの必要十分条件、非正規化一段・二段の元Wilson核Haar積分表示を形式化した。PK–PMで原Wilson作用の局所ゲージ対称性から、**形式的二次Taylor jetの3配置行列式に現れる三次係数が恒等的に消える**ことを証明。PN #5839で元の二段Wilson作用の全中間空間重みを保持し、**真正二重Haar核の三次余剰上界**をLean4証明。**実際の積分済3配置行列式の O(t^4) は係数同定が未完了であり、非零配置・D3>0・rank3・U0・endpoint・強極限・連続体質量ギャップはOPEN。**
 
 **[Acceptance gates and next proofs → ROADMAP.md](ROADMAP.md)**
 
@@ -14,15 +14,38 @@
 | --- | --- |
 | Repository | [itakura-hidetoshi/4d-mass-gap](https://github.com/itakura-hidetoshi/4d-mass-gap) |
 | **Only theorem-authoritative branch** | `formal/real-hilbert-uniform-coercive-strong-limit` |
-| **Last verified theorem-bearing merge checkpoint (PC)** | [`104e0008d5d7372bf45f226c51fe1a61dfc67805`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/104e0008d5d7372bf45f226c51fe1a61dfc67805) |
-| Latest verified theorem PR at this checkpoint | [#5825 PC](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5825), after [#5824 PB](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5824) and [#5823 PA](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5823) |
-| Exact **tested source** SHA (distinct from squash SHA) | PC source `dbbda38ceb987ebbd2c48f7cf79ce27b3e086a5e` (squash `104e0008d5d7372bf45f226c51fe1a61dfc67805`); PA squash `afd42dd8fea1f4e57a98f08d18c2bb7eec431448`; PB squash `c9e896755908e4504da8281a304ae6f82a544289`. |
-| [PC exact-head CI #39869958440](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39869958440) | SUCCESS, **10889/10889** Lean, **3/3** public `#print axioms`, changed PC file warning/error **0/0**, no `sorryAx` or new axiom. First PC bridge proof is standard-3 only; two positivity proofs inherit five upstream `native_decide` computation axioms (explicitly disclosed). Independent GitHub MCP exact-head log recheck completed; no separate external receipt claimed. |
+| **Latest verified theorem-bearing merge checkpoint (PN)** | [`32688fbe0e90b055b3c73ef142ef5f45ad3293f5`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/32688fbe0e90b055b3c73ef142ef5f45ad3293f5) (PN #5839 squash merge) |
+| Latest verified theorem PR at this checkpoint | [#5839 PN](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5839), after [#5838 PM](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5838), [#5837 PL](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5837), [#5836 PK](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5836) and [#5834 PJ](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5834). |
+| Exact **tested source** SHA (distinct from squash SHA) | PN source `aa8ff026ef5c5dd730decffad0376f1f4295660d`; PN squash `32688fbe0e90b055b3c73ef142ef5f45ad3293f5`. PM squash `06a3434d9ebbadef8afcb38c618db64a49e0cafb`, PL squash `80511291006f5d581cf69b0a53f7b44db61d358c`. |
+| [PN exact-head CI #39944152228](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39944152228) | SUCCESS, **10901/10901** Lean, **6/6** public `#print axioms`, only `propext`/`Classical.choice`/`Quot.sound`, changed PN file warning/error **0/0**, no `sorryAx` or new axiom; MCP CI completion receipt SUCCESS. |
 | Pinned Lean | `leanprover/lean4:v4.30.0-rc2` (see `lean-toolchain`) |
 | Pinned mathlib | `5450b53e5ddc75d46418fabb605edbf36bd0beb6` (see `lake-manifest.json`) |
 | Live branch | [re-observe the current theorem branch](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit) |
 
 The checkpoint is deliberately **a dated theorem-bearing merge**, not a claim that the branch HEAD cannot advance when these documents or subsequent theorems merge. A documentation-only commit does **not** prove new mathematics. Order of evidence: **fresh authoritative HEAD → exact Lean declarations and their imports → CI at the exact source SHA and `#print axioms` → README/ROADMAP → historical discussions**. The repository's default `main` is **not** the theorem carrier.
+
+## 1A. New verified post-PC evidence (PD–PN)
+
+The new proofs use the original physical Wilson kernel and actual spatial product Haar reference only; they do **not** turn the two interacting posterior laws into independent Haar posteriors.
+
+| Stage | Proved in Lean 4 | Not proved by this stage |
+| --- | --- | --- |
+| PD–PE | Third Schur orthogonality, `‖R₂‖² = Δ₂ D₃`; genuine signed GI and finite Krylov GL mass implications under nonzero residual | `R₂ ≠ 0` unconditionally |
+| PF–PH | Continuous spatial representatives; `D₃ > 0 ↔` nonzero genuine 3-configuration determinant when `Δ₂>0` | Existence of the required spatial triple |
+| PI–PJ | Exact normalization scaling; original one-slab and **two-slab literal double-Haar complete Wilson kernel**; positive third Hankel iff nonzero literal 3-point minor under rank-two gate | A nonzero original literal minor |
+| PK–PM | Complete original two-slab action `S(X,A)+S(A,B)`, spatial-Wilson-weighted Haar Ward identity, mixed second action-moment affine relation, **formal cubic minor coefficient identically zero** | Degree-two *formal jets* are not automatically full Taylor jets of the actual integral |
+| PN #5839 | Pinned mathlib exponential `n=3` bound; actual complete one/two-slab kernel residuals are `O(t³)` with the finite-volume original budget and true literal double-Haar remainder bound | Equality of integrated polynomial coefficients with PK moments, actual minor `O(t⁴)`, nonzero quartic/higher witness |
+
+The explicit finite-volume remainder is
+
+```text
+Q(X,A,B) := S(X,A) + S(A,B) ≤ 2 M_H
+R_H(t,B) := ∫ dμ_H(A) ∫ dμ_H(X)
+              [K_t(A,B) K_t(X,A) - (1 - t Q + t² Q²/2)]
+‖R_H(t,B)‖ ≤ ‖2 t M_H‖³, when ‖2 t M_H‖ ≤ 1.
+```
+
+The bound is **finite-volume**, not H-uniform; it does not imply `U0`, an endpoint scale transport, or any continuum mass gap. To obtain the actual `O(t⁴)` 3-point determinant, next identify the literal integrated degree-two coefficients with PK/PM moment data, then transport the uniform cubic remainders through the pointwise determinant.
 
 ## 2. Actual model: do not conflate these objects
 
