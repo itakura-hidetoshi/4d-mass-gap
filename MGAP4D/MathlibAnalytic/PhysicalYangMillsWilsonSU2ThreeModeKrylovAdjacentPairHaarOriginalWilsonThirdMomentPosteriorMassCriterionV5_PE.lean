@@ -134,6 +134,8 @@ theorem p4Q2PE_actualAllFine_thirdMoment_postMass_zero_iff_detProduct_zero
     p4Q2PE_actualThirdMomentSource_eq_physicalSchur
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n
   rw [hSource] at hMass
+  change Mass (S 2 a) (Finset.univ : Finset Link) = 0 ↔ D2 * D3 = 0
+  rw [hSource]
   have hNorm : ‖R‖ ^ 2 = D2 * D3 :=
     p4Q2PD_originalWilsonThirdSchur_normSq_eq_twoDet_mul_threeGap
       Hn (beta (n + 1)) (hbeta (n + 1))
