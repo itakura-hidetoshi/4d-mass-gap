@@ -62,16 +62,23 @@ local notation "C2" => p4Q2PP_originalTwoSlabCubicTaylor H
 local notation "J1" => p4Q2PP2_originalOneSlabFormalTaylor3 H
 local notation "J2" => p4Q2PP2_originalTwoSlabFormalTaylor3 H
 
-private theorem p4Q2PP3_oneSlabAction_pair_continuous :
-    Continuous (fun p : Cfg × Cfg => S p.1 p.2) :=
-  p4Q2IW_originalWilsonOneSlabAction_continuous H
+private theorem p4Q2PP3_oneSlabAction_row_continuous (B : Cfg) :
+    Continuous (fun X : Cfg => S X B) := by
+  have hPair : Continuous (fun X : Cfg => (X, B)) :=
+    continuous_id.prodMk continuous_const
+  have h := (p4Q2IW_originalWilsonOneSlabAction_continuous H).comp hPair
+  simpa only [Function.comp_def] using h
 
 private theorem p4Q2PP3_twoSlabAction_pair_continuous (B : Cfg) :
     Continuous (fun p : Cfg × Cfg => Q p.1 p.2 B) := by
-  unfold p4Q2PK_originalTwoSlabAction
-  exact (p4Q2IW_originalWilsonOneSlabAction_continuous H).add
-    ((p4Q2IW_originalWilsonOneSlabAction_continuous H).comp
-      (continuous_snd.prodMk continuous_const))
+  have hSlab : Continuous (fun p : Cfg × Cfg => S p.1 p.2) :=
+    p4Q2IW_originalWilsonOneSlabAction_continuous H
+  have hRow : Continuous (fun A : Cfg => S A B) :=
+    p4Q2PP3_oneSlabAction_row_continuous H B
+  have hRight : Continuous (fun p : Cfg × Cfg => S p.2 B) :=
+    hRow.comp continuous_snd
+  change Continuous (fun p : Cfg × Cfg => S p.1 p.2 + S p.2 B)
+  exact hSlab.add hRight
 
 /-- Bochner evaluation gives continuity of the genuine spatial Haar
 integral in its remaining right-boundary configuration. -/
@@ -98,7 +105,7 @@ theorem p4Q2PP3_originalOneSlab_integratedCubic_eq_jet
   have hPair : Continuous (fun X : Cfg => (X, B)) :=
     continuous_id.prodMk continuous_const
   have hS : Continuous (fun X : Cfg => S X B) :=
-    (p4Q2PP3_oneSlabAction_pair_continuous H).comp hPair
+    p4Q2PP3_oneSlabAction_row_continuous H B
   have ht : Continuous (fun X : Cfg => beta * S X B) :=
     continuous_const.mul hS
   have hP1 : Continuous (fun X : Cfg => P1 beta X B) := by
@@ -146,7 +153,7 @@ theorem p4Q2PP3_originalOneSlabHaarRow_cubicJet_quarticRemainder_le
   have hPair : Continuous (fun X : Cfg => (X, B)) :=
     continuous_id.prodMk continuous_const
   have hS : Continuous (fun X : Cfg => S X B) :=
-    (p4Q2PP3_oneSlabAction_pair_continuous H).comp hPair
+    p4Q2PP3_oneSlabAction_row_continuous H B
   have hK : Continuous (fun X : Cfg => K beta X B) :=
     (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
       H 2 beta).comp hPair
@@ -273,11 +280,17 @@ theorem p4Q2PP3_originalTwoSlabHaarRow_cubicJet_quarticRemainder_le
       ((ht.pow 3).div_const 6)
   have hK : Continuous (fun p : Cfg × Cfg =>
       K beta p.2 B * K beta p.1 p.2) := by
-    have hLeft := periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
-      H 2 beta
-    have hRight : Continuous (fun p : Cfg × Cfg => K beta p.2 B) :=
-      hLeft.comp (continuous_snd.prodMk continuous_const)
-    exact hRight.mul hLeft
+    have hPair : Continuous (fun A : Cfg => (A, B)) :=
+      continuous_id.prodMk continuous_const
+    have hKrow : Continuous (fun A : Cfg => K beta A B) := by
+      have h := (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous
+        H 2 beta).comp hPair
+      simpa only [Function.comp_def] using h
+    have hKright : Continuous (fun p : Cfg × Cfg => K beta p.2 B) :=
+      hKrow.comp continuous_snd
+    have hKpair : Continuous (fun p : Cfg × Cfg => K beta p.1 p.2) :=
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous H 2 beta
+    exact hKright.mul hKpair
   let fK : C(Cfg × Cfg, ℝ) :=
     ⟨(fun p => K beta p.2 B * K beta p.1 p.2), hK⟩
   let fC : C(Cfg × Cfg, ℝ) :=
