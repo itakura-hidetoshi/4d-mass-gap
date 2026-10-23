@@ -24,7 +24,7 @@ continuous Haar-L2 representative ψ of f. The pointwise step uses
 only the original compact spatial SU(2) Haar full support.
 
 Use these exact identities to identify PI's unnormalized two-step
-spatial determinant with an entirely LITERAL one-/two-slab Haar
+spatial determinant with an entirely LITERAL one- and two-slab Haar
 kernel determinant. In the original D2>0 physical interval:
   D3>0 iff EXISTS A,B,C with nonzero actual literal double-kernel minor.
 
@@ -276,7 +276,7 @@ theorem p4Q2PJ_originalRawThreePointMinor_eq_literalDoubleHaar
 
 /-- EXACT physical D3>0 is equivalent, on the already-proved physical
 D2>0 gate, to one truly NONZERO three-boundary determinant of the
-LITERAL unmodified Wilson one-/two-slab Haar kernels. Its existence
+LITERAL unmodified Wilson one- and two-slab Haar kernels. Its existence
 is still the genuine missing analytic configuration witness. -/
 theorem p4Q2PJ_originalThirdMoment_pos_iff_literalDoubleHaarMinor
     (hTwo : 0 < D2) :
