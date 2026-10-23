@@ -352,18 +352,15 @@ theorem p4Q2PS_originalQuarticWardResidual_rightStrip (B : Cfg) :
         (∫ A : Cfg, c A ∂haar) +
           3 * (∫ A : Cfg,
             (S A B) ^ 2 * h A - S A B * b A ∂haar) := by
-    have hCenterIntegral :
-        (∫ A : Cfg,
-          (S A B) ^ 2 * a A -
-            (S A B) ^ 2 * p4Q2PQ_originalFirstActionMean H ∂haar) =
-        (∫ A : Cfg, (S A B) ^ 2 * h A ∂haar) := by
-      apply integral_congr_ae
-      filter_upwards with A
-      unfold p4Q2PS_originalCenteredFirstMoment
-      ring
     rw [p4Q2PR_originalQuarticWardResidual_centeredCrossMoments H B]
+    change
+      (∫ A : Cfg, c A ∂haar) +
+        3 * (∫ A : Cfg, (S A B) ^ 2 * h A ∂haar) -
+        3 * (∫ A : Cfg, S A B * b A ∂haar) =
+      (∫ A : Cfg, c A ∂haar) +
+        3 * (∫ A : Cfg,
+          (S A B) ^ 2 * h A - S A B * b A ∂haar)
     rw [hSIntegral]
-    rw [hCenterIntegral]
     ring
   rw [hRightIntegral] at hPR
   convert hPR using 1 <;> dsimp [u] <;> ring
