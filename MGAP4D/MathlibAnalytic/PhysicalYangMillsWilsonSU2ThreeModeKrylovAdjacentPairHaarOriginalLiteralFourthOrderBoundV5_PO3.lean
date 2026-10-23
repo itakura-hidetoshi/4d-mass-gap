@@ -4,7 +4,7 @@ import Mathlib.Tactic
 /-!
 # P4-Q2-PO3 — fourth-order bound for the LITERAL original Wilson minor
 
-PO and PO2 identify both original one-/two-slab Haar-integrated
+PO and PO2 identify both original one- and two-slab Haar-integrated
 degree-two Taylor jets, each with a uniform cubic error. PM proves
 that the cubic determinant coefficient of those genuine moment jets
 vanishes for ALL original SU(2) configurations, by the spatial-Wilson
