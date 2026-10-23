@@ -53,8 +53,7 @@ The final order-six error product is controlled by 0 ≤ r ≤ 1. -/
 theorem p4Q2PO3_realMinor_fourthOrder_stability
     (r L E₁ E₂ Q : ℝ)
     (hr0 : 0 ≤ r) (hr1 : r ≤ 1)
-    (hL : 0 ≤ L) (hE₁ : 0 ≤ E₁) (hE₂ : 0 ≤ E₂)
-    (hQ : 0 ≤ Q)
+    (hE₁ : 0 ≤ E₁) (hE₂ : 0 ≤ E₂)
     (x y u v ex ey eu ev : ℝ)
     (hx : ‖x‖ ≤ r * L) (hy : ‖y‖ ≤ r * L)
     (hu : ‖u‖ ≤ r * L) (hv : ‖v‖ ≤ r * L)
@@ -259,7 +258,6 @@ theorem p4Q2PO3_originalLiteralWilsonMinor_fourthOrder
             ‖beta ^ 2 / 2‖ *
               ‖(b D - b A) + 2 * (d D - d A)‖ := by
         rw [norm_mul, norm_mul]
-        rfl
       _ ≤ r * ‖a D - a A‖ +
             r * ‖(b D - b A) + 2 * (d D - d A)‖ := by
         have h := mul_le_mul_of_nonneg_right hHalf
@@ -268,28 +266,58 @@ theorem p4Q2PO3_originalLiteralWilsonMinor_fourthOrder
       _ ≤ r * (‖a D - a A‖ + ‖b D - b A‖ +
             2 * ‖d D - d A‖) := by
         nlinarith [mul_le_mul_of_nonneg_left hSum hr0]
+  -- Explicit nonnegative additive slack avoids unfolding norm into abs
+  -- on only one side of a linarith comparison.
   have hLB₁ : ‖a B - a A‖ + ‖b B - b A‖ ≤ L := by
     have hExtra : 0 ≤ (1 : ℝ) + ‖a C - a A‖ + ‖b C - b A‖ +
         2 * (‖d B - d A‖ + ‖d C - d A‖) := by positivity
-    dsimp [L]
-    linarith
+    calc
+      ‖a B - a A‖ + ‖b B - b A‖ ≤
+          (‖a B - a A‖ + ‖b B - b A‖) +
+            ((1 : ℝ) + ‖a C - a A‖ + ‖b C - b A‖ +
+              2 * (‖d B - d A‖ + ‖d C - d A‖)) :=
+        le_add_of_nonneg_right hExtra
+      _ = L := by
+        dsimp only [L]
+        ring
   have hLC₁ : ‖a C - a A‖ + ‖b C - b A‖ ≤ L := by
     have hExtra : 0 ≤ (1 : ℝ) + ‖a B - a A‖ + ‖b B - b A‖ +
         2 * (‖d B - d A‖ + ‖d C - d A‖) := by positivity
-    dsimp [L]
-    linarith
+    calc
+      ‖a C - a A‖ + ‖b C - b A‖ ≤
+          (‖a C - a A‖ + ‖b C - b A‖) +
+            ((1 : ℝ) + ‖a B - a A‖ + ‖b B - b A‖ +
+              2 * (‖d B - d A‖ + ‖d C - d A‖)) :=
+        le_add_of_nonneg_right hExtra
+      _ = L := by
+        dsimp only [L]
+        ring
   have hLB₂ :
       ‖a B - a A‖ + ‖b B - b A‖ + 2 * ‖d B - d A‖ ≤ L := by
     have hExtra : 0 ≤ (1 : ℝ) + ‖a C - a A‖ + ‖b C - b A‖ +
         2 * ‖d C - d A‖ := by positivity
-    dsimp [L]
-    linarith
+    calc
+      ‖a B - a A‖ + ‖b B - b A‖ + 2 * ‖d B - d A‖ ≤
+          (‖a B - a A‖ + ‖b B - b A‖ + 2 * ‖d B - d A‖) +
+            ((1 : ℝ) + ‖a C - a A‖ + ‖b C - b A‖ +
+              2 * ‖d C - d A‖) :=
+        le_add_of_nonneg_right hExtra
+      _ = L := by
+        dsimp only [L]
+        ring
   have hLC₂ :
       ‖a C - a A‖ + ‖b C - b A‖ + 2 * ‖d C - d A‖ ≤ L := by
     have hExtra : 0 ≤ (1 : ℝ) + ‖a B - a A‖ + ‖b B - b A‖ +
         2 * ‖d B - d A‖ := by positivity
-    dsimp [L]
-    linarith
+    calc
+      ‖a C - a A‖ + ‖b C - b A‖ + 2 * ‖d C - d A‖ ≤
+          (‖a C - a A‖ + ‖b C - b A‖ + 2 * ‖d C - d A‖) +
+            ((1 : ℝ) + ‖a B - a A‖ + ‖b B - b A‖ +
+              2 * ‖d B - d A‖) :=
+        le_add_of_nonneg_right hExtra
+      _ = L := by
+        dsimp only [L]
+        ring
   have hJ1B :
       ‖J1 beta B - J1 beta A‖ ≤ r * L :=
     (hJ1 B).trans (mul_le_mul_of_nonneg_left hLB₁ hr0)
@@ -364,7 +392,7 @@ theorem p4Q2PO3_originalLiteralWilsonMinor_fourthOrder
   let ev := (G beta B - J2 beta B) - (G beta A - J2 beta A)
   have hQuant :=
     p4Q2PO3_realMinor_fourthOrder_stability
-      r L E₁ E₂ Q hr0 hBeta hL hE₁ hE₂ hQ
+      r L E₁ E₂ Q hr0 hBeta hE₁ hE₂
       x y u v ex ey eu ev
       hJ1B hJ1C hJ2C hJ2B
       (hErr1 B) (hErr1 C) (hErr2 C) (hErr2 B) hJetDet
