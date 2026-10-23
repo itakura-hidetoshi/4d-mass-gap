@@ -66,7 +66,6 @@ theorem p4Q2PN_realExp_quadraticRemainder_le (x : ℝ) (hx : ‖x‖ ≤ 1) :
       (∑ m ∈ Finset.range 3, x ^ m / (m.factorial : ℝ)) =
         1 + x + x ^ 2 / 2 := by
     norm_num [Finset.sum_range_succ, Finset.sum_range_zero]
-    <;> ring
   rw [hSeries] at h
   norm_num at h
   have hpow : 0 ≤ |x| ^ 3 := pow_nonneg (abs_nonneg x) _
@@ -174,7 +173,7 @@ theorem p4Q2PN_originalTwoSlabKernel_cubicRemainder_le
       _ ≤ ‖beta‖ * (2 * M) :=
         mul_le_mul_of_nonneg_left hQle (norm_nonneg _)
       _ = ‖beta * (2 * M)‖ := by
-        simp [Real.norm_eq_abs, abs_mul, abs_of_nonneg hM]
+        simp [Real.norm_eq_abs, abs_of_nonneg hM]
   have hExp :=
     p4Q2PN_realExp_quadraticRemainder_le
       (-(beta * Q X A B)) (le_trans hNorm hsmall)
