@@ -227,7 +227,9 @@ theorem p4Q2PK_originalTwoSlabKernelProduct_quadraticRemainder_le
       _ ≤ ‖t‖ * (2 * M) :=
         mul_le_mul_of_nonneg_left hS2le (norm_nonneg t)
       _ = ‖t * (2 * M)‖ := by
-        simp only [norm_mul, Real.norm_eq_abs, abs_of_nonneg hM]
+        rw [norm_mul]
+        simp only [Real.norm_eq_abs]
+        rw [abs_of_nonneg hM]
   have hExp := Real.norm_exp_sub_one_sub_id_le (le_trans hNorm hsmall)
   have hKernel :
       K t A B * K t X A - 1 + t * S2 =
