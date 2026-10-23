@@ -1,8 +1,8 @@
-# MGAP4D — 証明ロードマップ（P4-Q2-PC #5825統合済み／次はPD：真正Wilson第三モード解析）
+# MGAP4D — 証明ロードマップ（P4-Q2-PN #5839統合済み／次はPO：真正二段Haar Taylor係数同定）
 
-**2026-10-23 JST · 唯一のLean定理正本：`formal/real-hilbert-uniform-coercive-strong-limit` · 最新検証済み定理統合点：[`104e0008d5d7372bf45f226c51fe1a61dfc67805`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/104e0008d5d7372bf45f226c51fe1a61dfc67805)（[#5825 PC](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5825)）。PA #5823 squash `afd42dd8fea1f4e57a98f08d18c2bb7eec431448`、PB #5824 squash `c9e896755908e4504da8281a304ae6f82a544289`。文書のみのsquash SHAと定理正本SHAを混同しない。**
+**2026-10-23 JST · 唯一のLean定理正本：`formal/real-hilbert-uniform-coercive-strong-limit` · 最新検証済みsquash HEAD：[`32688fbe0e90b055b3c73ef142ef5f45ad3293f5`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/32688fbe0e90b055b3c73ef142ef5f45ad3293f5)（[#5839 PN](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5839)）。**
 
-**到達状況：** 元の二相互作用Wilson posterior・Gauss-law物理Hilbert・Perron半密度・frozen/fine couplingを保持。ONで小正fineの真正深さ1物理二モード独立性、OO/OPで深さ2真Schur残差・核の形を構成。**OW #5817は全有限r・全非負fineで真正物理源核と全文脈GI受信器核が一致することを無条件証明**し、OX #5818で非零有限Krylov物理源の真正GL質量厳密正値性を得た。OY/OZで正fine転送の任意回反復で非零物理源が消滅しないことを確認。**PA #5823：** ONの共通小正fine区間で全シフトの真正2×2物理Gram正定値、det>0。**PB #5824：** 任意有限深さで真正Gauss-law物理Gram＝元のWilson正規化転送Hankelモーメント行列、PSD。**PC #5825：** 全kで同一区間の厳密不等式 `m_(2k)m_(2k+2)-m_(2k+1)^2>0`。**真の深さ2 Schur物理像非零・3×3 Hankel行列式正値・U,TU,T²U rank3・任意rのS_r単射・U0・endpoint・H1-C3・強極限・連続体質量ギャップはOPEN。**
+**最新到達：** 真正二相互作用Wilson posterior、Gauss-law物理Hilbert、Perron半密度、frozen/fine couplingを変更しない。OW・OXで元の有限Krylov源の全文脈kernel一致と非零源の真正GL質量正値性、PA–PCで小正fineのrank2/Hankel二次正値性を証明。PD–PEで第三Schur直交・ノルム恒等式、PF–PHで真の空間3配置minorと第三Hankel正値性の必要十分条件（`Δ₂>0`）、PI–PJで真正Wilson一・二段のHaar積分表示を確立。PK–PMで原Wilson局所ゲージWard恒等式から形式的二次Taylor jetの**三次minor係数が全配置でゼロ**と証明。PNで原Wilson一・二段核の三次余剰評価と真正二重Haar積分の同評価をLean証明。**積分済み元Wilson3配置行列式の `O(t⁴)`、その非零係数、`D₃>0`、三モードrank3、`S_r`単射、`U0`、endpoint `E`、H1–C3、強極限および4D連続体質量ギャップはOPEN。**
 
 **[プロジェクトの数学的定義・数式・再現手順 → README.md](README.md)**
 
@@ -12,10 +12,10 @@
 | --- | --- |
 | Repository | [itakura-hidetoshi/4d-mass-gap](https://github.com/itakura-hidetoshi/4d-mass-gap) |
 | 定理の唯一正本 | `formal/real-hilbert-uniform-coercive-strong-limit`（default `main`ではない） |
-| 最終検証済み**定理-bearing**マージ点 | `104e0008d5d7372bf45f226c51fe1a61dfc67805` — PC #5825（PB #5824：`c9e896755908e4504da8281a304ae6f82a544289`、PA #5823：`afd42dd8fea1f4e57a98f08d18c2bb7eec431448`） |
-| 検証**source HEAD**（squashと区別） | PC `dbbda38ceb987ebbd2c48f7cf79ce27b3e086a5e`（squash `104e0008...`）。PA・PBは前行のsquash統合SHA。 |
-| [PC exact-head #39869958440](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39869958440) | **SUCCESS・10889/10889**・PC変更ファイルwarning/error **0/0**。GitHub MCPから同一HEADのrun/jobログを再確認。独立した外部MCP completion receiptの追加成立は主張しない。 |
-| 公開`#print axioms` | PC **3/3**。橋渡し定理は標準3公理のみ。2つの正定値性・不等式定理にはPA系列由来の既存finite-lattice `native_decide` 公理5件を継承。`sorryAx`なし、新規公理なし。 |
+| 最終検証済み**定理-bearing**マージ点 | `32688fbe0e90b055b3c73ef142ef5f45ad3293f5` — PN #5839。PD–PMは後述の時系列表に整理（default `main`は定理正本ではない）。 |
+| 検証**source HEAD**（squashと区別） | PN `aa8ff026ef5c5dd730decffad0376f1f4295660d`、squash `32688fbe0e90b055b3c73ef142ef5f45ad3293f5`。 |
+| [PN exact-head #39944152228](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39944152228) | **SUCCESS・10901/10901**。変更PNファイルwarning/error **0/0**。GitHub MCPで同一HEAD CI・MCP completion receipt **SUCCESS** を確認。 |
+| 公開`#print axioms` | PN新規6/6：標準3公理のみ（`propext`、`Classical.choice`、`Quot.sound`）、`sorryAx`なし。既存の別系統finite-lattice `native_decide`依存は削除・隠蔽していない。 |
 | Lean / mathlib pin | `v4.30.0-rc2` / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
 | 現在のbranch HEAD | [毎回GitHubで再観測](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit) |
 
@@ -29,6 +29,29 @@
 - `k_{H,b,e,e',z,z'}=(Q_GI/N_H)/(10E_b²)`。**`Q_GI>0`が体積ごとに成立しても`inf_H k_H>0`は従わない。**
 
 `A_W`（非正規化の原Wilson Haar-reference）、`D₁₂`（正規化物理条件射影のDirichlet）、元のGI検出器、`p`ごとに変わる物理源のGram、fine-evolution/endpoint、連続体Hamiltonianは**異なる作用素・検証対象**。
+
+### P4-Q2-PD–PN：真正第三モードの新しい証明段階
+
+| 範囲 | CLOSED（Lean4で証明したこと） | OPEN（証明していないこと） |
+| --- | --- | --- |
+| PD–PE | `R₂ ⟂ U,TU`、`‖R₂‖²=Δ₂D₃`、真正GI/GL条件付き移送 | `R₂≠0` 無条件証明 |
+| PF–PH | 真正連続空間代表、`Δ₂>0` で `D₃>0 ↔ ∃A,B,C, minor≠0` | 具体的非零3配置 |
+| PI–PJ | 元の一段Haar核・二段完全Wilson二重Haar核と真正非正規化物理転送のpointwise一致、minorの正規化尺度 | 非零literal minor |
+| PK–PM | 原Wilson二段全空間作用の厳密分解、空間Wilson作用重み付きHaarゲージWard恒等式、混合モーメントのアフィン関係、**二次までの形式的jetの三次minor係数は恒等的に0** | 形式的jetを積分済み真のTaylor jetに同定すること |
+| PN #5839 | 固定mathlibの指数関数3次余剰、真正一・二段元Wilson核および二重Haar余剰の有限体積一様上界、10901/10901 GREEN | 真のminor `O(t⁴)`、四次以上の非零係数、rank3 |
+
+数学的な核は（ここで `M_H` は本来の一スラブWilson作用予算）：
+
+```text
+Q(X,A,B) = S(X,A) + S(A,B)
+         = W(X)/2 + W(A) + W(B)/2 + C(X,A) + C(A,B)
+0 ≤ Q ≤ 2 M_H
+
+|∫dμ_H(A)∫dμ_H(X) [exp(-tQ) - (1 - tQ + t²Q²/2)]|
+    ≤ ‖2tM_H‖³              (‖2tM_H‖≤1).
+```
+
+この境界は真の空間Haarを使う**有限体積での余剰制御**であり、真正二posteriorの独立性や体積一様性を主張しない。次のPOで一段・二段の積分済Taylor係数とPKの `a,b,d` をFubini/Bochnerで同定し、PMのWard退化と合わせて実際のliteral minor `O(t⁴)` を閉じる。その先は元のSU(2) Wilson模型の四次以上の具体的非零3配置witnessが必要で、これを仮定へ置き換えてはならない。
 
 ## 1. 証明ゲート一覧：CLOSEDの量化範囲を明示
 
