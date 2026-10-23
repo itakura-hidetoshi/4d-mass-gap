@@ -57,6 +57,38 @@ local instance p4Q2PD_borelSpace :
 
 namespace GroundStatePosteriorJoint
 
+/-- Real-Hilbert linearity used BEFORE substitution of original Wilson
+moments; explicit Mathlib proof prevents elaboration-time rewrite misses
+for composite Gauss-law subtype expressions. -/
+private theorem p4Q2PD_inner_left_three_smul_sub
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (x y z w : E) (a b c : ℝ) :
+    inner ℝ (a • x - b • y - c • z) w =
+      a * inner ℝ x w - b * inner ℝ y w - c * inner ℝ z w := by
+  calc
+    _ = inner ℝ (a • x - b • y) w - inner ℝ (c • z) w :=
+      inner_sub_left _ _ _
+    _ = (inner ℝ (a • x) w - inner ℝ (b • y) w) -
+        inner ℝ (c • z) w := by
+          rw [inner_sub_left]
+    _ = a * inner ℝ x w - b * inner ℝ y w - c * inner ℝ z w := by
+          simp only [real_inner_smul_left]
+
+/-- The companion right-linear three-term Hilbert identity. -/
+private theorem p4Q2PD_inner_right_three_smul_sub
+    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    (w x y z : E) (a b c : ℝ) :
+    inner ℝ w (a • x - b • y - c • z) =
+      a * inner ℝ w x - b * inner ℝ w y - c * inner ℝ w z := by
+  calc
+    _ = inner ℝ w (a • x - b • y) - inner ℝ w (c • z) :=
+      inner_sub_right _ _ _
+    _ = (inner ℝ w (a • x) - inner ℝ w (b • y)) -
+        inner ℝ w (c • z) := by
+          rw [inner_sub_right]
+    _ = a * inner ℝ w x - b * inner ℝ w y - c * inner ℝ w z := by
+          simp only [real_inner_smul_right]
+
 section TrueOriginalWilsonThirdMoment
 variable (H : ℕ) (t : ℝ) (ht : 0 ≤ t)
 local notation "Phys" =>
@@ -114,11 +146,20 @@ theorem p4Q2PD_originalWilsonThirdSchur_ortho_unit :
   have h10 : inner ℝ (Fine U) U = m 1 := by
     simpa using
       (p4Q2PB_originalWilsonPhysicalKrylov_inner_eq_moment H t ht 1 0)
-  unfold p4Q2PD_originalWilsonThirdSchurPhysical
-  rw [inner_sub_left, inner_sub_left]
-  simp only [real_inner_smul_left, h20, h00, h10,
-    p4Q2PD_originalWilsonTwoMomentDet]
-  ring
+  calc
+    inner ℝ (p4Q2PD_originalWilsonThirdSchurPhysical H t ht) U =
+      p4Q2PD_originalWilsonTwoMomentDet H t ht *
+        inner ℝ ((Fine ^ 2) U) U -
+      ((m 2) ^ 2 - m 1 * m 3) * inner ℝ U U -
+      (m 0 * m 3 - m 1 * m 2) * inner ℝ (Fine U) U := by
+        exact p4Q2PD_inner_left_three_smul_sub
+          ((Fine ^ 2) U) U (Fine U) U
+          (p4Q2PD_originalWilsonTwoMomentDet H t ht)
+          ((m 2) ^ 2 - m 1 * m 3) (m 0 * m 3 - m 1 * m 2)
+    _ = 0 := by
+      rw [h20, h00, h10]
+      simp only [p4Q2PD_originalWilsonTwoMomentDet]
+      ring
 
 /-- The true physical Schur source is orthogonal to T U as well. -/
 theorem p4Q2PD_originalWilsonThirdSchur_ortho_first :
@@ -132,11 +173,20 @@ theorem p4Q2PD_originalWilsonThirdSchur_ortho_first :
   have h11 : inner ℝ (Fine U) (Fine U) = m 2 := by
     simpa using
       (p4Q2PB_originalWilsonPhysicalKrylov_inner_eq_moment H t ht 1 1)
-  unfold p4Q2PD_originalWilsonThirdSchurPhysical
-  rw [inner_sub_left, inner_sub_left]
-  simp only [real_inner_smul_left, h21, h01, h11,
-    p4Q2PD_originalWilsonTwoMomentDet]
-  ring
+  calc
+    inner ℝ (p4Q2PD_originalWilsonThirdSchurPhysical H t ht) (Fine U) =
+      p4Q2PD_originalWilsonTwoMomentDet H t ht *
+        inner ℝ ((Fine ^ 2) U) (Fine U) -
+      ((m 2) ^ 2 - m 1 * m 3) * inner ℝ U (Fine U) -
+      (m 0 * m 3 - m 1 * m 2) * inner ℝ (Fine U) (Fine U) := by
+        exact p4Q2PD_inner_left_three_smul_sub
+          ((Fine ^ 2) U) U (Fine U) (Fine U)
+          (p4Q2PD_originalWilsonTwoMomentDet H t ht)
+          ((m 2) ^ 2 - m 1 * m 3) (m 0 * m 3 - m 1 * m 2)
+    _ = 0 := by
+      rw [h21, h01, h11]
+      simp only [p4Q2PD_originalWilsonTwoMomentDet]
+      ring
 
 /-- The remaining true physical Hilbert cross inner is EXACTLY the
 original three-moment Schur determinant, no rank premise. -/
@@ -153,11 +203,23 @@ theorem p4Q2PD_originalWilsonThirdSchur_inner_second_eq_gap :
   have h12 : inner ℝ (Fine U) ((Fine ^ 2) U) = m 3 := by
     simpa using
       (p4Q2PB_originalWilsonPhysicalKrylov_inner_eq_moment H t ht 1 2)
-  unfold p4Q2PD_originalWilsonThirdSchurPhysical
-  rw [inner_sub_left, inner_sub_left]
-  simp only [real_inner_smul_left, h22, h02, h12,
-    p4Q2PD_originalWilsonTwoMomentDet, p4Q2PD_originalWilsonThirdMomentGap]
-  ring
+  calc
+    inner ℝ (p4Q2PD_originalWilsonThirdSchurPhysical H t ht)
+        ((Fine ^ 2) U) =
+      p4Q2PD_originalWilsonTwoMomentDet H t ht *
+        inner ℝ ((Fine ^ 2) U) ((Fine ^ 2) U) -
+      ((m 2) ^ 2 - m 1 * m 3) * inner ℝ U ((Fine ^ 2) U) -
+      (m 0 * m 3 - m 1 * m 2) *
+        inner ℝ (Fine U) ((Fine ^ 2) U) := by
+        exact p4Q2PD_inner_left_three_smul_sub
+          ((Fine ^ 2) U) U (Fine U) ((Fine ^ 2) U)
+          (p4Q2PD_originalWilsonTwoMomentDet H t ht)
+          ((m 2) ^ 2 - m 1 * m 3) (m 0 * m 3 - m 1 * m 2)
+    _ = p4Q2PD_originalWilsonThirdMomentGap H t ht := by
+      rw [h22, h02, h12]
+      simp only [p4Q2PD_originalWilsonTwoMomentDet,
+        p4Q2PD_originalWilsonThirdMomentGap]
+      ring
 
 /-- Exact authentic Gauss-law Hilbert identity: the NORM-SQUARED
 of the actual third Wilson innovation equals the 2x2 physical
@@ -184,8 +246,14 @@ theorem p4Q2PD_originalWilsonThirdSchur_normSq_eq_twoDet_mul_threeGap :
     _ = inner ℝ r (delta • ((Fine ^ 2) U) - a • U - b • (Fine U)) := by
       rw [← hr]
     _ = delta * inner ℝ r ((Fine ^ 2) U) := by
-      rw [inner_sub_right, inner_sub_right]
-      simp only [real_inner_smul_right, h0, h1, mul_zero, sub_zero]
+      calc
+        inner ℝ r (delta • ((Fine ^ 2) U) - a • U - b • (Fine U)) =
+          delta * inner ℝ r ((Fine ^ 2) U) -
+            a * inner ℝ r U - b * inner ℝ r (Fine U) := by
+              exact p4Q2PD_inner_right_three_smul_sub
+                r ((Fine ^ 2) U) U (Fine U) delta a b
+        _ = delta * inner ℝ r ((Fine ^ 2) U) := by
+              simp only [h0, h1, mul_zero, sub_zero]
     _ = delta * p4Q2PD_originalWilsonThirdMomentGap H t ht := by
       rw [h2]
 
