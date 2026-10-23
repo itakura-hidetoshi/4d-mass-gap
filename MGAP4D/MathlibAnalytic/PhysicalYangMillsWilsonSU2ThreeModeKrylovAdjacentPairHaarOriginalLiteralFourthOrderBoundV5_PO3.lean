@@ -214,10 +214,10 @@ theorem p4Q2PO3_originalLiteralWilsonMinor_fourthOrder
         r ^ 2 = r * r := by ring
         _ ≤ r * 1 := mul_le_mul_of_nonneg_left hBeta hr0
         _ = r := by ring
-    rw [norm_div, norm_pow]
-    norm_num
-    dsimp [r] at *
-    nlinarith [norm_nonneg beta]
+    calc
+      ‖beta ^ 2 / 2‖ = r ^ 2 / 2 := by
+        simp [r, norm_div, norm_pow]
+      _ ≤ r := by linarith [hr2, hr0]
   have hJ1 (D : Cfg) :
       ‖J1 beta D - J1 beta A‖ ≤
         r * (‖a D - a A‖ + ‖b D - b A‖) := by
@@ -230,11 +230,11 @@ theorem p4Q2PO3_originalLiteralWilsonMinor_fourthOrder
       _ = r * ‖a D - a A‖ +
             ‖beta ^ 2 / 2‖ * ‖b D - b A‖ := by
         rw [norm_mul, norm_mul]
-        rfl
       _ ≤ r * ‖a D - a A‖ +
             r * ‖b D - b A‖ := by
-        exact add_le_add_left
-          (mul_le_mul_of_nonneg_right hHalf (norm_nonneg _)) _
+        have h := mul_le_mul_of_nonneg_right hHalf
+          (norm_nonneg (b D - b A))
+        linarith
       _ = r * (‖a D - a A‖ + ‖b D - b A‖) := by ring
   have hJ2 (D : Cfg) :
       ‖J2 beta D - J2 beta A‖ ≤
@@ -262,29 +262,34 @@ theorem p4Q2PO3_originalLiteralWilsonMinor_fourthOrder
         rfl
       _ ≤ r * ‖a D - a A‖ +
             r * ‖(b D - b A) + 2 * (d D - d A)‖ := by
-        exact add_le_add_left
-          (mul_le_mul_of_nonneg_right hHalf (norm_nonneg _)) _
+        have h := mul_le_mul_of_nonneg_right hHalf
+          (norm_nonneg ((b D - b A) + 2 * (d D - d A)))
+        linarith
       _ ≤ r * (‖a D - a A‖ + ‖b D - b A‖ +
             2 * ‖d D - d A‖) := by
         nlinarith [mul_le_mul_of_nonneg_left hSum hr0]
   have hLB₁ : ‖a B - a A‖ + ‖b B - b A‖ ≤ L := by
+    have hExtra : 0 ≤ (1 : ℝ) + ‖a C - a A‖ + ‖b C - b A‖ +
+        2 * (‖d B - d A‖ + ‖d C - d A‖) := by positivity
     dsimp [L]
-    nlinarith [norm_nonneg (a C - a A), norm_nonneg (b C - b A),
-      norm_nonneg (d B - d A), norm_nonneg (d C - d A)]
+    linarith
   have hLC₁ : ‖a C - a A‖ + ‖b C - b A‖ ≤ L := by
+    have hExtra : 0 ≤ (1 : ℝ) + ‖a B - a A‖ + ‖b B - b A‖ +
+        2 * (‖d B - d A‖ + ‖d C - d A‖) := by positivity
     dsimp [L]
-    nlinarith [norm_nonneg (a B - a A), norm_nonneg (b B - b A),
-      norm_nonneg (d B - d A), norm_nonneg (d C - d A)]
+    linarith
   have hLB₂ :
       ‖a B - a A‖ + ‖b B - b A‖ + 2 * ‖d B - d A‖ ≤ L := by
+    have hExtra : 0 ≤ (1 : ℝ) + ‖a C - a A‖ + ‖b C - b A‖ +
+        2 * ‖d C - d A‖ := by positivity
     dsimp [L]
-    nlinarith [norm_nonneg (a C - a A), norm_nonneg (b C - b A),
-      norm_nonneg (d C - d A)]
+    linarith
   have hLC₂ :
       ‖a C - a A‖ + ‖b C - b A‖ + 2 * ‖d C - d A‖ ≤ L := by
+    have hExtra : 0 ≤ (1 : ℝ) + ‖a B - a A‖ + ‖b B - b A‖ +
+        2 * ‖d B - d A‖ := by positivity
     dsimp [L]
-    nlinarith [norm_nonneg (a B - a A), norm_nonneg (b B - b A),
-      norm_nonneg (d B - d A)]
+    linarith
   have hJ1B :
       ‖J1 beta B - J1 beta A‖ ≤ r * L :=
     (hJ1 B).trans (mul_le_mul_of_nonneg_left hLB₁ hr0)
@@ -311,9 +316,12 @@ theorem p4Q2PO3_originalLiteralWilsonMinor_fourthOrder
           (p4Q2PO_originalOneSlabHaarRow_eqFormal_cubicRemainder
             H beta hSmallOne A)
       _ = r ^ 3 * E₁ := by
-        dsimp [r, E₁]
-        rw [norm_mul, mul_pow]
-        ring
+        calc
+          ‖beta * M‖ ^ 3 + ‖beta * M‖ ^ 3 =
+              2 * (‖beta‖ ^ 3 * ‖M‖ ^ 3) := by
+            rw [norm_mul]
+            ring
+          _ = r ^ 3 * E₁ := by dsimp [r, E₁]; ring
   have hErr2 (D : Cfg) :
       ‖(G beta D - J2 beta D) - (G beta A - J2 beta A)‖ ≤
         r ^ 3 * E₂ := by
@@ -328,9 +336,12 @@ theorem p4Q2PO3_originalLiteralWilsonMinor_fourthOrder
           (p4Q2PO2_originalTwoSlabHaarRow_eqFormal_cubicRemainder
             H beta hSmall A)
       _ = r ^ 3 * E₂ := by
-        dsimp [r, E₂]
-        rw [norm_mul, mul_pow]
-        ring
+        calc
+          ‖beta * (2 * M)‖ ^ 3 + ‖beta * (2 * M)‖ ^ 3 =
+              2 * (‖beta‖ ^ 3 * ‖2 * M‖ ^ 3) := by
+            rw [norm_mul]
+            ring
+          _ = r ^ 3 * E₂ := by dsimp [r, E₂]; ring
   have hJetDet :
       ‖(J1 beta B - J1 beta A) * (J2 beta C - J2 beta A) -
         (J1 beta C - J1 beta A) * (J2 beta B - J2 beta A)‖ ≤
@@ -343,7 +354,6 @@ theorem p4Q2PO3_originalLiteralWilsonMinor_fourthOrder
       dsimp [R]
       ring
     rw [hFac, norm_mul, norm_pow]
-    exact le_rfl
   let x := J1 beta B - J1 beta A
   let y := J1 beta C - J1 beta A
   let u := J2 beta C - J2 beta A
@@ -365,8 +375,10 @@ theorem p4Q2PO3_originalLiteralWilsonMinor_fourthOrder
       p4Q2PJ_originalWilsonLiteralThreeSpatialMinor]
     ring
   rw [hLiteral] at hQuant
-  dsimp [C₀]
-  convert hQuant using 1 <;> ring
+  calc
+    ‖p4Q2PJ_originalWilsonLiteralThreeSpatialMinor H beta A B C‖ ≤
+        r ^ 4 * (Q + 2 * E₁ * L + 2 * E₂ * L + 2 * E₁ * E₂) := hQuant
+    _ = C₀ * ‖beta‖ ^ 4 := by dsimp [C₀, r]; ring
 
 end OriginalLiteralMinorOrderFour
 end GroundStatePosteriorJoint
