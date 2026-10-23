@@ -224,9 +224,30 @@ theorem p4Q2PR_originalTwoSlabThirdHaar_split (B : Cfg) :
           3 * (∫ A : Cfg, S A B * b A ∂haar) +
           3 * (∫ A : Cfg, (S A B) ^ 2 * a A ∂haar) +
           c B := by
-      rw [integral_sub (hLeft.add hRight) hCube]
-      rw [integral_add hLeft hRight]
-      rw [integral_sub hc (hFirst.const_mul 3)]
+      have hSplit :
+          (∫ A : Cfg,
+            c A - 3 * (S A B * b A) +
+              3 * ((S A B) ^ 2 * a A) - (S A B) ^ 3 ∂haar) =
+          (∫ A : Cfg,
+            c A - 3 * (S A B * b A) +
+              3 * ((S A B) ^ 2 * a A) ∂haar) -
+          (∫ A : Cfg, (S A B) ^ 3 ∂haar) := by
+        simpa only [Pi.sub_apply, Pi.add_apply] using
+          (integral_sub (hLeft.add hRight) hCube)
+      have hPlus :
+          (∫ A : Cfg,
+            c A - 3 * (S A B * b A) +
+              3 * ((S A B) ^ 2 * a A) ∂haar) =
+          (∫ A : Cfg, c A - 3 * (S A B * b A) ∂haar) +
+          (∫ A : Cfg, 3 * ((S A B) ^ 2 * a A) ∂haar) := by
+        simpa only [Pi.add_apply] using (integral_add hLeft hRight)
+      have hMinus :
+          (∫ A : Cfg, c A - 3 * (S A B * b A) ∂haar) =
+          (∫ A : Cfg, c A ∂haar) -
+          (∫ A : Cfg, 3 * (S A B * b A) ∂haar) := by
+        simpa only [Pi.sub_apply] using
+          (integral_sub hc (hFirst.const_mul 3))
+      rw [hSplit, hPlus, hMinus]
       simp only [integral_const_mul]
       unfold p4Q2PP2_originalOneSlabThirdActionMoment
       ring
