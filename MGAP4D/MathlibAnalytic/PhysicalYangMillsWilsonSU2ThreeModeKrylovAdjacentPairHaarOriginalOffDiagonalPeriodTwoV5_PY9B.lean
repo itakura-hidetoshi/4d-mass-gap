@@ -38,6 +38,25 @@ local notation "e1" => p4Q2PU3_originalPlaquetteEdge1
 local notation "e2" => p4Q2PU3_originalPlaquetteEdge2
 local notation "e3" => p4Q2PU3_originalPlaquetteEdge3
 
+/-- Explicit constructive enumeration of the original time-zero vertices.
+Avoid the noncomputable Finite.toFintype fallback in `native_decide`. -/
+local instance p4Q2PY9B_periodTwoVertexFintype :
+    Fintype (PeriodicHypercubicEvenVertex 0) := inferInstance
+
+local instance p4Q2PY9B_periodTwoSpatialVertexFintype :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex 0) :=
+  Subtype.fintype (periodicHypercubicEvenOnPrimaryReflectionPlane 0)
+
+local instance p4Q2PY9B_periodTwoSpatialDirectionFintype :
+    Fintype PeriodicHypercubicEvenSpatialDirection :=
+  Subtype.fintype (fun mu : PeriodicHypercubicAxis => mu ≠ 0)
+
+local instance p4Q2PY9B_periodTwoDirectionPairFintype :
+    Fintype PeriodicHypercubicEvenSpatialDirectionPair :=
+  Subtype.fintype (fun pair :
+      PeriodicHypercubicEvenSpatialDirection ×
+        PeriodicHypercubicEvenSpatialDirection => pair.1.1 < pair.2.1)
+
 local instance p4Q2PY9B_periodTwoPlaquetteFintype : Fintype Plaq0 :=
   instFintypeProd (PeriodicHypercubicEvenSpatialSliceVertex 0)
     PeriodicHypercubicEvenSpatialDirectionPair
