@@ -94,7 +94,6 @@ theorem p4Q2PY8_originalPlaquetteSquare_fullCrossingSquareHaar_invariant
       (∫ A : Cfg, (χ p A)^2 *
         (Cross A (fun _ => 1))^2 ∂haar) := by
   classical
-  let T : Cfg → Link → ℝ := fun D e => 0
   have hExpand (D : Cfg) :
       (∫ A : Cfg, (χ p A)^2 * (Cross A D)^2 ∂haar) =
       ∑ e : Link, ∑ f : Link,
