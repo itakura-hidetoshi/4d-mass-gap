@@ -60,9 +60,7 @@ theorem p4Q2PY9_originalPlaquettePhysicalEdges_card (p : Plaq) :
   obtain ⟨h30, h31, h32⟩ :=
     p4Q2PU3_originalPlaquette_last_distinct H p
   simp [p4Q2PY9_originalPlaquettePhysicalEdges,
-    h01, h02, h12, h30, h31, h32,
-    Ne.symm h01, Ne.symm h02, Ne.symm h12,
-    Ne.symm h30, Ne.symm h31, Ne.symm h32]
+    h01, h02, h12, Ne.symm h30, Ne.symm h31, Ne.symm h32]
 
 /-- Every member of the original four-link support is a genuinely
 incident physical link in the FOUR-DIMENSIONAL coordinate plaquette. -/
