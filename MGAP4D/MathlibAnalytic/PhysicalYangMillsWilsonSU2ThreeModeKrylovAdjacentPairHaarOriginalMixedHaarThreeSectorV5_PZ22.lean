@@ -145,12 +145,12 @@ theorem p4Q2PZ22_originalMixedScalar_threeHighSector
         P3 x y*c^3) +
         5*α*c^4) +
       ((70*x^3*c^2 + 30*x^2*c^3) + 5*x*c^4) := by
-  unfold p4Q2PZ22_originalMixedScalarPolynomial
-    p4Q2PZ22_originalM1 p4Q2PZ22_originalM2
-    p4Q2PZ22_originalM3 p4Q2PZ22_originalM4
-    p4Q2PZ22_originalSelectedCrossingOne
-    p4Q2PZ22_originalSelectedCrossingTwo
-    p4Q2PZ22_originalSelectedCrossingThree
+  simp only [p4Q2PZ22_originalMixedScalarPolynomial,
+    p4Q2PZ22_originalSelectedCrossingOne,
+    p4Q2PZ22_originalSelectedCrossingTwo,
+    p4Q2PZ22_originalSelectedCrossingThree,
+    p4Q2PZ22_originalM1, p4Q2PZ22_originalM2,
+    p4Q2PZ22_originalM3, p4Q2PZ22_originalM4]
   ring
 
 /-- Every moment input is from the real original one-slab SU(2)
@@ -276,10 +276,13 @@ theorem p4Q2PZ22_originalThreeHighHaar_exact
       (fun A : Cfg => 5*w A*(Cross A B)^4) haar :=
     ((continuous_const.mul hw).mul (hc.pow 4)).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
-  unfold p4Q2PZ22_originalThreeHighIntegrand
-    p4Q2PZ22_originalSpatialCubeCrossingSquareHaar
-    p4Q2PZ22_originalSpatialSquareCrossingCubeHaar
-    p4Q2PZ22_originalSpatialCrossingFourthHaar
+  change (∫ A : Cfg,
+      (70*(w A)^3*(Cross A B)^2 +
+        30*(w A)^2*(Cross A B)^3) +
+        5*w A*(Cross A B)^4 ∂haar) =
+      70*(∫ A : Cfg, (w A)^3*(Cross A B)^2 ∂haar) +
+        30*(∫ A : Cfg, (w A)^2*(Cross A B)^3 ∂haar) +
+        5*(∫ A : Cfg, w A*(Cross A B)^4 ∂haar)
   rw [integral_add (h1.add h2) h3, integral_add h1 h2]
   simp only [integral_const_mul]
 
@@ -307,6 +310,7 @@ theorem p4Q2PZ22_originalMixedPotential_threeHighHaar
       rfl
     _ = Vlo B + 70*F32 B + 30*F23 B + 5*F14 B := by
       rw [p4Q2PZ22_originalThreeHighHaar_exact H B]
+      ring
 
 /-- The fully genuine sixth Ward obstruction now has exactly three
 unselected higher-weight original SU(2) crossing sectors in its
