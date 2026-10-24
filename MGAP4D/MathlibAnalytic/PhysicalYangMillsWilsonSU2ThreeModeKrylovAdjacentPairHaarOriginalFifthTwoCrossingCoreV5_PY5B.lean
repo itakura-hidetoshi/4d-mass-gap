@@ -347,7 +347,7 @@ theorem p4Q2PY5_originalFifthWardResidual_twoCrossingReduced
       12 * (w B)^2 * (∫ A : Cfg, h A * Cross A (fun _ => 1) ∂haar) -
       6 * (∫ A : Cfg, x3 A ∂haar) -
       2 * s * b B
-  convert hR' using 1 <;> ring
+  convert hR' using 1; ring
 
 end GenuineFifthTwoCrossingCore
 end GroundStatePosteriorJoint
