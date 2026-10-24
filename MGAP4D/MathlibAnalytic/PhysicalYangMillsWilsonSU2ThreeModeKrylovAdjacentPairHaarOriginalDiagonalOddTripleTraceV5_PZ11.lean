@@ -91,7 +91,7 @@ theorem p4Q2PZ11_centerEven_originalThreeTemporalTracesHaar_zero
     · simp only [if_neg htd]
       dsimp [T]
       rw [p4Q2PU2_originalCrossingEnergy_unchanged_at_other
-        H target d htd.symm A B]
+        H target d (Ne.symm htd) A B]
   have hIndex : ∃ target : Link,
       (target = e ∧ target ≠ f ∧ target ≠ g) ∨
       (target = f ∧ target ≠ e ∧ target ≠ g) ∨
@@ -100,11 +100,11 @@ theorem p4Q2PZ11_centerEven_originalThreeTemporalTracesHaar_zero
     by_cases hef : e = f
     · by_cases heg : e = g
       · exact ⟨e, Or.inr (Or.inr (Or.inr ⟨rfl, hef, heg⟩))⟩
-      · refine ⟨g, Or.inr (Or.inr (Or.inl ⟨rfl, heg.symm, ?_⟩))⟩
+      · refine ⟨g, Or.inr (Or.inr (Or.inl ⟨rfl, Ne.symm heg, ?_⟩))⟩
         intro hgf
         exact heg (hef.trans hgf.symm)
     · by_cases heg : e = g
-      · refine ⟨f, Or.inr (Or.inl ⟨rfl, hef.symm, ?_⟩)⟩
+      · refine ⟨f, Or.inr (Or.inl ⟨rfl, Ne.symm hef, ?_⟩)⟩
         intro hfg
         exact hef (heg.trans hfg.symm)
       · exact ⟨e, Or.inl ⟨rfl, hef, heg⟩⟩
@@ -121,24 +121,20 @@ theorem p4Q2PZ11_centerEven_originalThreeTemporalTracesHaar_zero
     rcases hIndex with h | h | h | h
     · obtain ⟨ht, htf, htg⟩ := h
       subst target
-      simp only [if_pos rfl, if_neg htf, if_neg htg]
-      ring
+      simp [htf, htg] <;> ring
     · obtain ⟨ht, hte, htg⟩ := h
       subst target
-      simp only [if_pos rfl, if_neg hte, if_neg htg]
-      ring
+      simp [hte, htg] <;> ring
     · obtain ⟨ht, hte, htf⟩ := h
       subst target
-      simp only [if_pos rfl, if_neg hte, if_neg htf]
-      ring
+      simp [hte, htf] <;> ring
     · obtain ⟨ht, htf, htg⟩ := h
       have hef : e = f := ht.symm.trans htf
       have heg : e = g := ht.symm.trans htg
       subst target
       subst f
       subst g
-      simp only [if_pos rfl]
-      ring
+      simp <;> ring
   change (∫ A : Cfg, obs A ∂haar) = 0
   exact p4Q2PU_originalCenterFlip_Haar_odd_integral_zero
     H target obs hObs hOdd
