@@ -316,7 +316,7 @@ theorem p4Q2PZ7_originalLiteralWilsonMinor_sixthCoefficient
       _ = r ^ 6 * E₁ := by
         calc
           ‖beta * M‖ ^ 6 + ‖beta * M‖ ^ 6 =
-              2 * (‖beta‖ ^ 7 * ‖M‖ ^ 6) := by
+              2 * (‖beta‖ ^ 6 * ‖M‖ ^ 6) := by
             rw [norm_mul]
             ring
           _ = r ^ 6 * E₁ := by dsimp [r, E₁]; ring
@@ -336,7 +336,7 @@ theorem p4Q2PZ7_originalLiteralWilsonMinor_sixthCoefficient
       _ = r ^ 6 * E₂ := by
         calc
           ‖beta * (2 * M)‖ ^ 6 + ‖beta * (2 * M)‖ ^ 6 =
-              2 * (‖beta‖ ^ 7 * ‖2 * M‖ ^ 6) := by
+              2 * (‖beta‖ ^ 6 * ‖2 * M‖ ^ 6) := by
             rw [norm_mul]
             ring
           _ = r ^ 6 * E₂ := by dsimp [r, E₂]; ring
