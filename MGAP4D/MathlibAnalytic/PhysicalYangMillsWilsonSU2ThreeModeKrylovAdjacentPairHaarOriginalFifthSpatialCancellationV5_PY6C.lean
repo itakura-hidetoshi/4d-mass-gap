@@ -91,8 +91,11 @@ theorem p4Q2PY6_originalCenteredMixedHaar_atIdentity_split :
     rw [hEq]
     exact continuous_const.mul
       (p4Q2PW2_originalAllPlaquetteRealTrace_continuous H)
-  have hc : Continuous (fun A : Cfg => Cross A I) :=
-    p4Q2PY6B_cross_continuous H I
+  have hc : Continuous (fun A : Cfg => Cross A I) := by
+    have hPair : Continuous (fun A : Cfg => (A, I)) :=
+      continuous_id.prodMk continuous_const
+    have hCont := (p4Q2IW_originalWilsonCrossingAction_continuous H).comp hPair
+    simpa only [Function.comp_def] using hCont
   have hiW : Integrable (fun A : Cfg => w A * h A) haar :=
     (hw.mul hh).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
