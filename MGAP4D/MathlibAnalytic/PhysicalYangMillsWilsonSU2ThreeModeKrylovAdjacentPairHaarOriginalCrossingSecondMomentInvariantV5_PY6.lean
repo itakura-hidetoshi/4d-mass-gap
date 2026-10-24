@@ -101,9 +101,9 @@ independent by the already proved gauge Ward symmetry of W. -/
 theorem p4Q2PY6_originalHalfSpatial_crossingHaar_invariant (B : Cfg) :
     (∫ A : Cfg, w A * Cross A B ∂haar) =
       (∫ A : Cfg, w A * Cross A (fun _ => 1) ∂haar) := by
-  have h :=
+  have hWard :=
     p4Q2PL_originalSpatialWilson_weightedCrossingHaar_invariant H B
-  have hScaled := congrArg (fun x : ℝ => (1 / 2 : ℝ) * x) h
+  have hScaled := congrArg (fun x : ℝ => (1 / 2 : ℝ) * x) hWard
   simpa only [p4Q2PS_originalHalfSpatialAction, ← mul_assoc,
     integral_const_mul] using hScaled
 
