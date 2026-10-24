@@ -104,7 +104,7 @@ theorem p4Q2PY6_originalHalfSpatial_crossingHaar_invariant (B : Cfg) :
   have hWard :=
     p4Q2PL_originalSpatialWilson_weightedCrossingHaar_invariant H B
   have hScaled := congrArg (fun x : ℝ => (1 / 2 : ℝ) * x) hWard
-  simpa only [p4Q2PS_originalHalfSpatialAction, ← mul_assoc,
+  simpa only [p4Q2PS_originalHalfSpatialAction, mul_assoc,
     integral_const_mul] using hScaled
 
 /-- The original centered first Wilson action is exactly the
