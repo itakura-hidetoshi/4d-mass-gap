@@ -165,7 +165,6 @@ theorem p4Q2PY8_originalPlaquetteSquare_fullCrossingSquareHaar_invariant
         (∫ A : Cfg, (χ p A)^2 *
           (E ((A e)⁻¹ * D e) * E ((A f)⁻¹ * D f)) ∂haar) := by
         rw [hSums]
-        rfl
   calc
     (∫ A : Cfg, (χ p A)^2 * (Cross A B)^2 ∂haar) =
       ∑ e : Link, ∑ f : Link,
