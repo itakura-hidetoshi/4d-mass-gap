@@ -283,8 +283,40 @@ theorem p4Q2PZ22_originalThreeHighHaar_exact
       70*(∫ A : Cfg, (w A)^3*(Cross A B)^2 ∂haar) +
         30*(∫ A : Cfg, (w A)^2*(Cross A B)^3 ∂haar) +
         5*(∫ A : Cfg, w A*(Cross A B)^4 ∂haar)
-  rw [integral_add (h1.add h2) h3, integral_add h1 h2]
-  simp only [integral_const_mul]
+  have hAdd12 :
+      (∫ A : Cfg,
+        70*(w A)^3*(Cross A B)^2 +
+          30*(w A)^2*(Cross A B)^3 ∂haar) =
+      (∫ A : Cfg, 70*(w A)^3*(Cross A B)^2 ∂haar) +
+        (∫ A : Cfg, 30*(w A)^2*(Cross A B)^3 ∂haar) := by
+    simpa only [Pi.add_apply] using (integral_add h1 h2)
+  have hAdd123 :
+      (∫ A : Cfg,
+        (70*(w A)^3*(Cross A B)^2 +
+          30*(w A)^2*(Cross A B)^3) +
+          5*w A*(Cross A B)^4 ∂haar) =
+      (∫ A : Cfg,
+        70*(w A)^3*(Cross A B)^2 +
+          30*(w A)^2*(Cross A B)^3 ∂haar) +
+        (∫ A : Cfg, 5*w A*(Cross A B)^4 ∂haar) := by
+    simpa only [Pi.add_apply] using (integral_add (h1.add h2) h3)
+  calc
+    (∫ A : Cfg,
+      (70*(w A)^3*(Cross A B)^2 +
+        30*(w A)^2*(Cross A B)^3) +
+        5*w A*(Cross A B)^4 ∂haar) =
+        (∫ A : Cfg,
+          70*(w A)^3*(Cross A B)^2 +
+            30*(w A)^2*(Cross A B)^3 ∂haar) +
+          (∫ A : Cfg, 5*w A*(Cross A B)^4 ∂haar) := hAdd123
+    _ = (∫ A : Cfg, 70*(w A)^3*(Cross A B)^2 ∂haar) +
+          (∫ A : Cfg, 30*(w A)^2*(Cross A B)^3 ∂haar) +
+          (∫ A : Cfg, 5*w A*(Cross A B)^4 ∂haar) := by
+            rw [hAdd12]
+    _ = 70*(∫ A : Cfg, (w A)^3*(Cross A B)^2 ∂haar) +
+          30*(∫ A : Cfg, (w A)^2*(Cross A B)^3 ∂haar) +
+          5*(∫ A : Cfg, w A*(Cross A B)^4 ∂haar) := by
+            simp only [integral_const_mul]
 
 /-- PZ21's original mixed potential consists EXACTLY of the
 explicit selected lower-Ward Haar integral plus THREE true Wilson
