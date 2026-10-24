@@ -56,6 +56,10 @@ local instance p4Q2PZ19_productProbability (H : ℕ) :
       (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) := by
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
+local instance p4Q2PZ19_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  instFintypeProd (PeriodicHypercubicEvenSpatialSliceVertex H)
+    PeriodicHypercubicEvenSpatialDirection
 
 namespace GroundStatePosteriorJoint
 section GenuineCubicHaarSelection
@@ -145,8 +149,7 @@ private theorem p4Q2PZ19_integral_cube_of_two
       3*(∫ X : Cfg, f X*(g X)^2 ∂haar) +
       (∫ X : Cfg, (g X)^3 ∂haar) := by
         rw [hadd3, hadd2, hadd1]
-        simp only [integral_const_mul]
-        ring
+        simp only [integral_const_mul] <;> ring
 
 /-- EXACT original right-stripped cubic Haar decomposition with
 spatial Wilson w(X) and all true temporal crossings retained. -/
