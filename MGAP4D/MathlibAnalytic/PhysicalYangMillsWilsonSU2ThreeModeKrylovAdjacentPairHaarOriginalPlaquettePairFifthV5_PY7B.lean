@@ -104,8 +104,8 @@ theorem p4Q2PY7_originalPlaquetteTraceSquare_crossingHaar_pairSum
   have hEach (p q : Plaq) :
       Integrable (fun A : Cfg =>
         (χ p A * χ q A) * (Cross A B)^2) haar :=
-    (((hChi p).mul (hChi q)).mul (hCross.pow 2))
-      .integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    (((hChi p).mul (hChi q)).mul (hCross.pow 2)).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
   have hInner (p : Plaq) : Continuous (fun A : Cfg =>
         ∑ q : Plaq, (χ p A * χ q A) * (Cross A B)^2) := by
     apply continuous_finset_sum
