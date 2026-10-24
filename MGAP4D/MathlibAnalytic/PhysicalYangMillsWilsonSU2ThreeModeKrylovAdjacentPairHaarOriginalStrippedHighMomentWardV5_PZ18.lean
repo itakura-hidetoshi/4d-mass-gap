@@ -194,7 +194,7 @@ theorem p4Q2PZ18_originalCompleteFirst_eq_halfPlusAlpha (A : Cfg) :
       rw [p4Q2PS_originalOneSlabAction_rightSplit H X A]
       simp only [pow_one]
     _ = (∫ X : Cfg, L X A ∂haar) + w A := by
-      simpa only [Pi.add_apply] using
+      simpa only [Pi.add_apply, integral_const] using
         (integral_add hiL (integrable_const (w A)))
     _ = w A + α := by
       rw [show (∫ X : Cfg, L X A ∂haar) = μ 1 A from by
@@ -385,8 +385,7 @@ theorem p4Q2PZ18_originalConditionalTower_lowPlusHigh
     p4Q2PZ18_originalHighStrippedFourthKernel
   dsimp only
   rw [p4Q2PZ18_originalCompleteFourth_strippedExpansion H A,
-    p4Q2PZ18_originalCompleteThird_strippedExpansion H A,
-    p4Q2PZ18_originalStrippedSecond_eq_theta H A]
+    p4Q2PZ18_originalCompleteThird_strippedExpansion H A]
   rw [p4Q2PZ17_originalSecondMoment_quadratic H A,
     p4Q2PZ18_originalCompleteFirst_eq_halfPlusAlpha H A]
   ring
