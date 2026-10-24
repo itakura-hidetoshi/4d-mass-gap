@@ -189,7 +189,6 @@ theorem p4Q2PY5_originalPureSpatialFifthProfile_quadratic
           (w B)^2 * (∫ A : Cfg, φ2 A ∂haar) -
             (4 * (w B)^3) * (∫ A : Cfg, h A ∂haar) := by
       rw [hSub, hAdd012, hAdd01]
-      ring
     _ = _ := by
       rw [p4Q2PS_originalCenteredFirst_HaarMean_zero H]
       ring
