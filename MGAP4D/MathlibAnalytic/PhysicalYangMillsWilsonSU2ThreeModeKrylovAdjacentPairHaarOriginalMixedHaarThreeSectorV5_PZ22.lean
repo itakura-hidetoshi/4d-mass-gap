@@ -316,7 +316,7 @@ theorem p4Q2PZ22_originalThreeHighHaar_exact
     _ = 70*(∫ A : Cfg, (w A)^3*(Cross A B)^2 ∂haar) +
           30*(∫ A : Cfg, (w A)^2*(Cross A B)^3 ∂haar) +
           5*(∫ A : Cfg, w A*(Cross A B)^4 ∂haar) := by
-            simp only [integral_const_mul]
+            simp only [mul_assoc, integral_const_mul]
 
 /-- PZ21's original mixed potential consists EXACTLY of the
 explicit selected lower-Ward Haar integral plus THREE true Wilson
