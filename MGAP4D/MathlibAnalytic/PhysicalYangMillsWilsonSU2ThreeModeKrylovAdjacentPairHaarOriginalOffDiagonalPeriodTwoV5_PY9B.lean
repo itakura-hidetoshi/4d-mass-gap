@@ -43,6 +43,10 @@ Avoid the noncomputable Finite.toFintype fallback in `native_decide`. -/
 local instance p4Q2PY9B_periodTwoVertexFintype :
     Fintype (PeriodicHypercubicEvenVertex 0) := inferInstance
 
+local instance p4Q2PY9B_periodTwoPrimaryDecidable :
+    DecidablePred (periodicHypercubicEvenOnPrimaryReflectionPlane 0) :=
+  fun v => (inferInstance : Decidable (v 0 = 0))
+
 local instance p4Q2PY9B_periodTwoSpatialVertexFintype :
     Fintype (PeriodicHypercubicEvenSpatialSliceVertex 0) :=
   Subtype.fintype (periodicHypercubicEvenOnPrimaryReflectionPlane 0)
