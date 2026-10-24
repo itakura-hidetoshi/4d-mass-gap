@@ -70,10 +70,10 @@ theorem p4Q2PW_originalCrossing_eq_finsetSum (A B : Cfg) :
   classical
   unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction
     periodicHypercubicEvenSpatialSliceLinkList
-  simpa using
-    (Finset.sum_map_toList
+  exact
+    Finset.sum_map_toList
       (Finset.univ : Finset Link)
-      (fun e : Link => E ((A e)⁻¹ * B e)))
+      (fun e : Link => E ((A e)⁻¹ * B e))
 
 /-- A single original SU(2) spatial plaquette normalized trace
 has exactly zero Haar mean, by the actual one-link center symmetry. -/
