@@ -73,7 +73,7 @@ theorem p4Q2PW_originalCrossing_eq_finsetSum (A B : Cfg) :
   simpa using
     (Finset.sum_toList
       (s := (Finset.univ : Finset Link))
-      (f := fun e : Link => E ((A e)⁻¹ * B e))).symm
+      (fun e : Link => E ((A e)⁻¹ * B e))).symm
 
 /-- A single original SU(2) spatial plaquette normalized trace
 has exactly zero Haar mean, by the actual one-link center symmetry. -/
