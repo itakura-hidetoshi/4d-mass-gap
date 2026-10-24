@@ -149,7 +149,7 @@ private theorem p4Q2PZ19_integral_cube_of_two
       3*(∫ X : Cfg, f X*(g X)^2 ∂haar) +
       (∫ X : Cfg, (g X)^3 ∂haar) := by
         rw [hadd3, hadd2, hadd1]
-        simp only [integral_const_mul] <;> ring
+        simp only [integral_const_mul]
 
 /-- EXACT original right-stripped cubic Haar decomposition with
 spatial Wilson w(X) and all true temporal crossings retained. -/
