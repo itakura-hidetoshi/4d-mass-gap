@@ -197,19 +197,51 @@ theorem p4Q2PZ12_originalPlaquetteSquare_threeCrossingLinkHaar_invariant
         (∫ X : Cfg, t2 D e f X ∂haar) +
         (∫ X : Cfg, t2 D e g X ∂haar) +
         (∫ X : Cfg, t2 D f g X ∂haar) := by
-    change (∫ X : Cfg,
-      (t2 D e f X + t2 D e g X) + t2 D f g X ∂haar) = _
-    rw [integral_add ((hi2 D e f).add (hi2 D e g)) (hi2 D f g)]
-    rw [integral_add (hi2 D e f) (hi2 D e g)]
+    have hadd₂ :
+        (∫ X : Cfg, t2 D e f X + t2 D e g X ∂haar) =
+          (∫ X : Cfg, t2 D e f X ∂haar) +
+          (∫ X : Cfg, t2 D e g X ∂haar) := by
+      simpa only [Pi.add_apply] using
+        (integral_add (hi2 D e f) (hi2 D e g))
+    have hadd₃ :
+        (∫ X : Cfg,
+          (t2 D e f X + t2 D e g X) + t2 D f g X ∂haar) =
+          (∫ X : Cfg, t2 D e f X + t2 D e g X ∂haar) +
+          (∫ X : Cfg, t2 D f g X ∂haar) := by
+      simpa only [Pi.add_apply] using
+        (integral_add ((hi2 D e f).add (hi2 D e g)) (hi2 D f g))
+    calc
+      (∫ X : Cfg, pairs D X ∂haar) =
+        (∫ X : Cfg,
+          (t2 D e f X + t2 D e g X) + t2 D f g X ∂haar) := rfl
+      _ = (∫ X : Cfg, t2 D e f X + t2 D e g X ∂haar) +
+          (∫ X : Cfg, t2 D f g X ∂haar) := hadd₃
+      _ = _ := by rw [hadd₂]
   have hSingleInt (D : Cfg) :
       (∫ X : Cfg, singles D X ∂haar) =
         (∫ X : Cfg, t1 D e X ∂haar) +
         (∫ X : Cfg, t1 D f X ∂haar) +
         (∫ X : Cfg, t1 D g X ∂haar) := by
-    change (∫ X : Cfg,
-      (t1 D e X + t1 D f X) + t1 D g X ∂haar) = _
-    rw [integral_add ((hi1 D e).add (hi1 D f)) (hi1 D g)]
-    rw [integral_add (hi1 D e) (hi1 D f)]
+    have hadd₂ :
+        (∫ X : Cfg, t1 D e X + t1 D f X ∂haar) =
+          (∫ X : Cfg, t1 D e X ∂haar) +
+          (∫ X : Cfg, t1 D f X ∂haar) := by
+      simpa only [Pi.add_apply] using
+        (integral_add (hi1 D e) (hi1 D f))
+    have hadd₃ :
+        (∫ X : Cfg,
+          (t1 D e X + t1 D f X) + t1 D g X ∂haar) =
+          (∫ X : Cfg, t1 D e X + t1 D f X ∂haar) +
+          (∫ X : Cfg, t1 D g X ∂haar) := by
+      simpa only [Pi.add_apply] using
+        (integral_add ((hi1 D e).add (hi1 D f)) (hi1 D g))
+    calc
+      (∫ X : Cfg, singles D X ∂haar) =
+        (∫ X : Cfg,
+          (t1 D e X + t1 D f X) + t1 D g X ∂haar) := rfl
+      _ = (∫ X : Cfg, t1 D e X + t1 D f X ∂haar) +
+          (∫ X : Cfg, t1 D g X ∂haar) := hadd₃
+      _ = _ := by rw [hadd₂]
   have hRedInt (D : Cfg) :
       (∫ X : Cfg, reduced D X ∂haar) =
         ((∫ X : Cfg, t2 D e f X ∂haar) +
