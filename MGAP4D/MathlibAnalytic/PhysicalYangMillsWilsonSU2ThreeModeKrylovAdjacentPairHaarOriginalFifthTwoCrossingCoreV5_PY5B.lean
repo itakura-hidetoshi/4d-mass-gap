@@ -282,7 +282,15 @@ theorem p4Q2PY5_originalFifthWardResidual_twoCrossingReduced
       6 * (∫ A : Cfg, (S A B)^2 * b A ∂haar) -
       4 * (∫ A : Cfg, poly A ∂haar) -
       2 * s * b B at hR
-  rw [← hOriginalIntegral, hCollapse, hx0, hx1, hx2, hZero] at hR
+  have hR' :
+      R5 B = (∫ A : Cfg, u A ∂haar) +
+        (∫ A : Cfg,
+          -4 * (S A B * c A) +
+            6 * ((S A B)^2 * b A) - 4 * poly A ∂haar) -
+        2 * s * b B := by
+    rw [hOriginalIntegral]
+    linear_combination hR
+  rw [hCollapse, hx0, hx1, hx2, hZero] at hR'
   change
     R5 B = (∫ A : Cfg, u A ∂haar) +
       (∫ A : Cfg, p A ∂haar) -
@@ -291,7 +299,7 @@ theorem p4Q2PY5_originalFifthWardResidual_twoCrossingReduced
       12 * (w B)^2 * (∫ A : Cfg, h A * Cross A (fun _ => 1) ∂haar) -
       6 * (∫ A : Cfg, x3 A ∂haar) -
       2 * s * b B
-  convert hR using 1 <;> dsimp [P, V2, p, z, x3] <;> ring
+  convert hR' using 1 <;> dsimp [P, V2, p, z, x3] <;> ring
 
 end GenuineFifthTwoCrossingCore
 end GroundStatePosteriorJoint
