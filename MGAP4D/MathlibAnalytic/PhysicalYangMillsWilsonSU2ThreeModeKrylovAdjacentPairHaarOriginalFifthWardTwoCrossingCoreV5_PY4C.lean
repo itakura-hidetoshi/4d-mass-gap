@@ -148,8 +148,8 @@ theorem p4Q2PY4_originalCenteredCubicAction_noThreeCrossing
       ((w A + w B) ^ 3 +
         3 * (w A + w B) ^ 2 * Cross A B +
         3 * (w A + w B) * (Cross A B) ^ 2) * h A ∂haar) := by
-      rw [hZero]
-      rfl
+      dsimp only [z]
+      rw [hZero, add_zero]
 
 /-- Complete ORIGINAL fifth SU(2) Wilson Haar Ward residual after
 the actual triple-crossing Haar selection rule: its centered S^3
