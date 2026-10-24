@@ -252,7 +252,6 @@ private theorem p4Q2PZ18_integral_shift_cube
       3*t^2*(∫ X : Cfg, f X ∂haar) + t^3 := by
         rw [hadd3, hadd2, hadd1]
         simp [integral_const_mul]
-        ring
 
 /-- Haar binomial shift at degree four, valid in the actual compact
 SU(2) configuration space, with no posterior factorization. -/
@@ -316,8 +315,9 @@ private theorem p4Q2PZ18_integral_shift_fourth
       4*t*(∫ X : Cfg, (f X)^3 ∂haar) +
       6*t^2*(∫ X : Cfg, (f X)^2 ∂haar) +
       4*t^3*(∫ X : Cfg, f X ∂haar) + t^4 := by
-        rw [hadd4, hadd3, hadd2, hadd1]
-        simp only [integral_const_mul, integral_const]
+        have hConst : (∫ X : Cfg, t^4 ∂haar) = t^4 := by simp
+        rw [hadd4, hadd3, hadd2, hadd1, hConst]
+        simp only [integral_const_mul]
         ring
 
 /-- The authentic THIRD Haar moment contains only one genuinely
@@ -339,7 +339,7 @@ theorem p4Q2PZ18_originalCompleteThird_strippedExpansion (A : Cfg) :
   have h1 : (∫ X : Cfg, L X A ∂haar) = α := by
     simpa only [p4Q2PZ18_originalStrippedHaarMoment, pow_one] using
       (p4Q2PZ18_originalStrippedFirst_eq_alpha H A)
-  simp only [p4Q2PZ18_originalStrippedHaarMoment, pow_one]
+  simp only [p4Q2PZ18_originalStrippedHaarMoment]
   rw [h2, h1]
   ring
 
@@ -363,7 +363,7 @@ theorem p4Q2PZ18_originalCompleteFourth_strippedExpansion (A : Cfg) :
   have h1 : (∫ X : Cfg, L X A ∂haar) = α := by
     simpa only [p4Q2PZ18_originalStrippedHaarMoment, pow_one] using
       (p4Q2PZ18_originalStrippedFirst_eq_alpha H A)
-  simp only [p4Q2PZ18_originalStrippedHaarMoment, pow_one]
+  simp only [p4Q2PZ18_originalStrippedHaarMoment]
   rw [h2, h1]
   ring
 
