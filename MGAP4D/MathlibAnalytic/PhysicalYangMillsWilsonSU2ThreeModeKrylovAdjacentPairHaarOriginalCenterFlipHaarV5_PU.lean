@@ -112,7 +112,7 @@ theorem p4Q2PU_originalCenterFlip_Haar_measurePreserving (target : Link) :
     have hf : ∀ e, AEMeasurable (f e) μ :=
       fun e =>
         (p4Q2PU_originalCenterFlip_coordinate_measurePreserving H target e).measurable.aemeasurable
-    letI : ∀ e, SigmaFinite (μ.map (f e)) := fun e => by
+    letI : ∀ e, SigmaFinite (Measure.map (f e) μ) := fun e => by
       rw [(p4Q2PU_originalCenterFlip_coordinate_measurePreserving H target e).map_eq]
       infer_instance
     rw [show Flip target = (fun A e => f e (A e)) by rfl]
@@ -153,7 +153,7 @@ theorem p4Q2PU_originalCenterFlip_Haar_odd_integral_zero
           apply integral_congr_ae
           filter_upwards with A
           exact hOdd A
-      _ = -(∫ A : Cfg, f A ∂haar) := integral_neg
+      _ = -(∫ A : Cfg, f A ∂haar) := by rw [integral_neg]
   linarith
 
 end OriginalSpatialCenterFlip
