@@ -137,6 +137,8 @@ theorem p4Q2PX2_originalOneSlabKernel_quinticRemainder_le
     ring
   rw [periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_eq_boltzmann,
     hPolynomial]
+  have hSign : -beta * S X B = -(beta * S X B) := by ring
+  rw [hSign]
   exact hExp.trans (pow_le_pow_left₀ (norm_nonneg _) hNorm 5)
 
 /-- Fifth-order remainder for the fully interacting original SU(2)
