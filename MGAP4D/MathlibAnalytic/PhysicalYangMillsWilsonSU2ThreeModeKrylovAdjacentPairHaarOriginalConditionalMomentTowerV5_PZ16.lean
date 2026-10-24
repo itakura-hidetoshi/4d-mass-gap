@@ -167,7 +167,7 @@ private theorem p4Q2PZ16_integral_fourthPolynomial
     simpa only [Pi.add_apply] using
       (integral_add (((hi4.add hi3).add hi2).add hi1) hi0)
   rw [hadd4, hadd3, hadd2, hadd1]
-  simp
+  simp [integral_const_mul]
 
 /-- Exact original left-slab conditional moment expansion of the
 fourth-degree polarization of the unchanged two-slab Wilson action.
