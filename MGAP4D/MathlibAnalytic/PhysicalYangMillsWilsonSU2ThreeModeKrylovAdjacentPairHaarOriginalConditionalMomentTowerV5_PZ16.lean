@@ -142,10 +142,31 @@ private theorem p4Q2PZ16_integral_fourthPolynomial
     (continuous_const.mul hf).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
   have hi0 : Integrable (fun _ : Cfg => c0) haar := integrable_const c0
-  rw [integral_add (((hi4.add hi3).add hi2).add hi1) hi0,
-    integral_add ((hi4.add hi3).add hi2) hi1,
-    integral_add (hi4.add hi3) hi2,
-    integral_add hi4 hi3]
+  have hadd1 :
+      (∫ X : Cfg, c4*(f X)^4 + c3*(f X)^3 ∂haar) =
+        (∫ X : Cfg, c4*(f X)^4 ∂haar) +
+          (∫ X : Cfg, c3*(f X)^3 ∂haar) := by
+    simpa only [Pi.add_apply] using (integral_add hi4 hi3)
+  have hadd2 :
+      (∫ X : Cfg, (c4*(f X)^4 + c3*(f X)^3) + c2*(f X)^2 ∂haar) =
+        (∫ X : Cfg, c4*(f X)^4 + c3*(f X)^3 ∂haar) +
+          (∫ X : Cfg, c2*(f X)^2 ∂haar) := by
+    simpa only [Pi.add_apply] using (integral_add (hi4.add hi3) hi2)
+  have hadd3 :
+      (∫ X : Cfg,
+        ((c4*(f X)^4 + c3*(f X)^3) + c2*(f X)^2) + c1*f X ∂haar) =
+        (∫ X : Cfg, (c4*(f X)^4 + c3*(f X)^3) + c2*(f X)^2 ∂haar) +
+          (∫ X : Cfg, c1*f X ∂haar) := by
+    simpa only [Pi.add_apply] using (integral_add ((hi4.add hi3).add hi2) hi1)
+  have hadd4 :
+      (∫ X : Cfg,
+        (((c4*(f X)^4 + c3*(f X)^3) + c2*(f X)^2) + c1*f X) + c0 ∂haar) =
+        (∫ X : Cfg,
+          ((c4*(f X)^4 + c3*(f X)^3) + c2*(f X)^2) + c1*f X ∂haar) +
+          (∫ X : Cfg, c0 ∂haar) := by
+    simpa only [Pi.add_apply] using
+      (integral_add (((hi4.add hi3).add hi2).add hi1) hi0)
+  rw [hadd4, hadd3, hadd2, hadd1]
   simp
 
 /-- Exact original left-slab conditional moment expansion of the
@@ -177,7 +198,9 @@ theorem p4Q2PZ16_originalLeftHaar_polarization_tower
             (fun X : Cfg => S X A) hSlab
             5 (10*(t+u)) (10*(t^2+t*u+u^2))
             (5*(t^3+t^2*u+t*u^2+u^3)) (P4 t u)
-    _ = K A t u := rfl
+    _ = K A t u := by
+      simp only [p4Q2PZ16_originalConditionalFourthTower,
+        p4Q2PZ16_originalLeftSlabMoment, pow_one]
 
 /-- Genuine right-boundary double Haar response, with full spatial
 Wilson contribution at the intermediate slice A in every M_k(A). -/
