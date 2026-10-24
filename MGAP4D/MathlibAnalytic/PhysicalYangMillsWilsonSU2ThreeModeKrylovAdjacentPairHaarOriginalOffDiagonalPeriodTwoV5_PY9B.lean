@@ -73,7 +73,7 @@ private theorem p4Q2PY9B_periodTwo_discrete_two_shared :
     ∀ p q : Plaq0, p ≠ q →
       (({e0 0 p, e1 0 p, e2 0 p, e3 0 p} : Finset Link0) ∩
         ({e0 0 q, e1 0 q, e2 0 q, e3 0 q} : Finset Link0)).card ≤ 2 := by
-  native_decide
+  decide
 
 /-- Actual period-two pair support bound, connected to PY9A's
 original four-link definition, not an independent graph proxy. -/
