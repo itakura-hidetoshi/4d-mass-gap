@@ -173,7 +173,7 @@ theorem p4Q2PY6_originalSecondActionMoment_quadratic (B : Cfg) :
       (∫ A : Cfg, (q A)^2 + (2 * w B) * q A ∂haar) +
         (w B)^2 := by
     have h := integral_add hiqPlus (integrable_const ((w B)^2))
-    simpa only [Pi.add_apply] using h
+    simpa [Pi.add_apply] using h
   calc
     b B = (∫ A : Cfg, (S A B)^2 ∂haar) := rfl
     _ = (∫ A : Cfg,
