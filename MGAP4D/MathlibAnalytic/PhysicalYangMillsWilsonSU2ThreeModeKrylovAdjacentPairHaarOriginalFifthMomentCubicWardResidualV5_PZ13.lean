@@ -83,15 +83,15 @@ private theorem p4Q2PZ13_cross_continuous (B : Cfg) :
     Continuous (fun X : Cfg => Cross X B) := by
   have hPair : Continuous (fun X : Cfg => (X, B)) :=
     continuous_id.prodMk continuous_const
-  have h := (p4Q2IW_originalWilsonCrossingAction_continuous H).comp hPair
-  simpa only [Function.comp_def] using h
+  have hCont := (p4Q2IW_originalWilsonCrossingAction_continuous H).comp hPair
+  simpa only [Function.comp_def] using hCont
 
 private theorem p4Q2PZ13_slab_continuous (B : Cfg) :
     Continuous (fun X : Cfg => S X B) := by
   have hPair : Continuous (fun X : Cfg => (X, B)) :=
     continuous_id.prodMk continuous_const
-  have h := (p4Q2IW_originalWilsonOneSlabAction_continuous H).comp hPair
-  simpa only [Function.comp_def] using h
+  have hCont := (p4Q2IW_originalWilsonOneSlabAction_continuous H).comp hPair
+  simpa only [Function.comp_def] using hCont
 
 /-- The ACTUAL centered squared Wilson / complete cubic crossing
 Haar moment, already proved boundary-invariant in PZ12. -/
@@ -140,7 +140,7 @@ private theorem p4Q2PZ13_oneSlabResidual_continuous (B : Cfg) :
           (S X B)^5 - 10 * ((h X)^2 * (Cross X B)^3)) := by
     funext X
     have hp := p4Q2PZ13_originalOneSlabFifth_split H X B
-    linear_combination hp
+    linear_combination -hp
   rw [heq]
   exact (p4Q2PZ13_slab_continuous H B).pow 5 |>.sub
     (continuous_const.mul
