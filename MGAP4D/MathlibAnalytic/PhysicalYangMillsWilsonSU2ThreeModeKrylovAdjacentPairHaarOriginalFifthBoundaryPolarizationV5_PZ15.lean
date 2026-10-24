@@ -96,6 +96,7 @@ theorem p4Q2PZ15_originalOneSlabAction_boundaryDifference (X B C : Cfg) :
     S X B - S X C = (w B - w C) + (Cross X B - Cross X C) := by
   rw [p4Q2PS_originalOneSlabAction_rightSplit H X B,
     p4Q2PS_originalOneSlabAction_rightSplit H X C]
+  change (w X + Cross X B + w B) - (w X + Cross X C + w C) = _
   ring
 
 /-- The original middle spatial plaquette action cancels ONLY
@@ -107,6 +108,8 @@ theorem p4Q2PZ15_originalTwoSlabAction_boundaryDifference
   change (S X A + S A B) - (S X A + S A C) = _
   rw [p4Q2PS_originalOneSlabAction_rightSplit H A B,
     p4Q2PS_originalOneSlabAction_rightSplit H A C]
+  change (S X A + (w A + Cross A B + w B)) -
+    (S X A + (w A + Cross A C + w C)) = _
   ring
 
 /-- Exact boundary factor for the fifth power of the FULL interacting
@@ -308,8 +311,10 @@ end MathlibAnalytic
 end MGAP4D
 
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ15_originalFifthPower_polarization
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ15_originalOneSlabAction_boundaryDifference
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ15_originalTwoSlabAction_boundaryDifference
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ15_originalTwoSlabFifth_boundaryFactor
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ15_originalOneSlabFifth_boundaryFactor
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ15_originalOneSlabFifth_difference_response
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ15_originalTwoSlabFifth_difference_response
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ15_originalResidualGap_boundaryResponse
