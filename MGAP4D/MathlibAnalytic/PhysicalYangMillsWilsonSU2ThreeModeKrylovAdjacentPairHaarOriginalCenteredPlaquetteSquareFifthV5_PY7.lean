@@ -163,7 +163,7 @@ theorem p4Q2PY7_originalSpatialSquareCrossing_eq_centered
       rw [hSub, hAdd]
     _ = m^2 * (∫ A : Cfg, (Cross A B)^2 ∂haar) + G B := by
       rw [hZero]
-      dsimp only [G, p4Q2PY7_originalCenteredSquareTwoCrossingHaar]
+      dsimp only [p4Q2PY7_originalCenteredSquareTwoCrossingHaar]
       ring
 
 /-- The centered square is exactly a quarter of the squared sum of
