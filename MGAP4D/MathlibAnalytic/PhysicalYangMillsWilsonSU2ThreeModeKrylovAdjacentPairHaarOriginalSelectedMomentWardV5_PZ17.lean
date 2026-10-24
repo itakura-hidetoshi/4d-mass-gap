@@ -12,7 +12,7 @@ The genuine spatial Haar/temporal-crossing Ward results already proved
 in PY6 and PY6B reduce M1 to a monic affine polynomial in the actual
 spatial Wilson half-action w(A), and M2 to a monic quadratic polynomial
 in w(A). M3 and M4 remain the TRUE higher original one-slab action
-moments c(A), u(A); no presumed gauge cancellation is added.
+moments -c(A), u(A), with odd Taylor signs correctly retained; no presumed gauge cancellation is added.
 
 The PZ12 genuine cubic-crossing Haar selection, used in PZ13–PZ16,
 continues to remove only right-boundary-invariant sectors. The resulting
@@ -97,8 +97,11 @@ theorem p4Q2PZ17_originalSecondMoment_eq_actionSecond (A : Cfg) :
     M 2 A = b A := rfl
 
 theorem p4Q2PZ17_originalThirdFourthMoments_eq_actionMoments (A : Cfg) :
-    M 3 A = c A ∧ M 4 A = u4 A := by
-  constructor <;> rfl
+    M 3 A = -(c A) ∧ M 4 A = u4 A := by
+  constructor
+  · simp only [p4Q2PZ16_originalLeftSlabMoment,
+      p4Q2PP2_originalOneSlabThirdActionMoment, neg_neg]
+  · rfl
 
 /-- True first conditional Haar moment has precisely the right spatial
 Wilson boundary difference; all left plaquettes and the original
@@ -144,11 +147,11 @@ theorem p4Q2PZ17_originalCenteredCubicHaar_boundaryInvariant
     p4Q2PZ13_originalCenteredCubicHaar_invariant H C]
 
 /-- PZ16's true conditional Haar tower after the SU(2) selections:
-M1 is affine, M2 quadratic, while M3=c and M4=u4 remain authentic
+M1 is affine, M2 quadratic, while M3=-c and M4=u4 remain authentic
 genuine higher Wilson action Haar moments at the SAME middle slice. -/
 noncomputable def p4Q2PZ17_originalHaarSelectedFourthTower
     (A : Cfg) (t u : ℝ) : ℝ :=
-  ((((5 * u4 A + 10 * (t+u) * c A) +
+  ((((5 * u4 A - 10 * (t+u) * c A) +
       10 * (t^2+t*u+u^2) * ((w A)^2+2*α*w A+θ)) +
       5 * (t^3+t^2*u+t*u^2+u^3) * (w A+κ)) + P4 t u)
 
@@ -159,9 +162,11 @@ theorem p4Q2PZ17_originalConditionalTower_eq_selected
     K A t u = Ksel A t u := by
   unfold p4Q2PZ16_originalConditionalFourthTower
     p4Q2PZ17_originalHaarSelectedFourthTower
-  rw [p4Q2PZ17_originalSecondMoment_quadratic H A,
+  rw [(p4Q2PZ17_originalThirdFourthMoments_eq_actionMoments H A).1,
+    (p4Q2PZ17_originalThirdFourthMoments_eq_actionMoments H A).2,
+    p4Q2PZ17_originalSecondMoment_quadratic H A,
     p4Q2PZ17_originalFirstMoment_affine H A]
-  rfl
+  ring
 
 /-- Genuine two-slab response, still integrated against the actual
 intermediate SU(2) spatial Haar with its Wilson spatial action. -/
