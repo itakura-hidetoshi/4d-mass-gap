@@ -231,6 +231,28 @@ theorem p4Q2PZ1_originalFifthMomentJetMinor_afterUniversalWard
     p4Q2PY9_originalFifthFourthJetCoefficient_zero_allPeriods H A B C]
   ring
 
+/-- Exact genuine sixth-order Ward obstruction in four original
+moment determinants. The integer weights 20, 15, 15 and 6 are
+the factorial normalization obtained from the ORIGINAL action
+moments, not a replacement spectral polynomial. This is an
+algebraic identity, NOT a nonzero witness or an analytic claim,
+and the complete two-slab Wilson fifth moment is retained. -/
+theorem p4Q2PZ1_originalSixthFifthJetCoefficient_fourDeterminants
+    (A B C : Cfg) :
+    720 * D6 A B C =
+      20 * ((c B - c A) * (g C - g A) -
+        (c C - c A) * (g B - g A)) +
+      15 * ((b B - b A) * (v C - v A) -
+        (b C - b A) * (v B - v A)) +
+      15 * ((u B - u A) * ((b C - b A) + 2 * (d C - d A)) -
+        (u C - u A) * ((b B - b A) + 2 * (d B - d A))) -
+      6 * ((a B - a A) * ((n C - n A) - (m C - m A)) -
+        (a C - a A) * ((n B - n A) - (m B - m A))) := by
+  unfold p4Q2PZ1_originalSixthFifthJetCoefficient
+    p4Q2PX_originalSixthFourthJetCoefficient
+    p4Q2PP2_originalSixthJetCoefficient
+  ring
+
 end OriginalFifthMomentSixthJet
 end GroundStatePosteriorJoint
 
@@ -240,3 +262,4 @@ end MGAP4D
 
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ1_originalFifthMomentJetMinor_exact
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ1_originalFifthMomentJetMinor_afterUniversalWard
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ1_originalSixthFifthJetCoefficient_fourDeterminants
