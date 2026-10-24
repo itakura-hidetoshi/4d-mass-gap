@@ -81,6 +81,18 @@ local notation "a" => p4Q2PK_originalOneSlabFirstActionMoment H
 local notation "J1" => p4Q2PZ15_originalOneSlabFifthBoundaryResponse H
 local notation "W6" => p4Q2PZ8_originalSixthWardObstruction H
 
+private theorem p4Q2PZ19_half_continuous :
+    Continuous (fun X : Cfg => w X) :=
+  continuous_const.mul
+    (periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuous H 2)
+
+private theorem p4Q2PZ19_cross_continuous (B : Cfg) :
+    Continuous (fun X : Cfg => Cross X B) := by
+  have hp : Continuous (fun X : Cfg => (X, B)) :=
+    continuous_id.prodMk continuous_const
+  have hc := (p4Q2IW_originalWilsonCrossingAction_continuous H).comp hp
+  simpa only [Function.comp_def] using hc
+
 /-- A compact-Haar integration of the exact genuine sum-cubic:
 all four Wilson terms remain in the true integrands. -/
 private theorem p4Q2PZ19_integral_cube_of_two
@@ -146,8 +158,8 @@ theorem p4Q2PZ19_originalStrippedCubic_expansion (B : Cfg) :
       (∫ X : Cfg, (Cross X B)^3 ∂haar) := by
   have h := p4Q2PZ19_integral_cube_of_two H
     (fun X : Cfg => w X) (fun X : Cfg => Cross X B)
-    (p4Q2PZ18_half_continuous H)
-    (p4Q2PZ18_cross_continuous H B)
+    (p4Q2PZ19_half_continuous H)
+    (p4Q2PZ19_cross_continuous H B)
   unfold p4Q2PZ18_originalStrippedHaarMoment
   simpa only [p4Q2PS_originalRightStrippedAction] using h
 
@@ -159,7 +171,7 @@ theorem p4Q2PZ19_originalHalfSpatialSquare_crossingHaar_invariant
     (∫ X : Cfg, (w X)^2*Cross X B ∂haar) =
       (∫ X : Cfg, (w X)^2*Cross X (fun _ => 1) ∂haar) := by
   have hφ : Continuous (fun X : Cfg => (w X)^2) :=
-    (p4Q2PZ18_half_continuous H).pow 2
+    (p4Q2PZ19_half_continuous H).pow 2
   have hGauge (γ : Gauge) (X : Cfg) :
       w (periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeTransform
         H 2 γ X) = w X := by
@@ -196,7 +208,7 @@ theorem p4Q2PZ19_originalFullCrossingPowerHaar_invariant
   have hPres : MeasurePreserving T haar haar :=
     p4Q2IX_actualSpatialHaar_leftTranslate_measurePreserving H B
   have hf : AEStronglyMeasurable f haar :=
-    ((p4Q2PZ18_cross_continuous H B).pow k).measurable.aestronglyMeasurable
+    ((p4Q2PZ19_cross_continuous H B).pow k).measurable.aestronglyMeasurable
   have hmap : Measure.map T haar = haar := hPres.map_eq
   have hfm : AEStronglyMeasurable f (Measure.map T haar) := by
     rw [hmap]
