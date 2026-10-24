@@ -232,8 +232,11 @@ theorem p4Q2PZ1_originalFifthMomentJetMinor_afterUniversalWard
   ring
 
 /-- Exact genuine sixth-order Ward obstruction in four original
-moment determinants. This is algebraic equality, NOT a nonzero
-witness, and retains the full two-slab Wilson fifth moment. -/
+moment determinants. The integer weights 20, 15, 15 and 6 are
+the factorial normalization obtained from the ORIGINAL action
+moments, not a replacement spectral polynomial. This is an
+algebraic identity, NOT a nonzero witness or an analytic claim,
+and the complete two-slab Wilson fifth moment is retained. -/
 theorem p4Q2PZ1_originalSixthFifthJetCoefficient_fourDeterminants
     (A B C : Cfg) :
     720 * D6 A B C =
