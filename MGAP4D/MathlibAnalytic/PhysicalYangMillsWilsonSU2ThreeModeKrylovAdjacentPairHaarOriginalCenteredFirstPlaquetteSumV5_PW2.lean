@@ -88,9 +88,9 @@ theorem p4Q2PW2_originalSpatialWilsonAction_eq_card_sub_traceSum
     unfold periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction
       periodicHypercubicEvenSpatialSlicePlaquetteList
     simpa using
-      (Finset.sum_toList
-        (s := (Finset.univ : Finset Plaq))
-        (fun p : Plaq => E (Hol A p))).symm
+      (Finset.sum_map_toList
+        (Finset.univ : Finset Plaq)
+        (fun p : Plaq => E (Hol A p)))
   rw [hFinite]
   have hEnergy (p : Plaq) :
       E (Hol A p) = 1 - χ p A := by
