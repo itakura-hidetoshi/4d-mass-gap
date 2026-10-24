@@ -192,10 +192,23 @@ theorem p4Q2PY5_originalFifthWardResidual_twoCrossingReduced
       -4 * (∫ A : Cfg, S A B * c A ∂haar) +
         6 * (∫ A : Cfg, (S A B)^2 * b A ∂haar) -
         4 * (∫ A : Cfg, poly A ∂haar) := by
-    rw [integral_sub
-      ((hSC.const_mul (-4)).add (hS2b.const_mul 6))
-      (hPolInt.const_mul 4)]
-    rw [integral_add (hSC.const_mul (-4)) (hS2b.const_mul 6)]
+    have hAdd :
+        (∫ A : Cfg, -4 * (S A B * c A) +
+          6 * ((S A B)^2 * b A) ∂haar) =
+        (∫ A : Cfg, -4 * (S A B * c A) ∂haar) +
+          (∫ A : Cfg, 6 * ((S A B)^2 * b A) ∂haar) := by
+      simpa only [Pi.add_apply] using
+        (integral_add (hSC.const_mul (-4)) (hS2b.const_mul 6))
+    have hSub :
+        (∫ A : Cfg, -4 * (S A B * c A) +
+          6 * ((S A B)^2 * b A) - 4 * poly A ∂haar) =
+        (∫ A : Cfg, -4 * (S A B * c A) +
+          6 * ((S A B)^2 * b A) ∂haar) -
+          (∫ A : Cfg, 4 * poly A ∂haar) := by
+      simpa only [Pi.sub_apply] using
+        (integral_sub ((hSC.const_mul (-4)).add (hS2b.const_mul 6))
+          (hPolInt.const_mul 4))
+    rw [hSub, hAdd]
     simp only [integral_const_mul]
     ring
   have hPoint (A : Cfg) :
@@ -299,7 +312,7 @@ theorem p4Q2PY5_originalFifthWardResidual_twoCrossingReduced
       12 * (w B)^2 * (∫ A : Cfg, h A * Cross A (fun _ => 1) ∂haar) -
       6 * (∫ A : Cfg, x3 A ∂haar) -
       2 * s * b B
-  convert hR' using 1 <;> dsimp [P, V2, p, z, x3] <;> ring
+  convert hR' using 1 <;> ring
 
 end GenuineFifthTwoCrossingCore
 end GroundStatePosteriorJoint
