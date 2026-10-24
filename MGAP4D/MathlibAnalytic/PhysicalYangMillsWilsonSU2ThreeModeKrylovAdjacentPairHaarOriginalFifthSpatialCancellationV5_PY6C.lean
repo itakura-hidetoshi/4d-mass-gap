@@ -171,10 +171,18 @@ theorem p4Q2PY6_originalFifthSpatialQuadratic_eq_twiceWardSlope :
         p4Q2PY5_originalPureSpatialQuadraticWeight H A ∂haar) =
       6 * (∫ A : Cfg, b A ∂haar) -
         12 * (∫ A : Cfg, w A * h A ∂haar) := by
-    change
-      (∫ A : Cfg, 6 * b A - 12 * w A * h A ∂haar) = _
-    simpa only [Pi.sub_apply, integral_const_mul] using
-      (integral_sub (hiB.const_mul 6) (hiWH.const_mul 12))
+    calc
+      (∫ A : Cfg,
+        p4Q2PY5_originalPureSpatialQuadraticWeight H A ∂haar) =
+          ∫ A : Cfg, 6 * b A - 12 * (w A * h A) ∂haar := by
+        apply integral_congr_ae
+        filter_upwards with A
+        unfold p4Q2PY5_originalPureSpatialQuadraticWeight
+        ring
+      _ = 6 * (∫ A : Cfg, b A ∂haar) -
+          12 * (∫ A : Cfg, w A * h A ∂haar) := by
+        simpa only [Pi.sub_apply, integral_const_mul] using
+          (integral_sub (hiB.const_mul 6) (hiWH.const_mul 12))
   have hJ := p4Q2PY6_originalCenteredMixedHaar_atIdentity_split H
   unfold p4Q2PY5_originalFifthSpatialQuadratic
     p4Q2PY_originalQuarticWardSlope
