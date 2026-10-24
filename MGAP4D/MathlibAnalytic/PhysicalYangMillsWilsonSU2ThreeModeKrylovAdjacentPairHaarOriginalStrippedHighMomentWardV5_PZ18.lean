@@ -194,8 +194,12 @@ theorem p4Q2PZ18_originalCompleteFirst_eq_halfPlusAlpha (A : Cfg) :
       rw [p4Q2PS_originalOneSlabAction_rightSplit H X A]
       simp only [pow_one]
     _ = (∫ X : Cfg, L X A ∂haar) + w A := by
-      simpa only [Pi.add_apply, integral_const] using
-        (integral_add hiL (integrable_const (w A)))
+      calc
+        (∫ X : Cfg, L X A + w A ∂haar) =
+          (∫ X : Cfg, L X A ∂haar) + (∫ X : Cfg, w A ∂haar) := by
+            simpa only [Pi.add_apply] using
+              (integral_add hiL (integrable_const (w A)))
+        _ = _ := by simp
     _ = w A + α := by
       rw [show (∫ X : Cfg, L X A ∂haar) = μ 1 A from by
         simp only [p4Q2PZ18_originalStrippedHaarMoment, pow_one]]
@@ -247,7 +251,7 @@ private theorem p4Q2PZ18_integral_shift_cube
       3*t*(∫ X : Cfg, (f X)^2 ∂haar) +
       3*t^2*(∫ X : Cfg, f X ∂haar) + t^3 := by
         rw [hadd3, hadd2, hadd1]
-        simp only [integral_const_mul, integral_const]
+        simp [integral_const_mul]
         ring
 
 /-- Haar binomial shift at degree four, valid in the actual compact
@@ -330,9 +334,13 @@ theorem p4Q2PZ18_originalCompleteThird_strippedExpansion (A : Cfg) :
     filter_upwards with X
     rw [p4Q2PS_originalOneSlabAction_rightSplit H X A]
   rw [hraw, hshift]
-  change μ 3 A + 3*w A*μ 2 A + 3*(w A)^2*μ 1 A + (w A)^3 = _
-  rw [p4Q2PZ18_originalStrippedSecond_eq_theta H A,
-    p4Q2PZ18_originalStrippedFirst_eq_alpha H A]
+  have h2 : (∫ X : Cfg, (L X A)^2 ∂haar) = θ :=
+    p4Q2PZ18_originalStrippedSecond_eq_theta H A
+  have h1 : (∫ X : Cfg, L X A ∂haar) = α := by
+    simpa only [p4Q2PZ18_originalStrippedHaarMoment, pow_one] using
+      (p4Q2PZ18_originalStrippedFirst_eq_alpha H A)
+  simp only [p4Q2PZ18_originalStrippedHaarMoment, pow_one]
+  rw [h2, h1]
   ring
 
 /-- The original FOURTH Haar moment depends on two and only two
@@ -350,10 +358,13 @@ theorem p4Q2PZ18_originalCompleteFourth_strippedExpansion (A : Cfg) :
     filter_upwards with X
     rw [p4Q2PS_originalOneSlabAction_rightSplit H X A]
   rw [hraw, hshift]
-  change μ 4 A + 4*w A*μ 3 A + 6*(w A)^2*μ 2 A +
-    4*(w A)^3*μ 1 A + (w A)^4 = _
-  rw [p4Q2PZ18_originalStrippedSecond_eq_theta H A,
-    p4Q2PZ18_originalStrippedFirst_eq_alpha H A]
+  have h2 : (∫ X : Cfg, (L X A)^2 ∂haar) = θ :=
+    p4Q2PZ18_originalStrippedSecond_eq_theta H A
+  have h1 : (∫ X : Cfg, L X A ∂haar) = α := by
+    simpa only [p4Q2PZ18_originalStrippedHaarMoment, pow_one] using
+      (p4Q2PZ18_originalStrippedFirst_eq_alpha H A)
+  simp only [p4Q2PZ18_originalStrippedHaarMoment, pow_one]
+  rw [h2, h1]
   ring
 
 /-- All Haar-selected affine/quadratic and spatial-polynomial
