@@ -90,8 +90,7 @@ theorem p4Q2PY3_originalPlaquetteChar_crossingCubeHaar_zero
   have hEach (e f g : Link) :
       Integrable (fun A : Cfg =>
         χ p A * (T e A * T f A * T g A)) haar :=
-    (hChi.mul (((hT e).mul (hT f)).mul (hT g)))
-      .integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    (hChi.mul (((hT e).mul (hT f)).mul (hT g))).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hInnerCont (e f : Link) :
       Continuous (fun A : Cfg =>
         ∑ g : Link, χ p A * (T e A * T f A * T g A)) := by
