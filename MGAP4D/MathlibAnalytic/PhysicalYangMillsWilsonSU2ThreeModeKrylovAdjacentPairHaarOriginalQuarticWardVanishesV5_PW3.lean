@@ -52,6 +52,11 @@ local instance p4Q2PW3_measurableSpace :
 local instance p4Q2PW3_borelSpace :
     BorelSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupBorelSpace 2
+
+local instance p4Q2PW3_nativeFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSlicePlaquette H) :=
+  instFintypeProd (PeriodicHypercubicEvenSpatialSliceVertex H)
+    PeriodicHypercubicEvenSpatialDirectionPair
 namespace GroundStatePosteriorJoint
 
 section ActualWilsonQuarticWardZero
