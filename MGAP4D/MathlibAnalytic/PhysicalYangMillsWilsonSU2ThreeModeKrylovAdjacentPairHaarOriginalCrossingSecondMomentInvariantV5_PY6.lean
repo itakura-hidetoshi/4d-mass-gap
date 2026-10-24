@@ -124,8 +124,6 @@ theorem p4Q2PY6_originalCenteredFirst_eq_meanHalf_sub_half (B : Cfg) :
     h B = (1 / 2 : ℝ) * Φ B :=
       p4Q2PW2_originalCenteredFirstMoment_eq_half_traceSum H B
     _ = (Fintype.card Plaq : ℝ) / 2 - w B := by
-      rw [p4Q2PW2_originalSpatialWilsonAction_eq_card_sub_traceSum H B]
-        at *
       unfold p4Q2PS_originalHalfSpatialAction
       rw [p4Q2PW2_originalSpatialWilsonAction_eq_card_sub_traceSum H B]
       ring
