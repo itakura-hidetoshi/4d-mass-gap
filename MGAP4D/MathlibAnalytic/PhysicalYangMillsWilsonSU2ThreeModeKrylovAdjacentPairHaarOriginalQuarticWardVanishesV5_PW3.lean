@@ -52,9 +52,6 @@ local instance p4Q2PW3_measurableSpace :
 local instance p4Q2PW3_borelSpace :
     BorelSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupBorelSpace 2
-local instance p4Q2PW3_spatialPlaquettesFintype (H : ℕ) :
-    Fintype (PeriodicHypercubicEvenSpatialSlicePlaquette H) := Fintype.ofFinite _
-
 namespace GroundStatePosteriorJoint
 
 section ActualWilsonQuarticWardZero
