@@ -236,6 +236,47 @@ theorem p4Q2PY5_originalFifthWardResidual_twoCrossingReduced
       (((p A - 4 * x0 A) - 12 * w B * x1 A) -
         12 * (w B)^2 * x2 A) - 6 * x3 A) haar :=
     hiC.sub (hi3.const_mul 6)
+  have hStep0 :
+      (∫ A : Cfg, p A - 4 * x0 A ∂haar) =
+      (∫ A : Cfg, p A ∂haar) -
+        4 * (∫ A : Cfg, x0 A ∂haar) := by
+    simpa only [Pi.sub_apply, integral_const_mul] using
+      (integral_sub hP (hi0.const_mul 4))
+  have hStep1 :
+      (∫ A : Cfg, (p A - 4 * x0 A) - 12 * w B * x1 A ∂haar) =
+      (∫ A : Cfg, p A - 4 * x0 A ∂haar) -
+        12 * w B * (∫ A : Cfg, x1 A ∂haar) := by
+    simpa only [Pi.sub_apply, integral_const_mul] using
+      (integral_sub hiA (hi1.const_mul (12 * w B)))
+  have hStep2 :
+      (∫ A : Cfg,
+        ((p A - 4 * x0 A) - 12 * w B * x1 A) -
+          12 * (w B)^2 * x2 A ∂haar) =
+      (∫ A : Cfg, (p A - 4 * x0 A) - 12 * w B * x1 A ∂haar) -
+        12 * (w B)^2 * (∫ A : Cfg, x2 A ∂haar) := by
+    simpa only [Pi.sub_apply, integral_const_mul] using
+      (integral_sub hiB (hi2.const_mul (12 * (w B)^2)))
+  have hStep3 :
+      (∫ A : Cfg,
+        (((p A - 4 * x0 A) - 12 * w B * x1 A) -
+          12 * (w B)^2 * x2 A) - 6 * x3 A ∂haar) =
+      (∫ A : Cfg,
+        ((p A - 4 * x0 A) - 12 * w B * x1 A) -
+          12 * (w B)^2 * x2 A ∂haar) -
+        6 * (∫ A : Cfg, x3 A ∂haar) := by
+    simpa only [Pi.sub_apply, integral_const_mul] using
+      (integral_sub hiC (hi3.const_mul 6))
+  have hStep4 :
+      (∫ A : Cfg,
+        ((((p A - 4 * x0 A) - 12 * w B * x1 A) -
+          12 * (w B)^2 * x2 A) - 6 * x3 A) -
+          12 * w B * x4 A ∂haar) =
+      (∫ A : Cfg,
+        (((p A - 4 * x0 A) - 12 * w B * x1 A) -
+          12 * (w B)^2 * x2 A) - 6 * x3 A ∂haar) -
+        12 * w B * (∫ A : Cfg, x4 A ∂haar) := by
+    simpa only [Pi.sub_apply, integral_const_mul] using
+      (integral_sub hiD (hi4.const_mul (12 * w B)))
   have hExpandIntegral :
       (∫ A : Cfg,
         ((((p A - 4 * x0 A) - 12 * w B * x1 A) -
@@ -247,12 +288,8 @@ theorem p4Q2PY5_originalFifthWardResidual_twoCrossingReduced
         12 * (w B)^2 * (∫ A : Cfg, x2 A ∂haar) -
         6 * (∫ A : Cfg, x3 A ∂haar) -
         12 * w B * (∫ A : Cfg, x4 A ∂haar) := by
-    rw [integral_sub hiD (hi4.const_mul (12 * w B)),
-      integral_sub hiC (hi3.const_mul 6),
-      integral_sub hiB (hi2.const_mul (12 * (w B)^2)),
-      integral_sub hiA (hi1.const_mul (12 * w B)),
-      integral_sub hP (hi0.const_mul 4)]
-    simp only [integral_const_mul]
+    rw [hStep4, hStep3, hStep2, hStep1, hStep0]
+    ring
   have hCollapse :
       (∫ A : Cfg, -4 * (S A B * c A) +
         6 * ((S A B)^2 * b A) - 4 * poly A ∂haar) =
