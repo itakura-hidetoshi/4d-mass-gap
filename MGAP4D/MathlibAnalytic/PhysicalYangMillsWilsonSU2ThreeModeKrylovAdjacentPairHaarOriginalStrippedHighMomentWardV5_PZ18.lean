@@ -318,7 +318,6 @@ private theorem p4Q2PZ18_integral_shift_fourth
         have hConst : (∫ X : Cfg, t^4 ∂haar) = t^4 := by simp
         rw [hadd4, hadd3, hadd2, hadd1, hConst]
         simp only [integral_const_mul]
-        ring
 
 /-- The authentic THIRD Haar moment contains only one genuinely
 higher right-stripped profile: mu3 of unchanged spatial/crossing L. -/
