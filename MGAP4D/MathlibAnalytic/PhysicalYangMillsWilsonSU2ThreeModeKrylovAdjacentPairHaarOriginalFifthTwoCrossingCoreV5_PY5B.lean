@@ -210,7 +210,6 @@ theorem p4Q2PY5_originalFifthWardResidual_twoCrossingReduced
           (hPolInt.const_mul 4))
     rw [hSub, hAdd]
     simp only [integral_const_mul]
-    ring
   have hPoint (A : Cfg) :
       -4 * (S A B * c A) + 6 * ((S A B)^2 * b A) -
         4 * poly A =
@@ -289,7 +288,6 @@ theorem p4Q2PY5_originalFifthWardResidual_twoCrossingReduced
         6 * (∫ A : Cfg, x3 A ∂haar) -
         12 * w B * (∫ A : Cfg, x4 A ∂haar) := by
     rw [hStep4, hStep3, hStep2, hStep1, hStep0]
-    ring
   have hCollapse :
       (∫ A : Cfg, -4 * (S A B * c A) +
         6 * ((S A B)^2 * b A) - 4 * poly A ∂haar) =
