@@ -148,8 +148,9 @@ theorem p4Q2PY6_originalWeightedTwoCrossingHaar_eq_spatialSquare
   have hc : Continuous (fun A : Cfg => Cross A B) := by
     have hPair : Continuous (fun A : Cfg => (A, B)) :=
       continuous_id.prodMk continuous_const
-    have h := (p4Q2IW_originalWilsonCrossingAction_continuous H).comp hPair
-    simpa only [Function.comp_def] using h
+    have hContinuous :=
+      (p4Q2IW_originalWilsonCrossingAction_continuous H).comp hPair
+    simpa only [Function.comp_def] using hContinuous
   have hi0 : Integrable (fun A : Cfg =>
       (w A)^2 * (Cross A B)^2) haar :=
     ((hw.pow 2).mul (hc.pow 2)).integrable_of_hasCompactSupport
