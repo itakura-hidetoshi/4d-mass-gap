@@ -6,7 +6,7 @@ import Mathlib.Tactic
 
 PZ2 proves the sixth-order exponential kernel remainder before and
 after original Haar integration. PZ1 defines the ACTUAL genuine
-one-/two-slab fifth Wilson moments and the corrected sixth jet.
+one-slab and two-slab fifth Wilson moments and the corrected sixth jet.
 
 This file identifies the quintic kernel polynomials integrated
 against the ORIGINAL SU(2) spatial Haar (once and twice) with those
