@@ -44,9 +44,6 @@ local instance p4Q2PW_measurableSpace :
 local instance p4Q2PW_borelSpace :
     BorelSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupBorelSpace 2
-local instance p4Q2PW_spatialLinksFintype (H : ℕ) :
-    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := Fintype.ofFinite _
-
 namespace GroundStatePosteriorJoint
 
 section ActualOriginalCrossingSquareHaar
