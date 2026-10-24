@@ -7,7 +7,8 @@ import Mathlib.Tactic
 For the UNCHANGED original SU(2) one-slab S(X,B) and genuinely
 interacting two-slab Q(X,A,B)=S(X,A)+S(A,B), prove Mathlib-based
 sixth-order pointwise exponential Taylor remainder estimates for
-the degree-five polynomial, including the NEGATIVE fifth power
+the degree-five polynomial (including the genuine 1/5! coefficient),
+with the NEGATIVE fifth power
 required by e^(-beta*S).
 
 Integrate against the original normalized spatial Haar reference,
