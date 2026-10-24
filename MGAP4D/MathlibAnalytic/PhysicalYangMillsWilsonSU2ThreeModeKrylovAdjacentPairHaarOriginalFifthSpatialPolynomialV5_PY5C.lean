@@ -144,6 +144,27 @@ theorem p4Q2PY5_originalPureSpatialFifthProfile_quadratic
   have hi012 : Integrable (fun A : Cfg =>
       (φ0 A + w B * φ1 A) + (w B)^2 * φ2 A) haar :=
     hi01.add (hi2.const_mul ((w B)^2))
+  have hAdd01 :
+      (∫ A : Cfg, φ0 A + w B * φ1 A ∂haar) =
+      (∫ A : Cfg, φ0 A ∂haar) +
+        w B * (∫ A : Cfg, φ1 A ∂haar) := by
+    simpa only [Pi.add_apply, integral_const_mul] using
+      (integral_add hi0 (hi1.const_mul (w B)))
+  have hAdd012 :
+      (∫ A : Cfg, (φ0 A + w B * φ1 A) +
+        (w B)^2 * φ2 A ∂haar) =
+      (∫ A : Cfg, φ0 A + w B * φ1 A ∂haar) +
+        (w B)^2 * (∫ A : Cfg, φ2 A ∂haar) := by
+    simpa only [Pi.add_apply, integral_const_mul] using
+      (integral_add hi01 (hi2.const_mul ((w B)^2)))
+  have hSub :
+      (∫ A : Cfg, (φ0 A + w B * φ1 A) +
+        (w B)^2 * φ2 A - (4 * (w B)^3) * h A ∂haar) =
+      (∫ A : Cfg, (φ0 A + w B * φ1 A) +
+        (w B)^2 * φ2 A ∂haar) -
+        (4 * (w B)^3) * (∫ A : Cfg, h A ∂haar) := by
+    simpa only [Pi.sub_apply, integral_const_mul] using
+      (integral_sub hi012 (hih.const_mul (4 * (w B)^3)))
   have hPoint (A : Cfg) :
       -4 * (w A + w B) * c A +
         6 * (w A + w B)^2 * b A -
@@ -167,10 +188,8 @@ theorem p4Q2PY5_originalPureSpatialFifthProfile_quadratic
           w B * (∫ A : Cfg, φ1 A ∂haar)) +
           (w B)^2 * (∫ A : Cfg, φ2 A ∂haar) -
             (4 * (w B)^3) * (∫ A : Cfg, h A ∂haar) := by
-      rw [integral_sub hi012 (hih.const_mul (4 * (w B)^3)),
-        integral_add hi01 (hi2.const_mul ((w B)^2)),
-        integral_add hi0 (hi1.const_mul (w B))]
-      simp only [integral_const_mul]
+      rw [hSub, hAdd012, hAdd01]
+      ring
     _ = _ := by
       rw [p4Q2PS_originalCenteredFirst_HaarMean_zero H]
       ring
