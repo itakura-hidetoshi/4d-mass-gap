@@ -90,7 +90,7 @@ theorem p4Q2PW2_originalSpatialWilsonAction_eq_card_sub_traceSum
     simpa using
       (Finset.sum_toList
         (s := (Finset.univ : Finset Plaq))
-        (f := fun p : Plaq => E (Hol A p))).symm
+        (fun p : Plaq => E (Hol A p))).symm
   rw [hFinite]
   have hEnergy (p : Plaq) :
       E (Hol A p) = 1 - χ p A := by
