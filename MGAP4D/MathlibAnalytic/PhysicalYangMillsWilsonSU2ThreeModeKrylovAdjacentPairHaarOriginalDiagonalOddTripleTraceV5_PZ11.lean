@@ -121,20 +121,20 @@ theorem p4Q2PZ11_centerEven_originalThreeTemporalTracesHaar_zero
     rcases hIndex with h | h | h | h
     · obtain ⟨ht, htf, htg⟩ := h
       subst target
-      simp [htf, htg] <;> ring
+      simp [htf, htg]
     · obtain ⟨ht, hte, htg⟩ := h
       subst target
-      simp [hte, htg] <;> ring
+      simp [hte, htg]
     · obtain ⟨ht, hte, htf⟩ := h
       subst target
-      simp [hte, htf] <;> ring
+      simp [hte, htf]
     · obtain ⟨ht, htf, htg⟩ := h
       have hef : e = f := ht.symm.trans htf
       have heg : e = g := ht.symm.trans htg
       subst target
       subst f
       subst g
-      simp <;> ring
+      simp
   change (∫ A : Cfg, obs A ∂haar) = 0
   exact p4Q2PU_originalCenterFlip_Haar_odd_integral_zero
     H target obs hObs hOdd
