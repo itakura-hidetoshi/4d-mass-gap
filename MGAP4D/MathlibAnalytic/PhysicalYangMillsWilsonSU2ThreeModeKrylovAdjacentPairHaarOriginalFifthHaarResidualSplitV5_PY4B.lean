@@ -96,8 +96,8 @@ private theorem p4Q2PY4B_firstMoment_continuous :
     exact p4Q2PM_originalFirstMoment_spatialWilson H A
   rw [hEq]
   exact (continuous_const.mul
-    (periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuous H 2))
-      .sub continuous_const
+    (periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuous H 2)).sub
+      continuous_const
 
 private theorem p4Q2PY4B_secondMoment_continuous :
     Continuous (fun A : Cfg => b A) :=
