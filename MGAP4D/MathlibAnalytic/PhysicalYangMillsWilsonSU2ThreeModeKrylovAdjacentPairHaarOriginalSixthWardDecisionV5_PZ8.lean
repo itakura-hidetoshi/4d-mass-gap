@@ -136,7 +136,7 @@ theorem p4Q2PZ8_originalLiteralMinor_nonzero_of_strictSixthWitness
       ‖beta‖ ^ 6 * ‖D6 A B C‖ ≤ K * ‖beta‖ ^ 7 := h
       _ = ‖beta‖ ^ 6 * (K * ‖beta‖) := by ring
   have hBound : ‖D6 A B C‖ ≤ K * ‖beta‖ :=
-    (mul_le_mul_left hPow).mp hScaled
+    le_of_mul_le_mul_left hScaled hPow
   exact (not_lt_of_ge hBound) hStrict
 
 /-- If a genuine SU(2) triple has W6 ≠ 0, EVERY sufficiently
