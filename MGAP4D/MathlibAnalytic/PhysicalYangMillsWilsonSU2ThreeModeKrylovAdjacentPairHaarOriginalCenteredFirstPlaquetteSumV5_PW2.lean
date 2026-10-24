@@ -147,9 +147,10 @@ spatial-plaquette-count Haar mean, with the actual Wilson halfweight. -/
 theorem p4Q2PW2_originalFirstActionMoment_HaarMean_eq :
     (∫ A : Cfg, a A ∂haar) =
       -(1 / 2 : ℝ) * (Fintype.card Plaq : ℝ) - cH := by
+  have hWCont : Continuous (fun A : Cfg => W A) :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuous H 2
   have hWInt : Integrable (fun A : Cfg => W A) haar :=
-    (periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuous H 2)
-      .integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    hWCont.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hSplit :
       (∫ A : Cfg, (-(1 / 2 : ℝ)) * W A - cH ∂haar) =
         (∫ A : Cfg, (-(1 / 2 : ℝ)) * W A ∂haar) -
