@@ -194,6 +194,49 @@ theorem p4Q2PZ13_originalOneSlabFifth_difference_residual
     p4Q2PZ13_originalCenteredCubicHaar_invariant H A]
   ring
 
+
+/-- Exact physical sixth Wilson coefficient with the PZ12-invariant
+ONE-slab cubic Ward term removed. The true two-slab fifth moment
+is UNCHANGED: its additional invariant sector remains to be
+separated in the next stage. -/
+theorem p4Q2PZ13_originalSixthCoefficient_oneSlabResidual
+    (A B C : Cfg) :
+    p4Q2PZ1_originalSixthFifthJetCoefficient H A B C =
+      p4Q2PX_originalSixthFourthJetCoefficient H A B C -
+        ((p4Q2PK_originalOneSlabFirstActionMoment H B -
+            p4Q2PK_originalOneSlabFirstActionMoment H A) *
+          ((p4Q2PZ1_originalTwoSlabFifthActionMoment H C -
+              p4Q2PZ1_originalTwoSlabFifthActionMoment H A) -
+            (r1 C - r1 A)) -
+         (p4Q2PK_originalOneSlabFirstActionMoment H C -
+            p4Q2PK_originalOneSlabFirstActionMoment H A) *
+          ((p4Q2PZ1_originalTwoSlabFifthActionMoment H B -
+              p4Q2PZ1_originalTwoSlabFifthActionMoment H A) -
+            (r1 B - r1 A))) / 120 := by
+  unfold p4Q2PZ1_originalSixthFifthJetCoefficient
+  rw [p4Q2PZ13_originalOneSlabFifth_difference_residual H A C,
+      p4Q2PZ13_originalOneSlabFifth_difference_residual H A B]
+
+/-- Transport the exact one-slab cubic-Haar Ward cancellation into
+the GENUINE sixth obstruction W6=720D6. No universal W6 vanishing
+or nonvanishing follows without further two-slab Haar analysis. -/
+theorem p4Q2PZ13_originalSixthWard_oneSlabResidual
+    (A B C : Cfg) :
+    p4Q2PZ8_originalSixthWardObstruction H A B C =
+      720 * (p4Q2PX_originalSixthFourthJetCoefficient H A B C -
+        ((p4Q2PK_originalOneSlabFirstActionMoment H B -
+            p4Q2PK_originalOneSlabFirstActionMoment H A) *
+          ((p4Q2PZ1_originalTwoSlabFifthActionMoment H C -
+              p4Q2PZ1_originalTwoSlabFifthActionMoment H A) -
+            (r1 C - r1 A)) -
+         (p4Q2PK_originalOneSlabFirstActionMoment H C -
+            p4Q2PK_originalOneSlabFirstActionMoment H A) *
+          ((p4Q2PZ1_originalTwoSlabFifthActionMoment H B -
+              p4Q2PZ1_originalTwoSlabFifthActionMoment H A) -
+            (r1 B - r1 A))) / 120) := by
+  rw [p4Q2PZ8_sixthWard_eq_correctedCoefficient H A B C,
+    p4Q2PZ13_originalSixthCoefficient_oneSlabResidual H A B C]
+
 end OriginalFifthCubicWardResidual
 end GroundStatePosteriorJoint
 end
@@ -204,3 +247,6 @@ end MGAP4D
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ13_originalOneSlabFifth_split
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ13_originalOneSlabFifth_eq_WardPlusResidual
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ13_originalOneSlabFifth_difference_residual
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ13_originalSixthCoefficient_oneSlabResidual
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ13_originalSixthWard_oneSlabResidual
