@@ -55,8 +55,8 @@ theorem p4Q2PZ35A_pauliTraceDecomposition
   fin_cases i <;> fin_cases j <;>
     simp [p4Q2PZ35A_pauliQ0, p4Q2PZ35A_pauliQ1,
       p4Q2PZ35A_pauliQ2, p4Q2PZ35A_pauliQ3,
-      Matrix.trace_fin_two, Matrix.mul_apply, Fin.sum_univ_two,
-      Complex.I_mul_I] <;>
+      Matrix.trace_fin_two, Matrix.vecMul, dotProduct,
+      Fin.sum_univ_two, Complex.I_mul_I] <;>
     ring
 
 end
