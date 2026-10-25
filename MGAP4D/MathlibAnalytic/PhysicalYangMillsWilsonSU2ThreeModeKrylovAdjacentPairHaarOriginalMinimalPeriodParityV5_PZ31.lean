@@ -33,6 +33,12 @@ set_option synthInstance.maxHeartbeats 1050000
 /-- An EXPLICIT COMPUTABLE enumeration of the actual primary
 reflection plane at period two. Upstream `Fintype.ofFinite` is
 noncomputable and cannot serve a kernel-reduced finite certificate. -/
+/-- The geometrically exact fixed-time equation is computably
+decidable once explicitly reduced to a ZMod coordinate equality. -/
+local instance p4Q2PZ31_primaryPlaneDecidable :
+    DecidablePred (periodicHypercubicEvenOnPrimaryReflectionPlane 0) :=
+  fun v => inferInstanceAs (Decidable (v 0 = 0))
+
 local instance p4Q2PZ31_spatialSliceVertexFintype :
     Fintype (PeriodicHypercubicEvenSpatialSliceVertex 0) :=
   Fintype.subtype
@@ -68,8 +74,12 @@ local notation "Selected2" => p4Q2PZ27_originalParityAdmissibleTripleTwoLinkHaar
 physical side two. The predicates are exactly PZ27's real plaquette
 four-edge membership, not a test-only surrogate. -/
 def p4Q2PZ31_computablePeriodTwoOddEdges
-    (p q r : Plaq) : Finset Link :=
-  Finset.univ.filter (fun x : Link => Odd p q r x)
+    (p q r : Plaq) : Finset Link := by
+  letI : DecidablePred (fun x : Link => Odd p q r x) := fun x => by
+    unfold p4Q2PZ27_originalTripleOddEdge
+      p4Q2PZ27_originalEdgeOnPlaquette
+    infer_instance
+  exact Finset.univ.filter (fun x : Link => Odd p q r x)
 
 /-- Compare the explicitly enumerable Finset with the canonical PZ28
 original physical odd-edge support, not its cardinality proxy. -/
