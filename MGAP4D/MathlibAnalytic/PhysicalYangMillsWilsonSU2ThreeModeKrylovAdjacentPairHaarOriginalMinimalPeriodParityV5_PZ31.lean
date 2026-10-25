@@ -30,6 +30,14 @@ set_option maxHeartbeats 29000000
 set_option maxRecDepth 16384
 set_option synthInstance.maxHeartbeats 1050000
 
+/-- An EXPLICIT COMPUTABLE enumeration of the actual primary
+reflection plane at period two. Upstream `Fintype.ofFinite` is
+noncomputable and cannot serve a kernel-reduced finite certificate. -/
+local instance p4Q2PZ31_spatialSliceVertexFintype :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex 0) :=
+  Fintype.subtype
+    (periodicHypercubicEvenOnPrimaryReflectionPlane 0)
+
 local instance p4Q2PZ31_linkFintype :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink 0) :=
   instFintypeProd (PeriodicHypercubicEvenSpatialSliceVertex 0)
