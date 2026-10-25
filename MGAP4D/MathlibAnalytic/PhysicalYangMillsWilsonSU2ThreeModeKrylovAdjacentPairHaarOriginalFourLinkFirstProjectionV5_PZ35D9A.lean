@@ -164,7 +164,8 @@ theorem p4Q2PZ35D9A_originalCanonicalHaar_firstEdgeProjection
           (E ((A (e1 p))⁻¹ * B (e1 p)) *
            E ((A (e2 p))⁻¹ * B (e2 p)) *
            E ((A (e3 p))⁻¹ * B (e3 p))) ∂haar) := by
-      rfl
+      dsimp [c, F]
+      simp only [mul_assoc]
 
 end OriginalFourLinkFirstProjection
 end GroundStatePosteriorJoint
