@@ -175,7 +175,6 @@ theorem p4Q2PZ35D9B_originalThreeLinkHaar_secondEdgeProjection
           apply integral_congr_ae
           filter_upwards with A
           rw [hOut A]
-          rfl
         rw [hEq]
 
 /-- The ORIGINAL J_p is now one sixteenth of the genuine residual
