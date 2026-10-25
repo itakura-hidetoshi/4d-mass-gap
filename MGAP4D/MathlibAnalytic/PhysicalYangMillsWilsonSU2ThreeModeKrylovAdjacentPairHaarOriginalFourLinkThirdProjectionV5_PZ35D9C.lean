@@ -154,7 +154,6 @@ theorem p4Q2PZ35D9C_originalTwoLinkHaar_thirdEdgeProjection
           apply integral_congr_ae
           filter_upwards with A
           rw [hOut A]
-          rfl
         rw [hEq]
 
 /-- The original four-edge Haar integral has contracted THREE genuinely
