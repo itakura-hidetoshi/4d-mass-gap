@@ -128,7 +128,7 @@ theorem seventh_nonzero_of_distinct_actions
       (mul_ne_zero (sub_ne_zero.mpr hxy.symm)
         (sub_ne_zero.mpr hxz.symm))
       (sub_ne_zero.mpr hyz.symm)
-  exact neg_ne_zero.mpr (div_ne_zero hv (by norm_num))
+  exact div_ne_zero (neg_ne_zero.mpr hv) (by norm_num)
 
 end
 end MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.PZ37VandermondeAlgebra
