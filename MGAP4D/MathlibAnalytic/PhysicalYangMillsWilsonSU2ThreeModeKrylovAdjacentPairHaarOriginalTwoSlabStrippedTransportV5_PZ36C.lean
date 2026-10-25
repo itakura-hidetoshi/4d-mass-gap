@@ -108,6 +108,9 @@ theorem p4Q2PZ36C_originalInnerStrip_expansion
       p4Q2PZ36C_originalStripMoment H k := by
     simpa only [one_mul, p4Q2PZ36C_originalStripMoment] using
       (p4Q2PZ36A_originalScaledStripMoment_invariant_le_four H 1 k hk4 X)
+  change (n.choose k : ℝ) *
+      (∫ Y : Cfg, (w Y + Cross Y X)^k *
+        (2*w X + Cross X B)^(n-k) ∂haar) = _
   rw [integral_mul_const, hMom]
 
 /-- Continuity of the integrated inner moment is proved by its explicit
@@ -153,11 +156,20 @@ theorem p4Q2PZ36C_originalDoubleStrip_expansion
         apply integral_congr_ae
         filter_upwards with X
         exact p4Q2PZ36C_originalInnerStrip_expansion H n hn X B
+    _ = ∑ k ∈ Finset.range (n+1),
+        (∫ X : Cfg, (n.choose k : ℝ) *
+          (p4Q2PZ36C_originalStripMoment H k *
+            (2*w X+Cross X B)^(n-k)) ∂haar) := by
+      exact integral_finset_sum (Finset.range (n+1))
+        (f := fun k (X : Cfg) => (n.choose k : ℝ) *
+          (p4Q2PZ36C_originalStripMoment H k *
+            (2*w X+Cross X B)^(n-k))) (fun k _hk => hi k)
     _ = ∑ k ∈ Finset.range (n+1), (n.choose k : ℝ) *
         (p4Q2PZ36C_originalStripMoment H k *
           (∫ X : Cfg, (2*w X+Cross X B)^(n-k) ∂haar)) := by
-      simpa only [integral_const_mul] using
-        (integral_finset_sum (Finset.range (n+1)) (fun k _hk => hi k))
+      apply Finset.sum_congr rfl
+      intro k _hk
+      rw [integral_const_mul, integral_const_mul]
 
 /-- The previously missing genuine TWO-slab degree-four stripped
 Haar invariance, now with NO moment-transport assumption. -/
