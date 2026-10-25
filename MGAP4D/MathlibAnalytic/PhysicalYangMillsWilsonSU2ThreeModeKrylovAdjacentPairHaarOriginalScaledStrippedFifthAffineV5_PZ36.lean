@@ -137,7 +137,7 @@ theorem p4Q2PZ36_originalScaledStrippedFifth_expansion
   have hi (i : Fin 6) : Integrable (f i) haar :=
     (hf i).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hPoint (X : Cfg) : (r*w X+Cross X B)^5 = ∑ i : Fin 6, f i X := by
-    simp [f, Fin.sum_univ_succ] <;> ring
+    simp [f, Fin.sum_univ_succ]; ring
   have hSum := integral_finset_sum (μ := haar) (Finset.univ : Finset (Fin 6))
     (f := f) (fun i _hi => hi i)
   calc
