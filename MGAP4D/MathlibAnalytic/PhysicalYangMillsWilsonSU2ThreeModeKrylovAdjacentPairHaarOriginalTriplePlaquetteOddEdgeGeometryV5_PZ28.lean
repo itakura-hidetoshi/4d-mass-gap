@@ -200,7 +200,11 @@ theorem p4Q2PZ28_originalTwoLinks_notCover_of_isolated
   rcases hIso with hP | hQ | hR
   · obtain ⟨target, hMember, he, hf⟩ :=
       p4Q2PU3_originalPlaquette_freeLink_for_twoCrossings H p e f
-    have hp : On p target := Or.inl hMember
+    have hp : On p target := by
+      rcases hMember with h0 | h1 | h2
+      · exact Or.inl h0
+      · exact Or.inr (Or.inl h1)
+      · exact Or.inr (Or.inr (Or.inl h2))
     have hq : ¬ On q target := by
       intro h
       exact hP.1 ⟨target, hp, h⟩
@@ -210,7 +214,11 @@ theorem p4Q2PZ28_originalTwoLinks_notCover_of_isolated
     exact (hAdm target he hf) (Or.inl ⟨hp, hq, hr⟩)
   · obtain ⟨target, hMember, he, hf⟩ :=
       p4Q2PU3_originalPlaquette_freeLink_for_twoCrossings H q e f
-    have hq : On q target := Or.inl hMember
+    have hq : On q target := by
+      rcases hMember with h0 | h1 | h2
+      · exact Or.inl h0
+      · exact Or.inr (Or.inl h1)
+      · exact Or.inr (Or.inr (Or.inl h2))
     have hp : ¬ On p target := by
       intro h
       exact hQ.1 ⟨target, h, hq⟩
@@ -220,7 +228,11 @@ theorem p4Q2PZ28_originalTwoLinks_notCover_of_isolated
     exact (hAdm target he hf) (Or.inr (Or.inl ⟨hp, hq, hr⟩))
   · obtain ⟨target, hMember, he, hf⟩ :=
       p4Q2PU3_originalPlaquette_freeLink_for_twoCrossings H r e f
-    have hr : On r target := Or.inl hMember
+    have hr : On r target := by
+      rcases hMember with h0 | h1 | h2
+      · exact Or.inl h0
+      · exact Or.inr (Or.inl h1)
+      · exact Or.inr (Or.inr (Or.inl h2))
     have hp : ¬ On p target := by
       intro h
       exact hR.1 ⟨target, h, hr⟩
