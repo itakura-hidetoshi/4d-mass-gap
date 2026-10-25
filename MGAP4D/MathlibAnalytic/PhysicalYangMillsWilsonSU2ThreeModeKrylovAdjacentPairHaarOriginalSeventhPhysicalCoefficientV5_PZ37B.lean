@@ -7,7 +7,7 @@ import Mathlib.Tactic
 PZ37A proves the original interacting Wilson minor is O(beta^7).
 The seventh coefficient of a fifth-order Taylor *jet* in PZ1 is not
 yet the seventh coefficient of the physical original Wilson minor:
-the actual sixth one-/two-slab moments enter through the (1,6) and
+the actual sixth one-slab and two-slab moments enter through the (1,6) and
 (6,1) determinant pair. This file retains that correction exactly.
 
 Every coefficient below is from the ORIGINAL S(X,B) and the complete
