@@ -114,7 +114,7 @@ theorem p4Q2PZ30_originalDistinctPlaquettes_noTwoSharedLinks
       (PeriodicHypercubicEvenSideLength H) hSide
       (periodicHypercubicEvenSpatialSliceLinkEmbedding H a)
       (periodicHypercubicEvenSpatialSliceLinkEmbedding H b)
-      hFullNe
+      hFullNe.symm
       (periodicHypercubicEvenSpatialSlicePlaquetteEmbedding H p)
       (periodicHypercubicEvenSpatialSlicePlaquetteEmbedding H q)
       (p4Q2PZ30_originalTouches_of_on H p a hpa)
@@ -294,7 +294,6 @@ private theorem p4Q2PZ30_threeFourSets_odd_card_ge_six
   have hBound := Finset.card_le_card hSubset
   dsimp [AP, BP, CP] at hCardUnion
   dsimp [AP, BP, CP] at hBound
-  dsimp [AP, BP, CP] at hFreeA hFreeB hFreeC
   change 6 ≤ O.card
   omega
 
@@ -323,10 +322,13 @@ theorem p4Q2PZ30_originalTripleOddEdges_card_ge_six
     simp only [p4Q2PZ28_originalOddEdges,
       Finset.mem_filter, Finset.mem_univ, true_and]
     change Odd p q r x ↔ _
-    simp only [p4Q2PZ28_originalFourEdges,
-      p4Q2PZ27_originalEdgeOnPlaquette,
-      Finset.mem_insert, Finset.mem_singleton]
-    tauto
+    have hMem (s : Plaq) :
+        x ∈ Four s ↔ On s x := by
+      simp [p4Q2PZ28_originalFourEdges,
+        p4Q2PZ27_originalEdgeOnPlaquette]
+    simp only [hMem p, hMem q, hMem r]
+    unfold p4Q2PZ27_originalTripleOddEdge
+    rfl
   rw [hEq]
   exact hGeneral
 
