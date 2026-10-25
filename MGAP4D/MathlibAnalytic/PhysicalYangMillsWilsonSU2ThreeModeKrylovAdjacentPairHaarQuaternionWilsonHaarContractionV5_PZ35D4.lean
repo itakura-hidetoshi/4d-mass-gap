@@ -95,7 +95,7 @@ theorem p4Q2PZ35D4_centralMinusOne_coe :
   change p4Q2PZ35A_pauliQ1 * p4Q2PZ35A_pauliQ1 = -(1 : Mat)
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [p4Q2PZ35A_pauliQ1, Matrix.vecMul, dotProduct]
+    simp [p4Q2PZ35A_pauliQ1]
 
 /-- The fundamental real Wilson character is odd under multiplication
 by the true central SU(2) element -I. -/
