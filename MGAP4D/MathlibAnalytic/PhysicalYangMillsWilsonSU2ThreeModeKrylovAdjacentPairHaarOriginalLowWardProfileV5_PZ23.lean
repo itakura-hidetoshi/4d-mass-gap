@@ -646,7 +646,7 @@ noncomputable def p4Q2PZ23_originalLowWardPolynomial : Polynomial ℝ :=
 theorem p4Q2PZ23_originalLowWardProfile_polynomialEval (y : ℝ) :
     Profile y = (p4Q2PZ23_originalLowWardPolynomial H).eval y := by
   rw [p4Q2PZ23_originalLowWardProfile_quartic H y]
-  simp [p4Q2PZ23_originalLowWardPolynomial] <;> ring
+  simp [p4Q2PZ23_originalLowWardPolynomial]; ring
 
 /-- Concrete degree-at-most-four polynomial reduction of V_low,
 not a claim that the full Wilson mixed potential is only quartic. -/
