@@ -1,5 +1,6 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalEndpointMomentTransportV5_PZ36D
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalEndpointSixthCancellationAlgebraV5_PZ36B
+import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalScaledStrippedFifthAffineV5_PZ36
 import Mathlib.Tactic
 
 /-!
@@ -62,7 +63,9 @@ local notation "R2" => p4Q2PZ36D_originalTwoRaw H
 
 /-- The actual first signed PK coefficient is minus the first raw Haar moment. -/
 theorem p4Q2PZ36E_originalFirstAction_eq_negRaw (B : Cfg) :
-    p4Q2PK_originalOneSlabFirstActionMoment H B = -(R1 1 B) := rfl
+    p4Q2PK_originalOneSlabFirstActionMoment H B = -(R1 1 B) := by
+  simp only [p4Q2PK_originalOneSlabFirstActionMoment,
+    p4Q2PZ36D_originalOneRaw, pow_one]
 
 /-- The original second PK coefficient is the genuine raw second moment. -/
 theorem p4Q2PZ36E_originalSecondAction_eq_raw (B : Cfg) :
@@ -120,7 +123,7 @@ theorem p4Q2PZ36E_originalOneRaw_fifth_endpoint (B : Cfg) :
     (p4Q2PZ36C_half_continuous H).add
       (p4Q2PZ36C_cross_continuous H B)
   have hExp : R1 5 B =
-      ∑ k ∈ Finset.range 6, (5.choose k : ℝ) *
+      ∑ k ∈ Finset.range 6, ((5 : ℕ).choose k : ℝ) *
         ((∫ X : Cfg, (w X+Cross X B)^k ∂haar)*(w B)^(5-k)) := by
     calc
       R1 5 B = (∫ X : Cfg, ((w X+Cross X B)+w B)^5 ∂haar) := by
@@ -128,7 +131,7 @@ theorem p4Q2PZ36E_originalOneRaw_fifth_endpoint (B : Cfg) :
         apply integral_congr_ae
         filter_upwards with X
         rw [p4Q2PZ36C_originalOneSlab_eq_rightStripped H X B]
-      _ = ∑ k ∈ Finset.range 6, (5.choose k : ℝ) *
+      _ = ∑ k ∈ Finset.range 6, ((5 : ℕ).choose k : ℝ) *
           (∫ X : Cfg, (w X+Cross X B)^k*(w B)^(5-k) ∂haar) := by
         simpa only [] using
           (p4Q2PZ36A_originalHaar_integral_binomial H
