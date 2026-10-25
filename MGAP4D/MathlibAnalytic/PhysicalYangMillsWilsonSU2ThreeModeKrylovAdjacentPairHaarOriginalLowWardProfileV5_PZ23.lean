@@ -186,7 +186,6 @@ theorem p4Q2PZ23_originalSelectedCrossingTwo_Haar_invariant
   have hweight (x : ℝ) : P2 x y = u + v*x + t*x^2 := by
     unfold p4Q2PZ22_originalSelectedCrossingTwo
     dsimp [u,v,t]
-    ring
   have hWard :
       (∫ X : Cfg, (u+v*w X+t*(w X)^2)*(Cross X B)^2 ∂haar) =
       (∫ X : Cfg,
@@ -252,7 +251,6 @@ theorem p4Q2PZ23_originalSelectedCrossingThree_Haar_invariant
   have hweight (x : ℝ) : P3 x y = u + v*x := by
     unfold p4Q2PZ22_originalSelectedCrossingThree
     dsimp [u,v]
-    ring
   have hWard :
       (∫ X : Cfg, (u+v*w X)*(Cross X B)^3 ∂haar) =
       (∫ X : Cfg, (u+v*w X)*(Cross X (fun _ => 1))^3 ∂haar) := by
