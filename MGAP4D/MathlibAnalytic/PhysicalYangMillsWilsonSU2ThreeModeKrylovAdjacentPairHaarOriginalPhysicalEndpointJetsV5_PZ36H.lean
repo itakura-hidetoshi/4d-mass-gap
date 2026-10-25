@@ -51,13 +51,11 @@ theorem p4Q2PZ36H_originalOneFirst_endpoint (B : Cfg) :
     R1 1 B = w B + R1 1 I := by
   rw [p4Q2PZ36D_originalOneRaw_endpoint_binomial H 1 (by omega) B]
   simp [Finset.sum_range_succ, Nat.choose]
-  ring
 
 theorem p4Q2PZ36H_originalTwoFirst_endpoint (B : Cfg) :
     R2 1 B = w B + R2 1 I := by
   rw [p4Q2PZ36D_originalTwoRaw_endpoint_binomial H 1 (by omega) B]
   simp [Finset.sum_range_succ, Nat.choose]
-  ring
 
 theorem p4Q2PZ36H_originalOneSecond_endpoint (B : Cfg) :
     R1 2 B = (w B)^2 + 2*(R1 1 I)*(w B) + R1 2 I := by
