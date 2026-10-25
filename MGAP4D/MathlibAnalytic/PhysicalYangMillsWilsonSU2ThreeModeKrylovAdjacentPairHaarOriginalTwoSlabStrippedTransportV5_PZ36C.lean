@@ -84,8 +84,6 @@ theorem p4Q2PZ36C_originalTwoSlab_strip_eq (Y X B : Cfg) :
   change S Y X + S X B - w B = _
   rw [p4Q2PZ36C_originalOneSlab_eq_rightStripped H Y X,
     p4Q2PZ36C_originalOneSlab_eq_rightStripped H X B]
-  change (w Y + Cross Y X + w X) +
-    (w X + Cross X B + w B) - w B = _
   ring
 
 /-- Genuine identity-boundary stripped left moments. -/
