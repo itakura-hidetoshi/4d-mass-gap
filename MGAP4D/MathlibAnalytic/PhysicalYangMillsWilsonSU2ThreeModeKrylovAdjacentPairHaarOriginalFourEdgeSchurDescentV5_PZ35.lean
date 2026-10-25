@@ -98,7 +98,7 @@ theorem p4Q2PZ35_originalS4_affine_of_SchurEigenlaw
       intro p _hp
       exact hSchur p B
     _ = 24 * (lambda * (∑ p : Plaq, χ p B)) := by
-      rw [Finset.mul_sum]
+      rw [← Finset.mul_sum]
     _ = 24 * lambda * (∑ p : Plaq, χ p B) := by ring
     _ = 24 * lambda *
           ((Fintype.card Plaq : ℝ) - 2 * w B) := by
