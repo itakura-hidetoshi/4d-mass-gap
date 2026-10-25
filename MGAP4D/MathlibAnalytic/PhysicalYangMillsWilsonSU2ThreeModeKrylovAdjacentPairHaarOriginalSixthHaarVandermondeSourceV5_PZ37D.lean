@@ -90,7 +90,6 @@ theorem p4Q2PZ37D_originalScaledSixth_binomial
       ((6 : ℕ).choose k : ℝ) * r^k *
         (∫ X : Cfg, (w X)^k*(Cross X B)^(6-k) ∂haar)
     simp only [mul_pow, mul_assoc, integral_const_mul]
-    ring
   rw [hTerms]
   simp [Finset.sum_range_succ, Nat.choose]
   ring
