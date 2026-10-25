@@ -73,8 +73,8 @@ theorem p4Q2PZ36C_cross_continuous (B : Cfg) :
 this lemma only unfolds the already existing right-stripped action. -/
 theorem p4Q2PZ36C_originalOneSlab_eq_rightStripped (A B : Cfg) :
     S A B = w A + Cross A B + w B := by
-  rw [p4Q2PS_originalOneSlabAction_rightSplit H A B]
-  rfl
+  simpa only [p4Q2PS_originalRightStrippedAction] using
+    (p4Q2PS_originalOneSlabAction_rightSplit H A B)
 
 /-- Algebraic identification with the actual original Q. The middle
 spatial half-action occurs TWICE, once in each physical slab. -/
