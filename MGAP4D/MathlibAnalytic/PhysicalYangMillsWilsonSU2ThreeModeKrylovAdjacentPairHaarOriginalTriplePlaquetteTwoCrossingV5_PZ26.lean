@@ -143,18 +143,20 @@ theorem p4Q2PZ26_originalTripleTwoLinkHaar_zero_of_repeated
     (p q r : Plaq) (e f : Link) (B : Cfg)
     (hRepeat : p = q ∨ p = r ∨ q = r) :
     J2 p q r e f B = 0 := by
-  rcases hRepeat with hPQ | hPR | hQR
-  · subst q
+  have hFirst (u v : Plaq) : J2 u u v e f B = 0 := by
     calc
-      J2 p p r e f B =
-        (∫ X : Cfg, ((χ p X)^2 * χ r X) *
+      J2 u u v e f B =
+        (∫ X : Cfg, ((χ u X)^2 * χ v X) *
           (E ((X e)⁻¹ * B e) * E ((X f)⁻¹ * B f)) ∂haar) := by
           unfold p4Q2PZ26_originalTriplePlaquetteTwoLinkHaar
           apply integral_congr_ae
           filter_upwards with X
           ring
       _ = 0 :=
-        p4Q2PZ26_originalSquarePlaquetteTwoLinkHaar_zero H p r e f B
+        p4Q2PZ26_originalSquarePlaquetteTwoLinkHaar_zero H u v e f B
+  rcases hRepeat with hPQ | hPR | hQR
+  · subst q
+    exact hFirst p r
   · subst r
     calc
       J2 p q p e f B = J2 p p q e f B := by
@@ -162,8 +164,7 @@ theorem p4Q2PZ26_originalTripleTwoLinkHaar_zero_of_repeated
         apply integral_congr_ae
         filter_upwards with X
         ring
-      _ = 0 := p4Q2PZ26_originalTripleTwoLinkHaar_zero_of_repeated
-        H p p q e f B (Or.inl rfl)
+      _ = 0 := hFirst p q
   · subst r
     calc
       J2 p q q e f B = J2 q q p e f B := by
@@ -171,8 +172,7 @@ theorem p4Q2PZ26_originalTripleTwoLinkHaar_zero_of_repeated
         apply integral_congr_ae
         filter_upwards with X
         ring
-      _ = 0 := p4Q2PZ26_originalTripleTwoLinkHaar_zero_of_repeated
-        H q q p e f B (Or.inl rfl)
+      _ = 0 := hFirst q p
 
 /-- Exactly expand the original Haar two-crossing Wilson action
 into ALL ordered pairs of physical spatial links. -/
@@ -409,6 +409,7 @@ original SU(2) center flips, not discarded by an assumption. -/
 theorem p4Q2PZ26_originalCenteredCube_onlyDistinctPlaquettes
     (B : Cfg) :
     Z32 B = (1 / 8 : ℝ) * Distinct3 B := by
+  classical
   rw [p4Q2PZ26_originalCenteredCube_tripleHaar H B]
   unfold p4Q2PZ26_originalDistinctPlaquetteTripleHaar
   apply congrArg (fun t : ℝ => (1 / 8 : ℝ) * t)
