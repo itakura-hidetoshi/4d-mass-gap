@@ -129,8 +129,7 @@ theorem p4Q2PZ37E_originalInnerTwoStrippedFifth
       dsimp [t]
       simp [Finset.sum_range_succ, Nat.choose, hZero,
         hLow 1 (by omega), hLow 2 (by omega),
-        hLow 3 (by omega), hLow 4 (by omega), hFifth]
-      ring
+        hLow 3 (by omega), hLow 4 (by omega), hFifth] <;> ring
 
 /-- The original TWO-slab stripped fifth is an explicit original-Haar
 outer polynomial. Lower powers of the r=2 observable are retained. -/
@@ -162,8 +161,7 @@ theorem p4Q2PZ37E_originalTwoStrippedFifth_outerExpansion
       (∫ Y : Cfg, (Q Y X B-w B)^5 ∂haar) =
         ∑ i : Fin 7, f i X := by
     rw [p4Q2PZ37E_originalInnerTwoStrippedFifth H X B]
-    simp [f, Fin.sum_univ_succ]
-    ring
+    simp [f, Fin.sum_univ_succ] <;> ring
   have hSum :
       (∫ X : Cfg, (∑ i : Fin 7, f i X) ∂haar) =
         ∑ i : Fin 7, ∫ X : Cfg, f i X ∂haar :=
@@ -181,8 +179,7 @@ theorem p4Q2PZ37E_originalTwoStrippedFifth_outerExpansion
       10*(m 3)*V 2 B + 5*(m 4)*V 1 B +
       m 5 + (15/32 : ℝ)*(∫ X : Cfg, w X ∂haar) := by
         simp [f, Fin.sum_univ_succ,
-          p4Q2PZ37E_originalDoubledStripMoment, integral_const_mul]
-        ring
+          p4Q2PZ37E_originalDoubledStripMoment, integral_const_mul] <;> ring
 
 /-- The key missing PHYSICAL two-slab source transport:
 the genuinely interacting double spatial SU(2) Haar fifth moment,
