@@ -35,8 +35,7 @@ theorem p4Q2PZ35B_pauliQ1_mem_SU2 :
   · rw [Matrix.mem_unitaryGroup_iff]
     ext i j
     fin_cases i <;> fin_cases j <;>
-      simp [p4Q2PZ35A_pauliQ1, Matrix.vecMul, dotProduct] <;>
-      ring
+      simp [p4Q2PZ35A_pauliQ1, Matrix.vecMul, dotProduct]
   · simp [p4Q2PZ35A_pauliQ1, Matrix.det_fin_two]
 
 /-- Imaginary quaternion K has unitary adjoint and determinant one. -/
@@ -47,14 +46,8 @@ theorem p4Q2PZ35B_pauliQ2_mem_SU2 :
   · rw [Matrix.mem_unitaryGroup_iff]
     ext i j
     fin_cases i <;> fin_cases j <;>
-      simp [p4Q2PZ35A_pauliQ2, Matrix.vecMul, dotProduct] <;>
-      ring_nf <;>
-      simp [Complex.I_sq] <;>
-      ring
-  · simp [p4Q2PZ35A_pauliQ2, Matrix.det_fin_two] <;>
-      ring_nf <;>
-      simp [Complex.I_sq] <;>
-      ring
+      simp [p4Q2PZ35A_pauliQ2, Matrix.vecMul, dotProduct]
+  · simp [p4Q2PZ35A_pauliQ2, Matrix.det_fin_two]
 
 /-- Genuine SU(2) quaternion J, with matrix exactly the PZ35A J. -/
 def p4Q2PZ35B_quaternionJ : G :=
@@ -79,8 +72,7 @@ theorem p4Q2PZ35B_quaternionL_coe :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [p4Q2PZ35A_pauliQ1, p4Q2PZ35A_pauliQ2,
-      p4Q2PZ35A_pauliQ3, Matrix.vecMul, dotProduct] <;>
-    ring
+      p4Q2PZ35A_pauliQ3]
 
 /-- All four fixed twirl points are literal elements of the original SU(2). -/
 def p4Q2PZ35B_quaternionFamily : Fin 4 → G :=
@@ -105,7 +97,9 @@ theorem p4Q2PZ35B_quaternionFamily_coe (k : Fin 4) :
       ![p4Q2PZ35A_pauliQ0, p4Q2PZ35A_pauliQ1,
         p4Q2PZ35A_pauliQ2, p4Q2PZ35A_pauliQ3] k := by
   fin_cases k
-  · simp [p4Q2PZ35B_quaternionFamily, p4Q2PZ35A_pauliQ0]
+  · change (1 : Mat) = p4Q2PZ35A_pauliQ0
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp [p4Q2PZ35A_pauliQ0]
   · rfl
   · rfl
   · exact p4Q2PZ35B_quaternionL_coe
