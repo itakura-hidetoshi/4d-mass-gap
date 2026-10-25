@@ -30,23 +30,59 @@ set_option maxHeartbeats 29000000
 set_option maxRecDepth 16384
 set_option synthInstance.maxHeartbeats 1050000
 
-/-- An EXPLICIT COMPUTABLE enumeration of the actual primary
-reflection plane at period two. Upstream `Fintype.ofFinite` is
-noncomputable and cannot serve a kernel-reduced finite certificate. -/
-/-- The geometrically exact fixed-time equation is computably
-decidable once explicitly reduced to a ZMod coordinate equality. -/
+/-- All equality tests in the genuine period-two geometry use
+computable concrete ZMod-2, Fin-4, subtype and product deciders;
+none use Classical.decEq. -/
+local instance p4Q2PZ31_fullVertexDecidableEq :
+    DecidableEq (PeriodicHypercubicEvenVertex 0) :=
+  Fintype.decidablePiFintype
+local instance p4Q2PZ31_spatialVertexDecidableEq :
+    DecidableEq (PeriodicHypercubicEvenSpatialSliceVertex 0) :=
+  Subtype.instDecidableEq
+local instance p4Q2PZ31_spatialDirectionDecidableEq :
+    DecidableEq PeriodicHypercubicEvenSpatialDirection :=
+  Subtype.instDecidableEq
+local instance p4Q2PZ31_spatialDirectionPairDecidableEq :
+    DecidableEq PeriodicHypercubicEvenSpatialDirectionPair :=
+  Subtype.instDecidableEq
+local instance p4Q2PZ31_linkDecidableEq :
+    DecidableEq (PeriodicHypercubicEvenSpatialSliceLink 0) :=
+  instDecidableEqProd
+local instance p4Q2PZ31_plaquetteDecidableEq :
+    DecidableEq (PeriodicHypercubicEvenSpatialSlicePlaquette 0) :=
+  instDecidableEqProd
+
+/-- The primary reflection plane is a computable equality of one
+actual Euclidean-time ZMod-2 coordinate with zero. -/
 local instance p4Q2PZ31_primaryPlaneDecidable :
     DecidablePred (periodicHypercubicEvenOnPrimaryReflectionPlane 0) :=
   fun v => inferInstanceAs (Decidable (v 0 = 0))
 
+/-- Explicit COMPUTABLE enumeration of the real primary spatial
+reflection plane, avoiding the inherited Fintype.ofFinite choice. -/
 local instance p4Q2PZ31_spatialSliceVertexFintype :
     Fintype (PeriodicHypercubicEvenSpatialSliceVertex 0) :=
   Fintype.subtype
     (Finset.univ.filter
       (periodicHypercubicEvenOnPrimaryReflectionPlane 0))
-    (by
-      intro v
-      simp)
+    (by intro v; simp)
+
+/-- The three actual spatial directions and three ordered spatial
+coordinate planes have directly filtered computable enumerations. -/
+local instance p4Q2PZ31_spatialDirectionFintype :
+    Fintype PeriodicHypercubicEvenSpatialDirection :=
+  Fintype.subtype
+    ((Finset.univ : Finset PeriodicHypercubicAxis).filter
+      (fun mu => mu ≠ 0))
+    (by intro mu; simp)
+local instance p4Q2PZ31_spatialDirectionPairFintype :
+    Fintype PeriodicHypercubicEvenSpatialDirectionPair :=
+  Fintype.subtype
+    ((Finset.univ :
+      Finset (PeriodicHypercubicEvenSpatialDirection ×
+        PeriodicHypercubicEvenSpatialDirection)).filter
+      (fun pair => pair.1.1 < pair.2.1))
+    (by intro pair; simp)
 
 local instance p4Q2PZ31_linkFintype :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink 0) :=
