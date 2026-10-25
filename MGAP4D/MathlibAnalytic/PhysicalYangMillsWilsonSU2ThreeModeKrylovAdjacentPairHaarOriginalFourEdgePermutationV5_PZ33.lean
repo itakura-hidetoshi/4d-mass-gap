@@ -63,6 +63,15 @@ local notation "w" => p4Q2PS_originalHalfSpatialAction H
 local notation "W6" => p4Q2PZ8_originalSixthWardObstruction H
 local notation "Low6" => p4Q2PZ32_originalSixthWardLowBaseline H
 
+/-- Explicit mathlib bridge: list-to-finset deduplication produces
+exactly the finite support of an ordered four-link sequence. In Lean
+the two presentations are propositionally, not definitionally, equal. -/
+private theorem p4Q2PZ33_fourList_toFinset
+    (a b c d : Link) :
+    ([a,b,c,d] : List Link).toFinset = ({a,b,c,d} : Finset Link) := by
+  classical
+  simp only [List.toFinset_cons, List.toFinset_nil, Finset.insert_empty]
+
 /-- Covering all four ORIGINAL spatial plaquette links is precisely
 finset inclusion in the four real temporal crossing link indices. -/
 theorem p4Q2PZ33_originalCovers_iff_fourEdges_subset
@@ -104,11 +113,13 @@ theorem p4Q2PZ33_originalFourEdges_list_nodup (p : Plaq) :
   classical
   have hFour : (Four p).card = 4 :=
     p4Q2PZ28_originalFourEdges_card H p
+  have hFin : ([e0 p,e1 p,e2 p,e3 p] : List Link).toFinset.card = 4 := by
+    rw [p4Q2PZ33_fourList_toFinset H]
+    exact hFour
   have hCard :
       ((↑([e0 p,e1 p,e2 p,e3 p] : List Link) : Multiset Link).toFinset).card =
         (↑([e0 p,e1 p,e2 p,e3 p] : List Link) : Multiset Link).card := by
-    change (Four p).card = 4
-    exact hFour
+    simpa using hFin
   exact Multiset.coe_nodup.mp
     ((Multiset.toFinset_card_eq_card_iff_nodup).mp hCard)
 
@@ -124,11 +135,13 @@ theorem p4Q2PZ33_originalCover_crossings_nodup
   have hFour : ({e,f,g,k} : Finset Link).card = 4 := by
     rw [←hEqual]
     exact p4Q2PZ28_originalFourEdges_card H p
+  have hFin : ([e,f,g,k] : List Link).toFinset.card = 4 := by
+    rw [p4Q2PZ33_fourList_toFinset H]
+    exact hFour
   have hCard :
       ((↑([e,f,g,k] : List Link) : Multiset Link).toFinset).card =
         (↑([e,f,g,k] : List Link) : Multiset Link).card := by
-    change ({e,f,g,k} : Finset Link).card = 4
-    exact hFour
+    simpa using hFin
   exact Multiset.coe_nodup.mp
     ((Multiset.toFinset_card_eq_card_iff_nodup).mp hCard)
 
@@ -146,15 +159,18 @@ theorem p4Q2PZ33_originalCovers_iff_linkList_perm
     apply List.perm_of_nodup_nodup_toFinset_eq
       (p4Q2PZ33_originalCover_crossings_nodup H p e f g k hc)
       (p4Q2PZ33_originalFourEdges_list_nodup H p)
-    change ({e,f,g,k} : Finset Link) = Four p
-    exact ((p4Q2PZ33_originalCovers_iff_fourEdges_eq
-      H p e f g k).mp hc).symm
+    rw [p4Q2PZ33_fourList_toFinset H e f g k,
+      p4Q2PZ33_fourList_toFinset H (e0 p) (e1 p) (e2 p) (e3 p)]
+    simpa only [p4Q2PZ28_originalFourEdges] using
+      ((p4Q2PZ33_originalCovers_iff_fourEdges_eq
+        H p e f g k).mp hc).symm
   · intro hp
     apply (p4Q2PZ33_originalCovers_iff_fourEdges_eq H p e f g k).mpr
     have hs := List.toFinset_eq_of_perm
       ([e,f,g,k] : List Link) ([e0 p,e1 p,e2 p,e3 p] : List Link) hp
-    change ({e,f,g,k} : Finset Link) = Four p at hs
-    exact hs.symm
+    rw [p4Q2PZ33_fourList_toFinset H e f g k,
+      p4Q2PZ33_fourList_toFinset H (e0 p) (e1 p) (e2 p) (e3 p)] at hs
+    simpa only [p4Q2PZ28_originalFourEdges] using hs.symm
 
 /-- Original Haar sum, rewritten ONLY to its mathematically exact
 permutation support predicate; all actual Haar integrals are retained. -/
