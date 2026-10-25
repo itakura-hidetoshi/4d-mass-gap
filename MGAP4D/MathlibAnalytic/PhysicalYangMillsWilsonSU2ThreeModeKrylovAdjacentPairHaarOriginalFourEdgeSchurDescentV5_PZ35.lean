@@ -97,9 +97,9 @@ theorem p4Q2PZ35_originalS4_affine_of_SchurEigenlaw
       apply Finset.sum_congr rfl
       intro p _hp
       exact hSchur p B
-    _ = 24 * lambda * (∑ p : Plaq, χ p B) := by
+    _ = 24 * (lambda * (∑ p : Plaq, χ p B)) := by
       rw [Finset.mul_sum]
-      ring
+    _ = 24 * lambda * (∑ p : Plaq, χ p B) := by ring
     _ = 24 * lambda *
           ((Fintype.card Plaq : ℝ) - 2 * w B) := by
       rw [p4Q2PZ35_originalTraceSum_eq_card_sub_twoHalfAction H B]
@@ -127,12 +127,9 @@ theorem p4Q2PZ35_originalSixthWard_eq_lowBaseline_of_SchurEigenlaw
     W6 A B C = Low6 A B C := by
   apply p4Q2PZ32_originalSixthWard_lowOnly_of_affineFourthSupport H
     (-48 * lambda) (24 * lambda * (Fintype.card Plaq : ℝ))
-  · intro D
-    rw [p4Q2PZ35_originalS4_affine_of_SchurEigenlaw H lambda hSchur D]
-    ring
-  · exact A
-  · exact B
-  · exact C
+  intro D
+  rw [p4Q2PZ35_originalS4_affine_of_SchurEigenlaw H lambda hSchur D]
+  ring
 
 /-- The explicit SU(2) fundamental-representation coefficient
 predicted analytically by FOUR applications of -1/4 Schur
