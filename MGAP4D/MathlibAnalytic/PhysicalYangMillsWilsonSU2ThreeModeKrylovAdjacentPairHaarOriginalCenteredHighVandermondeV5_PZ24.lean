@@ -241,7 +241,25 @@ theorem p4Q2PZ24_originalF32_plusCenteredCube_lowerSelected
     _ = m^3*(∫ X : Cfg, (Cross X D)^2 ∂haar) -
         3*m^2*(∫ X : Cfg, w X*(Cross X D)^2 ∂haar) +
         3*m*(∫ X : Cfg, (w X)^2*(Cross X D)^2 ∂haar) := by
-      rw [integral_add (hi0.add hi1) hi2, integral_add hi0 hi1]
+      have hadd01 :
+          (∫ X : Cfg,
+            m^3*(Cross X D)^2 +
+              (-3*m^2)*(w X*(Cross X D)^2) ∂haar) =
+          (∫ X : Cfg, m^3*(Cross X D)^2 ∂haar) +
+            (∫ X : Cfg, (-3*m^2)*(w X*(Cross X D)^2) ∂haar) := by
+        simpa only [Pi.add_apply] using (integral_add hi0 hi1)
+      have hadd012 :
+          (∫ X : Cfg,
+            (m^3*(Cross X D)^2 +
+              (-3*m^2)*(w X*(Cross X D)^2)) +
+                (3*m)*((w X)^2*(Cross X D)^2) ∂haar) =
+          (∫ X : Cfg,
+            m^3*(Cross X D)^2 +
+              (-3*m^2)*(w X*(Cross X D)^2) ∂haar) +
+            (∫ X : Cfg, (3*m)*((w X)^2*(Cross X D)^2) ∂haar) := by
+        simpa only [Pi.add_apply] using
+          (integral_add (hi0.add hi1) hi2)
+      rw [hadd012, hadd01]
       simp only [integral_const_mul]
       ring
 
