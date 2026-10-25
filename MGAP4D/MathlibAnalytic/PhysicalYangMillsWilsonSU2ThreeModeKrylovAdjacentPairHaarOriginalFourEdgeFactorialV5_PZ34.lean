@@ -201,7 +201,7 @@ theorem p4Q2PZ34_originalPermutationHaar_eq_supportSum
   unfold p4Q2PZ33_originalPermutedPlaquetteFourthHaar
     p4Q2PZ34_originalPermutationSupport
   simp only [Finset.sum_filter, Fintype.sum_prod_type,
-    p4Q2PZ34_quadList]
+    p4Q2PZ34_quadList, p4Q2PZ34_baseList]
 
 /-- Exact factorial multiplicity: all 24 actual original
 SU(2) four-crossing Haar integrals equal the canonical term. -/
@@ -229,6 +229,7 @@ theorem p4Q2PZ34_originalPermutedFourth_eq_twentyFour
           simp [nsmul_eq_mul]
     _ = 24 * p4Q2PZ34_originalCanonicalFourCrossingHaar H p B := by
           rw [p4Q2PZ34_originalSupport_card_twentyFour H p]
+          norm_num
 
 /-- PZ32's COMPLETE remaining true fourth-spatial Haar support
 is 24 times one standard genuinely ordered SU(2) Haar integral
