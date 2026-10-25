@@ -318,11 +318,15 @@ theorem p4Q2PZ29_originalGeometricHaar_onlyNonThinTriples
         simp [hDistinct, hGeo, hThin, hZero]
       · simp [hDistinct, hGeo, hThin]
     · simp [hDistinct, hGeo]
-  · have hNot :
+  · have hNotGeo :
+        ¬ (p ≠ q ∧ p ≠ r ∧ q ≠ r ∧ Geo p q r) := by
+      rintro ⟨hpq, hpr, hqr, _hGeo⟩
+      exact hDistinct ⟨hpq, hpr, hqr⟩
+    have hNot :
         ¬ (p ≠ q ∧ p ≠ r ∧ q ≠ r ∧ Geo p q r ∧ ¬ Thin p q r) := by
       rintro ⟨hpq, hpr, hqr, _hGeo, _hThin⟩
       exact hDistinct ⟨hpq, hpr, hqr⟩
-    simp [hDistinct, hNot]
+    simp [hNotGeo, hNot]
 
 /-- Source-preserving exact PZ24 centered cubic Haar reduced further by
 the genuine PZ29 single-junction selection. -/
