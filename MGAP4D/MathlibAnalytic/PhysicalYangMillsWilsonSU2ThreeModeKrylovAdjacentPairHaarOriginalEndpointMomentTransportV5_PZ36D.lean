@@ -2,7 +2,7 @@ import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentP
 import Mathlib.Tactic
 
 /-!
-# PZ36D — literal one-/two-slab common-endpoint moment transport
+# PZ36D — literal one- and two-slab common-endpoint moment transport
 
 The coefficients below are actual original Haar moments at the identity
 boundary, never free algebraic parameters. PZ36C retains the full middle
