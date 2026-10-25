@@ -655,6 +655,138 @@ theorem p4Q2PZ23_originalSelectedLowHaar_polynomialEval (B : Cfg) :
   rw [p4Q2PZ23_originalSelectedLowHaar_eq_boundaryProfile H B,
     p4Q2PZ23_originalLowWardProfile_polynomialEval H (w B)]
 
+
+/-!
+## PZ23 higher crossing classification: F23 is ALREADY Haar-selected
+
+The PZ12 authentic two-plaquette Ward proof established invariance
+of the original spatial centered action squared times three crossings.
+Since the actual centered action h(X)=∫w dHaar-w(X), the identity
+w(X)^2=h(X)^2+2(∫w)dHaar*w(X)-(∫w)^2
+transports PZ12 and the established PZ19/PZ20 cubic Haar selections
+to the previously unresolved genuine F23 weighted crossing sector.
+No substitution of the action, boundary, Haar, or physical source.
+-/
+
+local notation "h" => p4Q2PS_originalCenteredFirstMoment H
+
+/-- Exact physical SU(2) Haar identity: the original w² Crossing³
+moment equals centered w² Crossing³ plus already selected lower
+moments. The equality holds for each real boundary configuration. -/
+private theorem p4Q2PZ23_originalF23_centeredDecomposition (D : Cfg) :
+    F23 D =
+      (∫ X : Cfg, (h X)^2 * (Cross X D)^3 ∂haar) +
+        2*(∫ Y : Cfg, w Y ∂haar) *
+          (∫ X : Cfg, w X * (Cross X D)^3 ∂haar) -
+        (∫ Y : Cfg, w Y ∂haar)^2 *
+          (∫ X : Cfg, (Cross X D)^3 ∂haar) := by
+  let m : ℝ := ∫ Y : Cfg, w Y ∂haar
+  have hw := p4Q2PZ23_half_continuous H
+  have hc := p4Q2PZ23_cross_continuous H D
+  have hh : Continuous (fun X : Cfg => h X) := by
+    have heq : (fun X : Cfg => h X) = (fun X : Cfg => m - w X) := by
+      funext X
+      exact p4Q2PY6_originalCenteredFirst_eq_meanHalf_sub_half H X
+    rw [heq]
+    exact continuous_const.sub hw
+  have h0 : Integrable (fun X : Cfg => (h X)^2 * (Cross X D)^3) haar :=
+    ((hh.pow 2).mul (hc.pow 3)).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have h1 : Integrable (fun X : Cfg =>
+      (2*m) * (w X * (Cross X D)^3)) haar :=
+    (continuous_const.mul (hw.mul (hc.pow 3))).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have h2 : Integrable (fun X : Cfg =>
+      m^2 * (Cross X D)^3) haar :=
+    (continuous_const.mul (hc.pow 3)).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have hAdd :
+      (∫ X : Cfg,
+        (h X)^2 * (Cross X D)^3 +
+          (2*m) * (w X * (Cross X D)^3) ∂haar) =
+      (∫ X : Cfg, (h X)^2 * (Cross X D)^3 ∂haar) +
+        (∫ X : Cfg, (2*m) * (w X * (Cross X D)^3) ∂haar) := by
+    simpa only [Pi.add_apply] using (integral_add h0 h1)
+  have hSub :
+      (∫ X : Cfg,
+        ((h X)^2 * (Cross X D)^3 +
+          (2*m) * (w X * (Cross X D)^3)) -
+          m^2 * (Cross X D)^3 ∂haar) =
+      (∫ X : Cfg,
+        (h X)^2 * (Cross X D)^3 +
+          (2*m) * (w X * (Cross X D)^3) ∂haar) -
+        (∫ X : Cfg, m^2 * (Cross X D)^3 ∂haar) := by
+    simpa only [Pi.sub_apply] using (integral_sub (h0.add h1) h2)
+  change (∫ X : Cfg, (w X)^2 * (Cross X D)^3 ∂haar) =
+    (∫ X : Cfg, (h X)^2 * (Cross X D)^3 ∂haar) +
+      2*m*(∫ X : Cfg, w X * (Cross X D)^3 ∂haar) -
+      m^2*(∫ X : Cfg, (Cross X D)^3 ∂haar)
+  calc
+    (∫ X : Cfg, (w X)^2 * (Cross X D)^3 ∂haar) =
+      (∫ X : Cfg,
+        ((h X)^2 * (Cross X D)^3 +
+          (2*m) * (w X * (Cross X D)^3)) -
+          m^2 * (Cross X D)^3 ∂haar) := by
+        apply integral_congr_ae
+        filter_upwards with X
+        rw [p4Q2PY6_originalCenteredFirst_eq_meanHalf_sub_half H X]
+        dsimp [m]
+        ring
+    _ = (∫ X : Cfg, (h X)^2 * (Cross X D)^3 ∂haar) +
+        2*m*(∫ X : Cfg, w X * (Cross X D)^3 ∂haar) -
+        m^2*(∫ X : Cfg, (Cross X D)^3 ∂haar) := by
+      rw [hSub, hAdd]
+      simp only [integral_const_mul]
+
+/-- NEW: genuine degree-five spatial-square/crossing-cube Haar
+sector is right-boundary INVARIANT. This uses the ACTUAL PZ12
+three-crossing Wilson plaquette square Ward result and PZ19/PZ20,
+and proves one of PZ22's three originally unresolved cases. -/
+theorem p4Q2PZ23_originalF23_Haar_boundaryInvariant (B : Cfg) :
+    F23 B = F23 (fun _ => 1) := by
+  rw [p4Q2PZ23_originalF23_centeredDecomposition H B,
+    p4Q2PZ23_originalF23_centeredDecomposition H (fun _ => 1),
+    p4Q2PZ12_originalCenteredSquare_fullCrossingCubeHaar_invariant H B,
+    p4Q2PZ20_originalHalfSpatial_crossingCubeHaar_invariant H B,
+    p4Q2PZ19_originalFullCrossingPowerHaar_invariant H 3 B]
+
+/-- Original Wilson mixed potential now has at most TWO unselected
+degree-five higher-crossing Haar sectors, F32 and F14; the authentic
+F23 is a fixed SU(2) Haar constant at the identity configuration. -/
+theorem p4Q2PZ23_originalMixedPotential_twoUnselectedHigh
+    (B : Cfg) :
+    V B = Profile (w B) + 70*F32 B +
+      30*F23 (fun _ => 1) + 5*F14 B := by
+  rw [p4Q2PZ23_originalMixedPotential_lowWardProfile H B,
+    p4Q2PZ23_originalF23_Haar_boundaryInvariant H B]
+
+/-- On a fixed physical Wilson spatial-action level, only the TWO
+remaining genuinely unselected higher moments can vary V. -/
+theorem p4Q2PZ23_originalMixedPotential_twoHigh_sameSpatialAction
+    (B C : Cfg) (hs : w B = w C) :
+    V B - V C = 70*(F32 B-F32 C)+5*(F14 B-F14 C) := by
+  rw [p4Q2PZ23_originalMixedPotential_twoUnselectedHigh H B,
+    p4Q2PZ23_originalMixedPotential_twoUnselectedHigh H C, hs]
+  ring
+
+/-- The genuine sixth Ward expression keeps original C6 and removes
+the proven F23 boundary difference, leaving F32 and F14 as the
+ONLY higher-weight unselected Haar contributions to W6. -/
+theorem p4Q2PZ23_originalSixthWard_twoUnselectedHigh
+    (A B C : Cfg) :
+    W6 A B C =
+      720*C6 A B C -
+      6*((a B-a A)*
+          ((Profile (w C)-Profile (w A)) +
+            70*(F32 C-F32 A)+5*(F14 C-F14 A)) -
+        (a C-a A)*
+          ((Profile (w B)-Profile (w A)) +
+            70*(F32 B-F32 A)+5*(F14 B-F14 A))) := by
+  rw [p4Q2PZ23_originalSixthWard_lowWardProfile H A B C,
+    p4Q2PZ23_originalF23_Haar_boundaryInvariant H A,
+    p4Q2PZ23_originalF23_Haar_boundaryInvariant H B,
+    p4Q2PZ23_originalF23_Haar_boundaryInvariant H C]
+  ring
 end GenuineOriginalLowHaarWard
 end GroundStatePosteriorJoint
 
@@ -676,3 +808,8 @@ end MGAP4D
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ23_originalLowWardProfile_quartic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ23_originalLowWardProfile_polynomialEval
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ23_originalSelectedLowHaar_polynomialEval
+
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ23_originalF23_Haar_boundaryInvariant
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ23_originalMixedPotential_twoUnselectedHigh
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ23_originalMixedPotential_twoHigh_sameSpatialAction
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ23_originalSixthWard_twoUnselectedHigh
