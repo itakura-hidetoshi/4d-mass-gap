@@ -82,15 +82,14 @@ theorem p4Q2PZ28_originalFourEdges_card (p : Plaq) :
   obtain ⟨h30, h31, h32⟩ :=
     p4Q2PU3_originalPlaquette_last_distinct H p
   simp [p4Q2PZ28_originalFourEdges,
-    h01, h02, h12, h30, h31, h32,
-    Ne.symm h01, Ne.symm h02, Ne.symm h12,
-    Ne.symm h30, Ne.symm h31, Ne.symm h32]
+    h01, h02, h12, Ne.symm h30, Ne.symm h31, Ne.symm h32]
 
 /-- The actual finite set of links at odd incidence among three
 original spatial plaquettes (one or three of their supports). -/
 noncomputable def p4Q2PZ28_originalOddEdges
-    (p q r : Plaq) : Finset Link :=
-  Finset.univ.filter (fun target => Odd p q r target)
+    (p q r : Plaq) : Finset Link := by
+  classical
+  exact Finset.univ.filter (fun target => Odd p q r target)
 
 /-- A shared physical spatial link, independent of plaquette traversal
 orientation. -/
@@ -153,8 +152,9 @@ theorem p4Q2PZ28_originalOddEdges_card_ge_four_of_isolated
       have hOn : On s target := by
         simpa [p4Q2PZ28_originalFourEdges,
           p4Q2PZ27_originalEdgeOnPlaquette] using hMem
-      exact Finset.mem_filter.mpr
-        ⟨Finset.mem_univ _, hOdd target hOn⟩
+      simp only [p4Q2PZ28_originalOddEdges, Finset.mem_filter,
+        Finset.mem_univ, true_and]
+      exact hOdd target hOn
     calc
       4 = (p4Q2PZ28_originalFourEdges H s).card :=
         (p4Q2PZ28_originalFourEdges_card H s).symm
@@ -313,7 +313,10 @@ theorem p4Q2PZ28_originalDistinctParityHaar_onlyGeometricTriples
         p4Q2PZ28_originalSelectedTwoLinkHaar_zero_of_notGeometric
           H p q r B hGeo
       simp [hDistinct, hGeo, hZero]
-  · simp [hDistinct]
+  · have hNot : ¬ (p ≠ q ∧ p ≠ r ∧ q ≠ r ∧ Geo p q r) := by
+      rintro ⟨hpq, hpr, hqr, _hGeo⟩
+      exact hDistinct ⟨hpq, hpr, hqr⟩
+    simp [hDistinct, hNot]
 
 /-- PZ24's original centered cubic/two-crossing Haar term with
 only the genuinely not-yet-eliminated shared-edge triples. -/
