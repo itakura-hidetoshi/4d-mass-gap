@@ -141,16 +141,14 @@ theorem p4Q2PZ36E_originalOneRaw_fifth_endpoint (B : Cfg) :
         apply Finset.sum_congr rfl
         intro k _hk
         rw [integral_mul_const]
-  have h0 : (∫ X : Cfg, (w X+Cross X B)^0 ∂haar) = R1 0 I := by
-    simp
   have h1 := p4Q2PZ36D_originalOneStrip_eq_identityRaw H 1 (by omega) B
   have h2 := p4Q2PZ36D_originalOneStrip_eq_identityRaw H 2 (by omega) B
   have h3 := p4Q2PZ36D_originalOneStrip_eq_identityRaw H 3 (by omega) B
   have h4 := p4Q2PZ36D_originalOneStrip_eq_identityRaw H 4 (by omega) B
   have h5 := p4Q2PZ36E_originalOneStripFifth_affine H B
+  simp only [pow_one] at h1
   rw [hExp]
-  simp [Finset.sum_range_succ, h0, h1, h2, h3, h4, h5,
-    p4Q2PZ36D_originalOneRaw_zero, Nat.choose]
+  simp [Finset.sum_range_succ, h1, h2, h3, h4, h5, Nat.choose]
   <;> ring
 
 end PhysicalCoefficientTransport
