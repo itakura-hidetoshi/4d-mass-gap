@@ -69,14 +69,21 @@ theorem p4Q2PZ36C_cross_continuous (B : Cfg) :
   simpa only [Function.comp_def] using
     (p4Q2IW_originalWilsonCrossingAction_continuous H).comp hp
 
+/-- Right-endpoint decomposition derived from the ACTUAL PS theorem;
+this lemma only unfolds the already existing right-stripped action. -/
+theorem p4Q2PZ36C_originalOneSlab_eq_rightStripped (A B : Cfg) :
+    S A B = w A + Cross A B + w B := by
+  rw [p4Q2PS_originalOneSlabAction_rightSplit H A B]
+  rfl
+
 /-- Algebraic identification with the actual original Q. The middle
 spatial half-action occurs TWICE, once in each physical slab. -/
 theorem p4Q2PZ36C_originalTwoSlab_strip_eq (Y X B : Cfg) :
     Q Y X B - w B =
       (w Y + Cross Y X) + (2*w X + Cross X B) := by
   change S Y X + S X B - w B = _
-  rw [p4Q2PS_originalOneSlabAction_eq_rightStripped H Y X,
-    p4Q2PS_originalOneSlabAction_eq_rightStripped H X B]
+  rw [p4Q2PZ36C_originalOneSlab_eq_rightStripped H Y X,
+    p4Q2PZ36C_originalOneSlab_eq_rightStripped H X B]
   change (w Y + Cross Y X + w X) +
     (w X + Cross X B + w B) - w B = _
   ring
