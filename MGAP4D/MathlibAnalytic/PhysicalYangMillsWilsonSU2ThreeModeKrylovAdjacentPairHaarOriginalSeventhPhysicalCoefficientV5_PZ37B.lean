@@ -55,9 +55,9 @@ local notation "D10" => p4Q2PZ1_originalTenthFifthJetCoefficient H
 
 /-- A signed, oriented boundary determinant for *actual* source functions. -/
 noncomputable def p4Q2PZ37B_originalBoundaryWedge
-    (f g : Cfg → ℝ) (A B C : Cfg) : ℝ :=
-  (f B - f A) * (g C - g A) -
-    (f C - f A) * (g B - g A)
+    (f h : Cfg → ℝ) (A B C : Cfg) : ℝ :=
+  (f B - f A) * (h C - h A) -
+    (f C - f A) * (h B - h A)
 
 local notation "W" => p4Q2PZ37B_originalBoundaryWedge H
 
