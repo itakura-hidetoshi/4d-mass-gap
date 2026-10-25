@@ -37,7 +37,7 @@ theorem p4Q2PZ35D_trace_adjugate_fin_two (A : Mat) :
 nonsingular 2x2 matrix inverse; this is derived from group structure. -/
 theorem p4Q2PZ35D_groupInverse_coe (g : G) :
     (((g⁻¹ : G) : Mat)) = (g : Mat)⁻¹ := by
-  symmetry
+  symm
   apply Matrix.inv_eq_left_inv
   change ((g⁻¹ * g : G) : Mat) = (1 : Mat)
   simp
