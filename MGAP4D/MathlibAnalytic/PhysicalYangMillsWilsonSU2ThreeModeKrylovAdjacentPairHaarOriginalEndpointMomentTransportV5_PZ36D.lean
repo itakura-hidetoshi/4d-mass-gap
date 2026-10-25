@@ -83,7 +83,7 @@ theorem p4Q2PZ36D_originalOneStrip_eq_identityRaw
       unfold p4Q2PZ36D_originalOneRaw
       apply integral_congr_ae
       filter_upwards with X
-      rw [p4Q2PS_originalOneSlabAction_eq_rightStripped H X I]
+      rw [p4Q2PZ36C_originalOneSlab_eq_rightStripped H X I]
       change (w X+Cross X I)^n = (w X+Cross X I+w I)^n
       rw [p4Q2PZ35_originalHalfSpatialAction_identity_zero H, add_zero]
 
@@ -95,7 +95,7 @@ theorem p4Q2PZ36D_originalOneRaw_endpoint_binomial
   have hc : Continuous (fun X : Cfg => w X+Cross X B) :=
     (p4Q2PZ36C_half_continuous H).add (p4Q2PZ36C_cross_continuous H B)
   have hPoint (X : Cfg) : S X B = (w X+Cross X B)+w B :=
-    p4Q2PS_originalOneSlabAction_eq_rightStripped H X B
+    p4Q2PZ36C_originalOneSlab_eq_rightStripped H X B
   calc
     R1 n B = (∫ X : Cfg, ((w X+Cross X B)+w B)^n ∂haar) := by
       unfold p4Q2PZ36D_originalOneRaw
