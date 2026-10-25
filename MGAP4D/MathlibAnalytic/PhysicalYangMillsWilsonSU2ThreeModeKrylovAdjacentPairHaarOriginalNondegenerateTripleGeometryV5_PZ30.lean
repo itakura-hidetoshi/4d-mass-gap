@@ -197,29 +197,25 @@ theorem p4Q2PZ30_originalTripleFreeEdges_card_ge_two
       (Four r) (Four p) (Four q)
       (p4Q2PZ28_originalFourEdges_card H r) hrp' hrq'⟩
 
-/-- GENERAL finite combinatorics: pairwise-overlap-at-most-one of
-three 4-element sets forces at least six elements of odd
-incidence, witnessed by three disjoint exclusive subsets. -/
+/-- GENERAL mathlib finite combinatorics: three disjoint families
+of at least two exclusive members yield six distinct members of
+ANY genuine finite odd-support set containing all three families.
+Passing the actual target finite set explicitly avoids accidental
+changes of Fintype/DecidablePred instances. -/
 private theorem p4Q2PZ30_threeFourSets_odd_card_ge_six
-    {α : Type*} [DecidableEq α] [Fintype α]
-    (A B C : Finset α)
+    {α : Type*} [DecidableEq α]
+    (A B C O : Finset α)
     (hFreeA : 2 ≤ (A \ (B ∪ C)).card)
     (hFreeB : 2 ≤ (B \ (A ∪ C)).card)
-    (hFreeC : 2 ≤ (C \ (A ∪ B)).card) :
-    6 ≤ (Finset.univ.filter (fun x : α =>
-      (x ∈ A ∧ x ∉ B ∧ x ∉ C) ∨
-      (x ∉ A ∧ x ∈ B ∧ x ∉ C) ∨
-      (x ∉ A ∧ x ∉ B ∧ x ∈ C) ∨
-      (x ∈ A ∧ x ∈ B ∧ x ∈ C))).card := by
+    (hFreeC : 2 ≤ (C \ (A ∪ B)).card)
+    (hA : ∀ x, x ∈ A → x ∉ B → x ∉ C → x ∈ O)
+    (hB : ∀ x, x ∈ B → x ∉ A → x ∉ C → x ∈ O)
+    (hC : ∀ x, x ∈ C → x ∉ A → x ∉ B → x ∈ O) :
+    6 ≤ O.card := by
   classical
   let AP : Finset α := A \ (B ∪ C)
   let BP : Finset α := B \ (A ∪ C)
   let CP : Finset α := C \ (A ∪ B)
-  let O : Finset α := Finset.univ.filter (fun x : α =>
-    (x ∈ A ∧ x ∉ B ∧ x ∉ C) ∨
-    (x ∉ A ∧ x ∈ B ∧ x ∉ C) ∨
-    (x ∉ A ∧ x ∉ B ∧ x ∈ C) ∨
-    (x ∈ A ∧ x ∈ B ∧ x ∈ C))
   have hPsub : AP ⊆ O := by
     intro x hx
     obtain ⟨ha, hnotBC⟩ := Finset.mem_sdiff.mp hx
@@ -229,9 +225,7 @@ private theorem p4Q2PZ30_threeFourSets_odd_card_ge_six
     have hc : x ∉ C := by
       intro h
       exact hnotBC (Finset.mem_union.mpr (Or.inr h))
-    change x ∈ Finset.univ.filter _
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-    exact Or.inl ⟨ha, hb, hc⟩
+    exact hA x ha hb hc
   have hQsub : BP ⊆ O := by
     intro x hx
     obtain ⟨hb, hnotAC⟩ := Finset.mem_sdiff.mp hx
@@ -241,9 +235,7 @@ private theorem p4Q2PZ30_threeFourSets_odd_card_ge_six
     have hc : x ∉ C := by
       intro h
       exact hnotAC (Finset.mem_union.mpr (Or.inr h))
-    change x ∈ Finset.univ.filter _
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-    exact Or.inr (Or.inl ⟨ha, hb, hc⟩)
+    exact hB x hb ha hc
   have hRsub : CP ⊆ O := by
     intro x hx
     obtain ⟨hc, hnotAB⟩ := Finset.mem_sdiff.mp hx
@@ -253,9 +245,7 @@ private theorem p4Q2PZ30_threeFourSets_odd_card_ge_six
     have hb : x ∉ B := by
       intro h
       exact hnotAB (Finset.mem_union.mpr (Or.inr h))
-    change x ∈ Finset.univ.filter _
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
-    exact Or.inr (Or.inr (Or.inl ⟨ha, hb, hc⟩))
+    exact hC x hc ha hb
   have hDisjAB : Disjoint AP BP := by
     apply Finset.disjoint_left.mpr
     intro x hx hy
@@ -294,12 +284,11 @@ private theorem p4Q2PZ30_threeFourSets_odd_card_ge_six
   have hBound := Finset.card_le_card hSubset
   dsimp [AP, BP, CP] at hCardUnion
   dsimp [AP, BP, CP] at hBound
-  change 6 ≤ O.card
   omega
 
-/-- Geometric strengthening on every nonminimal even-periodic lattice:
-three pairwise-distinct TRUE spatial Wilson plaquettes have at least
-six odd-incidence physical spatial links. -/
+/-- For H ≥ 1, a triple of pairwise-distinct ORIGINAL spatial Wilson
+plaquettes has at least SIX genuinely odd-incidence spatial links.
+No finite Fintype enumerations or synthetic observable are used. -/
 theorem p4Q2PZ30_originalTripleOddEdges_card_ge_six
     (hH : 1 ≤ H) (p q r : Plaq)
     (hpq : p ≠ q) (hpr : p ≠ r) (hqr : q ≠ r) :
@@ -308,29 +297,46 @@ theorem p4Q2PZ30_originalTripleOddEdges_card_ge_six
   obtain ⟨hp, hq, hr⟩ :=
     p4Q2PZ30_originalTripleFreeEdges_card_ge_two
       H hH p q r hpq hpr hqr
-  have hGeneral :=
-    p4Q2PZ30_threeFourSets_odd_card_ge_six
-      (Four p) (Four q) (Four r) hp hq hr
-  have hEq :
-      OddSet p q r =
-        Finset.univ.filter (fun x : Link =>
-          (x ∈ Four p ∧ x ∉ Four q ∧ x ∉ Four r) ∨
-          (x ∉ Four p ∧ x ∈ Four q ∧ x ∉ Four r) ∨
-          (x ∉ Four p ∧ x ∉ Four q ∧ x ∈ Four r) ∨
-          (x ∈ Four p ∧ x ∈ Four q ∧ x ∈ Four r)) := by
-    ext x
+  have hMem (s : Plaq) (x : Link) :
+      x ∈ Four s ↔ On s x := by
+    simp [p4Q2PZ28_originalFourEdges,
+      p4Q2PZ27_originalEdgeOnPlaquette]
+  apply p4Q2PZ30_threeFourSets_odd_card_ge_six
+    (Four p) (Four q) (Four r) (OddSet p q r)
+    hp hq hr
+  · intro x hx hNotQ hNotR
+    have hP : On p x := (hMem p x).mp hx
+    have hQ : ¬ On q x := by
+      intro h
+      exact hNotQ ((hMem q x).mpr h)
+    have hR : ¬ On r x := by
+      intro h
+      exact hNotR ((hMem r x).mpr h)
     simp only [p4Q2PZ28_originalOddEdges,
       Finset.mem_filter, Finset.mem_univ, true_and]
-    change Odd p q r x ↔ _
-    have hMem (s : Plaq) :
-        x ∈ Four s ↔ On s x := by
-      simp [p4Q2PZ28_originalFourEdges,
-        p4Q2PZ27_originalEdgeOnPlaquette]
-    simp only [hMem p, hMem q, hMem r]
-    unfold p4Q2PZ27_originalTripleOddEdge
-    rfl
-  rw [hEq]
-  exact hGeneral
+    exact Or.inl ⟨hP, hQ, hR⟩
+  · intro x hx hNotP hNotR
+    have hQ : On q x := (hMem q x).mp hx
+    have hP : ¬ On p x := by
+      intro h
+      exact hNotP ((hMem p x).mpr h)
+    have hR : ¬ On r x := by
+      intro h
+      exact hNotR ((hMem r x).mpr h)
+    simp only [p4Q2PZ28_originalOddEdges,
+      Finset.mem_filter, Finset.mem_univ, true_and]
+    exact Or.inr (Or.inl ⟨hP, hQ, hR⟩)
+  · intro x hx hNotP hNotQ
+    have hR : On r x := (hMem r x).mp hx
+    have hP : ¬ On p x := by
+      intro h
+      exact hNotP ((hMem p x).mpr h)
+    have hQ : ¬ On q x := by
+      intro h
+      exact hNotQ ((hMem q x).mpr h)
+    simp only [p4Q2PZ28_originalOddEdges,
+      Finset.mem_filter, Finset.mem_univ, true_and]
+    exact Or.inr (Or.inr (Or.inl ⟨hP, hQ, hR⟩))
 
 /-- No two real temporal crossing Wilson links can support a pairwise
 distinct triple on a spatial torus of side 2*(H+1) ≥4. -/
