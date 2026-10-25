@@ -100,18 +100,18 @@ theorem p4Q2PZ37E_originalInnerTwoStrippedFifth
   have hFifth :
       (∫ Y : Cfg, (w Y+Cross Y X)^5 ∂haar) =
         m 5 + (15/32 : ℝ)*w X := by
-    simpa only [one_mul, p4Q2PZ36_originalScaledStrippedFifth,
+    simpa only [one_mul, mul_one, p4Q2PZ36_originalScaledStrippedFifth,
       p4Q2PZ36C_originalStripMoment] using
       (p4Q2PZ36_originalScaledStrippedFifth_affine H 1 X)
-  have hZero : m 0 = 1 := by
-    simp [p4Q2PZ36C_originalStripMoment]
+  have hFirst :
+      (∫ Y : Cfg, w Y+Cross Y X ∂haar) = m 1 := by
+    simpa only [pow_one] using hLow 1 (by omega)
   calc
     (∫ Y : Cfg, (Q Y X B-w B)^5 ∂haar) =
       (∫ Y : Cfg, ((w Y+Cross Y X)+t)^5 ∂haar) := by
         apply integral_congr_ae
         filter_upwards with Y
         rw [p4Q2PZ36C_originalTwoSlab_strip_eq H Y X B]
-        rfl
     _ = ∑ k ∈ Finset.range 6, ((5 : ℕ).choose k : ℝ) *
         ((∫ Y : Cfg, (w Y+Cross Y X)^k ∂haar)*t^(5-k)) := by
       rw [p4Q2PZ36A_originalHaar_integral_binomial H
@@ -127,9 +127,9 @@ theorem p4Q2PZ37E_originalInnerTwoStrippedFifth
       5*(m 4)*(2*w X+Cross X B) +
       m 5 + (15/32 : ℝ)*w X := by
       dsimp [t]
-      simp [Finset.sum_range_succ, Nat.choose, hZero,
-        hLow 1 (by omega), hLow 2 (by omega),
-        hLow 3 (by omega), hLow 4 (by omega), hFifth] <;> ring
+      simp [Finset.sum_range_succ, Nat.choose, hFirst,
+        hLow 2 (by omega),
+        hLow 3 (by omega), hLow 4 (by omega), hFifth]; ring
 
 /-- The original TWO-slab stripped fifth is an explicit original-Haar
 outer polynomial. Lower powers of the r=2 observable are retained. -/
@@ -161,7 +161,7 @@ theorem p4Q2PZ37E_originalTwoStrippedFifth_outerExpansion
       (∫ Y : Cfg, (Q Y X B-w B)^5 ∂haar) =
         ∑ i : Fin 7, f i X := by
     rw [p4Q2PZ37E_originalInnerTwoStrippedFifth H X B]
-    simp [f, Fin.sum_univ_succ] <;> ring
+    simp [f, Fin.sum_univ_succ]; ring
   have hSum :
       (∫ X : Cfg, (∑ i : Fin 7, f i X) ∂haar) =
         ∑ i : Fin 7, ∫ X : Cfg, f i X ∂haar :=
@@ -179,7 +179,7 @@ theorem p4Q2PZ37E_originalTwoStrippedFifth_outerExpansion
       10*(m 3)*V 2 B + 5*(m 4)*V 1 B +
       m 5 + (15/32 : ℝ)*(∫ X : Cfg, w X ∂haar) := by
         simp [f, Fin.sum_univ_succ,
-          p4Q2PZ37E_originalDoubledStripMoment, integral_const_mul] <;> ring
+          p4Q2PZ37E_originalDoubledStripMoment, integral_const_mul]; ring
 
 /-- The key missing PHYSICAL two-slab source transport:
 the genuinely interacting double spatial SU(2) Haar fifth moment,
