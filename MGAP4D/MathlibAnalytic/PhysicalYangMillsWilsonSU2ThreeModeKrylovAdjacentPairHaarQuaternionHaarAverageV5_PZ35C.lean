@@ -51,9 +51,8 @@ local instance p4Q2PZ35C_borelSpace : BorelSpace G :=
   specialUnitaryGroupBorelSpace 2
 
 local instance p4Q2PZ35C_probability :
-    IsProbabilityMeasure μ := by
-  unfold normalizedCompactHaar
-  infer_instance
+    IsProbabilityMeasure μ :=
+  normalizedCompactHaar_isProbabilityMeasure G
 
 /-- Actual normalized compact SU(2) Haar left invariance, for every
 continuous real test f and EVERY true SU(2) element a. -/
@@ -86,7 +85,7 @@ theorem p4Q2PZ35C_originalSU2Haar_fourQuaternionAverage
       Integrable (fun u : G => f (q j * u)) μ := by
     have hc : Continuous (fun u : G => f (q j * u)) :=
       hf.comp (continuous_const.mul continuous_id)
-    exact hc.integrable_of_hasCompactSupport
+    exact hc.integrable_of_hasCompactSupport (μ := μ)
   calc
     (∫ u : G, (∑ j : Fin 4, f (q j * u)) ∂μ) =
         ∑ j : Fin 4, (∫ u : G, f (q j * u) ∂μ) := by
