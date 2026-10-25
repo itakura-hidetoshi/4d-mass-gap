@@ -146,8 +146,10 @@ theorem p4Q2PZ37G_originalF15_affine
     F 1 5 B = F 1 5 I + (15/32 : ℝ)*N*w B := by
   have h5B := p4Q2PZ37G_originalMixedFifth_evenSectors H 1 B
   have h5I := p4Q2PZ37G_originalMixedFifth_evenSectors H 1 I
-  have h14 := p4Q2PZ36_originalF14_affine H B
-  change F 1 4 B = F 1 4 I + (3/32 : ℝ)*w B at h14
+  have h14 : F 1 4 B = F 1 4 I + (3/32 : ℝ)*w B := by
+    simpa only [p4Q2PZ37D_originalMixedHaar,
+      p4Q2PZ22_originalSpatialCrossingFourthHaar, pow_one] using
+      (p4Q2PZ36_originalF14_affine H B)
   have h12 := p4Q2PZ36A_originalMixedMoment_invariant_le_four H 1 2 (by omega) B
   change F 1 2 B = F 1 2 I at h12
   have h10 : F 1 0 B = F 1 0 I := rfl
@@ -177,6 +179,7 @@ theorem p4Q2PZ37G_originalSixthWedge_twoEvenSectors
       A B C =
     W w (fun D : Cfg => 45*F 2 4 D + 225*F 4 2 D) A B C := by
   unfold p4Q2PZ37B_originalBoundaryWedge
+  dsimp only
   rw [p4Q2PZ37G_originalF15_affine H A,
     p4Q2PZ37G_originalF15_affine H B,
     p4Q2PZ37G_originalF15_affine H C,
