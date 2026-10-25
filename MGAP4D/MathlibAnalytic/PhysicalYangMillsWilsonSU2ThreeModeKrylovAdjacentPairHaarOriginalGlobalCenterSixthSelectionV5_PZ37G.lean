@@ -64,7 +64,10 @@ local notation "e0" => p4Q2PU3_originalPlaquetteEdge0 H
 local notation "e1" => p4Q2PU3_originalPlaquetteEdge1 H
 local notation "e2" => p4Q2PU3_originalPlaquetteEdge2 H
 local notation "e3" => p4Q2PU3_originalPlaquetteEdge3 H
-local notation "N" => ((periodicHypercubicEvenSpatialSliceLinkList H).length : ℝ)
+/-- The REAL-valued cardinality of the genuine finite spatial-link list. -/
+noncomputable def p4Q2PZ37G_originalLinkCount : ℝ :=
+  ((periodicHypercubicEvenSpatialSliceLinkList H).length : ℝ)
+local notation "N" => p4Q2PZ37G_originalLinkCount H
 
 /-- The actual simultaneous central SU(2) multiplication on every original
 spatial link, not a gauge-fixed or independent replacement configuration. -/
