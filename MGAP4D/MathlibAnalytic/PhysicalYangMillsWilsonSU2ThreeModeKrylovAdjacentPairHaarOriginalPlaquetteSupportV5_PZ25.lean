@@ -334,8 +334,9 @@ theorem p4Q2PZ25_originalPlaquetteFourthCrossing_expand
 /-- Genuine selected fourth crossing: retain only ordered four-link
 tuples that cover all four original plaquette edges. -/
 noncomputable def p4Q2PZ25_originalCoveredPlaquetteFourthHaar
-    (p : Plaq) (B : Cfg) : ℝ :=
-  ∑ e : Link, ∑ f : Link, ∑ g : Link, ∑ k : Link,
+    (p : Plaq) (B : Cfg) : ℝ := by
+  classical
+  exact ∑ e : Link, ∑ f : Link, ∑ g : Link, ∑ k : Link,
     if Covers p e f g k then Term4 p e f g k B else 0
 
 local notation "Covered4" => p4Q2PZ25_originalCoveredPlaquetteFourthHaar H
@@ -394,8 +395,12 @@ theorem p4Q2PZ25_originalCenteredFourth_plaquetteSum (B : Cfg) :
           filter_upwards with A
           rw [p4Q2PW2_originalCenteredFirstMoment_eq_half_traceSum H A]
           unfold p4Q2PW2_originalAllPlaquetteRealTrace
-          rw [Finset.sum_mul]
-          ring
+          calc
+            ((1 / 2 : ℝ) * ∑ p : Plaq, χ p A) * (Cross A B)^4 =
+              (1 / 2 : ℝ) * ((∑ p : Plaq, χ p A) * (Cross A B)^4) := by ring
+            _ = (1 / 2 : ℝ) *
+                (∑ p : Plaq, χ p A * (Cross A B)^4) := by
+                rw [Finset.sum_mul]
     _ = (1/2 : ℝ) *
       (∫ A : Cfg, ∑ p : Plaq,
         χ p A*(Cross A B)^4 ∂haar) := by
@@ -432,6 +437,7 @@ theorem p4Q2PZ25_originalFourthDefect_onlyCovered (B : Cfg) :
 
 end OriginalFourthCrossingPlaquetteSupport
 end GroundStatePosteriorJoint
+end
 end MathlibAnalytic
 end MGAP4D
 
