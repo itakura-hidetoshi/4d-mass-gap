@@ -36,7 +36,11 @@ noncomputable and cannot serve a kernel-reduced finite certificate. -/
 local instance p4Q2PZ31_spatialSliceVertexFintype :
     Fintype (PeriodicHypercubicEvenSpatialSliceVertex 0) :=
   Fintype.subtype
-    (periodicHypercubicEvenOnPrimaryReflectionPlane 0)
+    (Finset.univ.filter
+      (periodicHypercubicEvenOnPrimaryReflectionPlane 0))
+    (by
+      intro v
+      simp)
 
 local instance p4Q2PZ31_linkFintype :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink 0) :=
