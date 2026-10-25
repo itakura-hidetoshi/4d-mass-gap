@@ -186,7 +186,6 @@ theorem p4Q2PZ36D_originalTwoRaw_endpoint_binomial
       intro k hk
       rw [integral_const_mul, integral_mul_const,
         p4Q2PZ36C_originalTwoSlabStrip_eq_identityRaw H k (hk4 k hk) B]
-      rfl
 
 end OriginalEndpointMoments
 end GroundStatePosteriorJoint
