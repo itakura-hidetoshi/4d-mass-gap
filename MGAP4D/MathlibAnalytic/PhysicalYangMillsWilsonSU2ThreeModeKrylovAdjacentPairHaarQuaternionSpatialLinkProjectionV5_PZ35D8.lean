@@ -99,8 +99,9 @@ theorem p4Q2PZ35D8_originalSpatialHaar_eightLinkIntegralAverage
       (f (T target (q j) A) + f (T target (z * q j) A))) ∂haar) =
       ∑ j : Fin 4, (∫ A : Cfg,
         (f (T target (q j) A) + f (T target (z * q j) A)) ∂haar) := by
-        rw [integral_finset_sum _ (fun j _hj =>
-          (hInt (q j)).add (hInt (z * q j)))]
+        simpa using
+          (integral_finset_sum (Finset.univ : Finset (Fin 4))
+            (fun j _hj => (hInt (q j)).add (hInt (z * q j))))
     _ = ∑ j : Fin 4,
         ((∫ A : Cfg, f (T target (q j) A) ∂haar) +
          (∫ A : Cfg, f (T target (z * q j) A) ∂haar)) := by
@@ -220,6 +221,7 @@ theorem p4Q2PZ35D8_originalSpatialHaar_inverseProject
   have hcInv' : ∀ (a : G) (A : Cfg),
       (fun X : Cfg => (c X)⁻¹) (T target a A) = (c A)⁻¹ := by
     intro a A
+    change (c (T target a A))⁻¹ = (c A)⁻¹
     rw [hcInv a A]
   have hResult :=
     p4Q2PZ35D8_originalSpatialHaar_forwardProject
