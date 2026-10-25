@@ -120,45 +120,54 @@ def p4Q2PZ27_originalTwoLinkCoversOddEdges
 
 local notation "Admissible" => p4Q2PZ27_originalTwoLinkCoversOddEdges H
 
-/-- The original plaquette character flips its sign iff the target
-is one of the TRUE four spatial plaquette edges. -/
-theorem p4Q2PZ27_originalCharacter_centerParity
-    (p : Plaq) (target : Link) (X : Cfg) :
-    χ p (Flip target X) =
-      if On p target then -χ p X else χ p X := by
-  classical
-  by_cases hp : On p target
-  · simp only [if_pos hp]
-    exact p4Q2PY3_originalPlaquetteRealCharacter_centerOdd_four
-      H p target hp X
-  · simp only [if_neg hp]
-    exact p4Q2PY8_originalPlaquetteChar_centerUnchanged_of_freeEdge
-      H p target hp X
+/-- The original spatial plaquette character is center-ODD at any
+one of its four genuine oriented spatial links. -/
+theorem p4Q2PZ27_originalCharacter_centerOdd_of_edge
+    (p : Plaq) (target : Link) (X : Cfg)
+    (hp : On p target) :
+    χ p (Flip target X) = -χ p X :=
+  p4Q2PY3_originalPlaquetteRealCharacter_centerOdd_four
+    H p target hp X
+
+/-- At any link OUTSIDE its four genuine spatial plaquette edges,
+the original SU(2) plaquette character is center-INVARIANT. -/
+theorem p4Q2PZ27_originalCharacter_centerEven_of_freeEdge
+    (p : Plaq) (target : Link) (X : Cfg)
+    (hp : ¬ On p target) :
+    χ p (Flip target X) = χ p X :=
+  p4Q2PY8_originalPlaquetteChar_centerUnchanged_of_freeEdge
+    H p target hp X
 
 /-- Exact sign of the original TRIPLE plaquette-character product
 at a spatial edge of odd multiplicity, with no assumption of
-pairwise distinct plaquettes. -/
+pairwise distinct plaquettes. The four genuine parity cases are
+proved separately, avoiding classical if-projection surrogates. -/
 theorem p4Q2PZ27_originalTripleCharacter_centerOdd
     (p q r : Plaq) (target : Link)
     (hOdd : Odd p q r target) (X : Cfg) :
     ((χ p (Flip target X) * χ q (Flip target X)) *
       χ r (Flip target X)) =
         -((χ p X * χ q X) * χ r X) := by
-  rw [p4Q2PZ27_originalCharacter_centerParity H p target X,
-    p4Q2PZ27_originalCharacter_centerParity H q target X,
-    p4Q2PZ27_originalCharacter_centerParity H r target X]
   rcases hOdd with hOne | hTwo | hThree | hAll
   · obtain ⟨hp,hq,hr⟩ := hOne
-    simp only [if_pos hp, if_neg hq, if_neg hr]
+    rw [p4Q2PZ27_originalCharacter_centerOdd_of_edge H p target X hp,
+      p4Q2PZ27_originalCharacter_centerEven_of_freeEdge H q target X hq,
+      p4Q2PZ27_originalCharacter_centerEven_of_freeEdge H r target X hr]
     ring
   · obtain ⟨hp,hq,hr⟩ := hTwo
-    simp only [if_neg hp, if_pos hq, if_neg hr]
+    rw [p4Q2PZ27_originalCharacter_centerEven_of_freeEdge H p target X hp,
+      p4Q2PZ27_originalCharacter_centerOdd_of_edge H q target X hq,
+      p4Q2PZ27_originalCharacter_centerEven_of_freeEdge H r target X hr]
     ring
   · obtain ⟨hp,hq,hr⟩ := hThree
-    simp only [if_neg hp, if_neg hq, if_pos hr]
+    rw [p4Q2PZ27_originalCharacter_centerEven_of_freeEdge H p target X hp,
+      p4Q2PZ27_originalCharacter_centerEven_of_freeEdge H q target X hq,
+      p4Q2PZ27_originalCharacter_centerOdd_of_edge H r target X hr]
     ring
   · obtain ⟨hp,hq,hr⟩ := hAll
-    simp only [if_pos hp, if_pos hq, if_pos hr]
+    rw [p4Q2PZ27_originalCharacter_centerOdd_of_edge H p target X hp,
+      p4Q2PZ27_originalCharacter_centerOdd_of_edge H q target X hq,
+      p4Q2PZ27_originalCharacter_centerOdd_of_edge H r target X hr]
     ring
 
 /-- GENUINE SU(2) Haar selection:
@@ -302,7 +311,8 @@ end
 end MathlibAnalytic
 end MGAP4D
 
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ27_originalCharacter_centerParity
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ27_originalCharacter_centerOdd_of_edge
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ27_originalCharacter_centerEven_of_freeEdge
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ27_originalTripleCharacter_centerOdd
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ27_originalTripleTwoLinkHaar_zero_of_freeOddEdge
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ27_originalTripleTwoLinkHaar_zero_of_notAdmissible
