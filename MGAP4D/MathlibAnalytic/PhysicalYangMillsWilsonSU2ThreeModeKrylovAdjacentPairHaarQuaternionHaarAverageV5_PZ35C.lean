@@ -85,7 +85,8 @@ theorem p4Q2PZ35C_originalSU2Haar_fourQuaternionAverage
       Integrable (fun u : G => f (q j * u)) μ := by
     have hc : Continuous (fun u : G => f (q j * u)) :=
       hf.comp (continuous_const.mul continuous_id)
-    exact hc.integrable_of_hasCompactSupport (μ := μ)
+    exact hc.integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace (fun u : G => f (q j * u)))
   calc
     (∫ u : G, (∑ j : Fin 4, f (q j * u)) ∂μ) =
         ∑ j : Fin 4, (∫ u : G, f (q j * u) ∂μ) := by
