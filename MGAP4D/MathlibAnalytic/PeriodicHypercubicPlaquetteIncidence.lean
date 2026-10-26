@@ -33,7 +33,7 @@ abbrev PeriodicHypercubicOtherAxis (mu : PeriodicHypercubicAxis) : Type :=
 theorem periodicHypercubicOtherAxis_card
     (mu : PeriodicHypercubicAxis) :
     Fintype.card (PeriodicHypercubicOtherAxis mu) = 3 := by
-  fin_cases mu <;> native_decide
+  fin_cases mu <;> decide
 
 /-- Canonically sort two distinct directions into a coordinate-plane label. -/
 def periodicHypercubicAxisPairOfNe
@@ -74,7 +74,7 @@ theorem periodicHypercubicIncidentPlaquettes_card_le_six
     _ = Fintype.card (PeriodicHypercubicOtherAxis e.2 × Bool) := Finset.card_univ
     _ = 6 := by
       rw [Fintype.card_prod, periodicHypercubicOtherAxis_card]
-      native_decide
+      decide
 
 end
 

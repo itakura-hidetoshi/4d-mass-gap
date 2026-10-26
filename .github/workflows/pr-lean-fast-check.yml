@@ -54,9 +54,10 @@ jobs:
   pr-lean-fast-check:
     name: Changed Lean fast check
     runs-on: ubuntu-22.04
-    # Cold project-cache recovery must finish before judging the changed proofs.
-    # Keep every Lean check and its heartbeat budget unchanged.
-    timeout-minutes: 60
+    # Foundational incidence lemmas invalidate thousands of dependent oleans.
+    # Exact-head PZ37O runs exceeded 60 minutes with no Lean errors, so allow
+    # a complete dependency-aware check; do not skip imports or lower heartbeats.
+    timeout-minutes: 180
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -240,6 +241,58 @@ jobs:
           else
             echo "[fast] restored Mathlib build cache is already present"
           fi
+
+      # Early, fully kernel-checked diagnostic for the two finite incidence
+      # lemmas changed by PZ37O. This is NOT a substitute for the Lake check.
+      - name: Kernel-check changed finite incidence geometry
+        if: ${{ steps.lake-mode.outputs.required == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          incidence='MGAP4D/MathlibAnalytic/PeriodicHypercubicPlaquetteIncidence.lean'
+          if git diff --name-only "${CHECK_CHANGED_LEAN_BASE_REF}"...HEAD | grep -Fxq "${incidence}"; then
+            prereq='.lake/build/lib/lean/MGAP4D/MathlibAnalytic/PeriodicHypercubicSignedGeometry.olean'
+            if [[ -f "${prereq}" ]]; then
+              echo "[fast] kernel-check finite incidence geometry before expensive downstream build"
+              lake env lean -DautoImplicit=false "${incidence}"
+            else
+              echo "[fast] prerequisite olean not cached: Lake will check incidence with rebuilt imports"
+            fi
+          fi
+
+      # Cheap syntax/type diagnostics for new PZ37O leaf modules. A direct
+      # Lean invocation cannot replace Lake's dependency fingerprint validation.
+      # Compile in import order against the restored baseline oleans, then
+      # perform the full authoritative Lake build below.
+      - name: Early elaboration of new PZ37O leaves
+        if: ${{ steps.lake-mode.outputs.required == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='.lake/build/lib/lean/MGAP4D/MathlibAnalytic'
+          for prereq in \
+            PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalRotationalBoundaryWitnessV5_PZ37N \
+            PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalWilsonRawTwoSlabLiteralKernelV5_PJ \
+            PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalWilsonThirdMomentPosteriorMassCriterionV5_PE \
+            PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalWilsonPhysicalKrylovHankelMomentsV5_PB \
+            PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalGramPhysicalRank; do
+            if [[ ! -f "${base}/${prereq}.olean" ]]; then
+              echo "[fast] no baseline olean for ${prereq}; skip early elaboration"
+              exit 0
+            fi
+          done
+          for mod in \
+            PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalLiteralMinorThirdGapV5_PZ37O \
+            PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalThirdRankPosteriorBridgeV5_PZ37O \
+            PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalThirdMomentNonzeroBridgeV5_PZ37O \
+            PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalPhysicalKrylovRankThreeV5_PZ37O; do
+            src="MGAP4D/MathlibAnalytic/${mod}.lean"
+            if [[ -f "${src}" ]]; then
+              echo "[fast] diagnostic Lean elaboration: ${src}"
+              lake env lean -DautoImplicit=false -o "${base}/${mod}.olean" "${src}"
+            fi
+          done
+          echo "[fast] PZ37O diagnostic passed; authoritative Lake build follows"
 
       - name: Run changed Lean fast check
         if: ${{ steps.lake-mode.outputs.required == 'true' }}
