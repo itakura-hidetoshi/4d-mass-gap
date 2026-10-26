@@ -56,8 +56,15 @@ theorem p4Q2PZ37O_originalPhysicalThreeHankel_rank_three_of_det_pos
     (hDet :
       0 < (p4Q2PD_originalWilsonThreeHankel H t ht).det) :
     (p4Q2PD_originalWilsonThreeHankel H t ht).rank = 3 := by
-  have hRank := Matrix.rank_of_det_ne_zero (ne_of_gt hDet)
-  simpa using hRank
+  have hUnitDet :
+      IsUnit (p4Q2PD_originalWilsonThreeHankel H t ht).det :=
+    isUnit_iff_ne_zero.mpr (ne_of_gt hDet)
+  have hRank :=
+    Matrix.rank_mul_eq_left_of_isUnit_det
+      (p4Q2PD_originalWilsonThreeHankel H t ht)
+      (1 : Matrix (Fin (2 + 1)) (Fin (2 + 1)) ℝ)
+      hUnitDet
+  simpa only [one_mul, Matrix.rank_one, Fintype.card_fin] using hRank
 
 end GroundStatePosteriorJoint
 
