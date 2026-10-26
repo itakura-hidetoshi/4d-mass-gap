@@ -16,11 +16,11 @@ set_option autoImplicit false
 set_option maxHeartbeats 3900000
 set_option synthInstance.maxHeartbeats 1050000
 local notation "SU" => Matrix.specialUnitaryGroup (Fin 2) ℂ
-local instance : IsTopologicalGroup SU := specialUnitaryGroupIsTopologicalGroup 2
-local instance : CompactSpace SU := specialUnitaryGroupCompactSpace 2
-local instance : SecondCountableTopology SU := specialUnitaryGroupSecondCountableTopology 2
-local instance : MeasurableSpace SU := specialUnitaryGroupMeasurableSpace 2
-local instance : BorelSpace SU := specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37M_topologicalGroup : IsTopologicalGroup SU := specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37M_compactSpace : CompactSpace SU := specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37M_secondCountable : SecondCountableTopology SU := specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37M_measurableSpace : MeasurableSpace SU := specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37M_borelSpace : BorelSpace SU := specialUnitaryGroupBorelSpace 2
 
 namespace GroundStatePosteriorJoint
 open PZ37MEstimates
