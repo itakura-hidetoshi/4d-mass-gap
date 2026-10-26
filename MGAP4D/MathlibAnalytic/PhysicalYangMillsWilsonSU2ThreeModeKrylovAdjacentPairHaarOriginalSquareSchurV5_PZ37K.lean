@@ -113,7 +113,7 @@ theorem p4Q2PZ37K_originalSpatialHaar_inverseSquareProject
       (1/4 : ℝ) * (∫ X : Cfg, F X ∂haar) := by
   simp_rw [p4Q2PZ35D7_originalInverseCharacter_as_forward]
   exact p4Q2PZ37K_originalSpatialHaar_squareProject H target
-    (fun X => (c X)⁻¹) F hc.inv hF (by intro a X; rw [hcInv a X]) hFInv
+    (fun X => (c X)⁻¹) F hc.inv hF (by intro a X; exact congrArg (fun u : G => u⁻¹) (hcInv a X)) hFInv
 
 /-- Cyclicity lets either projector act inside a genuine noncommutative word. -/
 private theorem square_word_rotate (a u b : G) :
@@ -130,8 +130,8 @@ theorem p4Q2PZ37K_originalPlaquetteSquare_freeEdgeProject
     (∫ X : Cfg, (χ p X)^2 * F X ∂haar) =
       (1/4 : ℝ) * (∫ X : Cfg, F X ∂haar) := by
   have hn := p4Q2PZ33_originalFourEdges_list_nodup H p
-  simp only [List.nodup_cons, List.mem_cons, List.mem_singleton, not_or,
-    List.nodup_nil, List.not_mem_nil, and_true] at hn
+  simp only [List.nodup_cons, List.mem_cons, not_or,
+    List.nodup_nil, List.not_mem_nil, not_false_eq_true, and_true] at hn
   have h01 : e0 p ≠ e1 p := hn.1.1
   have h02 : e0 p ≠ e2 p := hn.1.2.1
   have h03 : e0 p ≠ e3 p := hn.1.2.2
@@ -161,7 +161,6 @@ theorem p4Q2PZ37K_originalPlaquetteSquare_freeEdgeProject
     filter_upwards with X
     change (ch (X (e0 p)*X (e1 p)*(X (e2 p))⁻¹*(X (e3 p))⁻¹))^2*F X = _
     rw [mul_assoc (X (e0 p)*X (e1 p)), square_word_rotate]
-    simp only [mul_assoc]
   · have h := p4Q2PZ37K_originalSpatialHaar_inverseSquareProject H (e2 p)
         (fun X => (X (e3 p))⁻¹ * (X (e0 p) * X (e1 p))) F
         (by fun_prop) hF (by
