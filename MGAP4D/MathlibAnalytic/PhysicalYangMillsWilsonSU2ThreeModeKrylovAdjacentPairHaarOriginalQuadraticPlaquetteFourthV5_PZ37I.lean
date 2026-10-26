@@ -157,7 +157,7 @@ theorem p4Q2PZ37I_originalF24_traceSquare_decomposition
           _ = (1/4 : ℝ)*K4 B := by
                 rw [integral_const_mul]
                 rfl
-      rw [hFirst, integral_const_mul]
+      rw [hFirst, integral_const_mul, integral_const_mul]
       simp only [p4Q2PZ37D_originalMixedHaar, pow_zero, one_mul, pow_one]
 
 /-- Unweighted true crossing fourth Haar moment is boundary-independent,
