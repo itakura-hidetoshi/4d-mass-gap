@@ -32,7 +32,7 @@ private theorem p4Q2PZ37N_rotation_continuous :
   apply continuous_pi
   intro j
   fin_cases i <;> fin_cases j <;>
-    simp [specialUnitaryTwoRotation, specialUnitaryTwoRotationMatrix] <;>
+    simp [specialUnitaryTwoRotationMatrix] <;>
     fun_prop
 
 private theorem p4Q2PZ37N_rotation_zero :
@@ -81,8 +81,25 @@ private theorem p4Q2PZ37N_boundary_continuous (H : ℕ) :
         periodicHypercubicEvenPrimarySpatialPlaquetteEdge H 0
   · simpa [Function.update_apply, h] using
       p4Q2PZ37N_rotation_continuous
-  · simpa [Function.update_apply, h] using
-      (continuous_const : Continuous (fun _ : ℝ => (1 : SU)))
+  · have hOther (t : ℝ) :
+        Function.update
+          (fun _ : PeriodicHypercubicEvenEdge H => (1 : SU))
+          (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H 0)
+          (specialUnitaryTwoRotation t)
+          (periodicHypercubicEvenSpatialSliceLinkEmbedding H e) = 1 := by
+      exact Function.update_of_ne h _ _
+    have hEq :
+        (fun t : ℝ =>
+          Function.update
+            (fun _ : PeriodicHypercubicEvenEdge H => (1 : SU))
+            (periodicHypercubicEvenPrimarySpatialPlaquetteEdge H 0)
+            (specialUnitaryTwoRotation t)
+            (periodicHypercubicEvenSpatialSliceLinkEmbedding H e)) =
+          (fun _ : ℝ => (1 : SU)) := by
+      funext t
+      exact hOther t
+    rw [hEq]
+    exact continuous_const
 
 private theorem p4Q2PZ37N_boundary_zero (H : ℕ) :
     p4Q2PZ37N_rotatedBoundary H 0 =
@@ -129,9 +146,10 @@ theorem p4Q2PZ37N_originalThreeBoundaryStrictHalfActions (H : ℕ) :
     (intermediate_value_Icc (le_of_lt Real.pi_pos) hf.continuousOn) hOneIcc
   have hwzero :
       w (fun _ : PeriodicHypercubicEvenSpatialSliceLink H => (1 : SU)) = 0 := by
-    change (1 / 2 : ℝ) * W (fun _ => (1 : SU)) = 0
-    rw [p4Q2IY_allOneSpatialWilsonAction_zero H]
-    ring
+    change (1 / 2 : ℝ) *
+      periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H 2
+        (fun _ => (1 : SU)) = 0
+    simp only [p4Q2IY_allOneSpatialWilsonAction_zero H, mul_zero]
   have hwmid : w (p4Q2PZ37N_rotatedBoundary H t) = (1 / 2 : ℝ) := by
     change (1 / 2 : ℝ) * f t = 1 / 2
     rw [hft]
@@ -142,9 +160,11 @@ theorem p4Q2PZ37N_originalThreeBoundaryStrictHalfActions (H : ℕ) :
   refine ⟨(fun _ => (1 : SU)),
     p4Q2PZ37N_rotatedBoundary H t,
     p4Q2PZ37N_rotatedBoundary H Real.pi, ?_, ?_⟩
-  · rw [hwzero, hwmid]
+  · dsimp only [w] at hwzero hwmid
+    rw [hwzero, hwmid]
     norm_num
-  · rw [hwmid]
+  · dsimp only [w] at hwmid hwpi
+    rw [hwmid]
     linarith
 
 /-- Unconditional finite-volume three-boundary witness: the original
