@@ -36,7 +36,7 @@
 
 ## Task 2: Eighth-order minor stability and jet tail
 
-**Files:** Create `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalEighthMinorEstimatesV5_PZ37M.lean`.
+**Files:** Create `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalEighthMinorEstimatesV5_PZ37M.lean` for reusable scalar estimates and `MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalSixthJetEighthTailV5_PZ37M.lean` for the physical jet.
 **Interfaces:** Consumes PZ37B exact jet determinant; produces real eighth-order stability, first-order jet row differences, eighth-order jet tail.
 
 - [ ] State and kernel-check the intended bounds in scratch before filling proofs.

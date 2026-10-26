@@ -37,13 +37,19 @@ local notation "J1" => p4Q2PZ37B_originalOneSlabTaylor6 H
 local notation "J2" => p4Q2PZ37B_originalTwoSlabTaylor6 H
 
 private theorem action_cont (B : Cfg) : Continuous (fun X : Cfg => S X B) := by
-  exact (p4Q2IW_originalWilsonOneSlabAction_continuous H).comp
-    (continuous_id.prodMk continuous_const)
+  have hp : Continuous (fun X : Cfg => (X,B)) :=
+    continuous_id.prodMk continuous_const
+  have h := (p4Q2IW_originalWilsonOneSlabAction_continuous H).comp hp
+  simpa only [Function.comp_def] using h
 
 private theorem double_action_cont (B : Cfg) :
     Continuous (fun p : Cfg × Cfg => Q p.1 p.2 B) := by
-  exact (p4Q2IW_originalWilsonOneSlabAction_continuous H).add
-    ((action_cont H B).comp continuous_snd)
+  have hs : Continuous (fun p : Cfg × Cfg => S p.1 p.2) :=
+    p4Q2IW_originalWilsonOneSlabAction_continuous H
+  have hr : Continuous (fun p : Cfg × Cfg => S p.2 B) :=
+    (action_cont H B).comp continuous_snd
+  change Continuous (fun p : Cfg × Cfg => S p.1 p.2 + S p.2 B)
+  exact hs.add hr
 
 private theorem quintic_cont {X : Type*} [TopologicalSpace X]
     (f : X → ℝ) (hf : Continuous f) (beta : ℝ) :
@@ -63,10 +69,12 @@ theorem p4Q2PZ37M_originalOneSlab_integratedSextic_eq_jet (beta : ℝ) (B : Cfg)
       p4Q2PX2_originalOneSlabQuarticTaylor p4Q2PP_originalOneSlabCubicTaylor
     ring
   simp_rw [hP]
+  have hi6 : Integrable (fun X : Cfg => (beta^6/720)*(S X B)^6) haar :=
+    ((hS.pow 6).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)).const_mul _
   rw [integral_add
     (hT.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _))
-    (((continuous_const.mul (hS.pow 6))).integrable_of_hasCompactSupport
-      (HasCompactSupport.of_compactSpace _)), integral_const_mul,
+    hi6, integral_const_mul,
     p4Q2PZ3_originalOneSlab_integratedQuintic_eq_jet H beta B]
   rfl
 
@@ -83,7 +91,9 @@ theorem p4Q2PZ37M_originalTwoSlab_integratedSextic_eq_jet (beta : ℝ) (B : Cfg)
       p4Q2PX2_originalTwoSlabQuarticTaylor p4Q2PP_originalTwoSlabCubicTaylor
     ring
   simp_rw [hP]
-  rw [double_integral_add haar _ _ hT (continuous_const.mul (hQ.pow 6))]
+  rw [double_integral_add haar (fun p : Cfg × Cfg => T2 beta p.1 p.2 B)
+    (fun p : Cfg × Cfg => (beta^6/720)*(Q p.1 p.2 B)^6)
+    hT (continuous_const.mul (hQ.pow 6))]
   simp_rw [integral_const_mul]
   rw [p4Q2PZ3_originalTwoSlab_integratedQuintic_eq_jet H beta B]
   rfl
@@ -108,7 +118,7 @@ theorem p4Q2PZ37M_originalOneSlabHaarRow_sexticJet_seventhRemainder_le
   have h := integral_error haar
     (fun X : Cfg => Real.exp (-(beta*S X B)))
     (fun X : Cfg => expTaylor6 (-(beta*S X B)))
-    ht.exp (expTaylor6_continuous.comp ht) (‖beta*M‖^7)
+    ht.rexp (expTaylor6_continuous.comp ht) (‖beta*M‖^7)
     (fun X => scaled_remainder beta (S X B) M
       (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabAction_nonneg
         H 2 (by decide) X B)
@@ -136,7 +146,7 @@ theorem p4Q2PZ37M_originalTwoSlabHaarRow_sexticJet_seventhRemainder_le
   have h := double_integral_error haar
     (fun p : Cfg × Cfg => Real.exp (-(beta*Q p.1 p.2 B)))
     (fun p : Cfg × Cfg => expTaylor6 (-(beta*Q p.1 p.2 B)))
-    ht.exp (expTaylor6_continuous.comp ht) (‖beta*(2*M)‖^7)
+    ht.rexp (expTaylor6_continuous.comp ht) (‖beta*(2*M)‖^7)
     (fun Y X => scaled_remainder beta (Q Y X B) (2*M)
       (p4Q2PK_originalTwoSlabAction_nonneg H Y X B)
       (p4Q2PN_originalTwoSlabAction_le_twoBudget H Y X B) hsmall)

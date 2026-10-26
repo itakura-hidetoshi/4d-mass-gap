@@ -42,7 +42,7 @@ private theorem one_difference (beta : ℝ) (A D : Cfg) :
     p4Q2PZ37B_originalOneSlabTaylor6, p4Q2PZ1_originalOneSlabFormalTaylor5,
     p4Q2PX_originalOneSlabFormalTaylor4, p4Q2PP2_originalOneSlabFormalTaylor3,
     p4Q2PK_originalOneSlabFormalTaylor2]
-  <;> ring
+  ring
 
 private theorem two_difference (beta : ℝ) (A D : Cfg) :
     J2 beta D-J2 beta A =
@@ -51,7 +51,7 @@ private theorem two_difference (beta : ℝ) (A D : Cfg) :
     p4Q2PZ37B_originalTwoSlabTaylor6, p4Q2PZ1_originalTwoSlabFormalTaylor5,
     p4Q2PX_originalTwoSlabFormalTaylor4, p4Q2PP2_originalTwoSlabFormalTaylor3,
     p4Q2PK_originalTwoSlabFormalTaylor2]
-  <;> ring
+  ring
 
 /-- No constant boundary difference survives in the genuine one-slab jet. -/
 theorem p4Q2PZ37M_originalOneJet_difference_firstOrder
@@ -97,7 +97,7 @@ theorem p4Q2PZ37M_originalSixthMomentJetMinor_eighthRemainder
       beta^7*p4Q2PZ37B_originalPhysicalSeventhCoefficient H A B C =
       ∑ i : Fin 5, beta^(8+i.val)*p4Q2PZ37M_originalJetTailCoefficients H A B C i := by
     simp [Fin.sum_univ_succ, p4Q2PZ37M_originalJetTailCoefficients]
-    <;> ring
+    ring
   rw [heq]
   exact PZ37MEstimates.polynomial_tail beta hb 8 5
     (p4Q2PZ37M_originalJetTailCoefficients H A B C)
