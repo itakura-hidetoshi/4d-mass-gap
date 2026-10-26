@@ -260,6 +260,40 @@ jobs:
             fi
           fi
 
+      # Cheap syntax/type diagnostics for new PZ37O leaf modules. A direct
+      # Lean invocation cannot replace Lake's dependency fingerprint validation.
+      # Compile in import order against the restored baseline oleans, then
+      # perform the full authoritative Lake build below.
+      - name: Early elaboration of new PZ37O leaves
+        if: ${{ steps.lake-mode.outputs.required == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          base='.lake/build/lib/lean/MGAP4D/MathlibAnalytic'
+          for prereq in \
+            PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalRotationalBoundaryWitnessV5_PZ37N \
+            PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalWilsonRawTwoSlabLiteralKernelV5_PJ \
+            PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalWilsonThirdMomentPosteriorMassCriterionV5_PE \
+            PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalWilsonPhysicalKrylovHankelMomentsV5_PB \
+            PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalGramPhysicalRank; do
+            if [[ ! -f "${base}/${prereq}.olean" ]]; then
+              echo "[fast] no baseline olean for ${prereq}; skip early elaboration"
+              exit 0
+            fi
+          done
+          for mod in \
+            PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalLiteralMinorThirdGapV5_PZ37O \
+            PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalThirdRankPosteriorBridgeV5_PZ37O \
+            PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalThirdMomentNonzeroBridgeV5_PZ37O \
+            PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalPhysicalKrylovRankThreeV5_PZ37O; do
+            src="MGAP4D/MathlibAnalytic/${mod}.lean"
+            if [[ -f "${src}" ]]; then
+              echo "[fast] diagnostic Lean elaboration: ${src}"
+              lake env lean -DautoImplicit=false -o "${base}/${mod}.olean" "${src}"
+            fi
+          done
+          echo "[fast] PZ37O diagnostic passed; authoritative Lake build follows"
+
       - name: Run changed Lean fast check
         if: ${{ steps.lake-mode.outputs.required == 'true' }}
         shell: bash
