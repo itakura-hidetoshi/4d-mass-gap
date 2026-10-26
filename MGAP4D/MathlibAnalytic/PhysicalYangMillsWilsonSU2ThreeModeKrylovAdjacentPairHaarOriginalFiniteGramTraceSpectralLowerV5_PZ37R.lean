@@ -72,14 +72,22 @@ theorem p4Q2PZ37R_finThree_posSemidef_eigenvalue_det_trace_bound
   have hcore (j : Fin 3) :
       4 * (ev 0 * ev 1 * ev 2) ≤
         (ev 0 + ev 1 + ev 2) ^ 2 * ev j := by
-    fin_cases j
-    · convert p4Q2PZ37R_three_nonnegative_product_bound
+    -- Turn a finite-index case split into genuine propositional equalities.
+    -- This keeps `ring` from seeing `ev ⟨1, proof⟩` and `ev 1` as
+    -- separate opaque atoms after `fin_cases` introduces constructors.
+    have hj : j = 0 ∨ j = 1 ∨ j = 2 := by
+      fin_cases j <;> simp
+    rcases hj with hj | hj | hj
+    · subst j
+      convert p4Q2PZ37R_three_nonnegative_product_bound
         (ev 0) (ev 1) (ev 2) (hnonneg 0) (hnonneg 1) (hnonneg 2) using 1 <;>
           ring
-    · convert p4Q2PZ37R_three_nonnegative_product_bound
+    · subst j
+      convert p4Q2PZ37R_three_nonnegative_product_bound
         (ev 1) (ev 0) (ev 2) (hnonneg 1) (hnonneg 0) (hnonneg 2) using 1 <;>
           ring
-    · convert p4Q2PZ37R_three_nonnegative_product_bound
+    · subst j
+      convert p4Q2PZ37R_three_nonnegative_product_bound
         (ev 2) (ev 0) (ev 1) (hnonneg 2) (hnonneg 0) (hnonneg 1) using 1 <;>
           ring
   calc
@@ -87,7 +95,6 @@ theorem p4Q2PZ37R_finThree_posSemidef_eigenvalue_det_trace_bound
     _ ≤ (ev 0 + ev 1 + ev 2) ^ 2 * ev i := hcore i
     _ = G.trace ^ 2 * hG.isHermitian.eigenvalues i := by
       rw [htrace]
-      rfl
 
 /-- Strict 3-by-3 Gram determinant gives the explicit strictly positive
 finite-volume lower certificate det/trace^2 for EVERY real eigenvalue. -/
