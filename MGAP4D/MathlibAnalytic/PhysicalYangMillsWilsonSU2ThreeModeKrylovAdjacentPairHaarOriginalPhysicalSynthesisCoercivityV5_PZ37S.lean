@@ -44,7 +44,7 @@ theorem p4Q2PZ37S_realFiniteThreeSynthesis_antilipschitz
     (v : Fin 3 → E)
     (hrank :
       Module.finrank ℝ (p4Q2AD_realFiniteSynthesis v).range = 3) :
-    ∃ K : ℝ≥0, 0 < K ∧
+    ∃ K : NNReal, 0 < K ∧
       AntilipschitzWith K (p4Q2AD_realFiniteSynthesis v) := by
   classical
   let S := p4Q2AD_realFiniteSynthesis v
@@ -66,7 +66,7 @@ theorem p4Q2PZ37S_realFiniteThreeSynthesis_norm_bound
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     (v : Fin 3 → E)
     (hrank : Module.finrank ℝ (p4Q2AD_realFiniteSynthesis v).range = 3) :
-    ∃ K : ℝ≥0, 0 < K ∧
+    ∃ K : NNReal, 0 < K ∧
       ∀ a : Fin 3 → ℝ,
         ‖a‖ ≤ (K : ℝ) * ‖(p4Q2AD_realFiniteSynthesis v) a‖ := by
   obtain ⟨K, hK, hAnti⟩ :=
@@ -112,7 +112,7 @@ theorem p4Q2PZ37S_allFiniteSmallFine_originalPhysicalCoefficient_norm_bound
     (e e' : Link) (left₀ right₀ : Cfg) :
     ∃ delta : ℝ, 0 < delta ∧
       (0 < beta (n + 1) → beta (n + 1) < delta →
-        ∃ K : ℝ≥0, 0 < K ∧
+        ∃ K : NNReal, 0 < K ∧
           ∀ a : Fin (2 + 1) → ℝ, ‖a‖ ≤ (K : ℝ) * ‖S a‖) := by
   obtain ⟨delta, hdelta, hThree⟩ :=
     p4Q2PZ37Q_allFiniteSmallFine_originalPhysicalKrylov_finrank_three
@@ -134,7 +134,7 @@ theorem p4Q2PZ37S_allFiniteSmallFine_originalPhysicalGram_and_coefficient_lower
         (0 < B ∧ ∀ i : Fin 3,
           B ≤ (p4Q2PZ37R_originalWilsonThreeHankel_posSemidef
             Hn (beta (n + 1)) (hbeta (n + 1))).isHermitian.eigenvalues i) ∧
-        ∃ K : ℝ≥0, 0 < K ∧
+        ∃ K : NNReal, 0 < K ∧
           ∀ a : Fin (2 + 1) → ℝ, ‖a‖ ≤ (K : ℝ) * ‖S a‖) := by
   obtain ⟨deltaG, hdeltaG, hG⟩ :=
     p4Q2PZ37R_allFiniteSmallFine_originalPhysicalGram_eigenvalue_lower
