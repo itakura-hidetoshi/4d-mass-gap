@@ -216,9 +216,9 @@ theorem p4Q2PZ37L_originalMinimalOverlapFourth_exact (B : Cfg) :
   by_cases hpq : p=q
   · simp [hpq]
   · have hle := p4Q2PZ37J_originalMinimalOverlap_le_two p q hpq
-    have hiff : 2 ≤ (Four p ∩ Four q).card ↔ (Four p ∩ Four q).card = 2 := by omega
     by_cases h : (Four p ∩ Four q).card = 2
-    · simp only [hpq, not_false_eq_true, true_and, hiff, h, if_true]
+    · rw [if_pos (And.intro hpq (show 2 ≤ (Four p ∩ Four q).card by omega)),
+        if_pos (And.intro hpq h)]
       exact p4Q2PZ37L_originalMinimalPairFourth_exact p q hpq h B
     · have hno : ¬ 2 ≤ (Four p ∩ Four q).card := by omega
       simp [h,hno]
