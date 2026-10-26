@@ -66,18 +66,28 @@ theorem p4Q2PZ37R_finThree_posSemidef_eigenvalue_det_trace_bound
   have htrace : G.trace = ev 0 + ev 1 + ev 2 := by
     simpa only [ev, Fin.sum_univ_three] using
       hG.isHermitian.trace_eq_sum_eigenvalues
-  rw [hdet, htrace]
-  change 4 * ev 0 * ev 1 * ev 2 ≤
-    (ev 0 + ev 1 + ev 2) ^ 2 * ev i
-  fin_cases i
-  · exact p4Q2PZ37R_three_nonnegative_product_bound
-      (ev 0) (ev 1) (ev 2) (hnonneg 0) (hnonneg 1) (hnonneg 2)
-  · convert p4Q2PZ37R_three_nonnegative_product_bound
-      (ev 1) (ev 0) (ev 2) (hnonneg 1) (hnonneg 0) (hnonneg 2) using 1 <;>
-        ring
-  · convert p4Q2PZ37R_three_nonnegative_product_bound
-      (ev 2) (ev 0) (ev 1) (hnonneg 2) (hnonneg 0) (hnonneg 1) using 1 <;>
-        ring
+  -- A calc chain uses proved equality rather than relying on the
+  -- definitional equality checked by `change`. In particular, `4*(a*b*c)`
+  -- and `((4*a)*b)*c` are only propositionally equal by associativity.
+  have hcore (j : Fin 3) :
+      4 * (ev 0 * ev 1 * ev 2) ≤
+        (ev 0 + ev 1 + ev 2) ^ 2 * ev j := by
+    fin_cases j
+    · convert p4Q2PZ37R_three_nonnegative_product_bound
+        (ev 0) (ev 1) (ev 2) (hnonneg 0) (hnonneg 1) (hnonneg 2) using 1 <;>
+          ring
+    · convert p4Q2PZ37R_three_nonnegative_product_bound
+        (ev 1) (ev 0) (ev 2) (hnonneg 1) (hnonneg 0) (hnonneg 2) using 1 <;>
+          ring
+    · convert p4Q2PZ37R_three_nonnegative_product_bound
+        (ev 2) (ev 0) (ev 1) (hnonneg 2) (hnonneg 0) (hnonneg 1) using 1 <;>
+          ring
+  calc
+    4 * G.det = 4 * (ev 0 * ev 1 * ev 2) := by rw [hdet]
+    _ ≤ (ev 0 + ev 1 + ev 2) ^ 2 * ev i := hcore i
+    _ = G.trace ^ 2 * hG.isHermitian.eigenvalues i := by
+      rw [htrace]
+      rfl
 
 /-- Strict 3-by-3 Gram determinant gives the explicit strictly positive
 finite-volume lower certificate det/trace^2 for EVERY real eigenvalue. -/
