@@ -91,6 +91,7 @@ def p4Q2PZ37L_originalMinimalPairShape (p q : Plaq) : Prop :=
 
 private theorem shape_certificate : ∀ p q : Plaq, p ≠ q →
     (CFour p ∩ CFour q).card = 2 → p4Q2PZ37L_originalMinimalPairShape p q := by
+  unfold p4Q2PZ37L_originalMinimalPairShape
   decide
 
 /-- Unconditional geometry classification on the original physical carriers. -/
@@ -200,13 +201,17 @@ local notation "LoopSum" => p4Q2PZ37L_originalMinimalBoundaryLoopSum
 /-- The genuine minimal-period Haar response is now a finite boundary polynomial. -/
 theorem p4Q2PZ37L_originalMinimalOverlapFourth_exact (B : Cfg) :
     Overlap4 B = (3/128 : ℝ)*LoopSum B := by
+  have hProd (f : Plaq × Plaq → ℝ) :
+      (∑ pq : Plaq × Plaq, f pq) = ∑ p : Plaq, ∑ q : Plaq, f (p,q) :=
+    Fintype.sum_prod_type f
   unfold p4Q2PZ37J_originalOverlapFourth p4Q2PZ37L_originalMinimalBoundaryLoopSum
     p4Q2PZ37J_originalMinimalOverlapPairs
   rw [Finset.mul_sum]
-  simp only [Finset.sum_filter, Fintype.sum_prod_type]
-  apply Finset.sum_congr rfl
+  simp only [Finset.sum_filter]
+  rw [hProd]
+  apply Finset.sum_congr (by ext p; simp)
   intro p _
-  apply Finset.sum_congr rfl
+  apply Finset.sum_congr (by ext q; simp)
   intro q _
   by_cases hpq : p=q
   · simp [hpq]
@@ -246,7 +251,7 @@ theorem p4Q2PZ37L_originalMinimalOverlapFourth_identity : Overlap4 I = (9/8 : �
   unfold p4Q2PZ37L_originalMinimalBoundaryLoopSum
   simp_rw [p4Q2PZ37L_originalMinimalBoundaryLoops_identity]
   simp [p4Q2PZ37J_originalMinimalOverlapPairs_card]
-  <;> norm_num
+  norm_num
 
 /-- Minimal-period seventh Taylor JET with no unevaluated Haar response.
 Its remaining boundary-loop wedge is not presumed zero. -/
