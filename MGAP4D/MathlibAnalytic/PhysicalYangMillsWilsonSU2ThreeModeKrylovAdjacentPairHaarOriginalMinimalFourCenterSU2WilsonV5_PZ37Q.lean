@@ -131,6 +131,11 @@ theorem p4Q2PZ37Q_originalMinimalFourCenterBoundary_spatialWilsonAction :
             (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy B₁₆ p) := by
     simp [periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction,
       periodicHypercubicEvenSpatialSlicePlaquetteList]
+    apply Finset.sum_congr
+    · ext p
+      simp
+    · intro p hp
+      rfl
   rw [hAction]
   calc
     (∑ p : Plaq,
@@ -142,11 +147,8 @@ theorem p4Q2PZ37Q_originalMinimalFourCenterBoundary_spatialWilsonAction :
           exact p4Q2PZ37Q_originalMinimalPlaquetteWilsonEnergy p
     _ = ∑ p ∈ F, (2 : ℝ) := by
           simp only [F, Finset.sum_filter]
-          apply Finset.sum_congr rfl
-          intro p _
-          cases h : Odd p <;> simp [h]
     _ = 32 := by
-          simp [hCount]
+          norm_num [hCount]
 
 /-- In the exact original one-slab physical boundary weight, the
 minimal-period genuine SU(2) center state reaches HALF-action 16. -/
