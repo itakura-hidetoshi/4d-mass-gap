@@ -106,7 +106,8 @@ theorem p4Q2PZ37L_originalSpatialHaar_twoCycleProject
     (fun X => X c) (fun X => E ((X c)⁻¹*B c)*F X)
     (continuous_apply c) (hE.mul hF)
     (by intro u X; exact p4Q2PZ35D6_originalLinkTranslate_other H a c u hac.symm X)
-    (by intro u X; rw [p4Q2PZ35D6_originalLinkTranslate_other H a c u hac.symm X, ha])
+    (by intro u X; dsimp only
+        rw [p4Q2PZ35D6_originalLinkTranslate_other H a c u hac.symm X, ha])
   have h2 := p4Q2PZ35D8_originalSpatialHaar_forwardProject H c (B c)
     (fun _ => B a) F continuous_const hF (by intros; rfl) hc
   calc

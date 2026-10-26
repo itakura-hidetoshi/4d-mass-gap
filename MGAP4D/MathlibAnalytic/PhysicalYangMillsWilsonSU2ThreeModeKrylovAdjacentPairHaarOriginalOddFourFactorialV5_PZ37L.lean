@@ -75,6 +75,7 @@ theorem sum_permutations_four [Fintype α] [DecidableEq α]
   have hSum : (∑ e : α, ∑ f : α, ∑ g : α, ∑ k : α,
       if ([e,f,g,k] : List α).Perm [a,b,c,d] then z else 0) = ∑ _t ∈ s, z := by
     simp only [s, Finset.sum_filter, Fintype.sum_prod_type, quadList]
+    rfl
   rw [hSum]
   simp [hCard, nsmul_eq_mul]
 end PZ37OddFourPermutation
