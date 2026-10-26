@@ -92,7 +92,7 @@ theorem p4Q2PZ37N_originalNonminimalLiteralMinor_nonzero_smallPositive
       _ < beta ^ 7 * ‖c‖ :=
         mul_lt_mul_of_pos_left hKsmall (pow_pos hb0 7)
       _ = ‖beta ^ 7 * c‖ := by
-        rw [norm_mul, norm_pow, Real.norm_eq_abs, abs_of_pos hb0]
+        simp only [norm_mul, norm_pow, Real.norm_eq_abs, abs_of_pos hb0]
   have hApprox :
       ‖p4Q2PJ_originalWilsonLiteralThreeSpatialMinor H beta A B C -
         beta ^ 7 * c‖ ≤ K * ‖beta‖ ^ 8 := by
