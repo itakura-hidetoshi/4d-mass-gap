@@ -10,7 +10,7 @@ small-positive original-Wilson intervals:
 
 * PE/PC: the true normalized physical first two moment pivot D2 is positive
   at a frozen-positive / fine-positive coupling pair.
-* PZ37N and PJ: the literal interacting SU(2) one-/two-slab Wilson minor is
+* PZ37N and PJ: the literal interacting SU(2) one- and two-slab Wilson minor is
   nonzero, so the actual third Hankel-Schur gap D3 is positive under D2 > 0.
 
 This yields an unconditional (on the common small-positive fine interval)
