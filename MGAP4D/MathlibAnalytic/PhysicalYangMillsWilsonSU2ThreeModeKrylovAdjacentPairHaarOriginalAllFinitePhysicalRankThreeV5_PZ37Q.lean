@@ -129,7 +129,8 @@ theorem p4Q2PZ37Q_originalMinimalThreePhysicalBoundaryActions :
   refine ⟨(fun _ => (1 : SU)), p4Q2PZ37Q_rotatedFourLinkBoundary t, B₁₆,
     ?_, ?_, ?_⟩
   · change (1 / 2 : ℝ) *
-      W (fun _ : PeriodicHypercubicEvenSpatialSliceLink 0 => (1 : SU)) = 0
+      periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction 0 2
+        (fun _ : PeriodicHypercubicEvenSpatialSliceLink 0 => (1 : SU)) = 0
     rw [p4Q2IY_allOneSpatialWilsonAction_zero]
     norm_num
   · change (1 / 2 : ℝ) * f t = 4
