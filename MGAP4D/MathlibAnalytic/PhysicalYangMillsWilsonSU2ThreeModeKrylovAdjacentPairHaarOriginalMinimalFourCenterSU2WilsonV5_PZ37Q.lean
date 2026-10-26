@@ -31,7 +31,6 @@ local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink 0
 local notation "Plaq" => PeriodicHypercubicEvenSpatialSlicePlaquette 0
 local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration 0 2
 local notation "Odd" => p4Q2PZ37Q_originalMinimalPlaquetteOdd
-local notation "B₁₆" => p4Q2PZ37Q_originalMinimalFourCenterBoundary
 
 private theorem p4Q2PZ37Q_negativeIdentity_inv :
     specialUnitaryTwoNegativeIdentity⁻¹ = specialUnitaryTwoNegativeIdentity := by
@@ -73,6 +72,8 @@ spatial positive links are -I, all other original links are I. -/
 def p4Q2PZ37Q_originalMinimalFourCenterBoundary : Cfg :=
   fun e => p4Q2PZ37Q_originalSU2CenterSign
     (p4Q2PZ37Q_originalMinimalSelected e)
+
+local notation "B₁₆" => p4Q2PZ37Q_originalMinimalFourCenterBoundary
 
 /-- Exact center parity of the original oriented four-edge plaquette
 holonomy, using the original spatial gauge carrier and inversions. -/
