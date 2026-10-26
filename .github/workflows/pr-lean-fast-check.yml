@@ -54,9 +54,10 @@ jobs:
   pr-lean-fast-check:
     name: Changed Lean fast check
     runs-on: ubuntu-22.04
-    # Cold project-cache recovery must finish before judging the changed proofs.
-    # Keep every Lean check and its heartbeat budget unchanged.
-    timeout-minutes: 60
+    # Foundational incidence lemmas invalidate thousands of dependent oleans.
+    # Exact-head PZ37O runs exceeded 60 minutes with no Lean errors, so allow
+    # a complete dependency-aware check; do not skip imports or lower heartbeats.
+    timeout-minutes: 180
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -239,6 +240,24 @@ jobs:
             lake exe cache get
           else
             echo "[fast] restored Mathlib build cache is already present"
+          fi
+
+      # Early, fully kernel-checked diagnostic for the two finite incidence
+      # lemmas changed by PZ37O. This is NOT a substitute for the Lake check.
+      - name: Kernel-check changed finite incidence geometry
+        if: ${{ steps.lake-mode.outputs.required == 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          incidence='MGAP4D/MathlibAnalytic/PeriodicHypercubicPlaquetteIncidence.lean'
+          if git diff --name-only "${CHECK_CHANGED_LEAN_BASE_REF}"...HEAD | grep -Fxq "${incidence}"; then
+            prereq='.lake/build/lib/lean/MGAP4D/MathlibAnalytic/PeriodicHypercubicSignedGeometry.olean'
+            if [[ -f "${prereq}" ]]; then
+              echo "[fast] kernel-check finite incidence geometry before expensive downstream build"
+              lake env lean -DautoImplicit=false "${incidence}"
+            else
+              echo "[fast] prerequisite olean not cached: Lake will check incidence with rebuilt imports"
+            fi
           fi
 
       - name: Run changed Lean fast check
