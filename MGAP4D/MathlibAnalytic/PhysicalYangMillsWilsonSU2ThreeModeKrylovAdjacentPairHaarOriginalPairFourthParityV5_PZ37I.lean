@@ -169,8 +169,8 @@ theorem p4Q2PZ37I_originalPairFourth_quadrupleExpansion
   have hEach (e f g k : Link) :
       Integrable (fun X : Cfg =>
         (χ p X*χ q X)*(T e X*T f X*T g X*T k X)) haar :=
-    ((hχ.mul ((((hT e).mul (hT f)).mul (hT g)).mul (hT k))))
-      .integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    (hχ.mul ((((hT e).mul (hT f)).mul (hT g)).mul (hT k))).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
   have hInner (e f g : Link) :
       Continuous (fun X : Cfg =>
         ∑ k : Link, (χ p X*χ q X)*(T e X*T f X*T g X*T k X)) := by
