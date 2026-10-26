@@ -80,8 +80,8 @@ theorem p4Q2PZ37R_finThree_posSemidef_eigenvalue_det_trace_bound
     rcases hj with hj | hj | hj
     · subst j
       convert p4Q2PZ37R_three_nonnegative_product_bound
-        (ev 0) (ev 1) (ev 2) (hnonneg 0) (hnonneg 1) (hnonneg 2) using 1 <;>
-          ring
+        (ev 0) (ev 1) (ev 2) (hnonneg 0) (hnonneg 1) (hnonneg 2) using 1
+      ring
     · subst j
       convert p4Q2PZ37R_three_nonnegative_product_bound
         (ev 1) (ev 0) (ev 2) (hnonneg 1) (hnonneg 0) (hnonneg 2) using 1 <;>
