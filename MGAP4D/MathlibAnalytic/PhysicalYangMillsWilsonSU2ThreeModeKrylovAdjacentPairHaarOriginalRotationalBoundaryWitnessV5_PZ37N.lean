@@ -25,7 +25,8 @@ local notation "SU" => SpecialUnitaryMatrixGroup 2
 
 private theorem p4Q2PZ37N_rotation_continuous :
     Continuous (specialUnitaryTwoRotation : ℝ → SU) := by
-  apply continuous_subtype_mk
+  refine Continuous.subtype_mk ?_ (fun t => (specialUnitaryTwoRotation t).property)
+  change Continuous (fun t : ℝ => specialUnitaryTwoRotationMatrix t)
   apply continuous_pi
   intro i
   apply continuous_pi
