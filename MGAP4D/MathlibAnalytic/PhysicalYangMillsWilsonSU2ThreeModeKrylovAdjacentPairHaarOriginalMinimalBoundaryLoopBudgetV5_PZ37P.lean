@@ -156,8 +156,10 @@ theorem p4Q2PZ37P_originalMinimalCorrectedCoefficient_nonzero_of_spread
     dsimp only [V]
     norm_num [PZ37VandermondeAlgebra.vandermonde, hA, hB, hC]
   have hW : |W| ≤ 1920 := by
-    simpa [W, hA, hB, hC] using
-      (p4Q2PZ37P_originalMinimalBoundaryWedge_abs_le A B C)
+    have h := p4Q2PZ37P_originalMinimalBoundaryWedge_abs_le A B C
+    rw [hA, hB, hC] at h
+    norm_num at h
+    exact h
   have hCorrBound : |(3/8192 : ℝ) * W| < |V / 512| := by
     have hMult : (3/8192 : ℝ) * |W| ≤ (3/8192) * 1920 :=
       mul_le_mul_of_nonneg_left hW (by norm_num)
