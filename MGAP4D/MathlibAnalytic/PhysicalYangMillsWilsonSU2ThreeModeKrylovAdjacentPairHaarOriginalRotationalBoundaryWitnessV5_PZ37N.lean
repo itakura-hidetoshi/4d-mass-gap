@@ -141,7 +141,7 @@ theorem p4Q2PZ37N_originalThreeBoundaryStrictHalfActions (H : ℕ) :
   refine ⟨(fun _ => (1 : SU)),
     p4Q2PZ37N_rotatedBoundary H t,
     p4Q2PZ37N_rotatedBoundary H Real.pi, ?_, ?_⟩
-  · rw [← hwzero, hwmid]
+  · rw [hwzero, hwmid]
     norm_num
   · rw [hwmid]
     linarith
