@@ -110,8 +110,10 @@ theorem p4Q2PZ37K_originalCenterEven_energy_mean
     rw [hEven X, p4Q2PY7_originalTemporalLinkTrace_centerOdd H e X B]
     ring
   have hZero := p4Q2PU_originalCenterFlip_Haar_odd_integral_zero H e obs hObs hOdd
-  have hiF := hF.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
-  have hiFE := (hF.mul hE).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  have hiF : Integrable F haar :=
+    hF.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+  have hiFE : Integrable (fun X : Cfg => F X*E ((X e)⁻¹*B e)) haar :=
+    (hF.mul hE).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hInt : (∫ X : Cfg, obs X ∂haar) =
       (∫ X : Cfg, F X ∂haar) - (∫ X : Cfg, F X*E ((X e)⁻¹*B e) ∂haar) := by
     calc

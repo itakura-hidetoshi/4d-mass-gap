@@ -7,7 +7,7 @@ Tech stack: Lean v4.30.0-rc2; mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6.
 
 Constraints: original Wilson action, normalized Haar, posterior and source unchanged; no new axiom, sorry, admit or native_decide. Keep H=0 and repeated crossing indices. Distinguish seventh jet from the actual minor remainder. Do not claim U0, rank3 or mass gap.
 
-- [ ] Derive normalized character-square orbit and forward/inverse original spatial Haar projection. Check all four genuine edge orientations.
+- [x] Derive normalized character-square orbit and forward/inverse original spatial Haar projection. Check all four genuine edge orientations.
 - [ ] Prove centre-even weights remove any list of distinct temporal energy factors, with all continuity/integrability obligations.
 - [ ] Prove every original diagonal fourth term is boundary-independent by the covered/free-edge dichotomy, then sum to D_H.
 - [ ] Derive zero diagonal wedge, all-period overlap-only jet, and unconditional H>=1 Vandermonde jet.
@@ -16,3 +16,10 @@ Constraints: original Wilson action, normalized Haar, posterior and source uncha
 Review focus: normalized character gives 1/4; coinciding crossing indices; H=0 four edges remain distinct; inverse edge orientations; jet/minor distinction.
 
 Execution: native implementation in a separate branch of a fresh clone. User supplied the research design and authorized continuing without procedural confirmation. Formal theorem statements and kernel checking replace behavior-unit tests.
+
+Execution record:
+- Independent full-source review: no findings; exact-head kernel/CI verification still pending.
+- Initial CI identified lambda beta-reduction for rewriting, an explicit not-false simplification in Nodup, and a redundant post-closure tactic. Fixed without changing any theorem statement; the finite-list simplification was separately checked with the pinned Lean/mathlib.
+- Source integrity and changed-source preflight pass. Dependency routing / source integrity / feedback classifier regression tests: 27/27.
+- Imported historical modules contain their own warnings and native-decide dependencies; acceptance is based on the actual 15 new theorem axiom reports, not on imports alone.
+- Second CI: square Schur file passed with four standard axiom reports; one remaining elaboration failure was an unconstrained measure metavariable in two local integrability facts. Both now explicitly name the original Haar measure.
