@@ -92,7 +92,8 @@ physical Hilbert source kernel at every finite depth and fine t >= 0.
 This is NOT an assertion of coefficient independence. -/
 theorem p4Q2PZ37U_allFinite_allDepth_originalSourceKernel_eq_GIJoint
     (hFrozen : 0 < beta n) (e : Link) (left₀ : Cfg) :
-    S.ker = K := by
+    (p4Q2HJ_actualRightPhysicalSourceSynthesis
+      (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta) n r).ker = K := by
   ext a
   have hPhysical :=
     p4Q2OX_originalPositiveFrozen_allFine_allDepth_massZero_iff_physicalZero
