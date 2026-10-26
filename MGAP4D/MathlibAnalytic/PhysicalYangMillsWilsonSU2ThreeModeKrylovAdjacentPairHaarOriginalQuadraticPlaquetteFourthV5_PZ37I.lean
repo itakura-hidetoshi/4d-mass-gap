@@ -112,7 +112,7 @@ theorem p4Q2PZ37I_originalF24_traceSquare_decomposition
     p4Q2PZ36C_cross_continuous H B
   have hA :
       Integrable (fun X : Cfg => (1/4 : ℝ)*(Φ X)^2*(Cross X B)^4) haar :=
-    (continuous_const.mul ((hφ.pow 2).mul (hc.pow 4))).integrable_of_hasCompactSupport
+    ((continuous_const.mul (hφ.pow 2)).mul (hc.pow 4)).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
   have hB :
       Integrable (fun X : Cfg => NP*(w X*(Cross X B)^4)) haar :=
