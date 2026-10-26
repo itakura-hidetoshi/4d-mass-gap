@@ -112,12 +112,16 @@ theorem p4Q2PZ37P_originalMinimalBoundaryWedge_abs_le
     p4Q2PZ37P_originalMinimalBoundaryLoopSum_abs_le_48 D
   have hRB : |R₀ B - R₀ A| ≤ 96 := by
     calc
-      |R₀ B - R₀ A| ≤ |R₀ B| + |R₀ A| := abs_sub_le _ _
+      |R₀ B - R₀ A| ≤ |R₀ B| + |R₀ A| := by
+        simpa only [sub_zero, zero_sub, abs_neg] using
+          (abs_sub_le (R₀ B) (0 : ℝ) (R₀ A))
       _ ≤ 48 + 48 := add_le_add (hR B) (hR A)
       _ = 96 := by norm_num
   have hRC : |R₀ C - R₀ A| ≤ 96 := by
     calc
-      |R₀ C - R₀ A| ≤ |R₀ C| + |R₀ A| := abs_sub_le _ _
+      |R₀ C - R₀ A| ≤ |R₀ C| + |R₀ A| := by
+        simpa only [sub_zero, zero_sub, abs_neg] using
+          (abs_sub_le (R₀ C) (0 : ℝ) (R₀ A))
       _ ≤ 48 + 48 := add_le_add (hR C) (hR A)
       _ = 96 := by norm_num
   unfold p4Q2PZ37B_originalBoundaryWedge
@@ -125,7 +129,10 @@ theorem p4Q2PZ37P_originalMinimalBoundaryWedge_abs_le
     |(w₀ B - w₀ A) * (R₀ C - R₀ A) -
         (w₀ C - w₀ A) * (R₀ B - R₀ A)| ≤
       |(w₀ B - w₀ A) * (R₀ C - R₀ A)| +
-        |(w₀ C - w₀ A) * (R₀ B - R₀ A)| := abs_sub_le _ _
+        |(w₀ C - w₀ A) * (R₀ B - R₀ A)| := by
+        simpa only [sub_zero, zero_sub, abs_neg] using
+          (abs_sub_le ((w₀ B - w₀ A) * (R₀ C - R₀ A))
+            (0 : ℝ) ((w₀ C - w₀ A) * (R₀ B - R₀ A)))
     _ = |w₀ B - w₀ A| * |R₀ C - R₀ A| +
           |w₀ C - w₀ A| * |R₀ B - R₀ A| := by rw [abs_mul, abs_mul]
     _ ≤ |w₀ B - w₀ A| * 96 + |w₀ C - w₀ A| * 96 :=
@@ -149,8 +156,8 @@ theorem p4Q2PZ37P_originalMinimalCorrectedCoefficient_nonzero_of_spread
     dsimp only [V]
     norm_num [PZ37VandermondeAlgebra.vandermonde, hA, hB, hC]
   have hW : |W| ≤ 1920 := by
-    simpa only [W, hA, hB, hC, sub_zero, abs_ofNat, Nat.cast_ofNat]
-      using (p4Q2PZ37P_originalMinimalBoundaryWedge_abs_le A B C)
+    simpa [W, hA, hB, hC] using
+      (p4Q2PZ37P_originalMinimalBoundaryWedge_abs_le A B C)
   have hCorrBound : |(3/8192 : ℝ) * W| < |V / 512| := by
     have hMult : (3/8192 : ℝ) * |W| ≤ (3/8192) * 1920 :=
       mul_le_mul_of_nonneg_left hW (by norm_num)
