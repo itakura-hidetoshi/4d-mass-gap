@@ -60,6 +60,8 @@ local notation "Flip" => p4Q2PU_originalSpatialSingleLinkCenterFlip H
 local notation "On" => p4Q2PZ27_originalEdgeOnPlaquette H
 local notation "Pair4" => p4Q2PZ37I_originalPairTraceFourth H
 local notation "K4" => p4Q2PZ37I_originalQuadraticTraceFourth H
+local notation "w" => p4Q2PS_originalHalfSpatialAction H
+local notation "W" => p4Q2PZ37B_originalBoundaryWedge H
 
 /-- Exactly one of two genuine original spatial plaquettes uses the link. -/
 def p4Q2PZ37I_originalPairOddEdge (p q : Plaq) (target : Link) : Prop :=
@@ -330,6 +332,20 @@ theorem p4Q2PZ37I_originalQuadraticTraceFourth_onlyOddCovered
   intro q _hq
   exact p4Q2PZ37I_originalPairFourth_onlyOddCovered H p q B
 
+/-- Exact physical seventh Taylor jet on the fully original parity-selected
+finite six-index Haar sum; no surviving integral is assumed zero. -/
+theorem p4Q2PZ37I_originalPhysicalSeventhJet_oddPairSelected
+    (A B C : Cfg) :
+    p4Q2PZ37B_originalPhysicalSeventhCoefficient H A B C =
+      -(PZ37VandermondeAlgebra.vandermonde (w A) (w B) (w C))/512 -
+        W w (fun D : Cfg => ∑ p : Plaq, ∑ q : Plaq, Selected p q D) A B C /64 := by
+  rw [p4Q2PZ37I_originalPhysicalSeventhJet_pairTraceFourth H A B C]
+  unfold p4Q2PZ37B_originalBoundaryWedge
+  dsimp only
+  rw [p4Q2PZ37I_originalQuadraticTraceFourth_onlyOddCovered H A,
+    p4Q2PZ37I_originalQuadraticTraceFourth_onlyOddCovered H B,
+    p4Q2PZ37I_originalQuadraticTraceFourth_onlyOddCovered H C]
+
 end PairParitySelection
 end GroundStatePosteriorJoint
 end
@@ -341,3 +357,4 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37I_originalPairFourth_quadrupleExpansion
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37I_originalPairFourth_onlyOddCovered
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37I_originalQuadraticTraceFourth_onlyOddCovered
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37I_originalPhysicalSeventhJet_oddPairSelected
