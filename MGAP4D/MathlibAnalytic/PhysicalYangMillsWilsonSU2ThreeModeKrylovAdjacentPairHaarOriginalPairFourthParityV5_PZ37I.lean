@@ -169,7 +169,7 @@ theorem p4Q2PZ37I_originalPairFourth_quadrupleExpansion
   have hEach (e f g k : Link) :
       Integrable (fun X : Cfg =>
         (χ p X*χ q X)*(T e X*T f X*T g X*T k X)) haar :=
-    (hχ.mul ((((hT e).mul (hT f)).mul (hT g)).mul (hT k)))
+    ((hχ.mul ((((hT e).mul (hT f)).mul (hT g)).mul (hT k))))
       .integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hInner (e f g : Link) :
       Continuous (fun X : Cfg =>
@@ -281,7 +281,12 @@ theorem p4Q2PZ37I_originalPairFourth_quadrupleExpansion
         apply integral_congr_ae
         filter_upwards with X
         rw [p4Q2PW_originalCrossing_eq_finsetSum H X B]
-        exact hPoint X
+        have hUniv :
+            (@Finset.univ Link (p4Q2PW_nativeFintype H)) =
+              (Finset.univ : Finset Link) := by
+          ext e
+          simp
+        simpa only [hUniv, T] using hPoint X
     _ = ∑ e : Link, ∑ f : Link, ∑ g : Link, ∑ k : Link,
       (∫ X : Cfg,
         (χ p X*χ q X)*(T e X*T f X*T g X*T k X) ∂haar) := hIntegral
