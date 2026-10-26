@@ -129,8 +129,10 @@ theorem p4Q2PZ37H_originalSpatialPower_distinctEnergyPair_mean
       ring
     _ = ((∫ X : Cfg, g0 X ∂haar)-(∫ X : Cfg, ge X ∂haar))-
         (∫ X : Cfg, gf X ∂haar)+(∫ X : Cfg, gef X ∂haar) := by
-      rw [integral_add ((hi0.sub hie).sub hif) hief,
-        integral_sub (hi0.sub hie) hif, integral_sub hi0 hie]
+      have hAdd := integral_add ((hi0.sub hie).sub hif) hief
+      have hSub := integral_sub (hi0.sub hie) hif
+      simp only [Pi.sub_apply] at hAdd hSub
+      rw [hAdd, hSub, integral_sub hi0 hie]
     _ = (∫ X : Cfg, (w X)^i ∂haar) := by
       change ((∫ X : Cfg, (w X)^i ∂haar)-
         (∫ X : Cfg, (w X)^i*τ e X B ∂haar))-
@@ -167,9 +169,17 @@ theorem p4Q2PZ37H_originalSpatialPower_crossingSquare_pairSum
   have hCross (X : Cfg) : Cross X B = ∑ e : Link, E ((X e)⁻¹*B e) := by
     simp [periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction,
       periodicHypercubicEvenSpatialSliceLinkList]
+    refine Finset.sum_congr ?_ (fun _ _ => rfl)
+    ext e
+    simp
   have hPoint (X : Cfg) : (w X)^i*(Cross X B)^2 =
       ∑ e : Link, ∑ f : Link, g e f X := by
     simp only [hCross X, pow_two, Finset.sum_mul, Finset.mul_sum, g]
+    apply Finset.sum_congr rfl
+    intro e _he
+    apply Finset.sum_congr rfl
+    intro f _hf
+    ring
   calc
     (∫ X : Cfg, (w X)^i*(Cross X B)^2 ∂haar) =
         (∫ X : Cfg, ∑ e : Link, ∑ f : Link, g e f X ∂haar) := by
