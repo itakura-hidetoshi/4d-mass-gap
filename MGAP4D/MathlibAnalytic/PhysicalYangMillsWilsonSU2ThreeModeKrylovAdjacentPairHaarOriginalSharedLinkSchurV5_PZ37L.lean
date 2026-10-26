@@ -82,9 +82,10 @@ theorem p4Q2PZ37L_originalSpatialHaar_fourLinkAverage
     (target : Link) (F : Cfg → ℝ) (hF : Continuous F) :
     (∫ X : Cfg, (∑ j : Fin 4, F (T target (q j) X)) ∂haar) =
       4 * (∫ X : Cfg, F X ∂haar) := by
-  rw [integral_finset_sum _ (fun j _ =>
+  have hInt (j : Fin 4) : Integrable (fun X : Cfg => F (T target (q j) X)) haar :=
     (hF.comp (p4Q2PZ35D8_originalSpatialLinkTranslation_continuous H target (q j))).integrable_of_hasCompactSupport
-      (HasCompactSupport.of_compactSpace _))]
+      (HasCompactSupport.of_compactSpace _)
+  rw [integral_finset_sum _ (fun j _ => hInt j)]
   simp_rw [p4Q2PZ35D6_originalSpatialHaar_oneLinkIntegralLeftTranslate H target _ F hF]
   simp [nsmul_eq_mul]
 
