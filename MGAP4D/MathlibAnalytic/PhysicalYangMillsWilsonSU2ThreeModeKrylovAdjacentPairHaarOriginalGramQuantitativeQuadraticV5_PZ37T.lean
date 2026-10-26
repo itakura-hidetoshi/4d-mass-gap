@@ -59,8 +59,8 @@ theorem p4Q2PZ37T_finThree_posSemidef_spectral_quadratic_lower
     ext i j
     by_cases hij : i = j
     · subst j
-      simp [Matrix.diagonal_apply, Matrix.one_apply, Matrix.smul_apply]
-    · simp [Matrix.diagonal_apply, Matrix.one_apply, Matrix.smul_apply, hij]
+      simp [Matrix.smul_apply]
+    · simp [Matrix.smul_apply, hij]
   have hUnit : U * star U = (1 : Matrix (Fin 3) (Fin 3) ℝ) := by
     simpa only [U] using
       (Unitary.coe_mul_star_self hG.isHermitian.eigenvectorUnitary)
@@ -69,7 +69,7 @@ theorem p4Q2PZ37T_finThree_posSemidef_spectral_quadratic_lower
   have hScalar :
       U * (c • (1 : Matrix (Fin 3) (Fin 3) ℝ)) * star U =
         c • (1 : Matrix (Fin 3) (Fin 3) ℝ) := by
-    rw [mul_smul, smul_mul, mul_one, hUnit]
+    rw [Matrix.mul_smul, Matrix.smul_mul, mul_one, hUnit]
   have hConjugateDifference :
       U * (Matrix.diagonal ev - c • (1 : Matrix (Fin 3) (Fin 3) ℝ)) * star U =
         G - c • (1 : Matrix (Fin 3) (Fin 3) ℝ) := by
@@ -79,7 +79,7 @@ theorem p4Q2PZ37T_finThree_posSemidef_spectral_quadratic_lower
     exact hConj
   have hQuadratic := hShift.dotProduct_mulVec_nonneg a
   have hSelfDot : star a ⬝ᵥ a = ∑ i : Fin 3, (a i) ^ 2 := by
-    simp [Matrix.dotProduct, pow_two]
+    simp [dotProduct, pow_two]
   have hExpand :
       star a ⬝ᵥ ((G - c • (1 : Matrix (Fin 3) (Fin 3) ℝ)) *ᵥ a) =
         star a ⬝ᵥ (G *ᵥ a) - c * (∑ i : Fin 3, (a i) ^ 2) := by
@@ -149,7 +149,9 @@ theorem p4Q2PZ37T_allFiniteSmallFine_originalPhysicalSynthesis_quadratic_lower
     simpa only [p4Q2PD_originalWilsonThreeHankel] using
       (p4Q2PB_originalWilsonPhysicalGram_eq_actualHankel
         Hn (beta (n + 1)) (hbeta (n + 1)) 2)
-  have hPSD : G.PosSemidef :=
+  have hPSD :
+      (p4Q2PD_originalWilsonThreeHankel
+        Hn (beta (n + 1)) (hbeta (n + 1))).PosSemidef :=
     p4Q2PZ37R_originalWilsonThreeHankel_posSemidef
       Hn (beta (n + 1)) (hbeta (n + 1))
   have hQuadratic :
