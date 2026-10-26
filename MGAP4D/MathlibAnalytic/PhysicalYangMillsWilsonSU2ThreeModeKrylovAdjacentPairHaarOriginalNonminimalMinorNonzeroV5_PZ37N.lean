@@ -25,7 +25,7 @@ local notation "w" => p4Q2PS_originalHalfSpatialAction H
 local notation "M" =>
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H
 
-/-- The *literal* one-/two-slab Wilson minor is nonzero throughout a small
+/-- The *literal* one- and two-slab Wilson minor is nonzero throughout a small
 positive interval whenever the three physical boundary action values differ.
 The radius may depend on H and all three boundaries. No new hypothesis
 concerning a Haar moment, endpoint, or posterior is introduced. -/
