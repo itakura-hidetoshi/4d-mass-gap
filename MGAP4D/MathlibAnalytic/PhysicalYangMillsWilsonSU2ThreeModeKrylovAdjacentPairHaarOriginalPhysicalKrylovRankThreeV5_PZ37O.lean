@@ -45,9 +45,17 @@ theorem p4Q2PZ37O_originalPhysicalThreeKrylov_linearIndependent_of_det_pos
       Matrix.gram ℝ (fun j : Fin (2 + 1) => (Fine ^ (j : ℕ)) U) =
         p4Q2PD_originalWilsonThreeHankel H t ht :=
     p4Q2PB_originalWilsonPhysicalGram_eq_actualHankel H t ht 2
-  apply Matrix.linearIndependent_of_det_gram_ne_zero
-  rw [hGram]
-  exact ne_of_gt hDet
+  have hGramDet :
+      (Matrix.gram ℝ
+        (fun j : Fin (2 + 1) => (Fine ^ (j : ℕ)) U)).det =
+        (p4Q2PD_originalWilsonThreeHankel H t ht).det :=
+    congrArg Matrix.det hGram
+  have hNonzero :
+      (Matrix.gram ℝ
+        (fun j : Fin (2 + 1) => (Fine ^ (j : ℕ)) U)).det ≠ 0 := by
+    intro hZero
+    exact (ne_of_gt hDet) (hGramDet.symm.trans hZero)
+  exact Matrix.linearIndependent_of_det_gram_ne_zero hNonzero
 
 /-- The genuine physical moment Hankel matrix has EXACT rank three
 under the same certificate; the rank statement uses mathlib's
