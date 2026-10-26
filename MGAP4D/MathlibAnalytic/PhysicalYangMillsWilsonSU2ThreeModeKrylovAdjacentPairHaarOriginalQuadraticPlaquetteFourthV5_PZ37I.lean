@@ -142,12 +142,23 @@ theorem p4Q2PZ37I_originalF24_traceSquare_decomposition
         (∫ X : Cfg, (NP^2/4 : ℝ)*(Cross X B)^4 ∂haar) := by
       have hAdd := integral_add hA hB
       have hSub := integral_sub (hA.add hB) hC
-      simp only [Pi.add_apply, Pi.sub_apply] at hAdd hSub
+      simp only [Pi.add_apply] at hAdd hSub
       rw [hSub, hAdd]
     _ = (1/4 : ℝ)*K4 B + NP*F 1 4 B - (NP^2/4 : ℝ)*F 0 4 B := by
-      rw [integral_const_mul, integral_const_mul, integral_const_mul]
-      simp only [p4Q2PZ37I_originalQuadraticTraceFourth,
-        p4Q2PZ37D_originalMixedHaar, pow_zero, one_mul, pow_one]
+      have hFirst :
+          (∫ X : Cfg, (1/4 : ℝ)*(Φ X)^2*(Cross X B)^4 ∂haar) =
+            (1/4 : ℝ)*K4 B := by
+        calc
+          (∫ X : Cfg, (1/4 : ℝ)*(Φ X)^2*(Cross X B)^4 ∂haar) =
+              (∫ X : Cfg, (1/4 : ℝ)*((Φ X)^2*(Cross X B)^4) ∂haar) := by
+                apply integral_congr_ae
+                filter_upwards with X
+                ring
+          _ = (1/4 : ℝ)*K4 B := by
+                rw [integral_const_mul]
+                rfl
+      rw [hFirst, integral_const_mul]
+      simp only [p4Q2PZ37D_originalMixedHaar, pow_zero, one_mul, pow_one]
 
 /-- Unweighted true crossing fourth Haar moment is boundary-independent,
 by genuine coordinatewise SU(2) Haar translation. -/
