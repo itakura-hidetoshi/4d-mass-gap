@@ -70,11 +70,13 @@ private theorem p4Q2PZ37W_finThree_single_quad
     (A : Matrix (Fin 3) (Fin 3) ℝ) (i : Fin 3) :
     star (Pi.single i (1 : ℝ)) ⬝ᵥ
         (A *ᵥ Pi.single i (1 : ℝ)) = A i i := by
-  have hStar : star (Pi.single i (1 : ℝ)) = Pi.single i (1 : ℝ) := by
+  let a : Fin 3 → ℝ := Pi.single i 1
+  change star a ⬝ᵥ (A *ᵥ a) = A i i
+  have hStar : star a = a := by
     ext j
-    simp
+    simp [a]
   rw [hStar]
-  simp only [single_one_dotProduct, Matrix.mulVec_apply, dotProduct_single_one]
+  simp only [a, single_one_dotProduct, Matrix.mulVec_apply, dotProduct_single_one]
 
 /-- Quadratic domination on *all* three coefficients implies trace
 domination with the SAME constants. This is pure matrix algebra and
@@ -84,7 +86,7 @@ theorem p4Q2PZ37W_finThree_quadratic_compare_trace
     (hCmp : ∀ a : Fin 3 → ℝ,
       c * (star a ⬝ᵥ (P *ᵥ a)) ≤ star a ⬝ᵥ (B *ᵥ a) ∧
       star a ⬝ᵥ (B *ᵥ a) ≤ C * (star a ⬝ᵥ (P *ᵥ a))) :
-    c * P.trace ≤ B.trace ∧ B.trace ≤ C * P.trace := by
+    c * (P).trace ≤ B.trace ∧ B.trace ≤ C * (P).trace := by
   have hDiag (i : Fin 3) :
       c * P i i ≤ B i i ∧ B i i ≤ C * P i i := by
     simpa only [p4Q2PZ37W_finThree_single_quad] using
@@ -174,8 +176,8 @@ trace m0+m2+m4. Constants may depend on every finite physical model. -/
 theorem p4Q2PZ37W_allFinite_allFine_originalGLIntegral_trace_physicalMoments
     (hFrozen : 0 < beta n) (e : Link) (left₀ : Cfg) :
     ∃ c C : ℝ, 0 < c ∧ c ≤ C ∧
-      c * P.trace ≤ (B hFrozen).trace ∧
-      (B hFrozen).trace ≤ C * P.trace := by
+      c * (P).trace ≤ (B hFrozen).trace ∧
+      (B hFrozen).trace ≤ C * (P).trace := by
   obtain ⟨c, C, hc, hcC, hCmp⟩ :=
     p4Q2PZ37W_allFinite_allFine_originalGL_physicalGram_quadratic_compare
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
@@ -192,14 +194,14 @@ theorem p4Q2PZ37W_allFiniteSmallFine_originalGLIntegral_detTrace_momentSandwich
     ∃ delta : ℝ, 0 < delta ∧
       (0 < beta (n + 1) → beta (n + 1) < delta →
         ∃ c C : ℝ, 0 < c ∧ c ≤ C ∧
-          0 < P.trace ∧
-          c * P.trace ≤ (B hFrozen).trace ∧
-          (B hFrozen).trace ≤ C * P.trace ∧
+          0 < (P).trace ∧
+          c * (P).trace ≤ (B hFrozen).trace ∧
+          (B hFrozen).trace ≤ C * (P).trace ∧
           0 < (B hFrozen).det ∧
-          (4 * (B hFrozen).det / ((C * P.trace) ^ 2)) ≤
+          (4 * (B hFrozen).det / ((C * (P).trace) ^ 2)) ≤
             4 * (B hFrozen).det / ((B hFrozen).trace ^ 2) ∧
           4 * (B hFrozen).det / ((B hFrozen).trace ^ 2) ≤
-            4 * (B hFrozen).det / ((c * P.trace) ^ 2)) := by
+            4 * (B hFrozen).det / ((c * (P).trace) ^ 2)) := by
   obtain ⟨delta, hdelta, hDef⟩ :=
     p4Q2PZ37V_allFiniteSmallFine_originalGLIntegralGram_posDef
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
@@ -214,25 +216,30 @@ theorem p4Q2PZ37W_allFiniteSmallFine_originalGLIntegral_detTrace_momentSandwich
   have hBtrace : 0 < (B hFrozen).trace := hPosDef.trace_pos
   have hBdet : 0 < (B hFrozen).det := hPosDef.det_pos
   have hC : 0 < C := lt_of_lt_of_le hc hcC
-  have hPtrace : 0 < P.trace := by nlinarith [hTraceHi]
-  have hcp : 0 < c * P.trace := mul_pos hc hPtrace
-  have hCp : 0 < C * P.trace := mul_pos hC hPtrace
-  have hLowerSq : (c * P.trace) ^ 2 ≤ (B hFrozen).trace ^ 2 := by
+  have hPtrace : 0 < (P).trace := by
+    by_contra hNot
+    have hNonpos : (P).trace ≤ 0 := le_of_not_gt hNot
+    have hUpperNonpos : C * (P).trace ≤ 0 :=
+      mul_nonpos_of_nonneg_of_nonpos hC.le hNonpos
+    linarith
+  have hcp : 0 < c * (P).trace := mul_pos hc hPtrace
+  have hCp : 0 < C * (P).trace := mul_pos hC hPtrace
+  have hLowerSq : (c * (P).trace) ^ 2 ≤ (B hFrozen).trace ^ 2 := by
     nlinarith [mul_nonneg (sub_nonneg.mpr hTraceLo)
       (add_nonneg hcp.le hBtrace.le)]
-  have hUpperSq : (B hFrozen).trace ^ 2 ≤ (C * P.trace) ^ 2 := by
+  have hUpperSq : (B hFrozen).trace ^ 2 ≤ (C * (P).trace) ^ 2 := by
     nlinarith [mul_nonneg (sub_nonneg.mpr hTraceHi)
       (add_nonneg hCp.le hBtrace.le)]
   have hNum : 0 ≤ 4 * (B hFrozen).det :=
     (mul_pos (by norm_num) hBdet).le
   have hLower :
-      (4 * (B hFrozen).det / ((C * P.trace) ^ 2)) ≤
+      (4 * (B hFrozen).det / ((C * (P).trace) ^ 2)) ≤
         4 * (B hFrozen).det / ((B hFrozen).trace ^ 2) :=
     (div_le_div_iff₀ (pow_pos hCp 2) (pow_pos hBtrace 2)).mpr
       (mul_le_mul_of_nonneg_left hUpperSq hNum)
   have hUpper :
       4 * (B hFrozen).det / ((B hFrozen).trace ^ 2) ≤
-        4 * (B hFrozen).det / ((c * P.trace) ^ 2) :=
+        4 * (B hFrozen).det / ((c * (P).trace) ^ 2) :=
     (div_le_div_iff₀ (pow_pos hBtrace 2) (pow_pos hcp 2)).mpr
       (mul_le_mul_of_nonneg_left hLowerSq hNum)
   exact ⟨c, C, hc, hcC, hPtrace, hTraceLo, hTraceHi, hBdet, hLower, hUpper⟩
