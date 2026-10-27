@@ -1,5 +1,16 @@
 # MGAP4D — 証明ロードマップ（P4-Q2-PZ37ZA #5935統合済み／次は全リンク・全文脈の真正GL質量一様制御とendpoint source transport）
 
+**LATEST VERIFIED THEOREM / NEXT GATE — 2026-10-27 JST · PZ37ZH #5945 MERGED**
+
+- Sole theorem carrier: `formal/real-hilbert-uniform-coercive-strong-limit`, tested PZ37ZH source SHA `8c258a37a04187cc6c708eef354e88682d7a7f5e`, verified squash theorem [`c2101b5596689ed6dd0939aad60b8c2884f6e3ee`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/c2101b5596689ed6dd0939aad60b8c2884f6e3ee) ([PR #5945](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5945)). Default `main` is not authority.
+- Exact-head [CI #40489013358](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40489013358): **11,093/11,093 SUCCESS**, changed file warning/error **0/0**, all seven new `#print axioms` reports exclusively standard `propext`, `Classical.choice`, `Quot.sound`, independent MCP CI completion receipt SUCCESS. No new axiom, sorry, admit or native_decide.
+- **CLOSED:** explicit adjacent frozen/fine `beta(0)=b>0`, `beta(k>0)=t≥0`, true HJ depth-one signed physical coefficients `(1,-1)`, exact same-Gauss-law-Hilbert equality `S_1(1,-1)=F_t=U-T_tU`. Apply the original OX all-fine/all-depth two-interacting-Wilson-posterior full-link GL kernel theorem: `M_GL(F_t)=0 iff F_t=0` for every nonnegative fine `t`. For any genuinely nonzero `F_t`, `0<M_GL(F_t)/‖F_t‖²≤2|Links(H)|e^(16b)`. PZ37ZF supplies nonzero physical `F_t` throughout one sufficiently small **positive** fine interval, without any assumed rank/separation axiom.
+- **OPEN / next PZ37ZI (tentative):** use verified genuine JG strong Haar-`L²` one-slab Wilson raw-row first variation with its nonconstant spatial-action tangent, together with original normalized transfer/operator-norm continuity. Analyze `F_t/t`, perpendicular spatial-action component, true full-link GL continuity/covariance, and whether a positive lower bound for `R(F_t)` uniform over `t∈(0,δ_H)` can be **proved** at each fixed finite `H,b` without assuming a transfer-norm derivative. Distinguish any fixed-model result from a volume-/scale-uniform physical source floor.
+- **Never infer:** `M_GL(F_t)→0` ⇒ normalized ratio tends to zero, or two-mode coefficient-ℓ² no-go ⇒ source-norm coercivity no-go. The separately disproved PZ37ZA bounded two-context `Q_GI/N_H` sufficient density remains closed. Endpoint E, arbitrary-depth common fine F, H1–H4 and continuum Yang–Mills mass gap are **OPEN**. Historical PZ37ZG/ZF/ZA checkpoints below are dated receipts, not latest authority.
+- Documentation-only append-only update: **do not run Strict Lean**.
+
+---
+
 **LATEST VERIFIED THEOREM AUTHORITY / NEXT GATE — 2026-10-27 JST, PZ37ZG #5943 MERGED**
 
 - Sole theorem carrier: `formal/real-hilbert-uniform-coercive-strong-limit`; verified theorem-bearing squash [`49467c2542e4a4b565ec480f04884f9c97c57abe`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/49467c2542e4a4b565ec480f04884f9c97c57abe), distinct from tested source `77d50b0c0d6bc90aa3b8a243bdf3ae50aeef37e8` ([PR #5943](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5943)).
