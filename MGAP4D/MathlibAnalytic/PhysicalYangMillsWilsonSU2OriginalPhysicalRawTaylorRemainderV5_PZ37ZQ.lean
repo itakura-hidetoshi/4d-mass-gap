@@ -139,9 +139,41 @@ theorem p4Q2PZ37ZQ_originalPhysicalRawTaylorError_coe_eq_toLp
           (t : ℝ) • p4Q2JE_originalWilsonHaarZeroDerivativeProfile H)
   rw [map_sub, map_smul, map_sub]
 
+/-- The true probability product-Haar L² embedding is contractive,
+split out to keep the physical Taylor elaborator small. -/
+theorem p4Q2PZ37ZQ_originalHaarEmbedding_norm_le
+    (H : ℕ)
+    (psi : C(PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2, ℝ)) :
+    ‖ContinuousMap.toLp 2
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) ℝ psi‖ ≤ ‖psi‖ := by
+  let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  let haar := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
+  let L : C(Cfg, ℝ) →L[ℝ] Lp ℝ 2 haar := ContinuousMap.toLp 2 haar ℝ
+  have hL : ‖L‖ ≤ 1 := by
+    have h := ContinuousMap.toLp_norm_le
+      (α := Cfg) (E := ℝ) (p := (2 : ENNReal)) (𝕜 := ℝ) haar
+    simpa [L, measureUnivNNReal] using h
+  change ‖L psi‖ ≤ ‖psi‖
+  calc
+    ‖L psi‖ ≤ ‖L‖ * ‖psi‖ := L.le_opNorm psi
+    _ ≤ 1 * ‖psi‖ := mul_le_mul_of_nonneg_right hL (norm_nonneg psi)
+    _ = ‖psi‖ := one_mul _
+
+/-- Physical submodule norm equals the full original Haar-L² norm.
+The exact L² identity was separately established above. -/
+theorem p4Q2PZ37ZQ_originalPhysicalRawTaylorError_norm_eq_Haar
+    (H : ℕ) (t : Set.Ici (0 : ℝ)) :
+    ‖p4Q2PZ37ZQ_originalPhysicalRawTaylorError H t‖ =
+    ‖ContinuousMap.toLp 2
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) ℝ
+      (p4Q2JF_originalWilsonHaarRowContinuous H (t : ℝ) -
+        (1 : C(PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2, ℝ)) -
+        (t : ℝ) • p4Q2JE_originalWilsonHaarZeroDerivativeProfile H)‖ := by
+  exact congrArg norm
+    (p4Q2PZ37ZQ_originalPhysicalRawTaylorError_coe_eq_toLp H t)
+
 /-- The true physical Taylor remainder is uniformly O_H(t²) on
-the true original Wilson finite-volume action-budget window.
-The one-slab operator norm normalization is not differentiated. -/
+the original Wilson finite-volume action-budget window. -/
 theorem p4Q2PZ37ZQ_originalPhysicalRawTaylorError_norm_le_quadratic
     (H : ℕ) (t : Set.Ici (0 : ℝ))
     (hsmall : ‖(t : ℝ) *
@@ -150,37 +182,19 @@ theorem p4Q2PZ37ZQ_originalPhysicalRawTaylorError_norm_le_quadratic
       ((t : ℝ) *
         periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H)^2 := by
   let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
-  let haar := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
-  let L : C(Cfg, ℝ) →L[ℝ] Lp ℝ 2 haar := ContinuousMap.toLp 2 haar ℝ
   let eps : C(Cfg, ℝ) :=
     p4Q2JF_originalWilsonHaarRowContinuous H (t : ℝ) -
       (1 : C(Cfg, ℝ)) -
       (t : ℝ) • p4Q2JE_originalWilsonHaarZeroDerivativeProfile H
-  have hEmbed :
-      ((p4Q2PZ37ZQ_originalPhysicalRawTaylorError H t :
-        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2) :
-        Lp ℝ 2 haar) = L eps :=
-    p4Q2PZ37ZQ_originalPhysicalRawTaylorError_coe_eq_toLp H t
-  have hL : ‖L‖ ≤ 1 := by
-    have h := ContinuousMap.toLp_norm_le
-      (α := Cfg) (E := ℝ) (p := (2 : ENNReal)) (𝕜 := ℝ) haar
-    simpa [L, measureUnivNNReal] using h
-  have hNorm : ‖L eps‖ ≤ ‖eps‖ := by
-    calc
-      ‖L eps‖ ≤ ‖L‖ * ‖eps‖ := L.le_opNorm eps
-      _ ≤ 1 * ‖eps‖ := mul_le_mul_of_nonneg_right hL (norm_nonneg eps)
-      _ = ‖eps‖ := one_mul _
-  have hJF :
-      ‖eps‖ ≤
-        ((t : ℝ) *
-          periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H)^2 :=
-    p4Q2JF_originalWilsonHaarRow_supNormQuadraticRemainder_le
-      H (t : ℝ) hsmall
-  have hEq :
-      ‖p4Q2PZ37ZQ_originalPhysicalRawTaylorError H t‖ = ‖L eps‖ :=
-    congrArg norm hEmbed
-  rw [hEq]
-  exact hNorm.trans hJF
+  calc
+    ‖p4Q2PZ37ZQ_originalPhysicalRawTaylorError H t‖ =
+        ‖ContinuousMap.toLp 2
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) ℝ eps‖ :=
+      p4Q2PZ37ZQ_originalPhysicalRawTaylorError_norm_eq_Haar H t
+    _ ≤ ‖eps‖ := p4Q2PZ37ZQ_originalHaarEmbedding_norm_le H eps
+    _ ≤ ((t : ℝ) *
+        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H)^2 :=
+      p4Q2JF_originalWilsonHaarRow_supNormQuadraticRemainder_le H (t : ℝ) hsmall
 
 end GroundStatePosteriorJoint
 end
@@ -188,4 +202,6 @@ end MGAP4D.MathlibAnalytic
 
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ZQ_originalPhysicalRawDerivative_coe_eq_HaarDerivative
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ZQ_originalPhysicalRawTaylorError_coe_eq_toLp
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ZQ_originalHaarEmbedding_norm_le
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ZQ_originalPhysicalRawTaylorError_norm_eq_Haar
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ZQ_originalPhysicalRawTaylorError_norm_le_quadratic
