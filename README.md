@@ -26,7 +26,7 @@ The checkpoint is deliberately **a dated theorem-bearing merge**, not a claim th
 
 ## 1A. Historical post-PC evidence (PD–PN; superseded checkpoint)
 
-The following archived PD–PN results describe their original proof-time status. Any older claim here that `D3>0` or physical three-mode rank 3 remains OPEN is superseded by PZ37Q–W above. These historical proofs use
+The following archived PD–PN results describe their original proof-time status. Any older claim here that `D3>0` or physical three-mode rank 3 remains OPEN is superseded by PZ37Q–W above. These historical proofs used the original physical Wilson kernel and the actual spatial product-Haar reference; the two interacting posteriors were never replaced by independent Haar posteriors.
 
 | Stage | Proved in Lean 4 | Not proved by this stage |
 | --- | --- | --- |
