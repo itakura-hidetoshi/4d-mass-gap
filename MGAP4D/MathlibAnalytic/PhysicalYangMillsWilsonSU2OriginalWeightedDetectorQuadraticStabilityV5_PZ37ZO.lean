@@ -88,7 +88,7 @@ theorem p4Q2PZ37ZO_weightedDetectorMass_add_le_two
       (∫ z, (L z (f + g))^2 / q z ∂μ) ≤
       ∫ z, 2 * ((L z f)^2 / q z) +
         2 * ((L z g)^2 / q z) ∂μ :=
-    integral_mono (hInt (f + g)) hR (Filter.Eventually.of_forall hPoint)
+    integral_mono (hInt (f + g)) hR hPoint
   unfold p4Q2PZ37ZO_weightedDetectorMass
   calc
     (∫ z, (L z (f + g))^2 / q z ∂μ) ≤
