@@ -121,7 +121,7 @@ theorem p4Q2PZ37ZT_originalPhysicalErrorDivFine_norm_le_linear
     (t : ℝ)⁻¹ * ‖E‖ ≤ (t : ℝ)⁻¹ * (((t : ℝ) * B)^2) :=
       mul_le_mul_of_nonneg_left hE (inv_nonneg.mpr ht.le)
     _ = (t : ℝ) * B^2 := by
-      field_simp [ne_of_gt ht] <;> ring
+      field_simp [ne_of_gt ht]
 
 /-- At any genuine finite H, the actual physical first-order
 Taylor-error quotient tends STRONGLY to zero in the true Gauss-law
@@ -159,7 +159,11 @@ theorem p4Q2PZ37ZT_originalPhysicalErrorDivFine_tendsto_zero
     rcases lt_or_eq_of_le htNonneg with htPos | htZero
     · exact p4Q2PZ37ZT_originalPhysicalErrorDivFine_norm_le_linear H t htPos hsmall
     · have hz : (t : ℝ) = 0 := htZero.symm
-      simp [p4Q2PZ37ZT_originalPhysicalErrorDivFine, hz]
+      change ‖(t : ℝ)⁻¹ •
+        p4Q2PZ37ZQ_originalPhysicalRawTaylorError H t‖ ≤
+          (t : ℝ) * B^2
+      rw [hz]
+      simp
   have hVal :
       Tendsto (fun t : Set.Ici (0 : ℝ) => (t : ℝ)) (𝓝 t0) (𝓝 (0 : ℝ)) := by
     exact continuous_subtype_val.continuousAt
@@ -225,7 +229,7 @@ theorem p4Q2PZ37ZT_originalScalarCorrectedTangent_eq_truePhysical
       (s * (t : ℝ) / 2) • W - s • E
     module
   have hScalar : (t : ℝ)⁻¹ * (s * (t : ℝ) / 2) = s / 2 := by
-    field_simp [ne_of_gt ht] <;> ring
+    field_simp [ne_of_gt ht]
   change (s / 2) • W - s • ((t : ℝ)⁻¹ • E) =
     (t : ℝ)⁻¹ •
       (p4Q2PZ37ZE_originalPhysicalCancellation H t - A • U)
