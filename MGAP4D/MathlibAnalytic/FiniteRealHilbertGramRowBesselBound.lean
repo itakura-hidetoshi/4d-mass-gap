@@ -93,11 +93,12 @@ theorem finiteRealHilbert_synthesis_sq_le_gram_row_bound
     (fun i j => ⟪v i, v j⟫_ℝ)
     (fun i j => real_inner_comm (v i) (v j)) D hrow a
 
-/-- A synthesis Bessel bound yields a total response bound for a SINGLE
-bounded linear functional, without an orthonormal-basis assumption. -/
+/-- A nonnegative synthesis Bessel bound yields a total response bound for
+a SINGLE bounded linear functional, without an orthonormal-basis assumption.
+Nonnegativity of D is explicit, including for the empty index type. -/
 theorem finiteRealHilbert_functional_sq_sum_le_of_synthesis
     {ι E : Type*} [Fintype ι] [NormedAddCommGroup E]
-    [InnerProductSpace ℝ E] (v : ι → E) (D : ℝ)
+    [InnerProductSpace ℝ E] (v : ι → E) (D : ℝ) (hD : 0 ≤ D)
     (hsynthesis : ∀ a : ι → ℝ,
       ‖∑ i, a i • v i‖ ^ 2 ≤ D * ∑ i, (a i) ^ 2)
     (L : E →L[ℝ] ℝ) :
@@ -119,19 +120,8 @@ theorem finiteRealHilbert_functional_sq_sum_le_of_synthesis
   have hscaled := mul_le_mul_of_nonneg_left hw (sq_nonneg ‖L‖)
   change q ≤ D * ‖L‖ ^ 2
   by_cases hzero : q = 0
-  · have hnonneg : 0 ≤ D := by
-      by_cases hempty : IsEmpty ι
-      · have hLzero : q = 0 := hzero
-        by_cases hD : 0 ≤ D
-        · exact hD
-        · exact False.elim (by
-            have hz := hsynthesis (fun _ => 0)
-            simp at hz)
-      · obtain ⟨i⟩ := not_isEmpty_iff.mp hempty
-        have hsingle := hsynthesis (Pi.single i 1)
-        simpa using (le_trans (sq_nonneg _) hsingle)
-    rw [hzero]
-    exact mul_nonneg hnonneg (sq_nonneg ‖L‖)
+  · rw [hzero]
+    exact mul_nonneg hD (sq_nonneg ‖L‖)
   · have hpositive : 0 < q := lt_of_le_of_ne hq (Ne.symm hzero)
     nlinarith
 
