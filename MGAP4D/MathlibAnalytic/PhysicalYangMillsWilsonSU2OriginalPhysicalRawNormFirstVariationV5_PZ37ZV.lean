@@ -104,7 +104,6 @@ theorem p4Q2PZ37ZV_originalRawVacuumExpectation_firstOrder_error
             inner ℝ U U = ‖U‖^2 := real_inner_self_eq_norm_sq U
             _ = 1 := by rw [hU]; norm_num
         rw [hs, hUU]
-        ring
   have hE : ‖E‖ ≤ ((t : ℝ) * B)^2 :=
     p4Q2PZ37ZQ_originalPhysicalRawTaylorError_norm_le_quadratic H t hsmall
   have hInnerError : |inner ℝ E U| ≤ ‖E‖ := by
