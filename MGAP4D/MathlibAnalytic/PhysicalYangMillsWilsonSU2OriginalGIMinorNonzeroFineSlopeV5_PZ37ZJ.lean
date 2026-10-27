@@ -137,7 +137,7 @@ theorem p4Q2PZ37ZJ_originalRawGIMinor_linearLower_of_spatialMinor
   have hEventually :
       ∀ᶠ t : ℝ in 𝓝[>] (0 : ℝ),
         c < |t⁻¹ * p4Q2JI_originalGIRawFineRowMinor H b hb.le e e' z z' t| :=
-    hAbs.eventually (isOpen_Ioi.mem_nhds (by dsimp [c]; linarith))
+    hAbs.eventually (isOpen_Ioi.mem_nhds (by dsimp [c]; exact half_lt_self hD))
   have hNhds :
       ∀ᶠ t : ℝ in 𝓝 (0 : ℝ),
         0 < t →
