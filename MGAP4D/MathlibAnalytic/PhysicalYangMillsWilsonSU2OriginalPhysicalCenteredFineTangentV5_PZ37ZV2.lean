@@ -109,6 +109,7 @@ theorem p4Q2PZ37ZV2_originalRawNormSlopeExtension_linearError
         (t : ℝ)⁻¹ * (‖R‖ - 1) - d =
           (t : ℝ)⁻¹ * (‖R‖ - (1 + (t : ℝ) * d)) := by
       field_simp [ht0]
+      ring
     rw [hIdentity, abs_mul, abs_inv, abs_of_pos ht]
     calc
       (t : ℝ)⁻¹ * |‖R‖ - (1 + (t : ℝ) * d)| ≤
@@ -116,7 +117,6 @@ theorem p4Q2PZ37ZV2_originalRawNormSlopeExtension_linearError
         mul_le_mul_of_nonneg_left h9 (inv_nonneg.mpr ht.le)
       _ = 9 * B^2 * (t : ℝ) := by
         field_simp [ht0]
-        ring
 
 /-- Genuine Wilson raw physical top-norm first-order quotient tends
 to its authentic physical vacuum coefficient from positive fine;
