@@ -1,8 +1,8 @@
-# MGAP4D — 証明ロードマップ（P4-Q2-PZ37Z #5933統合済み／次はPZ37ZA：真正GI局所二点相関・endpointと体積一様性）
+# MGAP4D — 証明ロードマップ（P4-Q2-PZ37ZA #5935統合済み／次は全リンク・全文脈の真正GL質量一様制御とendpoint source transport）
 
-**2026-10-27 JST · 唯一のLean定理正本：`formal/real-hilbert-uniform-coercive-strong-limit` · 最新検証済み定理-bearing squash HEAD：[`7ac5851d47ed2bbd63dee53b009ab8bf9268fbc9`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/7ac5851d47ed2bbd63dee53b009ab8bf9268fbc9)（[#5933 PZ37Z](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5933)）。default `main`は定理正本ではない。**
+**2026-10-27 JST · 唯一のLean定理正本：`formal/real-hilbert-uniform-coercive-strong-limit` · 最新検証済みtheorem-bearing squash HEAD：[`56e3ee8b7bda5454f8cc2adc51abe14b5dcd7300`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/56e3ee8b7bda5454f8cc2adc51abe14b5dcd7300)（[#5935 PZ37ZA](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5935)）。default `main`は定理正本ではない。**
 
-**最新到達（PZ37Z）：** PZ37Q–Yで真正SU(2) Wilson・Haar・二相互作用posterior・Gauss-law物理Hilbert源における全有限Hの小正fine真正3モードrank3と、元の物理Gram `P_H`／真正GL積分Gram `G_H^GL` の `c_H P_H≼G_H^GL≼C_H P_H`、`det G_H^GL≥c_H³D3(H,t)>0`、原posterior質量coercivityをLean証明。**PZ37Z #5933はこれとは異なる元の局所GI量** `Q_{H,b}(e,e',z,z')=Σ_{p∈P_H}d_{H,b,p}²` と本物のプラケット数 `N_H` に着目。LY/MA/MBの既証明を組み合わせ、固定正frozen bで `Q_H/N_H≥ε⇒#{p:d_p²≥ε/2}/N_H≥ε/(2M_b)`（`M_b=16E_b⁴`）、逆に `#{p:d_p²≥τ}/N_H≥ρ⇒Q_H/N_H≥τρ` を証明し、`∃ε>0∀H∃e,e',z,z':Q/N_H≥ε` と **H共通の絶対閾値τ・正の活動割合ρによる文脈選択型criterion** の同値をLean証明。N_Hの正値性はLYから導出。変動する真正frozen結合スケジュール `b_H>0` でも、元のWilson Harnack振幅 `(4E_{b_H}²)²≤K` をH一様に制御する**明示的条件付き**同値を証明。LZのmean/variance分解から `Q/N≥ε⇒m_H²≥ε/2∨V_H≥ε/2` を証明。純スカラー反例により有限Hごとの正値性から一様下界を推論できないこともLean形式化。**OPEN：** 上記正のGI活動密度／文脈族の実在、実際のcoupling/volume/endpointに沿う同一物理source互換、PZ37Y三モードGL Gram係数からこの局所GI Qへの一様橋、E,F,U0,H1–H4・連続体質量ギャップ。固定閾値は平均エネルギー自体で動くMB閾値とは異なる。**PZ37ZはU0の証明ではなく、一様性の必要十分criterionと障害の形式化**である。
+**最新到達（PZ37ZA）：** 元の真正SU(2) Wilson・二相互作用posterior・Gauss-law物理Hilbert・参照積Haar・frozen/fine結合を保持。PZ37Q–Yで全有限Hの小正fine三モード物理rank3・元の3モードGL積分Gram coercivityと `det G_H^GL≥c_H³D3(H,t)>0` を証明済み。PZ37Z #5933は異なる量 `Q_{H,b}(e,e',z,z')=Σ_{p∈P_H}d_{H,b,p}²` の `Q_H/N_H` に関し、文脈選択型の一様正下界と固定絶対閾値・正のGI活動割合の同値を証明した。しかし**PZ37ZA #5935でこの二文脈補償済みGI densityの実在側を否定した**。元の四リンク支持と有限重なり（24）、中心化Wilsonプラケットの積Haar独立性、補償済みGI二文脈汎関数ノルム `≤2E_b²` から、**全H・全リンク・全境界文脈で `Q_H≤96E_b⁴`**。実際のプラケット数 `N_H≥2(H+1)` により**固定 `b≥0` の `Q_H/N_H` はどのH依存文脈を選んでも一様正下界を持てない**。変動 `b_H` で元のHarnack共通上界 `(4E_{b_H}²)²≤K` を置けば `Q_H≤6K` で同じ結論。PZ37Zの同値は論理的に正しく、双方が偽となる。**限定：** 二文脈補償済み密度のno-goであり、元の全リンク・全文脈GL積分質量の一様coercivity、元の3モードの有限H正値性、endpoint E、任意深さF、強極限H1–H4・4D Yang–Mills質量ギャップの否定ではない。次に必要なのは十分条件の言い換えでなく、同一source/endpointに沿う真正full-link GL積分・相関の解析的一様評価。
 
 **[プロジェクトの数学的定義・数式・再現手順 → README.md](README.md)**
 
@@ -12,14 +12,14 @@
 | --- | --- |
 | Repository | [itakura-hidetoshi/4d-mass-gap](https://github.com/itakura-hidetoshi/4d-mass-gap) |
 | 定理の唯一正本 | `formal/real-hilbert-uniform-coercive-strong-limit`（default `main`ではない） |
-| 最終検証済み**定理-bearing**マージ点 | `7ac5851d47ed2bbd63dee53b009ab8bf9268fbc9` — PZ37Z #5933。後段の歴史的ステージ表は証明時点を示す。 |
-| 検証**source HEAD**（squashと区別） | PZ37Z `3188e56f7254cd83b36114ac3c8ab1ca77a8cab0`、squash `7ac5851d47ed2bbd63dee53b009ab8bf9268fbc9`。 |
-| [PZ37Z exact-head #40441775174](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40441775174) | **SUCCESS・11087/11087**、変更Lean2ファイルwarning/error **0/0**、公理監査6/6、MCP completion receipt SUCCESS、squash SHAと正本HEAD一致。 |
-| 公開`#print axioms` | PZ37Z新規6/6：`propext`、`Classical.choice`、`Quot.sound`のみ、`sorryAx`なし。既存の別系統finite-lattice `native_decide`と分離。 |
+| 最終検証済み**定理-bearing**マージ点 | `56e3ee8b7bda5454f8cc2adc51abe14b5dcd7300` — PZ37ZA #5935。後段の歴史的表はそれぞれの証明時点に限定。 |
+| 検証**source HEAD**（squashと区別） | PZ37ZA `780ad873a0e678b5a70cd5d8235682436ea28b7c`、squash `56e3ee8b7bda5454f8cc2adc51abe14b5dcd7300`。 |
+| [PZ37ZA exact-head #40455326601](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40455326601) | **SUCCESS・11092/11092**、変更Lean5ファイルwarning/error **0/0**、新規公理監査13/13標準3公理のみ、MCP completion receipt SUCCESS、squash SHAと正本HEAD一致。 |
+| 公開`#print axioms` | PZ37ZA新規13/13：`propext`、`Classical.choice`、`Quot.sound`のみ、`sorryAx`なし。既存の別系統finite-latticeの`native_decide`依存と混同しない。 |
 | Lean / mathlib pin | `v4.30.0-rc2` / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
 | 現在のbranch HEAD | [毎回GitHubで再観測](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit) |
 
-固定SHAは**2026-10-27・PZ37Zまでの定理統合点**であり、以降のdocs-onlyマージでは新しい数学定理を証明したことにならない。古いPN/R段階表の『rank3/D3未証明』『鋭いdet比較未証明』はPZ37Q–Zにより更新された歴史的記載である。PZ37ZのU0は**文脈選択型criteriaであり、実際のuniform witnessは未証明**とする。判定根拠：fresh authoritative SHA→Lean定理全文と前提/import→exact-head CI・公理監査→docs→古い履歴。
+固定SHAは**2026-10-27 PZ37ZAまでの定理統合点**であり、後続docs-onlyマージは新規Lean証明を意味しない。PZ37Zの二文脈補償済み `Q_H/N_H` の一様性はもはや単なる未証明ではなく、**PZ37ZAで条件成立の不可能性がLean証明済み**。PZ37Zの同値定理自体は保持し、旧記述は証明時点の履歴に限定する。fresh HEAD→定理全体とimports→exact-head CI・公理監査→docs→履歴の順で判定する。
 
 ### 重要な区別
 
@@ -203,6 +203,9 @@ OWは元の実右Krylov全有限深さで物理源・全文脈GI核の一致を�
 ## 3. 次の核心：本当に不足する数学的入力
 
 ### Gate U0 — 真正Wilson GI密度または同等のframe coercivityを一様化
+
+**PZ37ZA #5935による確定した障害：** 真正二文脈・transfer補償済み局所GIの正規化 `Q_H/N_H` は、固定frozen `b≥0` では全文脈について `Q_H≤96E_b⁴` かつ `N_H≥2(H+1)` であるため、**一様な正下界を持たないことを証明済み**。結合スケジュールでも共通Harnack振幅上界を課すと同様。したがって以下に残る『この二文脈 `Q_H/N_H` の正下界を導く』という旧候補は採用できない。一方、真正full-link / all-context GL積分Gram・同一endpoint源の一様coercivityは**別対象としてOPEN**であり、このno-goは否定しない。
+
 
 **求める条件の一例：** 自然な有限格子・coupling schedule・相容れる物理文脈族に対して、`Q_{\rm GI}(H,b_H,\ldots)/N_H`の十分な正下界と`E_{b_H}`の同時制御を**真のWilson積分から導く**。より直接的には`k_H=(Q_{\rm GI}/N_H)/(10E_{b_H}²)`そのものの有効な正下界、または必要な物理source作用素の相当する非退化性を証明してもよい。
 
