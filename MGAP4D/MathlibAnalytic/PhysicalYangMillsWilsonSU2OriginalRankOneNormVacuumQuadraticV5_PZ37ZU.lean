@@ -68,10 +68,11 @@ theorem p4Q2PZ37ZU_rankOne_topEigen_norm_gap_quadratic
     abel
   have hDiffNorm : ‖P - R‖ = eps := by
     rw [hOpp, norm_neg]
-    rfl
   have hLamHigh : lam ≤ 1 + eps := by
     calc
-      lam = ‖D + P‖ := by rw [hR]; rfl
+      lam = ‖D + P‖ := by
+        change ‖R‖ = ‖D + P‖
+        rw [hR]
       _ ≤ ‖D‖ + ‖P‖ := norm_add_le D P
       _ = 1 + eps := by rw [hPnorm]; dsimp [eps]; ring
   have hLamLow : 1 - eps ≤ lam := by
@@ -80,7 +81,7 @@ theorem p4Q2PZ37ZU_rankOne_topEigen_norm_gap_quadratic
         (1 : ℝ) = ‖P‖ := hPnorm.symm
         _ = ‖(P - R) + R‖ := by congr 1; abel
         _ ≤ ‖P - R‖ + ‖R‖ := norm_add_le (P - R) R
-        _ = eps + lam := by rw [hDiffNorm]; rfl
+        _ = eps + lam := by rw [hDiffNorm]
     linarith
   have hLamHalf : (1 / 2 : ℝ) ≤ lam := by linarith
   have hLamNear : |1 - lam| ≤ eps := by
@@ -111,7 +112,7 @@ theorem p4Q2PZ37ZU_rankOne_topEigen_norm_gap_quadratic
   have hDomega : ‖D omega‖ ≤ eps := by
     calc
       ‖D omega‖ ≤ ‖D‖ * ‖omega‖ := D.le_opNorm omega
-      _ = eps := by rw [homega, mul_one]; rfl
+      _ = eps := by rw [homega, mul_one]
   have hPomegaNorm : ‖P omega‖ = |c| := by
     rw [hPomega, norm_smul, Real.norm_eq_abs, hu, mul_one]
   have hCAbsLower : (1 / 2 : ℝ) ≤ |c| := by
@@ -275,8 +276,11 @@ theorem p4Q2PZ37ZU_originalPhysicalRawTopNorm_vacuum_gap_quadratic
     p4Q2PZ37ZU_rankOne_topEigen_norm_gap_quadratic
       R U omega hU hOmega hEig hSmall
   have hSquare :
-      ‖R - P‖^2 ≤ (B * (t : ℝ))^2 :=
-    pow_le_pow_left₀ (norm_nonneg _) hDist 2
+      ‖R - P‖^2 ≤ (B * (t : ℝ))^2 := by
+    have hright : 0 ≤ B * (t : ℝ) :=
+      (norm_nonneg (R - P)).trans hDist
+    nlinarith [mul_nonneg (sub_nonneg.mpr hDist)
+      (add_nonneg hright (norm_nonneg (R - P)))]
   constructor
   · exact hNonneg
   · exact hBound.trans (mul_le_mul_of_nonneg_left hSquare (by norm_num))
