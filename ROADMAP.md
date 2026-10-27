@@ -1,8 +1,8 @@
-# MGAP4D — 証明ロードマップ（P4-Q2-PN #5839統合済み／次はPO：真正二段Haar Taylor係数同定）
+# MGAP4D — 証明ロードマップ（P4-Q2-PZ37W #5927統合済み／次はPZ37X：真正GL積分Gram determinantの体積依存解析）
 
-**2026-10-23 JST · 唯一のLean定理正本：`formal/real-hilbert-uniform-coercive-strong-limit` · 最新検証済みsquash HEAD：[`32688fbe0e90b055b3c73ef142ef5f45ad3293f5`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/32688fbe0e90b055b3c73ef142ef5f45ad3293f5)（[#5839 PN](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5839)）。**
+**2026-10-27 JST · 唯一のLean定理正本：`formal/real-hilbert-uniform-coercive-strong-limit` · 最新検証済み定理-bearing squash HEAD：[`97edd55f7054767061a637c2cb8f04af704646c4`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/97edd55f7054767061a637c2cb8f04af704646c4)（[#5927 PZ37W](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5927)）。default `main`は定理正本ではない。**
 
-**最新到達：** 真正二相互作用Wilson posterior、Gauss-law物理Hilbert、Perron半密度、frozen/fine couplingを変更しない。OW・OXで元の有限Krylov源の全文脈kernel一致と非零源の真正GL質量正値性、PA–PCで小正fineのrank2/Hankel二次正値性を証明。PD–PEで第三Schur直交・ノルム恒等式、PF–PHで真の空間3配置minorと第三Hankel正値性の必要十分条件（`Δ₂>0`）、PI–PJで真正Wilson一・二段のHaar積分表示を確立。PK–PMで原Wilson局所ゲージWard恒等式から形式的二次Taylor jetの**三次minor係数が全配置でゼロ**と証明。PNで原Wilson一・二段核の三次余剰評価と真正二重Haar積分の同評価をLean証明。**積分済み元Wilson3配置行列式の `O(t⁴)`、その非零係数、`D₃>0`、三モードrank3、`S_r`単射、`U0`、endpoint `E`、H1–C3、強極限および4D連続体質量ギャップはOPEN。**
+**最新到達（PZ37W）：** 元のSU(2) Wilson作用、真正Haar、二相互作用posterior、Gauss-law物理Hilbert、独立したfrozen/fine結合を維持した。**PZ37Q #5921** は全有限空間半径H≥0で固定正frozen・十分小さい正fineに対する真正物理Krylov rank 3を証明した。**PZ37R/T #5922/#5924** は真正物理Gramの `4 D3/(m0+m2+m4)^2` 固有値・二次形式下界を証明した。**PZ37U #5925** は真正GL質量の全有限深さsource kernel一致と有限モデル依存ノルム両側比較を証明した。**PZ37V #5926** は真正二重posterior Haar積分Gramの正定値性、`gamma_H^GL=4det(G_H^GL)/(trace G_H^GL)^2>0` による全3係数coercivityを証明した。**PZ37W #5927** は全有限H・全非負fineで `c_H P_H ≼ G_H^GL ≼ C_H P_H` を元の物理Gramに対して証明し、trace `m0+m2+m4` および真正det/trace比の分母をモデル依存定数で比較した。**なお未解決：** `det G_H^GL` と比較定数の体積一様下界、共通small-fine半径、`inf_H Q_GI/N_H>0`（U0）、endpoint E、正fine×任意深さFに必要な一様制御、H1–H4、強極限・連続体質量ギャップ。以下の過去段階PNやR系列の『rank3未証明』などは履歴的記録であり、現在の到達点は本欄を優先する。
 
 **[プロジェクトの数学的定義・数式・再現手順 → README.md](README.md)**
 
@@ -12,14 +12,14 @@
 | --- | --- |
 | Repository | [itakura-hidetoshi/4d-mass-gap](https://github.com/itakura-hidetoshi/4d-mass-gap) |
 | 定理の唯一正本 | `formal/real-hilbert-uniform-coercive-strong-limit`（default `main`ではない） |
-| 最終検証済み**定理-bearing**マージ点 | `32688fbe0e90b055b3c73ef142ef5f45ad3293f5` — PN #5839。PD–PMは後述の時系列表に整理（default `main`は定理正本ではない）。 |
-| 検証**source HEAD**（squashと区別） | PN `aa8ff026ef5c5dd730decffad0376f1f4295660d`、squash `32688fbe0e90b055b3c73ef142ef5f45ad3293f5`。 |
-| [PN exact-head #39944152228](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/39944152228) | **SUCCESS・10901/10901**。変更PNファイルwarning/error **0/0**。GitHub MCPで同一HEAD CI・MCP completion receipt **SUCCESS** を確認。 |
-| 公開`#print axioms` | PN新規6/6：標準3公理のみ（`propext`、`Classical.choice`、`Quot.sound`）、`sorryAx`なし。既存の別系統finite-lattice `native_decide`依存は削除・隠蔽していない。 |
+| 最終検証済み**定理-bearing**マージ点 | `97edd55f7054767061a637c2cb8f04af704646c4` — PZ37W #5927。過去の段階別表はそれぞれの証明時点の記録（default `main`は正本ではない）。 |
+| 検証**source HEAD**（squashと区別） | PZ37W `f60351784557c753a904539e2a08308750910c4e`、squash `97edd55f7054767061a637c2cb8f04af704646c4`。 |
+| [PZ37W exact-head #40424471169](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40424471169) | **SUCCESS・11082/11082**。変更PZ37Wファイルwarning/error **0/0**。同一source HEADのLean検証・MCP completion receipt **SUCCESS**、squash merge SHAと正本HEAD一致をGitHub MCPで確認。 |
+| 公開`#print axioms` | PZ37W新規4/4：`propext`、`Classical.choice`、`Quot.sound`のみ、`sorryAx`なし。既存の**別系統**finite-latticeで報告される`native_decide`依存をPZ37Wの公理依存と混同しない。 |
 | Lean / mathlib pin | `v4.30.0-rc2` / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
 | 現在のbranch HEAD | [毎回GitHubで再観測](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit) |
 
-ここに固定したSHAは**2026-10-23時点の検証済み定理統合点**であり、README/ROADMAPのdocs-onlyマージによってbranch HEADが進んでも、定理の新規検証を意味しない。判断の優先順位は **fresh exact authoritative SHA → Lean定理と前提・import全文 → そのsource SHAのCI・公理監査 → 文書 → 以前の記録**。
+ここに固定したSHAは**2026-10-27・PZ37Wまでの定理統合点**である。これ以降のREADME/ROADMAP docs-onlyマージは新たな数学の証明を意味しない。**以下のR系列・PNまでの歴史的段階表に残る『rank3/D3未証明』等は、PZ37Q–Wで更新された旧時点の表現**である。判断の優先順位は **fresh authoritative SHA → Lean定理と前提/import全文 → exact-head CI・公理監査 → README/ROADMAP → 過去の証明時点の記録**。
 
 ### 重要な区別
 
