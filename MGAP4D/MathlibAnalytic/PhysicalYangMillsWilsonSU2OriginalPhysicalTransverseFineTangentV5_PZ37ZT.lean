@@ -84,8 +84,8 @@ theorem p4Q2PZ37ZT_originalRawInverseNorm_tendsto_one (H : ℕ) :
       (𝓝 (⟨0, le_refl (0 : ℝ)⟩ : Set.Ici (0 : ℝ))) (𝓝 (1 : ℝ)) := by
   have h := (p4Q2PZ37ZT_originalRawInverseNorm_continuous H).continuousAt
     (x := (⟨0, le_refl (0 : ℝ)⟩ : Set.Ici (0 : ℝ)))
-  rw [p4Q2PZ37ZT_originalRawInverseNorm_zero] at h
-  exact h
+  simpa only [ContinuousAt,
+    p4Q2PZ37ZT_originalRawInverseNorm_zero] using h
 
 /-- The TRUE physical raw Wilson Taylor error divided by fine,
 totalized at fine=0 by the usual real inverse. -/
@@ -121,8 +121,7 @@ theorem p4Q2PZ37ZT_originalPhysicalErrorDivFine_norm_le_linear
     (t : ℝ)⁻¹ * ‖E‖ ≤ (t : ℝ)⁻¹ * (((t : ℝ) * B)^2) :=
       mul_le_mul_of_nonneg_left hE (inv_nonneg.mpr ht.le)
     _ = (t : ℝ) * B^2 := by
-      field_simp [ne_of_gt ht]
-      ring
+      field_simp [ne_of_gt ht] <;> ring
 
 /-- At any genuine finite H, the actual physical first-order
 Taylor-error quotient tends STRONGLY to zero in the true Gauss-law
@@ -156,7 +155,8 @@ theorem p4Q2PZ37ZT_originalPhysicalErrorDivFine_tendsto_zero
     have hsmall : ‖(t : ℝ) * B‖ ≤ 1 := by
       rw [Real.norm_eq_abs, abs_of_nonneg (mul_nonneg t.property hB)]
       exact htBudget
-    rcases lt_or_eq_of_le t.property with htPos | htZero
+    have htNonneg : (0 : ℝ) ≤ (t : ℝ) := t.property
+    rcases lt_or_eq_of_le htNonneg with htPos | htZero
     · exact p4Q2PZ37ZT_originalPhysicalErrorDivFine_norm_le_linear H t htPos hsmall
     · have hz : (t : ℝ) = 0 := htZero.symm
       simp [p4Q2PZ37ZT_originalPhysicalErrorDivFine, hz]
@@ -225,13 +225,12 @@ theorem p4Q2PZ37ZT_originalScalarCorrectedTangent_eq_truePhysical
       (s * (t : ℝ) / 2) • W - s • E
     module
   have hScalar : (t : ℝ)⁻¹ * (s * (t : ℝ) / 2) = s / 2 := by
-    field_simp [ne_of_gt ht]
-    ring
+    field_simp [ne_of_gt ht] <;> ring
   change (s / 2) • W - s • ((t : ℝ)⁻¹ • E) =
     (t : ℝ)⁻¹ •
       (p4Q2PZ37ZE_originalPhysicalCancellation H t - A • U)
   rw [hSplit, smul_sub, smul_smul, smul_smul, hScalar]
-  rw [mul_comm (t : ℝ)⁻¹ s]
+  rw [smul_smul, mul_comm (t : ℝ)⁻¹ s]
 
 /-- The exact scalar-corrected first-order physical Wilson direction
 has the unconditional STRONG Haar-Hilbert limit W_H/2 at fine=0.
