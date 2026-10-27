@@ -326,6 +326,206 @@ theorem p4Q2PZ37ZS_originalPhysicalGLMass_quadratic_minus_quartic
     p4Q2PZ37ZS_originalPhysicalGLMass_quadratic_minus_quartic_of_fixed_floor
       H b hb m hm hFloor t hsmall⟩
 
+
+/-- The literal normalization inverse is bounded below on 0 ≤ t ≤ 1
+by the original finite-volume Wilson action budget. This is an
+algebraic reciprocal bound, not a derivative of the normalization. -/
+theorem p4Q2PZ37ZS_originalRawInverseNorm_ge_budgetReciprocal
+    (H : ℕ) (t : Set.Ici (0 : ℝ)) (ht : (t : ℝ) ≤ 1) :
+    1 / (1 + periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H) ≤
+      p4Q2PZ37ZS_originalRawInverseNorm H t := by
+  let Raw := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
+    H 2 specialUnitaryTwoWilsonRankPositive (t : ℝ) t.property
+  let B := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H
+  have hRawPos : 0 < ‖Raw‖ :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator_norm_pos
+      H 2 specialUnitaryTwoWilsonRankPositive (t : ℝ) t.property
+  have hCap : ‖Raw‖ ≤ 1 + B :=
+    p4Q2PZ37ZK_originalRawOperator_norm_le_one_add_budget H t ht
+  have hInv : 1 / (1 + B) ≤ 1 / ‖Raw‖ :=
+    one_div_le_one_div_of_le hRawPos hCap
+  simpa only [one_div, p4Q2PZ37ZS_originalRawInverseNorm] using hInv
+
+/-- A FINITE-H frozen-b positive fine interval on which the authentic
+original Wilson physical GL mass has a strictly positive quadratic
+lower bound d_(H,b) t^2. The SAME m from ZP is used for ALL t on
+this interval, and the raw inverse norm is not differentiated. -/
+theorem p4Q2PZ37ZS_originalPhysicalGLMass_exists_uniform_quadraticFine
+    (H : ℕ) (b : ℝ) (hb : 0 < b)
+    (e e' : PeriodicHypercubicEvenSpatialSliceLink H)
+    (left₀ right₀ :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    ∃ delta d : ℝ, 0 < delta ∧ 0 < d ∧
+      ∀ t : Set.Ici (0 : ℝ),
+        0 < (t : ℝ) → (t : ℝ) < delta →
+        d * (t : ℝ)^2 ≤
+          p4Q2GL_originalWilsonSignedGapSquareDivVarianceSpatialMass
+            H b hb.le (p4Q2PZ37ZE_originalPhysicalCancellation H t)
+            (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)) := by
+  let B : ℝ := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H
+  let C : ℝ := p4Q2PZ37ZG_originalFullLinkGL_RayleighCap H b
+  let Mass (t : Set.Ici (0 : ℝ)) : ℝ :=
+    p4Q2GL_originalWilsonSignedGapSquareDivVarianceSpatialMass H b hb.le
+      (p4Q2PZ37ZE_originalPhysicalCancellation H t)
+      (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H))
+  have hB : 0 ≤ B :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget_nonneg H
+  have hC : 0 ≤ C := by
+    dsimp [C, p4Q2PZ37ZG_originalFullLinkGL_RayleighCap]
+    positivity
+  obtain ⟨m, hm, hFloor⟩ :=
+    p4Q2PZ37ZP_originalStaticPhysicalGLMass_exists_quadraticFloor
+      H b hb e e' left₀ right₀
+  let K : ℝ := C * B^4
+  have hK : 0 ≤ K := by dsimp [K]; positivity
+  have hB1 : 0 < B + 1 := by linarith
+  have hK1 : 0 < K + 1 := by linarith
+  let delta : ℝ := min 1 (min (1 / (B + 1)) (m / (16 * (K + 1))))
+  let d : ℝ := (1 / (1 + B))^2 * (m / 16)
+  have hdelta : 0 < delta := by
+    dsimp [delta]
+    apply lt_min (by norm_num)
+    exact lt_min (by positivity) (by positivity)
+  have hd : 0 < d := by dsimp [d]; positivity
+  refine ⟨delta, d, hdelta, hd, ?_⟩
+  intro t ht htdelta
+  let s : ℝ := p4Q2PZ37ZS_originalRawInverseNorm H t
+  have htOne : (t : ℝ) < 1 :=
+    lt_of_lt_of_le htdelta (min_le_left _ _)
+  have htBWindow : (t : ℝ) < 1 / (B + 1) :=
+    lt_of_lt_of_le (lt_of_lt_of_le htdelta (min_le_right _ _))
+      (min_le_left _ _)
+  have htKWindow : (t : ℝ) < m / (16 * (K + 1)) :=
+    lt_of_lt_of_le (lt_of_lt_of_le htdelta (min_le_right _ _))
+      (min_le_right _ _)
+  have htBudget : (t : ℝ) * B ≤ 1 := by
+    have hProd : (t : ℝ) * (B + 1) < 1 :=
+      (lt_div_iff₀ hB1).mp htBWindow
+    nlinarith
+  have hsmall : ‖(t : ℝ) * B‖ ≤ 1 := by
+    rw [Real.norm_eq_abs, abs_of_nonneg (mul_nonneg ht.le hB)]
+    exact htBudget
+  have hCut : K * (t : ℝ)^2 ≤ m / 16 := by
+    have hProd : (t : ℝ) * (16 * (K + 1)) < m :=
+      (lt_div_iff₀ (by positivity : 0 < 16 * (K + 1))).mp htKWindow
+    have hTsq : (t : ℝ)^2 ≤ (t : ℝ) := by
+      nlinarith [mul_nonneg ht.le (sub_nonneg.mpr htOne.le)]
+    have hMonotone : K * (t : ℝ)^2 ≤ K * (t : ℝ) :=
+      mul_le_mul_of_nonneg_left hTsq hK
+    nlinarith
+  have hExact :
+      s^2 * (t : ℝ)^2 * (m / 8 - K * (t : ℝ)^2) ≤ Mass t := by
+    exact p4Q2PZ37ZS_originalPhysicalGLMass_quadratic_minus_quartic_of_fixed_floor
+      H b hb m hm hFloor t hsmall
+  have hBracket : m / 16 ≤ m / 8 - K * (t : ℝ)^2 := by linarith
+  have hSlope :
+      s^2 * (t : ℝ)^2 * (m / 16) ≤
+      s^2 * (t : ℝ)^2 * (m / 8 - K * (t : ℝ)^2) :=
+    mul_le_mul_of_nonneg_left hBracket
+      (mul_nonneg (sq_nonneg s) (sq_nonneg (t : ℝ)))
+  have hsLower : 1 / (1 + B) ≤ s :=
+    p4Q2PZ37ZS_originalRawInverseNorm_ge_budgetReciprocal H t htOne.le
+  have hsSq : (1 / (1 + B))^2 ≤ s^2 :=
+    pow_le_pow_left₀ (by positivity) hsLower 2
+  change d * (t : ℝ)^2 ≤ Mass t
+  calc
+    d * (t : ℝ)^2 = (1 / (1 + B))^2 * ((t : ℝ)^2 * (m / 16)) := by
+      dsimp [d]
+      ring
+    _ ≤ s^2 * ((t : ℝ)^2 * (m / 16)) :=
+      mul_le_mul_of_nonneg_right hsSq (by positivity)
+    _ = s^2 * (t : ℝ)^2 * (m / 16) := by ring
+    _ ≤ s^2 * (t : ℝ)^2 * (m / 8 - K * (t : ℝ)^2) := hSlope
+    _ ≤ Mass t := hExact
+
+/-- The TRUE finite-H Wilson action budget is strictly positive:
+otherwise ZI's O(t) upper bound would force the already proved
+genuine nonzero physical cancellation of ZF to vanish. -/
+theorem p4Q2PZ37ZS_originalWilsonActionBudget_pos (H : ℕ) :
+    0 < periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H := by
+  let B : ℝ := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H
+  have hB : 0 ≤ B :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget_nonneg H
+  obtain ⟨delta, hdelta, hNonzero⟩ :=
+    p4Q2PZ37ZF_originalPhysicalCancellation_ne_zero_smallPositive H
+  by_contra hn
+  have hZero : B = 0 := le_antisymm (le_of_not_gt hn) hB
+  let t : Set.Ici (0 : ℝ) := ⟨delta / 2, by positivity⟩
+  have ht : 0 < (t : ℝ) := by
+    change 0 < delta / 2
+    positivity
+  have htdelta : (t : ℝ) < delta := by
+    change delta / 2 < delta
+    linarith
+  have hF : p4Q2PZ37ZE_originalPhysicalCancellation H t ≠ 0 :=
+    hNonzero t ht htdelta
+  have hNorm :
+      ‖p4Q2PZ37ZE_originalPhysicalCancellation H t‖ ≤ 2 * B * (t : ℝ) :=
+    p4Q2PZ37ZI_originalPhysicalCancellation_norm_le_linearFine H t
+  rw [hZero] at hNorm
+  have hNormZero : ‖p4Q2PZ37ZE_originalPhysicalCancellation H t‖ = 0 := by
+    nlinarith [norm_nonneg (p4Q2PZ37ZE_originalPhysicalCancellation H t)]
+  exact hF (norm_eq_zero.mp hNormZero)
+
+/-- The authentic physical cancellation has an actual finite-H,b
+FINE-UNIFORM POSITIVE GL RAYLEIGH FLOOR, though it remains extensively
+H-dependent. No fine-zero Rayleigh limit, H-uniform coercivity, H1-H4
+or continuum gap is inferred. -/
+theorem p4Q2PZ37ZS_originalPhysicalGLRayleigh_exists_uniform_positiveFine
+    (H : ℕ) (b : ℝ) (hb : 0 < b)
+    (e e' : PeriodicHypercubicEvenSpatialSliceLink H)
+    (left₀ right₀ :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2) :
+    ∃ delta c : ℝ, 0 < delta ∧ 0 < c ∧
+      ∀ t : Set.Ici (0 : ℝ),
+        0 < (t : ℝ) → (t : ℝ) < delta →
+        c ≤ p4Q2PZ37ZG_originalFullLinkGL_physicalRayleigh H b hb
+          (p4Q2PZ37ZE_originalPhysicalCancellation H t) := by
+  let B : ℝ := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H
+  let F := p4Q2PZ37ZE_originalPhysicalCancellation H
+  have hB : 0 < B := p4Q2PZ37ZS_originalWilsonActionBudget_pos H
+  obtain ⟨delta₀, d, hd0, hd, hMass⟩ :=
+    p4Q2PZ37ZS_originalPhysicalGLMass_exists_uniform_quadraticFine
+      H b hb e e' left₀ right₀
+  obtain ⟨delta₁, hd1, hNonzero⟩ :=
+    p4Q2PZ37ZF_originalPhysicalCancellation_ne_zero_smallPositive H
+  let delta := min delta₀ delta₁
+  let c := d / (4 * B^2)
+  have hdelta : 0 < delta := lt_min hd0 hd1
+  have hc : 0 < c := by dsimp [c]; positivity
+  refine ⟨delta, c, hdelta, hc, ?_⟩
+  intro t ht htDelta
+  have ht0 : (t : ℝ) < delta₀ :=
+    lt_of_lt_of_le htDelta (min_le_left _ _)
+  have ht1 : (t : ℝ) < delta₁ :=
+    lt_of_lt_of_le htDelta (min_le_right _ _)
+  have hFNonzero : F t ≠ 0 := hNonzero t ht ht1
+  have hNormPos : 0 < ‖F t‖^2 :=
+    pow_pos (norm_pos_iff.mpr hFNonzero) 2
+  have hMassLower :
+      d * (t : ℝ)^2 ≤
+        p4Q2GL_originalWilsonSignedGapSquareDivVarianceSpatialMass
+          H b hb.le (F t)
+          (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)) :=
+    hMass t ht ht0
+  have hNormUpper : ‖F t‖ ≤ 2 * B * (t : ℝ) :=
+    p4Q2PZ37ZI_originalPhysicalCancellation_norm_le_linearFine H t
+  have hNormSq : ‖F t‖^2 ≤ (2 * B * (t : ℝ))^2 :=
+    pow_le_pow_left₀ (norm_nonneg _) hNormUpper 2
+  have hRatioBound : c * ‖F t‖^2 ≤ d * (t : ℝ)^2 := by
+    calc
+      c * ‖F t‖^2 ≤ c * (2 * B * (t : ℝ))^2 :=
+        mul_le_mul_of_nonneg_left hNormSq hc.le
+      _ = d * (t : ℝ)^2 := by
+        dsimp [c]
+        field_simp [ne_of_gt hB]
+        ring
+  change c ≤
+    p4Q2GL_originalWilsonSignedGapSquareDivVarianceSpatialMass
+      H b hb.le (F t)
+      (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)) / ‖F t‖^2
+  exact (le_div_iff₀ hNormPos).2 (hRatioBound.trans hMassLower)
+
 end GroundStatePosteriorJoint
 end
 end MGAP4D.MathlibAnalytic
@@ -336,3 +536,7 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ZS_originalScaledTaylorError_GL_le_quartic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ZS_originalPhysicalGLMass_quadratic_minus_quartic_of_fixed_floor
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ZS_originalPhysicalGLMass_quadratic_minus_quartic
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ZS_originalRawInverseNorm_ge_budgetReciprocal
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ZS_originalPhysicalGLMass_exists_uniform_quadraticFine
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ZS_originalWilsonActionBudget_pos
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ZS_originalPhysicalGLRayleigh_exists_uniform_positiveFine
