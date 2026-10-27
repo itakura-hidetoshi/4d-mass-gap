@@ -88,7 +88,7 @@ noncomputable def p4Q2PZ37ZP_originalStaticPhysicalGIDetector
       ring
     map_smul' := by
       intro c a
-      simp only [Pi.smul_apply, smul_eq_mul]
+      simp only [Pi.smul_apply, smul_eq_mul, RingHom.id_apply]
       ring
   }
 
@@ -180,12 +180,8 @@ theorem p4Q2PZ37ZP_originalStaticPhysicalGLMatrix_quad_eq_GL
     _ = p4Q2GL_originalWilsonSignedGapSquareDivVarianceSpatialMass
           H b hb.le (p4Q2PZ37ZN_originalStaticPhysicalSource H a)
           (Finset.univ : Finset Link) := by
-      change
-        (∑ e : Link,
-          (p4Q2HO_weightedIntegralBilin μ (D e)
-            (fun z => V z.2 e)
-            (p4Q2PZ37ZP_originalStaticPhysicalGI_integrable H b hb e)) a a) = _
-      simp only [p4Q2HO_weightedIntegralBilin_apply,
+      simp only [B, p4Q2PZ37ZP_originalStaticPhysicalGLBilinear,
+        LinearMap.sum_apply, p4Q2HO_weightedIntegralBilin_apply,
         p4Q2GL_originalWilsonSignedGapSquareDivVarianceSpatialMass,
         p4Q2GL_originalWilsonSignedExpectationGapSquareDivVarianceLinkMean,
         pow_two]
@@ -235,7 +231,9 @@ theorem p4Q2PZ37ZP_originalStaticPhysicalGLMass_exists_quadraticFloor
       H b hb e e' left₀ right₀ a ha
   obtain ⟨m, M, hm, hM, hFloor⟩ :=
     p4Q2HR_continuous_pos_quadratic_norm_bounds q hCont hHom hPos
-  exact ⟨m, hm, hFloor⟩
+  refine ⟨m, hm, ?_⟩
+  intro a
+  exact (hFloor a).1
 
 end GroundStatePosteriorJoint
 end
