@@ -45,7 +45,7 @@ private theorem p4Q2PZ37Y_finThree_conjugate_quadratic
   calc
     star a ⬝ᵥ ((star S * A * S) *ᵥ a) =
         (star a ᵥ* (star S)) ⬝ᵥ (A *ᵥ (S *ᵥ a)) := by
-      simp only [Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec]
+      simp only [Matrix.dotProduct_mulVec, Matrix.vecMul_mul]
     _ = star (S *ᵥ a) ⬝ᵥ (A *ᵥ (S *ᵥ a)) := by
       rw [Matrix.star_eq_conjTranspose, Matrix.vecMul_conjTranspose]
       simp
@@ -66,7 +66,7 @@ theorem p4Q2PZ37Y_finThree_posDef_quadratic_det_mono
   obtain ⟨S, hSUnit, hFactor⟩ :=
     CStarAlgebra.isStrictlyPositive_iff_eq_star_mul_self.mp
       hP.isStrictlyPositive
-  have hSDet : IsUnit S.det := (Matrix.isUnit_iff_isUnit_det).mp hSUnit
+  have hSDet : IsUnit S.det := (Matrix.isUnit_iff_isUnit_det S).mp hSUnit
   let T : Matrix (Fin 3) (Fin 3) ℝ := S⁻¹
   let M : Matrix (Fin 3) (Fin 3) ℝ := star T * B * T
   have hST : S * T = 1 := by
@@ -74,9 +74,9 @@ theorem p4Q2PZ37Y_finThree_posDef_quadratic_det_mono
   have hTS : T * S = 1 := by
     simpa only [T] using Matrix.nonsing_inv_mul S hSDet
   have hStarTS : star T * star S = 1 := by
-    rw [← star_mul, hST, star_one]
+    rw [← Matrix.star_mul, hST, star_one]
   have hStarST : star S * star T = 1 := by
-    rw [← star_mul, hTS, star_one]
+    rw [← Matrix.star_mul, hTS, star_one]
   have hPconj : star T * P * T = 1 := by
     calc
       star T * P * T = (star T * star S) * (S * T) := by
@@ -108,7 +108,6 @@ theorem p4Q2PZ37Y_finThree_posDef_quadratic_det_mono
       B = (1 : Matrix (Fin 3) (Fin 3) ℝ) * B * 1 := by simp
       _ = (star S * star T) * B * (T * S) := by
         rw [hStarST, hTS]
-        simp
       _ = star S * M * S := by
         simp only [M, mul_assoc]
   have hBdet : B.det = S.det ^ 2 * M.det := by
