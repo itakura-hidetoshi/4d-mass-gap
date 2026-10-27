@@ -231,16 +231,18 @@ theorem p4Q2PZ37ZS_originalScaledTaylorError_GL_le_quartic
   M_GL(F_t) >= s_t^2 t^2 (m/8 - C_GL B_H^4 t^2).
 This is at fixed H,b, on the ACTUAL Wilson Taylor budget window,
 with no positive small-fine interval chosen yet. -/
-theorem p4Q2PZ37ZS_originalPhysicalGLMass_quadratic_minus_quartic
+theorem p4Q2PZ37ZS_originalPhysicalGLMass_quadratic_minus_quartic_of_fixed_floor
     (H : ℕ) (b : ℝ) (hb : 0 < b)
-    (e e' : PeriodicHypercubicEvenSpatialSliceLink H)
-    (left₀ right₀ :
-      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2)
+    (m : ℝ) (hm : 0 < m)
+    (hFloor : ∀ a : Fin 2 → ℝ,
+      m * ‖a‖^2 ≤
+        p4Q2GL_originalWilsonSignedGapSquareDivVarianceSpatialMass
+          H b hb.le (p4Q2PZ37ZN_originalStaticPhysicalSource H a)
+          (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)))
     (t : Set.Ici (0 : ℝ))
     (hsmall : ‖(t : ℝ) *
       periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H‖ ≤ 1) :
-    ∃ m : ℝ, 0 < m ∧
-      (p4Q2PZ37ZS_originalRawInverseNorm H t)^2 * (t : ℝ)^2 *
+    (p4Q2PZ37ZS_originalRawInverseNorm H t)^2 * (t : ℝ)^2 *
         (m / 8 -
           p4Q2PZ37ZG_originalFullLinkGL_RayleighCap H b *
             (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H)^4 *
@@ -273,9 +275,15 @@ theorem p4Q2PZ37ZS_originalPhysicalGLMass_quadratic_minus_quartic
   have hERep : ((s • E : Phys) : Lp ℝ 2 haar) = L (s • psiE) := by
     change s • (E : Lp ℝ 2 haar) = L (s • psiE)
     rw [p4Q2PZ37ZQ_originalPhysicalRawTaylorError_coe_eq_toLp H t, map_smul]
-  obtain ⟨m, hm, hSFloor⟩ :=
-    p4Q2PZ37ZS_originalStaticPart_GL_lower
-      H b hb e e' left₀ right₀ t
+  have hCoord :
+      (s * (t : ℝ) / 2)^2 ≤ ‖a‖^2 :=
+    p4Q2PZ37ZS_originalStaticCoefficients_norm_sq_ge_WilsonComponent H t
+  have hFloorA : m * ‖a‖^2 ≤ Mass S := hFloor a
+  have hSFloor : m * (s * (t : ℝ))^2 / 4 ≤ Mass S := by
+    calc
+      m * (s * (t : ℝ))^2 / 4 = m * (s * (t : ℝ) / 2)^2 := by ring
+      _ ≤ m * ‖a‖^2 := mul_le_mul_of_nonneg_left hCoord hm.le
+      _ ≤ Mass S := hFloorA
   have hEUpper : Mass (s • E) ≤ C * s^2 * ((t : ℝ) * B)^4 :=
     p4Q2PZ37ZS_originalScaledTaylorError_GL_le_quartic H b hb t hsmall
   have hDecomp : F = S - s • E :=
@@ -284,7 +292,6 @@ theorem p4Q2PZ37ZS_originalPhysicalGLMass_quadratic_minus_quartic
     rw [hDecomp]
     exact p4Q2PZ37ZR_originalFullLinkGLMass_sub_lower
       H b hb S (s • E) psiS (s • psiE) hSRep hERep
-  refine ⟨m, hm, ?_⟩
   change s^2 * (t : ℝ)^2 * (m / 8 - C * B^4 * (t : ℝ)^2) ≤ Mass F
   calc
     s^2 * (t : ℝ)^2 * (m / 8 - C * B^4 * (t : ℝ)^2) =
@@ -292,6 +299,32 @@ theorem p4Q2PZ37ZS_originalPhysicalGLMass_quadratic_minus_quartic
           C * s^2 * ((t : ℝ) * B)^4 := by ring
     _ ≤ Mass S / 2 - Mass (s • E) := by linarith
     _ ≤ Mass F := hPerturb
+
+/-- Existential form for an arbitrary actual frozen finite Wilson
+model. Its witness m is chosen ONCE from ZP, independently of fine t. -/
+theorem p4Q2PZ37ZS_originalPhysicalGLMass_quadratic_minus_quartic
+    (H : ℕ) (b : ℝ) (hb : 0 < b)
+    (e e' : PeriodicHypercubicEvenSpatialSliceLink H)
+    (left₀ right₀ :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2)
+    (t : Set.Ici (0 : ℝ))
+    (hsmall : ‖(t : ℝ) *
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H‖ ≤ 1) :
+    ∃ m : ℝ, 0 < m ∧
+      (p4Q2PZ37ZS_originalRawInverseNorm H t)^2 * (t : ℝ)^2 *
+        (m / 8 -
+          p4Q2PZ37ZG_originalFullLinkGL_RayleighCap H b *
+            (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H)^4 *
+            (t : ℝ)^2) ≤
+      p4Q2GL_originalWilsonSignedGapSquareDivVarianceSpatialMass
+        H b hb.le (p4Q2PZ37ZE_originalPhysicalCancellation H t)
+        (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)) := by
+  obtain ⟨m, hm, hFloor⟩ :=
+    p4Q2PZ37ZP_originalStaticPhysicalGLMass_exists_quadraticFloor
+      H b hb e e' left₀ right₀
+  exact ⟨m, hm,
+    p4Q2PZ37ZS_originalPhysicalGLMass_quadratic_minus_quartic_of_fixed_floor
+      H b hb m hm hFloor t hsmall⟩
 
 end GroundStatePosteriorJoint
 end
@@ -301,4 +334,5 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ZS_originalStaticCoefficients_norm_sq_ge_WilsonComponent
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ZS_originalStaticPart_GL_lower
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ZS_originalScaledTaylorError_GL_le_quartic
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ZS_originalPhysicalGLMass_quadratic_minus_quartic_of_fixed_floor
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ZS_originalPhysicalGLMass_quadratic_minus_quartic
