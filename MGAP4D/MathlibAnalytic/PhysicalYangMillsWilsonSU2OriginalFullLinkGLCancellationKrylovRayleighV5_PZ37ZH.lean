@@ -86,7 +86,7 @@ theorem p4Q2PZ37ZH_adjacentFrozenFineCouplings_nonneg
   intro k
   by_cases hk : k = 0
   · simpa [p4Q2PZ37ZH_adjacentFrozenFineCouplings, hk] using hb.le
-  · simp [p4Q2PZ37ZH_adjacentFrozenFineCouplings, hk, t.property]
+  · simp [p4Q2PZ37ZH_adjacentFrozenFineCouplings, hk]
 
 /-- Literally in the Gauss-law physical Haar Hilbert space, the
 original HJ synthesis on (1,-1) is U-T_fine U. This is true at
