@@ -169,8 +169,22 @@ theorem p4Q2PZ37ZQ_originalPhysicalRawTaylorError_norm_eq_Haar
       (p4Q2JF_originalWilsonHaarRowContinuous H (t : ℝ) -
         (1 : C(PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2, ℝ)) -
         (t : ℝ) • p4Q2JE_originalWilsonHaarZeroDerivativeProfile H)‖ := by
-  exact congrArg norm
-    (p4Q2PZ37ZQ_originalPhysicalRawTaylorError_coe_eq_toLp H t)
+  let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  let haar := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
+  let Phys := periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2
+  let f : Phys := p4Q2PZ37ZQ_originalPhysicalRawTaylorError H t
+  let psi : C(Cfg, ℝ) :=
+    p4Q2JF_originalWilsonHaarRowContinuous H (t : ℝ) -
+      (1 : C(Cfg, ℝ)) -
+      (t : ℝ) • p4Q2JE_originalWilsonHaarZeroDerivativeProfile H
+  let L : C(Cfg, ℝ) →L[ℝ] Lp ℝ 2 haar := ContinuousMap.toLp 2 haar ℝ
+  have hAmbient : (f : Lp ℝ 2 haar) = L psi :=
+    p4Q2PZ37ZQ_originalPhysicalRawTaylorError_coe_eq_toLp H t
+  calc
+    ‖p4Q2PZ37ZQ_originalPhysicalRawTaylorError H t‖ =
+        ‖(f : Lp ℝ 2 haar)‖ := (Submodule.norm_coe f).symm
+    _ = ‖L psi‖ :=
+      congrArg (fun x : Lp ℝ 2 haar => ‖x‖) hAmbient
 
 /-- The true physical Taylor remainder is uniformly O_H(t²) on
 the original Wilson finite-volume action-budget window. -/
