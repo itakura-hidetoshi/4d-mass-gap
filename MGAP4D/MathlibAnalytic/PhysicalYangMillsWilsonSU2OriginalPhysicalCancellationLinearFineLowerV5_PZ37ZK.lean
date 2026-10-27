@@ -147,7 +147,6 @@ theorem p4Q2PZ37ZK_originalGITransverseCLM_cancellation_eq_rawMinor
   rw [hF, map_sub, hU, hV, map_smul, hUnitK]
   dsimp [K, p4Q2PZ37ZK_originalGITransverseCLM,
     p4Q2JI_originalGIRawFineRowMinor, G, unitLp, L]
-  simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply, smul_eq_mul]
   ring
 
 /-- The ORIGINAL raw one-slab physical Wilson operator norm is bounded
