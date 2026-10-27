@@ -1,8 +1,8 @@
-# MGAP4D — 証明ロードマップ（P4-Q2-PZ37X #5929統合済み／次はPZ37Y：真正GL積分行列式の鋭い比較と体積一様化障害）
+# MGAP4D — 証明ロードマップ（P4-Q2-PZ37Y #5931統合済み／次はPZ37Z：体積一様化障害・真正GI正規化U0への定量接続）
 
-**2026-10-27 JST · 唯一のLean定理正本：`formal/real-hilbert-uniform-coercive-strong-limit` · 最新検証済み定理-bearing squash HEAD：[`787950e6a7804f8b5080412a6ea44481cf14481e`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/787950e6a7804f8b5080412a6ea44481cf14481e)（[#5929 PZ37X](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5929)）。default `main`は定理正本ではない。**
+**2026-10-27 JST · 唯一のLean定理正本：`formal/real-hilbert-uniform-coercive-strong-limit` · 最新検証済み定理-bearing squash HEAD：[`e66a1939a9a19d6cf9122bccd54c2971a8e3c152`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/e66a1939a9a19d6cf9122bccd54c2971a8e3c152)（[#5931 PZ37Y](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5931)）。default `main`は定理正本ではない。**
 
-**最新到達（PZ37X）：** 元のSU(2) Wilson作用、二相互作用posterior、真正Haar積分、Gauss-law Hilbert源、独立frozen/fine couplingを保持。PZ37Q–Tで全有限Hの小正fineにおける真正物理Krylov rank3、`b_H=4D3/(m0+m2+m4)^2>0` の物理Gram固有値・二次形式下界を証明。PZ37Uで全有限深さの真正GL/source kernel一致と有限モデル依存ノルム両側比較、PZ37Vで本物のGL積分GramのPosDefと `γ_H^GL=4detG/(trG)^2>0`、PZ37Wで `c_H P_H≼G_H^GL≼C_H P_H` およびtrace上下比較を証明。**PZ37X #5929** ではこの二次形式比較から真正GL積分Gramの全3固有値について `λ_i(G_H^GL)≥c_H b_H`、従って **`det G_H^GL≥(c_H b_H)^3>0`**、さらに **`γ_H^GL≥4(c_H b_H)^3/(C_H trP_H)^2>0`** をLean4証明した。**未解決：** これらの比較定数・det/trace係数とsmall-fine半径の体積一様性、より鋭い `c_H³ D3` の直接行列式単調性、真正局所GI密度の `U0=inf_H Q_GI/N_H>0`、endpoint E、正fine×任意深さFの必要な一様制御、H1–H4・強極限・連続体質量ギャップ。以下の旧PN/R系列の『rank3/D3未証明』は当時の履歴を示す。
+**最新到達（PZ37Y）：** 真正SU(2) Wilson作用、二相互作用posterior、Haar、Gauss-law物理Hilbert、独立frozen/fine couplingを変更しない。PZ37Q–T：全有限Hで十分小さい正fineにおける真正3モードrank3と物理Gramの定量下界、PZ37U–W：真正GL integralと物理Gramのkernel一致・ノルム/二次形式両側比較 `c_H P_H ≼ G_H^GL ≼ C_H P_H`、trace上下評価、PZ37X：固有値積による `(c_H b_H)^3` 行列式下界。**PZ37Y #5931** では正定値Gramの可逆平方根合同変換と行列式積性をmathlib上でLean形式化し、**`det G_H^GL ≥ c_H³ D3(H,t)>0`** と **`γ_H^GL ≥ 4c_H³D3(H,t)/(C_H(m0+m2+m4))²>0`**、その係数による**全3係数の真正GL posterior質量coercivity**まで証明。`D3(H,t)` は元の真正Wilson三モーメント行列式であり、代理検出器ではない。**残るobstruction：** `c_H³D3/(C_H trP_H)²` と `δ_H` のH一様下界、`c_H`や`C_H`のH依存評価、正規化GI minor `U0=inf_H(Q_GI/N_H)>0`、endpoint E、正fine×任意深さFの一様性、H1–H4（強極限・半群・再構成・連続体）と質量ギャップ。局所FK/FL/GAのHaar感度評価のみからU0/全球frameの一様性を結論しない。以下PN/R系列の旧『rank3未証明』は各証明当時の歴史記録である。
 
 **[プロジェクトの数学的定義・数式・再現手順 → README.md](README.md)**
 
@@ -12,14 +12,14 @@
 | --- | --- |
 | Repository | [itakura-hidetoshi/4d-mass-gap](https://github.com/itakura-hidetoshi/4d-mass-gap) |
 | 定理の唯一正本 | `formal/real-hilbert-uniform-coercive-strong-limit`（default `main`ではない） |
-| 最終検証済み**定理-bearing**マージ点 | `787950e6a7804f8b5080412a6ea44481cf14481e` — PZ37X #5929。下段の歴史的時系列表は各証明時点の結果を示す。 |
-| 検証**source HEAD**（squashと区別） | PZ37X `c47b861eee4550a8165c1e00a43afb7d8905cab3`、squash `787950e6a7804f8b5080412a6ea44481cf14481e`。 |
-| [PZ37X exact-head #40428170464](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40428170464) | **SUCCESS・11083/11083**。変更PZ37Xファイルwarning/error **0/0**。同一source HEADの公理監査とMCP completion receipt **SUCCESS**、squash SHAと正本HEADの完全一致を確認。 |
-| 公開`#print axioms` | PZ37X新規4/4：`propext`、`Classical.choice`、`Quot.sound`のみ、`sorryAx`なし。既存の別系統finite-lattice `native_decide`とは分離する。 |
+| 最終検証済み**定理-bearing**マージ点 | `e66a1939a9a19d6cf9122bccd54c2971a8e3c152` — PZ37Y #5931。後述の歴史的段階表は各証明時点の結果を示す。 |
+| 検証**source HEAD**（squashと区別） | PZ37Y `f5c663632740f290c53b98e2ba16980dd6a16066`、squash `e66a1939a9a19d6cf9122bccd54c2971a8e3c152`。 |
+| [PZ37Y exact-head #40435436785](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40435436785) | **SUCCESS・11085/11085**。新規Lean2ファイルwarning/error **0/0**。同一source HEADの公理監査・MCP completion receipt **SUCCESS**、squash SHAと正本HEAD一致。 |
+| 公開`#print axioms` | PZ37Y新規2/2：`propext`、`Classical.choice`、`Quot.sound`のみ、`sorryAx`なし。既存別系統finite-latticeの`native_decide`依存と分離。 |
 | Lean / mathlib pin | `v4.30.0-rc2` / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
 | 現在のbranch HEAD | [毎回GitHubで再観測](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit) |
 
-ここに固定したSHAは**2026-10-27・PZ37Xまでの定理統合点**であり、この後の文書-only変更は新たな数学的証明を意味しない。後段のPN/R段階別表の旧『rank3/D3未証明』はPZ37Q–Xの後続定理で更新された。判断順位：**fresh authoritative SHA → Lean定理全文と依存 → exact-head CIと公理監査 → docs → 履歴**。
+固定SHAは**2026-10-27 PZ37Yまでの定理統合点**であり、以降のdocs-onlyマージでは新しい数学定理を証明したことにならない。旧PN/R段階表の『rank3/D3未証明』『鋭いdet比較未証明』はPZ37Q–Yで更新された歴史的記載である。根拠順：**fresh authoritative SHA → Lean定理本文と前提/import → exact-head CI・公理監査 → docs → 古い履歴**。
 
 ### 重要な区別
 
