@@ -71,7 +71,8 @@ private theorem pz37za_toLp_inner (f g : C(Cfg, ℝ)) :
   filter_upwards [ContinuousMap.coeFn_toLp (p := 2) (𝕜 := ℝ) μ f,
     ContinuousMap.coeFn_toLp (p := 2) (𝕜 := ℝ) μ g] with A hf hg
   rw [hf, hg]
-  ring
+  change (g A) * (f A) = (f A) * (g A)
+  exact mul_comm _ _
 
 private theorem pz37za_centered_integrable (p : Plaq) : Integrable (VC p) μ :=
   memLp_one_iff_integrable.mp (ContinuousMap.memLp (p := 1) μ ℝ (VC p))
