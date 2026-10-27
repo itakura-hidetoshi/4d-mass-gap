@@ -44,8 +44,10 @@ private theorem p4Q2PZ37Y_finThree_conjugate_quadratic
       star (S *ᵥ a) ⬝ᵥ (A *ᵥ (S *ᵥ a)) := by
   calc
     star a ⬝ᵥ ((star S * A * S) *ᵥ a) =
-        (star a ᵥ* (star S)) ⬝ᵥ (A *ᵥ (S *ᵥ a)) := by
-      simp only [Matrix.dotProduct_mulVec, Matrix.vecMul_mul]
+        star a ⬝ᵥ ((star S) *ᵥ (A *ᵥ (S *ᵥ a))) := by
+      simp only [← Matrix.mul_assoc, Matrix.mulVec_mulVec]
+    _ = (star a ᵥ* (star S)) ⬝ᵥ (A *ᵥ (S *ᵥ a)) := by
+      rw [Matrix.dotProduct_mulVec]
     _ = star (S *ᵥ a) ⬝ᵥ (A *ᵥ (S *ᵥ a)) := by
       rw [Matrix.star_eq_conjTranspose, Matrix.vecMul_conjTranspose]
       simp
