@@ -115,20 +115,18 @@ theorem p4Q2PZ37ZE_originalGL_cancellation_le_physicalTransferDistanceSq
   let F := p4Q2PZ37ZE_originalPhysicalCancellation H t
   have h0 : T t0 U = U := by
     simp [T, t0, U]
-  have hF : F = (T t0 - T t) U := by
-    change U - T t U = (T t0 - T t) U
+  have hF : F = -((T t - T t0) U) := by
+    change U - T t U = -((T t - T t0) U)
     rw [ContinuousLinearMap.sub_apply, h0]
+    abel
   have hUNorm : ‖U‖ = (1 : ℝ) :=
     periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_norm H 2
   have hNorm : ‖F‖ ≤ ‖T t - T t0‖ := by
-    rw [hF]
+    rw [hF, norm_neg]
     calc
-      ‖(T t0 - T t) U‖ ≤ ‖T t0 - T t‖ * ‖U‖ :=
-        (T t0 - T t).le_opNorm U
-      _ = ‖T t - T t0‖ := by
-        rw [hUNorm, mul_one]
-        have hSub : T t0 - T t = -(T t - T t0) := by abel
-        rw [hSub, norm_neg]
+      ‖(T t - T t0) U‖ ≤ ‖T t - T t0‖ * ‖U‖ :=
+        (T t - T t0).le_opNorm U
+      _ = ‖T t - T t0‖ := by rw [hUNorm, mul_one]
   have hSq : ‖F‖ ^ 2 ≤ ‖T t - T t0‖ ^ 2 :=
     pow_le_pow_left₀ (norm_nonneg _) hNorm 2
   have hCoef : 0 ≤
@@ -184,8 +182,12 @@ theorem p4Q2PZ37ZE_originalGL_cancellation_tendsto_zero
         H 2 specialUnitaryTwoWilsonRankPositive)
   have hDiff : Continuous (fun t : Set.Ici (0 : ℝ) => T t - T t0) :=
     hT.sub continuous_const
+  let Phys :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2
+  let Op := Phys →L[ℝ] Phys
+  have hOpNorm : Continuous (fun S : Op => ‖S‖) := continuous_norm
   have hNorm : Continuous (fun t : Set.Ici (0 : ℝ) => ‖T t - T t0‖) :=
-    hDiff.norm
+    hOpNorm.comp hDiff
   have hN : Continuous (fun t : Set.Ici (0 : ℝ) => ‖T t - T t0‖ ^ 2) :=
     hNorm.pow 2
   have hNLimit :
