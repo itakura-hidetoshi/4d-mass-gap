@@ -190,7 +190,6 @@ theorem p4Q2PZ37ZP_originalStaticPhysicalGLMatrix_quad_eq_GL
       apply integral_congr_ae
       filter_upwards with z
       rw [p4Q2PZ37ZP_originalStaticPhysicalGIDetector_eq_GI]
-      ring
 
 /-- HR's compact-sphere argument applies to the genuine static
 two-mode integrated GL Gram because its quadratic form is a finite
