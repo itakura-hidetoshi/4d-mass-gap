@@ -200,7 +200,11 @@ theorem p4Q2PZ37ZE_originalGL_cancellation_tendsto_zero
       Tendsto (fun t : Set.Ici (0 : ℝ) =>
         ‖p4Q2PZ37ZE_originalPhysicalCancellation H t‖ ^ 2)
         (𝓝 t0) (𝓝 (0 : ℝ)) := by
-    simpa [hAtZero] using hSqCont.continuousAt
+    have hAt : ContinuousAt
+        (fun t : Set.Ici (0 : ℝ) =>
+          ‖p4Q2PZ37ZE_originalPhysicalCancellation H t‖ ^ 2)
+        t0 := hSqCont.continuousAt
+    simpa [ContinuousAt, hAtZero] using hAt
   have hCLimit :
       Tendsto (fun t : Set.Ici (0 : ℝ) =>
         C * ‖p4Q2PZ37ZE_originalPhysicalCancellation H t‖ ^ 2)
