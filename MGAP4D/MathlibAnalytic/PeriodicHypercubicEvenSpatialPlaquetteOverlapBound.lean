@@ -17,11 +17,6 @@ open scoped BigOperators
 noncomputable section
 set_option autoImplicit false
 
-private noncomputable instance pz37zaSpatialPlaqFintype (H : ℕ) :
-    Fintype (PeriodicHypercubicEvenSpatialSlicePlaquette H) := Fintype.ofFinite _
-private noncomputable instance pz37zaSpatialLinkFintype (H : ℕ) :
-    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := Fintype.ofFinite _
-
 /-- The four intrinsic links used by the original spatial holonomy. -/
 def pz37zaSpatialPlaquetteBoundary (H : ℕ)
     (p : PeriodicHypercubicEvenSpatialSlicePlaquette H) :
@@ -114,7 +109,8 @@ theorem pz37zaSpatialPlaquetteCoordinateFamily_injective (H : ℕ) :
 theorem pz37zaOriginalSpatialPlaquetteCount_ge_sideLength (H : ℕ) :
     2 * (H + 1) ≤ GroundStatePosteriorJoint.p4Q2LP_originalSpatialPlaquetteCount H := by
   letI : NeZero (PeriodicHypercubicEvenSideLength H) := ⟨by
-    simp [PeriodicHypercubicEvenSideLength]⟩
+    change 2 * (H + 1) ≠ 0
+    omega⟩
   rw [GroundStatePosteriorJoint.p4Q2LQ_originalSpatialPlaquetteCount_eq_card]
   have h := Fintype.card_le_of_injective _ (pz37zaSpatialPlaquetteCoordinateFamily_injective H)
   simpa only [ZMod.card, PeriodicHypercubicEvenSideLength] using h
