@@ -88,8 +88,8 @@ theorem p4Q2PZ37X_finThree_quadratic_floor_eigenvalues
       ⟪u, u⟫_ℝ = ‖u‖ ^ 2 := real_inner_self_eq_norm_sq u
       _ = 1 := by rw [hUnit]; norm_num
   have hCoeff : (∑ j : Fin 3, (a j) ^ 2) = 1 := by
-    rw [EuclideanSpace.inner_eq_star_dotProduct] at hInner
-    simpa only [a, dotProduct, star_trivial, pow_two] using hInner
+    simpa [PiLp.inner_apply, a, real_inner_self_eq_norm_sq,
+      Real.norm_eq_abs, sq_abs] using hInner
   have hValue :
       star a ⬝ᵥ (G *ᵥ a) = hG.isHermitian.eigenvalues i := by
     simpa [a] using (hG.isHermitian.eigenvalues_eq i).symm
@@ -110,7 +110,7 @@ theorem p4Q2PZ37X_finThree_eigenvalues_floor_det
         ∏ i : Fin 3, hG.isHermitian.eigenvalues i :=
     Finset.prod_le_prod (fun _ _ => hk) (fun i _ => hFloor i)
   calc
-    k ^ 3 = ∏ _i : Fin 3, k := by simp [Fin.prod_univ_three, pow_succ]
+    k ^ 3 = ∏ _i : Fin 3, k := by simp [pow_succ]
     _ ≤ ∏ i : Fin 3, hG.isHermitian.eigenvalues i := hProd
     _ = G.det := (hG.isHermitian.det_eq_prod_eigenvalues).symm
 
@@ -215,10 +215,10 @@ theorem p4Q2PZ37X_allFiniteSmallFine_originalGLIntegral_D3_cubicDetAndGamma
     rw [hQuadratic]
     rw [hSource]
     exact hSourceFloor a
-  have hPPSD : P.PosSemidef :=
+  have hPPSD : (P).PosSemidef :=
     p4Q2PZ37R_originalWilsonThreeHankel_posSemidef
       Hn (beta (n + 1)) (hbeta (n + 1))
-  have hPDef : P.PosDef := by
+  have hPDef : (P).PosDef := by
     apply Matrix.PosDef.of_dotProduct_mulVec_pos hPPSD.isHermitian
     intro a ha
     have hCoeff : 0 < ∑ j : Fin 3, (a j) ^ 2 := by
