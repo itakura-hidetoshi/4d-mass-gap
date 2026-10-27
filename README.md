@@ -2,6 +2,25 @@
 
 **Original interacting Wilson theory · Gauss-law physical Hilbert space · Lean 4 + mathlib · Hidetoshi Itakura**
 
+> **LATEST VERIFIED THEOREM CHECKPOINT — 2026-10-27 JST · PZ37ZH [PR #5945](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5945) MERGED.** Only theorem-authoritative branch: `formal/real-hilbert-uniform-coercive-strong-limit`. Verified theorem squash [`c2101b5596689ed6dd0939aad60b8c2884f6e3ee`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/c2101b5596689ed6dd0939aad60b8c2884f6e3ee); distinct tested source `8c258a37a04187cc6c708eef354e88682d7a7f5e`; exact-head [CI #40489013358](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40489013358): **11,093/11,093 SUCCESS**, changed Lean warning/error **0/0**, seven public `#print axioms` reports each restricted to `propext`, `Classical.choice`, `Quot.sound`; independent MCP completion receipt **SUCCESS**. Older PZ37ZG/ZF/ZA checkpoints below are historical, not the latest theorem HEAD.
+
+### PZ37ZH: the TRUE Wilson physical cancellation equals literal depth-one source
+
+At each genuine finite SU(2) spatial `H` and frozen `b>0`, take nonnegative fine `t` and the explicit real signed coefficient vector `a=(1,-1)`; keep the actual adjacent schedule `beta_0=b`, `beta_k=t` for `k>0`. The unchanged HJ Gauss-law physical Hilbert synthesis and actual norm-normalized physical Wilson transfer satisfy **in the ORIGINAL Hilbert space**
+
+```text
+S_1(1,-1) = U - T_t U = F_t,               for all t >= 0.
+M_GL(H,b;F_t)=0  <->  F_t=0,              for all t >= 0.
+F_t != 0  ->  0 < M_GL(H,b;F_t)/||F_t||^2
+                 <= 2 |Links(H)| exp(16b).
+```
+
+The original OX all-depth source/whole-original-posterior GL kernel theorem supplies the zero-locus equality with genuine physical link and boundary contexts. PZ37ZF proves `F_t !=0` throughout a sufficiently small **positive** fine interval at each fixed `H`; thus the strictly positive **pointwise** physical-source-normalized Rayleigh bound is unconditional on that interval. The genuine two-interacting-Wilson posterior laws, their density-contrast variance, full spatial-link/full physical boundary-pair Haar integration and original Gauss-law physical source are all unchanged.
+
+**Still OPEN:** an `H`- or fine-uniform numerical positive physical-norm coercivity constant; the fine-zero limit of the ratio; compatible endpoint E, a common positive-fine window for arbitrary depths F, H1–H4 and the continuum Yang–Mills mass gap. The physical cancellation `F_t→0` makes the coefficient-frame no-go compatible with strictly positive physical Rayleigh at each `t>0`; the PZ37ZA-disproved bounded two-context `Q_GI/N_H` lower floor must never be revived.
+
+**Next genuine analytic gate (PZ37ZI tentative):** connect the already verified JG strong Haar-`L²` first variation of the TRUE unnormalized Wilson Haar row (with nonconstant spatial Wilson-action tangent) to the actual norm-normalized `F_t`. Separate scalar normalization and the nonconstant physical tangent; determine which fixed-`H,b` positive-fine source-norm bounds follow without silently assuming transfer-norm differentiability, posterior covariance uniformity or volume independence.
+
 > **LATEST VERIFIED THEOREM — 2026-10-27 JST · PZ37ZG [PR #5943](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5943) MERGED.** Sole theorem-authoritative branch: `formal/real-hilbert-uniform-coercive-strong-limit`. Verified theorem-bearing squash SHA [`49467c2542e4a4b565ec480f04884f9c97c57abe`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/49467c2542e4a4b565ec480f04884f9c97c57abe); tested source SHA `77d50b0c0d6bc90aa3b8a243bdf3ae50aeef37e8`; exact-head [CI #40483971949](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40483971949): **11,092/11,092 SUCCESS**, changed-file warning/error **0/0**, all four new public `#print axioms` restricted to `propext`, `Classical.choice`, `Quot.sound`, independent MCP completion receipt **SUCCESS**. The older PZ37ZF/PZ37ZA "CURRENT" headings below are dated historical checkpoints, not the live theorem HEAD.
 
 ### PZ37ZG: original Wilson physical-source-normalized GL Rayleigh bounds
