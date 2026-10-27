@@ -114,9 +114,7 @@ theorem p4Q2PZ37ZE_originalGL_cancellation_le_physicalTransferDistanceSq
   let U := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2
   let F := p4Q2PZ37ZE_originalPhysicalCancellation H t
   have h0 : T t0 U = U := by
-    simpa [T, t0, U] using
-      (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperator_zero_constantUnit
-        H 2 specialUnitaryTwoWilsonRankPositive)
+    simp [T, t0, U]
   have hF : F = (T t0 - T t) U := by
     change U - T t U = (T t0 - T t) U
     rw [ContinuousLinearMap.sub_apply, h0]
@@ -128,7 +126,9 @@ theorem p4Q2PZ37ZE_originalGL_cancellation_le_physicalTransferDistanceSq
       ‖(T t0 - T t) U‖ ≤ ‖T t0 - T t‖ * ‖U‖ :=
         (T t0 - T t).le_opNorm U
       _ = ‖T t - T t0‖ := by
-        rw [hUNorm, mul_one, norm_sub_rev]
+        rw [hUNorm, mul_one]
+        have hSub : T t0 - T t = -(T t - T t0) := by abel
+        rw [hSub, norm_neg]
   have hSq : ‖F‖ ^ 2 ≤ ‖T t - T t0‖ ^ 2 :=
     pow_le_pow_left₀ (norm_nonneg _) hNorm 2
   have hCoef : 0 ≤
@@ -182,8 +182,12 @@ theorem p4Q2PZ37ZE_originalGL_cancellation_tendsto_zero
     simpa [T] using
       (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperatorHalfLine_continuous
         H 2 specialUnitaryTwoWilsonRankPositive)
+  have hDiff : Continuous (fun t : Set.Ici (0 : ℝ) => T t - T t0) :=
+    hT.sub continuous_const
+  have hNorm : Continuous (fun t : Set.Ici (0 : ℝ) => ‖T t - T t0‖) :=
+    hDiff.norm
   have hN : Continuous (fun t : Set.Ici (0 : ℝ) => ‖T t - T t0‖ ^ 2) :=
-    ((hT.sub continuous_const).norm).pow 2
+    hNorm.pow 2
   have hNLimit :
       Tendsto (fun t : Set.Ici (0 : ℝ) => ‖T t - T t0‖ ^ 2)
         (𝓝 t0) (𝓝 (0 : ℝ)) := by
