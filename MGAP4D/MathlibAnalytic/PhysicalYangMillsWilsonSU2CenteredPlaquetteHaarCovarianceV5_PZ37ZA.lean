@@ -71,7 +71,6 @@ private theorem pz37za_toLp_inner (f g : C(Cfg, ℝ)) :
   filter_upwards [ContinuousMap.coeFn_toLp (p := 2) (𝕜 := ℝ) μ f,
     ContinuousMap.coeFn_toLp (p := 2) (𝕜 := ℝ) μ g] with A hf hg
   rw [hf, hg]
-  simp only [RCLike.inner_apply, star_trivial]
   ring
 
 private theorem pz37za_centered_integrable (p : Plaq) : Integrable (VC p) μ :=
@@ -143,12 +142,20 @@ private theorem pz37za_centered_support_restrict (p : Plaq) (A : Cfg) :
   have he (k : Fin 4) :
       pz37zaSpatialPlaquetteBoundary H p k ∈ pz37zaSpatialPlaquetteSupport H p :=
     Finset.mem_image.mpr ⟨k, Finset.mem_univ _, rfl⟩
-  have h0 := he 0
-  have h1 := he 1
-  have h2 := he 2
-  have h3 := he 3
-  simp only [pz37zaSpatialPlaquetteBoundary, Matrix.cons_val_zero,
-    Matrix.cons_val_one, Matrix.cons_val_two, Matrix.cons_val_three] at h0 h1 h2 h3
+  have h0 :
+      (p.1, p.2.1.1) ∈ pz37zaSpatialPlaquetteSupport H p := by
+    simpa [pz37zaSpatialPlaquetteBoundary] using (he 0)
+  have h1 :
+      (periodicHypercubicEvenSpatialSliceShift H p.1 p.2.1.1, p.2.1.2) ∈
+        pz37zaSpatialPlaquetteSupport H p := by
+    simpa [pz37zaSpatialPlaquetteBoundary] using (he 1)
+  have h2 :
+      (periodicHypercubicEvenSpatialSliceShift H p.1 p.2.1.2, p.2.1.1) ∈
+        pz37zaSpatialPlaquetteSupport H p := by
+    simpa [pz37zaSpatialPlaquetteBoundary] using (he 2)
+  have h3 :
+      (p.1, p.2.1.2) ∈ pz37zaSpatialPlaquetteSupport H p := by
+    simpa [pz37zaSpatialPlaquetteBoundary] using (he 3)
   simp [p4Q2PZ37ZA_centeredPlaquetteContinuous,
     p4Q2LO_originalLocalPlaquetteContinuous_apply,
     periodicHypercubicEvenSpatialSlicePlaquetteHolonomy,
