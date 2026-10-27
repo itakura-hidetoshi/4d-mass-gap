@@ -93,7 +93,7 @@ theorem p4Q2PZ37ZK_originalGITransverseCLM_constant_zero
         (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) ℝ
         (1 : C(PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2, ℝ))) = 0 := by
   unfold p4Q2PZ37ZK_originalGITransverseCLM
-  simp only [ContinuousLinearMap.sub_apply, Pi.smul_apply, smul_eq_mul]
+  simp only [ContinuousLinearMap.sub_apply, smul_apply, smul_eq_mul]
   ring
 
 /-- The TRUE physical cancellation, embedded isometrically in the
@@ -114,7 +114,7 @@ theorem p4Q2PZ37ZK_originalGITransverseCLM_cancellation_eq_rawMinor
           H 2 specialUnitaryTwoWilsonRankPositive (t : ℝ) t.property‖⁻¹ *
         p4Q2JI_originalGIRawFineRowMinor H b hb.le e e' z z' (t : ℝ) := by
   let haar := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
-  let L := ContinuousMap.toLp 2 haar ℝ
+  let L : C(PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2, ℝ) →L[ℝ]\n      Lp ℝ 2 haar := ContinuousMap.toLp 2 haar ℝ
   let F := p4Q2JF_originalWilsonHaarRowContinuous H
   let U := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2
   let Raw := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
@@ -146,7 +146,7 @@ theorem p4Q2PZ37ZK_originalGITransverseCLM_cancellation_eq_rawMinor
   rw [hF, map_sub, hU, hV, map_smul, hUnitK]
   dsimp [K, p4Q2PZ37ZK_originalGITransverseCLM,
     p4Q2JI_originalGIRawFineRowMinor, G, unitLp, L]
-  simp only [ContinuousLinearMap.sub_apply, Pi.smul_apply, smul_eq_mul]
+  simp only [ContinuousLinearMap.sub_apply, smul_apply, smul_eq_mul]
   ring
 
 /-- The ORIGINAL raw one-slab physical Wilson operator norm is bounded
@@ -174,7 +174,7 @@ theorem p4Q2PZ37ZK_originalRawOperator_norm_le_one_add_budget
   have hNorm : ‖R‖ ≤ ‖R - Q‖ + ‖Q‖ := by
     calc
       ‖R‖ = ‖(R - Q) + Q‖ := by congr 1; abel
-      _ ≤ ‖R - Q‖ + ‖Q‖ := norm_add_le _ _
+      _ ≤ ‖R - Q‖ + ‖Q‖ := norm_add_le (R - Q) Q
   have hScale : B * (t : ℝ) ≤ B := by
     nlinarith [mul_nonneg hB (sub_nonneg.mpr ht)]
   change ‖R‖ ≤ 1 + B
