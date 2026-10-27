@@ -87,11 +87,12 @@ theorem finiteRealHilbert_synthesis_sq_le_gram_row_bound
     intro i _hi
     apply Finset.sum_congr rfl
     intro j _hj
+    rw [real_inner_comm (v i) (v j)]
     ring
   rw [hexpand]
   exact finiteReal_symmetric_quadratic_le_row_bound
     (fun i j => ⟪v i, v j⟫_ℝ)
-    (fun i j => real_inner_comm (v i) (v j)) D hrow a
+    (fun i j => (real_inner_comm (v i) (v j)).symm) D hrow a
 
 /-- A nonnegative synthesis Bessel bound yields a total response bound for
 a SINGLE bounded linear functional, without an orthonormal-basis assumption.
