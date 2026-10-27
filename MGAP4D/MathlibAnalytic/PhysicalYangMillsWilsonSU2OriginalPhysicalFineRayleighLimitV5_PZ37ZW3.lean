@@ -107,11 +107,10 @@ theorem p4Q2PZ37ZW3_originalFullPhysicalTangent_has_continuousRepresentative
     (((a • U + ((s / 2) • W - s • Err) : Phys) : Lp ℝ 2 haar) =
       L (a • (1 : C(Cfg, ℝ)) +
         (s / 2) • p4Q2JI_actualSpatialWilsonContinuous H - s • (r • ψErr))
-  rw [Submodule.coe_add, Submodule.coe_sub,
-    Submodule.coe_smul, Submodule.coe_smul, Submodule.coe_smul,
+  simp only [Submodule.coe_add, Submodule.coe_sub, Submodule.coe_smul,
     p4Q2JU_originalPhysicalUnit_coe_eq_toLp H,
     p4Q2JU_originalSpatialWilsonPhysicalSource_coe_eq_toLp H,
-    hErr, map_add, map_sub, map_smul, map_smul, map_smul]
+    hErr, map_add, map_sub, map_smul]
 
 /-- The true centered source, with the inherited original physical
 Hilbert norm. -/
@@ -279,8 +278,14 @@ theorem p4Q2PZ37ZW3_originalPhysicalGLMass_div_fine_sq_tendsto
     rw [p4Q2PZ37ZW3_originalPhysicalCancellation_eq_fine_smulLift H t ht]
     have hScale := p4Q2PZ37ZW3_originalGLMass_smul H b hb
       (t : ℝ) (p4Q2PZ37ZW3_originalFullPhysicalTangentLift H t)
-    rw [← hScale]
-    change ((t : ℝ)^2 * _) / (t : ℝ)^2 = _
+    change
+      p4Q2GL_originalWilsonSignedGapSquareDivVarianceSpatialMass H b hb.le
+        (((t : ℝ) • p4Q2PZ37ZW3_originalFullPhysicalTangentLift H t :
+          p4Q2PZ37ZW2_originalContinuousPhysicalSources H) :
+          periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2)
+        (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)) /
+        (t : ℝ)^2 = _
+    rw [hScale]
     field_simp [ne_of_gt ht]
   exact hBase'.congr' (hPos.mono fun t ht => (hEq t ht).symm)
 
