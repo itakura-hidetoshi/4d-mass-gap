@@ -164,11 +164,12 @@ theorem p4Q2PZ37ZR_originalFullLinkGLMass_le_two_sub_add_two
       have hLinear :=
         p4Q2PZ37ZR_originalGI_sub_of_physicalContinuousRepresentatives
           H b hb.le f g psiF psiG hf hg e z
+      have hEq : G f e z = G (f-g) e z + G g e z := by
+        dsimp [G] at hLinear ⊢
+        linarith [hLinear]
       have hSq : (G f e z)^2 ≤
           2 * (G (f-g) e z)^2 + 2 * (G g e z)^2 := by
-        dsimp [G] at hLinear ⊢
-        rw [sub_eq_iff_eq_add] at hLinear
-        rw [hLinear]
+        rw [hEq]
         nlinarith [sq_nonneg (G (f-g) e z - G g e z)]
       calc
         (G f e z)^2 / V z.2 e ≤
