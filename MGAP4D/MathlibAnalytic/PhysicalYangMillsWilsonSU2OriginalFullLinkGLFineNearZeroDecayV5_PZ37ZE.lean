@@ -180,25 +180,34 @@ theorem p4Q2PZ37ZE_originalGL_cancellation_tendsto_zero
     simpa [T] using
       (periodicHypercubicEvenSpecialUnitaryNormalizedPhysicalOneSlabTransferOperatorHalfLine_continuous
         H 2 specialUnitaryTwoWilsonRankPositive)
-  have hDiff : Continuous (fun t : Set.Ici (0 : ℝ) => T t - T t0) :=
-    hT.sub continuous_const
-  let Phys :=
-    periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2
-  let Op := Phys →L[ℝ] Phys
-  have hOpNorm : Continuous (fun S : Op => ‖S‖) := continuous_norm
-  have hNorm : Continuous (fun t : Set.Ici (0 : ℝ) => ‖T t - T t0‖) :=
-    hOpNorm.comp hDiff
-  have hN : Continuous (fun t : Set.Ici (0 : ℝ) => ‖T t - T t0‖ ^ 2) :=
-    hNorm.pow 2
-  have hNLimit :
-      Tendsto (fun t : Set.Ici (0 : ℝ) => ‖T t - T t0‖ ^ 2)
+  let U :=
+    periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2
+  have hApp : Continuous (fun t : Set.Ici (0 : ℝ) => T t U) :=
+    (continuous_eval_const U).comp hT
+  have hPhys : Continuous
+      (fun t : Set.Ici (0 : ℝ) =>
+        p4Q2PZ37ZE_originalPhysicalCancellation H t) := by
+    change Continuous (fun t : Set.Ici (0 : ℝ) => U - T t U)
+    exact continuous_const.sub hApp
+  have hAtZero :
+      p4Q2PZ37ZE_originalPhysicalCancellation H t0 = 0 := by
+    simpa only [t0] using p4Q2PZ37ZE_originalPhysicalCancellation_zero H
+  have hSqCont : Continuous
+      (fun t : Set.Ici (0 : ℝ) =>
+        ‖p4Q2PZ37ZE_originalPhysicalCancellation H t‖ ^ 2) :=
+    (hPhys.norm).pow 2
+  have hSqLimit :
+      Tendsto (fun t : Set.Ici (0 : ℝ) =>
+        ‖p4Q2PZ37ZE_originalPhysicalCancellation H t‖ ^ 2)
         (𝓝 t0) (𝓝 (0 : ℝ)) := by
-    simpa using hN.continuousAt
+    simpa [hAtZero] using hSqCont.continuousAt
   have hCLimit :
-      Tendsto (fun t : Set.Ici (0 : ℝ) => C * ‖T t - T t0‖ ^ 2)
+      Tendsto (fun t : Set.Ici (0 : ℝ) =>
+        C * ‖p4Q2PZ37ZE_originalPhysicalCancellation H t‖ ^ 2)
         (𝓝 t0) (𝓝 (0 : ℝ)) := by
-    simpa using (tendsto_const_nhds.mul hNLimit : Tendsto
-      (fun t : Set.Ici (0 : ℝ) => C * ‖T t - T t0‖ ^ 2)
+    simpa using (tendsto_const_nhds.mul hSqLimit : Tendsto
+      (fun t : Set.Ici (0 : ℝ) =>
+        C * ‖p4Q2PZ37ZE_originalPhysicalCancellation H t‖ ^ 2)
       (𝓝 t0) (𝓝 (C * (0 : ℝ))))
   have hNonneg (t : Set.Ici (0 : ℝ)) : 0 ≤ M t := by
     unfold M p4Q2GL_originalWilsonSignedGapSquareDivVarianceSpatialMass
@@ -211,10 +220,21 @@ theorem p4Q2PZ37ZE_originalGL_cancellation_tendsto_zero
       (p4Q2FX_originalSU2WilsonPosteriorLeftSensitivityHaarSq_pos
         H b hb z.2 e).le
   have hUpper (t : Set.Ici (0 : ℝ)) :
-      M t ≤ C * ‖T t - T t0‖ ^ 2 := by
-    simpa only [M, C, T, t0] using
-      (p4Q2PZ37ZE_originalGL_cancellation_le_physicalTransferDistanceSq
-        H b hb t)
+      M t ≤ C * ‖p4Q2PZ37ZE_originalPhysicalCancellation H t‖ ^ 2 := by
+    change p4Q2GL_originalWilsonSignedGapSquareDivVarianceSpatialMass
+      H b (le_of_lt hb)
+      (p4Q2PZ37ZE_originalPhysicalCancellation H t)
+      (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)) ≤
+        C * ‖p4Q2PZ37ZE_originalPhysicalCancellation H t‖ ^ 2
+    calc
+      _ ≤ ((Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ) *
+            (2 * ‖p4Q2PZ37ZE_originalPhysicalCancellation H t‖ ^ 2)) /
+              Real.exp (-16 * b) :=
+        p4Q2PZ37ZC_originalGL_fullLink_le_explicit_physicalSourceNorm
+          H b hb (p4Q2PZ37ZE_originalPhysicalCancellation H t)
+      _ = C * ‖p4Q2PZ37ZE_originalPhysicalCancellation H t‖ ^ 2 := by
+        dsimp [C]
+        ring
   exact tendsto_of_tendsto_of_tendsto_of_le_of_le'
     tendsto_const_nhds hCLimit
     (Filter.Eventually.of_forall hNonneg)
