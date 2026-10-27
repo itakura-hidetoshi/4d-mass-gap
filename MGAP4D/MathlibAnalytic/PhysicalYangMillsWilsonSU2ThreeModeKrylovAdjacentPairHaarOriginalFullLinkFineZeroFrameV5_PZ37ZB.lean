@@ -65,11 +65,15 @@ private def p4Q2PZ37ZB_cancel : Fin 3 → ℝ :=
 
 private theorem p4Q2PZ37ZB_cancel_sum_zero :
     (∑ j : Fin 3, p4Q2PZ37ZB_cancel j) = 0 := by
-  norm_num [p4Q2PZ37ZB_cancel, Fin.sum_univ_three]
+  have h20 : (2 : Fin 3) ≠ 0 := by decide
+  have h21 : (2 : Fin 3) ≠ 1 := by decide
+  norm_num [p4Q2PZ37ZB_cancel, Fin.sum_univ_three, h20, h21]
 
 private theorem p4Q2PZ37ZB_cancel_norm_sq :
     (∑ j : Fin 3, (p4Q2PZ37ZB_cancel j) ^ 2) = 2 := by
-  norm_num [p4Q2PZ37ZB_cancel, Fin.sum_univ_three]
+  have h20 : (2 : Fin 3) ≠ 0 := by decide
+  have h21 : (2 : Fin 3) ≠ 1 := by decide
+  norm_num [p4Q2PZ37ZB_cancel, Fin.sum_univ_three, h20, h21]
 
 private theorem p4Q2PZ37ZB_cancel_ne_zero :
     p4Q2PZ37ZB_cancel ≠ (0 : Fin 3 → ℝ) := by
