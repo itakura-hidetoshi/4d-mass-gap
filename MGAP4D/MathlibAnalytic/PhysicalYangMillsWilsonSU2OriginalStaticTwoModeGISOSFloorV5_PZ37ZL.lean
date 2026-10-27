@@ -112,7 +112,6 @@ theorem p4Q2PZ37ZL_originalStaticTwoModeGISOS_exists_positive_floor
   have hHom (r : ℝ) (a : Fin 2 → ℝ) :
       q (r • a) = r ^ 2 * q a := by
     dsimp [q]
-    simp only [Pi.smul_apply, smul_eq_mul]
     ring
   have hDetected (a : Fin 2 → ℝ) (ha : a ≠ 0) :
       (A * a 0 + B * a 1 ≠ 0) ∨
