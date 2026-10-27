@@ -99,7 +99,7 @@ theorem p4Q2PZ37ZM_originalFullLinkGLMass_zero_iff_allOriginalGI
   constructor
   · intro hZero e z
     have hAE :
-        ∀ᵐ y : Pair ∂μ,
+        ∀ᵐ y ∂μ,
           p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap
             H b hb.le f e y = 0 :=
       hNull.mp hZero e (Finset.mem_univ e)
