@@ -85,9 +85,17 @@ theorem p4Q2PZ37ZV_originalRawVacuumExpectation_firstOrder_error
     abel
   have hInner : inner ℝ (R U) U =
       1 + (t : ℝ) * inner ℝ D U + inner ℝ E U := by
-    rw [hRaw, inner_add_left, inner_add_left, real_inner_smul_left,
-      real_inner_self_eq_norm_sq, hU]
-    ring
+    calc
+      inner ℝ (R U) U =
+          inner ℝ (U + (t : ℝ) • D + E) U :=
+        congrArg (fun x : Phys => inner ℝ x U) hRaw
+      _ = inner ℝ (U + (t : ℝ) • D) U + inner ℝ E U :=
+        inner_add_left _ _ _
+      _ = inner ℝ U U + inner ℝ ((t : ℝ) • D) U +
+            inner ℝ E U := by rw [inner_add_left]
+      _ = 1 + (t : ℝ) * inner ℝ D U + inner ℝ E U := by
+        rw [real_inner_smul_left, real_inner_self_eq_norm_sq, hU]
+        ring
   have hE : ‖E‖ ≤ ((t : ℝ) * B)^2 :=
     p4Q2PZ37ZQ_originalPhysicalRawTaylorError_norm_le_quadratic H t hsmall
   have hInnerError : |inner ℝ E U| ≤ ‖E‖ := by
@@ -174,9 +182,15 @@ theorem p4Q2PZ37ZV_originalPhysicalRawDerivative_vacuum_coeff
     periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector_norm H 2
   change inner ℝ ((-(1 / 2 : ℝ)) • W - k • U) U =
       -(1 / 2 : ℝ) * inner ℝ W U - k
-  rw [inner_sub_left, real_inner_smul_left, real_inner_smul_left,
-      real_inner_self_eq_norm_sq, hU]
-  ring
+  calc
+    inner ℝ ((-(1 / 2 : ℝ)) • W - k • U) U =
+        inner ℝ ((-(1 / 2 : ℝ)) • W) U -
+          inner ℝ (k • U) U :=
+      inner_sub_left _ _ _
+    _ = -(1 / 2 : ℝ) * inner ℝ W U - k := by
+      rw [real_inner_smul_left, real_inner_smul_left,
+        real_inner_self_eq_norm_sq, hU]
+      ring
 
 end GroundStatePosteriorJoint
 end
