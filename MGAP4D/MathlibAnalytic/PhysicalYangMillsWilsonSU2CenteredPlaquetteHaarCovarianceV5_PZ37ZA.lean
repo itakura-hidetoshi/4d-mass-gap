@@ -40,8 +40,6 @@ local instance pz37zaCov_borelSpace :
   specialUnitaryGroupBorelSpace 2
 private noncomputable instance pz37zaCov_linkFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) := Fintype.ofFinite _
-private noncomputable instance pz37zaCov_plaqFintype (H : ℕ) :
-    Fintype (PeriodicHypercubicEvenSpatialSlicePlaquette H) := Fintype.ofFinite _
 
 namespace GroundStatePosteriorJoint
 section Spatial
