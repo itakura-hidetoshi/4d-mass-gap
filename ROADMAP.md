@@ -1,5 +1,19 @@
 # MGAP4D — 証明ロードマップ（P4-Q2-PZ37ZA #5935統合済み／次は全リンク・全文脈の真正GL質量一様制御とendpoint source transport）
 
+**CURRENT THEOREM AUTHORITY / PROOF GATES (2026-10-27 JST, PZ37ZF #5941 MERGED)**
+
+- Sole theorem branch: `formal/real-hilbert-uniform-coercive-strong-limit`; exact verified HEAD = PZ37ZF squash `2d59cfc970cd358e29263577e2f8c76c688e35f9` ([PR #5941](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5941)). Source-HEAD [CI #40479003824](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40479003824) **11,091/11,091 SUCCESS**, changed Lean warnings/errors **0/0**, four public `#print axioms` only `propext`/`Classical.choice`/`Quot.sound`. The #5935/PZ37ZA “latest” entries farther below are historical checkpoint receipts, not the current HEAD.
+- **#5937 PZ37ZB — CLOSED:** genuine all-link/all-context three-mode GL Gram singular at fine zero; no positive coefficient-ℓ² frame *including* zero.
+- **#5938 PZ37ZC — CLOSED:** arbitrary original Gauss-law physical `f` and genuine spatial patch `S`: `M_GL(f,S) ≤ 2 e^(16b) |S| ‖f‖²` at frozen `b>0` (upper only; no surrogate, no finite-mode assumption).
+- **#5939 PZ37ZD — CLOSED:** at every finite depth/fine, true GL Gram upper quadratic comparison `B_GL ⪯ (1+2|Links(H)|e^(16b)) P_phys` and explicit 3-mode trace upper; a lower comparison constant exists *per finite model*, with no uniform `c_H` asserted.
+- **#5940 PZ37ZE — CLOSED:** exact true physical cancellation source `F_t=U-T_tU` obeys `M_GL(F_t) ≤ 2|Links(H)|e^(16b) ‖T_t-T_0‖² →0` as fine `t↓0` at fixed `H,b`.
+- **#5941 PZ37ZF — CLOSED:** for every positive `δ,ε`, some **strictly positive** `t<δ` has `F_t≠0` and `M_GL(F_t)<ε`; the fixed coefficient `(1,-1)` cannot have a uniformly positive coefficient-ℓ² GL floor over a punctured fine window.
+- **OPEN / do not confuse:** `M_GL(F_t)/‖F_t‖²` for the **nonzero, physically normalized** source; genuine full-link posterior covariance and volume/spacing-uniform lower bounds; same-endpoint source E; positive fine at all depths F; strong-limit H1–H4; continuum mass gap. The two-context `Q_GI/N_H` floor was *disproved* by PZ37ZA, not reopened by ZB–ZF. Positive-fine 3-mode Gram definiteness proved earlier remains true at each sufficiently small positive fine; a shared coefficient lower across `t↓0` is a different quantification.
+- **Next PZ37ZG (tentative):** inspect actual Wilson first-order physical cancellation source and normalized posterior GL mass ratio. Keep Gauss-law physical Hilbert and unchanged interacting SU(2) Wilson posterior integrals; investigate true covariance/compactness obstructions only once their hypotheses are proved. Docs-only updates must not trigger unnecessary Strict Lean.
+
+---
+
+
 **2026-10-27 JST · 唯一のLean定理正本：`formal/real-hilbert-uniform-coercive-strong-limit` · 最新検証済みtheorem-bearing squash HEAD：[`56e3ee8b7bda5454f8cc2adc51abe14b5dcd7300`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/56e3ee8b7bda5454f8cc2adc51abe14b5dcd7300)（[#5935 PZ37ZA](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5935)）。default `main`は定理正本ではない。**
 
 **最新到達（PZ37ZA）：** 元の真正SU(2) Wilson・二相互作用posterior・Gauss-law物理Hilbert・参照積Haar・frozen/fine結合を保持。PZ37Q–Yで全有限Hの小正fine三モード物理rank3・元の3モードGL積分Gram coercivityと `det G_H^GL≥c_H³D3(H,t)>0` を証明済み。PZ37Z #5933は異なる量 `Q_{H,b}(e,e',z,z')=Σ_{p∈P_H}d_{H,b,p}²` の `Q_H/N_H` に関し、文脈選択型の一様正下界と固定絶対閾値・正のGI活動割合の同値を証明した。しかし**PZ37ZA #5935でこの二文脈補償済みGI densityの実在側を否定した**。元の四リンク支持と有限重なり（24）、中心化Wilsonプラケットの積Haar独立性、補償済みGI二文脈汎関数ノルム `≤2E_b²` から、**全H・全リンク・全境界文脈で `Q_H≤96E_b⁴`**。実際のプラケット数 `N_H≥2(H+1)` により**固定 `b≥0` の `Q_H/N_H` はどのH依存文脈を選んでも一様正下界を持てない**。変動 `b_H` で元のHarnack共通上界 `(4E_{b_H}²)²≤K` を置けば `Q_H≤6K` で同じ結論。PZ37Zの同値は論理的に正しく、双方が偽となる。**限定：** 二文脈補償済み密度のno-goであり、元の全リンク・全文脈GL積分質量の一様coercivity、元の3モードの有限H正値性、endpoint E、任意深さF、強極限H1–H4・4D Yang–Mills質量ギャップの否定ではない。次に必要なのは十分条件の言い換えでなく、同一source/endpointに沿う真正full-link GL積分・相関の解析的一様評価。
