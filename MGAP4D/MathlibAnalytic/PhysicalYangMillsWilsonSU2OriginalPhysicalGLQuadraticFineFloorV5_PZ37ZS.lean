@@ -135,9 +135,13 @@ theorem p4Q2PZ37ZS_originalStaticCoefficients_norm_sq_ge_WilsonComponent
   let a := p4Q2PZ37ZS_originalPhysicalStaticCoefficients H t
   have hCoord : ‖a (1 : Fin 2)‖ ≤ ‖a‖ :=
     norm_le_pi_norm a (1 : Fin 2)
-  have hSq := pow_le_pow_left₀ (norm_nonneg _) hCoord 2
-  simpa [a, p4Q2PZ37ZS_originalPhysicalStaticCoefficients,
-    Real.norm_eq_abs, sq_abs] using hSq
+  have hSq : ‖a (1 : Fin 2)‖^2 ≤ ‖a‖^2 :=
+    pow_le_pow_left₀ (norm_nonneg _) hCoord 2
+  have hElem : a (1 : Fin 2) =
+      p4Q2PZ37ZS_originalRawInverseNorm H t * (t : ℝ) / 2 := by
+    dsimp [a, p4Q2PZ37ZS_originalPhysicalStaticCoefficients]
+  rw [hElem, Real.norm_eq_abs] at hSq
+  simpa only [sq_abs] using hSq
 
 
 /-- The genuine static two-mode GL mass controls the squared coefficient
@@ -450,7 +454,9 @@ theorem p4Q2PZ37ZS_originalWilsonActionBudget_pos (H : ℕ) :
     p4Q2PZ37ZF_originalPhysicalCancellation_ne_zero_smallPositive H
   by_contra hn
   have hZero : B = 0 := le_antisymm (le_of_not_gt hn) hB
-  let t : Set.Ici (0 : ℝ) := ⟨delta / 2, by positivity⟩
+  let t : Set.Ici (0 : ℝ) := ⟨delta / 2, by
+    change (0 : ℝ) ≤ delta / 2
+    linarith⟩
   have ht : 0 < (t : ℝ) := by
     change 0 < delta / 2
     positivity
