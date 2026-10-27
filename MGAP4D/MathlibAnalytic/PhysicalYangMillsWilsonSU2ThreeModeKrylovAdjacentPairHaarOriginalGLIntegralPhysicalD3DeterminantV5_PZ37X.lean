@@ -88,8 +88,13 @@ theorem p4Q2PZ37X_finThree_quadratic_floor_eigenvalues
       ⟪u, u⟫_ℝ = ‖u‖ ^ 2 := real_inner_self_eq_norm_sq u
       _ = 1 := by rw [hUnit]; norm_num
   have hCoeff : (∑ j : Fin 3, (a j) ^ 2) = 1 := by
-    simpa [PiLp.inner_apply, a, real_inner_self_eq_norm_sq,
-      Real.norm_eq_abs, sq_abs] using hInner
+    have hDot : a ⬝ᵥ star a = 1 := by
+      calc
+        a ⬝ᵥ star a = ⟪u, u⟫_ℝ := by
+          simpa only [a] using
+            (EuclideanSpace.inner_eq_star_dotProduct u u).symm
+        _ = 1 := hInner
+    simpa only [dotProduct, star_trivial, pow_two] using hDot
   have hValue :
       star a ⬝ᵥ (G *ᵥ a) = hG.isHermitian.eigenvalues i := by
     simpa [a] using (hG.isHermitian.eigenvalues_eq i).symm
