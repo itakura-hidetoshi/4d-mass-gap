@@ -92,7 +92,9 @@ theorem p4Q2PZ37ZV_originalRawVacuumExpectation_firstOrder_error
       _ = inner ℝ (U + (t : ℝ) • D) U + inner ℝ E U :=
         inner_add_left _ _ _
       _ = inner ℝ U U + inner ℝ ((t : ℝ) • D) U +
-            inner ℝ E U := by rw [inner_add_left]
+            inner ℝ E U := by
+        exact congrArg (fun z : ℝ => z + inner ℝ E U)
+          (inner_add_left U ((t : ℝ) • D) U)
       _ = 1 + (t : ℝ) * inner ℝ D U + inner ℝ E U := by
         rw [real_inner_smul_left, real_inner_self_eq_norm_sq, hU]
         ring
