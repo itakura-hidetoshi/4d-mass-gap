@@ -34,9 +34,9 @@ set_option synthInstance.maxHeartbeats 1050000
 /-- A real nonnegative symmetric bilinear form whose diagonal has a
 quadratic norm bound has a continuous quadratic value. -/
 theorem p4Q2PZ37ZW2_bounded_positive_bilinear_quadratic_continuous
-    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    {E : Type*} [NormedAddCommGroup E]
     (B : LinearMap.BilinForm ℝ E)
-    (hSym : B.IsSymm)
+    (hSym : LinearMap.IsSymm B)
     (hPos : ∀ x : E, 0 ≤ B x x)
     (C : ℝ) (hC : 0 ≤ C)
     (hUpper : ∀ x : E, B x x ≤ C * ‖x‖^2) :
@@ -76,9 +76,9 @@ theorem p4Q2PZ37ZW2_bounded_positive_bilinear_quadratic_continuous
     continuous_norm.continuousAt
   have hSub :
       Tendsto (fun x : E => ‖x-y‖) (𝓝 y) (𝓝 (0 : ℝ)) := by
-    simpa only [sub_self, norm_zero] using
-      ((continuous_id.sub continuous_const).norm.continuousAt :
-        Tendsto (fun x : E => ‖x-y‖) (𝓝 y) (𝓝 ‖y-y‖))
+    have hh : ContinuousAt (fun x : E => ‖x-y‖) y :=
+      (continuous_id.sub continuous_const).norm.continuousAt
+    simpa only [ContinuousAt, sub_self, norm_zero, id_eq] using hh
   have hProd :
       Tendsto (fun x : E => C * (‖x‖+‖y‖) * ‖x-y‖)
         (𝓝 y) (𝓝 (0 : ℝ)) := by
@@ -215,7 +215,7 @@ theorem p4Q2PZ37ZW2_originalGIContinuousSourceDetector_integrable
   rw [← p4Q2PZ37ZW2_originalGIContinuousSourceDetector_eq_originalGI H b hb e z f]
 
 /-- Original full-link complete-pair-Haar real bilinear GL form on
-the dense (not assumed complete) continuous-represented physical
+the linear (not assumed complete) continuous-represented physical
 source submodule. -/
 noncomputable def p4Q2PZ37ZW2_originalFullLinkGLPhysicalBilinear
     (H : ℕ) (b : ℝ) (hb : 0 < b) :
@@ -278,8 +278,8 @@ theorem p4Q2PZ37ZW2_originalFullLinkGLPhysicalMass_continuous
   let E := p4Q2PZ37ZW2_originalContinuousPhysicalSources H
   let B := p4Q2PZ37ZW2_originalFullLinkGLPhysicalBilinear H b hb
   let C := p4Q2PZ37ZG_originalFullLinkGL_RayleighCap H b
-  have hSym : B.IsSymm := by
-    rw [LinearMap.isSymm_def]
+  have hSym : LinearMap.IsSymm B := by
+    refine ⟨?_⟩
     intro f g
     simpa only [RingHom.id_apply] using
       p4Q2PZ37ZW2_originalFullLinkGLPhysicalBilinear_symm H b hb f g
