@@ -1,5 +1,16 @@
 # MGAP4D — 証明ロードマップ（P4-Q2-PZ37ZA #5935統合済み／次は全リンク・全文脈の真正GL質量一様制御とendpoint source transport）
 
+**LATEST VERIFIED THEOREM AUTHORITY / NEXT GATE — 2026-10-27 JST, PZ37ZG #5943 MERGED**
+
+- Sole theorem carrier: `formal/real-hilbert-uniform-coercive-strong-limit`; verified theorem-bearing squash [`49467c2542e4a4b565ec480f04884f9c97c57abe`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/49467c2542e4a4b565ec480f04884f9c97c57abe), distinct from tested source `77d50b0c0d6bc90aa3b8a243bdf3ae50aeef37e8` ([PR #5943](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5943)).
+- Exact source-head [CI #40483971949](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40483971949): **11,092/11,092 SUCCESS**, changed Lean warning/error **0/0**, four new public axiom audits only `propext`, `Classical.choice`, `Quot.sound`; independent MCP completion receipt SUCCESS.
+- **CLOSED (PZ37ZG):** for every nonzero genuine Gauss-law physical `f`, the full-link true interacting Wilson-posterior GL Rayleigh `R=M_GL(f)/‖f‖²` satisfies `0≤R≤2|Links(H)|e^(16b)`. On each finite original right-Krylov physical source subspace a strictly positive model-dependent lower `c(H,b,t,r)` exists for nonzero sources, using previously proved PZ37U; no new coercivity assumption. For the true `F_t=U-T_tU≠0` at sufficiently small positive fine, the same explicit upper Rayleigh cap holds.
+- **OPEN (next PZ37ZH tentative):** a named *literal* Lean equality `F_t=S_1(1,-1)` and direct strict `R(F_t)>0` via existing OX/U; the small-fine normalized-source direction and leading original Wilson analytic jet; existence/positivity of a ratio limit; fine-, volume- and scale-uniform physical norm lower bounds; endpoint E, arbitrary-depth common window F, H1–H4, continuum gap.
+- **Logical separation:** `M_GL(F_t)→0` does not determine `M_GL(F_t)/‖F_t‖²`. The PZ37ZF coefficient frame no-go **is not** a physical-source Hilbert coercivity no-go; PZ37ZA already disproved the separate bounded compensated two-context `Q_GI/N_H` uniform-density sufficient condition.
+- **Historical documents:** the PZ37ZF and PZ37ZA "CURRENT/LATEST" checkpoint text below is retained as dated history, not current authority. This is a docs-only appended checkpoint: do not run Strict Lean for this change.
+
+---
+
 **CURRENT THEOREM AUTHORITY / PROOF GATES (2026-10-27 JST, PZ37ZF #5941 MERGED)**
 
 - Sole theorem branch: `formal/real-hilbert-uniform-coercive-strong-limit`; exact verified HEAD = PZ37ZF squash `2d59cfc970cd358e29263577e2f8c76c688e35f9` ([PR #5941](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5941)). Source-HEAD [CI #40479003824](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40479003824) **11,091/11,091 SUCCESS**, changed Lean warnings/errors **0/0**, four public `#print axioms` only `propext`/`Classical.choice`/`Quot.sound`. The #5935/PZ37ZA “latest” entries farther below are historical checkpoint receipts, not the current HEAD.
