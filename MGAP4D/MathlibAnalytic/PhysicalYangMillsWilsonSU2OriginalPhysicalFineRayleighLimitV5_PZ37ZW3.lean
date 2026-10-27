@@ -104,7 +104,7 @@ theorem p4Q2PZ37ZW3_originalFullPhysicalTangent_has_continuousRepresentative
       (s / 2) • p4Q2JI_actualSpatialWilsonContinuous H -
         s • (r • ψErr), ?_⟩
   change
-    (((a • U + ((s / 2) • W - s • Err) : Phys) : Lp ℝ 2 haar) =
+    ((a • U + ((s / 2) • W - s • Err) : Phys) : Lp ℝ 2 haar) =
       L (a • (1 : C(Cfg, ℝ)) +
         (s / 2) • p4Q2JI_actualSpatialWilsonContinuous H - s • (r • ψErr))
   simp only [Submodule.coe_add, Submodule.coe_sub, Submodule.coe_smul,
@@ -168,7 +168,7 @@ theorem p4Q2PZ37ZW3_originalGLMass_smul
       (p4Q2PZ37ZW2_originalFullLinkGLPhysicalBilinear_self_eq_originalGL
         H b hb (c • f)).symm
     _ = c^2 * B f f := by
-      simp only [map_smul, smul_eq_mul]
+      simp only [map_smul, LinearMap.smul_apply, smul_eq_mul]
       ring
     _ = c^2 *
       p4Q2GL_originalWilsonSignedGapSquareDivVarianceSpatialMass
@@ -195,8 +195,14 @@ theorem p4Q2PZ37ZW3_originalGLRayleigh_smul
       (f : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2)
       (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSliceLink H)) /
       ‖f‖^2 := by
-  rw [p4Q2PZ37ZW3_originalGLMass_smul, norm_smul,
-    Real.norm_eq_abs, mul_pow, sq_abs]
+  let Phys :=
+    periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2
+  have hNorm :
+      ‖(c • f : p4Q2PZ37ZW2_originalContinuousPhysicalSources H)‖ =
+        |c| * ‖f‖ := by
+    change ‖c • (f : Phys)‖ = |c| * ‖(f : Phys)‖
+    rw [norm_smul, Real.norm_eq_abs]
+  rw [p4Q2PZ37ZW3_originalGLMass_smul, hNorm, mul_pow, sq_abs]
   exact mul_div_mul_left _ _ (pow_ne_zero 2 hc)
 
 /-- The numerator is continuous along the actual lifted normalized
@@ -220,7 +226,7 @@ theorem p4Q2PZ37ZW3_originalTangentGLMass_tendsto_center
   have hContAt :=
     (p4Q2PZ37ZW2_originalFullLinkGLPhysicalMass_continuous H b hb).continuousAt
       (x := p4Q2PZ37ZW3_originalCenteredPhysicalLift H)
-  exact hContAt.comp (p4Q2PZ37ZW3_originalFullPhysicalTangentLift_tendsto H)
+  exact hContAt.tendsto.comp (p4Q2PZ37ZW3_originalFullPhysicalTangentLift_tendsto H)
 
 /-- ORIGINAL unnormalized Wilson cancellation has the exact positive-
 fine physical-Hilbert identity F_t=t*(ZV true tangent). -/
@@ -234,7 +240,9 @@ theorem p4Q2PZ37ZW3_originalPhysicalCancellation_eq_fine_smulLift
     (t : ℝ) • p4Q2PZ37ZV2_originalFullPhysicalTangentExtension H t
   rw [← p4Q2PZ37ZV2_originalFullPhysicalTangentExtension_positive H t ht,
     smul_smul]
-  simp [ne_of_gt ht]
+  have hc : (t : ℝ) * (t : ℝ)⁻¹ = 1 := by
+    field_simp [ne_of_gt ht]
+  rw [hc, one_smul]
 
 /-- Original full-link GL mass divided by fine² converges from
 STRICTLY POSITIVE fine to the genuine centered Wilson physical GL mass. -/
