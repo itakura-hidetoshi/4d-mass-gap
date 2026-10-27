@@ -73,7 +73,8 @@ theorem p4Q2PZ37ZV2_originalRawNormSlopeExtension_positive
       (t : ℝ)⁻¹ *
         (‖periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabTransferOperator
           H 2 specialUnitaryTwoWilsonRankPositive (t : ℝ) t.property‖ - 1) := by
-  simp [p4Q2PZ37ZV2_originalRawNormSlopeExtension, (ne_of_gt ht)]
+  unfold p4Q2PZ37ZV2_originalRawNormSlopeExtension
+  rw [if_neg (ne_of_gt ht)]
 
 /-- Uniform first-order error for the continuously extended genuine
 raw-norm quotient, including fine zero. -/
@@ -94,7 +95,10 @@ theorem p4Q2PZ37ZV2_originalRawNormSlopeExtension_linearError
   let B : ℝ := periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget H
   let d : ℝ := inner ℝ D U
   by_cases ht0 : (t : ℝ) = 0
-  · simp [p4Q2PZ37ZV2_originalRawNormSlopeExtension, ht0]
+  · have htEq : t = (⟨0, le_refl (0 : ℝ)⟩ : Set.Ici (0 : ℝ)) :=
+      Subtype.ext ht0
+    rw [htEq]
+    simp [p4Q2PZ37ZV2_originalRawNormSlopeExtension]
   · have ht : 0 < (t : ℝ) := lt_of_le_of_ne t.property (Ne.symm ht0)
     have h9 : |‖R‖ - (1 + (t : ℝ) * d)| ≤ 9 * (B * (t : ℝ))^2 :=
       p4Q2PZ37ZV_originalPhysicalRawNorm_firstOrder_error H t hsmall
@@ -105,7 +109,6 @@ theorem p4Q2PZ37ZV2_originalRawNormSlopeExtension_linearError
         (t : ℝ)⁻¹ * (‖R‖ - 1) - d =
           (t : ℝ)⁻¹ * (‖R‖ - (1 + (t : ℝ) * d)) := by
       field_simp [ht0]
-      ring
     rw [hIdentity, abs_mul, abs_inv, abs_of_pos ht]
     calc
       (t : ℝ)⁻¹ * |‖R‖ - (1 + (t : ℝ) * d)| ≤
@@ -220,7 +223,11 @@ theorem p4Q2PZ37ZV2_originalLongitudinalSlopeExtension_tendsto
   have hq : Tendsto q (𝓝 t0) (𝓝 d) :=
     p4Q2PZ37ZV2_originalRawNormSlopeExtension_tendsto H
   have hCoeff : d + k = -(1 / 2 : ℝ) * w := by
-    dsimp [d, k, w]
+    change inner ℝ (p4Q2PZ37ZQ_originalPhysicalRawDerivative H)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2) +
+      p4Q2JE_originalWilsonHaarZeroDerivativeConstant H =
+      -(1 / 2 : ℝ) * inner ℝ (p4Q2JU_originalSpatialWilsonPhysicalSource H)
+        (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2)
     rw [p4Q2PZ37ZV_originalPhysicalRawDerivative_vacuum_coeff H]
     ring
   have hProd : Tendsto (fun t : Set.Ici (0 : ℝ) => s t * (q t + k))
@@ -258,7 +265,8 @@ theorem p4Q2PZ37ZV2_originalFullPhysicalTangentExtension_positive
   have hQ :=
     p4Q2PZ37ZT_originalScalarCorrectedTangent_eq_truePhysical H t ht
   change (t : ℝ)⁻¹ • F =
-    p4Q2PZ37ZV2_originalLongitudinalSlopeExtension H t • U + Q
+    p4Q2PZ37ZV2_originalLongitudinalSlopeExtension H t • U +
+      p4Q2PZ37ZT_originalScalarCorrectedTangent H t
   rw [← hLong, hQ]
   rw [smul_sub, smul_smul]
   module
