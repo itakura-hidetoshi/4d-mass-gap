@@ -45,6 +45,14 @@ local instance p4Q2PZ37ZW_measurableSpace :
 local instance p4Q2PZ37ZW_borelSpace :
     BorelSpace (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
   specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37ZW_SU2_normalizedHaarOpenPos :
+    (normalizedCompactHaar (Matrix.specialUnitaryGroup (Fin 2) ℂ)).IsOpenPosMeasure := by
+  unfold normalizedCompactHaar
+  infer_instance
+local instance p4Q2PZ37ZW_spatialHaarOpenPos (H : ℕ) :
+    (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2).IsOpenPosMeasure := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
 private noncomputable instance p4Q2PZ37ZW_linkFintype (H : ℕ) :
     Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
   Fintype.ofFinite _
@@ -81,9 +89,10 @@ theorem p4Q2PZ37ZW_originalCenteredCoefficients_ne_zero
     (H : ℕ) :
     p4Q2PZ37ZW_originalCenteredCoefficients H ≠ 0 := by
   intro h
-  have hOne := congrArg (fun a : Fin 2 → ℝ => a (1 : Fin 2)) h
-  rw [p4Q2PZ37ZW_originalCenteredCoefficients_one] at hOne
-  norm_num at hOne
+  have hOne : p4Q2PZ37ZW_originalCenteredCoefficients H (1 : Fin 2) =
+      (0 : Fin 2 → ℝ) (1 : Fin 2) :=
+    congrArg (fun a : Fin 2 → ℝ => a (1 : Fin 2)) h
+  norm_num [p4Q2PZ37ZW_originalCenteredCoefficients] at hOne
 
 /-- Identification with the original TWO physical sources U_H and W_H.
 The Wilson coordinate is literally 1/2, independent of the mean. -/
