@@ -34,7 +34,7 @@ set_option synthInstance.maxHeartbeats 1050000
 /-- A real nonnegative symmetric bilinear form whose diagonal has a
 quadratic norm bound has a continuous quadratic value. -/
 theorem p4Q2PZ37ZW2_bounded_positive_bilinear_quadratic_continuous
-    {E : Type*} [NormedAddCommGroup E]
+    {E : Type*} [NormedAddCommGroup E] [Module ℝ E]
     (B : LinearMap.BilinForm ℝ E)
     (hSym : LinearMap.IsSymm B)
     (hPos : ∀ x : E, 0 ≤ B x x)
