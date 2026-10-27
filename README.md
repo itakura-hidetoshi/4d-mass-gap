@@ -2,6 +2,20 @@
 
 **Original interacting Wilson theory · Gauss-law physical Hilbert space · Lean 4 + mathlib · Hidetoshi Itakura**
 
+> **LATEST VERIFIED THEOREM — 2026-10-27 JST · PZ37ZG [PR #5943](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5943) MERGED.** Sole theorem-authoritative branch: `formal/real-hilbert-uniform-coercive-strong-limit`. Verified theorem-bearing squash SHA [`49467c2542e4a4b565ec480f04884f9c97c57abe`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/49467c2542e4a4b565ec480f04884f9c97c57abe); tested source SHA `77d50b0c0d6bc90aa3b8a243bdf3ae50aeef37e8`; exact-head [CI #40483971949](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40483971949): **11,092/11,092 SUCCESS**, changed-file warning/error **0/0**, all four new public `#print axioms` restricted to `propext`, `Classical.choice`, `Quot.sound`, independent MCP completion receipt **SUCCESS**. The older PZ37ZF/PZ37ZA "CURRENT" headings below are dated historical checkpoints, not the live theorem HEAD.
+
+### PZ37ZG: original Wilson physical-source-normalized GL Rayleigh bounds
+
+For the **unchanged genuine two-interacting-SU(2)-Wilson-posterior** full spatial-link and pair-boundary Haar GL mass, define `R(H,b;f)=M_GL(H,b;f)/‖f‖²` only as a physical Rayleigh quotient for **nonzero** Gauss-law Hilbert source `f`. At each finite `H` and frozen `b>0`,
+
+```text
+0 ≤ R(H,b;f) ≤ 2 |Links(H)| / exp(-16b),      f ≠ 0.
+```
+
+PZ37U supplies a strictly positive **model-dependent** lower `c(H,b,t,r)>0` on nonzero source vectors in each finite genuine right-Krylov physical source subspace; PZ37ZG transports it to the **ratio** while preserving the explicit upper bound independent of fine coupling/depth at fixed `H,b`. PZ37ZF supplies a genuine interval of small positive fine `t` with `F_t=U-T_t U ≠ 0`; PZ37ZG proves `0≤R(H,b;F_t)≤2|Links(H)|exp(16b)` there. The new file does **not** separately identify the specific `F_t` with the `HJ` depth-one synthesis in a named Lean theorem, and does **not** prove a fine-uniform positive lower bound or `lim_(t↓0)R(H,b;F_t)`. Unnormalized `M_GL(F_t)→0` and failure of a coefficient-ℓ² frame do **not** imply a physical norm coercivity no-go.
+
+**Next precise gate (PZ37ZH tentative):** formalize the literal `F_t=S_1(1,-1)` bridge, derive pointwise strict normalized GL positivity from the original `OX/U` posterior kernel comparison, and determine whether the normalized direction has an analytic leading fine jet whose actual Wilson posterior covariance has a controlled positive limit. Any `H`-uniform estimate, common physical endpoint E, all-depth common window F, H1–H4 and continuum gap remain **OPEN**. PZ37ZA's disproved bounded compensated *two-context* `Q_GI/N_H` density cannot be reintroduced.
+
 > **CURRENT VERIFIED THEOREM CHECKPOINT — 2026-10-27 JST · PZ37ZF [PR #5941](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5941) MERGED.** Only theorem-authoritative branch: `formal/real-hilbert-uniform-coercive-strong-limit`; verified squash/HEAD: [`2d59cfc970cd358e29263577e2f8c76c688e35f9`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/2d59cfc970cd358e29263577e2f8c76c688e35f9). Exact-source CI [#40479003824](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40479003824): **11,091/11,091 SUCCESS**, changed Lean warning/error 0/0, four new public theorem axioms only `propext`, `Classical.choice`, `Quot.sound`. The earlier text below headed “Latest verified theorem checkpoint ... PZ37ZA” is the **historical #5935 checkpoint**, not the current theorem HEAD.
 
 ### Verified PZ37ZB–ZF: genuine full-link GL mass versus physical-source norm and fine scale
