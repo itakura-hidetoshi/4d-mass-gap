@@ -104,8 +104,7 @@ theorem p4Q2PZ37ZA_originalTwoContextDeterminant_centered_eq_minor
       p4Q2LW_originalCompensatedLocalGIMinor H b hb e e' z z' p := by
   rw [p4Q2PZ37ZA_originalCenteredPlaquetteHaarSource, map_sub, map_smul,
     p4Q2PZ37ZA_originalTwoContextDeterminant_unit_zero]
-  simp only [smul_zero, sub_zero,
-    p4Q2PZ37ZA_originalTwoContextDeterminantCLM,
+  simp only [p4Q2PZ37ZA_originalTwoContextDeterminantCLM,
     ContinuousLinearMap.sub_apply, ContinuousLinearMap.smul_apply, smul_eq_mul,
     p4Q2LW_originalCompensatedLocalGIMinor]
   ring
@@ -128,7 +127,7 @@ theorem p4Q2PZ37ZA_originalGISquareEnergy_le_of_centered_synthesis
   have hnorm := p4Q2PZ37ZA_originalTwoContextDeterminant_norm_le H b hb e e' z z'
   have hnormSq : ‖D e e' z z'‖ ^ 2 ≤ (2 * E ^ 2) ^ 2 := by
     nlinarith [mul_nonneg (sub_nonneg.mpr hnorm)
-      (add_nonneg (by positivity : 0 ≤ 2 * E ^ 2) (norm_nonneg _))]
+      (add_nonneg (by positivity : 0 ≤ 2 * E ^ 2) (norm_nonneg (D e e' z z')))]
   change (∑ p, (p4Q2LW_originalCompensatedLocalGIMinor H b hb e e' z z' p) ^ 2) ≤ _
   calc
     _ ≤ B * ‖D e e' z z'‖ ^ 2 := hBessel
