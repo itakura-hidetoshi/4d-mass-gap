@@ -111,7 +111,6 @@ theorem p4Q2PZ37Z_originalGI_energyFloor_implies_absoluteActive_density
         (div_le_div_iff_of_pos_right (by norm_num : (0 : ℝ) < 2)).mpr hEnergy
       _ = Q e e' z z' / (2 * N) := by
         field_simp [ne_of_gt hN]
-        ring
   have hSubset :
       p4Q2MB_originalActiveGISpatialPlaquettes H b hb e e' z z' ⊆
         p4Q2PZ37Z_originalGIAbsoluteActivePlaquettes
@@ -169,7 +168,7 @@ theorem p4Q2PZ37Z_originalGI_absoluteActive_implies_energyFloor
   have hLower : τ * (active.card : ℝ) ≤ Q e e' z z' := by
     calc
       τ * (active.card : ℝ) = ∑ p ∈ active, τ := by
-        simp only [Finset.sum_const_zero, Finset.sum_const, nsmul_eq_mul]
+        simp only [Finset.sum_const, nsmul_eq_mul]
         ring
       _ ≤ ∑ p ∈ active, (d e e' z z' p) ^ 2 := hOn
       _ ≤ ∑ p : Plaq, (d e e' z z' p) ^ 2 := hAll
@@ -214,12 +213,11 @@ def p4Q2PZ37Z_contextSelectableOriginalGIUniformAbsoluteActivity
 /-- Exact U0-type criterion for the unchanged ORIGINAL Wilson spatial
 GI minors. The size of the threshold and of the active fraction is
 uniform in H, but the existence of such witnesses is NOT proved here.
-The count-positivity premise concerns the genuine original plaquette
-carrier; it is independent of any spectral lower or frame hypothesis. -/
+The genuine count positivity is obtained directly from LY's existing
+original Wilson witness theorem at the already chosen real contexts,
+NOT postulated as an additional all-volume hypothesis. -/
 theorem p4Q2PZ37Z_contextSelectableOriginalGI_uniformDensity_iff_absoluteActivity
-    (b : ℝ) (hb : 0 ≤ b) (hbpos : 0 < b)
-    (hcount : ∀ H : ℕ,
-      0 < (p4Q2LP_originalSpatialPlaquetteCount H : ℝ)) :
+    (b : ℝ) (hb : 0 ≤ b) (hbpos : 0 < b) :
     p4Q2PZ37Z_contextSelectableOriginalGIUniformDensity b hb ↔
       p4Q2PZ37Z_contextSelectableOriginalGIUniformAbsoluteActivity b hb := by
   constructor
@@ -235,17 +233,27 @@ theorem p4Q2PZ37Z_contextSelectableOriginalGI_uniformDensity_iff_absoluteActivit
       div_pos hε (by norm_num), div_pos hε hDen, ?_⟩
     intro H
     obtain ⟨e, e', z, z', hEnergy⟩ := hWit H
+    have hN : 0 < (p4Q2LP_originalSpatialPlaquetteCount H : ℝ) := by
+      obtain ⟨_, _, _, _, hn, _⟩ :=
+        p4Q2LY_originalPhysicalLocalGI_exists_squareEnergy_floor
+          H b hb hbpos e e' z.1 z.2
+      exact hn
     refine ⟨e, e', z, z', ?_⟩
     simpa only [M, E] using
       (p4Q2PZ37Z_originalGI_energyFloor_implies_absoluteActive_density
-        H b hb hbpos (hcount H) ε e e' z z' hEnergy)
+        H b hb hbpos hN ε e e' z z' hEnergy)
   · rintro ⟨τ, ρ, hτ, hρ, hWit⟩
     refine ⟨τ * ρ, mul_pos hτ hρ, ?_⟩
     intro H
     obtain ⟨e, e', z, z', hActivity⟩ := hWit H
+    have hN : 0 < (p4Q2LP_originalSpatialPlaquetteCount H : ℝ) := by
+      obtain ⟨_, _, _, _, hn, _⟩ :=
+        p4Q2LY_originalPhysicalLocalGI_exists_squareEnergy_floor
+          H b hb hbpos e e' z.1 z.2
+      exact hn
     exact ⟨e, e', z, z',
       p4Q2PZ37Z_originalGI_absoluteActive_implies_energyFloor
-        H b hb (hcount H) τ ρ hτ.le e e' z z' hActivity⟩
+        H b hb hN τ ρ hτ.le e e' z z' hActivity⟩
 
 end GroundStatePosteriorJoint
 end
