@@ -1,5 +1,16 @@
 # MGAP4D — 証明ロードマップ（P4-Q2-PZ37ZA #5935統合済み／次は全リンク・全文脈の真正GL質量一様制御とendpoint source transport）
 
+**LATEST VERIFIED PZ37ZI — 2026-10-27 JST · [PR #5947](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5947) MERGED**
+
+- Sole theorem carrier: `formal/real-hilbert-uniform-coercive-strong-limit`; exact tested PZ37ZI source `f3a849f736334be71c6424f7ba6aa3a769249eda`; verified theorem-bearing squash [`87f187014c78222fd84e275a8d3b8bc19e6d6a36`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/87f187014c78222fd84e275a8d3b8bc19e6d6a36). Default `main` is not authority.
+- Exact source-head [CI #40491398111](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40491398111): **11,107/11,107 SUCCESS**, changed Lean warning/error **0/0**, four new public `#print axioms` all limited to `propext`/`Classical.choice`/`Quot.sound`, independent MCP completion receipt SUCCESS; no new axiom, sorry, admit or native_decide.
+- **CLOSED:** PZ37ZI combines genuine AQ global raw/normalized original Wilson physical transfer estimate with PZ37ZE/ZC and PZ37ZH. For any finite H, frozen b>0 and fine t≥0, with `B_H` the original plaquette/temporal crossing action budget and `L_H` original spatial-link count: `‖T_t-T_0‖≤2B_Ht`, `‖U-T_tU‖≤2B_Ht`, `0≤M_GL(H,b;U-T_tU)≤2L_He^(16b)(2B_Ht)²`. For sufficiently small **positive** fine, PZ37ZH makes that same true all-link two-posterior GL numerator strictly positive. This is fixed-volume `O(t²)`, not normalized-Rayleigh asymptotics or H-uniform lower coercivity.
+- **OPEN / next PZ37ZJ:** actual JG strong original raw one-slab Haar-`L²` first variation `R_t U=U+tD_H+o(t)`; its nonconstant genuine spatial Wilson tangent has `P_(U⊥)D_H ≠0`. Combine `‖R_t‖→1` with the projected cancellation `P_(U⊥)(U-T_tU)` to prove rigorously in Lean the **normalization-insensitive** slope `P_(U⊥)F_t/t→-P_(U⊥)D_H` for positive fine, *without* assuming differentiability of operator norm normalization. Transfer this to a genuine fixed-H linear lower bound on `‖F_t‖` if justified. Full `F_t/t` direction requires normalizer derivative or independent control; genuine GL normalized ratio/covariance needs further work.
+- **STILL OPEN:** source-norm fine-/volume-uniform GL coercivity, limit of `M_GL(F_t)/‖F_t‖²`, endpoint E, arbitrary-depth common fine F, H1–H4 and continuum mass gap. Do not revive PZ37ZA's disproved bounded two-context compensated `Q_GI/N_H` lower floor. Historical PZ37ZH and prior snapshots below remain dated, not latest theorem status.
+- Docs only: do not trigger unnecessary Strict Lean.
+
+---
+
 **LATEST VERIFIED THEOREM / NEXT GATE — 2026-10-27 JST · PZ37ZH #5945 MERGED**
 
 - Sole theorem carrier: `formal/real-hilbert-uniform-coercive-strong-limit`, tested PZ37ZH source SHA `8c258a37a04187cc6c708eef354e88682d7a7f5e`, verified squash theorem [`c2101b5596689ed6dd0939aad60b8c2884f6e3ee`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/c2101b5596689ed6dd0939aad60b8c2884f6e3ee) ([PR #5945](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5945)). Default `main` is not authority.

@@ -2,6 +2,22 @@
 
 **Original interacting Wilson theory · Gauss-law physical Hilbert space · Lean 4 + mathlib · Hidetoshi Itakura**
 
+> **LATEST VERIFIED THEOREM CHECKPOINT — 2026-10-27 JST · PZ37ZI [PR #5947](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5947) MERGED.** Only theorem authority `formal/real-hilbert-uniform-coercive-strong-limit`; genuine theorem-bearing squash [`87f187014c78222fd84e275a8d3b8bc19e6d6a36`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/87f187014c78222fd84e275a8d3b8bc19e6d6a36) matches canonical HEAD immediately after squash; exact tested source `f3a849f736334be71c6424f7ba6aa3a769249eda`. Exact-head [CI #40491398111](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40491398111): **11,107/11,107 SUCCESS**, changed Lean warnings/errors **0/0**, all four public theorem axiom reports only `propext`, `Classical.choice`, `Quot.sound`, independent MCP completion receipt **SUCCESS**. Below PZ37ZH/ZG/ZF/ZA paragraphs remain **dated historical checkpoints**, not current theorem HEAD.
+
+### PZ37ZI: quantitative O(t²) for TRUE Wilson physical full-link GL mass
+
+With unchanged original SU(2) Wilson normalized physical transfer `T_t`, genuine Gauss-law unit `U`, exact original interacting TWO Wilson posterior density-gap/variance full-link/full-boundary Haar mass `M_GL`, define `F_t=U-T_tU`. Let `B_H` be the **literal** original one-slab finite-H Wilson spatial-plaquette + temporal crossing global action budget, and `L_H` actual spatial-link count. For **every finite H**, **every frozen b>0** and **every nonnegative fine t**, the new Lean theorems close:
+
+```text
+‖T_t-T_0‖ ≤ 2 B_H t,
+‖F_t‖ ≤ 2 B_H t,
+0 ≤ M_GL(H,b;F_t) ≤ [2 L_H / exp(-16b)] (2 B_H t)².
+```
+
+In the actual sufficiently small positive-fine interval supplied by PZ37ZF/PZ37ZH, the same numerator is **strictly positive**, despite its rigorous quadratic upper decay. This improves PZ37ZE's qualitative fixed-H `M_GL(F_t)→0` to a uniform-in-fine explicit **O_H,b(t²)** budget, without ANY posterior replacement. `B_H` and `L_H` depend on volume; nothing here proves the source-normalized Rayleigh ratio tends to zero or admits a uniform positive lower bound.
+
+**Next precise tangent gate (PZ37ZJ tentative):** use JG's proved genuine strong Haar-`L²` derivative `A_t=R_tU = U+t D_H+o(t)`, with nonconstant spatial Wilson-action profile `D_H`; use AQ's raw operator-norm continuity `‖R_t‖→1`. The candidate normalization-INVARIANT projected limit is `P_(U⊥) F_t/t → -P_(U⊥) D_H ≠ 0`: projecting perpendicular to the constant source removes the unknown derivative of the scalar operator norm. This projection and its positive slope are **not yet Lean-formalized**; do not claim `F_t/t` itself has a limit until actual operator-norm-normalizer differentiability is proved. Finite-H posterior GL Rayleigh limit, H-uniform coercivity, compatible endpoint E, arbitrary depth F, H1–H4, and continuum 4D Yang–Mills mass gap remain **OPEN**. The separately disproved PZ37ZA bounded compensated two-context `Q_GI/N_H` floor must not be reintroduced.
+
 > **LATEST VERIFIED THEOREM CHECKPOINT — 2026-10-27 JST · PZ37ZH [PR #5945](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5945) MERGED.** Only theorem-authoritative branch: `formal/real-hilbert-uniform-coercive-strong-limit`. Verified theorem squash [`c2101b5596689ed6dd0939aad60b8c2884f6e3ee`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/c2101b5596689ed6dd0939aad60b8c2884f6e3ee); distinct tested source `8c258a37a04187cc6c708eef354e88682d7a7f5e`; exact-head [CI #40489013358](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40489013358): **11,093/11,093 SUCCESS**, changed Lean warning/error **0/0**, seven public `#print axioms` reports each restricted to `propext`, `Classical.choice`, `Quot.sound`; independent MCP completion receipt **SUCCESS**. Older PZ37ZG/ZF/ZA checkpoints below are historical, not the latest theorem HEAD.
 
 ### PZ37ZH: the TRUE Wilson physical cancellation equals literal depth-one source
