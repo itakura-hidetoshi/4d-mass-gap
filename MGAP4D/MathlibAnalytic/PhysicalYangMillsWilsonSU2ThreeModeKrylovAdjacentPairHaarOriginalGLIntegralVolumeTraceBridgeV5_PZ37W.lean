@@ -76,7 +76,7 @@ private theorem p4Q2PZ37W_finThree_single_quad
     ext j
     simp [a]
   rw [hStar]
-  simp only [a, single_one_dotProduct, Matrix.mulVec_apply, dotProduct_single_one]
+  simp only [a, single_one_dotProduct, Matrix.mulVec_single_one]
 
 /-- Quadratic domination on *all* three coefficients implies trace
 domination with the SAME constants. This is pure matrix algebra and
