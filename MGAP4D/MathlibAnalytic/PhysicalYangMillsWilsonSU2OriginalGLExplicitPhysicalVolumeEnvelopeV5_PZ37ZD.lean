@@ -204,8 +204,8 @@ No additional lower estimate is silently assumed. -/
 theorem p4Q2PZ37ZD_allFinite_allFine_originalGL_explicitTraceSandwich
     (hFrozen : 0 < beta n) (e : Link) (left₀ : Cfg) :
     ∃ c : ℝ, 0 < c ∧
-      c * P.trace ≤ (B hFrozen).trace ∧
-      (B hFrozen).trace ≤ Cexp * P.trace := by
+      c * (P).trace ≤ (B hFrozen).trace ∧
+      (B hFrozen).trace ≤ Cexp * (P).trace := by
   obtain ⟨c, _C, hc, _hcC, hCmp⟩ :=
     p4Q2PZ37W_allFinite_allFine_originalGL_physicalGram_quadratic_compare
       (halfExtent := halfExtent) (beta := beta) (hbeta := hbeta)
