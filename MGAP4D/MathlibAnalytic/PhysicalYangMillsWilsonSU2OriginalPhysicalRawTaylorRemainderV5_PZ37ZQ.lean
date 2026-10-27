@@ -126,12 +126,18 @@ theorem p4Q2PZ37ZQ_originalPhysicalRawTaylorError_coe_eq_toLp
       L (p4Q2JF_originalWilsonHaarRowContinuous H (t : ℝ) -
           (1 : C(Cfg, ℝ)) -
           (t : ℝ) • p4Q2JE_originalWilsonHaarZeroDerivativeProfile H)
-  rw [Submodule.coe_sub, Submodule.coe_smul,
+  rw [Submodule.coe_sub, Submodule.coe_sub, Submodule.coe_smul,
     p4Q2JI_actualRawFineUnit_coe_eq_HaarRow H (t : ℝ) t.property,
     p4Q2JU_originalPhysicalUnit_coe_eq_toLp H,
-    p4Q2PZ37ZQ_originalPhysicalRawDerivative_coe_eq_HaarDerivative H,
-    ← p4Q2JE_originalWilsonHaarZeroDerivativeLp,
-    map_sub, map_smul]
+    p4Q2PZ37ZQ_originalPhysicalRawDerivative_coe_eq_HaarDerivative H]
+  change
+    L (p4Q2JF_originalWilsonHaarRowContinuous H (t : ℝ)) -
+      L (1 : C(Cfg, ℝ)) -
+      (t : ℝ) • L (p4Q2JE_originalWilsonHaarZeroDerivativeProfile H) =
+        L (p4Q2JF_originalWilsonHaarRowContinuous H (t : ℝ) -
+          (1 : C(Cfg, ℝ)) -
+          (t : ℝ) • p4Q2JE_originalWilsonHaarZeroDerivativeProfile H)
+  rw [map_sub, map_smul, map_sub]
 
 /-- The true physical Taylor remainder is uniformly O_H(t²) on
 the true original Wilson finite-volume action-budget window.
