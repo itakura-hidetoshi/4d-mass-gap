@@ -133,6 +133,7 @@ theorem p4Q2PZ37ZN_originalStaticPhysicalGI_eq_twoModeRow
   dsimp [ψ]
   rw [map_add, map_smul, map_smul]
   rw [map_add, map_smul, map_smul]
+  simp only [smul_eq_mul]
 
 /-- At fixed finite H and frozen Wilson coupling b>0,
 the ORIGINAL full-link pair-Haar two-interacting-posterior GL mass
