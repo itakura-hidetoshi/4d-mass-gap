@@ -114,6 +114,7 @@ theorem p4Q2PZ37ZW3_originalFullPhysicalTangent_has_continuousRepresentative
     p4Q2JU_originalSpatialWilsonPhysicalSource_coe_eq_toLp H
   simp only [Submodule.coe_add, Submodule.coe_sub, Submodule.coe_smul,
     hU, hW, hErr, map_add, map_sub, map_smul]
+  abel
 
 /-- The true centered source, with the inherited original physical
 Hilbert norm. -/
