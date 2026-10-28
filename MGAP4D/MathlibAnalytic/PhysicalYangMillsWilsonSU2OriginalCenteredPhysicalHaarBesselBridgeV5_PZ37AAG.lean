@@ -67,11 +67,8 @@ theorem p4Q2PZ37AAG_originalSpatialWilsonContinuous_eq_finsetSum
       ∑ p : PeriodicHypercubicEvenSpatialSlicePlaquette H,
         p4Q2LO_originalLocalPlaquetteContinuous H p := by
   classical
-  rw [p4Q2LO_originalSpatialWilsonContinuous_eq_localSum H]
-  simp only [periodicHypercubicEvenSpatialSlicePlaquetteList]
-  simpa using (Finset.sum_map_toList
-    (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSlicePlaquette H))
-    (fun p => p4Q2LO_originalLocalPlaquetteContinuous H p))
+  simpa [periodicHypercubicEvenSpatialSlicePlaquetteList] using
+    (p4Q2LO_originalSpatialWilsonContinuous_eq_localSum H)
 
 /-- Exact original spatial Wilson Haar embedding is the sum of
 original toLp plaquettes; continuous source embedding is real-linear. -/
@@ -145,7 +142,8 @@ theorem p4Q2PZ37AAG_originalPhysicalWilsonMean_eq_plaquetteHaarSum
     induction s using Finset.induction_on with
     | empty => simp
     | @insert p s hp ih =>
-        simp only [Finset.sum_insert hp, real_inner_add_left, ih]
+        simp only [Finset.sum_insert hp]
+        rw [inner_add_left, ih]
   have hMeanLocal (p : Plaq) :
       inner ℝ (L (p4Q2LO_originalLocalPlaquetteContinuous H p))
         (L (1 : C(Cfg, ℝ))) =
@@ -215,6 +213,9 @@ theorem p4Q2PZ37AAG_originalCenteredPhysicalFormula_coe_eq_halfHaarSynthesis
               L (1 : C(Cfg, ℝ)) := by
     simp only [p4Q2PZ37ZA_originalCenteredPlaquetteHaarSource,
       Finset.sum_sub_distrib, Finset.sum_smul]
+    rfl
+  unfold p4Q2PZ37AAF_originalCenteredHaarPlaquetteSynthesis
+  simp only [one_smul]
   change (((1 / 2 : ℝ) • (W - w • U) : Phys) : Lp ℝ 2 haar) =
     (1 / 2 : ℝ) •
       (∑ p : Plaq, p4Q2PZ37ZA_originalCenteredPlaquetteHaarSource H p)
