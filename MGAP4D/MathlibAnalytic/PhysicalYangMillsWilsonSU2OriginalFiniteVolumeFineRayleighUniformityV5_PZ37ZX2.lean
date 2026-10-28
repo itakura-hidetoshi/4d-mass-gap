@@ -90,7 +90,7 @@ theorem p4Q2PZ37ZX2_originalFiniteVolumes_eventually_uniformRayleighError
   | empty =>
     exact Filter.Eventually.of_forall (by
       intro t H hH
-      exact (Finset.not_mem_empty H hH).elim)
+      simp at hH)
   | @insert H S hnot ih =>
     filter_upwards [hSingle H, ih] with t htH htS
     intro K hK
