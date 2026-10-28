@@ -1,5 +1,7 @@
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalCenteredPhysicalHaarBesselBridgeV5_PZ37AAG
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalPosteriorCertifiedPositiveFineRayleighV5_PZ37AAH
+import MGAP4D.MathlibAnalytic.FiniteRealHilbertGramRowBesselBound
+import Mathlib.Probability.Independence.Integration
+import Mathlib.MeasureTheory.Function.L2Space
 import Mathlib.Tactic
 
 /-!
@@ -8,6 +10,13 @@ import Mathlib.Tactic
 The SAME true original Gauss-law centered physical Wilson source V_H has
 its reference product-Haar-L2 norm bounded by 6 P_H (AAG/AAF), where P_H
 is the number of ACTUAL spatial Wilson plaquettes, not an invented volume.
+AAG/AAF cannot be imported together with the ZW/ZP branch at this pinned
+HEAD because two historical modules declare the SAME local-instance name
+p4Q2PZ37ZB_measurableSpace. We preserve BOTH original merged histories
+and independently REPROVE the identical local-Haar centered covariance,
+24-Bessel synthesis, and LO/JU physical representation in this single
+compatible theorem carrier. No axiom or surrogate presentation is used.
+
 The original TWO-interacting-posterior full-link full-pair-Haar GL Gram
 (ZP/ZX/ZW) has, at each fixed H and frozen b>0, a genuine positive
 two-mode coefficient-frame constant m_(H,b). In the centered direction
@@ -30,7 +39,7 @@ H1-H4, continuum mass gap, new axiom or surrogate posterior/source.
 
 namespace MGAP4D.MathlibAnalytic
 
-open MeasureTheory Filter
+open MeasureTheory Filter Matrix ProbabilityTheory
 open scoped ENNReal InnerProductSpace BigOperators Topology
 
 noncomputable section
@@ -59,6 +68,431 @@ private noncomputable instance p4Q2PZ37AAI_linkFintype (H : ℕ) :
 
 namespace GroundStatePosteriorJoint
 
+/-- ORIGINAL local Wilson plaquette with its true product-Haar mean removed.
+Redefined in this import-compatible proof path; it is exactly the same
+Haar-L2 function as the original ZA presentation, NOT a model replacement. -/
+noncomputable def p4Q2PZ37AAI_originalCenteredPlaquetteHaarSource
+    (H : ℕ) (p : PeriodicHypercubicEvenSpatialSlicePlaquette H) :
+    Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) :=
+  ContinuousMap.toLp 2
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) ℝ
+      (p4Q2LO_originalLocalPlaquetteContinuous H p) -
+    (∫ A, p4Q2LO_originalLocalPlaquetteContinuous H p A
+      ∂periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) •
+      ContinuousMap.toLp 2
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) ℝ
+        (1 : C(PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2, ℝ))
+
+section Spatial
+variable (H : ℕ)
+local notation "Gauge" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink H
+local notation "Plaq" => PeriodicHypercubicEvenSpatialSlicePlaquette H
+local notation "μ" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
+local notation "L" => ContinuousMap.toLp 2 μ ℝ
+local notation "W" => p4Q2LO_originalLocalPlaquetteContinuous H
+local notation "V" => p4Q2PZ37AAI_originalCenteredPlaquetteHaarSource H
+
+noncomputable def p4Q2PZ37AAI_centeredPlaquetteContinuous (p : Plaq) : C(Cfg, ℝ) :=
+  W p - (∫ A, W p A ∂μ) • (1 : C(Cfg, ℝ))
+
+local notation "VC" => p4Q2PZ37AAI_centeredPlaquetteContinuous H
+
+theorem p4Q2PZ37AAI_centeredPlaquette_toLp (p : Plaq) : L (VC p) = V p := by
+  simp only [p4Q2PZ37AAI_centeredPlaquetteContinuous,
+    p4Q2PZ37AAI_originalCenteredPlaquetteHaarSource, map_sub, map_smul]
+
+private theorem p4Q2PZ37AAI_toLp_inner (f g : C(Cfg, ℝ)) :
+    ⟪L f, L g⟫_ℝ = ∫ A, f A * g A ∂μ := by
+  rw [MeasureTheory.L2.inner_def]
+  apply integral_congr_ae
+  filter_upwards [ContinuousMap.coeFn_toLp (p := 2) (𝕜 := ℝ) μ f,
+    ContinuousMap.coeFn_toLp (p := 2) (𝕜 := ℝ) μ g] with A hf hg
+  rw [hf, hg]
+  change (g A) * (f A) = (f A) * (g A)
+  exact mul_comm _ _
+
+private theorem p4Q2PZ37AAI_centered_integrable (p : Plaq) : Integrable (VC p) μ :=
+  memLp_one_iff_integrable.mp (ContinuousMap.memLp (p := 1) μ ℝ (VC p))
+
+private theorem p4Q2PZ37AAI_centered_integral_zero (p : Plaq) :
+    (∫ A, VC p A ∂μ) = 0 := by
+  have hW : Integrable (W p) μ :=
+    memLp_one_iff_integrable.mp (ContinuousMap.memLp (p := 1) μ ℝ (W p))
+  change (∫ A, W p A - (∫ B, W p B ∂μ) * 1 ∂μ) = 0
+  simp only [mul_one]
+  rw [integral_sub hW (integrable_const _)]
+  simp
+
+/-- True centered Wilson source has variance at most one on original Haar. -/
+theorem p4Q2PZ37AAI_centeredPlaquette_norm_le_one (p : Plaq) : ‖V p‖ ≤ 1 := by
+  let m : ℝ := ∫ A, W p A ∂μ
+  let u := L (1 : C(Cfg, ℝ))
+  let x := L (W p)
+  have hu : ‖u‖ = 1 := p4Q2LR_originalHaarUnit_norm H
+  have hinner : ⟪x, u⟫_ℝ = m := by
+    simpa only [x, u, ContinuousMap.one_apply, mul_one, m] using
+      p4Q2PZ37AAI_toLp_inner H (W p) (1 : C(Cfg, ℝ))
+  have hshift : ‖x - u‖ ≤ 1 := by
+    let f : C(Cfg, ℝ) := W p - 1
+    have hae : ∀ᵐ A ∂μ, ‖(L f) A‖ ≤ (1 : ℝ) := by
+      filter_upwards [ContinuousMap.coeFn_toLp (p := 2) (𝕜 := ℝ) μ f] with A hA
+      rw [hA, Real.norm_eq_abs]
+      have hbounds := specialUnitaryWilsonPlaquetteEnergy_mem_Icc
+        (by norm_num : 0 < (2 : ℕ))
+        (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A p)
+      change |W p A - 1| ≤ 1
+      have hw0 : 0 ≤ W p A := hbounds.1
+      have hw2 : W p A ≤ 2 := hbounds.2
+      exact abs_le.mpr ⟨by linarith, by linarith⟩
+    have hlp := MeasureTheory.Lp.norm_le_of_ae_bound
+      (f := L f) (C := (1 : ℝ)) (by norm_num) hae
+    simpa [f, x, u, measureUnivNNReal, map_sub] using hlp
+  have hshiftSq : ‖x - u‖ ^ 2 ≤ 1 := by
+    nlinarith [norm_nonneg (x - u)]
+  rw [norm_sub_sq_real, hinner, hu] at hshiftSq
+  have hvSq : ‖V p‖ ^ 2 ≤ 1 := by
+    change ‖x - m • u‖ ^ 2 ≤ 1
+    rw [norm_sub_sq_real, real_inner_smul_right, hinner, norm_smul, hu]
+    simp only [Real.norm_eq_abs, mul_one, sq_abs]
+    nlinarith [sq_nonneg (m - 1)]
+  nlinarith [norm_nonneg (V p)]
+
+/-- A coordinate extension used only to demonstrate exact four-link dependence. -/
+private noncomputable def p4Q2PZ37AAI_supportExtend (p : Plaq)
+    (a : pz37zaSpatialPlaquetteSupport H p → Gauge) : Cfg := by
+  classical
+  exact fun e => if h : e ∈ pz37zaSpatialPlaquetteSupport H p then a ⟨e, h⟩ else 1
+
+private theorem p4Q2PZ37AAI_supportExtend_continuous (p : Plaq) :
+    Continuous (p4Q2PZ37AAI_supportExtend H p) := by
+  classical
+  apply continuous_pi
+  intro e
+  by_cases he : e ∈ pz37zaSpatialPlaquetteSupport H p
+  · simpa [p4Q2PZ37AAI_supportExtend, he] using
+      (continuous_apply (⟨e, he⟩ : pz37zaSpatialPlaquetteSupport H p))
+  · simp only [p4Q2PZ37AAI_supportExtend, he, dite_false]
+    exact continuous_const
+
+private theorem p4Q2PZ37AAI_centered_support_restrict (p : Plaq) (A : Cfg) :
+    VC p (p4Q2PZ37AAI_supportExtend H p (fun e => A e)) = VC p A := by
+  classical
+  have he (k : Fin 4) :
+      pz37zaSpatialPlaquetteBoundary H p k ∈ pz37zaSpatialPlaquetteSupport H p :=
+    Finset.mem_image.mpr ⟨k, Finset.mem_univ _, rfl⟩
+  have h0 :
+      (p.1, p.2.1.1) ∈ pz37zaSpatialPlaquetteSupport H p := by
+    simpa [pz37zaSpatialPlaquetteBoundary] using (he 0)
+  have h1 :
+      (periodicHypercubicEvenSpatialSliceShift H p.1 p.2.1.1, p.2.1.2) ∈
+        pz37zaSpatialPlaquetteSupport H p := by
+    simpa [pz37zaSpatialPlaquetteBoundary] using (he 1)
+  have h2 :
+      (periodicHypercubicEvenSpatialSliceShift H p.1 p.2.1.2, p.2.1.1) ∈
+        pz37zaSpatialPlaquetteSupport H p := by
+    simpa [pz37zaSpatialPlaquetteBoundary] using (he 2)
+  have h3 :
+      (p.1, p.2.1.2) ∈ pz37zaSpatialPlaquetteSupport H p := by
+    simpa [pz37zaSpatialPlaquetteBoundary] using (he 3)
+  simp [p4Q2PZ37AAI_centeredPlaquetteContinuous,
+    p4Q2LO_originalLocalPlaquetteContinuous_apply,
+    periodicHypercubicEvenSpatialSlicePlaquetteHolonomy,
+    p4Q2PZ37AAI_supportExtend, h0, h1, h2, h3]
+
+/-- Disjoint true link supports imply orthogonality on the ACTUAL reference Haar
+L2 carrier. No assertion of independence under either Wilson posterior. -/
+theorem p4Q2PZ37AAI_centeredPlaquette_inner_zero_of_disjoint
+    (p q : Plaq)
+    (hpq : Disjoint (pz37zaSpatialPlaquetteSupport H p)
+      (pz37zaSpatialPlaquetteSupport H q)) :
+    ⟪V p, V q⟫_ℝ = 0 := by
+  classical
+  have hcoords : iIndepFun (fun (e : Link) (A : Cfg) => A e) μ := by
+    exact iIndepFun_pi (fun _ => aemeasurable_id)
+  have hrestrict := iIndepFun.indepFun_finset
+    (pz37zaSpatialPlaquetteSupport H p) (pz37zaSpatialPlaquetteSupport H q)
+    hpq hcoords (fun e => measurable_pi_apply e)
+  have hpmeas : Measurable (fun a => VC p (p4Q2PZ37AAI_supportExtend H p a)) :=
+    ((VC p).continuous.comp (p4Q2PZ37AAI_supportExtend_continuous H p)).measurable
+  have hqmeas : Measurable (fun a => VC q (p4Q2PZ37AAI_supportExtend H q a)) :=
+    ((VC q).continuous.comp (p4Q2PZ37AAI_supportExtend_continuous H q)).measurable
+  have hind : IndepFun (VC p) (VC q) μ := by
+    have h := hrestrict.comp hpmeas hqmeas
+    apply h.congr
+    · filter_upwards with A
+      exact p4Q2PZ37AAI_centered_support_restrict H p A
+    · filter_upwards with A
+      exact p4Q2PZ37AAI_centered_support_restrict H q A
+  rw [← p4Q2PZ37AAI_centeredPlaquette_toLp H p,
+    ← p4Q2PZ37AAI_centeredPlaquette_toLp H q, p4Q2PZ37AAI_toLp_inner]
+  rw [hind.integral_fun_mul_eq_mul_integral
+    (p4Q2PZ37AAI_centered_integrable H p).aestronglyMeasurable
+    (p4Q2PZ37AAI_centered_integrable H q).aestronglyMeasurable,
+    p4Q2PZ37AAI_centered_integral_zero H p, zero_mul]
+
+/-- All absolute Gram row sums of the actual centered plaquette family are
+bounded by 24, uniformly in H. Both finite incidence and Haar covariance
+premises are discharged above, not assumed. -/
+theorem p4Q2PZ37AAI_centeredPlaquette_gram_row_le_twentyFour (p : Plaq) :
+    (∑ q : Plaq, |⟪V p, V q⟫_ℝ|) ≤ 24 := by
+  classical
+  have hentry (q : Plaq) : |⟪V p, V q⟫_ℝ| ≤ 1 := by
+    calc
+      |⟪V p, V q⟫_ℝ| ≤ ‖V p‖ * ‖V q‖ := abs_real_inner_le_norm _ _
+      _ ≤ 1 * 1 := mul_le_mul
+        (p4Q2PZ37AAI_centeredPlaquette_norm_le_one H p)
+        (p4Q2PZ37AAI_centeredPlaquette_norm_le_one H q) (norm_nonneg _) (by norm_num)
+      _ = 1 := one_mul _
+  have hsum : (∑ q : Plaq, |⟪V p, V q⟫_ℝ|) =
+      ∑ q ∈ pz37zaSpatialPlaquetteOverlap H p, |⟪V p, V q⟫_ℝ| := by
+    symm
+    apply Finset.sum_subset (Finset.subset_univ _)
+    intro q _hq hnot
+    rw [p4Q2PZ37AAI_centeredPlaquette_inner_zero_of_disjoint H p q
+      (pz37zaSpatialPlaquetteSupport_disjoint_of_not_overlap H p q hnot), abs_zero]
+  rw [hsum]
+  calc
+    _ ≤ ∑ _q ∈ pz37zaSpatialPlaquetteOverlap H p, (1 : ℝ) :=
+      Finset.sum_le_sum (fun q _ => hentry q)
+    _ = ((pz37zaSpatialPlaquetteOverlap H p).card : ℝ) := by simp
+    _ ≤ 24 := by exact_mod_cast pz37zaSpatialPlaquetteOverlap_card_le_twentyFour H p
+
+end Spatial
+
+/-- Actual original SU(2) spatial-plaquette Haar-L2 centered linear
+synthesis. The common underlying configuration and Haar are original. -/
+noncomputable def p4Q2PZ37AAI_originalCenteredHaarPlaquetteSynthesis
+    (H : ℕ)
+    (a : PeriodicHypercubicEvenSpatialSlicePlaquette H → ℝ) :
+    Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) :=
+  ∑ p : PeriodicHypercubicEvenSpatialSlicePlaquette H,
+    a p • p4Q2PZ37AAI_originalCenteredPlaquetteHaarSource H p
+
+/-- ORIGINAL full spatial-plaquette Haar Gram 24-Bessel bound, with
+one genuine link-support covariance row for each actual plaquette. -/
+theorem p4Q2PZ37AAI_originalCenteredHaarPlaquetteSynthesis_sq_le
+    (H : ℕ)
+    (a : PeriodicHypercubicEvenSpatialSlicePlaquette H → ℝ) :
+    ‖p4Q2PZ37AAI_originalCenteredHaarPlaquetteSynthesis H a‖^2 ≤
+      24 * ∑ p : PeriodicHypercubicEvenSpatialSlicePlaquette H, (a p)^2 := by
+  classical
+  exact finiteRealHilbert_synthesis_sq_le_gram_row_bound
+    (v := p4Q2PZ37AAI_originalCenteredPlaquetteHaarSource H)
+    24
+    (fun p => p4Q2PZ37AAI_centeredPlaquette_gram_row_le_twentyFour H p)
+    a
+
+/-- In particular the unit-weight ORIGINAL centered Wilson
+plaquette Haar sum has squared norm controlled by 24 times the
+literal finite spatial-plaquette count, not a thermodynamic proxy. -/
+theorem p4Q2PZ37AAI_originalCenteredHaarPlaquetteUnitSum_sq_le_card
+    (H : ℕ) :
+    ‖p4Q2PZ37AAI_originalCenteredHaarPlaquetteSynthesis H
+      (fun _ => (1 : ℝ))‖^2 ≤
+      24 * (Fintype.card (PeriodicHypercubicEvenSpatialSlicePlaquette H) : ℝ) := by
+  have h :=
+    p4Q2PZ37AAI_originalCenteredHaarPlaquetteSynthesis_sq_le
+      H (fun _ => (1 : ℝ))
+  simpa using h
+
+/-- The actual original GLOBAL Wilson action is the Finset sum
+of its canonical genuine spatial plaquette energies, with no
+coordinate or Wilson action replacement. -/
+theorem p4Q2PZ37AAI_originalSpatialWilsonContinuous_eq_finsetSum
+    (H : ℕ) :
+    p4Q2JI_actualSpatialWilsonContinuous H =
+      ∑ p : PeriodicHypercubicEvenSpatialSlicePlaquette H,
+        p4Q2LO_originalLocalPlaquetteContinuous H p := by
+  classical
+  simpa [periodicHypercubicEvenSpatialSlicePlaquetteList] using
+    (p4Q2LO_originalSpatialWilsonContinuous_eq_localSum H)
+
+/-- Exact original spatial Wilson Haar embedding is the sum of
+original toLp plaquettes; continuous source embedding is real-linear. -/
+theorem p4Q2PZ37AAI_originalSpatialWilsonHaar_eq_finsetSum
+    (H : ℕ) :
+    ContinuousMap.toLp 2
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) ℝ
+        (p4Q2JI_actualSpatialWilsonContinuous H) =
+      ∑ p : PeriodicHypercubicEvenSpatialSlicePlaquette H,
+        ContinuousMap.toLp 2
+          (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) ℝ
+          (p4Q2LO_originalLocalPlaquetteContinuous H p) := by
+  rw [p4Q2PZ37AAI_originalSpatialWilsonContinuous_eq_finsetSum H]
+  simp only [map_sum]
+
+/-- Every original local Wilson continuous observable's inner
+product with the ORIGINAL constant Haar-L² vacuum equals its genuine
+product-Haar mean. This is a physical integral identity, not a
+surrogate probability measure. -/
+theorem p4Q2PZ37AAI_originalLocalPlaquetteHaar_inner_unit_eq_integral
+    (H : ℕ) (p : PeriodicHypercubicEvenSpatialSlicePlaquette H) :
+    inner ℝ
+      (ContinuousMap.toLp 2
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) ℝ
+        (p4Q2LO_originalLocalPlaquetteContinuous H p))
+      (ContinuousMap.toLp 2
+        (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) ℝ
+        (1 : C(PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2, ℝ))) =
+      ∫ A, p4Q2LO_originalLocalPlaquetteContinuous H p A
+        ∂periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2 := by
+  rw [MeasureTheory.L2.inner_def]
+  apply integral_congr_ae
+  filter_upwards [
+    ContinuousMap.coeFn_toLp (p := 2) (𝕜 := ℝ)
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)
+      (p4Q2LO_originalLocalPlaquetteContinuous H p),
+    ContinuousMap.coeFn_toLp (p := 2) (𝕜 := ℝ)
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)
+      (1 : C(PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2, ℝ))]
+    with A hA hOne
+  rw [hA, hOne]
+  change (1 : ℝ) * p4Q2LO_originalLocalPlaquetteContinuous H p A =
+    p4Q2LO_originalLocalPlaquetteContinuous H p A
+  ring
+
+/-- The ORIGINAL Gauss-law physical spatial-Wilson vacuum mean is
+the sum of the original individual plaquette Haar means. -/
+theorem p4Q2PZ37AAI_originalPhysicalWilsonMean_eq_plaquetteHaarSum
+    (H : ℕ) :
+    inner ℝ (p4Q2JU_originalSpatialWilsonPhysicalSource H)
+      (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2) =
+    ∑ p : PeriodicHypercubicEvenSpatialSlicePlaquette H,
+      ∫ A, p4Q2LO_originalLocalPlaquetteContinuous H p A
+        ∂periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2 := by
+  classical
+  let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  let haar := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
+  let L : C(Cfg, ℝ) →L[ℝ] Lp ℝ 2 haar :=
+    ContinuousMap.toLp 2 haar ℝ
+  let Phys := periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2
+  let W : Phys := p4Q2JU_originalSpatialWilsonPhysicalSource H
+  let U : Phys := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2
+  let Plaq := PeriodicHypercubicEvenSpatialSlicePlaquette H
+  have hInnerSum :
+      ∀ s : Finset Plaq,
+        inner ℝ (∑ p ∈ s, L (p4Q2LO_originalLocalPlaquetteContinuous H p))
+          (L (1 : C(Cfg, ℝ))) =
+        ∑ p ∈ s, inner ℝ (L (p4Q2LO_originalLocalPlaquetteContinuous H p))
+          (L (1 : C(Cfg, ℝ))) := by
+    intro s
+    induction s using Finset.induction_on with
+    | empty => simp
+    | @insert p s hp ih =>
+        simp only [Finset.sum_insert hp]
+        rw [inner_add_left, ih]
+  have hMeanLocal (p : Plaq) :
+      inner ℝ (L (p4Q2LO_originalLocalPlaquetteContinuous H p))
+        (L (1 : C(Cfg, ℝ))) =
+      ∫ A, p4Q2LO_originalLocalPlaquetteContinuous H p A ∂haar :=
+    p4Q2PZ37AAI_originalLocalPlaquetteHaar_inner_unit_eq_integral H p
+  calc
+    inner ℝ W U =
+        inner ℝ (L (p4Q2JI_actualSpatialWilsonContinuous H))
+          (L (1 : C(Cfg, ℝ))) := by
+      change inner ℝ (W : Lp ℝ 2 haar) (U : Lp ℝ 2 haar) = _
+      rw [p4Q2JU_originalSpatialWilsonPhysicalSource_coe_eq_toLp H,
+        p4Q2JU_originalPhysicalUnit_coe_eq_toLp H]
+    _ = inner ℝ (∑ p : Plaq,
+          L (p4Q2LO_originalLocalPlaquetteContinuous H p))
+          (L (1 : C(Cfg, ℝ))) := by
+      rw [p4Q2PZ37AAI_originalSpatialWilsonHaar_eq_finsetSum H]
+    _ = ∑ p : Plaq, inner ℝ
+          (L (p4Q2LO_originalLocalPlaquetteContinuous H p))
+          (L (1 : C(Cfg, ℝ))) := by
+      simpa only using hInnerSum Finset.univ
+    _ = ∑ p : Plaq,
+          ∫ A, p4Q2LO_originalLocalPlaquetteContinuous H p A ∂haar := by
+      apply Finset.sum_congr rfl
+      intro p hp
+      exact hMeanLocal p
+
+/-- The actual original centered Gauss-law PHYSICAL tangent
+represented in the original spatial Haar-L² carrier is IDENTICAL
+to one half of the AAF centered genuine plaquette synthesis.
+The original two interacting Wilson posteriors remain unchanged. -/
+theorem p4Q2PZ37AAI_originalCenteredPhysicalFormula_coe_eq_halfHaarSynthesis
+    (H : ℕ) :
+    (((1 / 2 : ℝ) •
+      (p4Q2JU_originalSpatialWilsonPhysicalSource H -
+        (inner ℝ (p4Q2JU_originalSpatialWilsonPhysicalSource H)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2)) •
+          periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2) :
+        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2) :
+      Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)) =
+    (1 / 2 : ℝ) •
+      p4Q2PZ37AAI_originalCenteredHaarPlaquetteSynthesis H (fun _ => 1) := by
+  classical
+  let Cfg := PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
+  let haar := periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
+  let L : C(Cfg, ℝ) →L[ℝ] Lp ℝ 2 haar :=
+    ContinuousMap.toLp 2 haar ℝ
+  let Plaq := PeriodicHypercubicEvenSpatialSlicePlaquette H
+  let Phys := periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2
+  let W : Phys := p4Q2JU_originalSpatialWilsonPhysicalSource H
+  let U : Phys := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2
+  let w : ℝ := inner ℝ W U
+  have hMean : w = ∑ p : Plaq,
+      ∫ A, p4Q2LO_originalLocalPlaquetteContinuous H p A ∂haar :=
+    p4Q2PZ37AAI_originalPhysicalWilsonMean_eq_plaquetteHaarSum H
+  have hUncentered :
+      (W : Lp ℝ 2 haar) =
+        ∑ p : Plaq, L (p4Q2LO_originalLocalPlaquetteContinuous H p) := by
+    rw [p4Q2JU_originalSpatialWilsonPhysicalSource_coe_eq_toLp H]
+    exact p4Q2PZ37AAI_originalSpatialWilsonHaar_eq_finsetSum H
+  have hUnit : (U : Lp ℝ 2 haar) = L (1 : C(Cfg, ℝ)) :=
+    p4Q2JU_originalPhysicalUnit_coe_eq_toLp H
+  have hCenterSum :
+      (∑ p : Plaq, p4Q2PZ37AAI_originalCenteredPlaquetteHaarSource H p) =
+        (∑ p : Plaq, L (p4Q2LO_originalLocalPlaquetteContinuous H p)) -
+          (∑ p : Plaq,
+            ∫ A, p4Q2LO_originalLocalPlaquetteContinuous H p A ∂haar) •
+              L (1 : C(Cfg, ℝ)) := by
+    simp only [p4Q2PZ37AAI_originalCenteredPlaquetteHaarSource,
+      Finset.sum_sub_distrib, Finset.sum_smul]
+    rfl
+  unfold p4Q2PZ37AAI_originalCenteredHaarPlaquetteSynthesis
+  simp only [one_smul]
+  change (((1 / 2 : ℝ) • (W - w • U) : Phys) : Lp ℝ 2 haar) =
+    (1 / 2 : ℝ) •
+      (∑ p : Plaq, p4Q2PZ37AAI_originalCenteredPlaquetteHaarSource H p)
+  rw [Submodule.coe_smul, Submodule.coe_sub, Submodule.coe_smul]
+  rw [hCenterSum, ← hMean, ← hUncentered, ← hUnit]
+
+/-- The PHYSICAL Gauss-law normalized centered Wilson tangent,
+not a substitute source, has a true Haar-L² squared norm bounded
+by 6 times the ACTUAL original spatial plaquette count. -/
+theorem p4Q2PZ37AAI_originalCenteredPhysicalFormulaNorm_sq_le_six_plaquetteCount
+    (H : ℕ) :
+    ‖((1 / 2 : ℝ) •
+      (p4Q2JU_originalSpatialWilsonPhysicalSource H -
+        (inner ℝ (p4Q2JU_originalSpatialWilsonPhysicalSource H)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2)) •
+          periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2) :
+        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2)‖^2 ≤
+      6 * (Fintype.card (PeriodicHypercubicEvenSpatialSlicePlaquette H) : ℝ) := by
+  let W := p4Q2JU_originalSpatialWilsonPhysicalSource H
+  let U := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2
+  let V : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2 :=
+    (1 / 2 : ℝ) • (W - (inner ℝ W U) • U)
+  let S := p4Q2PZ37AAI_originalCenteredHaarPlaquetteSynthesis H (fun _ => 1)
+  have hEq : ‖V‖ = ‖(1 / 2 : ℝ) • S‖ := by
+    change ‖(V : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2))‖ =
+      ‖(1 / 2 : ℝ) • S‖
+    exact congrArg norm
+      (p4Q2PZ37AAI_originalCenteredPhysicalFormula_coe_eq_halfHaarSynthesis H)
+  have hSq : ‖V‖^2 = (1 / 4 : ℝ) * ‖S‖^2 := by
+    rw [hEq, norm_smul, Real.norm_eq_abs]
+    norm_num [mul_pow]
+  have hBessel :
+      ‖S‖^2 ≤ 24 *
+        (Fintype.card (PeriodicHypercubicEvenSpatialSlicePlaquette H) : ℝ) :=
+    p4Q2PZ37AAI_originalCenteredHaarPlaquetteUnitSum_sq_le_card H
+  dsimp [V] at hSq ⊢
+  linarith
+
 /-- The genuine spatial plaquette index is never empty. This is
 witnessed by an ORIGINAL coordinate plaquette, not by a proxy count. -/
 theorem p4Q2PZ37AAI_originalSpatialPlaquetteCount_pos (H : ℕ) :
@@ -77,7 +511,7 @@ theorem p4Q2PZ37AAI_originalCenteredPhysicalNorm_sq_le_six_plaquetteCount
     (H : ℕ) :
     ‖p4Q2PZ37ZW_originalCenteredPhysicalDirection H‖^2 ≤
       6 * (Fintype.card (PeriodicHypercubicEvenSpatialSlicePlaquette H) : ℝ) := by
-  exact p4Q2PZ37AAG_originalCenteredPhysicalFormulaNorm_sq_le_six_plaquetteCount H
+  exact p4Q2PZ37AAI_originalCenteredPhysicalFormulaNorm_sq_le_six_plaquetteCount H
 
 /-- Pure ordered-field step used to distinguish a genuine upper
 source norm from an independent lower posterior Gram estimate. -/
