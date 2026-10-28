@@ -1,11 +1,13 @@
 import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalCenteredHaarBesselSynthesisV5_PZ37AAF
-import MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalPhysicalCenteredGLRayleighLimitV5_PZ37ZW
 import Mathlib.Tactic
 
 /-!
 # P4-Q2-PZ37AAG — exact original Wilson centered Gauss-law physical / Haar bridge
 
-The original Wilson spatial source is the sum of its TRUE spatial
+This file deliberately states the LITERAL physical tangent formula rather than
+importing the separately named ZW theorem: an unrelated preexisting same-name
+local-instance collision currently prevents co-import with AAF. No new physical
+observable is defined. The original Wilson spatial source is the sum of its TRUE spatial
 plaquette energy observables (LO); the original physical Gauss-law
 source has EXACTLY the same original spatial Haar-L² representative
 (JU). The original physical Haar vacuum is the constant-one toLp
@@ -174,9 +176,13 @@ theorem p4Q2PZ37AAG_originalPhysicalWilsonMean_eq_plaquetteHaarSum
 represented in the original spatial Haar-L² carrier is IDENTICAL
 to one half of the AAF centered genuine plaquette synthesis.
 The original two interacting Wilson posteriors remain unchanged. -/
-theorem p4Q2PZ37AAG_originalCenteredPhysical_coe_eq_halfHaarSynthesis
+theorem p4Q2PZ37AAG_originalCenteredPhysicalFormula_coe_eq_halfHaarSynthesis
     (H : ℕ) :
-    ((p4Q2PZ37ZW_originalCenteredPhysicalDirection H :
+    (((1 / 2 : ℝ) •
+      (p4Q2JU_originalSpatialWilsonPhysicalSource H -
+        (inner ℝ (p4Q2JU_originalSpatialWilsonPhysicalSource H)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2)) •
+          periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2) :
         periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2) :
       Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2)) =
     (1 / 2 : ℝ) •
@@ -218,17 +224,25 @@ theorem p4Q2PZ37AAG_originalCenteredPhysical_coe_eq_halfHaarSynthesis
 /-- The PHYSICAL Gauss-law normalized centered Wilson tangent,
 not a substitute source, has a true Haar-L² squared norm bounded
 by 6 times the ACTUAL original spatial plaquette count. -/
-theorem p4Q2PZ37AAG_originalCenteredPhysicalNorm_sq_le_six_plaquetteCount
+theorem p4Q2PZ37AAG_originalCenteredPhysicalFormulaNorm_sq_le_six_plaquetteCount
     (H : ℕ) :
-    ‖p4Q2PZ37ZW_originalCenteredPhysicalDirection H‖^2 ≤
+    ‖((1 / 2 : ℝ) •
+      (p4Q2JU_originalSpatialWilsonPhysicalSource H -
+        (inner ℝ (p4Q2JU_originalSpatialWilsonPhysicalSource H)
+          (periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2)) •
+          periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2) :
+        periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2)‖^2 ≤
       6 * (Fintype.card (PeriodicHypercubicEvenSpatialSlicePlaquette H) : ℝ) := by
-  let V := p4Q2PZ37ZW_originalCenteredPhysicalDirection H
+  let W := p4Q2JU_originalSpatialWilsonPhysicalSource H
+  let U := periodicHypercubicEvenSpecialUnitaryPhysicalConstantUnitVector H 2
+  let V : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2 :=
+    (1 / 2 : ℝ) • (W - (inner ℝ W U) • U)
   let S := p4Q2PZ37AAF_originalCenteredHaarPlaquetteSynthesis H (fun _ => 1)
   have hEq : ‖V‖ = ‖(1 / 2 : ℝ) • S‖ := by
     change ‖(V : Lp ℝ 2 (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2))‖ =
       ‖(1 / 2 : ℝ) • S‖
     exact congrArg norm
-      (p4Q2PZ37AAG_originalCenteredPhysical_coe_eq_halfHaarSynthesis H)
+      (p4Q2PZ37AAG_originalCenteredPhysicalFormula_coe_eq_halfHaarSynthesis H)
   have hSq : ‖V‖^2 = (1 / 4 : ℝ) * ‖S‖^2 := by
     rw [hEq, norm_smul, Real.norm_eq_abs]
     norm_num [mul_pow]
@@ -247,5 +261,5 @@ end MGAP4D.MathlibAnalytic
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AAG_originalSpatialWilsonHaar_eq_finsetSum
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AAG_originalLocalPlaquetteHaar_inner_unit_eq_integral
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AAG_originalPhysicalWilsonMean_eq_plaquetteHaarSum
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AAG_originalCenteredPhysical_coe_eq_halfHaarSynthesis
-#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AAG_originalCenteredPhysicalNorm_sq_le_six_plaquetteCount
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AAG_originalCenteredPhysicalFormula_coe_eq_halfHaarSynthesis
+#print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37AAG_originalCenteredPhysicalFormulaNorm_sq_le_six_plaquetteCount
