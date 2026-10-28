@@ -267,7 +267,7 @@ theorem p4Q2PZ37AAL_uniformFineZero_of_activeLinkDensity
     (delta alpha : ℝ) (hd : 0 < delta) (ha : 0 < alpha)
     (hActiveDensity : ∀ H : ℕ,
       delta * (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ) ≤
-        (p4Q2PZ37AAL_originalActiveLinks H (b H) (hb H) alpha).card) :
+        ((p4Q2PZ37AAL_originalActiveLinks H (b H) (hb H) alpha).card : ℝ)) :
     ∀ H : ℕ, 0 < delta * alpha ∧
       delta * alpha ≤
         p4Q2PZ37AAH_originalExactCenteredRayleighFloor H (b H) (hb H) := by
