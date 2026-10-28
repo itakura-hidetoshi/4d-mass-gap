@@ -118,9 +118,15 @@ theorem p4Q2PZ37AAC_originalPositiveFine_RayleighError_le_linear
     dsimp [C, p4Q2PZ37ZG_originalFullLinkGL_RayleighCap]
     positivity
   have hN : 0 < N := by
-    dsimp [N]
-    rw [p4Q2PZ37AAC_originalCenteredLift_norm_eq_physical]
-    exact norm_pos_iff.mpr (p4Q2PZ37ZW_originalCenteredDirection_ne_zero H)
+    change 0 < ‖p4Q2PZ37ZW3_originalCenteredPhysicalLift H‖
+    apply norm_pos_iff.mpr
+    intro hv
+    apply p4Q2PZ37ZW_originalCenteredDirection_ne_zero H
+    have hh := congrArg (fun z :
+      p4Q2PZ37ZW2_originalContinuousPhysicalSources H =>
+      (z : periodicHypercubicEvenSpecialUnitarySpatialSliceGaugeInvariantL2Submodule H 2)) hv
+    simpa only [p4Q2PZ37ZW3_originalCenteredPhysicalLift, Submodule.coe_zero]
+      using hh
   have hDelta : D ≤ A * (t : ℝ) :=
     p4Q2PZ37AAC_originalRepresentedTangentDisplacement_le_rate
       H t ht hBudget
