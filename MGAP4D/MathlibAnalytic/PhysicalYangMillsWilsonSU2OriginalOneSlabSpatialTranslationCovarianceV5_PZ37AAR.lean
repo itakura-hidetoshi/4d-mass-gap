@@ -140,7 +140,7 @@ private theorem p4Q2PZ37AAR_originalSpatialAction_eq_sum
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction
     periodicHypercubicEvenSpatialSlicePlaquetteList
   simpa using
-    (Finset.sum_toList
+    (Finset.sum_map_toList
       (s := (Finset.univ : Finset P))
       (f := fun p : P =>
         specialUnitaryWilsonPlaquetteEnergy 2
@@ -183,7 +183,7 @@ private theorem p4Q2PZ37AAR_originalCrossingAction_eq_sum
   unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction
     periodicHypercubicEvenSpatialSliceLinkList
   simpa using
-    (Finset.sum_toList
+    (Finset.sum_map_toList
       (s := (Finset.univ : Finset Link))
       (f := fun e : Link =>
         specialUnitaryWilsonPlaquetteEnergy 2 ((A e)⁻¹ * B e))).symm
@@ -201,17 +201,26 @@ theorem p4Q2PZ37AAR_originalTemporalCrossingAction_translation
   let T := p4Q2PZ37AAP_actualSpatialLinkTranslation H a
   refine Fintype.sum_equiv T.symm _ _ ?_
   intro e
-  have hA := p4Q2PZ37AAQ_configurationTranslation_apply_translatedLink
-    H a A (T.symm e)
-  have hB := p4Q2PZ37AAQ_configurationTranslation_apply_translatedLink
-    H a B (T.symm e)
+  have he :
+      (p4Q2PZ37AAP_actualSpatialLinkTranslation H a) (T.symm e) = e :=
+    T.apply_symm_apply e
+  have hA :
+      p4Q2PZ37AAQ_originalSpatialConfigurationTranslation H a A e =
+        A (T.symm e) := by
+    simpa only [he] using
+      (p4Q2PZ37AAQ_configurationTranslation_apply_translatedLink
+        H a A (T.symm e))
+  have hB :
+      p4Q2PZ37AAQ_originalSpatialConfigurationTranslation H a B e =
+        B (T.symm e) := by
+    simpa only [he] using
+      (p4Q2PZ37AAQ_configurationTranslation_apply_translatedLink
+        H a B (T.symm e))
   have hPair :
       (p4Q2PZ37AAQ_originalSpatialConfigurationTranslation H a A e,
         p4Q2PZ37AAQ_originalSpatialConfigurationTranslation H a B e) =
       (A (T.symm e), B (T.symm e)) := by
-    apply Prod.ext
-    · simpa only [Equiv.apply_symm_apply] using hA
-    · simpa only [Equiv.apply_symm_apply] using hB
+    exact Prod.ext hA hB
   exact congrArg
     (fun q : G × G => specialUnitaryWilsonPlaquetteEnergy 2 (q.1⁻¹ * q.2))
     hPair
