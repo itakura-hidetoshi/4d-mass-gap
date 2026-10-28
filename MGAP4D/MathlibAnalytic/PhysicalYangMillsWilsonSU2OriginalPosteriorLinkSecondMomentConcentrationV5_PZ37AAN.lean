@@ -131,7 +131,7 @@ theorem p4Q2PZ37AAN_originalActiveCount_secondMoment_tradeoff
         (Finset.card_le_card (Finset.sdiff_subset :
           (Finset.univ \ S) ⊆ (Finset.univ :
             Finset (PeriodicHypercubicEvenSpatialSliceLink H))))
-    change ((Finset.univ \\ S).card : ℝ) ≤
+    change ((Finset.univ \ S).card : ℝ) ≤
       (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ)
     exact_mod_cast hNat
   have hInactiveSum : (∑ e ∈ Finset.univ \ S, j e) ≤ alpha := by
