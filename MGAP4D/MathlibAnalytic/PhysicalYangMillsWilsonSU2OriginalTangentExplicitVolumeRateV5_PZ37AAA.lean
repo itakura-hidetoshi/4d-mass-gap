@@ -56,7 +56,7 @@ theorem p4Q2PZ37AAA_normedTangent_scalarError_le
     calc
       |(s-1)*(d+k) + s*(q-d)| ≤
           |(s-1)*(d+k)| + |s*(q-d)| := abs_add_le _ _
-      _ = |s-1|*|d+k| + |s|*|q-d| := by rw [abs_mul, abs_mul]
+      _ = |s-1| * |d+k| + |s| * |q-d| := by rw [abs_mul, abs_mul]
   have hExpand :
       ((s*(q+k)) • U + (s/2) • W - s • e) -
         ((d+k) • U + (1/2 : ℝ) • W) =
@@ -171,7 +171,6 @@ theorem p4Q2PZ37AAA_originalInverseNorm_actionBudget_bounds
   have hsDiff : |‖R‖⁻¹ - 1| ≤ 2*B*(t : ℝ) := by
     have hIdentity : ‖R‖⁻¹ - 1 = (1-‖R‖)/‖R‖ := by
       field_simp [ne_of_gt hRPos]
-      ring
     rw [hIdentity, abs_div, abs_of_pos hRPos, abs_sub_comm]
     calc
       |‖R‖ - 1| / ‖R‖ ≤ (B*(t : ℝ))/‖R‖ :=
@@ -234,8 +233,11 @@ theorem p4Q2PZ37AAA_originalPhysicalTangent_error_le_linear
   have hSmallOne : ‖(t : ℝ)*B‖ ≤ 1 := by
     rw [Real.norm_eq_abs, abs_of_nonneg (mul_nonneg ht.le hB)]
     nlinarith [hsmall]
-  have hE : ‖e‖ ≤ B^2*(t : ℝ) :=
-    p4Q2PZ37ZT_originalPhysicalErrorDivFine_norm_le_linear H t ht hSmallOne
+  have hE : ‖e‖ ≤ B^2*(t : ℝ) := by
+    calc
+      ‖e‖ ≤ (t : ℝ)*B^2 :=
+        p4Q2PZ37ZT_originalPhysicalErrorDivFine_norm_le_linear H t ht hSmallOne
+      _ = B^2*(t : ℝ) := by ring
   have hd :
       d+k = -(1/2 : ℝ)*inner ℝ W U := by
     have hh := p4Q2PZ37ZV_originalPhysicalRawDerivative_vacuum_coeff H
@@ -244,7 +246,9 @@ theorem p4Q2PZ37AAA_originalPhysicalTangent_error_le_linear
   have hX :
       p4Q2PZ37ZV2_originalFullPhysicalTangentExtension H t =
         (s*(q+k)) • U + (s/2) • W - s • e := by
-    rfl
+    change (s*(q+k)) • U + ((s/2) • W - s • e) =
+      (s*(q+k)) • U + (s/2) • W - s • e
+    abel
   have hV :
       p4Q2PZ37ZW_originalCenteredPhysicalDirection H =
         (d+k) • U + (1/2 : ℝ) • W := by
