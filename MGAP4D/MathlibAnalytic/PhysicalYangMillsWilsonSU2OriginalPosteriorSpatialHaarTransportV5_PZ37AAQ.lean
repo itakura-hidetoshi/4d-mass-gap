@@ -100,10 +100,24 @@ theorem p4Q2PZ37AAQ_configurationTranslation_update
         (p4Q2PZ37AAQ_originalSpatialConfigurationTranslation H a A)
         (p4Q2PZ37AAP_actualSpatialLinkTranslation H a e) g := by
   classical
+  funext f
   let T := p4Q2PZ37AAP_actualSpatialLinkTranslation H a
-  change (Function.update A e g) ∘ (T.symm : Link → Link) =
-    Function.update (A ∘ (T.symm : Link → Link)) (T e) g
-  simpa using (Function.update_comp_equiv A T.symm e g)
+  obtain ⟨q, rfl⟩ := T.surjective f
+  calc
+    p4Q2PZ37AAQ_originalSpatialConfigurationTranslation H a
+        (Function.update A e g) (T q) =
+      Function.update A e g q :=
+        p4Q2PZ37AAQ_configurationTranslation_apply_translatedLink
+          H a (Function.update A e g) q
+    _ = Function.update
+        (p4Q2PZ37AAQ_originalSpatialConfigurationTranslation H a A)
+        (T e) g (T q) := by
+      by_cases hq : q = e
+      · subst q
+        simp
+      · have ht : T q ≠ T e := fun h => hq (T.injective h)
+        simp [Function.update, hq, ht,
+          p4Q2PZ37AAQ_configurationTranslation_apply_translatedLink]
 
 /-- The original constant identity LEFT Wilson boundary is fixed by
 every true spatial translation. -/
