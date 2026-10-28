@@ -120,12 +120,10 @@ theorem p4Q2PZ37AAT_originalConditionalMeasure_translation
         H 2 (by norm_num) beta hbeta B A e := by
   unfold periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkConditionalMeasure
   have hFun :
-      (fun g : G =>
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkFiberLogWeight
-          H 2 (by norm_num) beta hbeta (T a B) (T a A) (L a e) g) =
-      (fun g : G =>
-        periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkFiberLogWeight
-          H 2 (by norm_num) beta hbeta B A e g) := by
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkFiberLogWeight
+          H 2 (by norm_num) beta hbeta (T a B) (T a A) (L a e) =
+      periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumPosteriorSpatialLinkFiberLogWeight
+          H 2 (by norm_num) beta hbeta B A e := by
     funext g
     exact p4Q2PZ37AAT_originalConditionalFiberLogWeight_translation
       H a beta hbeta B A e g
