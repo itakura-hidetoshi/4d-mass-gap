@@ -188,7 +188,6 @@ theorem p4Q2PZ37AAK_originalNormalizedLinkResponse_sum_eq_Rayleigh
       p4Q2PZ37AAJ_originalPhysicalNorm_sq_eq_quarterHaarCovariance]
     change G / ((1 / 4 : ℝ) * C) = (4 / C) * G
     field_simp [hC0]
-    ring
   rw [hRayleigh]
   change (∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
     (4 * p4Q2PZ37AAK_originalCenteredLinkPosteriorResponse H b hb e) / C) =
@@ -230,7 +229,7 @@ theorem p4Q2PZ37AAK_exists_originalLink_positiveResponse
       0 < p4Q2PZ37AAK_originalCenteredLinkPosteriorResponse H b hb e := by
   classical
   by_contra h
-  push_neg at h
+  push Not at h
   have hSum :
       (∑ e : PeriodicHypercubicEvenSpatialSliceLink H,
         p4Q2PZ37AAK_originalCenteredLinkPosteriorResponse H b hb e) ≤ 0 := by
@@ -255,7 +254,7 @@ theorem p4Q2PZ37AAK_exists_link_ge_average_of_Rayleigh_floor
         p4Q2PZ37AAK_originalNormalizedLinkResponse H b hb e := by
   classical
   by_contra h
-  push_neg at h
+  push Not at h
   let p := pz37zaSpatialPlaquetteCoordinateFamily H 0
   let e0 : PeriodicHypercubicEvenSpatialSliceLink H := (p.1, p.2.1.1)
   have hStrict :
