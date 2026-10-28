@@ -234,7 +234,7 @@ theorem p4Q2PZ37AAO_originalRelativeLinkCap_controlsSecondMoment
         L * (((kappa * R) / L) * R) :=
       mul_le_mul_of_nonneg_left hSum hL.le
     _ = kappa * R^2 := by
-      field_simp [ne_of_gt hL] <;> ring
+      field_simp [ne_of_gt hL]
 
 /-- Genuine original per-link *relative* posterior cap kappa forces
 participation at least 1/kappa. The premise is a sharply identified
