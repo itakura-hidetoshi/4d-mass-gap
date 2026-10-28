@@ -42,6 +42,17 @@ local instance p4Q2PZ37AAS_measurableSpace : MeasurableSpace G :=
   specialUnitaryGroupMeasurableSpace 2
 local instance p4Q2PZ37AAS_borelSpace : BorelSpace G :=
   specialUnitaryGroupBorelSpace 2
+local instance p4Q2PZ37AAS_probability :
+    IsProbabilityMeasure (normalizedCompactHaar G) :=
+  normalizedCompactHaar_isProbabilityMeasure G
+private noncomputable instance p4Q2PZ37AAS_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+local instance p4Q2PZ37AAS_originalHaarProbability (H : ℕ) :
+    IsProbabilityMeasure
+      (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2) := by
+  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+  infer_instance
 
 namespace GroundStatePosteriorJoint
 
