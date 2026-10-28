@@ -73,7 +73,7 @@ theorem p4Q2PZ37AAA_normedTangent_scalarError_le
         norm_sub_le _ _
       _ ≤ (‖(s*(q+k)-(d+k)) • U‖ +
           ‖((s-1)/2) • W‖) + ‖s • e‖ :=
-        add_le_add_right (norm_add_le _ _) _
+        add_le_add (norm_add_le _ _) (le_refl _)
       _ = |s*(q+k)-(d+k)| + (|s-1|/2)*‖W‖ + |s| *‖e‖ := by
         simp only [norm_smul, Real.norm_eq_abs, abs_div,
           abs_of_pos (show (0 : ℝ) < 2 by norm_num), hU]
