@@ -116,7 +116,11 @@ theorem p4Q2PZ37ZZ_positiveBilinear_Rayleigh_error_le
   have hTerm2 :
       |(B x x/‖x‖^2) * ((‖y‖^2-‖x‖^2)/‖y‖^2)| ≤
         C * (((‖x‖+‖y‖)*‖x-y‖)/‖y‖^2) := by
-    rw [abs_mul, abs_div, abs_of_pos hYSq]
+    have hAbsRight :
+        |(‖y‖^2-‖x‖^2)/‖y‖^2| =
+          |‖y‖^2-‖x‖^2| / ‖y‖^2 := by
+      rw [abs_div, abs_of_pos hYSq]
+    rw [abs_mul, hAbsRight]
     exact mul_le_mul hRayleighCap
       (div_le_div_of_nonneg_right hNormSqDelta hYSq.le)
       (div_nonneg (abs_nonneg _) hYSq.le) hC
