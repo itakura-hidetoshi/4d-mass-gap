@@ -52,25 +52,13 @@ local instance p4Q2PZ37AAR_borelSpace : BorelSpace G :=
   specialUnitaryGroupBorelSpace 2
 
 /-!
-The original Wilson spatial-slice definition elaborates its finite lists
-using the canonical subtype Fintype for the time-zero vertex and the
-canonical product Fintype for links/plaquettes. Imported AAP/AAQ files
-also export private Fintype.ofFinite instances for these types; selecting
-those can change the definitional form of Finset.univ.toList despite
-extensional equality. The following FILE-LOCAL instances deliberately
-recover the exact original constructors, not a different enumeration.
+The original Wilson energy enumerates the actual spatial links/plaquettes
+through the canonical lists, while imported AAP/AAQ may elaborate a
+distinct Fintype instance. Since universal finsets are extensionally
+equal, convert each concrete original list-sum to the mathematical
+finite sum by Finset.sum_map_toList followed by Finset.sum_congr.
+No instance overrides or replacement of the original Wilson model.
 -/
-local instance p4Q2PZ37AAR_canonicalVertexFintype (H : ℕ) :
-    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
-  Subtype.fintype (periodicHypercubicEvenOnPrimaryReflectionPlane H)
-
-local instance p4Q2PZ37AAR_canonicalLinkFintype (H : ℕ) :
-    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
-  instFintypeProd
-
-local instance p4Q2PZ37AAR_canonicalPlaquetteFintype (H : ℕ) :
-    Fintype (PeriodicHypercubicEvenSpatialSlicePlaquette H) :=
-  instFintypeProd
 
 namespace GroundStatePosteriorJoint
 
@@ -153,11 +141,12 @@ private theorem p4Q2PZ37AAR_originalSpatialAction_eq_sum
   classical
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction
     periodicHypercubicEvenSpatialSlicePlaquetteList
-  exact Finset.sum_map_toList
-    (s := (Finset.univ : Finset P))
-    (f := fun p : P =>
-      specialUnitaryWilsonPlaquetteEnergy 2
-        (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A p))
+  rw [Finset.sum_map_toList]
+  apply Finset.sum_congr
+  · ext p
+    simp
+  · intro p _hp
+    rfl
 
 /-- UNCONDITIONAL exact spatial translation symmetry of the
 ORIGINAL genuine SU(2) time-zero spatial Wilson action. -/
@@ -193,10 +182,12 @@ private theorem p4Q2PZ37AAR_originalCrossingAction_eq_sum
   classical
   unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction
     periodicHypercubicEvenSpatialSliceLinkList
-  exact Finset.sum_map_toList
-    (s := (Finset.univ : Finset Link))
-    (f := fun e : Link =>
-      specialUnitaryWilsonPlaquetteEnergy 2 ((A e)⁻¹ * B e))
+  rw [Finset.sum_map_toList]
+  apply Finset.sum_congr
+  · ext e
+    simp
+  · intro e _he
+    rfl
 
 /-- The original temporal crossing action of TWO adjacent physical
 spatial boundaries is spatially translation covariant. -/
