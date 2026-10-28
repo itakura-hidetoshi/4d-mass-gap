@@ -250,7 +250,7 @@ theorem p4Q2PZ37AAN_sparseActiveLinks_force_posteriorSecondMoment
     mul_le_mul_of_nonneg_right hSparse hMomentNonneg
   have hBasic : (c - alpha)^2 ≤
       delta * p4Q2PZ37AAN_originalPosteriorLinkSecondMoment H b hb := by
-    apply (mul_le_mul_right hL).mp
+    apply (mul_le_mul_right hL).mpr
     nlinarith only [hTrade, hSparseMul]
   exact (div_le_iff₀ hDelta).mpr hBasic
 
