@@ -250,7 +250,7 @@ theorem p4Q2PZ37AAN_sparseActiveLinks_force_posteriorSecondMoment
     mul_le_mul_of_nonneg_right hSparse hMomentNonneg
   have hBasic : (c - alpha)^2 ≤
       delta * p4Q2PZ37AAN_originalPosteriorLinkSecondMoment H b hb := by
-    apply (mul_le_mul_right hL).mpr
+    apply (mul_le_mul_right hL).mp
     nlinarith only [hTrade, hSparseMul]
   exact (div_le_iff₀ hDelta).mpr hBasic
 
@@ -287,7 +287,7 @@ theorem p4Q2PZ37AAN_actualPosteriorCap_secondMoment_volumeCost
         L * (∑ e : PeriodicHypercubicEvenSpatialSliceLink H, cap * j e) :=
       mul_le_mul_of_nonneg_left hSum hL
     _ = L * (cap * ∑ e : PeriodicHypercubicEvenSpatialSliceLink H, j e) := by
-      rw [Finset.mul_sum]
+      rw [← Finset.mul_sum]
     _ = L * (cap * p4Q2PZ37AAH_originalExactCenteredRayleighFloor H b hb) := by
       rw [p4Q2PZ37AAK_originalNormalizedLinkResponse_sum_eq_Rayleigh]
 
