@@ -128,10 +128,22 @@ theorem p4Q2PZ37AAV_originalFullMeanActiveDensity_ge_oneThird
     simp
   have hSsub : S ⊆
       p4Q2PZ37AAL_originalActiveLinks H b hb (R b hb) := hd
+  have hUniv :
+      (Finset.univ : Finset Link) =
+        (Finset.univ : Finset V).product (Finset.univ : Finset D) := by
+    ext e
+    simp
   have hCount : Fintype.card Link = 3 * Fintype.card V := by
-    change Fintype.card (V × D) = 3 * Fintype.card V
-    rw [Fintype.card_prod, p4Q2PZ37AAP_originalSpatialDirection_card_three]
-    omega
+    calc
+      Fintype.card Link = (Finset.univ : Finset Link).card := by simp
+      _ = ((Finset.univ : Finset V).product
+          (Finset.univ : Finset D)).card := by rw [hUniv]
+      _ = Fintype.card V * Fintype.card D := by
+        rw [Finset.product_eq_sprod, Finset.card_product]
+        simp
+      _ = 3 * Fintype.card V := by
+        rw [p4Q2PZ37AAP_originalSpatialDirection_card_three]
+        omega
   have hCountReal :
       (Fintype.card Link : ℝ) = 3 * (Fintype.card V : ℝ) := by
     exact_mod_cast hCount
