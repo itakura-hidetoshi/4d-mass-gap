@@ -52,12 +52,25 @@ local instance p4Q2PZ37AAR_borelSpace : BorelSpace G :=
   specialUnitaryGroupBorelSpace 2
 
 /-!
-Use the original global product-Fintype instances for spatial links and
-plaquettes. Overriding them with Fintype.ofFinite changes the concrete
-Finset.univ.toList representation used by the original Wilson action,
-breaking definitional equality although the two enumerations are
-extensionally equivalent.
+The original Wilson spatial-slice definition elaborates its finite lists
+using the canonical subtype Fintype for the time-zero vertex and the
+canonical product Fintype for links/plaquettes. Imported AAP/AAQ files
+also export private Fintype.ofFinite instances for these types; selecting
+those can change the definitional form of Finset.univ.toList despite
+extensional equality. The following FILE-LOCAL instances deliberately
+recover the exact original constructors, not a different enumeration.
 -/
+local instance p4Q2PZ37AAR_canonicalVertexFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceVertex H) :=
+  Subtype.fintype (periodicHypercubicEvenOnPrimaryReflectionPlane H)
+
+local instance p4Q2PZ37AAR_canonicalLinkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  instFintypeProd
+
+local instance p4Q2PZ37AAR_canonicalPlaquetteFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSlicePlaquette H) :=
+  instFintypeProd
 
 namespace GroundStatePosteriorJoint
 
