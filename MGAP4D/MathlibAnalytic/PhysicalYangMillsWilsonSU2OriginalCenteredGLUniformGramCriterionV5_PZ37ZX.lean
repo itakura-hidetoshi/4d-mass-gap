@@ -209,9 +209,10 @@ theorem p4Q2PZ37ZX_uniformCenteredRayleigh_iff_originalGram
     have hDen : 0 < ‖p4Q2PZ37ZW_originalCenteredPhysicalDirection H‖^2 :=
       pow_pos (norm_pos_iff.mpr
         (p4Q2PZ37ZW_originalCenteredDirection_ne_zero H)) 2
+    have hH := h H
     rw [p4Q2PZ37ZX_originalCenteredRayleigh_eq_originalGram_div_physicalNorm]
-      at h
-    exact (le_div_iff₀ hDen).mp (h H)
+      at hH
+    exact (le_div_iff₀ hDen).mp hH
   · intro h H
     have hDen : 0 < ‖p4Q2PZ37ZW_originalCenteredPhysicalDirection H‖^2 :=
       pow_pos (norm_pos_iff.mpr
@@ -230,6 +231,8 @@ theorem p4Q2PZ37ZX_uniformOriginalGram_implies_allFineZeroRayleighLimits
       c * ‖p4Q2PZ37ZW_originalCenteredPhysicalDirection H‖^2 ≤
         p4Q2PZ37ZX_originalCenteredGLGramValue H (b H) (hb H)) :
     ∀ H : ℕ,
+      0 < p4Q2PZ37ZG_originalFullLinkGL_physicalRayleigh H (b H) (hb H)
+          (p4Q2PZ37ZW_originalCenteredPhysicalDirection H) ∧
       c ≤ p4Q2PZ37ZG_originalFullLinkGL_physicalRayleigh H (b H) (hb H)
           (p4Q2PZ37ZW_originalCenteredPhysicalDirection H) ∧
       Tendsto (fun t : Set.Ici (0 : ℝ) =>
@@ -239,8 +242,11 @@ theorem p4Q2PZ37ZX_uniformOriginalGram_implies_allFineZeroRayleighLimits
         (𝓝 (p4Q2PZ37ZG_originalFullLinkGL_physicalRayleigh H (b H) (hb H)
           (p4Q2PZ37ZW_originalCenteredPhysicalDirection H))) := by
   intro H
-  exact ⟨(p4Q2PZ37ZX_uniformCenteredRayleigh_iff_originalGram b hb c).2
-    hGram H, p4Q2PZ37ZW3_originalPhysicalRayleigh_strictFineZeroLimit
+  have hLower :=
+    ((p4Q2PZ37ZX_uniformCenteredRayleigh_iff_originalGram b hb c).2
+      hGram) H
+  exact ⟨lt_of_lt_of_le hc hLower, hLower,
+    p4Q2PZ37ZW3_originalPhysicalRayleigh_strictFineZeroLimit
       H (b H) (hb H)⟩
 
 end GroundStatePosteriorJoint
