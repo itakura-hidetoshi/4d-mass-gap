@@ -247,7 +247,7 @@ theorem p4Q2PZ37AAP_covariance_implies_originalRelativeLinkCap
           rw [hUniv]
         _ = (Finset.univ : Finset V).card *
               (Finset.univ : Finset D).card := by
-          rw [Finset.card_product]
+          rw [Finset.product_eq_sprod, Finset.card_product]
         _ = Fintype.card V * Fintype.card D := by simp
     change (Fintype.card E : ℝ) =
       (Fintype.card V : ℝ) * (Fintype.card D : ℝ)
@@ -262,7 +262,7 @@ theorem p4Q2PZ37AAP_covariance_implies_originalRelativeLinkCap
         change (Finset.univ : Finset E).sum j =
           (Finset.univ : Finset V).sum
             (fun v => (Finset.univ : Finset D).sum (fun d => j (v,d)))
-        rw [hUniv, Finset.sum_product]
+        rw [hUniv, Finset.product_eq_sprod, Finset.sum_product]
       _ = ∑ _v : V, ∑ d : D, j (v0,d) := by
         apply Finset.sum_congr rfl
         intro v _hv
