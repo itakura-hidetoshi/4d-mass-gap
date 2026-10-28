@@ -86,10 +86,8 @@ the old configuration at the old link. -/
     (a : Disp) (A : Cfg) (e : Link) :
     p4Q2PZ37AAQ_originalSpatialConfigurationTranslation H a A
       (p4Q2PZ37AAP_actualSpatialLinkTranslation H a e) = A e := by
-  simpa [p4Q2PZ37AAQ_originalSpatialConfigurationTranslation] using
-    (Equiv.piCongrLeft_apply_apply
-      (fun _ : Link => G)
-      (p4Q2PZ37AAP_actualSpatialLinkTranslation H a) A e)
+  exact MeasurableEquiv.piCongrLeft_apply_apply
+    (p4Q2PZ37AAP_actualSpatialLinkTranslation H a) A e
 
 /-- Genuine original spatial-link insertion commutes exactly with
 spatial reindexing. This is an equality of complete configurations. -/
