@@ -209,8 +209,7 @@ theorem p4Q2PZ37AAG_originalCenteredPhysical_coe_eq_halfHaarSynthesis
               L (1 : C(Cfg, ℝ)) := by
     simp only [p4Q2PZ37ZA_originalCenteredPlaquetteHaarSource,
       Finset.sum_sub_distrib, Finset.sum_smul]
-  change ((1 / 2 : ℝ) • (W - w • U) : Phys) = _
-  change ((1 / 2 : ℝ) • (W - w • U) : Lp ℝ 2 haar) =
+  change (((1 / 2 : ℝ) • (W - w • U) : Phys) : Lp ℝ 2 haar) =
     (1 / 2 : ℝ) •
       (∑ p : Plaq, p4Q2PZ37ZA_originalCenteredPlaquetteHaarSource H p)
   rw [Submodule.coe_smul, Submodule.coe_sub, Submodule.coe_smul]
