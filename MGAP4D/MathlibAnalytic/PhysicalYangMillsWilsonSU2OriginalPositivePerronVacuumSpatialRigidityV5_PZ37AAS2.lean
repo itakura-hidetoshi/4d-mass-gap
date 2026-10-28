@@ -81,7 +81,7 @@ private theorem positiveKernel_continuousEigenfunction_unique_up_to_scale
     exact (le_div_iff₀ (hvpos A)).mp (hmin A)
   have hAt : u B0 = c * v B0 := by
     dsimp [c, r]
-    exact (div_mul_cancel₀ (hvpos B0).ne').symm
+    exact (div_mul_cancel₀ (u B0) (hvpos B0).ne').symm
   have hIntF :
       Integrable (fun A : X => (u A - c * v A) * K A B0) μ := by
     have heq :
