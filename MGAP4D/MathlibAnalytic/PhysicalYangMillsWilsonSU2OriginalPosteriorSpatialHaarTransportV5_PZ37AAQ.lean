@@ -87,6 +87,7 @@ the old configuration at the old link. -/
     p4Q2PZ37AAQ_originalSpatialConfigurationTranslation H a A
       (p4Q2PZ37AAP_actualSpatialLinkTranslation H a e) = A e := by
   exact MeasurableEquiv.piCongrLeft_apply_apply
+    (β := fun _ : Link => G)
     (p4Q2PZ37AAP_actualSpatialLinkTranslation H a) A e
 
 /-- Genuine original spatial-link insertion commutes exactly with
@@ -99,15 +100,10 @@ theorem p4Q2PZ37AAQ_configurationTranslation_update
         (p4Q2PZ37AAQ_originalSpatialConfigurationTranslation H a A)
         (p4Q2PZ37AAP_actualSpatialLinkTranslation H a e) g := by
   classical
-  funext f
   let T := p4Q2PZ37AAP_actualSpatialLinkTranslation H a
-  obtain ⟨q, rfl⟩ := T.surjective f
-  simp only [p4Q2PZ37AAQ_configurationTranslation_apply_translatedLink]
-  by_cases hq : q = e
-  · subst q
-    simp
-  · have ht : T q ≠ T e := fun h => hq (T.injective h)
-    simp [Function.update, hq, ht]
+  change (Function.update A e g) ∘ (T.symm : Link → Link) =
+    Function.update (A ∘ (T.symm : Link → Link)) (T e) g
+  simpa using (Function.update_comp_equiv A T.symm e g)
 
 /-- The original constant identity LEFT Wilson boundary is fixed by
 every true spatial translation. -/
