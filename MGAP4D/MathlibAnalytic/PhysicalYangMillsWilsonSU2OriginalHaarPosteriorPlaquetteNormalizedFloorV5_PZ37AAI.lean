@@ -524,8 +524,7 @@ private theorem p4Q2PZ37AAI_scaledNorm_le_frameQuarter
     (m / (24 * P)) * N ≤ (m / (24 * P)) * (6 * P) :=
       mul_le_mul_of_nonneg_left hN hCoeff
     _ = m / 4 := by
-      field_simp [ne_of_gt hP]
-      <;> ring
+      field_simp [ne_of_gt hP]; ring
 
 /-- A true ORIGINAL interacting-posterior centered two-source Gram
 floor m/4 controls the physical source norm at rate m/(24 P_H).
@@ -544,7 +543,7 @@ theorem p4Q2PZ37AAI_originalCenteredGram_ge_plaquetteScaledNorm
       ‖p4Q2PZ37ZW_originalCenteredPhysicalDirection H‖^2 ≤ 6 * P :=
     p4Q2PZ37AAI_originalCenteredPhysicalNorm_sq_le_six_plaquetteCount H
   exact (p4Q2PZ37AAI_scaledNorm_le_frameQuarter P m
-    ‖p4Q2PZ37ZW_originalCenteredPhysicalDirection H‖^2
+    (‖p4Q2PZ37ZW_originalCenteredPhysicalDirection H‖^2)
     hP hm hNorm).trans hGram
 
 /-- Concrete full-link true posterior Rayleigh versus actual spatial
