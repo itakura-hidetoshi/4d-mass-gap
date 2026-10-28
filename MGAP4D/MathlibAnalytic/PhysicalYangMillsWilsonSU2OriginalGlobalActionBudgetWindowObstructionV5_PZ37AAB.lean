@@ -50,7 +50,9 @@ theorem p4Q2PZ37AAB_originalGlobalActionBudget_ge_four_sideParameter
   have hList :
       (periodicHypercubicEvenSpatialSlicePlaquetteList H).length =
         Fintype.card (PeriodicHypercubicEvenSpatialSlicePlaquette H) := by
-    simp [periodicHypercubicEvenSpatialSlicePlaquetteList]
+    change (Finset.univ.toList : List (PeriodicHypercubicEvenSpatialSlicePlaquette H)).length =
+      Fintype.card (PeriodicHypercubicEvenSpatialSlicePlaquette H)
+    simp
   have hPlaq :
       2 * (H+1) ≤
         (periodicHypercubicEvenSpatialSlicePlaquetteList H).length := by
@@ -62,10 +64,14 @@ theorem p4Q2PZ37AAB_originalGlobalActionBudget_ge_four_sideParameter
   have hLink :
       0 ≤ ((periodicHypercubicEvenSpatialSliceLinkList H).length : ℝ) :=
     Nat.cast_nonneg _
+  have hRealNorm :
+      (2 : ℝ) * ((H : ℝ) + 1) ≤
+        ((periodicHypercubicEvenSpatialSlicePlaquetteList H).length : ℝ) := by
+    simpa only [Nat.cast_add, Nat.cast_one] using hReal
   dsimp [periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabGlobalActionBudget,
     periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabCombinatorialVolume]
   push_cast
-  linarith
+  linarith only [hRealNorm, hLink]
 
 /-- The true original Wilson one-slab GLOBAL budget is unbounded.
 No arbitrary volume proxy is used: both counts are canonical lists. -/
