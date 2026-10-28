@@ -42,7 +42,7 @@ set_option synthInstance.maxHeartbeats 1050000
 positive symmetric quadratic form on its original normed carrier.
 The source norm in the denominator is NOT a coefficient norm. -/
 theorem p4Q2PZ37ZZ_positiveBilinear_Rayleigh_error_le
-    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    {E : Type*} [NormedAddCommGroup E] [Module ℝ E]
     (B : LinearMap.BilinForm ℝ E)
     (hSym : LinearMap.IsSymm B)
     (hPos : ∀ u : E, 0 ≤ B u u)
@@ -151,7 +151,6 @@ theorem p4Q2PZ37ZZ_positiveBilinear_Rayleigh_error_le
       nlinarith only [hh]
     _ = 5*C*‖x-y‖/‖y‖ := by
       field_simp [ne_of_gt hY]
-      ring
 
 local instance p4Q2PZ37ZZ_topologicalGroup :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
@@ -277,12 +276,12 @@ theorem p4Q2PZ37ZZ_originalAllVolumes_quantitativeUniformFineGate
       5 * p4Q2PZ37ZG_originalFullLinkGL_RayleighCap H (b H) *
         p4Q2PZ37ZZ_originalTangentDisplacement H t ≤
           (c / 2) * ‖p4Q2PZ37ZW3_originalCenteredPhysicalLift H‖) :
-    0 < ρ ∧ ∀ (H : ℕ) (t : Set.Ici (0 : ℝ)),
+    0 < c / 2 ∧ 0 < ρ ∧ ∀ (H : ℕ) (t : Set.Ici (0 : ℝ)),
       0 < (t : ℝ) → (t : ℝ) < ρ →
         c / 2 ≤
           p4Q2PZ37ZG_originalFullLinkGL_physicalRayleigh
             H (b H) (hb H) (p4Q2PZ37ZE_originalPhysicalCancellation H t) := by
-  refine ⟨hρ, ?_⟩
+  refine ⟨half_pos hc, hρ, ?_⟩
   intro H t ht htρ
   have hNorm :
       0 < ‖p4Q2PZ37ZW3_originalCenteredPhysicalLift H‖ := by
