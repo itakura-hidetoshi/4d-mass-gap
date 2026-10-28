@@ -67,9 +67,9 @@ theorem p4Q2PZ37AAG_originalSpatialWilsonContinuous_eq_finsetSum
   classical
   rw [p4Q2LO_originalSpatialWilsonContinuous_eq_localSum H]
   simp only [periodicHypercubicEvenSpatialSlicePlaquetteList]
-  simpa using (Finset.sum_toList (s :=
-    (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSlicePlaquette H)))
-    (f := fun p => p4Q2LO_originalLocalPlaquetteContinuous H p)).symm
+  simpa using (Finset.sum_map_toList
+    (Finset.univ : Finset (PeriodicHypercubicEvenSpatialSlicePlaquette H))
+    (fun p => p4Q2LO_originalLocalPlaquetteContinuous H p))
 
 /-- Exact original spatial Wilson Haar embedding is the sum of
 original toLp plaquettes; continuous source embedding is real-linear. -/
