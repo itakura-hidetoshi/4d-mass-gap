@@ -136,7 +136,6 @@ theorem p4Q2PZ37AAP_spatialTranslation_transitive_sameDirection
     ∃ a : Disp,
       p4Q2PZ37AAP_actualSpatialLinkTranslation H a e = f := by
   let a : Disp := ⟨f.1.1 - e.1.1, by
-    change (f.1.1 - e.1.1) 0 = 0
     have he : e.1.1 0 = 0 := e.1.2
     have hf : f.1.1 0 = 0 := f.1.2
     simp [he, hf]⟩
@@ -228,15 +227,31 @@ theorem p4Q2PZ37AAP_covariance_implies_originalRelativeLinkCap
   let v0 : V := (pz37zaSpatialPlaquetteCoordinateFamily H 0).1
   have hm : 0 < m := by
     have h : 0 < Fintype.card V := Fintype.card_pos_iff.mpr ⟨v0⟩
+    change (0 : ℝ) < (Fintype.card V : ℝ)
     exact_mod_cast h
   have hk3 : k = 3 := by
     change (Fintype.card D : ℝ) = 3
     norm_num [p4Q2PZ37AAP_originalSpatialDirection_card_three]
   have hk : 0 ≤ k := by rw [hk3]; norm_num
   have hL : 0 < L := p4Q2PZ37AAK_originalLinkCount_pos H
+  have hUniv :
+      (Finset.univ : Finset E) =
+        (Finset.univ : Finset V).product (Finset.univ : Finset D) := by
+    ext e
+    simp
   have hCard : L = m * k := by
-    dsimp [L, m, k]
-    simp only [Fintype.card_prod, Nat.cast_mul]
+    have hNat : Fintype.card E = Fintype.card V * Fintype.card D := by
+      calc
+        Fintype.card E = (Finset.univ : Finset E).card := by simp
+        _ = ((Finset.univ : Finset V).product (Finset.univ : Finset D)).card := by
+          rw [hUniv]
+        _ = (Finset.univ : Finset V).card *
+              (Finset.univ : Finset D).card := by
+          rw [Finset.card_product]
+        _ = Fintype.card V * Fintype.card D := by simp
+    change (Fintype.card E : ℝ) =
+      (Fintype.card V : ℝ) * (Fintype.card D : ℝ)
+    exact_mod_cast hNat
   have hConst : ∀ e f : E, e.2 = f.2 → j e = j f :=
     p4Q2PZ37AAP_originalNormalizedLink_directionHomogeneous H b hb hCov
   have hR : R = m * (∑ d : D, j (v0,d)) := by
@@ -244,7 +259,10 @@ theorem p4Q2PZ37AAP_covariance_implies_originalRelativeLinkCap
       R = ∑ e : E, j e :=
         (p4Q2PZ37AAK_originalNormalizedLinkResponse_sum_eq_Rayleigh H b hb).symm
       _ = ∑ v : V, ∑ d : D, j (v,d) := by
-        rw [Fintype.sum_prod_type]
+        change (Finset.univ : Finset E).sum j =
+          (Finset.univ : Finset V).sum
+            (fun v => (Finset.univ : Finset D).sum (fun d => j (v,d)))
+        rw [hUniv, Finset.sum_product]
       _ = ∑ _v : V, ∑ d : D, j (v0,d) := by
         apply Finset.sum_congr rfl
         intro v _hv
@@ -253,6 +271,7 @@ theorem p4Q2PZ37AAP_covariance_implies_originalRelativeLinkCap
         exact hConst (v,d) (v0,d) rfl
       _ = m * ∑ d : D, j (v0,d) := by
         simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
+        rfl
   have hOne (d : D) : j (v0,d) ≤ ∑ q : D, j (v0,q) := by
     have hSubset := Finset.sum_le_sum_of_subset_of_nonneg
       (Finset.subset_univ ({d} : Finset D))
