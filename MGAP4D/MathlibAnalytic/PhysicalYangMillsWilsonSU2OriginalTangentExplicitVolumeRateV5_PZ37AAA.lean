@@ -65,7 +65,7 @@ theorem p4Q2PZ37AAA_normedTangent_scalarError_le
   have hVector :
       ‖((s*(q+k)) • U + (s/2) • W - s • e) -
         ((d+k) • U + (1/2 : ℝ) • W)‖ ≤
-      |s*(q+k)-(d+k)| + (|s-1|/2)*‖W‖ + |s|*‖e‖ := by
+      |s*(q+k)-(d+k)| + (|s-1|/2)*‖W‖ + |s| *‖e‖ := by
     rw [hExpand]
     calc
       ‖(s*(q+k)-(d+k)) • U + ((s-1)/2) • W - s • e‖ ≤
@@ -74,12 +74,12 @@ theorem p4Q2PZ37AAA_normedTangent_scalarError_le
       _ ≤ (‖(s*(q+k)-(d+k)) • U‖ +
           ‖((s-1)/2) • W‖) + ‖s • e‖ :=
         add_le_add_right (norm_add_le _ _) _
-      _ = |s*(q+k)-(d+k)| + (|s-1|/2)*‖W‖ + |s|*‖e‖ := by
+      _ = |s*(q+k)-(d+k)| + (|s-1|/2)*‖W‖ + |s| *‖e‖ := by
         simp only [norm_smul, Real.norm_eq_abs, abs_div,
           abs_of_pos (show (0 : ℝ) < 2 by norm_num), hU]
         ring
   have hA :
-      |s-1| * |d+k| ≤ (2*B*t)*|d+k| :=
+      |s-1| * |d+k| ≤ (2*B*t)* |d+k| :=
     mul_le_mul_of_nonneg_right hS (abs_nonneg _)
   have hQBound :
       |s| * |q-d| ≤ 2 * (9*B^2*t) :=
@@ -89,16 +89,16 @@ theorem p4Q2PZ37AAA_normedTangent_scalarError_le
     apply mul_le_mul_of_nonneg_right _ (norm_nonneg W)
     exact div_le_div_of_nonneg_right hS (by norm_num)
   have hEBound :
-      |s|*‖e‖ ≤ 2 * (B^2*t) :=
+      |s| *‖e‖ ≤ 2 * (B^2*t) :=
     mul_le_mul hS2 hE (norm_nonneg e) (by norm_num)
   calc
     ‖((s*(q+k)) • U + (s/2) • W - s • e) -
        ((d+k) • U + (1/2 : ℝ) • W)‖ ≤
-      |s*(q+k)-(d+k)| + (|s-1|/2)*‖W‖ + |s|*‖e‖ := hVector
-    _ ≤ (2*B*t)*|d+k| + 2*(9*B^2*t) +
+      |s*(q+k)-(d+k)| + (|s-1|/2)*‖W‖ + |s| *‖e‖ := hVector
+    _ ≤ (2*B*t)* |d+k| + 2*(9*B^2*t) +
         ((2*B*t)/2)*‖W‖ + 2*(B^2*t) := by
       linarith only [hScalar, hA, hQBound, hWBound, hEBound]
-    _ = (2*B*|d+k| + B*‖W‖ + 20*B^2)*t := by ring
+    _ = (2*B* |d+k| + B*‖W‖ + 20*B^2)*t := by ring
 
 local instance p4Q2PZ37AAA_topologicalGroup :
     IsTopologicalGroup (Matrix.specialUnitaryGroup (Fin 2) ℂ) :=
@@ -193,7 +193,7 @@ noncomputable def p4Q2PZ37AAA_originalPhysicalTangentRateBudget
   let W := p4Q2JU_originalSpatialWilsonPhysicalSource H
   let d := inner ℝ (p4Q2PZ37ZQ_originalPhysicalRawDerivative H) U
   let k := p4Q2JE_originalWilsonHaarZeroDerivativeConstant H
-  2*B*|d+k| + B*‖W‖ + 20*B^2
+  2*B* |d+k| + B*‖W‖ + 20*B^2
 
 /-- For the ACTUAL original Wilson normalized physical transfer,
 the physical source F_t/t converges with a proved explicit O_H(t)
