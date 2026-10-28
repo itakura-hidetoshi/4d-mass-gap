@@ -164,9 +164,10 @@ theorem p4Q2PZ37AAC_originalPositiveFine_Rayleigh_ge_halfGramFloor
         ‖p4Q2PZ37ZW3_originalCenteredPhysicalLift H‖ / 2)
     (hRate :
       p4Q2PZ37AAC_originalPhysicalRayleighLinearRate H b * (t : ℝ) ≤ c/2) :
-    c/2 ≤
+    0 < c/2 ∧ c/2 ≤
       p4Q2PZ37ZG_originalFullLinkGL_physicalRayleigh H b hb
         (p4Q2PZ37ZE_originalPhysicalCancellation H t) := by
+  refine ⟨half_pos hc, ?_⟩
   have hNorm :
       0 < ‖p4Q2PZ37ZW_originalCenteredPhysicalDirection H‖^2 :=
     pow_pos (norm_pos_iff.mpr
