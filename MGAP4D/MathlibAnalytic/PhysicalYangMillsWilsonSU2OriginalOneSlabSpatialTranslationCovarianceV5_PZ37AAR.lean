@@ -139,12 +139,11 @@ private theorem p4Q2PZ37AAR_originalSpatialAction_eq_sum
   classical
   unfold periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction
     periodicHypercubicEvenSpatialSlicePlaquetteList
-  simpa using
-    (Finset.sum_map_toList
-      (s := (Finset.univ : Finset P))
-      (f := fun p : P =>
-        specialUnitaryWilsonPlaquetteEnergy 2
-          (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A p))).symm
+  exact Finset.sum_map_toList
+    (s := (Finset.univ : Finset P))
+    (f := fun p : P =>
+      specialUnitaryWilsonPlaquetteEnergy 2
+        (periodicHypercubicEvenSpatialSlicePlaquetteHolonomy A p))
 
 /-- UNCONDITIONAL exact spatial translation symmetry of the
 ORIGINAL genuine SU(2) time-zero spatial Wilson action. -/
@@ -155,13 +154,11 @@ theorem p4Q2PZ37AAR_originalSpatialWilsonAction_translation
     periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H 2 A := by
   rw [p4Q2PZ37AAR_originalSpatialAction_eq_sum H,
     p4Q2PZ37AAR_originalSpatialAction_eq_sum H]
-  refine Fintype.sum_equiv
-    (p4Q2PZ37AAR_actualSpatialPlaquetteTranslation H a).symm _ _ ?_
-  intro p
-  simpa only [Equiv.apply_symm_apply] using
-    congrArg (specialUnitaryWilsonPlaquetteEnergy 2)
-      (p4Q2PZ37AAR_originalSpatialPlaquetteHolonomy_translation H a A
-        ((p4Q2PZ37AAR_actualSpatialPlaquetteTranslation H a).symm p))
+  rw [← Equiv.sum_comp (p4Q2PZ37AAR_actualSpatialPlaquetteTranslation H a)]
+  apply Finset.sum_congr rfl
+  intro p _hp
+  exact congrArg (specialUnitaryWilsonPlaquetteEnergy 2)
+    (p4Q2PZ37AAR_originalSpatialPlaquetteHolonomy_translation H a A p)
 
 /-- The original actual spatial action CONTINUOUS Wilson source, not
 a substituted detector, is invariant at every configuration. -/
@@ -182,11 +179,10 @@ private theorem p4Q2PZ37AAR_originalCrossingAction_eq_sum
   classical
   unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingAction
     periodicHypercubicEvenSpatialSliceLinkList
-  simpa using
-    (Finset.sum_map_toList
-      (s := (Finset.univ : Finset Link))
-      (f := fun e : Link =>
-        specialUnitaryWilsonPlaquetteEnergy 2 ((A e)⁻¹ * B e))).symm
+  exact Finset.sum_map_toList
+    (s := (Finset.univ : Finset Link))
+    (f := fun e : Link =>
+      specialUnitaryWilsonPlaquetteEnergy 2 ((A e)⁻¹ * B e))
 
 /-- The original temporal crossing action of TWO adjacent physical
 spatial boundaries is spatially translation covariant. -/
@@ -199,31 +195,18 @@ theorem p4Q2PZ37AAR_originalTemporalCrossingAction_translation
   rw [p4Q2PZ37AAR_originalCrossingAction_eq_sum H,
     p4Q2PZ37AAR_originalCrossingAction_eq_sum H]
   let T := p4Q2PZ37AAP_actualSpatialLinkTranslation H a
-  refine Fintype.sum_equiv T.symm _ _ ?_
-  intro e
-  have he :
-      (p4Q2PZ37AAP_actualSpatialLinkTranslation H a) (T.symm e) = e :=
-    T.apply_symm_apply e
+  rw [← Equiv.sum_comp T]
+  apply Finset.sum_congr rfl
+  intro e _he
   have hA :
-      p4Q2PZ37AAQ_originalSpatialConfigurationTranslation H a A e =
-        A (T.symm e) := by
-    simpa only [he] using
-      (p4Q2PZ37AAQ_configurationTranslation_apply_translatedLink
-        H a A (T.symm e))
+      p4Q2PZ37AAQ_originalSpatialConfigurationTranslation H a A (T e) =
+        A e :=
+    p4Q2PZ37AAQ_configurationTranslation_apply_translatedLink H a A e
   have hB :
-      p4Q2PZ37AAQ_originalSpatialConfigurationTranslation H a B e =
-        B (T.symm e) := by
-    simpa only [he] using
-      (p4Q2PZ37AAQ_configurationTranslation_apply_translatedLink
-        H a B (T.symm e))
-  have hPair :
-      (p4Q2PZ37AAQ_originalSpatialConfigurationTranslation H a A e,
-        p4Q2PZ37AAQ_originalSpatialConfigurationTranslation H a B e) =
-      (A (T.symm e), B (T.symm e)) := by
-    exact Prod.ext hA hB
-  exact congrArg
-    (fun q : G × G => specialUnitaryWilsonPlaquetteEnergy 2 (q.1⁻¹ * q.2))
-    hPair
+      p4Q2PZ37AAQ_originalSpatialConfigurationTranslation H a B (T e) =
+        B e :=
+    p4Q2PZ37AAQ_configurationTranslation_apply_translatedLink H a B e
+  rw [hA, hB]
 
 /-- True original symmetric one-slab Wilson action is invariant
 when both of its physical boundary configurations are translated. -/
