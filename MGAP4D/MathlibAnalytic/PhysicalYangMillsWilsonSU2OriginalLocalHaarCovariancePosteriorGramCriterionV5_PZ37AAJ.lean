@@ -82,6 +82,7 @@ theorem p4Q2PZ37AAJ_originalHaarSynthesis_norm_sq_eq_covariance (H : ℕ) :
   simp only [one_smul]
   rw [← real_inner_self_eq_norm_sq]
   simp only [sum_inner, inner_sum]
+  rw [Finset.sum_comm]
 
 /-- True product-Haar covariance has EXACT finite four-link locality:
 every pair with disjoint original link supports contributes zero. -/
