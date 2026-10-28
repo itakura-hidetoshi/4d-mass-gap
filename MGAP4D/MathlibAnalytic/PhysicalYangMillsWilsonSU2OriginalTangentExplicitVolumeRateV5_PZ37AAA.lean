@@ -40,7 +40,7 @@ normalized tangent; keeps the scalar and transverse errors separate. -/
 theorem p4Q2PZ37AAA_normedTangent_scalarError_le
     {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
     (U W e : E) (hU : ‖U‖ = 1)
-    (s q d k B t : ℝ) (hB : 0 ≤ B) (ht : 0 ≤ t)
+    (s q d k B t : ℝ)
     (hS : |s - 1| ≤ 2 * B * t)
     (hS2 : |s| ≤ 2)
     (hQ : |q-d| ≤ 9 * B^2 * t)
@@ -258,7 +258,7 @@ theorem p4Q2PZ37AAA_originalPhysicalTangent_error_le_linear
     module
   have hPointwise :=
     p4Q2PZ37AAA_normedTangent_scalarError_le
-      U W e hU s q d k B (t : ℝ) hB ht.le hsDiff hS2 hQ hE
+      U W e hU s q d k B (t : ℝ) hsDiff hS2 hQ hE
   rw [hX,hV]
   exact hPointwise
 
