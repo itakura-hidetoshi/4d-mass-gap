@@ -96,7 +96,8 @@ theorem p4Q2PZ37AAH_originalExactCenteredRayleighFloor_mul_norm_sq_eq_gram
   have hNorm : ‖p4Q2PZ37ZW_originalCenteredPhysicalDirection H‖^2 ≠ 0 :=
     ne_of_gt (pow_pos (norm_pos_iff.mpr
       (p4Q2PZ37ZW_originalCenteredDirection_ne_zero H)) 2)
-  field_simp [hNorm]
+  exact div_mul_cancel₀
+    (p4Q2PZ37ZX_originalCenteredGLGramValue H b hb) hNorm
 
 /-- The concrete original AAE certified radius, with c chosen from
 the exact ORIGINAL centered Wilson interacting-posterior Gram. -/
