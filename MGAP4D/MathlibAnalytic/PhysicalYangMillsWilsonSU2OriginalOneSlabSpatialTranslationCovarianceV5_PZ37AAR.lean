@@ -51,12 +51,13 @@ local instance p4Q2PZ37AAR_measurableSpace : MeasurableSpace G :=
 local instance p4Q2PZ37AAR_borelSpace : BorelSpace G :=
   specialUnitaryGroupBorelSpace 2
 
-private noncomputable instance p4Q2PZ37AAR_linkFintype (H : ℕ) :
-    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
-  Fintype.ofFinite _
-private noncomputable instance p4Q2PZ37AAR_plaquetteFintype (H : ℕ) :
-    Fintype (PeriodicHypercubicEvenSpatialSlicePlaquette H) :=
-  Fintype.ofFinite _
+/-!
+Use the original global product-Fintype instances for spatial links and
+plaquettes. Overriding them with Fintype.ofFinite changes the concrete
+Finset.univ.toList representation used by the original Wilson action,
+breaking definitional equality although the two enumerations are
+extensionally equivalent.
+-/
 
 namespace GroundStatePosteriorJoint
 
