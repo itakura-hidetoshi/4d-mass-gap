@@ -131,6 +131,8 @@ theorem p4Q2PZ37AAN_originalActiveCount_secondMoment_tradeoff
         (Finset.card_le_card (Finset.sdiff_subset :
           (Finset.univ \ S) ⊆ (Finset.univ :
             Finset (PeriodicHypercubicEvenSpatialSliceLink H))))
+    change ((Finset.univ \\ S).card : ℝ) ≤
+      (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ)
     exact_mod_cast hNat
   have hInactiveSum : (∑ e ∈ Finset.univ \ S, j e) ≤ alpha := by
     calc
@@ -147,7 +149,7 @@ theorem p4Q2PZ37AAN_originalActiveCount_secondMoment_tradeoff
         p4Q2PZ37AAH_originalExactCenteredRayleighFloor H b hb := by
     calc
       _ = ∑ e : PeriodicHypercubicEvenSpatialSliceLink H, j e := by
-        simpa using (Finset.sum_sdiff
+        exact (Finset.sum_sdiff
           (s₁ := S)
           (s₂ := (Finset.univ :
             Finset (PeriodicHypercubicEvenSpatialSliceLink H)))
@@ -248,11 +250,20 @@ theorem p4Q2PZ37AAN_sparseActiveLinks_force_posteriorSecondMoment
     H b hb c alpha hAlpha hAlphaLe hFloor
   have hSparseMul :=
     mul_le_mul_of_nonneg_right hSparse hMomentNonneg
+  have hLarge : (c - alpha)^2 * L ≤
+      (delta * p4Q2PZ37AAN_originalPosteriorLinkSecondMoment H b hb) * L := by
+    calc
+      (c - alpha)^2 * L ≤
+          ((p4Q2PZ37AAL_originalActiveLinks H b hb alpha).card : ℝ) *
+            p4Q2PZ37AAN_originalPosteriorLinkSecondMoment H b hb := hTrade
+      _ ≤ (delta * L) *
+            p4Q2PZ37AAN_originalPosteriorLinkSecondMoment H b hb := hSparseMul
+      _ = (delta * p4Q2PZ37AAN_originalPosteriorLinkSecondMoment H b hb) * L := by
+        ring
   have hBasic : (c - alpha)^2 ≤
-      delta * p4Q2PZ37AAN_originalPosteriorLinkSecondMoment H b hb := by
-    apply (mul_le_mul_right hL).mp
-    nlinarith only [hTrade, hSparseMul]
-  exact (div_le_iff₀ hDelta).mpr hBasic
+      delta * p4Q2PZ37AAN_originalPosteriorLinkSecondMoment H b hb :=
+    (mul_le_mul_iff_of_pos_right hL).mp hLarge
+  exact (div_le_iff₀ hDelta).mpr (by nlinarith only [hBasic])
 
 /-- The ACTUAL AAM pointwise Wilson posterior cap bounds M2 only by
 |Links_H| times the true physical Rayleigh. Thus it is NOT a uniform
