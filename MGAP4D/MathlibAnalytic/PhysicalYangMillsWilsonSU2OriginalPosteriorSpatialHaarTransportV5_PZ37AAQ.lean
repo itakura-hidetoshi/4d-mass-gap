@@ -116,8 +116,11 @@ theorem p4Q2PZ37AAQ_configurationTranslation_update
       · subst q
         simp
       · have ht : T q ≠ T e := fun h => hq (T.injective h)
-        simp [Function.update, hq, ht,
-          p4Q2PZ37AAQ_configurationTranslation_apply_translatedLink]
+        have hCoord :
+            A q = p4Q2PZ37AAQ_originalSpatialConfigurationTranslation H a A (T q) :=
+          (p4Q2PZ37AAQ_configurationTranslation_apply_translatedLink
+            H a A q).symm
+        simpa [Function.update, hq, ht] using hCoord
 
 /-- The original constant identity LEFT Wilson boundary is fixed by
 every true spatial translation. -/
