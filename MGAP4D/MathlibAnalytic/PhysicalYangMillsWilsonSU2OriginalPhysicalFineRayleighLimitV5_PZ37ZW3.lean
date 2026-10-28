@@ -107,10 +107,13 @@ theorem p4Q2PZ37ZW3_originalFullPhysicalTangent_has_continuousRepresentative
     ((a • U + ((s / 2) • W - s • Err) : Phys) : Lp ℝ 2 haar) =
       L (a • (1 : C(Cfg, ℝ)) +
         (s / 2) • p4Q2JI_actualSpatialWilsonContinuous H - s • (r • ψErr))
+  have hU : (U : Lp ℝ 2 haar) = L (1 : C(Cfg, ℝ)) :=
+    p4Q2JU_originalPhysicalUnit_coe_eq_toLp H
+  have hW : (W : Lp ℝ 2 haar) =
+      L (p4Q2JI_actualSpatialWilsonContinuous H) :=
+    p4Q2JU_originalSpatialWilsonPhysicalSource_coe_eq_toLp H
   simp only [Submodule.coe_add, Submodule.coe_sub, Submodule.coe_smul,
-    p4Q2JU_originalPhysicalUnit_coe_eq_toLp H,
-    p4Q2JU_originalSpatialWilsonPhysicalSource_coe_eq_toLp H,
-    hErr, map_add, map_sub, map_smul]
+    hU, hW, hErr, map_add, map_sub, map_smul]
 
 /-- The true centered source, with the inherited original physical
 Hilbert norm. -/
@@ -202,7 +205,8 @@ theorem p4Q2PZ37ZW3_originalGLRayleigh_smul
         |c| * ‖f‖ := by
     change ‖c • (f : Phys)‖ = |c| * ‖(f : Phys)‖
     rw [norm_smul, Real.norm_eq_abs]
-  rw [p4Q2PZ37ZW3_originalGLMass_smul, hNorm, mul_pow, sq_abs]
+  rw [p4Q2PZ37ZW3_originalGLMass_smul H b hb c f,
+    hNorm, mul_pow, sq_abs]
   exact mul_div_mul_left _ _ (pow_ne_zero 2 hc)
 
 /-- The numerator is continuous along the actual lifted normalized
