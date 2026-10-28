@@ -105,8 +105,7 @@ theorem p4Q2PZ37AAD_originalTangentErrorBudget_unbounded :
   have hQuad :=
     p4Q2PZ37AAD_originalTangentErrorBudget_ge_quadraticVolume H
   have hCast : (((H+1 : ℕ) : ℝ)) = (H : ℝ) + 1 := by
-    push_cast
-    ring
+    simp only [Nat.cast_add, Nat.cast_one]
   have hPos : 0 ≤ (H : ℝ) := Nat.cast_nonneg H
   have hSmall :
       (H : ℝ) ≤ (320 : ℝ) * (((H+1 : ℕ) : ℝ))^2 := by
