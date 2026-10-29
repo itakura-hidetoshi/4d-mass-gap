@@ -61,7 +61,9 @@ theorem p4Q2PZ37AAZ2_originalUnweightedGIGapSquare_integrable_of_FXCap
     (H : ℕ) (b : ℝ) (hb : 0 < b)
     (e : PeriodicHypercubicEvenSpatialSliceLink H)
     (q : ℝ) (hq : 0 < q)
-    (hQcap : ∀ z,
+    (hQcap : ∀ z :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
       p4Q2FX_originalSU2WilsonPosteriorLeftSensitivityHaarSq
         H b hb.le z.2 e ≤ q) :
     Integrable
@@ -127,7 +129,9 @@ theorem p4Q2PZ37AAZ2_originalGapMoment_le_FXCap_mul_raw_noIntegrability
     (H : ℕ) (b : ℝ) (hb : 0 < b)
     (e : PeriodicHypercubicEvenSpatialSliceLink H)
     (q : ℝ) (hq : 0 < q)
-    (hQcap : ∀ z,
+    (hQcap : ∀ z :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
       p4Q2FX_originalSU2WilsonPosteriorLeftSensitivityHaarSq
         H b hb.le z.2 e ≤ q) :
     p4Q2PZ37AAZ_originalUnweightedCenteredGIGapMoment H b hb e ≤
@@ -146,7 +150,9 @@ theorem p4Q2PZ37AAZ2_allVolumes_Rayleigh_of_unweightedGIMoments
     (b : ℕ → ℝ) (hb : ∀ H, 0 < b H)
     (m q : ℝ) (hm : 0 < m) (hq : 0 < q)
     (e : ∀ H, PeriodicHypercubicEvenSpatialSliceLink H)
-    (hQcap : ∀ H, ∀ z,
+    (hQcap : ∀ H, ∀ z :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
       p4Q2FX_originalSU2WilsonPosteriorLeftSensitivityHaarSq
         H (b H) (hb H).le z.2 (e H) ≤ q)
     (hMoment : ∀ H,
