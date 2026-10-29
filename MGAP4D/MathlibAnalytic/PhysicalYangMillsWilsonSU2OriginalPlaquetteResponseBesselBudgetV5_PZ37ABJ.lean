@@ -85,8 +85,23 @@ theorem p4Q2PZ37ABJ_originalAllPlaquette_pointwise_sq_sum_le
   let E : ℝ := p4Q2LW_originalHarnackContrastScale b
   have hSyn (a : Plaq → ℝ) :
       ‖∑ p : Plaq, a p • V p‖^2 ≤ 24 * ∑ p : Plaq, (a p)^2 := by
-    simpa only [p4Q2PZ37AAI_originalCenteredHaarPlaquetteSynthesis, V] using
-      (p4Q2PZ37AAI_originalCenteredHaarPlaquetteSynthesis_sq_le H a)
+    -- AAI and AAX2 construct different Fintype instances on the same
+    -- original vertex type. Their univ finsets coincide extensionally,
+    -- but they are not definitionally equal (Fintype is data, not Prop).
+    have hSynthesis :
+        (∑ p : Plaq, a p • V p) =
+          p4Q2PZ37AAI_originalCenteredHaarPlaquetteSynthesis H a := by
+      unfold p4Q2PZ37AAI_originalCenteredHaarPlaquetteSynthesis
+      apply Finset.sum_congr (Finset.ext (fun p => by simp))
+      intro p _hp
+      rfl
+    rw [hSynthesis]
+    convert (p4Q2PZ37AAI_originalCenteredHaarPlaquetteSynthesis_sq_le H a)
+      using 1
+    · congr 1
+      apply Finset.sum_congr (Finset.ext (fun p => by simp))
+      intro p _hp
+      rfl
   have hBessel : (∑ p : Plaq, (Q (V p))^2) ≤ 24 * ‖Q‖^2 :=
     finiteRealHilbert_functional_sq_sum_le_of_synthesis
       V 24 (by norm_num) hSyn Q
