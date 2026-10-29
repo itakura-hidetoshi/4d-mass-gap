@@ -186,7 +186,10 @@ theorem p4Q2PZ37ABB_exists_originalOpenEvent_positiveMassMoment
       have hAbs : delta ≤ |D z| := hGap z hz
       have hSq := pow_le_pow_left₀ hdelta.le hAbs 2
       simpa only [sq_abs] using hSq
-    · rw [Set.indicator_of_not_mem hz]
+    · have hIndicatorZero :
+          E.indicator (fun _ : Pair => delta^2) z = 0 := by
+        simp [hz]
+      rw [hIndicatorZero]
       exact sq_nonneg _
   have hIntegral :
       (∫ z : Pair, E.indicator (fun _ : Pair => delta^2) z ∂μ) ≤
