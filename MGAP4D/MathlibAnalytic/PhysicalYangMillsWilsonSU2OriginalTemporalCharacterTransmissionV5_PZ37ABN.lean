@@ -290,7 +290,7 @@ theorem p4Q2PZ37ABN_originalTemporalWilsonMass_continuous :
   change Continuous (fun b : ℝ => ∫ g : G, k b g ∂μ)
   simpa only [Measure.restrict_univ] using
     (continuous_parametric_integral_of_continuous
-      (μ := μ) (f := fun b : ℝ => fun g : G => k b g)
+      («μ» := μ) (f := fun b : ℝ => fun g : G => k b g)
       (s := Set.univ) hJoint isCompact_univ)
 
 theorem p4Q2PZ37ABN_originalTemporalWilsonCharacterMoment_continuous :
@@ -305,7 +305,7 @@ theorem p4Q2PZ37ABN_originalTemporalWilsonCharacterMoment_continuous :
   change Continuous (fun b : ℝ => ∫ g : G, k b g * χ g ∂μ)
   simpa only [Measure.restrict_univ] using
     (continuous_parametric_integral_of_continuous
-      (μ := μ) (f := fun b : ℝ => fun g : G => k b g * χ g)
+      («μ» := μ) (f := fun b : ℝ => fun g : G => k b g * χ g)
       (s := Set.univ) hJoint isCompact_univ)
 
 /-- Continuity of the actual original temporal coefficient, without an
