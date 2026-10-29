@@ -74,7 +74,7 @@ theorem p4Q2PZ37ABC2_exists_actualLink_and_plaquette_GIContribution_notAEZero
     p4Q2PZ37AAZ_exists_originalLink_centeredGIGap_notAEZero H b hb
   refine ⟨e, ?_⟩
   by_contra hNone
-  push_neg at hNone
+  push Not at hNone
   have hAll : ∀ᵐ z ∂μ,
       ∀ p : Plaq,
         p4Q2PZ37ABC_originalCenteredPlaquetteGIContribution H b hb e z p = 0 := by
