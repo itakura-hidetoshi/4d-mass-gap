@@ -209,7 +209,9 @@ theorem p4Q2PZ37ABH_compactProbability_event_minus_negativeTail
     by_cases hx : x ∈ E
     · rw [Set.indicator_of_mem hx]
       linarith [hSignal x hx]
-    · rw [Set.indicator_of_not_mem hx]
+    · have hZero : E.indicator (fun _ : X => delta) x = 0 := by
+        simp [hx]
+      rw [hZero]
       linarith
   have hIntegral :
       (∫ x, E.indicator (fun _ : X => delta) x ∂μ) ≤
@@ -329,7 +331,7 @@ theorem p4Q2PZ37ABH_allVolumes_fullGIfloor_of_trueCross_and_scaleCap
             H (b H) (hb H) e p) :
     0 < kappa^2 / (Emax / 2)^2 ∧
     ∀ H, ∃ (e : PeriodicHypercubicEvenSpatialSliceLink H)
-      (p : PeriodicHypercubicEvenSpatialSlicePlaquette H),
+      (_p : PeriodicHypercubicEvenSpatialSlicePlaquette H),
       kappa^2 / (Emax / 2)^2 ≤
         p4Q2PZ37AAZ_originalUnweightedCenteredGIGapMoment
           H (b H) (hb H) e := by
