@@ -141,7 +141,16 @@ theorem p4Q2PZ37ABF2_originalPhysicalLocalGI_abs_le_transferInverse
     (p4Q2PZ37ABD_originalCenteredLocalPlaquettePhysicalSource H p) e z| ≤
     t⁻¹ * (E / 2)
   rw [abs_mul, abs_of_pos ht] at hComp
-  exact (le_inv_mul_iff₀ ht).mpr (by simpa [mul_comm] using hComp)
+  calc
+    |p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap
+      H b hb.le
+      (p4Q2PZ37ABD_originalCenteredLocalPlaquettePhysicalSource H p) e z| =
+      t⁻¹ * (t * |p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap
+        H b hb.le
+        (p4Q2PZ37ABD_originalCenteredLocalPlaquettePhysicalSource H p) e z|) := by
+          rw [← mul_assoc, inv_mul_cancel₀ ht.ne', one_mul]
+    _ ≤ t⁻¹ * (E / 2) :=
+      mul_le_mul_of_nonneg_left hComp (inv_nonneg.mpr ht.le)
 
 /-- Full original pair-Haar L² energy of the ACTUAL compensated
 centered single-plaquette physical Wilson GI response. -/
@@ -181,8 +190,6 @@ theorem p4Q2PZ37ABF2_originalCompensatedLocalPhysicalGIMoment_le_uniform
   have hInt : Integrable (fun z : Pair => (t * L z)^2) μ :=
     ((continuous_const.mul hL).pow 2).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
-  have hE : 0 ≤ E / 2 :=
-    div_nonneg (p4Q2LW_originalHarnackContrastScale_nonneg b hb.le) (by norm_num)
   have hPoint (z : Pair) : (t * L z)^2 ≤ (E / 2)^2 := by
     have hAbs :=
       p4Q2PZ37ABF2_originalCompensatedLocalPhysicalGI_abs_le H b hb e p z
