@@ -1,5 +1,56 @@
 # MGAP4D Roadmap
 
+**Current docs mirror (2026-10-29 JST).** This is the default `main` **documentation root**, **not** the theorem-bearing branch. The unique authoritative Lean theorem branch is [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit). See its complete [README](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/93a6a06c18c7a66f9e29353ea7e2b034b90c0a33/README.md) and [ROADMAP](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/93a6a06c18c7a66f9e29353ea7e2b034b90c0a33/ROADMAP.md). This root mirror does not synchronize Lean sources onto `main`.
+
+## Current proof gates (2026-10-29 JST)
+
+| Verified evidence | Authority |
+| --- | --- |
+| Latest theorem-bearing merge | [P4-Q2-PZ37AAZ/AAZ2 #5991](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5991) **MERGED** |
+| Tested **PR source** SHA | [`d769e275d016b6645e924a116acb0d7653f7e9a0`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/d769e275d016b6645e924a116acb0d7653f7e9a0) |
+| Theorem-bearing **squash** SHA | [`20f910f54791d662b687965af231842a27f093b6`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/20f910f54791d662b687965af231842a27f093b6), matching authoritative HEAD just after #5991 merged |
+| [Exact-head CI #40814241452](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40814241452) | **11,159 / 11,159 SUCCESS**, AAZ/AAZ2 changed Lean warning/error **0 / 0**, all eight public `#print axioms` standard `propext` / `Classical.choice` / `Quot.sound` only, no `sorryAx`, independent CI completion receipt **SUCCESS** |
+| Latest theorem-branch **docs-only** update | [#5992 MERGED](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5992), docs SHA [`93a6a06c18c7a66f9e29353ea7e2b034b90c0a33`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/93a6a06c18c7a66f9e29353ea7e2b034b90c0a33), **not** a new Lean theorem |
+| Toolchain pin | Lean `v4.30.0-rc2`, mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
+
+### CLOSED — authentic Wilson finite-volume results
+
+The same **genuine** interacting SU(2) Wilson kernel, positive Perron ground state, Gauss-law physical centered source, both interacting one-link posterior laws and original boundary pair-Haar are preserved.
+
+- **AAH–AAK:** for every finite `H,b>0`, the original centered source-specific Rayleigh `R_{H,b}>0` and a real spatial link has positive raw response `J_e>0`. This is not a volume-uniform lower bound.
+- **AAU/AAV/AAW [#5986–#5988](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5988):** prove original spatial-translation covariance and relative link participation; one-link signal criteria **do not** themselves produce absolute uniform constants.
+- **AAX/AAX2 [#5989](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5989):** actual spatial plaquette count equals spatial link count, original centered Haar covariance `C_H≤24L_H`, and if an original link's unnormalized response `J_e≥ε`, then `R≥ε/18`.
+- **AAY [#5990](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5990):** a true measurable outer pair-Haar event with probability `≥ρ`, original interacting-posterior GI gap `|Δ|≥δ`, actual FX variance `0<Q≤q` gives `J_e≥ρδ²/q`.
+- **AAZ/AAZ2 [#5991](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5991):** for each finite `H,b>0`, the centered Gauss-law GI expectation gap is **not pair-Haar-a.e. zero** on some actual link. Let `G_e=∫Δ_e²dμ_H` be its **unweighted** squared moment, and `Q_e` the genuine posterior density-difference FX variance. Given an explicit actual `Q_e≤q`, prove `G_e` automatically integrable and `G_e≤qJ_e`; common `G_e≥m>0` and `q>0` imply **conditionally** `R≥m/(18q)>0`.
+
+### OPEN — next rigorous mathematical steps
+
+**Gate A — Priority 1, prove an absolute genuine GI second moment:** construct one real Wilson spatial link `e_H` for *each* original finite volume and a single `m>0` such that
+
+```text
+G_(H,b(H),e_H) = ∫ |Δ_(H,b(H),e_H)(z;V_H)|² dμ_H(z) ≥ m   (all H).
+```
+
+Do not assume the unknown `R≥c` in this proof. Qualitative non-a.e.-zero at every finite `H` does **not** imply a positive uniform `m`. Candidate work: finite-support genuine pair-Haar cylinder events with volume-uniform probability; show their **actual GI receiver** responds nontrivially despite integration cancellations, and descend the remaining Haar variables without replacing the interacting conditional posterior by independent Haar.
+
+**Gate B — prove a compatible true FX variance cap:** produce a common `q>0` for the chosen genuine frozen schedule `b(H)` and original `Q_{H,b(H),e_H}(z)≤q`. The earlier [JL #5658](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5658) fixed-`b` bound `Q≤(e^{16b}-e^{-16b})²` has **five inherited legacy finite-incidence `native_decide` axioms**. An independently audited standard-axiom proof or explicit dependency account is required; do **not** silently import that legacy chain into AAZ2. AAZ2 proves integrability *conditional on the cap*, not the cap's uniform existence.
+
+**Gate C — apply the already Lean-proved conditional criterion** only after real `m,q` are established: `R_{H,b(H)}≥m/(18q)>0`. The implication is CLOSED; the existence of uniform witnesses is OPEN. This still controls only the one particular **centered** Gauss-law physical source.
+
+**Gate D — source-wide coercivity and positive fine:** all-source Hilbert frame/coercivity, common positive fine-coupling interval, compatible same physical endpoint E/F across scales, arbitrary depths and strong Hilbert limits require separate results. Coefficient-ℓ² frame degeneracy `t↓0` does not settle a source-normalized physical Rayleigh lower bound.
+
+**Gate E — continuum:** H1–H4, Osterwalder–Schrader/Wightman reconstruction, physical Hamiltonian and continuum 4D Yang–Mills existence plus mass gap remain **OPEN**. Never label a conditional finite-volume witness as a solved continuum mass gap.
+
+**Essential distinction:** PZ37ZA [#5935](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5935) disproved the separate bounded **compensated two-context** `Q_GI/N_H` uniform floor, **not** the original true full-link/all-boundary-pair-Haar GL mass. `Q_post` (original FX posterior variance), `Q_GI` (two-context compensated minor energy), `J` (raw true posterior one-link GL signal) and `G` (unweighted genuine GI-gap moment) are different mathematical objects.
+
+**CI/authority rules:** re-observe the current theorem branch SHA; inspect entire changed Lean files/imports/dependent signatures and pinned mathlib APIs; require exact-head **completed** success, changed Lean warnings/errors 0/0, axioms audit, no `sorryAx`, independent CI completion receipt; merge theorem PR only after all checks. A docs-only root change does **not** run Strict Lean, confer theorem authority on `main` or count as a new result.
+
+---
+
+## Historical root ROADMAP archive (2026-10-04)
+
+The original default-`main` roadmap below is preserved as a **dated** #5077/#5078-era record. Its “current”/“next” statements are **historical**, not current mathematical priorities. Earlier finite-volume work, q₀ estimates and old no-go results are not discarded.
+
 Status date: 2026-10-04 JST
 
 Authoritative theorem branch:

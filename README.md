@@ -1,8 +1,55 @@
 # MGAP4D
 
+**Main-branch documentation mirror | 2026-10-29 JST.** Formalized four-dimensional Yang–Mills / genuine interacting Wilson SU(2) research in Lean 4 / pinned mathlib, by Hidetoshi Itakura.
+
+## Current verified research status — 2026-10-29
+
+**Only authoritative theorem branch:** [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit). The default **`main` is a documentation mirror, not the theorem carrier**. In particular, merging documentation into this root cannot be interpreted as merging the current Lean proof library into `main`.
+
+The complete current, audited repository-root documents on the **theorem branch** are:
+- [Authoritative README — theorem-branch docs checkpoint `93a6a06c...`](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/93a6a06c18c7a66f9e29353ea7e2b034b90c0a33/README.md).
+- [Authoritative ROADMAP — genuine outstanding analytic gates](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/93a6a06c18c7a66f9e29353ea7e2b034b90c0a33/ROADMAP.md).
+- [Latest verified theorem-bearing PR #5991 (AAZ / AAZ2)](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5991), preceded by [#5990 AAY](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5990) and [#5989 AAX / AAX2](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5989).
+
+| Evidence / pin | Verified value |
+| --- | --- |
+| Latest **theorem-bearing squash** | [`20f910f54791d662b687965af231842a27f093b6`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/20f910f54791d662b687965af231842a27f093b6), equal to the theorem branch HEAD immediately after #5991 was merged |
+| Exact **PR-source SHA** tested (different from squash) | [`d769e275d016b6645e924a116acb0d7653f7e9a0`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/d769e275d016b6645e924a116acb0d7653f7e9a0) |
+| [Exact-head CI #40814241452](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40814241452) | **11,159 / 11,159 SUCCESS**, both changed Lean files **0 warnings / 0 errors**, eight `#print axioms` with only `propext`, `Classical.choice`, `Quot.sound`; no `sorryAx`; independent completed MCP CI receipt **SUCCESS** |
+| Pinned toolchain / mathlib (theorem branch) | Lean `v4.30.0-rc2` / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
+| Current **docs-only** theorem-branch HEAD | [`93a6a06c18c7a66f9e29353ea7e2b034b90c0a33`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/93a6a06c18c7a66f9e29353ea7e2b034b90c0a33), PR [#5992](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5992); a later docs-only HEAD does **not** replace the theorem-bearing checkpoint |
+
+### Precisely what is established
+
+All of the following refer to the **original** finite-volume interacting Wilson SU(2) model with unchanged positive Perron vacuum, Gauss-law physical Hilbert source, **both actual normalized interacting one-link conditional posterior laws**, and original outer boundary pair-Haar integration. No independent-Haar posterior or artificial physical source is substituted.
+
+For every finite volume `H` and frozen coupling `b>0`, let `V_H` be the original centered Gauss-law source, `C_H=4‖V_H‖²>0` its reference-Haar covariance, `e` an actual spatial link, `Δ_{H,b,e}(z)` the genuine signed GI expectation gap under the two interacting Wilson posteriors, and `Q_{H,b,e}(z)>0` their actual FX Haar-`L²` density-contrast variance. Define the **raw** one-link response and the **source-specific** Rayleigh value:
+
+```text
+J_(H,b,e) = ∫ [Δ_(H,b,e)(z)^2 / Q_(H,b,e)(z)] dμ_H(z)
+R_(H,b)   = (4 / C_H) Σ_e J_(H,b,e)
+G_(H,b,e) = ∫ Δ_(H,b,e)(z)^2 dμ_H(z)   (unweighted GI-gap moment)
+```
+
+**CLOSED, at each fixed finite `H,b>0`:** `R_(H,b)>0`, an actual `e` has `J_(H,b,e)>0`, and — newly in [AAZ #5991](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5991) — the centered `Δ` for some actual link is **not zero pair-Haar-almost everywhere**. Previous AAU results give genuine Wilson spatial-translation covariance, second-moment bound `M₂≤3R²` and positive link participation fraction `≥1/3`. These are *qualitative or relative* finite-volume results, not a volume-uniform positive Rayleigh constant.
+
+**CLOSED combinatorial / conditional analytic steps:** The genuine spatial plaquette count equals link count (`P_H=L_H`), and `C_H≤24L_H`. Hence `J_e≥ε≥0 ⇒ R≥ε/18`. A measurable genuine pair-Haar event with mass `≥ρ`, `|Δ|≥δ` and `0<Q≤q` yields `J_e≥ρδ²/q`. AAZ2 further proves that under a pointwise actual FX upper bound `Q≤q`, the original unweighted square is automatically integrable and `G_e≤qJ_e`; consequently a **common** `G_e≥m>0` and **common** `q>0` would imply the **conditional** bound `R≥m/(18q)>0` across all volumes.
+
+**OPEN and central:** Independently construct a positive volume-uniform `m` for the **actual GI unweighted second moment** on one authentic link per volume, and establish an appropriate common genuine FX upper bound `q` for the chosen frozen coupling schedule. Finite-`H` non-a.e.-zero `Δ` does **not** establish a uniform `m`. The existing JL fixed-coupling genuine FX bound has **five inherited legacy finite-grid `native_decide` axioms** in its original proof and is not silently imported into the standard-only AAZ2 theorem dependency path.
+
+Even source-specific `R≥c` would not, alone, imply uniform coercivity for **all** Gauss-law Hilbert vectors; the common positive-fine interval, same physical endpoint E/F, all-depth results, H1–H4 and continuum 4D Yang–Mills existence/mass gap remain **OPEN**. The older [PZ37ZA #5935](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5935) disproved a **different** bounded compensated **two-context** `Q_GI/N_H` density floor; this is **not** a no-go for genuine full-link, full-boundary-pair-Haar physical GL mass.
+
+**Recommended workflow:** read the fresh theorem-branch HEAD and its complete Lean sources/imports and authoritative exact-head CI receipts first; use the theorem-branch [ROADMAP](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/93a6a06c18c7a66f9e29353ea7e2b034b90c0a33/ROADMAP.md) for next mathematical gates. A documentation-only root update must not trigger or imply a new Strict Lean validation.
+
+---
+
+## Historical root documentation (2026-10-04; preserved)
+
+The following original `main` README documents a prior #5077/#5078 stage. References below to “current” or “next” were true **at that dated checkpoint**, but are superseded as present-day status by the section above. Historical mathematical achievements, no-go statements and exact-head receipts are preserved, not deleted.
+
 Hidetoshi Itakura's Lean 4 / mathlib development for the four-dimensional Yang--Mills existence and mass-gap program.
 
-## Current theorem status — through merged PRs #5077 and #5078
+## Historical theorem status — through merged PRs #5077 and #5078 (2026-10-04)
 
 The finite-volume positive-coupling transfer-gap route remains closed with the explicit volume/rank/scale-uniform constants
 
