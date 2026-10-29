@@ -69,7 +69,8 @@ private theorem p4Q2PZ37ABP_originalAllLinkKernel_eq_prod
     K b A B = ∏ e : Link, k b ((A e)⁻¹ * B e) := by
   unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
   have hnodup : (periodicHypercubicEvenSpatialSliceLinkList H).Nodup := by
-    simp [periodicHypercubicEvenSpatialSliceLinkList]
+    unfold periodicHypercubicEvenSpatialSliceLinkList
+    exact Finset.nodup_toList _
   have hset : (periodicHypercubicEvenSpatialSliceLinkList H).toFinset =
       (Finset.univ : Finset Link) := by
     ext e
@@ -96,7 +97,7 @@ theorem p4Q2PZ37ABP_originalAllLinkWilsonKernel_mass
     Finset.prod_const, Finset.card_univ] using
     (integral_fintype_prod_eq_prod
       (ι := Link) (𝕜 := ℝ) (E := fun _ : Link => G)
-      (μ := fun _ : Link => μ)
+      («μ» := fun _ : Link => μ)
       (fun (e : Link) (x : G) => k b (x⁻¹ * B e)))
 
 /-- Every remote coordinate is integrated with its original target link
@@ -119,7 +120,7 @@ theorem p4Q2PZ37ABP_originalRemoteTemporalWilson_mass
     Finset.prod_const, Finset.card_univ] using
     (integral_fintype_prod_eq_prod
       (ι := Remote) (𝕜 := ℝ) (E := fun _ : Remote => G)
-      (μ := fun _ : Remote => μ)
+      («μ» := fun _ : Remote => μ)
       (fun (e : Remote) (x : G) => k b (x⁻¹ * B e.1)))
 
 /-- Continuous tests of the four actual links are genuinely integrable
@@ -134,8 +135,10 @@ theorem p4Q2PZ37ABP_originalAllLinkWilson_test_integrable
       (continuous_const : Continuous (fun _ : Cfg => B))
   have hJoint : Continuous (fun q : Cfg × Cfg => K b q.1 q.2) :=
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_continuous H 2 b
-  have hKernel : Continuous (fun A : Cfg => K b A B) :=
-    hJoint.comp hPair
+  have hKernel := Continuous.comp'
+    (f := fun A : Cfg => (A, B))
+    (g := fun q : Cfg × Cfg => K b q.1 q.2) hJoint hPair
+  change Continuous (fun A : Cfg => K b A B) at hKernel
   have hCoordinates : Continuous
       (fun A : Cfg => fun i : Fin 4 => A (p4Q2MY_originalPlaquetteFourEdges H p i)) :=
     continuous_pi (fun i => continuous_apply (p4Q2MY_originalPlaquetteFourEdges H p i))
