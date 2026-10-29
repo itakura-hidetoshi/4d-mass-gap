@@ -69,7 +69,7 @@ theorem p4Q2PZ37ABQ2_originalWeight_continuous (b : ℝ) (hb : 0 ≤ b) :
   rw [hEq]
   simpa only [Pi.mul_apply] using h
 
-variable (p : Plaq)
+variable (p : PeriodicHypercubicEvenSpatialSlicePlaquette H)
 /-!
 Lean 4 chooses section theorem parameters from theorem headers, not theorem
 proofs. Since p occurs through local notation (emb/Remote/ρ/assemble), explicitly
@@ -188,6 +188,12 @@ theorem p4Q2PZ37ABQ2_originalRemotePerronWeight_twoSided
     simpa only [← mul_assoc, hc, one_mul] using h
   · exact p4Q2PZ37ABQ2_originalRemotePerronWeight_le_exp H p b hb B x y
 
+/-!
+The crossing product identity does not use a selected plaquette.
+Omit the forced p argument here to preserve its true free-variable dependency,
+and avoid both a spurious argument and unused-section-variable warning.
+-/
+omit p in
 private theorem p4Q2PZ37ABQ2_crossing_eq_prod (b : ℝ) (A B : Cfg) :
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel H 2 b A B =
       ∏ e : Link, specialUnitaryWilsonRelativeKernel 2 b (A e) (B e) := by
