@@ -216,8 +216,9 @@ private theorem p4Q2PZ37ABQ2_crossing_assemble
         (assemble x r e) (B e)) =
       (∏ i : Fin 4, specialUnitaryWilsonRelativeKernel 2 b (x i) (B (emb i))) *
         (∏ e : Remote, specialUnitaryWilsonRelativeKernel 2 b (r e) (B e.1)) :=
-    finiteProductEmbeddingAssemble_prod emb
-      (fun e a => specialUnitaryWilsonRelativeKernel 2 b a (B e)) x r
+    finiteProductEmbeddingAssemble_prod
+      (ι := Link) (κ := Fin 4) (α := G) emb
+      (fun (e : Link) (a : G) => specialUnitaryWilsonRelativeKernel 2 b a (B e)) x r
   have hSelected :
       (∏ i : Fin 4, specialUnitaryWilsonRelativeKernel 2 b (x i) (B (emb i))) =
         p4Q2PZ37ABO2_originalFourLinkWilsonKernel b x (fun i => B (emb i)) := by
