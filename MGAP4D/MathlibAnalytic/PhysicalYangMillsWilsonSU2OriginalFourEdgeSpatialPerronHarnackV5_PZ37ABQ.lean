@@ -69,6 +69,43 @@ theorem p4Q2PZ37ABQ_finiteCoordinateHarnack
           rw [Finset.card_insert_of_notMem hi, pow_succ]
           ring
 
+
+/-- A four-coordinate version of the finite-coordinate Harnack telescope.
+The support and cardinality calculation are performed in a small generic
+type, before specializing to the actual Wilson-link geometry. -/
+theorem p4Q2PZ37ABQ_finiteFourCoordinateHarnack
+    {ι : Type*} {α : Type*} [Fintype ι]
+    (F : (ι → α) → ℝ) (c : ℝ) (hc : 0 ≤ c)
+    (hstep : ∀ (B : ι → α) (i : ι) (g : α),
+      F (Function.update B i g) ≤ c * F B)
+    (e : Fin 4 ↪ ι) (A B : ι → α)
+    (hremote : ∀ i : ι, i ∉ Set.range e → A i = B i) :
+    F A ≤ c ^ 4 * F B := by
+  classical
+  let s : Finset ι := Finset.univ.image e
+  have hcard : s.card = 4 := by
+    dsimp [s]
+    rw [Finset.card_image_of_injective (Finset.univ : Finset (Fin 4)) e.injective]
+    simp
+  have hagree : ∀ i : ι, i ∉ s → A i = B i := by
+    intro i hi
+    apply hremote i
+    intro hr
+    rcases hr with ⟨j, hj⟩
+    apply hi
+    exact Finset.mem_image.mpr ⟨j, Finset.mem_univ _, hj⟩
+  have h := p4Q2PZ37ABQ_finiteCoordinateHarnack F c hc hstep s A B hagree
+  simpa only [hcard] using h
+
+/-- The fixed four-link Harnack factor is independent of the number of
+unselected links. -/
+private theorem p4Q2PZ37ABQ_exp_four (b : ℝ) :
+    (Real.exp (14 * b)) ^ 4 = Real.exp (56 * b) := by
+  rw [show (56 : ℝ) * b =
+    (14 * b) + (14 * b) + (14 * b) + (14 * b) by ring]
+  rw [Real.exp_add, Real.exp_add, Real.exp_add]
+  ring
+
 local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
 local instance p4Q2PZ37ABQ_topologicalGroup : IsTopologicalGroup G :=
   specialUnitaryGroupIsTopologicalGroup 2
@@ -187,12 +224,6 @@ theorem p4Q2PZ37ABQ_originalSpatialPerronWeight_fourEdge_le
       Real.exp (56 * b) *
         p4Q2PZ37ABQ_originalSpatialPerronWeight H b hb B := by
   classical
-  let e := p4Q2MY_originalPlaquetteFourEdgeEmbedding H p
-  let s : Finset Link := Finset.univ.image e
-  have hcard : s.card = 4 := by
-    dsimp [s]
-    rw [Finset.card_image_of_injective (Finset.univ : Finset (Fin 4)) e.injective]
-    simp
   have hstep : ∀ (C : Cfg) (target : Link) (g : G),
       p4Q2PZ37ABQ_originalSpatialPerronWeight H b hb
           (Function.update C target g) ≤
@@ -202,25 +233,14 @@ theorem p4Q2PZ37ABQ_originalSpatialPerronWeight_fourEdge_le
     simpa using
       (p4Q2PZ37ABQ_originalSpatialPerronWeight_oneLink_le
         H b hb C target g (C target))
-  have hagree : ∀ l : Link, l ∉ s → A l = B l := by
-    intro l hl
-    apply hremote l
-    intro hr
-    rcases hr with ⟨i, hi⟩
-    apply hl
-    exact Finset.mem_image.mpr ⟨i, Finset.mem_univ _, hi⟩
-  have hfactor : (Real.exp (14 * b)) ^ 4 = Real.exp (56 * b) := by
-    rw [show (56 : ℝ) * b =
-      (14 * b) + (14 * b) + (14 * b) + (14 * b) by ring]
-    rw [Real.exp_add, Real.exp_add, Real.exp_add]
-    ring
   calc
-    _ ≤ (Real.exp (14 * b)) ^ s.card *
+    _ ≤ (Real.exp (14 * b)) ^ 4 *
         p4Q2PZ37ABQ_originalSpatialPerronWeight H b hb B :=
-      p4Q2PZ37ABQ_finiteCoordinateHarnack
+      p4Q2PZ37ABQ_finiteFourCoordinateHarnack
         (p4Q2PZ37ABQ_originalSpatialPerronWeight H b hb)
-        (Real.exp (14 * b)) (Real.exp_nonneg _) hstep s A B hagree
-    _ = _ := by rw [hcard, hfactor]
+        (Real.exp (14 * b)) (Real.exp_nonneg _) hstep
+        (p4Q2MY_originalPlaquetteFourEdgeEmbedding H p) A B hremote
+    _ = _ := by rw [p4Q2PZ37ABQ_exp_four]
 
 /-- The comparison is symmetric because both configurations have the same
 actual remote links; no global volume factor is introduced. -/
@@ -246,6 +266,7 @@ end
 end MGAP4D.MathlibAnalytic
 
 #print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ABQ_finiteCoordinateHarnack
+#print axioms MGAP4D.MathlibAnalytic.p4Q2PZ37ABQ_finiteFourCoordinateHarnack
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ABQ_originalSpatialPerronWeight_pos
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ABQ_originalSpatialPerronWeight_oneLink_le
 #print axioms MGAP4D.MathlibAnalytic.GroundStatePosteriorJoint.p4Q2PZ37ABQ_originalSpatialPerronWeight_fourEdge_le
