@@ -69,8 +69,7 @@ private theorem p4Q2PZ37ABP_originalAllLinkKernel_eq_prod
     K b A B = ∏ e : Link, k b ((A e)⁻¹ * B e) := by
   unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel
   have hnodup : (periodicHypercubicEvenSpatialSliceLinkList H).Nodup := by
-    unfold periodicHypercubicEvenSpatialSliceLinkList
-    exact Finset.nodup_toList Finset.univ
+    simp [periodicHypercubicEvenSpatialSliceLinkList]
   have hset : (periodicHypercubicEvenSpatialSliceLinkList H).toFinset =
       (Finset.univ : Finset Link) := by
     ext e
@@ -93,8 +92,12 @@ theorem p4Q2PZ37ABP_originalAllLinkWilsonKernel_mass
   simp_rw [p4Q2PZ37ABP_originalAllLinkKernel_eq_prod]
   change (∫ A : Link → G, ∏ e : Link, k b ((A e)⁻¹ * B e)
     ∂(Measure.pi fun _ : Link => μ)) = _
-  rw [integral_fintype_prod_eq_prod]
-  simp only [p4Q2PZ37ABO_originalOneLink_mass, Finset.prod_const, Finset.card_univ]
+  simpa only [p4Q2PZ37ABO_originalOneLink_mass,
+    Finset.prod_const, Finset.card_univ] using
+    (integral_fintype_prod_eq_prod
+      (ι := Link) (𝕜 := ℝ) (E := fun _ : Link => G)
+      (μ := fun _ : Link => μ)
+      (fun (e : Link) (x : G) => k b (x⁻¹ * B e)))
 
 /-- Every remote coordinate is integrated with its original target link
 and contributes exactly Z_b. The complementary set is the actual
@@ -110,8 +113,14 @@ theorem p4Q2PZ37ABP_originalRemoteTemporalWilson_mass
       (p4Q2PZ37ABN_originalTemporalWilsonMass b)^
         (Fintype.card {e : Link //
           e ∉ Set.range (p4Q2MY_originalPlaquetteFourEdgeEmbedding H p)}) := by
-  rw [integral_fintype_prod_eq_prod]
-  simp only [p4Q2PZ37ABO_originalOneLink_mass, Finset.prod_const, Finset.card_univ]
+  let Remote : Type :=
+    {e : Link // e ∉ Set.range (p4Q2MY_originalPlaquetteFourEdgeEmbedding H p)}
+  simpa only [p4Q2PZ37ABO_originalOneLink_mass,
+    Finset.prod_const, Finset.card_univ] using
+    (integral_fintype_prod_eq_prod
+      (ι := Remote) (𝕜 := ℝ) (E := fun _ : Remote => G)
+      (μ := fun _ : Remote => μ)
+      (fun (e : Remote) (x : G) => k b (x⁻¹ * B e.1)))
 
 /-- Continuous tests of the four actual links are genuinely integrable
 against the original complete temporal kernel and spatial Haar. -/
@@ -120,9 +129,13 @@ theorem p4Q2PZ37ABP_originalAllLinkWilson_test_integrable
     (hf : Continuous f) :
     Integrable (fun A : Cfg => K b A B *
       f (fun i : Fin 4 => A (p4Q2MY_originalPlaquetteFourEdges H p i))) haar := by
+  have hPair : Continuous (fun A : Cfg => (A, B)) :=
+    (continuous_id : Continuous (fun A : Cfg => A)).prodMk
+      (continuous_const : Continuous (fun _ : Cfg => B))
+  have hJoint : Continuous (fun q : Cfg × Cfg => K b q.1 q.2) :=
+    periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_continuous H 2 b
   have hKernel : Continuous (fun A : Cfg => K b A B) :=
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel_continuous H 2 b).comp
-      (continuous_id.prodMk continuous_const)
+    hJoint.comp hPair
   have hCoordinates : Continuous
       (fun A : Cfg => fun i : Fin 4 => A (p4Q2MY_originalPlaquetteFourEdges H p i)) :=
     continuous_pi (fun i => continuous_apply (p4Q2MY_originalPlaquetteFourEdges H p i))
