@@ -225,26 +225,25 @@ private theorem p4Q2PZ37ABQ2_crossing_assemble
     fun e a => specialUnitaryWilsonRelativeKernel 2 b a (B e)
   have hRaw := finiteProductEmbeddingAssemble_prod
     (ι := Link) (κ := Fin 4) (α := G) emb q x r
-  have hProduct :
-      (∏ e : Link, specialUnitaryWilsonRelativeKernel 2 b
-        (assemble x r e) (B e)) =
-      (∏ i : Fin 4, specialUnitaryWilsonRelativeKernel 2 b (x i) (B (emb i))) *
-        (∏ e : Remote, specialUnitaryWilsonRelativeKernel 2 b (r e) (B e.1)) := by
-    simpa only [q] using hRaw
   have hSelected :
-      (∏ i : Fin 4, specialUnitaryWilsonRelativeKernel 2 b (x i) (B (emb i))) =
+      (∏ i : Fin 4, q (emb i) (x i)) =
         p4Q2PZ37ABO2_originalFourLinkWilsonKernel b x (fun i => B (emb i)) := by
+    change (∏ i : Fin 4, specialUnitaryWilsonRelativeKernel 2 b (x i) (B (emb i))) =
+      p4Q2PZ37ABO2_originalFourLinkWilsonKernel b x (fun i => B (emb i))
     unfold p4Q2PZ37ABO2_originalFourLinkWilsonKernel
     rfl
   have hRemote :
-      (∏ e : Remote, specialUnitaryWilsonRelativeKernel 2 b (r e) (B e.1)) =
-        p4Q2PZ37ABQ2_originalRemoteTemporalKernel H p b B r := rfl
+      (∏ e : Remote, q e.1 (r e)) =
+        p4Q2PZ37ABQ2_originalRemoteTemporalKernel H p b B r := by
+    change (∏ e : Remote, specialUnitaryWilsonRelativeKernel 2 b (r e) (B e.1)) =
+      p4Q2PZ37ABQ2_originalRemoteTemporalKernel H p b B r
+    rfl
   calc
-    _ = ∏ e : Link, specialUnitaryWilsonRelativeKernel 2 b
-        (assemble x r e) (B e) :=
-      p4Q2PZ37ABQ2_crossing_eq_prod H b (assemble x r) B
-    _ = (∏ i : Fin 4, specialUnitaryWilsonRelativeKernel 2 b (x i) (B (emb i))) *
-        (∏ e : Remote, specialUnitaryWilsonRelativeKernel 2 b (r e) (B e.1)) := hProduct
+    _ = ∏ e : Link, q e (assemble x r e) := by
+      simpa only [q] using
+        (p4Q2PZ37ABQ2_crossing_eq_prod H b (assemble x r) B)
+    _ = (∏ i : Fin 4, q (emb i) (x i)) *
+        (∏ e : Remote, q e.1 (r e)) := hRaw
     _ = _ := by rw [hSelected, hRemote]
 
 private theorem p4Q2PZ37ABQ2_fullKernel_assemble
