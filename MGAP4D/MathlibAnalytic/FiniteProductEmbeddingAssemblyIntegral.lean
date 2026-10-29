@@ -8,6 +8,8 @@ import Mathlib.Tactic
 Actual selected coordinates and the actual complementary coordinates are
 reassembled by the measurable product splitting. No substitute law is used.
 The continuous-test Fubini theorem proves integrability before iterating.
+The range/complement predicates are kept explicit throughout, avoiding
+hidden finite-enumeration choices for a locally aliased predicate.
 -/
 
 namespace MGAP4D.MathlibAnalytic
@@ -22,19 +24,30 @@ universe u v w
 noncomputable def finiteProductEmbeddingAssemble
     {ι : Type u} {κ : Type v} {α : Type w} [MeasurableSpace α]
     (e : κ ↪ ι) (x : κ → α) (r : {i : ι // i ∉ Set.range e} → α) : ι → α :=
-  let p : ι → Prop := fun i => i ∈ Set.range e
-  let erange : κ ≃ Subtype p := Equiv.ofInjective e e.injective
-  (MeasurableEquiv.piEquivPiSubtypeProd (fun _ : ι => α) p).symm
-    ((MeasurableEquiv.piCongrLeft (fun _ : Subtype p => α) erange) x, r)
+  (MeasurableEquiv.piEquivPiSubtypeProd (fun _ : ι => α)
+    (fun i => i ∈ Set.range e)).symm
+    ((MeasurableEquiv.piCongrLeft (fun _ : {i : ι // i ∈ Set.range e} => α)
+      (Equiv.ofInjective e e.injective)) x, r)
+
+/-- Explicitly remove the dependent transport cast in piCongrLeft.
+This equality is propositional, not an assumed definitional reduction. -/
+private theorem finiteProductEmbeddingAssemble_apply
+    {ι : Type u} {κ : Type v} {α : Type w} [MeasurableSpace α]
+    (e : κ ↪ ι) (x : κ → α) (r : {i : ι // i ∉ Set.range e} → α) (i : ι) :
+    finiteProductEmbeddingAssemble e x r i =
+      if h : i ∈ Set.range e then
+        x ((Equiv.ofInjective e e.injective).symm ⟨i, h⟩) else r ⟨i, h⟩ := by
+  simp only [finiteProductEmbeddingAssemble,
+    MeasurableEquiv.piEquivPiSubtypeProd_symm_apply,
+    MeasurableEquiv.coe_piCongrLeft, Equiv.piCongrLeft_apply_eq_cast, cast_eq]
 
 /-- Reconstruction preserves each selected coordinate exactly. -/
 theorem finiteProductEmbeddingAssemble_selected
     {ι : Type u} {κ : Type v} {α : Type w} [MeasurableSpace α]
     (e : κ ↪ ι) (x : κ → α) (r : {i : ι // i ∉ Set.range e} → α) (j : κ) :
     finiteProductEmbeddingAssemble e x r (e j) = x j := by
-  change (if h : e j ∈ Set.range e then
-    x ((Equiv.ofInjective e e.injective).symm ⟨e j, h⟩) else r ⟨e j, h⟩) = x j
-  rw [dif_pos (show e j ∈ Set.range e from ⟨j, rfl⟩)]
+  rw [finiteProductEmbeddingAssemble_apply,
+    dif_pos (show e j ∈ Set.range e from ⟨j, rfl⟩)]
   exact congrArg x ((Equiv.ofInjective e e.injective).symm_apply_apply j)
 
 /-- Reconstruction preserves every actual remote coordinate exactly. -/
@@ -43,9 +56,7 @@ theorem finiteProductEmbeddingAssemble_remote
     (e : κ ↪ ι) (x : κ → α) (r : {i : ι // i ∉ Set.range e} → α)
     (i : {i : ι // i ∉ Set.range e}) :
     finiteProductEmbeddingAssemble e x r i.1 = r i := by
-  change (if h : i.1 ∈ Set.range e then
-    x ((Equiv.ofInjective e e.injective).symm ⟨i.1, h⟩) else r ⟨i.1, h⟩) = r i
-  rw [dif_neg i.2]
+  rw [finiteProductEmbeddingAssemble_apply, dif_neg i.2]
 
 /-- Reconstruction is jointly continuous in the selected and remote data. -/
 theorem finiteProductEmbeddingAssemble_continuous
@@ -55,9 +66,7 @@ theorem finiteProductEmbeddingAssemble_continuous
       finiteProductEmbeddingAssemble e z.1 z.2) := by
   apply continuous_pi
   intro i
-  change Continuous (fun z : (κ → α) × ({i : ι // i ∉ Set.range e} → α) =>
-    if h : i ∈ Set.range e then
-      z.1 ((Equiv.ofInjective e e.injective).symm ⟨i, h⟩) else z.2 ⟨i, h⟩)
+  simp_rw [finiteProductEmbeddingAssemble_apply]
   by_cases hi : i ∈ Set.range e
   · simpa only [dif_pos hi] using
       ((continuous_apply ((Equiv.ofInjective e e.injective).symm ⟨i, hi⟩)).comp
@@ -77,18 +86,16 @@ theorem finiteProductEmbeddingAssemble_prod
     (r : {i : ι // i ∉ Set.range e} → α) :
     (∏ i : ι, q i (finiteProductEmbeddingAssemble e x r i)) =
       (∏ j : κ, q (e j) (x j)) * ∏ i : {i : ι // i ∉ Set.range e}, q i.1 (r i) := by
-  let p : ι → Prop := fun i => i ∈ Set.range e
-  letI : Fintype (Subtype p) := Subtype.fintype p
-  let erange : κ ≃ Subtype p := Equiv.ofInjective e e.injective
+  let erange : κ ≃ {i : ι // i ∈ Set.range e} := Equiv.ofInjective e e.injective
   have hselected :
-      (∏ i : Subtype p, q i.1 (finiteProductEmbeddingAssemble e x r i.1)) =
+      (∏ i : {i : ι // i ∈ Set.range e}, q i.1 (finiteProductEmbeddingAssemble e x r i.1)) =
         ∏ j : κ, q (e j) (finiteProductEmbeddingAssemble e x r (e j)) :=
-    (erange.prod_comp (fun i : Subtype p =>
+    (erange.prod_comp (fun i : {i : ι // i ∈ Set.range e} =>
       q i.1 (finiteProductEmbeddingAssemble e x r i.1))).symm
   calc
-    _ = (∏ i : Subtype p, q i.1 (finiteProductEmbeddingAssemble e x r i.1)) *
-        ∏ i : {i : ι // ¬p i}, q i.1 (finiteProductEmbeddingAssemble e x r i.1) :=
-      (Fintype.prod_subtype_mul_prod_subtype p
+    _ = (∏ i : {i : ι // i ∈ Set.range e}, q i.1 (finiteProductEmbeddingAssemble e x r i.1)) *
+        ∏ i : {i : ι // i ∉ Set.range e}, q i.1 (finiteProductEmbeddingAssemble e x r i.1) :=
+      (Fintype.prod_subtype_mul_prod_subtype (fun i => i ∈ Set.range e)
         (fun i => q i (finiteProductEmbeddingAssemble e x r i))).symm
     _ = _ := by
       rw [hselected]
@@ -108,45 +115,49 @@ theorem integral_finiteProductEmbeddingAssemble
         F (finiteProductEmbeddingAssemble e x r)
           ∂Measure.pi (fun _ : {i : ι // i ∉ Set.range e} => μ)
           ∂Measure.pi (fun _ : κ => μ) := by
-  let p : ι → Prop := fun i => i ∈ Set.range e
-  letI : Fintype (Subtype p) := Subtype.fintype p
-  let erange : κ ≃ Subtype p := Equiv.ofInjective e e.injective
-  let split := MeasurableEquiv.piEquivPiSubtypeProd (fun _ : ι => α) p
-  let reindex := MeasurableEquiv.piCongrLeft (fun _ : Subtype p => α) erange
-  have hSplit := measurePreserving_piEquivPiSubtypeProd (fun _ : ι => μ) p
-  have hReindex := measurePreserving_piCongrLeft (fun _ : Subtype p => μ) erange
-  have hJoin : Continuous (fun z : (Subtype p → α) × ({i : ι // ¬p i} → α) =>
-      split.symm z) := by
+  let erange : κ ≃ {i : ι // i ∈ Set.range e} := Equiv.ofInjective e e.injective
+  let split := MeasurableEquiv.piEquivPiSubtypeProd (fun _ : ι => α)
+    (fun i => i ∈ Set.range e)
+  let reindex := MeasurableEquiv.piCongrLeft (fun _ : {i : ι // i ∈ Set.range e} => α) erange
+  have hSplit := measurePreserving_piEquivPiSubtypeProd (fun _ : ι => μ)
+    (fun i => i ∈ Set.range e)
+  have hReindex := measurePreserving_piCongrLeft
+    (fun _ : {i : ι // i ∈ Set.range e} => μ) erange
+  have hJoin : Continuous (fun z : ({i : ι // i ∈ Set.range e} → α) ×
+      ({i : ι // i ∉ Set.range e} → α) => split.symm z) := by
     apply continuous_pi
     intro i
-    change Continuous (fun z : (Subtype p → α) × ({i : ι // ¬p i} → α) =>
-      if hi : p i then z.1 ⟨i, hi⟩ else z.2 ⟨i, hi⟩)
-    by_cases hi : p i
+    change Continuous (fun z : ({i : ι // i ∈ Set.range e} → α) ×
+      ({i : ι // i ∉ Set.range e} → α) =>
+      if hi : i ∈ Set.range e then z.1 ⟨i, hi⟩ else z.2 ⟨i, hi⟩)
+    by_cases hi : i ∈ Set.range e
     · simpa only [dif_pos hi] using
-        ((continuous_apply (⟨i, hi⟩ : Subtype p)).comp
-          (continuous_fst : Continuous (fun z : (Subtype p → α) ×
-            ({i : ι // ¬p i} → α) => z.1)))
+        ((continuous_apply (⟨i, hi⟩ : {i : ι // i ∈ Set.range e})).comp
+          (continuous_fst : Continuous (fun z : ({i : ι // i ∈ Set.range e} → α) ×
+            ({i : ι // i ∉ Set.range e} → α) => z.1)))
     · simpa only [dif_neg hi] using
-        ((continuous_apply (⟨i, hi⟩ : {i : ι // ¬p i})).comp
-          (continuous_snd : Continuous (fun z : (Subtype p → α) ×
-            ({i : ι // ¬p i} → α) => z.2)))
+        ((continuous_apply (⟨i, hi⟩ : {i : ι // i ∉ Set.range e})).comp
+          (continuous_snd : Continuous (fun z : ({i : ι // i ∈ Set.range e} → α) ×
+            ({i : ι // i ∉ Set.range e} → α) => z.2)))
   have hInt : Integrable (fun z => F (split.symm z))
-      ((Measure.pi (fun _ : Subtype p => μ)).prod
-        (Measure.pi (fun _ : {i : ι // ¬p i} => μ))) :=
+      ((Measure.pi (fun _ : {i : ι // i ∈ Set.range e} => μ)).prod
+        (Measure.pi (fun _ : {i : ι // i ∉ Set.range e} => μ))) :=
     (hF.comp hJoin).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   calc
-    _ = ∫ z : (Subtype p → α) × ({i : ι // ¬p i} → α), F (split.symm z)
-        ∂((Measure.pi (fun _ : Subtype p => μ)).prod
-          (Measure.pi (fun _ : {i : ι // ¬p i} => μ))) :=
+    _ = ∫ z : ({i : ι // i ∈ Set.range e} → α) × ({i : ι // i ∉ Set.range e} → α),
+        F (split.symm z)
+        ∂((Measure.pi (fun _ : {i : ι // i ∈ Set.range e} => μ)).prod
+          (Measure.pi (fun _ : {i : ι // i ∉ Set.range e} => μ))) :=
       (hSplit.symm.integral_comp' F).symm
-    _ = ∫ u : Subtype p → α, ∫ r : {i : ι // ¬p i} → α, F (split.symm (u, r))
-        ∂Measure.pi (fun _ : {i : ι // ¬p i} => μ)
-        ∂Measure.pi (fun _ : Subtype p => μ) := integral_prod _ hInt
-    _ = ∫ x : κ → α, ∫ r : {i : ι // ¬p i} → α, F (split.symm (reindex x, r))
-        ∂Measure.pi (fun _ : {i : ι // ¬p i} => μ)
+    _ = ∫ u : {i : ι // i ∈ Set.range e} → α,
+        ∫ r : {i : ι // i ∉ Set.range e} → α, F (split.symm (u, r))
+        ∂Measure.pi (fun _ : {i : ι // i ∉ Set.range e} => μ)
+        ∂Measure.pi (fun _ : {i : ι // i ∈ Set.range e} => μ) := integral_prod _ hInt
+    _ = ∫ x : κ → α, ∫ r : {i : ι // i ∉ Set.range e} → α, F (split.symm (reindex x, r))
+        ∂Measure.pi (fun _ : {i : ι // i ∉ Set.range e} => μ)
         ∂Measure.pi (fun _ : κ => μ) :=
-      (hReindex.integral_comp' (fun u => ∫ r : {i : ι // ¬p i} → α,
-        F (split.symm (u, r)) ∂Measure.pi (fun _ : {i : ι // ¬p i} => μ))).symm
+      (hReindex.integral_comp' (fun u => ∫ r : {i : ι // i ∉ Set.range e} → α,
+        F (split.symm (u, r)) ∂Measure.pi (fun _ : {i : ι // i ∉ Set.range e} => μ))).symm
     _ = _ := rfl
 
 end
