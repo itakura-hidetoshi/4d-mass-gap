@@ -173,6 +173,7 @@ theorem integral_finiteProductEmbeddingAssemble
       dsimp only [split, reindex, erange]
       rw [MeasurableEquiv.piEquivPiSubtypeProd_symm_apply,
         finiteProductEmbeddingAssemble_apply]
+      dsimp only
       split_ifs with hi
       · simp only [MeasurableEquiv.coe_piCongrLeft,
           Equiv.piCongrLeft_apply_eq_cast, cast_eq]
