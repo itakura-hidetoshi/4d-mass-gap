@@ -1,6 +1,41 @@
-# MGAP4D — 証明ロードマップ（2026-10-29 JST／P4-Q2-PZ37AAZ2・PR #5991までMERGED）
+# MGAP4D — 証明ロードマップ（2026-10-29 JST／P4-Q2-PZ37ABE・PR #5998までMERGED）
 
-## 現在の証明正本（2026-10-29 JST）
+## 最新の定理正本：P4-Q2-PZ37ABE／PR #5998までMERGED（2026-10-29 JST）
+
+唯一の定理正本は [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit)。default `main` は文書ミラーで、Lean定理正本ではない。
+
+| 正本監査 | 最新確定値 |
+| --- | --- |
+| 最新定理bearing PR | [#5998 — P4-Q2-PZ37ABE](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5998) **MERGED**（前段 [#5994](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5994)・[#5995](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5995)・[#5996](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5996)・[#5997](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5997) もMERGED） |
+| exact-source-head | `25b6cc2bc6171603bfbb909a23918be3a25586b4` |
+| 最新定理bearing squash SHA | [`75bee4a633cb1296a47a85624cd65a0917fddc8d`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/75bee4a633cb1296a47a85624cd65a0917fddc8d)：#5998マージ直後に正本HEADと完全一致 |
+| [exact-head CI #40827511993](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40827511993) | **Lean 11,168 / 11,168 SUCCESS**、変更Lean warning/error **0/0**、新規3定理の公理依存 `propext`/`Classical.choice`/`Quot.sound` のみ、`sorryAx`なし、独立completion receipt SUCCESS |
+| 固定環境 | Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
+
+### 直近のCLOSED：真正Wilson物理源と符号付き積分まで
+
+- **ABA/ABA2 #5994：** 真正FK posterior密度二側評価から `Q≤(e^(16b)-e^(-16b))²` を、歴史的JLの5件の `native_decide` 公理を継承せず直接Lean証明。任意の有限 `H,b>0` に真正GI重みなし二乗モーメントが正のリンクが存在。さらに `0<b(H)≤B` なら **共通FX上界 `q_B>0` はCLOSED**。
+- **ABB/ABB2 #5995：** 正の原pair-Haar測度を持つ真正GI開集合を有限体積ごとに構成。真正GB物理源射影 `α` の二乗モーメントと `G=∫Δ² dμ_H` のGA/ABAを用いる体積非依存二側比較。各 `H` での正値性のみ。
+- **ABC/ABC2 #5996：** 元の中心化Wilson Gauss-law源を実プラケットのHaar中心化源の有限和へ正確に分解。元のGI差は各プラケット寄与の総和、任意の一プラケットと**符号付き全残余**への厳密分解、少なくとも一つの局所源GI寄与の非a.e.ゼロを証明。
+- **ABD/ABD2 #5997：** 既存LOの真正局所プラケットGauss-law物理Hilbert源とGI寄与を同一視。全Wilson源GI応答と実局所物理GI応答が**同符号の積**を持つ正測度の開pair-Haar領域を構成。
+- **ABE #5998：** 真正局所物理源との全pair-Haar符号付き交差積分 `K_(H,b,e,p)=∫Δ_full Δ_local,p dμ_H` に関して **`Σ_p K_(H,b,e,p)=G_(H,b,e)`**。各有限体積で真正リンク・プラケットを選べば **`K_(H,b,e,p)>0`** が、**すべての残余原Haar変数を積分した後にも**成立することをLean証明。これは体積一様正値を意味しない。
+
+### なおOPEN：モデル内で実在する体積一様定量証人
+
+最優先は、元の中心化Gauss-law Wilson物理源と真正二posterior・完全pair-Haarのまま
+`∃m>0, ∀H, ∃e_H, G_(H,b(H),e_H)≥m` を**実証**すること。ABA2の有限`H`での`G>0`、ABD2の正測度の同符号領域、ABEの`K>0`はいずれも、共通の振幅・測度・Haar積分後の量的下界を含まない。真の4リンク局所**入力**から非局所Perron/Wilson GI**応答**への依存を精密化し、体積一様な局所寄与または符号付き残余相殺の制御を証明する。正の局所開集合をH共通の有限座標支持円筒と混同しない。
+
+**FX上界ゲートは条件 `0<b(H)≤B` の下でABAにより閉じた**。歴史的JL #5658の追加公理を無検証で取り込まない。任意の上限なし変動結合には、共通上界を主張しない。PZ37ZAで否定した補償済み二文脈 `Q_GI/N_H` の一様正下界を復活させない。
+
+全物理Hilbert空間coercivity、共通positive-fine区間、同一endpoint E/F、任意深さ、H1–H4、OS/Wightmanおよび連続体4D Yang–Mills質量ギャップは引き続きOPEN。以降の旧AAZ2章と旧Gate A–Eは**当時の履歴**であり、この最新のCLOSED/OPEN判定より優先しない。
+
+**文書更新はdocs-onlyであり新しいLean定理ではない。** Strict Leanは不要。CIのcompleted判定は定理-bearing PRのexact-head receiptからのみ採る。古い証明・no-go・引用は削除しない。
+
+---
+
+
+
+## 履歴：PZ37AAZ2時点の証明正本（2026-10-29 JST）
 
 唯一の定理正本は [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit)。**default `main` は定理正本ではない。** 真正有限体積SU(2) Wilson一スラブkernel、正Perron真空、Gauss-law物理Hilbertと元の中心化源`V_H`、**二つの相互作用するWilson条件付きposterior**、本物のSU(2) Haar・境界pair-Haar・GI受信器を変更しない。
 
