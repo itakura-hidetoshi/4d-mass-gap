@@ -211,9 +211,28 @@ private theorem p4Q2PZ37ABQ2_crossing_assemble
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel H 2 b (assemble x r) B =
       p4Q2PZ37ABO2_originalFourLinkWilsonKernel b x (fun i => B (emb i)) *
         p4Q2PZ37ABQ2_originalRemoteTemporalKernel H p b B r := by
-  rw [p4Q2PZ37ABQ2_crossing_eq_prod]
-  exact finiteProductEmbeddingAssemble_prod emb
-    (fun e a => specialUnitaryWilsonRelativeKernel 2 b a (B e)) x r
+  have hProduct :
+      (∏ e : Link, specialUnitaryWilsonRelativeKernel 2 b
+        (assemble x r e) (B e)) =
+      (∏ i : Fin 4, specialUnitaryWilsonRelativeKernel 2 b (x i) (B (emb i))) *
+        (∏ e : Remote, specialUnitaryWilsonRelativeKernel 2 b (r e) (B e.1)) :=
+    finiteProductEmbeddingAssemble_prod emb
+      (fun e a => specialUnitaryWilsonRelativeKernel 2 b a (B e)) x r
+  have hSelected :
+      (∏ i : Fin 4, specialUnitaryWilsonRelativeKernel 2 b (x i) (B (emb i))) =
+        p4Q2PZ37ABO2_originalFourLinkWilsonKernel b x (fun i => B (emb i)) := by
+    unfold p4Q2PZ37ABO2_originalFourLinkWilsonKernel
+    rfl
+  have hRemote :
+      (∏ e : Remote, specialUnitaryWilsonRelativeKernel 2 b (r e) (B e.1)) =
+        p4Q2PZ37ABQ2_originalRemoteTemporalKernel H p b B r := rfl
+  calc
+    _ = ∏ e : Link, specialUnitaryWilsonRelativeKernel 2 b
+        (assemble x r e) (B e) :=
+      p4Q2PZ37ABQ2_crossing_eq_prod H b (assemble x r) B
+    _ = (∏ i : Fin 4, specialUnitaryWilsonRelativeKernel 2 b (x i) (B (emb i))) *
+        (∏ e : Remote, specialUnitaryWilsonRelativeKernel 2 b (r e) (B e.1)) := hProduct
+    _ = _ := by rw [hSelected, hRemote]
 
 private theorem p4Q2PZ37ABQ2_fullKernel_assemble
     (b : ℝ) (hb : 0 ≤ b) (B : Cfg) (x : Fin 4 → G) (r : Remote → G) :
@@ -223,7 +242,7 @@ private theorem p4Q2PZ37ABQ2_fullKernel_assemble
   rw [p4Q2PZ37ABQ2_originalWeight_eq_halfWeight_mul_vacuum]
   unfold periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
   rw [p4Q2PZ37ABQ2_crossing_assemble H p b B x r]
-  ring
+  ac_rfl
 
 /-- Exact four-edge formula for the ORIGINAL full one-slab Perron kernel
 section. The remote spatial interactions and Perron weight are integrated,
