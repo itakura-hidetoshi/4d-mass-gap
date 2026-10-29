@@ -79,7 +79,17 @@ theorem p4Q2PZ37ABC_originalHaarCenteredWilson_eq_centeredPlaquetteSum
     p4Q2PZ37AAI_originalPhysicalWilsonMean_eq_plaquetteHaarSum H]
   simp only [p4Q2PZ37AAI_originalCenteredPlaquetteHaarSource,
     Finset.sum_sub_distrib, Finset.sum_smul]
-  rfl
+  -- Imported historical modules provide distinct Fintype realizations
+  -- of the SAME finite original plaquette carrier. They need not be
+  -- definitionally equal, so compare their actual univ Finsets by
+  -- extensionality rather than using rfl.
+  congr 1
+  · apply Finset.sum_congr (by ext p; simp)
+    intro p hp
+    rfl
+  · apply Finset.sum_congr (by ext p; simp)
+    intro p hp
+    rfl
 
 /-- The exact original one-plaquette contribution, after genuine
 Haar centering, to the unmodified JH two-Wilson-posterior signed
