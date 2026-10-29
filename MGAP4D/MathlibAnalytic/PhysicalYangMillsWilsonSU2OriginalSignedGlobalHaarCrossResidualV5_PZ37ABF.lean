@@ -100,8 +100,12 @@ private theorem p4Q2PZ37ABF_originalPlaquette_average_sum
       g / (Fintype.card (PeriodicHypercubicEvenSpatialSlicePlaquette H) : ℝ)) = g := by
   classical
   let P : ℝ := (Fintype.card (PeriodicHypercubicEvenSpatialSlicePlaquette H) : ℝ)
-  have hP : P ≠ 0 :=
-    ne_of_gt (p4Q2PZ37AAI_originalSpatialPlaquetteCount_pos H)
+  have hPosNat : 0 < Fintype.card (PeriodicHypercubicEvenSpatialSlicePlaquette H) :=
+    Fintype.card_pos_iff.mpr ⟨pz37zaSpatialPlaquetteCoordinateFamily H 0⟩
+  have hP : P ≠ 0 := by
+    apply ne_of_gt
+    change (0 : ℝ) < (Fintype.card (PeriodicHypercubicEvenSpatialSlicePlaquette H) : ℝ)
+    exact_mod_cast hPosNat
   simp only [Finset.sum_const, Finset.card_univ, nsmul_eq_mul]
   change P * (g / P) = g
   rw [mul_comm]
@@ -128,7 +132,11 @@ theorem p4Q2PZ37ABF_exists_originalLink_plaquette_cross_ge_fullGIMoment_average
     p4Q2PZ37ABA2_exists_originalLink_positiveUnweightedGIMoment H b hb
   let g : ℝ := p4Q2PZ37AAZ_originalUnweightedCenteredGIGapMoment H b hb e
   let P : ℝ := (Fintype.card Plaq : ℝ)
-  have hP : 0 < P := p4Q2PZ37AAI_originalSpatialPlaquetteCount_pos H
+  have hP : 0 < P := by
+    have hNat : 0 < Fintype.card Plaq :=
+      Fintype.card_pos_iff.mpr ⟨pz37zaSpatialPlaquetteCoordinateFamily H 0⟩
+    change (0 : ℝ) < (Fintype.card Plaq : ℝ)
+    exact_mod_cast hNat
   have hg : 0 < g := hG
   have hAvg : 0 < g / P := div_pos hg hP
   have hWitness : ∃ p : Plaq,
