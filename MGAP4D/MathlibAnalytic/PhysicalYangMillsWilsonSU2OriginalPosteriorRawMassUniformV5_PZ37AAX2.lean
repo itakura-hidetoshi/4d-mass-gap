@@ -63,50 +63,26 @@ theorem p4Q2PZ37AAX2_originalPlaquetteCount_eq_linkCount (H : ℕ) :
     Fintype.card (PeriodicHypercubicEvenSpatialSlicePlaquette H) =
       Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) := by
   classical
-  have hD : Fintype.card PeriodicHypercubicEvenSpatialDirection = 3 :=
-    p4Q2PZ37AAP_originalSpatialDirection_card_three
-  have hP : Fintype.card PeriodicHypercubicEvenSpatialDirectionPair = 3 := by
+  have hD : Nat.card PeriodicHypercubicEvenSpatialDirection = 3 := by
+    rw [Nat.card_eq_fintype_card]
+    exact p4Q2PZ37AAP_originalSpatialDirection_card_three
+  have hP : Nat.card PeriodicHypercubicEvenSpatialDirectionPair = 3 := by
+    rw [Nat.card_eq_fintype_card]
     decide
   let V := PeriodicHypercubicEvenSpatialSliceVertex H
   let P := PeriodicHypercubicEvenSpatialDirectionPair
   let D := PeriodicHypercubicEvenSpatialDirection
-  have hUnivP :
-      (Finset.univ : Finset (V × P)) =
-        (Finset.univ : Finset V).product (Finset.univ : Finset P) := by
-    ext x
-    simp
-  have hUnivD :
-      (Finset.univ : Finset (V × D)) =
-        (Finset.univ : Finset V).product (Finset.univ : Finset D) := by
-    ext x
-    simp
-  have hCardP :
-      Fintype.card (PeriodicHypercubicEvenSpatialSlicePlaquette H) =
-        Fintype.card V * Fintype.card P := by
-    calc
-      Fintype.card (PeriodicHypercubicEvenSpatialSlicePlaquette H) =
-          (Finset.univ : Finset (V × P)).card := by simp
-      _ = ((Finset.univ : Finset V).product (Finset.univ : Finset P)).card := by
-        rw [hUnivP]
-      _ = (Finset.univ : Finset V).card * (Finset.univ : Finset P).card := by
-        rw [Finset.product_eq_sprod, Finset.card_product]
-      _ = Fintype.card V * Fintype.card P := by simp
-  have hCardD :
-      Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) =
-        Fintype.card V * Fintype.card D := by
-    calc
-      Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) =
-          (Finset.univ : Finset (V × D)).card := by simp
-      _ = ((Finset.univ : Finset V).product (Finset.univ : Finset D)).card := by
-        rw [hUnivD]
-      _ = (Finset.univ : Finset V).card * (Finset.univ : Finset D).card := by
-        rw [Finset.product_eq_sprod, Finset.card_product]
-      _ = Fintype.card V * Fintype.card D := by simp
   calc
     Fintype.card (PeriodicHypercubicEvenSpatialSlicePlaquette H) =
-        Fintype.card V * Fintype.card P := hCardP
-    _ = Fintype.card V * Fintype.card D := by rw [hP, hD]
-    _ = Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) := hCardD.symm
+        Nat.card (PeriodicHypercubicEvenSpatialSlicePlaquette H) :=
+      Fintype.card_eq_nat_card
+    _ = Nat.card (V × P) := rfl
+    _ = Nat.card V * Nat.card P := Nat.card_prod V P
+    _ = Nat.card V * Nat.card D := by rw [hP, hD]
+    _ = Nat.card (V × D) := (Nat.card_prod V D).symm
+    _ = Nat.card (PeriodicHypercubicEvenSpatialSliceLink H) := rfl
+    _ = Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) :=
+      (Fintype.card_eq_nat_card).symm
 
 /-- The SAME exact centered Haar covariance of the genuine physical
 Wilson source is at most 24 times the number of ORIGINAL spatial links.
@@ -117,7 +93,13 @@ theorem p4Q2PZ37AAX2_originalHaarCovariance_le_twentyFourLinks (H : ℕ) :
       24 * (Fintype.card (PeriodicHypercubicEvenSpatialSliceLink H) : ℝ) := by
   have h :=
     p4Q2PZ37AAJ_originalHaarCovariance_le_twentyFourPlaquetteCount H
-  rw [p4Q2PZ37AAX2_originalPlaquetteCount_eq_linkCount H] at h
+  have hCount :
+      Nat.card (PeriodicHypercubicEvenSpatialSlicePlaquette H) =
+        Nat.card (PeriodicHypercubicEvenSpatialSliceLink H) := by
+    simpa only [Fintype.card_eq_nat_card] using
+      p4Q2PZ37AAX2_originalPlaquetteCount_eq_linkCount H
+  simp only [Fintype.card_eq_nat_card] at h ⊢
+  rw [hCount] at h
   exact h
 
 /-- A single *RAW*, volume-independent genuine two-posterior Wilson
