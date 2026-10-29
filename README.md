@@ -2,7 +2,68 @@
 
 **Original interacting Wilson theory · Gauss-law physical Hilbert space · Lean 4 + mathlib · Hidetoshi Itakura**
 
-> **LATEST VERIFIED THEOREM CHECKPOINT — 2026-10-27 JST · PZ37ZI [PR #5947](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5947) MERGED.** Only theorem authority `formal/real-hilbert-uniform-coercive-strong-limit`; genuine theorem-bearing squash [`87f187014c78222fd84e275a8d3b8bc19e6d6a36`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/87f187014c78222fd84e275a8d3b8bc19e6d6a36) matches canonical HEAD immediately after squash; exact tested source `f3a849f736334be71c6424f7ba6aa3a769249eda`. Exact-head [CI #40491398111](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40491398111): **11,107/11,107 SUCCESS**, changed Lean warnings/errors **0/0**, all four public theorem axiom reports only `propext`, `Classical.choice`, `Quot.sound`, independent MCP completion receipt **SUCCESS**. Below PZ37ZH/ZG/ZF/ZA paragraphs remain **dated historical checkpoints**, not current theorem HEAD.
+## Current verified theorem status (2026-10-29 JST)
+
+**Theorem authority:** [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit). The repository's default `main` is **not** the theorem-bearing branch. All statements below concern the **actual finite-volume interacting SU(2) Wilson model**, two distinct normalized *interacting* conditional posterior laws, original product/pair Haar integration, the Gauss-law physical Hilbert space, and the unchanged centered physical source.
+
+| Verified item | Exact evidence / status |
+| --- | --- |
+| Latest theorem-bearing PR | [#5991 — P4-Q2-PZ37AAZ / AAZ2](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5991) **MERGED** (following [#5990 AAY](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5990) and [#5989 AAX/AAX2](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5989)) |
+| Exact PR **source** SHA tested | [`d769e275d016b6645e924a116acb0d7653f7e9a0`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/d769e275d016b6645e924a116acb0d7653f7e9a0) |
+| Exact theorem-bearing **squash** SHA | [`20f910f54791d662b687965af231842a27f093b6`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/20f910f54791d662b687965af231842a27f093b6), confirmed equal to canonical branch HEAD **immediately after #5991 merge** |
+| [Exact-source-head CI #40814241452](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40814241452) | **11,159 / 11,159 Lean jobs SUCCESS**; AAZ/AAZ2 changed files warning/error **0 / 0**; eight public `#print axioms`: **`propext`, `Classical.choice`, `Quot.sound` only**; no `sorryAx`; independent MCP CI completion receipt **SUCCESS** |
+| Pinned Lean / mathlib | `leanprover/lean4:v4.30.0-rc2` / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` (`lean-toolchain` / `lake-manifest.json`) |
+| Interpretation | A subsequent **documentation-only** merge may advance the branch HEAD; it does **not** change the verified theorem-bearing squash checkpoint or independently certify new mathematics. Re-observe live HEAD and CI before citing a later state. |
+
+### Exact source-normalized Rayleigh and true link observables
+
+For each finite periodic spatial volume `H` and frozen Wilson coupling `b>0`, keep the original Gauss-law **centered physical source** `V_H` and define:
+
+- `C_H>0`: the original centered spatial Wilson plaquette **reference-Haar covariance**, exactly `C_H=4‖V_H‖²`, **not** a substitute conditional posterior.
+- `J_{H,b,e}≥0`: the **original** complete-boundary-pair-Haar integral of the squared genuine two-posterior signed GI expectation gap divided by the genuine positive FX posterior density-contrast variance, at the **actual** spatial link `e`.
+- `j_{H,b,e}=4J_{H,b,e}/C_H`, `L_H`: the source-normalized link response and **actual** positive spatial-link count.
+- `R_{H,b}=∑_{e}j_{H,b,e}=(4/C_H)∑_{e}J_{H,b,e}>0`: the exact full original centered-source physical GL Rayleigh **value** at each fixed finite `H,b>0`. A lower bound for this one source is **not** coercivity for every physical Hilbert vector.
+
+The exact finite-spatial-link / spatial-plaquette counts coincide (`P_H=L_H`), and the proved original Haar covariance upper bound is `C_H≤24L_H`. The following statements are Lean-formalized **without changing the source, true posterior, receiver, or measure**:
+
+| Stages / PRs | Proved scope | Limit |
+| --- | --- | --- |
+| [AAH–AAK, #5973–#5976](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5976) | Strict positivity of the actual fixed-`H,b` centered Rayleigh; exact original full-link decomposition `R=∑j_e`; one positive true posterior response link exists at every fixed volume. | `inf_H R_{H,b(H)}>0` is **not** proved. |
+| [AAQ–AAU, #5982–#5986](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5986) | Original spatial Haar transport, true Wilson one-slab kernel and positive Perron vacuum translation symmetry, **both interacting posterior laws**, original GI/FX covariance; unconditional `M₂≤3R²` and participation `P≥1/3`. | Relative participation alone does not control absolute response. |
+| [AAV #5987](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5987) | One **entire true spatial direction** has `j_e≥R/L_H` at every link; at least `1/3` of original links exceed the **full** mean threshold. | The threshold `R/L_H` may decay with volume. |
+| [AAW #5988](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5988) | One true link with `j_e≥3c/L_H` **suffices** for `R≥c`; a uniform floor `R≥c` **requires** a (possibly different) link with `j_e≥c/L_H`. | The factor-3 sufficient and factor-1 necessary premises are distinct; no uniform witness exists by this argument alone. |
+| [AAX / AAX2 #5989](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5989) | An authentic unnormalized **single** posterior response `J_e≥ε≥0` implies `R≥ε/18`, using `C_H≤24L_H`. The actual pointwise signal is `S(z)=Δ(z)²/Q(z)`, and `J_e=∫S\,dμ_H`. | A common **`ε>0`** is not constructed. |
+| [AAY #5990](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5990) | On a measurable original outer pair-Haar event `E_H`, if `μ_H(E_H)≥ρ`, `|Δ|≥δ`, and `0<Q≤q`, then `J_e≥ρδ²/q`. All-volume **conditional** `R≥ρδ²/(18q)`. | Common positive `ρ,δ` and an appropriate event are unproved. |
+| [AAZ / AAZ2 #5991](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5991) | **Unconditionally:** at each fixed `H,b>0` some actual link's centered GI gap `Δ` is **not zero pair-Haar-a.e.** Define the genuine **unweighted** moment `G_{H,b,e}=∫Δ²\,dμ_H`. Given a true FX cap `Q(z)≤q`, the unweighted gap square is **automatically integrable** and `G≤qJ_e`. A common moment `G≥m>0` and a common `q>0` imply **conditionally** `R≥m/(18q)`. | Neither a common positive **`m`** nor a valid common **`q`** for the intended coupling family is established by these eight new theorems. |
+
+Here `Δ` is always the **same** original signed GI expectation gap for the centered physical Gauss-law source under two *interacting* Wilson one-link posteriors; `Q` is their original positive FX **Haar-`L²` density-contrast variance**, and `μ_H` is the original **outer pair-Haar** boundary measure. `Q` is **not** the bounded compensated two-context plaquette-minor energy `Q_GI`.
+
+### The remaining genuine analytic obstruction
+
+**OPEN:** construct, independently of the unknown `R_{H,b}`, a common `m>0` with one actual link per volume and `∫Δ_{H,b(H),e_H}²dμ_H≥m`, together with a compatible positive FX upper envelope `q`. Qualitative non-a.e.-zero at every finite `H` does **not** imply a positive volume-uniform second moment or event mass. The historical [JL posterior FX envelope](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5658) has the fixed-`b` volume/link/context-independent bound `Q≤(e^{16b}-e^{-16b})²`, **but** its current proof inherits five old finite-grid `native_decide` axioms; it is *not silently imported* into the AAZ/AAZ2 standard-axiom-only chain. Any varying-`b(H)` use needs a common envelope and exact dependency accounting.
+
+Even a future positive source-specific fine-zero `R≥c` does **not** alone settle full physical-Hilbert coercivity, a **common** positive-fine interval, the same endpoint source transport (**E/F**), all-depth estimates, **H1–H4**, Osterwalder–Schrader/Wightman reconstruction, or the **continuum four-dimensional Yang–Mills mass gap**. The earlier [PZ37ZA #5935](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5935) **disproved** the distinct bounded *compensated two-context* `Q_GI/N_H` uniform floor. Do **not** confuse this genuine no-go with the original full-link/full-boundary-pair-Haar posterior GL Rayleigh studied here.
+
+### Reproducibility and evidence
+
+The source-level checkpoint for AAZ/AAZ2 is the exact PR head `d769e275d016b6645e924a116acb0d7653f7e9a0`, not the squash merge SHA. In a locally checked-out copy of that **exact commit**, with the repository's pinned toolchain/manifest, the changed theorem leaves are:
+
+```text
+MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalUnweightedGIGapMomentCriterionV5_PZ37AAZ
+MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2OriginalUnweightedGIGapAutomaticIntegrabilityV5_PZ37AAZ2
+```
+
+For each changed theorem inspect the **complete source and imports**, dependent signatures, exact pinned mathlib APIs, final build, `#print axioms`, changed-file diagnostics, and independent **completed** CI receipt. Neither a queued/in-progress job nor a docs-only commit is a mathematical proof receipt.
+
+**[Current proof gates, next analytic priorities, and historical record → ROADMAP.md](ROADMAP.md)**
+
+---
+
+## Historical checkpoint archive (2026-10-27; preserved)
+
+The following sections retain prior verified finite-volume results and **historical** PR-specific source/merge SHA receipts. Their phrases such as “next PZ37ZI” and “latest/current checkpoint” were true **at the dated checkpoint only**, and are superseded as a *current status* by the 2026-10-29 section above. Historical theorems and no-go claims are retained; an old open gate later closed by a newer theorem is not silently reopened.
+
+> **HISTORICAL VERIFIED THEOREM CHECKPOINT — 2026-10-27 JST · PZ37ZI [PR #5947](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5947) MERGED.** Only theorem authority `formal/real-hilbert-uniform-coercive-strong-limit`; genuine theorem-bearing squash [`87f187014c78222fd84e275a8d3b8bc19e6d6a36`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/87f187014c78222fd84e275a8d3b8bc19e6d6a36) matches canonical HEAD immediately after squash; exact tested source `f3a849f736334be71c6424f7ba6aa3a769249eda`. Exact-head [CI #40491398111](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40491398111): **11,107/11,107 SUCCESS**, changed Lean warnings/errors **0/0**, all four public theorem axiom reports only `propext`, `Classical.choice`, `Quot.sound`, independent MCP completion receipt **SUCCESS**. Below PZ37ZH/ZG/ZF/ZA paragraphs remain **dated historical checkpoints**, not current theorem HEAD.
 
 ### PZ37ZI: quantitative O(t²) for TRUE Wilson physical full-link GL mass
 
@@ -18,7 +79,7 @@ In the actual sufficiently small positive-fine interval supplied by PZ37ZF/PZ37Z
 
 **Next precise tangent gate (PZ37ZJ tentative):** use JG's proved genuine strong Haar-`L²` derivative `A_t=R_tU = U+t D_H+o(t)`, with nonconstant spatial Wilson-action profile `D_H`; use AQ's raw operator-norm continuity `‖R_t‖→1`. The candidate normalization-INVARIANT projected limit is `P_(U⊥) F_t/t → -P_(U⊥) D_H ≠ 0`: projecting perpendicular to the constant source removes the unknown derivative of the scalar operator norm. This projection and its positive slope are **not yet Lean-formalized**; do not claim `F_t/t` itself has a limit until actual operator-norm-normalizer differentiability is proved. Finite-H posterior GL Rayleigh limit, H-uniform coercivity, compatible endpoint E, arbitrary depth F, H1–H4, and continuum 4D Yang–Mills mass gap remain **OPEN**. The separately disproved PZ37ZA bounded compensated two-context `Q_GI/N_H` floor must not be reintroduced.
 
-> **LATEST VERIFIED THEOREM CHECKPOINT — 2026-10-27 JST · PZ37ZH [PR #5945](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5945) MERGED.** Only theorem-authoritative branch: `formal/real-hilbert-uniform-coercive-strong-limit`. Verified theorem squash [`c2101b5596689ed6dd0939aad60b8c2884f6e3ee`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/c2101b5596689ed6dd0939aad60b8c2884f6e3ee); distinct tested source `8c258a37a04187cc6c708eef354e88682d7a7f5e`; exact-head [CI #40489013358](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40489013358): **11,093/11,093 SUCCESS**, changed Lean warning/error **0/0**, seven public `#print axioms` reports each restricted to `propext`, `Classical.choice`, `Quot.sound`; independent MCP completion receipt **SUCCESS**. Older PZ37ZG/ZF/ZA checkpoints below are historical, not the latest theorem HEAD.
+> **HISTORICAL VERIFIED THEOREM CHECKPOINT — 2026-10-27 JST · PZ37ZH [PR #5945](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5945) MERGED.** Only theorem-authoritative branch: `formal/real-hilbert-uniform-coercive-strong-limit`. Verified theorem squash [`c2101b5596689ed6dd0939aad60b8c2884f6e3ee`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/c2101b5596689ed6dd0939aad60b8c2884f6e3ee); distinct tested source `8c258a37a04187cc6c708eef354e88682d7a7f5e`; exact-head [CI #40489013358](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40489013358): **11,093/11,093 SUCCESS**, changed Lean warning/error **0/0**, seven public `#print axioms` reports each restricted to `propext`, `Classical.choice`, `Quot.sound`; independent MCP completion receipt **SUCCESS**. Older PZ37ZG/ZF/ZA checkpoints below are historical, not the latest theorem HEAD.
 
 ### PZ37ZH: the TRUE Wilson physical cancellation equals literal depth-one source
 
@@ -37,7 +98,7 @@ The original OX all-depth source/whole-original-posterior GL kernel theorem supp
 
 **Next genuine analytic gate (PZ37ZI tentative):** connect the already verified JG strong Haar-`L²` first variation of the TRUE unnormalized Wilson Haar row (with nonconstant spatial Wilson-action tangent) to the actual norm-normalized `F_t`. Separate scalar normalization and the nonconstant physical tangent; determine which fixed-`H,b` positive-fine source-norm bounds follow without silently assuming transfer-norm differentiability, posterior covariance uniformity or volume independence.
 
-> **LATEST VERIFIED THEOREM — 2026-10-27 JST · PZ37ZG [PR #5943](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5943) MERGED.** Sole theorem-authoritative branch: `formal/real-hilbert-uniform-coercive-strong-limit`. Verified theorem-bearing squash SHA [`49467c2542e4a4b565ec480f04884f9c97c57abe`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/49467c2542e4a4b565ec480f04884f9c97c57abe); tested source SHA `77d50b0c0d6bc90aa3b8a243bdf3ae50aeef37e8`; exact-head [CI #40483971949](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40483971949): **11,092/11,092 SUCCESS**, changed-file warning/error **0/0**, all four new public `#print axioms` restricted to `propext`, `Classical.choice`, `Quot.sound`, independent MCP completion receipt **SUCCESS**. The older PZ37ZF/PZ37ZA "CURRENT" headings below are dated historical checkpoints, not the live theorem HEAD.
+> **HISTORICAL VERIFIED THEOREM — 2026-10-27 JST · PZ37ZG [PR #5943](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5943) MERGED.** Sole theorem-authoritative branch: `formal/real-hilbert-uniform-coercive-strong-limit`. Verified theorem-bearing squash SHA [`49467c2542e4a4b565ec480f04884f9c97c57abe`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/49467c2542e4a4b565ec480f04884f9c97c57abe); tested source SHA `77d50b0c0d6bc90aa3b8a243bdf3ae50aeef37e8`; exact-head [CI #40483971949](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40483971949): **11,092/11,092 SUCCESS**, changed-file warning/error **0/0**, all four new public `#print axioms` restricted to `propext`, `Classical.choice`, `Quot.sound`, independent MCP completion receipt **SUCCESS**. The older PZ37ZF/PZ37ZA "CURRENT" headings below are dated historical checkpoints, not the live theorem HEAD.
 
 ### PZ37ZG: original Wilson physical-source-normalized GL Rayleigh bounds
 
@@ -51,7 +112,7 @@ PZ37U supplies a strictly positive **model-dependent** lower `c(H,b,t,r)>0` on n
 
 **Next precise gate (PZ37ZH tentative):** formalize the literal `F_t=S_1(1,-1)` bridge, derive pointwise strict normalized GL positivity from the original `OX/U` posterior kernel comparison, and determine whether the normalized direction has an analytic leading fine jet whose actual Wilson posterior covariance has a controlled positive limit. Any `H`-uniform estimate, common physical endpoint E, all-depth common window F, H1–H4 and continuum gap remain **OPEN**. PZ37ZA's disproved bounded compensated *two-context* `Q_GI/N_H` density cannot be reintroduced.
 
-> **CURRENT VERIFIED THEOREM CHECKPOINT — 2026-10-27 JST · PZ37ZF [PR #5941](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5941) MERGED.** Only theorem-authoritative branch: `formal/real-hilbert-uniform-coercive-strong-limit`; verified squash/HEAD: [`2d59cfc970cd358e29263577e2f8c76c688e35f9`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/2d59cfc970cd358e29263577e2f8c76c688e35f9). Exact-source CI [#40479003824](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40479003824): **11,091/11,091 SUCCESS**, changed Lean warning/error 0/0, four new public theorem axioms only `propext`, `Classical.choice`, `Quot.sound`. The earlier text below headed “Latest verified theorem checkpoint ... PZ37ZA” is the **historical #5935 checkpoint**, not the current theorem HEAD.
+> **HISTORICAL VERIFIED THEOREM CHECKPOINT — 2026-10-27 JST · PZ37ZF [PR #5941](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5941) MERGED.** Only theorem-authoritative branch: `formal/real-hilbert-uniform-coercive-strong-limit`; verified squash/HEAD: [`2d59cfc970cd358e29263577e2f8c76c688e35f9`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/2d59cfc970cd358e29263577e2f8c76c688e35f9). Exact-source CI [#40479003824](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40479003824): **11,091/11,091 SUCCESS**, changed Lean warning/error 0/0, four new public theorem axioms only `propext`, `Classical.choice`, `Quot.sound`. The earlier text below headed “Latest verified theorem checkpoint ... PZ37ZA” is the **historical #5935 checkpoint**, not the current theorem HEAD.
 
 ### Verified PZ37ZB–ZF: genuine full-link GL mass versus physical-source norm and fine scale
 
@@ -71,7 +132,7 @@ PZ37U supplies a strictly positive **model-dependent** lower `c(H,b,t,r)>0` on n
 
 **[Acceptance gates and next proofs → ROADMAP.md](ROADMAP.md)**
 
-## 1. Theorem authority, pinned environment, and verified checkpoint
+## 1. Archived 2026-10-27 theorem authority, pinned environment, and verified checkpoint
 
 | Item | Verified value |
 | --- | --- |
@@ -280,7 +341,7 @@ git switch --detach feac7e92d3e56f5301d1f8ecbc66dceb4d74c011
 cat lean-toolchain
 # Optional when a compatible pinned cache is available:
 lake exe cache get
-# Dependency-aware build of the exact latest theorem-bearing leaf:
+# Historical dependency-aware build example (PZ37PC checkpoint, not the latest leaf):
 lake build MGAP4D.MathlibAnalytic.PhysicalYangMillsWilsonSU2ThreeModeKrylovAdjacentPairHaarOriginalWilsonAllIteratedFineKrylovNonzeroV5_OZ
 # Full repository build is a separate, more expensive check:
 # lake build
