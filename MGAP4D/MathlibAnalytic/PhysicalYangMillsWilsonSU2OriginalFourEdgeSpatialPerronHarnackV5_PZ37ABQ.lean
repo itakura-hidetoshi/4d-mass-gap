@@ -224,23 +224,26 @@ theorem p4Q2PZ37ABQ_originalSpatialPerronWeight_fourEdge_le
       Real.exp (56 * b) *
         p4Q2PZ37ABQ_originalSpatialPerronWeight H b hb B := by
   classical
+  let W : Cfg → ℝ := p4Q2PZ37ABQ_originalSpatialPerronWeight H b hb
   have hstep : ∀ (C : Cfg) (target : Link) (g : G),
-      p4Q2PZ37ABQ_originalSpatialPerronWeight H b hb
-          (Function.update C target g) ≤
-        Real.exp (14 * b) *
-          p4Q2PZ37ABQ_originalSpatialPerronWeight H b hb C := by
+      W (Function.update C target g) ≤ Real.exp (14 * b) * W C := by
     intro C target g
-    simpa using
-      (p4Q2PZ37ABQ_originalSpatialPerronWeight_oneLink_le
-        H b hb C target g (C target))
-  calc
-    _ ≤ (Real.exp (14 * b)) ^ 4 *
-        p4Q2PZ37ABQ_originalSpatialPerronWeight H b hb B :=
-      p4Q2PZ37ABQ_finiteFourCoordinateHarnack
-        (p4Q2PZ37ABQ_originalSpatialPerronWeight H b hb)
-        (Real.exp (14 * b)) (Real.exp_nonneg _) hstep
-        (p4Q2MY_originalPlaquetteFourEdgeEmbedding H p) A B hremote
-    _ = _ := by rw [p4Q2PZ37ABQ_exp_four]
+    have hId : Function.update C target (C target) = C := by
+      funext i
+      by_cases hi : i = target
+      · subst i
+        simp
+      · simp [hi]
+    have h := p4Q2PZ37ABQ_originalSpatialPerronWeight_oneLink_le
+      H b hb C target g (C target)
+    rw [hId] at h
+    exact h
+  have hFour : W A ≤ (Real.exp (14 * b)) ^ 4 * W B :=
+    p4Q2PZ37ABQ_finiteFourCoordinateHarnack W
+      (Real.exp (14 * b)) (Real.exp_nonneg _) hstep
+      (p4Q2MY_originalPlaquetteFourEdgeEmbedding H p) A B hremote
+  rw [p4Q2PZ37ABQ_exp_four] at hFour
+  exact hFour
 
 /-- The comparison is symmetric because both configurations have the same
 actual remote links; no global volume factor is introduced. -/
