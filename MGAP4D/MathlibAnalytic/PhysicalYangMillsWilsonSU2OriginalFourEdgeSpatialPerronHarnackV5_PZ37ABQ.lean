@@ -49,7 +49,7 @@ theorem p4Q2PZ37ABQ_finiteCoordinateHarnack
         funext i
         exact h i (by simp)
       subst B
-      simpa using (le_refl (F A))
+      simp
   | @insert i s hi ih =>
       intro A B h
       let B' : ι → α := Function.update B i (A i)
@@ -66,7 +66,7 @@ theorem p4Q2PZ37ABQ_finiteCoordinateHarnack
         _ ≤ c ^ s.card * (c * F B) :=
           mul_le_mul_of_nonneg_left (hstep B i (A i)) (pow_nonneg hc _)
         _ = c ^ (insert i s).card * F B := by
-          rw [Finset.card_insert_of_not_mem hi, pow_succ]
+          rw [Finset.card_insert_of_notMem hi, pow_succ]
           ring
 
 local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
@@ -165,11 +165,15 @@ theorem p4Q2PZ37ABQ_originalSpatialPerronWeight_oneLink_le
       _ = (Real.exp (6 * b) * Real.exp (8 * b)) *
           (Real.exp (-(theta * d)) * omega Bh) := by ring
       _ = _ := by
-        rw [← Real.exp_add]
-        congr 1
-        ring
-  simpa [p4Q2PZ37ABQ_originalSpatialPerronWeight,
-    Bg, Bh, omega, a, d, theta] using hCore
+        have hexp : Real.exp (6 * b) * Real.exp (8 * b) = Real.exp (14 * b) := by
+          rw [← Real.exp_add]
+          congr 1
+          ring
+        rw [hexp]
+  change
+    Real.exp (-(theta * a)) * omega Bg ≤
+      Real.exp (14 * b) * (Real.exp (-(theta * d)) * omega Bh)
+  exact hCore
 
 /-- Four true plaquette links, with the remote configuration unchanged,
 have a uniform original spatial-Perron weight comparison. The four-link
