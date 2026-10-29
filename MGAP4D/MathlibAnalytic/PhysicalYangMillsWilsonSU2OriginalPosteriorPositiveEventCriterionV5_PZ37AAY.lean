@@ -146,11 +146,11 @@ theorem p4Q2PZ37AAY_originalRawLinkResponse_ge_trueEventSignal
             mul_le_mul_of_nonneg_left (hVar z hz) (sq_nonneg _)
           _ ≤ (D z)^2 * q :=
             mul_le_mul_of_nonneg_right (hSq z hz) hq.le
-      have hwz : w z = 1 := by simp [w, Set.indicator, hz]
+      have hwz : w z = 1 := by simp [w, hz]
       rw [hwz, mul_one]
       change delta^2 / q ≤ (D z)^2 / Q z
       exact hDiv
-    · have hwz : w z = 0 := by simp [w, Set.indicator, hz]
+    · have hwz : w z = 0 := by simp [w, hz]
       rw [hwz, mul_zero]
       exact p4Q2PZ37AAX_originalCenteredPosteriorSignal_nonneg H b hb e z
   have hIntegral :
