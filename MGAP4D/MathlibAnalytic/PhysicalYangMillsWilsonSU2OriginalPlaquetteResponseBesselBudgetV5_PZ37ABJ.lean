@@ -84,8 +84,9 @@ theorem p4Q2PZ37ABJ_originalAllPlaquette_pointwise_sq_sum_le
   let t : ℝ := p4Q2LW_originalPhysicalTransferNorm H b hb.le
   let E : ℝ := p4Q2LW_originalHarnackContrastScale b
   have hSyn (a : Plaq → ℝ) :
-      ‖∑ p : Plaq, a p • V p‖^2 ≤ 24 * ∑ p : Plaq, (a p)^2 :=
-    p4Q2PZ37AAI_originalCenteredHaarPlaquetteSynthesis_sq_le H a
+      ‖∑ p : Plaq, a p • V p‖^2 ≤ 24 * ∑ p : Plaq, (a p)^2 := by
+    simpa only [p4Q2PZ37AAI_originalCenteredHaarPlaquetteSynthesis, V] using
+      (p4Q2PZ37AAI_originalCenteredHaarPlaquetteSynthesis_sq_le H a)
   have hBessel : (∑ p : Plaq, (Q (V p))^2) ≤ 24 * ‖Q‖^2 :=
     finiteRealHilbert_functional_sq_sum_le_of_synthesis
       V 24 (by norm_num) hSyn Q
