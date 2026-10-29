@@ -31,17 +31,24 @@ set_option autoImplicit false
 set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 1000000
 
+/-!
+The decidable equality is an explicit parameter of both generic
+Harnack telescope lemmas. This forces the function updates in their
+statements, proofs and Wilson specialization to use the SAME instance.
+Previously a hidden Classical.propDecidable competed with the native
+finite-link instDecidableEqProd, causing whnf loops and then a real
+Function.update instance mismatch after locally sealing large definitions.
+-/
 /-- A one-coordinate comparison telescopes exactly across a finite support.
 The support is the set of coordinates where the configurations may differ. -/
 theorem p4Q2PZ37ABQ_finiteCoordinateHarnack
-    {ι : Type*} {α : Type*} [Fintype ι]
+    {ι : Type*} {α : Type*} [Fintype ι] [DecidableEq ι]
     (F : (ι → α) → ℝ) (c : ℝ) (hc : 0 ≤ c)
     (hstep : ∀ (B : ι → α) (i : ι) (g : α),
       F (Function.update B i g) ≤ c * F B)
     (s : Finset ι) :
     ∀ (A B : ι → α), (∀ i, i ∉ s → A i = B i) →
       F A ≤ c ^ s.card * F B := by
-  classical
   induction s using Finset.induction_on with
   | empty =>
       intro A B h
@@ -74,14 +81,13 @@ theorem p4Q2PZ37ABQ_finiteCoordinateHarnack
 The support and cardinality calculation are performed in a small generic
 type, before specializing to the actual Wilson-link geometry. -/
 theorem p4Q2PZ37ABQ_finiteFourCoordinateHarnack
-    {ι : Type*} {α : Type*} [Fintype ι]
+    {ι : Type*} {α : Type*} [Fintype ι] [DecidableEq ι]
     (F : (ι → α) → ℝ) (c : ℝ) (hc : 0 ≤ c)
     (hstep : ∀ (B : ι → α) (i : ι) (g : α),
       F (Function.update B i g) ≤ c * F B)
     (e : Fin 4 ↪ ι) (A B : ι → α)
     (hremote : ∀ i : ι, i ∉ Set.range e → A i = B i) :
     F A ≤ c ^ 4 * F B := by
-  classical
   let s : Finset ι := Finset.univ.image e
   have hcard : s.card = 4 := by
     dsimp [s]
@@ -234,7 +240,6 @@ theorem p4Q2PZ37ABQ_originalSpatialPerronWeight_fourEdge_le
     p4Q2PZ37ABQ_originalSpatialPerronWeight H b hb A ≤
       Real.exp (56 * b) *
         p4Q2PZ37ABQ_originalSpatialPerronWeight H b hb B := by
-  classical
   let W : Cfg → ℝ := p4Q2PZ37ABQ_originalSpatialPerronWeight H b hb
   have hstep : ∀ (C : Cfg) (target : Link) (g : G),
       W (Function.update C target g) ≤ Real.exp (14 * b) * W C := by
