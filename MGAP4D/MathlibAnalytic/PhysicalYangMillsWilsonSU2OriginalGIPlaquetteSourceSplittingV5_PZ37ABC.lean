@@ -79,6 +79,7 @@ theorem p4Q2PZ37ABC_originalHaarCenteredWilson_eq_centeredPlaquetteSum
     p4Q2PZ37AAI_originalPhysicalWilsonMean_eq_plaquetteHaarSum H]
   simp only [p4Q2PZ37AAI_originalCenteredPlaquetteHaarSource,
     Finset.sum_sub_distrib, Finset.sum_smul]
+  rfl
 
 /-- The exact original one-plaquette contribution, after genuine
 Haar centering, to the unmodified JH two-Wilson-posterior signed
