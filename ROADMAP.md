@@ -2,7 +2,17 @@
 
 **Current docs mirror (2026-10-29 JST).** This is the default `main` **documentation root**, **not** the theorem-bearing branch. The unique authoritative Lean theorem branch is [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit). See its complete [README](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/93a6a06c18c7a66f9e29353ea7e2b034b90c0a33/README.md) and [ROADMAP](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/93a6a06c18c7a66f9e29353ea7e2b034b90c0a33/ROADMAP.md). This root mirror does not synchronize Lean sources onto `main`.
 
-## Latest theorem checkpoint and next genuine analytic gate (2026-10-29 JST)
+## Current verified theorem mirror — ABG / #6002 (2026-10-29 JST)
+
+This `main` is a documentation mirror ONLY; sole formal Lean theorem authority is [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit). Source theorem [#6002 / ABG](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6002) MERGED: exact tested source `f752141618f07a5d0c2b1cfd51c5cc2e60bb34d4`, theorem squash `6f68bc2989b7b46b2c3ef1702d521982ed37e521`; [CI #40831840574](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40831840574) **11,171/11,171 SUCCESS**, changed Lean 0/0, five standard-only axioms reports, no `sorryAx`, independent receipt SUCCESS. Latest **theorem-branch docs-only** [#6004](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6004) squash `46e70e32ab3af2b0506c0a9b57f0520d8e192b02` is NOT a new theorem.
+
+**CLOSED finite-volume:** [ABF/ABF2 #6001](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6001) true original pair-Haar `G=K_p+R_p` signed split; `0<G/|P_H|≤K_p` for an actual link/plaquette; actual transfer-compensated local physical GI `|tΔ_local,p|≤E_b/2` and `Mcomp≤(E_b/2)²`, with `t=||T||>0`, `E_b=exp(8b)(exp(16b)−exp(−16b))`. [ABG #6002](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6002) `(tK_p)²≤G Mcomp≤G(E_b/2)²`, hence a genuine finite-H positive G floor from one actual physical correlation. None of these is H-uniform.
+
+**NEXT OPEN:** construct from the ORIGINAL Wilson kernel, true Perron vacuum, Gauss-law physical source, two distinct INTERACTING posteriors and full outer pair-Haar a `κ>0` with `∀H ∃e_H,p_H: t_(H,b(H))K_(H,b(H),e_H,p_H)≥κ`, without recycling unknown `G` or `R` bounds. Signed negative remote tail, local finite-support descent, uniform Haar event mass/amplitude are independent unresolved inputs. All-physical-Hilbert coercivity, common fine window, endpoint E/F, H1–H4, OS/Wightman and continuum mass gap remain OPEN. Preserve PZ37ZA no-go and old ABE/AAZ2 history. No Strict Lean on this docs-only root mirror.
+
+---
+
+## Historical theorem checkpoint and next analytic gate (2026-10-29 JST · ABE)
 
 This **main** roadmap is a historical+current **documentation mirror only**. Unique Lean theorem authority: [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit). Latest authoritative root [README](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/c570350ea9e876fb4e11f6fd947d1b759d5ab7c8/README.md) and [ROADMAP](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/c570350ea9e876fb4e11f6fd947d1b759d5ab7c8/ROADMAP.md) are **docs-only** [#5999](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5999), not new Lean theorem commits.
 

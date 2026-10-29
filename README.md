@@ -2,7 +2,17 @@
 
 **Main-branch documentation mirror | 2026-10-29 JST.** Formalized four-dimensional Yang–Mills / genuine interacting Wilson SU(2) research in Lean 4 / pinned mathlib, by Hidetoshi Itakura.
 
-## Latest authoritative Lean theorem snapshot (2026-10-29 JST · PZ37ABE)
+## Current authoritative theorem MIRROR — ABG / PR #6002 (2026-10-29 JST)
+
+**This default `main` is documentation only.** The sole Lean theorem-bearing branch remains [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit). Its current docs-only checkpoint was squash-merged by [#6004](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6004) at `46e70e32ab3af2b0506c0a9b57f0520d8e192b02`; **this is not a theorem-bearing SHA**. The latest *verified Lean theorem-bearing* [PR #6002 / PZ37ABG](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6002) was MERGED with tested source `f752141618f07a5d0c2b1cfd51c5cc2e60bb34d4`, theorem squash `6f68bc2989b7b46b2c3ef1702d521982ed37e521`. [Exact-head CI #40831840574](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40831840574): **11,171/11,171 SUCCESS**, changed Lean warning/error **0/0**, five public axioms reports with only `propext`, `Classical.choice`, `Quot.sound`, no `sorryAx`, independent completion receipt **SUCCESS**.
+
+**New finite-volume ORIGINAL interacting Wilson facts after ABE:** [ABF/ABF2 #6001](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6001) proves `G=K_p+Σ_(q≠p)K_q` with the full signed residual and an actual plaquette `0<G/|P_H|≤K_p`. For the authentic physical one-slab transfer norm `t_(H,b)>0`, the local Gauss-law physical response satisfies `|t Δ_local,p|≤E_b/2` and complete original pair-Haar squared moment `Mcomp≤(E_b/2)²`; `E_b=exp(8b)(exp(16b)−exp(−16b))` depends on coupling, not spatial volume. [ABG #6002](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6002) proves genuine Cauchy–Schwarz `(tK_p)²≤G Mcomp≤G(E_b/2)²`, hence `G≥(tK_p)²/(E_b/2)²`, with an actual strictly positive certificate for EACH finite volume.
+
+**CRITICAL OPEN:** no independently proved H-uniform `κ>0` with `tK_p≥κ`, and thus no uniform positive `G` yet. Positive local open Haar regions, same-sign events, and finite-volume `K>0` do not supply common amplitude, mass or control of the entire signed negative remote contribution. Remaining all-physical-Hilbert coercivity, common positive-fine interval, E/F, H1–H4, OS/Wightman and continuum 4D Yang–Mills mass gap remain OPEN. Historical PZ37ZA no-go remains. **No Lean files transferred to main.** The older ABE mirror checkpoint below is history; this docs-only mirror must not run Strict Lean.
+
+---
+
+## Historical Lean theorem mirror snapshot (2026-10-29 JST · PZ37ABE)
 
 **This `main` branch is a documentation-only mirror, NOT the Lean theorem-bearing branch.** The sole authoritative Lean theorem source is [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit). The authoritative [README](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/c570350ea9e876fb4e11f6fd947d1b759d5ab7c8/README.md) and [ROADMAP](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/c570350ea9e876fb4e11f6fd947d1b759d5ab7c8/ROADMAP.md) were updated by **docs-only** [PR #5999](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5999); this docs SHA is **not** a new mathematical theorem.
 
