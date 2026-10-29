@@ -86,11 +86,11 @@ private theorem p4Q2PZ37ABO2_integral_finFour
         f x0 x1 x2 x3 ∂μ ∂μ ∂μ ∂μ := by
   let F : P → ℝ := fun p => f p.1.1.2 p.1.1.1 p.2 p.1.2
   have hF : Continuous F := hf
-  have hFI : Integrable F (((μ.prod μ).prod μ).prod μ) :=
+  have hFI : Integrable F (Measure.prod (Measure.prod (Measure.prod μ μ) μ) μ) :=
     hF.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hmp := measurePreserving_haarFinFourCyclicNestedCoordinates μ
   have hMap :
-      (∫ p : P, F p ∂(((μ.prod μ).prod μ).prod μ)) =
+      (∫ p : P, F p ∂(Measure.prod (Measure.prod (Measure.prod μ μ) μ) μ)) =
         ∫ x : X, F (haarFinFourCyclicNestedCoordinates x) ∂ν := by
     have h := integral_map_of_stronglyMeasurable
       («μ» := ν) hmp.measurable hF.stronglyMeasurable
@@ -102,10 +102,10 @@ private theorem p4Q2PZ37ABO2_integral_finFour
       apply integral_congr_ae
       filter_upwards with x
       simp only [haarFinFourCyclicNestedCoordinates_apply, F]
-    _ = ∫ p : P, F p ∂(((μ.prod μ).prod μ).prod μ) := hMap.symm
-    _ = ∫ x2 : G, ∫ q : (G × G) × G, F (q, x2) ∂((μ.prod μ).prod μ) ∂μ :=
+    _ = ∫ p : P, F p ∂(Measure.prod (Measure.prod (Measure.prod μ μ) μ) μ) := hMap.symm
+    _ = ∫ x2 : G, ∫ q : (G × G) × G, F (q, x2) ∂(Measure.prod (Measure.prod μ μ) μ) ∂μ :=
       integral_prod_symm F hFI
-    _ = ∫ x2 : G, ∫ x3 : G, ∫ q : G × G, F ((q, x3), x2) ∂(μ.prod μ) ∂μ ∂μ := by
+    _ = ∫ x2 : G, ∫ x3 : G, ∫ q : G × G, F ((q, x3), x2) ∂(Measure.prod μ μ) ∂μ ∂μ := by
       apply integral_congr_ae
       filter_upwards with x2
       have h3 : Continuous (fun q : (G × G) × G => F (q, x2)) :=
@@ -223,7 +223,11 @@ theorem p4Q2PZ37ABO2_originalFourLinkCharacter_convolution
     _ = ∫ x2 : G, ∫ x3 : G, ∫ x0 : G, ∫ x1 : G,
         k b (x2⁻¹ * y 2) * (k b (x3⁻¹ * y 3) * (k b (x0⁻¹ * y 0) *
           (k b (x1⁻¹ * y 1) * χ (x2⁻¹ * x3⁻¹ * x0 * x1)))) ∂μ ∂μ ∂μ ∂μ :=
-      p4Q2PZ37ABO2_integral_finFour _ (h2.mul (h3.mul (h0.mul (h1.mul hChar))))
+      p4Q2PZ37ABO2_integral_finFour
+        (fun x0 x1 x2 x3 =>
+          k b (x2⁻¹ * y 2) * (k b (x3⁻¹ * y 3) * (k b (x0⁻¹ * y 0) *
+            (k b (x1⁻¹ * y 1) * χ (x2⁻¹ * x3⁻¹ * x0 * x1)))))
+        (h2.mul (h3.mul (h0.mul (h1.mul hChar))))
     _ = n^4 * χ ((y 2)⁻¹ * (y 3)⁻¹ * y 0 * y 1) := by
       simp_rw [integral_const_mul]
       simp_rw [hOne1, p4Q2PZ37ABO2_integral_middle_constant,
