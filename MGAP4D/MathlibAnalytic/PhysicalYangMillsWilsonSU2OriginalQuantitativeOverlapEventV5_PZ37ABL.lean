@@ -86,7 +86,8 @@ theorem p4Q2PZ37ABL_compactProbability_threshold_mass_lower
   have hInd : Integrable (fun x : X => U.indicator (fun _ : X => q) x) μ :=
     (integrable_const q).indicator hU
   have hYoung (x : X) : 2 * d * f x ≤ c * (f x)^2 + q := by
-    apply (mul_le_mul_iff_right₀ hq).mp
+    -- In the pinned API, iff_left cancels a positive RIGHT factor.
+    apply (mul_le_mul_iff_left₀ hq).mp
     calc
       (2 * d * f x) * q ≤ d^2 * (f x)^2 + q^2 := by
         nlinarith only [sq_nonneg (d * f x - q)]
@@ -108,7 +109,10 @@ theorem p4Q2PZ37ABL_compactProbability_threshold_mass_lower
       linarith
   have hBaseInt : Integrable (fun x : X => 2 * d * a + c * (f x)^2) μ :=
     (integrable_const _).add (hfSq.const_mul c)
-  have hI := integral_mono (hf.const_mul (2 * d)) (hBaseInt.add hInd) hPoint
+  -- Explicit lambdas keep Pi.add from obstructing later integral rewrites.
+  have hI : (∫ x, 2 * d * f x ∂μ) ≤
+      ∫ x, 2 * d * a + c * (f x)^2 + U.indicator (fun _ : X => q) x ∂μ :=
+    integral_mono (hf.const_mul (2 * d)) (hBaseInt.add hInd) hPoint
   have hIndicator : (∫ x, U.indicator (fun _ : X => q) x ∂μ) = μ.real U * q := by
     simpa only [smul_eq_mul] using (integral_indicator_const q hU (μ := μ))
   have hLeft : (∫ x, 2 * d * f x ∂μ) = 2 * d * m := by
@@ -157,8 +161,9 @@ theorem p4Q2PZ37ABL_originalCrossDensity_sq_le_fullGapSq_scaleSq
   have hScaled := mul_le_mul_of_nonneg_left hLocalSq
     (sq_nonneg (p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap
       H b hb.le (p4Q2PZ37ZW_originalCenteredPhysicalDirection H) e z))
-  convert hScaled using 1 <;>
-    dsimp [p4Q2PZ37ABH_originalCompensatedSignedCrossDensity] <;> ring
+  convert hScaled using 1
+  dsimp [p4Q2PZ37ABH_originalCompensatedSignedCrossDensity]
+  ring
 
 /-- Unconditional complete original pair-Haar density moment bound.
 It does not assume a common fourth moment or an event mass. -/
@@ -223,10 +228,10 @@ theorem p4Q2PZ37ABL_originalAllPlaquette_crossDensitySecondMoment_sum_le
   have hTotalInt : Integrable (fun z : Pair => ∑ p : Plaq, (C p z)^2) μ :=
     (continuous_finset_sum Finset.univ (fun p _hp => hC p)).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
+  have hF : Continuous F := p4Q2HI_originalWilsonTwoPosteriorExpectationGap_continuous
+    H b hb.le (p4Q2PZ37ZW_originalCenteredPhysicalDirection H) e
   have hFInt : Integrable (fun z : Pair => (F z)^2) μ :=
-    ((p4Q2HI_originalWilsonTwoPosteriorExpectationGap_continuous
-      H b hb.le (p4Q2PZ37ZW_originalCenteredPhysicalDirection H) e).pow 2)
-      .integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
+    (hF.pow 2).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
   have hPoint (z : Pair) : (∑ p : Plaq, (C p z)^2) ≤ (F z)^2 * s := by
     have hEq : (∑ p : Plaq, (C p z)^2) = (F z)^2 * ∑ p : Plaq, (L p z)^2 := by
       rw [Finset.mul_sum]
