@@ -63,9 +63,21 @@ theorem p4Q2PZ37ABQ2_originalWeight_continuous (b : ℝ) (hb : 0 ≤ b) :
   have h := (periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight_continuous H 2 b).mul
     (periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
       H 2 (by norm_num) b hb)
-  simpa only [← p4Q2PZ37ABQ2_originalWeight_eq_halfWeight_mul_vacuum] using h
+  have hEq : W b hb = (fun A : Cfg => hW b A * Ω b hb A) := by
+    funext A
+    exact p4Q2PZ37ABQ2_originalWeight_eq_halfWeight_mul_vacuum H b hb A
+  rw [hEq]
+  simpa only [Pi.mul_apply] using h
 
 variable (p : Plaq)
+/-!
+Lean 4 chooses section theorem parameters from theorem headers, not theorem
+proofs. Since p occurs through local notation (emb/Remote/ρ/assemble), explicitly
+include p so that generated declarations retain the actual plaquette index.
+Without this the header elaborates as a free metavar and every subsequent
+reference to p or a remote type may become an unknown free variable.
+-/
+include p
 local notation "emb" => p4Q2MY_originalPlaquetteFourEdgeEmbedding H p
 local notation "Remote" => {e : Link // e ∉ Set.range emb}
 local notation "ρ" => Measure.pi (fun _ : Remote => μ)
