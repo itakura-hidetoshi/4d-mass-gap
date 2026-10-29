@@ -129,7 +129,9 @@ theorem p4Q2PZ37AAZ_originalGapMoment_le_FXCap_mul_rawResponse
     (H : ℕ) (b : ℝ) (hb : 0 < b)
     (e : PeriodicHypercubicEvenSpatialSliceLink H)
     (q : ℝ)
-    (hQcap : ∀ z,
+    (hQcap : ∀ z :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
       p4Q2FX_originalSU2WilsonPosteriorLeftSensitivityHaarSq
         H b hb.le z.2 e ≤ q)
     (hGapInt : Integrable
@@ -173,7 +175,9 @@ theorem p4Q2PZ37AAZ_originalRawResponse_ge_of_gapMoment
     (H : ℕ) (b : ℝ) (hb : 0 < b)
     (e : PeriodicHypercubicEvenSpatialSliceLink H)
     (m q : ℝ) (hq : 0 < q)
-    (hQcap : ∀ z,
+    (hQcap : ∀ z :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
       p4Q2FX_originalSU2WilsonPosteriorLeftSensitivityHaarSq
         H b hb.le z.2 e ≤ q)
     (hGapInt : Integrable
@@ -199,7 +203,9 @@ theorem p4Q2PZ37AAZ_allVolumes_Rayleigh_of_trueUnweightedGIMoments
     (b : ℕ → ℝ) (hb : ∀ H, 0 < b H)
     (m q : ℝ) (hm : 0 < m) (hq : 0 < q)
     (e : ∀ H, PeriodicHypercubicEvenSpatialSliceLink H)
-    (hQcap : ∀ H, ∀ z,
+    (hQcap : ∀ H, ∀ z :
+      PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 ×
+        PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
       p4Q2FX_originalSU2WilsonPosteriorLeftSensitivityHaarSq
         H (b H) (hb H).le z.2 (e H) ≤ q)
     (hGapInt : ∀ H, Integrable
