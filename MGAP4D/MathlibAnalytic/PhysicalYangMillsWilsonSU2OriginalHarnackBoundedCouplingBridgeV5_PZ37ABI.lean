@@ -34,6 +34,21 @@ set_option autoImplicit false
 set_option maxHeartbeats 3900000
 set_option synthInstance.maxHeartbeats 1050000
 
+-- The same genuine compact SU(2) carrier instances as ABH are needed
+-- to elaborate MeasurableSet on the original spatial pair-Haar carrier;
+-- local instances from the imported ABH file do not leak across imports.
+local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
+local instance p4Q2PZ37ABI_topologicalGroup : IsTopologicalGroup G :=
+  specialUnitaryGroupIsTopologicalGroup 2
+local instance p4Q2PZ37ABI_compactSpace : CompactSpace G :=
+  specialUnitaryGroupCompactSpace 2
+local instance p4Q2PZ37ABI_secondCountable : SecondCountableTopology G :=
+  specialUnitaryGroupSecondCountableTopology 2
+local instance p4Q2PZ37ABI_measurableSpace : MeasurableSpace G :=
+  specialUnitaryGroupMeasurableSpace 2
+local instance p4Q2PZ37ABI_borelSpace : BorelSpace G :=
+  specialUnitaryGroupBorelSpace 2
+
 namespace GroundStatePosteriorJoint
 
 /-- Actual original Wilson contrast scale E_b is monotone for
