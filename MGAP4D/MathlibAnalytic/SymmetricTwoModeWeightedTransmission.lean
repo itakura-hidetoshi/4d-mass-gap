@@ -72,7 +72,7 @@ theorem symmetric_twoMode_weighted_norm_lower
   have hq_le_w : ‖q‖ ≤ ‖w‖ := by
     have hsq : ‖q‖ ^ 2 ≤ ‖w‖ ^ 2 := by
       rw [hq_sq, hw_sq]
-      simpa only [add_comm] using (add_le_add_left hscaled (‖v‖ ^ 2))
+      exact add_le_add_right hscaled (‖v‖ ^ 2)
     nlinarith only [hsq, norm_nonneg q, norm_nonneg w]
   have hv_le_w : ‖v‖ ≤ ‖w‖ := by
     have hnonneg : 0 ≤ c ^ 2 * ‖u‖ ^ 2 :=
