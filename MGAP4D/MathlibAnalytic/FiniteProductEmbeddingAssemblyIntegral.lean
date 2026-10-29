@@ -86,6 +86,7 @@ theorem finiteProductEmbeddingAssemble_prod
     (r : {i : ι // i ∉ Set.range e} → α) :
     (∏ i : ι, q i (finiteProductEmbeddingAssemble e x r i)) =
       (∏ j : κ, q (e j) (x j)) * ∏ i : {i : ι // i ∉ Set.range e}, q i.1 (r i) := by
+  letI : Fintype {i : ι // i ∈ Set.range e} := Subtype.fintype (fun i => i ∈ Set.range e)
   let erange : κ ≃ {i : ι // i ∈ Set.range e} := Equiv.ofInjective e e.injective
   have hselected :
       (∏ i : {i : ι // i ∈ Set.range e}, q i.1 (finiteProductEmbeddingAssemble e x r i.1)) =
@@ -115,6 +116,7 @@ theorem integral_finiteProductEmbeddingAssemble
         F (finiteProductEmbeddingAssemble e x r)
           ∂Measure.pi (fun _ : {i : ι // i ∉ Set.range e} => μ)
           ∂Measure.pi (fun _ : κ => μ) := by
+  letI : Fintype {i : ι // i ∈ Set.range e} := Subtype.fintype (fun i => i ∈ Set.range e)
   let erange : κ ≃ {i : ι // i ∈ Set.range e} := Equiv.ofInjective e e.injective
   let split := MeasurableEquiv.piEquivPiSubtypeProd (fun _ : ι => α)
     (fun i => i ∈ Set.range e)
