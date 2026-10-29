@@ -186,7 +186,8 @@ theorem p4Q2PZ37AAX_originalProbe_lower_normalizedResponse
     p4Q2PZ37AAX_originalProbe_lower_rawResponse
       H b hb e w hw rho kappa hk hMean hPoint
   have hRatio : (rho * kappa * C) / L ≤ J := by
-    convert hRaw using 1 <;> ring
+    convert hRaw using 1
+    ring
   have hScaled : rho * kappa * C ≤ J * L :=
     (div_le_iff₀ hL).mp hRatio
   change (4 * rho * kappa) / L ≤ (4 * J) / C
