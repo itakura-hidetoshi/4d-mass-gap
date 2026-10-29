@@ -54,6 +54,10 @@ local instance p4Q2PZ37ABB_measurableSpace : MeasurableSpace G :=
   specialUnitaryGroupMeasurableSpace 2
 local instance p4Q2PZ37ABB_borelSpace : BorelSpace G :=
   specialUnitaryGroupBorelSpace 2
+private noncomputable instance p4Q2PZ37ABB_linkFintype (H : ℕ) :
+    Fintype (PeriodicHypercubicEvenSpatialSliceLink H) :=
+  Fintype.ofFinite _
+
 local instance p4Q2PZ37ABB_haarOpenPos :
     (normalizedCompactHaar G).IsOpenPosMeasure := by
   unfold normalizedCompactHaar
