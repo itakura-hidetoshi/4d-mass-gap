@@ -206,19 +206,31 @@ private theorem p4Q2PZ37ABQ2_crossing_eq_prod (b : ℝ) (A B : Cfg) :
   rw [← List.prod_toFinset
     (fun e : Link => specialUnitaryWilsonRelativeKernel 2 b (A e) (B e)) hn, hs]
 
+/-!
+The generic finite-product assembly theorem has already been kernel-checked.
+Locally seal the large physical edge embedding and exact assembly definition
+against speculative definitional-equality and WHNF expansion during its
+specialization. Their definitions and theorem hypotheses remain unchanged.
+-/
+attribute [local irreducible]
+  p4Q2MY_originalPlaquetteFourEdgeEmbedding
+  finiteProductEmbeddingAssemble
+
 private theorem p4Q2PZ37ABQ2_crossing_assemble
     (b : ℝ) (B : Cfg) (x : Fin 4 → G) (r : Remote → G) :
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel H 2 b (assemble x r) B =
       p4Q2PZ37ABO2_originalFourLinkWilsonKernel b x (fun i => B (emb i)) *
         p4Q2PZ37ABQ2_originalRemoteTemporalKernel H p b B r := by
+  let q : Link → G → ℝ :=
+    fun e a => specialUnitaryWilsonRelativeKernel 2 b a (B e)
+  have hRaw := finiteProductEmbeddingAssemble_prod
+    (ι := Link) (κ := Fin 4) (α := G) emb q x r
   have hProduct :
       (∏ e : Link, specialUnitaryWilsonRelativeKernel 2 b
         (assemble x r e) (B e)) =
       (∏ i : Fin 4, specialUnitaryWilsonRelativeKernel 2 b (x i) (B (emb i))) *
-        (∏ e : Remote, specialUnitaryWilsonRelativeKernel 2 b (r e) (B e.1)) :=
-    finiteProductEmbeddingAssemble_prod
-      (ι := Link) (κ := Fin 4) (α := G) emb
-      (fun (e : Link) (a : G) => specialUnitaryWilsonRelativeKernel 2 b a (B e)) x r
+        (∏ e : Remote, specialUnitaryWilsonRelativeKernel 2 b (r e) (B e.1)) := by
+    simpa only [q] using hRaw
   have hSelected :
       (∏ i : Fin 4, specialUnitaryWilsonRelativeKernel 2 b (x i) (B (emb i))) =
         p4Q2PZ37ABO2_originalFourLinkWilsonKernel b x (fun i => B (emb i)) := by
