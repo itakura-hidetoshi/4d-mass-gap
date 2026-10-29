@@ -182,7 +182,7 @@ theorem p4Q2PZ37ABF2_originalCompensatedLocalPhysicalGIMoment_le_uniform
     ((continuous_const.mul hL).pow 2).integrable_of_hasCompactSupport
       (HasCompactSupport.of_compactSpace _)
   have hE : 0 ≤ E / 2 :=
-    (p4Q2LW_originalHarnackContrastScale_nonneg b hb.le).trans_eq (by ring)
+    div_nonneg (p4Q2LW_originalHarnackContrastScale_nonneg b hb.le) (by norm_num)
   have hPoint (z : Pair) : (t * L z)^2 ≤ (E / 2)^2 := by
     have hAbs :=
       p4Q2PZ37ABF2_originalCompensatedLocalPhysicalGI_abs_le H b hb e p z
