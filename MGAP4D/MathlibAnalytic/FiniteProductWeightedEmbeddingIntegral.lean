@@ -42,6 +42,7 @@ theorem integral_finiteProduct_mul_embedding
       ∏ i : {i : ι // i ∉ Set.range e}, ∫ x : α, w i.1 x ∂μ := by
   classical
   let p : ι → Prop := fun i => i ∈ Set.range e
+  letI : Fintype (Subtype p) := Subtype.fintype p
   let erange : κ ≃ Subtype p := Equiv.ofInjective e e.injective
   let split : (ι → α) ≃ᵐ
       ((Subtype p → α) × ({i : ι // ¬p i} → α)) :=
