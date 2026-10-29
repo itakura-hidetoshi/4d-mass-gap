@@ -1,6 +1,85 @@
-# MGAP4D — 証明ロードマップ（P4-Q2-PZ37ZA #5935統合済み／次は全リンク・全文脈の真正GL質量一様制御とendpoint source transport）
+# MGAP4D — 証明ロードマップ（2026-10-29 JST／P4-Q2-PZ37AAZ2・PR #5991までMERGED）
 
-**LATEST VERIFIED PZ37ZI — 2026-10-27 JST · [PR #5947](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5947) MERGED**
+## 現在の証明正本（2026-10-29 JST）
+
+唯一の定理正本は [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit)。**default `main` は定理正本ではない。** 真正有限体積SU(2) Wilson一スラブkernel、正Perron真空、Gauss-law物理Hilbertと元の中心化源`V_H`、**二つの相互作用するWilson条件付きposterior**、本物のSU(2) Haar・境界pair-Haar・GI受信器を変更しない。
+
+| Authority | 確定値 |
+| --- | --- |
+| 最新定理PR | [#5991 AAZ/AAZ2](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5991) **MERGED** |
+| exact-headテスト対象PR source | [`d769e275d016b6645e924a116acb0d7653f7e9a0`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/d769e275d016b6645e924a116acb0d7653f7e9a0) |
+| theorem-bearing squash SHA | [`20f910f54791d662b687965af231842a27f093b6`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/20f910f54791d662b687965af231842a27f093b6)、#5991マージ直後の正本HEADと完全一致 |
+| [CI #40814241452](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40814241452) | **Lean 11,159 / 11,159 SUCCESS**、変更Lean2ファイルwarning/error **0/0**、8定理`#print axioms`＝`propext`/`Classical.choice`/`Quot.sound`のみ、`sorryAx`なし、独立completion receipt SUCCESS |
+| 固定環境 | Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
+
+このsquashは**定理統合時点**の記録。後続README/ROADMAPだけのマージでbranch HEADが変わっても新しいLean定理を証明したことにはならない。source SHAとsquash SHAは区別する。
+
+## 直近のCLOSED — 有限体積の正値性と真正Wilsonモデル固有の判定
+
+| 段階 | 証明済み | 閉じていないこと |
+| --- | --- | --- |
+| PZ37ZA [#5935](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5935) | 真の**補償済み二文脈**`Q_GI/N_H`の体積一様正下界は不可能。 | **全リンク・全文脈posterior積分**のGL massや4D質量ギャップのno-goではない。 |
+| AAH–AAK [#5973–#5976](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5976) | 全有限`H,b>0`で真正中心化物理源の`R_{H,b}>0`、`C_H=4‖V_H‖²>0`、`J_e≥0`、`R=(4/C_H)Σ_eJ_e`、一つの正の実リンク応答`J_e>0`。 | `inf_H R_{H,b(H)}>0`は未証明。 |
+| AAQ–AAU [#5982–#5986](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5986) | 元の空間Haar・Wilson kernel・正Perron・二posterior・GI/FXの**無条件並進共変性**。`M₂≤3R²`、参加率`P≥1/3`。 | 相対集中度の制御のみ。絶対的`R`下界にはならない。 |
+| AAV [#5987](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5987)・AAW [#5988](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5988) | 3つの真正空間方向の一方向の全リンクで`j_e≥R/L_H`、活性密度`≥1/3`。一リンク`j_e≥3c/L_H`は`R≥c`に十分。 | 正の体積一様一リンク証人は未構成。 |
+| AAX/AAX2 [#5989](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5989) | 真の空間プラケット数`P_H=L_H`、Haar共分散`C_H≤24L_H`、生一リンク応答`J_e≥ε⇒R≥ε/18`。 | 共通`ε>0`は未証明。 |
+| AAY [#5990](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5990) | 原境界pair-Haar可測領域`E_H`上の`μ_H(E_H)≥ρ`、`|Δ|≥δ`、`0<Q≤q`から`J_e≥ρδ²/q`。 | 一様正値`ρ,δ`を持つ真正領域の存在。 |
+| AAZ/AAZ2 [#5991](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5991) | 各固定`H,b>0`で`Δ`が**pair-Haar-a.e.ゼロではない**実リンクが存在。分母なし`G_e=∫Δ_e²dμ_H`を定義。真正FX分散`Q≤q`なら`G_e`は**自動可積分**、`G_e≤qJ_e`。共通`G_e≥m>0,q>0`なら条件付き`R≥m/(18q)>0`。 | `m`と対象`b(H)`での共通`q`の証明は残る。 |
+
+`Q=∫_{SU(2)}(p_0-p_\pi)^2dν`は**真正posterior密度差のFX分散**、`Q_GI=Σ_pd_p²`は旧二文脈補償済みminorの**別量**。`J_e=∫Δ_e²/Q_e\,dμ_H`に使う`μ_H`は**元の外側境界pair-Haar**。`R`は**特定中心化Gauss-law物理源**のRayleigh値であって、全物理Hilbert源のcoercivityではない。
+
+## 真の次段階：未解決ゲートの優先順位
+
+### Gate A — 本物のGI二乗モーメントの絶対的下界【最優先】
+
+\[
+\boxed{\exists m>0,\quad\forall H,\quad\exists e_H\in\mathrm{Links}_H,\quad
+ \int|\Delta_{H,b(H),e_H}(z;V_H)|^2\,d\mu_H(z)\ge m.}
+\]
+
+AAZの各有限`H`での非a.e.ゼロは**定性的**であり、正の`inf_H G_e`は従わない。**既に未知の`R`を前提にしない**真正局所応答から証明する。
+
+実装候補は、元のWilsonリンクと境界に依存する有限局所円筒領域を**同じ外側pair-Haar**で構成し、真正GI期待値差`|Δ|≥δ>0`と領域確率`μ_H(E_H)≥ρ>0`をともに全`H`で証明すること。高次元積Haarで全リンクを制限すると領域測度が体積とともに減り得る。source/receiverの真正有限サポートと他のHaar変数の積分降下を証明し、**元の二つのinteracting posteriorを独立Haar posteriorへ置換しない**。密度差の非零性・符号変化だけではGI受信器の積分相殺を排除できない。
+
+### Gate B — 実FX分散の共通上界と公理依存の境界
+
+目標`∀H,z,\ Q_{H,b(H),e_H}(z)≤q`（`q>0`）。既存[JL #5658](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5658)は**固定`b`**について`Q≤(e^{16b}-e^{-16b})²`を真正posteriorから証明したが、その`#print axioms`には**歴史的finite-grid `native_decide` 5公理**が継承されている。標準公理のみのAAZ2へ無断に取り込まない。真正FK二側HarnackとSU(2) Haar積分から、固定mathlibに適合する独立証明が必要か検討する。任意の変動`b(H)`に`q`を勝手に仮定せず、`b(H)\to0`でのposteriorのHaar化も評価する。
+
+**AAZ2でCLOSEDなのは`Q≤q⇒G_e`の自動可積分性であり、`q`の無条件存在ではない。**
+
+### Gate C — AAZ2の条件付き含意を実在の`m,q`で閉じる
+
+Gate A/Bの本物の独立証人が完成した場合にのみ、
+
+\[
+\boxed{0<m/(18q)\le R_{H,b(H)}\quad (\forall H)}
+\]
+
+が既存[AAZ2](MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalUnweightedGIGapAutomaticIntegrabilityV5_PZ37AAZ2.lean)から成立する。**この含意はすでにLean証明済み**であり、条件式だけを再証明せず、`m,q`のモデル内での構成へ進む。
+
+### Gate D — 全物理源のcoercivity、positive-fineの共通区間、endpoint E/F
+
+特定中心化源のfine-zeroの正値から、物理Gauss-law Hilbert全源の下界へは別のframe/source-synthesisが必要。AAE/AAHの正fine半径は**有限`H,b`ごと**で、全`H`・任意深さ共通ではない。`F_t=U-T_tU→0`やfine-zero係数Gram特異性からノルム正規化Rayleighのno-goを導かない。PZ37ZAで否定した二文脈`Q_GI/N_H`の一様正下界を復活させない。
+
+### Gate E — H1–H4、連続体・4D Yang–Mills質量ギャップ
+
+同一のendpoint、正のfine全深さ、source/measure compatibility、強極限Gauss-law Hilbert、物理Hamiltonian・正の非零スペクトル下界、OS/Wightman再構成と連続体4D質量ギャップは**OPEN**。条件付き有限体積Rayleigh判定をこれらの完了と同一視しない。
+
+## 実装/CI受入れ条件
+
+- 定理本文・imports・dependent signaturesを全部確認：[AAZ](MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalUnweightedGIGapMomentCriterionV5_PZ37AAZ.lean)、[AAZ2](MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalUnweightedGIGapAutomaticIntegrabilityV5_PZ37AAZ2.lean)、[AAY](MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalPosteriorPositiveEventCriterionV5_PZ37AAY.lean)、[AAX2](MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalPosteriorRawMassUniformV5_PZ37AAX2.lean)。
+- GitHub MCPで正本fresh HEADを観測。Leanを変更したら**exact-source-head CI completed SUCCESS**、変更Lean warning/error`0/0`、公開`#print axioms`、`sorryAx`なし、独立completion receipt **SUCCESS**後のみsquash merge。queued/in_progressをauthorityにしない。
+- **README/ROADMAPだけのdocs-only更新ではStrict Leanを回さない。** Markdown、両文書リンク、古いreceiptの履歴と最新SHA、`OPEN`と`CLOSED`を点検し、docsマージを新しい数学定理の証明とみなさない。
+- 現状の数学・再現手順は[README.md](README.md)。最新theorem-bearing検証は[CI #40814241452](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40814241452)。
+
+---
+
+## 歴史的checkpoint archive（2026-10-27時点まで）
+
+以下に残す「LATEST/CURRENT」「次はPZ37ZI／PA」は**その当時の検証履歴**であり、上の2026-10-29の最新正本・OPENゲートに優先しない。過去の形式化成果・no-go・独立completion receiptは削除しない。
+
+
+**HISTORICAL VERIFIED PZ37ZI — 2026-10-27 JST · [PR #5947](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5947) MERGED**
 
 - Sole theorem carrier: `formal/real-hilbert-uniform-coercive-strong-limit`; exact tested PZ37ZI source `f3a849f736334be71c6424f7ba6aa3a769249eda`; verified theorem-bearing squash [`87f187014c78222fd84e275a8d3b8bc19e6d6a36`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/87f187014c78222fd84e275a8d3b8bc19e6d6a36). Default `main` is not authority.
 - Exact source-head [CI #40491398111](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40491398111): **11,107/11,107 SUCCESS**, changed Lean warning/error **0/0**, four new public `#print axioms` all limited to `propext`/`Classical.choice`/`Quot.sound`, independent MCP completion receipt SUCCESS; no new axiom, sorry, admit or native_decide.
@@ -11,7 +90,7 @@
 
 ---
 
-**LATEST VERIFIED THEOREM / NEXT GATE — 2026-10-27 JST · PZ37ZH #5945 MERGED**
+**HISTORICAL VERIFIED THEOREM / NEXT GATE — 2026-10-27 JST · PZ37ZH #5945 MERGED**
 
 - Sole theorem carrier: `formal/real-hilbert-uniform-coercive-strong-limit`, tested PZ37ZH source SHA `8c258a37a04187cc6c708eef354e88682d7a7f5e`, verified squash theorem [`c2101b5596689ed6dd0939aad60b8c2884f6e3ee`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/c2101b5596689ed6dd0939aad60b8c2884f6e3ee) ([PR #5945](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5945)). Default `main` is not authority.
 - Exact-head [CI #40489013358](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40489013358): **11,093/11,093 SUCCESS**, changed file warning/error **0/0**, all seven new `#print axioms` reports exclusively standard `propext`, `Classical.choice`, `Quot.sound`, independent MCP CI completion receipt SUCCESS. No new axiom, sorry, admit or native_decide.
@@ -22,7 +101,7 @@
 
 ---
 
-**LATEST VERIFIED THEOREM AUTHORITY / NEXT GATE — 2026-10-27 JST, PZ37ZG #5943 MERGED**
+**HISTORICAL VERIFIED THEOREM AUTHORITY / NEXT GATE — 2026-10-27 JST, PZ37ZG #5943 MERGED**
 
 - Sole theorem carrier: `formal/real-hilbert-uniform-coercive-strong-limit`; verified theorem-bearing squash [`49467c2542e4a4b565ec480f04884f9c97c57abe`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/49467c2542e4a4b565ec480f04884f9c97c57abe), distinct from tested source `77d50b0c0d6bc90aa3b8a243bdf3ae50aeef37e8` ([PR #5943](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5943)).
 - Exact source-head [CI #40483971949](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40483971949): **11,092/11,092 SUCCESS**, changed Lean warning/error **0/0**, four new public axiom audits only `propext`, `Classical.choice`, `Quot.sound`; independent MCP completion receipt SUCCESS.
@@ -33,7 +112,7 @@
 
 ---
 
-**CURRENT THEOREM AUTHORITY / PROOF GATES (2026-10-27 JST, PZ37ZF #5941 MERGED)**
+**HISTORICAL THEOREM AUTHORITY / PROOF GATES (2026-10-27 JST, PZ37ZF #5941 MERGED)**
 
 - Sole theorem branch: `formal/real-hilbert-uniform-coercive-strong-limit`; exact verified HEAD = PZ37ZF squash `2d59cfc970cd358e29263577e2f8c76c688e35f9` ([PR #5941](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5941)). Source-HEAD [CI #40479003824](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40479003824) **11,091/11,091 SUCCESS**, changed Lean warnings/errors **0/0**, four public `#print axioms` only `propext`/`Classical.choice`/`Quot.sound`. The #5935/PZ37ZA “latest” entries farther below are historical checkpoint receipts, not the current HEAD.
 - **#5937 PZ37ZB — CLOSED:** genuine all-link/all-context three-mode GL Gram singular at fine zero; no positive coefficient-ℓ² frame *including* zero.
@@ -53,7 +132,7 @@
 
 **[プロジェクトの数学的定義・数式・再現手順 → README.md](README.md)**
 
-## 0. Authority / CI — status claims must be reproducible
+## 0. Historical 2026-10-27 authority / CI receipt
 
 | 項目 | 正確な検証結果 |
 | --- | --- |
