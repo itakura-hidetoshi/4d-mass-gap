@@ -212,6 +212,17 @@ theorem p4Q2PZ37ABQ_originalSpatialPerronWeight_oneLink_le
       Real.exp (14 * b) * (Real.exp (-(theta * d)) * omega Bh)
   exact hCore
 
+/-!
+The four-edge proof only needs the already verified *named* local weight
+and geometric embedding. Prevent the elaborator from unfolding their very
+large definitions in speculative whnf/isDefEq checks. This is a locally
+scoped transparency choice; the physical definitions and all earlier
+one-link proofs remain unchanged.
+-/
+attribute [local irreducible]
+  p4Q2PZ37ABQ_originalSpatialPerronWeight
+  p4Q2MY_originalPlaquetteFourEdgeEmbedding
+
 /-- Four true plaquette links, with the remote configuration unchanged,
 have a uniform original spatial-Perron weight comparison. The four-link
 support is MY's genuinely injective embedding (also at H=0). -/
@@ -239,11 +250,14 @@ theorem p4Q2PZ37ABQ_originalSpatialPerronWeight_fourEdge_le
     rw [hId] at h
     exact h
   have hFour : W A ≤ (Real.exp (14 * b)) ^ 4 * W B :=
-    p4Q2PZ37ABQ_finiteFourCoordinateHarnack W
-      (Real.exp (14 * b)) (Real.exp_nonneg _) hstep
+    p4Q2PZ37ABQ_finiteFourCoordinateHarnack
+      (ι := Link) (α := G)
+      W (Real.exp (14 * b)) (Real.exp_nonneg _) hstep
       (p4Q2MY_originalPlaquetteFourEdgeEmbedding H p) A B hremote
-  rw [p4Q2PZ37ABQ_exp_four] at hFour
-  exact hFour
+  have hCoef : (Real.exp (14 * b)) ^ 4 * W B =
+      Real.exp (56 * b) * W B :=
+    congrArg (fun c : ℝ => c * W B) (p4Q2PZ37ABQ_exp_four b)
+  exact hFour.trans_eq hCoef
 
 /-- The comparison is symmetric because both configurations have the same
 actual remote links; no global volume factor is introduced. -/
