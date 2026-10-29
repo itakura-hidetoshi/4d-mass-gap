@@ -53,8 +53,7 @@ theorem finiteProductEmbeddingAssemble_selected
 /-- Reconstruction preserves every actual remote coordinate exactly. -/
 theorem finiteProductEmbeddingAssemble_remote
     {ι : Type u} {κ : Type v} {α : Type w} [MeasurableSpace α]
-    (e : κ ↪ ι) (x : κ → α) (r : {i : ι // i ∉ Set.range e} → α)
-    (i : {i : ι // i ∉ Set.range e}) :
+    (e : κ ↪ ι) (x : κ → α) (r : {i : ι // i ∉ Set.range e}) :
     finiteProductEmbeddingAssemble e x r i.1 = r i := by
   rw [finiteProductEmbeddingAssemble_apply, dif_neg i.2]
 
@@ -160,7 +159,23 @@ theorem integral_finiteProductEmbeddingAssemble
         ∂Measure.pi (fun _ : κ => μ) :=
       (hReindex.integral_comp' (fun u => ∫ r : {i : ι // i ∉ Set.range e} → α,
         F (split.symm (u, r)) ∂Measure.pi (fun _ : {i : ι // i ∉ Set.range e} => μ))).symm
-    _ = _ := rfl
+    _ = ∫ x : κ → α, ∫ r : {i : ι // i ∉ Set.range e} → α,
+        F (finiteProductEmbeddingAssemble e x r)
+        ∂Measure.pi (fun _ : {i : ι // i ∉ Set.range e} => μ)
+        ∂Measure.pi (fun _ : κ => μ) := by
+      apply integral_congr_ae
+      filter_upwards with x
+      apply integral_congr_ae
+      filter_upwards with r
+      apply congrArg F
+      funext i
+      dsimp only [split, reindex, erange]
+      rw [MeasurableEquiv.piEquivPiSubtypeProd_symm_apply,
+        finiteProductEmbeddingAssemble_apply]
+      split_ifs with hi
+      · simp only [MeasurableEquiv.coe_piCongrLeft,
+          Equiv.piCongrLeft_apply_eq_cast, cast_eq]
+      · rfl
 
 end
 end MGAP4D.MathlibAnalytic
