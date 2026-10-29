@@ -1,6 +1,32 @@
-# MGAP4D — 証明ロードマップ（2026-10-29 JST／P4-Q2-PZ37ABE・PR #5998までMERGED）
+# MGAP4D — 証明ロードマップ（2026-10-29 JST／現行 P4-Q2-PZ37ABG・PR #6002までMERGED）
 
-## 最新の定理正本：P4-Q2-PZ37ABE／PR #5998までMERGED（2026-10-29 JST）
+## 現行の定理正本：P4-Q2-PZ37ABG／PR #6002までMERGED（2026-10-29 JST）
+
+唯一の定理正本：[`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit)。`main` は文書ミラーであり定理正本ではない。
+
+| 監査項目 | 確定値 |
+| --- | --- |
+| 最新定理-bearing PR | [#6002 ABG](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6002) MERGED。前段 [#6001 ABF/ABF2](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6001) MERGED |
+| #6002 exact-source-head | `f752141618f07a5d0c2b1cfd51c5cc2e60bb34d4` |
+| #6002 squash／マージ直後の定理正本HEAD | `6f68bc2989b7b46b2c3ef1702d521982ed37e521` |
+| [#6002 completed CI](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40831840574) | 11,171/11,171 SUCCESS、変更Lean warning/error 0/0、新規5定理標準3公理のみ、`sorryAx`なし、独立completion receipt SUCCESS |
+| Lean/mathlib | `v4.30.0-rc2`／`5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
+
+### 追加CLOSED — 真正Wilsonの体積依存を保持した新しい定量的比較
+
+- **ABF [#6001](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6001)**：真正物理プラケット源の完全pair-Haar符号付き交差相関 `K_(H,b,e,p)` は `Σ_p K_p=G_(H,b,e)` を満たす。選択した実プラケットに対して `G=K_p+Σ_(q≠p)K_q` とその**符号付き**残余を厳密保持。ある実リンク・プラケットで `0<G/|P_H|≤K_p`。絶対残余制御でも体積一様下界でもない。
+- **ABF2 [#6001](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6001)**：元の物理一スラブ転送ノルム `t_(H,b)>0` を保持した真正局所Gauss-law GI応答に `|t Δ_local,p(z)|≤E_b/2`、`Mcomp=∫(tΔ_local,p)²dμ_H≤(E_b/2)²`。ここで `E_b=exp(8b)(exp(16b)−exp(−16b))` は体積非依存。元の二つの**相互作用する**Wilson posteriorと完全外側pair-Haarは不変更。
+- **ABG [#6002](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6002)**：真正pair-Haar `L²` Cauchy–Schwarzから `(tK_p)²≤G Mcomp≤G(E_b/2)²`、したがって `G≥(tK_p)²/(E_b/2)²`。毎有限体積で実リンク／プラケットの正の証人が存在するが、その定数は `H` に依存し得る。
+
+### 次のOPEN — ABHの独立入力
+
+`∃κ>0, ∀H, ∃e_H,p_H: t_(H,b(H)) K_(H,b(H),e_H,p_H)≥κ` を既知の`G`や`R`の一様下界から逆算することなく、真正Wilsonから示す。有限`H`の同符号開領域は、`H`一様な測度・振幅・遠方の符号付き負残余制御を保証しない。これらを明示した独立の局所／descent証明が未完了。正の`κ`と`E_b≤E_B`が揃った場合に限り`G≥4κ²/E_B²`が従う。
+
+全物理Hilbert coercivity、共通positive-fine区間、endpoint E/F、H1–H4、OS/Wightman、連続体Yang–Mills質量ギャップはOPEN。旧PZ37ZAのno-goは保持。**以下のABE・AAZ2など旧節は時点履歴であり、現行正本の上位authorityではない。** 今回はdocs-onlyでLean定理を追加せず、Strict Leanを起動しない。
+
+---
+
+## 履歴：当時の定理正本 P4-Q2-PZ37ABE／PR #5998 MERGED（2026-10-29 JST）
 
 唯一の定理正本は [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit)。default `main` は文書ミラーで、Lean定理正本ではない。
 
