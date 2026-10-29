@@ -2,7 +2,28 @@
 
 **Main-branch documentation mirror | 2026-10-29 JST.** Formalized four-dimensional Yang–Mills / genuine interacting Wilson SU(2) research in Lean 4 / pinned mathlib, by Hidetoshi Itakura.
 
-## Current verified research status — 2026-10-29
+## Latest authoritative Lean theorem snapshot (2026-10-29 JST · PZ37ABE)
+
+**This `main` branch is a documentation-only mirror, NOT the Lean theorem-bearing branch.** The sole authoritative Lean theorem source is [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit). The authoritative [README](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/c570350ea9e876fb4e11f6fd947d1b759d5ab7c8/README.md) and [ROADMAP](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/c570350ea9e876fb4e11f6fd947d1b759d5ab7c8/ROADMAP.md) were updated by **docs-only** [PR #5999](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5999); this docs SHA is **not** a new mathematical theorem.
+
+| Verified source/evidence | Grounded conclusion |
+| --- | --- |
+| Latest **theorem-bearing PR** | [#5998 P4-Q2-PZ37ABE](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5998) **MERGED**, following [ABA/ABA2 #5994](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5994), [ABB/ABB2 #5995](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5995), [ABC/ABC2 #5996](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5996), and [ABD/ABD2 #5997](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5997), all MERGED on the theorem branch |
+| Actual exact tested **PR source** SHA | [`25b6cc2bc6171603bfbb909a23918be3a25586b4`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/25b6cc2bc6171603bfbb909a23918be3a25586b4) |
+| Last **theorem-bearing squash** SHA | [`75bee4a633cb1296a47a85624cd65a0917fddc8d`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/75bee4a633cb1296a47a85624cd65a0917fddc8d), confirmed equal to the authority HEAD immediately after PR #5998 squash |
+| [Exact-source-head CI #40827511993](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40827511993) | **11,168 / 11,168 Lean SUCCESS**, changed Lean warning/error **0/0**, three new public `#print axioms` only `propext`, `Classical.choice`, `Quot.sound`, no `sorryAx`, independent receipt **SUCCESS** |
+| Latest authoritative **docs-only** squash | [`c570350ea9e876fb4e11f6fd947d1b759d5ab7c8`](https://github.com/itakura-hidetoshi/4d-mass-gap/commit/c570350ea9e876fb4e11f6fd947d1b759d5ab7c8) via #5999, advancing the document HEAD without modifying Lean sources |
+| Pinned environment | Lean `v4.30.0-rc2` / mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
+
+**Proven genuine finite-volume Wilson results:** ABA independently bounds the actual interacting-posterior FX variance by `(e^(16b)-e^(-16b))²`, without inherited JL `native_decide` axioms. At every finite `H,b>0`, the unchanged centered Gauss-law physical Wilson GI gap has a strictly positive genuine full pair-Haar unweighted squared moment on some real link. ABB constructs genuine positive-mass open pair-Haar GI events and two-sided comparison with GB's actual physical source projection. ABC splits the original GI gap exactly into all genuine centered spatial-plaquette contributions **without discarding the signed full residual**. ABD turns every selected centered plaquette into an actual Gauss-law physical Hilbert source and proves a same-sign positive-mass open context with the full source. ABE proves **`Σ_p K_(H,b,e,p)=G_(H,b,e)>0` on a selected actual link**, where `K=∫(original full physical GI gap)(actual centered local plaquette physical GI gap)d(original full pair-Haar)`. Hence at each finite volume some authentic plaquette has a strictly positive **integrated signed global physical cross-response**.
+
+**Still OPEN:** `inf_H G_(H,b(H),e_H)>0`, a fixed-support original Wilson/Perron local response cylinder with a common positive Haar mass/amplitude, control of signed nonlocal remaining-plaquette response, all-Gauss-law physical-Hilbert coercivity, common positive-fine interval, matching endpoint E/F, all-depth H1–H4, OS/Wightman reconstruction and continuum 4D Yang–Mills existence with mass gap. For `0<b(H)≤B`, ABA has **already closed** the common *upper FX cap* `q_B=(e^(16B)-e^(-16B))²>0`, not the uniform positive GI moment. The PZ37ZA no-go concerns a **different compensated two-context quantity** and is retained.
+
+**No Lean theorem files are moved to `main`.** Historical AAZ2 and earlier receipts remain below, explicitly retained as past checkpoints.
+
+---
+
+## Historical main-mirror checkpoint — AAZ2 (#5991), 2026-10-29
 
 **Only authoritative theorem branch:** [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit). The default **`main` is a documentation mirror, not the theorem carrier**. In particular, merging documentation into this root cannot be interpreted as merging the current Lean proof library into `main`.
 

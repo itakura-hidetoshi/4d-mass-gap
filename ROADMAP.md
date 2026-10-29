@@ -2,7 +2,26 @@
 
 **Current docs mirror (2026-10-29 JST).** This is the default `main` **documentation root**, **not** the theorem-bearing branch. The unique authoritative Lean theorem branch is [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit). See its complete [README](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/93a6a06c18c7a66f9e29353ea7e2b034b90c0a33/README.md) and [ROADMAP](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/93a6a06c18c7a66f9e29353ea7e2b034b90c0a33/ROADMAP.md). This root mirror does not synchronize Lean sources onto `main`.
 
-## Current proof gates (2026-10-29 JST)
+## Latest theorem checkpoint and next genuine analytic gate (2026-10-29 JST)
+
+This **main** roadmap is a historical+current **documentation mirror only**. Unique Lean theorem authority: [`formal/real-hilbert-uniform-coercive-strong-limit`](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit). Latest authoritative root [README](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/c570350ea9e876fb4e11f6fd947d1b759d5ab7c8/README.md) and [ROADMAP](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/c570350ea9e876fb4e11f6fd947d1b759d5ab7c8/ROADMAP.md) are **docs-only** [#5999](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5999), not new Lean theorem commits.
+
+| Checkpoint | Verified authority |
+| --- | --- |
+| [Latest theorem-bearing PR #5998 — PZ37ABE](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/5998) | **MERGED** after #5994 ABA/ABA2, #5995 ABB/ABB2, #5996 ABC/ABC2, #5997 ABD/ABD2 |
+| PR source head / squash distinction | tested `25b6cc2bc6171603bfbb909a23918be3a25586b4`; theorem-bearing squash `75bee4a633cb1296a47a85624cd65a0917fddc8d` (canonical authority HEAD immediately after #5998 MERGED) |
+| [Exact-head Lean CI #40827511993](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/40827511993) | **11,168 / 11,168 SUCCESS**; changed Lean 0 warnings / 0 errors; three standard-only axiom reports, no sorryAx, independent completion receipt SUCCESS |
+| Pinned Lean/mathlib | `v4.30.0-rc2` / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
+
+**New CLOSED:** actual FK-based FX cap for positive bounded coupling schedules (no JL legacy native_decide); strictly positive genuine unweighted GI gap moment on some link in every fixed volume; authentic positive original pair-Haar GI event; genuine source-projection two-sided sandwich; exact local plaquette source + full signed residual; original centered local Gauss-law physical Hilbert source; positive-mass same-sign full/local physical GI event; and `Σ_p ∫(GI_full·GI_local,p)dμ_H = G_(H,b,e)>0` with a genuine plaquette having strictly positive **full-Haar-integrated signed correlation**. All are finite-volume results. See authoritative documents for detailed statement scope and separate CI receipts.
+
+**New primary OPEN gate:** prove an **H-independent positive lower bound** `∃m>0, ∀H, ∃e_H: G_(H,b(H),e_H)≥m` from the original interacting Wilson Gauss-law model, not from unknown Rayleigh. Need uniform finite-link genuine physical response/paired Haar mass and signed nonlocal residual cancellation estimates. Neither fixed-H `K>0` nor full-pair-Haar local positivity establishes a common `m`. For any coupling schedule with `0<b(H)≤B`, the genuine FX **upper** bound `q_B` is already proved in ABA; no independent JL axiom import. A uniform fine-zero *source-specific* Rayleigh would still not imply all physical-Hilbert coercivity, common fine window, E/F, H1–H4 or continuum mass gap.
+
+PZ37ZA's impossibility for the **different compensated two-context local-minor quantity** remains valid and must not be generalized to true full-link GL mass. Old AAZ2 and earlier sections below are preserved as labeled historical checkpoints. This docs-only mirror update does not trigger Strict Lean and does not place Lean files on `main`.
+
+---
+
+## Historical main-mirror proof gates — AAZ2 (#5991), 2026-10-29 JST
 
 | Verified evidence | Authority |
 | --- | --- |
