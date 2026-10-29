@@ -53,7 +53,8 @@ theorem finiteProductEmbeddingAssemble_selected
 /-- Reconstruction preserves every actual remote coordinate exactly. -/
 theorem finiteProductEmbeddingAssemble_remote
     {ι : Type u} {κ : Type v} {α : Type w} [MeasurableSpace α]
-    (e : κ ↪ ι) (x : κ → α) (r : {i : ι // i ∉ Set.range e}) :
+    (e : κ ↪ ι) (x : κ → α) (r : {i : ι // i ∉ Set.range e} → α)
+    (i : {i : ι // i ∉ Set.range e}) :
     finiteProductEmbeddingAssemble e x r i.1 = r i := by
   rw [finiteProductEmbeddingAssemble_apply, dif_neg i.2]
 
