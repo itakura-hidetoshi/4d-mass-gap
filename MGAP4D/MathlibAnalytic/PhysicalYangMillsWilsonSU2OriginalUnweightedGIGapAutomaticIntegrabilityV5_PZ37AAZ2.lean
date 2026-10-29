@@ -60,7 +60,7 @@ and GD genuine posterior variance measurability are unconditional. -/
 theorem p4Q2PZ37AAZ2_originalUnweightedGIGapSquare_integrable_of_FXCap
     (H : ℕ) (b : ℝ) (hb : 0 < b)
     (e : PeriodicHypercubicEvenSpatialSliceLink H)
-    (q : ℝ) (hq : 0 < q)
+    (q : ℝ)
     (hQcap : ∀ z :
       PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 ×
         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
@@ -104,9 +104,7 @@ theorem p4Q2PZ37AAZ2_originalUnweightedGIGapSquare_integrable_of_FXCap
     rw [hFn]
     exact hProdM
   have hBound (z : Pair) :
-      ‖(D z)^2‖ ≤ ‖q * S z‖ := by
-    have hS : 0 ≤ S z :=
-      p4Q2PZ37AAX_originalCenteredPosteriorSignal_nonneg H b hb e z
+      ‖(D z)^2‖ ≤ q * S z := by
     have hGap :
         (D z)^2 ≤ q * S z :=
       p4Q2PZ37AAZ_originalGapSquare_le_FXCap_mul_trueSignal
@@ -115,8 +113,6 @@ theorem p4Q2PZ37AAZ2_originalUnweightedGIGapSquare_integrable_of_FXCap
       ‖(D z)^2‖ = (D z)^2 :=
         Real.norm_of_nonneg (sq_nonneg _)
       _ ≤ q * S z := hGap
-      _ = ‖q * S z‖ :=
-        (Real.norm_of_nonneg (mul_nonneg hq.le hS)).symm
   change Integrable (fun z : Pair => (D z)^2) μ
   apply Integrable.mono' (hSInt.const_mul q) hGapM
   filter_upwards with z
@@ -128,7 +124,7 @@ extra analytic premise beyond the variance cap itself. -/
 theorem p4Q2PZ37AAZ2_originalGapMoment_le_FXCap_mul_raw_noIntegrability
     (H : ℕ) (b : ℝ) (hb : 0 < b)
     (e : PeriodicHypercubicEvenSpatialSliceLink H)
-    (q : ℝ) (hq : 0 < q)
+    (q : ℝ)
     (hQcap : ∀ z :
       PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2 ×
         PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2,
@@ -139,7 +135,7 @@ theorem p4Q2PZ37AAZ2_originalGapMoment_le_FXCap_mul_raw_noIntegrability
   exact p4Q2PZ37AAZ_originalGapMoment_le_FXCap_mul_rawResponse
     H b hb e q hQcap
     (p4Q2PZ37AAZ2_originalUnweightedGIGapSquare_integrable_of_FXCap
-      H b hb e q hq hQcap)
+      H b hb e q hQcap)
 
 /-- New tight all-volume criterion, with NO independent integrability
 assumption: a genuine positive unweighted two-Wilson-posterior GI-gap
@@ -165,7 +161,7 @@ theorem p4Q2PZ37AAZ2_allVolumes_Rayleigh_of_unweightedGIMoments
     b hb m q hm hq e hQcap
     (fun H =>
       p4Q2PZ37AAZ2_originalUnweightedGIGapSquare_integrable_of_FXCap
-        H (b H) (hb H) (e H) q hq (hQcap H))
+        H (b H) (hb H) (e H) q (hQcap H))
     hMoment
 
 end GroundStatePosteriorJoint
