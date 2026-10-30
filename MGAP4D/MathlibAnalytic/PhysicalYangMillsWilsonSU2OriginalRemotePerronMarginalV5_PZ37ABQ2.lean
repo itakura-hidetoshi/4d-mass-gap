@@ -366,9 +366,17 @@ private theorem p4Q2PZ37ABQ2_fullKernelTest_fubini
     (∫ A : Cfg, F A ∂haar) =
       ∫ x : Fin 4 → G, ∫ r : Remote → G,
         F (assemble x r) ∂ρ ∂ν := by
-  -- The source Haar measure is definitionally the actual product SU(2) Haar.
-  simpa only [periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure] using
-    (p4Q2PZ37ABQ2_originalHaar_fubini (ι := Link) emb F hF)
+  -- State the original spatial Haar / finite product identity separately.
+  -- Avoid an expensive simplifier equality check of the complete integral.
+  have hHaar : haar = (Measure.pi fun _ : Link => μ) := by
+    rfl
+  have hSplit :
+      (∫ A : Link → G, F A ∂(Measure.pi fun _ : Link => μ)) =
+        ∫ x : Fin 4 → G, ∫ r : Remote → G,
+          F (assemble x r) ∂ρ ∂ν :=
+    p4Q2PZ37ABQ2_originalHaar_fubini (ι := Link) emb F hF
+  rw [hHaar]
+  exact hSplit
 
 /-- Pointwise original full kernel insertion, preserving all link factors. -/
 private theorem p4Q2PZ37ABQ2_fullKernelTest_assemble
