@@ -295,6 +295,21 @@ private theorem p4Q2PZ37ABQ2_fullKernel_assemble
   rw [p4Q2PZ37ABQ2_crossing_assemble H p b B x r]
   ac_rfl
 
+/-!
+Lean 4 elaborates the original full one-slab kernel together with the real
+Perron representative, spatial halfweights, and the remote integral. All five
+are already independently kernel-checked definitions. Keep them opaque ONLY
+during the final product-Haar/Fubini specialization, avoiding speculative
+WHNF expansion of the entire physical finite lattice. This does not change
+the definition, the theorem, or the physical normalization.
+-/
+attribute [local irreducible]
+  p4Q2PZ37ABQ2_originalRemotePerronWeight
+  p4Q2PZ37ABO2_originalFourLinkWilsonKernel
+  periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight
+  periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
+  periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
+
 /-- Exact four-edge formula for the ORIGINAL full one-slab Perron kernel
 section. The remote spatial interactions and Perron weight are integrated,
 not removed or replaced. The right spatial half-weight is retained. -/
@@ -324,16 +339,23 @@ theorem p4Q2PZ37ABQ2_originalKernelSection_fourEdge_integral
     dsimp only [F]
     rw [hcoords, p4Q2PZ37ABQ2_fullKernel_assemble H p b hb B x r]
     ring
+  have hFubini :
+      (∫ A : Cfg, F A ∂haar) =
+        ∫ x : Fin 4 → G, ∫ r : Remote → G, F (assemble x r) ∂ρ ∂ν :=
+    integral_finiteProductEmbeddingAssemble
+      (ι := Link) (κ := Fin 4) (α := G) μ emb F hF
   calc
     _ = ∫ x : Fin 4 → G, ∫ r : Remote → G, F (assemble x r) ∂ρ ∂ν :=
-      integral_finiteProductEmbeddingAssemble μ emb F hF
+      hFubini
     _ = ∫ x : Fin 4 → G,
         (hW b B * p4Q2PZ37ABO2_originalFourLinkWilsonKernel b x (fun i => B (emb i)) * f x) *
           p4Q2PZ37ABQ2_originalRemotePerronWeight H p b hb B x ∂ν := by
       apply integral_congr_ae
       filter_upwards with x
       simp_rw [hpoint]
-      exact integral_const_mul _ _
+      rw [integral_const_mul]
+      unfold p4Q2PZ37ABQ2_originalRemotePerronWeight
+      rfl
     _ = _ := by
       rw [← integral_const_mul]
       apply integral_congr_ae
