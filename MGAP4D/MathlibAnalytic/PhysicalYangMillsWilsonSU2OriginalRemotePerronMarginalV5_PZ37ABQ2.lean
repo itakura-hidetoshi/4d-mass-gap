@@ -339,19 +339,20 @@ private theorem p4Q2PZ37ABQ2_fullKernelTest_continuous
 /-- Generic original-Haar / actual-MY-edge Fubini bridge.
 A compact arbitrary test function keeps all Wilson/Perron terms OUT of
 the elaborator's expected type during the measure-coordinate split. -/
+omit p in
 private theorem p4Q2PZ37ABQ2_originalHaar_fubini
-    (F : (Link → G) → ℝ) (hF : Continuous F) :
+    (e : Fin 4 ↪ Link) (F : (Link → G) → ℝ) (hF : Continuous F) :
     (∫ A : Link → G, F A ∂(Measure.pi fun _ : Link => μ)) =
       ∫ x : Fin 4 → G,
-        ∫ r : Remote → G, F (finiteProductEmbeddingAssemble emb x r)
-          ∂(Measure.pi fun _ : Remote => μ)
+        ∫ r : {i : Link // i ∉ Set.range e} → G,
+          F (finiteProductEmbeddingAssemble e x r)
+          ∂(Measure.pi fun _ : {i : Link // i ∉ Set.range e} => μ)
           ∂(Measure.pi fun _ : Fin 4 => μ) := by
-  -- Fix the complete concrete measure and function carriers in the theorem
-  -- statement, not by expanding a huge Cfg/Haar definitional alias at exact.
-  have hSplit := integral_finiteProductEmbeddingAssemble
-    (ι := Link) (κ := Fin 4) (α := G)
-    μ emb F hF
-  exact hSplit
+  -- Bind the embedding as a parameter before applying the generic Fubini
+  -- theorem. This prevents WHNF from expanding the concrete lattice embedding
+  -- during the generic-to-SU(2) measure type check.
+  exact integral_finiteProductEmbeddingAssemble
+    (ι := Link) (κ := Fin 4) (α := G) μ e F hF
 
 /-- The unchanged original product-Haar Fubini identity.
 All Wilson/Perron factors enter only through the test specialization,
@@ -372,7 +373,7 @@ private theorem p4Q2PZ37ABQ2_fullKernelTest_fubini
     ∫ x : Fin 4 → G, ∫ r : Remote → G,
       Ω b hb (assemble x r) * K b (assemble x r) B *
         f (fun i : Fin 4 => assemble x r (emb i)) ∂ρ ∂ν
-  exact p4Q2PZ37ABQ2_originalHaar_fubini H p
+  exact p4Q2PZ37ABQ2_originalHaar_fubini H emb
     (fun A : Link → G => Ω b hb A * K b A B *
       f (fun i : Fin 4 => A (emb i)))
     (p4Q2PZ37ABQ2_fullKernelTest_continuous H p b hb B f hf)
