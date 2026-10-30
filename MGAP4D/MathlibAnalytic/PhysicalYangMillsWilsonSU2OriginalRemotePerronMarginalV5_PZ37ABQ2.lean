@@ -127,9 +127,12 @@ private theorem p4Q2PZ37ABQ2_fullKernelTest_fubini
   -- Temporary elaborator diagnostic: display the fully explicit goal and
   -- hypothesis to identify non-defeq hidden measure/finite-index instances.
   set_option pp.explicit true in
-    set_option pp.maxSteps 900 in
+    set_option pp.maxSteps 600 in
       trace_state
-  exact hSplit
+  -- Diagnostic only: bound this known-failing equality test, without
+  -- modifying the global proof budget or any mathematical statement.
+  set_option maxHeartbeats 100000 in
+    exact hSplit
 
 
 /-- Every original remote temporal factor, with the original target B_e. -/
