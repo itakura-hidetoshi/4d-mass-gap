@@ -376,11 +376,12 @@ private theorem p4Q2PZ37ABQ2_fullKernelTest_fubini
     fun A => Ω b hb A * K b A B * f (fun i : Fin 4 => A (emb i))
   have hF : Continuous F :=
     p4Q2PZ37ABQ2_fullKernelTest_continuous H p b hb B f hf
-  change
-    (∫ A : Link → G, F A ∂(Measure.pi fun _ : Link => μ)) =
-      ∫ x : Fin 4 → G, ∫ r : Remote → G,
-        F (assemble x r) ∂ρ ∂ν
-  exact p4Q2PZ37ABQ2_originalHaar_fubini (ι := Link) emb F hF
+  have hSplit := p4Q2PZ37ABQ2_originalHaar_fubini (ι := Link) emb F hF
+  calc
+    _ = ∫ A : Link → G, F A ∂(Measure.pi fun _ : Link => μ) := by rfl
+    _ = ∫ x : Fin 4 → G, ∫ r : Remote → G,
+          F (assemble x r) ∂ρ ∂ν := hSplit
+    _ = _ := by rfl
 
 /-- Pointwise original full kernel insertion, preserving all link factors. -/
 private theorem p4Q2PZ37ABQ2_fullKernelTest_assemble
