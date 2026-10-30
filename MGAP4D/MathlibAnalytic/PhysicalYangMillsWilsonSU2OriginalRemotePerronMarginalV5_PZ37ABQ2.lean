@@ -134,6 +134,11 @@ private theorem p4Q2PZ37ABQ2_fullKernelTest_fubini
     (@p4Q2PZ37ABQ2_originalHaar_fubini Link
       (p4Q2PZ37ABQ2_links H) emb F hF)
   rw [← hHaar] at hSplit
+  -- Diagnostic only: show the actual elaborated goal/hypothesis, including
+  -- selected implicit typeclass arguments, without expanding proof terms.
+  set_option pp.explicit true in
+    set_option pp.maxSteps 1800 in
+      trace_state
   exact hSplit
 
 
