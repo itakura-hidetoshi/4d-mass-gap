@@ -340,17 +340,14 @@ private theorem p4Q2PZ37ABQ2_fullKernelTest_continuous
 A compact arbitrary test function keeps all Wilson/Perron terms OUT of
 the elaborator's expected type during the measure-coordinate split. -/
 private theorem p4Q2PZ37ABQ2_originalHaar_fubini
-    (F : Cfg → ℝ) (hF : Continuous F) :
-    (∫ A : Cfg, F A ∂haar) =
-      ∫ x : Fin 4 → G, ∫ r : Remote → G,
-        F (assemble x r) ∂ρ ∂ν := by
-  change
+    (F : (Link → G) → ℝ) (hF : Continuous F) :
     (∫ A : Link → G, F A ∂(Measure.pi fun _ : Link => μ)) =
-      ∫ x : Fin 4 → G, ∫ r : Remote → G,
-        F (assemble x r) ∂ρ ∂ν
-  -- Elaborate the exact generic Haar-Fubini theorem first, without a
-  -- giant expected physical type. This avoids speculative reduction of the
-  -- SU(2) product and MY's dependent remote-subtype.
+      ∫ x : Fin 4 → G,
+        ∫ r : Remote → G, F (finiteProductEmbeddingAssemble emb x r)
+          ∂(Measure.pi fun _ : Remote => μ)
+          ∂(Measure.pi fun _ : Fin 4 => μ) := by
+  -- Fix the complete concrete measure and function carriers in the theorem
+  -- statement, not by expanding a huge Cfg/Haar definitional alias at exact.
   have hSplit := integral_finiteProductEmbeddingAssemble
     (ι := Link) (κ := Fin 4) (α := G)
     μ emb F hF
@@ -368,8 +365,15 @@ private theorem p4Q2PZ37ABQ2_fullKernelTest_fubini
         Ω b hb (assemble x r) * K b (assemble x r) B *
           f (fun i : Fin 4 => assemble x r (emb i))
         ∂ρ ∂ν := by
+  change
+    (∫ A : Link → G, Ω b hb A * K b A B *
+      f (fun i : Fin 4 => A (emb i))
+      ∂(Measure.pi fun _ : Link => μ)) =
+    ∫ x : Fin 4 → G, ∫ r : Remote → G,
+      Ω b hb (assemble x r) * K b (assemble x r) B *
+        f (fun i : Fin 4 => assemble x r (emb i)) ∂ρ ∂ν
   exact p4Q2PZ37ABQ2_originalHaar_fubini H p
-    (fun A : Cfg => Ω b hb A * K b A B *
+    (fun A : Link → G => Ω b hb A * K b A B *
       f (fun i : Fin 4 => A (emb i)))
     (p4Q2PZ37ABQ2_fullKernelTest_continuous H p b hb B f hf)
 
