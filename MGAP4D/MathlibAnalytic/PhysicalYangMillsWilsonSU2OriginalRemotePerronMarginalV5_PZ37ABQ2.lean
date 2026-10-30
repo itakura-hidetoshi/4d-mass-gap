@@ -353,7 +353,7 @@ private theorem p4Q2PZ37ABQ2_originalHaar_fubini
   -- SU(2) product and MY's dependent remote-subtype.
   have hSplit := integral_finiteProductEmbeddingAssemble
     (ι := Link) (κ := Fin 4) (α := G)
-    (μ := μ) (e := emb) (F := F) hF
+    μ emb F hF
   exact hSplit
 
 /-- The unchanged original product-Haar Fubini identity.
