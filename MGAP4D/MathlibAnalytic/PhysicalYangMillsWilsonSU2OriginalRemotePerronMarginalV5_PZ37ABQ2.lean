@@ -357,31 +357,18 @@ private theorem p4Q2PZ37ABQ2_originalHaar_fubini
   exact integral_finiteProductEmbeddingAssemble
     (ι := ι) (κ := Fin 4) (α := G) μ e F hF
 
-/-- The unchanged original product-Haar Fubini identity.
-All Wilson/Perron factors enter only through the test specialization,
-after the full probability-product identity is separately kernel-checked. -/
+/-! The physical Wilson/Perron integrand is supplied later as one continuous
+function. At this point only the *original* Haar measure and actual MY
+coordinate splitting occur. This prevents repeated delta reduction of the
+large physical test during elaboration of the Fubini theorem's statement. -/
 private theorem p4Q2PZ37ABQ2_fullKernelTest_fubini
-    (b : ℝ) (hb : 0 ≤ b) (B : Cfg)
-    (f : (Fin 4 → G) → ℝ) (hf : Continuous f) :
-    (∫ A : Cfg, Ω b hb A * K b A B *
-      f (fun i : Fin 4 => A (emb i)) ∂haar) =
+    (F : Cfg → ℝ) (hF : Continuous F) :
+    (∫ A : Cfg, F A ∂haar) =
       ∫ x : Fin 4 → G, ∫ r : Remote → G,
-        Ω b hb (assemble x r) * K b (assemble x r) B *
-          f (fun i : Fin 4 => assemble x r (emb i))
-        ∂ρ ∂ν := by
-  -- Pin the original physical test as a single local function, so
-  -- beta-reduction of the entire Wilson/Perron term is not needed while
-  -- unifying the already proved generic Fubini conclusion.
-  let F : (Link → G) → ℝ :=
-    fun A => Ω b hb A * K b A B * f (fun i : Fin 4 => A (emb i))
-  have hF : Continuous F :=
-    p4Q2PZ37ABQ2_fullKernelTest_continuous H p b hb B f hf
-  have hSplit := p4Q2PZ37ABQ2_originalHaar_fubini (ι := Link) emb F hF
-  calc
-    _ = ∫ A : Link → G, F A ∂(Measure.pi fun _ : Link => μ) := by rfl
-    _ = ∫ x : Fin 4 → G, ∫ r : Remote → G,
-          F (assemble x r) ∂ρ ∂ν := hSplit
-    _ = _ := by rfl
+        F (assemble x r) ∂ρ ∂ν := by
+  -- The source Haar measure is definitionally the actual product SU(2) Haar.
+  simpa only [periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure] using
+    (p4Q2PZ37ABQ2_originalHaar_fubini (ι := Link) emb F hF)
 
 /-- Pointwise original full kernel insertion, preserving all link factors. -/
 private theorem p4Q2PZ37ABQ2_fullKernelTest_assemble
@@ -430,11 +417,17 @@ theorem p4Q2PZ37ABQ2_originalKernelSection_fourEdge_integral
       hW b B * ∫ x : Fin 4 → G,
         p4Q2PZ37ABO2_originalFourLinkWilsonKernel b x (fun i => B (emb i)) *
           p4Q2PZ37ABQ2_originalRemotePerronWeight H p b hb B x * f x ∂ν := by
+  have hTest : Continuous (fun A : Cfg =>
+      Ω b hb A * K b A B * f (fun i : Fin 4 => A (emb i))) :=
+    p4Q2PZ37ABQ2_fullKernelTest_continuous H p b hb B f hf
+  have hFubini :=
+    p4Q2PZ37ABQ2_fullKernelTest_fubini H p
+      (fun A : Cfg => Ω b hb A * K b A B *
+        f (fun i : Fin 4 => A (emb i))) hTest
   calc
     _ = ∫ x : Fin 4 → G, ∫ r : Remote → G,
           Ω b hb (assemble x r) * K b (assemble x r) B *
-            f (fun i : Fin 4 => assemble x r (emb i)) ∂ρ ∂ν :=
-      p4Q2PZ37ABQ2_fullKernelTest_fubini H p b hb B f hf
+            f (fun i : Fin 4 => assemble x r (emb i)) ∂ρ ∂ν := hFubini
     _ = ∫ x : Fin 4 → G,
         (hW b B * p4Q2PZ37ABO2_originalFourLinkWilsonKernel b x
           (fun i : Fin 4 => B (emb i)) * f x) *
