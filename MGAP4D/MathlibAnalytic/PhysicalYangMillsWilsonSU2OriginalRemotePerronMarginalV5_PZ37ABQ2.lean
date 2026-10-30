@@ -348,8 +348,13 @@ private theorem p4Q2PZ37ABQ2_originalHaar_fubini
     (∫ A : Link → G, F A ∂(Measure.pi fun _ : Link => μ)) =
       ∫ x : Fin 4 → G, ∫ r : Remote → G,
         F (assemble x r) ∂ρ ∂ν
-  exact integral_finiteProductEmbeddingAssemble
-    (ι := Link) (κ := Fin 4) (α := G) μ emb F hF
+  -- Elaborate the exact generic Haar-Fubini theorem first, without a
+  -- giant expected physical type. This avoids speculative reduction of the
+  -- SU(2) product and MY's dependent remote-subtype.
+  have hSplit := integral_finiteProductEmbeddingAssemble
+    (ι := Link) (κ := Fin 4) (α := G)
+    (μ := μ) (e := emb) (F := F) hF
+  exact hSplit
 
 /-- The unchanged original product-Haar Fubini identity.
 All Wilson/Perron factors enter only through the test specialization,
