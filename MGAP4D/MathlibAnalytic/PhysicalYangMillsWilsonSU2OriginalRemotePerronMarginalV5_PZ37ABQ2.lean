@@ -124,7 +124,11 @@ private theorem p4Q2PZ37ABQ2_fullKernelTest_fubini
     (@p4Q2PZ37ABQ2_originalHaar_fubini Link
       (p4Q2PZ37ABQ2_links H) emb F hF)
   rw [← hHaar] at hSplit
-  -- Both integral binders now use the literal full-link function carrier.
+  -- Temporary elaborator diagnostic: display the fully explicit goal and
+  -- hypothesis to identify non-defeq hidden measure/finite-index instances.
+  set_option pp.all true in
+    set_option pp.maxDepth 35 in
+      trace_state
   exact hSplit
 
 
