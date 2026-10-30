@@ -110,8 +110,8 @@ function. At this point only the *original* Haar measure and actual MY
 coordinate splitting occur. This prevents repeated delta reduction of the
 large physical test during elaboration of the Fubini theorem's statement. -/
 private theorem p4Q2PZ37ABQ2_fullKernelTest_fubini
-    (F : Cfg → ℝ) (hF : Continuous F) :
-    (∫ A : Cfg, F A ∂haar) =
+    (F : (Link → G) → ℝ) (hF : Continuous F) :
+    (∫ A : Link → G, F A ∂haar) =
       ∫ x : Fin 4 → G, ∫ r : Remote → G,
         F (assemble x r) ∂ρ ∂ν := by
   -- State the original spatial Haar / finite product identity separately.
@@ -124,9 +124,8 @@ private theorem p4Q2PZ37ABQ2_fullKernelTest_fubini
     (@p4Q2PZ37ABQ2_originalHaar_fubini Link
       (p4Q2PZ37ABQ2_links H) emb F hF)
   rw [← hHaar] at hSplit
-  -- Use tactic-level backward matching; avoid `exact`'s default-transparency
-  -- expansion of the concrete periodic-link configuration in this final step.
-  apply hSplit
+  -- Both integral binders now use the literal full-link function carrier.
+  exact hSplit
 
 
 /-- Every original remote temporal factor, with the original target B_e. -/
