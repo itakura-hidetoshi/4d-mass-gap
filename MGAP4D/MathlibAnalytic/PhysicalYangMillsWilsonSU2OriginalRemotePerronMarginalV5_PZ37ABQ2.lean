@@ -32,7 +32,11 @@ local instance p4Q2PZ37ABQ2_group : IsTopologicalGroup G := specialUnitaryGroupI
 local instance p4Q2PZ37ABQ2_compact : CompactSpace G := specialUnitaryGroupCompactSpace 2
 local instance p4Q2PZ37ABQ2_countable : SecondCountableTopology G :=
   specialUnitaryGroupSecondCountableTopology 2
-local instance p4Q2PZ37ABQ2_measurable : MeasurableSpace G := specialUnitaryGroupMeasurableSpace 2
+-- Reuse the EXACT measurable-space implementation selected by the original
+-- one-slab spatial Haar measure; avoid a non-defeq instance diamond in
+-- product-Haar Fubini without modifying the mathematical measurable structure.
+local instance p4Q2PZ37ABQ2_measurable : MeasurableSpace G :=
+  oneSlabHaarL2SpecialUnitaryMeasurableSpace 2
 local instance p4Q2PZ37ABQ2_borel : BorelSpace G := specialUnitaryGroupBorelSpace 2
 local instance p4Q2PZ37ABQ2_probability : IsProbabilityMeasure μ :=
   normalizedCompactHaar_isProbabilityMeasure G
@@ -124,16 +128,6 @@ private theorem p4Q2PZ37ABQ2_fullKernelTest_fubini
     (@p4Q2PZ37ABQ2_originalHaar_fubini Link
       (p4Q2PZ37ABQ2_links H) emb F hF)
   rw [← hHaar] at hSplit
-  -- The original Haar integral elaborates its ambient measurable-space
-  -- instance through the one-slab definition, while the abstract Fubini
-  -- lemma elaborates the same SU(2) Borel structure through this file's
-  -- local instance. These are propositionally equal without expanding the
-  -- whole Wilson lattice or the product measure.
-  have hMeas :
-      oneSlabHaarL2SpecialUnitaryMeasurableSpace 2 =
-        p4Q2PZ37ABQ2_measurable := by
-    rfl
-  rw [hMeas]
   exact hSplit
 
 
