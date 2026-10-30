@@ -238,10 +238,15 @@ private theorem p4Q2PZ37ABQ2_crossing_assemble
     change (∏ e : Remote, specialUnitaryWilsonRelativeKernel 2 b (r e) (B e.1)) =
       p4Q2PZ37ABQ2_originalRemoteTemporalKernel H p b B r
     rfl
+  have hCross :
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel H 2 b (assemble x r) B =
+        (∏ e : Link, q e (assemble x r e)) := by
+    change
+      periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel H 2 b (assemble x r) B =
+        (∏ e : Link, specialUnitaryWilsonRelativeKernel 2 b (assemble x r e) (B e))
+    exact p4Q2PZ37ABQ2_crossing_eq_prod H b (assemble x r) B
   calc
-    _ = ∏ e : Link, q e (assemble x r e) := by
-      simpa only [q] using
-        (p4Q2PZ37ABQ2_crossing_eq_prod H b (assemble x r) B)
+    _ = ∏ e : Link, q e (assemble x r e) := hCross
     _ = (∏ i : Fin 4, q (emb i) (x i)) *
         (∏ e : Remote, q e.1 (r e)) := hRaw
     _ = _ := by rw [hSelected, hRemote]
