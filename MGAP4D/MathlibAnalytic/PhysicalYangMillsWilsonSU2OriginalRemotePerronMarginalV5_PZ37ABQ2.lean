@@ -225,8 +225,28 @@ private theorem p4Q2PZ37ABQ2_assembly_prod
     (∏ e : Link, q e (assemble x r e)) =
       (∏ i : Fin 4, q (emb i) (x i)) *
         (∏ e : Remote, q e.1 (r e)) := by
-  exact finiteProductEmbeddingAssemble_prod
-    (ι := Link) (κ := Fin 4) (α := G) emb q x r
+  letI : Fintype {e : Link // e ∈ Set.range emb} :=
+    Subtype.fintype (fun e : Link => e ∈ Set.range emb)
+  let erange : Fin 4 ≃ {e : Link // e ∈ Set.range emb} :=
+    Equiv.ofInjective emb emb.injective
+  have hselected :
+      (∏ e : {e : Link // e ∈ Set.range emb},
+        q e.1 (assemble x r e.1)) =
+      ∏ i : Fin 4, q (emb i) (assemble x r (emb i)) :=
+    (erange.prod_comp
+      (fun e : {e : Link // e ∈ Set.range emb} =>
+        q e.1 (assemble x r e.1))).symm
+  calc
+    _ = (∏ e : {e : Link // e ∈ Set.range emb},
+          q e.1 (assemble x r e.1)) *
+        (∏ e : Remote, q e.1 (assemble x r e.1)) :=
+      (Fintype.prod_subtype_mul_prod_subtype
+        (fun e : Link => e ∈ Set.range emb)
+        (fun e => q e (assemble x r e))).symm
+    _ = _ := by
+      rw [hselected]
+      simp_rw [finiteProductEmbeddingAssemble_selected,
+        finiteProductEmbeddingAssemble_remote]
 
 private theorem p4Q2PZ37ABQ2_crossing_assemble
     (b : ℝ) (B : Cfg) (x : Fin 4 → G) (r : Remote → G) :
