@@ -196,9 +196,6 @@ theorem p4Q2PZ37ABR_originalKernelSection_withoutVacuum
     _ = _ := by
       rw [hraw]
       congr 1
-      apply integral_congr_ae
-      filter_upwards with x
-      rw [hfour, hremote]
 
 /-- Exact correction for the original source, not a replacement physical source. -/
 noncomputable def p4Q2PZ37ABR_originalSourceCorrection
@@ -313,10 +310,14 @@ theorem p4Q2PZ37ABR_correctedSignedIntegral_parts
         (∫ x : X, D b hb B x * V b hb B x * max (-(f x)) 0 ∂ν) := by
   have hw := (p4Q2PZ37ABR_originalPerronFourEdgeDensity_continuous H p b hb B).mul
     (p4Q2PZ37ABR_originalSourceCorrection_continuous H p b hb B)
-  have hp := (hw.mul (hf.max continuous_const)).integrable_of_hasCompactSupport
-    (HasCompactSupport.of_compactSpace _)
-  have hn := (hw.mul (hf.neg.max continuous_const)).integrable_of_hasCompactSupport
-    (HasCompactSupport.of_compactSpace _)
+  have hp : Integrable (fun x : X =>
+      D b hb B x * V b hb B x * max (f x) 0) ν :=
+    (hw.mul (hf.max continuous_const)).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
+  have hn : Integrable (fun x : X =>
+      D b hb B x * V b hb B x * max (-(f x)) 0) ν :=
+    (hw.mul (hf.neg.max continuous_const)).integrable_of_hasCompactSupport
+      (HasCompactSupport.of_compactSpace _)
   rw [← integral_sub hp hn]
   apply integral_congr_ae
   filter_upwards with x
