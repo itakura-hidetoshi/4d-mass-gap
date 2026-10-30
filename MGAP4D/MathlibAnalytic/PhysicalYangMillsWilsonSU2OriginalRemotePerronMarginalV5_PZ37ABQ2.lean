@@ -310,52 +310,111 @@ attribute [local irreducible]
   periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative
   periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel
 
-/-- Exact four-edge formula for the ORIGINAL full one-slab Perron kernel
-section. The remote spatial interactions and Perron weight are integrated,
-not removed or replaced. The right spatial half-weight is retained. -/
+/-!
+Independently kernel-check each genuine Fubini component rather than asking
+Lean to elaborate the entire large physical integral in one declaration.
+No statement, hypothesis, model or normalization is altered.
+-/
+
+/-- Continuity of the original Wilson/Perron test on all actual links. -/
+private theorem p4Q2PZ37ABQ2_fullKernelTest_continuous
+    (b : ℝ) (hb : 0 ≤ b) (B : Cfg)
+    (f : (Fin 4 → G) → ℝ) (hf : Continuous f) :
+    Continuous (fun A : Cfg =>
+      Ω b hb A * K b A B * f (fun i : Fin 4 => A (emb i))) := by
+  have hPair : Continuous (fun A : Cfg => (A, B)) :=
+    continuous_id.prodMk continuous_const
+  have hKernel := Continuous.comp'
+    (f := fun A : Cfg => (A, B))
+    (g := fun z : Cfg × Cfg => K b z.1 z.2)
+    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous H 2 b) hPair
+  change Continuous (fun A : Cfg => K b A B) at hKernel
+  have hCoordinates :
+      Continuous (fun A : Cfg => fun i : Fin 4 => A (emb i)) :=
+    continuous_pi (fun i => continuous_apply (emb i))
+  exact
+    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
+      H 2 (by norm_num) b hb).mul hKernel).mul (hf.comp hCoordinates)
+
+/-- The unchanged original product-Haar Fubini identity. -/
+private theorem p4Q2PZ37ABQ2_fullKernelTest_fubini
+    (b : ℝ) (hb : 0 ≤ b) (B : Cfg)
+    (f : (Fin 4 → G) → ℝ) (hf : Continuous f) :
+    (∫ A : Cfg, Ω b hb A * K b A B *
+      f (fun i : Fin 4 => A (emb i)) ∂haar) =
+      ∫ x : Fin 4 → G, ∫ r : Remote → G,
+        Ω b hb (assemble x r) * K b (assemble x r) B *
+          f (fun i : Fin 4 => assemble x r (emb i))
+        ∂ρ ∂ν := by
+  let F : Cfg → ℝ := fun A =>
+    Ω b hb A * K b A B * f (fun i : Fin 4 => A (emb i))
+  have hF : Continuous F :=
+    p4Q2PZ37ABQ2_fullKernelTest_continuous H p b hb B f hf
+  change (∫ A : Cfg, F A ∂haar) =
+    ∫ x : Fin 4 → G, ∫ r : Remote → G,
+      F (assemble x r) ∂ρ ∂ν
+  exact integral_finiteProductEmbeddingAssemble
+    (ι := Link) (κ := Fin 4) (α := G) μ emb F hF
+
+/-- Pointwise original full kernel insertion, preserving all link factors. -/
+private theorem p4Q2PZ37ABQ2_fullKernelTest_assemble
+    (b : ℝ) (hb : 0 ≤ b) (B : Cfg)
+    (f : (Fin 4 → G) → ℝ) (x : Fin 4 → G) (r : Remote → G) :
+    Ω b hb (assemble x r) * K b (assemble x r) B *
+      f (fun i : Fin 4 => assemble x r (emb i)) =
+      (hW b B * p4Q2PZ37ABO2_originalFourLinkWilsonKernel b x
+        (fun i : Fin 4 => B (emb i)) * f x) *
+      (W b hb (assemble x r) *
+        p4Q2PZ37ABQ2_originalRemoteTemporalKernel H p b B r) := by
+  have hcoords : (fun i : Fin 4 => assemble x r (emb i)) = x := by
+    funext i
+    exact finiteProductEmbeddingAssemble_selected emb x r i
+  rw [hcoords, p4Q2PZ37ABQ2_fullKernel_assemble H p b hb B x r]
+  ring
+
+/-- Real remote integration retains the actual Perron/spatial interactions. -/
+private theorem p4Q2PZ37ABQ2_innerFactor_integral
+    (b : ℝ) (hb : 0 ≤ b) (B : Cfg)
+    (f : (Fin 4 → G) → ℝ) (x : Fin 4 → G) :
+    (∫ r : Remote → G,
+      Ω b hb (assemble x r) * K b (assemble x r) B *
+        f (fun i : Fin 4 => assemble x r (emb i)) ∂ρ) =
+      (hW b B * p4Q2PZ37ABO2_originalFourLinkWilsonKernel b x
+        (fun i : Fin 4 => B (emb i)) * f x) *
+      p4Q2PZ37ABQ2_originalRemotePerronWeight H p b hb B x := by
+  calc
+    _ = ∫ r : Remote → G,
+        (hW b B * p4Q2PZ37ABO2_originalFourLinkWilsonKernel b x
+          (fun i : Fin 4 => B (emb i)) * f x) *
+        (W b hb (assemble x r) *
+          p4Q2PZ37ABQ2_originalRemoteTemporalKernel H p b B r) ∂ρ := by
+      apply integral_congr_ae
+      filter_upwards with r
+      exact p4Q2PZ37ABQ2_fullKernelTest_assemble H p b hb B f x r
+    _ = _ := by
+      unfold p4Q2PZ37ABQ2_originalRemotePerronWeight
+      rw [integral_const_mul]
+
+/-- The same exact public four-edge formula as before, now assembled from
+separately kernel-checkable facts about the original one-slab model. -/
 theorem p4Q2PZ37ABQ2_originalKernelSection_fourEdge_integral
     (b : ℝ) (hb : 0 ≤ b) (B : Cfg) (f : (Fin 4 → G) → ℝ) (hf : Continuous f) :
     (∫ A : Cfg, Ω b hb A * K b A B * f (fun i => A (emb i)) ∂haar) =
       hW b B * ∫ x : Fin 4 → G,
         p4Q2PZ37ABO2_originalFourLinkWilsonKernel b x (fun i => B (emb i)) *
           p4Q2PZ37ABQ2_originalRemotePerronWeight H p b hb B x * f x ∂ν := by
-  let F : Cfg → ℝ := fun A => Ω b hb A * K b A B * f (fun i => A (emb i))
-  have hPair : Continuous (fun A : Cfg => (A, B)) := continuous_id.prodMk continuous_const
-  have hKernel := Continuous.comp'
-    (f := fun A : Cfg => (A, B)) (g := fun z : Cfg × Cfg => K b z.1 z.2)
-    (periodicHypercubicEvenSpecialUnitaryTemporalGaugeOneSlabKernel_continuous H 2 b) hPair
-  change Continuous (fun A : Cfg => K b A B) at hKernel
-  have hCoordinates : Continuous (fun A : Cfg => fun i : Fin 4 => A (emb i)) :=
-    continuous_pi (fun i => continuous_apply (emb i))
-  have hF : Continuous F :=
-    ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
-      H 2 (by norm_num) b hb).mul hKernel).mul (hf.comp hCoordinates)
-  have hpoint (x : Fin 4 → G) (r : Remote → G) : F (assemble x r) =
-      (hW b B * p4Q2PZ37ABO2_originalFourLinkWilsonKernel b x (fun i => B (emb i)) * f x) *
-        (W b hb (assemble x r) * p4Q2PZ37ABQ2_originalRemoteTemporalKernel H p b B r) := by
-    have hcoords : (fun i : Fin 4 => assemble x r (emb i)) = x := by
-      funext i
-      exact finiteProductEmbeddingAssemble_selected emb x r i
-    dsimp only [F]
-    rw [hcoords, p4Q2PZ37ABQ2_fullKernel_assemble H p b hb B x r]
-    ring
-  have hFubini :
-      (∫ A : Cfg, F A ∂haar) =
-        ∫ x : Fin 4 → G, ∫ r : Remote → G, F (assemble x r) ∂ρ ∂ν :=
-    integral_finiteProductEmbeddingAssemble
-      (ι := Link) (κ := Fin 4) (α := G) μ emb F hF
   calc
-    _ = ∫ x : Fin 4 → G, ∫ r : Remote → G, F (assemble x r) ∂ρ ∂ν :=
-      hFubini
+    _ = ∫ x : Fin 4 → G, ∫ r : Remote → G,
+          Ω b hb (assemble x r) * K b (assemble x r) B *
+            f (fun i : Fin 4 => assemble x r (emb i)) ∂ρ ∂ν :=
+      p4Q2PZ37ABQ2_fullKernelTest_fubini H p b hb B f hf
     _ = ∫ x : Fin 4 → G,
-        (hW b B * p4Q2PZ37ABO2_originalFourLinkWilsonKernel b x (fun i => B (emb i)) * f x) *
+        (hW b B * p4Q2PZ37ABO2_originalFourLinkWilsonKernel b x
+          (fun i : Fin 4 => B (emb i)) * f x) *
           p4Q2PZ37ABQ2_originalRemotePerronWeight H p b hb B x ∂ν := by
       apply integral_congr_ae
       filter_upwards with x
-      simp_rw [hpoint]
-      rw [integral_const_mul]
-      unfold p4Q2PZ37ABQ2_originalRemotePerronWeight
-      rfl
+      exact p4Q2PZ37ABQ2_innerFactor_integral H p b hb B f x
     _ = _ := by
       rw [← integral_const_mul]
       apply integral_congr_ae
