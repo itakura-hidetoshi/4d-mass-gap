@@ -369,17 +369,18 @@ private theorem p4Q2PZ37ABQ2_fullKernelTest_fubini
         Ω b hb (assemble x r) * K b (assemble x r) B *
           f (fun i : Fin 4 => assemble x r (emb i))
         ∂ρ ∂ν := by
+  -- Pin the original physical test as a single local function, so
+  -- beta-reduction of the entire Wilson/Perron term is not needed while
+  -- unifying the already proved generic Fubini conclusion.
+  let F : (Link → G) → ℝ :=
+    fun A => Ω b hb A * K b A B * f (fun i : Fin 4 => A (emb i))
+  have hF : Continuous F :=
+    p4Q2PZ37ABQ2_fullKernelTest_continuous H p b hb B f hf
   change
-    (∫ A : Link → G, Ω b hb A * K b A B *
-      f (fun i : Fin 4 => A (emb i))
-      ∂(Measure.pi fun _ : Link => μ)) =
-    ∫ x : Fin 4 → G, ∫ r : Remote → G,
-      Ω b hb (assemble x r) * K b (assemble x r) B *
-        f (fun i : Fin 4 => assemble x r (emb i)) ∂ρ ∂ν
-  exact p4Q2PZ37ABQ2_originalHaar_fubini (ι := Link) emb
-    (fun A : Link → G => Ω b hb A * K b A B *
-      f (fun i : Fin 4 => A (emb i)))
-    (p4Q2PZ37ABQ2_fullKernelTest_continuous H p b hb B f hf)
+    (∫ A : Link → G, F A ∂(Measure.pi fun _ : Link => μ)) =
+      ∫ x : Fin 4 → G, ∫ r : Remote → G,
+        F (assemble x r) ∂ρ ∂ν
+  exact p4Q2PZ37ABQ2_originalHaar_fubini (ι := Link) emb F hF
 
 /-- Pointwise original full kernel insertion, preserving all link factors. -/
 private theorem p4Q2PZ37ABQ2_fullKernelTest_assemble
