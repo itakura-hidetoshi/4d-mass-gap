@@ -69,6 +69,8 @@ theorem abs_integral_relativeWeight_sub_anchor_le
     _ ≤ ∫ x, ((C - 1) * w y) * (q x * |f x|) ∂μ := by
       apply integral_mono hiabs hibound
       intro x
+      change |q x * w x * f x - w y * (q x * f x)| ≤
+        ((C - 1) * w y) * (q x * |f x|)
       calc
         _ = q x * |w x - w y| * |f x| := by
           rw [show q x * w x * f x - w y * (q x * f x) =
