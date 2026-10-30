@@ -227,8 +227,11 @@ private theorem p4Q2PZ37ABQ2_assembly_prod
         (∏ e : Remote, q e.1 (r e)) := by
   letI : Fintype {e : Link // e ∈ Set.range emb} :=
     Subtype.fintype (fun e : Link => e ∈ Set.range emb)
+  let edgeEmbedding : Fin 4 ↪ Link := p4Q2MY_originalPlaquetteFourEdgeEmbedding H p
+  have hInjective : Function.Injective (edgeEmbedding : Fin 4 → Link) :=
+    edgeEmbedding.injective
   let erange : Fin 4 ≃ {e : Link // e ∈ Set.range emb} :=
-    Equiv.ofInjective emb emb.injective
+    Equiv.ofInjective edgeEmbedding hInjective
   have hselected :
       (∏ e : {e : Link // e ∈ Set.range emb},
         q e.1 (assemble x r e.1)) =
