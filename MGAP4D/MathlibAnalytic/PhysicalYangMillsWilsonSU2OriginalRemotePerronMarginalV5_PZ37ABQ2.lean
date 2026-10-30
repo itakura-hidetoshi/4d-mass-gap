@@ -216,6 +216,18 @@ attribute [local irreducible]
   p4Q2MY_originalPlaquetteFourEdgeEmbedding
   finiteProductEmbeddingAssemble
 
+/-- Specialize the already kernel-checked finite-product split to the
+actual MY four-edge embedding, keeping the scalar factor q ABSTRACT.
+This isolates finite-subtype Fintype/MeasurableSpace elaboration from
+SU(2) Wilson matrix operations and genuine Perron factors. -/
+private theorem p4Q2PZ37ABQ2_assembly_prod
+    (q : Link → G → ℝ) (x : Fin 4 → G) (r : Remote → G) :
+    (∏ e : Link, q e (assemble x r e)) =
+      (∏ i : Fin 4, q (emb i) (x i)) *
+        (∏ e : Remote, q e.1 (r e)) := by
+  exact finiteProductEmbeddingAssemble_prod
+    (ι := Link) (κ := Fin 4) (α := G) emb q x r
+
 private theorem p4Q2PZ37ABQ2_crossing_assemble
     (b : ℝ) (B : Cfg) (x : Fin 4 → G) (r : Remote → G) :
     periodicHypercubicEvenSpecialUnitaryTemporalGaugeCrossingKernel H 2 b (assemble x r) B =
@@ -223,8 +235,7 @@ private theorem p4Q2PZ37ABQ2_crossing_assemble
         p4Q2PZ37ABQ2_originalRemoteTemporalKernel H p b B r := by
   let q : Link → G → ℝ :=
     fun e a => specialUnitaryWilsonRelativeKernel 2 b a (B e)
-  have hRaw := finiteProductEmbeddingAssemble_prod
-    (ι := Link) (κ := Fin 4) (α := G) emb q x r
+  have hRaw := p4Q2PZ37ABQ2_assembly_prod H p q x r
   have hSelected :
       (∏ i : Fin 4, q (emb i) (x i)) =
         p4Q2PZ37ABO2_originalFourLinkWilsonKernel b x (fun i => B (emb i)) := by
