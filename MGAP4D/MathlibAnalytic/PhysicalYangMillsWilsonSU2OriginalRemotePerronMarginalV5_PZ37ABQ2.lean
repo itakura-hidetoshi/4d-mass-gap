@@ -336,9 +336,12 @@ private theorem p4Q2PZ37ABQ2_fullKernelTest_continuous
     ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
       H 2 (by norm_num) b hb).mul hKernel).mul (hf.comp hCoordinates)
 
-/-- Generic original-Haar / actual-MY-edge Fubini bridge.
+/- Generic original-Haar / actual-MY-edge Fubini bridge.
 A compact arbitrary test function keeps all Wilson/Perron terms OUT of
-the elaborator's expected type during the measure-coordinate split. -/
+the elaborator's expected type during the measure-coordinate split.
+This comment is deliberately not a docstring: Lean 4's `omit p in` must
+directly prefix the declaration, whereas a docstring must directly attach
+to the declaration rather than to the `omit` command. -/
 omit p in
 private theorem p4Q2PZ37ABQ2_originalHaar_fubini
     (e : Fin 4 ↪ Link) (F : (Link → G) → ℝ) (hF : Continuous F) :
