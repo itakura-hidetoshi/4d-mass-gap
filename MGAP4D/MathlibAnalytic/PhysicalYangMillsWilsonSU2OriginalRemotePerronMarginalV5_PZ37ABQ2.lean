@@ -370,11 +370,14 @@ private theorem p4Q2PZ37ABQ2_fullKernelTest_fubini
   -- Avoid an expensive simplifier equality check of the complete integral.
   have hHaar : haar = (Measure.pi fun _ : Link => μ) := by
     rfl
+  -- Supply the SAME finite-link Fintype witness explicitly. Avoid
+  -- implicit instance normalization through the concrete periodic lattice.
   have hSplit :
       (∫ A : Link → G, F A ∂(Measure.pi fun _ : Link => μ)) =
         ∫ x : Fin 4 → G, ∫ r : Remote → G,
           F (assemble x r) ∂ρ ∂ν :=
-    p4Q2PZ37ABQ2_originalHaar_fubini (ι := Link) emb F hF
+    @p4Q2PZ37ABQ2_originalHaar_fubini Link
+      (p4Q2PZ37ABQ2_links H) emb F hF
   rw [hHaar]
   exact hSplit
 
