@@ -74,7 +74,9 @@ jobs:
 
       - name: Test changed-Lean dependency routing
         shell: bash
-        run: python3 scripts/test_changed_lean_dependency_check.py
+        run: |
+          python3 scripts/test_changed_lean_dependency_check.py
+          python3 scripts/test_lean_direct_diagnostic_routing.py
 
       - name: Detect whether Lake is required
         id: lake-mode
@@ -242,10 +244,12 @@ jobs:
             echo "[fast] restored Mathlib build cache is already present"
           fi
 
+      # Direct diagnostics use restored oleans and are opt-in. The mandatory
+      # Lake check below rebuilds dependencies before validating changed proofs.
       # Early, fully kernel-checked diagnostic for the two finite incidence
       # lemmas changed by PZ37O. This is NOT a substitute for the Lake check.
       - name: Kernel-check changed finite incidence geometry
-        if: ${{ steps.lake-mode.outputs.required == 'true' }}
+        if: ${{ steps.lake-mode.outputs.required == 'true' && env.LEAN_FAST_DIRECT_ELAB == 'true' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -265,7 +269,7 @@ jobs:
       # Compile in import order against the restored baseline oleans, then
       # perform the full authoritative Lake build below.
       - name: Early elaboration of new PZ37O leaves
-        if: ${{ steps.lake-mode.outputs.required == 'true' }}
+        if: ${{ steps.lake-mode.outputs.required == 'true' && env.LEAN_FAST_DIRECT_ELAB == 'true' }}
         shell: bash
         run: |
           set -euo pipefail
