@@ -127,7 +127,7 @@ private theorem p4Q2PZ37ABQ2_fullKernelTest_fubini
   -- Temporary elaborator diagnostic: display the fully explicit goal and
   -- hypothesis to identify non-defeq hidden measure/finite-index instances.
   set_option pp.all true in
-    set_option pp.maxDepth 35 in
+    set_option pp.maxSteps 2200 in
       trace_state
   exact hSplit
 
