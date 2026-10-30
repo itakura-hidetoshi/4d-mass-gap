@@ -50,6 +50,16 @@ local instance p4Q2PZ37ABQ2_probability : IsProbabilityMeasure μ :=
 namespace GroundStatePosteriorJoint
 variable (H : ℕ)
 local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink H
+/-!
+The generic Fubini lemma elaborates the range-complement Fintype using the
+classical decidable equality on its abstract index type. The physical Link
+carrier otherwise selects the structural product/subtype DecidableEq. These
+are logically equivalent but not definitionally equal inside opaque
+Measure.pi. Use the same classical decision procedure on the actual Link
+carrier before elaborating Remote, rho, and their product measures.
+-/
+local instance p4Q2PZ37ABQ2_linkDecEq : DecidableEq Link :=
+  fun a b => Classical.propDecidable (a = b)
 local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
 local notation "Plaq" => PeriodicHypercubicEvenSpatialSlicePlaquette H
 local notation "haar" => periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2
@@ -134,11 +144,8 @@ private theorem p4Q2PZ37ABQ2_fullKernelTest_fubini
     (@p4Q2PZ37ABQ2_originalHaar_fubini Link
       (p4Q2PZ37ABQ2_links H) emb F hF)
   rw [← hHaar] at hSplit
-  -- Diagnostic only: show the actual elaborated goal/hypothesis, including
-  -- selected implicit typeclass arguments, without expanding proof terms.
-  set_option pp.explicit true in
-    set_option pp.maxSteps 1800 in
-      trace_state
+  -- The complement Fintype now uses the same DecidableEq Link in both
+  -- the generic Fubini result and the original physical remote Haar.
   exact hSplit
 
 
