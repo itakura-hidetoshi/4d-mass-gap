@@ -124,7 +124,9 @@ private theorem p4Q2PZ37ABQ2_fullKernelTest_fubini
     (@p4Q2PZ37ABQ2_originalHaar_fubini Link
       (p4Q2PZ37ABQ2_links H) emb F hF)
   rw [← hHaar] at hSplit
-  exact hSplit
+  -- Use tactic-level backward matching; avoid `exact`'s default-transparency
+  -- expansion of the concrete periodic-link configuration in this final step.
+  apply hSplit
 
 
 /-- Every original remote temporal factor, with the original target B_e. -/
