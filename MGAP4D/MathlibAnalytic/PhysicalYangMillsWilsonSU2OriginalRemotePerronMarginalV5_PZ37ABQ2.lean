@@ -336,7 +336,24 @@ private theorem p4Q2PZ37ABQ2_fullKernelTest_continuous
     ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
       H 2 (by norm_num) b hb).mul hKernel).mul (hf.comp hCoordinates)
 
-/-- The unchanged original product-Haar Fubini identity. -/
+/-- Generic original-Haar / actual-MY-edge Fubini bridge.
+A compact arbitrary test function keeps all Wilson/Perron terms OUT of
+the elaborator's expected type during the measure-coordinate split. -/
+private theorem p4Q2PZ37ABQ2_originalHaar_fubini
+    (F : Cfg → ℝ) (hF : Continuous F) :
+    (∫ A : Cfg, F A ∂haar) =
+      ∫ x : Fin 4 → G, ∫ r : Remote → G,
+        F (assemble x r) ∂ρ ∂ν := by
+  change
+    (∫ A : Link → G, F A ∂(Measure.pi fun _ : Link => μ)) =
+      ∫ x : Fin 4 → G, ∫ r : Remote → G,
+        F (assemble x r) ∂ρ ∂ν
+  exact integral_finiteProductEmbeddingAssemble
+    (ι := Link) (κ := Fin 4) (α := G) μ emb F hF
+
+/-- The unchanged original product-Haar Fubini identity.
+All Wilson/Perron factors enter only through the test specialization,
+after the full probability-product identity is separately kernel-checked. -/
 private theorem p4Q2PZ37ABQ2_fullKernelTest_fubini
     (b : ℝ) (hb : 0 ≤ b) (B : Cfg)
     (f : (Fin 4 → G) → ℝ) (hf : Continuous f) :
@@ -346,15 +363,10 @@ private theorem p4Q2PZ37ABQ2_fullKernelTest_fubini
         Ω b hb (assemble x r) * K b (assemble x r) B *
           f (fun i : Fin 4 => assemble x r (emb i))
         ∂ρ ∂ν := by
-  let F : Cfg → ℝ := fun A =>
-    Ω b hb A * K b A B * f (fun i : Fin 4 => A (emb i))
-  have hF : Continuous F :=
-    p4Q2PZ37ABQ2_fullKernelTest_continuous H p b hb B f hf
-  change (∫ A : Cfg, F A ∂haar) =
-    ∫ x : Fin 4 → G, ∫ r : Remote → G,
-      F (assemble x r) ∂ρ ∂ν
-  exact integral_finiteProductEmbeddingAssemble
-    (ι := Link) (κ := Fin 4) (α := G) μ emb F hF
+  exact p4Q2PZ37ABQ2_originalHaar_fubini H p
+    (fun A : Cfg => Ω b hb A * K b A B *
+      f (fun i : Fin 4 => A (emb i)))
+    (p4Q2PZ37ABQ2_fullKernelTest_continuous H p b hb B f hf)
 
 /-- Pointwise original full kernel insertion, preserving all link factors. -/
 private theorem p4Q2PZ37ABQ2_fullKernelTest_assemble
