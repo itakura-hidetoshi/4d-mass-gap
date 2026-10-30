@@ -84,6 +84,49 @@ local notation "ρ" => Measure.pi (fun _ : Remote => μ)
 local notation "ν" => Measure.pi (fun _ : Fin 4 => μ)
 local notation "assemble" => finiteProductEmbeddingAssemble emb
 
+/- Generic original-Haar / actual-MY-edge Fubini bridge.
+A compact arbitrary test function keeps all Wilson/Perron terms OUT of
+the elaborator's expected type during the measure-coordinate split.
+This comment is deliberately not a docstring: Lean 4's `omit p in` must
+directly prefix the declaration, whereas a docstring must directly attach
+to the declaration rather than to the `omit` command. -/
+omit p in
+private theorem p4Q2PZ37ABQ2_originalHaar_fubini
+    {ι : Type*} [Fintype ι] (e : Fin 4 ↪ ι)
+    (F : (ι → G) → ℝ) (hF : Continuous F) :
+    (∫ A : ι → G, F A ∂(Measure.pi fun _ : ι => μ)) =
+      ∫ x : Fin 4 → G,
+        ∫ r : {i : ι // i ∉ Set.range e} → G,
+          F (finiteProductEmbeddingAssemble e x r)
+          ∂(Measure.pi fun _ : {i : ι // i ∉ Set.range e} => μ)
+          ∂(Measure.pi fun _ : Fin 4 => μ) := by
+  -- Keep the full finite link type abstract during this elaboration.
+  -- Substitution of the actual MY embedding happens in the subsequent lemma.
+  exact integral_finiteProductEmbeddingAssemble
+    (ι := ι) (κ := Fin 4) (α := G) μ e F hF
+
+/-! The physical Wilson/Perron integrand is supplied later as one continuous
+function. At this point only the *original* Haar measure and actual MY
+coordinate splitting occur. This prevents repeated delta reduction of the
+large physical test during elaboration of the Fubini theorem's statement. -/
+private theorem p4Q2PZ37ABQ2_fullKernelTest_fubini
+    (F : Cfg → ℝ) (hF : Continuous F) :
+    (∫ A : Cfg, F A ∂haar) =
+      ∫ x : Fin 4 → G, ∫ r : Remote → G,
+        F (assemble x r) ∂ρ ∂ν := by
+  -- State the original spatial Haar / finite product identity separately.
+  -- Avoid an expensive simplifier equality check of the complete integral.
+  have hHaar : haar = (Measure.pi fun _ : Link => μ) := by
+    rfl
+  -- Infer the theorem's source type BEFORE rewriting the concrete
+  -- Haar measure; avoid unifying a huge supplied expected type at application.
+  have hSplit :=
+    (@p4Q2PZ37ABQ2_originalHaar_fubini Link
+      (p4Q2PZ37ABQ2_links H) emb F hF)
+  rw [← hHaar] at hSplit
+  exact hSplit
+
+
 /-- Every original remote temporal factor, with the original target B_e. -/
 noncomputable def p4Q2PZ37ABQ2_originalRemoteTemporalKernel
     (b : ℝ) (B : Cfg) (r : Remote → G) : ℝ :=
@@ -335,48 +378,6 @@ private theorem p4Q2PZ37ABQ2_fullKernelTest_continuous
   exact
     ((periodicHypercubicEvenSpecialUnitaryPhysicalOneSlabContinuousVacuumRepresentative_continuous
       H 2 (by norm_num) b hb).mul hKernel).mul (hf.comp hCoordinates)
-
-/- Generic original-Haar / actual-MY-edge Fubini bridge.
-A compact arbitrary test function keeps all Wilson/Perron terms OUT of
-the elaborator's expected type during the measure-coordinate split.
-This comment is deliberately not a docstring: Lean 4's `omit p in` must
-directly prefix the declaration, whereas a docstring must directly attach
-to the declaration rather than to the `omit` command. -/
-omit p in
-private theorem p4Q2PZ37ABQ2_originalHaar_fubini
-    {ι : Type*} [Fintype ι] (e : Fin 4 ↪ ι)
-    (F : (ι → G) → ℝ) (hF : Continuous F) :
-    (∫ A : ι → G, F A ∂(Measure.pi fun _ : ι => μ)) =
-      ∫ x : Fin 4 → G,
-        ∫ r : {i : ι // i ∉ Set.range e} → G,
-          F (finiteProductEmbeddingAssemble e x r)
-          ∂(Measure.pi fun _ : {i : ι // i ∉ Set.range e} => μ)
-          ∂(Measure.pi fun _ : Fin 4 => μ) := by
-  -- Keep the full finite link type abstract during this elaboration.
-  -- Substitution of the actual MY embedding happens in the subsequent lemma.
-  exact integral_finiteProductEmbeddingAssemble
-    (ι := ι) (κ := Fin 4) (α := G) μ e F hF
-
-/-! The physical Wilson/Perron integrand is supplied later as one continuous
-function. At this point only the *original* Haar measure and actual MY
-coordinate splitting occur. This prevents repeated delta reduction of the
-large physical test during elaboration of the Fubini theorem's statement. -/
-private theorem p4Q2PZ37ABQ2_fullKernelTest_fubini
-    (F : Cfg → ℝ) (hF : Continuous F) :
-    (∫ A : Cfg, F A ∂haar) =
-      ∫ x : Fin 4 → G, ∫ r : Remote → G,
-        F (assemble x r) ∂ρ ∂ν := by
-  -- State the original spatial Haar / finite product identity separately.
-  -- Avoid an expensive simplifier equality check of the complete integral.
-  have hHaar : haar = (Measure.pi fun _ : Link => μ) := by
-    rfl
-  -- Infer the theorem's source type BEFORE rewriting the concrete
-  -- Haar measure; avoid unifying a huge supplied expected type at application.
-  have hSplit :=
-    (@p4Q2PZ37ABQ2_originalHaar_fubini Link
-      (p4Q2PZ37ABQ2_links H) emb F hF)
-  rw [← hHaar] at hSplit
-  exact hSplit
 
 /-- Pointwise original full kernel insertion, preserving all link factors. -/
 private theorem p4Q2PZ37ABQ2_fullKernelTest_assemble
