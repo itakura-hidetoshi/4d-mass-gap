@@ -26,6 +26,12 @@ set_option autoImplicit false
 set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 1000000
 
+-- The original one-slab SU(2) configuration uses the canonical
+-- Fin.fintype 2 in its matrix Submonoid carrier. Pin the same witness
+-- before elaborating G: the finite-index witness is computational data,
+-- not a proof-irrelevant proposition.
+local instance p4Q2PZ37ABQ2_finTwoFintype : Fintype (Fin 2) :=
+  Fin.fintype 2
 local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
 local notation "μ" => normalizedCompactHaar G
 local instance p4Q2PZ37ABQ2_group : IsTopologicalGroup G := specialUnitaryGroupIsTopologicalGroup 2
