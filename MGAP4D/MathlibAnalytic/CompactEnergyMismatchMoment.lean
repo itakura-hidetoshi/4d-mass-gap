@@ -94,8 +94,12 @@ theorem difference_product_integral (F E : α → ℝ)
     _ = 2 * covariance μ F E := by
       rw [integral_sub hSub h21,
         integral_sub hAdd h12, integral_add h11 h22,
-        integral_fun_fst, integral_fun_snd, integral_prod_mul, integral_prod_mul]
-      simp [covariance] <;> ring
+        integral_fun_fst (μ := μ) (ν := μ) (fun x : α => F x * E x),
+        integral_fun_snd (μ := μ) (ν := μ) (fun x : α => F x * E x),
+        integral_prod_mul (μ := μ) (ν := μ) F E,
+        integral_prod_mul (μ := μ) (ν := μ) E F]
+      simp [covariance]
+      ring
 
 /-- A genuine full pair-square integral, rather than a pointwise estimate. -/
 theorem difference_square_integral (F : α → ℝ) (hF : Continuous F) :
@@ -110,6 +114,7 @@ theorem variance_nonneg (F : α → ℝ) (hF : Continuous F) :
   rw [difference_square_integral μ F hF] at h
   linarith
 
+omit [SecondCountableTopology α] in
 /-- The variance in the bound is precisely the centered L2 error. -/
 theorem variance_eq_centered (F : α → ℝ) (hF : Continuous F) :
     variance μ F = ∫ x, (F x - ∫ y, F y ∂μ) ^ 2 ∂μ := by
@@ -126,7 +131,8 @@ theorem variance_eq_centered (F : α → ℝ) (hF : Continuous F) :
   simp_rw [hp]
   rw [integral_add hSub (integrable_const (m ^ 2)),
     integral_sub hFF hLinear, integral_const_mul]
-  simp [covariance, m] <;> ring
+  simp [covariance, m]
+  ring
 
 /-- In the convention E(h)-E(g), the signed integral has a minus sign. -/
 theorem signedPair_integral_eq_covariance (b s : ℝ) (F E : α → ℝ)
