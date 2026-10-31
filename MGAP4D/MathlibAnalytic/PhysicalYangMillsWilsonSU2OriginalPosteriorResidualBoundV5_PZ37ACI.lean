@@ -89,13 +89,13 @@ local notation "k" => p4Q2PZ37ACH_originalPosteriorEnergyContrast H
 local notation "F" => p4Q2PZ37ABZ_originalReceiverSection H
 local notation "gap" => p4Q2GI_originalWilsonSignedSourceTwoPosteriorExpectationGap H
 
-private theorem contrast_continuous (b : ℝ) (hb : 0 ≤ b) (B : Cfg) (e : Link) :
+private theorem p4Q2PZ37ACI_contrast_continuous (b : ℝ) (hb : 0 ≤ b) (B : Cfg) (e : Link) :
     Continuous (contrast b hb B e) := by
   change Continuous (fun g => density b hb left0 B e g - density b hb (left1 e) B e g)
   exact (p4Q2PZ37ABT_originalPosteriorDensity_continuous H b hb left0 B e).sub
     (p4Q2PZ37ABT_originalPosteriorDensity_continuous H b hb (left1 e) B e)
 
-private theorem contrast_variance (b : ℝ) (hb : 0 ≤ b) (B : Cfg) (e : Link) :
+private theorem p4Q2PZ37ACI_contrast_variance (b : ℝ) (hb : 0 ≤ b) (B : Cfg) (e : Link) :
     Var (contrast b hb B e) = Q b hb B e := by
   change (∫ g : G, contrast b hb B e g * contrast b hb B e g ∂μ) -
     (∫ g : G, contrast b hb B e g ∂μ) * (∫ g : G, contrast b hb B e g ∂μ) =
@@ -103,7 +103,7 @@ private theorem contrast_variance (b : ℝ) (hb : 0 ≤ b) (B : Cfg) (e : Link) 
   rw [p4Q2PZ37ACH_originalContrast_mean_zero]
   simp only [zero_mul, sub_zero, pow_two]
 
-private theorem contrast_covariance (b : ℝ) (hb : 0 ≤ b) (B : Cfg) (e : Link) :
+private theorem p4Q2PZ37ACI_contrast_covariance (b : ℝ) (hb : 0 ≤ b) (B : Cfg) (e : Link) :
     Cov (contrast b hb B e) E = -k b hb B e := by
   unfold CompactEnergyMismatchMoment.covariance
   rw [p4Q2PZ37ACH_originalContrast_mean_zero]
@@ -159,10 +159,11 @@ theorem p4Q2PZ37ACI_originalPosteriorResidual_le_energyProduct
   have h := p4Q2PZ37ACI_originalAffineResidual_variance_le H b hb B e
   have hv := CompactEnergyMismatchMoment.variance_residual μ 1
     (b * (Real.exp (32 * b) + Real.exp (-32 * b)))
-    (contrast b hb B e) E (contrast_continuous H b hb B e)
+    (contrast b hb B e) E (p4Q2PZ37ACI_contrast_continuous H b hb B e)
     (continuous_specialUnitaryWilsonPlaquetteEnergy 2)
   simp only [CompactEnergyMismatchMoment.residual, one_mul] at hv
-  rw [hv, contrast_variance, contrast_covariance, p4Q2PZ37ABZ_originalEnergy_Haar_variance] at h
+  rw [hv, p4Q2PZ37ACI_contrast_variance, p4Q2PZ37ACI_contrast_covariance,
+    p4Q2PZ37ABZ_originalEnergy_Haar_variance] at h
   unfold p4Q2PZ37ACI_originalPosteriorResidualEnvelope at h
   nlinarith
 
