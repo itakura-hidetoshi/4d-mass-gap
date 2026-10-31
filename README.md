@@ -1,3 +1,108 @@
+> このmainは文書ミラー。唯一の定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。以下はACK定理PR #6067の正本検証記録の同期である。
+
+## 検証済み定理 — ACK（2026-10-31 JST）
+
+唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラー。[ACK #6067](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6067) は、元の中心化Gauss-law物理源、真正FF受信器、Perron代表、transfer norm、二つの相互作用Wilson posteriorと元の外側pair-Haarを保持したまま、SU(2)四成分と残差の厳密な配分を証明した。
+
+### 1. 真正SU(2)の四つのHaar直交実成分
+
+元の実Wilson characterを `chi(g)=1-E(g)`、元の四元数族を `q_j=(1,J,K,L)` とし、`phi_j(g)=chi(q_j*g)` を定義。有限群平均へ置換せず、元の正規化compact SU(2) Haarに対し、
+
+```text
+integral phi_j = 0,
+integral phi_i*phi_j = delta_ij/4,
+sum_j phi_j(g)^2 = 1
+```
+
+を証明した。任意の連続実関数Fに対する有限四分の一Gram射影を一般補題として構成し、元の物理受信器 `F_z` に適用する：
+
+```text
+m_j(z) = integral F_z(g)*phi_j(g),
+P_z(g) = 4*sum_j m_j(z)*phi_j(g),
+R_z(g) = F_z(g) - integral F_z - P_z(g).
+integral R_z = 0, integral R_z*phi_j = 0,
+W_z := integral R_z^2 = Var(F_z) - 4*sum_j m_j(z)^2 >= 0.
+```
+
+引く平均は同じリンクHaar上の実際の平均であり、元物理源の空間Haar中心化とは区別している。
+
+### 2. 任意SU(2)ゲージ値に対する元受信器の輸送
+
+選んだ真正リンクeのsource頂点に任意の `a:SU(2)` を置き、両外側境界へ同じ格子ゲージを施す `Gamma_a` を構成。H=0を含む全有限Hで、joint continuity、元pair-Haarの保存、恒等変換、元ACCのcenter変換との一致、および
+
+```text
+F_(Gamma_a z)(g) = F_z(a^(-1)*g),
+mean(F_(Gamma_a z)) = mean(F_z),
+Var(F_(Gamma_a z)) = Var(F_z),
+C(Gamma_a z) = -integral F_z(g)*chi(a*g),
+m_j(z) = -C(Gamma_(q_j) z)
+```
+
+を証明した。元のprefactorとPerron半密度は保持する。固定posterior anchorの輸送やGI自体の符号反転は主張しない。ACCの `C(Gamma_center z)=-C(z)` と `D_F(Gamma_center z)=D_F(z)` は維持される。
+
+### 3. 同じ元外側Haarにおける正確な分散・残差配分
+
+ACJの実積分 `S=integral_outer C^2` をそのまま用いる。各jのゲージ変換が同じ元外側測度を保存するため、`integral_outer m_j^2=S` が全四成分で成立する。実際の非負量 `W=integral_outer W_z` により、
+
+```text
+Vbar := integral_outer Var(F_z) = 16*S + W,
+Dbar := integral_outer (Var(F_z)-4*C(z)^2) = 12*S + W,
+W >= 0.
+```
+
+を証明した。全有限H・b>0・全真正リンクeでACJの `S>0` が使えるので、
+
+```text
+Dbar >= 12*S > 0,
+Dbar >= (3/4)*Vbar,
+0 < S <= B^2/16,
+B = norm(T)^(-1)*(exp(8*b)^3-1)*norm(f0)
+```
+
+が成立。元FC上界を保持したまま、ACJの `S<=B^2/4` を四倍厳格化した。ACJの数値分散評価と同じ元源のノルム評価を代入すると、
+
+```text
+S <= 36*b^2*exp((2*A_H+48)*b)*norm(f0)^2
+  <= 216*P_H*b^2*exp((2*A_H+48)*b).
+```
+
+作用予算A_H・真正プラケット数P_Hの体積依存は明示したまま。これらは上界であり、Sの数値的正下界や体積一様な正下界を与えるものではない。
+
+### 4. 元物理受信器についての新しい残差障害
+
+同じ固定H・b>0・eにおいて、`D_F<=theta*C^2` が全配置、または元の外側pair-Haarでほとんど至る所成立することは、`theta<12` なら不可能。同様に `D_F<=theta*Var(F_z)` は `theta<3/4` なら不可能。これは元物理源・元Haarからの無条件の結論であり、選んだ好条件領域での評価を否定しない。任意の有限Kに対する不可能性は今回証明していない。
+
+### 5. 検証記録
+
+| 項目 | 確定値 |
+| --- | --- |
+| 定理PR | [#6067](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6067) — MERGED |
+| 定理squash | `d26e285dc81061f39f4a8de7b9c19cef3e62527f` |
+| exact-source HEAD | `b998b94815761849b7d0ead7338842f14ee8aa43` |
+| 実CI checkout | `8416e2ec9eefcf7dc2268320fb1fa3aa6912f0a3` |
+| 三者共通Git tree | `c6ce20cdeee8253bcd4209a9a38785189e9f6174` |
+| exact-source CI | [#41203213018](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41203213018) — SUCCESS |
+| マージ後CI | [#41203671530](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41203671530) — SUCCESS |
+| 独立source receipt | [#124543920340](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41203213018/job/124543920340) — SUCCESS |
+| 独立push receipt | [#124545380755](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41203671530/job/124545380755) — SUCCESS |
+| Lean検証 | 11,228 / 11,228 SUCCESS |
+| 新規Lean・公開定理 | 4ファイル、1,200行追加、削除0、49定理 |
+| 公理依存 | propext・Classical.choice・Quot.sound のみ。sorryAxなし |
+| 変更Lean warning / error | 0 / 0 |
+| Lean / mathlib | v4.30.0-rc2 / `5450b53e5ddc75d46418fabb605edbf36bd0beb6` |
+
+workflow・job・実Lean stepのcompleted/success、49件の公理出力、独立completion receipt、source/checkout/squash tree一致を確認した。変更Lean全文・imports・依存署名・固定mathlib APIを読み、積分の型推論、ゲージ連続性の定義展開、実部と条件分岐、部分型ノルムと局所基数定義のelaborationを修正した。公開49定理の仮定・結論は修正前後で不変。旧Lean、root、workflow、依存固定は一切変更していない。
+
+### 6. 次段階 ACL（未証明）
+
+真正連続SU(2)軌道上の共分散ゼロと正の分散の両立、または同じposterior係数を保った残差比の厳格化を調べる。候補となる代数恒等式・連続軌道の議論は、この段階では研究案である。ACJの同一領域GI正値条件の実際の成立、固定bまたは `0<b0<=b(H)<=B0` におけるSの体積一様正下界は未証明。
+
+真正GI二乗モーメントの体積一様正下界、同一配置域の一様質量と振幅、遠方相殺、全物理Hilbert coercivity、共通positive-fine区間、同一endpoint E/F、H1–H4、OS/Wightman再構成、4D連続体Yang–Mills存在・質量ギャップは未解決。ABS・ABM・PZ37ZA・ACC・ACGの既存障害定理を維持する。
+
+以下のACJ以前の「最新」「次段階」は歴史スナップショットとして保存する。
+
+---
+
 ## 検証済み定理 — ACJ（2026-10-31 JST）
 
 文書ミラー対応：[正本README／ROADMAP同期 #6065](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6065)。
