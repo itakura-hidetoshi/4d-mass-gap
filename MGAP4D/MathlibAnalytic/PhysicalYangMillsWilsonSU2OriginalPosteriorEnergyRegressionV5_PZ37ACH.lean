@@ -232,7 +232,7 @@ theorem p4Q2PZ37ACH_originalGI_energyRegression_sq
   rw [hFD, contrast_covariance] at h
   unfold CompactEnergyMismatchMoment.regressionDefect at h
   rw [contrast_variance, contrast_covariance, neg_sq] at h
-  convert h using 1 <;> ring
+  convert h using 1; ring
 
 /-- Absolute error around the true posterior-energy coefficient, not an approximate center. -/
 theorem p4Q2PZ37ACH_originalGI_energyRegression_abs
