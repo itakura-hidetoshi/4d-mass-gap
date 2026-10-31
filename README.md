@@ -1,3 +1,86 @@
+> **main文書ミラー（ACC同期）**：唯一の定理正本は [formal/real-hilbert-uniform-coercive-strong-limit](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit)。確認済み正本HEAD `bf65a8ec672f565318a69d25f481a7e23e809ce3`（[正本文書同期 #6050](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6050)）、定理squash `e8803e0fcc69d051953d532ed246ff9467c5d616`（[ACC #6047](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6047)）。このmain更新はREADME・ROADMAPの追記だけで、以下のACC検証記録を鏡映する。
+
+# MGAP4D — 最新検証済み定理 P4-Q2-PZ37ACC（2026-10-31 JST）
+
+**唯一の定理正本：** `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラー。[ACC定理 PR #6047](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6047) **MERGED**。定理squash `e8803e0fcc69d051953d532ed246ff9467c5d616` とマージ直後の正本HEADを完全一致で確認。exact-source `460d15a44e7b428a5a632f7e37e6132f9050169c`、実CI checkout `87a1db0829b27919a9aeb7d9768bc33d2e04fe46`、定理squashの全Git treeは `ef26f66ec383060030c307bcc00decd117b98942` に完全一致。既に統合されたACB [#6046](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6046) とその文書履歴を保持し、この拡張をACCとして接続した。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。
+
+**検証：** [CI #41174163063](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41174163063) workflow・build job・Lean step **completed / SUCCESS**、Lean **11,181 / 11,181 SUCCESS**。新規4 Leanファイル・1,208行・48公開定理・48件の `#print axioms`。公理依存は `propext`・`Classical.choice`・`Quot.sound` の範囲内、`sorryAx`なし、変更warning/error **0/0**。独立completion receipt [job #124459070461](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41174163063/job/124459070461) とpublish stepは **completed / SUCCESS**、同じexact-source SHAと `source_result=success` を確認。全文・imports・依存署名・固定APIを独立レビューし、既存Lean・元模型・仮定・公開root・workflowを変更していない。
+
+## CLOSED — 元の全GIを実共分散と実分散で直接評価
+
+元のFF受信器について、真正SU(2) Haar μに対し `v_z=Var_μ(F_z)`、`σ_z=sqrt(v_z)`、`C_z=Cov_μ(F_z,E)`、`D_z=v_z-4*C_z²≥0` とする。`Var_μ(E)=1/4` は既証の元Haar恒等式。`u=exp(32b)`、`l=exp(-32b)` と置くと、全有限H、b≥0、元の任意Gauss-law物理源、s²=1について、
+
+`-b*(u+l)*s*C_z-(b/2)*(u-l)*σ_z ≤ s*Δ_GI(z) ≤ -b*(u+l)*s*C_z+(b/2)*(u-l)*σ_z`、
+
+従って
+
+`|Δ_GI(z)+b*(u+l)*C_z| ≤ (b/2)*(u-l)*σ_z`
+
+を証明した。ABYの完全な正負tail比較、ABZの厳密な `M_s-M_{-s}=-4bsC_z`、ACAの全不整合上界を使う。内側長方形、小tail、特定の受信器profileは仮定しない。元の二つの相互作用posteriorと全負寄与を保持し、正寄与の上界を下界として代入していない。
+
+下界を `L_s(z)=-b*(u+l)*s*C_z-(b/2)*(u-l)*σ_z` とする。同じABX rectangle Rの外側領域で、s=R.signとすると、同じ最適不整合上界B_sを使うACAのrectangle marginはL_s以下。元FF/FCの `K=‖T‖⁻¹*((exp(8b))³-1)*‖f‖` によるσ_z≤Kを用いた誤差上界も証明し、真のtransfer normとそのH依存を保持した。
+
+## CLOSED / CONDITIONAL — 実回帰欠損による全tail上界と正値証明条件
+
+`B_s=b*(σ_z+2sC_z)` について `B_s*B_{-s}=b²D_z` を証明。望ましい共分散方向sC_z≤0なら、元の全不整合は
+
+`M_{-s}(z)≤b*sqrt(D_z)`、
+
+元posteriorの全負tailは `exp(32b)*b*sqrt(D_z)` 以下。一般解析葉では分母非零を明示した欠損の商表示、閾値の必要十分条件、D=0かつ望ましい向きでの不整合ゼロも証明した。実際のD_zが小さいことは、ここでは証明していない。
+
+b>0、r=exp(-64b)に対し、**この直接下界が正であること**の厳密な条件は
+
+`L_s(z)>0 ↔ [s*C_z<0 ∧ (1+r)²*D_z<4*r*v_z] ↔ B_s(z)<r*B_{-s}(z)`。
+
+この条件はs*Δ_GI(z)>0の十分条件であり、GI自体の正値性の必要条件とは主張しない。同じABX rectangle Rの外側領域内の点z∈R.outerEventで、ACA rectangle marginが正なら、s=R.signに対して同じ共分散・相対欠損条件が必ず成立する。
+
+同じ真正Perron断面 `F_z=C₀(z)-P(z)U_z`、`P(z)>0` から、条件は
+
+`s*Cov(U_z,E)>0` かつ `(1+r)²*D_U(z)<4*r*Var(U_z)`
+
+と同値。正のP²はこの相対欠損条件から消去できる。GIの中心は正符号の `b*(u+l)*P(z)*Cov(U_z,E)` で、下界・振幅にはPが残る。更新後の真正joint Perron半密度を含むUを別の源や局所量へ置換しない。この厳密条件が元の中心化物理源で成立することは未証明。
+
+## CLOSED — 真正中心化物理源のゲージ変換と全配置tail障害
+
+元のspatial Haar-L²中心化物理源 `f_H=½(W_H-⟨W_H,1⟩1)` を維持する。c=-I∈SU(2)をリンクeの始点だけに置く真正空間ゲージを、両外側境界へ同時に作用させる写像をΓ_eとする。元Perronの物理ベクトルと連続代表、元のkernel、物理源の連続代表を使い、
+
+`P(Γ_e z)=P(z)`、`U_{Γ_e z}(g)=U_z(cg)`、`F_{Γ_e z}(g)=F_z(cg)`
+
+を証明。右リンク更新は元のliteral Function.updateで、H=0も含め端点の相異性を使う。左右独立のゲージ不変性は仮定しない。
+
+真正二コピーHaarの変数変換とE(cg)=2−E(g)から、
+
+`M_s(Γ_e z)=M_{-s}(z)`、`C(Γ_e z)=-C(z)`、`v(Γ_e z)=v(z)`、`D(Γ_e z)=D(z)`、`B_s(Γ_e z)=B_{-s}(z)`
+
+を証明。共分散・分散・欠損の恒等式はFとUの双方で成立する。**二つの固定posteriorアンカーを輸送する定理ではなく、GI自体の符号反転は主張しない。**
+
+ABXの実際の正長方形に接続して、全有限H、b>0について、
+
+`∃e, ∀s=±1, ∀θ<1, ¬[∀z, M_{-s}(z)≤θ*M_s(z)]`
+
+を証明した。量化は**ある真正active linkの存在**であり、全リンクのactivityではない。同じリンクで各固定向きに対し全不整合が正となる外側配置も存在する。これは全配置で一つの向きに厳しいtail比率を課す方法の障害で、選択した外側領域上の制御や配置ごとの向き選択は排除しない。
+
+## CLOSED / CONDITIONAL — 共通符号を要求しない元外側Haar二乗積分
+
+`L_abs(z)=b*(u+l)*|C_z|-(b/2)*(u-l)*σ_z` と置くと `L_abs(z)≤|Δ_GI(z)|`。
+
+元の外側configuration pair-Haar λ_Hの任意の可測集合Aで、実際に `L_abs(z)≥δ≥0` が全z∈Aで検証されれば、
+
+`∫Δ_GI(z)²dλ_H≥λ_H(A)*δ²`
+
+が成立する。A全体に共通の向き・傾き、可測な向き選択、内側長方形を要求しない。補助SU(2)二コピーHaarと元外側pair-Haarは区別する。正のδや有用なλ_H(A)、それらのH一様性は別途証明が必要。
+
+[欠損解析](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/e8803e0fcc69d051953d532ed246ff9467c5d616/MGAP4D/MathlibAnalytic/CompactEnergyMismatchDefect.lean) ／ [元GI共分散評価](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/e8803e0fcc69d051953d532ed246ff9467c5d616/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalCovarianceGIBoundsV5_PZ37ACC.lean) ／ [真正Perron・源のゲージ対称性](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/e8803e0fcc69d051953d532ed246ff9467c5d616/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalGaugeTransferSymmetryV5_PZ37ACC.lean) ／ [元物理源の全配置tail障害](https://github.com/itakura-hidetoshi/4d-mass-gap/blob/e8803e0fcc69d051953d532ed246ff9467c5d616/MGAP4D/MathlibAnalytic/PhysicalYangMillsWilsonSU2OriginalGaugeMismatchObstructionV5_PZ37ACC.lean)。
+
+## OPEN — 次段階P4-Q2-PZ37ACD
+
+元の中心化Gauss-law源の真正U_zについて、選択した元外側Haar領域上で共分散・分散・相対欠損を評価し、厳密な欠損条件と正の絶対GI marginを証明する。全配置で固定した向きに厳しいtail優越を求める方法には上記の障害がある。領域の質量・振幅とH,b依存を制御し、元の外側pair-Haar二乗GI積分から真Gram／Rayleigh下界へ接続する。
+
+実欠損・全tailの十分な小ささ、固定support cylinder、領域・振幅・Haar質量の体積一様性、遠方相殺、全物理Hilbert coercivityは未解決。元のHaar-L²中心化から固定リンク平均ゼロは導かず、MQの別Riesz商の局所性をUへ転用しない。ABSの粗誤差障害、ABM／PZ37ZA no-goを保持。common fine-positive、同一endpoint E/F、H1–H4、OS/Wightman、4D連続体Yang–Mills mass gapは**OPEN**。
+
+**以下のACB以前の節は当時の履歴として完全に保存する。最新の到達点はこのACC追補を優先する。文書同期はdocs-only。**
+
+---
 > **main文書ミラー（ACB同期）**：唯一の定理正本は [formal/real-hilbert-uniform-coercive-strong-limit](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit)、確認済み正本文書HEAD `9dde4d0174f85292f5b17eefcdef8e2cf2502701`（[正本docs #6048](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6048)）、定理squash `8721fe3bb5dc283ac55f67f27a254db18581973f`（[Lean PR #6046](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6046)）。ここではACBの検証記録だけを文書として反映し、Lean定理はmainに移さない。
 
 # MGAP4D — 最新検証済み定理 P4-Q2-PZ37ACB（2026-10-31 JST）
