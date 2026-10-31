@@ -62,28 +62,33 @@ private theorem p4Q2PZ37ABS_halfWeight_oneLink_le
     (b : ℝ) (hb : 0 ≤ b) (A : Cfg) (target : Link) (g h : G) :
     hW b (Function.update A target g) ≤
       Real.exp (6 * b) * hW b (Function.update A target h) := by
-  let a : ℝ := periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction
-    H 2 (Function.update A target g)
-  let d : ℝ := periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction
-    H 2 (Function.update A target h)
+  classical
+  let Bg : Cfg := Function.update A target g
+  let Bh : Cfg := Function.update A target h
+  let a : ℝ := periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H 2 Bg
+  let d : ℝ := periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction H 2 Bh
+  let theta : ℝ := b / 2
   have hs : |a - d| ≤ 12 := by
-    simpa only [a, d,
+    simpa [a, d, Bg, Bh,
       periodicHypercubicEvenSpecialUnitaryContinuousVacuumSpatialSliceReplaceLink] using
       (periodicHypercubicEvenSpecialUnitarySpatialSliceWilsonAction_continuousVacuumReplaceLink_sub_abs_le_twelve
         H 2 (by norm_num) A target g h)
   have hreverse : d - a ≤ 12 := by
     have h := (abs_le.mp hs).1
     linarith
-  have hscaled := mul_le_mul_of_nonneg_left hreverse
-    (div_nonneg hb (show (0 : ℝ) ≤ 2 by norm_num))
-  have hlog : -(b / 2 * a) ≤ 6 * b + -(b / 2 * d) := by nlinarith
-  have he : Real.exp (-(b / 2 * a)) ≤
-      Real.exp (6 * b) * Real.exp (-(b / 2 * d)) := by
+  have htheta : 0 ≤ theta := div_nonneg hb (by norm_num)
+  have hscaled := mul_le_mul_of_nonneg_left hreverse htheta
+  have hlog : -(theta * a) ≤ 6 * b + -(theta * d) := by
+    dsimp [theta] at *
+    nlinarith [hscaled]
+  have he : Real.exp (-(theta * a)) ≤
+      Real.exp (6 * b) * Real.exp (-(theta * d)) := by
     calc
-      _ ≤ Real.exp (6 * b + -(b / 2 * d)) := Real.exp_le_exp.mpr hlog
+      _ ≤ Real.exp (6 * b + -(theta * d)) := Real.exp_le_exp.mpr hlog
       _ = _ := by rw [Real.exp_add]
-  simpa only [a, d, periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight,
-    neg_mul] using he
+  change Real.exp (-(theta * a)) ≤
+    Real.exp (6 * b) * Real.exp (-(theta * d))
+  exact he
 
 private theorem p4Q2PZ37ABS_halfWeight_fourEdge_le
     (b : ℝ) (hb : 0 ≤ b) (p : Plaq) (A B : Cfg)
