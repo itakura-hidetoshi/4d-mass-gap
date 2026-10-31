@@ -247,7 +247,7 @@ This is not a sign theorem about the genuine GI response itself. -/
 theorem p4Q2PZ37ACB_rectangle_noCertificate_of_wrongOrientation
     (b : ℝ) (hb : 0 ≤ b) (f : Phys) (e : Link)
     (R : p4Q2PZ37ABX_OriginalAlignmentRectangle H b hb f e)
-    (z : Cfg × Cfg) (hz : z ∈ R.outerEvent)
+    (z : Cfg × Cfg) (_hz : z ∈ R.outerEvent)
     (hdir : R.sign * Cov (U b hb f e z) E ≤ 0)
     (hscale : T b hb f e R ≤
       b * P b hb z * Real.sqrt (Var (U b hb f e z))) :
