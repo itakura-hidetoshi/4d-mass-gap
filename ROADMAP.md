@@ -1,3 +1,34 @@
+> **main文書ミラー（ACB同期）**：唯一の定理正本は [formal/real-hilbert-uniform-coercive-strong-limit](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit)、確認済み正本文書HEAD `9dde4d0174f85292f5b17eefcdef8e2cf2502701`（[正本docs #6048](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6048)）、定理squash `8721fe3bb5dc283ac55f67f27a254db18581973f`（[Lean PR #6046](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6046)）。ここではACBの検証記録だけを文書として反映し、Lean定理はmainに移さない。
+
+# MGAP4D — 定理正本ロードマップ追補（2026-10-31 JST／P4-Q2-PZ37ACB）
+
+**定理正本** `formal/real-hilbert-uniform-coercive-strong-limit`、default `main` は文書ミラー。[ACB #6046](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6046) **MERGED**。定理squash／マージ直後正本HEAD `8721fe3bb5dc283ac55f67f27a254db18581973f`、exact-source `8356fc4a72052527d8b446f8b16574fb5a286e60`、共通tree `2befd0cf522bf3fd32fd3e8f4953683a763ff73b`。[CI #41173509336](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41173509336) **11,177/11,177 SUCCESS**、新規2 Lean葉／19定理／全19公理依存標準三公理のみ／`sorryAx` 0／変更warning・error 0/0、独立[receipt #124457218765](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41173509336/job/124457218765) SUCCESS。Lean v4.30.0-rc2／mathlib 5450b53e5ddc75d46418fabb605edbf36bd0beb6不変。
+
+## CLOSED — 実物理Perron断面の分散正値と欠損証明書
+
+ABXの同じ外側領域で `v=Var(U_z)>0`。真正SU(2) Haar `Var(E)=1/4` と同じ元物理源について、
+
+```text
+C=Cov(U_z,E),  D=v-4C²≥0,  ρ=2sC/sqrt(v),
+-1≤ρ≤1,  1-ρ²=D/v,
+B=bP(sqrt(v)-2sC)=bP sqrt(v)(1-ρ).
+```
+
+さらに、`b>0`なら `B<T_R ↔ 1-ρ<T_R/(bP sqrt(v))`。`sC≥0`という**明示的方向条件**から `B sqrt(v)≤bPD` と実際の全interacting-posterior負tail `≤exp(32b)bPD/sqrt(v)`。同じABX閾値について `bPD<T_R sqrt(v)` が**別途証明されれば**元GI `sΔ_GI(z)>0`。逆向き `sC≤0` と `T_R≤bP sqrt(v)` はACA残差族での正の証明書を排除するが、実GIのno-goではない。全て元Wilson核・Perron・源・二posterior・元の外側pair-Haarを保持する。
+
+## OPEN — 次段階P4-Q2-PZ37ACC
+
+1. **真正Uのエネルギー方向の係数と直交残差。** 元のABRのsource遠方重み `S_B`、Perron重み `R_B`、ABSの正の補正 `V_B=S_B/R_B` と更新後joint Perron分母を保持して、`Cov(U_z,E)` と `D_z=Var(U_z-4Cov(U_z,E)E)` を真正積分から定量評価する。spatial Haar中心化を固定リンク平均零へ置換しない。
+2. **実モデルでの厳密閾値の成立。** 単に`D≥0`や`ρ≥0`を使うだけでは不足。`sC_z≥0` と `bP_zD_z<T_R sqrt(v_z)` の成立、または既存ACAの必要十分条件 `B_s<T_R` を元の源で独立に証明する。MQの異なるRiesz商の局所性をUへ移植しない。
+3. **体積一様性と遠方相殺。** 固定support cylinder、元外側pair-Haar事象質量、ABXの`A,V,η,κ`、実PとvのH依存、全負tail、他プラケットの符号付き補償を評価し、真Gram/Rayleigh一様下界へ進む。ABV固定cap`1/64`をABXのVに流用しない。
+4. **下流の独立ゲート。** 全物理Hilbert coercivity、共通positive-fine、同一endpoint E/F、任意深さH1–H4、OS/Wightman、4D連続体Yang–Mills mass gapは未証明。ABS／ABM／PZ37ZAのno-go・旧履歴・fixed pins／公開rootを保持する。
+
+GitHub MCPで正本exact HEAD、変更Lean全文・imports／依存署名／固定mathlib API、exact-source workflow／job／Lean step、公理・独立receipt、source/squash tree一致を確認した。今回のdocs-only同期ではStrict Leanを追加起動しない。
+
+**以下のACA以前の節は当時の履歴として完全に保存する。**
+
+---
+
 > **main文書ミラー（ACA同期）**：定理の唯一の正本は [formal/real-hilbert-uniform-coercive-strong-limit](https://github.com/itakura-hidetoshi/4d-mass-gap/tree/formal/real-hilbert-uniform-coercive-strong-limit)。確認済み正本HEAD `f3cb167e576250dd55b630cec1d448cbadf90a6d`（[正本文書同期 #6044](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6044)）。定理squashは `055efd930b9c45a3894282c9a6023db2abe3a753`。このmain文書更新はLean定理を追加・変更せず、以下のACA検証記録を鏡映する。
 
 # MGAP4D — 定理正本ロードマップ追補（2026-10-31 JST／P4-Q2-PZ37ACA）
