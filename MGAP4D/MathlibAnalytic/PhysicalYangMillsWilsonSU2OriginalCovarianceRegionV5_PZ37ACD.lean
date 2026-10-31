@@ -62,21 +62,30 @@ local instance p4Q2PZ37ACD_outerProbability : IsProbabilityMeasure outer := by
   unfold periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure
     periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
   infer_instance
-local instance p4Q2PZ37ACD_haarOpenPos : (normalizedCompactHaar G).IsOpenPosMeasure := by
-  unfold normalizedCompactHaar
-  infer_instance
-local instance p4Q2PZ37ACD_spatialOpenPos :
-    (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2).IsOpenPosMeasure := by
-  unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
-  infer_instance
-local instance p4Q2PZ37ACD_outerOpenPos : (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H 2).IsOpenPosMeasure := by
+/-! Keep the expensive full-support measure instance scoped to its use.
+Global local instances here can multiply reducibility/instance-search work
+while elaborating the large physical receiver and joint configuration type. -/
+private theorem p4Q2PZ37ACD_outerOpenPos :
+    (periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure H 2).IsOpenPosMeasure := by
+  letI : (normalizedCompactHaar G).IsOpenPosMeasure := by
+    unfold normalizedCompactHaar
+    infer_instance
+  letI : (periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure H 2).IsOpenPosMeasure := by
+    unfold periodicHypercubicEvenSpecialUnitarySpatialSliceHaarMeasure
+    infer_instance
   unfold periodicHypercubicEvenSpecialUnitarySpatialSlicePairHaarMeasure
   infer_instance
 
 private theorem p4Q2PZ37ACD_receiver_joint_continuous
     (b : ℝ) (hb : 0 ≤ b) (f : Phys) (e : Link) :
-    Continuous (fun t : (Cfg × Cfg) × G => F b hb f e t.1 t.2) :=
-  (p4Q2FF_originalWilsonRelativeSignedLinkResponseBCF H 2 (by norm_num) b hb f e).continuous
+    Continuous (fun t : (Cfg × Cfg) × G => F b hb f e t.1 t.2) := by
+  -- Only unfold the one-step receiver abbreviation. Avoid whnf expansion of
+  -- the continuous-map constructor, updated Perron density and physical source.
+  change Continuous (fun t : (Cfg × Cfg) × G =>
+    (p4Q2FF_originalWilsonRelativeSignedLinkResponseBCF
+      H 2 (by norm_num) b hb f e) t)
+  exact (p4Q2FF_originalWilsonRelativeSignedLinkResponseBCF
+    H 2 (by norm_num) b hb f e).continuous
 
 private theorem p4Q2PZ37ACD_receiver_continuous
     (b : ℝ) (hb : 0 ≤ b) (f : Phys) (e : Link) (z : Cfg × Cfg) :
@@ -137,8 +146,9 @@ theorem p4Q2PZ37ACD_originalCovarianceRegion_isOpen
 theorem p4Q2PZ37ACD_originalCovarianceRegion_mass_pos
     (b : ℝ) (hb : 0 ≤ b) (f : Phys) (e : Link) (c V : ℝ)
     (z0 : Cfg × Cfg) (hz0 : z0 ∈ A b hb f e c V) :
-    0 < Measure.real outer (A b hb f e c V) :=
-  ENNReal.toReal_pos
+    0 < Measure.real outer (A b hb f e c V) := by
+  letI : outer.IsOpenPosMeasure := p4Q2PZ37ACD_outerOpenPos H
+  exact ENNReal.toReal_pos
     ((p4Q2PZ37ACD_originalCovarianceRegion_isOpen H b hb f e c V).measure_pos
       outer ⟨z0, hz0⟩).ne' (measure_ne_top _ _)
 
@@ -285,8 +295,10 @@ theorem p4Q2PZ37ACD_exists_positiveHaar_marginRegion_of_point
   have hopen : IsOpen S := isOpen_lt continuous_const
     (p4Q2PZ37ACD_originalAbsoluteMargin_continuous H b hb f e)
   have hz0 : z0 ∈ S := by change delta < LAbs b hb f e z0; dsimp [delta]; linarith
-  have hmass : 0 < Measure.real outer S :=
-    ENNReal.toReal_pos (hopen.measure_pos outer ⟨z0, hz0⟩).ne' (measure_ne_top _ _)
+  have hmass : 0 < Measure.real outer S := by
+    letI : outer.IsOpenPosMeasure := p4Q2PZ37ACD_outerOpenPos H
+    exact ENNReal.toReal_pos
+      (hopen.measure_pos outer ⟨z0, hz0⟩).ne' (measure_ne_top _ _)
   have hbound : ∀ z ∈ S, delta ≤ LAbs b hb f e z := fun _ hz => hz.le
   refine ⟨S, delta, hopen, hz0, hmass, hd, ?_, ?_⟩
   · intro z hz
