@@ -90,7 +90,10 @@ private theorem p4Q2PZ37ACD_receiver_joint_continuous
 private theorem p4Q2PZ37ACD_receiver_continuous
     (b : ℝ) (hb : 0 ≤ b) (f : Phys) (e : Link) (z : Cfg × Cfg) :
     Continuous (F b hb f e z) :=
-  (p4Q2PZ37ACD_receiver_joint_continuous H b hb f e).comp
+  -- Use the already kernel-checked ACC/ACA point-section proof directly.
+  -- Composing the polymorphic joint continuity theorem here makes whnf
+  -- normalize the enormous original receiver again and exceeds heartbeats.
+  (p4Q2FF_originalWilsonRelativeSignedLinkResponseBCF H 2 (by norm_num) b hb f e).continuous.comp
     (continuous_const.prodMk continuous_id)
 
 /-- Actual Haar covariance varies continuously with both original boundaries. -/
