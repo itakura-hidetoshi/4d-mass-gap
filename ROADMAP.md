@@ -1,3 +1,78 @@
+## 検証済み定理 — ACJ（2026-10-31 JST）
+
+唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラー。[ACJ #6064](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6064) は元のWilson模型、中心化Gauss-law物理源、Perron代表、transfer norm、二posterior、真正外側pair-Haarを保持する。
+
+### 1. 真正外側共分散モーメントと正負対称性
+
+元の中心化物理源の同じFF受信器について `C(z)=Cov_Haar(F_z,E)`、元の外側pair-Haarを `nu_H` とし、実際の積分 `S=integral_outer C(z)^2` を定義した。ACIの各リンクでの非零共分散とACDの既存Haar開領域を使い、任意の有限H・b>0・真正リンクeで `S>0` を証明。真正center-gauge変換は同じ外側測度を保存しCの符号を反転するため、`integral_outer C=0` と任意の閾値tでの正負tail質量の一致を厳密に証明した。ゼロ平均はCの点ごとの消失を意味せず、ゼロ集合の質量は評価していない。
+
+### 2. 同じ真正配置域で共分散・源残差・Haar質量を定量評価
+
+元のACA/FC上界を `B=norm(T)^(-1)*(exp(8b)^3-1)*norm(f0)` とすると、`4*C(z)^2 <= Var(F_z) <= B^2` と `0<S<=B^2/4` が成立する。実際の同じSから
+
+```text
+c = sqrt(S/2), d = B^2-2*S,
+Aplus = {z | c < C(z)}, Aminus = {z | C(z) < -c}
+```
+
+を構成し、
+
+```text
+c>0, d>0, S/d>0,
+Aplus and Aminus are open,
+nu_H(Aplus) = nu_H(Aminus) >= S/d,
+on Aplus:  C >= c and 0 <= D_F <= d,
+on Aminus: -C >= c and 0 <= D_F <= d,
+D_F = Var(F_z)-4*C(z)^2
+```
+
+を証明した。共分散下界、源残差上界、正の外側質量が同じ元配置域で成立し、これらの正値性を新しい前提にしていない。厳密な開集合の境界が零測度だという仮定もない。定数は証明済みの正の元積分Sを含むため、SのH,bだけによる数値下界や体積一様下界を得たとは主張しない。
+
+### 3. 元物理源の数値的残差上界とGI回帰誤差の六次上界
+
+元の有限slab作用予算を `A_H`、真正プラケット数を `P_H` と書く。ACAの受信器上界、ABMの真正transfer逆ノルム評価、ACIのposterior残差評価から、b>0で任意の元物理源f・リンク・境界配置に対し
+
+```text
+Var(F), D_F <= 576*b^2*exp((2*A_H+48)*b)*norm(f)^2,
+(GI+4*k*C)^2 <= 589824*b^6*exp((2*A_H+112)*b)*norm(f)^2.
+```
+
+同じ中心化源f0について、互換なAAI枝の証明済み `norm(f0)^2<=6*P_H` を使い、
+
+```text
+D_f0 <= 3456*P_H*b^2*exp((2*A_H+48)*b),
+(GI_f0+4*k*C_f0)^2 <= 3538944*P_H*b^6*exp((2*A_H+112)*b)
+```
+
+を証明した。六次は回帰誤差の二乗に対する固定有限体積での上界。元の作用予算・プラケット数の体積依存を保持する。
+
+### 4. 検証と次段階
+
+追加Leanは3ファイル・683行、削除0行。公開18定理を検証。
+
+| 項目 | 確定値 |
+|---|---|
+| exact-source HEAD | `a1b3abc0b0f9b65a7faf486461401e97068c8bda` |
+| 実際のCI checkout | `48456fe599712544127eefd16f7a45ad802175ac` |
+| ACJ theorem squash | `322bbbeb6e5d5d5730b9db6879b0506c173c0422` |
+| source・checkout・squash共通Git tree | `0011f8ca48e1cbcd1a55de0e0444cce670e068e1` |
+| exact-source CI | [41198364175](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41198364175) — 11,224 / 11,224 SUCCESS |
+| exact-source独立receipt | [124529907827](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41198364175/job/124529907827) — SUCCESS |
+| マージ後push CI | [41198757390](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41198757390) — 11,224 / 11,224 SUCCESS |
+| マージ後独立receipt | [124531025560](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41198757390/job/124531025560) — SUCCESS |
+| 公理依存 | 全18定理とも propext・Classical.choice・Quot.sound のみ。sorryAxなし |
+| 変更Lean warning / error | source・マージ後とも 0 / 0 |
+
+変更全文・imports・dependent signatures・固定mathlib APIを確認し、実際のLean stepと独立completion receiptの成功、Git tree一致を確認済み。既存Lean・workflow・依存固定に変更なし。
+
+**次はACK（未証明）**：元のSU(2)ゲージ軌道で共分散と源残差がどう変わるかを解析し、同じ源の四つのHaar直交character成分と残余の分解を検討する。今回の正のSを数値的に下から評価する課題、および `rho(b)=b^2*(exp(32b)-exp(-32b))^2/4` として、負共分散領域でGI正値性の十分条件 `2*b*exp(-32b)*c > sqrt(d*rho(b))` を実際に満たすかという課題は残る。正のSの存在や六次誤差上界だけからこの閾値を推論しない。
+
+固定正結合／正の結合区間での共分散二乗モーメントS・GI二乗モーメントの共通正下界、真正外側pair-Haarの体積一様質量・振幅・遠方相殺、全物理Hilbert coercivity、common positive-fine、同一endpoint E/F、H1–H4、OS/Wightman再構成、4D連続体Yang–Mills mass gapは未解決。ABS・ABM・PZ37ZA・ACC・ACGの障害定理を保持。Lean v4.30.0-rc2／mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6` 固定。
+
+> 以下のACI以前の「最新」「次段階」は歴史スナップショット。現行frontierはACJ。過去本文はバイト単位で保存。
+
+---
+
 # MGAP4D ROADMAP — ACI検証済み、次はACJ
 
 ## 検証済み定理 — ACI（2026-10-31 JST）
