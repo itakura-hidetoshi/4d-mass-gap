@@ -30,10 +30,8 @@ set_option autoImplicit false
 set_option maxHeartbeats 3000000
 set_option synthInstance.maxHeartbeats 1000000
 
-local instance p4Q2PZ37ABS_finTwoFintype : Fintype (Fin 2) := Fin.fintype 2
 local notation "G" => Matrix.specialUnitaryGroup (Fin 2) ℂ
 local notation "X" => Fin 4 → G
-local notation "μ" => normalizedCompactHaar G
 local instance p4Q2PZ37ABS_group : IsTopologicalGroup G := specialUnitaryGroupIsTopologicalGroup 2
 local instance p4Q2PZ37ABS_compact : CompactSpace G := specialUnitaryGroupCompactSpace 2
 local instance p4Q2PZ37ABS_countable : SecondCountableTopology G :=
@@ -41,14 +39,10 @@ local instance p4Q2PZ37ABS_countable : SecondCountableTopology G :=
 local instance p4Q2PZ37ABS_measurable : MeasurableSpace G :=
   oneSlabHaarL2SpecialUnitaryMeasurableSpace 2
 local instance p4Q2PZ37ABS_borel : BorelSpace G := specialUnitaryGroupBorelSpace 2
-local instance p4Q2PZ37ABS_probability : IsProbabilityMeasure μ :=
-  normalizedCompactHaar_isProbabilityMeasure G
 
 namespace GroundStatePosteriorJoint
 variable (H : ℕ)
 local notation "Link" => PeriodicHypercubicEvenSpatialSliceLink H
-local instance p4Q2PZ37ABS_linkDecEq : DecidableEq Link :=
-  fun a b => Classical.propDecidable (a = b)
 local instance p4Q2PZ37ABS_links : Fintype Link := Fintype.ofFinite _
 local notation "Cfg" => PeriodicHypercubicEvenSpecialUnitarySpatialSliceConfiguration H 2
 local notation "Plaq" => PeriodicHypercubicEvenSpatialSlicePlaquette H
@@ -90,6 +84,12 @@ private theorem p4Q2PZ37ABS_halfWeight_oneLink_le
     Real.exp (6 * b) * Real.exp (-(theta * d))
   exact he
 
+/-! Freeze the spatial half-weight only during the four-link telescope,
+mirroring the already verified ABQ proof. -/
+section
+attribute [local irreducible]
+  periodicHypercubicEvenSpecialUnitarySpatialSliceHalfWeight
+
 private theorem p4Q2PZ37ABS_halfWeight_fourEdge_le
     (b : ℝ) (hb : 0 ≤ b) (p : Plaq) (A B : Cfg)
     (hremote : ∀ e : Link,
@@ -115,6 +115,17 @@ private theorem p4Q2PZ37ABS_halfWeight_fourEdge_le
     rw [Real.exp_add, Real.exp_add, Real.exp_add]
     ring
   simpa only [hc] using hFour
+
+end
+
+/-! The Haar/Fubini side needs the pinned ABR decidable-equality instance.
+Do not let it compete with the geometry one-link update above. -/
+local instance p4Q2PZ37ABS_finTwoFintype : Fintype (Fin 2) := Fin.fintype 2
+local instance p4Q2PZ37ABS_linkDecEq : DecidableEq Link :=
+  fun a b => Classical.propDecidable (a = b)
+local notation "μ" => normalizedCompactHaar G
+local instance p4Q2PZ37ABS_probability : IsProbabilityMeasure μ :=
+  normalizedCompactHaar_isProbabilityMeasure G
 
 variable (p : Plaq)
 include p
