@@ -81,9 +81,12 @@ theorem p4Q2PZ37ABZ_originalEnergy_Haar_second :
   have hp (g : G) : E g ^ 2 = χ g ^ 2 + 2 * E g - 1 := by
     unfold p4Q2PZ35C_originalOneLinkCharacter
     ring
+  have hTwice : Integrable (fun g : G => 2 * E g) μ := hE.const_mul 2
+  have hSum : Integrable (fun g : G => χ g ^ 2 + 2 * E g) μ := hχInt.add hTwice
+  have hOneI : Integrable (fun _g : G => (1 : ℝ)) μ := integrable_const 1
   simp_rw [hp]
-  rw [integral_sub (hχInt.add (hE.const_mul 2)) (integrable_const 1),
-    integral_add hχInt (hE.const_mul 2), integral_const_mul,
+  rw [integral_sub hSum hOneI,
+    integral_add hχInt hTwice, integral_const_mul,
     hχSq, p4Q2PZ37ABZ_originalEnergy_Haar_mean]
   norm_num
 

@@ -52,6 +52,7 @@ private theorem ci {β : Type*} [TopologicalSpace β] [MeasurableSpace β]
     {f : β → ℝ} (hf : Continuous f) : Integrable f ρ :=
   hf.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)
 
+omit [MeasurableSpace α] [CompactSpace α] [SecondCountableTopology α] [BorelSpace α] in
 theorem signedPair_continuous (b s : ℝ) (F E : α → ℝ)
     (hF : Continuous F) (hE : Continuous E) :
     Continuous (signedPair b s F E) := by
@@ -69,10 +70,20 @@ theorem difference_product_integral (F E : α → ℝ)
     (hF : Continuous F) (hE : Continuous E) :
     (∫ w : α × α, (F w.1 - F w.2) * (E w.1 - E w.2) ∂μ.prod μ) =
       2 * covariance μ F E := by
-  have h11 := ci (μ.prod μ) ((hF.mul hE).comp continuous_fst)
-  have h22 := ci (μ.prod μ) ((hF.mul hE).comp continuous_snd)
-  have h12 := ci (μ.prod μ) ((hF.comp continuous_fst).mul (hE.comp continuous_snd))
-  have h21 := ci (μ.prod μ) ((hE.comp continuous_fst).mul (hF.comp continuous_snd))
+  have h11 : Integrable (fun w : α × α => F w.1 * E w.1) (μ.prod μ) :=
+    ci (μ.prod μ) ((hF.mul hE).comp continuous_fst)
+  have h22 : Integrable (fun w : α × α => F w.2 * E w.2) (μ.prod μ) :=
+    ci (μ.prod μ) ((hF.mul hE).comp continuous_snd)
+  have h12 : Integrable (fun w : α × α => F w.1 * E w.2) (μ.prod μ) :=
+    ci (μ.prod μ) ((hF.comp continuous_fst).mul (hE.comp continuous_snd))
+  have h21 : Integrable (fun w : α × α => E w.1 * F w.2) (μ.prod μ) :=
+    ci (μ.prod μ) ((hE.comp continuous_fst).mul (hF.comp continuous_snd))
+  have hAdd : Integrable
+      (fun w : α × α => F w.1 * E w.1 + F w.2 * E w.2) (μ.prod μ) :=
+    h11.add h22
+  have hSub : Integrable
+      (fun w : α × α => F w.1 * E w.1 + F w.2 * E w.2 - F w.1 * E w.2)
+        (μ.prod μ) := hAdd.sub h12
   calc
     _ = ∫ w : α × α,
         ((F w.1 * E w.1 + F w.2 * E w.2) - F w.1 * E w.2) -
@@ -81,8 +92,8 @@ theorem difference_product_integral (F E : α → ℝ)
       filter_upwards with w
       ring
     _ = 2 * covariance μ F E := by
-      rw [integral_sub ((h11.add h22).sub h12) h21,
-        integral_sub (h11.add h22) h12, integral_add h11 h22,
+      rw [integral_sub hSub h21,
+        integral_sub hAdd h12, integral_add h11 h22,
         integral_fun_fst, integral_fun_snd, integral_prod_mul, integral_prod_mul]
       simp [covariance] <;> ring
 
@@ -94,8 +105,8 @@ theorem difference_square_integral (F : α → ℝ) (hF : Continuous F) :
 
 theorem variance_nonneg (F : α → ℝ) (hF : Continuous F) :
     0 ≤ variance μ F := by
-  have h := integral_nonneg (μ := μ.prod μ)
-    (fun w : α × α => sq_nonneg (F w.1 - F w.2))
+  have h : (0 : ℝ) ≤ ∫ w : α × α, (F w.1 - F w.2) ^ 2 ∂μ.prod μ :=
+    integral_nonneg (fun w : α × α => sq_nonneg (F w.1 - F w.2))
   rw [difference_square_integral μ F hF] at h
   linarith
 
@@ -104,13 +115,17 @@ theorem variance_eq_centered (F : α → ℝ) (hF : Continuous F) :
     variance μ F = ∫ x, (F x - ∫ y, F y ∂μ) ^ 2 ∂μ := by
   let m : ℝ := ∫ y, F y ∂μ
   have hFI := ci μ hF
-  have hFF := ci μ (hF.mul hF)
+  have hFF : Integrable (fun x : α => F x * F x) μ := ci μ (hF.mul hF)
+  have hLinear : Integrable (fun x : α => (2 * m) * F x) μ :=
+    hFI.const_mul (2 * m)
+  have hSub : Integrable (fun x : α => F x * F x - (2 * m) * F x) μ :=
+    hFF.sub hLinear
   have hp (x : α) : (F x - m) ^ 2 = F x * F x - (2 * m) * F x + m ^ 2 := by
     ring
   change covariance μ F F = ∫ x, (F x - m) ^ 2 ∂μ
   simp_rw [hp]
-  rw [integral_add (hFF.sub (hFI.const_mul (2 * m))) (integrable_const _),
-    integral_sub hFF (hFI.const_mul (2 * m)), integral_const_mul]
+  rw [integral_add hSub (integrable_const (m ^ 2)),
+    integral_sub hFF hLinear, integral_const_mul]
   simp [covariance, m] <;> ring
 
 /-- In the convention E(h)-E(g), the signed integral has a minus sign. -/
@@ -162,6 +177,8 @@ theorem mismatch_opposite_sub_eq_covariance (b s : ℝ) (F E : α → ℝ)
   simp_rw [heq, abs_neg] at hn
   linarith
 
+omit [TopologicalSpace α] [MeasurableSpace α] [CompactSpace α]
+  [SecondCountableTopology α] [BorelSpace α] in
 /-- A nonnegative aligned energy component contributes a nonnegative square.
 The result is valid for every real orientation scalar s. -/
 theorem signedPair_eq_residual_add (b s a : ℝ) (F E : α → ℝ) (w : α × α) :
@@ -183,6 +200,8 @@ theorem mismatch_le_residual (b s a : ℝ) (hb : 0 ≤ b) (ha : 0 ≤ a)
   have hp : 0 ≤ (2 * b * a * s ^ 2) * (E w.1 - E w.2) ^ 2 := by positivity
   linarith
 
+omit [TopologicalSpace α] [MeasurableSpace α] [CompactSpace α]
+  [SecondCountableTopology α] [BorelSpace α] in
 /-- Square completion controls every point of the negative tail by the
 actual residual difference.  No tail-cap or alignment hypothesis occurs. -/
 theorem mismatch_pointwise_le_residual_square (b s a : ℝ)
@@ -216,7 +235,7 @@ theorem mismatch_le_residual_variance (b s a : ℝ)
       exact mismatch_pointwise_le_residual_square b s a hb ha F E
     _ = (b / a) * variance μ (residual s a F E) := by
       rw [integral_div, integral_const_mul, difference_square_integral μ _ hR]
-      field_simp [ha.ne'] <;> ring
+      field_simp [ha.ne']
 
 /-- Exact residual variance expansion, with the covariance sign retained. -/
 theorem variance_residual (s a : ℝ) (F E : α → ℝ)
@@ -229,9 +248,19 @@ theorem variance_residual (s a : ℝ) (F E : α → ℝ)
   have hDE : Continuous DE := (hE.comp continuous_fst).sub (hE.comp continuous_snd)
   have hR : Continuous (residual s a F E) :=
     hF.add (continuous_const.mul hE)
-  have hFF := ci (μ.prod μ) (hDF.pow 2)
-  have hFE := ci (μ.prod μ) (hDF.mul hDE)
-  have hEE := ci (μ.prod μ) (hDE.pow 2)
+  have hFF : Integrable (fun w : α × α => DF w ^ 2) (μ.prod μ) :=
+    ci (μ.prod μ) (hDF.pow 2)
+  have hFE : Integrable (fun w : α × α => DF w * DE w) (μ.prod μ) :=
+    ci (μ.prod μ) (hDF.mul hDE)
+  have hEE : Integrable (fun w : α × α => DE w ^ 2) (μ.prod μ) :=
+    ci (μ.prod μ) (hDE.pow 2)
+  have hCross : Integrable (fun w : α × α => (2 * s * a) * (DF w * DE w))
+      (μ.prod μ) := hFE.const_mul (2 * s * a)
+  have hEnergy : Integrable (fun w : α × α => (s * a) ^ 2 * DE w ^ 2)
+      (μ.prod μ) := hEE.const_mul ((s * a) ^ 2)
+  have hSum : Integrable
+      (fun w : α × α => DF w ^ 2 + (2 * s * a) * (DF w * DE w)) (μ.prod μ) :=
+    hFF.add hCross
   have hp (w : α × α) :
       (residual s a F E w.1 - residual s a F E w.2) ^ 2 =
         (DF w ^ 2 + (2 * s * a) * (DF w * DE w)) + (s * a) ^ 2 * DE w ^ 2 := by
@@ -243,8 +272,8 @@ theorem variance_residual (s a : ℝ) (F E : α → ℝ)
           (∫ w, DF w * DE w ∂μ.prod μ) + (s * a) ^ 2 *
             (∫ w, DE w ^ 2 ∂μ.prod μ) := by
     simp_rw [hp]
-    rw [integral_add (hFF.add (hFE.const_mul _)) (hEE.const_mul _),
-      integral_add hFF (hFE.const_mul _), integral_const_mul, integral_const_mul]
+    rw [integral_add hSum hEnergy,
+      integral_add hFF hCross, integral_const_mul, integral_const_mul]
   dsimp [DF, DE] at hi
   rw [difference_square_integral μ _ hR, difference_square_integral μ F hF,
     difference_square_integral μ E hE, difference_product_integral μ F E hF hE] at hi
