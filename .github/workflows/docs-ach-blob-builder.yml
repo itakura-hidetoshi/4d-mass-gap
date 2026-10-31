@@ -1,0 +1,114 @@
+name: Prepare verified ACH documentation blobs
+on:
+  push:
+    branches: [tooling/docs-ace-blob-builder-20261031]
+    paths: [.github/workflows/docs-ach-blob-builder.yml]
+permissions:
+  contents: write
+jobs:
+  prepare:
+    if: github.repository == 'itakura-hidetoshi/4d-mass-gap'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 3
+    steps:
+      - name: Register and independently read back four append-only document blobs
+        env:
+          API_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import base64, hashlib, json, os, pathlib, urllib.request
+          api = 'https://api.github.com/repos/itakura-hidetoshi/4d-mass-gap'
+          refs = {'canonical': 'b609cedfc287923afed651a473d4d22238495877', 'main': '1517897bd02f8b4e59b3608552975ac49edb77c0'}
+          expected = {
+              ('canonical', 'README.md'): '66b9712b0187b88e75bfa77b8cb02ad2ef44cb98',
+              ('canonical', 'ROADMAP.md'): '9163cce279c5a6128ab63c1087ba26e669311860',
+              ('main', 'README.md'): 'ceac88b78806167d60f893f1d97792ebd55e65b9',
+              ('main', 'ROADMAP.md'): '1d9412e1172a6ff1d21390212552ad9429d7b98b',
+          }
+          def request(path, body=None):
+              if body is not None:
+                  assert path == '/git/blobs', 'Only unreferenced blob registration is permitted'
+              req = urllib.request.Request(api + path, data=None if body is None else json.dumps(body).encode(), headers={
+                  'Authorization': 'Bearer ' + os.environ['API_TOKEN'],
+                  'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', 'Content-Type': 'application/json'})
+              with urllib.request.urlopen(req, timeout=30) as r:
+                  return json.load(r)
+          def sha(data):
+              return hashlib.sha1(b'blob ' + str(len(data)).encode() + b'\0' + data).hexdigest()
+          run = request('/actions/runs/' + '41188053582')
+          assert run['head_sha'] == 'c0fda4a7947d1c0b5d68244cbda5e156d575dd67' and run['status'] == 'completed' and run['conclusion'] == 'success'
+          for commit in ('c0fda4a7947d1c0b5d68244cbda5e156d575dd67', 'b609cedfc287923afed651a473d4d22238495877'):
+              assert request('/git/commits/' + commit)['tree']['sha'] == '670db41939647f4e18962cc774f080db4c56c9f0'
+          common = '''## 検証済み定理 — ACG・ACH（2026-10-31 JST）
+
+          唯一のLean定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。default `main` は文書ミラー。最新定理 [ACH #6058](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6058) はMERGED、定理squash `b609cedfc287923afed651a473d4d22238495877`、exact-source `c0fda4a7947d1c0b5d68244cbda5e156d575dd67`、実CI checkout `f1e25c4e78f566b3f608067b3e3b4d590480df1e`、三者の共通tree `670db41939647f4e18962cc774f080db4c56c9f0`。Lean `v4.30.0-rc2`、mathlib `5450b53e5ddc75d46418fabb605edbf36bd0beb6`、元Wilson模型・物理源・真Perron・転送ノルム・二つの相互作用posterior・外側pair-Haarを保持する。
+
+          ### CLOSED — ACG：上限だけの結合条件に対する真正GIモーメントの障害
+
+          [ACG #6057](https://github.com/itakura-hidetoshi/4d-mass-gap/pull/6057) は元のプラケット数P_H・一スラブ作用budget A_H・E_b=exp(8b)(exp(16b)-exp(-16b))を保持して、全真正リンクで
+
+          `M(H,b,e) <= [exp(b A_H) P_H E_b/2]^2`。
+
+          固定Hの数値上界の連続性と零結合での消失から、任意の正のcap(H),epsilon(H)に対して、全リンクのMをepsilon(H)未満にする0<b(H)<=cap(H)を構成する。従って任意B>0の下で、0<b(H)<=min(B,1/(H+1))かつ全リンクM<1/(H+1)の一つの族が存在し、どのH依存リンク選択にも共通m>0がない。同じ族の各有限HでACEのM>0とACFの正のRayleigh証明書は成立する。これは固定b>0や正の下限を持つ区間の否定ではなく、Rayleighが零へ収束するという定理でもない。
+
+          ### CLOSED — ACH：元posteriorのエネルギー応答の一様正下界
+
+          同じ真正SU(2) Haar、元のWilsonエネルギーE、元の二posterior密度差d=p0-ppiについて `k=-integral E*d` と置く。真の全二コピー積分、ABYの行列式傾き、Var_Haar(E)=1/4を用い、全有限H・全真正リンクe・全右配置r・b>=0で
+
+          `(b/2) exp(-32b) <= k(H,b,e,r) <= (b/2) exp(32b)`。
+
+          従って指定した0<b0<=b<=Bでは、`k >= (b0/2)exp(-32B)>0` がH・リンク・右配置によらず成立する。領域capへの制限や都合のよいtail削除を使わない。ただしこれはposteriorのエネルギー応答であり、物理源のCov(F,E)が非零だという主張ではない。
+
+          ### CLOSED — ACH：真正GIの二重回帰残差評価
+
+          任意の元Gauss-law物理源の真正FF受信器Fについて `C=Cov(F,E)`、`D_F=Var(F)-4C^2`、元FX感度 `Q=integral d^2` とする。受信器と密度差の両方からエネルギー成分を除くと
+
+          `(Delta_GI+4kC)^2 <= D_F*(Q-4k^2)`、`0<=Q-4k^2`。
+
+          右辺は二つの実際の回帰残差の分散の積である。真の中心化Haar-L2でのCauchy--Schwarzと厳密共分散恒等式から証明した。D_F=0なら `Delta_GI=-4kC`。D_Fが小さいことやC!=0を新たな物理的事実として仮定しない。元のPerron因子・transfer normはFの中に保持される。
+
+          ### 検証
+
+          ACG exact-source e614d1c657083e0472c06533e160694a7034c231、squash 6d83a3d0c39d8e48d6c117f4b7a3e20b33ea6fd3、[CI #41185081567](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41185081567) SUCCESS、11215成功、9公開定理標準3公理のみ、変更0 warning/0 error。マージ後[CI #41186150614](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41186150614)もbuild・Lean step・独立receipt #124494239210 completed/SUCCESS。
+
+          ACH [exact-source CI #41188053582](https://github.com/itakura-hidetoshi/4d-mass-gap/actions/runs/41188053582) はworkflow・build・Lean step completed/SUCCESS、11197成功。新規434行・公開16定理・全16件の公理依存はpropext/Classical.choice/Quot.soundのみ、sorryAxなし、変更warning/error 0/0。独立completion receipt #124499925105は同じexact-sourceでsource_result=success。文書だけの更新は新規Lean定理ではなく、不要なLean再実行は行わない。
+
+          ### OPEN — 次はACI：実残差と物理源を評価する
+
+          元の密度差のエネルギー直交残差Q-4k^2を実Wilson積分から定量化し、元中心化物理源のCとD_F、および元外側pair-Haar上での振幅・質量・遠方相殺を評価する。kの一様正値だけからCの非零性や真正GIモーメントMの一様正下界は従わない。固定正結合または正の下限を持つ明示的区間における共通m、全物理Hilbert coercivity、common positive-fine、同一endpoint E/F、H1-H4、OS/Wightman、4D連続体Yang-Mills存在・質量ギャップはOPEN。ABS・ABM・PZ37ZA・ACC・ACGの障害を保持する。
+
+          以下のACF以前の本文はバイト単位で完全保存した履歴。旧「最新・次段階・OPEN」よりこの追補を優先する。
+
+          ---
+
+          '''
+          out = []
+          for label, ref in refs.items():
+              for path in ('README.md', 'ROADMAP.md'):
+                  obj = request('/contents/' + path + '?ref=' + ref)
+                  assert obj['encoding'] == 'base64'
+                  old = base64.b64decode(obj['content'])
+                  assert sha(old) == obj['sha'] == expected[(label, path)]
+                  assert len(old) > 100000
+                  heading = '# MGAP4D — 最新検証済み定理 P4-Q2-PZ37ACH\n\n' if path == 'README.md' else '# MGAP4D ROADMAP — ACH検証済み、次はACI\n\n'
+                  mirror = '' if label == 'canonical' else '> **main文書ミラー（ACH同期）**：文書のみの反映。定理正本は `formal/real-hilbert-uniform-coercive-strong-limit`。\n\n'
+                  prefix = (heading + mirror + common).encode('utf-8')
+                  new = prefix + old
+                  assert new[len(prefix):] == old
+                  created = request('/git/blobs', {'content': base64.b64encode(new).decode(), 'encoding': 'base64'})
+                  assert created['sha'] == sha(new)
+                  registered = request('/git/blobs/' + created['sha'])
+                  assert registered['encoding'] == 'base64' and base64.b64decode(registered['content']) == new
+                  entry = {'target': label, 'base_commit': ref, 'path': path, 'old_blob': sha(old), 'new_blob': created['sha'], 'old_bytes': len(old), 'new_bytes': len(new), 'added_lines': prefix.count(b'\n'), 'deleted_lines': 0, 'old_suffix_preserved': True, 'registration_readback_verified': True}
+                  out.append(entry)
+                  print('DOC_BLOB ' + json.dumps(entry, ensure_ascii=False), flush=True)
+          pathlib.Path('docs-ach-manifest.json').write_text(json.dumps(out, ensure_ascii=False, indent=2) + '\n')
+          print('DONE: only four unreferenced blobs registered; no tree, commit, branch or PR modified by this job.')
+          PY
+      - name: Save byte-preservation and registration manifest
+        uses: actions/upload-artifact@v6
+        with:
+          name: docs-ach-blob-manifest
+          path: docs-ach-manifest.json
+          if-no-files-found: error
